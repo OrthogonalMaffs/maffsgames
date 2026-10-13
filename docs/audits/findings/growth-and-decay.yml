@@ -1,0 +1,48 @@
+# Findings register for growth-and-decay (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: growth-and-decay
+audited:
+  tranche: S1 (SWEEP-1 reading sweep)
+  head: 091b4f0
+  date: 2026-10-13
+  served:
+    core: '15'
+    alevel: '15'
+    level4: '15'
+findings:
+- id: growth-and-decay-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:text-contradicts-content
+  level: level4
+  where: 'games/growth-and-decay/index.html:564-571 (L4_9)'
+  summary: 'A battery efficiency of 240% at the start (E = 240 × 0.78^c with E in %), impossible. Fixed (Jon''s ruling, 13 Oct 2026; keys unchanged): "Battery capacity (Wh)", units Wh, the interpretation options say capacity; the verifier fails any percentage context whose model leaves 0-100% on its graph range, and plants the old item'
+  evidence: '"Battery efficiency (%) decreases with charge cycles (hundreds)." | "Find E when c = 0." key 240 % (SWEEP-1, between batches 7 and 8)'
+  status: open
+- id: growth-and-decay-s1-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: all
+  where: 'games/growth-and-decay/index.html (every sq1, 45 scenarios)'
+  summary: 'Every sq1 said "Estimate X ... Give your answer to n significant figures", a calculation from the model with a calculator, not an estimate (SR-12: an estimate states its method). Fixed (Jon''s ruling, 13 Oct 2026): "Use the model to calculate X" on all 45, including CM14 and AL11, which ask an exact value and stated no precision; keys unchanged. The verifier fails a prompt that says "Estimate" with no method; plant'
+  evidence: '"Estimate the number of customers when t = 5. Give your answer to 3 significant figures." (SWEEP-1, between batches 7 and 8)'
+  status: open
+- id: growth-and-decay-s1-003
+  severity: MEDIUM
+  jc: true
+  class: NEW:text-contradicts-content
+  level: alevel
+  where: 'games/growth-and-decay/index.html:466-473 (AL12)'
+  summary: '"Pressure (atm) decreases with depth (m)": pressure in water rises with depth (about 1 atm per 10 m), and the depth variable is called t. A new context is Jon''s call (e.g. air pressure and altitude, as CM15)'
+  evidence: 'P = ke^{-0.046t}, "Given P = 1 when t = 0", key P(30) = 0.252 atm (SWEEP-1, between batches 7 and 8)'
+  status: open
+- id: growth-and-decay-s1-004
+  severity: MEDIUM
+  jc: true
+  class: NEW:text-contradicts-content
+  level: level4
+  where: 'games/growth-and-decay/index.html:604-611 (L4_14)'
+  summary: '"Hardness (HV) increases with tempering temperature": tempering lowers a steel''s hardness, and the key 3,610 HV at 300 °C (10,850 HV at the graph''s end, 350 °C) is beyond any steel (roughly 900 HV at most). A new context is Jon''s call'
+  evidence: 'H = 4.911e^{0.022T}; "Use the model to calculate H when T = 300 and k = 4.911" key 3610 HV (SWEEP-1, between batches 7 and 8)'
+  status: open

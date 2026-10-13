@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Growth and Decay (keys recomputed from each printed model) |
+# ci-line: Growth and Decay (keys recomputed from each printed model; no Estimate without a method; percentage contexts stay in 0-100) |
 """Independent verification of growth-and-decay's keys (todo §1.36; audit §1.2 items 1-4).
 
 Each scenario prints its model (modelLatex). That equation, not the game's graphFn, is
@@ -208,6 +208,21 @@ def check_scenario(rep, s, graph_vals, verbose=False):
                 rep.fail(sid, key, '%r keyed %s; the model gives %s' % (sq['prompt'], sq['answer'], sp.N(true, 8)))
         if 'sf' in sq and how and how[0] == 'sf' and sq['sf'] != how[1]:
             rep.fail(sid, key, 'sf field %s, but the prompt asks %d s.f.' % (sq['sf'], how[1]))
+    # Jon, 13 Oct 2026: a prompt that says "Estimate" names an estimation method (SR-12) or says "use the model to
+    # estimate"; a calculation from the model to a stated precision says "Use the model to calculate".
+    for key in ('sq1', 'sq3', 'sq4'):
+        sq = s.get(key)
+        if sq and re.match(r'\s*Estimate\b', sq['prompt']) and not re.search(
+                r'use the model to estimate|by rounding|significant figure first', sq['prompt'], re.I):
+            rep.fail(sid, key, '%r: "Estimate" with no estimation method; a calculation from the model says "Use the '
+                     'model to calculate" (Jon, 13 Oct 2026)' % sq['prompt'])
+    # the context makes sense at its values (Jon, 13 Oct 2026; L4_9 was a battery efficiency of 240%)
+    units = {(s.get(k) or {}).get('unit') for k in ('sq1', 'sq3', 'sq4')}
+    if '(%)' in s.get('context', '') or '%' in units:
+        over = [(x, y) for x, y in graph_vals if not -1e-9 <= y <= 100.5]   # 0.5: a constant rounded to 1 d.p. (CM2: 100.003 at T = 24)
+        if over:
+            rep.fail(sid, 'context', 'a percentage (%s) but the model gives %.4g at %s = %g, outside 0-100%%'
+                     % (s['context'][:50], over[0][1], s.get('graphXLabel', 'x'), over[0][0]))
     # the graph must draw the model (with the constant the stated condition gives)
     try:
         _, model = parse_model(s['modelLatex'])
@@ -344,6 +359,15 @@ def selftest(bank, graphs, played):
     bad[target] = [(x, y * 1.01) for x, y in graphs[target]]
     expect('graph disagrees with its model', lambda rep: check_bank(rep, bank, bad))
     expect('reworded prompt', lambda rep: check_bank(rep, mutated(lambda s: s['sq4'].__setitem__('prompt', 'Describe the curve.')), graphs))
+    expect('"Estimate" with no method', lambda rep: check_bank(rep, mutated(
+        lambda s: s['sq1'].__setitem__('prompt', s['sq1']['prompt'].replace('Use the model to calculate', 'Estimate'))), graphs))
+
+    def old_l4_9(s):
+        s['context'] = 'Battery efficiency (%) decreases with charge cycles (hundreds). c = hundreds of cycles.'
+        s['sq1']['unit'] = s['sq3']['unit'] = '%'
+    b49 = copy.deepcopy(bank)
+    old_l4_9(next(s for lvl in b49.values() for s in lvl if s['id'] == 'L4_9'))
+    expect('L4_9 as a 240% efficiency', lambda rep: check_bank(rep, b49, graphs))
     _, _, lie = load("""(() => { const s = Object.values(Q).flat().find(q => q.id === %r);
         s.sq4.answer = s.sq4.answer + 1; })()""" % target)
     expect('sq4 marked against a wrong key', lambda rep: check_played(rep, clean[:1], lie))
