@@ -131,11 +131,12 @@ findings:
   level: alevel
   where: games/suvat/index.html:229 (the answer box), :459 (ALEVEL[34])
   summary: 'ALEVEL[34] keys v_y = −0.32, typed into a box with inputmode="decimal", which on many phone keyboards
-    has no minus key: the student cannot type the key. Reported for the home lane''s contract (Jon''s rule, 13 Oct
-    2026), not fixed here'
+    has no minus key: the student cannot type the key. Fixed in #360: Phase 2 and Phase 0 mount the phone keypad with a minus key (NEGATIVE-INPUT, Jon''s ruling of 13 Oct
+    2026)'
   evidence: '<input type="text" inputmode="decimal" ... id="calcInput">; steps:[{prompt:"Find v_y",answer:-0.32,dp:2}]
     (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 360
 - id: suvat-s1-002
   severity: MEDIUM
   jc: true
