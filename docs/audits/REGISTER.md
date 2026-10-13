@@ -24,8 +24,8 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | CRITICAL | 1 | 34 | 0 | 35 |
 | HIGH | 8 | 229 | 0 | 237 |
 | MEDIUM | 237 | 260 | 3 | 500 |
-| LOW | 228 | 103 | 1 | 332 |
-| **All** | 474 | 626 | 4 | 1104 |
+| LOW | 226 | 105 | 1 | 332 |
+| **All** | 472 | 628 | 4 | 1104 |
 
 ### By class
 
@@ -33,7 +33,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 |---|---|---|
 | NEW:wording | 112 | 128 |
 | 2 | 12 | 111 |
-| NEW:text-contradicts-content | 62 | 90 |
+| NEW:text-contradicts-content | 60 | 90 |
 | 3 | 5 | 86 |
 | NEW:convention-unstated | 32 | 78 |
 | NEW:wrong-explanation-text | 21 | 71 |
@@ -216,11 +216,11 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `shape-shifter` | yes | verify-shape-shifter.py | 2 | 1 | 5 | 3 | 7 | 4 | 0 |
 | `simultaneous-solver` | yes | verify-simultaneous-solver.py | 0 | 0 | 1 | 2 | 3 | 0 | 0 |
 | `six-sevens-bruv` | yes | verify-six-sevens.py | 0 | 0 | 0 | 1 | 1 | 0 | 0 |
-| `split-it` | yes | verify-split-it.py | 0 | 0 | 1 | 7 | 7 | 1 | 0 |
+| `split-it` | yes | verify-split-it.py | 0 | 0 | 1 | 7 | 6 | 2 | 0 |
 | `spot-the-error` | yes | verify-spot-the-error.py | 0 | 14 | 8 | 5 | 1 | 26 | 0 |
 | `spot-the-muppet` | yes | verify-spot-the-muppet.py | 0 | 5 | 9 | 4 | 9 | 8 | 1 |
 | `standard-form-blitz` | yes | verify-standard-form-blitz.py | 0 | 0 | 2 | 3 | 2 | 3 | 0 |
-| `stat-attack` | yes | verify-stat-attack.py | 1 | 1 | 3 | 7 | 7 | 5 | 0 |
+| `stat-attack` | yes | verify-stat-attack.py | 1 | 1 | 3 | 7 | 6 | 6 | 0 |
 | `surd-simplifier` | yes | verify-surd-simplifier.py | 0 | 2 | 2 | 2 | 2 | 4 | 0 |
 | `suvat` | yes | verify-suvat.py | 1 | 4 | 8 | 4 | 5 | 12 | 0 |
 | `tax-theft` | yes | verify-tax-theft.py | 0 | 0 | 2 | 3 | 1 | 4 | 0 |
