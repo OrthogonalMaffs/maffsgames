@@ -52,24 +52,28 @@ findings:
   class: NEW:true-wrong-option
   level: gcse
   where: games/maths-court/index.html mc_gcse_001
-  summary: 'An argument that states a false rule is keyed correct: Brenda''s "Division before multiplication" reaches 54,
-    and the judge says "her understanding of the order within DM is muddled", yet tapping her scores. The court judges
-    reasoning (mc_ks3_002 keys right-answer-wrong-reason as wrong), so a wrong answer is marked right. Changing the key
-    is Jon''s call (contract STOP IF: recorded and reported)'
+  summary: 'An argument that states a false rule is keyed correct: Brenda''s "Division before multiplication" reaches
+    54, and the judge says "her understanding of the order within DM is muddled", yet tapping her scores. The
+    court judges reasoning (mc_ks3_002 keys right-answer-wrong-reason as wrong), so a wrong answer is marked
+    right. Changing the key is Jon''s call (contract STOP IF: recorded and reported) Fixed in #364 (Part 2 #3):
+    Brenda is keyed wrong and the judge names her false rule.'
   evidence: 'Problem "Calculate 18 ÷ (2 + 1) × 3²"; Brenda "Brackets: 2+1=3 | Division before multiplication: | 18÷3×3² =
     18÷3×9 | = 6×9 = 54", correct:true (SWEEP-1, batch 4)'
-  status: open
+  status: fixed
+  pr: 364
 - id: maths-court-s1-005
   severity: MEDIUM
   jc: false
   class: NEW:convention-unstated
   level: core
   where: games/maths-court/index.html mc_core_004
-  summary: 'The key interprets the gradient as "25 units per hour" though no unit of time (or distance) is given; a careful
-    student may reject it for that. Stating units is a stem change, open for Jon'
+  summary: 'The key interprets the gradient as "25 units per hour" though no unit of time (or distance) is given; a
+    careful student may reject it for that. Stating units is a stem change, open for Jon Fixed in #364 (R2):
+    the problem states that time is in hours and distance in units.'
   evidence: '"A distance-time graph shows a straight line from (0, 0) to (4, 100). Interpret the gradient." key Grace
     "Constant speed of 25 units per hour" (SWEEP-1, batch 4)'
-  status: open
+  status: fixed
+  pr: 364
 - id: maths-court-s1-006
   severity: LOW
   jc: true
@@ -79,9 +83,11 @@ findings:
   summary: 'The start screen promises "One correct answer" but five GCSE cases key two or three (gcse_001, 004, 008,
     012, 019). Settled by Part 2 #3 (the start screen says the court judges the reasoning) (Split: the parent
     entry held 7 defects; the others are maths-court-s1-007, maths-court-s1-008, maths-court-s1-009,
-    maths-court-s1-010, maths-court-s1-011, maths-court-s1-012.)'
+    maths-court-s1-010, maths-court-s1-011, maths-court-s1-012.) Fixed in #364 (Part 2 #3, R3): the start
+    screen no longer promises one correct answer.'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 364
 - id: maths-court-s1-007
   severity: MEDIUM
   jc: true
@@ -89,9 +95,11 @@ findings:
   level: ks3, gcse, core
   where: games/maths-court/index.html start screen, mc_core_003, mc_gcse_015, mc_gcse_004, mc_gcse_008
   summary: 'core_003''s Percy jokes "The planet will end before 13 years." (end-of-the-world humour, SR-14). Ruled
-    under R6: removed (Split from maths-court-s1-006, SWEEP-1-RULINGS step 1.)'
+    under R6: removed (Split from maths-court-s1-006, SWEEP-1-RULINGS step 1.) Fixed in #364 (R6): the line is
+    removed.'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 364
 - id: maths-court-s1-008
   severity: MEDIUM
   jc: true
@@ -109,27 +117,33 @@ findings:
   level: ks3, gcse, core
   where: games/maths-court/index.html start screen, mc_core_003, mc_gcse_015, mc_gcse_004, mc_gcse_008
   summary: 'gcse_015''s summary gives Mix Max 1 and 6 adding to 7 (his factors are −1 and −6: −7, not −5). Wrong
-    arithmetic shown to the student; open (Split from maths-court-s1-006, SWEEP-1-RULINGS step 1.)'
+    arithmetic shown to the student; open (Split from maths-court-s1-006, SWEEP-1-RULINGS step 1.) Fixed in
+    #364 (R3): the judge says -1 and -6 add to -7, not -5.'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 364
 - id: maths-court-s1-010
   severity: LOW
   jc: true
   class: NEW:wording
   level: ks3, gcse, core
   where: games/maths-court/index.html start screen, mc_core_003, mc_gcse_015, mc_gcse_004, mc_gcse_008
-  summary: 'gcse_004''s "works here by luck". Wording, open (Split from maths-court-s1-006, SWEEP-1-RULINGS step 1.)'
+  summary: 'gcse_004''s "works here by luck". Wording, open (Split from maths-court-s1-006, SWEEP-1-RULINGS step 1.)
+    Fixed in #364 (R1): reworded.'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 364
 - id: maths-court-s1-011
   severity: LOW
   jc: true
   class: NEW:wording
   level: ks3, gcse, core
   where: games/maths-court/index.html start screen, mc_core_003, mc_gcse_015, mc_gcse_004, mc_gcse_008
-  summary: 'gcse_008''s "x³ˣ⁴" notation. Wording, open (Split from maths-court-s1-006, SWEEP-1-RULINGS step 1.)'
+  summary: 'gcse_008''s "x³ˣ⁴" notation. Wording, open (Split from maths-court-s1-006, SWEEP-1-RULINGS step 1.) Fixed
+    in #364 (R1): written x^(3 x 4).'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 364
 - id: maths-court-s1-012
   severity: LOW
   jc: true
@@ -137,6 +151,8 @@ findings:
   level: ks3, gcse, core
   where: games/maths-court/index.html start screen, mc_core_003, mc_gcse_015, mc_gcse_004, mc_gcse_008
   summary: 'The court never says whether it judges the conclusion or the reasoning. Settled by Part 2 #3 (Split from
-    maths-court-s1-006, SWEEP-1-RULINGS step 1.)'
+    maths-court-s1-006, SWEEP-1-RULINGS step 1.) Fixed in #364 (Part 2 #3): the start screen says the court
+    judges the reasoning, not just the answer.'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 364
