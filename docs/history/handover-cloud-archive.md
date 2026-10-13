@@ -3,6 +3,13 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-13 (cloud): SWEEP-1 batch 3 (KS3 part 1; SR-20 stop and Jon's rulings)
+
+- **Stop:** word-problem-decoder GCSE (3 SR-18 overlaps) and equation-builder (31 "expression" items) reached SR-20's count; Jon ruled the same day (fix, no unlist). equation-builder: #338 merged.
+- **Fixed here:** word-problem-decoder gcse_029, 056, 024 and ks3_030 accept their second topic (SR-18; ACCEPT rows; plant on gcse_029); split-it's speed question says "At the same speed" (SR-17; the verifier's pattern needs it, so the old wording fails).
+- **Open, for Jon:** spot-the-error-s1-001 HIGH (ks3_010: the explanation blames the 80 trials, "replaces it 80 times" marked wrong; moving the Stage 2 key needs a ruling); s1-003 (Stage 2 slip items, a class); equatle s1-001 (left to right); 52dle s1-001/s1-002 (false or empty clue facts); and the LOWs.
+- **Class for Jon (running):** Stage 2 "misread phrase" on slip items (spot-the-error); "form an equation" phrases and Forming Expressions (word-problem-decoder, Jon to rule once); rates under Ratio & Proportion (word-problem-decoder s1-003).
+
 ## 2026-10-13 (cloud): equation-builder, Jon's ruling (SWEEP-1 batch 3's stop)
 
 - **Stems:** 27 "Write an expression for X" items now ask for "a formula for X" (keys unchanged). **Keys:** ks3_014 `LCM(420, 315)` (Days, = tiles removed), ks3_033 `2 × r³`, l4_015 `log(16)`, l4_021 `∫₁⁴ 2x dx`. Full list in the PR.
