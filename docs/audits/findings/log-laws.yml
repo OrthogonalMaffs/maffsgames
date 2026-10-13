@@ -147,7 +147,8 @@ findings:
   summary: 'The Solve answer box is inputmode="decimal", and iOS''s decimal pad has no minus key, so 34 of the 418
     typed Solve answers (4 of F2''s 108, 30 of F6''s 60; F5''s 83 are chosen, not typed) could not be typed on an
     iPhone. Already listed in the SWEEP-1 report''s batch 6 for a home-lane contract (the fix is the shared phone
-    keypad, MaffsKeypad, as quadratic-factoriser-s1-002). Report only; not fixed here'
+    keypad, MaffsKeypad, as quadratic-factoriser-s1-002). Fixed in #360: Solve mode mounts the phone keypad with a minus key (NEGATIVE-INPUT, Jon''s ruling of 13 Oct 2026)'
   evidence: '<input id="solveInput" type="text" inputmode="decimal" autocomplete="off" spellcheck="false">;
     counts read from window.LL_SOLVE (SWEEP-1, batch 11; not tested on a device)'
-  status: open
+  status: fixed
+  pr: 360

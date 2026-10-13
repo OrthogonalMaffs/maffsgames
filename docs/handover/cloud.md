@@ -87,10 +87,27 @@ Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
+## 2026-10-13 (cloud): NEGATIVE-INPUT (log-laws, suvat; Jon's input-design ruling)
+
+- **Ruling (Jon, 13 Oct):** mount `schools/assets/keypad.js` with `keys: {minus: true}` in every game where a negative typed answer is possible, as the 11 games that already use it do; the changed touch layout is accepted; keypad.js untouched; games with no possible negative keep their input; whether all typed-numeric games should move is a separate, later question. **Pattern copied: quadratic-factoriser's Formula level** (roots can be negative; calculator.css linked, the surface/font tokens declared on `:root`, a holder div inside the locked container, `MaffsKeypad.mount` with `keys: {minus: true}`).
+- **Changed (for the home lane's check):**
+  - `log-laws`: Solve mode's `#solveInput` (34 negative typed answers, log-laws-s1-005). Mounted once at page load; the keys sit inside `#solveBox`, so `MaffsLock.lock` and `fresh` switch them with the box (no keys code of its own).
+  - `suvat`: Phase 2's `#calcInput` (ALEVEL[34] step 0, v_y = -0.32, suvat-s1-001) and Phase 0's `#p0ux`/`#p0uy`. No Phase 0 key in the bank is negative; it is mounted too so one game does not mix two input styles (Jon can reverse that).
+  - Tested on a 390 px touch profile: real taps on minus, 3, point, 5 type `-3.5` into each; with a mouse the boxes are ordinary inputs, no keypad.
+- **Judged to have no negative answer (input unchanged):**
+  - `split-it`: every generator draws positive integers and builds positive answers (ratios in lowest terms, shares `a*k`, scaled recipe amounts, unit prices, money); nothing subtracts. Money boxes are `type="text" inputmode="decimal"`, the rest `type="number"`.
+  - `screening-room`: the answer is `tp / (tp + fp)` from non-negative counts, a percentage from 0 to 100 (`buildItem`); no bank answer is negative (280 items).
+  - `fermi-lab`: all 325 items' chain references, `acceptedAnswer`s and the figures table (`value:`) are positive estimates (smallest 2e-10); no negative anywhere in the data.
+  - `just-pythag-it-bruv`: side lengths; it already loads keypad.js through MaffsCalc.
+  - Already had a minus key: `simultaneous-solver`.
+- **Not settled by the code, for Jon:** none of the six candidates. **Not built:** the contract's `scripts/check-negative-input.py`. The ruling calls it the home lane's check, and the extracted banks cannot be its evidence: split-it and just-pythag-it-bruv are generators, log-laws' Solve answers are generated at run time, and suvat's negative sits in `steps[].answer`, not a top-level answer field (a check must walk nested fields and carry a declared list for generators).
+- **Next:** SWEEP-1-RULINGS (Jon's order). Step 0: commit his two documents verbatim as `docs/handover/contracts/2026-10-13-sweep-1-rulings-2.md`.
+
 ## 2026-10-13 (cloud): CQ-PLAY-AGAIN-SCREEN (characteristic-quest)
 
 - **Done:** characteristic-quest's `show()` now calls `MaffsLock.screen()`, exactly as eigenvalue-extractor's and eigenvector-engine's (the pattern copied); Play again goes `showMenu()` -> `show('menu')`, so the screen is fresh. `SCREEN_NOT_YET` in `check-answer-lock.py` is empty (the list only shrinks) and its stale ownership sentence is replaced. The game is judged in full with nothing reported.
 - **'answer lock' now waits only on the home lane's GATE_EXCLUDED change (contract FACTS-AND-NOTICE, part E)** (glorious-gantt, the one game left on NOT_YET, is that change's exclusion). `audit-register.py` untouched.
+- **Merged:** #359 (0538080); main's run 1000 green; Jon accepted it as complete (13 Oct).
 - **Findings untouched:** t6-002, t6-004, t6-005, s1-003, s1-004, s1-005 stay open for Jon.
 
 ## 2026-10-13 (cloud): SWEEP-1 batch 12 and the end of the sweep (A-Level and Further Maths, part 3)
@@ -100,19 +117,3 @@ main's last full run is red; watch main's run after merging.
 - **Fixed in batch 12:** complex-converter's six wrong calculator-hint results (SR-8, closing t6-005; every hint pair is now recomputed); matrix-crunch's true wrong options on the singular systems and its shuffled "Same circuit" items; eigenvalue-extractor's "No eigenvalues exist"; truth-will-set-you-free's "any two", symbols, XOR and unnamed output; boolean-blitz's Q38 step and four no-op steps; characteristic-quest, eigenvector-engine and factor-theorem wording. Each verifier fails on the old content and plants it.
 - **Open, for Jon:** see the report's grouped list. **For the home lane:** log-laws' 34 negative typed answers and suvat ALEVEL[34] behind inputmode="decimal"; SR-32 (CMP1) into canon and a figure check in the other chart games; the timer-policy class (SR-23: circle-theorem-spotter, dimension-checker, matrix-crunch, growth-and-decay, characteristic-quest ...); eigenvector-engine's and others' hard-coded logged level.
 - **Next:** nothing from this contract. The sweep's last step is Jon's rulings on the grouped list, which the cloud lane then applies in per-game PRs.
-
-## 2026-10-13 (cloud): CMP1-READABLE-FIGURES (core-maths-paper1; SR-32)
-
-- **Contract:** `docs/handover/contracts/2026-10-13-cmp1-readable-figures.md`. Jon's play-test: Q4's histogram bars at 2.4, 3.6 and 1.2 had no gridlines and labelled ticks only at 0 to 3, so 3.6 could not be read. The fix is in the game's chart-drawing code: the gridline step is the largest of 1, 0.5, 0.2, 0.1 (times a power of ten) at which every plotted value lies on a gridline (Q4 every 0.2, Q12 every 0.1), the labels unchanged; each box-plot number sits over a tick. Q12 and Q9 had the same fault and are fixed with it.
-- **Verifier:** every figure is read (each bar's density has a gridline or labelled tick within 0.5 px and the bar is drawn there; each box-plot value has a labelled tick; gridlines at least 4 px apart at 320 px, measured in Chromium: 4.3 px). Three plants; the old page fails 13 checks.
-- **End of task:** #357 merged and main's run (993) green. `scripts/end-task.py claude/cmp1-readable-figures` REFUSED here (the cloud sandbox has no `gh`, so it cannot report the PR's state); nothing was deleted by hand, so the local worktree and branch are left for a session that has `gh`.
-- **Slug:** the contract wrote core-maths-paper-1; the game, verifier and findings file are core-maths-paper1.
-- **For the home lane:** SR-32 is not yet in canon (the contract leaves it to the home lane). Other games that draw charts have no check of this kind (chart-interrogator, graph-sketcher, stat-attack and others): a verifier rule per game, as here. The 320 px spacing needed a taller chart for a 0.1 grid (Q12's drawing is 364 units tall).
-- **Next:** batch 12 (factor-theorem, complex-converter, matrix-crunch, characteristic-quest, eigenvalue-extractor, eigenvector-engine, boolean-blitz, truth-will-set-you-free), then the final "for Jon" list and the SWEEP_DONE note.
-
-## 2026-10-13 (cloud): SWEEP-1 batch 11 (A-Level, part 2: mechanics, logs, binomials, proofs)
-
-- **No SR-20 level.** Three HIGH items fixed: moments-master ("At the pivot" true as a wrong option), binomial-blaster ("r > n" true), proof-builder (a second valid order of the cos² + sin² proof rejected, SR-24; the verifier now holds every reviewed order).
-- **Fixed in batch 11:** dimension-checker's four verdict-sharing options (SR-31); force-resolver's shuffled "Same system" item, stated beams, 18 unstated precisions and 21 unchecked working lines; curling-friction's head-on collisions, horizontal surfaces and a duplicate KE option; moments-master's eight precisions, perpendicular, opposite sides, beam weight; log-laws' undeclared log₁₀ in Laws mode; proof-builder's induction domains and wording; binomial-blaster's two true options; partial-fractions-duel's method item and hint check. Each verifier fails on the old content and plants it.
-- **Open, for Jon:** proof-builder's TRUE option appearing only where it is the key (a design choice), a lemma order, key texts; log-laws' "Change of Base" label; binomial-blaster's ≈ stems and the coefficient item; dimension-checker's live timer (SR-23); curling-friction's "Worked solution" heading. **For the home lane:** log-laws' 34 negative typed answers behind inputmode="decimal".
-- **Next:** (done: see the CMP1-READABLE-FIGURES entry above.)

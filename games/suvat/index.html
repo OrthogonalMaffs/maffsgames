@@ -18,12 +18,15 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<link rel="stylesheet" href="../../schools/assets/calculator.css">
 <style>
   /* canon 7.5 GCSE+ row: dark theme, Outfit + JetBrains Mono, unique accent per game.
      Variable names are kept so every existing rule keeps working; only the values move.
      --navy is this file's "primary readable text" (13 colour uses) and --white its card
      surface (8 background uses), so both are remapped rather than renamed. */
-  :root{--bg:#12101a;--navy:#edf2f4;--red:#ef4444;--accent:#38bdf8;--yellow:#fbbf24;--green:#4ade80;--wrong:#f43f5e;--white:#1e1b2e;--text:#edf2f4;--muted:#9aa3b2;--border:#332d4d;--header:#1a1726;}
+  :root{--bg:#12101a;--navy:#edf2f4;--red:#ef4444;--accent:#38bdf8;--yellow:#fbbf24;--green:#4ade80;--wrong:#f43f5e;--white:#1e1b2e;--text:#edf2f4;--muted:#9aa3b2;--border:#332d4d;--header:#1a1726;
+    /* for the shared phone keypad (calculator.css, tokens only) */
+    --surface:#1e1b2e;--surface-alt:#2a2540;--font-text:'Outfit',sans-serif;--font-num:'JetBrains Mono',monospace;--hint:#9aa3b2;--on-accent:#12101a;}
   *{margin:0;padding:0;box-sizing:border-box;}
   body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',sans-serif;color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;}
   .header{width:100%;background:var(--header);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;gap:16px;}
@@ -146,6 +149,9 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 }
 -->
 <script src="../../schools/assets/answer.js"></script>
+<!-- The phone keypad for the typed answers (MaffsKeypad, canon 4.4), with a minus key: a vertical component or the
+     last step of a projectile question can be negative (ALEVEL[34]: v_y = -0.32) and a phone's decimal pad (iOS) has none. -->
+<script src="../../schools/assets/keypad.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -211,6 +217,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
           <span class="p0-unit">m/s</span>
         </div>
       </div>
+      <div id="p0Keypad"></div>
       <button class="calc-btn" onclick="submitPhase0()">CHECK</button>
       <div class="feedback" id="fb0"></div>
     </div>
@@ -227,6 +234,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
       <div class="step-label" id="stepLabel" style="display:none"></div>
       <div class="calc-q" id="calcQ"></div>
       <input type="text" inputmode="decimal" autocomplete="off" class="calc-input" id="calcInput" placeholder="?" onkeydown="if(event.key==='Enter')submitCalc()">
+      <div id="calcKeypad"></div>
       <br>
       <button class="calc-btn" onclick="submitCalc()">CHECK ANSWER</button>
       <div class="feedback" id="fb2"></div>
@@ -583,6 +591,16 @@ function renderRefPanel(){
   Array.prototype.forEach.call(chips, function(c){ setEq(c, c.dataset.eq); });
 }
 window.addEventListener('DOMContentLoaded', renderRefPanel);
+
+// The phone keypad (MaffsKeypad, canon 4.4) with a minus key, as quadratic-factoriser's Formula level mounts it: Phase 0's
+// two boxes share one, Phase 2's box has its own. With a mouse the boxes are ordinary inputs. The keys sit inside
+// #phase0 and #phase2, so MaffsLock.lock/fresh (canon 7.6.0) switch them with the boxes.
+if (window.MaffsKeypad) {
+  MaffsKeypad.mount(document.getElementById('p0Keypad'), { targets: [document.getElementById('p0ux'), document.getElementById('p0uy')],
+    keys: { minus: true }, maxLength: 10, keepInView: document.querySelector('#phase0 .p0-inputs'), foldInset: 44 });
+  MaffsKeypad.mount(document.getElementById('calcKeypad'), { targets: [document.getElementById('calcInput')],
+    keys: { minus: true }, maxLength: 10, keepInView: document.getElementById('calcInput'), foldInset: 44 });
+}
 
 /* ── Level detection ── */
 const level = MaffsLevel.resolve({slug:'suvat',levels:['alevel','level4'],fallback:'level4'});
