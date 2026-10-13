@@ -44,7 +44,9 @@ findings:
   level: all
   where: games/fraction-equivalence/index.html:134 (start screen how-to)
   summary: 'The cross-multiplication rule names letters it never defines: which of a, b, c, d is which numerator or
-    denominator is left for the student to guess (the rule holds only for a/b and c/d). The in-game hint, n1×d2 against
-    n2×d1, uses its own order. Wording, open for Jon'
+    denominator is left for the student to guess (the rule holds only for a/b and c/d). The in-game hint, n1×d2
+    against n2×d1, uses its own order. Wording, open for Jon Fixed under R2: the rule reads "for a/b and c/d,
+    they''re equivalent if a×d = b×c".'
   evidence: 'Start screen: "Cross multiply to check: if a×d = b×c, they''re equivalent" (SWEEP-1, batch 1)'
-  status: open
+  status: fixed
+  pr: 369

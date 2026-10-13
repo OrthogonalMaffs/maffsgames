@@ -400,7 +400,7 @@ ALEVEL = [
     ('u_{n+1} = 2u_n, \\; u_1 = 3|Find u\u2085', V(rec(3, lambda u, i: 2 * u, 5))),
     ('u_{n+1} = u_n + n, \\; u_1 = 1|Find u\u2084', V(rec(1, lambda u, i: u + i, 4))),
     ('u_{n+1} = u_n^2 - 1, \\; u_1 = 2|Find u\u2083', V(rec(2, lambda u, i: u * u - 1, 3))),
-    ('Prove S_n for a = 1, d = 1', ('verdict', 'Substitute: \\dfrac{n}{2}(2 + n - 1) = \\dfrac{n(n+1)}{2}')),
+    ('Prove S_n for a = 1, d = 1', ('verdict', 'Substitute: \\(\\dfrac{n}{2}(2 + n - 1) = \\dfrac{n(n+1)}{2}\\)')),
     ('0.\\dot{9} = \\displaystyle\\sum_{r=1}^{\\infty} 9 \\times 10^{-r}|What does this sum equal?',
      V(F(9, 10) / (1 - F(1, 10)))),
     ('a = 12, \\; S_\\infty = 36|Find r', V(1 - F(12, 36))),
@@ -516,10 +516,12 @@ def check_bank(fails, bank):
         for i, q in enumerate(bank[lv]):
             w = '%s[%d] (%s | %s | %s)%s' % (lv, i, q['seq'], q.get('q', ''), q['ask'],
                                              ' (%s)' % AUDIT[(lv, i)] if (lv, i) in AUDIT else '')
+            if re.fullmatch(r'a = -?[\d.]+, r = -?[\d.]+', q['seq']) and 'ar^{n-1}' not in q.get('q', ''):
+                fails.append('%s: an a/r item without the T_n = ar^{n-1} line leaves the type to the letter r (R2, sequence-solver-s1-004)' % w)
             try:
                 if lv == 'alevel':
                     words, target = ALEVEL[i]
-                    text = q.get('q', '') + '|' + q['ask']
+                    text = (q.get('q', '') + '|' + q['ask']).replace('\\(', '').replace('\\)', '')   # MaffsText delimiters
                     for part in words.split('|'):
                         if part not in text:
                             raise ValueError('the item must say "%s" for its answer to hold' % part)
@@ -543,6 +545,16 @@ SWEEP_JS = r"""() => {
       if (shown.length !== 4) out.push([lv, i, pick, shown.length + ' options on screen']);
       const btn = shown.find(x => x.dataset.val === pick);
       if (!btn) { out.push([lv, i, pick, 'not on screen']); continue; }
+      // R8 (SWEEP-1 sequence-solver-s1-002, -003): no raw TeX on screen, and prose is never set in maths mode
+      const vis = el => { const c = el.cloneNode(true); c.querySelectorAll('.katex-mathml').forEach(n => n.remove()); return c.textContent; };
+      const promptText = vis(document.getElementById('prompt'));
+      if (/\\|[A-Za-z]_[A-Za-z{]/.test(promptText)) out.push([lv, i, pick, 'raw TeX in the prompt: ' + promptText]);
+      for (const o of shown) {
+        if (/\\/.test(vis(o))) out.push([lv, i, o.dataset.val, 'raw TeX in an option: ' + vis(o)]);
+        const bare = o.dataset.val.replace(/\\\(.*?\\\)/g, '').replace(/\\text\{[^}]*\}/g, '').replace(/\\[a-zA-Z]+/g, '');
+        if (o.querySelector('.katex') && !/\\\(/.test(o.dataset.val) && /\b[A-Z][a-z]+\b|[a-z]{3,}/.test(bare))
+          out.push([lv, i, o.dataset.val, 'prose set in maths mode (spaces lost, italic): ' + vis(o)]);
+      }
       btn.click();
       const right = btn.classList.contains('correct');
       if (right !== (pick === q.correct)) out.push([lv, i, pick, right ? 'marked right' : 'marked wrong']);
@@ -561,7 +573,11 @@ def play(fails, html):
             ctx = browser.new_context(viewport={'width': 390, 'height': 844})
             ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)   # the sweep clicks as soon as showQ() renders
             page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
-            ctx.route(lambda url: not url.startswith(base) and '/katex@' not in url, lambda route: route.abort())
+            ctx.route(lambda url: not url.startswith(base), lambda route: route.abort())
+            # KaTeX comes from the pinned local copy, never the CDN (the verifier needs no outside host)
+            ctx.route(lambda url: url.startswith(bc.KATEX_CDN), lambda route: (
+                route.fulfill(**bc.real_font_response(route.request.url)) if bc.real_font_response(route.request.url)
+                else route.abort()))
             ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
                 status=200, content_type='text/html; charset=utf-8', body=html))
             page = ctx.new_page()
@@ -593,6 +609,10 @@ PLANTS = [
     ('alevel[49]', 'r-001: 0.999... beside the key 1', "correct:'1',d:['10','\\\\dfrac{9}{10}','\\\\infty']",
      "correct:'1',d:['0.999...','\\\\dfrac{9}{10}','\\\\infty']"),
     ('gcse[6]', 'B11: 10 - 3n beside -3n + 10', "d:['-3n + 10','3n + 7','-3n + 7']", "d:['-3n + 10','10 - 3n','-3n + 7']"),
+    ('alevel[48]', 'R8: raw TeX in the prompt', "ask:'Prove \\\\(S_n\\\\) for \\\\(a = 1, d = 1\\\\) gives \\\\(\\\\dfrac{n(n+1)}{2}\\\\)'",
+     "ask:'Prove S_n for a = 1, d = 1 gives \\\\dfrac{n(n+1)}{2}'"),
+    ('alevel[32]', 'R8: a prose key set in maths mode', "correct:'No, |r| ≥ 1'", "correct:'No, |r| \\\\geq 1'"),
+    ('gcse[39]', 'R2: a/r item without the formula line', "{seq:'a = 2, r = -2',q:'T_n = ar^{n-1}',", "{seq:'a = 2, r = -2',q:'',"),
     ('gcse[48]', 'SR-17: fill the gaps, type unstated', "ask:'If arithmetic, fill the gaps'", "ask:'Fill in the gaps'"),
 ]
 

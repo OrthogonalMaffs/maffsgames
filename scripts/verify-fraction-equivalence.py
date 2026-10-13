@@ -178,6 +178,9 @@ def open_page(pw, base, html, level):
 
 def play(fails, html):
     from playwright.sync_api import sync_playwright
+    # R2 (SWEEP-1 fraction-equivalence-s1-001): the cross-multiplication rule says which fractions a, b, c and d belong to
+    if "Cross multiply to check: for a/b and c/d, they're equivalent if a\u00d7d = b\u00d7c" not in html:
+        fails.append("how-to: the cross-multiplication rule must name its fractions: 'for a/b and c/d, they're equivalent if a\u00d7d = b\u00d7c'")
     proc, base = bc.start_stub_server()
     stats = {}
     try:
@@ -215,6 +218,8 @@ PLANTS = [
      'const correct=val===cur.equiv;', 'const correct=true;'),
     ('a wrong figure in the working (n1 × d1)', 'working',
      'const cross=cur.n1*cur.d2;', 'const cross=cur.n1*cur.d1;'),
+    ('the cross-multiplication rule with undefined letters', 'how-to',
+     "for a/b and c/d, they're equivalent if a\u00d7d = b\u00d7c", "if a\u00d7d = b\u00d7c, they're equivalent"),
     ('a generator fault (offset 0, re-roll guard gone)', 'keyed',
      [('d2=d1*mult+randInt(1,3);', 'd2=d1*mult+randInt(0,3);'), ('while(n1*d2===n2*d1);', 'while(false);')]),
 ]

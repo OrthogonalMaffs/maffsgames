@@ -61,10 +61,12 @@ findings:
   class: NEW:text-contradicts-content
   level: all
   where: games/prime-factorisation/index.html:320, :326 (pressPrime)
-  summary: 'A tap is rejected when the prime does not divide what is LEFT (remaining % p), but the feedback says
-    "p is not a factor here", which is false of the target whenever p is a factor already used up. On the last life
+  summary: 'A tap is rejected when the prime does not divide what is LEFT (remaining % p), but the feedback says "p is
+    not a factor here", which is false of the target whenever p is a factor already used up. On the last life
     the screen contradicts itself. Marking is right; the words are not (SR-6). New wording is open for Jon (the
-    verifier asserts the exact strings)'
+    verifier asserts the exact strings) Fixed under Part 2 #2: the feedback reads "p doesn''t go into what''s
+    left (r)", on the last life as well; the verifier asserts the new strings.'
   evidence: 'Target 12, taps 2, 2, 2: "2 is not a factor here!"; on the last life "2 is not a factor here. Out of lives:
     12 = 2 × 2 × 3" (SWEEP-1, batch 1)'
-  status: open
+  status: fixed
+  pr: 369
