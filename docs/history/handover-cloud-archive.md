@@ -3,6 +3,13 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-13 (cloud): CQ-PLAY-AGAIN-SCREEN (characteristic-quest)
+
+- **Done:** characteristic-quest's `show()` now calls `MaffsLock.screen()`, exactly as eigenvalue-extractor's and eigenvector-engine's (the pattern copied); Play again goes `showMenu()` -> `show('menu')`, so the screen is fresh. `SCREEN_NOT_YET` in `check-answer-lock.py` is empty (the list only shrinks) and its stale ownership sentence is replaced. The game is judged in full with nothing reported.
+- **'answer lock' now waits only on the home lane's GATE_EXCLUDED change (contract FACTS-AND-NOTICE, part E)** (glorious-gantt, the one game left on NOT_YET, is that change's exclusion). `audit-register.py` untouched.
+- **Merged:** #359 (0538080); main's run 1000 green; Jon accepted it as complete (13 Oct).
+- **Findings untouched:** t6-002, t6-004, t6-005, s1-003, s1-004, s1-005 stay open for Jon.
+
 ## 2026-10-13 (cloud): SWEEP-1 batch 12 and the end of the sweep (A-Level and Further Maths, part 3)
 
 - **SWEEP-1 is finished:** every live game except glorious-gantt has been read (batches 1 to 12), 13 SR-20 levels fixed the same day under SR-30. The home lane can set SWEEP_DONE = True (audit-register.py was not touched). The report's closing section (`docs/audits/sweep-1-2026-10.md`) holds the list for Jon, grouped by class.
