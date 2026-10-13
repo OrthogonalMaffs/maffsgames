@@ -26,7 +26,8 @@ findings:
     checkStep3(), and plants the old bands'
   evidence: 'correct = Math.abs(val - cv) < 0.002; correct = Math.abs(val - q.pValue) < 0.006; if (Math.abs(val -
     expected) <= 0.02) (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 353
 - id: test-the-claim-s1-002
   severity: HIGH
   jc: false
@@ -38,7 +39,8 @@ findings:
     a two-tailed Normal item''s −1.96 likewise. Fixed: either signed boundary where the region has two (lower and
     two-tailed); an upper-tail correlation still takes only +cv; played in the verifier'
   evidence: "C4 criticalValue: 0.4000, tailDir 'lower' (SWEEP-1, batch 10)"
-  status: open
+  status: fixed
+  pr: 353
 - id: test-the-claim-s1-003
   severity: HIGH
   jc: false
@@ -52,7 +54,8 @@ findings:
     that rewrites the key''s context, and plants the old swap'
   evidence: "wrongs.push(swapped(/decreased|increased|differs|fallen|exceeds|biased/, 'changed significantly', ...))
     (SWEEP-1, batch 10)"
-  status: open
+  status: fixed
+  pr: 353
 - id: test-the-claim-s1-004
   severity: MEDIUM
   jc: false
@@ -65,7 +68,8 @@ findings:
     p = 14/22; λ = 20, λ = 9, λ = 18); the verifier fails a composite in the accepted direction or an unscaled rate,
     and plants B2''s old option'
   evidence: "B2 h0Distractors ['p = 0.5','p \\\\leq 0.5','\\\\mu = 0.5','p \\\\neq 0.5'] (SWEEP-1, batch 10)"
-  status: open
+  status: fixed
+  pr: 353
 - id: test-the-claim-s1-005
   severity: MEDIUM
   jc: false
@@ -76,7 +80,8 @@ findings:
     ridge of 1 km² records 5 strikes in one year."'
   evidence: '"A forest records an average of 2 lightning strikes per square kilometre per year. An exposed ridge
     records 5 strikes in one year." (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 353
 - id: test-the-claim-s1-006
   severity: MEDIUM
   jc: true
