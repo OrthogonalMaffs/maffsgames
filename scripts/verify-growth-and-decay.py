@@ -265,14 +265,17 @@ PLAY_JS = """async (a) => {
   const out = {};
   try {
     G.questions = [q]; G.qIdx = 0; G.level = a.level;
+    MaffsLock.FRESH_MS = 0;   // every try is played at once, each on a freshly loaded sub-question
     const order = q.sq_order.filter(n => n <= 3 || (n === 4 && G.level !== 'core'));
-    for (const [n, v] of Object.entries(a.values)) {
-      G.sqIdx = order.indexOf(Number(n));
+    for (const [tag, v] of Object.entries(a.values)) {
+      const n = Number(tag.split(':')[0]);
+      G.sqIdx = order.indexOf(n);
       if (G.sqIdx < 0) continue;
       loadSQ(q);
+      document.getElementById('sqFb').innerHTML = '';
       document.getElementById('sqInput').value = v;
-      if (Number(n) === 4) checkSQ4(); else checkNumSQ(Number(n));
-      out[n] = document.getElementById('sqFb').textContent;
+      if (n === 4) checkSQ4(); else checkNumSQ(n);
+      out[tag] = document.getElementById('sqFb').textContent;
     }
   } finally { window.setTimeout = realTimeout; }
   return out;
@@ -280,6 +283,10 @@ PLAY_JS = """async (a) => {
 
 
 def typed_values(s):
+    """What is typed into each sub-question, tagged 'n:kind': the true value as asked ('right', marked correct); one
+    unit away at the asked precision ('up', 'down') and, on sq4, 0 and the sign error ('zero', 'neg'), none marked
+    correct; the true value to more figures than asked ('long', the format message, unmarked). Jon, 2 Oct 2026 (todo
+    1.36): marked to the precision the question states (growth-and-decay-s1-005)."""
     vals = {}
     for n in (1, 3, 4):
         sq = s.get('sq%d' % n)
@@ -289,15 +296,34 @@ def typed_values(s):
             true, how = recompute(s, 'sq%d' % n)
         except Exception:  # noqa: BLE001  (reported by check_scenario)
             continue
-        vals[str(n)] = format(round_as(true, how), 'f') if how else format(to_decimal(true).normalize(), 'f')
+        if not how:
+            vals['%d:right' % n] = format(to_decimal(true).normalize(), 'f')
+            continue
+        r = round_as(true, how)
+        unit = Decimal(1).scaleb(-how[1]) if how[0] == 'dp' else Decimal(1).scaleb(r.adjusted() - how[1] + 1)
+        vals['%d:right' % n] = format(r, 'f')
+        vals['%d:up' % n] = format(r + unit, 'f')
+        vals['%d:down' % n] = format(r - unit, 'f')
+        longer = round_as(true, ('sf', 9)) if how[0] == 'sf' else round_as(true, ('dp', how[1] + 6))
+        if longer != r:
+            vals['%d:long' % n] = format(longer, 'f')
+        if n == 4:
+            vals['4:zero'] = '0'
+            vals['4:neg'] = format(-r, 'f')
     return vals
 
 
 def check_played(rep, scenarios, played):
     for s in scenarios:
-        for n, text in (played.get(s['id']) or {}).items():
-            if 'Correct' not in text:
+        for tag, text in (played.get(s['id']) or {}).items():
+            n, kind = tag.split(':')
+            if kind == 'right' and 'Correct' not in text:
                 rep.fail(s['id'], 'marking (sq%s)' % n, 'typed the true value as asked; the game said %r' % text.strip()[:100])
+            elif kind in ('up', 'down', 'zero', 'neg') and 'Correct' in text:
+                rep.fail(s['id'], 'marking (sq%s %s)' % (n, kind), 'a wrong value was marked correct: %r' % text.strip()[:100])
+            elif kind == 'long' and ('Correct' in text or 'Incorrect' in text or 'Right value' not in text):
+                rep.fail(s['id'], 'marking (sq%s long)' % n, 'the true value to more figures than asked should get the format '
+                         'message, unmarked (SR-3); the game said %r' % text.strip()[:100])
 
 
 def load(patch_js=None):
@@ -371,6 +397,17 @@ def selftest(bank, graphs, played):
     _, _, lie = load("""(() => { const s = Object.values(Q).flat().find(q => q.id === %r);
         s.sq4.answer = s.sq4.answer + 1; })()""" % target)
     expect('sq4 marked against a wrong key', lambda rep: check_played(rep, clean[:1], lie))
+    _, _, old = load("""(() => { window.sqMark = function (sq, raw) { const v = parseFloat(raw);
+        const tol = sq === G.questions[G.qIdx].sq4 ? 0.15 : 0.02 * Math.abs(sq.answer) + 0.01;
+        return {res: Math.abs(v - sq.answer) <= tol ? 'correct' : 'wrong', key: String(sq.answer), opts: {}}; }; })()""")
+    scen = [s for lvl in bank.values() for s in lvl]
+    for name, sid, tag in (('old sq1 band (CM1 735, 736 accepted)', 'CM1', 'marking (sq1 up)'),
+                           ('old sq4 band (L4_1, 0 accepted)', 'L4_1', 'marking (sq4 zero)')):
+        rep = Report()
+        check_played(rep, scen, old)
+        caught = any(f.startswith(sid + ' ' + tag) for f in rep.fails)
+        ok = ok and caught
+        lines.append('  self-test %-34s %s' % (name, 'caught' if caught else '*** MISSED ***'))
     return ok, lines
 
 

@@ -141,6 +141,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/answer.js"></script>
 <!-- The on-screen calculator with its scientific keys (canon §4.4 "scientific"); keypad.js first, as MaffsCalc composes it. -->
 <script src="../../schools/assets/keypad.js"></script>
 <script src="../../schools/assets/calculator.js"></script>
@@ -447,7 +448,7 @@ alevel: [
      wrong:['Followers increase by 55 per week','Followers grow by 55% per week','Followers double every 0.055 weeks']},
    sq3:{prompt:'Given that T = 1200 when n = 0, find the value of k.',answer:1200,unit:''},
    sq4:{prompt:'Find n when T = 5000. Give your answer to 3 significant figures.',answer:25.9,hint:'\\frac{5000}{1200} = e^{0.055n} \\Rightarrow n = \\frac{\\ln(5000/1200)}{0.055}'}},
-  {id:'AL10',modelLatex:'R = 80e^{-0.025t}',context:'Radiation remaining (%). t = years.',
+  {id:'AL10',modelLatex:'R = 80e^{-0.025t}',context:'Radiation level (% of a reference level). t = years.',
    growth:false,graphFn:(x)=>80*Math.exp(-0.025*x),graphXMax:80,graphYLabel:'R%',graphXLabel:'t',
    sq_order:[1,2,3,4],
    sq1:{prompt:'Use the model to calculate R when t = 40. Give your answer to 3 significant figures.',answer:29.4,sf:3,unit:'%'},
@@ -785,16 +786,39 @@ function showHintBtn(){
 // ============================================================
 //  CHECK ANSWERS
 // ============================================================
+// Each typed sub-question is marked at the precision its prompt states, never to a band round the key (Jon, 2 Oct
+// 2026, todo 1.36: "mark to the precision the question states"; growth-and-decay-s1-005): significant figures or
+// decimal places by the shared MaffsAnswer.decimal(), an answer that needs no rounding by MaffsAnswer.exact().
+// 'format' (the right value at the wrong precision) and 'unreadable' are never marked (canon 7.1.3, SR-3).
+function sqMark(sq,raw){
+  const m=/to (\d+) significant figures?/.exec(sq.prompt), d=/to (\d+) decimal places?/.exec(sq.prompt);
+  if(m){
+    const sf=+m[1], e=Math.floor(Math.log10(Math.abs(sq.answer))), dp=sf-1-e;
+    const key=dp>=0?sq.answer.toFixed(dp):String(Math.round(sq.answer/Math.pow(10,-dp))*Math.pow(10,-dp));
+    return {res:MaffsAnswer.decimal(raw,key,dp),key:key,opts:{sf:sf}};
+  }
+  if(d){const dp=+d[1],key=sq.answer.toFixed(dp);return {res:MaffsAnswer.decimal(raw,key,dp),key:key,opts:{dp:dp}};}
+  return {res:MaffsAnswer.exact(raw,sq.answer),key:String(sq.answer),opts:{}};
+}
+// the key as the student writes it: a £ before it, a unit after
+function sqShow(sq,key){return sq.unit==='£'?'£'+key:key+(sq.unit?(sq.unit==='%'?'%':' '+sq.unit):'');}
+function sqUnmarked(r,raw,fb){
+  if(r.res!=='format'&&r.res!=='unreadable')return false;
+  fb.innerHTML=`<div class="feedback wrong">${MaffsAnswer.message(r.res,raw,r.opts)}</div>`;
+  return true;
+}
+
 function checkNumSQ(sqNum){
   const q=G.questions[G.qIdx],sq=q['sq'+sqNum];
-  const val=parseFloat($('sqInput').value);if(isNaN(val))return;
+  const raw=$('sqInput').value;if(!raw.trim())return;
+  const r=sqMark(sq,raw);
+  if(sqUnmarked(r,raw,$('sqFb')))return;   // not marked: the student resubmits
   if(!MaffsLock.lock($('qPanel')))return;   // one mark per attempt (canon 7.6.0)
   const fb=$('sqFb');G.totalSQs++;
 
-  const tol=sqNum===3?Math.max(0.005*Math.abs(sq.answer),0.05):0.02*Math.abs(sq.answer)+0.01;
-  if(Math.abs(val-sq.answer)<=tol){
+  if(r.res==='correct'){
     G.correctSQs++;
-    fb.innerHTML=`<div class="feedback correct">Correct! ${sq.unit?sq.unit+' ':''}${sq.answer}</div>`;
+    fb.innerHTML=`<div class="feedback correct">Correct! ${sqShow(sq,r.key)}</div>`;
     mfg('question_answered',{game_slug:'growth-and-decay',level:G.level,correct:true,question_index:G.totalSQs});
     MaffsLock.timer(()=>{G.sqIdx++;loadSQ(q);},1000);
   } else {
@@ -830,13 +854,15 @@ function checkMCQ(idx,correct){
 
 function checkSQ4(){
   const q=G.questions[G.qIdx],sq=q.sq4;
-  const val=parseFloat($('sqInput').value);if(isNaN(val))return;
+  const raw=$('sqInput').value;if(!raw.trim())return;
+  const r=sqMark(sq,raw);
+  if(sqUnmarked(r,raw,$('sqFb')))return;   // not marked: the student resubmits
   if(!MaffsLock.lock($('qPanel')))return;   // one mark per attempt (canon 7.6.0)
   const fb=$('sqFb');G.totalSQs++;G.sq4Attempts++;
 
-  if(Math.abs(val-sq.answer)<=0.15){
+  if(r.res==='correct'){
     G.correctSQs++;
-    fb.innerHTML=`<div class="feedback correct">Correct! Answer: ${sq.answer}</div>`;
+    fb.innerHTML=`<div class="feedback correct">Correct! Answer: ${r.key}</div>`;
     MaffsLock.timer(()=>{G.sqIdx++;loadSQ(q);},1000);
   } else {
     G.qPenalties++;G.penalties++;G.totalSQs--;G.sqWrongAttempts++; // Don't double-count retries
@@ -924,7 +950,7 @@ const calc=window.MaffsCalc?MaffsCalc.mount($('calc'),{keys:'scientific'}):null;
     K('P = 200 \\times 1.15^t')+
     'where '+k('P')+' is the population and '+k('t')+' is time in hours.<br><br>'+
     'Find the population after 6 hours:'+
-    K('P = 200 \\times 1.15^6 = 200 \\times 2.313 \\ldots = 462.7')+
+    K('P = 200 \\times 1.15^6 = 200 \\times 2.313 \\ldots = 462.6')+
     'So the population is approximately <b>463</b> bacteria.';
 
   document.getElementById('methodInterpret').innerHTML=
