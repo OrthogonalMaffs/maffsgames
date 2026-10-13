@@ -81,7 +81,8 @@ findings:
     F01''s labels in Chromium; plant'
   evidence: '"A ticket costs £18.95. Estimate the cost of 42 tickets." nums ["18.95","42"], money: true (SWEEP-1,
     batch 9)'
-  status: open
+  status: fixed
+  pr: 351
 - id: estimation-engine-s1-002
   severity: MEDIUM
   jc: false
@@ -93,7 +94,8 @@ findings:
     non-money item accepts it. Fixed: ''format'' shows the money message and the student resubmits, unmarked; the
     verifier types £20.0 and £800.0 on F01 and requires the message with no mark'
   evidence: 'checkRounding and checkEstimate stopped only on ''unreadable'' (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 351
 - id: estimation-engine-s1-003
   severity: MEDIUM
   jc: false

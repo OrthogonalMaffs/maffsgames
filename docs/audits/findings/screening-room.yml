@@ -221,7 +221,8 @@ findings:
     unmarked (SR-3); the verifier plays the key with and without a typed %, the decimal form and the unit, planted'
   evidence: 'Hint "as a percentage to 2 decimal places (e.g. 1.25%) or as a decimal to 4 decimal places (e.g. 0.0125)";
     keys 0.98% / 0.0098 (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 351
 - id: screening-room-s1-002
   severity: LOW
   jc: false
@@ -232,7 +233,8 @@ findings:
     size, but every count applies it to all 49,900 people with no prohibited item. Fixed: "of people with no
     prohibited item"; the verifier bars the old phrase, planted'
   evidence: 'key 100/3,593 = 2.8% (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 351
 - id: screening-room-s1-003
   severity: LOW
   jc: false
@@ -243,7 +245,8 @@ findings:
     answer is marked rounded to the stated places and a fraction is never marked. Fixed: "Calculate the probability,
     as a percentage or a decimal, to the places the question gives"; barred, planted'
   evidence: 'markCalc: a fraction returns "Right value, but as a fraction" (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 351
 - id: screening-room-s1-004
   severity: LOW
   jc: false
@@ -255,7 +258,8 @@ findings:
     t4-016 fixed the same in phase 3. Fixed: "If a result is positive, how likely is it to be real?"; barred,
     planted'
   evidence: 'Prompt text (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 351
 - id: screening-room-s1-005
   severity: LOW
   jc: false

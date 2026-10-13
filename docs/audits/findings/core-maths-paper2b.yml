@@ -47,7 +47,8 @@ findings:
     installation alone is more than one year''s savings of £24,000"; the verifier fails any wrong option with the
     key''s verdict, on every item, and plants two'
   evidence: 'Q33 stem "Which option has the higher expected value?" key "A — EV = £2,200" (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 351
 - id: core-maths-paper2b-s1-002
   severity: LOW
   jc: true
@@ -69,7 +70,8 @@ findings:
     to 4 decimal places."; pinned in the verifier, planted. Q13''s "−£0.33" for −£1/3 is to the penny, the money
     convention, so left'
   evidence: "options ['0.0025', '0.0020', '0.0050', '0.0500'] (SWEEP-1, batch 9)"
-  status: open
+  status: fixed
+  pr: 351
 - id: core-maths-paper2b-s1-004
   severity: LOW
   jc: false
@@ -80,7 +82,8 @@ findings:
     damage, which the stem never said (SR-17). Fixed: "Assume the defences prevent all flood damage."; pinned,
     planted'
   evidence: 'key "£1,440,000" (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 351
 - id: core-maths-paper2b-s1-005
   severity: MEDIUM
   jc: false

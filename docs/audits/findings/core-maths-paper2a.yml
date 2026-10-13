@@ -54,7 +54,8 @@ findings:
     working gives 16.4% "not 10%"; the verifier pins both, and plants the old stem'
   evidence: 'table 61, 64, 68, 71; "The CEO says: "Satisfaction has increased by nearly 20% since 2020."" (SWEEP-1,
     batch 9)'
-  status: open
+  status: fixed
+  pr: 351
 - id: core-maths-paper2a-s1-004
   severity: MEDIUM
   jc: false
@@ -101,4 +102,5 @@ findings:
     headline understates it", Q23 "Yes — 95% of the data lies within the interval"; the verifier fails any wrong
     option with the key''s verdict, planted'
   evidence: 'Found by the SR-31 scan of batch 9''s multiple-choice games (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 351

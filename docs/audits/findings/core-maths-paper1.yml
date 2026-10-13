@@ -83,7 +83,8 @@ findings:
     (SR-17). Fixed: "Key: 4 | 5 | 1 means 54 for Group A and 51 for Group B" under the table; the verifier requires a
     key whose values match a stem and leaves the diagram has, planted'
   evidence: 'Stem "What is the difference between the medians?" key 2 (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 351
 - id: core-maths-paper1-s1-002
   severity: MEDIUM
   jc: true
@@ -95,7 +96,8 @@ findings:
     averaged"; the verifier bars the old option, planted'
   evidence: '"A survey of 500 people finds that those who eat breakfast earn on average £4,200 more per year." (SWEEP-1,
     batch 9)'
-  status: open
+  status: fixed
+  pr: 351
 - id: core-maths-paper1-s1-003
   severity: LOW
   jc: true
@@ -106,7 +108,8 @@ findings:
     sound advice, offered as a wrong reason. Fixed: "Asking the first 40 people makes the sample random, so it cannot
     be biased" (convenience read as random); barred'
   evidence: 'Q8 options as served (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 351
 - id: core-maths-paper1-s1-004
   severity: MEDIUM
   jc: true
@@ -118,7 +121,8 @@ findings:
     and was offered as wrong. Fixed: that option is "…because their standard deviations are similar" (8 and 14, a
     misreading); barred'
   evidence: '"Class X: mean 62, median 65, SD 8. Class Y: mean 62, median 54, SD 14." (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 351
 - id: core-maths-paper1-s1-005
   severity: LOW
   jc: false
@@ -128,7 +132,8 @@ findings:
   summary: '"What is the best estimate for the median weight?" offered classes, not estimates. Fixed: "Which interval
     contains the median weight?"'
   evidence: "options ['Between 1 kg and 2 kg', 'Exactly 2 kg', ...] (SWEEP-1, batch 9)"
-  status: open
+  status: fixed
+  pr: 351
 - id: core-maths-paper1-s1-006
   severity: LOW
   jc: false
@@ -163,4 +168,5 @@ findings:
     misleading, because it leaves out the £85,000 salary", Q26 "No — her bills come to £1,868, more than her pay"
     (the rent counted twice); the verifier fails any wrong option with the key''s verdict, planted'
   evidence: 'Found by the SR-31 check added to the verifier (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 351
