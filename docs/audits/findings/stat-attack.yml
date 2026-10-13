@@ -67,11 +67,15 @@ findings:
   class: NEW:text-contradicts-content
   level: gcse, core
   where: games/stat-attack/index.html contextLine (G8, CM2, CM5, CM7, CM10, CM12)
-  summary: 'Money in the closing lines is printed to the penny from 3 s.f. keys, so the pence are wrong: £10.80
-    (true £10.79), £190.40 (£190.42), £67.40 (£67.41), £223.30 (£223.33), £62.10 (£62.06), £1,141.70 (£1,141.67),
-    £231.70 (£231.67), £169.20 (£169.17), £62.80 (£62.81)'
+  summary: 'Money in the closing lines is printed to the penny from 3 s.f. keys, so the pence are wrong: £10.80 (true
+    £10.79), £190.40 (£190.42), £67.40 (£67.41), £223.30 (£223.33), £62.10 (£62.06), £1,141.70 (£1,141.67),
+    £231.70 (£231.67), £169.20 (£169.17), £62.80 (£62.81) Fixed under R4: every pence figure in the closing
+    lines and options is recomputed from the unrounded mean and SD (G8 £10.79, CM2 £190.42 and £67.41, CM5
+    £223.33 and £62.06, CM7 £1,141.67, CM10 £231.67, CM12 £169.17 and £62.81, and the mean ± SD ranges); the
+    verifier holds every printed decimal to the unrounded value.'
   evidence: 'G8 "The mean pocket money is £10.80 ..." (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 367
 - id: stat-attack-s1-005
   severity: MEDIUM
   jc: false

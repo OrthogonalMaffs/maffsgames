@@ -29,9 +29,12 @@ findings:
   level: gcse
   where: games/split-it/index.html:431 (Unitary, currency working)
   summary: 'The working writes the euro amount and the rate as JS numbers, so about 56% of currency items show a money
-    answer to 1 d.p. ("€66.6"), which the game''s own format notice says loses the mark'
+    answer to 1 d.p. ("€66.6"), which the game''s own format notice says loses the mark Fixed under R4 (SWEEP-1
+    ruling): the working prints the rate and the amount with toFixed(2) from the exact value;
+    scripts/check-money.py runs the generator and fails any money amount without two decimals.'
   evidence: 'working "£45 × 1.48 = €66.6" (3,722 of 6,690 currency draws) (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 367
 - id: split-it-s1-003
   severity: LOW
   jc: false

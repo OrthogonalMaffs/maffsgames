@@ -428,7 +428,7 @@ const generators={
           const ans=parseFloat((amt*rate).toFixed(2));
           return{prompt:`£1 = <span class="highlight">€${rate.toFixed(2)}</span>. Convert <span class="highlight">£${amt}</span> to euros.`,
             type:'single',answers:[ans],unit:'€',money:'€',
-            working:`£${amt} × ${rate} = €${ans}`,hint:`Multiply £${amt} by the exchange rate.`};
+            working:`£${amt} × ${rate.toFixed(2)} = €${(amt*rate).toFixed(2)}`,hint:`Multiply £${amt} by the exchange rate.`};
         },
         ()=>{// Speed
           const d=rInt(3,8)*rInt(10,30);const t=rInt(2,5);const t2=rInt(2,8);
