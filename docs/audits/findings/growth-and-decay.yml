@@ -48,3 +48,67 @@ findings:
   summary: '"Hardness (HV) increases with tempering temperature": tempering lowers a steel''s hardness, and the key 3,610 HV at 300 °C (10,850 HV at the graph''s end, 350 °C) is beyond any steel (roughly 900 HV at most). A new context is Jon''s call'
   evidence: 'H = 4.911e^{0.022T}; "Use the model to calculate H when T = 300 and k = 4.911" key 3610 HV (SWEEP-1, between batches 7 and 8)'
   status: open
+- id: growth-and-decay-s1-005
+  severity: CRITICAL
+  jc: false
+  class: NEW:marking-tolerance
+  level: core, alevel, level4
+  where: games/growth-and-decay/index.html checkNumSQ, checkSQ4
+  summary: 'Every typed sub-question was marked to a band round the key, not at the precision its prompt states: sq1
+    ±(2% + 0.01), sq3 ±max(0.5%, 0.05), sq4 ±0.15 absolute. Played in the page, a value one unit off at the stated
+    precision was marked correct on 13 to 15 of the 15 scenarios at every level, and on L4_1 and L4_5 sq4 accepted 0
+    and the sign error (todo §1.36; the band larger than the answer). Fixed under SR-30 by Jon''s ruling of 2 Oct 2026
+    ("mark to the precision the question states"): each sub-question is marked by the shared MaffsAnswer at the
+    significant figures or decimal places its prompt states, an answer that needs no rounding exactly; the true value
+    to more figures gets the format message, unmarked (SR-3); the key is shown at its stated precision with its unit
+    after it. The verifier plays the right value, both neighbours, the long form and (sq4) 0 and the sign error on
+    every sub-question, and plants the old sq1 and sq4 bands; the new checks fail the old page 227 times'
+  evidence: 'const tol=sqNum===3?Math.max(0.005*Math.abs(sq.answer),0.05):0.02*Math.abs(sq.answer)+0.01;
+    if(Math.abs(val-sq.answer)<=0.15) (SWEEP-1, batch 10)'
+  status: open
+- id: growth-and-decay-s1-006
+  severity: LOW
+  jc: false
+  class: NEW:wrong-explanation
+  level: core, alevel, level4
+  where: games/growth-and-decay/index.html:953 (worked example), AL10 (:450)
+  summary: 'The worked example said 200 × 1.15^6 = 462.7 (it is 462.61); AL10''s context "Radiation remaining (%)" starts
+    at 80. Fixed: 462.6; "Radiation level (% of a reference level)"'
+  evidence: 'Overlay and context as quoted (SWEEP-1, batch 10)'
+  status: open
+- id: growth-and-decay-s1-007
+  severity: MEDIUM
+  jc: true
+  class: NEW:text-contradicts-content
+  level: alevel, level4
+  where: games/growth-and-decay/index.html AL11 (:465), L4_6 (:547), CM14 (:358), CM11 (:331), CM15 (:367), L4_11 (:584)
+  summary: 'For Jon (context or key-text changes): AL11 and L4_6 key a fractional count (4.64 devices, 8.03 amplifiers;
+    "the least n for which" would key 5 and 9), and AL11''s energy doubling per device is implausible; CM14''s 2 × 3^n
+    counts only the newest recipients, though its context says everyone shares; CM11 calls an amount in mg a
+    concentration, and its prompt and options say concentration; CM15''s pressure falls 4% per km (real air about 12%;
+    82.6 kPa at 5 km against about 54); L4_11''s key says an exponentially decaying oscillation is "heavily damped"
+    (it is underdamped)'
+  evidence: 'Contexts and keys as quoted (SWEEP-1, batch 10)'
+  status: open
+- id: growth-and-decay-s1-008
+  severity: MEDIUM
+  jc: true
+  class: NEW:timer-policy
+  level: core, alevel, level4
+  where: games/growth-and-decay/index.html:212 (#hudTimer), :122, finishScenario (:859)
+  summary: 'Timer policy lists Growth and Decay under Hidden Count-Up, but the HUD "Time" shows (the hiding rule at
+    :122 targets classes the element lacks), and each scenario is scored against cumulative session time (T_K 0.3),
+    so later scenarios score less for the same speed. The SR-23 timer class, for Jon to schedule'
+  evidence: 'Reviewer''s reading of :122 and :859 (SWEEP-1, batch 10)'
+  status: open
+- id: growth-and-decay-s1-009
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: core, alevel, level4
+  where: scripts/verify-growth-and-decay.py
+  summary: 'The verifier does not check the meaning of the 45 sq2 option sets, the sq4 hint text, the worked-example
+    overlay (where s1-006 was), the numbers stated in contexts, or the feedback strings; and the "Hint" button shows
+    the answer. Recorded under Jon''s rule of 13 Oct 2026; wrong values are now played (s1-005)'
+  evidence: 'check_scenario() and PLAY_JS before this PR (SWEEP-1, batch 10)'
+  status: open
