@@ -55,7 +55,8 @@ findings:
     power of x", "Write with a positive index", "Work out the value" or "Write using a root". Keys unchanged; the verifier
     fails a root, negative-index, reciprocal or value key with no ask naming it'
   evidence: 'Q28 x^{-3} key \dfrac{1}{x^3}; Q31 \dfrac{1}{x^5} key x^{-5} (SWEEP-1, batch 5)'
-  status: open
+  status: fixed
+  pr: 341
 - id: index-laws-s1-002
   severity: LOW
   jc: false
