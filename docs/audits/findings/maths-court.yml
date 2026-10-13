@@ -21,7 +21,8 @@ findings:
     verifier now fails any wrong argument that reaches a correct one''s conclusion without being named in the summary'
   evidence: 'Numerica "5/8 is bigger | 8 is a bigger number than 5 | so eighths are better." ⇒ "5/8 is larger"; summary
     "Demi is correct. 5/8 = 0.625, 3/5 = 0.6. Chuck approximated 5/8 as 0.5, which is wrong." (SWEEP-1, batch 4)'
-  status: open
+  status: fixed
+  pr: 340
 - id: maths-court-s1-002
   severity: MEDIUM
   jc: false
@@ -31,7 +32,8 @@ findings:
   summary: 'The keyed conclusion "b = 12.0cm" is 3 s.f., and the question never said so (SR-1). Fixed: "Give your answer
     to 3 significant figures."; a SPECS entry recomputes b and requires the line'
   evidence: '"In triangle ABC, angle A = 40°, angle B = 75°, a = 8cm. Find side b." (SWEEP-1, batch 4)'
-  status: open
+  status: fixed
+  pr: 340
 - id: maths-court-s1-003
   severity: MEDIUM
   jc: false
@@ -42,7 +44,8 @@ findings:
     £1,598.13 and £98.13 (the verdict stands). arith_problems never saw it: the wrong step crosses a line. Fixed, with a
     SPECS entry that recomputes all three'
   evidence: 'Connie: "Bank B: 1000 × 1.048¹⁰ | = 1000 × 1.5963 = £1,596.30 | Bank B wins by £96.30." (SWEEP-1, batch 4)'
-  status: open
+  status: fixed
+  pr: 340
 - id: maths-court-s1-004
   severity: HIGH
   jc: true

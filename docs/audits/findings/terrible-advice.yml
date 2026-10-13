@@ -132,7 +132,8 @@ findings:
     wrong this time" before saying her answer is right. TRUE_OPTIONS pins the old texts'
   evidence: 'gcse_008 key "Sharon is wrong this time — … The 650g is actually better value, so Sharon got lucky"
     (SWEEP-1, batch 4)'
-  status: open
+  status: fixed
+  pr: 340
 - id: terrible-advice-s1-002
   severity: MEDIUM
   jc: false
@@ -143,7 +144,8 @@ findings:
     both true; the fault is that they are not standard form, which the option never claimed. Fixed under SR-16: "… in
     standard form, …"; TRUE_OPTIONS pins the old texts'
   evidence: '"Professor Wren is wrong — 3,400,000 = 0.34 × 10⁷"; "Stella is wrong — 0.00057 = 57 × 10⁻⁵" (SWEEP-1, batch 4)'
-  status: open
+  status: fixed
+  pr: 340
 - id: terrible-advice-s1-003
   severity: MEDIUM
   jc: false
@@ -153,7 +155,8 @@ findings:
   summary: 'The key ended "You multiply for AND, add for OR", a false rule (adding holds only for events that cannot both
     happen; P(heads or 6) = 7/12, not 2/3), the class of t2-008. Fixed: "You multiply for AND, not add"; FALSE_RULES pins it'
   evidence: 'key "… = 1/12 ≈ 0.083. You multiply for AND, add for OR" (SWEEP-1, batch 4)'
-  status: open
+  status: fixed
+  pr: 340
 - id: terrible-advice-s1-004
   severity: MEDIUM
   jc: false

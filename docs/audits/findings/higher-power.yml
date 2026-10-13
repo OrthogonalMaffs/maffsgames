@@ -74,7 +74,8 @@ findings:
     sum to 12) and teaches the definition wrongly. Fixed: "Its factors other than itself add up to 6."; the verifier checks
     every perfect-number fact lists exactly its proper divisors'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 340
 - id: higher-power-s1-002
   severity: MEDIUM
   jc: false

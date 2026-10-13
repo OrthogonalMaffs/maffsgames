@@ -96,7 +96,8 @@ findings:
     streak)". RULED pins it'
   evidence: 'post "I''ve flipped heads 7 times in a row. The next flip MUST be tails."; options "P(tails) = 0.5 always",
     "P(tails) > 0.5", "P(tails) = 1", "Depends on coin" (SWEEP-1, batch 4)'
-  status: open
+  status: fixed
+  pr: 340
 - id: wrong-on-the-internet-s1-002
   severity: MEDIUM
   jc: false
@@ -107,7 +108,8 @@ findings:
     true stage-2 option keyed wrong. Fixed under the same ruling: the post says "5% compound interest"; the option is now a
     named error ("The answer is £2,000: 5% a year for 20 years doubles it"). RULED pins it'
   evidence: 'post "Invest £1000 at 5% for 20 years: £1000×1.05×20=£21,050." (SWEEP-1, batch 4)'
-  status: open
+  status: fixed
+  pr: 340
 - id: wrong-on-the-internet-s1-003
   severity: MEDIUM
   jc: false
