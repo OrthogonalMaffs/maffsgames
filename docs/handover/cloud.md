@@ -99,9 +99,10 @@ main's last full run is red; watch main's run after merging.
   - fermi-lab #363: s1-001 (Part 2 #5), -002 (R2), -003 first part (Part 2 #6: the wrong key 140 -> 82, the same day under SR-30), -004 (R3). The verifier now holds every key within 1.25 of its chain (it passed 140 against 82).
   - maths-court #364: s1-004 (Part 2 #3: Brenda keyed wrong), -005 (R2), -006 and -012 (Part 2 #3: start screen), -007 (R6), -009 (R3), -010 and -011 (R1).
   - spot-the-error #365: s1-001 (Part 2 #4: the 80 trials are the misreading, the stray 4 visible), -002 and -004 (R2), -003 first part (R5: ks3_021, l4_011), -005 and -006 (R3), -007 (R1).
-  - Closed in this contract so far: 4 + 8 + 7, plus 4 in step 1 (stat-attack-s1-006, core-maths-paper1-s1-006's first half, the R10 halves of eigenvector-engine-s1-004 and normal-navigator-s1-007).
+  - new-shapes #366: s1-001 (Part 2 #1: the h label beside the dashed height, inside the figure; the verifier measures it in Chromium, scaled for the phone).
+  - Closed in this contract so far: 4 + 8 + 7 + 1, plus 4 in step 1 (stat-attack-s1-006, core-maths-paper1-s1-006's first half, the R10 halves of eigenvector-engine-s1-004 and normal-navigator-s1-007).
 - **List for Jon (did not fit its rule, left open):** maths-court-s1-008 (core_003: "Paid off in year 14" against "About 13 years" are both true of 13.16 years, so R3 does not apply; no ruling gives wording). spot-the-error-s1-008 (gcse_007: "similar in shape" is keyed and the missed cue, the capacity, is not offered; no distractor is defensible, so R5 does not apply, and offering the capacity would change the design or the key).
-- **Next:** the other HIGH wrong keys the same day: new-shapes-001 (Part 2 #1), graph-sketcher-006 (#14). Then step 2 (R4, `check-money.py`) and step 3 in the contract's audience order.
+- **Next:** the last HIGH wrong keys the same day: graph-sketcher-006 (Part 2 #14). Then step 2 (R4, `check-money.py`) and step 3 in the contract's audience order.
 
 ## 2026-10-13 (cloud): NEGATIVE-INPUT (log-laws, suvat; Jon's input-design ruling)
 
