@@ -99,6 +99,7 @@ from stats_common import (PREC, D, to_dec, rnd, fmt, Binomial, Poisson, as_dec, 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGE = os.path.join(ROOT, 'games', 'test-the-claim', 'index.html')
 OPTIONS_JS = os.path.join(ROOT, 'schools', 'assets', 'options.js')
+ANSWER_JS = os.path.join(ROOT, 'schools', 'assets', 'answer.js')
 
 # Pearson Edexcel Level 3 AS and A level Statistics, "Statistical formulae and tables",
 # Issue 1, August 2017, Table 8: Critical Values of the Product Moment Correlation
@@ -122,7 +123,8 @@ NODE_DRIVER = r"""
 const fs = require('fs'), vm = require('vm');
 const html = fs.readFileSync(process.argv[1], 'utf8');
 const optionsJs = fs.readFileSync(process.argv[2], 'utf8');
-const unshuffled = process.argv[3] === 'unshuffled';
+const answerJs = fs.readFileSync(process.argv[3], 'utf8');
+const unshuffled = process.argv[4] === 'unshuffled';
 function grab(name) {
   const s = html.indexOf('function ' + name + '(');
   if (s < 0) { console.error(name + ' not found'); process.exit(2); }
@@ -140,10 +142,12 @@ vm.runInContext(`(function () { let a = 20260930; Math.random = function () {
   a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a);
   t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; })();`, ctx);
 vm.runInContext(optionsJs, ctx);
+vm.runInContext(answerJs, ctx);
 // Self-test hook: an options builder that keeps the author's order, i.e. an unshuffled build.
 if (unshuffled) vm.runInContext('MaffsOptions.build = function (c, d) { return [c].concat(d); };', ctx);
 vm.runInContext(bankSrc + '\n' +
-  ['generateWrongContexts', 'shuffleWithCorrect', 'stepHeader', 'pRoute', 'buildScenario', 'buildStep3', 'buildStep4', 'buildStep6']
+  ['generateWrongContexts', 'shuffleWithCorrect', 'stepHeader', 'pRoute', 'buildScenario', 'buildStep3', 'buildStep4', 'buildStep6',
+   'markAt', 'unmarked', 'checkZStat', 'checkStep3']
     .map(grab).join('\n') + `
 var state = { mode: null, method: 'cr' };
 var __sel = {}, __dom = {};
@@ -186,13 +190,59 @@ for (const m of Object.keys(QUESTIONS)) { for (const q of QUESTIONS[m]) {
   ui.step3_pvalue = buildStep3(q);
   delete q._zCalcDone;
   __ui[q.id] = ui;
+} }
+// Step 3's typed marking, played through the page's own checkZStat() and checkStep3() on the shared MaffsAnswer
+// (SWEEP-1, test-the-claim-s1-001..003): every value typed into the box the step really shows, the feedback read.
+var stepLock = () => true, stepReopen = () => {}, advanceStep = () => {}, _addDismiss = () => {}, buildStep = () => {};
+var MaffsLock = { timer: () => {} };
+function play(q, mode, method, boxes) {
+  state.mode = mode; state.method = method; state.questions = [q]; state.qIdx = 0;
+  state.totalSteps = 0; state.correctSteps = 0; state.penalties = 0;
+  __dom = { step3Feedback: { innerHTML: '' } };
+  for (const [id, v] of Object.entries(boxes)) __dom[id] = { value: String(v) };
+  $ = id => __dom[id];
+  if (boxes.zInput !== undefined) checkZStat(); else checkStep3();
+  $ = id => __dom[id] || (__dom[id] = { innerHTML: '', value: '' });
+  return __dom.step3Feedback.innerHTML.replace(/<[^>]*>/g, '');
+}
+globalThis.__mark = {};
+for (const m of Object.keys(QUESTIONS)) { for (const q of QUESTIONS[m]) {
+  const out = {};
+  if (m === 'normal') {
+    const z = Number(q.zStatExact), zs = v => v.toFixed(2);
+    out['z right ' + q.zStatExact] = play(q, m, 'cr', { zInput: q.zStatExact });
+    out['z wrong ' + zs(z + 0.01)] = play(q, m, 'cr', { zInput: zs(z + 0.01) });
+    out['z wrong ' + zs(z - 0.02)] = play(q, m, 'cr', { zInput: zs(z - 0.02) });
+    const two = q.tail === 'two' || q.tailDir === 'two';
+    const cv = two ? q.cvTwoTail[q.sig] : q.cvOneTail[q.sig];
+    const c2 = Number(cv.toFixed(2));
+    out['cr right ' + c2.toFixed(2)] = play(q, m, 'cr', { crInput: c2.toFixed(2) });
+    out[(two || q.tailDir === 'lower' ? 'cr right ' : 'cr wrong ') + (-c2).toFixed(2)] = play(q, m, 'cr', { crInput: (-c2).toFixed(2) });
+    out['cr wrong ' + (c2 + 0.01).toFixed(2)] = play(q, m, 'cr', { crInput: (c2 + 0.01).toFixed(2) });
+    if (cv.toFixed(4) !== c2.toFixed(4)) out['cr format ' + cv.toFixed(4)] = play(q, m, 'cr', { crInput: cv.toFixed(4) });
+  } else if (m === 'correlation') {
+    const cv = q.criticalValue;
+    out['cr right ' + cv.toFixed(4)] = play(q, m, 'cr', { crInput: cv.toFixed(4) });
+    out[(q.tailDir === 'upper' ? 'cr wrong ' : 'cr right ') + (-cv).toFixed(4)] = play(q, m, 'cr', { crInput: (-cv).toFixed(4) });
+    out['cr wrong ' + (cv + 0.0001).toFixed(4)] = play(q, m, 'cr', { crInput: (cv + 0.0001).toFixed(4) });
+  }
+  if (m !== 'correlation') {
+    const keys = [q.pValue].concat(q.pValueZ2 !== undefined ? [q.pValueZ2] : []);
+    for (const k of keys) out['p right ' + k.toFixed(4)] = play(q, m, 'pvalue', { pvInput: k.toFixed(4) });
+    for (const d of [0.0001, -0.0001, 0.005]) {
+      const v = Number((q.pValue + d).toFixed(4));
+      if (keys.some(k => Math.abs(k - v) < 1e-9)) continue;
+      out['p wrong ' + v.toFixed(4)] = play(q, m, 'pvalue', { pvInput: v.toFixed(4) });
+    }
+  }
+  __mark[q.id] = out;
 } }`, ctx);
-process.stdout.write(JSON.stringify({ Q: ctx.__bank.Q, C: ctx.__bank.C, wrong: ctx.__wrong, ui: ctx.__ui }));
+process.stdout.write(JSON.stringify({ Q: ctx.__bank.Q, C: ctx.__bank.C, wrong: ctx.__wrong, ui: ctx.__ui, mark: ctx.__mark }));
 """
 
 
 def load_bank(page, unshuffled=False):
-    r = subprocess.run(['node', '-e', NODE_DRIVER, page, OPTIONS_JS] + (['unshuffled'] if unshuffled else []),
+    r = subprocess.run(['node', '-e', NODE_DRIVER, page, OPTIONS_JS, ANSWER_JS] + (['unshuffled'] if unshuffled else []),
                        capture_output=True, text=True)
     if r.returncode != 0:
         sys.exit('node could not read the bank: ' + r.stderr.strip())
@@ -791,8 +841,63 @@ def check_corr(rep, q, table, verbose, ui=None):
 # --------------------------------------------------------------------------
 #  driver
 # --------------------------------------------------------------------------
+def check_sweep(rep, data):
+    """SWEEP-1 (test-the-claim-s1-001..006): what the page marks and offers.
+
+    - Step 3's typed marking, played in node through the page's own checkZStat() and checkStep3() (data['mark']):
+      the value at the precision the label states is correct (z and a Normal critical value 2 d.p., a p-value and a
+      PMCC critical value 4 d.p.; either signed boundary where the region has two), one unit off is not, and the
+      table value at other precision gets the format message, unmarked (SR-1, SR-3);
+    - a Normal item whose p-value from the z rounded to 2 d.p. (the z the game asks for first) differs at 4 d.p.
+      carries it as pValueZ2, and it is that value;
+    - Step 1 offers no composite H0 (p <= p0) and, on a scaled Poisson item, not the unscaled rate (both are
+      accepted forms of H0, SR-16);
+    - no Step 6 wrong conclusion rewrites the key's own context (a direction swap gave the key's claim, SR-16)."""
+    for iid, out in (data.get('mark') or {}).items():
+        for label, fb in out.items():
+            kind = label.split()[1]
+            if kind == 'right' and not fb.startswith('Correct'):
+                rep.fail('MARKING', iid, label, fb[:80], 'Correct')
+            elif kind == 'wrong' and fb.startswith('Correct'):
+                rep.fail('MARKING', iid, label, fb[:80], 'not correct')
+            elif kind == 'format' and (fb.startswith('Correct') or fb.startswith('Incorrect') or 'Right value' not in fb):
+                rep.fail('MARKING', iid, label, fb[:80], 'the format message, unmarked')
+    for mode, items in data['Q'].items():
+        for q in items:
+            iid = q['id']
+            if mode == 'normal':
+                z2 = Decimal(str(round(float(z_exact(q)), 2)))
+                side, _ = normal_tail(q)
+                p2 = NormalDist().cdf(float(z2)) if side == 'leq' else 1 - NormalDist().cdf(float(z2))
+                want = fmt(Decimal(repr(p2)), 4)
+                have = q.get('pValueZ2')
+                if want != format(D(q['pValue']), '.4f') and (have is None or format(D(have), '.4f') != want):
+                    rep.fail('KEY', iid, 'pValueZ2', have, want, 'the p-value from the z the game asks for, to 2 d.p.')
+            if mode == 'binomial' and q['tailDir'] in ('upper', 'lower'):
+                # the composite H0 is accepted in its own direction only: p <= p0 for an upper-tail test, p >= p0
+                # for a lower; the other direction is a named error
+                acc = r'\\leq' if q['tailDir'] == 'upper' else r'\\geq'
+                for o in q['h0Distractors']:
+                    if re.search(acc, o):
+                        rep.fail('DISTRACTOR', iid, 'Step 1 H0', o, 'not a composite H0', 'p <= p0 is an accepted H0 (SR-16)')
+            if mode == 'poisson' and q.get('lambda0') is not None:
+                lam = re.search(r'\\lambda = ([\d.]+)', q['h0Latex'])
+                if lam and float(lam.group(1)) != float(q['lambda0']):
+                    for o in q['h0Distractors']:
+                        m = re.fullmatch(r'\\lambda = ([\d.]+)', o.strip())
+                        if m and float(m.group(1)) == float(q['lambda0']):
+                            rep.fail('DISTRACTOR', iid, 'Step 1 H0', o, 'not the unscaled rate',
+                                     'H0 on the per-unit rate is accepted (SR-16)')
+            ctx_words = ' '.join(q['conclusionContext'].split()[:3])
+            for o in (data.get('wrong') or {}).get(iid, []):
+                if o.startswith(ctx_words):
+                    rep.fail('DISTRACTOR', iid, 'Step 6 context', o, 'not a rewrite of the key',
+                             'a rewritten context can say what the key says (SR-16)')
+
+
 def verify(data, verbose=False):
     rep = Report()
+    check_sweep(rep, data)
     booklet_selfcheck(rep)
     Q, C, wrong, ui = data['Q'], data['C'], data['wrong'], data.get('ui', {})
     for mode, items in Q.items():
@@ -898,6 +1003,28 @@ def selftest(data, page):
     hit = [f for f in verify(bank).fails if f[1] == 'CORR_CV[15]']
     print(f'  fault injection PMCC table entry changed{" " * 24}-> {"caught" if hit else "MISSED"}')
     ok &= bool(hit)
+    # SWEEP-1: the old Step 3 bands, Step 1 options and Step 6 swap, planted in a copy of the page
+    import tempfile
+    src = open(page, encoding='utf-8').read()
+    for desc, old, new, field in (
+            ('old Normal CV band (1.64 rejected)', "res = markAt(raw, two || q.tailDir === 'lower' ? both(cv) : [cv], 2);",
+             "res = Math.abs(parseFloat(raw) - cv) < 0.002 ? 'correct' : 'wrong';", 'cr right'),
+            ('old p-value band (0.006)', "res = markAt(raw, q.pValueZ2 !== undefined ? [q.pValue, q.pValueZ2] : [q.pValue], 4);",
+             "res = Math.abs(parseFloat(raw) - q.pValue) < 0.006 ? 'correct' : 'wrong';", 'p wrong'),
+            ('old Step 6 direction swap', "    wrongs.push('the claimed proportion has been proved correct');",
+             "    wrongs.push(q.conclusionContext.replace(/decreased|increased|differs|fallen|exceeds|biased/, 'changed significantly'));",
+             'Step 6 context'),
+            ("old B2 composite H0", "h0Distractors:['p = 0.5','p = 0.75',", "h0Distractors:['p = 0.5','p \\\\leq 0.5',", 'Step 1 H0')):
+        if src.count(old) != 1:
+            print(f'  fault injection {desc:52} -> CANNOT PLANT'); ok = False; continue
+        with tempfile.NamedTemporaryFile('w', suffix='.html', delete=False, encoding='utf-8') as t:
+            t.write(src.replace(old, new)); tmp = t.name
+        try:
+            hit = [f for f in verify(load_bank(tmp)).fails if field in str(f[2])]
+        finally:
+            os.unlink(tmp)
+        print(f'  fault injection {desc:52} -> {"caught" if hit else "MISSED"}')
+        ok &= bool(hit)
     # a code-level fault: the game's own page, with an options builder that does not shuffle
     rep = verify(load_bank(page, unshuffled=True))
     hit = {f[2] for f in rep.fails if f[0] == 'SHUFFLE'}
