@@ -13,7 +13,9 @@ so those follow the convention too.
 Every option is read as a complex number (TeX: \\dfrac, \\sqrt, \\pi, j; polar angles in degrees, exponential
 in radians). Then, for every item: the key equals the given number (to the bank's rounding); no wrong option
 does; a polar or exponential key's angle is principal; the stored re, im, r, argDeg and argRad are the given
-number, with principal angles; no context asks for another range ("positive angle"). In Chromium (390x844)
+number, with principal angles; no context asks for another range ("positive angle"); no two options are the same
+number (an angle written with π read in radians) unless checker-allowlist.json lists the pair as a form question
+(SR-4; B11-CLEAR, 12 Oct 2026: 3∠30° and 3∠π/6 under "(degrees)"). In Chromium (390x844)
 every item is shown through showRouletteQ() and every option clicked through rouletteAnswer(): the key marked
 right, the others wrong, and a polar or exponential question's target line states the range.
 A self-test plants the audit's item and one item's old positive-angle key back into a copy of the page; each
@@ -23,6 +25,7 @@ must FAIL naming its item.
 """
 import argparse
 import cmath
+import json
 import math
 import os
 import re
@@ -92,7 +95,7 @@ def value(s):
     t = s.strip()
     if '\\angle' in t:
         r, th = t.split('\\angle')
-        deg = real(th)
+        deg = math.degrees(real(th)) if '\\pi' in th else real(th)    # an angle written with pi is in radians
         return real(r) * cmath.exp(1j * math.radians(deg)), 'polar', deg
     m = re.fullmatch(r'(.*?)e\^\{(.*)\}', t)
     if m:
@@ -117,10 +120,23 @@ def principal(form, angle):
     return True
 
 
+def listed_pairs():
+    """Option pairs equal in value that checker-allowlist.json lists as form questions for this game (the ask names
+    the form: 3∠30° and 3∠π/6 under "(degrees)"), as (index, frozenset(pair)); Level 4 and Further share the bank."""
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'checker-allowlist.json')
+    out = set()
+    for e in json.load(open(path, encoding='utf-8'))['b11_form_questions']:
+        m = re.fullmatch(r'complex-converter QUESTIONS\.\w+\[(\d+)\]', e['where'])
+        if m:
+            out.add((int(m.group(1)), frozenset(e['pair'])))
+    return out
+
+
 def check_bank(fails, bank):
+    listed = listed_pairs()
     if len(bank) != COUNT:
         fails.append('bank: %d items, expected %d' % (len(bank), COUNT))
-    for q in bank:
+    for n, q in enumerate(bank):
         w = 'id %d (%s → %s, %s)' % (q['id'], q['source'], q['target'], q['givenLatex'])
         opts = [q['correctLatex']] + list(q['distractors'])
         if q['correct'] != q['correctLatex'] or len(set(opts)) != 4:
@@ -140,8 +156,13 @@ def check_bank(fails, bank):
         if angle is not None and not principal(form, angle):
             fails.append('%s: the key %s is not the principal argument (%s)' % (w, opts[0], RANGE_WORDS[form]))
         for o, (v, _, _) in zip(opts[1:], vals[1:]):
-            if close(v, z):
+            if close(v, z) and (n, frozenset((opts[0], o))) not in listed:
                 fails.append('%s: the wrong option %s is the same number as the key %s' % (w, o, opts[0]))
+        # SR-4 (B11-CLEAR, 12 Oct 2026): no two wrong options are the same number either (0 + 7j beside 7j).
+        for x in range(1, 4):
+            for y in range(x + 1, 4):
+                if close(vals[x][0], vals[y][0]) and (n, frozenset((opts[x], opts[y]))) not in listed:
+                    fails.append('%s: the wrong options %s and %s are the same number (SR-4)' % (w, opts[x], opts[y]))
         stored = q['r'] * cmath.exp(1j * math.radians(q['argDeg']))
         if not (close(complex(q['re'], q['im']), z) and close(stored, z)
                 and abs(math.radians(q['argDeg']) - q['argRad']) < 0.002):
@@ -215,6 +236,11 @@ PLANTS = [
     ('id 21 ', 't6-001: 5∠306.87° beside the key 5∠−53.13°',
      'distractors:["5\\\\angle 53.13°","5\\\\angle 126.87°","5\\\\angle -126.87°"]',
      'distractors:["5\\\\angle 53.13°","5\\\\angle 306.87°","5\\\\angle -126.87°"]'),
+    ('id 43 ', 'SR-4: two wrong options the same number (0 + 7j beside 7j)',
+     'distractors:["7j","0","-7"]', 'distractors:["7j","0 + 7j","-7"]'),
+    ('id 15 ', 'SR-4: 3∠π/3 (radians) beside 3∠60°, not listed',
+     'distractors:["3\\\\angle 60°","3\\\\angle \\\\pi/6","6\\\\angle 30°"]',
+     'distractors:["3\\\\angle 60°","3\\\\angle \\\\pi/6","3\\\\angle \\\\pi/3"]'),
     ('id 20 ', 'the old positive-angle key 5∠233.13°',
      'correct:"5\\\\angle -126.87°",correctLatex:"5\\\\angle -126.87°"',
      'correct:"5\\\\angle 233.13°",correctLatex:"5\\\\angle 233.13°"'),

@@ -92,3 +92,19 @@ findings:
     on positive-angle items; 'Sniper/Shot' framing (SR-14 JC)
   evidence: screenshot at 390px; drawArgand range = 1.4·max(|re|,|im|)
   status: open
+- id: complex-converter-b11-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:equal-value-options
+  level: all
+  where: 'games/complex-converter/index.html: id 43 (level4[42], further[42]); id 15 (level4[14], further[14])'
+  summary: 'id 43 (7e^{j0} to rectangular, key 7) offered 7j and 0 + 7j, two wrong options equal in value (SR-4).
+    Fixed under B11-CLEAR and Jon''s formula-forge ruling of 12 Oct 2026: 0 + 7j -> 0 (took e^{j0} as 0, not 1);
+    7j kept. id 15 (3e^{j pi/6} to polar, key 3 angle 30 deg) offers 3 angle pi/6, equal to the key; its context
+    reads "Express in polar form (degrees).", which names the form, so the pair is listed in
+    checker-allowlist.json b11_form_questions (SR-4''s exception). The verifier read pi angles as degrees and missed
+    that pair; it now reads them in radians'
+  evidence: 'check-banks.py B11 (data/check-ledger.json, now cleared); scripts/verify-complex-converter.py fails on any
+    unlisted pair of options that are the same number, with plants for both items'
+  status: fixed
+  pr: 331
