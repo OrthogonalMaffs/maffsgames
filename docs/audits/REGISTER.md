@@ -23,22 +23,22 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
 | HIGH | 8 | 229 | 0 | 237 |
-| MEDIUM | 233 | 264 | 3 | 500 |
-| LOW | 210 | 121 | 1 | 332 |
-| **All** | 452 | 648 | 4 | 1104 |
+| MEDIUM | 202 | 294 | 4 | 500 |
+| LOW | 157 | 174 | 1 | 332 |
+| **All** | 368 | 731 | 5 | 1104 |
 
 ### By class
 
 | Class | open | total |
 |---|---|---|
-| NEW:wording | 106 | 128 |
+| NEW:wording | 67 | 128 |
 | 2 | 12 | 111 |
-| NEW:text-contradicts-content | 53 | 90 |
+| NEW:text-contradicts-content | 35 | 90 |
 | 3 | 5 | 86 |
-| NEW:convention-unstated | 26 | 78 |
-| NEW:wrong-explanation-text | 21 | 71 |
+| NEW:convention-unstated | 12 | 78 |
+| NEW:wrong-explanation-text | 19 | 71 |
 | 6 | 24 | 56 |
-| NEW:true-wrong-option | 14 | 51 |
+| NEW:true-wrong-option | 7 | 51 |
 | NEW:verifier-gap | 49 | 49 |
 | 1 | 5 | 37 |
 | 5 | 27 | 27 |
@@ -46,12 +46,12 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:unstated-convention | 4 | 17 |
 | 7 | 5 | 16 |
 | NEW:precision-not-stated | 3 | 16 |
-| NEW:sr14-content | 9 | 15 |
+| NEW:sr14-content | 6 | 15 |
 | NEW:value-equal distractors | 0 | 14 |
 | 8 | 3 | 11 |
 | NEW:marking-tolerance | 2 | 11 |
 | NEW:raw-tex-on-screen | 4 | 11 |
-| NEW:degenerate-item | 9 | 9 |
+| NEW:degenerate-item | 8 | 9 |
 | NEW:equal-value-options | 0 | 9 |
 | NEW:timer-policy | 7 | 9 |
 | NEW:hand-typed explanation figure | 4 | 8 |
@@ -139,7 +139,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 | Game | Listed | Verifier | C | H | M | L | open | fixed | ruled |
 |---|---|---|---|---|---|---|---|---|---|
-| `52dle` | yes | verify-52dle.py | 0 | 1 | 5 | 6 | 11 | 1 | 0 |
+| `52dle` | yes | verify-52dle.py | 0 | 1 | 5 | 6 | 4 | 8 | 0 |
 | `angle-ace` | yes | verify-angle-ace.py | 0 | 6 | 7 | 2 | 0 | 15 | 0 |
 | `bearing-blitz` | yes | verify-bearing-blitz.py | 0 | 0 | 3 | 2 | 5 | 0 | 0 |
 | `better-value` | yes | verify-better-value.py | 0 | 5 | 9 | 4 | 8 | 10 | 0 |
@@ -150,7 +150,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `circle-theorem-spotter` | yes | verify-circle-theorem-spotter.py | 1 | 0 | 3 | 6 | 8 | 2 | 0 |
 | `complex-converter` | yes | verify-complex-converter.py | 0 | 1 | 9 | 2 | 5 | 7 | 0 |
 | `component-crusher` | yes | verify-component-crusher.py | 1 | 7 | 9 | 1 | 3 | 15 | 0 |
-| `constructions-lab` | yes | verify-constructions-lab.py | 0 | 0 | 4 | 3 | 7 | 0 | 0 |
+| `constructions-lab` | yes | verify-constructions-lab.py | 0 | 0 | 4 | 3 | 5 | 2 | 0 |
 | `coordinate-geometry-dash` | yes | verify-coordinate-geometry-dash.py | 0 | 1 | 6 | 2 | 6 | 3 | 0 |
 | `core-maths-paper1` | yes | verify-core-maths-paper1.py | 0 | 4 | 8 | 4 | 2 | 14 | 0 |
 | `core-maths-paper2a` | yes | verify-core-maths-paper2a.py | 1 | 1 | 4 | 5 | 7 | 4 | 0 |
@@ -161,15 +161,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `decimal-detective` | yes | verify-decimal-detective.py | 0 | 2 | 2 | 0 | 0 | 4 | 0 |
 | `differentiation-duel` | yes | verify-differentiation-duel.py | 0 | 2 | 11 | 3 | 2 | 14 | 0 |
 | `dimension-checker` | yes | verify-dimension-checker.py | 0 | 3 | 6 | 4 | 5 | 8 | 0 |
-| `distinctly-average` | yes | verify-distinctly-average.py | 0 | 0 | 0 | 3 | 3 | 0 | 0 |
+| `distinctly-average` | yes | verify-distinctly-average.py | 0 | 0 | 0 | 3 | 1 | 2 | 0 |
 | `eigenvalue-extractor` | yes | verify-eigenvalue-extractor.py | 0 | 1 | 5 | 3 | 7 | 2 | 0 |
 | `eigenvector-engine` | yes | verify-eigenvector-engine.py | 1 | 1 | 4 | 13 | 5 | 14 | 0 |
-| `equation-builder` | yes | verify-equation-builder.py | 1 | 3 | 4 | 2 | 2 | 8 | 0 |
-| `equatle` | yes | verify-equatle.py | 0 | 0 | 3 | 6 | 9 | 0 | 0 |
+| `equation-builder` | yes | verify-equation-builder.py | 1 | 3 | 4 | 2 | 0 | 10 | 0 |
+| `equatle` | yes | verify-equatle.py | 0 | 0 | 3 | 6 | 2 | 7 | 0 |
 | `estimation-engine` | yes | verify-estimation-engine.py | 0 | 1 | 6 | 0 | 1 | 6 | 0 |
 | `estimation-golf` | yes | verify-estimation-golf.py | 0 | 2 | 5 | 5 | 4 | 8 | 0 |
 | `expectation-station` | yes | verify-expectation-station.py | 2 | 13 | 8 | 5 | 5 | 23 | 0 |
-| `expected-damage` | yes | verify-expected-damage.py | 0 | 1 | 6 | 2 | 8 | 1 | 0 |
+| `expected-damage` | yes | verify-expected-damage.py | 0 | 1 | 6 | 2 | 3 | 6 | 0 |
 | `factor-race` | yes | verify-factor-race.py | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
 | `factor-theorem` | yes | verify-factor-theorem.py | 2 | 5 | 15 | 4 | 7 | 18 | 1 |
 | `fermi-lab` | yes | verify-fermi-lab.py | 0 | 2 | 1 | 1 | 0 | 4 | 0 |
@@ -182,11 +182,11 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `free-daily-pizza` | yes | verify-free-daily-pizza.py | 0 | 0 | 1 | 4 | 5 | 0 | 0 |
 | `given-that` | yes | verify-given-that.py | 0 | 3 | 2 | 3 | 3 | 5 | 0 |
 | `glorious-gantt` | unlisted | none | 1 | 7 | 4 | 1 | 13 | 0 | 0 |
-| `gradient-hunter` | yes | verify-gradient-hunter.py | 1 | 0 | 6 | 2 | 4 | 5 | 0 |
+| `gradient-hunter` | yes | verify-gradient-hunter.py | 1 | 0 | 6 | 2 | 0 | 9 | 0 |
 | `graph-sketcher` | yes | verify-graph-sketcher.py | 1 | 3 | 5 | 4 | 5 | 8 | 0 |
 | `graph-transformer` | yes | verify-graph-transformer.py | 0 | 0 | 3 | 3 | 2 | 4 | 0 |
 | `growth-and-decay` | yes | verify-growth-and-decay.py | 1 | 0 | 9 | 4 | 10 | 4 | 0 |
-| `higher-power` | yes | verify-higher-power.py | 0 | 1 | 8 | 6 | 13 | 2 | 0 |
+| `higher-power` | yes | verify-higher-power.py | 0 | 1 | 8 | 6 | 5 | 10 | 0 |
 | `index-laws` | yes | verify-index-laws.py | 0 | 0 | 3 | 1 | 1 | 2 | 1 |
 | `integration-duel` | yes | verify-integration-duel.py | 0 | 2 | 8 | 3 | 2 | 11 | 0 |
 | `like-terms-collector` | yes | verify-like-terms-collector.py | 1 | 1 | 3 | 1 | 4 | 2 | 0 |
@@ -203,7 +203,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `percentage-flip` | yes | verify-percentage-flip.py | 0 | 0 | 2 | 0 | 1 | 1 | 0 |
 | `prime-factorisation` | yes | verify-prime-factorisation.py | 0 | 0 | 4 | 1 | 4 | 1 | 0 |
 | `prime-or-composite` | yes | verify-prime-or-composite.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
-| `prisoners-dilemma` | yes | verify-prisoners-dilemma.py | 0 | 2 | 6 | 5 | 10 | 3 | 0 |
+| `prisoners-dilemma` | yes | verify-prisoners-dilemma.py | 0 | 2 | 6 | 5 | 4 | 9 | 0 |
 | `probability-paradox` | yes | verify-probability-paradox.py | 1 | 4 | 11 | 4 | 5 | 15 | 0 |
 | `probability-pioneer` | yes | verify-probability-pioneer.py | 0 | 2 | 3 | 3 | 0 | 8 | 0 |
 | `proof-builder` | yes | verify-proof-builder.py | 2 | 15 | 12 | 8 | 9 | 28 | 0 |
@@ -212,30 +212,30 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `scale-factor-scaling` | yes | verify-scale-factor-scaling.py | 0 | 1 | 4 | 3 | 3 | 5 | 0 |
 | `screening-room` | yes | verify-screening-room.py | 1 | 4 | 14 | 8 | 7 | 19 | 1 |
 | `sequence-solver` | yes | verify-sequence-solver.py | 0 | 1 | 4 | 2 | 2 | 5 | 0 |
-| `seven-bridges` | yes | verify-seven-bridges.py | 0 | 2 | 7 | 4 | 10 | 3 | 0 |
+| `seven-bridges` | yes | verify-seven-bridges.py | 0 | 2 | 7 | 4 | 7 | 6 | 0 |
 | `shape-shifter` | yes | verify-shape-shifter.py | 2 | 1 | 5 | 3 | 5 | 6 | 0 |
 | `simultaneous-solver` | yes | verify-simultaneous-solver.py | 0 | 0 | 1 | 2 | 3 | 0 | 0 |
 | `six-sevens-bruv` | yes | verify-six-sevens.py | 0 | 0 | 0 | 1 | 1 | 0 | 0 |
-| `split-it` | yes | verify-split-it.py | 0 | 0 | 1 | 7 | 6 | 2 | 0 |
+| `split-it` | yes | verify-split-it.py | 0 | 0 | 1 | 7 | 0 | 8 | 0 |
 | `spot-the-error` | yes | verify-spot-the-error.py | 0 | 14 | 8 | 5 | 1 | 26 | 0 |
-| `spot-the-muppet` | yes | verify-spot-the-muppet.py | 0 | 5 | 9 | 4 | 9 | 8 | 1 |
+| `spot-the-muppet` | yes | verify-spot-the-muppet.py | 0 | 5 | 9 | 4 | 0 | 17 | 1 |
 | `standard-form-blitz` | yes | verify-standard-form-blitz.py | 0 | 0 | 2 | 3 | 2 | 3 | 0 |
 | `stat-attack` | yes | verify-stat-attack.py | 1 | 1 | 3 | 7 | 6 | 6 | 0 |
 | `surd-simplifier` | yes | verify-surd-simplifier.py | 0 | 2 | 2 | 2 | 2 | 4 | 0 |
 | `suvat` | yes | verify-suvat.py | 1 | 4 | 8 | 4 | 5 | 12 | 0 |
 | `tax-theft` | yes | verify-tax-theft.py | 0 | 0 | 2 | 3 | 1 | 4 | 0 |
-| `terrible-advice` | yes | verify-terrible-advice.py | 0 | 6 | 11 | 3 | 7 | 13 | 0 |
+| `terrible-advice` | yes | verify-terrible-advice.py | 0 | 6 | 11 | 3 | 0 | 20 | 0 |
 | `test-the-claim` | yes | verify-test-the-claim.py | 1 | 2 | 5 | 3 | 6 | 5 | 0 |
 | `the-perfect-prank` | yes | none | 0 | 0 | 2 | 1 | 3 | 0 | 0 |
 | `think-of-a-number` | yes | verify-think-of-a-number.py | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `trig-identity-duel` | yes | verify-trig-identity-duel.py | 0 | 7 | 4 | 2 | 2 | 11 | 0 |
 | `trig-wars` | yes | verify-trig-wars.py | 1 | 1 | 6 | 2 | 1 | 9 | 0 |
 | `trig-worms` | yes | verify-trig-worms.py | 1 | 0 | 5 | 1 | 2 | 5 | 0 |
-| `truth-buster` | yes | verify-truth-buster.py | 0 | 3 | 14 | 3 | 7 | 13 | 0 |
+| `truth-buster` | yes | verify-truth-buster.py | 0 | 3 | 14 | 3 | 4 | 16 | 0 |
 | `truth-will-set-you-free` | yes | verify-truth-will-set-you-free.py | 1 | 1 | 5 | 6 | 4 | 9 | 0 |
 | `unit-converter` | yes | verify-unit-converter.py | 0 | 1 | 7 | 3 | 3 | 8 | 0 |
-| `word-problem-decoder` | yes | verify-word-problem-decoder.py | 0 | 8 | 7 | 7 | 10 | 12 | 0 |
-| `wrong-on-the-internet` | yes | verify-wrong-on-the-internet.py | 0 | 3 | 9 | 4 | 11 | 5 | 0 |
+| `word-problem-decoder` | yes | verify-word-problem-decoder.py | 0 | 8 | 7 | 7 | 4 | 17 | 1 |
+| `wrong-on-the-internet` | yes | verify-wrong-on-the-internet.py | 0 | 3 | 9 | 4 | 4 | 12 | 0 |
 
 ## Open CRITICAL and HIGH, by game (Year 6, KS3, GCSE and Core first)
 
