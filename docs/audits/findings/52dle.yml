@@ -53,3 +53,39 @@ findings:
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
     7 Oct'
   status: open
+- id: 52dle-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:text-contradicts-content
+  level: all
+  where: games/52dle/index.html:698 (puzzle 15, a = 28)
+  summary: 'The clue says "My divisors (1,2,4,7,14) sum to me", which is false: the divisors of 28 include 28 and sum to
+    56. It means the proper divisors, as hint 2 says. A one-word fix, open for Jon (the verifier pins the phrase
+    "(1,2,4,7,14)", unaffected)'
+  evidence: 'clue "I am the second perfect number. My divisors (1,2,4,7,14) sum to me."; hint "My proper divisors sum to
+    me" (SWEEP-1, batch 3)'
+  status: open
+- id: 52dle-s1-002
+  severity: MEDIUM
+  jc: true
+  class: NEW:text-contradicts-content
+  level: all
+  where: games/52dle/index.html:701 (puzzle 18, a = 23)
+  summary: 'The clue states a curiosity that does not exist ("1² + 2² + 3² + ... has properties modulo me"; every
+    modulus has properties). Same rule as t2-002/t2-003. A replacement fact is content, open for Jon'
+  evidence: 'clue "I am the 9th prime. I appear in the mathematical curiosity: 1² + 2² + 3² + ... has properties modulo
+    me." (SWEEP-1, batch 3)'
+  status: open
+- id: 52dle-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: games/52dle/index.html:692, :697, :702, :965 (puzzles 9, 14, 19; result modal); :601, :748-760 (rules, feedback)
+  summary: 'Wording: puzzle 19''s badge "Mersenne Prime" reads, on the result modal, as "521 is a Mersenne prime" (521 is
+    the exponent), and the clue writes 2^521 with a caret where others use superscripts; "Nature''s favourite proportion"
+    (puzzle 9) and "the most favourite number of humans globally" (puzzle 14, an online poll) are claims stated as fact;
+    the rules never explain the feedback bands or colours (blue and red mark distance, not direction), and help-audit.md''s
+    "?" How to Play modal is not on the page (a home-lane docs line). Open'
+  evidence: 'result modal "The answer was 521 — Mersenne Prime" (SWEEP-1, batch 3)'
+  status: open

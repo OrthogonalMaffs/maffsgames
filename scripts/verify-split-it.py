@@ -176,7 +176,9 @@ def expected(q):
     m = re.match(r'£1 = €([\d.]+)\. Convert £(\d+) to euros\.', t)
     if m:
         return 'money', [F(m.group(1)) * int(m.group(2))], '€'
-    m = re.match(r'A car travels (\d+) miles in (\d+) hours\. How far in (\d+) hours\?', t)
+    # SR-17 (SWEEP-1, split-it-s1-001): the key assumes the same speed, so the question says so; a speed
+    # question without it is unreadable here, and fails.
+    m = re.match(r'A car travels (\d+) miles in (\d+) hours\. At the same speed, how far in (\d+) hours\?', t)
     if m:
         d, h, h2 = map(int, m.groups())
         return 'exact', [F(d * h2, h)], None

@@ -210,3 +210,54 @@ findings:
   evidence: 'Found by the re-audit in the fix PR (scripts/verify-spot-the-error.py, 7 Oct 2026), closing t1-014.'
   status: fixed
   pr: 96
+- id: spot-the-error-s1-001
+  severity: HIGH
+  jc: true
+  class: NEW:true-wrong-option
+  level: ks3
+  where: games/spot-the-error/index.html:247 (ste_ks3_010), Stage 2
+  summary: 'The explanation names the 80 trials as the fact the working missed ("The total number of trials is 80
+    (stated in the question)"), yet the phrase "replaces it 80 times" is marked wrong; the key is "estimates the
+    probability of picking red". The "+ 4" in step 2 comes from nowhere and is never explained. Moving the Stage 2 key
+    is a key change no ruling covers (contract STOP IF: recorded and reported, not fixed)'
+  evidence: 'Steps "Total successful outcomes = 24", "P(red) = 24 ÷ (24 + 36 + 20 + 4) = 24 ÷ 84"; phrases [key]
+    "estimates the probability of picking red" | "replaces it 80 times" | "red 24 times" (SWEEP-1, batch 3)'
+  status: open
+- id: spot-the-error-s1-002
+  severity: MEDIUM
+  jc: true
+  class: NEW:convention-unstated
+  level: ks3
+  where: games/spot-the-error/index.html:251 (ste_ks3_014)
+  summary: 'The key needs one road straight through the junction (180° − 47°), which the stem never says. If two roads
+    end at a point the angle on the other side is 313° (step 3, keyed the error, would be right); at a crossroads it
+    could be 47°. Stating it is a stem change, open for Jon'
+  evidence: '"Two roads meet at a junction. The angle between them on one side is 47°. A surveyor calculates the angle
+    on the other side of the junction." Key step 3 "angles around a point sum to 360°, so other angle = 313°" (SWEEP-1,
+    batch 3)'
+  status: open
+- id: spot-the-error-s1-003
+  severity: MEDIUM
+  jc: true
+  class: NEW:true-wrong-option
+  level: ks3, gcse, level4
+  where: games/spot-the-error/index.html ste_ks3_021 (:261), ste_l4_011 (:340), ste_gcse_007 (:285) and the other slips
+  summary: 'Stage 2 asks for "the misread phrase that caused it", but many items are slips with nothing misread, so the
+    key falls back to the ask while the explanation points at another phrase, which is marked wrong: ks3_021 (the
+    explanation names the diameter, "diameter of 4.2 metres" marked wrong), l4_011 (it names r = 2, "r = 2" marked
+    wrong), gcse_007 ("similar in shape" keyed; the missed cue, the capacity, is not offered). Class for Jon: accept
+    two phrases where both fit, or reword Stage 2 for slip items'
+  evidence: 'ks3_021 key "area of the pond"; l4_011 key "S∞"; gcse_007 key "similar in shape" (SWEEP-1, batch 3)'
+  status: open
+- id: spot-the-error-s1-004
+  severity: LOW
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: gcse, level4, ks3
+  where: games/spot-the-error/index.html ste_gcse_036 (:317), ste_l4_004 (:333), ste_l4_025 (:357), ste_ks3_031 (:271)
+  summary: 'Wording: gcse_036''s explanation rests on independence the stem never states (the key holds anyway: a branch
+    pair sums to 1); l4_004 asks for distance "from t = 0" but ends "s = t³ + t² + c" (c = 0); l4_025''s key step has a
+    second slip (− x⁴/4!) the explanation never names, and "the x³/3! term belongs to sin(x)" (sin has − x³/3!);
+    ks3_031''s stem states the error ("without sorting the data first")'
+  evidence: 'SWEEP-1, batch 3'
+  status: open

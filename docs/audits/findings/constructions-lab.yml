@@ -60,3 +60,26 @@ findings:
     ~7 CSS px at 390; 'video coming soon' on all tasks; analytics level hard-coded 'gcse' and abandon on every exit
   evidence: Measured in Chromium at 390x844 touch; :454 read at source
   status: open
+- id: constructions-lab-s1-001
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: all
+  where: games/constructions-lab/index.html:160 (tutorial, Ruler Tool) against redraw() :268-277
+  summary: 'The tutorial says the ruler draws a line "between" the two points, but every ruler line is extended 800 px past
+    both, so task 5''s "Draw lines AC and BC ... Triangle ABC is equilateral" never shows a closed triangle. Wording or
+    a tool change, open for Jon'
+  evidence: '"1. Click a start point 2. Click an end point 3. A straight line is drawn between them"; const ext=800
+    (SWEEP-1, batch 3)'
+  status: open
+- id: constructions-lab-s1-002
+  severity: LOW
+  jc: true
+  class: NEW:text-contradicts-content
+  level: all
+  where: games/constructions-lab/index.html:226-228 (TASKS[8])
+  summary: '"The line from V through this point is the locus" of points equidistant from two lines, but for two lines the
+    locus is both angle bisectors, and task 9 insists "the locus is BOTH lines". With the drawn rays it is the bisector
+    inside the angle, which the task never says. Beyond t3-005 (rays called lines). Wording, open'
+  evidence: 'steps "This is the angle bisector" ... "The line from V through this point is the locus" (SWEEP-1, batch 3)'
+  status: open
