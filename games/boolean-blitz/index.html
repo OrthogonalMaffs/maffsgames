@@ -410,7 +410,7 @@ const QUESTIONS = [
   {
     expr: `\\overline{\\overline{A} + \\overline{B}}`,
     answer: `AB`,
-    distractors: [`\\overline{A} + \\overline{B}`, `A + B`, `\\overline{AB}`],
+    distractors: [`\\overline{A} + \\overline{B}`, `A + B`, `\\overline{A} \\cdot \\overline{B}`],
     steps: [
       [`\\overline{\\overline{A} + \\overline{B}}`, `\\overline{\\overline{A}} \\cdot \\overline{\\overline{B}}`, `De Morgan's`],
       [`\\overline{\\overline{A}} \\cdot \\overline{\\overline{B}}`, `A \\cdot B`, 'Double Negation'],
@@ -516,7 +516,7 @@ const QUESTIONS = [
   {
     expr: `\\overline{A + B} + A`,
     answer: `\\overline{B} + A`,
-    distractors: [`A + B`, `\\overline{A} + A`, `1`],
+    distractors: [`A + B`, `A \\cdot \\overline{B}`, `1`],
     steps: [
       [`\\overline{A+B} + A`, `\\overline{A}\\overline{B} + A`, `De Morgan's`],
       [`\\overline{A}\\overline{B} + A`, `A + \\overline{B}`, 'Absorption variant'],
@@ -534,7 +534,7 @@ const QUESTIONS = [
   {
     expr: `A \\cdot B \\cdot C + \\overline{A} \\cdot B \\cdot C`,
     answer: `BC`,
-    distractors: [`ABC`, `B + C`, `A \\cdot BC`],
+    distractors: [`ABC`, `B + C`, `0`],
     steps: [
       [`ABC + \\overline{A}BC`, `BC(A+\\overline{A})`, 'Distributive'],
       [`BC \\cdot 1`, `BC`, 'Complement + Identity'],
@@ -746,7 +746,7 @@ const QUESTIONS = [
   {
     expr: `A \\cdot B \\cdot C + A \\cdot B \\cdot D + A \\cdot B \\cdot \\overline{C} \\cdot \\overline{D}`,
     answer: `AB`,
-    distractors: [`AB(C+D)`, `ABC + ABD`, `A + B`],
+    distractors: [`AB(C+D)`, `ABCD`, `A + B`],
     steps: [
       [`ABC + ABD + AB\\overline{C}\\overline{D}`, `AB(C + D + \\overline{C}\\overline{D})`, 'Distributive'],
       [`\\overline{C}\\overline{D} = \\overline{C+D}`, `AB[(C+D) + \\overline{(C+D)}]`, `De Morgan's`],

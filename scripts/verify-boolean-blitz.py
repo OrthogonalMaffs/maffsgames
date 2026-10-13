@@ -17,13 +17,16 @@ Checks: every item's key has its expression's truth table (keys recomputed); the
 (computed here, with this script's own parser) are exactly those the page marks right, every option clicked in
 Chromium (390x844); t6-002 and t6-003 accept their second form, and no other option anywhere is accepted beside
 its key (Jon, 18:56: a new one needs his ruling); t6-001: after a mark, Enter three times and Tab+Enter on another
-option change neither the score nor the marks. A self-test plants the old exact-string marking, a rule accepting
-any option with the key's truth table, a new equal option in Q24, and the old CSS-only lock; each must FAIL.
+option change neither the score nor the marks; no two options share a truth table unless checker-allowlist.json lists
+the pair as a form question (SR-4; B11-CLEAR, 12 Oct 2026: the unsimplified forms of t6-004 and the two second forms
+above). A self-test plants the old exact-string marking, a rule accepting any option with the key's truth table, a new
+equal option in Q24, NOT(AB) back beside NOT(A) + NOT(B) in Q4, and the old CSS-only lock; each must FAIL.
 
     python scripts/verify-boolean-blitz.py [--no-selftest] [--against FILE] [--katex-dir DIR]
 """
 import argparse
 import itertools
+import json
 import os
 import re
 import sys
@@ -144,7 +147,19 @@ def accepted(q):
     return out
 
 
+def listed_pairs():
+    """Option pairs with one truth table that checker-allowlist.json lists as form questions for this game, as
+    (index, frozenset(pair)): the unsimplified forms of the key (t6-004) and the two second forms Jon accepted."""
+    out = set()
+    for e in json.load(open(os.path.join(HERE, 'checker-allowlist.json'), encoding='utf-8'))['b11_form_questions']:
+        m = re.fullmatch(r'boolean-blitz QUESTIONS\[(\d+)\]', e['where'])
+        if m:
+            out.add((int(m.group(1)), frozenset(e['pair'])))
+    return out
+
+
 def check_bank(fails, bank):
+    listed = listed_pairs()
     if len(bank) != COUNT:
         fails.append('bank: %d items, expected %d' % (len(bank), COUNT))
     for n, q in enumerate(bank):
@@ -157,6 +172,20 @@ def check_bank(fails, bank):
             fails.append('%s: %s' % (w, e))
         if q['answer'] in RULED and RULED[q['answer']] in q['distractors'] and RULED[q['answer']] not in accepted(q):
             fails.append('%s: %s must be accepted beside %s (Jon\'s ruling)' % (w, RULED[q['answer']], q['answer']))
+        # SR-4 (B11-CLEAR, 12 Oct 2026): no two options with one truth table unless the pair is listed as a form question.
+        opts = [q['answer']] + list(q['distractors'])
+        olet = sorted(set(re.findall(r'[A-Z]', ''.join(opts) + q['expr'])))
+        tabs = []
+        for o in opts:
+            try:
+                tabs.append(table(o, olet))
+            except ValueError:
+                tabs.append(None)                # not a Boolean expression (2AB): no truth table to share, as accepted()
+        for x in range(len(tabs)):
+            for y in range(x + 1, len(tabs)):
+                if tabs[x] is not None and tabs[x] == tabs[y] and (n, frozenset((opts[x], opts[y]))) not in listed:
+                    fails.append('%s: the options %s and %s have one truth table and are not a listed form question (SR-4)'
+                                 % (w, opts[x], opts[y]))
         for o in accepted(q):
             if o != q['answer'] and RULED.get(q['answer']) != o:
                 fails.append('%s: %s accepted beside the key %s; Jon accepted only AB + BC (for B(A + C)) and '
@@ -249,6 +278,8 @@ PLANTS = [
      [('  return boolLiterals(opt) <= Math.max(boolLiterals(key), minSopLiterals(g, vars));', '  return true;')]),
     ('Q24', 'a new equal option, B(C + A), in Q24',
      [("    distractors: [`AB + BC`, `BC`, `ABC`],", "    distractors: [`AB + BC`, `B(C + A)`, `ABC`],")]),
+    ('Q4 (', 'SR-4: two wrong options with one truth table (NOT(AB) back in Q4)',
+     [("`A + B`, `\\\\overline{A} \\\\cdot \\\\overline{B}`]", "`A + B`, `\\\\overline{AB}`]")]),
     ('t6-001', 't6-001: a CSS-only lock (before F1 batch 11)',
      [("  if (!MaffsLock.lock(document.getElementById('optionsGrid'))) return;", "  // (no guard: the CSS class alone)")]),
 ]
