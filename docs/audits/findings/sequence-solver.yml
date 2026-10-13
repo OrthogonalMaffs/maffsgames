@@ -67,7 +67,8 @@ findings:
   evidence: 'seq "3, __, 12, __, 21", ask "Fill in the gaps", key "3, 7.5, 12, 16.5, 21", options "3, 6, 12, 18, 21",
     "3, 8, 12, 17, 21", "3, 7, 12, 17, 21"; the verifier''s FILL() assumed arithmetic for any ask without "geometric"
     (SWEEP-1, batch 2)'
-  status: open
+  status: fixed
+  pr: 336
 - id: sequence-solver-s1-002
   severity: MEDIUM
   jc: false
