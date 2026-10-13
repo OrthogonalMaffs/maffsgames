@@ -158,6 +158,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/answer.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. A scenario is marked when its last step is done (right only with no slips): i >= 1 gives one wrong modal class, then every key; i = 0 every key.
 {
   "ready": "document.getElementById('gameScreen').classList.contains('active') && !!document.querySelector('#qArea .check-btn, #qArea .mcq-btn')",
@@ -168,13 +169,13 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
     "const fill = () => {",
     " if (G.currentQ === 0) set('modalInput', slip ? '0 to 1' : q.modalClass);",
     " else if (G.currentQ === 1) set('medianInput', q.medianClass);",
-    " else if (G.currentQ === 2) set('meanInput', q.mean);",
+    " else if (G.currentQ === 2) set('meanInput', meanKey(q).key);",
     " else if (G.sdStep === 0) q.midpoints.forEach((v, k) => set('mp' + k, v));",
     " else if (G.sdStep === 1) q.fx.forEach((v, k) => set('fx' + k, v));",
     " else if (G.sdStep === 2) q.x2.forEach((v, k) => set('x2_' + k, v));",
     " else if (G.sdStep === 3) q.fx2.forEach((v, k) => set('fx2_' + k, v));",
     " else if (G.sdStep === 4) set('varInput', q.variance);",
-    " else if (G.sdStep === 5) set('sdInput', q.sd);",
+    " else if (G.sdStep === 5) set('sdInput', sdKey(q).key);",
     " slip = false; };",
     "return new Promise(res => { const t0 = Date.now(); let last = null; (function w() {",
     " if (G.qIdx !== n0 || area.querySelector('.next-btn') || Date.now() - t0 > 15000) { res(); return; }",
@@ -907,6 +908,46 @@ function fmt(v){
   return parseFloat(v.toFixed(2)).toString();
 }
 
+// The mean and the standard deviation are asked to 3 significant figures and marked there by the shared
+// MaffsAnswer.decimal() (canon §7.1.3, SR-1, SR-3; stat-attack-s1-002): the key is worked exactly from the
+// table's own sums, Σfx/Σf and √(Σfx²/Σf − (Σfx/Σf)²), never from a band round a stored figure. An answer
+// equal to the key at its 3 s.f. place is right; one that rounds to it but carries more figures gets the
+// format message and is not marked; anything else is wrong.
+function _isqrt(n){ if(n<2n) return n; let x=n, y=(x+1n)/2n; while(y<x){ x=y; y=(x+n/x)/2n; } return x; }
+// a/b (BigInt, a >= 0, b > 0), or its square root, at 3 significant figures, half up: {key, dp}
+function _sf3(a,b,root){
+  const p=k=>10n**BigInt(k);
+  const ge=e=>e>=0 ? (root ? a>=b*p(2*e) : a>=b*p(e)) : (root ? a*p(-2*e)>=b : a*p(-e)>=b);
+  const v=Number(a)/Number(b);
+  let e=Math.floor(Math.log10(root?Math.sqrt(v):v));
+  while(!ge(e)) e--;
+  while(ge(e+1)) e++;
+  const dp=2-e;
+  let r;
+  if(!root){
+    r = dp>=0 ? (2n*a*p(dp)+b)/(2n*b) : (2n*a+b*p(-dp))/(2n*b*p(-dp));
+  } else {
+    const m = dp>=0 ? _isqrt(4n*a*p(2*dp)/b) : _isqrt(4n*a/(b*p(-2*dp)));
+    r=(m+1n)/2n;
+  }
+  let key;
+  if(dp>0){ const t=r.toString().padStart(dp+1,'0'); key=t.slice(0,-dp)+'.'+t.slice(-dp); }
+  else key=(r*p(-dp)).toString();
+  return {key:key,dp:dp};
+}
+function _sums(q){
+  // the table's sums are at most 2 d.p.: worked as integers in hundredths
+  const n=BigInt(q.freqs.reduce((x,y)=>x+y,0));
+  return {n:n, s1:BigInt(Math.round(q.sumFx*100)), s2:BigInt(Math.round(q.sumFx2*100))};
+}
+function meanKey(q){ const t=_sums(q); return _sf3(t.s1, 100n*t.n, false); }
+function sdKey(q){ const t=_sums(q); return _sf3(100n*t.n*t.s2-t.s1*t.s1, 10000n*t.n*t.n, true); }
+// A typed table entry is exact (f × x, x²): marked by MaffsAnswer.exact(), never to a band (SR-2).
+function _exactCol(id,vals){
+  for(let i=0;i<vals.length;i++){ if(MaffsAnswer.exact($(id+i).value,vals[i])!=='correct') return false; }
+  return true;
+}
+
 // ============================================================
 //  RENDER QUESTION
 // ============================================================
@@ -953,7 +994,7 @@ function renderMedianQ(q,area){
   const n=q.freqs.reduce((a,b)=>a+b,0);
   area.innerHTML=`
     <div class="q-label">Question 2 of 4</div>
-    <div class="q-prompt">Identify the class interval containing the median. (n = ${n})</div>
+    <div class="q-prompt">Identify the class interval containing the median. Use n ÷ 2 = ${n/2}: the median class is the first class whose cumulative frequency reaches ${n/2}. (n = ${n})</div>
     <input type="text" class="text-input" id="medianInput" placeholder="e.g. 40 ≤ x < 50">
     <button class="check-btn" onclick="checkMedian()">Check</button>
     <div id="medianFb"></div>
@@ -974,7 +1015,7 @@ function checkMedian(){
     G.penalties++;G.qPenalties++;
     const n=q.freqs.reduce((a,b)=>a+b,0);
     const medPos=n/2;
-    fb.innerHTML=`<div class="feedback wrong">Incorrect. The median is the ${medPos}th value. Count through cumulative frequencies to find which class it falls in.</div>`;
+    fb.innerHTML=`<div class="feedback wrong">Incorrect. The median is the n ÷ 2 = ${medPos}th value: count through the cumulative frequencies to the first class that reaches ${medPos}.</div>`;
     _addDismiss(fb,()=>{fb.innerHTML='';});
     MaffsLock.fresh($('qArea'));   // another try, after the fresh window: a double-click cannot cost two slips
   }
@@ -994,13 +1035,18 @@ function renderMeanQ(q,area){
 
 function checkMean(){
   const q=G.questions[G.qIdx];
-  const val=parseFloat($('meanInput').value);
-  if(isNaN(val)) return;
-  const correct=Math.abs(val-q.mean)<=0.15;
-  if(!MaffsLock.lock($('qArea')))return;   // one mark per attempt (canon 7.6.0)
+  const raw=$('meanInput').value;
+  if(!raw.trim()) return;
+  const k=meanKey(q), res=MaffsAnswer.decimal(raw,k.key,k.dp);
   const fb=$('meanFb');
+  if(res==='format'||res==='unreadable'){   // not marked (canon §7.1.3): the student resubmits
+    fb.innerHTML=`<div class="feedback hint">${MaffsAnswer.message(res,raw,{sf:3})}</div>`;
+    return;
+  }
+  const correct=res==='correct';
+  if(!MaffsLock.lock($('qArea')))return;   // one mark per attempt (canon 7.6.0)
   if(correct){
-    fb.innerHTML=`<div class="feedback correct">Correct! Mean = ${q.mean}</div>`;
+    fb.innerHTML=`<div class="feedback correct">Correct! Mean = ${k.key} (3 s.f.)</div>`;
     MaffsLock.timer(()=>{G.currentQ=3;G.sdStep=0;renderQuestion(q);},1000);
   } else {
     G.penalties++;G.qPenalties++;
@@ -1041,11 +1087,7 @@ function renderSD_midpoints(q,area){
 function checkMidpoints(){
   const q=G.questions[G.qIdx];
   const n=q.classes.length;
-  let allCorrect=true;
-  for(let i=0;i<n;i++){
-    const val=parseFloat($('mp'+i).value);
-    if(isNaN(val)||Math.abs(val-q.midpoints[i])>0.01){allCorrect=false;break;}
-  }
+  const allCorrect=_exactCol('mp',q.midpoints.slice(0,n));
   if(!MaffsLock.lock($('qArea')))return;   // one mark per attempt (canon 7.6.0)
   const fb=$('sdFb');
   if(allCorrect){
@@ -1079,11 +1121,7 @@ function renderSD_fx(q,area){
 function checkFx(){
   const q=G.questions[G.qIdx];
   const n=q.classes.length;
-  let allCorrect=true;
-  for(let i=0;i<n;i++){
-    const val=parseFloat($('fx'+i).value);
-    if(isNaN(val)||Math.abs(val-q.fx[i])>0.5){allCorrect=false;break;}
-  }
+  const allCorrect=_exactCol('fx',q.fx.slice(0,n));
   if(!MaffsLock.lock($('qArea')))return;   // one mark per attempt (canon 7.6.0)
   const fb=$('sdFb');
   if(allCorrect){
@@ -1117,11 +1155,7 @@ function renderSD_x2(q,area){
 function checkX2(){
   const q=G.questions[G.qIdx];
   const n=q.classes.length;
-  let allCorrect=true;
-  for(let i=0;i<n;i++){
-    const val=parseFloat($('x2_'+i).value);
-    if(isNaN(val)||Math.abs(val-q.x2[i])>0.5){allCorrect=false;break;}
-  }
+  const allCorrect=_exactCol('x2_',q.x2.slice(0,n));
   if(!MaffsLock.lock($('qArea')))return;   // one mark per attempt (canon 7.6.0)
   const fb=$('sdFb');
   if(allCorrect){
@@ -1155,11 +1189,7 @@ function renderSD_fx2(q,area){
 function checkFx2(){
   const q=G.questions[G.qIdx];
   const n=q.classes.length;
-  let allCorrect=true;
-  for(let i=0;i<n;i++){
-    const val=parseFloat($('fx2_'+i).value);
-    if(isNaN(val)||Math.abs(val-q.fx2[i])>Math.max(1,q.fx2[i]*0.001)){allCorrect=false;break;}
-  }
+  const allCorrect=_exactCol('fx2_',q.fx2.slice(0,n));
   if(!MaffsLock.lock($('qArea')))return;   // one mark per attempt (canon 7.6.0)
   const fb=$('sdFb');
   if(allCorrect){
@@ -1223,13 +1253,18 @@ function renderSD_final(q,area){
 
 function checkSD(){
   const q=G.questions[G.qIdx];
-  const val=parseFloat($('sdInput').value);
-  if(isNaN(val)) return;
-  const correct=Math.abs(val-q.sd)<=Math.max(0.1,q.sd*0.01);
-  if(!MaffsLock.lock($('qArea')))return;   // one mark per attempt (canon 7.6.0)
+  const raw=$('sdInput').value;
+  if(!raw.trim()) return;
+  const k=sdKey(q), res=MaffsAnswer.decimal(raw,k.key,k.dp);
   const fb=$('sdFb');
+  if(res==='format'||res==='unreadable'){   // not marked (canon §7.1.3): the student resubmits
+    fb.innerHTML=`<div class="feedback hint">${MaffsAnswer.message(res,raw,{sf:3})}</div>`;
+    return;
+  }
+  const correct=res==='correct';
+  if(!MaffsLock.lock($('qArea')))return;   // one mark per attempt (canon 7.6.0)
   if(correct){
-    fb.innerHTML=`<div class="feedback correct">Correct! σ = ${q.sd}</div>`;
+    fb.innerHTML=`<div class="feedback correct">Correct! σ = ${k.key}</div>`;
     // Check if interpretation step needed
     if((G.level==='core'||G.level==='level4')&&q.interpretOptions){
       MaffsLock.timer(()=>{G.sdStep=6;renderSDQ(q,$('qArea'));},1000);
@@ -1381,10 +1416,11 @@ function showMenu(){
 //  INTERVAL PARSER — flexible matching
 // ============================================================
 function parseInterval(s){
-  // Extract numbers from interval string
-  const nums=s.match(/[\d.]+/g);
+  // The class's two bounds, compared by value: "3 ≤ x < 4" is the class "3.0 ≤ x < 4.0"
+  // (stat-attack-s1-006).
+  const nums=s.match(/\d+(?:\.\d+)?|\.\d+/g);
   if(!nums||nums.length<2) return s.trim().toLowerCase();
-  return nums[0]+'_'+nums[1];
+  return Number(nums[0])+'_'+Number(nums[1]);
 }
 
 // ============================================================
@@ -1411,7 +1447,7 @@ window.addEventListener('DOMContentLoaded',()=>{parseURL();});
     '<tr style="font-weight:700;border-top:2px solid var(--primary)"><td style="padding:.4rem;border:1px solid var(--border)">Total</td><td style="padding:.4rem;border:1px solid var(--border)">30</td><td style="padding:.4rem;border:1px solid var(--border)"></td><td style="padding:.4rem;border:1px solid var(--border);color:#f59e0b">1380</td></tr>'+
     '</table>'+
     '<b style="color:var(--primary)">Modal class:</b> 40\u201360 (highest frequency = 12)<br>'+
-    '<b style="color:var(--primary)">Median class:</b> The 15th and 16th values fall in 40\u201360 (cumulative: 4, 11, <b>23</b>, ...)<br>'+
+    '<b style="color:var(--primary)">Median class:</b> n \u00f7 2 = 15: the 15th value falls in 40\u201360, the first class whose cumulative frequency reaches 15 (cumulative: 4, 11, <b>23</b>, ...)<br>'+
     '<b style="color:var(--primary)">Estimated mean:</b> '+k('\\bar{x} = \\frac{\\sum fx}{\\sum f} = \\frac{1380}{30} = 46');
 
   document.getElementById('methodMeanSD').innerHTML=
