@@ -9,7 +9,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | met: 0 of 96 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 3 open (0 CRITICAL, 3 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 1 open (0 CRITICAL, 1 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, SR-14 fields |
 | 4 | Every level serves 40+ (tracked, not part of the gate: canon §0.2, Jon 12 Oct 2026) | not met, not gating: 126 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | met: 0 in the roster's Unlisted section |
@@ -22,10 +22,10 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
-| HIGH | 10 | 227 | 0 | 237 |
-| MEDIUM | 239 | 258 | 3 | 500 |
+| HIGH | 8 | 229 | 0 | 237 |
+| MEDIUM | 237 | 260 | 3 | 500 |
 | LOW | 228 | 103 | 1 | 332 |
-| **All** | 478 | 622 | 4 | 1104 |
+| **All** | 474 | 626 | 4 | 1104 |
 
 ### By class
 
@@ -33,7 +33,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 |---|---|---|
 | NEW:wording | 112 | 128 |
 | 2 | 12 | 111 |
-| NEW:text-contradicts-content | 63 | 90 |
+| NEW:text-contradicts-content | 62 | 90 |
 | 3 | 5 | 86 |
 | NEW:convention-unstated | 32 | 78 |
 | NEW:wrong-explanation-text | 21 | 71 |
@@ -55,7 +55,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:equal-value-options | 0 | 9 |
 | NEW:timer-policy | 7 | 9 |
 | NEW:hand-typed explanation figure | 4 | 8 |
-| NEW:second-correct-answer | 4 | 8 |
+| NEW:second-correct-answer | 1 | 8 |
 | NEW:hint-gives-answer | 6 | 7 |
 | NEW:wrong-explanation | 1 | 7 |
 | NEW:ill-posed wording | 1 | 6 |
@@ -183,7 +183,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `given-that` | yes | verify-given-that.py | 0 | 3 | 2 | 3 | 3 | 5 | 0 |
 | `glorious-gantt` | unlisted | none | 1 | 7 | 4 | 1 | 13 | 0 | 0 |
 | `gradient-hunter` | yes | verify-gradient-hunter.py | 1 | 0 | 6 | 2 | 4 | 5 | 0 |
-| `graph-sketcher` | yes | verify-graph-sketcher.py | 1 | 3 | 5 | 4 | 8 | 5 | 0 |
+| `graph-sketcher` | yes | verify-graph-sketcher.py | 1 | 3 | 5 | 4 | 5 | 8 | 0 |
 | `graph-transformer` | yes | verify-graph-transformer.py | 0 | 0 | 3 | 3 | 2 | 4 | 0 |
 | `growth-and-decay` | yes | verify-growth-and-decay.py | 1 | 0 | 9 | 4 | 10 | 4 | 0 |
 | `higher-power` | yes | verify-higher-power.py | 0 | 1 | 8 | 6 | 13 | 2 | 0 |
@@ -197,7 +197,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `modular-battle` | yes | verify-modular-battle.py | 0 | 0 | 4 | 2 | 5 | 1 | 0 |
 | `moments-master` | yes | verify-moments-master.py | 1 | 9 | 9 | 4 | 5 | 18 | 0 |
 | `negative-number-line` | yes | verify-negative-number-line.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
-| `new-shapes` | yes | verify-new-shapes.py | 0 | 2 | 7 | 1 | 9 | 1 | 0 |
+| `new-shapes` | yes | verify-new-shapes.py | 0 | 2 | 7 | 1 | 8 | 2 | 0 |
 | `normal-navigator` | yes | verify-normal-navigator.py | 0 | 0 | 4 | 7 | 6 | 5 | 0 |
 | `partial-fractions-duel` | yes | verify-partial-fractions-duel.py | 0 | 7 | 4 | 2 | 1 | 12 | 0 |
 | `percentage-flip` | yes | verify-percentage-flip.py | 0 | 0 | 2 | 0 | 1 | 1 | 0 |
@@ -239,10 +239,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Open CRITICAL and HIGH, by game (Year 6, KS3, GCSE and Core first)
 
-### `new-shapes` (Year 6)
-
-- **HIGH** new-shapes-s1-001, `games/new-shapes/index.html:504 (renderParallelogram, hLabel left 168px), :583 (renderTrapezium, hLabel right 20px)`: The h label is not drawn on the dashed height line: on every parallelogram it sits over the slanted side (and hides it), and on every trapezium it straddles the slanted side, so it reads as the slant length, the very ...
-
 ### `glorious-gantt` (Core, L4; unlisted)
 
 - **CRITICAL** glorious-gantt-t4-001 (JC), `games/glorious-gantt/index.html:353,390,428 (L4_A1, L4_A2, L4_A3)`: Node-time keys contradict the drawn network the prompt names: 10+ of 82 marked entries in L4 mode A
@@ -257,7 +253,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 ### `graph-sketcher` (Core, A-Level, L4)
 
 - **HIGH** graph-sketcher-s1-006 (JC), `games/graph-sketcher/index.html L4_5 (:538), CM2 (:273), CM11 (:351), CM4 (:291)`: L4_5's "maximum deflection" on 0 ≤ x ≤ 4 is 4 at both x = 1 and x = 4 (the endpoint), so (4, 4) is also right. Part 2 #14: the ask becomes "the turning point"; the key is unchanged (Split: the parent entry held 4 defe...
-- **HIGH** graph-sketcher-s1-009 (JC), `games/graph-sketcher/index.html L4_5 (:538), CM2 (:273), CM11 (:351), CM4 (:291)`: CM2's key "Model allows negative profit" is false, P = x(x − 3)² ≥ 0, and no option is true. Part 2 #14: the key becomes "The model predicts profit keeps rising without limit as x increases" (drafted wording in the co...
 
 ## Live games no audit has covered
 
