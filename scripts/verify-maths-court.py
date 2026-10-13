@@ -140,6 +140,35 @@ def pct(text):
     return float(m.group(1)) / 100 if m else None
 
 
+def _text(case):
+    return ' '.join([case['problem'], case['judgesSummary']] + [w for a in case['arguments'] for w in a['working'] + [a['conclusion']]])
+
+
+# SWEEP-1-RULINGS (13 Oct 2026): each ruling's fix stays fixed (Part 2 #3, R1, R2, R3, R6).
+PINS = {
+    'mc_gcse_001': [('Part 2 #3: Brenda reaches 54 by "division before multiplication", a false rule, so she is keyed wrong',
+                     lambda c: not next(a for a in c['arguments'] if a['name'].startswith('Brenda'))['correct'])],
+    'mc_core_003': [('R6: no end-of-the-world joke ("The planet will end ...")', lambda c: 'planet will end' not in _text(c))],
+    'mc_gcse_015': [("R3: the judge says Mix Max's factors (-1 and -6) add to -7, not -5",
+                     lambda c: '\u22127' in c['judgesSummary'] and 'add to 7' not in c['judgesSummary'])],
+    'mc_core_004': [('R2: the problem states the units the key rests on (time in hours)', lambda c: 'hours' in c['problem'])],
+    'mc_gcse_008': [('R1: the index working is written x^(3 x 4), not the superscript-x form', lambda c: '\u02e3' not in _text(c))],
+    'mc_gcse_004': [('R1: Gus is not said to work "by luck"', lambda c: 'by luck' not in c['judgesSummary'])],
+}
+
+START_SAYS = 'The court judges the reasoning, not just the answer.'
+START_NEVER = 'One correct answer'
+
+
+def check_start(rep, page_src):
+    """Part 2 #3 and R3: the start screen says what the court judges and no longer promises one correct answer
+    (five GCSE cases key two or three)."""
+    if START_SAYS not in page_src:
+        rep.fail('start screen', 'Part 2 #3', 'no longer says %r' % START_SAYS)
+    if START_NEVER in page_src:
+        rep.fail('start screen', 'R3', 'promises %r though five GCSE cases key two or three' % START_NEVER)
+
+
 def check_case(rep, case, verbose=False):
     # Several arguments may be correct (mc_gcse_004 has three routes to one answer), two
     # wrong arguments may share a conclusion, and a wrong argument may even reach the right
@@ -171,6 +200,9 @@ def check_case(rep, case, verbose=False):
                 and a['name'].split()[0] not in case['judgesSummary']:
             rep.fail(cid, 'SR-16', '%s reaches the right conclusion (%r) by a wrong reason, and the judge\'s summary '
                      'never says why it is wrong' % (a['name'], a['conclusion']))
+    for desc, ok_ in PINS.get(cid, []):
+        if not ok_(case):
+            rep.fail(cid, 'sweep-1 ruling', desc)
     spec = SPECS.get(cid)
     if spec is None:
         return
@@ -334,6 +366,38 @@ def selftest(bank, rendered):
         c['judgesSummary'] = 'Demi is correct. 5/8 = 0.625, 3/5 = 0.6. Chuck approximated 5/8 as 0.5, which is wrong.'
     expect('s1-001: mc_ks3_002 Numerica unnamed', lambda rep: check_bank(rep, mutated(old_summary)))
 
+    # SWEEP-1-RULINGS (13 Oct 2026): each fault as it was on main before the ruling's fix
+    def old_brenda(b):
+        for a in find(b, 'mc_gcse_001')['arguments']:
+            a['correct'] = a['correct'] or a['name'].startswith('Brenda')
+    expect('Part 2 #3: Brenda keyed correct', lambda rep: check_bank(rep, mutated(old_brenda)))
+
+    def old_planet(b):
+        a = find(b, 'mc_core_003')['arguments'][2]
+        a['working'] = a['working'] + ['The planet will end before 13 years.']
+    expect('R6: the planet-will-end joke', lambda rep: check_bank(rep, mutated(old_planet)))
+
+    def old_sum(b):
+        c = find(b, 'mc_gcse_015')
+        c['judgesSummary'] = c['judgesSummary'].replace('chose \u22121 and \u22126, which multiply to +6 but add to \u22127, not \u22125.',
+                                                          'chose 1 and 6 which multiply to 6 but add to 7, not 5.')
+    expect('R3: gcse_015 summary adds to 7, not 5', lambda rep: check_bank(rep, mutated(old_sum)))
+
+    def old_units(b):
+        c = find(b, 'mc_core_004')
+        c['problem'] = c['problem'].replace(' Time is measured in hours and distance in units.', '')
+    expect('R2: mc_core_004 units unstated', lambda rep: check_bank(rep, mutated(old_units)))
+
+    def old_notation(b):
+        a = find(b, 'mc_gcse_008')['arguments'][1]
+        a['working'] = [w.replace('x^(3 \u00d7 4)', 'x\u00b3\u02e3\u2074') for w in a['working']]
+    expect('R1: gcse_008 x^(3x4) notation', lambda rep: check_bank(rep, mutated(old_notation)))
+
+    def old_start(rep):
+        src = open(os.path.join(ROOT, 'games', SLUG, 'index.html'), encoding='utf-8').read()
+        check_start(rep, src.replace(START_SAYS, START_NEVER + '.'))
+    expect('Part 2 #3: start screen promises one answer', old_start)
+
     leak_bank, leak_rendered = load_and_render("""(() => {
       const orig = loadQuestion;
       loadQuestion = function () { orig();
@@ -360,6 +424,7 @@ def main():
     rep = Report()
     cases = check_bank(rep, bank, args.verbose)
     check_rendered(rep, cases, rendered)
+    check_start(rep, open(os.path.join(ROOT, 'games', SLUG, 'index.html'), encoding='utf-8').read())
     for f in rep.fails:
         print('FAIL ' + f)
     for w in rep.warns:

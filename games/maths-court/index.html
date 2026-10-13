@@ -201,7 +201,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <!-- START SCREEN -->
 <div class="screen active" id="startScreen">
   <div class="start-title">Maths Court</div>
-  <div class="start-sub">Three arguments. One correct answer. You're the judge.<br>Read the working, find the truth, deliver the verdict.</div>
+  <div class="start-sub">Three arguments. The court judges the reasoning, not just the answer. You're the judge.<br>Read the working, find the truth, deliver the verdict.</div>
 
   <div class="level-card selected" data-level="ks3" onclick="selectLevel('ks3')">
     <h3>KS3</h3>
@@ -387,8 +387,8 @@ gcse: [
 arguments:[
 {name:'Bryan Bracket',occupation:'Order Operative',working:['Brackets first: 2+1=3','Powers: 3\u00b2=9','Then left to right: 18\u00f73=6, 6\u00d79=54'],conclusion:'Answer: 54',correct:true},
 {name:'Lesley Left',occupation:'Sequential Thinker',working:['18\u00f72=9, 9+1=10','10\u00d73=30, 30\u00b2=900'],conclusion:'Answer: 900',correct:false},
-{name:'Brenda Mnemonic',occupation:'BIDMAS Believer',working:['Brackets: 2+1=3','Division before multiplication:','18\u00f73\u00d73\u00b2 = 18\u00f73\u00d79','= 6\u00d79 = 54'],conclusion:'Answer: 54',correct:true}
-],judgesSummary:'Bryan is correct with clear reasoning. Brenda also gets 54 but her understanding of the order within DM is muddled \u2014 division and multiplication have equal priority and go left to right. Lesley ignored all precedence rules.'},
+{name:'Brenda Mnemonic',occupation:'BIDMAS Believer',working:['Brackets: 2+1=3','Division before multiplication:','18\u00f73\u00d73\u00b2 = 18\u00f73\u00d79','= 6\u00d79 = 54'],conclusion:'Answer: 54',correct:false}
+],judgesSummary:'Bryan is correct with clear reasoning. Brenda also gets 54, but by a false rule: division does not come before multiplication. They have equal priority and go left to right, so the court rules against her reasoning. Lesley ignored all precedence rules.'},
 
 {id:'mc_gcse_002',level:'gcse',topic:'Algebra \u2014 Expanding',problem:'Expand and simplify (2x + 3)(x \u2212 4)',
 arguments:[
@@ -409,7 +409,7 @@ arguments:[
 {name:'Sol Ving',occupation:'Equation Expert',working:['From eq2: x = y + 2','Sub into eq1: 3(y+2) + 2y = 16','3y+6+2y=16 \u2192 5y=10 \u2192 y=2, x=4'],conclusion:'x = 4, y = 2',correct:true},
 {name:'Ellie Minator',occupation:'Elimination Fan',working:['Multiply eq2 by 2: 2x \u2212 2y = 4','Add to eq1: 5x = 20, x = 4','Sub: 4 \u2212 y = 2, y = 2'],conclusion:'x = 4, y = 2',correct:true},
 {name:'Gus Simultaneous',occupation:'Guessing Champion',working:['Try x=5, y=3: 3(5)+2(3)=21\u226016','Try x=4, y=2: 3(4)+2(2)=16\u2713','and 4\u22122=2\u2713. Done by trial.'],conclusion:'x = 4, y = 2',correct:true}
-],judgesSummary:'All three reached x=4, y=2, which is correct. Sol used substitution (clear and reliable), Ellie used elimination (equally valid), Gus used trial and error (risky in an exam \u2014 works here by luck). Substitution and elimination are the expected methods.'},
+],judgesSummary:'All three reached x=4, y=2, which is correct. Sol used substitution (clear and reliable), Ellie used elimination (equally valid), Gus used trial and error (risky in an exam \u2014 it only works if the guess happens to be right). Substitution and elimination are the expected methods.'},
 
 {id:'mc_gcse_005',level:'gcse',topic:'Pythagoras',problem:'A right triangle has legs 5cm and 12cm. Find the hypotenuse.',
 arguments:[
@@ -435,7 +435,7 @@ arguments:[
 {id:'mc_gcse_008',level:'gcse',topic:'Indices',problem:'Simplify (x\u00b3)\u2074 \u00f7 x\u2075',
 arguments:[
 {name:'Indy Ces',occupation:'Index Law Professor',working:['(x\u00b3)\u2074 = x\u00b9\u00b2','x\u00b9\u00b2 \u00f7 x\u2075 = x\u2077'],conclusion:'Answer: x\u2077',correct:true},
-{name:'Maddy Multiply',occupation:'Multiplication Fan',working:['(x\u00b3)\u2074 = x\u00b3\u02e3\u2074 = x\u00b9\u00b2','Then x\u00b9\u00b2 \u00f7 x\u2075 = x\u00b9\u00b2\u207b\u2075 = x\u2077'],conclusion:'Answer: x\u2077',correct:true},
+{name:'Maddy Multiply',occupation:'Multiplication Fan',working:['(x\u00b3)\u2074 = x^(3 \u00d7 4) = x\u00b9\u00b2','Then x\u00b9\u00b2 \u00f7 x\u2075 = x\u00b9\u00b2\u207b\u2075 = x\u2077'],conclusion:'Answer: x\u2077',correct:true},
 {name:'Terry Times',occupation:'All-Purpose Multiplier',working:['(x\u00b3)\u2074 = x\u00b3 \u00d7 x\u2074 = x\u2077','Then x\u2077 \u00f7 x\u2075 = x\u00b2'],conclusion:'Answer: x\u00b2',correct:false}
 ],judgesSummary:'Both Indy and Maddy are correct (x\u2077). Terry confused (x\u00b3)\u2074 = x\u00b9\u00b2 with x\u00b3 \u00d7 x\u2074 = x\u2077 \u2014 a power to a power means multiply indices.'},
 
@@ -486,7 +486,7 @@ arguments:[
 {name:'Faye Factor',occupation:'Quadratic Factoriser',working:['Need two numbers that multiply to +6','and add to \u22125','Those are \u22122 and \u22123','x\u00b2 \u2212 5x + 6 = (x \u2212 2)(x \u2212 3)'],conclusion:'(x \u2212 2)(x \u2212 3)',correct:true},
 {name:'Positive Pete',occupation:'Sign Ignorer',working:['Factors of 6: 2 and 3','x\u00b2 \u2212 5x + 6 = (x + 2)(x + 3)','Check: x\u00b2 + 5x + 6... close enough.'],conclusion:'(x + 2)(x + 3)',correct:false},
 {name:'Mix Max',occupation:'Confused Calculator',working:['Factors of 6: 1 and 6','x\u00b2 \u2212 5x + 6 = (x \u2212 1)(x \u2212 6)','Check: x\u00b2 \u2212 7x + 6... that\'s the same.'],conclusion:'(x \u2212 1)(x \u2212 6)',correct:false}
-],judgesSummary:'Faye is correct. We need two numbers that multiply to +6 AND add to \u22125. Only \u22122 and \u22123 work. Pete got the signs wrong (his expand gives +5x not \u22125x). Mix Max chose 1 and 6 which multiply to 6 but add to 7, not 5.'},
+],judgesSummary:'Faye is correct. We need two numbers that multiply to +6 AND add to \u22125. Only \u22122 and \u22123 work. Pete got the signs wrong (his expand gives +5x not \u22125x). Mix Max chose \u22121 and \u22126, which multiply to +6 but add to \u22127, not \u22125.'},
 
 {id:'mc_gcse_016',level:'gcse',topic:'Perpendicular Gradient',problem:'A line has gradient 3. What is the gradient of a line perpendicular to it?',
 arguments:[
@@ -543,10 +543,10 @@ arguments:[
 arguments:[
 {name:'Sol Arpanel',occupation:'Renewable Finance Expert',working:['Payback = \u00a35,000 \u00f7 \u00a3380','= 13.16 years','Paid off in year 14.'],conclusion:'About 13 years',correct:true},
 {name:'Sunny Optimist',occupation:'Green Energy Enthusiast',working:['\u00a35,000 \u00f7 12 months = \u00a3416/month','Saves \u00a3380/month.','Paid off in about a year!'],conclusion:'About 1 year',correct:false},
-{name:'Percy Pessimist',occupation:'Anti-Solar Campaigner',working:['They never pay for themselves.','The planet will end before 13 years.'],conclusion:'Never',correct:false}
+{name:'Percy Pessimist',occupation:'Anti-Solar Campaigner',working:['They never pay for themselves.'],conclusion:'Never',correct:false}
 ],judgesSummary:'Sol is correct. Payback = initial cost \u00f7 annual saving = \u00a35,000 \u00f7 \u00a3380 = 13.2 years. Sunny confused monthly with annual savings.'},
 
-{id:'mc_core_004',level:'core',topic:'Gradient Interpretation',problem:'A distance-time graph shows a straight line from (0, 0) to (4, 100). Interpret the gradient.',
+{id:'mc_core_004',level:'core',topic:'Gradient Interpretation',problem:'A distance-time graph shows a straight line from (0, 0) to (4, 100). Time is measured in hours and distance in units. Interpret the gradient.',
 arguments:[
 {name:'Grace Gradient',occupation:'Rate of Change Analyst',working:['Gradient = \u0394y / \u0394x','= (100 \u2212 0) / (4 \u2212 0)','= 100 / 4 = 25','Units: distance/time = speed.'],conclusion:'Constant speed of 25 units per hour',correct:true},
 {name:'Acceleration Al',occupation:'Physics Enthusiast',working:['Gradient of distance-time = acceleration.','100 / 4 = 25','Acceleration = 25 m/s\u00b2.'],conclusion:'Acceleration of 25 m/s\u00b2',correct:false},
