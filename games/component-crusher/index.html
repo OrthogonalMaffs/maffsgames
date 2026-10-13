@@ -382,7 +382,7 @@ alevel:[
    grid:{x:[-2,6],y:[-5,2]},
    sqs:[
      {type:'num',prompt:'Find the speed \\(|\\mathbf{v}|\\).',answer:5},
-     {type:'num',prompt:'Find the bearing of the motion, in degrees to 1 d.p.',answer:126.9,dp:1}
+     {type:'num',prompt:'Taking \\(\\mathbf{i}\\) due east and \\(\\mathbf{j}\\) due north, find the bearing of the motion, in degrees to 1 d.p.',answer:126.9,dp:1}
    ]},
   {id:'AL12',desc:'Position with velocity (Mechanics)',
    vectors:[{from:[2,3],to:[3,5],label:'v',color:'#14b8a6'}],
@@ -486,7 +486,7 @@ level4:[
    grid3d:true,
    sqs:[
      {type:'vec3',prompt:'\\(r = (1+2t)i + (3-t)j + (2+3t)k\\). Position at \\(t = 2\\).',answers:[5,1,8],labels:['i','j','k']},
-     {type:'vec3',prompt:'Direction vector of the line.',answers:[2,-1,3],labels:['i','j','k']}
+     {type:'vec3',prompt:'Direction vector of the line.',answers:[2,-1,3],labels:['i','j','k'],anyMultiple:true}
    ]},
   {id:'L10',desc:'Cable tension',
    vectors:[{from:[0,0,0],to:[3,4,0],label:'T direction',color:'#14b8a6'}],
@@ -501,7 +501,7 @@ level4:[
    grid3d:true,
    sqs:[
      {type:'vec3',prompt:'Find the resultant of \\(F₁ + F₂ + F₃\\).',answers:[0,0,18],labels:['i','j','k']},
-     {type:'mcq',prompt:'What does this resultant tell us?',correct:'Purely vertical — mast is in horizontal equilibrium',wrong:['The mast will topple','All forces are equal','Net force is zero']}
+     {type:'mcq',prompt:'Taking \\(\\mathbf{k}\\) as vertically upwards, what does this resultant tell us?',correct:'Purely vertical — mast is in horizontal equilibrium',wrong:['The mast will topple','All forces are equal','Net force is zero']}
    ]},
   {id:'L12',desc:'Displacement magnitude',
    given:{s:[4,-3,12]},
@@ -772,13 +772,20 @@ function checkVec(n){
   const raws=[];for(let i=0;i<n;i++){raws.push($('v'+i).value);}
   const res=raws.map((r,i)=>mark(r,sq.answers[i],sq.dp));
   if(unmarked(res,sq.dp))return;
+  // A direction vector is any non-zero multiple of the key: (−2, 1, −3) is as right as (2, −1, 3)
+  // (component-crusher-s1-001, SR-24).
+  if(sq.anyMultiple){
+    const v=raws.map(r=>Number(String(r).trim().replace(/[−–]/g,'-')));
+    const j=sq.answers.findIndex(a=>a!==0), k=v[j]/sq.answers[j];
+    if(v.every(Number.isFinite)&&k!==0&&Number.isFinite(k)&&sq.answers.every((a,i)=>Math.abs(v[i]-k*a)<1e-9*Math.max(1,Math.abs(k*a))))res.fill('correct');
+  }
   if(!MaffsLock.lock($('qBox')))return;   // marked once: Check and the boxes lock until the next sub-question
   G.total++;
   const ok=res.every(r=>r==='correct');
   res.forEach((r,i)=>{$('v'+i).classList.add(r==='correct'?'correct':'wrong');});
   if(ok){G.correct++;G.qCorrect++;G.score+=15;$('hudScore').textContent=G.score;}else{G.penalties++;}
   $('hudCorrect').textContent=`${G.correct}/${G.total}`;
-  $('sqFb').innerHTML=`<div class="feedback ${ok?'correct':'wrong'}">${ok?'Correct!':'Incorrect. Answer: '+sq.answers.map(a=>keyText(a,sq.dp)).join(', ')}</div>`;
+  $('sqFb').innerHTML=`<div class="feedback ${ok?'correct':'wrong'}">${ok?'Correct!':'Incorrect. Answer: '+sq.answers.map(a=>keyText(a,sq.dp)).join(', ')+(sq.anyMultiple?' (or any non-zero multiple of it)':'')}</div>`;
   mfg('question_answered',{game_slug:'component-crusher',level:G.level,question_index:G.total,correct:ok});
   afterMark(q,ok);
 }

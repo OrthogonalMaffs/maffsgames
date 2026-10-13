@@ -253,6 +253,13 @@ def ratios(qs):
     return {a / b for a in vals for b in vals if b > 0 and a <= b}
 
 
+# Comparisons a worked answer got wrong (SWEEP-1, given-that-s1-001, s1-002): never again.
+EXPLAIN_FORBIDS = {
+    'alevel_10': [(r'Nearly half the flagged scripts are false positives', '47 of 92 flagged are false positives, over half')],
+    'alevel_07': [(r'triples the risk', 'against on-time days (10/200) it is six times; three times only the overall rate')],
+}
+
+
 def check_bank(fails, bank):
     counts = {lv: len(bank.get(lv, [])) for lv in COUNTS}
     if counts != COUNTS:
@@ -294,6 +301,9 @@ def check_bank(fails, bank):
                 if half_up(target, places) != stored:
                     fails.append('%s: stored answer %s is not the key %s rounded to %d d.p.'
                                  % (w, pd['answer'], float(target), places))
+                for pat, why in EXPLAIN_FORBIDS.get(pd.get('id') or q.get('id'), []):
+                    if re.search(pat, pd.get('explanation', '')):
+                        fails.append('%s: the explanation says %r (%s)' % (w, pat, why))
                 if ph == 'p2':
                     fr = re.findall(r'(\d+(?:\.\d+)?)/(\d+(?:\.\d+)?)', pd.get('explanation', ''))
                     if fr and not any(F(a) / F(b) == target for a, b in fr):
@@ -465,6 +475,8 @@ PLANTS = [
     ('core_04 p1', "r-002/r-003: marked within 0.005, no precision",
      "result=MaffsAnswer.fractionOrDecimal(raw,ex[0],ex[1],dp);",
      "result=Math.abs(parseFloat(raw)-phaseData.answer)<=0.005?'correct':'wrong';"),
+    ('alevel_10 p2', 's1-001: "Nearly half ... false positives"', "Just over half the flagged scripts (47 of 92) are false positives.",
+     "Nearly half the flagged scripts are false positives."),
     ('alevel_01 p1', "r-004: decimals only, the fraction unreadable",
      "result=MaffsAnswer.fractionOrDecimal(raw,ex[0],ex[1],dp);",
      "result=MaffsAnswer.decimal(raw,(ex[0]/ex[1]).toFixed(dp),dp);"),

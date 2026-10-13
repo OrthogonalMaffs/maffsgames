@@ -3,6 +3,12 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-13 (cloud): SWEEP-1 batch 5 (KS3 part 3, first GCSE)
+
+- **Fixed:** index-laws, 20 conversion items name their form (SR-17; form_needed()); gradient-hunter, exact keys at 2+ places say "Give the exact value." (SR-1) and two true y-value options name their error (SR-16).
+- **Open, for Jon:** fermi-lab-s1-001 HIGH (eq_bus_distance keys student-km for "distance travelled by school buses"); gradient-hunter-s1-003 (y-value readings true at an instant, about twenty options).
+- **Class for Jon (running):** assumptions only in hidden hints with tight bands (fermi-lab s1-002).
+
 ## 2026-10-13 (cloud): SWEEP-1 batch 4 (KS3 part 2)
 
 - **Fixed (rulings):** terrible-advice gcse_008/core_002 true "X is correct" options, ks3_017/gcse_019 true equations, gcse_018 "add for OR" (SR-16); wrong-on-the-internet ks3_007 "a fair coin", core_004 "5% compound interest" (Jon's ruling, RULED); maths-court ks3_002's summary names Numerica (SR-16, a check on every case), gcse_010 3 s.f. (SR-1), core_007's 1.048¹⁰ (SPECS); higher-power ks3_35's fact (check_perfect). Each verifier PASS locally with its new plants.

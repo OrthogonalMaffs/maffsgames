@@ -139,3 +139,79 @@ findings:
   evidence: 'docs/audit-resit-correctness-2026-10-04.md F9. '
   status: fixed
   pr: 113
+- id: better-value-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:true-wrong-option
+  level: gcse, core
+  where: games/better-value/index.html bv_gcse_019 (:1098), bv_core_028 (:598), bv_core_033 (:660)
+  summary: 'Three threshold distractors were true statements past the break-even point, marked wrong (SR-16; the shape
+    of r-007): "worth it if you eat 15 or more lunches" (break-even 12), "better value if you watch at least 3 films"
+    (break-even 1), "better value above 10 kWh per day" (break-even 4.25). Fixed: each says "only", which is false;
+    the verifier recomputes every break-even and fails a threshold distractor that is true at it, and plants the old
+    text'
+  evidence: "{text:'The pass is worth it if you eat 15 or more lunches per month',correct:false} (SWEEP-1, batch 8)"
+  status: open
+- id: better-value-s1-002
+  severity: MEDIUM
+  jc: true
+  class: NEW:unstated-convention
+  level: gcse
+  where: games/better-value/index.html bv_gcse_019 (:1098), bv_gcse_020
+  summary: 'At exactly break-even the options cost the same: gcse_019 keys "12 or more" (equal counts as worth it),
+    gcse_020 keys "more than 15" (equal does not). Which convention is a choice for Jon (with r-006)'
+  evidence: 'gcse_019 break-even 12 lunches exactly, key "12 or more"; gcse_020 key "after more than 15 bottles"
+    (SWEEP-1, batch 8)'
+  status: open
+- id: better-value-s1-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:true-wrong-option
+  level: core
+  where: games/better-value/index.html bv_core_050 (:864)
+  summary: '"Meal prep is clearly cheaper — £790 vs £825 for buying" is true in cash and was marked wrong without the
+    fault named (the time cost). Fixed: the distractor gives its reason, "because the time spent prepping costs
+    nothing", which is the error; in the verifier''s MUST_SAY, planted'
+  evidence: "{text:'Meal prep is clearly cheaper — £790 vs £825 for buying',correct:false} (SWEEP-1, batch 8)"
+  status: open
+- id: better-value-s1-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:unstated-convention
+  level: core
+  where: games/better-value/index.html bv_core_041 (:756)
+  summary: 'The keyed comparison of buying a van with leasing one ignores what the bought van is worth after 3 years,
+    which the scenario never said (SR-17). Fixed: "Compare over 3 years, ignoring what the van is worth at the end."'
+  evidence: "scenario '... Compare over 3 years.' (SWEEP-1, batch 8)"
+  status: open
+- id: better-value-s1-005
+  severity: LOW
+  jc: false
+  class: NEW:wrong-explanation
+  level: core
+  where: games/better-value/index.html bv_core_048 (:840)
+  summary: 'The explanation said a TPFT policy gives "no cover if your car is damaged"; TPFT covers fire and theft
+    damage. Fixed: "no cover for damage to your own car in an accident"'
+  evidence: "'no cover if your car is damaged (only TPFT)' (SWEEP-1, batch 8)"
+  status: open
+- id: better-value-s1-006
+  severity: LOW
+  jc: true
+  class: NEW:wording
+  level: core
+  where: games/better-value/index.html bv_core_047 (:828), bv_core_011 (:392)
+  summary: 'core_047 keys "Cleaner B is better value overall" on a stated preference, and its "roughly 9 times/year"
+    is 52/6 = 8.7; core_011''s "nothing for 12 months, then £599 if not paid" is garbled. Stem changes, for Jon'
+  evidence: 'Scenario texts as quoted (SWEEP-1, batch 8)'
+  status: open
+- id: better-value-s1-007
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: all
+  where: scripts/verify-better-value.py
+  summary: 'The verifier recomputes keyed figures but not the start-screen worked example, the figures and truth of
+    distractors (except the thresholds now checked, s1-001) or the verbal claims, and it passes any whole number of 40
+    or less in a keyed card as a count without recomputing it. Recorded under Jon''s rule of 13 Oct 2026'
+  evidence: 'Docstring: a figure is a KEY or ALSO value "or a small count (40 or less)" (SWEEP-1, batch 8)'
+  status: open

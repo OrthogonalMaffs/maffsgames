@@ -188,7 +188,16 @@ def holds(eq, subj, value, chain=()):
     return True
 
 
+# Misconception text never calls a valid method wrong (SWEEP-1, formula-forge-s1-001, s1-002): square rooting A = πr²
+# first is valid (√A = √π·r), and dividing by the coefficient first is valid (the stage's own P = 2(l + w) hint does it).
+MISC_FORBIDS = [(r'Not the other way around', 'square rooting first is valid: √A = √π·r, so r = √A/√π'),
+                (r'\bAlways isolate\b', 'dividing by the coefficient first is also valid')]
+
+
 def check_item(fails, where, q):
+    for pat, why in MISC_FORBIDS:
+        if re.search(pat, q.get('misconception') or ''):
+            fails.append('misconception: %s: %r calls a valid method wrong (%s)' % (where, q['misconception'], why))
     opts = [q['correct']] + list(q['distractors'])
     if len(q['distractors']) != 3 or len(set(opts)) != 4:
         fails.append('options: %s: %d distractors, %d different strings with the key' % (where, len(q['distractors']), len(set(opts))))
@@ -379,6 +388,9 @@ PLANTS = [
     ('SR-4: a new pair of wrong options equal in value (y + 7 and 7 + y)', 'options:',
      [("correct:'x = y - 7',distractors:['x = y + 7','x = 7 - y','x = 7y']", "correct:'x = y - 7',distractors:['x = y + 7','x = 7 + y','x = 7y']")]),
     ('a misspelt TeX command in an option', 'render:', [("'u = at - v','u = \\\\dfrac{v}{at}']", "'u = at - v','u = \\\\dfac{v}{at}']")]),
+    ('s1-001: "Not the other way around" back on A = πr²', 'misconception:',
+     [("misconception:'Divide by π, then square root. If you square root first, divide by √π, not π: √A/π is wrong.'",
+       "misconception:'Divide by π first, THEN square root. Not the other way around.'")]),
     ('marking by the first character only', 'marking:', [("const ok=btn.dataset.val===q.correct;", "const ok=btn.dataset.val[0]===q.correct[0];")]),
     ('five a stage dealt, not six', 'session:', [("const s1=shuffle([...bank.s1]).slice(0,6);", "const s1=shuffle([...bank.s1]).slice(0,5);")]),
 ]

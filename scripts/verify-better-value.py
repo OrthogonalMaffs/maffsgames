@@ -217,7 +217,38 @@ def check_equations(fails, w, q):
             fails.append('%s: "Set equal: %s" solves to %s, not %s = %s' % (w, m.group(1), got, var, sol.group(2)))
 
 
+# SWEEP-1 (13 Oct 2026). SR-16: a wrong threshold option is false as written: "worth it if N or more" / "at least N" /
+# "above N" with N at or past the break-even point is TRUE unless it says "only" (s1-001). The smallest count (or the
+# level) from which each item's keyed option says it wins:
+BREAK_EVEN = {'bv_gcse_019': F(30) / F('2.50'), 'bv_core_028': 1, 'bv_core_033': F(17, 4)}
+THRESHOLD = re.compile(r'\b(?:is|are) (?:better value|worth it)\b.*?(?:at least|above)?\s*([\d.]+)\s*(?:or more)?\s*'
+                       r'(?:lunches|films|kWh)', re.I)
+# Words a wrong option or a scenario must carry (SR-16, SR-17): (item, the card or scenario text it is in, words).
+MUST_SAY = [('bv_core_050', '\u00a3790 vs \u00a3825', 'costs nothing'),          # s1-003: the fault is named
+            ('bv_core_041', 'scenario', 'ignoring what the van is worth')]   # s1-004: the assumption is stated
+
+
+def sweep_fails(bank):
+    out = []
+    for q in [q for lv in bank.values() for q in lv]:
+        be = BREAK_EVEN.get(q['id'])
+        if be is not None:
+            for c in q['conclusions']:
+                m = THRESHOLD.search(c['text'])
+                if not c['correct'] and m and not re.search(r'\bonly\b', c['text']) and F(m.group(1)) >= be:
+                    out.append('%s: the wrong option %r is true (the break-even point is %s; SR-16, better-value-s1-001)'
+                               % (q['id'], c['text'], be))
+        for qid, where, words in MUST_SAY:
+            if q['id'] != qid:
+                continue
+            texts = [q['scenario']] if where == 'scenario' else [c['text'] for c in q['conclusions'] if where in c['text']]
+            if not texts or not all(words in t for t in texts):
+                out.append('%s: %s must say %r (SWEEP-1)' % (qid, where, words))
+    return out
+
+
 def check_bank(fails, bank):
+    fails.extend(sweep_fails(bank))
     counts = {lv: len(bank.get(lv, [])) for lv in COUNTS}
     if counts != COUNTS:
         fails.append('bank: %s items by level, expected %s (a change needs REVIEW extended)' % (counts, COUNTS))
@@ -326,6 +357,8 @@ PLANTS = [
      "return on investment (344% vs 331%)",
      "Premium flyers give better return on investment \\u2014 net profit \\u00a3860 vs \\u00a3620 for standard"),
     ('bv_core_049', 'r-005: 8.8 hours', "above approximately 8.5 hours per week", "above approximately 8.8 hours per week"),
+    ('bv_gcse_019', 's1-001: "15 or more lunches" true as written', "The pass is only worth it if you eat 15", "The pass is worth it if you eat 15"),
+    ('bv_core_041', 's1-004: the van\'s end value not set aside', "Compare over 3 years, ignoring what the van is worth at the end.", "Compare over 3 years."),
 ]
 
 

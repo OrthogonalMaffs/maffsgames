@@ -124,3 +124,26 @@ findings:
     because 1609 is a rounded value, not a definition. verify-unit-converter.py now fails "=" before any stated
     conversion that is not the exact definition.'
   pr: 205
+- id: unit-converter-s1-001
+  severity: LOW
+  jc: true
+  class: NEW:unstated-convention
+  level: gcse
+  where: games/unit-converter/index.html:164 (Area)
+  summary: '"Convert 1 hectare to m²" assumes the definition of a hectare, which no question or the start screen gives
+    (SR-17); it is the only unit the game names that is not a metric prefix of the metre. Stating it is a stem change,
+    for Jon'
+  evidence: "{sec:'Area',p:'Convert 1 hectare to m²',c:'10,000 m²', ... s:['1 hectare = 100 m × 100 m = 10,000 m²']}
+    (SWEEP-1, batch 8)"
+  status: open
+- id: unit-converter-s1-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: all
+  where: scripts/verify-unit-converter.py
+  summary: 'The verifier checks the keys but not the worked steps (the s arrays, :138-211) or the figures in the
+    multiple-choice options (:152, :156, :162, :171, :174, :176, :178, :182, :190, :208, :211). Recorded under Jon''s
+    rule of 13 Oct 2026'
+  evidence: 'No check reads s[] or recomputes a distractor''s value (SWEEP-1, batch 8)'
+  status: open

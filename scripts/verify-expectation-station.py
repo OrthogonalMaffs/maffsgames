@@ -203,7 +203,7 @@ CARDS = {
     'es_gcse_001': [T('On average, the spinner lands on 2.5 over many spins', lambda s: s.E == F('2.5')),
                     W('The spinner will land on 2 or 3 every time', lambda s: s.P(lambda x: x in (2, 3)) == 1),
                     W('2.5 is the most likely score', lambda s: F('2.5') in s.modes()),
-                    W('Half of all spins land on 2.5', lambda s: s.P(lambda x: x == F('2.5')) == F(1, 2))],
+                    W('Exactly half of all spins land on 2.5', lambda s: s.P(lambda x: x == F('2.5')) == F(1, 2))],
     'es_gcse_002': [T('On average, the colour name has 3.85 letters', lambda s: s.E == F('3.85')),
                     W('Most sweets are blue (4 letters)', lambda s: s.most(4)),
                     W('The average sweet has 4 letters in its name', lambda s: s.E == 4),
@@ -289,7 +289,7 @@ CARDS = {
                       W('Each batch has exactly 0.4 defective items', lambda s: s.P(lambda x: x == F('0.4')) == 1)],
     'es_alevel_007': [T('On average, a call lasts 5 minutes', lambda s: s.E == 5),
                       W('More than half of calls last exactly 5 minutes', lambda s: s.most(5)),
-                      W('Half of all calls last longer than 5 minutes', lambda s: s.P(lambda x: x > 5) == F(1, 2)),
+                      W('Exactly half of all calls last longer than 5 minutes', lambda s: s.P(lambda x: x > 5) == F(1, 2)),
                       W('The standard deviation of call lengths is 5', lambda s: s.V == 25)],
     'es_alevel_008': [T('The expected return of Project A is £7,000', lambda s: s.E == 7),
                       W('Project A always makes £7,000 profit', lambda s: s.P(lambda x: x == 7) == 1),
@@ -331,13 +331,13 @@ CARDS = {
     'es_core_025': [
         T('On average, there are 1.5 late returns per day', lambda s: s.E == F('1.5')),
         W('There are never more than 3 late returns per day', lambda s: s.P(lambda x: x <= 3) == 1),
-        W('Half of all days have more than 1.5 late returns', lambda s: s.P(lambda x: x > F('1.5')) == F(1, 2)),
+        W('Exactly half of all days have more than 1.5 late returns', lambda s: s.P(lambda x: x > F('1.5')) == F(1, 2)),
         W('Every day has exactly 1.5 late returns', lambda s: s.P(lambda x: x == F('1.5')) == 1),
     ],
     'es_core_026': [
         T('On average, there are 0.6 missed bins per street', lambda s: s.E == F('0.6')),
         W('There are never more than 2 missed bins per street', lambda s: s.P(lambda x: x <= 2) == 1),
-        W('Half of all streets have more than 0.6 missed bins', lambda s: s.P(lambda x: x > F('0.6')) == F(1, 2)),
+        W('Exactly half of all streets have more than 0.6 missed bins', lambda s: s.P(lambda x: x > F('0.6')) == F(1, 2)),
         W('Every street has exactly 0.6 missed bins', lambda s: s.P(lambda x: x == F('0.6')) == 1),
     ],
     'es_core_027': [
@@ -361,24 +361,24 @@ CARDS = {
     'es_core_031': [
         T('On average, there are 1.4 no-show tables per evening', lambda s: s.E == F('1.4')),
         W('There are never more than 3 no-show tables per evening', lambda s: s.P(lambda x: x <= 3) == 1),
-        W('Half of all evenings have more than 1.4 no-show tables', lambda s: s.P(lambda x: x > F('1.4')) == F(1, 2)),
+        W('Exactly half of all evenings have more than 1.4 no-show tables', lambda s: s.P(lambda x: x > F('1.4')) == F(1, 2)),
         W('Every evening has exactly 1.4 no-show tables', lambda s: s.P(lambda x: x == F('1.4')) == 1),
     ],
     'es_core_032': [
         T('On average, there are 0.7 overdue books per borrower', lambda s: s.E == F('0.7')),
         W('There are never more than 2 overdue books per borrower', lambda s: s.P(lambda x: x <= 2) == 1),
-        W('Half of all borrowers have more than 0.7 overdue books', lambda s: s.P(lambda x: x > F('0.7')) == F(1, 2)),
+        W('Exactly half of all borrowers have more than 0.7 overdue books', lambda s: s.P(lambda x: x > F('0.7')) == F(1, 2)),
         W('Every borrower has exactly 0.7 overdue books', lambda s: s.P(lambda x: x == F('0.7')) == 1),
     ],
     'es_core_033': [
         T('On average, there are 0.95 uncollected parcels per day', lambda s: s.E == F('0.95')),
         W('There are never more than 2 uncollected parcels per day', lambda s: s.P(lambda x: x <= 2) == 1),
-        W('Half of all days have more than 0.95 uncollected parcels', lambda s: s.P(lambda x: x > F('0.95')) == F(1, 2)),
+        W('Exactly half of all days have more than 0.95 uncollected parcels', lambda s: s.P(lambda x: x > F('0.95')) == F(1, 2)),
         W('Every day has exactly 0.95 uncollected parcels', lambda s: s.P(lambda x: x == F('0.95')) == 1),
     ],
     'es_core_034': [
         T('On average, there are 0.55 fillings per check-up', lambda s: s.E == F('0.55')),
-        W('Half of all check-ups have more than 0.55 fillings', lambda s: s.P(lambda x: x > F('0.55')) == F(1, 2)),
+        W('Exactly half of all check-ups have more than 0.55 fillings', lambda s: s.P(lambda x: x > F('0.55')) == F(1, 2)),
         W('Every check-up has exactly 0.55 fillings', lambda s: s.P(lambda x: x == F('0.55')) == 1),
         W('55% of check-ups have at least one filling', lambda s: s.P(lambda x: x >= 1) == F('0.55')),
     ],
@@ -386,17 +386,17 @@ CARDS = {
         T('On average, there are 1.05 cancelled rides per shift', lambda s: s.E == F('1.05')),
         W('Most shifts have exactly 1 cancelled ride', lambda s: s.most(1)),
         W('There are never more than 2 cancelled rides per shift', lambda s: s.P(lambda x: x <= 2) == 1),
-        W('Half of all shifts have more than 1.05 cancelled rides', lambda s: s.P(lambda x: x > F('1.05')) == F(1, 2)),
+        W('Exactly half of all shifts have more than 1.05 cancelled rides', lambda s: s.P(lambda x: x > F('1.05')) == F(1, 2)),
     ],
     'es_core_036': [
         T('On average, there are 1.8 referrals per hour', lambda s: s.E == F('1.8')),
         W('There are never more than 3 referrals per hour', lambda s: s.P(lambda x: x <= 3) == 1),
-        W('Half of all hours have more than 1.8 referrals', lambda s: s.P(lambda x: x > F('1.8')) == F(1, 2)),
+        W('Exactly half of all hours have more than 1.8 referrals', lambda s: s.P(lambda x: x > F('1.8')) == F(1, 2)),
         W('Every hour has exactly 1.8 referrals', lambda s: s.P(lambda x: x == F('1.8')) == 1),
     ],
     'es_core_038': [
         T('On average, there are 1.65 attempts per apprentice', lambda s: s.E == F('1.65')),
-        W('Half of all apprentices have more than 1.65 attempts', lambda s: s.P(lambda x: x > F('1.65')) == F(1, 2)),
+        W('Exactly half of all apprentices have more than 1.65 attempts', lambda s: s.P(lambda x: x > F('1.65')) == F(1, 2)),
         W('Every apprentice has exactly 1.65 attempts', lambda s: s.P(lambda x: x == F('1.65')) == 1),
         W('1.65 is the most likely number of attempts', lambda s: F('1.65') in s.modes()),
     ],
@@ -440,12 +440,12 @@ CARDS = {
         T('On average, there are 1.2 buses per 10-minute period', lambda s: s.E == F('1.2')),
         W('Most 10-minute periods have exactly 1 bus', lambda s: s.most(1)),
         W('There are never more than 2 buses per 10-minute period', lambda s: s.P(lambda x: x <= 2) == 1),
-        W('Half of all 10-minute periods have more than 1.2 buses', lambda s: s.P(lambda x: x > F('1.2')) == F(1, 2)),
+        W('Exactly half of all 10-minute periods have more than 1.2 buses', lambda s: s.P(lambda x: x > F('1.2')) == F(1, 2)),
     ],
     'es_gcse_019': [
         T('On average, there are 1.4 goals per match', lambda s: s.E == F('1.4')),
         W('There are never more than 3 goals per match', lambda s: s.P(lambda x: x <= 3) == 1),
-        W('Half of all matches have more than 1.4 goals', lambda s: s.P(lambda x: x > F('1.4')) == F(1, 2)),
+        W('Exactly half of all matches have more than 1.4 goals', lambda s: s.P(lambda x: x > F('1.4')) == F(1, 2)),
         W('Every match has exactly 1.4 goals', lambda s: s.P(lambda x: x == F('1.4')) == 1),
     ],
     'es_gcse_020': [
@@ -470,17 +470,17 @@ CARDS = {
         T('On average, there are 1.9 baskets per set of 3 throws', lambda s: s.E == F('1.9')),
         W('Most sets of 3 throws have exactly 2 baskets', lambda s: s.most(2)),
         W('There are never more than 2 baskets per set of 3 throws', lambda s: s.P(lambda x: x <= 2) == 1),
-        W('Half of all sets of 3 throws have more than 1.9 baskets', lambda s: s.P(lambda x: x > F('1.9')) == F(1, 2)),
+        W('Exactly half of all sets of 3 throws have more than 1.9 baskets', lambda s: s.P(lambda x: x > F('1.9')) == F(1, 2)),
     ],
     'es_gcse_026': [
         T('On average, there are 1.95 red lights per journey', lambda s: s.E == F('1.95')),
         W('There are never more than 3 red lights per journey', lambda s: s.P(lambda x: x <= 3) == 1),
-        W('Half of all journeys have more than 1.95 red lights', lambda s: s.P(lambda x: x > F('1.95')) == F(1, 2)),
+        W('Exactly half of all journeys have more than 1.95 red lights', lambda s: s.P(lambda x: x > F('1.95')) == F(1, 2)),
         W('Every journey has exactly 1.95 red lights', lambda s: s.P(lambda x: x == F('1.95')) == 1),
     ],
     'es_gcse_027': [
         T('On average, there are 1.75 messages per hour', lambda s: s.E == F('1.75')),
-        W('Half of all hours have more than 1.75 messages', lambda s: s.P(lambda x: x > F('1.75')) == F(1, 2)),
+        W('Exactly half of all hours have more than 1.75 messages', lambda s: s.P(lambda x: x > F('1.75')) == F(1, 2)),
         W('Every hour has exactly 1.75 messages', lambda s: s.P(lambda x: x == F('1.75')) == 1),
         W('1.75 is the most likely number of messages', lambda s: F('1.75') in s.modes()),
     ],
@@ -505,12 +505,12 @@ CARDS = {
     'es_gcse_032': [
         T('On average, there are 1.1 goals per match', lambda s: s.E == F('1.1')),
         W('There are never more than 2 goals per match', lambda s: s.P(lambda x: x <= 2) == 1),
-        W('Half of all matches have more than 1.1 goals', lambda s: s.P(lambda x: x > F('1.1')) == F(1, 2)),
+        W('Exactly half of all matches have more than 1.1 goals', lambda s: s.P(lambda x: x > F('1.1')) == F(1, 2)),
         W('Every match has exactly 1.1 goals', lambda s: s.P(lambda x: x == F('1.1')) == 1),
     ],
     'es_gcse_033': [
         T('On average, there are 1.7 cups of tea per day', lambda s: s.E == F('1.7')),
-        W('Half of all days have more than 1.7 cups of tea', lambda s: s.P(lambda x: x > F('1.7')) == F(1, 2)),
+        W('Exactly half of all days have more than 1.7 cups of tea', lambda s: s.P(lambda x: x > F('1.7')) == F(1, 2)),
         W('Every day has exactly 1.7 cups of tea', lambda s: s.P(lambda x: x == F('1.7')) == 1),
         W('1.7 is the most likely number of cups of tea', lambda s: F('1.7') in s.modes()),
     ],
@@ -530,18 +530,18 @@ CARDS = {
         T('On average, there are 2.35 tickets per go', lambda s: s.E == F('2.35')),
         W('Most goes have exactly 1 ticket', lambda s: s.most(1)),
         W('There are never more than 5 tickets per go', lambda s: s.P(lambda x: x <= 5) == 1),
-        W('Half of all goes have more than 2.35 tickets', lambda s: s.P(lambda x: x > F('2.35')) == F(1, 2)),
+        W('Exactly half of all goes have more than 2.35 tickets', lambda s: s.P(lambda x: x > F('2.35')) == F(1, 2)),
     ],
     'es_gcse_037': [
         T('On average, there are 1.15 correct answers per quiz', lambda s: s.E == F('1.15')),
         W('There are never more than 3 correct answers per quiz', lambda s: s.P(lambda x: x <= 3) == 1),
-        W('Half of all quizzes have more than 1.15 correct answers', lambda s: s.P(lambda x: x > F('1.15')) == F(1, 2)),
+        W('Exactly half of all quizzes have more than 1.15 correct answers', lambda s: s.P(lambda x: x > F('1.15')) == F(1, 2)),
         W('Every quiz has exactly 1.15 correct answers', lambda s: s.P(lambda x: x == F('1.15')) == 1),
     ],
     'es_gcse_038': [
         T('On average, there are 0.85 rainy days per weekend', lambda s: s.E == F('0.85')),
         W('There are never more than 1 rainy day per weekend', lambda s: s.P(lambda x: x <= 1) == 1),
-        W('Half of all weekends have more than 0.85 rainy days', lambda s: s.P(lambda x: x > F('0.85')) == F(1, 2)),
+        W('Exactly half of all weekends have more than 0.85 rainy days', lambda s: s.P(lambda x: x > F('0.85')) == F(1, 2)),
         W('Every weekend has exactly 0.85 rainy days', lambda s: s.P(lambda x: x == F('0.85')) == 1),
     ],
     'es_gcse_039': [
@@ -560,17 +560,17 @@ CARDS = {
         T('Over many spins, the mean score is 3', lambda s: s.E == 3),
         W('More than half of all spins score 4', lambda s: s.most(4)),
         W('No spin ever scores more than 3', lambda s: s.P(lambda x: x <= 3) == 1),
-        W('Half of all spins score more than 3', lambda s: s.P(lambda x: x > 3) == F(1, 2)),
+        W('Exactly half of all spins score more than 3', lambda s: s.P(lambda x: x > 3) == F(1, 2)),
     ],
     'es_gcse_017': [
         T('Over many picks, the mean score is 2.1', lambda s: s.E == F('2.1')),
         W('No pick ever scores more than 2', lambda s: s.P(lambda x: x <= 2) == 1),
-        W('Half of all picks score more than 2.1', lambda s: s.P(lambda x: x > F('2.1')) == F(1, 2)),
+        W('Exactly half of all picks score more than 2.1', lambda s: s.P(lambda x: x > F('2.1')) == F(1, 2)),
         W('Every pick scores exactly 2.1', lambda s: s.P(lambda x: x == F('2.1')) == 1),
     ],
     'es_gcse_024': [
         T('Over many throws, the mean score is 11.5', lambda s: s.E == F('11.5')),
-        W('Half of all throws score more than 11.5', lambda s: s.P(lambda x: x > F('11.5')) == F(1, 2)),
+        W('Exactly half of all throws score more than 11.5', lambda s: s.P(lambda x: x > F('11.5')) == F(1, 2)),
         W('Every throw scores exactly 11.5', lambda s: s.P(lambda x: x == F('11.5')) == 1),
         W('11.5 is the most likely score', lambda s: F('11.5') in s.modes()),
     ],
@@ -1979,6 +1979,20 @@ SWEEP_JS = r"""() => {
     const fill1 = (vals) => { vals.forEach(([i, v]) => { selectedCell = i; placeTileInCell(v, 0); }); checkStage1(); drain(); };
     const missing = q.table.map((row, i) => [i, row]).filter(([i, row]) => !row.given).map(([i]) => i);
     const val = (i) => { const p = completedTable[i].pr; return q.stage1Tiles.find(t => ratKey(ratFromString(t)) === ratKey(p)); };
+    // what each missing cell shows before it is filled (a k-cell must show its expression)
+    start();
+    r.blank = missing.map(i => [i, (document.getElementById('cell_' + i) || {}).textContent || '']);
+    // after two wrong attempts the reveal writes each value as its tile does (expectation-station-s1-003)
+    { start(); const wt = q.stage1Tiles.find(t => ratKey(ratFromString(t)) !== ratKey(completedTable[missing[0]].pr));
+      if (wt !== undefined) {
+        const wrong = missing.map(i => [i, i === missing[0] ? wt : val(i)]);
+        fill1(wrong);
+        if (currentStage === 1) {
+          wrong.forEach(([i, t]) => { selectedCell = i; placeTileInCell(t, 0); }); checkStage1();   // the second try: the reveal
+          for (const i of missing) { const t = (document.getElementById('cell_' + i) || {}).textContent;
+            if (!q.stage1Tiles.includes(t)) r.problems.push('the Stage 1 reveal shows ' + JSON.stringify(t) + ' for x = ' + q.table[i].x + ', which no tile shows'); }
+          drain();
+        } } }
     // a wrong tile for one cell (the first tile not equal in value to that cell), marked wrong
     start();
     const wrongTile = q.stage1Tiles.find(t => ratKey(ratFromString(t)) !== ratKey(completedTable[missing[0]].pr));
@@ -2019,6 +2033,34 @@ SWEEP_JS = r"""() => {
 }"""
 
 
+def half_card_fails(bank):
+    """SR-16 (SWEEP-1, expectation-station-s1-004): "Half of all ... have more than E(X)" is true on the reading "at
+    least half" wherever more than half do; a wrong card says "Exactly half"."""
+    out = []
+    for q in [q for lv in ('core', 'gcse', 'alevel') for q in bank.get(lv, [])]:
+        for c in q.get('interpretations', []):
+            if not c['correct'] and re.match(r'Half of all\b', c['text']):
+                out.append('%s: the wrong card %r can be read as "at least half" (SR-16)' % (q['id'], c['text']))
+    return out
+
+
+def k_cell_fails(bank, blanks):
+    """SWEEP-1 (expectation-station-s1-001): in a table written in terms of k, a missing cell shows its expression
+    ("2k = ?"): shown only "?", the student cannot tell which multiple of k it is and other tiles fit (es_alevel_001:
+    0.15, 0.30 gave k = 11/140). Shown, the completion is k = 1 / (the sum of the coefficients), unique."""
+    out = []
+    for q in [q for lv in ('core', 'gcse', 'alevel') for q in bank.get(lv, [])]:
+        cells = [str(r['p']) for r in q['table']]
+        if not any('k' in c for c in cells):
+            continue
+        for i, text in blanks.get(q['id'], []):
+            want = cells[i].replace(' ', '')
+            if want not in text.replace(' ', ''):
+                out.append('%s Stage 1: the missing cell for x = %s shows %r, not its expression %s, so other tiles fit '
+                           '(expectation-station-s1-001)' % (q['id'], q['table'][i]['x'], text, cells[i]))
+    return out
+
+
 def play(fails, html):
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
@@ -2037,7 +2079,10 @@ def play(fails, html):
             page.goto(base + '/games/%s/?cb=verify' % SLUG, wait_until='load', timeout=20000)
             page.wait_for_function('typeof QUESTIONS !== "undefined" && typeof loadQuestion === "function"', timeout=8000)
             bank = page.evaluate('() => QUESTIONS')
-            for r in page.evaluate(SWEEP_JS):
+            swept = page.evaluate(SWEEP_JS)
+            fails.extend(k_cell_fails(bank, {r['id']: r.get('blank') or [] for r in swept}))
+            fails.extend(half_card_fails(bank))
+            for r in swept:
                 for p in r['problems']:
                     fails.append('%s in Chromium: %s' % (where(r['id']), p))
                 if r['ex'] is not None:
@@ -2067,6 +2112,11 @@ PLANTS = [
      'if (Math.abs(parseFrac(filledCells[i]) - completedTable[i].p) < 0.001) {'),
     ('es_gcse_005', 't2-013: "A biased coin" with a fair coin\'s table', 'A fair coin is flipped 3 times.',
      'A biased coin is flipped 3 times.'),
+    ('es_core_033', 's1-004: "Half of all days" back', "{text:'Exactly half of all days have more than 0.95", "{text:'Half of all days have more than 0.95"),
+    ('es_gcse_003', 's1-003: the reveal from the float', "cell.textContent = currentQ.stage1Tiles.find(t => ratKey(ratFromString(t)) === ratKey(pr)) || ratDecimalString(pr);",
+     "cell.textContent = formatP(completedTable[i].p);"),
+    ('es_alevel_001', 's1-001: the k-cells shown as "?" only',
+     "const blank = /k/.test(String(r.p)) ? formatP(r.p) + ' = ?' : '?';", "const blank = '?';"),
     # pc-001: es_core_001 as it was, with no stated relation, so its two missing tiles can swap
     ('es_core_001', 'pc-001: es_core_001 with no relation (two completions)',
      ' P(X = 2) is 0.05 more than P(X = 4).\'', '\'', {'es_core_001': ('none',)}),

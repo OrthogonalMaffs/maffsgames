@@ -601,7 +601,7 @@ optionA:{label:'Streaming',details:[{key:'Monthly cost',value:'\u00a39.99'},{key
 optionB:{label:'Cinema',details:[{key:'Per film',value:'\u00a312.50'}]},
 conclusions:[
 {text:'The streaming service is better value if you watch at least 1 film per month',correct:true},
-{text:'The streaming service is better value if you watch at least 3 films per month',correct:false},
+{text:'The streaming service is only better value if you watch at least 3 films per month',correct:false},
 {text:'Cinema is always better value',correct:false},
 {text:'They cost the same for 2 films per month',correct:false}
 ],
@@ -664,7 +664,7 @@ optionB:{label:'New Tariff',details:[{key:'Rate',value:'24p/kWh'},{key:'Standing
 conclusions:[
 {text:'The new tariff is better value above 4.25 kWh per day \u2014 the household uses 12 kWh so they should switch',correct:true},
 {text:'The current tariff is always cheaper because of the lower standing charge',correct:false},
-{text:'The new tariff is better value above 10 kWh per day',correct:false},
+{text:'The new tariff is only better value above 10 kWh per day',correct:false},
 {text:'They cost the same at 12 kWh per day',correct:false}
 ],
 explanation:'Set equal: 28d + 25 = 24d + 42 \u2192 4d = 17 \u2192 d = 4.25 kWh (both sides in pence per day). Above 4.25 kWh/day the new tariff is cheaper. At 12 kWh: current = 336p + 25p = 361p/day. New = 288p + 42p = 330p/day. Saving: 31p/day \u2248 \u00a3113/year.'},
@@ -754,7 +754,7 @@ conclusions:[
 explanation:'Nursery A: 250 \u00d7 \u00a355 = \u00a313,750. Nursery B: (250 \u00d7 \u00a348) + (250 \u00d7 \u00a35) + (50 \u00d7 \u00a320) = \u00a312,000 + \u00a31,250 + \u00a31,000 = \u00a314,250. The \u201ccheaper\u201d daily rate hides \u00a3500/year in extra costs.'},
 
 {id:'bv_core_041',level:'core',type:'direct',
-scenario:'A tradesperson needs a van. Option A: buy a 3-year-old van for \u00a312,000 cash. Expected repairs: \u00a3800/year. Insurance: \u00a31,200/year. Option B: lease a new van for \u00a3350/month including maintenance. Insurance: \u00a3900/year. Compare over 3 years.',
+scenario:'A tradesperson needs a van. Option A: buy a 3-year-old van for \u00a312,000 cash. Expected repairs: \u00a3800/year. Insurance: \u00a31,200/year. Option B: lease a new van for \u00a3350/month including maintenance. Insurance: \u00a3900/year. Compare over 3 years, ignoring what the van is worth at the end.',
 optionA:{label:'Buy Used Van',details:[{key:'Purchase',value:'\u00a312,000'},{key:'Repairs',value:'\u00a3800/year'},{key:'Insurance',value:'\u00a31,200/year'}]},
 optionB:{label:'Lease New Van',details:[{key:'Monthly lease',value:'\u00a3350 (inc. maintenance)'},{key:'Insurance',value:'\u00a3900/year'}]},
 conclusions:[
@@ -847,7 +847,7 @@ conclusions:[
 {text:'They offer the same level of protection',correct:false},
 {text:'Insurer B is better because you save money every month',correct:false}
 ],
-explanation:'Insurer B saves \u00a3140/year but: no cover if your car is damaged (only TPFT), \u00a3250 higher excess per claim, and no courtesy car if yours is off the road. On a \u00a34,500 car, one own-fault accident would cost far more than the \u00a3140 saving. The cheapest policy is not the best value when risk is considered.'},
+explanation:'Insurer B saves \u00a3140/year but: no cover for damage to your own car in an accident (only TPFT), \u00a3250 higher excess per claim, and no courtesy car if yours is off the road. On a \u00a34,500 car, one own-fault accident would cost far more than the \u00a3140 saving. The cheapest policy is not the best value when risk is considered.'},
 
 {id:'bv_core_049',level:'core',type:'breakeven',
 scenario:'A small business is choosing between hiring a part-time employee or outsourcing work. Employee: \u00a315/hour for 20 hours/week, plus \u00a3180/month employer NI and pension. Outsourcing: \u00a340/hour, estimated 8 hours/week needed. At what weekly outsourcing hours does hiring become cheaper?',
@@ -866,7 +866,7 @@ scenario:'A student can buy lunch at university or meal-prep at home. Buying: av
 optionA:{label:'Buy Lunch',details:[{key:'Per meal',value:'\u00a35.50'},{key:'Weekly cost',value:'\u00a327.50'}]},
 optionB:{label:'Meal Prep',details:[{key:'Weekly ingredients',value:'\u00a325'},{key:'Containers',value:'\u00a340 one-off'},{key:'Prep time',value:'45 min/week'},{key:'Opportunity cost',value:'\u00a311.44/hour'}]},
 conclusions:[
-{text:'Meal prep is clearly cheaper \u2014 \u00a3790 vs \u00a3825 for buying',correct:false},
+{text:'Meal prep is clearly cheaper \u2014 \u00a3790 vs \u00a3825 for buying, because the time spent prepping costs nothing',correct:false},
 {text:'Meal prep saves \u00a335 in direct costs, but if the 45 minutes/week could be spent earning \u00a311.44/hour, the true cost of meal prep exceeds buying \u2014 opportunity cost matters',correct:true},
 {text:'Meal prep saves over \u00a3200 per year',correct:false},
 {text:'Buying lunch is always better value because time is money',correct:false}
@@ -1103,7 +1103,7 @@ conclusions:[
 {text:'The pass is worth it if you eat 12 or more lunches per month',correct:true},
 {text:'The pass is worth it if you eat 8 or more lunches per month',correct:false},
 {text:'Individual lunches are always cheaper',correct:false},
-{text:'The pass is worth it if you eat 15 or more lunches per month',correct:false}
+{text:'The pass is only worth it if you eat 15 or more lunches per month',correct:false}
 ],
 explanation:'\u00a330 \u00f7 \u00a32.50 = 12. If you eat 12 or more school lunches in a month, the pass is better value.'},
 
