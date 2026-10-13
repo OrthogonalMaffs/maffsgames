@@ -16,7 +16,9 @@ nothing is floated except to print):
     exactly the stated number of significant figures.
   Options: exactly four, all different strings; exactly one is right (equal to the value, and in standard form where that is
     asked: a distractor that is numerically equal but not in standard form, like 45 x 10^3, is legitimately wrong; where the
-    question does not ask for standard form, ANY option equal to the key in value fails the item, SR-4/SR-16); a
+    question does not ask for standard form, ANY option equal to the key in value fails the item, SR-4/SR-16); no two
+    options are equal in value (SR-4; B11-CLEAR, 12 Oct 2026, none expected) except, where standard form is asked,
+    options equal to the key's value in other forms (they test the form); a
     comparison's "All equal", "They are equal", "Cannot tell" and "None are equal" are false claims, and each pair claimed
     equal is tested.
   Render: every question and option is parsed by KaTeX (throwOnError) from the pinned local copy, and the rendered TeX
@@ -189,6 +191,18 @@ def check_item(fails, where, q):
         return
     ask, tex = q['ask'], q['q']
     info = [opt_info(o) for o in opts]
+    # SR-4 (B11-CLEAR, 12 Oct 2026): no two options equal in value, none expected. The one exception is a question that
+    # asks for standard form, where options equal to the key's value in other forms test the form (45 x 10^3 and
+    # 0.45 x 10^5 beside 4.5 x 10^4); two wrong values equal to each other are never allowed.
+    need_std_form = any(ask.startswith(a) for a in STD_ASKS)
+    for x in range(4):
+        for y in range(x + 1, 4):
+            vx, vy = info[x][0], info[y][0]
+            if vx is None or vy is None or sympy.simplify(vx - vy) != 0:
+                continue
+            if need_std_form and info[0][0] is not None and sympy.simplify(vx - info[0][0]) == 0:
+                continue
+            fails.append('options: %s: the options %r and %r are equal in value (SR-4)' % (where, opts[x], opts[y]))
     # comparisons
     if ask in COMPARE_ASKS or tex.startswith('\\text{Which is bigger') or ask == 'Which two are equal?' or tex.startswith('\\text{Arrange'):
         body = re.sub(r'\\text\{[^}]*\}', ',', tex)
@@ -396,6 +410,8 @@ PLANTS = [
      [("correct:'37000',d:['3700','370000','370']", "correct:'37000',d:['37000.0','370000','370']")]),
     ('SR-4/16: an option equal to the key in value, plain "Calculate" asked', 'options:',
      [("correct:'1',d:['0','10^{12}','10^{-12}']", "correct:'1',d:['1.0','10^{12}','10^{-12}']")]),
+    ('SR-4: two wrong options equal in value (2.5 x 10^3 and 25 x 10^2, B11-CLEAR)', 'options:',
+     [("d:['2.5 \\\\times 10^{3}','2.5 \\\\times 10^{-3}','4 \\\\times 10^{-4}']", "d:['2.5 \\\\times 10^{3}','25 \\\\times 10^{2}','4 \\\\times 10^{-4}']")]),
     ('a solve-for key that does not solve the equation', 'key:',
      [("correct:'7',d:['70','0.7','14']", "correct:'70',d:['7','0.7','14']")]),
     ('the wrong claim keyed for "which two are equal"', 'options:',

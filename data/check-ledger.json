@@ -5595,7 +5595,7 @@
  "standard-form-blitz": {
   "generator": false,
   "layers": {
-   "A": "violations",
+   "A": "verified",
    "B": "none",
    "C": "none",
    "D": "none",
@@ -5611,14 +5611,8 @@
     "status": "pass"
    },
    "B11": {
-    "entries": [
-     {
-      "detail": "QUESTIONS.alevel[35]: '2.5 \\\\times 10^{3}' = '25 \\\\times 10^{2}' (both wrong options)",
-      "id": "standard-form-blitz::a7810b288fac#1::B11::[\"2.5 \\\\times 10^{3}\", \"25 \\\\times 10^{2}\"]",
-      "line": null
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B2": {
     "entries": [],
