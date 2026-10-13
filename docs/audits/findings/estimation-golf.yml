@@ -84,3 +84,68 @@ findings:
     mm, 1% off). Proximity scoring blunts the effect (28 for class size is Par).'
   evidence: 'docs/audit-resit-correctness-2026-10-04.md F5. '
   status: open
+- id: estimation-golf-s1-001
+  severity: MEDIUM
+  jc: true
+  class: NEW:convention-unstated
+  level: ks3, gcse, level4
+  where: games/estimation-golf/index.html:665, :671 (ks3), :675, :676 (gcse), :696 (level4)
+  summary: 'Questions say "Estimate" but state no method (SR-12, SR-17), and the key is the exact value; the hints show
+    exact working. A student who estimates by the GCSE N14 method (round each value to 1 s.f.) is scored over par and,
+    outside 5%, logged correct:false (band.strokes<=3, :847). Sharpest on gcse "Estimate 23% of 840." (key 193.2;
+    20% of 800 = 160 is 17% off, Bogey). The game sits outside SR-12, as canon expects for the estimation games other
+    than estimation-engine. For Jon: state a method and key its answer (the SR-12 rebuild), or say "Work out" where
+    the exact value is wanted (a stem change)'
+  evidence: '"Estimate 23% of 840." key 193.2, hint "20% + 3%"; "Estimate the number of heartbeats in a year (assume
+    70 bpm)." key 36792000 (70×60×20×400 = 33,600,000, Par); "Estimate the number of seconds in one day." key 86400
+    (60×60×20 = 72,000, Bogey); "...about 1.8 kg. Estimate the weight of one apple in grams." key 150 (2000÷10 = 200,
+    Double Bogey); "Estimate the RMS value ... peak voltage 325 V." key 229.8 (300÷1.4 = 214, Par). Bands at :717-725
+    (SWEEP-1, batch 1)'
+  status: open
+- id: estimation-golf-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: year6, alevel, level4
+  where: games/estimation-golf/index.html:626-636 (HOLES_META), :795 (loadHole)
+  summary: 'Each hole''s topic label comes from HOLES_META by hole number, not from the item, so the label and the
+    question disagree: Year 6 draws 9 of 20 at random, and the alevel and level4 banks do not follow the nine topics.
+    Fix (a topic per item) is inside the game; the topics are content, so open for Jon'
+  evidence: '"Percentages" over "Estimate the gradient of y = x³ at x = 3 by first principles..."; "Large Numbers" over
+    the trapezium rule; "Time & Rates" over "Estimate sin(30°) as a decimal."; "Rounding" over the level4 RMS item;
+    "Powers & Roots" over the bending moment (SWEEP-1, batch 1)'
+  status: open
+- id: estimation-golf-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: alevel, gcse, level4
+  where: games/estimation-golf/index.html:877, :882 (feedback)
+  summary: 'The feedback prints the key as a JS number and the error to 2 d.p.: "Give ln(10) to 2 decimal places." shows
+    "Actual answer: 2.3" (below the precision asked); for small keys the error reads as zero ("Round 0.004857 to 2
+    significant figures.", answer 0.0048: "Error: 2.0% (-0.00)"; thermal resistance 0.0833 likewise)'
+  evidence: 'alevel :688 answer: 2.30 (stored as the number 2.3); diffStr = diff.toFixed(2) at :877 (SWEEP-1, batch 1)'
+  status: open
+- id: estimation-golf-s1-004
+  severity: LOW
+  jc: true
+  class: NEW:convention-unstated
+  level: level4
+  where: games/estimation-golf/index.html:699
+  summary: 'The beam''s support is stated only in the hint (which costs a stroke): the key wL²/8 = 10 is the simply
+    supported case. "Maximum ... at mid-span" nearly pins it (a fixed-ended beam''s maximum is not at mid-span), so
+    LOW. Adding "simply supported" is a stem change, open for Jon'
+  evidence: '"A beam of length 4 m has a UDL of 5 kN/m. Estimate the maximum bending moment at mid-span (kNm)." key 10,
+    hint "M_max = wL²/8 for a simply supported beam" (SWEEP-1, batch 1)'
+  status: open
+- id: estimation-golf-s1-005
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: alevel
+  where: games/estimation-golf/index.html:687, :689
+  summary: 'The trapezium hint calls the ordinates strips ("Strips at x = 0, 0.5, 1" for 2 strips), and the speed-of-sound
+    stem gives its own key ("(≈ 343 m/s)", key 343). Wording and a new stem, open for Jon'
+  evidence: 'hint "Strips at x = 0, 0.5, 1. Values: 0, 0.25, 1."; "Estimate the speed (m/s) of sound in air at 20°C
+    (≈ 343 m/s)." key 343 (SWEEP-1, batch 1)'
+  status: open

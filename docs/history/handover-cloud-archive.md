@@ -3,6 +3,44 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-12 (cloud): B11-CLEAR game 3, index-laws (#320)
+
+- **Replacements (kind a, keys unchanged):** [6] 3^{12} -> 3^2 (subtracted the powers; 9^6 kept); [27] 1/x^{-3} -> −1/x^3 (negative as well; x^3 kept); [38] 27/3 -> 1/3, [39] 100/2 -> 1/10, [40] 25/2 -> 1/5 (reciprocal as for a negative power; 9, 50, 12.5 kept).
+- **Verifier** fails on any equal pair except the key beside another form where `ask` names it ((5^2)^3); plant puts 3^{12} back.
+- **Games 4-7 are built and committed locally** (worktrees /home/user/wt/sfb, ss, bb, cc; branches claude/b11-<slug>), each verifier PASS with its plant, each ledger clean for its game only. Each needs: rebase on main, claim commit pushed alone, fix pushed, PR, findings + release commit. Recipe: KaTeX via `npm pack katex@0.16.9` in the scratchpad; extraction through `docs/sandbox-checks.md`'s `run_extract_offline.py`; verifiers take `--katex-dir`.
+- **Surd Simplifier note for Jon:** six of its eight pairs (27/99 and 9/33 for 3/11, and so on) are both the KEY's value unsimplified, under "simplest form": SR-4's form exception, so they are listed in the allowlist (as alevel[6]/[7] already were), not replaced. gcse[38] and [43] are replaced. Jon can reverse this.
+
+## 2026-10-13 (cloud): B11-CLEAR game 6, boolean-blitz (#330)
+
+- **Replacements (kind a, keys unchanged):** Q4 NOT(AB) -> NOT(A)NOT(B); Q15 NOT(A) + A -> A NOT(B); Q17 A.BC -> 0; Q40 ABC + ABD -> ABCD (each a named slip; the other of each pair kept).
+- **Listed (kind b):** Q2, Q10, Q12, Q19 (key unsimplified, wrong under "Simplify fully.") and Q24, Q41 (second forms accepted, #227), all in b11_form_questions. No stem changed; nothing for Jon.
+
+## 2026-10-13 (cloud): B11-CLEAR game 5, surd-simplifier (#328)
+
+- **Replacements (kind a, keys unchanged):** gcse[38] 0.(2): 1/5 -> 2/99 (used 99, as for two recurring digits; 2/10 kept). gcse[43] 0.(45): 9/20 -> 4/9 (took only the 4 as recurring; 45/100 kept).
+- **Listed, not replaced:** gcse[42], [44], [49], alevel[31], [32], [39]: both options are the key's value uncancelled, and each ask is "Convert to a fraction in its simplest form" (SR-4's exception, as alevel[6]/[7]).
+- **Local KaTeX:** this verifier takes `--katex-dir scripts/fonts/katex/dist`; without it, it times out here (CDN 403), as main's copy does.
+
+## 2026-10-13 (cloud): B11-CLEAR game 4, standard-form-blitz (#324)
+
+- **Replacement (kind a, key unchanged):** alevel[35] (5 x 10^-2)^-2, key 4 x 10^2: 25 x 10^2 -> 2.5 x 10^-3 (squared, ignoring the minus in the power); 2.5 x 10^3 kept.
+- **Verifier** fails on any equal pair except, where standard form is asked, the key's value in another form; plant puts 25 x 10^2 back. Ledger: only this game changed.
+- **Note:** a ledger change selects ~150 checks in check-changed.py; locally it passes the 50-minute cap. Games 5-7 (surd-simplifier, boolean-blitz, complex-converter) are built locally in
+  /home/user/wt/ss, bb, cc (one commit each on an older main; cherry-pick onto a fresh claim commit, as game 4).
+
+## 2026-10-12 (cloud): B11-CLEAR game 2, coordinate-geometry-dash (#315)
+
+- **Replacement (kind a, key unchanged):** alevel[15] (x = 2t + 1, y = t^2 - 3, dy/dx at t = 1; key 1): 1/2 -> −2 (gave y at t = 1, not the gradient); ½ kept.
+- **Verifier** fails on any equal pair (EQUAL_PAIRS empty; plant puts 1/2 back). Ledger: this game only.
+- **Container (new session after a clear):** cdn.jsdelivr.net is refused by the proxy (403), so every browser check of a page loading KaTeX from the CDN fails locally (about 30, incl. answer-lock parts); the changed game's own verifier and B11 passed. CI is the measure. Playwright needs `PLAYWRIGHT_BROWSERS_PATH` pointing at a dir with `chromium-1243 -> /opt/pw-browsers/chromium-1194` (and the headless shell likewise); esprima as in game 1. A full check-changed run takes over 35 min here: give the background run the 2 h timeout. Never run two at once (they share the stub server's port: "QUESTIONS is not defined").
+- **Next:** index-laws (replacements drafted: [6] 3^{12} -> 3^2, subtracted the powers; [27] 1/x^{-3} -> −1/x^3, made the answer negative as well; [38] 27/3 -> 1/3, [39] 100/2 -> 1/10, [40] 25/2 -> 1/5, each took the reciprocal as for a negative power; the kept twin of each is the student's own form). Then standard-form-blitz ([35] 25x10^2 -> 2.5x10^{-3}, squared and ignored the minus); surd-simplifier (its pairs also equal the key: 27/99 = 9/33 = 3/11; ask "simplest form"); boolean-blitz (every question shows "Simplify fully.", so the six kind-b items are allowlisted, #227 accepts AB + BC for B(A + C)); complex-converter ([14] context "Express in polar form (degrees).": allowlist; [42] 0 + 7j -> 0, took e^{j0} as 0).
+
+## 2026-10-12 (cloud): B11-CLEAR game 1, scale-factor-scaling (#312, merge commit 031d8ed)
+
+- **Replacements (kind a, keys unchanged):** T1[8] 4:10 -> 4:5 (squared only the first number; 2:5 kept); T1[9] 3:9 -> 1:6 (doubled the scale factor instead of squaring it; 1:3 kept).
+- **Verifier** fails on any equal pair (EQUAL_PAIRS empty; plant puts 4:10 back). **Ledger:** `extract-banks.py --only` then `check-banks.py --only <slug> --write-ledger`; only this game changed.
+- **Container:** extraction needs esprima, which will not build here; the CI pin (4.0.1) is pure Python: `pip download --no-binary :all: esprima==4.0.1`, untar into the scratchpad, put it on PYTHONPATH.
+
 ## 2026-10-12 (cloud): VERIFIERS-20 game 20, prisoners-dilemma (#309, merge commit 9b57ab9); the list is complete
 
 - **Verifier:** `scripts/verify-prisoners-dilemma.py` (from the parked draft). The game marks nothing, so (as constructions-lab) it checks what the game states and does: payoffs, every opponent
