@@ -642,10 +642,20 @@ def check_chart_contrast(rep, qid, svg, bg):
 
 # ── the bank ─────────────────────────────────────────────────────────────────
 
+def sr31_lead(o):
+    """The verdict or choice an option opens with, the words before its dash ("Yes", "No", "A")."""
+    m = re.match(r'^(.{1,30}?)\s+[—–]\s+', o)
+    return m.group(1).strip() if m else None
+
+
 def check_bank(rep, bank, ctx, verbose=False):
     used = {}
     for i, q in enumerate(bank):
         qid = 'Q%d' % (i + 1)
+        k = sr31_lead(q['options'][q['correct']])
+        for j, o in enumerate(q['options']):
+            if k and j != q['correct'] and sr31_lead(o) == k:
+                rep.fail(qid, 'SR-31', 'the wrong option %r gives the key\'s verdict %r (Jon, 13 Oct 2026)' % (o, k))
         opts = q['options']
         if not (0 <= q['correct'] < len(opts)):
             rep.fail(qid, 'key', 'correct index %r is not an option' % q['correct'])
@@ -787,6 +797,11 @@ def selftest(bank, ctx):
         q = find(b, r'Eating breakfast causes')
         q['options'][2] = 'The mean is not the right measure for earnings data'
     expect("Q18's old true option C", q18_old)
+
+    def q26_old(b, c):
+        q = find(b, r'save \d+% of her take-home')
+        q['options'][2] = 'Yes — but only if she cuts her food budget'
+    expect("SR-31: Q26's old C (the key's Yes)", q26_old)
 
     def q15_no_key(b, c):
         q = find(b, r'stem-and-leaf')

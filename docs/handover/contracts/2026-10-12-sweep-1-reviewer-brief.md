@@ -20,7 +20,9 @@ run node/python to draw from a generator). Node may not be installed; python3 is
 ## What to read
 Every item as a student sees it: stem, every option, the key, hints, worked steps / explanations, feedback text,
 the start screen's instructions. For each item ask:
-a. **True wrong option / second correct answer (SR-16, SR-24).** Is an option marked wrong actually a true statement,
+a. **True wrong option / second correct answer (SR-16, SR-24); SR-31 (Jon, 13 Oct 2026): no wrong option gives
+   the key's verdict or choice** ("Yes — <wrong reason>" beside a "Yes — …" key; "A — EV = <wrong figure>" beside "A — …"),
+   whatever its reason. Is an option marked wrong actually a true statement,
    or a second correct answer to the question as written? (A worded option that is true; an equivalent form the stem
    does not exclude; a counterexample that refutes only a softer statement than the one written.)
 b. **Unstated convention (SR-1, SR-17).** Does the key depend on a convention, precision, rounding, form or

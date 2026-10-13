@@ -221,7 +221,7 @@ var QUESTIONS = [
   {
     section:'3.4',ao:'AO3',
     stem:'A newspaper headline states: "House prices have risen 200% in 20 years."\n\nA homeowner paid \u00a380,000 for a house 20 years ago. The house is now worth \u00a3240,000. Is the headline correct?',
-    options:['Yes \u2014 \u00a3240,000 is three times \u00a380,000, which is a 200% increase','No \u2014 the increase is \u00a3160,000, which is only 100% of the original price','Yes \u2014 the house has tripled in value, so prices have risen 300%','No \u2014 a 200% rise would mean the house is worth \u00a3280,000'],
+    options:['Yes \u2014 \u00a3240,000 is three times \u00a380,000, which is a 200% increase','No \u2014 the increase is \u00a3160,000, which is only 100% of the original price','No \u2014 tripling is a 300% increase, so the headline understates it','No \u2014 a 200% rise would mean the house is worth \u00a3280,000'],
     correct:0,
     working:'Percentage increase = (160,000 \u00f7 80,000) \u00d7 100 = 200%. The headline is correct. A common error is confusing "risen by 200%" with "risen to 200%".'
   },
@@ -229,10 +229,10 @@ var QUESTIONS = [
     section:'3.4',ao:'AO3',
     stem:'A company presents this data about employee satisfaction:',
     table:{headers:['Year','Satisfied (%)'],rows:[['2020','61'],['2021','64'],['2022','68'],['2023','71']]},
-    stemAfterTable:'The CEO says: "Satisfaction has increased by nearly 20% since 2020."\n\nWhat error has the CEO made?',
+    stemAfterTable:'The CEO says: "Satisfaction has increased by 10% since 2020."\n\nWhat error has the CEO made?',
     options:['The data shows a decrease, not an increase','The CEO has confused percentage point increase with percentage increase','The sample size is too small to draw conclusions','The CEO should be using the median, not mean'],
     correct:1,
-    working:'Satisfaction rose by 10 percentage points (61 to 71). As a percentage increase: (10 \u00f7 61) \u00d7 100 = 16.4%, not nearly 20%. The CEO has confused percentage points with percentage change.'
+    working:'Satisfaction rose by 10 percentage points (61 to 71). As a percentage increase: (10 \u00f7 61) \u00d7 100 = 16.4%, not 10%. The CEO has confused percentage points with percentage change.'
   },
   {
     section:'3.4',ao:'AO2',
@@ -360,7 +360,7 @@ var QUESTIONS = [
   {
     section:'3.6',ao:'AO2',
     stem:'A sample of 64 observations gives a sample mean of 200. The population has known standard deviation 16. A 95% confidence interval is (196.08, 203.92).\n\nA researcher claims: "There is a 95% chance that the population mean lies between 196.08 and 203.92."\n\nIs this interpretation correct?',
-    options:['Yes \u2014 that is the definition of a confidence interval','No \u2014 the population mean is fixed; the interval either contains it or it doesn\'t','Yes \u2014 because the sample size is large enough','No \u2014 the probability should be 5%, not 95%'],
+    options:['Yes \u2014 that is the definition of a confidence interval','No \u2014 the population mean is fixed; the interval either contains it or it doesn\'t','Yes \u2014 because the sample size is large enough','Yes \u2014 95% of the data lies within the interval'],
     correct:1,
     working:'The frequentist interpretation: 95% of confidence intervals constructed this way will contain the true mean. This specific interval either contains it or doesn\'t \u2014 there is no probability attached to a fixed interval containing a fixed (unknown) parameter.'
   },

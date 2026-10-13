@@ -87,6 +87,13 @@ Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
+## 2026-10-13 (cloud): core-maths-paper2a (#349), stat-attack (#350) and SWEEP-1 batch 9 (GCSE part 5, Core Maths)
+
+- **Two SR-20 levels, fixed under SR-30:** core-maths-paper2a (three true criticisms as wrong options, #349); stat-attack (#350: the mean, SD and variance marked to bands, not the 3 s.f. asked; a wrong SD marked right on all 36; the variance to 3 s.f. and the SD from the unrounded variance on Jon's ruling).
+- **Jon's rulings, 13 Oct (verbatim in the rulings file), done in batch 9's PR:** paper2a Q5's CEO says "increased by 10%"; paper2b Q24, Q33, Q35, Q36 give a verdict other than the key's; **SR-31 (standing): no wrong option gives the key's verdict or choice** (a check in every Core Maths verifier and in the brief; its scan fixed five more); Screening Room's box shows a fixed % and reads a percentage.
+- **Fixed in batch 9:** screening-room wording; estimation-engine's counts as £ and its money format path (SR-3); core-maths-paper1 (stem-and-leaf key, SR-16/SR-31 options); paper2b (precision, assumption); paper2c (units).
+- **Next:** batch 10 found growth-and-decay, test-the-claim and graph-sketcher at SR-20 (marking bands, true and second-correct options); each is fixed first in its own PR under SR-30, then batch 10 (tax-theft on Jon's ruling). Notes: scratchpad `batch10-notes.txt`.
+
 ## 2026-10-13 (cloud): correlation-or-coincidence (#347) and SWEEP-1 batch 8 (GCSE part 4)
 
 - **SR-20 hit, ruled the same day:** correlation-or-coincidence keyed "Something else causes both" on three pairs where one drives the other (B22, B25, B27). #347: Jon's three pairs (shoe size/reading age, ice creams/sunburn, umbrellas/taxis), the verifier bars the old pairs; the new ones overlap B4, B1 and B3 (s1-002, my error, for Jon).
@@ -100,10 +107,3 @@ main's last full run is red; watch main's run after merging.
 - **Fixed in batch 7:** probability-paradox SR-18 assumptions (Monty's random choice; "at random"/"fair" in five) and two true options (SR-16); coordinate-geometry-dash "∞"; graph-transformer's Show-steps captions and 1/x equations (every caption worked out from its target); formula-unlocked's raw-TeX target line and two misconception texts; scale-factor-scaling "Length scale factor", "Corresponding sides", "Similar solids". Every verifier PASS locally with its plants.
 - **Open, for Jon:** SR-14: probability-paradox-s1-005 (plane crash, needs a new context) and bearing-blitz-s1-001 ("Fire or die."); the SR-23 timer class (surd-simplifier, circle-theorem-spotter, scale-factor-scaling, trig-identity-duel-t2-010); circle-theorem-spotter-s1-004 (Q50's numbers).
 - **Class (running):** verifier gaps in worked feedback in every batch 7 game (each has an entry); raw TeX through textContent/innerHTML (formula-unlocked, proportion-blaster).
-
-## 2026-10-13 (cloud): quadratic-factoriser (#342) and SWEEP-1 batch 6 (GCSE part 2)
-
-- **SR-20 stop, ruled the same day:** quadratic-factoriser Higher keyed the wrong guided split on 3008 of 3760 items. #342: kps and kqr, step 5 kpx and ±kq; the verifier plays all six steps of every Higher item (3762 item-modes, about 60 s) and a self-test line plants the old split (about 80 s); the Formula roots are on MaffsKeypad with its minus key.
-- **Fixed in batch 6:** proportion-blaster x > 0 (SR-17); standard-form-blitz ≈ 82's precision (SR-1, any approximate key) and the light-time inverse (SR-4); surd-simplifier's start screen; trig-wars SR-14 (Jon) and the briefing's 45° rule; trig-worms TOA error names when O > A. Every verifier PASS locally with its plants.
-- **Open, for Jon:** modular-battle-s1-002 (SR-4 for a remainder drill); surd-simplifier-s1-003 (SR-23 timer); standard-form-blitz-s1-004 (calculator tag); trig-worms-s1-001 (θ arc); quadratic-factoriser-s1-003 (verifier gap).
-- **Class for Jon (running):** no working after a wrong answer (proportion-blaster, standard-form-blitz, surd-simplifier, trig-identity-duel); negative typed answers behind inputmode="decimal" (log-laws, suvat), for a home-lane contract.

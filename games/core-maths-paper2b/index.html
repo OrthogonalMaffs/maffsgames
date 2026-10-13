@@ -364,7 +364,7 @@ var QUESTIONS = [
   {
     section:'3.9',ao:'AO3',
     stem:'A probability distribution has E(X) = 4.2.\n\nA student says: \u201cThe most likely value is 4 or 5.\u201d\n\nIs the student correct?',
-    options:['Yes \u2014 expected value equals the most likely value','No \u2014 E(X) is a long-run average and need not equal any value that X actually takes','Yes \u2014 E(X) lies between 4 and 5 so one of them must be most likely','No \u2014 the most likely value is the median, not the mean'],
+    options:['Yes \u2014 expected value equals the most likely value','No \u2014 E(X) is a long-run average and need not equal any value that X actually takes','Yes \u2014 E(X) lies between 4 and 5 so one of them must be most likely','Yes \u2014 4.2 rounds to 4, so 4 is the most likely value'],
     correct:1,
     working:'E(X) is the long-run average (mean) of the distribution. It does not tell us which individual value has the highest probability. The mode (most likely value) could be any value in the distribution.'
   },
@@ -430,7 +430,7 @@ var QUESTIONS = [
   {
     section:'3.10',ao:'AO3',
     stem:'Option A: 70% chance of gaining \u00a34,000, 30% chance of losing \u00a32,000.\nOption B: a guaranteed \u00a31,500.\n\nWhich option has the higher expected value?',
-    options:['A \u2014 EV = \u00a32,200','B \u2014 it is safer','Both are equal','A \u2014 EV = \u00a34,000'],
+    options:['A \u2014 EV = \u00a32,200','B \u2014 it is safer','Both are equal','B \u2014 \u00a31,500 is more than A\u2019s EV of \u00a31,400'],
     correct:0,
     working:'E(A) = 0.7 \u00d7 4,000 + 0.3 \u00d7 (\u22122,000) = 2,800 \u2212 600 = \u00a32,200. E(B) = \u00a31,500. Option A has the higher EV.'
   },
@@ -444,14 +444,14 @@ var QUESTIONS = [
   {
     section:'3.10',ao:'AO3',
     stem:'Travel insurance costs \u00a345. The policy covers:\n\nTrip cancellation: P = 0.06, cost = \u00a3400\nMedical emergency: P = 0.02, cost = \u00a31,200\n\nIs the insurance good value based on expected cost?',
-    options:['No \u2014 \u00a348 barely exceeds the premium','Yes \u2014 the expected loss of \u00a348 exceeds the \u00a345 premium','No \u2014 expected loss is only \u00a324','Yes \u2014 expected loss of \u00a396 far exceeds the premium'],
+    options:['No \u2014 \u00a348 barely exceeds the premium','Yes \u2014 the expected loss of \u00a348 exceeds the \u00a345 premium','No \u2014 expected loss is only \u00a324','No \u2014 the chance of claiming is only 8%, so it is not worth it'],
     correct:1,
     working:'E(loss) = 0.06 \u00d7 400 + 0.02 \u00d7 1,200 = 24 + 24 = \u00a348. Since \u00a348 > \u00a345, the insurance is actuarially good value.'
   },
   {
     section:'3.10',ao:'AO3',
     stem:'A business considers installing CCTV: \u00a330,000 installation plus \u00a35,000 per year running costs. It is expected to reduce crime-related losses by 60%. Current crime losses average \u00a340,000 per year.\n\nOver 10 years, is the CCTV a worthwhile investment?',
-    options:['No \u2014 total cost (\u00a380,000) exceeds total savings (\u00a340,000)','Yes \u2014 total savings (\u00a3240,000) exceed total cost (\u00a380,000)','No \u2014 crime trends cannot be predicted','Yes \u2014 any crime reduction justifies the cost'],
+    options:['No \u2014 total cost (\u00a380,000) exceeds total savings (\u00a340,000)','Yes \u2014 total savings (\u00a3240,000) exceed total cost (\u00a380,000)','No \u2014 crime trends cannot be predicted','No \u2014 the \u00a330,000 installation alone is more than one year\u2019s savings of \u00a324,000'],
     correct:1,
     working:'Total cost = 30,000 + 10 \u00d7 5,000 = \u00a380,000. Total savings = 10 \u00d7 0.6 \u00d7 40,000 = \u00a3240,000. Net benefit = 240,000 \u2212 80,000 = \u00a3160,000. BCR = 3, strongly supports.'
   }

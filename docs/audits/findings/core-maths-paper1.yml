@@ -151,3 +151,16 @@ findings:
     Q18''s old options and Q15''s key are now checked'
   evidence: 'check_bank() reads working text for Q32 only (SWEEP-1, batch 9)'
   status: open
+- id: core-maths-paper1-s1-008
+  severity: MEDIUM
+  jc: false
+  class: NEW:true-wrong-option
+  level: core
+  where: games/core-maths-paper1/index.html Q10 (:326), Q26
+  summary: 'Two wrong options gave the key''s verdict or choice (SR-31, Jon, 13 Oct 2026): Q10 "Mean — fair, because it
+    uses all data values" beside the key "Mean — potentially misleading …" (the measure is the key''s); Q26 "Yes — but
+    only if she cuts her food budget" beside the key "Yes — she has £692 remaining …". Fixed: Q10 "Median —
+    misleading, because it leaves out the £85,000 salary", Q26 "No — her bills come to £1,868, more than her pay"
+    (the rent counted twice); the verifier fails any wrong option with the key''s verdict, planted'
+  evidence: 'Found by the SR-31 check added to the verifier (SWEEP-1, batch 9)'
+  status: open

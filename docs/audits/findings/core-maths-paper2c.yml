@@ -141,3 +141,14 @@ findings:
     reviewer''s recomputation. Recorded under Jon''s rule of 13 Oct 2026; the units are now checked'
   evidence: 'check_bank() reads Q12 and Q35 only (SWEEP-1, batch 9)'
   status: open
+- id: core-maths-paper2c-s1-005
+  severity: MEDIUM
+  jc: false
+  class: NEW:true-wrong-option
+  level: core
+  where: games/core-maths-paper2c/index.html Q6 (:249)
+  summary: '"Yes — but only when the line is horizontal" gave the key''s verdict "Yes" (SR-31, Jon, 13 Oct 2026). Fixed:
+    "No — the acceleration is 30 m/s², the final velocity" (v read as a); the verifier fails any wrong option with the
+    key''s verdict, planted'
+  evidence: 'Found by the SR-31 scan of batch 9''s multiple-choice games (SWEEP-1, batch 9)'
+  status: open

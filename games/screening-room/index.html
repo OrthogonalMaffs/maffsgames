@@ -136,6 +136,8 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',sans-serif;co
 .calc-input-row{display:flex;gap:10px;align-items:center;margin-bottom:16px}
 .calc-input{font-family:'JetBrains Mono',monospace;font-size:16px;padding:12px 16px;border:2px solid var(--border);border-radius:10px;background:#0f172a;color:var(--text);flex:1;outline:none;transition:border-color 0.2s}
 .calc-input:focus{border-color:var(--accent)}
+.calc-field{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.calc-unit{font-family:'JetBrains Mono',monospace;font-size:16px;color:var(--text)}
 .calc-submit{font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;padding:12px 24px;border:none;border-radius:10px;background:var(--accent);color:#fff;cursor:pointer;transition:all 0.2s}
 .calc-submit:hover{opacity:0.9}
 .calc-submit:disabled{opacity:0.4;cursor:not-allowed}
@@ -238,7 +240,7 @@ body.accessible{background-color:#12141f !important}
     " document.getElementById('continueBtn').click();",
     " await until(() => document.getElementById('phase3').style.display !== 'none' && !document.getElementById('calcInput').disabled && !MaffsLock.isFresh());",
     " const k = q.keys[0] + (i === 0 ? 0 : 1);",
-    " document.getElementById('calcInput').value = (k / Math.pow(10, q.dp)).toFixed(q.dp) + '%';",
+    " document.getElementById('calcInput').value = (k / Math.pow(10, q.dp)).toFixed(q.dp);",
     " document.getElementById('calcSubmit').click();",
     "})();"
   ]
@@ -335,7 +337,7 @@ body.accessible{background-color:#12141f !important}
         <div class="calc-prompt" id="calcPrompt"></div>
         <div class="calc-hint" id="calcHint"></div>
         <div class="calc-input-row">
-          <input type="text" class="calc-input" id="calcInput" placeholder="Your answer..." autocomplete="off">
+          <span class="calc-field"><input type="text" inputmode="decimal" class="calc-input" id="calcInput" placeholder="Your answer..." autocomplete="off" aria-label="Your answer, as a percentage"><span class="calc-unit" id="calcUnit" aria-hidden="true">%</span></span>
           <button class="calc-submit" id="calcSubmit" onclick="handleCalc()">Submit</button>
         </div>
         <div class="calc-hint" id="calcMsg" role="status" style="display:none"></div>
@@ -892,9 +894,11 @@ function showPhase2() {
 function showPhase3() {
   var q = currentQ;
   document.getElementById('calcPrompt').innerHTML = 'Of the <strong>' + numFmt(q.testPositive.total) + '</strong> positive results, how many are real? Calculate ' + kRender('P(\\text{condition} \\mid \\text{positive})') + '.';
-  var ex = [null, ['12.5%', '0.125'], ['1.25%', '0.0125'], ['0.125%', '0.00125']][q.dp];
+  // Jon, 13 Oct 2026 (screening-room-s1-001): the box is a percentage, its % shown beside it, and what is typed is
+  // read as a percentage.
+  var ex = [null, '12.5', '1.25', '0.125'][q.dp];
   document.getElementById('calcHint').textContent = 'Give your answer as a percentage to ' + q.dp + ' decimal place' + (q.dp === 1 ? '' : 's') +
-    ' (e.g. ' + ex[0] + ') or as a decimal to ' + (q.dp + 2) + ' decimal places (e.g. ' + ex[1] + ').';
+    ' (e.g. ' + ex + ').';
   document.getElementById('calcMsg').style.display = 'none';
   document.getElementById('calcInput').value = '';
   document.getElementById('calcInput').disabled = false;
@@ -921,12 +925,12 @@ document.getElementById('calcInput').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') { e.preventDefault(); handleCalc(); }
 });
 
-// The answer is marked at the precision the question states (SR-1, SR-17): a percentage to q.dp decimal places
-// (with %), or the same value as a decimal to q.dp + 2 places. MaffsAnswer.decimal reads the typed string exactly.
-// 'format' (the right value, not rounded as asked, or as a fraction) and 'unreadable' are never marked (SR-3).
+// The answer is a percentage, marked at the precision the question states (SR-1, SR-17): q.dp decimal places. The
+// box shows the % (a typed one is allowed). MaffsAnswer.decimal reads the typed string exactly. 'format' (the right
+// value, not rounded as asked, as a fraction, or as a decimal where a percentage is asked) and 'unreadable' are never
+// marked (SR-3).
 function markCalc(raw, q) {
-  var s = String(raw == null ? '' : raw).trim(), isPct = /%$/.test(s);
-  if (isPct) s = s.replace(/\s*%$/, '');
+  var s = String(raw == null ? '' : raw).trim().replace(/\s*%$/, '');
   var hint = document.getElementById('calcHint').textContent;
   if (s.indexOf('/') !== -1) {
     var parts = s.split('/'), a = MaffsAnswer.parse(parts[0]), b = MaffsAnswer.parse(parts[1] || '');
@@ -937,9 +941,12 @@ function markCalc(raw, q) {
   }
   var v = MaffsAnswer.parse(s);
   if (v === null) return { result: 'unreadable', msg: hint };
-  if (!isPct && v > 1) return { result: 'unreadable', msg: 'A probability is never more than 1. For a percentage, type the % sign.' };
-  var r = isPct ? markForm(s, q.keys, q.dp) : markForm(s, q.keys, q.dp + 2);
-  if (r === 'format') return { result: 'format', msg: MaffsAnswer.message('format', raw, { dp: isPct ? q.dp : q.dp + 2 }) };
+  var r = markForm(s, q.keys, q.dp);
+  if (r === 'format') return { result: 'format', msg: MaffsAnswer.message('format', raw, { dp: q.dp }) };
+  // the right value as a decimal (0.0098 for 0.98%): not marked, the box takes a percentage
+  if (r === 'wrong' && v <= 1 && markForm(s, q.keys, q.dp + 2) !== 'wrong') {
+    return { result: 'format', msg: 'Right value, but as a decimal. The box is a percentage: ' + hint };
+  }
   return { result: r };
 }
 // a form against every accepted key (a rounded item accepts the count ratio and the exact value)

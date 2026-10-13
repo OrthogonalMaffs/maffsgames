@@ -44,10 +44,20 @@ UNITS = [
 ]
 
 
+def sr31_lead(o):
+    """The verdict or choice an option opens with, the words before its dash ("Yes", "No", "A")."""
+    m = re.match(r'^(.{1,30}?)\s+[—–]\s+', o)
+    return m.group(1).strip() if m else None
+
+
 def check_bank(fails, bank):
     if len(bank) != COUNT:
         fails.append('bank: %d questions, expected %d' % (len(bank), COUNT))
     for i, q in enumerate(bank):
+        k, ok = sr31_lead(q['options'][q['correct']]), q.get('accept') or [q['correct']]
+        for j, o in enumerate(q['options']):
+            if k and j not in ok and sr31_lead(o) == k:
+                fails.append('Q%d SR-31: the wrong option %r gives the key\'s verdict %r (Jon, 13 Oct 2026)' % (i + 1, o, k))
         for pat, need in UNITS:
             if re.search(pat, q['stem'], re.S) and need not in q['stem']:
                 fails.append('Q%d units: the key depends on a unit the stem does not state (%r; SR-17)' % (i + 1, need))
@@ -151,6 +161,8 @@ PLANTS = [
     ('Q35 (t4-003)', "t4-003: Q35 with D not accepted", [('    accept:[1,3],\n', '')]),
     ('Q6 units', 's1-001: Q6 without its units', [("velocity–time graph (t in seconds, v in m/s) shows a straight line from (0, 0)",
                                                     "velocity–time graph shows a straight line from (0, 0)")]),
+    ('Q6 SR-31', "SR-31: Q6's old D (the key's Yes)", [("'No — the acceleration is 30 m/s², the final velocity']",
+                                                       "'Yes — but only when the line is horizontal']")]),
     ('Q33 units', 's1-002: Q33 without t in years', [("e^(0.06t), where t is the time in years.", "e^(0.06t).")]),
     ('t4-001', 't4-001: no fresh lock on a new question (before F1 batch 10)',
      [('  MaffsLock.fresh(container);   // a new question', '  // a new question'),

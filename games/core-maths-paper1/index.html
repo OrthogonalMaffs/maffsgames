@@ -323,7 +323,7 @@ const QUESTIONS = [
   {
     section: '3.1', ao: 'AO2',
     stem: 'The annual salaries of 5 employees are: \u00a322,000, \u00a324,000, \u00a326,000, \u00a328,000, \u00a385,000. A recruitment advert states "Average salary \u00a337,000." Which measure is being used, and is it a fair representation?',
-    options: ['Mean \u2014 fair, because it uses all data values', 'Mean \u2014 potentially misleading, because it is heavily influenced by the outlier', 'Median \u2014 fair, because it is not affected by the outlier', 'Mode \u2014 misleading, because there is no modal salary'],
+    options: ['Median \u2014 misleading, because it leaves out the \u00a385,000 salary', 'Mean \u2014 potentially misleading, because it is heavily influenced by the outlier', 'Median \u2014 fair, because it is not affected by the outlier', 'Mode \u2014 misleading, because there is no modal salary'],
     correct: 1,
     working: 'Mean = (22+24+26+28+85)\u00f75 = \u00a337,000. Correct but distorted by the \u00a385k outlier. Median = \u00a326,000 \u2014 far more representative.'
   },
@@ -439,7 +439,7 @@ const QUESTIONS = [
     section: '3.2', ao: 'AO2',
     stem: 'Priya\'s monthly take-home pay is \u00a31,840. She wants to save 10% of her take-home pay. Can she afford to?',
     table: { headers: ['Item', 'Monthly cost'], rows: [['Rent', '\u00a3720'], ['Food', '\u00a3210'], ['Transport', '\u00a395'], ['Phone', '\u00a335'], ['Utilities', '\u00a388']] },
-    options: ['Yes \u2014 she has \u00a3692 remaining; saving \u00a3184 is easily achievable', 'No \u2014 outgoings exceed income once savings are included', 'Yes \u2014 but only if she cuts her food budget', 'No \u2014 utilities and transport together exceed her savings target'],
+    options: ['Yes \u2014 she has \u00a3692 remaining; saving \u00a3184 is easily achievable', 'No \u2014 outgoings exceed income once savings are included', 'No \u2014 her bills come to \u00a31,868, more than her pay', 'No \u2014 utilities and transport together exceed her savings target'],
     correct: 0,
     working: 'Total outgoings = \u00a31,148. Remaining = \u00a3692. Savings target = \u00a3184. Comfortably achievable.'
   },

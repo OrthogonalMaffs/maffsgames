@@ -208,14 +208,17 @@ findings:
     Current behaviour kept, no code change.'
 - id: screening-room-s1-001
   severity: MEDIUM
-  jc: true
+  jc: false
   class: NEW:marking-tolerance
   level: alevel
   where: games/screening-room/index.html markCalc (alevel_01, alevel_12, alevel_19)
   summary: 'A percentage typed without its % sign is nudged ("type the % sign") when it is over 1, but under 1 it is
     read as a decimal and marked wrong: 0.98 for 0.98%, 0.045 for 0.045%, 0.28 for 0.28%. Nudging there would also
     nudge a student who means 0.98 (98%), so which way is a choice for Jon; the verifier''s probe skips these items
-    (verify :286-289)'
+    (verify :286-289)
+    Jon''s ruling (13 Oct 2026): the box shows a fixed % and reads the figure typed as a percentage; keys unchanged.
+    Fixed: the % unit beside the box, the hint asks for a percentage only, and the key as a decimal gets a message,
+    unmarked (SR-3); the verifier plays the key with and without a typed %, the decimal form and the unit, planted'
   evidence: 'Hint "as a percentage to 2 decimal places (e.g. 1.25%) or as a decimal to 4 decimal places (e.g. 0.0125)";
     keys 0.98% / 0.0098 (SWEEP-1, batch 9)'
   status: open

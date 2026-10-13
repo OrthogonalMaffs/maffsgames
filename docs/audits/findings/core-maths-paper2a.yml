@@ -49,7 +49,9 @@ findings:
   where: games/core-maths-paper2a/index.html Q5 (:228)
   summary: 'The key "The CEO has confused percentage point increase with percentage increase" does not fit the CEO''s
     figure: satisfaction rose 10 points (61 to 71), a 16.4% increase, and neither reading gives "nearly 20%", so no
-    option is right. A fix needs a new stem (e.g. the CEO says "increased by 10%"), so under SR-30 it is for Jon'
+    option is right. A fix needs a new stem (e.g. the CEO says "increased by 10%"), so under SR-30 it is for Jon
+    Jon''s ruling (13 Oct 2026): the CEO says "increased by 10%"; key unchanged. Fixed: the stem quotes 10%, the
+    working gives 16.4% "not 10%"; the verifier pins both, and plants the old stem'
   evidence: 'table 61, 64, 68, 71; "The CEO says: "Satisfaction has increased by nearly 20% since 2020."" (SWEEP-1,
     batch 9)'
   status: open
@@ -86,4 +88,17 @@ findings:
     s1-001..004 passed); prose figures in Q18, Q23, Q25, Q27, Q32, Q33 and Q36''s workings are not compared with the
     computed values. Recorded under Jon''s rule of 13 Oct 2026; s1-001 and s1-002''s texts are now checked'
   evidence: 'SPECS starts at STATS_FROM = 9 (SWEEP-1, batch 9)'
+  status: open
+- id: core-maths-paper2a-s1-007
+  severity: MEDIUM
+  jc: false
+  class: NEW:true-wrong-option
+  level: core
+  where: games/core-maths-paper2a/index.html Q4 (:223), Q23
+  summary: 'Two wrong options gave the key''s verdict (SR-31, Jon, 13 Oct 2026): Q4 "Yes — the house has tripled in value,
+    so prices have risen 300%" beside the key "Yes — … a 200% increase"; Q23 "No — the probability should be 5%, not
+    95%" beside the key "No — the population mean is fixed …". Fixed: Q4 "No — tripling is a 300% increase, so the
+    headline understates it", Q23 "Yes — 95% of the data lies within the interval"; the verifier fails any wrong
+    option with the key''s verdict, planted'
+  evidence: 'Found by the SR-31 scan of batch 9''s multiple-choice games (SWEEP-1, batch 9)'
   status: open

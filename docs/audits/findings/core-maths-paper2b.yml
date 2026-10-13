@@ -32,7 +32,7 @@ findings:
   status: open
 - id: core-maths-paper2b-s1-001
   severity: MEDIUM
-  jc: true
+  jc: false
   class: NEW:true-wrong-option
   level: core
   where: games/core-maths-paper2b/index.html Q24 (:366), Q33 (:432), Q35 (:446), Q36 (:453)
@@ -40,7 +40,12 @@ findings:
     EV £2,200), Q35 "Yes — expected loss of £96 far exceeds the premium", Q36 "Yes — any crime reduction justifies
     the cost", Q24 "No — the most likely value is the median, not the mean". A student who gets the asked-for verdict
     may pick it and be marked wrong. t2-001''s ruling (rewrite Q28''s D so it does not pick the key''s policy) covered a
-    true reason; whether it extends to a false one is for Jon'
+    true reason; whether it extends to a false one is for Jon
+    Jon''s ruling (13 Oct 2026): t2-001 extends, each rewritten so its verdict differs from the key''s; standing as
+    SR-31. Fixed: Q24 "Yes — 4.2 rounds to 4, so 4 is the most likely value", Q33 "B — £1,500 is more than A''s EV
+    of £1,400", Q35 "No — the chance of claiming is only 8%, so it is not worth it", Q36 "No — the £30,000
+    installation alone is more than one year''s savings of £24,000"; the verifier fails any wrong option with the
+    key''s verdict, on every item, and plants two'
   evidence: 'Q33 stem "Which option has the higher expected value?" key "A — EV = £2,200" (SWEEP-1, batch 9)'
   status: open
 - id: core-maths-paper2b-s1-002
