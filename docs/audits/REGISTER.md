@@ -9,7 +9,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | met: 0 of 96 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | met: 0 open (0 CRITICAL, 0 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 1 open (0 CRITICAL, 1 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, SR-14 fields |
 | 4 | Every level serves 40+ (tracked, not part of the gate: canon §0.2, Jon 12 Oct 2026) | not met, not gating: 106 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | met: 0 in the roster's Unlisted section |
@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-611 findings in 79 games.
+632 findings in 80 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 26 | 0 | 27 |
-| HIGH | 7 | 207 | 0 | 214 |
-| MEDIUM | 116 | 169 | 3 | 288 |
-| LOW | 49 | 32 | 1 | 82 |
-| **All** | 173 | 434 | 4 | 611 |
+| HIGH | 8 | 209 | 0 | 217 |
+| MEDIUM | 123 | 170 | 3 | 296 |
+| LOW | 59 | 32 | 1 | 92 |
+| **All** | 191 | 437 | 4 | 632 |
 
 ### By class
 
@@ -35,20 +35,21 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 3 | 5 | 86 |
 | 6 | 24 | 56 |
 | 1 | 5 | 37 |
-| NEW:wrong-explanation-text | 10 | 36 |
+| NEW:wrong-explanation-text | 11 | 37 |
 | 5 | 26 | 26 |
+| NEW:text-contradicts-content | 21 | 24 |
+| NEW:convention-unstated | 10 | 23 |
 | 4 | 5 | 22 |
-| NEW:convention-unstated | 7 | 19 |
-| NEW:text-contradicts-content | 14 | 17 |
 | 7 | 5 | 16 |
 | NEW:value-equal distractors | 0 | 14 |
 | 8 | 3 | 11 |
 | NEW:precision-not-stated | 2 | 9 |
+| NEW:wording | 8 | 9 |
 | NEW:equal-value-options | 0 | 8 |
 | NEW:raw-tex-on-screen | 3 | 8 |
 | NEW:hand-typed explanation figure | 5 | 7 |
 | NEW:ill-posed wording | 1 | 6 |
-| NEW:wording | 5 | 6 |
+| NEW:true-wrong-option | 3 | 6 |
 | 11 | 0 | 5 |
 | NEW:board-mixes-session-lengths | 5 | 5 |
 | NEW:marking-by-structure | 0 | 5 |
@@ -64,6 +65,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:analytics | 0 | 2 |
 | NEW:board-key-mismatch | 2 | 2 |
 | NEW:cosmetic | 1 | 2 |
+| NEW:degenerate-item | 2 | 2 |
 | NEW:double-finish | 0 | 2 |
 | NEW:hidden-data | 0 | 2 |
 | NEW:hint-gives-answer | 1 | 2 |
@@ -76,7 +78,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:ambiguous-notation | 0 | 1 |
 | NEW:answer-reveal-invisible | 1 | 1 |
 | NEW:data-not-shown | 0 | 1 |
-| NEW:degenerate-item | 1 | 1 |
 | NEW:duplicate-item | 1 | 1 |
 | NEW:estimation-not-by-stated-method | 0 | 1 |
 | NEW:exact-order sorter marking | 0 | 1 |
@@ -115,7 +116,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:static friction wording | 0 | 1 |
 | NEW:tap-selects-wrong-option | 0 | 1 |
 | NEW:test repeats taught items | 1 | 1 |
-| NEW:true-wrong-option | 0 | 1 |
 | NEW:ui | 1 | 1 |
 | NEW:uncancelled-timer | 0 | 1 |
 | NEW:wrong hint | 0 | 1 |
@@ -126,7 +126,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 | Game | Listed | Verifier | C | H | M | L | open | fixed | ruled |
 |---|---|---|---|---|---|---|---|---|---|
-| `52dle` | yes | verify-52dle.py | 0 | 1 | 3 | 0 | 3 | 1 | 0 |
+| `52dle` | yes | verify-52dle.py | 0 | 1 | 5 | 1 | 6 | 1 | 0 |
 | `angle-ace` | yes | verify-angle-ace.py | 0 | 6 | 7 | 2 | 2 | 13 | 0 |
 | `bearing-blitz` | yes | verify-bearing-blitz.py | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `better-value` | yes | verify-better-value.py | 0 | 5 | 4 | 0 | 3 | 6 | 0 |
@@ -135,7 +135,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `characteristic-quest` | yes | verify-characteristic-quest.py | 0 | 1 | 3 | 1 | 3 | 2 | 0 |
 | `complex-converter` | yes | verify-complex-converter.py | 0 | 1 | 6 | 1 | 3 | 5 | 0 |
 | `component-crusher` | yes | verify-component-crusher.py | 1 | 6 | 6 | 1 | 2 | 12 | 0 |
-| `constructions-lab` | yes | verify-constructions-lab.py | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
+| `constructions-lab` | yes | verify-constructions-lab.py | 0 | 0 | 4 | 3 | 7 | 0 | 0 |
 | `coordinate-geometry-dash` | yes | verify-coordinate-geometry-dash.py | 0 | 1 | 4 | 0 | 3 | 2 | 0 |
 | `core-maths-paper1` | yes | verify-core-maths-paper1.py | 0 | 4 | 2 | 0 | 0 | 6 | 0 |
 | `core-maths-paper2b` | yes | verify-core-maths-paper2b.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
@@ -148,7 +148,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `eigenvalue-extractor` | yes | verify-eigenvalue-extractor.py | 0 | 1 | 3 | 1 | 4 | 1 | 0 |
 | `eigenvector-engine` | yes | verify-eigenvector-engine.py | 1 | 1 | 2 | 8 | 1 | 11 | 0 |
 | `equation-builder` | yes | verify-equation-builder.py | 1 | 3 | 4 | 2 | 2 | 8 | 0 |
-| `equatle` | yes | verify-equatle.py | 0 | 0 | 2 | 0 | 2 | 0 | 0 |
+| `equatle` | yes | verify-equatle.py | 0 | 0 | 3 | 1 | 4 | 0 | 0 |
 | `estimation-engine` | yes | verify-estimation-engine.py | 0 | 1 | 3 | 0 | 0 | 4 | 0 |
 | `estimation-golf` | yes | verify-estimation-golf.py | 0 | 2 | 4 | 4 | 8 | 2 | 0 |
 | `expectation-station` | yes | verify-expectation-station.py | 2 | 12 | 5 | 1 | 0 | 20 | 0 |
@@ -189,7 +189,8 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `sequence-solver` | yes | verify-sequence-solver.py | 0 | 1 | 4 | 2 | 5 | 2 | 0 |
 | `seven-bridges` | yes | verify-seven-bridges.py | 0 | 2 | 6 | 1 | 6 | 3 | 0 |
 | `shape-shifter` | yes | verify-shape-shifter.py | 2 | 1 | 5 | 3 | 7 | 4 | 0 |
-| `spot-the-error` | yes | verify-spot-the-error.py | 0 | 13 | 4 | 2 | 0 | 19 | 0 |
+| `split-it` | yes | verify-split-it.py | 0 | 0 | 1 | 4 | 4 | 1 | 0 |
+| `spot-the-error` | yes | verify-spot-the-error.py | 0 | 14 | 6 | 3 | 4 | 19 | 0 |
 | `spot-the-muppet` | yes | verify-spot-the-muppet.py | 0 | 5 | 4 | 0 | 0 | 8 | 1 |
 | `standard-form-blitz` | yes | verify-standard-form-blitz.py | 0 | 0 | 1 | 0 | 0 | 1 | 0 |
 | `surd-simplifier` | yes | verify-surd-simplifier.py | 0 | 2 | 1 | 0 | 0 | 3 | 0 |
@@ -203,10 +204,14 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `truth-buster` | yes | verify-truth-buster.py | 0 | 3 | 12 | 1 | 3 | 13 | 0 |
 | `truth-will-set-you-free` | yes | verify-truth-will-set-you-free.py | 1 | 1 | 2 | 2 | 1 | 5 | 0 |
 | `unit-converter` | yes | verify-unit-converter.py | 0 | 1 | 6 | 2 | 1 | 8 | 0 |
-| `word-problem-decoder` | yes | verify-word-problem-decoder.py | 0 | 6 | 4 | 2 | 2 | 10 | 0 |
+| `word-problem-decoder` | yes | verify-word-problem-decoder.py | 0 | 8 | 6 | 3 | 5 | 12 | 0 |
 | `wrong-on-the-internet` | yes | verify-wrong-on-the-internet.py | 0 | 2 | 4 | 0 | 3 | 3 | 0 |
 
 ## Open CRITICAL and HIGH, by game (Year 6, KS3, GCSE and Core first)
+
+### `spot-the-error` (KS3, GCSE, L4)
+
+- **HIGH** spot-the-error-s1-001 (JC), `games/spot-the-error/index.html:247 (ste_ks3_010), Stage 2`: The explanation names the 80 trials as the fact the working missed ("The total number of trials is 80 (stated in the question)"), yet the phrase "replaces it 80 times" is marked wrong; the key is "estimates the probab...
 
 ### `glorious-gantt` (Core, L4; unlisted)
 
@@ -221,7 +226,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Live games no audit has covered
 
-19 of 97 live games: `chart-interrogator`, `circle-theorem-spotter`, `core-maths-paper2a`, `distinctly-average`, `fermi-lab`, `free-daily-pizza`, `graph-sketcher`, `graph-transformer`, `growth-and-decay`, `just-pythag-it-bruv`, `maths-court`, `normal-navigator`, `quadratic-factoriser`, `simultaneous-solver`, `six-sevens-bruv`, `split-it`, `stat-attack`, `tax-theft`, `test-the-claim`
+18 of 97 live games: `chart-interrogator`, `circle-theorem-spotter`, `core-maths-paper2a`, `distinctly-average`, `fermi-lab`, `free-daily-pizza`, `graph-sketcher`, `graph-transformer`, `growth-and-decay`, `just-pythag-it-bruv`, `maths-court`, `normal-navigator`, `quadratic-factoriser`, `simultaneous-solver`, `six-sevens-bruv`, `stat-attack`, `tax-theft`, `test-the-claim`
 
 ## Exit bar detail
 
