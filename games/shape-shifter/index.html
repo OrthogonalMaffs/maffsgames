@@ -403,6 +403,7 @@ let questions = [];
 let qIndex = 0;
 let currentQ = null;
 let placedVertices = [];
+let lastVertexAnswerCorrect = false;   // a correct answer is drawn as the shape's own outline, whatever order it was tapped in
 let expectedVertices = [];
 let selectedMode = 'translation'; // mode chosen on start screen
 let totalAnswered = 0;
@@ -517,6 +518,7 @@ function loadQuestion() {
   // mode card or Next, or a second Enter, cannot answer it (shape-shifter-t3-005).
   MaffsLock.fresh(gameEl);
   placedVertices = [];
+  lastVertexAnswerCorrect = false;
   selectedOption = -1;
   hoveredOption = -1;
   // For mix mode, switch mode per question
@@ -536,11 +538,11 @@ function loadQuestion() {
 
   if (mode === 'translation') {
     expectedVertices = currentQ.shape.map(([x,y]) => [x + currentQ.dx, y + currentQ.dy]);
-    instrBar.innerHTML = `<span class="highlight">${currentQ.desc}</span> — tap each vertex position`;
+    instrBar.innerHTML = `<span class="highlight">${currentQ.desc}</span> — tap all ${expectedVertices.length} vertices of the new shape`;
   } else if (mode === 'reflection') {
     expectedVertices = reflectShape(currentQ.shape, currentQ.axis);
     const axisLabel = currentQ.axis === 'x' ? 'x-axis' : 'y-axis';
-    instrBar.innerHTML = `<span class="highlight">${currentQ.desc}</span> — tap each reflected vertex`;
+    instrBar.innerHTML = `<span class="highlight">${currentQ.desc}</span> — tap all ${expectedVertices.length} vertices of the reflected shape. A vertex on the mirror line stays where it is: tap it too.`;
   } else if (mode === 'rotation') {
     expectedVertices = [];
     buildRotationOptions();
@@ -698,15 +700,17 @@ function drawGrid() {
       ctx.stroke();
     }
     // Draw partial shape from placed vertices
-    if (placedVertices.length >= 2) {
+    // Marking ignores tap order, so a correct answer is joined in the shape's own order (never a bow-tie beside "Correct!")
+    const joined = (MaffsLock.isLocked(gameEl) && lastVertexAnswerCorrect) ? expectedVertices : placedVertices;
+    if (joined.length >= 2) {
       ctx.beginPath();
-      const [sx, sy] = gridToPixel(placedVertices[0][0], placedVertices[0][1]);
+      const [sx, sy] = gridToPixel(joined[0][0], joined[0][1]);
       ctx.moveTo(sx, sy);
-      for (let i = 1; i < placedVertices.length; i++) {
-        const [nx, ny] = gridToPixel(placedVertices[i][0], placedVertices[i][1]);
+      for (let i = 1; i < joined.length; i++) {
+        const [nx, ny] = gridToPixel(joined[i][0], joined[i][1]);
         ctx.lineTo(nx, ny);
       }
-      if (placedVertices.length === expectedVertices.length) {
+      if (joined.length === expectedVertices.length) {
         ctx.closePath();
       }
       ctx.strokeStyle = '#6366f1';
@@ -871,6 +875,7 @@ function checkVertexAnswer() {
   if (!used.every(Boolean)) allCorrect = false;
 
   totalAnswered++;
+  lastVertexAnswerCorrect = allCorrect;
   const fb = document.getElementById('feedbackBar');
   if (allCorrect) {
     totalCorrect++;

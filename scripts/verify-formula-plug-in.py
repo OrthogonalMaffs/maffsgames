@@ -202,7 +202,7 @@ def mark_all(fails, page, bank):
             where = '%s, %s typed (%s)' % (q['id'], what, int(val))
             sh = got['shown']
             wantvars = ', '.join('%s = %s' % (v['name'], v['value']) for v in q['variables'])
-            if sh['formula'] != [q['formulaKatex']] or sh['vars'] != wantvars or sh['prompt'] != 'What is %s?' % q['resultVar'] \
+            if sh['formula'] != [q['formulaKatex']] or sh['vars'] != wantvars or sh['prompt'] != 'What is %s?' % (q['resultVar'] if len(q['resultVar']) == 1 else 'the ' + q['resultVar'].lower()) \
                     or sh['name'] != q['formulaName']:
                 fails.append('%s: the question shows %r' % (where, sh))
             if right:
@@ -260,6 +260,8 @@ PLANTS = [
      [("'A = 8 \\\\times 5','A = 40'", "'A = 8 \\\\times 6','A = 40'")]),
     ('a wrong formula text (the triangle half dropped)', 'formula text',
      [("formulaKatex:'A = \\\\tfrac{1}{2} \\\\times b \\\\times h',variables:[{name:'b',value:6}", "formulaKatex:'A = b \\\\times h',variables:[{name:'b',value:6}")]),
+    ('the Mean prompt "What is Mean?" (R1, formula-plug-in-s1-001)', 'the question shows',
+     [("'What is ' + (q.resultVar.length > 1 ? 'the ' + q.resultVar.toLowerCase() : q.resultVar) + '?';", "'What is ' + q.resultVar + '?';")]),
 ]
 
 

@@ -253,6 +253,28 @@ return (args) => {
   return out;
 };
 """
+WORDING_JS = CLICK_JS + r"""
+return (args) => {
+  const [m, item, expected, order] = args;
+  startGame(m);
+  show(m, item);
+  const text = document.getElementById('instructionBar').textContent;
+  // log every stroked path in the student's colour, with its points in the order they were joined
+  const paths = []; let cur = null;
+  const o = {beginPath: ctx.beginPath, moveTo: ctx.moveTo, lineTo: ctx.lineTo, stroke: ctx.stroke};
+  ctx.beginPath = function () { cur = []; return o.beginPath.apply(this, arguments); };
+  ctx.moveTo = function (x, y) { if (cur) cur.push([x, y]); return o.moveTo.apply(this, arguments); };
+  ctx.lineTo = function (x, y) { if (cur) cur.push([x, y]); return o.lineTo.apply(this, arguments); };
+  ctx.stroke = function () { if (cur && cur.length > 2 && this.strokeStyle === '#6366f1') paths.push(cur.slice());
+                             return o.stroke.apply(this, arguments); };
+  for (const k of order) clickG(expected[k][0], expected[k][1]);
+  const fb = fbText();
+  Object.assign(ctx, o);
+  MaffsLock.clearTimers();
+  return {text, fb, last: paths.length ? paths[paths.length - 1] : null,
+          want: expected.map(p => gridToPixel(p[0], p[1]))};
+};
+"""
 ROTATION_JS = CLICK_JS + r"""
 return (args) => {
   const [item, deals] = args;
@@ -371,6 +393,43 @@ def vertex_checks(fails, page, mode, bank):
                 fails.append('%s: marking: %s reads %r (score %d), expected %r' % (where, lab, r['fb'], r['d'], bad))
 
 
+def is_cyclic_order(got, want):
+    """got visits the points of want in want's cyclic order, either way round (a simple outline, not a bow-tie)."""
+    pts = [tuple(round(c, 3) for c in p) for p in got]
+    if pts and pts[0] == pts[-1]:
+        pts = pts[:-1]
+    w = [tuple(round(c, 3) for c in p) for p in want]
+    if sorted(pts) != sorted(w):
+        return False
+    n = len(w)
+    for seq in (w, w[::-1]):
+        for s in range(n):
+            if [seq[(s + k) % n] for k in range(n)] == pts:
+                return True
+    return False
+
+
+def wording_checks(fails, page, mode, bank):
+    """R2/R3 (SWEEP-1 shape-shifter-s1-001, -002): the instruction gives the count (and, in reflections, the vertex on
+    the mirror line), and a correct answer is drawn as the shape's own outline whatever order it was tapped in."""
+    for i, q in enumerate(bank, 1):
+        exp = [list(p) for p in (translate(q['shape'], *parse_translation(q['desc'])) if mode == 'translation'
+                                 else reflect(q['shape'], re.search(r'(x|y)-axis', q['desc']).group(1)))]
+        n = len(exp)
+        where = '%s %d (%s)' % (mode, i, q['desc'])
+        order = [0, 2, 1, 3] if n >= 4 else list(range(n))[::-1]
+        r = page.evaluate(WORDING_JS_FN, [mode, q, exp, order])
+        if 'tap all %d vertices' % n not in r['text']:
+            fails.append('%s: wording: the instruction %r does not give the count (tap all %d vertices)' % (where, r['text'], n))
+        if mode == 'reflection' and 'A vertex on the mirror line stays where it is' not in r['text']:
+            fails.append('%s: wording: the instruction %r does not say a vertex on the mirror line stays put' % (where, r['text']))
+        if r['fb'] != 'Correct!':
+            fails.append('%s: wording: the image tapped in order %s reads %r' % (where, order, r['fb']))
+        elif not r['last'] or not is_cyclic_order(r['last'], r['want']):
+            fails.append('%s: wording: a correct answer tapped in order %s is joined as %r, not the shape\'s own outline'
+                         % (where, order, r['last']))
+
+
 def rotation_checks(fails, page, bank):
     for i, q in enumerate(bank, 1):
         kind, cx, cy = parse_rotation(q['desc'])
@@ -446,6 +505,8 @@ def play(fails, html, expected_hit):
             page.evaluate('() => { startGame("translation"); }')
             vertex_checks(fails, page, 'translation', tq)
             vertex_checks(fails, page, 'reflection', rq)
+            wording_checks(fails, page, 'translation', tq)
+            wording_checks(fails, page, 'reflection', rq)
             rotation_checks(fails, page, oq)
             for m in MODES:
                 good = play_session(page, m, False)
@@ -484,11 +545,17 @@ PLANTS = [
     ('a wrong vertex marked right (y ignored)', 'marking: vertex',
      [("placedVertices[i][0] === expectedVertices[j][0] && placedVertices[i][1] === expectedVertices[j][1]",
        "placedVertices[i][0] === expectedVertices[j][0]")]),
+    ('a correct answer joined in tap order (bow-tie)', 'wording',
+     [("const joined = (MaffsLock.isLocked(gameEl) && lastVertexAnswerCorrect) ? expectedVertices : placedVertices;",
+       "const joined = placedVertices;")]),
+    ('the vertex count missing from the instruction', 'wording',
+     [("— tap all ${expectedVertices.length} vertices of the new shape`;", "— tap each vertex position`;")]),
     ('the y-axis reflection computed as the x-axis', 'marking',
      [("if (axis === 'y') return shape.map(([x,y]) => [-x, y]);", "if (axis === 'y') return shape.map(([x,y]) => [x, -y]);")]),
 ]
 VERTEX_JS_FN = '(function(){' + VERTEX_JS + '})()'
 ROTATION_JS_FN = '(function(){' + ROTATION_JS + '})()'
+WORDING_JS_FN = '(function(){' + WORDING_JS + '})()'
 
 
 def main():

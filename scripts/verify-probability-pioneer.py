@@ -43,6 +43,8 @@ import bank_common as bc  # noqa: E402
 
 SLUG = 'probability-pioneer'
 COUNTS = {'STAGE1': 10, 'STAGE2': 20, 'STAGE3': 15}
+ASSUMPTIONS = ('Unless a question says otherwise, every die has six faces and is fair, every coin is fair, '
+               'and every pick is made at random.')
 
 # ---------------------------------------------------------------------------------------------
 # Stage 1: reviewed keys (event -> (scale value, reason)). Change one only with Jon's ruling.
@@ -69,7 +71,7 @@ STAGE1_KEYS = {
 STAGE3_KEYS = {
     "P(event) is always between 0 and 1 inclusive": (True, "definition"),
     "If P(A) = 0.3, then P(not A) = 0.7": (True, "P(not A) = 1 - P(A)"),
-    "Rolling heads 5 times makes tails more likely next": (False, "independent flips; gambler's fallacy"),
+    "Flipping heads 5 times makes tails more likely next": (False, "independent flips; gambler's fallacy"),
     "P(impossible event) = 0": (True, "definition"),
     "P(certain event) = 1": (True, "definition"),
     "You can have P(event) = 1.5": (False, "a probability never exceeds 1"),
@@ -80,7 +82,7 @@ STAGE3_KEYS = {
     "A probability of 0.9 means the event will definitely happen": (False, "only 1 is certain"),
     "The more times you repeat an experiment, the closer the results tend to get to the theoretical probability": (
         True, "law of large numbers, stated as a tendency, not a guarantee (audit F8)"),
-    "A fair die gives each number probability exactly 1/6": (True, "six equally likely outcomes"),
+    "A fair six-sided die gives each number probability exactly 1/6": (True, "six equally likely outcomes"),
     "P(rolling 7 on a standard die) = 7/6": (False, "impossible, so 0; and 7/6 > 1"),
     "Probability can be written as a fraction, decimal or percentage": (True, "1/2, 0.5, 50%"),
     "If P(rain) = 0.4, it will rain on exactly 4 out of every 10 days": (False, "a long-run proportion, "
@@ -158,11 +160,11 @@ def stage2_value(stem):
         if ev:
             return prob(DIE, ev)
     # a fair coin
-    if s == 'flipping tails':
+    if s == 'flipping tails on a fair coin':
         return prob('HT', lambda x: x == 'T')
-    if s == 'flipping heads':
+    if s == 'flipping heads on a fair coin':
         return prob('HT', lambda x: x == 'H')
-    if s == 'heads twice in a row':
+    if s == 'heads twice in a row with a fair coin':
         return prob([a + b for a in 'HT' for b in 'HT'], lambda x: x == 'HH')
     # a bag of counters: "red from 3 red, 7 blue", "picking red from ...", "green from 5R, 3G, 2Y"
     m = re.fullmatch(r'(?:picking )?(red|blue|green|yellow) from (.+)', s)
@@ -177,9 +179,9 @@ def stage2_value(stem):
         want = m.group(1) == 'vowel'
         return prob(letters, lambda x: (x in VOWELS) == want)
     # cards: "heart from 52 cards", "face card from 52"
-    m = re.fullmatch(r'(heart|diamond|club|spade|face card) from 52(?: cards)?', s)
+    m = re.fullmatch(r'(heart|diamond|club|spade|picture card \(J, Q or K\)) from (?:a pack of )?52(?: cards)?', s)
     if m:
-        if m.group(1) == 'face card':
+        if m.group(1).startswith('picture card'):
             return prob(DECK, lambda c: c[0] in 'JQK')
         return prob(DECK, lambda c, suit=m.group(1) + 's': c[1] == suit)
     # a whole number from a range: "even from 1–8"
@@ -216,6 +218,21 @@ def check_bank(rep, bank, scale, verbose=False):
         if len(bank.get(name, [])) != n:
             rep.fail(name, 'count', '%d items, expected %d (a change to the bank needs this verifier '
                      'updated)' % (len(bank.get(name, [])), n))
+
+    # Wording (R1, R2; SWEEP-1 probability-pioneer-s1-001 to -004): the assumptions are stated on the start
+    # screen, every die or coin question names its object, colours are written out, "picture card" says what it
+    # is, and a coin is flipped, not rolled.
+    if ASSUMPTIONS not in ' '.join(bank.get('START', '').split()):
+        rep.fail('start screen', 'assumptions', 'the line %r is missing (SR-17)' % ASSUMPTIONS)
+    for i, q in enumerate(bank.get('STAGE2', []), 1):
+        stem = q.get('q', '')
+        if re.search(r'\d\s*[RGYB]\b', stem) or 'face card' in stem:
+            rep.fail('Stage 2 Q%d' % i, 'wording', '%r uses a bare colour letter or "face card"' % stem)
+        if re.search(r'rolling|flipping|heads|tails', stem) and not re.search(r'\b(die|dice|coin)\b', stem):
+            rep.fail('Stage 2 Q%d' % i, 'wording', '%r does not say what is rolled or flipped (SR-17)' % stem)
+    for i, q in enumerate(bank.get('STAGE3', []), 1):
+        if re.search(r'rolling heads|rolling tails', q.get('statement', ''), re.I):
+            rep.fail('Stage 3 Q%d' % i, 'wording', '%r: a coin is flipped, not rolled' % q['statement'])
 
     # Stage 1
     seen = set()
@@ -316,7 +333,7 @@ def run_page(rep, chromium=None, verbose=False):
             page.route('**/*', lambda r: r.continue_() if r.request.url.startswith(base) else r.abort())
             page.goto(base + '/games/' + SLUG + '/?cb=verify', wait_until='load', timeout=20000)
             page.wait_for_function('typeof STAGE3 !== "undefined"', timeout=8000)
-            bank = page.evaluate('JSON.parse(JSON.stringify({STAGE1, STAGE2, STAGE3}))')
+            bank = page.evaluate('JSON.parse(JSON.stringify({STAGE1, STAGE2, STAGE3, START: document.getElementById("startScreen").innerText}))')
             scale = {}
             for v, aria in page.evaluate('''[...document.querySelectorAll('#scaleLabels .scale-label')]
                                              .map(l => [parseFloat(l.dataset.value), l.getAttribute('aria-label')])'''):
@@ -410,6 +427,18 @@ def selftest(bank, scale):
         q = find(b['STAGE1'], 'event', 'lottery')                              # the audit's F3
         q.update(answer=0, accept=0.25, label='Impossible', acceptLabel='Unlikely')
     expect('Stage 1 lottery keyed Impossible', second_point)
+
+    def no_assumptions(b):
+        b['START'] = b['START'].replace(ASSUMPTIONS, '')
+    expect('assumptions line removed (SR-17)', no_assumptions)
+
+    def face_card(b):
+        find(b['STAGE2'], 'q', 'picture card')['q'] = 'P(face card from 52)'
+    expect('"face card" back in Stage 2', face_card)
+
+    def unnamed_coin(b):
+        find(b['STAGE2'], 'q', 'flipping tails')['q'] = 'P(flipping tails)'
+    expect('coin question with no coin named', unnamed_coin)
     return ok, lines
 
 
