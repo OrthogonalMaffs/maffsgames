@@ -87,3 +87,19 @@ findings:
   summary: Wrong options AB(C+D) and ABC + ABD are equal, both offered as wrong
   evidence: 'B11 parser, F0 (7 Oct 2026): AB(C+D) = ABC + ABD, exact (scripts/bank_common.py); ledger boolean-blitz::9f0b149c442e#1::B11::["AB(C+D)", "ABC + ABD"]'
   status: open
+- id: boolean-blitz-b11-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:equal-value-options
+  level: level4
+  where: 'games/boolean-blitz/index.html: QUESTIONS[4], [15], [17], [40]'
+  summary: 'Four items had two wrong options with the same truth table (SR-4: four distinct options). Keys right.
+    Fixed under B11-CLEAR and Jon''s formula-forge ruling of 12 Oct 2026: Q4 NOT(AB) -> NOT(A)NOT(B) (De Morgan''s
+    swap without the double negation); Q15 NOT(A) + A -> A NOT(B) (combined with AND); Q17 A.BC -> 0 (took
+    A + NOT(A) as 0); Q40 ABC + ABD -> ABCD (ANDed the terms). Six key-equal pairs (Q2, Q10, Q12, Q19, Q24, Q41)
+    are listed in checker-allowlist.json b11_form_questions: every question says "Simplify fully." (Jon''s 9 Oct
+    rulings, #227)'
+  evidence: 'check-banks.py B11 (data/check-ledger.json, now cleared); scripts/verify-boolean-blitz.py fails on any
+    unlisted pair with one truth table, with a plant that puts NOT(AB) back in Q4'
+  status: fixed
+  pr: 330
