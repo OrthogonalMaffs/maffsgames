@@ -1,0 +1,87 @@
+# Findings register for core-maths-paper2a (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: core-maths-paper2a
+audited:
+  tranche: S1 (SWEEP-1 reading sweep)
+  head: f283457
+  date: 2026-10-13
+  served:
+    core: '36'
+findings:
+- id: core-maths-paper2a-s1-001
+  severity: CRITICAL
+  jc: true
+  class: NEW:true-wrong-option
+  level: core
+  where: games/core-maths-paper2a/index.html Q1 (:199), Q3 (:214), Q7 (:244)
+  summary: 'Three §3.4 items offered a true criticism as a wrong option (SR-16), so a student who chose it was marked
+    wrong; three items is SR-20''s count: Q1 "School C only has a 6 percentage point lead, not double" refutes the
+    governor directly; Q3 "Whether the dentists were paid for their recommendation" is as important a missing fact
+    as the sample size (the judgement call); Q7 "The data does not tell us whether users enjoyed the content" is a
+    true criticism of the conclusion, and "should have reported median time instead" is the key''s own point as a
+    remedy. Fixed under SR-30 (no unlist; the fix is SR-16''s): each becomes a named error, Q1 "The governor is
+    right: School C''s bar is more than twice as tall as School B''s" (14 to 8 units as drawn, 1.75), Q3 "The flavour
+    of the toothpaste", Q7 "…the total minutes across all users instead" and "The mean must be wrong, because no
+    user spends exactly 47 minutes". The verifier bars the old texts and checks Q1''s bar claim against the drawing;
+    plants'
+  evidence: 'Q1 stem: School B 68%, School C 74%, "The y-axis starts at 60%"; "What is the most appropriate criticism
+    of this statement?" key "The y-axis is truncated..." (SWEEP-1, batch 9)'
+  status: open
+- id: core-maths-paper2a-s1-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation
+  level: core
+  where: games/core-maths-paper2a/index.html Q8 (:251)
+  summary: 'The working said the parent''s "nearly 4%" is imprecise because it is 3 percentage points, but 3 ÷ 78 =
+    3.8%, so "nearly 4%" is right as a percentage increase; the working also endorsed distractor B''s point. Fixed:
+    the working says "nearly 4%" is right as a percentage increase and puts the flaw in the conclusion; the
+    verifier bars the old claim, planted'
+  evidence: 'working "Two issues: the stated "4%" is imprecise (it''s 3 percentage points), ..." (SWEEP-1, batch 9)'
+  status: open
+- id: core-maths-paper2a-s1-003
+  severity: HIGH
+  jc: false
+  class: NEW:wrong-key
+  level: core
+  where: games/core-maths-paper2a/index.html Q5 (:228)
+  summary: 'The key "The CEO has confused percentage point increase with percentage increase" does not fit the CEO''s
+    figure: satisfaction rose 10 points (61 to 71), a 16.4% increase, and neither reading gives "nearly 20%", so no
+    option is right. A fix needs a new stem (e.g. the CEO says "increased by 10%"), so under SR-30 it is for Jon'
+  evidence: 'table 61, 64, 68, 71; "The CEO says: "Satisfaction has increased by nearly 20% since 2020."" (SWEEP-1,
+    batch 9)'
+  status: open
+- id: core-maths-paper2a-s1-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:text-contradicts-content
+  level: core
+  where: games/core-maths-paper2a/index.html Q1 (:199), barchart_q1 (:467)
+  summary: 'Even on the truncated axis the drawn bars do not show C "more than twice" B (14 to 8 units, 1.75), and the
+    working says the gap "looks enormous". Making the figure support the governor (an axis from 64% gives 10 to 4) is
+    a stem change, for Jon'
+  evidence: 'renderBarChart: minY 60, maxY 78 (SWEEP-1, batch 9)'
+  status: open
+- id: core-maths-paper2a-s1-005
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: core
+  where: games/core-maths-paper2a/index.html Q8 (:251), Q31 (:419), Q4 (:223), Q1 (:201), Q2
+  summary: 'Q8''s key says the change "is not statistically significant" where "cannot be judged significant" is the
+    defensible claim; Q31 says "Estimate the value of y" without naming the regression line (Jon''s Estimate rule,
+    no precision stated, so outside the ruling); Q4 asks whether one house proves a headline about prices; Q1 says
+    "grade C" (pre-2017); Q2''s "=B1×12" uses × (harmless as a distractor). Stem and key-text changes, for Jon'
+  evidence: 'Item texts as quoted (SWEEP-1, batch 9)'
+  status: open
+- id: core-maths-paper2a-s1-006
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: core
+  where: scripts/verify-core-maths-paper2a.py
+  summary: 'Q1-Q9 (§3.4) have no SPECS, so their keys, option figures and working claims were never checked (how
+    s1-001..004 passed); prose figures in Q18, Q23, Q25, Q27, Q32, Q33 and Q36''s workings are not compared with the
+    computed values. Recorded under Jon''s rule of 13 Oct 2026; s1-001 and s1-002''s texts are now checked'
+  evidence: 'SPECS starts at STATS_FROM = 9 (SWEEP-1, batch 9)'
+  status: open
