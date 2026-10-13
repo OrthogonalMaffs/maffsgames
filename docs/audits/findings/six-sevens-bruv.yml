@@ -1,0 +1,20 @@
+# Findings register for six-sevens-bruv (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: six-sevens-bruv
+audited:
+  tranche: S1 (SWEEP-1 reading sweep)
+  head: 951f6b3
+  date: 2026-10-13
+  served:
+    all: generator (66 facts)
+findings:
+- id: six-sevens-bruv-s1-001
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: all
+  where: games/six-sevens-bruv/index.html:867 (showWrong), :208-209, :741
+  summary: 'A miss is promised "It comes back in a few questions", but in a 20 or 40 session a miss in the last 2-5
+    questions never returns (the cap stops the session; the results screen lists it). Wording, open'
+  evidence: '"✗ You said <b>…</b>. It comes back in a few questions." (SWEEP-1, batch 5)'
+  status: open

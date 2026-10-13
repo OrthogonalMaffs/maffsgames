@@ -228,10 +228,14 @@ def check_bank(fails, bank):
                 fails.append('ambiguity: %s: the divisor %r is not a coefficient-and-variable term, so the stem reads two ways (%s or %s; SR-17)' % (
                     where, odd[0].strip(), v, strict))
         ask = q.get('ask')
-        if ask:
-            m = re.search(r'single power of (\d+)', ask)
-            base = int(m.group(1)) if m else None
-            right = [o for o, x in zip(opts, ov) if same(x, v) and base is not None and power_of(o, base) is not None]
+        need = form_needed(q)
+        if need and (not ask or need[1] not in ask):
+            fails.append('form: %s: the key %r is %s, which "the correct simplified form" does not name; the ask must say '
+                         '"... %s ..." (SR-17)' % (where, q['correct'], need[0], need[1]))
+        m = re.search(r'single power of (\d+)', ask or '')
+        if m:                                    # the ask names a numeric base: only that form is right
+            base = int(m.group(1))
+            right = [o for o, x in zip(opts, ov) if same(x, v) and power_of(o, base) is not None]
         else:
             right = [o for o, x in zip(opts, ov) if same(x, v)]
         if right != [q['correct']]:
@@ -369,7 +373,25 @@ def play(fails, html):
     return stats
 
 
+def form_needed(q):
+    """SWEEP-1 (13 Oct 2026, index-laws-s1-001; SR-17: "simplify" names the form). The shared line "Select the correct
+    simplified form" leaves the form open, and the bank keyed x^-3 as 1/x^3 but 1/x^5 as x^-5. A key that is a root, a
+    negative index, a reciprocal, or (in the negative and fractional rules) a plain value needs an ask naming it."""
+    k = q['correct']
+    if '\\sqrt' in k:
+        return 'a root', 'root'
+    if '^{-' in k:
+        return 'a negative index', 'single power of'
+    if q['rule'] in ('Negative Power', 'Fractional Power') and re.fullmatch(r'-?\d+|\\dfrac\{\d+\}\{\d+\}', k):
+        return 'a value', 'value'
+    if k.startswith('\\dfrac'):
+        return 'a reciprocal', 'positive index'
+    return None
+
+
 PLANTS = [
+    ('SR-17: x^-3 with no ask naming its form', 'form:',
+     [("q:'x^{-3}', ask:'Write with a positive index', correct:", "q:'x^{-3}', correct:")]),
     ('a wrong key (x^8 for x^3 times x^4)', 'key:',
      [("{rule:'Multiply Rule', q:'x^3 \\\\times x^4', correct:'x^7',\n    wrong:['x^{12}','2x^7','x^{34}']",
        "{rule:'Multiply Rule', q:'x^3 \\\\times x^4', correct:'x^8',\n    wrong:['x^{12}','2x^7','x^{34}']")]),

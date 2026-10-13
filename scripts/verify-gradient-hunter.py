@@ -107,6 +107,10 @@ def check_bank(fails, bank):
             if len(keyed) != 1:
                 fails.append('%s: %d interpretations keyed correct (exactly one)' % (qid, len(keyed)))
                 continue
+            for o in opts:
+                if not o['correct'] and (qid, o['text']) in TRUE_OPTIONS:
+                    fails.append('gradient-hunter-s1-002 %s: "%s" is true of the drawn graph and keyed wrong (SR-16): %s'
+                                 % (qid, o['text'], TRUE_OPTIONS[(qid, o['text'])]))
             if len({o['text'] for o in opts}) != len(opts):
                 fails.append('%s: two interpretations have the same text' % qid)
             vals = [num(v) for v in re.findall(r'(?<![\w.])(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)', keyed[0]['text'])]
@@ -271,6 +275,11 @@ def check_typed(fails, page, bank):
             if ('2 decimal places' in prompt) == exact:
                 fails.append('%s %s: the gradient is %s; the prompt %s "2 decimal places": %r'
                              % (tag, q['id'], v, 'says' if exact else 'does not say', prompt))
+            # SWEEP-1 (13 Oct 2026, gradient-hunter-s1-001; SR-1): an exact key at 2 or more places is marked exactly,
+            # so the prompt says so (a student rounding -0.1125 to -0.11, as the recurring items ask, was marked wrong).
+            if ('Give the exact value' in prompt) != (exact and dp >= 2):
+                fails.append('gradient-hunter-s1-001 %s: the gradient is %s (%s); the prompt %s "Give the exact value": %r'
+                             % (q['id'], v, 'exact at %d places' % dp if exact else 'recurring', 'says' if not (exact and dp >= 2) else 'does not say', prompt))
             if not exact:               # an unrounded answer is never marked, and the box stays open
                 page.evaluate("(t) => { document.getElementById('gradInput').value = t; document.getElementById('gradCheck').click(); }",
                               '%.6f' % float(v))
@@ -289,7 +298,19 @@ def check_typed(fails, page, bank):
                 fails.append('%s %s: the working after the answer does not show rise \u00f7 run = %s: %r' % (tag, q['id'], key, st[1]))
 
 
+# SWEEP-1 (13 Oct 2026): wrong options that were true of the graph as drawn (SR-16), now worded as the error they name.
+TRUE_OPTIONS = {
+    ('gh_core_019', 'The rod reaches 30 deg C'): 'the rod starts at 20 deg C and climbs past 700',
+    ('gh_gcse_007', 'The pool contains 1000 litres'): 'point B, which the student clicks, is (4, 1000)',
+}
+
 PLANTS = [
+    ('gradient-hunter-s1-001', 's1-001: an exact -0.1125 with no "exact value"',
+     "${k.exact ? (k.dp >= 2 ? '. Give the exact value.' : '.') : '. Give your answer to 2 decimal places.'}",
+     "${k.exact ? '.' : '. Give your answer to 2 decimal places.'}"),
+    ('gradient-hunter-s1-002', "s1-002: core_019's true 'The rod reaches 30 deg C'",
+     "{text:'The gradient means the rod\\'s temperature is 30 deg C',correct:false}",
+     "{text:'The rod reaches 30 deg C',correct:false}"),
     ('gradient-hunter-t2-001', 't2-001: no lock on the options', '      if (!MaffsLock.lock(grid)) return;\n', ''),
     ('gradient-hunter-t2-003', 't2-003: a point for clicking the points',
      '  G.maxScore += 2;   // one for the gradient the student types, one for the interpretation\n',

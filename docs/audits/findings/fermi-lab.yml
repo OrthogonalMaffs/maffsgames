@@ -1,0 +1,46 @@
+# Findings register for fermi-lab (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: fermi-lab
+audited:
+  tranche: S1 (SWEEP-1 reading sweep)
+  head: 951f6b3
+  date: 2026-10-13
+  served:
+    all: '65'
+findings:
+- id: fermi-lab-s1-001
+  severity: HIGH
+  jc: true
+  class: NEW:text-contradicts-content
+  level: core
+  where: games/fermi-lab/index.html:417 (eq_bus_distance)
+  summary: 'The question asks for the distance travelled by school buses, but the chain multiplies students × km × 2 × days,
+    the distance travelled by students; at about 50 a bus the buses travel some 150,000-300,000 km, a factor of 25-50
+    under the key, so a student answering the question as written is rated badly. Rewording the stem ("travelled by
+    students on school buses") or adding "÷ students per bus" and changing the key is Jon''s call (contract STOP IF:
+    recorded and reported)'
+  evidence: '"Estimate the total distance travelled by school buses serving a town of 50,000 people in one school year."
+    key 7,600,000; note "4,000 × 5 × 2 × 190 = 7,600,000 km." (SWEEP-1, batch 5)'
+  status: open
+- id: fermi-lab-s1-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: core, alevel
+  where: games/fermi-lab/index.html:408 (eq_steps), :400 (nuclear-cooling-water), :409 (eq_coffee_cups)
+  summary: 'A step''s assumption is stated only in its hidden hint while its green band is tight: eq_steps names no period
+    and says "walking to school" while the chain counts the walk home (a one-way 1 is red); nuclear-cooling-water''s
+    "3 GW" is electrical only in the hint (3e9 entered as thermal is amber, the final Good); eq_coffee_cups'' "one cup a
+    week" is only in the hint (1.75 a week is amber). Stating each in the stem or the step label, open for Jon'
+  evidence: 'SWEEP-1, batch 5'
+  status: open
+- id: fermi-lab-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: games/fermi-lab/index.html (piano-tuners-london; start screen)
+  summary: 'Wording, open: piano-tuners-london keys 140 while its own chain gives 82 (inside Brilliant); the start screen
+    says "Your chain multiplies out" though several chains divide'
+  evidence: 'SWEEP-1, batch 5'
+  status: open

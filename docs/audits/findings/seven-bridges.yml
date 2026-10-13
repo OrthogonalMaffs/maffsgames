@@ -111,3 +111,26 @@ findings:
     submitScore passes 50 for 10 puzzles; declared_impossible records the graph, not the student
   evidence: Agent's evidence.
   status: open
+- id: seven-bridges-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: ks3, gcse, alevel
+  where: games/seven-bridges/index.html:583 (Hint 1)
+  summary: '"Count the connections at each vertex" reads, on a graph with two lines to the same vertex, as counting
+    neighbours; counted that way the verdict flips on gcse_08, gcse_18, al_01 and al_25 (possible keyed, 4 odd vertices
+    counted). Hint 2 shows the true degrees; marking is right. Wording ("count the lines; two lines to one vertex count
+    as two"), open'
+  evidence: 'SWEEP-1, batch 5 (degrees recomputed per edge and per neighbour for all 75 graphs)'
+  status: open
+- id: seven-bridges-s1-002
+  severity: LOW
+  jc: true
+  class: NEW:convention-unstated
+  level: all
+  where: games/seven-bridges/index.html:176, :181-184, :255-257, :600-601, :696
+  summary: 'Open: the rules never say a route may finish away from its start ("Impossible" is wrong on every two-odd
+    graph); "Eulerian path" covers circuits at :255 and only open routes at :257, and A-Level''s "path" repeats no vertex
+    (the term is Jon''s call); the wrong-"Impossible" feedback gives the count but not the rule'
+  evidence: 'SWEEP-1, batch 5'
+  status: open

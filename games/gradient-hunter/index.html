@@ -387,7 +387,7 @@ core: [
    chordA:{x:5,y:200,label:'A'},chordB:{x:20,y:650,label:'B'},gradientShown:30,
    interpretations:[
      {text:'The rod heats up at an average rate of 30 deg C per minute between minutes 5 and 20',correct:true},
-     {text:'The rod reaches 30 deg C',correct:false},
+     {text:'The gradient means the rod\'s temperature is 30 deg C',correct:false},
      {text:'It takes 30 minutes to heat the rod',correct:false},
      {text:'Temperature increases by 30% each minute',correct:false}
    ]},
@@ -464,7 +464,7 @@ gcse: [
    pointA:{x:1,y:4000,label:'A'},pointB:{x:4,y:1000,label:'B'},gradient:-1000,
    interpretations:[
      {text:'The pool loses 1000 litres per hour on average',correct:true},
-     {text:'The pool contains 1000 litres',correct:false},
+     {text:'The gradient means the pool contains 1000 litres',correct:false},
      {text:'A negative gradient means the pool is being filled',correct:false}
    ]},
   {id:'gh_gcse_008',type:'calculate',context:'A shop records the number of customers who have entered since opening.',
@@ -1052,7 +1052,7 @@ function onBothPointsClicked(q) {
   const k = chordGradient(q);
   const A = q.pointA, B = q.pointB;
   $('calcFeedback').innerHTML = `
-    <div class="instruction">Work out the gradient of the chord from ${A.label} (${fmtN(A.x)}, ${fmtN(A.y)}) to ${B.label} (${fmtN(B.x)}, ${fmtN(B.y)})${k.exact ? '.' : '. Give your answer to 2 decimal places.'}</div>
+    <div class="instruction">Work out the gradient of the chord from ${A.label} (${fmtN(A.x)}, ${fmtN(A.y)}) to ${B.label} (${fmtN(B.x)}, ${fmtN(B.y)})${k.exact ? (k.dp >= 2 ? '. Give the exact value.' : '.') : '. Give your answer to 2 decimal places.'}</div>
     <div class="grad-row" id="gradRow"><label for="gradInput">Gradient =</label>
       <input id="gradInput" type="text" inputmode="text" autocomplete="off" aria-label="Gradient">
       <button class="check-btn" id="gradCheck">Check</button></div>
