@@ -8,7 +8,7 @@ audited:
   served:
     gcse: '50'
     alevel: '50'
-findings: []
+findings:
 - id: standard-form-blitz-b11-001
   severity: MEDIUM
   jc: false
