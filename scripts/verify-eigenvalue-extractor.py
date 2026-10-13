@@ -9,7 +9,10 @@ Checks, independent of the game's code (SymPy; a small TeX reader here, as Jon a
   Key: every option is read as a list of eigenvalues with repeats ("lambda = 2, lambda = 3"; "lambda = 3 (repeated)" is 3 twice;
     "lambda = (-5 \\pm \\sqrt{33})/2" and "\\pm i" are two; "No eigenvalues exist" is none), and the key is exactly the roots of
     the equation, counted with multiplicity, complex roots included.
-  Options: four different strings; exactly one is the roots (SR-4/SR-16).
+  Options: four different strings; exactly one is the roots (SR-4/SR-16). A worded "No eigenvalues exist" / "no solution" option
+    beside an equation with complex roots is barred: true over the reals, and the page never names the field (SR-16).
+  Start-screen worked example: its equation is solved and "Sum of eigenvalues = trace (a + b = c)" and "Product ... (a x b = d)"
+    are checked against the roots, the trace and the determinant.
   Worked lines: an equation ("(lambda - 2)(lambda - 3) = 0", "lambda^2 = -1") has exactly the equation's roots; a list of
     eigenvalues ("lambda = 2 or lambda = 3", "Repeated eigenvalue lambda = 4", "lambda = \\pm i") names only roots; a quadratic
     formula line's expressions are equal in value and are the roots; "Discriminant = 81 - 64 = 17" and "Check: 2 + 3 = 5, 2 × 3 = 6"
@@ -18,6 +21,7 @@ Checks, independent of the game's code (SymPy; a small TeX reader here, as Jon a
   Sessions: startGame() dealt five times: 15 different items from the bank.
   Marking, in Chromium (390x844), through the game's own buttons: every option of every item pressed: the key is marked correct
     and scores; any other is marked wrong, the key shown, the worked solution shows the item's lines, Next mounted.
+Not asserted: the `mc` notes and the prose worked lines ("Difference of two squares", "Cannot factorise", "Complex eigenvalues").
 Not asserted (open findings, left open): 15 of 25 served (t6-002), the repeated-eigenvalue note (t6-003), prose losing its
 spaces in KaTeX (t6-004), the rotation wording (t6-005).
 
@@ -206,6 +210,8 @@ def check_bank(fails, qs):
             continue
         if not same_multiset(named[0], roots):
             fails.append('key: %s: keyed %r, the roots are %s' % (where, q['c'], roots))
+        if any(re.search(r'no eigenvalues|no (real )?solution', o, re.I) for o in opts) and any(not r.is_real for r in roots):
+            fails.append('options: %s: a worded "no eigenvalues" option beside complex roots is true over the reals (SR-16)' % where)
         right = [o for o, r in zip(opts, named) if same_multiset(r, roots)]
         if right != [q['c']]:
             fails.append('options: %s: the options that are the roots are %r, the key is %r' % (where, right, q['c']))
@@ -215,6 +221,23 @@ def check_bank(fails, qs):
             fails.append('options: %s: equation repeated' % where)
         seen.add(q['eq'])
     return n
+
+
+def check_example(fails, html):
+    """The start-screen worked example: the equation's roots, and its sum = trace and product = determinant line."""
+    m = re.search(r"Solve the characteristic equation \$\{rkI\('([^']+)'\)\}", html)
+    t = re.search(r'trace \((-?\d+) \+ (-?\d+) = (-?\d+) ✓\)\. Product of eigenvalues = determinant \((-?\d+) × (-?\d+) = (-?\d+) ✓\)', html)
+    if not m or not t:
+        fails.append('example: the start-screen worked example or its check line cannot be found')
+        return 0
+    p = sp.Poly(poly_of(m.group(1).replace('\\\\', '\\')), L)
+    A, B, C = [int(x) for x in p.all_coeffs()]
+    roots = roots_of(p.as_expr())
+    a, b, c, d, e, f = map(int, t.groups())
+    if not same_multiset([a, b], roots) or not same_multiset([d, e], roots) or c != -B // A or f != C // A or a + b != c or d * e != f:
+        fails.append('example: the start-screen check line "%s + %s = %s, %s x %s = %s" is not trace/determinant of %s (roots %s)'
+                     % (a, b, c, d, e, f, m.group(1), roots))
+    return 2
 
 
 RENDER_JS = r"""(qs) => { const bad = [];
@@ -264,7 +287,7 @@ def play(fails, html):
             page.goto(base + '/games/%s/?cb=verify' % SLUG, wait_until='load', timeout=20000)
             page.wait_for_function('typeof QS !== "undefined" && typeof katex !== "undefined"', timeout=15000)
             qs = page.evaluate('() => JSON.parse(JSON.stringify(QS))')
-            n = check_bank(fails, qs)
+            n = check_bank(fails, qs) + check_example(fails, html)
             for msg in page.evaluate(RENDER_JS, qs):
                 fails.append('render: KaTeX cannot parse %s' % msg)
             for d in page.evaluate(SESSION_JS):
@@ -306,6 +329,9 @@ PLANTS = [
     ('a repeated root keyed as 3 and -3 (for (lambda - 3)^2)', 'key:', [("c:'\\\\lambda = 3 \\\\text{ (repeated)}',d:['\\\\lambda = 3, \\\\lambda = 6'",
                                                                        "c:'\\\\lambda = 3, \\\\lambda = -3',d:['\\\\lambda = 3, \\\\lambda = 6'")]),
     ('a wrong factorisation in a worked line', 'working:', [("s:['(\\\\lambda - 2)(\\\\lambda - 5) = 0']", "s:['(\\\\lambda - 2)(\\\\lambda + 5) = 0']")]),
+    ('SR-16: the old "No eigenvalues exist" option beside lambda^2 + 1', 'options:', [("'\\\\lambda = i \\\\text{ (repeated)}','\\\\lambda = 0 \\\\text{ (repeated)}'],s:['\\\\lambda^2 = -1'",
+                                                                              "'No eigenvalues exist','\\\\lambda = 0 \\\\text{ (repeated)}'],s:['\\\\lambda^2 = -1'")]),
+    ('a wrong sum in the start-screen example', 'example:', [("trace (2 + 5 = 7 ✓)", "trace (2 + 5 = 8 ✓)")]),
     ('a wrong discriminant', 'working:', [("'Discriminant = 81 - 64 = 17'", "'Discriminant = 81 - 64 = 19'")]),
     ('a wrong check sum', 'working:', [("'Check: 2 + 3 = 5 ✓, 2 × 3 = 6 ✓'", "'Check: 2 + 3 = 6 ✓, 2 × 3 = 6 ✓'")]),
     ('marking by the first nine characters', 'marking:', [("ok=btn.dataset.val===q.c", "ok=btn.dataset.val.slice(0,9)===q.c.slice(0,9)")]),
