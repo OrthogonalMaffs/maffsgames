@@ -244,7 +244,8 @@ findings:
     The verifier''s TRUE_WRONG list bars the old option on this item; the old option is planted and caught.'
   evidence: '\text{Why can''t we use } \binom{n}{r} = \dfrac{n!}{r!(n-r)!} \text{ when n is negative?} | Because |
     n! \text{ is undefined for negative } n | n \text{ must be even}, r > n, \text{It still works} (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: binomial-blaster-s1-002
   severity: MEDIUM
   jc: true
@@ -256,7 +257,8 @@ findings:
     TRUE_WRONG list bars the old option on this item; the old option is planted and caught.'
   evidence: '\text{If } |x| = 1 \text{ in } (1+x)^{-1} | The series | Diverges | Converges to 0, Converges to 1, Is
     undefined (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: binomial-blaster-s1-003
   severity: LOW
   jc: false
@@ -270,7 +272,8 @@ findings:
     options are planted and caught.'
   evidence: '\text{The expansion of } (1+ax)^n \text{ begins } 1 + 6x + \cdots | Find the product a × n | 6 | a+n, 6a,
     n (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: binomial-blaster-s1-004
   severity: LOW
   jc: false

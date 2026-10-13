@@ -173,7 +173,8 @@ findings:
     mass its predecessor gives; the old context is planted and caught'
   evidence: 'ctx "Same system. a = 2.5 m/s². Trailer resistance = 200 N." | q T - 200 = 500 × 2.5 | ask Tension in tow
     bar | key 1450 N | 1250 N, 1000 N, 3000 N (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: force-resolver-s1-002
   severity: MEDIUM
   jc: false
@@ -184,7 +185,8 @@ findings:
     4 m beam". The verifier''s STATED table requires "light" in the context; the old context is planted and caught'
   evidence: 'ctx "A 60 kg engineer stands at the midpoint of a 4 m beam supported at both ends. g = 9.81." | Reaction at
     each support | key 294.3 N | 588.6 N, 147.15 N, 60 N (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: force-resolver-s1-003
   severity: MEDIUM
   jc: false
@@ -196,7 +198,8 @@ findings:
     STATED table requires "horizontal beam" in each context'
   evidence: 'ctx "A 500 N force acts at 25° to a beam. cos 25° = 0.906, sin 25° = 0.423." | Horizontal component | key
     453 N; Vertical component | key 211.5 N (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: force-resolver-s1-004
   severity: MEDIUM
   jc: false
@@ -210,7 +213,8 @@ findings:
     "vertical wall" and "horizontal tie"'
   evidence: 'ctx "A bracket supports a 2 kN load. The bracket arm is at 40° to the wall." | Force along the bracket arm
     | key 2/cos 40° ≈ 2.61 kN | 2 kN, 2 cos 40° kN, 2 sin 40° kN (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: force-resolver-s1-005
   severity: LOW
   jc: false
@@ -222,7 +226,8 @@ findings:
     The verifier''s STATED table requires "smooth table"; the old context is planted and caught'
   evidence: 'ctx "A (4 kg) on table, B (6 kg) hanging. a = 6 m/s²." | q T = m_A a | Tension in the string | key 24 N |
     60 N, 40 N, 36 N (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: force-resolver-s1-006
   severity: LOW
   jc: false
@@ -233,7 +238,8 @@ findings:
     Fixed: "with a horizontal force of 40 N". The verifier''s STATED table requires "horizontal force"'
   evidence: 'ctx "A box (20 kg) is pushed at constant velocity across a rough floor with 40 N. g = 10." | Friction force
     | key 40 N | 200 N, 0 N, 160 N (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: force-resolver-s1-007
   severity: LOW
   jc: false
@@ -245,7 +251,8 @@ findings:
     requires "only forces"; the item''s review pin is renewed (6259496e to 46ee4e26)'
   evidence: 'ctx "On an inclined plane, the normal reaction R equals..." | Complete the statement | key mg cos θ | mg,
     mg sin θ, mg tan θ (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: force-resolver-s1-008
   severity: MEDIUM
   jc: false
@@ -260,7 +267,8 @@ findings:
     precision; the old alevel[8] ask is planted and caught, and the old page fails on all eighteen'
   evidence: 'e.g. ctx "A force has horizontal component 8 N and vertical component 6 N." | Find the angle to the
     horizontal | key 36.9°; ask "Component of weight along the slope" | key 203 N (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: force-resolver-s1-009
   severity: MEDIUM
   jc: false

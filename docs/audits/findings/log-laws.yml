@@ -94,7 +94,8 @@ findings:
   evidence: 'QUESTIONS[7]: \log 100 + \log 10 | key 3 | 1000, 2, \log 110; start screen: "The laws students
     always mix up. 12 questions, take your time. Can you keep them straight?"; title: "Quick Reference"; the base
     stated only in #solveOpts (.solve-note) and the Solve Quick Reference title (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: log-laws-s1-002
   severity: LOW
   jc: true
@@ -120,7 +121,8 @@ findings:
     the old text is planted and caught'
   evidence: 'F3-rc line 3: ln(e^{-t/RC}) = ln(V/V0), move Undo the log -> U_back "That is true, but it takes you
     back to the equation you started from." (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: log-laws-s1-004
   severity: MEDIUM
   jc: false

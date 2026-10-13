@@ -110,7 +110,8 @@ findings:
   evidence: 'Stone A (20 kg, 4 m/s) hits stationary B (20 kg). They stick together at 2 m/s. | KE before vs KE after |
     160 J before, 80 J after — energy lost | Equal — 160 J each, 160 J before, 160 J after, 80 J before, 80 J after
     (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: curling-friction-s1-002
   severity: LOW
   jc: false
@@ -123,7 +124,8 @@ findings:
     is planted.'
   evidence: 'A 20 kg stone experiences a friction force of 5.88 N. g = 9.8 m/s². | Find μ | 0.03 | 0.3, 0.003, 3
     (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: curling-friction-s1-003
   severity: LOW
   jc: false
@@ -133,7 +135,8 @@ findings:
   summary: 'The key (μ = u²/2gs = 0.02) takes v = 0 at 22.5 m, which the item did not say (SR-17). Fixed: "travels
     22.5 m before stopping". The verifier''s STATED list requires the phrase; the old ctx is planted.'
   evidence: 'A stone launched at 3 m/s travels 22.5 m. g = 10. | Find μ | 0.02 | 0.04, 0.03, 0.01 (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: curling-friction-s1-004
   severity: LOW
   jc: false
@@ -145,7 +148,8 @@ findings:
     STATED list requires the phrase; the old ctx is planted.'
   evidence: 'On a flat surface, for any object, R equals... | Complete the statement | mg | \mu mg, ma, F (SWEEP-1,
     batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: curling-friction-s1-005
   severity: MEDIUM
   jc: false
@@ -164,7 +168,8 @@ findings:
     then decelerates at 0.3 m/s². | How far does the target stone travel? | \dfrac{16}{0.6} \approx 26.7 \text{ m} |
     13.3 m, 40 m, 53.3 m; alevel[27]: Two identical stones. Stone A at 4 m/s hits stationary stone B. | In a perfectly
     elastic collision with equal masses, what happens? | A stops, B moves at 4 m/s (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: curling-friction-s1-006
   severity: LOW
   jc: false
@@ -177,7 +182,8 @@ findings:
     say horizontal (or flat) and a push or pull not said to be horizontal; the crate''s old ctx is planted.'
   evidence: 'level4[18]: A 30 kg crate is pushed with 60 N on a surface where μ = 0.15, g = 10. | Find the acceleration |
     0.5 m/s² | 2, 1.5, 0.15 m/s² (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: curling-friction-s1-007
   severity: MEDIUM
   jc: false

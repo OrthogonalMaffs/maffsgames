@@ -98,7 +98,8 @@ findings:
     with the key''s Yes or No now FAILS; planted'
   evidence: '"Is E = ½mv² dimensionally homogeneous?" | key Yes - both sides are [M L² T⁻²] | No - the ½ changes the
     dimensions, No - v² has wrong units, Yes - both sides are [M L T⁻²] (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: dimension-checker-s1-002
   severity: LOW
   jc: false
@@ -108,7 +109,8 @@ findings:
   summary: 'P was never defined where the start screen''s table lists both power and pressure, and item 3''s key
     holds only if P is power. Fixed: each P item''s context says "P is power."; checked and planted'
   evidence: '"Is P = Fv dimensionally homogeneous?" | key Yes - both sides are [M L² T⁻³] (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: dimension-checker-s1-003
   severity: LOW
   jc: false

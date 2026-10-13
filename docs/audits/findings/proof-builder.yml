@@ -281,7 +281,8 @@ findings:
     triangle with hypotenuse 1 / Let the adjacent side be cos theta and the opposite side be sin theta / By Pythagoras:
     (adjacent)^2 + (opposite)^2 = (hypotenuse)^2 / So cos^2 theta + sin^2 theta = 1^2 = 1 | keyed order 0,1,2,3 only
     (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: proof-builder-s1-002
   severity: MEDIUM
   jc: true
@@ -312,7 +313,8 @@ findings:
   evidence: 'Prove by induction: sum_{r=1}^{n} r = n(n+1)/2 | What value of n should we use for the base case? | n =
     1 | n = 0, n = 2, n = k | step: Here, the sum starts at r=1, so n=1 is the base case. Also sum r^2 =
     n(n+1)(2n+1)/6 and sum r.r! = (n+1)! - 1, no domain (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: proof-builder-s1-004
   severity: MEDIUM
   jc: false
@@ -324,7 +326,8 @@ findings:
     first n positive integers". The verifier fails any bank text saying "natural number(s)"; the old stem is planted.'
   evidence: '"The sum of the first n natural numbers is always even" | Pick a counter-example | n = 1 | n = 3, n = 7,
     n = 8 (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: proof-builder-s1-005
   severity: MEDIUM
   jc: true
@@ -351,7 +354,8 @@ findings:
   evidence: '"If z1 and z2 are complex, then |z1 + z2| = |z1| + |z2|" | z_1 = 1, z_2 = i | z_1=1, z_2=1; z_1=2,
     z_2=3; z_1=0, z_2=5 | misconception: ...with equality only when z1 and z2 point in the same direction (SWEEP-1,
     batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: proof-builder-s1-007
   severity: LOW
   jc: false
@@ -364,7 +368,8 @@ findings:
     bars the old text; it is planted.'
   evidence: '"If a > b then a^2 > b^2" | a = -1, b = -2 | a = 3, b = 2; a = 5, b = 1; a = 10, b = 3 | misconception:
     Negative numbers reverse the inequality when squared (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: proof-builder-s1-008
   severity: LOW
   jc: false
@@ -375,7 +380,8 @@ findings:
     the old prompt is planted.'
   evidence: 'In the inductive step, add (k+1)(k+1)! to both sides. RHS becomes (k+1)!-1+(k+1)(k+1)!. Factor: | (k+2)!
     - 1 | (k+1)!.(k+1) - 1, (k+1)!(k+2) + 1, (k+2)! (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: proof-builder-s1-009
   severity: LOW
   jc: false
@@ -388,7 +394,8 @@ findings:
     steps are planted.'
   evidence: '"log(a + b) = log(a) + log(b)" | a = b = 10 | a=2, b=2; a=3, b=1.5; a=6, b=1.2 | steps: log(10 + 10) =
     log(20) ~ 1.301 / log(10) + log(10) = 1 + 1 = 2 / 1.301 != 2 (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: proof-builder-s1-010
   severity: LOW
   jc: true

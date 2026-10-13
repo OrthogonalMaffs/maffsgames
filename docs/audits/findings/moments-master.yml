@@ -174,7 +174,8 @@ findings:
     option; planted'
   evidence: '"A non-uniform rod, 5 m. When balanced on a pivot at 2 m from A, it is in equilibrium." | "Where is the
     centre of mass?" | key 2 m from A | 2.5 m from A, 3 m from A, At the pivot (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: moments-master-s1-002
   severity: MEDIUM
   jc: false
@@ -186,7 +187,8 @@ findings:
     keyed from a reference with a bare distance distractor now FAILS; planted'
   evidence: '"A light beam, 3 m. 40 N at left end, 60 N at right end." | "Where should the support be for
     equilibrium?" | key 1.8 m from the left end | 1.5 m, 1.2 m, 2 m (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: moments-master-s1-003
   severity: MEDIUM
   jc: false
@@ -199,7 +201,8 @@ findings:
     "=" a rounded one now FAIL; both planted'
   evidence: '"A simply supported beam, 6 m. A 10 kN load at 2 m from the left support." | "Reaction at the right
     support" | key 3.33 kN (10/3) (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: moments-master-s1-004
   severity: MEDIUM
   jc: false
@@ -212,7 +215,8 @@ findings:
     sides (alevel[17]), the beam''s weight is ignored (level4[3], [5], [6]; level4[2] says so). Fixed: each item
     states it (STATED); the old alevel[1] is planted'
   evidence: '"A force of 25 N acts 2 m from a pivot." | "Calculate the moment" | key 50 Nm (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: moments-master-s1-005
   severity: LOW
   jc: true
@@ -224,7 +228,8 @@ findings:
     (alevel[45]''s reviewed pin renewed after review)'
   evidence: '"A force acts along the line through the pivot." | "What is the moment?" | key 0 Nm | F Nm, Fd Nm,
     Cannot tell (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: moments-master-s1-006
   severity: LOW
   jc: true

@@ -138,7 +138,8 @@ findings:
     not an A-Level method: a judgement call for Jon'
   evidence: '"\dfrac{6x^2+5x+3}{(x+1)(2x+1)(x-1)}" | "What method to find A, B, C?" | key Substitution or comparing
     coefficients | Long division, Differentiation, Integration (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 356
 - id: partial-fractions-duel-s1-002
   severity: MEDIUM
   jc: false
