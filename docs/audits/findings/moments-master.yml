@@ -163,3 +163,89 @@ findings:
     [28], [30] ... (Chromium, 390px)'
   status: fixed
   pr: 126
+- id: moments-master-s1-001
+  severity: HIGH
+  jc: false
+  class: NEW:true-wrong-option
+  level: alevel
+  where: games/moments-master/index.html:156 (alevel[26])
+  summary: 'A rod balanced on one pivot, with no other load, has its centre of mass at the pivot: "At the pivot" was
+    a second correct answer, marked wrong (SR-16). Fixed: "1 m from A" (half of 2 m). TRUE_WRONG bars the old
+    option; planted'
+  evidence: '"A non-uniform rod, 5 m. When balanced on a pivot at 2 m from A, it is in equilibrium." | "Where is the
+    centre of mass?" | key 2 m from A | 2.5 m from A, 3 m from A, At the pivot (SWEEP-1, batch 11)'
+  status: open
+- id: moments-master-s1-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:true-wrong-option
+  level: alevel
+  where: games/moments-master/index.html:149 (alevel[20])
+  summary: 'The key is "1.8 m from the left end" but the distractors were bare distances, and 1.2 m is the right
+    answer measured from the right-hand end (SR-16). Fixed: every distractor says "from the left end". A distance
+    keyed from a reference with a bare distance distractor now FAILS; planted'
+  evidence: '"A light beam, 3 m. 40 N at left end, 60 N at right end." | "Where should the support be for
+    equilibrium?" | key 1.8 m from the left end | 1.5 m, 1.2 m, 2 m (SWEEP-1, batch 11)'
+  status: open
+- id: moments-master-s1-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:precision-not-stated
+  level: level4
+  where: games/moments-master/index.html:134, :150, :166 (alevel), :186, :187, :192, :198, :201 (level4)
+  summary: 'SR-1/SR-17: eight keys are their data rounded to 3 s.f. (3.33 kN, 6.67 kN, 30.6 Nm, 12.7 Nm, 6.33 kN,
+    17.3 Nm, 0.233 m, 57.7 N) and no ask said so; level4[18] wrote 19/3 "= 6.33". Fixed: each ask says "to 3 s.f.",
+    and 6.33 is "\approx". A rounded key whose ask states no precision, or another one, and an exact value written
+    "=" a rounded one now FAIL; both planted'
+  evidence: '"A simply supported beam, 6 m. A 10 kN load at 2 m from the left support." | "Reaction at the right
+    support" | key 3.33 kN (10/3) (SWEEP-1, batch 11)'
+  status: open
+- id: moments-master-s1-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: alevel
+  where: games/moments-master/index.html:129-131 (alevel[1]-[3]), :146 (alevel[17]), :186, :188, :189 (level4[3],
+    [5], [6])
+  summary: 'SR-17: the keys rely on conventions the items did not state: the force''s distance is perpendicular
+    (alevel[1]-[3]; alevel[0] says so, and alevel[5]-[6] teach that the angle matters), the children sit on opposite
+    sides (alevel[17]), the beam''s weight is ignored (level4[3], [5], [6]; level4[2] says so). Fixed: each item
+    states it (STATED); the old alevel[1] is planted'
+  evidence: '"A force of 25 N acts 2 m from a pivot." | "Calculate the moment" | key 50 Nm (SWEEP-1, batch 11)'
+  status: open
+- id: moments-master-s1-005
+  severity: LOW
+  jc: true
+  class: NEW:true-wrong-option
+  level: alevel
+  where: games/moments-master/index.html:135 (alevel[7]), :177 (alevel[45])
+  summary: 'A force through the pivot: the wrong options "Fd Nm" and "F × d" are F × 0, the key''s zero, read
+    literally. Fixed: "Its maximum value" and "F × lever length", named errors; TRUE_WRONG bars the old options
+    (alevel[45]''s reviewed pin renewed after review)'
+  evidence: '"A force acts along the line through the pivot." | "What is the moment?" | key 0 Nm | F Nm, Fd Nm,
+    Cannot tell (SWEEP-1, batch 11)'
+  status: open
+- id: moments-master-s1-006
+  severity: LOW
+  jc: true
+  class: NEW:wording
+  level: alevel
+  where: games/moments-master/index.html:179 (alevel[47]), :200 (level4[17])
+  summary: 'For Jon (key text and stem changes): alevel[47]''s key "Closer to the heavier end" is circular and
+    misses a symmetric non-uniform rod; level4[17]''s vice reads as if 600 N is the clamping force, and "maximum" is
+    unexplained'
+  evidence: '"A bench vice clamp applies 600 N through a handle 0.2 m long." | "Maximum clamping moment" | key 120 Nm
+    (SWEEP-1, batch 11)'
+  status: open
+- id: moments-master-s1-007
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: alevel
+  where: scripts/verify-moments-master.py
+  summary: 'The verifier now checks rounded keys'' precision, stated conventions, true wrong options on three items and
+    distance references, but still does not evaluate working lines with an unknown in them (R_B × 4 = ..., T_A =
+    2T_B), the derived totals in contexts ("Total load = 10 kN"), or worded options against the key''s meaning beyond
+    the TRUE_WRONG list. Recorded under Jon''s rule of 13 Oct 2026; read by hand, correct'
+  evidence: 'check_bank() evaluates a claim only when two sides are numbers (SWEEP-1, batch 11)'
+  status: open

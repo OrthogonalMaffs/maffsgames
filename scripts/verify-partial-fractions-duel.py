@@ -16,11 +16,14 @@ Every item is read from its TeX (read() below; one it cannot read FAILS: extend 
     repeated one) and can represent the fraction; every wrong option must be unable to (a valid equivalent
     form is a true statement: SR-16).
   "Proper or improper": from the degrees. "Quotient" / "Perform long division": SymPy's polynomial division.
-  "What method": a reviewed verdict. Every fraction asked about is in lowest terms; the options are distinct
+  "What method": a reviewed verdict. Any ask naming A, B or C has its form on screen (the stem states fraction =
+    form; SWEEP-1, the method item's letters were never defined), and a "(set x = a)" hint names the root of the
+    asked letter's own denominator, the value that isolates it. Every fraction asked about is in lowest terms; the options are distinct
     in value. In Chromium (390x844) every item is shown through showQ() and every option clicked through
     handle(): the key marked right, the others wrong; options come from MaffsOptions.build().
 A self-test plants three of the audit's own faults back (t5-001: A keyed 1/2; t5-004: remainder keyed 2;
-t5-005: the valid form (Ax+B)/(x-1)^2 + C/(x+2) as a wrong option), and Play Again without MaffsLock.screen (a
+t5-005: the valid form (Ax+B)/(x-1)^2 + C/(x+2) as a wrong option; s1-001: the method item without its form; s1-002:
+a hint naming the wrong value of x), and Play Again without MaffsLock.screen (a
 double click on it opened /leaderboards/); each must FAIL naming its item.
 
     python scripts/verify-partial-fractions-duel.py [--no-selftest] [--against FILE] [--katex-dir DIR]
@@ -112,6 +115,15 @@ def check_bank(fails, bank):
             fails.append('%s: %s (extend read())' % (w, e))
             continue
         frac = parts[0]
+        if re.search(r'\b[ABC]\b', ask) and len(parts) != 2:
+            fails.append('%s: the ask names %s but the stem never shows the form that defines them' % (
+                w, ', '.join(sorted(set(re.findall(r'\b[ABC]\b', ask))))))
+        hint = re.search(r'\(set x = ([^)]*)\)', ask)
+        if hint and len(parts) == 2 and re.match(r'Find [ABC]\b', ask):
+            at = read(hint.group(1).replace('\u2212', '-'))
+            own = [t for t in sp.Add.make_args(parts[1]) if sp.Symbol(ask.split()[1]) in t.free_symbols]
+            if len(own) != 1 or sp.denom(sp.together(own[0])).subs(x, at) != 0:
+                fails.append('%s: the hint sets x = %s, which does not isolate %s' % (w, at, ask.split()[1]))
         if sp.gcd(sp.numer(sp.together(frac)), sp.denom(sp.together(frac))) != 1 or \
                 sp.degree(sp.gcd(*[sp.Poly(t, x) for t in (sp.numer(frac), sp.denom(frac))]).as_expr(), x) > 0:
             fails.append('%s: the fraction is not in lowest terms' % w)
@@ -300,6 +312,10 @@ PLANTS = [
     ('item 46 ', 't5-004: remainder keyed 2', "correct:'3',d:['2','5','0']", "correct:'2',d:['3','5','0']"),
     ('item 38 ', 't5-005: a valid equivalent form as a wrong option',
      "'\\\\dfrac{A}{x-1}+\\\\dfrac{B}{x-1}+\\\\dfrac{C}{x+2}'", "'\\\\dfrac{Ax+B}{(x-1)^2}+\\\\dfrac{C}{x+2}'"),
+    ('item 28 ', 's1-001: the method item without its form',
+     " = \\\\dfrac{A}{x+1}+\\\\dfrac{B}{2x+1}+\\\\dfrac{C}{x-1}',ask:'What method to find A, B, C?'",
+     "',ask:'What method to find A, B, C?'"),
+    ('item 25 ', 's1-002: a hint naming the wrong x', "ask:'Find A (set x = 0)'", "ask:'Find A (set x = 1)'"),
     ('Play Again: ', 't5-007: Play Again without MaffsLock.screen',
      "document.getElementById(id).classList.add('active');MaffsLock.screen(document.getElementById(id))}",
      "document.getElementById(id).classList.add('active')}"),

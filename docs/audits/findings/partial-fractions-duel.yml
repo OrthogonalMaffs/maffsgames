@@ -125,3 +125,29 @@ findings:
     found by the cloud lane's fix (PR 139)
   status: fixed
   pr: 139
+- id: partial-fractions-duel-s1-001
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: alevel
+  where: games/partial-fractions-duel/index.html:131 (item 28)
+  summary: 'The method item asked "What method to find A, B, C?" over a bare fraction: A, B and C were never defined
+    on screen (the shape of t5-008, fixed only for the "Find" items). Fixed: the stem states the decomposition
+    (A/(x+1) + B/(2x+1) + C/(x-1)). An ask naming A, B or C whose stem shows no form now FAILS; planted. Not fixed:
+    the wrong option "Differentiation" is arguably true (the residue form A = N(a)/D''(a) uses a derivative), though
+    not an A-Level method: a judgement call for Jon'
+  evidence: '"\dfrac{6x^2+5x+3}{(x+1)(2x+1)(x-1)}" | "What method to find A, B, C?" | key Substitution or comparing
+    coefficients | Long division, Differentiation, Integration (SWEEP-1, batch 11)'
+  status: open
+- id: partial-fractions-duel-s1-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: alevel
+  where: scripts/verify-partial-fractions-duel.py
+  summary: 'The game shows no worked steps or feedback, only the "(set x = a)" hints in seven asks, which the
+    verifier ignored. It now checks each hint isolates its letter (x = the root of that letter''s own denominator);
+    planted. Still unchecked: nothing else is shown to the student. Recorded under Jon''s rule of 13 Oct 2026; all
+    seven hints were correct'
+  evidence: 'check_bank() matched r''Find [ABC]\b'' and ignored the parenthesis (SWEEP-1, batch 11)'
+  status: open
