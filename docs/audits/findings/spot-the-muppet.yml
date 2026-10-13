@@ -117,10 +117,12 @@ findings:
   where: games/spot-the-muppet/index.html:263 (stm_ks3_008), :275 (stm_ks3_014)
   summary: 'ks3_008''s 44% needs the second voucher to come off the reduced price (both off the original gives 50%),
     which the advice never states. Open (advice text) (Split: the parent entry held 3 defects; the others are
-    spot-the-muppet-s1-004, spot-the-muppet-s1-005.)'
+    spot-the-muppet-s1-004, spot-the-muppet-s1-005.) Fixed under R2: the advice says the shop takes the second
+    voucher off the reduced price.'
   evidence: '"You''ve got a 20% off voucher and a 30% off voucher. Use them both together for 50% off."; "You''ve flipped
     heads 5 times in a row." (SWEEP-1, batch 4)'
-  status: open
+  status: fixed
+  pr: 371
 - id: spot-the-muppet-s1-004
   severity: MEDIUM
   jc: false
@@ -128,10 +130,12 @@ findings:
   level: ks3
   where: games/spot-the-muppet/index.html:263 (stm_ks3_008), :275 (stm_ks3_014)
   summary: 'ks3_008''s option "you can only use one voucher at a time" is shop policy, not a maths error (SR-4). Open
-    (Split from spot-the-muppet-s1-001, SWEEP-1-RULINGS step 1.)'
+    (Split from spot-the-muppet-s1-001, SWEEP-1-RULINGS step 1.) Fixed under R5: the shop-policy option is
+    replaced by a named error (the vouchers average out at 25%).'
   evidence: '"You''ve got a 20% off voucher and a 30% off voucher. Use them both together for 50% off."; "You''ve flipped
     heads 5 times in a row." (SWEEP-1, batch 4)'
-  status: open
+  status: fixed
+  pr: 371
 - id: spot-the-muppet-s1-005
   severity: MEDIUM
   jc: false
@@ -139,10 +143,11 @@ findings:
   level: ks3
   where: games/spot-the-muppet/index.html:263 (stm_ks3_008), :275 (stm_ks3_014)
   summary: 'ks3_014''s "P(tails) is always 0.5" needs a fair coin, never stated (R2). Open (advice text) (Split from
-    spot-the-muppet-s1-001, SWEEP-1-RULINGS step 1.)'
+    spot-the-muppet-s1-001, SWEEP-1-RULINGS step 1.) Fixed under R2: the advice says a fair coin.'
   evidence: '"You''ve got a 20% off voucher and a 30% off voucher. Use them both together for 50% off."; "You''ve flipped
     heads 5 times in a row." (SWEEP-1, batch 4)'
-  status: open
+  status: fixed
+  pr: 371
 - id: spot-the-muppet-s1-002
   severity: MEDIUM
   jc: true
@@ -150,9 +155,11 @@ findings:
   level: core
   where: games/spot-the-muppet/index.html:313 (stm_core_004)
   summary: 'The title "Savings Maximisation Guru (No Relation to the Clown)" beside the name Penny Wise alludes to the
-    child-killing clown of It, in a humour field; the scan cannot see an allusion. Jon''s call (delete the parenthetical)'
+    child-killing clown of It, in a humour field; the scan cannot see an allusion. Jon''s call (delete the
+    parenthetical) Fixed under R6 (Jon): the "(No Relation to the Clown)" parenthetical is deleted.'
   evidence: 'SWEEP-1, batch 4 (terrible-advice core_004 has the same joke)'
-  status: open
+  status: fixed
+  pr: 371
 - id: spot-the-muppet-s1-003
   severity: MEDIUM
   jc: false
@@ -161,18 +168,22 @@ findings:
   where: games/spot-the-muppet/index.html stm_gcse_006, stm_gcse_007, stm_core_009, start screen, stm_ks3_006
   summary: 'gcse_006''s "add 5 to the last digit" (literally 2.9) is called "exactly right". Wording, open (Split: the
     parent entry held 5 defects; the others are spot-the-muppet-s1-006, spot-the-muppet-s1-007,
-    spot-the-muppet-s1-008, spot-the-muppet-s1-009.)'
+    spot-the-muppet-s1-008, spot-the-muppet-s1-009.) Fixed under R3: the advice says "put a 5 after the last
+    digit", which gives 2.45.'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 371
 - id: spot-the-muppet-s1-006
   severity: LOW
   jc: false
   class: NEW:wording
   level: ks3, gcse, core
   where: games/spot-the-muppet/index.html stm_gcse_006, stm_gcse_007, stm_core_009, start screen, stm_ks3_006
-  summary: 'gcse_007 offers 12.5 twice. Wording, open (Split from spot-the-muppet-s1-003, SWEEP-1-RULINGS step 1.)'
+  summary: 'gcse_007 offers 12.5 twice. Wording, open (Split from spot-the-muppet-s1-003, SWEEP-1-RULINGS step 1.)
+    Fixed under R1: the second 12.5 is replaced by the named error x = 25² = 625.'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 371
 - id: spot-the-muppet-s1-007
   severity: LOW
   jc: false
@@ -180,9 +191,11 @@ findings:
   level: ks3, gcse, core
   where: games/spot-the-muppet/index.html stm_gcse_006, stm_gcse_007, stm_core_009, start screen, stm_ks3_006
   summary: 'core_009 "Benny is wrong — … = 134 units" gives Benny''s own figure. Wording, open (Split from
-    spot-the-muppet-s1-003, SWEEP-1-RULINGS step 1.)'
+    spot-the-muppet-s1-003, SWEEP-1-RULINGS step 1.) Fixed under R3: the option that gave Benny''s own 134 is
+    replaced by the named error of adding the unit cost to the price (100 units).'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 371
 - id: spot-the-muppet-s1-008
   severity: LOW
   jc: false
@@ -190,9 +203,11 @@ findings:
   level: ks3, gcse, core
   where: games/spot-the-muppet/index.html stm_gcse_006, stm_gcse_007, stm_core_009, start screen, stm_ks3_006
   summary: 'The start screen says every character is wrong though three GCSE keys are "… is actually correct".
-    Wording, open (Split from spot-the-muppet-s1-003, SWEEP-1-RULINGS step 1.)'
+    Wording, open (Split from spot-the-muppet-s1-003, SWEEP-1-RULINGS step 1.) Fixed under R3: the start screen
+    says the advice is usually spectacularly wrong.'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 371
 - id: spot-the-muppet-s1-009
   severity: LOW
   jc: false
@@ -200,6 +215,7 @@ findings:
   level: ks3, gcse, core
   where: games/spot-the-muppet/index.html stm_gcse_006, stm_gcse_007, stm_core_009, start screen, stm_ks3_006
   summary: 'ks3_006 "A recipe for 4 serves". Wording, open (Split from spot-the-muppet-s1-003, SWEEP-1-RULINGS step
-    1.)'
+    1.) Fixed under R1: "A recipe for 4 people".'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 371

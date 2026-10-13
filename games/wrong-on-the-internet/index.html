@@ -266,7 +266,7 @@ ks3: [
   stage1CorrectAnswer:'14',stage1Options:['14','20','24','10'],
   stage2Options:[
     {text:'BIDMAS requires multiplication before addition: 3\u00d74=12 first, then 2+12=14. Left-to-right only applies within the same tier of operations',correct:true},
-    {text:'The poster added the wrong numbers',correct:false},
+    {text:'The poster should have multiplied 2 \u00d7 3 first, giving 10',correct:false},
     {text:'The poster forgot to include the 2',correct:false}],
   explanation:'BIDMAS: multiplication before addition. 3\u00d74=12, then 2+12=14. Left-to-right only applies within equal-priority operations.'
 },
@@ -300,7 +300,7 @@ ks3: [
   stage1CorrectAnswer:'\u22128',stage1Options:['\u22128','2','8','\u22122'],
   stage2Options:[
     {text:'Two negatives make positive applies to MULTIPLICATION (\u2212\u00d7\u2212=+), not addition. Adding two negative numbers gives a more negative result: \u22123+\u22125=\u22128',correct:true},
-    {text:'The poster added the numbers incorrectly',correct:false},
+    {text:'The signs are ignored when adding, so the answer is +8',correct:false},
     {text:'The poster is correct',correct:false}],
   explanation:'The rule "two negatives make a positive" applies to multiplication only. Adding two negatives: \u22123 + (\u22125) = \u22128.'
 },
@@ -388,7 +388,7 @@ ks3: [
   id:'woti_ks3_012',level:'ks3',topic:'Probability',postType:'viral',
   post:{username:'@ProbExpert',text:'P(rolling a 6) = 1/6. I roll 6 dice so P(at least one 6) = 6 \u00d7 1/6 = 1. Guaranteed 6. This is why I always win at board games.',likes:'11.2k',reshares:'3.4k',comments:'2,456',
     replies:[{username:'@DicePedant',text:'That\'s not how probability works...'},{username:'@ProbExpert',text:'6 times 1/6 = 1 = certainty. MATHS.'}]},
-  stage1CorrectAnswer:'P(at least one 6) = 1 \u2212 (5/6)\u2076 \u2248 0.665',stage1Options:['P(at least one 6) = 1 \u2212 (5/6)\u2076 \u2248 0.665','1 (guaranteed)','1/6','6/6'],
+  stage1CorrectAnswer:'P(at least one 6) = 1 \u2212 (5/6)\u2076 \u2248 0.665',stage1Options:['P(at least one 6) = 1 \u2212 (5/6)\u2076 \u2248 0.665','1 (guaranteed)','1/6','5/6'],
   stage2Options:[
     {text:'You cannot simply multiply probabilities when finding "at least one". P(at least one 6) = 1 \u2212 P(no sixes) = 1 \u2212 (5/6)\u2076 \u2248 66.5%, not 100%',correct:true},
     {text:'You should add the probabilities differently',correct:false},
@@ -397,7 +397,7 @@ ks3: [
 },
 {
   id:'woti_ks3_013',level:'ks3',topic:'Expanding Brackets',postType:'thread',
-  post:{username:'@AlgebraForum',text:'Simplify 3(x + 4)',likes:'1.1k',reshares:'230',comments:'678',
+  post:{username:'@AlgebraForum',text:'Expand 3(x + 4)',likes:'1.1k',reshares:'230',comments:'678',
     replies:[{username:'@FastExpander',text:'3x + 4. Multiply the 3 by the x only.'},{username:'@SlowExpander',text:'3x + 12. Multiply 3 by everything in the bracket.'},{username:'@FastExpander',text:'Why would you multiply the 4? It\'s already a number.'}]},
   stage1CorrectAnswer:'3x + 12',stage1Options:['3x + 12','3x + 4','3x + 7','12x'],
   stage2Options:[
@@ -507,7 +507,7 @@ gcse: [
   stage1CorrectAnswer:'13',stage1Options:['13','169','17','\u221a30'],
   stage2Options:[
     {text:'c\u00b2=169 means c=\u221a169=13. The square and square root do not cancel here \u2014 the equation gives c\u00b2, and you must take the root to find c',correct:true},
-    {text:'Pythagoras was applied incorrectly',correct:false},
+    {text:'The poster should have added the sides: 5 + 12 = 17',correct:false},
     {text:'The square root does cancel with squaring',correct:false}],
   explanation:'c\u00b2 = 25 + 144 = 169, so c = \u221a169 = 13. You must square root to find the length itself.'
 },
@@ -574,7 +574,7 @@ gcse: [
     replies:[{username:'@GeometryGeek',text:'It\'s TWICE. Centre = 2 \u00d7 circumference.'},{username:'@CircleExpert',text:'That would make it 160\u00b0 which is obtuse. Doesn\'t look right.'}]},
   stage1CorrectAnswer:'Circumference angle = 40\u00b0',stage1Options:['Circumference angle = 40\u00b0','80\u00b0','160\u00b0','100\u00b0'],
   stage2Options:[
-    {text:'The theorem states angle at centre = TWICE the angle at circumference. Circumference angle = 80\u00b0\u00f72 = 40\u00b0. The poster inverted the relationship',correct:true},
+    {text:'The theorem states angle at centre = TWICE the angle at circumference. Circumference angle = 80\u00b0\u00f72 = 40\u00b0. The poster missed the factor of 2',correct:true},
     {text:'The theorem only applies to isosceles triangles in circles',correct:false},
     {text:'The angles are equal for minor arcs only',correct:false}],
   explanation:'Angle at centre = 2 \u00d7 angle at circumference. Centre 80\u00b0 means circumference = 40\u00b0.'
@@ -648,11 +648,11 @@ gcse: [
 },
 {
   id:'woti_gcse_020',level:'gcse',topic:'Bounds',postType:'viral',
-  post:{username:'@MeasurementFacts',text:'Measured as 7.3cm to nearest mm. Upper bound = 7.35cm. You always add 5 to the last digit for upper bound.',likes:'4.7k',reshares:'1.2k',comments:'1,890',
+  post:{username:'@MeasurementFacts',text:'Measured as 7.3cm to nearest mm. Upper bound = 7.35cm. You put a 5 after the last digit for the upper bound.',likes:'4.7k',reshares:'1.2k',comments:'1,890',
     replies:[{username:'@BoundsChecker',text:'Hmm, that\'s actually right this time.'},{username:'@MeasurementFacts',text:'Of course it is. I\'m the measurement facts account.'}]},
   stage1CorrectAnswer:'7.35cm (the poster is correct)',stage1Options:['7.35cm (the poster is correct)','7.4cm','7.30cm','7.305cm'],
   stage2Options:[
-    {text:'The poster is actually correct here. Nearest mm = accuracy of 0.1cm. Half of 0.1 = 0.05. Upper bound = 7.3+0.05 = 7.35cm. Adding 5 to the last digit is a valid shortcut for this degree of accuracy',correct:true},
+    {text:'The poster is actually correct here. Nearest mm = accuracy of 0.1cm. Half of 0.1 = 0.05. Upper bound = 7.3+0.05 = 7.35cm. Putting a 5 after the last digit is a valid shortcut for this degree of accuracy',correct:true},
     {text:'Upper bound should be 7.4cm',correct:false},
     {text:'The poster is wrong \u2014 upper bound is 7.305cm',correct:false}],
   explanation:'Nearest mm = \u00b10.05cm. Upper bound = 7.3 + 0.05 = 7.35cm. The poster\'s method works here.'
@@ -696,11 +696,11 @@ core: [
 },
 {
   id:'woti_core_004',level:'core',topic:'Compound Interest',postType:'viral',
-  post:{username:'@SavingsGuru',text:'Invest \u00a31000 at 5% compound interest for 20 years: \u00a31000\u00d71.05\u00d720=\u00a321,050. Retirement sorted!',likes:'12.4k',reshares:'4.5k',comments:'3,456',
+  post:{username:'@SavingsGuru',text:'Invest \u00a31000 at 5% compound interest for 20 years: \u00a31000\u00d71.05\u00d720=\u00a321,000. Retirement sorted!',likes:'12.4k',reshares:'4.5k',comments:'3,456',
     replies:[{username:'@FinanceMaths',text:'That\'s not how compound interest works...'},{username:'@SavingsGuru',text:'1000 times 1.05 times 20. What\'s hard about that?'}]},
-  stage1CorrectAnswer:'\u00a31,000\u00d71.05\u00b2\u2070 = \u00a32,653',stage1Options:['\u00a31,000\u00d71.05\u00b2\u2070 = \u00a32,653','\u00a321,050','\u00a32,000','\u00a31,000\u00d71.05\u00d720 = \u00a321,050'],
+  stage1CorrectAnswer:'\u00a31,000\u00d71.05\u00b2\u2070 = \u00a32,653',stage1Options:['\u00a31,000\u00d71.05\u00b2\u2070 = \u00a32,653','\u00a31,050','\u00a32,000','\u00a31,000\u00d71.05\u00d720 = \u00a321,000'],
   stage2Options:[
-    {text:'Compound interest raises 1.05 to the POWER of 20 (\u00a32,653), not multiplied by 20 (\u00a321,050). The poster confused exponentiation with multiplication \u2014 a factor-of-8 error',correct:true},
+    {text:'Compound interest raises 1.05 to the POWER of 20 (\u00a32,653), not multiplied by 20 (\u00a321,000). The poster confused exponentiation with multiplication \u2014 a factor-of-8 error',correct:true},
     {text:'The answer is \u00a32,000: 5% a year for 20 years doubles it',correct:false},
     {text:'The poster\'s calculation is a valid approximation',correct:false}],
   explanation:'Compound interest: A = P \u00d7 (1+r)\u207f = 1000 \u00d7 1.05\u00b2\u2070 = \u00a32,653. The poster multiplied instead of raising to a power.'
@@ -710,7 +710,7 @@ core: [
   post:{username:'@EconomicsFacts',text:'UK inflation in 2023 was 7.3%. This means everything cost 7.3% more than in 2022. Simple.',likes:'5.6k',reshares:'1.8k',comments:'2,345',
     pollOptions:[{text:'Agree',percentage:78,winner:true},{text:'Disagree',percentage:22,winner:false}],
     pollVotes:'2,345 votes',pollCaption:'78% agree. Inflation = everything goes up by the same amount.'},
-  stage1CorrectAnswer:'CPI inflation of 7.3% means the average basket of goods rose by 7.3% \u2014 individual items varied widely',stage1Options:['CPI inflation of 7.3% means the average basket of goods rose by 7.3% \u2014 individual items varied widely','Everything cost exactly 7.3% more','Nothing changed','Some things went up 14.6%'],
+  stage1CorrectAnswer:'CPI inflation of 7.3% means the average basket of goods rose by 7.3% \u2014 individual items varied widely',stage1Options:['CPI inflation of 7.3% means the average basket of goods rose by 7.3% \u2014 individual items varied widely','Everything cost exactly 7.3% more','Nothing changed','Prices rose by 7.3% every month'],
   stage2Options:[
     {text:'CPI measures a weighted average basket of goods \u2014 some items rose much more (energy, food), others less or fell. "7.3% inflation" describes the aggregate, not individual prices',correct:true},
     {text:'7.3% inflation does mean all prices rose by exactly 7.3%',correct:false},
