@@ -226,3 +226,84 @@ findings:
     25, 35 (Chromium, 390px). Found by the fix PR''s verifier work (7 Oct 2026)'
   status: fixed
   pr: 130
+- id: factor-theorem-s1-001
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: games/factor-theorem/index.html:547, :568 (Learn example 3 step 1, Learn example 4 step 3)
+  summary: 'The worked division lines had no brackets round the dividend, so as written the division bound to the last
+    term only. Fixed: both dividends are now bracketed. verify-factor-theorem.py now checks that every Learn worked line
+    "A \div B" brackets a multi-term dividend; both old lines are planted back and caught.'
+  evidence: 'x^3 - 7x - 6 \div (x - 3) | 2x^3 + x^2 - 13x + 6 \div (x - 2) (SWEEP-1, batch 11)'
+  status: open
+- id: factor-theorem-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:key-ask mismatch
+  level: all
+  where: games/factor-theorem/index.html:688 (practice Q15)
+  summary: 'Asked to "fully factorise and solve f(x) = 0"; the scaffold and key end at the factorisation (same shape as
+    t5-006 and t5-007, which were fixed for Q24 and Q38). Fixed: the ask is now "Fully factorise f(x)." The verifier''s
+    ask-versus-key check skipped every scaffolded item; it now reads the prompt of a scaffolded item too whenever it asks
+    to solve or find all values, and the old Q15 ask is planted back and caught. Q14 ("Find all values of s where H(s) =
+    0") was read and left alone: its key is the roots (s=1, s=-1, s=-2), so the ask matches.'
+  evidence: 'f(x) = 2x^3 - 3x^2 - 11x + 6. Fully factorise and solve f(x) = 0. | key (x-3)(2x-1)(x+2) | scaffold ends
+    (2x - ___)(x + ___) (SWEEP-1, batch 11)'
+  status: open
+- id: factor-theorem-s1-003
+  severity: MEDIUM
+  jc: true
+  class: NEW:true-wrong-option
+  level: all
+  where: games/factor-theorem/index.html:763-770 (practice Q33)
+  summary: 'FOR JON, not fixed. Two wrong options end on the key''s conclusion with a bad reason ("f(-2) = (-2)^n - 2^n =
+    0, so (x - 2) is a factor" and "f(0) = -2^n, so (x - 2) is a factor"), which SR-31 bars; the first is also true only
+    for even n. The stem never defines f ("Let f(x) = x^n - 2^n" is missing) though the options use f(2) and f(0).
+    verify-factor-theorem.py pins these options word for word to the FT-FIX contract, so changing them, or the stem,
+    needs a new ruling from Jon.'
+  evidence: 'Prove that (x - 2) is a factor of x^n - 2^n for all positive integers n. Which line proves it? | key f(2) =
+    2^n - 2^n = 0, so by the factor theorem (x - 2) is a factor. (SWEEP-1, batch 11)'
+  status: open
+- id: factor-theorem-s1-004
+  severity: LOW
+  jc: true
+  class: NEW:wording
+  level: all
+  where: games/factor-theorem/index.html:732, :771 (practice Q23, Q34)
+  summary: 'FOR JON, not fixed (a context change). Q23 calls a real cubic in omega an impedance, but impedance is
+    complex with a non-negative magnitude, and this cubic is negative for omega < 1 and between 2 and 3. Q34 is milder: a
+    torque that is a cubic in theta with a root at theta = -1/2. Either the contexts change or both become a bare "Find
+    the roots of ...".'
+  evidence: 'The impedance of a circuit is Z(w) = w^3 - 6w^2 + 11w - 6. Find all values of w where Z = 0. (SWEEP-1, batch
+    11)'
+  status: open
+- id: factor-theorem-s1-005
+  severity: MEDIUM
+  jc: true
+  class: NEW:degenerate-item
+  level: all
+  where: games/factor-theorem/index.html (practice Q3, Q10, Q23, Q14, Q24, Q16, Q20, Q37, Q17, Q40)
+  summary: 'FOR JON, not fixed (new items needed). Practice repeats that t5-017 (the test repeats) does not record: Q3,
+    Q10 and Q23 (and test T5) are x^3 - 6x^2 + 11x - 6; Q14 and Q24 are x^3 + 2x^2 - x - 2; Q16, Q20 and Q37 are x^3 + 4x^2
+    + x - 6 (Q37 is Q16''s answer again, p = 4, q = 1); Q17 and Q40 are x^3 - 4x^2 - 7x + 10. About 33 of the 40 are
+    distinct. Same class as t5-016 and t5-017.'
+  evidence: 'polynomials as listed (SWEEP-1, batch 11)'
+  status: open
+- id: factor-theorem-s1-006
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: all
+  where: scripts/verify-factor-theorem.py (check_hints, check_learn)
+  summary: 'The verifier recomputes every key, scaffold label, the Q33 and T9(c) explanations and the numeric hints, and
+    after this PR checks the ask against the key on scaffolded items and the bracketing of Learn division lines. Still
+    unchecked: the text of Learn examples 1-4 (every working line and explanation, e.g. f(2) = 1, the candidate list of
+    example 2, the long-division products and subtractions of example 3, "-7x + 9x = 2x", the f(2) working and closing
+    "x = 2, x = 1/2, x = -3" of example 4; only example 4 step 1''s candidate list is checked); and the hints that only
+    state an equation or a value, or that contain unknowns (Q2 "(-1)^3 = -1", Q5, Q8, Q13, Q16, Q30 "2a + b = 2", "a - b
+    = -5", "a = -1, b = 4", Q23''s "Divide by (w - 1) to get w^2 - 5w + 6", which may be partly caught by the quotient
+    and factorisation patterns, unconfirmed). Every one was recomputed by hand in the SWEEP-1 read and none is wrong
+    today.'
+  evidence: 'check_hints skips hints with unknowns; check_learn reads example 4 step 1 only (SWEEP-1, batch 11)'
+  status: open
