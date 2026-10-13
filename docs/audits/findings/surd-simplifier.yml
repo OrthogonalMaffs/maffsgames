@@ -36,3 +36,18 @@ findings:
   pr: 210
   ruling: 'Contract LISTED-HIGH (Jon, 9 Oct 2026), item 1: keyed 206/495 (412/990), the only option equal to it.
     scripts/verify-surd-simplifier.py reads the recurring decimal exactly and fails main''s page here.'
+- id: surd-simplifier-b11-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:equal-value-options
+  level: gcse
+  where: 'games/surd-simplifier/index.html: QUESTIONS.gcse[38], gcse[43]'
+  summary: 'Two items had two wrong options equal in value (SR-4: four distinct options): gcse[38] 0.(2) offered 1/5
+    and 2/10; gcse[43] 0.(45) offered 9/20 and 45/100. Keys right. Fixed under B11-CLEAR and Jon''s formula-forge
+    ruling of 12 Oct 2026: 1/5 -> 2/99 (used 99, as for two recurring digits); 9/20 -> 4/9 (took only the 4 as
+    recurring). Six other pairs equal the key unsimplified where the ask is "Convert to a fraction in its simplest
+    form", so they are listed in checker-allowlist.json b11_form_questions (SR-4''s exception)'
+  evidence: 'check-banks.py B11 (data/check-ledger.json, now cleared); scripts/verify-surd-simplifier.py fails on any
+    unlisted equal pair, with a plant that puts 1/5 back'
+  status: fixed
+  pr: 328
