@@ -80,7 +80,8 @@ findings:
     options untouched. The verifier bars "any two" in any scenario or logic line; planted with the old text in both.'
   evidence: 'The ventilation fans run when any two of temperature/humidity/CO2 are triggered. | key (A \cdot B + A
     \cdot C + B \cdot C) \cdot \overline{D} \cdot \overline{E} (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 358
 - id: truth-will-set-you-free-s1-002
   severity: MEDIUM
   jc: false
@@ -93,7 +94,8 @@ findings:
     planted with the line removed.'
   evidence: 'Start screen: "Read each scenario. Fill in the output column of the truth table. Then identify the
     matching Boolean expression." (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 358
 - id: truth-will-set-you-free-s1-003
   severity: LOW
   jc: false
@@ -105,7 +107,8 @@ findings:
     scenario or logic line to be glossed; planted with the old text.'
   evidence: 'The mixer motor runs when forward XOR reverse is active. | key (A \cdot \overline{B} + \overline{A}
     \cdot B) \cdot C \cdot D \cdot \overline{E} (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 358
 - id: truth-will-set-you-free-s1-004
   severity: LOW
   jc: false
@@ -117,7 +120,8 @@ findings:
     text. Tiers 2-4 (items 10-31) never name an output; that is a reworded stem on 22 items, for Jon.'
   evidence: 'A compressor control system. The compressor (output) runs when the pressure is low AND the motor
     temperature is below limit AND the oil level is adequate. (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 358
 - id: truth-will-set-you-free-s1-005
   severity: LOW
   jc: true

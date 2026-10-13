@@ -74,7 +74,8 @@ findings:
     + (0-(-1)) = lambda^2 + 1 = 0". The verifier now checks the structure of a polynomial line (a trace term must carry
     its lambda); the old line is planted and caught, and the old page fails.'
   evidence: '\lambda^2 - 0 + (0-(-1)) = \lambda^2 + 1 = 0 | A = [[0,-1],[1,0]] | key \lambda^2 + 1 = 0 (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 358
 - id: characteristic-quest-s1-002
   severity: LOW
   jc: false
@@ -88,7 +89,8 @@ findings:
     and the old page fails.'
   evidence: 'Negative determinant (4−6 = −2) means one eigenvalue is negative. | Symmetric matrix — eigenvalues are always
     real. (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 358
 - id: characteristic-quest-s1-003
   severity: LOW
   jc: true

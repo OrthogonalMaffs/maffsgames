@@ -71,7 +71,8 @@ findings:
     equation with complex roots; the old option is planted and caught.'
   evidence: 'lambda^2 + 1 = 0 | Find the eigenvalues | key: lambda = i, lambda = -i | options: lambda = 1, lambda = -1 /
     No eigenvalues exist / lambda = 0 (repeated) (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 358
 - id: eigenvalue-extractor-s1-002
   severity: LOW
   jc: true

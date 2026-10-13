@@ -68,7 +68,8 @@ findings:
   summary: Six calculator-hint results are wrong (all on distractor key sequences)
   evidence: id 55 10tan(4π/3)=17.32 shown 1.73; id 3 6.67 shown 6.65; id 5 6.66 shown 6.65; id 34 0.745/0.367 shown
     0.747/0.368; id 53 25.20 shown 25.21
-  status: open
+  status: fixed
+  pr: 358
 - id: complex-converter-t6-006
   severity: MEDIUM
   jc: false
@@ -123,7 +124,8 @@ findings:
     decimals or carries the wrong unit; plants of the old id 55 and id 34 figures are caught, and the old page
     fails with six CALC_HINTS lines (the lead said 24 hints; the table has 20 entries)'
   evidence: 'id 55 10\cos(4pi/3) distractor 10\tan(4pi/3) | result 1.73 (true 17.32) (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 358
 - id: complex-converter-s1-002
   severity: MEDIUM
   jc: true

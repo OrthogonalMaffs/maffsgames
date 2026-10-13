@@ -144,7 +144,8 @@ findings:
     caught.'
   evidence: 'A = [[5,0],[0,2]], lambda = 5 | key (1,0) | mc: "For diagonal matrices, eigenvectors are the standard
     basis vectors e1 and e2." (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 358
 - id: eigenvector-engine-s1-002
   severity: LOW
   jc: false
@@ -158,7 +159,8 @@ findings:
     proportional to row n of A - lambda I; the old advice and a wrong row label are planted and caught.'
   evidence: 'Key insight: "You only need ONE row. Let one variable = 1 and solve for the other." | QS[4] A - 5I =
     [[0,0],[0,-3]] uses Row 2 | QS[5] 3x = 0 (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 358
 - id: eigenvector-engine-s1-003
   severity: LOW
   jc: true

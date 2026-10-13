@@ -93,7 +93,8 @@ findings:
   evidence: 'x + y = 3 / 2x + 2y = 6 | What happens? | key Infinite solutions (D = 0, consistent) | No solution; x = 3,
     y = 0; x = 0, y = 3. And 2x + 2y = 10 / x + y = 5 | key Infinite solutions (D = 0) | x = 5, y = 0; No solution;
     x = 0, y = 5 (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 358
 - id: matrix-crunch-s1-002
   severity: LOW
   jc: false
@@ -107,7 +108,8 @@ findings:
     texts planted and caught.'
   evidence: '2x + y = 5 / x + 3y = 10 | Find y using Cramer''s rule | key 3 | step "D = 5 (from above)"; 3I_1 + 2I_2 = 10 / I_1 + 4I_2 =
     12 | ctx "Same circuit." | Find I2 (amps) | key 2.6 (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 358
 - id: matrix-crunch-s1-003
   severity: LOW
   jc: false
@@ -118,7 +120,8 @@ findings:
     which have a system and no matrix. Fixed: "This question is not singular (D ≠ 0). Check your calculation before
     flagging." The verifier requires the new text and bars the old (s1-003); the old text is planted and caught.'
   evidence: 'wrong Flag as Singular on a Cramer item shows "This matrix is not singular" (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 358
 - id: matrix-crunch-s1-004
   severity: MEDIUM
   jc: false

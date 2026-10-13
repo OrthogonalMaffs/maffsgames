@@ -236,7 +236,8 @@ findings:
     term only. Fixed: both dividends are now bracketed. verify-factor-theorem.py now checks that every Learn worked line
     "A \div B" brackets a multi-term dividend; both old lines are planted back and caught.'
   evidence: 'x^3 - 7x - 6 \div (x - 3) | 2x^3 + x^2 - 13x + 6 \div (x - 2) (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 358
 - id: factor-theorem-s1-002
   severity: LOW
   jc: false
@@ -250,7 +251,8 @@ findings:
     0") was read and left alone: its key is the roots (s=1, s=-1, s=-2), so the ask matches.'
   evidence: 'f(x) = 2x^3 - 3x^2 - 11x + 6. Fully factorise and solve f(x) = 0. | key (x-3)(2x-1)(x+2) | scaffold ends
     (2x - ___)(x + ___) (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 358
 - id: factor-theorem-s1-003
   severity: MEDIUM
   jc: true

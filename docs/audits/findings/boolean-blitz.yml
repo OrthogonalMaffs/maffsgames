@@ -114,7 +114,8 @@ findings:
     scripts/verify-boolean-blitz.py now checks that each step''s from and to share a truth table, with a plant that
     puts the old step 3 back (caught); the old page FAILS it'
   evidence: '(A + B) . (C + D) . (A + B) . (!C + D) | simplify | D(A + B) | step 3 was D -> D(A+B) (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 358
 - id: boolean-blitz-s1-002
   severity: LOW
   jc: false
@@ -127,7 +128,8 @@ findings:
     now fails a step whose from equals its to, with a plant of the Q22 no-op (caught); the old page FAILS it'
   evidence: 'Q22 step 3 A!B -> A!B Identity; Q29 step 3 A + B -> A + B Absorption; Q35 step 2 AB + C -> AB + C Double
     Negation; Q39 step 3 (A xor B) + D -> (A xor B) + D Combine (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 358
 - id: boolean-blitz-s1-003
   severity: LOW
   jc: true
