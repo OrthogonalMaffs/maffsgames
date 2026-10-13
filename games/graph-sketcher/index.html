@@ -146,6 +146,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/answer.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Each scenario opens with a table of values (and, at Core, a curve to draw) before its interpretation questions, which are the only marked answers. "answer" completes the table with its keys and, at Core, draws the true curve through Check Curve, then answers the question on screen: i = 0 the key, i >= 1 a wrong value or option. A wrong answer waits on Next under its feedback.
 {
   "ready": "document.getElementById('gameScreen').classList.contains('active') && G.phase !== 'done'",
@@ -259,7 +260,7 @@ core:[
    answers:{20:1.2,30:2.1,40:3.2,50:4.5},
    iqs:[
      {type:'read',prompt:'Estimate the wind speed when wave height is 3 m.',answer:38.3,tol:2},
-     {type:'extrap',prompt:'Estimate h when s = 70. Is this reliable?',answer:7.7,tol:0.5,reliable:false,reason:'Beyond the data range'},
+     {type:'extrap',prompt:'Use the model to estimate h when s = 70. Is this reliable?',answer:7.7,tol:0.5,reliable:false,reason:'Beyond the data range'},
      {type:'mcq',prompt:'What property indicates wind speed has more effect at higher speeds?',correct:'The graph is steeper at higher wind speeds',wrong:['The graph is linear','The graph flattens off','The gradient is constant']},
      {type:'mcq',prompt:'Describe one limitation of this model.',correct:'No upper limit — predicts unrealistically large wave heights',wrong:['The model is too accurate','It only works for hurricanes','Wave heights cannot be positive']}
    ]},
@@ -269,7 +270,7 @@ core:[
    answers:{1:4,2:2,4:4},
    iqs:[
      {type:'read',prompt:'Estimate P when x = 2.5.',answer:0.625,tol:0.3},
-     {type:'mcq',prompt:'At what value of x does profit reach its local minimum?',correct:'x = 3',wrong:['x = 0','x = 1','x = 5']},
+     {type:'mcq',prompt:'At what value of x does profit reach its turning point (local minimum)?',correct:'x = 3',wrong:['x = 0','x = 1','x = 5']},
      {type:'mcq',prompt:'Describe one limitation of this model.',correct:'Model allows negative profit but real businesses would stop trading',wrong:['Profit is always positive','The model is linear','x cannot be a whole number']}
    ]},
   {id:'CM3',eqLatex:'P = 100 \\times 1.05^t',context:'Population P (thousands), t = years since 2010.',
@@ -278,7 +279,7 @@ core:[
    answers:{5:127.6,10:162.9,15:207.9},
    iqs:[
      {type:'read',prompt:'Estimate the year when the population reaches 200,000.',answer:2024.2,tol:0.8},
-     {type:'extrap',prompt:'Estimate P when t = 25. Is this reliable?',answer:338.6,tol:17,reliable:false,reason:'Assumes growth rate stays constant'},
+     {type:'extrap',prompt:'Use the model to estimate P when t = 25. Is this reliable?',answer:338.6,tol:17,reliable:false,reason:'Assumes growth rate stays constant'},
      {type:'mcq',prompt:'What does the increasing steepness tell you?',correct:'The population is growing at an increasing rate',wrong:['Population is decreasing','Growth rate is constant','Population will reach a maximum']}
    ]},
   {id:'CM4',eqLatex:'d = 0.006v^2',context:'Braking distance d (m) vs speed v (mph).',
@@ -340,7 +341,7 @@ core:[
    answers:{10:0.48,20:1.04,40:1.92,50:2,60:1.68},
    iqs:[
      {type:'read',prompt:'Estimate h when s = 55.',answer:1.9,tol:0.3},
-     {type:'mcq',prompt:'How does this differ from a simpler quadratic at high speeds?',correct:'The cubic term causes the curve to flatten and eventually turn',wrong:['There is no difference','The quadratic is always larger','The cubic grows faster']}
+     {type:'mcq',prompt:'How does this differ from a simpler quadratic at high speeds?',correct:'The cubic term causes the curve to flatten and eventually turn',wrong:['There is no difference','The cubic gives larger heights at high speeds','The cubic grows faster']}
    ]},
   {id:'CM11',eqLatex:'A = 500 \\times 1.04^n',context:'Account balance A (£) after n years at 4% interest.',
    fn:n=>500*Math.pow(1.04,n),xRange:[0,25],yRange:[400,1400],xLabel:'n (years)',yLabel:'A (£)',
@@ -348,7 +349,7 @@ core:[
    answers:{5:608.3,10:740.1,15:900.5,20:1095.6},
    iqs:[
      {type:'read',prompt:'Estimate A when n = 18.',answer:1012.9,tol:50},
-     {type:'extrap',prompt:'Estimate A when n = 30. Is this reliable?',answer:1621.7,tol:80,reliable:false,reason:'Assumes interest rate stays constant for 30 years'}
+     {type:'extrap',prompt:'Use the model to estimate A when n = 30. Is this reliable?',answer:1621.7,tol:80,reliable:false,reason:'Assumes interest rate stays constant for 30 years'}
    ]},
   {id:'CM12',eqLatex:'F = -0.003v^2 + 0.3v',context:'Fuel efficiency F (km/L) vs speed v (km/h).',
    fn:v=>-0.003*v*v+0.3*v,xRange:[0,100],yRange:[0,8],xLabel:'v (km/h)',yLabel:'F (km/L)',
@@ -415,7 +416,7 @@ alevel:[
    tableX:[-4,-2,-1,1,2,4],given:{'-4':1,'-1':-2,4:3},answers:{'-2':0,1:6,2:4},
    iqs:[
      {type:'mcq',prompt:'What are the equations of the asymptotes?',correct:'x = 0 and y = 2',wrong:['x = 2 and y = 0','x = 4 and y = 2','x = 0 and y = 4']},
-     {type:'mcq',prompt:'Where is the gradient steepest?',correct:'x = ±1 (closest to the asymptote)',wrong:['x = ±4','x = 0','x = ±2']},
+     {type:'mcq',prompt:'Of the x-values in the table, where is the gradient steepest?',correct:'x = ±1 (closest to the asymptote)',wrong:['x = ±4','x = 0','x = ±2']},
      {type:'mcq',prompt:'Which equation matches this shape?',correct:'y = 4/x + 2 (shifted reciprocal)',wrong:['y = 4x + 2','y = 2/x²','y = ln(x) + 2']}
    ]},
   {id:'AL5',eqLatex:'y = 2\\sin(x) + 1',context:'For 0° ≤ x ≤ 360°.',
@@ -453,7 +454,7 @@ alevel:[
    tableX:[0,45,90,135,180,225,270,315,360],given:{0:1,90:-1,180:1,270:-1,360:1},answers:{45:0,135:0,225:0,315:0},
    iqs:[
      {type:'roots',prompt:'Write down the first two positive roots.',answers:[45,135],tol:1},
-     {type:'tp',prompt:'Write down the coordinates of the first maximum.',answer:{x:0,y:1},tol:1},
+     {type:'tp',prompt:'Write down the coordinates of the first maximum, for x ≥ 0.',answer:{x:0,y:1},tol:1},
      {type:'mcq',prompt:'What is the period of this function?',correct:'180°',wrong:['360°','90°','720°']}
    ]},
   {id:'AL10',eqLatex:'y = \\frac{1}{x-2} + 3',context:'',
@@ -516,7 +517,7 @@ level4:[
      {type:'read',prompt:'At what time does V reach 6V?',answer:0.0347,tol:0.003},
      {type:'mcq',prompt:'What is the time constant of this circuit?',correct:'0.05 seconds',wrong:['20 seconds','12 seconds','0.1 seconds']}
    ]},
-  {id:'L4_3',eqLatex:'V = 240\\sin(100\\pi t)',context:'AC mains voltage. V (volts), t (seconds). Frequency 50 Hz.',
+  {id:'L4_3',eqLatex:'V = 240\\sin(100\\pi t)',context:'An AC supply. V (volts), t (seconds). Frequency 50 Hz.',
    fn:t=>240*Math.sin(100*Math.PI*t),xRange:[0,0.02],yRange:[-260,260],xLabel:'t (s)',yLabel:'V (V)',
    tableX:[0,0.005,0.01,0.015,0.02],given:{0:0,0.01:0,0.02:0},answers:{0.005:240,0.015:-240},
    iqs:[
@@ -551,7 +552,7 @@ level4:[
      {type:'tp',prompt:'Write down the approximate coordinates of the maximum height.',answer:{x:3.06,y:45.9},tol:0.2},
      {type:'read',prompt:'Estimate the time of flight (when h returns to 0).',answer:6.12,tol:0.15}
    ]},
-  {id:'L4_8',eqLatex:'x = 3\\sin(50t) + 1',context:'Vibration displacement x (mm), t = time (s).',
+  {id:'L4_8',eqLatex:'x = 3\\sin(50t) + 1',context:'Vibration displacement x (mm), t = time (s); the angle 50t is in radians.',
    fn:t=>3*Math.sin(50*t)+1,xRange:[0,0.3],yRange:[-3,5],xLabel:'t (s)',yLabel:'x (mm)',
    tableX:[0,0.031,0.063,0.094,0.126,0.157],given:{0:1,0.063:1,0.126:1},
    answers:{0.031:4,0.094:-2,0.157:4},
@@ -696,6 +697,9 @@ function buildTable(q){
     }
   });
   html+='</tr></table>';
+  const dp=tableDp(q);
+  if(dp!==null)html+=`<div class="table-note" style="font-size:.78rem;color:var(--muted);margin-top:.35rem">Give each value to ${dp} decimal place${dp===1?'':'s'}.</div>`;
+  html+='<div id="tableMsg" role="status" style="font-size:.78rem;color:var(--wrong);margin-top:.25rem"></div>';
   $('tableBox').innerHTML=html;
 }
 
@@ -706,16 +710,34 @@ function fmtV(v){
   return parseFloat(v.toPrecision(4));
 }
 
+// A table's values are worked from the equation, not read from a graph, so they are marked at a stated precision,
+// never to a band (SR-1, SR-2; graph-sketcher-s1-001): exactly where every value is exact, else at the decimal
+// places the scenario's own keys are given to, which the table states. A right value at other precision gets the
+// message and no penalty (SR-3).
+function tableDp(q){
+  let dp=null;
+  for(const [x,a] of Object.entries(q.answers)){
+    const t=q.fn(Number(x)), near=(u,v)=>Math.abs(u-v)<=1e-9*Math.max(1,Math.abs(v));
+    if(near(t,a))continue;
+    let p=0; while(p<8&&!near(Number(t.toFixed(p)),a))p++;
+    dp=Math.max(dp===null?0:dp,p);
+  }
+  return dp;
+}
 function checkCell(input){
   const q=G.questions[G.qIdx];
   const key=input.dataset.x;
   const expected=q.answers[key];
   if(expected===undefined)return;
-  const val=parseFloat(input.value);
-  if(isNaN(val))return;
-  const tol=Math.abs(expected)<=10?Math.max(0.15,Math.abs(expected)*0.02):Math.max(0.5,Math.abs(expected)*0.01);
+  const raw=input.value;
+  if(!raw.trim())return;
+  const dp=tableDp(q);
+  const res=dp===null?MaffsAnswer.exact(raw,expected):MaffsAnswer.decimal(raw,expected.toFixed(dp),dp);
+  const msg=$('tableMsg');
+  if(res==='format'||res==='unreadable'){if(msg)msg.textContent=MaffsAnswer.message(res,raw,{dp:dp});return;}
+  if(msg)msg.textContent='';
   const cell=input.parentElement;
-  if(Math.abs(val-expected)<=tol){
+  if(res==='correct'){
     cell.classList.add('correct-cell');cell.classList.remove('wrong-cell');
     input.value=fmtV(expected);input.disabled=true;
     checkTableComplete(q);
@@ -1121,7 +1143,8 @@ function checkRootsIQ(){
   const tol=iq.tol||0.15;
   let allFound=true;
   iq.answers.forEach(a=>{if(!vals.some(v=>Math.abs(v-a)<=tol))allFound=false;});
-  const ok=allFound&&vals.length<=iq.answers.length+1;
+  // every root, and nothing else (an extra value was accepted; graph-sketcher-s1-002)
+  const ok=allFound&&vals.length===iq.answers.length;
   if(ok){
     G.correctIQs++;G.score+=15;$('hudScore').textContent=G.score;
     fb.innerHTML=`<div class="feedback correct">Correct! Roots: ${iq.answers.join(', ')}</div>`;_trackIQ(true);
@@ -1139,7 +1162,10 @@ function checkTPIQ(){
   if(!MaffsLock.lock($('qBox')))return;   // one mark per question (canon 7.6.0)
   G.totalIQs++;const fb=$('iqFb');
   const tol=iq.tol||0.15;
-  const ok=Math.abs(vx-iq.answer.x)<=tol&&Math.abs(vy-iq.answer.y)<=Math.max(tol,Math.abs(iq.answer.y)*0.05);
+  // y is read from the drawn graph to 2.5% of the y-axis, as chart-interrogator reads its axes (canon 7.1.2); it had
+  // the x tolerance, in y units, so AL5 accepted 2 or 4 for 3 (graph-sketcher-s1-002)
+  const tolY=0.025*(q.yRange[1]-q.yRange[0]);
+  const ok=Math.abs(vx-iq.answer.x)<=tol&&Math.abs(vy-iq.answer.y)<=tolY;
   if(ok){
     G.correctIQs++;G.score+=15;$('hudScore').textContent=G.score;
     fb.innerHTML=`<div class="feedback correct">Correct! (${iq.answer.x}, ${iq.answer.y})</div>`;_trackIQ(true);
