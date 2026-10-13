@@ -168,7 +168,7 @@ findings:
     coin.'
   evidence: 'advice "You''ve flipped heads 5 times in a row. The next flip is definitely tails…" (SWEEP-1, batch 4)'
   status: fixed
-  pr: 371
+  pr: 370
 - id: terrible-advice-s1-005
   severity: MEDIUM
   jc: true
@@ -181,7 +181,7 @@ findings:
     under R5: the shop-policy option is replaced by a named error (the vouchers average out at 25%).'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: terrible-advice-s1-006
   severity: MEDIUM
   jc: true
@@ -193,7 +193,7 @@ findings:
     "put a 5 after the last digit".'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: terrible-advice-s1-007
   severity: LOW
   jc: true
@@ -204,7 +204,7 @@ findings:
     Fixed under R1: the second 12.5 is replaced by the named error x = 25² = 625.'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: terrible-advice-s1-008
   severity: LOW
   jc: true
@@ -216,7 +216,7 @@ findings:
     2.653 as exact.'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: terrible-advice-s1-009
   severity: LOW
   jc: true
@@ -227,7 +227,7 @@ findings:
     under R3: the option reads "= 20,000 units".'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: terrible-advice-s1-010
   severity: MEDIUM
   jc: true
@@ -239,4 +239,4 @@ findings:
     terrible-advice-s1-005, SWEEP-1-RULINGS step 1.) Fixed under R6 (Jon): the parenthetical is deleted.'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370

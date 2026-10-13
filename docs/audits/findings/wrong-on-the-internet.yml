@@ -122,7 +122,7 @@ findings:
     £1,050 (one year only), so no two options carry one figure.'
   evidence: 'options "£21,050" and "£1,000×1.05×20 = £21,050"; key "… not multiplied by 20 (£21,050)" (SWEEP-1, batch 4)'
   status: fixed
-  pr: 371
+  pr: 370
 - id: wrong-on-the-internet-s1-004
   severity: MEDIUM
   jc: true
@@ -135,7 +135,7 @@ findings:
     up 14.6%" becomes the named error "Prices rose by 7.3% every month".'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: wrong-on-the-internet-s1-006
   severity: MEDIUM
   jc: true
@@ -148,7 +148,7 @@ findings:
     vague options become named errors (ignoring the signs; adding the sides, 17; multiplying 2 × 3 first, 10).'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: wrong-on-the-internet-s1-007
   severity: MEDIUM
   jc: true
@@ -160,7 +160,7 @@ findings:
     under R3: the post and key say a 5 goes after the last digit (7.3 → 7.35).'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: wrong-on-the-internet-s1-005
   severity: LOW
   jc: false
@@ -172,7 +172,7 @@ findings:
     Fixed under R5: "6/6" is replaced by 5/6.'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: wrong-on-the-internet-s1-008
   severity: LOW
   jc: false
@@ -184,7 +184,7 @@ findings:
     2".'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: wrong-on-the-internet-s1-009
   severity: LOW
   jc: false
@@ -195,7 +195,7 @@ findings:
     wrong-on-the-internet-s1-005, SWEEP-1-RULINGS step 1.) Fixed under R1: the post says "Expand 3(x + 4)".'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: wrong-on-the-internet-s1-010
   severity: LOW
   jc: false

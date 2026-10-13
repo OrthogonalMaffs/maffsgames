@@ -122,7 +122,7 @@ findings:
   evidence: '"You''ve got a 20% off voucher and a 30% off voucher. Use them both together for 50% off."; "You''ve flipped
     heads 5 times in a row." (SWEEP-1, batch 4)'
   status: fixed
-  pr: 371
+  pr: 370
 - id: spot-the-muppet-s1-004
   severity: MEDIUM
   jc: false
@@ -135,7 +135,7 @@ findings:
   evidence: '"You''ve got a 20% off voucher and a 30% off voucher. Use them both together for 50% off."; "You''ve flipped
     heads 5 times in a row." (SWEEP-1, batch 4)'
   status: fixed
-  pr: 371
+  pr: 370
 - id: spot-the-muppet-s1-005
   severity: MEDIUM
   jc: false
@@ -147,7 +147,7 @@ findings:
   evidence: '"You''ve got a 20% off voucher and a 30% off voucher. Use them both together for 50% off."; "You''ve flipped
     heads 5 times in a row." (SWEEP-1, batch 4)'
   status: fixed
-  pr: 371
+  pr: 370
 - id: spot-the-muppet-s1-002
   severity: MEDIUM
   jc: true
@@ -159,7 +159,7 @@ findings:
     parenthetical) Fixed under R6 (Jon): the "(No Relation to the Clown)" parenthetical is deleted.'
   evidence: 'SWEEP-1, batch 4 (terrible-advice core_004 has the same joke)'
   status: fixed
-  pr: 371
+  pr: 370
 - id: spot-the-muppet-s1-003
   severity: MEDIUM
   jc: false
@@ -172,7 +172,7 @@ findings:
     digit", which gives 2.45.'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: spot-the-muppet-s1-006
   severity: LOW
   jc: false
@@ -183,7 +183,7 @@ findings:
     Fixed under R1: the second 12.5 is replaced by the named error x = 25² = 625.'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: spot-the-muppet-s1-007
   severity: LOW
   jc: false
@@ -195,7 +195,7 @@ findings:
     replaced by the named error of adding the unit cost to the price (100 units).'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: spot-the-muppet-s1-008
   severity: LOW
   jc: false
@@ -207,7 +207,7 @@ findings:
     says the advice is usually spectacularly wrong.'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: spot-the-muppet-s1-009
   severity: LOW
   jc: false
@@ -218,4 +218,4 @@ findings:
     1.) Fixed under R1: "A recipe for 4 people".'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
