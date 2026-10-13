@@ -162,7 +162,7 @@ body.accessible{background-color:#12141f!important}
       <button class="mode-btn" data-mode="pairs">Pairs</button>
     </div>
     <p style="text-align:center;color:var(--muted);font-size:.82rem;margin:.5rem 0;line-height:1.5" id="modeDesc">
-      Two cards — one revealed, one hidden. Is the hidden value higher or lower? Build your streak!
+      Two cards — one revealed, one hidden. Is the hidden value higher or lower? If the two are equal, either answer is right. Build your streak!
     </p>
     <div class="level-select">
       <button class="level-btn active" data-level="ks3">KS3</button>
@@ -239,7 +239,7 @@ const KS3_CARDS = [
 {id:"ks3_01",display:"2^5",displayType:"expression",valueDisplay:"32",value:32,difficulty:1,fact:"2 to the power 5 = 32. There are 32 teams in the NFL."},
 {id:"ks3_02",display:"2^8",displayType:"expression",valueDisplay:"256",value:256,difficulty:1,fact:"2 to the power 8 = 256. This is why colours in computing often go from 0 to 255."},
 {id:"ks3_03",display:"2^{10}",displayType:"expression",valueDisplay:"1{,}024",value:1024,difficulty:1,fact:"2 to the power 10 = 1,024 -- the basis of a kilobyte."},
-{id:"ks3_04",display:"2^{20}",displayType:"expression",valueDisplay:"1{,}048{,}576",value:1048576,difficulty:2,fact:"2 to the power 20 is approximately 1 million. A megabyte is 2 to the power 20 bytes."},
+{id:"ks3_04",display:"2^{20}",displayType:"expression",valueDisplay:"1{,}048{,}576",value:1048576,difficulty:2,fact:"2 to the power 20 is approximately 1 million. A mebibyte (MiB) is 2 to the power 20 bytes; a megabyte is usually taken as 1,000,000 bytes."},
 {id:"ks3_05",display:"3^4",displayType:"expression",valueDisplay:"81",value:81,difficulty:1,fact:"3 to the power 4 = 81. Also 9 squared -- a perfect square and a perfect power."},
 {id:"ks3_06",display:"5^3",displayType:"expression",valueDisplay:"125",value:125,difficulty:1,fact:"5 cubed = 125. A cube of a prime number."},
 {id:"ks3_07",display:"7^2",displayType:"expression",valueDisplay:"49",value:49,difficulty:1,fact:"7 squared = 49. The square of a prime."},
@@ -254,8 +254,8 @@ const KS3_CARDS = [
 {id:"ks3_16",display:"\\text{Pi } (\\pi)",displayType:"name",valueDisplay:"3.14159...",value:3.14159,difficulty:1,fact:"Pi is the ratio of a circle's circumference to its diameter."},
 {id:"ks3_17",display:"\\sqrt{2}",displayType:"expression",valueDisplay:"1.41421...",value:1.41421,difficulty:2,fact:"The square root of 2 is the diagonal of a unit square."},
 {id:"ks3_18",display:"\\sqrt{3}",displayType:"expression",valueDisplay:"1.73205...",value:1.73205,difficulty:2,fact:"The square root of 3 appears in equilateral triangles."},
-{id:"ks3_19",display:"\\sqrt{5}",displayType:"expression",valueDisplay:"2.23607...",value:2.23607,difficulty:2,fact:"The square root of 5 appears in the golden ratio formula."},
-{id:"ks3_20",display:"\\sqrt{10}",displayType:"expression",valueDisplay:"3.16228...",value:3.16228,difficulty:3,fact:"The square root of 10 is approximately 3.162. Slightly bigger than pi -- a tricky comparison!"},
+{id:"ks3_19",display:"\\sqrt{5}",displayType:"expression",valueDisplay:"\\approx 2.23607",value:2.23607,difficulty:2,fact:"The square root of 5 appears in the golden ratio formula."},
+{id:"ks3_20",display:"\\sqrt{10}",displayType:"expression",valueDisplay:"\\approx 3.16228",value:3.16228,difficulty:3,fact:"The square root of 10 is approximately 3.162. Slightly bigger than pi -- a tricky comparison!"},
 {id:"ks3_21",display:"\\text{Seconds in a day}",displayType:"description",valueDisplay:"86{,}400",value:86400,difficulty:2,fact:"24 x 60 x 60 = 86,400 seconds in every day."},
 {id:"ks3_22",display:"\\text{Days in a year}",displayType:"description",valueDisplay:"365",value:365,difficulty:1,fact:"Actually 365.2422 days -- which is why we need leap years."},
 {id:"ks3_23",display:"\\text{Hours in a year}",displayType:"description",valueDisplay:"8{,}760",value:8760,difficulty:2,fact:"365 x 24 = 8,760 hours."},
@@ -266,7 +266,7 @@ const KS3_CARDS = [
 {id:"ks3_28",display:"4^4",displayType:"expression",valueDisplay:"256",value:256,difficulty:3,fact:"4 to the power 4 = 256 = 2 to the power 8."},
 {id:"ks3_29",display:"11^2",displayType:"expression",valueDisplay:"121",value:121,difficulty:1,fact:"11 squared = 121. A palindrome number."},
 {id:"ks3_30",display:"13^2",displayType:"expression",valueDisplay:"169",value:169,difficulty:2,fact:"13 squared = 169. Part of the 5-12-13 Pythagorean triple."},
-{id:"ks3_31",display:"\\text{Grains on chessboard (first half)}",displayType:"description",valueDisplay:"2^{32} - 1 \\approx 4.3 \\text{ billion}",value:4294967295,difficulty:3,fact:"The first 32 squares hold about 4.3 billion grains."},
+{id:"ks3_31",display:"\\text{Grains on the first 32 squares of a chessboard (1, then doubling)}",displayType:"description",valueDisplay:"2^{32} - 1 \\approx 4.3 \\text{ billion}",value:4294967295,difficulty:3,fact:"The first 32 squares hold about 4.3 billion grains."},
 {id:"ks3_32",display:"\\text{Speed of light (m/s)}",displayType:"description",valueDisplay:"299{,}792{,}458",value:299792458,difficulty:2,fact:"Light travels 300 million metres every second."},
 {id:"ks3_33",display:"\\text{Distance to Moon (km)}",displayType:"description",valueDisplay:"384{,}400",value:384400,difficulty:2,fact:"About 384,400 km."},
 {id:"ks3_34",display:"\\text{Distance to Sun (km)}",displayType:"description",valueDisplay:"149{,}600{,}000",value:149600000,difficulty:2,fact:"About 150 million km. Light takes 8 minutes 20 seconds."},
@@ -293,26 +293,26 @@ const GCSE_CARDS = [
 {id:"gcse_12",display:"\\text{Golden ratio } (\\varphi)",displayType:"name",valueDisplay:"1.61803...",value:1.61803,difficulty:2,fact:"The golden ratio = (1 + the square root of 5) / 2. Found in the Fibonacci sequence."},
 {id:"gcse_13",display:"\\dfrac{1+\\sqrt{5}}{2}",displayType:"expression",valueDisplay:"1.61803...",value:1.61803,difficulty:3,fact:"The golden ratio. It satisfies the equation: phi squared = phi + 1."},
 {id:"gcse_14",display:"\\ln(2)",displayType:"expression",valueDisplay:"0.6931...",value:0.6931,difficulty:3,fact:"The natural log of 2. Doubling time = 0.693 / rate."},
-{id:"gcse_15",display:"\\ln(10)",displayType:"expression",valueDisplay:"2.3026...",value:2.3026,difficulty:3,fact:"ln(10) is approximately 2.303."},
-{id:"gcse_16",display:"1.05^{10}",displayType:"expression",valueDisplay:"1.6289...",value:1.6289,difficulty:3,fact:"5% compound for 10 years: 1 pound becomes 1.63 pounds."},
+{id:"gcse_15",display:"\\ln(10)",displayType:"expression",valueDisplay:"\\approx 2.3026",value:2.3026,difficulty:3,fact:"ln(10) is approximately 2.303."},
+{id:"gcse_16",display:"1.05^{10}",displayType:"expression",valueDisplay:"\\approx 1.6289",value:1.6289,difficulty:3,fact:"5% compound for 10 years: 1 pound becomes 1.63 pounds."},
 {id:"gcse_17",display:"1.1^{10}",displayType:"expression",valueDisplay:"2.5937...",value:2.5937,difficulty:3,fact:"10% compound for 10 years more than doubles."},
-{id:"gcse_18",display:"0.95^{20}",displayType:"expression",valueDisplay:"0.3585...",value:0.3585,difficulty:4,fact:"5% annual decline over 20 years: only 35.8% left."},
-{id:"gcse_19",display:"1.02^{35}",displayType:"expression",valueDisplay:"2.0000...",value:1.9999,difficulty:5,fact:"At 2% growth, 35 years to double. Rule of 70: 70 / rate."},
+{id:"gcse_18",display:"0.95^{20}",displayType:"expression",valueDisplay:"\\approx 0.3585",value:0.3585,difficulty:4,fact:"5% annual decline over 20 years: only 35.8% left."},
+{id:"gcse_19",display:"1.02^{35}",displayType:"expression",valueDisplay:"\\approx 1.9999",value:1.9999,difficulty:5,fact:"At 2% growth, 35 years to double. Rule of 70: 70 / rate."},
 {id:"gcse_20",display:"\\pi^2",displayType:"expression",valueDisplay:"9.8696...",value:9.8696,difficulty:3,fact:"Pi squared is approximately 9.87. Close to g = 9.81 m/s squared."},
 {id:"gcse_21",display:"e^2",displayType:"expression",valueDisplay:"7.389...",value:7.389,difficulty:3,fact:"e squared is approximately 7.389. Between 7 and 8."},
-{id:"gcse_22",display:"3\\pi",displayType:"expression",valueDisplay:"9.4248...",value:9.4248,difficulty:3,fact:"3 times pi is approximately 9.425. Slightly less than pi squared."},
+{id:"gcse_22",display:"3\\pi",displayType:"expression",valueDisplay:"\\approx 9.4248",value:9.4248,difficulty:3,fact:"3 times pi is approximately 9.425. Slightly less than pi squared."},
 {id:"gcse_23",display:"\\varphi^2",displayType:"expression",valueDisplay:"2.618...",value:2.618,difficulty:4,fact:"The golden ratio squared = the golden ratio + 1 = 2.618."},
 {id:"gcse_24",display:"e + 1",displayType:"expression",valueDisplay:"3.71828...",value:3.71828,difficulty:4,fact:"e + 1 is approximately 3.718. Bigger than pi."},
-{id:"gcse_25",display:"\\sqrt{2} + \\sqrt{3}",displayType:"expression",valueDisplay:"3.1463...",value:3.1463,difficulty:5,fact:"The square root of 2 + the square root of 3 is approximately 3.146. Astonishingly close to pi!"},
-{id:"gcse_26",display:"\\sqrt{7}",displayType:"expression",valueDisplay:"2.6458...",value:2.6458,difficulty:3,fact:"The square root of 7 is approximately 2.646."},
+{id:"gcse_25",display:"\\sqrt{2} + \\sqrt{3}",displayType:"expression",valueDisplay:"\\approx 3.1463",value:3.1463,difficulty:5,fact:"The square root of 2 + the square root of 3 is approximately 3.146. Astonishingly close to pi!"},
+{id:"gcse_26",display:"\\sqrt{7}",displayType:"expression",valueDisplay:"\\approx 2.6458",value:2.6458,difficulty:3,fact:"The square root of 7 is approximately 2.646."},
 {id:"gcse_27",display:"3\\sqrt{2}",displayType:"expression",valueDisplay:"4.2426...",value:4.2426,difficulty:3,fact:"3 times the square root of 2 is approximately 4.243. The diagonal of a 3x3 square."},
-{id:"gcse_28",display:"\\sqrt{50}",displayType:"expression",valueDisplay:"7.0711...",value:7.0711,difficulty:3,fact:"The square root of 50 = 5 times the square root of 2, which is approximately 7.071. Very close to 7."},
+{id:"gcse_28",display:"\\sqrt{50}",displayType:"expression",valueDisplay:"\\approx 7.0711",value:7.0711,difficulty:3,fact:"The square root of 50 = 5 times the square root of 2, which is approximately 7.071. Very close to 7."},
 {id:"gcse_29",display:"\\text{Speed of sound (m/s)}",displayType:"description",valueDisplay:"343",value:343,difficulty:2,fact:"343 m/s. Also 7 cubed = 343."},
 {id:"gcse_30",display:"\\text{Absolute zero (°C)}",displayType:"description",valueDisplay:"-273.15",value:-273.15,difficulty:2,fact:"0 Kelvin = -273.15 degrees Celsius."},
 {id:"gcse_31",display:"\\text{Earth's radius (km)}",displayType:"description",valueDisplay:"6{,}371",value:6371,difficulty:2,fact:"About 6,371 km on average."},
 {id:"gcse_32",display:"\\text{Population of Earth}",displayType:"description",valueDisplay:"\\approx 8 \\times 10^9",value:8000000000,difficulty:2,fact:"About 8 billion people."},
 {id:"gcse_33",display:"\\text{100th prime}",displayType:"description",valueDisplay:"541",value:541,difficulty:4,fact:"The 100th prime is 541."},
-{id:"gcse_34",display:"\\text{Largest Mersenne prime exponent}",displayType:"description",valueDisplay:"136{,}279{,}841",value:136279841,difficulty:3,fact:"2 to the power 136,279,841 minus 1 is prime."},
+{id:"gcse_34",display:"\\text{Largest known Mersenne prime exponent}",displayType:"description",valueDisplay:"136{,}279{,}841",value:136279841,difficulty:3,fact:"2 to the power 136,279,841 minus 1 is prime."},
 {id:"gcse_35",display:"\\text{Third perfect number}",displayType:"description",valueDisplay:"496",value:496,difficulty:3,fact:"496 = 1+2+4+8+16+31+62+124+248."},
 {id:"gcse_36",display:"\\left(\\tfrac{3}{2}\\right)^{12}",displayType:"expression",valueDisplay:"129.746...",value:129.746,difficulty:4,fact:"Twelve perfect fifths almost equals seven octaves (128)."},
 {id:"gcse_37",display:"2^{2^3}",displayType:"expression",valueDisplay:"256",value:256,difficulty:3,fact:"2 to the power (2 cubed) = 2 to the power 8 = 256."},
@@ -322,28 +322,28 @@ const GCSE_CARDS = [
 ];
 
 const ALEVEL_CARDS = [
-{id:"al_01",display:"e^\\pi",displayType:"expression",valueDisplay:"23.1407...",value:23.1407,difficulty:4,fact:"e to the power pi is approximately 23.14. Gelfond's constant."},
-{id:"al_02",display:"\\pi^e",displayType:"expression",valueDisplay:"22.4592...",value:22.4592,difficulty:4,fact:"Pi to the power e is approximately 22.46. Less than e to the power pi."},
-{id:"al_03",display:"e^e",displayType:"expression",valueDisplay:"15.1543...",value:15.1543,difficulty:3,fact:"e to the power e is approximately 15.15."},
-{id:"al_04",display:"\\pi^\\pi",displayType:"expression",valueDisplay:"36.4622...",value:36.4622,difficulty:3,fact:"Pi to the power pi is approximately 36.46."},
+{id:"al_01",display:"e^\\pi",displayType:"expression",valueDisplay:"\\approx 23.1407",value:23.1407,difficulty:4,fact:"e to the power pi is approximately 23.14. Gelfond's constant."},
+{id:"al_02",display:"\\pi^e",displayType:"expression",valueDisplay:"\\approx 22.4592",value:22.4592,difficulty:4,fact:"Pi to the power e is approximately 22.46. Less than e to the power pi."},
+{id:"al_03",display:"e^e",displayType:"expression",valueDisplay:"\\approx 15.1543",value:15.1543,difficulty:3,fact:"e to the power e is approximately 15.15."},
+{id:"al_04",display:"\\pi^\\pi",displayType:"expression",valueDisplay:"\\approx 36.4622",value:36.4622,difficulty:3,fact:"Pi to the power pi is approximately 36.46."},
 {id:"al_05",display:"\\ln(\\pi)",displayType:"expression",valueDisplay:"1.1447...",value:1.1447,difficulty:4,fact:"ln(pi) is approximately 1.145."},
 {id:"al_06",display:"\\sum_{n=1}^{\\infty} \\dfrac{1}{n^2}",displayType:"expression",valueDisplay:"\\dfrac{\\pi^2}{6} \\approx 1.6449",value:1.6449,difficulty:4,fact:"The Basel problem -- solved by Euler in 1735."},
 {id:"al_07",display:"\\sum_{n=0}^{\\infty} \\dfrac{1}{n!}",displayType:"expression",valueDisplay:"e \\approx 2.71828",value:2.71828,difficulty:3,fact:"This infinite series defines e."},
 {id:"al_08",display:"\\sum_{n=1}^{100} n",displayType:"expression",valueDisplay:"5{,}050",value:5050,difficulty:2,fact:"Gauss found this as a child: n(n+1)/2."},
 {id:"al_09",display:"\\sum_{n=1}^{100} n^2",displayType:"expression",valueDisplay:"338{,}350",value:338350,difficulty:3,fact:"Sum of first 100 squares."},
 {id:"al_10",display:"\\sum_{n=1}^{\\infty} \\dfrac{1}{2^n}",displayType:"expression",valueDisplay:"1",value:1,difficulty:2,fact:"1/2 + 1/4 + 1/8 + ... = 1 exactly."},
-{id:"al_11",display:"\\log_{10}(2)",displayType:"expression",valueDisplay:"0.30103...",value:0.30103,difficulty:3,fact:"log base 10 of 2 is approximately 0.301. Why 2 to the power 10 is approximately 10 cubed."},
-{id:"al_12",display:"\\log_2(10)",displayType:"expression",valueDisplay:"3.32193...",value:3.32193,difficulty:3,fact:"log base 2 of 10 is approximately 3.322. Bits per decimal digit."},
-{id:"al_13",display:"\\log_{10}(7)",displayType:"expression",valueDisplay:"0.8451...",value:0.8451,difficulty:4,fact:"log base 10 of 7 is approximately 0.845."},
-{id:"al_14",display:"\\text{Euler-Mascheroni } (\\gamma)",displayType:"name",valueDisplay:"0.57722...",value:0.57722,difficulty:4,fact:"Nobody knows if the Euler-Mascheroni constant is rational or irrational."},
-{id:"al_15",display:"\\text{Catalan's constant } (G)",displayType:"name",valueDisplay:"0.91597...",value:0.91597,difficulty:5,fact:"G = 1 - 1/9 + 1/25 - 1/49 + ..."},
-{id:"al_16",display:"\\text{Ap\\'{e}ry's constant } \\zeta(3)",displayType:"name",valueDisplay:"1.20206...",value:1.20206,difficulty:5,fact:"Zeta(3) = 1 + 1/8 + 1/27 + ... Proved irrational in 1978."},
+{id:"al_11",display:"\\log_{10}(2)",displayType:"expression",valueDisplay:"\\approx 0.30103",value:0.30103,difficulty:3,fact:"log base 10 of 2 is approximately 0.301. Why 2 to the power 10 is approximately 10 cubed."},
+{id:"al_12",display:"\\log_2(10)",displayType:"expression",valueDisplay:"\\approx 3.32193",value:3.32193,difficulty:3,fact:"log base 2 of 10 is approximately 3.322. Bits per decimal digit."},
+{id:"al_13",display:"\\log_{10}(7)",displayType:"expression",valueDisplay:"\\approx 0.8451",value:0.8451,difficulty:4,fact:"log base 10 of 7 is approximately 0.845."},
+{id:"al_14",display:"\\text{Euler-Mascheroni } (\\gamma)",displayType:"name",valueDisplay:"\\approx 0.57722",value:0.57722,difficulty:4,fact:"Nobody knows if the Euler-Mascheroni constant is rational or irrational."},
+{id:"al_15",display:"\\text{Catalan's constant } (G)",displayType:"name",valueDisplay:"\\approx 0.91597",value:0.91597,difficulty:5,fact:"G = 1 - 1/9 + 1/25 - 1/49 + ..."},
+{id:"al_16",display:"\\text{Ap\\'{e}ry's constant } \\zeta(3)",displayType:"name",valueDisplay:"\\approx 1.20206",value:1.20206,difficulty:5,fact:"Zeta(3) = 1 + 1/8 + 1/27 + ... Proved irrational in 1978."},
 {id:"al_17",display:"\\pi^3",displayType:"expression",valueDisplay:"31.006...",value:31.006,difficulty:5,fact:"Pi cubed is approximately 31.006. Just barely above 31."},
-{id:"al_18",display:"e^3",displayType:"expression",valueDisplay:"20.086...",value:20.086,difficulty:4,fact:"e cubed is approximately 20.086. Just above 20."},
+{id:"al_18",display:"e^3",displayType:"expression",valueDisplay:"\\approx 20.086",value:20.086,difficulty:4,fact:"e cubed is approximately 20.086. Just above 20."},
 {id:"al_19",display:"\\sqrt[3]{12}",displayType:"expression",valueDisplay:"2.2894...",value:2.2894,difficulty:5,fact:"The cube root of 12 is approximately 2.289."},
 {id:"al_20",display:"\\sqrt{e}",displayType:"expression",valueDisplay:"1.6487...",value:1.6487,difficulty:5,fact:"The square root of e is approximately 1.649. Very close to the golden ratio, which is approximately 1.618."},
 {id:"al_21",display:"e^{i\\pi} + 1",displayType:"expression",valueDisplay:"0",value:0,difficulty:2,fact:"Euler's identity. The most beautiful equation."},
-{id:"al_22",display:"\\sin(1) \\text{ (radians)}",displayType:"expression",valueDisplay:"0.8415...",value:0.8415,difficulty:4,fact:"sin(1 radian) is approximately 0.841."},
+{id:"al_22",display:"\\sin(1) \\text{ (radians)}",displayType:"expression",valueDisplay:"\\approx 0.8415",value:0.8415,difficulty:4,fact:"sin(1 radian) is approximately 0.841."},
 {id:"al_23",display:"\\cos(1) \\text{ (radians)}",displayType:"expression",valueDisplay:"0.5403...",value:0.5403,difficulty:4,fact:"cos(1 radian) is approximately 0.540."},
 {id:"al_24",display:"\\tan(\\tfrac{\\pi}{3})",displayType:"expression",valueDisplay:"\\sqrt{3} \\approx 1.7321",value:1.7321,difficulty:3,fact:"tan(60 degrees) = the square root of 3."},
 {id:"al_25",display:"\\text{Primes under 1{,}000}",displayType:"description",valueDisplay:"168",value:168,difficulty:4,fact:"168 primes under 1,000."},
@@ -351,17 +351,17 @@ const ALEVEL_CARDS = [
 {id:"al_27",display:"\\text{Digits in } 52!",displayType:"description",valueDisplay:"68",value:68,difficulty:3,fact:"52! has 68 digits."},
 {id:"al_28",display:"\\binom{52}{13}",displayType:"expression",valueDisplay:"635{,}013{,}559{,}600",value:635013559600,difficulty:3,fact:"The number of possible bridge hands."},
 {id:"al_29",display:"\\dfrac{52!}{(13!)^4}",displayType:"expression",valueDisplay:"\\approx 5.36 \\times 10^{28}",value:5.36e28,magnitude:28,difficulty:3,fact:"Ways to deal four bridge hands."},
-{id:"al_30",display:"2^{64}",displayType:"expression",valueDisplay:"1.84 \\times 10^{19}",value:1.84e19,magnitude:19,difficulty:2,fact:"2 to the power 64 is approximately 1.84 times 10 to the power 19. Total chessboard grains."},
+{id:"al_30",display:"2^{64}",displayType:"expression",valueDisplay:"1.84 \\times 10^{19}",value:1.84e19,magnitude:19,difficulty:2,fact:"2 to the power 64 is approximately 1.84 times 10 to the power 19. One less than this is the total number of grains on the whole chessboard."},
 {id:"al_31",display:"\\text{Googol } (10^{100})",displayType:"name",valueDisplay:"10^{100}",value:1e100,magnitude:100,difficulty:3,fact:"Larger than atoms in the observable universe."},
 {id:"al_32",display:"\\text{Googolplex } (10^{10^{100}})",displayType:"name",valueDisplay:"10^{10^{100}}",value:Infinity,magnitude:1e100,difficulty:3,fact:"Can't be written out -- not enough particles in the universe for digits."},
 {id:"al_33",display:"\\text{Atoms in the universe}",displayType:"description",valueDisplay:"\\approx 10^{80}",value:1e80,magnitude:80,difficulty:2,fact:"About 10 to the power 80 atoms."},
 {id:"al_34",display:"\\int_0^1 x^x \\, dx",displayType:"expression",valueDisplay:"0.7834...",value:0.7834,difficulty:5,fact:"The 'sophomore's dream' -- no closed form."},
 {id:"al_35",display:"\\int_0^{\\infty} e^{-x^2} dx",displayType:"expression",valueDisplay:"\\dfrac{\\sqrt{\\pi}}{2} \\approx 0.8862",value:0.8862,difficulty:4,fact:"The Gaussian integral."},
-{id:"al_36",display:"1 - \\dfrac{1}{e}",displayType:"expression",valueDisplay:"0.6321...",value:0.6321,difficulty:4,fact:"P(at least one fixed point in random permutation)."},
-{id:"al_37",display:"\\dfrac{1}{e}",displayType:"expression",valueDisplay:"0.3679...",value:0.3679,difficulty:3,fact:"P(no fixed point) for large n."},
+{id:"al_36",display:"1 - \\dfrac{1}{e}",displayType:"expression",valueDisplay:"0.6321...",value:0.6321,difficulty:4,fact:"As n gets large, P(at least one fixed point in a random permutation of n objects) approaches this."},
+{id:"al_37",display:"\\dfrac{1}{e}",displayType:"expression",valueDisplay:"\\approx 0.3679",value:0.3679,difficulty:3,fact:"P(no fixed point) for large n."},
 {id:"al_38",display:"\\sum_{n=1}^{\\infty} \\dfrac{1}{n}",displayType:"expression",valueDisplay:"\\infty",value:Infinity,difficulty:3,fact:"The harmonic series diverges -- extremely slowly."},
 {id:"al_39",display:"\\prod_{p \\text{ prime}} \\dfrac{1}{1-p^{-2}}",displayType:"expression",valueDisplay:"\\dfrac{\\pi^2}{6}",value:1.6449,difficulty:5,fact:"Euler's product formula connects primes to pi."},
-{id:"al_40",display:"e^{i \\cdot 0} + e^{i\\pi/2} + e^{i\\pi} + e^{i3\\pi/2}",displayType:"expression",valueDisplay:"0",value:0,difficulty:4,fact:"The four roots of unity sum to zero."}
+{id:"al_40",display:"e^{i \\cdot 0} + e^{i\\pi/2} + e^{i\\pi} + e^{i3\\pi/2}",displayType:"expression",valueDisplay:"0",value:0,difficulty:4,fact:"The four fourth roots of unity (1, i, \u22121, \u2212i) sum to zero."}
 ];
 
 const RAZOR_PAIRS = [
@@ -397,7 +397,7 @@ document.querySelectorAll('.mode-btn').forEach(b=>{
     b.classList.add('active');
     currentMode=b.dataset.mode;
     document.getElementById('modeDesc').textContent=currentMode==='hol'
-      ? 'Two cards -- one revealed, one hidden. Is the hidden value higher or lower? Build your streak!'
+      ? 'Two cards -- one revealed, one hidden. Is the hidden value higher or lower? If the two are equal, either answer is right. Build your streak!'
       : 'A grid of face-down cards. Match each expression to its value. Fewest attempts wins!';
   });
 });

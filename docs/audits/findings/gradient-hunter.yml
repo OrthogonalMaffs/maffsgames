@@ -87,11 +87,14 @@ findings:
   where: 'games/gradient-hunter/index.html: gh_gcse_015, gh_core_013, gh_gcse_003, gh_gcse_014, gh_gcse_011, gh_gcse_002,
     gh_gcse_004, gh_alevel_008 (and the other y-value readings)'
   summary: 'The class behind s1-002: wrong options that read the gradient as a y-value ("The ball is 10 metres high",
-    "The bath is 5 cm deep") are true at some instant where the curve reaches that value. None changes the marking (the
-    key is plainly the best answer). One rewording covers the class ("The gradient means …"), over about twenty options:
-    Jon''s call'
+    "The bath is 5 cm deep") are true at some instant where the curve reaches that value. None changes the
+    marking (the key is plainly the best answer). One rewording covers the class ("The gradient means …"), over
+    about twenty options: Jon''s call Fixed under R5: twelve wrong options that read the gradient as a y- or
+    x-value, true where the graph reaches that value, are worded "The gradient means ..." like s1-002''s; the
+    false ones are left.'
   evidence: 'SWEEP-1, batch 5'
-  status: open
+  status: fixed
+  pr: 371
 - id: gradient-hunter-s1-004
   severity: MEDIUM
   jc: false
@@ -99,18 +102,23 @@ findings:
   level: core, alevel
   where: games/gradient-hunter/index.html gh_core_015 (:348-356), gh_alevel_009, :170 (start screen)
   summary: 'core_015''s spline rises between years 3 and 4 though the car loses value. Open (Split: the parent entry
-    held 3 defects; the others are gradient-hunter-s1-005, gradient-hunter-s1-006.)'
+    held 3 defects; the others are gradient-hunter-s1-005, gradient-hunter-s1-006.) Fixed under R3: core_015''s
+    plotted values no longer rise between years 3 and 4 (the year-3 value is 10,500); the chord and its key are
+    unchanged.'
   evidence: 'SWEEP-1, batch 5'
-  status: open
+  status: fixed
+  pr: 371
 - id: gradient-hunter-s1-005
   severity: LOW
   jc: false
   class: NEW:wording
   level: core, alevel
   where: games/gradient-hunter/index.html gh_core_015 (:348-356), gh_alevel_009, :170 (start screen)
-  summary: 'alevel_009 writes 116.7 with no ≈. Open (Split from gradient-hunter-s1-004, SWEEP-1-RULINGS step 1.)'
+  summary: 'alevel_009 writes 116.7 with no ≈. Open (Split from gradient-hunter-s1-004, SWEEP-1-RULINGS step 1.) Fixed
+    under R1: "gradient approximately 116.7".'
   evidence: 'SWEEP-1, batch 5'
-  status: open
+  status: fixed
+  pr: 371
 - id: gradient-hunter-s1-006
   severity: LOW
   jc: false
@@ -118,6 +126,8 @@ findings:
   level: core, alevel
   where: games/gradient-hunter/index.html gh_core_015 (:348-356), gh_alevel_009, :170 (start screen)
   summary: 'The start screen says click two points "to find the gradient" though the student types it. Open (Split
-    from gradient-hunter-s1-004, SWEEP-1-RULINGS step 1.)'
+    from gradient-hunter-s1-004, SWEEP-1-RULINGS step 1.) Fixed under R3: the start screen and the instruction
+    say the student works out the gradient.'
   evidence: 'SWEEP-1, batch 5'
-  status: open
+  status: fixed
+  pr: 371

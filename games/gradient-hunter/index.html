@@ -152,7 +152,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <div id="menuScreen" class="screen active">
   <div class="header"><h1>Gradient Hunter</h1><div class="sub">Click points, find gradients, interpret rates of change</div>  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
 </div>
-  <div class="menu-info">Click two points on a real-world graph to find the gradient of the chord. Then interpret what that gradient means in context. Practise rates of change for Core Maths, GCSE, and A-Level.</div>
+  <div class="menu-info">Click two points on a real-world graph and work out the gradient of the chord. Then interpret what that gradient means in context. Practise rates of change for Core Maths, GCSE, and A-Level.</div>
   <div style="text-align:center;font-size:.72rem;color:var(--muted);margin:.6rem 0 .3rem;text-transform:uppercase;letter-spacing:.04em;font-weight:600">Choose Level</div>
   <div class="level-grid">
     <button class="level-btn" data-level="gcse" onclick="selLevel(this)">GCSE<span class="lsub">Year 10-11</span></button>
@@ -327,7 +327,7 @@ core: [
    chordA:{x:2,y:20,label:'A'},chordB:{x:7,y:45,label:'B'},gradientShown:5,
    interpretations:[
      {text:'Water depth increases by 5 cm per minute on average between minutes 2 and 7',correct:true},
-     {text:'The bath is 5 cm deep',correct:false},
+     {text:'The gradient means the bath is 5 cm deep',correct:false},
      {text:'5 litres of water flows in per minute',correct:false},
      {text:'The bath fills in 5 minutes',correct:false}
    ]},
@@ -343,7 +343,7 @@ core: [
    ]},
   {id:'gh_core_015',type:'reading',context:'A graph shows the value of a car over time.',
    xLabel:'Age (years)',yLabel:'Value (pounds)',xMin:0,xMax:6,yMin:4000,yMax:20000,
-   points:[[0,18000],[1,14000],[2,11500],[3,10000],[4,10000],[5,9000],[6,8000]],curveType:'smooth',
+   points:[[0,18000],[1,14000],[2,11500],[3,10500],[4,10000],[5,9000],[6,8000]],curveType:'smooth',
    chordA:{x:0,y:18000,label:'A'},chordB:{x:4,y:10000,label:'B'},gradientShown:-2000,
    interpretations:[
      {text:'The car loses an average of 2,000 pounds in value per year over the first 4 years',correct:true},
@@ -358,7 +358,7 @@ core: [
    interpretations:[
      {text:'The factory uses electricity at an average rate of 30 kWh per hour between 8am and 4pm',correct:true},
      {text:'30 machines are running',correct:false},
-     {text:'The factory uses 30 kWh in total',correct:false},
+     {text:'The gradient means the factory uses 30 kWh in total',correct:false},
      {text:'Electricity usage doubles every 30 hours',correct:false}
    ]},
   {id:'gh_core_017',type:'reading',context:'A graph tracks the number of social media followers for a new account.',
@@ -367,7 +367,7 @@ core: [
    chordA:{x:10,y:200,label:'A'},chordB:{x:40,y:1400,label:'B'},gradientShown:40,
    interpretations:[
      {text:'The account gains an average of 40 followers per day between days 10 and 40',correct:true},
-     {text:'There are 40 followers in total',correct:false},
+     {text:'The gradient means there are 40 followers in total',correct:false},
      {text:'The account doubles every 40 days',correct:false},
      {text:'40% of visitors follow the account',correct:false}
    ]},
@@ -397,7 +397,7 @@ core: [
    chordA:{x:20,y:15,label:'A'},chordB:{x:60,y:55,label:'B'},gradientShown:1,
    interpretations:[
      {text:'The student revises for an average of 1 hour per day between days 20 and 60',correct:true},
-     {text:'The student has done 1 hour of revision in total',correct:false},
+     {text:'The gradient means the student has done 1 hour of revision in total',correct:false},
      {text:'Revision increases by 1% per day',correct:false},
      {text:'A gradient of 1 means the graph is horizontal',correct:false}
    ]}
@@ -419,7 +419,7 @@ gcse: [
    pointA:{x:2,y:5,label:'A'},pointB:{x:8,y:19,label:'B'},gradient:2.33,
    interpretations:[
      {text:'The plant grows approximately 2.33 cm per day on average between days 2 and 8',correct:true},
-     {text:'The plant is 2.33 cm tall',correct:false},
+     {text:'The gradient means the plant is 2.33 cm tall',correct:false},
      {text:'The plant grows by 2.33% each day',correct:false}
    ]},
   {id:'gh_gcse_003',type:'calculate',context:'Water is poured into a tank at a steady rate. The depth of water is recorded.',
@@ -428,7 +428,7 @@ gcse: [
    pointA:{x:0,y:0,label:'A'},pointB:{x:8,y:40,label:'B'},gradient:5,
    interpretations:[
      {text:'The water depth increases by 5 cm per minute',correct:true},
-     {text:'There are 5 cm of water in the tank',correct:false},
+     {text:'The gradient means there are 5 cm of water in the tank',correct:false},
      {text:'The tank holds 5 litres',correct:false}
    ]},
   {id:'gh_gcse_004',type:'calculate',context:'A taxi charges based on distance. The total fare is recorded.',
@@ -437,7 +437,7 @@ gcse: [
    pointA:{x:2,y:6,label:'A'},pointB:{x:8,y:15,label:'B'},gradient:1.5,
    interpretations:[
      {text:'The fare increases by 1.50 pounds per mile',correct:true},
-     {text:'The taxi has driven 1.5 miles',correct:false},
+     {text:'The gradient means the taxi has driven 1.5 miles',correct:false},
      {text:'The total fare is 1.50 pounds',correct:false}
    ]},
   {id:'gh_gcse_005',type:'calculate',context:'A phone battery drains during the day. Charge percentage is recorded.',
@@ -502,7 +502,7 @@ gcse: [
    chordA:{x:2,y:10,label:'A'},chordB:{x:10,y:50,label:'B'},gradientShown:5,
    interpretations:[
      {text:'The person saves 5 pounds per week on average between weeks 2 and 10',correct:true},
-     {text:'They have saved 5 pounds in total',correct:false},
+     {text:'The gradient means they have saved 5 pounds in total',correct:false},
      {text:'They save 5% more each week',correct:false},
      {text:'They will have 5 pounds at the end',correct:false}
    ]},
@@ -532,7 +532,7 @@ gcse: [
    chordA:{x:1,y:4,label:'A'},chordB:{x:5,y:1,label:'B'},gradientShown:-0.75,
    interpretations:[
      {text:'Paint is used at a rate of 0.75 litres per hour on average between hours 1 and 5',correct:true},
-     {text:'0.75 litres of paint remains',correct:false},
+     {text:'The gradient means 0.75 litres of paint remains',correct:false},
      {text:'The negative sign means paint is being added',correct:false},
      {text:'The tin holds 0.75 litres',correct:false}
    ]},
@@ -542,7 +542,7 @@ gcse: [
    chordA:{x:0,y:1,label:'A'},chordB:{x:2,y:21,label:'B'},gradientShown:10,
    interpretations:[
      {text:'The ball rises at an average of 10 metres per second in the first 2 seconds',correct:true},
-     {text:'The ball is 10 metres high',correct:false},
+     {text:'The gradient means the ball is 10 metres high',correct:false},
      {text:'The ball weighs 10 kg',correct:false},
      {text:'The ball is always moving at 10 m/s',correct:false}
    ]}
@@ -612,7 +612,7 @@ alevel: [
      {text:'The average velocity between t=1 and t=5 is 4 m/s',correct:true},
      {text:'The instantaneous velocity at t=3 is 4 m/s',correct:false},
      {text:'The particle is decelerating at 4 m/s squared',correct:false},
-     {text:'The particle has travelled 4 metres in total',correct:false}
+     {text:'The gradient means the particle has travelled 4 metres in total',correct:false}
    ]},
   {id:'gh_alevel_008',type:'reading',context:'A velocity-time graph is shown. The chord between (2, 10) and (8, 34) has gradient 4.',
    xLabel:'Time (s)',yLabel:'Velocity (m/s)',xMin:0,xMax:10,yMin:0,yMax:40,
@@ -620,11 +620,11 @@ alevel: [
    chordA:{x:2,y:10,label:'A'},chordB:{x:8,y:34,label:'B'},gradientShown:4,
    interpretations:[
      {text:'The average acceleration between t=2 and t=8 is 4 m/s squared',correct:true},
-     {text:'The velocity is 4 m/s',correct:false},
+     {text:'The gradient means the velocity is 4 m/s',correct:false},
      {text:'The particle travels 4 metres',correct:false},
      {text:'Acceleration is constant at 4 m/s squared throughout',correct:false}
    ]},
-  {id:'gh_alevel_009',type:'reading',context:'An exponential growth model shows bacteria count. The chord from (0, 100) to (6, 800) has gradient 116.7. The tangent at t=3 has a gradient of 110, a little less steep than the chord.',
+  {id:'gh_alevel_009',type:'reading',context:'An exponential growth model shows bacteria count. The chord from (0, 100) to (6, 800) has gradient approximately 116.7. The tangent at t=3 has a gradient of 110, a little less steep than the chord.',
    xLabel:'Time (hours)',yLabel:'Bacteria count',xMin:0,xMax:8,yMin:0,yMax:1500,
    points:[[0,100],[1,130],[2,180],[3,270],[4,400],[5,580],[6,800],[7,1100],[8,1400]],curveType:'smooth',
    chordA:{x:0,y:100,label:'A'},chordB:{x:6,y:800,label:'B'},gradientShown:116.7,
@@ -939,7 +939,7 @@ function loadQuestion() {
     drawGraph(q, { showChord: false });
     startPulse();
     $('interactionArea').innerHTML = `
-      <div class="instruction">Click point ${q.pointA.label} then point ${q.pointB.label} to find the gradient of the chord.</div>
+      <div class="instruction">Click point ${q.pointA.label} then point ${q.pointB.label}, then work out the gradient of the chord.</div>
       <div class="click-status">
         <span class="pt" id="ptA">Point ${q.pointA.label}: waiting</span>
         <span class="pt" id="ptB">Point ${q.pointB.label}: waiting</span>

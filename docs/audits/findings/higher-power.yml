@@ -82,10 +82,13 @@ findings:
   class: NEW:convention-unstated
   level: ks3
   where: games/higher-power/index.html ks3_31
-  summary: '"Grains on chessboard (first half)" never states the rule (1 grain, doubling each square), and "first half"
-    could mean half the grains. Both readings beat every other KS3 card, so no answer is mis-marked. Label wording, open'
+  summary: '"Grains on chessboard (first half)" never states the rule (1 grain, doubling each square), and "first
+    half" could mean half the grains. Both readings beat every other KS3 card, so no answer is mis-marked.
+    Label wording, open Fixed under R2: the card reads "Grains on the first 32 squares of a chessboard (1, then
+    doubling)".'
   evidence: 'value "2^{32} − 1 ≈ 4.3 billion" (SWEEP-1, batch 4)'
-  status: open
+  status: fixed
+  pr: 371
 - id: higher-power-s1-003
   severity: LOW
   jc: false
@@ -94,18 +97,22 @@ findings:
   where: games/higher-power/index.html gcse_34, al_36, al_30, ks3_03, ks3_04, al_40, :574, :478
   summary: '"Largest Mersenne prime exponent" means the largest known. Wording, open (Split: the parent entry held 8
     defects; the others are higher-power-s1-004, higher-power-s1-005, higher-power-s1-006, higher-power-s1-007,
-    higher-power-s1-008, higher-power-s1-009, higher-power-s1-010.)'
+    higher-power-s1-008, higher-power-s1-009, higher-power-s1-010.) Fixed under R1: "Largest known Mersenne
+    prime exponent".'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 371
 - id: higher-power-s1-004
   severity: MEDIUM
   jc: false
   class: NEW:text-contradicts-content
   level: ks3, gcse, alevel
   where: games/higher-power/index.html gcse_34, al_36, al_30, ks3_03, ks3_04, al_40, :574, :478
-  summary: 'al_36''s 1 − 1/e holds only for large n. Open (Split from higher-power-s1-003, SWEEP-1-RULINGS step 1.)'
+  summary: 'al_36''s 1 − 1/e holds only for large n. Open (Split from higher-power-s1-003, SWEEP-1-RULINGS step 1.)
+    Fixed under R3: the fact says 1 − 1/e is the limit as n gets large.'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 371
 - id: higher-power-s1-005
   severity: MEDIUM
   jc: false
@@ -113,9 +120,11 @@ findings:
   level: ks3, gcse, alevel
   where: games/higher-power/index.html gcse_34, al_36, al_30, ks3_03, ks3_04, al_40, :574, :478
   summary: 'al_30 gives 2^64 for the board''s total (it is 2^64 − 1, as ks3_31 distinguishes). Open (Split from
-    higher-power-s1-003, SWEEP-1-RULINGS step 1.)'
+    higher-power-s1-003, SWEEP-1-RULINGS step 1.) Fixed under R3: the fact says 2^64 is one more than the
+    board''s total (the total is 2^64 − 1).'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 371
 - id: higher-power-s1-006
   severity: LOW
   jc: false
@@ -123,9 +132,11 @@ findings:
   level: ks3, gcse, alevel
   where: games/higher-power/index.html gcse_34, al_36, al_30, ks3_03, ks3_04, al_40, :574, :478
   summary: '"A megabyte is 2 to the power 20 bytes" (a mebibyte). Wording, open (Split from higher-power-s1-003,
-    SWEEP-1-RULINGS step 1.)'
+    SWEEP-1-RULINGS step 1.) Fixed under R1: the fact says a mebibyte is 2^20 bytes and a megabyte is usually
+    1,000,000.'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 371
 - id: higher-power-s1-007
   severity: LOW
   jc: false
@@ -133,9 +144,10 @@ findings:
   level: ks3, gcse, alevel
   where: games/higher-power/index.html gcse_34, al_36, al_30, ks3_03, ks3_04, al_40, :574, :478
   summary: '"The four roots of unity" (fourth roots). Wording, open (Split from higher-power-s1-003, SWEEP-1-RULINGS
-    step 1.)'
+    step 1.) Fixed under R1: "The four fourth roots of unity (1, i, −1, −i)".'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 371
 - id: higher-power-s1-008
   severity: LOW
   jc: false
@@ -143,9 +155,10 @@ findings:
   level: ks3, gcse, alevel
   where: games/higher-power/index.html gcse_34, al_36, al_30, ks3_03, ks3_04, al_40, :574, :478
   summary: 'A tie accepts either answer, never said. Wording, open (Split from higher-power-s1-003, SWEEP-1-RULINGS
-    step 1.)'
+    step 1.) Fixed under R2: the mode text says that if the two are equal, either answer is right.'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 371
 - id: higher-power-s1-009
   severity: LOW
   jc: false
@@ -153,9 +166,12 @@ findings:
   level: ks3, gcse, alevel
   where: games/higher-power/index.html gcse_34, al_36, al_30, ks3_03, ks3_04, al_40, :574, :478
   summary: 'About 21 value displays end "..." after a rounded digit. Wording, open (Split from higher-power-s1-003,
-    SWEEP-1-RULINGS step 1.)'
+    SWEEP-1-RULINGS step 1.) Fixed under R3: a decimal that is rounded is written with ≈ (23 cards), one that
+    is truncated keeps "..."; gcse_19 shows ≈ 1.9999, its stored value (it showed 2.0000). The verifier
+    recomputes every one with mpmath. higher-power-s1-010 (pickRazorPair and the level) stays open.'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 371
 - id: higher-power-s1-010
   severity: LOW
   jc: false

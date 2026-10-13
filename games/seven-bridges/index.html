@@ -180,7 +180,7 @@ body.accessible p,body.accessible .status-msg,body.accessible .hint-bar{line-hei
     <ol>
       <li>Click any vertex (circle) to set your starting position</li>
       <li>Click an adjacent vertex to cross the edge between them</li>
-      <li>Cross every edge exactly once to solve the puzzle</li>
+      <li>Cross every edge exactly once to solve the puzzle. You may finish at a different vertex from where you started</li>
       <li>Some puzzles are impossible. Spot them and click IMPOSSIBLE</li>
     </ol>
   </div>
@@ -580,7 +580,7 @@ function showHint() {
   var p = S.puzzle;
 
   if (S.hintLevel === 1) {
-    document.getElementById('hintText').innerHTML = '<strong>Hint 1:</strong> Count the connections at each vertex. How many have an odd number?';
+    document.getElementById('hintText').innerHTML = '<strong>Hint 1:</strong> Count the lines at each vertex (two lines to the same vertex count as two). How many vertices have an odd number?';
     document.getElementById('hintBtn').textContent = 'Next Hint';
   } else if (S.hintLevel === 2) {
     var degrees = computeDegrees();
@@ -693,7 +693,7 @@ function declareImpossible() {
     logAnswer(true);
   } else {
     S.scores.push(0);
-    showStatus('fail', '<h4>\u2717 Actually possible!</h4><p>This graph has ' + p.oddVertices.length + ' odd-degree vert' + (p.oddVertices.length === 1 ? 'ex' : 'ices') + '. Watch the solution...</p>');
+    showStatus('fail', '<h4>\u2717 Actually possible!</h4><p>This graph has ' + p.oddVertices.length + ' odd-degree vert' + (p.oddVertices.length === 1 ? 'ex' : 'ices') + ', and a path exists when there are 0 or 2. Watch the solution...</p>');
     logAnswer(false);
 
     if (p.sampleSolution) {

@@ -89,6 +89,59 @@ def check_perfect(fails, pools):
                              % (lv, c['id'], fact, n))
 
 
+def true_values():
+    """The exact value (30 digits) of every card whose valueDisplay is a decimal expansion, by id."""
+    from mpmath import mp, mpf, pi, e, sqrt, log, euler, catalan, zeta, sin, cos, quad, cbrt, phi
+    mp.dps = 30
+    return {'ks3_16': pi, 'ks3_17': sqrt(2), 'ks3_18': sqrt(3), 'ks3_19': sqrt(5), 'ks3_20': sqrt(10), 'ks3_40': pi ** 2,
+            'gcse_10': sqrt(200), 'gcse_11': e, 'gcse_12': phi, 'gcse_13': (1 + sqrt(5)) / 2, 'gcse_14': log(2), 'gcse_15': log(10),
+            'gcse_16': mpf('1.05') ** 10, 'gcse_17': mpf('1.1') ** 10, 'gcse_18': mpf('0.95') ** 20, 'gcse_19': mpf('1.02') ** 35,
+            'gcse_20': pi ** 2, 'gcse_21': e ** 2, 'gcse_22': 3 * pi, 'gcse_23': phi ** 2, 'gcse_24': e + 1, 'gcse_25': sqrt(2) + sqrt(3),
+            'gcse_26': sqrt(7), 'gcse_27': 3 * sqrt(2), 'gcse_28': sqrt(50), 'gcse_36': (mpf(3) / 2) ** 12,
+            'al_01': e ** pi, 'al_02': pi ** e, 'al_03': e ** e, 'al_04': pi ** pi, 'al_05': log(pi), 'al_11': mp.log10(2),
+            'al_12': log(10, 2), 'al_13': mp.log10(7), 'al_14': euler, 'al_15': catalan, 'al_16': zeta(3), 'al_17': pi ** 3,
+            'al_18': e ** 3, 'al_19': cbrt(12), 'al_20': sqrt(e), 'al_22': sin(1), 'al_23': cos(1), 'al_34': quad(lambda x: x ** x, [0, 1]),
+            'al_36': 1 - 1 / e, 'al_37': 1 / e, 'razor_04': sqrt(3) / 2, 'razor_05': mpf(23) / 6}
+
+
+CARD_RE = re.compile(r'\{id:"(\w+)",display:"((?:[^"\\]|\\.)*)",displayType:"\w+",valueDisplay:"((?:[^"\\]|\\.)*)"(?:.*?fact:"((?:[^"\\]|\\.)*)")?')
+
+
+def check_text(fails, html):
+    """R1, R2, R3 (SWEEP-1 higher-power-s1-002 to -009): a decimal ending "..." is the truncated expansion; a rounded one
+    is written with the approximately-equals sign; labels and facts say what is true."""
+    from mpmath import mp, mpf, floor
+    tv = true_values()
+    cards = {m.group(1): m for m in CARD_RE.finditer(html)}
+    for i, m in cards.items():
+        shown = m.group(3)
+        d = re.fullmatch(r'([\d.]+)\.\.\.', shown)
+        r = re.fullmatch(r'\\\\approx ([\d.]+)', shown)
+        if not (d or r) or i not in tv:
+            if (d or r):
+                fails.append('%s: %r is a decimal expansion with no true value in true_values()' % (i, shown))
+            continue
+        digits = (d or r).group(1)
+        dp = len(digits.split('.')[1])
+        trunc = floor(tv[i] * 10 ** dp) / mpf(10) ** dp
+        rounded = floor(tv[i] * 10 ** dp + mpf(1) / 2) / mpf(10) ** dp
+        want = mpf(digits)
+        if d and abs(trunc - want) > mpf(10) ** (-dp - 3):
+            fails.append('%s: %r ends "..." but the digits are rounded (true %s): write "\\approx" instead (R3)' % (i, shown, mp.nstr(tv[i], 12)))
+        if r and abs(rounded - want) > mpf(10) ** (-dp - 3):
+            fails.append('%s: %r is not the value rounded to %d places (true %s)' % (i, shown, dp, mp.nstr(tv[i], 12)))
+    need = (('ks3_31', 'display', 'doubling'), ('gcse_34', 'display', 'known'), ('ks3_04', 'fact', 'mebibyte'),
+            ('al_40', 'fact', 'fourth roots'), ('al_36', 'fact', 'large'))
+    for i, field, word in need:
+        m = cards.get(i)
+        if not m or word not in m.group(2 if field == 'display' else 4):
+            fails.append('%s: its %s must say %r (R1, R2, R3)' % (i, field, word))
+    if cards.get('al_30') and 'Total chessboard grains.' in cards['al_30'].group(4):
+        fails.append('al_30: 2^64 is not the board\'s total; the total is 2^64 \u2212 1 (R3)')
+    if html.count('If the two are equal, either answer is right.') < 2:
+        fails.append('start screen: it must say a tie accepts either answer (R2)')
+
+
 def check_pools(fails, pools):
     check_perfect(fails, pools)
     for lv in LEVELS:
@@ -170,6 +223,11 @@ def play(fails, html):
 
 
 PLANTS = [
+    ('ks3_19', 's1-009: 2.23607 rounded but shown with "..."', '"\\\\approx 2.23607"', '"2.23607..."'),
+    ('ks3_31', 's1-002: the chessboard rule unstated', '(1, then doubling)', '(first half)'),
+    ('al_30', 's1-005: 2^64 called the board total', 'One less than this is the total number of grains on the whole chessboard.', 'Total chessboard grains.'),
+    ('al_36', 's1-004: 1 - 1/e for every n', 'As n gets large, ', ''),
+    ('start screen', 's1-008: a tie never mentioned', 'If the two are equal, either answer is right. Build your streak!\n', 'Build your streak!\n'),
     ('ks3 ks3_35', "s1-001: 6's factors 'add up to itself'",
      'Its factors other than itself add up to 6.', 'Its factors add up to itself.'),
     ('ks3 Pairs in Chromium: ks3_02', "t2-001: the deal's pairId decides the match",
@@ -189,6 +247,7 @@ def main():
     KATEX_DIR = args.katex_dir
     html = open(args.against or GAME, encoding='utf-8').read()
     fails = []
+    check_text(fails, html)
     pools = play(fails, html)
     if pools is not None:
         check_pools(fails, pools)
@@ -202,7 +261,9 @@ def main():
                 ok = False
                 continue
             rep = []
-            planted = play(rep, html.replace(new, old))
+            bad_html = html.replace(new, old)
+            check_text(rep, bad_html)
+            planted = play(rep, bad_html) if tag.startswith(('ks3 ', 'gcse ', 'alevel ')) else None
             if planted is not None:
                 check_pools(rep, planted)
             hit = [f for f in rep if f.startswith(tag)]
