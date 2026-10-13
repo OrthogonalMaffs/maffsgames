@@ -111,6 +111,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="../../schools/assets/analytics.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
@@ -214,7 +215,7 @@ var NUMBERS_DEFAULT = [12,18,24,30,36,48,60,72,84,96,100,120,56,45,42,28,40,66,9
 var NUMBERS_YEAR6 = [12,18,20,24,28,30,36,40,42,45,8,16,15,32,48,50,10,14,22,26];
 
 // Detect level from URL param
-var _urlLevel = new URLSearchParams(window.location.search).get('level');
+var _urlLevel = MaffsLevel.resolve({slug:'prime-factorisation',levels:['year6','ks3','gcse'],fallback:'ks3',boards:['all']});
 var gameLevel = _urlLevel === 'year6' ? 'year6' : 'all';
 var NUMBERS = gameLevel === 'year6' ? NUMBERS_YEAR6 : NUMBERS_DEFAULT;
 

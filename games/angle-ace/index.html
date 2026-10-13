@@ -77,6 +77,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
@@ -654,10 +655,8 @@ function selectLevel(lvl){
 
 // URL param routing
 (function(){
-  const params=new URLSearchParams(window.location.search);
-  const lvl=params.get('level');
-  if(lvl && QUESTIONS_BY_LEVEL[lvl]){selectLevel(lvl)}
-  else{selectLevel('gcse')}
+  const lvl=MaffsLevel.resolve({slug:'angle-ace',levels:['year6','ks3','gcse'],fallback:'gcse'});
+  selectLevel(QUESTIONS_BY_LEVEL[lvl]?lvl:'gcse');
 })();
 
 // ============================================================

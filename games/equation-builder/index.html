@@ -145,6 +145,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
@@ -416,9 +417,8 @@ function init(){
   if(localStorage.getItem('mfg_dyslexia')==='1'){document.body.classList.add('dyslexia');a11yBtn.classList.add('active');}
   a11yBtn.addEventListener('click',()=>{document.body.classList.toggle('dyslexia');const on=document.body.classList.contains('dyslexia');localStorage.setItem('mfg_dyslexia',on?'1':'0');a11yBtn.classList.toggle('active',on);});
   // URL param level auto-select
-  const params=new URLSearchParams(window.location.search);
-  const urlLevel=params.get('level');
-  if(urlLevel){
+  const urlLevel=MaffsLevel.resolve({slug:'equation-builder',levels:['ks3','gcse','level4'],fallback:'ks3'});
+  if(MaffsLevel.declared('equation-builder').fromUrl){
     const btn=document.querySelector('.level-btn[data-level="'+urlLevel+'"]');
     if(btn){btn.click();}
   }

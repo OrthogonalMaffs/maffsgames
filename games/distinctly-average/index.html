@@ -180,6 +180,7 @@
 <script src="../../schools/assets/analytics.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/session-length.js"></script>
@@ -1104,9 +1105,7 @@ function poolFor(level) { return level === 'gcse' ? GCSE_POOL : KS3_POOL; }
 /* ----------------------------------------------------------------------------
    Level select / session length (start screen)
    ---------------------------------------------------------------------------- */
-const params = new URLSearchParams(window.location.search);
-let currentLevel = params.get('level');
-if (!IMPLEMENTED_LEVELS.includes(currentLevel)) currentLevel = IMPLEMENTED_LEVELS[0];
+let currentLevel = MaffsLevel.resolve({slug:'distinctly-average',levels:['ks3','gcse'],fallback:'ks3'});
 let sessionLength = 10;
 
 function renderLevelButtons() {

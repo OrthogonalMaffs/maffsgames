@@ -85,6 +85,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="../../schools/assets/analytics.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
@@ -208,7 +209,7 @@ const QUESTIONS_YEAR6 = [
 ];
 
 // Detect level from URL param
-const _pfUrlLevel = new URLSearchParams(window.location.search).get('level');
+const _pfUrlLevel = MaffsLevel.resolve({slug:'percentage-flip',levels:['year6','ks3','gcse'],fallback:'ks3',boards:['all']});
 const gameLevel = _pfUrlLevel === 'year6' ? 'year6' : 'all';
 const QUESTIONS = gameLevel === 'year6' ? QUESTIONS_YEAR6 : QUESTIONS_DEFAULT;
 

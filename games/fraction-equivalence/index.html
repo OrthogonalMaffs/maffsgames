@@ -91,6 +91,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="../../schools/assets/analytics.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
@@ -209,7 +210,7 @@ const YEAR6_BANK = [
 ];
 
 // Detect level from URL param
-const urlLevel = new URLSearchParams(window.location.search).get('level');
+const urlLevel = MaffsLevel.resolve({slug:'fraction-equivalence',levels:['year6','ks3','gcse'],fallback:'ks3',boards:['all']});
 const gameLevel = urlLevel === 'year6' ? 'year6' : 'all';
 
 let score=0, streak=0, qNum=0, timerInt=null, timerStart=null;

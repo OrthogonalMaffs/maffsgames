@@ -166,7 +166,7 @@ def static_check(page, portal, refs, game_src):
                 if LABEL.get(key) != label:
                     errors.append("%s: level key %s is labelled %r, SR-11 says %r" % (slug, key, label, LABEL.get(key)))
                 src = game_src(slug)
-                if "get('level')" not in src or not re.search(r"""['"]%s['"]""" % re.escape(key), src):
+                if ("get('level')" not in src and "MaffsLevel.resolve(" not in src) or not re.search(r"""['"]%s['"]""" % re.escape(key), src):
                     errors.append("%s: the game does not read level %r from ?level=" % (slug, key))
     on_page = set(m.lower() for m in ANY_GAME.findall(page))
     suite = {g for _, _, gs in SUITE for g in gs}
