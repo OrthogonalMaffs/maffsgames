@@ -581,7 +581,7 @@ const QUESTIONS = [
     steps: [
       [`\\overline{AB} \\cdot A`, `(\\overline{A}+\\overline{B}) \\cdot A`, `De Morgan's`],
       [`A\\overline{A} + A\\overline{B}`, `0 + A\\overline{B}`, 'Distributive + Complement'],
-      [`A\\overline{B}`, `A\\overline{B}`, 'Identity'],
+      [`0 + A\\overline{B}`, `A\\overline{B}`, 'Identity'],
     ]
   },
   {
@@ -644,7 +644,7 @@ const QUESTIONS = [
     steps: [
       [`AB + A\\overline{B} + \\overline{A}B + AC`, `A(B+\\overline{B}) + \\overline{A}B + AC`, 'Distributive'],
       [`A + \\overline{A}B + AC`, `(A+B) + AC`, 'Complement + Identity + Absorption variant'],
-      [`A + B`, `A + B`, 'Absorption'],
+      [`(A+B) + AC`, `A + B`, 'Absorption'],
     ]
   },
   // Advanced (Q31-Q42)
@@ -701,7 +701,7 @@ const QUESTIONS = [
     distractors: [`\\overline{A}\\overline{B} + C`, `A + B + C`, `ABC`],
     steps: [
       [`\\overline{\\overline{AB} \\cdot \\overline{C}}`, `\\overline{\\overline{AB}} + \\overline{\\overline{C}}`, `De Morgan's`],
-      [`AB + C`, `AB + C`, 'Double Negation'],
+      [`\\overline{\\overline{AB}} + \\overline{\\overline{C}}`, `AB + C`, 'Double Negation'],
     ]
   },
   {
@@ -729,8 +729,8 @@ const QUESTIONS = [
     distractors: [`(A+B)(C+D)`, `ABCD`, `D`],
     steps: [
       [`(A+B)(C+D)(A+B)(\\overline{C}+D)`, `(A+B)(C+D)(\\overline{C}+D)`, 'Idempotent'],
-      [`(C+D)(\\overline{C}+D) = C\\overline{C}+CD+\\overline{C}D+DD`, `0+CD+\\overline{C}D+D`, 'Distributive + Complement + Idempotent'],
-      [`D`, `D(A+B)`, 'Absorption + result'],
+      [`(A+B)(C+D)(\\overline{C}+D) = (A+B)(C\\overline{C}+CD+\\overline{C}D+DD)`, `(A+B)(0+CD+\\overline{C}D+D)`, 'Distributive + Complement + Idempotent'],
+      [`(A+B)(0+CD+\\overline{C}D+D)`, `D(A+B)`, 'Absorption + result'],
     ]
   },
   {
@@ -740,7 +740,7 @@ const QUESTIONS = [
     steps: [
       [`\\overline{A}B + A\\overline{B}`, `A \\oplus B`, 'XOR Definition'],
       [`CD + \\overline{C}D`, `D(C+\\overline{C}) = D`, 'Distributive + Complement + Identity'],
-      [`(A \\oplus B) + D`, `(A \\oplus B) + D`, 'Combine'],
+      [`(A \\oplus B) + CD + \\overline{C}D`, `(A \\oplus B) + D`, 'Combine'],
     ]
   },
   {

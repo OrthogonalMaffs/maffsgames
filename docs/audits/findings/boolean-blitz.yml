@@ -103,3 +103,51 @@ findings:
     unlisted pair with one truth table, with a plant that puts NOT(AB) back in Q4'
   status: fixed
   pr: 330
+- id: boolean-blitz-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:text-contradicts-content
+  level: level4
+  where: games/boolean-blitz/index.html:731 (QUESTIONS[38], worked steps 2-3)
+  summary: 'The worked steps dropped the (A+B) factor at step 2, then step 3 turned D into D(A+B), which is not an
+    equality. Key right. Fixed: (A+B) is carried through steps 2 and 3, ending (A+B)(0+CD+!CD+D) -> D(A+B).
+    scripts/verify-boolean-blitz.py now checks that each step''s from and to share a truth table, with a plant that
+    puts the old step 3 back (caught); the old page FAILS it'
+  evidence: '(A + B) . (C + D) . (A + B) . (!C + D) | simplify | D(A + B) | step 3 was D -> D(A+B) (SWEEP-1, batch 11)'
+  status: open
+- id: boolean-blitz-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: level4
+  where: games/boolean-blitz/index.html:584, :647, :704, :743 (QUESTIONS[22], [29], [35], [39], one step each)
+  summary: 'Four worked steps showed X -> X (no-ops) under the labels Identity, Absorption, Double Negation and
+    Combine. Fixed: each now shows the move its label names, its from being the previous step''s to (Q22 0 + A!B ->
+    A!B; Q29 (A+B) + AC -> A + B; Q35 !!(AB) + !!C -> AB + C; Q39 (A xor B) + CD + !CD -> (A xor B) + D). The verifier
+    now fails a step whose from equals its to, with a plant of the Q22 no-op (caught); the old page FAILS it'
+  evidence: 'Q22 step 3 A!B -> A!B Identity; Q29 step 3 A + B -> A + B Absorption; Q35 step 2 AB + C -> AB + C Double
+    Negation; Q39 step 3 (A xor B) + D -> (A xor B) + D Combine (SWEEP-1, batch 11)'
+  status: open
+- id: boolean-blitz-s1-003
+  severity: LOW
+  jc: true
+  class: wording
+  level: level4
+  where: games/boolean-blitz/index.html:386-762 (the steps arrays, about 40 steps)
+  summary: 'For Jon, not fixed (optional readability): many worked steps are not chained, the next from not being the
+    previous to (for example Q6 step 3, Q10 step 2, Q24 step 3, Q36 step 2), and some show one sub-expression only
+    (Q8 step 2, Q40 step 2). Each step is still an equality, and the header says "One valid simplification path"'
+  evidence: 'Q8 step 2: !B!C = !(B+C) -> A[(B+C) + !(B+C)] (SWEEP-1, batch 11)'
+  status: open
+- id: boolean-blitz-s1-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: level4
+  where: scripts/verify-boolean-blitz.py
+  summary: 'The verifier now checks that each worked step is an equality and not a no-op. It still does not check the
+    law-name labels on the steps, that a step''s from is the previous step''s to (a step whose from has no ''='' is
+    compared with its to only, a from with ''='' only side by side), the cheat-sheet LAWS equations and names
+    (:346-361), the walkthrough header (:297) or the start-screen text (:277)'
+  evidence: 'check_steps in scripts/verify-boolean-blitz.py (SWEEP-1, batch 11)'
+  status: open
