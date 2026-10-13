@@ -629,7 +629,14 @@ Jon has not yet fixed. Spec references are DfE subject-content parts (`docs/resi
    `verify-test-the-claim.py` fails locally with `ReferenceError: generateWrongContexts is not defined`
    under Playwright's node v24 (it passes in CI; CRLF checkouts are the suspected cause, above); (c) node
    is not on PATH on Windows (Playwright's bundled node works; `check-changed.py` does not need it unless
-   Test the Claim is selected).
+   Test the Claim is selected); (d) the shared calculator check (`test-calculator-js.py`, "Shared on-screen
+   calculator") was reported on 12 Oct as failing locally on every run. **Not reproduced 13 Oct 2026:** it passes
+   here, alone and inside `check-changed.py`. Its only environment-dependent path is the answer-box check, which
+   needs Playwright's WebKit (`python -m playwright install webkit`) and says so when it is missing ("WebKit would
+   not start", line 460); an earlier sandbox without WebKit failed it the same way. Nothing in the harness to fix;
+   if it fails locally, install WebKit first. (e) Under `check-changed.py`'s parallel load, Chromium sometimes
+   crashes in the answer-lock parts and `verify-characteristic-quest.py` ("Page crashed", "Target page, context or
+   browser has been closed", 13 Oct); a re-run or CI passes.
 19. **CI flake: tier 4 lint reported B4 "level bank below 40" for `proportion-blaster::gcse`** in one of
    two identical runs of PR #36 (same commit; the other passed, as did a re-run). Locally the extraction
    reads 50 GCSE items and the game never mutates its bank, so the extraction or its grouping is

@@ -24,37 +24,35 @@ Apps Script endpoint is answered locally and recorded; every other host is abort
 
     python scripts/test-section-clicks.py
 """
-import asyncio, json, mimetypes, os, sys
+import asyncio, json, mimetypes, os, re, sys
 from urllib.parse import urlsplit, unquote
 from playwright.async_api import async_playwright
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ORIGIN = "https://maffsgames.co.uk"
 
-# (section, item, position) in page order: the markup's contract. The room cards are in the hub's order, easiest
-# first (FRONT-PAGE-ROOM-ORDER, 12 Oct 2026), so a room's position here is its place in that order.
-EXPECTED_LINKS = [
-    ("essentials-link", "open-essentials", 1),
-    ("escape-rooms", "summary", 1),
-    ("escape-rooms", "comic-caper", 3),
-    ("escape-rooms", "kiln-disaster", 4),
-    ("escape-rooms", "library-jam", 5),
-    ("escape-rooms", "hamster-heist", 6),
-    ("escape-rooms", "pe-shed-rebellion", 7),
-    ("escape-rooms", "heatwave-mutiny", 8),
-    ("escape-rooms", "prom-budget", 9),
-    ("escape-rooms", "canteen-hack", 10),
-    ("escape-rooms", "car-trap", 11),
-    ("escape-rooms", "rugby-mud", 12),
-    ("escape-rooms", "rightful-king", 13),
-    ("escape-rooms", "open-all", 14),
-    ("escape-rooms", "start-hamster-heist", 15),
-    ("parent-guides", "open-guides", 1),
-]
-EXPECTED_TOGGLES = [
-    ("escape-rooms", "show-all", 2),
-    ("new-2026-27", "show-them", 1),
-]
+def expected_from_page():
+    """([(section, item, position)] for the links, [(section, item, position)] for the toggles), read from
+    index.html's own markup order: a labelled element's position is its place among its section's
+    data-mfg-item elements, in page order (the rule analytics.js applies). Nothing here is a hand copy of the
+    page, so reordering the cards moves the expectation with them (FRONT-PAGE-ROOM-ORDER broke the old table)."""
+    with open(os.path.join(ROOT, "index.html"), encoding="utf-8") as f:
+        html = f.read()
+    links, toggles, section, pos = [], [], None, 0
+    for m in re.finditer(r"<(\w+)([^>]*data-mfg-(?:section|item)=[^>]*)>", html):
+        tag, attrs = m.group(1), m.group(2)
+        sec = re.search(r'data-mfg-section="([^"]+)"', attrs)
+        item = re.search(r'data-mfg-item="([^"]+)"', attrs)
+        if sec:
+            section, pos = sec.group(1), 0
+        if item:
+            pos += 1
+            is_toggle = tag == "button" and "aria-expanded" in attrs
+            (toggles if is_toggle else links).append((section, item.group(1), pos))
+    return links, toggles
+
+
+EXPECTED_LINKS, EXPECTED_TOGGLES = expected_from_page()
 
 # Records whether anything before this point cancelled the click, then stops the
 # navigation itself, so one page load serves every click. Bubble phase on window:

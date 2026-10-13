@@ -99,6 +99,8 @@ def problems(pages, js):
         marks = [m for m in SNIPPET_MARKS if m in t] + ([ID] if any(ID in s.group(0) for s in SCRIPT.finditer(t)) else [])
         if marks:
             out.append("%s: carries its own copy of the GA4 tag (%s); it belongs in analytics.js only" % (p, marks[0]))
+        if "Google Analytics (cookieless)" in t:
+            out.append("%s: keeps the orphan 'Google Analytics (cookieless)' comment; scripts/apply-analytics-loader.py removes it" % p)
         incs = INCLUDE.findall(t)
         if exempt(p, t):
             continue
@@ -126,6 +128,8 @@ def selftest(pages, js):
     check("PLANT: a page with the snippet back is caught", any("carries its own copy" in x for x in p))
     p = problems(dict(base, **{page: base[page].replace("</head>", "<script>var id='%s';</script></head>" % ID, 1)}), js)
     check("PLANT: the measurement ID inside a script is caught", any("carries its own copy" in x for x in p))
+    p = problems(dict(base, **{page: base[page].replace("</head>", "<!-- Google Analytics (cookieless) -->\n</head>", 1)}), js)
+    check("PLANT: the orphan comment back is caught", any("orphan" in x for x in p))
     check("the ID as plain text (as on /privacy/) is not flagged",
           not problems(dict(base, **{page: base[page].replace("</body>", "<p><code>%s</code></p></body>" % ID, 1)}), js))
     inc = INCLUDE.search(base[page]).group(0)
