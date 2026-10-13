@@ -25,7 +25,8 @@ findings:
     and plants the old one'
   evidence: 'G4 freqs 6, 14, 10, 7, 3 (cumulative 6, 20, 30), key "20 ≤ x < 30"; G10 6, 14, 11, 7, 2, key "50 ≤ x <
     100" (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 350
 - id: stat-attack-s1-002
   severity: CRITICAL
   jc: false
@@ -41,7 +42,8 @@ findings:
     both neighbours and the long form on every scenario, and plants the old bands'
   evidence: 'const correct=Math.abs(val-q.mean)<=0.15; const correct=Math.abs(val-q.sd)<=Math.max(0.1,q.sd*0.01);
     the new verifier fails the old page 242 times (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 350
 - id: stat-attack-s1-003
   severity: MEDIUM
   jc: true
@@ -76,7 +78,8 @@ findings:
     and 1417 or 1418 for 1417.5. Fixed (SR-2): every column entry is marked by MaffsAnswer.exact(); the verifier types
     the true columns and, where a column has a non-integer entry, the rounded one, and plants the old fx band'
   evidence: 'Math.abs(val-q.fx[i])>0.5; the old page passes a rounded fx or x² column in 17 checks (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 350
 - id: stat-attack-s1-006
   severity: LOW
   jc: false
