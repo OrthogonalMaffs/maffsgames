@@ -17,6 +17,8 @@ Every case (all levels):
   - every '=' chain in the correct argument's working and in the judge's summary is
     arithmetically true (stats_common.arith_problems). The wrong arguments are wrong
     on purpose and are not checked.
+  - a wrong argument that reaches a correct argument's conclusion (a true answer by a wrong reason) is named
+    in the judge's summary, with its fault (SR-16; SWEEP-1, 13 Oct 2026).
 Every statistics case: SPECS below says what is asked, from the problem text; the
 text must still print those numbers, every value the correct argument states must be
 the recomputed one, and the correct argument must be the one the recomputation backs.
@@ -34,6 +36,7 @@ import argparse
 import copy
 import importlib.util
 import os
+import math
 import re
 import sys
 from fractions import Fraction
@@ -94,6 +97,19 @@ def _specs():
             stated=[(r'Expected value = [^=]+= (\d+)', b60.mean())],
             extra=[('the stated expectation is 60 x 1/6', b60.mean() == 10),
                    ('8 sixes is not significant at 5%, either tail', st.to_dec(p_le8) * 2 > st.D('0.05'))]),
+        # SWEEP-1 (13 Oct 2026): maths-court-s1-003 (1.048^10 was 1.5963) and s1-002 (b's precision unstated, SR-1)
+        'mc_core_007': dict(
+            has=['Bank A: 5% simple interest', 'Bank B: 4.8% compound interest', '10 years on \u00a31,000'],
+            key='Bank B (compound) is better', why='1000 x 1.048^10 = %.2f > 1500' % (1000 * 1.048 ** 10),
+            stated=[(r'= 1000 × (\d+\.\d+) = £1,5', 1.048 ** 10),
+                    (r'= 1000 × \d+\.\d+ = £1,(\d{3}\.\d\d)', 1000 * 1.048 ** 10 - 1000),   # the £1,xxx.xx, past the thousand
+                    (r'Bank B wins by £(\d+\.\d+)', 1000 * 1.048 ** 10 - 1500)],
+            extra=[('compound beats simple after 10 years', 1000 * 1.048 ** 10 > 1500)]),
+        'mc_gcse_010': dict(
+            has=['angle A = 40°', 'angle B = 75°', 'a = 8cm', 'Give your answer to 3 significant figures.'],
+            key='b = 12.0cm', why='b = 8 sin 75° / sin 40° = %.4f' % (8 * math.sin(math.radians(75)) / math.sin(math.radians(40))),
+            stated=[(r'= (\d+\.\d+)cm', 8 * math.sin(math.radians(75)) / math.sin(math.radians(40)))],
+            extra=[('12.0 is b to 3 s.f.', round(8 * math.sin(math.radians(75)) / math.sin(math.radians(40)), 1) == 12.0)]),
         'mc_core_009': dict(
             # "biased towards heads" (Jon, 30 Sep 2026; it was "Is the coin fair?", which reads
             # two-tailed) matches the one-tailed H1: p > 0.5 the correct argument tests.
@@ -148,6 +164,13 @@ def check_case(rep, case, verbose=False):
                      + [("judge's summary", case['judgesSummary'])]):
         for left, right_, why in st.arith_problems(t):
             rep.fail(cid, where, '"%s = %s" is false (%s)' % (left, right_, why))
+    # SR-16 (SWEEP-1, maths-court-s1-001): a wrong argument that reaches a correct argument's conclusion is a true
+    # answer by a wrong reason, so the judge's summary must name it and its fault.
+    for a in args:
+        if not a['correct'] and any(a['conclusion'] == g['conclusion'] for g in goods) \
+                and a['name'].split()[0] not in case['judgesSummary']:
+            rep.fail(cid, 'SR-16', '%s reaches the right conclusion (%r) by a wrong reason, and the judge\'s summary '
+                     'never says why it is wrong' % (a['name'], a['conclusion']))
     spec = SPECS.get(cid)
     if spec is None:
         return
@@ -294,6 +317,22 @@ def selftest(bank, rendered):
         a = correct_arg(find(b, 'mc_core_001'))[0]
         a['working'] = [w.replace('= £1.50', '= £1.80') for w in a['working']]
     expect('wrong working (mc_core_001 = 1.80)', lambda rep: check_bank(rep, mutated(wrong_working)))
+
+    # SWEEP-1 (13 Oct 2026): each fault as it was on main before the sweep's fix
+    def old_compound(b):
+        a = correct_arg(find(b, 'mc_core_007'))[0]
+        a['working'] = [w.replace('1.59813 = £1,598.13', '1.5963 = £1,596.30').replace('£98.13', '£96.30') for w in a['working']]
+    expect('s1-003: mc_core_007 1.048^10 = 1.5963', lambda rep: check_bank(rep, mutated(old_compound)))
+
+    def old_precision(b):
+        c = find(b, 'mc_gcse_010')
+        c['problem'] = c['problem'].replace(' Give your answer to 3 significant figures.', '')
+    expect('s1-002: mc_gcse_010 precision unstated', lambda rep: check_bank(rep, mutated(old_precision)))
+
+    def old_summary(b):
+        c = find(b, 'mc_ks3_002')
+        c['judgesSummary'] = 'Demi is correct. 5/8 = 0.625, 3/5 = 0.6. Chuck approximated 5/8 as 0.5, which is wrong.'
+    expect('s1-001: mc_ks3_002 Numerica unnamed', lambda rep: check_bank(rep, mutated(old_summary)))
 
     leak_bank, leak_rendered = load_and_render("""(() => {
       const orig = loadQuestion;

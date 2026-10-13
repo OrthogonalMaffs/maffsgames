@@ -114,9 +114,16 @@ TRUE_OPTIONS = {
     'ta_gcse_006': ('Prudence is correct — upper bound is 2.45m', TAG + 't2-001'),
     'ta_core_007': ('Wendy is correct — the overall average is 70%', TAG + 't2-003'),
     'ta_core_004': ('Penny is wrong — £1,000 × 5% × 20 = £1,000 (simple interest, the original amount doubles)', TAG + 't2-010'),
+    # SWEEP-1 (13 Oct 2026): the right conclusion offered as "X is correct", keyed wrong (as t2-003)
+    'ta_gcse_008': ('Sharon is correct — the 650g is better value', TAG + 's1-001'),
+    'ta_core_002': ('Barry is correct — 750ml is better value', TAG + 's1-001'),
+    # a true equation offered as "X is wrong — ...", where the ask is standard form but the option never says so
+    'ta_ks3_017': ('Professor Wren is wrong — 3,400,000 = 0.34 × 10⁷', TAG + 's1-002'),
+    'ta_gcse_019': ('Stella is wrong — 0.00057 = 57 × 10⁻⁵', TAG + 's1-002'),
 }
 # A key must not state a false rule.
-FALSE_RULES = {'ta_gcse_007': ('always have a positive and negative solution', TAG + 't2-008')}
+FALSE_RULES = {'ta_gcse_007': ('always have a positive and negative solution', TAG + 't2-008'),
+               'ta_gcse_018': ('add for OR', TAG + 's1-003')}   # only for events that cannot both happen
 # A distractor that ends on the key's values but is false as a whole (reviewed): it is not SR-16's shape.
 SR16_REVIEWED = {'ta_gcse_008': 'quotes the right unit prices (1.2p/g, 1.1p/g) with the wrong conclusion (the 400g)'}
 ARITH_ENTRY = {'ta_gcse_002': TAG + 't2-006', 'ta_core_004': TAG + 't2-009'}
@@ -338,6 +345,14 @@ def run(html):
 
 D = '\\u2014'
 PLANTS = [
+    (TAG + 's1-001', "s1-001: gcse_008's 'Sharon is correct — the 650g'",
+     "{text:'Sharon is correct in both method and answer',correct:false}",
+     "{text:'Sharon is correct " + D + " the 650g is better value',correct:false}"),
+    (TAG + 's1-002', "s1-002: ks3_017's true 0.34 x 10^7",
+     "{text:'Professor Wren is wrong " + D + " in standard form, 3,400,000",
+     "{text:'Professor Wren is wrong " + D + " 3,400,000"),
+    (TAG + 's1-003', "s1-003: gcse_018's 'add for OR'",
+     "You multiply for AND, not add',correct:true}", "You multiply for AND, add for OR',correct:true}"),
     (TAG + 't2-004', 't2-004: no fresh window on a new question',
      "  MaffsLock.fresh(document.getElementById('gameScreen'));\n", ''),
     (TAG + 't2-001', "t2-001: gcse_006's second true option",

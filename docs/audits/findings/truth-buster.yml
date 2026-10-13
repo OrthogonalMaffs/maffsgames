@@ -199,3 +199,26 @@ findings:
     (content, Project Claude) or a layout ruling (collapse the counterexample or Learn More); filed open per Jon''s
     ruling (7 Oct: the 320x568 entry does not block the fix PR).'
   status: open
+- id: truth-buster-s1-001
+  severity: MEDIUM
+  jc: true
+  class: NEW:convention-unstated
+  level: all
+  where: games/truth-buster/index.html:279 (tb_t2_020)
+  summary: 'With "Always True" and "Not Always True" as the buttons, "A set can have more elements than the set of all
+    natural numbers." also reads as a claim about any set, and then it is not always true; keyed Always True (SR-18: worded
+    so the key holds as written). Rewording ("There is a set with …", as tb_t3_011) is a stem change, open for Jon'
+  evidence: 'answer:true (SWEEP-1, batch 4)'
+  status: open
+- id: truth-buster-s1-002
+  severity: LOW
+  jc: true
+  class: NEW:convention-unstated
+  level: all
+  where: games/truth-buster/index.html:300 (tb_t3_018), :284 (tb_t3_002), :290 (tb_t3_008)
+  summary: 'Open: tb_t3_018 "If a mathematical statement is true, it can be proved." names no system (as t3-015 added ZFC
+    to t3_017); tb_t3_002''s counterexample "Train tracks appear to meet at the horizon" refutes nothing (SR-24; the
+    projective plane is only in the reveal); tb_t3_008''s title "Only for shapes without holes" overstates (a hollow cube
+    gives 4)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open

@@ -288,7 +288,7 @@ arguments:[
 {name:'Numerica Strong',occupation:'Fraction Influencer',working:['5/8 is bigger','8 is a bigger number than 5','so eighths are better.'],conclusion:'5/8 is larger',correct:false},
 {name:'Demi Nominator',occupation:'Common Denominator Coach',working:['Common denominator 40:','3/5 = 24/40','5/8 = 25/40','5/8 is larger by 1/40.'],conclusion:'5/8 is larger',correct:true},
 {name:'Chuck Approximate',occupation:'Rounding Guru',working:['3/5 = 0.6','5/8 = 0.5 (just over half)','So 3/5 is larger.'],conclusion:'3/5 is larger',correct:false}
-],judgesSummary:'Demi is correct. 5/8 = 0.625, 3/5 = 0.6. Chuck approximated 5/8 as 0.5, which is wrong.'},
+],judgesSummary:'Demi is correct. 5/8 = 0.625, 3/5 = 0.6. Numerica has the right answer for the wrong reason: a bigger denominator makes each part smaller, not bigger. Chuck approximated 5/8 as 0.5, which is wrong.'},
 
 {id:'mc_ks3_003',level:'ks3',topic:'Percentages',problem:'Find 35% of 60',
 arguments:[
@@ -446,7 +446,7 @@ arguments:[
 {name:'Daphne Direct',occupation:'Factorisation Fan',working:['x\u00b2 + 6x + 2','= (x + 2)(x + 1)','Check: x\u00b2 + 3x + 2... close enough.'],conclusion:'(x + 2)(x + 1)',correct:false}
 ],judgesSummary:'Francesca is correct. (x+3)\u00b2 expands to x\u00b2+6x+9, which is 7 more than we want, so subtract 7. Harvey forgot to subtract the 9 that the square introduces. Daphne factorised a completely different expression.'},
 
-{id:'mc_gcse_010',level:'gcse',topic:'Sine Rule',problem:'In triangle ABC, angle A = 40\u00b0, angle B = 75\u00b0, a = 8cm. Find side b.',
+{id:'mc_gcse_010',level:'gcse',topic:'Sine Rule',problem:'In triangle ABC, angle A = 40\u00b0, angle B = 75\u00b0, a = 8cm. Find side b. Give your answer to 3 significant figures.',
 arguments:[
 {name:'Sinead Rule',occupation:'Sine Rule Specialist',working:['a/sin A = b/sin B','8/sin 40\u00b0 = b/sin 75\u00b0','b = 8 \u00d7 sin 75\u00b0 / sin 40\u00b0','b = 8 \u00d7 0.9659 / 0.6428 = 12.02cm'],conclusion:'b = 12.0cm',correct:true},
 {name:'Colin Cosine',occupation:'Wrong Rule Selector',working:['b\u00b2 = a\u00b2 + c\u00b2 \u2212 2ac cos B','But I don\'t know c...','b \u2248 8 \u00d7 cos 75\u00b0 = 2.07cm'],conclusion:'b = 2.07cm',correct:false},
@@ -569,7 +569,7 @@ arguments:[
 
 {id:'mc_core_007',level:'core',topic:'Compound Interest Comparison',problem:'Bank A: 5% simple interest. Bank B: 4.8% compound interest. Which is better after 10 years on \u00a31,000?',
 arguments:[
-{name:'Connie Compound',occupation:'Compound Interest Advocate',working:['Bank A: 1000 + (1000 \u00d7 0.05 \u00d7 10)','= 1000 + 500 = \u00a31,500','Bank B: 1000 \u00d7 1.048\u00b9\u2070','= 1000 \u00d7 1.5963 = \u00a31,596.30','Bank B wins by \u00a396.30.'],conclusion:'Bank B (compound) is better',correct:true},
+{name:'Connie Compound',occupation:'Compound Interest Advocate',working:['Bank A: 1000 + (1000 \u00d7 0.05 \u00d7 10)','= 1000 + 500 = \u00a31,500','Bank B: 1000 \u00d7 1.048\u00b9\u2070','= 1000 \u00d7 1.59813 = \u00a31,598.13','Bank B wins by \u00a398.13.'],conclusion:'Bank B (compound) is better',correct:true},
 {name:'Simple Simon',occupation:'Simple Interest Supporter',working:['5% > 4.8%','Higher percentage = more money.','Bank A is obviously better.'],conclusion:'Bank A (simple) is better',correct:false},
 {name:'First Year Faye',occupation:'Short-Term Thinker',working:['Bank A year 1: \u00a350 interest','Bank B year 1: \u00a348 interest','Bank A gives more every year.','Bank A is better.'],conclusion:'Bank A (simple) is better',correct:false}
 ],judgesSummary:'Connie is correct. Although Bank A has a higher rate, compound interest grows exponentially while simple interest grows linearly. After 10 years, Bank B overtakes. Faye correctly notes Bank A is better in year 1, but compound interest accelerates over time.'},

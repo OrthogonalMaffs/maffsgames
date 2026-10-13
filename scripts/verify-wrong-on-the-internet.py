@@ -19,8 +19,9 @@ Checks, every item: no stage-1 key carries a condition of its own, "(if ...)" (a
 instead); a post about roulette states its wheel, and its keys use that wheel's P(black) (18/37 with one zero,
 18/38 with two); no item says addition gives P(A OR B) or "OR = add"; RULED pins the two rulings' words. In
 Chromium (390x844) every stage-1 and stage-2 option of every item is clicked through the game's own handlers,
-the mark read from the button: exactly the key right. A self-test plants both items as they were on main;
-each must FAIL naming its item.
+the mark read from the button: exactly the key right. SWEEP-1 (13 Oct 2026) adds two posts under the same ruling:
+ks3_007 states a fair coin ("Depends on coin" goes), core_004 states compound interest. A self-test plants all four
+items as they were; each must FAIL naming its item.
 
     python scripts/verify-wrong-on-the-internet.py [--no-selftest] [--against FILE]
 """
@@ -39,6 +40,9 @@ GAME = os.path.join(os.path.dirname(HERE), 'games', SLUG, 'index.html')
 RULED = {
     'woti_gcse_004': ('European roulette wheel (one green zero)', 'P(black) = 18/37 every spin', ['Depends on wheel']),
     'woti_gcse_011': ('A and B are independent.', '0.12', []),
+    # SWEEP-1 (13 Oct 2026), the same ruling: the post states the convention its key uses
+    'woti_ks3_007': ('a fair coin', 'P(tails) = 0.5 always', ['Depends on coin']),
+    'woti_core_004': ('5% compound interest', '£1,000×1.05²⁰ = £2,653', []),
 }
 WHEELS = {'one green zero': '18/37', 'single-zero': '18/37', 'two green zeros': '18/38', 'double-zero': '18/38',
           'American': '18/38', 'European': '18/37'}
@@ -155,6 +159,10 @@ PLANTS = [
     ('woti_gcse_011', 't2-002: keyed "0.12 (if independent)"',
      "stage1CorrectAnswer:'0.12',stage1Options:['0.12',",
      "stage1CorrectAnswer:'0.12 (if independent)',stage1Options:['0.12 (if independent)',"),
+    ('woti_ks3_007', 's1-001: the coin\'s fairness unstated',
+     "text:'I\\'ve flipped a fair coin and got heads 7 times", "text:'I\\'ve flipped heads 7 times"),
+    ('woti_core_004', 's1-002: compound interest unstated',
+     "text:'Invest \\u00a31000 at 5% compound interest for 20 years: ", "text:'Invest \\u00a31000 at 5% for 20 years: "),
 ]
 
 

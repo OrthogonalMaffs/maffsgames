@@ -87,3 +87,34 @@ findings:
     9 opponents, link opens 5; no how-to
   evidence: Agent's evidence.
   status: open
+- id: prisoners-dilemma-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:text-contradicts-content
+  level: core
+  where: games/prisoners-dilemma/index.html:507 (The Adaptive Firm)
+  summary: '"sticks with a pricing strategy while it''s profitable and changes when it''s not", but the rule (Pavlov)
+    changes after £0k or £1k, and £1k is a profit. The class of t4-005 (Core''s pricing rewording). Open (wording)'
+  evidence: 'stratName "Pavlov (Win-Stay, Lose-Shift)" (SWEEP-1, batch 4)'
+  status: open
+- id: prisoners-dilemma-s1-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: all
+  where: games/prisoners-dilemma/index.html:243-247 (the matrix)
+  summary: 'The payoff matrix never says which number in a cell is yours ("3, 3 | 0, 5"); only KS3''s round messages show
+    the order. A "(you, them)" title, open'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: prisoners-dilemma-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: games/prisoners-dilemma/index.html:898, :717, :460, :555
+  summary: 'Wording, open: GCSE''s "your opponent adapts" shows after non-adaptive opponents; the halfway prompt asks for
+    Random Rita''s pattern though her description says there is none; A-Level''s "Prober" is not Axelrod''s Prober (the
+    rule is stated exactly); Tournament Mode, the only ranked mode, unlocks after 3 wins, never said'
+  evidence: 'SWEEP-1, batch 4'
+  status: open

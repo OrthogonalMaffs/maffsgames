@@ -14,7 +14,8 @@ Checks, every level, in Chromium (390x844), each pair turned over through pairsF
 the cards' state: every card's expression with its own value card matches; every card with every other card
 worth the same (its value card and its expression card) matches; every card with the card nearest to it in
 value but worth something else does not, nor a googolplex with infinity. Cards that look the same must be
-worth the same. A self-test plants main's pairId rule back; it must FAIL.
+worth the same. A perfect number's fact lists exactly its proper divisors (SWEEP-1, 13 Oct 2026). A self-test
+plants main's pairId rule back, and ks3_35's old fact; each must FAIL.
 
     python scripts/verify-higher-power.py [--no-selftest] [--against FILE] [--katex-dir DIR]
 """
@@ -70,7 +71,26 @@ def cases(pool):
     return out
 
 
+def check_perfect(fails, pools):
+    """SWEEP-1 (13 Oct 2026, higher-power-s1-001): a perfect number's fact lists exactly its proper divisors, which
+    sum to it, and never says its factors (which include itself) add up to it."""
+    for lv in LEVELS:
+        for c in pools[lv]:
+            if 'perfect number' not in c['display']:
+                continue
+            n, fact = int(c['value']), c.get('fact', '')
+            proper = [d for d in range(1, n) if n % d == 0]
+            m = re.match(r'(\d+) = ([\d+ ]+)\.', fact)
+            terms = [int(t) for t in m.group(2).replace(' ', '').split('+')] if m else None
+            if not m or int(m.group(1)) != n or terms != proper or sum(proper) != n:
+                fails.append('%s %s: the fact %r does not list %d\'s proper divisors, summing to it' % (lv, c['id'], fact, n))
+            if re.search(r'factors add up', fact) and 'other than itself' not in fact:
+                fails.append('%s %s: "%s": its factors include %d itself; only those other than itself add up to it'
+                             % (lv, c['id'], fact, n))
+
+
 def check_pools(fails, pools):
+    check_perfect(fails, pools)
     for lv in LEVELS:
         pool = pools[lv]
         for a in pool:
@@ -150,6 +170,8 @@ def play(fails, html):
 
 
 PLANTS = [
+    ('ks3 ks3_35', "s1-001: 6's factors 'add up to itself'",
+     'Its factors other than itself add up to 6.', 'Its factors add up to itself.'),
     ('ks3 Pairs in Chromium: ks3_02', "t2-001: the deal's pairId decides the match",
      'if(first!==second&&sameValue(pairsCards[first].card,pairsCards[second].card)){',
      'if(pairsCards[first].pairId===pairsCards[second].pairId&&first!==second){'),

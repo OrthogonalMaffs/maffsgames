@@ -84,3 +84,63 @@ findings:
   ruling: 'Jon, 12 Oct 2026 (SR-14): in woti_core_006''s correct stage-2 option, "At 100°C humans can''t survive, let
     alone buy ice cream." is replaced with "At 100°C water boils, so nobody is queuing for ice cream."; the key, options
     and explanation are unchanged.'
+- id: wrong-on-the-internet-s1-001
+  severity: HIGH
+  jc: false
+  class: NEW:convention-unstated
+  level: ks3
+  where: games/wrong-on-the-internet/index.html woti_ks3_007
+  summary: 'The key "P(tails) = 0.5 always" needs a fair coin the post never states, so "Depends on coin" was right as
+    written (the shape of t2-001). Fixed under Jon''s ruling (the post states the convention its key uses): "I''ve
+    flipped a fair coin and got heads 7 times in a row"; "Depends on coin" replaced by "P(tails) < 0.5 (heads is on a
+    streak)". RULED pins it'
+  evidence: 'post "I''ve flipped heads 7 times in a row. The next flip MUST be tails."; options "P(tails) = 0.5 always",
+    "P(tails) > 0.5", "P(tails) = 1", "Depends on coin" (SWEEP-1, batch 4)'
+  status: fixed
+  pr: 340
+- id: wrong-on-the-internet-s1-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: core
+  where: games/wrong-on-the-internet/index.html woti_core_004
+  summary: 'The post never said compound interest (only a reply did), so "The answer is £2,000 using simple interest" was a
+    true stage-2 option keyed wrong. Fixed under the same ruling: the post says "5% compound interest"; the option is now a
+    named error ("The answer is £2,000: 5% a year for 20 years doubles it"). RULED pins it'
+  evidence: 'post "Invest £1000 at 5% for 20 years: £1000×1.05×20=£21,050." (SWEEP-1, batch 4)'
+  status: fixed
+  pr: 340
+- id: wrong-on-the-internet-s1-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:text-contradicts-content
+  level: core
+  where: games/wrong-on-the-internet/index.html woti_core_004
+  summary: '1000 × 1.05 × 20 is 21,000, not 21,050 (that is 1000 × (1.05 + 20)), so a stage-1 option shows a false
+    equation, the stage-2 key quotes it as the product, and two options carry £21,050 (SR-4). Changing the post''s figure
+    is Jon''s call'
+  evidence: 'options "£21,050" and "£1,000×1.05×20 = £21,050"; key "… not multiplied by 20 (£21,050)" (SWEEP-1, batch 4)'
+  status: open
+- id: wrong-on-the-internet-s1-004
+  severity: MEDIUM
+  jc: true
+  class: NEW:true-wrong-option
+  level: ks3, gcse, core
+  where: games/wrong-on-the-internet/index.html woti_core_005, woti_ks3_004, woti_gcse_007, woti_ks3_001, woti_gcse_020
+  summary: 'Options that are true as written, keyed wrong: core_005 "Some things went up 14.6%" (the key itself says
+    individual items varied widely); the vague stage-2 options ks3_004 "The poster added the numbers incorrectly",
+    gcse_007 "Pythagoras was applied incorrectly", ks3_001 "The poster added the wrong numbers". And gcse_020''s key calls
+    "add 5 to the last digit" (7.3 → 7.8, read literally) "a valid shortcut". Replacements are new wording, open'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: wrong-on-the-internet-s1-005
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: ks3, gcse
+  where: games/wrong-on-the-internet/index.html woti_ks3_012, woti_gcse_013, woti_ks3_013, woti_gcse_008
+  summary: 'Wording, open: ks3_012 offers "1 (guaranteed)" and "6/6" (equal); gcse_013''s key says the poster "inverted the
+    relationship" (they missed the factor of 2); ks3_013 asks to "Simplify 3(x + 4)" and keys the expansion; gcse_008''s
+    ice cream causes sunburn joke (injury in humour, SR-14 tier b, Jon''s call)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
