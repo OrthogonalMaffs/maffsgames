@@ -15,7 +15,8 @@
 Checks: every question's options clicked in Chromium (390x844) through selectAnswer(), the mark read from the
 button: right exactly when the option is the key or in the item's accept set; RULED pins Q12's words and Q35's
 accepted pair and explanation; then a real session (real timers), Q1 answered and Next tapped with a second tap
-on the next question's first option at once (a double-tap): the second question must be on screen, unanswered. A self-test plants each finding back; each must FAIL.
+on the next question's first option at once (a double-tap): the second question must be on screen, unanswered. UNITS:
+a key that depends on a unit has it stated (SWEEP-1, SR-17). A self-test plants each finding back; each must FAIL.
 
     python scripts/verify-core-maths-paper2c.py [--no-selftest] [--against FILE]
 """
@@ -34,9 +35,22 @@ GAME = os.path.join(os.path.dirname(HERE), 'games', SLUG, 'index.html')
 COUNT = 36
 
 
+# SWEEP-1 (core-maths-paper2c-s1-001, s1-002; SR-17): a key that depends on a unit says which. A v-t graph given by
+# its coordinates states t in seconds and v in m/s (Q6 judges "6 m/s²", Q19 keys "90 m"); a model in t whose key is
+# in years ("annual", "How many years") states that t is the time in years.
+UNITS = [
+    (r'velocity–time graph shows a straight line from \(', 't in seconds, v in m/s'),
+    (r'(according to|modelled by).*(annual|How many years)', 'where t is the time in years'),
+]
+
+
 def check_bank(fails, bank):
     if len(bank) != COUNT:
         fails.append('bank: %d questions, expected %d' % (len(bank), COUNT))
+    for i, q in enumerate(bank):
+        for pat, need in UNITS:
+            if re.search(pat, q['stem'], re.S) and need not in q['stem']:
+                fails.append('Q%d units: the key depends on a unit the stem does not state (%r; SR-17)' % (i + 1, need))
     q12 = [i for i, q in enumerate(bank) if '(2, 7) and (6, 7)' in q['stem']]
     q35 = [i for i, q in enumerate(bank) if 'doubling time is constant regardless' in q['stem']]
     if len(q12) != 1 or len(q35) != 1:
@@ -135,6 +149,9 @@ PLANTS = [
     ('Q12 (t4-002)', 't4-002: Q12 without "f is a quadratic"',
      [("stem:'f is a quadratic. The graph of y = f(x)", "stem:'The graph of y = f(x)")]),
     ('Q35 (t4-003)', "t4-003: Q35 with D not accepted", [('    accept:[1,3],\n', '')]),
+    ('Q6 units', 's1-001: Q6 without its units', [("velocity–time graph (t in seconds, v in m/s) shows a straight line from (0, 0)",
+                                                    "velocity–time graph shows a straight line from (0, 0)")]),
+    ('Q33 units', 's1-002: Q33 without t in years', [("e^(0.06t), where t is the time in years.", "e^(0.06t).")]),
     ('t4-001', 't4-001: no fresh lock on a new question (before F1 batch 10)',
      [('  MaffsLock.fresh(container);   // a new question', '  // a new question'),
       ('  MaffsLock.fresh(oc);\n  currentQ++;', '  currentQ++;')]),

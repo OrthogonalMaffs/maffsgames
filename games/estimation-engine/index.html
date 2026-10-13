@@ -259,10 +259,10 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
   {"id": "E03", "group": "E", "nums": ["3.92", "4.11"], "shape": "sqrt(a*b)", "rounded": ["4", "4"], "estimate": "4", "exact": "4.014", "show": "√(3.92 × 4.11)", "tex": "\\sqrt{3.92 \\times 4.11}", "approx": true},
   {"id": "E04", "group": "E", "nums": ["4.87", "19.6"], "shape": "sqrt(a*b)", "rounded": ["5", "20"], "estimate": "10", "exact": "9.770", "show": "√(4.87 × 19.6)", "tex": "\\sqrt{4.87 \\times 19.6}", "approx": true},
   {"id": "E05", "group": "E", "nums": ["0.29", "512"], "shape": "a**2*b", "rounded": ["0.3", "500"], "estimate": "45", "exact": "43.06", "show": "0.29² × 512", "tex": "0.29^2 \\times 512", "approx": true},
-  {"id": "F01", "group": "F", "nums": ["18.95", "42"], "shape": "a*b", "rounded": ["20", "40"], "estimate": "800", "exact": "795.90", "text": "A ticket costs £18.95. Estimate the cost of 42 tickets.", "money": true},
+  {"id": "F01", "group": "F", "nums": ["18.95", "42"], "shape": "a*b", "rounded": ["20", "40"], "estimate": "800", "exact": "795.90", "text": "A ticket costs £18.95. Estimate the cost of 42 tickets.", "money": true, "moneyAt": [0]},
   {"id": "F02", "group": "F", "nums": ["287", "9.8"], "shape": "a/b", "rounded": ["300", "10"], "estimate": "30", "exact": "29.29", "text": "A car travels 287 miles on 9.8 gallons. Estimate the miles per gallon.", "approx": true},
   {"id": "F03", "group": "F", "nums": ["61.4", "38.7"], "shape": "a*b", "rounded": ["60", "40"], "estimate": "2400", "exact": "2376", "text": "A field is 61.4 m by 38.7 m. Estimate its area in m².", "approx": true},
-  {"id": "F04", "group": "F", "nums": ["4180", "21"], "shape": "a/b", "rounded": ["4000", "20"], "estimate": "200", "exact": "199.05", "text": "£4,180 is shared equally between 21 people. Estimate each share.", "money": true, "approx": true},
+  {"id": "F04", "group": "F", "nums": ["4180", "21"], "shape": "a/b", "rounded": ["4000", "20"], "estimate": "200", "exact": "199.05", "text": "£4,180 is shared equally between 21 people. Estimate each share.", "money": true, "moneyAt": [0], "approx": true},
   {"id": "F05", "group": "F", "nums": ["11.8", "392"], "shape": "b/a", "rounded": ["10", "400"], "estimate": "40", "exact": "33.22", "text": "Paint covers 11.8 m² per litre. Estimate the litres needed for 392 m².", "approx": true},
   {"id": "F06", "group": "F", "nums": ["3.12", "487"], "shape": "a*b", "rounded": ["3", "500"], "estimate": "1500", "exact": "1519", "text": "A runner averages 3.12 m/s for 487 s. Estimate the distance in metres.", "approx": true}
 ]; /* BANK-END */
@@ -341,7 +341,11 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
   var pool = [], qIdx = 0, marks = 0, total = 0, q = null, state = 'menu', kp = null, qMarks = [false, false], firstRight = 0, secondRight = 0, bothRight = 0;
 
   function showS(id) { document.querySelectorAll('.screen').forEach(function (s) { s.classList.remove('active'); }); $(id).classList.add('active'); }
-  function mark(raw, key) { return q.money ? MaffsAnswer.money(raw, key) : MaffsAnswer.exact(raw, key); }
+  // A money item's estimate is money; of its numbers, only those in moneyAt are (42 tickets and 21 people are
+  // counts, estimation-engine-s1-001). Money is marked by MaffsAnswer.money(), anything else exactly.
+  function isMoney(i) { return !!q.money && (i < 0 || !q.moneyAt || q.moneyAt.indexOf(i) >= 0); }
+  function cur(i) { return isMoney(i) ? '£' : ''; }
+  function mark(raw, key, i) { return isMoney(i) ? MaffsAnswer.money(raw, key) : MaffsAnswer.exact(raw, key); }
 
   // A fresh keypad for each step's boxes (touch screens only; with a mouse they are ordinary inputs).
   function keypadFor(inputs) {
@@ -384,7 +388,7 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
     var row = document.createElement('div'); row.className = 'cells';
     var inputs = q.nums.map(function (n, i) {
       var cell = document.createElement('label'); cell.className = 'cell';
-      cell.innerHTML = '<span class="from">' + (q.money ? '£' : '') + esc(n) + '</span>';
+      cell.innerHTML = '<span class="from">' + cur(i) + esc(n) + '</span>';
       var inp = document.createElement('input');
       inp.type = 'text'; inp.inputMode = 'decimal'; inp.setAttribute('aria-label', n + ' to 1 significant figure');
       inp.dataset.i = i;
@@ -398,9 +402,12 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
 
   function checkRounding() {
     var inputs = [].slice.call($('stepBody').querySelectorAll('input'));
-    var results = inputs.map(function (inp, i) { return mark(inp.value, q.rounded[i]); });
+    var results = inputs.map(function (inp, i) { return mark(inp.value, q.rounded[i], i); });
     var bad = results.indexOf('unreadable');
-    if (bad >= 0) { $('msg').textContent = MaffsAnswer.message('unreadable') + ' (the ' + (q.money ? '£' : '') + q.nums[bad] + ' box)'; return; }
+    if (bad >= 0) { $('msg').textContent = MaffsAnswer.message('unreadable') + ' (the ' + cur(bad) + q.nums[bad] + ' box)'; return; }
+    // A right amount in the wrong form (£20.0) is not marked (canon §7.1.3, SR-3; estimation-engine-s1-002).
+    bad = results.indexOf('format');
+    if (bad >= 0) { $('msg').textContent = MaffsAnswer.message('format', inputs[bad].value, { currency: '£' }) + ' (the ' + cur(bad) + q.nums[bad] + ' box)'; return; }
     var ok = results.every(function (r) { return r === 'correct'; });
     qMarks[0] = ok;
     if (ok) { marks++; firstRight++; $('marks').textContent = marks; }
@@ -408,7 +415,7 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
     // The boxes become plain values, so nothing from step 1 can be typed into or selected again.
     inputs.forEach(function (inp, i) {
       var cell = inp.parentElement, typed = inp.value, val = document.createElement('span');
-      val.className = 'val'; val.textContent = (q.money ? '£' : '') + q.rounded[i];
+      val.className = 'val'; val.textContent = cur(i) + q.rounded[i];
       cell.replaceChild(val, inp);
       var cue = cell.querySelector('.maffs-keypad-cue'); if (cue) cue.remove();
       cell.classList.add(results[i] === 'correct' ? 'done' : 'missed');
@@ -420,7 +427,7 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
     if (ok) fb.innerHTML = '<span class="v">✓ Rounding right.</span>';
     else {
       fb.innerHTML = '<span class="v">✗ Not all of them.</span> ' + q.nums.map(function (n, i) {
-        return results[i] === 'correct' ? '' : esc((q.money ? '£' : '') + n) + ' to 1 s.f. is ' + esc((q.money ? '£' : '') + q.rounded[i]) + '.';
+        return results[i] === 'correct' ? '' : esc(cur(i) + n) + ' to 1 s.f. is ' + esc(cur(i) + q.rounded[i]) + '.';
       }).filter(Boolean).join(' ');
     }
     $('stepBody').appendChild(fb);
@@ -444,8 +451,9 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
   }
 
   function checkEstimate() {
-    var raw = $('estimate').value, r = mark(raw, q.estimate);
+    var raw = $('estimate').value, r = mark(raw, q.estimate, -1);
     if (r === 'unreadable') { $('msg').textContent = MaffsAnswer.message('unreadable'); return; }
+    if (r === 'format') { $('msg').textContent = MaffsAnswer.message('format', raw, { currency: '£' }); return; }   // not marked (SR-3)
     if (!MaffsLock.lock($('qcard'))) return;   // one answer per question (canon 7.6.0); an unreadable entry is not an answer
     var ok = r === 'correct';
     qMarks[1] = ok;

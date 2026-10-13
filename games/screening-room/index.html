@@ -263,7 +263,7 @@ body.accessible{background-color:#12141f !important}
       <div class="how-to">
         <p>Read a screening scenario and estimate how likely a positive result is real</p>
         <p>Watch an icon array animation showing the natural frequencies</p>
-        <p>Calculate the exact probability — enter as a fraction, decimal or percentage</p>
+        <p>Calculate the probability, as a percentage or a decimal, to the places the question gives</p>
       </div>
       <div class="tier-label">Level</div>
       <div class="level-select">
@@ -297,7 +297,7 @@ body.accessible{background-color:#12141f !important}
       <div class="question-card">
         <div class="q-context" id="qContext"></div>
         <div class="q-scenario" id="qScenario"></div>
-        <div class="q-prompt">If someone tests positive, how likely is it they actually have the condition?</div>
+        <div class="q-prompt">If a result is positive, how likely is it to be real?</div>
       </div>
       <div class="gut-options" id="gutOptions">
         <button class="gut-btn" data-gut="very_likely" onclick="handleGut(this)">Very likely<span class="gut-range">Over 75%</span></button>
@@ -396,7 +396,7 @@ gcse: [
 {id:"gcse_06",context:"Rapid strep throat test",label:"Has strep throat",N:400,base:0.25,tests:[[0.86,0.95]],scenario:"A GP sees {N} patients with sore throats in a month. {c} of them ({base}) actually have strep throat. The rapid test correctly detects {sens} of strep cases, but gives a false positive for {fpr} of patients without strep.",explanation:"{pos} patients test positive. {tp} actually have strep."},
 {id:"gcse_07",context:"Shop security gate",label:"Carrying stolen item",N:20000,base:0.005,tests:[[0.8,0.97]],scenario:"Over a month, a shop's security gates check {N} customers leaving the store. {c} customers ({base}) are actually carrying stolen items. The gates correctly detect {sens} of stolen items, but trigger a false alarm for {fpr} of honest customers.",explanation:"{pos} customers trigger the alarm. Only {tp} are actually shoplifting."},
 {id:"gcse_08",context:"Dyslexia screening questionnaire",label:"Has dyslexia",N:600,base:0.1,tests:[[0.8,0.85]],scenario:"{N} students complete a dyslexia screening questionnaire. {c} students ({base}) have dyslexia. The questionnaire correctly identifies {sens} of dyslexic students, but also flags {fpr} of non-dyslexic students.",explanation:"{pos} students are flagged. {tp} actually have dyslexia."},
-{id:"gcse_09",context:"Concert security metal detector",label:"Carrying prohibited item",N:50000,base:0.002,tests:[[1.0,0.93]],scenario:"At a music festival, {N} people pass through metal detectors. {c} people ({base}) are carrying prohibited metal items. The detectors catch {sens} of prohibited items, but also trigger for {fpr} of people carrying harmless metal.",explanation:"{pos} people trigger the detectors. Only {tp} have prohibited items."},
+{id:"gcse_09",context:"Concert security metal detector",label:"Carrying prohibited item",N:50000,base:0.002,tests:[[1.0,0.93]],scenario:"At a music festival, {N} people pass through metal detectors. {c} people ({base}) are carrying prohibited metal items. The detectors catch {sens} of prohibited items, but also trigger for {fpr} of people with no prohibited item.",explanation:"{pos} people trigger the detectors. Only {tp} have prohibited items."},
 {id:"gcse_10",context:"Primary school head lice check",label:"Has head lice",N:400,base:0.15,tests:[[0.8,0.95]],scenario:"A school nurse checks {N} children for head lice. {c} children ({base}) actually have lice. The visual check correctly spots {sens} of cases, but mistakenly identifies {fpr} of lice-free children as having nits.",explanation:"{pos} children are flagged. {tp} actually have lice."},
 {id:"gcse_11",context:"COVID rapid test during outbreak",label:"Has COVID",N:500,base:0.2,tests:[[0.8,0.99]],scenario:"During a school outbreak, {N} students are tested with lateral flow tests. {c} students ({base}) actually have COVID. The test correctly detects {sens} of positive cases, but gives a false positive for {fpr} of students without COVID.",explanation:"{pos} students test positive. {tp} actually have COVID."},
 {id:"gcse_12",context:"Home pregnancy test",label:"Pregnant",N:5000,base:0.08,tests:[[0.99,0.98]],scenario:"Of {N} women who take a home pregnancy test, {c} ({base}) are actually pregnant. The test correctly detects {sens} of pregnancies, but gives a false positive for {fpr} of non-pregnant women.",explanation:"{pos} women test positive. {tp} are actually pregnant."},

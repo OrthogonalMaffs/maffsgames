@@ -293,7 +293,7 @@ const QUESTIONS = [
   },
   {
     section: '3.1', ao: 'AO1',
-    stem: 'A cumulative frequency table for the weights of 100 parcels shows: 20 below 1 kg, 55 below 2 kg, 80 below 3 kg, 100 below 4 kg. What is the best estimate for the median weight?',
+    stem: 'A cumulative frequency table for the weights of 100 parcels shows: 20 below 1 kg, 55 below 2 kg, 80 below 3 kg, 100 below 4 kg. Which interval contains the median weight?',
     options: ['Between 1 kg and 2 kg', 'Exactly 2 kg', 'Between 2 kg and 3 kg', 'Between 3 kg and 4 kg'],
     correct: 0,
     working: 'Median = 50th value. 20 parcels below 1 kg, 55 below 2 kg \u2014 the 50th parcel falls in the 1\u20132 kg class.'
@@ -308,7 +308,7 @@ const QUESTIONS = [
   {
     section: '3.1', ao: 'AO2',
     stem: 'A journalist surveys the first 40 people outside a cinema on a Saturday afternoon to find out how much TV people watch. What is the most significant reason this sample may be biased?',
-    options: ['40 people is not enough for any valid conclusion', 'The sample is taken on a Saturday, so workers are underrepresented', 'People visiting a cinema on a Saturday afternoon may watch less TV than average', 'She should have used a larger sample from multiple locations'],
+    options: ['40 people is not enough for any valid conclusion', 'The sample is taken on a Saturday, so workers are underrepresented', 'People visiting a cinema on a Saturday afternoon may watch less TV than average', 'Asking the first 40 people makes the sample random, so it cannot be biased'],
     correct: 2,
     working: 'The location creates systematic bias \u2014 cinema-goers may self-select as people who prefer going out over watching TV.'
   },
@@ -330,7 +330,7 @@ const QUESTIONS = [
   {
     section: '3.1', ao: 'AO2',
     stem: 'Class X: mean 62, median 65, SD 8. Class Y: mean 62, median 54, SD 14. Which statement is most accurate?',
-    options: ['The classes performed equally well because they have the same mean', 'Class X performed better on average because their median is higher', 'Class Y performed better because their scores were more spread out', 'No comparison can be made without seeing the raw data'],
+    options: ['The classes performed equally well because their standard deviations are similar', 'Class X performed better on average because their median is higher', 'Class Y performed better because their scores were more spread out', 'No comparison can be made without seeing the raw data'],
     correct: 1,
     working: 'Same mean, but Class Y\'s lower median (54 vs 65) suggests outliers pulling the mean up. Class X also has lower SD \u2014 more consistent performance.'
   },
@@ -381,7 +381,7 @@ const QUESTIONS = [
   {
     section: '3.1', ao: 'AO3',
     stem: 'A survey of 500 people finds that those who eat breakfast earn on average \u00a34,200 more per year. A blogger concludes "Eating breakfast causes higher earnings." What is the most appropriate criticism?',
-    options: ['The sample size of 500 is too small', 'Correlation between breakfast habits and earnings does not imply causation', 'The mean is not the right measure for earnings data', 'The survey should have asked about other meals too'],
+    options: ['The sample size of 500 is too small', 'Correlation between breakfast habits and earnings does not imply causation', 'The survey is invalid because earnings cannot be averaged', 'The survey should have asked about other meals too'],
     correct: 1,
     working: 'A confounding variable \u2014 such as lifestyle habits or socioeconomic background \u2014 could explain both. Classic correlation \u2260 causation.'
   },
@@ -618,7 +618,8 @@ function renderStemLeaf() {
     '<tr><td class="left-col">7 &nbsp;6 &nbsp;4 &nbsp;2</td><td class="stem-col">5</td><td class="right-col">1 &nbsp;3 &nbsp;8 &nbsp;9</td></tr>' +
     '<tr><td class="left-col">8 &nbsp;5 &nbsp;1</td><td class="stem-col">6</td><td class="right-col">0 &nbsp;4 &nbsp;6</td></tr>' +
     '<tr><td class="left-col">3</td><td class="stem-col">7</td><td class="right-col">2</td></tr>' +
-    '</table>';
+    '</table>' +
+    '<p class="stem-leaf-key" style="text-align:center;font-size:13px;margin:-8px 0 12px">Key: 4 | 5 | 1 means 54 for Group A and 51 for Group B</p>';
 }
 
 // ── GAME STATE ──

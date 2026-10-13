@@ -43,9 +43,9 @@ rates, and computes everything else; this script recomputes it all with exact fr
 
     python scripts/verify-screening-room.py [--file PATH] [--selftest]
 
---selftest plants 13 faults in copies of the page (a hand-keyed band, alevel_16's old 130 false positives in the
-engine and typed into its explanation, marking that accepts 0, and one or two for each SR-21 entry) and requires each
-to be caught.
+--selftest plants 16 faults in copies of the page (a hand-keyed band, alevel_16's old 130 false positives in the
+engine and typed into its explanation, marking that accepts 0, one or two for each SR-21 entry, and the old start
+screen, phase 1 prompt and gcse_09 wording from SWEEP-1) and requires each to be caught.
 """
 import argparse
 import math
@@ -503,6 +503,15 @@ def run(path, play=True, only=None):
         for m in re.finditer(r'[{,]\s*' + field + r'\s*:', block):
             line = block[:m.start()].count('\n')
             rep[('hand-keyed', f'item line {line}')].append(f'an item literal carries {field}: it must be computed')
+    # SWEEP-1 (screening-room-s1-002..004): the words agree with what the page does. The start screen promised an
+    # "exact" answer "as a fraction" (rounded, and a fraction is never marked); the phase 1 prompt asked whether
+    # "someone" has "the condition" on welds, emails and alarms; gcse_09 gave its false-positive rate for "people
+    # carrying harmless metal" where every count uses all the people with no prohibited item.
+    for pat, why in ((r'Calculate the exact probability|enter as a fraction', 'screening-room-s1-003'),
+                     (r'they actually have the condition', 'screening-room-s1-004'),
+                     (r'of people carrying harmless metal', 'screening-room-s1-002')):
+        if re.search(pat, src):
+            rep[(why, 'page text')].append('the page says %r, which its marking or counts contradict' % pat)
     proc, base = bc.start_stub_server()
     try:
         with sync_playwright() as p:
@@ -592,6 +601,14 @@ def selftest():
         ('t4-016 (pinned): the prompt counts people', 'screening-room-t4-016', {'gcse_01'},
          lambda s: plant(s, "'Of the <strong>' + numFmt(q.testPositive.total) + '</strong> positive results",
                          "'Out of <strong>' + numFmt(q.testPositive.total) + '</strong> people who tested positive")),
+        ('s1-003: the old start screen', 'screening-room-s1-003', None,
+         lambda s: plant(s, 'Calculate the probability, as a percentage or a decimal, to the places the question gives',
+                         'Calculate the exact probability — enter as a fraction, decimal or percentage')),
+        ('s1-004: the old phase 1 prompt', 'screening-room-s1-004', None,
+         lambda s: plant(s, 'If a result is positive, how likely is it to be real?',
+                         'If someone tests positive, how likely is it they actually have the condition?')),
+        ("s1-002: gcse_09's old rate wording", 'screening-room-s1-002', None,
+         lambda s: plant(s, 'of people with no prohibited item.', 'of people carrying harmless metal.')),
         ("t4-016 (pinned): the hint's example is an item's answer", 'screening-room-t4-016', {'gcse_01'},
          lambda s: plant(s, "['12.5%', '0.125']", "['25.8%', '0.258']")),
     ]

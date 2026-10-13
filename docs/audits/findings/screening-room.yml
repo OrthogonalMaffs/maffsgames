@@ -206,3 +206,74 @@ findings:
   ruling: 'Jon, 8 Oct 2026 23:39 (UC-FIX amendment, item 1): one question_answered row per answer is correct; each
     item asks for two answers, the gut check and the worked figure, and logging both shows where a student goes wrong.
     Current behaviour kept, no code change.'
+- id: screening-room-s1-001
+  severity: MEDIUM
+  jc: true
+  class: NEW:marking-tolerance
+  level: alevel
+  where: games/screening-room/index.html markCalc (alevel_01, alevel_12, alevel_19)
+  summary: 'A percentage typed without its % sign is nudged ("type the % sign") when it is over 1, but under 1 it is
+    read as a decimal and marked wrong: 0.98 for 0.98%, 0.045 for 0.045%, 0.28 for 0.28%. Nudging there would also
+    nudge a student who means 0.98 (98%), so which way is a choice for Jon; the verifier''s probe skips these items
+    (verify :286-289)'
+  evidence: 'Hint "as a percentage to 2 decimal places (e.g. 1.25%) or as a decimal to 4 decimal places (e.g. 0.0125)";
+    keys 0.98% / 0.0098 (SWEEP-1, batch 9)'
+  status: open
+- id: screening-room-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: gcse
+  where: games/screening-room/index.html:399 (gcse_09)
+  summary: 'The scenario gave the false-positive rate for "people carrying harmless metal", a subset of unstated
+    size, but every count applies it to all 49,900 people with no prohibited item. Fixed: "of people with no
+    prohibited item"; the verifier bars the old phrase, planted'
+  evidence: 'key 100/3,593 = 2.8% (SWEEP-1, batch 9)'
+  status: open
+- id: screening-room-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: all
+  where: games/screening-room/index.html:266 (start screen)
+  summary: 'The start screen said "Calculate the exact probability — enter as a fraction, decimal or percentage"; the
+    answer is marked rounded to the stated places and a fraction is never marked. Fixed: "Calculate the probability,
+    as a percentage or a decimal, to the places the question gives"; barred, planted'
+  evidence: 'markCalc: a fraction returns "Right value, but as a fraction" (SWEEP-1, batch 9)'
+  status: open
+- id: screening-room-s1-004
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: all
+  where: games/screening-room/index.html:300 (phase 1 prompt)
+  summary: 'The fixed phase 1 prompt "If someone tests positive, how likely is it they actually have the condition?"
+    was shown on about 32 of 70 items that are not people with a condition (welds, emails, alarms, banknotes);
+    t4-016 fixed the same in phase 3. Fixed: "If a result is positive, how likely is it to be real?"; barred,
+    planted'
+  evidence: 'Prompt text (SWEEP-1, batch 9)'
+  status: open
+- id: screening-room-s1-005
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: games/screening-room/index.html:322-323, :740 (legend), :430 (alevel_18), :448 (core_14), :894, :1071
+  summary: 'The legend labels the blue dot "Has <condition>" though blue is only the missed cases (alevel_16 "after two
+    tests", alevel_18 "lower threshold"); alevel_18 says "more of its positives are real" for a share; core_14 uses
+    "struggle" and "fail" as one; phase 3 asks "how many are real" for a probability; the end screen says "The base
+    rate matters more than test accuracy" (not true in general, e.g. gcse_15). Wording, for Jon'
+  evidence: 'Texts as quoted (SWEEP-1, batch 9)'
+  status: open
+- id: screening-room-s1-006
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: all
+  where: scripts/verify-screening-room.py
+  summary: 'The verifier checks that each number in a template is from the data, not which count sits in which slot (a
+    swapped {tp} and {fp} would pass), and does not check the qualitative explanation claims, the end-screen insight,
+    the legend labels or the no-% case under 1%. Recorded under Jon''s rule of 13 Oct 2026; the start screen, phase 1
+    prompt and gcse_09 wording are now checked'
+  evidence: 'check_item(): numbers_in() membership only (SWEEP-1, batch 9)'
+  status: open
