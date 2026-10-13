@@ -141,7 +141,7 @@ body.accessible p,body.accessible .question-text,body.accessible .feedback-detai
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/level.js"></script>
-<script>MaffsLevel.resolve({slug:'like-terms-collector',levels:['year6'],fallback:'year6'});</script>
+<script>var resolvedLevel=MaffsLevel.resolve({slug:'like-terms-collector',levels:['year6'],fallback:'year6'});</script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
@@ -360,7 +360,7 @@ function startGame(){
   loadQuestion();
   window._mfgSlug='like-terms-collector';
   window._mfgLevel='year6';
-  if(typeof mfg==='function') mfg('game_started',{game_slug:'like-terms-collector',level:'year6'});
+  if(typeof mfg==='function') mfg('game_started',{game_slug:'like-terms-collector',level:resolvedLevel});
 }
 
 function updateStagePill(){
@@ -455,7 +455,7 @@ function checkInputAnswer(){
   updateScore();
   showFeedback(correct, correct?null:(decimals.length?`${decimals.join(' and ')} ${decimals.length>1?'are not whole numbers':'is not a whole number'}: you are counting, so each answer is a whole number. `:'')+`The answer is ${q.answers[0]} ${q.labels[0]} and ${q.answers[1]} ${q.labels[1]}.`);
 
-  if(typeof mfg==='function') mfg('question_answered',{game_slug:'like-terms-collector',level:'year6',question_index:questionIndex,correct:correct});
+  if(typeof mfg==='function') mfg('question_answered',{game_slug:'like-terms-collector',level:resolvedLevel,question_index:questionIndex,correct:correct});
 }
 
 function checkMCQ(btn,chosen,answer){
@@ -473,7 +473,7 @@ function checkMCQ(btn,chosen,answer){
   updateScore();
   showFeedback(correct, correct?null:`The correct answer is ${answer}.`);
 
-  if(typeof mfg==='function') mfg('question_answered',{game_slug:'like-terms-collector',level:'year6',question_index:questionIndex,correct:correct});
+  if(typeof mfg==='function') mfg('question_answered',{game_slug:'like-terms-collector',level:resolvedLevel,question_index:questionIndex,correct:correct});
 }
 
 function showFeedback(correct,detail){
@@ -601,7 +601,7 @@ const showResults=MaffsLock.finishOnce(function(early){
   MaffsLock.timer(()=>{pab.style.display='block'},5000);
 
   window._mfgCompleted=true;
-  if(typeof mfg==='function') mfg('game_completed',{game_slug:'like-terms-collector',level:'year6',score:totalCorrect,questions_answered:answeredTotal,questions_correct:totalCorrect});
+  if(typeof mfg==='function') mfg('game_completed',{game_slug:'like-terms-collector',level:resolvedLevel,score:totalCorrect,questions_answered:answeredTotal,questions_correct:totalCorrect});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('like-terms-collector','year6',totalCorrect,answeredTotal).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('like-terms-collector','year6',totalCorrect);}}
 });
 

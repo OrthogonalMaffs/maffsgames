@@ -22,7 +22,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/level.js"></script>
-<script>MaffsLevel.resolve({slug:'factor-theorem',levels:['alevel'],fallback:'alevel'});</script>
+<script>var resolvedLevel=MaffsLevel.resolve({slug:'factor-theorem',levels:['alevel'],fallback:'alevel'});</script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/mathtext.js"></script>
@@ -891,7 +891,7 @@ function beginRun(mode) {
     }, 1000);
   }
   if (typeof mfg === 'function') {
-    mfg('game_started', { game_slug: CONTENT.slug, level: 'alevel', mode: mode });
+    mfg('game_started', { game_slug: CONTENT.slug, level: resolvedLevel, mode: mode });
   }
 }
 
@@ -1034,7 +1034,7 @@ function scrollToStep() {
 const finishPractice = MaffsLock.finishOnce(() => {
   const questions = CONTENT.practice.questions;
   if (typeof mfg === 'function') {
-    mfg('game_completed', { game_slug: CONTENT.slug, level: 'alevel', score: practiceState.score, questions_answered: questions.length, questions_correct: practiceState.answers.filter(a => a).length, mode: 'practice' });
+    mfg('game_completed', { game_slug: CONTENT.slug, level: resolvedLevel, score: practiceState.score, questions_answered: questions.length, questions_correct: practiceState.answers.filter(a => a).length, mode: 'practice' });
   }
 });
 
@@ -1154,7 +1154,7 @@ function renderPractice() {
       document.getElementById('nextQBtn').focus();
     }
     if (typeof mfg === 'function') {
-      mfg('question_answered', { game_slug: CONTENT.slug, level: 'alevel', question_index: practiceState.qIdx + 1, correct, attempts, hints_used: hintsUsed, mode: 'practice' });
+      mfg('question_answered', { game_slug: CONTENT.slug, level: resolvedLevel, question_index: practiceState.qIdx + 1, correct, attempts, hints_used: hintsUsed, mode: 'practice' });
     }
     return qScore;
   };
@@ -1245,7 +1245,7 @@ function resetPractice() {
 const finishTest = MaffsLock.finishOnce(() => {
   const questions = CONTENT.test.questions;
   if (typeof mfg === 'function') {
-    mfg('game_completed', { game_slug: CONTENT.slug, level: 'alevel', score: testState.score, questions_answered: questions.length, questions_correct: testState.answers.filter(a => a.correct).length, mode: 'test' });
+    mfg('game_completed', { game_slug: CONTENT.slug, level: resolvedLevel, score: testState.score, questions_answered: questions.length, questions_correct: testState.answers.filter(a => a.correct).length, mode: 'test' });
   }
   if (window.MaffsLeaderboard) { MaffsLeaderboard.submitScore(CONTENT.slug, 'alevel', testState.score, questions.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record(CONTENT.slug,'alevel',testState.score);} }
 });
@@ -1367,7 +1367,7 @@ function renderTest() {
     }
 
     if (typeof mfg === 'function') {
-      mfg('question_answered', { game_slug: CONTENT.slug, level: 'alevel', question_index: testState.qIdx + 1, correct: allCorrect, attempts: 1, hints_used: 0, mode: 'test' });
+      mfg('question_answered', { game_slug: CONTENT.slug, level: resolvedLevel, question_index: testState.qIdx + 1, correct: allCorrect, attempts: 1, hints_used: 0, mode: 'test' });
     }
   });
 

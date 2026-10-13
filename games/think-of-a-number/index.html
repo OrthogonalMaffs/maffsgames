@@ -143,7 +143,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/level.js"></script>
-<script>MaffsLevel.resolve({slug:'think-of-a-number',levels:['year6'],fallback:'year6'});</script>
+<script>var resolvedLevel=MaffsLevel.resolve({slug:'think-of-a-number',levels:['year6'],fallback:'year6'});</script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
@@ -470,7 +470,7 @@ function startGame() {
   showQuestion();
 
   if (typeof mfg === 'function') {
-    mfg('game_started', {game_slug:'think-of-a-number', level:'year6'});
+    mfg('game_started', {game_slug:'think-of-a-number', level:resolvedLevel});
   }
 }
 
@@ -666,7 +666,7 @@ function submitAnswer() {
   if (typeof mfg === 'function') {
     mfg('question_answered', {
       game_slug: 'think-of-a-number',
-      level: 'year6',
+      level: resolvedLevel,
       question_index: currentIndex + 1,
       correct: isCorrect
     });
@@ -728,7 +728,7 @@ const showResults = MaffsLock.finishOnce(function () {
     if (typeof mfg === 'function') {
       mfg('personal_best_set', {
         game_slug: 'think-of-a-number',
-        level: 'year6',
+        level: resolvedLevel,
         score: correctCount,
         previous_best: prevBest
       });
@@ -742,7 +742,7 @@ const showResults = MaffsLock.finishOnce(function () {
   if (typeof mfg === 'function') {
     mfg('game_completed', {
       game_slug: 'think-of-a-number',
-      level: 'year6',
+      level: resolvedLevel,
       score: correctCount,
       questions_answered: total,
       questions_correct: correctCount

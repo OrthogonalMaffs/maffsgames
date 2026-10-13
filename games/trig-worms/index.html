@@ -96,7 +96,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/level.js"></script>
-<script>MaffsLevel.resolve({slug:'trig-worms',levels:['gcse','alevel'],fallback:'gcse'});</script>
+<script>var resolvedLevel=MaffsLevel.resolve({slug:'trig-worms',levels:['gcse','alevel'],fallback:'gcse'});</script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
@@ -481,9 +481,9 @@ function startGame(){
   document.getElementById('startScreen').style.display='none';
   document.getElementById('gameOver').classList.remove('visible');
   document.getElementById('mainGame').classList.add('visible');
-  mfg('game_started',{game_slug:'trig-worms',level:'gcse'});
+  mfg('game_started',{game_slug:'trig-worms',level:resolvedLevel});
   window._ggAbandoned=true;
-  if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'trig-worms',level:'gcse',questions_answered:qNum})});}
+  if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'trig-worms',level:resolvedLevel,questions_answered:qNum})});}
   buildLevelBar();
   loadQ();
 }
@@ -550,7 +550,7 @@ function guess(val,btn,div){
     fb.textContent='MISSED! See correct answer above';fb.className='feedback wrong';
     animateShot(false,()=>{qNum++;loadQ();});
   }
-  mfg('question_answered',{game_slug:'trig-worms',level:'gcse',correct:correct,question_index:qNum+1});
+  mfg('question_answered',{game_slug:'trig-worms',level:resolvedLevel,correct:correct,question_index:qNum+1});
   document.getElementById('score').textContent=score;
 }
 
@@ -581,11 +581,11 @@ const endGame=MaffsLock.finishOnce(function(){
   document.getElementById('goDetail').textContent=`${TOTAL} shots fired • ${score/10} hits`;
   window._ggAbandoned=false;
   var _twPct=TOTAL>0?Math.round(_twCorrectCount/TOTAL*100):0;
-  mfg('game_completed',{game_slug:'trig-worms',level:'gcse',score:score,questions_answered:TOTAL,accuracy:_twPct});
+  mfg('game_completed',{game_slug:'trig-worms',level:resolvedLevel,score:score,questions_answered:TOTAL,accuracy:_twPct});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('trig-worms','gcse',score,TOTAL).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('trig-worms','gcse',score);}}
   var _twOldBest=getBest();
   saveBest(score);
-  if(score>_twOldBest){mfg('personal_best_set',{game_slug:'trig-worms',level:'gcse',score:score,previous_best:_twOldBest});}
+  if(score>_twOldBest){mfg('personal_best_set',{game_slug:'trig-worms',level:resolvedLevel,score:score,previous_best:_twOldBest});}
   renderLB();
 });
 function getBest(){return parseInt(localStorage.getItem('tw_best')||'0');}

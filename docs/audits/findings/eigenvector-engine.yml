@@ -179,12 +179,13 @@ findings:
   class: NEW:unstated-convention
   level: further
   where: games/eigenvector-engine/index.html:144,163,170-171 (mfg events)
-  summary: 'For the home lane / Jon (SR-29 class), not fixed. mfg events hard-code level ''further'';
-    MaffsLevel.resolve also accepts Level 4, so Level 4 plays are logged as ''further'' (R10, the home lane''s)
-    (Split: the parent entry held 3 defects; the others are eigenvector-engine-s1-006,
-    eigenvector-engine-s1-007.)'
+  summary: 'Fixed under R10 (LEVEL-LOGGED, 13 Oct 2026): the events now log the resolved level; the leaderboard key
+    stays ''further'' (SR-29). Was: mfg events hard-code level ''further''; MaffsLevel.resolve also accepts
+    Level 4, so Level 4 plays are logged as ''further''. (Split: the parent entry held 3 defects; the others
+    are eigenvector-engine-s1-006, eigenvector-engine-s1-007.)'
   evidence: 'mfg(''game_started'', {game_slug: ''eigenvector-engine'', level: ''further'', ...}) (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 362
 - id: eigenvector-engine-s1-006
   severity: LOW
   jc: true

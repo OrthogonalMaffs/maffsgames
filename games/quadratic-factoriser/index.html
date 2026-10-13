@@ -1546,12 +1546,12 @@ function hfCompleteStepFlow() {
   }
   if (hfViaShowMethod) {
     hfViaShowMethod = false;
-    mfg('question_answered', { game_slug: SLUG, level: 'higher', correct: true, question_index: qIndex });
+    mfg('question_answered', { game_slug: SLUG, level: currentLevel, correct: true, question_index: qIndex });
     score += 15; correctCount++; document.getElementById('score').textContent = score;
     MaffsLock.timer(hfBeginRealQuestion, 1200);
     return;
   }
-  mfg('question_answered', { game_slug: SLUG, level: 'higher', correct: true, question_index: qIndex });
+  mfg('question_answered', { game_slug: SLUG, level: currentLevel, correct: true, question_index: qIndex });
   score += 15; correctCount++; document.getElementById('score').textContent = score;
   hfConsecCorrect++;
   if (hfConsecCorrect >= 2) { hfMode = 'independent'; hfConsecCorrect = 0; hfConsecWrong = 0; }
@@ -1624,7 +1624,7 @@ function hfIndepCheck() {
   const k = isHcf ? picks.k : 1;
   const sa = k * picks.p * picks.r, sb = k * (picks.p * picks.s + picks.q * picks.r), sc = k * picks.q * picks.s;
   const correct = (sa === currentQ.a && sb === currentQ.b && sc === currentQ.c);
-  mfg('question_answered', { game_slug: SLUG, level: 'higher', correct: correct, question_index: qIndex });
+  mfg('question_answered', { game_slug: SLUG, level: currentLevel, correct: correct, question_index: qIndex });
   document.getElementById('hfIndepCheckBtn').disabled = true;
   const fb = document.getElementById('hfFeedback');
   if (correct) {
@@ -1734,7 +1734,7 @@ function submitFormulaAnswer(n1, n2, saidNoReal) {
   else correct = rootsMatch(n1, n2, root1, root2);
 
   formulaDisable();
-  mfg('question_answered', { game_slug: SLUG, level: 'formula', correct: correct, question_index: qIndex });
+  mfg('question_answered', { game_slug: SLUG, level: currentLevel, correct: correct, question_index: qIndex });
   const fb = document.getElementById('fFeedback');
   const hint = document.getElementById('fHintText');
   if (correct) {

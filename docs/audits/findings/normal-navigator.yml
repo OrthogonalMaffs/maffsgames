@@ -108,11 +108,14 @@ findings:
   class: NEW:level-content-mismatch
   level: alevel
   where: games/normal-navigator/index.html:325-374
-  summary: 'The game serves one bank to A-Level, Level 4 and Core Maths but logs level "alevel" for all three, the
-    shape of the factor-theorem ruling (a level serving another level''s items). R10, the home lane''s
-    (contract LEVEL-LOGGED) (Split: the parent entry held 2 defects; the others are normal-navigator-s1-011.)'
+  summary: 'Closed under R10 and SR-29 (Jon, 13 Oct 2026): the events now log the resolved level, and one bank serving
+    a second audience is acceptable under SR-29. Was: the game serves one bank to A-Level, Level 4 and Core
+    Maths but logs level "alevel" for all three, the shape of the factor-theorem ruling (a level serving
+    another level''s items). (Split: the parent entry held 2 defects; the other is normal-navigator-s1-011, the
+    calculator tag, which stays open for Jon.)'
   evidence: 'mfg(..., level: ''alevel'') at every event (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 362
 - id: normal-navigator-s1-011
   severity: LOW
   jc: true
