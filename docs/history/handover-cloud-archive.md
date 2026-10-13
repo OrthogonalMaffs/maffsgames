@@ -17,6 +17,14 @@ and the last three entries; older entries move here, newest first, unchanged.
 - **Fixed in batch 9:** screening-room wording; estimation-engine's counts as £ and its money format path (SR-3); core-maths-paper1 (stem-and-leaf key, SR-16/SR-31 options); paper2b (precision, assumption); paper2c (units).
 - **Next:** (done: see batch 10's entry above.)
 
+## 2026-10-13 (cloud): growth-and-decay (#352), test-the-claim (#353), graph-sketcher (#354) and SWEEP-1 batch 10 (Core Maths and A-Level, part 1)
+
+- **Three SR-20 levels, each fixed in its own PR under SR-30 (keys unchanged):** growth-and-decay (#352), test-the-claim (#353), graph-sketcher (#354): typed answers marked to bands that disagree with the precision their prompt states, so wrong answers were marked right and right ones wrong (todo §1.36); now marked through the shared MaffsAnswer at the stated precision, plus true or accepted-H0 wrong options (SR-16), signed boundaries and stated conventions (SR-17).
+- **Jon's tax-theft ruling, done in batch 10's PR (verbatim in the rulings file):** Hard's table in taxable-income bands from uk_rates.py, the payslip annual throughout, "You Keep per Year", the factor-of-12 hint skipped on a £0 key, Jon's closing line.
+- **Fixed in batch 10:** integration-duel's three working lines (every expression of the working is now checked); normal-navigator's 26 unstated precisions (SR-1), the IQR working, "exactly 95%"; suvat's double-negative deceleration.
+- **Open, for Jon:** normal-navigator-s1-002 (minimum-mark rounding) and -007 (one level logged for three); suvat-s1-002 and -005; differentiation-duel-s1-001; the SR-20 games' open entries (growth-and-decay s1-003/-004/-007/-008, test-the-claim s1-006/-007, graph-sketcher s1-006/-007). **For the home lane:** suvat ALEVEL[34] (v_y = −0.32 behind inputmode="decimal").
+- **Next:** batch 11 (curling-friction, force-resolver, moments-master, log-laws, binomial-blaster, partial-fractions-duel, proof-builder, dimension-checker), then batch 12 (factor-theorem, complex-converter, matrix-crunch, characteristic-quest, eigenvalue-extractor, eigenvector-engine, boolean-blitz, truth-will-set-you-free), then the final "for Jon" list and the SWEEP_DONE note. Notes: scratchpad `batch11-notes.txt`.
+
 ## 2026-10-13 (cloud): circle-theorem-spotter (#344) and SWEEP-1 batch 7 (GCSE part 3)
 
 - **SR-20 hit, fixed under SR-30 (Jon, 13 Oct):** circle-theorem-spotter's tangent figures marked the angle on the wrong side (6 of 55 HIGH). #344: T across AB from C, on B's side of OA; the verifier measures every tangent figure's SVG in Chromium; both old rules planted.
