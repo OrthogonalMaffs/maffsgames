@@ -85,7 +85,11 @@ findings:
   where: games/graph-sketcher/index.html L4_5 (:538), CM2 (:273), CM11 (:351), CM4 (:291)
   summary: 'L4_5''s "maximum deflection" on 0 ≤ x ≤ 4 is 4 at both x = 1 and x = 4 (the endpoint), so (4, 4) is also
     right. Part 2 #14: the ask becomes "the turning point"; the key is unchanged (Split: the parent entry held
-    4 defects; the others are graph-sketcher-s1-009, graph-sketcher-s1-010, graph-sketcher-s1-011.)'
+    4 defects; the others are graph-sketcher-s1-009, graph-sketcher-s1-010, graph-sketcher-s1-011.) NOT APPLIED
+    (the contract: a drafted wording that proves wrong on checking is reported, not rewritten): "the turning
+    point" is ambiguous for L4_5, because y = x^3 - 6x^2 + 9x has two turning points on 0 <= x <= 4, (1, 4) a
+    local maximum and (3, 0) a local minimum, and the key is (1, 4). Proposed for Jon: "the local maximum" (it
+    excludes the endpoint (4, 4) and names the key).'
   evidence: 'Items as quoted (SWEEP-1, batch 10)'
   status: open
 - id: graph-sketcher-s1-009
@@ -96,9 +100,13 @@ findings:
   where: games/graph-sketcher/index.html L4_5 (:538), CM2 (:273), CM11 (:351), CM4 (:291)
   summary: 'CM2''s key "Model allows negative profit" is false, P = x(x − 3)² ≥ 0, and no option is true. Part 2 #14:
     the key becomes "The model predicts profit keeps rising without limit as x increases" (drafted wording in
-    the content document) (Split from graph-sketcher-s1-006, SWEEP-1-RULINGS step 1.)'
+    the content document) (Split from graph-sketcher-s1-006, SWEEP-1-RULINGS step 1.) Fixed in #366 (Part 2
+    #14): the correct limitation is "The model predicts profit keeps rising without limit as x increases" (the
+    drafted wording), and the wrong options are the drafted three; the verifier checks P = x(x-3)^2 is never
+    negative, is 0 at x = 3 and rises without limit.'
   evidence: 'Items as quoted (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 366
 - id: graph-sketcher-s1-010
   severity: MEDIUM
   jc: true
@@ -106,9 +114,12 @@ findings:
   level: core, level4
   where: games/graph-sketcher/index.html L4_5 (:538), CM2 (:273), CM11 (:351), CM4 (:291)
   summary: 'CM11''s rate is fixed in the context, so "Reliable" is defensible. Part 2 #14: "Reliable" is accepted as
-    well as the current key (Split from graph-sketcher-s1-006, SWEEP-1-RULINGS step 1.)'
+    well as the current key (Split from graph-sketcher-s1-006, SWEEP-1-RULINGS step 1.) Fixed in #366 (Part 2
+    #14): either reliability answer is accepted for CM11 (the context fixes the 4% rate); the verifier plays
+    the other answer through the game.'
   evidence: 'Items as quoted (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 366
 - id: graph-sketcher-s1-011
   severity: MEDIUM
   jc: true
@@ -117,9 +128,13 @@ findings:
   where: games/graph-sketcher/index.html L4_5 (:538), CM2 (:273), CM11 (:351), CM4 (:291)
   summary: 'CM4''s key gives reaction time as a braking-distance limitation. Part 2 #14: the key text names a
     limitation of the braking-distance model itself (R3; wording reported in the PR) (Split from
-    graph-sketcher-s1-006, SWEEP-1-RULINGS step 1.)'
+    graph-sketcher-s1-006, SWEEP-1-RULINGS step 1.) Fixed in #366 (Part 2 #14, R3): the limitation now reads
+    "The model assumes the same road surface and brakes at every speed, but wet roads or worn tyres lengthen
+    the braking distance". Reaction time is thinking distance, not braking distance. Wording written by the
+    cloud lane and reported in the PR.'
   evidence: 'Items as quoted (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 366
 - id: graph-sketcher-s1-007
   severity: LOW
   jc: true

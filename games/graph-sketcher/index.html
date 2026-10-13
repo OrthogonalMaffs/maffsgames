@@ -271,7 +271,7 @@ core:[
    iqs:[
      {type:'read',prompt:'Estimate P when x = 2.5.',answer:0.625,tol:0.3},
      {type:'mcq',prompt:'At what value of x does profit reach its turning point (local minimum)?',correct:'x = 3',wrong:['x = 0','x = 1','x = 5']},
-     {type:'mcq',prompt:'Describe one limitation of this model.',correct:'Model allows negative profit but real businesses would stop trading',wrong:['Profit is always positive','The model is linear','x cannot be a whole number']}
+     {type:'mcq',prompt:'Describe one limitation of this model.',correct:'The model predicts profit keeps rising without limit as x increases',wrong:['The model predicts a loss when x = 3','The model is linear','x cannot be a whole number']}
    ]},
   {id:'CM3',eqLatex:'P = 100 \\times 1.05^t',context:'Population P (thousands), t = years since 2010.',
    fn:t=>100*Math.pow(1.05,t),xRange:[0,20],yRange:[90,280],xLabel:'t (years)',yLabel:'P (thousands)',
@@ -289,7 +289,7 @@ core:[
    iqs:[
      {type:'read',prompt:'Estimate the speed at which braking distance reaches 20 m.',answer:57.7,tol:3},
      {type:'mcq',prompt:'What does the shape tell you about speed and braking distance?',correct:'Braking distance increases more rapidly as speed increases',wrong:['Braking distance is proportional to speed','The relationship is linear','Braking distance decreases at high speeds']},
-     {type:'mcq',prompt:'Describe one limitation.',correct:'Model gives d = 0 at v = 0 but real braking includes reaction time',wrong:['The model is exact','Speed cannot be measured','Braking distance is always negative']}
+     {type:'mcq',prompt:'Describe one limitation.',correct:'The model assumes the same road surface and brakes at every speed, but wet roads or worn tyres lengthen the braking distance',wrong:['The model is exact','Speed cannot be measured','Braking distance is always negative']}
    ]},
   {id:'CM5',eqLatex:'C = \\frac{2000}{n} + 5',context:'Average cost C (£) per item when producing n items.',
    fn:n=>2000/n+5,xRange:[10,500],yRange:[0,220],xLabel:'n (items)',yLabel:'C (£)',
@@ -349,7 +349,7 @@ core:[
    answers:{5:608.3,10:740.1,15:900.5,20:1095.6},
    iqs:[
      {type:'read',prompt:'Estimate A when n = 18.',answer:1012.9,tol:50},
-     {type:'extrap',prompt:'Use the model to estimate A when n = 30. Is this reliable?',answer:1621.7,tol:80,reliable:false,reason:'Assumes interest rate stays constant for 30 years'}
+     {type:'extrap',prompt:'Use the model to estimate A when n = 30. Is this reliable?',answer:1621.7,tol:80,reliable:false,either:true,eitherNote:'it assumes the interest rate stays at 4% for 30 years',reason:'Assumes interest rate stays constant for 30 years'}
    ]},
   {id:'CM12',eqLatex:'F = -0.003v^2 + 0.3v',context:'Fuel efficiency F (km/L) vs speed v (km/h).',
    fn:v=>-0.003*v*v+0.3*v,xRange:[0,100],yRange:[0,8],xLabel:'v (km/h)',yLabel:'F (km/L)',
@@ -1111,10 +1111,10 @@ function checkExtrapIQ(){
   G.totalIQs++;const fb=$('iqFb');
   const tol=iq.tol||Math.abs(iq.answer)*0.05;
   const valOk=Math.abs(val-iq.answer)<=tol;
-  const relOk=(rel==='no')===(!iq.reliable);
+  const relOk=!!iq.either||(rel==='no')===(!iq.reliable);   // iq.either: the context fixes the rate, so "Reliable" is as defensible (Part 2 #14)
   if(valOk&&relOk){
     G.correctIQs++;G.score+=15;$('hudScore').textContent=G.score;
-    fb.innerHTML=`<div class="feedback correct">Correct! ${iq.answer} — ${iq.reliable?'reliable':'unreliable: '+iq.reason}</div>`;_trackIQ(true);
+    fb.innerHTML=`<div class="feedback correct">Correct! ${iq.answer} — ${iq.either?'either answer is accepted: '+iq.eitherNote:iq.reliable?'reliable':'unreliable: '+iq.reason}</div>`;_trackIQ(true);
   } else {
     G.qPenalties++;
     fb.innerHTML=`<div class="feedback wrong">Answer: ${iq.answer}. ${iq.reliable?'Reliable':'Unreliable — '+iq.reason}</div>`;_trackIQ(false);
