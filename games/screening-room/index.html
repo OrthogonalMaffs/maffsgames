@@ -136,6 +136,8 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',sans-serif;co
 .calc-input-row{display:flex;gap:10px;align-items:center;margin-bottom:16px}
 .calc-input{font-family:'JetBrains Mono',monospace;font-size:16px;padding:12px 16px;border:2px solid var(--border);border-radius:10px;background:#0f172a;color:var(--text);flex:1;outline:none;transition:border-color 0.2s}
 .calc-input:focus{border-color:var(--accent)}
+.calc-field{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.calc-unit{font-family:'JetBrains Mono',monospace;font-size:16px;color:var(--text)}
 .calc-submit{font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;padding:12px 24px;border:none;border-radius:10px;background:var(--accent);color:#fff;cursor:pointer;transition:all 0.2s}
 .calc-submit:hover{opacity:0.9}
 .calc-submit:disabled{opacity:0.4;cursor:not-allowed}
@@ -238,7 +240,7 @@ body.accessible{background-color:#12141f !important}
     " document.getElementById('continueBtn').click();",
     " await until(() => document.getElementById('phase3').style.display !== 'none' && !document.getElementById('calcInput').disabled && !MaffsLock.isFresh());",
     " const k = q.keys[0] + (i === 0 ? 0 : 1);",
-    " document.getElementById('calcInput').value = (k / Math.pow(10, q.dp)).toFixed(q.dp) + '%';",
+    " document.getElementById('calcInput').value = (k / Math.pow(10, q.dp)).toFixed(q.dp);",
     " document.getElementById('calcSubmit').click();",
     "})();"
   ]
@@ -263,7 +265,7 @@ body.accessible{background-color:#12141f !important}
       <div class="how-to">
         <p>Read a screening scenario and estimate how likely a positive result is real</p>
         <p>Watch an icon array animation showing the natural frequencies</p>
-        <p>Calculate the exact probability — enter as a fraction, decimal or percentage</p>
+        <p>Calculate the probability, as a percentage or a decimal, to the places the question gives</p>
       </div>
       <div class="tier-label">Level</div>
       <div class="level-select">
@@ -297,7 +299,7 @@ body.accessible{background-color:#12141f !important}
       <div class="question-card">
         <div class="q-context" id="qContext"></div>
         <div class="q-scenario" id="qScenario"></div>
-        <div class="q-prompt">If someone tests positive, how likely is it they actually have the condition?</div>
+        <div class="q-prompt">If a result is positive, how likely is it to be real?</div>
       </div>
       <div class="gut-options" id="gutOptions">
         <button class="gut-btn" data-gut="very_likely" onclick="handleGut(this)">Very likely<span class="gut-range">Over 75%</span></button>
@@ -335,7 +337,7 @@ body.accessible{background-color:#12141f !important}
         <div class="calc-prompt" id="calcPrompt"></div>
         <div class="calc-hint" id="calcHint"></div>
         <div class="calc-input-row">
-          <input type="text" class="calc-input" id="calcInput" placeholder="Your answer..." autocomplete="off">
+          <span class="calc-field"><input type="text" inputmode="decimal" class="calc-input" id="calcInput" placeholder="Your answer..." autocomplete="off" aria-label="Your answer, as a percentage"><span class="calc-unit" id="calcUnit" aria-hidden="true">%</span></span>
           <button class="calc-submit" id="calcSubmit" onclick="handleCalc()">Submit</button>
         </div>
         <div class="calc-hint" id="calcMsg" role="status" style="display:none"></div>
@@ -396,7 +398,7 @@ gcse: [
 {id:"gcse_06",context:"Rapid strep throat test",label:"Has strep throat",N:400,base:0.25,tests:[[0.86,0.95]],scenario:"A GP sees {N} patients with sore throats in a month. {c} of them ({base}) actually have strep throat. The rapid test correctly detects {sens} of strep cases, but gives a false positive for {fpr} of patients without strep.",explanation:"{pos} patients test positive. {tp} actually have strep."},
 {id:"gcse_07",context:"Shop security gate",label:"Carrying stolen item",N:20000,base:0.005,tests:[[0.8,0.97]],scenario:"Over a month, a shop's security gates check {N} customers leaving the store. {c} customers ({base}) are actually carrying stolen items. The gates correctly detect {sens} of stolen items, but trigger a false alarm for {fpr} of honest customers.",explanation:"{pos} customers trigger the alarm. Only {tp} are actually shoplifting."},
 {id:"gcse_08",context:"Dyslexia screening questionnaire",label:"Has dyslexia",N:600,base:0.1,tests:[[0.8,0.85]],scenario:"{N} students complete a dyslexia screening questionnaire. {c} students ({base}) have dyslexia. The questionnaire correctly identifies {sens} of dyslexic students, but also flags {fpr} of non-dyslexic students.",explanation:"{pos} students are flagged. {tp} actually have dyslexia."},
-{id:"gcse_09",context:"Concert security metal detector",label:"Carrying prohibited item",N:50000,base:0.002,tests:[[1.0,0.93]],scenario:"At a music festival, {N} people pass through metal detectors. {c} people ({base}) are carrying prohibited metal items. The detectors catch {sens} of prohibited items, but also trigger for {fpr} of people carrying harmless metal.",explanation:"{pos} people trigger the detectors. Only {tp} have prohibited items."},
+{id:"gcse_09",context:"Concert security metal detector",label:"Carrying prohibited item",N:50000,base:0.002,tests:[[1.0,0.93]],scenario:"At a music festival, {N} people pass through metal detectors. {c} people ({base}) are carrying prohibited metal items. The detectors catch {sens} of prohibited items, but also trigger for {fpr} of people with no prohibited item.",explanation:"{pos} people trigger the detectors. Only {tp} have prohibited items."},
 {id:"gcse_10",context:"Primary school head lice check",label:"Has head lice",N:400,base:0.15,tests:[[0.8,0.95]],scenario:"A school nurse checks {N} children for head lice. {c} children ({base}) actually have lice. The visual check correctly spots {sens} of cases, but mistakenly identifies {fpr} of lice-free children as having nits.",explanation:"{pos} children are flagged. {tp} actually have lice."},
 {id:"gcse_11",context:"COVID rapid test during outbreak",label:"Has COVID",N:500,base:0.2,tests:[[0.8,0.99]],scenario:"During a school outbreak, {N} students are tested with lateral flow tests. {c} students ({base}) actually have COVID. The test correctly detects {sens} of positive cases, but gives a false positive for {fpr} of students without COVID.",explanation:"{pos} students test positive. {tp} actually have COVID."},
 {id:"gcse_12",context:"Home pregnancy test",label:"Pregnant",N:5000,base:0.08,tests:[[0.99,0.98]],scenario:"Of {N} women who take a home pregnancy test, {c} ({base}) are actually pregnant. The test correctly detects {sens} of pregnancies, but gives a false positive for {fpr} of non-pregnant women.",explanation:"{pos} women test positive. {tp} are actually pregnant."},
@@ -892,9 +894,11 @@ function showPhase2() {
 function showPhase3() {
   var q = currentQ;
   document.getElementById('calcPrompt').innerHTML = 'Of the <strong>' + numFmt(q.testPositive.total) + '</strong> positive results, how many are real? Calculate ' + kRender('P(\\text{condition} \\mid \\text{positive})') + '.';
-  var ex = [null, ['12.5%', '0.125'], ['1.25%', '0.0125'], ['0.125%', '0.00125']][q.dp];
+  // Jon, 13 Oct 2026 (screening-room-s1-001): the box is a percentage, its % shown beside it, and what is typed is
+  // read as a percentage.
+  var ex = [null, '12.5', '1.25', '0.125'][q.dp];
   document.getElementById('calcHint').textContent = 'Give your answer as a percentage to ' + q.dp + ' decimal place' + (q.dp === 1 ? '' : 's') +
-    ' (e.g. ' + ex[0] + ') or as a decimal to ' + (q.dp + 2) + ' decimal places (e.g. ' + ex[1] + ').';
+    ' (e.g. ' + ex + ').';
   document.getElementById('calcMsg').style.display = 'none';
   document.getElementById('calcInput').value = '';
   document.getElementById('calcInput').disabled = false;
@@ -921,12 +925,12 @@ document.getElementById('calcInput').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') { e.preventDefault(); handleCalc(); }
 });
 
-// The answer is marked at the precision the question states (SR-1, SR-17): a percentage to q.dp decimal places
-// (with %), or the same value as a decimal to q.dp + 2 places. MaffsAnswer.decimal reads the typed string exactly.
-// 'format' (the right value, not rounded as asked, or as a fraction) and 'unreadable' are never marked (SR-3).
+// The answer is a percentage, marked at the precision the question states (SR-1, SR-17): q.dp decimal places. The
+// box shows the % (a typed one is allowed). MaffsAnswer.decimal reads the typed string exactly. 'format' (the right
+// value, not rounded as asked, as a fraction, or as a decimal where a percentage is asked) and 'unreadable' are never
+// marked (SR-3).
 function markCalc(raw, q) {
-  var s = String(raw == null ? '' : raw).trim(), isPct = /%$/.test(s);
-  if (isPct) s = s.replace(/\s*%$/, '');
+  var s = String(raw == null ? '' : raw).trim().replace(/\s*%$/, '');
   var hint = document.getElementById('calcHint').textContent;
   if (s.indexOf('/') !== -1) {
     var parts = s.split('/'), a = MaffsAnswer.parse(parts[0]), b = MaffsAnswer.parse(parts[1] || '');
@@ -937,9 +941,12 @@ function markCalc(raw, q) {
   }
   var v = MaffsAnswer.parse(s);
   if (v === null) return { result: 'unreadable', msg: hint };
-  if (!isPct && v > 1) return { result: 'unreadable', msg: 'A probability is never more than 1. For a percentage, type the % sign.' };
-  var r = isPct ? markForm(s, q.keys, q.dp) : markForm(s, q.keys, q.dp + 2);
-  if (r === 'format') return { result: 'format', msg: MaffsAnswer.message('format', raw, { dp: isPct ? q.dp : q.dp + 2 }) };
+  var r = markForm(s, q.keys, q.dp);
+  if (r === 'format') return { result: 'format', msg: MaffsAnswer.message('format', raw, { dp: q.dp }) };
+  // the right value as a decimal (0.0098 for 0.98%): not marked, the box takes a percentage
+  if (r === 'wrong' && v <= 1 && markForm(s, q.keys, q.dp + 2) !== 'wrong') {
+    return { result: 'format', msg: 'Right value, but as a decimal. The box is a percentage: ' + hint };
+  }
   return { result: r };
 }
 // a form against every accepted key (a rounded item accepts the count ratio and the exact value)

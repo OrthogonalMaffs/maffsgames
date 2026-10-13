@@ -24,9 +24,10 @@ rates, and computes everything else; this script recomputes it all with exact fr
     one the data gives (a count, a stated rate, the answer, a "1 in N").
   - IN CHROMIUM (reduced motion), every item is played: the band's button is marked correct and the next one
     wrong; the icon array (N <= 10,000) draws exactly its true positives, false positives and missed cases; the
-    prompt states the precision; the key as a percentage and as a decimal are marked correct, one unit off and 0
-    are wrong; an over-precise answer, a fraction, "abc" and a percentage without % are never marked (no score,
-    no event, the input stays open, the message is shown); the explanation shows the data's text, and the Bayes
+    prompt states the precision; the box shows a fixed % and reads the figure typed as a percentage (Jon, 13 Oct
+    2026): the key, with or without a typed %, is marked correct, one unit off and 0 are wrong; an over-precise
+    answer, a fraction, "abc" and the key as a decimal are never marked (no score, no event, the input stays open,
+    the message is shown); the explanation shows the data's text, and the Bayes
     box shows at A-Level.
 
   - SR-21 (Jon's contract and rulings, 8 Oct 2026):
@@ -43,9 +44,10 @@ rates, and computes everything else; this script recomputes it all with exact fr
 
     python scripts/verify-screening-room.py [--file PATH] [--selftest]
 
---selftest plants 13 faults in copies of the page (a hand-keyed band, alevel_16's old 130 false positives in the
-engine and typed into its explanation, marking that accepts 0, and one or two for each SR-21 entry) and requires each
-to be caught.
+--selftest plants 17 faults in copies of the page (a hand-keyed band, alevel_16's old 130 false positives in the
+engine and typed into its explanation, marking that accepts 0, one or two for each SR-21 entry, and the old start
+screen, phase 1 prompt and gcse_09 wording, and the answer box without its % unit, from SWEEP-1) and requires each to
+be caught.
 """
 import argparse
 import math
@@ -122,6 +124,7 @@ PLAY = """([lv, id, gutRight, gutWrong, probes]) => {
               document.getElementById('continueBtn').classList.contains('visible') };
       out.prompt = document.getElementById('calcPrompt').textContent;
       out.hint = document.getElementById('calcHint').textContent;
+      out.unit = (document.getElementById('calcUnit') || {}).textContent || '';
       const before = totalScore, ev = events.length;
       document.getElementById('calcInput').value = raw;
       document.getElementById('calcSubmit').click();
@@ -282,11 +285,13 @@ def probes_for(e):
     over = f'{float(exact):.{dp + 2}f}'
     over_ok = half_up_pct(F(over) / 100, dp) in e['keys'] and F(over) != F(k, 10 ** dp)
     frac = f"{e['tpi']}/{e['pos']}"
-    probes = [(pct + '%', 'correct'), (dec, 'correct'), (off + '%', 'wrong'), ('0', 'wrong'), ('abc', 'unmarked'),
-              (frac, 'unmarked'), (pct, 'unmarked' if F(pct) > 1 else 'decimal-form')]
+    # Jon, 13 Oct 2026 (screening-room-s1-001): the box is a percentage (its % shown), so the figure typed is read as
+    # a percentage, with or without a typed %; the right value as a decimal gets a message and no mark (SR-3)
+    probes = [(pct, 'correct'), (pct + '%', 'correct'), (dec, 'unmarked'), (off, 'wrong'), ('0', 'wrong'),
+              ('abc', 'unmarked'), (frac, 'unmarked')]
     if over_ok:
-        probes.append((over + '%', 'unmarked'))
-    return [p for p in probes if p[1] != 'decimal-form']
+        probes.append((over, 'unmarked'))
+    return probes
 
 
 def check_play(page, lv, q, e, rep):
@@ -339,8 +344,10 @@ def check_play(page, lv, q, e, rep):
             rep[('icon array', iid)].append(f"summary shows {n}, data {want}")
     if f"{e['pos']:,}" not in r['prompt']:
         rep[('chromium', iid)].append('the prompt does not show the number of positives')
-    if f"to {e['dp']} decimal place" not in r['hint'] or f"to {e['dp'] + 2} decimal places" not in r['hint']:
-        rep[('chromium', iid)].append(f"the precision is not stated: {r['hint']!r}")
+    if f"to {e['dp']} decimal place" not in r['hint'] or 'as a decimal' in r['hint']:
+        rep[('chromium', iid)].append(f"the precision is not stated, or a decimal is still offered: {r['hint']!r}")
+    if r.get('unit') != '%':
+        rep[('screening-room-s1-001', iid)].append(f"the answer box shows no % unit: {r.get('unit')!r}")
     for (raw, want), got in zip(probes, r['probes']):
         if want == 'correct':
             ok = got['shown'] and got['title'].startswith('Correct') and got['gained'] == 3 and got['events'] == 1
@@ -486,7 +493,8 @@ def extra_checks(browser, base, src, path, data, rep, only):
         hint = page.evaluate("([lv, id]) => { currentLevel = lv; startGame(); const q = QUESTIONS[lv].find(x => x.id === id); "
                              "sessionQuestions = [q, q, q, q, q, q, q, q]; qIdx = 0; showQuestion(); showPhase3(); "
                              "return document.getElementById('calcHint').textContent; }", [hit[0], hit[1]['id']])
-        for ex in re.findall(r'e\.g\. ([\d.]+%)', hint):
+        for ex in re.findall(r'e\.g\. ([\d.]+)%?', hint):
+            ex += '%'   # the box is a percentage (s1-001): its example is a percentage too
             if ex in answers:
                 rep[('screening-room-t4-016', 'hint')].append(f'the input hint gives {ex}, which is an item\'s answer: {hint!r}')
     ctx.close()
@@ -503,6 +511,15 @@ def run(path, play=True, only=None):
         for m in re.finditer(r'[{,]\s*' + field + r'\s*:', block):
             line = block[:m.start()].count('\n')
             rep[('hand-keyed', f'item line {line}')].append(f'an item literal carries {field}: it must be computed')
+    # SWEEP-1 (screening-room-s1-002..004): the words agree with what the page does. The start screen promised an
+    # "exact" answer "as a fraction" (rounded, and a fraction is never marked); the phase 1 prompt asked whether
+    # "someone" has "the condition" on welds, emails and alarms; gcse_09 gave its false-positive rate for "people
+    # carrying harmless metal" where every count uses all the people with no prohibited item.
+    for pat, why in ((r'Calculate the exact probability|enter as a fraction', 'screening-room-s1-003'),
+                     (r'they actually have the condition', 'screening-room-s1-004'),
+                     (r'of people carrying harmless metal', 'screening-room-s1-002')):
+        if re.search(pat, src):
+            rep[(why, 'page text')].append('the page says %r, which its marking or counts contradict' % pat)
     proc, base = bc.start_stub_server()
     try:
         with sync_playwright() as p:
@@ -592,8 +609,18 @@ def selftest():
         ('t4-016 (pinned): the prompt counts people', 'screening-room-t4-016', {'gcse_01'},
          lambda s: plant(s, "'Of the <strong>' + numFmt(q.testPositive.total) + '</strong> positive results",
                          "'Out of <strong>' + numFmt(q.testPositive.total) + '</strong> people who tested positive")),
+        ('s1-001: the % unit removed', 'screening-room-s1-001', {'alevel_01'},
+         lambda s: plant(s, '<span class="calc-unit" id="calcUnit" aria-hidden="true">%</span>', '')),
+        ('s1-003: the old start screen', 'screening-room-s1-003', None,
+         lambda s: plant(s, 'Calculate the probability, as a percentage or a decimal, to the places the question gives',
+                         'Calculate the exact probability — enter as a fraction, decimal or percentage')),
+        ('s1-004: the old phase 1 prompt', 'screening-room-s1-004', None,
+         lambda s: plant(s, 'If a result is positive, how likely is it to be real?',
+                         'If someone tests positive, how likely is it they actually have the condition?')),
+        ("s1-002: gcse_09's old rate wording", 'screening-room-s1-002', None,
+         lambda s: plant(s, 'of people with no prohibited item.', 'of people carrying harmless metal.')),
         ("t4-016 (pinned): the hint's example is an item's answer", 'screening-room-t4-016', {'gcse_01'},
-         lambda s: plant(s, "['12.5%', '0.125']", "['25.8%', '0.258']")),
+         lambda s: plant(s, "[null, '12.5', '1.25', '0.125']", "[null, '25.8', '1.25', '0.125']")),
     ]
     failed = 0
     for label, where, only, mutate in cases:

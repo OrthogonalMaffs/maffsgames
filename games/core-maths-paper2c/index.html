@@ -234,7 +234,7 @@ var QUESTIONS = [
     stem:'Two graphs show the same sales data. Graph A has a y-axis starting at \u00a30. Graph B has a y-axis starting at \u00a380,000.\n\nA manager uses Graph B and says: "Sales have rocketed this year." What is the issue?',
     options:['Graph A is wrong','Graph B\u2019s truncated y-axis exaggerates the growth','A bar chart should be used instead','Same data, so neither graph is misleading'],
     correct:1,
-    working:'Truncating the y-axis makes small changes appear dramatic. The underlying data shows the same modest growth in both graphs, but Graph B\u2019s visual presentation exaggerates it.'
+    working:'Truncating the y-axis makes small changes appear dramatic. The underlying data shows the same growth in both graphs, but Graph B\u2019s visual presentation exaggerates it.'
   },
   {
     section:'3.4',ao:'AO3',
@@ -245,8 +245,8 @@ var QUESTIONS = [
   },
   {
     section:'3.4',ao:'AO2',
-    stem:'A velocity\u2013time graph shows a straight line from (0, 0) to (5, 30).\n\nA student says: "The acceleration is 6 m/s\u00b2." Is this correct?',
-    options:['Yes \u2014 acceleration is the gradient of a v\u2013t graph','No \u2014 acceleration is the area under a v\u2013t graph','No \u2014 acceleration should be 5 \u00f7 30','Yes \u2014 but only when the line is horizontal'],
+    stem:'A velocity\u2013time graph (t in seconds, v in m/s) shows a straight line from (0, 0) to (5, 30).\n\nA student says: "The acceleration is 6 m/s\u00b2." Is this correct?',
+    options:['Yes \u2014 acceleration is the gradient of a v\u2013t graph','No \u2014 acceleration is the area under a v\u2013t graph','No \u2014 acceleration should be 5 \u00f7 30','No \u2014 the acceleration is 30 m/s\u00b2, the final velocity'],
     correct:0,
     working:'Acceleration = gradient of v\u2013t graph = (30 \u2212 0) \u00f7 (5 \u2212 0) = 30 \u00f7 5 = 6 m/s\u00b2. The student is correct.'
   },
@@ -340,7 +340,7 @@ var QUESTIONS = [
   },
   {
     section:'3.12',ao:'AO1',
-    stem:'A velocity\u2013time graph shows a straight line from (0, 8) to (5, 28).\n\nWhat is the distance travelled?',
+    stem:'A velocity\u2013time graph (t in seconds, v in m/s) shows a straight line from (0, 8) to (5, 28).\n\nWhat is the distance travelled?',
     options:['20 m','90 m','100 m','140 m'],
     correct:1,
     working:'Distance = area under v\u2013t graph = trapezium = \u00bd(8 + 28) \u00d7 5 = \u00bd \u00d7 36 \u00d7 5 = 90 m.'
@@ -354,7 +354,7 @@ var QUESTIONS = [
   },
   {
     section:'3.12',ao:'AO2',
-    stem:'A curved distance\u2013time graph is given. How do you estimate the speed at t = 4?',
+    stem:'For a curved distance\u2013time graph, how do you estimate the speed at t = 4?',
     options:['Total distance \u00f7 total time','Read off the distance at t = 4','Draw a tangent at t = 4 and calculate its gradient','Find the area under the curve up to t = 4'],
     correct:2,
     working:'For a curved graph, the instantaneous speed at a point is found by drawing a tangent at that point and calculating its gradient.'
@@ -411,7 +411,7 @@ var QUESTIONS = [
   },
   {
     section:'3.13',ao:'AO1',
-    stem:'A car depreciates according to V = 18,000 \u00d7 0.85\u1d57.\n\nWhat is the annual depreciation rate?',
+    stem:'A car depreciates according to V = 18,000 \u00d7 0.85\u1d57, where t is the time in years.\n\nWhat is the annual depreciation rate?',
     options:['0.85%','8.5%','15%','85%'],
     correct:2,
     working:'The multiplier 0.85 means the car retains 85% of its value each year, so it loses 15% per year.'
@@ -439,7 +439,7 @@ var QUESTIONS = [
   },
   {
     section:'3.13',ao:'AO2',
-    stem:'An investment grows according to V = 5000 \u00d7 e^(0.06t).\n\nHow many years until the investment reaches \u00a38000?',
+    stem:'An investment grows according to V = 5000 \u00d7 e^(0.06t), where t is the time in years.\n\nHow many years until the investment reaches \u00a38000?',
     options:['7.8','9.4','12.2','16.0'],
     correct:0,
     working:'8000 = 5000e^(0.06t) \u2192 e^(0.06t) = 1.6 \u2192 0.06t = ln 1.6 = 0.4700 \u2192 t = 7.83 \u2248 7.8 years.'

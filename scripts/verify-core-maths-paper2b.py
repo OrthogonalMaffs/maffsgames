@@ -11,7 +11,9 @@ does not pick the same policy as the key).
 Checks: Q28's choice recomputed from its own table and premiums (the policy whose premium is below its expected
 loss, the greater benefit); the key picks it; no other option picks it. Every option of every question clicked
 in Chromium (390x844) through selectAnswer(), the mark read from the button: right exactly for the key.
-A self-test plants the old option D; it must FAIL naming Q28.
+Q16 states its precision and Q29 its assumption (SWEEP-1, STATED). SR-31 (Jon, 13 Oct 2026): no wrong option on
+any item gives the key's verdict or choice, the words before its dash. A self-test plants the old option D and the
+old Q16 and Q29 stems; each must FAIL naming its item.
 
     python scripts/verify-core-maths-paper2b.py [--no-selftest] [--against FILE]
 """
@@ -34,9 +36,29 @@ def money(s):
     return F(re.sub(r'[^\d.]', '', s))
 
 
+# SWEEP-1 (core-maths-paper2b-s1-003, s1-004; SR-1, SR-17): Q16's key 0.0020 is 20/9900 rounded, so the stem states
+# its precision; Q29's expected benefit (0.08 x £18 million) assumes the defences prevent all the damage, so it says so.
+STATED = [
+    ('components, of which 5 are defective', 'Give your answer to 4 decimal places', 'Q16 precision'),
+    ('flood defences costing', 'Assume the defences prevent all flood damage', 'Q29 assumption'),
+]
+
+
 def check_bank(fails, bank):
     if len(bank) != COUNT:
         fails.append('bank: %d questions, expected %d' % (len(bank), COUNT))
+    # SR-31 (Jon, 13 Oct 2026; t2-001's ruling extended): no wrong option gives the key's verdict or choice, the
+    # words before its dash ("Yes", "No", "A", "B"), whatever reason follows.
+    for i, q in enumerate(bank):
+        lead = lambda o: o.split(' — ', 1)[0].strip() if ' — ' in o else None  # noqa: E731
+        k = lead(q['options'][q['correct']])
+        for j, o in enumerate(q['options']):
+            if k and j != q['correct'] and lead(o) == k:
+                fails.append('Q%d (SR-31): the wrong option %r gives the key\'s verdict %r' % (i + 1, o, k))
+    for find, need, tag in STATED:
+        hits = [q for q in bank if find in q['stem']]
+        if len(hits) != 1 or need not in hits[0]['stem']:
+            fails.append('%s: the stem must say %r (%d item(s) found)' % (tag, need, len(hits)))
     hits = [i for i, q in enumerate(bank) if 'only afford one insurance policy' in (q.get('stemAfterTable') or '')]
     if len(hits) != 1:
         fails.append('Q28 not found once (%s)' % hits)
@@ -116,6 +138,12 @@ def esc(x):
 PLANTS = [
     ('Q28 (t2-001)', 't2-001: option D "Data breach - larger potential loss"',
      "'Neither — both premiums cost more than the expected loss']", "'Data breach — larger potential loss']"),
+    ('Q33 (SR-31)', "s1-001: Q33's old D (the key's verdict, a wrong EV)", "'B — £1,500 is more than A’s EV of £1,400']",
+     "'A — EV = £4,000']"),
+    ('Q24 (SR-31)', "s1-001: Q24's old D (the key's verdict)", "'Yes — 4.2 rounds to 4, so 4 is the most likely value']",
+     "'No — the most likely value is the median, not the mean']"),
+    ('Q16 precision', 's1-003: Q16 without its precision', ' Give your answer to 4 decimal places.', ''),
+    ('Q29 assumption', 's1-004: Q29 without its assumption', ' Assume the defences prevent all flood damage.', ''),
 ]
 
 

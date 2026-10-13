@@ -98,3 +98,61 @@ findings:
     renderSVG undefined (dead code); Q2 and Q36 test the same point
   evidence: Agent's evidence.
   status: open
+- id: core-maths-paper2c-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:unstated-convention
+  level: core
+  where: games/core-maths-paper2c/index.html Q6 (:248), Q19 (:343)
+  summary: 'Two velocity-time graphs given by coordinates did not state their units, though Q6 judges the claim "6
+    m/s²" and Q19 keys "90 m" (SR-17). Fixed: "(t in seconds, v in m/s)"; the verifier fails a coordinate v-t stem
+    without it, planted'
+  evidence: '"A velocity–time graph shows a straight line from (0, 8) to (5, 28). What is the distance travelled?"
+    (SWEEP-1, batch 9)'
+  status: fixed
+  pr: 351
+- id: core-maths-paper2c-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:unstated-convention
+  level: core
+  where: games/core-maths-paper2c/index.html Q29 (:414), Q33 (:442)
+  summary: 'Q29''s "annual depreciation rate" and Q33''s "How many years" keys hold only with t in years, which the
+    models did not say. Fixed: ", where t is the time in years"; checked, planted. (Q32''s missing unit is t4-008)'
+  evidence: '"A car depreciates according to V = 18,000 × 0.85ᵗ." (SWEEP-1, batch 9)'
+  status: fixed
+  pr: 351
+- id: core-maths-paper2c-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: core
+  where: games/core-maths-paper2c/index.html Q21 (:357), Q4 working (:237)
+  summary: 'Q21 said "A curved distance–time graph is given" with no graph drawn; Q4''s working spoke of "modest"
+    growth the stem never gives. Fixed: "For a curved distance–time graph, how do you…" and "the same growth"'
+  evidence: 'Q21 has no svg or table (SWEEP-1, batch 9)'
+  status: fixed
+  pr: 351
+- id: core-maths-paper2c-s1-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: core
+  where: scripts/verify-core-maths-paper2c.py
+  summary: 'The verifier marks every option against its key and pins Q12 and Q35, but recomputes no key (Q10, Q11,
+    Q13, Q15, Q16, Q19, Q22, Q24, Q25-Q34), no working note (36) and not Q34''s table; all correct today by the
+    reviewer''s recomputation. Recorded under Jon''s rule of 13 Oct 2026; the units are now checked'
+  evidence: 'check_bank() reads Q12 and Q35 only (SWEEP-1, batch 9)'
+  status: open
+- id: core-maths-paper2c-s1-005
+  severity: MEDIUM
+  jc: false
+  class: NEW:true-wrong-option
+  level: core
+  where: games/core-maths-paper2c/index.html Q6 (:249)
+  summary: '"Yes — but only when the line is horizontal" gave the key''s verdict "Yes" (SR-31, Jon, 13 Oct 2026). Fixed:
+    "No — the acceleration is 30 m/s², the final velocity" (v read as a); the verifier fails any wrong option with the
+    key''s verdict, planted'
+  evidence: 'Found by the SR-31 scan of batch 9''s multiple-choice games (SWEEP-1, batch 9)'
+  status: fixed
+  pr: 351

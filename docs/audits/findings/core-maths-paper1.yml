@@ -73,3 +73,100 @@ findings:
     7 Oct'
   status: fixed
   pr: 93
+- id: core-maths-paper1-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:unstated-convention
+  level: core
+  where: games/core-maths-paper1/index.html Q15 (:361), renderStemLeaf (:614)
+  summary: 'The back-to-back stem-and-leaf diagram had no key, so the tens-and-units reading the key uses was assumed
+    (SR-17). Fixed: "Key: 4 | 5 | 1 means 54 for Group A and 51 for Group B" under the table; the verifier requires a
+    key whose values match a stem and leaves the diagram has, planted'
+  evidence: 'Stem "What is the difference between the medians?" key 2 (SWEEP-1, batch 9)'
+  status: fixed
+  pr: 351
+- id: core-maths-paper1-s1-002
+  severity: MEDIUM
+  jc: true
+  class: NEW:true-wrong-option
+  level: core
+  where: games/core-maths-paper1/index.html Q18 (:383)
+  summary: '"The mean is not the right measure for earnings data" is a defensible true statement (earnings are skewed;
+    the stem''s "on average") offered as wrong (SR-16). Fixed: "The survey is invalid because earnings cannot be
+    averaged"; the verifier bars the old option, planted'
+  evidence: '"A survey of 500 people finds that those who eat breakfast earn on average £4,200 more per year." (SWEEP-1,
+    batch 9)'
+  status: fixed
+  pr: 351
+- id: core-maths-paper1-s1-003
+  severity: LOW
+  jc: true
+  class: NEW:true-wrong-option
+  level: core
+  where: games/core-maths-paper1/index.html Q8 (:310)
+  summary: '"She should have used a larger sample from multiple locations" is the key''s point (the location bias) as
+    sound advice, offered as a wrong reason. Fixed: "Asking the first 40 people makes the sample random, so it cannot
+    be biased" (convenience read as random); barred'
+  evidence: 'Q8 options as served (SWEEP-1, batch 9)'
+  status: fixed
+  pr: 351
+- id: core-maths-paper1-s1-004
+  severity: MEDIUM
+  jc: true
+  class: NEW:true-wrong-option
+  level: core
+  where: games/core-maths-paper1/index.html Q11 (:332)
+  summary: 'The key "Class X performed better on average because their median is higher" reads "on average" as the
+    median; by the mean (62 each) "The classes performed equally well because they have the same mean" is half true,
+    and was offered as wrong. Fixed: that option is "…because their standard deviations are similar" (8 and 14, a
+    misreading); barred'
+  evidence: '"Class X: mean 62, median 65, SD 8. Class Y: mean 62, median 54, SD 14." (SWEEP-1, batch 9)'
+  status: fixed
+  pr: 351
+- id: core-maths-paper1-s1-005
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: core
+  where: games/core-maths-paper1/index.html Q6 (:296)
+  summary: '"What is the best estimate for the median weight?" offered classes, not estimates. Fixed: "Which interval
+    contains the median weight?"'
+  evidence: "options ['Between 1 kg and 2 kg', 'Exactly 2 kg', ...] (SWEEP-1, batch 9)"
+  status: fixed
+  pr: 351
+- id: core-maths-paper1-s1-006
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: core
+  where: games/core-maths-paper1/index.html Q4, Q12 (renderHistogram), Q19 (:392)
+  summary: 'The histograms tick the density axis at whole numbers only, while the workings read densities to 0.1 (Q4
+    3.6, 1.2; Q12 1.8 … 1.5), about 4 px; the keys are robust (options 12 apart; the taller of equal-width bars).
+    Q19''s "£318.55" matches no named error (compound interest on the same figures is £313.77). For Jon'
+  evidence: 'renderHistogram y ticks 0-3 (SWEEP-1, batch 9)'
+  status: open
+- id: core-maths-paper1-s1-007
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: core
+  where: scripts/verify-core-maths-paper1.py
+  summary: 'The verifier recomputes every key, the charts and Q27''s figures, but checks only Q32''s working note; the
+    other 35 working notes are unchecked (all correct today). Recorded under Jon''s rule of 13 Oct 2026; Q8, Q11 and
+    Q18''s old options and Q15''s key are now checked'
+  evidence: 'check_bank() reads working text for Q32 only (SWEEP-1, batch 9)'
+  status: open
+- id: core-maths-paper1-s1-008
+  severity: MEDIUM
+  jc: false
+  class: NEW:true-wrong-option
+  level: core
+  where: games/core-maths-paper1/index.html Q10 (:326), Q26
+  summary: 'Two wrong options gave the key''s verdict or choice (SR-31, Jon, 13 Oct 2026): Q10 "Mean — fair, because it
+    uses all data values" beside the key "Mean — potentially misleading …" (the measure is the key''s); Q26 "Yes — but
+    only if she cuts her food budget" beside the key "Yes — she has £692 remaining …". Fixed: Q10 "Median —
+    misleading, because it leaves out the £85,000 salary", Q26 "No — her bills come to £1,868, more than her pay"
+    (the rent counted twice); the verifier fails any wrong option with the key''s verdict, planted'
+  evidence: 'Found by the SR-31 check added to the verifier (SWEEP-1, batch 9)'
+  status: fixed
+  pr: 351

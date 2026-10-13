@@ -164,6 +164,15 @@ def check_bank(bank):
             if not same(it["exact"], got):
                 fails.append("%s: the exact value %s rounds to %s at %d d.p., the bank says %s"
                              % (iid, fmt(dec(exact)), got, places, it["exact"]))
+            if it.get("money"):
+                # a number the stem prints after "£" is money; any other (42 tickets, 21 people) is a count and
+                # is labelled and marked as one (estimation-engine-s1-001)
+                pounds = {i for i, n in enumerate(nums)
+                          if re.search(r"£\s*" + re.escape("{:,}".format(Decimal(n)) if "." not in n else n), it["text"])}
+                at = set(it.get("moneyAt", range(len(nums))))
+                if at != pounds:
+                    fails.append("%s: moneyAt %s, but the stem prints £ before the numbers %s"
+                                 % (iid, sorted(at), sorted(pounds)))
             if it.get("money") and (places != 2 or "." in it["estimate"]):
                 fails.append("%s: a money item needs pence in its exact value and whole pounds in its estimate" % iid)
             is_exact = sp.Rational(it["exact"]) == exact
@@ -203,7 +212,10 @@ def selftest(bank):
     def exact_half(by):
         it = by["A01"]                                # 48 x 21 -> 45 x 21: 45 is a half at 1 s.f.
         it["nums"][0], it["tex"], it["exact"] = "45", "45 \\times 21", "945"
-    cases = [("a wrong rounding (A07: 9.2 -> 10)", wrong_rounding),
+    def count_as_money(by):
+        by["F01"].pop("moneyAt", None)                # 42 tickets labelled and marked as £42 (s1-001)
+    cases = [("a count as money (F01: £42)", count_as_money),
+             ("a wrong rounding (A07: 9.2 -> 10)", wrong_rounding),
              ("a wrong estimate (D01: 170)", wrong_estimate),
              ("an exact-half number (A01: 45)", exact_half)]
     out = []
@@ -296,6 +308,23 @@ def play(fails, shots=None, katex_dir=None):
                 got = await page.evaluate("EE.ui.marks()")
                 if got != want:
                     fails.append("page, %s: marks %r, expected %r" % (label, got, want))
+            # F01: the £ only on the ticket price, never on the 42 tickets; a right amount in the wrong form
+            # (20.0, 800.0) gets the format message and is not marked (SR-3; estimation-engine-s1-001, s1-002).
+            await page.evaluate("EE.ui.startWith(['F01'])")
+            labels = await page.evaluate("[...document.querySelectorAll('#stepBody .cell .from')].map(e => e.textContent)")
+            if labels != ["£18.95", "42"]:
+                fails.append("page, F01: the step-1 labels are %r, expected ['£18.95', '42']" % labels)
+            st = await answer_rounding(["20.0", "40"])
+            msg = await page.evaluate("document.getElementById('msg').textContent")
+            if st != "round" or "two decimal places" not in msg:
+                fails.append("page, F01: £20.0 should get the money format message, unmarked; state %r, message %r" % (st, msg))
+            await answer_rounding(["20", "40"])
+            st = await answer_estimate("800.0")
+            msg = await page.evaluate("document.getElementById('msg').textContent")
+            if st != "estimate" or "two decimal places" not in msg:
+                fails.append("page, F01: £800.0 should get the money format message, unmarked; state %r, message %r" % (st, msg))
+            if await answer_estimate("800") != "feedback" or await page.evaluate("EE.ui.marks()") != [True, True]:
+                fails.append("page, F01: 20, 40 then 800 should take both marks")
             # F02: 10 for 9.8 accepted, 9 rejected
             for vals, want in [(["300", "10"], True), (["300", "9"], False)]:
                 await page.evaluate("EE.ui.startWith(['F02'])")

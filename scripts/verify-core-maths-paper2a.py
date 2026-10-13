@@ -200,6 +200,12 @@ TRUE_WRONG = {
     6: [(r'enjoyed', 'time spent does not show the content is engaging: a true criticism of the conclusion'),
         (r'\bmedian\b', 'reporting the median is the key\'s own point, as a remedy')],
 }
+# Q5 (Jon, 13 Oct 2026; core-maths-paper2a-s1-003): the CEO's figure is the points-as-percent error the key names,
+# 10 points read as 10%, and the working gives the true rise, 10 / 61 = 16.4%.
+STEM_NEEDS = {
+    4: [('Satisfaction has increased by 10% since 2020', 'the CEO quotes the 10 points as 10%, the error the key names'),
+        ('= 16.4%, not 10%', 'the working gives the true percentage rise')],
+}
 WORKING_FORBIDS = {
     7: [(r'"4%" is imprecise', '3 / 78 = 3.8%: "nearly 4%" is right as a percentage increase')],
 }
@@ -211,6 +217,12 @@ class Report:
 
     def fail(self, qi, what, detail):
         self.fails.append('Q%d %s: %s' % (qi + 1, what, detail))
+
+
+def sr31_lead(o):
+    """The verdict or choice an option opens with, the words before its dash ("Yes", "No", "A")."""
+    m = re.match(r'^(.{1,30}?)\s+[—–]\s+', o)
+    return m.group(1).strip() if m else None
 
 
 def check_item(rep, qi, q, verbose=False):
@@ -236,10 +248,18 @@ def check_item(rep, qi, q, verbose=False):
         for name, pat in DRAFT_PATTERNS:
             if pat.search(o):
                 rep.fail(qi, 'draft prose', 'option %r contains %r' % (o, name))
+    # SR-31 (Jon, 13 Oct 2026): no wrong option gives the key's verdict or choice
+    k = sr31_lead(opts[key])
+    for i, o in enumerate(opts):
+        if k and i != key and sr31_lead(o) == k:
+            rep.fail(qi, 'SR-31', 'the wrong option %r gives the key\'s verdict %r' % (o, k))
     for pat, why in TRUE_WRONG.get(qi, []):
         for i, o in enumerate(opts):
             if i != key and re.search(pat, o, re.IGNORECASE):
                 rep.fail(qi, 'true wrong option', '%r (%s; SR-16)' % (o, why))
+    for need, why in STEM_NEEDS.get(qi, []):
+        if need not in (q.get('stemAfterTable') or '') + q['stem'] + q.get('working', ''):
+            rep.fail(qi, 'stem', 'must say %r (%s)' % (need, why))
     for pat, why in WORKING_FORBIDS.get(qi, []):
         if re.search(pat, q.get('working', '')):
             rep.fail(qi, 'working', 'says %r (%s)' % (pat, why))
@@ -452,6 +472,14 @@ def selftest(bank, rendered):
     def old_q7(b):
         b[6]['options'][3] = 'The data does not tell us whether users enjoyed the content'
     expect('true wrong option (old Q7 D)', lambda rep: check_bank(rep, mutated(old_q7)))
+
+    def old_q5(b):
+        b[4]['stemAfterTable'] = b[4]['stemAfterTable'].replace('increased by 10%', 'increased by nearly 20%')
+    expect('old Q5 stem ("nearly 20%")', lambda rep: check_bank(rep, mutated(old_q5)))
+
+    def old_q4(b):
+        b[3]['options'][2] = 'Yes — the house has tripled in value, so prices have risen 300%'
+    expect('SR-31 (old Q4 C, the key\'s "Yes")', lambda rep: check_bank(rep, mutated(old_q4)))
 
     def old_q8(b):
         b[7]['working'] = 'Two issues: the stated "4%" is imprecise (it\'s 3 percentage points), and more.'

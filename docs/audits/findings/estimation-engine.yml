@@ -68,3 +68,42 @@ findings:
   evidence: 'docs/audit-resit-correctness-2026-10-04.md F4. '
   status: fixed
   pr: 74
+- id: estimation-engine-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:text-contradicts-content
+  level: gcse
+  where: games/estimation-engine/index.html F01, F04 (step 1 labels, feedback, messages)
+  summary: 'A money item put "£" before every number, so the 42 tickets showed as "£42" (F01) and the 21 people as
+    "£21" (F04) in the step-1 box, the rounded value, the feedback ("£42 to 1 s.f. is £40.") and the unreadable
+    message, and counts were marked as money. Fixed: moneyAt names the money numbers (the £ the stem prints); only
+    they get a £ and money marking; the verifier fails a moneyAt that differs from the stem''s £ signs and reads
+    F01''s labels in Chromium; plant'
+  evidence: '"A ticket costs £18.95. Estimate the cost of 42 tickets." nums ["18.95","42"], money: true (SWEEP-1,
+    batch 9)'
+  status: fixed
+  pr: 351
+- id: estimation-engine-s1-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:marking-tolerance
+  level: gcse
+  where: games/estimation-engine/index.html checkRounding, checkEstimate
+  summary: 'On money items a right amount in the wrong form ("20.0", "800.0") came back from MaffsAnswer.money() as
+    ''format'' and fell through to wrong, against SR-3 (never marked); the count 42 typed "40.0" did too, where a
+    non-money item accepts it. Fixed: ''format'' shows the money message and the student resubmits, unmarked; the
+    verifier types £20.0 and £800.0 on F01 and requires the message with no mark'
+  evidence: 'checkRounding and checkEstimate stopped only on ''unreadable'' (SWEEP-1, batch 9)'
+  status: fixed
+  pr: 351
+- id: estimation-engine-s1-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: gcse
+  where: scripts/verify-estimation-engine.py
+  summary: 'The verifier does not check the step-1 feedback text, the step-2 heading and working line built by
+    shapeForms (it checks only that they render; all 12 shapes read correctly by hand), or the start-screen example.
+    Recorded under Jon''s rule of 13 Oct 2026; the money labels and format path are now checked'
+  evidence: 'play() covers D01, F02, F01 and a full game (SWEEP-1, batch 9)'
+  status: open

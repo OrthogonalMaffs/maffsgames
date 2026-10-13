@@ -86,3 +86,28 @@ findings:
     4: the hint is refused once the step is answered; the worked solution's Next is MaffsNext). Open for the 320x568
     Next under the footer and game_completed's accuracy field."
   status: open
+- id: linear-equation-solver-s1-001
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: gcse
+  where: games/linear-equation-solver/index.html:583 (ask), :154-156 (menu)
+  summary: 'On 227 of 295 lines the four options share one move label and differ in the line it gives, but the ask is
+    "What is the optimal move here?"; the menu says a slower move "scores half", where it costs half a wrong move
+    (12.5 of 100) and a "slower" option takes as many moves, bringing in fractions. Wording, for Jon. (Canon SR-13''s
+    text still says such a move "scores full marks and is followed by a nudge": a docs point for the home lane)'
+  evidence: 'A1 x + 7 = 12: options "-7 → x = 12 - 7", "-7 → x = 12", "-7 → x + 7 = 12 - 7", "-7 → x = 12 + 7" (SWEEP-1,
+    batch 9)'
+  status: open
+- id: linear-equation-solver-s1-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: gcse
+  where: scripts/verify-linear-equation-solver.py
+  summary: 'The verifier checks only the last line of each worked solution (not the 227 step texts and intermediate
+    lines), a hint''s number but not its verb, sign or descriptive clause (295 hints), and the answer-phase
+    distractors only as distinct values. All correct today by the reviewer''s check. Recorded under Jon''s rule of 13
+    Oct 2026'
+  evidence: 'verify :395, :546-553, :389-391 (SWEEP-1, batch 9)'
+  status: open

@@ -299,6 +299,16 @@ def r_stemleaf(rep, qid, q, ctx):
     for left, stem, right in rows:
         a += [int(stem) * 10 + int(x) for x in re.findall(r'\d', left)]
         b += [int(stem) * 10 + int(x) for x in re.findall(r'\d', right)]
+    # the diagram's key (SWEEP-1, core-maths-paper1-s1-001; SR-17): stems are tens, and the key line says so with a
+    # leaf the diagram really has on each side
+    k = re.search(r'Key: (\d) \| (\d) \| (\d) means (\d+) for Group A and (\d+) for Group B', html)
+    if not k:
+        rep.fail(qid, 'chart', 'the stem-and-leaf diagram has no key (SR-17)')
+    else:
+        la, st, lb, va, vb = (int(x) for x in k.groups())
+        if (va, vb) != (st * 10 + la, st * 10 + lb):
+            rep.fail(qid, 'chart', 'the key reads %d and %d, the stem and leaves give %d and %d'
+                     % (va, vb, st * 10 + la, st * 10 + lb))
     stated = int(re.search(r'\((\d+) values each\)', q['stem']).group(1))
     if len(a) != stated or len(b) != stated:
         rep.fail(qid, 'chart', 'the diagram has %d and %d values, the stem says %d each' % (len(a), len(b), stated))
@@ -509,7 +519,23 @@ PINNED = {
 }
 
 
+# SWEEP-1 (core-maths-paper1-s1-002..004; SR-16): wrong options that were true, or the key's own point as a remedy,
+# may not come back: Q8's "larger sample from multiple locations" (the location bias, as advice), Q11's "equally well
+# because they have the same mean" (true by the mean, the key's "on average" being the median), Q18's "The mean is not
+# the right measure for earnings data" (earnings are skewed).
+TRUE_WRONG = {
+    r'surveys the first 40 people outside a cinema': r'multiple locations',
+    r'Class X: mean 62': r'equally well because they have the same mean',
+    r'Eating breakfast causes': r'mean is not the right measure',
+}
+
+
 def pinned(rep, qid, q):
+    for rx, bad in TRUE_WRONG.items():
+        if re.search(rx, q['stem']):
+            for i, o in enumerate(q['options']):
+                if i != q['correct'] and re.search(bad, o):
+                    rep.fail(qid, 'true wrong option', '%r is true, or the key\'s point, offered as wrong (SR-16)' % o)
     for rx, key in PINNED.items():
         if re.search(rx, q['stem']):
             if q['options'][q['correct']] != key:
@@ -616,10 +642,20 @@ def check_chart_contrast(rep, qid, svg, bg):
 
 # ── the bank ─────────────────────────────────────────────────────────────────
 
+def sr31_lead(o):
+    """The verdict or choice an option opens with, the words before its dash ("Yes", "No", "A")."""
+    m = re.match(r'^(.{1,30}?)\s+[—–]\s+', o)
+    return m.group(1).strip() if m else None
+
+
 def check_bank(rep, bank, ctx, verbose=False):
     used = {}
     for i, q in enumerate(bank):
         qid = 'Q%d' % (i + 1)
+        k = sr31_lead(q['options'][q['correct']])
+        for j, o in enumerate(q['options']):
+            if k and j != q['correct'] and sr31_lead(o) == k:
+                rep.fail(qid, 'SR-31', 'the wrong option %r gives the key\'s verdict %r (Jon, 13 Oct 2026)' % (o, k))
         opts = q['options']
         if not (0 <= q['correct'] < len(opts)):
             rep.fail(qid, 'key', 'correct index %r is not an option' % q['correct'])
@@ -756,6 +792,21 @@ def selftest(bank, ctx):
         svg = c['charts'][q['svg']]['svg']
         c['charts'][q['svg']]['svg'] = re.sub(r'(<line\b[^>]*?)stroke="#[0-9a-fA-F]{6}"', r'\1stroke="#1e293b"', svg)
     expect("Q9's old whisker colour (#1e293b)", q9_whiskers)
+
+    def q18_old(b, c):
+        q = find(b, r'Eating breakfast causes')
+        q['options'][2] = 'The mean is not the right measure for earnings data'
+    expect("Q18's old true option C", q18_old)
+
+    def q26_old(b, c):
+        q = find(b, r'save \d+% of her take-home')
+        q['options'][2] = 'Yes — but only if she cuts her food budget'
+    expect("SR-31: Q26's old C (the key's Yes)", q26_old)
+
+    def q15_no_key(b, c):
+        q = find(b, r'stem-and-leaf')
+        c['charts'][q['svg']]['svg'] = re.sub(r'<p class="stem-leaf-key".*?</p>', '', c['charts'][q['svg']]['svg'])
+    expect("Q15's diagram with no key", q15_no_key)
 
     def wrong_key(b, c):
         q = find(b, r'compound interest per annum')
