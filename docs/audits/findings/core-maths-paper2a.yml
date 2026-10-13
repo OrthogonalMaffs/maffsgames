@@ -26,7 +26,8 @@ findings:
     plants'
   evidence: 'Q1 stem: School B 68%, School C 74%, "The y-axis starts at 60%"; "What is the most appropriate criticism
     of this statement?" key "The y-axis is truncated..." (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 349
 - id: core-maths-paper2a-s1-002
   severity: MEDIUM
   jc: false
@@ -38,7 +39,8 @@ findings:
     the working says "nearly 4%" is right as a percentage increase and puts the flaw in the conclusion; the
     verifier bars the old claim, planted'
   evidence: 'working "Two issues: the stated "4%" is imprecise (it''s 3 percentage points), ..." (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 349
 - id: core-maths-paper2a-s1-003
   severity: HIGH
   jc: false
