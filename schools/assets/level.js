@@ -24,7 +24,8 @@
  * to the student. A page with no level parameter is left alone.
  *
  * The declaration is recorded: MaffsLevel.declared(slug) returns {levels, fallback, boards} (copies) or
- * null; its fromUrl is true when the URL asked for a declared level (for a game that preselects nothing otherwise).
+ * null; its asked is true when the URL had a level parameter at all, and its fromUrl when that parameter was a declared
+ * level (for a game that acts only when it was asked).
  * firebase-leaderboard.js's submitScore refuses a level that a declared game has not declared
  * (levels or boards), with a console.warn, so a stray board cannot be created whatever a game does. A page
  * with no declaration behaves as before.
@@ -58,10 +59,11 @@
       try { console.warn('MaffsLevel: ' + slug + ' fallback "' + fallback + '" is not one of its levels'); } catch (e) {}
       fallback = levels[0];
     }
-    decls[slug] = { levels: levels.slice(), fallback: fallback, boards: strings(cfg.boards), fromUrl: false };
+    decls[slug] = { levels: levels.slice(), fallback: fallback, boards: strings(cfg.boards), fromUrl: false, asked: false };
 
     var asked = readParam();
     if (asked === null) return fallback;
+    decls[slug].asked = true;
     if (levels.indexOf(asked) !== -1) { decls[slug].fromUrl = true; return asked; }
     try {
       var u = new URL(global.location.href);
@@ -73,7 +75,7 @@
 
   function declared(slug) {
     var d = Object.prototype.hasOwnProperty.call(decls, slug) ? decls[slug] : null;
-    return d ? { levels: d.levels.slice(), fallback: d.fallback, boards: d.boards.slice(), fromUrl: d.fromUrl } : null;
+    return d ? { levels: d.levels.slice(), fallback: d.fallback, boards: d.boards.slice(), fromUrl: d.fromUrl, asked: d.asked } : null;
   }
 
   // True when the game has declared no levels at all (not migrated) or declared this key as a level or a board.
