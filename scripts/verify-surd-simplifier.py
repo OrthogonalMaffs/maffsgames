@@ -16,6 +16,8 @@ Every item, both levels:
   denominator, a fraction in lowest terms with a denominator above 1, no unexpanded product or unevaluated sum;
   a wrong option equal in value to the key is allowed only when it is not in simplest form, so the ask tells
   them apart (SR-4); every other wrong option differs from the key in value (SR-16);
+  no two wrong options are equal in value unless the pair is listed as a form question in
+  checker-allowlist.json (SR-4; B11-CLEAR, 12 Oct 2026);
   four distinct option strings; and, in Chromium (390x844), every item shown through showQ() and every option
   clicked through handle(): the key marked right, the others wrong.
 A self-test plants each audit fault back into a copy of the page; each must FAIL naming its item.
@@ -23,6 +25,7 @@ A self-test plants each audit fault back into a copy of the page; each must FAIL
     python scripts/verify-surd-simplifier.py [--no-selftest] [--against FILE] [--katex-dir DIR]
 """
 import argparse
+import json
 import os
 import re
 import sys
@@ -186,7 +189,21 @@ def item_name(lv, i, q):
     return '%s[%d] (%s | %s)%s' % (lv, i, q['q'], q['ask'], ' (%s)' % AUDIT[(lv, i)] if (lv, i) in AUDIT else '')
 
 
+def listed_pairs():
+    """Pairs of wrong options equal in value that checker-allowlist.json lists as form questions for this game (the
+    ask names the form: both are the key's value unsimplified, or one wrong value written two ways), as
+    (level, index, frozenset(pair))."""
+    path = os.path.join(HERE, 'checker-allowlist.json')
+    out = set()
+    for e in json.load(open(path, encoding='utf-8'))['b11_form_questions']:
+        m = re.fullmatch(r'surd-simplifier QUESTIONS\.(\w+)\[(\d+)\]', e['where'])
+        if m:
+            out.add((m.group(1), int(m.group(2)), frozenset(e['pair'])))
+    return out
+
+
 def check_bank(fails, bank):
+    listed = listed_pairs()
     counts = {lv: len(bank.get(lv, [])) for lv in COUNTS}
     if counts != COUNTS:
         fails.append('bank: %s items by level, expected %s' % (counts, COUNTS))
@@ -211,6 +228,13 @@ def check_bank(fails, bank):
                 if sp.simplify(v - target) == 0 and not unsimplified(o):
                     fails.append('%s: the wrong option %s equals the answer and is in simplest form (SR-16)'
                                  % (w, o))
+            # SR-4 (B11-CLEAR, 12 Oct 2026): two wrong options equal in value leave the student three choices, unless
+            # the pair is a listed form question (checker-allowlist.json b11_form_questions).
+            for x in range(1, 4):
+                for y in range(x + 1, 4):
+                    if sp.simplify(vals[x] - vals[y]) == 0 and (lv, i, frozenset((opts[x], opts[y]))) not in listed:
+                        fails.append('%s: the wrong options %s and %s are equal in value and not a listed form '
+                                     'question (SR-4)' % (w, opts[x], opts[y]))
 
 
 SWEEP_JS = r"""() => {
@@ -274,6 +298,8 @@ PLANTS = [
      "correct:'\\\\sqrt{2} \\\\cdot \\\\sqrt{2}',d:['2\\\\sqrt{2}','4','\\\\dfrac{8\\\\sqrt{32}}{32}']"),
     ('alevel[35]', 't1-002: 0.4(16) keyed 137/330',
      "correct:'\\\\dfrac{206}{495}'", "correct:'\\\\dfrac{137}{330}'"),
+    ('gcse[38]', 'SR-4: two wrong options equal in value (1/5 and 2/10), not listed',
+     "d:['\\\\dfrac{2}{99}','\\\\dfrac{2}{10}','\\\\dfrac{1}{4}']", "d:['\\\\dfrac{1}{5}','\\\\dfrac{2}{10}','\\\\dfrac{1}{4}']"),
     ('gcse[36]', 'a key not in lowest terms (6/9 for 0.(6))',
      "correct:'\\\\dfrac{2}{3}',d:['\\\\dfrac{6}{10}','\\\\dfrac{2}{9}','\\\\dfrac{6}{9}']}",
      "correct:'\\\\dfrac{6}{9}',d:['\\\\dfrac{6}{10}','\\\\dfrac{2}{9}','\\\\dfrac{2}{3}']}"),
