@@ -117,9 +117,18 @@ findings:
   class: NEW:wording
   level: level4
   where: games/dimension-checker/index.html:108 (item 1), :129 (item 18)
-  summary: 'For Jon (key text and stem): item 1''s key writes "[MLT⁻²] ≠ [MLT⁻¹]" where every other item spaces the
-    bracket; item 18''s stem "In P = F²v, is this homogeneous?" reads unlike the others ("Is P = F²v dimensionally
-    homogeneous?")'
+  summary: 'For Jon (key text): item 1''s key writes "[MLT⁻²] ≠ [MLT⁻¹]" where every other item spaces the bracket
+    (Split: the parent entry held 2 defects; the others are dimension-checker-s1-006.)'
+  evidence: 'c:''No - [MLT⁻²] ≠ [MLT⁻¹]'' (SWEEP-1, batch 11)'
+  status: open
+- id: dimension-checker-s1-006
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: level4
+  where: games/dimension-checker/index.html:108 (item 1), :129 (item 18)
+  summary: 'For Jon (stem): item 18''s stem "In P = F²v, is this homogeneous?" reads unlike the others ("Is P = F²v
+    dimensionally homogeneous?") (Split from dimension-checker-s1-003, SWEEP-1-RULINGS step 1.)'
   evidence: 'c:''No - [MLT⁻²] ≠ [MLT⁻¹]'' (SWEEP-1, batch 11)'
   status: open
 - id: dimension-checker-s1-004

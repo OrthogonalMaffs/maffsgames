@@ -136,9 +136,20 @@ findings:
   class: wording
   level: level4
   where: games/boolean-blitz/index.html:386-762 (the steps arrays, about 40 steps)
-  summary: 'For Jon, not fixed (optional readability): many worked steps are not chained, the next from not being the
-    previous to (for example Q6 step 3, Q10 step 2, Q24 step 3, Q36 step 2), and some show one sub-expression only
-    (Q8 step 2, Q40 step 2). Each step is still an equality, and the header says "One valid simplification path"'
+  summary: 'For Jon, not fixed (optional readability): many worked steps are not chained, the next "from" not being
+    the previous "to" (for example Q6 step 3, Q10 step 2, Q24 step 3, Q36 step 2). Each step is still an
+    equality, and the header says "One valid simplification path" (Split: the parent entry held 2 defects; the
+    others are boolean-blitz-s1-005.)'
+  evidence: 'Q8 step 2: !B!C = !(B+C) -> A[(B+C) + !(B+C)] (SWEEP-1, batch 11)'
+  status: open
+- id: boolean-blitz-s1-005
+  severity: LOW
+  jc: true
+  class: wording
+  level: level4
+  where: games/boolean-blitz/index.html:386-762 (the steps arrays, about 40 steps)
+  summary: 'For Jon, not fixed (optional readability): some worked steps show one sub-expression only (Q8 step 2, Q40
+    step 2). Each step is still an equality (Split from boolean-blitz-s1-003, SWEEP-1-RULINGS step 1.)'
   evidence: 'Q8 step 2: !B!C = !(B+C) -> A[(B+C) + !(B+C)] (SWEEP-1, batch 11)'
   status: open
 - id: boolean-blitz-s1-004

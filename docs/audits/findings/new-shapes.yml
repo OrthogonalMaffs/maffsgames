@@ -109,7 +109,7 @@ findings:
   evidence: After 3 wrong answers the header reads 3/20; prompts are 'What is A?'/'What is V?'
   status: open
 - id: new-shapes-s1-001
-  severity: MEDIUM
+  severity: HIGH
   jc: false
   class: NEW:text-contradicts-content
   level: year6

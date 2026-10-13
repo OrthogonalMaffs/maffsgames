@@ -73,13 +73,70 @@ findings:
 - id: maths-court-s1-006
   severity: LOW
   jc: true
+  class: NEW:text-contradicts-content
+  level: ks3, gcse, core
+  where: games/maths-court/index.html start screen, mc_core_003, mc_gcse_015, mc_gcse_004, mc_gcse_008
+  summary: 'The start screen promises "One correct answer" but five GCSE cases key two or three (gcse_001, 004, 008,
+    012, 019). Settled by Part 2 #3 (the start screen says the court judges the reasoning) (Split: the parent
+    entry held 7 defects; the others are maths-court-s1-007, maths-court-s1-008, maths-court-s1-009,
+    maths-court-s1-010, maths-court-s1-011, maths-court-s1-012.)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: maths-court-s1-007
+  severity: MEDIUM
+  jc: true
+  class: NEW:sr14-content
+  level: ks3, gcse, core
+  where: games/maths-court/index.html start screen, mc_core_003, mc_gcse_015, mc_gcse_004, mc_gcse_008
+  summary: 'core_003''s Percy jokes "The planet will end before 13 years." (end-of-the-world humour, SR-14). Ruled
+    under R6: removed (Split from maths-court-s1-006, SWEEP-1-RULINGS step 1.)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: maths-court-s1-008
+  severity: MEDIUM
+  jc: true
+  class: NEW:text-contradicts-content
+  level: ks3, gcse, core
+  where: games/maths-court/index.html start screen, mc_core_003, mc_gcse_015, mc_gcse_004, mc_gcse_008
+  summary: 'core_003''s Sol works to year 14 but concludes "About 13 years". Open (Split from maths-court-s1-006,
+    SWEEP-1-RULINGS step 1.)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: maths-court-s1-009
+  severity: MEDIUM
+  jc: true
+  class: NEW:wrong-explanation-text
+  level: ks3, gcse, core
+  where: games/maths-court/index.html start screen, mc_core_003, mc_gcse_015, mc_gcse_004, mc_gcse_008
+  summary: 'gcse_015''s summary gives Mix Max 1 and 6 adding to 7 (his factors are −1 and −6: −7, not −5). Wrong
+    arithmetic shown to the student; open (Split from maths-court-s1-006, SWEEP-1-RULINGS step 1.)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: maths-court-s1-010
+  severity: LOW
+  jc: true
   class: NEW:wording
   level: ks3, gcse, core
   where: games/maths-court/index.html start screen, mc_core_003, mc_gcse_015, mc_gcse_004, mc_gcse_008
-  summary: 'Wording, open: the start screen promises "One correct answer" but five GCSE cases key two or three (gcse_001,
-    004, 008, 012, 019); core_003''s Percy jokes "The planet will end before 13 years." (end-of-the-world humour, SR-14
-    is Jon''s call) and Sol works to year 14 but concludes "About 13 years"; gcse_015''s summary gives Mix Max 1 and 6
-    adding to 7 (his factors are −1 and −6: −7, not −5); gcse_004''s "works here by luck"; gcse_008''s "x³ˣ⁴" notation.
-    Class for Jon: the court never says whether it judges the conclusion or the reasoning'
+  summary: 'gcse_004''s "works here by luck". Wording, open (Split from maths-court-s1-006, SWEEP-1-RULINGS step 1.)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: maths-court-s1-011
+  severity: LOW
+  jc: true
+  class: NEW:wording
+  level: ks3, gcse, core
+  where: games/maths-court/index.html start screen, mc_core_003, mc_gcse_015, mc_gcse_004, mc_gcse_008
+  summary: 'gcse_008''s "x³ˣ⁴" notation. Wording, open (Split from maths-court-s1-006, SWEEP-1-RULINGS step 1.)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: maths-court-s1-012
+  severity: LOW
+  jc: true
+  class: NEW:convention-unstated
+  level: ks3, gcse, core
+  where: games/maths-court/index.html start screen, mc_core_003, mc_gcse_015, mc_gcse_004, mc_gcse_008
+  summary: 'The court never says whether it judges the conclusion or the reasoning. Settled by Part 2 #3 (Split from
+    maths-court-s1-006, SWEEP-1-RULINGS step 1.)'
   evidence: 'SWEEP-1, batch 4'
   status: open

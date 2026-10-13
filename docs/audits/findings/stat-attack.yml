@@ -94,17 +94,56 @@ findings:
     the bounds are compared by value; the verifier types each median class with plain bounds. (It still ignores the
     inequality signs, so "40 < x ≤ 50" passes for "40 ≤ x < 50": recorded, for Jon)'
   evidence: "L4_7 classes '3.0 ≤ x < 4.0' ... (SWEEP-1, batch 9; precision audit item 8)"
-  status: open
+  status: fixed
+  pr: 350
 - id: stat-attack-s1-007
   severity: LOW
   jc: true
   class: NEW:wording
   level: gcse, core, level4
   where: games/stat-attack/index.html G6, L4_4, G1, L4_9
-  summary: 'G6 is "marked out of 40" but its top class 30 ≤ x < 40 has no room for 40; L4_4 reads 60-110 °C "from a
-    furnace"; G1''s closing line mentions grade boundaries never given; L4_9''s distractor "The standard deviation
-    means cycles are inconsistent" is a judgement, arguably true. Every keyed interpretation says the data "vary by
-    approximately σ from the mean on average" (the SD is a root-mean-square, not a mean, deviation): for Jon'
+  summary: 'G6 is "marked out of 40" but its top class 30 ≤ x < 40 has no room for 40. For Jon (Split: the parent
+    entry held 5 defects; the others are stat-attack-s1-009, stat-attack-s1-010, stat-attack-s1-011,
+    stat-attack-s1-012.)'
+  evidence: 'Item texts as quoted (SWEEP-1, batch 9)'
+  status: open
+- id: stat-attack-s1-009
+  severity: LOW
+  jc: true
+  class: NEW:wording
+  level: gcse, core, level4
+  where: games/stat-attack/index.html G6, L4_4, G1, L4_9
+  summary: 'L4_4 reads 60-110 °C "from a furnace". For Jon (Split from stat-attack-s1-007, SWEEP-1-RULINGS step 1.)'
+  evidence: 'Item texts as quoted (SWEEP-1, batch 9)'
+  status: open
+- id: stat-attack-s1-010
+  severity: LOW
+  jc: true
+  class: NEW:wording
+  level: gcse, core, level4
+  where: games/stat-attack/index.html G6, L4_4, G1, L4_9
+  summary: 'G1''s closing line mentions grade boundaries never given. For Jon (Split from stat-attack-s1-007,
+    SWEEP-1-RULINGS step 1.)'
+  evidence: 'Item texts as quoted (SWEEP-1, batch 9)'
+  status: open
+- id: stat-attack-s1-011
+  severity: LOW
+  jc: true
+  class: NEW:wording
+  level: gcse, core, level4
+  where: games/stat-attack/index.html G6, L4_4, G1, L4_9
+  summary: 'L4_9''s distractor "The standard deviation means cycles are inconsistent" is a judgement, arguably true.
+    For Jon (Split from stat-attack-s1-007, SWEEP-1-RULINGS step 1.)'
+  evidence: 'Item texts as quoted (SWEEP-1, batch 9)'
+  status: open
+- id: stat-attack-s1-012
+  severity: LOW
+  jc: true
+  class: NEW:wording
+  level: gcse, core, level4
+  where: games/stat-attack/index.html G6, L4_4, G1, L4_9
+  summary: 'Every keyed interpretation says the data "vary by approximately σ from the mean on average" (the SD is a
+    root-mean-square, not a mean, deviation). For Jon (Split from stat-attack-s1-007, SWEEP-1-RULINGS step 1.)'
   evidence: 'Item texts as quoted (SWEEP-1, batch 9)'
   status: open
 - id: stat-attack-s1-008

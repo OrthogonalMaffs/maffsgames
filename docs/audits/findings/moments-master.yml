@@ -231,14 +231,24 @@ findings:
   status: fixed
   pr: 356
 - id: moments-master-s1-006
+  severity: MEDIUM
+  jc: true
+  class: NEW:wording
+  level: alevel
+  where: games/moments-master/index.html:179 (alevel[47]), :200 (level4[17])
+  summary: 'For Jon (key text): alevel[47]''s key "Closer to the heavier end" is circular and misses a symmetric
+    non-uniform rod (Split: the parent entry held 2 defects; the others are moments-master-s1-008.)'
+  evidence: '"A bench vice clamp applies 600 N through a handle 0.2 m long." | "Maximum clamping moment" | key 120 Nm
+    (SWEEP-1, batch 11)'
+  status: open
+- id: moments-master-s1-008
   severity: LOW
   jc: true
   class: NEW:wording
   level: alevel
   where: games/moments-master/index.html:179 (alevel[47]), :200 (level4[17])
-  summary: 'For Jon (key text and stem changes): alevel[47]''s key "Closer to the heavier end" is circular and
-    misses a symmetric non-uniform rod; level4[17]''s vice reads as if 600 N is the clamping force, and "maximum" is
-    unexplained'
+  summary: 'For Jon (stem): level4[17]''s vice reads as if 600 N is the clamping force, and "maximum" is unexplained
+    (Split from moments-master-s1-006, SWEEP-1-RULINGS step 1.)'
   evidence: '"A bench vice clamp applies 600 N through a handle 0.2 m long." | "Maximum clamping moment" | key 120 Nm
     (SWEEP-1, batch 11)'
   status: open

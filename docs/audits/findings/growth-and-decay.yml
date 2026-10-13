@@ -84,12 +84,60 @@ findings:
   class: NEW:text-contradicts-content
   level: alevel, level4
   where: games/growth-and-decay/index.html AL11 (:465), L4_6 (:547), CM14 (:358), CM11 (:331), CM15 (:367), L4_11 (:584)
-  summary: 'For Jon (context or key-text changes): AL11 and L4_6 key a fractional count (4.64 devices, 8.03 amplifiers;
-    "the least n for which" would key 5 and 9), and AL11''s energy doubling per device is implausible; CM14''s 2 × 3^n
-    counts only the newest recipients, though its context says everyone shares; CM11 calls an amount in mg a
-    concentration, and its prompt and options say concentration; CM15''s pressure falls 4% per km (real air about 12%;
-    82.6 kPa at 5 km against about 54); L4_11''s key says an exponentially decaying oscillation is "heavily damped"
-    (it is underdamped)'
+  summary: 'AL11 and L4_6 key a fractional count (4.64 devices, 8.03 amplifiers; "the least n for which" would key 5
+    and 9). Part 2 #16: key "the least n" as the integer (Split: the parent entry held 6 defects; the others
+    are growth-and-decay-s1-010, growth-and-decay-s1-011, growth-and-decay-s1-012, growth-and-decay-s1-013,
+    growth-and-decay-s1-014.)'
+  evidence: 'Contexts and keys as quoted (SWEEP-1, batch 10)'
+  status: open
+- id: growth-and-decay-s1-010
+  severity: LOW
+  jc: true
+  class: NEW:text-contradicts-content
+  level: alevel, level4
+  where: games/growth-and-decay/index.html AL11 (:465), L4_6 (:547), CM14 (:358), CM11 (:331), CM15 (:367), L4_11 (:584)
+  summary: 'AL11''s energy doubling per device is implausible. For Jon (context) (Split from growth-and-decay-s1-007,
+    SWEEP-1-RULINGS step 1.)'
+  evidence: 'Contexts and keys as quoted (SWEEP-1, batch 10)'
+  status: open
+- id: growth-and-decay-s1-011
+  severity: MEDIUM
+  jc: true
+  class: NEW:text-contradicts-content
+  level: alevel, level4
+  where: games/growth-and-decay/index.html AL11 (:465), L4_6 (:547), CM14 (:358), CM11 (:331), CM15 (:367), L4_11 (:584)
+  summary: 'CM14''s 2 × 3^n counts only the newest recipients, though its context says everyone shares. For Jon
+    (context or key text) (Split from growth-and-decay-s1-007, SWEEP-1-RULINGS step 1.)'
+  evidence: 'Contexts and keys as quoted (SWEEP-1, batch 10)'
+  status: open
+- id: growth-and-decay-s1-012
+  severity: LOW
+  jc: true
+  class: NEW:text-contradicts-content
+  level: alevel, level4
+  where: games/growth-and-decay/index.html AL11 (:465), L4_6 (:547), CM14 (:358), CM11 (:331), CM15 (:367), L4_11 (:584)
+  summary: 'CM11 calls an amount in mg a concentration, and its prompt and options say concentration. For Jon (Split
+    from growth-and-decay-s1-007, SWEEP-1-RULINGS step 1.)'
+  evidence: 'Contexts and keys as quoted (SWEEP-1, batch 10)'
+  status: open
+- id: growth-and-decay-s1-013
+  severity: LOW
+  jc: true
+  class: NEW:text-contradicts-content
+  level: alevel, level4
+  where: games/growth-and-decay/index.html AL11 (:465), L4_6 (:547), CM14 (:358), CM11 (:331), CM15 (:367), L4_11 (:584)
+  summary: 'CM15''s pressure falls 4% per km (real air about 12%; 82.6 kPa at 5 km against about 54). For Jon (Split
+    from growth-and-decay-s1-007, SWEEP-1-RULINGS step 1.)'
+  evidence: 'Contexts and keys as quoted (SWEEP-1, batch 10)'
+  status: open
+- id: growth-and-decay-s1-014
+  severity: MEDIUM
+  jc: true
+  class: NEW:text-contradicts-content
+  level: alevel, level4
+  where: games/growth-and-decay/index.html AL11 (:465), L4_6 (:547), CM14 (:358), CM11 (:331), CM15 (:367), L4_11 (:584)
+  summary: 'L4_11''s key says an exponentially decaying oscillation is "heavily damped" (it is underdamped). For Jon
+    (key text) (Split from growth-and-decay-s1-007, SWEEP-1-RULINGS step 1.)'
   evidence: 'Contexts and keys as quoted (SWEEP-1, batch 10)'
   status: open
 - id: growth-and-decay-s1-008

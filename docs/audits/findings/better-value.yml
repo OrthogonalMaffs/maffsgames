@@ -204,8 +204,28 @@ findings:
   class: NEW:wording
   level: core
   where: games/better-value/index.html bv_core_047 (:828), bv_core_011 (:392)
-  summary: 'core_047 keys "Cleaner B is better value overall" on a stated preference, and its "roughly 9 times/year"
-    is 52/6 = 8.7; core_011''s "nothing for 12 months, then £599 if not paid" is garbled. Stem changes, for Jon'
+  summary: 'core_047 keys "Cleaner B is better value overall" on a stated preference. Stem change, for Jon (Split: the
+    parent entry held 3 defects; the others are better-value-s1-008, better-value-s1-009.)'
+  evidence: 'Scenario texts as quoted (SWEEP-1, batch 8)'
+  status: open
+- id: better-value-s1-008
+  severity: LOW
+  jc: true
+  class: NEW:wording
+  level: core
+  where: games/better-value/index.html bv_core_047 (:828), bv_core_011 (:392)
+  summary: 'core_047''s "roughly 9 times/year" is 52/6 = 8.7. Stem change, for Jon (Split from better-value-s1-006,
+    SWEEP-1-RULINGS step 1.)'
+  evidence: 'Scenario texts as quoted (SWEEP-1, batch 8)'
+  status: open
+- id: better-value-s1-009
+  severity: LOW
+  jc: true
+  class: NEW:wording
+  level: core
+  where: games/better-value/index.html bv_core_047 (:828), bv_core_011 (:392)
+  summary: 'core_011''s "nothing for 12 months, then £599 if not paid" is garbled. Stem change, for Jon (Split from
+    better-value-s1-006, SWEEP-1-RULINGS step 1.)'
   evidence: 'Scenario texts as quoted (SWEEP-1, batch 8)'
   status: open
 - id: better-value-s1-007

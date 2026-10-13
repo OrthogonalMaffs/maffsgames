@@ -121,9 +121,20 @@ findings:
   class: NEW:text-contradicts-content
   level: alevel, gcse, level4
   where: games/estimation-golf/index.html:877, :882 (feedback)
-  summary: 'The feedback prints the key as a JS number and the error to 2 d.p.: "Give ln(10) to 2 decimal places." shows
-    "Actual answer: 2.3" (below the precision asked); for small keys the error reads as zero ("Round 0.004857 to 2
-    significant figures.", answer 0.0048: "Error: 2.0% (-0.00)"; thermal resistance 0.0833 likewise)'
+  summary: 'The feedback prints the key as a JS number: "Give ln(10) to 2 decimal places." shows "Actual answer: 2.3"
+    (below the precision asked) (Split: the parent entry held 2 defects; the others are
+    estimation-golf-s1-006.)'
+  evidence: 'alevel :688 answer: 2.30 (stored as the number 2.3); diffStr = diff.toFixed(2) at :877 (SWEEP-1, batch 1)'
+  status: open
+- id: estimation-golf-s1-006
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: alevel, gcse, level4
+  where: games/estimation-golf/index.html:877, :882 (feedback)
+  summary: 'For small keys the error reads as zero ("Round 0.004857 to 2 significant figures.", answer 0.0048: "Error:
+    2.0% (-0.00)"; thermal resistance 0.0833 likewise) (Split from estimation-golf-s1-003, SWEEP-1-RULINGS step
+    1.)'
   evidence: 'alevel :688 answer: 2.30 (stored as the number 2.3); diffStr = diff.toFixed(2) at :877 (SWEEP-1, batch 1)'
   status: open
 - id: estimation-golf-s1-004
@@ -144,8 +155,19 @@ findings:
   class: NEW:wording
   level: alevel
   where: games/estimation-golf/index.html:687, :689
-  summary: 'The trapezium hint calls the ordinates strips ("Strips at x = 0, 0.5, 1" for 2 strips), and the speed-of-sound
-    stem gives its own key ("(≈ 343 m/s)", key 343). Wording and a new stem, open for Jon'
+  summary: 'The trapezium hint calls the ordinates strips ("Strips at x = 0, 0.5, 1" for 2 strips). Wording, open for
+    Jon (Split: the parent entry held 2 defects; the others are estimation-golf-s1-007.)'
+  evidence: 'hint "Strips at x = 0, 0.5, 1. Values: 0, 0.25, 1."; "Estimate the speed (m/s) of sound in air at 20°C
+    (≈ 343 m/s)." key 343 (SWEEP-1, batch 1)'
+  status: open
+- id: estimation-golf-s1-007
+  severity: MEDIUM
+  jc: false
+  class: NEW:hint-gives-answer
+  level: alevel
+  where: games/estimation-golf/index.html:687, :689
+  summary: 'The speed-of-sound stem gives its own key ("(≈ 343 m/s)", key 343). A new stem, open for Jon (Split from
+    estimation-golf-s1-005, SWEEP-1-RULINGS step 1.)'
   evidence: 'hint "Strips at x = 0, 0.5, 1. Values: 0, 0.25, 1."; "Estimate the speed (m/s) of sound in air at 20°C
     (≈ 343 m/s)." key 343 (SWEEP-1, batch 1)'
   status: open

@@ -93,12 +93,31 @@ findings:
   evidence: 'SWEEP-1, batch 5'
   status: open
 - id: gradient-hunter-s1-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:wording
+  level: core, alevel
+  where: games/gradient-hunter/index.html gh_core_015 (:348-356), gh_alevel_009, :170 (start screen)
+  summary: 'core_015''s spline rises between years 3 and 4 though the car loses value. Open (Split: the parent entry
+    held 3 defects; the others are gradient-hunter-s1-005, gradient-hunter-s1-006.)'
+  evidence: 'SWEEP-1, batch 5'
+  status: open
+- id: gradient-hunter-s1-005
   severity: LOW
   jc: false
   class: NEW:wording
   level: core, alevel
   where: games/gradient-hunter/index.html gh_core_015 (:348-356), gh_alevel_009, :170 (start screen)
-  summary: 'Open: core_015''s spline rises between years 3 and 4 though the car loses value; alevel_009 writes 116.7 with
-    no ≈; the start screen says click two points "to find the gradient" though the student types it'
+  summary: 'alevel_009 writes 116.7 with no ≈. Open (Split from gradient-hunter-s1-004, SWEEP-1-RULINGS step 1.)'
+  evidence: 'SWEEP-1, batch 5'
+  status: open
+- id: gradient-hunter-s1-006
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: core, alevel
+  where: games/gradient-hunter/index.html gh_core_015 (:348-356), gh_alevel_009, :170 (start screen)
+  summary: 'The start screen says click two points "to find the gradient" though the student types it. Open (Split
+    from gradient-hunter-s1-004, SWEEP-1-RULINGS step 1.)'
   evidence: 'SWEEP-1, batch 5'
   status: open

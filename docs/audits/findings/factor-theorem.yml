@@ -259,11 +259,23 @@ findings:
   class: NEW:true-wrong-option
   level: all
   where: games/factor-theorem/index.html:763-770 (practice Q33)
-  summary: 'FOR JON, not fixed. Two wrong options end on the key''s conclusion with a bad reason ("f(-2) = (-2)^n - 2^n =
-    0, so (x - 2) is a factor" and "f(0) = -2^n, so (x - 2) is a factor"), which SR-31 bars; the first is also true only
-    for even n. The stem never defines f ("Let f(x) = x^n - 2^n" is missing) though the options use f(2) and f(0).
-    verify-factor-theorem.py pins these options word for word to the FT-FIX contract, so changing them, or the stem,
-    needs a new ruling from Jon.'
+  summary: 'FOR JON, not fixed. Two wrong options end on the key''s conclusion with a bad reason ("f(-2) = (-2)^n -
+    2^n = 0, so (x - 2) is a factor" and "f(0) = -2^n, so (x - 2) is a factor"), which SR-31 bars; the first is
+    also true only for even n. verify-factor-theorem.py pins these options word for word to the FT-FIX
+    contract, so changing them needs a ruling (R5) (Split: the parent entry held 2 defects; the others are
+    factor-theorem-s1-007.)'
+  evidence: 'Prove that (x - 2) is a factor of x^n - 2^n for all positive integers n. Which line proves it? | key f(2) =
+    2^n - 2^n = 0, so by the factor theorem (x - 2) is a factor. (SWEEP-1, batch 11)'
+  status: open
+- id: factor-theorem-s1-007
+  severity: MEDIUM
+  jc: true
+  class: NEW:convention-unstated
+  level: all
+  where: games/factor-theorem/index.html:763-770 (practice Q33)
+  summary: 'FOR JON, not fixed. The stem never defines f ("Let f(x) = x^n - 2^n" is missing) though the options use
+    f(2) and f(0). The verifier pins the stem to the FT-FIX contract (Split from factor-theorem-s1-003,
+    SWEEP-1-RULINGS step 1.)'
   evidence: 'Prove that (x - 2) is a factor of x^n - 2^n for all positive integers n. Which line proves it? | key f(2) =
     2^n - 2^n = 0, so by the factor theorem (x - 2) is a factor. (SWEEP-1, batch 11)'
   status: open

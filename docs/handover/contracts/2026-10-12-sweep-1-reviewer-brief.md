@@ -65,6 +65,11 @@ f. **Negative typed answers.** Any typed-answer box with inputmode="decimal" (iO
 - HIGH: a student answering correctly is marked wrong, or a wrong answer is marked right.
 - MEDIUM: an unstated convention, or a misleading option that does not change the marking.
 - LOW: wording.
+- **One defect per entry (Jon, 13 Oct 2026, contract SWEEP-1-RULINGS, process point 1).** A candidate finding is one fault
+  of one kind (its instances may be listed: "ten stems write an approximately-equals sign" is one defect), never a
+  bundle of different faults. Each has its own severity, set by its own worst consequence: a wrong key, false
+  arithmetic or a false statement is never LOW because the other items in a "wording" list are. When one item shows
+  two different faults, report two findings. (Why: fermi-lab-003 filed a wrong key at LOW inside a wording entry.)
 Be precise and honest. Do not pad. "No findings" is a perfectly good answer when it is true. False positives cost
 time: before reporting, check the item really reads the way you claim as served (e.g. check that the stem really
 lacks the precision statement — it may be in the start screen, a level banner, or a shared instruction line shown on
@@ -73,7 +78,7 @@ every question; if so it is stated, not a finding).
 ## Output (your final message)
 1. One line: how many items/templates you read, per level.
 2. A list of candidate findings, each with:
-   - check (a/b/c/d), proposed severity, level, where (file:line and item id/index),
+   - check (a/b/c/d), proposed severity (one defect, one severity), level, where (file:line and item id/index),
    - the stem, the options and the key QUOTED verbatim,
    - one-line why,
    - fix shape: (i) inside games/<slug>/ without changing the key or the stem — e.g. replace the true wrong option

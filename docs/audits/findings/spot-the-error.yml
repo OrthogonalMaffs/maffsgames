@@ -255,9 +255,38 @@ findings:
   class: NEW:wrong-explanation-text
   level: gcse, level4, ks3
   where: games/spot-the-error/index.html ste_gcse_036 (:317), ste_l4_004 (:333), ste_l4_025 (:357), ste_ks3_031 (:271)
-  summary: 'Wording: gcse_036''s explanation rests on independence the stem never states (the key holds anyway: a branch
-    pair sums to 1); l4_004 asks for distance "from t = 0" but ends "s = t³ + t² + c" (c = 0); l4_025''s key step has a
-    second slip (− x⁴/4!) the explanation never names, and "the x³/3! term belongs to sin(x)" (sin has − x³/3!);
-    ks3_031''s stem states the error ("without sorting the data first")'
+  summary: 'Wording: gcse_036''s explanation rests on independence the stem never states (the key holds anyway: a
+    branch pair sums to 1) (Split: the parent entry held 4 defects; the others are spot-the-error-s1-005,
+    spot-the-error-s1-006, spot-the-error-s1-007.)'
+  evidence: 'SWEEP-1, batch 3'
+  status: open
+- id: spot-the-error-s1-005
+  severity: LOW
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: gcse, level4, ks3
+  where: games/spot-the-error/index.html ste_gcse_036 (:317), ste_l4_004 (:333), ste_l4_025 (:357), ste_ks3_031 (:271)
+  summary: 'Wording: l4_004 asks for distance "from t = 0" but ends "s = t³ + t² + c" (c = 0) (Split from
+    spot-the-error-s1-004, SWEEP-1-RULINGS step 1.)'
+  evidence: 'SWEEP-1, batch 3'
+  status: open
+- id: spot-the-error-s1-006
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: gcse, level4, ks3
+  where: games/spot-the-error/index.html ste_gcse_036 (:317), ste_l4_004 (:333), ste_l4_025 (:357), ste_ks3_031 (:271)
+  summary: 'Wording: l4_025''s key step has a second slip (− x⁴/4!) the explanation never names, and says "the x³/3!
+    term belongs to sin(x)" (sin has − x³/3!) (Split from spot-the-error-s1-004, SWEEP-1-RULINGS step 1.)'
+  evidence: 'SWEEP-1, batch 3'
+  status: open
+- id: spot-the-error-s1-007
+  severity: LOW
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: gcse, level4, ks3
+  where: games/spot-the-error/index.html ste_gcse_036 (:317), ste_l4_004 (:333), ste_l4_025 (:357), ste_ks3_031 (:271)
+  summary: 'Wording: ks3_031''s stem states the error ("without sorting the data first") (Split from
+    spot-the-error-s1-004, SWEEP-1-RULINGS step 1.)'
   evidence: 'SWEEP-1, batch 3'
   status: open

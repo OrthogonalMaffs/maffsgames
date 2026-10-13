@@ -77,9 +77,29 @@ findings:
   class: NEW:text-contradicts-content
   level: alevel
   where: games/normal-navigator/index.html:276, :272-273, :228
-  summary: 'Open: the B(100, 0.3) parameters item shades 25 to 35, a region the question never mentions; the two
-    empirical-rule items about a general N(μ, σ²) label the curve μ = 0, σ = 1; :228 says "X ~ N(0, 1)" and asks
-    P(Z < 0). Drawing and context changes, not decided by a standing ruling'
+  summary: 'Open: the B(100, 0.3) parameters item shades 25 to 35, a region the question never mentions. Drawing
+    change, not decided by a standing ruling (Split: the parent entry held 3 defects; the others are
+    normal-navigator-s1-009, normal-navigator-s1-010.)'
+  evidence: 'shade:[25,35] on "What are μ and σ for the approximation?" (SWEEP-1, batch 10)'
+  status: open
+- id: normal-navigator-s1-009
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: alevel
+  where: games/normal-navigator/index.html:276, :272-273, :228
+  summary: 'Open: the two empirical-rule items about a general N(μ, σ²) label the curve μ = 0, σ = 1. Drawing change,
+    not decided by a standing ruling (Split from normal-navigator-s1-006, SWEEP-1-RULINGS step 1.)'
+  evidence: 'shade:[25,35] on "What are μ and σ for the approximation?" (SWEEP-1, batch 10)'
+  status: open
+- id: normal-navigator-s1-010
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: alevel
+  where: games/normal-navigator/index.html:276, :272-273, :228
+  summary: 'Open: :228 says "X ~ N(0, 1)" and asks P(Z < 0). Context change, not decided by a standing ruling (Split
+    from normal-navigator-s1-006, SWEEP-1-RULINGS step 1.)'
   evidence: 'shade:[25,35] on "What are μ and σ for the approximation?" (SWEEP-1, batch 10)'
   status: open
 - id: normal-navigator-s1-007
@@ -88,12 +108,24 @@ findings:
   class: NEW:level-content-mismatch
   level: alevel
   where: games/normal-navigator/index.html:325-374
-  summary: 'Closed under R10 and SR-29 (Jon, 13 Oct 2026): the events now log the resolved level, and one bank serving a second audience is acceptable under SR-29. Was: the game serves one bank to A-Level, Level 4 and Core Maths but logs level "alevel" for all three, the
-    shape of the factor-theorem ruling (a level serving another level''s items). The page also says to use a
-    calculator while its roster tag is untagged. For Jon'
+  summary: 'Closed under R10 and SR-29 (Jon, 13 Oct 2026): the events now log the resolved level, and one bank serving
+    a second audience is acceptable under SR-29. Was: the game serves one bank to A-Level, Level 4 and Core
+    Maths but logs level "alevel" for all three, the shape of the factor-theorem ruling (a level serving
+    another level''s items). (Split: the parent entry held 2 defects; the other is normal-navigator-s1-011, the
+    calculator tag, which stays open for Jon.)'
   evidence: 'mfg(..., level: ''alevel'') at every event (SWEEP-1, batch 10)'
   status: fixed
   pr: 362
+- id: normal-navigator-s1-011
+  severity: LOW
+  jc: true
+  class: NEW:calculator-tag
+  level: alevel
+  where: games/normal-navigator/index.html:325-374
+  summary: 'The page says to use a calculator while its roster tag is untagged. A calculator tag (canon §4.4): its own
+    decision for Jon (Part 3) (Split from normal-navigator-s1-007, SWEEP-1-RULINGS step 1.)'
+  evidence: 'mfg(..., level: ''alevel'') at every event (SWEEP-1, batch 10)'
+  status: open
 - id: normal-navigator-s1-008
   severity: MEDIUM
   jc: false
@@ -105,13 +137,4 @@ findings:
     from rounded inputs, the start text beyond its count, or the shading of a parameters item. Recorded under Jon''s
     rule of 13 Oct 2026'
   evidence: 'check_text() reads numbers, not sentences (SWEEP-1, batch 10)'
-  status: open
-- id: normal-navigator-s1-009
-  severity: LOW
-  jc: true
-  class: NEW:unstated-convention
-  level: alevel
-  where: games/normal-navigator/index.html (start screen and hints); .claude/rules/game-roster.md
-  summary: 'The page tells students to use a calculator while the roster entry for normal-navigator is untagged. For Jon''s calculator-tagging decision (split out of s1-007, 13 Oct 2026)'
-  evidence: 'page text says to use a calculator; roster tag: none (SWEEP-1 batch 10, ruling of 13 Oct 2026)'
   status: open

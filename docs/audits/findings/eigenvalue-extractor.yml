@@ -79,9 +79,19 @@ findings:
   class: NEW:degenerate-item
   level: further
   where: games/eigenvalue-extractor/index.html:118 (item 2, lambda^2 - 7lambda + 10 = 0)
-  summary: 'Item 2 is an exact repeat of the start-screen worked example (line 108), so the answer is on the page above
-    it. For Jon, not fixed: replacing the item needs new content. Separately for Jon: adding "over the complex numbers"
-    to the stem of item 12 (a stem change) would also state the field; not done.'
+  summary: 'Item 2 is an exact repeat of the start-screen worked example (line 108), so the answer is on the page
+    above it. For Jon, not fixed: replacing the item needs new content (Part 3, deferred) (Split: the parent
+    entry held 2 defects; the others are eigenvalue-extractor-s1-004.)'
+  evidence: 'lambda^2 - 7lambda + 10 = 0 | key: lambda = 2, lambda = 5 (SWEEP-1, batch 11)'
+  status: open
+- id: eigenvalue-extractor-s1-004
+  severity: LOW
+  jc: true
+  class: NEW:convention-unstated
+  level: further
+  where: games/eigenvalue-extractor/index.html:118 (item 2, lambda^2 - 7lambda + 10 = 0)
+  summary: 'Item 12''s stem does not state the field; adding "over the complex numbers" (a stem change) would. For
+    Jon, not done (Split from eigenvalue-extractor-s1-002, SWEEP-1-RULINGS step 1.)'
   evidence: 'lambda^2 - 7lambda + 10 = 0 | key: lambda = 2, lambda = 5 (SWEEP-1, batch 11)'
   status: open
 - id: eigenvalue-extractor-s1-003

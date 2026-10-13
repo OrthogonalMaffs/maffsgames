@@ -3,6 +3,14 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-13 (cloud): SWEEP-1 batch 12 and the end of the sweep (A-Level and Further Maths, part 3)
+
+- **SWEEP-1 is finished:** every live game except glorious-gantt has been read (batches 1 to 12), 13 SR-20 levels fixed the same day under SR-30. The home lane can set SWEEP_DONE = True (audit-register.py was not touched). The report's closing section (`docs/audits/sweep-1-2026-10.md`) holds the list for Jon, grouped by class.
+- **Ledger lesson (CI, Tier 4 layer A):** fixing a game's wording can remove a ledgered B7 entry; the lint then fails "STALE ledger entry" until `data/check-ledger.json` is cleared. Run `python scripts/check-banks.py --ci` after `extract-banks.py` before pushing a text fix (it caught `matrix-crunch` and `eigenvalue-extractor` here).
+- **Fixed in batch 12:** complex-converter's six wrong calculator-hint results (SR-8, closing t6-005; every hint pair is now recomputed); matrix-crunch's true wrong options on the singular systems and its shuffled "Same circuit" items; eigenvalue-extractor's "No eigenvalues exist"; truth-will-set-you-free's "any two", symbols, XOR and unnamed output; boolean-blitz's Q38 step and four no-op steps; characteristic-quest, eigenvector-engine and factor-theorem wording. Each verifier fails on the old content and plants it.
+- **Open, for Jon:** see the report's grouped list. **For the home lane:** log-laws' 34 negative typed answers and suvat ALEVEL[34] behind inputmode="decimal"; SR-32 (CMP1) into canon and a figure check in the other chart games; the timer-policy class (SR-23: circle-theorem-spotter, dimension-checker, matrix-crunch, growth-and-decay, characteristic-quest ...); eigenvector-engine's and others' hard-coded logged level.
+- **Next:** nothing from this contract. The sweep's last step is Jon's rulings on the grouped list, which the cloud lane then applies in per-game PRs.
+
 ## 2026-10-13 (cloud): CMP1-READABLE-FIGURES (core-maths-paper1; SR-32)
 
 - **Contract:** `docs/handover/contracts/2026-10-13-cmp1-readable-figures.md`. Jon's play-test: Q4's histogram bars at 2.4, 3.6 and 1.2 had no gridlines and labelled ticks only at 0 to 3, so 3.6 could not be read. The fix is in the game's chart-drawing code: the gridline step is the largest of 1, 0.5, 0.2, 0.1 (times a power of ten) at which every plotted value lies on a gridline (Q4 every 0.2, Q12 every 0.1), the labels unchanged; each box-plot number sits over a tick. Q12 and Q9 had the same fault and are fixed with it.

@@ -86,8 +86,30 @@ findings:
   class: NEW:wording
   level: year6
   where: games/probability-pioneer/index.html:340, :345, :347, :356
-  summary: 'Abbreviations and terms never explained: R, G and Y for colours; "face card" (US; UK "picture card"), keyed
-    as J, Q and K without saying so; "Rolling heads" for a coin. Wording, open for Jon'
+  summary: 'R, G and Y for colours are never explained. Wording, open for Jon (Split: the parent entry held 3 defects;
+    the others are probability-pioneer-s1-003, probability-pioneer-s1-004.)'
+  evidence: '"P(green from 5R, 3G, 2Y)" key 3/10; "P(face card from 52)" key 3/13; "Rolling heads 5 times makes tails
+    more likely next" (SWEEP-1, batch 2)'
+  status: open
+- id: probability-pioneer-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: year6
+  where: games/probability-pioneer/index.html:340, :345, :347, :356
+  summary: '"Face card" (US; UK "picture card") is keyed as J, Q and K without saying so. Wording, open for Jon (R1)
+    (Split from probability-pioneer-s1-002, SWEEP-1-RULINGS step 1.)'
+  evidence: '"P(green from 5R, 3G, 2Y)" key 3/10; "P(face card from 52)" key 3/13; "Rolling heads 5 times makes tails
+    more likely next" (SWEEP-1, batch 2)'
+  status: open
+- id: probability-pioneer-s1-004
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: year6
+  where: games/probability-pioneer/index.html:340, :345, :347, :356
+  summary: '"Rolling heads" for a coin. Wording, open for Jon (Split from probability-pioneer-s1-002, SWEEP-1-RULINGS
+    step 1.)'
   evidence: '"P(green from 5R, 3G, 2Y)" key 3/10; "P(face card from 52)" key 3/13; "Rolling heads 5 times makes tails
     more likely next" (SWEEP-1, batch 2)'
   status: open

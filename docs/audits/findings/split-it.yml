@@ -61,8 +61,37 @@ findings:
   class: NEW:wording
   level: ks3, gcse
   where: games/split-it/index.html:386, :398, :401, :407, :410, :439 (Scale and speed working)
-  summary: 'Wording: the concrete mix recipe is scaled "for {p} people"; the Pancakes item asks for eggs "to 1 decimal
-    place" though every key is whole (SR-10); the Foundation working writes "12/4" with an ASCII slash; the speed working
-    writes "= 233.3 miles" for a rounded value. Open'
+  summary: 'Wording: the concrete mix recipe is scaled "for {p} people" (Split: the parent entry held 4 defects; the
+    others are split-it-s1-006, split-it-s1-007, split-it-s1-008.)'
+  evidence: '"A Concrete mix recipe for 4 people uses the amounts below." (SWEEP-1, batch 3)'
+  status: open
+- id: split-it-s1-006
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: ks3, gcse
+  where: games/split-it/index.html:386, :398, :401, :407, :410, :439 (Scale and speed working)
+  summary: 'Wording: the Pancakes item asks for eggs "to 1 decimal place" though every key is whole (SR-10) (Split
+    from split-it-s1-005, SWEEP-1-RULINGS step 1.)'
+  evidence: '"A Concrete mix recipe for 4 people uses the amounts below." (SWEEP-1, batch 3)'
+  status: open
+- id: split-it-s1-007
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: ks3, gcse
+  where: games/split-it/index.html:386, :398, :401, :407, :410, :439 (Scale and speed working)
+  summary: 'Wording: the Foundation working writes "12/4" with an ASCII slash (Split from split-it-s1-005,
+    SWEEP-1-RULINGS step 1.)'
+  evidence: '"A Concrete mix recipe for 4 people uses the amounts below." (SWEEP-1, batch 3)'
+  status: open
+- id: split-it-s1-008
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: ks3, gcse
+  where: games/split-it/index.html:386, :398, :401, :407, :410, :439 (Scale and speed working)
+  summary: 'Wording: the speed working writes "= 233.3 miles" for a rounded value (Split from split-it-s1-005,
+    SWEEP-1-RULINGS step 1.)'
   evidence: '"A Concrete mix recipe for 4 people uses the amounts below." (SWEEP-1, batch 3)'
   status: open

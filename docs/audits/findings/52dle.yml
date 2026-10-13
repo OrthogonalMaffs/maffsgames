@@ -82,10 +82,58 @@ findings:
   class: NEW:wording
   level: all
   where: games/52dle/index.html:692, :697, :702, :965 (puzzles 9, 14, 19; result modal); :601, :748-760 (rules, feedback)
-  summary: 'Wording: puzzle 19''s badge "Mersenne Prime" reads, on the result modal, as "521 is a Mersenne prime" (521 is
-    the exponent), and the clue writes 2^521 with a caret where others use superscripts; "Nature''s favourite proportion"
-    (puzzle 9) and "the most favourite number of humans globally" (puzzle 14, an online poll) are claims stated as fact;
-    the rules never explain the feedback bands or colours (blue and red mark distance, not direction), and help-audit.md''s
-    "?" How to Play modal is not on the page (a home-lane docs line). Open'
+  summary: 'Wording: puzzle 19''s badge "Mersenne Prime" reads, on the result modal, as "521 is a Mersenne prime" (521
+    is the exponent). Open (Split: the parent entry held 6 defects; the others are 52dle-s1-004, 52dle-s1-005,
+    52dle-s1-006, 52dle-s1-007, 52dle-s1-008.)'
+  evidence: 'result modal "The answer was 521 — Mersenne Prime" (SWEEP-1, batch 3)'
+  status: open
+- id: 52dle-s1-004
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: games/52dle/index.html:692, :697, :702, :965 (puzzles 9, 14, 19; result modal); :601, :748-760 (rules, feedback)
+  summary: 'Wording: puzzle 19''s clue writes 2^521 with a caret where the other clues use superscripts. Open (Split
+    from 52dle-s1-003, SWEEP-1-RULINGS step 1.)'
+  evidence: 'result modal "The answer was 521 — Mersenne Prime" (SWEEP-1, batch 3)'
+  status: open
+- id: 52dle-s1-005
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: games/52dle/index.html:692, :697, :702, :965 (puzzles 9, 14, 19; result modal); :601, :748-760 (rules, feedback)
+  summary: 'Wording: puzzle 9''s "Nature''s favourite proportion" is a claim stated as fact. Open (Split from
+    52dle-s1-003, SWEEP-1-RULINGS step 1.)'
+  evidence: 'result modal "The answer was 521 — Mersenne Prime" (SWEEP-1, batch 3)'
+  status: open
+- id: 52dle-s1-006
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: games/52dle/index.html:692, :697, :702, :965 (puzzles 9, 14, 19; result modal); :601, :748-760 (rules, feedback)
+  summary: 'Wording: puzzle 14''s "the most favourite number of humans globally" (an online poll) is a claim stated as
+    fact. Open (Split from 52dle-s1-003, SWEEP-1-RULINGS step 1.)'
+  evidence: 'result modal "The answer was 521 — Mersenne Prime" (SWEEP-1, batch 3)'
+  status: open
+- id: 52dle-s1-007
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: games/52dle/index.html:692, :697, :702, :965 (puzzles 9, 14, 19; result modal); :601, :748-760 (rules, feedback)
+  summary: 'The rules never explain the feedback bands or colours (blue and red mark distance, not direction). Open
+    (Split from 52dle-s1-003, SWEEP-1-RULINGS step 1.)'
+  evidence: 'result modal "The answer was 521 — Mersenne Prime" (SWEEP-1, batch 3)'
+  status: open
+- id: 52dle-s1-008
+  severity: LOW
+  jc: false
+  class: NEW:docs
+  level: all
+  where: games/52dle/index.html:692, :697, :702, :965 (puzzles 9, 14, 19; result modal); :601, :748-760 (rules, feedback)
+  summary: 'help-audit.md lists a "?" How to Play modal for this game that is not on the page (a home-lane docs line).
+    Open (Split from 52dle-s1-003, SWEEP-1-RULINGS step 1.)'
   evidence: 'result modal "The answer was 521 — Mersenne Prime" (SWEEP-1, batch 3)'
   status: open

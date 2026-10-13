@@ -141,8 +141,20 @@ findings:
   level: core
   where: games/core-maths-paper1/index.html Q4, Q12 (renderHistogram), Q19 (:392)
   summary: 'The histograms tick the density axis at whole numbers only, while the workings read densities to 0.1 (Q4
-    3.6, 1.2; Q12 1.8 … 1.5), about 4 px; the keys are robust (options 12 apart; the taller of equal-width bars).
-    Q19''s "£318.55" matches no named error (compound interest on the same figures is £313.77). For Jon'
+    3.6, 1.2; Q12 1.8 … 1.5), about 4 px; the keys are robust (options 12 apart; the taller of equal-width
+    bars). Fixed in #357 (every figure''s values on a gridline or labelled tick) (Split: the parent entry held
+    2 defects; the others are core-maths-paper1-s1-010.)'
+  evidence: 'renderHistogram y ticks 0-3 (SWEEP-1, batch 9)'
+  status: fixed
+  pr: 357
+- id: core-maths-paper1-s1-010
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: core
+  where: games/core-maths-paper1/index.html Q4, Q12 (renderHistogram), Q19 (:392)
+  summary: 'Q19''s "£318.55" matches no named error (compound interest on the same figures is £313.77). For Jon (Split
+    from core-maths-paper1-s1-006, SWEEP-1-RULINGS step 1.)'
   evidence: 'renderHistogram y ticks 0-3 (SWEEP-1, batch 9)'
   status: open
 - id: core-maths-paper1-s1-007

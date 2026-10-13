@@ -85,7 +85,19 @@ findings:
   class: NEW:text-contradicts-content
   level: all
   where: 'games/formula-unlocked/index.html:459 ("Stage 2: Two Steps"), :143'
-  summary: 'Several "Two Steps" items are one step (Q_LEVEL4[3], [4], [6], [7]; Q_GCSE[16]), and some steps arrays are only the answer line (Q_LEVEL4[1] ends "σA = F", not with F as the subject), against "Every wrong answer shows the full worked solution"'
+  summary: 'Several "Two Steps" items are one step (Q_LEVEL4[3], [4], [6], [7]; Q_GCSE[16]) (Split: the parent entry
+    held 2 defects; the others are formula-unlocked-s1-007.)'
+  evidence: 'Q_LEVEL4[4] E = σ/ε as its only step (SWEEP-1, batch 7)'
+  status: open
+- id: formula-unlocked-s1-007
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: all
+  where: 'games/formula-unlocked/index.html:459 ("Stage 2: Two Steps"), :143'
+  summary: 'Some steps arrays are only the answer line (Q_LEVEL4[1] ends "σA = F", not with F as the subject), against
+    "Every wrong answer shows the full worked solution" (Split from formula-unlocked-s1-005, SWEEP-1-RULINGS
+    step 1.)'
   evidence: 'Q_LEVEL4[4] E = σ/ε as its only step (SWEEP-1, batch 7)'
   status: open
 - id: formula-unlocked-s1-006

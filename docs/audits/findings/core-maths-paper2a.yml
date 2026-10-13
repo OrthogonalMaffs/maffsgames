@@ -74,9 +74,50 @@ findings:
   level: core
   where: games/core-maths-paper2a/index.html Q8 (:251), Q31 (:419), Q4 (:223), Q1 (:201), Q2
   summary: 'Q8''s key says the change "is not statistically significant" where "cannot be judged significant" is the
-    defensible claim; Q31 says "Estimate the value of y" without naming the regression line (Jon''s Estimate rule,
-    no precision stated, so outside the ruling); Q4 asks whether one house proves a headline about prices; Q1 says
-    "grade C" (pre-2017); Q2''s "=B1×12" uses × (harmless as a distractor). Stem and key-text changes, for Jon'
+    defensible claim. Key-text change, for Jon (Split: the parent entry held 5 defects; the others are
+    core-maths-paper2a-s1-008, core-maths-paper2a-s1-009, core-maths-paper2a-s1-010,
+    core-maths-paper2a-s1-011.)'
+  evidence: 'Item texts as quoted (SWEEP-1, batch 9)'
+  status: open
+- id: core-maths-paper2a-s1-008
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: core
+  where: games/core-maths-paper2a/index.html Q8 (:251), Q31 (:419), Q4 (:223), Q1 (:201), Q2
+  summary: 'Q31 says "Estimate the value of y" without naming the regression line (Jon''s Estimate rule, no precision
+    stated, so outside the ruling). Stem change, for Jon (Split from core-maths-paper2a-s1-005, SWEEP-1-RULINGS
+    step 1.)'
+  evidence: 'Item texts as quoted (SWEEP-1, batch 9)'
+  status: open
+- id: core-maths-paper2a-s1-009
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: core
+  where: games/core-maths-paper2a/index.html Q8 (:251), Q31 (:419), Q4 (:223), Q1 (:201), Q2
+  summary: 'Q4 asks whether one house proves a headline about prices. Stem change, for Jon (Split from
+    core-maths-paper2a-s1-005, SWEEP-1-RULINGS step 1.)'
+  evidence: 'Item texts as quoted (SWEEP-1, batch 9)'
+  status: open
+- id: core-maths-paper2a-s1-010
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: core
+  where: games/core-maths-paper2a/index.html Q8 (:251), Q31 (:419), Q4 (:223), Q1 (:201), Q2
+  summary: 'Q1 says "grade C" (pre-2017). Stem change, for Jon (Split from core-maths-paper2a-s1-005, SWEEP-1-RULINGS
+    step 1.)'
+  evidence: 'Item texts as quoted (SWEEP-1, batch 9)'
+  status: open
+- id: core-maths-paper2a-s1-011
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: core
+  where: games/core-maths-paper2a/index.html Q8 (:251), Q31 (:419), Q4 (:223), Q1 (:201), Q2
+  summary: 'Q2''s "=B1×12" uses × (harmless as a distractor). For Jon (Split from core-maths-paper2a-s1-005,
+    SWEEP-1-RULINGS step 1.)'
   evidence: 'Item texts as quoted (SWEEP-1, batch 9)'
   status: open
 - id: core-maths-paper2a-s1-006

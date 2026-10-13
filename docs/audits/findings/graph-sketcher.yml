@@ -83,10 +83,41 @@ findings:
   class: NEW:second-correct-answer
   level: core, level4
   where: games/graph-sketcher/index.html L4_5 (:538), CM2 (:273), CM11 (:351), CM4 (:291)
-  summary: 'For Jon (stem or key-text changes): L4_5''s "maximum deflection" on 0 ≤ x ≤ 4 is 4 at both x = 1 and x = 4
-    (the endpoint), so (4, 4) is also right ("local maximum"?); CM2''s key "Model allows negative profit" is false, P =
-    x(x − 3)² ≥ 0, and no option is true; CM11''s rate is fixed in the context, so "Reliable" is defensible; CM4''s key
-    gives reaction time as a braking-distance limitation'
+  summary: 'L4_5''s "maximum deflection" on 0 ≤ x ≤ 4 is 4 at both x = 1 and x = 4 (the endpoint), so (4, 4) is also
+    right. Part 2 #14: the ask becomes "the turning point"; the key is unchanged (Split: the parent entry held
+    4 defects; the others are graph-sketcher-s1-009, graph-sketcher-s1-010, graph-sketcher-s1-011.)'
+  evidence: 'Items as quoted (SWEEP-1, batch 10)'
+  status: open
+- id: graph-sketcher-s1-009
+  severity: HIGH
+  jc: true
+  class: NEW:second-correct-answer
+  level: core, level4
+  where: games/graph-sketcher/index.html L4_5 (:538), CM2 (:273), CM11 (:351), CM4 (:291)
+  summary: 'CM2''s key "Model allows negative profit" is false, P = x(x − 3)² ≥ 0, and no option is true. Part 2 #14:
+    the key becomes "The model predicts profit keeps rising without limit as x increases" (drafted wording in
+    the content document) (Split from graph-sketcher-s1-006, SWEEP-1-RULINGS step 1.)'
+  evidence: 'Items as quoted (SWEEP-1, batch 10)'
+  status: open
+- id: graph-sketcher-s1-010
+  severity: MEDIUM
+  jc: true
+  class: NEW:second-correct-answer
+  level: core, level4
+  where: games/graph-sketcher/index.html L4_5 (:538), CM2 (:273), CM11 (:351), CM4 (:291)
+  summary: 'CM11''s rate is fixed in the context, so "Reliable" is defensible. Part 2 #14: "Reliable" is accepted as
+    well as the current key (Split from graph-sketcher-s1-006, SWEEP-1-RULINGS step 1.)'
+  evidence: 'Items as quoted (SWEEP-1, batch 10)'
+  status: open
+- id: graph-sketcher-s1-011
+  severity: MEDIUM
+  jc: true
+  class: NEW:second-correct-answer
+  level: core, level4
+  where: games/graph-sketcher/index.html L4_5 (:538), CM2 (:273), CM11 (:351), CM4 (:291)
+  summary: 'CM4''s key gives reaction time as a braking-distance limitation. Part 2 #14: the key text names a
+    limitation of the braking-distance model itself (R3; wording reported in the PR) (Split from
+    graph-sketcher-s1-006, SWEEP-1-RULINGS step 1.)'
   evidence: 'Items as quoted (SWEEP-1, batch 10)'
   status: open
 - id: graph-sketcher-s1-007
@@ -96,8 +127,28 @@ findings:
   level: core, level4
   where: games/graph-sketcher/index.html CM4 (:284), CM12 (:353), CM10 (:337), L4_12 (:584), CM9, L4_11, CM3, AL8, L4_15
   summary: 'Contexts implausible at their values (CM4''s braking needs about 1.7 g; CM12 covers 0 km/L at 100 km/h;
-    CM10''s waves shrink as the wind rises; L4_12''s flow falls as pressure rises) and wording (CM9 "speed cannot be
-    zero"; L4_11''s strain only approaches 0.006; CM3''s year 2024.2; AL8''s "10 × 0.5x"; L4_15 prints 1.00e+6). For Jon'
+    CM10''s waves shrink as the wind rises; L4_12''s flow falls as pressure rises). For Jon (Split: the parent
+    entry held 3 defects; the others are graph-sketcher-s1-012, graph-sketcher-s1-013.)'
+  evidence: 'Reviewer''s list (SWEEP-1, batch 10)'
+  status: open
+- id: graph-sketcher-s1-012
+  severity: LOW
+  jc: true
+  class: NEW:text-contradicts-content
+  level: core, level4
+  where: games/graph-sketcher/index.html CM4 (:284), CM12 (:353), CM10 (:337), L4_12 (:584), CM9, L4_11, CM3, AL8, L4_15
+  summary: 'Statements not true as written: CM9 "speed cannot be zero"; L4_11''s strain only approaches 0.006. For Jon
+    (Split from graph-sketcher-s1-007, SWEEP-1-RULINGS step 1.)'
+  evidence: 'Reviewer''s list (SWEEP-1, batch 10)'
+  status: open
+- id: graph-sketcher-s1-013
+  severity: LOW
+  jc: true
+  class: NEW:text-contradicts-content
+  level: core, level4
+  where: games/graph-sketcher/index.html CM4 (:284), CM12 (:353), CM10 (:337), L4_12 (:584), CM9, L4_11, CM3, AL8, L4_15
+  summary: 'Number and notation display: CM3''s year 2024.2; AL8''s "10 × 0.5x"; L4_15 prints 1.00e+6. For Jon (Split
+    from graph-sketcher-s1-007, SWEEP-1-RULINGS step 1.)'
   evidence: 'Reviewer''s list (SWEEP-1, batch 10)'
   status: open
 - id: graph-sketcher-s1-008
