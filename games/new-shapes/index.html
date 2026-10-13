@@ -496,12 +496,13 @@ function renderParallelogram(container, b, h) {
   bLabel.style.transform = 'translateX(-50%)';
   wrap.appendChild(bLabel);
 
-  // Label: h on the right of dotted line
+  // Label: h beside the dashed perpendicular, on its left, inside the figure. On its right it sat over the slanted
+  // side, so it read as the slant length (SWEEP-1 new-shapes-s1-001; Part 2 #1).
   const hLabel = document.createElement('div');
   hLabel.className = 'shape-label';
   hLabel.textContent = 'h = ' + h;
   hLabel.style.top = '50%';
-  hLabel.style.left = '168px';
+  hLabel.style.right = '126px';
   hLabel.style.transform = 'translateY(-50%)';
   wrap.appendChild(hLabel);
 
@@ -575,12 +576,13 @@ function renderTrapezium(container, a, b, h) {
   bLabel.style.transform = 'translateX(-50%)';
   wrap.appendChild(bLabel);
 
-  // Label: h (right of dashed line)
+  // Label: h beside the dashed perpendicular, on its left, inside the figure. On its right it straddled the slanted
+  // side (SWEEP-1 new-shapes-s1-001; Part 2 #1).
   const hLabel = document.createElement('div');
   hLabel.className = 'shape-label';
   hLabel.textContent = 'h = ' + h;
   hLabel.style.top = '50%';
-  hLabel.style.right = '20px';
+  hLabel.style.right = '81px';
   hLabel.style.transform = 'translateY(-50%)';
   wrap.appendChild(hLabel);
 

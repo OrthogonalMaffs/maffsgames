@@ -23,6 +23,8 @@ Checks, independent of the game's code:
     loadQuestion() (formula TeX read from KaTeX's annotation, variables line, prompt): the key typed on the numpad and
     submitted reads "Correct!" and is counted; each wrong answer (key +-1 and the usual slips: adding for multiplying,
     forgetting the half, ...) reads "Not quite - the answer is [key]", is not counted, and shows the item's working.
+The h label (SWEEP-1 new-shapes-s1-001, Part 2 #1): on every parallelogram and trapezium it sits just to the left of the dashed height
+  line and wholly inside the figure, so it cannot be read as the slant length; the outline is measured in Chromium.
 Not asserted, because the findings are still open and the redraw is a design call for Jon: the diagram's PROPORTIONS
 (parallelogram always 180x100, trapezium top always half the base, prism cross-section always a square: t3-003,
 t3-004, r-001) and the prism's l arrow, which spans the front width plus the depth rather than the depth edge (r-001,
@@ -186,6 +188,29 @@ MARK_JS = r"""(args) => {
                  labels: [...sc.querySelectorAll('.shape-label')].map(e => e.textContent),
                  svg: [...sc.querySelectorAll('svg text')].map(e => e.textContent),
                  aria: (sc.querySelector('[role=img]') || {getAttribute: () => null}).getAttribute('aria-label')};
+  // Where the h label sits (SWEEP-1 new-shapes-s1-001; Part 2 #1): its four corners, the figure's outline and the dashed
+  // height line's x, all in viewport pixels.
+  const geom = (() => {
+    const wrap = sc.querySelector('.shape-container');
+    const hl = [...sc.querySelectorAll('.shape-label')].find(e => /^h = /.test(e.textContent));
+    if (!wrap || !hl) return null;
+    const L = hl.getBoundingClientRect(), pg = sc.querySelector('.parallelogram-shape');
+    const corners = [[L.left, L.top], [L.right, L.top], [L.right, L.bottom], [L.left, L.bottom]];
+    if (pg) {
+      // the figure is scaled down on a phone (its rect is narrower than its 260 px), so offsets are scaled to the viewport
+      const W = wrap.getBoundingClientRect(), k = W.width / wrap.offsetWidth, m = new DOMMatrix(getComputedStyle(pg).transform);
+      const cx = pg.offsetLeft + pg.offsetWidth / 2, cy = pg.offsetTop + pg.offsetHeight / 2;
+      const poly = [[0, 0], [1, 0], [1, 1], [0, 1]].map(([u, w]) => {
+        const dx = (u - 0.5) * pg.offsetWidth, dy = (w - 0.5) * pg.offsetHeight;
+        return [W.left + k * (cx + m.a * dx + m.c * dy), W.top + k * (cy + m.b * dx + m.d * dy)]; });
+      return {corners: corners, poly: poly, scale: k, line: sc.querySelector('.parallelogram-height').getBoundingClientRect().left, right: L.right};
+    }
+    const svg = sc.querySelector('svg'), S = svg.getBoundingClientRect(), k = S.width / svg.viewBox.baseVal.width;
+    const poly = svg.querySelector('polygon').getAttribute('points').trim().split(/\s+/)
+      .map(pt => pt.split(',').map(Number)).map(([x, y]) => [S.left + k * x, S.top + k * y]);
+    return {corners: corners, poly: poly, scale: k, line: svg.querySelector('line').getBoundingClientRect().left, right: L.right};
+  })();
+  shown.geom = geom;
   for (const ch of typed) numInput(ch);
   submitAnswer();
   MaffsLock.clearTimers();
@@ -196,6 +221,30 @@ DEAL_JS = r"""() => { const out = {};
   for (const n of %s) { out[n] = []; selectSession(n);
     for (let k = 0; k < %d; k++) { startGame(); out[n].push(sessionQuestions.map(q => q.id)); MaffsLock.clearTimers(); } }
   return out; }""" % (list(SESSIONS), DEALS)
+
+
+def inside(pt, poly):
+    """Is pt inside the convex polygon (the same side of every edge)?"""
+    signs = []
+    for i in range(len(poly)):
+        (x1, y1), (x2, y2) = poly[i], poly[(i + 1) % len(poly)]
+        signs.append((x2 - x1) * (pt[1] - y1) - (y2 - y1) * (pt[0] - x1))
+    return all(s >= 0 for s in signs) or all(s <= 0 for s in signs)
+
+
+def check_h_label(fails, where, q, geom):
+    """Part 2 #1: the h label sits beside the dashed height line, wholly inside the figure, so it cannot be read as the
+    slant length (it sat over the slanted side of every parallelogram and trapezium)."""
+    if q['section'] not in ('parallelogram', 'trapezium'):
+        return
+    if not geom:
+        fails.append('%s: no h label to place' % where)
+        return
+    if not all(inside(c, geom['poly']) for c in geom['corners']):
+        fails.append('%s: the h label is not wholly inside the figure: it crosses a slanted side' % where)
+    gap = (geom['line'] - geom['right']) / geom['scale']   # in the figure's own pixels
+    if not 0 <= gap <= 14:
+        fails.append('%s: the h label is %.0f px from the dashed height line, not just to its left' % (where, gap))
 
 
 def mark_all(fails, page, bank):
@@ -209,6 +258,8 @@ def mark_all(fails, page, bank):
             got = page.evaluate(MARK_JS, [q, str(int(val))])
             where = '%s, %s typed (%s)' % (q['id'], what, int(val))
             sh = got['shown']
+            if what == 'the key':
+                check_h_label(fails, where, q, sh.get('geom'))
             wantvars = ', '.join('%s = %s' % (v['name'], v['value']) for v in q['variables'])
             if sh['formula'] != [q['formulaKatex']] or sh['vars'] != wantvars or sh['prompt'] != 'What is %s?' % q['resultVar'] \
                     or sh['name'] != q['formulaName']:
@@ -272,6 +323,10 @@ PLANTS = [
      [("'A = 6 \\\\times 4','A = 24'", "'A = 6 \\\\times 5','A = 24'")]),
     ('a wrong formula text (prism V = A + l)', 'formula text',
      [("formulaKatex:'V = A \\\\times l',variables:[{name:'A',value:12},{name:'l',value:5}]", "formulaKatex:'V = A + l',variables:[{name:'A',value:12},{name:'l',value:5}]")]),
+    ('the parallelogram h label back over the slanted side', 'h label',
+     [("hLabel.style.right = '126px';", "hLabel.style.left = '168px';")]),
+    ('the trapezium h label back across the slanted side', 'h label',
+     [("hLabel.style.right = '81px';", "hLabel.style.right = '20px';")]),
     ('a wrong number in the diagram description', 'the diagram says',
      [("' and height ' + h);", "' and height ' + b);")]),
 ]

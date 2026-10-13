@@ -315,6 +315,26 @@ def rounds_to(key, true):
     return Decimal(repr(float(key))).quantize(q) == want, want
 
 
+# SWEEP-1-RULINGS (13 Oct 2026, Part 2 #14; graph-sketcher-s1-009 to -011): each ruling's fix stays fixed.
+CM2_KEY = 'The model predicts profit keeps rising without limit as x increases'
+CM2_WRONG = ['The model predicts a loss when x = 3', 'The model is linear', 'x cannot be a whole number']
+
+
+def _limit(s):
+    return next(iq for iq in s['iqs'] if iq['type'] == 'mcq' and iq['prompt'].startswith('Describe one limitation'))
+
+
+PINS = {
+    'CM2': [('the limitation is true of the model (P = x(x-3)^2 is never negative and rises without limit), and no wrong option is',
+             lambda s, g: _limit(s)['correct'] == CM2_KEY and sorted(_limit(s)['wrong']) == sorted(CM2_WRONG)
+             and all(g(k / 10.0) >= -1e-9 for k in range(0, 51)) and g(3) == 0 and g(1000) > g(5) > g(4))],
+    'CM4': [('the limitation is of the braking-distance model itself, not reaction time (thinking distance)',
+             lambda s, g: 'reaction' not in _limit(s)['correct'].lower())],
+    'CM11': [('either reliability answer is accepted (the context fixes the 4% rate)',
+              lambda s, g: any(iq['type'] == 'extrap' and iq.get('either') for iq in s['iqs']))],
+}
+
+
 def check_scenario(rep, s, fn_vals, verbose=False):
     sid = s['id']
     spec = SPECS.get(sid, {})
@@ -327,6 +347,9 @@ def check_scenario(rep, s, fn_vals, verbose=False):
         rep.fail(sid, 'context', 'no longer says %r: the spec must be re-derived' % spec['context'])
     g = sp.lambdify(var, f, 'math')
     lo, hi = s['xRange']
+    for desc, ok_ in PINS.get(sid, []):
+        if not ok_(s, g):
+            rep.fail(sid, 'sweep-1 ruling', desc)
     for x, y in fn_vals:
         try:
             want = g(x)
@@ -454,6 +477,8 @@ def true_answers(s):
             arg = (sp_[1], sp_[2]) if kind == 'year' else sp_[1]
             iqs[i] = dict(value=sig(answer_iq(kind, arg, f, var, lo, hi)))
         iqs[i]['reliable'] = 'yes' if iq.get('reliable') else 'no'
+        if iq.get('either'):    # Part 2 #14: the other reliability answer is right too
+            iqs['%d:either' % i] = dict(iqs[i], reliable='no' if iq.get('reliable') else 'yes')
     return cells, iqs, dp
 
 
@@ -520,9 +545,9 @@ def check_played(rep, scenarios, played):
         if dp is not None and ('to %d decimal place' % dp) not in r.get('note', ''):
             rep.fail(s['id'], 'table precision', 'the table does not state its %d decimal places (SR-1): %r' % (dp, r.get('note')))
         for tag, text in r['iqs'].items():
-            if ':' not in tag and 'Correct' not in text:
+            if (':' not in tag or tag.endswith(':either')) and 'Correct' not in text:
                 rep.fail(s['id'], 'marking (iq %s)' % tag, 'typed the true value; the game said %r' % text.strip()[:100])
-            elif ':' in tag and 'Correct' in text:
+            elif ':' in tag and not tag.endswith(':either') and 'Correct' in text:
                 rep.fail(s['id'], 'marking (iq %s)' % tag, 'a wrong answer was marked correct: %r' % text.strip()[:100])
 
 
@@ -635,6 +660,38 @@ def selftest(bank, fn_vals, played):
           const ok = Math.abs(vx - iq.answer.x) <= tol && Math.abs(vy - iq.answer.y) <= Math.max(tol, Math.abs(iq.answer.y) * 0.05);
           document.getElementById('iqFb').textContent = ok ? 'Correct!' : 'Expected'; };
       })()""")
+    # SWEEP-1-RULINGS (Part 2 #14): each fault as it was before the ruling's fix
+    def put_back(sid, fn):
+        b = copy.deepcopy(bank)
+        for lvl in b.values():
+            for sc in lvl:
+                if sc['id'] == sid:
+                    fn(sc)
+        return b
+
+    def old_cm2(sc):
+        _limit(sc).update(correct='Model allows negative profit but real businesses would stop trading',
+                          wrong=['Profit is always positive', 'The model is linear', 'x cannot be a whole number'])
+
+    def old_cm4(sc):
+        _limit(sc)['correct'] = 'Model gives d = 0 at v = 0 but real braking includes reaction time'
+
+    def old_cm11(sc):
+        for iq in sc['iqs']:
+            iq.pop('either', None)
+    expect('Part 2 #14: CM2 negative-profit key', lambda rep: check_bank(rep, put_back('CM2', old_cm2), fn_vals))
+    expect('Part 2 #14: CM4 reaction-time key', lambda rep: check_bank(rep, put_back('CM4', old_cm4), fn_vals))
+    expect('Part 2 #14: CM11 one reliability answer', lambda rep: check_bank(rep, put_back('CM11', old_cm11), fn_vals))
+    # the game's own marking: CM11's other reliability answer, refused (the old rule)
+    _, _, strict = load("""(() => { checkExtrapIQ = function () { const q = G.questions[G.qIdx], iq = q.iqs[G.iqIdx];
+          const val = parseFloat(document.getElementById('iqInput').value), rel = document.getElementById('iqReliable').value;
+          const ok = Math.abs(val - iq.answer) <= (iq.tol || 0) && (rel === 'no') === (!iq.reliable);
+          document.getElementById('iqFb').textContent = ok ? 'Correct!' : 'Expected'; }; })()""")
+    rep = Report()
+    check_played(rep, [s for lvl in bank.values() for s in lvl], strict)
+    caught = any(f.startswith('CM11 marking (iq') for f in rep.fails)
+    ok = ok and caught
+    lines.append('  self-test %-34s %s' % ('CM11 "Reliable" refused (old marking)', 'caught' if caught else '*** MISSED ***'))
     allsc = [s for lvl in bank.values() for s in lvl]
     for name, sid, tag in (('old cell band (CM1, +0.1 accepted)', 'CM1', 'marking (cell'),
                            ('old roots (AL1, an extra root accepted)', 'AL1', 'marking (iq'),

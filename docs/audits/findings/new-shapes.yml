@@ -115,11 +115,14 @@ findings:
   level: year6
   where: games/new-shapes/index.html:504 (renderParallelogram, hLabel left 168px), :583 (renderTrapezium, hLabel right 20px)
   summary: 'The h label is not drawn on the dashed height line: on every parallelogram it sits over the slanted side
-    (and hides it), and on every trapezium it straddles the slanted side, so it reads as the slant length, the very
-    misconception the section teaches against (SR-25). Not t3-003/t3-004 (proportions). Marking unaffected. Under
-    Jon''s 12 Oct ruling the diagrams are redrawn from each item''s parameters in the SR-26 growth, not before; close
-    this in the same PR'
+    (and hides it), and on every trapezium it straddles the slanted side, so it reads as the slant length, the
+    very misconception the section teaches against (SR-25). Not t3-003/t3-004 (proportions). Marking
+    unaffected. Under Jon''s 12 Oct ruling the diagrams are redrawn from each item''s parameters in the SR-26
+    growth, not before; close this in the same PR Fixed in #366 (Part 2 #1): the h label sits just left of the
+    dashed perpendicular, wholly inside the figure; the verifier measures it in Chromium, with a plant of each
+    old position.'
   evidence: 'ns_p12 at 390 px (Chromium, stub server): "A = b × h", "b = 3, h = 10", the label box "h = 10" over the
     right-hand slant side, the dashed line about 28 px to its left; ns_t16 "a = 1, b = 7, h = 6" likewise across the
     right slant (SWEEP-1, batch 2)'
-  status: open
+  status: fixed
+  pr: 366

@@ -99,9 +99,11 @@ main's last full run is red; watch main's run after merging.
   - fermi-lab #363: s1-001 (Part 2 #5), -002 (R2), -003 first part (Part 2 #6: the wrong key 140 -> 82, the same day under SR-30), -004 (R3). The verifier now holds every key within 1.25 of its chain (it passed 140 against 82).
   - maths-court #364: s1-004 (Part 2 #3: Brenda keyed wrong), -005 (R2), -006 and -012 (Part 2 #3: start screen), -007 (R6), -009 (R3), -010 and -011 (R1).
   - spot-the-error #365: s1-001 (Part 2 #4: the 80 trials are the misreading, the stray 4 visible), -002 and -004 (R2), -003 first part (R5: ks3_021, l4_011), -005 and -006 (R3), -007 (R1).
-  - Closed in this contract so far: 4 + 8 + 7, plus 4 in step 1 (stat-attack-s1-006, core-maths-paper1-s1-006's first half, the R10 halves of eigenvector-engine-s1-004 and normal-navigator-s1-007).
-- **List for Jon (did not fit its rule, left open):** maths-court-s1-008 (core_003: "Paid off in year 14" against "About 13 years" are both true of 13.16 years, so R3 does not apply; no ruling gives wording). spot-the-error-s1-008 (gcse_007: "similar in shape" is keyed and the missed cue, the capacity, is not offered; no distractor is defensible, so R5 does not apply, and offering the capacity would change the design or the key).
-- **Next:** the other HIGH wrong keys the same day: new-shapes-001 (Part 2 #1), graph-sketcher-006 (#14). Then step 2 (R4, `check-money.py`) and step 3 in the contract's audience order.
+  - new-shapes #366: s1-001 (Part 2 #1: the h label beside the dashed height, inside the figure; the verifier measures it in Chromium, scaled for the phone).
+  - graph-sketcher #366 (with new-shapes): s1-009 (CM2's true limitation), -010 (CM11 either answer), -011 (CM4's own limitation; wording reported in the PR), Part 2 #14.
+  - Closed in this contract so far: 4 + 8 + 7 + 1 + 3, plus 4 in step 1 (stat-attack-s1-006, core-maths-paper1-s1-006's first half, the R10 halves of eigenvector-engine-s1-004 and normal-navigator-s1-007).
+- **List for Jon (did not fit its rule, left open):** maths-court-s1-008 (core_003: "Paid off in year 14" against "About 13 years" are both true of 13.16 years, so R3 does not apply; no ruling gives wording). graph-sketcher-s1-006 (L4_5: Jon's drafted "the turning point" is ambiguous, since y = x^3 - 6x^2 + 9x has two turning points on [0, 4], (1, 4) and (3, 0); not applied per STOP IF; proposed "the local maximum"), graph-sketcher-s1-007, -012, -013 (implausible contexts; CM9's "speed cannot be zero" is true; L4_11 "maximum strain" and the `1.00e+6` display need a content or marking convention: no rule gives wording). spot-the-error-s1-008 (gcse_007: "similar in shape" is keyed and the missed cue, the capacity, is not offered; no distractor is defensible, so R5 does not apply, and offering the capacity would change the design or the key).
+- **Next:** step 2 (R4, `check-money.py`), then step 3 in the contract's audience order (Year 6, KS3, Essentials at GCSE, other GCSE, Core, A-Level, L4). All the same-day HIGH keys are done except L4_5 (below). Then step 2 (R4, `check-money.py`) and step 3 in the contract's audience order.
 
 ## 2026-10-13 (cloud): NEGATIVE-INPUT (log-laws, suvat; Jon's input-design ruling)
 
@@ -118,10 +120,3 @@ main's last full run is red; watch main's run after merging.
   - Already had a minus key: `simultaneous-solver`.
 - **Not settled by the code, for Jon:** none of the six candidates. **Not built:** the contract's `scripts/check-negative-input.py`. The ruling calls it the home lane's check, and the extracted banks cannot be its evidence: split-it and just-pythag-it-bruv are generators, log-laws' Solve answers are generated at run time, and suvat's negative sits in `steps[].answer`, not a top-level answer field (a check must walk nested fields and carry a declared list for generators).
 - **Merged:** #360 (cf976e7), CI green on re-run (three page-load timeouts in other games on the first attempt: screening-room, proof-builder, quadratic-factoriser); log-laws-s1-005 and suvat-s1-001 closed. Main's run for the merge: see the next entry.
-
-## 2026-10-13 (cloud): CQ-PLAY-AGAIN-SCREEN (characteristic-quest)
-
-- **Done:** characteristic-quest's `show()` now calls `MaffsLock.screen()`, exactly as eigenvalue-extractor's and eigenvector-engine's (the pattern copied); Play again goes `showMenu()` -> `show('menu')`, so the screen is fresh. `SCREEN_NOT_YET` in `check-answer-lock.py` is empty (the list only shrinks) and its stale ownership sentence is replaced. The game is judged in full with nothing reported.
-- **'answer lock' now waits only on the home lane's GATE_EXCLUDED change (contract FACTS-AND-NOTICE, part E)** (glorious-gantt, the one game left on NOT_YET, is that change's exclusion). `audit-register.py` untouched.
-- **Merged:** #359 (0538080); main's run 1000 green; Jon accepted it as complete (13 Oct).
-- **Findings untouched:** t6-002, t6-004, t6-005, s1-003, s1-004, s1-005 stay open for Jon.
