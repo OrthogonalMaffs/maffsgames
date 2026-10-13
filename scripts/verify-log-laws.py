@@ -39,6 +39,16 @@ And for the Laws bank (QUESTIONS, read from the same page; contract LOG-NOTATION
   - no option equals another: no wrong option equals the key, and no two wrong options are equal.
   Two faults are planted on every run and must each be caught: QUESTIONS[22] as it was before
   10 Oct (1/3 log 27 keyed 1, with log 3 offered as wrong) and QUESTIONS[24]'s old 2 log x.
+  - the Laws view states the base (SR-17; SWEEP-1, log-laws-s1-001): when any Laws question, option
+    or explanation uses a bare \\log (four keys rely on base 10), both the Laws start screen
+    (#lawsOpts) and the Laws Quick Reference title (#mainGame .law-ref-title) say "log means log" with the subscript 10,
+    read from the rendered page. The old markup of each, which did not, is planted and must be caught.
+
+And for the Solve REASONS texts (SWEEP-1, log-laws-s1-003):
+  - a reason that says a move takes you back to "the equation you started from" is shown only where
+    that is true: at every state where it is used and which was reached by taking logs (so undoing the
+    log returns to the line before), that line must be the first line. The old U_back text, which the
+    capacitor items (F3-rc, line 3 -> line 2) contradicted, is planted and must be caught.
 
 USAGE
 -----
@@ -148,6 +158,13 @@ async def fetch(katex_dir):
             "() => typeof QUESTIONS !== 'undefined' ? JSON.parse(JSON.stringify(QUESTIONS)) : null")
         if data is not None:
             data["laws_bank"] = laws
+        # The Laws view's own words about the base, as rendered (SR-17; log-laws-s1-001).
+        view = await page.evaluate(
+            "() => { const t = e => e ? e.textContent.replace(/\\s+/g, ' ').trim() : null;"
+            " return { start: t(document.getElementById('lawsOpts')),"
+            " ref: t(document.querySelector('#mainGame .law-ref-title')) }; }")
+        if data is not None:
+            data["laws_view"] = view
         katex_bad = await page.evaluate(KATEX_JS)
         await browser.close()
         return data, katex_bad, errors
@@ -496,6 +513,80 @@ def laws_plants(laws):
             ("QUESTIONS[%d] offering 2 log x (before 10 Oct)" % i24, old24, "are equal")]
 
 
+# A bare \\log (no subscript base) in a Laws string relies on log meaning log base 10 (SR-17).
+BARE_LOG = re.compile(r"\\log(?!_)")
+BASE_STATED = re.compile("log means log\u2081\u2080")
+
+
+def check_laws_base(laws, view):
+    """The Laws start screen and Quick Reference title state the base when any Laws string uses bare \\log."""
+    def texts(q):
+        return [q["q"], q["correct"], q.get("exp") or ""] + list(q["distractors"])
+    users = [k for k, q in enumerate(laws or []) if any(BARE_LOG.search(t) for t in texts(q))]
+    if not users:
+        return []
+    out = []
+    for key, where in (("start", "the Laws start screen (#lawsOpts)"),
+                       ("ref", "the Laws Quick Reference title (#mainGame .law-ref-title)")):
+        txt = (view or {}).get(key)
+        if txt is None:
+            out.append("%s is missing from the page" % where)
+        elif not BASE_STATED.search(txt):
+            out.append("%s does not state the base: %d Laws questions use a bare log (e.g. QUESTIONS[%d]); "
+                       "it reads %a" % (where, len(users), users[0], txt[:100]))
+    return out
+
+
+def laws_base_plants(view):
+    """The Laws view's markup before SWEEP-1: neither place stated that log means log base 10."""
+    old_start = dict(view or {}, start="The laws students always mix up. 12 questions, take your time. "
+                                       "Can you keep them straight?")
+    old_ref = dict(view or {}, ref="Quick Reference")
+    return [("the Laws start screen without the base (before SWEEP-1)", old_start,
+             "the Laws start screen (#lawsOpts) does not state the base"),
+            ("the Laws Quick Reference title without the base (before SWEEP-1)", old_ref,
+             "the Laws Quick Reference title (#mainGame .law-ref-title) does not state the base")]
+
+
+# A reason that claims the move returns to the item's first line.
+CLAIMS_START = re.compile(r"(equation|line) you started (from|with)")
+
+
+def check_reasons_back(data):
+    """A reason claiming "back to the equation you started from" is used only where that is true.
+
+    Where a state was reached by taking logs (a log or ln edge), undoing the log returns to the
+    line that edge came from, so the claim holds only if that line is state 0."""
+    out = []
+    claims = {rid for rid, r in data["reasons"].items() if CLAIMS_START.search(r["t"])}
+    if not claims:
+        return out
+    for f in data["families"]:
+        for it in f["items"]:
+            into = {}
+            for a, edges in it["go"].items():
+                for move, j in edges.items():
+                    if move in ("log", "ln"):
+                        into.setdefault(j, []).append(int(a))
+            for i_s, w in it["why"].items():
+                for move, rid in w.items():
+                    if rid in claims:
+                        bad = [p for p in into.get(int(i_s), []) if p != 0]
+                        if bad:
+                            out.append("%s state %s: move %s gives reason %s (%r), but undoing the log returns "
+                                       "to line %d, not the first line" % (
+                                           it["id"], i_s, move, rid, data["reasons"][rid]["t"][:60], bad[0] + 1))
+    return out
+
+
+def reasons_back_plant(data):
+    """U_back's text before SWEEP-1, which the capacitor items contradicted."""
+    old = dict(data, reasons=dict(data["reasons"]))
+    old["reasons"]["U_back"] = dict(old["reasons"]["U_back"],
+                                    t="That is true, but it takes you back to the equation you started from.")
+    return old
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--require-katex", action="store_true",
@@ -544,6 +635,7 @@ def main():
             verify_item(it, move_ids, reasons)
 
     laws = data.pop("laws_bank", None)     # out of data, so strings() below walks the Solve data only
+    view = data.pop("laws_view", None)
     if not laws:
         fail("could not read the Laws bank (QUESTIONS) from the live page")
     else:
@@ -557,6 +649,24 @@ def main():
                 print("  planted fault caught: " + what)
             else:
                 fail("planted fault NOT caught: %s (the Laws check found %s)" % (what, got or "nothing"))
+        print("Verifying the Laws view states the base wherever a Laws question uses a bare log (SR-17)...")
+        for problem in check_laws_base(laws, view):
+            fail(problem)
+        for what, v, expect in laws_base_plants(view):
+            got = check_laws_base(laws, v)
+            if any(expect in g for g in got):
+                print("  planted fault caught: " + what)
+            else:
+                fail("planted fault NOT caught: %s (the base check found %s)" % (what, got or "nothing"))
+
+    print("Verifying no reason claims a return to the first line where it returns to a later one...")
+    for problem in check_reasons_back(data):
+        fail(problem)
+    got = check_reasons_back(reasons_back_plant(data))
+    if any("U_back" in g for g in got):
+        print("  planted fault caught: U_back's text before SWEEP-1 (%d states contradict it)" % len(got))
+    else:
+        fail("planted fault NOT caught: U_back's old text (the reasons check found nothing)")
 
     for s in strings(data):
         for m in re.finditer(r"\\log_(\{[^}]*\}|.)", s):
