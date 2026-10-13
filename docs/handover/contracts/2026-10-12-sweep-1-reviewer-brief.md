@@ -41,6 +41,11 @@ Also note (briefly) any outright WRONG key or wrong explanation figure you happe
 e. **Verifier gap.** Does scripts/verify-<slug>.py recompute the game's worked steps, hints, explanations and feedback
    figures (not just the keys)? Name each student-facing explanation / hint / worked-step / feedback text the verifier
    does NOT check (file:line). If the game shows none, say so.
+g. **"Estimate" stems (Jon, 13 Oct 2026).** A stem that says "Estimate X" must state an estimation method (SR-12) or
+   say "use the model to estimate". A plain "Estimate X to n s.f." (or to n d.p.) with a calculator is a finding: list
+   each (file:line, the stem). It is fixed by rewording to "Use the model to calculate X" (keys unchanged).
+h. **Contexts make sense at their values.** Every scenario's context is physically possible at the values shown
+   (no 240% efficiency, no negative mass, no probability above 1). List any that is not.
 f. **Negative typed answers.** Any typed-answer box with inputmode="decimal" (iOS's decimal pad has no minus key):
    can any of its answers be negative? Count them (file:line, how many of how many).
 
