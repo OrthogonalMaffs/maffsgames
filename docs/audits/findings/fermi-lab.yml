@@ -35,12 +35,22 @@ findings:
   evidence: 'SWEEP-1, batch 5'
   status: open
 - id: fermi-lab-s1-003
+  severity: HIGH
+  jc: false
+  class: NEW:wrong-key
+  level: all
+  where: games/fermi-lab/index.html (piano-tuners-london; start screen)
+  summary: 'piano-tuners-london keys 140 while its own chain gives 82 (inside Brilliant): a wrong key. Part 2 #6: the
+    key follows the chain (82) (Split: the parent entry held 2 defects; the others are fermi-lab-s1-004.)'
+  evidence: 'SWEEP-1, batch 5'
+  status: open
+- id: fermi-lab-s1-004
   severity: LOW
   jc: false
   class: NEW:wording
   level: all
   where: games/fermi-lab/index.html (piano-tuners-london; start screen)
-  summary: 'Wording, open: piano-tuners-london keys 140 while its own chain gives 82 (inside Brilliant); the start screen
-    says "Your chain multiplies out" though several chains divide'
+  summary: 'Wording, open: the start screen says "Your chain multiplies out" though several chains divide (Split from
+    fermi-lab-s1-003, SWEEP-1-RULINGS step 1.)'
   evidence: 'SWEEP-1, batch 5'
   status: open

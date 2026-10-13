@@ -179,10 +179,31 @@ findings:
   class: NEW:unstated-convention
   level: further
   where: games/eigenvector-engine/index.html:144,163,170-171 (mfg events)
-  summary: 'For the home lane / Jon (SR-29 class), not fixed. mfg events hard-code level ''further''; MaffsLevel.resolve
-    also accepts Level 4, so Level 4 plays are logged as ''further''. Also noted, not fixed: the bank is 25 items from
-    8 matrices with no generator (near-duplicate matrices such as [[1,3],[3,1]] and [[0,2],[2,0]]; the 15-of-25 draw
-    is t6-003), and a wrong answer never says why the chosen distractor fails.'
+  summary: 'For the home lane / Jon (SR-29 class), not fixed. mfg events hard-code level ''further'';
+    MaffsLevel.resolve also accepts Level 4, so Level 4 plays are logged as ''further'' (R10, the home lane''s)
+    (Split: the parent entry held 3 defects; the others are eigenvector-engine-s1-006,
+    eigenvector-engine-s1-007.)'
+  evidence: 'mfg(''game_started'', {game_slug: ''eigenvector-engine'', level: ''further'', ...}) (SWEEP-1, batch 11)'
+  status: open
+- id: eigenvector-engine-s1-006
+  severity: LOW
+  jc: true
+  class: NEW:degenerate-item
+  level: further
+  where: games/eigenvector-engine/index.html:144,163,170-171 (mfg events)
+  summary: 'The bank is 25 items from 8 matrices with no generator (near-duplicate matrices such as [[1,3],[3,1]] and
+    [[0,2],[2,0]]; the 15-of-25 draw is t6-003). Noted, not fixed (Split from eigenvector-engine-s1-004,
+    SWEEP-1-RULINGS step 1.)'
+  evidence: 'mfg(''game_started'', {game_slug: ''eigenvector-engine'', level: ''further'', ...}) (SWEEP-1, batch 11)'
+  status: open
+- id: eigenvector-engine-s1-007
+  severity: LOW
+  jc: true
+  class: NEW:wrong-explanation-text
+  level: further
+  where: games/eigenvector-engine/index.html:144,163,170-171 (mfg events)
+  summary: 'A wrong answer never says why the chosen distractor fails. Noted, not fixed (Split from
+    eigenvector-engine-s1-004, SWEEP-1-RULINGS step 1.)'
   evidence: 'mfg(''game_started'', {game_slug: ''eigenvector-engine'', level: ''further'', ...}) (SWEEP-1, batch 11)'
   status: open
 - id: eigenvector-engine-s1-005

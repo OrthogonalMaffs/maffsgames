@@ -111,9 +111,28 @@ findings:
   class: NEW:wording
   level: alevel, level4
   where: games/test-the-claim/index.html :1824-1825, :1859-1862, :2048; startGame (:1306-1322)
-  summary: 'The Step 4 hint and the Step 5 reason speak of "the critical region" on the p-value route; the model answer
-    says "to suggest that" where Step 6 says "to support the claim that"; a chosen tail and level match few items, so the
-    session is padded with others while the results line names the choice'
+  summary: 'The Step 4 hint and the Step 5 reason speak of "the critical region" on the p-value route (Split: the
+    parent entry held 3 defects; the others are test-the-claim-s1-010, test-the-claim-s1-011.)'
+  evidence: 'Reviewer''s reading (SWEEP-1, batch 10)'
+  status: open
+- id: test-the-claim-s1-010
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: alevel, level4
+  where: games/test-the-claim/index.html :1824-1825, :1859-1862, :2048; startGame (:1306-1322)
+  summary: 'The model answer says "to suggest that" where Step 6 says "to support the claim that" (Split from
+    test-the-claim-s1-008, SWEEP-1-RULINGS step 1.)'
+  evidence: 'Reviewer''s reading (SWEEP-1, batch 10)'
+  status: open
+- id: test-the-claim-s1-011
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: alevel, level4
+  where: games/test-the-claim/index.html :1824-1825, :1859-1862, :2048; startGame (:1306-1322)
+  summary: 'A chosen tail and level match few items, so the session is padded with others while the results line names
+    the choice (Split from test-the-claim-s1-008, SWEEP-1-RULINGS step 1.)'
   evidence: 'Reviewer''s reading (SWEEP-1, batch 10)'
   status: open
 - id: test-the-claim-s1-009

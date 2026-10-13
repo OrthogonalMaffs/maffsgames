@@ -15,9 +15,30 @@ findings:
   class: NEW:wrong-explanation-text
   level: gcse
   where: games/distinctly-average/index.html:835 (wrong_n distractor), :317 (its feedback), :1391-1392 and :1018 (meanText)
-  summary: 'Wording, open: the missing-value distractor wrong_n (mean × (n − 1) − the known sum) is explained "You divided
-    by the wrong number of values" (nobody divided; the mean was multiplied by the wrong count), on all 15 items; and
-    outlierMean''s inexact line reads "29 ÷ 4 about 7.3" with no verb. Outside the four checks, for Jon: in every
-    missing-value item the key is the only whole number inside the data''s range (a generator change)'
+  summary: 'Wording, open: the missing-value distractor wrong_n (mean × (n − 1) − the known sum) is explained "You
+    divided by the wrong number of values" (nobody divided; the mean was multiplied by the wrong count), on all
+    15 items (Split: the parent entry held 3 defects; the others are distinctly-average-s1-002,
+    distinctly-average-s1-003.)'
+  evidence: '"6 7 6 ?", mean 6.5: options 7 (key), 0.5, 6.5, 19 (SWEEP-1, batch 5)'
+  status: open
+- id: distinctly-average-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: gcse
+  where: games/distinctly-average/index.html:835 (wrong_n distractor), :317 (its feedback), :1391-1392 and :1018 (meanText)
+  summary: 'Wording, open: outlierMean''s inexact line reads "29 ÷ 4 about 7.3" with no verb (Split from
+    distinctly-average-s1-001, SWEEP-1-RULINGS step 1.)'
+  evidence: '"6 7 6 ?", mean 6.5: options 7 (key), 0.5, 6.5, 19 (SWEEP-1, batch 5)'
+  status: open
+- id: distinctly-average-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:hint-gives-answer
+  level: gcse
+  where: games/distinctly-average/index.html:835 (wrong_n distractor), :317 (its feedback), :1391-1392 and :1018 (meanText)
+  summary: 'Outside the four checks, for Jon: in every missing-value item the key is the only whole number inside the
+    data''s range, so it can be found by elimination (a generator change) (Split from
+    distinctly-average-s1-001, SWEEP-1-RULINGS step 1.)'
   evidence: '"6 7 6 ?", mean 6.5: options 7 (key), 0.5, 6.5, 19 (SWEEP-1, batch 5)'
   status: open

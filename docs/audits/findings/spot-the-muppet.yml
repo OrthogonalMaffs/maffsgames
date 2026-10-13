@@ -115,9 +115,31 @@ findings:
   class: NEW:convention-unstated
   level: ks3
   where: games/spot-the-muppet/index.html:263 (stm_ks3_008), :275 (stm_ks3_014)
-  summary: 'Two keys rest on what the advice never states: ks3_008''s 44% needs the second voucher to come off the reduced
-    price (both off the original gives 50%), and its option "you can only use one voucher at a time" is shop policy, not a
-    maths error (SR-4); ks3_014''s "P(tails) is always 0.5" needs a fair coin. Open (advice text)'
+  summary: 'ks3_008''s 44% needs the second voucher to come off the reduced price (both off the original gives 50%),
+    which the advice never states. Open (advice text) (Split: the parent entry held 3 defects; the others are
+    spot-the-muppet-s1-004, spot-the-muppet-s1-005.)'
+  evidence: '"You''ve got a 20% off voucher and a 30% off voucher. Use them both together for 50% off."; "You''ve flipped
+    heads 5 times in a row." (SWEEP-1, batch 4)'
+  status: open
+- id: spot-the-muppet-s1-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:true-wrong-option
+  level: ks3
+  where: games/spot-the-muppet/index.html:263 (stm_ks3_008), :275 (stm_ks3_014)
+  summary: 'ks3_008''s option "you can only use one voucher at a time" is shop policy, not a maths error (SR-4). Open
+    (Split from spot-the-muppet-s1-001, SWEEP-1-RULINGS step 1.)'
+  evidence: '"You''ve got a 20% off voucher and a 30% off voucher. Use them both together for 50% off."; "You''ve flipped
+    heads 5 times in a row." (SWEEP-1, batch 4)'
+  status: open
+- id: spot-the-muppet-s1-005
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: ks3
+  where: games/spot-the-muppet/index.html:263 (stm_ks3_008), :275 (stm_ks3_014)
+  summary: 'ks3_014''s "P(tails) is always 0.5" needs a fair coin, never stated (R2). Open (advice text) (Split from
+    spot-the-muppet-s1-001, SWEEP-1-RULINGS step 1.)'
   evidence: '"You''ve got a 20% off voucher and a 30% off voucher. Use them both together for 50% off."; "You''ve flipped
     heads 5 times in a row." (SWEEP-1, batch 4)'
   status: open
@@ -132,13 +154,52 @@ findings:
   evidence: 'SWEEP-1, batch 4 (terrible-advice core_004 has the same joke)'
   status: open
 - id: spot-the-muppet-s1-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:text-contradicts-content
+  level: ks3, gcse, core
+  where: games/spot-the-muppet/index.html stm_gcse_006, stm_gcse_007, stm_core_009, start screen, stm_ks3_006
+  summary: 'gcse_006''s "add 5 to the last digit" (literally 2.9) is called "exactly right". Wording, open (Split: the
+    parent entry held 5 defects; the others are spot-the-muppet-s1-006, spot-the-muppet-s1-007,
+    spot-the-muppet-s1-008, spot-the-muppet-s1-009.)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: spot-the-muppet-s1-006
   severity: LOW
   jc: false
   class: NEW:wording
   level: ks3, gcse, core
   where: games/spot-the-muppet/index.html stm_gcse_006, stm_gcse_007, stm_core_009, start screen, stm_ks3_006
-  summary: 'Wording, open: gcse_006''s "add 5 to the last digit" (literally 2.9) is called "exactly right"; gcse_007 offers
-    12.5 twice; core_009 "Benny is wrong — … = 134 units" gives Benny''s own figure; the start screen says every character
-    is wrong though three GCSE keys are "… is actually correct"; ks3_006 "A recipe for 4 serves"'
+  summary: 'gcse_007 offers 12.5 twice. Wording, open (Split from spot-the-muppet-s1-003, SWEEP-1-RULINGS step 1.)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: spot-the-muppet-s1-007
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: ks3, gcse, core
+  where: games/spot-the-muppet/index.html stm_gcse_006, stm_gcse_007, stm_core_009, start screen, stm_ks3_006
+  summary: 'core_009 "Benny is wrong — … = 134 units" gives Benny''s own figure. Wording, open (Split from
+    spot-the-muppet-s1-003, SWEEP-1-RULINGS step 1.)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: spot-the-muppet-s1-008
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: ks3, gcse, core
+  where: games/spot-the-muppet/index.html stm_gcse_006, stm_gcse_007, stm_core_009, start screen, stm_ks3_006
+  summary: 'The start screen says every character is wrong though three GCSE keys are "… is actually correct".
+    Wording, open (Split from spot-the-muppet-s1-003, SWEEP-1-RULINGS step 1.)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: spot-the-muppet-s1-009
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: ks3, gcse, core
+  where: games/spot-the-muppet/index.html stm_gcse_006, stm_gcse_007, stm_core_009, start screen, stm_ks3_006
+  summary: 'ks3_006 "A recipe for 4 serves". Wording, open (Split from spot-the-muppet-s1-003, SWEEP-1-RULINGS step
+    1.)'
   evidence: 'SWEEP-1, batch 4'
   status: open

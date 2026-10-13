@@ -300,8 +300,18 @@ findings:
   class: NEW:wording
   level: all
   where: games/expectation-station/index.html
-  summary: 'Small wording faults: "Sigma" written out, ">=" in text, "=" for a rounded value, a plain 1/3, "1
-    consoles"'
+  summary: 'Small wording faults in notation: "Sigma" written out, ">=" in text, "=" for a rounded value, a plain 1/3
+    (Split: the parent entry held 2 defects; the others are expectation-station-s1-008.)'
+  evidence: 'Reviewer''s list (SWEEP-1, batch 8)'
+  status: open
+- id: expectation-station-s1-008
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: games/expectation-station/index.html
+  summary: 'Small wording fault in a plural: "1 consoles" (Split from expectation-station-s1-006, SWEEP-1-RULINGS step
+    1.)'
   evidence: 'Reviewer''s list (SWEEP-1, batch 8)'
   status: open
 - id: expectation-station-s1-007

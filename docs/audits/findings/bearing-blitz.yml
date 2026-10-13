@@ -14,7 +14,19 @@ findings:
   class: NEW:sr14-content
   level: gcse
   where: 'games/bearing-blitz/index.html:93 (start-screen subtitle), :291'
-  summary: '"Fire or die." refers to the player''s death (SR-14 bans death everywhere; the scanner leaves "die" out for dice); the final miss line carries a 💀. For Jon (SR-14 calls have been his)'
+  summary: '"Fire or die." refers to the player''s death (SR-14 bans death everywhere; the scanner leaves "die" out
+    for dice). For Jon (SR-14 calls have been his); ruled under R6, replacement "Fire first." (Split: the
+    parent entry held 2 defects; the others are bearing-blitz-s1-005.)'
+  evidence: '"You are a submarine. Enemy ships are closing in. Set your bearing by eye — no numbers, no labels. Fire or die."; "💀 DESTROYED! Surface ships locked onto your position." (SWEEP-1, batch 7)'
+  status: open
+- id: bearing-blitz-s1-005
+  severity: MEDIUM
+  jc: true
+  class: NEW:sr14-content
+  level: gcse
+  where: 'games/bearing-blitz/index.html:93 (start-screen subtitle), :291'
+  summary: 'The final miss line carries a 💀 and "DESTROYED!" (SR-14, death imagery). Ruled under R6, replacement "HIT!
+    Surface ships locked onto your position." (Split from bearing-blitz-s1-001, SWEEP-1-RULINGS step 1.)'
   evidence: '"You are a submarine. Enemy ships are closing in. Set your bearing by eye — no numbers, no labels. Fire or die."; "💀 DESTROYED! Surface ships locked onto your position." (SWEEP-1, batch 7)'
   status: open
 - id: bearing-blitz-s1-002

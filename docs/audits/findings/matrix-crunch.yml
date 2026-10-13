@@ -136,14 +136,25 @@ findings:
     batch 11)'
   status: open
 - id: matrix-crunch-s1-005
+  severity: MEDIUM
+  jc: true
+  class: NEW:hint-gives-answer
+  level: further, level4
+  where: games/matrix-crunch/index.html:208-210, :236, :238 (option format, "What happens?" stem)
+  summary: 'For Jon, not fixed (a rewrite of option text). The key is the only option carrying a "(D = 0, ...)" note
+    and the only one written "\dfrac{36}{14} = \dfrac{18}{7}"; Level 4 R1 = 10/3 is the only non-integer, so
+    the odd one out is the answer (Split: the parent entry held 2 defects; the others are
+    matrix-crunch-s1-009.)'
+  evidence: 'x + y = 3 / 2x + 2y = 6 | What happens? | key Infinite solutions (D = 0, consistent) (SWEEP-1, batch 11)'
+  status: open
+- id: matrix-crunch-s1-009
   severity: LOW
   jc: true
   class: NEW:wording
   level: further, level4
   where: games/matrix-crunch/index.html:208-210, :236, :238 (option format, "What happens?" stem)
-  summary: 'For Jon, not fixed (a rewrite of option text and stems). The key is the only option carrying a "(D = 0, ...)"
-    note and the only one written "\dfrac{36}{14} = \dfrac{18}{7}"; Level 4 R1 = 10/3 is the only non-integer, so the
-    odd one out is the answer. The stem "What happens?" does not say what happens to what.'
+  summary: 'For Jon, not fixed (a stem). The stem "What happens?" does not say what happens to what (Split from
+    matrix-crunch-s1-005, SWEEP-1-RULINGS step 1.)'
   evidence: 'x + y = 3 / 2x + 2y = 6 | What happens? | key Infinite solutions (D = 0, consistent) (SWEEP-1, batch 11)'
   status: open
 - id: matrix-crunch-s1-006

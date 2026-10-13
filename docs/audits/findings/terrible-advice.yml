@@ -168,14 +168,62 @@ findings:
   evidence: 'advice "You''ve flipped heads 5 times in a row. The next flip is definitely tails…" (SWEEP-1, batch 4)'
   status: open
 - id: terrible-advice-s1-005
+  severity: MEDIUM
+  jc: true
+  class: NEW:true-wrong-option
+  level: ks3, gcse, core
+  where: games/terrible-advice/index.html ta_ks3_008, ta_gcse_006, ta_gcse_007, ta_core_004, ta_core_009
+  summary: 'ks3_008''s "you can only use one voucher at a time" is shop policy, not a maths error (SR-4). Wording,
+    open (Split: the parent entry held 6 defects; the others are terrible-advice-s1-006,
+    terrible-advice-s1-007, terrible-advice-s1-008, terrible-advice-s1-009, terrible-advice-s1-010.)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: terrible-advice-s1-006
+  severity: MEDIUM
+  jc: true
+  class: NEW:text-contradicts-content
+  level: ks3, gcse, core
+  where: games/terrible-advice/index.html ta_ks3_008, ta_gcse_006, ta_gcse_007, ta_core_004, ta_core_009
+  summary: 'gcse_006''s "just add 5 to the last digit" (read literally, 2.9) is praised as "the right method".
+    Wording, open (Split from terrible-advice-s1-005, SWEEP-1-RULINGS step 1.)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: terrible-advice-s1-007
   severity: LOW
   jc: true
   class: NEW:wording
   level: ks3, gcse, core
   where: games/terrible-advice/index.html ta_ks3_008, ta_gcse_006, ta_gcse_007, ta_core_004, ta_core_009
-  summary: 'Wording, open: ks3_008''s "you can only use one voucher at a time" is shop policy, not a maths error (SR-4);
-    gcse_006''s "just add 5 to the last digit" (read literally, 2.9) is praised as "the right method"; gcse_007 offers 12.5
-    twice; core_004 writes £1,000 × 2.653 = £2,653 (£2,653.30); core_009 "£20,000 units"; core_004''s "PennyWise (No
-    Relation to the Clown)" alludes to a horror villain in a humour field (SR-14, Jon''s call)'
+  summary: 'gcse_007 offers 12.5 twice. Wording, open (Split from terrible-advice-s1-005, SWEEP-1-RULINGS step 1.)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: terrible-advice-s1-008
+  severity: LOW
+  jc: true
+  class: NEW:wording
+  level: ks3, gcse, core
+  where: games/terrible-advice/index.html ta_ks3_008, ta_gcse_006, ta_gcse_007, ta_core_004, ta_core_009
+  summary: 'core_004 writes £1,000 × 2.653 = £2,653 (£2,653.30). Wording, open (Split from terrible-advice-s1-005,
+    SWEEP-1-RULINGS step 1.)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: terrible-advice-s1-009
+  severity: LOW
+  jc: true
+  class: NEW:wording
+  level: ks3, gcse, core
+  where: games/terrible-advice/index.html ta_ks3_008, ta_gcse_006, ta_gcse_007, ta_core_004, ta_core_009
+  summary: 'core_009 "£20,000 units". Wording, open (Split from terrible-advice-s1-005, SWEEP-1-RULINGS step 1.)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: terrible-advice-s1-010
+  severity: MEDIUM
+  jc: true
+  class: NEW:sr14-content
+  level: ks3, gcse, core
+  where: games/terrible-advice/index.html ta_ks3_008, ta_gcse_006, ta_gcse_007, ta_core_004, ta_core_009
+  summary: 'core_004''s "PennyWise (No Relation to the Clown)" alludes to a horror villain in a humour field (SR-14,
+    Jon''s call). Ruled under R6, with spot-the-muppet-s1-002: the parenthetical is deleted (Split from
+    terrible-advice-s1-005, SWEEP-1-RULINGS step 1.)'
   evidence: 'SWEEP-1, batch 4'
   status: open

@@ -191,9 +191,20 @@ findings:
   class: NEW:convention-unstated
   level: ks3
   where: games/word-problem-decoder/index.html wpd_ks3_050
-  summary: 'KS3 offers no Probability topic, so "Estimate the probability of picking a red counter" is keyed Statistics &
-    Averages and a student who recognises probability must guess; Fractions and Ratio & Proportion (24/80) fit as well.
-    The extra "fell on the floor 4 times" sentence muddles a set that already totals 80. For Jon'
+  summary: 'KS3 offers no Probability topic, so "Estimate the probability of picking a red counter" is keyed
+    Statistics & Averages and a student who recognises probability must guess; Fractions and Ratio & Proportion
+    (24/80) fit as well. Part 2 #13: add Probability to KS3''s topic list (Split: the parent entry held 2
+    defects; the others are word-problem-decoder-s1-006.)'
+  evidence: 'Key "Statistics & Averages" (SWEEP-1, batch 3)'
+  status: open
+- id: word-problem-decoder-s1-006
+  severity: LOW
+  jc: true
+  class: NEW:convention-unstated
+  level: ks3
+  where: games/word-problem-decoder/index.html wpd_ks3_050
+  summary: 'The extra "fell on the floor 4 times" sentence muddles a set that already totals 80. For Jon (Split from
+    word-problem-decoder-s1-004, SWEEP-1-RULINGS step 1.)'
   evidence: 'Key "Statistics & Averages" (SWEEP-1, batch 3)'
   status: open
 - id: word-problem-decoder-s1-005
@@ -202,10 +213,48 @@ findings:
   class: NEW:text-contradicts-content
   level: ks3, gcse
   where: games/word-problem-decoder/index.html gcse_027, gcse_047, gcse_044, ks3_036, gcse_059, gcse_036
-  summary: 'Wording: gcse_027 and gcse_047 refer to a figure the game never shows (as t1-011, not in its list); gcse_044
-    asks for "the angle in the alternate segment" with no tangent given; ks3_036 wants "the total seating capacity" then
-    asks for the back row; gcse_059''s "volume of the box by the volume of a tin" is keyed Area & Perimeter (no volume
-    topic); gcse_036''s highlight "largest angle in the triangle" fits Angles on its words (the trigonometry cue is
-    unhighlighted)'
+  summary: 'Wording: gcse_027 and gcse_047 refer to a figure the game never shows (as t1-011, not in its list) (Split:
+    the parent entry held 5 defects; the others are word-problem-decoder-s1-007, word-problem-decoder-s1-008,
+    word-problem-decoder-s1-009, word-problem-decoder-s1-010.)'
+  evidence: 'SWEEP-1, batch 3'
+  status: open
+- id: word-problem-decoder-s1-007
+  severity: MEDIUM
+  jc: false
+  class: NEW:text-contradicts-content
+  level: ks3, gcse
+  where: games/word-problem-decoder/index.html gcse_027, gcse_047, gcse_044, ks3_036, gcse_059, gcse_036
+  summary: 'Wording: gcse_044 asks for "the angle in the alternate segment" with no tangent given (Split from
+    word-problem-decoder-s1-005, SWEEP-1-RULINGS step 1.)'
+  evidence: 'SWEEP-1, batch 3'
+  status: open
+- id: word-problem-decoder-s1-008
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: ks3, gcse
+  where: games/word-problem-decoder/index.html gcse_027, gcse_047, gcse_044, ks3_036, gcse_059, gcse_036
+  summary: 'Wording: ks3_036 wants "the total seating capacity" then asks for the back row (Split from
+    word-problem-decoder-s1-005, SWEEP-1-RULINGS step 1.)'
+  evidence: 'SWEEP-1, batch 3'
+  status: open
+- id: word-problem-decoder-s1-009
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: ks3, gcse
+  where: games/word-problem-decoder/index.html gcse_027, gcse_047, gcse_044, ks3_036, gcse_059, gcse_036
+  summary: 'Wording: gcse_059''s "volume of the box by the volume of a tin" is keyed Area & Perimeter (no volume
+    topic) (Split from word-problem-decoder-s1-005, SWEEP-1-RULINGS step 1.)'
+  evidence: 'SWEEP-1, batch 3'
+  status: open
+- id: word-problem-decoder-s1-010
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: ks3, gcse
+  where: games/word-problem-decoder/index.html gcse_027, gcse_047, gcse_044, ks3_036, gcse_059, gcse_036
+  summary: 'Wording: gcse_036''s highlight "largest angle in the triangle" fits Angles on its words (the trigonometry
+    cue is unhighlighted) (Split from word-problem-decoder-s1-005, SWEEP-1-RULINGS step 1.)'
   evidence: 'SWEEP-1, batch 3'
   status: open

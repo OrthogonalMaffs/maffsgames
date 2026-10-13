@@ -72,8 +72,19 @@ findings:
   class: NEW:wording
   level: gcse
   where: games/circle-theorem-spotter/index.html:414 (Q9), :427 (Q22)
-  summary: 'Q9''s context asks for an angle but the ask is "Which theorem?" with theorem options; Q22''s "what shape
-    is formed?" is keyed "The chord is a diameter", not a shape'
+  summary: 'Q9''s context asks for an angle but the ask is "Which theorem?" with theorem options (Split: the parent
+    entry held 2 defects; the others are circle-theorem-spotter-s1-010.)'
+  evidence: 'Q9 ctx "... What is the angle subtended at the circumference by the same arc?" | "Which theorem?"
+    (SWEEP-1, batch 7)'
+  status: open
+- id: circle-theorem-spotter-s1-010
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: gcse
+  where: games/circle-theorem-spotter/index.html:414 (Q9), :427 (Q22)
+  summary: 'Q22''s "what shape is formed?" is keyed "The chord is a diameter", not a shape (Split from
+    circle-theorem-spotter-s1-005, SWEEP-1-RULINGS step 1.)'
   evidence: 'Q9 ctx "... What is the angle subtended at the circumference by the same arc?" | "Which theorem?"
     (SWEEP-1, batch 7)'
   status: open

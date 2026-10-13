@@ -62,7 +62,18 @@ findings:
   level: higher
   where: games/quadratic-factoriser/index.html hfStep4Html, hfStep3Html
   summary: 'Step 4''s split line and step 3''s options write a negative term unbracketed after a sign ("+ -16x", "3 x
-    -16 = -48", "6 + -4"), and a coefficient of 1 as "1x" ("8x^2 + -1x")'
+    -16 = -48", "6 + -4") (Split: the parent entry held 2 defects; the others are
+    quadratic-factoriser-s1-007.)'
+  evidence: 'Item 1040: "8x^2 + -1x + -16x + 8" (SWEEP-1, batch 6)'
+  status: open
+- id: quadratic-factoriser-s1-007
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: higher
+  where: games/quadratic-factoriser/index.html hfStep4Html, hfStep3Html
+  summary: 'A coefficient of 1 is written "1x" ("8x^2 + -1x") (Split from quadratic-factoriser-s1-004, SWEEP-1-RULINGS
+    step 1.)'
   evidence: 'Item 1040: "8x^2 + -1x + -16x + 8" (SWEEP-1, batch 6)'
   status: open
 - id: quadratic-factoriser-s1-005

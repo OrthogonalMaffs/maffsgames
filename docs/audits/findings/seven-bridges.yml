@@ -130,7 +130,27 @@ findings:
   level: all
   where: games/seven-bridges/index.html:176, :181-184, :255-257, :600-601, :696
   summary: 'Open: the rules never say a route may finish away from its start ("Impossible" is wrong on every two-odd
-    graph); "Eulerian path" covers circuits at :255 and only open routes at :257, and A-Level''s "path" repeats no vertex
-    (the term is Jon''s call); the wrong-"Impossible" feedback gives the count but not the rule'
+    graph) (Split: the parent entry held 3 defects; the others are seven-bridges-s1-003,
+    seven-bridges-s1-004.)'
+  evidence: 'SWEEP-1, batch 5'
+  status: open
+- id: seven-bridges-s1-003
+  severity: LOW
+  jc: true
+  class: NEW:convention-unstated
+  level: all
+  where: games/seven-bridges/index.html:176, :181-184, :255-257, :600-601, :696
+  summary: 'Open: "Eulerian path" covers circuits at :255 and only open routes at :257, and A-Level''s "path" repeats
+    no vertex (the term is Jon''s call) (Split from seven-bridges-s1-002, SWEEP-1-RULINGS step 1.)'
+  evidence: 'SWEEP-1, batch 5'
+  status: open
+- id: seven-bridges-s1-004
+  severity: LOW
+  jc: true
+  class: NEW:convention-unstated
+  level: all
+  where: games/seven-bridges/index.html:176, :181-184, :255-257, :600-601, :696
+  summary: 'Open: the wrong-"Impossible" feedback gives the count but not the rule (Split from seven-bridges-s1-002,
+    SWEEP-1-RULINGS step 1.)'
   evidence: 'SWEEP-1, batch 5'
   status: open

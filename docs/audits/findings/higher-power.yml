@@ -92,9 +92,77 @@ findings:
   class: NEW:wording
   level: ks3, gcse, alevel
   where: games/higher-power/index.html gcse_34, al_36, al_30, ks3_03, ks3_04, al_40, :574, :478
-  summary: 'Wording, open: "Largest Mersenne prime exponent" (largest known); al_36''s 1 − 1/e holds only for large n; al_30
-    gives 2^64 for the board''s total (2^64 − 1, as ks3_31 distinguishes); "A megabyte is 2 to the power 20 bytes" (a
-    mebibyte); "The four roots of unity" (fourth roots); a tie accepts either answer, never said; about 21 value displays
-    end "..." after a rounded digit. Also extends t2-003: pickRazorPair ignores the level at GCSE too'
+  summary: '"Largest Mersenne prime exponent" means the largest known. Wording, open (Split: the parent entry held 8
+    defects; the others are higher-power-s1-004, higher-power-s1-005, higher-power-s1-006, higher-power-s1-007,
+    higher-power-s1-008, higher-power-s1-009, higher-power-s1-010.)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: higher-power-s1-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:text-contradicts-content
+  level: ks3, gcse, alevel
+  where: games/higher-power/index.html gcse_34, al_36, al_30, ks3_03, ks3_04, al_40, :574, :478
+  summary: 'al_36''s 1 − 1/e holds only for large n. Open (Split from higher-power-s1-003, SWEEP-1-RULINGS step 1.)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: higher-power-s1-005
+  severity: MEDIUM
+  jc: false
+  class: NEW:text-contradicts-content
+  level: ks3, gcse, alevel
+  where: games/higher-power/index.html gcse_34, al_36, al_30, ks3_03, ks3_04, al_40, :574, :478
+  summary: 'al_30 gives 2^64 for the board''s total (it is 2^64 − 1, as ks3_31 distinguishes). Open (Split from
+    higher-power-s1-003, SWEEP-1-RULINGS step 1.)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: higher-power-s1-006
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: ks3, gcse, alevel
+  where: games/higher-power/index.html gcse_34, al_36, al_30, ks3_03, ks3_04, al_40, :574, :478
+  summary: '"A megabyte is 2 to the power 20 bytes" (a mebibyte). Wording, open (Split from higher-power-s1-003,
+    SWEEP-1-RULINGS step 1.)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: higher-power-s1-007
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: ks3, gcse, alevel
+  where: games/higher-power/index.html gcse_34, al_36, al_30, ks3_03, ks3_04, al_40, :574, :478
+  summary: '"The four roots of unity" (fourth roots). Wording, open (Split from higher-power-s1-003, SWEEP-1-RULINGS
+    step 1.)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: higher-power-s1-008
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: ks3, gcse, alevel
+  where: games/higher-power/index.html gcse_34, al_36, al_30, ks3_03, ks3_04, al_40, :574, :478
+  summary: 'A tie accepts either answer, never said. Wording, open (Split from higher-power-s1-003, SWEEP-1-RULINGS
+    step 1.)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: higher-power-s1-009
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: ks3, gcse, alevel
+  where: games/higher-power/index.html gcse_34, al_36, al_30, ks3_03, ks3_04, al_40, :574, :478
+  summary: 'About 21 value displays end "..." after a rounded digit. Wording, open (Split from higher-power-s1-003,
+    SWEEP-1-RULINGS step 1.)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: higher-power-s1-010
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: ks3, gcse, alevel
+  where: games/higher-power/index.html gcse_34, al_36, al_30, ks3_03, ks3_04, al_40, :574, :478
+  summary: 'pickRazorPair ignores the level at GCSE too (extends t2-003). Open (Split from higher-power-s1-003,
+    SWEEP-1-RULINGS step 1.)'
   evidence: 'SWEEP-1, batch 4'
   status: open

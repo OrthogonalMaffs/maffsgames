@@ -46,11 +46,64 @@ findings:
   class: NEW:wording
   level: all
   where: games/equatle/index.html:277, :282-290, :537, :616
-  summary: 'How to Play wording: grey is "not in the equation at all", but under the minimum-match rule it can mean "no
-    more of it", under an example row holding two 7s; "Duplicate digits" covers operators too; order matters is never
-    said (28+9=037 is accepted but is not 9+28=037); a true-looking non-integer side gets "Invalid expression"; the text
-    writes * and / where the tiles show × and ÷; every leading-zero example is on the left though 26% of targets pad
-    the right. Open'
+  summary: 'How to Play: grey is "not in the equation at all", but under the minimum-match rule it can mean "no more
+    of it", under an example row holding two 7s. Open (Split: the parent entry held 6 defects; the others are
+    equatle-s1-003, equatle-s1-004, equatle-s1-005, equatle-s1-006, equatle-s1-007.)'
+  evidence: '"Grey — not in the equation at all."; "Duplicate digits use the Wordle minimum-match rule"; 10/4+2=4 gets
+    "Invalid expression" (SWEEP-1, batch 3)'
+  status: open
+- id: equatle-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: games/equatle/index.html:277, :282-290, :537, :616
+  summary: 'How to Play: "Duplicate digits" covers operators too. Open (Split from equatle-s1-002, SWEEP-1-RULINGS
+    step 1.)'
+  evidence: '"Grey — not in the equation at all."; "Duplicate digits use the Wordle minimum-match rule"; 10/4+2=4 gets
+    "Invalid expression" (SWEEP-1, batch 3)'
+  status: open
+- id: equatle-s1-004
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: games/equatle/index.html:277, :282-290, :537, :616
+  summary: 'How to Play: order matters is never said (28+9=037 is accepted but is not 9+28=037). Open (Split from
+    equatle-s1-002, SWEEP-1-RULINGS step 1.)'
+  evidence: '"Grey — not in the equation at all."; "Duplicate digits use the Wordle minimum-match rule"; 10/4+2=4 gets
+    "Invalid expression" (SWEEP-1, batch 3)'
+  status: open
+- id: equatle-s1-005
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: games/equatle/index.html:277, :282-290, :537, :616
+  summary: 'A true-looking non-integer side gets "Invalid expression". Open (Split from equatle-s1-002,
+    SWEEP-1-RULINGS step 1.)'
+  evidence: '"Grey — not in the equation at all."; "Duplicate digits use the Wordle minimum-match rule"; 10/4+2=4 gets
+    "Invalid expression" (SWEEP-1, batch 3)'
+  status: open
+- id: equatle-s1-006
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: games/equatle/index.html:277, :282-290, :537, :616
+  summary: 'The text writes * and / where the tiles show × and ÷. Open (Split from equatle-s1-002, SWEEP-1-RULINGS
+    step 1.)'
+  evidence: '"Grey — not in the equation at all."; "Duplicate digits use the Wordle minimum-match rule"; 10/4+2=4 gets
+    "Invalid expression" (SWEEP-1, batch 3)'
+  status: open
+- id: equatle-s1-007
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: games/equatle/index.html:277, :282-290, :537, :616
+  summary: 'Every leading-zero example is on the left though 26% of targets pad the right. Open (Split from
+    equatle-s1-002, SWEEP-1-RULINGS step 1.)'
   evidence: '"Grey — not in the equation at all."; "Duplicate digits use the Wordle minimum-match rule"; 10/4+2=4 gets
     "Invalid expression" (SWEEP-1, batch 3)'
   status: open

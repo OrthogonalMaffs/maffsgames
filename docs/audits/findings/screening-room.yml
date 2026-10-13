@@ -261,15 +261,54 @@ findings:
   status: fixed
   pr: 351
 - id: screening-room-s1-005
+  severity: MEDIUM
+  jc: false
+  class: NEW:wording
+  level: all
+  where: games/screening-room/index.html:322-323, :740 (legend), :430 (alevel_18), :448 (core_14), :894, :1071
+  summary: 'The legend labels the blue dot "Has <condition>" though blue is only the missed cases (alevel_16 "after
+    two tests", alevel_18 "lower threshold"). Wording, for Jon (Split: the parent entry held 5 defects; the
+    others are screening-room-s1-007, screening-room-s1-008, screening-room-s1-009, screening-room-s1-010.)'
+  evidence: 'Texts as quoted (SWEEP-1, batch 9)'
+  status: open
+- id: screening-room-s1-007
   severity: LOW
   jc: false
   class: NEW:wording
   level: all
   where: games/screening-room/index.html:322-323, :740 (legend), :430 (alevel_18), :448 (core_14), :894, :1071
-  summary: 'The legend labels the blue dot "Has <condition>" though blue is only the missed cases (alevel_16 "after two
-    tests", alevel_18 "lower threshold"); alevel_18 says "more of its positives are real" for a share; core_14 uses
-    "struggle" and "fail" as one; phase 3 asks "how many are real" for a probability; the end screen says "The base
-    rate matters more than test accuracy" (not true in general, e.g. gcse_15). Wording, for Jon'
+  summary: 'alevel_18 says "more of its positives are real" for a share. Wording, for Jon (Split from
+    screening-room-s1-005, SWEEP-1-RULINGS step 1.)'
+  evidence: 'Texts as quoted (SWEEP-1, batch 9)'
+  status: open
+- id: screening-room-s1-008
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: games/screening-room/index.html:322-323, :740 (legend), :430 (alevel_18), :448 (core_14), :894, :1071
+  summary: 'core_14 uses "struggle" and "fail" as one. Wording, for Jon (Split from screening-room-s1-005,
+    SWEEP-1-RULINGS step 1.)'
+  evidence: 'Texts as quoted (SWEEP-1, batch 9)'
+  status: open
+- id: screening-room-s1-009
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: games/screening-room/index.html:322-323, :740 (legend), :430 (alevel_18), :448 (core_14), :894, :1071
+  summary: 'Phase 3 asks "how many are real" for a probability. Wording, for Jon (Split from screening-room-s1-005,
+    SWEEP-1-RULINGS step 1.)'
+  evidence: 'Texts as quoted (SWEEP-1, batch 9)'
+  status: open
+- id: screening-room-s1-010
+  severity: MEDIUM
+  jc: false
+  class: NEW:text-contradicts-content
+  level: all
+  where: games/screening-room/index.html:322-323, :740 (legend), :430 (alevel_18), :448 (core_14), :894, :1071
+  summary: 'The end screen says "The base rate matters more than test accuracy" (not true in general, e.g. gcse_15).
+    Wording, for Jon (Split from screening-room-s1-005, SWEEP-1-RULINGS step 1.)'
   evidence: 'Texts as quoted (SWEEP-1, batch 9)'
   status: open
 - id: screening-room-s1-006

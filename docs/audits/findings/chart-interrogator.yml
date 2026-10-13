@@ -77,8 +77,19 @@ findings:
   level: all
   where: games/chart-interrogator/index.html:758
   summary: '"Estimate the proportion ... in the range 50–60" uses "range" for a class, a word the game also uses for
-    the statistic; and since the range is a whole class, the proportion is exact (frequency over total), not an
-    estimate. It states no precision, so it is outside Jon''s Estimate ruling (check g); rewording is a stem change'
+    the statistic. Rewording is a stem change (Split: the parent entry held 2 defects; the others are
+    chart-interrogator-s1-008.)'
+  evidence: "'Estimate the proportion of '+s.contextPlural+' in the range '+propInterval.interval (SWEEP-1, batch 8)"
+  status: open
+- id: chart-interrogator-s1-008
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: games/chart-interrogator/index.html:758
+  summary: 'Since the range is a whole class, the proportion is exact (frequency over total), not an estimate. It
+    states no precision, so it is outside Jon''s Estimate ruling (check g); rewording is a stem change (Split
+    from chart-interrogator-s1-006, SWEEP-1-RULINGS step 1.)'
   evidence: "'Estimate the proportion of '+s.contextPlural+' in the range '+propInterval.interval (SWEEP-1, batch 8)"
   status: open
 - id: chart-interrogator-s1-007

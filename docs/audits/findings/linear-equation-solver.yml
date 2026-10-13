@@ -93,9 +93,32 @@ findings:
   level: gcse
   where: games/linear-equation-solver/index.html:583 (ask), :154-156 (menu)
   summary: 'On 227 of 295 lines the four options share one move label and differ in the line it gives, but the ask is
-    "What is the optimal move here?"; the menu says a slower move "scores half", where it costs half a wrong move
-    (12.5 of 100) and a "slower" option takes as many moves, bringing in fractions. Wording, for Jon. (Canon SR-13''s
-    text still says such a move "scores full marks and is followed by a nudge": a docs point for the home lane)'
+    "What is the optimal move here?". A redesign of the ask, not wording (Part 3, deferred; Jon reviews a
+    drafted ask) (Split: the parent entry held 3 defects; the others are linear-equation-solver-s1-003,
+    linear-equation-solver-s1-004.)'
+  evidence: 'A1 x + 7 = 12: options "-7 → x = 12 - 7", "-7 → x = 12", "-7 → x + 7 = 12 - 7", "-7 → x = 12 + 7" (SWEEP-1,
+    batch 9)'
+  status: open
+- id: linear-equation-solver-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: gcse
+  where: games/linear-equation-solver/index.html:583 (ask), :154-156 (menu)
+  summary: 'The menu says a slower move "scores half", where it costs half a wrong move (12.5 of 100), and a "slower"
+    option takes as many moves, bringing in fractions. Wording, for Jon (Split from
+    linear-equation-solver-s1-001, SWEEP-1-RULINGS step 1.)'
+  evidence: 'A1 x + 7 = 12: options "-7 → x = 12 - 7", "-7 → x = 12", "-7 → x + 7 = 12 - 7", "-7 → x = 12 + 7" (SWEEP-1,
+    batch 9)'
+  status: open
+- id: linear-equation-solver-s1-004
+  severity: LOW
+  jc: false
+  class: NEW:docs
+  level: gcse
+  where: games/linear-equation-solver/index.html:583 (ask), :154-156 (menu)
+  summary: 'Canon SR-13''s text still says such a move "scores full marks and is followed by a nudge": a docs point
+    for the home lane (Split from linear-equation-solver-s1-001, SWEEP-1-RULINGS step 1.)'
   evidence: 'A1 x + 7 = 12: options "-7 → x = 12 - 7", "-7 → x = 12", "-7 → x + 7 = 12 - 7", "-7 → x = 12 + 7" (SWEEP-1,
     batch 9)'
   status: open

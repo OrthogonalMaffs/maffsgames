@@ -77,10 +77,29 @@ findings:
   class: NEW:sr14-content
   level: core
   where: games/expected-damage/index.html:539 (ed_core_004), :532 (ed_gcse_019), :522 (ed_gcse_010), the premise
-  summary: 'SR-14, for Jon: core_004''s four people "convinced the trolley is a sign" who "stand and welcome it" reads as
-    choosing to be hit, for laughs (tier a); gcse_019''s man walking into a lamppost and gcse_010''s trip are injury in
-    humour (tier b); and the premise itself (score by the pedestrians a trolley hits, animated knocked away) is outside
-    any ruling or allowlist'
+  summary: 'SR-14, for Jon: core_004''s four people "convinced the trolley is a sign" who "stand and welcome it" reads
+    as choosing to be hit, for laughs (tier a). Ruled under R6: reworded (Split: the parent entry held 3
+    defects; the others are expected-damage-s1-005, expected-damage-s1-006.)'
+  evidence: '"There''s a 65% chance all four stand and welcome it." (SWEEP-1, batch 4)'
+  status: open
+- id: expected-damage-s1-005
+  severity: MEDIUM
+  jc: true
+  class: NEW:sr14-content
+  level: core
+  where: games/expected-damage/index.html:539 (ed_core_004), :532 (ed_gcse_019), :522 (ed_gcse_010), the premise
+  summary: 'SR-14, for Jon: gcse_019''s man walking into a lamppost and gcse_010''s trip are injury in humour (tier b)
+    (Split from expected-damage-s1-003, SWEEP-1-RULINGS step 1.)'
+  evidence: '"There''s a 65% chance all four stand and welcome it." (SWEEP-1, batch 4)'
+  status: open
+- id: expected-damage-s1-006
+  severity: MEDIUM
+  jc: true
+  class: NEW:sr14-content
+  level: core
+  where: games/expected-damage/index.html:539 (ed_core_004), :532 (ed_gcse_019), :522 (ed_gcse_010), the premise
+  summary: 'SR-14, for Jon: the premise itself (score by the pedestrians a trolley hits, animated knocked away) is
+    outside any ruling or allowlist (Split from expected-damage-s1-003, SWEEP-1-RULINGS step 1.)'
   evidence: '"There''s a 65% chance all four stand and welcome it." (SWEEP-1, batch 4)'
   status: open
 - id: expected-damage-s1-004
@@ -90,7 +109,17 @@ findings:
   level: ks3, gcse
   where: games/expected-damage/index.html ed_gcse_007, ed_gcse_013, :333, :337
   summary: 'Wording, open: gcse_007 and gcse_013 leave the central man out of the count (8 and 4 are defensible; keys
-    unchanged); the Foundation preview says "Certain vs single gamble" (ks3_010 has no certain track) and GCSE''s
-    "Two-outcome gambles" (gcse_003 has three). The resit audit''s F3-F7 never reached this file'
+    unchanged) (Split: the parent entry held 2 defects; the others are expected-damage-s1-007.)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: expected-damage-s1-007
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: ks3, gcse
+  where: games/expected-damage/index.html ed_gcse_007, ed_gcse_013, :333, :337
+  summary: 'Wording, open: the Foundation preview says "Certain vs single gamble" (ks3_010 has no certain track) and
+    GCSE''s "Two-outcome gambles" (gcse_003 has three). The resit audit''s F3-F7 never reached this file (Split
+    from expected-damage-s1-004, SWEEP-1-RULINGS step 1.)'
   evidence: 'SWEEP-1, batch 4'
   status: open

@@ -77,9 +77,29 @@ findings:
   class: NEW:text-contradicts-content
   level: alevel
   where: games/normal-navigator/index.html:276, :272-273, :228
-  summary: 'Open: the B(100, 0.3) parameters item shades 25 to 35, a region the question never mentions; the two
-    empirical-rule items about a general N(μ, σ²) label the curve μ = 0, σ = 1; :228 says "X ~ N(0, 1)" and asks
-    P(Z < 0). Drawing and context changes, not decided by a standing ruling'
+  summary: 'Open: the B(100, 0.3) parameters item shades 25 to 35, a region the question never mentions. Drawing
+    change, not decided by a standing ruling (Split: the parent entry held 3 defects; the others are
+    normal-navigator-s1-009, normal-navigator-s1-010.)'
+  evidence: 'shade:[25,35] on "What are μ and σ for the approximation?" (SWEEP-1, batch 10)'
+  status: open
+- id: normal-navigator-s1-009
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: alevel
+  where: games/normal-navigator/index.html:276, :272-273, :228
+  summary: 'Open: the two empirical-rule items about a general N(μ, σ²) label the curve μ = 0, σ = 1. Drawing change,
+    not decided by a standing ruling (Split from normal-navigator-s1-006, SWEEP-1-RULINGS step 1.)'
+  evidence: 'shade:[25,35] on "What are μ and σ for the approximation?" (SWEEP-1, batch 10)'
+  status: open
+- id: normal-navigator-s1-010
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: alevel
+  where: games/normal-navigator/index.html:276, :272-273, :228
+  summary: 'Open: :228 says "X ~ N(0, 1)" and asks P(Z < 0). Context change, not decided by a standing ruling (Split
+    from normal-navigator-s1-006, SWEEP-1-RULINGS step 1.)'
   evidence: 'shade:[25,35] on "What are μ and σ for the approximation?" (SWEEP-1, batch 10)'
   status: open
 - id: normal-navigator-s1-007
@@ -89,8 +109,18 @@ findings:
   level: alevel
   where: games/normal-navigator/index.html:325-374
   summary: 'The game serves one bank to A-Level, Level 4 and Core Maths but logs level "alevel" for all three, the
-    shape of the factor-theorem ruling (a level serving another level''s items). The page also says to use a
-    calculator while its roster tag is untagged. For Jon'
+    shape of the factor-theorem ruling (a level serving another level''s items). R10, the home lane''s
+    (contract LEVEL-LOGGED) (Split: the parent entry held 2 defects; the others are normal-navigator-s1-011.)'
+  evidence: 'mfg(..., level: ''alevel'') at every event (SWEEP-1, batch 10)'
+  status: open
+- id: normal-navigator-s1-011
+  severity: LOW
+  jc: true
+  class: NEW:calculator-tag
+  level: alevel
+  where: games/normal-navigator/index.html:325-374
+  summary: 'The page says to use a calculator while its roster tag is untagged. A calculator tag (canon §4.4): its own
+    decision for Jon (Part 3) (Split from normal-navigator-s1-007, SWEEP-1-RULINGS step 1.)'
   evidence: 'mfg(..., level: ''alevel'') at every event (SWEEP-1, batch 10)'
   status: open
 - id: normal-navigator-s1-008

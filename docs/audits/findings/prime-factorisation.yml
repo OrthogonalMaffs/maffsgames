@@ -56,7 +56,7 @@ findings:
   evidence: 'Chromium: 1 wrong tap + 8 solved = 1600 + 2x50 = 1700; zero-life run submitted [''prime-factorisation'',''all'',0,0]'
   status: open
 - id: prime-factorisation-s1-001
-  severity: LOW
+  severity: MEDIUM
   jc: false
   class: NEW:text-contradicts-content
   level: all
