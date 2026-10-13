@@ -25,7 +25,8 @@ findings:
     precision, one unit off and the long form, and plants the old band'
   evidence: 'const tol=Math.abs(expected)<=10?Math.max(0.15,Math.abs(expected)*0.02):Math.max(0.5,Math.abs(expected)*0.01);
     the new checks fail the old page 228 times (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 354
 - id: graph-sketcher-s1-002
   severity: HIGH
   jc: false
@@ -38,7 +39,8 @@ findings:
     its axes (canon §7.1.2); the verifier plays an extra root and a y off by 5%, and plants both old rules'
   evidence: 'const ok=allFound&&vals.length<=iq.answers.length+1; Math.max(tol,Math.abs(iq.answer.y)*0.05) (SWEEP-1,
     batch 10)'
-  status: open
+  status: fixed
+  pr: 354
 - id: graph-sketcher-s1-003
   severity: MEDIUM
   jc: false
@@ -48,7 +50,8 @@ findings:
   summary: '"The quadratic is always larger" is true: CM1''s quadratic minus CM10''s cubic is 0.00002s³ > 0 for s > 0
     (SR-16). Fixed: "The cubic gives larger heights at high speeds", the named error'
   evidence: "wrong:['There is no difference','The quadratic is always larger','The cubic grows faster'] (SWEEP-1, batch 10)"
-  status: open
+  status: fixed
+  pr: 354
 - id: graph-sketcher-s1-004
   severity: MEDIUM
   jc: false
@@ -60,7 +63,8 @@ findings:
     after a question on positive roots. Fixed: "Of the x-values in the table, …", "the angle 50t is in radians", "…, for
     x ≥ 0"'
   evidence: 'Prompts and context as quoted (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 354
 - id: graph-sketcher-s1-005
   severity: LOW
   jc: false
@@ -71,7 +75,8 @@ findings:
     to estimate"); CM2''s "local minimum" where P(0) equals P(3); L4_3''s "AC mains" at a 240 V peak (UK mains peaks near
     325 V). Fixed: "Use the model to estimate …", "turning point (local minimum)", "An AC supply"'
   evidence: 'Prompts as quoted (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 354
 - id: graph-sketcher-s1-006
   severity: HIGH
   jc: true
