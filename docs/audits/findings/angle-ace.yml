@@ -213,3 +213,25 @@ findings:
   pr:
   - 79
   - 80
+- id: angle-ace-s1-001
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: gcse
+  where: games/angle-ace/index.html:107-116 (start-screen reason grid), :307 (REASONS.ISOSC)
+  summary: 'The start screen lists eight geometric reasons; the game offers and marks nine. "Base angles of an
+    isosceles triangle are equal" (the key reason of the isosceles item, :578) is missing from the reference'
+  evidence: 'Grid: Z, F, C, straight line, point, vertically opposite, triangle, exterior; REASONS adds ISOSC
+    (SWEEP-1, batch 2)'
+  status: open
+- id: angle-ace-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: gcse
+  where: games/angle-ace/index.html:577-579
+  summary: 'The isosceles worked solution adds the apex line and a "But" that compute nothing, steering a struggling
+    student towards the apex (110, an offered option) before the answer. Wording, open'
+  evidence: 'Prompt "The triangle is isosceles (marked sides equal). Find x.", options 35, 110, 70, 145, key 35;
+    steps "35° + 35° + apex = 180°", "But x IS one of the base angles", "x = 35°" (SWEEP-1, batch 2)'
+  status: open

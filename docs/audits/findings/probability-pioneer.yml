@@ -66,3 +66,28 @@ findings:
   evidence: 'docs/audit-resit-correctness-2026-10-04.md F4. '
   status: fixed
   pr: 45
+- id: probability-pioneer-s1-001
+  severity: MEDIUM
+  jc: true
+  class: NEW:convention-unstated
+  level: year6
+  where: games/probability-pioneer/index.html:333, :340-347 (Stage 2), :356, :364 (Stage 3)
+  summary: 'The game never states its assumptions: dice are taken as fair and six-sided, coins as fair, picks as at
+    random, though "fair" appears only in Stage 1 and Stage 2 Q1 (SR-17). Sharpest in Stage 3 Q11, a true/false
+    statement that is true only for a six-sided die (SR-18: statements worded so the key holds as written). Keys
+    right under the intended reading. Open for Jon: one assumptions line, or item-by-item wording'
+  evidence: 'Stage 3 Q11 "A fair die gives each number probability exactly 1/6" keyed True; Stage 2 "P(rolling 1 or 2)"
+    (no object named) key 1/3; "P(flipping tails)" (fairness unstated) key 1/2; "P(heads twice in a row)" key 1/4
+    (SWEEP-1, batch 2)'
+  status: open
+- id: probability-pioneer-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: year6
+  where: games/probability-pioneer/index.html:340, :345, :347, :356
+  summary: 'Abbreviations and terms never explained: R, G and Y for colours; "face card" (US; UK "picture card"), keyed
+    as J, Q and K without saying so; "Rolling heads" for a coin. Wording, open for Jon'
+  evidence: '"P(green from 5R, 3G, 2Y)" key 3/10; "P(face card from 52)" key 3/13; "Rolling heads 5 times makes tails
+    more likely next" (SWEEP-1, batch 2)'
+  status: open

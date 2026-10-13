@@ -16,7 +16,9 @@ the few whose answer is a formula or a sentence are a reviewed verdict, pinned t
   the key equals the answer; no wrong option equals it in value (SR-16); the four options are distinct strings
   and distinct in value (SR-4); and in Chromium (390x844) every option is clicked through handle(): the key
   marked right, the others wrong.
-A self-test plants r-001 back (0.999... beside 1) and the B11 pair; each must FAIL naming its item.
+A fill-the-gaps ask must name the sequence type its key assumes (SR-17, sequence-solver-s1-001).
+A self-test plants r-001 back (0.999... beside 1), the B11 pair and gcse[48]'s old untyped ask ('Fill in the
+gaps'); each must FAIL naming its item.
 
     python scripts/verify-sequence-solver.py [--no-selftest] [--against FILE]
 """
@@ -296,9 +298,13 @@ def FILL(q):
     if 'geometric' in q['ask']:
         r = sp.Rational(last / first) ** sp.Rational(1, k)
         vals = [F(str(first * r ** i)) for i in range(k + 1)]
-    else:
+    elif 'arithmetic' in q['ask']:
         d = (last - first) / k
         vals = [first + d * i for i in range(k + 1)]
+    else:
+        # SR-17 (SWEEP-1, sequence-solver-s1-001): a fill-the-gaps key holds only for the sequence type it assumes,
+        # so the ask must name it.
+        raise ValueError('the ask %r does not say whether the sequence is arithmetic or geometric (SR-17)' % q['ask'])
     for i, t in enumerate(ts):
         if t is not None and vals[i] != t:
             raise ValueError('the filled sequence misses the shown term %s' % t)
@@ -587,6 +593,7 @@ PLANTS = [
     ('alevel[49]', 'r-001: 0.999... beside the key 1', "correct:'1',d:['10','\\\\dfrac{9}{10}','\\\\infty']",
      "correct:'1',d:['0.999...','\\\\dfrac{9}{10}','\\\\infty']"),
     ('gcse[6]', 'B11: 10 - 3n beside -3n + 10', "d:['-3n + 10','3n + 7','-3n + 7']", "d:['-3n + 10','10 - 3n','-3n + 7']"),
+    ('gcse[48]', 'SR-17: fill the gaps, type unstated', "ask:'If arithmetic, fill the gaps'", "ask:'Fill in the gaps'"),
 ]
 
 
