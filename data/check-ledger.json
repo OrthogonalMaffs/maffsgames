@@ -1991,8 +1991,8 @@
     "entries": [
      {
       "detail": "QUESTIONS.core[3]: 'wait' in \"Track A leads to a group of people who have just discovered their horoscope says today is 'a day of transformation'. Fou\"",
-      "id": "expected-damage::a970e013e838#1::B6",
-      "line": 529
+      "id": "expected-damage::65373feb50d7#1::B6",
+      "line": 540
      },
      {
       "detail": "QUESTIONS.core[13]: 'wait' in \"Track B leads to a queue of people outside a bakery that only sells one thing and there is an 80-minute wait. There's a \"",
@@ -6547,8 +6547,8 @@
      },
      {
       "detail": "QUESTIONS.gcse[19]: 'hmm' in \"Hmm, that's actually right this time.\"",
-      "id": "wrong-on-the-internet::3923e7d6d911#1::B6",
-      "line": 636
+      "id": "wrong-on-the-internet::a41cc098bbb4#1::B6",
+      "line": 652
      }
     ],
     "status": "fail"

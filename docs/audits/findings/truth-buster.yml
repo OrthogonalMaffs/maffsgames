@@ -206,10 +206,13 @@ findings:
   level: all
   where: games/truth-buster/index.html:279 (tb_t2_020)
   summary: 'With "Always True" and "Not Always True" as the buttons, "A set can have more elements than the set of all
-    natural numbers." also reads as a claim about any set, and then it is not always true; keyed Always True (SR-18: worded
-    so the key holds as written). Rewording ("There is a set with …", as tb_t3_011) is a stem change, open for Jon'
+    natural numbers." also reads as a claim about any set, and then it is not always true; keyed Always True
+    (SR-18: worded so the key holds as written). Rewording ("There is a set with …", as tb_t3_011) is a stem
+    change, open for Jon Fixed under R1: "There is a set with more elements than the set of all natural
+    numbers", like tb_t3_011; the key is unchanged.'
   evidence: 'answer:true (SWEEP-1, batch 4)'
-  status: open
+  status: fixed
+  pr: 370
 - id: truth-buster-s1-002
   severity: LOW
   jc: true
@@ -218,9 +221,11 @@ findings:
   where: games/truth-buster/index.html:300 (tb_t3_018), :284 (tb_t3_002), :290 (tb_t3_008)
   summary: 'Open: tb_t3_018 "If a mathematical statement is true, it can be proved." names no system (as t3-015 added
     ZFC to t3_017) (Split: the parent entry held 3 defects; the others are truth-buster-s1-003,
-    truth-buster-s1-004.)'
+    truth-buster-s1-004.) Fixed under R2: the statement names its system ("a consistent system of axioms strong
+    enough for arithmetic (such as ZFC)").'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 370
 - id: truth-buster-s1-003
   severity: MEDIUM
   jc: true
@@ -238,6 +243,9 @@ findings:
   level: all
   where: games/truth-buster/index.html:300 (tb_t3_018), :284 (tb_t3_002), :290 (tb_t3_008)
   summary: 'Open: tb_t3_008''s title "Only for shapes without holes" overstates (a hollow cube gives 4) (Split from
-    truth-buster-s1-002, SWEEP-1-RULINGS step 1.)'
+    truth-buster-s1-002, SWEEP-1-RULINGS step 1.) Fixed under R3: the title reads "Only for simple shapes: one
+    surface, no holes through it". truth-buster-s1-003 (a counterexample that refutes nothing) needs a new one
+    and stays with Jon.'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 370

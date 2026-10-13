@@ -211,7 +211,7 @@ body.accessible{background-color:#12141f!important}
       <button class="level-btn" data-level="core">Core Maths</button>
     </div>
     <div id="menuOpponents"></div>
-    <div style="text-align:center;font-size:.72rem;color:var(--muted);margin:.6rem 0">The leaderboard ranks Tournament Mode totals only; single matches are not ranked.</div>
+    <div style="text-align:center;font-size:.72rem;color:var(--muted);margin:.6rem 0">The leaderboard ranks Tournament Mode totals only; single matches are not ranked. Tournament Mode unlocks once you have beaten 3 different opponents at this level (more points than them in a match).</div>
     <div id="tournamentBtn" style="text-align:center;margin:.8rem 0;display:none">
       <button class="btn-secondary" onclick="startTournament()">Tournament Mode</button>
       <div style="font-size:.72rem;color:var(--muted);margin-top:.3rem">Round-robin: play all opponents at this level</div>
@@ -240,7 +240,7 @@ body.accessible{background-color:#12141f!important}
     </div>
 
     <div class="matrix-wrap" id="matrixWrap">
-      <h3 id="matrixTitle">Payoff Matrix</h3>
+      <h3 id="matrixTitle">Payoff Matrix (you, them)</h3>
       <table class="matrix" id="matrixTable">
         <tr><th></th><th>Opponent Cooperates</th><th>Opponent Defects</th></tr>
         <tr><td class="you-label">You Cooperate</td><td id="mc_cc">3, 3</td><td id="mc_cd">0, 5</td></tr>
@@ -457,7 +457,7 @@ const OPPONENTS = {
       }
     },
     { id: 'pat', name: 'Prober Pat', hint: 'Tests you early — your response determines everything', color: '#eab308', letter: 'P',
-      stratName: 'Prober', desc: 'Cooperates rounds 1-3, defects round 4 as a probe. If the opponent cooperates on round 5 (doesn\'t retaliate), Pat concludes they\'re exploitable and always defects. If the opponent defects on round 5 (retaliates), Pat switches to Tit-for-Tat.',
+      stratName: 'Prober (a simplified version of Axelrod\'s)', desc: 'Cooperates rounds 1-3, defects round 4 as a probe. If the opponent cooperates on round 5 (doesn\'t retaliate), Pat concludes they\'re exploitable and always defects. If the opponent defects on round 5 (retaliates), Pat switches to Tit-for-Tat.',
       play: function(h) {
         const r = h.length; // 0-indexed current round
         if (r < 3) return 'cooperate';
@@ -504,7 +504,7 @@ const OPPONENTS = {
       play: function(h) { if (h.length === 0) return 'defect'; return h[h.length - 1].player; }
     },
     { id: 'adaptive', name: 'The Adaptive Firm', hint: 'Changes strategy based on profit outcomes', color: '#06b6d4', letter: 'A',
-      stratName: 'Pavlov (Win-Stay, Lose-Shift)', desc: 'The Adaptive Firm sticks with a pricing strategy while it\'s profitable and changes when it\'s not. They respond to the bottom line, not emotions.',
+      stratName: 'Pavlov (Win-Stay, Lose-Shift)', desc: 'The Adaptive Firm repeats its pricing strategy after a good result (£3k or £5k) and changes it after a poor one (£0k or £1k). They respond to the bottom line, not emotions.',
       play: function(h) {
         if (h.length === 0) return 'cooperate';
         const last = h[h.length - 1];
@@ -586,13 +586,13 @@ function startGame() {
 
   // Matrix labels for Core Maths
   if (isCoreMaths()) {
-    document.getElementById('matrixTitle').textContent = 'Profit Matrix';
+    document.getElementById('matrixTitle').textContent = 'Profit Matrix (you, them)';
     document.getElementById('mc_cc').textContent = '\u00A33k, \u00A33k';
     document.getElementById('mc_cd').textContent = '\u00A30k, \u00A35k';
     document.getElementById('mc_dc').textContent = '\u00A35k, \u00A30k';
     document.getElementById('mc_dd').textContent = '\u00A31k, \u00A31k';
   } else {
-    document.getElementById('matrixTitle').textContent = 'Payoff Matrix';
+    document.getElementById('matrixTitle').textContent = 'Payoff Matrix (you, them)';
     document.getElementById('mc_cc').textContent = '3, 3';
     document.getElementById('mc_cd').textContent = '0, 5';
     document.getElementById('mc_dc').textContent = '5, 0';
@@ -714,7 +714,9 @@ function makeChoice(choice) {
       } else {
         // Halfway message
         if (roundNum === 10) {
-          document.getElementById('halfwayMsg').textContent = 'Halfway through! Can you spot ' + currentOpponent.name.split(' ')[0] + '\'s pattern?';
+          document.getElementById('halfwayMsg').textContent = /^Random/.test(currentOpponent.stratName)
+            ? 'Halfway through! ' + currentOpponent.name.split(' ')[0] + ' is random, so there is no pattern to find.'
+            : 'Halfway through! Can you spot ' + currentOpponent.name.split(' ')[0] + '\'s pattern?';
           document.getElementById('halfwayMsg').style.display = 'block';
         } else {
           document.getElementById('halfwayMsg').style.display = 'none';
@@ -895,7 +897,7 @@ function getEVSection() {
     '<div class="ev-calc">If you cooperate: E(X) = 0.5 x 3 + 0.5 x 0 = 1.5</div>' +
     '<div class="ev-calc">If you defect: E(X) = 0.5 x 5 + 0.5 x 1 = 3.0</div>' +
     '<p>In a <strong>single round</strong>, defecting has higher expected value (3.0 vs 1.5).</p>' +
-    '<p>But over 20 rounds, your opponent adapts. Strategies like <strong>Tit-for-Tat</strong> punish defection and reward cooperation, changing the expected outcome.</p>' +
+    '<p>But over 20 rounds, an opponent may adapt. Strategies like <strong>Tit-for-Tat</strong> punish defection and reward cooperation, changing the expected outcome.</p>' +
     '<p><strong>This is why cooperation can emerge</strong> — in repeated games, the expected value calculation depends on how the other player responds to your choices.</p>' +
     '</div>';
 }

@@ -140,7 +140,40 @@ JS_SHOW = '''(q) => {
 }'''
 
 
-def run_page(rep, chromium=None, verbose=False):
+JS_PLAY = r"""([lv, mode, seed]) => {
+  let a = seed >>> 0;
+  Math.random = function () {                       // mulberry32: the dice differ with the seed
+    a = (a + 0x6D2B79F5) >>> 0; let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  window.setTimeout = function () { return 0; };
+  MaffsLock.timer = function (fn) { fn(); return 0; };   // the trolley and the outcome run at once
+  window.mfg = function () {};
+  currentLevel = lv; startGame();
+  let best = 0, chosen = 0;
+  for (let i = 0; i < sessionQuestions.length; i++) {
+    const q = sessionQuestions[i];
+    const pick = mode === 'best' ? q.higherEVOption : (q.higherEVOption === 'A' ? 'B' : 'A');
+    best += (q.higherEVOption === 'A' ? q.optionA : q.optionB).ev;
+    chosen += (pick === 'A' ? q.optionA : q.optionB).ev;
+    selectOption(pick);
+    MaffsLock.clearTimers();
+    nextQuestion();
+  }
+  return {opt: document.getElementById('revealOptScore').textContent, you: document.getElementById('revealYourEv').textContent,
+          best, chosen, fmt: String(Math.round(best * 100) / 100), fmtChosen: String(Math.round(chosen * 100) / 100),
+          text: document.querySelector('.reveal-scores').textContent.replace(/\s+/g, ' ').trim()};
+}"""
+
+S1_HTML = (("the rest is an escape: nobody is hit", 'the start screen must say a track whose chances total under 100% leaves the rest as an escape (R2, expected-damage-s1-001)'),
+           ('A certain track against a gamble, or two gambles.', 'the Foundation preview must describe its tracks truthfully (R3, expected-damage-s1-007)'),
+           ('Gambles with two or three outcomes', "the GCSE preview must say gambles can have three outcomes (R3, expected-damage-s1-007)"),
+           ('(he is not one of them)', 'gcse_007 must say whether the man is one of the 7 (R2, expected-damage-s1-004)'),
+           ('(he is not counted)', 'gcse_013 must say the man is not counted (R2, expected-damage-s1-004)'))
+
+
+def run_page(rep, chromium=None, verbose=False, html=None):
     """Read the bank, then read back every outcome line the page shows. Returns (bank, lines)."""
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
@@ -150,7 +183,11 @@ def run_page(rep, chromium=None, verbose=False):
             page = browser.new_page()
             errors = []
             page.on('pageerror', lambda e: errors.append(str(e)))
+            page.add_init_script(bc.NO_LOCK_FRESH_INIT)   # MaffsLock's 300 ms window: the playthrough answers at once
             page.route('**/*', lambda r: r.continue_() if r.request.url.startswith(base) else r.abort())
+            if html is not None:
+                page.route(re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG), lambda r: r.fulfill(
+                    status=200, content_type='text/html; charset=utf-8', body=html))
             page.goto(base + '/games/' + SLUG + '/?cb=verify', wait_until='load', timeout=20000)
             page.wait_for_function('typeof QUESTIONS !== "undefined"', timeout=8000)
             bank = page.evaluate('JSON.parse(JSON.stringify(QUESTIONS))')
@@ -176,6 +213,25 @@ def run_page(rep, chromium=None, verbose=False):
                             if got is None or got != exact(o['probability']) or count != o['muppets']:
                                 rep.fail(where, 'shown', 'the page shows %r; stored %s chance of %s'
                                          % (r['text'], exact(o['probability']), o['muppets']))
+            # R3, Part 2 #10 (SWEEP-1 expected-damage-s1-002): optimal play is the sum of the better tracks' E(X), never a roll
+            seen = {}
+            for mode in ('best', 'worst'):
+                for seed in (1, 2, 3):
+                    for level in bank:
+                        page.goto(base + '/games/' + SLUG + '/?cb=verify', wait_until='load', timeout=20000)
+                        page.wait_for_function('typeof QUESTIONS !== "undefined"', timeout=8000)
+                        got = page.evaluate(JS_PLAY, [level, mode, seed])
+                        key = (level, mode)
+                        seen.setdefault(key, set()).add(got['opt'])
+                        where = '%s %s seed %d' % (level, mode, seed)
+                        if got['opt'] != got['fmt']:
+                            rep.fail(where, 'reveal', 'optimal play shows %r, the better tracks\' E(X) sum to %s' % (got['opt'], got['fmt']))
+                        if got['you'] != got['fmtChosen']:
+                            rep.fail(where, 'reveal', 'your choices show %r, the tracks chosen sum to %s' % (got['you'], got['fmtChosen']))
+                        if mode == 'best' and got['you'] != got['opt']:
+                            rep.fail(where, 'reveal', 'always choosing the higher E(X) shows %r against optimal %r' % (got['you'], got['opt']))
+                        if mode == 'worst' and not got['chosen'] < got['best']:
+                            rep.fail(where, 'reveal', 'always choosing the lower E(X) is not below optimal (%s v %s)' % (got['chosen'], got['best']))
             browser.close()
             for e in errors:
                 rep.fail('page', 'error', e)
@@ -232,11 +288,36 @@ def main():
     rep = Report()
     bank, shown = run_page(rep, args.chromium, args.verbose)
     check_bank(rep, bank, args.verbose)
+    html = open(os.path.join(os.path.dirname(HERE), 'games', SLUG, 'index.html'), encoding='utf-8').read()
+    for need, why in S1_HTML:
+        if need not in html:
+            rep.fail('start screen', 'wording', why)
+    if 'stand and welcome it' in html:
+        rep.fail('ed_core_004', 'wording', 'four people "stand and welcome" the trolley: reads as choosing to be hit, for laughs (SR-14, R6, expected-damage-s1-003)')
     for f in rep.fails:
         print('FAIL ' + f)
     ok = not rep.fails
     if not args.no_selftest:
         s_ok, lines = selftest(bank)
+        for what, today, old, tag in (
+                ('optimal play rolled again (s1-002)', 'optimalScore += optOpt.ev;', 'optimalScore += (Math.random() < 0.5 ? 0 : 10);', 'reveal'),
+                ('the escape line removed (s1-001)', "<br>If a track's chances add up to less than 100%, the rest is an escape: nobody is hit.", '', 'wording'),
+                ('gcse_013 with the man uncounted again (s1-004)', ' (he is not counted)', '', 'wording')):
+            if html.count(today) != 1:
+                lines.append('  self-test %-40s *** CANNOT PLANT ***' % what)
+                s_ok = False
+                continue
+            planted = html.replace(today, old)
+            r2 = Report()
+            if tag == 'reveal':
+                run_page(r2, args.chromium, False, html=planted)
+            else:
+                for need, why in S1_HTML:
+                    if need not in planted:
+                        r2.fail('start screen', 'wording', why)
+            hit = [f for f in r2.fails if tag in f]
+            s_ok = s_ok and bool(hit)
+            lines.append('  self-test %-40s %s' % (what, ('caught: ' + hit[0][:100]) if hit else '*** MISSED ***'))
         print('\nFault-injection self-test (patched copies; the file is never touched):')
         for ln in lines:
             print(ln)

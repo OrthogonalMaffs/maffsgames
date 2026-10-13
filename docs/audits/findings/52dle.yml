@@ -59,12 +59,13 @@ findings:
   class: NEW:text-contradicts-content
   level: all
   where: games/52dle/index.html:698 (puzzle 15, a = 28)
-  summary: 'The clue says "My divisors (1,2,4,7,14) sum to me", which is false: the divisors of 28 include 28 and sum to
-    56. It means the proper divisors, as hint 2 says. A one-word fix, open for Jon (the verifier pins the phrase
-    "(1,2,4,7,14)", unaffected)'
+  summary: 'The clue says "My divisors (1,2,4,7,14) sum to me", which is false: the divisors of 28 include 28 and sum
+    to 56. It means the proper divisors, as hint 2 says. A one-word fix, open for Jon (the verifier pins the
+    phrase "(1,2,4,7,14)", unaffected) Fixed under Part 2 #7: "My proper divisors (1,2,4,7,14) sum to me".'
   evidence: 'clue "I am the second perfect number. My divisors (1,2,4,7,14) sum to me."; hint "My proper divisors sum to
     me" (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 370
 - id: 52dle-s1-002
   severity: MEDIUM
   jc: true
@@ -72,10 +73,13 @@ findings:
   level: all
   where: games/52dle/index.html:701 (puzzle 18, a = 23)
   summary: 'The clue states a curiosity that does not exist ("1² + 2² + 3² + ... has properties modulo me"; every
-    modulus has properties). Same rule as t2-002/t2-003. A replacement fact is content, open for Jon'
+    modulus has properties). Same rule as t2-002/t2-003. A replacement fact is content, open for Jon Fixed
+    under Part 2 #8 with Jon''s drafted clue: the 9th prime and the smallest group with a better than even
+    chance of a shared birthday (23 people: 0.507; 22: 0.476), pinned in the verifier.'
   evidence: 'clue "I am the 9th prime. I appear in the mathematical curiosity: 1² + 2² + 3² + ... has properties modulo
     me." (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 370
 - id: 52dle-s1-003
   severity: LOW
   jc: false
@@ -84,9 +88,11 @@ findings:
   where: games/52dle/index.html:692, :697, :702, :965 (puzzles 9, 14, 19; result modal); :601, :748-760 (rules, feedback)
   summary: 'Wording: puzzle 19''s badge "Mersenne Prime" reads, on the result modal, as "521 is a Mersenne prime" (521
     is the exponent). Open (Split: the parent entry held 6 defects; the others are 52dle-s1-004, 52dle-s1-005,
-    52dle-s1-006, 52dle-s1-007, 52dle-s1-008.)'
+    52dle-s1-006, 52dle-s1-007, 52dle-s1-008.) Fixed under R1: puzzle 19''s badge reads "Mersenne Prime
+    exponent".'
   evidence: 'result modal "The answer was 521 — Mersenne Prime" (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 370
 - id: 52dle-s1-004
   severity: LOW
   jc: false
@@ -94,9 +100,10 @@ findings:
   level: all
   where: games/52dle/index.html:692, :697, :702, :965 (puzzles 9, 14, 19; result modal); :601, :748-760 (rules, feedback)
   summary: 'Wording: puzzle 19''s clue writes 2^521 with a caret where the other clues use superscripts. Open (Split
-    from 52dle-s1-003, SWEEP-1-RULINGS step 1.)'
+    from 52dle-s1-003, SWEEP-1-RULINGS step 1.) Fixed under R1: 2⁵²¹ is written with superscripts.'
   evidence: 'result modal "The answer was 521 — Mersenne Prime" (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 370
 - id: 52dle-s1-005
   severity: LOW
   jc: false
@@ -104,9 +111,10 @@ findings:
   level: all
   where: games/52dle/index.html:692, :697, :702, :965 (puzzles 9, 14, 19; result modal); :601, :748-760 (rules, feedback)
   summary: 'Wording: puzzle 9''s "Nature''s favourite proportion" is a claim stated as fact. Open (Split from
-    52dle-s1-003, SWEEP-1-RULINGS step 1.)'
+    52dle-s1-003, SWEEP-1-RULINGS step 1.) Fixed under R1: "Often said to appear throughout nature".'
   evidence: 'result modal "The answer was 521 — Mersenne Prime" (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 370
 - id: 52dle-s1-006
   severity: LOW
   jc: false
@@ -114,9 +122,11 @@ findings:
   level: all
   where: games/52dle/index.html:692, :697, :702, :965 (puzzles 9, 14, 19; result modal); :601, :748-760 (rules, feedback)
   summary: 'Wording: puzzle 14''s "the most favourite number of humans globally" (an online poll) is a claim stated as
-    fact. Open (Split from 52dle-s1-003, SWEEP-1-RULINGS step 1.)'
+    fact. Open (Split from 52dle-s1-003, SWEEP-1-RULINGS step 1.) Fixed under R1: "Often named as people''s
+    favourite number in online polls".'
   evidence: 'result modal "The answer was 521 — Mersenne Prime" (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 370
 - id: 52dle-s1-007
   severity: LOW
   jc: false
@@ -124,9 +134,12 @@ findings:
   level: all
   where: games/52dle/index.html:692, :697, :702, :965 (puzzles 9, 14, 19; result modal); :601, :748-760 (rules, feedback)
   summary: 'The rules never explain the feedback bands or colours (blue and red mark distance, not direction). Open
-    (Split from 52dle-s1-003, SWEEP-1-RULINGS step 1.)'
+    (Split from 52dle-s1-003, SWEEP-1-RULINGS step 1.) Fixed under R2: the page explains the closeness words
+    and that colour shows closeness, not direction. 52dle-s1-008 (help-audit.md, a home-lane docs line) stays
+    open.'
   evidence: 'result modal "The answer was 521 — Mersenne Prime" (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 370
 - id: 52dle-s1-008
   severity: LOW
   jc: false

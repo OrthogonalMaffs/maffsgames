@@ -140,6 +140,20 @@ STALE_JS = """(lv) => { S.level = lv; startGame();
   return [poss.id, S.session[1].id]; }"""
 
 
+S1 = (('hint 1', 'Count the lines at each vertex (two lines to the same vertex count as two)',
+        'Hint 1 must say to count lines, two lines to one vertex counting as two (R3, seven-bridges-s1-001)'),
+      ('rules', 'You may finish at a different vertex from where you started',
+       'the rules must say a route can end away from where it began (R2, seven-bridges-s1-002)'),
+      ('feedback', ', and a path exists when there are 0 or 2.',
+       'the wrong-IMPOSSIBLE feedback must give the rule as well as the count (R3, seven-bridges-s1-004)'))
+
+
+def check_text(fails, html):
+    for tag, need, why in S1:
+        if need not in html:
+            fails.append('%s: %s' % (tag, why))
+
+
 def play(fails, html):
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
@@ -187,6 +201,10 @@ def play(fails, html):
 
 # (the text the failure must start with, what is planted, today's text, main's text before the fix).
 PLANTS = [
+    ('hint 1', 's1-001: Hint 1 says "connections"', 'Count the lines at each vertex (two lines to the same vertex count as two). How many vertices have an odd number?',
+     'Count the connections at each vertex. How many have an odd number?'),
+    ('rules', 's1-002: the rules never say a route can end elsewhere', '. You may finish at a different vertex from where you started', ''),
+    ('feedback', 's1-004: the wrong-IMPOSSIBLE feedback gives no rule', ', and a path exists when there are 0 or 2.', '.'),
     ('alevel al_15', "t4-002: al_15's E at the midpoint of AC and BD",
      '{"id":"E","x":300,"y":150}],"edges":[["A","B"],["B","C"],["C","D"],["D","A"],["A","E"]',
      '{"id":"E","x":300,"y":200}],"edges":[["A","B"],["B","C"],["C","D"],["D","A"],["A","E"]'),
@@ -215,6 +233,7 @@ def main():
     fails = []
     bk = banks(html)
     check_bank(fails, bk)
+    check_text(fails, html)
     play(fails, html)
     print('%s: %d puzzles, every answer recomputed and every edge measured; Next during a solution, in Chromium'
           % (SLUG, sum(len(v or []) for v in bk.values())))
@@ -228,6 +247,7 @@ def main():
             planted = html.replace(new, old)
             rep = []
             check_bank(rep, banks(planted))
+            check_text(rep, planted)
             if not any(f.startswith(tag) for f in rep):
                 play(rep, planted)
             hit = [f for f in rep if f.startswith(tag)]

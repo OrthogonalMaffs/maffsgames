@@ -163,10 +163,12 @@ findings:
   class: NEW:convention-unstated
   level: ks3
   where: games/terrible-advice/index.html ta_ks3_014 (key)
-  summary: '"P(tails) is always 0.5" needs a fair coin, never stated (the marking holds). As spot-the-muppet ks3_014 and
-    wrong-on-the-internet ks3_007; open for Jon (advice or key text)'
+  summary: '"P(tails) is always 0.5" needs a fair coin, never stated (the marking holds). As spot-the-muppet ks3_014
+    and wrong-on-the-internet ks3_007; open for Jon (advice or key text) Fixed under R2: the advice says a fair
+    coin.'
   evidence: 'advice "You''ve flipped heads 5 times in a row. The next flip is definitely tails…" (SWEEP-1, batch 4)'
-  status: open
+  status: fixed
+  pr: 370
 - id: terrible-advice-s1-005
   severity: MEDIUM
   jc: true
@@ -175,9 +177,11 @@ findings:
   where: games/terrible-advice/index.html ta_ks3_008, ta_gcse_006, ta_gcse_007, ta_core_004, ta_core_009
   summary: 'ks3_008''s "you can only use one voucher at a time" is shop policy, not a maths error (SR-4). Wording,
     open (Split: the parent entry held 6 defects; the others are terrible-advice-s1-006,
-    terrible-advice-s1-007, terrible-advice-s1-008, terrible-advice-s1-009, terrible-advice-s1-010.)'
+    terrible-advice-s1-007, terrible-advice-s1-008, terrible-advice-s1-009, terrible-advice-s1-010.) Fixed
+    under R5: the shop-policy option is replaced by a named error (the vouchers average out at 25%).'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 370
 - id: terrible-advice-s1-006
   severity: MEDIUM
   jc: true
@@ -185,18 +189,22 @@ findings:
   level: ks3, gcse, core
   where: games/terrible-advice/index.html ta_ks3_008, ta_gcse_006, ta_gcse_007, ta_core_004, ta_core_009
   summary: 'gcse_006''s "just add 5 to the last digit" (read literally, 2.9) is praised as "the right method".
-    Wording, open (Split from terrible-advice-s1-005, SWEEP-1-RULINGS step 1.)'
+    Wording, open (Split from terrible-advice-s1-005, SWEEP-1-RULINGS step 1.) Fixed under R3: the advice says
+    "put a 5 after the last digit".'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 370
 - id: terrible-advice-s1-007
   severity: LOW
   jc: true
   class: NEW:wording
   level: ks3, gcse, core
   where: games/terrible-advice/index.html ta_ks3_008, ta_gcse_006, ta_gcse_007, ta_core_004, ta_core_009
-  summary: 'gcse_007 offers 12.5 twice. Wording, open (Split from terrible-advice-s1-005, SWEEP-1-RULINGS step 1.)'
+  summary: 'gcse_007 offers 12.5 twice. Wording, open (Split from terrible-advice-s1-005, SWEEP-1-RULINGS step 1.)
+    Fixed under R1: the second 12.5 is replaced by the named error x = 25² = 625.'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 370
 - id: terrible-advice-s1-008
   severity: LOW
   jc: true
@@ -204,18 +212,22 @@ findings:
   level: ks3, gcse, core
   where: games/terrible-advice/index.html ta_ks3_008, ta_gcse_006, ta_gcse_007, ta_core_004, ta_core_009
   summary: 'core_004 writes £1,000 × 2.653 = £2,653 (£2,653.30). Wording, open (Split from terrible-advice-s1-005,
-    SWEEP-1-RULINGS step 1.)'
+    SWEEP-1-RULINGS step 1.) Fixed under R4: the key gives 1.05²⁰ as £2,653.30 and no longer writes a rounded
+    2.653 as exact.'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 370
 - id: terrible-advice-s1-009
   severity: LOW
   jc: true
   class: NEW:wording
   level: ks3, gcse, core
   where: games/terrible-advice/index.html ta_ks3_008, ta_gcse_006, ta_gcse_007, ta_core_004, ta_core_009
-  summary: 'core_009 "£20,000 units". Wording, open (Split from terrible-advice-s1-005, SWEEP-1-RULINGS step 1.)'
+  summary: 'core_009 "£20,000 units". Wording, open (Split from terrible-advice-s1-005, SWEEP-1-RULINGS step 1.) Fixed
+    under R3: the option reads "= 20,000 units".'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 370
 - id: terrible-advice-s1-010
   severity: MEDIUM
   jc: true
@@ -224,6 +236,7 @@ findings:
   where: games/terrible-advice/index.html ta_ks3_008, ta_gcse_006, ta_gcse_007, ta_core_004, ta_core_009
   summary: 'core_004''s "PennyWise (No Relation to the Clown)" alludes to a horror villain in a humour field (SR-14,
     Jon''s call). Ruled under R6, with spot-the-muppet-s1-002: the parenthetical is deleted (Split from
-    terrible-advice-s1-005, SWEEP-1-RULINGS step 1.)'
+    terrible-advice-s1-005, SWEEP-1-RULINGS step 1.) Fixed under R6 (Jon): the parenthetical is deleted.'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 370

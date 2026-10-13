@@ -318,6 +318,34 @@ def new_page(browser, base, html, fresh_zero):
     return ctx, page, errors
 
 
+
+S1 = {'ks3_008': 'the shop takes the second off the reduced price', 'ks3_014': 'with a fair coin',
+      'gcse_006': 'put a 5 after the last digit'}
+
+
+def check_s1(fails, bank):
+    """R2, R3, R5, R6, R1 (SWEEP-1 terrible-advice-s1): the convention a key rests on is in the advice, no option is shop policy,
+    no two options give the same figure, the SR-14 joke is gone and a rounded figure is not written as exact."""
+    by = {q['id'].split('_', 1)[1]: q for lv in COUNTS for q in bank.get(lv, [])}
+    for k, need in S1.items():
+        if need not in by[k]['advice']:
+            fails.append('%ss1-001 %s: the advice must say %r' % (TAG, by[k]['id'], need))
+    for k, bad in (('ks3_008', 'you can only use one voucher at a time'), ('gcse_007', '\u221a25 = 12.5')):
+        for o in by[k]['options']:
+            if bad in o['text']:
+                fails.append('%ss1-004 %s: the option %r is shop policy or a false equation, not a named error (SR-4)' % (TAG, by[k]['id'], o['text']))
+    if sum('12.5' in o['text'] for o in by['gcse_007']['options']) > 1:
+        fails.append('%ss1-006 %s: two options give 12.5' % (TAG, by['gcse_007']['id']))
+    if 'Clown' in by['core_004']['character']['title']:
+        fails.append('%ss1-002 %s: the title still alludes to the clown (SR-14, R6)' % (TAG, by['core_004']['id']))
+    key = next(o['text'] for o in by['core_004']['options'] if o['correct'])
+    if '\u00a32,653.30' not in key or '2.653 =' in key:
+        fails.append('%ss1-008 %s: the key must give 1.05\u00b2\u2070 as \u00a32,653.30, not write a rounded 2.653 as exact: %r' % (TAG, by['core_004']['id'], key))
+    for o in by['core_009']['options']:
+        if re.search(r'\u00a3[\d,]+ units', o['text']) or (not o['correct'] and 'is wrong' in o['text'] and '= 134 units' in o['text']):
+            fails.append('%ss1-007 %s: the option %r is in pounds as units, or gives the figure it calls wrong' % (TAG, by['core_009']['id'], o['text']))
+
+
 def run(html):
     from playwright.sync_api import sync_playwright
     fails, opens = [], []
@@ -328,6 +356,7 @@ def run(html):
             ctx, page, errors = new_page(browser, base, html, True)
             bank = page.evaluate('() => QUESTIONS')
             check_bank(fails, opens, bank)
+            check_s1(fails, bank)
             sweep(fails, page, bank)
             ctx.close()
             ctx, page, errors2 = new_page(browser, base, html, False)
@@ -345,6 +374,20 @@ def run(html):
 
 D = '\\u2014'
 PLANTS = [
+    (TAG + 's1-001', 's1-001: ks3_014 with no fair coin (R2)',
+     "in a row with a fair coin. The next flip is definitely tails", "in a row. The next flip is definitely tails"),
+    (TAG + 's1-004', 's1-004: ks3_008 back to shop policy (R5)',
+     "the two vouchers average out at 25% off", "you can only use one voucher at a time"),
+    (TAG + 's1-002', 's1-002: core_004 title back to the clown joke (R6)',
+     "Savings Maximisation Guru, PennyWise Financial'", "Savings Maximisation Guru, PennyWise Financial (No Relation to the Clown)'"),
+    (TAG + 's1-006', 's1-006: gcse_007 12.5 twice (R1)',
+     "x = 25\\u00b2 = 625", "x = \\u221a25 = 12.5"),
+    (TAG + 's1-001', 's1-001: gcse_006 add 5 to the last digit (R3)',
+     "just put a 5 after the last digit", "just add 5 to the last digit"),
+    (TAG + 's1-008', 's1-008: core_004 key a rounded 2.653 as exact (R4)',
+     "\\u00a31,000 \\u00d7 1.05\\u00b2\\u2070 = \\u00a32,653.30'", "\\u00a31,000 \\u00d7 1.05\\u00b2\\u2070 = \\u00a31,000 \\u00d7 2.653 = \\u00a32,653'"),
+    (TAG + 's1-007', 's1-007: core_009 pounds as units (R3)',
+     "\\u00d7 \\u00a32,000 = 20,000 units", "\\u00d7 \\u00a32,000 = \\u00a320,000 units"),
     (TAG + 's1-001', "s1-001: gcse_008's 'Sharon is correct — the 650g'",
      "{text:'Sharon is correct in both method and answer',correct:false}",
      "{text:'Sharon is correct " + D + " the 650g is better value',correct:false}"),

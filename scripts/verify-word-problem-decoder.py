@@ -69,6 +69,11 @@ ACCEPT = {
                           'the phrase gives an area (gcse_027 keys "area of 81 cm²" Area & Perimeter)'),
     ('wpd_ks3_030', 0): ({'Algebra — Forming Expressions', 'Geometry — Area & Perimeter'}, 's1-002',
                          'the expression is a rectangle\'s perimeter (the mirror of ks3_046, angles and forming expressions)'),
+    # SWEEP-1 Part 2 #13 (13 Oct 2026): KS3 now offers Probability; the item keeps its old topic as a second right answer
+    ('wpd_ks3_050', 0): ({'Probability', 'Statistics & Averages'}, 's1-004',
+                         'experimental probability from frequencies; it was keyed Statistics & Averages before KS3 offered Probability'),
+    ('wpd_gcse_036', 0): ({'Geometry — Pythagoras & Trigonometry', 'Geometry — Angles'}, 's1-010',
+                          'the largest angle is found by the cosine rule; "largest angle" fits Angles on its words'),
 }
 for _n in range(1, 6):
     ACCEPT[('wpd_gcse_%03d' % _n, 0)] = ({'Reverse Percentage', PCT}, 't1-003', 'a reverse percentage is a percentage problem')
@@ -102,6 +107,22 @@ def check_bank(fails, data):
                 fails.append('%s: keyed %s; the scheme files this shape under %s at KS3' % (q['id'], h['topic'], KS3_PARENT[key]))
     for key in set(ACCEPT) - seen:
         fails.append('ACCEPT %s phrase %d: no such phrase (re-review the table)' % (key[0], key[1] + 1))
+
+
+def check_wording(fails, data):
+    """R1, R3, Part 2 #13 (SWEEP-1 word-problem-decoder-s1-004, -005, -007, -008, -010): KS3 offers Probability and
+    keys the counter-experiment under it; a problem never refers to a figure the game does not show, to a tangent it
+    does not give, or to a want that its question does not ask."""
+    text = {q['id']: q['text'] for q in data['bank']}
+    first = {q['id']: q['highlights'][0]['topic'] for q in data['bank']}
+    if 'Probability' not in data['ks3']:
+        fails.append('%ss1-004 KS3 offers no Probability topic (Part 2 #13)' % TAG)
+    if first.get('wpd_ks3_050') != 'Probability':
+        fails.append('%ss1-004 wpd_ks3_050 is keyed %r, not Probability' % (TAG, first.get('wpd_ks3_050')))
+    for i, banned in (('wpd_gcse_027', 'The square has'), ('wpd_gcse_027', 'The rectangle has'), ('wpd_gcse_047', 'In a diagram'),
+                      ('wpd_gcse_044', 'alternate segment'), ('wpd_ks3_036', 'total seating capacity')):
+        if banned in text.get(i, ''):
+            fails.append('%ss1-005 %s still says %r (a figure, tangent or want the game never gives)' % (TAG, i, banned))
 
 
 def check_numbers(fails, bank):
@@ -258,6 +279,7 @@ def run(html):
             page.wait_for_function("typeof QUESTIONS !== 'undefined' && typeof showPhrase === 'function'", timeout=8000)
             data = page.evaluate(DATA)
             check_bank(fails, data)
+            check_wording(fails, data)
             check_numbers(fails, data['bank'])
             play(fails, page, data)
             errs = [e for e in errors if 'firebase' not in e.lower()]
@@ -282,6 +304,10 @@ PLANTS = [
      'The total cost of the tickets is £136.', 'The total cost of the tickets is £131.'),
     (TAG + 't1-007', "t1-007: gcse_059's old estimate (48)",
      'He estimates he can fit about 61 tins in the box', 'He estimates he can fit about 48 tins in the box'),
+    (TAG + 's1-004', "s1-004: KS3 without Probability (Part 2 #13)",
+     "'Geometry — Angles','Statistics & Averages','Probability'];", "'Geometry — Angles','Statistics & Averages'];"),
+    (TAG + 's1-005', "s1-005: gcse_044's alternate segment is back",
+     " Find angle ADC and explain", " They also want to find the angle in the alternate segment. Find angle ADC and explain"),
     (TAG + 's1-001', "s1-001: gcse_029's second topic off",
      "topic:'Algebra — Functions',also:['Algebra — Quadratics'],", "topic:'Algebra — Functions',"),
 ]

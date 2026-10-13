@@ -609,6 +609,10 @@ def check(page=PAGE, only=None, verbose=False, part=None):
             more = mine - set(acc)
             fails.append('%s: the page\'s ACCEPTED list differs from the computed one (missing %d, extra %d)%s'
                          % (q['id'], len(miss), len(more), (': ' + ' | '.join(' '.join(x) for x in list(miss | more)[:3]))))
+        if whole and q['id'] == 'eb_l4_010' and not q['text'].startswith('Write the form of the partial fractions'):
+            fails.append('eb_l4_010: the key is the form A/(x+1) + B/(x−2) only, so the stem must ask for the form (R1, equation-builder-s1-004): %r' % q['text'])
+        if whole and q['id'] == 'eb_l4_021' and ('Evaluate' in q['text'] or 'definite integral for the area' not in q['text']):
+            fails.append('eb_l4_021: the key is the unevaluated integral, so the stem must not say "Evaluate" (R1, equation-builder-s1-005): %r' % q['text'])
         if whole and ask_disagrees(q):
             fails.append('%s: %s (SR-25)' % (q['id'], ask_disagrees(q)))
         if whole and q['id'] == 'eb_gcse_013' and not gcse_013_geometry(q):
@@ -717,6 +721,12 @@ def selftest():
         ('an "equation for X" item that rejects a rearrangement (gcse_019 loses Q3 − IQR = Q1)',
          lambda s: s.replace('["Q3","−","IQR","=","Q1"],', '', 1) if '["Q3","−","IQR","=","Q1"],' in s
                     else s.replace(',["Q3","−","IQR","=","Q1"]', '', 1), ['eb_gcse_019'], True),
+        ('the partial-fractions stem back to "Express ... in partial fractions" (l4_010, R1)',
+         lambda s: s.replace('Write the form of the partial fractions of (3x + 1)/((x + 1)(x \\u2212 2)).', 'Express (3x + 1)/((x + 1)(x \\u2212 2)) in partial fractions.', 1),
+         ['eb_l4_010'], True),
+        ('the area stem back to "Evaluate the area" (l4_021, R1)',
+         lambda s: s.replace('Write the definite integral for the area under y = 2x between x = 1 and x = 4.', 'Evaluate the area under y = 2x between x = 1 and x = 4. Write the definite integral expression.', 1),
+         ['eb_l4_021'], True),
         ('a distractor that builds an equal value (gcse_010 gets 5/9 and 4/10 back)',
          lambda s: s.replace("'5/10','\\u00f7','3/9'", "'5/9','\\u00f7','4/10'", 1)
                     .replace("'\\u2212','5/10'", "'\\u2212','5/9'"), ['eb_gcse_010'], True),

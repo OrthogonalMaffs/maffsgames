@@ -118,11 +118,13 @@ findings:
   level: ks3, gcse, alevel
   where: games/seven-bridges/index.html:583 (Hint 1)
   summary: '"Count the connections at each vertex" reads, on a graph with two lines to the same vertex, as counting
-    neighbours; counted that way the verdict flips on gcse_08, gcse_18, al_01 and al_25 (possible keyed, 4 odd vertices
-    counted). Hint 2 shows the true degrees; marking is right. Wording ("count the lines; two lines to one vertex count
-    as two"), open'
+    neighbours; counted that way the verdict flips on gcse_08, gcse_18, al_01 and al_25 (possible keyed, 4 odd
+    vertices counted). Hint 2 shows the true degrees; marking is right. Wording ("count the lines; two lines to
+    one vertex count as two"), open Fixed under R3: Hint 1 says to count the lines, two lines to the same
+    vertex counting as two.'
   evidence: 'SWEEP-1, batch 5 (degrees recomputed per edge and per neighbour for all 75 graphs)'
-  status: open
+  status: fixed
+  pr: 370
 - id: seven-bridges-s1-002
   severity: LOW
   jc: true
@@ -130,10 +132,11 @@ findings:
   level: all
   where: games/seven-bridges/index.html:176, :181-184, :255-257, :600-601, :696
   summary: 'Open: the rules never say a route may finish away from its start ("Impossible" is wrong on every two-odd
-    graph) (Split: the parent entry held 3 defects; the others are seven-bridges-s1-003,
-    seven-bridges-s1-004.)'
+    graph) (Split: the parent entry held 3 defects; the others are seven-bridges-s1-003, seven-bridges-s1-004.)
+    Fixed under R2: the rules say a route may finish at a different vertex from where it started.'
   evidence: 'SWEEP-1, batch 5'
-  status: open
+  status: fixed
+  pr: 370
 - id: seven-bridges-s1-003
   severity: LOW
   jc: true
@@ -151,6 +154,8 @@ findings:
   level: all
   where: games/seven-bridges/index.html:176, :181-184, :255-257, :600-601, :696
   summary: 'Open: the wrong-"Impossible" feedback gives the count but not the rule (Split from seven-bridges-s1-002,
-    SWEEP-1-RULINGS step 1.)'
+    SWEEP-1-RULINGS step 1.) Fixed under R3: the wrong-IMPOSSIBLE feedback gives the rule (a path exists with 0
+    or 2 odd vertices) as well as the count. seven-bridges-s1-003 (the term "Eulerian path") stays with Jon.'
   evidence: 'SWEEP-1, batch 5'
-  status: open
+  status: fixed
+  pr: 370

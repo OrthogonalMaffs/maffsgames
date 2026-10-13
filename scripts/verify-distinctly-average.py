@@ -1050,11 +1050,41 @@ async def fetch_page_data():
     async with async_playwright() as pw:
         browser = await pw.chromium.launch()
         page = await browser.new_page()
+
+        # KaTeX comes from the pinned local copy, never the CDN; no other outside host is reached
+        async def outside(route):
+            r = bc.real_font_response(route.request.url)
+            if r:
+                await route.fulfill(**r)
+            else:
+                await route.abort()
+        await page.route(lambda url: not url.startswith(base), outside)
         await page.goto(base + "/games/" + SLUG + "/?cb=verify", wait_until="load", timeout=20000)
         await page.wait_for_timeout(300)
         data = await page.evaluate("() => ({items: window.DA_ITEMS || null, prompts: window.DA_PROMPTS || null, mc: window.DA_MC || null})")
         await browser.close()
         return data
+
+
+SRC = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "games", "distinctly-average", "index.html")
+
+
+def check_source(html):
+    """R1, R3 (SWEEP-1 distinctly-average-s1-001, -002): the wrong_n explanation says what was done (the mean was
+    multiplied by the wrong count; nobody divided), and a rounded mean in the outlier working is written with an
+    approximately-equals sign, not a bare "about"."""
+    out = []
+    m = re.search(r"wrong_n: '([^']*)'", html)
+    if not m or "multiplied the mean by the wrong number of values" not in m.group(1):
+        out.append("wrong_n: its explanation must say the mean was multiplied by the wrong number of values (R3), not %r" % (m and m.group(1)))
+    mt = re.search(r"function meanText\(sum, n\) \{[^\n]*\}", html)
+    if not mt or "'about '" in mt.group(0) or "u2248" not in mt.group(0):
+        out.append("meanText: a rounded mean must be written '\u2248 7.3' beside '= 7.5', not 'about 7.3' with no verb (R1): %r" % (mt and mt.group(0)))
+    return out
+
+
+SOURCE_PLANTS = (("wrong_n back to 'divided'", "You multiplied the mean by the wrong number of values.", "You divided by the wrong number of values."),
+                 ("meanText back to a bare 'about'", "'\\u2248 '", "'about '"))
 
 
 def main():
@@ -1107,6 +1137,15 @@ def main():
         fail(m)
     for m in check_shared_prompt_cues(tiers):
         fail(m)
+    src = open(SRC, encoding="utf-8").read()
+    for m in check_source(src):
+        fail(m)
+    if selftest:
+        for what, today, old in SOURCE_PLANTS:
+            if src.count(today) != 1 or not check_source(src.replace(today, old)):
+                fail("source self-test '%s' was not caught (or could not be planted)" % what)
+            else:
+                print("  source self-test %-34s caught" % what)
 
     # Format-signature report: how many items per family have a correct option singled out by shape.
     print()

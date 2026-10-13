@@ -54,7 +54,33 @@ def texts(q):
         + list(q['stage1Options']) + [o['text'] for o in q['stage2Options']] + [q.get('explanation', '')]
 
 
+def check_s1(fails, bank):
+    """R5, R3, R1, Part 2 #9 (SWEEP-1 wrong-on-the-internet-s1-003, -004, -005, -006, -007, -008, -009): the post's
+    product is 21,000 and no option repeats a value; no distractor is true as written or true of any slip; a rule
+    is stated truly; a post asks for what its key gives."""
+    by = {q['id']: q for items in bank.values() for q in items}
+    c4 = by['woti_core_004']
+    every = ' '.join(texts(c4))
+    if '21,050' in every or '21,000' not in c4['post']['text']:
+        fails.append('woti_core_004 s1-003: 1000 x 1.05 x 20 is 21,000, not 21,050: %r' % c4['post']['text'])
+    if len(set(c4['stage1Options'])) != 4 or sum('21,000' in o for o in c4['stage1Options']) > 1:
+        fails.append('woti_core_004 s1-003: two stage-1 options carry the same figure: %r' % c4['stage1Options'])
+    for qid, banned in (('woti_core_005', 'Some things went up 14.6%'), ('woti_ks3_004', 'The poster added the numbers incorrectly'),
+                        ('woti_gcse_007', 'Pythagoras was applied incorrectly'), ('woti_ks3_001', 'The poster added the wrong numbers'),
+                        ('woti_gcse_013', 'inverted the relationship')):
+        if banned in ' '.join(texts(by[qid])):
+            fails.append('%s s1-004: still offers %r (true of any slip, or true as written)' % (qid, banned))
+    if '6/6' in by['woti_ks3_012']['stage1Options']:
+        fails.append("woti_ks3_012 s1-005: '1 (guaranteed)' and '6/6' are the same value")
+    g20 = ' '.join(texts(by['woti_gcse_020']))
+    if 'add 5 to the last digit' in g20 or 'Adding 5 to the last digit' in g20:
+        fails.append('woti_gcse_020 s1-007: "add 5 to the last digit" read literally gives 7.8, not 7.35')
+    if by['woti_ks3_013']['post']['text'].startswith('Simplify'):
+        fails.append('woti_ks3_013 s1-009: the post says "Simplify" but the key is the expansion')
+
+
 def check_bank(fails, bank):
+    check_s1(fails, bank)
     for lv, items in bank.items():
         for q in items:
             w = q['id']
@@ -161,6 +187,14 @@ PLANTS = [
      "stage1CorrectAnswer:'0.12 (if independent)',stage1Options:['0.12 (if independent)',"),
     ('woti_ks3_007', 's1-001: the coin\'s fairness unstated',
      "text:'I\\'ve flipped a fair coin and got heads 7 times", "text:'I\\'ve flipped heads 7 times"),
+    ('woti_core_004', 's1-003: the product written 21,050 (Part 2 #9)',
+     "=\u00a321,000. Retirement sorted!", "=\u00a321,050. Retirement sorted!"),
+    ('woti_core_005', 's1-004: a true distractor, 14.6%', "'Prices rose by 7.3% every month'", "'Some things went up 14.6%'"),
+    ('woti_ks3_004', 's1-004: a vague distractor', "The signs are ignored when adding, so the answer is +8", "The poster added the numbers incorrectly"),
+    ('woti_ks3_012', 's1-005: 1 and 6/6 equal', "'1 (guaranteed)','1/6','5/6']", "'1 (guaranteed)','1/6','6/6']"),
+    ('woti_gcse_020', 's1-007: add 5 to the last digit',
+     "You put a 5 after the last digit for the upper bound.", "You always add 5 to the last digit for upper bound."),
+    ('woti_ks3_013', 's1-009: Simplify for an expansion', "text:'Expand 3(x + 4)'", "text:'Simplify 3(x + 4)'"),
     ('woti_core_004', 's1-002: compound interest unstated',
      "text:'Invest \\u00a31000 at 5% compound interest for 20 years: ", "text:'Invest \\u00a31000 at 5% for 20 years: "),
 ]

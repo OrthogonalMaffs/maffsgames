@@ -94,19 +94,23 @@ findings:
   level: core
   where: games/prisoners-dilemma/index.html:507 (The Adaptive Firm)
   summary: '"sticks with a pricing strategy while it''s profitable and changes when it''s not", but the rule (Pavlov)
-    changes after £0k or £1k, and £1k is a profit. The class of t4-005 (Core''s pricing rewording). Open (wording)'
+    changes after £0k or £1k, and £1k is a profit. The class of t4-005 (Core''s pricing rewording). Open
+    (wording) Fixed under R3: the Adaptive Firm repeats its price after £3k or £5k and changes it after £0k or
+    £1k.'
   evidence: 'stratName "Pavlov (Win-Stay, Lose-Shift)" (SWEEP-1, batch 4)'
-  status: open
+  status: fixed
+  pr: 370
 - id: prisoners-dilemma-s1-002
   severity: MEDIUM
   jc: false
   class: NEW:convention-unstated
   level: all
   where: games/prisoners-dilemma/index.html:243-247 (the matrix)
-  summary: 'The payoff matrix never says which number in a cell is yours ("3, 3 | 0, 5"); only KS3''s round messages show
-    the order. A "(you, them)" title, open'
+  summary: 'The payoff matrix never says which number in a cell is yours ("3, 3 | 0, 5"); only KS3''s round messages
+    show the order. A "(you, them)" title, open Fixed under R2: the matrix title reads "(you, them)".'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 370
 - id: prisoners-dilemma-s1-003
   severity: LOW
   jc: false
@@ -115,9 +119,10 @@ findings:
   where: games/prisoners-dilemma/index.html:898, :717, :460, :555
   summary: 'GCSE''s "your opponent adapts" shows after non-adaptive opponents. Wording, open (Split: the parent entry
     held 4 defects; the others are prisoners-dilemma-s1-004, prisoners-dilemma-s1-005,
-    prisoners-dilemma-s1-006.)'
+    prisoners-dilemma-s1-006.) Fixed under R3: GCSE says "an opponent may adapt".'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 370
 - id: prisoners-dilemma-s1-004
   severity: LOW
   jc: false
@@ -125,9 +130,11 @@ findings:
   level: all
   where: games/prisoners-dilemma/index.html:898, :717, :460, :555
   summary: 'The halfway prompt asks for Random Rita''s pattern though her description says there is none. Wording,
-    open (Split from prisoners-dilemma-s1-003, SWEEP-1-RULINGS step 1.)'
+    open (Split from prisoners-dilemma-s1-003, SWEEP-1-RULINGS step 1.) Fixed under R3: the halfway prompt says
+    a random opponent has no pattern to find.'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 370
 - id: prisoners-dilemma-s1-005
   severity: LOW
   jc: false
@@ -135,9 +142,11 @@ findings:
   level: all
   where: games/prisoners-dilemma/index.html:898, :717, :460, :555
   summary: 'A-Level''s "Prober" is not Axelrod''s Prober (the rule is stated exactly). Wording, open (Split from
-    prisoners-dilemma-s1-003, SWEEP-1-RULINGS step 1.)'
+    prisoners-dilemma-s1-003, SWEEP-1-RULINGS step 1.) Fixed under R1: the strategy is named "Prober (a
+    simplified version of Axelrod''s)".'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 370
 - id: prisoners-dilemma-s1-006
   severity: LOW
   jc: false
@@ -145,6 +154,8 @@ findings:
   level: all
   where: games/prisoners-dilemma/index.html:898, :717, :460, :555
   summary: 'Tournament Mode, the only ranked mode, unlocks after 3 wins, never said. Wording, open (Split from
-    prisoners-dilemma-s1-003, SWEEP-1-RULINGS step 1.)'
+    prisoners-dilemma-s1-003, SWEEP-1-RULINGS step 1.) Fixed under R2: the menu says Tournament Mode unlocks
+    once 3 different opponents are beaten.'
   evidence: 'SWEEP-1, batch 4'
-  status: open
+  status: fixed
+  pr: 370

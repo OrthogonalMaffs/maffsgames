@@ -356,6 +356,12 @@ def mapping_checks(fails, page):
 
 def play(fails, html):
     from playwright.sync_api import sync_playwright
+    # R3 (SWEEP-1 constructions-lab-s1-001, -002): the tutorial says the ruler's line carries on past both points
+    # (it is drawn 800 units beyond each), and task 9 calls its bisector the locus only inside the angle drawn
+    if 'A straight line is drawn through both points and carries on past them' not in html:
+        fails.append('tutorial: the ruler step must say the line carries on past both points (it is drawn 800 units beyond each)')
+    if 'The line from V through this point is the locus inside this angle' not in html:
+        fails.append('statement: task 9 must call the bisector the locus inside this angle (two lines have two bisectors)')
     proc, base = bc.start_stub_server()
     stats = {}
     try:
@@ -394,6 +400,10 @@ def play(fails, html):
 
 
 PLANTS = [
+    ('the tutorial says the ruler line is drawn between the points', 'tutorial:',
+     [("3. A straight line is drawn through both points and carries on past them<br>", "3. A straight line is drawn between them<br>")]),
+    ('task 9 calls one bisector the whole locus', 'statement:',
+     [("'The line from V through this point is the locus inside this angle'", "'The line from V through this point is the locus'")]),
     ('circle-circle crossings mirrored (wrong point)', 'tools:',
      [("return[{x:mx+h*dy/d,y:my-h*dx/d},{x:mx-h*dy/d,y:my+h*dx/d}];", "return[{x:mx+h*dy/d,y:my+h*dx/d},{x:mx-h*dy/d,y:my-h*dx/d}];")]),
     ('no snapping (snap distance 0.1)', 'tools:', [("const SNAP_DIST=12;", "const SNAP_DIST=0.1;")]),

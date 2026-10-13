@@ -314,7 +314,7 @@ const MC = {
   mean_not_median: 'That is the mean (the total shared out equally) — the median is the middle value once the data is sorted.',
   value_not_mean: 'That is one of the values in the data set, not the mean of all of them.',
   sum_not_divided: 'That is the total of all the values — you still need to divide by how many values there are.',
-  wrong_n: 'You divided by the wrong number of values.',
+  wrong_n: 'You multiplied the mean by the wrong number of values.',
   range_as_max: 'That is the largest value — the range is the largest value MINUS the smallest.',
   range_as_min: 'That is the smallest value — the range is the largest value minus the smallest.',
   mean_not_range: 'That is the mean of the data — the range measures the spread (largest minus smallest), not the average.',
@@ -1014,8 +1014,8 @@ function arrangeOutlier(values, k) {
   return rot.join(',') === sortedKey ? z : rot;
 }
 function sumOf(arr) { return arr.reduce((a, b) => a + b, 0); }
-/* "= 25.5" when sum/n is exact to 1 d.p., "about 34.8" when it is not */
-function meanText(sum, n) { return ((sum * 10) % n === 0 ? '= ' : 'about ') + roundStr(sum / n, 1); }
+/* "= 25.5" when sum/n is exact to 1 d.p., "\u2248 34.8" when it is not */
+function meanText(sum, n) { return ((sum * 10) % n === 0 ? '= ' : '\u2248 ') + roundStr(sum / n, 1); }
 /* twice the median, as an integer (so .5 medians stay exact) */
 function twiceMedian(sortedArr) {
   const n = sortedArr.length;

@@ -49,7 +49,7 @@ import bank_common as bc  # noqa: E402
 SLUG = 'equatle'
 GAME = os.path.join(os.path.dirname(HERE), 'games', SLUG, 'index.html')
 N = 8
-EXAMPLES = ['9+4*7=37', '09+15=24', '108/9=12', '15-2*7=1', '3*5-09=6']
+EXAMPLES = ['9+4*7=37', '09+15=24', '108/9=12', '15-2*7=1', '3*5-09=6', '15+9=024']
 DATES = ([(2026, m, d) for m in range(1, 13) for d in (1, 28)] + [(2026, 12, 31), (2028, 2, 29), (2027, 12, 31),
          (2026, 10, 12), (2026, 3, 29), (2026, 10, 25), (2026, 1, 1), (2027, 1, 1), (2029, 2, 28), (2030, 6, 15)])
 
@@ -371,10 +371,32 @@ def play(fails, html):
                 bad_rhs = str(int(rhs) + 1).zfill(len(rhs))
                 if len(bad_rhs) != len(rhs):
                     continue
-                want = '%s = %d, not %d' % (strip_zeros(lhs), int(lhs_value(lhs)), int(bad_rhs))
+                want = '%s = %d, not %d' % (strip_zeros(lhs).replace('*', '×').replace('/', '÷'), int(lhs_value(lhs)), int(bad_rhs))
                 if m != want:
                     fails.append('refusal: %s=%s reads %r, expected %r' % (lhs, bad_rhs, m, want))
                     break
+            # R1, R2 (SWEEP-1 equatle-s1-001 to -007): the rules say how + and - are worked, that both sides are whole
+            # numbers, which positions leading zeros take and that order matters; they show the tiles' signs; every
+            # equation printed in them is true; a non-integer side says so
+            htp = page.evaluate("() => document.getElementById('m-htp').textContent").replace('\u00d7', '*').replace('\u00f7', '/').replace('\u2212', '-')
+            htp = ' '.join(htp.split())
+            for need in ('worked left to right', 'whole number', 'on either side', 'The order matters', 'Grey — not in the equation, or you have used more of it',
+                         'Duplicate characters (digits and operators alike)'):
+                if need not in htp:
+                    fails.append('how to play: it must say %r' % need)
+            if re.search(r'\d[*/]\d', page.evaluate("() => document.getElementById('m-htp').textContent")):
+                fails.append('how to play: it writes * or / where the tiles show \u00d7 and \u00f7')
+            printed = [t for t in re.findall(r'[0-9][0-9+*/-]*=[0-9]+', htp) if len(t) == 8]
+            for t in printed:
+                if not equation_ok(t):
+                    fails.append('how to play: the printed %s is not a true 8-character equation' % t)
+            for t in EXAMPLES:
+                if t not in printed:
+                    fails.append('how to play: the example %s is not printed' % t)
+            nonint = page.evaluate(VALIDATE_JS, ['10/4+2=4', '7/2+1=04'])
+            for g, r in zip(['10/4+2=4', '7/2+1=04'], nonint):
+                if not (r or '').endswith('which is not a whole number'):
+                    fails.append('refusal: %s is a non-integer side and must say so, not %r' % (g, r))
             malformed = ['1+1=3', '1+1=2000', 'abc=defg', '1+2+3+4=10', '1+2=3=00', '=1234567', '1234567=', '1+2+3=1+', '1++2=003',
                          '+1+2+3=7', '1+2+3+=07', '9/0+1=10', '9/00+1=1', '5-9+3=-1', '1+2+3=0a']
             for m, r in zip(malformed, page.evaluate(VALIDATE_JS, malformed)):
@@ -444,6 +466,12 @@ def play(fails, html):
 
 
 PLANTS = [
+    ('the non-integer side refused as "Invalid expression"', 'refusal:',
+     [("if(raw!==null) return `${showEq(cl)} = ${+raw.toFixed(4)}, which is not a whole number`;", "if(false) return 'x';")]),
+    ('the rules drop the left-to-right line', 'how to play:',
+     [("Additions and subtractions are worked left to right, so 9−5+3 is 7, not 1.", "")]),
+    ('the rules write * where the tiles show ×', 'how to play:',
+     [("<strong style=\"color:var(--accent)\">9+4×7=37</strong> is correct", "<strong style=\"color:var(--accent)\">9+4*7=37</strong> is correct")]),
     ('a false equation admitted to the bank', 'bank:',
      [("if (lv === null || isNaN(rv) || lv !== rv || rv <= 0) return;",
        "if (lv === null || isNaN(rv) || (lv !== rv && lv + 1 !== rv) || rv <= 0) return;"),
@@ -451,9 +479,9 @@ PLANTS = [
     ('duplicate letters: a yellow does not use up the target', 'colours:',
      [("res[i]='present';tu[j]=true;break;", "res[i]='present';break;")]),
     ('a false equation accepted as a guess', 'refusal:',
-     [("if(lv!==rv) return `${cl} = ${lv}, not ${rv}`;", "if(false) return `${cl} = ${lv}, not ${rv}`;")]),
+     [("if(lv!==rv) return `${showEq(cl)} = ${lv}, not ${rv}`;", "if(false) return `${showEq(cl)} = ${lv}, not ${rv}`;")]),
     ('the refusal swaps the two figures', 'refusal:',
-     [("return `${cl} = ${lv}, not ${rv}`;", "return `${cl} = ${rv}, not ${lv}`;")]),
+     [("return `${showEq(cl)} = ${lv}, not ${rv}`;", "return `${showEq(cl)} = ${rv}, not ${lv}`;")]),
     ('a true equation with a division refused', 'acceptance:',
      [("if(rv<=0) return 'Result must be positive';", "if(rv<=0||lhs.includes('/')) return 'Result must be positive';")]),
     ('Hard Mode forgets the yellows', 'hard:',

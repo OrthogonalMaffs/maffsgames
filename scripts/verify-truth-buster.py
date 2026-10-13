@@ -131,7 +131,8 @@ KEYS = {
                    needs=('It has been proved',)),
     'tb_t2_019': K(False, 'x² and x² + 5 have the same derivative',
                    check=lambda: sp.diff(x ** 2, x) == sp.diff(x ** 2 + 5, x)),
-    'tb_t2_020': K(True, 'the reals are uncountable (Cantor)'),
+    'tb_t2_020': K(True, 'the reals are uncountable (Cantor); worded as an existence claim, like tb_t3_011 (R1, truth-buster-s1-001)',
+                   needs=('There is a set with more elements',)),
     # ---------------- Tier 3 ----------------
     'tb_t3_001': K(False, 'a spherical triangle can have three 90° angles', needs=('on every surface, flat or curved',)),
     'tb_t3_002': K(False, 'in projective geometry every two lines meet', needs=('whatever kind of geometry',)),
@@ -154,7 +155,8 @@ KEYS = {
     'tb_t3_015': K(False, 'a Möbius strip has one side'),
     'tb_t3_016': K(False, 'Goldbach is unproved; the statement claims a proof', needs=('has been proved',)),
     'tb_t3_017': K(False, 'in ZFC, separation from a universal set gives Russell\'s paradox', needs=('ZFC',)),
-    'tb_t3_018': K(False, 'Gödel: a consistent, sufficiently strong system has true unprovable statements'),
+    'tb_t3_018': K(False, 'Gödel: a consistent, sufficiently strong system has true unprovable statements; the statement names its system, as tb_t3_017 does (R2, truth-buster-s1-002)',
+                   needs=('consistent system of axioms', 'ZFC')),
     'tb_t3_019': K(True, 'V_d / 2^d → 0', check=lambda: sp.limit(sp.pi ** (n / 2) / sp.gamma(n / 2 + 1) / 2 ** n, n, sp.oo) == 0),
     'tb_t3_020': K(False, 'e is defined exactly'),
 }
@@ -322,7 +324,7 @@ REVIEWED = {
     'tb_t2_017': '1671c3ebf991',
     'tb_t2_018': 'd28ee1d85943',
     'tb_t2_019': '1ac17a3d73ef',
-    'tb_t2_020': '1168fbc05bd8',
+    'tb_t2_020': '648b845d82ac',
     'tb_t3_001': '9a869320805f',
     'tb_t3_002': 'ac875d930474',
     'tb_t3_003': '5f6862675417',
@@ -330,7 +332,7 @@ REVIEWED = {
     'tb_t3_005': 'a12d1cf40da9',
     'tb_t3_006': '9c70fb47fd93',
     'tb_t3_007': 'b73c577d7931',
-    'tb_t3_008': '1e1314fb4006',
+    'tb_t3_008': 'b1ced39850c5',
     'tb_t3_009': 'c3b9ddbfa09e',
     'tb_t3_010': 'c10a2419f454',
     'tb_t3_011': '2ebf0d007378',
@@ -340,7 +342,7 @@ REVIEWED = {
     'tb_t3_015': 'f7c61b4b3fd6',
     'tb_t3_016': '0503a08b239a',
     'tb_t3_017': '149ce5b1cab9',
-    'tb_t3_018': 'afdb43aa0178',
+    'tb_t3_018': '108f18adb295',
     'tb_t3_019': 'fd70880004c8',
     'tb_t3_020': '9a78278d035a',
 }
@@ -543,6 +545,11 @@ def u(s):
 
 
 PLANTS = [
+    ('tb_t2_020', 's1-001: Cantor read as a claim about every set',
+     u('There is a set with more elements than'), u('A set can have more elements than')),
+    ('tb_t3_018', 's1-002: Goedel with no system named',
+     u('In a consistent system of axioms strong enough for arithmetic (such as ZFC), every true statement can be proved.'),
+     u('If a mathematical statement is true, it can be proved.')),
     ('tb_t2_018', 't3-001: pi statement without "has been proved"',
      u('It has been proved that the number π contains'), u('The number π contains')),
     ('tb_t3_004', 't3-003: sphere eversion without "pass through itself"',

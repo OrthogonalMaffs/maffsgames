@@ -190,6 +190,25 @@ def check_game(fails, page, lv, opp, kind, rounds, pattern):
         fails.append('statement: %s: the mutual-defection insight misstates the payoffs' % where)
 
 
+S1 = (('matrix', "<h3 id=\"matrixTitle\">Payoff Matrix (you, them)</h3>", 'the matrix does not say which number in a cell is yours (R2)'),
+      ('matrix', "'Profit Matrix (you, them)'", 'the Core matrix does not say which number in a cell is yours (R2)'),
+      ('pavlov', 'after a good result (\u00a33k or \u00a35k) and changes it after a poor one (\u00a30k or \u00a31k)',
+       'the Adaptive Firm\'s description does not match its rule (R3)'),
+      ('adapts', 'an opponent may adapt', 'GCSE says the opponent adapts after any opponent (R3)'),
+      ('random', 'is random, so there is no pattern to find', 'the halfway prompt asks for Random Rita\'s pattern (R3)'),
+      ('prober', 'Prober (a simplified version of Axelrod', 'Prober Pat\'s rule is not Axelrod\'s Prober (R1)'),
+      ('tournament', 'Tournament Mode unlocks once you have beaten 3 different opponents', 'the tournament unlock is never said (R2)'))
+
+
+def check_text(fails, html):
+    """SWEEP-1 prisoners-dilemma-s1-001 to -006."""
+    for tag, need, why in S1:
+        if need not in html:
+            fails.append('%s: %s' % (tag, why))
+    if 'sticks with a pricing strategy while it' in html:
+        fails.append('pavlov: the Adaptive Firm still "changes when it\'s not" profitable, but changes after \u00a31k, a profit (R3)')
+
+
 def play(fails, html):
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
@@ -282,6 +301,13 @@ def play(fails, html):
 
 
 PLANTS = [
+    ('the matrix title without (you, them)', 'matrix:', [("<h3 id=\"matrixTitle\">Payoff Matrix (you, them)</h3>", "<h3 id=\"matrixTitle\">Payoff Matrix</h3>")]),
+    ('the Adaptive Firm described as profit-driven', 'pavlov:',
+     [("repeats its pricing strategy after a good result (\u00a33k or \u00a35k) and changes it after a poor one (\u00a30k or \u00a31k)", "sticks with a pricing strategy while it\\'s profitable and changes when it\\'s not")]),
+    ('the halfway prompt for Random Rita', 'random:',
+     [("' is random, so there is no pattern to find.'", "' has a pattern.'")]),
+    ('the tournament unlock unsaid', 'tournament:',
+     [(" Tournament Mode unlocks once you have beaten 3 different opponents at this level (more points than them in a match).", "")]),
     ('the sucker payoff 1, not 0', 'payoffs:', [("if (playerChoice === 'cooperate' && opponentChoice === 'defect') return { p: 0, o: 5 };",
                                                   "if (playerChoice === 'cooperate' && opponentChoice === 'defect') return { p: 1, o: 5 };")]),
     ('Grudge Gary forgives after 3 rounds (KS3)', 'opponent:',
@@ -308,6 +334,7 @@ def main():
     sys.stdout.reconfigure(encoding='utf-8')
     html = open(args.against or GAME, encoding='utf-8').read()
     fails = []
+    check_text(fails, html)
     st = play(fails, html)
     print('%s: payoffs checked; every opponent at every level against its stated rule over %d histories; %d games of 20 rounds and a '
           'tournament per level played in Chromium, every score, count and stated figure recomputed' % (SLUG, st.get('cases', 0), st.get('games', 0)))
@@ -325,6 +352,7 @@ def main():
             for o, n in edits:
                 planted = planted.replace(o, n)
             rep = []
+            check_text(rep, planted)
             play(rep, planted)
             found = [f for f in rep if f.startswith(tag)]
             ok = ok and bool(found)

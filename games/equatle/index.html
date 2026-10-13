@@ -275,19 +275,21 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
     <div class="mb">
       <p style="font-size:.7rem;color:var(--body);line-height:1.6;margin-bottom:.8rem">
         Guess the equation in 6 tries. Each guess must be a <strong style="color:var(--accent)">valid, true equation</strong>.
-        <strong style="color:var(--teal)">BODMAS applies</strong> — so <strong style="color:var(--accent)">9+4*7=37</strong> is correct (4×7=28, then +9).
-        Leading zeros are valid characters: <strong style="color:var(--accent)">09+15=24</strong> is a legal guess.
+        <strong style="color:var(--teal)">BODMAS applies</strong> — so <strong style="color:var(--accent)">9+4×7=37</strong> is correct (4×7=28, then +9).
+        Additions and subtractions are worked left to right, so 9−5+3 is 7, not 1. Each side must come to a whole number: 10÷4+2 is not allowed.
+        Leading zeros are valid characters, on either side: <strong style="color:var(--accent)">09+15=24</strong> and <strong style="color:var(--accent)">15+9=024</strong> are both legal guesses.
+        The order matters: 28+9=037 and 9+28=037 are different guesses.
       </p>
       <div class="hdiv"></div>
-      <div class="hrow"><div class="hts"><div class="ht c">9</div><div class="ht">+</div><div class="ht">4</div><div class="ht">*</div><div class="ht">7</div><div class="ht">=</div><div class="ht">3</div><div class="ht">7</div></div></div>
+      <div class="hrow"><div class="hts"><div class="ht c">9</div><div class="ht">+</div><div class="ht">4</div><div class="ht">×</div><div class="ht">7</div><div class="ht">=</div><div class="ht">3</div><div class="ht">7</div></div></div>
       <div class="hrow"><div class="hts"><div class="ht c">9</div></div><div class="hd"><strong>Green</strong> — right character, right position.</div></div>
       <div class="hrow"><div class="hts"><div class="ht p">4</div></div><div class="hd"><strong>Yellow</strong> — in the equation, wrong position.</div></div>
-      <div class="hrow"><div class="hts"><div class="ht a">7</div></div><div class="hd"><strong>Grey</strong> — not in the equation at all.</div></div>
+      <div class="hrow"><div class="hts"><div class="ht a">7</div></div><div class="hd"><strong>Grey</strong> — not in the equation, or you have used more of it than the equation holds.</div></div>
       <div class="hdiv"></div>
       <div class="hn">
-        Duplicate digits use the Wordle minimum-match rule — greens are locked first, then yellows drawn from what remains.<br><br>
+        Duplicate characters (digits and operators alike) use the Wordle minimum-match rule — greens are locked first, then yellows drawn from what remains.<br><br>
         <strong>Valid 8-char equation examples:</strong><br>
-        <span style="color:var(--accent)">9+4*7=37</span> &nbsp;·&nbsp; <span style="color:var(--accent)">09+15=24</span> &nbsp;·&nbsp; <span style="color:var(--accent)">108/9=12</span> &nbsp;·&nbsp; <span style="color:var(--accent)">15-2*7=1</span> &nbsp;·&nbsp; <span style="color:var(--accent)">3*5-09=6</span><br><br>
+        <span style="color:var(--accent)">9+4×7=37</span> &nbsp;·&nbsp; <span style="color:var(--accent)">09+15=24</span> &nbsp;·&nbsp; <span style="color:var(--accent)">108÷9=12</span> &nbsp;·&nbsp; <span style="color:var(--accent)">15−2×7=1</span> &nbsp;·&nbsp; <span style="color:var(--accent)">3×5−09=6</span> &nbsp;·&nbsp; <span style="color:var(--accent)">15+9=024</span><br><br>
         <strong>Hard Mode:</strong> confirmed positions must be reused; present characters must appear somewhere.
       </div>
     </div>
@@ -528,15 +530,21 @@ function getBank() {
 }
 
 // Evaluate an expression string safely (handles leading zeros, BODMAS via JS engine)
-function safeEval(expr) {
+function evalRaw(expr) {
   if (!/^[0-9+\-*/]+$/.test(expr)) return null;
   // Strip leading zeros from each numeric token to avoid octal interpretation
   const clean = expr.replace(/\d+/g, m => String(parseInt(m, 10)));
   try {
     const v = Function('"use strict";return(' + clean + ')')();
-    return (typeof v === 'number' && isFinite(v) && Number.isInteger(v)) ? v : null;
+    return (typeof v === 'number' && isFinite(v)) ? v : null;
   } catch { return null; }
 }
+function safeEval(expr) {
+  const v = evalRaw(expr);
+  return (v !== null && Number.isInteger(v)) ? v : null;
+}
+// The text shows the tiles' own signs (R1, SWEEP-1 equatle-s1-006)
+function showEq(s) { return s.replace(/\*/g, '×').replace(/\//g, '÷'); }
 
 // ═══════════════════════════════════════════════════════════════════════════════
 //  CONFIG
@@ -611,9 +619,14 @@ function validate(guess){
   const cl=lhs.replace(/\d+/g,m=>String(parseInt(m,10)));
   if(/\/0(?!\d)/.test(cl)) return 'Division by zero';
   const lv=safeEval(lhs), rv=parseInt(rhs,10);
-  if(lv===null) return 'Invalid expression';
+  if(lv===null){
+    const raw=evalRaw(lhs);
+    // a true-looking sum that is not a whole number says so (R1, SWEEP-1 equatle-s1-005)
+    if(raw!==null) return `${showEq(cl)} = ${+raw.toFixed(4)}, which is not a whole number`;
+    return 'Invalid expression';
+  }
   if(rv<=0) return 'Result must be positive';
-  if(lv!==rv) return `${cl} = ${lv}, not ${rv}`;
+  if(lv!==rv) return `${showEq(cl)} = ${lv}, not ${rv}`;
   return null;
 }
 

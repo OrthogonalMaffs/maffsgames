@@ -35,11 +35,13 @@ findings:
   level: all
   where: games/equatle/index.html:229, :278 (rules), :616 (refusal)
   summary: 'The rules say "BODMAS applies" but never that + and − are worked left to right, the convention 609 targets
-    of the shape D−D+D depend on. A student who reads BODMAS literally (A before S) types 9-5+3=01 and is refused with
-    "9-5+3 = 7, not 1", no reason given. One rules line, open for Jon'
+    of the shape D−D+D depend on. A student who reads BODMAS literally (A before S) types 9-5+3=01 and is
+    refused with "9-5+3 = 7, not 1", no reason given. One rules line, open for Jon Fixed under R2: the rules
+    say additions and subtractions are worked left to right (9−5+3 is 7).'
   evidence: '"Guess the 8-character equation in 6 tries · BODMAS applies"; "BODMAS applies — so 9+4*7=37 is correct";
     target 9-5+3=07 (SWEEP-1, batch 3; pool rebuilt, 23,399 equations)'
-  status: open
+  status: fixed
+  pr: 370
 - id: equatle-s1-002
   severity: LOW
   jc: false
@@ -48,10 +50,12 @@ findings:
   where: games/equatle/index.html:277, :282-290, :537, :616
   summary: 'How to Play: grey is "not in the equation at all", but under the minimum-match rule it can mean "no more
     of it", under an example row holding two 7s. Open (Split: the parent entry held 6 defects; the others are
-    equatle-s1-003, equatle-s1-004, equatle-s1-005, equatle-s1-006, equatle-s1-007.)'
+    equatle-s1-003, equatle-s1-004, equatle-s1-005, equatle-s1-006, equatle-s1-007.) Fixed under R1: grey reads
+    "not in the equation, or you have used more of it than the equation holds".'
   evidence: '"Grey — not in the equation at all."; "Duplicate digits use the Wordle minimum-match rule"; 10/4+2=4 gets
     "Invalid expression" (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 370
 - id: equatle-s1-003
   severity: LOW
   jc: false
@@ -59,10 +63,11 @@ findings:
   level: all
   where: games/equatle/index.html:277, :282-290, :537, :616
   summary: 'How to Play: "Duplicate digits" covers operators too. Open (Split from equatle-s1-002, SWEEP-1-RULINGS
-    step 1.)'
+    step 1.) Fixed under R1: "Duplicate characters (digits and operators alike)".'
   evidence: '"Grey — not in the equation at all."; "Duplicate digits use the Wordle minimum-match rule"; 10/4+2=4 gets
     "Invalid expression" (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 370
 - id: equatle-s1-004
   severity: LOW
   jc: false
@@ -70,10 +75,12 @@ findings:
   level: all
   where: games/equatle/index.html:277, :282-290, :537, :616
   summary: 'How to Play: order matters is never said (28+9=037 is accepted but is not 9+28=037). Open (Split from
-    equatle-s1-002, SWEEP-1-RULINGS step 1.)'
+    equatle-s1-002, SWEEP-1-RULINGS step 1.) Fixed under R2: the rules say order matters (28+9=037 and 9+28=037
+    are different guesses).'
   evidence: '"Grey — not in the equation at all."; "Duplicate digits use the Wordle minimum-match rule"; 10/4+2=4 gets
     "Invalid expression" (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 370
 - id: equatle-s1-005
   severity: LOW
   jc: false
@@ -81,10 +88,12 @@ findings:
   level: all
   where: games/equatle/index.html:277, :282-290, :537, :616
   summary: 'A true-looking non-integer side gets "Invalid expression". Open (Split from equatle-s1-002,
-    SWEEP-1-RULINGS step 1.)'
+    SWEEP-1-RULINGS step 1.) Fixed under R1: a sum that is not a whole number says so ("10÷4+2 = 4.5, which is
+    not a whole number"), and the rules say each side must be a whole number.'
   evidence: '"Grey — not in the equation at all."; "Duplicate digits use the Wordle minimum-match rule"; 10/4+2=4 gets
     "Invalid expression" (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 370
 - id: equatle-s1-006
   severity: LOW
   jc: false
@@ -92,10 +101,11 @@ findings:
   level: all
   where: games/equatle/index.html:277, :282-290, :537, :616
   summary: 'The text writes * and / where the tiles show × and ÷. Open (Split from equatle-s1-002, SWEEP-1-RULINGS
-    step 1.)'
+    step 1.) Fixed under R1: the rules and refusals show × and ÷ like the tiles.'
   evidence: '"Grey — not in the equation at all."; "Duplicate digits use the Wordle minimum-match rule"; 10/4+2=4 gets
     "Invalid expression" (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 370
 - id: equatle-s1-007
   severity: LOW
   jc: false
@@ -103,7 +113,9 @@ findings:
   level: all
   where: games/equatle/index.html:277, :282-290, :537, :616
   summary: 'Every leading-zero example is on the left though 26% of targets pad the right. Open (Split from
-    equatle-s1-002, SWEEP-1-RULINGS step 1.)'
+    equatle-s1-002, SWEEP-1-RULINGS step 1.) Fixed under R1: the rules show a leading zero on the right
+    (15+9=024).'
   evidence: '"Grey — not in the equation at all."; "Duplicate digits use the Wordle minimum-match rule"; 10/4+2=4 gets
     "Invalid expression" (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 370

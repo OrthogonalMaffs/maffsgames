@@ -41,12 +41,14 @@ findings:
   class: NEW:text-contradicts-content
   level: ks3, gcse
   where: games/split-it/index.html:364-367 (ks3), :373-375 (gcse), Fractions
-  summary: 'Equal parts are drawn, so "the smaller part" or "the largest part" does not exist or is not unique (about 1
-    in 7 Foundation draws, 28% of GCSE draws). The key''s value is unambiguous; drawing distinct parts is a generator
-    change, open'
+  summary: 'Equal parts are drawn, so "the smaller part" or "the largest part" does not exist or is not unique (about
+    1 in 7 Foundation draws, 28% of GCSE draws). The key''s value is unambiguous; drawing distinct parts is a
+    generator change, open Fixed under R3: the parts are drawn so that the smaller or largest part exists and
+    is unique (no redraw loop); the verifier checks it with plants.'
   evidence: '"In the ratio 2 : 2, what fraction of the total is the smaller part?" key 1/2; "In the ratio 2 : 4 : 4,
     what fraction of the total is the largest part?" key 2/5 (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 370
 - id: split-it-s1-004
   severity: LOW
   jc: false
@@ -54,10 +56,13 @@ findings:
   level: ks3, gcse
   where: games/split-it/index.html:416-420 (Unitary, n = m), :434-437 (speed, t = t2)
   summary: 'The generator can ask for the amount it has just given (about 9% of Foundation unitary draws, 14% of speed
-    draws). Drawing m ≠ n and t2 ≠ t without a redraw loop (tier 2) is a generator change, open'
+    draws). Drawing m ≠ n and t2 ≠ t without a redraw loop (tier 2) is a generator change, open Fixed under R3
+    (Jon, Part 3): m is drawn from 2-12 leaving out n, and t2 from 2-8 leaving out t, so no question asks for
+    the amount it has just given.'
   evidence: '"8 rubbers cost £28.80. How much do 8 rubbers cost?" key 28.8; "A car travels 65 miles in 5 hours. How far
     in 5 hours?" key 65 (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 370
 - id: split-it-s1-005
   severity: LOW
   jc: false
@@ -65,9 +70,11 @@ findings:
   level: ks3, gcse
   where: games/split-it/index.html:386, :398, :401, :407, :410, :439 (Scale and speed working)
   summary: 'Wording: the concrete mix recipe is scaled "for {p} people" (Split: the parent entry held 4 defects; the
-    others are split-it-s1-006, split-it-s1-007, split-it-s1-008.)'
+    others are split-it-s1-006, split-it-s1-007, split-it-s1-008.) Fixed under R1: the concrete mix is scaled
+    for "wheelbarrows".'
   evidence: '"A Concrete mix recipe for 4 people uses the amounts below." (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 370
 - id: split-it-s1-006
   severity: LOW
   jc: false
@@ -75,9 +82,11 @@ findings:
   level: ks3, gcse
   where: games/split-it/index.html:386, :398, :401, :407, :410, :439 (Scale and speed working)
   summary: 'Wording: the Pancakes item asks for eggs "to 1 decimal place" though every key is whole (SR-10) (Split
-    from split-it-s1-005, SWEEP-1-RULINGS step 1.)'
+    from split-it-s1-005, SWEEP-1-RULINGS step 1.) Fixed under R1: the recipe line says "(eggs are whole
+    numbers)" beside "to 1 decimal place".'
   evidence: '"A Concrete mix recipe for 4 people uses the amounts below." (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 370
 - id: split-it-s1-007
   severity: LOW
   jc: false
@@ -85,9 +94,11 @@ findings:
   level: ks3, gcse
   where: games/split-it/index.html:386, :398, :401, :407, :410, :439 (Scale and speed working)
   summary: 'Wording: the Foundation working writes "12/4" with an ASCII slash (Split from split-it-s1-005,
-    SWEEP-1-RULINGS step 1.)'
+    SWEEP-1-RULINGS step 1.) Fixed under R1: the Foundation working writes the scale factor as a stacked
+    fraction.'
   evidence: '"A Concrete mix recipe for 4 people uses the amounts below." (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 370
 - id: split-it-s1-008
   severity: LOW
   jc: false
@@ -95,6 +106,7 @@ findings:
   level: ks3, gcse
   where: games/split-it/index.html:386, :398, :401, :407, :410, :439 (Scale and speed working)
   summary: 'Wording: the speed working writes "= 233.3 miles" for a rounded value (Split from split-it-s1-005,
-    SWEEP-1-RULINGS step 1.)'
+    SWEEP-1-RULINGS step 1.) Fixed under R1: the speed working writes ≈ for a rounded value.'
   evidence: '"A Concrete mix recipe for 4 people uses the amounts below." (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 370

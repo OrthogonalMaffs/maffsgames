@@ -165,7 +165,7 @@ def expected(q):
         parts = nums(m.group(1))
         pick = min(parts) if m.group(2) == 'smaller' else max(parts)
         return 'fraction', [F(pick, sum(parts))], None
-    m = re.search(r'recipe for (\d+) people .* for (\d+) people', t)
+    m = re.search(r'recipe for (\d+) \w+ uses .* for (\d+) \w+\?', t)
     if m:
         n0, n1 = int(m.group(1)), int(m.group(2))
         return 'exact', [F(it['v']) * n1 / n0 for it in q['items']], None
@@ -189,7 +189,49 @@ def expected(q):
     raise ValueError('unreadable prompt: ' + t)
 
 
+def check_wording(q, rep):
+    """R1, R3 (SWEEP-1 split-it-s1-003 to -008): the part asked for exists and is unique, no question asks for the
+    amount it has just given, a recipe is scaled in units that fit it, whole items are said to be whole, no ASCII
+    fraction in the working, and a rounded value is not written with an equals sign."""
+    t = text_of(q['prompt'])
+    where = f"{q['mode']}/{q['level']}"
+    bad = []
+    m = re.match(r'In the ratio ([\d : ]+), what fraction of the total is the (smaller|larger|largest) part', t)
+    if m:
+        parts = nums(m.group(1))
+        pick = min(parts) if m.group(2) == 'smaller' else max(parts)
+        if parts.count(pick) != 1:
+            bad.append(f'"the {m.group(2)} part" of {m.group(1)} is not one part')
+    m = re.match(r'(\d+) \w+ cost £([\d.]+)\. How much do (\d+) \w+ cost\?', t)
+    if m and m.group(1) == m.group(3):
+        bad.append(f'asks for the cost of the {m.group(3)} just given: {t}')
+    m = re.match(r'A car travels (\d+) miles in (\d+) hours\. At the same speed, how far in (\d+) hours\?', t)
+    if m:
+        d, h, h2 = map(int, m.groups())
+        if h == h2:
+            bad.append(f'asks for the distance in the {h} hours just given: {t}')
+        exact = (10 * d * h2) % h == 0
+        sign = re.search(r'([=≈]) [\d.]+ miles', q['working'])
+        if not sign or sign.group(1) != ('=' if exact else '≈'):
+            bad.append(f'the speed working writes {sign and sign.group(1)} for a value that is {"exact" if exact else "rounded"}: {q["working"]}')
+    m = re.search(r'A (.+?) recipe for (\d+) (\w+) uses', t)
+    if m:
+        if m.group(1) == 'Concrete mix' and m.group(3) == 'people':
+            bad.append('a concrete mix is scaled "for people"')
+        whole = [i['n'].lower() for i in q['items'] if i.get('whole')]
+        said = re.search(r'\((.+?) (?:is|are) whole numbers?\)', t)
+        if whole and 'decimal place' in t and not (said and said.group(1) == ' and '.join(whole)):
+            bad.append(f'the whole-number ingredient {whole} is asked "to 1 decimal place" with no word that it is whole: {t}')
+        if not whole and said:
+            bad.append(f'a recipe with no whole item says one is: {t}')
+        if re.search(r'Scale factor = \d+/\d+', q['working']):
+            bad.append(f'the working writes the scale factor with an ASCII slash: {q["working"]}')
+    for b in bad:
+        rep[(where, 'wording')].append(b)
+
+
 def check_key(q, rep):
+    check_wording(q, rep)
     t = text_of(q['prompt'])
     where = f"{q['mode']}/{q['level']}"
     try:
@@ -374,6 +416,41 @@ def run(args):
     return rep, counts
 
 
+# (what is planted, today's text in the page, the fault). Each must make the check FAIL.
+PLANTS = [
+    ('equal parts in a Foundation fraction', 'let b=rInt(1,6);if(b>=a)b++;', 'let b=rInt(1,7);'),
+    ('a tied largest part at GCSE', 'const L=rInt(2,5),u=rInt(1,L-1),w=rInt(1,L-1);', 'const L=rInt(2,5),u=rInt(1,L),w=rInt(1,L);'),
+    ('a unitary question for the amount just given', 'let m=rInt(2,11);if(m>=n)m++;', 'let m=rInt(2,12);'),
+    ('a speed question for the hours just given', 'let t2=rInt(2,7);if(t2>=t)t2++;', 'let t2=rInt(2,8);'),
+    ('a concrete mix scaled for people', "{name:'Concrete mix',who:'wheelbarrows',items:", "{name:'Concrete mix',items:"),
+    ('an ASCII slash in the scale working', 'Scale factor = ${F(target,orig)} = ${sf}', 'Scale factor = ${target}/${orig} = ${sf}'),
+    ('a rounded speed written with =', "${(10*d*t2)%t===0?'=':'≈'}", '='),
+    ('eggs asked to 1 d.p. with no word that they are whole',
+     "${r.items.some(i=>i.whole)?` (${r.items.filter(i=>i.whole).map(i=>i.n.toLowerCase()).join(' and ')} are whole numbers)`:''}", ''),
+]
+
+
+def selftest(args):
+    import tempfile
+    html = open(PAGE, encoding='utf-8').read()
+    ok = True
+    for what, today, fault in PLANTS:
+        if html.count(today) != 1:
+            print(f'  self-test {what}: *** CANNOT PLANT ({html.count(today)}) ***')
+            ok = False
+            continue
+        with tempfile.NamedTemporaryFile('w', suffix='.html', delete=False, encoding='utf-8') as f:
+            f.write(html.replace(today, fault))
+        try:
+            rep, _ = run(argparse.Namespace(file=f.name, per=300, sample=1, verbose=False))
+        finally:
+            os.unlink(f.name)
+        hit = bool(rep)
+        ok = ok and hit
+        print(f'  self-test {what}: ' + ('caught' if hit else '*** MISSED ***'))
+    return ok
+
+
 def main():
     try:
         sys.stdout.reconfigure(encoding='utf-8')
@@ -384,6 +461,7 @@ def main():
     ap.add_argument('--per', type=int, default=1500, help='questions generated per mode and level')
     ap.add_argument('--sample', type=int, default=25, help='distinct questions marked per mode and level')
     ap.add_argument('--verbose', action='store_true')
+    ap.add_argument('--no-selftest', action='store_true')
     args = ap.parse_args()
     rep, counts = run(args)
     total = sum(counts.values())
@@ -401,6 +479,11 @@ def main():
         return 1
     print(f'PASS: {total} generated questions (6 modes x 2 levels), every key recomputed; '
           f'marking probed on a sample of every type')
+    if not args.file and not args.no_selftest:
+        print('\nFault-injection self-test (planted in copies of the page; the file is never touched):')
+        if not selftest(args):
+            print('FAIL    self-test: a planted fault was not caught')
+            return 1
     return 0
 
 

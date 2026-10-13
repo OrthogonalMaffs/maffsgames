@@ -149,18 +149,22 @@ findings:
   class: NEW:text-contradicts-content
   level: level4
   where: games/equation-builder/index.html l4_010
-  summary: '"Express ... in partial fractions" is keyed with the form only: no tile offers A = 2/3 and B = 7/3. Wording
-    ("Write the form of the partial fractions"), open for Jon'
+  summary: '"Express ... in partial fractions" is keyed with the form only: no tile offers A = 2/3 and B = 7/3.
+    Wording ("Write the form of the partial fractions"), open for Jon Fixed under R1: the stem asks "Write the
+    form of the partial fractions of ...".'
   evidence: '"Express (3x + 1)/((x + 1)(x − 2)) in partial fractions." key A/(x+1) + B/(x−2) (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 370
 - id: equation-builder-s1-005
   severity: LOW
   jc: false
   class: NEW:text-contradicts-content
   level: level4
   where: games/equation-builder/index.html l4_021
-  summary: 'The stem says "Evaluate the area" but the key is the unevaluated integral (15 is never asked). Wording, open
-    for Jon'
+  summary: 'The stem says "Evaluate the area" but the key is the unevaluated integral (15 is never asked). Wording,
+    open for Jon Fixed under R1: the stem asks "Write the definite integral for the area ...", with no
+    "Evaluate".'
   evidence: '"Evaluate the area under y = 2x between x = 1 and x = 4. Write the definite integral expression." key ∫₁⁴
     2x dx (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 370

@@ -65,7 +65,34 @@ def knot_slope(pts, x):
     return (F(str(b[1])) - F(str(a[1]))) / (F(str(b[0])) - F(str(a[0])))
 
 
+# R5 (SWEEP-1 gradient-hunter-s1-003): a wrong option that reads the gradient as a y- or x-value is true at the instant the
+# graph reaches that value, so it is worded as the gradient's (false) meaning, like gradient-hunter-s1-002's.
+Y_READINGS = {
+    'gh_core_013': 'the bath is 5 cm deep', 'gh_core_016': 'the factory uses 30 kWh in total',
+    'gh_core_017': 'there are 40 followers in total', 'gh_core_020': 'the student has done 1 hour of revision in total',
+    'gh_gcse_002': 'the plant is 2.33 cm tall', 'gh_gcse_003': 'there are 5 cm of water in the tank',
+    'gh_gcse_004': 'the taxi has driven 1.5 miles', 'gh_gcse_011': 'they have saved 5 pounds in total',
+    'gh_gcse_014': '0.75 litres of paint remains', 'gh_gcse_015': 'the ball is 10 metres high',
+    'gh_alevel_007': 'the particle has travelled 4 metres in total', 'gh_alevel_008': 'the velocity is 4 m/s'}
+
+
+def check_s1(fails, bank):
+    by = {q['id']: q for lv in COUNTS for q in bank.get(lv, [])}
+    for qid, reading in Y_READINGS.items():
+        texts = [i['text'] for i in by[qid]['interpretations']]
+        want = 'The gradient means ' + reading
+        if want not in texts:
+            fails.append('gradient-hunter-s1-003 %s: the y-value reading must be worded %r (it is true where the graph reaches that value), not %r'
+                         % (qid, want, [t for t in texts if reading.lower() in t.lower()]))
+    c15 = by['gh_core_015']['points']
+    if any(b[1] > a[1] for a, b in zip(c15, c15[1:])):
+        fails.append('gradient-hunter-s1-004 gh_core_015: the car\'s value must never rise between plotted years: %r' % c15)
+    if 'gradient approximately 116.7' not in by['gh_alevel_009']['context']:
+        fails.append('gradient-hunter-s1-005 gh_alevel_009: 700 / 6 = 116.67 is written with no "approximately": %r' % by['gh_alevel_009']['context'])
+
+
 def check_bank(fails, bank):
+    check_s1(fails, bank)
     counts = {lv: len(bank.get(lv, [])) for lv in COUNTS}
     if counts != COUNTS:
         fails.append('bank: %s items by level, expected %s' % (counts, COUNTS))
@@ -311,6 +338,13 @@ PLANTS = [
     ('gradient-hunter-s1-002', "s1-002: core_019's true 'The rod reaches 30 deg C'",
      "{text:'The gradient means the rod\\'s temperature is 30 deg C',correct:false}",
      "{text:'The rod reaches 30 deg C',correct:false}"),
+    ('gradient-hunter-s1-003', "s1-003: the ball 'is 10 metres high' (true at t=0.5)",
+     "{text:'The gradient means the ball is 10 metres high',correct:false}", "{text:'The ball is 10 metres high',correct:false}"),
+    ('gradient-hunter-s1-004', "s1-004: core_015 rises between years 3 and 4", "[3,10500],[4,10000],[5,9000]", "[3,10000],[4,10500],[5,9000]"),
+    ('gradient-hunter-s1-005', "s1-005: alevel_009's 116.7 without 'approximately'", "has gradient approximately 116.7. The tangent", "has gradient 116.7. The tangent"),
+    ('gradient-hunter-s1-006', "s1-006: the start screen says click to find the gradient",
+     "Click two points on a real-world graph and work out the gradient of the chord. Then interpret",
+     "Click two points on a real-world graph to find the gradient of the chord. Then interpret"),
     ('gradient-hunter-t2-001', 't2-001: no lock on the options', '      if (!MaffsLock.lock(grid)) return;\n', ''),
     ('gradient-hunter-t2-003', 't2-003: a point for clicking the points',
      '  G.maxScore += 2;   // one for the gradient the student types, one for the interpretation\n',
@@ -323,6 +357,8 @@ PLANTS = [
 
 def run(html):
     fails = []
+    if html.count('work out the gradient of the chord') < 2:
+        fails.append('gradient-hunter-s1-006 start screen and instruction: the student works the gradient out and types it, so "to find the gradient" (R3) is wrong')
     bank = play(fails, html)
     if bank:
         check_bank(fails, bank)
