@@ -913,10 +913,12 @@ function fmt(v){
 // table's own sums, Σfx/Σf and √(Σfx²/Σf − (Σfx/Σf)²), never from a band round a stored figure. An answer
 // equal to the key at its 3 s.f. place is right; one that rounds to it but carries more figures gets the
 // format message and is not marked; anything else is wrong.
-function _isqrt(n){ if(n<2n) return n; let x=n, y=(x+1n)/2n; while(y<x){ x=y; y=(x+n/x)/2n; } return x; }
+// BigInt(…) calls, never 10n literals or **: the shared bank extractor's parser (ES2017) must read this page.
+const _B1=BigInt(1), _B2=BigInt(2), _B4=BigInt(4), _B10=BigInt(10), _B100=BigInt(100), _B10000=BigInt(10000);
+function _isqrt(n){ if(n<_B2) return n; let x=n, y=(x+_B1)/_B2; while(y<x){ x=y; y=(x+n/x)/_B2; } return x; }
 // a/b (BigInt, a >= 0, b > 0), or its square root, at 3 significant figures, half up: {key, dp}
 function _sf3(a,b,root){
-  const p=k=>10n**BigInt(k);
+  const p=k=>{ let r=_B1; for(let i=0;i<k;i++) r=r*_B10; return r; };
   const ge=e=>e>=0 ? (root ? a>=b*p(2*e) : a>=b*p(e)) : (root ? a*p(-2*e)>=b : a*p(-e)>=b);
   const v=Number(a)/Number(b);
   let e=Math.floor(Math.log10(root?Math.sqrt(v):v));
@@ -925,10 +927,10 @@ function _sf3(a,b,root){
   const dp=2-e;
   let r;
   if(!root){
-    r = dp>=0 ? (2n*a*p(dp)+b)/(2n*b) : (2n*a+b*p(-dp))/(2n*b*p(-dp));
+    r = dp>=0 ? (_B2*a*p(dp)+b)/(_B2*b) : (_B2*a+b*p(-dp))/(_B2*b*p(-dp));
   } else {
-    const m = dp>=0 ? _isqrt(4n*a*p(2*dp)/b) : _isqrt(4n*a/(b*p(-2*dp)));
-    r=(m+1n)/2n;
+    const m = dp>=0 ? _isqrt(_B4*a*p(2*dp)/b) : _isqrt(_B4*a/(b*p(-2*dp)));
+    r=(m+_B1)/_B2;
   }
   let key;
   if(dp>0){ const t=r.toString().padStart(dp+1,'0'); key=t.slice(0,-dp)+'.'+t.slice(-dp); }
@@ -940,10 +942,10 @@ function _sums(q){
   const n=BigInt(q.freqs.reduce((x,y)=>x+y,0));
   return {n:n, s1:BigInt(Math.round(q.sumFx*100)), s2:BigInt(Math.round(q.sumFx2*100))};
 }
-function meanKey(q){ const t=_sums(q); return _sf3(t.s1, 100n*t.n, false); }
+function meanKey(q){ const t=_sums(q); return _sf3(t.s1, _B100*t.n, false); }
 // The variance is asked to 3 s.f. too (Jon, 13 Oct 2026; stat-attack-s1-003), from the exact Σfx²/Σf − (Σfx/Σf)².
-function varKey(q){ const t=_sums(q); return _sf3(100n*t.n*t.s2-t.s1*t.s1, 10000n*t.n*t.n, false); }
-function sdKey(q){ const t=_sums(q); return _sf3(100n*t.n*t.s2-t.s1*t.s1, 10000n*t.n*t.n, true); }
+function varKey(q){ const t=_sums(q); return _sf3(_B100*t.n*t.s2-t.s1*t.s1, _B10000*t.n*t.n, false); }
+function sdKey(q){ const t=_sums(q); return _sf3(_B100*t.n*t.s2-t.s1*t.s1, _B10000*t.n*t.n, true); }
 // A typed table entry is exact (f × x, x²): marked by MaffsAnswer.exact(), never to a band (SR-2).
 function _exactCol(id,vals){
   for(let i=0;i<vals.length;i++){ if(MaffsAnswer.exact($(id+i).value,vals[i])!=='correct') return false; }
