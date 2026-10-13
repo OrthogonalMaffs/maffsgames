@@ -14,6 +14,8 @@
  *   fallback  the game's default level; it must be one of levels.
  *   boards    optional: extra keys the game submits to the leaderboard that are boards, not levels
  *             (session lengths such as 'q20', tournament boards such as 'gcse-tournament').
+ *   boardPatterns  optional: regular-expression sources for board keys that cannot be listed (one board a day,
+ *             such as '^daily-\d{4}-\d{2}-\d{2}$').
  *
  * resolve() returns the ?level= value if, and only if, it is a member of the declared array (a plain
  * indexOf over the array: never a property lookup, so 'constructor', '__proto__' and 'toString' are
@@ -59,7 +61,7 @@
       try { console.warn('MaffsLevel: ' + slug + ' fallback "' + fallback + '" is not one of its levels'); } catch (e) {}
       fallback = levels[0];
     }
-    decls[slug] = { levels: levels.slice(), fallback: fallback, boards: strings(cfg.boards), fromUrl: false, asked: false };
+    decls[slug] = { levels: levels.slice(), fallback: fallback, boards: strings(cfg.boards), boardPatterns: strings(cfg.boardPatterns), fromUrl: false, asked: false };
 
     var asked = readParam();
     if (asked === null) return fallback;
@@ -75,14 +77,18 @@
 
   function declared(slug) {
     var d = Object.prototype.hasOwnProperty.call(decls, slug) ? decls[slug] : null;
-    return d ? { levels: d.levels.slice(), fallback: d.fallback, boards: d.boards.slice(), fromUrl: d.fromUrl, asked: d.asked } : null;
+    return d ? { levels: d.levels.slice(), fallback: d.fallback, boards: d.boards.slice(), boardPatterns: d.boardPatterns.slice(), fromUrl: d.fromUrl, asked: d.asked } : null;
   }
 
   // True when the game has declared no levels at all (not migrated) or declared this key as a level or a board.
   function allows(slug, key) {
     var d = Object.prototype.hasOwnProperty.call(decls, slug) ? decls[slug] : null;
     if (!d) return true;
-    return d.levels.indexOf(key) !== -1 || d.boards.indexOf(key) !== -1;
+    if (d.levels.indexOf(key) !== -1 || d.boards.indexOf(key) !== -1) return true;
+    for (var i = 0; i < d.boardPatterns.length; i++) {
+      try { if (new RegExp(d.boardPatterns[i]).test(String(key))) return true; } catch (e) { /* a bad pattern allows nothing */ }
+    }
+    return false;
   }
 
   global.MaffsLevel = { resolve: resolve, declared: declared, allows: allows };

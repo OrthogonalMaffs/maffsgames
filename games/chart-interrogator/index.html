@@ -146,6 +146,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
@@ -394,7 +395,7 @@ function checkReady(){
 // URL param support
 (function(){
   var p=new URLSearchParams(window.location.search);
-  var t=p.get('type'),l=p.get('level');
+  var t=p.get('type'),lv=MaffsLevel.resolve({slug:'chart-interrogator',levels:['gcse','alevel','core','l4'],fallback:'gcse'}),l=MaffsLevel.declared('chart-interrogator').fromUrl?lv:null;
   if(t){var tb=document.querySelector('[data-type="'+t+'"]');if(tb){selectType(tb);}}
   if(l){var lb=document.querySelector('[data-level="'+l+'"]');if(lb){selectLevel(lb);}}
   if(t&&l){beginGame();}

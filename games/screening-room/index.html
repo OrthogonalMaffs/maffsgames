@@ -219,6 +219,7 @@ body.accessible{background-color:#12141f !important}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
@@ -575,11 +576,11 @@ var currentQ = null;
 var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // ─── LEVEL SELECT ───
-var pa = new URLSearchParams(location.search);
-// Only the game's own levels (t4-006: 'constructor', '__proto__' and 'toString' are on every object); anything else
+// MaffsLevel is the one reader (t4-006: 'constructor', '__proto__' and 'toString' are never levels); anything else
 // leaves the default level on the start screen, unserved and unlogged.
-if (Object.prototype.hasOwnProperty.call(QUESTIONS, pa.get('level') || '')) {
-  currentLevel = pa.get('level');
+var lvReq = MaffsLevel.resolve({slug:'screening-room',levels:['gcse','alevel','core','level4'],fallback:'gcse'});
+if (Object.prototype.hasOwnProperty.call(QUESTIONS, lvReq)) {
+  currentLevel = lvReq;
 }
 document.querySelectorAll('.level-btn').forEach(function(b) {
   b.classList.toggle('active', b.dataset.level === currentLevel);
