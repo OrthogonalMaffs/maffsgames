@@ -27,7 +27,8 @@ findings:
     where C is on the major arc)" key 40°, options 80°, 140°, 50°; the figure (A 270°, B 195°, C 65°) drew the "40°"
     arc over the 142.5° angle on C''s side of AB. Q35 "Angle OAB = 25° (B on circle)." | "Find angle BAT" key 65°
     (SWEEP-1, batch 7; the old page fails the new check on all ten items)'
-  status: open
+  status: fixed
+  pr: 344
 - id: circle-theorem-spotter-s1-002
   severity: MEDIUM
   jc: false
@@ -41,7 +42,8 @@ findings:
     theorem does this diagram show?" key "Two tangents from a point are equal", d "Tangent-radius", "Alternate
     segment theorem", "Angle in semicircle"; twoTangents draws seg(O, A), seg(O, B) and sq(A, O, P), sq(B, O, P)
     (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 344
 - id: circle-theorem-spotter-s1-003
   severity: LOW
   jc: true
