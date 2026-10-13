@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-595 findings in 79 games.
+606 findings in 79 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 26 | 0 | 27 |
 | HIGH | 7 | 205 | 0 | 212 |
-| MEDIUM | 113 | 167 | 3 | 283 |
-| LOW | 40 | 32 | 1 | 73 |
-| **All** | 161 | 430 | 4 | 595 |
+| MEDIUM | 116 | 168 | 3 | 287 |
+| LOW | 47 | 32 | 1 | 80 |
+| **All** | 171 | 431 | 4 | 606 |
 
 ### By class
 
@@ -38,23 +38,23 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:wrong-explanation-text | 10 | 36 |
 | 5 | 26 | 26 |
 | 4 | 5 | 22 |
+| NEW:convention-unstated | 7 | 19 |
 | 7 | 5 | 16 |
-| NEW:convention-unstated | 4 | 15 |
+| NEW:text-contradicts-content | 12 | 14 |
 | NEW:value-equal distractors | 0 | 14 |
 | 8 | 3 | 11 |
-| NEW:text-contradicts-content | 8 | 10 |
 | NEW:precision-not-stated | 2 | 9 |
 | NEW:equal-value-options | 0 | 8 |
+| NEW:raw-tex-on-screen | 3 | 8 |
 | NEW:hand-typed explanation figure | 5 | 7 |
-| NEW:raw-tex-on-screen | 2 | 7 |
 | NEW:ill-posed wording | 1 | 6 |
+| NEW:wording | 5 | 6 |
 | 11 | 0 | 5 |
 | NEW:board-mixes-session-lengths | 5 | 5 |
 | NEW:marking-by-structure | 0 | 5 |
 | NEW:phone-layout | 4 | 5 |
 | B7 (ledgered) | 3 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
-| NEW:wording | 3 | 4 |
 | 9 | 1 | 3 |
 | NEW:level-content-mismatch | 2 | 3 |
 | NEW:phone-fold | 3 | 3 |
@@ -126,7 +126,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | Game | Listed | Verifier | C | H | M | L | open | fixed | ruled |
 |---|---|---|---|---|---|---|---|---|---|
 | `52dle` | yes | verify-52dle.py | 0 | 1 | 3 | 0 | 3 | 1 | 0 |
-| `angle-ace` | yes | verify-angle-ace.py | 0 | 6 | 7 | 0 | 0 | 13 | 0 |
+| `angle-ace` | yes | verify-angle-ace.py | 0 | 6 | 7 | 2 | 2 | 13 | 0 |
 | `bearing-blitz` | yes | verify-bearing-blitz.py | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `better-value` | yes | verify-better-value.py | 0 | 5 | 4 | 0 | 3 | 6 | 0 |
 | `binomial-blaster` | yes | verify-binomial-blaster.py | 2 | 15 | 4 | 1 | 1 | 21 | 0 |
@@ -173,21 +173,21 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `modular-battle` | yes | verify-modular-battle.py | 0 | 0 | 3 | 1 | 3 | 1 | 0 |
 | `moments-master` | yes | verify-moments-master.py | 1 | 8 | 4 | 2 | 2 | 13 | 0 |
 | `negative-number-line` | yes | verify-negative-number-line.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
-| `new-shapes` | yes | verify-new-shapes.py | 0 | 1 | 7 | 1 | 8 | 1 | 0 |
+| `new-shapes` | yes | verify-new-shapes.py | 0 | 1 | 8 | 1 | 9 | 1 | 0 |
 | `partial-fractions-duel` | yes | verify-partial-fractions-duel.py | 0 | 7 | 3 | 1 | 0 | 11 | 0 |
 | `percentage-flip` | yes | verify-percentage-flip.py | 0 | 0 | 2 | 0 | 1 | 1 | 0 |
 | `prime-factorisation` | yes | verify-prime-factorisation.py | 0 | 0 | 3 | 2 | 5 | 0 | 0 |
 | `prime-or-composite` | yes | verify-prime-or-composite.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
 | `prisoners-dilemma` | yes | verify-prisoners-dilemma.py | 0 | 2 | 4 | 1 | 4 | 3 | 0 |
 | `probability-paradox` | yes | verify-probability-paradox.py | 1 | 4 | 5 | 1 | 0 | 11 | 0 |
-| `probability-pioneer` | yes | verify-probability-pioneer.py | 0 | 2 | 2 | 0 | 0 | 4 | 0 |
+| `probability-pioneer` | yes | verify-probability-pioneer.py | 0 | 2 | 3 | 1 | 2 | 4 | 0 |
 | `proof-builder` | yes | verify-proof-builder.py | 2 | 14 | 7 | 1 | 3 | 21 | 0 |
 | `proportion-blaster` | yes | verify-proportion-blaster.py | 0 | 1 | 0 | 0 | 0 | 1 | 0 |
 | `scale-factor-scaling` | yes | verify-scale-factor-scaling.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
 | `screening-room` | yes | verify-screening-room.py | 1 | 4 | 10 | 2 | 1 | 15 | 1 |
-| `sequence-solver` | yes | verify-sequence-solver.py | 0 | 1 | 2 | 0 | 2 | 1 | 0 |
+| `sequence-solver` | yes | verify-sequence-solver.py | 0 | 1 | 4 | 2 | 5 | 2 | 0 |
 | `seven-bridges` | yes | verify-seven-bridges.py | 0 | 2 | 6 | 1 | 6 | 3 | 0 |
-| `shape-shifter` | yes | verify-shape-shifter.py | 2 | 1 | 5 | 1 | 5 | 4 | 0 |
+| `shape-shifter` | yes | verify-shape-shifter.py | 2 | 1 | 5 | 3 | 7 | 4 | 0 |
 | `spot-the-error` | yes | verify-spot-the-error.py | 0 | 13 | 4 | 2 | 0 | 19 | 0 |
 | `spot-the-muppet` | yes | verify-spot-the-muppet.py | 0 | 5 | 4 | 0 | 0 | 8 | 1 |
 | `standard-form-blitz` | yes | verify-standard-form-blitz.py | 0 | 0 | 1 | 0 | 0 | 1 | 0 |
