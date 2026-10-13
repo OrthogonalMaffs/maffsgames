@@ -58,7 +58,7 @@
   "Gradient Hunter (every chord gradient exact from its own points; stated tangents are the drawn curve's; one true interpretation; the typed gradient marked, clicking scores nothing; answer once and Next once, played in Chromium)": "9",
   "Graph Sketcher (keys recomputed from each printed equation)": "16",
   "Graph Transformer (BFS reachability + par verification; every Show-steps caption and 1/x equation checked)": "6",
-  "Growth and Decay (keys recomputed from each printed model)": "24",
+  "Growth and Decay (keys recomputed from each printed model; no Estimate without a method; percentage contexts stay in 0-100)": "24",
   "Higher Power Pairs (two cards match exactly when they are worth the same; played in Chromium)": "7",
   "Index Laws (all 45 keys recomputed symbolically from the question's TeX; every option classified; every explanation's arithmetic recomputed; every option pressed in Chromium)": "11",
   "Integration Duel (every key and option checked with SymPy, explanations checked, every option marked in Chromium)": "15",
