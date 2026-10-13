@@ -9,7 +9,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | met: 0 of 96 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 7 open (0 CRITICAL, 7 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 5 open (0 CRITICAL, 5 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, SR-14 fields |
 | 4 | Every level serves 40+ (tracked, not part of the gate: canon §0.2, Jon 12 Oct 2026) | not met, not gating: 126 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | met: 0 in the roster's Unlisted section |
@@ -22,20 +22,20 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
-| HIGH | 14 | 223 | 0 | 237 |
-| MEDIUM | 245 | 251 | 3 | 499 |
-| LOW | 236 | 95 | 1 | 332 |
-| **All** | 496 | 603 | 4 | 1103 |
+| HIGH | 12 | 225 | 0 | 237 |
+| MEDIUM | 244 | 252 | 3 | 499 |
+| LOW | 235 | 96 | 1 | 332 |
+| **All** | 492 | 607 | 4 | 1103 |
 
 ### By class
 
 | Class | open | total |
 |---|---|---|
-| NEW:wording | 115 | 128 |
+| NEW:wording | 114 | 128 |
 | 2 | 12 | 111 |
-| NEW:text-contradicts-content | 65 | 90 |
+| NEW:text-contradicts-content | 64 | 90 |
 | 3 | 5 | 86 |
-| NEW:convention-unstated | 36 | 78 |
+| NEW:convention-unstated | 35 | 78 |
 | NEW:wrong-explanation-text | 26 | 71 |
 | 6 | 24 | 56 |
 | NEW:true-wrong-option | 16 | 50 |
@@ -81,7 +81,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:hidden-data | 0 | 2 |
 | NEW:prose-through-katex | 2 | 2 |
 | NEW:unmarkable free text | 0 | 2 |
-| NEW:wrong-key | 1 | 2 |
+| NEW:wrong-key | 0 | 2 |
 | wording | 2 | 2 |
 | 10 | 0 | 1 |
 | NEW:a11y state | 0 | 1 |
@@ -172,7 +172,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `expected-damage` | yes | verify-expected-damage.py | 0 | 1 | 6 | 2 | 8 | 1 | 0 |
 | `factor-race` | yes | verify-factor-race.py | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
 | `factor-theorem` | yes | verify-factor-theorem.py | 2 | 5 | 15 | 4 | 7 | 18 | 1 |
-| `fermi-lab` | yes | verify-fermi-lab.py | 0 | 2 | 1 | 1 | 4 | 0 | 0 |
+| `fermi-lab` | yes | verify-fermi-lab.py | 0 | 2 | 1 | 1 | 0 | 4 | 0 |
 | `force-resolver` | yes | verify-force-resolver.py | 1 | 7 | 12 | 5 | 3 | 22 | 0 |
 | `formula-forge` | yes | verify-formula-forge.py | 0 | 1 | 8 | 3 | 8 | 4 | 0 |
 | `formula-plug-in` | yes | verify-formula-plug-in.py | 0 | 1 | 4 | 2 | 6 | 1 | 0 |
@@ -242,11 +242,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 ### `new-shapes` (Year 6)
 
 - **HIGH** new-shapes-s1-001, `games/new-shapes/index.html:504 (renderParallelogram, hLabel left 168px), :583 (renderTrapezium, hLabel right 20px)`: The h label is not drawn on the dashed height line: on every parallelogram it sits over the slanted side (and hides it), and on every trapezium it straddles the slanted side, so it reads as the slant length, the very ...
-
-### `fermi-lab` (KS3, GCSE, A-Level, L4, Core)
-
-- **HIGH** fermi-lab-s1-001 (JC), `games/fermi-lab/index.html:417 (eq_bus_distance)`: The question asks for the distance travelled by school buses, but the chain multiplies students × km × 2 × days, the distance travelled by students; at about 50 a bus the buses travel some 150,000-300,000 km, a factor...
-- **HIGH** fermi-lab-s1-003, `games/fermi-lab/index.html (piano-tuners-london; start screen)`: piano-tuners-london keys 140 while its own chain gives 82 (inside Brilliant): a wrong key. Part 2 #6: the key follows the chain (82) (Split: the parent entry held 2 defects; the others are fermi-lab-s1-004.)
 
 ### `maths-court` (KS3, GCSE, Core)
 
