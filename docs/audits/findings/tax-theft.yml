@@ -23,7 +23,8 @@ findings:
     and bars the gross £50,270 on Hard; the old table is planted'
   evidence: '106,000: allowance £9,570, taxable £96,430; the table''s gross bands put £50,270 - £9,570 = £40,700 at
     20%, not £37,700 (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 355
 - id: tax-theft-s1-002
   severity: LOW
   jc: false
@@ -35,7 +36,8 @@ findings:
     payslip is annual throughout (its last row is Net Annual Pay, gross minus deductions; the step''s monthly answer
     stays in its feedback and step list), and the label reads "You Keep per Year". Checked and planted'
   evidence: 'Payslip "Period: Annual", row "Net Monthly Pay" £5,903.12 for £106,000 (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 355
 - id: tax-theft-s1-003
   severity: LOW
   jc: false
@@ -47,7 +49,8 @@ findings:
     checks every wrong-amount probe''s hint; the old hint is planted'
   evidence: 'hard 130000, Step 0 key £0.00; typed 1.00 -> "Have you accidentally divided by 12? Work in annual
     figures first." (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 355
 - id: tax-theft-s1-004
   severity: LOW
   jc: false
@@ -57,7 +60,8 @@ findings:
   summary: 'Easy''s closing line "Welcome to adulthood." is the youth register canon §7.5 retired. Replaced with
     Jon''s line, verbatim (13 Oct 2026): "But at least the potholes get fixed, right?" Checked and planted'
   evidence: 'WRY_LINES.easy (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 355
 - id: tax-theft-s1-005
   severity: MEDIUM
   jc: false
