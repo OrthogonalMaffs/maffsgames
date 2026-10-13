@@ -98,3 +98,66 @@ findings:
   evidence: 'docs/audit-resit-correctness-2026-10-04.md F5. '
   status: fixed
   pr: 49
+- id: equation-builder-s1-001
+  severity: HIGH
+  jc: false
+  class: NEW:text-contradicts-content
+  level: ks3, gcse, level4
+  where: 'games/equation-builder/index.html: 31 items whose stem asked for an expression while the key was a formula
+    X = ... (ks3 10, gcse 6, level4 15); scripts/verify-equation-builder.py kind_of() read the kind from the key only'
+  summary: 'A question asking for "an expression for X" was keyed "X = ...", so the bare expression it asks for (in UK
+    usage an expression has no "=") was refused ("That doesn''t match the question yet."), then scored wrong.
+    SR-20''s count at every level; Jon''s ruling of 13 Oct: where the stem names the subject it now asks for "a
+    formula for X" (27 items, keys unchanged); where it names none the key is the bare expression (ks3_014,
+    ks3_033, l4_015, l4_021). The verifier now reads the kind from the question''s own words and fails a key whose
+    form disagrees (SR-25)'
+  evidence: 'ks3_002 "Write an expression for the total mass T kg of the mortar mixture." key T = 6x, 6x refused;
+    l4_015 "Simplify log(8) + log(4) − log(2). Write the single logarithm expression." key log(8×4 ÷ 2) = log(16),
+    log(16) refused (SWEEP-1, batch 3)'
+  status: open
+- id: equation-builder-s1-002
+  severity: HIGH
+  jc: false
+  class: NEW:true-wrong-option
+  level: gcse
+  where: 'games/equation-builder/index.html: gcse_008, gcse_012, gcse_014, gcse_018, gcse_019'
+  summary: 'Left from r-003: five "Write the equation for/to find X" items had keys of the form X = ..., so the
+    verifier classed them as formulas and every rearrangement was marked wrong, though gcse_007, worded the same,
+    accepts them (SR-13 decision 5). Now classed as equations from their words; every rearrangement accepted, the
+    operator tiles they need added to valid (gcse_008 ×, gcse_012 −, gcse_018 ×, gcse_019 +)'
+  evidence: 'gcse_019 "Write the equation for the IQR." key IQR = Q3 − Q1: Q3 − IQR = Q1 and Q1 = Q3 − IQR were marked
+    wrong; gcse_008 T × 3×10⁸ = 4.013×10¹⁶ could not be built (× a distractor) (SWEEP-1, batch 3)'
+  status: open
+- id: equation-builder-s1-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:hint-gives-answer
+  level: ks3, gcse, level4
+  where: games/equation-builder/index.html renderTiles (tiles drawn in bank order)
+  summary: 'The tiles were never shuffled and every bank lists the key''s tiles first, in order, so tapping the tiles
+    left to right built the key in 115 of 120 questions. Jon''s ruling of 13 Oct: shuffle them for each question so
+    the key''s tiles are not first (orderTiles; the verifier checks it in Chromium)'
+  evidence: 'Assembly: the first tiles were the key in 68 of 68; gap-fill: the missing tiles in order in 47 of 52
+    (SWEEP-1, batch 3)'
+  status: open
+- id: equation-builder-s1-004
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: level4
+  where: games/equation-builder/index.html l4_010
+  summary: '"Express ... in partial fractions" is keyed with the form only: no tile offers A = 2/3 and B = 7/3. Wording
+    ("Write the form of the partial fractions"), open for Jon'
+  evidence: '"Express (3x + 1)/((x + 1)(x − 2)) in partial fractions." key A/(x+1) + B/(x−2) (SWEEP-1, batch 3)'
+  status: open
+- id: equation-builder-s1-005
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: level4
+  where: games/equation-builder/index.html l4_021
+  summary: 'The stem says "Evaluate the area" but the key is the unevaluated integral (15 is never asked). Wording, open
+    for Jon'
+  evidence: '"Evaluate the area under y = 2x between x = 1 and x = 4. Write the definite integral expression." key ∫₁⁴
+    2x dx (SWEEP-1, batch 3)'
+  status: open
