@@ -66,13 +66,15 @@ trig-identity-duel trig-wars trig-worms truth-buster truth-will-set-you-free uni
 word-problem-decoder wrong-on-the-internet
 '''.split())
 MIGRATED = frozenset('''
-52dle angle-ace binomial-blaster complex-converter constructions-lab curling-friction decimal-detective
-differentiation-duel distinctly-average equation-builder equatle expected-damage fermi-lab force-resolver
-formula-plug-in four-quadrant-explorer fraction-equivalence higher-power integration-duel just-pythag-it-bruv
-like-terms-collector maths-court matrix-crunch moments-master negative-number-line new-shapes percentage-flip
-prime-factorisation prime-or-composite prisoners-dilemma probability-pioneer proof-builder sequence-solver
+52dle angle-ace bearing-blitz better-value binomial-blaster circle-theorem-spotter complex-converter
+constructions-lab correlation-or-coincidence curling-friction decimal-detective differentiation-duel
+distinctly-average equation-builder equatle estimation-engine expected-damage fermi-lab force-resolver
+formula-plug-in four-quadrant-explorer fraction-equivalence graph-transformer higher-power index-laws
+integration-duel just-pythag-it-bruv like-terms-collector linear-equation-solver maths-court matrix-crunch
+moments-master negative-number-line new-shapes percentage-flip prime-factorisation prime-or-composite
+prisoners-dilemma probability-paradox probability-pioneer proof-builder proportion-blaster sequence-solver
 seven-bridges shape-shifter six-sevens-bruv split-it spot-the-error spot-the-muppet suvat terrible-advice
-think-of-a-number truth-buster word-problem-decoder wrong-on-the-internet
+think-of-a-number trig-wars trig-worms truth-buster word-problem-decoder wrong-on-the-internet
 '''.split())
 
 # The portal has no Year 6 filter button, so a game that serves only Year 6 is reachable under the KS3 filter and its
@@ -222,14 +224,15 @@ def selftest(root):
     page = 'games/%s/index.html' % slug
     good = "<script src=\"../../schools/assets/level.js\"></script><script>var level=MaffsLevel.resolve({slug:'%s',levels:%s,fallback:'%s'});</script>"
     levels = roster[slug]
+    bare = RESOLVE.sub('', files[page])    # the page without any declaration it already has
     plants = [
         ('a declaration that differs from the roster',
-         {page: files[page] + good % (slug, json.dumps(levels + ['alevel']).replace('"', "'"), levels[0])},
+         {page: bare + good % (slug, json.dumps(levels + ['alevel']).replace('"', "'"), levels[0])},
          'but the roster lists'),
         ('a link to a key the game does not serve',
          {'index.html': files['index.html'] + '<a href="games/%s/?level=alevel">x</a>' % slug}, 'but %s serves' % slug),
         ('a migrated game that reads ?level itself',
-         {page: files[page] + good % (slug, json.dumps(levels).replace('"', "'"), levels[0])
+         {page: bare + good % (slug, json.dumps(levels).replace('"', "'"), levels[0])
           + "<script>var l=new URLSearchParams(location.search).get('level');</script>"}, 'reads ?level with its own code'),
     ]
     for name, patch, want in plants:
