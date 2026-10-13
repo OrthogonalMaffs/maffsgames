@@ -93,7 +93,8 @@ findings:
     the overall rate"; the verifier forbids both claims and plants the first'
   evidence: 'alevel_10 tree: honest flagged 47, cheated flagged 45; alevel_07 table: late 15/50, on time 10/200
     (SWEEP-1, batch 8)'
-  status: open
+  status: fixed
+  pr: 348
 - id: given-that-s1-002
   severity: LOW
   jc: false

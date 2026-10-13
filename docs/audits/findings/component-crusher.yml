@@ -168,7 +168,8 @@ findings:
     non-zero multiple and the feedback says so; the verifier tries −1× and 2× the key on every direction-vector prompt
     and plants the old part'
   evidence: "{type:'vec3',prompt:'Direction vector of the line.',answers:[2,-1,3]} (SWEEP-1, batch 8)"
-  status: open
+  status: fixed
+  pr: 348
 - id: component-crusher-s1-002
   severity: MEDIUM
   jc: false
@@ -180,7 +181,8 @@ findings:
     plants the old prompt'
   evidence: "'What does this resultant tell us?' key 'Purely vertical — mast is in horizontal equilibrium' (SWEEP-1,
     batch 8)"
-  status: open
+  status: fixed
+  pr: 348
 - id: component-crusher-s1-003
   severity: MEDIUM
   jc: false
@@ -191,7 +193,8 @@ findings:
     AL14 states its frame) (SR-17). Fixed: the prompt states both; the verifier fails a bearing prompt without them,
     and plants the old one'
   evidence: "'Find the bearing of the motion, in degrees to 1 d.p.' key 126.9 (SWEEP-1, batch 8)"
-  status: open
+  status: fixed
+  pr: 348
 - id: component-crusher-s1-004
   severity: MEDIUM
   jc: false

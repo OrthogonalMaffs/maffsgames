@@ -34,7 +34,8 @@ findings:
     first label 20), so its class width could not be read off the axis (SR-25). Fixed: every class boundary off the
     grid is labelled; the verifier draws every histogram and fails an unlabelled boundary, and plants the old axis'
   evidence: 'H5 classes from 16; x labels at multiples of 10 only (SWEEP-1, batch 8)'
-  status: open
+  status: fixed
+  pr: 348
 - id: chart-interrogator-s1-003
   severity: MEDIUM
   jc: false
@@ -47,7 +48,8 @@ findings:
     verifier fails fewer than four, and plants the old options'
   evidence: "options:shuffleArr([maxFreqInterval.interval,freqs[0].interval,freqs[freqs.length-1].interval,
     freqs[Math.min(2,freqs.length-1)].interval].filter(unique)) (SWEEP-1, batch 8)"
-  status: open
+  status: fixed
+  pr: 348
 - id: chart-interrogator-s1-004
   severity: LOW
   jc: false

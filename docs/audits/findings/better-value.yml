@@ -151,7 +151,8 @@ findings:
     the verifier recomputes every break-even and fails a threshold distractor that is true at it, and plants the old
     text'
   evidence: "{text:'The pass is worth it if you eat 15 or more lunches per month',correct:false} (SWEEP-1, batch 8)"
-  status: open
+  status: fixed
+  pr: 348
 - id: better-value-s1-002
   severity: MEDIUM
   jc: true
@@ -173,7 +174,8 @@ findings:
     fault named (the time cost). Fixed: the distractor gives its reason, "because the time spent prepping costs
     nothing", which is the error; in the verifier''s MUST_SAY, planted'
   evidence: "{text:'Meal prep is clearly cheaper — £790 vs £825 for buying',correct:false} (SWEEP-1, batch 8)"
-  status: open
+  status: fixed
+  pr: 348
 - id: better-value-s1-004
   severity: MEDIUM
   jc: false
@@ -183,7 +185,8 @@ findings:
   summary: 'The keyed comparison of buying a van with leasing one ignores what the bought van is worth after 3 years,
     which the scenario never said (SR-17). Fixed: "Compare over 3 years, ignoring what the van is worth at the end."'
   evidence: "scenario '... Compare over 3 years.' (SWEEP-1, batch 8)"
-  status: open
+  status: fixed
+  pr: 348
 - id: better-value-s1-005
   severity: LOW
   jc: false
@@ -193,7 +196,8 @@ findings:
   summary: 'The explanation said a TPFT policy gives "no cover if your car is damaged"; TPFT covers fire and theft
     damage. Fixed: "no cover for damage to your own car in an accident"'
   evidence: "'no cover if your car is damaged (only TPFT)' (SWEEP-1, batch 8)"
-  status: open
+  status: fixed
+  pr: 348
 - id: better-value-s1-006
   severity: LOW
   jc: true

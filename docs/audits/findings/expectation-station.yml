@@ -246,7 +246,8 @@ findings:
     and plants the old blank'
   evidence: "es_alevel_003 table [{x:1,p:'k',given:false},{x:2,p:'k'},{x:3,p:'2k'},{x:4,p:'k',given:false}], tiles
     0.2, 0.2, 0.1, 0.4 (SWEEP-1, batch 8)"
-  status: open
+  status: fixed
+  pr: 348
 - id: expectation-station-s1-002
   severity: LOW
   jc: false
@@ -267,7 +268,8 @@ findings:
     0.3333333333333333, not as the tile 1/3. Fixed: the reveal writes the tile''s own string, or the exact decimal;
     the verifier fills a wrong table, reads the revealed cells and fails a float string, and plants the old reveal'
   evidence: 'cell.textContent = formatP(completedTable[i].p) (SWEEP-1, batch 8)'
-  status: open
+  status: fixed
+  pr: 348
 - id: expectation-station-s1-004
   severity: MEDIUM
   jc: false
@@ -279,7 +281,8 @@ findings:
     of all", false on every item; the verifier fails a "Half of all" card, its card check holds each "Exactly half"
     card false against the table, and es_core_033''s old card is planted'
   evidence: "es_core_033: P(X > 0.95) = 0.40 + 0.20 + 0.05 = 0.65 (SWEEP-1, batch 8)"
-  status: open
+  status: fixed
+  pr: 348
 - id: expectation-station-s1-005
   severity: LOW
   jc: true

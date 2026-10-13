@@ -122,7 +122,8 @@ findings:
     "Divide by π, then square root. If you square root first, divide by √π, not π: √A/π is wrong."; the verifier
     forbids the old claim and plants it'
   evidence: "misconception:'Divide by π first, THEN square root. Not the other way around.' (SWEEP-1, batch 8)"
-  status: open
+  status: fixed
+  pr: 348
 - id: formula-forge-s1-002
   severity: LOW
   jc: false
@@ -134,7 +135,8 @@ findings:
     its coefficient."; in the verifier''s forbidden list'
   evidence: "misconception:'Always isolate the term with your subject first, THEN deal with coefficients.' (SWEEP-1,
     batch 8)"
-  status: open
+  status: fixed
+  pr: 348
 - id: formula-forge-s1-003
   severity: LOW
   jc: true
