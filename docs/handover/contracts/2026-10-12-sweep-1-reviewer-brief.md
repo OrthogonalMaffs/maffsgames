@@ -37,6 +37,13 @@ d. **SR-14 sensitive content** in student-facing text: banned everywhere: death,
 
 Also note (briefly) any outright WRONG key or wrong explanation figure you happen to see.
 
+**Two more things to report (Jon, 13 Oct 2026):**
+e. **Verifier gap.** Does scripts/verify-<slug>.py recompute the game's worked steps, hints, explanations and feedback
+   figures (not just the keys)? Name each student-facing explanation / hint / worked-step / feedback text the verifier
+   does NOT check (file:line). If the game shows none, say so.
+f. **Negative typed answers.** Any typed-answer box with inputmode="decimal" (iOS's decimal pad has no minus key):
+   can any of its answers be negative? Count them (file:line, how many of how many).
+
 ## Standing rulings that already decide things (do not report these as open questions)
 - SR-4: distractors come from nameable student errors; four distinct options; none equal in value to the key unless
   the ask names the form that tells them apart.
