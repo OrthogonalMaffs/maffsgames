@@ -23,9 +23,9 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 |---|---|---|---|---|
 | CRITICAL | 1 | 26 | 0 | 27 |
 | HIGH | 7 | 205 | 0 | 212 |
-| MEDIUM | 116 | 164 | 3 | 283 |
+| MEDIUM | 113 | 167 | 3 | 283 |
 | LOW | 40 | 32 | 1 | 73 |
-| **All** | 164 | 427 | 4 | 595 |
+| **All** | 161 | 430 | 4 | 595 |
 
 ### By class
 
@@ -37,7 +37,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 1 | 5 | 37 |
 | NEW:wrong-explanation-text | 10 | 36 |
 | 5 | 26 | 26 |
-| 4 | 8 | 22 |
+| 4 | 5 | 22 |
 | 7 | 5 | 16 |
 | NEW:convention-unstated | 4 | 15 |
 | NEW:value-equal distractors | 0 | 14 |
@@ -143,7 +143,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `curling-friction` | yes | verify-curling-friction.py | 0 | 3 | 3 | 2 | 1 | 7 | 0 |
 | `decimal-detective` | yes | verify-decimal-detective.py | 0 | 2 | 2 | 0 | 0 | 4 | 0 |
 | `differentiation-duel` | yes | verify-differentiation-duel.py | 0 | 2 | 10 | 2 | 0 | 14 | 0 |
-| `dimension-checker` | yes | verify-dimension-checker.py | 0 | 3 | 3 | 1 | 2 | 5 | 0 |
+| `dimension-checker` | yes | verify-dimension-checker.py | 0 | 3 | 3 | 1 | 1 | 6 | 0 |
 | `eigenvalue-extractor` | yes | verify-eigenvalue-extractor.py | 0 | 1 | 3 | 1 | 4 | 1 | 0 |
 | `eigenvector-engine` | yes | verify-eigenvector-engine.py | 1 | 1 | 2 | 8 | 1 | 11 | 0 |
 | `equation-builder` | yes | verify-equation-builder.py | 1 | 1 | 3 | 0 | 0 | 5 | 0 |
@@ -170,11 +170,11 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `linear-equation-solver` | yes | verify-linear-equation-solver.py | 1 | 1 | 2 | 1 | 1 | 4 | 0 |
 | `log-laws` | yes | verify-log-laws.py | 1 | 4 | 0 | 2 | 0 | 7 | 0 |
 | `matrix-crunch` | yes | verify-matrix-crunch.py | 0 | 2 | 3 | 1 | 3 | 3 | 0 |
-| `modular-battle` | yes | verify-modular-battle.py | 0 | 0 | 3 | 1 | 4 | 0 | 0 |
+| `modular-battle` | yes | verify-modular-battle.py | 0 | 0 | 3 | 1 | 3 | 1 | 0 |
 | `moments-master` | yes | verify-moments-master.py | 1 | 8 | 4 | 2 | 2 | 13 | 0 |
 | `negative-number-line` | yes | verify-negative-number-line.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
 | `new-shapes` | yes | verify-new-shapes.py | 0 | 1 | 7 | 1 | 8 | 1 | 0 |
-| `partial-fractions-duel` | yes | verify-partial-fractions-duel.py | 0 | 7 | 3 | 1 | 1 | 10 | 0 |
+| `partial-fractions-duel` | yes | verify-partial-fractions-duel.py | 0 | 7 | 3 | 1 | 0 | 11 | 0 |
 | `percentage-flip` | yes | verify-percentage-flip.py | 0 | 0 | 2 | 0 | 1 | 1 | 0 |
 | `prime-factorisation` | yes | verify-prime-factorisation.py | 0 | 0 | 3 | 2 | 5 | 0 | 0 |
 | `prime-or-composite` | yes | verify-prime-or-composite.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
