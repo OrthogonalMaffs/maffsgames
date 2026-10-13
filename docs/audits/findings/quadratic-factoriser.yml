@@ -27,7 +27,8 @@ findings:
     -13" (the base split; -48 is not ac, -13 is not b), the true pair -32 and 6 not on screen; step 4 showed "4x^2 + 3x +
     -16x - 48", which is 4x^2 - 13x - 48; step 5 "The first pair factorises to x(2x + 3)" and keyed -8 for the second
     pair (SWEEP-1, batch 6)'
-  status: open
+  status: fixed
+  pr: 342
 - id: quadratic-factoriser-s1-002
   severity: HIGH
   jc: false
@@ -40,7 +41,8 @@ findings:
     phone and plants the keypad removed and its minus key off'
   evidence: '<input type="text" inputmode="decimal" class="formula-input" id="fRoot1" placeholder="x₁">; many Formula
     items have a negative root, e.g. any with b > 0 and c > 0 (SWEEP-1, batch 6; not tested on a device)'
-  status: open
+  status: fixed
+  pr: 342
 - id: quadratic-factoriser-s1-003
   severity: MEDIUM
   jc: false
