@@ -359,7 +359,8 @@ const generators={
 
   fractions(level){
     if(level==='ks3'){
-      const a=rInt(1,7),b=rInt(1,7);const tp=a+b;
+      // two different parts, drawn without a redraw loop (R3, SWEEP-1 split-it-s1-003): "the smaller part" exists
+      const a=rInt(1,7);let b=rInt(1,6);if(b>=a)b++;const tp=a+b;
       const g=gcd(a,tp);const na=a/g,da=tp/g;
       const ask=Math.random()<0.5?'smaller':'larger';
       const num=ask==='smaller'?Math.min(a,b):Math.max(a,b);
@@ -369,7 +370,10 @@ const generators={
         working:`Total parts = ${tp}. ${ask==='smaller'?'Smaller':'Larger'} = ${F(num,tp)} = ${F(num/g2,tp/g2)}`,
         hint:`Total parts = ${a}+${b} = ${tp}. Write as a fraction and simplify.`};
     } else {
-      const a=rInt(1,5),b=rInt(1,5),c=rInt(1,5);const tp=a+b+c;
+      // one part strictly the largest, so "the largest part" is unique (R3, SWEEP-1 split-it-s1-003): the largest is
+      // drawn first, the other two below it, and the three then placed in random order
+      const L=rInt(2,5),u=rInt(1,L-1),w=rInt(1,L-1);
+      const order=[[L,u,w],[u,L,w],[u,w,L]][rInt(0,2)];const a=order[0],b=order[1],c=order[2];const tp=a+b+c;
       const parts=[a,b,c];const largest=Math.max(...parts);
       const g2=gcd(largest,tp);
       return{prompt:`In the ratio <span class="highlight">${a} : ${b} : ${c}</span>, what fraction of the total is the largest part?`,
@@ -383,7 +387,7 @@ const generators={
     const recipes=[
       {name:'Smoothie',items:[{n:'Orange juice',v:300,u:'ml'},{n:'Banana',v:150,u:'g'},{n:'Yoghurt',v:80,u:'ml'}]},
       {name:'Pancakes',items:[{n:'Flour',v:200,u:'g'},{n:'Milk',v:300,u:'ml'},{n:'Eggs',v:2,u:'',whole:true}]},
-      {name:'Concrete mix',items:[{n:'Cement',v:12,u:'kg'},{n:'Sand',v:24,u:'kg'},{n:'Gravel',v:8,u:'kg'}]},
+      {name:'Concrete mix',who:'wheelbarrows',items:[{n:'Cement',v:12,u:'kg'},{n:'Sand',v:24,u:'kg'},{n:'Gravel',v:8,u:'kg'}]},
       {name:'Salad dressing',items:[{n:'Oil',v:90,u:'ml'},{n:'Vinegar',v:30,u:'ml'},{n:'Mustard',v:10,u:'g'}]},
       {name:'Flapjacks',items:[{n:'Oats',v:250,u:'g'},{n:'Butter',v:100,u:'g'},{n:'Syrup',v:60,u:'ml'}]}
     ];
@@ -398,23 +402,24 @@ const generators={
       const pairs=r.items.some(i=>i.whole)?[[3,6],[3,9],[4,8],[4,12],[6,12],[6,18]]:[[4,6],[4,10],[6,9],[3,5],[6,10]];const p=pairs[rInt(0,pairs.length-1)];
       sf=p[1]/p[0];target=p[1];
       // Recalc orig
-      return{prompt:`A <span class="highlight">${r.name}</span> recipe for <span class="highlight">${p[0]}</span> people uses the amounts below.<br>How much of each do you need for <span class="highlight">${p[1]}</span> people?<br>Give your answers to 1 decimal place.`,
+      return{prompt:`A <span class="highlight">${r.name}</span> recipe for <span class="highlight">${p[0]}</span> ${r.who||'people'} uses the amounts below.<br>How much of each do you need for <span class="highlight">${p[1]}</span> ${r.who||'people'}?<br>Give your answers to 1 decimal place${r.items.some(i=>i.whole)?` (${r.items.filter(i=>i.whole).map(i=>i.n.toLowerCase()).join(' and ')} are whole numbers)`:''}.`,
         type:'scale',items:r.items,scaleFactor:sf,origServes:p[0],targetServes:p[1],dp:1,
         answers:r.items.map(i=>parseFloat((i.v*sf).toFixed(1))),
         working:`Scale factor = ${F(p[1],p[0])} = ${X(p[1],p[0])}. Multiply each amount by ${X(p[1],p[0])}.`,
         hint:`Scale factor = ${p[1]} ÷ ${p[0]} = ${X(p[1],p[0])}. Multiply each ingredient by this.`};
     }
-    return{prompt:`A <span class="highlight">${r.name}</span> recipe for <span class="highlight">${orig}</span> people uses the amounts below.<br>How much of each do you need for <span class="highlight">${target}</span> people?`,
+    return{prompt:`A <span class="highlight">${r.name}</span> recipe for <span class="highlight">${orig}</span> ${r.who||'people'} uses the amounts below.<br>How much of each do you need for <span class="highlight">${target}</span> ${r.who||'people'}?`,
       type:'scale',items:r.items,scaleFactor:sf,origServes:orig,targetServes:target,
       answers:r.items.map(i=>i.v*sf),
-      working:`Scale factor = ${target}/${orig} = ${sf}. Multiply each amount by ${sf}.`,
+      working:`Scale factor = ${F(target,orig)} = ${sf}. Multiply each amount by ${sf}.`,
       hint:`Scale factor = ${target} ÷ ${orig} = ${sf}. Multiply each ingredient by this.`};
   },
 
   unitary(level){
     if(level==='ks3'){
       const n=rInt(2,8);const unitP=rInt(1,50)*10;// pence
-      const cost=n*unitP;const m=rInt(2,12);
+      // m is drawn from 2-12 leaving out n: it never asks for the amount just given (R3, SWEEP-1 split-it-s1-004)
+      const cost=n*unitP;let m=rInt(2,11);if(m>=n)m++;
       const items=['pens','pencils','rulers','rubbers','notebooks','stickers'][rInt(0,5)];
       const costStr=(cost/100).toFixed(2);const ansStr=(m*unitP/100).toFixed(2);
       return{prompt:`<span class="highlight">${n} ${items}</span> cost <span class="highlight">£${costStr}</span>.<br>How much do <span class="highlight">${m} ${items}</span> cost?`,
@@ -431,12 +436,12 @@ const generators={
             working:`£${amt} × ${rate.toFixed(2)} = €${(amt*rate).toFixed(2)}`,hint:`Multiply £${amt} by the exchange rate.`};
         },
         ()=>{// Speed
-          const d=rInt(3,8)*rInt(10,30);const t=rInt(2,5);const t2=rInt(2,8);
+          const d=rInt(3,8)*rInt(10,30);const t=rInt(2,5);let t2=rInt(2,7);if(t2>=t)t2++;   // t2 differs from t (R3, split-it-s1-004)
           // d×t2÷t to 1 d.p., rounded half up, in whole numbers (exact: no float in the key)
           const ans=Math.floor((20*d*t2+t)/(2*t))/10;
           return{prompt:`A car travels <span class="highlight">${d} miles</span> in <span class="highlight">${t} hours</span>.<br>At the same speed, how far in <span class="highlight">${t2} hours</span>?<br>Give your answer to 1 decimal place.`,
             type:'single',answers:[ans],unit:'miles',dp:1,
-            working:`Speed = ${d}÷${t} = ${X(d,t)} mph. Distance = ${X(d,t)}×${t2} = ${ans} miles`,
+            working:`Speed = ${d}÷${t} = ${X(d,t)} mph. Distance = ${X(d,t)}×${t2} ${(10*d*t2)%t===0?'=':'≈'} ${ans} miles`,
             hint:`Find the speed first: ${d} ÷ ${t}`};
         },
         ()=>{// Best value

@@ -600,6 +600,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
     <p class="game-kicker">Daily · Mathematical Deduction</p>
     <h1 class="game-title">52<strong style="color:var(--teal)">-dle</strong></h1>
     <p class="game-sub">Identify the hidden number. Six guesses. New puzzle every 24 hours.</p>
+    <p class="game-sub">After each guess you see ↑ Higher or ↓ Lower and a closeness word: Incredibly close (within 2), Very warm (within 10), Getting warmer (within 50), In the right area (within 200) or Far off. The colour of the closeness word shows how near you are, not whether to go higher or lower.</p>
   </div>
 
   <div class="status-bar">
@@ -689,17 +690,17 @@ const PUZZLES = [
   {a:97,  cat:"Prime",          clue:"I am the largest two-digit prime. My reverse, 79, is also prime — we are emirp twins.",hints:["I am the largest two-digit prime","I am between 90 and 100","My digits sum to 16"]},
   {a:53,  cat:"Prime",          clue:"I am the 16th prime. The nearest prime greater than 52 — one more than the cards in a deck.",hints:["I am prime","I am one more than 52","I am between 50 and 55"]},
   {a:42,  cat:"Mathematical Culture", clue:"The answer to life, the universe, and everything. Also 6 × 7. Ten less than 52.",hints:["6 × 7","The Hitchhiker's Guide number","I am between 40 and 45"]},
-  {a:1618,cat:"Golden Ratio",   clue:"φ ≈ 1.618… The golden ratio, first four digits. Nature's favourite proportion.",hints:["I am the golden ratio digits","I am between 1600 and 1650","φ ≈ 1.618"]},
+  {a:1618,cat:"Golden Ratio",   clue:"φ ≈ 1.618… The golden ratio, first four digits. Often said to appear throughout nature.",hints:["I am the golden ratio digits","I am between 1600 and 1650","φ ≈ 1.618"]},
   {a:2704, cat:"Perfect Square", clue:"I am 52 squared. The square of the number of cards in a standard deck.",hints:["I am 52²","I am between 2700 and 2710","52 × 52"]},
   {a:13,  cat:"Prime",          clue:"I am the 6th prime, and the 7th Fibonacci number. Considered unlucky by many, loved by mathematicians.",hints:["I am prime and Fibonacci","I am less than 20","I am 12 + 1"]},
   {a:37,  cat:"Prime",          clue:"I am a permutable prime — rearrange my digits and you still get primes: 37, 73. We are emirp cousins.",hints:["I am prime","37 reversed is also prime","I am between 30 and 40"]},
   {a:100, cat:"Perfect Square", clue:"10 squared. The basis of our decimal system. One hundred.",hints:["I am a perfect square","I am 10²","I am between 90 and 110"]},
-  {a:7,   cat:"Prime",          clue:"The 4th prime. The number of days in a week. Considered the most favourite number of humans globally.",hints:["I am a single digit prime","I am the 4th prime","I am less than 10"]},
-  {a:28,  cat:"Perfect Number", clue:"I am the second perfect number. My divisors (1,2,4,7,14) sum to me. 6 is the first — I am the second.",hints:["I am a perfect number","My proper divisors sum to me","I am between 20 and 35"]},
+  {a:7,   cat:"Prime",          clue:"The 4th prime. The number of days in a week. Often named as people's favourite number in online polls.",hints:["I am a single digit prime","I am the 4th prime","I am less than 10"]},
+  {a:28,  cat:"Perfect Number", clue:"I am the second perfect number. My proper divisors (1,2,4,7,14) sum to me. 6 is the first — I am the second.",hints:["I am a perfect number","My proper divisors sum to me","I am between 20 and 35"]},
   {a:1597, cat:"Fibonacci",     clue:"I am the 17th Fibonacci number. I am also prime, making me a Fibonacci prime.",hints:["I am Fibonacci and prime","I am between 1500 and 1600","F(17)"]},
   {a:64,  cat:"Perfect Square", clue:"I am 8 squared. I am also 4 cubed. I am the only number (besides 1) that is both a perfect square and a perfect cube below 100.",hints:["I am 8²","I am 4³","I am between 60 and 70"]},
-  {a:23,  cat:"Prime",          clue:"I am the 9th prime. I appear in the mathematical curiosity: 1² + 2² + 3² + ... has properties modulo me.",hints:["I am prime","I am the 9th prime","I am between 20 and 30"]},
-  {a:521, cat:"Mersenne Prime", clue:"2^521 − 1 is a Mersenne prime. I am the exponent. One of the earliest discovered by computer in 1952.",hints:["I am a Mersenne prime exponent","I am between 500 and 530","2^521 − 1 is prime"]},
+  {a:23,  cat:"Prime",          clue:"I am the 9th prime. I am also the smallest number of people needed for a better than even chance that two of them share a birthday.",hints:["I am prime","I am the 9th prime","I am between 20 and 30"]},
+  {a:521, cat:"Mersenne Prime exponent", clue:"2⁵²¹ − 1 is a Mersenne prime. I am the exponent. One of the earliest discovered by computer in 1952.",hints:["I am a Mersenne prime exponent","I am between 500 and 530","2⁵²¹ − 1 is prime"]},
 ];
 
 // ─── STATE ────────────────────────────────────────────────────────────

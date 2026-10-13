@@ -41,6 +41,14 @@ def is_fib(n):
     return any(fib(k) == n for k in range(1, 40))
 
 
+def shared_birthday(n):
+    """Exact probability that two of n people share a birthday (365 equally likely days)."""
+    q = sp.Integer(1)
+    for k in range(n):
+        q *= sp.Rational(365 - k, 365)
+    return 1 - q
+
+
 def nth_prime(n):
     return sp.prime(n)
 
@@ -80,16 +88,35 @@ FACTS = {
     100: [('10 squared', lambda a: a == 10 ** 2), ('between 90 and 110', lambda a: 90 < a < 110)],
     7: [('4th prime', lambda a: a == nth_prime(4)), ('days in a week', lambda a: a == 7), ('less than 10', lambda a: a < 10)],
     28: [('second perfect number', lambda a: a == [n for n in range(2, 500) if perfect(n)][1]),
-         ('(1,2,4,7,14)', lambda a: sp.divisors(a)[:-1] == [1, 2, 4, 7, 14]), ('between 20 and 35', lambda a: 20 < a < 35)],
+         ('My proper divisors (1,2,4,7,14) sum to me', lambda a: sp.divisors(a)[:-1] == [1, 2, 4, 7, 14] and sum(sp.divisors(a)[:-1]) == a),
+         ('between 20 and 35', lambda a: 20 < a < 35)],
     1597: [('17th Fibonacci', lambda a: a == fib(17)), ('also prime', lambda a: sp.isprime(a)),
            ('between 1500 and 1600', lambda a: 1500 < a < 1600)],
     64: [('8 squared', lambda a: a == 8 ** 2), ('4 cubed', lambda a: a == 4 ** 3),
          ('both a perfect square and a perfect cube below 100',
           lambda a: [n for n in range(2, 100) if sp.integer_nthroot(n, 6)[1]] == [a])],
-    23: [('9th prime', lambda a: a == nth_prime(9)), ('between 20 and 30', lambda a: 20 < a < 30)],
-    521: [('2^521 − 1 is a Mersenne prime', lambda a: a in (2, 3, 5, 7, 13, 17, 19, 31, 61, 89, 107, 127, 521)),
+    23: [('9th prime', lambda a: a == nth_prime(9)), ('between 20 and 30', lambda a: 20 < a < 30),
+         ('smallest number of people needed for a better than even chance that two of them share a birthday',
+          lambda a: a == next(n for n in range(2, 366) if shared_birthday(n) > sp.Rational(1, 2)))],
+    521: [('2⁵²¹ − 1 is a Mersenne prime', lambda a: a in (2, 3, 5, 7, 13, 17, 19, 31, 61, 89, 107, 127, 521)),
           ('between 500 and 530', lambda a: 500 < a < 530)],
 }
+
+
+def check_wording(fails, html, puzzles):
+    """R1, R2 (SWEEP-1 52dle-s1-003 to -007): the badge says the answer is an exponent, the exponent is written with
+    superscripts like the other clues, claims are hedged, and the page explains its feedback."""
+    for k, p in enumerate(puzzles):
+        if p['a'] == 521 and not p['cat'].endswith('exponent'):
+            fails.append('puzzle %d (521): the badge %r reads as if 521 itself were a Mersenne prime' % (k, p['cat']))
+        text = ' '.join([p['clue']] + list(p['hints']))
+        if '^' in text:
+            fails.append('puzzle %d (%s): %r writes a power with a caret; the other clues use superscripts' % (k, p['a'], text))
+        for claim in ("Nature's favourite proportion", 'most favourite number of humans'):
+            if claim in text:
+                fails.append('puzzle %d (%s): %r states a claim as fact' % (k, p['a'], claim))
+    if 'The colour of the closeness word shows how near you are, not whether to go higher or lower.' not in html:
+        fails.append('rules: the page must explain its feedback words and that colour shows closeness, not direction')
 
 
 def check_facts(fails, puzzles):
@@ -174,6 +201,9 @@ def play(fails, html):
 
 # (the puzzle the failure must name, what is planted, today's text, the fault).
 PLANTS = [
+    ('puzzle ', 'R3: 521 badged "Mersenne Prime"', 'cat:"Mersenne Prime exponent"', 'cat:"Mersenne Prime"'),
+    ('rules: ', 'R2: the feedback bands unexplained', 'The colour of the closeness word shows how near you are, not whether to go higher or lower.', ''),
+    ('puzzle ', 'R1: a power written with a caret', '"2⁵²¹ − 1 is prime"', '"2^521 − 1 is prime"'),
     ('puzzle ', 't2-001: the guess read by parseInt()',
      'const raw = input.value.trim();', 'const raw = String(parseInt(input.value.trim()));'),
     ('puzzle 1 (88)', 'a wrong number: 88 for the 11th Fibonacci', '{a:89,', '{a:88,'),
@@ -191,6 +221,7 @@ def main():
     puzzles = play(fails, html)
     if puzzles is not None:
         check_facts(fails, puzzles)
+        check_wording(fails, html, puzzles)
     print('%s: %d puzzles, every number recomputed from its words, %d guesses marked in Chromium'
           % (SLUG, len(puzzles or []), sum(len(cases(p['a'])) for p in puzzles or [])))
     ok = True
@@ -201,9 +232,11 @@ def main():
                 ok = False
                 continue
             rep = []
-            planted = play(rep, html.replace(new, old))
+            bad_html = html.replace(new, old)
+            planted = play(rep, bad_html)
             if planted is not None:
                 check_facts(rep, planted)
+                check_wording(rep, bad_html, planted)
             hit = [f for f in rep if f.startswith(tag)]
             ok = ok and bool(hit)
             print('  self-test %-46s %s' % (what, ('caught: ' + hit[0][:110]) if hit else '*** MISSED ***'))

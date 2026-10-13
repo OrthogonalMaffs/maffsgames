@@ -157,7 +157,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <div class="tutorial-box">
 <h2>How to Use the Tools</h2>
 <div class="tut-step"><strong>🔵 Compass Tool</strong><br>1. Click a centre point on the canvas<br>2. Click a second point to set the radius<br>3. An arc is drawn centred on the first point, passing through the second<br>4. The arc draws a full circle — use this to find intersection points</div>
-<div class="tut-step"><strong>🟠 Ruler Tool</strong><br>1. Click a start point<br>2. Click an end point<br>3. A straight line is drawn between them<br>4. Use intersection points from your compass arcs as start/end points</div>
+<div class="tut-step"><strong>🟠 Ruler Tool</strong><br>1. Click a start point<br>2. Click an end point<br>3. A straight line is drawn through both points and carries on past them<br>4. Use intersection points from your compass arcs as start/end points</div>
 <div class="tut-step"><strong>⚫ Point Tool</strong><br>1. Click anywhere to place a point<br>2. Use this to mark intersection points where arcs cross<br>3. Points snap to nearby intersections automatically</div>
 <div class="tut-step"><strong>🔒 Lock Radius</strong><br>1. Draw a compass arc with the radius you want<br>2. Click the Lock Radius button in the toolbar<br>3. Now each click places a new arc at that exact radius — no need to set it again<br>4. Essential for perpendicular bisectors and angle bisectors where both arcs must be equal<br>5. Click again to unlock and set a new radius</div>
 <div class="tut-step"><strong>Tips</strong><br>• Set your compass radius to more than half the line segment<br>• Draw arcs from both ends to find the perpendicular bisector<br>• The intersection of two arcs gives you a construction point<br>• Use Lock Radius when you need equal arcs from different centres<br>• Use ↩ Undo if you make a mistake</div>
@@ -225,7 +225,7 @@ const TASKS=[
  video:''},
 {name:'Locus: Equidistant from Two Lines',
  setup:c=>{c.strokeStyle='#1e293b';c.lineWidth=2;c.beginPath();c.moveTo(150,350);c.lineTo(550,150);c.stroke();c.beginPath();c.moveTo(150,350);c.lineTo(550,350);c.stroke();drawLabel(c,135,365,'V')},
- steps:['This is the angle bisector','Place compass at V (where the lines meet)','Draw an arc crossing both lines','From each crossing point, draw equal arcs into the angle','Mark their intersection','The line from V through this point is the locus','Every point on this line is equidistant from both lines'],
+ steps:['This is the angle bisector','Place compass at V (where the lines meet)','Draw an arc crossing both lines','From each crossing point, draw equal arcs into the angle','Mark their intersection','The line from V through this point is the locus inside this angle','Every point on this line is equidistant from both lines'],
  video:''},
 {name:'Locus: Fixed Distance from a Line',
  setup:c=>{drawLineAB(c,100,250,600,250);drawLabel(c,300,420,'Draw the locus of points 80px from the line')},
