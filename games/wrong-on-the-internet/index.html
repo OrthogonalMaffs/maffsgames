@@ -162,6 +162,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/session-length.js"></script>
@@ -797,11 +798,7 @@ const GAME_SLUG = 'wrong-on-the-internet';
 //  INIT
 // ============================================================
 (function init() {
-  const params = new URLSearchParams(window.location.search);
-  const lvl = params.get('level');
-  if (lvl && QUESTIONS[lvl]) {
-    S.level = lvl;
-  }
+  S.level = MaffsLevel.resolve({slug:'wrong-on-the-internet',levels:['ks3','gcse','core'],fallback:'gcse'});
   setLevel(S.level);
   showPB();
 })();

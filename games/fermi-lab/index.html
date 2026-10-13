@@ -195,6 +195,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/analytics.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
@@ -433,13 +434,7 @@ var stepsSubmitted = 0;
 
 // ─── INIT ───
 function init() {
-  var params = new URLSearchParams(window.location.search);
-  var level = params.get('level');
-  if (level === 'ks3') currentTier = 'ks3';
-  else if (level === 'alevel') currentTier = 'alevel';
-  else if (level === 'level4') currentTier = 'level4';
-  else if (level === 'core') currentTier = 'core';
-  else currentTier = 'gcse';
+  currentTier = MaffsLevel.resolve({slug:'fermi-lab',levels:['ks3','gcse','alevel','level4','core'],fallback:'gcse'});
 
   var tierNames = { ks3:'KS3', gcse:'GCSE', alevel:'A-Level', level4:'Level 4', core:'Core Maths' };
   document.getElementById('tierDisplay').textContent = tierNames[currentTier] || 'GCSE';

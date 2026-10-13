@@ -289,6 +289,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/session-length.js"></script>
@@ -563,9 +564,7 @@ let firstPlay = true;
 
 /* ======== INIT ======== */
 (function init() {
-  const params = new URLSearchParams(window.location.search);
-  const lvl = params.get('level');
-  if (lvl && QUESTIONS[lvl]) currentLevel = lvl;
+  currentLevel = MaffsLevel.resolve({slug:'expected-damage',levels:['ks3','gcse','core'],fallback:'gcse'});
   firstPlay = !localStorage.getItem('ed_seen_reveal');
   showPB();
   MaffsSession.render({

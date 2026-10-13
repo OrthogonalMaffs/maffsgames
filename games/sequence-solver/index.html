@@ -76,6 +76,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
@@ -313,7 +314,7 @@ function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random
 function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false})}
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');MaffsLock.screen(document.getElementById(id))}
 document.querySelectorAll('.level-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.level-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');level=b.dataset.level})});
-const pa=new URLSearchParams(location.search);if(pa.get('level')&&QUESTIONS[pa.get('level')]){level=pa.get('level');document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}
+{const lv=MaffsLevel.resolve({slug:'sequence-solver',levels:['ks3','gcse','alevel','level4'],fallback:'ks3'});if(lv!==level&&QUESTIONS[lv]){level=lv;document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}}
 
 function startGame(){MaffsLock.newSession();questions=shuffle([...QUESTIONS[level]]).slice(0,totalQ);qIdx=0;score=0;streak=0;bestStreak=0;correctCount=0;document.getElementById('score').textContent='0';document.getElementById('streak').textContent='0';const pr=document.getElementById('progress');pr.innerHTML='';for(let i=0;i<totalQ;i++){const d=document.createElement('div');d.className='pip'+(i===0?' current':'');pr.appendChild(d)}mfg('game_started',{game_slug:'sequence-solver',level:level});window._ggAbandoned=true;if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'sequence-solver',level:level,questions_answered:qIdx})});}show('game');showQ()}
 

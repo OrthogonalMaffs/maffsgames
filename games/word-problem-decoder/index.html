@@ -162,6 +162,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
@@ -510,8 +511,7 @@ function init() {
   });
 
   // Default level from URL param or gcse
-  const urlLevel = new URLSearchParams(window.location.search).get('level');
-  const initLevel = (urlLevel === 'ks3' || urlLevel === 'gcse') ? urlLevel : 'gcse';
+  const initLevel = MaffsLevel.resolve({slug:'word-problem-decoder',levels:['ks3','gcse'],fallback:'gcse'});
   document.querySelector('.level-btn.' + initLevel).click();
 }
 

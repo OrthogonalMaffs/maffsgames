@@ -67,11 +67,12 @@ word-problem-decoder wrong-on-the-internet
 '''.split())
 MIGRATED = frozenset('''
 52dle angle-ace binomial-blaster complex-converter constructions-lab curling-friction decimal-detective
-differentiation-duel distinctly-average equation-builder equatle force-resolver formula-plug-in
-four-quadrant-explorer fraction-equivalence higher-power integration-duel just-pythag-it-bruv
-like-terms-collector matrix-crunch moments-master negative-number-line new-shapes percentage-flip
-prime-factorisation prime-or-composite prisoners-dilemma probability-pioneer proof-builder seven-bridges
-shape-shifter suvat think-of-a-number
+differentiation-duel distinctly-average equation-builder equatle expected-damage fermi-lab force-resolver
+formula-plug-in four-quadrant-explorer fraction-equivalence higher-power integration-duel just-pythag-it-bruv
+like-terms-collector maths-court matrix-crunch moments-master negative-number-line new-shapes percentage-flip
+prime-factorisation prime-or-composite prisoners-dilemma probability-pioneer proof-builder sequence-solver
+seven-bridges shape-shifter six-sevens-bruv split-it spot-the-error spot-the-muppet suvat terrible-advice
+think-of-a-number truth-buster word-problem-decoder wrong-on-the-internet
 '''.split())
 
 # The portal has no Year 6 filter button, so a game that serves only Year 6 is reachable under the KS3 filter and its

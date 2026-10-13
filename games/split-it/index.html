@@ -126,6 +126,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/answer.js"></script>
@@ -238,7 +239,8 @@ function pickMode(mode){
 function parseURL(){
   const p=new URLSearchParams(location.search);
   if(p.get('mode'))S.mode=p.get('mode');
-  if(p.get('level')&&S.mode)startGame(p.get('level'));
+  const lv=MaffsLevel.resolve({slug:'split-it',levels:['ks3','gcse'],fallback:'ks3'});
+  if(MaffsLevel.declared('split-it').asked&&S.mode)startGame(lv);
 }
 
 // ============================================================
