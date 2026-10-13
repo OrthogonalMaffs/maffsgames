@@ -9,7 +9,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | met: 0 of 96 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 5 open (0 CRITICAL, 5 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 4 open (0 CRITICAL, 4 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, SR-14 fields |
 | 4 | Every level serves 40+ (tracked, not part of the gate: canon §0.2, Jon 12 Oct 2026) | not met, not gating: 126 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | met: 0 in the roster's Unlisted section |
@@ -22,10 +22,10 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
-| HIGH | 12 | 222 | 0 | 234 |
-| MEDIUM | 217 | 248 | 3 | 468 |
+| HIGH | 11 | 223 | 0 | 234 |
+| MEDIUM | 216 | 249 | 3 | 468 |
 | LOW | 153 | 93 | 1 | 247 |
-| **All** | 383 | 597 | 4 | 984 |
+| **All** | 381 | 599 | 4 | 984 |
 
 ### By class
 
@@ -68,7 +68,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:number-line-tolerance | 0 | 4 |
 | 9 | 1 | 3 |
 | NEW:exact-order sorter marking | 1 | 3 |
-| NEW:input-cannot-type-answer | 2 | 3 |
+| NEW:input-cannot-type-answer | 0 | 3 |
 | NEW:key-ask mismatch | 0 | 3 |
 | NEW:phone-fold | 3 | 3 |
 | NEW:wrong explanation | 0 | 3 |
@@ -189,7 +189,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `integration-duel` | yes | verify-integration-duel.py | 0 | 2 | 8 | 3 | 2 | 11 | 0 |
 | `like-terms-collector` | yes | verify-like-terms-collector.py | 1 | 1 | 3 | 1 | 4 | 2 | 0 |
 | `linear-equation-solver` | yes | verify-linear-equation-solver.py | 1 | 1 | 3 | 2 | 3 | 4 | 0 |
-| `log-laws` | yes | verify-log-laws.py | 1 | 4 | 3 | 4 | 3 | 9 | 0 |
+| `log-laws` | yes | verify-log-laws.py | 1 | 4 | 3 | 4 | 2 | 10 | 0 |
 | `maths-court` | yes | verify-maths-court.py | 0 | 1 | 4 | 1 | 3 | 3 | 0 |
 | `matrix-crunch` | yes | verify-matrix-crunch.py | 0 | 2 | 6 | 6 | 8 | 6 | 0 |
 | `modular-battle` | yes | verify-modular-battle.py | 0 | 0 | 4 | 2 | 5 | 1 | 0 |
@@ -220,7 +220,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `standard-form-blitz` | yes | verify-standard-form-blitz.py | 0 | 0 | 2 | 3 | 2 | 3 | 0 |
 | `stat-attack` | yes | verify-stat-attack.py | 1 | 1 | 3 | 3 | 4 | 4 | 0 |
 | `surd-simplifier` | yes | verify-surd-simplifier.py | 0 | 2 | 2 | 2 | 2 | 4 | 0 |
-| `suvat` | yes | verify-suvat.py | 1 | 4 | 8 | 4 | 6 | 11 | 0 |
+| `suvat` | yes | verify-suvat.py | 1 | 4 | 8 | 4 | 5 | 12 | 0 |
 | `tax-theft` | yes | verify-tax-theft.py | 0 | 0 | 2 | 3 | 1 | 4 | 0 |
 | `terrible-advice` | yes | verify-terrible-advice.py | 0 | 6 | 8 | 1 | 2 | 13 | 0 |
 | `test-the-claim` | yes | verify-test-the-claim.py | 1 | 2 | 5 | 1 | 4 | 5 | 0 |
@@ -263,10 +263,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 ### `graph-sketcher` (Core, A-Level, L4)
 
 - **HIGH** graph-sketcher-s1-006 (JC), `games/graph-sketcher/index.html L4_5 (:538), CM2 (:273), CM11 (:351), CM4 (:291)`: For Jon (stem or key-text changes): L4_5's "maximum deflection" on 0 ≤ x ≤ 4 is 4 at both x = 1 and x = 4 (the endpoint), so (4, 4) is also right ("local maximum"?); CM2's key "Model allows negative profit" is false, ...
-
-### `suvat` (A-Level, L4)
-
-- **HIGH** suvat-s1-001, `games/suvat/index.html:229 (the answer box), :459 (ALEVEL[34])`: ALEVEL[34] keys v_y = −0.32, typed into a box with inputmode="decimal", which on many phone keyboards has no minus key: the student cannot type the key. Reported for the home lane's contract (Jon's rule, 13 Oct 2026),...
 
 ## Live games no audit has covered
 
