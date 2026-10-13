@@ -1,0 +1,120 @@
+# Findings register for stat-attack (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: stat-attack
+audited:
+  tranche: S1 (SWEEP-1 reading sweep)
+  head: f283457
+  date: 2026-10-13
+  served:
+    gcse: '12'
+    core: '12'
+    level4: '12'
+findings:
+- id: stat-attack-s1-001
+  severity: HIGH
+  jc: false
+  class: NEW:unstated-convention
+  level: gcse
+  where: games/stat-attack/index.html renderMedianQ (G4, G10)
+  summary: 'The median class was keyed by Jon''s n/2 rule (2 Oct 2026, the first class whose cumulative frequency
+    reaches n/2), but the prompt never said so (SR-17), and on G4 and G10 n/2 = 20 falls exactly on a class end: the
+    (n+1)/2 method, and interpolation (exactly 30 and 100, outside the keyed "x < 30" and "x < 100"), give the next
+    class, and the Worked Example taught "the 15th and 16th values". 2 of 12 GCSE scenarios, SR-20 with s1-002. Fixed
+    under SR-30: the prompt states "Use n ÷ 2 = 20: the median class is the first class whose cumulative frequency
+    reaches 20", the feedback and the Worked Example say the same; the verifier reads the prompt on every scenario,
+    and plants the old one'
+  evidence: 'G4 freqs 6, 14, 10, 7, 3 (cumulative 6, 20, 30), key "20 ≤ x < 30"; G10 6, 14, 11, 7, 2, key "50 ≤ x <
+    100" (SWEEP-1, batch 9)'
+  status: fixed
+  pr: 350
+- id: stat-attack-s1-002
+  severity: CRITICAL
+  jc: false
+  class: NEW:marking-tolerance
+  level: gcse, core, level4
+  where: games/stat-attack/index.html checkMean, checkSD
+  summary: 'The mean and the SD, both asked "to 3 significant figures", were marked to bands round the stored figure
+    (±0.15; ±max(0.1, 1%)), not at 3 s.f. Played in the page: one unit off in the third figure was marked correct
+    for the SD on all 36 scenarios and for the mean on 21, and the right 3 s.f. mean was rejected on 13 (106 for
+    106.25, 1140 for 1141.7; todo §1.36). Fixed under SR-30 (SR-1, SR-3): both are marked by the shared
+    MaffsAnswer.decimal() against a key worked exactly from the table''s sums, Σfx/Σf and √(Σfx²/Σf − (Σfx/Σf)²), at
+    3 s.f.; the true value to more figures gets the format message, unmarked. The verifier plays the right answer,
+    both neighbours and the long form on every scenario, and plants the old bands'
+  evidence: 'const correct=Math.abs(val-q.mean)<=0.15; const correct=Math.abs(val-q.sd)<=Math.max(0.1,q.sd*0.01);
+    the new verifier fails the old page 242 times (SWEEP-1, batch 9)'
+  status: fixed
+  pr: 350
+- id: stat-attack-s1-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:unstated-convention
+  level: gcse, core, level4
+  where: games/stat-attack/index.html renderSD_variance, checkVariance
+  summary: '"Calculate the variance." states no precision (SR-1), and it is marked ±max(0.5, 0.5%), ±46% on L4_7''s
+    1.094. SR-1''s default (1 d.p.) does not fit: the SD worked from the 1 d.p. variance differs at 3 s.f. on six
+    scenarios (G2, G3, CM8, L4_1, L4_6, L4_9). Jon''s ruling (13 Oct 2026): the variance is asked to 3 s.f.,
+    and the SD prompt says "Use your unrounded variance", its key from the exact value. Fixed: the variance is
+    marked by MaffsAnswer.decimal() at 3 s.f. against a key worked exactly from the sums; the SD step no longer
+    prints a rounded variance; the verifier plays both neighbours and the long form and reads both prompts, and
+    plants the old band'
+  evidence: 'L4_1 variance 1.2384: √1.2 = 1.10 against the true 1.11; G3 115.5556: √115.6 = 10.8 against 10.7
+    (SWEEP-1, batch 9)'
+  status: fixed
+  pr: 350
+- id: stat-attack-s1-004
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: gcse, core
+  where: games/stat-attack/index.html contextLine (G8, CM2, CM5, CM7, CM10, CM12)
+  summary: 'Money in the closing lines is printed to the penny from 3 s.f. keys, so the pence are wrong: £10.80
+    (true £10.79), £190.40 (£190.42), £67.40 (£67.41), £223.30 (£223.33), £62.10 (£62.06), £1,141.70 (£1,141.67),
+    £231.70 (£231.67), £169.20 (£169.17), £62.80 (£62.81)'
+  evidence: 'G8 "The mean pocket money is £10.80 ..." (SWEEP-1, batch 9)'
+  status: open
+- id: stat-attack-s1-005
+  severity: MEDIUM
+  jc: false
+  class: NEW:marking-tolerance
+  level: gcse, core, level4
+  where: games/stat-attack/index.html checkMidpoints, checkFx, checkX2, checkFx2
+  summary: 'The table columns were marked to bands (fx and x² ±0.5, fx² ±max(1, 0.1%)), so 7 or 8 passed for fx = 7.5
+    and 1417 or 1418 for 1417.5. Fixed (SR-2): every column entry is marked by MaffsAnswer.exact(); the verifier types
+    the true columns and, where a column has a non-integer entry, the rounded one, and plants the old fx band'
+  evidence: 'Math.abs(val-q.fx[i])>0.5; the old page passes a rounded fx or x² column in 17 checks (SWEEP-1, batch 9)'
+  status: fixed
+  pr: 350
+- id: stat-attack-s1-006
+  severity: LOW
+  jc: false
+  class: NEW:marking-tolerance
+  level: level4
+  where: games/stat-attack/index.html parseInterval (L4_7)
+  summary: 'Class answers were compared as digit strings, so "3 ≤ x < 4" was marked wrong for "3.0 ≤ x < 4.0". Fixed:
+    the bounds are compared by value; the verifier types each median class with plain bounds. (It still ignores the
+    inequality signs, so "40 < x ≤ 50" passes for "40 ≤ x < 50": recorded, for Jon)'
+  evidence: "L4_7 classes '3.0 ≤ x < 4.0' ... (SWEEP-1, batch 9; precision audit item 8)"
+  status: open
+- id: stat-attack-s1-007
+  severity: LOW
+  jc: true
+  class: NEW:wording
+  level: gcse, core, level4
+  where: games/stat-attack/index.html G6, L4_4, G1, L4_9
+  summary: 'G6 is "marked out of 40" but its top class 30 ≤ x < 40 has no room for 40; L4_4 reads 60-110 °C "from a
+    furnace"; G1''s closing line mentions grade boundaries never given; L4_9''s distractor "The standard deviation
+    means cycles are inconsistent" is a judgement, arguably true. Every keyed interpretation says the data "vary by
+    approximately σ from the mean on average" (the SD is a root-mean-square, not a mean, deviation): for Jon'
+  evidence: 'Item texts as quoted (SWEEP-1, batch 9)'
+  status: open
+- id: stat-attack-s1-008
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: gcse, core, level4
+  where: scripts/verify-stat-attack.py
+  summary: 'The verifier does not check the Worked Example overlay''s figures, whether each interpretation option is
+    true or false (only its numbers), the qualitative closing-line claims, or printed pence against the true value
+    (s1-004). Recorded under Jon''s rule of 13 Oct 2026; the mean, SD, column and median marking is now played'
+  evidence: 'check_scenario() compares contextLine numbers at their printed precision (SWEEP-1, batch 9)'
+  status: open
