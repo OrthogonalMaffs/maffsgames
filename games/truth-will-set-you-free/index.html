@@ -251,7 +251,8 @@ body {
 <div class="start-screen" id="startScreen">
   <h2>THE TRUTH WILL SET YOU FREE</h2>
   <p>Build truth tables from real engineering scenarios. Then match them to Boolean algebra.</p>
-  <p class="start-inst">Read each scenario. Fill in the output column of the truth table. Then identify the matching Boolean expression.</p>
+  <p class="start-inst" style="margin-bottom:.6rem">Read each scenario. Fill in the output column of the truth table: tap a cell to set 0 or 1. Then identify the matching Boolean expression.</p>
+  <p class="start-inst">In the expressions, &middot; means AND, + means OR and a bar means NOT. AND is worked out before OR, and two letters side by side also mean AND.</p>
   <button class="start-btn" onclick="startGame()">Start</button>
 </div>
 
@@ -434,7 +435,7 @@ var QUESTION_LIBRARY = [
   },
   {
     tier: 'Tier 1 — Foundation', inputs: ['A','B','C'],
-    scenario: 'A compressor control system. The compressor (output) runs when the pressure is low AND the motor temperature is below limit AND the oil level is adequate.',
+    scenario: 'A compressor control system. The compressor (output K) runs when the pressure is low AND the motor temperature is below limit AND the oil level is adequate.',
     inputDescs: ['A = Pressure low (1 = low)', 'B = Motor temp below limit (1 = below)', 'C = Oil level adequate (1 = adequate)'],
     logic: 'The compressor runs when pressure is low AND temperature is below limit AND oil level is adequate.',
     expr: 'A \\cdot B \\cdot C',
@@ -573,9 +574,9 @@ var QUESTION_LIBRARY = [
   },
   {
     tier: 'Tier 3 — Advanced', inputs: ['A','B','C','D','E'],
-    scenario: 'A greenhouse climate control. The ventilation fans run when any two of temperature/humidity/CO2 are triggered. Storm conditions or economy mode stops the fans.',
+    scenario: 'A greenhouse climate control. The ventilation fans run when at least two of temperature/humidity/CO2 are triggered. Storm conditions or economy mode stops the fans.',
     inputDescs: ['A = Temperature high (1 = high)', 'B = Humidity high (1 = high)', 'C = CO2 above threshold (1 = above)', 'D = Storm conditions (1 = storm)', 'E = Economy mode (1 = active)'],
-    logic: 'Fans run when (any two of temp/humidity/CO2 are triggered) AND no storm AND no economy mode.',
+    logic: 'Fans run when (at least two of temp/humidity/CO2 are triggered) AND no storm AND no economy mode.',
     expr: '(A \\cdot B + A \\cdot C + B \\cdot C) \\cdot \\overline{D} \\cdot \\overline{E}',
     distractors: ['(A + B + C) \\cdot \\overline{D} \\cdot \\overline{E}', 'A \\cdot B \\cdot C \\cdot \\overline{D} \\cdot \\overline{E}', '(A \\cdot B + C) \\cdot \\overline{D} \\cdot \\overline{E}'],
     bbLink: null
@@ -600,9 +601,9 @@ var QUESTION_LIBRARY = [
   },
   {
     tier: 'Tier 3 — Advanced', inputs: ['A','B','C','D','E'],
-    scenario: 'An industrial mixer control. The mixer motor runs when forward XOR reverse is active. Guard must be closed, power enabled, and no fault detected.',
+    scenario: 'An industrial mixer control. The mixer motor runs when exactly one of forward or reverse (XOR) is active. Guard must be closed, power enabled, and no fault detected.',
     inputDescs: ['A = Forward (1 = active)', 'B = Reverse (1 = active)', 'C = Guard closed (1 = closed)', 'D = Power enable (1 = enabled)', 'E = Fault detected (1 = fault)'],
-    logic: 'Motor runs when (forward XOR reverse) AND guard closed AND power enabled AND no fault.',
+    logic: 'Motor runs when (exactly one of forward or reverse (XOR)) AND guard closed AND power enabled AND no fault.',
     expr: '(A \\cdot \\overline{B} + \\overline{A} \\cdot B) \\cdot C \\cdot D \\cdot \\overline{E}',
     distractors: ['(A + B) \\cdot C \\cdot D \\cdot \\overline{E}', '(A \\cdot B) \\cdot C \\cdot D \\cdot \\overline{E}', '(A \\cdot \\overline{B} + \\overline{A} \\cdot B) \\cdot C \\cdot D \\cdot E'],
     bbLink: 'BB Q12', simplified: '(A \\oplus B) \\cdot C \\cdot D \\cdot \\overline{E}',

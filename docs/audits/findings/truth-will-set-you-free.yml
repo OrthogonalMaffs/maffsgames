@@ -69,3 +69,88 @@ findings:
   evidence: scripts/verify-truth-will-set-you-free.py (SymPy) on main's page; found by the cloud lane's fix (PR #135)
   status: fixed
   pr: 135
+- id: truth-will-set-you-free-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: level4
+  where: games/truth-will-set-you-free/index.html:576-580 (library [24], greenhouse)
+  summary: '"Any two of temperature/humidity/CO2" reads as at least two or exactly two; the key (A.B + A.C + B.C) runs
+    the fans when all three are triggered. Fixed (SR-17): stem and logic line now say "at least two of ...", key and
+    options untouched. The verifier bars "any two" in any scenario or logic line; planted with the old text in both.'
+  evidence: 'The ventilation fans run when any two of temperature/humidity/CO2 are triggered. | key (A \cdot B + A
+    \cdot C + B \cdot C) \cdot \overline{D} \cdot \overline{E} (SWEEP-1, batch 11)'
+  status: open
+- id: truth-will-set-you-free-s1-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: level4
+  where: games/truth-will-set-you-free/index.html:253-254 (start screen)
+  summary: 'The game never says what the symbols mean (. AND, + OR, bar NOT) or that AND binds tighter than OR, which
+    the wrong options rely on (A + B.C against A.B + C); the post-answer lines use juxtaposition as AND unexplained.
+    Fixed (SR-17): one line added to the start screen. The verifier checks the start screen states each convention;
+    planted with the line removed.'
+  evidence: 'Start screen: "Read each scenario. Fill in the output column of the truth table. Then identify the
+    matching Boolean expression." (SWEEP-1, batch 11)'
+  status: open
+- id: truth-will-set-you-free-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:convention-unstated
+  level: level4
+  where: games/truth-will-set-you-free/index.html:603-605 (library [27], mixer)
+  summary: 'XOR is used in the stem before the game defines it (the definition shows only after answering). Fixed
+    (SR-17): "exactly one of forward or reverse (XOR)" in stem and logic line. The verifier requires every XOR in a
+    scenario or logic line to be glossed; planted with the old text.'
+  evidence: 'The mixer motor runs when forward XOR reverse is active. | key (A \cdot \overline{B} + \overline{A}
+    \cdot B) \cdot C \cdot D \cdot \overline{E} (SWEEP-1, batch 11)'
+  status: open
+- id: truth-will-set-you-free-s1-004
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: level4
+  where: games/truth-will-set-you-free/index.html:437 (library [9], compressor)
+  summary: 'The output is unnamed, "The compressor (output) runs". Fixed: "(output K)" (K is not an input). The
+    verifier requires every Tier 1 scenario to name an output letter that is not an input; planted with the old
+    text. Tiers 2-4 (items 10-31) never name an output; that is a reworded stem on 22 items, for Jon.'
+  evidence: 'A compressor control system. The compressor (output) runs when the pressure is low AND the motor
+    temperature is below limit AND the oil level is adequate. (SWEEP-1, batch 11)'
+  status: open
+- id: truth-will-set-you-free-s1-005
+  severity: LOW
+  jc: true
+  class: NEW:wording
+  level: level4
+  where: games/truth-will-set-you-free/index.html:821 (prompt)
+  summary: 'After a wrong table the prompt still says "this truth table" while the table on screen is the student''s
+    own with corrections shown in green; the key matches the corrected table. Not a fault in practice. Noted, not
+    fixed (SWEEP-1 decision F6).'
+  evidence: 'Which Boolean expression matches this truth table? (SWEEP-1, batch 11)'
+  status: open
+- id: truth-will-set-you-free-s1-006
+  severity: MEDIUM
+  jc: false
+  class: verifier-gap
+  level: level4
+  where: scripts/verify-truth-will-set-you-free.py (library [0]-[31] scenario, inputDescs, logic)
+  summary: 'The verifier recomputes every table, key, distractor and simplified form from the expression but never
+    ties the hand-typed prose to it: scenario, inputDescs (including the "1 = ..." polarity) and logic for all 32
+    items, the "simplifies to" line (only tested for "undefined") and the generic Boolean Blitz line. The logic
+    lines are words with no input letters, so an input-letter check was not possible; only the new SR-17 wording
+    checks exist. The game has no hints or worked steps.'
+  evidence: 'e.g. a logic line or inputDescs polarity changed to disagree with expr passes the verifier (SWEEP-1,
+    batch 11)'
+  status: open
+- id: truth-will-set-you-free-s1-007
+  severity: LOW
+  jc: true
+  class: 5
+  level: level4
+  where: games/truth-will-set-you-free/index.html (library [6]-[8], [17]-[24])
+  summary: 'Several items share a shape (A.B + A.C in items 6-8; similar shapes in 17-18, 19-20, 22-24), so a Tier 1
+    draw of 3 can serve near-identical items. Overlaps open truth-will-set-you-free-t6-004; recorded for Jon, not
+    fixed.'
+  evidence: 'reviewer report (SWEEP-1, batch 11)'
+  status: open
