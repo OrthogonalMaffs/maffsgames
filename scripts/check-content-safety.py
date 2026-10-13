@@ -54,7 +54,14 @@ so crime words are not scanned. Change a list here, never in a game, and update 
 import argparse, collections, functools, pathlib, re, sys
 
 BASE = pathlib.Path(__file__).resolve().parent.parent
-GLOBS = ("games/**/*.html", "games/**/*.js", "escape-rooms/**/*.html", "escape-rooms/**/*.js")
+GLOBS = ("games/**/*.html", "games/**/*.js", "escape-rooms/**/*.html", "escape-rooms/**/*.js",
+         # Every other published page and the shared script that puts words on screen (LISTINGS-AND-GATE part B,
+         # 13 Oct 2026: SR-14 is site-wide, so the portal's weekly facts, /essentials/, /resit/, the parents' guides
+         # and the rest are read too). Games and escape rooms stay first; a file is read once.
+         "*.html", "essentials/**/*.html", "resit/**/*.html", "op/**/*.html", "parents/**/*.html",
+         "spec-map/**/*.html", "year6/**/*.html", "6-7/**/*.html", "about/**/*.html", "updates/**/*.html",
+         "leaderboards/**/*.html", "privacy/**/*.html", "feedback/**/*.html", "schools/**/*.html",
+         "schools/assets/*.js")
 
 # Tier (a): banned everywhere. Whole words; a trailing \w* takes the word's other forms.
 TIER_A = {
@@ -405,7 +412,15 @@ def scan(root, override=None):
 # Every hit present on 4 Oct 2026 (SR-14 as amended that evening), for Jon to rule on: file -> {word: count}.
 # Reported, never failed. Lower a count (or drop the entry) in the PR that removes the words. 5 Oct 2026: the
 # idioms and the class names Jon ruled out of SR-14 (4 Oct, 20:06) are no longer hits (ALLOW, displayed()).
-KNOWN = {}
+# 13 Oct 2026 (LISTINGS-AND-GATE part B), the first read of the pages outside games/ and escape-rooms/: two of the
+# portal's weekly facts (index.html, the weekly list), three in all. "√2 is Irrational — and It Caused a Murder"
+# (murder, drowned), "Correlation Does Not Imply Causation" (drowned in swimming pools, deaths by bedsheet
+# entanglement) and "Survivorship Bias" ("everyone who died at 60") are tier (a)
+# wording on the front page. Jon rules: rewrite the two facts, or allow them with his reason in ALLOW. Until he does,
+# 'SR-14 fields' stays False in scripts/audit-register.py. Counts are of the words the scan finds on those lines.
+KNOWN = {
+    "index.html": {"drowned": 2, "murder": 1, "deaths": 1, "died": 1},
+}
 
 
 def compare(found, known):
@@ -448,6 +463,9 @@ def _selftest_files(root):
         "tier (b) in a list of theories": ({target: clean.replace("</body>", "<script>var x={conspiracies:['a','the hospital did it']};</script></body>")}, KNOWN),
         "a stale KNOWN entry": (None, dict(KNOWN, **{target: {"murder": 1}})),
     }
+    home = (root / "index.html").read_text(encoding="utf-8")
+    faults["tier (a) on the portal page (outside games/)"] = ({"index.html": home.replace("</body>", "<p>Nobody drowned.</p></body>")}, KNOWN)
+    faults["tier (b) in a joke on the portal page"] = ({"index.html": home.replace("</body>", "<script>var x={joke:'the hospital did it'};</script></body>")}, KNOWN)
     missed = [name for name, (override, known) in faults.items() if not compare(scan(root, override), known)[0]]
     return missed, len(faults)
 

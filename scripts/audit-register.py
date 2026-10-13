@@ -53,10 +53,10 @@ OPTIONAL = {'pr', 'ruling'}
 
 # Exit bar point 3 (canon §0.2): shared checks green site-wide. Set each True in the PR that makes it so.
 SHARED_CHECKS_GREEN = {
-    'answer lock': False,
+    'answer lock': False,    # still open 13 Oct 2026: glorious-gantt on NOT_YET, characteristic-quest on SCREEN_NOT_YET (check-answer-lock.py)
     'level resolver': True,    # MaffsLevel in every game; NOT_YET empty in scripts/check-levels.py (LEVEL-RESOLVER, 13 Oct 2026)
-    'SR-14 fields': False,
-    'B11 parser': False,
+    'SR-14 fields': False,    # scripts/check-content-safety.py runs in CI site-wide; False until Jon rules on its 5 KNOWN hits (3 portal weekly facts)
+    'B11 parser': True,    # data/check-ledger.json holds no B11 entry for any game (B11-CLEAR, #331; LISTINGS-AND-GATE, 13 Oct 2026)
 }
 # Games left out of exit-bar points 1, 2 and 5 by Jon's named ruling: slug -> reason. Deliberately by name, not a general
 # "unlisted games don't count" rule (canon §0.2). A slug that leaves the roster's Unlisted section fails validation, so
