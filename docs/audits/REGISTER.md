@@ -23,19 +23,19 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
 | HIGH | 8 | 229 | 0 | 237 |
-| MEDIUM | 236 | 261 | 3 | 500 |
-| LOW | 218 | 113 | 1 | 332 |
-| **All** | 463 | 637 | 4 | 1104 |
+| MEDIUM | 233 | 264 | 3 | 500 |
+| LOW | 210 | 121 | 1 | 332 |
+| **All** | 452 | 648 | 4 | 1104 |
 
 ### By class
 
 | Class | open | total |
 |---|---|---|
-| NEW:wording | 107 | 128 |
+| NEW:wording | 106 | 128 |
 | 2 | 12 | 111 |
-| NEW:text-contradicts-content | 58 | 90 |
+| NEW:text-contradicts-content | 53 | 90 |
 | 3 | 5 | 86 |
-| NEW:convention-unstated | 30 | 78 |
+| NEW:convention-unstated | 26 | 78 |
 | NEW:wrong-explanation-text | 21 | 71 |
 | 6 | 24 | 56 |
 | NEW:true-wrong-option | 14 | 51 |
@@ -50,7 +50,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:value-equal distractors | 0 | 14 |
 | 8 | 3 | 11 |
 | NEW:marking-tolerance | 2 | 11 |
-| NEW:raw-tex-on-screen | 5 | 11 |
+| NEW:raw-tex-on-screen | 4 | 11 |
 | NEW:degenerate-item | 9 | 9 |
 | NEW:equal-value-options | 0 | 9 |
 | NEW:timer-policy | 7 | 9 |
@@ -167,7 +167,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `equation-builder` | yes | verify-equation-builder.py | 1 | 3 | 4 | 2 | 2 | 8 | 0 |
 | `equatle` | yes | verify-equatle.py | 0 | 0 | 3 | 6 | 9 | 0 | 0 |
 | `estimation-engine` | yes | verify-estimation-engine.py | 0 | 1 | 6 | 0 | 1 | 6 | 0 |
-| `estimation-golf` | yes | verify-estimation-golf.py | 0 | 2 | 5 | 5 | 10 | 2 | 0 |
+| `estimation-golf` | yes | verify-estimation-golf.py | 0 | 2 | 5 | 5 | 4 | 8 | 0 |
 | `expectation-station` | yes | verify-expectation-station.py | 2 | 13 | 8 | 5 | 5 | 23 | 0 |
 | `expected-damage` | yes | verify-expected-damage.py | 0 | 1 | 6 | 2 | 8 | 1 | 0 |
 | `factor-race` | yes | verify-factor-race.py | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
@@ -178,7 +178,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `formula-plug-in` | yes | verify-formula-plug-in.py | 0 | 1 | 4 | 2 | 5 | 2 | 0 |
 | `formula-unlocked` | yes | verify-formula-unlocked.py | 0 | 1 | 1 | 7 | 4 | 5 | 0 |
 | `four-quadrant-explorer` | yes | verify-four-quadrant-explorer.py | 0 | 1 | 2 | 1 | 3 | 1 | 0 |
-| `fraction-equivalence` | yes | verify-fraction-equivalence.py | 0 | 0 | 2 | 2 | 4 | 0 | 0 |
+| `fraction-equivalence` | yes | verify-fraction-equivalence.py | 0 | 0 | 2 | 2 | 3 | 1 | 0 |
 | `free-daily-pizza` | yes | verify-free-daily-pizza.py | 0 | 0 | 1 | 4 | 5 | 0 | 0 |
 | `given-that` | yes | verify-given-that.py | 0 | 3 | 2 | 3 | 3 | 5 | 0 |
 | `glorious-gantt` | unlisted | none | 1 | 7 | 4 | 1 | 13 | 0 | 0 |
@@ -201,7 +201,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `normal-navigator` | yes | verify-normal-navigator.py | 0 | 0 | 4 | 7 | 6 | 5 | 0 |
 | `partial-fractions-duel` | yes | verify-partial-fractions-duel.py | 0 | 7 | 4 | 2 | 1 | 12 | 0 |
 | `percentage-flip` | yes | verify-percentage-flip.py | 0 | 0 | 2 | 0 | 1 | 1 | 0 |
-| `prime-factorisation` | yes | verify-prime-factorisation.py | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
+| `prime-factorisation` | yes | verify-prime-factorisation.py | 0 | 0 | 4 | 1 | 4 | 1 | 0 |
 | `prime-or-composite` | yes | verify-prime-or-composite.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
 | `prisoners-dilemma` | yes | verify-prisoners-dilemma.py | 0 | 2 | 6 | 5 | 10 | 3 | 0 |
 | `probability-paradox` | yes | verify-probability-paradox.py | 1 | 4 | 11 | 4 | 5 | 15 | 0 |
@@ -211,7 +211,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `quadratic-factoriser` | yes | verify-quadratic-factoriser.py | 1 | 1 | 1 | 4 | 5 | 2 | 0 |
 | `scale-factor-scaling` | yes | verify-scale-factor-scaling.py | 0 | 1 | 4 | 3 | 3 | 5 | 0 |
 | `screening-room` | yes | verify-screening-room.py | 1 | 4 | 14 | 8 | 7 | 19 | 1 |
-| `sequence-solver` | yes | verify-sequence-solver.py | 0 | 1 | 4 | 2 | 5 | 2 | 0 |
+| `sequence-solver` | yes | verify-sequence-solver.py | 0 | 1 | 4 | 2 | 2 | 5 | 0 |
 | `seven-bridges` | yes | verify-seven-bridges.py | 0 | 2 | 7 | 4 | 10 | 3 | 0 |
 | `shape-shifter` | yes | verify-shape-shifter.py | 2 | 1 | 5 | 3 | 5 | 6 | 0 |
 | `simultaneous-solver` | yes | verify-simultaneous-solver.py | 0 | 0 | 1 | 2 | 3 | 0 | 0 |
