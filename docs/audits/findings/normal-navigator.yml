@@ -93,7 +93,7 @@ findings:
     calculator while its roster tag is untagged. For Jon'
   evidence: 'mfg(..., level: ''alevel'') at every event (SWEEP-1, batch 10)'
   status: fixed
-  pr: 0
+  pr: 362
 - id: normal-navigator-s1-008
   severity: MEDIUM
   jc: false

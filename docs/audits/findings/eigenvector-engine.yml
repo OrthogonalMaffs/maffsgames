@@ -185,7 +185,7 @@ findings:
     is t6-003), and a wrong answer never says why the chosen distractor fails.'
   evidence: 'mfg(''game_started'', {game_slug: ''eigenvector-engine'', level: ''further'', ...}) (SWEEP-1, batch 11)'
   status: fixed
-  pr: 0
+  pr: 362
 - id: eigenvector-engine-s1-005
   severity: MEDIUM
   jc: false
