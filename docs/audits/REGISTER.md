@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-587 findings in 79 games.
+595 findings in 79 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 26 | 0 | 27 |
 | HIGH | 7 | 205 | 0 | 212 |
-| MEDIUM | 115 | 164 | 3 | 282 |
-| LOW | 33 | 32 | 1 | 66 |
-| **All** | 156 | 427 | 4 | 587 |
+| MEDIUM | 116 | 164 | 3 | 283 |
+| LOW | 40 | 32 | 1 | 73 |
+| **All** | 164 | 427 | 4 | 595 |
 
 ### By class
 
@@ -39,14 +39,14 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 5 | 26 | 26 |
 | 4 | 8 | 22 |
 | 7 | 5 | 16 |
+| NEW:convention-unstated | 4 | 15 |
 | NEW:value-equal distractors | 0 | 14 |
-| NEW:convention-unstated | 1 | 12 |
 | 8 | 3 | 11 |
+| NEW:text-contradicts-content | 8 | 10 |
 | NEW:precision-not-stated | 2 | 9 |
 | NEW:equal-value-options | 0 | 8 |
 | NEW:hand-typed explanation figure | 5 | 7 |
 | NEW:raw-tex-on-screen | 2 | 7 |
-| NEW:text-contradicts-content | 5 | 7 |
 | NEW:ill-posed wording | 1 | 6 |
 | 11 | 0 | 5 |
 | NEW:board-mixes-session-lengths | 5 | 5 |
@@ -54,6 +54,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:phone-layout | 4 | 5 |
 | B7 (ledgered) | 3 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
+| NEW:wording | 3 | 4 |
 | 9 | 1 | 3 |
 | NEW:level-content-mismatch | 2 | 3 |
 | NEW:phone-fold | 3 | 3 |
@@ -69,7 +70,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:prose-through-katex | 2 | 2 |
 | NEW:timer-policy | 0 | 2 |
 | NEW:unmarkable free text | 0 | 2 |
-| NEW:wording | 1 | 2 |
 | 10 | 0 | 1 |
 | NEW:a11y state | 0 | 1 |
 | NEW:ambiguous-notation | 0 | 1 |
@@ -149,17 +149,17 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `equation-builder` | yes | verify-equation-builder.py | 1 | 1 | 3 | 0 | 0 | 5 | 0 |
 | `equatle` | yes | verify-equatle.py | 0 | 0 | 2 | 0 | 2 | 0 | 0 |
 | `estimation-engine` | yes | verify-estimation-engine.py | 0 | 1 | 3 | 0 | 0 | 4 | 0 |
-| `estimation-golf` | yes | verify-estimation-golf.py | 0 | 2 | 3 | 0 | 3 | 2 | 0 |
+| `estimation-golf` | yes | verify-estimation-golf.py | 0 | 2 | 4 | 4 | 8 | 2 | 0 |
 | `expectation-station` | yes | verify-expectation-station.py | 2 | 12 | 5 | 1 | 0 | 20 | 0 |
 | `expected-damage` | yes | verify-expected-damage.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
 | `factor-race` | yes | verify-factor-race.py | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
 | `factor-theorem` | yes | verify-factor-theorem.py | 2 | 5 | 11 | 1 | 2 | 16 | 1 |
 | `force-resolver` | yes | verify-force-resolver.py | 1 | 7 | 5 | 2 | 1 | 14 | 0 |
 | `formula-forge` | yes | verify-formula-forge.py | 0 | 1 | 6 | 1 | 6 | 2 | 0 |
-| `formula-plug-in` | yes | verify-formula-plug-in.py | 0 | 1 | 4 | 1 | 5 | 1 | 0 |
+| `formula-plug-in` | yes | verify-formula-plug-in.py | 0 | 1 | 4 | 2 | 6 | 1 | 0 |
 | `formula-unlocked` | yes | verify-formula-unlocked.py | 0 | 1 | 0 | 1 | 0 | 2 | 0 |
 | `four-quadrant-explorer` | yes | verify-four-quadrant-explorer.py | 0 | 1 | 2 | 1 | 3 | 1 | 0 |
-| `fraction-equivalence` | yes | verify-fraction-equivalence.py | 0 | 0 | 2 | 1 | 3 | 0 | 0 |
+| `fraction-equivalence` | yes | verify-fraction-equivalence.py | 0 | 0 | 2 | 2 | 4 | 0 | 0 |
 | `given-that` | yes | verify-given-that.py | 0 | 3 | 1 | 0 | 0 | 4 | 0 |
 | `glorious-gantt` | unlisted | none | 1 | 7 | 4 | 1 | 13 | 0 | 0 |
 | `gradient-hunter` | yes | verify-gradient-hunter.py | 1 | 0 | 2 | 0 | 0 | 3 | 0 |
@@ -176,7 +176,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `new-shapes` | yes | verify-new-shapes.py | 0 | 1 | 7 | 1 | 8 | 1 | 0 |
 | `partial-fractions-duel` | yes | verify-partial-fractions-duel.py | 0 | 7 | 3 | 1 | 1 | 10 | 0 |
 | `percentage-flip` | yes | verify-percentage-flip.py | 0 | 0 | 2 | 0 | 1 | 1 | 0 |
-| `prime-factorisation` | yes | verify-prime-factorisation.py | 0 | 0 | 3 | 1 | 4 | 0 | 0 |
+| `prime-factorisation` | yes | verify-prime-factorisation.py | 0 | 0 | 3 | 2 | 5 | 0 | 0 |
 | `prime-or-composite` | yes | verify-prime-or-composite.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
 | `prisoners-dilemma` | yes | verify-prisoners-dilemma.py | 0 | 2 | 4 | 1 | 4 | 3 | 0 |
 | `probability-paradox` | yes | verify-probability-paradox.py | 1 | 4 | 5 | 1 | 0 | 11 | 0 |
