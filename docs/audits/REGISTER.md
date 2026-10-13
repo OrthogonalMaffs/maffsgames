@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-583 findings in 79 games.
+584 findings in 79 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 26 | 0 | 27 |
 | HIGH | 7 | 205 | 0 | 212 |
-| MEDIUM | 115 | 160 | 3 | 278 |
+| MEDIUM | 115 | 161 | 3 | 279 |
 | LOW | 33 | 32 | 1 | 66 |
-| **All** | 156 | 423 | 4 | 583 |
+| **All** | 156 | 424 | 4 | 584 |
 
 ### By class
 
@@ -49,10 +49,10 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:ill-posed wording | 1 | 6 |
 | 11 | 0 | 5 |
 | NEW:board-mixes-session-lengths | 5 | 5 |
+| NEW:equal-value-options | 0 | 5 |
 | NEW:marking-by-structure | 0 | 5 |
 | NEW:phone-layout | 4 | 5 |
 | B7 (ledgered) | 3 | 4 |
-| NEW:equal-value-options | 0 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
 | 9 | 1 | 3 |
 | NEW:level-content-mismatch | 2 | 3 |
@@ -190,7 +190,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `shape-shifter` | yes | verify-shape-shifter.py | 2 | 1 | 5 | 1 | 5 | 4 | 0 |
 | `spot-the-error` | yes | verify-spot-the-error.py | 0 | 13 | 4 | 2 | 0 | 19 | 0 |
 | `spot-the-muppet` | yes | verify-spot-the-muppet.py | 0 | 5 | 4 | 0 | 0 | 8 | 1 |
-| `standard-form-blitz` | yes | verify-standard-form-blitz.py | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `standard-form-blitz` | yes | verify-standard-form-blitz.py | 0 | 0 | 1 | 0 | 0 | 1 | 0 |
 | `surd-simplifier` | yes | verify-surd-simplifier.py | 0 | 2 | 0 | 0 | 0 | 2 | 0 |
 | `suvat` | yes | verify-suvat.py | 1 | 3 | 6 | 1 | 1 | 10 | 0 |
 | `terrible-advice` | yes | verify-terrible-advice.py | 0 | 5 | 5 | 0 | 0 | 10 | 0 |
