@@ -88,7 +88,7 @@ findings:
     doubling)".'
   evidence: 'value "2^{32} − 1 ≈ 4.3 billion" (SWEEP-1, batch 4)'
   status: fixed
-  pr: 371
+  pr: 370
 - id: higher-power-s1-003
   severity: LOW
   jc: false
@@ -101,7 +101,7 @@ findings:
     prime exponent".'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: higher-power-s1-004
   severity: MEDIUM
   jc: false
@@ -112,7 +112,7 @@ findings:
     Fixed under R3: the fact says 1 − 1/e is the limit as n gets large.'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: higher-power-s1-005
   severity: MEDIUM
   jc: false
@@ -124,7 +124,7 @@ findings:
     board''s total (the total is 2^64 − 1).'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: higher-power-s1-006
   severity: LOW
   jc: false
@@ -136,7 +136,7 @@ findings:
     1,000,000.'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: higher-power-s1-007
   severity: LOW
   jc: false
@@ -147,7 +147,7 @@ findings:
     step 1.) Fixed under R1: "The four fourth roots of unity (1, i, −1, −i)".'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: higher-power-s1-008
   severity: LOW
   jc: false
@@ -158,7 +158,7 @@ findings:
     step 1.) Fixed under R2: the mode text says that if the two are equal, either answer is right.'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: higher-power-s1-009
   severity: LOW
   jc: false
@@ -171,7 +171,7 @@ findings:
     recomputes every one with mpmath. higher-power-s1-010 (pickRazorPair and the level) stays open.'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: higher-power-s1-010
   severity: LOW
   jc: false

@@ -22,7 +22,7 @@ findings:
     wrong number of values.'
   evidence: '"6 7 6 ?", mean 6.5: options 7 (key), 0.5, 6.5, 19 (SWEEP-1, batch 5)'
   status: fixed
-  pr: 371
+  pr: 370
 - id: distinctly-average-s1-002
   severity: LOW
   jc: false
@@ -34,7 +34,7 @@ findings:
     4 ≈ 7.3").'
   evidence: '"6 7 6 ?", mean 6.5: options 7 (key), 0.5, 6.5, 19 (SWEEP-1, batch 5)'
   status: fixed
-  pr: 371
+  pr: 370
 - id: distinctly-average-s1-003
   severity: LOW
   jc: false

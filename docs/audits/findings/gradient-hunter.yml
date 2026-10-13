@@ -94,7 +94,7 @@ findings:
     false ones are left.'
   evidence: 'SWEEP-1, batch 5'
   status: fixed
-  pr: 371
+  pr: 370
 - id: gradient-hunter-s1-004
   severity: MEDIUM
   jc: false
@@ -107,7 +107,7 @@ findings:
     unchanged.'
   evidence: 'SWEEP-1, batch 5'
   status: fixed
-  pr: 371
+  pr: 370
 - id: gradient-hunter-s1-005
   severity: LOW
   jc: false
@@ -118,7 +118,7 @@ findings:
     under R1: "gradient approximately 116.7".'
   evidence: 'SWEEP-1, batch 5'
   status: fixed
-  pr: 371
+  pr: 370
 - id: gradient-hunter-s1-006
   severity: LOW
   jc: false
@@ -130,4 +130,4 @@ findings:
     say the student works out the gradient.'
   evidence: 'SWEEP-1, batch 5'
   status: fixed
-  pr: 371
+  pr: 370

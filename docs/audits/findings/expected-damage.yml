@@ -62,7 +62,7 @@ findings:
     escape and nobody is hit.'
   evidence: 'hint "⚠️ probability: 80%"; 23 of 50 items have a track under 1 (SWEEP-1, batch 4)'
   status: fixed
-  pr: 371
+  pr: 370
 - id: expected-damage-s1-002
   severity: MEDIUM
   jc: false
@@ -77,7 +77,7 @@ findings:
     figures.'
   evidence: 'const optRoll = Math.random(); (SWEEP-1, batch 4)'
   status: fixed
-  pr: 371
+  pr: 370
 - id: expected-damage-s1-003
   severity: MEDIUM
   jc: true
@@ -91,7 +91,7 @@ findings:
     the percentages are unchanged.'
   evidence: '"There''s a 65% chance all four stand and welcome it." (SWEEP-1, batch 4)'
   status: fixed
-  pr: 371
+  pr: 370
 - id: expected-damage-s1-005
   severity: MEDIUM
   jc: true
@@ -123,7 +123,7 @@ findings:
     gcse_007 and gcse_013 say the central man is not counted.'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: expected-damage-s1-007
   severity: LOW
   jc: false
@@ -136,4 +136,4 @@ findings:
     truthfully (a certain track against a gamble, or two gambles; gambles with two or three outcomes).'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370

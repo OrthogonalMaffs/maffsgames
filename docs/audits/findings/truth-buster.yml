@@ -212,7 +212,7 @@ findings:
     numbers", like tb_t3_011; the key is unchanged.'
   evidence: 'answer:true (SWEEP-1, batch 4)'
   status: fixed
-  pr: 371
+  pr: 370
 - id: truth-buster-s1-002
   severity: LOW
   jc: true
@@ -225,7 +225,7 @@ findings:
     enough for arithmetic (such as ZFC)").'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: truth-buster-s1-003
   severity: MEDIUM
   jc: true
@@ -248,4 +248,4 @@ findings:
     and stays with Jon.'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370

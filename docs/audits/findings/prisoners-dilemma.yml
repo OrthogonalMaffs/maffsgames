@@ -99,7 +99,7 @@ findings:
     £1k.'
   evidence: 'stratName "Pavlov (Win-Stay, Lose-Shift)" (SWEEP-1, batch 4)'
   status: fixed
-  pr: 371
+  pr: 370
 - id: prisoners-dilemma-s1-002
   severity: MEDIUM
   jc: false
@@ -110,7 +110,7 @@ findings:
     show the order. A "(you, them)" title, open Fixed under R2: the matrix title reads "(you, them)".'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: prisoners-dilemma-s1-003
   severity: LOW
   jc: false
@@ -122,7 +122,7 @@ findings:
     prisoners-dilemma-s1-006.) Fixed under R3: GCSE says "an opponent may adapt".'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: prisoners-dilemma-s1-004
   severity: LOW
   jc: false
@@ -134,7 +134,7 @@ findings:
     a random opponent has no pattern to find.'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: prisoners-dilemma-s1-005
   severity: LOW
   jc: false
@@ -146,7 +146,7 @@ findings:
     simplified version of Axelrod''s)".'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370
 - id: prisoners-dilemma-s1-006
   severity: LOW
   jc: false
@@ -158,4 +158,4 @@ findings:
     once 3 different opponents are beaten.'
   evidence: 'SWEEP-1, batch 4'
   status: fixed
-  pr: 371
+  pr: 370

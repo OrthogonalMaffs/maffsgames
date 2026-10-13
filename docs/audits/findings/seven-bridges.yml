@@ -124,7 +124,7 @@ findings:
     vertex counting as two.'
   evidence: 'SWEEP-1, batch 5 (degrees recomputed per edge and per neighbour for all 75 graphs)'
   status: fixed
-  pr: 371
+  pr: 370
 - id: seven-bridges-s1-002
   severity: LOW
   jc: true
@@ -136,7 +136,7 @@ findings:
     Fixed under R2: the rules say a route may finish at a different vertex from where it started.'
   evidence: 'SWEEP-1, batch 5'
   status: fixed
-  pr: 371
+  pr: 370
 - id: seven-bridges-s1-003
   severity: LOW
   jc: true
@@ -158,4 +158,4 @@ findings:
     or 2 odd vertices) as well as the count. seven-bridges-s1-003 (the term "Eulerian path") stays with Jon.'
   evidence: 'SWEEP-1, batch 5'
   status: fixed
-  pr: 371
+  pr: 370
