@@ -1512,11 +1512,6 @@
    "B7": {
     "entries": [
      {
-      "detail": "QS.d[] at rkI:137: 'No eigenvalues exist' renders as 'Noeigenvaluesexist' (lost a space beside: No, eigenvalues, exist)",
-      "id": "eigenvalue-extractor::B7::katex[QS.d[]]::0ba0d31f952a#1",
-      "line": 137
-     },
-     {
       "detail": "QS.s[] at rkI:140: 'Both eigenvalues are negative' renders as 'Botheigenvaluesarenegative' (lost a space beside: Both, are, eigenvalues, negative)",
       "id": "eigenvalue-extractor::B7::katex[QS.s[]]::4953b8128e09#1",
       "line": 140
@@ -3731,11 +3726,6 @@
      {
       "detail": "QUESTIONS.steps[] at rkStr:385: 'Cannot divide by zero' renders as 'Cannotdividebyzero' (lost a space beside: Cannot, by, divide, zero)",
       "id": "matrix-crunch::B7::katex[QUESTIONS.steps[]]::175dc1aa2ca9#1",
-      "line": 385
-     },
-     {
-      "detail": "QUESTIONS.steps[] at rkStr:385: 'D = 5 (from above)' renders as 'D = 5(fromabove)' (lost a space beside: above, from)",
-      "id": "matrix-crunch::B7::katex[QUESTIONS.steps[]]::62d3ead06720#1",
       "line": 385
      },
      {
