@@ -200,7 +200,7 @@ var QUESTIONS = [
     section:'3.4',ao:'AO2',
     stem:'A bar chart shows the percentage of students achieving grade C or above in four schools. School A: 72%, School B: 68%, School C: 74%, School D: 71%. The y-axis starts at 60%.\n\nA governor says: "School C is more than twice as good as School B."\n\nWhat is the most appropriate criticism of this statement?',
     svg:'barchart_q1',
-    options:['The chart should use a pie chart instead','The y-axis is truncated, making differences appear larger than they are','Percentages are the wrong measure for school performance','School C only has a 6 percentage point lead, not double'],
+    options:['The chart should use a pie chart instead','The y-axis is truncated, making differences appear larger than they are','Percentages are the wrong measure for school performance','The governor is right: School C\u2019s bar is more than twice as tall as School B\u2019s'],
     correct:1,
     working:'The truncated y-axis is the structural flaw. The visual gap between 68% and 74% looks enormous but represents only 6 percentage points.'
   },
@@ -214,7 +214,7 @@ var QUESTIONS = [
   {
     section:'3.4',ao:'AO2',
     stem:'A researcher claims: "In our survey, 4 out of 5 dentists recommended our toothpaste."\n\nWhich of the following is the most important piece of information missing from this claim?',
-    options:['The brand of toothpaste being recommended','How many dentists were surveyed in total','Whether the dentists were paid for their recommendation','The country in which the survey was conducted'],
+    options:['The brand of toothpaste being recommended','How many dentists were surveyed in total','The flavour of the toothpaste','The country in which the survey was conducted'],
     correct:1,
     working:'"4 out of 5" from a sample of 5 is meaningless. From 500 it would be meaningful. Sample size is the critical missing information.'
   },
@@ -244,7 +244,7 @@ var QUESTIONS = [
   {
     section:'3.4',ao:'AO3',
     stem:'A social media company reports: "Our users spend an average of 47 minutes per day on our platform. This shows our content is highly engaging."\n\nWhich is the strongest criticism of this conclusion?',
-    options:['The mean may be distorted by a small number of very heavy users','47 minutes is not a long time to spend on social media','The company should have reported median time instead','The data does not tell us whether users enjoyed the content'],
+    options:['The mean may be distorted by a small number of very heavy users','47 minutes is not a long time to spend on social media','The company should have reported the total minutes across all users instead','The mean must be wrong, because no user spends exactly 47 minutes'],
     correct:0,
     working:'A small proportion of extremely heavy users could inflate the mean substantially, making the "average" unrepresentative of typical usage. The company also has a vested interest in presenting engagement positively.'
   },
@@ -253,7 +253,7 @@ var QUESTIONS = [
     stem:'A school reports that its GCSE pass rate improved from 78% to 81% over two years, while the national average stayed at 79%.\n\nA parent says: "The school improved by nearly 4% while the national average didn\'t change \u2014 the school must be getting much better."\n\nGive the most precise criticism of this statement.',
     options:['The improvement of 3 percentage points is not statistically significant without knowing sample sizes','78% to 81% is only a 3 percentage point improvement, not 4%','The national average of 79% is between the two figures, so the school is average','Pass rates are not a reliable measure of school quality'],
     correct:0,
-    working:'Two issues: the stated "4%" is imprecise (it\'s 3 percentage points), and without knowing cohort sizes and variability, we cannot determine if the change is meaningful or within normal variation.'
+    working:'The parent\'s "nearly 4%" is right as a percentage increase (3 \u00f7 78 = 3.8%), though the rise is 3 percentage points. The flaw is the conclusion: without knowing cohort sizes and variability, we cannot tell whether a 3-point change is meaningful or within normal variation.'
   },
   {
     section:'3.4',ao:'AO2',

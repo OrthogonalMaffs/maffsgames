@@ -24,8 +24,11 @@ before answering, no option is marked and the working is hidden; after choosing 
 key, the key is marked correct and the working shows. Q1's bar chart must draw the
 four percentages its stem states.
 
-A fault-injection self-test (a wrong value, a wrong key, a pre-answer leak and a
-mis-drawn bar) must FAIL each time; it runs unless --no-selftest.
+Q1, Q3 and Q7 may not offer the true criticisms they once did as wrong options (SR-16), Q1's "more than
+twice as tall" option must be false as drawn, and Q8's working may not call "nearly 4%" wrong.
+
+A fault-injection self-test (a wrong value, a wrong key, a pre-answer leak, a mis-drawn bar, the old
+Q1, Q7 and Q8 texts and a bar drawn so the Q1 claim holds) must FAIL each time; it runs unless --no-selftest.
 
     python scripts/verify-core-maths-paper2a.py [--verbose] [--no-selftest]
 """
@@ -188,6 +191,19 @@ def _specs():
 SPECS = _specs()
 STATS_FROM = 9      # Q10, the first §3.5 item
 
+# §3.4 critical analysis (SWEEP-1, core-maths-paper2a-s1-001..004). A true statement is never a wrong option
+# (SR-16): these true criticisms were offered as wrong options and may not come back as one. Q8's working may
+# not call the parent's "nearly 4%" wrong: 3 / 78 = 3.8%, so it is right as a percentage increase.
+TRUE_WRONG = {
+    0: [(r'6 percentage point lead', 'C leads B by 6 points: a true criticism of "more than twice as good"')],
+    2: [(r'\bpaid\b', 'whether the dentists were paid is as important a missing fact as the sample size')],
+    6: [(r'enjoyed', 'time spent does not show the content is engaging: a true criticism of the conclusion'),
+        (r'\bmedian\b', 'reporting the median is the key\'s own point, as a remedy')],
+}
+WORKING_FORBIDS = {
+    7: [(r'"4%" is imprecise', '3 / 78 = 3.8%: "nearly 4%" is right as a percentage increase')],
+}
+
 
 class Report:
     def __init__(self):
@@ -220,6 +236,13 @@ def check_item(rep, qi, q, verbose=False):
         for name, pat in DRAFT_PATTERNS:
             if pat.search(o):
                 rep.fail(qi, 'draft prose', 'option %r contains %r' % (o, name))
+    for pat, why in TRUE_WRONG.get(qi, []):
+        for i, o in enumerate(opts):
+            if i != key and re.search(pat, o, re.IGNORECASE):
+                rep.fail(qi, 'true wrong option', '%r (%s; SR-16)' % (o, why))
+    for pat, why in WORKING_FORBIDS.get(qi, []):
+        if re.search(pat, q.get('working', '')):
+            rep.fail(qi, 'working', 'says %r (%s)' % (pat, why))
     # worked-step arithmetic
     for left, right, why in st.arith_problems(q.get('working', '')):
         rep.fail(qi, 'working', '"%s = %s" is false (%s)' % (left, right, why))
@@ -324,6 +347,19 @@ def bars_from_svg(svg):
     return {lab: round(to_val(y), 6) for lab, (x, y, w) in zip(labels, rects)}
 
 
+def bar_claim(rep, qi, q, drawn):
+    """A wrong option saying C's bar is "more than twice as tall" as B's must be false as drawn: bar heights run
+    from the axis start, so the ratio is (C - start) / (B - start) (core-maths-paper2a-s1-001)."""
+    axis = re.search(r'y-axis starts at (\d+)%', q['stem'])
+    if not drawn or not axis or 'B' not in drawn or 'C' not in drawn:
+        return
+    start = float(axis.group(1))
+    ratio = (drawn['C'] - start) / (drawn['B'] - start)
+    for i, o in enumerate(q['options']):
+        if i != q['correct'] and re.search(r'more than twice as tall', o) and ratio > 2:
+            rep.fail(qi, 'true wrong option', '%r is true as drawn (C/B bar heights %.2f; SR-16)' % (o, ratio))
+
+
 def check_rendered(rep, bank, rendered):
     for qi, q in enumerate(bank):
         r = rendered[qi]
@@ -343,6 +379,7 @@ def check_rendered(rep, bank, rendered):
             drawn = bars_from_svg(pre['svg'] or '')
             if not drawn or set(drawn) != set(stated) or any(abs(drawn[k] - stated[k]) > 0.05 for k in stated):
                 rep.fail(qi, 'bar chart', 'stem states %s, drawing shows %s' % (stated, drawn))
+            bar_claim(rep, qi, q, drawn)
             axis = re.search(r'y-axis starts at (\d+)%', q['stem'])
             if axis and pre['svg'] and ('>%s%%</text>' % axis.group(1)) not in pre['svg']:
                 rep.fail(qi, 'bar chart', 'stem says the axis starts at %s%%, the drawing does not' % axis.group(1))
@@ -407,6 +444,21 @@ def selftest(bank, rendered):
     def wrong_working(b):
         b[16]['working'] = b[16]['working'].replace('= 61', '= 62')
     expect('wrong working (Q17 0.0122 x 5000 = 62)', lambda rep: check_bank(rep, mutated(wrong_working)))
+
+    def old_q1(b):
+        b[0]['options'][3] = 'School C only has a 6 percentage point lead, not double'
+    expect('true wrong option (old Q1 D)', lambda rep: check_bank(rep, mutated(old_q1)))
+
+    def old_q7(b):
+        b[6]['options'][3] = 'The data does not tell us whether users enjoyed the content'
+    expect('true wrong option (old Q7 D)', lambda rep: check_bank(rep, mutated(old_q7)))
+
+    def old_q8(b):
+        b[7]['working'] = 'Two issues: the stated "4%" is imprecise (it\'s 3 percentage points), and more.'
+    expect('false working (old Q8 "4%")', lambda rep: check_bank(rep, mutated(old_q8)))
+
+    expect('bar claim true as drawn (C at 78%)',
+           lambda rep: bar_claim(rep, 0, bank[0], {'A': 72, 'B': 68, 'C': 78, 'D': 71}))
 
     # a pre-answer leak and a mis-drawn bar: patched into the live page, the file is never touched
     leak_bank, leak_rendered = load_and_render("""(() => {
