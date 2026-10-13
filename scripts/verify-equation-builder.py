@@ -35,6 +35,13 @@ How (contract, 4 Oct 2026):
   d. an accepted arrangement may not use a distractor tile.
 Each tile is translated on its own into an explicit SymPy fragment (TILE_FRAGMENT / translate), so two tiles
 side by side never multiply implicitly: "3" then "m" is not "3m".
+
+The question's own words decide the kind first (Jon, 13 Oct 2026, SWEEP-1; SR-25): the last sentence that says
+"write" asks for an expression (the key has no "="), a formula (the key is "X = ..." with X one tile) or an
+equation (any rearrangement is accepted, SR-13 decision 5, as eb_gcse_007 always was). The check fails a key
+whose form disagrees with what its question asks for. Then, in Chromium (part 1): the tile bank is shuffled for
+each question and never starts with the tiles a blank needs in the key's order (orderTiles), and the page lays
+the bank out in that order.
 """
 import argparse, itertools, json, pathlib, random, re, sys
 from fractions import Fraction
@@ -94,15 +101,13 @@ SPECIAL = {
     'eb_l4_008': {'kind': ('equation', None),
                   'why': 'integration by parts: the integral tiles are fixed symbols, so the same step in any '
                          'arrangement is accepted and evaluating the second integral is not'},
-    'eb_l4_021': {'fixed': ('key', 'swap'),
-                  'why': 'a definite integral built from two tiles: the key and swapped sides only'},
+    'eb_l4_021': {'fixed': ('key',),
+                  'why': 'a definite integral built from two tiles: the key only'},
     'eb_l4_023': {'fixed': ('key', 'r0'),
                   'why': 'sigma notation: from r = 1 or r = 0 (the r = 0 term of r squared is 0, same sum)'},
     'eb_l4_033': {'fixed': ('key',), 'why': 'a matrix gap-fill: one operator slot, only the key is right'},
     'eb_gcse_031': {'fixed': ('key',), 'why': 'a plus-or-minus gap-fill: one operator slot, only the key is right'},
     'eb_gcse_039': {'fixed': ('key',), 'why': 'two = signs in one answer: only the key tile gives the right root'},
-    'eb_l4_015': {'kind': ('formula', 'log(16)'),
-                  'why': 'no unknown: a formula for log(16): one side exactly that tile, the other equal in value'},
     'eb_l4_002': {'pm_c': True, 'why': 'constant of integration: + c and - c are both right'},
     'eb_l4_026': {'pm_c': True, 'why': 'constant of integration: + c and - c are both right'},
     'eb_l4_034': {'pm_c': True, 'why': 'constant of integration: + c and - c are both right'},
@@ -304,12 +309,64 @@ def split_eq(tokens):
     return list(tokens[:i]), list(tokens[i + 1:])
 
 
+# What the question asks for, from its own words (Jon, 13 Oct 2026, SWEEP-1; SR-25): the last sentence that says
+# "write" names an expression, a formula or an equation, or none of them. An expression has no "="; a formula is
+# "X = ..." with X one tile, alone on its side; an equation is any other statement with "=", and "the equation for
+# X" accepts every rearrangement (SR-13 decision 5), as eb_gcse_007 always has.
+ASK_KINDS = ('expression', 'formula', 'equation')
+
+
+def ask_of(q):
+    said = [x for x in re.split(r'(?<=[.?!:])\s+', q['text']) if re.search(r'\bwrite\b', x, re.I)]
+    return said[-1] if said else ''
+
+
+def stem_kind(q):
+    ask = ask_of(q)
+    for k in ('formula', 'equation', 'expression'):
+        if re.search(r'\b%s\b' % k, ask, re.I):
+            return k
+    return None
+
+
+def formula_subject(key):
+    if key.count(EQ) == 0:
+        return None
+    l, r = split_eq(key)
+    for side, other in ((l, r), (r, l)):
+        if len(side) == 1 and side[0] not in other:
+            e = to_sympy(side)
+            if e is None or e[0].free_symbols:        # a quantity, not a number such as 180
+                return side[0]
+    return None
+
+
+def key_form(key):
+    if EQ not in key:
+        return 'expression'
+    return 'formula' if formula_subject(key) else 'equation'
+
+
+def ask_disagrees(q):
+    """SR-25: the key's form against what the question's words ask for; None when they agree."""
+    sk, kf = stem_kind(q), key_form(q['slots'])
+    if sk is None or sk == kf or (sk == 'equation' and kf == 'formula'):
+        return None
+    return 'the question asks for %s (%r) but the key %r is %s' % (
+        'an ' + sk if sk == 'expression' else 'a ' + sk, ask_of(q), ' '.join(q['slots']),
+        'an expression' if kf == 'expression' else 'a ' + kf)
+
+
 def kind_of(q):
     if 'kind' in SPECIAL.get(q['id'], {}):
         return SPECIAL[q['id']]['kind']
     key = q['slots']
     if EQ not in key:
         return ('expression', None)
+    if stem_kind(q) == 'equation':
+        return ('equation', None)
+    if stem_kind(q) == 'formula':
+        return ('formula', formula_subject(key))
     l, r = split_eq(key)
     for side, other in ((l, r), (r, l)):
         if len(side) == 1 and translate(side[0])[0] == 'operand':
@@ -552,6 +609,8 @@ def check(page=PAGE, only=None, verbose=False, part=None):
             more = mine - set(acc)
             fails.append('%s: the page\'s ACCEPTED list differs from the computed one (missing %d, extra %d)%s'
                          % (q['id'], len(miss), len(more), (': ' + ' | '.join(' '.join(x) for x in list(miss | more)[:3]))))
+        if whole and ask_disagrees(q):
+            fails.append('%s: %s (SR-25)' % (q['id'], ask_disagrees(q)))
         if whole and q['id'] == 'eb_gcse_013' and not gcse_013_geometry(q):
             fails.append('eb_gcse_013: the key is not the midpoint the question names')
         if verbose:
@@ -562,6 +621,66 @@ def check(page=PAGE, only=None, verbose=False, part=None):
         if extra_ids:
             fails.append('ACCEPTED block has ids not in the bank: %s' % sorted(extra_ids))
     return fails, report, computed
+
+
+TILE_ORDER_JS = r"""() => {
+  if (typeof orderTiles !== 'function') return ['orderTiles() is not on the page'];
+  const bad = [];
+  const need = q => q.slots.filter((s, i) => !(q.prefilled || []).includes(i));
+  const keyFirst = (q, t) => need(q).every((s, i) => t[i] === s);
+  let seed = 20261013;
+  const lcg = () => (seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648;
+  const still = () => 0.9999999;          // Fisher-Yates with this draw leaves every tile where it is
+  const same = (a, b) => a.slice().sort().join('\u0001') === b.slice().sort().join('\u0001');
+  for (const q of QUESTIONS) {
+    for (const r of [still, () => 0].concat(Array(40).fill(lcg))) {
+      const t = orderTiles(q, r);
+      if (!same(t, q.tiles)) { bad.push(q.id + ': orderTiles() changed the tiles'); break; }
+      if (keyFirst(q, t)) { bad.push(q.id + ": the key's tiles come first: " + t.slice(0, need(q).length).join(' ')); break; }
+    }
+  }
+  // The page lays the bank out in that order: with the draw that would leave the tiles in place, no question's
+  // bank may start with its key.
+  const real = Math.random;
+  Math.random = still;
+  for (const q of QUESTIONS) {
+    questionQueue = [q]; totalQ = 1; qIndex = 0;
+    showQuestion();
+    const shown = [...document.querySelectorAll('#tileBank .tile')].map(e => e.textContent);
+    const want = need(q).map(t => { const d = document.createElement('div'); renderContent(t, d); return d.textContent; });
+    if (shown.length !== q.tiles.length) bad.push(q.id + ': the bank shows ' + shown.length + ' tiles, not ' + q.tiles.length);
+    else if (want.every((w, i) => shown[i] === w)) bad.push(q.id + ": the bank on screen starts with the key's tiles: " + shown.slice(0, want.length).join(' '));
+  }
+  Math.random = real;
+  return bad;
+}"""
+
+
+def tile_order_fails(page=PAGE):
+    """Jon, 13 Oct 2026: the tiles are shuffled for each question, never with the key's tiles first."""
+    sys.path.insert(0, str(BASE / 'scripts'))
+    import bank_common as bc
+    from playwright.sync_api import sync_playwright
+    html = page.read_text(encoding='utf-8')
+    proc, base = bc.start_stub_server()
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch()
+            ctx = browser.new_context(viewport={'width': 390, 'height': 844})
+            page_url = re.compile(r'/games/equation-builder/(\?[^/]*)?$')
+            ctx.route(lambda url: not url.startswith(base) and '/katex@' not in url, lambda route: route.abort())
+            ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
+                status=200, content_type='text/html; charset=utf-8', body=html))
+            pg = ctx.new_page()
+            errors = []
+            pg.on('pageerror', lambda e: errors.append(str(e)))
+            pg.goto(base + '/games/equation-builder/?cb=verify', wait_until='load', timeout=30000)
+            pg.wait_for_function('typeof QUESTIONS !== "undefined"', timeout=15000)
+            out = pg.evaluate(TILE_ORDER_JS)
+            browser.close()
+    finally:
+        proc.terminate()
+    return ['tile order: ' + x for x in out] + ['tile order: page error: ' + e for e in errors[:3]]
 
 
 def write(page=PAGE):
@@ -589,6 +708,15 @@ def selftest():
         ('a missing accepted arrangement (ks3_001 loses C = 3 + 2.50m)',
          lambda s: s.replace('["C","=","3","+","2.50m"],', '', 1) if '["C","=","3","+","2.50m"],' in s
                     else s.replace(',["C","=","3","+","2.50m"]', '', 1), ['eb_ks3_001'], True),
+        ('an expression asked, a formula keyed (ks3_002\'s old wording, SR-25)',
+         lambda s: s.replace('Write a formula for the total mass T kg', 'Write an expression for the total mass T kg', 1),
+         ['eb_ks3_002'], True),
+        ('a bare key back to a formula (l4_015 keyed log(8×4 ÷ 2) = log(16))',
+         lambda s: s.replace("slots:['log(16)']", "slots:['log(8\\u00d74','\\u00f7','2)','=','log(16)']", 1),
+         ['eb_l4_015'], True),
+        ('an "equation for X" item that rejects a rearrangement (gcse_019 loses Q3 − IQR = Q1)',
+         lambda s: s.replace('["Q3","−","IQR","=","Q1"],', '', 1) if '["Q3","−","IQR","=","Q1"],' in s
+                    else s.replace(',["Q3","−","IQR","=","Q1"]', '', 1), ['eb_gcse_019'], True),
         ('a distractor that builds an equal value (gcse_010 gets 5/9 and 4/10 back)',
          lambda s: s.replace("'5/10','\\u00f7','3/9'", "'5/9','\\u00f7','4/10'", 1)
                     .replace("'\\u2212','5/10'", "'\\u2212','5/9'"), ['eb_gcse_010'], True),
@@ -613,6 +741,29 @@ def selftest():
         ok = bool(fails) == should_fail and bool(parted) == should_fail
         print('  %s  %-66s %s%s' % ('PASS' if ok else 'FAIL', name, fails[0][:110] if fails else '(no failures)',
                                    '' if bool(parted) == bool(fails) else '  [the parts disagree]'))
+        if not ok:
+            bad.append(name)
+    order_cases = [
+        ('tile order: the bank laid out in bank order again', lambda s: s.replace('  tileOrder.forEach(t=>{', '  currentQ.tiles.forEach(t=>{', 1)),
+        ('tile order: no guard against the key coming first', lambda s: s.replace(
+            "  if(need.every((s,i)=>t[i]===s)){const j=t.findIndex(x=>x!==t[0]);if(j>0)[t[0],t[j]]=[t[j],t[0]];}\n", '', 1)),
+    ]
+    for name, plant in [('tile order: clean copy passes', None)] + order_cases:
+        d = pathlib.Path(tempfile.mkdtemp(prefix='eb-'))
+        try:
+            page = d / 'index.html'
+            src = PAGE.read_text(encoding='utf-8')
+            if plant:
+                new = plant(src)
+                if new == src:
+                    bad.append(name + ' (the plant changed nothing)'); continue
+                src = new
+            page.write_text(src, encoding='utf-8')
+            fails = tile_order_fails(page)
+        finally:
+            shutil.rmtree(d, ignore_errors=True)
+        ok = bool(fails) == bool(plant)
+        print('  %s  %-66s %s' % ('PASS' if ok else 'FAIL', name, fails[0][:110] if fails else '(no failures)'))
         if not ok:
             bad.append(name)
     print('selftest: %s' % ('FAILED: ' + ', '.join(bad) if bad else 'PASS'))
@@ -680,6 +831,8 @@ def main():
     if a.only:
         only = {q['id'] for q in load_bank() if any(o in q['id'] for o in a.only)}
     fails, report, _ = check(only=only, verbose=a.report, part=part)
+    if not only and (part is None or part[0] == 1):
+        fails += tile_order_fails()
     for qid, n, k, why in report:
         print('%-12s accepted=%-3d of %s arrangements%s' % (qid, k, n if n is not None else 'fixed',
                                                            ('  [special: %s]' % why) if why else ''))
