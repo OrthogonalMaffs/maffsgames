@@ -11,7 +11,9 @@ on maffsgames.co.uk only. This script, in the pattern of apply-footer.py / apply
   2. makes sure the page loads analytics.js exactly once: a page that already does is left alone, and the include
      must resolve to schools/assets/analytics.js; a page that does not (about, feedback, leaderboards, privacy,
      spec map) gets one, in the snippet's place, at its own relative path.
-Nothing else in a page is touched. Idempotent: a page with no snippet is skipped.
+  3. removes the "Google Analytics (cookieless)" comment the snippet left behind (13 Oct 2026, LISTINGS-AND-GATE part C):
+     a label for a tag that is no longer there. The line goes whole, and the pass counts the pages it changed.
+Nothing else in a page is touched. Idempotent: a page with no snippet or comment is skipped.
 """
 import os, posixpath, re, subprocess, sys
 
@@ -21,6 +23,7 @@ ASSET = "schools/assets/analytics.js"
 SNIPPET = re.compile(r'<script async src="https://www\.googletagmanager\.com/gtag/js\?id=%s"></script>\s*<script>.*?</script>(\r?\n)'
                      % ID, re.S)
 INCLUDE = re.compile(r'<script\b[^>]*\bsrc="([^"]*analytics\.js[^"]*)"[^>]*>')
+ORPHAN = re.compile(r'[ \t]*<!-- Google Analytics \(cookieless\) -->[ \t]*\r?\n')
 
 
 def pages():
@@ -65,6 +68,19 @@ def main(dry):
         if not dry:
             with open(os.path.join(ROOT, page), "w", encoding="utf-8", newline="") as f:
                 f.write(new)
+    orphans = []
+    for page in pages():
+        with open(os.path.join(ROOT, page), encoding="utf-8", newline="") as f:
+            text = f.read()
+        new = ORPHAN.sub("", text)
+        if new != text:
+            orphans.append(page)
+            if not dry:
+                with open(os.path.join(ROOT, page), "w", encoding="utf-8", newline="") as f:
+                    f.write(new)
+    print("orphan comments removed: %d pages changed" % len(orphans))
+    for p in orphans:
+        print("  comment removed: " + p)
     print("pages changed: %d (snippet removed, existing include kept: %d; include added: %d)" % (len(changed), len(kept), len(added)))
     for p in added:
         print("  include added: " + p)
