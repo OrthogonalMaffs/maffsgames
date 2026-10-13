@@ -1,0 +1,114 @@
+# Findings register for graph-sketcher (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: graph-sketcher
+audited:
+  tranche: S1 (SWEEP-1 reading sweep)
+  head: 856aa7c
+  date: 2026-10-13
+  served:
+    core: '15 scenarios, 41 questions'
+    alevel: '15 scenarios, 38 questions'
+    level4: '15 scenarios, 30 questions'
+findings:
+- id: graph-sketcher-s1-001
+  severity: CRITICAL
+  jc: false
+  class: NEW:marking-tolerance
+  level: core, alevel, level4
+  where: games/graph-sketcher/index.html checkCell (:709), buildTable
+  summary: 'Table cells, worked from the equation (not read from a graph), were marked to a band with no precision
+    stated: ±max(0.15, 2%) for a key of 10 or less, ±max(0.5, 1%) above, so a key of 4 accepted 4.1, 134 accepted 135,
+    and every L4_11 cell (0.002 to 0.006) accepted 0. Played in the page, a wrong cell was marked correct in 44 of the
+    45 scenarios (all with a table). Fixed under SR-30 (SR-1, SR-2, SR-3): a table whose values are all exact is marked
+    exactly; else at the decimal places the scenario''s own keys are given to (keys unchanged), which the table now
+    states; a right value at other precision gets a message, no penalty. The verifier types every cell at the stated
+    precision, one unit off and the long form, and plants the old band'
+  evidence: 'const tol=Math.abs(expected)<=10?Math.max(0.15,Math.abs(expected)*0.02):Math.max(0.5,Math.abs(expected)*0.01);
+    the new checks fail the old page 228 times (SWEEP-1, batch 10)'
+  status: fixed
+  pr: 354
+- id: graph-sketcher-s1-002
+  severity: HIGH
+  jc: false
+  class: NEW:marking-tolerance
+  level: alevel, level4
+  where: games/graph-sketcher/index.html checkRootsIQ (:1124), checkTPIQ
+  summary: 'Roots accepted one extra wrong value (vals.length <= n + 1: "2, 3, 7" for AL1), on 10 items; a turning
+    point''s y was read to the x tolerance in y units (max(tol, 5%)), so AL5 accepted 2 or 4 for y = 3 and AL13 anything
+    from −0.09 to 2.91. Fixed: exactly the roots, nothing else; y read to 2.5% of its axis, as chart-interrogator reads
+    its axes (canon §7.1.2); the verifier plays an extra root and a y off by 5%, and plants both old rules'
+  evidence: 'const ok=allFound&&vals.length<=iq.answers.length+1; Math.max(tol,Math.abs(iq.answer.y)*0.05) (SWEEP-1,
+    batch 10)'
+  status: fixed
+  pr: 354
+- id: graph-sketcher-s1-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:true-wrong-option
+  level: core
+  where: games/graph-sketcher/index.html CM10 (:343)
+  summary: '"The quadratic is always larger" is true: CM1''s quadratic minus CM10''s cubic is 0.00002s³ > 0 for s > 0
+    (SR-16). Fixed: "The cubic gives larger heights at high speeds", the named error'
+  evidence: "wrong:['There is no difference','The quadratic is always larger','The cubic grows faster'] (SWEEP-1, batch 10)"
+  status: fixed
+  pr: 354
+- id: graph-sketcher-s1-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:unstated-convention
+  level: alevel, level4
+  where: games/graph-sketcher/index.html AL4 (:418), L4_8 (:554), AL9 (:456)
+  summary: 'Conventions the keys rely on were not stated (SR-17): AL4''s "steepest" holds only of the table''s x-values
+    (−4/x² has no steepest point); L4_8''s 3sin(50t) is keyed in radians with no unit shown; AL9''s "first maximum" (0, 1)
+    after a question on positive roots. Fixed: "Of the x-values in the table, …", "the angle 50t is in radians", "…, for
+    x ≥ 0"'
+  evidence: 'Prompts and context as quoted (SWEEP-1, batch 10)'
+  status: fixed
+  pr: 354
+- id: graph-sketcher-s1-005
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: core, level4
+  where: games/graph-sketcher/index.html :262, :281, :351 (extrapolation), CM2 (:272), L4_3 (:519)
+  summary: 'Three extrapolations off the drawn graph said "Estimate X" (Jon''s Estimate ruling, 13 Oct: "use the model
+    to estimate"); CM2''s "local minimum" where P(0) equals P(3); L4_3''s "AC mains" at a 240 V peak (UK mains peaks near
+    325 V). Fixed: "Use the model to estimate …", "turning point (local minimum)", "An AC supply"'
+  evidence: 'Prompts as quoted (SWEEP-1, batch 10)'
+  status: fixed
+  pr: 354
+- id: graph-sketcher-s1-006
+  severity: HIGH
+  jc: true
+  class: NEW:second-correct-answer
+  level: core, level4
+  where: games/graph-sketcher/index.html L4_5 (:538), CM2 (:273), CM11 (:351), CM4 (:291)
+  summary: 'For Jon (stem or key-text changes): L4_5''s "maximum deflection" on 0 ≤ x ≤ 4 is 4 at both x = 1 and x = 4
+    (the endpoint), so (4, 4) is also right ("local maximum"?); CM2''s key "Model allows negative profit" is false, P =
+    x(x − 3)² ≥ 0, and no option is true; CM11''s rate is fixed in the context, so "Reliable" is defensible; CM4''s key
+    gives reaction time as a braking-distance limitation'
+  evidence: 'Items as quoted (SWEEP-1, batch 10)'
+  status: open
+- id: graph-sketcher-s1-007
+  severity: LOW
+  jc: true
+  class: NEW:text-contradicts-content
+  level: core, level4
+  where: games/graph-sketcher/index.html CM4 (:284), CM12 (:353), CM10 (:337), L4_12 (:584), CM9, L4_11, CM3, AL8, L4_15
+  summary: 'Contexts implausible at their values (CM4''s braking needs about 1.7 g; CM12 covers 0 km/L at 100 km/h;
+    CM10''s waves shrink as the wind rises; L4_12''s flow falls as pressure rises) and wording (CM9 "speed cannot be
+    zero"; L4_11''s strain only approaches 0.006; CM3''s year 2024.2; AL8''s "10 × 0.5x"; L4_15 prints 1.00e+6). For Jon'
+  evidence: 'Reviewer''s list (SWEEP-1, batch 10)'
+  status: open
+- id: graph-sketcher-s1-008
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: core, alevel, level4
+  where: scripts/verify-graph-sketcher.py
+  summary: 'The verifier did not check the 50 multiple-choice keys and options, the extrapolation reliable flag and
+    reason, the worked example, the context constants, or an endpoint tying with a "maximum" (how s1-006''s L4_5 passed),
+    and played only the true value (how s1-001 and s1-002 passed). Recorded under Jon''s rule of 13 Oct 2026; wrong
+    cells, extra roots and off readings are now played'
+  evidence: 'check_played() before this PR (SWEEP-1, batch 10)'
+  status: open

@@ -16,12 +16,16 @@ so), and then
     key must be that value correctly rounded at the precision it is stored to. A turning
     point checks both coordinates; a roots key must list exactly the roots asked for.
 
-The marking is then played in the page through the game's own functions: every table
-cell and every typed question, answered with the true value, must be marked correct.
-Tolerances are not checked here: they are the shared precision marker's business (§1.36).
+The marking is then played in the page through the game's own functions (SWEEP-1, graph-sketcher-s1-001,
+s1-002): every table cell typed with the true value at the table's precision (exact where every value is
+exact, else the decimal places its keys are given to, which the table must state) is marked correct, one
+unit off is not, and the true value to 6 s.f. gets the message, unmarked; every typed question answered
+with the true value is marked correct; roots with an extra value, and a turning point whose y is off by 5%
+of its axis (graph readings, canon 7.1.2: 2.5% of the axis), are not.
 
 A fault-injection self-test (a wrong cell, a wrong given value, a wrong reading key, a
-graph that disagrees with its equation, a reworded prompt) must FAIL each time; it runs
+graph that disagrees with its equation, a reworded prompt, and the old cell band, extra-root
+acceptance and turning-point y band played in the page) must FAIL each time; it runs
 unless --no-selftest.
 
     python scripts/verify-graph-sketcher.py [--verbose] [--no-selftest]
@@ -403,8 +407,34 @@ def true_answers(s):
     g = sp.lambdify(var, f, 'math')
     lo, hi = s['xRange']
     sig = lambda v: float('%.6g' % v)  # noqa: E731
-    cells = {x: sig(g(float(x))) for x in s['answers']}
+    # a table is marked exactly where every value is exact, else at the decimal places its keys are given to,
+    # which the page states (SR-1, SR-2; graph-sketcher-s1-001): the true value typed at that precision is right
+    near = lambda u, v: abs(u - v) <= 1e-9 * max(1, abs(v))  # noqa: E731
+    dp = None
+    for x, a in s['answers'].items():
+        t = g(float(x))
+        if near(t, a):
+            continue
+        p = 0
+        while p < 8 and not near(round(t, p), a):
+            p += 1
+        dp = max(dp or 0, p)
+
+    def at(v):
+        v = round(v, 9) + 0.0   # floating-point noise (cos 90° = 6e-17) is not a digit a student types
+        if dp is None:
+            return sig(v)
+        return format(Decimal(repr(v)).quantize(Decimal(1).scaleb(-dp), rounding=ROUND_HALF_UP), 'f')
+    cells = {}
+    for x in s['answers']:
+        t = g(float(x))
+        cells[x + ':right'] = at(t)
+        step = Decimal(1).scaleb(-dp) if dp is not None else Decimal('0.1')
+        cells[x + ':up'] = format(Decimal(str(at(t))) + step, 'f')
+        if dp is not None and Decimal(str(sig(t))) != Decimal(str(at(t))):
+            cells[x + ':long'] = '%.6g' % t
     iqs = {}
+    ys = s['yRange'][1] - s['yRange'][0]
     for i, iq in enumerate(s['iqs']):
         if iq['type'] == 'mcq' or i not in spec.get('iq', {}):
             continue
@@ -413,15 +443,18 @@ def true_answers(s):
         if kind == 'tp':
             x, y = turning_point(sp_[1], f, var, lo, hi)
             iqs[i] = dict(x=sig(x), y=sig(y))
+            iqs['%d:off' % i] = dict(x=sig(x), y=sig(y + 0.05 * ys))   # y off the reading by 5% of its axis
         elif kind in ('roots', 'roots2', 'rootpos'):
             rs = roots_in(f, var, lo, hi)
             rs = [r for r in rs if r > 0][:2] if kind == 'roots2' else [r for r in rs if r > 1e-9][:1] if kind == 'rootpos' else rs
             iqs[i] = dict(text=', '.join('%.6g' % r for r in rs)) if kind != 'rootpos' else dict(value=sig(rs[0]))
+            if kind != 'rootpos' and iq['type'] == 'roots':
+                iqs['%d:extra' % i] = dict(text=iqs[i]['text'] + ', %.6g' % (max(rs) + 0.37 * (hi - lo) + 1))
         else:
             arg = (sp_[1], sp_[2]) if kind == 'year' else sp_[1]
             iqs[i] = dict(value=sig(answer_iq(kind, arg, f, var, lo, hi)))
         iqs[i]['reliable'] = 'yes' if iq.get('reliable') else 'no'
-    return cells, iqs
+    return cells, iqs, dp
 
 
 # --------------------------------------------------------------------------
@@ -438,18 +471,22 @@ PLAY_JS = """async (a) => {
   const q = Object.values(SCENARIOS).flat().find(s => s.id === a.id);
   const realTimeout = window.setTimeout;
   window.setTimeout = () => 0;            // a correct answer schedules the next screen
-  const out = {cells: {}, iqs: {}};
+  const out = {cells: {}, iqs: {}, note: ''};
   try {
     G.questions = [q]; G.qIdx = 0; G.level = a.level;
     buildTable(q);
-    for (const [x, v] of Object.entries(a.cells)) {
-      const inp = document.querySelector('input[data-x="' + x + '"]');
-      if (!inp) { out.cells[x] = 'no input'; continue; }
+    const n = document.querySelector('#tableBox .table-note'); out.note = n ? n.textContent : '';
+    for (const [tag, v] of Object.entries(a.cells)) {
+      buildTable(q);                      // each try on a fresh table
+      const inp = document.querySelector('input[data-x="' + tag.split(':')[0] + '"]');
+      if (!inp) { out.cells[tag] = 'no input'; continue; }
       inp.value = String(v); checkCell(inp);
-      out.cells[x] = inp.parentElement.classList.contains('correct-cell') ? 'ok' : 'rejected';
+      const m = document.getElementById('tableMsg');
+      out.cells[tag] = inp.parentElement.classList.contains('correct-cell') ? 'ok' : (m && m.textContent ? 'unmarked' : 'rejected');
     }
     document.getElementById('qBox').style.display = 'block';
-    for (const [i, v] of Object.entries(a.iqs)) {
+    for (const [tag, v] of Object.entries(a.iqs)) {
+      const i = tag.split(':')[0];
       G.iqIdx = Number(i); loadIQ(q);
       const iq = q.iqs[G.iqIdx];
       if (iq.type === 'tp') {
@@ -462,7 +499,7 @@ PLAY_JS = """async (a) => {
         else if (iq.type === 'roots') checkRootsIQ();
         else checkReadIQ();
       }
-      out.iqs[i] = document.getElementById('iqFb').textContent;
+      out.iqs[tag] = document.getElementById('iqFb').textContent;
     }
   } finally { window.setTimeout = realTimeout; }
   return out;
@@ -474,12 +511,19 @@ def check_played(rep, scenarios, played):
         r = played.get(s['id'])
         if r is None:
             continue
-        for x, res in r['cells'].items():
-            if res != 'ok':
-                rep.fail(s['id'], 'marking (cell %s)' % x, 'the true value was %s' % res)
-        for i, text in r['iqs'].items():
-            if 'Correct' not in text:
-                rep.fail(s['id'], 'marking (iq %s)' % i, 'typed the true value; the game said %r' % text.strip()[:100])
+        for tag, res in r['cells'].items():
+            x, kind = tag.split(':')
+            want = {'right': 'ok', 'up': 'rejected', 'long': 'unmarked'}[kind]
+            if res != want:
+                rep.fail(s['id'], 'marking (cell %s %s)' % (x, kind), 'the game %s it; want %s' % (res, want))
+        dp = r.get('dp')
+        if dp is not None and ('to %d decimal place' % dp) not in r.get('note', ''):
+            rep.fail(s['id'], 'table precision', 'the table does not state its %d decimal places (SR-1): %r' % (dp, r.get('note')))
+        for tag, text in r['iqs'].items():
+            if ':' not in tag and 'Correct' not in text:
+                rep.fail(s['id'], 'marking (iq %s)' % tag, 'typed the true value; the game said %r' % text.strip()[:100])
+            elif ':' in tag and 'Correct' in text:
+                rep.fail(s['id'], 'marking (iq %s)' % tag, 'a wrong answer was marked correct: %r' % text.strip()[:100])
 
 
 def load(patch_js=None, play=True):
@@ -503,11 +547,12 @@ def load(patch_js=None, play=True):
                     if not play:
                         continue
                     try:
-                        cells, iqs = true_answers(s)
+                        cells, iqs, dp = true_answers(s)
                     except Exception:  # noqa: BLE001  (reported by check_scenario)
                         continue
                     played[s['id']] = page.evaluate(PLAY_JS, dict(id=s['id'], level=lvl, cells=cells,
                                                                   iqs={str(k): v for k, v in iqs.items()}))
+                    played[s['id']]['dp'] = dp
             browser.close()
             if errors:
                 sys.exit('page errors: %s' % '; '.join(errors[:5]))
@@ -575,6 +620,30 @@ def selftest(bank, fn_vals, played):
     _, _, lie = load("""(() => { const s = Object.values(SCENARIOS).flat().find(q => q.id === %r);
         const k = Object.keys(s.answers)[0]; s.answers[k] = s.answers[k] + 5; })()""" % clean[0]['id'])
     expect('cell marked against a wrong key', lambda rep: check_played(rep, [clean[0]], lie))
+    # SWEEP-1 (graph-sketcher-s1-001, s1-002): the old cell band, the extra root and the y read to the x tolerance
+    _, _, old = load("""(() => {
+        checkCell = function (input) { const q = G.questions[G.qIdx], e = q.answers[input.dataset.x], v = parseFloat(input.value);
+          const tol = Math.abs(e) <= 10 ? Math.max(0.15, Math.abs(e) * 0.02) : Math.max(0.5, Math.abs(e) * 0.01);
+          if (Math.abs(v - e) <= tol) input.parentElement.classList.add('correct-cell'); };
+        const R = checkRootsIQ;
+        checkRootsIQ = function () { const q = G.questions[G.qIdx], iq = q.iqs[G.iqIdx];
+          const vals = document.getElementById('iqInput').value.split(',').map(Number);
+          const ok = iq.answers.every(a => vals.some(v => Math.abs(v - a) <= (iq.tol || 0.15))) && vals.length <= iq.answers.length + 1;
+          document.getElementById('iqFb').textContent = ok ? 'Correct!' : 'Expected'; };
+        checkTPIQ = function () { const q = G.questions[G.qIdx], iq = q.iqs[G.iqIdx], tol = iq.tol || 0.15;
+          const vx = +document.getElementById('iqTpX').value, vy = +document.getElementById('iqTpY').value;
+          const ok = Math.abs(vx - iq.answer.x) <= tol && Math.abs(vy - iq.answer.y) <= Math.max(tol, Math.abs(iq.answer.y) * 0.05);
+          document.getElementById('iqFb').textContent = ok ? 'Correct!' : 'Expected'; };
+      })()""")
+    allsc = [s for lvl in bank.values() for s in lvl]
+    for name, sid, tag in (('old cell band (CM1, +0.1 accepted)', 'CM1', 'marking (cell'),
+                           ('old roots (AL1, an extra root accepted)', 'AL1', 'marking (iq'),
+                           ('old TP y band (AL5, y off by 5% accepted)', 'AL5', 'marking (iq')):
+        rep = Report()
+        check_played(rep, allsc, old)
+        caught = any(f.startswith(sid + ' ' + tag) for f in rep.fails)
+        ok = ok and caught
+        lines.append('  self-test %-34s %s' % (name, 'caught' if caught else '*** MISSED ***'))
     return ok, lines
 
 
