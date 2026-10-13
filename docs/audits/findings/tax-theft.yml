@@ -1,0 +1,71 @@
+# Findings register for tax-theft (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: tax-theft
+audited:
+  tranche: S1 (SWEEP-1 reading sweep)
+  head: 9237145
+  date: 2026-10-13
+  served:
+    core: '104'
+findings:
+- id: tax-theft-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:text-contradicts-content
+  level: core
+  where: games/tax-theft/index.html income tax table (was :676-683)
+  summary: 'On Hard the income tax table stated the bands as gross income with a fixed £12,570 allowance (basic rate
+    £12,571 to £50,270), while the Hard step says the bands apply to taxable income; reading the table gives a
+    wrong answer on all four Hard salaries, and the generic hint says "use the table above". Fixed (Jon''s ruling,
+    13 Oct 2026): on Hard the table, built from TAX_RULES, states the bands as taxable income (the first £37,700
+    at 20%, £37,701 to £125,140 at 40%, over £125,140 at 45%) and the allowance''s taper; Easy and Medium keep the
+    gross bands, right at the full allowance. The verifier reads the table on every salary against uk_rates.py
+    and bars the gross £50,270 on Hard; the old table is planted'
+  evidence: '106,000: allowance £9,570, taxable £96,430; the table''s gross bands put £50,270 - £9,570 = £40,700 at
+    20%, not £37,700 (SWEEP-1, batch 10)'
+  status: open
+- id: tax-theft-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: core
+  where: games/tax-theft/index.html payslip (was :723, :752), completion (was :779)
+  summary: 'The payslip says "Period: Annual" but its last row was "Net Monthly Pay", holding the monthly figure;
+    the completion screen''s "You Keep" was the annual figure, unlabelled. Fixed (Jon''s ruling, 13 Oct 2026): the
+    payslip is annual throughout (its last row is Net Annual Pay, gross minus deductions; the step''s monthly answer
+    stays in its feedback and step list), and the label reads "You Keep per Year". Checked and planted'
+  evidence: 'Payslip "Period: Annual", row "Net Monthly Pay" £5,903.12 for £106,000 (SWEEP-1, batch 10)'
+  status: open
+- id: tax-theft-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: core
+  where: games/tax-theft/index.html getHint() (was :1132)
+  summary: 'At £130,000 the Step 0 allowance is £0, so any answer within £2 of £0 (£1, £0.01) got "Have you
+    accidentally divided by 12?". Fixed (Jon''s ruling): the factor-of-12 hint needs a key above £0. The verifier
+    checks every wrong-amount probe''s hint; the old hint is planted'
+  evidence: 'hard 130000, Step 0 key £0.00; typed 1.00 -> "Have you accidentally divided by 12? Work in annual
+    figures first." (SWEEP-1, batch 10)'
+  status: open
+- id: tax-theft-s1-004
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: core
+  where: games/tax-theft/index.html WRY_LINES.easy
+  summary: 'Easy''s closing line "Welcome to adulthood." is the youth register canon §7.5 retired. Replaced with
+    Jon''s line, verbatim (13 Oct 2026): "But at least the potholes get fixed, right?" Checked and planted'
+  evidence: 'WRY_LINES.easy (SWEEP-1, batch 10)'
+  status: open
+- id: tax-theft-s1-005
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: core
+  where: scripts/verify-tax-theft.py
+  summary: 'The verifier recomputes every key, plays every step and now reads the tax table, but does not check the
+    figures in the step band text (the per-band amounts), the NI instruction''s thresholds, the hints other than the
+    factor-of-12 one, the completion percentages or the start screen. Recorded under Jon''s rule of 13 Oct 2026'
+  evidence: 'buildSteps() band text, getHint(), finishGame() percentages (SWEEP-1, batch 10)'
+  status: open

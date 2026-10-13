@@ -116,3 +116,36 @@ findings:
     options come from MaffsOptions.build and the question order from a Fisher-Yates shuffle. Still open: the silent alevel
     fallback for an unknown ?level is class 4 (the shared resolver, F2).'
   status: open
+- id: integration-duel-s1-001
+  severity: LOW
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: level4
+  where: games/integration-duel/index.html:832 (level4[19])
+  summary: 'The explanation "100/(−5) = −20e^(−5t) + c" set a number equal to a function. Fixed: "100 × e^(−5t)/(−5)
+    + c = −20e^(−5t) + c". The verifier now reads every expression of the working (after the last "so" or ":"),
+    each equal to the final one apart from the + c; the old line is planted'
+  evidence: 'exp:''100/(−5) = −20e^(−5t) + c'' (SWEEP-1, batch 10)'
+  status: open
+- id: integration-duel-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: level4
+  where: games/integration-duel/index.html:792 (level4[2]), :830 (level4[18])
+  summary: 'Two explanations stopped unsimplified, at 6t³/3 + 2t²/2 + c and 50 × e^(−2t)/(−2) + c. Fixed: each ends
+    at the key (= 2t³ + t² + c; = −25e^(−2t) + c). An explanation whose last expression has a whole-number fraction
+    that cancels now FAILS; both old lines are planted'
+  evidence: 'exp:''6t³/3 + 2t²/2 + c''; exp:''50 × e^(−2t)/(−2) + c'' (SWEEP-1, batch 10)'
+  status: open
+- id: integration-duel-s1-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: level4
+  where: scripts/verify-integration-duel.py
+  summary: 'The verifier now checks each expression of the working, but not the substitution and by-parts set-up
+    lines (u = ..., du = ...), lines holding an integral sign or a bracket evaluation, or the in-game Quick
+    Reference. Recorded under Jon''s rule of 13 Oct 2026'
+  evidence: 'steps() skips lines with ∫, [ ] or u (SWEEP-1, batch 10)'
+  status: open

@@ -124,3 +124,69 @@ findings:
   evidence: code read
   status: fixed
   pr: 128
+- id: suvat-s1-001
+  severity: HIGH
+  jc: false
+  class: NEW:input-cannot-type-answer
+  level: alevel
+  where: games/suvat/index.html:229 (the answer box), :459 (ALEVEL[34])
+  summary: 'ALEVEL[34] keys v_y = −0.32, typed into a box with inputmode="decimal", which on many phone keyboards
+    has no minus key: the student cannot type the key. Reported for the home lane''s contract (Jon''s rule, 13 Oct
+    2026), not fixed here'
+  evidence: '<input type="text" inputmode="decimal" ... id="calcInput">; steps:[{prompt:"Find v_y",answer:-0.32,dp:2}]
+    (SWEEP-1, batch 10)'
+  status: open
+- id: suvat-s1-002
+  severity: MEDIUM
+  jc: true
+  class: NEW:text-contradicts-content
+  level: alevel
+  where: games/suvat/index.html:391-394 (ALEVEL[22])
+  summary: 'The stem gives the landing vertical speed, 29.4 m/s, but the item treats v as unknown: three other SUVAT
+    equations using v give the same 44.1 m, but the stem''s "(u_y = 0, a = −9.8, t = 3)" and the known chips omit
+    v. Dropping the 29.4 clause is a stem change, for Jon'
+  evidence: '"lands 3 seconds later, when its vertical speed is 29.4 m/s ... (u_y = 0, a = −9.8, t = 3)",
+    known:{u:0,a:-9.8,t:3} (SWEEP-1, batch 10)'
+  status: open
+- id: suvat-s1-003
+  severity: LOW
+  jc: true
+  class: NEW:convention-unstated
+  level: alevel
+  where: games/suvat/index.html:486-490
+  summary: 'Unlike the other maximum-height items this one does not state "(Vertical: v = 0 at max height)", but its
+    part (b) asks for the speed at maximum height, which is exactly that fact: stating it would answer (b). Left as
+    is; noted'
+  evidence: '"(a) Find the time to reach maximum height, to 2 d.p. (b) What is the speed at maximum height, to 1
+    d.p.?" (SWEEP-1, batch 10)'
+  status: open
+- id: suvat-s1-004
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: level4
+  where: games/suvat/index.html:271 (LEVEL4[6])
+  summary: '"decelerates from 500 m/s at −20 m/s²" is a double negative. Fixed: "at 20 m/s²"; a deceleration given
+    as a negative number is barred and planted'
+  evidence: 'scenario:"A rocket decelerates from 500 m/s at −20 m/s². Find time to stop." (SWEEP-1, batch 10)'
+  status: open
+- id: suvat-s1-005
+  severity: LOW
+  jc: true
+  class: NEW:wording
+  level: alevel
+  where: games/suvat/index.html:401
+  summary: 'A stone leaves "a table 5 m high": no table is 5 m high (check h). A context change, for Jon'
+  evidence: '"A stone leaves a horizontal surface at 10 m/s from a table 5 m high." (SWEEP-1, batch 10)'
+  status: open
+- id: suvat-s1-006
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: alevel
+  where: scripts/verify-suvat.py
+  summary: 'The verifier checks every key both ways and that the working quotes it, but not the working''s
+    intermediate figures, whether the stem''s data agrees with the known chips (how s1-002 passed), or that phase
+    1''s equation is the only one the chips allow. Recorded under Jon''s rule of 13 Oct 2026'
+  evidence: 'check_bank() reads answer, dp and the key in working (SWEEP-1, batch 10)'
+  status: open

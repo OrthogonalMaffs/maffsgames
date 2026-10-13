@@ -51,6 +51,13 @@ WHAT IT CHECKS, PER QUESTION
                distribution; every "a > b" is tested. A number that is not part of
                a checked chain must match a value this script derives for the
                question (a stated input, a z, a Φ, an inverse-Φ, the answer, ...)
+  precision    SR-1 (SWEEP-1, 13 Oct 2026): a numeric key that is the true value rounded (a probability, a
+               percentage, an expected count, an inverse-Normal value, a z, an IQR) needs the question to say
+               to how many decimal places, or to the nearest whole number, and to say the key's own precision;
+               three "minimum mark" items wait on Jon's rounding convention (PRECISION_PENDING) and are
+               reported, not failed; the last figure of the worked steps is the true answer at its printed
+               precision (so "IQR = 554.0 − 446.0 = 108.0" FAILS: it is 107.9), and no text claims
+               "exactly N%" that the question's probability is not
   prose        no draft markers (check-banks' B6 list, plus "actually", "closest",
                "recheck" and a trailing "...")
   bank         no duplicate questions, textually or by what they ask; no
@@ -569,9 +576,31 @@ def check_text(text, dists, known, where, fail):
 # --------------------------------------------------------------------------
 #  per-question verification
 # --------------------------------------------------------------------------
+# SR-1: a rounded key's precision must be stated (SWEEP-1, 13 Oct 2026). These three key a minimum mark rounded
+# to the nearest whole number where a minimum may round up (232.04 -> 232 or 233): a convention for Jon
+# (normal-navigator-s1-002), so they are reported until he rules, not failed.
+PRECISION_KINDS = ('prob', 'percent', 'count', 'inv', 'invz', 'iqr', 'z')
+PRECISION_PENDING = {
+    'X ~ N(200, 25²). The top 10% get an A. Find the minimum mark.': 'normal-navigator-s1-002',
+    'IQ scores: X ~ N(100, 15²). Mensa requires top 2%.': 'normal-navigator-s1-002',
+    'Exam marks: X ~ N(65, 12²). The pass mark is set so 80% pass.': 'normal-navigator-s1-002',
+}
+
+
+def stated_dp(text):
+    """The precision a question states: decimal places, or 0 for the nearest whole number; None if it states none."""
+    m = re.search(r'(\d+|one|two|three|four) (?:d\.p\.|decimal places?)', text)
+    if m:
+        return {'one': 1, 'two': 2, 'three': 3, 'four': 4}.get(m.group(1)) or int(m.group(1))
+    if re.search(r'nearest (?:whole number|integer)', text):
+        return 0
+    return None
+
+
 class Report:
     def __init__(self):
         self.fails = []
+        self.notes = []
 
     def fail(self, qid, field, stated, computed=None):
         self.fails.append('FAIL %s %s: stated %s%s' % (qid, field, stated,
@@ -648,6 +677,7 @@ def verify_question(rep, i, q, line, spec, verbose):
         mu, sigma = 0.0, 1.0   # symbolic: drawn and worked as the standard normal
     extras = list(spec.get('extra', []))
     answer = None           # the true value of the key (float), or tuple, or label
+    raw_answer = None       # the same before any rounding the kind applies (an expected count)
     answer_region = spec.get('region')
     solved = {}
 
@@ -662,6 +692,7 @@ def verify_question(rep, i, q, line, spec, verbose):
             extras += [p, 1 - p, spec.get('n', 1) * p]
             if kind == 'count':
                 # "how many would you expect" is keyed to the nearest whole item
+                raw_answer = answer
                 answer = float(rhu(Decimal(repr(answer)), 0))
         elif kind == 'inv':
             answer = NormalDist(mu, sigma).inv_cdf(spec['p_below'])
@@ -721,6 +752,7 @@ def verify_question(rep, i, q, line, spec, verbose):
         rep.fail(qid, 'answer', 'cannot be computed from the question as written', str(e))
         return
 
+    raw = answer if raw_answer is None else raw_answer
     # ---- the key against the true answer ------------------------------
     if verbose:
         print('  [%d] %-12s key %-28r true %r' % (i, kind, key, answer))
@@ -780,6 +812,15 @@ def verify_question(rep, i, q, line, spec, verbose):
             if not matches(tok, answer):
                 d_ = decimals(tok)
                 rep.fail(qid, 'correct', repr(key), '%s%s (%.6f)' % (rhu(answer, d_), '%' if pct else '', answer))
+            if kind in PRECISION_KINDS and abs(v - raw) > 1e-9:
+                said = stated_dp(q.get('q', '') + ' ' + ctx)
+                if ctx in PRECISION_PENDING:
+                    rep.notes.append('%s: key %r rounded, precision not stated (%s, for Jon)' % (qid, key, PRECISION_PENDING[ctx]))
+                elif said is None:
+                    rep.fail(qid, 'q', repr(q.get('q', '')), 'the key %r is rounded (%.6f) and the question does not say '
+                             'to what precision (SR-1)' % (key, raw))
+                elif said != decimals(tok):
+                    rep.fail(qid, 'q', repr(q.get('q', '')), 'states %d d.p., the key %r has %d' % (said, key, decimals(tok)))
             if kind in ('find_sigma', 'find_mu'):
                 km = v if kind == 'find_mu' else mu
                 ks = v if kind == 'find_sigma' else sigma
@@ -849,6 +890,15 @@ def verify_question(rep, i, q, line, spec, verbose):
         if text:
             check_text(text, ev_dists, known, fname,
                        lambda where, what, why: rep.fail(qid, where, what, why))
+    if kind in PRECISION_KINDS and isinstance(answer, float) and steps:
+        toks = NUM_RE.findall(clean(steps[-1]))
+        if toks and not matches(toks[-1], raw) and not matches(toks[-1], answer):
+            rep.fail(qid, 'steps', repr(steps[-1]), 'ends at %s; the answer is %.6f' % (toks[-1], raw))
+    for fname, text in fields:
+        for m in re.finditer(r'exactly (\d+(?:\.\d+)?)%', text):
+            ps = [p_ for p_ in extras + [raw if isinstance(raw, float) else None] if isinstance(p_, float)]
+            if not any(abs(100 * p_ - float(m.group(1))) < 1e-9 for p_ in ps):
+                rep.fail(qid, fname, repr(m.group(0)), 'no probability in this question is exactly %s%%' % m.group(1))
     for fname in ('ctx', 'q', 'misconception'):
         check_draft(rep, qid, fname, q.get(fname, ''))
     for st in q.get('steps', []):
@@ -1154,6 +1204,27 @@ def selftest(bank, lines, rendered):
         b[_find(b, 'Bolts have length')]['shade'] = [-999, 49]
     faults.append(('two-tail region, one tail', 'Bolts have length', 'shade', f_one_tail))
 
+    def f_no_dp(b):                      # SR-1: a rounded probability with no precision stated (s1-001)
+        q = b[_find(b, 'X ~ N(50, 8²). Find P(42 < X < 58)')]
+        q['q'] = q['q'].replace(' (to 4 d.p.)', '')
+    faults.append(('precision unstated', 'X ~ N(50, 8²). Find P(42 < X < 58)', 'q', f_no_dp))
+
+    def f_wrong_dp(b):                   # a precision stated that is not the key's
+        q = b[_find(b, 'X ~ N(50, 8²). Find k such that')]
+        q['q'] = q['q'].replace('(to 1 d.p.)', '(to 2 d.p.)')
+    faults.append(('precision not the key\'s', 'X ~ N(50, 8²). Find k such that', 'q', f_wrong_dp))
+
+    def f_iqr(b):                        # the old IQR working, closing at 108.0 (s1-003)
+        q = b[_find(b, 'X ~ N(500, 80²). Find the interquartile range')]
+        q['steps'] = ['Q1: z = −0.6745 → x = 500 − 0.6745×80 = 446.0', 'Q3: z = 0.6745 → x = 500 + 0.6745×80 = 554.0',
+                      'IQR = 554.0 − 446.0 = 108.0']
+    faults.append(('old IQR working', 'X ~ N(500, 80²). Find the interquartile range', 'steps', f_iqr))
+
+    def f_exactly(b):                    # "exactly 95%" for 0.950004 (s1-004)
+        q = b[_find(b, 'X ~ N(0, 1). P(−1.96 < Z < 1.96)')]
+        q['misconception'] = q['misconception'].replace('very nearly 95%', 'exactly 95%')
+    faults.append(('"exactly 95%"', 'X ~ N(0, 1). P(−1.96 < Z < 1.96)', 'misconception', f_exactly))
+
     if rendered is not None:
         def f_leak(b, r):                # "Find μ" with the answer printed under the curve
             i = _find(b, 'X ~ N(μ, 6²). P(X > 70)')
@@ -1218,6 +1289,11 @@ def main():
             print('SELF-TEST FAILED: injected faults not caught: %s' % ', '.join(missed))
             return 2
     rep = verify(bank, lines, patches, args.verbose, rendered)
+    said = re.search(r'(\d+) questions covering', open(args.page, encoding='utf-8').read())
+    if not said or int(said.group(1)) != len(bank):
+        rep.fail(SLUG, 'start screen', repr(said.group(0) if said else None), 'the bank has %d questions' % len(bank))
+    for n in rep.notes:
+        print('note: ' + n)
     for f in rep.fails:
         print(f)
     failing_q = sorted({re.search(r'QUESTIONS\[(\d+)\]', f).group(1) for f in rep.fails if 'QUESTIONS[' in f}, key=int)
