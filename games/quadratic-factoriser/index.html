@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<link rel="stylesheet" href="../../schools/assets/calculator.css">
 <style>
   /* canon 7.5.1 GCSE+ row: dark theme, Outfit + JetBrains Mono, unique accent per game.
      Every level this game serves (gcse, higher, formula) is GCSE-and-above, so the whole
@@ -40,6 +41,9 @@
     --border:    #342d52;
     --shadow-sm: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
     --shadow-md: 0 4px 16px rgba(0,0,0,0.35), 0 2px 4px rgba(0,0,0,0.2);
+    /* for the shared phone keypad (calculator.css, tokens only) */
+    --surface: #1e1b2e; --surface-alt: #2a2540; --font-text: 'Outfit', sans-serif;
+    --font-num: 'JetBrains Mono', monospace; --wrong: #f87171; --hint: #9a94b3; --on-accent: #000;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -674,6 +678,8 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 -->
 <script src="../../schools/assets/mathtext.js"></script>
 <script src="../../schools/assets/options.js"></script>
+<!-- The phone keypad for the Formula level's typed roots (MaffsKeypad, canon 4.4), with a minus key. -->
+<script src="../../schools/assets/keypad.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -1311,7 +1317,11 @@ function hfBracketLatex(p, q, r, s, k) {
   const inner = `(${p}x ${sq} ${Math.abs(q)})(${r}x ${ss} ${Math.abs(s)})`;
   return (k && k !== 1) ? `${k}${inner}` : inner;
 }
-function hfCorrectSplit(item) { return { m: item.p * item.s, n: item.q * item.r }; }
+// The AC split of the quadratic on screen. An item is k(px + q)(rx + s), so a = kpr, b = k(ps + qr), c = kqs and
+// ac = k^2 pqrs: the pair is kps and kqr (it multiplies to ac and adds to b). A base item has no k (k = 1); an HCF
+// item's k is 2 to 5, and the base pair ps, qr would multiply to ac/k^2 and add to b/k (SWEEP-1, Jon 13 Oct 2026).
+function hfK(item) { return item.k || 1; }
+function hfCorrectSplit(item) { const k = hfK(item); return { m: k * item.p * item.s, n: k * item.q * item.r }; }
 function pairsEqual(pair1, pair2) {
   return (pair1[0] === pair2[0] && pair1[1] === pair2[1]) || (pair1[0] === pair2[1] && pair1[1] === pair2[0]);
 }
@@ -1448,9 +1458,10 @@ function hfStep4Html(narrate, split) {
 
 function hfStep5Html(narrate) {
   const { p, q, r, s } = currentQ;
+  const k = hfK(currentQ);   // ax^2 + kps x = kpx(rx + s); kqr x + c = kq(rx + s)
   const bracket = `${r === 1 ? '' : r}x ${s >= 0 ? '+' : '-'} ${Math.abs(s)}`;
-  const factor = `${p === 1 ? '' : p}x`;
-  const opts = MaffsOptions.shuffle([q, -q]);
+  const factor = `${k * p === 1 ? '' : k * p}x`;
+  const opts = MaffsOptions.shuffle([k * q, -k * q]);
   const rows = opts.map(v => `<button class="hf-choice-btn" onclick="hfStep5Pick(${v})">${tex(String(v))}</button>`).join('');
   const lead = narrate
     ? mx(`The first pair factorises to \\(${factor}(${bracket})\\). Now factorise the second pair — its bracket must come out IDENTICAL to the first.`)
@@ -1507,7 +1518,7 @@ function hfStep5Pick(v) {
   if (!MaffsLock.lock(hfPanel())) return;   // one pick per step (canon 7.6.0)
   hfDisableChoices();
   const { q, r, s } = currentQ;
-  if (v === q) { hfStepCorrectAdvance(6); return; }
+  if (v === hfK(currentQ) * q) { hfStepCorrectAdvance(6); return; }
   const wrongR = -r, wrongS = -s;
   hfShowMisconception('bracket-mismatch',
     `Taking out \\(${v}\\) leaves \\(${wrongR}x ${wrongS >= 0 ? '+' : '-'} ${Math.abs(wrongS)}\\), which does not match the ` +
@@ -1653,9 +1664,10 @@ function renderFormulaQuestion() {
       <div class="q-label">Solve</div>
       <div class="quadratic" id="formulaQuadratic">${tex(formatQuadratic(b, c, a) + ' = 0')}</div>
       <div class="formula-inputs">
-        <input type="text" inputmode="decimal" class="formula-input" id="fRoot1" placeholder="x₁" autocomplete="off">
-        <input type="text" inputmode="decimal" class="formula-input" id="fRoot2" placeholder="x₂" autocomplete="off">
+        <input type="text" inputmode="text" class="formula-input" id="fRoot1" placeholder="x₁" autocomplete="off">
+        <input type="text" inputmode="text" class="formula-input" id="fRoot2" placeholder="x₂" autocomplete="off">
       </div>
+      <div id="fKeypad"></div>
       <button type="button" class="no-real-btn" id="noRealBtn" onclick="submitNoReal()">No real solutions</button>
       <div class="feedback" id="fFeedback"></div>
       <div class="hint-text" id="fHintText"></div>
@@ -1664,6 +1676,13 @@ function renderFormulaQuestion() {
     <button class="check-btn" id="fCheckBtn" onclick="checkFormulaAnswer()">Check Answer</button>
   `;
   MaffsLock.fresh(formulaPanel());   // a new question: a double-click on Next cannot answer it
+  // Roots can be negative, so the phone keypad (MaffsKeypad, canon 4.4) has a minus key: a phone's decimal pad
+  // (iOS) has none. With a mouse the boxes are ordinary text inputs.
+  if (window.MaffsKeypad) {
+    MaffsKeypad.mount(document.getElementById('fKeypad'), {
+      targets: [document.getElementById('fRoot1'), document.getElementById('fRoot2')],
+      keys: { minus: true }, keepInView: formulaPanel().querySelector('.formula-inputs'), foldInset: 40 });
+  }
 }
 
 function loadFormulaQ() {
@@ -1680,6 +1699,7 @@ function formulaDisable() {
     const el = document.getElementById(id);
     if (el) el.disabled = true;
   });
+  document.querySelectorAll('#fKeypad .maffs-keypad-key').forEach(k => { k.disabled = true; });
 }
 
 function checkFormulaAnswer() {

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-# ci-line: Quadratic Factoriser (every pooled item recomputed, SymPy) |
+# ci-line: Quadratic Factoriser (every pooled item recomputed, SymPy; every Higher item's six guided steps played in Chromium, each split, factor and line recomputed; Formula roots on the keypad with a minus key) |
+# ci-line: Quadratic Factoriser self-test (the old split and eight other faults planted in the guided steps and the keypad; each must fail) | --selftest
 """Layers C + D verification for quadratic-factoriser (docs/quadratic-factoriser-spec.md,
 item 5). Grows with each build phase; this version covers Phase 1 ('gcse'), Phase 2
 ('higher') and Phase 3 ('formula').
@@ -26,13 +27,29 @@ question. That single assertion is a stronger, always-sufficient guarantee than 
 per-stage size floor, and it is what makes the 12-item DOTS stage safe without any
 special-casing.
 
+THE GUIDED STEPS (SWEEP-1, Jon's ruling 13 Oct 2026)
+----------------------------------------------------
+Every Higher item, and the tutorial example, is played through its six guided steps in
+Chromium (Guided mode and "Show me the method" render the same steps): every option on
+every step is tried, and what the page accepts is recomputed here. Each step has exactly one
+accepted option and no other option is also right (SR-24); the step 3 split multiplies to
+ac and adds to b; the step 4 line equals the quadratic on screen, its middle terms the
+accepted split; step 5's first pair equals the factor times the bracket, and the accepted
+second-pair factor times the bracket equals the second pair; step 6's accepted
+factorisation equals the quadratic; the figures in the tutorial's narration and in each
+misconception message are recomputed. The Formula level's root boxes are on the shared
+phone keypad (MaffsKeypad) with a minus key: roots can be negative and a phone's decimal
+pad (iOS) has none.
+
 USAGE
 -----
     python scripts/verify-quadratic-factoriser.py
+    python scripts/verify-quadratic-factoriser.py --selftest   # planted faults must fail
 """
 import asyncio
 import math
 import os
+import re
 import sys
 
 import sympy as sp
@@ -52,18 +69,307 @@ def fail(msg):
     print("FAIL: " + msg)
 
 
-async def fetch_pools():
+PAGE = os.path.join(ROOT, "games", SLUG, "index.html")
+
+# Plays one Higher item's six guided steps: renders each step as the page does (hfRenderStep), then tries
+# every option the step offers (its own onclick), noting whether the page accepts it ("Correct!") and any
+# misconception message it shows. Every LaTeX string is read back from KaTeX's annotation, as rendered.
+GUIDED_JS = r"""(indices) => {
+  const items = [higherTutorialExample].concat(window.QF_POOLS.higher.pool);
+  const ann = el => el ? [...el.querySelectorAll('annotation')].map(a => a.textContent) : [];
+  const out = [];
+  for (const i of indices) {
+    for (const mode of (i === 0 ? ['tutorial', 'guided'] : ['guided'])) {
+      const item = items[i];
+      currentQ = item; hfMode = mode; hfViaShowMethod = false;
+      const rec = { i, mode, a: item.a, b: item.b, c: item.c, steps: [] };
+      for (let st = 1; st <= 6; st++) {
+        hfStep = st; hfRenderStep();
+        const panel = hfPanel(), body = document.getElementById('hfStepBody');
+        const step = { quad: ann(panel.querySelector('.hf-quadratic')),
+          prompts: [...body.querySelectorAll('.hf-note, .hf-step-prompt')].map(ann), opts: [] };
+        const calls = [...body.querySelectorAll('.hf-choice-btn:not(.hf-continue-btn)')]
+          .map(b => ({ call: b.getAttribute('onclick'), tex: ann(b) }));
+        for (const o of calls) {
+          MaffsLock.fresh(panel);
+          const fb = document.getElementById('hfFeedback');
+          fb.textContent = ''; fb.className = 'hf-feedback';
+          body.querySelectorAll('.hf-misconception').forEach(m => m.remove());
+          (0, eval)(o.call);
+          const mis = body.querySelector('.hf-misconception');
+          step.opts.push({ call: o.call, tex: o.tex, accepted: fb.textContent === 'Correct!',
+            mis: mis ? { name: mis.dataset.misconception, tex: ann(mis), text: mis.textContent } : null });
+        }
+        rec.steps.push(step);
+      }
+      out.push(rec);
+    }
+  }
+  MaffsLock.clearTimers();
+  return out;
+}"""
+
+# The Formula level on a phone: its root boxes are on MaffsKeypad, with a minus key that types.
+KEYPAD_JS = r"""async () => {
+  currentLevel = 'formula'; startGame();
+  await new Promise(r => setTimeout(r, MaffsLock.FRESH_MS + 100));   // past the new question's fresh window
+  const r1 = document.getElementById('fRoot1'), r2 = document.getElementById('fRoot2');
+  const keys = [...document.querySelectorAll('#fKeypad .maffs-keypad-key')].filter(k => k.offsetParent !== null);
+  const minus = keys.filter(k => k.dataset.act === 'minus')[0];
+  const press = act_val => { const k = keys.filter(k => k.dataset.act + ':' + k.dataset.val === act_val)[0]; if (k) k.click(); };
+  if (minus) { press('minus:-'); press('in:1'); press('in:.'); press('in:5'); }
+  return { keys: keys.length, minus: !!minus, typed: r1 ? r1.value : null,
+           inputmode: [r1, r2].map(t => t && t.getAttribute('inputmode')), readOnly: [r1, r2].map(t => t && t.readOnly) };
+}"""
+
+
+PAGES = 4   # the guided steps are played on this many pages at once (each its own renderer process)
+
+
+async def fetch_pools(html=None, every=1):
+    """Reads window.QF_POOLS, plays the Higher items' guided steps (every one, or every `every`-th with the tutorial
+    example: the self-test's sample), and checks the Formula keypad on a phone. html, when given, is served in
+    place of the page (the self-test's planted copies)."""
     from playwright.async_api import async_playwright
 
     base = "http://127.0.0.1:%d" % PORT
+    url = base + "/games/" + SLUG + "/?cb=verify"
+    page_re = re.compile(r"/games/" + SLUG + r"/(\?[^/]*)?$")
+
+    async def open_page(ctx):
+        if html is not None:
+            await ctx.route(lambda u: bool(page_re.search(u)), lambda route: route.fulfill(
+                status=200, content_type="text/html; charset=utf-8", body=html))
+        page = await ctx.new_page()
+        errors = []
+        page.on("pageerror", lambda e: errors.append(str(e)))
+        await page.goto(url, wait_until="load", timeout=30000)
+        await page.wait_for_timeout(300)
+        return page, errors
+
     async with async_playwright() as pw:
         browser = await pw.chromium.launch()
-        page = await browser.new_page()
-        await page.goto(base + "/games/" + SLUG + "/?cb=verify", wait_until="load", timeout=20000)
-        await page.wait_for_timeout(300)
+        page, errors = await open_page(await browser.new_context())
         pools = await page.evaluate("() => window.QF_POOLS || null")
+        guided = []
+        if pools and "higher" in pools:
+            todo = list(range(0, len(pools["higher"]["pool"]) + 1, every))
+
+            async def play(share):
+                pg, errs = await open_page(await browser.new_context())
+                got = []
+                for start in range(0, len(share), 300):
+                    got += await pg.evaluate(GUIDED_JS, share[start:start + 300])
+                errors.extend(errs)
+                return got
+
+            for got in await asyncio.gather(*[play(todo[k::PAGES]) for k in range(PAGES)]):
+                guided += got
+            guided.sort(key=lambda r: (r["i"], r["mode"]))
+        phone = await open_page(await browser.new_context(
+            viewport={"width": 390, "height": 844}, has_touch=True, is_mobile=True))
+        keypad = await phone[0].evaluate(KEYPAD_JS)
         await browser.close()
-        return pools
+        return pools, guided, keypad, errors + phone[1]
+
+
+def poly(latex):
+    """A LaTeX polynomial or product as the page writes it ('6x^2 + 4x + -3x - 2', '2x(3x + 4)',
+    '2(2x - 1)(3x + 4)', '-6') -> its exact coefficients {power: int}, zeros dropped. A small parser of its
+    own, not SymPy's: it reads about 60,000 expressions a run, and these are integer polynomials in x."""
+    toks = re.findall(r"\d+|[x()+\-^]|\S", re.sub(r"\\(left|right|,|;|!)|\\ |[{}]", " ", latex))
+    pos = [0]
+
+    def peek():
+        return toks[pos[0]] if pos[0] < len(toks) else None
+
+    def take():
+        pos[0] += 1
+        return toks[pos[0] - 1]
+
+    def mul(p1, p2):
+        out = {}
+        for i, u in p1.items():
+            for j, v in p2.items():
+                out[i + j] = out.get(i + j, 0) + u * v
+        return out
+
+    def add(p1, p2, sign=1):
+        out = dict(p1)
+        for i, v in p2.items():
+            out[i] = out.get(i, 0) + sign * v
+        return out
+
+    def atom():
+        t = take()
+        if t == "(":
+            e = expr()
+            if take() != ")":
+                raise ValueError("unbalanced bracket in %r" % latex)
+            base = e
+        elif t == "x":
+            base = {1: 1}
+        elif t is not None and t.isdigit():
+            base = {0: int(t)}
+        else:
+            raise ValueError("cannot read %r in %r" % (t, latex))
+        if peek() == "^":
+            take()
+            n = take()
+            if not n.isdigit():
+                raise ValueError("cannot read the power in %r" % latex)
+            out = {0: 1}
+            for _ in range(int(n)):
+                out = mul(out, base)
+            base = out
+        return base
+
+    def term():
+        sign = 1
+        while peek() in ("+", "-"):
+            sign = -sign if take() == "-" else sign
+        out = {0: sign}
+        while peek() not in (None, "+", "-", ")"):
+            out = mul(out, atom())   # juxtaposition is multiplication: 2x(3x + 4)
+        return out
+
+    def expr():
+        out = term()
+        while peek() in ("+", "-"):
+            sign = -1 if take() == "-" else 1
+            out = add(out, term(), sign)
+        return out
+
+    e = expr()
+    if peek() is not None:
+        raise ValueError("cannot read %r" % latex)
+    return {i: v for i, v in e.items() if v}
+
+
+def pmul(p1, p2):
+    out = {}
+    for i, u in p1.items():
+        for j, v in p2.items():
+            out[i + j] = out.get(i + j, 0) + u * v
+    return {i: v for i, v in out.items() if v}
+
+
+def args_of(call):
+    """hfStep3Pick(6,-4) -> [6, -4]; hfStep6Pick('2(x + 1)(3x - 4)') -> ['2(x + 1)(3x - 4)']."""
+    inner = call[call.index("(") + 1:call.rindex(")")]
+    if inner.startswith("'"):
+        return [inner[1:-1].replace("\\'", "'")]
+    return [int(v) for v in inner.split(",")]
+
+
+def verify_guided(guided, n_pool, every=1):
+    """Jon, 13 Oct 2026: every guided step's key, split, factor and line recomputed (canon: verifiers
+    recompute explanation and hint figures)."""
+    want = len(range(0, n_pool + 1, every)) + 1   # the items in Guided mode, and the tutorial example narrated too
+    if len(guided) != want:
+        fail("guided steps: played %d item-modes, expected %d" % (len(guided), want))
+    bad = []
+
+    def note(rec, msg):
+        if len(bad) < 40:
+            bad.append("guided steps, %s, item %d (%dx^2 %+dx %+d): %s"
+                       % (rec["mode"], rec["i"], rec["a"], rec["b"], rec["c"], msg))
+        else:
+            bad.append(None)
+
+    for rec in guided:
+        a, b, c = rec["a"], rec["b"], rec["c"]
+        Q = {i: v for i, v in {2: a, 1: b, 0: c}.items() if v}
+        steps = rec["steps"]
+        if len(steps) != 6:
+            note(rec, "%d steps rendered, not 6" % len(steps)); continue
+        try:
+            for st in steps:
+                if len(st["quad"]) != 1 or poly(st["quad"][0]) != Q:
+                    raise ValueError("the quadratic on screen %r is not %dx^2 %+dx %+d" % (st["quad"], a, b, c))
+        except ValueError as e:
+            note(rec, str(e)); continue
+
+        def one_accepted(k, right):
+            opts = steps[k - 1]["opts"]
+            acc = [o for o in opts if o["accepted"]]
+            if len(acc) != 1:
+                note(rec, "step %d accepts %d of its %d options" % (k, len(acc), len(opts)))
+                return None
+            for o in opts:
+                if right(o) != o["accepted"]:
+                    note(rec, "step %d: %s is %s but the page %s it" % (
+                        k, o["call"], "right" if right(o) else "wrong",
+                        "accepts" if o["accepted"] else "refuses"))
+            return acc[0]
+
+        # Step 1: a, b and c.
+        one_accepted(1, lambda o: args_of(o["call"]) == [a, b, c])
+        # Step 2: a x c.
+        one_accepted(2, lambda o: args_of(o["call"]) == [a * c])
+        # Step 3: the pair that multiplies to ac and adds to b; each option's own sums shown right.
+        for o in steps[2]["opts"]:
+            m, n = args_of(o["call"])
+            t = " ".join(o["tex"])
+            nums = [int(v) for v in re.findall(r"-?\d+", t)]
+            if nums != [m, n, m * n, m, n, m + n]:
+                note(rec, "step 3 option %r does not show m x n and m + n correctly" % t)
+            if o["mis"]:
+                mt = re.findall(r"-?\d+", " ".join(o["mis"]["tex"]))
+                if m * n != c or [int(v) for v in mt[:1]] != [c] or str(a * c) not in mt:
+                    note(rec, "step 3's misconception for %r states %r" % (o["call"], o["mis"]["text"]))
+        acc3 = one_accepted(3, lambda o: (lambda m, n: m * n == a * c and m + n == b)(*args_of(o["call"])))
+        if rec["mode"] == "tutorial":
+            lead = " ".join(steps[2]["prompts"][0])
+            if "ac = %d" % (a * c) not in lead or "b = %d" % b not in lead:
+                note(rec, "the tutorial's step 3 states %r, not ac = %d and b = %d" % (lead, a * c, b))
+        # Step 4: the split line equals the quadratic, and its middle terms are the accepted split.
+        line = [t for p in steps[3]["prompts"] for t in p if "x^2" in t]
+        mid = re.match(r"^\d*x\^2 \+ (-?\d+)x \+ (-?\d+)x ", line[0]) if len(line) == 1 else None
+        if not mid:
+            note(rec, "step 4's line %r is not read" % line); continue
+        m1, n1 = int(mid.group(1)), int(mid.group(2))
+        if poly(line[0]) != Q:
+            note(rec, "step 4's line %s does not equal the quadratic" % line[0])
+        if acc3 and sorted([m1, n1]) != sorted(args_of(acc3["call"])):
+            note(rec, "step 4 splits into %dx and %dx, not the accepted pair %s" % (m1, n1, acc3["call"]))
+        # Step 5: the first pair is the factor times the bracket; the accepted factor x bracket is the second pair.
+        fp = [t for p in steps[4]["prompts"] for t in p if re.match(r"^-?\d*x\(.*\)$", t)]
+        if len(fp) != 1:
+            note(rec, "step 5's first-pair factorisation is not read (%r)" % steps[4]["prompts"]); continue
+        fm = re.match(r"^(-?\d*x)\((.*)\)$", fp[0])
+        F, B = poly(fm.group(1)), poly(fm.group(2))
+        if pmul(F, B) != {i: v for i, v in {2: a, 1: m1}.items() if v}:
+            note(rec, "step 5: the first pair %dx^2 %+dx is not %s" % (a, m1, fp[0]))
+        second = {i: v for i, v in {1: n1, 0: c}.items() if v}
+        one_accepted(5, lambda o: pmul({0: args_of(o["call"])[0]}, B) == second)
+        for o in steps[4]["opts"]:
+            if o["mis"]:
+                mt = o["mis"]["tex"]
+                if len(mt) < 2 or pmul(poly(mt[0]), poly(mt[1])) != second:
+                    note(rec, "step 5's misconception for %s states %r" % (o["call"], o["mis"]["text"]))
+        # Step 6: the accepted factorisation equals the quadratic, and no other option does.
+        one_accepted(6, lambda o: poly(args_of(o["call"])[0]) == Q)
+    shown = [m for m in bad if m]
+    for m in shown:
+        fail(m)
+    if len(bad) > len(shown):
+        fail("guided steps: %d more" % (len(bad) - len(shown)))
+    if not bad:
+        print("  guided steps: %d item-modes, every step's key, split, line and factor recomputed" % len(guided))
+
+
+def verify_keypad(keypad):
+    """The Formula level's roots can be negative: on a phone they are typed on MaffsKeypad with its minus key."""
+    if not keypad["minus"] or keypad["typed"] != "-1.5":
+        fail("formula: on a phone the root boxes are not on the keypad with a minus key that types "
+             "(keys %d, minus %s, typed %r, inputmode %r)" % (keypad["keys"], keypad["minus"], keypad["typed"],
+                                                              keypad["inputmode"]))
+    elif keypad["inputmode"] != ["none", "none"] or keypad["readOnly"] != [True, True]:
+        fail("formula: on a phone the root boxes would open the system keyboard (inputmode %r, readOnly %r)"
+             % (keypad["inputmode"], keypad["readOnly"]))
+    else:
+        print("  formula keypad: %d keys on a phone, minus types; boxes read-only, inputmode none" % keypad["keys"])
 
 
 def verify_gcse(level):
@@ -281,20 +587,30 @@ def verify_formula(level):
              "minority ('mostly non-square')" % square_pct)
 
 
-def main():
+def run(html=None, every=1, pools_too=True):
+    """Every check, on the page as served (or on html in its place). Returns the failures. pools_too=False (the
+    self-test's plants) leaves out the SymPy pool checks, which no plant touches."""
     global PORT
+    del _FAILURES[:]
     # A free port chosen per run; raises bc.StubServerError, naming the cause, if the
     # stub server cannot start.
     server, base = bc.start_stub_server()
     PORT = urlsplit(base).port
     try:
-        pools = asyncio.run(fetch_pools())
+        pools, guided, keypad, errors = asyncio.run(fetch_pools(html, every))
     finally:
         server.terminate()
 
     if not pools:
-        print("FAIL: could not read window.QF_POOLS from the live page")
-        return 1
+        fail("could not read window.QF_POOLS from the live page")
+        return list(_FAILURES)
+    for e in errors[:3]:
+        fail("page error: " + e)
+
+    if not pools_too:
+        verify_guided(guided, len(pools["higher"]["pool"]), every)
+        verify_keypad(keypad)
+        return list(_FAILURES)
 
     if "gcse" in pools:
         print("Verifying 'gcse'...")
@@ -305,18 +621,73 @@ def main():
     if "higher" in pools:
         print("Verifying 'higher'...")
         verify_higher(pools["higher"])
+        verify_guided(guided, len(pools["higher"]["pool"]), every)
     else:
         fail("window.QF_POOLS.higher is missing")
 
     if "formula" in pools:
         print("Verifying 'formula'...")
         verify_formula(pools["formula"])
+        verify_keypad(keypad)
     else:
         fail("window.QF_POOLS.formula is missing")
+    return list(_FAILURES)
 
+
+# Planted faults: each must fail (the self-test). The first is the old split, fixed 13 Oct 2026.
+PLANTS = [
+    ("the old split (base ps, qr on an HCF item)",
+     "function hfCorrectSplit(item) { const k = hfK(item); return { m: k * item.p * item.s, n: k * item.q * item.r }; }",
+     "function hfCorrectSplit(item) { return { m: item.p * item.s, n: item.q * item.r }; }"),
+    ("step 5's first-pair factor without k",
+     "const factor = `${k * p === 1 ? '' : k * p}x`;", "const factor = `${p === 1 ? '' : p}x`;"),
+    ("step 5 accepting q, not kq",
+     "if (v === hfK(currentQ) * q) { hfStepCorrectAdvance(6); return; }", "if (v === q) { hfStepCorrectAdvance(6); return; }"),
+    ("step 5 offering q and -q",
+     "const opts = MaffsOptions.shuffle([k * q, -k * q]);", "const opts = MaffsOptions.shuffle([q, -q]);"),
+    ("step 3 accepting the pair that multiplies to c",
+     "if (pairsEqual([m, n], [split.m, split.n])) { hfStepCorrectAdvance(4); return; }",
+     "if (pairsEqual([m, n], [split.m, split.n]) || m * n === currentQ.c) { hfStepCorrectAdvance(4); return; }"),
+    ("step 4's line with the wrong constant",
+     "const line = `${a === 1 ? '' : a}x^2 + ${split.m}x + ${split.n}x ${c >= 0 ? '+' : '-'} ${Math.abs(c)}`;",
+     "const line = `${a === 1 ? '' : a}x^2 + ${split.m}x + ${split.n}x ${c >= 0 ? '+' : '-'} ${Math.abs(c) + 1}`;"),
+    ("step 5's misconception with the wrong bracket",
+     "const wrongR = -r, wrongS = -s;", "const wrongR = -r, wrongS = s;"),
+    ("the Formula roots without the keypad (the decimal pad: no minus on iOS)",
+     "  if (window.MaffsKeypad) {\n    MaffsKeypad.mount(", "  if (false) {\n    MaffsKeypad.mount("),
+    ("the keypad without its minus key",
+     "keys: { minus: true }, keepInView", "keys: { minus: false }, keepInView"),
+]
+
+
+SAMPLE = 40   # the self-test plays every 40th Higher item (base and HCF items both); the full run plays them all
+
+
+def selftest():
+    src = open(PAGE, encoding="utf-8").read()
+    bad = []
+    clean = run(None, SAMPLE, pools_too=False)
+    if clean:
+        bad.append("the page as served fails (%d)" % len(clean))
+    for name, old, new in PLANTS:
+        if src.count(old) != 1:
+            bad.append(name + " (the plant no longer matches the page)")
+            continue
+        print("\nselftest plant: " + name)
+        if not run(src.replace(old, new), SAMPLE, pools_too=False):
+            bad.append(name + " (passed)")
     print()
-    if _FAILURES:
-        print("%d FAILURE(S)" % len(_FAILURES))
+    print("selftest: %s" % ("FAILED: " + "; ".join(bad) if bad else "PASS (%d plants fail)" % len(PLANTS)))
+    return 1 if bad else 0
+
+
+def main():
+    if "--selftest" in sys.argv[1:]:
+        return selftest()
+    fails = run(None)
+    print()
+    if fails:
+        print("%d FAILURE(S)" % len(fails))
         return 1
     print("PASS")
     return 0
