@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-984 findings in 97 games.
+985 findings in 97 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
 | HIGH | 11 | 223 | 0 | 234 |
-| MEDIUM | 216 | 249 | 3 | 468 |
-| LOW | 153 | 93 | 1 | 247 |
-| **All** | 381 | 599 | 4 | 984 |
+| MEDIUM | 214 | 251 | 3 | 468 |
+| LOW | 154 | 93 | 1 | 248 |
+| **All** | 380 | 601 | 4 | 985 |
 
 ### By class
 
@@ -43,7 +43,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 1 | 5 | 37 |
 | 5 | 27 | 27 |
 | 4 | 5 | 22 |
-| NEW:unstated-convention | 5 | 17 |
+| NEW:unstated-convention | 5 | 18 |
 | 7 | 5 | 16 |
 | NEW:precision-not-stated | 3 | 16 |
 | NEW:value-equal distractors | 0 | 14 |
@@ -64,7 +64,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:second-correct-answer | 1 | 5 |
 | B7 (ledgered) | 3 | 4 |
 | NEW:hint-gives-answer | 3 | 4 |
-| NEW:level-content-mismatch | 3 | 4 |
+| NEW:level-content-mismatch | 2 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
 | 9 | 1 | 3 |
 | NEW:exact-order sorter marking | 1 | 3 |
@@ -161,7 +161,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `dimension-checker` | yes | verify-dimension-checker.py | 0 | 3 | 6 | 3 | 4 | 8 | 0 |
 | `distinctly-average` | yes | verify-distinctly-average.py | 0 | 0 | 0 | 1 | 1 | 0 | 0 |
 | `eigenvalue-extractor` | yes | verify-eigenvalue-extractor.py | 0 | 1 | 5 | 2 | 6 | 2 | 0 |
-| `eigenvector-engine` | yes | verify-eigenvector-engine.py | 1 | 1 | 4 | 11 | 4 | 13 | 0 |
+| `eigenvector-engine` | yes | verify-eigenvector-engine.py | 1 | 1 | 4 | 11 | 3 | 14 | 0 |
 | `equation-builder` | yes | verify-equation-builder.py | 1 | 3 | 4 | 2 | 2 | 8 | 0 |
 | `equatle` | yes | verify-equatle.py | 0 | 0 | 3 | 1 | 4 | 0 | 0 |
 | `estimation-engine` | yes | verify-estimation-engine.py | 0 | 1 | 6 | 0 | 1 | 6 | 0 |
@@ -196,7 +196,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `moments-master` | yes | verify-moments-master.py | 1 | 9 | 8 | 4 | 4 | 18 | 0 |
 | `negative-number-line` | yes | verify-negative-number-line.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
 | `new-shapes` | yes | verify-new-shapes.py | 0 | 1 | 8 | 1 | 9 | 1 | 0 |
-| `normal-navigator` | yes | verify-normal-navigator.py | 0 | 0 | 4 | 4 | 4 | 4 | 0 |
+| `normal-navigator` | yes | verify-normal-navigator.py | 0 | 0 | 4 | 5 | 4 | 5 | 0 |
 | `partial-fractions-duel` | yes | verify-partial-fractions-duel.py | 0 | 7 | 4 | 2 | 1 | 12 | 0 |
 | `percentage-flip` | yes | verify-percentage-flip.py | 0 | 0 | 2 | 0 | 1 | 1 | 0 |
 | `prime-factorisation` | yes | verify-prime-factorisation.py | 0 | 0 | 3 | 2 | 5 | 0 | 0 |
