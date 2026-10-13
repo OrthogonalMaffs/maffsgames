@@ -108,3 +108,55 @@ findings:
     unlisted pair of options that are the same number, with plants for both items'
   status: fixed
   pr: 331
+- id: complex-converter-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:hand-typed explanation figure
+  level: all
+  where: games/complex-converter/index.html:381, :385, :387, :392, :394, :398 (CALC_HINTS ids 3, 5, 34, 53, 55)
+  summary: 'Six hand-typed calculator-hint results were wrong, all on distractor key sequences (the SWEEP-1 reading
+    review recomputed every one and confirmed t6-005; this entry is that item, fixed, for the lead to close t6-005).
+    Fixed under SR-8: id 3 5tan(53.13 deg) 6.65 -> 6.67; id 5 5tan(0.927) 6.65 -> 6.66; id 34 arctan(12/13) 0.747 ->
+    0.745 and arctan(5/13) 0.368 -> 0.367; id 53 arctan(8/17) 25.21 -> 25.20 deg; id 55 10tan(4pi/3) 1.73 -> 17.32.
+    The verifier now parses every CALC_HINTS correct and distractor expression from its own TeX (20 entries, 80
+    pairs), evaluates it in the entry''s DEG or RAD mode and fails if the printed result differs to its printed
+    decimals or carries the wrong unit; plants of the old id 55 and id 34 figures are caught, and the old page
+    fails with six CALC_HINTS lines (the lead said 24 hints; the table has 20 entries)'
+  evidence: 'id 55 10\cos(4pi/3) distractor 10\tan(4pi/3) | result 1.73 (true 17.32) (SWEEP-1, batch 11)'
+  status: open
+- id: complex-converter-s1-002
+  severity: MEDIUM
+  jc: true
+  class: NEW:text-contradicts-content
+  level: all
+  where: games/complex-converter/index.html:333, :338, :341, :348, :364 (ids 19, 24, 27, 34, 50)
+  summary: 'For Jon, not fixed (contexts are new content). id 19 says "This impedance has a negative real part" of
+    -3 + 4j and id 24 calls 2 angle -60 deg (1 - sqrt(3)j) a "capacitive reactance phasor"; ids 27, 34 and 50 call
+    -1 + j, -5 + 12j and -7 + 24j an "impedance". A passive impedance has no negative resistance and a reactance is
+    purely imaginary, so each context claims something physically false. Suggested: "complex number" or "phasor"
+    in the context lines, keys unchanged. The t6-004 rounded-angle precision stays open and untouched'
+  evidence: 'id 19: -3 + 4j | polar | key 5 angle 126.87 deg | context "This impedance has a negative real part. Find
+    its polar form." (SWEEP-1, batch 11)'
+  status: open
+- id: complex-converter-s1-003
+  severity: LOW
+  jc: true
+  class: NEW:wording
+  level: all
+  where: games/complex-converter/index.html:363 (id 49), Matching Triples card text
+  summary: 'For Jon, not fixed. id 49 (e^{j pi}) is drawn in Matching Triples as the exponential card "1e^{j3.142}":
+    the coefficient 1 is printed and the angle is a rounded decimal where Form Roulette uses pi'
+  evidence: 'e^{j pi} | polar | key 1 angle 180 deg | argRad 3.14159 (SWEEP-1, batch 11)'
+  status: open
+- id: complex-converter-s1-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: all
+  where: scripts/verify-complex-converter.py
+  summary: 'The verifier now recomputes every CALC_HINTS pair. It still does not check the context lines (only the
+    word "positive", so physical sense is unchecked: s1-002), the Matching Triples card text built from the stored
+    values (cLatex, pLatex, eLatex: s1-003), the Argand Sniper scoring and feedback text, or the calculator panel
+    (never opened)'
+  evidence: 'verifier docstring and checks (SWEEP-1, batch 11)'
+  status: open

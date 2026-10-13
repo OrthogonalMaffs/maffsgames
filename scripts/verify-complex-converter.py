@@ -18,8 +18,12 @@ number (an angle written with π read in radians) unless checker-allowlist.json 
 (SR-4; B11-CLEAR, 12 Oct 2026: 3∠30° and 3∠π/6 under "(degrees)"). In Chromium (390x844)
 every item is shown through showRouletteQ() and every option clicked through rouletteAnswer(): the key marked
 right, the others wrong, and a polar or exponential question's target line states the range.
-A self-test plants the audit's item and one item's old positive-angle key back into a copy of the page; each
-must FAIL naming its item.
+Calculator hints (SWEEP-1, batch 11; complex-converter-t6-005): every CALC_HINTS entry (20 entries, 80 expression/result pairs) has its correct and
+distractor expressions parsed from their own TeX and evaluated (degrees where the argument carries °, arctan in
+the entry's DEG or RAD mode), and each printed result must equal the computed value to its printed decimals, with
+the unit matching the mode. Six hand-typed results had been wrong (6.65 for 6.67, 1.73 for 17.32 ...).
+A self-test plants the audit's item, one item's old positive-angle key and two old hint figures back into a copy
+of the page; each must FAIL naming its item.
 
     python scripts/verify-complex-converter.py [--no-selftest] [--against FILE] [--katex-dir DIR]
 """
@@ -199,6 +203,51 @@ SWEEP_JS = r"""(words) => {
 KATEX_DIR = None
 
 
+def hint_value(tex, mode):
+    """Evaluate a CALC_HINTS expression's TeX (\\arctan, \\cos/\\sin/\\tan, \\dfrac, \\sqrt, \\pi, °)."""
+    t = tex.replace('\\left', '').replace('\\right', '').replace('\\!', '').replace('\\pi', 'pi')
+    t = t.replace('\u00b0', '*pi/180')
+    for _ in range(6):
+        t = re.sub(r'\\dfrac\{([^{}]*)\}\{([^{}]*)\}', r'((\1)/(\2))', t)
+        t = re.sub(r'\\sqrt\{([^{}]*)\}', r'sqrt(\1)', t)
+    t = re.sub(r'\\(arctan|cos|sin|tan)', lambda m: {'arctan': 'atan'}.get(m.group(1), m.group(1)), t)
+    t = re.sub(r'(\d|\))\s*(?=[a-z(])', r'\1*', t)
+    if '\\' in t:
+        raise ValueError('unparsed TeX in %r' % tex)
+    env = {k: getattr(math, k) for k in ('pi', 'sqrt', 'cos', 'sin', 'tan', 'atan')}
+    v = eval(t, {'__builtins__': {}}, env)
+    if 'atan' in t and mode == 'DEG':
+        v = math.degrees(v)
+    return v
+
+
+def check_hints(fails, hints):
+    if len(hints) != 20:
+        fails.append('CALC_HINTS has %d entries, expected 20' % len(hints))
+    for qid, h in sorted(hints.items(), key=lambda kv: int(kv[0])):
+        exprs = [h['correct']] + list(h['distractors'])
+        results = [h['result']] + list(h['results'])
+        if len(exprs) != len(results):
+            fails.append('CALC_HINTS id %s: %d expressions but %d results' % (qid, len(exprs), len(results)))
+            continue
+        for tex, res in zip(exprs, results):
+            res = res.replace('\u200b', '')
+            m = re.match(r'^(-?\d+(?:\.(\d+))?)(\u00b0|\s+rad)?', res)
+            if not m:
+                fails.append('CALC_HINTS id %s: cannot read result %r' % (qid, res))
+                continue
+            shown, dec, unit = float(m.group(1)), len(m.group(2) or ''), m.group(3)
+            try:
+                got = hint_value(tex, h['mode'])
+            except Exception as e:  # noqa: BLE001
+                fails.append('CALC_HINTS id %s: cannot evaluate %r (%s)' % (qid, tex, e))
+                continue
+            if 'arctan' in tex and (unit or '').strip() != ('\u00b0' if h['mode'] == 'DEG' else 'rad'):
+                fails.append('CALC_HINTS id %s: %r shown as %r in %s mode' % (qid, tex, res, h['mode']))
+            if abs(round(got, dec) - shown) > 1e-9:
+                fails.append('CALC_HINTS id %s: %s = %.*f but the hint shows %s' % (qid, tex, dec + 2, got, res))
+
+
 def play(fails, html):
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
@@ -220,6 +269,7 @@ def play(fails, html):
             page.goto(base + '/games/%s/?level=level4&cb=verify' % SLUG, wait_until='load', timeout=20000)
             page.wait_for_function('typeof QUESTIONS !== "undefined" && typeof katex !== "undefined"', timeout=15000)
             bank = page.evaluate('() => QUESTIONS.level4')
+            check_hints(fails, page.evaluate('() => CALC_HINTS'))
             for qid, pick, what in page.evaluate(SWEEP_JS, RANGE_WORDS):
                 fails.append('id %d in Chromium: option %s %s' % (qid, pick, what))
             browser.close()
@@ -241,6 +291,10 @@ PLANTS = [
     ('id 15 ', 'SR-4: 3∠π/3 (radians) beside 3∠60°, not listed',
      'distractors:["3\\\\angle 60°","3\\\\angle \\\\pi/6","6\\\\angle 30°"]',
      'distractors:["3\\\\angle 60°","3\\\\angle \\\\pi/6","3\\\\angle \\\\pi/3"]'),
+    ('CALC_HINTS id 55', 't6-005: 10tan(4π/3) shown as 1.73, not 17.32',
+     'results:["-8.66","5.00","17.32"]', 'results:["-8.66","5.00","1.73"]'),
+    ('CALC_HINTS id 34', 't6-005: arctan(12/13) shown as 0.747 rad, not 0.745',
+     'results:["0.395 rad","0.745 rad","0.367 rad"]', 'results:["0.395 rad","0.747 rad","0.368 rad"]'),
     ('id 20 ', 'the old positive-angle key 5∠233.13°',
      'correct:"5\\\\angle -126.87°",correctLatex:"5\\\\angle -126.87°"',
      'correct:"5\\\\angle 233.13°",correctLatex:"5\\\\angle 233.13°"'),
