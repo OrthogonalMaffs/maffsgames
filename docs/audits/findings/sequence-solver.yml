@@ -76,10 +76,13 @@ findings:
   level: alevel
   where: games/sequence-solver/index.html:302 (alevel[48]); the prompt is written with textContent at :330
   summary: 'The only ask that holds TeX is shown as raw markup: the student reads "S_n" and "\dfrac{n(n+1)}{2}". Same
-    class as r-002 (the GCSE sequence line), a different element and level. A rendering change, open'
+    class as r-002 (the GCSE sequence line), a different element and level. A rendering change, open Fixed
+    under R8: the ask is rendered with MaffsText (prose as prose, only the maths in KaTeX), so S_n and the
+    fraction no longer show as raw markup.'
   evidence: 'ask "Prove S_n for a = 1, d = 1 gives \\dfrac{n(n+1)}{2}", key "Substitute: \\dfrac{n}{2}(2 + n - 1) =
     \\dfrac{n(n+1)}{2}" (SWEEP-1, batch 2)'
-  status: open
+  status: fixed
+  pr: 369
 - id: sequence-solver-s1-003
   severity: LOW
   jc: false
@@ -87,18 +90,22 @@ findings:
   level: alevel
   where: games/sequence-solver/index.html:284 (alevel[33]), :302 (alevel[48]); option renderer at :335
   summary: 'Any option containing \, ^ or { is rendered by KaTeX in maths mode, so in these two items the key alone
-    shows in maths italic with its spaces gone ("No,|r|≥1"), beside three plain-text wrong options: the key can be
-    picked by its font. Marking unaffected; open (a rendering change)'
+    shows in maths italic with its spaces gone ("No,|r|≥1"), beside three plain-text wrong options: the key can
+    be picked by its font. Marking unaffected; open (a rendering change) Fixed under R8: the key is plain text
+    ("No, |r| ≥ 1"), like its three siblings; options with prose and maths render through MaffsText.'
   evidence: 'alevel[33] q "a = 3, r = 1.1", ask "Does the sum converge?", key "No, |r| \\geq 1", options "Yes", "Yes, r is
     close to 1", "Only for large n" (SWEEP-1, batch 2)'
-  status: open
+  status: fixed
+  pr: 369
 - id: sequence-solver-s1-004
   severity: LOW
   jc: true
   class: NEW:convention-unstated
   level: gcse
   where: games/sequence-solver/index.html:235 (gcse[39])
-  summary: 'The one a/r item without the formula line or the word "geometric": the type is left to the letter r. Its two
-    siblings (:233, :234) show T_n = ar^{n-1}. r is standard notation, so LOW; open for Jon'
+  summary: 'The one a/r item without the formula line or the word "geometric": the type is left to the letter r. Its
+    two siblings (:233, :234) show T_n = ar^{n-1}. r is standard notation, so LOW; open for Jon Fixed under R2:
+    the item shows T_n = ar^{n-1} like its two siblings.'
   evidence: 'seq "a = 2, r = -2", q "", ask "Find the 6th term", key "-64", options "64", "-32", "32" (SWEEP-1, batch 2)'
-  status: open
+  status: fixed
+  pr: 369

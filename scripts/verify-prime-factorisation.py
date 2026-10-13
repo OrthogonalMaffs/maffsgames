@@ -17,7 +17,7 @@ Checks, independent of the game's code:
     buttons, including taps that do not divide), each replayed against a model of the rule written here. After every tap
     the page's lives, product, the primes built and the feedback line must equal the model's; a completed target reads
     "T = p x q x ... (+200)" with the primes tapped, and scores 200 once; three wrong taps read
-    "p is not a factor here. Out of lives: T = p x q x ..." with the recomputed ascending factorisation; while the
+    "p doesn't go into what's left (r). Out of lives: T = p x q x ..." with the recomputed ascending factorisation; while the
     product line is shown (the first three questions) it reads "Your product: P" with the model's P.
 No analytics or leaderboard request leaves the stub server (every other request is aborted).
 
@@ -81,9 +81,9 @@ def model(t, seq):
                 lives -= 1
                 if lives <= 0:
                     locked = True
-                    fb = '%d is not a factor here. Out of lives: %d = %s' % (p, t, TIMES.join(map(str, factorise(t))))
+                    fb = "%d doesn't go into what's left (%d). Out of lives: %d = %s" % (p, rem, t, TIMES.join(map(str, factorise(t))))
                 else:
-                    fb = '%d is not a factor here!' % p
+                    fb = "%d doesn't go into what's left (%d)." % (p, rem)
             else:
                 rem //= p
                 product *= p
@@ -202,6 +202,8 @@ PLANTS = [
      [('if (remaining % p !== 0) {', 'if (currentTarget % p !== 0) {')]),
     ('a wrong factorisation shown when lives run out', 'model',
      [("primeFactors(currentTarget).join(' \\u00d7 ')", "primeFactors(currentTarget).slice(1).join(' \\u00d7 ')")]),
+    ('the old false wording "p is not a factor here" (R3)', 'model',
+     [("fb.textContent = p + \" doesn't go into what's left (\" + remaining + ').';", "fb.textContent = p + ' is not a factor here!';")]),
     ('a wrong product line (one too many)', 'product line',
      [("el.textContent = 'Your product: ' + product;", "el.textContent = 'Your product: ' + (product + 1);")]),
 ]

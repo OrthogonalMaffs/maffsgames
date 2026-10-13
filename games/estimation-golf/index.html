@@ -522,6 +522,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     <div class="flag"></div>
   </div>
   <p class="subtitle">9 holes · par your estimate · lowest score wins</p>
+  <p class="subtitle">Each answer is scored by how close it is to the exact value. There is no set method: the closer, the better.</p>
   <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
 </div>
 
@@ -545,7 +546,6 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
       <thead>
         <tr>
           <th>Hole</th>
-          <th>Topic</th>
           <th>Par</th>
           <th>Score</th>
           <th>+/−</th>
@@ -573,7 +573,6 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     <div class="hole-card" id="holeCard">
       <div class="hole-meta">
         <span class="hole-num" id="holeNum">1</span>
-        <span class="hole-topic" id="holeTopic">Rounding</span>
         <span class="hole-par" id="holePar">Par 4</span>
       </div>
       <div class="fairway-wrap" id="fairwayWrap">
@@ -620,19 +619,19 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 
 <script>
 // ── QUESTION BANKS ─────────────────────────────────────────────────────────────
-// 9 holes, each with a topic. Each level has its own questions per hole.
+// 9 holes. Each level has its own questions per hole. (No topic label: the questions are not grouped by topic, R3.)
 // answer: exact value, tolerance: % within which you get eagle/birdie/par
 
 const HOLES_META = [
-  { topic: 'Rounding',         par: 4 },
-  { topic: 'Percentages',      par: 4 },
-  { topic: 'Large Numbers',    par: 4 },
-  { topic: 'Powers & Roots',   par: 4 },
-  { topic: 'Units & Measures', par: 4 },
-  { topic: 'Proportions',      par: 4 },
-  { topic: 'Time & Rates',     par: 4 },
-  { topic: 'Areas & Volumes',  par: 4 },
-  { topic: 'Mixed Estimates',  par: 4 },
+  { par: 4 },
+  { par: 4 },
+  { par: 4 },
+  { par: 4 },
+  { par: 4 },
+  { par: 4 },
+  { par: 4 },
+  { par: 4 },
+  { par: 4 },
 ];
 // Par 4 × 9 = 36 total par
 
@@ -684,7 +683,7 @@ const QUESTIONS = {
   alevel: [
     { q: "Give the value of e to 4 significant figures.", answer: 2.718, hint: "e ≈ 2.71828...", unit: "" },
     { q: "Estimate the gradient of y = x³ at x = 3 by first principles: (f(3 + h) − f(3)) ÷ h with h = 0.001. Give your answer to 3 decimal places.", answer: 27.009, hint: "f(3.001) = 3.001³ = 27.027009001. Subtract f(3) = 27, then divide by 0.001.", unit: "" },
-    { q: "Estimate ∫₀¹ x² dx using the trapezium rule with 2 strips.", answer: 0.375, hint: "Strips at x = 0, 0.5, 1. Values: 0, 0.25, 1.", unit: "" },
+    { q: "Estimate ∫₀¹ x² dx using the trapezium rule with 2 strips.", answer: 0.375, hint: "2 strips, so x = 0, 0.5, 1. Values: 0, 0.25, 1.", unit: "" },
     { q: "Give ln(10) to 2 decimal places.", answer: 2.30, hint: "ln(10) = ln(2) + ln(5). ln(2)≈0.693, ln(5)≈1.609", unit: "" },
     { q: "Estimate the speed (m/s) of sound in air at 20°C (≈ 343 m/s).", answer: 343, hint: "A standard value worth knowing.", unit: "m/s" },
     { q: "A geometric series has a = 3, r = 0.5. Estimate the sum to infinity.", answer: 6, hint: "S∞ = a/(1−r)", unit: "" },
@@ -696,7 +695,7 @@ const QUESTIONS = {
     { q: "Estimate the RMS value of a sinusoidal wave with peak voltage 325 V.", answer: 229.8, hint: "V_rms = V_peak / √2", unit: "V" },
     { q: "A steel rod of length 2 m expands by 0.0024 m when heated 100°C. Estimate the coefficient of linear expansion (×10⁻⁶ /°C).", answer: 12, hint: "α = ΔL / (L₀ × ΔT). Express answer ×10⁻⁶", unit: "×10⁻⁶/°C" },
     { q: "Estimate the frequency (Hz) of a wave with velocity 340 m/s and wavelength 0.5 m.", answer: 680, hint: "f = v / λ", unit: "Hz" },
-    { q: "A beam of length 4 m has a UDL of 5 kN/m. Estimate the maximum bending moment at mid-span (kNm).", answer: 10, hint: "M_max = wL²/8 for a simply supported beam", unit: "kNm" },
+    { q: "A simply supported beam of length 4 m has a UDL of 5 kN/m. Estimate the maximum bending moment at mid-span (kNm).", answer: 10, hint: "M_max = wL²/8 for a simply supported beam", unit: "kNm" },
     { q: "Estimate the capacitive reactance (Ω) of a 100μF capacitor at 50 Hz.", answer: 31.8, hint: "Xc = 1 / (2πfC). Use π ≈ 3.14", unit: "Ω" },
     { q: "An object falls from rest. Estimate the velocity (m/s) after 3 seconds (g = 9.81 m/s²).", answer: 29.43, hint: "v = u + at, u = 0", unit: "m/s" },
     { q: "Estimate the efficiency (%) of a motor with input power 500 W and output power 375 W.", answer: 75, hint: "η = (P_out / P_in) × 100", unit: "%" },
@@ -777,7 +776,6 @@ function buildScorecard() {
     tr.id = `row${i}`;
     tr.innerHTML = `
       <td>${i+1}</td>
-      <td style="text-align:left;font-size:0.68rem">${h.topic}</td>
       <td>${h.par}</td>
       <td id="sc${i}">—</td>
       <td id="vp${i}">—</td>
@@ -792,7 +790,6 @@ function loadHole() {
   const meta = HOLES_META[hole];
 
   document.getElementById('holeNum').textContent  = hole + 1;
-  document.getElementById('holeTopic').textContent = meta.topic;
   document.getElementById('holePar').textContent   = `Par ${meta.par}`;
   document.getElementById('questionText').textContent = currentQ.q;
   document.getElementById('hintText').textContent  = '💡 ' + currentQ.hint;
@@ -874,18 +871,36 @@ function submitAnswer() {
   grade.style.color = band.strokes <= 1 ? '#ffd700' : band.strokes <= 2 ? '#c8922a' : band.strokes <= 3 ? '#4a8c3f' : band.strokes <= 4 ? '#1a4a7a' : '#b5303a';
 
   const diff = guess - answer;
-  const diffStr = diff >= 0 ? `+${diff.toFixed(diff % 1 === 0 ? 0 : 2)}` : diff.toFixed(diff % 1 === 0 ? 0 : 2);
+  const diffStr = diffText(diff);
   const unitStr = currentQ.unit ? ` ${currentQ.unit}` : '';
 
   detail.innerHTML = `
     Your answer: <strong>${guess}${unitStr}</strong><br>
-    Actual answer: <strong>${answer}${unitStr}</strong><br>
+    Actual answer: <strong>${keyText(answer, currentQ.q)}${unitStr}</strong><br>
     Error: <strong>${pct.toFixed(1)}%</strong> (${diffStr}${unitStr})<br>
     Strokes: <strong>${strokes}</strong>${hintUsed[hole] ? ' <em>(+1 hint penalty)</em>' : ''}
   `;
 
   document.getElementById('nextBtn').textContent = hole < 8 ? 'Next Hole →' : 'See Scorecard →';
   panel.classList.add('show');
+}
+
+// The key is shown to the precision its question asks for ("2 decimal places", "3 significant figures"),
+// never as a bare JS number ("2.3" for 2.30); the error keeps two significant figures, so a small key
+// does not read as a zero error (R3, SWEEP-1 estimation-golf-s1-003, -006).
+function keyText(answer, q) {
+  const dp = q.match(/(\d+) decimal places?/);
+  if (dp) return answer.toFixed(+dp[1]);
+  const sf = q.match(/(\d+) significant figures?/);
+  if (sf) { const t = answer.toPrecision(+sf[1]); if (!/e/.test(t)) return t; }
+  return String(answer);
+}
+
+function diffText(diff) {
+  const mag = Math.abs(diff);
+  const places = mag >= 1 ? (diff % 1 === 0 ? 0 : 2) : mag === 0 ? 0 : Math.min(8, 1 - Math.floor(Math.log10(mag)));
+  const t = diff.toFixed(places);
+  return diff >= 0 ? '+' + t : t;
 }
 
 function moveBall(pct) {

@@ -115,7 +115,8 @@ KEYS = {
 }
 AUDIT = {('level4', 7): 'estimation-golf-r-001', ('alevel', 1): 'estimation-golf-r-002'}
 STATED = {('alevel', 1): 3, ('level4', 7): 2}      # the precision each audited key is held to
-SAYS = {('alevel', 1): ['(f(3 + h) − f(3)) ÷ h with h = 0.001', 'Give your answer to 3 decimal places']}   # method and precision stated (r-002)
+SAYS = {('alevel', 1): ['(f(3 + h) − f(3)) ÷ h with h = 0.001', 'Give your answer to 3 decimal places'],   # method and precision stated (r-002)
+        ('level4', 3): ['simply supported']}   # the support the key assumes (R2, estimation-golf-s1-004)
 OLD = {('alevel', 1): '27', ('level4', 7): '565.2'}  # the audit's wrong keys: must not score a Hole in One
 
 
@@ -175,6 +176,21 @@ SWEEP_JS = r"""(old) => {
   for (const lv of Object.keys(QUESTIONS)) QUESTIONS[lv].forEach((q, i) => {
     const got = play(q, String(q.answer));
     if (!/Hole in One/.test(got)) out.push([lv, i, String(q.answer), got]);
+    // R3 (SWEEP-1 estimation-golf-s1-003, -006): the key is shown to the precision its question asks for, and a
+    // small key's error is not a zero
+    const detail = document.getElementById('resultDetail').textContent;
+    const dpm = q.q.match(/(\d+) decimal places?/);
+    const shown = (detail.replace(/\s+/g, ' ').match(/Actual answer: (\S+)/) || [])[1];
+    if (dpm && shown !== q.answer.toFixed(+dpm[1]))
+      out.push([lv, i, String(q.answer), 'the key is shown as ' + shown + ', not to ' + dpm[1] + ' d.p.']);
+    if (Math.abs(q.answer) < 1) {
+      play(q, String(+(q.answer * 1.02).toPrecision(2)));
+      const d2 = document.getElementById('resultDetail').textContent;
+      const m = d2.match(/\(([+-][0-9.]+)/);
+      if (!m || parseFloat(m[1]) === 0) out.push([lv, i, String(q.answer), 'a 2% miss reads as a zero error: ' + d2.replace(/\s+/g, ' ')]);
+    }
+    if (document.querySelector('.hole-topic, #holeTopic') || /Topic/.test(document.getElementById('scoretable').textContent))
+      out.push([lv, i, String(q.answer), 'a topic label is shown, but the questions are not grouped by topic (R3)']);
     const o = old[lv + '|' + i];
     if (o !== undefined && o !== String(q.answer)) {
       const g2 = play(q, o);
@@ -217,6 +233,9 @@ def play(fails, html):
 
 def run(html):
     fails = []
+    # R2 (SWEEP-1 estimation-golf-s1-001): the start screen says how an answer is scored and that no method is set
+    if 'Each answer is scored by how close it is to the exact value. There is no set method' not in html:
+        fails.append('start screen (estimation-golf-s1-001): it must say how answers are scored and that there is no set method')
     bank = play(fails, html)
     if bank is not None:
         check_bank(fails, bank)
@@ -224,6 +243,13 @@ def run(html):
 
 
 PLANTS = [
+    ('start screen', 'R2: the scoring convention unstated', '<p class="subtitle">Each answer is scored by how close it is to the exact value. There is no set method: the closer, the better.</p>', ''),
+    ('alevel[3]', 'R3: a topic label back on the hole', '<span class="hole-num" id="holeNum">1</span>', '<span class="hole-num" id="holeNum">1</span><span class="hole-topic" id="holeTopic">Rounding</span>'),
+    ('alevel[3]', 'R3: ln(10) shown as 2.3', "Actual answer: <strong>${keyText(answer, currentQ.q)}${unitStr}</strong>",
+     "Actual answer: <strong>${answer}${unitStr}</strong>"),
+    ('gcse[0]', 'R3: a small key reads as a zero error', "const diffStr = diffText(diff);",
+     "const diffStr = diff >= 0 ? `+${diff.toFixed(diff % 1 === 0 ? 0 : 2)}` : diff.toFixed(diff % 1 === 0 ? 0 : 2);"),
+    ('level4[3]', 'R2: the beam with no stated support', "A simply supported beam of length 4 m", "A beam of length 4 m"),
     ('level4[7]', 'r-001: the cylinder keyed 565.2 (pi = 3.14)', 'answer: 565.49,', 'answer: 565.2,'),
     ('alevel[1]', 'r-002: the gradient keyed 27 (the limit)', 'answer: 27.009,', 'answer: 27,'),
 ]
