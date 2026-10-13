@@ -19,7 +19,8 @@ Chromium (390x844); t6-002 and t6-003 accept their second form, and no other opt
 its key (Jon, 18:56: a new one needs his ruling); t6-001: after a mark, Enter three times and Tab+Enter on another
 option change neither the score nor the marks; no two options share a truth table unless checker-allowlist.json lists
 the pair as a form question (SR-4; B11-CLEAR, 12 Oct 2026: the unsimplified forms of t6-004 and the two second forms
-above). A self-test plants the old exact-string marking, a rule accepting any option with the key's truth table, a new
+above). Every worked step (q.steps) is an equality (from and to, and any '=' parts, share a truth table) and not a no-op
+(SWEEP-1 batch 11; not checked: chaining from step to step, the law labels). A self-test plants the old exact-string marking, a rule accepting any option with the key's truth table, a new
 equal option in Q24, NOT(AB) back beside NOT(A) + NOT(B) in Q4, and the old CSS-only lock; each must FAIL.
 
     python scripts/verify-boolean-blitz.py [--no-selftest] [--against FILE] [--katex-dir DIR]
@@ -158,6 +159,30 @@ def listed_pairs():
     return out
 
 
+def check_steps(fails, n, q):
+    """SWEEP-1 batch 11: every worked step is an equality and does something. A step's from and to may each hold
+    chained '=' parts. A from with no '=' must share one truth table with every part of to; a from with '='
+    shows a sub-expression equality (Q8, Q38, Q40 step 2), so only each side's own parts must agree. From and to
+    must differ as text (spaces ignored). Not checked: that a step's from is the previous step's to (about 40 steps show one
+    sub-expression or skip an unshown move), and the law labels."""
+    for k, st in enumerate(q.get('steps') or []):
+        frm, to = st[0], st[1]
+        w = 'Q%d step %d (%s -> %s)' % (n, k + 1, frm, to)
+        sides = [[x.replace('[', '(').replace(']', ')') for x in side.split('=')] for side in (frm, to)]
+        letters = sorted(set(re.findall(r'[A-Z]', q['expr'] + frm + to)))
+        try:
+            tabs = [set(table(x, letters) for x in side) for side in sides]
+        except ValueError as e:
+            fails.append('%s: cannot read: %s' % (w, e))
+            continue
+        if '=' not in frm:
+            tabs = [tabs[0] | tabs[1]]
+        if any(len(t) > 1 for t in tabs):
+            fails.append('%s: not an equality (the two sides have different truth tables)' % w)
+        if re.sub(r'\s+', '', frm) == re.sub(r'\s+', '', to):
+            fails.append('%s: a no-op step (from equals to)' % w)
+
+
 def check_bank(fails, bank):
     listed = listed_pairs()
     if len(bank) != COUNT:
@@ -186,6 +211,7 @@ def check_bank(fails, bank):
                 if tabs[x] is not None and tabs[x] == tabs[y] and (n, frozenset((opts[x], opts[y]))) not in listed:
                     fails.append('%s: the options %s and %s have one truth table and are not a listed form question (SR-4)'
                                  % (w, opts[x], opts[y]))
+        check_steps(fails, n, q)
         for o in accepted(q):
             if o != q['answer'] and RULED.get(q['answer']) != o:
                 fails.append('%s: %s accepted beside the key %s; Jon accepted only AB + BC (for B(A + C)) and '
@@ -280,6 +306,10 @@ PLANTS = [
      [("    distractors: [`AB + BC`, `BC`, `ABC`],", "    distractors: [`AB + BC`, `B(C + A)`, `ABC`],")]),
     ('Q4 (', 'SR-4: two wrong options with one truth table (NOT(AB) back in Q4)',
      [("`A + B`, `\\\\overline{A} \\\\cdot \\\\overline{B}`]", "`A + B`, `\\\\overline{AB}`]")]),
+    ('Q38 step', 'Q38 step 3 back: D becomes D(A+B)',
+     [("[`(A+B)(0+CD+\\\\overline{C}D+D)`, `D(A+B)`, 'Absorption + result'],", "[`D`, `D(A+B)`, 'Absorption + result'],")]),
+    ('Q22 step', 'Q22 step 3 back: a no-op A!B -> A!B',
+     [("[`0 + A\\\\overline{B}`, `A\\\\overline{B}`, 'Identity'],", "[`A\\\\overline{B}`, `A\\\\overline{B}`, 'Identity'],")]),
     ('t6-001', 't6-001: a CSS-only lock (before F1 batch 11)',
      [("  if (!MaffsLock.lock(document.getElementById('optionsGrid'))) return;", "  // (no guard: the CSS class alone)")]),
 ]

@@ -131,3 +131,71 @@ findings:
   evidence: 'B11 parser, F0 (7 Oct 2026): \begin{pmatrix} -1 \\ -1 \end{pmatrix} = \begin{pmatrix} 1 \\ 1 \end{pmatrix}, exact (scripts/bank_common.py); ledger eigenvector-engine::8ec70fba8b56#1::B11::["\\begin{pmatrix} -1 \\\\ -1 \\end{pmatrix}", "\\begin{pmatrix} 1 \\\\ 1 \\end{pmatrix}"]'
   status: fixed
   pr: 134
+- id: eigenvector-engine-s1-001
+  severity: LOW
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: further
+  where: games/eigenvector-engine/index.html:116 (QS[4] mc)
+  summary: 'The misconception text said that for diagonal matrices the eigenvectors ARE the standard basis vectors; true
+    only up to scaling and only when the diagonal entries differ (for kI every vector is one). Fixed: now "multiples
+    of e1 and e2 when the diagonal entries are different". The verifier recomputes mc claims (a diagonal-matrix claim
+    needs a diagonal A with different entries and the words multiples and different); the old text is planted and
+    caught.'
+  evidence: 'A = [[5,0],[0,2]], lambda = 5 | key (1,0) | mc: "For diagonal matrices, eigenvectors are the standard
+    basis vectors e1 and e2." (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 358
+- id: eigenvector-engine-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: further
+  where: games/eigenvector-engine/index.html:107 (start-screen worked example, key insight)
+  summary: 'The advice "You only need ONE row. Let one variable = 1 and solve for the other" is false for items whose
+    first row is all zeros (QS[4]) or that fix a variable (QS[5], 3x = 0). Fixed (words only): "choose a row that is
+    not all zeros ... if a row gives x = 0 or y = 0, that variable is fixed". The verifier parses the example (A - 5I,
+    row 1, x = 2y, v = (2,1) an eigenvector), requires the new advice, and checks every worked "Row n" equation is
+    proportional to row n of A - lambda I; the old advice and a wrong row label are planted and caught.'
+  evidence: 'Key insight: "You only need ONE row. Let one variable = 1 and solve for the other." | QS[4] A - 5I =
+    [[0,0],[0,-3]] uses Row 2 | QS[5] 3x = 0 (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 358
+- id: eigenvector-engine-s1-003
+  severity: LOW
+  jc: true
+  class: NEW:convention-unstated
+  level: further
+  where: games/eigenvector-engine/index.html:154 (prompt "Select the simplest integer eigenvector")
+  summary: 'For Jon, not fixed (a choice of convention). Keys use mixed signs, (-1,1) for QS[3] and QS[18], (-2,1) for
+    QS[8], (1,-2) for QS[11]; the opposite sign is never offered and "simplest" does not say which sign. Marking is
+    unaffected: no sign twin is shown, so no option is a second correct answer.'
+  evidence: 'QS[3] A = [[4,2],[1,3]], lambda = 2 | key (-1,1) | "Select the simplest integer eigenvector" (SWEEP-1,
+    batch 11)'
+  status: open
+- id: eigenvector-engine-s1-004
+  severity: MEDIUM
+  jc: true
+  class: NEW:unstated-convention
+  level: further
+  where: games/eigenvector-engine/index.html:144,163,170-171 (mfg events)
+  summary: 'For the home lane / Jon (SR-29 class), not fixed. mfg events hard-code level ''further''; MaffsLevel.resolve
+    also accepts Level 4, so Level 4 plays are logged as ''further''. Also noted, not fixed: the bank is 25 items from
+    8 matrices with no generator (near-duplicate matrices such as [[1,3],[3,1]] and [[0,2],[2,0]]; the 15-of-25 draw
+    is t6-003), and a wrong answer never says why the chosen distractor fails.'
+  evidence: 'mfg(''game_started'', {game_slug: ''eigenvector-engine'', level: ''further'', ...}) (SWEEP-1, batch 11)'
+  status: open
+- id: eigenvector-engine-s1-005
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: further
+  where: scripts/verify-eigenvector-engine.py
+  summary: 'After the s1 additions the verifier still does not check: the mc text of QS[7] beyond its negative-lambda
+    claim, the sub-prompt "Select the simplest integer eigenvector" (lowest terms is checked, the sign convention is
+    not), the middle worked lines that carry no "Row n" label, why each distractor is wrong (the game gives no
+    reason), the start-screen key-insight prose beyond the advice sentence, and that the 15-of-25 draw covers the
+    bank.'
+  evidence: 'check_bank, check_mc and check_page cover keys, options, A - lambda I, Row n lines, mc claims and the
+    start-screen example (SWEEP-1, batch 11)'
+  status: open

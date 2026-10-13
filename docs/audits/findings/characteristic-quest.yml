@@ -63,3 +63,67 @@ findings:
   summary: ?level ignored (always 'further'; roster lists L4); 'Complex eigenvalues indicate a rotation' is loose
   evidence: bare, level4, constructor, __proto__, nonsense all log level 'further'
   status: open
+- id: characteristic-quest-s1-001
+  severity: LOW
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: further
+  where: games/characteristic-quest/index.html:129 (item 13, m [[0,-1],[1,0]])
+  summary: 'The worked line "lambda^2 - 0 + (0-(-1))" gave the trace term no lambda, against the lambda^2 - (trace)lambda
+    + (det) form the start screen teaches (the t6-003 shape, there fixed for item 22). Fixed: now "lambda^2 - (0)lambda
+    + (0-(-1)) = lambda^2 + 1 = 0". The verifier now checks the structure of a polynomial line (a trace term must carry
+    its lambda); the old line is planted and caught, and the old page fails.'
+  evidence: '\lambda^2 - 0 + (0-(-1)) = \lambda^2 + 1 = 0 | A = [[0,-1],[1,0]] | key \lambda^2 + 1 = 0 (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 358
+- id: characteristic-quest-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: further
+  where: games/characteristic-quest/index.html:120 (item 4), :133 (item 17)
+  summary: 'Two loose notes. Item 4 said a negative determinant "means one eigenvalue is negative" (the eigenvalues have
+    opposite signs); item 17 said "Symmetric matrix" (it is real symmetric matrices whose eigenvalues are real). Fixed:
+    "means the eigenvalues have opposite signs" and "Real symmetric matrix". The verifier now checks both notes against
+    the item''s matrix (det < 0 with real roots; b = c) and requires the new wording; both old notes are planted and caught,
+    and the old page fails.'
+  evidence: 'Negative determinant (4−6 = −2) means one eigenvalue is negative. | Symmetric matrix — eigenvalues are always
+    real. (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 358
+- id: characteristic-quest-s1-003
+  severity: LOW
+  jc: true
+  class: NEW:degenerate-item
+  level: further
+  where: games/characteristic-quest/index.html:117, :119-:141 (items 1/25, 19, 18, 2/3, 14/16)
+  summary: 'For Jon, not fixed (a bank-content decision; overlaps t6-002). Items 1 and 25 share a key and all three
+    distractors; items 19 and 18 also key lambda^2 - 5 lambda + 6; items 2/3 share lambda^2 - 7 lambda + 10 and 14/16
+    share lambda^2 - 8 lambda + 7. With 15 of 26 served, a student can meet the same option set twice in a game and
+    answer the repeat from memory. Fixing needs new distractors or matrices.'
+  evidence: 'm [[2,1],[0,3]] and [[3,1],[0,2]]: key \lambda^2 - 5\lambda + 6 = 0, same distractors (SWEEP-1, batch 11)'
+  status: open
+- id: characteristic-quest-s1-004
+  severity: LOW
+  jc: true
+  class: NEW:timer-policy
+  level: further
+  where: games/characteristic-quest/index.html:updateTimer, BASE/T_K
+  summary: 'For Jon and the home lane, not fixed. The HUD shows a Time count-up and the score uses BASE/T_K, but no section
+    of .claude/rules/timer-policy.md lists the game (nor, per the reviewer, the other two eigenvector-trilogy games). Either
+    list it under Visible Count-Up (scored) or change the game.'
+  evidence: 'timer-policy.md has no Characteristic Quest entry (SWEEP-1, batch 11)'
+  status: open
+- id: characteristic-quest-s1-005
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: further
+  where: scripts/verify-characteristic-quest.py
+  summary: 'After the SWEEP-1 additions the verifier still does not check: the wording of prose beyond the recognised claims
+    (a new note is flagged only if it matches none of the known patterns, and a recognised pattern is checked for its
+    mathematics, not its phrasing); prose spacing lost in KaTeX (t6-004); distractor sets repeating across items
+    (s1-003); the 15-of-26 pool (t6-002); the level parameter (t6-005); and the timer. Worked lines are checked as
+    polynomial identities, not for the order of the steps shown.'
+  evidence: 'verify-characteristic-quest.py note_checks, line_checks, check_example (SWEEP-1, batch 11)'
+  status: open

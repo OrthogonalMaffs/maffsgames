@@ -544,7 +544,7 @@ const CONTENT = {
         title: 'Algebraic Long Division',
         setup: 'We know (x \u2212 3) is a factor of x\u00B3 \u2212 7x \u2212 6. Now we divide to find what\'s left. This is exactly like numerical long division \u2014 same process, just with algebra.',
         steps: [
-          { working: 'x^3 - 7x - 6 \\div (x - 3)', explain: 'Set up the division. Important: our cubic has no x\u00B2 term. Write it as x\u00B3 + 0x\u00B2 \u2212 7x \u2212 6. The zero placeholder keeps your columns aligned.' },
+          { working: '(x^3 - 7x - 6) \\div (x - 3)', explain: 'Set up the division. Important: our cubic has no x\u00B2 term. Write it as x\u00B3 + 0x\u00B2 \u2212 7x \u2212 6. The zero placeholder keeps your columns aligned.' },
           { working: 'x^3 \\div x = x^2', explain: 'Divide the leading term of the dividend (x\u00B3) by the leading term of the divisor (x). This gives the first term of the quotient: x\u00B2.' },
           { working: 'x^2 \\times (x - 3) = x^3 - 3x^2', explain: 'Multiply x\u00B2 by the whole divisor (x \u2212 3). Write the result below.' },
           { working: '(x^3 + 0x^2) - (x^3 - 3x^2) = 3x^2', explain: 'Subtract. Be careful \u2014 signs flip: \u2212(x\u00B3 \u2212 3x\u00B2) becomes \u2212x\u00B3 + 3x\u00B2. The x\u00B3 terms cancel, leaving 3x\u00B2.' },
@@ -565,7 +565,7 @@ const CONTENT = {
         steps: [
           { working: 'f(x) = 2x^3 + x^2 - 13x + 6', explain: 'A cubic with leading coefficient 2. Values to try: \u00B1(factors of 6) \u00F7 (factors of 2), which is \u00B11, \u00B12, \u00B13, \u00B16, \u00B1\u00BD, \u00B13/2.' },
           { working: 'f(2) = 2(8) + (4) - 13(2) + 6 = 16 + 4 - 26 + 6 = 0 \\checkmark', explain: 'x = 2 gives zero, so (x \u2212 2) is a factor.' },
-          { working: '2x^3 + x^2 - 13x + 6 \\div (x - 2)', explain: 'Perform algebraic long division. All terms present, no zero placeholder needed this time.' },
+          { working: '(2x^3 + x^2 - 13x + 6) \\div (x - 2)', explain: 'Perform algebraic long division. All terms present, no zero placeholder needed this time.' },
           { working: '2x^3 \\div x = 2x^2', explain: 'First term of quotient: 2x\u00B2.' },
           { working: '2x^2(x-2) = 2x^3 - 4x^2', explain: 'Multiply and subtract.' },
           { working: '(2x^3 + x^2) - (2x^3 - 4x^2) = 5x^2', explain: '5x\u00B2 is the new leading term.' },
@@ -685,7 +685,7 @@ const CONTENT = {
           {label:'Quotient = s\u00B2 + ___s + ___',answer:'3, 2'},
           {label:'s\u00B2 + 3s + 2 = (s + ___)(s + ___)',answer:'1, 2'}],
         finalAnswer:'s=1, s=-1, s=-2',hints:['Try s = 1','Divide by (s \u2212 1)','Factorise the quadratic'] },
-      { id:15, tier:3, prompt:'f(x) = \\(2x^3 - 3x^2 - 11x + 6\\). Fully factorise and solve \\(f(x) = 0\\).',
+      { id:15, tier:3, prompt:'f(x) = \\(2x^3 - 3x^2 - 11x + 6\\). Fully factorise \\(f(x)\\).',
         scaffoldSteps:[
           {label:'f(3) = 54 \u2212 27 \u2212 33 + 6 = ___',answer:'0'},
           {label:'Quotient = 2x\u00B2 + ___x \u2212 ___',answer:'3, 2'},

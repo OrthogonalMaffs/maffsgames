@@ -59,3 +59,41 @@ findings:
   summary: '''the matrix represents a rotation'' is loose for eigenvalues ±i'
   evidence: '[[1,-2],[1,-1]] has λ²+1 and is not a rotation'
   status: open
+- id: eigenvalue-extractor-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:true-wrong-option
+  level: further
+  where: games/eigenvalue-extractor/index.html:128 (item 12, lambda^2 + 1 = 0)
+  summary: 'The wrong option "No eigenvalues exist" is true over the reals and the page never states the field (SR-16).
+    Fixed: replaced by the named error "lambda = i (repeated)" (a repeated root for the conjugate pair); four distinct
+    options, key and stem unchanged. The verifier now bars a worded "no eigenvalues"/"no solution" option beside an
+    equation with complex roots; the old option is planted and caught.'
+  evidence: 'lambda^2 + 1 = 0 | Find the eigenvalues | key: lambda = i, lambda = -i | options: lambda = 1, lambda = -1 /
+    No eigenvalues exist / lambda = 0 (repeated) (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 358
+- id: eigenvalue-extractor-s1-002
+  severity: LOW
+  jc: true
+  class: NEW:degenerate-item
+  level: further
+  where: games/eigenvalue-extractor/index.html:118 (item 2, lambda^2 - 7lambda + 10 = 0)
+  summary: 'Item 2 is an exact repeat of the start-screen worked example (line 108), so the answer is on the page above
+    it. For Jon, not fixed: replacing the item needs new content. Separately for Jon: adding "over the complex numbers"
+    to the stem of item 12 (a stem change) would also state the field; not done.'
+  evidence: 'lambda^2 - 7lambda + 10 = 0 | key: lambda = 2, lambda = 5 (SWEEP-1, batch 11)'
+  status: open
+- id: eigenvalue-extractor-s1-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: further
+  where: scripts/verify-eigenvalue-extractor.py (mc notes ~:120, :126, :128, :130; prose worked lines)
+  summary: 'The verifier still does not read the hand-typed explanations: every mc note (the repeated-eigenvalue note,
+    "lambda = 0 ... singular (det = 0)", "Complex eigenvalues come in conjugate pairs ... rotation", "Not every
+    characteristic equation factorises neatly") and the prose worked lines ("Difference of two squares", "Cannot
+    factorise - use the quadratic formula", "Complex eigenvalues - the matrix represents a rotation"). Added in
+    SWEEP-1: a check of the start-screen worked example (sum = trace, product = determinant), with a plant.'
+  evidence: 'Reviewer read all of these as true except the open t6-003 and t6-005 (SWEEP-1, batch 11)'
+  status: open

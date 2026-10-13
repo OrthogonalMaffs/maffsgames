@@ -17,8 +17,16 @@ Chromium (390x844, KaTeX). Every item is played through the game's own handlers:
   MaffsLock's real window: a double click on Submit never also clicks Continue; a second option clicked after the
   first is ignored; the results screen submits once. Aa is saved to mfg_accessible and restored on reload.
 
+Words (SWEEP-1, batch 11; SR-17). The student-facing prose is checked for the conventions the key relies on: the
+  start screen defines the symbols (. AND, + OR, bar NOT, AND before OR, side by side = AND) and says to tap a cell
+  to set 0 or 1; no scenario or logic line says "any two" (at least two, or exactly two, is stated); XOR in a
+  scenario or logic line is glossed ("exactly one of ... (XOR)"); every Tier 1 scenario names its output letter,
+  "(output F)", and that letter is not one of the inputs (Tiers 2-4 never did: for Jon). Not checked (a gap): that scenario, inputDescs and logic prose agree
+  with the key; the logic lines are words, so no input letter appears in them to tie them to the expression.
+
 A self-test plants three of the audit's own faults back (t6-001: a point for every cell; t6-003: [27] without its
-simplified form, and [27] written in XOR with no definition); each must FAIL naming its audit item.
+simplified form, and [27] written in XOR with no definition) and puts the five SWEEP-1 wordings back (the start
+screen's symbols and tap line, "any two", the bare XOR, the unnamed output); each must FAIL naming its item.
 
 [27]'s line after the answer (approved by Project Claude, 7 Oct 2026): XOR is introduced nowhere else in the game, so
 the form is "written", not "simplified", with the identity that defines XOR and a gloss: "This expression can be
@@ -86,6 +94,37 @@ def equivalent(e1, e2):
 
 def where(i):
     return 'library[%d]' % i
+
+
+def check_words(fails, lib):
+    """SWEEP-1 batch 11 (SR-17): the conventions the key relies on are stated in the prose."""
+    for i, q in enumerate(lib):
+        for field in ('scenario', 'logic'):
+            t = q.get(field) or ''
+            if re.search(r'\bany (two|2)\b', t, re.I):
+                fails.append('%s: the %s says "any two", which reads as at least two or exactly two (SR-17): %r'
+                             % (where(i), field, t[:80]))
+            if 'XOR' in t.replace('exactly one of forward or reverse (XOR)', ''):
+                fails.append('%s: the %s uses XOR without "exactly one of ... (XOR)" (SR-17): %r'
+                             % (where(i), field, t[:80]))
+        m = re.search(r'\(output ([A-Z])\)', q.get('scenario') or '')
+        if not q['tier'].startswith('Tier 1'):
+            continue  # only Tier 1 names its output letter; the later tiers do not (a reworded stem, for Jon)
+        if not m:
+            fails.append('%s: the scenario does not name its output, "(output F)": %r' % (where(i), (q.get('scenario') or '')[:60]))
+        elif m.group(1) in q['inputs']:
+            fails.append('%s: the output letter %s is also an input' % (where(i), m.group(1)))
+
+
+def check_start(fails, html):
+    m = re.search(r'<div class="start-screen" id="startScreen">(.*?)<button', html, re.S)
+    t = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', m.group(1)) if m else '').replace('&middot;', '.')
+    for what, pat in (('. means AND', r'\. means AND'), ('+ means OR', r'\+ means OR'), ('a bar means NOT', r'bar means NOT'),
+                      ('AND is worked out before OR', r'AND is worked out before OR'),
+                      ('two letters side by side mean AND', r'side by side also mean AND'),
+                      ('tap a cell to set 0 or 1', r'tap a cell to set 0 or 1')):
+        if not re.search(pat, t):
+            fails.append('start screen: does not say "%s" (SR-17)' % what)
 
 
 def check_bank(fails, lib):
@@ -289,6 +328,15 @@ PLANTS = [
     ('library[27]', 't6-003: [27] in XOR with no definition',
      ",\n    identity: ['A \\\\oplus B', 'A \\\\cdot \\\\overline{B} + \\\\overline{A} \\\\cdot B'], gloss: 'XOR: one or the other, but not both'",
      ""),
+    ('start screen', 'SWEEP-1: start screen without the symbols',
+     '<p class="start-inst">In the expressions, &middot; means AND, + means OR and a bar means NOT. AND is worked out '
+     'before OR, and two letters side by side also mean AND.</p>', ''),
+    ('start screen', 'SWEEP-1: start screen without the tap line', ': tap a cell to set 0 or 1.', '.'),
+    ('library[24]', 'SWEEP-1: [24] "any two"', 'run when at least two of temperature', 'run when any two of temperature'),
+    ('library[24]', 'SWEEP-1: [24] logic "any two"', '(at least two of temp/', '(any two of temp/'),
+    ('library[27]', 'SWEEP-1: [27] bare XOR', 'runs when exactly one of forward or reverse (XOR) is active.',
+     'runs when forward XOR reverse is active.'),
+    ('library[9]', 'SWEEP-1: [9] output unnamed', '(output K)', '(output)'),
 ]
 
 
@@ -305,6 +353,8 @@ def main():
     lib = play(fails, html)
     if lib:
         check_bank(fails, lib)
+        check_words(fails, lib)
+    check_start(fails, html)
     print('%s: every table from its key, distractors not equivalent, scoring by correct cells, MaffsLock' % SLUG)
     ok = True
     if not args.no_selftest and not args.against:
@@ -317,6 +367,8 @@ def main():
             planted = play(rep, html.replace(old, new))
             if planted:
                 check_bank(rep, planted)
+                check_words(rep, planted)
+            check_start(rep, html.replace(old, new))
             hit = [f for f in rep if f.startswith(prefix)]
             ok = ok and bool(hit)
             print('  self-test %-42s %s' % (what, ('caught: ' + hit[0][:100]) if hit else '*** MISSED ***'))

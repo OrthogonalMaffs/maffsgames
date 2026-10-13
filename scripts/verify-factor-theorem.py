@@ -44,6 +44,9 @@ A-Level only (Jon, 9 Oct 2026). With no ?level, ?level=alevel, level4, xyz and _
   nothing (t5-014, t5-015), and the Test submits once, to factor_theorem_alevel.
 A wrong answer waits on the shared Next control (canon 7.6), a right one on the Next Question button (t5-018's note).
 
+SWEEP-1 (13 Oct 2026): an ask to solve or find all values must have a key that is roots, scaffolded items included (Q15
+  asked to solve and was keyed a factorisation); a Learn worked line "A \\div B" brackets a multi-term dividend. Plants:
+  Q15's old ask, and the old unbracketed Learn lines of examples 3 and 4.
 A self-test plants the audit's faults back (t5-001: the pair (x - 2)(x + 3) accepted for Q6; t5-003: the old T4;
 Q33's and T9(c)'s old free-text keys; a prose key; a Practice submit; ?level logged; a wrong answer advanced by the
 Next button); each must FAIL naming its item.
@@ -497,8 +500,8 @@ def check(fails, content):
         if not it.get('scaffoldSteps'):
             accepted[uid] = sorted(fs)
         # the ask matches the key (typed answers: practice without a scaffold, test parts)
-        ask = it.get('label') or (it['prompt'] if not it.get('scaffoldSteps') else '')
-        if ask:
+        ask = it.get('label') or it['prompt']   # scaffolded items too (SWEEP-1: Q15 asked to solve, keyed a factorisation)
+        if ask and (not it.get('scaffoldSteps') or ASK_ROOTS.search(ask)):
             if ASK_FACT.search(ask) and truth[0] not in ('fact', 'params+fact'):
                 fails.append('%s: asks to factorise; keyed %r' % (tag(uid), key))
             if ASK_ROOTS.search(ask) and truth[0] != 'roots' and not ASK_FACT.search(ask) and uid[0] == 'p':
@@ -750,6 +753,14 @@ def check_learn(fails, content):
             got |= {sp.Rational(z), -sp.Rational(z)}
     if got != want:
         fails.append("Learn example 4: the values to try are %s (factor-theorem-t5-012)" % sorted(want))
+    # SWEEP-1: a worked line "A \\div B" brackets a dividend of more than one term, else the division binds to its last term
+    for n, e in enumerate(content['learn']['examples'], 1):
+        for i, st in enumerate(e['steps'], 1):
+            w = st['working']
+            if '\\div' in w:
+                dividend = w.split('\\div')[0].strip()
+                if re.search(r'(?<!^)[+-]', dividend.lstrip('-')) and not re.fullmatch(r'\([^()]*\)', dividend):
+                    fails.append('Learn example %d step %d: the dividend %r is not bracketed, so the division binds to its last term' % (n, i, dividend))
 
 
 # ── Chromium ──
@@ -1320,6 +1331,12 @@ PLANTS = [
     ('level', 't5-013: ?level read and logged', "mfg('game_started', { game_slug: CONTENT.slug, level: 'alevel', mode: mode });",
      "mfg('game_started', { game_slug: CONTENT.slug, level: new URLSearchParams((performance.getEntriesByType('navigation')[0].name.split('?')[1] || '')).get('level') || 'alevel', "
      "mode: mode });"),
+    ('p15', 'SWEEP-1: Q15 asks to solve, keyed a factorisation', "Fully factorise \\\\(f(x)\\\\).'",
+     "Fully factorise and solve \\\\(f(x) = 0\\\\).'"),
+    ('Learn example 3', 'SWEEP-1: Learn ex. 3 dividend unbracketed', "working: '(x^3 - 7x - 6) \\\\div (x - 3)'",
+     "working: 'x^3 - 7x - 6 \\\\div (x - 3)'"),
+    ('Learn example 4 step 3', 'SWEEP-1: Learn ex. 4 dividend unbracketed', "working: '(2x^3 + x^2 - 13x + 6) \\\\div (x - 2)'",
+     "working: '2x^3 + x^2 - 13x + 6 \\\\div (x - 2)'"),
     ('wrong answer', 't5-018: a wrong answer advanced by the Next button',
      "    if (correct) {\n      document.getElementById('nextQBtn').style.display = 'block';",
      "    if (true) {\n      document.getElementById('nextQBtn').style.display = 'block';"),

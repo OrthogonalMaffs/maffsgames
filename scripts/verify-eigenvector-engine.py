@@ -21,8 +21,17 @@ Chromium (390x844, KaTeX). Every option of every item is clicked through the gam
   Next (MaffsNext, canon 7.6) moves one question, and so do two activations of it in one frame (two Enters with no
   gap): the old plain onclick was only hidden after use, so the second ran again and skipped a question unseen.
 
-A self-test plants three faults back (t6-001: the old QS[16]; f0-005-style: (-1, 2) offered as wrong for QS[11],
-whose key is (1, -2); t6-002: the old Next, a plain onclick); each must FAIL naming its item.
+Explanations (SWEEP-1 batch 11). Each "Row n" worked equation is proportional to row n of A - lambda I (a wrong row label
+fails, and so does an all-zero row used as the working row). The misconception texts (mc) are recomputed: a "diagonal
+matrices" claim must say multiples and different entries, and the matrix must be diagonal with different entries; the
+dot product quoted for orthogonal eigenvectors is recomputed, both vectors being eigenvectors for different
+eigenvalues of a symmetric A; "A + |lambda|I" needs a negative lambda. The start screen's worked example is parsed
+(A - 5I, row 1, x = 2y, v = (2, 1) an eigenvector) and its advice must say to choose a row that is not all zeros and
+that a row giving x = 0 or y = 0 fixes that variable.
+
+A self-test plants five faults back (t6-001: the old QS[16]; f0-005-style: (-1, 2) offered as wrong for QS[11],
+whose key is (1, -2); t6-002: the old Next, a plain onclick; the old QS[4] mc text; a wrong row label on QS[4]; the old start-screen
+advice); each must FAIL naming its item.
 
     python scripts/verify-eigenvector-engine.py [--no-selftest] [--against FILE] [--katex-dir DIR]
 """
@@ -80,6 +89,80 @@ def equations(seg):
     return out
 
 
+def check_mc(fails, i, q, A):
+    """The misconception text's own claims, recomputed."""
+    mc = (q.get('mc') or '').replace('\u2212', '-')
+    if 'standard basis' in mc or 'diagonal' in mc:
+        diag = A[0, 1] == 0 and A[1, 0] == 0
+        if not diag or A[0, 0] == A[1, 1]:
+            fails.append('%s mc: %r speaks of a diagonal matrix with different entries; A = %s' % (
+                where(i), mc, A.tolist()))
+        if 'standard basis' in mc and not ('multiples' in mc and 'different' in mc):
+            fails.append('%s mc: %r: the standard basis vectors only up to scaling, and only when the diagonal '
+                         'entries are different' % (where(i), mc))
+    if 'A + |' in mc and q['lam'] >= 0:
+        fails.append('%s mc: %r speaks of a negative lambda; lambda = %s' % (where(i), mc, q['lam']))
+    dm = re.search(r'\((-?\d+),\s*(-?\d+)\)\s*\u00b7\s*\((-?\d+),\s*(-?\d+)\)\s*=\s*(-?\d+)', mc)
+    if dm:
+        a1, a2, b1, b2, claim = (int(z) for z in dm.groups())
+        u, v = sp.Matrix([a1, a2]), sp.Matrix([b1, b2])
+        if a1 * b1 + a2 * b2 != claim:
+            fails.append('%s mc: %r: the dot product is %d' % (where(i), mc, a1 * b1 + a2 * b2))
+        if A != A.T:
+            fails.append('%s mc: %r: A is not symmetric' % (where(i), mc))
+        lams = []
+        for w in (u, v):
+            Aw = A * w
+            lam_w = [t for t in (sp.Rational(Aw[k], w[k]) for k in range(2) if w[k] != 0)]
+            if not parallel(Aw, w) or len(set(lam_w)) != 1:
+                fails.append('%s mc: %r: %s is not an eigenvector of A' % (where(i), mc, list(w)))
+            else:
+                lams.append(lam_w[0])
+        if len(lams) == 2 and lams[0] == lams[1]:
+            fails.append('%s mc: %r: the two vectors share the eigenvalue %s' % (where(i), mc, lams[0]))
+
+
+def check_page(fails, html):
+    """The start screen's worked example and its advice."""
+    m = re.search(r'function buildExample\(\)\{(.*?)\n\}', html, re.S)
+    if not m:
+        fails.append('start screen: buildExample not found')
+        return
+    src = m.group(1).replace('\\\\', '\\')
+    mats = [sp.Matrix(2, 2, [int(z) for z in g]) for g in MAT.findall(src)]
+    vecs = [sp.Matrix([int(a), int(b)]) for a, b in VEC.findall(src)]
+    lm = re.search(r'\\lambda = (-?\d+)', src)
+    if len(mats) != 2 or not vecs or not lm:
+        fails.append('start screen: the worked example is not a matrix, a lambda, A - lambda I and a vector')
+        return
+    A, M1 = mats
+    lam = int(lm.group(1))
+    if M1 != A - lam * sp.eye(2):
+        fails.append('start screen: A - %dI is not %s for A = %s' % (lam, M1.tolist(), A.tolist()))
+    v = vecs[-1]
+    if (A - lam * sp.eye(2)) * v != sp.zeros(2, 1):
+        fails.append('start screen: %s is not an eigenvector of %s for lambda = %d' % (list(v), A.tolist(), lam))
+    em = re.search(r'Take row 1:<br>.*?\$\{rkI\(\'(.*?)\'\)\}', src)
+    if em:
+        eqs = equations(em.group(1))
+        row = M1.row(0)
+        for lhs, rhs in eqs:
+            d = sp.expand(lhs - rhs)
+            co = (d.coeff(X, 1), d.coeff(Y, 1))
+            if row[0] * co[1] - row[1] * co[0] != 0 or co == (0, 0):
+                fails.append('start screen: %r is not row 1 of A - %dI' % (lhs - rhs, lam))
+            if sp.simplify((lhs - rhs).subs({X: v[0], Y: v[1]})) != 0:
+                fails.append('start screen: the example line does not hold at %s' % list(v))
+        if not eqs:
+            fails.append('start screen: no row-1 equation read')
+    else:
+        fails.append('start screen: no "Take row 1" line')
+    note = re.sub(r'\s+', ' ', src)
+    if 'not all zeros' not in note or 'that variable is fixed' not in note:
+        fails.append('start screen: the advice "you only need ONE row" must say to choose a row that is not all '
+                     'zeros and that a row giving x = 0 or y = 0 fixes that variable')
+
+
 def check_bank(fails, qs):
     for i, q in enumerate(qs):
         A = sp.Matrix(q['m'])
@@ -121,6 +204,22 @@ def check_bank(fails, qs):
                 for lhs, rhs in equations(seg):
                     if sp.simplify((lhs - rhs).subs({X: c[0], Y: c[1]})) != 0:
                         fails.append('%s: the worked line %r does not hold at the key %s' % (where(i), st, list(c)))
+        for st in steps[1:-1]:
+            rm = re.match(r'\s*Row (\d)\b', st)
+            if not rm or int(rm.group(1)) not in (1, 2):
+                continue
+            row = M.row(int(rm.group(1)) - 1)
+            if row == sp.zeros(1, 2):
+                fails.append('%s Row: %r works from row %s of A - lambda I, which is all zeros' % (
+                    where(i), st, rm.group(1)))
+            for seg in maths(st):
+                for lhs, rhs in equations(seg):
+                    d = sp.expand(lhs - rhs)
+                    co = (d.coeff(X, 1), d.coeff(Y, 1))
+                    if row[0] * co[1] - row[1] * co[0] != 0 or co == (0, 0) or d.subs({X: 0, Y: 0}) != 0:
+                        fails.append('%s Row: %r is not row %s of A - lambda I = %s' % (
+                            where(i), st, rm.group(1), list(row)))
+        check_mc(fails, i, q, A)
         if 'orthogonal' in (q.get('mc') or '') and 'different eigenvalues' not in q['mc']:
             fails.append('%s: %r: orthogonal only for different eigenvalues (eigenvector-engine-t6-005)' % (
                 where(i), q['mc']))
@@ -294,6 +393,15 @@ PLANTS = [
     ('Next', 't6-002: the old Next (a plain onclick)',
      "html+='<div id=\"nextMount\"></div>';",
      "html+='<button class=\"next-btn\" onclick=\"closeSol()\">Got it — next</button>';"),
+    ('QS[4] mc', 'SWEEP-1: the old QS[4] mc text',
+     "eigenvectors are multiples of e\u2081 and e\u2082 when the diagonal entries are different.",
+     "eigenvectors are the standard basis vectors e\u2081 and e\u2082."),
+    ('QS[4] Row', 'SWEEP-1: a wrong row label on QS[4]',
+     "Row 2: \\\\(-3y = 0", "Row 1: \\\\(-3y = 0"),
+    ('start screen', 'SWEEP-1: the old start-screen advice',
+     "You only need ONE row: choose a row that is not all zeros. Let one variable = 1 and solve for the other; if a "
+     "row gives x = 0 or y = 0, that variable is fixed.",
+     "You only need ONE row. Let one variable = 1 and solve for the other."),
 ]
 
 
@@ -310,6 +418,7 @@ def main():
     qs = play(fails, html)
     if qs:
         check_bank(fails, qs)
+    check_page(fails, html)
     print('%s: every key an eigenvector, no option a multiple of one or of another, working recomputed, every option '
           'clicked' % SLUG)
     ok = True
@@ -323,6 +432,7 @@ def main():
             planted = play(rep, html.replace(old, new))
             if planted:
                 check_bank(rep, planted)
+            check_page(rep, html.replace(old, new))
             hit = [f for f in rep if f.startswith(prefix)]
             ok = ok and bool(hit)
             print('  self-test %-44s %s' % (what, ('caught: ' + hit[0][:100]) if hit else '*** MISSED ***'))
