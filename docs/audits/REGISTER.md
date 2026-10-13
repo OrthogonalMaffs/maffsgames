@@ -11,21 +11,21 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 1 | Every live game has a verifier in CI | met: 0 of 96 live games have none (computed from `games/` and the verifiers CI runs) |
 | 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 3 open (0 CRITICAL, 3 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, SR-14 fields |
-| 4 | Every level serves 40+ (tracked, not part of the gate: canon §0.2, Jon 12 Oct 2026) | not met, not gating: 112 audited levels serve under 40 (games no audit has covered are not measured) |
+| 4 | Every level serves 40+ (tracked, not part of the gate: canon §0.2, Jon 12 Oct 2026) | not met, not gating: 115 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | met: 0 in the roster's Unlisted section |
 | 6 | One sweep of the verified games for true wrong options and unstated conventions | NOT MET (stated) |
 
 ## Counts
 
-751 findings in 89 games.
+755 findings in 90 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 28 | 0 | 29 |
 | HIGH | 10 | 212 | 0 | 222 |
-| MEDIUM | 155 | 194 | 3 | 352 |
+| MEDIUM | 157 | 196 | 3 | 356 |
 | LOW | 105 | 42 | 1 | 148 |
-| **All** | 271 | 476 | 4 | 751 |
+| **All** | 273 | 478 | 4 | 755 |
 
 ### By class
 
@@ -35,8 +35,8 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 3 | 5 | 86 |
 | 6 | 24 | 56 |
 | NEW:wrong-explanation-text | 14 | 49 |
-| NEW:convention-unstated | 25 | 47 |
-| NEW:text-contradicts-content | 32 | 38 |
+| NEW:convention-unstated | 25 | 48 |
+| NEW:text-contradicts-content | 34 | 41 |
 | NEW:wording | 35 | 38 |
 | 1 | 5 | 37 |
 | 5 | 26 | 26 |
@@ -171,6 +171,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `glorious-gantt` | unlisted | none | 1 | 7 | 4 | 1 | 13 | 0 | 0 |
 | `gradient-hunter` | yes | verify-gradient-hunter.py | 1 | 0 | 5 | 1 | 2 | 5 | 0 |
 | `graph-transformer` | yes | verify-graph-transformer.py | 0 | 0 | 3 | 3 | 2 | 4 | 0 |
+| `growth-and-decay` | yes | verify-growth-and-decay.py | 0 | 0 | 4 | 0 | 2 | 2 | 0 |
 | `higher-power` | yes | verify-higher-power.py | 0 | 1 | 6 | 1 | 6 | 2 | 0 |
 | `index-laws` | yes | verify-index-laws.py | 0 | 0 | 3 | 1 | 1 | 2 | 1 |
 | `integration-duel` | yes | verify-integration-duel.py | 0 | 2 | 7 | 1 | 1 | 9 | 0 |
@@ -245,13 +246,13 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Live games no audit has covered
 
-9 of 97 live games: `chart-interrogator`, `core-maths-paper2a`, `graph-sketcher`, `growth-and-decay`, `just-pythag-it-bruv`, `normal-navigator`, `stat-attack`, `tax-theft`, `test-the-claim`
+8 of 97 live games: `chart-interrogator`, `core-maths-paper2a`, `graph-sketcher`, `just-pythag-it-bruv`, `normal-navigator`, `stat-attack`, `tax-theft`, `test-the-claim`
 
 ## Exit bar detail
 
 **1. No verifier in CI (0):** 
 
-**4. Audited levels serving under 40 (112):** 52dle all (20 in rotation), angle-ace gcse (35), better-value gcse (20), binomial-blaster alevel (20), binomial-blaster alevel2 (20), characteristic-quest further (15), complex-converter further (20), complex-converter level4 (20), component-crusher gcse (38), component-crusher alevel (32), component-crusher level4 (34), constructions-lab all (10/10), constructions-lab ks3 (10/10), constructions-lab gcse (10/10), coordinate-geometry-dash gcse (24), coordinate-geometry-dash alevel (21), core-maths-paper1 core (36), core-maths-paper2b core (36), core-maths-paper2c core (36), correlation-or-coincidence all (13), curling-friction alevel (20), curling-friction level4 (20), differentiation-duel alevel (14), differentiation-duel level4 (14), dimension-checker level4 (20), dimension-checker alevel (20), eigenvalue-extractor further (15), eigenvector-engine further (15), estimation-golf year6 (9/20), estimation-golf ks3 (9/9), estimation-golf gcse (9/9), estimation-golf alevel (9/9), estimation-golf level4 (9/9), expectation-station core (20), expectation-station gcse (15), expectation-station alevel (10), expected-damage ks3 (15), expected-damage gcse (20), expected-damage core (15), factor-race year6 (10/20), force-resolver alevel (20), force-resolver level4 (20), formula-forge gcse (29), formula-forge alevel (29), formula-forge level4 (16), formula-unlocked gcse (29), formula-unlocked alevel (25), formula-unlocked level4 (14), fraction-equivalence year6 (20), given-that gcse (25), given-that alevel (25), given-that core (20), given-that level4 (20), glorious-gantt core-a (4), glorious-gantt level4-a (4), glorious-gantt core-b (3), glorious-gantt level4-b (4), gradient-hunter gcse (15), gradient-hunter core (20), gradient-hunter alevel (10), graph-transformer gcse (25), graph-transformer alevel (25), integration-duel alevel (14), integration-duel level4 (14), maths-court ks3 (15), maths-court gcse (20), maths-court core (10), matrix-crunch further (20), matrix-crunch level4 (20), moments-master alevel (20), moments-master level4 (20), partial-fractions-duel alevel (20), partial-fractions-duel level4 (20), percentage-flip year6 (20), percentage-flip default (12), prime-factorisation all (8/28), prime-factorisation year6 (8/20), prisoners-dilemma ks3 (5), prisoners-dilemma gcse (7), prisoners-dilemma alevel (9), prisoners-dilemma core (7), probability-paradox all (38 (3 modes; Paradox mode 12)), proof-builder alevel (counter 15/25, sorter 8/8), proof-builder further (counter 15/35, sorter 8/11, induction 4/4), scale-factor-scaling gcse (38), scale-factor-scaling level4 (31), screening-room gcse (20), screening-room alevel (20), screening-room core (15), screening-room level4 (15), seven-bridges ks3 (25), seven-bridges gcse (25), seven-bridges alevel (25), shape-shifter year6-translation (10/15), shape-shifter year6-reflection (10/15), shape-shifter year6-rotation (10/15), simultaneous-solver gcse (stages 1-4: 48 each; stage 5: 40), spot-the-error ks3 (35), spot-the-error level4 (30), spot-the-muppet gcse (20), spot-the-muppet core (12), spot-the-muppet ks3 (18), suvat alevel (10), suvat level4 (8), terrible-advice gcse (20), terrible-advice core (12), terrible-advice ks3 (18), truth-will-set-you-free level4 (10), unit-converter alevel (38), wrong-on-the-internet gcse (20), wrong-on-the-internet core (10), wrong-on-the-internet ks3 (15)
+**4. Audited levels serving under 40 (115):** 52dle all (20 in rotation), angle-ace gcse (35), better-value gcse (20), binomial-blaster alevel (20), binomial-blaster alevel2 (20), characteristic-quest further (15), complex-converter further (20), complex-converter level4 (20), component-crusher gcse (38), component-crusher alevel (32), component-crusher level4 (34), constructions-lab all (10/10), constructions-lab ks3 (10/10), constructions-lab gcse (10/10), coordinate-geometry-dash gcse (24), coordinate-geometry-dash alevel (21), core-maths-paper1 core (36), core-maths-paper2b core (36), core-maths-paper2c core (36), correlation-or-coincidence all (13), curling-friction alevel (20), curling-friction level4 (20), differentiation-duel alevel (14), differentiation-duel level4 (14), dimension-checker level4 (20), dimension-checker alevel (20), eigenvalue-extractor further (15), eigenvector-engine further (15), estimation-golf year6 (9/20), estimation-golf ks3 (9/9), estimation-golf gcse (9/9), estimation-golf alevel (9/9), estimation-golf level4 (9/9), expectation-station core (20), expectation-station gcse (15), expectation-station alevel (10), expected-damage ks3 (15), expected-damage gcse (20), expected-damage core (15), factor-race year6 (10/20), force-resolver alevel (20), force-resolver level4 (20), formula-forge gcse (29), formula-forge alevel (29), formula-forge level4 (16), formula-unlocked gcse (29), formula-unlocked alevel (25), formula-unlocked level4 (14), fraction-equivalence year6 (20), given-that gcse (25), given-that alevel (25), given-that core (20), given-that level4 (20), glorious-gantt core-a (4), glorious-gantt level4-a (4), glorious-gantt core-b (3), glorious-gantt level4-b (4), gradient-hunter gcse (15), gradient-hunter core (20), gradient-hunter alevel (10), graph-transformer gcse (25), graph-transformer alevel (25), growth-and-decay core (15), growth-and-decay alevel (15), growth-and-decay level4 (15), integration-duel alevel (14), integration-duel level4 (14), maths-court ks3 (15), maths-court gcse (20), maths-court core (10), matrix-crunch further (20), matrix-crunch level4 (20), moments-master alevel (20), moments-master level4 (20), partial-fractions-duel alevel (20), partial-fractions-duel level4 (20), percentage-flip year6 (20), percentage-flip default (12), prime-factorisation all (8/28), prime-factorisation year6 (8/20), prisoners-dilemma ks3 (5), prisoners-dilemma gcse (7), prisoners-dilemma alevel (9), prisoners-dilemma core (7), probability-paradox all (38 (3 modes; Paradox mode 12)), proof-builder alevel (counter 15/25, sorter 8/8), proof-builder further (counter 15/35, sorter 8/11, induction 4/4), scale-factor-scaling gcse (38), scale-factor-scaling level4 (31), screening-room gcse (20), screening-room alevel (20), screening-room core (15), screening-room level4 (15), seven-bridges ks3 (25), seven-bridges gcse (25), seven-bridges alevel (25), shape-shifter year6-translation (10/15), shape-shifter year6-reflection (10/15), shape-shifter year6-rotation (10/15), simultaneous-solver gcse (stages 1-4: 48 each; stage 5: 40), spot-the-error ks3 (35), spot-the-error level4 (30), spot-the-muppet gcse (20), spot-the-muppet core (12), spot-the-muppet ks3 (18), suvat alevel (10), suvat level4 (8), terrible-advice gcse (20), terrible-advice core (12), terrible-advice ks3 (18), truth-will-set-you-free level4 (10), unit-converter alevel (38), wrong-on-the-internet gcse (20), wrong-on-the-internet core (10), wrong-on-the-internet ks3 (15)
 
 **5. Unlisted (0):** none
 
