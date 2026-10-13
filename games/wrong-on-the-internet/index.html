@@ -329,9 +329,9 @@ ks3: [
 },
 {
   id:'woti_ks3_007',level:'ks3',topic:'Gambler\'s Fallacy',postType:'thread',
-  post:{username:'@ProbabilityPete',text:'I\'ve flipped heads 7 times in a row. The next flip MUST be tails. The coin owes me.',likes:'3.4k',reshares:'890',comments:'1,234',
+  post:{username:'@ProbabilityPete',text:'I\'ve flipped a fair coin and got heads 7 times in a row. The next flip MUST be tails. The coin owes me.',likes:'3.4k',reshares:'890',comments:'1,234',
     replies:[{username:'@StatsMaven',text:'Each flip is independent. Still 50/50.'},{username:'@ProbabilityPete',text:'You don\'t understand balance. The universe needs balance.'}]},
-  stage1CorrectAnswer:'P(tails) = 0.5 always',stage1Options:['P(tails) = 0.5 always','P(tails) > 0.5','P(tails) = 1','Depends on coin'],
+  stage1CorrectAnswer:'P(tails) = 0.5 always',stage1Options:['P(tails) = 0.5 always','P(tails) > 0.5','P(tails) = 1','P(tails) < 0.5 (heads is on a streak)'],
   stage2Options:[
     {text:'The gambler\'s fallacy \u2014 a fair coin has no memory. Each flip is independent with P(heads)=P(tails)=0.5 regardless of previous results',correct:true},
     {text:'Pete is right that probability evens out over time',correct:false},
@@ -696,12 +696,12 @@ core: [
 },
 {
   id:'woti_core_004',level:'core',topic:'Compound Interest',postType:'viral',
-  post:{username:'@SavingsGuru',text:'Invest \u00a31000 at 5% for 20 years: \u00a31000\u00d71.05\u00d720=\u00a321,050. Retirement sorted!',likes:'12.4k',reshares:'4.5k',comments:'3,456',
+  post:{username:'@SavingsGuru',text:'Invest \u00a31000 at 5% compound interest for 20 years: \u00a31000\u00d71.05\u00d720=\u00a321,050. Retirement sorted!',likes:'12.4k',reshares:'4.5k',comments:'3,456',
     replies:[{username:'@FinanceMaths',text:'That\'s not how compound interest works...'},{username:'@SavingsGuru',text:'1000 times 1.05 times 20. What\'s hard about that?'}]},
   stage1CorrectAnswer:'\u00a31,000\u00d71.05\u00b2\u2070 = \u00a32,653',stage1Options:['\u00a31,000\u00d71.05\u00b2\u2070 = \u00a32,653','\u00a321,050','\u00a32,000','\u00a31,000\u00d71.05\u00d720 = \u00a321,050'],
   stage2Options:[
     {text:'Compound interest raises 1.05 to the POWER of 20 (\u00a32,653), not multiplied by 20 (\u00a321,050). The poster confused exponentiation with multiplication \u2014 a factor-of-8 error',correct:true},
-    {text:'The answer is \u00a32,000 using simple interest',correct:false},
+    {text:'The answer is \u00a32,000: 5% a year for 20 years doubles it',correct:false},
     {text:'The poster\'s calculation is a valid approximation',correct:false}],
   explanation:'Compound interest: A = P \u00d7 (1+r)\u207f = 1000 \u00d7 1.05\u00b2\u2070 = \u00a32,653. The poster multiplied instead of raising to a power.'
 },

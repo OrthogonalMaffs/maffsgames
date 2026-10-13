@@ -109,3 +109,36 @@ findings:
     equation in the advice and the keys). Fixed: £21,000 in the advice and the option'
   status: fixed
   pr: 155
+- id: spot-the-muppet-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: ks3
+  where: games/spot-the-muppet/index.html:263 (stm_ks3_008), :275 (stm_ks3_014)
+  summary: 'Two keys rest on what the advice never states: ks3_008''s 44% needs the second voucher to come off the reduced
+    price (both off the original gives 50%), and its option "you can only use one voucher at a time" is shop policy, not a
+    maths error (SR-4); ks3_014''s "P(tails) is always 0.5" needs a fair coin. Open (advice text)'
+  evidence: '"You''ve got a 20% off voucher and a 30% off voucher. Use them both together for 50% off."; "You''ve flipped
+    heads 5 times in a row." (SWEEP-1, batch 4)'
+  status: open
+- id: spot-the-muppet-s1-002
+  severity: MEDIUM
+  jc: true
+  class: NEW:sr14-content
+  level: core
+  where: games/spot-the-muppet/index.html:313 (stm_core_004)
+  summary: 'The title "Savings Maximisation Guru (No Relation to the Clown)" beside the name Penny Wise alludes to the
+    child-killing clown of It, in a humour field; the scan cannot see an allusion. Jon''s call (delete the parenthetical)'
+  evidence: 'SWEEP-1, batch 4 (terrible-advice core_004 has the same joke)'
+  status: open
+- id: spot-the-muppet-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: ks3, gcse, core
+  where: games/spot-the-muppet/index.html stm_gcse_006, stm_gcse_007, stm_core_009, start screen, stm_ks3_006
+  summary: 'Wording, open: gcse_006''s "add 5 to the last digit" (literally 2.9) is called "exactly right"; gcse_007 offers
+    12.5 twice; core_009 "Benny is wrong — … = 134 units" gives Benny''s own figure; the start screen says every character
+    is wrong though three GCSE keys are "… is actually correct"; ks3_006 "A recipe for 4 serves"'
+  evidence: 'SWEEP-1, batch 4'
+  status: open

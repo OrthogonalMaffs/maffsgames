@@ -64,3 +64,36 @@ findings:
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
     7 Oct'
   status: open
+- id: higher-power-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: ks3
+  where: games/higher-power/index.html ks3_35 (fact)
+  summary: 'The fact said "6 = 1 + 2 + 3. Its factors add up to itself.", which is false (the factors of 6 include 6 and
+    sum to 12) and teaches the definition wrongly. Fixed: "Its factors other than itself add up to 6."; the verifier checks
+    every perfect-number fact lists exactly its proper divisors'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
+- id: higher-power-s1-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: ks3
+  where: games/higher-power/index.html ks3_31
+  summary: '"Grains on chessboard (first half)" never states the rule (1 grain, doubling each square), and "first half"
+    could mean half the grains. Both readings beat every other KS3 card, so no answer is mis-marked. Label wording, open'
+  evidence: 'value "2^{32} − 1 ≈ 4.3 billion" (SWEEP-1, batch 4)'
+  status: open
+- id: higher-power-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: ks3, gcse, alevel
+  where: games/higher-power/index.html gcse_34, al_36, al_30, ks3_03, ks3_04, al_40, :574, :478
+  summary: 'Wording, open: "Largest Mersenne prime exponent" (largest known); al_36''s 1 − 1/e holds only for large n; al_30
+    gives 2^64 for the board''s total (2^64 − 1, as ks3_31 distinguishes); "A megabyte is 2 to the power 20 bytes" (a
+    mebibyte); "The four roots of unity" (fourth roots); a tie accepts either answer, never said; about 21 value displays
+    end "..." after a rounded digit. Also extends t2-003: pickRazorPair ignores the level at GCSE too'
+  evidence: 'SWEEP-1, batch 4'
+  status: open

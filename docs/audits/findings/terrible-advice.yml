@@ -120,3 +120,59 @@ findings:
     "Penny is wrong — the answer is £1,000 + 20 × £50 = £2,000", false for the compound interest the advice states'
   status: fixed
   pr: 160
+- id: terrible-advice-s1-001
+  severity: HIGH
+  jc: false
+  class: NEW:true-wrong-option
+  level: gcse, core
+  where: games/terrible-advice/index.html ta_gcse_008, ta_core_002
+  summary: 'The right conclusion offered as "X is correct — <conclusion>" and keyed wrong (the shape of t2-003): gcse_008
+    "Sharon is correct — the 650g is better value"; core_002 "Barry is correct — 750ml is better value". Fixed under
+    SR-16 as core_007 already reads: "… is correct in both method and answer"; gcse_008''s key no longer opens "Sharon is
+    wrong this time" before saying her answer is right. TRUE_OPTIONS pins the old texts'
+  evidence: 'gcse_008 key "Sharon is wrong this time — … The 650g is actually better value, so Sharon got lucky"
+    (SWEEP-1, batch 4)'
+  status: open
+- id: terrible-advice-s1-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:true-wrong-option
+  level: ks3, gcse
+  where: games/terrible-advice/index.html ta_ks3_017, ta_gcse_019
+  summary: 'A true equation offered as "X is wrong — <equation>": "3,400,000 = 0.34 × 10⁷" and "0.00057 = 57 × 10⁻⁵" are
+    both true; the fault is that they are not standard form, which the option never claimed. Fixed under SR-16: "… in
+    standard form, …"; TRUE_OPTIONS pins the old texts'
+  evidence: '"Professor Wren is wrong — 3,400,000 = 0.34 × 10⁷"; "Stella is wrong — 0.00057 = 57 × 10⁻⁵" (SWEEP-1, batch 4)'
+  status: open
+- id: terrible-advice-s1-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: gcse
+  where: games/terrible-advice/index.html ta_gcse_018 (key)
+  summary: 'The key ended "You multiply for AND, add for OR", a false rule (adding holds only for events that cannot both
+    happen; P(heads or 6) = 7/12, not 2/3), the class of t2-008. Fixed: "You multiply for AND, not add"; FALSE_RULES pins it'
+  evidence: 'key "… = 1/12 ≈ 0.083. You multiply for AND, add for OR" (SWEEP-1, batch 4)'
+  status: open
+- id: terrible-advice-s1-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: ks3
+  where: games/terrible-advice/index.html ta_ks3_014 (key)
+  summary: '"P(tails) is always 0.5" needs a fair coin, never stated (the marking holds). As spot-the-muppet ks3_014 and
+    wrong-on-the-internet ks3_007; open for Jon (advice or key text)'
+  evidence: 'advice "You''ve flipped heads 5 times in a row. The next flip is definitely tails…" (SWEEP-1, batch 4)'
+  status: open
+- id: terrible-advice-s1-005
+  severity: LOW
+  jc: true
+  class: NEW:wording
+  level: ks3, gcse, core
+  where: games/terrible-advice/index.html ta_ks3_008, ta_gcse_006, ta_gcse_007, ta_core_004, ta_core_009
+  summary: 'Wording, open: ks3_008''s "you can only use one voucher at a time" is shop policy, not a maths error (SR-4);
+    gcse_006''s "just add 5 to the last digit" (read literally, 2.9) is praised as "the right method"; gcse_007 offers 12.5
+    twice; core_004 writes £1,000 × 2.653 = £2,653 (£2,653.30); core_009 "£20,000 units"; core_004''s "PennyWise (No
+    Relation to the Clown)" alludes to a horror villain in a humour field (SR-14, Jon''s call)'
+  evidence: 'SWEEP-1, batch 4'
+  status: open

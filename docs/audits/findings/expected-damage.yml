@@ -49,3 +49,48 @@ findings:
     the leaderboard score, the "Optimal play would have hit N" figure and the closing claim "The students who scored
     closest to optimal were not luckier. They calculated." rest on this draw.'
   status: open
+- id: expected-damage-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: ks3, gcse, core
+  where: games/expected-damage/index.html:329 (start screen), :671 (hint)
+  summary: 'A track whose chances total under 100% has the rest as an escape hitting 0 Muppets, which is said only in a
+    tooltip after an escape. Two keys depend on it: ks3_014 (A certain 5; B 50% of 8, 30% of 2: 4.6, or 5.75 rescaled)
+    and gcse_016 (A certain 5; B 70% of 7, 20% of 0: 4.9, or 5.44). One line, open for Jon'
+  evidence: 'hint "⚠️ probability: 80%"; 23 of 50 items have a track under 1 (SWEEP-1, batch 4)'
+  status: open
+- id: expected-damage-s1-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:text-contradicts-content
+  level: ks3, gcse, core
+  where: games/expected-damage/index.html:812 (optRoll), :428, :442
+  summary: '"Optimal play would have hit N Muppets" comes from its own random roll, so a student who chose the higher E(X)
+    every time is told optimal play would have done differently, against the closing line "The students who scored
+    closest to optimal were not luckier. They calculated." Open (use the student''s own roll, or ΣE(X))'
+  evidence: 'const optRoll = Math.random(); (SWEEP-1, batch 4)'
+  status: open
+- id: expected-damage-s1-003
+  severity: MEDIUM
+  jc: true
+  class: NEW:sr14-content
+  level: core
+  where: games/expected-damage/index.html:539 (ed_core_004), :532 (ed_gcse_019), :522 (ed_gcse_010), the premise
+  summary: 'SR-14, for Jon: core_004''s four people "convinced the trolley is a sign" who "stand and welcome it" reads as
+    choosing to be hit, for laughs (tier a); gcse_019''s man walking into a lamppost and gcse_010''s trip are injury in
+    humour (tier b); and the premise itself (score by the pedestrians a trolley hits, animated knocked away) is outside
+    any ruling or allowlist'
+  evidence: '"There''s a 65% chance all four stand and welcome it." (SWEEP-1, batch 4)'
+  status: open
+- id: expected-damage-s1-004
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: ks3, gcse
+  where: games/expected-damage/index.html ed_gcse_007, ed_gcse_013, :333, :337
+  summary: 'Wording, open: gcse_007 and gcse_013 leave the central man out of the count (8 and 4 are defensible; keys
+    unchanged); the Foundation preview says "Certain vs single gamble" (ks3_010 has no certain track) and GCSE''s
+    "Two-outcome gambles" (gcse_003 has three). The resit audit''s F3-F7 never reached this file'
+  evidence: 'SWEEP-1, batch 4'
+  status: open
