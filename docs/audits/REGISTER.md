@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-683 findings in 86 games.
+704 findings in 86 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 27 | 0 | 28 |
 | HIGH | 10 | 212 | 0 | 222 |
-| MEDIUM | 140 | 180 | 3 | 323 |
-| LOW | 77 | 32 | 1 | 110 |
-| **All** | 228 | 451 | 4 | 683 |
+| MEDIUM | 143 | 185 | 3 | 331 |
+| LOW | 87 | 35 | 1 | 123 |
+| **All** | 241 | 459 | 4 | 704 |
 
 ### By class
 
@@ -34,32 +34,33 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 2 | 12 | 111 |
 | 3 | 5 | 86 |
 | 6 | 24 | 56 |
-| NEW:wrong-explanation-text | 13 | 43 |
-| NEW:convention-unstated | 22 | 38 |
+| NEW:wrong-explanation-text | 14 | 46 |
+| NEW:convention-unstated | 23 | 40 |
 | 1 | 5 | 37 |
-| NEW:text-contradicts-content | 26 | 29 |
+| NEW:text-contradicts-content | 27 | 31 |
+| NEW:wording | 27 | 28 |
 | 5 | 26 | 26 |
 | 4 | 5 | 22 |
-| NEW:wording | 20 | 21 |
 | 7 | 5 | 16 |
+| NEW:true-wrong-option | 7 | 15 |
 | NEW:value-equal distractors | 0 | 14 |
-| NEW:true-wrong-option | 6 | 13 |
+| NEW:precision-not-stated | 2 | 12 |
 | 8 | 3 | 11 |
-| NEW:precision-not-stated | 2 | 11 |
+| NEW:raw-tex-on-screen | 4 | 9 |
 | NEW:equal-value-options | 0 | 8 |
-| NEW:raw-tex-on-screen | 3 | 8 |
 | NEW:hand-typed explanation figure | 5 | 7 |
+| NEW:sr14-content | 2 | 7 |
 | NEW:ill-posed wording | 1 | 6 |
 | 11 | 0 | 5 |
 | NEW:board-mixes-session-lengths | 5 | 5 |
 | NEW:marking-by-structure | 0 | 5 |
 | NEW:phone-layout | 4 | 5 |
-| NEW:sr14-content | 2 | 5 |
 | B7 (ledgered) | 3 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
 | 9 | 1 | 3 |
 | NEW:level-content-mismatch | 2 | 3 |
 | NEW:phone-fold | 3 | 3 |
+| NEW:timer-policy | 1 | 3 |
 | NEW:wrong explanation | 0 | 3 |
 | uncounted | 0 | 3 |
 | NEW:analytics | 0 | 2 |
@@ -71,7 +72,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:hint-gives-answer | 1 | 2 |
 | NEW:key-ask mismatch | 0 | 2 |
 | NEW:prose-through-katex | 2 | 2 |
-| NEW:timer-policy | 0 | 2 |
 | NEW:unmarkable free text | 0 | 2 |
 | 10 | 0 | 1 |
 | NEW:a11y state | 0 | 1 |
@@ -177,7 +177,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `log-laws` | yes | verify-log-laws.py | 1 | 4 | 0 | 2 | 0 | 7 | 0 |
 | `maths-court` | yes | verify-maths-court.py | 0 | 1 | 4 | 1 | 3 | 3 | 0 |
 | `matrix-crunch` | yes | verify-matrix-crunch.py | 0 | 2 | 3 | 1 | 3 | 3 | 0 |
-| `modular-battle` | yes | verify-modular-battle.py | 0 | 0 | 3 | 1 | 3 | 1 | 0 |
+| `modular-battle` | yes | verify-modular-battle.py | 0 | 0 | 4 | 2 | 5 | 1 | 0 |
 | `moments-master` | yes | verify-moments-master.py | 1 | 8 | 4 | 2 | 2 | 13 | 0 |
 | `negative-number-line` | yes | verify-negative-number-line.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
 | `new-shapes` | yes | verify-new-shapes.py | 0 | 1 | 8 | 1 | 9 | 1 | 0 |
@@ -189,7 +189,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `probability-paradox` | yes | verify-probability-paradox.py | 1 | 4 | 5 | 1 | 0 | 11 | 0 |
 | `probability-pioneer` | yes | verify-probability-pioneer.py | 0 | 2 | 3 | 1 | 2 | 4 | 0 |
 | `proof-builder` | yes | verify-proof-builder.py | 2 | 14 | 7 | 1 | 3 | 21 | 0 |
-| `proportion-blaster` | yes | verify-proportion-blaster.py | 0 | 1 | 0 | 0 | 0 | 1 | 0 |
+| `proportion-blaster` | yes | verify-proportion-blaster.py | 0 | 1 | 1 | 2 | 2 | 2 | 0 |
 | `quadratic-factoriser` | yes | verify-quadratic-factoriser.py | 1 | 1 | 1 | 3 | 4 | 2 | 0 |
 | `scale-factor-scaling` | yes | verify-scale-factor-scaling.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
 | `screening-room` | yes | verify-screening-room.py | 1 | 4 | 10 | 2 | 1 | 15 | 1 |
@@ -200,15 +200,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `split-it` | yes | verify-split-it.py | 0 | 0 | 1 | 4 | 4 | 1 | 0 |
 | `spot-the-error` | yes | verify-spot-the-error.py | 0 | 14 | 6 | 3 | 4 | 19 | 0 |
 | `spot-the-muppet` | yes | verify-spot-the-muppet.py | 0 | 5 | 6 | 1 | 3 | 8 | 1 |
-| `standard-form-blitz` | yes | verify-standard-form-blitz.py | 0 | 0 | 1 | 0 | 0 | 1 | 0 |
-| `surd-simplifier` | yes | verify-surd-simplifier.py | 0 | 2 | 1 | 0 | 0 | 3 | 0 |
+| `standard-form-blitz` | yes | verify-standard-form-blitz.py | 0 | 0 | 2 | 3 | 2 | 3 | 0 |
+| `surd-simplifier` | yes | verify-surd-simplifier.py | 0 | 2 | 2 | 2 | 2 | 4 | 0 |
 | `suvat` | yes | verify-suvat.py | 1 | 3 | 6 | 1 | 1 | 10 | 0 |
 | `terrible-advice` | yes | verify-terrible-advice.py | 0 | 6 | 8 | 1 | 2 | 13 | 0 |
 | `the-perfect-prank` | yes | none | 0 | 0 | 2 | 1 | 3 | 0 | 0 |
 | `think-of-a-number` | yes | verify-think-of-a-number.py | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| `trig-identity-duel` | yes | verify-trig-identity-duel.py | 0 | 7 | 4 | 0 | 0 | 11 | 0 |
-| `trig-wars` | yes | verify-trig-wars.py | 1 | 1 | 4 | 0 | 0 | 6 | 0 |
-| `trig-worms` | yes | verify-trig-worms.py | 1 | 0 | 3 | 0 | 0 | 4 | 0 |
+| `trig-identity-duel` | yes | verify-trig-identity-duel.py | 0 | 7 | 4 | 2 | 2 | 11 | 0 |
+| `trig-wars` | yes | verify-trig-wars.py | 1 | 1 | 6 | 2 | 1 | 9 | 0 |
+| `trig-worms` | yes | verify-trig-worms.py | 1 | 0 | 5 | 1 | 2 | 5 | 0 |
 | `truth-buster` | yes | verify-truth-buster.py | 0 | 3 | 13 | 2 | 5 | 13 | 0 |
 | `truth-will-set-you-free` | yes | verify-truth-will-set-you-free.py | 1 | 1 | 2 | 2 | 1 | 5 | 0 |
 | `unit-converter` | yes | verify-unit-converter.py | 0 | 1 | 6 | 2 | 1 | 8 | 0 |
