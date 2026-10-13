@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-606 findings in 79 games.
+611 findings in 79 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 26 | 0 | 27 |
-| HIGH | 7 | 205 | 0 | 212 |
-| MEDIUM | 116 | 168 | 3 | 287 |
-| LOW | 47 | 32 | 1 | 80 |
-| **All** | 171 | 431 | 4 | 606 |
+| HIGH | 7 | 207 | 0 | 214 |
+| MEDIUM | 116 | 169 | 3 | 288 |
+| LOW | 49 | 32 | 1 | 82 |
+| **All** | 173 | 434 | 4 | 611 |
 
 ### By class
 
@@ -39,8 +39,8 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 5 | 26 | 26 |
 | 4 | 5 | 22 |
 | NEW:convention-unstated | 7 | 19 |
+| NEW:text-contradicts-content | 14 | 17 |
 | 7 | 5 | 16 |
-| NEW:text-contradicts-content | 12 | 14 |
 | NEW:value-equal distractors | 0 | 14 |
 | 8 | 3 | 11 |
 | NEW:precision-not-stated | 2 | 9 |
@@ -66,6 +66,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:cosmetic | 1 | 2 |
 | NEW:double-finish | 0 | 2 |
 | NEW:hidden-data | 0 | 2 |
+| NEW:hint-gives-answer | 1 | 2 |
 | NEW:key-ask mismatch | 0 | 2 |
 | NEW:prose-through-katex | 2 | 2 |
 | NEW:timer-policy | 0 | 2 |
@@ -84,7 +85,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:form-omitted-in-stem | 0 | 1 |
 | NEW:g not stated | 0 | 1 |
 | NEW:generator-drops-items | 1 | 1 |
-| NEW:hint-gives-answer | 1 | 1 |
 | NEW:hit-detection | 0 | 1 |
 | NEW:inconsistent premise | 1 | 1 |
 | NEW:keys-under-overlay | 0 | 1 |
@@ -115,6 +115,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:static friction wording | 0 | 1 |
 | NEW:tap-selects-wrong-option | 0 | 1 |
 | NEW:test repeats taught items | 1 | 1 |
+| NEW:true-wrong-option | 0 | 1 |
 | NEW:ui | 1 | 1 |
 | NEW:uncancelled-timer | 0 | 1 |
 | NEW:wrong hint | 0 | 1 |
@@ -146,7 +147,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `dimension-checker` | yes | verify-dimension-checker.py | 0 | 3 | 3 | 1 | 1 | 6 | 0 |
 | `eigenvalue-extractor` | yes | verify-eigenvalue-extractor.py | 0 | 1 | 3 | 1 | 4 | 1 | 0 |
 | `eigenvector-engine` | yes | verify-eigenvector-engine.py | 1 | 1 | 2 | 8 | 1 | 11 | 0 |
-| `equation-builder` | yes | verify-equation-builder.py | 1 | 1 | 3 | 0 | 0 | 5 | 0 |
+| `equation-builder` | yes | verify-equation-builder.py | 1 | 3 | 4 | 2 | 2 | 8 | 0 |
 | `equatle` | yes | verify-equatle.py | 0 | 0 | 2 | 0 | 2 | 0 | 0 |
 | `estimation-engine` | yes | verify-estimation-engine.py | 0 | 1 | 3 | 0 | 0 | 4 | 0 |
 | `estimation-golf` | yes | verify-estimation-golf.py | 0 | 2 | 4 | 4 | 8 | 2 | 0 |
