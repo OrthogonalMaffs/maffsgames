@@ -210,11 +210,12 @@ L = [
     ('When Q = 2, P = 12. When Q = 4, P = 48.', [N(2)]),
 ]
 TARGETS = {'gcse': G, 'alevel': L}
-# The words in the ask each target reads (the stem's numbers are pinned above).
+# The words in the ask each target reads (the stem's numbers are pinned above). gcse[16] and gcse[21] find x from x²:
+# the ask states x > 0, the root the key takes (SR-17; proportion-blaster-s1-001).
 ASKS = {('gcse', 0): 'Find k', ('gcse', 1): 'x = 8', ('gcse', 2): 'y = 25', ('gcse', 5): '7 kg', ('gcse', 6): 'x = 5',
         ('gcse', 7): 't = 7', ('gcse', 9): 'y = 6', ('gcse', 10): 'Q = 12', ('gcse', 11): 'x = 0.5',
-        ('gcse', 14): 'x = 5', ('gcse', 15): 'x = 6', ('gcse', 16): 'y = 100', ('gcse', 17): 'v = 5',
-        ('gcse', 19): 'x = 4', ('gcse', 20): 'r = 10', ('gcse', 21): 'y = 50', ('gcse', 23): 'x = 10',
+        ('gcse', 14): 'x = 5', ('gcse', 15): 'x = 6', ('gcse', 16): 'y = 100 (x > 0)', ('gcse', 17): 'v = 5',
+        ('gcse', 19): 'x = 4', ('gcse', 20): 'r = 10', ('gcse', 21): 'y = 50 (x > 0)', ('gcse', 23): 'x = 10',
         ('gcse', 25): 'x = 9', ('gcse', 26): 'y = 4', ('gcse', 27): 't = 6', ('gcse', 28): 'x = 8',
         ('gcse', 29): 'y = 6', ('gcse', 30): 'V = 10', ('gcse', 32): 'x = 4', ('gcse', 33): 'x = 3',
         ('gcse', 34): 'larger', ('gcse', 35): 'smaller', ('gcse', 36): 'larger', ('gcse', 37): 'girls',
@@ -333,6 +334,8 @@ PLANTS = [
      "d:['10','\\\\dfrac{100}{36}','25']", "d:['10','\\\\dfrac{100}{36}','\\\\sqrt{100}']"),
     ('gcse[45]', 'F4: 10 : 8 : 6 beside 5 : 4 : 3',
      "d:['5 : 4 : 3','5 : 8 : 3','5 : 12 : 3']", "d:['5 : 4 : 3','5 : 8 : 3','10 : 8 : 6']"),
+    ('gcse[21]', 's1-001: x from x² with x > 0 unstated',
+     "ask:'Find x when y = 50 (x > 0)'", "ask:'Find x when y = 50'"),
 ]
 
 

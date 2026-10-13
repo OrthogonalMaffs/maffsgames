@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Trig Wars (each side scores its own hits; the trig panel's numbers agree; hits found along the path; miss advice true by the physics) |
+# ci-line: Trig Wars (each side scores its own hits; the trig panel's numbers agree; hits found along the path; miss advice true by the physics; briefing and SR-14 text) |
 """Trig Wars: scoring by side, the trig panel, hit detection and the miss advice, against the game's own physics.
 
 Trig Wars is an artillery game (canvas, two sides of three tanks, turns). It has no question bank; what a student is
@@ -21,9 +21,13 @@ through the controls both the old and the fixed page share (the sliders, FIRE, c
   Miss advice (t2-004): every change the message suggests (steeper or shallower angle, more or less power) must,
     for some step of 1 to 8, land nearer the nearest enemy (or hit), by the physics; checked over angles either side
     of 45 degrees and shells stopped by the hill.
-  SR-14 (t2-006): the four lines the audit named are gone.
+  SR-14 (t2-006): the four lines the audit named are gone. SWEEP-1 (Jon, 13 Oct 2026): no skull on a hit line
+    (s1-003) and no friendly-fire jokes (s1-004); hits and misses near your own tanks are said plainly.
+  The briefing (s1-001): 45 degrees gives maximum range on level ground only, and raising the angle does not
+    always trade distance for height (below 45 degrees it gains both).
 A self-test plants three of the audit's faults back into a copy of the page (t2-001 the shared score, t2-002 the
-0.28 in the panel, t2-003 the ground tested first); each must FAIL naming its entry.
+0.28 in the panel, t2-003 the ground tested first) and the sweep's text back (s1-001, s1-003, s1-004); each must
+FAIL naming its entry.
 
     python scripts/verify-trig-wars.py [--no-selftest] [--against FILE]
 """
@@ -170,6 +174,29 @@ ADVICE = [
     (r'less power', (0, -1)),
 ]
 SR14 = ['shooting yourself', 'did themselves in', 'WE LOST ONE', "'💀 DOWN!'"]
+# SWEEP-1 (Jon's ruling, 13 Oct 2026): the skull on a hit line, and the friendly-fire jokes.
+SR14_S1 = [('trig-wars-s1-003', '☠'), ('trig-wars-s1-003', 'ELIMINATED'),
+           ('trig-wars-s1-004', 'Friendly fire'), ('trig-wars-s1-004', 'BLUE ON BLUE'),
+           ('trig-wars-s1-004', 'idiot'), ('trig-wars-s1-004', 'filing a complaint'),
+           ('trig-wars-s1-004', 'Yikes'), ('trig-wars-s1-004', 'Smooth.')]
+
+
+def text_fails(html):
+    """The page's words: SR-14 (t2-006, s1-003, s1-004) and the briefing's range rule (s1-001)."""
+    fails = []
+    for s in SR14:
+        if s in html:
+            fails.append('trig-wars-t2-006 (SR-14): the page still says %r' % s)
+    for tag, s in SR14_S1:
+        if s in html:
+            fails.append('%s (SR-14): the page still says %r' % (tag, s))
+    if 'trade distance for height' in html:
+        fails.append('trig-wars-s1-001: the briefing says raising the angle trades distance for height (below 45 '
+                     'degrees a steeper shot goes further too)')
+    if re.search(r'45&deg; gives\s+maximum range', html) and not re.search(r'level ground, 45&deg; gives', html):
+        fails.append('trig-wars-s1-001: the briefing says 45 degrees gives maximum range without "on level ground" '
+                     '(the hill moves the best angle)')
+    return fails
 
 # ── Chromium ──────────────────────────────────────────────────────────────────
 INIT = r"""(() => {
@@ -428,10 +455,7 @@ def check_advice(fails, page):
 def run(html):
     """[fail] for one copy of the page."""
     from playwright.sync_api import sync_playwright
-    fails = []
-    for s in SR14:
-        if s in html:
-            fails.append('trig-wars-t2-006 (SR-14): the page still says %r' % s)
+    fails = text_fails(html)
     proc, base = bc.start_stub_server()
     try:
         with sync_playwright() as pw:
@@ -473,6 +497,16 @@ PLANTS = [
     ('trig-wars-t2-003', 't2-003: the ground tested before the hit',
      'if(hit && tHit<=tGround) return', 'if(hit && tGround>1) return'),
 ]
+# The sweep's text, planted back: checked by text_fails alone (no battle needed).
+TEXT_PLANTS = [
+    ('trig-wars-s1-001', 's1-001: the old briefing',
+     'A steeper &theta; sends the shell higher. <span class="brief-key">On level ground, 45&deg; gives',
+     'Raise &theta; and you trade distance for height.\n      <span class="brief-key">45&deg; gives'),
+    ('trig-wars-s1-003', 's1-003: the skull hit line',
+     "const hitLines=['⚡ DIRECT HIT!',", "const hitLines=['⚡ DIRECT HIT!','☠ ELIMINATED!',"),
+    ('trig-wars-s1-004', 's1-004: a friendly-fire joke',
+     '"That landed in your own camp.",', '"General to command: \'Our idiot is shooting at us again.\'",'),
+]
 
 
 def main():
@@ -492,6 +526,14 @@ def main():
                 ok = False
                 continue
             hit = [f for f in run(html.replace(old, new)) if f.startswith(tag)]
+            ok = ok and bool(hit)
+            print('  self-test %-46s %s' % (what, ('caught: ' + hit[0][:110]) if hit else '*** MISSED ***'))
+        for tag, what, old, new in TEXT_PLANTS:
+            if html.count(old) != 1:
+                print('  self-test %-46s *** CANNOT PLANT ***' % what)
+                ok = False
+                continue
+            hit = [f for f in text_fails(html.replace(old, new)) if f.startswith(tag)]
             ok = ok and bool(hit)
             print('  self-test %-46s %s' % (what, ('caught: ' + hit[0][:110]) if hit else '*** MISSED ***'))
     for f in fails:

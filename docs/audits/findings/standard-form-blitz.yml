@@ -22,3 +22,39 @@ findings:
     any equal pair, with a plant that puts 25 x 10^2 back'
   status: fixed
   pr: 324
+- id: standard-form-blitz-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:precision-not-stated
+  level: alevel
+  where: 'games/standard-form-blitz/index.html:208 (alevel[30])'
+  summary: 'An approximate key with no precision stated (SR-1: multiple-choice answers state their precision too). Fixed: the ask says "(nearest whole number)"; the verifier fails any approximate key whose question states no precision, and plants the old ask'
+  evidence: '"Earth mass: 6 × 10^24 kg. Moon mass: 7.3 × 10^22 kg." | "How many times heavier is Earth?" key "≈ 82" (82.19…), options ≈ 8.2, ≈ 820, ≈ 46 (SWEEP-1, batch 6)'
+  status: open
+- id: standard-form-blitz-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:true-wrong-option
+  level: alevel
+  where: 'games/standard-form-blitz/index.html:204 (alevel[26])'
+  summary: 'A distractor made two errors at once (SR-4: from a nameable error): 2 × 10^3 is the inverse with its sign also lost. Fixed: 2 × 10^-3, the inverse (speed ÷ distance); the verifier pins the named error'
+  evidence: '"Distance to Sun: 1.5 × 10^11 m. Speed of light: 3 × 10^8 m/s." | "Time for light to reach Earth (s)" key 5 × 10^2, d 5 × 10^3, 4.5 × 10^19, 2 × 10^3 (SWEEP-1, batch 6)'
+  status: open
+- id: standard-form-blitz-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: alevel
+  where: 'games/standard-form-blitz/index.html:205, :216'
+  summary: 'Where the ask says "to 3 s.f.", a distractor written to 1 s.f. is ruled out by its form alone'
+  evidence: ':205 key 5.99 × 10^26 beside 6 × 10^25; :216 key 1.39 × 10^3 beside 9 × 10^2 and 3 × 10^3 (SWEEP-1, batch 6)'
+  status: open
+- id: standard-form-blitz-s1-004
+  severity: LOW
+  jc: true
+  class: NEW:convention-unstated
+  level: alevel
+  where: 'games/standard-form-blitz/index.html (A-Level level); roster Calculator column'
+  summary: 'A-Level items need a calculator (3 s.f. quotients, cube roots) and the game is untagged (canon §4.4, Jon''s call)'
+  evidence: ':216 "(2.7 × 10^9)^{1/3}" to 3 s.f.; roster: standard-form-blitz untagged (SWEEP-1, batch 6)'
+  status: open

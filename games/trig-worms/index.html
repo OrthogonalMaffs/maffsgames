@@ -216,10 +216,13 @@ function questionFrom(type, angle, hyp, ratio){
     else { g1=opp; g2=adj; n1='opposite'; n2='adjacent'; fn='tan'; theta=toDeg(Math.atan(opp/adj)); labels={O:'O='+opp,A:'A='+adj}; }
     correct=deg(theta);
     const r=g1/g2, small=Math.min(g1,g2)/Math.max(g1,g2);
+    // O > A: sin⁻¹(O/A) and cos⁻¹(O/A) have no value, so the slip that gives these angles also turned the ratio
+    // over, and its name says so (trig-worms-s1-002).
+    const over = g1 > g2 ? '(A/O) instead of tan⁻¹(O/A)' : ' instead of tan⁻¹';
     named = ratio==='TOA'
       ? [['ratio upside down: tan⁻¹(A/O)', toDeg(Math.atan(g2/g1))],
-         ['sin⁻¹ instead of tan⁻¹', toDeg(Math.asin(small))],
-         ['cos⁻¹ instead of tan⁻¹', toDeg(Math.acos(small))]]
+         ['sin⁻¹'+over, toDeg(Math.asin(small))],
+         ['cos⁻¹'+over, toDeg(Math.acos(small))]]
       : [[(fn==='sin'?'cos':'sin')+'⁻¹ instead of '+fn+'⁻¹', toDeg(fn==='sin'?Math.acos(r):Math.asin(r))],
          ['tan⁻¹ instead of '+fn+'⁻¹', toDeg(Math.atan(r))],
          ['tan⁻¹ of the ratio upside down', toDeg(Math.atan(1/r))]];
