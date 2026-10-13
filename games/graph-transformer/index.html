@@ -105,6 +105,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
@@ -807,8 +808,7 @@ const finishGame=MaffsLock.finishOnce(function(){
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 
 // Init
-const pa=new URLSearchParams(location.search);
-if(pa.get('level')==='alevel'){level='alevel';document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level==='alevel'))}
+{const lv=MaffsLevel.resolve({slug:'graph-transformer',levels:['gcse','alevel'],fallback:'gcse'});if(lv!==level){level=lv;document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}}
 
 
 (function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();

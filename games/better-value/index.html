@@ -169,6 +169,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/session-length.js"></script>
@@ -1123,8 +1124,7 @@ explanation:'Reusable: \u00a315 upfront then free. Bottled: \u00a31 each. After 
 // ============================================================
 //  GAME STATE
 // ============================================================
-const params = new URLSearchParams(window.location.search);
-let currentLevel = params.get('level') || 'core';
+let currentLevel = MaffsLevel.resolve({slug:'better-value',levels:['gcse','core'],fallback:'core'});
 if (!QUESTIONS[currentLevel]) currentLevel = 'core';
 
 let sessionLength = 10;
