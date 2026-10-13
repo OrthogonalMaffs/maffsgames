@@ -9,7 +9,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | met: 0 of 96 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 5 open (0 CRITICAL, 5 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 4 open (0 CRITICAL, 4 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, SR-14 fields |
 | 4 | Every level serves 40+ (tracked, not part of the gate: canon §0.2, Jon 12 Oct 2026) | not met, not gating: 126 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | met: 0 in the roster's Unlisted section |
@@ -22,23 +22,23 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
-| HIGH | 12 | 225 | 0 | 237 |
-| MEDIUM | 244 | 252 | 3 | 499 |
-| LOW | 235 | 96 | 1 | 332 |
-| **All** | 492 | 607 | 4 | 1103 |
+| HIGH | 11 | 226 | 0 | 237 |
+| MEDIUM | 241 | 255 | 3 | 499 |
+| LOW | 231 | 100 | 1 | 332 |
+| **All** | 484 | 615 | 4 | 1103 |
 
 ### By class
 
 | Class | open | total |
 |---|---|---|
-| NEW:wording | 114 | 128 |
+| NEW:wording | 112 | 128 |
 | 2 | 12 | 111 |
-| NEW:text-contradicts-content | 64 | 90 |
+| NEW:text-contradicts-content | 63 | 90 |
 | 3 | 5 | 86 |
-| NEW:convention-unstated | 35 | 78 |
-| NEW:wrong-explanation-text | 26 | 71 |
+| NEW:convention-unstated | 33 | 78 |
+| NEW:wrong-explanation-text | 25 | 71 |
 | 6 | 24 | 56 |
-| NEW:true-wrong-option | 16 | 50 |
+| NEW:true-wrong-option | 15 | 50 |
 | NEW:verifier-gap | 49 | 49 |
 | 1 | 5 | 37 |
 | 5 | 27 | 27 |
@@ -46,7 +46,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:unstated-convention | 4 | 17 |
 | 7 | 5 | 16 |
 | NEW:precision-not-stated | 3 | 16 |
-| NEW:sr14-content | 10 | 15 |
+| NEW:sr14-content | 9 | 15 |
 | NEW:value-equal distractors | 0 | 14 |
 | 8 | 3 | 11 |
 | NEW:marking-tolerance | 2 | 11 |
@@ -192,7 +192,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `like-terms-collector` | yes | verify-like-terms-collector.py | 1 | 1 | 3 | 1 | 4 | 2 | 0 |
 | `linear-equation-solver` | yes | verify-linear-equation-solver.py | 1 | 1 | 3 | 4 | 5 | 4 | 0 |
 | `log-laws` | yes | verify-log-laws.py | 1 | 4 | 3 | 4 | 2 | 10 | 0 |
-| `maths-court` | yes | verify-maths-court.py | 0 | 1 | 7 | 4 | 9 | 3 | 0 |
+| `maths-court` | yes | verify-maths-court.py | 0 | 1 | 7 | 4 | 1 | 11 | 0 |
 | `matrix-crunch` | yes | verify-matrix-crunch.py | 0 | 2 | 7 | 6 | 9 | 6 | 0 |
 | `modular-battle` | yes | verify-modular-battle.py | 0 | 0 | 4 | 2 | 5 | 1 | 0 |
 | `moments-master` | yes | verify-moments-master.py | 1 | 9 | 9 | 4 | 5 | 18 | 0 |
@@ -242,10 +242,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 ### `new-shapes` (Year 6)
 
 - **HIGH** new-shapes-s1-001, `games/new-shapes/index.html:504 (renderParallelogram, hLabel left 168px), :583 (renderTrapezium, hLabel right 20px)`: The h label is not drawn on the dashed height line: on every parallelogram it sits over the slanted side (and hides it), and on every trapezium it straddles the slanted side, so it reads as the slant length, the very ...
-
-### `maths-court` (KS3, GCSE, Core)
-
-- **HIGH** maths-court-s1-004 (JC), `games/maths-court/index.html mc_gcse_001`: An argument that states a false rule is keyed correct: Brenda's "Division before multiplication" reaches 54, and the judge says "her understanding of the order within DM is muddled", yet tapping her scores. The court ...
 
 ### `spot-the-error` (KS3, GCSE, L4)
 
