@@ -96,3 +96,105 @@ findings:
   evidence: Found by the re-audit in the fix PR (scripts/verify-curling-friction.py); each ask now says (3 s.f.).
   status: fixed
   pr: 109
+- id: curling-friction-s1-001
+  severity: LOW
+  jc: false
+  class: NEW:equal-value-options
+  level: alevel
+  where: games/curling-friction/index.html:194 (alevel[41])
+  summary: 'Two wrong options, "Equal — 160 J each" and "160 J before, 160 J after", make the same claim, so the item
+    offered three distinct answers (SR-4). Fixed: "Equal — 160 J each" is now "40 J before, 40 J after" (KE taken as
+    ½mv, v not squared: ½·20·4 = 40, ½·40·2 = 40). The reviewer''s "160 J before, 40 J after — energy lost" was not
+    used: it gives the key''s verdict, energy lost (SR-31). The verifier now reads every option''s stated KE before and
+    after and fails two options that state the same pair; the old option is planted.'
+  evidence: 'Stone A (20 kg, 4 m/s) hits stationary B (20 kg). They stick together at 2 m/s. | KE before vs KE after |
+    160 J before, 80 J after — energy lost | Equal — 160 J each, 160 J before, 160 J after, 80 J before, 80 J after
+    (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 356
+- id: curling-friction-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:convention-unstated
+  level: alevel
+  where: games/curling-friction/index.html:152 (alevel[2])
+  summary: 'μ = F/R from a given friction force needs limiting friction (the stone sliding), which was not stated:
+    t5-006''s shape, in the ctx rather than the ask (SR-17). Fixed: "A 20 kg stone sliding across the ice experiences
+    ...". The verifier''s t5-006 guard now also covers a ctx that gives a friction force with an ask for μ; the old ctx
+    is planted.'
+  evidence: 'A 20 kg stone experiences a friction force of 5.88 N. g = 9.8 m/s². | Find μ | 0.03 | 0.3, 0.003, 3
+    (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 356
+- id: curling-friction-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:convention-unstated
+  level: alevel
+  where: games/curling-friction/index.html:171 (alevel[20])
+  summary: 'The key (μ = u²/2gs = 0.02) takes v = 0 at 22.5 m, which the item did not say (SR-17). Fixed: "travels
+    22.5 m before stopping". The verifier''s STATED list requires the phrase; the old ctx is planted.'
+  evidence: 'A stone launched at 3 m/s travels 22.5 m. g = 10. | Find μ | 0.02 | 0.04, 0.03, 0.01 (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 356
+- id: curling-friction-s1-004
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: alevel
+  where: games/curling-friction/index.html:161 (alevel[11])
+  summary: '"On a flat surface, for any object, R equals mg" is false when another vertical force acts (a push down, a
+    pull up). Fixed: "for an object with no other vertical forces acting" (SR-17; key unchanged). The verifier''s
+    STATED list requires the phrase; the old ctx is planted.'
+  evidence: 'On a flat surface, for any object, R equals... | Complete the statement | mg | \mu mg, ma, F (SWEEP-1,
+    batch 11)'
+  status: fixed
+  pr: 356
+- id: curling-friction-s1-005
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: all
+  where: games/curling-friction/index.html:179-185, 193, 199, 202, 208, 220, 224 (alevel 27, 28, 29, 31, 33, 40, 46,
+    48, 54; level4 7, 11)
+  summary: 'Elastic collisions (and those given an "After:" state or e) were keyed as one-dimensional without saying
+    so; in curling most hits are glancing, and then A does not stop and B does not take its speed. Only alevel[44] said
+    head-on. Fixed under SR-17: "head-on" added to each of the 11 items. The reviewer also listed alevel 30, 32, 41, 45
+    and level4 5, 10: not changed, because the stones stick together there, so the common velocity follows from
+    momentum at any angle and the key relies on no convention. The verifier now fails any ctx describing a collision
+    with speeds given whose answer needs one dimension (elastic, "After:" or separation; not stick or lock) that does
+    not say head-on, directly or along the line of centres; alevel[54]''s old ctx is planted.'
+  evidence: 'alevel[54]: A stone (20 kg, 4 m/s) collides with a stationary stone (20 kg). Elastic. The target stone
+    then decelerates at 0.3 m/s². | How far does the target stone travel? | \dfrac{16}{0.6} \approx 26.7 \text{ m} |
+    13.3 m, 40 m, 53.3 m; alevel[27]: Two identical stones. Stone A at 4 m/s hits stationary stone B. | In a perfectly
+    elastic collision with equal masses, what happens? | A stops, B moves at 4 m/s (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 356
+- id: curling-friction-s1-006
+  severity: LOW
+  jc: false
+  class: NEW:convention-unstated
+  level: level4
+  where: games/curling-friction/index.html:214, 215, 227, 231 (level4 1, 2, 14, 18)
+  summary: 'Four level4 items put a body "on a surface" never said to be horizontal, and the crate''s 60 N push was
+    never said to be horizontal; each key takes R = mg and the whole push along the surface (SR-17). Fixed: "horizontal
+    surface" in all four, and "pushed horizontally with 60 N". The verifier now fails a ctx with "surface" that does not
+    say horizontal (or flat) and a push or pull not said to be horizontal; the crate''s old ctx is planted.'
+  evidence: 'level4[18]: A 30 kg crate is pushed with 60 N on a surface where μ = 0.15, g = 10. | Find the acceleration |
+    0.5 m/s² | 2, 1.5, 0.15 m/s² (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 356
+- id: curling-friction-s1-007
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: all
+  where: scripts/verify-curling-friction.py; games/curling-friction/index.html:299-316 (showSolution)
+  summary: 'After SWEEP-1 the verifier still does not check that the "Using: <formula>" line fits each item (q is
+    free text, e.g. alevel[19] shows "Using: s = 25, a = 0.5"), nor that the ctx-driven conventions cover every
+    wording a new item may use (the collision and surface rules are keyword rules). The panel is headed "Worked
+    solution" but shows only the formula, the ctx and the key, no working (no item has steps): for Jon, as changing
+    the heading or adding steps is a UI and content choice.'
+  evidence: 'showSolution: <h3>Worked solution</h3>; Using: ${rkStr(q.q)}; ${q.ctx}; Correct answer: ${rkStr(q.correct)}
+    (SWEEP-1, batch 11)'
+  status: open

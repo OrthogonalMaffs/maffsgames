@@ -15,14 +15,25 @@ Keys. KEYS below holds, for every item with a numeric answer, the answer compute
 Options (SR-4, SR-16). No two options are equal in value (an option written as an expression, 25 root 3 N, is
   evaluated), and no distractor equals the key. Where this fix wrote a distractor (REASONS), it is recomputed from
   its named error.
-Claims. Every numeric equality or approximation written in a key or a working line holds; every "Same ..." item
-  quotes its predecessor's key.
+Claims. Every numeric equality or approximation written in a key or a working line holds. Every working line that
+  contains letters (T - mg = ma, m_B g = (m_A + m_B)a ...) is evaluated with the item's own data and its key bound to
+  its symbols (WORKING): each side of every = must be equal, and a working line with no = must equal the key; a lettered
+  working line with no WORKING entry fails. An item that follows another (CHAIN) quotes its predecessor's key and
+  restates every mass its predecessor gives, and no context refers to another item ("Same system ..."): startGame
+  shuffles the bank, so an item's words must stand alone (SR-17; force-resolver-s1-001).
+Conventions (SR-17). Each item in STATED names the convention its key relies on ("light", "horizontal beam",
+  "smooth table" ...; force-resolver-s1-002..007).
+Precision (SR-1, SR-17). Where a key is not the exact value of its own data at the precision it is shown to, the
+  ask or context states a precision ("to 3 s.f.", "to 1 d.p.") that the shown figure has (force-resolver-s1-008).
+Verdicts (SR-31). No wrong option gives the key's verdict (VERDICT items: no distractor starts with it).
 Chromium (390x844 and 320x568). Every option of every item is clicked through the game's own handler: the key is
   marked right; any other option is marked wrong, shows the answer and waits for the shared Next control (MaffsNext,
   canon 7.6). No raw TeX on screen; the page never scrolls sideways.
 
-A self-test plants two of the audit's own faults back (t5-002: the rope item keyed 1.79; t5-005: '50 cos 30 N' beside
-the key 25 root 3 N); each must FAIL naming its item.
+A self-test plants faults back, each of which must FAIL naming its item: two of the audit's own (t5-002: the rope item
+keyed 1.79; t5-005: '50 cos 30 N' beside the key 25 root 3 N), and SWEEP-1's old text (s1-001 the "Same system"
+context; s1-002 the beam without "light"; s1-005 the table without "smooth"; s1-008 the angle ask without its
+precision; a "Yes" distractor beside a "Yes" key; a wrong working line).
 
     python scripts/verify-force-resolver.py [--no-selftest] [--against FILE] [--katex-dir DIR] [--print-pins]
 """
@@ -122,8 +133,39 @@ VERDICT = {('alevel', 32): 'Yes', ('level4', 15): 'Yes'}
 
 CHAIN = {('alevel', 36): ('alevel', 35), ('alevel', 39): ('alevel', 38), ('level4', 11): ('level4', 10)}
 
+# The convention each key relies on, which its context must state (SR-17; SWEEP-1, 13 Oct 2026)
+STATED = {
+    ('level4', 17): ['light'],                                   # 294.3 N = mg/2 needs a weightless beam
+    ('level4', 0): ['horizontal beam'], ('level4', 1): ['horizontal beam'],
+    ('level4', 2): ['vertical wall', 'horizontal tie'],         # 2/cos 40: the arm 40 deg from vertical, a level tie
+    ('alevel', 39): ['smooth table'],                            # T = m_A a needs no friction on A
+    ('alevel', 51): ['horizontal force'],                        # friction = push needs the push horizontal
+    ('alevel', 33): ['only forces'],                             # R = mg cos theta needs no other force across it
+}
+
+# Working lines with letters: each symbol's value from the item's own data, the key's symbol bound to the key
+WORKING = {
+    ('alevel', 7): {'R': 10, 'F_x': 8, 'F_y': 6},
+    ('alevel', 8): {'\\theta': ATAN(R(6, 8)), 'F_x': 8, 'F_y': 6},
+    ('alevel', 12): {'F': 20, 'm': 5, 'a': 4}, ('alevel', 13): {'F': 6, 'm': 3, 'a': 2},
+    ('alevel', 14): {'F': 24, 'm': 3, 'a': 8},
+    ('alevel', 16): {'F_{net}': 10 * 1, 'F': 30, '\\mu': R(2, 10), 'm': 10, 'g': G10},
+    ('alevel', 18): {'T': 9600, 'm': 800, 'g': G10, 'a': 2}, ('alevel', 19): {'T': 6800, 'm': 800, 'g': G10, 'a': R(3, 2)},
+    ('alevel', 20): {'R': 756, 'm': 70, 'g': G98, 'a': 1},
+    ('alevel', 22): {'m': 5, 'g': G10, '\\theta': deg(30), '=': 25},
+    ('alevel', 23): {'m': 5, 'g': G10, '\\theta': deg(30), '=': 25 * SQRT(3)},
+    ('alevel', 24): {'a': 5, 'g': G10, '\\theta': deg(30)},
+    ('alevel', 26): {'F_{net}': KEYS[('alevel', 26)][0], 'm': 10, 'g': G10, '\\theta': deg(30), '\\mu': R(3, 10)},
+    ('alevel', 29): {'P': 56, 'm': 8, 'g': G10, 'a': 2},
+    ('alevel', 35): {'m_A': 3, 'm_B': 2, 'g': G10, 'a': 2}, ('alevel', 36): {'T': 24, 'm_B': 2, 'g': G10, 'a': 2},
+    ('alevel', 38): {'m_A': 4, 'm_B': 6, 'g': G10, 'a': 6}, ('alevel', 39): {'T': 24, 'm_A': 4, 'a': 6},
+    ('alevel', 40): {'m_A': 4, 'm_B': 6, 'g': G10, '\\mu': R(1, 4), 'a': 5},
+    ('alevel', 42): {'m_A': 2, 'm_B': 3, 'g': G10, 'a': 4},
+    ('level4', 11): {'T': 1450},
+}
+
 REVIEWED = {
-    ('alevel', 31): '9961b5b3', ('alevel', 33): '6259496e', ('alevel', 34): '3a70ffc8', ('alevel', 41): '8194136d',
+    ('alevel', 31): '9961b5b3', ('alevel', 33): '46ee4e26', ('alevel', 34): '3a70ffc8', ('alevel', 41): '8194136d',
     ('alevel', 43): '231e59e2', ('alevel', 48): '5ac7988b', ('alevel', 49): 'ea4371ce', ('level4', 16): 'd7cdb64c',
     ('level4', 19): 'c25764d0',
 }
@@ -210,6 +252,41 @@ def close(shown, exact, dec):
     return abs(sp.N(exact - shown, 30)) <= R(1, 2) * R(10) ** -dec + R(1, 10 ** 12)
 
 
+def working_value(tex, bind):
+    """A working line's side with letters -> SymPy, each symbol replaced by its value in `bind`; raises KeyError
+    naming a symbol with no value."""
+    s = tex.replace('\\left', '').replace('\\right', '').replace('\\,', ' ')
+    out = []
+    for tok in re.findall(r'\\[A-Za-z]+|[A-Za-z](?:_\{[^{}]*\}|_[A-Za-z0-9])?|.', s):
+        if tok in ('\\sin', '\\cos', '\\tan'):
+            out.append(' ' + tok[1:] + ' ')
+        elif tok == '\\arctan':
+            out.append(' atan ')
+        elif tok in ('\\sqrt', '\\dfrac', '\\frac'):
+            out.append(tok)
+        elif tok == '\\times':
+            out.append('*')
+        elif tok.startswith('\\') or tok[0].isalpha():
+            if tok not in bind:
+                raise KeyError(tok)
+            out.append('(%s)' % sp.sstr(bind[tok]))
+        else:
+            out.append(tok)
+    s = ''.join(out)
+    s = re.sub(r'(\d+(?:\.\d+)?)°', r'(\1*pi/180)', s)
+    for _ in range(3):
+        s = re.sub(r'\\[dt]?frac\{([^{}]*)\}\{([^{}]*)\}', r'((\1)/(\2))', s)
+        s = re.sub(r'\\sqrt\{([^{}]*)\}', r'sqrt(\1)', s)
+    s = re.sub(r'(sin|cos|tan)\s+(\([^()]*\))', r'\1\2', s)
+    s = re.sub(r'(?<=[\d)])\s*(?=[(a-z])', '*', s.strip())
+    return sp.sympify(s)
+
+
+def sig_figs(num):
+    d = num.lstrip('-').replace('.', '').lstrip('0')
+    return len(d)
+
+
 # ------------------------------------------------------------------ the static checks
 def check_bank(fails, bank, print_pins=False):
     for lvl in ('alevel', 'level4'):
@@ -293,6 +370,64 @@ def check_bank(fails, bank, print_pins=False):
         if prev is None or prev[0] not in quoted:
             fails.append('%s: follows %s but does not quote its key %s' % (
                 where(lvl, i), where(plvl, p), prev[0] if prev else bank[plvl][p]['correct']))
+        # startGame shuffles the bank: the chained item restates its predecessor's masses (SR-17)
+        for mass in re.findall(r'\d+(?:\.\d+)? kg', bank[plvl][p]['ctx']):
+            if not re.search(r'(?<![\d.])' + re.escape(mass), bank[lvl][i]['ctx']):
+                fails.append('%s: follows %s but does not restate its %s; the bank is shuffled, so the item must '
+                             'stand alone (SR-17, force-resolver-s1-001)' % (where(lvl, i), where(plvl, p), mass))
+    for lvl in ('alevel', 'level4'):
+        for i, it in enumerate(bank[lvl]):
+            w = where(lvl, i)
+            words = (it.get('ctx') or '') + ' ' + (it.get('ask') or '')
+            # an item's words never lean on another item: the bank is shuffled (SR-17)
+            if re.search(r'^\s*Same\b|\b(same system|previous (question|item)|as above)\b', it.get('ctx') or '', re.I):
+                fails.append('%s: the context %r refers to another item, but startGame shuffles the bank (SR-17, '
+                             'force-resolver-s1-001)' % (w, it['ctx']))
+            for phrase in STATED.get((lvl, i), []):
+                if phrase not in it.get('ctx', ''):
+                    fails.append('%s: the context %r does not state %r, which its key relies on (SR-17)' % (
+                        w, it['ctx'], phrase))
+            # a rounded key states its precision, and the shown figure has it (SR-1, SR-17)
+            if (lvl, i) in KEYS:
+                val = KEYS[(lvl, i)][0]
+                q = quantity(it['correct'])
+                tail = re.split(r'\\approx|=', it['correct'])[-1]
+                lit = re.search(r'-?\d+(?:\.\d+)?', tail)
+                if q and lit and abs(sp.N(val - q[0], 40)) > R(1, 10 ** 30):
+                    num = lit.group(0)
+                    dp = len(num.split('.')[1]) if '.' in num else 0
+                    st = re.findall(r'to (\d+) (s\.f\.|d\.p\.)', words)
+                    if not st:
+                        fails.append('%s: the key %r is rounded but no precision is stated (SR-1, SR-17, '
+                                     'force-resolver-s1-008)' % (w, it['correct']))
+                    elif not any((k == 'd.p.' and int(n) == dp) or (k == 's.f.' and int(n) == sig_figs(num))
+                                 for n, k in st):
+                        fails.append('%s: the stated precision %s does not match the key %s (SR-1)' % (
+                            w, ', '.join('to %s %s' % x for x in st), num))
+            # a working line with letters holds with the item's own data (force-resolver-s1-009)
+            qline = it.get('q') or ''
+            if re.search(r'[A-Za-z]', re.sub(r'\\(sin|cos|tan|times|sqrt|dfrac|frac|left|right|arctan)', '', qline)):
+                bind = WORKING.get((lvl, i))
+                sides = []
+                if bind is None:
+                    fails.append('%s: the working line %r has no WORKING entry: it is not checked' % (w, qline))
+                else:
+                    try:
+                        sides = [working_value(x, bind) for x in qline.split('=')]
+                    except (KeyError, sp.SympifyError, TypeError, SyntaxError) as e:
+                        fails.append('%s: the working line %r cannot be evaluated (%s)' % (w, qline, e))
+                if len(sides) == 1:
+                    sides.append(sp.sympify(bind.get('=', sp.nan)))
+                for v in sides[1:]:
+                    if not abs(sp.N(v - sides[0], 30)) < R(1, 10 ** 9):
+                        fails.append('%s: the working line %r does not hold with its data: %s is not %s' % (
+                            w, qline, sp.N(sides[0], 6), sp.N(v, 6)))
+            # SR-31: no wrong option gives the key's verdict
+            if (lvl, i) in VERDICT:
+                for o in it['d']:
+                    if o.strip().lower().startswith(VERDICT[(lvl, i)].lower()):
+                        fails.append('%s: the wrong option %r gives the key\'s verdict %r (SR-31)' % (
+                            w, o, VERDICT[(lvl, i)]))
 
 
 # ------------------------------------------------------------------ Chromium
@@ -393,6 +528,16 @@ PLANTS = [
      "correct:'1.40 \\\\text{ m/s}^2'", "correct:'1.79 \\\\text{ m/s}^2'"),
     ('alevel[23]', "t5-005: '50 cos 30 N' beside 25 root 3",
      "d:['25 \\\\text{ N}','50 \\\\text{ N}','4.33 \\\\text{ N}']},", "d:['25 \\\\text{ N}','50 \\\\text{ N}','50\\\\cos 30° \\\\text{ N}']},"),
+    ('level4[11]', 's1-001: the old "Same system" ctx',
+     "{ctx:'A 1500 kg car tows a 500 kg trailer. a = 2.5 m/s². Trailer", "{ctx:'Same system. a = 2.5 m/s². Trailer"),
+    ('level4[17]', 's1-002: the beam without "light"', 'of a light 4 m beam', 'of a 4 m beam'),
+    ('alevel[39]', 's1-005: the table without "smooth"',
+     "{ctx:'A (4 kg) on a smooth table, B (6 kg)", "{ctx:'A (4 kg) on table, B (6 kg)"),
+    ('alevel[8]', 's1-008: the 36.9 ask, no precision',
+     "ask:'Find the angle to the horizontal (to 1 d.p.)'", "ask:'Find the angle to the horizontal'"),
+    ('alevel[32]', 'SR-31: a "Yes" distractor', "d:['No','Cannot tell','Only if pushed']",
+     "d:['Yes: friction is less than weight','Cannot tell','Only if pushed']"),
+    ('alevel[36]', 's1-009: a wrong working line', "q:'T = m_B(g + a)'", "q:'T = m_B(g - a)'"),
 ]
 
 

@@ -264,3 +264,186 @@ findings:
     its conclusion; "Counter-Example Finder"; the dead branch removed; MaffsNext on every wrong answer. Still open: the
     silent alevel fallback for an unknown ?level is class 4 (the shared resolver, F2).'
   status: open
+- id: proof-builder-s1-001
+  severity: HIGH
+  jc: false
+  class: NEW:exact-order sorter marking
+  level: alevel
+  where: games/proof-builder/index.html:300-302 (SORTER.alevel[7])
+  summary: 'The cos^2 + sin^2 = 1 sorter accepted only lines 0,1,2,3; 0,2,1,3 (Pythagoras stated before the sides are
+    named) is an equally valid proof and was rejected, and the verifier asserted the rejection. Fixed under SR-24: the
+    proof has an `after` map {1:[0], 2:[0], 3:[1,2]}, the n^2 + n proof''s semantics. The verifier now holds every
+    reviewed valid order per proof (VALID_ORDERS; default the order as written) and fails when a proof''s `after` map
+    does not admit exactly that set; in Chromium every reviewed order is played and must be accepted, and every
+    permutation of a proof of five lines or fewer is accepted only when reviewed. The old exact-order version is
+    planted.'
+  evidence: 'Prove that cos^2 theta + sin^2 theta = 1 for 0 < theta < 90 degrees | lines: Consider a right-angled
+    triangle with hypotenuse 1 / Let the adjacent side be cos theta and the opposite side be sin theta / By Pythagoras:
+    (adjacent)^2 + (opposite)^2 = (hypotenuse)^2 / So cos^2 theta + sin^2 theta = 1^2 = 1 | keyed order 0,1,2,3 only
+    (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 356
+- id: proof-builder-s1-002
+  severity: MEDIUM
+  jc: true
+  class: NEW:exact-order sorter marking
+  level: further
+  where: games/proof-builder/index.html:308-309 (SORTER.further[2])
+  summary: 'The 3^n > 2n + 1 sorter is marked in one exact order. Line 3 (6k + 3 = 2(k+1) + 1 + 4k) is an algebraic
+    identity that needs nothing before it but the setting, so it (and the lemma 4k > 0 that follows) may be valid
+    before line 2 (3^{k+1} > 6k + 3). Whether that order is an acceptable proof is a judgement: not fixed, for Jon.
+    If accepted, it is an `after` map and a VALID_ORDERS entry.'
+  evidence: 'Prove that 3^n > 2n+1 for all n >= 2 | lines: Base case: n=2. LHS = 9. RHS = 5. 9 > 5. True. / Assume
+    3^k > 2k + 1 for some k >= 2 / 3^{k+1} = 3 x 3^k > 3(2k+1) = 6k+3 / 6k + 3 = (2k+3) + 4k = 2(k+1)+1 + 4k / Since
+    k >= 2, we have 4k > 0, so 6k+3 > 2(k+1)+1 / Therefore 3^{k+1} > 2(k+1)+1, completing the inductive step / By
+    mathematical induction, 3^n > 2n+1 for all n >= 2 | keyed order 0-6 only (SWEEP-1, batch 11)'
+  status: open
+- id: proof-builder-s1-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: further
+  where: games/proof-builder/index.html:318-320, :325, :337 (INDUCTION[0], [1], [3])
+  summary: 'Three induction propositions stated no domain for n, so n = 0 is a valid base case for the sum of r, and
+    stage 1''s reason "the sum starts at r=1, so n=1 is the base case" is a non sequitur. Fixed under SR-17: each
+    proposition ends "\text{ for all integers } n \geq 1" (INDUCTION[2] already says "for all n >= 1"); the reason
+    reads "The statement is claimed for n >= 1, so n = 1 is the base case" (a reason text, not a key). The verifier
+    fails an induction proposition with no domain for n and bars the old reason; the old proposition and the old
+    reason are planted.'
+  evidence: 'Prove by induction: sum_{r=1}^{n} r = n(n+1)/2 | What value of n should we use for the base case? | n =
+    1 | n = 0, n = 2, n = k | step: Here, the sum starts at r=1, so n=1 is the base case. Also sum r^2 =
+    n(n+1)(2n+1)/6 and sum r.r! = (n+1)! - 1, no domain (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 356
+- id: proof-builder-s1-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: further
+  where: games/proof-builder/index.html:268 (COUNTER.further[3])
+  summary: 'The statement "The sum of the first n natural numbers is always even" (key n = 1) depends on whether 0 is
+    a natural number: with 0 included, the first one natural number sums to 0, which is even. Fixed under SR-17: "the
+    first n positive integers". The verifier fails any bank text saying "natural number(s)"; the old stem is planted.'
+  evidence: '"The sum of the first n natural numbers is always even" | Pick a counter-example | n = 1 | n = 3, n = 7,
+    n = 8 (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 356
+- id: proof-builder-s1-005
+  severity: MEDIUM
+  jc: true
+  class: NEW:hint-gives-answer
+  level: all
+  where: games/proof-builder/index.html:240, :247, :251, :261, :262 (COUNTER, the five items keyed true)
+  summary: 'In Counter-Example Finder the option "This statement is actually TRUE" appears only on the five items where
+    it is the key, so its presence gives the answer. Not fixed: offering it on every item adds an option to about 30
+    items and changes the four-option design; a design choice for Jon.'
+  evidence: '"An even number plus an even number is always even" | Pick a counter-example that disproves this
+    statement, or say that it is true | This statement is actually TRUE | 2 + 2 = 4, 4 + 6 = 10, 8 + 8 = 16; no
+    false-keyed item offers the TRUE option (SWEEP-1, batch 11)'
+  status: open
+- id: proof-builder-s1-006
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: further
+  where: games/proof-builder/index.html:271 (COUNTER.further[6] misconception)
+  summary: 'The misconception said equality in |z1 + z2| <= |z1| + |z2| holds "only when z1 and z2 point in the same
+    direction", contradicted by the item''s own option z1 = 0, z2 = 5 (equality, no direction). Fixed: "with equality
+    only when one is a non-negative real multiple of the other (or either is 0)". The verifier bars the old text;
+    it is planted.'
+  evidence: '"If z1 and z2 are complex, then |z1 + z2| = |z1| + |z2|" | z_1 = 1, z_2 = i | z_1=1, z_2=1; z_1=2,
+    z_2=3; z_1=0, z_2=5 | misconception: ...with equality only when z1 and z2 point in the same direction (SWEEP-1,
+    batch 11)'
+  status: fixed
+  pr: 356
+- id: proof-builder-s1-007
+  severity: LOW
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: alevel
+  where: games/proof-builder/index.html:243 (COUNTER.alevel[5] misconception)
+  summary: 'The misconception "Negative numbers reverse the inequality when squared" is false as stated: squaring
+    reverses a > b only when both are negative (3 > -2 but 9 > 4 keeps it; 1 > -2 gives 1 < 4, so one negative can).
+    Fixed: "Squaring reverses the inequality when both numbers are negative, and can when only one is". The verifier
+    bars the old text; it is planted.'
+  evidence: '"If a > b then a^2 > b^2" | a = -1, b = -2 | a = 3, b = 2; a = 5, b = 1; a = 10, b = 3 | misconception:
+    Negative numbers reverse the inequality when squared (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 356
+- id: proof-builder-s1-008
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: further
+  where: games/proof-builder/index.html:340 (INDUCTION[3] stage 2 prompt)
+  summary: 'The prompt ended "Factor:", US English. Fixed: "Factorise:". The verifier bars "Factor:" in any bank text;
+    the old prompt is planted.'
+  evidence: 'In the inductive step, add (k+1)(k+1)! to both sides. RHS becomes (k+1)!-1+(k+1)(k+1)!. Factor: | (k+2)!
+    - 1 | (k+1)!.(k+1) - 1, (k+1)!(k+2) + 1, (k+2)! (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 356
+- id: proof-builder-s1-009
+  severity: LOW
+  jc: false
+  class: NEW:convention-unstated
+  level: alevel
+  where: games/proof-builder/index.html:256 (COUNTER.alevel[18] steps)
+  summary: 'The worked steps evaluated log(20) ~ 1.301 and log(10) = 1, assuming base 10 without saying so. Fixed
+    under SR-17: the steps write log_{10}. (The statement and its options hold in any base, so the stem is unchanged.)
+    The verifier fails a worked step that takes a log with no base, and still evaluates the base-10 steps; the old
+    steps are planted.'
+  evidence: '"log(a + b) = log(a) + log(b)" | a = b = 10 | a=2, b=2; a=3, b=1.5; a=6, b=1.2 | steps: log(10 + 10) =
+    log(20) ~ 1.301 / log(10) + log(10) = 1 + 1 = 2 / 1.301 != 2 (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 356
+- id: proof-builder-s1-010
+  severity: LOW
+  jc: true
+  class: NEW:hint-gives-answer
+  level: alevel
+  where: games/proof-builder/index.html:241, :244 (COUNTER.alevel[3], [6])
+  summary: 'Two keys show their result ("= 0", "= 2") while their distractors show only the sum or product, so the key
+    stands out by its form. Not fixed: it needs a key-text change (or a result on every distractor), for Jon.'
+  evidence: '"The sum of two irrational numbers is always irrational" | sqrt2 + (-sqrt2) = 0 | sqrt2+sqrt8, sqrt2+sqrt3,
+    sqrt5+sqrt7; "The product of two irrational numbers is always irrational" | sqrt2 x sqrt2 = 2 | sqrt2 x sqrt5,
+    sqrt3 x sqrt5, sqrt2 x sqrt3 (SWEEP-1, batch 11)'
+  status: open
+- id: proof-builder-s1-011
+  severity: LOW
+  jc: true
+  class: NEW:wording
+  level: alevel
+  where: games/proof-builder/index.html:240 (COUNTER.alevel[2])
+  summary: 'One true-keyed item words its key "This statement is actually TRUE — no counter-example exists"; the other
+    four say "This statement is actually TRUE". Not fixed: a key-text change, for Jon (with s1-005).'
+  evidence: '"If n is an integer and n^2 is even, then n is even" | This statement is actually TRUE — no
+    counter-example exists | 3, 5, 7 (SWEEP-1, batch 11)'
+  status: open
+- id: proof-builder-s1-012
+  severity: LOW
+  jc: true
+  class: NEW:wording
+  level: alevel
+  where: games/proof-builder/index.html:285 (SORTER.alevel[0] misconception)
+  summary: 'Noticed in passing, not in this batch''s list: the misconception says "factoring out 2"; British usage is
+    "taking out a factor of 2" (or "factorising"). Not fixed (outside the batch''s scope), for Jon.'
+  evidence: 'Prove that the sum of two odd numbers is even | misconception: The key is expressing odd numbers in the
+    form 2k+1 and factoring out 2 (SWEEP-1, batch 11)'
+  status: open
+- id: proof-builder-s1-013
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: all
+  where: scripts/verify-proof-builder.py
+  summary: 'What the verifier still does not check, after SWEEP-1. Now covered: the sorter''s accepted orders against
+    a reviewed list of valid orders per proof (both directions, in Python and in Chromium); the domain of n in every
+    induction proposition; "natural numbers"; the log base in worked steps; barred texts for the reviewed wrong
+    explanations. Still not checked: symbolic counter-example steps and induction steps (check_claims skips any claim
+    with a variable, so "n^2 = 2(2k^2+2k)+1" or "(k+1)!(k+2) = (k+2)!" are unread); the maths of misconception texts
+    beyond the barred list; the maths of sorter lines; whether a proof has a valid order not yet in VALID_ORDERS
+    (that list is a review, e.g. s1-002); and "\approx" claims are checked only to within 0.5, because the parser
+    rationalises the decimal (1.301 becomes 1301/1000, so its places are lost).'
+  evidence: 'check_claims: vals with free symbols -> None, claim skipped; \approx tolerance from str(b), which has no
+    "." for a Rational (SWEEP-1, batch 11)'
+  status: open

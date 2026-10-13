@@ -169,7 +169,8 @@ findings:
   summary: '"decelerates from 500 m/s at −20 m/s²" is a double negative. Fixed: "at 20 m/s²"; a deceleration given
     as a negative number is barred and planted'
   evidence: 'scenario:"A rocket decelerates from 500 m/s at −20 m/s². Find time to stop." (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 355
 - id: suvat-s1-005
   severity: LOW
   jc: true

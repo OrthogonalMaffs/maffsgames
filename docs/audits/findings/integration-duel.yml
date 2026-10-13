@@ -126,7 +126,8 @@ findings:
     + c = −20e^(−5t) + c". The verifier now reads every expression of the working (after the last "so" or ":"),
     each equal to the final one apart from the + c; the old line is planted'
   evidence: 'exp:''100/(−5) = −20e^(−5t) + c'' (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 355
 - id: integration-duel-s1-002
   severity: LOW
   jc: false
@@ -137,7 +138,8 @@ findings:
     at the key (= 2t³ + t² + c; = −25e^(−2t) + c). An explanation whose last expression has a whole-number fraction
     that cancels now FAILS; both old lines are planted'
   evidence: 'exp:''6t³/3 + 2t²/2 + c''; exp:''50 × e^(−2t)/(−2) + c'' (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 355
 - id: integration-duel-s1-003
   severity: MEDIUM
   jc: false

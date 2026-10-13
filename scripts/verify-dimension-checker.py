@@ -13,7 +13,10 @@ algebra on the quantities in its prompt (DIM) or, for a verdict, the computed tr
 reviewed key. Then:
   the key's dimensions (an option "[M L T^-2]", or the bracket in "Yes - both sides are [...]") equal the target;
   every wrong option's dimensions differ from it; a "Yes"/"No" key agrees with the computed homogeneity and
-  every wrong option that agrees with it differs in its reason;
+  every wrong option that agrees with it differs in its reason, and (SR-31, Jon 13 Oct 2026) no wrong option gives
+  the key's verdict at all: a "Yes - [wrong dimensions]" beside a "Yes" key marks a student with the right verdict
+  wrong for the bracket;
+  a P in an item's equation is said to be power (the start screen lists power and pressure; SWEEP-1);
   an item whose answer needs a quantity's dimensions not in M, L, T (current; viscosity; resistance) states them
   in its prompt or context (t5-002, t5-004), and no option says it "cannot" be checked when the item gives all
   it needs;
@@ -23,7 +26,8 @@ reviewed key. Then:
   every option clicked through handleAnswer(): the key marked right, the others wrong; a wrong answer shows the
   worked solution and the shared Next control (MaffsNext, canon 7.6), not a hand-rolled button.
 A self-test plants three of the audit's own faults back into a copy of the page (t5-001: s = ut + at^2 keyed No;
-t5-002: Stokes' law without mu's dimensions; t5-004: P = I^2 R without R's); each must FAIL naming its item.
+t5-002: Stokes' law without mu's dimensions; t5-004: P = I^2 R without R's) and the sweep's (s1-001: a wrong option
+with the key's verdict; s1-002: P = Fv with P undefined); each must FAIL naming its item.
 
     python scripts/verify-dimension-checker.py [--no-selftest] [--against FILE]
 """
@@ -194,6 +198,11 @@ def check_bank(fails, bank):
             says_yes = o.startswith('Yes') or o.startswith('Neither')
             if says_yes and homog and (d is None or d == lhs):
                 fails.append('%s: the wrong option %r is also right (SR-16)' % (w, o))
+            verdict = lambda x: x.split(' ')[0].rstrip(',')
+            if verdict(o) in ('Yes', 'No') and verdict(o) == verdict(q['c']):
+                fails.append('%s: the wrong option %r gives the key\'s verdict (SR-31)' % (w, o))
+        if re.search(r'\bP\s*=', q['p']) and 'power' not in text.lower():
+            fails.append('%s: P is not said to be power (the start screen lists power and pressure; SR-17)' % w)
 
 
 SWEEP_JS = r"""() => {
@@ -259,8 +268,11 @@ PLANTS = [
     ('item 4 ', 't5-001: s = ut + at² keyed No', "c:'Yes — all terms are [L]',d:['No — it should be ½at², so the dimensions do not match'",
      "c:'No — it should be ½at², so the dimensions do not match',d:['Yes — all terms are [L]'"),
     ('item 25 ', "t5-002: Stokes' law without mu's dimensions", "ctx:'Viscosity μ has dimensions [M L⁻¹ T⁻¹].',", ''),
+    ('item 2 ', "s1-001: 'Yes - [M L T^-2]' beside a Yes key", "'No — E is [M L T⁻²]'", "'Yes — both sides are [M L T⁻²]'"),
+    ('item 3 ', 's1-002: P = Fv with P undefined', "{p:'Is P = Fv dimensionally homogeneous?',ctx:'P is power.',",
+     "{p:'Is P = Fv dimensionally homogeneous?',"),
     ('item 5 ', "t5-004: P = I²R without R's dimensions",
-     "ctx:'Current I has dimensions [A] (amperes); resistance R has dimensions [M L² T⁻³ A⁻²].',", ''),
+     "ctx:'P is power. Current I has dimensions [A] (amperes); resistance R has dimensions [M L² T⁻³ A⁻²].',", "ctx:'P is power.',"),
 ]
 
 

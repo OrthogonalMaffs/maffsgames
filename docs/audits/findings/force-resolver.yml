@@ -160,3 +160,140 @@ findings:
   evidence: 'B11 parser, F0 (7 Oct 2026): 12 \text{ N} = 12\sin 90° \text{ N}, exact (scripts/bank_common.py); ledger force-resolver::8c466d96e9b4#1::B11::["12 \\text{ N}", "12\\sin 90° \\text{ N}"]'
   status: fixed
   pr: 127
+- id: force-resolver-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:text-contradicts-content
+  level: level4
+  where: games/force-resolver/index.html:198 (level4[11])
+  summary: 'The context began "Same system", but startGame shuffles the bank, so the system it means (level4[10]) need
+    not come first, and the masses were given nowhere in its text (SR-17). Fixed: the context restates the system from
+    level4[10], "A 1500 kg car tows a 500 kg trailer." The verifier now fails any context that refers to another item
+    ("Same ...", "same system", "previous question", "as above") and requires a chained item (CHAIN) to restate every
+    mass its predecessor gives; the old context is planted and caught'
+  evidence: 'ctx "Same system. a = 2.5 m/s². Trailer resistance = 200 N." | q T - 200 = 500 × 2.5 | ask Tension in tow
+    bar | key 1450 N | 1250 N, 1000 N, 3000 N (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 356
+- id: force-resolver-s1-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: level4
+  where: games/force-resolver/index.html:204 (level4[17])
+  summary: 'The key 294.3 N (half of 60g) needs the beam to be weightless, which was not stated (SR-17). Fixed: "a light
+    4 m beam". The verifier''s STATED table requires "light" in the context; the old context is planted and caught'
+  evidence: 'ctx "A 60 kg engineer stands at the midpoint of a 4 m beam supported at both ends. g = 9.81." | Reaction at
+    each support | key 294.3 N | 588.6 N, 147.15 N, 60 N (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 356
+- id: force-resolver-s1-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: level4
+  where: games/force-resolver/index.html:187-188 (level4[0], level4[1])
+  summary: 'The asks are the horizontal and vertical components, keyed 500 cos 25° and 500 sin 25°, which need the beam
+    to be horizontal; the context said only "to a beam" (SR-17). Fixed: "to a horizontal beam" in both. The verifier''s
+    STATED table requires "horizontal beam" in each context'
+  evidence: 'ctx "A 500 N force acts at 25° to a beam. cos 25° = 0.906, sin 25° = 0.423." | Horizontal component | key
+    453 N; Vertical component | key 211.5 N (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 356
+- id: force-resolver-s1-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: level4
+  where: games/force-resolver/index.html:189 (level4[2])
+  summary: 'The key 2/cos 40° holds only when the arm is at 40° to a vertical wall, the load is vertical and the other
+    member is a horizontal tie (resolving vertically: F cos 40° = 2); the context named neither the wall''s direction
+    nor the tie (SR-17). Fixed: "at 40° to a vertical wall, with a horizontal tie to the wall", as level4[3] and
+    level4[12] already name theirs; its key''s precision is also stated (s1-007). The verifier''s STATED table requires
+    "vertical wall" and "horizontal tie"'
+  evidence: 'ctx "A bracket supports a 2 kN load. The bracket arm is at 40° to the wall." | Force along the bracket arm
+    | key 2/cos 40° ≈ 2.61 kN | 2 kN, 2 cos 40° kN, 2 sin 40° kN (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 356
+- id: force-resolver-s1-005
+  severity: LOW
+  jc: false
+  class: NEW:convention-unstated
+  level: alevel
+  where: games/force-resolver/index.html:171 (alevel[39])
+  summary: 'The key T = m_A a = 24 N needs the table to be smooth; the context said "on table" (its predecessor
+    alevel[38] says smooth, but the bank is shuffled; SR-17). Fixed: "on a smooth table". No g is needed (a is given).
+    The verifier''s STATED table requires "smooth table"; the old context is planted and caught'
+  evidence: 'ctx "A (4 kg) on table, B (6 kg) hanging. a = 6 m/s²." | q T = m_A a | Tension in the string | key 24 N |
+    60 N, 40 N, 36 N (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 356
+- id: force-resolver-s1-006
+  severity: LOW
+  jc: false
+  class: NEW:convention-unstated
+  level: alevel
+  where: games/force-resolver/index.html:184 (alevel[51])
+  summary: 'The key, friction = 40 N, needs the 40 N push to be horizontal; the context said only "with 40 N" (SR-17).
+    Fixed: "with a horizontal force of 40 N". The verifier''s STATED table requires "horizontal force"'
+  evidence: 'ctx "A box (20 kg) is pushed at constant velocity across a rough floor with 40 N. g = 10." | Friction force
+    | key 40 N | 200 N, 0 N, 160 N (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 356
+- id: force-resolver-s1-007
+  severity: LOW
+  jc: false
+  class: NEW:convention-unstated
+  level: alevel
+  where: games/force-resolver/index.html:164 (alevel[33])
+  summary: 'The key R = mg cos θ holds only when no other force acts across the slope; the statement was unqualified
+    (SR-17). Fixed: "when the only forces are its weight, R and forces along the slope". The verifier''s STATED table
+    requires "only forces"; the item''s review pin is renewed (6259496e to 46ee4e26)'
+  evidence: 'ctx "On an inclined plane, the normal reaction R equals..." | Complete the statement | key mg cos θ | mg,
+    mg sin θ, mg tan θ (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 356
+- id: force-resolver-s1-008
+  severity: MEDIUM
+  jc: false
+  class: NEW:precision-not-stated
+  level: all
+  where: games/force-resolver/index.html:129,131,133,137,154,156,157,158,159,161,189,190,192,193,194,199,200,201
+  summary: 'Eighteen rounded keys did not state their precision (SR-1, SR-17): bare 36.9°, 24.0 N, 4.80 m/s², 53.1°,
+    203 N and thirteen "≈ x" keys; only level4[8] (to 2 d.p.) and level4[18] (to 1 d.p.) stated theirs. Fixed: each
+    ask states the precision its key shows ("(to 3 s.f.)"; the two angles "to 1 d.p."; 1224 N "to 4 s.f."). New
+    general verifier rule: where a key is not the exact value of its own data (KEYS, recomputed with SymPy) at the
+    figure shown, the ask or context must say "to N s.f." or "to N d.p." and the shown figure must have that
+    precision; the old alevel[8] ask is planted and caught, and the old page fails on all eighteen'
+  evidence: 'e.g. ctx "A force has horizontal component 8 N and vertical component 6 N." | Find the angle to the
+    horizontal | key 36.9°; ask "Component of weight along the slope" | key 203 N (SWEEP-1, batch 11)'
+  status: fixed
+  pr: 356
+- id: force-resolver-s1-009
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: all
+  where: games/force-resolver/index.html:136-174,198 (the q working lines)
+  summary: 'The working lines (q) that contain letters (F = ma, T - mg = ma, m_B g - μ m_A g = (m_A + m_B)a ...) were
+    never evaluated: the claims check reads only all-numeric sides. Fixed: the verifier now evaluates every lettered
+    working line (21 of them) with the item''s own data and its key bound to its symbols (WORKING); every side of each
+    = must agree, a line with no = must equal the key, and a lettered line with no WORKING entry fails. All 21 hold.
+    A wrong line (T = m_B(g - a)) is planted and caught'
+  evidence: 'q lines at alevel[7], [8], [12]-[14], [16], [18]-[20], [22]-[24], [26], [29], [35], [36], [38]-[40],
+    [42], level4[11] (SWEEP-1, batch 11)'
+  status: open
+- id: force-resolver-s1-010
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: all
+  where: scripts/verify-force-resolver.py
+  summary: 'What the verifier still does not check after SWEEP-1: conventions are checked only for the items in its
+    STATED table, by phrase, not by a general rule; the WORKING symbol bindings are hand-transcribed from each
+    context, not read from it; the rounded figures inside the verdict keys (alevel[32] 17.3 N, level4[15] 49.8 N and
+    37.3 N) are recomputed but their precision is not stated or checked; the nine reviewed text keys are pinned, not
+    checked; the scenario and given-values layout that formatCtx makes is not read. SR-31 is now checked for the two
+    verdict items (no distractor starts with the key''s "Yes"; planted and caught); none gave the key''s verdict'
+  evidence: 'scripts/verify-force-resolver.py STATED, WORKING, FIGS, REVIEWED (SWEEP-1, batch 11)'
+  status: open

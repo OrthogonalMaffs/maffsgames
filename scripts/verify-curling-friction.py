@@ -16,12 +16,24 @@ for a worded answer, the reviewed key with its reason. Then:
     the context or ask, SR-1); no wrong option equals the target, exactly or at the key's precision (SR-16);
     no two options are equal in value; a wrong option keeps the key's unit;
   worded: the key is the reviewed one;
-  friction: a context that asks for a friction force from mu R must say the stone slides (t5-006);
+  friction: a context that asks for a friction force from mu R, or gives a friction force and asks for mu, must say
+    the stone slides (t5-006; SWEEP-1 s1-002: mu = F / R holds only for limiting friction);
+  conventions (SR-17, SWEEP-1): a context describing a collision whose answer relies on it being one-dimensional
+    (elastic, an "After:" state or a coefficient of restitution, with speeds given; not one where the bodies stick or
+    lock, whose common velocity follows from momentum at any angle) must say head-on (or directly / along the line
+    of centres); a context on a "surface" must say it is horizontal (or flat), and a push or pull must be said to be
+    horizontal; STATED gives per item a phrase the key relies on (R = mg with no other vertical force; a distance
+    travelled "before stopping");
+  KE claims (SR-4, SWEEP-1 s1-001): no two options state the same KE before and after ("Equal — 160 J each" and
+    "160 J before, 160 J after" are one answer);
   in Chromium (390x844) every item is shown through the game's own showQ() and every option clicked through
     handle(): the key marked right, the others wrong; a wrong answer shows the worked solution and the shared
     Next control (MaffsNext, canon 7.6), not a hand-rolled button.
 A self-test plants three of the audit's own faults back into a copy of the page (t5-001: sqrt(4.96) as the key;
-t5-002: the hammer's "speed" keyed -4; t5-006: "sits on ice"); each must FAIL naming its item.
+t5-002: the hammer's "speed" keyed -4; t5-006: "sits on ice") and six of SWEEP-1's (s1-001: "Equal — 160 J each";
+s1-002: a friction force given with no sliding; s1-003: "travels 22.5 m" with no "before stopping"; s1-004: "for any
+object"; s1-005: an elastic collision not said to be head-on; s1-006: the crate's push and surface not said to be
+horizontal); each must FAIL naming its item.
 
     python scripts/verify-curling-friction.py [--no-selftest] [--against FILE] [--katex-dir DIR]
 """
@@ -134,6 +146,46 @@ TARGETS = {
         T('0.0563 \\leq \\mu \\leq 0.0643', 'mu = u^2 / (2 g s) = 1.8 / s for s from 28 to 32: 0.05625 to 0.06429'),  # 19
     ],
 }
+STATED = {
+    ('alevel', 11): ('no other vertical forces', 'R = mg only when no other vertical force acts (s1-004)'),
+    ('alevel', 20): ('before stopping', 'the key takes v = 0 at 22.5 m (s1-003)'),
+}
+HEAD_ON = re.compile(r'head-on|directly|along the line of centres', re.I)
+
+
+def ke_claim(o):
+    """(KE before, KE after) stated by a worded option, or None."""
+    m = re.match(r'\s*(\d+(?:\.\d+)?) J before, (\d+(?:\.\d+)?) J after', o)
+    if m:
+        return F(m.group(1)), F(m.group(2))
+    m = re.match(r'\s*Equal\W+(\d+(?:\.\d+)?) J each', o)
+    if m:
+        return F(m.group(1)), F(m.group(1))
+    return None
+
+
+def check_conventions(fails, w, lv, i, q, opts):
+    ctx, text = q['ctx'], ' '.join([q['ctx'], q['ask'], q['q']])
+    if re.search(r'\b(hits?|collides?|collision|strikes?|impact)\b', ctx, re.I) and re.search(r'\d m/s', ctx) \
+            and (re.search(r'(?<!in)elastic', text, re.I) or 'After:' in ctx or 'separation' in ctx) \
+            and not re.search(r'\b(stick|stuck|lock)', ctx, re.I) and not HEAD_ON.search(ctx):
+        fails.append('%s: a collision whose answer needs it one-dimensional, never said to be head-on (SR-17; a'
+                     ' glancing hit sends the stones off at angles)' % w)
+    if re.search(r'\bsurface\b', ctx, re.I) and not re.search(r'horizontal|flat', ctx, re.I):
+        fails.append('%s: a surface never said to be horizontal; the key takes R = mg (SR-17)' % w)
+    if re.search(r'\b(pushed|pulled|push|pull)\b', ctx, re.I) and not re.search(r'\b(pushed|pulled)\s+horizontally|horizontal (force|push|pull)', ctx, re.I):
+        fails.append('%s: a push or pull never said to be horizontal; the key takes all of it along the surface (SR-17)' % w)
+    if (lv, i) in STATED and STATED[(lv, i)][0] not in ctx:
+        fails.append('%s: does not say "%s"; %s (SR-17)' % (w, STATED[(lv, i)][0], STATED[(lv, i)][1]))
+    claims = [(o, ke_claim(o)) for o in opts]
+    claims = [(o, c) for o, c in claims if c is not None]
+    for a in range(len(claims)):
+        for b in range(a + 1, len(claims)):
+            if claims[a][1] == claims[b][1]:
+                fails.append('%s: options %s and %s state the same KE before and after (SR-4: four distinct answers)'
+                             % (w, claims[a][0], claims[b][0]))
+
+
 AUDIT = {('alevel', 0): 't5-006', ('alevel', 21): 't5-001', ('level4', 7): 't5-002'}
 UNIT_NAMES = {'N', 'm', 's', 'J', 'Ns', 'm/s', 'm/s^2', 'kg m/s', '%', ''}
 
@@ -192,9 +244,12 @@ def check_bank(fails, bank):
             opts = [q['correct']] + q['d']
             if len(set(opts)) != 4:
                 fails.append('%s: %d options, not 4 distinct' % (w, len(set(opts))))
-            if re.search(r'friction force', q['ask'], re.I) and 'μ' in q['ctx'] and not re.search(r'slid|moving|sweep', q['ctx'], re.I):
-                fails.append('%s: asks a friction force from mu R but never says the stone slides (at rest with no'
-                             ' applied force there is no friction)' % w)
+            if ((re.search(r'friction force', q['ask'], re.I) and 'μ' in q['ctx'])
+                    or (re.search(r'friction force', q['ctx'], re.I) and 'μ' in q['ask'])) \
+                    and not re.search(r'slid|moving|sweep', q['ctx'], re.I):
+                fails.append('%s: relates a friction force to mu R but never says the stone slides (at rest with no'
+                             ' applied force there is no friction; mu = F / R only for limiting friction)' % w)
+            check_conventions(fails, w, lv, i, q, opts)
             if tg[0] == 'text':
                 if q['correct'] != tg[1]:
                     fails.append('%s: keyed %s, reviewed %s (%s)' % (w, q['correct'], tg[1], tg[2]))
@@ -314,6 +369,17 @@ PLANTS = [
      "ask:'Speed of hammer after (equal mass formula not valid here)'"),
     ('alevel[0]', 't5-006: the stone "sits on ice"', 'A 20 kg curling stone slides across the ice.',
      'A 20 kg curling stone sits on ice.'),
+    ('alevel[41]', 's1-001: "Equal — 160 J each" beside 160/160', "d:['40 J before, 40 J after',",
+     "d:['Equal — 160 J each',"),
+    ('alevel[2]', 's1-002: friction force given, no sliding', 'A 20 kg stone sliding across the ice experiences',
+     'A 20 kg stone experiences'),
+    ('alevel[20]', 's1-003: no "before stopping"', 'travels 22.5 m before stopping.', 'travels 22.5 m.'),
+    ('alevel[11]', 's1-004: "for any object, R equals"', 'for an object with no other vertical forces acting, R',
+     'for any object, R'),
+    ('alevel[54]', 's1-005: elastic collision not said head-on', 'collides head-on with a stationary stone',
+     'collides with a stationary stone'),
+    ('level4[18]', 's1-006: the crate\'s push not said horizontal', 'pushed horizontally with 60 N on a horizontal surface',
+     'pushed with 60 N on a surface'),
 ]
 
 

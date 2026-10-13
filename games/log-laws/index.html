@@ -635,6 +635,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
     </div>
     <div id="lawsOpts">
       <div class="start-desc">The laws students always mix up. 12 questions, take your time. Can you keep them straight?</div>
+      <div class="solve-note"><b>log</b> means <b>log&#8321;&#8320;</b>, the log key on your calculator. Every law works the same way for <b>ln</b>.</div>
     </div>
     <div id="solveOpts" hidden>
       <div class="start-desc">Choose each step yourself. A wrong move tells you why, and you try again. Finish on your calculator, to 3 significant figures.</div>
@@ -654,7 +655,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
   <div class="main-game" id="mainGame">
     <div class="timer-text" id="timerDisplay">0s</div>
     <div class="law-ref">
-      <div class="law-ref-title">Quick Reference</div>
+      <div class="law-ref-title">Quick Reference &middot; log means log&#8321;&#8320;</div>
       <div class="laws-grid" id="refGrid"></div>
     </div>
     <div class="question-box">
@@ -1303,7 +1304,7 @@ waitForKaTeX(buildRefPanels);
     S1_back:  { ok: true, t: 'That just turns \\(\\log 10\\) back into 1. It is true, but it does not move you forward.' },
     S0:       { t: '\\(\\log 1 = 0\\) only helps when there is a log of 1, and there is not one here.' },
     U_nolog:  { t: 'There is no log to undo. \\({v}\\) is stuck in the index, and taking logs is how you bring it down.' },
-    U_back:   { ok: true, t: 'That is true, but it takes you back to the equation you started from.' },
+    U_back:   { ok: true, t: 'That is true, but it takes you back to an earlier line.' },
     U_combine:{ t: 'To undo the log you need a single log on each side. Combine the logs into one first.' },
     U_single: { t: 'To undo the log you need a single log on each side and nothing else. Here \\({v}\\) is outside the logs, so rearrange.' },
     R_index:  { t: '\\({v}\\) is in the index, and no rearranging will get it out. Take logs of both sides first.' },

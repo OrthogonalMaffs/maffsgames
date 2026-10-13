@@ -14,15 +14,22 @@ Keys. KEYS below holds, for every item with a numeric answer, the answer compute
 Options (SR-4, SR-16). No two options are equal in value, and no distractor equals the key: values are compared in
   SI (5 kW = 5000 W) and with their words (1 Nm clockwise is not 1 Nm anticlockwise). Where an item's distractors
   are named errors (REASONS), each is recomputed from its reason.
-Claims. Every numeric equality or approximation written in a key or a working line (x = y, x \\approx y) holds.
+Claims. Every numeric equality or approximation written in a key or a working line (x = y, x \\approx y) holds,
+  and an exact value is never written "=" a rounded one (19/3 = 6.33 FAILS; it is \\approx).
   Every "Same ..." item quotes its predecessor's key.
+Sweep checks (SWEEP-1, 13 Oct 2026). SR-1/SR-17: a key that is its data's value rounded states its precision in the
+  ask ("to 3 s.f."), matching the figures shown. STATED: the conventions a key relies on are written in the item
+  (a perpendicular distance, opposite sides of the pivot, the beam's weight ignored). SR-16: TRUE_WRONG bars wrong
+  options that are true (a balanced rod's centre of mass "At the pivot"; "Fd" through the pivot); and a distance
+  keyed "from <reference>" has every distance distractor name the same reference ("1.2 m" is right from the
+  right-hand end).
 Rendering. A string drawn by KaTeX keeps no prose outside \\text{} (B7: KaTeX drops the spaces).
 Chromium (390x844 and 320x568). Every option of every item is clicked through the game's own handler: the key is
   marked right; any other option is marked wrong, shows the answer and waits for the shared Next control (MaffsNext,
   canon 7.6). No raw TeX on screen; the page never scrolls sideways.
 
-A self-test plants two of the audit's own faults back (t5-008: R_B keyed 50 N; t5-004: '5 kW' beside 5000 W); each
-must FAIL naming its item.
+A self-test plants two of the audit's own faults back (t5-008: R_B keyed 50 N; t5-004: '5 kW' beside 5000 W) and
+the sweep's (s1-001..s1-005); each must FAIL naming its item.
 
     python scripts/verify-moments-master.py [--no-selftest] [--against FILE] [--katex-dir DIR] [--print-pins]
 """
@@ -129,9 +136,18 @@ CHAIN = {('alevel', 14): ('alevel', 13), ('alevel', 24): ('alevel', 23), ('aleve
 REVIEWED = {
     ('alevel', 8): '8135a2e1', ('alevel', 9): '96350667', ('alevel', 11): 'a52353dc', ('alevel', 19): '61d9081d',
     ('alevel', 38): '43817fd7', ('alevel', 40): '534029c5', ('alevel', 41): '7d1e4443', ('alevel', 42): '9dc7885c',
-    ('alevel', 43): '8fe28f06', ('alevel', 44): '2fd5eebf', ('alevel', 45): '03101a1b', ('alevel', 46): '563f4e34',
+    ('alevel', 43): '8fe28f06', ('alevel', 44): '2fd5eebf', ('alevel', 45): '11e91522', ('alevel', 46): '563f4e34',
     ('alevel', 47): '9b5659b5', ('alevel', 48): '6b368ea2',
 }
+
+# SR-16 (SWEEP-1): wrong options that are true. alevel[26]: a rod balanced on one pivot has its centre of mass at
+# the pivot (the key's 2 m from A); alevel[7] and [45]: F x d through the pivot is F x 0, the key's zero.
+TRUE_WRONG = {('alevel', 26): ['At the pivot'], ('alevel', 7): ['Fd \\text{ Nm}'], ('alevel', 45): ['F × d']}
+
+# SR-17 (SWEEP-1): the convention each key relies on, written in the item's context
+STATED = {('alevel', 1): 'perpendicular distance', ('alevel', 2): 'perpendicular distance',
+          ('alevel', 3): 'perpendicular distance', ('alevel', 17): 'on the other side',
+          ('level4', 3): 'ignore beam weight', ('level4', 5): 'ignore beam weight', ('level4', 6): 'ignore beam weight'}
 
 TAGS = {('alevel', 16): 't5-005', ('alevel', 22): 't5-006', ('alevel', 28): 't5-008', ('alevel', 33): 't5-007',
         ('level4', 6): 't5-002', ('level4', 7): 't5-003', ('level4', 14): 't5-004', ('alevel', 19): 't5-013',
@@ -196,6 +212,28 @@ def close(shown, exact, dec):
     return abs(sp.N(exact - shown, 30)) <= R(1, 2) * R(10) ** -dec + R(1, 10 ** 12)
 
 
+def shown_literal(opt):
+    """The number a key shows last ('... \\approx 0.233 \\text{ m right of pivot}' -> '0.233')."""
+    s = opt
+    for sep in ('\\approx', '='):
+        if sep in s:
+            s = s.rsplit(sep, 1)[1]
+    m = re.match(r'\s*(-?\d+(?:\.\d+)?)', s)
+    return m.group(1) if m else None
+
+
+def sig_figs(lit):
+    digits = lit.lstrip('-').replace('.', '').lstrip('0')
+    return len(digits)
+
+
+def stated_precision(text):
+    m = re.search(r'to (\d+) (s\.f\.|significant figures?|d\.p\.|decimal places?)', text)
+    if not m:
+        return None
+    return int(m.group(1)), 'sf' if m.group(2)[0] == 's' else 'dp'
+
+
 # ------------------------------------------------------------------ the static checks
 def check_bank(fails, bank, print_pins=False):
     for lvl in ('alevel', 'level4'):
@@ -209,6 +247,16 @@ def check_bank(fails, bank, print_pins=False):
                     fails.append('%s: the key %r is not a single quantity' % (w, it['correct']))
                 elif q[1] != unit or not close(q[0], val, q[2]):
                     fails.append('%s: keyed %s %s; its data gives %s %s' % (w, q[0], q[1], sp.N(val, 6), unit))
+                elif sp.N(val - q[0], 30) != 0:
+                    # SR-1/SR-17 (SWEEP-1): a rounded key states its precision, the one it shows
+                    lit = shown_literal(it['correct'])
+                    said = stated_precision(it['ask'] + ' ' + it['ctx'])
+                    if said is None:
+                        fails.append('%s: keyed %s, its data\'s %s rounded, and the ask states no precision (SR-1): %r'
+                                     % (w, lit, sp.N(val, 6), it['ask']))
+                    elif said != ((sig_figs(lit), 'sf') if said[1] == 'sf' else (q[2], 'dp')):
+                        fails.append('%s: the ask says to %d %s; the key %s shows another precision' % (
+                            w, said[0], said[1], lit))
             elif (lvl, i) in REVIEWED:
                 if print_pins or REVIEWED[(lvl, i)] != pin(it):
                     fails.append('%s: a reviewed text key, changed since review (pin %s, now %s): re-review it' % (
@@ -236,6 +284,18 @@ def check_bank(fails, bank, print_pins=False):
                     xv = si(x)[0]
                     if xv == kv or (x[1] == qs[0][1] and x[2] >= qs[0][2] and close(x[0], val, x[2])):
                         fails.append('%s: the distractor %r equals the key %s %s (SR-16)' % (w, o, sp.N(val, 6), unit))
+            for bad in TRUE_WRONG.get((lvl, i), []):
+                if bad in it['d']:
+                    fails.append('%s: the wrong option %r is true (SR-16)' % (w, bad))
+            if (lvl, i) in STATED and STATED[(lvl, i)] not in it['ctx']:
+                fails.append('%s: the key relies on "%s", which the item does not state (SR-17): %r' % (
+                    w, STATED[(lvl, i)], it['ctx']))
+            ref = re.search(r'\\text\{ m (from [^{}]*)\}', it['correct'])
+            if ref:
+                for o in it['d']:
+                    if re.fullmatch(r'\s*-?\d+(?:\.\d+)?\s*\\text\{ m\s*\}\s*', o):
+                        fails.append('%s: the distance %r names no reference; the key is measured %s (SR-16)' % (
+                            w, o, ref.group(1)))
             if (lvl, i) in REASONS:
                 got = sorted((quantity(o) for o in it['d']), key=lambda x: x[0] if x else 0)
                 for (v, why) in REASONS[(lvl, i)]:
@@ -244,7 +304,13 @@ def check_bank(fails, bank, print_pins=False):
             # every numeric claim written in a key or a working line
             for s in [it['correct'], it.get('q') or '']:
                 for part in re.split(r'\\text\{[^{}]*\}', s):
+                    seps = re.findall(r'=|\\approx', part)
                     sides = re.split(r'=|\\approx', part)
+                    if len(sides) >= 2 and seps[-1] == '=':
+                        a_, b_ = latex_value(sides[-2]), latex_value(sides[-1])
+                        if a_ is not None and b_ is not None and sp.N(a_ - b_, 30) != 0 and \
+                                re.fullmatch(r'\s*-?\d+\.\d+\s*', sides[-1]):
+                            fails.append('%s: %r writes = before a rounded value (use \\approx)' % (w, s))
                     vals = [latex_value(x) for x in sides if x.strip()]
                     nums = [v for v in vals if v is not None]
                     if len(nums) >= 2:
@@ -367,6 +433,15 @@ PLANTS = [
      "correct:'75 \\\\text{ N}',d:['50 \\\\text{ N}','100 \\\\text{ N}','25 \\\\text{ N}']},",
      "correct:'50 \\\\text{ N}',d:['75 \\\\text{ N}','100 \\\\text{ N}','25 \\\\text{ N}']},"),
     ('level4[14]', "t5-004: '5 kW' beside 5000 W", "'524 \\\\text{ W}'", "'5 \\\\text{ kW}'"),
+    ('alevel[26]', "s1-001: 'At the pivot' as a wrong option", "'3 \\\\text{ m from A}','1 \\\\text{ m from A}']", "'3 \\\\text{ m from A}','At the pivot']"),
+    ('alevel[20]', 's1-002: distances with no reference',
+     "d:['1.5 \\\\text{ m from the left end}','1.2 \\\\text{ m from the left end}'",
+     "d:['1.5 \\\\text{ m}','1.2 \\\\text{ m from the left end}'"),
+    ('level4[3]', 's1-003: a rounded key with no precision stated', "ask:'Reaction at the right support, to 3 s.f.'",
+     "ask:'Reaction at the right support'"),
+    ('level4[18]', 's1-003: 19/3 = 6.33', "\\\\approx 6.33 \\\\text{ kN}'", "= 6.33 \\\\text{ kN}'"),
+    ('alevel[1]', 's1-004: the distance not said to be perpendicular',
+     "ctx:'A force of 25 N acts at a perpendicular distance of 2 m from a pivot.'", "ctx:'A force of 25 N acts 2 m from a pivot.'"),
 ]
 
 

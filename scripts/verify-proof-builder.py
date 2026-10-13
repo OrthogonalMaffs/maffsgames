@@ -17,23 +17,34 @@ Induction. STAGES holds each stage's target: the key equals it (SymPy), no wrong
   is a true statement of what the stage asks.
 Worked steps. Every maths claim in a step ("a = b", "a \\approx b", "a \\neq b") whose sides are numbers is
   evaluated; one that is false FAILS.
-Sorter (Chromium). For every proof, the order as written is accepted and swapping any two adjacent lines is
-  rejected, unless the proof lists the order as valid (`after`: the lines each line needs before it); for the
-  n^2 + n proof every valid order is accepted. After a wrong Check, reselecting lines and checking again scores
-  nothing (t5-015).
+Sorter. VALID_ORDERS below holds, per proof, every order reviewed as a valid proof (default: the order as
+  written only). The proof's `after` map (the lines each line needs before it) must admit exactly that set: a valid
+  order it rejects FAILS (SR-24), and so does an order it admits that is not reviewed. In Chromium every reviewed
+  order is accepted; for a proof of five lines or fewer every permutation is played and accepted only when
+  reviewed; for every proof, swapping any two adjacent lines is accepted only when reviewed. After a wrong Check,
+  reselecting lines and checking again scores nothing (t5-015).
+Domains and conventions (SR-17). Every induction proposition states its domain of n ("n \\geq 1"); no text says
+  "natural numbers" (whether 0 is one is a convention); every log in a worked step states its base (\\log_{10}).
+Barred texts. BARRED below lists wording reviewed as wrong (explanations that contradict their own item, a
+  non sequitur reason, US spelling): any bank string (statement, option, step, misconception, prompt, line)
+  that matches one FAILS.
 Rendering (Chromium, 390x844). Every statement, sorter line, prompt, worked step and misconception is shown through
   the game's own renderers: no raw TeX on screen (a backslash, ^ or _), every prose word separated by a space, and
   the page never scrolls sideways (sorter screens and solution panels).
 Marking (Chromium). Every option of every counter item and induction stage is clicked: the key marked right, the
   others wrong; a wrong answer shows the worked solution and the shared Next control (MaffsNext, canon 7.6).
 
-A self-test plants three of the audit's own faults back into a copy of the page (t5-003: a = 4, b = 9 as a wrong
-option; t5-009: (k^2 + 3k + 2)/2 as a wrong option; t5-012: the exterior-angle statement keyed false with "a
-reflex angle"); each must FAIL naming its item.
+A self-test plants faults back into a copy of the page, each of which must FAIL naming its item: three of the
+tranche 5 audit's (t5-003: a = 4, b = 9 as a wrong option; t5-009: (k^2 + 3k + 2)/2 as a wrong option; t5-012:
+the exterior-angle statement keyed false with "a reflex angle") and the SWEEP-1 texts as they were before their
+fixes (s1-001 the cos^2 + sin^2 proof in one exact order; s1-003 an induction proposition with no domain and the
+"the sum starts at r=1" reason; s1-004 "natural numbers"; s1-006 to s1-009 the |z1 + z2| and a^2 > b^2
+misconceptions, "Factor:" and the base-free log steps).
 
     python scripts/verify-proof-builder.py [--no-selftest] [--against FILE] [--katex-dir DIR]
 """
 import argparse
+import itertools
 import os
 import re
 import sys
@@ -68,7 +79,7 @@ def group(s, i, o, c):
 def to_py(s):
     s = (s.replace('\u2212', '-').replace('\\left', '').replace('\\right', '').replace('\\times', '*')
          .replace('\\cdot', '*').replace('\\pi', ' pi ').replace('\\theta', ' theta ').replace('°', '*pi/180')
-         .replace('^\\circ', '*pi/180').replace('\\,', ' ').strip())
+         .replace('^\\circ', '*pi/180').replace('\\,', ' ').replace('\\log_{10}', '\\log').strip())
     for a_, b_ in SUP.items():
         s = s.replace(a_, b_)
     out, i = '', 0
@@ -227,7 +238,7 @@ REFUTES = [
     ('determinant of any matrix is positive', lambda o: mat(o).det() <= 0),
     ('AB = BA', lambda o: (lambda d: mat(d['A']) * mat(d['B']) != mat(d['B']) * mat(d['A']))(assigns(o))),
     ('eigenvalues of a real matrix are real', lambda o: any(not v.is_real for v in mat(o).eigenvals())),
-    ('first n natural numbers', lambda o: (num(o) * (num(o) + 1) / 2) % 2 == 1),
+    ('first n positive integers', lambda o: (num(o) * (num(o) + 1) / 2) % 2 == 1),
     ('e^{i\\theta}', lambda o: sp.simplify(sp.exp(sp.I * num(o)) - sp.cos(num(o)) - sp.sin(num(o))) != 0),
     ('\\det(A) = \\det(B)', lambda o: (lambda d: mat(d['A']).det() == mat(d['B']).det() and mat(d['A']) != mat(d['B']))(assigns(o))),
     ('|z_1 + z_2|', lambda o: (lambda d: sp.simplify(abs(d['z_1'] + d['z_2']) - abs(d['z_1']) - abs(d['z_2'])) != 0)(tri(o))),
@@ -244,7 +255,7 @@ TRUE_PROOFS = {
     'reciprocal of an irrational': '1/x = p/q gives x = q/p',
 }
 AUDIT_S = {'\\sqrt{a+b}': 't5-003', '\\log(a + b)': 't5-004', '(a+b)^2 = a^2 + b^2': 't5-005',
-           '\\dfrac{a}{b+c}': 't5-006', 'first n natural numbers': 't5-007', '\\arg(z_1 z_2)': 't5-008',
+           '\\dfrac{a}{b+c}': 't5-006', 'first n positive integers': 't5-007', '\\arg(z_1 z_2)': 't5-008',
            'exterior angle': 't5-012'}
 
 # Induction: (prop substring, stage) -> target (SymPy), or ('text', key) for a reviewed choice.
@@ -263,6 +274,30 @@ STAGES = {
     ('r!', 1): sp.factorial(k + 1) - 1 + (k + 1) * sp.factorial(k + 1),
 }
 AUDIT_I = {('\\sum_{r=1}^{n} r =', 3): 't5-009', ('8^n', 2): 't5-010', ('r!', 1): 't5-011'}
+
+# Sorter: (title substring, with \( \) removed) -> every order reviewed as a valid proof. A proof not listed has one
+# valid order, as written. n^2 + n (t5-013): line 0 (n^2 + n = n(n+1)) may come anywhere before the last line, and
+# lines 1 and 2 in either order, before line 3. cos^2 + sin^2 (s1-001): Pythagoras may be stated before the sides are
+# named, both after the triangle and before the conclusion.
+VALID_ORDERS = [
+    ('Prove that n^2 + n is even', [[0, 1, 2, 3, 4], [0, 2, 1, 3, 4], [1, 0, 2, 3, 4], [2, 0, 1, 3, 4],
+                                    [1, 2, 0, 3, 4], [2, 1, 0, 3, 4], [1, 2, 3, 0, 4], [2, 1, 3, 0, 4]]),
+    ('Prove that \\cos^2\\theta + \\sin^2\\theta = 1', [[0, 1, 2, 3], [0, 2, 1, 3]]),
+]
+AUDIT_O = {'Prove that n^2 + n is even': 't5-013', 'Prove that \\cos^2\\theta + \\sin^2\\theta = 1': 's1-001'}
+
+# Wording reviewed as wrong: (regex, why, finding). Matched against every string in the bank.
+BARRED = [
+    (r'point in the same direction', 'the |z1 + z2| misconception says equality needs the same direction, but its own '
+     'option z1 = 0 gives equality', 's1-006'),
+    (r'Negative numbers reverse the inequality when squared', 'squaring reverses an inequality only when both '
+     'numbers are negative', 's1-007'),
+    (r'the sum starts at r=1, so n=1 is the base case', 'a non sequitur: the base case comes from the domain the '
+     'statement is claimed for', 's1-003'),
+    (r'\bFactor\s*:', 'US English: "Factorise:"', 's1-008'),
+    (r'natural numbers?', 'whether 0 is a natural number is a convention: state the domain (SR-17)', 's1-004'),
+]
+DOMAIN = re.compile(r'n\s*(\\geq|\\ge\b|≥|\\in)')
 
 
 def same(a, b):
@@ -324,7 +359,82 @@ def check_claims(fails, w, text):
                 continue
 
 
+def ind_label(prop):
+    """The proposition without its stated domain, so a label is the same before and after the domain is added."""
+    return re.sub(r'\s*\\text\{ for all integers \} n \\geq 1$', '', prop)[:40]
+
+
+def bank_strings(bank):
+    """(label, field, text) for every string a student can see."""
+    for lv in ('alevel', 'further'):
+        for q in bank['COUNTER'][lv]:
+            w = 'counter %s' % q['s'][:60]
+            for t in [q['s'], q['correct']] + q['d']:
+                yield w, 'text', t
+            for t in q.get('steps', []):
+                yield w, 'step', t
+            if q.get('misconception'):
+                yield w, 'misconception', q['misconception']
+        for i, q in enumerate(bank['SORTER'][lv]):
+            w = 'sorter %s[%d]' % (lv, i)
+            for t in [q['title']] + q['lines']:
+                yield w, 'text', t
+            if q.get('misconception'):
+                yield w, 'misconception', q['misconception']
+    for q in bank['INDUCTION']:
+        yield 'induction %s:' % ind_label(q['prop']), 'text', q['prop']
+        for si, st in enumerate(q['stages']):
+            w = 'induction %s stage %d' % (ind_label(q['prop']), si + 1)
+            for t in [st['prompt'], st['correct']] + st['d']:
+                yield w, 'text', t
+            for t in st.get('steps', []):
+                yield w, 'step', t
+            if st.get('misconception'):
+                yield w, 'misconception', st['misconception']
+
+
+def admitted(q):
+    """Every order the game's sorter accepts: each line after every line its `after` entry lists (no map: exact)."""
+    nl = len(q['lines'])
+    if not q.get('after'):
+        return {tuple(range(nl))}
+    after = {int(kk): v for kk, v in q['after'].items()}
+    return {o for o in itertools.permutations(range(nl))
+            if all(o.index(j) < pos for pos, li in enumerate(o) for j in after.get(li, []))}
+
+
+def reviewed_orders(q):
+    t = q['title'].replace('\\(', '').replace('\\)', '')
+    hits = [(sub, orders) for sub, orders in VALID_ORDERS if sub in t]
+    return (hits[0][0], {tuple(o) for o in hits[0][1]}) if hits else (None, {tuple(range(len(q['lines'])))})
+
+
+def check_wording(fails, bank):
+    for w, field, t in bank_strings(bank):
+        for rx, why, sid in BARRED:
+            if re.search(rx, t):
+                fails.append('%s: %r: %s (proof-builder-%s)' % (w, t[:70], why, sid))
+        if field == 'step' and re.search(r'\\log(?![_a-zA-Z])', t):
+            fails.append('%s: the step %r takes a log with no base stated (SR-17, proof-builder-s1-009)' % (w, t[:70]))
+    for q in bank['INDUCTION']:
+        if not DOMAIN.search(q['prop']):
+            fails.append('induction %s: the proposition %r states no domain for n (SR-17, proof-builder-s1-003)'
+                         % (ind_label(q['prop']), q['prop']))
+    for lv in ('alevel', 'further'):
+        for i, q in enumerate(bank['SORTER'][lv]):
+            w = 'sorter %s[%d]' % (lv, i)
+            sub, want = reviewed_orders(q)
+            tag = ' (proof-builder-%s)' % AUDIT_O[sub] if sub in AUDIT_O else ''
+            got = admitted(q)
+            for o in sorted(want - got):
+                fails.append('%s: the valid order %s is rejected by the game (SR-24)%s'
+                             % (w, ','.join(map(str, o)), tag))
+            for o in sorted(got - want):
+                fails.append('%s: the game accepts the order %s, not reviewed as valid%s' % (w, ','.join(map(str, o)), tag))
+
+
 def check_bank(fails, bank):
+    check_wording(fails, bank)
     counter = bank['COUNTER']['alevel'] + bank['COUNTER']['further']
     if len(counter) != len(REFUTES):
         fails.append('counter: %d items, REFUTES has %d (review and extend REFUTES)' % (len(counter), len(REFUTES)))
@@ -358,7 +468,7 @@ def check_bank(fails, bank):
         for si, st in enumerate(q['stages']):
             key = next(((p, si) for (p, s_) in STAGES if s_ == si and p in q['prop']), None)
             tag = AUDIT_I.get(key)
-            w = 'induction %s stage %d%s' % (q['prop'][:40], si + 1, ' (proof-builder-%s)' % tag if tag else '')
+            w = 'induction %s stage %d%s' % (ind_label(q['prop']), si + 1, ' (proof-builder-%s)' % tag if tag else '')
             if key is None:
                 fails.append('%s: no STAGES entry (review it)' % w)
                 continue
@@ -391,7 +501,7 @@ def check_bank(fails, bank):
                 check_claims(fails, w, s2)
 
 
-SWEEP_JS = r"""() => {
+SWEEP_JS = r"""(VALID) => {
   window.setTimeout = () => 0; window.requestAnimationFrame = () => 0;
   const out = [], W = document.documentElement.clientWidth;
   const raw = el => { const c = el.cloneNode(true); c.querySelectorAll('.katex-mathml').forEach(x => x.remove()); return c.textContent; };
@@ -439,15 +549,18 @@ SWEEP_JS = r"""() => {
     document.querySelector('.sort-check').click();
     return score > 0;
   };
-  const valid = (q, order) => q.after ? order.every((li, pos) => (q.after[li] || []).every(j => order.indexOf(j) < pos)) : order.every((li, pos) => li === pos);
-  // Orders reviewed as valid proofs that the game must accept (t5-013).
-  const MUST = [['Prove that n^2 + n is even', [[0, 2, 1, 3, 4], [1, 2, 0, 3, 4], [2, 1, 0, 3, 4]]]];
+  // Orders reviewed as valid proofs (VALID_ORDERS): the game must accept these and no others (SR-24).
+  const perms = a => a.length < 2 ? [a] : a.flatMap((v, j) => perms([...a.slice(0, j), ...a.slice(j + 1)]).map(r => [v, ...r]));
   for (const lv of ['alevel', 'further']) SORTER[lv].forEach((q, i) => {
     const w = 'sorter ' + lv + '[' + i + ']';
     const base = q.lines.map((_, j) => j);
+    const hit = VALID.find(([t]) => q.title.replace(/\\[()]/g, '').includes(t));
+    const reviewed = hit ? hit[1] : [base];
+    const valid = (q, order) => reviewed.some(r => r.join() === order.join());
     if (!play(q, base)) out.push(['sort', w, 'the order as written is rejected']);
-    for (const [t, orders] of MUST) if (q.title.replace(/\\[()]/g, '').includes(t))
-      for (const o of orders) if (!play(q, o)) out.push(['sort', w, 'the valid order ' + o.join(',') + ' is rejected (proof-builder-t5-013)']);
+    for (const o of reviewed) if (!play(q, o)) out.push(['sort', w, 'the valid order ' + o.join(',') + ' is rejected (SR-24)']);
+    if (base.length <= 5) for (const o of perms(base)) if (play(q, o) !== valid(q, o))
+      out.push(['sort', w, 'order ' + o.join(',') + (valid(q, o) ? ' rejected' : ' accepted') + ' (reviewed valid: ' + valid(q, o) + ')']);
     looks(w + ' lines', document.getElementById('gameArea'));
     q.lines.forEach(l => prose(w + ' line', l, document.getElementById('gameArea')));
     looks(w + ' title', document.getElementById('statement'));
@@ -515,7 +628,7 @@ def play(fails, html):
             page.wait_for_function('typeof COUNTER !== "undefined" && typeof katex !== "undefined"', timeout=15000)
             bank = page.evaluate('() => ({COUNTER, SORTER, INDUCTION})')
             seen = set()
-            for kind, where, what in page.evaluate(SWEEP_JS):
+            for kind, where, what in page.evaluate(SWEEP_JS, VALID_ORDERS):
                 tag = ' (proof-builder-t5-018)' if 'spaces' in what else ' (proof-builder-t5-019)' if 'raw TeX' in what \
                     else ' (proof-builder-t5-022)' if kind == 'phone' else ''
                 msg = '%s in Chromium: %s%s' % (where, what, tag)
@@ -539,6 +652,25 @@ PLANTS = [
     ('counter "Every exterior', 't5-012: the true exterior-angle statement keyed false',
      "correct:'This statement is actually TRUE',d:['A regular hexagon','An equilateral triangle','A square'],isTrue:true",
      "correct:'A reflex angle in a non-convex polygon',d:['A regular hexagon','An equilateral triangle','A square']"),
+    ('sorter alevel[7]', 's1-001: cos^2 + sin^2 in one exact order', "],\n   after:{1:[0],2:[0],3:[1,2]}},", "]},"),
+    ('induction \\sum_{r=1}^{n} r = \\frac{n(n+1)}{2}:', 's1-003: the sum of r with no domain',
+     "{prop:'\\\\sum_{r=1}^{n} r = \\\\frac{n(n+1)}{2} \\\\text{ for all integers } n \\\\geq 1',",
+     "{prop:'\\\\sum_{r=1}^{n} r = \\\\frac{n(n+1)}{2}',"),
+    ('induction \\sum_{r=1}^{n} r = \\frac{n(n+1)}{2} stage 1', 's1-003: "the sum starts at r=1" reason',
+     "'The statement is claimed for \\\\(n \\\\geq 1\\\\), so \\\\(n = 1\\\\) is the base case'",
+     "'Here, the sum starts at r=1, so n=1 is the base case'"),
+    ('counter "The sum of the first n natural', 's1-004: "first n natural numbers"',
+     "first n positive integers is always even", "first n natural numbers is always even"),
+    ('counter "If \\(z_1\\) and', 's1-006: "point in the same direction"',
+     "one is a non-negative real multiple of the other (or either is \\\\(0\\\\))'",
+     "\\\\(z_1\\\\) and \\\\(z_2\\\\) point in the same direction'"),
+    ('counter "If a > b then', 's1-007: negatives reverse when squared',
+     "Squaring reverses the inequality when both numbers are negative, and can when only one is",
+     "Negative numbers reverse the inequality when squared"),
+    ('induction \\sum_{r=1}^{n} r \\cdot r! = (n+1)! - 1 stage 2', 's1-008: "Factor:"',
+     "(k+1)(k+1)!. Factorise:'", "(k+1)(k+1)!. Factor:'"),
+    ('counter "\\log(a + b)', 's1-009: log with no base in the steps',
+     "'\\\\log_{10}(10 + 10) = \\\\log_{10}(20) \\\\approx 1.301'", "'\\\\log(10 + 10) = \\\\log(20) \\\\approx 1.301'"),
 ]
 
 

@@ -87,6 +87,13 @@ Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
+## 2026-10-13 (cloud): SWEEP-1 batch 11 (A-Level, part 2: mechanics, logs, binomials, proofs)
+
+- **No SR-20 level.** Three HIGH items fixed: moments-master ("At the pivot" true as a wrong option), binomial-blaster ("r > n" true), proof-builder (a second valid order of the cos² + sin² proof rejected, SR-24; the verifier now holds every reviewed order).
+- **Fixed in batch 11:** dimension-checker's four verdict-sharing options (SR-31); force-resolver's shuffled "Same system" item, stated beams, 18 unstated precisions and 21 unchecked working lines; curling-friction's head-on collisions, horizontal surfaces and a duplicate KE option; moments-master's eight precisions, perpendicular, opposite sides, beam weight; log-laws' undeclared log₁₀ in Laws mode; proof-builder's induction domains and wording; binomial-blaster's two true options; partial-fractions-duel's method item and hint check. Each verifier fails on the old content and plants it.
+- **Open, for Jon:** proof-builder's TRUE option appearing only where it is the key (a design choice), a lemma order, key texts; log-laws' "Change of Base" label; binomial-blaster's ≈ stems and the coefficient item; dimension-checker's live timer (SR-23); curling-friction's "Worked solution" heading. **For the home lane:** log-laws' 34 negative typed answers behind inputmode="decimal".
+- **Next:** CMP1-READABLE-FIGURES (contract `docs/handover/contracts/2026-10-13-cmp1-readable-figures.md`; branch `claude/cmp1-readable-figures`, claim commit pushed, core-maths-paper1 claimed on the cloud lane's remaining list), then batch 12 (factor-theorem, complex-converter, matrix-crunch, characteristic-quest, eigenvalue-extractor, eigenvector-engine, boolean-blitz, truth-will-set-you-free), then the final "for Jon" list and the SWEEP_DONE note.
+
 ## 2026-10-13 (cloud): growth-and-decay (#352), test-the-claim (#353), graph-sketcher (#354) and SWEEP-1 batch 10 (Core Maths and A-Level, part 1)
 
 - **Three SR-20 levels, each fixed in its own PR under SR-30 (keys unchanged):** growth-and-decay (#352), test-the-claim (#353), graph-sketcher (#354): typed answers marked to bands that disagree with the precision their prompt states, so wrong answers were marked right and right ones wrong (todo §1.36); now marked through the shared MaffsAnswer at the stated precision, plus true or accepted-H0 wrong options (SR-16), signed boundaries and stated conventions (SR-17).
@@ -101,10 +108,3 @@ main's last full run is red; watch main's run after merging.
 - **Jon's rulings, 13 Oct (verbatim in the rulings file), done in batch 9's PR:** paper2a Q5's CEO says "increased by 10%"; paper2b Q24, Q33, Q35, Q36 give a verdict other than the key's; **SR-31 (standing): no wrong option gives the key's verdict or choice** (a check in every Core Maths verifier and in the brief; its scan fixed five more); Screening Room's box shows a fixed % and reads a percentage.
 - **Fixed in batch 9:** screening-room wording; estimation-engine's counts as £ and its money format path (SR-3); core-maths-paper1 (stem-and-leaf key, SR-16/SR-31 options); paper2b (precision, assumption); paper2c (units).
 - **Next:** (done: see batch 10's entry above.)
-
-## 2026-10-13 (cloud): correlation-or-coincidence (#347) and SWEEP-1 batch 8 (GCSE part 4)
-
-- **SR-20 hit, ruled the same day:** correlation-or-coincidence keyed "Something else causes both" on three pairs where one drives the other (B22, B25, B27). #347: Jon's three pairs (shoe size/reading age, ice creams/sunburn, umbrellas/taxis), the verifier bars the old pairs; the new ones overlap B4, B1 and B3 (s1-002, my error, for Jon).
-- **Fixed in batch 8:** component-crusher L9's direction vector takes any non-zero multiple (SR-24), and AL11/L11 state their axes; formula-forge's A = πr² misconception; better-value's three true threshold options, the meal-prep reason, the van's resale and TPFT; given-that's two explanations; chart-interrogator's unlabelled boundaries and four-option Q1; expectation-station's k-cells ("2k = ?"), exact reveal and "Exactly half". Every verifier PASS locally with its plants; answer-lock PASS.
-- **Open, for Jon:** better-value-s1-002 (equal at break-even, with r-006); chart-interrogator-s1-001 (histogram bands by axis, canon §7.1.2) and s1-005; expectation-station-s1-005 ("Most"); stem changes in unit-converter, formula-forge, given-that.
-- **Class (running):** verifier gaps in worked text in every batch 8 game (each has an entry); conventions stated in one item and not its neighbours (component-crusher AL14 only).

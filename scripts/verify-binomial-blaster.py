@@ -19,8 +19,14 @@ of a series, an expression identical for every n, an interval |x| < k, an estima
   value; an estimate's ask states its method ("first N terms" or "these three terms"); and, in Chromium
   (390x844), every item is shown through showQ() and every option clicked through handle(): the key marked
   right, the others wrong. Options are assembled by MaffsOptions.build() (four distinct, the key once).
-A self-test plants three of the audit's own faults back into a copy of the page (t5-003: (1.01)^5 keyed
-1.05101; t5-007: (2x+3)^3 keyed 54; t5-012: the coefficient keyed 5); each must FAIL naming its item.
+  An item whose target is a number offers only numbers (SR-4: a letter expression is no slip in working that
+  ends in a value). A reviewed verdict item offers none of the true statements in TRUE_WRONG (SR-16).
+The "How it works" overlay's worked example (6C2 = 6!/(2! 4!) = 720/(2 x 24) = 15) is read from the page and
+every member of its chain must equal the last (the overlay's other text is formulas and is not checked).
+A self-test plants faults back into a copy of the page: three of the audit's own (t5-003: (1.01)^5 keyed
+1.05101; t5-007: (2x+3)^3 keyed 54; t5-012: the coefficient keyed 5), the SWEEP-1 items' old options (s1-001:
+'r > n' offered; s1-002: 'Is undefined' offered; s1-003: a x n offered a+n, 6a, n) and a wrong worked example;
+each must FAIL naming its item.
 
     python scripts/verify-binomial-blaster.py [--no-selftest] [--against FILE] [--katex-dir DIR]
 """
@@ -169,12 +175,20 @@ TARGETS = {
                 ('verdict', 'n! \\text{ is undefined for negative } n', 'the factorial is defined only for whole numbers 0, 1, 2 ...'),
                 ('verdict', 'An infinite series', 'for n not 0, 1, 2 ... the coefficients never reach zero'),
                 ('verdict', 'Diverges', 'at x = 1 the partial sums are 1, 0, 1, 0 ...; at x = -1 the terms grow'),
-                ('expr', x), V(1)],
+                ('expr', x), ('poly', sp.Integer(1))],
+}
+# True statements that a verdict item must not offer as wrong options (SR-16; SWEEP-1, 13 Oct 2026).
+TRUE_WRONG = {
+    # n < 0 and r >= 0 make r > n always, so (n-r)! is undefined: a true reason
+    ('alevel2', 45): ['r > n'],
+    # a divergent series has no sum: the same fact as the key
+    ('alevel2', 47): ['Is undefined'],
 }
 COEFF_ASK = re.compile(r'Coefficient of x([²³⁴]?)|Constant term')
 # The words an item must carry for its target to be the one above.
 PINNED = {('alevel', 40): 'is row 0', ('alevel2', 41): '27x^2', ('alevel2', 42): '27x^2', ('alevel2', 40): 'product a',
           ('alevel2', 46): '\\{0, 1, 2, \\ldots\\}', ('alevel2', 36): '\\dfrac{3}{(1+x)(1-2x)}'}
+SWEEP = {('alevel2', 45): 's1-001', ('alevel2', 47): 's1-002', ('alevel2', 40): 's1-003'}
 AUDIT = {('alevel', 9): 't5-002', ('alevel', 35): 't5-003', ('alevel', 36): 't5-004', ('alevel', 38): 't5-005',
          ('alevel', 39): 't5-006', ('alevel', 49): 't5-007', ('alevel', 37): 't5-008', ('alevel', 40): 't5-009',
          ('alevel2', 32): 't5-011', ('alevel2', 39): 't5-012', ('alevel2', 41): 't5-013', ('alevel2', 42): 't5-014',
@@ -197,6 +211,8 @@ def check_bank(fails, bank):
         for i, q in enumerate(bank[lv]):
             w = '%s[%d] (%s | %s)%s' % (lv, i, q['q'], q['ask'],
                                        ' (binomial-blaster-%s)' % AUDIT[(lv, i)] if (lv, i) in AUDIT else '')
+            if (lv, i) in SWEEP:
+                w += ' (binomial-blaster-%s)' % SWEEP[(lv, i)]
             t = TARGETS[lv][i]
             if (lv, i) in PINNED and PINNED[(lv, i)] not in q['q'] + ' ' + q['ask']:
                 fails.append('%s: the item must say "%s" for its key to hold' % (w, PINNED[(lv, i)]))
@@ -206,6 +222,9 @@ def check_bank(fails, bank):
             if t[0] == 'verdict':
                 if q['correct'] != t[1]:
                     fails.append('%s: keyed %r, reviewed %r (%s)' % (w, q['correct'], t[1], t[2]))
+                for o in q['d']:
+                    if o in TRUE_WRONG.get((lv, i), []):
+                        fails.append('%s: the wrong option %r is a true statement (SR-16)' % (w, o))
                 continue
             if t[0] == 'bound':
                 ks = [bound(o) for o in opts]
@@ -222,6 +241,9 @@ def check_bank(fails, bank):
                 continue
             if t[0] == 'val':
                 target = t[1]
+                for o, v in zip(opts[1:], vals[1:]):
+                    if v.free_symbols:
+                        fails.append('%s: the answer is a number but the wrong option %s is not (SR-4)' % (w, o))
             elif t[0] == 'poly':
                 target = sp.expand(t[1])
             elif t[0] == 'series':
@@ -253,6 +275,24 @@ def check_bank(fails, bank):
                 for k in range(p + 1, 4):
                     if same(sp.expand(vals[p]), sp.expand(vals[k])):
                         fails.append('%s: options %s and %s are equal in value' % (w, opts[p], opts[k]))
+
+
+def check_overlay(fails, html):
+    """The "How it works" worked example: every member of the chain equals the last."""
+    m = re.search(r"'Example: '\+k\('((?:[^'\\]|\\.)*)'\)", html)
+    if not m:
+        fails.append('overlay: the nCr worked example ("Example: ...") is not on the page')
+        return
+    tex = m.group(1).replace('\\\\', '\\')
+    parts = [p.strip() for p in tex.split('=')]
+    try:
+        vals = [read(p.replace('\\times', '\\cdot')) for p in parts]
+    except ValueError as e:
+        fails.append('overlay: worked example %r: %s (extend read())' % (tex, e))
+        return
+    for p, v in zip(parts[:-1], vals[:-1]):
+        if sp.simplify(v - vals[-1]) != 0:
+            fails.append('overlay: worked example %r: %s = %s, not %s' % (tex, p, sp.simplify(v), parts[-1]))
 
 
 SWEEP_JS = r"""() => {
@@ -342,6 +382,10 @@ PLANTS = [
      "correct:'1.05101',d:['1.051','1.0501','0.951']"),
     ('alevel[49]', 't5-007: (2x+3)^3 keyed 54', "correct:'36',d:['54','108','18']", "correct:'54',d:['36','108','18']"),
     ('alevel2[39]', 't5-012: the coefficient keyed 5', "correct:'-3',d:['3','9','-6']", "correct:'5',d:['3','9','-6']"),
+    ('alevel2[45]', "s1-001: 'r > n' offered", "'r \\\\text{ must be negative}'", "'r > n'"),
+    ('alevel2[47]', "s1-002: 'Is undefined' offered", "'\\\\text{Converges to } \\\\tfrac{1}{2}'", "'Is undefined'"),
+    ('alevel2[40]', 's1-003: a x n offered a+n, 6a, n', "correct:'6',d:['1','12','-6']", "correct:'6',d:['a+n','6a','n']"),
+    ('overlay', 'worked example 6C2 = 30', "\\\\times 24} = 15'", "\\\\times 24} = 30'"),
 ]
 
 
@@ -358,6 +402,7 @@ def main():
     bank = play(fails, html)
     if bank is not None:
         check_bank(fails, bank)
+    check_overlay(fails, html)
     print('%s: %d items, every option evaluated (SymPy) and clicked in Chromium' % (SLUG, sum(len(bank[k]) for k in COUNTS) if bank else 0))
     ok = True
     if not args.no_selftest and not args.against:
@@ -370,6 +415,7 @@ def main():
             planted = play(rep, html.replace(old, new))
             if planted is not None:
                 check_bank(rep, planted)
+            check_overlay(rep, html.replace(old, new))
             hit = [f for f in rep if f.startswith(tag)]
             ok = ok and bool(hit)
             print('  self-test %-42s %s' % (what, ('caught: ' + hit[0][:110]) if hit else '*** MISSED ***'))
