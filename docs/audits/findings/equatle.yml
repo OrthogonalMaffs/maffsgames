@@ -28,3 +28,29 @@ findings:
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
     7 Oct'
   status: open
+- id: equatle-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: all
+  where: games/equatle/index.html:229, :278 (rules), :616 (refusal)
+  summary: 'The rules say "BODMAS applies" but never that + and − are worked left to right, the convention 609 targets
+    of the shape D−D+D depend on. A student who reads BODMAS literally (A before S) types 9-5+3=01 and is refused with
+    "9-5+3 = 7, not 1", no reason given. One rules line, open for Jon'
+  evidence: '"Guess the 8-character equation in 6 tries · BODMAS applies"; "BODMAS applies — so 9+4*7=37 is correct";
+    target 9-5+3=07 (SWEEP-1, batch 3; pool rebuilt, 23,399 equations)'
+  status: open
+- id: equatle-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: games/equatle/index.html:277, :282-290, :537, :616
+  summary: 'How to Play wording: grey is "not in the equation at all", but under the minimum-match rule it can mean "no
+    more of it", under an example row holding two 7s; "Duplicate digits" covers operators too; order matters is never
+    said (28+9=037 is accepted but is not 9+28=037); a true-looking non-integer side gets "Invalid expression"; the text
+    writes * and / where the tiles show × and ÷; every leading-zero example is on the left though 26% of targets pad
+    the right. Open'
+  evidence: '"Grey — not in the equation at all."; "Duplicate digits use the Wordle minimum-match rule"; 10/4+2=4 gets
+    "Invalid expression" (SWEEP-1, batch 3)'
+  status: open

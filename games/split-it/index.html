@@ -434,7 +434,7 @@ const generators={
           const d=rInt(3,8)*rInt(10,30);const t=rInt(2,5);const t2=rInt(2,8);
           // d×t2÷t to 1 d.p., rounded half up, in whole numbers (exact: no float in the key)
           const ans=Math.floor((20*d*t2+t)/(2*t))/10;
-          return{prompt:`A car travels <span class="highlight">${d} miles</span> in <span class="highlight">${t} hours</span>.<br>How far in <span class="highlight">${t2} hours</span>?<br>Give your answer to 1 decimal place.`,
+          return{prompt:`A car travels <span class="highlight">${d} miles</span> in <span class="highlight">${t} hours</span>.<br>At the same speed, how far in <span class="highlight">${t2} hours</span>?<br>Give your answer to 1 decimal place.`,
             type:'single',answers:[ans],unit:'miles',dp:1,
             working:`Speed = ${d}÷${t} = ${X(d,t)} mph. Distance = ${X(d,t)}×${t2} = ${ans} miles`,
             hint:`Find the speed first: ${d} ÷ ${t}`};

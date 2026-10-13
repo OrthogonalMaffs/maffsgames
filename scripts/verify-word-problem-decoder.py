@@ -21,8 +21,8 @@ it signals from four options. Jon's ruling (SR-18, 6 Oct 2026): one category sch
     marks each accepted topic right and each other one wrong (so the marking is tested, whatever the page's code).
     After a mark, every option clicked again and pressed with Enter changes nothing (word-problem-decoder-t1-005: a
     second Enter credited the next phrase unseen); the session ends once.
-A self-test plants five faults back into a copy of the page (no lock; the scheme off; gcse_017's second topic off;
-gcse_017's old total; gcse_059's old estimate);
+A self-test plants six faults back into a copy of the page (no lock; the scheme off; gcse_017's second topic off;
+gcse_017's old total; gcse_059's old estimate; gcse_029's second topic off, SWEEP-1);
 each must FAIL naming its entry.
 
     python scripts/verify-word-problem-decoder.py [--no-selftest] [--against FILE]
@@ -60,6 +60,15 @@ ACCEPT = {
     ('wpd_gcse_039', 0): ({'Geometry — Similarity & Congruence', RP}, 't1-010',
                           'a scale of 1:200 is a ratio (ks3_003 keys a map scale Ratio & Proportion)'),
     ('wpd_gcse_060', 1): ({EQ, RP}, 't1-010', 'the average speed is distance ÷ time, a compound measure'),
+    # SWEEP-1 (13 Oct 2026; Jon's ruling, SR-18: both accepted where both fit)
+    ('wpd_gcse_029', 0): ({'Algebra — Functions', 'Algebra — Quadratics'}, 's1-001',
+                          'f(x) = 2x² − 3 is a quadratic and f(x) = 15 is solved as one (gcse_025 keys h = 40 + 12t − 5t² Quadratics)'),
+    ('wpd_gcse_056', 0): ({'Statistics — Cumulative Frequency & Box Plots', 'Statistics & Averages'}, 's1-001',
+                          'the two groups are compared by their medians and interquartile ranges, an average and a spread'),
+    ('wpd_gcse_024', 0): ({'Algebra — Quadratics', 'Geometry — Area & Perimeter'}, 's1-001',
+                          'the phrase gives an area (gcse_027 keys "area of 81 cm²" Area & Perimeter)'),
+    ('wpd_ks3_030', 0): ({'Algebra — Forming Expressions', 'Geometry — Area & Perimeter'}, 's1-002',
+                         'the expression is a rectangle\'s perimeter (the mirror of ks3_046, angles and forming expressions)'),
 }
 for _n in range(1, 6):
     ACCEPT[('wpd_gcse_%03d' % _n, 0)] = ({'Reverse Percentage', PCT}, 't1-003', 'a reverse percentage is a percentage problem')
@@ -273,6 +282,8 @@ PLANTS = [
      'The total cost of the tickets is £136.', 'The total cost of the tickets is £131.'),
     (TAG + 't1-007', "t1-007: gcse_059's old estimate (48)",
      'He estimates he can fit about 61 tins in the box', 'He estimates he can fit about 48 tins in the box'),
+    (TAG + 's1-001', "s1-001: gcse_029's second topic off",
+     "topic:'Algebra — Functions',also:['Algebra — Quadratics'],", "topic:'Algebra — Functions',"),
 ]
 
 

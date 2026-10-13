@@ -1,0 +1,68 @@
+# Findings register for split-it (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: split-it
+audited:
+  tranche: S1 (SWEEP-1 reading sweep)
+  head: 50212d2
+  date: 2026-10-13
+  served:
+    ks3: generator
+    gcse: generator
+findings:
+- id: split-it-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: gcse
+  where: games/split-it/index.html:437 (Unitary, speed)
+  summary: 'The key d × t2 ÷ t assumes the car keeps the same speed; the question never said so (SR-17). Fixed under
+    SR-17 by stating it ("At the same speed, how far in t2 hours?"); key unchanged. verify-split-it.py reads the speed
+    key only from a prompt that says so, so the old wording fails as unreadable'
+  evidence: '"A car travels 102 miles in 5 hours. How far in 7 hours? Give your answer to 1 decimal place." keyed 142.8
+    (SWEEP-1, batch 3; 20,000 draws per mode and level)'
+  status: fixed
+  pr: 339
+- id: split-it-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: gcse
+  where: games/split-it/index.html:431 (Unitary, currency working)
+  summary: 'The working writes the euro amount and the rate as JS numbers, so about 56% of currency items show a money
+    answer to 1 d.p. ("€66.6"), which the game''s own format notice says loses the mark'
+  evidence: 'working "£45 × 1.48 = €66.6" (3,722 of 6,690 currency draws) (SWEEP-1, batch 3)'
+  status: open
+- id: split-it-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: ks3, gcse
+  where: games/split-it/index.html:364-367 (ks3), :373-375 (gcse), Fractions
+  summary: 'Equal parts are drawn, so "the smaller part" or "the largest part" does not exist or is not unique (about 1
+    in 7 Foundation draws, 28% of GCSE draws). The key''s value is unambiguous; drawing distinct parts is a generator
+    change, open'
+  evidence: '"In the ratio 2 : 2, what fraction of the total is the smaller part?" key 1/2; "In the ratio 2 : 4 : 4,
+    what fraction of the total is the largest part?" key 2/5 (SWEEP-1, batch 3)'
+  status: open
+- id: split-it-s1-004
+  severity: LOW
+  jc: false
+  class: NEW:degenerate-item
+  level: ks3, gcse
+  where: games/split-it/index.html:416-420 (Unitary, n = m), :434-437 (speed, t = t2)
+  summary: 'The generator can ask for the amount it has just given (about 9% of Foundation unitary draws, 14% of speed
+    draws). Drawing m ≠ n and t2 ≠ t without a redraw loop (tier 2) is a generator change, open'
+  evidence: '"8 rubbers cost £28.80. How much do 8 rubbers cost?" key 28.8; "A car travels 65 miles in 5 hours. How far
+    in 5 hours?" key 65 (SWEEP-1, batch 3)'
+  status: open
+- id: split-it-s1-005
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: ks3, gcse
+  where: games/split-it/index.html:386, :398, :401, :407, :410, :439 (Scale and speed working)
+  summary: 'Wording: the concrete mix recipe is scaled "for {p} people"; the Pancakes item asks for eggs "to 1 decimal
+    place" though every key is whole (SR-10); the Foundation working writes "12/4" with an ASCII slash; the speed working
+    writes "= 233.3 miles" for a rounded value. Open'
+  evidence: '"A Concrete mix recipe for 4 people uses the amounts below." (SWEEP-1, batch 3)'
+  status: open

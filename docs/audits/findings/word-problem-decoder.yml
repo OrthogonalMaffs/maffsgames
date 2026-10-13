@@ -145,3 +145,67 @@ findings:
   evidence: 'Found by the cloud lane''s re-audit (8 Oct 2026; t1-009; the tranche 1 report''s LOW note). Not
     changed in #157 (no marking effect).'
   status: open
+- id: word-problem-decoder-s1-001
+  severity: HIGH
+  jc: true
+  class: NEW:true-wrong-option
+  level: gcse
+  where: games/word-problem-decoder/index.html wpd_gcse_029, wpd_gcse_056, wpd_gcse_024
+  summary: 'Three phrases where a second offered topic fits and was marked wrong (SR-18), SR-20''s count of 3 at GCSE:
+    gcse_029 "f(x) = 2x² − 3" (solve f(x) = 15) keyed Functions only, Quadratics fits (gcse_025 keys h = 40 + 12t − 5t²
+    Quadratics); gcse_056 "comparing the two groups" (by medians and IQRs) keyed Cumulative Frequency & Box Plots only,
+    Statistics & Averages fits and is always on screen; gcse_024 "area of the field is 198 m²" keyed Quadratics only,
+    Area & Perimeter fits (gcse_027 keys "area of 81 cm²" so). Fixed under Jon''s ruling of 13 Oct (as #157): both
+    accepted, ACCEPT rows in the verifier, a plant that turns gcse_029''s second topic off'
+  evidence: 'SWEEP-1, batch 3: the verifier''s ACCEPT table (8 Oct) had none of these phrases, so it required the second
+    topic to be marked wrong'
+  status: fixed
+  pr: 339
+- id: word-problem-decoder-s1-002
+  severity: HIGH
+  jc: true
+  class: NEW:true-wrong-option
+  level: ks3
+  where: games/word-problem-decoder/index.html wpd_ks3_030
+  summary: '"Write an expression for the perimeter" keyed Forming Expressions only; Area & Perimeter fits (the mirror of
+    ks3_046, angles and forming expressions, accepted under t1-010). Fixed under SR-18 with the three above'
+  evidence: '"A rectangular sports pitch ... Write an expression for the perimeter of the pitch in terms of w." Area &
+    Perimeter offered about 29% of the time (SWEEP-1, batch 3)'
+  status: fixed
+  pr: 339
+- id: word-problem-decoder-s1-003
+  severity: MEDIUM
+  jc: true
+  class: NEW:true-wrong-option
+  level: gcse
+  where: games/word-problem-decoder/index.html wpd_gcse_055, gcse_007, gcse_008, gcse_010, gcse_011, gcse_012
+  summary: 'Weaker overlaps, for Jon: gcse_055 "interquartile range" (Statistics & Averages, a measure of spread);
+    gcse_007/008 rates in standard form ("3 × 10⁸ metres per second", "2.4 × 10⁹ operations per second") against Ratio &
+    Proportion, the topic the game keys rates under elsewhere (ks3_006, ks3_007, gcse_060); gcse_010-012 surds and
+    bounds of an area against Area & Perimeter (reachable only when the topic filter is narrowed)'
+  evidence: 'SWEEP-1, batch 3'
+  status: open
+- id: word-problem-decoder-s1-004
+  severity: MEDIUM
+  jc: true
+  class: NEW:convention-unstated
+  level: ks3
+  where: games/word-problem-decoder/index.html wpd_ks3_050
+  summary: 'KS3 offers no Probability topic, so "Estimate the probability of picking a red counter" is keyed Statistics &
+    Averages and a student who recognises probability must guess; Fractions and Ratio & Proportion (24/80) fit as well.
+    The extra "fell on the floor 4 times" sentence muddles a set that already totals 80. For Jon'
+  evidence: 'Key "Statistics & Averages" (SWEEP-1, batch 3)'
+  status: open
+- id: word-problem-decoder-s1-005
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: ks3, gcse
+  where: games/word-problem-decoder/index.html gcse_027, gcse_047, gcse_044, ks3_036, gcse_059, gcse_036
+  summary: 'Wording: gcse_027 and gcse_047 refer to a figure the game never shows (as t1-011, not in its list); gcse_044
+    asks for "the angle in the alternate segment" with no tangent given; ks3_036 wants "the total seating capacity" then
+    asks for the back row; gcse_059''s "volume of the box by the volume of a tin" is keyed Area & Perimeter (no volume
+    topic); gcse_036''s highlight "largest angle in the triangle" fits Angles on its words (the trigonometry cue is
+    unhighlighted)'
+  evidence: 'SWEEP-1, batch 3'
+  status: open
