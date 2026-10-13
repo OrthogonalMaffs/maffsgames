@@ -184,7 +184,10 @@ findings:
     Proportion, the topic the game keys rates under elsewhere (ks3_006, ks3_007, gcse_060); gcse_010-012 surds and
     bounds of an area against Area & Perimeter (reachable only when the topic filter is narrowed)'
   evidence: 'SWEEP-1, batch 3'
-  status: open
+  status: ruled
+  ruling: 'Jon, 13 Oct 2026 (SWEEP-1 Part 3, approved in full 20:35): accepted as they are. SR-4 (distractors that
+    name real errors) fits multiple-choice items with authored distractors; in a topic decoder the overlaps are
+    topics that genuinely fit the phrase, which SR-18 already handles where both are accepted.'
 - id: word-problem-decoder-s1-004
   severity: MEDIUM
   jc: true
@@ -194,9 +197,12 @@ findings:
   summary: 'KS3 offers no Probability topic, so "Estimate the probability of picking a red counter" is keyed
     Statistics & Averages and a student who recognises probability must guess; Fractions and Ratio & Proportion
     (24/80) fit as well. Part 2 #13: add Probability to KS3''s topic list (Split: the parent entry held 2
-    defects; the others are word-problem-decoder-s1-006.)'
+    defects; the others are word-problem-decoder-s1-006.) Fixed under Part 2 #13: KS3 now offers Probability
+    and wpd_ks3_050 is keyed Probability; its old topic, Statistics & Averages, is still accepted as a second
+    right answer (SR-18).'
   evidence: 'Key "Statistics & Averages" (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 370
 - id: word-problem-decoder-s1-006
   severity: LOW
   jc: true
@@ -215,9 +221,11 @@ findings:
   where: games/word-problem-decoder/index.html gcse_027, gcse_047, gcse_044, ks3_036, gcse_059, gcse_036
   summary: 'Wording: gcse_027 and gcse_047 refer to a figure the game never shows (as t1-011, not in its list) (Split:
     the parent entry held 5 defects; the others are word-problem-decoder-s1-007, word-problem-decoder-s1-008,
-    word-problem-decoder-s1-009, word-problem-decoder-s1-010.)'
+    word-problem-decoder-s1-009, word-problem-decoder-s1-010.) Fixed under R1: gcse_027 ("A square ... A
+    rectangle ...") and gcse_047 (no "In a diagram") no longer refer to a figure the game never shows.'
   evidence: 'SWEEP-1, batch 3'
-  status: open
+  status: fixed
+  pr: 370
 - id: word-problem-decoder-s1-007
   severity: MEDIUM
   jc: false
@@ -225,9 +233,11 @@ findings:
   level: ks3, gcse
   where: games/word-problem-decoder/index.html gcse_027, gcse_047, gcse_044, ks3_036, gcse_059, gcse_036
   summary: 'Wording: gcse_044 asks for "the angle in the alternate segment" with no tangent given (Split from
-    word-problem-decoder-s1-005, SWEEP-1-RULINGS step 1.)'
+    word-problem-decoder-s1-005, SWEEP-1-RULINGS step 1.) Fixed under R1: gcse_044 no longer asks for "the
+    angle in the alternate segment".'
   evidence: 'SWEEP-1, batch 3'
-  status: open
+  status: fixed
+  pr: 370
 - id: word-problem-decoder-s1-008
   severity: LOW
   jc: false
@@ -235,9 +245,11 @@ findings:
   level: ks3, gcse
   where: games/word-problem-decoder/index.html gcse_027, gcse_047, gcse_044, ks3_036, gcse_059, gcse_036
   summary: 'Wording: ks3_036 wants "the total seating capacity" then asks for the back row (Split from
-    word-problem-decoder-s1-005, SWEEP-1-RULINGS step 1.)'
+    word-problem-decoder-s1-005, SWEEP-1-RULINGS step 1.) Fixed under R3: ks3_036 wants to know "how many seats
+    are in the back row", which is what it asks.'
   evidence: 'SWEEP-1, batch 3'
-  status: open
+  status: fixed
+  pr: 370
 - id: word-problem-decoder-s1-009
   severity: LOW
   jc: false
@@ -255,6 +267,9 @@ findings:
   level: ks3, gcse
   where: games/word-problem-decoder/index.html gcse_027, gcse_047, gcse_044, ks3_036, gcse_059, gcse_036
   summary: 'Wording: gcse_036''s highlight "largest angle in the triangle" fits Angles on its words (the trigonometry
-    cue is unhighlighted) (Split from word-problem-decoder-s1-005, SWEEP-1-RULINGS step 1.)'
+    cue is unhighlighted) (Split from word-problem-decoder-s1-005, SWEEP-1-RULINGS step 1.) Fixed under SR-18:
+    gcse_036 accepts Angles as well as Pythagoras & Trigonometry, since "largest angle" fits Angles on its
+    words.'
   evidence: 'SWEEP-1, batch 3'
-  status: open
+  status: fixed
+  pr: 370
