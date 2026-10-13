@@ -492,6 +492,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="../../schools/assets/analytics.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
@@ -734,8 +735,8 @@ const RANK_LABELS = [
 ];
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
-const _egUrlLevel = new URLSearchParams(window.location.search).get('level');
-let level = _egUrlLevel && QUESTIONS[_egUrlLevel] ? _egUrlLevel : 'ks3';
+const _egUrlLevel = MaffsLevel.resolve({slug:'estimation-golf',levels:['year6','ks3','gcse','alevel','level4','core'],fallback:'ks3'});
+let level = QUESTIONS[_egUrlLevel] ? _egUrlLevel : 'ks3';
 let hole  = 0;   // 0-indexed
 let scores = []; // strokes per hole
 let hintUsed = [];

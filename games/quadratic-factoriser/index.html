@@ -656,6 +656,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 <script src="../../schools/assets/analytics.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/session-length.js"></script>
@@ -1080,9 +1081,7 @@ function formulaSubstitutionMsg(a, b, c, root1, root2) {
 /* ----------------------------------------------------------------------------
    Level select / session length (start screen)
    ---------------------------------------------------------------------------- */
-const params = new URLSearchParams(window.location.search);
-let currentLevel = params.get('level');
-if (!IMPLEMENTED_LEVELS.includes(currentLevel)) currentLevel = IMPLEMENTED_LEVELS[0];
+let currentLevel = MaffsLevel.resolve({slug:'quadratic-factoriser',levels:['gcse','higher','formula'],fallback:'gcse'});
 let sessionLength = 8;
 
 function renderLevelButtons() {

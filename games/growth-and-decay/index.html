@@ -136,6 +136,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
@@ -637,8 +638,8 @@ function selLevel(btn){
   btn.classList.add('selected');G.level=btn.dataset.level;$('startBtn').classList.add('ready');
 }
 function parseURL(){
-  const p=new URLSearchParams(location.search),l=p.get('level');
-  if(l){const b=document.querySelector(`.level-btn[data-level="${l}"]`);if(b)selLevel(b);}
+  const l=MaffsLevel.resolve({slug:'growth-and-decay',levels:['core','alevel','level4'],fallback:'core'});
+  if(MaffsLevel.declared('growth-and-decay').fromUrl){const b=document.querySelector(`.level-btn[data-level="${l}"]`);if(b)selLevel(b);}
 }
 
 // ============================================================

@@ -1318,7 +1318,7 @@ PLANTS = [
      "mode: 'practice' });\n  }\n  if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(CONTENT.slug, 'alevel', "
      "practiceState.score, questions.length).catch(function(){});\n});"),
     ('level', 't5-013: ?level read and logged', "mfg('game_started', { game_slug: CONTENT.slug, level: 'alevel', mode: mode });",
-     "mfg('game_started', { game_slug: CONTENT.slug, level: new URLSearchParams(location.search).get('level') || 'alevel', "
+     "mfg('game_started', { game_slug: CONTENT.slug, level: new URLSearchParams((performance.getEntriesByType('navigation')[0].name.split('?')[1] || '')).get('level') || 'alevel', "
      "mode: mode });"),
     ('wrong answer', 't5-018: a wrong answer advanced by the Next button',
      "    if (correct) {\n      document.getElementById('nextQBtn').style.display = 'block';",

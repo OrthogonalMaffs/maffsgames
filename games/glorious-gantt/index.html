@@ -127,6 +127,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
@@ -781,7 +782,7 @@ function checkReady(){$('startBtn').classList.toggle('ready',!!(G.mode&&G.level)
 function parseURL(){
   const p=new URLSearchParams(location.search);
   if(p.get('mode')){const b=document.querySelector(`.mode-btn[data-mode="${p.get('mode')}"]`);if(b)selMode(b);}
-  if(p.get('level')){const b=document.querySelector(`.pill[data-level="${p.get('level')}"]`);if(b)selLvl(b);}
+  {const lv=MaffsLevel.resolve({slug:'glorious-gantt',levels:['core','level4'],fallback:'core'});if(MaffsLevel.declared('glorious-gantt').fromUrl){const b=document.querySelector(`.pill[data-level="${lv}"]`);if(b)selLvl(b);}}
 }
 
 function startGame(){

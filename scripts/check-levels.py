@@ -65,18 +65,25 @@ surd-simplifier suvat tax-theft terrible-advice test-the-claim the-perfect-prank
 trig-identity-duel trig-wars trig-worms truth-buster truth-will-set-you-free unit-converter
 word-problem-decoder wrong-on-the-internet
 '''.split())
+# Games with no script on the page, so nothing reads ?level: withdrawn holding pages. A script added later must be migrated.
+NO_SCRIPT_EXEMPT = frozenset('regression-rumble'.split())
 MIGRATED = frozenset('''
-52dle angle-ace bearing-blitz better-value binomial-blaster circle-theorem-spotter complex-converter
-component-crusher constructions-lab correlation-or-coincidence curling-friction decimal-detective
-differentiation-duel distinctly-average equation-builder equatle estimation-engine expectation-station
-expected-damage fermi-lab force-resolver formula-forge formula-plug-in formula-unlocked
-four-quadrant-explorer fraction-equivalence given-that gradient-hunter graph-transformer higher-power
-index-laws integration-duel just-pythag-it-bruv like-terms-collector linear-equation-solver maths-court
-matrix-crunch moments-master negative-number-line new-shapes percentage-flip prime-factorisation
-prime-or-composite prisoners-dilemma probability-paradox probability-pioneer proof-builder proportion-blaster
-sequence-solver seven-bridges shape-shifter simultaneous-solver six-sevens-bruv split-it spot-the-error
-spot-the-muppet stat-attack suvat terrible-advice think-of-a-number trig-identity-duel trig-wars trig-worms
-truth-buster word-problem-decoder wrong-on-the-internet
+52dle angle-ace bearing-blitz better-value binomial-blaster boolean-blitz characteristic-quest
+chart-interrogator circle-theorem-spotter complex-converter component-crusher constructions-lab
+coordinate-geometry-dash core-maths-paper1 core-maths-paper2a core-maths-paper2b core-maths-paper2c
+correlation-or-coincidence curling-friction decimal-detective differentiation-duel dimension-checker
+distinctly-average eigenvalue-extractor eigenvector-engine equation-builder equatle estimation-engine
+estimation-golf expectation-station expected-damage factor-race factor-theorem fermi-lab force-resolver
+formula-forge formula-plug-in formula-unlocked four-quadrant-explorer fraction-equivalence free-daily-pizza
+given-that glorious-gantt gradient-hunter graph-sketcher graph-transformer growth-and-decay higher-power
+index-laws integration-duel just-pythag-it-bruv like-terms-collector linear-equation-solver log-laws
+maths-court matrix-crunch modular-battle moments-master negative-number-line new-shapes normal-navigator
+partial-fractions-duel percentage-flip prime-factorisation prime-or-composite prisoners-dilemma
+probability-paradox probability-pioneer proof-builder proportion-blaster quadratic-factoriser
+scale-factor-scaling screening-room sequence-solver seven-bridges shape-shifter simultaneous-solver
+six-sevens-bruv split-it spot-the-error spot-the-muppet standard-form-blitz stat-attack surd-simplifier suvat
+tax-theft terrible-advice test-the-claim the-perfect-prank think-of-a-number trig-identity-duel trig-wars
+trig-worms truth-buster truth-will-set-you-free unit-converter word-problem-decoder wrong-on-the-internet
 '''.split())
 
 # The portal has no Year 6 filter button, so a game that serves only Year 6 is reachable under the KS3 filter and its
@@ -85,8 +92,17 @@ truth-buster word-problem-decoder wrong-on-the-internet
 # levels stay the roster's.
 FILTER_ALIAS = {'year6': {'ks3'}}
 
+# Games whose true level keys are not the roster's (their LEVEL_OVERRIDES entry in check-leaderboard-coverage.js, read from
+# there, is the list). chart-interrogator's Level 4 button says 'l4'; quadratic-factoriser has gcse, higher and formula.
+OWN_LEVEL_KEYS = frozenset('chart-interrogator quadratic-factoriser'.split())
+# Portal cards that list a level the game does not serve, kept as Jon has them until he rules (reported, never failed; an
+# entry that is no longer true fails, so it cannot go stale). (slug, card token) -> why.
+CARD_KNOWN_MISMATCH = {
+    ('quadratic-factoriser', 'alevel'): 'the roster and card list A-Level; the game serves gcse, higher and formula (Jon to rule)',
+}
+
 RESOLVE = re.compile(r'MaffsLevel\.resolve\s*\(\s*\{(.*?)\}\s*\)', re.S)
-OWN_READ = re.compile(r'''\.get\(\s*['"]level['"]\s*\)|[?&]level=|\blevel\s*=\s*([a-z]+)\.get\b''')
+OWN_READ = re.compile(r'''\.get\(\s*['"]level['"]\s*\)|\blevel\s*=\s*([a-z]+)\.get\b|location\.search[^;\n]*level''')
 SUBMIT = re.compile(r'''MaffsLeaderboard\.submitScore\(\s*[^,]+,\s*(['"])([^'"]+)\1\s*,''')
 LINK = re.compile(r'''(?:games/|\.\./)([a-z0-9][a-z0-9-]*)/(?:index\.html)?\?(?:[^"'\s<>#]*&(?:amp;)?)?level=([A-Za-z0-9_-]*)''')
 CARD = re.compile(r'''<a\s+[^>]*href="([^"]*)"[^>]*class="game-card"[^>]*data-levels="([^"]*)"''')
@@ -119,6 +135,16 @@ def label_to_key():
     return m
 
 
+def coverage_overrides():
+    """{slug: [levels]} from LEVEL_OVERRIDES in scripts/check-leaderboard-coverage.js (the games whose true level keys are not
+    the roster's: read from there, never copied)."""
+    src = open(os.path.join(HERE, 'check-leaderboard-coverage.js'), encoding='utf-8').read()
+    i = src.index('const LEVEL_OVERRIDES = {')
+    block = src[i:src.index('};', i)]
+    return {m.group(1): re.findall(r"'([^']+)'", m.group(2))
+            for m in re.finditer(r"'([a-z0-9-]+)':\s*\[\[([^\]]*)\]", block)}
+
+
 def parse_decl(text):
     """The first MaffsLevel.resolve({...}) declaration as {slug, levels, fallback, boards} (string literals), or None."""
     m = RESOLVE.search(text)
@@ -136,16 +162,23 @@ def parse_decl(text):
     return {'slug': lit('slug'), 'levels': arr('levels'), 'fallback': lit('fallback'), 'boards': arr('boards') or []}
 
 
-def analyse(files, roster, games, migrated, at_start):
+def analyse(files, roster, games, migrated, at_start, overrides=None):
     """(errors, not_yet). Pure: the selftest plants faults in `files`."""
     errors = []
+    overrides = coverage_overrides() if overrides is None else overrides
     to_key = label_to_key()
     served = {}
     decls = {}
+    known_seen = set()
     for slug in games:
         text = files.get('games/%s/index.html' % slug, '')
         d = parse_decl(text)
         has_call = 'MaffsLevel.resolve' in text
+        if slug in NO_SCRIPT_EXEMPT:
+            if '<script' in text:
+                errors.append('%s is exempt as a page with no script, but now has one: migrate it' % slug)
+            served[slug] = set(roster.get(slug, []))
+            continue
         if has_call and slug not in migrated:
             errors.append('%s calls MaffsLevel.resolve but is not in MIGRATED: move it there and off NOT_YET_AT_START' % slug)
         if slug in migrated and not has_call:
@@ -159,11 +192,11 @@ def analyse(files, roster, games, migrated, at_start):
                 continue
             decls[slug] = d
             served[slug] = set(d['levels'])
-            want = set(roster.get(slug, []))
+            want = set((overrides.get(slug) if slug in OWN_LEVEL_KEYS else None) or roster.get(slug, []))
             if d['slug'] != slug:
                 errors.append('%s: declares slug %r' % (slug, d['slug']))
-            if set(d['levels']) != want:
-                errors.append('%s: declares levels %s but the roster lists %s (scripts/roster-levels.json)'
+            if (slug in roster or slug in OWN_LEVEL_KEYS) and set(d['levels']) != want:
+                errors.append('%s: declares levels %s but the roster lists %s (scripts/roster-levels.json; or LEVEL_OVERRIDES in check-leaderboard-coverage.js)'
                               % (slug, sorted(d['levels']), sorted(want)))
             if d['fallback'] not in d['levels']:
                 errors.append('%s: fallback %r is not one of its levels' % (slug, d['fallback']))
@@ -202,9 +235,17 @@ def analyse(files, roster, games, migrated, at_start):
                 key = to_key.get(tok.replace('-', ''))
                 if key is None:
                     errors.append('%s: card %s lists an unknown level %r' % (path, slug, tok))
-                elif key not in served[slug] and not any(key in FILTER_ALIAS.get(k, ()) for k in served[slug]):
+                elif (tok in served[slug] or key in served[slug]
+                      or any(key in FILTER_ALIAS.get(k, ()) for k in served[slug])):
+                    continue
+                elif (slug, tok) in CARD_KNOWN_MISMATCH:
+                    known_seen.add((slug, tok))
+                else:
                     errors.append('%s: card %s lists %r (%s), but the game serves %s' % (path, slug, tok, key, sorted(served[slug])))
-    not_yet = sorted(set(at_start) - set(migrated))
+    for k in CARD_KNOWN_MISMATCH:
+        if k not in known_seen:
+            errors.append('CARD_KNOWN_MISMATCH %s is no longer true: remove it' % (k,))
+    not_yet = sorted(set(at_start) - set(migrated) - NO_SCRIPT_EXEMPT)
     return errors, not_yet
 
 

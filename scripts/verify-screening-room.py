@@ -62,6 +62,8 @@ import bank_common as bc  # noqa: E402
 
 SLUG = 'screening-room'
 PAGE = os.path.join(bc.GAMES_DIR, SLUG, 'index.html')
+# The level reader the game declares (LEVEL-RESOLVER, 13 Oct 2026); the t4-006 plant swaps it for the unvalidated read.
+RESOLVE_CALL = "MaffsLevel.resolve({slug:'screening-room',levels:['gcse','alevel','core','level4'],fallback:'gcse'})"
 LEVELS = ['gcse', 'alevel', 'core', 'level4']
 BANDS = [('very_likely', 'Over 75%'), ('likely', '25 – 75%'), ('unlikely', '5 – 25%'), ('very_unlikely', 'Under 5%')]
 NUM = re.compile(r'(?<![\w.])\d[\d,]*(?:\.\d+)?')
@@ -572,8 +574,8 @@ def selftest():
          lambda s: plant(s, "  if (v === null) return { result: 'unreadable', msg: hint };",
                          "  if (v === null) return { result: 'unreadable', msg: hint };\n  if (v === 0) return { result: 'correct' };")),
         ('t4-006: prototype keys accepted as levels', 'screening-room-t4-006', {'gcse_01'},
-         lambda s: plant(s, "if (Object.prototype.hasOwnProperty.call(QUESTIONS, pa.get('level') || '')) {",
-                         "if (pa.get('level') && QUESTIONS[pa.get('level')]) {")),
+         lambda s: plant(s, "var lvReq = "+RESOLVE_CALL+";\nif (Object.prototype.hasOwnProperty.call(QUESTIONS, lvReq)) {",
+                         "var lvReq = new URLSearchParams(location.search).get('level');\nif (lvReq && QUESTIONS[lvReq]) {")),
         ('t4-008: a remainder rounded to whole icons', 'screening-room-t4-008', {'alevel_04'},
          lambda s: plant(s, '    if (g[1] % k) plan.push([g[0], g[1] % k]);', '    if (2 * (g[1] % k) >= k) plan.push([g[0], 0]);')),
         ('t4-008: no scale note', 'screening-room-t4-008', {'alevel_01'},
