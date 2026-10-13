@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-704 findings in 86 games.
+713 findings in 87 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
-| CRITICAL | 1 | 27 | 0 | 28 |
+| CRITICAL | 1 | 28 | 0 | 29 |
 | HIGH | 10 | 212 | 0 | 222 |
-| MEDIUM | 143 | 185 | 3 | 331 |
-| LOW | 87 | 35 | 1 | 123 |
-| **All** | 241 | 459 | 4 | 704 |
+| MEDIUM | 145 | 186 | 3 | 334 |
+| LOW | 92 | 35 | 1 | 128 |
+| **All** | 248 | 461 | 4 | 713 |
 
 ### By class
 
@@ -37,12 +37,12 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:wrong-explanation-text | 14 | 46 |
 | NEW:convention-unstated | 23 | 40 |
 | 1 | 5 | 37 |
-| NEW:text-contradicts-content | 27 | 31 |
-| NEW:wording | 27 | 28 |
+| NEW:text-contradicts-content | 28 | 33 |
+| NEW:wording | 29 | 30 |
 | 5 | 26 | 26 |
 | 4 | 5 | 22 |
+| NEW:true-wrong-option | 8 | 17 |
 | 7 | 5 | 16 |
-| NEW:true-wrong-option | 7 | 15 |
 | NEW:value-equal distractors | 0 | 14 |
 | NEW:precision-not-stated | 2 | 12 |
 | 8 | 3 | 11 |
@@ -57,22 +57,23 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:phone-layout | 4 | 5 |
 | B7 (ledgered) | 3 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
+| NEW:timer-policy | 2 | 4 |
 | 9 | 1 | 3 |
+| NEW:degenerate-item | 3 | 3 |
 | NEW:level-content-mismatch | 2 | 3 |
 | NEW:phone-fold | 3 | 3 |
-| NEW:timer-policy | 1 | 3 |
 | NEW:wrong explanation | 0 | 3 |
 | uncounted | 0 | 3 |
 | NEW:analytics | 0 | 2 |
 | NEW:board-key-mismatch | 2 | 2 |
 | NEW:cosmetic | 1 | 2 |
-| NEW:degenerate-item | 2 | 2 |
 | NEW:double-finish | 0 | 2 |
 | NEW:hidden-data | 0 | 2 |
 | NEW:hint-gives-answer | 1 | 2 |
 | NEW:key-ask mismatch | 0 | 2 |
 | NEW:prose-through-katex | 2 | 2 |
 | NEW:unmarkable free text | 0 | 2 |
+| NEW:verifier-gap | 2 | 2 |
 | 10 | 0 | 1 |
 | NEW:a11y state | 0 | 1 |
 | NEW:ambiguous-notation | 0 | 1 |
@@ -119,7 +120,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:test repeats taught items | 1 | 1 |
 | NEW:ui | 1 | 1 |
 | NEW:uncancelled-timer | 0 | 1 |
-| NEW:verifier-gap | 1 | 1 |
 | NEW:wrong hint | 0 | 1 |
 | NEW:wrong statement in key | 0 | 1 |
 | NEW:wrong text | 0 | 1 |
@@ -135,6 +135,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `binomial-blaster` | yes | verify-binomial-blaster.py | 2 | 15 | 4 | 1 | 1 | 21 | 0 |
 | `boolean-blitz` | yes | verify-boolean-blitz.py | 0 | 3 | 1 | 5 | 5 | 4 | 0 |
 | `characteristic-quest` | yes | verify-characteristic-quest.py | 0 | 1 | 3 | 1 | 3 | 2 | 0 |
+| `circle-theorem-spotter` | yes | verify-circle-theorem-spotter.py | 1 | 0 | 3 | 5 | 7 | 2 | 0 |
 | `complex-converter` | yes | verify-complex-converter.py | 0 | 1 | 6 | 1 | 3 | 5 | 0 |
 | `component-crusher` | yes | verify-component-crusher.py | 1 | 6 | 6 | 1 | 2 | 12 | 0 |
 | `constructions-lab` | yes | verify-constructions-lab.py | 0 | 0 | 4 | 3 | 7 | 0 | 0 |
@@ -242,7 +243,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Live games no audit has covered
 
-12 of 97 live games: `chart-interrogator`, `circle-theorem-spotter`, `core-maths-paper2a`, `graph-sketcher`, `graph-transformer`, `growth-and-decay`, `just-pythag-it-bruv`, `normal-navigator`, `simultaneous-solver`, `stat-attack`, `tax-theft`, `test-the-claim`
+11 of 97 live games: `chart-interrogator`, `core-maths-paper2a`, `graph-sketcher`, `graph-transformer`, `growth-and-decay`, `just-pythag-it-bruv`, `normal-navigator`, `simultaneous-solver`, `stat-attack`, `tax-theft`, `test-the-claim`
 
 ## Exit bar detail
 
