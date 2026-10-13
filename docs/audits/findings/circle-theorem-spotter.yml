@@ -1,0 +1,120 @@
+# Findings register for circle-theorem-spotter (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: circle-theorem-spotter
+audited:
+  tranche: S1 (SWEEP-1 reading sweep)
+  head: d5b6868
+  date: 2026-10-13
+  served:
+    gcse: '55'
+findings:
+- id: circle-theorem-spotter-s1-001
+  severity: CRITICAL
+  jc: false
+  class: NEW:text-contradicts-content
+  level: gcse
+  where: games/circle-theorem-spotter/index.html FIG altSegment, tangentRadius (Q6, Q11, Q35-Q39, Q43, Q44, Q53)
+  summary: 'The tangent figures marked the tangent angle on the wrong side, so a student who applied the theorem to
+    the figure as drawn was marked wrong on 6 of the 55 items (SR-20''s threshold). altSegment always marked the angle
+    towards the tangent''s end t.a, on the same side of chord AB as C, so the theorem gave the angle at C as 180°
+    minus the label, a distractor on Q36 (140°), Q37 (125°), Q38 (118°), Q44 (145°) and Q53 (140°); tangentRadius
+    marked angle BAT across OA from B, so Q35 read 90° + 25° = 115°, key 65°. Q6, Q11, Q39 and Q43 had the same wrong
+    figure with keys unaffected. Fixed (Jon''s ruling, 13 Oct 2026, SR-25: the figure changes to match the words and
+    the key, as Q19; no unlist): T is the tangent''s end across AB from C, and on B''s side of OA. The verifier renders
+    every tangent figure in Chromium and measures the marked arc and the T label from the SVG; the old figures are
+    planted and fail'
+  evidence: 'Q36 "Tangent at A. Chord AB makes 40° with the tangent." | "Angle in the alternate segment (angle ACB
+    where C is on the major arc)" key 40°, options 80°, 140°, 50°; the figure (A 270°, B 195°, C 65°) drew the "40°"
+    arc over the 142.5° angle on C''s side of AB. Q35 "Angle OAB = 25° (B on circle)." | "Find angle BAT" key 65°
+    (SWEEP-1, batch 7; the old page fails the new check on all ten items)'
+  status: fixed
+  pr: 344
+- id: circle-theorem-spotter-s1-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:true-wrong-option
+  level: gcse
+  where: games/circle-theorem-spotter/index.html:412 (Q7)
+  summary: 'A true wrong option (SR-16): the two-tangents figure also draws both radii with right-angle marks, so
+    "Tangent-radius" is also a theorem the diagram shows. Fixed: that distractor is "Cyclic quadrilateral", which the
+    figure does not show'
+  evidence: '"Both green lines are drawn from the external point P and each touches the circle once." | "Which
+    theorem does this diagram show?" key "Two tangents from a point are equal", d "Tangent-radius", "Alternate
+    segment theorem", "Angle in semicircle"; twoTangents draws seg(O, A), seg(O, B) and sq(A, O, P), sq(B, O, P)
+    (SWEEP-1, batch 7)'
+  status: fixed
+  pr: 344
+- id: circle-theorem-spotter-s1-003
+  severity: LOW
+  jc: true
+  class: NEW:true-wrong-option
+  level: gcse
+  where: games/circle-theorem-spotter/index.html:407 (Q2)
+  summary: 'The angle in a semicircle is the 180° case of the angle at the centre theorem (Q22 teaches the link), so
+    "Angle at centre theorem" is defensible for the semicircle figure; no centre angle is marked'
+  evidence: '"AB is a straight line through the centre O, and C is on the circle." | "Which theorem does this diagram
+    show?" key "Angle in a semicircle = 90°", d "Angle at centre theorem", ... (SWEEP-1, batch 7)'
+  status: open
+- id: circle-theorem-spotter-s1-004
+  severity: LOW
+  jc: true
+  class: NEW:degenerate-item
+  level: gcse
+  where: games/circle-theorem-spotter/index.html:455 (Q50)
+  summary: 'The misconception the item targets (opposite angles equal, 3y = 2y + 30) gives the key too, y = 30, since
+    both angles are 90°: the item cannot tell the right method from the wrong one. New numbers are a stem and key
+    change, for Jon'
+  evidence: '"Cyclic quad ABCD. B = 3y, D = 2y + 30." | "Find y" key 30 (SWEEP-1, batch 7)'
+  status: open
+- id: circle-theorem-spotter-s1-005
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: gcse
+  where: games/circle-theorem-spotter/index.html:414 (Q9), :427 (Q22)
+  summary: 'Q9''s context asks for an angle but the ask is "Which theorem?" with theorem options; Q22''s "what shape
+    is formed?" is keyed "The chord is a diameter", not a shape'
+  evidence: 'Q9 ctx "... What is the angle subtended at the circumference by the same arc?" | "Which theorem?"
+    (SWEEP-1, batch 7)'
+  status: open
+- id: circle-theorem-spotter-s1-006
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: gcse
+  where: games/circle-theorem-spotter/index.html:447, :460
+  summary: 'The distractors \sqrt{119} cm and \sqrt{39} cm render "cm" as italic maths run into the root'
+  evidence: "d: ['17 cm','7 cm','\\\\sqrt{119} cm'] (SWEEP-1, batch 7)"
+  status: open
+- id: circle-theorem-spotter-s1-007
+  severity: MEDIUM
+  jc: true
+  class: NEW:timer-policy
+  level: gcse
+  where: games/circle-theorem-spotter/index.html:101 (HUD timer), :471-472
+  summary: 'Timer policy lists Circle Theorem Spotter under Hidden Count-Up, but the HUD shows a running "Time" and the
+    time feeds the score; the same shape as surd-simplifier-s1-003 and trig-identity-duel-t2-010 (SR-23, for Jon to
+    schedule)'
+  evidence: 'tick() writes the seconds to #timer each second; handle() scores with the elapsed time (SWEEP-1, batch 7)'
+  status: open
+- id: circle-theorem-spotter-s1-008
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: gcse
+  where: games/circle-theorem-spotter/index.html:90 (start screen)
+  summary: 'The start screen says "all seven circle theorems"; the options name eight properties (the chord bisector
+    among them)'
+  evidence: 'Start screen text; option names across the 11 "which theorem" items (SWEEP-1, batch 7)'
+  status: open
+- id: circle-theorem-spotter-s1-009
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: gcse
+  where: scripts/verify-circle-theorem-spotter.py
+  summary: 'The verifier does not check a worded "which theorem" key against everything its figure draws (how s1-002
+    passed). The game shows no worked steps or hints (feedback is "The answer: <key>."). Recorded under Jon''s rule of
+    13 Oct 2026; the tangent figures are now measured (s1-001)'
+  evidence: 'check() reads options and calculation keys; figures were checked for arc placement only (SWEEP-1, batch 7)'
+  status: open

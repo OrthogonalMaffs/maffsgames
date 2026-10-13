@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Circle Theorem Spotter (every calculation key re-solved, SymPy + arc wording vs figure) |
+# ci-line: Circle Theorem Spotter (every calculation key re-solved, SymPy + arc wording vs figure; each tangent angle drawn on the side the theorem needs, in Chromium) |
 """Independent verification of every calculation question in circle-theorem-spotter (todo §1.3).
 
 Until 3 Oct 2026 two keys were wrong and nothing caught them: Q48 ("centre = 2x, circumference
@@ -21,8 +21,15 @@ The bank is read from the page source (esprima), never from a copy. For every qu
     places a point on the circle, the figure draws it on that arc (for the angle-at-the-centre
     figure, by its `inside` flag); "subtended at the centre by the minor arc" needs a centre
     angle under 180°. Where the text names the arc, the key is derived from the TEXT's arc.
+  - every figure with a marked tangent angle is rendered by the page's own FIG.render in Chromium
+    and measured from the SVG it draws (SWEEP-1, circle-theorem-spotter-s1-001, Jon's ruling 13 Oct
+    2026, SR-25): the angle between the tangent and a chord AB that the alternate segment theorem
+    equates to the angle at C lies on the OTHER side of AB from C; the angle BAT beside a radius OA
+    (90 degrees minus angle OAB) lies on B's side of OA. The marked arc must run from ray AB to ray AT,
+    T being where the figure labels the tangent.
 A fault-injection self-test (Q48's old numbers, Q19's old `inside` flag, a distractor equal to
-its key, a changed key) must FAIL each time; it runs unless --no-selftest.
+its key, a changed key, and the old tangent figures planted back into the page) must FAIL each
+time; it runs unless --no-selftest.
 
     python scripts/verify-circle-theorem-spotter.py [--file PATH] [--verbose] [--no-selftest]
 """
@@ -357,6 +364,103 @@ def check(bank, verbose=False):
     return fails, solved
 
 
+# --- the tangent figures, as drawn (Chromium) -----------------------------------------------------
+
+FIG_JS = r"""() => {
+  const out = [];
+  QUESTIONS.gcse.forEach((q, i) => {
+    const f = q.fig || {};
+    if (!((f.t === 'altSegment' && f.tanLab) || (f.t === 'tangentRadius' && f.batLab))) return;
+    const doc = new DOMParser().parseFromString(FIG.render(f), 'text/html');   // labels carry HTML entities (&deg;)
+    const c = doc.querySelector('circle');
+    const t = [...doc.querySelectorAll('text')].filter(e => e.textContent === 'T')
+      .map(e => [+e.getAttribute('x'), +e.getAttribute('y')]);
+    const arcs = [...doc.querySelectorAll('path')].map(e => e.getAttribute('d'));
+    out.push({ i, ctx: q.ctx, fig: f, cx: +c.getAttribute('cx'), cy: +c.getAttribute('cy'),
+               r: +c.getAttribute('r'), t, arcs });
+  });
+  return out;
+}"""
+
+
+def _side(p, q, r):
+    v = (q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0])
+    return (v > 1e-9) - (v < -1e-9)
+
+
+def _dir(v, p):
+    import math
+    return math.degrees(math.atan2(p[1] - v[1], p[0] - v[0])) % 360
+
+
+def tangent_side_fails(figs):
+    """[fail] for each tangent angle drawn on the wrong side (the figures FIG_JS reads)."""
+    import math
+    fails = []
+    for g in figs:
+        f, where = g['fig'], 'Q%d (%s)' % (g['i'] + 1, g['ctx'])
+        pt = lambda d: (g['cx'] + g['r'] * math.cos(math.radians(d)), g['cy'] - g['r'] * math.sin(math.radians(d)))
+        A, B, O = pt(270 if f.get('A') is None else f['A']), pt(f['B']), (g['cx'], g['cy'])
+        if len(g['t']) != 1:
+            fails.append('figure: %s: the tangent is labelled T %d times' % (where, len(g['t'])))
+            continue
+        T = (g['t'][0][0], g['t'][0][1] + 8)          # the label sits 8 px above the tangent's end
+        # the marked arc at A runs from ray AB to ray AT
+        want = sorted([_dir(A, B), _dir(A, T)])
+        found = False
+        for d in g['arcs']:
+            m = re.match(r'M([-\d.]+) ([-\d.]+) A[-\d.]+ [-\d.]+ 0 \d \d ([-\d.]+) ([-\d.]+)', d or '')
+            if not m:
+                continue
+            s_, e_ = (float(m.group(1)), float(m.group(2))), (float(m.group(3)), float(m.group(4)))
+            if abs(math.dist(A, s_) - math.dist(A, e_)) > 0.5 or math.dist(A, s_) > 60:
+                continue
+            got = sorted([_dir(A, s_), _dir(A, e_)])
+            if all(min(abs(a - b), 360 - abs(a - b)) < 2.5 for a, b in zip(got, want)):
+                found = True
+        if not found:
+            fails.append('figure: %s: no marked arc runs from ray AB to ray AT' % where)
+        if f['t'] == 'altSegment':
+            C = pt(f['C'])
+            if _side(A, B, T) == _side(A, B, C):
+                fails.append('figure: %s: the tangent-chord angle is marked on C\'s side of AB, so the theorem gives '
+                             'the angle at C as 180 degrees minus the label (SR-25)' % where)
+        elif _side(O, A, T) != _side(O, A, B):
+            fails.append('figure: %s: angle BAT is marked across OA from B, so it is 90 degrees PLUS angle OAB '
+                         '(SR-25)' % where)
+    return fails
+
+
+def read_tangent_figures(html):
+    """The page's tangent figures, rendered in Chromium from html (the page, or a planted copy)."""
+    from playwright.sync_api import sync_playwright
+    proc, base = bc.start_stub_server()
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch()
+            ctx = browser.new_context()
+            page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
+            ctx.route(lambda u: not u.startswith(base) and '/katex@' not in u, lambda r: r.abort())
+            ctx.route(lambda u: bool(page_url.search(u)), lambda r: r.fulfill(
+                status=200, content_type='text/html; charset=utf-8', body=html))
+            pg = ctx.new_page()
+            pg.goto(base + '/games/%s/?cb=verify' % SLUG, wait_until='load', timeout=30000)
+            figs = pg.evaluate(FIG_JS)
+            browser.close()
+    finally:
+        proc.terminate()
+    return figs
+
+
+# The old figures (before 13 Oct 2026), planted back: each must fail.
+FIG_PLANTS = [
+    ('the old alternate-segment figure (T always at t.a)',
+     "const E = side(t.p, B, t.a) === side(t.p, B, C) ? t.b : t.a;", "const E = t.a;"),
+    ('the old tangent-radius figure (T always at t.a)',
+     "const E = o.B !== undefined && side(O, t.p, P(o.B)) !== side(O, t.p, t.a) ? t.b : t.a;", "const E = t.a;"),
+]
+
+
 def selftest(bank):
     """Each injected fault must FAIL."""
     def find(pred):
@@ -381,6 +485,16 @@ def selftest(bank):
 
     base = set(check(bank)[0])
     bad = []
+    html = open(PAGE, encoding='utf-8').read()
+    for name, old, new in FIG_PLANTS:
+        if html.count(old) != 1:
+            print(f'self-test CANNOT PLANT {name}')
+            bad.append(name)
+            continue
+        fails = tangent_side_fails(read_tangent_figures(html.replace(old, new)))
+        print(f'self-test {"caught " if fails else "MISSED "} {name}' + (f': {fails[0]}' if fails else ''))
+        if not fails:
+            bad.append(name)
     for name, fault in [('old Q48 numbers', fault_old_q48), ('Q19 inside:true', fault_old_q19),
                         ('a distractor equal to its key', fault_distractor), ('a changed key', fault_key)]:
         b = copy.deepcopy(bank)
@@ -401,6 +515,10 @@ def main():
 
     bank = load_bank(args.file)
     fails, solved = check(bank, args.verbose)
+    figs = read_tangent_figures(open(args.file, encoding='utf-8').read())
+    fails += tangent_side_fails(figs)
+    if len(figs) < 9:
+        fails.append('figure: only %d tangent figures with a marked tangent angle read (expected 9)' % len(figs))
     for f in fails:
         print(f'FAIL    {f}')
     missed = [] if args.no_selftest else selftest(bank)
@@ -411,7 +529,7 @@ def main():
               f'{len(bank)} questions, {solved} calculations solved')
         return 1
     print(f'\nPASS: {len(bank)} questions, {solved} calculation questions solved independently, '
-          f'options and arc wording checked')
+          f'options and arc wording checked; {len(figs)} tangent figures measured in Chromium')
     return 0
 
 

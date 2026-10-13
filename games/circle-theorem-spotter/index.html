@@ -173,6 +173,9 @@ const FIG = (function () {
   // Several questions use P/Q/R/S or X/Y/Z/W rather than A/B/C/D.
   const nm = (o, i, def) => (o.names && o.names[i]) || def;
 
+  // Which side of the line through p and q the point r is on (the sign of the cross product).
+  const side = (p, q, r) => Math.sign((q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0]));
+
   // Arc marking the angle at v between the rays to p1 and p2.
   function arc(v, p1, p2, label, rr, reflex, skew) {
     rr = rr || 22;
@@ -292,13 +295,16 @@ const FIG = (function () {
     // Tangent meeting a radius at the point of contact.
     tangentRadius: function (o) {
       const t = tangentAt(o.A === undefined ? 270 : o.A);
+      // T is the tangent's end on B's side of OA, so angle BAT = 90° - angle OAB as the words say
+      // (circle-theorem-spotter-s1-001: it was always t.a, across OA from B).
+      const E = o.B !== undefined && side(O, t.p, P(o.B)) !== side(O, t.p, t.a) ? t.b : t.a;
       let s = circle() + seg(t.a, t.b, C_TAN) + seg(O, t.p);
-      s += sq(t.p, O, t.a, o.rightLab || null);
+      s += sq(t.p, O, E, o.rightLab || null);
       if (o.B !== undefined) {
         const B = P(o.B);
         s += seg(t.p, B);
         if (o.oabLab) s += arc(t.p, O, B, o.oabLab, 22, false, -14);
-        if (o.batLab) s += arc(t.p, B, t.a, o.batLab, 38, false, 10);
+        if (o.batLab) s += arc(t.p, B, E, o.batLab, 38, false, 10);
         s += dot(B, nm(o,1,'B'));
       }
       // Q42 needs the right-angled triangle OAP, not just the tangent.
@@ -319,7 +325,7 @@ const FIG = (function () {
         s += dot(Pp, 'P', C_TXT, O);
       }
       s += dot(t.p, nm(o,0,'A'), C_TXT, O) + centreDot();
-      s += '<text x="' + n(t.a[0]) + '" y="' + n(t.a[1] - 8) + '" fill="' + C_TAN +
+      s += '<text x="' + n(E[0]) + '" y="' + n(E[1] - 8) + '" fill="' + C_TAN +
            '" font-size="12" text-anchor="middle" font-family="Outfit,sans-serif">T</text>';
       return s;
     },
@@ -327,13 +333,17 @@ const FIG = (function () {
     altSegment: function (o) {
       const t = tangentAt(o.A === undefined ? 270 : o.A);
       const B = P(o.B), C = P(o.C);
+      // The tangent-chord angle equal to the angle at C is the one on the OTHER side of AB from C (the
+      // alternate segment): T is the tangent's end across AB from C (circle-theorem-spotter-s1-001: it
+      // was always t.a, on C's side, so the marked angle was the supplement).
+      const E = side(t.p, B, t.a) === side(t.p, B, C) ? t.b : t.a;
       let s = circle() + seg(t.a, t.b, C_TAN) + seg(t.p, B) + seg(C, t.p) + seg(C, B);
-      if (o.tanLab) s += arc(t.p, B, t.a, o.tanLab, 24);
+      if (o.tanLab) s += arc(t.p, B, E, o.tanLab, 24);
       if (o.altLab) s += arc(C, t.p, B, o.altLab, 20);
       if (o.showO) { s += seg(O, t.p, C_LINE, true) + seg(O, B, C_LINE, true) +
                           arc(O, t.p, B, o.oLab, 26, false, -30) + centreDot(); }
       s += dot(t.p, nm(o,0,'A'), C_TXT, O) + dot(B, nm(o,1,'B')) + dot(C, nm(o,2,'C'));
-      s += '<text x="' + n(t.a[0]) + '" y="' + n(t.a[1] - 8) + '" fill="' + C_TAN +
+      s += '<text x="' + n(E[0]) + '" y="' + n(E[1] - 8) + '" fill="' + C_TAN +
            '" font-size="12" text-anchor="middle" font-family="Outfit,sans-serif">T</text>';
       return s;
     },
@@ -399,7 +409,7 @@ gcse:[
   {fig:{t:'cyclicQuad',A:125,B:35,C:305,D:215,labs:{A:'a',C:'c'}},ctx:'All four vertices of ABCD lie on the circle.',ask:'Which theorem does this diagram show?',correct:'Opposite angles in a cyclic quad sum to 180°',d:['Angles in same segment','Angle at centre theorem','Tangent-radius']},
   {fig:{t:'tangentRadius'},ctx:'The green line touches the circle at exactly one point, A. OA is a radius.',ask:'Which theorem does this diagram show?',correct:'Tangent is perpendicular to the radius',d:['Alternate segment theorem','Angle in semicircle','Angle at centre theorem']},
   {fig:{t:'altSegment',A:270,B:195,C:65,tanLab:'x',altLab:'x'},ctx:'The green line is a tangent touching at A. AB is a chord, and C lies on the far arc.',ask:'Which theorem does this diagram show?',correct:'Alternate segment theorem',d:['Tangent-radius','Angles in same segment','Angle at centre theorem']},
-  {fig:{t:'twoTangents',equal:true},ctx:'Both green lines are drawn from the external point P and each touches the circle once.',ask:'Which theorem does this diagram show?',correct:'Two tangents from a point are equal',d:['Tangent-radius','Alternate segment theorem','Angle in semicircle']},
+  {fig:{t:'twoTangents',equal:true},ctx:'Both green lines are drawn from the external point P and each touches the circle once.',ask:'Which theorem does this diagram show?',correct:'Two tangents from a point are equal',d:['Cyclic quadrilateral','Alternate segment theorem','Angle in semicircle']},
   {fig:{t:'chordBisect'},ctx:'OM is drawn from the centre to meet chord AB, and the two halves are marked equal.',ask:'Which property does this diagram show?',correct:'Perpendicular from centre bisects chord',d:['Tangent-radius','Angle at centre theorem','Alternate segment theorem']},
   {fig:{t:'centreCirc',deg:100,centreLab:'100&deg;',circLab:'?'},ctx:'The angle subtended at the centre by arc AB is 100°. What is the angle subtended at the circumference by the same arc?',ask:'Which theorem?',correct:'Angle at centre = 2 × angle at circumference',d:['Angles in same segment','Cyclic quadrilateral','Alternate segment theorem']},
   {fig:{t:'semicircle',C:65,cLab:'?'},ctx:'AB is a diameter. C is a point on the circumference.',ask:'What is angle ACB?',correct:'90°',d:['45°','180°','60°']},
