@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-840 findings in 93 games.
+845 findings in 93 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
-| CRITICAL | 1 | 31 | 0 | 32 |
+| CRITICAL | 1 | 32 | 0 | 33 |
 | HIGH | 10 | 216 | 0 | 226 |
-| MEDIUM | 177 | 220 | 3 | 400 |
-| LOW | 127 | 54 | 1 | 182 |
-| **All** | 315 | 521 | 4 | 840 |
+| MEDIUM | 180 | 220 | 3 | 403 |
+| LOW | 127 | 55 | 1 | 183 |
+| **All** | 318 | 523 | 4 | 845 |
 
 ### By class
 
@@ -34,14 +34,14 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 2 | 12 | 111 |
 | 3 | 5 | 86 |
 | 6 | 24 | 56 |
-| NEW:text-contradicts-content | 37 | 52 |
+| NEW:text-contradicts-content | 38 | 53 |
 | NEW:wrong-explanation-text | 15 | 50 |
 | NEW:wording | 46 | 49 |
 | NEW:convention-unstated | 25 | 48 |
 | 1 | 5 | 37 |
 | NEW:true-wrong-option | 10 | 34 |
 | 5 | 26 | 26 |
-| NEW:verifier-gap | 25 | 25 |
+| NEW:verifier-gap | 26 | 26 |
 | 4 | 5 | 22 |
 | 7 | 5 | 16 |
 | NEW:unstated-convention | 4 | 14 |
@@ -51,15 +51,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:raw-tex-on-screen | 5 | 11 |
 | NEW:sr14-content | 4 | 9 |
 | NEW:equal-value-options | 0 | 8 |
+| NEW:marking-tolerance | 3 | 8 |
 | NEW:hand-typed explanation figure | 5 | 7 |
-| NEW:marking-tolerance | 3 | 7 |
+| NEW:wrong-explanation | 1 | 7 |
 | NEW:ill-posed wording | 1 | 6 |
-| NEW:wrong-explanation | 1 | 6 |
+| NEW:timer-policy | 4 | 6 |
 | 11 | 0 | 5 |
 | NEW:board-mixes-session-lengths | 5 | 5 |
 | NEW:marking-by-structure | 0 | 5 |
 | NEW:phone-layout | 4 | 5 |
-| NEW:timer-policy | 3 | 5 |
 | B7 (ledgered) | 3 | 4 |
 | NEW:degenerate-item | 4 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
@@ -179,7 +179,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `glorious-gantt` | unlisted | none | 1 | 7 | 4 | 1 | 13 | 0 | 0 |
 | `gradient-hunter` | yes | verify-gradient-hunter.py | 1 | 0 | 5 | 1 | 2 | 5 | 0 |
 | `graph-transformer` | yes | verify-graph-transformer.py | 0 | 0 | 3 | 3 | 2 | 4 | 0 |
-| `growth-and-decay` | yes | verify-growth-and-decay.py | 0 | 0 | 4 | 0 | 2 | 2 | 0 |
+| `growth-and-decay` | yes | verify-growth-and-decay.py | 1 | 0 | 7 | 1 | 5 | 4 | 0 |
 | `higher-power` | yes | verify-higher-power.py | 0 | 1 | 6 | 1 | 6 | 2 | 0 |
 | `index-laws` | yes | verify-index-laws.py | 0 | 0 | 3 | 1 | 1 | 2 | 1 |
 | `integration-duel` | yes | verify-integration-duel.py | 0 | 2 | 7 | 1 | 1 | 9 | 0 |
