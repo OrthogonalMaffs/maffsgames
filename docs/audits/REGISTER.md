@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-845 findings in 93 games.
+854 findings in 94 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
-| CRITICAL | 1 | 32 | 0 | 33 |
-| HIGH | 10 | 216 | 0 | 226 |
-| MEDIUM | 180 | 220 | 3 | 403 |
-| LOW | 127 | 55 | 1 | 183 |
-| **All** | 318 | 523 | 4 | 845 |
+| CRITICAL | 1 | 33 | 0 | 34 |
+| HIGH | 10 | 218 | 0 | 228 |
+| MEDIUM | 183 | 222 | 3 | 408 |
+| LOW | 128 | 55 | 1 | 184 |
+| **All** | 322 | 528 | 4 | 854 |
 
 ### By class
 
@@ -34,24 +34,24 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 2 | 12 | 111 |
 | 3 | 5 | 86 |
 | 6 | 24 | 56 |
-| NEW:text-contradicts-content | 38 | 53 |
+| NEW:text-contradicts-content | 39 | 54 |
+| NEW:wording | 47 | 50 |
 | NEW:wrong-explanation-text | 15 | 50 |
-| NEW:wording | 46 | 49 |
 | NEW:convention-unstated | 25 | 48 |
 | 1 | 5 | 37 |
-| NEW:true-wrong-option | 10 | 34 |
+| NEW:true-wrong-option | 11 | 36 |
+| NEW:verifier-gap | 27 | 27 |
 | 5 | 26 | 26 |
-| NEW:verifier-gap | 26 | 26 |
 | 4 | 5 | 22 |
 | 7 | 5 | 16 |
-| NEW:unstated-convention | 4 | 14 |
+| NEW:unstated-convention | 4 | 15 |
 | NEW:value-equal distractors | 0 | 14 |
 | NEW:precision-not-stated | 2 | 12 |
 | 8 | 3 | 11 |
 | NEW:raw-tex-on-screen | 5 | 11 |
+| NEW:marking-tolerance | 3 | 9 |
 | NEW:sr14-content | 4 | 9 |
 | NEW:equal-value-options | 0 | 8 |
-| NEW:marking-tolerance | 3 | 8 |
 | NEW:hand-typed explanation figure | 5 | 7 |
 | NEW:wrong-explanation | 1 | 7 |
 | NEW:ill-posed wording | 1 | 6 |
@@ -63,6 +63,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | B7 (ledgered) | 3 | 4 |
 | NEW:degenerate-item | 4 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
+| NEW:second-correct-answer | 0 | 4 |
 | 9 | 1 | 3 |
 | NEW:level-content-mismatch | 2 | 3 |
 | NEW:phone-fold | 3 | 3 |
@@ -76,7 +77,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:hint-gives-answer | 1 | 2 |
 | NEW:key-ask mismatch | 0 | 2 |
 | NEW:prose-through-katex | 2 | 2 |
-| NEW:second-correct-answer | 0 | 2 |
 | NEW:unmarkable free text | 0 | 2 |
 | 10 | 0 | 1 |
 | NEW:a11y state | 0 | 1 |
@@ -217,6 +217,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `surd-simplifier` | yes | verify-surd-simplifier.py | 0 | 2 | 2 | 2 | 2 | 4 | 0 |
 | `suvat` | yes | verify-suvat.py | 1 | 3 | 6 | 1 | 1 | 10 | 0 |
 | `terrible-advice` | yes | verify-terrible-advice.py | 0 | 6 | 8 | 1 | 2 | 13 | 0 |
+| `test-the-claim` | yes | verify-test-the-claim.py | 1 | 2 | 5 | 1 | 4 | 5 | 0 |
 | `the-perfect-prank` | yes | none | 0 | 0 | 2 | 1 | 3 | 0 | 0 |
 | `think-of-a-number` | yes | verify-think-of-a-number.py | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `trig-identity-duel` | yes | verify-trig-identity-duel.py | 0 | 7 | 4 | 2 | 2 | 11 | 0 |
@@ -255,7 +256,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Live games no audit has covered
 
-5 of 97 live games: `graph-sketcher`, `just-pythag-it-bruv`, `normal-navigator`, `tax-theft`, `test-the-claim`
+4 of 97 live games: `graph-sketcher`, `just-pythag-it-bruv`, `normal-navigator`, `tax-theft`
 
 ## Exit bar detail
 
