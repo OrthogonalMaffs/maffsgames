@@ -180,6 +180,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/options.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/answer.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Binomial, one-tailed, 5%. A test is marked once, at Step 6: the answer works Steps 1-5 right (each Check waits for the next step to render), then i = 0 gives the right conclusion and i >= 1 a wrong context.
 {
   "start": "selectMode(document.querySelector('.mode-btn[data-mode=binomial]')); selectPill(document.querySelector('.pill[data-tail=one]'), 'tail'); selectPill(document.querySelector('.pill[data-sig=\"5\"]'), 'sig'); startGame();",
@@ -200,7 +201,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
     "  else if (st === 3) {",
     "   if (document.getElementById('zInput')) set('zInput', q.zStatExact);",
     "   else if (document.getElementById('crLowerInput')) { set('crLowerInput', q.crBoundaryLower === -1 ? '' : q.crBoundaryLower); set('crUpperInput', q.crBoundaryUpper); }",
-    "   else if (document.getElementById('crInput')) set('crInput', state.mode === 'correlation' ? q.criticalValue : state.mode === 'normal' ? (q.tail === 'two' ? q.cvTwoTail[q.sig] : (q.tailDir === 'lower' ? -q.cvOneTail[q.sig] : q.cvOneTail[q.sig])) : q.crBoundary);",
+    "   else if (document.getElementById('crInput')) set('crInput', state.mode === 'correlation' ? q.criticalValue : state.mode === 'normal' ? (q.tail === 'two' ? q.cvTwoTail[q.sig] : (q.tailDir === 'lower' ? -q.cvOneTail[q.sig] : q.cvOneTail[q.sig])).toFixed(2) : q.crBoundary);",
     "   else if (document.getElementById('pvInput')) set('pvInput', q.pValue);",
     "  }",
     "  else if (st === 4) selectOption('step4Select', q._step4Correct);",
@@ -334,7 +335,7 @@ binomial: [
     scenario:'A coin is suspected to be biased towards heads. In 20 flips, 15 heads are observed. Test at 5% whether the probability of heads exceeds 0.5.',
     n:20,p0:0.5,x:15,
     h0Latex:'p = 0.5',h1Latex:'p > 0.5',
-    h0Distractors:['p = 0.5','p \\leq 0.5','\\mu = 0.5','p \\neq 0.5'],
+    h0Distractors:['p = 0.5','p = 0.75','\\mu = 0.5','p \\neq 0.5'],
     h1Distractors:['p > 0.5','p < 0.5','p \\neq 0.5','p = 0.5'],
     h0Correct:0,h1Correct:0,
     distStatement:'X \\sim B(20,\\, 0.5)',
@@ -442,7 +443,7 @@ binomial: [
     scenario:'A new fertiliser is claimed to improve crop yield. Historically 35% of plots exceed target yield. With fertiliser, 12 out of 25 plots exceed target. Test at 1%. Any probability not listed can be found with your calculator\'s binomial distribution functions.',
     n:25,p0:0.35,x:12,
     h0Latex:'p = 0.35',h1Latex:'p > 0.35',
-    h0Distractors:['p = 0.35','p \\leq 0.35','\\mu = 0.35','p \\neq 0.35'],
+    h0Distractors:['p = 0.35','p = 0.48','\\mu = 0.35','p \\neq 0.35'],
     h1Distractors:['p > 0.35','p < 0.35','p \\neq 0.35','p = 0.35'],
     h0Correct:0,h1Correct:0,
     distStatement:'X \\sim B(25,\\, 0.35)',
@@ -478,7 +479,7 @@ binomial: [
     scenario:'A teacher believes more than half her class will pass a test. 14 out of 22 students pass. Test at 5%.',
     n:22,p0:0.5,x:14,
     h0Latex:'p = 0.5',h1Latex:'p > 0.5',
-    h0Distractors:['p = 0.5','p \\leq 0.5','\\mu = 0.5','p \\neq 0.5'],
+    h0Distractors:['p = 0.5','p = \\tfrac{14}{22}','\\mu = 0.5','p \\neq 0.5'],
     h1Distractors:['p > 0.5','p < 0.5','p \\neq 0.5','p = 0.5'],
     h0Correct:0,h1Correct:0,
     distStatement:'X \\sim B(22,\\, 0.5)',
@@ -608,7 +609,7 @@ poisson: [
     scalingPrompt:'The claim is 4 per minute but the observation is over 3 minutes. State the value of \\(\\lambda\\) for the observation period.',
     scalingAnswer:12,
     h0Latex:'\\lambda = 12',h1Latex:'\\lambda > 12',
-    h0Distractors:['\\lambda = 12','\\lambda = 4','\\lambda \\neq 12','\\mu = 12'],
+    h0Distractors:['\\lambda = 12','\\lambda = 20','\\lambda \\neq 12','\\mu = 12'],
     h1Distractors:['\\lambda > 12','\\lambda < 12','\\lambda \\neq 12','\\lambda = 12'],
     h0Correct:0,h1Correct:0,
     distStatement:'X \\sim \\text{Po}(12)',
@@ -646,7 +647,7 @@ poisson: [
     scalingPrompt:'The claim is 2 per hour but the observation is over 8 hours. State the value of \\(\\lambda\\) for the observation period.',
     scalingAnswer:16,
     h0Latex:'\\lambda = 16',h1Latex:'\\lambda < 16',
-    h0Distractors:['\\lambda = 16','\\lambda = 2','\\lambda \\neq 16','\\mu = 16'],
+    h0Distractors:['\\lambda = 16','\\lambda = 9','\\lambda \\neq 16','\\mu = 16'],
     h1Distractors:['\\lambda < 16','\\lambda > 16','\\lambda \\neq 16','\\lambda = 16'],
     h0Correct:0,h1Correct:0,
     distStatement:'X \\sim \\text{Po}(16)',
@@ -661,7 +662,7 @@ poisson: [
   },
   {
     id:'P8',tail:'one',tailDir:'upper',sig:10,
-    scenario:'A forest records an average of 2 lightning strikes per square kilometre per year. An exposed ridge records 5 strikes in one year. Test at 10%.',
+    scenario:'A forest records an average of 2 lightning strikes per square kilometre per year. An exposed ridge of 1 km\u00b2 records 5 strikes in one year. Test at 10%.',
     lambda0:2,x:5,requiresScaling:false,
     h0Latex:'\\lambda = 2',h1Latex:'\\lambda > 2',
     h0Distractors:['\\lambda = 2','\\lambda < 2','\\lambda \\neq 2','\\mu = 2'],
@@ -720,7 +721,7 @@ poisson: [
     scalingPrompt:'The claim is 6 per hour but the observation is over 2 hours. State the value of \\(\\lambda\\) for the observation period.',
     scalingAnswer:12,
     h0Latex:'\\lambda = 12',h1Latex:'\\lambda \\neq 12',
-    h0Distractors:['\\lambda = 12','\\lambda = 6','\\lambda \\neq 6','\\mu = 12'],
+    h0Distractors:['\\lambda = 12','\\lambda = 18','\\lambda \\neq 6','\\mu = 12'],
     h1Distractors:['\\lambda \\neq 12','\\lambda > 12','\\lambda < 12','\\lambda = 12'],
     h0Correct:0,h1Correct:0,
     distStatement:'X \\sim \\text{Po}(12)',
@@ -788,7 +789,7 @@ normal: [
     zFormula:'z = \\frac{65.5 - 62}{8/\\sqrt{25}} = \\frac{3.5}{1.6} = 2.19',
     cvOneTail:{1:2.3263,5:1.6449,10:1.2816},cvTwoTail:{1:2.5758,5:1.9600,10:1.6449},
     crStatement:'Z \\geq 1.6449',
-    pValue:0.0144,pValueExpr:'P(\\bar{X} \\geq 65.5) = 0.0144',
+    pValue:0.0144,pValueZ2:0.0143,pValueExpr:'P(\\bar{X} \\geq 65.5) = 0.0144',
     crExplanation:'P(Z \\geq 1.6449) = 0.05 \\text{, so the critical region is } Z \\geq 1.6449',
     inCR:true,reject:true,
     conclusionContext:'the mean score has increased'
@@ -808,7 +809,7 @@ normal: [
     zFormula:'z = \\frac{332.1 - 330}{5/\\sqrt{20}} = \\frac{2.1}{1.118} = 1.88',
     cvOneTail:{1:2.3263,5:1.6449,10:1.2816},cvTwoTail:{1:2.5758,5:1.9600,10:1.6449},
     crStatement:'|Z| \\geq 1.9600',
-    pValue:0.0302,pValueExpr:'P(\\bar{X} \\geq 332.1) = 0.0302',
+    pValue:0.0302,pValueZ2:0.0301,pValueExpr:'P(\\bar{X} \\geq 332.1) = 0.0302',
     crExplanation:'P(Z \\geq 1.9600) = 0.025 \\text{ in each tail, so the critical region is } |Z| \\geq 1.9600',
     inCR:false,reject:false,
     conclusionContext:'the mean volume differs from 330ml'
@@ -848,7 +849,7 @@ normal: [
     zFormula:'z = \\frac{3.45 - 3.2}{0.6/\\sqrt{30}} = \\frac{0.25}{0.1095} = 2.28',
     cvOneTail:{1:2.3263,5:1.6449,10:1.2816},cvTwoTail:{1:2.5758,5:1.9600,10:1.6449},
     crStatement:'|Z| \\geq 2.5758',
-    pValue:0.0112,pValueExpr:'P(\\bar{X} \\geq 3.45) = 0.0112',
+    pValue:0.0112,pValueZ2:0.0113,pValueExpr:'P(\\bar{X} \\geq 3.45) = 0.0112',
     crExplanation:'P(Z \\geq 2.5758) = 0.005 \\text{ in each tail, so the critical region is } |Z| \\geq 2.5758',
     inCR:false,reject:false,
     conclusionContext:'the mean delivery time differs from 3.2 days'
@@ -868,7 +869,7 @@ normal: [
     zFormula:'z = \\frac{207 - 200}{15/\\sqrt{25}} = \\frac{7}{3} = 2.33',
     cvOneTail:{1:2.3263,5:1.6449,10:1.2816},cvTwoTail:{1:2.5758,5:1.9600,10:1.6449},
     crStatement:'Z \\geq 2.3263',
-    pValue:0.0098,pValueExpr:'P(\\bar{X} \\geq 207) = 0.0098',
+    pValue:0.0098,pValueZ2:0.0099,pValueExpr:'P(\\bar{X} \\geq 207) = 0.0098',
     crExplanation:'P(Z \\geq 2.3263) = 0.01 \\text{, so the critical region is } Z \\geq 2.3263',
     inCR:true,reject:true,
     conclusionContext:'the mean battery life has increased'
@@ -888,7 +889,7 @@ normal: [
     zFormula:'z = \\frac{747.5 - 750}{10/\\sqrt{40}} = \\frac{-2.5}{1.581} = -1.58',
     cvOneTail:{1:2.3263,5:1.6449,10:1.2816},cvTwoTail:{1:2.5758,5:1.9600,10:1.6449},
     crStatement:'Z \\leq -1.2816',
-    pValue:0.0569,pValueExpr:'P(\\bar{X} \\leq 747.5) = 0.0569',
+    pValue:0.0569,pValueZ2:0.0571,pValueExpr:'P(\\bar{X} \\leq 747.5) = 0.0569',
     crExplanation:'P(Z \\leq -1.2816) = 0.10 \\text{, so the critical region is } Z \\leq -1.2816',
     inCR:true,reject:true,
     conclusionContext:'the mean weight is below the stated 750g'
@@ -968,7 +969,7 @@ normal: [
     zFormula:'z = \\frac{43.2 - 45}{4/\\sqrt{20}} = \\frac{-1.8}{0.894} = -2.01',
     cvOneTail:{1:2.3263,5:1.6449,10:1.2816},cvTwoTail:{1:2.5758,5:1.9600,10:1.6449},
     crStatement:'Z \\leq -1.6449',
-    pValue:0.0221,pValueExpr:'P(\\bar{X} \\leq 43.2) = 0.0221',
+    pValue:0.0221,pValueZ2:0.0222,pValueExpr:'P(\\bar{X} \\leq 43.2) = 0.0221',
     crExplanation:'P(Z \\leq -1.6449) = 0.05 \\text{, so the critical region is } Z \\leq -1.6449',
     inCR:true,reject:true,
     conclusionContext:'the mean fuel efficiency is below the claimed 45mpg'
@@ -1484,6 +1485,24 @@ function buildStep(q, step) {
 // Each Check marks once (canon 7.6.0): the step panel is locked until the next step renders, or until the step
 // reopens for another try (Try Again, or at once where the step offers no Try Again).
 function stepLock() { return MaffsLock.lock($('stepPanel')); }
+// A typed value is marked at the precision its label states (z and a Normal critical value 2 d.p., a p-value and a
+// PMCC critical value 4 d.p.) by the shared MaffsAnswer.decimal(), never to a band round the key (SR-1, SR-3;
+// test-the-claim-s1-001..003). Each accepted key is a number; the best result over them wins. 'format' (the right
+// value at other precision) and 'unreadable' are not marked: the step shows the message and stays open.
+function markAt(raw, keys, dp) {
+  let best = 'wrong';
+  for (const k of keys) {
+    const r = MaffsAnswer.decimal(raw, Number(k).toFixed(dp), dp);
+    if (r === 'correct') return r;
+    if (r === 'format' || r === 'unreadable') best = r;
+  }
+  return best;
+}
+function unmarked(res, raw, dp, fb) {
+  if (res !== 'format' && res !== 'unreadable') return false;
+  fb.innerHTML = `<div class="feedback wrong">${MaffsAnswer.message(res, raw, {dp: dp})}</div>`;
+  return true;
+}
 function stepReopen() { MaffsLock.fresh($('stepPanel')); }
 
 function stepHeader(num, title) {
@@ -1695,12 +1714,13 @@ function switchMethod(m) {
 
 function checkZStat() {
   const q = state.questions[state.qIdx];
-  const val = parseFloat($('zInput').value);
+  const raw = $('zInput').value;
   const fb = $('step3Feedback');
-  if (isNaN(val)) return;
+  if (!raw.trim()) return;
+  const res = markAt(raw, [q.zStatExact], 2);
+  if (unmarked(res, raw, 2, fb)) return;
   if (!stepLock()) return;
-  const expected = parseFloat(q.zStatExact);
-  if (Math.abs(val - expected) <= 0.02) {
+  if (res === 'correct') {
     q._zCalcDone = true;
     fb.innerHTML = `<div class="feedback correct">Correct! ${K(q.zFormula)}</div>`;
     MaffsLock.timer(() => buildStep(q, 3), 1500);
@@ -1717,52 +1737,52 @@ function checkStep3() {
   state.totalSteps++;
   let correct = false;
 
+  // Where the critical region has two boundaries (a lower tail written r <= -cv or Z <= -cv, or |Z| >= cv), the
+  // boundary is either signed value (test-the-claim-s1-002).
+  const both = cv => [cv, -cv];
+  let res = 'wrong', dp = 0, raws = [];
   if (state.method === 'cr') {
     if (state.mode === 'correlation') {
-      const val = parseFloat($('crInput').value);
-      if (isNaN(val)) return;
-      correct = Math.abs(val - q.criticalValue) < 0.001;
+      const raw = $('crInput').value; if (!raw.trim()) return; raws = [raw]; dp = 4;
+      res = markAt(raw, q.tailDir === 'upper' ? [q.criticalValue] : both(q.criticalValue), 4);
     } else if (state.mode === 'normal') {
-      if (q.crDirection === 'two' || q.tailDir === 'two') {
-        const lo = parseFloat($('crLowerInput')?.value);
-        const hi = parseFloat($('crUpperInput')?.value);
-        if (isNaN(lo) || isNaN(hi)) {
-          // Single input for normal
-          const val = parseFloat($('crInput')?.value);
-          if (isNaN(val)) return;
-          const cv = q.tail === 'two' ? q.cvTwoTail[q.sig] : q.cvOneTail[q.sig];
-          correct = Math.abs(val - cv) < 0.002;
-        } else {
-          const cv = q.cvTwoTail[q.sig];
-          correct = Math.abs(lo - (-cv)) < 0.002 && Math.abs(hi - cv) < 0.002;
-        }
+      dp = 2;
+      if ($('crLowerInput')) {
+        const lo = $('crLowerInput').value, hi = $('crUpperInput').value;
+        if (!lo.trim() || !hi.trim()) return; raws = [lo, hi];
+        const cv = q.cvTwoTail[q.sig], a = markAt(lo, [-cv], 2), b = markAt(hi, [cv], 2);
+        res = (a === 'correct' && b === 'correct') ? 'correct' : [a, b].includes('unreadable') ? 'unreadable' : [a, b].includes('format') ? 'format' : 'wrong';
       } else {
-        const val = parseFloat($('crInput').value);
-        if (isNaN(val)) return;
-        const cv = q.cvOneTail[q.sig];
-        if (q.tailDir === 'lower') correct = Math.abs(val - (-cv)) < 0.002 || Math.abs(val - cv) < 0.002;
-        else correct = Math.abs(val - cv) < 0.002;
+        const raw = $('crInput').value; if (!raw.trim()) return; raws = [raw];
+        const two = q.tail === 'two' || q.tailDir === 'two';
+        const cv = two ? q.cvTwoTail[q.sig] : q.cvOneTail[q.sig];
+        res = markAt(raw, two || q.tailDir === 'lower' ? both(cv) : [cv], 2);
       }
     } else {
-      // Discrete distributions
+      // Discrete distributions: an integer boundary, exactly
       if (q.crDirection === 'two') {
         const lo = parseFloat($('crLowerInput')?.value);
         const hi = parseFloat($('crUpperInput')?.value);
         if (isNaN(hi)) return;
         // A blank Lower box means "no lower critical region", which the bank stores as -1.
-        correct = ((isNaN(lo) ? -1 : lo) === q.crBoundaryLower && hi === q.crBoundaryUpper);
+        res = ((isNaN(lo) ? -1 : lo) === q.crBoundaryLower && hi === q.crBoundaryUpper) ? 'correct' : 'wrong';
       } else {
         const val = parseFloat($('crInput').value);
         if (isNaN(val)) return;
-        correct = val === q.crBoundary;
+        res = val === q.crBoundary ? 'correct' : 'wrong';
       }
     }
   } else {
-    // p-value method
-    const val = parseFloat($('pvInput').value);
-    if (isNaN(val)) return;
-    correct = Math.abs(val - q.pValue) < 0.006;
+    // p-value method, 4 d.p.; a Normal item also accepts the p-value from the z the student gave to 2 d.p.
+    const raw = $('pvInput').value; if (!raw.trim()) return; raws = [raw]; dp = 4;
+    res = markAt(raw, q.pValueZ2 !== undefined ? [q.pValue, q.pValueZ2] : [q.pValue], 4);
   }
+  if (res === 'format' || res === 'unreadable') {
+    state.totalSteps--;
+    unmarked(res, raws.join(', '), dp, fb);
+    return;
+  }
+  correct = res === 'correct';
 
   if (!stepLock()) { state.totalSteps--; return; }
   if (correct) {
@@ -1915,27 +1935,20 @@ function buildStep6(q) {
 }
 
 function generateWrongContexts(q) {
-  const ctx = q.conclusionContext;
-  // Generate 3 plausible wrong conclusions.
-  // The first swaps the context's direction word. When the context has no word the
-  // pattern knows, replace() returns it unchanged -- which offered the correct
-  // conclusion twice (B8, B10, B12, P8) -- so fall back to the misconception that
-  // failing to reject H0 proves the claim.
-  const swapped = (pattern, word, fallback) => {
-    const s = ctx.replace(pattern, word);
-    return s !== ctx ? s : fallback;
-  };
+  // Generate 3 plausible wrong conclusions, each false as the claim tested. A direction swap ("differs" ->
+  // "changed significantly") gave the key's own claim on two-tailed items, and garbled sentences on others
+  // (test-the-claim-s1-004, SR-16): the misconception that a test proves the claim takes its place.
   const wrongs = [];
   if (state.mode === 'binomial') {
-    wrongs.push(swapped(/decreased|increased|differs|fallen|exceeds|biased/, 'changed significantly', 'the claimed proportion has been proved correct'));
+    wrongs.push('the claimed proportion has been proved correct');
     wrongs.push('the sample proportion equals the claimed value');
     wrongs.push('the population parameter cannot be determined from this sample');
   } else if (state.mode === 'poisson') {
-    wrongs.push(swapped(/decreased|increased|changed/, 'remained constant', 'the claimed rate has been proved correct'));
+    wrongs.push('the claimed rate has been proved correct');
     wrongs.push('the observed count is a typical value for this distribution');
     wrongs.push('the rate parameter equals the observed value');
   } else if (state.mode === 'normal') {
-    wrongs.push(swapped(/decreased|increased|differs|below/, 'equals the claimed value', 'the claimed mean has been proved correct'));
+    wrongs.push('the claimed mean has been proved correct');
     wrongs.push('the sample mean is not significantly different from zero');
     wrongs.push('the population standard deviation has changed');
   } else {

@@ -1,0 +1,124 @@
+# Findings register for test-the-claim (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: test-the-claim
+audited:
+  tranche: S1 (SWEEP-1 reading sweep)
+  head: 856aa7c
+  date: 2026-10-13
+  served:
+    alevel: '48 (one bank for both levels)'
+    level4: '48 (one bank for both levels)'
+findings:
+- id: test-the-claim-s1-001
+  severity: CRITICAL
+  jc: false
+  class: NEW:marking-tolerance
+  level: alevel, level4
+  where: games/test-the-claim/index.html buildStep3 (:1656), checkStep3, checkZStat
+  summary: 'Typed answers were marked to bands that disagree with the precision their labels state. A Normal critical
+    value labelled "(2 d.p.)" was marked to ±0.002 of the 4 d.p. table value, so the correct 1.64 (1.6449),
+    2.33 (2.3263) and 2.58 (2.5758) were marked wrong on 9 of the 12 Normal items (N1, N2, N4, N5, N6, N8, N9, N11,
+    N12); a p-value labelled "(4 d.p.)" was marked to ±0.006, accepting named errors (B2 P(X = 15) = 0.0148 for 0.0207,
+    P4, P10, N4''s doubled 0.0027); the z labelled "(2 d.p.)" to ±0.02 (−1.98 accepted for −2.00). Fixed under SR-30
+    (SR-1, SR-3): every typed value is marked by the shared MaffsAnswer.decimal() at its label''s precision; a Normal
+    p-value also accepts the value from the z the game asks for to 2 d.p. (pValueZ2, on six items); the other precision
+    gets the format message, unmarked. The verifier plays every box in node through the page''s own checkZStat() and
+    checkStep3(), and plants the old bands'
+  evidence: 'correct = Math.abs(val - cv) < 0.002; correct = Math.abs(val - q.pValue) < 0.006; if (Math.abs(val -
+    expected) <= 0.02) (SWEEP-1, batch 10)'
+  status: open
+- id: test-the-claim-s1-002
+  severity: HIGH
+  jc: false
+  class: NEW:second-correct-answer
+  level: alevel, level4
+  where: games/test-the-claim/index.html checkStep3 (C4, C8, C12; Normal two-tailed)
+  summary: '"State the critical region boundary value": on the lower-tail correlation items the region is r ≤ −0.4000,
+    whose boundary −0.4000 was marked wrong (the key stored +0.4000), and the wrong-answer hint then said "r ≤ −0.4000";
+    a two-tailed Normal item''s −1.96 likewise. Fixed: either signed boundary where the region has two (lower and
+    two-tailed); an upper-tail correlation still takes only +cv; played in the verifier'
+  evidence: "C4 criticalValue: 0.4000, tailDir 'lower' (SWEEP-1, batch 10)"
+  status: open
+- id: test-the-claim-s1-003
+  severity: HIGH
+  jc: false
+  class: NEW:second-correct-answer
+  level: alevel, level4
+  where: games/test-the-claim/index.html generateWrongContexts (B3, B6, B9, B11; one-tailed items garbled)
+  summary: 'Step 6''s first wrong conclusion swapped the context''s direction word: "differs from 75%" became "changed
+    significantly from 75%", the key''s own claim, on the four two-tailed binomial items; elsewhere it produced garbled
+    sentences ("the mean fill weight has equals the claimed value below 500g", every Normal item). Fixed (SR-16): the
+    swap goes; the misconception that the test proves the claim takes its place; the verifier fails a wrong conclusion
+    that rewrites the key''s context, and plants the old swap'
+  evidence: "wrongs.push(swapped(/decreased|increased|differs|fallen|exceeds|biased/, 'changed significantly', ...))
+    (SWEEP-1, batch 10)"
+  status: open
+- id: test-the-claim-s1-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:true-wrong-option
+  level: alevel, level4
+  where: games/test-the-claim/index.html B2, B8, B10, P5, P7, P11 (Step 1)
+  summary: 'Step 1 offered accepted forms of H0 as wrong (SR-16): the composite "p ≤ 0.5" (B2, B10) and "p ≤ 0.35" (B8)
+    on upper-tail tests, and the unscaled rate "λ = 4" (P5), "λ = 2" (P7), "λ = 6" (P11) where UK mark schemes accept H0
+    on the per-unit rate. Fixed: each is the named error of writing H0 with the sample value (p = 0.75, p = 0.48,
+    p = 14/22; λ = 20, λ = 9, λ = 18); the verifier fails a composite in the accepted direction or an unscaled rate,
+    and plants B2''s old option'
+  evidence: "B2 h0Distractors ['p = 0.5','p \\\\leq 0.5','\\\\mu = 0.5','p \\\\neq 0.5'] (SWEEP-1, batch 10)"
+  status: open
+- id: test-the-claim-s1-005
+  severity: MEDIUM
+  jc: false
+  class: NEW:unstated-convention
+  level: alevel, level4
+  where: games/test-the-claim/index.html P8 (:663)
+  summary: 'λ = 2 strikes per km² assumes the ridge is 1 km², which the stem did not say (SR-17). Fixed: "An exposed
+    ridge of 1 km² records 5 strikes in one year."'
+  evidence: '"A forest records an average of 2 lightning strikes per square kilometre per year. An exposed ridge
+    records 5 strikes in one year." (SWEEP-1, batch 10)'
+  status: open
+- id: test-the-claim-s1-006
+  severity: MEDIUM
+  jc: true
+  class: NEW:true-wrong-option
+  level: alevel, level4
+  where: games/test-the-claim/index.html buildStep6, generateWrongContexts (non-reject items)
+  summary: 'On the items where H0 is not rejected, Step 6 frames the conclusion as "There is insufficient evidence … to
+    support the claim that …", inside which every wrong conclusion becomes a true (if empty) sentence: "a causal
+    relationship exists", "the claimed proportion has been proved correct", "there is no linear relationship". The
+    frame, or what component C asks, is a design choice for Jon'
+  evidence: 'C3, C5, C8, C12; B8, B10, B12; the Poisson and Normal non-reject items (SWEEP-1, batch 10)'
+  status: open
+- id: test-the-claim-s1-007
+  severity: MEDIUM
+  jc: true
+  class: NEW:text-contradicts-content
+  level: alevel, level4
+  where: games/test-the-claim/index.html B10 (:477)
+  summary: '"A teacher believes more than half her class will pass. 14 out of 22 students pass": 14/22 is already more
+    than half of the whole class, so "insufficient evidence" contradicts the data; it needs a population and a sample
+    (a new context, for Jon)'
+  evidence: 'Stem as quoted (SWEEP-1, batch 10)'
+  status: open
+- id: test-the-claim-s1-008
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: alevel, level4
+  where: games/test-the-claim/index.html :1824-1825, :1859-1862, :2048; startGame (:1306-1322)
+  summary: 'The Step 4 hint and the Step 5 reason speak of "the critical region" on the p-value route; the model answer
+    says "to suggest that" where Step 6 says "to support the claim that"; a chosen tail and level match few items, so the
+    session is padded with others while the results line names the choice'
+  evidence: 'Reviewer''s reading (SWEEP-1, batch 10)'
+  status: open
+- id: test-the-claim-s1-009
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: alevel, level4
+  where: scripts/verify-test-the-claim.py
+  summary: 'The verifier recomputed every key but did not play Step 3''s typed marking (how s1-001 and s1-002 passed),
+    read the meaning of Step 6''s distractors (s1-003), or check the Step 1-5 feedback, hint and model-answer texts.
+    Recorded under Jon''s rule of 13 Oct 2026; Step 3 marking, Step 1 options and Step 6 rewrites are now checked'
+  evidence: 'NODE_DRIVER before this PR (SWEEP-1, batch 10)'
+  status: open
