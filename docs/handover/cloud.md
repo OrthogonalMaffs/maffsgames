@@ -34,7 +34,7 @@ in the queue below pointing to it. Read it when the item starts, not at session 
 start-up load). When the work merges, move the file to `docs/history/`.
 
 **Queue:** VERIFIERS-20 (12 Oct, contract `docs/handover/contracts/2026-10-12-verifiers-20.md`): 20 verifiers, one game per PR; 1 prime-or-composite DONE (#282); 2 fraction-equivalence DONE (#283); 3 percentage-flip DONE (#284); 4 factor-race DONE (#285); 5 prime-factorisation DONE (#286); 6 think-of-a-number DONE (#287); 7 formula-plug-in DONE (#290); 8 four-quadrant-explorer DONE (#291); 9 new-shapes DONE (#292); 10 shape-shifter DONE (#293); 11 equatle DONE (#294); 12 standard-form-blitz DONE (#295); 13 index-laws DONE (#296, ruling #297); 14 modular-battle DONE (#298); 15 bearing-blitz DONE (#300); 16 constructions-lab DONE (#301); between games: wrong-on-the-internet t2-006 (Jon's SR-14 ruling) DONE (#304, 73478d6), closes t2-006; modular-battle verifier flake fixed (#303); 17 formula-forge DONE (#305); 18 characteristic-quest DONE (#306); 19 eigenvalue-extractor DONE (#307); 20 prisoners-dilemma DONE (#309). **VERIFIERS-20 COMPLETE.** Then: formula-forge-v20-001 (Jon's ruling, 12 Oct) DONE (#310, 8d36ca2).
-B11-CLEAR (12 Oct, contract `docs/handover/contracts/2026-10-12-b11-clear.md`): clear B11 from the ledger, one game per PR: 1 scale-factor-scaling DONE (#312, 031d8ed); 2 coordinate-geometry-dash DONE (#315); then index-laws, standard-form-blitz, surd-simplifier, boolean-blitz, complex-converter.
+B11-CLEAR (12 Oct, contract `docs/handover/contracts/2026-10-12-b11-clear.md`): clear B11 from the ledger, one game per PR: 1 scale-factor-scaling DONE (#312, 031d8ed); 2 coordinate-geometry-dash DONE (#315); 3 index-laws DONE (#320); then standard-form-blitz, surd-simplifier, boolean-blitz, complex-converter.
 UC-FIX: DONE, #196 merged 9 Oct (c9fbf4b), main green.
 SIM-S5: DONE, #203 merged 9 Oct (4081538). UC-T4-007: DONE, #205 merged 9 Oct (920c5b1; the answers' item 3c, in
 `docs/history/contracts/2026-10-09-sim-s5-answers.md`; claim #204). FT-FIX: DONE, #207 merged 9 Oct (cf96929; contract, amendment and Jon's answers
@@ -89,6 +89,13 @@ Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
+## 2026-10-12 (cloud): B11-CLEAR game 3, index-laws (#320)
+
+- **Replacements (kind a, keys unchanged):** [6] 3^{12} -> 3^2 (subtracted the powers; 9^6 kept); [27] 1/x^{-3} -> −1/x^3 (negative as well; x^3 kept); [38] 27/3 -> 1/3, [39] 100/2 -> 1/10, [40] 25/2 -> 1/5 (reciprocal as for a negative power; 9, 50, 12.5 kept).
+- **Verifier** fails on any equal pair except the key beside another form where `ask` names it ((5^2)^3); plant puts 3^{12} back.
+- **Games 4-7 are built and committed locally** (worktrees /home/user/wt/sfb, ss, bb, cc; branches claude/b11-<slug>), each verifier PASS with its plant, each ledger clean for its game only. Each needs: rebase on main, claim commit pushed alone, fix pushed, PR, findings + release commit. Recipe: KaTeX via `npm pack katex@0.16.9` in the scratchpad; extraction through `docs/sandbox-checks.md`'s `run_extract_offline.py`; verifiers take `--katex-dir`.
+- **Surd Simplifier note for Jon:** six of its eight pairs (27/99 and 9/33 for 3/11, and so on) are both the KEY's value unsimplified, under "simplest form": SR-4's form exception, so they are listed in the allowlist (as alevel[6]/[7] already were), not replaced. gcse[38] and [43] are replaced. Jon can reverse this.
+
 ## 2026-10-12 (cloud): B11-CLEAR game 2, coordinate-geometry-dash (#315)
 
 - **Replacement (kind a, key unchanged):** alevel[15] (x = 2t + 1, y = t^2 - 3, dy/dx at t = 1; key 1): 1/2 -> −2 (gave y at t = 1, not the gradient); ½ kept.
@@ -101,67 +108,3 @@ main's last full run is red; watch main's run after merging.
 - **Replacements (kind a, keys unchanged):** T1[8] 4:10 -> 4:5 (squared only the first number; 2:5 kept); T1[9] 3:9 -> 1:6 (doubled the scale factor instead of squaring it; 1:3 kept).
 - **Verifier** fails on any equal pair (EQUAL_PAIRS empty; plant puts 4:10 back). **Ledger:** `extract-banks.py --only` then `check-banks.py --only <slug> --write-ledger`; only this game changed.
 - **Container:** extraction needs esprima, which will not build here; the CI pin (4.0.1) is pure Python: `pip download --no-binary :all: esprima==4.0.1`, untar into the scratchpad, put it on PYTHONPATH.
-
-## 2026-10-12 (cloud): VERIFIERS-20 game 20, prisoners-dilemma (#309, merge commit 9b57ab9); the list is complete
-
-- **Verifier:** `scripts/verify-prisoners-dilemma.py` (from the parked draft). The game marks nothing, so (as constructions-lab) it checks what the game states and does: payoffs, every opponent
-  against its stated rule over 3040 histories, 28 games and a tournament per level played in Chromium with every score and figure recomputed. Six planted faults fail. t4-001 untouched.
-- **Main's runs:** 38299209665 (#308, after #307) green; #309's Gate green first time.
-- **VERIFIERS-20 complete:** 20 verifiers, #282-#309. Findings opened: fraction-equivalence-v20-001 (stays open until that bank's SR-26 growth, Jon 12 Oct), index-laws-v20-001 (ruled, #297),
-  formula-forge-v20-001 (ruled below). Fixed on the way: characteristic-quest-t6-003 (#306), woti t2-006 (#304), the modular-battle verifier flake (#303).
-- **Jon's rulings, 12 Oct:** formula-forge-v20-001: in each equal pair the sqrt(x^2) form is replaced (v = u^2 + 2as; a = sqrt(c^2 + b^2); u = sqrt(v^2 + 2as)), keys unchanged, EQUAL_PAIRS emptied, finding
-  closed, in its own PR (claimed here). prisoners-dilemma is off the remaining line (#309), so the **home lane can do t4-001**.
-- **Drafts branch** `claude/verifiers-17-20-drafts` is spent (all four drafts merged); it can be deleted with the merged `claude/verifier-*` branches (the proxy refuses remote deletes).
-
-## 2026-10-12 (cloud): MAIN RED, verify-modular-battle (run 826, #301's merge); fix is this lane's
-
-- **Were #300 and #301 merged on green? Yes, both.** #300 merged after run 820 (#298) finished green (17:22 UTC); #301 after
-  run 825 (#299) finished green (17:53). #300's own run, 822, was green. **Main went red on 826, #301's own merge run:**
-  Content verifiers 13, verify-modular-battle (#298's verifier), attempt 1 and the re-run both failed. No cloud merge since.
-- **Cause (a flaky verifier, not the game):** after the 408 steered questions, the scaffold and 90-second session drivers
-  loaded questions on live `Math.random`. Under the "key offered twice" plant a b = 2 draw can show only the key twice, so
-  `find()` returned undefined and the script threw (TypeError at `b.click()`). Measured: the old driver threw 24 of 200.
-  It passed #298's PR and runs 820, 822 and 825 by chance.
-- **FIXED: #303 merged (9714acc)** after its Gate was green and main's run 828 (#302) was green. Watch main's run on 9714acc.
-- **Fix (#303):** both drivers load fixed steered questions (`DRIVE_PAIRS`) and
-  assert the steering took; a missing button is a `scaffold:`/`session:` FAIL, not an exception. New driver: 0 of 200, one
-  outcome. Full verifier three times: PASS, identical output, all 7 plants caught.
-- **Class check: local.** Of the 16 VERIFIERS-20 scripts, only this one drives play on live randomness; the other
-  find-then-click drivers (four-quadrant-explorer, standard-form-blitz, index-laws) press fixed items, so are deterministic.
-- **Then:** the woti t2-006 PR (#304) merges only once main's run after #303 is green.
-
-## 2026-10-12 (cloud): New Shapes diagram findings, Jon's ruling
-
-- **Jon, 12 Oct:** New Shapes' diagram findings (r-001, t3-003, t3-004, t3-005: proportions fixed whatever the numbers, the prism's l arrow on the wrong dimension) **stay open until its SR-26 bank growth, which redraws from each question's parameters.** No cloud-lane redraw before then. The `new-shapes` verifier (#292) checks the numbers on the diagram only and prints that the geometry is not asserted; when the bank is grown and the diagrams are drawn from each item's parameters, extend the verifier to assert the geometry (drawn proportions and the l arrow along the depth edge) and close those four entries in the same PR.
-
-## 2026-10-12 (cloud): Runner cancels at "Initialize containers" (Jon's rule, 12 Oct)
-
-Rule: a job cancelled at Initialize containers is runner infrastructure; re-run only those jobs, up to 3 times per run; a green re-run counts as main green; any other failure or cancel stops the lane. Record per cancelled job, duration against timeout (content groups: 6 min = 360 s), for the home lane:
-- Main run 802 (bb79123), attempt 1: 8 jobs cancelled at Initialize containers (Site-wide checks, Content verifiers 3, 9, 12, 25, 14, 32, 24). Durations not captured; one re-run used.
-- Main run 802, attempt 2: Content verifiers 33 cancelled at Initialize containers, 10:56:22 to 11:02:41 = 379 s against a 360 s timeout (the whole timeout spent before the first step ran). Second re-run used.
-- Earlier, on PR heads: #291 Content verifiers 3; #292 Tiers 1+2 shard 3/4, Content verifiers 4, then 3, 21, 13. Durations not captured.
-Reading: 379 s is over the timeout, so the container pull is consuming the timeout, not the checks.
-
-## 2026-10-12 (cloud): CHECKPOINT 2 (Jon asked for one at 66% context)
-
-- **Merged:** VERIFIERS-20 games 1-16 (#282-#287, #290-#298, #300, #301; index-laws ruling #297); main green after each (last checked: 38286441432 on #299, and the #301 merge's run was in progress).
-- **IN FLIGHT: wrong-on-the-internet t2-006 (Jon's SR-14 ruling, 12 Oct), branch `claude/woti-t2-006`.** Pushed: claim commit, and the one-line change in woti_core_006's correct stage-2 option
-  ("At 100°C humans can't survive, let alone buy ice cream." becomes "At 100°C water boils, so nobody is queuing for ice cream."; key, options, explanation unchanged). The verify-wrong-on-the-internet.py run passed.
-  **#304 open:** check-changed run (woti passes; only the container's esprima/WebKit/KaTeX failures); t2-006 set fixed with pr 304 and the ruling; the game is off the remaining line.
-  DONE: main run 830 (#303) green; #304 merged on a green Gate (73478d6).
-- **Next, games 17-20:** drafts that pass are parked on branch `claude/verifiers-17-20-drafts` in `docs/handover/drafts/`, with a README giving each one's follow-ups (formula-forge-v20-001 to file for Jon;
-  characteristic-quest's t6-003 SR-6 fix as a patch; a plant label to fix in eigenvalue-extractor; prisoners-dilemma left alone on t4-001). Each game gets its own claim, PR, Gate and main run.
-- **Open for Jon:** formula-forge-v20-001 (three items with two wrong options equal in value; replacements suggested in the drafts README). Merged `claude/verifier-*` remote branches need deleting (the proxy refuses).
-- **Interim rule:** the re-run rule for "Initialize containers" cancels can be retired once main has had two full runs with no such cancel since #299 (CONTAINER-PULL-TIMEOUT); remove it then.
-- **Container setup (each new session):** Playwright 1.63 expects Chromium build 1243; the container has 1194 in another layout. In a scratch dir make `chromium_headless_shell-1243/` (with empty INSTALLATION_COMPLETE and DEPENDENCIES_VALIDATED files)
-  holding a symlink `chrome-headless-shell-linux64 -> /opt/pw-browsers/chromium_headless_shell-1194/chrome-linux`, plus `chromium-1243/chrome-linux64` the same way. Add a symlink `chrome-headless-shell -> headless_shell` inside that 1194 dir.
-  Set `PLAYWRIGHT_BROWSERS_PATH` to the scratch dir.
-- **Recipe that works (games 1-8):** worktree from origin/main; claim commit (the previous game's entry + one `cloud-remaining` line) pushed alone; script; `ci-groups --check`,
-  `audit-register --check`, `check-verifier-coverage`, `check-context-size`; PR; merge on green Gate with main's last run green (the "Record CI timings" commit appears only after a
-  green main run). KaTeX games: serve it with `bc.is_font_cdn` + `bc.serve_real_font`. Never write the remaining-list token in backticks in an entry; keep this file under 20 KB (move old entries to the archive).
-- **TeX readers (Jon, 12 Oct 2026):** per-verifier TeX readers are acceptable (as in verify-formula-unlocked.py, games 12 and 13); games 17-19 carry their own. HOME-LANE ITEM: give `bank_common`
-  one exact TeX reader and move these verifiers onto it. Today `parse_value` reads `6x^7 \div 2x^2` as 3x^9 (against Jon's ruling on index-laws-v20-001), reads standard form as a float,
-  and returns None for `v = u + at` (multi-letter juxtaposition) and for anything with `\lambda`.
-- **Pre-push set for verifier-only PRs (Jon's ruling, 12 Oct 2026; the home lane records it as SR-27):** run the verifier and its self-test, `ci-groups.py --check`,
-  `audit-register.py --check`, `check-verifier-coverage.py` and `check-context-size.py`; not `check-changed.py`. A PR that also touches a game page, a shared asset or another script still runs `check-changed.py`.
-  Applies from game 12 (standard-form-blitz); games 10 and 11 ran the longer set.

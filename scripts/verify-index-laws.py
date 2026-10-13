@@ -14,7 +14,8 @@ x^0 = 1 hold as the lesson teaches; nothing is floated):
   Options: four different strings, none of the three wrong ones the key's string; exactly one is equal to the question
     (SR-4/SR-16), so a distractor equal in value is a second right answer. The one exception is a question whose `ask` names
     a form ("a single power of 5"): there an equal option is wrong when it is not that form (25^3), and exactly one option is
-    a power of that base equal to the value.
+    a power of that base equal to the value. No two options are equal in value (SR-4; B11-CLEAR, 12 Oct 2026, none expected),
+    except the key and an option in another form in a question whose `ask` names the form.
   Convention (Jon's ruling, 12 Oct 2026, index-laws-v20-001): a coefficient-and-variable term such as 2x^2 is one object;
     implied multiplication binds tighter than ÷, so 6x^7 ÷ 2x^2 divides by the whole term (3x^5). The keys are read that way.
   Ambiguity (SR-17): each stem is also read strictly left to right. Where the two readings differ, every divisor must be a
@@ -235,6 +236,10 @@ def check_bank(fails, bank):
             right = [o for o, x in zip(opts, ov) if same(x, v)]
         if right != [q['correct']]:
             fails.append('options: %s: the right option(s) are %r, the key is %r' % (where, right, q['correct']))
+        for x in range(4):
+            for y in range(x + 1, 4):
+                if same(ov[x], ov[y]) and not (ask and x == 0):
+                    fails.append('options: %s: the options %r and %r are equal in value (SR-4)' % (where, opts[x], opts[y]))
         ok, bad = exp_claims(q['exp'])
         nclaims += len(ok)
         for b in bad:
@@ -374,6 +379,8 @@ PLANTS = [
      [("wrong:['x^{12}','2x^7','x^{34}'], exp:'Add the powers: 3+4=7'", "wrong:['x^7','2x^7','x^{34}'], exp:'Add the powers: 3+4=7'")]),
     ('the asked form met twice ((5^2)^3 with a second 5^6)', 'options:',
      [("wrong:['5^5','5^8','25^3']", "wrong:['5^5','5^{6}','25^3']")]),
+    ('SR-4: two wrong options equal in value (3^{12} = 9^6, B11-CLEAR)', 'options:',
+     [("wrong:['3^8','9^6','3^2']", "wrong:['3^8','9^6','3^{12}']")]),
     ('a wrong sum in an explanation (3+4=8)', 'working:',
      [("exp:'Add the powers: 3+4=7'", "exp:'Add the powers: 3+4=8'")]),
     ('a wrong stated root in an explanation', 'working:',
