@@ -9,7 +9,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | met: 0 of 96 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 4 open (0 CRITICAL, 4 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 5 open (0 CRITICAL, 5 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, SR-14 fields |
 | 4 | Every level serves 40+ (tracked, not part of the gate: canon §0.2, Jon 12 Oct 2026) | not met, not gating: 126 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | met: 0 in the roster's Unlisted section |
@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-862 findings in 95 games.
+886 findings in 97 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
-| HIGH | 11 | 219 | 0 | 230 |
-| MEDIUM | 184 | 224 | 3 | 411 |
-| LOW | 129 | 56 | 1 | 186 |
-| **All** | 325 | 533 | 4 | 862 |
+| HIGH | 12 | 219 | 0 | 231 |
+| MEDIUM | 194 | 224 | 3 | 421 |
+| LOW | 142 | 56 | 1 | 199 |
+| **All** | 349 | 533 | 4 | 886 |
 
 ### By class
 
@@ -33,20 +33,20 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 |---|---|---|
 | 2 | 12 | 111 |
 | 3 | 5 | 86 |
+| NEW:text-contradicts-content | 45 | 60 |
 | 6 | 24 | 56 |
-| NEW:text-contradicts-content | 40 | 55 |
-| NEW:wording | 47 | 51 |
-| NEW:wrong-explanation-text | 15 | 50 |
-| NEW:convention-unstated | 25 | 48 |
+| NEW:wrong-explanation-text | 20 | 55 |
+| NEW:wording | 50 | 54 |
+| NEW:convention-unstated | 27 | 50 |
 | 1 | 5 | 37 |
 | NEW:true-wrong-option | 11 | 37 |
-| NEW:verifier-gap | 28 | 28 |
+| NEW:verifier-gap | 33 | 33 |
 | 5 | 26 | 26 |
 | 4 | 5 | 22 |
 | 7 | 5 | 16 |
 | NEW:unstated-convention | 4 | 16 |
 | NEW:value-equal distractors | 0 | 14 |
-| NEW:precision-not-stated | 2 | 12 |
+| NEW:precision-not-stated | 3 | 13 |
 | 8 | 3 | 11 |
 | NEW:marking-tolerance | 3 | 11 |
 | NEW:raw-tex-on-screen | 5 | 11 |
@@ -58,14 +58,14 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:timer-policy | 4 | 6 |
 | 11 | 0 | 5 |
 | NEW:board-mixes-session-lengths | 5 | 5 |
+| NEW:degenerate-item | 5 | 5 |
 | NEW:marking-by-structure | 0 | 5 |
 | NEW:phone-layout | 4 | 5 |
 | NEW:second-correct-answer | 1 | 5 |
 | B7 (ledgered) | 3 | 4 |
-| NEW:degenerate-item | 4 | 4 |
+| NEW:level-content-mismatch | 3 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
 | 9 | 1 | 3 |
-| NEW:level-content-mismatch | 2 | 3 |
 | NEW:phone-fold | 3 | 3 |
 | NEW:wrong explanation | 0 | 3 |
 | uncounted | 0 | 3 |
@@ -75,6 +75,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:double-finish | 0 | 2 |
 | NEW:hidden-data | 0 | 2 |
 | NEW:hint-gives-answer | 1 | 2 |
+| NEW:input-cannot-type-answer | 1 | 2 |
 | NEW:key-ask mismatch | 0 | 2 |
 | NEW:prose-through-katex | 2 | 2 |
 | NEW:unmarkable free text | 0 | 2 |
@@ -93,7 +94,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:generator-drops-items | 1 | 1 |
 | NEW:hit-detection | 0 | 1 |
 | NEW:inconsistent premise | 1 | 1 |
-| NEW:input-cannot-type-answer | 0 | 1 |
 | NEW:keys-under-overlay | 0 | 1 |
 | NEW:locus-segment-ends | 1 | 1 |
 | NEW:low-answer-variety | 1 | 1 |
@@ -154,7 +154,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `correlation-or-coincidence` | yes | verify-correlation-or-coincidence.py | 2 | 0 | 4 | 3 | 5 | 4 | 0 |
 | `curling-friction` | yes | verify-curling-friction.py | 0 | 3 | 3 | 2 | 1 | 7 | 0 |
 | `decimal-detective` | yes | verify-decimal-detective.py | 0 | 2 | 2 | 0 | 0 | 4 | 0 |
-| `differentiation-duel` | yes | verify-differentiation-duel.py | 0 | 2 | 10 | 2 | 0 | 14 | 0 |
+| `differentiation-duel` | yes | verify-differentiation-duel.py | 0 | 2 | 11 | 3 | 2 | 14 | 0 |
 | `dimension-checker` | yes | verify-dimension-checker.py | 0 | 3 | 3 | 1 | 1 | 6 | 0 |
 | `distinctly-average` | yes | verify-distinctly-average.py | 0 | 0 | 0 | 1 | 1 | 0 | 0 |
 | `eigenvalue-extractor` | yes | verify-eigenvalue-extractor.py | 0 | 1 | 3 | 1 | 4 | 1 | 0 |
@@ -183,7 +183,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `growth-and-decay` | yes | verify-growth-and-decay.py | 1 | 0 | 7 | 1 | 5 | 4 | 0 |
 | `higher-power` | yes | verify-higher-power.py | 0 | 1 | 6 | 1 | 6 | 2 | 0 |
 | `index-laws` | yes | verify-index-laws.py | 0 | 0 | 3 | 1 | 1 | 2 | 1 |
-| `integration-duel` | yes | verify-integration-duel.py | 0 | 2 | 7 | 1 | 1 | 9 | 0 |
+| `integration-duel` | yes | verify-integration-duel.py | 0 | 2 | 8 | 3 | 4 | 9 | 0 |
 | `like-terms-collector` | yes | verify-like-terms-collector.py | 1 | 1 | 3 | 1 | 4 | 2 | 0 |
 | `linear-equation-solver` | yes | verify-linear-equation-solver.py | 1 | 1 | 3 | 2 | 3 | 4 | 0 |
 | `log-laws` | yes | verify-log-laws.py | 1 | 4 | 0 | 2 | 0 | 7 | 0 |
@@ -193,6 +193,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `moments-master` | yes | verify-moments-master.py | 1 | 8 | 4 | 2 | 2 | 13 | 0 |
 | `negative-number-line` | yes | verify-negative-number-line.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
 | `new-shapes` | yes | verify-new-shapes.py | 0 | 1 | 8 | 1 | 9 | 1 | 0 |
+| `normal-navigator` | yes | verify-normal-navigator.py | 0 | 0 | 4 | 4 | 8 | 0 | 0 |
 | `partial-fractions-duel` | yes | verify-partial-fractions-duel.py | 0 | 7 | 3 | 1 | 0 | 11 | 0 |
 | `percentage-flip` | yes | verify-percentage-flip.py | 0 | 0 | 2 | 0 | 1 | 1 | 0 |
 | `prime-factorisation` | yes | verify-prime-factorisation.py | 0 | 0 | 3 | 2 | 5 | 0 | 0 |
@@ -216,7 +217,8 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `standard-form-blitz` | yes | verify-standard-form-blitz.py | 0 | 0 | 2 | 3 | 2 | 3 | 0 |
 | `stat-attack` | yes | verify-stat-attack.py | 1 | 1 | 3 | 3 | 4 | 4 | 0 |
 | `surd-simplifier` | yes | verify-surd-simplifier.py | 0 | 2 | 2 | 2 | 2 | 4 | 0 |
-| `suvat` | yes | verify-suvat.py | 1 | 3 | 6 | 1 | 1 | 10 | 0 |
+| `suvat` | yes | verify-suvat.py | 1 | 4 | 8 | 4 | 7 | 10 | 0 |
+| `tax-theft` | yes | verify-tax-theft.py | 0 | 0 | 2 | 3 | 5 | 0 | 0 |
 | `terrible-advice` | yes | verify-terrible-advice.py | 0 | 6 | 8 | 1 | 2 | 13 | 0 |
 | `test-the-claim` | yes | verify-test-the-claim.py | 1 | 2 | 5 | 1 | 4 | 5 | 0 |
 | `the-perfect-prank` | yes | none | 0 | 0 | 2 | 1 | 3 | 0 | 0 |
@@ -259,9 +261,13 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 - **HIGH** graph-sketcher-s1-006 (JC), `games/graph-sketcher/index.html L4_5 (:538), CM2 (:273), CM11 (:351), CM4 (:291)`: For Jon (stem or key-text changes): L4_5's "maximum deflection" on 0 ≤ x ≤ 4 is 4 at both x = 1 and x = 4 (the endpoint), so (4, 4) is also right ("local maximum"?); CM2's key "Model allows negative profit" is false, ...
 
+### `suvat` (A-Level, L4)
+
+- **HIGH** suvat-s1-001, `games/suvat/index.html:229 (the answer box), :459 (ALEVEL[34])`: ALEVEL[34] keys v_y = −0.32, typed into a box with inputmode="decimal", which on many phone keyboards has no minus key: the student cannot type the key. Reported for the home lane's contract (Jon's rule, 13 Oct 2026),...
+
 ## Live games no audit has covered
 
-3 of 97 live games: `just-pythag-it-bruv`, `normal-navigator`, `tax-theft`
+1 of 97 live games: `just-pythag-it-bruv`
 
 ## Exit bar detail
 
