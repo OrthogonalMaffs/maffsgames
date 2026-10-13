@@ -13,11 +13,11 @@ frequencies, in exact rational arithmetic, and compared with what the game store
     stored to. It is asked to 3 s.f. and marked there (stat-attack-s1-002): the page works
     the 3 s.f. key from the table's sums and marks it with MaffsAnswer.decimal();
   - the variance, Σfx²/Σf − (Σfx/Σf)²: the on-screen formula substitutes the table's own
-    sums, unrounded, so the key must be the true variance, correctly rounded at its stored
-    precision (no precision is asked);
-  - the standard deviation, asked "to 3 significant figures": the key must be √(true
-    variance) to 3 s.f.; and √ of the variance key, which the SD step prints, must round
-    to the same 3 s.f. value.
+    sums, unrounded, so the stored key must be the true variance, correctly rounded at its
+    stored precision; it is asked, and marked by the page, to 3 s.f. (Jon, 13 Oct 2026);
+  - the standard deviation, asked "to 3 significant figures" from "your unrounded
+    variance": the stored key must be √(true variance) to 3 s.f., and √ of the stored
+    variance key must round to the same 3 s.f. value.
 
 What the student reads must agree with the keys. Every number in a scenario's closing
 line (contextLine) and its interpretation options must be the mean key, the SD key or
@@ -25,9 +25,9 @@ mean ± SD at the precision it is printed to (×1000 where the unit is thousands
 figure from the question itself (a class boundary or n).
 
 The marking is then played in the page through the game's own render and check
-functions: the true modal class, the n/2 median class, the 3 s.f. mean, the true variance
-and the 3 s.f. SD must each be marked correct; the mean and SD one unit away in the third
-significant figure must not be, and the true value written to more figures gets the format
+functions: the true modal class, the n/2 median class, and the 3 s.f. mean, variance and
+SD must each be marked correct; one unit away in the third significant figure must not be
+(the variance asked to 3 s.f. and the SD from the unrounded variance, Jon, 13 Oct 2026), and the true value written to more figures gets the format
 message, unmarked (SWEEP-1, stat-attack-s1-002; SR-1, SR-3). The midpoint, fx, x² and fx²
 columns are marked exactly: the true column is right, and a non-integer entry rounded to a
 whole number is not (s1-005). The median prompt states the n/2 rule (s1-001, SR-17), and a
@@ -229,6 +229,9 @@ PLAY_JS = """async (a) => {
   out.medianAlt = await run(renderMedianQ, 'medianInput', a.medianAlt, checkMedian, 'medianFb');
   for (const [k, v] of Object.entries(a.means)) out['mean_' + k] = await run(renderMeanQ, 'meanInput', v, checkMean, 'meanFb');
   for (const [k, v] of Object.entries(a.sds)) out['sd_' + k] = await run(renderSD_final, 'sdInput', v, checkSD, 'sdFb');
+  for (const [k, v] of Object.entries(a.variances)) out['var_' + k] = await run(renderSD_variance, 'varInput', v, checkVariance, 'sdFb');
+  renderSD_variance(q, area); out.varPrompt = area.querySelector('.q-prompt').textContent;
+  renderSD_final(q, area); out.sdPrompt = area.querySelector('.q-prompt').textContent;
   for (const [k, vals] of Object.entries(a.cols)) {
     const [render, check, id] = {mp: [renderSD_midpoints, checkMidpoints, 'mp'], fx: [renderSD_fx, checkFx, 'fx'],
       x2: [renderSD_x2, checkX2, 'x2_'], fx2: [renderSD_fx2, checkFx2, 'fx2_']}[k.split(':')[0]];
@@ -256,6 +259,10 @@ def answers_for(s):
     # the true value to 9 s.f. (more figures than asked, never a double rounding), where it differs from the key
     if round_sf(t['mean'], 9) != m3:
         means['long'] = format(round_sf(t['mean'], 9), 'f')
+    v3 = round_sf(t['var'], 3)
+    variances = {'right': format(v3, 'f'), 'up': format(v3 + unit(v3), 'f'), 'down': format(v3 - unit(v3), 'f')}
+    if round_sf(t['var'], 9) != v3:
+        variances['long'] = format(round_sf(t['var'], 9), 'f')
     sds = {'right': format(sd3, 'f'), 'up': format(sd3 + unit(sd3), 'f'), 'down': format(sd3 - unit(sd3), 'f')}
     if round_sf(t['sd'], 9) != sd3:
         sds['long'] = format(round_sf(t['sd'], 9), 'f')
@@ -265,11 +272,11 @@ def answers_for(s):
         if any(x.denominator != 1 for x in t[k]):
             cols[k + ':rounded'] = [str(int(round_dp(x, 0))) for x in t[k]]
     return dict(id=s['id'], modal=s['classes'][t['modal'][0]], median=s['classes'][t['median']],
-                notMedian=s['classes'][other], means=means, sds=sds, cols=cols,
+                notMedian=s['classes'][other], means=means, sds=sds, variances=variances, cols=cols,
                 # the same class with its bounds written plainly ("3 ≤ x < 4" for "3.0 ≤ x < 4.0", s1-006)
                 medianAlt='%s ≤ x < %s' % tuple(format(Decimal(b.numerator) / Decimal(b.denominator), 'f')
                                                 for b in t['bounds'][t['median']]),
-                variance=format(round_dp(t['var'], 4), 'f'), sd=format(sd3, 'f'), n=t['n'])
+                variance=format(v3, 'f'), sd=format(sd3, 'f'), n=t['n'])
 
 
 def check_played(rep, scenarios, played):
@@ -289,11 +296,19 @@ def check_played(rep, scenarios, played):
             if want not in r[step]:
                 rep.fail(s['id'], 'marking (%s)' % step, 'typed %s; the game said %r'
                          % (a['means' if step.startswith('mean') else 'sds']['right'], r[step].strip()[:100]))
-        for step in ('mean_up', 'mean_down', 'sd_up', 'sd_down'):
+        group = {'mean': 'means', 'sd': 'sds', 'var': 'variances'}
+        for step in ('mean_up', 'mean_down', 'sd_up', 'sd_down', 'var_up', 'var_down'):
             if 'Correct' in r[step]:
                 rep.fail(s['id'], 'marking (%s)' % step, 'typed %s, one unit off at 3 s.f.; the game marked it correct'
-                         % a['means' if step.startswith('mean') else 'sds'][step.split('_')[1]])
-        for step in ('mean_long', 'sd_long'):
+                         % a[group[step.split('_')[0]]][step.split('_')[1]])
+        if 'Correct' not in r['var_right']:
+            rep.fail(s['id'], 'marking (var_right)', 'typed %s; the game said %r' % (a['variances']['right'], r['var_right'].strip()[:100]))
+        # Jon, 13 Oct 2026 (stat-attack-s1-003): the variance is asked to 3 s.f., and the SD from the unrounded variance
+        if '3 significant figures' not in r['varPrompt']:
+            rep.fail(s['id'], 'variance prompt', 'does not ask for 3 significant figures: %r' % r['varPrompt'].strip()[:100])
+        if 'Use your unrounded variance' not in r['sdPrompt']:
+            rep.fail(s['id'], 'SD prompt', 'does not say "Use your unrounded variance": %r' % r['sdPrompt'].strip()[:100])
+        for step in ('mean_long', 'sd_long', 'var_long'):
             if step in r and 'significant figures' not in r[step]:
                 rep.fail(s['id'], 'marking (%s)' % step, 'typed the true value to 9 s.f.; it should get the 3 s.f. format '
                          'message, unmarked (SR-3); the game said %r' % r[step].strip()[:100])
@@ -393,7 +408,7 @@ def selftest(bank, played):
         return False, lines
     sid = clean[0]
     _, lie = load("""(() => { const all = Object.values(SCENARIOS).flat();
-        const q = all.find(s => s.id === %r); q.variance = q.variance + 3; })()""" % sid)
+        const q = all.find(s => s.id === %r); q.sumFx2 = q.sumFx2 + 300; })()""" % sid)
     expect('variance marked against a wrong key', lambda rep: check_played(
         rep, [s for lvl in bank.values() for s in lvl if s['id'] == sid], lie))
     old_marking = load("""(() => {
@@ -401,6 +416,8 @@ def selftest(bank, played):
           $('meanFb').innerHTML = Math.abs(v - q.mean) <= 0.15 ? 'Correct!' : 'Incorrect.'; };
         checkSD = function () { const q = G.questions[G.qIdx]; const v = parseFloat($('sdInput').value);
           $('sdFb').innerHTML = Math.abs(v - q.sd) <= Math.max(0.1, q.sd * 0.01) ? 'Correct!' : 'Incorrect.'; };
+        checkVariance = function () { const q = G.questions[G.qIdx]; const v = parseFloat($('varInput').value);
+          $('sdFb').innerHTML = Math.abs(v - q.variance) <= Math.max(0.5, q.variance * 0.005) ? 'Correct!' : 'Incorrect.'; };
         checkFx = function () { const q = G.questions[G.qIdx]; let ok = true;
           for (let i = 0; i < q.classes.length; i++) if (Math.abs(parseFloat($('fx' + i).value) - q.fx[i]) > 0.5) ok = false;
           $('sdFb').innerHTML = ok ? 'fx correct!' : 'Check.'; };
@@ -411,6 +428,7 @@ def selftest(bank, played):
     all_s = [s for lvl in bank.values() for s in lvl]
     for name, pick in (('old mean band (G10, 106 rejected)', 'G10 marking (mean_right)'),
                        ('old SD band (G10, 54.5 accepted)', 'G10 marking (sd_up)'),
+                       ('old variance band (L4_7, 1.10 accepted)', 'L4_7 marking (var_up)'),
                        ('old fx band (L4_7, 7 for 7.5)', 'L4_7 marking (fx:rounded column)'),
                        ('old median prompt (G4, no n/2 rule)', 'G4 median prompt')):
         rep = Report()

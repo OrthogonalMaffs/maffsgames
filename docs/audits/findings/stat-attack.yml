@@ -46,17 +46,21 @@ findings:
   pr: 350
 - id: stat-attack-s1-003
   severity: MEDIUM
-  jc: true
+  jc: false
   class: NEW:unstated-convention
   level: gcse, core, level4
   where: games/stat-attack/index.html renderSD_variance, checkVariance
   summary: '"Calculate the variance." states no precision (SR-1), and it is marked ±max(0.5, 0.5%), ±46% on L4_7''s
     1.094. SR-1''s default (1 d.p.) does not fit: the SD worked from the 1 d.p. variance differs at 3 s.f. on six
-    scenarios (G2, G3, CM8, L4_1, L4_6, L4_9). Which precision the variance asks, and whether the SD step
-    roots the student''s figure or the stated one, is a convention for Jon'
+    scenarios (G2, G3, CM8, L4_1, L4_6, L4_9). Jon''s ruling (13 Oct 2026): the variance is asked to 3 s.f.,
+    and the SD prompt says "Use your unrounded variance", its key from the exact value. Fixed: the variance is
+    marked by MaffsAnswer.decimal() at 3 s.f. against a key worked exactly from the sums; the SD step no longer
+    prints a rounded variance; the verifier plays both neighbours and the long form and reads both prompts, and
+    plants the old band'
   evidence: 'L4_1 variance 1.2384: √1.2 = 1.10 against the true 1.11; G3 115.5556: √115.6 = 10.8 against 10.7
     (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 350
 - id: stat-attack-s1-004
   severity: LOW
   jc: false

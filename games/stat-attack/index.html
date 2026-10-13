@@ -174,7 +174,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
     " else if (G.sdStep === 1) q.fx.forEach((v, k) => set('fx' + k, v));",
     " else if (G.sdStep === 2) q.x2.forEach((v, k) => set('x2_' + k, v));",
     " else if (G.sdStep === 3) q.fx2.forEach((v, k) => set('fx2_' + k, v));",
-    " else if (G.sdStep === 4) set('varInput', q.variance);",
+    " else if (G.sdStep === 4) set('varInput', varKey(q).key);",
     " else if (G.sdStep === 5) set('sdInput', sdKey(q).key);",
     " slip = false; };",
     "return new Promise(res => { const t0 = Date.now(); let last = null; (function w() {",
@@ -941,6 +941,8 @@ function _sums(q){
   return {n:n, s1:BigInt(Math.round(q.sumFx*100)), s2:BigInt(Math.round(q.sumFx2*100))};
 }
 function meanKey(q){ const t=_sums(q); return _sf3(t.s1, 100n*t.n, false); }
+// The variance is asked to 3 s.f. too (Jon, 13 Oct 2026; stat-attack-s1-003), from the exact Σfx²/Σf − (Σfx/Σf)².
+function varKey(q){ const t=_sums(q); return _sf3(100n*t.n*t.s2-t.s1*t.s1, 10000n*t.n*t.n, false); }
 function sdKey(q){ const t=_sums(q); return _sf3(100n*t.n*t.s2-t.s1*t.s1, 10000n*t.n*t.n, true); }
 // A typed table entry is exact (f × x, x²): marked by MaffsAnswer.exact(), never to a band (SR-2).
 function _exactCol(id,vals){
@@ -1209,7 +1211,7 @@ function renderSD_variance(q,area){
   const sumF=q.freqs.reduce((a,b)=>a+b,0);
   area.innerHTML=`
     <div class="q-label">Question 4 — Step E</div>
-    <div class="q-prompt">Calculate the variance.</div>
+    <div class="q-prompt">Calculate the variance. Give your answer to 3 significant figures.</div>
     <div style="font-size:.85rem;color:var(--muted);margin-bottom:.6rem;line-height:1.8">
       ${K('\\sigma^2 = \\frac{\\Sigma fx^2}{\\Sigma f} - \\left(\\frac{\\Sigma fx}{\\Sigma f}\\right)^2',true)}
       <br>
@@ -1223,13 +1225,18 @@ function renderSD_variance(q,area){
 
 function checkVariance(){
   const q=G.questions[G.qIdx];
-  const val=parseFloat($('varInput').value);
-  if(isNaN(val)) return;
-  const correct=Math.abs(val-q.variance)<=Math.max(0.5,q.variance*0.005);
-  if(!MaffsLock.lock($('qArea')))return;   // one mark per attempt (canon 7.6.0)
+  const raw=$('varInput').value;
+  if(!raw.trim()) return;
+  const k=varKey(q), res=MaffsAnswer.decimal(raw,k.key,k.dp);
   const fb=$('sdFb');
+  if(res==='format'||res==='unreadable'){   // not marked (canon §7.1.3): the student resubmits
+    fb.innerHTML=`<div class="feedback hint">${MaffsAnswer.message(res,raw,{sf:3})}</div>`;
+    return;
+  }
+  const correct=res==='correct';
+  if(!MaffsLock.lock($('qArea')))return;   // one mark per attempt (canon 7.6.0)
   if(correct){
-    fb.innerHTML=`<div class="feedback correct">Correct! Variance = ${q.variance}</div>`;
+    fb.innerHTML=`<div class="feedback correct">Correct! Variance = ${k.key} (3 s.f.)</div>`;
     MaffsLock.timer(()=>{G.sdStep=5;renderSDQ(q,$('qArea'));},1000);
   } else {
     G.penalties++;G.qPenalties++;
@@ -1243,8 +1250,8 @@ function checkVariance(){
 function renderSD_final(q,area){
   area.innerHTML=`
     <div class="q-label">Question 4 — Step F</div>
-    <div class="q-prompt">Calculate the standard deviation to 3 significant figures.</div>
-    <div style="font-size:.82rem;color:var(--muted);margin-bottom:.5rem">${K(`\\sigma = \\sqrt{${q.variance}} = \\;?`)}</div>
+    <div class="q-prompt">Calculate the standard deviation to 3 significant figures. Use your unrounded variance.</div>
+    <div style="font-size:.82rem;color:var(--muted);margin-bottom:.5rem">${K('\\sigma = \\sqrt{\\sigma^2} = \\;?')}</div>
     <input type="number" class="num-input" id="sdInput" placeholder="σ" step="any">
     <button class="check-btn" onclick="checkSD()">Check</button>
     <div id="sdFb"></div>
