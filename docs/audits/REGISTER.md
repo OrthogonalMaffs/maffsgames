@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-886 findings in 97 games.
+941 findings in 97 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
-| HIGH | 12 | 219 | 0 | 231 |
-| MEDIUM | 194 | 224 | 3 | 421 |
-| LOW | 142 | 56 | 1 | 199 |
-| **All** | 349 | 533 | 4 | 886 |
+| HIGH | 12 | 222 | 0 | 234 |
+| MEDIUM | 205 | 240 | 3 | 448 |
+| LOW | 141 | 82 | 1 | 224 |
+| **All** | 359 | 578 | 4 | 941 |
 
 ### By class
 
@@ -33,29 +33,29 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 |---|---|---|
 | 2 | 12 | 111 |
 | 3 | 5 | 86 |
-| NEW:text-contradicts-content | 45 | 60 |
+| NEW:convention-unstated | 27 | 66 |
+| NEW:wording | 55 | 64 |
+| NEW:text-contradicts-content | 42 | 63 |
+| NEW:wrong-explanation-text | 15 | 57 |
 | 6 | 24 | 56 |
-| NEW:wrong-explanation-text | 20 | 55 |
-| NEW:wording | 50 | 54 |
-| NEW:convention-unstated | 27 | 50 |
+| NEW:true-wrong-option | 11 | 43 |
+| NEW:verifier-gap | 42 | 42 |
 | 1 | 5 | 37 |
-| NEW:true-wrong-option | 11 | 37 |
-| NEW:verifier-gap | 33 | 33 |
 | 5 | 26 | 26 |
 | 4 | 5 | 22 |
 | 7 | 5 | 16 |
 | NEW:unstated-convention | 4 | 16 |
+| NEW:precision-not-stated | 2 | 15 |
 | NEW:value-equal distractors | 0 | 14 |
-| NEW:precision-not-stated | 3 | 13 |
 | 8 | 3 | 11 |
 | NEW:marking-tolerance | 3 | 11 |
 | NEW:raw-tex-on-screen | 5 | 11 |
+| NEW:equal-value-options | 0 | 9 |
 | NEW:sr14-content | 4 | 9 |
-| NEW:equal-value-options | 0 | 8 |
 | NEW:hand-typed explanation figure | 5 | 7 |
+| NEW:timer-policy | 5 | 7 |
 | NEW:wrong-explanation | 1 | 7 |
 | NEW:ill-posed wording | 1 | 6 |
-| NEW:timer-policy | 4 | 6 |
 | 11 | 0 | 5 |
 | NEW:board-mixes-session-lengths | 5 | 5 |
 | NEW:degenerate-item | 5 | 5 |
@@ -63,9 +63,12 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:phone-layout | 4 | 5 |
 | NEW:second-correct-answer | 1 | 5 |
 | B7 (ledgered) | 3 | 4 |
+| NEW:hint-gives-answer | 3 | 4 |
 | NEW:level-content-mismatch | 3 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
 | 9 | 1 | 3 |
+| NEW:exact-order sorter marking | 1 | 3 |
+| NEW:input-cannot-type-answer | 2 | 3 |
 | NEW:phone-fold | 3 | 3 |
 | NEW:wrong explanation | 0 | 3 |
 | uncounted | 0 | 3 |
@@ -74,8 +77,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:cosmetic | 1 | 2 |
 | NEW:double-finish | 0 | 2 |
 | NEW:hidden-data | 0 | 2 |
-| NEW:hint-gives-answer | 1 | 2 |
-| NEW:input-cannot-type-answer | 1 | 2 |
 | NEW:key-ask mismatch | 0 | 2 |
 | NEW:prose-through-katex | 2 | 2 |
 | NEW:unmarkable free text | 0 | 2 |
@@ -86,7 +87,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:data-not-shown | 0 | 1 |
 | NEW:duplicate-item | 1 | 1 |
 | NEW:estimation-not-by-stated-method | 0 | 1 |
-| NEW:exact-order sorter marking | 0 | 1 |
 | NEW:false scoring claim | 0 | 1 |
 | NEW:false-general-statement | 0 | 1 |
 | NEW:form-omitted-in-stem | 0 | 1 |
@@ -138,7 +138,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `angle-ace` | yes | verify-angle-ace.py | 0 | 6 | 7 | 2 | 2 | 13 | 0 |
 | `bearing-blitz` | yes | verify-bearing-blitz.py | 0 | 0 | 2 | 2 | 4 | 0 | 0 |
 | `better-value` | yes | verify-better-value.py | 0 | 5 | 9 | 2 | 6 | 10 | 0 |
-| `binomial-blaster` | yes | verify-binomial-blaster.py | 2 | 15 | 4 | 1 | 1 | 21 | 0 |
+| `binomial-blaster` | yes | verify-binomial-blaster.py | 2 | 16 | 6 | 4 | 4 | 24 | 0 |
 | `boolean-blitz` | yes | verify-boolean-blitz.py | 0 | 3 | 1 | 5 | 5 | 4 | 0 |
 | `characteristic-quest` | yes | verify-characteristic-quest.py | 0 | 1 | 3 | 1 | 3 | 2 | 0 |
 | `chart-interrogator` | yes | verify-chart-interrogator.py | 0 | 0 | 4 | 3 | 5 | 2 | 0 |
@@ -152,10 +152,10 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `core-maths-paper2b` | yes | verify-core-maths-paper2b.py | 0 | 1 | 3 | 3 | 3 | 4 | 0 |
 | `core-maths-paper2c` | yes | verify-core-maths-paper2c.py | 0 | 3 | 8 | 3 | 7 | 7 | 0 |
 | `correlation-or-coincidence` | yes | verify-correlation-or-coincidence.py | 2 | 0 | 4 | 3 | 5 | 4 | 0 |
-| `curling-friction` | yes | verify-curling-friction.py | 0 | 3 | 3 | 2 | 1 | 7 | 0 |
+| `curling-friction` | yes | verify-curling-friction.py | 0 | 3 | 5 | 7 | 2 | 13 | 0 |
 | `decimal-detective` | yes | verify-decimal-detective.py | 0 | 2 | 2 | 0 | 0 | 4 | 0 |
 | `differentiation-duel` | yes | verify-differentiation-duel.py | 0 | 2 | 11 | 3 | 2 | 14 | 0 |
-| `dimension-checker` | yes | verify-dimension-checker.py | 0 | 3 | 3 | 1 | 1 | 6 | 0 |
+| `dimension-checker` | yes | verify-dimension-checker.py | 0 | 3 | 6 | 3 | 4 | 8 | 0 |
 | `distinctly-average` | yes | verify-distinctly-average.py | 0 | 0 | 0 | 1 | 1 | 0 | 0 |
 | `eigenvalue-extractor` | yes | verify-eigenvalue-extractor.py | 0 | 1 | 3 | 1 | 4 | 1 | 0 |
 | `eigenvector-engine` | yes | verify-eigenvector-engine.py | 1 | 1 | 2 | 8 | 1 | 11 | 0 |
@@ -168,7 +168,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `factor-race` | yes | verify-factor-race.py | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
 | `factor-theorem` | yes | verify-factor-theorem.py | 2 | 5 | 11 | 1 | 2 | 16 | 1 |
 | `fermi-lab` | yes | verify-fermi-lab.py | 0 | 1 | 1 | 1 | 3 | 0 | 0 |
-| `force-resolver` | yes | verify-force-resolver.py | 1 | 7 | 5 | 2 | 1 | 14 | 0 |
+| `force-resolver` | yes | verify-force-resolver.py | 1 | 7 | 12 | 5 | 3 | 22 | 0 |
 | `formula-forge` | yes | verify-formula-forge.py | 0 | 1 | 8 | 3 | 8 | 4 | 0 |
 | `formula-plug-in` | yes | verify-formula-plug-in.py | 0 | 1 | 4 | 2 | 6 | 1 | 0 |
 | `formula-unlocked` | yes | verify-formula-unlocked.py | 0 | 1 | 1 | 6 | 3 | 5 | 0 |
@@ -183,25 +183,25 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `growth-and-decay` | yes | verify-growth-and-decay.py | 1 | 0 | 7 | 1 | 5 | 4 | 0 |
 | `higher-power` | yes | verify-higher-power.py | 0 | 1 | 6 | 1 | 6 | 2 | 0 |
 | `index-laws` | yes | verify-index-laws.py | 0 | 0 | 3 | 1 | 1 | 2 | 1 |
-| `integration-duel` | yes | verify-integration-duel.py | 0 | 2 | 8 | 3 | 4 | 9 | 0 |
+| `integration-duel` | yes | verify-integration-duel.py | 0 | 2 | 8 | 3 | 2 | 11 | 0 |
 | `like-terms-collector` | yes | verify-like-terms-collector.py | 1 | 1 | 3 | 1 | 4 | 2 | 0 |
 | `linear-equation-solver` | yes | verify-linear-equation-solver.py | 1 | 1 | 3 | 2 | 3 | 4 | 0 |
-| `log-laws` | yes | verify-log-laws.py | 1 | 4 | 0 | 2 | 0 | 7 | 0 |
+| `log-laws` | yes | verify-log-laws.py | 1 | 4 | 3 | 4 | 3 | 9 | 0 |
 | `maths-court` | yes | verify-maths-court.py | 0 | 1 | 4 | 1 | 3 | 3 | 0 |
 | `matrix-crunch` | yes | verify-matrix-crunch.py | 0 | 2 | 3 | 1 | 3 | 3 | 0 |
 | `modular-battle` | yes | verify-modular-battle.py | 0 | 0 | 4 | 2 | 5 | 1 | 0 |
-| `moments-master` | yes | verify-moments-master.py | 1 | 8 | 4 | 2 | 2 | 13 | 0 |
+| `moments-master` | yes | verify-moments-master.py | 1 | 9 | 8 | 4 | 4 | 18 | 0 |
 | `negative-number-line` | yes | verify-negative-number-line.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
 | `new-shapes` | yes | verify-new-shapes.py | 0 | 1 | 8 | 1 | 9 | 1 | 0 |
-| `normal-navigator` | yes | verify-normal-navigator.py | 0 | 0 | 4 | 4 | 8 | 0 | 0 |
-| `partial-fractions-duel` | yes | verify-partial-fractions-duel.py | 0 | 7 | 3 | 1 | 0 | 11 | 0 |
+| `normal-navigator` | yes | verify-normal-navigator.py | 0 | 0 | 4 | 4 | 4 | 4 | 0 |
+| `partial-fractions-duel` | yes | verify-partial-fractions-duel.py | 0 | 7 | 4 | 2 | 1 | 12 | 0 |
 | `percentage-flip` | yes | verify-percentage-flip.py | 0 | 0 | 2 | 0 | 1 | 1 | 0 |
 | `prime-factorisation` | yes | verify-prime-factorisation.py | 0 | 0 | 3 | 2 | 5 | 0 | 0 |
 | `prime-or-composite` | yes | verify-prime-or-composite.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
 | `prisoners-dilemma` | yes | verify-prisoners-dilemma.py | 0 | 2 | 6 | 2 | 7 | 3 | 0 |
 | `probability-paradox` | yes | verify-probability-paradox.py | 1 | 4 | 11 | 4 | 5 | 15 | 0 |
 | `probability-pioneer` | yes | verify-probability-pioneer.py | 0 | 2 | 3 | 1 | 2 | 4 | 0 |
-| `proof-builder` | yes | verify-proof-builder.py | 2 | 14 | 7 | 1 | 3 | 21 | 0 |
+| `proof-builder` | yes | verify-proof-builder.py | 2 | 15 | 12 | 8 | 9 | 28 | 0 |
 | `proportion-blaster` | yes | verify-proportion-blaster.py | 0 | 1 | 1 | 2 | 2 | 2 | 0 |
 | `quadratic-factoriser` | yes | verify-quadratic-factoriser.py | 1 | 1 | 1 | 3 | 4 | 2 | 0 |
 | `scale-factor-scaling` | yes | verify-scale-factor-scaling.py | 0 | 1 | 4 | 3 | 3 | 5 | 0 |
@@ -217,8 +217,8 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `standard-form-blitz` | yes | verify-standard-form-blitz.py | 0 | 0 | 2 | 3 | 2 | 3 | 0 |
 | `stat-attack` | yes | verify-stat-attack.py | 1 | 1 | 3 | 3 | 4 | 4 | 0 |
 | `surd-simplifier` | yes | verify-surd-simplifier.py | 0 | 2 | 2 | 2 | 2 | 4 | 0 |
-| `suvat` | yes | verify-suvat.py | 1 | 4 | 8 | 4 | 7 | 10 | 0 |
-| `tax-theft` | yes | verify-tax-theft.py | 0 | 0 | 2 | 3 | 5 | 0 | 0 |
+| `suvat` | yes | verify-suvat.py | 1 | 4 | 8 | 4 | 6 | 11 | 0 |
+| `tax-theft` | yes | verify-tax-theft.py | 0 | 0 | 2 | 3 | 1 | 4 | 0 |
 | `terrible-advice` | yes | verify-terrible-advice.py | 0 | 6 | 8 | 1 | 2 | 13 | 0 |
 | `test-the-claim` | yes | verify-test-the-claim.py | 1 | 2 | 5 | 1 | 4 | 5 | 0 |
 | `the-perfect-prank` | yes | none | 0 | 0 | 2 | 1 | 3 | 0 | 0 |
