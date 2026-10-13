@@ -9,7 +9,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | met: 0 of 96 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 4 open (0 CRITICAL, 4 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 3 open (0 CRITICAL, 3 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, SR-14 fields |
 | 4 | Every level serves 40+ (tracked, not part of the gate: canon §0.2, Jon 12 Oct 2026) | not met, not gating: 126 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | met: 0 in the roster's Unlisted section |
@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-1103 findings in 97 games.
+1104 findings in 97 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
-| HIGH | 11 | 226 | 0 | 237 |
-| MEDIUM | 241 | 255 | 3 | 499 |
-| LOW | 231 | 100 | 1 | 332 |
-| **All** | 484 | 615 | 4 | 1103 |
+| HIGH | 10 | 227 | 0 | 237 |
+| MEDIUM | 239 | 258 | 3 | 500 |
+| LOW | 228 | 103 | 1 | 332 |
+| **All** | 478 | 622 | 4 | 1104 |
 
 ### By class
 
@@ -35,10 +35,10 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 2 | 12 | 111 |
 | NEW:text-contradicts-content | 63 | 90 |
 | 3 | 5 | 86 |
-| NEW:convention-unstated | 33 | 78 |
-| NEW:wrong-explanation-text | 25 | 71 |
+| NEW:convention-unstated | 32 | 78 |
+| NEW:wrong-explanation-text | 21 | 71 |
 | 6 | 24 | 56 |
-| NEW:true-wrong-option | 15 | 50 |
+| NEW:true-wrong-option | 14 | 51 |
 | NEW:verifier-gap | 49 | 49 |
 | 1 | 5 | 37 |
 | 5 | 27 | 27 |
@@ -217,7 +217,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `simultaneous-solver` | yes | verify-simultaneous-solver.py | 0 | 0 | 1 | 2 | 3 | 0 | 0 |
 | `six-sevens-bruv` | yes | verify-six-sevens.py | 0 | 0 | 0 | 1 | 1 | 0 | 0 |
 | `split-it` | yes | verify-split-it.py | 0 | 0 | 1 | 7 | 7 | 1 | 0 |
-| `spot-the-error` | yes | verify-spot-the-error.py | 0 | 14 | 7 | 5 | 7 | 19 | 0 |
+| `spot-the-error` | yes | verify-spot-the-error.py | 0 | 14 | 8 | 5 | 1 | 26 | 0 |
 | `spot-the-muppet` | yes | verify-spot-the-muppet.py | 0 | 5 | 9 | 4 | 9 | 8 | 1 |
 | `standard-form-blitz` | yes | verify-standard-form-blitz.py | 0 | 0 | 2 | 3 | 2 | 3 | 0 |
 | `stat-attack` | yes | verify-stat-attack.py | 1 | 1 | 3 | 7 | 7 | 5 | 0 |
@@ -242,10 +242,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 ### `new-shapes` (Year 6)
 
 - **HIGH** new-shapes-s1-001, `games/new-shapes/index.html:504 (renderParallelogram, hLabel left 168px), :583 (renderTrapezium, hLabel right 20px)`: The h label is not drawn on the dashed height line: on every parallelogram it sits over the slanted side (and hides it), and on every trapezium it straddles the slanted side, so it reads as the slant length, the very ...
-
-### `spot-the-error` (KS3, GCSE, L4)
-
-- **HIGH** spot-the-error-s1-001 (JC), `games/spot-the-error/index.html:247 (ste_ks3_010), Stage 2`: The explanation names the 80 trials as the fact the working missed ("The total number of trials is 80 (stated in the question)"), yet the phrase "replaces it 80 times" is marked wrong; the key is "estimates the probab...
 
 ### `glorious-gantt` (Core, L4; unlisted)
 
