@@ -9,23 +9,23 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | met: 0 of 96 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 1 open (0 CRITICAL, 1 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 2 open (0 CRITICAL, 2 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, SR-14 fields |
-| 4 | Every level serves 40+ (tracked, not part of the gate: canon §0.2, Jon 12 Oct 2026) | not met, not gating: 106 audited levels serve under 40 (games no audit has covered are not measured) |
+| 4 | Every level serves 40+ (tracked, not part of the gate: canon §0.2, Jon 12 Oct 2026) | not met, not gating: 109 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | met: 0 in the roster's Unlisted section |
 | 6 | One sweep of the verified games for true wrong options and unstated conventions | NOT MET (stated) |
 
 ## Counts
 
-632 findings in 80 games.
+663 findings in 81 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 26 | 0 | 27 |
-| HIGH | 8 | 209 | 0 | 217 |
-| MEDIUM | 123 | 170 | 3 | 296 |
-| LOW | 59 | 32 | 1 | 92 |
-| **All** | 191 | 437 | 4 | 632 |
+| HIGH | 9 | 211 | 0 | 220 |
+| MEDIUM | 136 | 177 | 3 | 316 |
+| LOW | 67 | 32 | 1 | 100 |
+| **All** | 213 | 446 | 4 | 663 |
 
 ### By class
 
@@ -34,32 +34,32 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 2 | 12 | 111 |
 | 3 | 5 | 86 |
 | 6 | 24 | 56 |
+| NEW:wrong-explanation-text | 11 | 40 |
 | 1 | 5 | 37 |
-| NEW:wrong-explanation-text | 11 | 37 |
+| NEW:convention-unstated | 18 | 33 |
+| NEW:text-contradicts-content | 24 | 27 |
 | 5 | 26 | 26 |
-| NEW:text-contradicts-content | 21 | 24 |
-| NEW:convention-unstated | 10 | 23 |
 | 4 | 5 | 22 |
 | 7 | 5 | 16 |
+| NEW:wording | 15 | 16 |
 | NEW:value-equal distractors | 0 | 14 |
 | 8 | 3 | 11 |
-| NEW:precision-not-stated | 2 | 9 |
-| NEW:wording | 8 | 9 |
+| NEW:true-wrong-option | 5 | 11 |
+| NEW:precision-not-stated | 2 | 10 |
 | NEW:equal-value-options | 0 | 8 |
 | NEW:raw-tex-on-screen | 3 | 8 |
 | NEW:hand-typed explanation figure | 5 | 7 |
 | NEW:ill-posed wording | 1 | 6 |
-| NEW:true-wrong-option | 3 | 6 |
 | 11 | 0 | 5 |
 | NEW:board-mixes-session-lengths | 5 | 5 |
 | NEW:marking-by-structure | 0 | 5 |
 | NEW:phone-layout | 4 | 5 |
+| NEW:sr14-content | 2 | 5 |
 | B7 (ledgered) | 3 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
 | 9 | 1 | 3 |
 | NEW:level-content-mismatch | 2 | 3 |
 | NEW:phone-fold | 3 | 3 |
-| NEW:sr14-content | 0 | 3 |
 | NEW:wrong explanation | 0 | 3 |
 | uncounted | 0 | 3 |
 | NEW:analytics | 0 | 2 |
@@ -152,7 +152,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `estimation-engine` | yes | verify-estimation-engine.py | 0 | 1 | 3 | 0 | 0 | 4 | 0 |
 | `estimation-golf` | yes | verify-estimation-golf.py | 0 | 2 | 4 | 4 | 8 | 2 | 0 |
 | `expectation-station` | yes | verify-expectation-station.py | 2 | 12 | 5 | 1 | 0 | 20 | 0 |
-| `expected-damage` | yes | verify-expected-damage.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
+| `expected-damage` | yes | verify-expected-damage.py | 0 | 1 | 4 | 1 | 5 | 1 | 0 |
 | `factor-race` | yes | verify-factor-race.py | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
 | `factor-theorem` | yes | verify-factor-theorem.py | 2 | 5 | 11 | 1 | 2 | 16 | 1 |
 | `force-resolver` | yes | verify-force-resolver.py | 1 | 7 | 5 | 2 | 1 | 14 | 0 |
@@ -164,12 +164,13 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `given-that` | yes | verify-given-that.py | 0 | 3 | 1 | 0 | 0 | 4 | 0 |
 | `glorious-gantt` | unlisted | none | 1 | 7 | 4 | 1 | 13 | 0 | 0 |
 | `gradient-hunter` | yes | verify-gradient-hunter.py | 1 | 0 | 2 | 0 | 0 | 3 | 0 |
-| `higher-power` | yes | verify-higher-power.py | 0 | 1 | 4 | 0 | 4 | 1 | 0 |
+| `higher-power` | yes | verify-higher-power.py | 0 | 1 | 6 | 1 | 6 | 2 | 0 |
 | `index-laws` | yes | verify-index-laws.py | 0 | 0 | 2 | 0 | 0 | 1 | 1 |
 | `integration-duel` | yes | verify-integration-duel.py | 0 | 2 | 7 | 1 | 1 | 9 | 0 |
 | `like-terms-collector` | yes | verify-like-terms-collector.py | 1 | 1 | 3 | 1 | 4 | 2 | 0 |
 | `linear-equation-solver` | yes | verify-linear-equation-solver.py | 1 | 1 | 2 | 1 | 1 | 4 | 0 |
 | `log-laws` | yes | verify-log-laws.py | 1 | 4 | 0 | 2 | 0 | 7 | 0 |
+| `maths-court` | yes | verify-maths-court.py | 0 | 1 | 4 | 1 | 3 | 3 | 0 |
 | `matrix-crunch` | yes | verify-matrix-crunch.py | 0 | 2 | 3 | 1 | 3 | 3 | 0 |
 | `modular-battle` | yes | verify-modular-battle.py | 0 | 0 | 3 | 1 | 3 | 1 | 0 |
 | `moments-master` | yes | verify-moments-master.py | 1 | 8 | 4 | 2 | 2 | 13 | 0 |
@@ -179,7 +180,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `percentage-flip` | yes | verify-percentage-flip.py | 0 | 0 | 2 | 0 | 1 | 1 | 0 |
 | `prime-factorisation` | yes | verify-prime-factorisation.py | 0 | 0 | 3 | 2 | 5 | 0 | 0 |
 | `prime-or-composite` | yes | verify-prime-or-composite.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
-| `prisoners-dilemma` | yes | verify-prisoners-dilemma.py | 0 | 2 | 4 | 1 | 4 | 3 | 0 |
+| `prisoners-dilemma` | yes | verify-prisoners-dilemma.py | 0 | 2 | 6 | 2 | 7 | 3 | 0 |
 | `probability-paradox` | yes | verify-probability-paradox.py | 1 | 4 | 5 | 1 | 0 | 11 | 0 |
 | `probability-pioneer` | yes | verify-probability-pioneer.py | 0 | 2 | 3 | 1 | 2 | 4 | 0 |
 | `proof-builder` | yes | verify-proof-builder.py | 2 | 14 | 7 | 1 | 3 | 21 | 0 |
@@ -191,23 +192,27 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `shape-shifter` | yes | verify-shape-shifter.py | 2 | 1 | 5 | 3 | 7 | 4 | 0 |
 | `split-it` | yes | verify-split-it.py | 0 | 0 | 1 | 4 | 4 | 1 | 0 |
 | `spot-the-error` | yes | verify-spot-the-error.py | 0 | 14 | 6 | 3 | 4 | 19 | 0 |
-| `spot-the-muppet` | yes | verify-spot-the-muppet.py | 0 | 5 | 4 | 0 | 0 | 8 | 1 |
+| `spot-the-muppet` | yes | verify-spot-the-muppet.py | 0 | 5 | 6 | 1 | 3 | 8 | 1 |
 | `standard-form-blitz` | yes | verify-standard-form-blitz.py | 0 | 0 | 1 | 0 | 0 | 1 | 0 |
 | `surd-simplifier` | yes | verify-surd-simplifier.py | 0 | 2 | 1 | 0 | 0 | 3 | 0 |
 | `suvat` | yes | verify-suvat.py | 1 | 3 | 6 | 1 | 1 | 10 | 0 |
-| `terrible-advice` | yes | verify-terrible-advice.py | 0 | 5 | 5 | 0 | 0 | 10 | 0 |
+| `terrible-advice` | yes | verify-terrible-advice.py | 0 | 6 | 8 | 1 | 2 | 13 | 0 |
 | `the-perfect-prank` | yes | none | 0 | 0 | 2 | 1 | 3 | 0 | 0 |
 | `think-of-a-number` | yes | verify-think-of-a-number.py | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `trig-identity-duel` | yes | verify-trig-identity-duel.py | 0 | 7 | 4 | 0 | 0 | 11 | 0 |
 | `trig-wars` | yes | verify-trig-wars.py | 1 | 1 | 4 | 0 | 0 | 6 | 0 |
 | `trig-worms` | yes | verify-trig-worms.py | 1 | 0 | 3 | 0 | 0 | 4 | 0 |
-| `truth-buster` | yes | verify-truth-buster.py | 0 | 3 | 12 | 1 | 3 | 13 | 0 |
+| `truth-buster` | yes | verify-truth-buster.py | 0 | 3 | 13 | 2 | 5 | 13 | 0 |
 | `truth-will-set-you-free` | yes | verify-truth-will-set-you-free.py | 1 | 1 | 2 | 2 | 1 | 5 | 0 |
 | `unit-converter` | yes | verify-unit-converter.py | 0 | 1 | 6 | 2 | 1 | 8 | 0 |
 | `word-problem-decoder` | yes | verify-word-problem-decoder.py | 0 | 8 | 6 | 3 | 5 | 12 | 0 |
-| `wrong-on-the-internet` | yes | verify-wrong-on-the-internet.py | 0 | 2 | 4 | 0 | 3 | 3 | 0 |
+| `wrong-on-the-internet` | yes | verify-wrong-on-the-internet.py | 0 | 3 | 7 | 1 | 6 | 5 | 0 |
 
 ## Open CRITICAL and HIGH, by game (Year 6, KS3, GCSE and Core first)
+
+### `maths-court` (KS3, GCSE, Core)
+
+- **HIGH** maths-court-s1-004 (JC), `games/maths-court/index.html mc_gcse_001`: An argument that states a false rule is keyed correct: Brenda's "Division before multiplication" reaches 54, and the judge says "her understanding of the order within DM is muddled", yet tapping her scores. The court ...
 
 ### `spot-the-error` (KS3, GCSE, L4)
 
@@ -226,13 +231,13 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Live games no audit has covered
 
-18 of 97 live games: `chart-interrogator`, `circle-theorem-spotter`, `core-maths-paper2a`, `distinctly-average`, `fermi-lab`, `free-daily-pizza`, `graph-sketcher`, `graph-transformer`, `growth-and-decay`, `just-pythag-it-bruv`, `maths-court`, `normal-navigator`, `quadratic-factoriser`, `simultaneous-solver`, `six-sevens-bruv`, `stat-attack`, `tax-theft`, `test-the-claim`
+17 of 97 live games: `chart-interrogator`, `circle-theorem-spotter`, `core-maths-paper2a`, `distinctly-average`, `fermi-lab`, `free-daily-pizza`, `graph-sketcher`, `graph-transformer`, `growth-and-decay`, `just-pythag-it-bruv`, `normal-navigator`, `quadratic-factoriser`, `simultaneous-solver`, `six-sevens-bruv`, `stat-attack`, `tax-theft`, `test-the-claim`
 
 ## Exit bar detail
 
 **1. No verifier in CI (0):** 
 
-**4. Audited levels serving under 40 (106):** 52dle all (20 in rotation), angle-ace gcse (35), better-value gcse (20), binomial-blaster alevel (20), binomial-blaster alevel2 (20), characteristic-quest further (15), complex-converter further (20), complex-converter level4 (20), component-crusher gcse (38), component-crusher alevel (32), component-crusher level4 (34), constructions-lab all (10/10), constructions-lab ks3 (10/10), constructions-lab gcse (10/10), coordinate-geometry-dash gcse (24), coordinate-geometry-dash alevel (21), core-maths-paper1 core (36), core-maths-paper2b core (36), core-maths-paper2c core (36), correlation-or-coincidence all (13), curling-friction alevel (20), curling-friction level4 (20), differentiation-duel alevel (14), differentiation-duel level4 (14), dimension-checker level4 (20), dimension-checker alevel (20), eigenvalue-extractor further (15), eigenvector-engine further (15), estimation-golf year6 (9/20), estimation-golf ks3 (9/9), estimation-golf gcse (9/9), estimation-golf alevel (9/9), estimation-golf level4 (9/9), expectation-station core (20), expectation-station gcse (15), expectation-station alevel (10), expected-damage ks3 (15), expected-damage gcse (20), expected-damage core (15), factor-race year6 (10/20), force-resolver alevel (20), force-resolver level4 (20), formula-forge gcse (29), formula-forge alevel (29), formula-forge level4 (16), formula-unlocked gcse (29), formula-unlocked alevel (25), formula-unlocked level4 (14), fraction-equivalence year6 (20), given-that gcse (25), given-that alevel (25), given-that core (20), given-that level4 (20), glorious-gantt core-a (4), glorious-gantt level4-a (4), glorious-gantt core-b (3), glorious-gantt level4-b (4), gradient-hunter gcse (15), gradient-hunter core (20), gradient-hunter alevel (10), integration-duel alevel (14), integration-duel level4 (14), matrix-crunch further (20), matrix-crunch level4 (20), moments-master alevel (20), moments-master level4 (20), partial-fractions-duel alevel (20), partial-fractions-duel level4 (20), percentage-flip year6 (20), percentage-flip default (12), prime-factorisation all (8/28), prime-factorisation year6 (8/20), prisoners-dilemma ks3 (5), prisoners-dilemma gcse (7), prisoners-dilemma alevel (9), prisoners-dilemma core (7), probability-paradox all (38 (3 modes; Paradox mode 12)), proof-builder alevel (counter 15/25, sorter 8/8), proof-builder further (counter 15/35, sorter 8/11, induction 4/4), scale-factor-scaling gcse (38), scale-factor-scaling level4 (31), screening-room gcse (20), screening-room alevel (20), screening-room core (15), screening-room level4 (15), seven-bridges ks3 (25), seven-bridges gcse (25), seven-bridges alevel (25), shape-shifter year6-translation (10/15), shape-shifter year6-reflection (10/15), shape-shifter year6-rotation (10/15), spot-the-error ks3 (35), spot-the-error level4 (30), spot-the-muppet gcse (20), spot-the-muppet core (12), spot-the-muppet ks3 (18), suvat alevel (10), suvat level4 (8), terrible-advice gcse (20), terrible-advice core (12), terrible-advice ks3 (18), truth-will-set-you-free level4 (10), unit-converter alevel (38), wrong-on-the-internet gcse (20), wrong-on-the-internet core (10), wrong-on-the-internet ks3 (15)
+**4. Audited levels serving under 40 (109):** 52dle all (20 in rotation), angle-ace gcse (35), better-value gcse (20), binomial-blaster alevel (20), binomial-blaster alevel2 (20), characteristic-quest further (15), complex-converter further (20), complex-converter level4 (20), component-crusher gcse (38), component-crusher alevel (32), component-crusher level4 (34), constructions-lab all (10/10), constructions-lab ks3 (10/10), constructions-lab gcse (10/10), coordinate-geometry-dash gcse (24), coordinate-geometry-dash alevel (21), core-maths-paper1 core (36), core-maths-paper2b core (36), core-maths-paper2c core (36), correlation-or-coincidence all (13), curling-friction alevel (20), curling-friction level4 (20), differentiation-duel alevel (14), differentiation-duel level4 (14), dimension-checker level4 (20), dimension-checker alevel (20), eigenvalue-extractor further (15), eigenvector-engine further (15), estimation-golf year6 (9/20), estimation-golf ks3 (9/9), estimation-golf gcse (9/9), estimation-golf alevel (9/9), estimation-golf level4 (9/9), expectation-station core (20), expectation-station gcse (15), expectation-station alevel (10), expected-damage ks3 (15), expected-damage gcse (20), expected-damage core (15), factor-race year6 (10/20), force-resolver alevel (20), force-resolver level4 (20), formula-forge gcse (29), formula-forge alevel (29), formula-forge level4 (16), formula-unlocked gcse (29), formula-unlocked alevel (25), formula-unlocked level4 (14), fraction-equivalence year6 (20), given-that gcse (25), given-that alevel (25), given-that core (20), given-that level4 (20), glorious-gantt core-a (4), glorious-gantt level4-a (4), glorious-gantt core-b (3), glorious-gantt level4-b (4), gradient-hunter gcse (15), gradient-hunter core (20), gradient-hunter alevel (10), integration-duel alevel (14), integration-duel level4 (14), maths-court ks3 (15), maths-court gcse (20), maths-court core (10), matrix-crunch further (20), matrix-crunch level4 (20), moments-master alevel (20), moments-master level4 (20), partial-fractions-duel alevel (20), partial-fractions-duel level4 (20), percentage-flip year6 (20), percentage-flip default (12), prime-factorisation all (8/28), prime-factorisation year6 (8/20), prisoners-dilemma ks3 (5), prisoners-dilemma gcse (7), prisoners-dilemma alevel (9), prisoners-dilemma core (7), probability-paradox all (38 (3 modes; Paradox mode 12)), proof-builder alevel (counter 15/25, sorter 8/8), proof-builder further (counter 15/35, sorter 8/11, induction 4/4), scale-factor-scaling gcse (38), scale-factor-scaling level4 (31), screening-room gcse (20), screening-room alevel (20), screening-room core (15), screening-room level4 (15), seven-bridges ks3 (25), seven-bridges gcse (25), seven-bridges alevel (25), shape-shifter year6-translation (10/15), shape-shifter year6-reflection (10/15), shape-shifter year6-rotation (10/15), spot-the-error ks3 (35), spot-the-error level4 (30), spot-the-muppet gcse (20), spot-the-muppet core (12), spot-the-muppet ks3 (18), suvat alevel (10), suvat level4 (8), terrible-advice gcse (20), terrible-advice core (12), terrible-advice ks3 (18), truth-will-set-you-free level4 (10), unit-converter alevel (38), wrong-on-the-internet gcse (20), wrong-on-the-internet core (10), wrong-on-the-internet ks3 (15)
 
 **5. Unlisted (0):** none
 
