@@ -1328,7 +1328,7 @@ PLANTS = [
     ('Practice', 't5-014: a Practice submit', "mode: 'practice' });\n  }\n});",
      "mode: 'practice' });\n  }\n  if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(CONTENT.slug, 'alevel', "
      "practiceState.score, questions.length).catch(function(){});\n});"),
-    ('level', 't5-013: ?level read and logged', "mfg('game_started', { game_slug: CONTENT.slug, level: 'alevel', mode: mode });",
+    ('level', 't5-013: ?level read and logged', "mfg('game_started', { game_slug: CONTENT.slug, level: resolvedLevel, mode: mode });",
      "mfg('game_started', { game_slug: CONTENT.slug, level: new URLSearchParams((performance.getEntriesByType('navigation')[0].name.split('?')[1] || '')).get('level') || 'alevel', "
      "mode: mode });"),
     ('p15', 'SWEEP-1: Q15 asks to solve, keyed a factorisation', "Fully factorise \\\\(f(x)\\\\).'",

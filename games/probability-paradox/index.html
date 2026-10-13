@@ -90,7 +90,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/level.js"></script>
-<script>MaffsLevel.resolve({slug:'probability-paradox',levels:['gcse','core'],fallback:'gcse'});</script>
+<script>var resolvedLevel=MaffsLevel.resolve({slug:'probability-paradox',levels:['gcse','core'],fallback:'gcse'});</script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
@@ -503,8 +503,8 @@ function startMode(m){
   else if(mode==='fallacy')pool=shuffle([...FALLACY_QUESTIONS]).slice(0,12);
 
   window._ggAbandoned=true;
-  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'probability-paradox',level:'gcse',mode:mode,questions_answered:total});});}
-  mfg('game_started',{game_slug:'probability-paradox',level:'gcse',mode:mode});
+  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'probability-paradox',level:resolvedLevel,mode:mode,questions_answered:total});});}
+  mfg('game_started',{game_slug:'probability-paradox',level:resolvedLevel,mode:mode});
 
   show('game');nextQ();
   MaffsLock.fresh(document.getElementById('game'));
@@ -542,7 +542,7 @@ function handleAnswer(btn){
   const q=currentQ,s=(Date.now()-qStart)/1000;
   const ok=accepted(q).includes(btn.dataset.val);
   document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(accepted(q).includes(b.dataset.val))b.classList.add('correct')});
-  mfg('question_answered',{game_slug:'probability-paradox',level:'gcse',mode:mode,correct:ok,question_index:total});
+  mfg('question_answered',{game_slug:'probability-paradox',level:resolvedLevel,mode:mode,correct:ok,question_index:total});
 
   if(ok){
     btn.classList.add('correct');
@@ -591,7 +591,7 @@ function updateHUD(){document.getElementById('score').textContent=score;document
 const endGame=MaffsLock.finishOnce(function(){
   window._ggAbandoned=false;
   const pct=total>0?Math.round(correctN/total*100):0;
-  mfg('game_completed',{game_slug:'probability-paradox',level:'gcse',mode:mode,score:score,questions_answered:total,questions_correct:correctN,accuracy:pct});
+  mfg('game_completed',{game_slug:'probability-paradox',level:resolvedLevel,mode:mode,score:score,questions_answered:total,questions_correct:correctN,accuracy:pct});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('probability-paradox','gcse',score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('probability-paradox','gcse',score);}}
   let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';
   const names={paradox:'Paradox Predictor',conditional:'Conditional Calculator',fallacy:'Fallacy Spotter'};

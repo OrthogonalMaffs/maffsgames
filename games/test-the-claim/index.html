@@ -173,7 +173,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/level.js"></script>
-<script>MaffsLevel.resolve({slug:'test-the-claim',levels:['alevel','level4'],fallback:'alevel'});</script>
+<script>var resolvedLevel=MaffsLevel.resolve({slug:'test-the-claim',levels:['alevel','level4'],fallback:'alevel'});</script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/mathtext.js"></script>
@@ -1349,13 +1349,13 @@ function startGame() {
   const modeLabels = {binomial:'Binomial',poisson:'Poisson',normal:'Z-test',correlation:'Correlation'};
   $('hudMode').textContent = modeLabels[state.mode];
 
-  mfg('game_started',{game_slug:'test-the-claim',level:'alevel'});
+  mfg('game_started',{game_slug:'test-the-claim',level:resolvedLevel});
   mfg('mode_selected',{game_slug:'test-the-claim',mode:state.mode});
 
   // Abandon tracking
   window._ggAbandoned=true;
   window.addEventListener('beforeunload',function(){
-    if(window._ggAbandoned) mfg('game_abandoned',{game_slug:'test-the-claim',level:'alevel',questions_answered:state.qIdx});
+    if(window._ggAbandoned) mfg('game_abandoned',{game_slug:'test-the-claim',level:resolvedLevel,questions_answered:state.qIdx});
   });
 
   loadQuestion();
@@ -1983,11 +1983,11 @@ function checkStep6() {
   if (aOk && bOk && cOk) {
     state.questionsCorrect++;
     fb.innerHTML = '<div class="feedback correct">Perfect conclusion!</div>';
-    mfg('question_answered',{game_slug:'test-the-claim',level:'alevel',correct:true,question_index:state.qIdx+1});
+    mfg('question_answered',{game_slug:'test-the-claim',level:resolvedLevel,correct:true,question_index:state.qIdx+1});
   } else {
     state.penalties++;
     fb.innerHTML = '<div class="feedback wrong">Not quite — check the model answer below.</div>';
-    mfg('question_answered',{game_slug:'test-the-claim',level:'alevel',correct:false,question_index:state.qIdx+1});
+    mfg('question_answered',{game_slug:'test-the-claim',level:resolvedLevel,correct:false,question_index:state.qIdx+1});
   }
 
   // Calculate score for this question
@@ -2142,7 +2142,7 @@ const endGame = MaffsLock.finishOnce(function () {
   const prev = parseInt(localStorage.getItem(key) || '0');
   if (state.score > prev) {
     localStorage.setItem(key, state.score);
-    mfg('personal_best_set',{game_slug:'test-the-claim',level:'alevel',score:state.score,previous_best:prev});
+    mfg('personal_best_set',{game_slug:'test-the-claim',level:resolvedLevel,score:state.score,previous_best:prev});
     if (prev > 0) {
       $('pbLine').textContent = `New personal best! (Previous: ${prev})`;
       $('pbLine').style.display = 'block';
@@ -2153,7 +2153,7 @@ const endGame = MaffsLock.finishOnce(function () {
   }
 
   window._ggAbandoned=false;
-  mfg('game_completed',{game_slug:'test-the-claim',level:'alevel',score:state.score,questions_answered:state.questionsTotal,accuracy:pct});
+  mfg('game_completed',{game_slug:'test-the-claim',level:resolvedLevel,score:state.score,questions_answered:state.questionsTotal,accuracy:pct});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('test-the-claim','alevel',state.score,state.questionsTotal).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('test-the-claim','alevel',state.score);}}
 });
 

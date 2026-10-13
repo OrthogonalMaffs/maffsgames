@@ -88,11 +88,12 @@ findings:
   class: NEW:level-content-mismatch
   level: alevel
   where: games/normal-navigator/index.html:325-374
-  summary: 'The game serves one bank to A-Level, Level 4 and Core Maths but logs level "alevel" for all three, the
+  summary: 'Closed under R10 and SR-29 (Jon, 13 Oct 2026): the events now log the resolved level, and one bank serving a second audience is acceptable under SR-29. Was: the game serves one bank to A-Level, Level 4 and Core Maths but logs level "alevel" for all three, the
     shape of the factor-theorem ruling (a level serving another level''s items). The page also says to use a
     calculator while its roster tag is untagged. For Jon'
   evidence: 'mfg(..., level: ''alevel'') at every event (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 362
 - id: normal-navigator-s1-008
   severity: MEDIUM
   jc: false
@@ -104,4 +105,13 @@ findings:
     from rounded inputs, the start text beyond its count, or the shading of a parameters item. Recorded under Jon''s
     rule of 13 Oct 2026'
   evidence: 'check_text() reads numbers, not sentences (SWEEP-1, batch 10)'
+  status: open
+- id: normal-navigator-s1-009
+  severity: LOW
+  jc: true
+  class: NEW:unstated-convention
+  level: alevel
+  where: games/normal-navigator/index.html (start screen and hints); .claude/rules/game-roster.md
+  summary: 'The page tells students to use a calculator while the roster entry for normal-navigator is untagged. For Jon''s calculator-tagging decision (split out of s1-007, 13 Oct 2026)'
+  evidence: 'page text says to use a calculator; roster tag: none (SWEEP-1 batch 10, ruling of 13 Oct 2026)'
   status: open

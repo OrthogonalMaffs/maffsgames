@@ -96,7 +96,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/level.js"></script>
-<script>MaffsLevel.resolve({slug:'constructions-lab',levels:['ks3','gcse'],fallback:'gcse'});</script>
+<script>var resolvedLevel=MaffsLevel.resolve({slug:'constructions-lab',levels:['ks3','gcse'],fallback:'gcse'});</script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
@@ -452,8 +452,8 @@ function loadTask(idx){
   setTool('compass');
   show('construct');
   window._ggAbandoned=true;
-  mfg('game_started',{game_slug:'constructions-lab',level:'gcse'});
-  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'constructions-lab',level:'gcse',questions_answered:0})});}
+  mfg('game_started',{game_slug:'constructions-lab',level:resolvedLevel});
+  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'constructions-lab',level:resolvedLevel,questions_answered:0})});}
 
   // Build instructions
   const inst=document.getElementById('instructions');

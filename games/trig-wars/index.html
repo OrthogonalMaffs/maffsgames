@@ -330,7 +330,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/level.js"></script>
-<script>MaffsLevel.resolve({slug:'trig-wars',levels:['gcse','alevel'],fallback:'gcse'});</script>
+<script>var resolvedLevel=MaffsLevel.resolve({slug:'trig-wars',levels:['gcse','alevel'],fallback:'gcse'});</script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
@@ -509,9 +509,9 @@ function resetGame() {
   MaffsLock.newSession();
   over = false; turn = 1; shotId++;
   _twShots={1:0,2:0};_twHits={1:0,2:0};_twLogged=0;
-  mfg('game_started',{game_slug:'trig-wars',level:'gcse',mode:mode});
+  mfg('game_started',{game_slug:'trig-wars',level:resolvedLevel,mode:mode});
   window._ggAbandoned=true;
-  if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'trig-wars',level:'gcse',mode:mode,questions_answered:_twLogged})});}
+  if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'trig-wars',level:resolvedLevel,mode:mode,questions_answered:_twLogged})});}
   MaffsLock.fresh(firePanel(1)); MaffsLock.fresh(firePanel(2));
 
   // Randomise army positions each game
@@ -956,7 +956,7 @@ function fire(p){
     _twShots[p]++; if(hit) _twHits[p]++;
     if(personFires(p)){
       _twLogged++;
-      mfg('question_answered',{game_slug:'trig-wars',level:'gcse',mode:mode,correct:hit,question_index:_twLogged});
+      mfg('question_answered',{game_slug:'trig-wars',level:resolvedLevel,mode:mode,correct:hit,question_index:_twLogged});
     }
   }
 
@@ -1011,11 +1011,11 @@ const finishGame = MaffsLock.finishOnce(function(winner){
   window._ggAbandoned=false;
   if(mode==='cpu'){
     const sc=_twHits[1], n=_twShots[1];
-    mfg('game_completed',{game_slug:'trig-wars',level:'gcse',mode:'cpu',score:sc,questions_answered:n,accuracy:n>0?Math.round(sc/n*100):0});
+    mfg('game_completed',{game_slug:'trig-wars',level:resolvedLevel,mode:'cpu',score:sc,questions_answered:n,accuracy:n>0?Math.round(sc/n*100):0});
     if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('trig-wars','gcse',sc,n).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('trig-wars','gcse',sc);}}
   } else {
     const n=_twShots[1]+_twShots[2], h=_twHits[1]+_twHits[2];
-    mfg('game_completed',{game_slug:'trig-wars',level:'gcse',mode:'human',score:_twHits[winner],questions_answered:n,accuracy:n>0?Math.round(h/n*100):0});
+    mfg('game_completed',{game_slug:'trig-wars',level:resolvedLevel,mode:'human',score:_twHits[winner],questions_answered:n,accuracy:n>0?Math.round(h/n*100):0});
   }
 });
 

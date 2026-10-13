@@ -21,7 +21,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/level.js"></script>
-<script>MaffsLevel.resolve({slug:'core-maths-paper2b',levels:['core'],fallback:'core'});</script>
+<script>var resolvedLevel=MaffsLevel.resolve({slug:'core-maths-paper2b',levels:['core'],fallback:'core'});</script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
@@ -467,7 +467,7 @@ function showScreen(id) {
 
 function startGame() {
   currentQ = 0; score = 0; answers = []; MaffsLock.newSession();
-  mfg('game_started',{game_slug:'core-maths-paper2b',level:'core'});
+  mfg('game_started',{game_slug:'core-maths-paper2b',level:resolvedLevel});
   showScreen('gameScreen');
   showSectionBanner(0);
 }
@@ -532,7 +532,7 @@ function selectAnswer(idx) {
   var note = document.getElementById('workingNote');
   note.textContent = q.working;
   note.classList.add('visible');
-  mfg('question_answered',{game_slug:'core-maths-paper2b',level:'core',question_index:currentQ+1,correct:isCorrect,section:q.section});
+  mfg('question_answered',{game_slug:'core-maths-paper2b',level:resolvedLevel,question_index:currentQ+1,correct:isCorrect,section:q.section});
   MaffsLock.timer(function(){document.getElementById('nextBtn').classList.add('visible');},1500);
 }
 
@@ -573,7 +573,7 @@ var finishGame = MaffsLock.finishOnce(function () {
       el.appendChild(d);
     }
   });
-  mfg('game_completed',{game_slug:'core-maths-paper2b',level:'core',score:score,questions_answered:36,questions_correct:score});
+  mfg('game_completed',{game_slug:'core-maths-paper2b',level:resolvedLevel,score:score,questions_answered:36,questions_correct:score});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('core-maths-paper2b','core',score,36).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('core-maths-paper2b','core',score);}}
   showScreen('resultsScreen');
 });

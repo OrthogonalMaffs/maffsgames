@@ -609,7 +609,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/level.js"></script>
-<script>MaffsLevel.resolve({slug:'tax-theft',levels:['core'],fallback:'core'});</script>
+<script>var resolvedLevel=MaffsLevel.resolve({slug:'tax-theft',levels:['core'],fallback:'core'});</script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/answer.js"></script>
@@ -1006,9 +1006,9 @@ function startGame(diff) {
   answers = {};
   _ttStepCount=steps.length;_ttCorrectCount=0;
 
-  mfg('game_started',{game_slug:'tax-theft',level:'core'});
+  mfg('game_started',{game_slug:'tax-theft',level:resolvedLevel});
   window._ggAbandoned=true;
-  if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'tax-theft',level:'core',questions_answered:currentStepIndex})});}
+  if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'tax-theft',level:resolvedLevel,questions_answered:currentStepIndex})});}
 
   document.getElementById('diffScreen').style.display = 'none';
   document.getElementById('completionScreen').style.display = 'none';
@@ -1095,7 +1095,7 @@ function checkAnswer() {
   if (result === 'correct') {
     // Correct
     _ttCorrectCount++;
-    mfg('question_answered',{game_slug:'tax-theft',level:'core',correct:true,question_index:currentStepIndex+1});
+    mfg('question_answered',{game_slug:'tax-theft',level:resolvedLevel,correct:true,question_index:currentStepIndex+1});
     answers[step.id] = step.key;
     fb.textContent = 'Correct \u2014 ' + fmtPence(step.key);
     fb.className = 'feedback correct';
@@ -1136,7 +1136,7 @@ function checkAnswer() {
     }, 800);
   } else {
     // Wrong
-    mfg('question_answered',{game_slug:'tax-theft',level:'core',correct:false,question_index:currentStepIndex+1});
+    mfg('question_answered',{game_slug:'tax-theft',level:resolvedLevel,correct:false,question_index:currentStepIndex+1});
     var hint = getHint(val, step.key / 100, step);
     fb.textContent = hint;
     fb.className = 'feedback wrong';
@@ -1186,10 +1186,10 @@ function showCompletion() { finishGame(); }
 const finishGame = MaffsLock.finishOnce(function () {
   window._ggAbandoned=false;
   var _ttPct=_ttStepCount>0?Math.round(_ttCorrectCount/_ttStepCount*100):0;
-  mfg('game_completed',{game_slug:'tax-theft',level:'core',score:_ttCorrectCount,questions_answered:_ttStepCount,accuracy:_ttPct});
+  mfg('game_completed',{game_slug:'tax-theft',level:resolvedLevel,score:_ttCorrectCount,questions_answered:_ttStepCount,accuracy:_ttPct});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('tax-theft','core',_ttCorrectCount,_ttStepCount).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('tax-theft','core',_ttCorrectCount);}}
   var _ttPbKey='tax-theft_best_core';var _ttOldBest=parseInt(localStorage.getItem(_ttPbKey)||'0');
-  if(_ttCorrectCount>_ttOldBest){mfg('personal_best_set',{game_slug:'tax-theft',level:'core',score:_ttCorrectCount,previous_best:_ttOldBest});localStorage.setItem(_ttPbKey,_ttCorrectCount);}
+  if(_ttCorrectCount>_ttOldBest){mfg('personal_best_set',{game_slug:'tax-theft',level:resolvedLevel,score:_ttCorrectCount,previous_best:_ttOldBest});localStorage.setItem(_ttPbKey,_ttCorrectCount);}
   document.getElementById('gameContainer').style.display = 'none';
   document.getElementById('completionScreen').style.display = 'block';
 

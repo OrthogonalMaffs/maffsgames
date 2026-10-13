@@ -21,7 +21,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/level.js"></script>
-<script>MaffsLevel.resolve({slug:'core-maths-paper1',levels:['core'],fallback:'core'});</script>
+<script>var resolvedLevel=MaffsLevel.resolve({slug:'core-maths-paper1',levels:['core'],fallback:'core'});</script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
@@ -663,7 +663,7 @@ function startGame() {
   score = 0;
   answers = [];
   MaffsLock.newSession();
-  mfg('game_started', { game_slug: 'core-maths-paper1', level: 'core' });
+  mfg('game_started', { game_slug: 'core-maths-paper1', level: resolvedLevel });
   showScreen('gameScreen');
   showSectionBanner(0);
 }
@@ -768,7 +768,7 @@ function selectAnswer(idx) {
   // Analytics
   mfg('question_answered', {
     game_slug: 'core-maths-paper1',
-    level: 'core',
+    level: resolvedLevel,
     question_index: currentQ + 1,
     correct: isCorrect,
     section: q.section
@@ -832,7 +832,7 @@ var finishGame = MaffsLock.finishOnce(function () {
 
   mfg('game_completed', {
     game_slug: 'core-maths-paper1',
-    level: 'core',
+    level: resolvedLevel,
     score: score,
     questions_answered: 36,
     questions_correct: score
