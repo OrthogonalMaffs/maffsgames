@@ -1,0 +1,85 @@
+# Findings register for quadratic-factoriser (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: quadratic-factoriser
+audited:
+  tranche: S1 (SWEEP-1 reading sweep)
+  head: 019f159
+  date: 2026-10-13
+  served:
+    gcse: generator
+    higher: generator
+    formula: generator
+findings:
+- id: quadratic-factoriser-s1-001
+  severity: CRITICAL
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: higher
+  where: games/quadratic-factoriser/index.html:1314 hfCorrectSplit; :1449 hfStep5Html; :1506 hfStep5Pick
+  summary: 'Guided mode and "Show me the method" keyed the wrong AC split on every HCF item (3008 of the level''s 3760,
+    80%): hfCorrectSplit used the base ps and qr, but an HCF item is k(px + q)(rx + s) with k = 2 to 5, so the keyed
+    pair multiplied to ac/k^2 and added to b/k, the true split was not offered, step 4''s line did not equal the
+    quadratic, and step 5''s "first pair factorises to px(...)" and its key q were wrong. Fixed (Jon''s ruling, 13 Oct
+    2026; SR-8, the step keys were wrong): the split is kps and kqr, step 5 shows kpx(rx + s) and keys kq. The verifier
+    plays every Higher item''s six steps in Chromium and recomputes each key, split, line, factor and misconception
+    figure; the old hfCorrectSplit is planted and fails'
+  evidence: 'Item 760, 4x^2 - 26x - 48 = 2(2x + 3)(x - 8): ac = -192, b = -26. Step 3 keyed "3 x -16 = -48, 3 + -16 =
+    -13" (the base split; -48 is not ac, -13 is not b), the true pair -32 and 6 not on screen; step 4 showed "4x^2 + 3x +
+    -16x - 48", which is 4x^2 - 13x - 48; step 5 "The first pair factorises to x(2x + 3)" and keyed -8 for the second
+    pair (SWEEP-1, batch 6)'
+  status: open
+- id: quadratic-factoriser-s1-002
+  severity: HIGH
+  jc: false
+  class: NEW:input-cannot-type-answer
+  level: formula
+  where: games/quadratic-factoriser/index.html:1656-1657 (fRoot1, fRoot2)
+  summary: 'The Formula level''s root boxes were inputmode="decimal", and iOS''s decimal pad has no minus key, so a
+    negative root could not be typed on an iPhone. Fixed (Jon''s ruling, 13 Oct 2026): the boxes are on the shared
+    phone keypad (MaffsKeypad) with its minus key; with a mouse they are text inputs. The verifier types -1.5 on a
+    phone and plants the keypad removed and its minus key off'
+  evidence: '<input type="text" inputmode="decimal" class="formula-input" id="fRoot1" placeholder="x₁">; many Formula
+    items have a negative root, e.g. any with b > 0 and c > 0 (SWEEP-1, batch 6; not tested on a device)'
+  status: open
+- id: quadratic-factoriser-s1-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: all
+  where: scripts/verify-quadratic-factoriser.py; games/quadratic-factoriser/index.html:1283 (GCSE hint), :1052-1100
+    (formulaMistakeMessage, formulaSubstitutionMsg), :1750 (the discriminant line)
+  summary: 'The verifier does not recompute the GCSE level''s wrong-answer hint or the Formula level''s feedback (the
+    four named mistakes, the worked substitution, the discriminant). The Higher steps are now checked (s1-001). Recorded
+    under Jon''s rule of 13 Oct 2026: a verifier that does not check worked steps or hints is a finding'
+  evidence: 'No wrong figure was seen in those messages on reading (SWEEP-1, batch 6); nothing checks them'
+  status: open
+- id: quadratic-factoriser-s1-004
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: higher
+  where: games/quadratic-factoriser/index.html hfStep4Html, hfStep3Html
+  summary: 'Step 4''s split line and step 3''s options write a negative term unbracketed after a sign ("+ -16x", "3 x
+    -16 = -48", "6 + -4"), and a coefficient of 1 as "1x" ("8x^2 + -1x")'
+  evidence: 'Item 1040: "8x^2 + -1x + -16x + 8" (SWEEP-1, batch 6)'
+  status: open
+- id: quadratic-factoriser-s1-005
+  severity: LOW
+  jc: false
+  class: NEW:convention-unstated
+  level: formula
+  where: games/quadratic-factoriser/index.html renderFormulaQuestion
+  summary: 'Two root boxes on every real-root item, including a repeated root: nothing says to enter a repeated root
+    twice'
+  evidence: 'Two boxes x₁ and x₂ and "Enter both roots, or press No real solutions." (SWEEP-1, batch 6)'
+  status: open
+- id: quadratic-factoriser-s1-006
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: higher
+  where: games/quadratic-factoriser/index.html hfStep6Html
+  summary: 'Step 6''s narration "The common bracket comes out the front, next to the two leftover factors" sits beside
+    options written k(px + q)(rx + s): the leftover factors kpx and kq become k(px + q) without a word'
+  evidence: 'Tutorial step 6 (SWEEP-1, batch 6)'
+  status: open
