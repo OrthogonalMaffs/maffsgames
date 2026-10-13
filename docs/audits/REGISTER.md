@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-755 findings in 90 games.
+761 findings in 90 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
-| CRITICAL | 1 | 28 | 0 | 29 |
+| CRITICAL | 1 | 29 | 0 | 30 |
 | HIGH | 10 | 212 | 0 | 222 |
-| MEDIUM | 157 | 196 | 3 | 356 |
-| LOW | 105 | 42 | 1 | 148 |
-| **All** | 273 | 478 | 4 | 755 |
+| MEDIUM | 159 | 196 | 3 | 358 |
+| LOW | 108 | 42 | 1 | 151 |
+| **All** | 278 | 479 | 4 | 761 |
 
 ### By class
 
@@ -34,21 +34,21 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 2 | 12 | 111 |
 | 3 | 5 | 86 |
 | 6 | 24 | 56 |
-| NEW:wrong-explanation-text | 14 | 49 |
+| NEW:wrong-explanation-text | 15 | 50 |
 | NEW:convention-unstated | 25 | 48 |
 | NEW:text-contradicts-content | 34 | 41 |
 | NEW:wording | 35 | 38 |
 | 1 | 5 | 37 |
 | 5 | 26 | 26 |
+| NEW:true-wrong-option | 10 | 23 |
 | 4 | 5 | 22 |
-| NEW:true-wrong-option | 8 | 20 |
 | 7 | 5 | 16 |
 | NEW:value-equal distractors | 0 | 14 |
 | NEW:precision-not-stated | 2 | 12 |
 | 8 | 3 | 11 |
 | NEW:raw-tex-on-screen | 5 | 11 |
+| NEW:verifier-gap | 10 | 10 |
 | NEW:sr14-content | 4 | 9 |
-| NEW:verifier-gap | 9 | 9 |
 | NEW:equal-value-options | 0 | 8 |
 | NEW:hand-typed explanation figure | 5 | 7 |
 | NEW:ill-posed wording | 1 | 6 |
@@ -58,9 +58,9 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:phone-layout | 4 | 5 |
 | NEW:timer-policy | 3 | 5 |
 | B7 (ledgered) | 3 | 4 |
+| NEW:degenerate-item | 4 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
 | 9 | 1 | 3 |
-| NEW:degenerate-item | 3 | 3 |
 | NEW:level-content-mismatch | 2 | 3 |
 | NEW:phone-fold | 3 | 3 |
 | NEW:wrong explanation | 0 | 3 |
@@ -143,7 +143,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `core-maths-paper1` | yes | verify-core-maths-paper1.py | 0 | 4 | 2 | 0 | 0 | 6 | 0 |
 | `core-maths-paper2b` | yes | verify-core-maths-paper2b.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
 | `core-maths-paper2c` | yes | verify-core-maths-paper2c.py | 0 | 3 | 5 | 1 | 6 | 3 | 0 |
-| `correlation-or-coincidence` | yes | verify-correlation-or-coincidence.py | 1 | 0 | 2 | 0 | 0 | 3 | 0 |
+| `correlation-or-coincidence` | yes | verify-correlation-or-coincidence.py | 2 | 0 | 4 | 3 | 5 | 4 | 0 |
 | `curling-friction` | yes | verify-curling-friction.py | 0 | 3 | 3 | 2 | 1 | 7 | 0 |
 | `decimal-detective` | yes | verify-decimal-detective.py | 0 | 2 | 2 | 0 | 0 | 4 | 0 |
 | `differentiation-duel` | yes | verify-differentiation-duel.py | 0 | 2 | 10 | 2 | 0 | 14 | 0 |
