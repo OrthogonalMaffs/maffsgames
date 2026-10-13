@@ -147,7 +147,8 @@ findings:
   where: 'games/probability-paradox/index.html:147 (Monty Hall)'
   summary: 'The 2/3 needs the host to choose at random between two goat doors when you picked the car; the scenario did not say so (SR-18). Fixed: "If both doors you did not pick hide goats, he chooses between them at random."; ASSUMED pins it; plant'
   evidence: '"... he always opens a door you did not pick that hides a goat, then always offers you the chance to switch. He opens Door 3 ..." key "2/3 — always switch" (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 345
 - id: probability-paradox-s1-002
   severity: MEDIUM
   jc: false
@@ -156,7 +157,8 @@ findings:
   where: 'games/probability-paradox/index.html:179, :246, :284, :310, :315'
   summary: 'Five keys need a random draw or fair coins the scenario did not state (SR-18): Bertrand''s Box (the coin drawn at random), the 5 red and 3 blue bag, three coins, the 52-card deck, the 4/3/2 box. Fixed: each says "at random" or "fair"; ASSUMED pins them; plant'
   evidence: '"A card is drawn from a standard 52-card deck." | "P(King | Face card)?" key 1/3; "Three coins are flipped." key 3/4 (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 345
 - id: probability-paradox-s1-003
   severity: MEDIUM
   jc: false
@@ -165,7 +167,8 @@ findings:
   where: 'games/probability-paradox/index.html:333-336 (Fallacy, John)'
   summary: 'A true option marked wrong (SR-16): "Only with more data" is what the item''s own explanation concludes. Fixed: "Yes — a fair coin would give exactly 5 heads" (a named error); TRUE_WRONG pins it'
   evidence: 'opts "No — 7/10 is within normal variation" (key), "Yes — 7/10 proves bias", "Only with more data", "Depends on the coin"; explain "... We''d need a significance test with more data." (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 345
 - id: probability-paradox-s1-004
   severity: MEDIUM
   jc: false
@@ -174,7 +177,8 @@ findings:
   where: 'games/probability-paradox/index.html:227-230 (Non-transitive Dice)'
   summary: 'A true option marked wrong (SR-16): from what is given, whether A beats C cannot be determined, so "Cannot determine" was right too. Fixed: "Yes — A is the strongest die, so it beats both the others" (a named error); TRUE_WRONG pins it; plant'
   evidence: '"Does Die A necessarily beat Die C?" key "No — dice can be non-transitive"; d included "Cannot determine" (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 345
 - id: probability-paradox-s1-005
   severity: MEDIUM
   jc: true

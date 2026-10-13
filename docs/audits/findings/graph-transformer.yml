@@ -17,7 +17,8 @@ findings:
   where: 'games/graph-transformer/index.html buildGhostSteps (Show steps)'
   summary: 'A reflection was explained as "Squash vertically by a factor of 1, and reflect in the x-axis" (12 puzzles with a = -1) or "Stretch horizontally by a factor of 1, and reflect in the y-axis ... scales x by 1/-1" (b = -1): a factor-1 stretch is no transformation, and the GCSE level is translations and reflections. Fixed: "Reflect in the x-axis" / "Reflect in the y-axis" with their own why line; the verifier works out every caption from its target; plant'
   evidence: 'GCSE "Reflect in x-axis" puzzles; A-Level :259/:260 "Reflect in y (decay curve)" (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 345
 - id: graph-transformer-s1-002
   severity: LOW
   jc: false
@@ -26,7 +27,8 @@ findings:
   where: 'games/graph-transformer/index.html buildGhostSteps (vertical shift)'
   summary: 'Downward shifts read "+ -3 raises every point by -3" (9 puzzles). Fixed: "− 3 lowers every point by 3"; checked; plant'
   evidence: 'gcse "Translate down 3" (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 345
 - id: graph-transformer-s1-003
   severity: LOW
   jc: false
@@ -35,7 +37,8 @@ findings:
   where: 'games/graph-transformer/index.html buildGhostSteps (horizontal stretch)'
   summary: '"f(½x) scales x by 1/½". Fixed: the factor is printed (scales x by 2); checked'
   evidence: 'A-Level "Stretch ×2 in x" (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 345
 - id: graph-transformer-s1-004
   severity: MEDIUM
   jc: false
@@ -44,7 +47,8 @@ findings:
   where: 'games/graph-transformer/index.html buildEquation (base 1/x)'
   summary: 'A stretched 1/x was written 2\dfrac{1}{x}, which reads as the mixed number 2 1/x (the plain-text fallback printed "21/x"). Fixed: the factor goes into the fraction (2/x, 1/(2x), -2/(x-1)); the verifier fails a number written beside \dfrac for 1/x; plant'
   evidence: 'A-Level :262 "Stretch ×2 in y" target y = 2\dfrac{1}{x} (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 345
 - id: graph-transformer-s1-005
   severity: LOW
   jc: false

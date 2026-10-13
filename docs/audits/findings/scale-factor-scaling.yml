@@ -48,7 +48,8 @@ findings:
   where: 'games/scale-factor-scaling/index.html:128 (T1[7]), :136 (T1[14])'
   summary: '"Scale factor = 4" beside an area, under the label "Area SF", without saying it is the length scale factor; read as the area scale factor it gives 40 cm² (and 32 m²), both offered (SR-17). Fixed: "Length scale factor = 4." and "= 0.5."; TARGETS words pin it; plant'
   evidence: '"Scale factor = 4. Original area = 10 cm². New area = ?" key 160 cm², d 40 cm², 640 cm², 80 cm² (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 345
 - id: scale-factor-scaling-s1-002
   severity: LOW
   jc: false
@@ -57,7 +58,8 @@ findings:
   where: 'games/scale-factor-scaling/index.html:130 (T1[9])'
   summary: 'The two sides were not said to be corresponding sides. Fixed: "Corresponding sides 3 cm and 9 cm."; pinned'
   evidence: '"Similar triangles. Sides 3 cm and 9 cm. Area ratio = ?" key 1:9 (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 345
 - id: scale-factor-scaling-s1-003
   severity: LOW
   jc: false
@@ -66,7 +68,8 @@ findings:
   where: 'games/scale-factor-scaling/index.html:166 (T3[8]), :167 (T3[9])'
   summary: 'Two ratio items did not say the solids are similar, which both keys need. Fixed: "Similar solids."; pinned; plant'
   evidence: '"Volume ratio = 8:27. Area ratio = ?" key 4:9; "Area ratio = 9:25. Volume ratio = ?" key 27:125 (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 345
 - id: scale-factor-scaling-s1-004
   severity: LOW
   jc: false

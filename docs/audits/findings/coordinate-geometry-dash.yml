@@ -75,7 +75,8 @@ findings:
   where: 'games/coordinate-geometry-dash/index.html:221 (gcse[6])'
   summary: 'A true option marked wrong (SR-16): beside "Undefined (vertical)", "∞" says the same thing in the words many texts use. Fixed: "1" (the line x = 1 read as its gradient); the verifier fails an infinite option beside an undefined key; plant'
   evidence: '"A = (1, 3) and B = (1, 7)" | "Gradient of AB?" opts "Undefined (vertical)" (key), "0", "4", "∞" (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 345
 - id: coordinate-geometry-dash-s1-002
   severity: LOW
   jc: false

@@ -48,7 +48,8 @@ findings:
   where: 'games/formula-unlocked/index.html:463 (target line)'
   summary: 'The target was written with textContent, so four items showed raw TeX: "Make \Delta T the subject" (Q_GCSE[16]), "\Delta L" (Q_LEVEL4[2]), "P_2" (Q_LEVEL4[7]), "R_1" (Q_LEVEL4[12]). Fixed: rendered with rkInline; the verifier reads the rendered line in Chromium; plant'
   evidence: '"Make \Delta T the subject" (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 345
 - id: formula-unlocked-s1-002
   severity: LOW
   jc: false
@@ -66,7 +67,8 @@ findings:
   where: 'games/formula-unlocked/index.html:246 (Q_GCSE[12])'
   summary: '"The last distractor is a common error" points at an option by position, but the options are shuffled. Fixed: "Writing x = y/m − c is a common error"; the verifier fails any misconception that names an option by position; plant'
   evidence: 'y = mx + c, make x the subject (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 345
 - id: formula-unlocked-s1-004
   severity: LOW
   jc: false
@@ -75,7 +77,8 @@ findings:
   where: 'games/formula-unlocked/index.html:279 (Q_GCSE[20])'
   summary: 'The misconception "you get 4π², not 2π²" names an option no one is offered: the distractor leaves 2π unsquared. Fixed: "(2π)² = 4π². Leaving it as 2π is the error."; pinned; plant'
   evidence: 'distractors T²/(4π²g), gT/(2π), T²g/(2π) (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 345
 - id: formula-unlocked-s1-005
   severity: LOW
   jc: false
