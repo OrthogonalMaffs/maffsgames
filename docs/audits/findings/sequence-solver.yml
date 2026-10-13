@@ -54,3 +54,50 @@ findings:
     earlier value-equal distractor; the wording remains.)'
   evidence: 'docs/audit-resit-correctness-2026-10-04.md F3. '
   status: open
+- id: sequence-solver-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: gcse
+  where: games/sequence-solver/index.html:245 (gcse[48])
+  summary: 'A fill-the-gaps item whose key holds only for an arithmetic sequence never said so (SR-17); the next item
+    (:246) says "If geometric, fill the gaps". No option was a second correct answer (the shown terms are collinear),
+    so the marking was right. Fixed under SR-17 by stating the type the key already uses; key unchanged. The verifier
+    now fails a fill-the-gaps ask that names no sequence type'
+  evidence: 'seq "3, __, 12, __, 21", ask "Fill in the gaps", key "3, 7.5, 12, 16.5, 21", options "3, 6, 12, 18, 21",
+    "3, 8, 12, 17, 21", "3, 7, 12, 17, 21"; the verifier''s FILL() assumed arithmetic for any ask without "geometric"
+    (SWEEP-1, batch 2)'
+  status: open
+- id: sequence-solver-s1-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:raw-tex-on-screen
+  level: alevel
+  where: games/sequence-solver/index.html:302 (alevel[48]); the prompt is written with textContent at :330
+  summary: 'The only ask that holds TeX is shown as raw markup: the student reads "S_n" and "\dfrac{n(n+1)}{2}". Same
+    class as r-002 (the GCSE sequence line), a different element and level. A rendering change, open'
+  evidence: 'ask "Prove S_n for a = 1, d = 1 gives \\dfrac{n(n+1)}{2}", key "Substitute: \\dfrac{n}{2}(2 + n - 1) =
+    \\dfrac{n(n+1)}{2}" (SWEEP-1, batch 2)'
+  status: open
+- id: sequence-solver-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: alevel
+  where: games/sequence-solver/index.html:284 (alevel[33]), :302 (alevel[48]); option renderer at :335
+  summary: 'Any option containing \, ^ or { is rendered by KaTeX in maths mode, so in these two items the key alone
+    shows in maths italic with its spaces gone ("No,|r|≥1"), beside three plain-text wrong options: the key can be
+    picked by its font. Marking unaffected; open (a rendering change)'
+  evidence: 'alevel[33] q "a = 3, r = 1.1", ask "Does the sum converge?", key "No, |r| \\geq 1", options "Yes", "Yes, r is
+    close to 1", "Only for large n" (SWEEP-1, batch 2)'
+  status: open
+- id: sequence-solver-s1-004
+  severity: LOW
+  jc: true
+  class: NEW:convention-unstated
+  level: gcse
+  where: games/sequence-solver/index.html:235 (gcse[39])
+  summary: 'The one a/r item without the formula line or the word "geometric": the type is left to the letter r. Its two
+    siblings (:233, :234) show T_n = ar^{n-1}. r is standard notation, so LOW; open for Jon'
+  evidence: 'seq "a = 2, r = -2", q "", ask "Find the 6th term", key "-64", options "64", "-32", "32" (SWEEP-1, batch 2)'
+  status: open
