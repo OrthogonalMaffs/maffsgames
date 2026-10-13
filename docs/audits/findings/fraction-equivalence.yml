@@ -37,3 +37,14 @@ findings:
     so the Year 6 bank has 19 different pairs, not 20. Replacing one is new content (Jon''s call, SR-19)'
   evidence: 'scripts/verify-fraction-equivalence.py (VERIFIERS-20): it records this pair as an expected repeat and fails on any other'
   status: open
+- id: fraction-equivalence-s1-001
+  severity: LOW
+  jc: false
+  class: NEW:convention-unstated
+  level: all
+  where: games/fraction-equivalence/index.html:134 (start screen how-to)
+  summary: 'The cross-multiplication rule names letters it never defines: which of a, b, c, d is which numerator or
+    denominator is left for the student to guess (the rule holds only for a/b and c/d). The in-game hint, n1×d2 against
+    n2×d1, uses its own order. Wording, open for Jon'
+  evidence: 'Start screen: "Cross multiply to check: if a×d = b×c, they''re equivalent" (SWEEP-1, batch 1)'
+  status: open
