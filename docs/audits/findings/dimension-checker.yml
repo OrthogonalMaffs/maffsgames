@@ -71,7 +71,9 @@ findings:
   summary: ?level ignored; every URL (incl. alevel) plays and submits as 'level4'
   evidence: 'submitScore(''dimension-checker'',''level4'',…) for ?level=alevel Left open by the cloud-lane fix PR: class
     4, owned by the shared level resolver (contract F2).'
-  status: open
+  status: fixed
+  pr: 333
+  ruling: 'Jon, 13 Oct 2026 (level listings, group 1): the A-Level listing is removed from the roster row and the card; the game serves Level 4 only, and ?level=alevel falls back to it.'
 - id: dimension-checker-t5-007
   severity: LOW
   jc: false

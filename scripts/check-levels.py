@@ -22,7 +22,8 @@ Site-wide, for every game migrated or not (an unmigrated game serves the roster'
   e. every portal card (`<a href="games/<slug>/..." class="game-card" data-levels="...">`) lists only levels its
      game serves, and its link's level is one of them. "A level that serves another level's items is not listed
      as that level" (SR-16 to SR-20): a wrong listing is corrected to match the game, never made true by adding
-     content.
+     content. SR-29 (Jon, 13 Oct 2026) narrows that: AUDIENCE_LISTINGS names five games whose single bank suits a
+     second audience; for each the check also requires no level selector, one submit key and one hub board.
 
 NOT_YET (built the way check-answer-lock.py's is, canon 7.6.0): the games not yet migrated. Reported, never
 failed, and it may only shrink: it is NOT_YET_AT_START minus MIGRATED, so a game that is not in
@@ -96,10 +97,25 @@ FILTER_ALIAS = {'year6': {'ks3'}}
 # there, is the list). chart-interrogator's Level 4 button says 'l4'; quadratic-factoriser has gcse, higher and formula.
 OWN_LEVEL_KEYS = frozenset('chart-interrogator quadratic-factoriser'.split())
 # Portal cards that list a level the game does not serve, kept as Jon has them until he rules (reported, never failed; an
-# entry that is no longer true fails, so it cannot go stale). (slug, card token) -> why.
-CARD_KNOWN_MISMATCH = {
-    ('quadratic-factoriser', 'alevel'): 'the roster and card list A-Level; the game serves gcse, higher and formula (Jon to rule)',
+# entry that is no longer true fails, so it cannot go stale). (slug, card token) -> why. Empty since Jon's 13 Oct 2026
+# rulings (quadratic-factoriser's A-Level listing was removed); the mechanism stays for the next one.
+CARD_KNOWN_MISMATCH = {}
+
+# SR-29 (Jon, 13 Oct 2026, level listings): a card or roster row may list an audience that a game's single bank suits,
+# beside the level it was written for, if the game offers that audience no separate level, level selector or board.
+# SR-29 narrows "a level that serves another level's items is not listed as that level" (SR-16 to SR-20): read together.
+# slug -> (the one level the game's board and bank are written for, the audiences it is also listed for). Each row's
+# reason is SR-29. The check accepts the listing and fails if the game gains a level selector, submits under any other
+# key, or the hub lists a second board for it.
+AUDIENCE_LISTINGS = {
+    'characteristic-quest': ('further', ('level4',)),
+    'eigenvalue-extractor': ('further', ('level4',)),
+    'eigenvector-engine': ('further', ('level4',)),
+    'partial-fractions-duel': ('alevel', ('level4',)),
+    'normal-navigator': ('alevel', ('level4', 'core')),
 }
+SELECTOR = re.compile(r'''class="level-btn|class="level-select|id="levelSelect|setLevel\s*\(|selectLevel\s*\(|data-level=''')
+HUB_ROW = re.compile(r"\['([a-z0-9-]+)','[^']*',\[([^\]]*)\]")
 
 RESOLVE = re.compile(r'MaffsLevel\.resolve\s*\(\s*\{(.*?)\}\s*\)', re.S)
 OWN_READ = re.compile(r'''\.get\(\s*['"]level['"]\s*\)|\blevel\s*=\s*([a-z]+)\.get\b|location\.search[^;\n]*level''')
@@ -210,6 +226,20 @@ def analyse(files, roster, games, migrated, at_start, overrides=None):
         else:
             served[slug] = set(roster.get(slug, []))
 
+    hub = {m.group(1): re.findall(r"'([^']+)'", m.group(2)) for m in HUB_ROW.finditer(files.get('leaderboards/index.html', ''))}
+    for slug, (primary, audiences) in sorted(AUDIENCE_LISTINGS.items()):
+        text = files.get('games/%s/index.html' % slug, '')
+        why = 'SR-29 audience listing for %s' % slug
+        if not set((primary,) + audiences) <= served.get(slug, set()):
+            errors.append('%s: no longer lists %s: remove it from AUDIENCE_LISTINGS' % (why, sorted(set(audiences) - served.get(slug, set()))))
+        if SELECTOR.search(text):
+            errors.append('%s: the page now has a level selector, so SR-29 does not fit it (report it to Jon)' % why)
+        extra = sorted({k for _, k in SUBMIT.findall(text)} - {primary})
+        if extra:
+            errors.append('%s: submits under %s, a separate board (SR-29 allows only %r)' % (why, extra, primary))
+        if slug in hub and hub[slug] != [primary]:
+            errors.append('%s: the hub lists boards %s (SR-29 allows only %r)' % (why, hub[slug], primary))
+
     def check_link(where, slug, key):
         if slug not in served:
             return                                  # not a game folder (a different ../<x>/ link)
@@ -277,6 +307,12 @@ def selftest(root):
         ('a migrated game that reads ?level itself',
          {page: bare + good % (slug, json.dumps(levels).replace('"', "'"), levels[0])
           + "<script>var l=new URLSearchParams(location.search).get('level');</script>"}, 'reads ?level with its own code'),
+        ('a card listing a level its game does not serve',
+         {'index.html': files['index.html'] + '<a href="games/%s/?level=%s" class="game-card" data-levels="gcse alevel" data-topics="x">' % (slug, levels[0])},
+         'but the game serves'),
+        ('an SR-29 game that gains a level selector',
+         {'games/normal-navigator/index.html': files['games/normal-navigator/index.html'] + '<button class="level-btn" data-level="core">Core</button>'},
+         'has a level selector'),
     ]
     for name, patch, want in plants:
         f2 = dict(files)
