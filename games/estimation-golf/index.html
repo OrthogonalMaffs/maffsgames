@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="description" content="Estimate answers by rounding: the closer you get, the further the ball goes. For KS3, GCSE, A-Level, Level 4 and Core Maths. Free, no sign-up.">
+<meta name="description" content="Estimate answers by rounding: the closer you get, the further the ball goes. For KS3, GCSE, A-Level and Level 4. Free, no sign-up.">
 <link rel="canonical" href="https://maffsgames.co.uk/games/estimation-golf/">
 <meta property="og:title" content="Estimation and Rounding Game – GCSE Maths | MaffsGames">
-<meta property="og:description" content="Estimate answers by rounding: the closer you get, the further the ball goes. For KS3, GCSE, A-Level, Level 4 and Core Maths. Free, no sign-up.">
+<meta property="og:description" content="Estimate answers by rounding: the closer you get, the further the ball goes. For KS3, GCSE, A-Level and Level 4. Free, no sign-up.">
 <meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
 <meta property="og:url" content="https://maffsgames.co.uk/games/estimation-golf/">
 <meta property="og:type" content="website">
@@ -735,7 +735,7 @@ const RANK_LABELS = [
 ];
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
-const _egUrlLevel = MaffsLevel.resolve({slug:'estimation-golf',levels:['year6','ks3','gcse','alevel','level4','core'],fallback:'ks3'});
+const _egUrlLevel = MaffsLevel.resolve({slug:'estimation-golf',levels:['year6','ks3','gcse','alevel','level4'],fallback:'ks3'});
 let level = QUESTIONS[_egUrlLevel] ? _egUrlLevel : 'ks3';
 let hole  = 0;   // 0-indexed
 let scores = []; // strokes per hole

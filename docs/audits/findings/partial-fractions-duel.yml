@@ -100,7 +100,9 @@ findings:
   summary: ?level never read; level4 (roster, portal l4) silently serves alevel and submits 'alevel'
   evidence: 'Chromium: level4/constructor/__proto__/nonsense all play alevel, submitScore(''alevel'') Left open by the
     cloud-lane fix PR: class 4, owned by the shared level resolver (contract F2).'
-  status: open
+  status: fixed
+  pr: 332
+  ruling: 'Jon, 13 Oct 2026 (level listings, group 2) and canon SR-29: Level 4 stays listed as an audience the single A-Level bank suits; the game offers no Level 4 selector or board, and ?level=level4 plays the one bank and submits to the one alevel board (check-levels.py AUDIENCE_LISTINGS).'
 - id: partial-fractions-duel-t5-010
   severity: LOW
   jc: false

@@ -25,7 +25,9 @@ findings:
   where: index.html:1943
   summary: Card data-levels 'gcse alevel' lists it at A-Level; there is no A-Level content and ?level= is ignored
   evidence: Every URL fires game_started level 'gcse'.
-  status: open
+  status: fixed
+  pr: 332
+  ruling: 'Jon, 13 Oct 2026 (level listings, group 1): the A-Level listing is removed from the roster row and the card; the game''s declaration is gcse only, so an old ?level=alevel falls back to gcse.'
 - id: modular-battle-t4-003
   severity: MEDIUM
   jc: true
