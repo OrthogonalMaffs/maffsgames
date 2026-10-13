@@ -113,6 +113,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
       <div><span>X</span> — Vertically opposite angles are equal</div>
       <div><span>△</span> — Angles in a triangle = 180°</div>
       <div><span>⚡</span> — Exterior angle = sum of interior opposites</div>
+      <div><span>▽</span> — Base angles of an isosceles triangle are equal</div>
     </div>
     <div class="level-select" id="levelSelect">
       <div style="font-size:.85rem;font-weight:600;margin-bottom:.5rem;text-align:center">Choose your level:</div>
@@ -576,7 +577,7 @@ angleOpts:[52,38,90,128],steps:['38° + 90° + x = 180°','x = 180° − 128° =
 
 {fig:{t:'tri',A:35,B:'x',iso:true},
 prompt:'The triangle is isosceles (marked sides equal). Find x.',answer:35,reason:REASONS.ISOSC,
-angleOpts:[35,110,70,145],steps:['Isosceles triangle: base angles are equal','The two base angles are both 35°','35° + 35° + apex = 180°','But x IS one of the base angles','x = 35°'],misconception:'Base angles of an isosceles triangle are EQUAL. The base angles are opposite the equal sides.'},
+angleOpts:[35,110,70,145],steps:['Isosceles triangle: base angles are equal','x is one of the two base angles','The other base angle is 35°, so x = 35°'],misconception:'Base angles of an isosceles triangle are EQUAL. The base angles are opposite the equal sides.'},
 
 // === EXTERIOR ANGLE ===
 {fig:{t:'ext',A:40,C:65,x:'x'},

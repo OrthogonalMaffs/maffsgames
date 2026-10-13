@@ -1706,3 +1706,18 @@ screening-room, glorious-gantt.
 - The unlisted games and their open findings: `docs/audits/REGISTER.md` ("By game", Listed = unlisted) and the
   roster's Unlisted section. Each has its relist checklist in `docs/todo.md` §1.53-§1.75.
 - **Next:** Jon's first cloud-lane contract names the game.
+
+## Moved from the cloud handover's queue on 13 Oct 2026 (done items)
+
+UC-FIX: DONE, #196 merged 9 Oct (c9fbf4b), main green.
+SIM-S5: DONE, #203 merged 9 Oct (4081538). UC-T4-007: DONE, #205 merged 9 Oct (920c5b1; the answers' item 3c, in
+`docs/history/contracts/2026-10-09-sim-s5-answers.md`; claim #204). FT-FIX: DONE, #207 merged 9 Oct (cf96929; contract, amendment and Jon's answers
+of 9 Oct, 11:00, in `docs/history/contracts/2026-10-0[89]-ft-fix*.md`).
+LISTED-HIGH: COMPLETE (contract, rulings and notes now in `docs/history/contracts/2026-10-09-listed-high*.md`):
+#210-#212, #214, #216, #217, #219, #223, #225-#231 merged; main green (run 654, 37978742832). Item 12 closed on
+Jon's ruling of 22:45 (option A): see the PD-CLOSE entry below. CAR-TRAP-DRAFT (moved from the home lane, Jon 20:17; contract on main,
+`contracts/2026-10-09-car-trap-draft.md`): **Car Trap draft for Jon's review**, #235 merged (ba5b6b2); main green
+(run 661). **CAR TRAP HAS MOVED ENTIRELY TO THE HOME LANE (Jon, 10 Oct), including #242 (CAR-TRAP-BUILD): the cloud
+lane does not push to #242 or touch any car-trap file.** #242's state at hand-over is in its branch's
+`docs/handover/cloud.md` (the CAR-TRAP-BUILD entry). It is red only on the teacher page at 320 px (§1.37). The new
+art was not on main when Jon said it was: the only `car-trap-*.webp` there are the old pictures.

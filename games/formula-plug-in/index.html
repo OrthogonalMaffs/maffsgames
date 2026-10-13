@@ -465,7 +465,7 @@ function loadQuestion() {
   document.getElementById('varsLine').textContent = varsStr;
 
   // Question prompt
-  document.getElementById('questionPrompt').textContent = 'What is ' + q.resultVar + '?';
+  document.getElementById('questionPrompt').textContent = 'What is ' + (q.resultVar.length > 1 ? 'the ' + q.resultVar.toLowerCase() : q.resultVar) + '?';
 
   // Reset answer display
   updateAnswerDisplay();

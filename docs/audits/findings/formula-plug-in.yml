@@ -81,6 +81,8 @@ findings:
   level: year6
   where: games/formula-plug-in/index.html:351-355 (fpi_046-fpi_050), prompt built at :451
   summary: 'The prompt is "What is " + resultVar + "?", so the five Mean items ask "What is Mean?" (the other nine
-    formulas use one letter: "What is A?"). Marking unaffected; wording open for Jon'
+    formulas use one letter: "What is A?"). Marking unaffected; wording open for Jon Fixed under R1: the prompt
+    reads "What is the mean?".'
   evidence: 'fpi_046: "Mean = Sum ÷ n", "Sum = 30, n = 6", "What is Mean?", key 5 (SWEEP-1, batch 1)'
-  status: open
+  status: fixed
+  pr: 368

@@ -142,19 +142,25 @@ findings:
   level: year6
   where: games/shape-shifter/index.html:543 (reflection instruction), :793 (marks only at the vertex count)
   summary: 'An answer is marked only once as many points are tapped as the shape has vertices, and the instruction
-    gives no count. In 3 of 15 reflections a vertex lies on the mirror line, so a student who does not re-tap it (not
-    knowing it maps to itself) gets no mark and no prompt: the game just waits. Wording, open'
+    gives no count. In 3 of 15 reflections a vertex lies on the mirror line, so a student who does not re-tap
+    it (not knowing it maps to itself) gets no mark and no prompt: the game just waits. Wording, open Fixed
+    under R2: the instruction gives the vertex count and, in reflections, says a vertex on the mirror line
+    stays where it is.'
   evidence: 'REFLECTION_QUESTIONS[7] "Reflect in the y-axis", (0,1),(2,1),(2,3),(0,3); [11] (0,-2) on the y-axis;
     [12] "Reflect in the x-axis", (1,0),(3,0) on it; instruction "<desc> — tap each reflected vertex" (SWEEP-1, batch 2)'
-  status: open
+  status: fixed
+  pr: 368
 - id: shape-shifter-s1-002
   severity: LOW
   jc: false
   class: NEW:text-contradicts-content
   level: year6
   where: games/shape-shifter/index.html:701-709 (drawGrid joins placed points in tap order)
-  summary: 'Marking ignores tap order but the student''s shape is drawn joined in tap order, so four right corners tapped
-    in a crossing order draw a bow-tie beside "Correct!", and the true outline is the near-invisible navy of t3-001'
+  summary: 'Marking ignores tap order but the student''s shape is drawn joined in tap order, so four right corners
+    tapped in a crossing order draw a bow-tie beside "Correct!", and the true outline is the near-invisible
+    navy of t3-001 Fixed under R3: a correct answer is drawn as the shape''s own outline whatever order it was
+    tapped in.'
   evidence: 'checkVertexAnswer (:855) is order-independent; the placed polygon is closed in placedVertices order
     (SWEEP-1, batch 2)'
-  status: open
+  status: fixed
+  pr: 368

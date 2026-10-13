@@ -709,6 +709,7 @@ def run_page(chromium=None, against=None, patches=None):
                     banks = page.evaluate('''JSON.parse(JSON.stringify(Object.fromEntries(Object.entries(QUESTIONS_BY_LEVEL)
                                             .map(([k, v]) => [k, v.map(q => Object.assign({}, q, {draw: undefined}))]))))''')
                     reasons = page.evaluate('REASONS')
+                    banks['_menu'] = page.evaluate("document.querySelector('.menu-reasons').innerText")
                 for lv in LEVELS:
                     for i in range(len(banks.get(lv, []))):
                         renders[(lv, i, w)] = page.evaluate(JS_RENDER, [lv, i])
@@ -760,7 +761,24 @@ def label(lv, i, q):
     return '%s[%d] (%s, key %s)' % (lv, i, q.get('prompt', '')[:40], q.get('answer'))
 
 
+def check_wording(rep, banks, reasons):
+    """R3, R1 (SWEEP-1 angle-ace-s1-001, -002): the start screen lists every reason the game marks, and the isosceles
+    worked solution goes straight to the base angle (no apex line, no "But" steering towards the apex option)."""
+    lines = [l for l in banks.get('_menu', '').splitlines() if l.strip()]
+    if len(lines) != len(reasons):
+        rep('menu', 'reasons', 'the start screen lists %d reasons, the game marks %d' % (len(lines), len(reasons)))
+    if not any('isosceles' in l.lower() for l in lines):
+        rep('menu', 'reasons', 'the isosceles base-angle reason is not on the start screen')
+    for lv in LEVELS:
+        for i, q in enumerate(banks.get(lv, [])):
+            if q.get('reason') == reasons.get('ISOSC'):
+                text = ' '.join(q.get('steps', [])).lower()
+                if 'apex' in text or 'but ' in text:
+                    rep(label(lv, i, q), 'steps', 'the isosceles solution mentions the apex or a "But": %r' % q['steps'])
+
+
 def check_all(rep, banks, reasons, renders, marks, notes=None):
+    check_wording(rep, banks, reasons)
     for lv in LEVELS:
         bank = banks.get(lv, [])
         if lv in COUNTS and len(bank) != COUNTS[lv]:
@@ -792,6 +810,16 @@ def selftest(banks, reasons, renders, marks, extra):
         new = [f for f in rep.fails if f not in base.fails]
         ok = ok and bool(new)
         lines.append('  self-test %-34s %s' % (name, ('caught: ' + new[0][:110]) if new else '*** MISSED ***'))
+
+    nine = copy.deepcopy(banks)
+    nine['_menu'] = '\n'.join([l for l in nine['_menu'].splitlines() if l.strip()][:-1])
+    expect('start screen missing the ninth reason', b=nine)
+    apex = copy.deepcopy(banks)
+    for lv in LEVELS:
+        for q in apex.get(lv, []):
+            if q.get('reason') == reasons.get('ISOSC'):
+                q['steps'] = q['steps'] + ['35° + 35° + apex = 180°']
+    expect('isosceles solution mentions the apex', b=apex)
 
     item = ('year6', 0, 390)     # x and 40° on a straight line
     rec = renders[item]
