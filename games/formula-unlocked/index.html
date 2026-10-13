@@ -243,7 +243,7 @@ steps:['v - u = at','a = \\dfrac{v - u}{t}']},
 
 {stage:2,formula:'y = mx + c',target:'x',correct:'x = \\dfrac{y - c}{m}',d:['x = \\dfrac{y + c}{m}','x = m(y - c)','x = \\dfrac{y}{m} - c'],
 hints:['Subtract c from both sides','Divide both sides by m'],
-steps:['y - c = mx','x = \\dfrac{y - c}{m}'],misconception:'The last distractor is a common error — dividing only the first term by m instead of the whole expression.'},
+steps:['y - c = mx','x = \\dfrac{y - c}{m}'],misconception:'Writing x = y/m − c is a common error — dividing only the first term by m instead of the whole expression.'},
 
 {stage:2,formula:'P = \\dfrac{E}{t}',target:'t',correct:'t = \\dfrac{E}{P}',d:['t = EP','t = E - P','t = \\dfrac{P}{E}'],
 hints:['Multiply both sides by t to clear the fraction','Then divide both sides by P'],
@@ -276,7 +276,7 @@ steps:['\\dfrac{A}{\\pi} = r^2','r = \\sqrt{\\dfrac{A}{\\pi}}']},
 
 {stage:3,formula:'T = 2\\pi\\sqrt{\\dfrac{l}{g}}',target:'l',correct:'l = \\dfrac{gT^2}{4\\pi^2}',d:['l = \\dfrac{T^2}{4\\pi^2 g}','l = \\dfrac{gT}{2\\pi}','l = \\dfrac{T^2 g}{2\\pi}'],
 hints:['Divide by 2π, then square both sides','Multiply by g'],
-steps:['\\dfrac{T}{2\\pi} = \\sqrt{\\dfrac{l}{g}}','\\dfrac{T^2}{4\\pi^2} = \\dfrac{l}{g}','l = \\dfrac{gT^2}{4\\pi^2}'],misconception:'When you square 2π, you get 4π², not 2π².'},
+steps:['\\dfrac{T}{2\\pi} = \\sqrt{\\dfrac{l}{g}}','\\dfrac{T^2}{4\\pi^2} = \\dfrac{l}{g}','l = \\dfrac{gT^2}{4\\pi^2}'],misconception:'When you square both sides, the 2π is squared too: (2π)² = 4π². Leaving it as 2π is the error.'},
 
 {stage:3,formula:'c^2 = a^2 + b^2',target:'a',correct:'a = \\sqrt{c^2 - b^2}',d:['a = c - b','a = \\sqrt{c^2 + b^2}','a = c^2 - b^2'],
 hints:['Subtract b² from both sides','Take the square root'],
@@ -460,7 +460,8 @@ function nextQ(){
   // Formula
   const fEl=document.getElementById('formulaDisplay');
   rk(fEl,currentQ.formula);
-  document.getElementById('targetDisplay').textContent='Make '+currentQ.target+' the subject';
+  // The target is TeX (\\Delta T, P_2): rendered, never shown raw (formula-unlocked-s1-001).
+  document.getElementById('targetDisplay').innerHTML='Make '+rkInline(currentQ.target)+' the subject';
   document.getElementById('contextDisplay').textContent=currentQ.ctx||'';
 
   // Hint info

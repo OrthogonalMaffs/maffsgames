@@ -68,6 +68,8 @@ def R(*p):
 
 
 # (words the prompt must carry, the answer from them). Each tier in the page's order.
+# SWEEP-1 (13 Oct 2026; SR-17): each prompt's words state what its key assumes: a LENGTH scale factor
+# (s1-001), corresponding sides (s1-002), similar solids (s1-003). The old wording fails the words check.
 TARGETS = {
     'T1': [
         ('Length scale factor = 2. Area', N(2 ** 2)),
@@ -77,14 +79,14 @@ TARGETS = {
         ('Length scale factor = 10. Area', N(10 ** 2)),
         ('Lengths double. Original area = 12 cm²', N(12 * 2 ** 2, 'cm²')),
         ('Lengths triple. Original area = 5 m²', N(5 * 3 ** 2, 'm²')),
-        ('Scale factor = 4. Original area = 10 cm²', N(10 * 4 ** 2, 'cm²')),
+        ('Length scale factor = 4. Original area = 10 cm²', N(10 * 4 ** 2, 'cm²')),
         ('Lengths in ratio 2:5. Area ratio', R(4, 25)),
-        ('Sides 3 cm and 9 cm. Area ratio', R(1, 9)),
+        ('Corresponding sides 3 cm and 9 cm. Area ratio', R(1, 9)),
         ('Length scale factor = ½. Area', N(F(1, 2) ** 2)),
         ('Length scale factor = ⅓. Area', N(F(1, 3) ** 2)),
         ('Lengths halved. Original area = 100 cm²', N(100 * F(1, 2) ** 2, 'cm²')),
         ('Scale factor = 1.5. Area', N(F(3, 2) ** 2)),
-        ('Scale factor = 0.5. Original area = 64 m²', N(64 * F(1, 2) ** 2, 'm²')),
+        ('Length scale factor = 0.5. Original area = 64 m²', N(64 * F(1, 2) ** 2, 'm²')),
     ],
     'T2': [
         ('Length scale factor = 2. Volume', N(2 ** 3)),
@@ -110,8 +112,8 @@ TARGETS = {
         ('Volume scale factor = 125. Linear', N(5)),
         ('Area ratio = 16:49. Length ratio', R(4, 7)),
         ('Volume ratio = 8:27. Length ratio', R(2, 3)),
-        ('Volume ratio = 8:27. Area ratio', R(4, 9)),
-        ('Area ratio = 9:25. Volume ratio', R(27, 125)),
+        ('Similar solids. Volume ratio = 8:27. Area ratio', R(4, 9)),
+        ('Similar solids. Area ratio = 9:25. Volume ratio', R(27, 125)),
     ],
     'T4': [
         ('A cube has side 5 cm, enlarged by SF 3. New volume', N(5 ** 3 * 3 ** 3, 'cm³')),
@@ -219,6 +221,10 @@ PLANTS = [
      "{sec:'Context',p:'Paint covers 10 m² per litre. A shape with surface area 10 m² is enlarged so its dimensions double. How many litres for the larger shape?',c:'4 litres',d:['2 litres','8 litres','1 litre'],s:['Surface area scales by k² = 2² = 4','New surface area = 10 × 4 = 40 m²','40 ÷ 10 = 4 litres'],mc:'Paint covers area, so it scales by k², not k.'}", "{sec:'Context',p:'Paint covers 10 m² per litre. If dimensions double, how many litres for the larger shape?',c:'4 litres per 10 m²',d:['2 litres','8 litres','1 litre'],s:['Surface area scales by k² = 4','4× more paint needed']}"),
     ('T1[8]', 'SR-4: two wrong options equal in value (4:10 = 2:5)',
      "c:'4:25',d:['2:5','8:125','4:5']", "c:'4:25',d:['2:5','8:125','4:10']"),
+    ('T1[7]', 's1-001: "Scale factor" with no "length" (40 cm² is then right)',
+     "p:'Length scale factor = 4. Original area", "p:'Scale factor = 4. Original area"),
+    ('T3[8]', 's1-003: a ratio item that does not say similar',
+     "p:'Similar solids. Volume ratio = 8:27. Area ratio", "p:'Volume ratio = 8:27. Area ratio"),
 ]
 
 

@@ -1,0 +1,65 @@
+# Findings register for graph-transformer (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: graph-transformer
+audited:
+  tranche: S1 (SWEEP-1 reading sweep)
+  head: d5b6868
+  date: 2026-10-13
+  served:
+    gcse: '25'
+    alevel: '25'
+findings:
+- id: graph-transformer-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: all
+  where: 'games/graph-transformer/index.html buildGhostSteps (Show steps)'
+  summary: 'A reflection was explained as "Squash vertically by a factor of 1, and reflect in the x-axis" (12 puzzles with a = -1) or "Stretch horizontally by a factor of 1, and reflect in the y-axis ... scales x by 1/-1" (b = -1): a factor-1 stretch is no transformation, and the GCSE level is translations and reflections. Fixed: "Reflect in the x-axis" / "Reflect in the y-axis" with their own why line; the verifier works out every caption from its target; plant'
+  evidence: 'GCSE "Reflect in x-axis" puzzles; A-Level :259/:260 "Reflect in y (decay curve)" (SWEEP-1, batch 7)'
+  status: open
+- id: graph-transformer-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: 'games/graph-transformer/index.html buildGhostSteps (vertical shift)'
+  summary: 'Downward shifts read "+ -3 raises every point by -3" (9 puzzles). Fixed: "− 3 lowers every point by 3"; checked; plant'
+  evidence: 'gcse "Translate down 3" (SWEEP-1, batch 7)'
+  status: open
+- id: graph-transformer-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: alevel
+  where: 'games/graph-transformer/index.html buildGhostSteps (horizontal stretch)'
+  summary: '"f(½x) scales x by 1/½". Fixed: the factor is printed (scales x by 2); checked'
+  evidence: 'A-Level "Stretch ×2 in x" (SWEEP-1, batch 7)'
+  status: open
+- id: graph-transformer-s1-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:text-contradicts-content
+  level: alevel
+  where: 'games/graph-transformer/index.html buildEquation (base 1/x)'
+  summary: 'A stretched 1/x was written 2\dfrac{1}{x}, which reads as the mixed number 2 1/x (the plain-text fallback printed "21/x"). Fixed: the factor goes into the fraction (2/x, 1/(2x), -2/(x-1)); the verifier fails a number written beside \dfrac for 1/x; plant'
+  evidence: 'A-Level :262 "Stretch ×2 in y" target y = 2\dfrac{1}{x} (SWEEP-1, batch 7)'
+  status: open
+- id: graph-transformer-s1-005
+  severity: LOW
+  jc: false
+  class: NEW:convention-unstated
+  level: all
+  where: 'games/graph-transformer/index.html:125-140 (start screen), :574-584'
+  summary: 'Par, and the rule that repeated presses of one shift button count as one move, are not explained anywhere a student sees'
+  evidence: 'HUD "Par"; three presses of "← Left 1" show Moves = 1 (SWEEP-1, batch 7)'
+  status: open
+- id: graph-transformer-s1-006
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: all
+  where: 'scripts/verify-graph-transformer.py'
+  summary: 'The verifier checked reachability, par and duplicate curves only, not the desc text, the displayed equations or the Show-steps captions (where s1-001 to s1-003 lived). The captions and 1/x equations are now checked; desc and the general equation display are not (Jon''s rule of 13 Oct 2026)'
+  evidence: 'desc shown on a match (:743) and a skip (:771); buildEquation (:480-528) (SWEEP-1, batch 7)'
+  status: open

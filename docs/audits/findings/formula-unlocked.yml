@@ -40,3 +40,57 @@ findings:
   evidence: 'B11 parser, F0 (7 Oct 2026): L = \dfrac{gT}{2\pi} = L = g\left(\dfrac{T}{2\pi}\right), exact (scripts/bank_common.py); ledger formula-unlocked::e2cccd4c65ca#1::B11::["L = \\dfrac{gT}{2\\pi}", "L = g\\left(\\dfrac{T}{2\\pi}\\right)"]'
   status: fixed
   pr: 116
+- id: formula-unlocked-s1-001
+  severity: LOW
+  jc: false
+  class: NEW:raw-tex-on-screen
+  level: gcse
+  where: 'games/formula-unlocked/index.html:463 (target line)'
+  summary: 'The target was written with textContent, so four items showed raw TeX: "Make \Delta T the subject" (Q_GCSE[16]), "\Delta L" (Q_LEVEL4[2]), "P_2" (Q_LEVEL4[7]), "R_1" (Q_LEVEL4[12]). Fixed: rendered with rkInline; the verifier reads the rendered line in Chromium; plant'
+  evidence: '"Make \Delta T the subject" (SWEEP-1, batch 7)'
+  status: open
+- id: formula-unlocked-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:raw-tex-on-screen
+  level: alevel
+  where: 'games/formula-unlocked/index.html:322 (Q_ALEVEL[1]), :399 (Q_LEVEL4[12]) hints'
+  summary: 'Two hints show raw TeX (braces, an underscore) through plain innerHTML; the maths is right'
+  evidence: '"Use the log law: ln a + bx = ln a + ln(e^{bx}) = ln(ae^{bx})"; "1/R₁ = 1/R_T − 1/R₂" (SWEEP-1, batch 7)'
+  status: open
+- id: formula-unlocked-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: gcse
+  where: 'games/formula-unlocked/index.html:246 (Q_GCSE[12])'
+  summary: '"The last distractor is a common error" points at an option by position, but the options are shuffled. Fixed: "Writing x = y/m − c is a common error"; the verifier fails any misconception that names an option by position; plant'
+  evidence: 'y = mx + c, make x the subject (SWEEP-1, batch 7)'
+  status: open
+- id: formula-unlocked-s1-004
+  severity: LOW
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: gcse
+  where: 'games/formula-unlocked/index.html:279 (Q_GCSE[20])'
+  summary: 'The misconception "you get 4π², not 2π²" names an option no one is offered: the distractor leaves 2π unsquared. Fixed: "(2π)² = 4π². Leaving it as 2π is the error."; pinned; plant'
+  evidence: 'distractors T²/(4π²g), gT/(2π), T²g/(2π) (SWEEP-1, batch 7)'
+  status: open
+- id: formula-unlocked-s1-005
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: all
+  where: 'games/formula-unlocked/index.html:459 ("Stage 2: Two Steps"), :143'
+  summary: 'Several "Two Steps" items are one step (Q_LEVEL4[3], [4], [6], [7]; Q_GCSE[16]), and some steps arrays are only the answer line (Q_LEVEL4[1] ends "σA = F", not with F as the subject), against "Every wrong answer shows the full worked solution"'
+  evidence: 'Q_LEVEL4[4] E = σ/ε as its only step (SWEEP-1, batch 7)'
+  status: open
+- id: formula-unlocked-s1-006
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: all
+  where: 'scripts/verify-formula-unlocked.py; index.html hints (useHint :484-497), misconception strings, ctx'
+  summary: 'The verifier recomputes keys, options and every steps line but not the hints (49 items, 2-4 each) or the ctx labels; misconceptions are now checked for position words and the pinned slip only (Jon''s rule of 13 Oct 2026)'
+  evidence: 'All hints read correct today (SWEEP-1, batch 7)'
+  status: open

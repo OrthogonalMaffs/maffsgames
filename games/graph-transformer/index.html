@@ -290,13 +290,16 @@ function buildGhostSteps(t){
     steps.push({state:{...next},title:title,what:what,why:why});
     cur={...next};
   };
+  // A factor of -1 is a reflection, not a stretch by a factor of 1 (graph-transformer-s1-001).
   if(Math.abs(t.b-1)>1e-9){
-    const squash=Math.abs(t.b)>1;
-    push({...cur,b:t.b},'Horizontal stretch',
-      squash?('Squash horizontally by a factor of '+fmt(1/Math.abs(t.b))):
-             ('Stretch horizontally by a factor of '+fmt(1/Math.abs(t.b)))
-      +(t.b<0?', and reflect in the y-axis':''),
-      'The '+fmt(t.b)+' sits inside the bracket, so it does the opposite of what it looks like \u2014 f('+fmt(t.b)+'x) scales x by 1/'+fmt(t.b)+'.');
+    const m=Math.abs(t.b);
+    if(Math.abs(m-1)<1e-9)
+      push({...cur,b:t.b},'Reflection','Reflect in the y-axis',
+        'The \u2212 sits inside the bracket: f(\u2212x) takes each point at x to \u2212x, so the curve flips across the y-axis.');
+    else
+      push({...cur,b:t.b},'Horizontal stretch',
+        (m>1?'Squash':'Stretch')+' horizontally by a factor of '+fmt(1/m)+(t.b<0?', and reflect in the y-axis':''),
+        'The '+fmt(t.b)+' sits inside the bracket, so it does the opposite of what it looks like \u2014 f('+fmt(t.b)+'x) scales x by '+fmt(1/m)+(t.b<0?' and flips it across the y-axis':'')+'.');
   }
   if(Math.abs(t.h)>1e-9){
     push({...cur,h:t.h},'Horizontal shift',
@@ -305,15 +308,19 @@ function buildGhostSteps(t){
            :'f(x + '+fmt(-t.h)+') moves the curve LEFT. Adding inside the bracket shifts the negative way.');
   }
   if(Math.abs(t.a-1)>1e-9){
-    push({...cur,a:t.a},'Vertical stretch',
-      (Math.abs(t.a)>1?'Stretch':'Squash')+' vertically by a factor of '+fmt(Math.abs(t.a))
-      +(t.a<0?', and reflect in the x-axis':''),
-      'This one is outside the function, so it behaves as you would expect \u2014 every y-value is multiplied by '+fmt(t.a)+'.');
+    const m=Math.abs(t.a);
+    if(Math.abs(m-1)<1e-9)
+      push({...cur,a:t.a},'Reflection','Reflect in the x-axis',
+        'The \u2212 is outside the function: every y-value is multiplied by \u22121, so the curve flips across the x-axis.');
+    else
+      push({...cur,a:t.a},'Vertical stretch',
+        (m>1?'Stretch':'Squash')+' vertically by a factor of '+fmt(m)+(t.a<0?', and reflect in the x-axis':''),
+        'This one is outside the function, so it behaves as you would expect \u2014 every y-value is multiplied by '+fmt(t.a)+'.');
   }
   if(Math.abs(t.k)>1e-9){
     push({...cur,k:t.k},'Vertical shift',
       'Move '+(t.k>0?'up':'down')+' '+fmt(Math.abs(t.k)),
-      'Also outside the function, so it also behaves normally \u2014 + '+fmt(t.k)+' raises every point by '+fmt(t.k)+'.');
+      'Also outside the function, so it also behaves normally \u2014 '+(t.k>0?'+ '+fmt(t.k)+' raises':'\u2212 '+fmt(-t.k)+' lowers')+' every point by '+fmt(Math.abs(t.k))+'.');
   }
   return steps;
 }
@@ -470,7 +477,7 @@ function renderEq(id,latex){
   }
   el.textContent=latex
     .replace(/\\tfrac\{1\}\{2\}/g,'\u00bd')
-    .replace(/\\dfrac\{1\}\{([^}]*)\}/g,'1/$1')
+    .replace(/\\dfrac\{([^}]*)\}\{([^}]*)\}/g,'$1/$2')
     .replace(/\\sqrt\{([^}]*)\}/g,'\u221a($1)')
     .replace(/\\sin/g,'sin')
     .replace(/\^2/g,'\u00b2').replace(/\^3/g,'\u00b3')
@@ -509,11 +516,23 @@ function buildEquation(base,st){
   else if(base==='x³')expr=inner==='x'?'x^3':grp+'^3';
   else if(base==='sin x')expr='\\sin('+arg+')';
   else if(base==='1/x')expr='\\dfrac{1}{'+arg+'}';
+  // For 1/x the factor a goes into the fraction: 2/x, never 2 written beside 1/x, which reads as the mixed
+  // number 2 1/x (graph-transformer-s1-004).
+  let aDone=false;
+  if(base==='1/x'&&st.a!==1){
+    const m=Math.abs(st.a),sg=st.a<0?'-':'';
+    const c=arg.match(/^(\d*\.?\d*)x$/);
+    if(Number.isInteger(m))expr=sg+'\\dfrac{'+m+'}{'+arg+'}';
+    else if(Number.isInteger(1/m))expr=sg+'\\dfrac{1}{'+(c?(1/m)*(c[1]===''?1:+c[1])+'x':(1/m)+'('+arg+')')+'}';
+    else expr=sg+'\\dfrac{'+m+'}{'+arg+'}';
+    aDone=true;
+  }
   else if(base==='√x')expr='\\sqrt{'+arg+'}';
   else if(base==='eˣ')expr='e^{'+arg+'}';
 
   // a factor
-  if(st.a===-1)expr='-'+expr;
+  if(aDone){}
+  else if(st.a===-1)expr='-'+expr;
   else if(st.a!==1){
     if(st.a===2)expr='2'+expr;
     else if(st.a===3)expr='3'+expr;

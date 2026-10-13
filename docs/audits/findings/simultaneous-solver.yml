@@ -1,0 +1,38 @@
+# Findings register for simultaneous-solver (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: simultaneous-solver
+audited:
+  tranche: S1 (SWEEP-1 reading sweep)
+  head: d5b6868
+  date: 2026-10-13
+  served:
+    gcse: 'stages 1-4: 48 each; stage 5: 40'
+    alevel: '50'
+findings:
+- id: simultaneous-solver-s1-001
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: alevel
+  where: 'games/simultaneous-solver/index.html:545 (a25)'
+  summary: 'The ask "Find the values of x (sum)" is garbled: it wants the sum of the two x values'
+  evidence: '"y = 2x + 1", "y = x^2 - 2x + 1" | "Find the values of x (sum)" key 4 (roots 0 and 4) (SWEEP-1, batch 7)'
+  status: open
+- id: simultaneous-solver-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: gcse
+  where: 'games/simultaneous-solver/index.html:1199-1200 (Stage 2 end of problem)'
+  summary: '"x is on its own: 7x = 14" reads as already solved to a struggling student; the other letter is eliminated, not x isolated'
+  evidence: '"<o> is on its own: <K><o> = <C>" (SWEEP-1, batch 7)'
+  status: open
+- id: simultaneous-solver-s1-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: all
+  where: 'scripts/verify-simultaneous-solver.py; games/simultaneous-solver/index.html:996-1015, :1078-1088, :1106-1109, :1131-1137, :1169-1172, :1182-1185, :1192-1207, :582-623'
+  summary: 'The verifier recomputes keys, marking and the step algebra but not most worked feedback: the substitution prompts, Stage 4''s letter-choice text, the wrong-multiplier feedback, the add/subtract reason, the Solve working, the w1/w2 working, the end-of-problem summaries ("Check in (k)") and Stage 5''s why lines. All read correct by a port of the algebra; nothing would catch a future slip (Jon''s rule of 13 Oct 2026)'
+  evidence: 'Checked today: only the "Neatest:" note, the doubled-letter line and one Stage 2 term-by-term working (SWEEP-1, batch 7)'
+  status: open

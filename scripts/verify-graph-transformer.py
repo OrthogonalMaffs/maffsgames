@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Graph Transformer (BFS reachability + par verification) |
+# ci-line: Graph Transformer (BFS reachability + par verification; every Show-steps caption and 1/x equation checked) |
 """Verifies every Graph Transformer puzzle is solvable with its tier's buttons and
 correctly parred (docs/snagging-list.md snag #7's par-verification pass, promoted
 to CI so an unsolvable or misparred puzzle cannot ship again).
@@ -50,6 +50,7 @@ import argparse
 import asyncio
 import copy
 import os
+import re
 import sys
 import time
 from urllib.parse import urlsplit
@@ -85,6 +86,69 @@ async def run_bfs_on(page, lvl, puzzles):
     return await page.evaluate("(a) => window.GT_VERIFY.bfsCheck(a.l, a.p)", {"l": lvl, "p": puzzles})
 
 
+# SWEEP-1 (13 Oct 2026): what "Show steps" says for each target, and how a 1/x equation is written.
+TEXT_JS = """(l) => window.GT_VERIFY.allPuzzles(l).map(p => ({desc: p.desc, base: p.base, t: p.target,
+  steps: buildGhostSteps(p.target).map(s => ({title: s.title, what: s.what, why: s.why})),
+  eq: buildEquation(p.base, p.target)}))"""
+
+
+def gt_fmt(n):
+    if abs(n - 0.5) < 1e-9:
+        return '\u00bd'
+    if abs(n + 0.5) < 1e-9:
+        return '-\u00bd'
+    v = round(n * 1000) / 1000
+    return str(int(v)) if v == int(v) else str(v)
+
+
+def text_fails(lvl, items):
+    """[fail] for a caption that does not say what its target does, or a 1/x equation that reads as a mixed number.
+    Each caption's main line is worked out here from the target: a factor of -1 is a reflection (never "a factor
+    of 1", graph-transformer-s1-001); a downward shift lowers (s1-002); the inside factor is printed as the number
+    it scales x by (s1-003)."""
+    out = []
+    for i, it in enumerate(items):
+        t, tag = it['t'], '%s #%d (%s)' % (lvl, i + 1, it['desc'])
+        want = []
+        if abs(t['b'] - 1) > 1e-9:
+            m = abs(t['b'])
+            want.append('Reflect in the y-axis' if abs(m - 1) < 1e-9 else
+                        ('Squash' if m > 1 else 'Stretch') + ' horizontally by a factor of ' + gt_fmt(1 / m) +
+                        (', and reflect in the y-axis' if t['b'] < 0 else ''))
+        if abs(t['h']) > 1e-9:
+            want.append('Move ' + ('right' if t['h'] > 0 else 'left') + ' ' + gt_fmt(abs(t['h'])))
+        if abs(t['a'] - 1) > 1e-9:
+            m = abs(t['a'])
+            want.append('Reflect in the x-axis' if abs(m - 1) < 1e-9 else
+                        ('Stretch' if m > 1 else 'Squash') + ' vertically by a factor of ' + gt_fmt(m) +
+                        (', and reflect in the x-axis' if t['a'] < 0 else ''))
+        if abs(t['k']) > 1e-9:
+            want.append('Move ' + ('up' if t['k'] > 0 else 'down') + ' ' + gt_fmt(abs(t['k'])))
+        got = [st['what'] for st in it['steps']]
+        if got != want:
+            out.append('%s: Show steps says %s; the target does %s' % (tag, got, want))
+        for st in it['steps']:
+            bad = re.search(r'factor of 1(?![\d.])|(raises|lowers) every point by -|1/\u00bd|1/-', st['what'] + ' ' + st['why'])
+            if bad:
+                out.append('%s: the step "%s" says "%s" (%s)' % (tag, st['title'], bad.group(0), st['why']))
+        if it['base'] == '1/x' and re.search(r'(\d|\\tfrac\{1\}\{\d+\})\\dfrac', it['eq']):
+            out.append('%s: %s reads as a mixed number; the factor belongs in the fraction (s1-004)' % (tag, it['eq']))
+    return out
+
+
+# The old caption and equation code, planted back in the page (each must fail).
+OLD_TEXT_PLANTS = [
+    ('a reflection captioned as a stretch by a factor of 1',
+     "buildGhostSteps = (function (orig) { return function (t) { return orig(t).map(s => s.what === 'Reflect in the x-axis'"
+     " ? Object.assign({}, s, {what: 'Squash vertically by a factor of 1, and reflect in the x-axis'}) : s); }; })(buildGhostSteps);"),
+    ('a downward shift that "raises every point by -3"',
+     "buildGhostSteps = (function (orig) { return function (t) { return orig(t).map(s => s.title === 'Vertical shift' && t.k < 0"
+     " ? Object.assign({}, s, {why: '+ ' + t.k + ' raises every point by ' + t.k + '.'}) : s); }; })(buildGhostSteps);"),
+    ('2 written beside 1/x',
+     "buildEquation = (function (orig) { return function (b, st) { return b === '1/x' && st.a === 2 ? 'y = 2\\\\dfrac{1}{x}' : orig(b, st); }; })(buildEquation);"),
+]
+
+
 async def run_selftest(page, all_puzzles):
     """Mutate one puzzle's amplitude to 3 (unreachable) and another's par by +1
     (mismatch), via bfsCheck's puzzlesOverride. The real bank is never touched."""
@@ -109,6 +173,16 @@ async def run_selftest(page, all_puzzles):
     lines.append("  par +1 on %-46s %s" %
                  (par_item["desc"], "CAUGHT (par mismatch)" if caught2 else "*** MISSED ***"))
 
+    for name, js in OLD_TEXT_PLANTS:
+        await page.evaluate("() => { window.__gt_saved = [buildGhostSteps, buildEquation]; }")
+        await page.evaluate("() => { " + js + " }")
+        caught = False
+        for lv in LEVELS:
+            caught = caught or bool(text_fails(lv, await page.evaluate(TEXT_JS, lv)))
+        await page.evaluate("() => { buildGhostSteps = window.__gt_saved[0]; buildEquation = window.__gt_saved[1]; }")
+        ok = ok and caught
+        lines.append("  %-56s %s" % (name, "CAUGHT" if caught else "*** MISSED ***"))
+
     return ok, lines
 
 
@@ -131,6 +205,8 @@ async def run_all(no_selftest):
             all_puzzles[lvl] = await page.evaluate("(l) => window.GT_VERIFY.allPuzzles(l)", lvl)
             dup_pairs[lvl] = await page.evaluate(
                 "(l) => window.GT_VERIFY.curveDupPairs(window.GT_VERIFY.allPuzzles(l))", lvl)
+            for f in text_fails(lvl, await page.evaluate(TEXT_JS, lvl)):
+                fail(f)
 
         selftest_ok, selftest_lines = True, []
         if not no_selftest:
