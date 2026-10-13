@@ -268,6 +268,11 @@ SWEEP_JS = r"""(plan) => {
     const off = p.keys.slice(); off[0] = (Number(off[0]) + unit).toFixed(p.dp || (String(off[0]).split('.')[1] || '').length);
     tries.push([off, 'wrong']);
     if (p.dp) { const ex = p.keys.slice(); ex[0] = Number(p.exact[0]).toFixed(p.dp + 3); tries.push([ex, 'unmarked']); }
+    // a direction vector is any non-zero multiple of the key (SWEEP-1, component-crusher-s1-001; SR-24)
+    if (/direction vector/i.test(all[p.sid][1].sqs[p.i].prompt)) {
+      tries.push([p.keys.map(x => String(-Number(x))), 'correct']);
+      tries.push([p.keys.map(x => String(2 * Number(x))), 'correct']);
+    }
     for (const [vals, want] of tries) {
       open(p.sid, p.i);
       for (let j = 0; j < n; j++) document.getElementById('v' + j).value = String(vals[j]);
@@ -307,6 +312,7 @@ def check_page(fails, html):
             page.wait_for_function('typeof SCENARIOS === "object" && typeof loadScenario === "function"', timeout=8000)
             scen = page.evaluate('() => SCENARIOS')
             plan = check_bank(fails, scen)
+            fails.extend(convention_fails(scen))
             res = page.evaluate(SWEEP_JS, plan)
             browser.close()
     finally:
@@ -380,9 +386,32 @@ def check_drawing(fails, q, d):
                 fails.append('%s: the arrow %r ends between grid lines' % (sid, v['label']))
 
 
+def convention_fails(scen):
+    """SR-17 (SWEEP-1, component-crusher-s1-002, s1-003): a bearing needs i east and j north; "vertical" needs the
+    axis that is vertical. Each is stated in the scenario or the sub-question that uses it."""
+    out = []
+    for lv in ('gcse', 'alevel', 'level4'):
+        for q in scen[lv]:
+            for i, sq in enumerate(q['sqs']):
+                text = q.get('desc', '') + ' ' + sq.get('prompt', '')
+                said = text + ' ' + ' '.join(q['sqs'][j].get('prompt', '') for j in range(i))
+                if re.search(r'find the bearing', sq.get('prompt', ''), re.I) and sq.get('type') == 'num' and not (
+                        re.search(r'east', said) and re.search(r'north', said)):
+                    out.append('%s.%d: a bearing with i and j not given as east and north (SR-17): %r' % (q['id'], i + 1, sq['prompt']))
+                if sq.get('type') == 'mcq' and re.search(r'vertical', sq.get('correct', ''), re.I) and not re.search(
+                        r'vertical', text.replace(sq.get('correct', ''), '')):
+                    out.append('%s.%d: the key says "vertical" but nothing says which axis is vertical (SR-17)' % (q['id'], i + 1))
+    return out
+
+
 PLANTS = [
     ('AL11', 't4-002: the bearing keyed 143.1', "answer:126.9,dp:1}", "answer:143.1,dp:1}"),
     ('L2', 't4-001: a Level 4 scenario with its given removed', "   given:{a:[2,1,-2],b:[3,-2,1]},\n", ""),
+    ('AL11', 's1-003: the bearing with no compass directions',
+     "Taking \\\\(\\\\mathbf{i}\\\\) due east and \\\\(\\\\mathbf{j}\\\\) due north, find the bearing", "Find the bearing"),
+    ('L11', 's1-002: "vertical" with no vertical axis', "Taking \\\\(\\\\mathbf{k}\\\\) as vertically upwards, what", "What"),
+    ('L9', 's1-001: the direction vector marked against one multiple only',
+     "labels:['i','j','k'],anyMultiple:true}", "labels:['i','j','k']}"),
     ('AL2', 't4-004: the true option "C is on the perpendicular bisector"',
      "'C divides AB in the ratio 1 : 2'", "'C is on the perpendicular bisector'"),
 ]

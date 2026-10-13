@@ -1,0 +1,94 @@
+# Findings register for chart-interrogator (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: chart-interrogator
+audited:
+  tranche: S1 (SWEEP-1 reading sweep)
+  head: 93cf8dd
+  date: 2026-10-13
+  served:
+    gcse: '10 scenarios'
+    alevel: '10 scenarios'
+    core: '12 scenarios'
+    l4: '8 scenarios'
+findings:
+- id: chart-interrogator-s1-001
+  severity: MEDIUM
+  jc: true
+  class: NEW:marking-tolerance
+  level: all
+  where: games/chart-interrogator/index.html:756-757 (histogram Phase 1)
+  summary: 'The histogram frequency and total are marked to ±1 whatever the axis, not to a band read from the scale
+    (canon §7.1.2, as the box plot and cumulative frequency readings are); where the density falls between gridlines
+    (H9 needs it to ±0.0025) a fair reading can miss. A wrong reading gets "Check your reading" and a retry, no mark
+    lost. The band per histogram is a marking change, for Jon'
+  evidence: "{text:'Calculate the frequency for the ...',expected:Math.round(askInterval.freq),tolerance:1} (SWEEP-1,
+    batch 8)"
+  status: open
+- id: chart-interrogator-s1-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:text-contradicts-content
+  level: alevel
+  where: games/chart-interrogator/index.html drawHistogram (H5)
+  summary: 'A class boundary off the axis grid had no label: H5''s lowest boundary, 16, sat between gridlines (the
+    first label 20), so its class width could not be read off the axis (SR-25). Fixed: every class boundary off the
+    grid is labelled; the verifier draws every histogram and fails an unlabelled boundary, and plants the old axis'
+  evidence: 'H5 classes from 16; x labels at multiples of 10 only (SWEEP-1, batch 8)'
+  status: fixed
+  pr: 348
+- id: chart-interrogator-s1-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:option-count
+  level: all
+  where: games/chart-interrogator/index.html:753-755 (histogram Q1)
+  summary: '"Which class interval has the highest frequency?" picked its options by position (first, last, third),
+    which coincided with the key on six of the ten histograms, leaving three options (SR-4). Fixed: four options, the
+    named errors first (the tallest bar, density read as frequency; the widest class), then other classes; the
+    verifier fails fewer than four, and plants the old options'
+  evidence: "options:shuffleArr([maxFreqInterval.interval,freqs[0].interval,freqs[freqs.length-1].interval,
+    freqs[Math.min(2,freqs.length-1)].interval].filter(unique)) (SWEEP-1, batch 8)"
+  status: fixed
+  pr: 348
+- id: chart-interrogator-s1-004
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: games/chart-interrogator/index.html:478-492 (stem and leaf)
+  summary: 'Stem-and-leaf items with two-digit leaves write a leaf of 0 as "0", not "00", and two-digit stems print as
+    "01", "02", unlike the key''s format'
+  evidence: "getLeaf returns (val%div).toString(); stemLabel '0'+st (SWEEP-1, batch 8)"
+  status: open
+- id: chart-interrogator-s1-005
+  severity: LOW
+  jc: true
+  class: NEW:marking-tolerance
+  level: all
+  where: games/chart-interrogator/index.html cfCurve (CF5, CF6)
+  summary: 'The cumulative frequency curve is drawn in S-shaped steps, so a reading from a polygon joined by straight
+    lines (also taught) can fall outside the band on CF5 and CF6. Which drawing to mark against is for Jon'
+  evidence: 'CF5 median band ±1.047 after the cap (verifier output) (SWEEP-1, batch 8)'
+  status: open
+- id: chart-interrogator-s1-006
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: games/chart-interrogator/index.html:758
+  summary: '"Estimate the proportion ... in the range 50–60" uses "range" for a class, a word the game also uses for
+    the statistic; and since the range is a whole class, the proportion is exact (frequency over total), not an
+    estimate. It states no precision, so it is outside Jon''s Estimate ruling (check g); rewording is a stem change'
+  evidence: "'Estimate the proportion of '+s.contextPlural+' in the range '+propInterval.interval (SWEEP-1, batch 8)"
+  status: open
+- id: chart-interrogator-s1-007
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: all
+  where: scripts/verify-chart-interrogator.py
+  summary: 'Histogram Phase 1 was not built by the verifier (now drawn and read, s1-002, s1-003), and it does not check
+    the Phase 2 comparison and cumulative frequency keys, the "why" figures, the model answers or the rounding shown.
+    The game shows no worked steps. Recorded under Jon''s rule of 13 Oct 2026'
+  evidence: 'BUILD covered box plot, stem and leaf and cumulative frequency only before this PR (SWEEP-1, batch 8)'
+  status: open

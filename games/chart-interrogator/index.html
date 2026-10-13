@@ -660,6 +660,12 @@ function drawHistogram(container){
     ctx.fillText(gx.toString(),xc(gx),pb+18);
   }
 
+  // Every class boundary is labelled too, so each class width can be read off the axis (chart-interrogator-s1-002:
+  // H5's first boundary, 16, sat between gridlines with no label).
+  data.map(function(d){return d.lo;}).concat([xMax]).forEach(function(b){
+    if(Math.abs(b/xStep-Math.round(b/xStep))>1e-9)ctx.fillText(b.toString(),xc(b),pb+18);
+  });
+
   var yStep=niceStep(0,maxFD,5);
   ctx.textAlign='right';
   for(var gy=0;gy<=maxFD*1.1;gy+=yStep){
@@ -742,8 +748,11 @@ function buildPhase1Questions(){
     var proportion=Math.round(propInterval.freq/totalFreq*100);
 
     phase1Questions=[
+      // Four options, the named errors first: the tallest bar (density read as frequency) and the widest class, then
+      // other classes to make four (chart-interrogator-s1-003: picked by position, one fell away on six histograms).
       {text:'Which class interval has the highest frequency?',expected:maxFreqInterval.interval,key:'maxInterval',type:'mc',
-       options:shuffleArr([maxFreqInterval.interval,freqs[0].interval,freqs[freqs.length-1].interval,freqs[Math.min(2,freqs.length-1)].interval].filter(unique))},
+       options:shuffleArr([maxFreqInterval,freqs.reduce(function(a,b){return a.fd>b.fd?a:b;}),freqs.reduce(function(a,b){return a.width>b.width?a:b;})]
+         .concat(freqs).map(function(f){return f.interval;}).filter(unique).slice(0,4))},
       {text:'Calculate the frequency for the '+askInterval.interval+' class interval.',expected:Math.round(askInterval.freq),tolerance:1,key:'askFreq',type:'number',hint:'Frequency = frequency density \u00d7 class width'},
       {text:'How many '+s.contextPlural+' are in the sample altogether?',expected:Math.round(totalFreq),tolerance:1,key:'total',type:'number'},
       {text:'Estimate the proportion of '+s.contextPlural+' in the range '+propInterval.interval+'.',expected:proportion,tolerance:2,key:'proportion',type:'number',suffix:'%'}

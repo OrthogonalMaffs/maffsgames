@@ -111,3 +111,50 @@ findings:
     three as expected and the run fails on any other'
   status: fixed
   pr: 310
+- id: formula-forge-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation
+  level: gcse, level4
+  where: games/formula-forge/index.html:278 (A = πr², make r the subject)
+  summary: 'The misconception said "Divide by π first, THEN square root. Not the other way around.", which is false:
+    rooting first is valid if the root of π follows (r = √A/√π); the slip is dividing by π after the root. Fixed:
+    "Divide by π, then square root. If you square root first, divide by √π, not π: √A/π is wrong."; the verifier
+    forbids the old claim and plants it'
+  evidence: "misconception:'Divide by π first, THEN square root. Not the other way around.' (SWEEP-1, batch 8)"
+  status: fixed
+  pr: 348
+- id: formula-forge-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:wrong-explanation
+  level: gcse, level4
+  where: games/formula-forge/index.html:233
+  summary: '"Always isolate the term with your subject first, THEN deal with coefficients." is contradicted by the
+    game''s own hint at :248-250, which divides first. Fixed: "Isolate the term with your subject first, then deal with
+    its coefficient."; in the verifier''s forbidden list'
+  evidence: "misconception:'Always isolate the term with your subject first, THEN deal with coefficients.' (SWEEP-1,
+    batch 8)"
+  status: fixed
+  pr: 348
+- id: formula-forge-s1-003
+  severity: LOW
+  jc: true
+  class: NEW:unstated-convention
+  level: gcse, level4
+  where: games/formula-forge/index.html:303, :315, :358
+  summary: 'Rearrangements that divide by an expression do not state it is non-zero: y ≠ 1 (:303), u ≠ f (:315), R₂ ≠
+    R_T (:358); the same class as t4-006 (a ≠ c). Stating them is a stem change, for Jon'
+  evidence: 'The keys divide by (1 − y), (u − f) and (R_T − R₂) (SWEEP-1, batch 8)'
+  status: open
+- id: formula-forge-s1-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: all
+  where: scripts/verify-formula-forge.py
+  summary: 'The verifier checks keys and steps but not the first hint (45 items), the prose parts of the second hint
+    or the misconception lines, except the two claims fixed here (s1-001, s1-002), nor the formulas in the contexts.
+    Recorded under Jon''s rule of 13 Oct 2026'
+  evidence: 'check_item() reads hint1 and misconception only through MISC_FORBIDS (SWEEP-1, batch 8)'
+  status: open

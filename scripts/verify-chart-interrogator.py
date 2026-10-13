@@ -175,7 +175,41 @@ def hist_truth(s):
     return cls, modal, most, named, fds[0] == fds[1], freqs[0] == freqs[1]
 
 
+# SWEEP-1 (chart-interrogator-s1-002, s1-003): each histogram's drawn labels name every class boundary, and its
+# "highest frequency" question offers four different classes, the tallest bar among them where it is not the key.
+HIST_SWEEP = """() => {
+  const out = [];
+  const C = CanvasRenderingContext2D.prototype, f = C.fillText;
+  for (const s of HISTOGRAMS) {
+    const texts = []; C.fillText = function (t, ...a) { texts.push(String(t)); return f.call(this, t, ...a); };
+    currentScenario = s; selectedType = 'histogram'; selectedLevel = s.level; sessionAnswers = {};
+    const d = document.createElement('div'); drawHistogram(d); C.fillText = f;
+    buildPhase1Questions();
+    const q1 = phase1Questions.find(q => q.key === 'maxInterval');
+    out.push({id: s.id, texts, bounds: s.data.map(x => x.lo).concat([s.data[s.data.length - 1].hi]), options: q1.options,
+              key: q1.expected, tallest: s.data.reduce((a, b) => a.fd > b.fd ? a : b)});
+  }
+  return out;
+}"""
+
+
+def hist_sweep_fails(page):
+    out = []
+    for h in page.evaluate(HIST_SWEEP):
+        for b in h['bounds']:
+            if ('%g' % b) not in h['texts']:
+                out.append('%s: the class boundary %g is not labelled on the x-axis (chart-interrogator-s1-002)' % (h['id'], b))
+        opts = h['options']
+        tallest = '%g\u2013%g' % (h['tallest']['lo'], h['tallest']['hi'])
+        if len(opts) != 4 or len(set(opts)) != 4:
+            out.append('%s: "highest frequency" offers %d options %s, not four different classes (SR-4)' % (h['id'], len(opts), opts))
+        if tallest != h['key'] and tallest not in opts:
+            out.append('%s: the tallest bar %s, the named error, is not offered (SR-4)' % (h['id'], tallest))
+    return out
+
+
 def check_histograms(page, data, fails):
+    fails.extend(hist_sweep_fails(page))
     checks, split, report = 0, {"Yes": 0, "No": 0}, []
     game = {g["id"]: g for g in page.evaluate(HIST_ALL)}
     marked = {m["id"]: m["results"] for m in page.evaluate(HIST_MARK)}
@@ -438,6 +472,9 @@ def run(browser, base, mutate=None):
 # Each must make the check FAIL. (description, text in the game, replacement)
 FAULTS = [
     ("box-plot band uncapped", "return Math.min(band,gap/2*(1-1e-9));", "return band;"),
+    ("s1-002: the class boundaries not labelled", "if(Math.abs(b/xStep-Math.round(b/xStep))>1e-9)ctx.fillText(", "if(false)ctx.fillText("),
+    ("s1-003: options by position (three on six histograms)",
+     ".concat(freqs).map(function(f){return f.interval;}).filter(unique).slice(0,4))},", ".map(function(f){return f.interval;}).filter(unique))},"),
     ("cumulative-frequency median uncapped", "median:capTol(xTol,median,[q1,q3,n/2])", "median:xTol"),
     ("stem and leaf to the nearest half unit", "var slTol=(s.decimal?0.1:1)*1e-9;", "var slTol=(s.decimal?0.1:1)*0.5;"),
     ("a histogram class of 22.5 observations (todo 1.15)", "{lo:35,hi:40,fd:4.6}", "{lo:35,hi:40,fd:4.5}"),

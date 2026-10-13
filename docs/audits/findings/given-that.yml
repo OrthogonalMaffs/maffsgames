@@ -81,3 +81,49 @@ findings:
     s.f.; verify-given-that.py types every key as a fraction (lowest terms and unreduced) and plants r-004 back.'
   status: fixed
   pr: 123
+- id: given-that-s1-001
+  severity: LOW
+  jc: false
+  class: NEW:wrong-explanation
+  level: alevel
+  where: games/given-that/index.html:363 (alevel_10), :360 (alevel_07)
+  summary: 'Two explanations misstated the figures: alevel_10 said "Nearly half the flagged scripts are false
+    positives" (47 of 92, just over half); alevel_07 said "arriving late triples the risk" (3/10 against on-time days''
+    10/200 is six times; three times is against the overall rate). Fixed: "Just over half (47 of 92)" and "three times
+    the overall rate"; the verifier forbids both claims and plants the first'
+  evidence: 'alevel_10 tree: honest flagged 47, cheated flagged 45; alevel_07 table: late 15/50, on time 10/200
+    (SWEEP-1, batch 8)'
+  status: fixed
+  pr: 348
+- id: given-that-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: core
+  where: games/given-that/index.html core_12
+  summary: 'The tree is titled "20,000 alarm events in office buildings (1 year)", but most of its 20,000 branches are
+    no alarm (17,912), so they are not alarm events. A new title is a context change, for Jon'
+  evidence: 'title "20,000 alarm events ..."; leaves: alarm sounds 98 + 1,990 = 2,088, no alarm 2 + 17,910 = 17,912
+    (SWEEP-1, batch 8)'
+  status: open
+- id: given-that-s1-003
+  severity: LOW
+  jc: true
+  class: NEW:wording
+  level: alevel
+  where: games/given-that/index.html alevel_02, alevel_04, alevel_19
+  summary: 'The second phase asks a number and a yes/no ("Find P(A|B). Are A and B independent?") with one number box,
+    so the independence half is never answered. A stem change, for Jon'
+  evidence: '"Find P(STEM | male). Is choosing STEM independent of gender?" (SWEEP-1, batch 8)'
+  status: open
+- id: given-that-s1-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: all
+  where: scripts/verify-given-that.py
+  summary: 'The worked answers are checked only where they show one a/b fraction; ten items with none (alevel_08, 10,
+    23; core_02, 04, 06, 08, 10, 12; l4_15) and the counts, percentages, comparisons and independence conclusions in
+    explanations are not. Recorded under Jon''s rule of 13 Oct 2026'
+  evidence: 'check_bank() reads one fraction per answerDisplay; EXPLAIN_FORBIDS covers two claims (SWEEP-1, batch 8)'
+  status: open
