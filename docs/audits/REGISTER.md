@@ -9,7 +9,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | met: 0 of 96 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 7 open (0 CRITICAL, 7 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 4 open (0 CRITICAL, 4 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, SR-14 fields |
 | 4 | Every level serves 40+ (tracked, not part of the gate: canon §0.2, Jon 12 Oct 2026) | not met, not gating: 126 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | met: 0 in the roster's Unlisted section |
@@ -17,53 +17,53 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-1103 findings in 97 games.
+984 findings in 97 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
-| HIGH | 14 | 223 | 0 | 237 |
-| MEDIUM | 247 | 249 | 3 | 499 |
-| LOW | 236 | 95 | 1 | 332 |
-| **All** | 498 | 601 | 4 | 1103 |
+| HIGH | 11 | 223 | 0 | 234 |
+| MEDIUM | 216 | 249 | 3 | 468 |
+| LOW | 153 | 93 | 1 | 247 |
+| **All** | 381 | 599 | 4 | 984 |
 
 ### By class
 
 | Class | open | total |
 |---|---|---|
-| NEW:wording | 115 | 128 |
 | 2 | 12 | 111 |
-| NEW:text-contradicts-content | 65 | 90 |
 | 3 | 5 | 86 |
-| NEW:convention-unstated | 36 | 78 |
-| NEW:wrong-explanation-text | 26 | 71 |
+| NEW:wording | 60 | 72 |
+| NEW:convention-unstated | 28 | 70 |
+| NEW:text-contradicts-content | 43 | 68 |
+| NEW:wrong-explanation-text | 15 | 60 |
 | 6 | 24 | 56 |
-| NEW:true-wrong-option | 16 | 50 |
 | NEW:verifier-gap | 49 | 49 |
+| NEW:true-wrong-option | 12 | 46 |
 | 1 | 5 | 37 |
 | 5 | 27 | 27 |
 | 4 | 5 | 22 |
 | NEW:unstated-convention | 5 | 17 |
 | 7 | 5 | 16 |
 | NEW:precision-not-stated | 3 | 16 |
-| NEW:sr14-content | 10 | 15 |
 | NEW:value-equal distractors | 0 | 14 |
 | 8 | 3 | 11 |
-| NEW:marking-tolerance | 2 | 11 |
+| NEW:marking-tolerance | 3 | 11 |
 | NEW:raw-tex-on-screen | 5 | 11 |
-| NEW:degenerate-item | 9 | 9 |
 | NEW:equal-value-options | 0 | 9 |
+| NEW:sr14-content | 4 | 9 |
 | NEW:timer-policy | 7 | 9 |
+| NEW:degenerate-item | 8 | 8 |
 | NEW:hand-typed explanation figure | 4 | 8 |
-| NEW:second-correct-answer | 4 | 8 |
-| NEW:hint-gives-answer | 6 | 7 |
 | NEW:wrong-explanation | 1 | 7 |
 | NEW:ill-posed wording | 1 | 6 |
 | 11 | 0 | 5 |
 | NEW:board-mixes-session-lengths | 5 | 5 |
 | NEW:marking-by-structure | 0 | 5 |
 | NEW:phone-layout | 4 | 5 |
+| NEW:second-correct-answer | 1 | 5 |
 | B7 (ledgered) | 3 | 4 |
+| NEW:hint-gives-answer | 3 | 4 |
 | NEW:level-content-mismatch | 3 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
 | 9 | 1 | 3 |
@@ -76,18 +76,14 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:analytics | 0 | 2 |
 | NEW:board-key-mismatch | 2 | 2 |
 | NEW:cosmetic | 1 | 2 |
-| NEW:docs | 2 | 2 |
 | NEW:double-finish | 0 | 2 |
 | NEW:hidden-data | 0 | 2 |
 | NEW:prose-through-katex | 2 | 2 |
 | NEW:unmarkable free text | 0 | 2 |
-| NEW:wrong-key | 1 | 2 |
-| wording | 2 | 2 |
 | 10 | 0 | 1 |
 | NEW:a11y state | 0 | 1 |
 | NEW:ambiguous-notation | 0 | 1 |
 | NEW:answer-reveal-invisible | 1 | 1 |
-| NEW:calculator-tag | 1 | 1 |
 | NEW:data-not-shown | 0 | 1 |
 | NEW:duplicate-item | 1 | 1 |
 | NEW:estimation-not-by-stated-method | 0 | 1 |
@@ -133,120 +129,117 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:wrong hint | 0 | 1 |
 | NEW:wrong statement in key | 0 | 1 |
 | NEW:wrong text | 0 | 1 |
+| NEW:wrong-key | 0 | 1 |
 | verifier-gap | 1 | 1 |
+| wording | 1 | 1 |
 
 ### By game
 
 | Game | Listed | Verifier | C | H | M | L | open | fixed | ruled |
 |---|---|---|---|---|---|---|---|---|---|
-| `52dle` | yes | verify-52dle.py | 0 | 1 | 5 | 6 | 11 | 1 | 0 |
+| `52dle` | yes | verify-52dle.py | 0 | 1 | 5 | 1 | 6 | 1 | 0 |
 | `angle-ace` | yes | verify-angle-ace.py | 0 | 6 | 7 | 2 | 2 | 13 | 0 |
-| `bearing-blitz` | yes | verify-bearing-blitz.py | 0 | 0 | 3 | 2 | 5 | 0 | 0 |
-| `better-value` | yes | verify-better-value.py | 0 | 5 | 9 | 4 | 8 | 10 | 0 |
+| `bearing-blitz` | yes | verify-bearing-blitz.py | 0 | 0 | 2 | 2 | 4 | 0 | 0 |
+| `better-value` | yes | verify-better-value.py | 0 | 5 | 9 | 2 | 6 | 10 | 0 |
 | `binomial-blaster` | yes | verify-binomial-blaster.py | 2 | 16 | 6 | 4 | 4 | 24 | 0 |
-| `boolean-blitz` | yes | verify-boolean-blitz.py | 0 | 3 | 3 | 8 | 8 | 6 | 0 |
+| `boolean-blitz` | yes | verify-boolean-blitz.py | 0 | 3 | 3 | 7 | 7 | 6 | 0 |
 | `characteristic-quest` | yes | verify-characteristic-quest.py | 0 | 1 | 4 | 5 | 6 | 4 | 0 |
-| `chart-interrogator` | yes | verify-chart-interrogator.py | 0 | 0 | 4 | 4 | 6 | 2 | 0 |
-| `circle-theorem-spotter` | yes | verify-circle-theorem-spotter.py | 1 | 0 | 3 | 6 | 8 | 2 | 0 |
+| `chart-interrogator` | yes | verify-chart-interrogator.py | 0 | 0 | 4 | 3 | 5 | 2 | 0 |
+| `circle-theorem-spotter` | yes | verify-circle-theorem-spotter.py | 1 | 0 | 3 | 5 | 7 | 2 | 0 |
 | `complex-converter` | yes | verify-complex-converter.py | 0 | 1 | 9 | 2 | 5 | 7 | 0 |
 | `component-crusher` | yes | verify-component-crusher.py | 1 | 7 | 9 | 1 | 3 | 15 | 0 |
 | `constructions-lab` | yes | verify-constructions-lab.py | 0 | 0 | 4 | 3 | 7 | 0 | 0 |
 | `coordinate-geometry-dash` | yes | verify-coordinate-geometry-dash.py | 0 | 1 | 6 | 2 | 6 | 3 | 0 |
-| `core-maths-paper1` | yes | verify-core-maths-paper1.py | 0 | 4 | 8 | 4 | 2 | 14 | 0 |
-| `core-maths-paper2a` | yes | verify-core-maths-paper2a.py | 1 | 1 | 4 | 5 | 7 | 4 | 0 |
+| `core-maths-paper1` | yes | verify-core-maths-paper1.py | 0 | 4 | 8 | 3 | 2 | 13 | 0 |
+| `core-maths-paper2a` | yes | verify-core-maths-paper2a.py | 1 | 1 | 4 | 1 | 3 | 4 | 0 |
 | `core-maths-paper2b` | yes | verify-core-maths-paper2b.py | 0 | 1 | 3 | 3 | 3 | 4 | 0 |
 | `core-maths-paper2c` | yes | verify-core-maths-paper2c.py | 0 | 3 | 8 | 3 | 7 | 7 | 0 |
 | `correlation-or-coincidence` | yes | verify-correlation-or-coincidence.py | 2 | 0 | 4 | 3 | 5 | 4 | 0 |
 | `curling-friction` | yes | verify-curling-friction.py | 0 | 3 | 5 | 7 | 2 | 13 | 0 |
 | `decimal-detective` | yes | verify-decimal-detective.py | 0 | 2 | 2 | 0 | 0 | 4 | 0 |
 | `differentiation-duel` | yes | verify-differentiation-duel.py | 0 | 2 | 11 | 3 | 2 | 14 | 0 |
-| `dimension-checker` | yes | verify-dimension-checker.py | 0 | 3 | 6 | 4 | 5 | 8 | 0 |
-| `distinctly-average` | yes | verify-distinctly-average.py | 0 | 0 | 0 | 3 | 3 | 0 | 0 |
-| `eigenvalue-extractor` | yes | verify-eigenvalue-extractor.py | 0 | 1 | 5 | 3 | 7 | 2 | 0 |
-| `eigenvector-engine` | yes | verify-eigenvector-engine.py | 1 | 1 | 4 | 13 | 6 | 13 | 0 |
+| `dimension-checker` | yes | verify-dimension-checker.py | 0 | 3 | 6 | 3 | 4 | 8 | 0 |
+| `distinctly-average` | yes | verify-distinctly-average.py | 0 | 0 | 0 | 1 | 1 | 0 | 0 |
+| `eigenvalue-extractor` | yes | verify-eigenvalue-extractor.py | 0 | 1 | 5 | 2 | 6 | 2 | 0 |
+| `eigenvector-engine` | yes | verify-eigenvector-engine.py | 1 | 1 | 4 | 11 | 4 | 13 | 0 |
 | `equation-builder` | yes | verify-equation-builder.py | 1 | 3 | 4 | 2 | 2 | 8 | 0 |
-| `equatle` | yes | verify-equatle.py | 0 | 0 | 3 | 6 | 9 | 0 | 0 |
+| `equatle` | yes | verify-equatle.py | 0 | 0 | 3 | 1 | 4 | 0 | 0 |
 | `estimation-engine` | yes | verify-estimation-engine.py | 0 | 1 | 6 | 0 | 1 | 6 | 0 |
-| `estimation-golf` | yes | verify-estimation-golf.py | 0 | 2 | 5 | 5 | 10 | 2 | 0 |
-| `expectation-station` | yes | verify-expectation-station.py | 2 | 13 | 8 | 5 | 5 | 23 | 0 |
-| `expected-damage` | yes | verify-expected-damage.py | 0 | 1 | 6 | 2 | 8 | 1 | 0 |
+| `estimation-golf` | yes | verify-estimation-golf.py | 0 | 2 | 4 | 4 | 8 | 2 | 0 |
+| `expectation-station` | yes | verify-expectation-station.py | 2 | 13 | 8 | 4 | 4 | 23 | 0 |
+| `expected-damage` | yes | verify-expected-damage.py | 0 | 1 | 4 | 1 | 5 | 1 | 0 |
 | `factor-race` | yes | verify-factor-race.py | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
-| `factor-theorem` | yes | verify-factor-theorem.py | 2 | 5 | 15 | 4 | 7 | 18 | 1 |
-| `fermi-lab` | yes | verify-fermi-lab.py | 0 | 2 | 1 | 1 | 4 | 0 | 0 |
+| `factor-theorem` | yes | verify-factor-theorem.py | 2 | 5 | 14 | 4 | 6 | 18 | 1 |
+| `fermi-lab` | yes | verify-fermi-lab.py | 0 | 1 | 1 | 1 | 3 | 0 | 0 |
 | `force-resolver` | yes | verify-force-resolver.py | 1 | 7 | 12 | 5 | 3 | 22 | 0 |
 | `formula-forge` | yes | verify-formula-forge.py | 0 | 1 | 8 | 3 | 8 | 4 | 0 |
 | `formula-plug-in` | yes | verify-formula-plug-in.py | 0 | 1 | 4 | 2 | 6 | 1 | 0 |
-| `formula-unlocked` | yes | verify-formula-unlocked.py | 0 | 1 | 1 | 7 | 4 | 5 | 0 |
+| `formula-unlocked` | yes | verify-formula-unlocked.py | 0 | 1 | 1 | 6 | 3 | 5 | 0 |
 | `four-quadrant-explorer` | yes | verify-four-quadrant-explorer.py | 0 | 1 | 2 | 1 | 3 | 1 | 0 |
 | `fraction-equivalence` | yes | verify-fraction-equivalence.py | 0 | 0 | 2 | 2 | 4 | 0 | 0 |
-| `free-daily-pizza` | yes | verify-free-daily-pizza.py | 0 | 0 | 1 | 4 | 5 | 0 | 0 |
+| `free-daily-pizza` | yes | verify-free-daily-pizza.py | 0 | 0 | 0 | 1 | 1 | 0 | 0 |
 | `given-that` | yes | verify-given-that.py | 0 | 3 | 2 | 3 | 3 | 5 | 0 |
 | `glorious-gantt` | unlisted | none | 1 | 7 | 4 | 1 | 13 | 0 | 0 |
-| `gradient-hunter` | yes | verify-gradient-hunter.py | 1 | 0 | 6 | 2 | 4 | 5 | 0 |
-| `graph-sketcher` | yes | verify-graph-sketcher.py | 1 | 3 | 5 | 4 | 8 | 5 | 0 |
+| `gradient-hunter` | yes | verify-gradient-hunter.py | 1 | 0 | 5 | 1 | 2 | 5 | 0 |
+| `graph-sketcher` | yes | verify-graph-sketcher.py | 1 | 2 | 3 | 2 | 3 | 5 | 0 |
 | `graph-transformer` | yes | verify-graph-transformer.py | 0 | 0 | 3 | 3 | 2 | 4 | 0 |
-| `growth-and-decay` | yes | verify-growth-and-decay.py | 1 | 0 | 9 | 4 | 10 | 4 | 0 |
-| `higher-power` | yes | verify-higher-power.py | 0 | 1 | 8 | 6 | 13 | 2 | 0 |
+| `growth-and-decay` | yes | verify-growth-and-decay.py | 1 | 0 | 7 | 1 | 5 | 4 | 0 |
+| `higher-power` | yes | verify-higher-power.py | 0 | 1 | 6 | 1 | 6 | 2 | 0 |
 | `index-laws` | yes | verify-index-laws.py | 0 | 0 | 3 | 1 | 1 | 2 | 1 |
 | `integration-duel` | yes | verify-integration-duel.py | 0 | 2 | 8 | 3 | 2 | 11 | 0 |
 | `like-terms-collector` | yes | verify-like-terms-collector.py | 1 | 1 | 3 | 1 | 4 | 2 | 0 |
-| `linear-equation-solver` | yes | verify-linear-equation-solver.py | 1 | 1 | 3 | 4 | 5 | 4 | 0 |
+| `linear-equation-solver` | yes | verify-linear-equation-solver.py | 1 | 1 | 3 | 2 | 3 | 4 | 0 |
 | `log-laws` | yes | verify-log-laws.py | 1 | 4 | 3 | 4 | 2 | 10 | 0 |
-| `maths-court` | yes | verify-maths-court.py | 0 | 1 | 7 | 4 | 9 | 3 | 0 |
-| `matrix-crunch` | yes | verify-matrix-crunch.py | 0 | 2 | 7 | 6 | 9 | 6 | 0 |
+| `maths-court` | yes | verify-maths-court.py | 0 | 1 | 4 | 1 | 3 | 3 | 0 |
+| `matrix-crunch` | yes | verify-matrix-crunch.py | 0 | 2 | 6 | 6 | 8 | 6 | 0 |
 | `modular-battle` | yes | verify-modular-battle.py | 0 | 0 | 4 | 2 | 5 | 1 | 0 |
-| `moments-master` | yes | verify-moments-master.py | 1 | 9 | 9 | 4 | 5 | 18 | 0 |
+| `moments-master` | yes | verify-moments-master.py | 1 | 9 | 8 | 4 | 4 | 18 | 0 |
 | `negative-number-line` | yes | verify-negative-number-line.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
-| `new-shapes` | yes | verify-new-shapes.py | 0 | 2 | 7 | 1 | 9 | 1 | 0 |
-| `normal-navigator` | yes | verify-normal-navigator.py | 0 | 0 | 4 | 7 | 7 | 4 | 0 |
+| `new-shapes` | yes | verify-new-shapes.py | 0 | 1 | 8 | 1 | 9 | 1 | 0 |
+| `normal-navigator` | yes | verify-normal-navigator.py | 0 | 0 | 4 | 4 | 4 | 4 | 0 |
 | `partial-fractions-duel` | yes | verify-partial-fractions-duel.py | 0 | 7 | 4 | 2 | 1 | 12 | 0 |
 | `percentage-flip` | yes | verify-percentage-flip.py | 0 | 0 | 2 | 0 | 1 | 1 | 0 |
-| `prime-factorisation` | yes | verify-prime-factorisation.py | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
+| `prime-factorisation` | yes | verify-prime-factorisation.py | 0 | 0 | 3 | 2 | 5 | 0 | 0 |
 | `prime-or-composite` | yes | verify-prime-or-composite.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
-| `prisoners-dilemma` | yes | verify-prisoners-dilemma.py | 0 | 2 | 6 | 5 | 10 | 3 | 0 |
+| `prisoners-dilemma` | yes | verify-prisoners-dilemma.py | 0 | 2 | 6 | 2 | 7 | 3 | 0 |
 | `probability-paradox` | yes | verify-probability-paradox.py | 1 | 4 | 11 | 4 | 5 | 15 | 0 |
-| `probability-pioneer` | yes | verify-probability-pioneer.py | 0 | 2 | 3 | 3 | 4 | 4 | 0 |
+| `probability-pioneer` | yes | verify-probability-pioneer.py | 0 | 2 | 3 | 1 | 2 | 4 | 0 |
 | `proof-builder` | yes | verify-proof-builder.py | 2 | 15 | 12 | 8 | 9 | 28 | 0 |
 | `proportion-blaster` | yes | verify-proportion-blaster.py | 0 | 1 | 1 | 2 | 2 | 2 | 0 |
-| `quadratic-factoriser` | yes | verify-quadratic-factoriser.py | 1 | 1 | 1 | 4 | 5 | 2 | 0 |
+| `quadratic-factoriser` | yes | verify-quadratic-factoriser.py | 1 | 1 | 1 | 3 | 4 | 2 | 0 |
 | `scale-factor-scaling` | yes | verify-scale-factor-scaling.py | 0 | 1 | 4 | 3 | 3 | 5 | 0 |
-| `screening-room` | yes | verify-screening-room.py | 1 | 4 | 14 | 8 | 7 | 19 | 1 |
+| `screening-room` | yes | verify-screening-room.py | 1 | 4 | 12 | 6 | 3 | 19 | 1 |
 | `sequence-solver` | yes | verify-sequence-solver.py | 0 | 1 | 4 | 2 | 5 | 2 | 0 |
-| `seven-bridges` | yes | verify-seven-bridges.py | 0 | 2 | 7 | 4 | 10 | 3 | 0 |
+| `seven-bridges` | yes | verify-seven-bridges.py | 0 | 2 | 7 | 2 | 8 | 3 | 0 |
 | `shape-shifter` | yes | verify-shape-shifter.py | 2 | 1 | 5 | 3 | 7 | 4 | 0 |
 | `simultaneous-solver` | yes | verify-simultaneous-solver.py | 0 | 0 | 1 | 2 | 3 | 0 | 0 |
 | `six-sevens-bruv` | yes | verify-six-sevens.py | 0 | 0 | 0 | 1 | 1 | 0 | 0 |
-| `split-it` | yes | verify-split-it.py | 0 | 0 | 1 | 7 | 7 | 1 | 0 |
-| `spot-the-error` | yes | verify-spot-the-error.py | 0 | 14 | 7 | 5 | 7 | 19 | 0 |
-| `spot-the-muppet` | yes | verify-spot-the-muppet.py | 0 | 5 | 9 | 4 | 9 | 8 | 1 |
+| `split-it` | yes | verify-split-it.py | 0 | 0 | 1 | 4 | 4 | 1 | 0 |
+| `spot-the-error` | yes | verify-spot-the-error.py | 0 | 14 | 6 | 3 | 4 | 19 | 0 |
+| `spot-the-muppet` | yes | verify-spot-the-muppet.py | 0 | 5 | 6 | 1 | 3 | 8 | 1 |
 | `standard-form-blitz` | yes | verify-standard-form-blitz.py | 0 | 0 | 2 | 3 | 2 | 3 | 0 |
-| `stat-attack` | yes | verify-stat-attack.py | 1 | 1 | 3 | 7 | 7 | 5 | 0 |
+| `stat-attack` | yes | verify-stat-attack.py | 1 | 1 | 3 | 3 | 4 | 4 | 0 |
 | `surd-simplifier` | yes | verify-surd-simplifier.py | 0 | 2 | 2 | 2 | 2 | 4 | 0 |
 | `suvat` | yes | verify-suvat.py | 1 | 4 | 8 | 4 | 5 | 12 | 0 |
 | `tax-theft` | yes | verify-tax-theft.py | 0 | 0 | 2 | 3 | 1 | 4 | 0 |
-| `terrible-advice` | yes | verify-terrible-advice.py | 0 | 6 | 11 | 3 | 7 | 13 | 0 |
-| `test-the-claim` | yes | verify-test-the-claim.py | 1 | 2 | 5 | 3 | 6 | 5 | 0 |
+| `terrible-advice` | yes | verify-terrible-advice.py | 0 | 6 | 8 | 1 | 2 | 13 | 0 |
+| `test-the-claim` | yes | verify-test-the-claim.py | 1 | 2 | 5 | 1 | 4 | 5 | 0 |
 | `the-perfect-prank` | yes | none | 0 | 0 | 2 | 1 | 3 | 0 | 0 |
 | `think-of-a-number` | yes | verify-think-of-a-number.py | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `trig-identity-duel` | yes | verify-trig-identity-duel.py | 0 | 7 | 4 | 2 | 2 | 11 | 0 |
 | `trig-wars` | yes | verify-trig-wars.py | 1 | 1 | 6 | 2 | 1 | 9 | 0 |
 | `trig-worms` | yes | verify-trig-worms.py | 1 | 0 | 5 | 1 | 2 | 5 | 0 |
-| `truth-buster` | yes | verify-truth-buster.py | 0 | 3 | 14 | 3 | 7 | 13 | 0 |
+| `truth-buster` | yes | verify-truth-buster.py | 0 | 3 | 13 | 2 | 5 | 13 | 0 |
 | `truth-will-set-you-free` | yes | verify-truth-will-set-you-free.py | 1 | 1 | 5 | 6 | 4 | 9 | 0 |
 | `unit-converter` | yes | verify-unit-converter.py | 0 | 1 | 7 | 3 | 3 | 8 | 0 |
-| `word-problem-decoder` | yes | verify-word-problem-decoder.py | 0 | 8 | 7 | 7 | 10 | 12 | 0 |
-| `wrong-on-the-internet` | yes | verify-wrong-on-the-internet.py | 0 | 3 | 9 | 4 | 11 | 5 | 0 |
+| `word-problem-decoder` | yes | verify-word-problem-decoder.py | 0 | 8 | 6 | 3 | 5 | 12 | 0 |
+| `wrong-on-the-internet` | yes | verify-wrong-on-the-internet.py | 0 | 3 | 7 | 1 | 6 | 5 | 0 |
 
 ## Open CRITICAL and HIGH, by game (Year 6, KS3, GCSE and Core first)
-
-### `new-shapes` (Year 6)
-
-- **HIGH** new-shapes-s1-001, `games/new-shapes/index.html:504 (renderParallelogram, hLabel left 168px), :583 (renderTrapezium, hLabel right 20px)`: The h label is not drawn on the dashed height line: on every parallelogram it sits over the slanted side (and hides it), and on every trapezium it straddles the slanted side, so it reads as the slant length, the very ...
 
 ### `fermi-lab` (KS3, GCSE, A-Level, L4, Core)
 
 - **HIGH** fermi-lab-s1-001 (JC), `games/fermi-lab/index.html:417 (eq_bus_distance)`: The question asks for the distance travelled by school buses, but the chain multiplies students × km × 2 × days, the distance travelled by students; at about 50 a bus the buses travel some 150,000-300,000 km, a factor...
-- **HIGH** fermi-lab-s1-003, `games/fermi-lab/index.html (piano-tuners-london; start screen)`: piano-tuners-london keys 140 while its own chain gives 82 (inside Brilliant): a wrong key. Part 2 #6: the key follows the chain (82) (Split: the parent entry held 2 defects; the others are fermi-lab-s1-004.)
 
 ### `maths-court` (KS3, GCSE, Core)
 
@@ -269,8 +262,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ### `graph-sketcher` (Core, A-Level, L4)
 
-- **HIGH** graph-sketcher-s1-006 (JC), `games/graph-sketcher/index.html L4_5 (:538), CM2 (:273), CM11 (:351), CM4 (:291)`: L4_5's "maximum deflection" on 0 ≤ x ≤ 4 is 4 at both x = 1 and x = 4 (the endpoint), so (4, 4) is also right. Part 2 #14: the ask becomes "the turning point"; the key is unchanged (Split: the parent entry held 4 defe...
-- **HIGH** graph-sketcher-s1-009 (JC), `games/graph-sketcher/index.html L4_5 (:538), CM2 (:273), CM11 (:351), CM4 (:291)`: CM2's key "Model allows negative profit" is false, P = x(x − 3)² ≥ 0, and no option is true. Part 2 #14: the key becomes "The model predicts profit keeps rising without limit as x increases" (drafted wording in the co...
+- **HIGH** graph-sketcher-s1-006 (JC), `games/graph-sketcher/index.html L4_5 (:538), CM2 (:273), CM11 (:351), CM4 (:291)`: For Jon (stem or key-text changes): L4_5's "maximum deflection" on 0 ≤ x ≤ 4 is 4 at both x = 1 and x = 4 (the endpoint), so (4, 4) is also right ("local maximum"?); CM2's key "Model allows negative profit" is false, ...
 
 ## Live games no audit has covered
 
