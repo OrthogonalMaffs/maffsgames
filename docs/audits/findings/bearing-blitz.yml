@@ -7,4 +7,40 @@ audited:
   date: 2026-10-06
   served:
     gcse: generator (360 bearings)
-findings: []
+findings:
+- id: bearing-blitz-s1-001
+  severity: MEDIUM
+  jc: true
+  class: NEW:sr14-content
+  level: gcse
+  where: 'games/bearing-blitz/index.html:93 (start-screen subtitle), :291'
+  summary: '"Fire or die." refers to the player''s death (SR-14 bans death everywhere; the scanner leaves "die" out for dice); the final miss line carries a 💀. For Jon (SR-14 calls have been his)'
+  evidence: '"You are a submarine. Enemy ships are closing in. Set your bearing by eye — no numbers, no labels. Fire or die."; "💀 DESTROYED! Surface ships locked onto your position." (SWEEP-1, batch 7)'
+  status: open
+- id: bearing-blitz-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: gcse
+  where: 'games/bearing-blitz/index.html:312 (results)'
+  summary: '"Survived with 1 lives" (20 hits after two misses)'
+  evidence: '(livesLeft>0?''Survived with ''+livesLeft+'' lives'':...) (SWEEP-1, batch 7)'
+  status: open
+- id: bearing-blitz-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:convention-unstated
+  level: gcse
+  where: 'games/bearing-blitz/index.html:243 (nextTarget)'
+  summary: 'After a miss the next target is the same bearing again (indexed by sunkCount), just after the true bearing and the dashed line were shown; the start screen does not say a miss repeats the target'
+  evidence: 'nextTarget uses sunkCount; a miss does not advance it (SWEEP-1, batch 7)'
+  status: open
+- id: bearing-blitz-s1-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: gcse
+  where: 'scripts/verify-bearing-blitz.py; index.html:287, :291, :309-312, :188-195'
+  summary: 'The verifier checks the hit message, a 2-lives miss, titles and the all-hit/all-miss stats, but not the 1-life miss figures and singular, the final miss''s "You were D° off", "Survived with N lives" (how s1-002 got through), mixed-game stats, or the dashed target line (Jon''s rule of 13 Oct 2026)'
+  evidence: 'Only substrings "They''re getting closer!" and "DESTROYED!" are checked (SWEEP-1, batch 7)'
+  status: open

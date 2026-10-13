@@ -103,7 +103,7 @@ KEYS = [
     ('mutually exclusive events', F(3, 10) + F(4, 10), 'dec'),
     ('P(Rain) = 0.3', F(8, 10) * F(3, 10) + F(2, 10) * F(7, 10), 'dec'),
     ('2% of the population', F(95, 100) * F(2, 100) / (F(95, 100) * F(2, 100) + F(5, 100) * F(98, 100)), 'dp2'),
-    ('Three coins are flipped', F(3, 4), 'frac'),
+    ('Three fair coins are flipped', F(3, 4), 'frac'),
     ('P(A) = 0.6, P(B) = 0.3', F(4, 10) * F(7, 10), 'dec'),
     ('P(A only) = 0.15', F(15, 100) + F(10, 100), 'dec'),
     ('machines X and Y', F(3, 100) * F(6, 10) / (F(3, 100) * F(6, 10) + F(5, 100) * F(4, 10)), 'frac'),
@@ -139,9 +139,22 @@ ASSUMED = {
     'Inspection Paradox': (['at random', 'Poisson', 'no timetable'], TAG + 't1-002'),
     'Two-Child Problem': (['equally likely', 'You ask', 'The answer is yes'], TAG + 't1-006'),
     'Tuesday variant': (['equally likely', 'any day of the week', 'You ask', 'The answer is yes'], TAG + 't1-006'),
-    'Monty Hall': (['always opens a door you did not pick that hides a goat', 'always offers'], TAG + 't1-009'),
+    'Monty Hall': (['always opens a door you did not pick that hides a goat', 'always offers',
+                    'he chooses between them at random'], TAG + 's1-001 (t1-009)'),
+    # SWEEP-1 (probability-paradox-s1-002): the draw or the coin each key needs is random or fair, and says so.
+    "Bertrand's Box": (['draw one coin at random'], TAG + 's1-002'),
+    '5 red and 3 blue': (['drawn at random'], TAG + 's1-002'),
+    'Three fair coins are flipped': (['fair'], TAG + 's1-002'),
+    '52-card deck': (['drawn at random'], TAG + 's1-002'),
+    '4 red, 3 green, 2 blue': (['drawn at random'], TAG + 's1-002'),
     '2% of the population': (['95% of people with the disease test positive', '95% of people without it test negative'],
                              TAG + 't1-009'),
+}
+
+# SR-16: options marked wrong that were true of the scenario as written (SWEEP-1); none may come back.
+TRUE_WRONG = {
+    'got 7 heads': ('Only with more data', TAG + 's1-003', 'its own explanation says more data is needed'),
+    'Non-transitive Dice': ('Cannot determine', TAG + 's1-004', 'from what is given, whether A beats C cannot be determined'),
 }
 
 KNOWN_OPEN = {}
@@ -225,6 +238,11 @@ def check_bank(fails, opens, banks):
             if missing:
                 fails.append('%s "%s": the key holds only if %s, which the scenario does not say (SR-18): "%s"'
                              % (tag, phrase, ' / '.join(missing), re.sub('<[^>]+>', '', q['scenario'])))
+    # SR-16: no option true of its scenario is marked wrong
+    for phrase, (opt, tag, why) in TRUE_WRONG.items():
+        q = find(banks['paradox'] + banks['fallacy'], phrase)
+        if q and any(o.startswith(opt) for o in q['opts'] if o != q['correct']):
+            fails.append('%s "%s": "%s" is marked wrong but is true (%s; SR-16)' % (tag, phrase, opt, why))
     # SR-18 rulings
     env = find(banks['paradox'], 'Envelope Problem')
     if env and not env['correct'].startswith('Cannot determine'):
@@ -492,6 +510,12 @@ PLANTS = [
     (TAG + 't1-007', 't1-007: the one-sided p',
      "(p ≈ 0.58 by Fisher's exact test, two-sided)", "(p ≈ 0.29 by Fisher's exact test)"),
     (TAG + 't1-004', 't1-004: the old regression item', RTM_NEW, RTM_OLD),
+    (TAG + 's1-001', 's1-001: Monty without the host\'s random choice',
+     ' If both doors you did not pick hide goats, he chooses between them at random.', ''),
+    (TAG + 's1-002', 's1-002: the card not drawn at random',
+     'A card is drawn at random from a standard', 'A card is drawn from a standard'),
+    (TAG + 's1-004', 's1-004: the dice with "Cannot determine" back',
+     '"Yes — A is the strongest die, so it beats both the others"', '"Cannot determine"'),
     (TAG + 't1-010', 't1-010: no lock on the options',
      "  if(!MaffsLock.lock(document.getElementById('options')))return;\n", ''),
 ]

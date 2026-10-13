@@ -236,6 +236,14 @@ def check_bank(fails, banks):
                 for b in range(a + 1, len(opts)):
                     if same(vals[a][1].subs(t, k), vals[b][1].subs(t, k)):
                         fails.append('%s: the wrong options %s and %s are equal in value (SR-4)' % (w, opts[a], opts[b]))
+            # SWEEP-1 (13 Oct 2026): the misconception text names the error a student made, by what it is: the options
+            # are shuffled, so never by position (s1-003), and it never names an option that is not there (s1-004).
+            mc = q.get('misconception') or ''
+            if re.search(r'\b(first|second|third|last) (distractor|option)', mc):
+                fails.append('%s: the misconception points at an option by position, and the options are shuffled: %r' % (w, mc))
+            for bad, why in MISCONCEPTION_FORBIDS.get((name, i), []):
+                if bad in mc:
+                    fails.append('%s: the misconception says %r (%s)' % (w, bad, why))
             for line in q.get('steps', []):
                 try:
                     ss = [e.subs(t, k) for e in sides(line)]
@@ -247,6 +255,9 @@ def check_bank(fails, banks):
                     fails.append('%s: the step %r does not hold for the key' % (w, line))
 
 
+# Misconception wording that named something no option shows (SWEEP-1, formula-unlocked-s1-004).
+MISCONCEPTION_FORBIDS = {('Q_GCSE', 20): [('not 2π²', 'no option has 2π²: the distractor leaves 2π unsquared')]}
+
 SWEEP_JS = r"""() => {
   window.setTimeout = () => 0; window.setInterval = () => 0;
   const out = [], banks = {Q_GCSE, Q_ALEVEL, Q_LEVEL4};
@@ -255,6 +266,11 @@ SWEEP_JS = r"""() => {
     for (const pick of [key, ...q.d]) {
       pool = [q]; qIdx = 0; total = 0; score = 0; correctN = 0;
       nextQ();
+      // the target line is rendered, never raw TeX (SWEEP-1, formula-unlocked-s1-001)
+      const tEl = document.getElementById('targetDisplay').cloneNode(true);
+      tEl.querySelectorAll('.katex-mathml').forEach(m => m.remove());   // KaTeX's hidden MathML carries the TeX source
+      const tgt = tEl.textContent;
+      if (pick === key && /[\\_^{}]/.test(tgt)) out.push([name, i, pick, 'the target line shows raw TeX: ' + tgt]);
       const shown = [...document.querySelectorAll('#options .opt-btn')];
       if (shown.length !== 4) out.push([name, i, pick, shown.length + ' options on screen']);
       const btn = shown.find(b => b.dataset.val === pick);
@@ -315,6 +331,11 @@ PLANTS = [
      "d:['u = \\\\dfrac{s}{t} - \\\\dfrac{1}{2}at^2',", "d:['u = \\\\dfrac{s}{t} - \\\\dfrac{1}{2}at',"),
     ('Q_LEVEL4[10]', 'f0-001: g(T/(2 pi)) beside gT/(2 pi)',
      "'L = \\\\dfrac{gT^2}{2\\\\pi}']", "'L = g\\\\left(\\\\dfrac{T}{2\\\\pi}\\\\right)']"),
+    ('Q_GCSE[16]', 's1-001: the target written as text (raw \\Delta T)',
+     "document.getElementById('targetDisplay').innerHTML='Make '+rkInline(currentQ.target)+' the subject';",
+     "document.getElementById('targetDisplay').textContent='Make '+currentQ.target+' the subject';"),
+    ('Q_GCSE[20]', 's1-004: "not 2π²"', "Leaving it as 2π is the error.'", "not 2π².'"),
+    ('Q_GCSE[12]', 's1-003: "The last distractor"', "misconception:'Writing x = y/m − c is a common error", "misconception:'The last distractor is a common error"),
 ]
 
 

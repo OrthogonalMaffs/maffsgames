@@ -144,7 +144,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 // ============================================================
 
 const PARADOX_QUESTIONS = [
-{scenario:"<strong>The Monty Hall Problem.</strong> You're on a game show. There are 3 doors — behind one is a car, behind the other two are goats. You pick Door 1. The host knows where the car is, and he always opens a door you did not pick that hides a goat, then always offers you the chance to switch. He opens Door 3, revealing a goat, and offers you Door 2.",
+{scenario:"<strong>The Monty Hall Problem.</strong> You're on a game show. There are 3 doors — behind one is a car, behind the other two are goats. You pick Door 1. The host knows where the car is, and he always opens a door you did not pick that hides a goat, then always offers you the chance to switch. If both doors you did not pick hide goats, he chooses between them at random. He opens Door 3, revealing a goat, and offers you Door 2.",
 q:"Should you switch? What's the probability of winning if you do?",
 opts:["2/3 — always switch","1/2 — doesn't matter","1/3 — stick with Door 1","Can't determine"],
 correct:"2/3 — always switch",
@@ -176,7 +176,7 @@ sim:{type:'twochild',labels:['Both boys','Boy + Girl'],expected:[0.333,0.667]},
 steps:["The sample space for two children is: {BB, BG, GB, GG}","'At least one boy' eliminates GG, leaving {BB, BG, GB}","Of these three equally likely outcomes, only one is BB","P(both boys | at least one boy) = 1/3"],
 misconception:"Many people answer 1/2 because they think 'one is a boy, so the other is either boy or girl'. But this ignores that BG and GB are separate outcomes."},
 
-{scenario:"<strong>Bertrand's Box Paradox.</strong> There are three boxes. One contains two gold coins, one contains two silver coins, and one contains one gold and one silver. You pick a box at random and draw one coin — it's gold.",
+{scenario:"<strong>Bertrand's Box Paradox.</strong> There are three boxes. One contains two gold coins, one contains two silver coins, and one contains one gold and one silver. You pick a box at random and draw one coin at random from it — it's gold.",
 q:"What is the probability the other coin in the same box is also gold?",
 opts:["2/3","1/2","1/3","3/4"],
 correct:"2/3",
@@ -226,7 +226,7 @@ misconception:"The 'renewal paradox' or 'bus waiting time paradox'. Random ≠ u
 
 {scenario:"<strong>Non-transitive Dice.</strong> Die A beats Die B more than half the time. Die B beats Die C more than half the time.",
 q:"Does Die A necessarily beat Die C?",
-opts:["No — dice can be non-transitive","Yes — A beats C by transitivity","Only if all dice are fair","Cannot determine"],
+opts:["No — dice can be non-transitive","Yes — A beats C by transitivity","Only if all dice are fair","Yes — A is the strongest die, so it beats both the others"],
 correct:"No — dice can be non-transitive",
 sim:{type:'dice',labels:['A beats C','C beats A'],expected:[0.44,0.56]},
 steps:["Example: A = {2,2,4,4,9,9}, B = {1,1,6,6,8,8}, C = {3,3,5,5,7,7}","A beats B (5/9 of the time)","B beats C (5/9 of the time)","But C beats A (5/9 of the time)!","A > B > C > A — a rock-paper-scissors cycle","Transitivity does NOT hold for probabilistic comparisons"],
@@ -243,7 +243,7 @@ misconception:"This is genuinely debated in philosophy! 'Halfers' say 1/2 (the c
 ];
 
 const CONDITIONAL_QUESTIONS = [
-{scenario:"A bag contains 5 red and 3 blue balls. Two balls are drawn without replacement.",
+{scenario:"A bag contains 5 red and 3 blue balls. Two balls are drawn at random without replacement.",
 q:"P(second ball is red | first ball was red)?",
 opts:["4/7","5/8","5/7","4/8"],correct:"4/7",
 steps:["After removing one red ball: 4 red, 3 blue remain (7 total)","P(2nd red | 1st red) = 4/7"],
@@ -281,7 +281,7 @@ opts:["0.28","0.95","0.02","0.50"],correct:"0.28",
 steps:["P(+|D) = 0.95, P(+|D') = 0.05, P(D) = 0.02","P(+) = 0.95×0.02 + 0.05×0.98 = 0.019 + 0.049 = 0.068","P(D|+) = 0.019/0.068 ≈ 0.28"],
 misconception:"Bayes' theorem in action. The base rate (2%) dramatically reduces the posterior probability despite 95% accuracy."},
 
-{scenario:"Three coins are flipped. Let A = 'at least two heads' and B = 'first coin is heads'.",
+{scenario:"Three fair coins are flipped. Let A = 'at least two heads' and B = 'first coin is heads'.",
 q:"Find P(A | B)",
 opts:["3/4","1/2","3/8","1/4"],correct:"3/4",
 steps:["Given B (first = H), outcomes: HHH, HHT, HTH, HTT","P(A|B) = cases with ≥2 heads: HHH, HHT, HTH = 3 out of 4","P(A|B) = 3/4"]},
@@ -307,12 +307,12 @@ q:"Find P(A | B)",
 opts:["3/4","3/5","1/2","2/5"],correct:"3/4",
 steps:["P(B) = P(B|A)P(A) + P(B|A')P(A')","= 0.6×0.5 + 0.2×0.5 = 0.3 + 0.1 = 0.4","P(A|B) = P(B|A)P(A)/P(B) = 0.3/0.4 = 3/4"]},
 
-{scenario:"A card is drawn from a standard 52-card deck.",
+{scenario:"A card is drawn at random from a standard 52-card deck.",
 q:"P(King | Face card)?",
 opts:["1/3","1/12","1/13","1"],correct:"1/3",
 steps:["Face cards: J, Q, K in each suit = 12 cards","Kings = 4","P(King | Face) = 4/12 = 1/3"]},
 
-{scenario:"A box has 4 red, 3 green, 2 blue balls. Two are drawn without replacement.",
+{scenario:"A box has 4 red, 3 green, 2 blue balls. Two are drawn at random without replacement.",
 q:"P(both same colour)?",
 opts:["5/18","1/3","1/4","7/18"],correct:"5/18",
 steps:["P(RR) = 4/9 × 3/8 = 12/72","P(GG) = 3/9 × 2/8 = 6/72","P(BB) = 2/9 × 1/8 = 2/72","P(same) = 20/72 = 5/18"]},
@@ -332,7 +332,7 @@ misconception:"P(Disease|Positive) depends on BOTH the test accuracy AND how com
 
 {scenario:"John says: 'I flipped 10 coins and got 7 heads. The coin must be biased.'",
 q:"Is John's reasoning valid?",
-opts:["No — 7/10 is within normal variation","Yes — 7/10 proves bias","Only with more data","Depends on the coin"],correct:"No — 7/10 is within normal variation",
+opts:["No — 7/10 is within normal variation","Yes — 7/10 proves bias","Yes — a fair coin would give exactly 5 heads","Depends on the coin"],correct:"No — 7/10 is within normal variation",
 explain:"P(7+ heads in 10 flips of fair coin) ≈ 0.17. That's not unusual enough to conclude bias. We'd need a significance test with more data."},
 
 {scenario:"'I survived a plane crash. Therefore plane crashes are survivable.'",

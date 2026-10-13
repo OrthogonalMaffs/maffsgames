@@ -40,3 +40,60 @@ findings:
     any equal pair, with a plant that puts 4:10 back'
   status: fixed
   pr: 312
+- id: scale-factor-scaling-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: gcse
+  where: 'games/scale-factor-scaling/index.html:128 (T1[7]), :136 (T1[14])'
+  summary: '"Scale factor = 4" beside an area, under the label "Area SF", without saying it is the length scale factor; read as the area scale factor it gives 40 cm² (and 32 m²), both offered (SR-17). Fixed: "Length scale factor = 4." and "= 0.5."; TARGETS words pin it; plant'
+  evidence: '"Scale factor = 4. Original area = 10 cm². New area = ?" key 160 cm², d 40 cm², 640 cm², 80 cm² (SWEEP-1, batch 7)'
+  status: fixed
+  pr: 345
+- id: scale-factor-scaling-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:convention-unstated
+  level: gcse
+  where: 'games/scale-factor-scaling/index.html:130 (T1[9])'
+  summary: 'The two sides were not said to be corresponding sides. Fixed: "Corresponding sides 3 cm and 9 cm."; pinned'
+  evidence: '"Similar triangles. Sides 3 cm and 9 cm. Area ratio = ?" key 1:9 (SWEEP-1, batch 7)'
+  status: fixed
+  pr: 345
+- id: scale-factor-scaling-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:convention-unstated
+  level: all
+  where: 'games/scale-factor-scaling/index.html:166 (T3[8]), :167 (T3[9])'
+  summary: 'Two ratio items did not say the solids are similar, which both keys need. Fixed: "Similar solids."; pinned; plant'
+  evidence: '"Volume ratio = 8:27. Area ratio = ?" key 4:9; "Area ratio = 9:25. Volume ratio = ?" key 27:125 (SWEEP-1, batch 7)'
+  status: fixed
+  pr: 345
+- id: scale-factor-scaling-s1-004
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: 'games/scale-factor-scaling/index.html:132, :133, :149, :150'
+  summary: 'Fractions mix Unicode glyphs (½ ⅓ ¼ ⅛) and ASCII ("1/16", "1/9", "2/9", "1/27", "2/27"), sometimes in one option set'
+  evidence: 'T1 and T2 option sets (SWEEP-1, batch 7)'
+  status: open
+- id: scale-factor-scaling-s1-005
+  severity: MEDIUM
+  jc: false
+  class: NEW:timer-policy
+  level: all
+  where: 'games/scale-factor-scaling/index.html:101 (HUD timer), :198'
+  summary: 'Timer policy lists Scale Factor Scaling under Hidden Count-Up, but the HUD "Time" is visible (the CSS hides .timer, not #timer) and time feeds the score; the class of surd-simplifier-s1-003 and circle-theorem-spotter-s1-007 (SR-23, for Jon to schedule)'
+  evidence: 'm=1/(1+T_K*Math.log(1+s)) (SWEEP-1, batch 7)'
+  status: open
+- id: scale-factor-scaling-s1-006
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: all
+  where: 'scripts/verify-scale-factor-scaling.py; index.html:121-179 (worked steps s), the mc lines'
+  summary: 'The verifier recomputes keys and option values only; none of the 46 worked-step arrays or the mc warning lines is checked (the multi-step T4[3], T4[5], T2[12], T4[0], T4[4], T4[6] carry most risk). All read correct today (Jon''s rule of 13 Oct 2026)'
+  evidence: 'showExplain at :199 shows s on a wrong answer (SWEEP-1, batch 7)'
+  status: open

@@ -240,6 +240,12 @@ def check_bank(fails, bank):
                             fails.append('%s: the options %s and %s are equal in value (SR-4)' % (w, vals[a][0], vals[b][0]))
             if key not in right:
                 fails.append('%s: keyed %s, the answer is %s' % (w, key, target))
+            # SR-16 (SWEEP-1, coordinate-geometry-dash-s1-001): beside "undefined", an "infinite" gradient is the same
+            # claim in other words (many texts say a vertical line's gradient is infinite), so it is never a wrong option.
+            if key.startswith('Undefined'):
+                for o in opts:
+                    if o != key and re.search(r'∞|infinit', o, re.I):
+                        fails.append('%s: the option %s says the same as the key %s (SR-16)' % (w, o, key))
             for o in right:
                 if o != key:
                     fails.append('%s: the unkeyed option %s is also correct' % (w, o))
@@ -303,6 +309,8 @@ PLANTS = [
      'opts:["xy = 12","y = 12/x","x = 12/y","All equivalent"],correct:"All equivalent"'),
     ('alevel[15]', 'SR-4: two wrong options equal in value (½ and 1/2)',
      'opts:["1","2","½","−2"],correct:"1"', 'opts:["1","2","½","1/2"],correct:"1"'),
+    ('gcse[6]', 's1-001: "∞" beside "Undefined (vertical)"',
+     'opts:["Undefined (vertical)","0","4","1"]', 'opts:["Undefined (vertical)","0","4","∞"]'),
 ]
 
 
