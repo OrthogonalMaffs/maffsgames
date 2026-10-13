@@ -69,7 +69,8 @@ findings:
   where: 'games/correlation-or-coincidence/index.html:330-331 (B22), :336-337 (B25), :340-341 (B27)'
   summary: 'Three ''both'' items keyed "Something else causes both" had a direct link as well: gig-goers buy the band''s T-shirts (B25), lemons are bought to go on the pancakes (B27), driving chips the paint (B22), so "One causes the other" was also true and marked wrong (3 items: SR-20''s count, at every level). Fixed (Jon''s ruling, 13 Oct 2026; no unlist): replaced with ice creams and sunburn cases (hot sunny weather), umbrellas and taxi bookings (rain), a child''s shoe size and reading age (age), each keyed "Something else causes both", positive, its graph generated to its stated band and checked; the verifier fails the three old pairs as ''both'' items; plant'
   evidence: 'B25 "Concert tickets sold (thousands)" / "Band T-shirts sold (thousands)", lurk "how popular the band is", explain "Tickets don''t sell T-shirts."; B27 pancakes / lemons, explain "Pancakes don''t sell lemons on their own."; B22 miles / scratches, explain "Driving miles doesn''t scratch paint." (SWEEP-1, batch 8)'
-  status: open
+  status: fixed
+  pr: 347
 - id: correlation-or-coincidence-s1-002
   severity: LOW
   jc: true
