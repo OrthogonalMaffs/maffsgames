@@ -872,9 +872,9 @@ SWALLOWED = set()      # games where a driver tap landed in a fresh window and w
 # PLAY-AGAIN-SCREEN batch 2 (contract PLAY-AGAIN-SCREEN, 9 Oct 2026; may only shrink): games whose Play again still
 # shows a screen without MaffsLock.screen(), through their own screen code rather than a show(id) helper. Their
 # "not fresh" fault is reported, not failed, until batch 2 converts them; a listed game that passes fails, so the
-# list cannot go stale. characteristic-quest is the cloud lane's (cloud-remaining:) until it comes off that list.
+# list cannot go stale. Empty since 13 Oct 2026 (CQ-PLAY-AGAIN-SCREEN converted the last, characteristic-quest);
+# it may only shrink, so nothing is added back.
 SCREEN_NOT_YET = set('''
-characteristic-quest
 '''.split())
 SCREEN_REPORTED = {}   # slug -> the not-fresh fault, for a game on SCREEN_NOT_YET
 
