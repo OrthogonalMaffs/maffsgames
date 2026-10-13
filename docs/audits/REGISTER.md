@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-677 findings in 85 games.
+683 findings in 86 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
-| CRITICAL | 1 | 26 | 0 | 27 |
-| HIGH | 10 | 211 | 0 | 221 |
-| MEDIUM | 139 | 180 | 3 | 322 |
-| LOW | 74 | 32 | 1 | 107 |
-| **All** | 224 | 449 | 4 | 677 |
+| CRITICAL | 1 | 27 | 0 | 28 |
+| HIGH | 10 | 212 | 0 | 222 |
+| MEDIUM | 140 | 180 | 3 | 323 |
+| LOW | 77 | 32 | 1 | 110 |
+| **All** | 228 | 451 | 4 | 683 |
 
 ### By class
 
@@ -34,13 +34,13 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 2 | 12 | 111 |
 | 3 | 5 | 86 |
 | 6 | 24 | 56 |
-| NEW:wrong-explanation-text | 13 | 42 |
+| NEW:wrong-explanation-text | 13 | 43 |
+| NEW:convention-unstated | 22 | 38 |
 | 1 | 5 | 37 |
-| NEW:convention-unstated | 21 | 37 |
 | NEW:text-contradicts-content | 26 | 29 |
 | 5 | 26 | 26 |
 | 4 | 5 | 22 |
-| NEW:wording | 18 | 19 |
+| NEW:wording | 20 | 21 |
 | 7 | 5 | 16 |
 | NEW:value-equal distractors | 0 | 14 |
 | NEW:true-wrong-option | 6 | 13 |
@@ -88,6 +88,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:generator-drops-items | 1 | 1 |
 | NEW:hit-detection | 0 | 1 |
 | NEW:inconsistent premise | 1 | 1 |
+| NEW:input-cannot-type-answer | 0 | 1 |
 | NEW:keys-under-overlay | 0 | 1 |
 | NEW:locus-segment-ends | 1 | 1 |
 | NEW:low-answer-variety | 1 | 1 |
@@ -118,6 +119,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:test repeats taught items | 1 | 1 |
 | NEW:ui | 1 | 1 |
 | NEW:uncancelled-timer | 0 | 1 |
+| NEW:verifier-gap | 1 | 1 |
 | NEW:wrong hint | 0 | 1 |
 | NEW:wrong statement in key | 0 | 1 |
 | NEW:wrong text | 0 | 1 |
@@ -188,6 +190,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `probability-pioneer` | yes | verify-probability-pioneer.py | 0 | 2 | 3 | 1 | 2 | 4 | 0 |
 | `proof-builder` | yes | verify-proof-builder.py | 2 | 14 | 7 | 1 | 3 | 21 | 0 |
 | `proportion-blaster` | yes | verify-proportion-blaster.py | 0 | 1 | 0 | 0 | 0 | 1 | 0 |
+| `quadratic-factoriser` | yes | verify-quadratic-factoriser.py | 1 | 1 | 1 | 3 | 4 | 2 | 0 |
 | `scale-factor-scaling` | yes | verify-scale-factor-scaling.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
 | `screening-room` | yes | verify-screening-room.py | 1 | 4 | 10 | 2 | 1 | 15 | 1 |
 | `sequence-solver` | yes | verify-sequence-solver.py | 0 | 1 | 4 | 2 | 5 | 2 | 0 |
@@ -239,7 +242,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Live games no audit has covered
 
-13 of 97 live games: `chart-interrogator`, `circle-theorem-spotter`, `core-maths-paper2a`, `graph-sketcher`, `graph-transformer`, `growth-and-decay`, `just-pythag-it-bruv`, `normal-navigator`, `quadratic-factoriser`, `simultaneous-solver`, `stat-attack`, `tax-theft`, `test-the-claim`
+12 of 97 live games: `chart-interrogator`, `circle-theorem-spotter`, `core-maths-paper2a`, `graph-sketcher`, `graph-transformer`, `growth-and-decay`, `just-pythag-it-bruv`, `normal-navigator`, `simultaneous-solver`, `stat-attack`, `tax-theft`, `test-the-claim`
 
 ## Exit bar detail
 
