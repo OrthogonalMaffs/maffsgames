@@ -18,7 +18,8 @@ findings:
   where: 'games/growth-and-decay/index.html:564-571 (L4_9)'
   summary: 'A battery efficiency of 240% at the start (E = 240 × 0.78^c with E in %), impossible. Fixed (Jon''s ruling, 13 Oct 2026; keys unchanged): "Battery capacity (Wh)", units Wh, the interpretation options say capacity; the verifier fails any percentage context whose model leaves 0-100% on its graph range, and plants the old item'
   evidence: '"Battery efficiency (%) decreases with charge cycles (hundreds)." | "Find E when c = 0." key 240 % (SWEEP-1, between batches 7 and 8)'
-  status: open
+  status: fixed
+  pr: 346
 - id: growth-and-decay-s1-002
   severity: MEDIUM
   jc: false
@@ -27,7 +28,8 @@ findings:
   where: 'games/growth-and-decay/index.html (every sq1, 45 scenarios)'
   summary: 'Every sq1 said "Estimate X ... Give your answer to n significant figures", a calculation from the model with a calculator, not an estimate (SR-12: an estimate states its method). Fixed (Jon''s ruling, 13 Oct 2026): "Use the model to calculate X" on all 45, including CM14 and AL11, which ask an exact value and stated no precision; keys unchanged. The verifier fails a prompt that says "Estimate" with no method; plant'
   evidence: '"Estimate the number of customers when t = 5. Give your answer to 3 significant figures." (SWEEP-1, between batches 7 and 8)'
-  status: open
+  status: fixed
+  pr: 346
 - id: growth-and-decay-s1-003
   severity: MEDIUM
   jc: true
