@@ -3,6 +3,12 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-13 (cloud): SWEEP-1 batch 4 (KS3 part 2)
+
+- **Fixed (rulings):** terrible-advice gcse_008/core_002 true "X is correct" options, ks3_017/gcse_019 true equations, gcse_018 "add for OR" (SR-16); wrong-on-the-internet ks3_007 "a fair coin", core_004 "5% compound interest" (Jon's ruling, RULED); maths-court ks3_002's summary names Numerica (SR-16, a check on every case), gcse_010 3 s.f. (SR-1), core_007's 1.048¹⁰ (SPECS); higher-power ks3_35's fact (check_perfect). Each verifier PASS locally with its new plants.
+- **Open, for Jon:** maths-court-s1-004 HIGH (gcse_001 keys Brenda's false rule correct); SR-14: expected-damage s1-003 (core_004 "stand and welcome it"; the trolley premise), spot-the-muppet s1-002 and terrible-advice core_004 ("No Relation to the Clown").
+- **Class for Jon (running):** fair coin unstated in three games (spot-the-muppet ks3_014, terrible-advice ks3_014; woti fixed); "add 5 to the last digit" praised as a method (spot-the-muppet, terrible-advice gcse_006, woti gcse_020); the court never says if it judges the reasoning or the answer (maths-court).
+
 ## 2026-10-13 (cloud): SWEEP-1 batch 3 (KS3 part 1; SR-20 stop and Jon's rulings)
 
 - **Stop:** word-problem-decoder GCSE (3 SR-18 overlaps) and equation-builder (31 "expression" items) reached SR-20's count; Jon ruled the same day (fix, no unlist). equation-builder: #338 merged.
