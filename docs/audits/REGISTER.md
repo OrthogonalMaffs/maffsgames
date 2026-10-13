@@ -9,7 +9,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | met: 0 of 96 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 2 open (0 CRITICAL, 2 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 3 open (0 CRITICAL, 3 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, SR-14 fields |
 | 4 | Every level serves 40+ (tracked, not part of the gate: canon §0.2, Jon 12 Oct 2026) | not met, not gating: 109 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | met: 0 in the roster's Unlisted section |
@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-663 findings in 81 games.
+677 findings in 85 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 26 | 0 | 27 |
-| HIGH | 9 | 211 | 0 | 220 |
-| MEDIUM | 136 | 177 | 3 | 316 |
-| LOW | 67 | 32 | 1 | 100 |
-| **All** | 213 | 446 | 4 | 663 |
+| HIGH | 10 | 211 | 0 | 221 |
+| MEDIUM | 139 | 180 | 3 | 322 |
+| LOW | 74 | 32 | 1 | 107 |
+| **All** | 224 | 449 | 4 | 677 |
 
 ### By class
 
@@ -34,18 +34,18 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 2 | 12 | 111 |
 | 3 | 5 | 86 |
 | 6 | 24 | 56 |
-| NEW:wrong-explanation-text | 11 | 40 |
+| NEW:wrong-explanation-text | 13 | 42 |
 | 1 | 5 | 37 |
-| NEW:convention-unstated | 18 | 33 |
-| NEW:text-contradicts-content | 24 | 27 |
+| NEW:convention-unstated | 21 | 37 |
+| NEW:text-contradicts-content | 26 | 29 |
 | 5 | 26 | 26 |
 | 4 | 5 | 22 |
+| NEW:wording | 18 | 19 |
 | 7 | 5 | 16 |
-| NEW:wording | 15 | 16 |
 | NEW:value-equal distractors | 0 | 14 |
+| NEW:true-wrong-option | 6 | 13 |
 | 8 | 3 | 11 |
-| NEW:true-wrong-option | 5 | 11 |
-| NEW:precision-not-stated | 2 | 10 |
+| NEW:precision-not-stated | 2 | 11 |
 | NEW:equal-value-options | 0 | 8 |
 | NEW:raw-tex-on-screen | 3 | 8 |
 | NEW:hand-typed explanation figure | 5 | 7 |
@@ -145,6 +145,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `decimal-detective` | yes | verify-decimal-detective.py | 0 | 2 | 2 | 0 | 0 | 4 | 0 |
 | `differentiation-duel` | yes | verify-differentiation-duel.py | 0 | 2 | 10 | 2 | 0 | 14 | 0 |
 | `dimension-checker` | yes | verify-dimension-checker.py | 0 | 3 | 3 | 1 | 1 | 6 | 0 |
+| `distinctly-average` | yes | verify-distinctly-average.py | 0 | 0 | 0 | 1 | 1 | 0 | 0 |
 | `eigenvalue-extractor` | yes | verify-eigenvalue-extractor.py | 0 | 1 | 3 | 1 | 4 | 1 | 0 |
 | `eigenvector-engine` | yes | verify-eigenvector-engine.py | 1 | 1 | 2 | 8 | 1 | 11 | 0 |
 | `equation-builder` | yes | verify-equation-builder.py | 1 | 3 | 4 | 2 | 2 | 8 | 0 |
@@ -155,17 +156,19 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `expected-damage` | yes | verify-expected-damage.py | 0 | 1 | 4 | 1 | 5 | 1 | 0 |
 | `factor-race` | yes | verify-factor-race.py | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
 | `factor-theorem` | yes | verify-factor-theorem.py | 2 | 5 | 11 | 1 | 2 | 16 | 1 |
+| `fermi-lab` | yes | verify-fermi-lab.py | 0 | 1 | 1 | 1 | 3 | 0 | 0 |
 | `force-resolver` | yes | verify-force-resolver.py | 1 | 7 | 5 | 2 | 1 | 14 | 0 |
 | `formula-forge` | yes | verify-formula-forge.py | 0 | 1 | 6 | 1 | 6 | 2 | 0 |
 | `formula-plug-in` | yes | verify-formula-plug-in.py | 0 | 1 | 4 | 2 | 6 | 1 | 0 |
 | `formula-unlocked` | yes | verify-formula-unlocked.py | 0 | 1 | 0 | 1 | 0 | 2 | 0 |
 | `four-quadrant-explorer` | yes | verify-four-quadrant-explorer.py | 0 | 1 | 2 | 1 | 3 | 1 | 0 |
 | `fraction-equivalence` | yes | verify-fraction-equivalence.py | 0 | 0 | 2 | 2 | 4 | 0 | 0 |
+| `free-daily-pizza` | yes | verify-free-daily-pizza.py | 0 | 0 | 0 | 1 | 1 | 0 | 0 |
 | `given-that` | yes | verify-given-that.py | 0 | 3 | 1 | 0 | 0 | 4 | 0 |
 | `glorious-gantt` | unlisted | none | 1 | 7 | 4 | 1 | 13 | 0 | 0 |
-| `gradient-hunter` | yes | verify-gradient-hunter.py | 1 | 0 | 2 | 0 | 0 | 3 | 0 |
+| `gradient-hunter` | yes | verify-gradient-hunter.py | 1 | 0 | 5 | 1 | 2 | 5 | 0 |
 | `higher-power` | yes | verify-higher-power.py | 0 | 1 | 6 | 1 | 6 | 2 | 0 |
-| `index-laws` | yes | verify-index-laws.py | 0 | 0 | 2 | 0 | 0 | 1 | 1 |
+| `index-laws` | yes | verify-index-laws.py | 0 | 0 | 3 | 1 | 1 | 2 | 1 |
 | `integration-duel` | yes | verify-integration-duel.py | 0 | 2 | 7 | 1 | 1 | 9 | 0 |
 | `like-terms-collector` | yes | verify-like-terms-collector.py | 1 | 1 | 3 | 1 | 4 | 2 | 0 |
 | `linear-equation-solver` | yes | verify-linear-equation-solver.py | 1 | 1 | 2 | 1 | 1 | 4 | 0 |
@@ -188,8 +191,9 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `scale-factor-scaling` | yes | verify-scale-factor-scaling.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
 | `screening-room` | yes | verify-screening-room.py | 1 | 4 | 10 | 2 | 1 | 15 | 1 |
 | `sequence-solver` | yes | verify-sequence-solver.py | 0 | 1 | 4 | 2 | 5 | 2 | 0 |
-| `seven-bridges` | yes | verify-seven-bridges.py | 0 | 2 | 6 | 1 | 6 | 3 | 0 |
+| `seven-bridges` | yes | verify-seven-bridges.py | 0 | 2 | 7 | 2 | 8 | 3 | 0 |
 | `shape-shifter` | yes | verify-shape-shifter.py | 2 | 1 | 5 | 3 | 7 | 4 | 0 |
+| `six-sevens-bruv` | yes | verify-six-sevens.py | 0 | 0 | 0 | 1 | 1 | 0 | 0 |
 | `split-it` | yes | verify-split-it.py | 0 | 0 | 1 | 4 | 4 | 1 | 0 |
 | `spot-the-error` | yes | verify-spot-the-error.py | 0 | 14 | 6 | 3 | 4 | 19 | 0 |
 | `spot-the-muppet` | yes | verify-spot-the-muppet.py | 0 | 5 | 6 | 1 | 3 | 8 | 1 |
@@ -209,6 +213,10 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `wrong-on-the-internet` | yes | verify-wrong-on-the-internet.py | 0 | 3 | 7 | 1 | 6 | 5 | 0 |
 
 ## Open CRITICAL and HIGH, by game (Year 6, KS3, GCSE and Core first)
+
+### `fermi-lab` (KS3, GCSE, A-Level, L4, Core)
+
+- **HIGH** fermi-lab-s1-001 (JC), `games/fermi-lab/index.html:417 (eq_bus_distance)`: The question asks for the distance travelled by school buses, but the chain multiplies students × km × 2 × days, the distance travelled by students; at about 50 a bus the buses travel some 150,000-300,000 km, a factor...
 
 ### `maths-court` (KS3, GCSE, Core)
 
@@ -231,7 +239,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Live games no audit has covered
 
-17 of 97 live games: `chart-interrogator`, `circle-theorem-spotter`, `core-maths-paper2a`, `distinctly-average`, `fermi-lab`, `free-daily-pizza`, `graph-sketcher`, `graph-transformer`, `growth-and-decay`, `just-pythag-it-bruv`, `normal-navigator`, `quadratic-factoriser`, `simultaneous-solver`, `six-sevens-bruv`, `stat-attack`, `tax-theft`, `test-the-claim`
+13 of 97 live games: `chart-interrogator`, `circle-theorem-spotter`, `core-maths-paper2a`, `graph-sketcher`, `graph-transformer`, `growth-and-decay`, `just-pythag-it-bruv`, `normal-navigator`, `quadratic-factoriser`, `simultaneous-solver`, `stat-attack`, `tax-theft`, `test-the-claim`
 
 ## Exit bar detail
 
