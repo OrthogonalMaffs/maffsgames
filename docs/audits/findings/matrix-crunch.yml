@@ -79,3 +79,100 @@ findings:
   summary: Duplicate '0' option; question renders 3 options (B2 ledgered)
   evidence: correct '0', d ['12','0','6']
   status: open
+- id: matrix-crunch-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:true-wrong-option
+  level: further, level4
+  where: games/matrix-crunch/index.html:208, :238 (singular "What happens?" Cramer items)
+  summary: 'The wrong options "x = 3, y = 0" / "x = 0, y = 3" (and "x = 5, y = 0" / "x = 0, y = 5") are true solutions of
+    the singular system, so true statements were marked wrong (SR-16). Fixed: each reads "Exactly one solution, x = ...",
+    the unique-solution misconception as a false statement; four distinct options, key unchanged. The verifier solves
+    each system and fails any bare "x = a, y = b" wrong option that satisfies it (s1-001); the old options are planted
+    in both levels and caught.'
+  evidence: 'x + y = 3 / 2x + 2y = 6 | What happens? | key Infinite solutions (D = 0, consistent) | No solution; x = 3,
+    y = 0; x = 0, y = 3. And 2x + 2y = 10 / x + y = 5 | key Infinite solutions (D = 0) | x = 5, y = 0; No solution;
+    x = 0, y = 5 (SWEEP-1, batch 11)'
+  status: open
+- id: matrix-crunch-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: further, level4
+  where: games/matrix-crunch/index.html:202 (Find y), :233-234 (Find I2)
+  summary: 'The pool is shuffled (t6-003), so "D = 5 (from above)" and the context "Same circuit." point at a question
+    that may not have been shown. Fixed: the step restates the determinant, and the context repeats the sibling item''s
+    own context line (no new context, keys unchanged); both D steps also restated ("D = 12 - 2 = 10"). The verifier
+    fails any context or step starting "Same" or saying "from above" / "as above" / "the above" (s1-002); both old
+    texts planted and caught.'
+  evidence: '2x + y = 5 / x + 3y = 10 | Find y using Cramer''s rule | key 3 | step "D = 5 (from above)"; 3I_1 + 2I_2 = 10 / I_1 + 4I_2 =
+    12 | ctx "Same circuit." | Find I2 (amps) | key 2.6 (SWEEP-1, batch 11)'
+  status: open
+- id: matrix-crunch-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: games/matrix-crunch/index.html:411 (wrong-flag text)
+  summary: 'The wrong-flag text "This matrix is not singular - its determinant is not zero." was shown on Cramer items,
+    which have a system and no matrix. Fixed: "This question is not singular (D ≠ 0). Check your calculation before
+    flagging." The verifier requires the new text and bars the old (s1-003); the old text is planted and caught.'
+  evidence: 'wrong Flag as Singular on a Cramer item shows "This matrix is not singular" (SWEEP-1, batch 11)'
+  status: open
+- id: matrix-crunch-s1-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: all
+  where: scripts/verify-matrix-crunch.py
+  summary: 'The verifier checked only the answer lock and the flag. Added: every determinant, inverse and Cramer key is
+    recomputed from the item''s own matrix or system, and each singular flag is checked against det = 0 (s1-004; wrong
+    determinant, inverse and Cramer keys planted and caught). Still unchecked: every worked step, the misconception
+    strings, the distractors (their origin, and option distinctness, t6-006), the contexts and the flag labels.'
+  evidence: 'all 53 keys recomputed and agree; steps, misconceptions and distractors are read by no check (SWEEP-1,
+    batch 11)'
+  status: open
+- id: matrix-crunch-s1-005
+  severity: LOW
+  jc: true
+  class: NEW:wording
+  level: further, level4
+  where: games/matrix-crunch/index.html:208-210, :236, :238 (option format, "What happens?" stem)
+  summary: 'For Jon, not fixed (a rewrite of option text and stems). The key is the only option carrying a "(D = 0, ...)"
+    note and the only one written "\dfrac{36}{14} = \dfrac{18}{7}"; Level 4 R1 = 10/3 is the only non-integer, so the
+    odd one out is the answer. The stem "What happens?" does not say what happens to what.'
+  evidence: 'x + y = 3 / 2x + 2y = 6 | What happens? | key Infinite solutions (D = 0, consistent) (SWEEP-1, batch 11)'
+  status: open
+- id: matrix-crunch-s1-006
+  severity: LOW
+  jc: true
+  class: NEW:wording
+  level: level4
+  where: games/matrix-crunch/index.html:219, :233-234 (mesh-equation contexts)
+  summary: 'For Jon, not fixed (a new context). The Kirchhoff pair 3I_1 + 2I_2 = 10 / I_1 + 4I_2 = 12 and the "circuit
+    mesh equations matrix" [[5,-2],[3,1]] have asymmetric coupling (2 against 1; -2 against 3), which passive mesh
+    resistors do not give. Not impossible, so LOW.'
+  evidence: '3I_1 + 2I_2 = 10 / I_1 + 4I_2 = 12 | Kirchhoff''s voltage law gives these mesh equations (SWEEP-1, batch 11)'
+  status: open
+- id: matrix-crunch-s1-007
+  severity: LOW
+  jc: true
+  class: NEW:precision-not-stated
+  level: level4
+  where: games/matrix-crunch/index.html:229 (inverse of [[1,0.5],[0.5,1]])
+  summary: 'For Jon, not fixed (key text). The key is left as 1/0.75 times the matrix, a form no textbook gives, and the
+    stem names no form; the worked steps then show the 4/3 form. Choose the convention: the 4/3 form as the key, or a
+    stem line naming the form.'
+  evidence: 'Find the inverse | key \dfrac{1}{0.75}\begin{pmatrix}1&-0.5\\-0.5&1\end{pmatrix} (SWEEP-1, batch 11)'
+  status: open
+- id: matrix-crunch-s1-008
+  severity: MEDIUM
+  jc: true
+  class: NEW:timer-policy
+  level: all
+  where: games/matrix-crunch/index.html:142 (id="timer"), :91 (CSS), :355 (score)
+  summary: 'For Jon, SR-23 class, not fixed. timer-policy.md lists Matrix Crunch under Hidden Count-Up (time on the
+    results screen only, no score multiplier); the game shows the "Time" HUD item (the CSS at :91 hides the classes
+    .timer and .hud-timer, not the id) and feeds the time into the score (m = 1/(1+T_K*ln(1+s))).'
+  evidence: 'HUD "Time" visible during play; score multiplied by the time term (SWEEP-1, batch 11)'
+  status: open

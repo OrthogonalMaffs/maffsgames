@@ -199,13 +199,13 @@ inv:[
 ],
 cramer:[
   {sys:['2x + y = 5','x + 3y = 10'],ask:'Find x using Cramer\'s rule',correct:'1',d:['2','3','5'],steps:['D = \\det\\begin{pmatrix}2&1\\\\1&3\\end{pmatrix} = 5','D_x = \\det\\begin{pmatrix}5&1\\\\10&3\\end{pmatrix} = 15 - 10 = 5','x = \\dfrac{D_x}{D} = \\dfrac{5}{5} = 1']},
-  {sys:['2x + y = 5','x + 3y = 10'],ask:'Find y using Cramer\'s rule',correct:'3',d:['1','5','2'],steps:['D = 5 (from above)','D_y = \\det\\begin{pmatrix}2&5\\\\1&10\\end{pmatrix} = 20 - 5 = 15','y = \\dfrac{D_y}{D} = \\dfrac{15}{5} = 3']},
+  {sys:['2x + y = 5','x + 3y = 10'],ask:'Find y using Cramer\'s rule',correct:'3',d:['1','5','2'],steps:['D = \\det\\begin{pmatrix}2&1\\\\1&3\\end{pmatrix} = 5','D_y = \\det\\begin{pmatrix}2&5\\\\1&10\\end{pmatrix} = 20 - 5 = 15','y = \\dfrac{D_y}{D} = \\dfrac{15}{5} = 3']},
   {sys:['3x + 2y = 7','x - y = 1'],ask:'Find x',correct:'\\dfrac{9}{5}',d:['\\dfrac{7}{5}','3','1'],steps:['D = \\det\\begin{pmatrix}3&2\\\\1&-1\\end{pmatrix} = -3 - 2 = -5','D_x = \\det\\begin{pmatrix}7&2\\\\1&-1\\end{pmatrix} = -7 - 2 = -9','x = \\dfrac{-9}{-5} = \\dfrac{9}{5}']},
   {sys:['4x + y = 11','2x + 3y = 13'],ask:'Find x',correct:'2',d:['3','1','4'],steps:['D = 12 - 2 = 10','D_x = 33 - 13 = 20','x = 20/10 = 2']},
-  {sys:['4x + y = 11','2x + 3y = 13'],ask:'Find y',correct:'3',d:['1','5','2'],steps:['D = 10','D_y = 52 - 22 = 30','y = 30/10 = 3']},
+  {sys:['4x + y = 11','2x + 3y = 13'],ask:'Find y',correct:'3',d:['1','5','2'],steps:['D = 12 - 2 = 10','D_y = 52 - 22 = 30','y = 30/10 = 3']},
   {sys:['x + 2y = 8','3x + y = 9'],ask:'Find x',correct:'2',d:['3','4','1'],steps:['D = 1 - 6 = -5','D_x = 8 - 18 = -10','x = -10/-5 = 2']},
   {sys:['5x + 3y = 1','2x + y = 0'],ask:'Find x',correct:'-1',d:['1','0','3'],steps:['D = 5 - 6 = -1','D_x = 1 - 0 = 1','x = 1/-1 = -1']},
-  {sys:['x + y = 3','2x + 2y = 6'],ask:'What happens?',correct:'Infinite solutions (D = 0, consistent)',d:['No solution','x = 3, y = 0','x = 0, y = 3'],steps:['D = 2 - 2 = 0','The equations are multiples of each other','Infinitely many solutions'],singular:true},
+  {sys:['x + y = 3','2x + 2y = 6'],ask:'What happens?',correct:'Infinite solutions (D = 0, consistent)',d:['No solution','Exactly one solution, x = 3, y = 0','Exactly one solution, x = 0, y = 3'],steps:['D = 2 - 2 = 0','The equations are multiples of each other','Infinitely many solutions'],singular:true},
   {sys:['x + y = 3','x + y = 5'],ask:'What happens?',correct:'No solution (D = 0, inconsistent)',d:['Infinite solutions','x = 4, y = 1','x = 3, y = 0'],steps:['D = 1 - 1 = 0','But 3 \\neq 5 — the lines are parallel','No solution exists'],singular:true},
   {sys:['3x - 2y = 4','x + 4y = 10'],ask:'Find x',correct:'\\dfrac{36}{14} = \\dfrac{18}{7}',d:['2','3','\\dfrac{26}{14}'],steps:['D = 12 - (-2) = 14','D_x = 16 - (-20) = 36','x = 36/14 = 18/7']},
 ]
@@ -231,11 +231,11 @@ inv:[
 ],
 cramer:[
   {sys:['3I_1 + 2I_2 = 10','I_1 + 4I_2 = 12'],ctx:'Kirchhoff\'s voltage law gives these mesh equations. Solve for the currents.',ask:'Find I\u2081 (amps)',correct:'1.6',d:['2','3.2','0.8'],steps:['D = 12 - 2 = 10','D_{I_1} = 40 - 24 = 16','I_1 = 16/10 = 1.6 \\text{ A}']},
-  {sys:['3I_1 + 2I_2 = 10','I_1 + 4I_2 = 12'],ctx:'Same circuit.',ask:'Find I\u2082 (amps)',correct:'2.6',d:['3','1.2','3.6'],steps:['D = 10','D_{I_2} = 36 - 10 = 26','I_2 = 26/10 = 2.6 \\text{ A}']},
+  {sys:['3I_1 + 2I_2 = 10','I_1 + 4I_2 = 12'],ctx:'Kirchhoff\'s voltage law gives these mesh equations. Solve for the currents.',ask:'Find I\u2082 (amps)',correct:'2.6',d:['3','1.2','3.6'],steps:['D = 12 - 2 = 10','D_{I_2} = 36 - 10 = 26','I_2 = 26/10 = 2.6 \\text{ A}']},
   {sys:['2F_1 + F_2 = 50','F_1 + 3F_2 = 70'],ctx:'Equilibrium equations for a structural joint.',ask:'Find F\u2081 (kN)',correct:'16',d:['20','10','14'],steps:['D = 6 - 1 = 5','D_{F_1} = 150 - 70 = 80','F_1 = 80/5 = 16 \\text{ kN}']},
   {sys:['5R_1 + 2R_2 = 24','R_1 + R_2 = 7'],ctx:'Resistance network equations.',ask:'Find R\u2081 (\u03a9)',correct:'\\dfrac{10}{3}',d:['4','2','5'],steps:['D = 5 - 2 = 3','D_{R_1} = 24 - 14 = 10','R_1 = 10/3 \\approx 3.33 \\text{ \u03a9}']},
   {sys:['4T_1 + T_2 = 100','T_1 + 4T_2 = 100'],ctx:'Heat transfer between two nodes.',ask:'Find T\u2081 (\u00b0C)',correct:'20',d:['25','16.7','80'],steps:['D = 16 - 1 = 15','D_{T_1} = 400 - 100 = 300','T_1 = 300/15 = 20\u00b0C']},
-  {sys:['2x + 2y = 10','x + y = 5'],ctx:'These equations describe a redundant system.',ask:'What happens?',correct:'Infinite solutions (D = 0)',d:['x = 5, y = 0','No solution','x = 0, y = 5'],steps:['D = 2 - 2 = 0','The equations are identical when simplified','Infinitely many solutions'],singular:true},
+  {sys:['2x + 2y = 10','x + y = 5'],ctx:'These equations describe a redundant system.',ask:'What happens?',correct:'Infinite solutions (D = 0)',d:['Exactly one solution, x = 5, y = 0','No solution','Exactly one solution, x = 0, y = 5'],steps:['D = 2 - 2 = 0','The equations are identical when simplified','Infinitely many solutions'],singular:true},
 ]
 }
 };
@@ -408,7 +408,7 @@ function showSolution(type){
     html+=`<div class="misconception">\u26a0 ${currentQ.misconception}</div>`;
   }
   if(type==='wrongFlag'){
-    html+=`<div class="misconception">\u26a0 This matrix is not singular — its determinant is not zero. Check your calculation before flagging.</div>`;
+    html+=`<div class="misconception">\u26a0 This question is not singular (D \u2260 0). Check your calculation before flagging.</div>`;
   }
   sol.innerHTML=html;
   sol.className='solution show';
