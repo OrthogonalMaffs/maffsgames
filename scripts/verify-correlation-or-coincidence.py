@@ -43,6 +43,8 @@ CATS = ("cause", "both", "chance")
 BUTTONS = {"cause": "One causes the other", "both": "Something else causes both", "chance": "Coincidence"}
 # The strength bands, stated here independently of the page.
 BANDS = {"very strong": (0.94, 1.0), "strong": (0.80, 0.94), "moderate": (0.50, 0.80)}
+# Pairs with a direct causal link, never a 'both' item (replaced 13 Oct 2026: B25, B27, B22).
+DIRECT_LINK = [("tickets", "t-shirts"), ("pancakes", "lemons"), ("miles", "scratches")]
 MIN_BANK = 84
 PHONES = [(320, 568), (375, 667), (390, 844)]
 PORT = None
@@ -109,6 +111,15 @@ def check_bank(bank, points):
             out.append("%s: direction %r is not +1 or -1" % (qid, q.get("dir")))
         if q.get("str") not in BANDS:
             out.append("%s: strength %r is not one of %s" % (qid, q.get("str"), ", ".join(BANDS)))
+        # A 'both' pair has no direct link as well as its common cause (SWEEP-1, Jon's ruling 13 Oct 2026): the three
+        # pairs where one also drives the other (gig-goers buy the shirts, lemons go on the pancakes, driving chips the
+        # paint) never come back.
+        if cat == "both":
+            pair = (q.get("x", [""])[0] + " | " + q.get("y", [""])[0]).lower()
+            for a_, b_ in DIRECT_LINK:
+                if a_ in pair and b_ in pair:
+                    out.append("%s: %r has a direct link as well as its common cause, so 'One causes the other' is "
+                               "also true (correlation-or-coincidence-s1-001)" % (qid, pair))
         # SR-14: tier (a) anywhere in the item; tier (b) (illness, injury) also in its joke.
         text = " ".join(str(v) for v in (q.get("x", [""])[0], q.get("y", [""])[0], q.get("explain"), lurk))
         words = SAFETY.terms(text) + SAFETY.terms(joke, humour=True)
@@ -322,6 +333,9 @@ FAULTS = [
     ("a 'both' item with no lurking variable", "COC.BANK.filter(function(q){return q.cat==='both';})[3].lurk = '';"),
     ("a coincidence with no joke theory", "COC.BANK.filter(function(q){return q.cat==='chance';})[5].joke = '';"),
     ("an item outside the three categories", "COC.BANK[7].cat = 'maybe';"),
+    ("B25's old pair back (tickets and T-shirts, a direct link)",
+     "(function(){ var q = COC.BANK.find(function(q){return q.id==='B25';}); q.x[0] = 'Concert tickets sold (thousands)';"
+     " q.y[0] = 'Band T-shirts sold (thousands)'; })();"),
     ("an empty explanation", "COC.BANK[11].explain = ' ';"),
     ("a lopsided split (six coincidences relabelled)",
      "COC.BANK.filter(function(q){return q.cat==='chance';}).slice(0,6).forEach(function(q){ q.cat='cause'; delete q.joke; });"),
