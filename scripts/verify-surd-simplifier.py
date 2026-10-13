@@ -303,7 +303,18 @@ PLANTS = [
     ('gcse[36]', 'a key not in lowest terms (6/9 for 0.(6))',
      "correct:'\\\\dfrac{2}{3}',d:['\\\\dfrac{6}{10}','\\\\dfrac{2}{9}','\\\\dfrac{6}{9}']}",
      "correct:'\\\\dfrac{6}{9}',d:['\\\\dfrac{6}{10}','\\\\dfrac{2}{9}','\\\\dfrac{2}{3}']}"),
+    ('start screen', 's1-001: "nested surds" listed, none in the bank',
+     "expand surd brackets\n", "expand surd brackets, nested surds\n"),
 ]
+
+
+def start_screen_fails(html, bank):
+    """The start screen says what the bank holds (SWEEP-1, surd-simplifier-s1-001): it names nested surds only when an
+    A-Level item has a root inside a root."""
+    if bank is None or 'nested surd' not in html:
+        return []
+    nested = [q for q in bank.get('alevel', []) if re.search(r'\\sqrt\{[^{}]*\\sqrt', q.get('q', ''))]
+    return [] if nested else ['start screen: it lists "nested surds" but no A-Level item has a root inside a root']
 
 
 def selftest_shapes():
@@ -333,6 +344,7 @@ def main():
     bank = play(fails, html)
     if bank is not None:
         check_bank(fails, bank)
+    fails += start_screen_fails(html, bank)
     print('%s: %d items, every key recomputed from its stem, every option read and clicked in Chromium'
           % (SLUG, sum(len(bank.get(k, [])) for k in COUNTS) if bank else 0))
     ok = True
@@ -346,6 +358,7 @@ def main():
             planted = play(rep, html.replace(new, old))
             if planted is not None:
                 check_bank(rep, planted)
+            rep += start_screen_fails(html.replace(new, old), planted)
             hit = [f for f in rep if f.startswith(tag)]
             ok = ok and bool(hit)
             print('  self-test %-46s %s' % (what, ('caught: ' + hit[0][:110]) if hit else '*** MISSED ***'))

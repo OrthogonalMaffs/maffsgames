@@ -183,6 +183,10 @@ def fits(optv, value, prec):
     return to_decimal(optv) == (round_sf(value, n) if kind == 'sf' else round_int(value))
 
 
+# Distractors a sweep named (SR-4: from a nameable error): {(the ask, the distractor): the error}.
+NAMED_ERRORS = {('Time for light to reach Earth (s)', '2 \\times 10^{-3}'): 'speed divided by distance, the inverse'}
+
+
 def check_item(fails, where, q):
     key, d = q['correct'], q['d']
     opts = [key] + list(d)
@@ -191,6 +195,13 @@ def check_item(fails, where, q):
         return
     ask, tex = q['ask'], q['q']
     info = [opt_info(o) for o in opts]
+    # SR-1 (SWEEP-1, standard-form-blitz-s1-001): an approximate key states the precision it is rounded to.
+    if '\\approx' in key and not re.search(r'nearest|s\.f\.|d\.p\.|significant|decimal place', ask):
+        fails.append('precision: %s: the key %r is approximate but the question states no precision (SR-1)' % (where, key))
+    # SR-4 (SWEEP-1, standard-form-blitz-s1-002): each named error's distractor, where one option made two errors.
+    for words, wrong in NAMED_ERRORS:
+        if ask == words and wrong not in d:
+            fails.append('options: %s: the distractor %r (%s) is missing (SR-4)' % (where, wrong, NAMED_ERRORS[(words, wrong)]))
     # SR-4 (B11-CLEAR, 12 Oct 2026): no two options equal in value, none expected. The one exception is a question that
     # asks for standard form, where options equal to the key's value in other forms test the form (45 x 10^3 and
     # 0.45 x 10^5 beside 4.5 x 10^4); two wrong values equal to each other are never allowed.
@@ -419,6 +430,10 @@ PLANTS = [
        "correct:'All three',d:['None are equal','4.5 \\\\times 10^5 \\\\text{ and } 45 \\\\times 10^5','4.5 \\\\times 10^6 \\\\text{ and } 45 \\\\times 10^5']")]),
     ('marking by the first three characters only', 'marking:',
      [("const ok=btn.dataset.val===q.correct;", "const ok=btn.dataset.val.slice(0,3)===q.correct.slice(0,3);")]),
+    ('SR-1: the approximate key with no precision stated (s1-001)', 'precision:',
+     [("ask:'How many times heavier is Earth? (nearest whole number)'", "ask:'How many times heavier is Earth?'")]),
+    ('SR-4: the two-error distractor back (s1-002)', 'options:',
+     [("'4.5 \\\\times 10^{19}','2 \\\\times 10^{-3}']", "'4.5 \\\\times 10^{19}','2 \\\\times 10^3']")]),
     ('a session one question short', 'session:',
      [("slice(0,totalQ);qIdx=0;score=0;", "slice(0,totalQ-1);qIdx=0;score=0;")]),
     ('a misspelt TeX command in a key', 'render:',

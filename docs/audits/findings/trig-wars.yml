@@ -88,3 +88,42 @@ findings:
     Claude).'
   status: fixed
   pr: 148
+- id: trig-wars-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: all
+  where: 'games/trig-wars/index.html:391-394 (briefing)'
+  summary: 'The briefing said "Raise θ and you trade distance for height" (false below 45°, where a steeper shot goes further too: t2-004''s backwards rule, left in the briefing) and that 45° gives maximum range (level ground only; the hill moves it to 42-54°). Fixed: "A steeper θ sends the shell higher. On level ground, 45° gives maximum range … The hill between the tanks changes the best angle, so use where each shot lands to adjust." The verifier pins both and plants the old text'
+  evidence: '"Raise θ and you trade distance for height. 45° gives maximum range — that is the angle where sin and cos are equal" (SWEEP-1, batch 6)'
+  status: fixed
+  pr: 343
+- id: trig-wars-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: 'games/trig-wars/index.html:1081-1133 (live trig triangle)'
+  summary: 'Above about 45° the live trig triangle''s apex is drawn off the top of its canvas'
+  evidence: 'Read from the drawing code at :1081-1133: above about 45° the apex is placed above the canvas top (SWEEP-1, batch 6; not checked on screen)'
+  status: open
+- id: trig-wars-s1-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:sr14-content
+  level: all
+  where: 'games/trig-wars/index.html:990 (hitLines)'
+  summary: 'A skull on a hit line, "☠ ELIMINATED!" (t2-006 removed the other death symbols). Fixed (Jon''s ruling, 13 Oct 2026, SR-14): removed; the verifier fails ☠ and ELIMINATED and plants the line back'
+  evidence: 'const hitLines=[''⚡ DIRECT HIT!'',''☠ ELIMINATED!'',''💥 GOT ONE!'',''🎯 BULLSEYE!''] (SWEEP-1, batch 6)'
+  status: fixed
+  pr: 343
+- id: trig-wars-s1-004
+  severity: LOW
+  jc: false
+  class: NEW:sr14-content
+  level: all
+  where: 'games/trig-wars/index.html:807-817 (MISS_LINES.blueon1, blueon2, wayShort)'
+  summary: 'Friendly-fire jokes on a shell that lands near your own tanks. Fixed (Jon''s ruling, 13 Oct 2026, SR-14: keep hit and miss neutral): "That landed in your own camp." / "Too close to your own tanks." (Omega''s for Player 2); wayShort''s "Your own troops are filing a complaint." -> "Way short of the target."; the verifier fails each old phrase'
+  evidence: '"BLUE ON BLUE! You nearly hit your own lads! 😬", "Friendly fire! Your teammates are NOT impressed.", "That landed in YOUR camp. Smooth.", "General to command: ''Our idiot is shooting at us again.''", "Friendly fire! The enemy is laughing.", "That shell nearly took out your own tank. Yikes." (SWEEP-1, batch 6)'
+  status: fixed
+  pr: 343

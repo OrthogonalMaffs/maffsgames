@@ -85,8 +85,16 @@ def expect(type_, angle, hyp, ratio):
             g1, g2, fn, theta, labels = O, A, 'tan', todeg(mp.atan(O / A)), {'O': 'O=%s' % opp, 'A': 'A=%s' % adj}
         r, small = g1 / g2, min(g1, g2) / max(g1, g2)
         if ratio == 'TOA':
+            # Each name says what the student did to get its angle: sin⁻¹ or cos⁻¹ of O/A where O/A <= 1, and of A/O
+            # (the ratio turned over too) where O > A, since sin⁻¹(O/A) then has no value (SWEEP-1, trig-worms-s1-002).
+            if O <= A:
+                s_name, c_name = 'sin⁻¹ instead of tan⁻¹', 'cos⁻¹ instead of tan⁻¹'
+                s_val, c_val = mp.asin(O / A), mp.acos(O / A)
+            else:
+                s_name, c_name = 'sin⁻¹(A/O) instead of tan⁻¹(O/A)', 'cos⁻¹(A/O) instead of tan⁻¹(O/A)'
+                s_val, c_val = mp.asin(A / O), mp.acos(A / O)
             named = [('ratio upside down: tan⁻¹(A/O)', todeg(mp.atan(g2 / g1))),
-                     ('sin⁻¹ instead of tan⁻¹', todeg(mp.asin(small))), ('cos⁻¹ instead of tan⁻¹', todeg(mp.acos(small))),
+                     (s_name, todeg(s_val)), (c_name, todeg(c_val)),
                      ('ratio rounded to 1 d.p. before tan⁻¹', todeg(mp.atan(mp.mpf(str(half_up(r, 1))))))]
         else:
             other = 'cos' if fn == 'sin' else 'sin'
@@ -253,6 +261,8 @@ PLANTS = [
     ("the adjacent question labelled O=? (t1-002)", "labels={H:'H='+hyp,A:'A=?'}", "labels={H:'H='+hyp,O:'O=?'}"),
     ("an angle key that ignores the shown sides (t1-001, t1-003)", "    correct=deg(theta);\n", "    correct=angle+'°';\n"),
     ("an angle question with no stated precision (t1-001)", "\\nFind angle θ to the nearest degree.`", "\\nFind angle θ.`"),
+    ("'sin⁻¹ instead of tan⁻¹' naming sin⁻¹(A/O) when O > A (s1-002)",
+     "['sin⁻¹'+over, toDeg(Math.asin(small))]", "['sin⁻¹ instead of tan⁻¹', toDeg(Math.asin(small))]"),
 ]
 
 

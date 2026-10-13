@@ -52,3 +52,31 @@ findings:
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
   status: fixed
   pr: 98
+- id: trig-worms-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:text-contradicts-content
+  level: all
+  where: 'games/trig-worms/index.html:367, :417-421 (θ arc and glyph)'
+  summary: 'Where the drawn adjacent side is shorter than the angle arc''s radius (70-85°, 155 of 1,204 outcomes) the θ arc and its glyph sit at the right-angle corner, not at θ''s vertex'
+  evidence: '155 of the 1,204 servable outcomes, all at 70-85°, measured from the drawing code (SWEEP-1, batch 6)'
+  status: open
+- id: trig-worms-s1-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: all
+  where: 'games/trig-worms/index.html:218-223 (TOA named errors), :537 (feedback)'
+  summary: 'On TOA angle items with O > A the feedback named a wrong option "sin⁻¹ instead of tan⁻¹" (or cos⁻¹), but sin⁻¹(O/A) has no value there: the angle is sin⁻¹(A/O), the ratio turned over too (84 of 174 TOA outcomes); the verifier mirrored the name. Fixed: the name says "sin⁻¹(A/O) instead of tan⁻¹(O/A)" where O > A; the verifier derives each name from O and A, and plants the old name'
+  evidence: 'θ = 50°, H = 8, TOA: O = 6.1, A = 5.1, key 50°, distractors 40°, 57°, 33°; feedback "(57° comes from sin⁻¹ instead of tan⁻¹.)", but sin⁻¹(6.1/5.1) is undefined and 57° = sin⁻¹(5.1/6.1) (SWEEP-1, batch 6; the verifier''s plant)'
+  status: fixed
+  pr: 343
+- id: trig-worms-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: all
+  where: 'games/trig-worms/index.html:236 (exp)'
+  summary: 'The working shows θ to 1 d.p. as x.5° and then rounds down to the nearest degree (the key is from the unrounded value)'
+  evidence: 'exp: `… = ${round1(theta).toFixed(1)}° = ${correct} to the nearest degree`; 6 outcomes show a 1 d.p. value ending .5 beside a key rounded down (SWEEP-1, batch 6)'
+  status: open

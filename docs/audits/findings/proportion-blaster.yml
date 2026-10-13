@@ -24,3 +24,31 @@ findings:
     alevel sessions (20 drawn from 50).'
   status: fixed
   pr: 111
+- id: proportion-blaster-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: gcse
+  where: 'games/proportion-blaster/index.html gcse[16] :166, gcse[21] :171'
+  summary: 'Two items find x from y = kx² and key the positive root without saying so (SR-17: a square root in rearranging states positive). Fixed: the ask says "(x > 0)"; the verifier pins it and plants the old ask'
+  evidence: 'gcse[16] "y ∝ x². When x = 3, y = 36." | "Find x when y = 100" key 5 (x = ±5); gcse[21] "y ∝ x². When x = 2, y = 8." | "Find x when y = 50" key 5 (SWEEP-1, batch 6)'
+  status: fixed
+  pr: 343
+- id: proportion-blaster-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:raw-tex-on-screen
+  level: alevel
+  where: 'games/proportion-blaster/index.html:277 (context written with textContent)'
+  summary: 'The context line is written as plain text, so TeX in it shows raw: "y ∝ x^{3/2}" (alevel[6]); x^n in alevel[14], [23], [24], [28], [29], [40], [41]; x^2 in [44]; Q^a in [49]'
+  evidence: 'alevel[6] ctx "y ∝ x^{3/2}. When x = 4, y = 16." through document.getElementById(''context'').textContent (SWEEP-1, batch 6)'
+  status: open
+- id: proportion-blaster-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: all
+  where: 'games/proportion-blaster/index.html (wrong-answer feedback)'
+  summary: 'No working is shown after a wrong answer, only the key highlighted: a struggling student is not told why (class, with standard-form-blitz, surd-simplifier, trig-identity-duel)'
+  evidence: 'Wrong pick: the key turns green and Next mounts; no explanation (SWEEP-1, batch 6)'
+  status: open

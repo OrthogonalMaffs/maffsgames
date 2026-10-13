@@ -129,3 +129,21 @@ findings:
     θ (doubling the angle doubles the sine: the misconception the item tests).'
   status: fixed
   pr: 102
+- id: trig-identity-duel-s1-001
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: alevel
+  where: 'games/trig-identity-duel/index.html:226-228'
+  summary: '\csc renders "csc"; UK specifications (AQA, Edexcel, OCR) write cosec'
+  evidence: 'q "1 + \cot^2\theta" key "\csc^2\theta" shows csc²θ (SWEEP-1, batch 6)'
+  status: open
+- id: trig-identity-duel-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: alevel
+  where: 'games/trig-identity-duel/index.html:238'
+  summary: 'The ask "Which double angle identity helps?" is answered by options that are rewritten expressions, not identities'
+  evidence: 'ask "Which double angle identity helps?" with expression options (SWEEP-1, batch 6)'
+  status: open

@@ -51,3 +51,31 @@ findings:
     unlisted equal pair, with a plant that puts 1/5 back'
   status: fixed
   pr: 328
+- id: surd-simplifier-s1-001
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: alevel
+  where: 'games/surd-simplifier/index.html:113 (start screen)'
+  summary: 'The start screen listed "nested surds" for A-Level and no item has one (a start screen says what the game does). Fixed: removed; the verifier lists nested surds only when an A-Level item has a root inside a root, and plants the old text'
+  evidence: '"A-Level: + rationalise conjugate denominators, expand surd brackets, nested surds" (SWEEP-1, batch 6)'
+  status: fixed
+  pr: 343
+- id: surd-simplifier-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: gcse
+  where: 'games/surd-simplifier/index.html:180-181 (gcse[33], gcse[34])'
+  summary: 'The same stem twice in one bank, with different asks and keys the same'
+  evidence: '"8/√32" | "Rationalise and simplify" key √2, and "8/√32" | "Simplify fully" key √2 (SWEEP-1, batch 6)'
+  status: open
+- id: surd-simplifier-s1-003
+  severity: MEDIUM
+  jc: true
+  class: NEW:timer-policy
+  level: all
+  where: 'games/surd-simplifier/index.html:125 (HUD timer), :291-295, :301'
+  summary: 'Timer policy lists Surd Simplifier under Hidden Count-Up, but the HUD shows a running "Time" and the time feeds the score; same shape as trig-identity-duel-t2-010 (SR-23 applies; a fix outside SWEEP-1''s checks, for Jon to schedule)'
+  evidence: '<div class="hud-label">Time</div><div class="hud-val" id="timer">0s</div> (the CSS at :77 hides .timer, not #timer) (SWEEP-1, batch 6)'
+  status: open
