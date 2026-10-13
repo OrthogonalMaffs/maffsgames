@@ -134,6 +134,10 @@ def explained(num_text, s, t, sd_key):
     val = Decimal(raw)
     mean = F(s['mean'])
     sd = F(sd_key)
+    if dp:
+        # A figure printed with decimals (a price to the penny) is the UNROUNDED value rounded to those
+        # decimals, never a 3 s.f. key padded with a zero (R4, SWEEP-1 stat-attack-s1-004: "£190.40" for £190.42).
+        mean, sd = t['mean'], F(repr(t['sd']))
     cands = [mean, sd, mean - sd, mean + sd]
     for scale in (1, 1000):
         for c in cands:
@@ -398,6 +402,11 @@ def selftest(bank, played):
         s = next(iter(by.values()))
         s['contextLine'] += ' The standard deviation is %s.' % round(s['sd'] + 0.7, 2)
     expect('stale SD in the prose', lambda rep: check_bank(rep, mutated(stale_prose)))
+
+    def padded_pence(by):
+        s = by['G8']
+        s['contextLine'] = s['contextLine'].replace('£10.79', '£10.80')   # the 3 s.f. key padded to pence (R4)
+    expect('3 s.f. key padded to pence (R4)', lambda rep: check_bank(rep, mutated(padded_pence)))
 
     # Lie about a key the page then marks against, in a scenario that is clean on its own,
     # so the failure cannot be mistaken for one the run already reported.
