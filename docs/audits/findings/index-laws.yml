@@ -43,3 +43,27 @@ findings:
     pair, with a plant that puts 3^{12} back'
   status: fixed
   pr: 320
+- id: index-laws-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: gcse
+  where: games/index-laws/index.html:678 (the shared line), 20 items in the Divide, Power, Negative and Fractional rules
+  summary: 'Every item read "Select the correct simplified form", which names no form, and the keys disagreed about it:
+    x^-3 keyed 1/x^3 but 1/x^5 keyed x^-5; x^3 ÷ x^7 and (x^-2)^3 keyed with a negative index; x^(3/2) keyed (√x)^3; and
+    eleven items asking for a value. Fixed under SR-17 ("simplify" names the form): each now has an ask, "Write as a single
+    power of x", "Write with a positive index", "Work out the value" or "Write using a root". Keys unchanged; the verifier
+    fails a root, negative-index, reciprocal or value key with no ask naming it'
+  evidence: 'Q28 x^{-3} key \dfrac{1}{x^3}; Q31 \dfrac{1}{x^5} key x^{-5} (SWEEP-1, batch 5)'
+  status: fixed
+  pr: 341
+- id: index-laws-s1-002
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: gcse
+  where: games/index-laws/index.html:625 (Q8)
+  summary: 'x^(1/3) × x^(2/3) is keyed "x^1" as the simplified form, where Q4 keys the same result "x". No option is x,
+    so marking is unaffected. Open'
+  evidence: 'SWEEP-1, batch 5'
+  status: open

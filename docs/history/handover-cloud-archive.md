@@ -3,6 +3,38 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-13 (cloud): equation-builder, Jon's ruling (SWEEP-1 batch 3's stop)
+
+- **Stems:** 27 "Write an expression for X" items now ask for "a formula for X" (keys unchanged). **Keys:** ks3_014 `LCM(420, 315)` (Days, = tiles removed), ks3_033 `2 × r³`, l4_015 `log(16)`, l4_021 `∫₁⁴ 2x dx`. Full list in the PR.
+- **Rearrangements:** gcse_008, 012, 014, 018, 019 now equations (as gcse_007); valid gains gcse_008 ×, gcse_012 −, gcse_018 ×, gcse_019 +.
+- **Tiles:** shuffled per question by `orderTiles()`, never starting with the key's tiles in order.
+- **Verifier:** kind from the question's words (last "write" sentence), SR-25 form check, tile order checked in Chromium (part 1); five new plants. Locally: check PASS, --selftest PASS, --part-selftest PASS (through `run_offline_sync.py`).
+- **Findings:** equation-builder-s1-001 HIGH, s1-002 HIGH, s1-003 MEDIUM fixed; s1-004, s1-005 LOW open (l4_010 form only; l4_021 "Evaluate").
+
+## 2026-10-13 (cloud): SWEEP-1 batch 2 (Year 6 part 2, sequence-solver)
+
+- **Fixed (SR-17):** sequence-solver gcse[48] "Fill in the gaps" -> "If arithmetic, fill the gaps" (key unchanged); the verifier's FILL() now fails an ask naming no type (plant: the old ask).
+- **Open:** probability-pioneer s1-001 MEDIUM, s1-002; shape-shifter s1-001..002; new-shapes s1-001 MEDIUM (waits on the SR-26 redraw, Jon 12 Oct); angle-ace s1-001..002; sequence-solver s1-002 MEDIUM, s1-003..004. No new findings: decimal-detective, four-quadrant-explorer, like-terms-collector.
+- **Class for Jon (running):** assumptions unstated (fair, six-sided, at random): probability-pioneer (s1-001). Raw TeX on screen: sequence-solver (s1-002; r-002 already).
+- **Container:** verifiers that load KaTeX from the CDN run here through `run_offline_sync.py` (scratchpad): it patches the sync API's launch (executable /opt/pw-browsers/chromium) and new_context (routes the KaTeX CDN to `scripts/fonts/katex/dist`); the verifier is unchanged. The async wrapper from sandbox-checks.md does not reach sync-API verifiers (goto times out).
+
+## 2026-10-13 (cloud): SWEEP-1 batch 1 (Year 6 games, part 1)
+
+- **Read:** estimation-golf, factor-race, prime-factorisation, percentage-flip, fraction-equivalence, negative-number-line, think-of-a-number, formula-plug-in. Report section in `docs/audits/sweep-1-2026-10.md`.
+- **Recorded (open, none fixed):** estimation-golf-s1-001 MEDIUM, s1-002..005 LOW; prime-factorisation-s1-001, fraction-equivalence-s1-001, formula-plug-in-s1-001 LOW. No HIGH, no CRITICAL.
+- **Method:** one read-only reviewer per game (brief: session scratchpad `sweep-brief.md`; inputs: the page, `data/banks/<slug>.json` from an offline extract, the verifier, the findings file), then every candidate checked against the page by me before recording. Out-of-scope notes go in the report, not the register. Fixes only where a ruling decides the wording; new copy is Jon's.
+- **Class for Jon (running):** SR-12, "Estimate" with no stated method and an exact key: estimation-golf (s1-001).
+- **Container:** esprima from the sdist on PYTHONPATH, `pip install playwright==1.63.0 sympy mpmath` (pyyaml is Debian's), KaTeX from `scripts/fonts/katex/dist` through the sandbox-checks wrapper: 82 live, 1 static, 14 generators.
+
+## 2026-10-13 (cloud): B11-CLEAR game 7, complex-converter (#331); B11-CLEAR complete
+
+- **Replacement (kind a, key unchanged):** id 43 (7e^{j0} to rectangular, key 7): 0 + 7j -> 0 (took e^{j0} as 0, not 1); 7j kept.
+- **Listed (kind b):** id 15 (3e^{j pi/6} to polar, key 3 angle 30 deg) beside 3 angle pi/6: its context, shown on screen, reads "Express in polar form (degrees)." The verifier now reads pi angles in radians.
+- **FOR THE HOME LANE: data/check-ledger.json holds no B11 entry for any game** (summed over every game after #331). Exit-bar point 3's "B11 parser" item can be set to True in
+  audit-register.py (the cloud lane does not edit that file). All 8 kind-(b) pairs are allowlisted with their ask quoted; none needed Jon's ruling. Every replacement is listed in
+  the game entries above and in each PR (#312, #315, #320, #324, #328, #330, #331); each of the seven verifiers fails on a planted equal-value pair.
+- **Container note:** boolean-blitz's extraction needs KaTeX; locally (CDN 403) it falls back to the LAWS bank and check-banks --ci misreads it. CI reads it correctly.
+
 ## 2026-10-12 (cloud): B11-CLEAR game 3, index-laws (#320)
 
 - **Replacements (kind a, keys unchanged):** [6] 3^{12} -> 3^2 (subtracted the powers; 9^6 kept); [27] 1/x^{-3} -> −1/x^3 (negative as well; x^3 kept); [38] 27/3 -> 1/3, [39] 100/2 -> 1/10, [40] 25/2 -> 1/5 (reciprocal as for a negative power; 9, 50, 12.5 kept).

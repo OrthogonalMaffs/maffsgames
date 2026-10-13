@@ -54,3 +54,51 @@ findings:
     plants the old point-on-click.'
   status: fixed
   pr: 152
+- id: gradient-hunter-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:precision-not-stated
+  level: core, gcse, alevel
+  where: games/gradient-hunter/index.html:1055 (the typed-gradient prompt)
+  summary: 'An exact gradient at 2 or more places is marked exactly, but its prompt stated no precision while the recurring
+    items ask for 2 d.p.: alevel_004''s −0.1125 typed as −0.11 was marked wrong, not told the format (also core_004 12.25,
+    core_005 14.25, gcse_008 28.75, gcse_009 2.25, alevel_006 −0.29). Fixed under SR-1 (state the precision the key
+    uses): "Give the exact value."; the verifier checks the line appears exactly there'
+  evidence: '"Work out the gradient of the chord from A (2, 1.6) to B (10, 0.7)." key −9/80 (SWEEP-1, batch 5)'
+  status: fixed
+  pr: 341
+- id: gradient-hunter-s1-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:true-wrong-option
+  level: core, gcse
+  where: games/gradient-hunter/index.html:390 (gh_core_019), :467 (gh_gcse_007)
+  summary: 'Two wrong interpretations were true of the graph as drawn: "The rod reaches 30 deg C" (it climbs from 20 to
+    past 700) and "The pool contains 1000 litres" (point B is (4, 1000)). Fixed under SR-16: "The gradient means …",
+    naming the error; TRUE_OPTIONS pins the old texts'
+  evidence: 'SWEEP-1, batch 5'
+  status: fixed
+  pr: 341
+- id: gradient-hunter-s1-003
+  severity: MEDIUM
+  jc: true
+  class: NEW:true-wrong-option
+  level: core, gcse, alevel
+  where: 'games/gradient-hunter/index.html: gh_gcse_015, gh_core_013, gh_gcse_003, gh_gcse_014, gh_gcse_011, gh_gcse_002,
+    gh_gcse_004, gh_alevel_008 (and the other y-value readings)'
+  summary: 'The class behind s1-002: wrong options that read the gradient as a y-value ("The ball is 10 metres high",
+    "The bath is 5 cm deep") are true at some instant where the curve reaches that value. None changes the marking (the
+    key is plainly the best answer). One rewording covers the class ("The gradient means …"), over about twenty options:
+    Jon''s call'
+  evidence: 'SWEEP-1, batch 5'
+  status: open
+- id: gradient-hunter-s1-004
+  severity: LOW
+  jc: false
+  class: NEW:wording
+  level: core, alevel
+  where: games/gradient-hunter/index.html gh_core_015 (:348-356), gh_alevel_009, :170 (start screen)
+  summary: 'Open: core_015''s spline rises between years 3 and 4 though the car loses value; alevel_009 writes 116.7 with
+    no ≈; the start screen says click two points "to find the gradient" though the student types it'
+  evidence: 'SWEEP-1, batch 5'
+  status: open

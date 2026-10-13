@@ -1,0 +1,23 @@
+# Findings register for distinctly-average (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: distinctly-average
+audited:
+  tranche: S1 (SWEEP-1 reading sweep)
+  head: 951f6b3
+  date: 2026-10-13
+  served:
+    ks3: generator
+    gcse: generator
+findings:
+- id: distinctly-average-s1-001
+  severity: LOW
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: gcse
+  where: games/distinctly-average/index.html:835 (wrong_n distractor), :317 (its feedback), :1391-1392 and :1018 (meanText)
+  summary: 'Wording, open: the missing-value distractor wrong_n (mean × (n − 1) − the known sum) is explained "You divided
+    by the wrong number of values" (nobody divided; the mean was multiplied by the wrong count), on all 15 items; and
+    outlierMean''s inexact line reads "29 ÷ 4 about 7.3" with no verb. Outside the four checks, for Jon: in every
+    missing-value item the key is the only whole number inside the data''s range (a generator change)'
+  evidence: '"6 7 6 ?", mean 6.5: options 7 (key), 0.5, 6.5, 19 (SWEEP-1, batch 5)'
+  status: open

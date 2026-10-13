@@ -35,7 +35,7 @@ start-up load). When the work merges, move the file to `docs/history/`.
 
 **Queue:** VERIFIERS-20 (12 Oct, contract now `docs/history/contracts/2026-10-12-verifiers-20.md`): 20 verifiers, one game per PR; 1 prime-or-composite DONE (#282); 2 fraction-equivalence DONE (#283); 3 percentage-flip DONE (#284); 4 factor-race DONE (#285); 5 prime-factorisation DONE (#286); 6 think-of-a-number DONE (#287); 7 formula-plug-in DONE (#290); 8 four-quadrant-explorer DONE (#291); 9 new-shapes DONE (#292); 10 shape-shifter DONE (#293); 11 equatle DONE (#294); 12 standard-form-blitz DONE (#295); 13 index-laws DONE (#296, ruling #297); 14 modular-battle DONE (#298); 15 bearing-blitz DONE (#300); 16 constructions-lab DONE (#301); between games: wrong-on-the-internet t2-006 (Jon's SR-14 ruling) DONE (#304, 73478d6), closes t2-006; modular-battle verifier flake fixed (#303); 17 formula-forge DONE (#305); 18 characteristic-quest DONE (#306); 19 eigenvalue-extractor DONE (#307); 20 prisoners-dilemma DONE (#309). **VERIFIERS-20 COMPLETE.** Then: formula-forge-v20-001 (Jon's ruling, 12 Oct) DONE (#310, 8d36ca2).
 B11-CLEAR (12 Oct, contract now `docs/history/contracts/2026-10-12-b11-clear.md`): clear B11 from the ledger, one game per PR: 1 scale-factor-scaling DONE (#312, 031d8ed); 2 coordinate-geometry-dash DONE (#315); 3 index-laws DONE (#320, 588a903); 4 standard-form-blitz DONE (#324, cb0751b); 5 surd-simplifier DONE (#328, 6d40d5a); 6 boolean-blitz DONE (#330, c5ef4b0); 7 complex-converter DONE (#331). **B11-CLEAR COMPLETE: the ledger holds no B11 entry.**
-**SWEEP-1** (12 Oct, contract `docs/handover/contracts/2026-10-12-sweep-1.md`): one reading sweep of 96 live games (glorious-gantt skipped), 12 batches of 8 in lowest-level order; findings in each game's file, report `docs/audits/sweep-1-2026-10.md`. **Jon's rulings, 13 Oct** (verbatim: `docs/handover/contracts/2026-10-13-sweep-1-rulings.md`): word-problem-decoder and equation-builder fixed, not unlisted; **equation-builder must merge today, or say so and the home lane unlists it.** Batches 1-3 DONE (#332, #336, #339); equation-builder DONE (#338). Batch 4 (truth-buster, spot-the-muppet, terrible-advice, wrong-on-the-internet, maths-court, expected-damage, higher-power, prisoners-dilemma): #340 open. Batch 5 (seven-bridges, distinctly-average, just-pythag-it-bruv, fermi-lab, six-sevens-bruv, free-daily-pizza, gradient-hunter, index-laws): being read.
+**SWEEP-1** (12 Oct, contract `docs/handover/contracts/2026-10-12-sweep-1.md`): one reading sweep of 96 live games (glorious-gantt skipped), 12 batches of 8 in lowest-level order; findings in each game's file, report `docs/audits/sweep-1-2026-10.md`. **Jon's rulings, 13 Oct** (verbatim: `docs/handover/contracts/2026-10-13-sweep-1-rulings.md`): word-problem-decoder and equation-builder fixed, not unlisted; **equation-builder must merge today, or say so and the home lane unlists it.** **STOPPED 13 Oct (STOP IF: SR-20 threshold), waiting for Jon:** batch 6's quadratic-factoriser, GCSE Higher: every HCF item (3008 of 3760, 80%) shows a guided split (hfCorrectSplit uses the base p·s, q·r while a, b, c are scaled by k) that fails the step's own rule, keyed right, the true split not offered. Nothing fixed or recorded yet; batch 6 candidates in the session scratchpad `batch6-notes.txt`. Batches 1-4 DONE (#332, #336, #339, #340); equation-builder DONE (#338). Batch 5: #341 open.
 UC-FIX: DONE, #196 merged 9 Oct (c9fbf4b), main green.
 SIM-S5: DONE, #203 merged 9 Oct (4081538). UC-T4-007: DONE, #205 merged 9 Oct (920c5b1; the answers' item 3c, in
 `docs/history/contracts/2026-10-09-sim-s5-answers.md`; claim #204). FT-FIX: DONE, #207 merged 9 Oct (cf96929; contract, amendment and Jon's answers
@@ -87,6 +87,12 @@ Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
+## 2026-10-13 (cloud): SWEEP-1 batch 5 (KS3 part 3, first GCSE)
+
+- **Fixed:** index-laws, 20 conversion items name their form (SR-17; form_needed()); gradient-hunter, exact keys at 2+ places say "Give the exact value." (SR-1) and two true y-value options name their error (SR-16).
+- **Open, for Jon:** fermi-lab-s1-001 HIGH (eq_bus_distance keys student-km for "distance travelled by school buses"); gradient-hunter-s1-003 (y-value readings true at an instant, about twenty options).
+- **Class for Jon (running):** assumptions only in hidden hints with tight bands (fermi-lab s1-002).
+
 ## 2026-10-13 (cloud): SWEEP-1 batch 4 (KS3 part 2)
 
 - **Fixed (rulings):** terrible-advice gcse_008/core_002 true "X is correct" options, ks3_017/gcse_019 true equations, gcse_018 "add for OR" (SR-16); wrong-on-the-internet ks3_007 "a fair coin", core_004 "5% compound interest" (Jon's ruling, RULED); maths-court ks3_002's summary names Numerica (SR-16, a check on every case), gcse_010 3 s.f. (SR-1), core_007's 1.048¹⁰ (SPECS); higher-power ks3_35's fact (check_perfect). Each verifier PASS locally with its new plants.
@@ -99,35 +105,3 @@ main's last full run is red; watch main's run after merging.
 - **Fixed here:** word-problem-decoder gcse_029, 056, 024 and ks3_030 accept their second topic (SR-18; ACCEPT rows; plant on gcse_029); split-it's speed question says "At the same speed" (SR-17; the verifier's pattern needs it, so the old wording fails).
 - **Open, for Jon:** spot-the-error-s1-001 HIGH (ks3_010: the explanation blames the 80 trials, "replaces it 80 times" marked wrong; moving the Stage 2 key needs a ruling); s1-003 (Stage 2 slip items, a class); equatle s1-001 (left to right); 52dle s1-001/s1-002 (false or empty clue facts); and the LOWs.
 - **Class for Jon (running):** Stage 2 "misread phrase" on slip items (spot-the-error); "form an equation" phrases and Forming Expressions (word-problem-decoder, Jon to rule once); rates under Ratio & Proportion (word-problem-decoder s1-003).
-
-## 2026-10-13 (cloud): equation-builder, Jon's ruling (SWEEP-1 batch 3's stop)
-
-- **Stems:** 27 "Write an expression for X" items now ask for "a formula for X" (keys unchanged). **Keys:** ks3_014 `LCM(420, 315)` (Days, = tiles removed), ks3_033 `2 × r³`, l4_015 `log(16)`, l4_021 `∫₁⁴ 2x dx`. Full list in the PR.
-- **Rearrangements:** gcse_008, 012, 014, 018, 019 now equations (as gcse_007); valid gains gcse_008 ×, gcse_012 −, gcse_018 ×, gcse_019 +.
-- **Tiles:** shuffled per question by `orderTiles()`, never starting with the key's tiles in order.
-- **Verifier:** kind from the question's words (last "write" sentence), SR-25 form check, tile order checked in Chromium (part 1); five new plants. Locally: check PASS, --selftest PASS, --part-selftest PASS (through `run_offline_sync.py`).
-- **Findings:** equation-builder-s1-001 HIGH, s1-002 HIGH, s1-003 MEDIUM fixed; s1-004, s1-005 LOW open (l4_010 form only; l4_021 "Evaluate").
-
-## 2026-10-13 (cloud): SWEEP-1 batch 2 (Year 6 part 2, sequence-solver)
-
-- **Fixed (SR-17):** sequence-solver gcse[48] "Fill in the gaps" -> "If arithmetic, fill the gaps" (key unchanged); the verifier's FILL() now fails an ask naming no type (plant: the old ask).
-- **Open:** probability-pioneer s1-001 MEDIUM, s1-002; shape-shifter s1-001..002; new-shapes s1-001 MEDIUM (waits on the SR-26 redraw, Jon 12 Oct); angle-ace s1-001..002; sequence-solver s1-002 MEDIUM, s1-003..004. No new findings: decimal-detective, four-quadrant-explorer, like-terms-collector.
-- **Class for Jon (running):** assumptions unstated (fair, six-sided, at random): probability-pioneer (s1-001). Raw TeX on screen: sequence-solver (s1-002; r-002 already).
-- **Container:** verifiers that load KaTeX from the CDN run here through `run_offline_sync.py` (scratchpad): it patches the sync API's launch (executable /opt/pw-browsers/chromium) and new_context (routes the KaTeX CDN to `scripts/fonts/katex/dist`); the verifier is unchanged. The async wrapper from sandbox-checks.md does not reach sync-API verifiers (goto times out).
-
-## 2026-10-13 (cloud): SWEEP-1 batch 1 (Year 6 games, part 1)
-
-- **Read:** estimation-golf, factor-race, prime-factorisation, percentage-flip, fraction-equivalence, negative-number-line, think-of-a-number, formula-plug-in. Report section in `docs/audits/sweep-1-2026-10.md`.
-- **Recorded (open, none fixed):** estimation-golf-s1-001 MEDIUM, s1-002..005 LOW; prime-factorisation-s1-001, fraction-equivalence-s1-001, formula-plug-in-s1-001 LOW. No HIGH, no CRITICAL.
-- **Method:** one read-only reviewer per game (brief: session scratchpad `sweep-brief.md`; inputs: the page, `data/banks/<slug>.json` from an offline extract, the verifier, the findings file), then every candidate checked against the page by me before recording. Out-of-scope notes go in the report, not the register. Fixes only where a ruling decides the wording; new copy is Jon's.
-- **Class for Jon (running):** SR-12, "Estimate" with no stated method and an exact key: estimation-golf (s1-001).
-- **Container:** esprima from the sdist on PYTHONPATH, `pip install playwright==1.63.0 sympy mpmath` (pyyaml is Debian's), KaTeX from `scripts/fonts/katex/dist` through the sandbox-checks wrapper: 82 live, 1 static, 14 generators.
-
-## 2026-10-13 (cloud): B11-CLEAR game 7, complex-converter (#331); B11-CLEAR complete
-
-- **Replacement (kind a, key unchanged):** id 43 (7e^{j0} to rectangular, key 7): 0 + 7j -> 0 (took e^{j0} as 0, not 1); 7j kept.
-- **Listed (kind b):** id 15 (3e^{j pi/6} to polar, key 3 angle 30 deg) beside 3 angle pi/6: its context, shown on screen, reads "Express in polar form (degrees)." The verifier now reads pi angles in radians.
-- **FOR THE HOME LANE: data/check-ledger.json holds no B11 entry for any game** (summed over every game after #331). Exit-bar point 3's "B11 parser" item can be set to True in
-  audit-register.py (the cloud lane does not edit that file). All 8 kind-(b) pairs are allowlisted with their ask quoted; none needed Jon's ruling. Every replacement is listed in
-  the game entries above and in each PR (#312, #315, #320, #324, #328, #330, #331); each of the seven verifiers fails on a planted equal-value pair.
-- **Container note:** boolean-blitz's extraction needs KaTeX; locally (CDN 403) it falls back to the LAWS bank and check-banks --ci misreads it. CI reads it correctly.
