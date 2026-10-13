@@ -71,6 +71,11 @@ PLAY = """async ([tier, id, values]) => {
 }"""
 
 
+# The key follows the chain (Jon's ruling, 13 Oct 2026, Part 2 #6; fermi-lab-s1-003). Brilliant is a factor of 2,
+# which let piano-tuners-london key 140 against a chain of 82 (factor 1.7). The widest item today is 1.12.
+KEY_PIN = F(5, 4)
+
+
 def frac(x):
     return F(repr(float(x))) if not isinstance(x, int) else F(x)
 
@@ -134,6 +139,10 @@ def check_data(data, src, rep):
             continue
         m = model_product(q)
         k = frac(q['acceptedAnswer'])
+        if factor_of(m, k) > KEY_PIN:
+            rep[('chain', iid)].append(f'model chain gives {float(m):.6g}, key {float(k):.6g}: factor '
+                                        f'{float(factor_of(m, k)):.3g}; the key follows the chain (within {KEY_PIN}), '
+                                        f'which the Brilliant band (factor 2) alone does not pin (fermi-lab-s1-003: key 140, chain 82)')
         if factor_of(m, k) > 2:
             rep[('chain', iid)].append(f'model chain gives {float(m):.6g}, key {float(k):.6g}: factor '
                                         f'{float(factor_of(m, k)):.3g}, not Brilliant')
@@ -267,6 +276,8 @@ def selftest():
                          'hint:"About 600,000 students in England sit')),
         ('a figure its source does not support (coach fuel 8 L/100 km)', 'eq_school_trip',
          lambda s: plant(s, 'coachFuelPer100km: {value:20,', 'coachFuelPer100km: {value:8,')),
+        ('a key that is not the chain (piano tuners keyed 140, the chain gives 82: fermi-lab-s1-003)', 'piano-tuners-london',
+         lambda s: plant(s, 'acceptedAnswer:82,answerNote:"Classic Fermi problem.', 'acceptedAnswer:140,answerNote:"Classic Fermi problem.')),
         ('a stored figure with no source URL', 'ukPowerPerPerson',
          lambda s: plant(s, 'url:"https://www.gov.uk/government/statistics/energy-consumption-in-the-uk-2025/energy-consumption-in-the-uk-ecuk-2025"}},\npackedLunchShare',
                          'url:""}},\npackedLunchShare')),
