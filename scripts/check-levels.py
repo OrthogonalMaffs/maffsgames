@@ -65,21 +65,25 @@ surd-simplifier suvat tax-theft terrible-advice test-the-claim the-perfect-prank
 trig-identity-duel trig-wars trig-worms truth-buster truth-will-set-you-free unit-converter
 word-problem-decoder wrong-on-the-internet
 '''.split())
+# Games with no script on the page, so nothing reads ?level: withdrawn holding pages. A script added later must be migrated.
+NO_SCRIPT_EXEMPT = frozenset('regression-rumble'.split())
 MIGRATED = frozenset('''
-52dle angle-ace bearing-blitz better-value binomial-blaster characteristic-quest circle-theorem-spotter
-complex-converter component-crusher constructions-lab core-maths-paper1 core-maths-paper2a core-maths-paper2b
-core-maths-paper2c correlation-or-coincidence curling-friction decimal-detective differentiation-duel
-distinctly-average eigenvalue-extractor eigenvector-engine equation-builder equatle estimation-engine
-expectation-station expected-damage factor-theorem fermi-lab force-resolver formula-forge formula-plug-in
-formula-unlocked four-quadrant-explorer fraction-equivalence given-that glorious-gantt gradient-hunter
-graph-sketcher graph-transformer growth-and-decay higher-power index-laws integration-duel
+52dle angle-ace bearing-blitz better-value binomial-blaster boolean-blitz characteristic-quest
+circle-theorem-spotter complex-converter component-crusher constructions-lab coordinate-geometry-dash
+core-maths-paper1 core-maths-paper2a core-maths-paper2b core-maths-paper2c correlation-or-coincidence
+curling-friction decimal-detective differentiation-duel dimension-checker distinctly-average
+eigenvalue-extractor eigenvector-engine equation-builder equatle estimation-engine estimation-golf
+expectation-station expected-damage factor-race factor-theorem fermi-lab force-resolver formula-forge
+formula-plug-in formula-unlocked four-quadrant-explorer fraction-equivalence given-that glorious-gantt
+gradient-hunter graph-sketcher graph-transformer growth-and-decay higher-power index-laws integration-duel
 just-pythag-it-bruv like-terms-collector linear-equation-solver log-laws maths-court matrix-crunch
-moments-master negative-number-line new-shapes normal-navigator percentage-flip prime-factorisation
-prime-or-composite prisoners-dilemma probability-paradox probability-pioneer proof-builder proportion-blaster
-sequence-solver seven-bridges shape-shifter simultaneous-solver six-sevens-bruv split-it spot-the-error
-spot-the-muppet stat-attack suvat tax-theft terrible-advice test-the-claim think-of-a-number
-trig-identity-duel trig-wars trig-worms truth-buster truth-will-set-you-free word-problem-decoder
-wrong-on-the-internet
+modular-battle moments-master negative-number-line new-shapes normal-navigator partial-fractions-duel
+percentage-flip prime-factorisation prime-or-composite prisoners-dilemma probability-paradox
+probability-pioneer proof-builder proportion-blaster scale-factor-scaling sequence-solver seven-bridges
+shape-shifter simultaneous-solver six-sevens-bruv split-it spot-the-error spot-the-muppet standard-form-blitz
+stat-attack surd-simplifier suvat tax-theft terrible-advice test-the-claim the-perfect-prank
+think-of-a-number trig-identity-duel trig-wars trig-worms truth-buster truth-will-set-you-free
+word-problem-decoder wrong-on-the-internet
 '''.split())
 
 # The portal has no Year 6 filter button, so a game that serves only Year 6 is reachable under the KS3 filter and its
@@ -149,6 +153,11 @@ def analyse(files, roster, games, migrated, at_start):
         text = files.get('games/%s/index.html' % slug, '')
         d = parse_decl(text)
         has_call = 'MaffsLevel.resolve' in text
+        if slug in NO_SCRIPT_EXEMPT:
+            if '<script' in text:
+                errors.append('%s is exempt as a page with no script, but now has one: migrate it' % slug)
+            served[slug] = set(roster.get(slug, []))
+            continue
         if has_call and slug not in migrated:
             errors.append('%s calls MaffsLevel.resolve but is not in MIGRATED: move it there and off NOT_YET_AT_START' % slug)
         if slug in migrated and not has_call:
@@ -165,7 +174,7 @@ def analyse(files, roster, games, migrated, at_start):
             want = set(roster.get(slug, []))
             if d['slug'] != slug:
                 errors.append('%s: declares slug %r' % (slug, d['slug']))
-            if set(d['levels']) != want:
+            if slug in roster and set(d['levels']) != want:
                 errors.append('%s: declares levels %s but the roster lists %s (scripts/roster-levels.json)'
                               % (slug, sorted(d['levels']), sorted(want)))
             if d['fallback'] not in d['levels']:
@@ -207,7 +216,7 @@ def analyse(files, roster, games, migrated, at_start):
                     errors.append('%s: card %s lists an unknown level %r' % (path, slug, tok))
                 elif key not in served[slug] and not any(key in FILTER_ALIAS.get(k, ()) for k in served[slug]):
                     errors.append('%s: card %s lists %r (%s), but the game serves %s' % (path, slug, tok, key, sorted(served[slug])))
-    not_yet = sorted(set(at_start) - set(migrated))
+    not_yet = sorted(set(at_start) - set(migrated) - NO_SCRIPT_EXEMPT)
     return errors, not_yet
 
 
