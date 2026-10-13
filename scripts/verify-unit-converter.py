@@ -52,6 +52,8 @@ import bank_common as bc  # noqa: E402
 
 SLUG = 'unit-converter'
 GAME = os.path.join(os.path.dirname(HERE), 'games', SLUG, 'index.html')
+# The level reader the game declares (LEVEL-RESOLVER, 13 Oct 2026); the t4-003 plant swaps it for the unvalidated read.
+RESOLVE_CALL = "MaffsLevel.resolve({slug:'unit-converter',levels:['gcse','alevel','level4'],fallback:'gcse'})"
 LEVELS = {'gcse': ('L', 'A', 'V', 'T'), 'alevel': ('A', 'V', 'T'), 'level4': None}
 SERVED = {'gcse': 48, 'alevel': 38, 'level4': 42}
 PER_CORRECT = 100
@@ -633,8 +635,8 @@ PLANTS = [
     ('t4-004: the cylinder\'s precision unstated', 't4-004', ('bank',),
      "Volume in cm³? Give your answer to 3 significant figures.',", "Volume in cm³?',"),
     ('t4-003: ?level read without validation', 't4-003', ('level',),
-     "if(Object.prototype.hasOwnProperty.call(LEVELS,pa.get('level')||''))setLevel(pa.get('level'));",
-     "if(pa.get('level'))setLevel(pa.get('level'));"),
+     "const lvReq="+RESOLVE_CALL+";if(Object.prototype.hasOwnProperty.call(LEVELS,lvReq))setLevel(lvReq);",
+     "const lvReq=new URLSearchParams(location.search).get('level');if(lvReq)setLevel(lvReq);"),
     ('t4-005: a time-weighted score', 't4-005', ('timer',),
      "score+=PER_CORRECT;",
      "score+=Math.max(1,Math.round(PER_CORRECT/(1+0.15*Math.log(1+(Date.now()-(window.__qs||Date.now()))/1000))));"),

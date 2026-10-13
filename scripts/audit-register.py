@@ -54,7 +54,7 @@ OPTIONAL = {'pr', 'ruling'}
 # Exit bar point 3 (canon §0.2): shared checks green site-wide. Set each True in the PR that makes it so.
 SHARED_CHECKS_GREEN = {
     'answer lock': False,
-    'level resolver': False,
+    'level resolver': True,    # MaffsLevel in every game; NOT_YET empty in scripts/check-levels.py (LEVEL-RESOLVER, 13 Oct 2026)
     'SR-14 fields': False,
     'B11 parser': False,
 }

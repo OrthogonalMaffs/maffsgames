@@ -39,7 +39,7 @@ HOST = 'https://fixture.test'
 sys.path.insert(0, HERE)
 JUNK = ['constructor', '__proto__', 'nonsense']
 
-DECL = "{slug: 'fixture', levels: ['gcse', 'alevel'], fallback: 'gcse', boards: ['q20']}"
+DECL = r"{slug: 'fixture', levels: ['gcse', 'alevel'], fallback: 'gcse', boards: ['q20'], boardPatterns: ['^daily-\\d{4}-\\d{2}-\\d{2}$']}"
 PAGE = ('<!doctype html><html><head><meta charset="utf-8"><title>fixture</title></head><body>'
         '<script src="/level.js"></script>'
         '<script>window.__r = {};try{window.__r.level = MaffsLevel.resolve(%s);}catch(e){window.__r.threw = String(e);}'
@@ -137,6 +137,8 @@ def run(level_src):
         lb_case('submit under a typed-in key', DECL, 'zzz', False)
         lb_case('submit under a declared level', DECL, 'alevel', True)
         lb_case('submit under a declared board', DECL, 'q20', True)
+        lb_case('submit under a board matching a pattern', DECL, 'daily-2026-10-01', True)
+        lb_case('submit under a near-miss of the pattern', DECL, 'daily-xyz', False)
         lb_case('submit with no declaration (unmigrated)', None, 'anything', True)
         browser.close()
     return fails

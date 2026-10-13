@@ -1535,6 +1535,11 @@ and is not edited by fix PRs.
 
 # 8. Outstanding Backlog
 
+
+### 7.9.1 Games read `?level=` through `MaffsLevel` (LEVEL-RESOLVER, Jon, 12 Oct 2026)
+
+Every game declares its levels once with `MaffsLevel.resolve` (§4.5) and reads no `?level=` of its own. `scripts/check-levels.py` (CI, every PR) fails a game that does not, a declaration that differs from the roster (or, for the two games whose level keys are not the roster's, from `LEVEL_OVERRIDES` in `check-leaderboard-coverage.js`), a page that reads `?level` itself, and any internal link, sitemap entry or portal card naming a level its game does not serve. `MaffsLeaderboard.submitScore` refuses a key a declaring page has not declared. A new game is declared from the start: `NOT_YET_AT_START` is closed and `NOT_YET` is empty. A verifier that plants a fault on a game's `?level` line plants against the `MaffsLevel.resolve` call (`verify-screening-room.py`, `verify-unit-converter.py`); one that reads the logged level reads the navigation URL, because `MaffsLevel` normalises `location.search` (`verify-factor-theorem.py`).
+
 ## 8.1 Games — Gaps
 
 **None open.** All four items that sat here are built and live — found on 8 September 2026 while

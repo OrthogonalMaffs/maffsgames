@@ -67,6 +67,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
@@ -130,7 +131,7 @@ function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random
 function fmt(s){return String(s).replace(/(^|[^\d.,])(\d{4,})/g,(m,p,d)=>p+d.replace(/\B(?=(\d{3})+(?!\d))/g,','))}
 // Only the game's own levels (t4-003): anything else ('__proto__' and 'constructor' included) leaves the start screen
 // at the default level, so a bad key is never served, logged or submitted.
-const pa=new URLSearchParams(location.search);if(Object.prototype.hasOwnProperty.call(LEVELS,pa.get('level')||''))setLevel(pa.get('level'));
+const lvReq=MaffsLevel.resolve({slug:'unit-converter',levels:['gcse','alevel','level4'],fallback:'gcse'});if(Object.prototype.hasOwnProperty.call(LEVELS,lvReq))setLevel(lvReq);
 
 // LENGTH
 const L=[
