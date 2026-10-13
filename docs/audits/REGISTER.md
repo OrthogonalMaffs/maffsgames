@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-585 findings in 79 games.
+586 findings in 79 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 26 | 0 | 27 |
 | HIGH | 7 | 205 | 0 | 212 |
-| MEDIUM | 115 | 162 | 3 | 280 |
+| MEDIUM | 115 | 163 | 3 | 281 |
 | LOW | 33 | 32 | 1 | 66 |
-| **All** | 156 | 425 | 4 | 585 |
+| **All** | 156 | 426 | 4 | 586 |
 
 ### By class
 
@@ -43,10 +43,10 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:convention-unstated | 1 | 12 |
 | 8 | 3 | 11 |
 | NEW:precision-not-stated | 2 | 9 |
+| NEW:equal-value-options | 0 | 7 |
 | NEW:hand-typed explanation figure | 5 | 7 |
 | NEW:raw-tex-on-screen | 2 | 7 |
 | NEW:text-contradicts-content | 5 | 7 |
-| NEW:equal-value-options | 0 | 6 |
 | NEW:ill-posed wording | 1 | 6 |
 | 11 | 0 | 5 |
 | NEW:board-mixes-session-lengths | 5 | 5 |
@@ -130,7 +130,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `bearing-blitz` | yes | verify-bearing-blitz.py | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `better-value` | yes | verify-better-value.py | 0 | 5 | 4 | 0 | 3 | 6 | 0 |
 | `binomial-blaster` | yes | verify-binomial-blaster.py | 2 | 15 | 4 | 1 | 1 | 21 | 0 |
-| `boolean-blitz` | yes | verify-boolean-blitz.py | 0 | 3 | 0 | 5 | 5 | 3 | 0 |
+| `boolean-blitz` | yes | verify-boolean-blitz.py | 0 | 3 | 1 | 5 | 5 | 4 | 0 |
 | `characteristic-quest` | yes | verify-characteristic-quest.py | 0 | 1 | 3 | 1 | 3 | 2 | 0 |
 | `complex-converter` | yes | verify-complex-converter.py | 0 | 1 | 5 | 1 | 3 | 4 | 0 |
 | `component-crusher` | yes | verify-component-crusher.py | 1 | 6 | 6 | 1 | 2 | 12 | 0 |
