@@ -30,7 +30,8 @@ findings:
   where: 'games/standard-form-blitz/index.html:208 (alevel[30])'
   summary: 'An approximate key with no precision stated (SR-1: multiple-choice answers state their precision too). Fixed: the ask says "(nearest whole number)"; the verifier fails any approximate key whose question states no precision, and plants the old ask'
   evidence: '"Earth mass: 6 × 10^24 kg. Moon mass: 7.3 × 10^22 kg." | "How many times heavier is Earth?" key "≈ 82" (82.19…), options ≈ 8.2, ≈ 820, ≈ 46 (SWEEP-1, batch 6)'
-  status: open
+  status: fixed
+  pr: 343
 - id: standard-form-blitz-s1-002
   severity: LOW
   jc: false
@@ -39,7 +40,8 @@ findings:
   where: 'games/standard-form-blitz/index.html:204 (alevel[26])'
   summary: 'A distractor made two errors at once (SR-4: from a nameable error): 2 × 10^3 is the inverse with its sign also lost. Fixed: 2 × 10^-3, the inverse (speed ÷ distance); the verifier pins the named error'
   evidence: '"Distance to Sun: 1.5 × 10^11 m. Speed of light: 3 × 10^8 m/s." | "Time for light to reach Earth (s)" key 5 × 10^2, d 5 × 10^3, 4.5 × 10^19, 2 × 10^3 (SWEEP-1, batch 6)'
-  status: open
+  status: fixed
+  pr: 343
 - id: standard-form-blitz-s1-003
   severity: LOW
   jc: false

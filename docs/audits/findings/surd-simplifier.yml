@@ -59,7 +59,8 @@ findings:
   where: 'games/surd-simplifier/index.html:113 (start screen)'
   summary: 'The start screen listed "nested surds" for A-Level and no item has one (a start screen says what the game does). Fixed: removed; the verifier lists nested surds only when an A-Level item has a root inside a root, and plants the old text'
   evidence: '"A-Level: + rationalise conjugate denominators, expand surd brackets, nested surds" (SWEEP-1, batch 6)'
-  status: open
+  status: fixed
+  pr: 343
 - id: surd-simplifier-s1-002
   severity: LOW
   jc: false
