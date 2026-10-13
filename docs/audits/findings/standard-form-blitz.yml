@@ -9,3 +9,16 @@ audited:
     gcse: '50'
     alevel: '50'
 findings: []
+- id: standard-form-blitz-b11-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:equal-value-options
+  level: alevel
+  where: 'games/standard-form-blitz/index.html: QUESTIONS.alevel[35]'
+  summary: '(5 x 10^-2)^-2 (key 4 x 10^2) offered 2.5 x 10^3 and 25 x 10^2, two wrong options equal in value (SR-4:
+    four distinct options). Fixed under B11-CLEAR and Jon''s formula-forge ruling of 12 Oct 2026: 25 x 10^2 ->
+    2.5 x 10^-3 (squared, ignoring the minus in the power); 2.5 x 10^3 kept'
+  evidence: 'check-banks.py B11 (data/check-ledger.json, now cleared); scripts/verify-standard-form-blitz.py fails on
+    any equal pair, with a plant that puts 25 x 10^2 back'
+  status: fixed
+  pr: 324
