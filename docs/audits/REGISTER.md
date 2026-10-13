@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-941 findings in 97 games.
+942 findings in 97 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
 | HIGH | 12 | 222 | 0 | 234 |
-| MEDIUM | 205 | 240 | 3 | 448 |
+| MEDIUM | 205 | 241 | 3 | 449 |
 | LOW | 141 | 82 | 1 | 224 |
-| **All** | 359 | 578 | 4 | 941 |
+| **All** | 359 | 579 | 4 | 942 |
 
 ### By class
 
@@ -125,6 +125,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:test repeats taught items | 1 | 1 |
 | NEW:ui | 1 | 1 |
 | NEW:uncancelled-timer | 0 | 1 |
+| NEW:unreadable-figure | 0 | 1 |
 | NEW:wrong hint | 0 | 1 |
 | NEW:wrong statement in key | 0 | 1 |
 | NEW:wrong text | 0 | 1 |
@@ -147,7 +148,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `component-crusher` | yes | verify-component-crusher.py | 1 | 7 | 9 | 1 | 3 | 15 | 0 |
 | `constructions-lab` | yes | verify-constructions-lab.py | 0 | 0 | 4 | 3 | 7 | 0 | 0 |
 | `coordinate-geometry-dash` | yes | verify-coordinate-geometry-dash.py | 0 | 1 | 6 | 2 | 6 | 3 | 0 |
-| `core-maths-paper1` | yes | verify-core-maths-paper1.py | 0 | 4 | 7 | 3 | 2 | 12 | 0 |
+| `core-maths-paper1` | yes | verify-core-maths-paper1.py | 0 | 4 | 8 | 3 | 2 | 13 | 0 |
 | `core-maths-paper2a` | yes | verify-core-maths-paper2a.py | 1 | 1 | 4 | 1 | 3 | 4 | 0 |
 | `core-maths-paper2b` | yes | verify-core-maths-paper2b.py | 0 | 1 | 3 | 3 | 3 | 4 | 0 |
 | `core-maths-paper2c` | yes | verify-core-maths-paper2c.py | 0 | 3 | 8 | 3 | 7 | 7 | 0 |
