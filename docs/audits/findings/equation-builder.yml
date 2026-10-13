@@ -114,7 +114,8 @@ findings:
   evidence: 'ks3_002 "Write an expression for the total mass T kg of the mortar mixture." key T = 6x, 6x refused;
     l4_015 "Simplify log(8) + log(4) − log(2). Write the single logarithm expression." key log(8×4 ÷ 2) = log(16),
     log(16) refused (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 338
 - id: equation-builder-s1-002
   severity: HIGH
   jc: false
@@ -127,7 +128,8 @@ findings:
     operator tiles they need added to valid (gcse_008 ×, gcse_012 −, gcse_018 ×, gcse_019 +)'
   evidence: 'gcse_019 "Write the equation for the IQR." key IQR = Q3 − Q1: Q3 − IQR = Q1 and Q1 = Q3 − IQR were marked
     wrong; gcse_008 T × 3×10⁸ = 4.013×10¹⁶ could not be built (× a distractor) (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 338
 - id: equation-builder-s1-003
   severity: MEDIUM
   jc: false
@@ -139,7 +141,8 @@ findings:
     the key''s tiles are not first (orderTiles; the verifier checks it in Chromium)'
   evidence: 'Assembly: the first tiles were the key in 68 of 68; gap-fill: the missing tiles in order in 47 of 52
     (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 338
 - id: equation-builder-s1-004
   severity: LOW
   jc: false
