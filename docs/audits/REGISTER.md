@@ -23,19 +23,19 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
 | HIGH | 8 | 229 | 0 | 237 |
-| MEDIUM | 237 | 260 | 3 | 500 |
-| LOW | 226 | 105 | 1 | 332 |
-| **All** | 472 | 628 | 4 | 1104 |
+| MEDIUM | 236 | 261 | 3 | 500 |
+| LOW | 218 | 113 | 1 | 332 |
+| **All** | 463 | 637 | 4 | 1104 |
 
 ### By class
 
 | Class | open | total |
 |---|---|---|
-| NEW:wording | 112 | 128 |
+| NEW:wording | 107 | 128 |
 | 2 | 12 | 111 |
-| NEW:text-contradicts-content | 60 | 90 |
+| NEW:text-contradicts-content | 58 | 90 |
 | 3 | 5 | 86 |
-| NEW:convention-unstated | 32 | 78 |
+| NEW:convention-unstated | 30 | 78 |
 | NEW:wrong-explanation-text | 21 | 71 |
 | 6 | 24 | 56 |
 | NEW:true-wrong-option | 14 | 51 |
@@ -140,7 +140,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | Game | Listed | Verifier | C | H | M | L | open | fixed | ruled |
 |---|---|---|---|---|---|---|---|---|---|
 | `52dle` | yes | verify-52dle.py | 0 | 1 | 5 | 6 | 11 | 1 | 0 |
-| `angle-ace` | yes | verify-angle-ace.py | 0 | 6 | 7 | 2 | 2 | 13 | 0 |
+| `angle-ace` | yes | verify-angle-ace.py | 0 | 6 | 7 | 2 | 0 | 15 | 0 |
 | `bearing-blitz` | yes | verify-bearing-blitz.py | 0 | 0 | 3 | 2 | 5 | 0 | 0 |
 | `better-value` | yes | verify-better-value.py | 0 | 5 | 9 | 4 | 8 | 10 | 0 |
 | `binomial-blaster` | yes | verify-binomial-blaster.py | 2 | 16 | 6 | 4 | 4 | 24 | 0 |
@@ -175,7 +175,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `fermi-lab` | yes | verify-fermi-lab.py | 0 | 2 | 1 | 1 | 0 | 4 | 0 |
 | `force-resolver` | yes | verify-force-resolver.py | 1 | 7 | 12 | 5 | 3 | 22 | 0 |
 | `formula-forge` | yes | verify-formula-forge.py | 0 | 1 | 8 | 3 | 8 | 4 | 0 |
-| `formula-plug-in` | yes | verify-formula-plug-in.py | 0 | 1 | 4 | 2 | 6 | 1 | 0 |
+| `formula-plug-in` | yes | verify-formula-plug-in.py | 0 | 1 | 4 | 2 | 5 | 2 | 0 |
 | `formula-unlocked` | yes | verify-formula-unlocked.py | 0 | 1 | 1 | 7 | 4 | 5 | 0 |
 | `four-quadrant-explorer` | yes | verify-four-quadrant-explorer.py | 0 | 1 | 2 | 1 | 3 | 1 | 0 |
 | `fraction-equivalence` | yes | verify-fraction-equivalence.py | 0 | 0 | 2 | 2 | 4 | 0 | 0 |
@@ -205,7 +205,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `prime-or-composite` | yes | verify-prime-or-composite.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
 | `prisoners-dilemma` | yes | verify-prisoners-dilemma.py | 0 | 2 | 6 | 5 | 10 | 3 | 0 |
 | `probability-paradox` | yes | verify-probability-paradox.py | 1 | 4 | 11 | 4 | 5 | 15 | 0 |
-| `probability-pioneer` | yes | verify-probability-pioneer.py | 0 | 2 | 3 | 3 | 4 | 4 | 0 |
+| `probability-pioneer` | yes | verify-probability-pioneer.py | 0 | 2 | 3 | 3 | 0 | 8 | 0 |
 | `proof-builder` | yes | verify-proof-builder.py | 2 | 15 | 12 | 8 | 9 | 28 | 0 |
 | `proportion-blaster` | yes | verify-proportion-blaster.py | 0 | 1 | 1 | 2 | 2 | 2 | 0 |
 | `quadratic-factoriser` | yes | verify-quadratic-factoriser.py | 1 | 1 | 1 | 4 | 5 | 2 | 0 |
@@ -213,7 +213,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `screening-room` | yes | verify-screening-room.py | 1 | 4 | 14 | 8 | 7 | 19 | 1 |
 | `sequence-solver` | yes | verify-sequence-solver.py | 0 | 1 | 4 | 2 | 5 | 2 | 0 |
 | `seven-bridges` | yes | verify-seven-bridges.py | 0 | 2 | 7 | 4 | 10 | 3 | 0 |
-| `shape-shifter` | yes | verify-shape-shifter.py | 2 | 1 | 5 | 3 | 7 | 4 | 0 |
+| `shape-shifter` | yes | verify-shape-shifter.py | 2 | 1 | 5 | 3 | 5 | 6 | 0 |
 | `simultaneous-solver` | yes | verify-simultaneous-solver.py | 0 | 0 | 1 | 2 | 3 | 0 | 0 |
 | `six-sevens-bruv` | yes | verify-six-sevens.py | 0 | 0 | 0 | 1 | 1 | 0 | 0 |
 | `split-it` | yes | verify-split-it.py | 0 | 0 | 1 | 7 | 6 | 2 | 0 |
