@@ -9,7 +9,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | met: 0 of 96 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 4 open (0 CRITICAL, 4 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 3 open (0 CRITICAL, 3 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, SR-14 fields |
 | 4 | Every level serves 40+ (tracked, not part of the gate: canon §0.2, Jon 12 Oct 2026) | not met, not gating: 123 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | met: 0 in the roster's Unlisted section |
@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-810 findings in 93 games.
+840 findings in 93 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 31 | 0 | 32 |
-| HIGH | 11 | 215 | 0 | 226 |
-| MEDIUM | 171 | 209 | 3 | 383 |
-| LOW | 123 | 45 | 1 | 169 |
-| **All** | 306 | 500 | 4 | 810 |
+| HIGH | 10 | 216 | 0 | 226 |
+| MEDIUM | 177 | 220 | 3 | 400 |
+| LOW | 127 | 54 | 1 | 182 |
+| **All** | 315 | 521 | 4 | 840 |
 
 ### By class
 
@@ -34,30 +34,30 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 2 | 12 | 111 |
 | 3 | 5 | 86 |
 | 6 | 24 | 56 |
+| NEW:text-contradicts-content | 37 | 52 |
 | NEW:wrong-explanation-text | 15 | 50 |
+| NEW:wording | 46 | 49 |
 | NEW:convention-unstated | 25 | 48 |
-| NEW:text-contradicts-content | 37 | 46 |
-| NEW:wording | 42 | 45 |
 | 1 | 5 | 37 |
-| NEW:true-wrong-option | 10 | 27 |
+| NEW:true-wrong-option | 10 | 34 |
 | 5 | 26 | 26 |
+| NEW:verifier-gap | 25 | 25 |
 | 4 | 5 | 22 |
-| NEW:verifier-gap | 19 | 19 |
 | 7 | 5 | 16 |
+| NEW:unstated-convention | 4 | 14 |
 | NEW:value-equal distractors | 0 | 14 |
 | NEW:precision-not-stated | 2 | 12 |
 | 8 | 3 | 11 |
 | NEW:raw-tex-on-screen | 5 | 11 |
 | NEW:sr14-content | 4 | 9 |
-| NEW:unstated-convention | 4 | 9 |
 | NEW:equal-value-options | 0 | 8 |
 | NEW:hand-typed explanation figure | 5 | 7 |
+| NEW:marking-tolerance | 3 | 7 |
 | NEW:ill-posed wording | 1 | 6 |
 | NEW:wrong-explanation | 1 | 6 |
 | 11 | 0 | 5 |
 | NEW:board-mixes-session-lengths | 5 | 5 |
 | NEW:marking-by-structure | 0 | 5 |
-| NEW:marking-tolerance | 3 | 5 |
 | NEW:phone-layout | 4 | 5 |
 | NEW:timer-policy | 3 | 5 |
 | B7 (ledgered) | 3 | 4 |
@@ -128,7 +128,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:wrong hint | 0 | 1 |
 | NEW:wrong statement in key | 0 | 1 |
 | NEW:wrong text | 0 | 1 |
-| NEW:wrong-key | 1 | 1 |
+| NEW:wrong-key | 0 | 1 |
 
 ### By game
 
@@ -147,10 +147,10 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `component-crusher` | yes | verify-component-crusher.py | 1 | 7 | 9 | 1 | 3 | 15 | 0 |
 | `constructions-lab` | yes | verify-constructions-lab.py | 0 | 0 | 4 | 3 | 7 | 0 | 0 |
 | `coordinate-geometry-dash` | yes | verify-coordinate-geometry-dash.py | 0 | 1 | 6 | 2 | 6 | 3 | 0 |
-| `core-maths-paper1` | yes | verify-core-maths-paper1.py | 0 | 4 | 2 | 0 | 0 | 6 | 0 |
-| `core-maths-paper2a` | yes | verify-core-maths-paper2a.py | 1 | 1 | 3 | 1 | 4 | 2 | 0 |
-| `core-maths-paper2b` | yes | verify-core-maths-paper2b.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
-| `core-maths-paper2c` | yes | verify-core-maths-paper2c.py | 0 | 3 | 5 | 1 | 6 | 3 | 0 |
+| `core-maths-paper1` | yes | verify-core-maths-paper1.py | 0 | 4 | 7 | 3 | 2 | 12 | 0 |
+| `core-maths-paper2a` | yes | verify-core-maths-paper2a.py | 1 | 1 | 4 | 1 | 3 | 4 | 0 |
+| `core-maths-paper2b` | yes | verify-core-maths-paper2b.py | 0 | 1 | 3 | 3 | 3 | 4 | 0 |
+| `core-maths-paper2c` | yes | verify-core-maths-paper2c.py | 0 | 3 | 8 | 3 | 7 | 7 | 0 |
 | `correlation-or-coincidence` | yes | verify-correlation-or-coincidence.py | 2 | 0 | 4 | 3 | 5 | 4 | 0 |
 | `curling-friction` | yes | verify-curling-friction.py | 0 | 3 | 3 | 2 | 1 | 7 | 0 |
 | `decimal-detective` | yes | verify-decimal-detective.py | 0 | 2 | 2 | 0 | 0 | 4 | 0 |
@@ -161,7 +161,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `eigenvector-engine` | yes | verify-eigenvector-engine.py | 1 | 1 | 2 | 8 | 1 | 11 | 0 |
 | `equation-builder` | yes | verify-equation-builder.py | 1 | 3 | 4 | 2 | 2 | 8 | 0 |
 | `equatle` | yes | verify-equatle.py | 0 | 0 | 3 | 1 | 4 | 0 | 0 |
-| `estimation-engine` | yes | verify-estimation-engine.py | 0 | 1 | 3 | 0 | 0 | 4 | 0 |
+| `estimation-engine` | yes | verify-estimation-engine.py | 0 | 1 | 6 | 0 | 1 | 6 | 0 |
 | `estimation-golf` | yes | verify-estimation-golf.py | 0 | 2 | 4 | 4 | 8 | 2 | 0 |
 | `expectation-station` | yes | verify-expectation-station.py | 2 | 13 | 8 | 4 | 4 | 23 | 0 |
 | `expected-damage` | yes | verify-expected-damage.py | 0 | 1 | 4 | 1 | 5 | 1 | 0 |
@@ -184,7 +184,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `index-laws` | yes | verify-index-laws.py | 0 | 0 | 3 | 1 | 1 | 2 | 1 |
 | `integration-duel` | yes | verify-integration-duel.py | 0 | 2 | 7 | 1 | 1 | 9 | 0 |
 | `like-terms-collector` | yes | verify-like-terms-collector.py | 1 | 1 | 3 | 1 | 4 | 2 | 0 |
-| `linear-equation-solver` | yes | verify-linear-equation-solver.py | 1 | 1 | 2 | 1 | 1 | 4 | 0 |
+| `linear-equation-solver` | yes | verify-linear-equation-solver.py | 1 | 1 | 3 | 2 | 3 | 4 | 0 |
 | `log-laws` | yes | verify-log-laws.py | 1 | 4 | 0 | 2 | 0 | 7 | 0 |
 | `maths-court` | yes | verify-maths-court.py | 0 | 1 | 4 | 1 | 3 | 3 | 0 |
 | `matrix-crunch` | yes | verify-matrix-crunch.py | 0 | 2 | 3 | 1 | 3 | 3 | 0 |
@@ -203,7 +203,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `proportion-blaster` | yes | verify-proportion-blaster.py | 0 | 1 | 1 | 2 | 2 | 2 | 0 |
 | `quadratic-factoriser` | yes | verify-quadratic-factoriser.py | 1 | 1 | 1 | 3 | 4 | 2 | 0 |
 | `scale-factor-scaling` | yes | verify-scale-factor-scaling.py | 0 | 1 | 4 | 3 | 3 | 5 | 0 |
-| `screening-room` | yes | verify-screening-room.py | 1 | 4 | 10 | 2 | 1 | 15 | 1 |
+| `screening-room` | yes | verify-screening-room.py | 1 | 4 | 12 | 6 | 3 | 19 | 1 |
 | `sequence-solver` | yes | verify-sequence-solver.py | 0 | 1 | 4 | 2 | 5 | 2 | 0 |
 | `seven-bridges` | yes | verify-seven-bridges.py | 0 | 2 | 7 | 2 | 8 | 3 | 0 |
 | `shape-shifter` | yes | verify-shape-shifter.py | 2 | 1 | 5 | 3 | 7 | 4 | 0 |
@@ -241,10 +241,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 ### `spot-the-error` (KS3, GCSE, L4)
 
 - **HIGH** spot-the-error-s1-001 (JC), `games/spot-the-error/index.html:247 (ste_ks3_010), Stage 2`: The explanation names the 80 trials as the fact the working missed ("The total number of trials is 80 (stated in the question)"), yet the phrase "replaces it 80 times" is marked wrong; the key is "estimates the probab...
-
-### `core-maths-paper2a` (Core)
-
-- **HIGH** core-maths-paper2a-s1-003, `games/core-maths-paper2a/index.html Q5 (:228)`: The key "The CEO has confused percentage point increase with percentage increase" does not fit the CEO's figure: satisfaction rose 10 points (61 to 71), a 16.4% increase, and neither reading gives "nearly 20%", so no ...
 
 ### `glorious-gantt` (Core, L4; unlisted)
 
