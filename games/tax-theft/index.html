@@ -674,13 +674,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
       <div class="threshold-tables">
         <div class="threshold-table">
           <h4>Income Tax 2025/26</h4>
-          <table>
-            <tr><th>Band</th><th>Annual Income</th><th>Rate</th></tr>
-            <tr><td>Personal allowance</td><td>Up to &pound;12,570</td><td>0%</td></tr>
-            <tr><td>Basic rate</td><td>&pound;12,571 &ndash; &pound;50,270</td><td>20%</td></tr>
-            <tr><td>Higher rate</td><td>&pound;50,271 &ndash; &pound;125,140</td><td>40%</td></tr>
-            <tr><td>Additional rate</td><td>Over &pound;125,140</td><td>45%</td></tr>
-          </table>
+          <table id="taxTable"></table>
         </div>
         <div class="threshold-table">
           <h4>National Insurance 2025/26 (Class 1 Employee)</h4>
@@ -749,7 +743,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
             <span class="value pending" id="payDeductions">&mdash;</span>
           </div>
           <div class="payslip-row net">
-            <span class="label">Net Monthly Pay</span>
+            <span class="label">Net Annual Pay</span>
             <span class="value pending" id="payNet">&mdash;</span>
           </div>
         </div>
@@ -776,7 +770,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
     <div class="summary-stat keep">
       <div class="stat-value" id="sumKeep"></div>
       <div class="stat-pct" id="sumKeepPct"></div>
-      <div class="stat-label">You Keep</div>
+      <div class="stat-label">You Keep per Year</div>
     </div>
   </div>
   <div class="wry-line" id="wryLine"></div>
@@ -813,7 +807,7 @@ const SALARIES = {
 };
 
 const WRY_LINES = {
-  easy: "Welcome to adulthood.",
+  easy: "But at least the potholes get fixed, right?",
   medium: "And that's before pension contributions.",
   hard: "At this salary, you've lost your personal allowance entirely. The government thanks you.",
   hardReduced: "At this salary, your personal allowance is reduced to {pa}. The government thanks you."
@@ -853,6 +847,27 @@ function fmtMoney(n) {
 // Money is held in whole pence so every key is exact; worked answers are shown in full money form.
 function fmtPence(p) {
   return '\u00a3' + (p / 100).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+// The income tax table, from TAX_RULES. Easy and Medium keep the full allowance, so their bands
+// can be read as gross income. On Hard the allowance tapers, so the bands are stated as the
+// tax system states them: on TAXABLE income, the basic rate on the first \u00a337,700 of it.
+function renderTaxTable(diff) {
+  var R = TAX_RULES, h;
+  if (diff === 'hard') {
+    h = '<tr><th>Band</th><th>Taxable Income</th><th>Rate</th></tr>' +
+      '<tr><td>Personal allowance</td><td>' + fmtMoney(R.personalAllowance) + ', less \u00a31 for every \u00a32 of income over ' + fmtMoney(R.paReducesAbove) + '; taxable income is salary minus the allowance</td><td>0%</td></tr>' +
+      '<tr><td>Basic rate</td><td>The first ' + fmtMoney(R.basicRateBand) + ' of taxable income</td><td>' + Math.round(R.basicRate * 100) + '%</td></tr>' +
+      '<tr><td>Higher rate</td><td>' + fmtMoney(R.basicRateBand + 1) + ' \u2013 ' + fmtMoney(R.higherRateLimit) + ' of taxable income</td><td>' + Math.round(R.higherRate * 100) + '%</td></tr>' +
+      '<tr><td>Additional rate</td><td>Taxable income over ' + fmtMoney(R.higherRateLimit) + '</td><td>' + Math.round(R.additionalRate * 100) + '%</td></tr>';
+  } else {
+    h = '<tr><th>Band</th><th>Annual Income</th><th>Rate</th></tr>' +
+      '<tr><td>Personal allowance</td><td>Up to ' + fmtMoney(R.personalAllowance) + '</td><td>0%</td></tr>' +
+      '<tr><td>Basic rate</td><td>' + fmtMoney(R.personalAllowance + 1) + ' \u2013 ' + fmtMoney(R.basicRateLimit) + '</td><td>' + Math.round(R.basicRate * 100) + '%</td></tr>' +
+      '<tr><td>Higher rate</td><td>' + fmtMoney(R.basicRateLimit + 1) + ' \u2013 ' + fmtMoney(R.higherRateLimit) + '</td><td>' + Math.round(R.higherRate * 100) + '%</td></tr>' +
+      '<tr><td>Additional rate</td><td>Over ' + fmtMoney(R.higherRateLimit) + '</td><td>' + Math.round(R.additionalRate * 100) + '%</td></tr>';
+  }
+  document.getElementById('taxTable').innerHTML = h;
 }
 
 function getPA(gross) {
@@ -1002,6 +1017,7 @@ function startGame(diff) {
   document.getElementById('salaryAmount').textContent = fmtMoney(currentSalary);
   document.getElementById('diffLabel').textContent = diff.charAt(0).toUpperCase() + diff.slice(1);
   document.getElementById('payGross').textContent = fmtMoney(currentSalary);
+  renderTaxTable(diff);
 
   // Reset payslip
   ['payPA', 'payTaxable', 'payTax', 'payNI', 'payDeductions', 'payNet'].forEach(function(id) {
@@ -1088,6 +1104,9 @@ function checkAnswer() {
     var payEl = document.getElementById(step.payslipField);
     if (step.id === 'tax' || step.id === 'ni' || step.id === 'deductions') {
       payEl.textContent = '\u2212' + fmtPence(step.key);
+    } else if (step.id === 'net') {
+      // The payslip is annual throughout: it shows the year's net pay, gross minus deductions.
+      payEl.textContent = fmtPence(currentSalary * 100 - answers.deductions);
     } else {
       payEl.textContent = fmtPence(step.key);
     }
@@ -1128,8 +1147,8 @@ function checkAnswer() {
 }
 
 function getHint(val, expected, step) {
-  // Check for factor-of-12 error
-  if (step.id !== 'net' && Math.abs(val - expected / 12) <= 2) {
+  // Check for factor-of-12 error (never on a key of \u00a30, where a twelfth of it is \u00a30 too)
+  if (step.id !== 'net' && expected > 0 && Math.abs(val - expected / 12) <= 2) {
     return "Have you accidentally divided by 12? Work in annual figures first.";
   }
   if (step.id === 'net' && Math.abs(val - expected * 12) <= 2) {

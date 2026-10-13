@@ -135,6 +135,9 @@ def check_bank(fails, bank):
                 e1, r1 = abs(e1), abs(r1)
             if q['find'] in q['known']:
                 fails.append('%s: the unknown %s is also given' % (where(lvl, i), q['find']))
+            if re.search(r'decelerat\w*[^.]*?\bat\s*[\u2212-]\s*\d', q['scenario']):
+                fails.append('%s: a deceleration given as a negative number (a double negative; suvat-s1-004): %r'
+                             % (where(lvl, i), q['scenario']))
             for j, st in enumerate(steps):
                 w = where(lvl, i, j if lvl == 'al' and len(steps) > 1 else None)
                 if j == 0:
@@ -313,6 +316,8 @@ def play(fails, html):
 PLANTS = [
     ('ALEVEL[34] step 1', 't5-002: v_y keyed +0.32', 'answer:-0.32,dp:2', 'answer:0.32,dp:2'),
     ('ALEVEL[48] step 2', 't5-007: the range keyed 103.5 to 1 d.p.', 'answer:103,dp:0', 'answer:103.5,dp:1'),
+    ('LEVEL4[6]', 's1-004: decelerates at \u221220 m/s\u00b2', 'decelerates from 500 m/s at 20 m/s\u00b2',
+     'decelerates from 500 m/s at \u221220 m/s\u00b2'),
 ]
 
 

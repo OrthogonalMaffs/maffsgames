@@ -33,13 +33,21 @@ shuffle queue; nothing else is set). At every step:
     marked correct, and the feedback, payslip and completed-step line show it in full
     money form (£30,432.00).
 
-At the end the completion screen's figures are checked, and the closing line: "lost
-your personal allowance entirely" only at £125,140 and above; below that it names the
-reduced allowance. The salary lists are checked too: hard is exactly 106k/114k/120k/130k,
+The income tax table is read on every salary (Jon's ruling, 13 Oct 2026): on Hard it
+states the bands as taxable income (the first £37,700 of it at the basic rate, from
+uk_rates.py), never the gross £50,270; on Easy and Medium, with the full allowance, as
+gross income. A wrong amount gets the factor-of-12 hint only when it is a twelfth of a key
+above £0 (Hard's £130,000 allowance is £0, and £1 is not "divided by 12").
+
+At the end the payslip is annual throughout (its Net Annual Pay row shows gross minus
+deductions; no row is monthly), the completion screen's figures are checked, "You Keep"
+says per year, and the closing line: Easy's is Jon's line, verbatim; "lost your personal
+allowance entirely" only at £125,140 and above; below that it names the reduced allowance. The salary lists are checked too: hard is exactly 106k/114k/120k/130k,
 medium holds 8 distinct salaries between £50,270 and £100,000, easy stays basic rate.
 
 A fault-injection self-test (the old gross-threshold band method, a format check that
-marks instead, the old closing line) patches the page and must FAIL each time; it runs
+marks instead, the old closing line, the old gross table on Hard, the monthly net row, the
+factor-of-12 hint on a £0 key, the old Easy line and the unlabelled "You Keep") patches the page and must FAIL each time; it runs
 unless --no-selftest, and only when the main check passes.
 
     python scripts/verify-tax-theft.py [--verbose] [--no-selftest]
@@ -66,6 +74,29 @@ HMRC = dict(personalAllowance=ur.PERSONAL_ALLOWANCE, paReducesAbove=ur.PA_TAPER_
             niUpperLimit=ur.NI_UPPER_EARNINGS_LIMIT, niMainRate=float(ur.NI_MAIN_RATE),
             niHigherRate=float(ur.NI_UPPER_RATE))
 HARD = [106000, 114000, 120000, 130000]
+EASY_LINE = 'But at least the potholes get fixed, right?'   # Jon's line, verbatim (13 Oct 2026)
+TWELFTH_HINT = 'divided by 12'
+
+
+def gbp(n):
+    return '£{:,}'.format(n)
+
+
+def tax_table(diff):
+    """What the income tax table must say, and must not, from uk_rates.py (Jon's ruling, 13 Oct 2026)."""
+    pa, band, top = ur.PERSONAL_ALLOWANCE, ur.BASIC_RATE_BAND, ur.HIGHER_RATE_LIMIT
+    rates = ['%d%%' % (r * 100) for r in (ur.BASIC_RATE, ur.HIGHER_RATE, ur.ADDITIONAL_RATE)]
+    if diff == 'hard':
+        need = ['Taxable Income', '%s, less £1 for every £2 of income over %s' % (gbp(pa), gbp(ur.PA_TAPER_FROM)),
+                'The first %s of taxable income' % gbp(band),
+                '%s – %s of taxable income' % (gbp(band + 1), gbp(top)),
+                'Taxable income over %s' % gbp(top)]
+        bar = [gbp(pa + band), gbp(pa + band + 1), 'Annual Income']   # the gross bands, wrong once the allowance tapers
+    else:
+        need = ['Annual Income', 'Up to %s' % gbp(pa), '%s – %s' % (gbp(pa + 1), gbp(pa + band)),
+                '%s – %s' % (gbp(pa + band + 1), gbp(top)), 'Over %s' % gbp(top)]
+        bar = []
+    return need + rates, bar
 FORMAT_MSG = ('Right amount, but money always has two decimal places. In the exam, '
               '£{raw} loses the mark. Fix it and resubmit.')
 TITLES = {'Reduced Personal Allowance': 'pa', 'Taxable Income': 'taxable', 'Income Tax': 'tax',
@@ -160,6 +191,14 @@ def play(page, rep, diff, gross, verbose=False, probes=True):
     sid = '%s %d' % (diff, gross) + ('' if probes else ' [keys]')
     k = keys(gross)
     page.evaluate('([d, g]) => { usedSalaries[d] = [g]; startGame(d); }', [diff, gross])
+    table = page.evaluate("document.getElementById('taxTable').textContent")
+    need, bar = tax_table(diff)
+    for t in need:
+        if t not in table:
+            rep.fail(sid, 'tax table', 'does not say %r: %r' % (t, table[:200]))
+    for t in bar:
+        if t in table:
+            rep.fail(sid, 'tax table', 'states the gross band %r on Hard, where the bands are taxable income' % t)
     want_steps = 6 if diff == 'hard' else 5
     n = page.evaluate('steps.length')
     if n != want_steps:
@@ -207,6 +246,8 @@ def play(page, rep, diff, gross, verbose=False, probes=True):
                 return
             if 'wrong' not in after['fbClass']:
                 rep.fail(where, 'wrong', '%s was not marked wrong: %r' % (raw, after['fbText'][:100]))
+            if TWELFTH_HINT in after['fbText'] and not (key > 0 and abs(key + delta - key / 12) <= 2):
+                rep.fail(where, 'hint', '%s (key %s) got the factor-of-12 hint: %r' % (raw, plain(key), after['fbText'][:100]))
         # The right answer, rightly written
         raw = str(key.numerator) if (key.denominator == 1 and i % 2 == 0) else plain(key)
         after = submit(page, raw)
@@ -223,7 +264,8 @@ def play(page, rep, diff, gross, verbose=False, probes=True):
                     return
         wait_advance(page, i)
         shown = page.evaluate('(id) => document.getElementById(id).textContent', PAYSLIP[sk])
-        want = ('−' if sk in ('tax', 'ni', 'deductions') else '') + money(key)
+        # The payslip is annual: its net row is the year's net pay (Jon's ruling, 13 Oct 2026)
+        want = ('−' if sk in ('tax', 'ni', 'deductions') else '') + money(gross - k['deductions'] if sk == 'net' else key)
         if shown != want:
             rep.fail(where, 'payslip', 'shows %r, expected %r' % (shown, want))
         line = page.evaluate(STATE)['completed'][-1]
@@ -233,7 +275,16 @@ def play(page, rep, diff, gross, verbose=False, probes=True):
             print('  %-24s %-11s %s' % (sid, sk, money(key)))
     page.wait_for_function('document.getElementById("completionScreen").style.display === "block"', timeout=5000)
     end = page.evaluate("""() => ({tax: sumTax.textContent, ni: sumNI.textContent,
-        keep: sumKeep.textContent, wry: wryLine.textContent})""")
+        keep: sumKeep.textContent, wry: wryLine.textContent,
+        keepLabel: sumKeep.parentElement.querySelector('.stat-label').textContent,
+        rows: Array.from(document.querySelectorAll('.payslip-row .label')).map(e => e.textContent),
+        period: Array.from(document.querySelectorAll('.payslip-meta dt')).find(d => d.textContent === 'Period').nextElementSibling.textContent})""")
+    if end['period'] != 'Annual' or any('month' in r.lower() for r in end['rows']) or 'Net Annual Pay' not in end['rows']:
+        rep.fail(sid, 'payslip', 'not annual throughout: period %r, rows %r' % (end['period'], end['rows']))
+    if 'per year' not in end['keepLabel'].lower():
+        rep.fail(sid, 'completion keep', '"You Keep" is not labelled per year: %r' % end['keepLabel'])
+    if diff == 'easy' and end['wry'] != EASY_LINE:
+        rep.fail(sid, 'closing line', '%r, not Jon\'s line %r' % (end['wry'], EASY_LINE))
     for name, want in (('tax', money(k['tax'])), ('ni', money(k['ni'])),
                        ('keep', money(gross - k['deductions']))):
         if end[name] != want:
@@ -311,9 +362,9 @@ def selftest():
     lines, ok = [], True
     one = [('hard', 106000)]
 
-    def expect(name, patch):
+    def expect(name, patch, only=one):
         nonlocal ok
-        rep, _ = run(patch, only=one)
+        rep, _ = run(patch, only=only)
         caught = bool(rep.fails)
         ok = ok and caught
         lines.append('  self-test %-40s %s' % (name, ('caught: ' + rep.fails[0][:110]) if caught else '*** MISSED ***'))
@@ -325,6 +376,17 @@ def selftest():
     expect('format check marks instead', """(() => { const real = moneyResult;
         moneyResult = function(raw, key) { const r = real(raw, key); return r === 'format' ? 'correct' : r; }; })()""")
     expect('old closing line for a reduced allowance', "WRY_LINES.hardReduced = WRY_LINES.hard")
+    expect('the gross tax table on Hard', "(() => { renderTaxTable = (function (r) { return function () { r('easy'); }; })(renderTaxTable); })()")
+    expect('the payslip\'s monthly net row', """(() => { const real = checkAnswer;
+        document.getElementById('payNet').previousElementSibling.textContent = 'Net Monthly Pay';
+        checkAnswer = function () { const s = steps[currentStepIndex]; real();
+          if (s.id === 'net' && document.getElementById('feedback').className.indexOf('correct') >= 0)
+            document.getElementById('payNet').textContent = fmtPence(s.key); }; })()""")
+    expect('the factor-of-12 hint on a £0 key', """(() => { getHint = (function (real) { return function (v, e, s) {
+        if (s.id !== 'net' && Math.abs(v - e / 12) <= 2) return 'Have you accidentally divided by 12? Work in annual figures first.';
+        return real(v, e, s); }; })(getHint); })()""", only=[('hard', 130000)])
+    expect('the old Easy closing line', "WRY_LINES.easy = 'Welcome to adulthood.'", only=[('easy', 14000)])
+    expect('"You Keep" with no period', "sumKeep.parentElement.querySelector('.stat-label').textContent = 'You Keep'")
     return ok, lines
 
 

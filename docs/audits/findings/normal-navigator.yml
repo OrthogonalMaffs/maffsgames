@@ -1,0 +1,103 @@
+# Findings register for normal-navigator (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: normal-navigator
+audited:
+  tranche: S1 (SWEEP-1 reading sweep)
+  head: 9237145
+  date: 2026-10-13
+  served:
+    alevel: '47'
+    level4: '47'
+    core: '47'
+findings:
+- id: normal-navigator-s1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:precision-not-stated
+  level: alevel
+  where: games/normal-navigator/index.html, 26 items (:232-:292)
+  summary: 'SR-1: 26 rounded keys (probabilities to 4 d.p., inverse-Normal values to 1 d.p., z to 2 d.p., an IQR
+    and an expected count to the nearest whole number, a percentage to 2 d.p.) never said their precision. Fixed:
+    each ask states the key''s own precision; the verifier fails a rounded key whose question states no precision
+    or another one (old page: 26 fails); two plants'
+  evidence: '"P(42 < X < 58) = ?" key 0.6827 (0.682689); "k = ?" key 60.3 (60.2524) (SWEEP-1, batch 10)'
+  status: open
+- id: normal-navigator-s1-002
+  severity: MEDIUM
+  jc: true
+  class: NEW:convention-unstated
+  level: alevel
+  where: games/normal-navigator/index.html:253, :259, :262
+  summary: 'Three items key a minimum or pass mark to the nearest whole number where a minimum can be read as
+    rounding up: the top 10% minimum is 232.04 (keyed 232; 233 if marks are whole and "minimum" means at least),
+    Mensa''s 130.8 (131 either way), and the pass mark that lets 80% pass, 54.9 (keyed 55, which lets fewer than
+    80% pass). A rounding convention for Jon; the verifier reports these three, not fails them'
+  evidence: '"X ~ N(200, 25²). The top 10% get an A. Find the minimum mark." key 232, options 225, 240, 228
+    (SWEEP-1, batch 10)'
+  status: open
+- id: normal-navigator-s1-003
+  severity: LOW
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: alevel
+  where: games/normal-navigator/index.html:255 (IQR)
+  summary: 'The IQR working rounded Q1 and Q3 to 446.0 and 554.0 and gave IQR = 108.0; it is 107.92. Fixed:
+    446.04, 553.96, 107.92 ≈ 108. The verifier now reads the last figure of every worked solution against the
+    answer; the old working is planted'
+  evidence: '"IQR = 554.0 − 446.0 = 108.0"; 2 × 0.67449 × 80 = 107.92 (SWEEP-1, batch 10)'
+  status: open
+- id: normal-navigator-s1-004
+  severity: LOW
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: alevel
+  where: games/normal-navigator/index.html:248 (misconception)
+  summary: '"z = ±1.96 gives exactly 95%": it gives 0.950004. Fixed: "very nearly 95%"; an "exactly N%" claim no
+    probability in the question makes is barred and planted'
+  evidence: 'P(−1.96 < Z < 1.96) = 0.9500042 (SWEEP-1, batch 10)'
+  status: open
+- id: normal-navigator-s1-005
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: alevel
+  where: games/normal-navigator/index.html:285, :101, :289
+  summary: 'Three small mismatches, fixed: the two-condition item drew σ = 5 where its working finds 5.11; the start
+    screen promised 50 questions (the bank has 47; now checked against the bank); the z = 1.96 working stopped at
+    Φ(1.96) = 0.975 without stating z'
+  evidence: 'mu:17,sigma:5 against "σ ≈ 5.11"; "50 questions covering" (SWEEP-1, batch 10)'
+  status: open
+- id: normal-navigator-s1-006
+  severity: LOW
+  jc: false
+  class: NEW:text-contradicts-content
+  level: alevel
+  where: games/normal-navigator/index.html:276, :272-273, :228
+  summary: 'Open: the B(100, 0.3) parameters item shades 25 to 35, a region the question never mentions; the two
+    empirical-rule items about a general N(μ, σ²) label the curve μ = 0, σ = 1; :228 says "X ~ N(0, 1)" and asks
+    P(Z < 0). Drawing and context changes, not decided by a standing ruling'
+  evidence: 'shade:[25,35] on "What are μ and σ for the approximation?" (SWEEP-1, batch 10)'
+  status: open
+- id: normal-navigator-s1-007
+  severity: MEDIUM
+  jc: true
+  class: NEW:level-content-mismatch
+  level: alevel
+  where: games/normal-navigator/index.html:325-374
+  summary: 'The game serves one bank to A-Level, Level 4 and Core Maths but logs level "alevel" for all three, the
+    shape of the factor-theorem ruling (a level serving another level''s items). The page also says to use a
+    calculator while its roster tag is untagged. For Jon'
+  evidence: 'mfg(..., level: ''alevel'') at every event (SWEEP-1, batch 10)'
+  status: open
+- id: normal-navigator-s1-008
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: alevel
+  where: scripts/verify-normal-navigator.py
+  summary: 'The verifier evaluates every arithmetic chain and now the last figure and the stated precision, but not
+    the prose claims in steps and misconceptions (the "68% rule" wording, "Reject from BOTH tails"), values derived
+    from rounded inputs, the start text beyond its count, or the shading of a parameters item. Recorded under Jon''s
+    rule of 13 Oct 2026'
+  evidence: 'check_text() reads numbers, not sentences (SWEEP-1, batch 10)'
+  status: open

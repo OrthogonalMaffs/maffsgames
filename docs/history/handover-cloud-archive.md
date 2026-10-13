@@ -3,6 +3,13 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-13 (cloud): circle-theorem-spotter (#344) and SWEEP-1 batch 7 (GCSE part 3)
+
+- **SR-20 hit, fixed under SR-30 (Jon, 13 Oct):** circle-theorem-spotter's tangent figures marked the angle on the wrong side (6 of 55 HIGH). #344: T across AB from C, on B's side of OA; the verifier measures every tangent figure's SVG in Chromium; both old rules planted.
+- **Fixed in batch 7:** probability-paradox SR-18 assumptions (Monty's random choice; "at random"/"fair" in five) and two true options (SR-16); coordinate-geometry-dash "∞"; graph-transformer's Show-steps captions and 1/x equations (every caption worked out from its target); formula-unlocked's raw-TeX target line and two misconception texts; scale-factor-scaling "Length scale factor", "Corresponding sides", "Similar solids". Every verifier PASS locally with its plants.
+- **Open, for Jon:** SR-14: probability-paradox-s1-005 (plane crash, needs a new context) and bearing-blitz-s1-001 ("Fire or die."); the SR-23 timer class (surd-simplifier, circle-theorem-spotter, scale-factor-scaling, trig-identity-duel-t2-010); circle-theorem-spotter-s1-004 (Q50's numbers).
+- **Class (running):** verifier gaps in worked feedback in every batch 7 game (each has an entry); raw TeX through textContent/innerHTML (formula-unlocked, proportion-blaster).
+
 ## 2026-10-13 (cloud): quadratic-factoriser (#342) and SWEEP-1 batch 6 (GCSE part 2)
 
 - **SR-20 stop, ruled the same day:** quadratic-factoriser Higher keyed the wrong guided split on 3008 of 3760 items. #342: kps and kqr, step 5 kpx and ±kq; the verifier plays all six steps of every Higher item (3762 item-modes, about 60 s) and a self-test line plants the old split (about 80 s); the Formula roots are on MaffsKeypad with its minus key.

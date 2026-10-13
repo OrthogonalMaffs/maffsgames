@@ -18,18 +18,24 @@ never skip). Then:
   definite: the key equals the integral exactly; no wrong option does;
   no two options are equal in value (c held as a symbol);
   the explanation's last statement (after its last '=', ':' or 'so') equals the key; so an explanation that
-    never states the answer FAILS, and none may add a unit (m, m/s, J, N·s, kN·m) the question does not state.
+    never states the answer FAILS, and none may add a unit (m, m/s, J, N·s, kN·m) the question does not state;
+  every working step is read too (SWEEP-1, 13 Oct 2026): each '='-separated expression after the last 'so' or ':'
+    equals the final one (the + c aside; a line with an integral sign, a bracket evaluation or the substitution
+    variable u is not an expression of the answer), so '100/(-5) = -20e^(-5t) + c' (a number set equal to a
+    function) FAILS; and the final expression has no uncancelled whole-number fraction (6t^3/3, 50e^(-2t)/(-2)):
+    the explanation finishes at the key, simplified.
 In Chromium (390x844) every item is shown through the game's own nextQ() with its options from MaffsOptions,
 and every option clicked through guess(): the key marked right, the others wrong; the key without its + c is
 told the constant is missing. The start screen must not promise faster answers score higher (t5-009).
 
-A self-test plants three of the audit's own faults back into a copy of the page (t5-001: the impulse integral
-keyed 8/3; t5-002: 'ln x + c' as a wrong option; t5-004: 4e^{2x}/2 beside 2e^{2x}); each must FAIL naming its
-item.
+A self-test plants the audit's own faults back into a copy of the page (t5-001: the impulse integral
+keyed 8/3; t5-002: 'ln x + c' as a wrong option; t5-004: 4e^{2x}/2 beside 2e^{2x}; the sweep's s1-001 and
+s1-002: the old level4[19], [2] and [18] working); each must FAIL naming its item.
 
     python scripts/verify-integration-duel.py [--no-selftest] [--against FILE] [--katex-dir DIR]
 """
 import argparse
+import math
 import os
 import random
 import re
@@ -169,6 +175,24 @@ def final(expl):
     return uni(tail)
 
 
+def uncancelled(expr):
+    """Whole-number fractions in a plain-text expression that cancel (6t³/3, 50 × e^(−2t)/(−2)): its numbers outside
+    exponents, function arguments and bracketed algebra, numerator and denominator sharing a factor."""
+    s = expr.replace('\u2212', '-').replace('×', '*')
+    s = re.sub('[%s]+' % ''.join(SUP), '', s)
+    s = re.sub(r'\^\([^)]*\)|\^-?\w+', '', s)
+    while re.search(r'\([^()]*[a-zω|][^()]*\)', s):
+        s = re.sub(r'\([^()]*[a-zω|][^()]*\)', 'G', s)
+    return ['%s/%s' % (a, d) for a, d in re.findall(r'(?<![\w.)])(\d+)[^+=/]*/\s*\(?\s*-?(\d+)', s)
+            if math.gcd(int(a), int(d)) > 1]
+
+
+def steps(expl):
+    """The explanation's working after its last 'so' or ':', split at '=': the expressions of the answer."""
+    tail = re.split(r', so |: |\bso ', expl)[-1]
+    return [p.strip() for p in tail.split('=')]
+
+
 def integral(q):
     m = re.match(r'^\\int(?:_(\{[^}]*\}|\S)\^(\{[^}]*\}|\S))?\s*(.*?)\\,d([xt])$', q.strip())
     if not m:
@@ -250,6 +274,21 @@ def check_bank(fails, bank):
                 continue
             if not same(fv, vals[0]):
                 fails.append('%s: the explanation ends at %s, the key is %s' % (w_, fv, q['correct']))
+            parts = steps(q['exp'])
+            for p in parts[:-1]:
+                if '∫' in p or '[' in p:
+                    continue
+                try:
+                    pv = uni(p)
+                except ValueError:
+                    continue
+                if any(str(v_) == 'u' for v_ in pv.free_symbols):
+                    continue
+                if not same(pv.subs(c, 0), fv.subs(c, 0)):
+                    fails.append('%s: the working sets %r equal to %r (s1-001)' % (w_, p, parts[-1]))
+            un = uncancelled(parts[-1])
+            if un:
+                fails.append('%s: the explanation stops at %r, with %s not cancelled (s1-002)' % (w_, parts[-1], ', '.join(un)))
 
 
 SWEEP_JS = r"""() => {
@@ -321,6 +360,12 @@ PLANTS = [
      "correct:'\\\\frac{16}{3}',\n      wrong:['-\\\\frac{16}{3}'", "correct:'\\\\frac{8}{3}',\n      wrong:['-\\\\frac{16}{3}'"),
     ('alevel[24]', "t5-002: 'ln x + c' as a wrong option", "'-x^{-2} + c','x^{-1} + c']", "'\\\\ln x + c','x^{-1} + c']"),
     ('alevel[20]', 't5-004: 4e^{2x}/2 beside 2e^{2x}', "'8e^{2x} + c'", "'\\\\frac{4e^{2x}}{2}'"),
+    ('level4[19]', 's1-001: a number set equal to a function', "exp:'100 × e^(−5t)/(−5) + c = −20e^(−5t) + c'",
+     "exp:'100/(−5) = −20e^(−5t) + c'"),
+    ('level4[2]', 's1-002: the working stops at 6t³/3 + 2t²/2', "exp:'6t³/3 + 2t²/2 + c = 2t³ + t² + c'",
+     "exp:'6t³/3 + 2t²/2 + c'"),
+    ('level4[18]', 's1-002: the working stops at 50e^(−2t)/(−2)', "exp:'50 × e^(−2t)/(−2) + c = −25e^(−2t) + c'",
+     "exp:'50 × e^(−2t)/(−2) + c'"),
 ]
 
 
