@@ -579,6 +579,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 <script src="../../schools/assets/analytics.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
@@ -736,10 +737,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 // what every event and score reports. Jon's rulings, 28 Sep 2026:
 // docs/next-contract-log-laws-solve.md.
 const levelNames = { alevel: 'A-Level', level3: 'Level 3 (Engineering)', level4: 'Level 4' };
-const LEVEL = (() => {
-  const p = new URLSearchParams(location.search).get('level');
-  return Object.prototype.hasOwnProperty.call(levelNames, p) ? p : 'alevel';
-})();
+const LEVEL = MaffsLevel.resolve({slug:'log-laws',levels:['alevel','level3','level4'],fallback:'alevel'});
 let mode = 'laws';   // 'laws' | 'solve'; Solve mode lives in the second script below
 
 // ── Reference laws (LaTeX) ──────────────────────────────────────────────────
