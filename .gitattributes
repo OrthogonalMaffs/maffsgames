@@ -1,3 +1,8 @@
+# Line endings (Jon, 13 Oct 2026): every text file is LF in the repository AND in every working tree, Windows included,
+# so a verifier sees the same bytes locally as in CI (the Windows-only false failures came from CRLF checkouts, not from
+# any one verifier). Git still detects binary files itself (text=auto) and leaves them alone; the -text lines below win.
+* text=auto eol=lf
+
 # Files a check reads as bytes. Git on Windows (core.autocrlf) would otherwise check them out with CRLF, and the
 # check would see bytes the repository never holds. Nothing here changes a committed blob.
 #
