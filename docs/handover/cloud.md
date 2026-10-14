@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: wrong-on-the-internet`
+`cloud-remaining: `
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -45,6 +45,8 @@ main's last full run is red; watch main's run after merging.
 ## 2026-10-14 (cloud): MAIN-GREEN-AND-OPTION-PARITY (contract `docs/handover/contracts/2026-10-14-main-green-and-option-parity.md`)
 
 - **Part 1, verify-probability-paradox.py, measured here (one local machine, serial):** before #371 (56e4ece^) 178 s; main (e057694) 231 s; fixed 74 s. Cause: #371 added four plants to the self-test, each re-running the whole `run()`, and `next_once` (real MaffsLock timers) costs 10 s of its 13.6 s. It raises only `t1-010` failures, so it now runs for the real page and the t1-010 plant, not the other 15. Not the simulation (0.2 s). All 16 plants still caught; no check dropped; no budget, workflow or ci-groups change.
+
+- **Option parity (SR-34), wrong-on-the-internet:** 100% / 0% -> 29% / 7% (key strictly longest / shortest; PR open). Stage 2 is a diagnosis, not a verdict on a character, so every option is one clause naming one error, distractors lengthened where the key still led; the explanation (already shown after marking) keeps the working. ks3_002's garbled "3/4 is larger because 4>5 is false... wait that's backwards" is replaced by "3/4 is bigger because its bottom number is smaller" (its B6 entry goes; four B6 re-keyed). **Examples (my drafting under SR-34; Jon may overrule):** ks3_001 key "BIDMAS requires multiplication before addition: 3×4=12 first, then 2+12=14. Left-to-right only applies within the same tier of operations" -> "Multiplication comes before addition, so 3 × 4 is done first". core_007 key "Break-even = Fixed costs ÷ Contribution per unit. … QuickBusiness divided by selling price, ignoring the £10 production cost per unit" -> "QuickBusiness ignored the £10 cost: divide by £25 − £10". gcse_017 distractor "The primality of 1 is genuinely debated" -> "Whether 1 counts as prime is genuinely debated by mathematicians".
 
 ## 2026-10-13 (cloud): SWEEP-1-RULINGS (finished 14 Oct; full entry in `docs/history/handover-cloud-archive.md`)
 
