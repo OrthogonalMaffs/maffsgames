@@ -24,6 +24,7 @@ A self-test plants a wrong figure, a changed pinned phrase, a literal modulus an
     python scripts/verify-facts.py [--no-selftest] [--against FILE]
 """
 import argparse
+import datetime
 import math
 import os
 import re
@@ -125,12 +126,14 @@ PINS = [
     ('More Card Shuffles Than Atoms in Earth', [
         P('roughly (' + NUM + ') × 10(' + SUPRX + ')', lambda m, e: near(sci(m, e), F52, 0.05),
           '52! = %.3g' % F52),
-        P('about (' + NUM + ') × 10(' + SUPRX + ') shuffles', lambda m, e: near(sci(m, e), SHUFFLES, 0.15),
-          '117e9 people ever born (PRB 2022) x 13.8e9 years in seconds = %.2g' % SHUFFLES),
+        # an upper bound, not an estimate: valid for any 100-117 billion people ever born (PRB 2022 gives 117 billion)
+        P('fewer than 10(' + SUPRX + ') shuffles',
+          lambda e: all(p * BIG_BANG_S < 10 ** int(e.translate(SUP)) for p in (100e9, EVER_LIVED)),
+          '100-117e9 people ever born x 13.8e9 years in seconds = %.2g to %.2g, both under 10^29' % (100e9 * BIG_BANG_S, SHUFFLES)),
         P('you.d need about 10(' + SUPRX + ') shuffles', lambda e: near(10 ** int(e.translate(SUP)), HALF_CHANCE, 0.1),
           'birthday bound sqrt(2 ln2 . 52!) = %.3g' % HALF_CHANCE),
-        P('around (' + NUM + ') times that whole exercise', lambda n: near(num(n), HALF_CHANCE / SHUFFLES, 0.1),
-          'ratio %.3g' % (HALF_CHANCE / SHUFFLES)),
+        P('more than (' + NUM + ') times that whole exercise', lambda n: HALF_CHANCE / 10 ** 29 > num(n),
+          'against the 10^29 bound the ratio is at least %.3g' % (HALF_CHANCE / 10 ** 29)),
         L('even chance that ANY two', None, 'birthday problem with 52! "days": 50% needs about sqrt(2 ln2 . N) draws'),
     ]),
     ('Not All Infinities Are the Same Size', [
@@ -197,9 +200,8 @@ PINS = [
         P('Total positives: ([0-9]+). Genuine: ([0-9]+)', lambda t, g: (int(t), int(g)) == (49 + 199, 49)),
         P('= 49/248 ≈ ([0-9]+)%', lambda p: round(100 * 49 / 248) == int(p)),
         P('wrong ([0-9]+)% of the time[.]$', lambda p: round(100 * 199 / 248) == int(p)),
-        # KNOWN (finding, not fixed): the hook says "more than 90%", the body computes 80%.
-        P('give wrong results more than ([0-9]+)% of the time', lambda p: round(100 * 199 / 248) > int(p),
-          'the body computes 199/248 = 80%', known='hook says >90%, body computes 80%'),
+        P('give wrong results about ([0-9]+)% of the time', lambda p: round(100 * 199 / 248) == int(p),
+          'the hook agrees with the body: 199/248 = 80%'),
     ]),
     ('Infinitely Many Primes', [
         L('proved over 2,300 years ago', lambda: 2026 + 300 > 2300, 'Euclid, Elements IX.20, c. 300 BC'),
@@ -364,7 +366,9 @@ PINS = [
     ]),
     ('The Basel Problem', [
         L('1/1² + 1/2² + 1/3² + 1/4² + ... = π²/6', lambda: near(sum(1 / k ** 2 for k in range(1, 200001)), math.pi ** 2 / 6, 1e-5)),
-        L('In 1735, a 28-year-old Euler proved this', None, WIKI + 'Basel_problem (Euler, born 15 Apr 1707; announced 1735)'),
+        P('In December ([0-9]{4}), Euler, then ([0-9]+), announced a proof',
+          lambda y, a: int(y) == 1735 and (datetime.date(1735, 12, 5) - datetime.date(1707, 4, 15)).days // 365.2425 >= int(a) == 28,
+          WIKI + 'Basel_problem (announced to the St Petersburg Academy 5 Dec 1735; Euler born 15 Apr 1707, so 28)'),
     ]),
     ('Barcodes Use Modular Arithmetic', [
         L('ISBN-13 uses mod 10: multiply digits alternately by 1 and 3', lambda: isbn13_ok('9780306406157') and not isbn13_ok('9780306406158')),
@@ -399,7 +403,7 @@ PINS = [
         L('36.8%', lambda: round(100 / math.e, 1) == 36.8),
     ]),
     ('Is Mathematics Discovered or Invented?', [
-        L('argued about this for 2,500 years', None, 'Plato (c. 400 BC) onwards; a round figure, see handover'),
+        L('argued about this for about 2,500 years', None, 'Plato (c. 400 BC) onwards; stated as approximate'),
     ]),
 ]
 
