@@ -502,7 +502,7 @@ level4: [
    sq_order:[1,2,3,4],
    sq1:{prompt:'Use the model to calculate V when t = 0.1s. Give your answer to 3 significant figures.',answer:1.62,sf:3,unit:'V'},
    sq2:{prompt:'Interpret the value −20 in this model.',correct:'Voltage decays rapidly — the time constant is 0.05 seconds',
-     wrong:['Voltage decays steadily — it falls by 20V every second','Voltage grows rapidly — it rises at 20% every second','Voltage decays slowly — the time constant is a full 20 seconds']},
+     wrong:['Voltage decays steadily — it falls by 20V every second','Voltage grows rapidly — it rises at 20% every second','Voltage decays slowly — it halves every 20 seconds']},
    sq3:{prompt:'Find V₀ when t = 0.',answer:12,unit:'V'},
    sq4:{prompt:'Find t when V = 6. Give your answer to 4 significant figures.',answer:0.03466,hint:'6 = 12e^{-20t} \\Rightarrow 0.5 = e^{-20t} \\Rightarrow t = \\frac{\\ln 2}{20}'}},
   {id:'L4_2',modelLatex:'T = 20 + 160e^{-0.08t}',context:'Cooling component. T = temperature (°C), t = minutes. Ambient = 20°C.',
