@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: expectation-station`
+`cloud-remaining: `
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -58,23 +58,9 @@ main's last full run is red; watch main's run after merging.
 - **Distractors replaced, not reworded (for Jon):** gcse_011 (both games) "area = π × d = 10π" gave the same 31.42 as "area = π × 10 = 31.42cm²"; now "it's 157.08cm²" (the diameter used, then halved). ks3_017 (both games): every option says "in standard form it's …", so 0.34 × 10⁷ is false as written (terrible-advice-s1-002's rule). spot-the-muppet core_008 "pre-VAT = £120 × 0.80 = £96" gave the muppet's own £96 a second time beside "Roxanne is correct — it's £96"; now "Roxanne is wrong — it's £140" (adding £20, not 20%). gcse_003 and gcse_020 (the muppet is right) keep a claim, not a figure, in one distractor each ("subtracting is not allowed", "she should have added").
 - **Option parity (SR-34), wrong-on-the-internet:** 100% / 0% -> 29% / 7% (key strictly longest / shortest; PR open). Stage 2 is a diagnosis, not a verdict on a character, so every option is one clause naming one error, distractors lengthened where the key still led; the explanation (already shown after marking) keeps the working. ks3_002's garbled "3/4 is larger because 4>5 is false... wait that's backwards" is replaced by "3/4 is bigger because its bottom number is smaller" (its B6 entry goes; four B6 re-keyed). **Examples (my drafting under SR-34; Jon may overrule):** ks3_001 key "BIDMAS requires multiplication before addition: 3×4=12 first, then 2+12=14. Left-to-right only applies within the same tier of operations" -> "Multiplication comes before addition, so 3 × 4 is done first". core_007 key "Break-even = Fixed costs ÷ Contribution per unit. … QuickBusiness divided by selling price, ignoring the £10 production cost per unit" -> "QuickBusiness ignored the £10 cost: divide by £25 − £10". gcse_017 distractor "The primality of 1 is genuinely debated" -> "Whether 1 counts as prime is genuinely debated by mathematicians".
 
+- **Option parity (SR-34), expectation-station:** 51% / 1% -> 19% / 1% (PR open). 38 wrong cards lengthened with their claim unchanged, so each reviewed verdict and computed check in the verifier's CARDS still holds (CARDS carries the new text); keys unchanged. **Examples (my drafting under SR-34; Jon may overrule):** alevel_015 "The most likely value of X is 3" -> "The most likely value of X is 3, the value with the highest probability"; gcse_001 "2.5 is the most likely score" -> "2.5 is the most likely score on any single spin of the spinner"; core_015 "The checkout processes 2.6 customers per minute" -> "The express checkout processes 2.6 customers per minute on average at busy times". The 13 Oct NEGATIVE-INPUT entry moved to the archive (size).
+
 ## 2026-10-13 (cloud): SWEEP-1-RULINGS (finished 14 Oct; full entry in `docs/history/handover-cloud-archive.md`)
 
 - Steps 0 to 3 merged, #361 to #371; 392 of 517 sweep entries closed, 125 open. SR-33 (rules R1 to R9) is for the home lane to carry into canon.
 - Left for Jon (did not fit a rule): maths-court-s1-008, graph-sketcher-s1-006 and the rest of the list in the archived entry. bearing-blitz uses "Fire first." (the content document's wording), not Part A's "Fire before they do".
-
-## 2026-10-13 (cloud): NEGATIVE-INPUT (log-laws, suvat; Jon's input-design ruling)
-
-- **Ruling (Jon, 13 Oct):** mount `schools/assets/keypad.js` with `keys: {minus: true}` in every game where a negative typed answer is possible, as the 11 games that already use it do; the changed touch layout is accepted; keypad.js untouched; games with no possible negative keep their input; whether all typed-numeric games should move is a separate, later question. **Pattern copied: quadratic-factoriser's Formula level** (roots can be negative; calculator.css linked, the surface/font tokens declared on `:root`, a holder div inside the locked container, `MaffsKeypad.mount` with `keys: {minus: true}`).
-- **Changed (for the home lane's check):**
-  - `log-laws`: Solve mode's `#solveInput` (34 negative typed answers, log-laws-s1-005). Mounted once at page load; the keys sit inside `#solveBox`, so `MaffsLock.lock` and `fresh` switch them with the box (no keys code of its own).
-  - `suvat`: Phase 2's `#calcInput` (ALEVEL[34] step 0, v_y = -0.32, suvat-s1-001) and Phase 0's `#p0ux`/`#p0uy`. No Phase 0 key in the bank is negative; it is mounted too so one game does not mix two input styles (Jon can reverse that).
-  - Tested on a 390 px touch profile: real taps on minus, 3, point, 5 type `-3.5` into each; with a mouse the boxes are ordinary inputs, no keypad.
-- **Judged to have no negative answer (input unchanged):**
-  - `split-it`: every generator draws positive integers and builds positive answers (ratios in lowest terms, shares `a*k`, scaled recipe amounts, unit prices, money); nothing subtracts. Money boxes are `type="text" inputmode="decimal"`, the rest `type="number"`.
-  - `screening-room`: the answer is `tp / (tp + fp)` from non-negative counts, a percentage from 0 to 100 (`buildItem`); no bank answer is negative (280 items).
-  - `fermi-lab`: all 325 items' chain references, `acceptedAnswer`s and the figures table (`value:`) are positive estimates (smallest 2e-10); no negative anywhere in the data.
-  - `just-pythag-it-bruv`: side lengths; it already loads keypad.js through MaffsCalc.
-  - Already had a minus key: `simultaneous-solver`.
-- **Not settled by the code, for Jon:** none of the six candidates. **Not built:** the contract's `scripts/check-negative-input.py`. The ruling calls it the home lane's check, and the extracted banks cannot be its evidence: split-it and just-pythag-it-bruv are generators, log-laws' Solve answers are generated at run time, and suvat's negative sits in `steps[].answer`, not a top-level answer field (a check must walk nested fields and carry a declared list for generators).
-- **Merged:** #360 (cf976e7), CI green on re-run (three page-load timeouts in other games on the first attempt: screening-room, proof-builder, quadratic-factoriser); log-laws-s1-005 and suvat-s1-001 closed. Main's run for the merge: see the next entry.
