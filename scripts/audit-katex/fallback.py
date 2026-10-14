@@ -21,8 +21,8 @@ ROOT = REPO
 HOOK = open(os.path.join(CODE, "kx_hook.js")).read()
 SITES = json.load(open(os.path.join(HERE, "sites.json")))
 WR = {r["file"]: r for r in json.load(open(os.path.join(HERE, "wrappers.json")))}
-OUT = open(os.path.join(HERE, "fb.jsonl"), "w")
-SITE_LOG = open(os.path.join(HERE, "fb_sites.jsonl"), "w")
+OUT = open(os.path.join(HERE, "fb.jsonl"), "w", newline='')
+SITE_LOG = open(os.path.join(HERE, "fb_sites.jsonl"), "w", newline='')
 FIREBASE_STUB = ("(function(){var h={get:function(t,k){return k==='then'?undefined:P;},apply:function(){return P;}};"
                  "var P=new Proxy(function(){},h);window.firebase=P;})();")
 

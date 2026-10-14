@@ -586,7 +586,7 @@ async def run(only, workers, timeout_ms, port=DEFAULT_PORT):
 
     for r in results:
         path = os.path.join(BANKS_DIR, r["slug"] + ".json")
-        with open(path, "w", encoding="utf-8") as fh:
+        with open(path, "w", encoding="utf-8", newline='') as fh:
             json.dump(r, fh, indent=1, ensure_ascii=False)
 
     return results

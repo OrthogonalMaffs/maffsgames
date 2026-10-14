@@ -418,7 +418,7 @@ def main():
     }
 
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
-    with open(args.out, 'w', encoding='utf-8') as fh:
+    with open(args.out, 'w', encoding='utf-8', newline='') as fh:
         json.dump(payload, fh, indent=1, ensure_ascii=False)
         fh.write('\n')
 

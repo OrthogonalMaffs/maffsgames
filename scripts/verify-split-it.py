@@ -439,7 +439,7 @@ def selftest(args):
             print(f'  self-test {what}: *** CANNOT PLANT ({html.count(today)}) ***')
             ok = False
             continue
-        with tempfile.NamedTemporaryFile('w', suffix='.html', delete=False, encoding='utf-8') as f:
+        with tempfile.NamedTemporaryFile('w', suffix='.html', delete=False, encoding='utf-8', newline='') as f:
             f.write(html.replace(today, fault))
         try:
             rep, _ = run(argparse.Namespace(file=f.name, per=300, sample=1, verbose=False))

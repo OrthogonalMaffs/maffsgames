@@ -297,7 +297,7 @@ def apply_all(root):
         if values["slug"] in PENDING:
             continue
         p = root / path
-        p.write_text(render(p.read_text(encoding="utf-8"), values), encoding="utf-8")
+        p.write_text(render(p.read_text(encoding="utf-8"), values), encoding="utf-8", newline='')
 
 
 def selftest():
@@ -321,12 +321,12 @@ def selftest():
         pend = next(iter(PENDING), None)
 
         def edit(path, fn):
-            (tmp / path).write_text(fn((tmp / path).read_text(encoding="utf-8")), encoding="utf-8")
+            (tmp / path).write_text(fn((tmp / path).read_text(encoding="utf-8")), encoding="utf-8", newline='')
 
         def data(fn):
             d = json.loads(pristine[DATA])
             fn(d)
-            (tmp / DATA).write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8")
+            (tmp / DATA).write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8", newline='')
 
         game = "games/split-it/index.html"
         faults = [
@@ -351,13 +351,13 @@ def selftest():
         ]
         if pend:
             faults.append(("stale PENDING entry", lambda: (tmp / ("games/%s/index.html" % pend)).write_text(
-                render(applied["games/%s/index.html" % pend], exp["games/%s/index.html" % pend]), encoding="utf-8"),
+                render(applied["games/%s/index.html" % pend], exp["games/%s/index.html" % pend]), encoding="utf-8", newline=''),
                 "PENDING but already matches"))
         failures = []
         for name, plant, needle in faults:
             for p, t in applied.items():
-                (tmp / p).write_text(t, encoding="utf-8")
-            (tmp / DATA).write_text(pristine[DATA], encoding="utf-8")
+                (tmp / p).write_text(t, encoding="utf-8", newline='')
+            (tmp / DATA).write_text(pristine[DATA], encoding="utf-8", newline='')
             plant()
             errs, _ = check(tmp)
             if not any(needle in e for e in errs):

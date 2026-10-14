@@ -1030,7 +1030,7 @@ def selftest(data, page):
             ("old B2 composite H0", "h0Distractors:['p = 0.5','p = 0.75',", "h0Distractors:['p = 0.5','p \\\\leq 0.5',", 'Step 1 H0')):
         if src.count(old) != 1:
             print(f'  fault injection {desc:52} -> CANNOT PLANT'); ok = False; continue
-        with tempfile.NamedTemporaryFile('w', suffix='.html', delete=False, encoding='utf-8') as t:
+        with tempfile.NamedTemporaryFile('w', suffix='.html', delete=False, encoding='utf-8', newline='') as t:
             t.write(src.replace(old, new)); tmp = t.name
         try:
             hit = [f for f in verify(load_bank(tmp)).fails if field in str(f[2])]

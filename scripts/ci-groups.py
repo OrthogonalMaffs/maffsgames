@@ -593,7 +593,7 @@ def selftest():
     import tempfile
     with tempfile.TemporaryDirectory() as td:
         bad = os.path.join(td, "w.yml")      # PLANT: one entry's job_timeout one minute short, one missing
-        with open(bad, "w", encoding="utf-8") as f:
+        with open(bad, "w", encoding="utf-8", newline='') as f:
             f.write("- name: A\n  timeout: 10\n  job_timeout: 19\n- name: B\n  timeout: 8\n")
         sb = static_timeouts(bad)
     check("PLANT: a static entry with job_timeout off by one, or missing, is caught: %s" % (sb,),
@@ -726,7 +726,7 @@ def main():
     if a.json:
         print(json.dumps(m, indent=1))
     elif a.github_output:
-        with open(a.github_output, "a", encoding="utf-8") as f:
+        with open(a.github_output, "a", encoding="utf-8", newline='') as f:
             f.write("groups=%s\n" % json.dumps(m))
         print("%d content group(s), %d line(s)" % (len(m), sum(c["checks"].count("\n") for c in m)))
     else:

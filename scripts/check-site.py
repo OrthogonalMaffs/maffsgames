@@ -2533,7 +2533,7 @@ def main():
         t1_results, blocked, escaped = asyncio.run(
             tier1(pages, args.live, args.workers, args.timeout, site_wide))
         if args.phone_widths:
-            with open(args.phone_widths, "w", encoding="utf-8") as fh:
+            with open(args.phone_widths, "w", encoding="utf-8", newline='') as fh:
                 json.dump(sorted(({"label": r["label"], "url": r["url"], "width": r["width"]}
                                   for r in t1_results if "width" in r),
                                  key=lambda r: (r["url"], r["label"])), fh, indent=1)

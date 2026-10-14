@@ -158,7 +158,7 @@ def main():
                                  if cn.startswith("katex.") and len(x.arguments) > (2 if cn == "katex.render" else 1) else None})
         fw.walk(tree, v)
         out[f] = res
-    json.dump(out, open(os.path.join(HERE, "sites.json"), "w"), indent=1)
+    json.dump(out, open(os.path.join(HERE, "sites.json"), "w", newline=''), indent=1)
     for f, res in out.items():
         for s in res:
             if s["wrapper_body"]:

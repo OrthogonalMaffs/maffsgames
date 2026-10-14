@@ -677,7 +677,7 @@ def selftest():
         s = path.read_text(encoding="utf-8").replace("\r\n", "\n")
         t = fn(s)
         assert t != s, "planted fault changed nothing in %s" % path
-        path.write_text(t, encoding="utf-8")
+        path.write_text(t, encoding="utf-8", newline='')
 
     page = lambda d, s=g: d / "games" / s / "index.html"
 

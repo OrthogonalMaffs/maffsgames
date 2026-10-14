@@ -46,7 +46,7 @@ def main():
     for p, new in writes.items():
         print("%s %s" % ("would write" if a.dry_run else "wrote   ", p.relative_to(BASE)))
         if not a.dry_run:
-            p.write_text(new, encoding="utf-8")
+            p.write_text(new, encoding="utf-8", newline='')
     print("%d of %d pages %s" % (len(writes), len(exp), "would change" if a.dry_run else "changed"))
     return 0
 

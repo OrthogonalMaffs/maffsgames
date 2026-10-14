@@ -272,10 +272,10 @@ def find_node():
 def run_harness(node, source, workdir, tag):
     src_path = os.path.join(workdir, "script-%s.js" % tag)
     harness = os.path.join(workdir, "harness.js")
-    with open(src_path, "w", encoding="utf-8") as f:
+    with open(src_path, "w", encoding="utf-8", newline='') as f:
         f.write(source)
     if not os.path.exists(harness):
-        with open(harness, "w", encoding="utf-8") as f:
+        with open(harness, "w", encoding="utf-8", newline='') as f:
             f.write(HARNESS)
     p = subprocess.run([node, harness, src_path], capture_output=True, text=True, encoding="utf-8")
     if p.returncode != 0:

@@ -175,7 +175,7 @@ def selftest():
             for rel, text in files.items():
                 p = os.path.join(d, rel)
                 os.makedirs(os.path.dirname(p), exist_ok=True)
-                with open(p, 'w', encoding='utf-8') as fh:
+                with open(p, 'w', encoding='utf-8', newline='') as fh:
                     fh.write(text)
             errs, _ = scan(d, not_yet)
         got = bool(errs)
