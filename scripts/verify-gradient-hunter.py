@@ -81,8 +81,8 @@ def check_s1(fails, bank):
     for qid, reading in Y_READINGS.items():
         texts = [i['text'] for i in by[qid]['interpretations']]
         want = 'The gradient means ' + reading
-        if want not in texts:
-            fails.append('gradient-hunter-s1-003 %s: the y-value reading must be worded %r (it is true where the graph reaches that value), not %r'
+        if not any(t.startswith(want) for t in texts):     # SR-34 (14 Oct 2026): the option may go on, in the keys' form
+            fails.append('gradient-hunter-s1-003 %s: the y-value reading must start %r (it is true where the graph reaches that value), not %r'
                          % (qid, want, [t for t in texts if reading.lower() in t.lower()]))
     c15 = by['gh_core_015']['points']
     if any(b[1] > a[1] for a, b in zip(c15, c15[1:])):

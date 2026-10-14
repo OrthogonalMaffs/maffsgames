@@ -218,7 +218,7 @@ core: [
    pointA:{x:1,y:15,label:'A'},pointB:{x:3,y:50,label:'B'},gradient:17.5,
    interpretations:[
      {text:'The cyclist covers an average of 17.5 km per hour between hours 1 and 3',correct:true},
-     {text:"The cyclist's speed is always 17.5 km/h",correct:false},
+     {text:"The cyclist's speed is always exactly 17.5 km per hour between hours 1 and 3",correct:false},
      {text:'The total journey is 17.5 km',correct:false}
    ]},
   {id:'gh_core_002',type:'calculate',context:'A gas meter records cumulative energy usage in a home over a week.',
@@ -228,7 +228,7 @@ core: [
    interpretations:[
      {text:'The home uses approximately 10.67 kWh per day on average between days 2 and 5',correct:true},
      {text:'The total energy used is 10.67 kWh',correct:false},
-     {text:'Energy usage is decreasing at 10.67 kWh per day',correct:false}
+     {text:'Energy usage is decreasing at 10.67 kWh per day on average between days 2 and 5',correct:false}
    ]},
   {id:'gh_core_003',type:'calculate',context:'A bank account balance is tracked over 6 months after a fixed monthly deposit.',
    xLabel:'Month',yLabel:'Balance (pounds)',xMin:0,xMax:6,yMin:200,yMax:800,
@@ -236,7 +236,7 @@ core: [
    pointA:{x:1,y:300,label:'A'},pointB:{x:4,y:600,label:'B'},gradient:100,
    interpretations:[
      {text:'The account balance increases by 100 pounds per month on average',correct:true},
-     {text:'The account earns 100 pounds in interest',correct:false},
+     {text:'The account earns 100 pounds in interest in total over the 6 months shown',correct:false},
      {text:'The balance doubles every 100 months',correct:false}
    ]},
   {id:'gh_core_004',type:'calculate',context:"A car's fuel tank is being filled at a petrol station.",
@@ -246,7 +246,7 @@ core: [
    interpretations:[
      {text:'Fuel is being added at approximately 12.25 litres per minute',correct:true},
      {text:'The tank holds 12.25 litres',correct:false},
-     {text:'The car uses 12.25 litres per mile',correct:false}
+     {text:'The car uses up 12.25 litres of fuel for every mile it drives',correct:false}
    ]},
   {id:'gh_core_005',type:'calculate',context:'A population of bacteria is counted over time in a laboratory experiment.',
    xLabel:'Hours',yLabel:'Population (thousands)',xMin:0,xMax:8,yMin:0,yMax:100,
@@ -254,7 +254,7 @@ core: [
    pointA:{x:2,y:8,label:'A'},pointB:{x:6,y:65,label:'B'},gradient:14.25,
    interpretations:[
      {text:'Between hours 2 and 6, the population grows by approximately 14,250 bacteria per hour on average',correct:true},
-     {text:'The bacteria population is always growing at 14.25 thousand per hour',correct:false},
+     {text:'The bacteria population is always growing at exactly 14.25 thousand per hour, at every moment of the day',correct:false},
      {text:'14.25% of bacteria survive each hour',correct:false}
    ]},
   {id:'gh_core_006',type:'calculate',context:'A water tank is being drained. The volume of water remaining is recorded.',
@@ -264,7 +264,7 @@ core: [
    interpretations:[
      {text:'Water drains at an average rate of 50 litres per minute between minutes 2 and 8',correct:true},
      {text:'The tank loses 50% of its water per minute',correct:false},
-     {text:'The gradient is positive so the tank is filling',correct:false}
+     {text:'The gradient is positive, so the tank is filling at 50 litres per minute between minutes 2 and 8',correct:false}
    ]},
   {id:'gh_core_007',type:'calculate',context:"A runner's heart rate is monitored during a race.",
    xLabel:'Time (minutes)',yLabel:'Heart rate (bpm)',xMin:0,xMax:30,yMin:60,yMax:180,
@@ -273,7 +273,7 @@ core: [
    interpretations:[
      {text:"The runner's heart rate increases by 8 bpm per minute on average in the first 10 minutes",correct:true},
      {text:"The runner's heart rate is 8 bpm",correct:false},
-     {text:'Heart rate increases by 8% per minute',correct:false}
+     {text:'The runner\'s heart rate goes up by 8 percent every minute on average in the first 10 minutes',correct:false}
    ]},
   {id:'gh_core_008',type:'calculate',context:'House prices in a town are tracked over 10 years.',
    xLabel:'Year',yLabel:'Average house price (thousands, pounds)',xMin:0,xMax:10,yMin:150,yMax:310,
@@ -281,7 +281,7 @@ core: [
    pointA:{x:2,y:170,label:'A'},pointB:{x:8,y:265,label:'B'},gradient:15.83,
    interpretations:[
      {text:'House prices increase by approximately 15,830 pounds per year on average between years 2 and 8',correct:true},
-     {text:'House prices increase by 15.83% each year',correct:false},
+     {text:'House prices increase by approximately 15.83 percent each year on average between years 2 and 8',correct:false},
      {text:'The total increase in house price is 15,830 pounds',correct:false}
    ]},
   {id:'gh_core_009',type:'calculate',context:'A solar panel generates electricity throughout the day. Output is recorded from 6am.',
@@ -291,7 +291,7 @@ core: [
    interpretations:[
      {text:'Power output increases by approximately 46.67 watts per hour on average in the morning',correct:true},
      {text:'The panel generates 46.67 watts in total',correct:false},
-     {text:'Output rises by 46.67% every hour',correct:false}
+     {text:'Power output rises by approximately 46.67 percent every single hour on average in the morning',correct:false}
    ]},
   {id:'gh_core_010',type:'calculate',context:'A coffee shop records cumulative sales throughout the day.',
    xLabel:'Hours after opening',yLabel:'Cumulative sales (pounds)',xMin:0,xMax:8,yMin:0,yMax:800,
@@ -300,7 +300,7 @@ core: [
    interpretations:[
      {text:'The cafe earns an average of 95 pounds per hour between hours 1 and 5',correct:true},
      {text:'Total sales are 95 pounds',correct:false},
-     {text:'Sales grow by 95 pounds each minute',correct:false}
+     {text:'Sales grow by an average of 95 pounds each minute between hours 1 and 5',correct:false}
    ]},
   {id:'gh_core_011',type:'calculate',context:'A car brakes to a stop. Its speed is recorded during braking.',
    xLabel:'Time (seconds)',yLabel:'Speed (mph)',xMin:0,xMax:6,yMin:0,yMax:60,
@@ -309,7 +309,7 @@ core: [
    interpretations:[
      {text:'The car decelerates at an average of 10 mph per second',correct:true},
      {text:'The car travels 10 miles during braking',correct:false},
-     {text:'The gradient is positive so the car is accelerating',correct:false}
+     {text:'The gradient is positive, so the car is accelerating by 10 mph per second',correct:false}
    ]},
   {id:'gh_core_012',type:'calculate',context:"A patient's temperature is monitored in hospital after medication is given.",
    xLabel:'Hours after medication',yLabel:'Temperature (deg C)',xMin:0,xMax:8,yMin:37,yMax:40.5,
@@ -317,7 +317,7 @@ core: [
    pointA:{x:2,y:40.1,label:'A'},pointB:{x:6,y:38.1,label:'B'},gradient:-0.5,
    interpretations:[
      {text:"The patient's temperature falls by 0.5 deg C per hour on average between hours 2 and 6",correct:true},
-     {text:'The temperature is always falling at 0.5 deg C per hour',correct:false},
+     {text:'The patient\'s temperature is always falling at exactly 0.5 deg C per hour between hours 2 and 6',correct:false},
      {text:'A negative gradient means the medication is not working',correct:false}
    ]},
   // Reading (8)
@@ -328,7 +328,7 @@ core: [
    interpretations:[
      {text:'Water depth increases by 5 cm per minute on average between minutes 2 and 7',correct:true},
      {text:'The gradient means the bath is 5 cm deep',correct:false},
-     {text:'5 litres of water flows in per minute',correct:false},
+     {text:'5 litres of water flows into the bath per minute on average between minutes 2 and 7',correct:false},
      {text:'The bath fills in 5 minutes',correct:false}
    ]},
   {id:'gh_core_014',type:'reading',context:"A graph shows a car's fuel consumption on a long journey.",
@@ -337,7 +337,7 @@ core: [
    chordA:{x:50,y:40,label:'A'},chordB:{x:150,y:32,label:'B'},gradientShown:-0.08,
    interpretations:[
      {text:'The car uses 0.08 litres of fuel per mile on average between miles 50 and 150',correct:true},
-     {text:'The car gains 0.08 litres per mile',correct:false},
+     {text:'The car gains 0.08 litres of fuel per mile on average between miles 50 and 150',correct:false},
      {text:'The negative gradient means the car has broken down',correct:false},
      {text:'Fuel efficiency is 0.08 miles per litre',correct:false}
    ]},
@@ -348,7 +348,7 @@ core: [
    interpretations:[
      {text:'The car loses an average of 2,000 pounds in value per year over the first 4 years',correct:true},
      {text:'The car is worth -2,000 pounds',correct:false},
-     {text:'The car loses 2,000% of its value',correct:false},
+     {text:'The car loses 2,000% of its value each year, on average, over the first 4 years of its life',correct:false},
      {text:'The car will be worthless in 2,000 years',correct:false}
    ]},
   {id:'gh_core_016',type:'reading',context:'A graph shows electricity usage in a factory.',
@@ -358,7 +358,7 @@ core: [
    interpretations:[
      {text:'The factory uses electricity at an average rate of 30 kWh per hour between 8am and 4pm',correct:true},
      {text:'30 machines are running',correct:false},
-     {text:'The gradient means the factory uses 30 kWh in total',correct:false},
+     {text:'The gradient means the factory uses 30 kWh in total over the whole day, from 8am to 4pm',correct:false},
      {text:'Electricity usage doubles every 30 hours',correct:false}
    ]},
   {id:'gh_core_017',type:'reading',context:'A graph tracks the number of social media followers for a new account.',
@@ -367,7 +367,7 @@ core: [
    chordA:{x:10,y:200,label:'A'},chordB:{x:40,y:1400,label:'B'},gradientShown:40,
    interpretations:[
      {text:'The account gains an average of 40 followers per day between days 10 and 40',correct:true},
-     {text:'The gradient means there are 40 followers in total',correct:false},
+     {text:'The gradient means there are 40 followers in total on the account between days 10 and 40',correct:false},
      {text:'The account doubles every 40 days',correct:false},
      {text:'40% of visitors follow the account',correct:false}
    ]},
@@ -379,7 +379,7 @@ core: [
      {text:'The driver covers 30 km per hour on average in the first 3 hours',correct:true},
      {text:'The driver is travelling backwards',correct:false},
      {text:'The journey is 30 km long',correct:false},
-     {text:'Speed decreases by 30 km/h each hour',correct:false}
+     {text:'The driver\'s speed decreases by 30 km per hour in each of the first 3 hours',correct:false}
    ]},
   {id:'gh_core_019',type:'reading',context:'A graph shows the temperature of a metal rod being heated in a furnace.',
    xLabel:'Time (minutes)',yLabel:'Temperature (deg C)',xMin:0,xMax:25,yMin:0,yMax:750,
@@ -389,7 +389,7 @@ core: [
      {text:'The rod heats up at an average rate of 30 deg C per minute between minutes 5 and 20',correct:true},
      {text:'The gradient means the rod\'s temperature is 30 deg C',correct:false},
      {text:'It takes 30 minutes to heat the rod',correct:false},
-     {text:'Temperature increases by 30% each minute',correct:false}
+     {text:'The rod\'s temperature increases by 30% each minute on average between minutes 5 and 20',correct:false}
    ]},
   {id:'gh_core_020',type:'reading',context:"A graph shows a student's cumulative revision hours over a term.",
    xLabel:'Days into term',yLabel:'Total revision hours',xMin:0,xMax:70,yMin:0,yMax:70,
@@ -397,7 +397,7 @@ core: [
    chordA:{x:20,y:15,label:'A'},chordB:{x:60,y:55,label:'B'},gradientShown:1,
    interpretations:[
      {text:'The student revises for an average of 1 hour per day between days 20 and 60',correct:true},
-     {text:'The gradient means the student has done 1 hour of revision in total',correct:false},
+     {text:'The gradient means the student has done 1 hour of revision in total by day 60',correct:false},
      {text:'Revision increases by 1% per day',correct:false},
      {text:'A gradient of 1 means the graph is horizontal',correct:false}
    ]}
@@ -410,7 +410,7 @@ gcse: [
    pointA:{x:0,y:0,label:'A'},pointB:{x:3,y:180,label:'B'},gradient:60,
    interpretations:[
      {text:'The car travels at an average speed of 60 mph',correct:true},
-     {text:'The car has 60 litres of fuel',correct:false},
+     {text:'The car has 60 litres of fuel left at the end of the journey',correct:false},
      {text:'The journey takes 60 minutes',correct:false}
    ]},
   {id:'gh_gcse_002',type:'calculate',context:'A plant grows over 10 days. Its height is measured daily.',
@@ -419,8 +419,8 @@ gcse: [
    pointA:{x:2,y:5,label:'A'},pointB:{x:8,y:19,label:'B'},gradient:2.33,
    interpretations:[
      {text:'The plant grows approximately 2.33 cm per day on average between days 2 and 8',correct:true},
-     {text:'The gradient means the plant is 2.33 cm tall',correct:false},
-     {text:'The plant grows by 2.33% each day',correct:false}
+     {text:'The gradient means the plant is 2.33 cm tall at every point between days 2 and 8',correct:false},
+     {text:'The plant grows by 2.33% of its height each day between days 2 and 8',correct:false}
    ]},
   {id:'gh_gcse_003',type:'calculate',context:'Water is poured into a tank at a steady rate. The depth of water is recorded.',
    xLabel:'Time (minutes)',yLabel:'Depth (cm)',xMin:0,xMax:8,yMin:0,yMax:40,
@@ -446,7 +446,7 @@ gcse: [
    pointA:{x:0,y:100,label:'A'},pointB:{x:10,y:10,label:'B'},gradient:-9,
    interpretations:[
      {text:'The battery loses 9% charge per hour on average',correct:true},
-     {text:'The battery has 9% remaining',correct:false},
+     {text:'The battery has 9% of its charge remaining at the end',correct:false},
      {text:'The battery charges at 9% per hour',correct:false}
    ]},
   {id:'gh_gcse_006',type:'calculate',context:'A student walks to school. Their distance from home is plotted.',
@@ -456,7 +456,7 @@ gcse: [
    interpretations:[
      {text:'The student walks at an average of 60 metres per minute',correct:true},
      {text:'The school is 60 metres away',correct:false},
-     {text:'It takes 60 minutes to walk to school',correct:false}
+     {text:'It takes the student 60 minutes to walk all the way to school',correct:false}
    ]},
   {id:'gh_gcse_007',type:'calculate',context:'A pool is being emptied. The volume of water is recorded.',
    xLabel:'Time (hours)',yLabel:'Volume (litres)',xMin:0,xMax:5,yMin:0,yMax:5000,
@@ -474,7 +474,7 @@ gcse: [
    interpretations:[
      {text:'The shop gets approximately 28.75 customers per hour on average between hours 1 and 5',correct:true},
      {text:'The shop has 28.75 customers in total',correct:false},
-     {text:'Customer numbers increase by 28.75% per hour',correct:false}
+     {text:'Customer numbers grow by 28.75% every hour on average between hours 1 and 5 of opening',correct:false}
    ]},
   {id:'gh_gcse_009',type:'calculate',context:'Temperature outside is recorded throughout the morning.',
    xLabel:'Time (hours after 6am)',yLabel:'Temperature (deg C)',xMin:0,xMax:6,yMin:4,yMax:16,
@@ -483,7 +483,7 @@ gcse: [
    interpretations:[
      {text:'The temperature rises by 2.25 deg C per hour on average between 7am and 11am',correct:true},
      {text:'The temperature is 2.25 deg C',correct:false},
-     {text:'Temperature increases by 2.25% each hour',correct:false}
+     {text:'The temperature increases by 2.25 percent each hour on average between 7am and 11am',correct:false}
    ]},
   // Reading (6)
   {id:'gh_gcse_010',type:'reading',context:'A graph shows how far a bus has travelled. The chord from (0, 0) to (2, 80) has gradient 40.',
@@ -493,7 +493,7 @@ gcse: [
    interpretations:[
      {text:'The bus travels at an average speed of 40 km per hour',correct:true},
      {text:'The bus has 40 passengers',correct:false},
-     {text:'The journey is 40 km long',correct:false},
+     {text:'The whole bus journey is 40 km long from start to finish',correct:false},
      {text:'The bus stops 40 times',correct:false}
    ]},
   {id:'gh_gcse_011',type:'reading',context:'A graph shows savings in a jar over weeks. The chord from (2, 10) to (10, 50) has gradient 5.',
@@ -503,7 +503,7 @@ gcse: [
    interpretations:[
      {text:'The person saves 5 pounds per week on average between weeks 2 and 10',correct:true},
      {text:'The gradient means they have saved 5 pounds in total',correct:false},
-     {text:'They save 5% more each week',correct:false},
+     {text:'They save 5% more each week than the week before, between weeks 2 and 10',correct:false},
      {text:'They will have 5 pounds at the end',correct:false}
    ]},
   {id:'gh_gcse_012',type:'reading',context:'A graph shows a car slowing down. The chord from (0, 30) to (6, 0) has gradient -5.',
@@ -524,7 +524,7 @@ gcse: [
      {text:'Each unit of electricity costs 0.20 pounds on average between 100 and 500 units',correct:true},
      {text:'The total bill is 0.20 pounds',correct:false},
      {text:'Electricity usage is 0.2 kWh',correct:false},
-     {text:'The price increases by 20% each unit',correct:false}
+     {text:'The price of each unit goes up by 20% on average between 100 and 500 units used',correct:false}
    ]},
   {id:'gh_gcse_014',type:'reading',context:'A graph shows how much paint is left in a tin during decorating. Chord from (1, 4) to (5, 1) has gradient -0.75.',
    xLabel:'Hours of painting',yLabel:'Paint remaining (litres)',xMin:0,xMax:6,yMin:0,yMax:5,
@@ -532,7 +532,7 @@ gcse: [
    chordA:{x:1,y:4,label:'A'},chordB:{x:5,y:1,label:'B'},gradientShown:-0.75,
    interpretations:[
      {text:'Paint is used at a rate of 0.75 litres per hour on average between hours 1 and 5',correct:true},
-     {text:'The gradient means 0.75 litres of paint remains',correct:false},
+     {text:'The gradient means 0.75 litres of paint remains in the tin between hours 1 and 5',correct:false},
      {text:'The negative sign means paint is being added',correct:false},
      {text:'The tin holds 0.75 litres',correct:false}
    ]},
@@ -544,7 +544,7 @@ gcse: [
      {text:'The ball rises at an average of 10 metres per second in the first 2 seconds',correct:true},
      {text:'The gradient means the ball is 10 metres high',correct:false},
      {text:'The ball weighs 10 kg',correct:false},
-     {text:'The ball is always moving at 10 m/s',correct:false}
+     {text:'The ball is always moving at exactly 10 metres per second for the first 2 seconds',correct:false}
    ]}
 ],
 alevel: [
@@ -556,7 +556,7 @@ alevel: [
    interpretations:[
      {text:'The average velocity of the particle between t=2 and t=5 is 7 m/s',correct:true},
      {text:'The instantaneous velocity at t=2 is 7 m/s',correct:false},
-     {text:'The particle accelerates at 7 m/s squared',correct:false}
+     {text:'The particle accelerates at a constant 7 m/s squared between t=2 and t=5',correct:false}
    ]},
   {id:'gh_alevel_002',type:'calculate',context:'The population of a colony of organisms is modelled. Population P (thousands) is recorded.',
    xLabel:'Time (days)',yLabel:'Population (thousands)',xMin:0,xMax:12,yMin:0,yMax:50,
@@ -564,7 +564,7 @@ alevel: [
    pointA:{x:4,y:4,label:'A'},pointB:{x:10,y:30,label:'B'},gradient:4.33,
    interpretations:[
      {text:'The average rate of population growth between days 4 and 10 is approximately 4,330 organisms per day',correct:true},
-     {text:'The population grows at a constant rate of 4.33 thousand per day',correct:false},
+     {text:'The population grows at a constant rate of 4.33 thousand organisms every single day between days 4 and 10',correct:false},
      {text:'4.33% of organisms reproduce each day',correct:false}
    ]},
   {id:'gh_alevel_003',type:'calculate',context:'An object is launched vertically. Its height h (m) is plotted against time.',
@@ -574,7 +574,7 @@ alevel: [
    interpretations:[
      {text:'The average velocity between t=1 and t=4 is 5 m/s upward',correct:true},
      {text:'The instantaneous velocity at t=1 is 5 m/s',correct:false},
-     {text:'The acceleration is 5 m/s squared',correct:false}
+     {text:'The acceleration between t=1 and t=4 is 5 m/s squared upward',correct:false}
    ]},
   {id:'gh_alevel_004',type:'calculate',context:'A chemical reaction is monitored. Concentration of reactant (mol/L) is measured.',
    xLabel:'Time (minutes)',yLabel:'Concentration (mol/L)',xMin:0,xMax:20,yMin:0,yMax:2,
@@ -582,7 +582,7 @@ alevel: [
    pointA:{x:2,y:1.6,label:'A'},pointB:{x:10,y:0.7,label:'B'},gradient:-0.1125,
    interpretations:[
      {text:'The concentration decreases by approximately 0.11 mol/L per minute on average between minutes 2 and 10',correct:true},
-     {text:'The rate of reaction is constant at 0.11 mol/L per minute',correct:false},
+     {text:'The rate of reaction stays constant at exactly 0.11 mol/L per minute throughout, between minutes 2 and 10',correct:false},
      {text:'0.11 moles of product are formed in total',correct:false}
    ]},
   {id:'gh_alevel_005',type:'calculate',context:'Revenue R (thousands of pounds) is plotted against the number of units sold.',
@@ -591,7 +591,7 @@ alevel: [
    pointA:{x:2,y:8,label:'A'},pointB:{x:6,y:22,label:'B'},gradient:3.5,
    interpretations:[
      {text:'Revenue increases by an average of 3,500 pounds per 100 units sold between 200 and 600 units',correct:true},
-     {text:'Marginal revenue is always 3.5 thousand pounds per 100 units',correct:false},
+     {text:'Marginal revenue is always exactly 3.5 thousand pounds per 100 units sold, between 200 and 600 units',correct:false},
      {text:'Total revenue is 3,500 pounds',correct:false}
    ]},
   {id:'gh_alevel_006',type:'calculate',context:'A capacitor discharges through a resistor. Voltage V (volts) is measured.',
@@ -600,7 +600,7 @@ alevel: [
    pointA:{x:5,y:9.5,label:'A'},pointB:{x:25,y:3.7,label:'B'},gradient:-0.29,
    interpretations:[
      {text:'The voltage drops by approximately 0.29 V per millisecond on average between 5 ms and 25 ms',correct:true},
-     {text:'The voltage is always decreasing at 0.29 V/ms',correct:false},
+     {text:'The voltage is always decreasing at exactly 0.29 V per millisecond, the whole way between 5 ms and 25 ms',correct:false},
      {text:'The capacitor stores 0.29 joules of energy',correct:false}
    ]},
   // Reading (4)
@@ -622,7 +622,7 @@ alevel: [
      {text:'The average acceleration between t=2 and t=8 is 4 m/s squared',correct:true},
      {text:'The gradient means the velocity is 4 m/s',correct:false},
      {text:'The particle travels 4 metres',correct:false},
-     {text:'Acceleration is constant at 4 m/s squared throughout',correct:false}
+     {text:'Acceleration is constant at 4 m/s squared throughout, from t=2 to t=8',correct:false}
    ]},
   {id:'gh_alevel_009',type:'reading',context:'An exponential growth model shows bacteria count. The chord from (0, 100) to (6, 800) has gradient approximately 116.7. The tangent at t=3 has a gradient of 110, a little less steep than the chord.',
    xLabel:'Time (hours)',yLabel:'Bacteria count',xMin:0,xMax:8,yMin:0,yMax:1500,
