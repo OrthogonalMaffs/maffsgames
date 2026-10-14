@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # ci-line: End-of-task helper (end-task.py: a squash-merged branch is removed; an unmerged branch, an extra local commit and a dirty worktree each refuse; gh stubbed) | --selftest
+# ci-deps: scripts/bg.py
 """Remove a finished task's worktree and local branch, only when that is safe (RULINGS-12OCT, 12 Oct 2026).
 
     python scripts/end-task.py <branch>        # after the PR is merged and main's run is reported
@@ -10,10 +11,13 @@ refuses. This helper checks instead, then deletes. It deletes only when ALL hold
   1. the branch's PR is MERGED (gh pr view <branch> --json state,headRefOid,mergeCommit);
   2. the local tip equals the PR's headRefOid (nothing local that was not in the PR);
   3. the branch's worktree, if it has one, is clean (git status --porcelain is empty).
-Then: git worktree remove (never --force), git branch -D, git worktree prune. Otherwise it names the failed
+Then, first, it stops what the session registered through scripts/bg.py (<worktree>/.claude/pids.json: each process
+and its children, taskkill /T on Windows, the process group on POSIX) and reports any other process whose command line
+holds the worktree path without killing it (contract BG-LAUNCHER). Then: git worktree remove (never --force),
+git branch -D, git worktree prune. Otherwise it names the failed
 condition and deletes nothing. It never touches a remote branch (GitHub deletes a merged head branch itself).
 """
-import json, os, subprocess, sys, tempfile
+import json, os, signal, subprocess, sys, tempfile, time
 
 
 def run(args, cwd=None):
@@ -22,6 +26,126 @@ def run(args, cwd=None):
 
 def real(p):
     return os.path.normcase(os.path.realpath(p))
+
+
+# --- background processes (contract BG-LAUNCHER) --------------------------------------------------------------------
+# scripts/bg.py registers a session's background servers in <worktree>/.claude/pids.json. This file runs from a copy
+# in /tmp (so it cannot import bg.py); the registry format is the contract between them, and bg.py's --selftest
+# runs the two together.
+WIN = os.name == "nt"
+
+
+def registry(wt):
+    try:
+        with open(os.path.join(wt, ".claude", "pids.json"), encoding="utf-8", newline="") as fh:
+            data = json.load(fh)
+        return data if isinstance(data, list) else []
+    except (OSError, ValueError):
+        return []
+
+
+def create_time(pid):
+    """The OS's creation time for a live pid (None if gone), in bg.py's format: identifies the process, not the number."""
+    if WIN:
+        ps = "$p=Get-CimInstance Win32_Process -Filter 'ProcessId=%d'; if($p){$p.CreationDate.ToUniversalTime().ToString('o')}" % pid
+        r = run(["powershell", "-NoProfile", "-NonInteractive", "-Command", ps])
+    else:
+        try:
+            r = run(["ps", "-p", str(pid), "-o", "stat=,lstart="])
+            out = r.stdout.strip()
+            return None if not out or out.startswith("Z") else out.split(None, 1)[-1]   # a zombie is already dead
+        except (FileNotFoundError, OSError):                       # a container without procps: /proc/<pid>/stat, state then start ticks
+            try:
+                with open("/proc/%d/stat" % pid) as fh:
+                    f = fh.read().rsplit(")", 1)[1].split()
+                return None if f[0] == "Z" else f[19]
+            except (OSError, IndexError):
+                return None
+    return r.stdout.strip() or None
+
+
+def alive(pid, create=None):
+    """Whether pid is running (and, given its recorded creation time, is still the same process)."""
+    now = create_time(pid)
+    return bool(now) and (create is None or now == create)
+
+
+def kill_tree(pid):
+    """Stop pid and its children: taskkill /T /F on Windows (the process is one this session registered), the process
+    group on POSIX (bg.py starts each in its own session): TERM, then KILL after a grace period."""
+    if WIN:
+        run(["taskkill", "/PID", str(pid), "/T", "/F"])
+        return
+    for sig in (signal.SIGTERM, signal.SIGKILL):
+        try:
+            os.killpg(os.getpgid(pid), sig)
+        except (ProcessLookupError, PermissionError):
+            return
+        for _ in range(20):
+            if not alive(pid):
+                return
+            time.sleep(0.1)
+
+
+def stop_registered(wt):
+    """Stop every process registered under wt, report each, clear the registry. Returns [(pid, cmd, what happened)]."""
+    done = []
+    for e in registry(wt):
+        pid, create = e.get("pid"), e.get("create")
+        if not isinstance(pid, int):
+            continue
+        if not alive(pid, create):
+            done.append((pid, e.get("cmd"), "already gone (or the pid was reused: left alone)"))
+            continue
+        kill_tree(pid)
+        for _ in range(30):
+            if not alive(pid, create):
+                break
+            time.sleep(0.1)
+        done.append((pid, e.get("cmd"), "stopped" if not alive(pid, create) else "STILL RUNNING"))
+    reg = os.path.join(wt, ".claude", "pids.json")
+    if not any(d[2] == "STILL RUNNING" for d in done):
+        try:
+            os.remove(reg)
+            os.rmdir(os.path.dirname(reg))                  # only if nothing else is in .claude
+        except OSError:
+            pass
+    return done
+
+
+def unregistered(wt, exclude=()):
+    """[(pid, command line)] of running processes whose command line holds the worktree path and that are not registered.
+    Reported only, never killed. The process list is read whole and filtered here, so this scan's own command line
+    does not hold the path."""
+    if WIN:
+        ps = "Get-CimInstance Win32_Process | ForEach-Object { \"$($_.ProcessId)`t$($_.CommandLine)\" }"
+        out = run(["powershell", "-NoProfile", "-NonInteractive", "-Command", ps]).stdout
+    else:
+        try:
+            out = run(["ps", "-eo", "pid=,args="]).stdout
+        except OSError:                                   # a container without procps: read /proc directly
+            rows = []
+            for d in os.listdir("/proc"):
+                if d.isdigit():
+                    try:
+                        with open("/proc/%s/cmdline" % d, "rb") as fh:
+                            rows.append("%s %s" % (d, fh.read().replace(b"\x00", b" ").decode("utf-8", "replace")))
+                    except OSError:
+                        pass
+            out = "\n".join(rows)
+    needle = real(wt).replace("\\", "/").lower()
+    mine = {os.getpid()} | set(exclude)
+    registered = {e.get("pid") for e in registry(wt)}
+    found = []
+    for line in out.splitlines():
+        pid_s, _, cmd = line.strip().replace("\t", " ").partition(" ")
+        if not pid_s.isdigit() or not cmd:
+            continue
+        if int(pid_s) in mine or int(pid_s) in registered:
+            continue
+        if needle in cmd.replace("\\", "/").lower():
+            found.append((int(pid_s), cmd.strip()[:200]))
+    return found
 
 
 def gh_pr(branch, cwd=None):
@@ -80,6 +204,11 @@ def end_task(branch, repo, gh=gh_pr, cwd=None):
     if fail:
         print("REFUSED: %s\nNothing was deleted." % fail)
         return 1
+    if wt:                                     # the checks passed: stop what the session registered before removing its folder
+        for pid, cmd, what in stop_registered(wt):
+            print("process %s %s  %s" % (pid, what, " ".join(cmd) if isinstance(cmd, list) else cmd))
+        for pid, cmd in unregistered(wt):
+            print("NOT REGISTERED, NOT STOPPED: process %s holds this worktree's path: %s" % (pid, cmd))
     steps = ([["git", "worktree", "remove", wt]] if wt else []) + [["git", "branch", "-D", branch], ["git", "worktree", "prune"]]
     for s in steps:
         r = run(s, repo)
@@ -105,6 +234,7 @@ def selftest():
         g = lambda *a, cwd=repo: run(["git", "-c", "user.name=t", "-c", "user.email=t@t", "-c", "commit.gpgsign=false"] + list(a), cwd)
         g("init", "-q", "-b", "main")
         open(os.path.join(repo, "a.txt"), "w", newline='').write("a\n")
+        open(os.path.join(repo, ".gitignore"), "w", newline='').write(".claude/pids.json\n.claude/bg-*.log\n")
         g("add", "."), g("commit", "-qm", "base")
         exists = lambda b: g("rev-parse", "--verify", "-q", "refs/heads/" + b).returncode == 0
 
@@ -124,6 +254,23 @@ def selftest():
         check("premise: git branch -d refuses a squash-merged branch", g("branch", "-d", "squashed").returncode != 0)
         check("squash-merged, clean, tip = PR head: removed",
               end_task("squashed", repo, stub("MERGED", tip), cwd=td) == 0 and not exists("squashed") and not os.path.exists(wt))
+
+        # A session's registered background process is stopped before its worktree is removed (contract BG-LAUNCHER).
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("bg", os.path.join(os.path.dirname(os.path.abspath(__file__)), "bg.py"))
+        bg = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(bg)
+        wt, tip = make("served")
+        entry = bg.start([sys.executable, "-c", "import time; time.sleep(300)"], wt)
+        check("premise: the registered server is running", alive(entry["pid"], entry["create"]))
+        ok = end_task("served", repo, stub("MERGED", tip), cwd=td) == 0
+        check("a registered server is stopped, then the worktree and branch are removed",
+              ok and not alive(entry["pid"], entry["create"]) and not exists("served") and not os.path.exists(wt))
+        wt, tip = make("served-open")
+        entry = bg.start([sys.executable, "-c", "import time; time.sleep(300)"], wt)
+        check("a refused removal (PR not merged) leaves the server running",
+              end_task("served-open", repo, stub("OPEN", tip), cwd=td) == 1 and alive(entry["pid"], entry["create"]))
+        kill_tree(entry["pid"])
 
         wt, tip = make("open-pr")
         check("PR not merged: refuses, nothing deleted",

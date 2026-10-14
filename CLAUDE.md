@@ -137,6 +137,9 @@ Three things that cost time on 21/09, local or live:
 - GA4 + Google Sheets dual analytics via `mfg()` wrapper
 - `scripts/` require Python >= 3.10 (`write_text` `newline=`); CI pins 3.12 and `scripts/check-python-version.py` holds it
 
+## Background processes: start them with `scripts/bg.py` (Jon, 14 Oct 2026, contract BG-LAUNCHER)
+A server or a long-running loop a session starts in the background outlives the session (orphans from four days were found on 14 Oct) and can make worktree removal fail with "Permission denied". Start every such process through `python scripts/bg.py -- <command>`, never a raw `&` or `nohup` shell: it records the PID in `<worktree>/.claude/pids.json` (gitignored), and `scripts/end-task.py` stops what was registered, with its children, before it removes the worktree, then reports (without killing) any unregistered process whose command line holds the worktree path. **Not covered:** the harness's own background shells (the Bash tool's `run_in_background`); stop those with the harness (`/tasks`).
+
 ## Session practice (Jon, 8 Oct 2026, contract CTX)
 
 - **Preview from a scratch copy:** never swap the repo's game file to preview; serve a scratch copy (`--against`).
