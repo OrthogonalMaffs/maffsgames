@@ -117,7 +117,8 @@ REVIEW = dict([
     r('bv_core_028', [], [F('9.99') / F('12.50')], 'at least 1 film per month'),
     r('bv_core_029', [F(5000, 1200)], [5 * 1200, 5 * 1200 - 5000], 'after approximately 4.2 years'),
     r('bv_core_030', [F(120) / (F('0.12') - F(18, 200))], [F(18, 200), F('0.12') - F(18, 200)], 'more than 4,000 pages'),
-    r('bv_core_031', [18 * 28 + 60, 12 * 32, F(18 * 28 + 60, 18)], [18 * 28], 'Per month the advertised deal is cheaper', 'lt'),
+    # SR-34 (14 Oct 2026): the totals are working, now only in the explanation; the keyed card keeps the per-month figure
+    r('bv_core_031', [F(18 * 28 + 60, 18)], [18 * 28, 18 * 28 + 60, 12 * 32], 'Per month the advertised deal is cheaper', 'lt'),
     r('bv_core_032', [1200 + 145 + 36 * F('5.99')], [36 * F('5.99'), 1200 + 145 + 36 * F('5.99') - 1050],
       'cash purchase is better value', 'lt'),
     r('bv_core_033', [F(42 - 25, 28 - 24)], [28 - 24, 42 - 25, 12 * 28, 12 * 28 + 25, 12 * 24, 12 * 24 + 42,
@@ -128,7 +129,8 @@ REVIEW = dict([
       'Policy A is better value', 'lt'),
     r('bv_core_036', [20 * 22 + 3 * 48], [20 * 22, 3 * 48, 20 * 48, 20 * 48 - (20 * 22 + 3 * 48)],
       'Advance tickets are better value', 'lt'),
-    r('bv_core_037', [1120 - 260, 800 - 180, F(800 - 180, 180) * 100, F(1120 - 260, 260) * 100], [860 - 620],
+    # SR-34 (14 Oct 2026): the keyed card names the higher ROI; the two percentages are in the explanation
+    r('bv_core_037', [1120 - 260, 800 - 180], [860 - 620, F(800 - 180, 180) * 100, F(1120 - 260, 260) * 100],
       'Premium flyers give more net profit', 'gt'),
     r('bv_core_038', [F(1200, 195), F(450, 68)], [25 * 195, 25 * 68], 'Cavity wall insulation has the shorter payback', 'lt'),
     r('bv_core_039', [8], [12 * 45, 75 + 12 * 35, F(75, 45 - 35), 12 * (45 - 35), 12 * 35], 'rolling gym is better value from month 8'),
@@ -231,7 +233,9 @@ MUST_SAY = [('bv_core_050', '\u00a3790 vs \u00a3825', 'costs nothing'),         
             ('bv_gcse_020', 'scenario', 'cheaper, not the same price'),
             # s1-008 (R2): 52 / 6 = 8.7 is rounded, and the keyed £135 uses 9; s1-009 (R1): the sentence reads
             ('bv_core_047', 'scenario', 'use 9'),
-            ('bv_core_011', 'scenario', 'is due if it has not been paid by then')]
+            ('bv_core_011', 'scenario', 'is due if it has not been paid by then'),
+            # r-004 (SR-34, 14 Oct 2026): the ROI figures moved to the explanation; the keyed card still names the higher one
+            ('bv_core_037', 'Premium flyers give more net profit', 'standard has the higher ROI')]
 
 
 def sweep_fails(bank):
@@ -359,9 +363,10 @@ def play(fails, html):
 PLANTS = [
     ('bv_core_036', 'r-003: £518 keyed', "total \\u00a3584 vs", "total \\u00a3518 vs"),
     ('bv_core_037', 'r-004: premium keyed the better ROI',
-     "Premium flyers give more net profit \\u2014 \\u00a3860 vs \\u00a3620 for standard, though standard has the higher "
-     "return on investment (344% vs 331%)",
+     "Premium flyers give more net profit, \\u00a3860 vs \\u00a3620, but standard has the higher ROI",
      "Premium flyers give better return on investment \\u2014 net profit \\u00a3860 vs \\u00a3620 for standard"),
+    ('bv_core_037', 'r-004: the keyed card names premium as the higher ROI',
+     "but standard has the higher ROI", "and premium has the higher ROI"),
     ('bv_core_049', 'r-005: 8.8 hours', "above approximately 8.5 hours per week", "above approximately 8.8 hours per week"),
     ('bv_gcse_019', 's1-001: "15 or more lunches" true as written', "The pass is only worth it if you eat 15", "The pass is worth it if you eat 15"),
     ('bv_gcse_019', 's1-002: the convention not stated', " (Worth it means cheaper, not the same price.)", ""),
