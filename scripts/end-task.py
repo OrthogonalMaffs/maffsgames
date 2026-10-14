@@ -21,7 +21,7 @@ import json, os, signal, subprocess, sys, tempfile, time
 
 
 def run(args, cwd=None):
-    return subprocess.run(args, cwd=cwd, capture_output=True, text=True, encoding="utf-8")
+    return subprocess.run(args, cwd=cwd, capture_output=True, text=True, encoding="utf-8", errors="replace")
 
 
 def real(p):
@@ -119,7 +119,7 @@ def unregistered(wt, exclude=()):
     does not hold the path."""
     if WIN:
         ps = "Get-CimInstance Win32_Process | ForEach-Object { \"$($_.ProcessId)`t$($_.CommandLine)\" }"
-        out = run(["powershell", "-NoProfile", "-NonInteractive", "-Command", ps]).stdout
+        out = run(["powershell", "-NoProfile", "-NonInteractive", "-Command", ps]).stdout or ""
     else:
         try:
             out = run(["ps", "-eo", "pid=,args="]).stdout
