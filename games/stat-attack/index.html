@@ -398,9 +398,9 @@ core: [
    contextLine:'The mean salary is £29,500 with a standard deviation of £9,690 — salaries are moderately spread.',
    interpretOptions:[
      {text:'On average, salaries vary by approximately £9,690 from the mean salary of £29,500.',correct:true},
-     {text:'The standard deviation of £9,690 means most employees earn exactly £29,500.',correct:false},
-     {text:'The mean salary is £9,690.',correct:false},
-     {text:'Salaries are clustered within £29,500 of zero.',correct:false}
+     {text:'The standard deviation of £9,690 means that most employees earn exactly the mean of £29,500.',correct:false},
+     {text:'The mean salary is £9,690, and most salaries lie within £29,500 of that mean.',correct:false},
+     {text:'Salaries are all clustered within £29,500 of zero, so nobody earns more than that.',correct:false}
    ]},
   {id:'CM2',title:'Monthly energy bills (£)',context:'60 households reported their monthly energy bill.',
    unit:'£',classLabel:'Bill (£)',
@@ -414,9 +414,9 @@ core: [
    contextLine:'The mean energy bill is £190.42 with a standard deviation of £67.41.',
    interpretOptions:[
      {text:'On average, household energy bills vary by approximately £67.41 from the mean bill of £190.42.',correct:true},
-     {text:'All households pay between £123.01 and £257.82.',correct:false},
-     {text:'The average energy bill is £67.41.',correct:false},
-     {text:'Energy bills never exceed £190.42.',correct:false}
+     {text:'All households pay between £123.01 and £257.82, because the standard deviation is £67.41.',correct:false},
+     {text:'The average energy bill is £67.41, and bills vary by approximately £190.42 either side of that average.',correct:false},
+     {text:'Energy bills never exceed the mean of £190.42, since £67.41 is the most a bill can vary.',correct:false}
    ]},
   {id:'CM3',title:'Weekly working hours',context:'60 workers reported their weekly hours.',
    unit:'hours',classLabel:'Hours',
@@ -430,9 +430,9 @@ core: [
    contextLine:'The mean working week is 37.1 hours with a standard deviation of 9.18 hours.',
    interpretOptions:[
      {text:'On average, weekly working hours vary by approximately 9 hours from the mean of 37.1 hours.',correct:true},
-     {text:'Most workers do exactly 37.1 hours per week.',correct:false},
-     {text:'The standard deviation means workers do between 28 and 46 hours.',correct:false},
-     {text:'9.18 hours is the most common working time.',correct:false}
+     {text:'Most workers do exactly the mean of 37.1 hours per week, as the standard deviation shows.',correct:false},
+     {text:'The standard deviation of 9 hours means that every worker does between 28 and 46 hours a week.',correct:false},
+     {text:'9.18 hours is the most common working week, and 37.1 hours is the longest one recorded.',correct:false}
    ]},
   {id:'CM4',title:'House prices (£k)',context:'60 houses sold in one area were recorded by price.',
    unit:'£k',classLabel:'Price (£k)',
@@ -446,9 +446,9 @@ core: [
    contextLine:'The mean house price is £258,300 with a standard deviation of £88,100.',
    interpretOptions:[
      {text:'On average, house prices vary by approximately £88,100 from the mean price of £258,300.',correct:true},
-     {text:'The cheapest house costs £88,100.',correct:false},
-     {text:'House prices are tightly clustered around £258,300.',correct:false},
-     {text:'The standard deviation means half of houses cost more than £258,300.',correct:false}
+     {text:'The cheapest house costs £88,100, and the mean price of £258,300 is the most expensive.',correct:false},
+     {text:'House prices are tightly clustered around £258,300, with almost no spread from the mean.',correct:false},
+     {text:'The standard deviation of £88,100 means exactly half of the houses cost more than £258,300.',correct:false}
    ]},
   {id:'CM5',title:'Monthly food spend (£)',context:'60 adults reported their monthly food expenditure.',
    unit:'£',classLabel:'Spend (£)',
@@ -462,9 +462,9 @@ core: [
    contextLine:'The mean food spend is £223.33 with a standard deviation of £62.06.',
    interpretOptions:[
      {text:'On average, monthly food spending varies by approximately £62.06 from the mean of £223.33.',correct:true},
-     {text:'Nobody spends more than £285.39 on food.',correct:false},
-     {text:'The mean food spend is £62.06.',correct:false},
-     {text:'£62.06 is the median food spend.',correct:false}
+     {text:'Nobody spends more than £285.39 a month on food, because that is the mean plus one standard deviation.',correct:false},
+     {text:'The mean food spend is £62.06, and spending varies by approximately £223.33 around it.',correct:false},
+     {text:'£62.06 is the median food spend, so half of the households spend less than £62.06.',correct:false}
    ]},
   {id:'CM6',title:'Commuting time per day (minutes)',context:'60 commuters recorded their daily commuting time.',
    unit:'min',classLabel:'Time (min)',
@@ -478,9 +478,9 @@ core: [
    contextLine:'The mean commuting time is 47.7 minutes with a standard deviation of 25.1 minutes.',
    interpretOptions:[
      {text:'On average, commuting times vary by approximately 25.1 minutes from the mean of 47.7 minutes.',correct:true},
-     {text:'25.1 minutes is the shortest commute recorded.',correct:false},
-     {text:'Most commuters travel exactly 47.7 minutes.',correct:false},
-     {text:'The standard deviation tells us the range of commuting times.',correct:false}
+     {text:'25.1 minutes is the shortest commute recorded, so nobody travels less than 25.1 minutes a day.',correct:false},
+     {text:'Most commuters travel exactly 47.7 minutes a day, and the standard deviation confirms it.',correct:false},
+     {text:'The standard deviation of 25.1 minutes tells us the range of commuting times, from the shortest to the longest.',correct:false}
    ]},
   {id:'CM7',title:'Annual holiday spend (£)',context:'60 families reported their annual spend on holidays.',
    unit:'£',classLabel:'Spend (£)',
@@ -494,9 +494,9 @@ core: [
    contextLine:'The mean holiday spend is £1,141.67 with a standard deviation of £654 — a wide range of budgets.',
    interpretOptions:[
      {text:'On average, holiday spending varies by approximately £654 from the mean spend of £1,142.',correct:true},
-     {text:'All families spend between £488 and £1,796 on holidays.',correct:false},
-     {text:'£654 is the most popular amount spent on holidays.',correct:false},
-     {text:'The mean holiday spend is £654.',correct:false}
+     {text:'All families spend between £488 and £1,796 on holidays, because the standard deviation is £654.',correct:false},
+     {text:'£654 is the most popular amount spent on holidays, the mode of the data.',correct:false},
+     {text:'The mean holiday spend is £654, and spending varies by about £1,142 around it.',correct:false}
    ]},
   {id:'CM8',title:'Age of first-time buyers',context:'60 first-time property buyers had their ages recorded.',
    unit:'',classLabel:'Age',
@@ -510,9 +510,9 @@ core: [
    contextLine:'The mean age of first-time buyers is 35.3 with a standard deviation of 6.11 years.',
    interpretOptions:[
      {text:'On average, first-time buyer ages vary by approximately 6.11 years from the mean age of 35.3.',correct:true},
-     {text:'6.11 years is the youngest age of a first-time buyer.',correct:false},
-     {text:'Most first-time buyers are exactly 35.3 years old.',correct:false},
-     {text:'The standard deviation shows the range is 6.11 years.',correct:false}
+     {text:'6.11 years is the youngest age at which anyone in the data bought a first home.',correct:false},
+     {text:'Most first-time buyers are exactly 35.3 years old, as a standard deviation of 6.11 shows.',correct:false},
+     {text:'The standard deviation shows the range of first-time buyer ages is 6.11 years, youngest to oldest.',correct:false}
    ]},
   {id:'CM9',title:'Weekly screen time (hours)',context:'60 adults reported their weekly screen time.',
    unit:'hours',classLabel:'Time (hours)',
@@ -526,9 +526,9 @@ core: [
    contextLine:'The mean weekly screen time is 36 hours with a standard deviation of 12.9 hours.',
    interpretOptions:[
      {text:'On average, weekly screen time varies by approximately 12.9 hours from the mean of 36 hours.',correct:true},
-     {text:'12.9 hours is the median screen time.',correct:false},
-     {text:'Nobody has screen time below 23.1 hours.',correct:false},
-     {text:'Screen time data is not spread out at all.',correct:false}
+     {text:'12.9 hours is the median screen time, so half of the people watch less than 12.9 hours.',correct:false},
+     {text:'Nobody has screen time below 23.1 hours a week, since that is the mean minus the standard deviation.',correct:false},
+     {text:'Screen time data is not spread out at all: everyone\'s weekly screen time is close to 36 hours.',correct:false}
    ]},
   {id:'CM10',title:'Monthly savings (£)',context:'60 adults reported how much they save per month.',
    unit:'£',classLabel:'Amount (£)',
@@ -542,9 +542,9 @@ core: [
    contextLine:'The mean monthly saving is £231.67 with a standard deviation of £180 — savings habits vary widely.',
    interpretOptions:[
      {text:'On average, monthly savings vary by approximately £180 from the mean of £231.67.',correct:true},
-     {text:'£180 is the most common amount saved per month.',correct:false},
-     {text:'The mean saving is £180.',correct:false},
-     {text:'All savers put away between £51.63 and £411.71.',correct:false}
+     {text:'£180 is the most common amount saved per month, the mode of the savings data.',correct:false},
+     {text:'The mean saving is £180 a month, and savings vary by roughly £231.67 around it.',correct:false},
+     {text:'All savers put away between £51.63 and £411.71, because the standard deviation is £180.',correct:false}
    ]},
   {id:'CM11',title:'Daily calorie intake',context:'60 adults recorded their daily calorie intake.',
    unit:'kcal',classLabel:'Calories',
@@ -558,9 +558,9 @@ core: [
    contextLine:'The mean daily calorie intake is 2,093 kcal with a standard deviation of 437 kcal.',
    interpretOptions:[
      {text:'On average, daily calorie intakes vary by approximately 437 kcal from the mean intake of 2,093 kcal.',correct:true},
-     {text:'437 kcal is the recommended daily intake.',correct:false},
-     {text:'Most people consume exactly 2,093 calories per day.',correct:false},
-     {text:'The standard deviation measures the total calories consumed.',correct:false}
+     {text:'437 kcal is the recommended daily intake, and 2,093 kcal is the most anyone eats in a day.',correct:false},
+     {text:'Most people consume exactly 2,093 calories per day, with the standard deviation showing no spread.',correct:false},
+     {text:'The standard deviation of 437 kcal measures the total calories consumed by everyone in the sample per day.',correct:false}
    ]},
   {id:'CM12',title:'Fuel costs per month (£)',context:'60 drivers reported their monthly fuel expenditure.',
    unit:'£',classLabel:'Cost (£)',
@@ -574,9 +574,9 @@ core: [
    contextLine:'The mean fuel cost is £169.17 with a standard deviation of £62.81.',
    interpretOptions:[
      {text:'On average, monthly fuel costs vary by approximately £62.81 from the mean cost of £169.17.',correct:true},
-     {text:'£62.81 is the cheapest monthly fuel cost.',correct:false},
-     {text:'Fuel costs do not vary between drivers.',correct:false},
-     {text:'The mean fuel cost is £62.81.',correct:false}
+     {text:'£62.81 is the cheapest monthly fuel cost, so no driver pays less than £62.81 a month.',correct:false},
+     {text:'Fuel costs do not vary between drivers: every driver pays the mean cost of £169.17 a month.',correct:false},
+     {text:'The mean fuel cost is £62.81, and costs vary by approximately £169.17 around it.',correct:false}
    ]}
 ],
 level4: [
@@ -592,9 +592,9 @@ level4: [
    contextLine:'The mean diameter is 50.54 mm with a standard deviation of 1.11 mm — tight tolerance.',
    interpretOptions:[
      {text:'On average, component diameters vary by approximately 1.11 mm from the mean of 50.54 mm.',correct:true},
-     {text:'1.11 mm is the smallest diameter measured.',correct:false},
-     {text:'All components are within 1.11 mm of the target.',correct:false},
-     {text:'The standard deviation means the process is out of control.',correct:false}
+     {text:'1.11 mm is the smallest diameter measured, so no component is thinner than 1.11 mm.',correct:false},
+     {text:'All components are within 1.11 mm of the target diameter, as the standard deviation guarantees.',correct:false},
+     {text:'The standard deviation of 1.11 mm means the machining process is out of control.',correct:false}
    ]},
   {id:'L4_2',title:'Tensile strength (MPa)',context:'50 steel samples were tested for tensile strength.',
    unit:'MPa',classLabel:'Strength (MPa)',
@@ -608,9 +608,9 @@ level4: [
    contextLine:'The mean tensile strength is 349.2 MPa with a standard deviation of 22.3 MPa.',
    interpretOptions:[
      {text:'On average, tensile strengths vary by approximately 22.3 MPa from the mean of 349.2 MPa.',correct:true},
-     {text:'22.3 MPa is the minimum acceptable strength.',correct:false},
-     {text:'All samples have strength within 22.3 MPa of 349.2 MPa.',correct:false},
-     {text:'The mean tensile strength is 22.3 MPa.',correct:false}
+     {text:'22.3 MPa is the minimum acceptable strength, so every sample above it passes the test.',correct:false},
+     {text:'All samples have a tensile strength within 22.3 MPa of 349.2 MPa, as the standard deviation guarantees.',correct:false},
+     {text:'The mean tensile strength is 22.3 MPa, and strengths vary by approximately 349.2 MPa.',correct:false}
    ]},
   {id:'L4_3',title:'Processing time (seconds)',context:'50 manufacturing processes were timed.',
    unit:'s',classLabel:'Time (s)',
@@ -624,9 +624,9 @@ level4: [
    contextLine:'The mean processing time is 21.9 seconds with a standard deviation of 6.01 seconds.',
    interpretOptions:[
      {text:'On average, processing times vary by approximately 6.01 seconds from the mean of 21.9 seconds.',correct:true},
-     {text:'6.01 seconds is the fastest processing time.',correct:false},
-     {text:'The mean processing time is 6.01 seconds.',correct:false},
-     {text:'All processes take exactly 21.9 seconds.',correct:false}
+     {text:'6.01 seconds is the fastest processing time, so no process finishes in under 6.01 seconds.',correct:false},
+     {text:'The mean processing time is 6.01 seconds, and times vary by approximately 21.9 seconds.',correct:false},
+     {text:'All processes take exactly 21.9 seconds, so the standard deviation of 6.01 seconds must be a measuring error.',correct:false}
    ]},
   {id:'L4_4',title:'Operating temperature (°C)',context:'50 readings of operating temperature were recorded from a furnace.',
    unit:'°C',classLabel:'Temp (°C)',
@@ -640,9 +640,9 @@ level4: [
    contextLine:'The mean operating temperature is 84.0°C with a standard deviation of 10.8°C.',
    interpretOptions:[
      {text:'On average, operating temperatures vary by approximately 10.8°C from the mean of 84.0°C.',correct:true},
-     {text:'10.8°C is the lowest temperature recorded.',correct:false},
-     {text:'The furnace always runs at exactly 84.0°C.',correct:false},
-     {text:'The standard deviation tells us the furnace is broken.',correct:false}
+     {text:'10.8°C is the lowest temperature recorded, so the furnace never runs below 10.8°C.',correct:false},
+     {text:'The furnace always runs at exactly 84.0°C, so a standard deviation of 10.8°C is impossible.',correct:false},
+     {text:'The standard deviation of 10.8°C tells us that the furnace is broken and needs repair.',correct:false}
    ]},
   {id:'L4_5',title:'Batch weight (g)',context:'50 product batches were weighed during quality control.',
    unit:'g',classLabel:'Weight (g)',
@@ -656,9 +656,9 @@ level4: [
    contextLine:'The mean batch weight is 502.5 g with a standard deviation of 5.20 g — good process control.',
    interpretOptions:[
      {text:'On average, batch weights vary by approximately 5.20 g from the mean weight of 502.5 g.',correct:true},
-     {text:'5.20 g is the lightest batch.',correct:false},
-     {text:'All batches weigh exactly 502.5 g.',correct:false},
-     {text:'The standard deviation means the process fails quality checks.',correct:false}
+     {text:'5.20 g is the lightest batch, so no batch weighs less than 5.20 g.',correct:false},
+     {text:'All batches weigh exactly 502.5 g, with no variation from one batch to the next.',correct:false},
+     {text:'The standard deviation of 5.20 g means that the process fails its quality checks every time.',correct:false}
    ]},
   {id:'L4_6',title:'Voltage readings (V)',context:'50 voltage readings were taken from a power supply under load.',
    unit:'V',classLabel:'Voltage (V)',
@@ -672,9 +672,9 @@ level4: [
    contextLine:'The mean voltage is 222.48 V with a standard deviation of 2.11 V.',
    interpretOptions:[
      {text:'On average, voltage readings vary by approximately 2.11 V from the mean of 222.48 V.',correct:true},
-     {text:'2.11 V is the minimum acceptable voltage.',correct:false},
-     {text:'The mean voltage is 2.11 V.',correct:false},
-     {text:'Voltage readings are extremely unstable.',correct:false}
+     {text:'2.11 V is the minimum acceptable voltage, so every reading above 2.11 V is safe.',correct:false},
+     {text:'The mean voltage is 2.11 V, and readings vary by approximately 222.48 V around it.',correct:false},
+     {text:'Voltage readings are extremely unstable, swinging far away from the mean of 222.48 V.',correct:false}
    ]},
   {id:'L4_7',title:'Surface roughness (μm)',context:'50 machined surfaces were measured for roughness.',
    unit:'μm',classLabel:'Roughness (μm)',
@@ -688,9 +688,9 @@ level4: [
    contextLine:'The mean surface roughness is 3.34 μm with a standard deviation of 1.05 μm.',
    interpretOptions:[
      {text:'On average, surface roughness values vary by approximately 1.05 μm from the mean of 3.34 μm.',correct:true},
-     {text:'1.05 μm is the smoothest surface measured.',correct:false},
-     {text:'All surfaces have roughness below 3.34 μm.',correct:false},
-     {text:'The standard deviation of 1.05 μm is the target roughness.',correct:false}
+     {text:'1.05 μm is the smoothest surface measured, so no surface is smoother than 1.05 μm.',correct:false},
+     {text:'All surfaces have a roughness below 3.34 μm, because that is the mean of the data.',correct:false},
+     {text:'The standard deviation of 1.05 μm is the target roughness that every finished surface is supposed to meet.',correct:false}
    ]},
   {id:'L4_8',title:'Hardness (HV)',context:'50 metal samples were tested for Vickers hardness.',
    unit:'HV',classLabel:'Hardness (HV)',
@@ -704,9 +704,9 @@ level4: [
    contextLine:'The mean hardness is 249.2 HV with a standard deviation of 20.8 HV.',
    interpretOptions:[
      {text:'On average, hardness values vary by approximately 20.8 HV from the mean hardness of 249.2 HV.',correct:true},
-     {text:'20.8 HV is the minimum hardness for the material.',correct:false},
-     {text:'The mean hardness is 20.8 HV.',correct:false},
-     {text:'All samples have hardness between 228.4 and 270.0 HV.',correct:false}
+     {text:'20.8 HV is the minimum hardness for the material, so every sample is at least 20.8 HV.',correct:false},
+     {text:'The mean hardness is 20.8 HV, and values vary by approximately 249.2 HV around it.',correct:false},
+     {text:'All samples have a hardness between 228.4 and 270.0 HV, because the standard deviation is 20.8 HV.',correct:false}
    ]},
   {id:'L4_9',title:'Cycle time (minutes)',context:'50 production cycles were timed.',
    unit:'min',classLabel:'Time (min)',
@@ -720,9 +720,9 @@ level4: [
    contextLine:'The mean cycle time is 9.80 minutes with a standard deviation of 2.16 minutes.',
    interpretOptions:[
      {text:'On average, cycle times vary by approximately 2.16 minutes from the mean of 9.80 minutes.',correct:true},
-     {text:'2.16 minutes is the fastest cycle time.',correct:false},
-     {text:'All cycles take between 7.64 and 11.96 minutes.',correct:false},
-     {text:'The standard deviation means cycles are inconsistent.',correct:false}
+     {text:'2.16 minutes is the fastest cycle time, so no cycle is ever quicker than 2.16 minutes.',correct:false},
+     {text:'All cycles take between 7.64 and 11.96 minutes, because the standard deviation is 2.16 minutes.',correct:false},
+     {text:'The standard deviation of 2.16 minutes means the cycles are too inconsistent to use.',correct:false}
    ]},
   {id:'L4_10',title:'Insulation resistance (MΩ)',context:'50 cable samples were tested for insulation resistance.',
    unit:'MΩ',classLabel:'Resistance (MΩ)',
@@ -736,9 +736,9 @@ level4: [
    contextLine:'The mean insulation resistance is 21.6 MΩ with a standard deviation of 6.02 MΩ.',
    interpretOptions:[
      {text:'On average, insulation resistance values vary by approximately 6.02 MΩ from the mean of 21.6 MΩ.',correct:true},
-     {text:'6.02 MΩ is the minimum acceptable resistance.',correct:false},
-     {text:'The mean resistance is 6.02 MΩ.',correct:false},
-     {text:'All cables have resistance above 21.6 MΩ.',correct:false}
+     {text:'6.02 MΩ is the minimum acceptable resistance, so every cable above 6.02 MΩ passes.',correct:false},
+     {text:'The mean resistance is 6.02 MΩ, and values vary by approximately 21.6 MΩ around it.',correct:false},
+     {text:'All of the cables have an insulation resistance above 21.6 MΩ, since that is the mean of the readings.',correct:false}
    ]},
   {id:'L4_11',title:'Torque (Nm)',context:'50 bolts were tested for tightening torque.',
    unit:'Nm',classLabel:'Torque (Nm)',
@@ -752,9 +752,9 @@ level4: [
    contextLine:'The mean torque is 63.6 Nm with a standard deviation of 10.8 Nm.',
    interpretOptions:[
      {text:'On average, torque values vary by approximately 10.8 Nm from the mean of 63.6 Nm.',correct:true},
-     {text:'10.8 Nm is the target torque.',correct:false},
-     {text:'All bolts are tightened to exactly 63.6 Nm.',correct:false},
-     {text:'The standard deviation of 10.8 Nm is the maximum allowable torque.',correct:false}
+     {text:'10.8 Nm is the target torque, and 63.6 Nm is the most a bolt can take.',correct:false},
+     {text:'All bolts are tightened to exactly 63.6 Nm, with no variation from bolt to bolt.',correct:false},
+     {text:'The standard deviation of 10.8 Nm is the maximum allowable torque for any bolt on the line.',correct:false}
    ]},
   {id:'L4_12',title:'Yield stress (MPa)',context:'50 steel specimens were tested for yield stress.',
    unit:'MPa',classLabel:'Stress (MPa)',
@@ -768,9 +768,9 @@ level4: [
    contextLine:'The mean yield stress is 300.0 MPa with a standard deviation of 20.8 MPa.',
    interpretOptions:[
      {text:'On average, yield stress values vary by approximately 20.8 MPa from the mean of 300.0 MPa.',correct:true},
-     {text:'20.8 MPa is the minimum yield stress allowed.',correct:false},
-     {text:'All specimens have yield stress of exactly 300 MPa.',correct:false},
-     {text:'The mean yield stress is 20.8 MPa.',correct:false}
+     {text:'20.8 MPa is the minimum yield stress allowed, so every specimen above it is acceptable.',correct:false},
+     {text:'All specimens have a yield stress of exactly 300 MPa, with no spread at all from one specimen to the next.',correct:false},
+     {text:'The mean yield stress is 20.8 MPa, and values vary by approximately 300.0 MPa around it.',correct:false}
    ]}
 ]
 };
