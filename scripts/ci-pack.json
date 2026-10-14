@@ -10,7 +10,7 @@
   "Characteristic Quest (every 2x2 characteristic equation recomputed from its matrix in SymPy; every option classified; every worked line, trace, determinant and eigenvalue claim checked; every option pressed in Chromium)": "17",
   "Chart Interrogator (independent recomputation of every key and tolerance)": "16",
   "Circle Theorem Spotter (every calculation key re-solved, SymPy + arc wording vs figure; each tangent angle drawn on the side the theorem needs, in Chromium)": "35",
-  "Complex Converter (every key equal to its given number, the principal argument stated and keyed, no option a second form of the key; every option marked in Chromium)": "7",
+  "Complex Converter (every key equal to its given number, the principal argument stated and keyed, no option a second form of the key; every option marked in Chromium)": "27",
   "Component Crusher (every key from what the student is shown, diagrams measured from the canvas, marking through MaffsAnswer in Chromium)": "6",
   "Constructions Lab (no marking to check: every task's figure, labels and stated results verified by constructing all ten with the game's own compass and ruler in Chromium)": "12",
   "Context size (CLAUDE.md and both handovers at most 20 KB, docs/todo.md at most 150 KB; canon reported; contracts CTX and TODO-SLIM)": "14",
