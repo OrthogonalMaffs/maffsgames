@@ -399,6 +399,28 @@ def same(written, exact):
     return abs(float(v) - float(exact)) <= 0.5 / 10 ** places + 1e-9 * max(1, abs(float(exact)))
 
 
+def explanation_of(fails, q):
+    """SR-34: the item's explanation, the working shown once the question is marked ('' and a failure if it has none).
+    Shared with verify-terrible-advice.py."""
+    expl = q.get('explanation')
+    if not isinstance(expl, str) or not expl.strip():
+        fails.append('SR-34 %s: no explanation: the working is shown after the answer, and never in the key' % q['id'])
+        return ''
+    return expl
+
+
+def key_values(fails, qid, key, expl, want, verdict):
+    """SR-34: the numbers the key's values are read from (the explanation's when the key is a verdict with no figure,
+    in verdict), after checking the explanation states every value too. Shared with verify-terrible-advice.py."""
+    if verdict and any(same(g, w) for g in numbers(key) for w in want):
+        fails.append('VERDICT_KEYS %s is stale: the key now states a value (%s)' % (qid, key))
+    gone = [w for w in want if not any(same(g, w) for g in numbers(expl))]
+    if gone and expl:
+        fails.append('SR-34 %s: the explanation does not state %s (the key\'s value, recomputed): "%s"'
+                     % (qid, ', '.join(str(round(float(w), 4)) for w in gone), expl))
+    return numbers(expl if verdict else key)
+
+
 def check_bank(fails, opens, bank):
     counts = {lv: sum(1 for q in bank if q['level'] == lv) for lv in COUNTS}
     if counts != COUNTS:
@@ -414,10 +436,7 @@ def check_bank(fails, opens, bank):
             fails.append('%s: %d options, %d keyed correct, %d distinct (4, 1, 4)' % (qid, len(opts), len(keys), len({o['text'] for o in opts})))
             continue
         key = keys[0]['text']
-        expl = q.get('explanation')
-        if not isinstance(expl, str) or not expl.strip():
-            fails.append('SR-34 %s: no explanation: the working is shown after the answer, and never in the key' % qid)
-            expl = ''
+        expl = explanation_of(fails, q)
         # arithmetic in the advice, the key and the explanation
         for where, text in (('advice', q['advice']), ('key', key), ('explanation', expl)):
             for written, vals in equations(text, q['advice']):
@@ -433,13 +452,7 @@ def check_bank(fails, opens, bank):
         # the key's values, recomputed
         if qid in KEYS:
             want = KEYS[qid]
-            got = numbers(expl if qid in VERDICT_KEYS else key)
-            if qid in VERDICT_KEYS and any(same(g, w) for g in numbers(key) for w in want):
-                fails.append('VERDICT_KEYS %s is stale: the key now states a value (%s)' % (qid, key))
-            gone = [w for w in want if not any(same(g, w) for g in numbers(expl))]
-            if gone and expl:
-                fails.append('SR-34 %s: the explanation does not state %s (the key\'s value, recomputed): "%s"'
-                             % (qid, ', '.join(str(round(float(w), 4)) for w in gone), expl))
+            got = key_values(fails, qid, key, expl, want, qid in VERDICT_KEYS)
             missing = [w for w in want if not any(same(g, w) for g in got)]
             # each value as the key writes it (for SR-16: a distractor equal to that, not merely near the exact value)
             written = [next((g[0] for g in got if same(g, w)), None) for w in want]
@@ -604,12 +617,14 @@ SHOWN = """() => { const b = document.getElementById('explanation');
   return {show: b.classList.contains('show'), text: b.textContent, shown: getComputedStyle(b).display !== 'none'}; }"""
 
 
-def explanation_shown(fails, page, bank):
-    """SR-34: the working is shown once the question is marked, right or wrong, and not before (one item a level)."""
-    for lv in COUNTS:
-        ids = [q['id'] for q in bank if q['level'] == lv]
+def explanation_shown(fails, page, levels, load=None):
+    """SR-34: the working is shown once the question is marked, right or wrong, and not before (one item a level).
+    levels: {level: [items]}; load: the game's LOAD (default this game's). Shared with verify-terrible-advice.py."""
+    bank = [q for qs in levels.values() for q in qs]
+    for lv, qs in levels.items():
+        ids = [q['id'] for q in qs]
         for how in ('its key', 'two wrong picks'):
-            page.evaluate(LOAD, [lv, ids[:2]])
+            page.evaluate(load or LOAD, [lv, ids[:2]])
             page.wait_for_timeout(350)
             s = page.evaluate(SHOWN)
             if s['show'] or s['text']:
@@ -725,7 +740,7 @@ def run(html):
             ctx.close()
             ctx, page, errors2 = new_page(browser, base, html, False)
             lock_window(fails, page, bank)
-            explanation_shown(fails, page, bank)
+            explanation_shown(fails, page, {lv: [q for q in bank if q['level'] == lv] for lv in COUNTS})
             ctx.close()
             errs = [e for e in errors + errors2 if 'firebase' not in e.lower()]
             if errs:
