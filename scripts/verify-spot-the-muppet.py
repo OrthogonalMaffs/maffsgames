@@ -165,11 +165,13 @@ def check_loan(fails, q, p, apr, months, tag):
             fails.append('%s %s: the key does not state %s, %.2f to the penny (APR %g%%, %d months, on the shrinking '
                          'balance): "%s"' % (tag, q['id'], what, v, apr * 100, months, key))
     rate = (1 + apr) ** (1 / 12) - 1
-    expl = numbers(q.get('explanation') or '')
-    if not any(same(g, rate * 100) for g in expl if g[1] == 3):
-        fails.append('%s %s: the explanation does not state the monthly rate, %.3f%%: "%s"'
-                     % (tag, q['id'], rate * 100, q.get('explanation')))
-    if not any(g[1] == 2 and same(g, pay) for g in expl):
+    # SR-34: an item with an explanation carries its working there, the rate included; one without (a game not yet
+    # moved to SR-34, as Terrible Advice, which shares this check) states the rate in the key.
+    where = 'explanation' if 'explanation' in q else 'key'
+    text = q.get('explanation') or '' if where == 'explanation' else key
+    if not any(same(g, rate * 100) for g in numbers(text) if g[1] == 3):
+        fails.append('%s %s: the %s does not state the monthly rate, %.3f%%: "%s"' % (tag, q['id'], where, rate * 100, text))
+    if where == 'explanation' and not any(g[1] == 2 and same(g, pay) for g in numbers(text)):
         fails.append('%s %s: the explanation does not state the monthly payment, %.2f' % (tag, q['id'], pay))
     wrong = [o['text'] for o in q['options'] if not o['correct']]
     for v, word, places in loan_distractors(p, apr, months):
