@@ -23,7 +23,9 @@ findings:
     lost. The band per histogram is a marking change, for Jon'
   evidence: "{text:'Calculate the frequency for the ...',expected:Math.round(askInterval.freq),tolerance:1} (SWEEP-1,
     batch 8)"
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R9 + canon 7.1.2: histogram frequency and total are marked to a band read from the drawn density axis (2.5% of its span x the class width, the total''s x the whole width), each capped below half the gap to the nearest named wrong answer; was a fixed 1. verify-chart-interrogator.py recomputes it and pins it with a plant.'
 - id: chart-interrogator-s1-002
   severity: MEDIUM
   jc: false
@@ -59,7 +61,9 @@ findings:
   summary: 'Stem-and-leaf items with two-digit leaves write a leaf of 0 as "0", not "00", and two-digit stems print as
     "01", "02", unlike the key''s format'
   evidence: "getLeaf returns (val%div).toString(); stemLabel '0'+st (SWEEP-1, batch 8)"
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: stem-and-leaf leaves are written with the digits the key uses ("00", "05") and stems as the key writes them ("2", never "02"). verify-chart-interrogator.py recomputes it and pins it with a plant.'
 - id: chart-interrogator-s1-005
   severity: LOW
   jc: true
@@ -69,7 +73,9 @@ findings:
   summary: 'The cumulative frequency curve is drawn in S-shaped steps, so a reading from a polygon joined by straight
     lines (also taught) can fall outside the band on CF5 and CF6. Which drawing to mark against is for Jon'
   evidence: 'CF5 median band ±1.047 after the cap (verifier output) (SWEEP-1, batch 8)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R9: a cumulative-frequency reading from the polygon (points joined by straight lines) is accepted within its own capped band as well as a reading from the curve; every named wrong answer of either drawing still fails. verify-chart-interrogator.py recomputes it and pins it with a plant.'
 - id: chart-interrogator-s1-006
   severity: LOW
   jc: false
@@ -80,7 +86,9 @@ findings:
     the statistic. Rewording is a stem change (Split: the parent entry held 2 defects; the others are
     chart-interrogator-s1-008.)'
   evidence: "'Estimate the proportion of '+s.contextPlural+' in the range '+propInterval.interval (SWEEP-1, batch 8)"
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: "in the class 50-60", not "in the range". verify-chart-interrogator.py recomputes it and pins it with a plant.'
 - id: chart-interrogator-s1-008
   severity: LOW
   jc: false

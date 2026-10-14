@@ -105,7 +105,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     </div>
     <div class="menu-info">
       <strong>GCSE:</strong> Midpoints, gradients, y = mx + c, parallel/perpendicular lines, distance between points.<br>
-      <strong>A-Level:</strong> Adds circles (equation, centre, radius, tangent/normal), parametric equations, and intersection problems.
+      <strong>A-Level:</strong> Circles (equation, centre, radius, tangent/normal), parametric equations, and intersection problems.
     </div>
   <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
     <button class="start-btn" onclick="startGame()">Start</button>
@@ -257,7 +257,7 @@ ctx:"Line 1: y = x + 1. Line 2: y = −x + 5",q:"Find the intersection point",op
 ctx:"Line 1: y = 2x − 1. Line 2: y = ½x + 2",q:"Intersection?",opts:["(2, 3)","(3, 5)","(1, 1)","(4, 7)"],correct:"(2, 3)",steps:["2x − 1 = ½x + 2","3/2 x = 3 → x = 2","y = 2(2) − 1 = 3"]},
 // HARDER GCSE
 {draw:q=>{setView(-6,8,-6,8);drawGrid();drawPoint(4,2);drawLine(2,0,'#3b82f6',1.5)},
-ctx:"Line L has gradient 2. Find the perpendicular from (4, 2) to L through the origin.",q:"Perpendicular gradient?",opts:["−½","½","−2","2"],correct:"−½",steps:["Negative reciprocal of 2","= −1/2"]},
+ctx:"Line L has gradient 2. It passes through the origin. A second line, through (4, 2), is perpendicular to L.",q:"Perpendicular gradient?",opts:["−½","½","−2","2"],correct:"−½",steps:["Negative reciprocal of 2","= −1/2"]},
 {draw:q=>{setView(-2,8,-2,8);drawGrid();drawPoint(1,1);drawPoint(5,1);drawPoint(5,4);drawSegment(1,1,5,1,'#3b82f6');drawSegment(5,1,5,4,'#3b82f6');drawSegment(1,1,5,4,'#06b6d4',1.5,[4,4])},
 ctx:"Right triangle with vertices (1,1), (5,1), (5,4)",q:"Find the length of the hypotenuse",opts:["5","√7","7","25"],correct:"5",steps:["Horizontal: 5−1 = 4","Vertical: 4−1 = 3","Hypotenuse = √(16+9) = √25 = 5","This is a 3-4-5 triangle"]},
 ];

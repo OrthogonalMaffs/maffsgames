@@ -88,7 +88,9 @@ findings:
   where: 'games/correlation-or-coincidence/index.html:264-265 (A19)'
   summary: 'Revision hours and test score across different students, keyed "One causes the other": motivation and prior attainment drive both, the textbook confounder, so "Something else causes both" is defensible. Jon''s call (e.g. one student over several tests)'
   evidence: 'explain "Revision helps. Students also start from different places, which is why the pattern is only moderate." (SWEEP-1, batch 8)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'Part 2 #11: A19 is one student over 12 tests (Jon''s drafted wording); key unchanged; verifier pins the labels and explanation with a plant.'
 - id: correlation-or-coincidence-s1-004
   severity: LOW
   jc: false
@@ -97,7 +99,9 @@ findings:
   where: 'games/correlation-or-coincidence/index.html:423-425 (C26)'
   summary: 'Fridge magnets and favourite-film viewings over 8 families, keyed "Coincidence": young children in the family plausibly drive both (the joke itself names the kids'' drawings)'
   evidence: 'explain "With only 8 families, a pattern can appear by chance. Magnets don''t press play." (SWEEP-1, batch 8)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'Part 2 #11: C26 is house number against cinema trips (Jon''s drafted wording); key unchanged; verifier pins it with a plant.'
 - id: correlation-or-coincidence-s1-005
   severity: LOW
   jc: false
@@ -106,7 +110,9 @@ findings:
   where: 'games/correlation-or-coincidence/index.html:304-305 (B10)'
   summary: '"Height doesn''t widen a trunk" is doubtful (trunks thicken under height and wind load); the key, the tree''s age, is fine'
   evidence: 'explain "Height doesn''t widen a trunk. Older trees have had longer to grow both ways." (SWEEP-1, batch 8)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R3: B10 no longer says height cannot widen a trunk; "Older trees have had longer to grow both taller and wider."; key unchanged; verifier pins it.'
 - id: correlation-or-coincidence-s1-006
   severity: MEDIUM
   jc: false

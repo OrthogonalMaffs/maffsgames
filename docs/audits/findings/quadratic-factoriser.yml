@@ -65,7 +65,9 @@ findings:
     -16 = -48", "6 + -4") (Split: the parent entry held 2 defects; the others are
     quadratic-factoriser-s1-007.)'
   evidence: 'Item 1040: "8x^2 + -1x + -16x + 8" (SWEEP-1, batch 6)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: step 4 writes a difference as one ("8x^2 - x - 16x + 8", never "+ -16x") and step 3''s options bracket a negative second number ("3 x (-16) = -48"). verify-quadratic-factoriser.py reads every guided step; it fails the old form, with a plant.'
 - id: quadratic-factoriser-s1-007
   severity: LOW
   jc: false
@@ -75,7 +77,9 @@ findings:
   summary: 'A coefficient of 1 is written "1x" ("8x^2 + -1x") (Split from quadratic-factoriser-s1-004, SWEEP-1-RULINGS
     step 1.)'
   evidence: 'Item 1040: "8x^2 + -1x + -16x + 8" (SWEEP-1, batch 6)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: a coefficient of 1 is left out of step 4''s line ("- x", not "-1x"). verify-quadratic-factoriser.py reads every guided step; it fails the old form, with a plant.'
 - id: quadratic-factoriser-s1-005
   severity: LOW
   jc: false
@@ -85,7 +89,9 @@ findings:
   summary: 'Two root boxes on every real-root item, including a repeated root: nothing says to enter a repeated root
     twice'
   evidence: 'Two boxes x₁ and x₂ and "Enter both roots, or press No real solutions." (SWEEP-1, batch 6)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R2: the Formula level''s label reads "Solve (type a repeated root twice)" and its empty-box message says a repeated root goes in both boxes.'
 - id: quadratic-factoriser-s1-006
   severity: LOW
   jc: false
@@ -95,4 +101,6 @@ findings:
   summary: 'Step 6''s narration "The common bracket comes out the front, next to the two leftover factors" sits beside
     options written k(px + q)(rx + s): the leftover factors kpx and kq become k(px + q) without a word'
   evidence: 'Tutorial step 6 (SWEEP-1, batch 6)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R3: step 6''s narration reads "The common bracket comes out the front, and the two leftover terms make the other bracket."'

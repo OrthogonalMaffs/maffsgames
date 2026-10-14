@@ -111,7 +111,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     <div class="header"><h1>Probability Paradox</h1><div class="sub">Your intuition is wrong. Let the simulation prove it.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
     <div class="mode-grid">
       <div class="mode-card" onclick="startMode('paradox')"><span class="badge">Paradoxes</span><h3>Paradox Predictor</h3><p>A famous probability scenario. Make your prediction. Then watch a live simulation of 1,000 trials reveal the truth. Inspired by Martin Gardner.</p></div>
-      <div class="mode-card" onclick="startMode('conditional')"><span class="badge">A-Level</span><h3>Conditional Calculator</h3><p>P(A|B), tree diagrams, Venn diagrams, independence tests. The bread and butter of A-Level probability — with worked solutions when you get it wrong.</p></div>
+      <div class="mode-card" onclick="startMode('conditional')"><span class="badge">Conditional</span><h3>Conditional Calculator</h3><p>P(A|B), tree diagrams, Venn diagrams, independence tests. The bread and butter of conditional probability — with worked solutions when you get it wrong.</p></div>
       <div class="mode-card" onclick="startMode('fallacy')"><span class="badge">Reasoning</span><h3>Fallacy Spotter</h3><p>Someone's made a probability argument. Is it valid? Or have they fallen for the gambler's fallacy, base rate neglect, or the confusion of the inverse?</p></div>
     </div>
   </div>
@@ -126,7 +126,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     <div class="q-card"><div class="scenario" id="scenario"></div><div class="question" id="question"></div></div>
     <div class="options" id="options"></div>
     <div class="sim-panel" id="simPanel">
-      <h3>Running 1,000 simulations...</h3>
+      <h3 id="simHead">Running 1,000 simulations...</h3>
       <div class="sim-count" id="simCount">0 / 1,000</div>
       <div class="sim-bars" id="simBars"></div>
     </div>
@@ -212,7 +212,7 @@ misconception:"This is a genuine paradox that confused mathematicians for decade
 q:"Is this possible?",
 opts:["Yes — it's Simpson's Paradox","No — A must be better overall","Only if sample sizes are equal","Only for binary outcomes"],
 correct:"Yes — it's Simpson's Paradox",
-sim:{type:'simpson',labels:['Paradox occurs','No paradox'],expected:[1.0,0.0]},
+sim:{type:'simpson',labels:['Paradox occurs','No paradox'],expected:[1.0,0.0],fixed:true,head:'Checking the hospitals\' figures...',note:'No chance involved: these figures give the paradox every time'},
 steps:["Hospital A: mild 19/20 = 95%, severe 60/200 = 30%","Hospital B: mild 180/200 = 90%, severe 5/20 = 25%","A is better in BOTH groups","Overall: A 79/220 = 36%, B 185/220 = 84% — B is better overall","A treats mostly severe cases (low recovery); B treats mostly mild ones. The mix, not the quality of care, drives the overall rate"],
 misconception:"Aggregated data can reverse trends visible in subgroups. Always check for lurking variables when comparing rates."},
 
@@ -330,15 +330,15 @@ opts:["The base rate (prevalence)","The sample size","The confidence interval","
 explain:"If the disease is rare (say 1 in 10,000), most positive results are false positives. The doctor has committed base rate neglect.",
 misconception:"P(Disease|Positive) depends on BOTH the test accuracy AND how common the disease is."},
 
-{scenario:"John says: 'I flipped 10 coins and got 7 heads. The coin must be biased.'",
+{scenario:"John says: 'I flipped a coin 10 times and got 7 heads. The coin must be biased.'",
 q:"Is John's reasoning valid?",
 opts:["No — 7/10 is within normal variation","Yes — 7/10 proves bias","Yes — a fair coin would give exactly 5 heads","Depends on the coin"],correct:"No — 7/10 is within normal variation",
 explain:"P(7+ heads in 10 flips of fair coin) ≈ 0.17. That's not unusual enough to conclude bias. We'd need a significance test with more data."},
 
-{scenario:"'I survived a plane crash. Therefore plane crashes are survivable.'",
+{scenario:"'Every famous band I know of kept going when things got hard. So if a band never gives up, it will become famous.'",
 q:"What bias is this?",
 opts:["Survivorship bias","Confirmation bias","Availability heuristic","Anchoring"],correct:"Survivorship bias",
-explain:"We only hear from survivors. The people who didn't survive can't tell us their experience. The sample is biased."},
+explain:"We only hear about the bands that made it. Thousands of bands never gave up and still weren't famous, and you never hear about them. The sample is biased."},
 
 {scenario:"A basketball player has made 8 shots in a row. The commentator says 'He's got the hot hand! He's more likely to make the next one.'",
 q:"Is the 'hot hand' a fallacy?",
@@ -391,11 +391,23 @@ function runSim(simDef, callback){
   panel.className='sim-panel show';
   const barsEl=document.getElementById('simBars');
   barsEl.innerHTML='';
+  document.getElementById('simHead').textContent=simDef.head||'Running 1,000 simulations...';
   simDef.labels.forEach((lbl,idx)=>{
     const w=document.createElement('div');w.className='sim-bar-wrap';
     w.innerHTML=`<div class="sim-bar-val" id="sv${idx}">0%</div><div class="sim-bar-outer"><div class="sim-bar-inner ${idx===0?'a':'b'}" id="sb${idx}" style="height:0%"></div></div><div class="sim-bar-label">${lbl}</div>`;
     barsEl.appendChild(w);
   });
+
+  // A result that is a fact of the figures, not a chance one (Simpson's paradox): shown as a check, never as a simulation
+  if(simDef.fixed){
+    document.getElementById('simCount').textContent=simDef.note;
+    simDef.expected.forEach((p,idx)=>{
+      document.getElementById('sb'+idx).style.height=(p*100)+'%';
+      document.getElementById('sv'+idx).textContent=Math.round(p*100)+'%';
+    });
+    MaffsLock.timer(callback,1200);
+    return;
+  }
 
   function step(){
     const batch=Math.min(20,N-i);

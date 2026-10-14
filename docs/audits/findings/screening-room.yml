@@ -270,7 +270,9 @@ findings:
     two tests", alevel_18 "lower threshold"). Wording, for Jon (Split: the parent entry held 5 defects; the
     others are screening-room-s1-007, screening-room-s1-008, screening-room-s1-009, screening-room-s1-010.)'
   evidence: 'Texts as quoted (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R3: the legend''s blue dot reads "<condition>, not flagged" (blue marks only the cases the test missed; the flagged ones are green). verify-screening-room.py fails the old text, with a plant.'
 - id: screening-room-s1-007
   severity: LOW
   jc: false
@@ -280,7 +282,9 @@ findings:
   summary: 'alevel_18 says "more of its positives are real" for a share. Wording, for Jon (Split from
     screening-room-s1-005, SWEEP-1-RULINGS step 1.)'
   evidence: 'Texts as quoted (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: alevel_18 reads "a larger share of its positives are real". verify-screening-room.py fails the old text, with a plant.'
 - id: screening-room-s1-008
   severity: LOW
   jc: false
@@ -290,7 +294,9 @@ findings:
   summary: 'core_14 uses "struggle" and "fail" as one. Wording, for Jon (Split from screening-room-s1-005,
     SWEEP-1-RULINGS step 1.)'
   evidence: 'Texts as quoted (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: core_14 says "fail" throughout (was "struggle" and "fail"). verify-screening-room.py fails the old text, with a plant.'
 - id: screening-room-s1-009
   severity: LOW
   jc: false
@@ -300,7 +306,9 @@ findings:
   summary: 'Phase 3 asks "how many are real" for a probability. Wording, for Jon (Split from screening-room-s1-005,
     SWEEP-1-RULINGS step 1.)'
   evidence: 'Texts as quoted (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: Phase 3 asks "what percentage are real?" for a probability answered as a percentage. verify-screening-room.py fails the old text, with a plant.'
 - id: screening-room-s1-010
   severity: MEDIUM
   jc: false
@@ -310,7 +318,9 @@ findings:
   summary: 'The end screen says "The base rate matters more than test accuracy" (not true in general, e.g. gcse_15).
     Wording, for Jon (Split from screening-room-s1-005, SWEEP-1-RULINGS step 1.)'
   evidence: 'Texts as quoted (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R3: the end screen reads "Even an accurate test gives mostly false positives when the condition is rare." (the base rate does not always matter more than accuracy, e.g. gcse_15). verify-screening-room.py fails the old text, with a plant.'
 - id: screening-room-s1-006
   severity: MEDIUM
   jc: false

@@ -50,7 +50,9 @@ findings:
   where: 'games/standard-form-blitz/index.html:205, :216'
   summary: 'Where the ask says "to 3 s.f.", a distractor written to 1 s.f. is ruled out by its form alone'
   evidence: ':205 key 5.99 × 10^26 beside 6 × 10^25; :216 key 1.39 × 10^3 beside 9 × 10^2 and 3 × 10^3 (SWEEP-1, batch 6)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: the 1 s.f. distractors under "to 3 s.f." are written to 3 s.f. (5.99 x 10^25; 9.00 x 10^2 and 3.00 x 10^3), so their form no longer rules them out; verify-standard-form-blitz.py fails a standard-form distractor of the wrong s.f. count, with a plant.'
 - id: standard-form-blitz-s1-004
   severity: LOW
   jc: true

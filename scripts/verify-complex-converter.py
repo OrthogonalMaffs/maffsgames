@@ -143,6 +143,8 @@ def check_bank(fails, bank):
     for n, q in enumerate(bank):
         w = 'id %d (%s → %s, %s)' % (q['id'], q['source'], q['target'], q['givenLatex'])
         opts = [q['correctLatex']] + list(q['distractors'])
+        if q['id'] in (19, 24, 27, 34, 50) and re.search(r'impedance|reactance', q.get('context', '')):   # s1-002 (R3)
+            fails.append('%s: the context calls a number with a negative real part, or a reactance that is not purely imaginary, an impedance or a reactance (a passive impedance has no negative resistance): %r (complex-converter-s1-002)' % (w, q['context']))
         if q['correct'] != q['correctLatex'] or len(set(opts)) != 4:
             fails.append('%s: the options %s are not four distinct strings with one key' % (w, opts))
         try:
@@ -261,6 +263,8 @@ def play(fails, html):
             if KATEX_DIR:
                 ctx.route(lambda url: '/katex@' in url and '/dist/' in url, lambda route: route.fulfill(
                     path=os.path.join(KATEX_DIR, route.request.url.split('/dist/', 1)[1].split('?')[0])))
+            else:
+                ctx.route(lambda url: bc.is_font_cdn(url), bc.serve_real_font)     # KaTeX from the pinned local copy
             ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
                 status=200, content_type='text/html; charset=utf-8', body=html))
             page = ctx.new_page()
@@ -283,6 +287,10 @@ def play(fails, html):
 
 # (the item the failure must name, what is planted, today's text, main's text before LISTED-HIGH).
 PLANTS = [
+    ('id 34 ', 's1-002: -5 + 12j called an impedance',
+     'context:"Express this complex number in exponential form."', 'context:"Express this impedance in exponential form."'),
+    ('id 19 ', 's1-002: an impedance with a negative real part',
+     'context:"This complex number has a negative real part. Find its polar form."', 'context:"This impedance has a negative real part. Find its polar form."'),
     ('id 21 ', 't6-001: 5∠306.87° beside the key 5∠−53.13°',
      'distractors:["5\\\\angle 53.13°","5\\\\angle 126.87°","5\\\\angle -126.87°"]',
      'distractors:["5\\\\angle 53.13°","5\\\\angle 306.87°","5\\\\angle -126.87°"]'),

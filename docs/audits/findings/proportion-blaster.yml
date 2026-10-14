@@ -42,7 +42,9 @@ findings:
   where: 'games/proportion-blaster/index.html:277 (context written with textContent)'
   summary: 'The context line is written as plain text, so TeX in it shows raw: "y ∝ x^{3/2}" (alevel[6]); x^n in alevel[14], [23], [24], [28], [29], [40], [41]; x^2 in [44]; Q^a in [49]'
   evidence: 'alevel[6] ctx "y ∝ x^{3/2}. When x = 4, y = 16." through document.getElementById(''context'').textContent (SWEEP-1, batch 6)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R8: a context with maths in it is written with \( \) (x^{3/2}, x^n, kx^n, x^2, Q^a in ten items) and rendered through MaffsText; the verifier opens every item and fails on raw TeX in the context.'
 - id: proportion-blaster-s1-003
   severity: LOW
   jc: false

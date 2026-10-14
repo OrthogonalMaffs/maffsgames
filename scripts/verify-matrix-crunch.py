@@ -63,6 +63,8 @@ def page_for(pw, base, html, level):
     if KATEX_DIR:
         ctx.route(lambda url: '/katex@' in url and '/dist/' in url, lambda route: route.fulfill(
             path=os.path.join(KATEX_DIR, route.request.url.split('/dist/', 1)[1].split('?')[0])))
+    else:
+        ctx.route(lambda url: bc.is_font_cdn(url), bc.serve_real_font)     # KaTeX from the pinned local copy
     ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
         status=200, content_type='text/html; charset=utf-8', body=html))
     page = ctx.new_page()
@@ -74,6 +76,8 @@ def page_for(pw, base, html, level):
 
 
 def play(fails, html):
+    if re.search(r'class="hud-label">Time<', html) or 'id="timer"' in html:   # R7 (s1-008): Hidden Count-Up
+        fails.append('hud: the running Time is on the HUD; Hidden Count-Up means it is never shown (R7, matrix-crunch-s1-008)')
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
     try:
@@ -274,6 +278,7 @@ BANK_PLANTS = [
 
 
 PLANTS = [
+    ('hud:', 's1-008: the HUD Time back', [('<div class="hud-item"><div class="hud-label">Score</div>', '<div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div><div class="hud-item"><div class="hud-label">Score</div>')]),
     ('t6-001', 't6-001: options with no lock (CSS class only)',
      [('function handleAnswer(btn){\n  if(!answerLock())return;\n', 'function handleAnswer(btn){\n')]),
     ('t6-002', 't6-002: the flag with no lock',

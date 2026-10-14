@@ -136,6 +136,16 @@ def text_fails(lvl, items):
     return out
 
 
+def menu_fails(text):
+    """graph-transformer-s1-005 (R2): the start screen says what Par is and that repeated presses of one shift button are one move."""
+    out = []
+    if 'Par is the fewest moves' not in text:
+        out.append('start: the start screen must say Par is the fewest moves the puzzle needs')
+    if 'counts as one move' not in text:
+        out.append('start: the start screen must say pressing the same shift button again and again counts as one move')
+    return out
+
+
 # The old caption and equation code, planted back in the page (each must fail).
 OLD_TEXT_PLANTS = [
     ('a reflection captioned as a stretch by a factor of 1',
@@ -173,6 +183,10 @@ async def run_selftest(page, all_puzzles):
     lines.append("  par +1 on %-46s %s" %
                  (par_item["desc"], "CAUGHT (par mismatch)" if caught2 else "*** MISSED ***"))
 
+    await page.evaluate("() => { document.querySelector('#menu .menu-info').innerHTML = 'The blue curve is yours.'; }")
+    caught = bool(menu_fails(await page.inner_text('#menu')))
+    ok = ok and caught
+    lines.append("  %-56s %s" % ("Par and the one-move rule not explained", "CAUGHT" if caught else "*** MISSED ***"))
     for name, js in OLD_TEXT_PLANTS:
         await page.evaluate("() => { window.__gt_saved = [buildGhostSteps, buildEquation]; }")
         await page.evaluate("() => { " + js + " }")
@@ -198,6 +212,8 @@ async def run_all(no_selftest):
         await page.goto(base + "/games/" + SLUG + "/?cb=verify%d" % int(time.time()),
                         wait_until="load", timeout=20000)
         await page.wait_for_function("!!window.GT_VERIFY", timeout=8000)
+        for f in menu_fails(await page.inner_text('#menu')):
+            fail(f)
 
         results, all_puzzles, dup_pairs = {}, {}, {}
         for lvl in LEVELS:

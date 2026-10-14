@@ -120,7 +120,9 @@ findings:
   summary: 'For Jon (key text): item 1''s key writes "[MLT⁻²] ≠ [MLT⁻¹]" where every other item spaces the bracket
     (Split: the parent entry held 2 defects; the others are dimension-checker-s1-006.)'
   evidence: 'c:''No - [MLT⁻²] ≠ [MLT⁻¹]'' (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: item 1''s key spaces its brackets like every other item ("[M L T⁻²] ≠ [M L T⁻¹]"). verify-dimension-checker.py pins it with a plant.'
 - id: dimension-checker-s1-006
   severity: LOW
   jc: false
@@ -130,7 +132,9 @@ findings:
   summary: 'For Jon (stem): item 18''s stem "In P = F²v, is this homogeneous?" reads unlike the others ("Is P = F²v
     dimensionally homogeneous?") (Split from dimension-checker-s1-003, SWEEP-1-RULINGS step 1.)'
   evidence: 'c:''No - [MLT⁻²] ≠ [MLT⁻¹]'' (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: item 18 reads "Is P = F²v dimensionally homogeneous?" like the others. verify-dimension-checker.py pins it with a plant.'
 - id: dimension-checker-s1-004
   severity: MEDIUM
   jc: true
@@ -141,7 +145,9 @@ findings:
     hide rule at :60 targets classes, the element is id="timer") and the score is time-weighted (:151); the same
     shape as circle-theorem-spotter-s1-007 and trig-identity-duel-t2-010 (SR-23, for Jon to schedule)'
   evidence: 'score += 1/(1+T_K*log(1+s)) (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R7: the running Time is gone from the top bar. NOTE for Jon: the score is still time-weighted, which the Hidden Count-Up policy says it should not be; R7 covers the display only. verify-dimension-checker.py pins it with a plant.'
 - id: dimension-checker-s1-005
   severity: MEDIUM
   jc: false

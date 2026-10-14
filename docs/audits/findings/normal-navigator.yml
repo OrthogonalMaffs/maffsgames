@@ -35,7 +35,9 @@ findings:
     80% pass). A rounding convention for Jon; the verifier reports these three, not fails them'
   evidence: '"X ~ N(200, 25²). The top 10% get an A. Find the minimum mark." key 232, options 225, 240, 228
     (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'Part 2 #18 + R2: a minimum or pass mark in whole numbers is rounded UP and the stem says so (A-grade minimum re-keyed 232 -> 233, with 232 kept as the named error "nearest"; Mensa 131 and the pass mark 55 unchanged); boundaryAnswer() treats the ceiling of a shading boundary as the boundary, so the ticks stay hidden until answered; verify-normal-navigator.py recomputes the rounded-up key, with a plant.'
 - id: normal-navigator-s1-003
   severity: LOW
   jc: false

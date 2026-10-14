@@ -186,6 +186,8 @@ let cannonAngle=45, currentQ=null;
 // Half up, exactly: 4.5 × sin 30° is 2.25, but in floating point it is 2.2499999..., which Math.round would take
 // down. The nudge is far below any value this game shows and far above floating-point error.
 function round1(n){return Math.round(n*10+1e-9)/10;}
+// θ is shown to 1 d.p. unless that rounds to a different whole number than the key (37.46 shows as 37.5, which is 38): then to as many places as it takes
+function thetaShown(theta,key){const k=parseFloat(key);for(let dp=1;dp<=4;dp++){const s=theta.toFixed(dp);if(Math.round(parseFloat(s)+1e-9)===k)return s}return theta.toFixed(4)}
 function round2(n){return Math.round(n*100)/100;}
 function toRad(d){return d*Math.PI/180;}
 function toDeg(r){return r*180/Math.PI;}
@@ -236,7 +238,7 @@ function questionFrom(type, angle, hyp, ratio){
     // Last of all: the calculator left in radians (the inverse returns radians, read as degrees).
     named.push(['calculator in radians', round2(theta*Math.PI/180).toFixed(2)+'°']);
     qText=`The ${n1} = ${g1}, ${n2} = ${g2}.\nFind angle θ to the nearest degree.`;
-    exp=`${fn} θ = ${g1}/${g2} → θ = ${fn}⁻¹(${g1}/${g2}) = ${round1(theta).toFixed(1)}° = ${correct} to the nearest degree`;
+    exp=`${fn} θ = ${g1}/${g2} → θ = ${fn}⁻¹(${g1}/${g2}) = ${thetaShown(theta,correct)}° = ${correct} to the nearest degree`;
     findSide=null;
   } else if(type==='side'){
     if(ratio==='SOH'){
@@ -371,6 +373,7 @@ function drawScene(q, shotProgress=0, hit=false, miss=false){
   const triAdj=q.adj*triScale;
   const triOpp=q.opp*triScale;
   const triHyp=Math.sqrt(triAdj*triAdj+triOpp*triOpp);
+  const arcR=Math.min(22,triAdj*0.6);   // the θ arc stays on the adjacent side, however short it is drawn (trig-worms-s1-001)
 
   // Triangle
   ctx.beginPath();
@@ -417,11 +420,12 @@ function drawScene(q, shotProgress=0, hit=false, miss=false){
   // hAngle = atan2(-triOpp, triAdj) is already NEGATIVE (canvas y grows downward, so the
   // hypotenuse points up-right). The old call passed -hAngle, i.e. a POSITIVE angle, which
   // mirrored the wedge below the ground line. Sweep hAngle -> 0 instead: hypotenuse to adjacent.
-  ctx.arc(triX,triY,22,hAngle,0,false);
+  ctx.arc(triX,triY,arcR,hAngle,0,false);
   ctx.stroke();
   ctx.fillStyle='#ec4899';
   ctx.font='bold 16px Outfit, sans-serif';
-  ctx.fillText('θ',triX+24,triY-6);
+  // beside the arc; where the adjacent side is too short to hold it, outside the vertex, never at the right-angle corner
+  ctx.fillText('θ',triAdj>=40?triX+24:triX-16,triY-6);
 
   // Target (castle)
   const targetX=W-80, targetY=H*0.75-10;

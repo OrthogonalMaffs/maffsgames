@@ -123,7 +123,7 @@ FALLACY = {
     "hasn't come up in 50 draws": 'independent draws: the gambler\'s fallacy',
     'The doctor says': 'base rate neglect',
     'got 7 heads': 'P(7+ heads in 10) = 0.17, checked below',
-    'survived a plane crash': 'survivorship bias',
+    'Every famous band I know of': 'survivorship bias (the plane-crash item was replaced under R6/SR-14)',
     'hot hand': 'debated since Miller and Sanjurjo (2015)',
     '60 hours a week': 'confusion of the inverse',
     'eat chocolate daily': 'correlation is not causation',
@@ -345,6 +345,22 @@ def new_page(browser, base, html, fresh_zero, width=1280):
     return ctx, page, errors
 
 
+def sweep_text(fails, banks, html):
+    """SWEEP-1 rulings (13 Oct 2026): what the page says is true of what it does."""
+    fal = ' '.join(q['scenario'] + ' ' + q['explain'] for q in banks['fallacy'])
+    if re.search(r'plane crash|survived a (?:plane|car)', fal):   # s1-005 (R6, SR-14): a fatal outcome
+        fails.append(TAG + 's1-005: the survivorship item still uses a plane crash (SR-14); Jon\'s band wording replaces it')
+    if 'every famous band' not in fal.lower():
+        fails.append(TAG + 's1-005: the survivorship item must be the famous-bands wording Jon approved')
+    if re.search(r'flipped 10 coins', fal):
+        fails.append(TAG + 's1-006: "I flipped 10 coins" must read "I flipped a coin 10 times"')
+    if '<span class="badge">A-Level</span>' in html or 'bread and butter of A-Level' in html:
+        fails.append(TAG + 's1-007: the Conditional card is badged A-Level; the game is listed for GCSE and Core')
+    for q in banks['paradox']:   # s1-008: a result that is a fact of the figures is shown as a check, never "1,000 simulations"
+        if q['sim']['type'] == 'simpson' and not q['sim'].get('fixed'):
+            fails.append(TAG + 's1-008: the Simpson item shows a constant as "Running 1,000 simulations..."; it must be a fixed check')
+
+
 def sims(fails, page):
     for typ, share, declared in page.evaluate(SIMS):
         exact = float(EXACT[typ])
@@ -458,6 +474,7 @@ def run(html):
             ctx, page, errors = new_page(browser, base, html, True)
             banks = page.evaluate(BANKS)
             check_bank(fails, opens, banks)
+            sweep_text(fails, banks, html)
             sims(fails, page)
             play(fails, page, banks)
             ctx.close()
@@ -494,6 +511,12 @@ RTM_OLD = ('{scenario:"A student scores 95% on a test after scoring 60%. The tea
            'method."},')
 
 PLANTS = [
+    (TAG + 's1-005', 's1-005: the plane crash back',
+     "'Every famous band I know of kept going when things got hard. So if a band never gives up, it will become famous.'",
+     "'I survived a plane crash. Therefore plane crashes are survivable.'"),
+    (TAG + 's1-006', 's1-006: "I flipped 10 coins" back', "I flipped a coin 10 times and got 7 heads.", "I flipped 10 coins and got 7 heads."),
+    (TAG + 's1-007', 's1-007: the A-Level badge back', '<span class="badge">Conditional</span>', '<span class="badge">A-Level</span>'),
+    (TAG + 's1-008', 's1-008: Simpson run as a simulation again', ',fixed:true,head:', ',head:'),
     (TAG + 't1-001', 't1-001: the envelope keyed £20',
      'correct:"Cannot determine — it depends on how the amounts were chosen",', 'correct:"£20 — switching doesn\'t help",'),
     (TAG + 't1-002', 't1-002: the bus without its assumption',

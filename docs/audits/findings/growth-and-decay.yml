@@ -38,7 +38,9 @@ findings:
   where: 'games/growth-and-decay/index.html:466-473 (AL12)'
   summary: '"Pressure (atm) decreases with depth (m)": pressure in water rises with depth (about 1 atm per 10 m), and the depth variable is called t. A new context is Jon''s call (e.g. air pressure and altitude, as CM15)'
   evidence: 'P = ke^{-0.046t}, "Given P = 1 when t = 0", key P(30) = 0.252 atm (SWEEP-1, between batches 7 and 8)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'Part 2 #16 + Jon''s drafted wording (content document): AL12 is light intensity I in clear sea water against depth d (every number and key unchanged; no unit); verify-growth-and-decay.py pins it with a plant.'
 - id: growth-and-decay-s1-004
   severity: MEDIUM
   jc: true
@@ -47,7 +49,9 @@ findings:
   where: 'games/growth-and-decay/index.html:604-611 (L4_14)'
   summary: '"Hardness (HV) increases with tempering temperature": tempering lowers a steel''s hardness, and the key 3,610 HV at 300 °C (10,850 HV at the graph''s end, 350 °C) is beyond any steel (roughly 900 HV at most). A new context is Jon''s call'
   evidence: 'H = 4.911e^{0.022T}; "Use the model to calculate H when T = 300 and k = 4.911" key 3610 HV (SWEEP-1, between batches 7 and 8)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'Part 2 #16 + Jon''s drafted wording (content document): L4_14 is bacteria N (thousands) against time t (minutes), every number and key unchanged; the verifier pins it with a plant.'
 - id: growth-and-decay-s1-005
   severity: CRITICAL
   jc: false
@@ -89,7 +93,9 @@ findings:
     are growth-and-decay-s1-010, growth-and-decay-s1-011, growth-and-decay-s1-012, growth-and-decay-s1-013,
     growth-and-decay-s1-014.)'
   evidence: 'Contexts and keys as quoted (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'Part 2 #16: AL11 and L4_6 ask for the least whole number n and key 5 and 9 (not 4.64 devices and 8.03 amplifiers); the verifier recomputes the least integer from the model, with a plant. The other five items bundled here stay open as growth-and-decay-s1-010 to -014 (contexts and key texts, for Jon).'
 - id: growth-and-decay-s1-010
   severity: LOW
   jc: true
@@ -150,7 +156,9 @@ findings:
     :122 targets classes the element lacks), and each scenario is scored against cumulative session time (T_K 0.3),
     so later scenarios score less for the same speed. The SR-23 timer class, for Jon to schedule'
   evidence: 'Reviewer''s reading of :122 and :859 (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R7: the running Time is gone from the HUD. NOTE for Jon: each scenario is still scored against cumulative session time (T_K 0.3), which the Hidden Count-Up policy says a game does not do; R7 covers the display only. The verifier fails a HUD Time, with a plant.'
 - id: growth-and-decay-s1-009
   severity: MEDIUM
   jc: false

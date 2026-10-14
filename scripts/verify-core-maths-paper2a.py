@@ -322,6 +322,9 @@ def check_bank(rep, bank, verbose=False):
         rep.fail(-1, 'bank', '%d questions, the game says 36' % len(bank))
     for qi, q in enumerate(bank):
         check_item(rep, qi, q, verbose)
+        for o in q['options']:   # s1-011 (R1): a spreadsheet cell formula multiplies with *, not the times sign
+            if re.match(r'^=.*\u00d7', o):
+                rep.fail(qi, 'notation', 'the spreadsheet formula %r uses the multiplication sign; a cell formula uses * (core-maths-paper2a-s1-011)' % o)
 
 
 # --------------------------------------------------------------------------
@@ -464,6 +467,10 @@ def selftest(bank, rendered):
     def wrong_working(b):
         b[16]['working'] = b[16]['working'].replace('= 61', '= 62')
     expect('wrong working (Q17 0.0122 x 5000 = 62)', lambda rep: check_bank(rep, mutated(wrong_working)))
+
+    def times_sign(b):
+        b[1]['options'][2] = '=B1\u00d712'
+    expect('s1-011: a cell formula with the times sign', lambda rep: check_bank(rep, mutated(times_sign)))
 
     def old_q1(b):
         b[0]['options'][3] = 'School C only has a 6 percentage point lead, not double'

@@ -254,6 +254,8 @@ KATEX_DIR = None
 
 
 def play(fails, html):
+    if re.search(r'table 5 m high', html):   # s1-005 (Part 2 #17): no table is 5 m high
+        fails.append('suvat-s1-005: the stone leaves "a table 5 m high"; no table is 5 m high ("a wall 5 m high")')
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
     bank = {}
@@ -314,6 +316,7 @@ def play(fails, html):
 
 
 PLANTS = [
+    ('suvat-s1-005', 's1-005: a table 5 m high', 'from a wall 5 m high.', 'from a table 5 m high.'),
     ('ALEVEL[34] step 1', 't5-002: v_y keyed +0.32', 'answer:-0.32,dp:2', 'answer:0.32,dp:2'),
     ('ALEVEL[48] step 2', 't5-007: the range keyed 103.5 to 1 d.p.', 'answer:103,dp:0', 'answer:103.5,dp:1'),
     ('LEVEL4[6]', 's1-004: decelerates at \u221220 m/s\u00b2', 'decelerates from 500 m/s at 20 m/s\u00b2',

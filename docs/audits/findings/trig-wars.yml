@@ -106,7 +106,9 @@ findings:
   where: 'games/trig-wars/index.html:1081-1133 (live trig triangle)'
   summary: 'Above about 45° the live trig triangle''s apex is drawn off the top of its canvas'
   evidence: 'Read from the drawing code at :1081-1133: above about 45° the apex is placed above the canvas top (SWEEP-1, batch 6; not checked on screen)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R8: the live trig triangle''s hypotenuse is shortened so the whole triangle stays on its 198 x 118 canvas; the verifier records every path point of the triangle at 87 angles x 3 powers, with a plant.'
 - id: trig-wars-s1-003
   severity: MEDIUM
   jc: false

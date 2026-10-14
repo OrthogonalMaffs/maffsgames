@@ -655,6 +655,8 @@ def page_context(pw, base, html):
     if KATEX_DIR:
         ctx.route(lambda url: '/katex@0.16.9/dist/' in url, lambda route: route.fulfill(
             path=os.path.join(KATEX_DIR, route.request.url.split('/dist/', 1)[1].split('?')[0])))
+    else:
+        ctx.route(lambda url: bc.is_font_cdn(url), bc.serve_real_font)     # KaTeX from the pinned local copy
     ctx.route(lambda url: bool(bc_page.search(url)), lambda route: route.fulfill(
         status=200, content_type='text/html; charset=utf-8', body=html))
     ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)
@@ -846,6 +848,8 @@ def sweep(fails, moves, res):
 
 # ------------------------------------------------------------------ self-test
 PLANTS = [
+    ('s1-003: the menu says a slower move "scores half"', 'S3 menu',
+     [(None, 'slower loses half as many points as a wrong move.', 'slower scores half.')]),
     ('only the keyed move counts (the old single-key marking)', 'M1 at',
      [(None, "if(o.cls === 'e'){", "if(!o.key){"), (None, "if(ob && ob.cls === 'b')", "if(ob && ob.key)")]),
     ('the slower /3 on 3x + 7 = 22 offered as an error', 'L1 at',
@@ -855,6 +859,11 @@ PLANTS = [
 
 
 def run(html, fails, cases=True):
+    # linear-equation-solver-s1-003 (R3): a slower move costs half a wrong move's points (A_COST = W_COST / 2); it does not "score half"
+    if 'slower scores half' in html or 'slower loses half as many points as a wrong move' not in html:
+        fails.append('S3 menu: the start screen must say a slower move "loses half as many points as a wrong move" (it costs A_COST = W_COST / 2, not half the marks)')
+    if 'A_COST = W_COST / 2' not in html:
+        fails.append('S3 menu: a slower move no longer costs A_COST = W_COST / 2; the start screen\'s "half as many points as a wrong move" needs checking')
     bank, moves = play(fails, html, cases)
     if bank:
         check_bank(fails, bank)

@@ -210,7 +210,6 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
     <div class="hud-item"><div class="hud-label">Scenario</div><div class="hud-val" id="hudQ">1/6</div></div>
     <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
     <div class="hud-item"><div class="hud-label">Level</div><div class="hud-val" id="hudLevel">—</div></div>
-    <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val mono" id="hudTimer">0s</div></div>
   </div>
   <div class="game-layout">
     <div class="sc-panel" id="scPanel"></div>
@@ -463,15 +462,15 @@ alevel: [
    sq2:{prompt:'Interpret the value 2 in this model.',correct:'Energy usage doubles for each additional device',
      wrong:['Energy increases by 2 units per device','Energy decreases by half per device','There are always 2 units of energy']},
    sq3:{prompt:'Find E when n = 0.',answer:4,unit:'units'},
-   sq4:{prompt:'Find n when E = 100. Give your answer to 3 significant figures.',answer:4.64,hint:'100 = 4 \\times 2^n \\Rightarrow 25 = 2^n \\Rightarrow n = \\frac{\\ln 25}{\\ln 2}'}},
-  {id:'AL12',modelLatex:'P = ke^{-0.046t}',context:'Pressure (atm) decreases with depth (m).',
-   growth:false,graphFn:(x)=>Math.exp(-0.046*x),graphXMax:60,graphYLabel:'P (atm)',graphXLabel:'t (m)',
+   sq4:{prompt:'Find the least whole number n for which E is at least 100.',answer:5,hint:'100 = 4 \\times 2^n \\Rightarrow 25 = 2^n \\Rightarrow n = \\frac{\\ln 25}{\\ln 2} = 4.64, so the least whole number is 5'}},
+  {id:'AL12',modelLatex:'I = ke^{-0.046d}',context:'In clear sea water, light intensity I (as a fraction of the light at the surface) decreases with depth d (m).',
+   growth:false,graphFn:(x)=>Math.exp(-0.046*x),graphXMax:60,graphYLabel:'I',graphXLabel:'d (m)',
    sq_order:[3,1,2,4],
-   sq1:{prompt:'Use the model to calculate P when t = 30. Give your answer to 3 significant figures.',answer:0.252,sf:3,unit:'atm'},
-   sq2:{prompt:'Interpret the value −0.046 in this model.',correct:'Pressure decreases continuously at 4.6% per metre depth',
-     wrong:['Pressure drops by 0.046 atm per metre','Pressure increases by 4.6% per metre','Pressure halves every 0.046 metres']},
-   sq3:{prompt:'Given P = 1 when t = 0, find k.',answer:1,unit:'atm'},
-   sq4:{prompt:'Find t when P = 0.1. Give your answer to 3 significant figures.',answer:50.1,hint:'0.1 = e^{-0.046t} \\Rightarrow \\ln 0.1 = -0.046t \\Rightarrow t = \\frac{-\\ln 0.1}{0.046}'}},
+   sq1:{prompt:'Use the model to calculate I when d = 30. Give your answer to 3 significant figures.',answer:0.252,sf:3,unit:''},
+   sq2:{prompt:'Interpret the value −0.046 in this model.',correct:'Light intensity decreases continuously at 4.6% per metre of depth',
+     wrong:['Light intensity drops by 0.046 per metre','Light intensity increases by 4.6% per metre','Light intensity halves every 0.046 metres']},
+   sq3:{prompt:'Given I = 1 when d = 0, find k.',answer:1,unit:''},
+   sq4:{prompt:'Find d when I = 0.1. Give your answer to 3 significant figures.',answer:50.1,hint:'0.1 = e^{-0.046d} \\Rightarrow \\ln 0.1 = -0.046d \\Rightarrow d = \\frac{-\\ln 0.1}{0.046}'}},
   {id:'AL13',modelLatex:'W = 2.5e^{0.35t}',context:'Width of a crack (mm) grows. t = days.',
    growth:true,graphFn:(x)=>2.5*Math.exp(0.35*x),graphXMax:8,graphYLabel:'W (mm)',graphXLabel:'t',
    sq_order:[1,2,3,4],
@@ -545,7 +544,7 @@ level4: [
    sq2:{prompt:'Interpret the value 1.25 in this model.',correct:'Signal strength increases by 25% for each amplifier added',
      wrong:['Signal increases by 1.25 mW per amplifier','Signal decreases by 25% per amplifier','There are 1.25 amplifiers']},
    sq3:{prompt:'Find S₀ when n = 0.',answer:0.5,unit:'mW'},
-   sq4:{prompt:'Find n when S = 3. Give your answer to 3 significant figures.',answer:8.03,hint:'\\frac{3}{0.5} = 1.25^n \\Rightarrow n = \\frac{\\ln 6}{\\ln 1.25}'}},
+   sq4:{prompt:'Find the least whole number n for which S is at least 3.',answer:9,hint:'\\frac{3}{0.5} = 1.25^n \\Rightarrow n = \\frac{\\ln 6}{\\ln 1.25} = 8.03, so the least whole number is 9'}},
   {id:'L4_7',modelLatex:'N = N_0 \\times e^{-0.0231t}',context:'Radioactive nuclei decay. Half-life ≈ 30 years. N₀ = 5×10⁶, t = years.',
    growth:false,graphFn:(x)=>5e6*Math.exp(-0.0231*x),graphXMax:100,graphYLabel:'N',graphXLabel:'t',
    sq_order:[3,1,2,4],
@@ -602,14 +601,14 @@ level4: [
      wrong:['Power drops by 0.015 mW per metre','Power increases by 1.5% per metre','Power halves every 0.015 metres']},
    sq3:{prompt:'Find P₀ when d = 0.',answer:5000,unit:'mW'},
    sq4:{prompt:'Find d when P = 1000. Give your answer to 3 significant figures.',answer:107,hint:'\\frac{1000}{5000} = e^{-0.015d} \\Rightarrow d = \\frac{\\ln 5}{0.015}'}},
-  {id:'L4_14',modelLatex:'H = ke^{0.022T}',context:'Hardness (HV) increases with tempering temperature (°C). Model valid for early tempering.',
-   growth:true,graphFn:(x)=>4.911*Math.exp(0.022*x),graphXMin:200,graphXMax:350,graphYLabel:'H (HV)',graphXLabel:'T (°C)',
+  {id:'L4_14',modelLatex:'N = ke^{0.022t}',context:'The number of bacteria N (thousands) in a culture grows with time t (minutes). Model valid for early growth.',
+   growth:true,graphFn:(x)=>4.911*Math.exp(0.022*x),graphXMin:200,graphXMax:350,graphYLabel:'N (thousands)',graphXLabel:'t (min)',
    sq_order:[3,1,2,4],
-   sq1:{prompt:'Use the model to calculate H when T = 300 and k = 4.911. Give your answer to 3 significant figures.',answer:3610,sf:3,unit:'HV'},
-   sq2:{prompt:'Interpret the value 0.022 in this model.',correct:'Hardness increases continuously at 2.2% per °C of tempering temperature',
-     wrong:['Hardness increases by 0.022 HV per °C','Hardness decreases by 2.2% per °C','Hardness doubles every 0.022°C']},
-   sq3:{prompt:'Given H = 400 when T = 200, find k. Give your answer to 3 significant figures.',answer:4.91,unit:''},
-   sq4:{prompt:'Find T when H = 500. Give your answer to 3 significant figures.',answer:210,hint:'\\frac{500}{4.911} = e^{0.022T} \\Rightarrow T = \\frac{\\ln(500/4.911)}{0.022}'}},
+   sq1:{prompt:'Use the model to calculate N when t = 300 and k = 4.911. Give your answer to 3 significant figures.',answer:3610,sf:3,unit:'thousand'},
+   sq2:{prompt:'Interpret the value 0.022 in this model.',correct:'The number of bacteria grows continuously at 2.2% per minute',
+     wrong:['The number of bacteria increases by 0.022 thousand per minute','The number of bacteria decreases by 2.2% per minute','The number of bacteria doubles every 0.022 minutes']},
+   sq3:{prompt:'Given N = 400 when t = 200, find k. Give your answer to 3 significant figures.',answer:4.91,unit:''},
+   sq4:{prompt:'Find t when N = 500. Give your answer to 3 significant figures.',answer:210,hint:'\\frac{500}{4.911} = e^{0.022t} \\Rightarrow t = \\frac{\\ln(500/4.911)}{0.022}'}},
   {id:'L4_15',modelLatex:'Q = 100 \\times 0.9^f',context:'Quality factor decreases with fatigue cycles (millions). f = millions of cycles.',
    growth:false,graphFn:(x)=>100*Math.pow(0.9,x),graphXMax:15,graphYLabel:'Q',graphXLabel:'f',
    sq_order:[1,2,3,4],
@@ -667,7 +666,7 @@ function startGame(){
 function updateTimer(){
   G.timerElapsed=Math.floor((Date.now()-G.timerStart)/1000);
   const m=Math.floor(G.timerElapsed/60),s=G.timerElapsed%60;
-  $('hudTimer').textContent=m>0?`${m}m${s.toString().padStart(2,'0')}s`:`${s}s`;
+  // Hidden Count-Up (timer policy): the clock runs for the score and is never shown during play
 }
 
 // ============================================================

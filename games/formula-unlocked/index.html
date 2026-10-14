@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/mathtext.js"></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
 <link rel="stylesheet" href="../../schools/assets/calculator.css">
 <style>
@@ -135,7 +136,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     <div class="badges"><span class="calc-badge" data-calc="scientific">Scientific calculator required</span></div>
     <div class="stage-legend">
       <span class="stage-pill sp1">Stage 1: One step</span>
-      <span class="stage-pill sp2">Stage 2: Two steps</span>
+      <span class="stage-pill sp2">Stage 2: Up to two steps</span>
       <span class="stage-pill sp3">Stage 3: Powers &amp; roots</span>
       <span class="stage-pill sp4">Stage 4: Variable appears twice</span>
     </div>
@@ -202,11 +203,11 @@ steps:['F = ma','\\dfrac{F}{a} = m','m = \\dfrac{F}{a}']},
 
 {stage:1,formula:'P = IV',target:'I',correct:'I = \\dfrac{P}{V}',d:['I = PV','I = P - V','I = \\dfrac{V}{P}'],
 hints:['I is multiplied by V','Divide both sides by V'],
-steps:['P = IV','\\dfrac{P}{V} = I']},
+steps:['P = IV','\\dfrac{P}{V} = I','I = \\dfrac{P}{V}']},
 
 {stage:1,formula:'d = st',target:'s',correct:'s = \\dfrac{d}{t}',d:['s = dt','s = d - t','s = \\dfrac{t}{d}'],
 hints:['s is multiplied by t','Divide both sides by t'],
-steps:['d = st','\\dfrac{d}{t} = s']},
+steps:['d = st','\\dfrac{d}{t} = s','s = \\dfrac{d}{t}']},
 
 {stage:1,formula:'C = \\pi d',target:'d',correct:'d = \\dfrac{C}{\\pi}',d:['d = C\\pi','d = C - \\pi','d = \\dfrac{\\pi}{C}'],
 hints:['d is multiplied by π','Divide both sides by π'],
@@ -319,7 +320,7 @@ hints:['Subtract ½at² from both sides','Divide by t'],
 steps:['s - \\dfrac{1}{2}at^2 = ut','u = \\dfrac{s - \\frac{1}{2}at^2}{t} = \\dfrac{2s - at^2}{2t}']},
 
 {stage:2,formula:'\\ln y = \\ln a + bx',target:'y',correct:'y = ae^{bx}',d:['y = a + e^{bx}','y = e^{a + bx}','y = \\dfrac{e^{bx}}{a}'],
-hints:['Use the log law: ln a + bx = ln a + ln(e^{bx}) = ln(ae^{bx})','Exponentiate both sides'],
+hints:['Use the log law: \\(\\ln a + bx = \\ln a + \\ln(e^{bx}) = \\ln(ae^{bx})\\)','Exponentiate both sides'],
 steps:['\\ln y = \\ln a + bx','\\ln y = \\ln(ae^{bx})','y = ae^{bx}']},
 
 // Stage 3
@@ -349,20 +350,20 @@ steps:['V = IR','R = \\dfrac{V}{I}']},
 
 {stage:1,formula:'\\sigma = \\dfrac{F}{A}',target:'F',ctx:'Direct stress',correct:'F = \\sigma A',d:['F = \\dfrac{\\sigma}{A}','F = \\sigma + A','F = \\dfrac{A}{\\sigma}'],
 hints:['F is divided by A','Multiply both sides by A'],
-steps:['\\sigma A = F']},
+steps:['\\sigma = \\dfrac{F}{A}','F = \\sigma A']},
 
 {stage:1,formula:'\\epsilon = \\dfrac{\\Delta L}{L}',target:'\\Delta L',ctx:'Strain',correct:'\\Delta L = \\epsilon L',d:['\\Delta L = \\dfrac{\\epsilon}{L}','\\Delta L = \\dfrac{L}{\\epsilon}','\\Delta L = \\epsilon + L'],
 hints:['ΔL is divided by L','Multiply both sides by L'],
-steps:['\\epsilon L = \\Delta L']},
+steps:['\\epsilon = \\dfrac{\\Delta L}{L}','\\Delta L = \\epsilon L']},
 
 // Stage 2
 {stage:2,formula:'P = I^2 R',target:'R',ctx:'Power dissipated in a resistor',correct:'R = \\dfrac{P}{I^2}',d:['R = \\dfrac{P}{2I}','R = PI^2','R = \\dfrac{P}{I}'],
 hints:['R is multiplied by I²','Divide both sides by I²'],
-steps:['\\dfrac{P}{I^2} = R']},
+steps:['P = I^2 R','R = \\dfrac{P}{I^2}']},
 
 {stage:2,formula:'\\sigma = E\\epsilon',target:'E',ctx:'Young\'s modulus (Hooke\'s law)',correct:'E = \\dfrac{\\sigma}{\\epsilon}',d:['E = \\sigma\\epsilon','E = \\sigma - \\epsilon','E = \\dfrac{\\epsilon}{\\sigma}'],
 hints:['E is multiplied by ε','Divide both sides by ε'],
-steps:['E = \\dfrac{\\sigma}{\\epsilon}']},
+steps:['\\sigma = E\\epsilon','E = \\dfrac{\\sigma}{\\epsilon}']},
 
 {stage:2,formula:'v = u + at',target:'t',ctx:'SUVAT equation',correct:'t = \\dfrac{v - u}{a}',d:['t = \\dfrac{v + u}{a}','t = a(v - u)','t = \\dfrac{u - v}{a}'],
 hints:['Subtract u from both sides','Divide by a'],
@@ -370,11 +371,11 @@ steps:['v - u = at','t = \\dfrac{v - u}{a}']},
 
 {stage:2,formula:'M = Fd',target:'d',ctx:'Moment of a force',correct:'d = \\dfrac{M}{F}',d:['d = MF','d = M - F','d = \\dfrac{F}{M}'],
 hints:['d is multiplied by F','Divide by F'],
-steps:['d = \\dfrac{M}{F}']},
+steps:['M = Fd','d = \\dfrac{M}{F}']},
 
 {stage:2,formula:'P_{total} = P_1 + P_2 + P_3',target:'P_2',ctx:'Series power',correct:'P_2 = P_{total} - P_1 - P_3',d:['P_2 = P_{total} - P_1 + P_3','P_2 = \\dfrac{P_{total}}{P_1 P_3}','P_2 = P_1 + P_3 - P_{total}'],
 hints:['Subtract P₁ and P₃ from both sides'],
-steps:['P_2 = P_{total} - P_1 - P_3']},
+steps:['P_{total} = P_1 + P_2 + P_3','P_2 = P_{total} - P_1 - P_3']},
 
 // Stage 3
 {stage:3,formula:'E_k = \\dfrac{1}{2}mv^2',target:'v',ctx:'Kinetic energy',correct:'v = \\sqrt{\\dfrac{2E_k}{m}}',d:['v = \\dfrac{2E_k}{m}','v = \\dfrac{\\sqrt{2E_k}}{m}','v = \\dfrac{E_k}{2m}'],
@@ -396,7 +397,7 @@ steps:['\\dfrac{A}{\\pi} = r^2','r = \\sqrt{\\dfrac{A}{\\pi}}']},
 // Stage 4
 {stage:4,formula:'\\dfrac{1}{R_T} = \\dfrac{1}{R_1} + \\dfrac{1}{R_2}',target:'R_1',ctx:'Parallel resistors',
 correct:'R_1 = \\dfrac{R_T R_2}{R_2 - R_T}',d:['R_1 = R_T - R_2','R_1 = \\dfrac{R_T + R_2}{R_T R_2}','R_1 = \\dfrac{R_2 - R_T}{R_T R_2}'],
-hints:['Rearrange: 1/R₁ = 1/R_T − 1/R₂','Find common denominator on the right','Take the reciprocal'],
+hints:['Rearrange: \\(\\dfrac{1}{R_1} = \\dfrac{1}{R_T} - \\dfrac{1}{R_2}\\)','Find common denominator on the right','Take the reciprocal'],
 steps:['\\dfrac{1}{R_1} = \\dfrac{1}{R_T} - \\dfrac{1}{R_2} = \\dfrac{R_2 - R_T}{R_T R_2}','R_1 = \\dfrac{R_T R_2}{R_2 - R_T}']},
 
 {stage:4,formula:'\\dfrac{1}{f} = \\dfrac{1}{u} + \\dfrac{1}{v}',target:'v',ctx:'Thin lens equation',
@@ -453,7 +454,7 @@ function nextQ(){
 
   // Stage indicator
   const stageColors=['','var(--stage1)','var(--stage2)','var(--stage3)','var(--stage4)'];
-  const stageNames=['','One Step','Two Steps','Powers & Roots','Variable Appears Twice'];
+  const stageNames=['','One Step','Up to Two Steps','Powers & Roots','Variable Appears Twice'];
   document.getElementById('stageInd').textContent='Stage '+currentQ.stage+': '+stageNames[currentQ.stage];
   document.getElementById('stageInd').style.color=stageColors[currentQ.stage];
 
@@ -488,7 +489,7 @@ function useHint(){
   const panel=document.getElementById('hintPanel');
   panel.className='hint-panel show';
   const div=document.createElement('div');div.className='hint-step';
-  div.innerHTML='Step '+hintsRevealed+': '+hint;
+  div.innerHTML='Step '+hintsRevealed+': '+(MaffsText.hasMaths(hint)?MaffsText.html(hint):hint);   // a hint with maths in it is written with \( \), so it renders (formula-unlocked-s1-002)
   panel.appendChild(div);
 
   if(hintsRevealed>=currentQ.hints.length)document.getElementById('hintBtn').classList.add('disabled');

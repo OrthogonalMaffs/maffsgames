@@ -246,7 +246,9 @@ def load_bank(page, unshuffled=False):
                        capture_output=True, text=True)
     if r.returncode != 0:
         sys.exit('node could not read the bank: ' + r.stderr.strip())
-    return json.loads(r.stdout)
+    data = json.loads(r.stdout)
+    data['src'] = open(page, encoding='utf-8').read()   # the page's own text, for the wording checks
+    return data
 
 
 # --------------------------------------------------------------------------
@@ -862,6 +864,14 @@ def check_sweep(rep, data):
                 rep.fail('MARKING', iid, label, fb[:80], 'not correct')
             elif kind == 'format' and (fb.startswith('Correct') or fb.startswith('Incorrect') or 'Right value' not in fb):
                 rep.fail('MARKING', iid, label, fb[:80], 'the format message, unmarked')
+    # SWEEP-1 rulings (Part 2 #15, R1): B10 has a population and a sample (14 of 22 is not already more than half of the
+    # whole class); the model answer says "support the claim that", as Step 6 does (test-the-claim-s1-007, -010)
+    for items in data['Q'].values():
+        for q in items:
+            if q['id'] == 'B10' and ('county' not in q['scenario'] or 'her class' in q['scenario']):
+                rep.fail('WORDING', 'B10', 'scenario', q['scenario'][:60], 'a head teacher, the county\'s Year 11 and a sample of 22')
+    if 'to suggest that' in data.get('src', ''):
+        rep.fail('WORDING', 'MODEL', 'model answer', 'to suggest that', 'to support the claim that')
     for mode, items in data['Q'].items():
         for q in items:
             iid = q['id']
@@ -959,6 +969,7 @@ SELFTEST_ITEMS = ('B1', 'B2', 'P1', 'P2', 'N1', 'C1')
 
 FAULTS = [
     # (item, description, mutation(data, item), field that must be reported)
+    ('B10', 'the old class-pass scenario back', lambda d, q: q.__setitem__('scenario', 'A teacher believes more than half her class will pass a test. 14 out of 22 students pass. Test at 5%.'), 'scenario'),
     ('B1', 'critical value moved by one', lambda d, q: q.__setitem__('crBoundary', q['crBoundary'] + 1), 'crBoundary'),
     ('P1', 'critical value moved by one', lambda d, q: q.__setitem__('crBoundary', q['crBoundary'] + 1), 'crBoundary'),
     ('B1', 'a displayed probability changed', lambda d, q: q['givenCDF'][0].__setitem__('val', '0.0353'), 'givenCDF'),
@@ -1014,6 +1025,8 @@ def selftest(data, page):
             ('old Step 6 direction swap', "    wrongs.push('the claimed proportion has been proved correct');",
              "    wrongs.push(q.conclusionContext.replace(/decreased|increased|differs|fallen|exceeds|biased/, 'changed significantly'));",
              'Step 6 context'),
+            ('old model answer "to suggest that"', "level to support the claim that ${q.conclusionContext}.",
+             "level to suggest that ${q.conclusionContext}.", 'model answer'),
             ("old B2 composite H0", "h0Distractors:['p = 0.5','p = 0.75',", "h0Distractors:['p = 0.5','p \\\\leq 0.5',", 'Step 1 H0')):
         if src.count(old) != 1:
             print(f'  fault injection {desc:52} -> CANNOT PLANT'); ok = False; continue

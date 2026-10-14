@@ -1721,3 +1721,41 @@ Jon's ruling of 22:45 (option A): see the PD-CLOSE entry below. CAR-TRAP-DRAFT (
 lane does not push to #242 or touch any car-trap file.** #242's state at hand-over is in its branch's
 `docs/handover/cloud.md` (the CAR-TRAP-BUILD entry). It is red only on the teacher page at 320 px (§1.37). The new
 art was not on main when Jon said it was: the only `car-trap-*.webp` there are the old pictures.
+
+## Moved from the cloud handover on 14 Oct 2026 (the 10 Oct queue, rulings, standing authorisation and FONT-FIT)
+
+**QUEUE (Jon, 10 Oct), in order. Keep the handover current after each:**
+Done 10 Oct: RIGHTFUL-KING-DRAFT (#247, aa660f7) and LIBRARY-DRAFT (#248, 8302ba8). Jon approved both drafts in
+full ("spot on"); the Library room's title is The Library Jam.
+1. **RIGHTFUL-KING-BUILD: DONE.** #257 merged 10 Oct (79165de); main's run 723 is green. The contract is now in
+   `docs/history/contracts/`. Jon can play-test the room at `/escape-rooms/rightful-king/play.html`.
+2. **LIBRARY-JAM-BUILD: DONE.** #262 merged 10 Oct (5f4f656); main's run 736 is green. The contract is now in
+   `docs/history/contracts/`. Jon can play-test the room at `/escape-rooms/library-jam/play.html`. CI passed its
+   teacher page under the §1.37 entry (recorded at 538 px, measured in the cloud container).
+**Jon's ruling for both builds (10 Oct, after 13:45):**
+- **The hub is left alone.** A built room sits behind its noindex holding page, and the checker counts a room as
+  live only without `noindex`, so no card is needed. The star chip comes with the release contract.
+- **Every lock gets a `grade` in room.js**, with a one-line reason in the PR, as #253 did.
+- **The derived rating must be ★★★ (Rightful King) and ★ (Library Jam).** If honest grading gives anything else,
+  STOP and report; never adjust a grade to fit.
+- **Calibration from #253:** building powers to find the years (Prom's compound growth) is 5; a Venn overlap from
+  totals is 4.
+**Standing authorisation (Jon, 10 Oct):** the cloud lane merges any PR of its own once its Gate is green and main's
+last full run is green, without asking each time. It still watches main's run after each merge.
+**FONT-FIT: DONE.** #256 merged 10 Oct (a2dbdeb); main's run 720 is green. The contract is now
+`docs/history/contracts/2026-10-10-font-fit.md`; the findings are in `docs/audits/font-fit-2026-10-10.md`.
+- Free Daily Pizza and Negative Number Line both fit at 320x568 with **14 px** to spare (Next and Confirm at 514
+  against 528), by layout only. Their verifiers assert `MARGIN = 8`.
+- **Known problems, for Jon to order** (in the findings file; not fixed, not allowlisted):
+  - Over the fold: standard-form-blitz +10, surd-simplifier +9, coordinate-geometry-dash +7, sequence-solver +4 and
+    modular-battle +2 (320x568); estimation-golf +12 (390x844).
+  - Too wide: distinctly-average, +14 px (its Aa toggle).
+  - Within 5 px of the fold: proportion-blaster, prime-or-composite, higher-power, matrix-crunch, trig-worms and
+    wrong-on-the-internet.
+- **Lesson:** the cloud container's Chromium (1194) lays out 1 px differently from CI's (1243). parents/fractions
+  measured 320 here and 321 in CI, so the allowlist keeps it at 321. **CI is the measure for a 1 px verdict.**
+  Locally, Playwright 1.63 runs through scratch symlinks to build 1194 (`/opt/pw-browsers/*-1243`), with
+  `FONTCONFIG_FILE` pinning DejaVu.
+- **For the home lane:** CI's DejaVu pin step can now be retired for the phone checks (not removed: the workflow is
+  home-lane).
+Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).

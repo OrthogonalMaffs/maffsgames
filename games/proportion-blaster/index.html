@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/mathtext.js"></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -205,7 +206,7 @@ alevel:[
   {ctx:'y \u221d \u221ax. When x = 9, y = 6.',q:'y = k\\sqrt{x}',ask:'Find y when x = 25',correct:'10',d:['50','\\dfrac{25}{3}','12']},
   {ctx:'y \u221d \u221ax. When x = 4, y = 10.',q:'y = k\\sqrt{x}',ask:'Find x when y = 25',correct:'25',d:['\\dfrac{625}{4}','12.5','100']},
   {ctx:'T \u221d \u221al. When l = 4, T = 6.',q:'T = k\\sqrt{l}',ask:'Find T when l = 16',correct:'12',d:['24','48','8']},
-  {ctx:'y \u221d x^{3/2}. When x = 4, y = 16.',q:'y = kx^{3/2}',ask:'Find k',correct:'2',d:['4','8','1']},
+  {ctx:'y \u221d \\(x^{3/2}\\). When x = 4, y = 16.',q:'y = kx^{3/2}',ask:'Find k',correct:'2',d:['4','8','1']},
   {ctx:'F \u221d 1/d\u00b2. When d = 2, F = 10.',q:'F = \\dfrac{k}{d^2}',ask:'Find F when d = 5',correct:'1.6',d:['4','2','0.8']},
   {ctx:'y \u221d 1/x\u00b3. When x = 2, y = 5.',q:'y = \\dfrac{k}{x^3}',ask:'Find k',correct:'40',d:['10','2.5','80']},
   {ctx:'y \u221d 1/x\u00b3. When x = 2, y = 5.',q:'y = \\dfrac{k}{x^3}',ask:'Find y when x = 4',correct:'0.625',d:['1.25','2.5','0.3125']},
@@ -213,7 +214,7 @@ alevel:[
   {ctx:'y \u221d x\u00b2. When x = a, y = b.',q:'y = kx^2',ask:'Find y when x = 3a',correct:'9b',d:['3b','6b','27b']},
   {ctx:'y \u221d 1/x. When x = a, y = b.',q:'y = \\dfrac{k}{x}',ask:'Find y when x = 2a',correct:'\\dfrac{b}{2}',d:['2b','\\dfrac{b}{4}','\\dfrac{a}{2b}']},
   {ctx:'P \u221d \u221aQ. When Q = 16, P = 20.',q:'P = k\\sqrt{Q}',ask:'Find Q when P = 30',correct:'36',d:['\\dfrac{900}{16}','24','\\dfrac{36}{4}']},
-  {ctx:'y \u221d x^n. When x doubles, y multiplies by 8.',q:'y = kx^n',ask:'Find n',correct:'3',d:['2','4','8']},
+  {ctx:'y \u221d \\(x^n\\). When x doubles, y multiplies by 8.',q:'y = kx^n',ask:'Find n',correct:'3',d:['2','4','8']},
   {ctx:'y is proportional to (x + 1)\u00b2. When x = 2, y = 18.',q:'y = k(x+1)^2',ask:'Find k',correct:'2',d:['9','6','3']},
   {ctx:'y is proportional to (x + 1)\u00b2. When x = 2, y = 18.',q:'y = k(x+1)^2',ask:'Find y when x = 4',correct:'50',d:['32','72','25']},
   {ctx:'y is inversely proportional to (x \u2212 1). When x = 3, y = 5.',q:'y = \\dfrac{k}{x-1}',ask:'Find k',correct:'10',d:['5','15','\\dfrac{5}{2}']},
@@ -222,13 +223,13 @@ alevel:[
   {ctx:'y varies as x\u00b2 and inversely as z. When x = 3, z = 2, y = 9.',q:'y = \\dfrac{kx^2}{z}',ask:'Find k',correct:'2',d:['1','3','\\dfrac{9}{2}']},
   {ctx:'y varies as x\u00b2 and inversely as z. k = 2.',q:'y = \\dfrac{2x^2}{z}',ask:'Find y when x = 4, z = 8',correct:'4',d:['8','2','16']},
   {ctx:'F varies directly as m and inversely as r\u00b2. F = 10 when m = 5, r = 2.',q:'F = \\dfrac{km}{r^2}',ask:'Find k',correct:'8',d:['2','4','10']},
-  {ctx:'If y \u221d x^n and (2, 12) and (4, 48) lie on the curve.',q:'y = kx^n',ask:'Find n',correct:'2',d:['3','1','4']},
-  {ctx:'If y \u221d x^n and (1, 5) and (2, 40) lie on the curve.',q:'y = kx^n',ask:'Find n',correct:'3',d:['2','4','8']},
+  {ctx:'If y \u221d \\(x^n\\) and (2, 12) and (4, 48) lie on the curve.',q:'y = kx^n',ask:'Find n',correct:'2',d:['3','1','4']},
+  {ctx:'If y \u221d \\(x^n\\) and (1, 5) and (2, 40) lie on the curve.',q:'y = kx^n',ask:'Find n',correct:'3',d:['2','4','8']},
   {ctx:'y = ax + b. When x = 1, y = 5. When x = 3, y = 11.',q:'y = ax + b',ask:'Find a',correct:'3',d:['2','4','5']},
   {ctx:'y = ax + b. When x = 1, y = 5. When x = 3, y = 11.',q:'y = ax + b',ask:'Find b',correct:'2',d:['3','1','5']},
   {ctx:'y = ax\u00b2 + b. When x = 0, y = 3. When x = 2, y = 11.',q:'y = ax^2 + b',ask:'Find a',correct:'2',d:['4','1','3']},
-  {ctx:'When x triples, y is multiplied by 9. y \u221d x^n.',q:'',ask:'State the value of n',correct:'2',d:['3','9','\\dfrac{1}{2}']},
-  {ctx:'When x is halved, y is multiplied by 4. y \u221d x^n.',q:'',ask:'State the value of n',correct:'-2',d:['2','-1','4']},
+  {ctx:'When x triples, y is multiplied by 9. y \u221d \\(x^n\\).',q:'',ask:'State the value of n',correct:'2',d:['3','9','\\dfrac{1}{2}']},
+  {ctx:'When x is halved, y is multiplied by 4. y \u221d \\(x^n\\).',q:'',ask:'State the value of n',correct:'-2',d:['2','-1','4']},
   {ctx:'a : b = 2 : 5 and b : c = 3 : 7.',q:'',ask:'Find a : b : c',correct:'6 : 15 : 35',d:['2 : 5 : 7','2 : 3 : 7','2 : 15 : 35']},
   {ctx:'x : y = 4 : 3 and x + y = 35.',q:'',ask:'Find x',correct:'20',d:['15','12','28']},
   {ctx:'After a 25% increase, a value becomes 200.',q:'',ask:'Original value',correct:'160',d:['150','175','180']},
@@ -239,16 +240,16 @@ alevel:[
   {ctx:'y \u221d 1/x. If x doubles, what happens to y?',q:'',ask:'y is multiplied by',correct:'\\dfrac{1}{2}',d:['2','\\dfrac{1}{4}','4']},
   {ctx:'y \u221d 1/x\u00b2. If x triples, what happens to y?',q:'',ask:'y is multiplied by',correct:'\\dfrac{1}{9}',d:['\\dfrac{1}{3}','9','3']},
   {ctx:'y \u221d \u221ax. If x quadruples, what happens to y?',q:'',ask:'y is multiplied by',correct:'2',d:['4','\\dfrac{1}{2}','16']},
-  {ctx:'If y = kx^n, and doubling x quadruples y.',q:'',ask:'n = ?',correct:'2',d:['4','\\dfrac{1}{2}','1']},
-  {ctx:'If y = kx^n, and tripling x multiplies y by 27.',q:'',ask:'n = ?',correct:'3',d:['9','\\dfrac{1}{3}','27']},
+  {ctx:'If y = \\(kx^n\\), and doubling x quadruples y.',q:'',ask:'n = ?',correct:'2',d:['4','\\dfrac{1}{2}','1']},
+  {ctx:'If y = \\(kx^n\\), and tripling x multiplies y by 27.',q:'',ask:'n = ?',correct:'3',d:['9','\\dfrac{1}{3}','27']},
   {ctx:'\u00a38000 depreciates 15% per year.',q:'',ask:'Value after 3 years (nearest \u00a3)',correct:'\u00a34913',d:['\u00a34800','\u00a35100','\u00a34600']},
   {ctx:'A bacteria colony doubles every 20 minutes. Start: 500.',q:'',ask:'Count after 1 hour',correct:'4000',d:['1500','3000','8000']},
-  {ctx:'y \u221d x^2. When x = a, y = b. Find y when x = a/2.',q:'',ask:'y = ?',correct:'\\dfrac{b}{4}',d:['\\dfrac{b}{2}','2b','4b']},
+  {ctx:'y \u221d \\(x^2\\). When x = a, y = b. Find y when x = a/2.',q:'',ask:'y = ?',correct:'\\dfrac{b}{4}',d:['\\dfrac{b}{2}','2b','4b']},
   {ctx:'y \u221d 1/x. When x = a, y = b. Find y when x = a/3.',q:'',ask:'y = ?',correct:'3b',d:['\\dfrac{b}{3}','9b','\\dfrac{3b}{a}']},
   {ctx:'Share \u00a3x in ratio 2 : 3. The difference between shares is \u00a340.',q:'',ask:'Find x',correct:'200',d:['100','120','160']},
   {ctx:'a : b = 1 : 4. b : c = 2 : 3. a + b + c = 150.',q:'',ask:'Find c',correct:'\\dfrac{900}{11}',d:['\\dfrac{450}{11}','90','50']},
   {ctx:'y is proportional to x\u00b2. x is proportional to z\u00b3. y = k when z = 1.',q:'y \\propto z^6',ask:'When z doubles, y is multiplied by',correct:'64',d:['8','32','16']},
-  {ctx:'P \u221d Q^a. When Q = 2, P = 12. When Q = 4, P = 48.',q:'P = kQ^a',ask:'Find a',correct:'2',d:['3','1','4']},
+  {ctx:'P \u221d \\(Q^a\\). When Q = 2, P = 12. When Q = 4, P = 48.',q:'P = kQ^a',ask:'Find a',correct:'2',d:['3','1','4']},
 ]
 };
 
@@ -274,7 +275,7 @@ function startGame(){
 function showQ(){
   if(window.MaffsNext)MaffsNext.clear(document.getElementById('nextMount'));
   const q=questions[qIdx];document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;
-  document.getElementById('context').textContent=q.ctx;
+  {const cx=document.getElementById('context');if(MaffsText.hasMaths(q.ctx))cx.innerHTML=MaffsText.html(q.ctx);else cx.textContent=q.ctx}   // a context with maths in it is written with \( \) (proportion-blaster-s1-002)
   const qEl=document.getElementById('question');qEl.innerHTML='';
   if(q.q)rk(qEl,q.q);
   document.getElementById('prompt').textContent=q.ask;

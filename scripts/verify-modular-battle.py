@@ -103,8 +103,9 @@ SCAFFOLD_JS = r"""([plan, pairs]) => {
 
 def expected_label(a, b):
     q, r = divmod(a, b)
-    return ('%d dots in groups of %d — %d full groups, and what is left over:' % (a, b, q) if r
-            else '%d dots in groups of %d — %d full groups, nothing left over:' % (a, b, q))
+    g = 'group' if q == 1 else 'groups'    # modular-battle-s1-001 (R1): "1 full group"
+    return ('%d dots in groups of %d — %d full %s, and what is left over:' % (a, b, q, g) if r
+            else '%d dots in groups of %d — %d full %s, nothing left over:' % (a, b, q, g))
 
 
 def check_one(fails, a, b, info, k):
@@ -213,8 +214,12 @@ def play(fails, html):
                 fails.append('session: steering to %r showed %r' % (DRIVE_PAIRS[:len(shown)], shown))
             page.clock.run_for(90000)
             end = page.evaluate('() => ({over: document.getElementById("gameOver").classList.contains("visible"), score: document.getElementById("finalScore").textContent, detail: document.getElementById("goDetail").textContent, t: timeLeft})')
-            if not end['over'] or end['score'] != str(10 * got) or end['detail'] != '%d correct answers' % got or end['t'] != 0:
+            if not end['over'] or end['score'] != str(10 * got) or end['detail'] != '%d correct %s' % (got, 'answer' if got == 1 else 'answers') or end['t'] != 0:
                 fails.append('session: after %d right answers and 90 seconds the end reads %r' % (got, end))
+            # modular-battle-s1-001 (R1): one right answer reads "1 correct answer"
+            one = page.evaluate('() => { startGame(); score = 10; endGame(); return document.getElementById("goDetail").textContent; }')
+            if one != '1 correct answer':
+                fails.append('session: one right answer reads %r, expected %r' % (one, '1 correct answer'))
             if errors:
                 fails.append('page errors: %s' % '; '.join(errors[:3]))
             browser.close()
@@ -226,6 +231,8 @@ def play(fails, html):
 
 
 PLANTS = [
+    ('s1-001: "1 full groups"', 'dots:', [("${groups} full ${groups === 1 ? 'group' : 'groups'}, and what is left over:", "${groups} full groups, and what is left over:")]),
+    ('s1-001: "1 correct answers"', 'session:', [("correct ${Math.round(score/10) === 1 ? 'answer' : 'answers'}`", "correct answers`")]),
     ('a wrong key ((a+1) mod b)', 'key:', [("const ans = a % b;", "const ans = (a + 1) % b;")]),
     ('the key offered twice (SR-4/16)', 'options:', [("for(let r = 0; r < mod; r++) { if(r !== correct) wrong.push(r); }",
                                                      "for(let r = 0; r < mod; r++) { wrong.push(r); }")]),

@@ -366,6 +366,9 @@ def play(fails, html):
                     if [s for s, _ in d] != want_stages or len(set(map(tuple, d))) != len(d) or any(ix < 0 for _, ix in d):
                         fails.append('session: %s dealt %r, expected stages %r with no item twice' % (lv, d, want_stages))
                         break
+            # s1-003 (R2): the start screen says an expression divided by is assumed non-zero (y != 1, u != f, R_T != R_2)
+            if 'assume that expression is not zero' not in page.inner_text('#menu'):
+                fails.append('start: the start screen must say that an expression divided by is assumed not to be zero (formula-forge-s1-003)')
             mark_checks(fails, page, bank)
             if errors:
                 fails.append('page errors: %s' % '; '.join(errors[:3]))
@@ -391,6 +394,8 @@ PLANTS = [
     ('s1-001: "Not the other way around" back on A = πr²', 'misconception:',
      [("misconception:'Divide by π, then square root. If you square root first, divide by √π, not π: √A/π is wrong.'",
        "misconception:'Divide by π first, THEN square root. Not the other way around.'")]),
+    ('s1-003: the non-zero assumption not stated', 'start:',
+     [("Where an answer divides by an expression, assume that expression is not zero.", "Hints are scaffolding.")]),
     ('marking by the first character only', 'marking:', [("const ok=btn.dataset.val===q.correct;", "const ok=btn.dataset.val[0]===q.correct[0];")]),
     ('five a stage dealt, not six', 'session:', [("const s1=shuffle([...bank.s1]).slice(0,6);", "const s1=shuffle([...bank.s1]).slice(0,5);")]),
 ]

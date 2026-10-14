@@ -113,7 +113,9 @@ findings:
     of .claude/rules/timer-policy.md lists the game (nor, per the reviewer, the other two eigenvector-trilogy games). Either
     list it under Visible Count-Up (scored) or change the game.'
   evidence: 'timer-policy.md has no Characteristic Quest entry (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R7: Characteristic Quest is added to the Hidden Count-Up list in .claude/rules/timer-policy.md and its HUD shows no running Time (the answer time still feeds the score, BASE 100, T_K 0.15, which that policy says Hidden Count-Up games do not do: for Jon). The reviewer''s remark that the other two trilogy games are unlisted is the home lane''s docs point. The verifier fails a HUD Time, with a plant.'
 - id: characteristic-quest-s1-005
   severity: MEDIUM
   jc: false

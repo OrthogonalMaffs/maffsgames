@@ -278,6 +278,10 @@ def check_bank(fails, bank):
                 fails.append('%s: %s' % (tag('p2') if q['id'] == 'alevel_18' else q['id'], fault))
             if sp_['headers'] and (d.get('rowHeader'), d.get('colHeader')) != sp_['headers']:
                 fails.append('%s: the table headers %r are not the reviewed %r' % (q['id'], (d.get('rowHeader'), d.get('colHeader')), sp_['headers']))
+            # s1-002 (R3): the 20,000 are office-building days, not alarm events (17,912 of them had no alarm)
+            if q['id'] == 'core_12' and (d.get('total') != 20000 or 'alarm events' in d.get('title', '') or 'office-building days' not in d.get('title', '')):
+                fails.append('core_12: the tree\'s %d are office-building days; its title %r must say so, not "alarm events" (given-that-s1-002)'
+                             % (d.get('total', 0), d.get('title')))
             qs = quantities(d)
             for ph, key in (('p1', 'phase1'), ('p2', 'phase2')):
                 pd = q[key]
@@ -427,6 +431,7 @@ def play(fails, html, free):
             ctx.route(lambda url: not url.startswith(base) and '/katex@' not in url, lambda route: route.abort())
             ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
                 status=200, content_type='text/html; charset=utf-8', body=hooked))
+            ctx.route(lambda url: bc.is_font_cdn(url), bc.serve_real_font)     # KaTeX from the pinned local copy
             page = ctx.new_page()
             errors = []
             page.on('pageerror', lambda e: errors.append(str(e)))
@@ -477,6 +482,8 @@ PLANTS = [
      "result=Math.abs(parseFloat(raw)-phaseData.answer)<=0.005?'correct':'wrong';"),
     ('alevel_10 p2', 's1-001: "Nearly half ... false positives"', "Just over half the flagged scripts (47 of 92) are false positives.",
      "Nearly half the flagged scripts are false positives."),
+    ('core_12', 's1-002: the title calls 20,000 days alarm events', 'title:"20,000 office-building days (1 year)"',
+     'title:"20,000 alarm events in office buildings (1 year)"'),
     ('alevel_01 p1', "r-004: decimals only, the fraction unreadable",
      "result=MaffsAnswer.fractionOrDecimal(raw,ex[0],ex[1],dp);",
      "result=MaffsAnswer.decimal(raw,(ex[0]/ex[1]).toFixed(dp),dp);"),

@@ -542,7 +542,7 @@ var ALEVEL = [
   {"id": "a22", "sys": ["y = x + 3", "y = x^2 + 1"], "ask": "Find the negative x value", "correct": "-1", "distractors": ["-2", "-3", "0"]},
   {"id": "a23", "sys": ["y = 4 - x", "y = x^2 - 2x"], "ask": "Find the positive x value", "correct": "\\tfrac{1+\\sqrt{17}}{2}", "distractors": ["2", "\\tfrac{-1+\\sqrt{17}}{2}", "1+\\sqrt{17}"]},
   {"id": "a24", "sys": ["y = 5 - x", "y = x^2 - x - 1"], "ask": "Find the positive x value", "correct": "\\sqrt{6}", "distractors": ["3", "2", "\\sqrt{5}"]},
-  {"id": "a25", "sys": ["y = 2x + 1", "y = x^2 - 2x + 1"], "ask": "Find the values of x (sum)", "correct": "4", "distractors": ["2", "3", "5"]},
+  {"id": "a25", "sys": ["y = 2x + 1", "y = x^2 - 2x + 1"], "ask": "Find the sum of the two values of x", "correct": "4", "distractors": ["2", "3", "5"]},
   {"id": "a26", "sys": ["y = x", "y = x^2 - 6"], "ask": "Find the positive x value", "correct": "3", "distractors": ["2", "6", "1"]},
   {"id": "a27", "sys": ["y = x", "y = x^2 - 6"], "ask": "Find the negative x value", "correct": "-2", "distractors": ["-3", "-1", "-6"]},
   {"id": "a28", "sys": ["y = 2x - 1", "y = x^2 - 4"], "ask": "Find the positive x value", "correct": "3", "distractors": ["1", "2", "4"]},
@@ -1196,7 +1196,7 @@ var EqTiles = (function () {
       h = '<div class="fb-verdict">' + (ok ? '✓ ' : '') + 'The ' + mathHtml(P.letter) + ' terms match.</div>' +
         '<div class="fb-line">Next they would be ' + (SS.opFor(P.s, P.letter) === 'sub' ? 'subtracted (same signs)' : 'added (different signs)') + ': that is Stage 2.</div>';
     } else if (stageKey === 'stage2') {
-      h = '<div class="fb-verdict">' + P.right + ' of ' + n + ' steps right.</div><div class="fb-line">' + mathHtml(o) + ' is on its own: ' +
+      h = '<div class="fb-verdict">' + P.right + ' of ' + n + ' steps right.</div><div class="fb-line">' + mathHtml(o) + ' is the only letter left: ' +
         mathHtml(combTex(P.comb, o)) + '. Solving it is Stage 3.</div>';
     } else {
       var k = 1 - P.subJ, r = q.e[k];

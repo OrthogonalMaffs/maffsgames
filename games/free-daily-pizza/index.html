@@ -406,6 +406,9 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     e.tag = tag;
     return opt(form, value, e);
   }
+  /* An inverted value is a decimal, percentage or amount that can come out recurring (4/3 = 1.3̇). When the
+     answer terminates, a recurring option gives the key away (the only odd one out), so it is not offered. */
+  function INV(form, inv, v) { return terminates(v) && !terminates(inv) ? null : C(form, inv, 'inversion'); }
   function PV(form, v, s) { return C(form, shift10(v, s), 'place-value', { shift: s }); }
   /* Truncation only where a student would plausibly cut a decimal short: a recurring value, or
      one with three or more decimal places. */
@@ -447,10 +450,13 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     if (!o || !o.tag) return '';
     if (o.tag === 'place-value') {
       var big = o.shift > 0, n = Math.abs(o.shift) === 1 ? '10' : '100';
-      return 'Right digits, wrong place: that is ' + n + ' times too ' + (big ? 'big' : 'small') + '.';
+      // A fraction is shown in lowest terms (15/2 for 10 x 3/4), so its digits are not the answer's: only the size is said.
+      return (o.form === 'f' ? 'That is ' : 'Right digits, wrong place: that is ') + n + ' times too ' + (big ? 'big' : 'small') + '.';
     }
     if (o.tag === 'inversion' && item && (item.kind === 'outof-f' || item.kind === 'outof-p')) return 'That divides the wrong way round: the whole goes on the bottom.';
     if (o.tag === 'inversion' && item && (item.kind === 'ofamt-f' || item.kind === 'ofamt-p')) return 'That divides by the fraction instead of multiplying by it.';
+    if (o.tag === 'digit-reading' && item && item.from === 'p') return 'That puts the percentage number on the bottom of a fraction. A percentage is out of 100.';
+    if (o.tag === 'one-part-only' && item && item.kind === 'ofamt-p') return 'That is only 10% of the amount. Now scale it up.';
     return FDP.TAGS[o.tag] || '';
   };
 
@@ -562,10 +568,10 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     var a = v[0], b = v[1], inv = R(b, a);
     var t1 = truncOf(v, 1), t2 = truncOf(v, 2), c, pair = from + '>' + to;
     if (pair === 'f>d') c = [b <= 9 ? C('d', R(b, 10), 'denominator-as-decimal') : null,
-      C('d', t1, 'truncation', { k: 1 }), C('d', t2, 'truncation', { k: 2 }), C('d', inv, 'inversion'),
+      C('d', t1, 'truncation', { k: 1 }), C('d', t2, 'truncation', { k: 2 }), INV('d', inv, v),
       PV('d', v, 1), PV('d', v, -1), PV('d', v, 2)];
     else if (pair === 'f>p') c = [C('p', t2, 'truncation', { k: 2 }), C('p', R(a, 100), 'raw-part'),
-      b <= 9 ? C('p', R(b, 10), 'denominator-as-decimal') : null, PV('p', v, -1), PV('p', v, 1), C('p', inv, 'inversion'),
+      b <= 9 ? C('p', R(b, 10), 'denominator-as-decimal') : null, PV('p', v, -1), PV('p', v, 1), INV('p', inv, v),
       PV('p', v, -2)];
     else if (pair === 'd>f') c = [C('f', digitReadDec(v), 'digit-reading'),
       terminates(v) ? null : C('f', floorTo(v, 1), 'truncation', { k: 1 }), C('f', inv, 'inversion'), PV('f', v, 1), PV('f', v, -1)];
@@ -601,7 +607,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
       prompt: 'Write \\(' + fracTex([n, d]) + '\\) in its simplest form.',
       promptText: 'Write ' + n + '/' + d + ' in its simplest form.',
       equation: '\\(' + fracTex([n, d]) + ' = ' + answer.tex + '\\)',
-      working: 'The biggest number into both ' + n + ' and ' + d + ' is ' + g + '. ' + simplifyLine(n, d),
+      working: 'The biggest factor of both ' + n + ' and ' + d + ' is ' + g + '. ' + simplifyLine(n, d),
       pictures: nonNull([pizzaSpec([n, d]), pizzaSpec(ans)])
     };
     return finish(it, c);
@@ -610,9 +616,9 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
   function ofFractionItem(a, b, N) {
     var f = [a, b], ans = R(a * N, b), c;
     if (a > 1) c = [C('n', R(N, b), 'one-part-only'), C('n', R(N * (b - a), b), 'complement'), C('n', R(a * N), 'no-divide'),
-      C('n', R(N * b, a), 'inversion'), b <= 9 ? C('n', R(N * b, 10), 'denominator-as-decimal') : null,
+      INV('n', R(N * b, a), ans), b <= 9 ? C('n', R(N * b, 10), 'denominator-as-decimal') : null,
       PV('n', ans, 1), PV('n', ans, -1)];
-    else c = [C('n', R(N * b, a), 'inversion'), b <= 9 ? C('n', R(N * b, 10), 'denominator-as-decimal') : null,
+    else c = [INV('n', R(N * b, a), ans), b <= 9 ? C('n', R(N * b, 10), 'denominator-as-decimal') : null,
       C('n', R(N * (b - a), b), 'complement'), PV('n', ans, 1), PV('n', ans, -1)];
     var answer = opt('n', ans);
     var it = {
@@ -631,7 +637,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     var f = R(p, 100), ans = R(p * N, 100);
     var c = [N - p > 0 ? C('n', R(N - p), 'subtract-percent') : null,
       p % 10 === 0 && p !== 10 ? C('n', R(N, 10), 'one-part-only') : null,
-      C('n', R(N * (100 - p), 100), 'complement'), PV('n', ans, 1), C('n', R(100 * N, p), 'inversion'), PV('n', ans, -1)];
+      C('n', R(N * (100 - p), 100), 'complement'), PV('n', ans, 1), INV('n', R(100 * N, p), ans), PV('n', ans, -1)];
     var answer = opt('n', ans);
     var pic = barSpec(f, N) || (N % 100 === 0 ? gridSpec(f, N / 100) : null);
     var it = {
@@ -651,7 +657,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     if (to === 'f') c = [C('f', v, 'unsimplified', { shown: [A, B] }), C('f', R(B, A), 'inversion'),
       C('f', R(A, B - A), 'part-to-part'), C('f', R(B - A, B), 'complement')];
     else c = [C('p', R(A, 100), 'raw-part'), C('p', R(A, B - A), 'part-to-part'), C('p', R(B - A, B), 'complement'),
-      C('p', R(B, A), 'inversion'), PV('p', v, -1), PV('p', v, 1)];
+      INV('p', R(B, A), v), PV('p', v, -1), PV('p', v, 1)];
     var first = A + ' out of ' + B + ' is \\(' + fracTex([A, B]) + '\\). ', work;
     if (to === 'f') work = first + simplifyLine(A, B);
     else {

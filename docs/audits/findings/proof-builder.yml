@@ -297,7 +297,9 @@ findings:
     3^k > 2k + 1 for some k >= 2 / 3^{k+1} = 3 x 3^k > 3(2k+1) = 6k+3 / 6k + 3 = (2k+3) + 4k = 2(k+1)+1 + 4k / Since
     k >= 2, we have 4k > 0, so 6k+3 > 2(k+1)+1 / Therefore 3^{k+1} > 2(k+1)+1, completing the inductive step / By
     mathematical induction, 3^n > 2n+1 for all n >= 2 | keyed order 0-6 only (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R9 (SR-24): the 3^n > 2n+1 sorter accepts every valid order (line 3, the identity 6k+3 = (2k+3) + 4k, needs only the assumption that names k; line 4 needs that identity; the base case may come anywhere before the last line); the verifier holds the game to the reviewed list of 18 orders, both directions, in Python and in Chromium.'
 - id: proof-builder-s1-003
   severity: MEDIUM
   jc: false
@@ -340,7 +342,9 @@ findings:
   evidence: '"An even number plus an even number is always even" | Pick a counter-example that disproves this
     statement, or say that it is true | This statement is actually TRUE | 2 + 2 = 4, 4 + 6 = 10, 8 + 8 = 16; no
     false-keyed item offers the TRUE option (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R9: "This statement is actually TRUE" is offered on every counter-example item (it replaces the last distractor on the 30 false-keyed items, so every item still has four options). verify-proof-builder.py fails the old form, with a plant.'
 - id: proof-builder-s1-006
   severity: LOW
   jc: false
@@ -407,7 +411,9 @@ findings:
   evidence: '"The sum of two irrational numbers is always irrational" | sqrt2 + (-sqrt2) = 0 | sqrt2+sqrt8, sqrt2+sqrt3,
     sqrt5+sqrt7; "The product of two irrational numbers is always irrational" | sqrt2 x sqrt2 = 2 | sqrt2 x sqrt5,
     sqrt3 x sqrt5, sqrt2 x sqrt3 (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R9: the distractors beside a key that shows its result show theirs too (sum and product of two irrational numbers). verify-proof-builder.py fails the old form, with a plant.'
 - id: proof-builder-s1-011
   severity: LOW
   jc: true
@@ -418,7 +424,9 @@ findings:
     four say "This statement is actually TRUE". Not fixed: a key-text change, for Jon (with s1-005).'
   evidence: '"If n is an integer and n^2 is even, then n is even" | This statement is actually TRUE — no
     counter-example exists | 3, 5, 7 (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R9 (with s1-005): the true-keyed item words its key "This statement is actually TRUE", as the others do. verify-proof-builder.py fails the old form, with a plant.'
 - id: proof-builder-s1-012
   severity: LOW
   jc: true
@@ -429,7 +437,9 @@ findings:
     "taking out a factor of 2" (or "factorising"). Not fixed (outside the batch''s scope), for Jon.'
   evidence: 'Prove that the sum of two odd numbers is even | misconception: The key is expressing odd numbers in the
     form 2k+1 and factoring out 2 (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: the sorter''s misconception says "taking out a factor of 2" (British usage). verify-proof-builder.py fails the old form, with a plant.'
 - id: proof-builder-s1-013
   severity: MEDIUM
   jc: false

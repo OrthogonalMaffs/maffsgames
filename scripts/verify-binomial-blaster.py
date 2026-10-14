@@ -213,6 +213,12 @@ def check_bank(fails, bank):
                                        ' (binomial-blaster-%s)' % AUDIT[(lv, i)] if (lv, i) in AUDIT else '')
             if (lv, i) in SWEEP:
                 w += ' (binomial-blaster-%s)' % SWEEP[(lv, i)]
+            # s1-004 (R1): the stem rewrites a number exactly, so it uses =; the approximation is the three-term estimate the ask names
+            if '\\approx' in q['q'] and q['ask'].startswith('Estimate using first 3 terms'):
+                fails.append('notation: %s: the stem writes an approximately-equals sign between two exactly equal expressions (binomial-blaster-s1-004)' % w)
+            # s1-005 (R1): an ask for the coefficient of x is about an expansion that has an x in it
+            if q['ask'].startswith('Coefficient of x in the expansion') and not re.search(r'\(1\s*[+-]\s*x\)', q['q']):
+                fails.append('stem: %s: the ask names the coefficient of x, but the stem shows no x to expand (binomial-blaster-s1-005)' % w)
             t = TARGETS[lv][i]
             if (lv, i) in PINNED and PINNED[(lv, i)] not in q['q'] + ' ' + q['ask']:
                 fails.append('%s: the item must say "%s" for its key to hold' % (w, PINNED[(lv, i)]))
@@ -351,6 +357,8 @@ def play(fails, html):
             if KATEX_DIR:
                 ctx.route(lambda url: '/katex@0.16.9/dist/' in url, lambda route: route.fulfill(
                     path=os.path.join(KATEX_DIR, route.request.url.split('/dist/', 1)[1].split('?')[0])))
+            else:
+                ctx.route(lambda url: bc.is_font_cdn(url), bc.serve_real_font)     # KaTeX from the pinned local copy
             ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
                 status=200, content_type='text/html; charset=utf-8', body=html))
             page = ctx.new_page()
@@ -378,6 +386,8 @@ def play(fails, html):
 
 
 PLANTS = [
+    ('notation:', 's1-004: an approximately-equals sign between equal expressions', "{q:'(1.01)^5 = (1+0.01)^5',", "{q:'(1.01)^5 \\\\approx (1+0.01)^5',"),
+    ('stem:', 's1-005: the cube root with no x', "{q:'\\\\sqrt[3]{1.06} = (1+x)^{1/3},\\\\; x = 0.06',", "{q:'\\\\sqrt[3]{1.06} = (1+0.06)^{1/3}',"),
     ('alevel[35]', 't5-003: (1.01)^5 keyed 1.05101', "correct:'1.051',d:['1.05101','1.0501','0.951']",
      "correct:'1.05101',d:['1.051','1.0501','0.951']"),
     ('alevel[49]', 't5-007: (2x+3)^3 keyed 54', "correct:'36',d:['54','108','18']", "correct:'54',d:['36','108','18']"),

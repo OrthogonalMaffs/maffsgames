@@ -187,7 +187,9 @@ findings:
   where: 'games/probability-paradox/index.html:338-341 (Fallacy)'
   summary: 'Fatal-outcome content (SR-14), and as written the conclusion is not a fallacy (one survivor shows crashes can be survived). Needs a new context, Jon''s call (e.g. firms or bands heard of because they succeeded)'
   evidence: '"''I survived a plane crash. Therefore plane crashes are survivable.''" | "What bias is this?" key "Survivorship bias"; explain "The people who didn''t survive can''t tell us their experience." (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R6 (SR-14), Jon''s approved wording (content document): the plane-crash item is the famous-bands survivorship item; question, options and key unchanged; verify-probability-paradox.py reviews it and fails a crash scenario, with a plant.'
 - id: probability-paradox-s1-006
   severity: LOW
   jc: false
@@ -196,7 +198,9 @@ findings:
   where: 'games/probability-paradox/index.html:333'
   summary: '"I flipped 10 coins ... The coin must be biased" should read "I flipped a coin 10 times"'
   evidence: '"John says: ''I flipped 10 coins and got 7 heads. The coin must be biased.''" (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: "I flipped a coin 10 times and got 7 heads."; the verifier pins it with a plant.'
 - id: probability-paradox-s1-007
   severity: LOW
   jc: false
@@ -205,7 +209,9 @@ findings:
   where: 'games/probability-paradox/index.html:114'
   summary: 'The Conditional mode card is badged "A-Level" ("The bread and butter of A-Level probability"); the game is listed for GCSE and Core'
   evidence: 'mode-card badge "A-Level" (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R3: the Conditional card is badged "Conditional" and reads "the bread and butter of conditional probability" (the game is listed for GCSE and Core); the verifier pins it with a plant.'
 - id: probability-paradox-s1-008
   severity: LOW
   jc: false
@@ -214,7 +220,9 @@ findings:
   where: 'games/probability-paradox/index.html:129, :465 (Simpson''s Paradox simulation)'
   summary: 'The Simpson simulation returns the same result every time but the page says "Running 1,000 simulations..." and "Paradox occurs 100%": nothing is simulated'
   evidence: 'sim for Simpson returns a constant (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R3: the Simpson item is shown as a check ("Checking the hospitals'' figures...", "No chance involved: these figures give the paradox every time"), not as 1,000 simulations of a constant; the other thirteen simulations are unchanged and measured by the verifier; the verifier fails a constant shown as a simulation, with a plant.'
 - id: probability-paradox-s1-009
   severity: MEDIUM
   jc: false

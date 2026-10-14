@@ -139,7 +139,6 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
       <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
       <div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="streak">0</div></div>
       <div class="hud-item"><div class="hud-label">Stage</div><div class="hud-val" id="stageNum">1</div></div>
-      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div>
     </div>
     <div class="lives" id="lives"></div>
     <div class="stage-bar">
@@ -331,13 +330,7 @@ function nextQ(){
   const fb=document.getElementById('flagBtn');fb.classList.remove('disabled');
   MaffsLock.fresh(document.getElementById('game'));   // a new question: a double-click cannot answer it
 
-  qStartTime=Date.now();updateTimer();
-}
-
-function updateTimer(){
-  const el=document.getElementById('timer');
-  const tick=()=>{if(document.getElementById('game').classList.contains('active')){el.textContent=Math.floor((Date.now()-qStartTime)/1000);requestAnimationFrame(tick)}};
-  requestAnimationFrame(tick);
+  qStartTime=Date.now();   // Hidden Count-Up (timer policy): the clock runs for the score and is never shown
 }
 
 // One answer per question, an option or the singular flag (canon 7.6.0).

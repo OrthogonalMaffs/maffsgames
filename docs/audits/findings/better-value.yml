@@ -163,7 +163,9 @@ findings:
     gcse_020 keys "more than 15" (equal does not). Which convention is a choice for Jon (with r-006)'
   evidence: 'gcse_019 break-even 12 lunches exactly, key "12 or more"; gcse_020 key "after more than 15 bottles"
     (SWEEP-1, batch 8)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'Part 2 #12 + R2: one convention, stated in both stems ("cheaper, not the same price"); gcse_019 re-keyed to "more than 12 lunches" (from the 13th); verify-better-value.py recomputes the key and pins the stems with plants.'
 - id: better-value-s1-003
   severity: MEDIUM
   jc: false
@@ -217,7 +219,9 @@ findings:
   summary: 'core_047''s "roughly 9 times/year" is 52/6 = 8.7. Stem change, for Jon (Split from better-value-s1-006,
     SWEEP-1-RULINGS step 1.)'
   evidence: 'Scenario texts as quoted (SWEEP-1, batch 8)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R2: core_047 says "use 9" (52/6 = 8.7 is rounded and the key uses 9); key unchanged; verifier pins it.'
 - id: better-value-s1-009
   severity: LOW
   jc: true
@@ -227,7 +231,9 @@ findings:
   summary: 'core_011''s "nothing for 12 months, then £599 if not paid" is garbled. Stem change, for Jon (Split from
     better-value-s1-006, SWEEP-1-RULINGS step 1.)'
   evidence: 'Scenario texts as quoted (SWEEP-1, batch 8)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: core_011 reads "nothing to pay for 12 months, then the full £599 is due if it has not been paid by then"; no key or figure changes; verifier pins it.'
 - id: better-value-s1-007
   severity: MEDIUM
   jc: false

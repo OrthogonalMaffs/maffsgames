@@ -287,7 +287,9 @@ findings:
     \approx (1+0.02)^{1/2}; \dfrac{1}{1.03} \approx (1+0.03)^{-1}; \dfrac{1}{0.98} \approx (1-0.02)^{-1};
     \sqrt{4.08} \approx 2(1+0.02)^{1/2}; (0.97)^{-2} \approx (1-0.03)^{-2}; \sqrt[3]{1.06} \approx (1+0.06)^{1/3};
     \dfrac{1}{\sqrt{1-x}} \approx (1-x)^{-1/2} (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: nine stems that rewrite a number exactly (e.g. (1.01)^5 = (1+0.01)^5) use =; the approximation is the three-term estimate the ask names (the two stems that state a truncated series keep \approx). verify-binomial-blaster.py pins it with a plant.'
 - id: binomial-blaster-s1-005
   severity: LOW
   jc: false
@@ -299,7 +301,9 @@ findings:
     stem change, for Jon.'
   evidence: '\sqrt[3]{1.06} \approx (1+0.06)^{1/3} | Coefficient of x in the expansion | \dfrac{1}{3} | \dfrac{1}{6}, 3,
     \dfrac{2}{3} (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: the cube-root stem reads (1+x)^{1/3} with x = 0.06, so "the coefficient of x" has an x to find. verify-binomial-blaster.py pins it with a plant.'
 - id: binomial-blaster-s1-006
   severity: MEDIUM
   jc: false

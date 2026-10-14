@@ -217,6 +217,8 @@ def check_bank(fails, bank):
         for i, q in enumerate(items):
             w = '%s[%d] (%s | %s)%s' % (lv, i, q['ctx'], q['q'], ' (%s)' % AUDIT[(lv, i)] if (lv, i) in AUDIT else '')
             words, (kind, target) = targets[i]
+            if (lv, i) == ('gcse', 22) and 'passes through the origin' not in q['ctx']:   # s1-002 (R3)
+                fails.append('%s: the context must say line L passes through the origin; (4, 2) is the point the perpendicular goes through (coordinate-geometry-dash-s1-002)' % w)
             if words not in q['ctx'] + ' ' + q['q']:
                 fails.append('%s: the question must say "%s" for its target to hold' % (w, words))
             key = q.get('correct_override') or q['correct']
@@ -289,6 +291,9 @@ def play(fails, html):
             page.on('pageerror', lambda e: errors.append(str(e)))
             page.goto(base + '/games/%s/?level=alevel&cb=verify' % SLUG, wait_until='load', timeout=20000)
             page.wait_for_function('typeof Q_ALEVEL !== "undefined"', timeout=15000)
+            menu = page.inner_text('#menu')   # s1-003 (R3): the A-Level line does not claim to add to the GCSE items
+            if 'Adds circles' in menu or 'Circles (equation' not in menu:
+                fails.append('start: the A-Level line must not say "Adds circles" (the level serves the A-Level items only; coordinate-geometry-dash-s1-003)')
             page.evaluate("() => show('game')")
             bank = page.evaluate('() => ({gcse: Q_GCSE, alevel: Q_ALEVEL})')
             for lv, i, pick, what in page.evaluate(SWEEP_JS):
@@ -304,6 +309,10 @@ def play(fails, html):
 
 # (the item the failure must name, what is planted, today's text, main's text before LISTED-HIGH).
 PLANTS = [
+    ('gcse[22]', 's1-002: the old ambiguous context',
+     'ctx:"Line L has gradient 2. It passes through the origin. A second line, through (4, 2), is perpendicular to L."',
+     'ctx:"Line L has gradient 2. Find the perpendicular from (4, 2) to L through the origin."'),
+    ('start:', 's1-003: "Adds circles" back', '<strong>A-Level:</strong> Circles (equation', '<strong>A-Level:</strong> Adds circles (equation'),
     ('alevel[13]', 't1-001: three correct equations, keyed "All equivalent"',
      'opts:["xy = 12","xy = 7","y = 12x","x = 3y/4"],correct:"xy = 12"',
      'opts:["xy = 12","y = 12/x","x = 12/y","All equivalent"],correct:"All equivalent"'),

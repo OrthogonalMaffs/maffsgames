@@ -119,7 +119,9 @@ findings:
   summary: 'Q2''s "=B1×12" uses × (harmless as a distractor). For Jon (Split from core-maths-paper2a-s1-005,
     SWEEP-1-RULINGS step 1.)'
   evidence: 'Item texts as quoted (SWEEP-1, batch 9)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: Q2''s distractor reads =B1*12 (a spreadsheet cell formula multiplies with *); verify-core-maths-paper2a.py fails a times sign in a formula option, with a plant.'
 - id: core-maths-paper2a-s1-006
   severity: MEDIUM
   jc: false

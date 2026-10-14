@@ -476,7 +476,7 @@ binomial: [
   },
   {
     id:'B10',tail:'one',tailDir:'upper',sig:5,
-    scenario:'A teacher believes more than half her class will pass a test. 14 out of 22 students pass. Test at 5%.',
+    scenario:'A head teacher believes more than half of the county\'s Year 11 will pass. In a sample of 22, 14 pass. Test at 5%.',
     n:22,p0:0.5,x:14,
     h0Latex:'p = 0.5',h1Latex:'p > 0.5',
     h0Distractors:['p = 0.5','p = \\tfrac{14}{22}','\\mu = 0.5','p \\neq 0.5'],
@@ -490,7 +490,7 @@ binomial: [
     crExplanation:'P(X \\geq 16) = 0.0262 < 0.05 and P(X \\geq 15) = 0.0669 > 0.05',
     pValue:0.1431,pValueExpr:'P(X \\geq 14) = 0.1431',
     inCR:false,reject:false,
-    conclusionContext:'more than half the class will pass'
+    conclusionContext:'more than half of the county\'s Year 11 will pass'
   },
   {
     id:'B11',tail:'two',tailDir:'two',sig:1,
@@ -2058,7 +2058,7 @@ function showModelAnswer(q, ok) {
         ${K(distStr)}.<br><br>
         ${K(compStr)}.<br><br>
         We <strong>${rejText}</strong> ${K('H_0')}.<br><br>
-        There is <strong>${sOrI}</strong> evidence at the ${q.sig}% significance level to suggest that ${q.conclusionContext}.
+        There is <strong>${sOrI}</strong> evidence at the ${q.sig}% significance level to support the claim that ${q.conclusionContext}.
       </div>
     </div>
     ${ok ? `<button class="next-q-btn" onclick="nextFromButton(this)">

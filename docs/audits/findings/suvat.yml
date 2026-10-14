@@ -180,7 +180,9 @@ findings:
   where: games/suvat/index.html:401
   summary: 'A stone leaves "a table 5 m high": no table is 5 m high (check h). A context change, for Jon'
   evidence: '"A stone leaves a horizontal surface at 10 m/s from a table 5 m high." (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'Part 2 #17: "a wall 5 m high" (no table is 5 m high); no number or key changes; verify-suvat.py fails "table 5 m high", with a plant.'
 - id: suvat-s1-006
   severity: MEDIUM
   jc: false

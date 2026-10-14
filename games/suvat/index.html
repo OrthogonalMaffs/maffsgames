@@ -406,7 +406,7 @@ const QUESTIONS_ALEVEL = [
    steps:[{prompt:"Find t (from horizontal)",answer:3,unit:"s"},{prompt:"Find h = ½(9.8)t²",answer:44.1,unit:"m"}],
    working:"Horizontal: t = 24/8 = 3 s. Vertical: h = ½(9.8)(9) = 44.1 m"},
 
-  {scenario:"A stone leaves a horizontal surface at 10 m/s from a table 5 m high. Find the speed on impact. First find v_y (vertical: u = 0, a = 9.8, s = 5), then combine with v_x = 10 m/s.",
+  {scenario:"A stone leaves a horizontal surface at 10 m/s from a wall 5 m high. Find the speed on impact. First find v_y (vertical: u = 0, a = 9.8, s = 5), then combine with v_x = 10 m/s.",
    known:{u:0,a:9.8,s:5},find:'v',equation:'v² = u² + 2as',
    steps:[{prompt:"Find v_y",answer:9.9,dp:1,unit:"m/s"},{prompt:"Find speed √(v_x² + v_y²)",answer:14.1,dp:1,unit:"m/s"}],
    working:"v_y² = 2(9.8)(5) = 98 → v_y = 9.9. Speed = √(100+98) = 14.1 m/s"},

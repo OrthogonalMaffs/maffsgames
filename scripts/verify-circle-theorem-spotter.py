@@ -74,9 +74,15 @@ def to_py(node):
     raise ValueError(f'unexpected {node.type} in the bank at line {node.loc.start.line}')
 
 
-def load_bank(path):
-    with open(path, encoding='utf-8') as fh:
-        tree, _src = bc.parse_game_source(fh.read())
+def load_bank_text(src):
+    return load_bank(None, src)
+
+
+def load_bank(path, src=None):
+    if src is None:
+        with open(path, encoding='utf-8') as fh:
+            src = fh.read()
+    tree, _src = bc.parse_game_source(src)
     if tree is None:
         raise SystemExit(f'FAIL    {path}: the page script does not parse')
     for name, init, _kind in bc.top_level_declarations(tree):
@@ -461,6 +467,38 @@ FIG_PLANTS = [
 ]
 
 
+def check_text(html, bank):
+    """SWEEP-1 rulings (13 Oct 2026): what the page says is true of what it shows."""
+    out = []
+    # the <meta> description is generated from data/games.json (home lane); this checks what the page itself shows
+    flat = re.sub(r'\s+', ' ', re.sub(r'<meta[^>]*>', '', html))
+    if 'all seven circle theorems' in flat:   # s1-008 (R3): the options name eight properties
+        out.append('text: the start screen says "all seven circle theorems"; the options name eight properties (circle-theorem-spotter-s1-008)')
+    if re.search(r'class="hud-label">Time<', html) or 'id="timer"' in html or 'setInterval(tick' in html:
+        out.append('hud: Hidden Count-Up (timer policy) means no running Time in the HUD (R7, circle-theorem-spotter-s1-007)')
+    for _, _, q in bank:
+        opts = [q['correct']] + list(q['d'])
+        if any(re.search(r'\\sqrt\{\d+\} cm', o) for o in opts):   # s1-006 (R1): "cm" in a root's TeX is italic maths
+            out.append('option: %r writes "cm" as maths run into the root; use \\text{ cm} (circle-theorem-spotter-s1-006)' % opts)
+        if q['ask'].startswith('Which theorem') and re.search(r'\b(?:What|what|How|how)\b[^.?]*\?\s*$', q['ctx']):
+            out.append('item: the context asks %r but the ask is "Which theorem?" (circle-theorem-spotter-s1-005)' % q['ctx'][:70])
+        if 'what shape' in q['ctx']:   # s1-010: the key is a fact about the chord, not a shape
+            out.append('item: the context asks "what shape" but the key is %r (circle-theorem-spotter-s1-010)' % q['correct'])
+        if q['fig'].get('t') == 'semicircle' and q['ask'] == 'Which theorem does this diagram show?' and 'Angle at centre theorem' in q['d']:
+            out.append('item: the semicircle figure offers "Angle at centre theorem" (the 180 degree case), a true option (R5, circle-theorem-spotter-s1-003)')
+    return out
+
+
+TEXT_PLANTS = [
+    ('"all seven circle theorems" back', "GCSE Higher — the circle theorems.", "GCSE Higher — all seven circle theorems."),
+    ('the HUD Time back', '<div class="hud-item"><div class="hud-label">Score</div>', '<div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0s</div></div><div class="hud-item"><div class="hud-label">Score</div>'),
+    ('\\sqrt{119} cm back', "'\\\\sqrt{119}\\\\text{ cm}'", "'\\\\sqrt{119} cm'"),
+    ('Q9 asking for an angle again', "The angle subtended at the circumference by the same arc is marked ?.", "What is the angle subtended at the circumference by the same arc?"),
+    ('Q22 asking "what shape" again', "ctx:'The angle at the centre is 180°.'", "ctx:'If the angle at the centre is 180°, what shape is formed?'"),
+    ('the true semicircle option back', "d:['Angles in same segment','Alternate segment theorem','Tangent-radius']}", "d:['Angle at centre theorem','Alternate segment theorem','Tangent-radius']}"),
+]
+
+
 def selftest(bank):
     """Each injected fault must FAIL."""
     def find(pred):
@@ -486,6 +524,16 @@ def selftest(bank):
     base = set(check(bank)[0])
     bad = []
     html = open(PAGE, encoding='utf-8').read()
+    for name, old, new in TEXT_PLANTS:
+        if html.count(old) != 1:
+            print(f'self-test CANNOT PLANT {name}')
+            bad.append(name)
+            continue
+        planted = html.replace(old, new)
+        fails = check_text(planted, load_bank_text(planted))
+        print(f'self-test {"caught " if fails else "MISSED "} {name}' + (f': {fails[0][:100]}' if fails else ''))
+        if not fails:
+            bad.append(name)
     for name, old, new in FIG_PLANTS:
         if html.count(old) != 1:
             print(f'self-test CANNOT PLANT {name}')
@@ -517,6 +565,7 @@ def main():
     fails, solved = check(bank, args.verbose)
     figs = read_tangent_figures(open(args.file, encoding='utf-8').read())
     fails += tangent_side_fails(figs)
+    fails += check_text(open(args.file, encoding='utf-8').read(), bank)
     if len(figs) < 9:
         fails.append('figure: only %d tangent figures with a marked tangent angle read (expected 9)' % len(figs))
     for f in fails:

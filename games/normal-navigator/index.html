@@ -201,7 +201,9 @@ function boundaryAnswer(q){
   if(!nums)return false;
   const t=nums[nums.length-1],v=parseFloat(t),tol=0.5*Math.pow(10,-((t.split('.')[1]||'').length))+0.03;
   const regions=Array.isArray(q.shade[0])?q.shade:[q.shade];
-  return regions.some(r=>r.some(b=>b!==-999&&b!==999&&(Math.abs(b-v)<=tol||Math.abs((b-q.mu)/q.sigma-v)<=tol)));
+  // a minimum rounded UP to a whole number (232.04 -> 233) is still the shading boundary: the key is its ceiling
+  const up=/so round [^.]*\bup\b/.test(q.ctx||'');
+  return regions.some(r=>r.some(b=>b!==-999&&b!==999&&(Math.abs(b-v)<=tol||Math.abs((b-q.mu)/q.sigma-v)<=tol||(up&&Math.ceil(b-1e-9)===v))));
 }
 
 // A question about two distributions (noCurve) has no single curve to draw:
@@ -250,16 +252,16 @@ const QUESTIONS=[
 // --- INVERSE NORMAL ---
 {ctx:"X ~ N(50, 8²). Find k such that P(X < k) = 0.9.",q:"k = ? (to 1 d.p.)",mu:50,sigma:8,shade:[-999,60.25],opts:["60.3","58.0","62.4","56.5"],correct:"60.3",steps:["P(Z < z) = 0.9 → z = 1.2816","k = μ + zσ = 50 + 1.2816 × 8 = 60.2528 ≈ 60.3"]},
 {ctx:"X ~ N(100, 15²). Find k such that P(X > k) = 0.05.",q:"k = ? (to 1 d.p.)",mu:100,sigma:15,shade:[124.7,999],opts:["124.7","120.0","130.0","119.2"],correct:"124.7",steps:["P(X > k) = 0.05 → P(X < k) = 0.95","z = 1.6449","k = 100 + 1.6449 × 15 ≈ 124.7"]},
-{ctx:"X ~ N(200, 25²). The top 10% get an A. Find the minimum mark.",q:"Minimum for A = ?",mu:200,sigma:25,shade:[232,999],opts:["232","225","240","228"],correct:"232",steps:["P(X > k) = 0.10 → P(X < k) = 0.90","z = 1.2816","k = 200 + 1.2816 × 25 ≈ 232"]},
+{ctx:"X ~ N(200, 25²). The top 10% get an A. Marks are whole numbers, so round the minimum up. Find the minimum mark.",q:"Minimum for A = ?",mu:200,sigma:25,shade:[232.04,999],opts:["233","232","225","240"],correct:"233",steps:["P(X > k) = 0.10 → P(X < k) = 0.90","z = 1.2816","k = 200 + 1.2816 × 25 = 232.04","Marks are whole numbers, so round up: 233"]},
 {ctx:"X ~ N(170, 10²). Find the height exceeded by 2.5% of people.",q:"k = ? (to 1 d.p.)",mu:170,sigma:10,shade:[189.6,999],opts:["189.6","185.0","195.0","192.0"],correct:"189.6",steps:["P(X > k) = 0.025 → z = 1.96","k = 170 + 1.96 × 10 = 189.6"]},
 {ctx:"X ~ N(500, 80²). Find the interquartile range.",q:"IQR = ? (to the nearest whole number)",mu:500,sigma:80,shade:[446,554],opts:["108","80","160","120"],correct:"108",steps:["Q1: z = −0.6745 → x = 500 − 0.6745×80 = 446.04","Q3: z = 0.6745 → x = 500 + 0.6745×80 = 553.96","IQR = 553.96 − 446.04 = 107.92 ≈ 108"],misconception:"For a normal distribution, IQR = 2 × 0.6745 × σ ≈ 1.349σ"},
 
 // --- CONTEXT PROBLEMS ---
 {ctx:"Bolts have length X ~ N(50, 0.5²) mm. A bolt is rejected if outside 49–51mm.",q:"P(rejected) = ? (to 4 d.p.)",mu:50,sigma:0.5,shade:[[-999,49],[51,999]],opts:["0.0455","0.3174","0.0228","0.1587"],correct:"0.0455",steps:["P(rejected) = P(X<49) + P(X>51)","z = ±2, and P(X < 49) = Φ(−2) = 0.02275","P = 2 × 0.02275 = 0.04550 ≈ 0.0455"],misconception:"Reject from BOTH tails, so double the one-tail probability."},
-{ctx:"IQ scores: X ~ N(100, 15²). Mensa requires top 2%.",q:"Minimum IQ for Mensa = ?",mu:100,sigma:15,shade:[130.8,999],opts:["131","125","135","128"],correct:"131",steps:["P(X > k) = 0.02 → z = 2.054","k = 100 + 2.054 × 15 ≈ 131"]},
+{ctx:"IQ scores: X ~ N(100, 15²). Mensa requires top 2%. IQ scores are whole numbers, so round the minimum up.",q:"Minimum IQ for Mensa = ?",mu:100,sigma:15,shade:[130.8,999],opts:["131","125","135","128"],correct:"131",steps:["P(X > k) = 0.02 → z = 2.054","k = 100 + 2.054 × 15 = 130.8","IQ scores are whole numbers, so round up: 131"]},
 {ctx:"A machine fills bottles with X ~ N(500, 8²) ml. A bottle is underfilled if < 490ml.",q:"P(underfilled) = ? (to 4 d.p.)",mu:500,sigma:8,shade:[-999,490],opts:["0.1056","0.2119","0.0668","0.1587"],correct:"0.1056",steps:["z = (490−500)/8 = −1.25","P(X < 490) = Φ(−1.25) ≈ 0.1056"]},
 {ctx:"Delivery times: X ~ N(30, 5²) minutes. A pizza is free if > 45 min.",q:"P(free pizza) = ? (to 4 d.p.)",mu:30,sigma:5,shade:[45,999],opts:["0.0013","0.0228","0.0062","0.0668"],correct:"0.0013",steps:["z = (45−30)/5 = 3","P(X > 45) = 1 − Φ(3) = 1 − 0.9987 = 0.0013"],misconception:"z = 3 is three standard deviations out — only 0.13% of data. The '99.7% rule'."},
-{ctx:"Exam marks: X ~ N(65, 12²). The pass mark is set so 80% pass.",q:"What is the pass mark?",mu:65,sigma:12,shade:[54.9,999],opts:["55","50","58","52"],correct:"55",steps:["P(X > k) = 0.80 → P(X < k) = 0.20","z = −0.8416","k = 65 + (−0.8416)(12) ≈ 54.9 ≈ 55"]},
+{ctx:"Exam marks: X ~ N(65, 12²). The pass mark is set so 80% pass. Marks are whole numbers, so round the pass mark up.",q:"What is the pass mark?",mu:65,sigma:12,shade:[54.9,999],opts:["55","50","58","52"],correct:"55",steps:["P(X > k) = 0.80 → P(X < k) = 0.20","z = −0.8416","k = 65 + (−0.8416)(12) = 54.9","Marks are whole numbers, so round up: 55"]},
 {ctx:"Battery life: X ~ N(48, 4²) hours. A battery is 'premium' if it lasts > 54 hours.",q:"What percentage are premium? (to 2 d.p.)",mu:48,sigma:4,shade:[54,999],opts:["6.68%","2.28%","15.87%","1.34%"],correct:"6.68%",steps:["z = (54−48)/4 = 1.5","P(X > 54) = 1 − 0.9332 = 0.0668 = 6.68%"]},
 
 // --- COMBINED / HARDER ---

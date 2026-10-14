@@ -259,7 +259,16 @@ SWEEP_JS = r"""() => {
 KATEX_DIR = None
 
 
+def text_fails(html):
+    """SWEEP-1 rulings (13 Oct 2026): R7, the timer policy lists this game under Hidden Count-Up, so the HUD shows no running Time."""
+    out = []
+    if re.search(r'class="hud-label">Time<', html) or 'id="timer"' in html:
+        out.append('hud: the running Time is on the HUD; Hidden Count-Up means it is never shown (R7, surd-simplifier-s1-003)')
+    return out
+
+
 def play(fails, html):
+    fails.extend(text_fails(html))
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
     try:
@@ -272,6 +281,8 @@ def play(fails, html):
             if KATEX_DIR:
                 ctx.route(lambda url: '/katex@0.16.9/dist/' in url, lambda route: route.fulfill(
                     path=os.path.join(KATEX_DIR, route.request.url.split('/dist/', 1)[1].split('?')[0])))
+            else:
+                ctx.route(lambda url: bc.is_font_cdn(url), bc.serve_real_font)     # KaTeX from the pinned local copy
             ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
                 status=200, content_type='text/html; charset=utf-8', body=html))
             page = ctx.new_page()
@@ -293,6 +304,8 @@ def play(fails, html):
 
 # (the item the failure must name, what is planted, today's text, main's text before LISTED-HIGH).
 PLANTS = [
+    ('hud:', 's1-003: the HUD Time back', '<div class="hud-item"><div class="hud-label">Streak</div>',
+     '<div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0s</div></div><div class="hud-item"><div class="hud-label">Streak</div>'),
     ('gcse[33]', 't1-001: 8/sqrt(32) keyed sqrt(2).sqrt(2)',
      "correct:'\\\\sqrt{2}',d:['2\\\\sqrt{2}','4','\\\\sqrt{2} \\\\cdot \\\\sqrt{2}']",
      "correct:'\\\\sqrt{2} \\\\cdot \\\\sqrt{2}',d:['2\\\\sqrt{2}','4','\\\\dfrac{8\\\\sqrt{32}}{32}']"),

@@ -283,6 +283,12 @@ def check_item(fails, where, q):
         fails.append('key: %s: %r is not in standard form' % (where, key))
     if prec and prec[0] == 'sf' and need_std and keysf != prec[1]:
         fails.append('key: %s: %r is written to %d s.f., the question says %d' % (where, key, keysf, prec[1]))
+    # s1-003 (R1): where the ask says "to 3 s.f.", a distractor in standard form is written to 3 s.f. too, or its form alone rules it out
+    if prec and prec[0] == 'sf' and prec[1] >= 2 and need_std:
+        for o, (v, std, sf) in zip(opts[1:], info[1:]):
+            if std and sf is not None and sf != prec[1]:
+                fails.append('precision: %s: the distractor %r is written to %d s.f., the question says %d (ruled out by its form alone)'
+                             % (where, o, sf, prec[1]))
     right = [o for o, (v, std, _) in zip(opts, info) if fits(v, value, prec) and (std or not need_std)]
     if right != [key]:
         fails.append('options: %s: the right option(s) are %r, the key is %r' % (where, right, key))
@@ -434,6 +440,8 @@ PLANTS = [
      [("ask:'How many times heavier is Earth? (nearest whole number)'", "ask:'How many times heavier is Earth?'")]),
     ('SR-4: the two-error distractor back (s1-002)', 'options:',
      [("'4.5 \\\\times 10^{19}','2 \\\\times 10^{-3}']", "'4.5 \\\\times 10^{19}','2 \\\\times 10^3']")]),
+    ('s1-003: a 1 s.f. distractor beside a 3 s.f. key', 'precision:',
+     [("'5.99 \\\\times 10^{-27}','5.99 \\\\times 10^{25}']", "'5.99 \\\\times 10^{-27}','6 \\\\times 10^{25}']")]),
     ('a session one question short', 'session:',
      [("slice(0,totalQ);qIdx=0;score=0;", "slice(0,totalQ-1);qIdx=0;score=0;")]),
     ('a misspelt TeX command in a key', 'render:',

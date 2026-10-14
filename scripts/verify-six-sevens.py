@@ -665,6 +665,29 @@ FAULTS = [
 ]
 
 
+PAGE = os.path.join(ROOT, "games", SLUG, "index.html")
+
+
+def check_promise(html, out):
+    """six-sevens-bruv-s1-001 (R3): a miss is promised a return only "if there is time" (a miss in the last
+    2-5 questions of a 20 or 40 session never comes back; the results screen lists it)."""
+    if "It comes back in a few questions" in html:
+        out.append("the wrong-answer line still promises 'It comes back in a few questions' (false at the end of a session)")
+    if "It comes back if there is time." not in html:
+        out.append("the wrong-answer line must say 'It comes back if there is time.'")
+    flat = re.sub(r"\s+", " ", html)
+    if "a few questions later, if the session has time left" not in flat:
+        out.append("the start screen must say a missed fact comes back 'if the session has time left'")
+
+
+def promise_selftest():
+    html = open(PAGE, encoding="utf-8").read()
+    planted = html.replace("It comes back if there is time.", "It comes back in a few questions.")
+    got = []
+    check_promise(planted, got)
+    return bool(got), "  %-48s %s" % ("wrong-answer line promises a return", ("CAUGHT (%s)" % got[0][:70]) if got else "*** MISSED ***")
+
+
 async def selftest(browser):
     lines, ok = [], True
     for name, patch in FAULTS:
@@ -706,8 +729,15 @@ async def run_all(args):
               "one score to q20; grid saved, resumed and deleted; clear-the-grid submitted nothing; "
               "storage-blocked mode run" % played)
 
+        prom = []
+        check_promise(open(PAGE, encoding="utf-8").read(), prom)
+        for f in prom:
+            fail(f)
         if not args.no_selftest:
             ok, lines = await selftest(browser)
+            pok, pline = promise_selftest()
+            ok = ok and pok
+            lines.append(pline)
             print()
             print("Fault-injection self-test (patched into a fresh page; the file is never touched):")
             for ln in lines:

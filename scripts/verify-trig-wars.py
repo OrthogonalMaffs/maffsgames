@@ -319,6 +319,34 @@ def check_scoring(fails, page):
         fails.append('%s: 2 PLAYER: game_completed %d time(s) (once)' % (tag, len(gc)))
 
 
+TRI_JS = r"""([ang, pwr]) => {
+  const tc = document.getElementById('trigCanvas'), tx = tc.getContext('2d');
+  if (!window.__triPts) {
+    window.__triPts = [];
+    for (const k of ['moveTo', 'lineTo']) { const o = tx[k].bind(tx); tx[k] = (x, y) => { window.__triPts.push([x, y]); return o(x, y); }; }
+  }
+  window.__triPts.length = 0;
+  document.getElementById('p1ang').value = ang; document.getElementById('p1pwr').value = pwr;
+  refreshTrig();
+  return {w: tc.width, h: tc.height, pts: window.__triPts.slice()};
+}"""
+
+
+def check_triangle(fails, page):
+    """trig-wars-s1-002 (R8): the live trig triangle (hypotenuse, Vx, Vy and their arrowheads) stays on its canvas at every angle."""
+    page.evaluate("() => { setMode('cpu'); }")
+    off_canvas = []
+    for ang in range(3, 90, 2):
+        for pwr in (20, 60, 100):
+            r = page.evaluate(TRI_JS, [ang, pwr])
+            bad = [p for p in r['pts'] if p[0] < 0 or p[0] > r['w'] or p[1] < 0 or p[1] > r['h']]
+            if bad:
+                off_canvas.append((ang, pwr, bad[0]))
+    if off_canvas:
+        fails.append('trig-wars-s1-002: the live triangle is drawn off its canvas at %d settings, first at %d deg V %d (point %s)'
+                     % (len(off_canvas), off_canvas[0][0], off_canvas[0][1], off_canvas[0][2]))
+
+
 def check_panel(fails, page):
     page.evaluate("() => { setMode('cpu'); }")
     bad = 0
@@ -474,7 +502,7 @@ def run(html):
             page.wait_for_function("typeof fire === 'function' && typeof refreshTrig === 'function'", timeout=8000)
             page.evaluate("() => { window.__msgs = []; const m0 = msg; "
                           "msg = function (p, t) { window.__msgs.push([p, t]); return m0(p, t); }; }")
-            for check in (check_scoring, check_panel, check_hits, check_advice):
+            for check in (check_scoring, check_panel, check_triangle, check_hits, check_advice):
                 try:
                     check(fails, page)
                 except Exception as e:      # a page that never reaches the state a check waits for fails it
@@ -490,6 +518,8 @@ def run(html):
 
 
 PLANTS = [
+    ('trig-wars-s1-002', 's1-002: the triangle off its canvas',
+     'const hyp=Math.min(145, (oy-10)/Math.max(sinV,0.01), (198-ox-16)/Math.max(cosV,0.01));', 'const hyp=145;'),
     ('trig-wars-t2-001', 't2-001: every hit counts for Player 1',
      'const sc=_twHits[1], n=_twShots[1];', 'const sc=_twHits[1]+_twHits[2], n=_twShots[1]+_twShots[2];'),
     ('trig-wars-t2-002', 't2-002: Vx scaled by 0.28 beside V',

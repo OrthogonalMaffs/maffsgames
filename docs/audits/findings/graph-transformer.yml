@@ -57,7 +57,9 @@ findings:
   where: 'games/graph-transformer/index.html:125-140 (start screen), :574-584'
   summary: 'Par, and the rule that repeated presses of one shift button count as one move, are not explained anywhere a student sees'
   evidence: 'HUD "Par"; three presses of "← Left 1" show Moves = 1 (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R2: the start screen says "Par is the fewest moves the puzzle needs. Pressing the same shift button again and again counts as one move."; verify-graph-transformer.py pins it with a plant.'
 - id: graph-transformer-s1-006
   severity: MEDIUM
   jc: false

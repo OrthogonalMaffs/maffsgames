@@ -280,6 +280,11 @@ SWEEP_JS = r"""() => {
       questions = [q]; qIdx = 0; totalQ = 1; level = lv; score = 0; correctCount = 0; streak = 0;
       document.getElementById('progress').innerHTML = '<div class="pip current"></div>';
       showQ();
+      if (pick === q.correct) {   // the context line is rendered, never raw TeX (SWEEP-1, proportion-blaster-s1-002)
+        const cEl = document.getElementById('context').cloneNode(true);
+        cEl.querySelectorAll('.katex-mathml').forEach(m => m.remove());   // KaTeX's hidden MathML carries the TeX source
+        if (/[\\_^{}]/.test(cEl.textContent)) out.push([lv, i, pick, 'the context shows raw TeX: ' + cEl.textContent]);
+      }
       const shown = [...document.querySelectorAll('#options .opt-btn')];
       if (shown.length !== 4) out.push([lv, i, pick, shown.length + ' options on screen']);
       const btn = shown.find(x => x.dataset.val === pick);
@@ -309,6 +314,8 @@ def play(fails, html):
                     path=os.path.join(KATEX_DIR, route.request.url.split('/dist/', 1)[1].split('?')[0])))
             ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
                 status=200, content_type='text/html; charset=utf-8', body=html))
+            if not KATEX_DIR:
+                ctx.route(lambda url: bc.is_font_cdn(url), bc.serve_real_font)     # KaTeX from the pinned local copy
             page = ctx.new_page()
             errors = []
             page.on('pageerror', lambda e: errors.append(str(e)))
@@ -334,6 +341,8 @@ PLANTS = [
      "d:['10','\\\\dfrac{100}{36}','25']", "d:['10','\\\\dfrac{100}{36}','\\\\sqrt{100}']"),
     ('gcse[45]', 'F4: 10 : 8 : 6 beside 5 : 4 : 3',
      "d:['5 : 4 : 3','5 : 8 : 3','5 : 12 : 3']", "d:['5 : 4 : 3','5 : 8 : 3','10 : 8 : 6']"),
+    ('alevel[6]', 's1-002: the context written as plain text (raw x^{3/2})',
+     "y \\u221d \\\\(x^{3/2}\\\\). When x = 4, y = 16.", "y \\u221d x^{3/2}. When x = 4, y = 16."),
     ('gcse[21]', 's1-001: x from x² with x > 0 unstated',
      "ask:'Find x when y = 50 (x > 0)'", "ask:'Find x when y = 50'"),
 ]

@@ -17,7 +17,9 @@ findings:
   where: 'games/simultaneous-solver/index.html:545 (a25)'
   summary: 'The ask "Find the values of x (sum)" is garbled: it wants the sum of the two x values'
   evidence: '"y = 2x + 1", "y = x^2 - 2x + 1" | "Find the values of x (sum)" key 4 (roots 0 and 4) (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: the ask reads "Find the sum of the two values of x"; the verifier''s key reader follows it.'
 - id: simultaneous-solver-s1-002
   severity: LOW
   jc: false
@@ -26,7 +28,9 @@ findings:
   where: 'games/simultaneous-solver/index.html:1199-1200 (Stage 2 end of problem)'
   summary: '"x is on its own: 7x = 14" reads as already solved to a struggling student; the other letter is eliminated, not x isolated'
   evidence: '"<o> is on its own: <K><o> = <C>" (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: the Stage 2 end line reads "<letter> is the only letter left: 7x = 14" (the other letter is eliminated; x is not yet isolated); pinned with a plant.'
 - id: simultaneous-solver-s1-003
   severity: MEDIUM
   jc: false

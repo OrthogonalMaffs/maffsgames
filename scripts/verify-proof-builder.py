@@ -177,7 +177,7 @@ def irr(v):
 
 
 def terms(o, sep):
-    lhs = o.split('=')[0]
+    lhs = re.split(r'=|\\approx', o)[0]    # a distractor may show its result (s1-010): \sqrt2+\sqrt3 \approx 3.15
     depth, cur, parts = 0, '', []
     for ch in lhs:
         depth += (ch in '({') - (ch in ')}')
@@ -284,7 +284,19 @@ VALID_ORDERS = [
                                     [1, 2, 0, 3, 4], [2, 1, 0, 3, 4], [1, 2, 3, 0, 4], [2, 1, 3, 0, 4]]),
     ('Prove that \\cos^2\\theta + \\sin^2\\theta = 1', [[0, 1, 2, 3], [0, 2, 1, 3]]),
 ]
-AUDIT_O = {'Prove that n^2 + n is even': 't5-013', 'Prove that \\cos^2\\theta + \\sin^2\\theta = 1': 's1-001'}
+# 3^n > 2n+1 (s1-002, R9, SR-24): line 3 (6k+3 = (2k+3) + 4k, an identity) needs only the assumption that names k; line 4 (4k > 0, so
+# 6k+3 > 2(k+1)+1) needs that identity and k >= 2; line 5 needs lines 2 and 4; the base case may come anywhere before the last line.
+def dag_orders(after, n):
+    return [list(o) for o in itertools.permutations(range(n))
+            if all(o.index(j) < pos for pos, li in enumerate(o) for j in after.get(li, []))]
+
+
+VALID_ORDERS.append(('Prove that 3^n > 2n+1', dag_orders({2: [1], 3: [1], 4: [1, 3], 5: [2, 4], 6: [0, 5]}, 7)))
+AUDIT_O = {'Prove that n^2 + n is even': 't5-013', 'Prove that \\cos^2\\theta + \\sin^2\\theta = 1': 's1-001',
+           'Prove that 3^n > 2n+1': 's1-002'}
+
+TRUE_OPTION = 'This statement is actually TRUE'
+RESULT_ITEMS = ('The sum of two irrational numbers is always irrational', 'The product of two irrational numbers is always irrational')
 
 # Wording reviewed as wrong: (regex, why, finding). Matched against every string in the bank.
 BARRED = [
@@ -295,6 +307,7 @@ BARRED = [
     (r'the sum starts at r=1, so n=1 is the base case', 'a non sequitur: the base case comes from the domain the '
      'statement is claimed for', 's1-003'),
     (r'\bFactor\s*:', 'US English: "Factorise:"', 's1-008'),
+    (r'factoring out', 'US English: "taking out a factor of"', 's1-012'),
     (r'natural numbers?', 'whether 0 is a natural number is a convention: state the domain (SR-17)', 's1-004'),
 ]
 DOMAIN = re.compile(r'n\s*(\\geq|\\ge\b|≥|\\in)')
@@ -446,6 +459,15 @@ def check_bank(fails, bank):
             fails.append('%s: %d REFUTES entries match (review it)' % (w, len(hits)))
             continue
         sub, f = hits[0]
+        # R9 (s1-005, s1-011): "This statement is actually TRUE" is offered on every item, in one wording, so its presence does not
+        # give the answer; s1-010: where a key shows its result, so does every distractor
+        opts_all = [q['correct']] + list(q['d'])
+        if TRUE_OPTION not in opts_all:
+            fails.append('%s: the option %r is missing, so its presence on the true items gives the answer (proof-builder-s1-005)' % (w, TRUE_OPTION))
+        if q.get('isTrue') and q['correct'] != TRUE_OPTION:
+            fails.append('%s: the true-keyed item words its key %r, not %r (proof-builder-s1-011)' % (w, q['correct'], TRUE_OPTION))
+        if any(s_ in q['s'] for s_ in RESULT_ITEMS) and not all(('=' in o or '\\approx' in o) for o in opts_all if o != TRUE_OPTION):
+            fails.append('%s: the key shows its result but a distractor does not (proof-builder-s1-010): %s' % (w, opts_all))
         try:
             if q.get('isTrue'):
                 if sub not in TRUE_PROOFS:
@@ -458,6 +480,8 @@ def check_bank(fails, bank):
                 elif not f(q['correct']):
                     fails.append('%s: the key %r does not disprove the statement' % (w, q['correct']))
             for o in q['d']:
+                if o == TRUE_OPTION:
+                    continue
                 if f(o):
                     fails.append('%s: the wrong option %r also disproves the statement (SR-16)' % (w, o))
         except (ValueError, KeyError, AttributeError, TypeError) as e:
@@ -619,6 +643,8 @@ def play(fails, html):
             if KATEX_DIR:
                 ctx.route(lambda url: '/katex@0.16.9/dist/' in url, lambda route: route.fulfill(
                     path=os.path.join(KATEX_DIR, route.request.url.split('/dist/', 1)[1].split('?')[0])))
+            else:
+                ctx.route(lambda url: bc.is_font_cdn(url), bc.serve_real_font)     # KaTeX from the pinned local copy
             ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
                 status=200, content_type='text/html; charset=utf-8', body=html))
             page = ctx.new_page()
@@ -645,8 +671,17 @@ def play(fails, html):
 
 
 PLANTS = [
-    ('counter "\\(\\sqrt{a+b}', 't5-003: a = 4, b = 9 as a wrong option', "d:['a=0, b=9','a=0, b=4','a=16, b=0']",
-     "d:['a=4, b=9','a=0, b=4','a=16, b=0']"),
+    ('counter "The sum of two irrational', 's1-005: the TRUE option missing from a false item',
+     r"\\approx 3.15','This statement is actually TRUE']", r"\\approx 3.15','\\sqrt{5}+\\sqrt{7} \\approx 4.88']"),
+    ('counter "The product of two irrational', 's1-010: distractors without results beside a key with one',
+     r"'\\sqrt{2}\\times\\sqrt{5} = \\sqrt{10}'", r"'\\sqrt{2}\\times\\sqrt{5}'"),
+    ('counter "If n is an integer and n² is even', 's1-011: the true key worded differently',
+     "correct:'This statement is actually TRUE',d:['3','5','7'],isTrue:true", "correct:'This statement is actually TRUE — no counter-example exists',d:['3','5','7'],isTrue:true"),
+    ('sorter alevel[0]', 's1-012: "factoring out 2"', "taking out a factor of 2", "factoring out 2"),
+    ('sorter further[2]', 's1-002: the 3^n sorter in one exact order',
+     "],\n   after:{2:[1],3:[1],4:[1,3],5:[2,4],6:[0,5]}}", "]}"),
+    ('counter "\\(\\sqrt{a+b}', 't5-003: a = 4, b = 9 as a wrong option', "d:['a=0, b=9','a=0, b=4','This statement is actually TRUE']",
+     "d:['a=4, b=9','a=0, b=4','This statement is actually TRUE']"),
     ('induction \\sum_{r=1}^{n} r = \\frac{n(n+1)}{2} stage 4', 't5-009: (k^2+3k+2)/2 as a wrong option',
      "'\\\\frac{k^2+3k}{2}'", "'\\\\frac{k^2+3k+2}{2}'"),
     ('counter "Every exterior', 't5-012: the true exterior-angle statement keyed false',

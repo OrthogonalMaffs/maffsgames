@@ -87,7 +87,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
   <div id="menu" class="screen active">
     <div class="header"><h1>Circle Theorem Spotter</h1><div class="sub">Name the theorem. Find the angle. State the reason.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
     <p style="text-align:center;color:var(--muted);font-size:.82rem;margin:1rem 0;line-height:1.5">
-      GCSE Higher — all seven circle theorems.<br>
+      GCSE Higher — the circle theorems.<br>
       Identify theorems, calculate missing angles, and state geometric reasons.
     </p>
   <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
@@ -98,9 +98,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
       <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1/20</div></div>
       <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
       <div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="streak">0</div></div>
-      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0s</div></div>
     </div>
-    <div class="timer-text" id="timerDisplay">0s</div>
     <div class="progress" id="progress"></div>
     <div class="q-card">
       <div class="figure" id="figure"></div>
@@ -404,14 +402,14 @@ const FIG = (function () {
 const QUESTIONS={
 gcse:[
   {fig:{t:'centreCirc',deg:110,centreLab:'2x',circLab:'x'},ctx:'O is the centre. Both marked angles stand on the same arc AB.',ask:'Which theorem does this diagram show?',correct:'Angle at centre = 2 × angle at circumference',d:['Angles in same segment','Angle in semicircle','Cyclic quadrilateral']},
-  {fig:{t:'semicircle',C:65},ctx:'AB is a straight line through the centre O, and C is on the circle.',ask:'Which theorem does this diagram show?',correct:'Angle in a semicircle = 90°',d:['Angle at centre theorem','Alternate segment theorem','Tangent-radius']},
+  {fig:{t:'semicircle',C:65},ctx:'AB is a straight line through the centre O, and C is on the circle.',ask:'Which theorem does this diagram show?',correct:'Angle in a semicircle = 90°',d:['Angles in same segment','Alternate segment theorem','Tangent-radius']},
   {fig:{t:'sameSegment',A:200,B:340,C:110,D:50,cLab:'x',dLab:'x'},ctx:'C and D both lie on the major arc, on the same side of chord AB.',ask:'Which theorem does this diagram show?',correct:'Angles in the same segment are equal',d:['Angle at centre theorem','Cyclic quadrilateral','Alternate segment theorem']},
   {fig:{t:'cyclicQuad',A:125,B:35,C:305,D:215,labs:{A:'a',C:'c'}},ctx:'All four vertices of ABCD lie on the circle.',ask:'Which theorem does this diagram show?',correct:'Opposite angles in a cyclic quad sum to 180°',d:['Angles in same segment','Angle at centre theorem','Tangent-radius']},
   {fig:{t:'tangentRadius'},ctx:'The green line touches the circle at exactly one point, A. OA is a radius.',ask:'Which theorem does this diagram show?',correct:'Tangent is perpendicular to the radius',d:['Alternate segment theorem','Angle in semicircle','Angle at centre theorem']},
   {fig:{t:'altSegment',A:270,B:195,C:65,tanLab:'x',altLab:'x'},ctx:'The green line is a tangent touching at A. AB is a chord, and C lies on the far arc.',ask:'Which theorem does this diagram show?',correct:'Alternate segment theorem',d:['Tangent-radius','Angles in same segment','Angle at centre theorem']},
   {fig:{t:'twoTangents',equal:true},ctx:'Both green lines are drawn from the external point P and each touches the circle once.',ask:'Which theorem does this diagram show?',correct:'Two tangents from a point are equal',d:['Cyclic quadrilateral','Alternate segment theorem','Angle in semicircle']},
   {fig:{t:'chordBisect'},ctx:'OM is drawn from the centre to meet chord AB, and the two halves are marked equal.',ask:'Which property does this diagram show?',correct:'Perpendicular from centre bisects chord',d:['Tangent-radius','Angle at centre theorem','Alternate segment theorem']},
-  {fig:{t:'centreCirc',deg:100,centreLab:'100&deg;',circLab:'?'},ctx:'The angle subtended at the centre by arc AB is 100°. What is the angle subtended at the circumference by the same arc?',ask:'Which theorem?',correct:'Angle at centre = 2 × angle at circumference',d:['Angles in same segment','Cyclic quadrilateral','Alternate segment theorem']},
+  {fig:{t:'centreCirc',deg:100,centreLab:'100&deg;',circLab:'?'},ctx:'The angle subtended at the centre by arc AB is 100°. The angle subtended at the circumference by the same arc is marked ?.',ask:'Which theorem links the two angles?',correct:'Angle at centre = 2 × angle at circumference',d:['Angles in same segment','Cyclic quadrilateral','Alternate segment theorem']},
   {fig:{t:'semicircle',C:65,cLab:'?'},ctx:'AB is a diameter. C is a point on the circumference.',ask:'What is angle ACB?',correct:'90°',d:['45°','180°','60°']},
   {fig:{t:'altSegment',A:270,B:195,C:65,tanLab:'55&deg;',altLab:'?'},ctx:'A chord is drawn. The angle between the chord and the tangent at one end is 55°.',ask:'Which theorem gives the angle in the alternate segment?',correct:'Alternate segment theorem',d:['Angle at centre theorem','Tangent-radius','Cyclic quadrilateral']},
   {fig:{t:'cyclicQuad',A:125,B:35,C:305,D:215,labs:{A:'72&deg;',C:'?'}},ctx:'ABCD is a cyclic quadrilateral. Angle A = 72°.',ask:'What is angle C?',correct:'108°',d:['72°','90°','144°']},
@@ -424,7 +422,7 @@ gcse:[
   {fig:{t:'centreCirc',deg:140,centreLab:'140&deg;',circLab:'?'},ctx:'The angle at the centre is 140°. Find the angle at the circumference on the MAJOR arc side.',ask:'Find the angle',correct:'70°',d:['110°','140°','220°']},
   {fig:{t:'centreCirc',deg:260,centreLab:'260&deg;',circLab:'?'},ctx:'The reflex angle at the centre is 260°. Find the angle at the circumference subtended by the major arc.',ask:'Find the angle',correct:'130°',d:['50°','260°','100°']},
   {fig:{t:'centreCirc',deg:180,centreLab:'?',circLab:'90&deg;'},ctx:'The angle at the circumference is 90°. What is the angle at the centre?',ask:'Find the angle',correct:'180°',d:['90°','45°','360°']},
-  {fig:{t:'centreCirc',deg:180,centreLab:'180&deg;'},ctx:'If the angle at the centre is 180°, what shape is formed?',ask:'What does this tell us?',correct:'The chord is a diameter',d:['The angle at circumference is 180°','The triangle is equilateral','The chord is a tangent']},
+  {fig:{t:'centreCirc',deg:180,centreLab:'180&deg;'},ctx:'The angle at the centre is 180°.',ask:'What does this tell us about the chord?',correct:'The chord is a diameter',d:['The angle at circumference is 180°','The triangle is equilateral','The chord is a tangent']},
   {fig:{t:'sameSegment',A:200,B:340,C:110,D:50,cLab:'42&deg;',dLab:'?'},ctx:'Angle ACB = 42° where A, B, C lie on the circle. D is another point on the same arc as C.',ask:'Find angle ADB',correct:'42°',d:['84°','21°','138°']},
   {fig:{t:'sameSegment',A:200,B:340,C:110,D:50,cLab:'58&deg;',dLab:'?',names:['P','Q','R','S']},ctx:'Angle PRQ = 58° in a circle. S is on the same arc as R.',ask:'Find angle PSQ',correct:'58°',d:['116°','29°','122°']},
   {fig:{t:'sameSegment',A:200,B:340,C:110,D:50,cLab:'x',dLab:'3x &minus; 80'},ctx:'Two angles in the same segment are marked x and 3x − 80.',ask:'Find x',correct:'40°',d:['20°','80°','60°']},
@@ -444,7 +442,7 @@ gcse:[
   {fig:{t:'altSegment',A:270,B:195,C:65,tanLab:'48&deg;',showO:true,oLab:'?',names:['P','Q','R']},ctx:'Tangent at P. Angle QPT = 48° (Q on circle). O is centre.',ask:'Find angle QOP (angle at centre)',correct:'96°',d:['48°','42°','132°']},
   {fig:{t:'twoTangents',A:205,B:335,pLab:'50&deg;',oLab:'?'},ctx:'Two tangents from point P. Angle between them is 50°.',ask:'Find the angle subtended at the centre by the minor arc',correct:'130°',d:['50°','100°','310°']},
   {fig:{t:'twoTangents',A:210,B:330,pLab:'60&deg;',showPO:true,poaLab:'?'},ctx:'Two tangents from P make angle 60°. OA is radius to point of tangency.',ask:'Find angle OPA',correct:'30°',d:['60°','90°','120°']},
-  {fig:{t:'tangentRadius',showP:true,oaLab:'5 cm',paLab:'12 cm',opLab:'?'},ctx:'Tangent at A. OA = radius = 5 cm. PA = tangent = 12 cm.',ask:'Find OP',correct:'13 cm',d:['17 cm','7 cm','\\sqrt{119} cm']},
+  {fig:{t:'tangentRadius',showP:true,oaLab:'5 cm',paLab:'12 cm',opLab:'?'},ctx:'Tangent at A. OA = radius = 5 cm. PA = tangent = 12 cm.',ask:'Find OP',correct:'13 cm',d:['17 cm','7 cm','\\sqrt{119}\\text{ cm}']},
   {fig:{t:'altSegment',A:270,B:195,C:65,tanLab:'70&deg;',showO:true,oLab:'?',names:['B','A','C']},ctx:'Tangent at B. Angle ABT = 70°. AB is a chord.',ask:'Find the angle subtended by AB at the centre',correct:'140°',d:['70°','110°','40°']},
   {fig:{t:'altSegment',A:270,B:195,C:65,tanLab:'35&deg;',altLab:'?',names:['C','D','E']},ctx:'Tangent at C. Chord CD. Angle TCD = 35°. E is on major arc.',ask:'Find angle CED',correct:'35°',d:['70°','145°','55°']},
   {fig:{t:'semicircle',C:65,aLab:'32&deg;',bLab:'?'},ctx:'AB is a diameter. Angle BAC = 32°.',ask:'Find angle ABC',correct:'58°',d:['32°','90°','148°']},
@@ -457,7 +455,7 @@ gcse:[
   {fig:{t:'centreCirc',deg:130,centreLab:'130&deg;',circLab:'?',inside:true,names:['A','B','D']},ctx:'O is centre. Angle AOB = 130°. D is on minor arc.',ask:'Find angle ADB',correct:'115°',d:['65°','130°','230°']},
   {fig:{t:'altSegment',A:270,B:195,C:65,tanLab:'40&deg;',altLab:'?'},ctx:'Tangent at A. Angle BAT = 40°. B and C on circle.',ask:'Find angle BCA (C on major arc, same segment as alternate)',correct:'40°',d:['80°','140°','50°']},
   {fig:{t:'semicircle',C:65,cLab:'90&deg;',names:['A','C','B']},ctx:'In a circle, angle ABC = 90°. BC = 6, AC = 10.',ask:'Find AB',correct:'8',d:['4','64','\\sqrt{136}']},
-  {fig:{t:'chordBisect',chordLab:'8 cm',radLab:'5 cm',distLab:'?'},ctx:'A chord is 8 cm long. The radius is 5 cm.',ask:'Distance from centre to chord',correct:'3 cm',d:['4 cm','\\sqrt{39} cm','2 cm']},
+  {fig:{t:'chordBisect',chordLab:'8 cm',radLab:'5 cm',distLab:'?'},ctx:'A chord is 8 cm long. The radius is 5 cm.',ask:'Distance from centre to chord',correct:'3 cm',d:['4 cm','\\sqrt{39}\\text{ cm}','2 cm']},
 ]
 };
 
@@ -467,8 +465,7 @@ function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random
 function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false})}
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');MaffsLock.screen(document.getElementById(id))}
 function startGame(){MaffsLock.newSession();questions=shuffle([...QUESTIONS.gcse]).slice(0,totalQ);qIdx=0;score=0;streak=0;bestStreak=0;correctCount=0;document.getElementById('score').textContent='0';document.getElementById('streak').textContent='0';const pr=document.getElementById('progress');pr.innerHTML='';for(let i=0;i<totalQ;i++){const d=document.createElement('div');d.className='pip'+(i===0?' current':'');pr.appendChild(d)}show('game');showQ();window._ggAbandoned=true;mfg('game_started',{game_slug:'circle-theorem-spotter',level:resolvedLevel});if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'circle-theorem-spotter',level:resolvedLevel,questions_answered:qIdx})})}}
-function showQ(){const q=questions[qIdx];if(window.MaffsNext)MaffsNext.clear(document.getElementById('nextMount'));document.getElementById('feedback').textContent='';document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;document.getElementById('figure').innerHTML=FIG.render(q.fig);document.getElementById('context').textContent=q.ctx;document.getElementById('prompt').textContent=q.ask;const opts=shuffle([q.correct,...q.d]);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;if(v.includes('\\')){rk(b,v)}else{b.textContent=v}b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});MaffsLock.fresh(oEl);qStartTime=Date.now();document.getElementById('timer').textContent='0s';clearInterval(timerInterval);timerInterval=setInterval(tick,250)}
-function tick(){const e=Math.floor((Date.now()-qStartTime)/1000);document.getElementById('timer').textContent=e+'s'}
+function showQ(){const q=questions[qIdx];if(window.MaffsNext)MaffsNext.clear(document.getElementById('nextMount'));document.getElementById('feedback').textContent='';document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;document.getElementById('figure').innerHTML=FIG.render(q.fig);document.getElementById('context').textContent=q.ctx;document.getElementById('prompt').textContent=q.ask;const opts=shuffle([q.correct,...q.d]);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;if(v.includes('\\')){rk(b,v)}else{b.textContent=v}b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});MaffsLock.fresh(oEl);qStartTime=Date.now();clearInterval(timerInterval)}   // Hidden Count-Up (timer policy): the clock runs for the score and is never shown
 function handle(btn,q){if(!MaffsLock.lock(document.getElementById('options')))return;clearInterval(timerInterval);const s=(Date.now()-qStartTime)/1000;const ok=btn.dataset.val===q.correct;document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.correct)b.classList.add('correct')});mfg('question_answered',{game_slug:'circle-theorem-spotter',level:resolvedLevel,correct:ok,question_index:qIdx+1});if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));streak++;correctCount++;if(streak>bestStreak)bestStreak=streak;pip('done')}else{btn.classList.add('wrong');streak=0;pip('fail')}document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;
   // canon §7.6: a right answer moves on briskly; a wrong one names the theorem and waits on Next.
   if(ok){MaffsLock.timer(adv,1000);return}
