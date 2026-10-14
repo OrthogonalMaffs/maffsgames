@@ -23,6 +23,10 @@ its own bank and engine: a point for a right first pick only. The arithmetic, ke
     pick marks nothing; scores 0, logged once, attempts 2); two wrong picks (scores 0, logged once; then every option
     clicked and pressed with Enter changes nothing). With MaffsLock's real fresh window (t2-004): Next's second click
     landing on the new question's option marks nothing; a double click on Next moves on once; the session ends once.
+SR-34 (Jon, 14 Oct 2026): every option a verdict and a result in one form; the working is in the item's explanation,
+  shown after the answer is marked, right or wrong. Spot the Muppet's checks (stm.explanation_of, stm.key_values,
+  stm.explanation_shown): every item has one, its equations hold, it states the key's values (VERDICT_KEYS: a key that
+  is a verdict with no figure), it is shown after marking and not before. FALSE_RULES reads the explanation too.
 KNOWN_OPEN: register entries detected here and left open (reported, never failed; a stale one fails).
 A self-test plants nine faults back into a copy of the page; each must FAIL naming its entry.
 
@@ -124,8 +128,11 @@ TRUE_OPTIONS = {
 # A key must not state a false rule.
 FALSE_RULES = {'ta_gcse_007': ('always have a positive and negative solution', TAG + 't2-008'),
                'ta_gcse_018': ('add for OR', TAG + 's1-003')}   # only for events that cannot both happen
-# A distractor that ends on the key's values but is false as a whole (reviewed): it is not SR-16's shape.
-SR16_REVIEWED = {'ta_gcse_008': 'quotes the right unit prices (1.2p/g, 1.1p/g) with the wrong conclusion (the 400g)'}
+# A key that is a verdict with no figure in it (right answer, wrong method): the explanation states the values (SR-34).
+VERDICT_KEYS = {'ta_gcse_008': 'the answer is right and the method is wrong: the unit prices are in the explanation',
+                'ta_gcse_012': 'the answer is right and the method is wrong: the gradient is in the explanation',
+                'ta_core_002': 'the conclusion is right and the method is wrong: the unit prices are in the explanation',
+                'ta_core_007': 'the answer is right and the method is wrong: the weighted mean is in the explanation'}
 ARITH_ENTRY = {'ta_gcse_002': TAG + 't2-006', 'ta_core_004': TAG + 't2-009'}
 
 KNOWN_OPEN = {}
@@ -150,7 +157,8 @@ def check_bank(fails, opens, bank):
             fails.append('%s: %d options, %d keyed correct, %d distinct (4, 1, 4)' % (qid, len(opts), len(keys), len({o['text'] for o in opts})))
             continue
         key = keys[0]['text']
-        for where, text in (('advice', q['advice']), ('key', key)):
+        expl = stm.explanation_of(fails, q)
+        for where, text in (('advice', q['advice']), ('key', key), ('explanation', expl)):
             for written, vals in stm.equations(text, q['advice']):
                 for a, b in zip(vals, vals[1:]):
                     if a is None or b is None or stm.holds(a, b):
@@ -163,7 +171,7 @@ def check_bank(fails, opens, bank):
                                  % (tag + ' ' if tag else '', qid, where, written, round(float(a[0]), 4), round(float(b[0]), 4)))
         if qid in KEYS:
             want = KEYS[qid]
-            got = stm.numbers(key)
+            got = stm.key_values(fails, qid, key, expl, want, qid in VERDICT_KEYS)
             missing = [w for w in want if not any(stm.same(g, w) for g in got)]
             written = [next((g[0] for g in got if stm.same(g, w)), None) for w in want]
             if missing:
@@ -171,14 +179,13 @@ def check_bank(fails, opens, bank):
                     open_seen.add(qid)
                     opens.append('%s %s: %s' % (KNOWN_OPEN[qid][0], qid, KNOWN_OPEN[qid][1]))
                 else:
-                    fails.append('%s: the key does not state %s (recomputed from the item): "%s"'
-                                 % (qid, ', '.join(str(round(float(w), 4)) for w in missing), key))
+                    fails.append('%s: the %s does not state %s (recomputed from the item): "%s"'
+                                 % (qid, 'explanation' if qid in VERDICT_KEYS else 'key',
+                                    ', '.join(str(round(float(w), 4)) for w in missing), expl if qid in VERDICT_KEYS else key))
             for o in opts:
                 if o['correct']:
                     continue
                 tail = stm.numbers(o['text'])[-len(want):]
-                if qid in SR16_REVIEWED:
-                    continue
                 if None not in written and len(tail) == len(want) and all(g[0] == w for g, w in zip(tail, written)):
                     fails.append('SR-16 %s: the distractor "%s" ends on the key\'s value, by a wrong method; a true '
                                  'statement is never a wrong option' % (qid, o['text']))
@@ -188,8 +195,9 @@ def check_bank(fails, opens, bank):
             text, tag = TRUE_OPTIONS[qid]
             if any(o['text'] == text and not o['correct'] for o in opts):
                 fails.append('%s %s: "%s" is true as written and keyed wrong (SR-16)' % (tag, qid, text))
-        if qid in FALSE_RULES and FALSE_RULES[qid][0] in key:
-            fails.append('%s %s: the key states a false rule ("...%s")' % (FALSE_RULES[qid][1], qid, FALSE_RULES[qid][0]))
+        for where, text in (('key', key), ('explanation', expl)):
+            if qid in FALSE_RULES and FALSE_RULES[qid][0] in text:
+                fails.append('%s %s: the %s states a false rule ("...%s")' % (FALSE_RULES[qid][1], qid, where, FALSE_RULES[qid][0]))
         for o in opts:
             if not o['correct'] and re.search(r' is correct \u2014', o['text']):
                 adv = stm.numbers(q['advice'])
@@ -211,6 +219,8 @@ def check_bank(fails, opens, bank):
         if extra and small and F(extra.group(1)) / int(extra.group(2)) < F(small.group(1)) / int(small.group(2)):
             fails.append('%s %s: the advice compares the extra %sml\'s price per ml with the small bottle\'s: a valid '
                          'marginal argument, which the key calls the wrong method' % (TAG + 't2-002', q['id'], extra.group(2)))
+    for qid in set(VERDICT_KEYS) - set(ids):
+        fails.append('VERDICT_KEYS %s is stale: no such item' % qid)
     for k in set(MUPPET_SUMS) - seen_sums:
         fails.append('MUPPET_SUMS %s "%s" is stale: no such wrong sum in the advice' % k)
     for qid in set(KNOWN_OPEN) - open_seen:
@@ -346,7 +356,9 @@ def check_s1(fails, bank):
             fails.append('%ss1-007 %s: the option %r is in pounds as units, or gives the figure it calls wrong' % (TAG, by['core_009']['id'], o['text']))
 
 
-def run(html):
+def run(html, play=True):
+    """play=False (a self-test plant in the bank's text): the bank checks only, no play in Chromium. Every text plant is
+    caught by a bank check; replaying all 50 items for each one cost most of the verifier's CI time (14 Oct 2026)."""
     from playwright.sync_api import sync_playwright
     fails, opens = [], []
     proc, base = bc.start_stub_server()
@@ -357,10 +369,13 @@ def run(html):
             bank = page.evaluate('() => QUESTIONS')
             check_bank(fails, opens, bank)
             check_s1(fails, bank)
-            sweep(fails, page, bank)
+            if play:
+                sweep(fails, page, bank)
             ctx.close()
             ctx, page, errors2 = new_page(browser, base, html, False)
-            lock_window(fails, page, bank)
+            if play:
+                lock_window(fails, page, bank)
+                stm.explanation_shown(fails, page, {lv: bank.get(lv, []) for lv in COUNTS}, LOAD)
             ctx.close()
             errs = [e for e in errors + errors2 if 'firebase' not in e.lower()]
             if errs:
@@ -377,47 +392,59 @@ PLANTS = [
     (TAG + 's1-001', 's1-001: ks3_014 with no fair coin (R2)',
      "in a row with a fair coin. The next flip is definitely tails", "in a row. The next flip is definitely tails"),
     (TAG + 's1-004', 's1-004: ks3_008 back to shop policy (R5)',
-     "the two vouchers average out at 25% off", "you can only use one voucher at a time"),
+     "Maureen is wrong " + D + " it\\'s 25% off", "Maureen is wrong " + D + " you can only use one voucher at a time"),
     (TAG + 's1-002', 's1-002: core_004 title back to the clown joke (R6)',
      "Savings Maximisation Guru, PennyWise Financial'", "Savings Maximisation Guru, PennyWise Financial (No Relation to the Clown)'"),
     (TAG + 's1-006', 's1-006: gcse_007 12.5 twice (R1)',
-     "x = 25\\u00b2 = 625", "x = \\u221a25 = 12.5"),
+     "Victor is wrong " + D + " x = 625", "Victor is wrong " + D + " x = \\u221a25 = 12.5"),
     (TAG + 's1-001', 's1-001: gcse_006 add 5 to the last digit (R3)',
      "just put a 5 after the last digit", "just add 5 to the last digit"),
     (TAG + 's1-008', 's1-008: core_004 key a rounded 2.653 as exact (R4)',
-     "\\u00a31,000 \\u00d7 1.05\\u00b2\\u2070 = \\u00a32,653.30'", "\\u00a31,000 \\u00d7 1.05\\u00b2\\u2070 = \\u00a31,000 \\u00d7 2.653 = \\u00a32,653'"),
+     "Penny is wrong " + D + " it\\'s \\u00a32,653.30'", "Penny is wrong " + D + " it\\'s \\u00a31,000 \\u00d7 2.653 = \\u00a32,653'"),
     (TAG + 's1-007', 's1-007: core_009 pounds as units (R3)',
-     "\\u00d7 \\u00a32,000 = 20,000 units", "\\u00d7 \\u00a32,000 = \\u00a320,000 units"),
+     "Brenda is wrong " + D + " it\\'s 20,000 units", "Brenda is wrong " + D + " it\\'s \\u00a320,000 units"),
     (TAG + 's1-001', "s1-001: gcse_008's 'Sharon is correct — the 650g'",
-     "{text:'Sharon is correct in both method and answer',correct:false}",
+     "{text:'Sharon is right on the answer " + D + " and right on the method',correct:false}",
      "{text:'Sharon is correct " + D + " the 650g is better value',correct:false}"),
     (TAG + 's1-002', "s1-002: ks3_017's true 0.34 x 10^7",
-     "{text:'Professor Wren is wrong " + D + " in standard form, 3,400,000",
-     "{text:'Professor Wren is wrong " + D + " 3,400,000"),
+     "{text:'Professor Wren is wrong " + D + " in standard form it\\'s 0.34",
+     "{text:'Professor Wren is wrong " + D + " 3,400,000 = 0.34"),
     (TAG + 's1-003', "s1-003: gcse_018's 'add for OR'",
-     "You multiply for AND, not add',correct:true}", "You multiply for AND, add for OR',correct:true}"),
+     "You multiply for AND, not add.'}", "You multiply for AND, add for OR.'}"),
     (TAG + 't2-004', 't2-004: no fresh window on a new question',
      "  MaffsLock.fresh(document.getElementById('gameScreen'));\n", ''),
     (TAG + 't2-001', "t2-001: gcse_006's second true option",
-     "{text:'Prudence is wrong " + D + " upper bound is 2.49m',correct:false}",
+     "{text:'Prudence is wrong " + D + " it\\'s 2.49m',correct:false}",
      "{text:'Prudence is correct " + D + " upper bound is 2.45m',correct:false}"),
     (TAG + 't2-002', 't2-002: core_002 a valid marginal argument',
      'The big one only costs \\u00a31.30 more, and \\u00a31.30 is less than \\u00a33.50, so obviously the big bottle is better value.',
      'The difference in price is \\u00a31.30 for 250ml extra. That\\\'s better than paying \\u00a33.50 for 500ml so obviously the big bottle is better value.'),
     (TAG + 't2-003', "t2-003: core_007's 'Wendy is correct — 70%'",
-     "{text:'Wendy is correct in both method and answer',correct:false}",
+     "{text:'Wendy is right on the answer " + D + " and right on the method',correct:false}",
      "{text:'Wendy is correct " + D + " the overall average is 70%',correct:false}"),
     (TAG + 't2-006', 't2-006: gcse_002 500 x 1.1249 = 562.43',
      '\\u00a3500 \\u00d7 1.124864 = \\u00a3562.43', '\\u00a3500 \\u00d7 1.1249 = \\u00a3562.43'),
     (TAG + 't2-009', 't2-009: core_004 1.05 x 20 = 21.05',
      '\\u00d7 1.05 \\u00d7 20 = \\u00a31,000 \\u00d7 21 = \\u00a321,000.', '\\u00d7 1.05 \\u00d7 20 = \\u00a31,000 \\u00d7 21.05 = \\u00a321,050.'),
     (TAG + 't2-005', 't2-005: core_012 the key gives about £397 a month',
-     '\\u2248 \\u00a3364.20 a month (total \\u00a313,111.19)', '\\u2248 \\u00a3397 a month (total \\u00a314,292.19)'),
+     "it\\'s \\u00a3364.20 a month, \\u00a313,111.19 in total", "it\\'s \\u00a3397 a month, \\u00a314,292.19 in total"),
     (TAG + 't2-005', "t2-005: core_012's advice says 6% per year",
      'over 3 years at 6% APR.', 'over 3 years at 6% per year.'),
+    ('SR-34', 'SR-34: ks3_001 with no explanation',
+     ",explanation:'To find 30% of 80, multiply by 0.30, not divide by 30: 0.30 \\u00d7 80 = 24.'}", "}"),
+    ('SR-34', 'SR-34: the explanation is never shown',
+     "  box.classList.add('show');\n}", "}"),
+    ('SR-34', 'SR-34: gcse_008 explanation loses the unit prices',
+     "In pence: 400g costs 480 \\u00f7 400 = 1.2p/g and 650g costs 715 \\u00f7 650 = 1.1p/g, so", "In pence: the 650g is cheaper per gram, so"),
+    ('ta_ks3_001', 'ks3_001 explanation with a wrong sum',
+     "0.30 \\u00d7 80 = 24.'}", "0.30 \\u00d7 80 = 25.'}"),
     (TAG + 't2-007', 't2-007: core_003 prescribing televisions',
      "I\\'m telling everyone I know to buy a bigger telly.", "I\\'m prescribing televisions to all my patients."),
 ]
+
+
+# The plants only play in Chromium can catch (the rest are in the bank's text, caught by the bank checks).
+PLAYED = {'t2-004: no fresh window on a new question', 'SR-34: the explanation is never shown'}
 
 
 def main():
@@ -438,7 +465,7 @@ def main():
                 print('  self-test %-46s *** CANNOT PLANT ***' % what)
                 ok = False
                 continue
-            hit = [f for f in run(html.replace(old, new))[0] if f.startswith(tag)]
+            hit = [f for f in run(html.replace(old, new), play=what in PLAYED)[0] if f.startswith(tag)]
             ok = ok and bool(hit)
             print('  self-test %-46s %s' % (what, ('caught: ' + hit[0][:100]) if hit else '*** MISSED ***'))
     for f in fails:
