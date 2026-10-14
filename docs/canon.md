@@ -2189,6 +2189,7 @@ python scripts/check-site.py --live     # tier 1 against maffsgames.co.uk
 python scripts/check-site.py --only modular-battle
 ```
 One-time setup: `pip install playwright && python -m playwright install chromium`.
+**Python:** `scripts/` require Python >= 3.10 (`write_text` `newline=`, contract TEXT-WRITES). CI pins 3.12 in every `actions/setup-python` step, `scripts/bank_common.py` exits with a message naming the minimum below 3.10, and `scripts/check-python-version.py` holds both.
 **In a Claude Code cloud sandbox** the CDNs are unreachable and the installed Chromium is not the one pip's
 Playwright expects, so tiers 1 and 3 fail there identically on `main`: follow `docs/sandbox-checks.md`.
 
