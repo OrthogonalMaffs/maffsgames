@@ -50,7 +50,7 @@ Bank depth (40+ per level, and served bank size) is tracked in the register and 
 
 **One named exception (Jon, 9 Oct 2026, 00:25): Simultaneous Solver Stage 5 only** (word problems, the two
 equations built from tiles; merged #203). No other build is excepted: a further exception needs Jon's own named
-ruling, never a contract's inference. **Glorious Gantt Game (`glorious-gantt`) is excluded from points 1, 2 and 5 while it is in the roster's Unlisted section (Jon, 12 Oct 2026). It stays live at its URL, as Jon accepted.** The register's exit-bar dashboard
+ruling, never a contract's inference. **Glorious Gantt Game (`glorious-gantt`) is excluded from points 1, 2, 3 and 5 while it is in the roster's Unlisted section (Jon, 12 Oct 2026 for 1, 2 and 5; 13 Oct 2026 for 3). It stays live at its URL, as Jon accepted.** The register's exit-bar dashboard
 (`docs/audits/REGISTER.md`) shows how far the site is from each point.
 
 When deciding what comes next:
