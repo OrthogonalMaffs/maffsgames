@@ -3,6 +3,22 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-13 (cloud): NEGATIVE-INPUT (log-laws, suvat; Jon's input-design ruling)
+
+- **Ruling (Jon, 13 Oct):** mount `schools/assets/keypad.js` with `keys: {minus: true}` in every game where a negative typed answer is possible, as the 11 games that already use it do; the changed touch layout is accepted; keypad.js untouched; games with no possible negative keep their input; whether all typed-numeric games should move is a separate, later question. **Pattern copied: quadratic-factoriser's Formula level** (roots can be negative; calculator.css linked, the surface/font tokens declared on `:root`, a holder div inside the locked container, `MaffsKeypad.mount` with `keys: {minus: true}`).
+- **Changed (for the home lane's check):**
+  - `log-laws`: Solve mode's `#solveInput` (34 negative typed answers, log-laws-s1-005). Mounted once at page load; the keys sit inside `#solveBox`, so `MaffsLock.lock` and `fresh` switch them with the box (no keys code of its own).
+  - `suvat`: Phase 2's `#calcInput` (ALEVEL[34] step 0, v_y = -0.32, suvat-s1-001) and Phase 0's `#p0ux`/`#p0uy`. No Phase 0 key in the bank is negative; it is mounted too so one game does not mix two input styles (Jon can reverse that).
+  - Tested on a 390 px touch profile: real taps on minus, 3, point, 5 type `-3.5` into each; with a mouse the boxes are ordinary inputs, no keypad.
+- **Judged to have no negative answer (input unchanged):**
+  - `split-it`: every generator draws positive integers and builds positive answers (ratios in lowest terms, shares `a*k`, scaled recipe amounts, unit prices, money); nothing subtracts. Money boxes are `type="text" inputmode="decimal"`, the rest `type="number"`.
+  - `screening-room`: the answer is `tp / (tp + fp)` from non-negative counts, a percentage from 0 to 100 (`buildItem`); no bank answer is negative (280 items).
+  - `fermi-lab`: all 325 items' chain references, `acceptedAnswer`s and the figures table (`value:`) are positive estimates (smallest 2e-10); no negative anywhere in the data.
+  - `just-pythag-it-bruv`: side lengths; it already loads keypad.js through MaffsCalc.
+  - Already had a minus key: `simultaneous-solver`.
+- **Not settled by the code, for Jon:** none of the six candidates. **Not built:** the contract's `scripts/check-negative-input.py`. The ruling calls it the home lane's check, and the extracted banks cannot be its evidence: split-it and just-pythag-it-bruv are generators, log-laws' Solve answers are generated at run time, and suvat's negative sits in `steps[].answer`, not a top-level answer field (a check must walk nested fields and carry a declared list for generators).
+- **Merged:** #360 (cf976e7), CI green on re-run (three page-load timeouts in other games on the first attempt: screening-room, proof-builder, quadratic-factoriser); log-laws-s1-005 and suvat-s1-001 closed. Main's run for the merge: see the next entry.
+
 ## 2026-10-13 (cloud): CQ-PLAY-AGAIN-SCREEN (characteristic-quest)
 
 - **Done:** characteristic-quest's `show()` now calls `MaffsLock.screen()`, exactly as eigenvalue-extractor's and eigenvector-engine's (the pattern copied); Play again goes `showMenu()` -> `show('menu')`, so the screen is fresh. `SCREEN_NOT_YET` in `check-answer-lock.py` is empty (the list only shrinks) and its stale ownership sentence is replaced. The game is judged in full with nothing reported.
