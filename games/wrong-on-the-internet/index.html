@@ -265,9 +265,9 @@ ks3: [
     replies:[{username:'@ActualMathsTeacher',text:'Multiplication first. It\'s 14.'},{username:'@QuickMathsKing',text:'You\'re wrong and also rude'}]},
   stage1CorrectAnswer:'14',stage1Options:['14','20','24','10'],
   stage2Options:[
-    {text:'BIDMAS requires multiplication before addition: 3\u00d74=12 first, then 2+12=14. Left-to-right only applies within the same tier of operations',correct:true},
+    {text:'Multiplication comes before addition, so 3 \u00d7 4 is done first',correct:true},
     {text:'The poster should have multiplied 2 \u00d7 3 first, giving 10',correct:false},
-    {text:'The poster forgot to include the 2',correct:false}],
+    {text:'The poster forgot to include the 2 at all when working it out',correct:false}],
   explanation:'BIDMAS: multiplication before addition. 3\u00d74=12, then 2+12=14. Left-to-right only applies within equal-priority operations.'
 },
 {
@@ -277,9 +277,9 @@ ks3: [
     pollVotes:'3,421 votes',pollCaption:'61% got it right! 3/4 has a bigger top number.'},
   stage1CorrectAnswer:'4/5',stage1Options:['4/5','3/4','Equal','Can\'t compare'],
   stage2Options:[
-    {text:'You must convert to common denominators or decimals to compare. 3/4=0.75, 4/5=0.8 \u2014 bigger numerator doesn\'t mean bigger fraction when denominators differ',correct:true},
-    {text:'The fractions can\'t be compared',correct:false},
-    {text:'3/4 is larger because 4>5 is false... wait that\'s backwards',correct:false}],
+    {text:'A bigger top number doesn\'t mean a bigger fraction: 4/5 = 0.8',correct:true},
+    {text:'The fractions can\'t be compared without first using a calculator',correct:false},
+    {text:'3/4 is bigger because its bottom number is smaller',correct:false}],
   explanation:'Convert to compare: 3/4=0.75, 4/5=0.8. A bigger numerator only means a bigger fraction when denominators are the same.'
 },
 {
@@ -288,9 +288,9 @@ ks3: [
     replies:[{username:'@MathsExpertMike',text:'60 \u00f7 15 = 4'},{username:'@ConfidentCarla',text:'15 \u00d7 60 = 900'},{username:'@QuietlyCorrectKate',text:'0.15 \u00d7 60 = 9'}]},
   stage1CorrectAnswer:'9',stage1Options:['9','4','900','75'],
   stage2Options:[
-    {text:'Mike divided instead of multiplying (% of = multiply). Carla multiplied without converting 15% to 0.15. Kate\'s method is correct',correct:true},
-    {text:'All three replies are wrong',correct:false},
-    {text:'Kate used the wrong decimal for 15%',correct:false}],
+    {text:'Mike divided and Carla didn\'t convert 15%; Kate is right',correct:true},
+    {text:'All three replies are wrong, so the answer is none of them',correct:false},
+    {text:'Kate used the wrong decimal: 15% is 1.5, not 0.15',correct:false}],
   explanation:'15% of 60 = 0.15 \u00d7 60 = 9. Mike divided (wrong operation), Carla forgot to convert 15% to 0.15.'
 },
 {
@@ -299,9 +299,9 @@ ks3: [
     replies:[{username:'@CalmCorrector',text:'That rule is for multiplication, not addition...'},{username:'@NegativesAreFun',text:'BLOCKED'}]},
   stage1CorrectAnswer:'\u22128',stage1Options:['\u22128','2','8','\u22122'],
   stage2Options:[
-    {text:'Two negatives make positive applies to MULTIPLICATION (\u2212\u00d7\u2212=+), not addition. Adding two negative numbers gives a more negative result: \u22123+\u22125=\u22128',correct:true},
+    {text:'\'Two negatives make a positive\' is for multiplying, not adding',correct:true},
     {text:'The signs are ignored when adding, so the answer is +8',correct:false},
-    {text:'The poster is correct',correct:false}],
+    {text:'The poster is correct, because two negatives always make a positive',correct:false}],
   explanation:'The rule "two negatives make a positive" applies to multiplication only. Adding two negatives: \u22123 + (\u22125) = \u22128.'
 },
 {
@@ -311,9 +311,9 @@ ks3: [
     pollVotes:'2,109 votes',pollCaption:'Most got it right! 5+3+5+3=16!'},
   stage1CorrectAnswer:'15cm\u00b2',stage1Options:['15cm\u00b2','16cm\u00b2','8cm\u00b2','30cm\u00b2'],
   stage2Options:[
-    {text:'The majority (and caption) calculated perimeter (adding all sides = 16cm) but called it area. Area = length \u00d7 width = 5\u00d73 = 15cm\u00b2',correct:true},
-    {text:'The dimensions were applied the wrong way round',correct:false},
-    {text:'The poster forgot to include units',correct:false}],
+    {text:'The poll worked out the perimeter, 16cm, and called it the area',correct:true},
+    {text:'The poll used the 5cm and 3cm sides the wrong way round',correct:false},
+    {text:'The poll\'s answer is right, but it forgot to include the square units',correct:false}],
   explanation:'Perimeter = 2(5+3) = 16cm. Area = 5\u00d73 = 15cm\u00b2. The poll confused perimeter with area.'
 },
 {
@@ -322,9 +322,9 @@ ks3: [
     replies:[{username:'@RatioReality',text:'That\'s... not how ratios work.'},{username:'@RatioKing',text:'It literally says 2:3. Two pounds. Three pounds.'}]},
   stage1CorrectAnswer:'\u00a348 and \u00a372',stage1Options:['\u00a348 and \u00a372','\u00a32 and \u00a33','\u00a360 each','\u00a340 and \u00a380'],
   stage2Options:[
-    {text:'Ratio numbers are parts, not amounts. Total parts = 5, each part = \u00a3120\u00f75 = \u00a324. Shares: 2\u00d7\u00a324=\u00a348 and 3\u00d7\u00a324=\u00a372',correct:true},
-    {text:'The poster calculated the right amounts but the wrong way',correct:false},
-    {text:'The ratio should be simplified first',correct:false}],
+    {text:'The 2 and 3 are parts of the \u00a3120, not amounts in pounds',correct:true},
+    {text:'The poster got the right amounts but used the wrong method',correct:false},
+    {text:'The poster should have simplified the ratio 2:3 first',correct:false}],
   explanation:'Ratio parts: 2+3=5. Each part = \u00a3120\u00f75 = \u00a324. Shares: \u00a348 and \u00a372.'
 },
 {
@@ -333,9 +333,9 @@ ks3: [
     replies:[{username:'@StatsMaven',text:'Each flip is independent. Still 50/50.'},{username:'@ProbabilityPete',text:'You don\'t understand balance. The universe needs balance.'}]},
   stage1CorrectAnswer:'P(tails) = 0.5 always',stage1Options:['P(tails) = 0.5 always','P(tails) > 0.5','P(tails) = 1','P(tails) < 0.5 (heads is on a streak)'],
   stage2Options:[
-    {text:'The gambler\'s fallacy \u2014 a fair coin has no memory. Each flip is independent with P(heads)=P(tails)=0.5 regardless of previous results',correct:true},
-    {text:'Pete is right that probability evens out over time',correct:false},
-    {text:'The error is not knowing if the coin is fair',correct:false}],
+    {text:'A fair coin has no memory, so P(tails) is still 0.5',correct:true},
+    {text:'Pete is right that the results must even out over time',correct:false},
+    {text:'The real error is not knowing whether the coin is fair',correct:false}],
   explanation:'The gambler\'s fallacy: coins have no memory. Each flip is independent \u2014 P(tails) = 0.5 regardless of history.'
 },
 {
@@ -344,9 +344,9 @@ ks3: [
     replies:[{username:'@SequenceFan',text:'You got the right answer but missed the bigger picture...'},{username:'@PatternSpotter',text:'Right is right. Genius confirmed.'}]},
   stage1CorrectAnswer:'25 (and the poster is correct)',stage1Options:['25 (and the poster is correct)','20','32','24'],
   stage2Options:[
-    {text:'The next term IS 25 and the poster\'s difference method is valid. However they didn\'t recognise this as square numbers (1\u00b2, 2\u00b2, 3\u00b2, 4\u00b2, 5\u00b2) \u2014 the more elegant explanation',correct:true},
-    {text:'The poster is wrong \u2014 the next term is 20',correct:false},
-    {text:'Adding odd numbers doesn\'t work for this sequence',correct:false}],
+    {text:'The poster is right; the terms are also the square numbers',correct:true},
+    {text:'The poster is wrong, because the next term in this sequence is 20',correct:false},
+    {text:'Adding the odd numbers doesn\'t work for this sequence',correct:false}],
   explanation:'The sequence is 1\u00b2, 2\u00b2, 3\u00b2, 4\u00b2, 5\u00b2=25. The difference method (odd numbers) works but misses that these are perfect squares.'
 },
 {
@@ -356,9 +356,9 @@ ks3: [
     pollVotes:'1,567 votes',pollCaption:'71% right! Mean = middle value.'},
   stage1CorrectAnswer:'Sum \u00f7 count',stage1Options:['Sum \u00f7 count','Middle value','Most common','(max+min)\u00f72'],
   stage2Options:[
-    {text:'The poll caption confused mean with median. Mean = sum\u00f7count. Median = middle value when sorted. Mode = most common',correct:true},
-    {text:'Mean and median are the same thing',correct:false},
-    {text:'Both poll options are wrong',correct:false}],
+    {text:'The caption describes the median; the mean is sum \u00f7 count',correct:true},
+    {text:'The mean and the median are the same thing, so it\'s right',correct:false},
+    {text:'Both poll options are wrong descriptions of the mean',correct:false}],
   explanation:'Mean = sum of values \u00f7 number of values. Median = middle value. The poll confused the two.'
 },
 {
@@ -367,9 +367,9 @@ ks3: [
     replies:[{username:'@FactorFinder',text:'HCF = largest factor they share. That\'s 6.'},{username:'@NumberFacts',text:'6 is tiny. Highest means HIGHEST.'}]},
   stage1CorrectAnswer:'6',stage1Options:['6','36','216','30'],
   stage2Options:[
-    {text:'HCF = Highest Common Factor = largest number that divides BOTH. Factors of 12: 1,2,3,4,6,12. Factors of 18: 1,2,3,6,9,18. HCF=6. Multiplying gives LCM\u00d7something, not HCF',correct:true},
-    {text:'HCF and LCM are interchangeable',correct:false},
-    {text:'The poster should have added instead',correct:false}],
+    {text:'HCF is the largest number dividing both: 6, not their product',correct:true},
+    {text:'HCF and LCM are interchangeable, so 36 is right',correct:false},
+    {text:'The poster should have added the two numbers instead: 12 + 18 = 30',correct:false}],
   explanation:'HCF = largest number dividing both. Common factors of 12 and 18: 1, 2, 3, 6. HCF = 6.'
 },
 {
@@ -379,9 +379,9 @@ ks3: [
     pollVotes:'2,891 votes',pollCaption:'360\u00b0 \u2014 same as all shapes!'},
   stage1CorrectAnswer:'180\u00b0',stage1Options:['180\u00b0','360\u00b0','270\u00b0','90\u00b0'],
   stage2Options:[
-    {text:'Angles in a triangle sum to 180\u00b0. 360\u00b0 is the sum of angles at a point or around a full turn. Quadrilaterals sum to 360\u00b0, not all shapes',correct:true},
-    {text:'All polygons have angles summing to 360\u00b0',correct:false},
-    {text:'It depends on the type of triangle',correct:false}],
+    {text:'The angles of any triangle sum to 180\u00b0; 360\u00b0 is a quadrilateral\'s',correct:true},
+    {text:'All polygons have angles summing to 360\u00b0, so the poll\'s answer is right',correct:false},
+    {text:'It depends on the type of triangle, so neither is always right',correct:false}],
   explanation:'Angles in any triangle sum to 180\u00b0. 360\u00b0 is angles at a point or in a quadrilateral.'
 },
 {
@@ -390,9 +390,9 @@ ks3: [
     replies:[{username:'@DicePedant',text:'That\'s not how probability works...'},{username:'@ProbExpert',text:'6 times 1/6 = 1 = certainty. MATHS.'}]},
   stage1CorrectAnswer:'P(at least one 6) = 1 \u2212 (5/6)\u2076 \u2248 0.665',stage1Options:['P(at least one 6) = 1 \u2212 (5/6)\u2076 \u2248 0.665','1 (guaranteed)','1/6','5/6'],
   stage2Options:[
-    {text:'You cannot simply multiply probabilities when finding "at least one". P(at least one 6) = 1 \u2212 P(no sixes) = 1 \u2212 (5/6)\u2076 \u2248 66.5%, not 100%',correct:true},
-    {text:'You should add the probabilities differently',correct:false},
-    {text:'The poster\'s method works for exactly one 6',correct:false}],
+    {text:'You can\'t multiply up for \'at least one\': it\'s 1 \u2212 (5/6)\u2076',correct:true},
+    {text:'You should add the probabilities in a different order',correct:false},
+    {text:'The poster\'s method works, but only for getting exactly one 6',correct:false}],
   explanation:'P(at least one 6 from 6 dice) = 1 \u2212 (5/6)\u2076 \u2248 66.5%. You cannot add probabilities past 1.'
 },
 {
@@ -401,9 +401,9 @@ ks3: [
     replies:[{username:'@FastExpander',text:'3x + 4. Multiply the 3 by the x only.'},{username:'@SlowExpander',text:'3x + 12. Multiply 3 by everything in the bracket.'},{username:'@FastExpander',text:'Why would you multiply the 4? It\'s already a number.'}]},
   stage1CorrectAnswer:'3x + 12',stage1Options:['3x + 12','3x + 4','3x + 7','12x'],
   stage2Options:[
-    {text:'The distributive law: 3(x+4) = 3\u00d7x + 3\u00d74 = 3x+12. Every term inside the bracket must be multiplied by 3, including the constant',correct:true},
-    {text:'SlowExpander is wrong \u2014 constants don\'t get multiplied',correct:false},
-    {text:'FastExpander is correct',correct:false}],
+    {text:'SlowExpander is right: the 4 must be multiplied by 3 too',correct:true},
+    {text:'SlowExpander is wrong, because constants don\'t get multiplied',correct:false},
+    {text:'FastExpander is correct: only the x is multiplied by 3',correct:false}],
   explanation:'Distributive law: 3(x+4) = 3x + 12. Both terms inside the bracket get multiplied.'
 },
 {
@@ -412,9 +412,9 @@ ks3: [
     replies:[{username:'@PrecisionMatters',text:'Look at the third decimal place \u2014 it\'s 6, so you round up.'},{username:'@RoundingMaster',text:'Chop. Done. Next.'}]},
   stage1CorrectAnswer:'3.46',stage1Options:['3.46','3.45','3.5','3.456'],
   stage2Options:[
-    {text:'Rounding requires looking at the next digit \u2014 the 6 means we round up the 5 to 6, giving 3.46. Truncation (chopping) gives 3.45 but loses accuracy compared to proper rounding',correct:true},
-    {text:'3.45 and 3.46 are both acceptable',correct:false},
-    {text:'The poster used too many decimal places',correct:false}],
+    {text:'The next digit is 6, so the 5 rounds up: chopping isn\'t rounding',correct:true},
+    {text:'3.45 and 3.46 are both acceptable answers to 2 decimal places',correct:false},
+    {text:'The poster used too many decimal places in the answer',correct:false}],
   explanation:'To round 3.456 to 2dp: look at the 3rd decimal (6 \u2265 5), so round up: 3.46. Truncation \u2260 rounding.'
 },
 {
@@ -424,9 +424,9 @@ ks3: [
     pollVotes:'2,340 votes',pollCaption:'64% right. The more time you travel, the faster you go.'},
   stage1CorrectAnswer:'Speed = Distance \u00f7 Time',stage1Options:['Speed = Distance \u00f7 Time','Speed = Distance \u00d7 Time','Time = Speed \u00d7 Distance','Distance = Speed \u00f7 Time'],
   stage2Options:[
-    {text:'Speed = Distance \u00f7 Time. More time to cover a distance means SLOWER speed, not faster. The poll caption also has the logic completely backwards',correct:true},
-    {text:'The formula is correct but the caption is wrong',correct:false},
-    {text:'The formula depends on units',correct:false}],
+    {text:'Speed is distance \u00f7 time; more time means slower, not faster',correct:true},
+    {text:'The formula is correct, but the caption explains it wrongly',correct:false},
+    {text:'The formula depends on the units the distance is measured in',correct:false}],
   explanation:'Speed = Distance \u00f7 Time. More time for the same distance = slower, not faster.'
 }
 ],
@@ -438,9 +438,9 @@ gcse: [
     replies:[{username:'@NumberNerd',text:'Actually it\'s 9. Left to right after brackets.'},{username:'@MathsWhiz2009',text:'Blocked.'}]},
   stage1CorrectAnswer:'9',stage1Options:['1','9','3','36'],
   stage2Options:[
-    {text:'After brackets: 6\u00f72\u00d73. Left to right: 6\u00f72=3, then 3\u00d73=9. Treating 2(3) as a grouped denominator is non-standard convention',correct:true},
-    {text:'(1+2) was evaluated as 2, not 3',correct:false},
-    {text:'Division comes before multiplication so it\'s 1',correct:false}],
+    {text:'After the bracket, \u00f7 and \u00d7 go left to right: 6 \u00f7 2 \u00d7 3 = 9',correct:true},
+    {text:'The poster worked out (1+2) as 2, when it is really 3',correct:false},
+    {text:'Division comes before multiplication, so the answer has to be 1',correct:false}],
   explanation:'6\u00f72(1+2): brackets give 6\u00f72\u00d73. Left to right: 3\u00d73=9. The poster wrongly treated 2(3) as a single denominator.'
 },
 {
@@ -450,9 +450,9 @@ gcse: [
     pollVotes:'4,201 votes',pollCaption:'73% right \u2014 it approaches 1 but never gets there.'},
   stage1CorrectAnswer:'Yes, exactly 1',stage1Options:['Yes, exactly 1','Less than 1','Context-dependent','Undefined'],
   stage2Options:[
-    {text:'0.999...=1 exactly. Proof: x=0.999..., 10x=9.999..., 9x=9, x=1. Also 1/3=0.333..., \u00d73 gives 1=0.999.... The "approaches but never reaches" argument fails for infinite decimals',correct:true},
-    {text:'0.999... is genuinely less than 1 in standard maths',correct:false},
-    {text:'The answer depends on the number system used',correct:false}],
+    {text:'0.999... is exactly 1: an infinite decimal never \'falls short\'',correct:true},
+    {text:'0.999... is less than 1 in standard maths, so the poll is right',correct:false},
+    {text:'The answer depends on the number system that is being used',correct:false}],
   explanation:'0.999... = 1 exactly. The algebraic proof: let x = 0.999..., then 10x = 9.999..., so 9x = 9, therefore x = 1.'
 },
 {
@@ -461,9 +461,9 @@ gcse: [
     replies:[{username:'@FastMaths',text:'x\u00b2+9. Square both parts.'},{username:'@SlowButRight',text:'(x+3)(x+3) = x\u00b2+6x+9'},{username:'@FastMaths',text:'6x? I don\'t see any 6 in the question.'}]},
   stage1CorrectAnswer:'x\u00b2+6x+9',stage1Options:['x\u00b2+6x+9','x\u00b2+9','x\u00b2+6x','2x+6'],
   stage2Options:[
-    {text:'(a+b)\u00b2 \u2260 a\u00b2+b\u00b2. The middle term 2ab=6x always appears. FastMaths squared each term separately, missing all cross-products',correct:true},
-    {text:'SlowButRight expanded incorrectly',correct:false},
-    {text:'The 6x cancels out',correct:false}],
+    {text:'FastMaths squared each term and missed the middle term, 6x',correct:true},
+    {text:'SlowButRight made a mistake when expanding (x+3)(x+3)',correct:false},
+    {text:'The two 3x terms cancel out, so x\u00b2 + 9 is correct',correct:false}],
   explanation:'(x+3)\u00b2 = (x+3)(x+3) = x\u00b2+3x+3x+9 = x\u00b2+6x+9. Never square terms individually.'
 },
 {
@@ -472,9 +472,9 @@ gcse: [
     replies:[{username:'@CasinoDealer',text:'Sir, the wheel doesn\'t remember.'},{username:'@NotAGambler',text:'MATHEMATICS. CERTAIN.'}]},
   stage1CorrectAnswer:'P(black) = 18/37 every spin',stage1Options:['P(black) = 18/37 every spin','P(black) > 0.5 after 12 reds','P(black) = 1 now','P(black) = 1/2 every spin'],
   stage2Options:[
-    {text:'Gambler\'s fallacy \u2014 the wheel has no memory. P(black) = 18/37 \u2248 48.6% on every spin regardless of history. Previous results never affect independent events',correct:true},
-    {text:'Probability does even out so black is slightly more likely',correct:false},
-    {text:'The error is ignoring the green zero',correct:false}],
+    {text:'Spins are independent: P(black) is 18/37 on every spin',correct:true},
+    {text:'Probability evens out, so black is slightly more likely now',correct:false},
+    {text:'The only error is ignoring the green zero on the wheel',correct:false}],
   explanation:'The gambler\'s fallacy: roulette spins are independent. On a single-zero wheel, P(black) = 18/37 every time, regardless of history.'
 },
 {
@@ -484,9 +484,9 @@ gcse: [
     pollVotes:'4,102 votes',pollCaption:'Easy \u2014 20+20=40%!'},
   stage1CorrectAnswer:'36%',stage1Options:['36%','40%','44%','42%'],
   stage2Options:[
-    {text:'Each reduction applies to the current price. After first 20%: 80%. After second 20%: 80%\u00d780%=64%. Total reduction=36%, not 40%. Successive percentages multiply, not add',correct:true},
-    {text:'Percentage reductions can be added for the same item',correct:false},
-    {text:'The answer is 44% because you overcorrect',correct:false}],
+    {text:'Successive changes multiply: 0.8 \u00d7 0.8 = 0.64, so 36% off',correct:true},
+    {text:'Percentage reductions on the same item can just be added',correct:false},
+    {text:'It\'s 44%, because the second reduction overcorrects',correct:false}],
   explanation:'Successive percentage changes multiply: 0.8 \u00d7 0.8 = 0.64. Total reduction = 36%, not 40%.'
 },
 {
@@ -495,9 +495,9 @@ gcse: [
     replies:[{username:'@IndexCorrector',text:'You ADD the powers. x\u2077.'},{username:'@IndicesAreEasy',text:'Adding? In MULTIPLICATION? Make it make sense.'}]},
   stage1CorrectAnswer:'x\u2077',stage1Options:['x\u2077','x\u00b9\u00b2','x\u00b3\u2074','2x\u2077'],
   stage2Options:[
-    {text:'Multiplying same base: ADD the powers (x\u00b3\u00d7x\u2074=x\u2077). Multiplying powers applies to (x\u00b3)\u2074=x\u00b9\u00b2 \u2014 power raised to a power. The poster confused two different index laws',correct:true},
-    {text:'Powers do multiply when bases multiply',correct:false},
-    {text:'The answer is x\u00b9\u00b2 for a different reason',correct:false}],
+    {text:'Multiplying the same base adds the powers: x\u00b3 \u00d7 x\u2074 = x\u2077',correct:true},
+    {text:'Powers do multiply when the same bases are multiplied',correct:false},
+    {text:'The answer is x\u00b9\u00b2, but the poster\'s reason is wrong',correct:false}],
   explanation:'x\u00b3 \u00d7 x\u2074 = x\u00b3\u207a\u2074 = x\u2077. ADD powers for multiplication. MULTIPLY powers for (x\u00b3)\u2074.'
 },
 {
@@ -506,9 +506,9 @@ gcse: [
     replies:[{username:'@PythagorasFan',text:'You forgot \u221a. \u221a169=13.'},{username:'@RightTriangles',text:'The square root cancels with the square so you don\'t need it.'}]},
   stage1CorrectAnswer:'13',stage1Options:['13','169','17','\u221a30'],
   stage2Options:[
-    {text:'c\u00b2=169 means c=\u221a169=13. The square and square root do not cancel here \u2014 the equation gives c\u00b2, and you must take the root to find c',correct:true},
+    {text:'169 is c\u00b2, not c: you must square root it to get c = 13',correct:true},
     {text:'The poster should have added the sides: 5 + 12 = 17',correct:false},
-    {text:'The square root does cancel with squaring',correct:false}],
+    {text:'The square root cancels with the squaring, so 169 stands',correct:false}],
   explanation:'c\u00b2 = 25 + 144 = 169, so c = \u221a169 = 13. You must square root to find the length itself.'
 },
 {
@@ -517,9 +517,9 @@ gcse: [
     replies:[{username:'@StatsNerd',text:'Confounding variable: hot weather.'},{username:'@DataScience4All',text:'The data speaks for itself.'}]},
   stage1CorrectAnswer:'Correlation \u2260 causation \u2014 hot weather causes both',stage1Options:['Correlation \u2260 causation \u2014 hot weather causes both','Ice cream causes sunburn','Data must be wrong','Sunburn causes ice cream'],
   stage2Options:[
-    {text:'Hot weather is the confounding variable \u2014 it independently increases both ice cream consumption and time in the sun (and therefore sunburn). This is a textbook correlation vs causation error',correct:true},
-    {text:'Strong correlation does prove causation',correct:false},
-    {text:'The sample size is too small',correct:false}],
+    {text:'Hot weather is a confounding variable that causes both',correct:true},
+    {text:'A strong correlation does prove causation in this case',correct:false},
+    {text:'The sample size is too small to draw any conclusion',correct:false}],
   explanation:'Hot weather is the confounding variable causing both. Correlation \u2260 causation is one of the most important lessons in statistics.'
 },
 {
@@ -529,9 +529,9 @@ gcse: [
     pollVotes:'1,890 votes',pollCaption:'52% right \u2014 add the numbers AND add the powers!'},
   stage1CorrectAnswer:'6\u00d710\u00b3',stage1Options:['6\u00d710\u00b3','6\u00d710\u2076','5\u00d710\u00b3','6.0\u00d710\u2070'],
   stage2Options:[
-    {text:'Same powers means add coefficients only: 2.5+3.5=6, keeping \u00d710\u00b3. Powers only add when MULTIPLYING standard form numbers. Adding powers is like saying 300+700=1,000,000',correct:true},
-    {text:'Convert to ordinary numbers before adding',correct:false},
-    {text:'Average the coefficients to get 3\u00d710\u00b3',correct:false}],
+    {text:'With the same power, only the numbers are added: 6 \u00d7 10\u00b3',correct:true},
+    {text:'The error is not converting to ordinary numbers first',correct:false},
+    {text:'The numbers in front should be averaged instead, giving 3 \u00d7 10\u00b3',correct:false}],
   explanation:'When adding standard form with same power: add coefficients only. 2.5+3.5=6, so 6\u00d710\u00b3. Powers don\'t add.'
 },
 {
@@ -540,9 +540,9 @@ gcse: [
     replies:[{username:'@QuickAnswer',text:'(x+2)(x+3). Add to 5, multiply to 6.'},{username:'@AlgebraGuru',text:'Wrong! It\'s (x+1)(x+6). 1+6=7... hmm... (x+2)(x+3)? 2+3=5, 2\u00d73=6. Oh.'}]},
   stage1CorrectAnswer:'(x+2)(x+3)',stage1Options:['(x+2)(x+3)','(x+1)(x+6)','(x+5)(x+1)','(x+6)(x\u22121)'],
   stage2Options:[
-    {text:'The final answer (x+2)(x+3) is correct. The poster initially tried (x+1)(x+6) where 1+6=7\u22605, self-corrected. QuickAnswer had the right method throughout',correct:true},
-    {text:'QuickAnswer is wrong',correct:false},
-    {text:'The expression cannot be factorised',correct:false}],
+    {text:'QuickAnswer was right all along; the poster self-corrected',correct:true},
+    {text:'QuickAnswer is wrong; the answer really is (x+1)(x+6)',correct:false},
+    {text:'The expression cannot be factorised with whole numbers',correct:false}],
   explanation:'x\u00b2+5x+6 = (x+2)(x+3). Find two numbers that add to 5 and multiply to 6: 2 and 3.'
 },
 {
@@ -551,9 +551,9 @@ gcse: [
     replies:[{username:'@TreeDiagrammer',text:'AND means multiply, not add...'},{username:'@ProbMaster',text:'More events = more probability. Logic.'}]},
   stage1CorrectAnswer:'0.12',stage1Options:['0.12','0.7','0.1','Need more information'],
   stage2Options:[
-    {text:'A and B are independent, so P(A AND B) = P(A)\u00d7P(B) = 0.4\u00d70.3 = 0.12. Both happening is less likely than either one alone, so it can never be the sum',correct:true},
-    {text:'P(A AND B) = P(A) \u2212 P(B) = 0.1',correct:false},
-    {text:'The poster is correct that AND means addition',correct:false}],
+    {text:'For independent events, multiply: 0.4 \u00d7 0.3 = 0.12',correct:true},
+    {text:'It\'s P(A) \u2212 P(B) = 0.1, because AND means subtract',correct:false},
+    {text:'The poster is right that AND means adding the two',correct:false}],
   explanation:'A and B are independent, so P(A AND B) = P(A) \u00d7 P(B) = 0.4 \u00d7 0.3 = 0.12. Both happening is less likely than either one alone: 0.7 is bigger than both P(A) and P(B).'
 },
 {
@@ -563,9 +563,9 @@ gcse: [
     pollVotes:'2,345 votes',pollCaption:'44% right \u2014 negative power means negative answer!'},
   stage1CorrectAnswer:'1/8',stage1Options:['1/8','\u22128','\u22126','8'],
   stage2Options:[
-    {text:'Negative exponent means reciprocal: 2\u207b\u00b3 = 1/2\u00b3 = 1/8. A negative power never makes the answer negative \u2014 it creates a fraction',correct:true},
-    {text:'2\u207b\u00b3 = \u2212(2\u00b3) = \u22128 is correct',correct:false},
-    {text:'The answer depends on the base',correct:false}],
+    {text:'A negative power means a reciprocal: 2\u207b\u00b3 = 1/8, not negative',correct:true},
+    {text:'A negative power makes the answer negative: 2\u207b\u00b3 = \u22128',correct:false},
+    {text:'The answer depends on the base, so the value of 2\u207b\u00b3 can\'t be found',correct:false}],
   explanation:'Negative exponent = reciprocal: 2\u207b\u00b3 = 1/2\u00b3 = 1/8. Negative power \u2260 negative answer.'
 },
 {
@@ -574,9 +574,9 @@ gcse: [
     replies:[{username:'@GeometryGeek',text:'It\'s TWICE. Centre = 2 \u00d7 circumference.'},{username:'@CircleExpert',text:'That would make it 160\u00b0 which is obtuse. Doesn\'t look right.'}]},
   stage1CorrectAnswer:'Circumference angle = 40\u00b0',stage1Options:['Circumference angle = 40\u00b0','80\u00b0','160\u00b0','100\u00b0'],
   stage2Options:[
-    {text:'The theorem states angle at centre = TWICE the angle at circumference. Circumference angle = 80\u00b0\u00f72 = 40\u00b0. The poster missed the factor of 2',correct:true},
+    {text:'The angle at the centre is twice the angle at the circumference',correct:true},
     {text:'The theorem only applies to isosceles triangles in circles',correct:false},
-    {text:'The angles are equal for minor arcs only',correct:false}],
+    {text:'The two angles are equal, but only when the arc is minor',correct:false}],
   explanation:'Angle at centre = 2 \u00d7 angle at circumference. Centre 80\u00b0 means circumference = 40\u00b0.'
 },
 {
@@ -585,9 +585,9 @@ gcse: [
     replies:[{username:'@FirstReply',text:'7. The gradient is the number at the end.'},{username:'@SecondReply',text:'3. It\'s the coefficient of x \u2014 how steep it is.'},{username:'@ThirdReply',text:'3x. You need to keep the x.'}]},
   stage1CorrectAnswer:'3',stage1Options:['3','7','3x','10'],
   stage2Options:[
-    {text:'In y=mx+c, m is the gradient and c is the y-intercept. Gradient=3 (coefficient of x). FirstReply confused gradient with y-intercept (7). ThirdReply kept the x unnecessarily',correct:true},
-    {text:'The gradient is 7 because that\'s the constant',correct:false},
-    {text:'All three replies are wrong',correct:false}],
+    {text:'SecondReply is right: the gradient is 3, without the x',correct:true},
+    {text:'The gradient is 7, because that\'s the constant at the end',correct:false},
+    {text:'All three replies are wrong about the gradient of y=3x+7',correct:false}],
   explanation:'y = mx + c: gradient m = 3, y-intercept c = 7. The gradient is the coefficient of x, without the x.'
 },
 {
@@ -596,9 +596,9 @@ gcse: [
     replies:[{username:'@BayesFan',text:'You multiply along branches...'},{username:'@TreeDiagram',text:'1.0 = certain. Trees are just addition. Easy.'}]},
   stage1CorrectAnswer:'0.24',stage1Options:['0.24','1.0','0.4','0.6'],
   stage2Options:[
-    {text:'P(A and B) = P(A) \u00d7 P(B|A) = 0.6\u00d70.4 = 0.24. Multiply along branches, add between branches. Adding 0.6+0.4=1.0 makes no probabilistic sense',correct:true},
-    {text:'P(B|A)=0.4 means B is impossible given A',correct:false},
-    {text:'The tree should show P(B) not P(B|A)',correct:false}],
+    {text:'Multiply along the branches: 0.6 \u00d7 0.4 = 0.24, not 1.0',correct:true},
+    {text:'P(B|A) = 0.4 means B is impossible once A has happened',correct:false},
+    {text:'The tree should show P(B), not P(B|A), on that branch',correct:false}],
   explanation:'Multiply along tree branches: P(A and B) = P(A) \u00d7 P(B|A) = 0.6 \u00d7 0.4 = 0.24.'
 },
 {
@@ -607,9 +607,9 @@ gcse: [
     replies:[{username:'@FastMethod',text:'(x+8)\u00b2 + 3. Add the 8 inside and keep the 3.'},{username:'@SlowMethod',text:'(x+4)\u00b2 \u2212 13. Half the 8 to get 4, subtract 4\u00b2=16, so 3\u221216=\u221213.'},{username:'@FastMethod',text:'Why would you halve it? It\'s 8 right there.'}]},
   stage1CorrectAnswer:'(x+4)\u00b2\u221213',stage1Options:['(x+4)\u00b2\u221213','(x+8)\u00b2+3','(x+4)\u00b2+3','(x+8)\u00b2\u221261'],
   stage2Options:[
-    {text:'Completing the square: halve the coefficient of x (8\u00f72=4), write (x+4)\u00b2, then subtract 4\u00b2=16. Net change: +16\u221216=0. So (x+4)\u00b2\u221213. FastMethod put 8 directly in brackets',correct:true},
-    {text:'SlowMethod subtracted the wrong value',correct:false},
-    {text:'The answer is (x+4)\u00b2+3',correct:false}],
+    {text:'FastMethod should halve the 8, then subtract 4\u00b2 = 16',correct:true},
+    {text:'SlowMethod subtracted the wrong value from the 3',correct:false},
+    {text:'The answer is (x+4)\u00b2 + 3, with no adjustment needed',correct:false}],
   explanation:'Complete the square: halve the x coefficient (8\u00f72=4), form (x+4)\u00b2, adjust constant: 3\u221216=\u221213.'
 },
 {
@@ -619,9 +619,9 @@ gcse: [
     pollVotes:'5,892 votes',pollCaption:'61% got it right \u2014 1 is divisible only by itself so it\'s prime!'},
   stage1CorrectAnswer:'No \u2014 1 is not prime',stage1Options:['No \u2014 1 is not prime','Yes \u2014 1 is prime','Depends on definition','1 is a special prime'],
   stage2Options:[
-    {text:'By definition, a prime number has exactly TWO distinct factors: 1 and itself. The number 1 has only ONE factor (itself), so it fails the definition. This is why 1 is excluded',correct:true},
-    {text:'1 is prime because it\'s only divisible by itself',correct:false},
-    {text:'The primality of 1 is genuinely debated',correct:false}],
+    {text:'A prime has exactly two factors; 1 has only one, so it isn\'t',correct:true},
+    {text:'1 is prime, because it is only divisible by itself',correct:false},
+    {text:'Whether 1 counts as prime is genuinely debated by mathematicians',correct:false}],
   explanation:'A prime has exactly 2 distinct factors: 1 and itself. The number 1 has only 1 factor, so it is not prime.'
 },
 {
@@ -630,9 +630,9 @@ gcse: [
     replies:[{username:'@TrigChecker',text:'Wait... that\'s actually right.'},{username:'@TrigHelp',text:'I know. I\'m posting it because people keep getting this wrong.'}]},
   stage1CorrectAnswer:'11.31 (the poster is correct)',stage1Options:['11.31 (the poster is correct)','8','5.66','16'],
   stage2Options:[
-    {text:'The poster\'s calculation is correct: b = 8/sin30\u00b0 \u00d7 sin45\u00b0 = 8/0.5 \u00d7 0.707 = 16 \u00d7 0.707 = 11.31. The sine rule application and arithmetic are both right',correct:true},
-    {text:'The poster applied the sine rule incorrectly',correct:false},
-    {text:'b should be divided, not multiplied',correct:false}],
+    {text:'The poster is correct: the sine rule and the arithmetic hold',correct:true},
+    {text:'The poster applied the sine rule the wrong way round',correct:false},
+    {text:'b should have been divided by sin 45\u00b0, not multiplied',correct:false}],
   explanation:'b = (8 \u00d7 sin45\u00b0)/sin30\u00b0 = (8 \u00d7 0.707)/0.5 = 11.31. The poster is correct here \u2014 sometimes they get it right!'
 },
 {
@@ -641,9 +641,9 @@ gcse: [
     replies:[{username:'@VectorMike',text:'3+4=7. Add the components.'},{username:'@VectorSally',text:'\u221a(3\u00b2+4\u00b2)=\u221a(9+16)=\u221a25=5.'},{username:'@VectorMike',text:'Why are you squaring? That just makes it bigger.'}]},
   stage1CorrectAnswer:'5',stage1Options:['5','7','25','\u221a7'],
   stage2Options:[
-    {text:'Magnitude uses Pythagoras: \u221a(x\u00b2+y\u00b2). The vector (3,4) forms a right triangle with legs 3 and 4 \u2014 hypotenuse = 5. Mike added components which gives 7, not the length',correct:true},
-    {text:'Sally made an arithmetic error',correct:false},
-    {text:'Both methods are acceptable approximations',correct:false}],
+    {text:'Mike added the components; the length needs Pythagoras',correct:true},
+    {text:'Sally made an arithmetic error when working out \u221a25',correct:false},
+    {text:'Both methods are acceptable ways to estimate the length',correct:false}],
   explanation:'Magnitude = \u221a(3\u00b2+4\u00b2) = \u221a25 = 5. It\'s Pythagoras \u2014 the vector components are legs of a right triangle.'
 },
 {
@@ -652,9 +652,9 @@ gcse: [
     replies:[{username:'@BoundsChecker',text:'Hmm, that\'s actually right this time.'},{username:'@MeasurementFacts',text:'Of course it is. I\'m the measurement facts account.'}]},
   stage1CorrectAnswer:'7.35cm (the poster is correct)',stage1Options:['7.35cm (the poster is correct)','7.4cm','7.30cm','7.305cm'],
   stage2Options:[
-    {text:'The poster is actually correct here. Nearest mm = accuracy of 0.1cm. Half of 0.1 = 0.05. Upper bound = 7.3+0.05 = 7.35cm. Putting a 5 after the last digit is a valid shortcut for this degree of accuracy',correct:true},
-    {text:'Upper bound should be 7.4cm',correct:false},
-    {text:'The poster is wrong \u2014 upper bound is 7.305cm',correct:false}],
+    {text:'The poster is correct: half of 0.1cm is 0.05, so 7.35cm',correct:true},
+    {text:'The upper bound should be 7.4cm, the next tenth up',correct:false},
+    {text:'The poster is wrong, as the upper bound is really 7.305cm',correct:false}],
   explanation:'Nearest mm = \u00b10.05cm. Upper bound = 7.3 + 0.05 = 7.35cm. The poster\'s method works here.'
 }
 ],
@@ -666,9 +666,9 @@ core: [
     replies:[{username:'@GamblingMaths',text:'The maths checks out for YOUR machine. Real machines are much worse.'},{username:'@CasinoFan',text:'FREE. MONEY. GLITCH.'}]},
   stage1CorrectAnswer:'Expected profit = \u00a30.50 but real slots have much worse odds than this',stage1Options:['Expected profit = \u00a30.50 but real slots have much worse odds than this','Expected loss of \u00a30.50 per play','Can\'t calculate without knowing plays','\u00a31 guaranteed profit'],
   stage2Options:[
-    {text:'The calculation E(X)=\u00a31 > \u00a30.50 cost is mathematically correct for the stated probabilities. The real error: actual slot machines have P(win) far below 0.01 or pay far less than \u00a3100. Real E(X) is always negative for slots',correct:true},
-    {text:'The expected value calculation is wrong',correct:false},
-    {text:'You need to know how many times you play',correct:false}],
+    {text:'The sum is right; real slot machines never offer these odds',correct:true},
+    {text:'The expected value calculation itself is done wrongly',correct:false},
+    {text:'You need to know how many times you will play before working it out',correct:false}],
   explanation:'E(X)=\u00a31 > cost of \u00a30.50 is correct for these numbers. The error is assuming real machines offer these odds \u2014 they never do.'
 },
 {
@@ -678,9 +678,9 @@ core: [
     pollVotes:'4,301 votes',pollCaption:'44% got it \u2014 68% within 2 SDs!'},
   stage1CorrectAnswer:'95%',stage1Options:['95%','68%','99.7%','50%'],
   stage2Options:[
-    {text:'68-95-99.7 rule: 68% within 1 SD, 95% within 2 SD, 99.7% within 3 SD. The poll confused 1 SD with 2 SD. Within 2 SDs = 95%, not 68%',correct:true},
-    {text:'68% within 2 SDs is correct',correct:false},
-    {text:'The answer depends on the specific distribution',correct:false}],
+    {text:'The poll used the 1 SD figure: within 2 SDs it\'s 95%',correct:true},
+    {text:'68% within 2 SDs is correct, so the poll is right',correct:false},
+    {text:'The answer depends on the particular normal distribution',correct:false}],
   explanation:'The empirical rule: 68% within 1 SD, 95% within 2 SDs, 99.7% within 3 SDs. The poll mixed up 1 SD and 2 SDs.'
 },
 {
@@ -689,9 +689,9 @@ core: [
     replies:[{username:'@CausationPolice',text:'Correlation \u2260 causation. Confounders exist.'},{username:'@StatsFacts',text:'r=0.95. That\'s basically proof.'}]},
   stage1CorrectAnswer:'Strong correlation suggests relationship but doesn\'t prove causation',stage1Options:['Strong correlation suggests relationship but doesn\'t prove causation','Correct \u2014 r=0.95 proves causation','r=0.95 is too weak','r=0.95 means 95% who revise pass'],
   stage2Options:[
-    {text:'Correlation shows association, not causation \u2014 confounding variables (ability, motivation) could explain both. That said, revision-grades likely IS causal, but the correlation alone cannot prove it',correct:true},
-    {text:'r=0.95 is strong enough to prove causation',correct:false},
-    {text:'r=0.95 means 95% variance explained',correct:false}],
+    {text:'Correlation shows association, not proof that revision causes it',correct:true},
+    {text:'r = 0.95 is strong enough to prove causation on its own',correct:false},
+    {text:'r = 0.95 means that 95% of the variance is explained',correct:false}],
   explanation:'Correlation \u2260 causation. Confounders (ability, motivation, home environment) could drive both variables independently.'
 },
 {
@@ -700,9 +700,9 @@ core: [
     replies:[{username:'@FinanceMaths',text:'That\'s not how compound interest works...'},{username:'@SavingsGuru',text:'1000 times 1.05 times 20. What\'s hard about that?'}]},
   stage1CorrectAnswer:'\u00a31,000\u00d71.05\u00b2\u2070 = \u00a32,653',stage1Options:['\u00a31,000\u00d71.05\u00b2\u2070 = \u00a32,653','\u00a31,050','\u00a32,000','\u00a31,000\u00d71.05\u00d720 = \u00a321,000'],
   stage2Options:[
-    {text:'Compound interest raises 1.05 to the POWER of 20 (\u00a32,653), not multiplied by 20 (\u00a321,000). The poster confused exponentiation with multiplication \u2014 a factor-of-8 error',correct:true},
-    {text:'The answer is \u00a32,000: 5% a year for 20 years doubles it',correct:false},
-    {text:'The poster\'s calculation is a valid approximation',correct:false}],
+    {text:'Compound interest raises 1.05 to the power 20: \u00a32,653',correct:true},
+    {text:'It\'s \u00a32,000, because 5% a year for 20 years doubles it',correct:false},
+    {text:'The poster\'s figure is a fair approximation to the answer',correct:false}],
   explanation:'Compound interest: A = P \u00d7 (1+r)\u207f = 1000 \u00d7 1.05\u00b2\u2070 = \u00a32,653. The poster multiplied instead of raising to a power.'
 },
 {
@@ -712,9 +712,9 @@ core: [
     pollVotes:'2,345 votes',pollCaption:'78% agree. Inflation = everything goes up by the same amount.'},
   stage1CorrectAnswer:'CPI inflation of 7.3% means the average basket of goods rose by 7.3% \u2014 individual items varied widely',stage1Options:['CPI inflation of 7.3% means the average basket of goods rose by 7.3% \u2014 individual items varied widely','Everything cost exactly 7.3% more','Nothing changed','Prices rose by 7.3% every month'],
   stage2Options:[
-    {text:'CPI measures a weighted average basket of goods \u2014 some items rose much more (energy, food), others less or fell. "7.3% inflation" describes the aggregate, not individual prices',correct:true},
-    {text:'7.3% inflation does mean all prices rose by exactly 7.3%',correct:false},
-    {text:'Inflation figures are unreliable',correct:false}],
+    {text:'7.3% is an average over a basket; single items varied a lot',correct:true},
+    {text:'7.3% inflation means all prices rose by exactly 7.3%',correct:false},
+    {text:'Inflation figures are far too unreliable to be used for anything',correct:false}],
   explanation:'CPI is a weighted average. 7.3% is the aggregate change \u2014 individual items varied hugely (energy up 30%+, some items fell).'
 },
 {
@@ -723,9 +723,9 @@ core: [
     replies:[{username:'@StatsTeacher',text:'Extrapolation beyond your data range is dangerous.'},{username:'@DataDrivenDecisions',text:'The LINE says 4,800. Lines don\'t lie.'}]},
   stage1CorrectAnswer:'The prediction is unreliable \u2014 100\u00b0C is far outside the data range',stage1Options:['The prediction is unreliable \u2014 100\u00b0C is far outside the data range','4,800 sales is a valid prediction','The regression line is wrong','You need more data points'],
   stage2Options:[
-    {text:'Extrapolation beyond the data range (10-30\u00b0C) assumes the linear relationship continues indefinitely. At 100\u00b0C water boils, so nobody is queuing for ice cream. Regression models only apply within or near the observed data range',correct:true},
-    {text:'The regression equation itself is calculated incorrectly',correct:false},
-    {text:'Linear regression can\'t be used for temperature data',correct:false}],
+    {text:'100\u00b0C is far outside the 10\u201330\u00b0C data: that\'s extrapolation',correct:true},
+    {text:'The regression equation itself has been calculated wrongly',correct:false},
+    {text:'Linear regression can\'t be used with temperature data',correct:false}],
   explanation:'Extrapolation beyond the data range is unreliable. The linear model fitted to 10-30\u00b0C data says nothing about 100\u00b0C.'
 },
 {
@@ -734,9 +734,9 @@ core: [
     replies:[{username:'@QuickBusiness',text:'\u00a35000 \u00f7 \u00a325 = 200 units. Divide by selling price.'},{username:'@CarefulCalc',text:'\u00a35000 \u00f7 (\u00a325-\u00a310) = \u00a35000 \u00f7 \u00a315 = 333.3, so 334 units.'},{username:'@QuickBusiness',text:'Why subtract? You sell at \u00a325 not \u00a315.'}]},
   stage1CorrectAnswer:'334 units',stage1Options:['334 units','200 units','500 units','167 units'],
   stage2Options:[
-    {text:'Break-even = Fixed costs \u00f7 Contribution per unit. Contribution = selling price \u2212 variable cost = \u00a325\u2212\u00a310 = \u00a315. QuickBusiness divided by selling price, ignoring the \u00a310 production cost per unit',correct:true},
-    {text:'CarefulCalc should not round up to 334',correct:false},
-    {text:'Break-even should include profit margin',correct:false}],
+    {text:'QuickBusiness ignored the \u00a310 cost: divide by \u00a325 \u2212 \u00a310',correct:true},
+    {text:'CarefulCalc should not have rounded 333.3 up to 334',correct:false},
+    {text:'The break-even point should include a profit margin',correct:false}],
   explanation:'Break-even = Fixed costs \u00f7 (Price \u2212 Variable cost) = 5000 \u00f7 15 = 333.3, round up to 334 units.'
 },
 {
@@ -746,9 +746,9 @@ core: [
     pollVotes:'1,890 votes',pollCaption:'38% right! SD = the mean of the data = 10.'},
   stage1CorrectAnswer:'0',stage1Options:['0','10','2','5'],
   stage2Options:[
-    {text:'Standard deviation measures spread from the mean. When all values are identical, there is zero deviation from the mean \u2014 SD = 0. The poll confused SD with the mean itself',correct:true},
-    {text:'SD equals the mean for uniform data',correct:false},
-    {text:'SD cannot be zero for real data',correct:false}],
+    {text:'All five values are the same, so there\'s no spread: SD = 0',correct:true},
+    {text:'The SD equals the mean of the data when every value is the same',correct:false},
+    {text:'The SD can never be zero for a real set of data',correct:false}],
   explanation:'SD measures spread. All values identical means zero spread, so SD = 0. The poll confused SD with the mean.'
 },
 {
@@ -757,8 +757,8 @@ core: [
     replies:[{username:'@StatsPedant',text:'We reject the null. We don\'t "accept" or "prove" alternatives.'},{username:'@HypothesisPro',text:'Reject, accept, same thing. I got a significant result.'}]},
   stage1CorrectAnswer:'We reject the null hypothesis \u2014 we don\'t "accept" or "prove" the alternative',stage1Options:['We reject the null hypothesis \u2014 we don\'t "accept" or "prove" the alternative','The alternative hypothesis is proven','p=0.03 means 3% chance the result is correct','The test should use 0.01 significance'],
   stage2Options:[
-    {text:'In hypothesis testing, we either reject or fail to reject the null. We never "accept" or "prove" the alternative \u2014 we merely find sufficient evidence against the null at the chosen significance level',correct:true},
-    {text:'A p-value of 0.03 means there\'s a 3% chance the alternative is true',correct:false},
+    {text:'You reject the null hypothesis; you never prove the alternative',correct:true},
+    {text:'p = 0.03 means a 3% chance that the alternative is true',correct:false},
     {text:'The poster should have used a two-tailed test instead',correct:false}],
   explanation:'We "reject H\u2080" \u2014 never "accept H\u2081" or "prove" anything. Significance means sufficient evidence against the null, not proof of the alternative.'
 },
@@ -768,9 +768,9 @@ core: [
     replies:[{username:'@FinanceGrad',text:'You haven\'t discounted future cash flows. \u00a32,000 in 6 years isn\'t worth \u00a32,000 today.'},{username:'@ProjectManager',text:'A pound is a pound. Money doesn\'t change.'}]},
   stage1CorrectAnswer:'The savings must be discounted \u2014 future money is worth less than present money',stage1Options:['The savings must be discounted \u2014 future money is worth less than present money','Net benefit is \u00a32,000 as stated','You need to add inflation on top','The costs should also be spread over 6 years'],
   stage2Options:[
-    {text:'Time value of money: future savings must be discounted to present value using a discount rate. \u00a32,000 received in year 6 is worth less than \u00a32,000 today. The net present value (NPV) would be lower than the simple \u00a32,000 calculation suggests',correct:true},
-    {text:'Adding up undiscounted cash flows is acceptable for short time periods',correct:false},
-    {text:'The error is not including maintenance costs',correct:false}],
+    {text:'Future savings must be discounted: \u00a32,000 later is worth less',correct:true},
+    {text:'Undiscounted cash flows are fine over short time periods',correct:false},
+    {text:'The only error is leaving out the maintenance costs',correct:false}],
   explanation:'Time value of money: future cash flows must be discounted. \u00a32,000/year for 6 years has a present value below \u00a312,000, reducing the apparent net benefit.'
 }
 ]
