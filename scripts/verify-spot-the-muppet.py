@@ -28,6 +28,10 @@ from the live page, then:
     revealed; then every option clicked and pressed with Enter changes nothing). With MaffsLock's real fresh window
     (spot-the-muppet-t2-005): Next's second click landing on the new question's option marks nothing; a double click on
     Next moves on once; a double click on a first wrong pick spends one pick; the session ends once.
+SR-34 (Jon, 14 Oct 2026): every option is a verdict and a result in one form, so no option is longer than the others for
+  carrying working; the working is in the item's explanation, shown after the answer is marked, right or wrong. Every item
+  has one; its equations hold; it states the key's values (a key that is a verdict with no value is in VERDICT_KEYS, with
+  the reason, and the explanation then carries the values). The loan's monthly rate is in the explanation.
 KNOWN_OPEN holds register entries this script detects but this PR does not fix (reported, never failed; a stale one fails).
 A self-test plants eight faults back into a copy of the page; each must FAIL naming its entry.
 
@@ -126,6 +130,11 @@ CONVENTIONS = {
     'stm_gcse_002': ('compound', None),
 }
 
+# A key that is a verdict with no figure in it (right answer, wrong method): the explanation states the values (SR-34).
+VERDICT_KEYS = {'stm_gcse_008': 'the answer is right and the method is wrong: the unit prices are in the explanation',
+                'stm_gcse_012': 'the answer is right and the method is wrong: the gradient is in the explanation',
+                'stm_core_002': 'the conclusion is right and the method is wrong: the unit prices are in the explanation'}
+
 # A distractor ending on the key's value: the register entry it was filed as.
 SR16_ENTRY = {'stm_core_008': TAG + 't2-002', 'stm_ks3_005': TAG + 't2-003'}
 
@@ -156,8 +165,12 @@ def check_loan(fails, q, p, apr, months, tag):
             fails.append('%s %s: the key does not state %s, %.2f to the penny (APR %g%%, %d months, on the shrinking '
                          'balance): "%s"' % (tag, q['id'], what, v, apr * 100, months, key))
     rate = (1 + apr) ** (1 / 12) - 1
-    if not any(same(g, rate * 100) for g in got if g[1] == 3):
-        fails.append('%s %s: the key does not state the monthly rate, %.3f%%: "%s"' % (tag, q['id'], rate * 100, key))
+    expl = numbers(q.get('explanation') or '')
+    if not any(same(g, rate * 100) for g in expl if g[1] == 3):
+        fails.append('%s %s: the explanation does not state the monthly rate, %.3f%%: "%s"'
+                     % (tag, q['id'], rate * 100, q.get('explanation')))
+    if not any(g[1] == 2 and same(g, pay) for g in expl):
+        fails.append('%s %s: the explanation does not state the monthly payment, %.2f' % (tag, q['id'], pay))
     wrong = [o['text'] for o in q['options'] if not o['correct']]
     for v, word, places in loan_distractors(p, apr, months):
         hit = [t for t in wrong if word in t and any(g[1] == places and same(g, v) for g in numbers(t))]
@@ -399,8 +412,12 @@ def check_bank(fails, opens, bank):
             fails.append('%s: %d options, %d keyed correct, %d distinct (4, 1, 4)' % (qid, len(opts), len(keys), len({o['text'] for o in opts})))
             continue
         key = keys[0]['text']
-        # arithmetic in the advice and the key
-        for where, text in (('advice', q['advice']), ('key', key)):
+        expl = q.get('explanation')
+        if not isinstance(expl, str) or not expl.strip():
+            fails.append('SR-34 %s: no explanation: the working is shown after the answer, and never in the key' % qid)
+            expl = ''
+        # arithmetic in the advice, the key and the explanation
+        for where, text in (('advice', q['advice']), ('key', key), ('explanation', expl)):
             for written, vals in equations(text, q['advice']):
                 for a, b in zip(vals, vals[1:]):
                     if a is None or b is None or holds(a, b):
@@ -414,7 +431,13 @@ def check_bank(fails, opens, bank):
         # the key's values, recomputed
         if qid in KEYS:
             want = KEYS[qid]
-            got = numbers(key)
+            got = numbers(expl if qid in VERDICT_KEYS else key)
+            if qid in VERDICT_KEYS and any(same(g, w) for g in numbers(key) for w in want):
+                fails.append('VERDICT_KEYS %s is stale: the key now states a value (%s)' % (qid, key))
+            gone = [w for w in want if not any(same(g, w) for g in numbers(expl))]
+            if gone and expl:
+                fails.append('SR-34 %s: the explanation does not state %s (the key\'s value, recomputed): "%s"'
+                             % (qid, ', '.join(str(round(float(w), 4)) for w in gone), expl))
             missing = [w for w in want if not any(same(g, w) for g in got)]
             # each value as the key writes it (for SR-16: a distractor equal to that, not merely near the exact value)
             written = [next((g[0] for g in got if same(g, w)), None) for w in want]
@@ -423,8 +446,9 @@ def check_bank(fails, opens, bank):
                     open_seen.add(qid)
                     opens.append('%s %s: %s' % (KNOWN_OPEN[qid][0], qid, KNOWN_OPEN[qid][1]))
                 else:
-                    fails.append('%s: the key does not state %s (recomputed from the item): "%s"'
-                                 % (qid, ', '.join(str(round(float(w), 4)) for w in missing), key))
+                    fails.append('%s: the %s does not state %s (recomputed from the item): "%s"'
+                                 % (qid, 'explanation' if qid in VERDICT_KEYS else 'key',
+                                    ', '.join(str(round(float(w), 4)) for w in missing), expl if qid in VERDICT_KEYS else key))
             # SR-16: no distractor ends on the key's value(s)
             for o in opts:
                 if o['correct']:
@@ -469,6 +493,8 @@ def check_bank(fails, opens, bank):
                          'marginal argument, which the key calls the wrong method'
                          % (TAG + 't2-004', q['id'], float(F(extra.group(1)) * 100 / int(extra.group(2))), extra.group(2),
                             float(F(small.group(1)) * 100 / int(small.group(2)))))
+    for qid in set(VERDICT_KEYS) - {q['id'] for q in bank}:
+        fails.append('VERDICT_KEYS %s is stale: no such item' % qid)
     for k in set(MUPPET_SUMS) - seen_sums:
         fails.append('MUPPET_SUMS %s "%s" is stale: no such wrong sum in the advice' % k)
     for qid in set(KNOWN_OPEN) - open_seen:
@@ -572,6 +598,38 @@ def sweep(fails, page, bank):
                          'question_answered %d -> %d' % (TAG + 't2-005', qid, s0['score'], s1['score'], len(s0['qa']), len(s1['qa'])))
 
 
+SHOWN = """() => { const b = document.getElementById('explanation');
+  return {show: b.classList.contains('show'), text: b.textContent, shown: getComputedStyle(b).display !== 'none'}; }"""
+
+
+def explanation_shown(fails, page, bank):
+    """SR-34: the working is shown once the question is marked, right or wrong, and not before (one item a level)."""
+    for lv in COUNTS:
+        ids = [q['id'] for q in bank if q['level'] == lv]
+        for how in ('its key', 'two wrong picks'):
+            page.evaluate(LOAD, [lv, ids[:2]])
+            page.wait_for_timeout(350)
+            s = page.evaluate(SHOWN)
+            if s['show'] or s['text']:
+                fails.append('SR-34 %s: the explanation is showing before the question is marked' % ids[0])
+            if how == 'its key':
+                page.evaluate(PICK, True)
+            else:
+                page.evaluate(PICK, False)
+                page.wait_for_timeout(350)
+                page.evaluate(PICK, False)
+            try:
+                page.wait_for_function("() => document.getElementById('explanation').classList.contains('show')", timeout=4000)
+            except Exception:
+                fails.append('SR-34 %s: the explanation is not shown after %s' % (ids[0], how))
+                continue
+            s = page.evaluate(SHOWN)
+            want = next(q.get('explanation') or '' for q in bank if q['id'] == ids[0])
+            if not s['shown'] or s['text'] != 'Working: ' + want:
+                fails.append('SR-34 %s: after %s the explanation reads %r, not "Working: " + the item\'s explanation'
+                             % (ids[0], how, s['text']))
+
+
 def next_shown(page):
     page.wait_for_function("() => document.getElementById('nextBtn').style.display === 'block'", timeout=8000)
 
@@ -665,6 +723,7 @@ def run(html):
             ctx.close()
             ctx, page, errors2 = new_page(browser, base, html, False)
             lock_window(fails, page, bank)
+            explanation_shown(fails, page, bank)
             ctx.close()
             errs = [e for e in errors + errors2 if 'firebase' not in e.lower()]
             if errs:
@@ -681,32 +740,40 @@ PLANTS = [
     (TAG + 's1-001', 's1-001: ks3_014 with no fair coin (R2)',
      "in a row with a fair coin. The next flip is definitely tails", "in a row. The next flip is definitely tails"),
     (TAG + 's1-004', 's1-004: ks3_008 back to shop policy (R5)',
-     "the two vouchers average out at 25% off", "you can only use one voucher at a time"),
+     "Maureen is wrong \\u2014 it\\'s 25% off", "Maureen is wrong \\u2014 you can only use one voucher at a time"),
     (TAG + 's1-002', 's1-002: core_004 title back to the clown joke (R6)',
      "title:'Savings Maximisation Guru',", "title:'Savings Maximisation Guru (No Relation to the Clown)',"),
     (TAG + 's1-006', 's1-006: gcse_007 12.5 twice (R1)',
-     "x = 25\\u00b2 = 625", "x = \\u221a25 = 12.5"),
+     "Victor is wrong \\u2014 x = 625", "Victor is wrong \\u2014 x = \\u221a25 = 12.5"),
     (TAG + 's1-001', 's1-001: gcse_006 add 5 to the last digit (R3)',
      "put a 5 after the last digit", "add 5 to the last digit"),
     (TAG + 's1-008', 's1-008: core_004 key a rounded 2.653 as exact (R4)',
-     "\\u00a32,653.30. Not multiplied by 20", "\\u00a32,653. Not multiplied by 20"),
+     "Penny is wrong \\u2014 it\\'s \\u00a32,653.30", "Penny is wrong \\u2014 it\\'s \\u00a32,653"),
     (TAG + 's1-007', 's1-007: core_009 gives the figure it calls wrong (R3)',
-     "break-even = \\u00a32,000 \\u00f7 (\\u00a315 + \\u00a35) = 100 units", "break-even = (\\u00a32,000 + \\u00a35) \\u00f7 \\u00a315 = 134 units"),
+     "Benny is wrong \\u2014 it\\'s 100 units", "Benny is wrong \\u2014 it\\'s \\u00a3100 units"),
     (TAG + 't2-005', 't2-005: no fresh window on a new question',
      "  MaffsLock.fresh(document.getElementById('gameScreen'));\n", ''),
     (TAG + 't2-001', 't2-001: core_004 never says compound',
      '\\u00a31,000 at 5% compound interest for 20 years', '\\u00a31,000 at 5% for 20 years'),
     (TAG + 't2-002', 't2-002: core_008 £120 - £20 = £100',
-     'pre-VAT = \\u00a3120 \\u00d7 1.20 = \\u00a3144', 'pre-VAT = \\u00a3120 \\u2212 \\u00a320 = \\u00a3100'),
+     "Roxanne is wrong \\u2014 it\\'s \\u00a3144", "Roxanne is wrong \\u2014 it\\'s \\u00a3120 \\u2212 \\u00a320 = \\u00a3100"),
     (TAG + 't2-003', 't2-003: ks3_005 (2+10)/2 = 6',
-     'mean = (3+7+8+2+10) \\u00f7 4 = 7.5', 'mean = (2+10) \\u00f7 2 = 6, same answer, different method'),
+     "Dr Venn is wrong \\u2014 it\\'s 7.5", "Dr Venn is wrong \\u2014 it\\'s (2 + 10) \\u00f7 2 = 6"),
     (TAG + 't2-004', 't2-004: core_002 a valid marginal argument',
      'The big one only costs \\u00a31.30 more, and \\u00a31.30 is less than \\u00a33.50, so obviously the big bottle wins.',
      'Difference: \\u00a31.30 for 250ml extra. That\\\'s better than paying \\u00a33.50 for 500ml so obviously big bottle wins.'),
     (TAG + 't2-009', 't2-009: core_004 1,000 x 1.05 x 20 = 21,050',
      '\\u00d7 1.05 \\u00d7 20 = \\u00a321,000.', '\\u00d7 1.05 \\u00d7 20 = \\u00a321,050.'),
     (TAG + 't2-006', 't2-006: core_012 the key gives about £397 a month',
-     '\\u2248 \\u00a3364.20 a month (total \\u00a313,111.19)', '\\u2248 \\u00a3397 a month (total \\u00a314,292.19)'),
+     "it\\'s \\u00a3364.20 a month, \\u00a313,111.19 in total", "it\\'s \\u00a3397 a month, \\u00a314,292.19 in total"),
+    ('SR-34', 'SR-34: ks3_001 with no explanation',
+     ",explanation:'30% of 80 means multiply by 0.30, not divide by 30: 0.30 \\u00d7 80 = 24.'}", "}"),
+    ('SR-34', 'SR-34: the explanation is never shown',
+     "  box.classList.add('show');\n}", "}"),
+    ('stm_ks3_001', 'ks3_001 explanation with a wrong sum',
+     "0.30 \\u00d7 80 = 24.'}", "0.30 \\u00d7 80 = 25.'}"),
+    ('SR-34', 'SR-34: gcse_008 explanation loses the unit prices',
+     "In pence: 650g costs 715 \\u00f7 650 = 1.10p/g and 400g costs 480 \\u00f7 400 = 1.20p/g. But", "In pence: 650g is cheaper per gram. But"),
     (TAG + 't2-008', 't2-008: core_003 prescribing televisions',
      "I\\'m telling everyone I know to buy a bigger telly.", "I\\'m prescribing televisions to all my patients."),
 ]
