@@ -725,7 +725,9 @@ def check_s1(fails, bank):
             fails.append('%ss1-007 %s: the option %r is in pounds as units, or gives the figure it calls wrong' % (TAG, by['core_009']['id'], o['text']))
 
 
-def run(html):
+def run(html, play=True):
+    """play=False (a self-test plant in the bank's text): the bank checks only, no play in Chromium. Every text plant is
+    caught by a bank check; replaying all 50 items for each one cost most of the verifier's CI time (14 Oct 2026)."""
     from playwright.sync_api import sync_playwright
     fails, opens = [], []
     proc, base = bc.start_stub_server()
@@ -736,11 +738,13 @@ def run(html):
             bank = page.evaluate('() => QUESTIONS')
             check_bank(fails, opens, bank)
             check_s1(fails, bank)
-            sweep(fails, page, bank)
+            if play:
+                sweep(fails, page, bank)
             ctx.close()
             ctx, page, errors2 = new_page(browser, base, html, False)
-            lock_window(fails, page, bank)
-            explanation_shown(fails, page, {lv: [q for q in bank if q['level'] == lv] for lv in COUNTS})
+            if play:
+                lock_window(fails, page, bank)
+                explanation_shown(fails, page, {lv: [q for q in bank if q['level'] == lv] for lv in COUNTS})
             ctx.close()
             errs = [e for e in errors + errors2 if 'firebase' not in e.lower()]
             if errs:
@@ -796,6 +800,10 @@ PLANTS = [
 ]
 
 
+# The plants only play in Chromium can catch (the rest are in the bank's text, caught by the bank checks).
+PLAYED = {'t2-005: no fresh window on a new question', 'SR-34: the explanation is never shown'}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--no-selftest', action='store_true')
@@ -814,7 +822,7 @@ def main():
                 print('  self-test %-46s *** CANNOT PLANT ***' % what)
                 ok = False
                 continue
-            hit = [f for f in run(html.replace(old, new))[0] if f.startswith(tag)]
+            hit = [f for f in run(html.replace(old, new), play=what in PLAYED)[0] if f.startswith(tag)]
             ok = ok and bool(hit)
             print('  self-test %-46s %s' % (what, ('caught: ' + hit[0][:100]) if hit else '*** MISSED ***'))
     for f in fails:
