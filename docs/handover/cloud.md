@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: stat-attack`
+`cloud-remaining: `
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -56,6 +56,8 @@ main's last full run is red; watch main's run after merging.
   - gcse_005 key "Larry is wrong — expected value ≠ guaranteed. P(at least one 6 in 6 rolls) = 1 − (5/6)⁶ ≈ 0.665, not 1" -> "Larry is wrong — the chance is about 0.665"; distractor "Larry is wrong — P(6) increases with each failed roll" -> "Larry is wrong — the chance rises after each miss".
   - core_012 key (61 words of working) -> "Lenny is wrong — it's £364.20 a month, £13,111.19 in total"; distractors keep their figure and method: "Lenny is wrong — it's £397 a month, compound interest on the whole £12,000".
 - **Distractors replaced, not reworded (for Jon):** gcse_011 (both games) "area = π × d = 10π" gave the same 31.42 as "area = π × 10 = 31.42cm²"; now "it's 157.08cm²" (the diameter used, then halved). ks3_017 (both games): every option says "in standard form it's …", so 0.34 × 10⁷ is false as written (terrible-advice-s1-002's rule). spot-the-muppet core_008 "pre-VAT = £120 × 0.80 = £96" gave the muppet's own £96 a second time beside "Roxanne is correct — it's £96"; now "Roxanne is wrong — it's £140" (adding £20, not 20%). gcse_003 and gcse_020 (the muppet is right) keep a claim, not a figure, in one distractor each ("subtracting is not allowed", "she should have added").
+
+- **Option parity (SR-34), stat-attack:** 100% / 0% -> 0% / 0% (PR open). The SD-interpretation key was unchanged; each fragment distractor became a full sentence of the same misreading, every figure the mean, the SD or mean ± SD. **Examples (my drafting under SR-34; Jon may overrule):** CM1 "The mean salary is £9,690." -> "The mean salary is £9,690, and most salaries lie within £29,500 of that mean."; L4_6 "Voltage readings are extremely unstable." -> "Voltage readings are extremely unstable, swinging far away from the mean of 222.48 V."; CM6 "The standard deviation tells us the range of commuting times." -> "The standard deviation of 25.1 minutes tells us the range of commuting times, from the shortest to the longest."
 
 ## 2026-10-13 (cloud): SWEEP-1-RULINGS (finished 14 Oct; full entry in `docs/history/handover-cloud-archive.md`)
 
