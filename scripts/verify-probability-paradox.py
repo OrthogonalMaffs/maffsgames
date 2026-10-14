@@ -464,7 +464,9 @@ def phone(fails, page, banks):
                      % (TAG + 't1-004', w1, w2))
 
 
-def run(html):
+def run(html, only=None):
+    """`only` is a planted fault's tag: next_once (10 s of real timers) raises t1-010 failures alone, so it runs for the
+    real page and for the t1-010 plant, never for the other 18 (CI: group budget)."""
     from playwright.sync_api import sync_playwright
     fails, opens = [], []
     proc, base = bc.start_stub_server()
@@ -478,9 +480,11 @@ def run(html):
             sims(fails, page)
             play(fails, page, banks)
             ctx.close()
-            ctx, page, errors2 = new_page(browser, base, html, False)
-            next_once(fails, page)
-            ctx.close()
+            errors2 = []
+            if only is None or only == TAG + 't1-010':
+                ctx, page, errors2 = new_page(browser, base, html, False)
+                next_once(fails, page)
+                ctx.close()
             ctx, page, errors3 = new_page(browser, base, html, True, width=390)
             phone(fails, page, banks)
             ctx.close()
@@ -562,7 +566,7 @@ def main():
                 print('  self-test %-44s *** CANNOT PLANT ***' % what)
                 ok = False
                 continue
-            hit = [f for f in run(html.replace(old, new))[0] if f.startswith(tag)]
+            hit = [f for f in run(html.replace(old, new), tag)[0] if f.startswith(tag)]
             ok = ok and bool(hit)
             print('  self-test %-44s %s' % (what, ('caught: ' + hit[0][:100]) if hit else '*** MISSED ***'))
     for f in fails:
