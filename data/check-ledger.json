@@ -6526,29 +6526,24 @@
    "B6": {
     "entries": [
      {
-      "detail": "QUESTIONS.ks3[1]: 'wait' in \"3/4 is larger because 4>5 is false... wait that's backwards\"",
-      "id": "wrong-on-the-internet::33e7bc654242#1::B6",
-      "line": 260
-     },
-     {
       "detail": "QUESTIONS.ks3[7]: 'wait' in \"1, 4, 9, 16... next term is 25! Add 3, then 5, then 7, then 9. So add 9 to get 25. Wait that's right. I'm a genius.\"",
-      "id": "wrong-on-the-internet::301412cf9731#1::B6",
-      "line": 328
+      "id": "wrong-on-the-internet::c78e6636a74a#1::B6",
+      "line": 341
      },
      {
       "detail": "QUESTIONS.gcse[9]: 'hmm' in \"Wrong! It's (x+1)(x+6). 1+6=7... hmm... (x+2)(x+3)? 2+3=5, 2×3=6. Oh.\"",
-      "id": "wrong-on-the-internet::4d8d996896d4#1::B6",
-      "line": 524
+      "id": "wrong-on-the-internet::d700cf39296c#1::B6",
+      "line": 537
      },
      {
       "detail": "QUESTIONS.gcse[17]: 'wait' in \"Wait... that's actually right.\"",
-      "id": "wrong-on-the-internet::cc8e6063458f#1::B6",
-      "line": 614
+      "id": "wrong-on-the-internet::8f74276fb567#1::B6",
+      "line": 627
      },
      {
       "detail": "QUESTIONS.gcse[19]: 'hmm' in \"Hmm, that's actually right this time.\"",
-      "id": "wrong-on-the-internet::a41cc098bbb4#1::B6",
-      "line": 652
+      "id": "wrong-on-the-internet::9ec2a88a4cb9#1::B6",
+      "line": 649
      }
     ],
     "status": "fail"
