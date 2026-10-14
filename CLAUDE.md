@@ -135,6 +135,7 @@ Three things that cost time on 21/09, local or live:
 - GitHub Pages hosting
 - Firebase Realtime Database for leaderboard
 - GA4 + Google Sheets dual analytics via `mfg()` wrapper
+- `scripts/` require Python >= 3.10 (`write_text` `newline=`); CI pins 3.12 and `scripts/check-python-version.py` holds it
 
 ## Session practice (Jon, 8 Oct 2026, contract CTX)
 

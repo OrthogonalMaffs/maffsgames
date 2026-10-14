@@ -25,6 +25,20 @@ import sys
 import time
 import urllib.request
 
+MIN_PYTHON = (3, 10)      # scripts/ need 3.10: Path.write_text(newline=) (TEXT-WRITES, 14 Oct 2026)
+
+
+def require_python(version=None):
+    """Exit with a clear message below MIN_PYTHON, not an obscure TypeError from write_text(newline=) later.
+    Most scripts import this module; CI pins 3.12 (scripts/check-python-version.py holds that)."""
+    v = tuple(version if version is not None else sys.version_info)[:2]
+    if v < MIN_PYTHON:
+        sys.exit("scripts/ require Python >= %d.%d (write_text newline=); this is Python %d.%d"
+                 % (MIN_PYTHON + v))
+
+
+require_python()
+
 # esprima is imported inside parse_game_source(), not here: the roster and
 # stub-server helpers below are also used by check-site.py, which has never
 # needed a JavaScript parser, and an import here would make every checker

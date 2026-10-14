@@ -19,6 +19,9 @@ the mode as a literal.
 BLIND SPOTS (listed in docs/handover/home.md, not checked): shell redirects (> and >>) in commands the scripts run,
 and subprocess calls given a file as stdout=. Neither goes through Python's text layer here.
 
+scripts/ require Python >= 3.10 (write_text newline=): Path.write_text has no newline= argument before 3.10 (held by
+scripts/check-python-version.py).
+
   python scripts/check-text-writes.py --check      the repo's scripts/
   python scripts/check-text-writes.py --selftest   planted offending writes must be caught, clean ones passed
 """
