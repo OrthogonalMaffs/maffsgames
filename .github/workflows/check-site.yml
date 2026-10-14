@@ -233,6 +233,20 @@ jobs:
           echo "::error::could not push the timings and pack after 3 attempts"
           exit 1
 
+      # PERSISTENCE REPORT (TIMING-GATE, 14 Oct 2026; docs/handover/ci-timing-diagnosis.md): names each verifier whose
+      # last 3 main runs are each more than 20% and at least 15 s over the median of the 5 runs before them, in the
+      # job summary and as a warning. It reports and never fails the job (the blocking test is the 80% pack check
+      # above), and it runs even when that check failed, because that is when the new run's times matter most.
+      - name: Persistence report (verifiers that grew and stayed grown)
+        if: always()
+        continue-on-error: true
+        env:
+          RUN_ID: ${{ github.run_id }}
+          TIMING_DIR: ${{ runner.temp }}/ci-timings
+        run: |
+          git fetch -q --depth=80 origin main || true
+          python scripts/timing-gate.py --report --run-id "$RUN_ID" --from-dir "$TIMING_DIR" | tee -a "$GITHUB_STEP_SUMMARY"
+
   # Runs on the bare runner because it takes about a second and needs only node,
   # which the runner ships, so a coverage break is reported before any image is pulled.
   #
@@ -514,12 +528,17 @@ jobs:
 
       # Each line of the group is "label|command". Every check runs, even after one
       # fails, so a single run reports every failure; the job fails if any did.
-      # TIME BUDGET (Jon, 5 Oct 2026): a group fails once it passes 75% of its timeout, measured from
-      # the job's first step (JOB_T0), so it is split before it is ever cut off. Group B ran past its
-      # 12 minutes on every full run from #68 to #71 and was cancelled mid-verifier: a cancelled job
-      # reports nothing about the checks it never reached. The budget's error is raised the moment it
-      # is passed (an annotation survives a later cancel); the remaining checks still run. Every
-      # check's duration goes to the log and to the job summary.
+      # TIME BUDGET (Jon, 5 Oct 2026; a WARNING since TIMING-GATE, 14 Oct 2026): a group that passes 75% of its
+      # timeout, measured from the job's first step (JOB_T0), is reported in the job summary and as a warning
+      # annotation, naming the group, the slowest line against its recorded median, and its time. It does NOT
+      # fail the job: of 160 runs, the only two failures this check produced were single-line stalls on unchanged
+      # code (Equation Builder 260 s against 136 s; Spot the Muppet 290 s against 94 s), while the one real
+      # regression (Probability Paradox) never reached it. What blocks is the packing: a group estimated past 80%
+      # of its budget from the median of the last 5 main runs (ci-groups.py --check, on every PR and in the main
+      # timings job), plus the job's hard timeout (matrix.job_timeout) against a hang. docs/handover/ci-timing-
+      # diagnosis.md has the data. Group B once ran past its 12 minutes on every full run from #68 to #71 and
+      # was cancelled mid-verifier; the remaining checks still run after a warning. Every check's duration goes
+      # to the log and to the job summary.
       - name: ${{ matrix.name }}
         if: steps.lines.outputs.any == 'true'
         shell: bash
@@ -534,7 +553,8 @@ jobs:
           timing="$RUNNER_TEMP/ci-timing/timing.txt"; mkdir -p "$(dirname "$timing")"; echo "$GROUP" > "$timing"
           { echo "### $GROUP"; echo; echo "Time budget: $(mmss $budget) (75% of ${TIMEOUT_MIN}m)"; echo
             echo "| Check | Result | Duration | Group elapsed |"; echo "|---|---|---|---|"; } >> "$GITHUB_STEP_SUMMARY"
-          failed=()
+          failed=(); slow=""; slowtook=0; slowmed=""; slowgap=-999999
+          median_of() { python3 -c "import json,sys; v=json.load(open('scripts/ci-timings.json')).get('lines',{}).get(sys.argv[1]); print('' if v is None else v)" "$1" 2>/dev/null || true; }
           while IFS='|' read -r label cmd; do
             [ -z "$label" ] && continue
             echo "::group::$label"
@@ -544,9 +564,11 @@ jobs:
             took=$((SECONDS - start)); elapsed=$(( $(date +%s) - JOB_T0 ))
             echo "$status  $label  (${took}s; group at $(mmss $elapsed) of ${TIMEOUT_MIN}m)" | tee -a "$timing"
             echo "| $label | $status | ${took}s | $(mmss $elapsed) |" >> "$GITHUB_STEP_SUMMARY"
+            med=$(median_of "$label"); gap=$took; [ -n "$med" ] && gap=$((took - med))
+            if [ $gap -gt $slowgap ]; then slow="$label"; slowtook=$took; slowmed="$med"; slowgap=$gap; fi
             if [ -z "$over" ] && [ $elapsed -gt $budget ]; then
-              over="$GROUP at $(mmss $elapsed) of ${TIMEOUT_MIN}m (budget $(mmss $budget), 75%): split it"
-              echo "::error::time budget: $over"
+              over="$GROUP at $(mmss $elapsed) of ${TIMEOUT_MIN}m (budget $(mmss $budget), 75%)"
+              echo "::warning::time budget (a warning, the job is not failed): $over"
             fi
           done <<< "$CHECKS"
           elapsed=$(( $(date +%s) - JOB_T0 ))
@@ -556,10 +578,12 @@ jobs:
             printf '::error::FAILED: %s\n' "${failed[@]}"
           fi
           if [ -n "$over" ]; then
-            echo "::error::time budget: $over (move its slowest verifier into a group of its own, as A, C and D are)"
-            echo "**Over the time budget:** $over" >> "$GITHUB_STEP_SUMMARY"
+            detail="the slowest line against its recorded median: ${slow} took ${slowtook}s (recorded median ${slowmed:-none}${slowmed:+s})"
+            echo "::warning::time budget (a warning, the job is not failed): $over; $detail"
+            { echo; echo "**Over the time budget (a warning; the job is not failed):** $over"; echo
+              echo "Group: $GROUP. Slowest line against its recorded median: ${slow} took ${slowtook}s (recorded median ${slowmed:-none}${slowmed:+s})."; } >> "$GITHUB_STEP_SUMMARY"
           fi
-          [ ${#failed[@]} -eq 0 ] && [ -z "$over" ]
+          [ ${#failed[@]} -eq 0 ]
 
       # The group's timing lines, for the main-only "CI timings and pack" job (ci-groups.py --from-dir): the
       # job-log API failed for the workflow's own token on every fetch (9 Oct), so the timings travel as artifacts.

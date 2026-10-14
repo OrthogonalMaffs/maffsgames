@@ -55,9 +55,13 @@ reports its result (green, red or cancelled, naming the job and the check). **A 
 is fixed before any new work starts.** **Why:** a PR runs only the verifiers its changes select, so a
 group that has outgrown its timeout passes on every PR and fails only on main. Group B was cancelled at
 its 12-minute limit on every main run from #68 to #71, and it was seen only when a PR touched every game.
-Each verifier group now also fails at 75% of its timeout ("time budget: … split it", in
-`.github/workflows/check-site.yml`), so a group is split before it is cut off; each job's summary lists
-every verifier's duration.
+**What blocks and what warns (TIMING-GATE, 14 Oct 2026; `docs/handover/ci-timing-diagnosis.md`):** a group
+estimated past 80% of its budget from the median of the last 5 main runs fails (`ci-groups.py --check`, every PR
+and the main timings job), and each job has a hard timeout against a hang. A group that passes 75% of its timeout on
+one run's clock only **warns** (job summary and annotation naming the slowest line against its recorded median; the
+job stays green), and the main timings job reports, never fails on, a verifier whose last 3 runs are each 20% and
+15 s over the 5 before. **Why:** the per-run clock failed twice in 160 runs, both single-line stalls on unchanged
+code, and never saw the one real regression (the median did). Each job's summary lists every verifier's duration.
 CI timings are the median of the last 5 main runs, and the timings job commits only a pack that passes `ci-groups.py --check`
 (CI-TIMINGS-MEDIAN, 12 Oct 2026): run 785's one slow group recorded a 125 s setup against 18-28 s before it, and the
 single-run pack it produced turned `--check` red on main and on every PR.
