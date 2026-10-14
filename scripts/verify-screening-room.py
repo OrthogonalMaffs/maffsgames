@@ -517,7 +517,14 @@ def run(path, play=True, only=None):
     # carrying harmless metal" where every count uses all the people with no prohibited item.
     for pat, why in ((r'Calculate the exact probability|enter as a fraction', 'screening-room-s1-003'),
                      (r'they actually have the condition', 'screening-room-s1-004'),
-                     (r'of people carrying harmless metal', 'screening-room-s1-002')):
+                     (r'of people carrying harmless metal', 'screening-room-s1-002'),
+                     # SWEEP-1 rulings (R3, R1): the legend names what blue is, the share is a share, one word for failing, a percentage
+                     # asked for as a percentage, and no sentence that is false in general
+                     (r'id="legendCondLabel">Has condition<', 'screening-room-s1-005'),
+                     (r'so more of its positives are real', 'screening-room-s1-007'),
+                     (r'would struggle|predicted to struggle', 'screening-room-s1-008'),
+                     (r'how many are real\?', 'screening-room-s1-009'),
+                     (r'The base rate matters more than test accuracy', 'screening-room-s1-010')):
         if re.search(pat, src):
             rep[(why, 'page text')].append('the page says %r, which its marking or counts contradict' % pat)
     proc, base = bc.start_stub_server()
@@ -614,6 +621,16 @@ def selftest():
         ('s1-003: the old start screen', 'screening-room-s1-003', None,
          lambda s: plant(s, 'Calculate the probability, as a percentage or a decimal, to the places the question gives',
                          'Calculate the exact probability — enter as a fraction, decimal or percentage')),
+        ('s1-005: the legend calls blue "Has condition"', 'screening-room-s1-005', None,
+         lambda s: plant(s, '<span id="legendCondLabel">Has the condition, not flagged</span>', '<span id="legendCondLabel">Has condition</span>')),
+        ('s1-007: "more of its positives are real"', 'screening-room-s1-007', None,
+         lambda s: plant(s, 'so a larger share of its positives are real', 'so more of its positives are real')),
+        ('s1-008: struggle and fail as one', 'screening-room-s1-008', None,
+         lambda s: plant(s, 'Predicted grades suggested about {posPct} would fail.', 'Predicted grades suggested about {posPct} would struggle.')),
+        ('s1-009: "how many are real" for a probability', 'screening-room-s1-009', None,
+         lambda s: plant(s, 'what percentage are real? Calculate', 'how many are real? Calculate')),
+        ('s1-010: "the base rate matters more"', 'screening-room-s1-010', None,
+         lambda s: plant(s, 'Even an accurate test gives mostly false positives when the condition is rare.', 'The base rate matters more than test accuracy.')),
         ('s1-004: the old phase 1 prompt', 'screening-room-s1-004', None,
          lambda s: plant(s, 'If a result is positive, how likely is it to be real?',
                          'If someone tests positive, how likely is it they actually have the condition?')),

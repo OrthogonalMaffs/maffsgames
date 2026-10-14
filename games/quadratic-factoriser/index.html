@@ -1438,7 +1438,7 @@ function hfStep3Html(narrate, split) {
   });
   const shuffled = MaffsOptions.shuffle(rows);
   const html = shuffled.map(([m, n]) =>
-    `<button class="hf-choice-btn" onclick="hfStep3Pick(${m},${n})">${tex(`${m} \\times ${n} = ${m * n},\\ \\ ${m} + ${n} = ${m + n}`)}</button>`
+    `<button class="hf-choice-btn" onclick="hfStep3Pick(${m},${n})">${tex(`${m} \\times ${n < 0 ? `(${n})` : n} = ${m * n},\\ \\ ${m} + ${n < 0 ? `(${n})` : n} = ${m + n}`)}</button>`
   ).join('');
   const lead = narrate
     ? mx(`Find two numbers that multiply to \\(ac = ${a * c}\\) and add to \\(b = ${b}\\).`)
@@ -1446,9 +1446,12 @@ function hfStep3Html(narrate, split) {
   return `<div class="${narrate ? 'hf-note' : 'hf-step-prompt'}">${lead}</div><div class="hf-choice-row">${html}</div>`;
 }
 
+// A term after the first, written as a sum or a difference (never "+ -16x"), with a coefficient of 1 left out ("- x", not "-1x").
+function hfLaterTerm(coef, v) { return ` ${coef < 0 ? '-' : '+'} ${v && Math.abs(coef) === 1 ? '' : Math.abs(coef)}${v}`; }
+
 function hfStep4Html(narrate, split) {
   const { a, c } = currentQ;
-  const line = `${a === 1 ? '' : a}x^2 + ${split.m}x + ${split.n}x ${c >= 0 ? '+' : '-'} ${Math.abs(c)}`;
+  const line = `${a === 1 ? '' : a}x^2${hfLaterTerm(split.m, 'x')}${hfLaterTerm(split.n, 'x')}${hfLaterTerm(c, '')}`;
   const note = narrate
     ? `<div class="hf-note">${mx(`Either order is fine — \\(${split.m}x\\) then \\(${split.n}x\\), or the other way round.`)}</div>`
     : `<div class="hf-step-prompt">Split the middle term.</div>`;
@@ -1476,7 +1479,7 @@ function hfStep6Html(narrate) {
   const opts = MaffsOptions.shuffle([correctLatex, wrongLatex]);
   const rows = opts.map(latex => `<button class="hf-choice-btn" onclick="hfStep6Pick('${latex.replace(/'/g, "\\'")}')">${tex(latex)}</button>`).join('');
   const lead = narrate
-    ? 'The common bracket comes out the front, next to the two leftover factors.'
+    ? 'The common bracket comes out the front, and the two leftover terms make the other bracket.'
     : 'Which is the correct factorisation?';
   return `<div class="${narrate ? 'hf-note' : 'hf-step-prompt'}">${lead}</div><div class="hf-choice-row">${rows}</div>`;
 }
@@ -1661,7 +1664,7 @@ function renderFormulaQuestion() {
   const { a, b, c } = currentQ;
   formulaPanel().innerHTML = `
     <div class="question-box">
-      <div class="q-label">Solve</div>
+      <div class="q-label">Solve (type a repeated root twice)</div>
       <div class="quadratic" id="formulaQuadratic">${tex(formatQuadratic(b, c, a) + ' = 0')}</div>
       <div class="formula-inputs">
         <input type="text" inputmode="text" class="formula-input" id="fRoot1" placeholder="x₁" autocomplete="off">
@@ -1707,7 +1710,7 @@ function checkFormulaAnswer() {
   const v2 = document.getElementById('fRoot2').value.trim();
   if (v1 === '' || v2 === '') {
     const fb = document.getElementById('fFeedback');
-    fb.textContent = 'Enter both roots, or press "No real solutions".';
+    fb.textContent = 'Enter both roots (a repeated root goes in both boxes), or press "No real solutions".';
     fb.className = 'feedback wrong';
     return;
   }

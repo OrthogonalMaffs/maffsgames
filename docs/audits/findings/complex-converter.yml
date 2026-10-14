@@ -139,7 +139,9 @@ findings:
     in the context lines, keys unchanged. The t6-004 rounded-angle precision stays open and untouched'
   evidence: 'id 19: -3 + 4j | polar | key 5 angle 126.87 deg | context "This impedance has a negative real part. Find
     its polar form." (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R3 (the reviewer''s suggested wording, keys unchanged): the five contexts say "complex number" or "phasor", not "impedance" or "capacitive reactance" (ids 19, 24, 27, 34, 50: a passive impedance has no negative resistance and a reactance is purely imaginary); verify-complex-converter.py fails the old words, with plants.'
 - id: complex-converter-s1-003
   severity: LOW
   jc: true

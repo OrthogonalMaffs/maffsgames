@@ -52,10 +52,10 @@ DATA = """() => ({stemleaf: STEM_LEAF, boxplot: BOX_PLOTS, cumfreq: CUM_FREQ, hi
 
 # Builds one scenario's Phase 1 questions with the game's own function.
 BUILD = """([type, id]) => {
-  const s = ({stemleaf: STEM_LEAF, boxplot: BOX_PLOTS, cumfreq: CUM_FREQ})[type].find(x => x.id === id);
+  const s = ({stemleaf: STEM_LEAF, boxplot: BOX_PLOTS, cumfreq: CUM_FREQ, histogram: HISTOGRAMS})[type].find(x => x.id === id);
   selectedType = type; selectedLevel = s.level; currentScenario = s; sessionAnswers = {};
   buildPhase1Questions();
-  return phase1Questions.map(q => ({key: q.key, expected: q.expected, tolerance: q.tolerance}));
+  return phase1Questions.map(q => ({key: q.key, expected: q.expected, tolerance: q.tolerance, alt: q.alt || null, text: q.text}));
 }"""
 
 # Marks each case through the game's input and submitPhase1(); a timer stub stops a correct
@@ -63,7 +63,7 @@ BUILD = """([type, id]) => {
 MARK = """(cases) => {
   window.setTimeout = function () { return 0; };
   return cases.map(c => {
-    const s = ({stemleaf: STEM_LEAF, boxplot: BOX_PLOTS, cumfreq: CUM_FREQ})[c.type].find(x => x.id === c.id);
+    const s = ({stemleaf: STEM_LEAF, boxplot: BOX_PLOTS, cumfreq: CUM_FREQ, histogram: HISTOGRAMS})[c.type].find(x => x.id === c.id);
     selectedType = c.type; selectedLevel = s.level; currentScenario = s; sessionAnswers = {};
     buildPhase1Questions(); currentPhase = 1; currentQIndex = c.qi; showCurrentQuestion();
     document.getElementById('qInput').value = c.typed; submitPhase1();
@@ -350,49 +350,211 @@ def cf_truth(s):
     return keys, tol, wrong, band, span
 
 
+def cf_poly(s):
+    """The polygon: the same cumulative points joined by straight lines (chart-interrogator-s1-005)."""
+    pts, x, c = [(float(s["data"][0]["lo"]), 0.0)], 0.0, 0.0
+    for d in s["data"]:
+        c += float(d["f"])
+        pts.append((float(d["hi"]), c))
+    return pts
+
+
+def poly_x_at(s, cf):
+    pts = cf_poly(s)
+    for (x0, c0), (x1, c1) in zip(pts, pts[1:]):
+        if cf <= c1:
+            return x0 + (x1 - x0) * (cf - c0) / (c1 - c0)
+    return pts[-1][0]
+
+
+def poly_at_x(s, x):
+    pts = cf_poly(s)
+    for (x0, c0), (x1, c1) in zip(pts, pts[1:]):
+        if x <= x1:
+            return c0 + (c1 - c0) * (x - x0) / (x1 - x0)
+    return pts[-1][1]
+
+
+def cf_alt(s, keys, wrong, band):
+    """The polygon's readings and their bands, each capped below the nearest named wrong answer of either drawing."""
+    n = s["n"]
+    span = float(s["data"][-1]["hi"]) - float(s["data"][0]["lo"])
+    pq1, pmd, pq3 = poly_x_at(s, n / 4), poly_x_at(s, n / 2), poly_x_at(s, 3 * n / 4)
+    pbelow = poly_at_x(s, float(s["benchVal"]))
+    pbench = n - pbelow if s["benchSide"] == "above" else pbelow
+    alt = {"q1": pq1, "median": pmd, "q3": pq3, "iqr": pq3 - pq1, "bench": pbench}
+    pool = {"q1": [pmd, pq3, n / 4, keys["median"], keys["q3"]], "median": [pq1, pq3, n / 2, keys["q1"], keys["q3"]],
+            "q3": [pq1, pmd, 3 * n / 4, keys["q1"], keys["median"]], "iqr": [n / 2, span],
+            "bench": [n - pbench, n - keys["bench"]]}
+    tol = {}
+    for k in alt:
+        gaps = [abs(w - alt[k]) for w in pool[k] if abs(w - alt[k]) > 1e-9]
+        tol[k] = min(band[k], min(gaps) / 2) if gaps else band[k]
+    return alt, tol, pool
+
+
 def check_cumfreq(page, data, fails):
     checks, cases, why, bench_cases, bench_why, report = 0, [], [], [], [], []
     for s in data["cumfreq"]:
         keys, tol, wrong, band, span = cf_truth(s)
+        alt, atol, apool = cf_alt(s, keys, wrong, band)
         game = page.evaluate(BUILD, ["cumfreq", s["id"]])
+
+        def ok_at(k, v, keys=keys, tol=tol, alt=alt, atol=atol):
+            """Accepted by the curve's band or by the polygon's (chart-interrogator-s1-005)."""
+            return abs(v - keys[k]) <= tol[k] or abs(v - alt[k]) <= atol[k]
+
         for qi, q in enumerate(game):
             k = q["key"]
             where = "%s %s" % (s["id"], k)
-            checks += 3
+            checks += 4
             if abs(q["expected"] - keys[k]) > span * 1e-9:
                 fails.append("%s: key %r, recomputed %r" % (where, q["expected"], keys[k]))
             if abs(q["tolerance"] - tol[k]) > span * 1e-7:
                 fails.append("%s: tolerance %r, recomputed %r" % (where, q["tolerance"], tol[k]))
-            if any(abs(w - q["expected"]) <= q["tolerance"] for w in wrong[k]):
-                fails.append("%s: tolerance %r reaches a named wrong answer" % (where, q["tolerance"]))
+            ga = q.get("alt")
+            if not ga or abs(ga["expected"] - alt[k]) > span * 1e-7 or abs(ga["tolerance"] - atol[k]) > span * 1e-7:
+                fails.append("%s: polygon reading %r, recomputed %.6f +-%.6f (chart-interrogator-s1-005)" % (where, ga, alt[k], atol[k]))
+            if any(ok_at(k, w) for w in wrong[k] + apool[k] if abs(w - keys[k]) > 1e-9 and abs(w - alt[k]) > 1e-9):
+                fails.append("%s: a band reaches a named wrong answer" % where)
 
             def add(value, accept, label, qi=qi, where=where):
                 cases.append({"type": "cumfreq", "id": s["id"], "qi": qi, "typed": "%.6f" % value})
                 why.append((where, label, "%.6f" % value, accept))
 
             add(keys[k], True, "the key")
+            add(alt[k], True, "the polygon's reading")
             for w in wrong[k]:
                 add(w, False, "named wrong answer %g" % w)
             for sign in (1, -1):
-                add(keys[k] + sign * tol[k] * 0.999, True, "just inside the band")
-                add(keys[k] + sign * tol[k] * 1.001, False, "just outside the band")
+                for f, lab in ((0.999, "just inside"), (1.001, "just outside")):
+                    v = keys[k] + sign * tol[k] * f
+                    add(v, ok_at(k, v), "%s the curve's band" % lab)
+                    v = alt[k] + sign * atol[k] * f
+                    add(v, ok_at(k, v), "%s the polygon's band" % lab)
             if k in ("q1", "median", "q3"):
                 add(CF_PIXEL[s["id"]][("q1", "median", "q3").index(k)], True, "the pixel-measured reading of the drawn curve")
-        for value, accept, label in ([(keys["bench"], True, "the key")] +
-                                     [(w, False, "named wrong answer %g" % w) for w in wrong["bench"]] +
-                                     [(keys["bench"] + sg * tol["bench"] * f, f < 1, "band edge")
-                                      for sg in (1, -1) for f in (0.999, 1.001)]):
+        cases_b = [(keys["bench"], True, "the key"), (alt["bench"], True, "the polygon's reading")]
+        cases_b += [(w, False, "named wrong answer %g" % w) for w in wrong["bench"]]
+        for sg in (1, -1):
+            for f in (0.999, 1.001):
+                for base_, t_ in ((keys["bench"], tol["bench"]), (alt["bench"], atol["bench"])):
+                    v = base_ + sg * t_ * f
+                    cases_b.append((v, ok_at("bench", v), "band edge"))
+        for value, accept, label in cases_b:
             bench_cases.append({"id": s["id"], "typed": "%.6f" % value})
             bench_why.append(("%s bench" % s["id"], label, "%.6f" % value, accept))
         capped = [k for k in keys if tol[k] < band[k] - 1e-12]
-        report.append("%s %s" % (s["id"], ", ".join("%s +-%.4g -> +-%.4g" % (k, band[k], tol[k]) for k in capped)
-                                 if capped else "no band capped"))
+        moved = [k for k in keys if abs(alt[k] - keys[k]) > tol[k]]
+        report.append("%s %s%s" % (s["id"], ", ".join("%s +-%.4g -> +-%.4g" % (k, band[k], tol[k]) for k in capped)
+                                   if capped else "no band capped",
+                                   "; polygon outside the curve's band: " + ", ".join(moved) if moved else ""))
     got = page.evaluate(MARK, cases) + [r["accepted"] for r in page.evaluate(CF_BENCH, bench_cases)]
     for (where, label, text, accept), ok in zip(why + bench_why, got):
         checks += 1
         if ok != accept:
             fails.append("%s: typed %s (%s) was %s" % (where, text, label, "accepted" if ok else "rejected"))
     return checks, len(cases) + len(bench_cases), report
+
+
+# SWEEP-1 (chart-interrogator-s1-001): a histogram frequency is a density read off the drawn axis times a width. Its band is
+# 2.5% of the density axis's span (the tallest bar is 90% of the plot height) times the class width, the total's times the
+# whole x width, each capped below half the gap to the nearest named wrong answer (canon 7.1.2).
+def hist_phase1(s):
+    cls = [{"lo": num(d["lo"]), "hi": num(d["hi"]), "fd": num(d["fd"])} for d in s["data"]]
+    for c in cls:
+        c["width"] = c["hi"] - c["lo"]
+        c["freq"] = c["fd"] * c["width"]
+    total = sum(c["freq"] for c in cls)
+    most = cls[0]
+    for c in cls[1:]:
+        if c["freq"] > most["freq"]:
+            most = c
+    ask = cls[2] if cls[1] is most else cls[1]
+    axis = max(c["fd"] for c in cls) / F(9, 10)
+    d_band = axis / 40
+    keys = {"askFreq": ask["freq"], "total": total}
+
+    def cap(band, key, wrongs):
+        gaps = [abs(w - key) for w in wrongs if abs(w - key) > 0]
+        return min(band, min(gaps) / 2) if gaps else band
+
+    wrong = {"askFreq": [ask["fd"], total], "total": [sum(c["fd"] for c in cls), ask["freq"]]}
+    tol = {"askFreq": cap(d_band * ask["width"], ask["freq"], wrong["askFreq"]),
+           "total": cap(d_band * (cls[-1]["hi"] - cls[0]["lo"]), total, wrong["total"])}
+    return keys, tol, wrong
+
+
+def check_hist_readings(page, data, fails):
+    checks, cases, why, report = 0, [], [], []
+    for s in data["histogram"]:
+        keys, tol, wrong = hist_phase1(s)
+        game = page.evaluate(BUILD, ["histogram", s["id"]])
+        by_key = {q["key"]: (qi, q) for qi, q in enumerate(game)}
+        for k in ("askFreq", "total"):
+            qi, q = by_key[k]
+            where = "%s %s" % (s["id"], k)
+            checks += 2
+            if abs(num(q["expected"]) - keys[k]) > F(1, 2):
+                fails.append("%s: key %r, recomputed %s" % (where, q["expected"], keys[k]))
+            if abs(num(q["tolerance"]) - tol[k]) > F(1, 10**6):
+                fails.append("%s: tolerance %r, recomputed %s (the old fixed 1 is not a band read from the scale)" % (where, q["tolerance"], float(tol[k])))
+            if any(abs(w - num(q["expected"])) <= num(q["tolerance"]) for w in wrong[k]):
+                fails.append("%s: tolerance %r reaches a named wrong answer" % (where, q["tolerance"]))
+            key = num(q["expected"])
+            for w in wrong[k]:
+                cases.append({"type": "histogram", "id": s["id"], "qi": qi, "typed": typed(w)})
+                why.append((where, "named wrong answer %s" % typed(w), typed(w), False))
+            cases.append({"type": "histogram", "id": s["id"], "qi": qi, "typed": typed(key)})
+            why.append((where, "the key", typed(key), True))
+            for sign in (1, -1):
+                for f, ok in ((F(999, 1000), True), (F(1001, 1000), False)):
+                    v = key + sign * tol[k] * f
+                    cases.append({"type": "histogram", "id": s["id"], "qi": qi, "typed": "%.6f" % float(v)})
+                    why.append((where, "%s the band" % ("just inside" if ok else "just outside"), "%.6f" % float(v), ok))
+        report.append("%s frequency +-%.3g, total +-%.3g" % (s["id"], float(tol["askFreq"]), float(tol["total"])))
+        # s1-006: the proportion is asked of a class, not a "range" (the word is also a statistic)
+        prop = by_key["proportion"][1]["text"]
+        checks += 1
+        if " in the class " not in prop or "range" in prop:
+            fails.append("%s: the proportion question reads %r; it must say 'in the class', not 'in the range' (chart-interrogator-s1-006)" % (s["id"], prop))
+    got = page.evaluate(MARK, cases)
+    for (where, label, text, accept), ok in zip(why, got):
+        checks += 1
+        if ok != accept:
+            fails.append("%s: typed %s (%s) was %s" % (where, text, label, "accepted" if ok else "rejected"))
+    return checks, len(cases), report
+
+
+# SWEEP-1 (chart-interrogator-s1-004): a stem-and-leaf table writes each leaf with as many digits as the key does
+# (a 0 under stems of 100 is "00") and each stem as the key does ("2|40", never "02").
+SL_DRAW = """() => STEM_LEAF.map(s => {
+  currentScenario = s; selectedType = 'stemleaf';
+  const d = document.createElement('div'); drawStemLeaf(d);
+  return {id: s.id, rows: Array.from(d.querySelectorAll('tr')).slice(1).map(r => Array.from(r.children).map(c => c.textContent))};
+})"""
+
+
+def check_stemleaf_layout(page, data, fails):
+    checks = 0
+    drawn = {d["id"]: d["rows"] for d in page.evaluate(SL_DRAW)}
+    for s in data["stemleaf"]:
+        div, dec = s["stemDiv"], s.get("decimal")
+        width = len(str(div)) - 1
+        def leaf(v, st):
+            return str(int(round((num(v) - st * div) * 10))) if dec else str(int(num(v)) % div).zfill(width)
+        stems = sorted({int(num(v) // div) for v in s["a"] + s["b"]})
+        want = []
+        for st in stems:
+            la = [leaf(v, st) for v in sorted(s["a"], key=num) if int(num(v) // div) == st]
+            lb = [leaf(v, st) for v in sorted(s["b"], key=num) if int(num(v) // div) == st]
+            want.append(["  ".join(reversed(la)), str(st), "  ".join(lb)])
+        checks += 1
+        if drawn[s["id"]] != want:
+            bad = next((a for a, b in zip(drawn[s["id"]], want) if a != b), None)
+            fails.append("%s: the drawn table differs from the recomputed one (first row %r, expected %r) (chart-interrogator-s1-004)"
+                         % (s["id"], bad, next(b for a, b in zip(drawn[s["id"]], want) if a != b) if bad else None))
+    return checks
 
 
 def check_readings(page, data, fails):
@@ -463,10 +625,13 @@ def run(browser, base, mutate=None):
     checks, n_cases = check_readings(page, data, fails)
     c_checks, c_cases, cf_report = check_cumfreq(page, data, fails)
     h_checks, split, report = check_histograms(page, data, fails)
+    hr_checks, hr_cases, hr_report = check_hist_readings(page, data, fails)
+    h_checks += hr_checks + check_stemleaf_layout(page, data, fails)
+    n_cases += hr_cases
     page.close()
     if errors:
         fails.append("page errors: %s" % errors)
-    return fails, checks + c_checks + h_checks, n_cases + c_cases, split, (report, cf_report)
+    return fails, checks + c_checks + h_checks, n_cases + c_cases, split, (report, cf_report + ['histogram bands: ' + '; '.join(hr_report)])
 
 
 # Each must make the check FAIL. (description, text in the game, replacement)
@@ -475,6 +640,12 @@ FAULTS = [
     ("s1-002: the class boundaries not labelled", "if(Math.abs(b/xStep-Math.round(b/xStep))>1e-9)ctx.fillText(", "if(false)ctx.fillText("),
     ("s1-003: options by position (three on six histograms)",
      ".concat(freqs).map(function(f){return f.interval;}).filter(unique).slice(0,4))},", ".map(function(f){return f.interval;}).filter(unique))},"),
+    ("s1-001: a histogram frequency back to a fixed +-1", "tolerance:freqTol,key:'askFreq'", "tolerance:1,key:'askFreq'"),
+    ("s1-001: the total back to a fixed +-1", "tolerance:totalTol,key:'total'", "tolerance:1,key:'total'"),
+    ("s1-005: the polygon's reading not accepted", "return Math.abs(val-expected)<=tolerance||(!!alt&&Math.abs(val-alt.expected)<=alt.tolerance);", "return Math.abs(val-expected)<=tolerance;"),
+    ("s1-004: leaves not padded", ".padStart(String(div).length-1,'0')", ""),
+    ("s1-004: stems padded to two digits", "var stemLabel=st.toString();", "var stemLabel=s.stemWidth===2&&st<10?'0'+st:st.toString();"),
+    ("s1-006: 'in the range' back", "' in the class '+propInterval.interval", "' in the range '+propInterval.interval"),
     ("cumulative-frequency median uncapped", "median:capTol(xTol,median,[q1,q3,n/2])", "median:xTol"),
     ("stem and leaf to the nearest half unit", "var slTol=(s.decimal?0.1:1)*1e-9;", "var slTol=(s.decimal?0.1:1)*0.5;"),
     ("a histogram class of 22.5 observations (todo 1.15)", "{lo:35,hi:40,fd:4.6}", "{lo:35,hi:40,fd:4.5}"),

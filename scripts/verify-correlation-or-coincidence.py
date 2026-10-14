@@ -78,6 +78,30 @@ def pearson(pts):
 
 
 # ---------------------------------------------------------------- the bank and its graphs
+# SWEEP-1 rulings (13 Oct 2026): the wording of the items the rulings changed. (id, field, text it must carry.)
+# A19 is one student across 12 tests (prior attainment is no longer a confounder, Part 2 #11); C26 is a house number, which
+# no family trait drives (Part 2 #11); B10's explanation no longer claims that height cannot widen a trunk (R3).
+PINNED = [("A19", "x", "Hours one student revised for each of 12 tests"),
+          ("A19", "y", "Their score on that test (out of 50)"),
+          ("A19", "explain", "For one student, more revision means a better score"),
+          ("C26", "x", "House number (8 families)"),
+          ("C26", "joke", "live further from the cinema"),
+          ("C26", "explain", "A house number can't press play."),
+          ("B10", "explain", "Older trees have had longer to grow both taller and wider.")]
+
+
+def check_pinned(bank):
+    out = []
+    by = {q.get("id"): q for q in bank}
+    for qid, field, want in PINNED:
+        q = by.get(qid)
+        v = (q or {}).get(field)
+        s = v[0] if isinstance(v, list) else str(v or "")
+        if want not in s:
+            out.append("%s: %s must carry %r (SWEEP-1 rulings), it reads %r" % (qid, field, want, s[:60]))
+    return out
+
+
 def check_bank(bank, points):
     out = []
     n = len(bank)
@@ -321,6 +345,7 @@ async def collect(page):
     bank = await page.evaluate("JSON.parse(JSON.stringify(COC.BANK))")
     points = await page.evaluate("() => { var o = {}; COC.BANK.forEach(function (q) { o[q.id] = COC.points(q); }); return o; }")
     found, counts = check_bank(bank, points)
+    found += check_pinned(bank)
     found += check_deals(await page.evaluate(DEALS_JS), bank)
     return found, bank, counts
 
@@ -336,6 +361,12 @@ FAULTS = [
     ("B25's old pair back (tickets and T-shirts, a direct link)",
      "(function(){ var q = COC.BANK.find(function(q){return q.id==='B25';}); q.x[0] = 'Concert tickets sold (thousands)';"
      " q.y[0] = 'Band T-shirts sold (thousands)'; })();"),
+    ("A19 back to different students (the confounder)",
+     "(function(){ var q = COC.BANK.find(function(q){return q.id==='A19';}); q.x[0] = 'Hours of revision for a test'; })();"),
+    ("C26 back to fridge magnets",
+     "(function(){ var q = COC.BANK.find(function(q){return q.id==='C26';}); q.x[0] = 'Magnets on the fridge (8 families)'; })();"),
+    ("B10 claims height cannot widen a trunk",
+     "(function(){ var q = COC.BANK.find(function(q){return q.id==='B10';}); q.explain = 'Height doesn\\'t widen a trunk.'; })();"),
     ("an empty explanation", "COC.BANK[11].explain = ' ';"),
     ("a lopsided split (six coincidences relabelled)",
      "COC.BANK.filter(function(q){return q.cat==='chance';}).slice(0,6).forEach(function(q){ q.cat='cause'; delete q.joke; });"),

@@ -254,8 +254,8 @@ function renderDots(a, b) {
   }
 
   label.textContent = remainder > 0
-    ? `${a} dots in groups of ${b} — ${groups} full groups, and what is left over:`
-    : `${a} dots in groups of ${b} — ${groups} full groups, nothing left over:`;
+    ? `${a} dots in groups of ${b} — ${groups} full ${groups === 1 ? 'group' : 'groups'}, and what is left over:`
+    : `${a} dots in groups of ${b} — ${groups} full ${groups === 1 ? 'group' : 'groups'}, nothing left over:`;
 }
 
 function loadQuestion() {
@@ -350,7 +350,7 @@ const finishGame = MaffsLock.finishOnce(function () {
   document.getElementById('mainGame').classList.remove('visible');
   document.getElementById('gameOver').classList.add('visible');
   document.getElementById('finalScore').textContent = score;
-  document.getElementById('goDetail').textContent = `${Math.round(score/10)} correct answers`;
+  document.getElementById('goDetail').textContent = `${Math.round(score/10)} correct ${Math.round(score/10) === 1 ? 'answer' : 'answers'}`;
   const _acc = _ggQCount > 0 ? Math.round(_ggCorrectCount / _ggQCount * 100) : 0;
   mfg('game_completed',{game_slug:'modular-battle',level:resolvedLevel,score:score,questions_answered:_ggQCount,accuracy:_acc});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('modular-battle','gcse',score,_ggQCount).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('modular-battle','gcse',score);}}

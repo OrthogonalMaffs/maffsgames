@@ -105,7 +105,9 @@ findings:
     no alarm (17,912), so they are not alarm events. A new title is a context change, for Jon'
   evidence: 'title "20,000 alarm events ..."; leaves: alarm sounds 98 + 1,990 = 2,088, no alarm 2 + 17,910 = 17,912
     (SWEEP-1, batch 8)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R3: the tree is titled "20,000 office-building days (1 year)": 17,912 of the 20,000 had no alarm, so they were not alarm events; no figure or key changes; verify-given-that.py pins it with a plant.'
 - id: given-that-s1-003
   severity: LOW
   jc: true

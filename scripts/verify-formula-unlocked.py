@@ -253,6 +253,13 @@ def check_bank(fails, banks):
                 fl, fr = sides(q['formula'])
                 if not all(same(ss[0], x) for x in ss[1:]):
                     fails.append('%s: the step %r does not hold for the key' % (w, line))
+            # SWEEP-1 (s1-007, R3): "Every wrong answer shows the full worked solution": it starts from a line that is not
+            # the answer and ends with the target alone on the left.
+            steps = q.get('steps') or []
+            if len(steps) < 2:
+                fails.append('%s: the worked solution is %d line(s); it must show the working, then the key' % (w, len(steps)))
+            elif sides(steps[-1].split('=')[0] + '=x')[0] != t:
+                fails.append('%s: the last worked line %r does not have %s alone on the left' % (w, steps[-1], q['target']))
 
 
 # Misconception wording that named something no option shows (SWEEP-1, formula-unlocked-s1-004).
@@ -271,6 +278,12 @@ SWEEP_JS = r"""() => {
       tEl.querySelectorAll('.katex-mathml').forEach(m => m.remove());   // KaTeX's hidden MathML carries the TeX source
       const tgt = tEl.textContent;
       if (pick === key && /[\\_^{}]/.test(tgt)) out.push([name, i, pick, 'the target line shows raw TeX: ' + tgt]);
+      if (pick === key) {   // every hint is rendered, never raw TeX (SWEEP-1, formula-unlocked-s1-002)
+        (q.hints || []).forEach(() => useHint());
+        const hEl = document.getElementById('hintPanel').cloneNode(true);
+        hEl.querySelectorAll('.katex-mathml').forEach(m => m.remove());
+        if (/[\\_^{}]/.test(hEl.textContent)) out.push([name, i, pick, 'a hint shows raw TeX: ' + hEl.textContent.slice(0, 90)]);
+      }
       const shown = [...document.querySelectorAll('#options .opt-btn')];
       if (shown.length !== 4) out.push([name, i, pick, shown.length + ' options on screen']);
       const btn = shown.find(b => b.dataset.val === pick);
@@ -296,11 +309,15 @@ def play(fails, html):
             ctx.route(lambda url: not url.startswith(base) and '/katex@' not in url, lambda route: route.abort())
             ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
                 status=200, content_type='text/html; charset=utf-8', body=html))
+            ctx.route(lambda url: bc.is_font_cdn(url), bc.serve_real_font)     # KaTeX from the pinned local copy
             page = ctx.new_page()
             errors = []
             page.on('pageerror', lambda e: errors.append(str(e)))
             page.goto(base + '/games/%s/?cb=verify' % SLUG, wait_until='load', timeout=20000)
             page.wait_for_function('typeof Q_GCSE !== "undefined" && typeof katex !== "undefined"', timeout=15000)
+            legend = page.inner_text('.stage-legend')
+            if 'Up to two steps' not in legend or 'Stage 2: Two steps' in legend:
+                fails.append('start: the Stage 2 label must be true of its one-step items: "Up to two steps" (formula-unlocked-s1-005)')
             for name, i, pick, what in page.evaluate(SWEEP_JS):
                 fails.append('%s[%d]%s in Chromium: option %s %s' % (name, i, ' (%s)' % AUDIT[(name, i)] if (name, i) in AUDIT else '', pick, what))
             browser.close()
@@ -334,6 +351,12 @@ PLANTS = [
     ('Q_GCSE[16]', 's1-001: the target written as text (raw \\Delta T)',
      "document.getElementById('targetDisplay').innerHTML='Make '+rkInline(currentQ.target)+' the subject';",
      "document.getElementById('targetDisplay').textContent='Make '+currentQ.target+' the subject';"),
+    ('Q_LEVEL4[1]', 's1-007: the worked solution is only the answer line',
+     "steps:['\\\\sigma = \\\\dfrac{F}{A}','F = \\\\sigma A']}", "steps:['\\\\sigma A = F']}"),
+    ('Q_ALEVEL[1]', 's1-002: a hint written as raw TeX',
+     "'Use the log law: \\\\(\\\\ln a + bx = \\\\ln a + \\\\ln(e^{bx}) = \\\\ln(ae^{bx})\\\\)'", "'Use the log law: ln a + bx = ln a + ln(e^{bx}) = ln(ae^{bx})'"),
+    ('start:', 's1-005: Stage 2 called Two steps again',
+     '<span class="stage-pill sp2">Stage 2: Up to two steps</span>', '<span class="stage-pill sp2">Stage 2: Two steps</span>'),
     ('Q_GCSE[20]', 's1-004: "not 2π²"', "Leaving it as 2π is the error.'", "not 2π².'"),
     ('Q_GCSE[12]', 's1-003: "The last distractor"', "misconception:'Writing x = y/m − c is a common error", "misconception:'The last distractor is a common error"),
 ]

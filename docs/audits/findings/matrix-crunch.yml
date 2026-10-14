@@ -189,4 +189,6 @@ findings:
     results screen only, no score multiplier); the game shows the "Time" HUD item (the CSS at :91 hides the classes
     .timer and .hud-timer, not the id) and feeds the time into the score (m = 1/(1+T_K*ln(1+s))).'
   evidence: 'HUD "Time" visible during play; score multiplied by the time term (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R7: the running Time is gone from the HUD. NOTE for Jon: the answer time still feeds the score (m = 1/(1+T_K ln(1+s))), which the Hidden Count-Up policy says it should not; R7 covers the display only. The verifier fails a HUD Time, with a plant.'

@@ -58,7 +58,9 @@ findings:
   where: 'games/formula-unlocked/index.html:322 (Q_ALEVEL[1]), :399 (Q_LEVEL4[12]) hints'
   summary: 'Two hints show raw TeX (braces, an underscore) through plain innerHTML; the maths is right'
   evidence: '"Use the log law: ln a + bx = ln a + ln(e^{bx}) = ln(ae^{bx})"; "1/R₁ = 1/R_T − 1/R₂" (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R8: hints are written with \( \) where they hold maths and rendered through MaffsText (the two raw-TeX hints, Q_ALEVEL[1] and Q_LEVEL4[12]); the verifier opens every hint and fails on raw TeX.'
 - id: formula-unlocked-s1-003
   severity: LOW
   jc: false
@@ -88,7 +90,9 @@ findings:
   summary: 'Several "Two Steps" items are one step (Q_LEVEL4[3], [4], [6], [7]; Q_GCSE[16]) (Split: the parent entry
     held 2 defects; the others are formula-unlocked-s1-007.)'
   evidence: 'Q_LEVEL4[4] E = σ/ε as its only step (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R3: the Stage 2 label reads "Up to two steps" (four Level 4 items and Q_GCSE[16] are one step); no key or item moves. verify-formula-unlocked.py pins it with a plant.'
 - id: formula-unlocked-s1-007
   severity: LOW
   jc: false
@@ -99,7 +103,9 @@ findings:
     "Every wrong answer shows the full worked solution" (Split from formula-unlocked-s1-005, SWEEP-1-RULINGS
     step 1.)'
   evidence: 'Q_LEVEL4[4] E = σ/ε as its only step (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R3: every worked solution now starts from a line that is not the answer and ends with the target alone on the left (Level 4 items 1, 2, 3, 4, 6, 7 and GCSE items 2, 3 fixed); the verifier checks all 49.'
 - id: formula-unlocked-s1-006
   severity: MEDIUM
   jc: false

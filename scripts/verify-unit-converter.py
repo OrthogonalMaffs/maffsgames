@@ -147,7 +147,7 @@ def recompute(q):
 
     def times_pi(v):
         return Value(v * pi.coef, pi.k)
-    m = (re.match(r'^Convert ' + NUM + r' (\S+?) to (\S+?)(?: \(.*\))?(?:\. .*)?$', p) or
+    m = (re.match(r'^(?:A hectare is a square 100 m by 100 m\. )?Convert ' + NUM + r' (\S+?) to (\S+?)(?: \(.*\))?(?:\. .*)?$', p) or
          re.match(r'^Stress = ' + NUM + r' (\S+?)\. Convert to (\S+?)\.$', p))
     if m:
         x, u1, u2 = num(m.group(1)), unit_key(m.group(2)), unit_key(m.group(3))
@@ -212,6 +212,10 @@ def check_bank(rep, bank, verbose=False):
             if sign == '≈' and EXACT_DEFS.get(pair) == given:
                 rep[('t4-006', where)].append('"1 %s ≈ %s %s" is exact by definition: "=", not "≈"'
                                               % (unit, dec(given), pair[1]))
+        # s1-001 (R2): a hectare is the only named unit that is not a metric prefix of the metre, so a question that uses
+        # one says what it is (SR-17)
+        if 'hectare' in p and 'A hectare is a square 100 m by 100 m' not in p:
+            rep[('s1-001', where)].append('the question uses a hectare without saying it is a square 100 m by 100 m')
         v, u2, why = recompute(q)
         if v is None:
             rep[('verifier', where)].append('cannot recompute: ' + why)
@@ -653,6 +657,8 @@ PLANTS = [
      "(1 inch = 2.54 cm)", "(1 inch ≈ 2.54 cm)"),
     ('t4-007: "1 mile = 1609 m" back', 't4-007', ('bank',),
      "(1 mile ≈ 1609 m)", "(1 mile = 1609 m)"),
+    ('s1-001: the hectare not defined', 's1-001', ('bank',),
+     "A hectare is a square 100 m by 100 m. Convert 1 hectare to m²", "Convert 1 hectare to m²"),
     ('a wrong key (60 mph keyed 26.9 m/s)', 'key', ('bank',),
      "c:'26.8 m/s',d:['60 m/s'", "c:'26.9 m/s',d:['60 m/s'"),
     ('the calculator not mounted', 'calculator', ('phone',),

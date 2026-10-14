@@ -82,7 +82,7 @@ REVIEW = dict([
     r('bv_gcse_016', [F(54, 6), F(80, 9)], [], 'Job A pays better per hour', 'gt'),
     r('bv_gcse_017', [F('2.40') / 300, F('3.50') / 500], [], 'Bottle B is better value', 'lt'),
     r('bv_gcse_018', [F(8, 6), F(6, 4)], [], 'Car Park B is cheaper per hour', 'lt'),
-    r('bv_gcse_019', [F(30) / F('2.50')], [], 'worth it if you eat 12 or more'),
+    r('bv_gcse_019', [F(30) / F('2.50')], [], 'worth it if you eat more than 12'),
     r('bv_gcse_020', [F(15, 1)], [16], 'saves money after more than 15 bottles'),
     r('bv_core_001', [12 * 35, 60 + 12 * 28], [12 * 28], 'Gym B is better value', 'lt'),
     r('bv_core_002', [18 * 29, 49 + 18 * 24], [18 * 24], 'Provider B is better value', 'lt'),
@@ -225,7 +225,13 @@ THRESHOLD = re.compile(r'\b(?:is|are) (?:better value|worth it)\b.*?(?:at least|
                        r'(?:lunches|films|kWh)', re.I)
 # Words a wrong option or a scenario must carry (SR-16, SR-17): (item, the card or scenario text it is in, words).
 MUST_SAY = [('bv_core_050', '\u00a3790 vs \u00a3825', 'costs nothing'),          # s1-003: the fault is named
-            ('bv_core_041', 'scenario', 'ignoring what the van is worth')]   # s1-004: the assumption is stated
+            ('bv_core_041', 'scenario', 'ignoring what the van is worth'),    # s1-004: the assumption is stated
+            # s1-002 (Part 2 #12, R2): one break-even convention, stated; at the break-even point the cost is equal, not less
+            ('bv_gcse_019', 'scenario', 'cheaper, not the same price'),
+            ('bv_gcse_020', 'scenario', 'cheaper, not the same price'),
+            # s1-008 (R2): 52 / 6 = 8.7 is rounded, and the keyed £135 uses 9; s1-009 (R1): the sentence reads
+            ('bv_core_047', 'scenario', 'use 9'),
+            ('bv_core_011', 'scenario', 'is due if it has not been paid by then')]
 
 
 def sweep_fails(bank):
@@ -358,6 +364,10 @@ PLANTS = [
      "Premium flyers give better return on investment \\u2014 net profit \\u00a3860 vs \\u00a3620 for standard"),
     ('bv_core_049', 'r-005: 8.8 hours', "above approximately 8.5 hours per week", "above approximately 8.8 hours per week"),
     ('bv_gcse_019', 's1-001: "15 or more lunches" true as written', "The pass is only worth it if you eat 15", "The pass is worth it if you eat 15"),
+    ('bv_gcse_019', 's1-002: the convention not stated', " (Worth it means cheaper, not the same price.)", ""),
+    ('bv_gcse_019', 's1-002: "12 or more" keyed', "more than 12 lunches per month \\u2014 from the 13th lunch onwards", "12 or more lunches per month"),
+    ('bv_core_047', 's1-008: the 9 not stated as the figure to use', " (roughly 9 times/year: use 9)", " (roughly 9 times/year)"),
+    ('bv_core_011', 's1-009: the garbled sentence back', "nothing to pay for 12 months, then the full \\u00a3599 is due if it has not been paid by then.", "nothing for 12 months, then \\u00a3599 if not paid."),
     ('bv_core_041', 's1-004: the van\'s end value not set aside', "Compare over 3 years, ignoring what the van is worth at the end.", "Compare over 3 years."),
 ]
 

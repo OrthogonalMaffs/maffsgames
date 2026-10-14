@@ -171,6 +171,14 @@ def recompute(s, key):
             raise ValueError('asks for k but the model has none')
         return kval, asked(prompt)
     f = model.subs(K, kval) if kval is not None else model
+    # "Find the least whole number n for which E is at least 100" (growth-and-decay-s1-007, Part 2 #16): the least
+    # integer from which the model reaches the value, never a fractional count of devices or amplifiers
+    least = re.match(r'Find the least whole number (\w) for which (\w) is at least ' + NUM, prompt)
+    if least and sp.Symbol(least.group(1)) == var:
+        roots = [r for r in sp.solve(sp.Eq(f, number(least.group(3))), var) if r.is_real]
+        if len(roots) != 1:
+            raise ValueError('%d real solutions' % len(roots))
+        return sp.ceiling(roots[0]), None
     # "Find A when B = c": B the model's variable -> the value there ("Find L when T = 24",
     # "Find P₀ when t = 0"); B the modelled quantity -> solve for the variable ("Find t
     # when P = 10,000", "Find the half-life — when R = 40").
@@ -354,6 +362,22 @@ def load(patch_js=None):
         proc.wait()
 
 
+def sweep_fails(rep, bank, html):
+    """SWEEP-1 rulings (13 Oct 2026): R7 (no running Time on the HUD), the two drafted contexts (Part B), and Part 2 #16
+    (a count of devices or amplifiers is keyed as the least whole number)."""
+    by = {s['id']: s for lvl in bank.values() for s in lvl}
+    if 'id="hudTimer"' in html:
+        rep.fail('hud', 's1-008', 'the running Time is on the HUD; Hidden Count-Up means it is never shown (R7)')
+    al12, l414 = by.get('AL12', {}), by.get('L4_14', {})
+    if 'light intensity' not in al12.get('context', '') or 'Pressure' in al12.get('context', '') or 'atm' in al12.get('graphYLabel', ''):
+        rep.fail('AL12', 's1-003', 'pressure falling with depth in water is false; the context is light intensity in sea water (Jon\'s wording)')
+    if 'bacteria' not in l414.get('context', '') or 'Hardness' in l414.get('context', '') or 'HV' in l414.get('graphYLabel', ''):
+        rep.fail('L4_14', 's1-004', 'a hardness of 3,610 HV is not physical; the context is bacteria in thousands (Jon\'s wording)')
+    for sid in ('AL11', 'L4_6'):
+        if not by.get(sid, {}).get('sq4', {}).get('prompt', '').startswith('Find the least whole number'):
+            rep.fail(sid, 's1-007', 'a count of devices or amplifiers is keyed as a fraction; Part 2 #16 keys the least whole number')
+
+
 def selftest(bank, graphs, played):
     lines, ok = [], True
     base = Report()
@@ -384,6 +408,29 @@ def selftest(bank, graphs, played):
     bad = dict(graphs)
     bad[target] = [(x, y * 1.01) for x, y in graphs[target]]
     expect('graph disagrees with its model', lambda rep: check_bank(rep, bank, bad))
+    html = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'games', 'growth-and-decay', 'index.html'), encoding='utf-8').read()
+    expect('s1-008: the HUD Time back', lambda rep: sweep_fails(rep, bank, html + '<div id="hudTimer"></div>'))
+
+    def al12_old(b):
+        s = next(x for lvl in b.values() for x in lvl if x['id'] == 'AL12')
+        s['context'] = 'Pressure (atm) decreases with depth (m).'
+    b12 = copy.deepcopy(bank)
+    al12_old(b12)
+    expect('s1-003: AL12 as pressure under water', lambda rep: sweep_fails(rep, b12, html))
+
+    def l414_old(b):
+        s = next(x for lvl in b.values() for x in lvl if x['id'] == 'L4_14')
+        s['context'] = 'Hardness (HV) increases with tempering temperature (°C).'
+    b414 = copy.deepcopy(bank)
+    l414_old(b414)
+    expect('s1-004: L4_14 as 3,610 HV steel', lambda rep: sweep_fails(rep, b414, html))
+
+    def al11_old(b):
+        s = next(x for lvl in b.values() for x in lvl if x['id'] == 'AL11')
+        s['sq4']['prompt'] = 'Find n when E = 100. Give your answer to 3 significant figures.'
+    b11 = copy.deepcopy(bank)
+    al11_old(b11)
+    expect('s1-007: AL11 keyed 4.64 devices', lambda rep: sweep_fails(rep, b11, html))
     expect('reworded prompt', lambda rep: check_bank(rep, mutated(lambda s: s['sq4'].__setitem__('prompt', 'Describe the curve.')), graphs))
     expect('"Estimate" with no method', lambda rep: check_bank(rep, mutated(
         lambda s: s['sq1'].__setitem__('prompt', s['sq1']['prompt'].replace('Use the model to calculate', 'Estimate'))), graphs))
@@ -422,6 +469,7 @@ def main():
     args = ap.parse_args()
     bank, graphs, played = load()
     rep = Report()
+    sweep_fails(rep, bank, open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'games', 'growth-and-decay', 'index.html'), encoding='utf-8').read())
     scenarios = check_bank(rep, bank, graphs, args.verbose)
     check_played(rep, scenarios, played)
     for f in rep.fails:

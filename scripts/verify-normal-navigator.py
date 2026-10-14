@@ -177,17 +177,17 @@ SPECS = [
     # --- inverse normal ---
     dict(ctx="X ~ N(50, 8²). Find k such that P(X < k) = 0.9.", kind='inv', p_below=0.9, tail='lt'),
     dict(ctx="X ~ N(100, 15²). Find k such that P(X > k) = 0.05.", kind='inv', p_below=0.95, tail='gt'),
-    dict(ctx="X ~ N(200, 25²). The top 10% get an A. Find the minimum mark.", kind='inv', p_below=0.90, tail='gt'),
+    dict(ctx="X ~ N(200, 25²). The top 10% get an A. Marks are whole numbers, so round the minimum up. Find the minimum mark.", kind='inv', p_below=0.90, tail='gt'),
     dict(ctx="X ~ N(170, 10²). Find the height exceeded by 2.5% of people.", kind='inv', p_below=0.975, tail='gt'),
     dict(ctx="X ~ N(500, 80²). Find the interquartile range.", kind='iqr'),
     # --- context ---
     dict(ctx="Bolts have length X ~ N(50, 0.5²) mm. A bolt is rejected if outside 49–51mm.", kind='prob',
          region=('outside', 49, 51)),
-    dict(ctx="IQ scores: X ~ N(100, 15²). Mensa requires top 2%.", kind='inv', p_below=0.98, tail='gt'),
+    dict(ctx="IQ scores: X ~ N(100, 15²). Mensa requires top 2%. IQ scores are whole numbers, so round the minimum up.", kind='inv', p_below=0.98, tail='gt'),
     dict(ctx="A machine fills bottles with X ~ N(500, 8²) ml. A bottle is underfilled if < 490ml.", kind='prob',
          region=('lt', 490)),
     dict(ctx="Delivery times: X ~ N(30, 5²) minutes. A pizza is free if > 45 min.", kind='prob', region=('gt', 45)),
-    dict(ctx="Exam marks: X ~ N(65, 12²). The pass mark is set so 80% pass.", kind='inv', p_below=0.20, tail='gt'),
+    dict(ctx="Exam marks: X ~ N(65, 12²). The pass mark is set so 80% pass. Marks are whole numbers, so round the pass mark up.", kind='inv', p_below=0.20, tail='gt'),
     dict(ctx="Battery life: X ~ N(48, 4²) hours. A battery is 'premium' if it lasts > 54 hours.", kind='percent',
          region=('gt', 54)),
     # --- combined / harder ---
@@ -580,11 +580,7 @@ def check_text(text, dists, known, where, fail):
 # to the nearest whole number where a minimum may round up (232.04 -> 232 or 233): a convention for Jon
 # (normal-navigator-s1-002), so they are reported until he rules, not failed.
 PRECISION_KINDS = ('prob', 'percent', 'count', 'inv', 'invz', 'iqr', 'z')
-PRECISION_PENDING = {
-    'X ~ N(200, 25²). The top 10% get an A. Find the minimum mark.': 'normal-navigator-s1-002',
-    'IQ scores: X ~ N(100, 15²). Mensa requires top 2%.': 'normal-navigator-s1-002',
-    'Exam marks: X ~ N(65, 12²). The pass mark is set so 80% pass.': 'normal-navigator-s1-002',
-}
+PRECISION_PENDING = {}   # Jon ruled (Part 2 #18): a minimum or pass mark is rounded UP, and the stem says so (normal-navigator-s1-002)
 
 
 def stated_dp(text):
@@ -592,7 +588,7 @@ def stated_dp(text):
     m = re.search(r'(\d+|one|two|three|four) (?:d\.p\.|decimal places?)', text)
     if m:
         return {'one': 1, 'two': 2, 'three': 3, 'four': 4}.get(m.group(1)) or int(m.group(1))
-    if re.search(r'nearest (?:whole number|integer)', text):
+    if re.search(r'nearest (?:whole number|integer)', text) or re.search(r'whole numbers?, so round (?:the )?\w+(?: \w+)? up', text):
         return 0
     return None
 
@@ -753,6 +749,8 @@ def verify_question(rep, i, q, line, spec, verbose):
         return
 
     raw = answer if raw_answer is None else raw_answer
+    if kind == 'inv' and isinstance(answer, float) and re.search(r'whole numbers?, so round (?:the )?\w+(?: \w+)? up', q.get('q', '') + ' ' + ctx):
+        raw, answer = answer, float(math.ceil(answer - 1e-9))     # Part 2 #18: a minimum rounded UP is the answer; 232.04 is the working
     # ---- the key against the true answer ------------------------------
     if verbose:
         print('  [%d] %-12s key %-28r true %r' % (i, kind, key, answer))
@@ -809,7 +807,11 @@ def verify_question(rep, i, q, line, spec, verbose):
             rep.fail(qid, 'correct', repr(key), 'not a number')
         else:
             v, tok, pct = pv
-            if not matches(tok, answer):
+            up = re.search(r'whole numbers?, so round (?:the )?\w+(?: \w+)? up', q.get('q', '') + ' ' + ctx)
+            if up:   # Part 2 #18: a minimum or pass mark in whole numbers is rounded up, never to the nearest
+                if v != math.ceil(raw - 1e-9):
+                    rep.fail(qid, 'correct', repr(key), 'a minimum rounded up is %d (%.6f)' % (math.ceil(raw - 1e-9), raw))
+            elif not matches(tok, answer):
                 d_ = decimals(tok)
                 rep.fail(qid, 'correct', repr(key), '%s%s (%.6f)' % (rhu(answer, d_), '%' if pct else '', answer))
             if kind in PRECISION_KINDS and abs(v - raw) > 1e-9:
@@ -1177,6 +1179,10 @@ def selftest(bank, lines, rendered):
     def f_graph(b):                      # the drawn μ is not the answer's
         b[_find(b, 'X ~ N(μ, 6²). P(X > 70)')]['mu'] = 60
     faults.append(('graph μ', 'X ~ N(μ, 6²). P(X > 70)', 'mu (graph)', f_graph))
+
+    def f_nearest(b):                    # a minimum keyed to the nearest whole number (232.04 -> 232), not rounded up
+        _swap_key(b[_find(b, 'X ~ N(200, 25²). The top 10% get an A.')], '232')
+    faults.append(('a minimum to the nearest', 'X ~ N(200, 25²). The top 10% get an A.', 'correct', f_nearest))
 
     def f_step(b):                       # worked-step arithmetic that does not close
         q = b[_find(b, 'X ~ N(50, 8²). Find P(X > 58)')]

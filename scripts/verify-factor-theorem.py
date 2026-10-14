@@ -594,16 +594,16 @@ def prose(key):
 # ── the answer-button items, as Jon's FT-FIX contract states them (8 Oct 2026) ──
 Q33_OPTIONS = [
     '\\(f(2) = 2^n - 2^n = 0\\), so by the factor theorem \\((x - 2)\\) is a factor.',
-    '\\(f(-2) = (-2)^n - 2^n = 0\\), so \\((x - 2)\\) is a factor.',
+    '\\(f(-2) = (-2)^n - 2^n = 0\\), so \\((x + 2)\\) is a factor.',
     '\\(f(2) = 0\\), so \\((x + 2)\\) is a factor.',
-    '\\(f(0) = -2^n\\), so \\((x - 2)\\) is a factor.']
+    '\\(f(0) = -2^n\\), so \\((x - 2)\\) is not a factor.']
 T9C_OPTIONS = [
     'The object is at the origin (displacement zero) at t = 2, 3 and 4, passing through it each time.',
     'The object is at rest at t = 2, 3 and 4.',
     'The object changes direction at t = 2, 3 and 4.',
     "The object's acceleration is zero at t = 2 and 4."]
 nn = sp.Symbol('n', positive=True, integer=True)
-PROOF = re.compile(r'^f\((-?\d+)\) = (.+), so (?:by the factor theorem )?\(x ([+-]) (\d+)\) is a factor\.$')
+PROOF = re.compile(r'^f\((-?\d+)\) = (.+), so (?:by the factor theorem )?\(x ([+-]) (\d+)\) is (?:not )?a factor\.$')
 
 
 def proof_holds(option, poly):
@@ -659,6 +659,8 @@ def check_options(fails, content):
         if not it.get('explain'):
             fails.append('%s: no explanation shown after marking' % tag(uid))
     if q33.get('options'):
+        if 'Let \\(f(x) = x^n - 2^n\\)' not in q33['prompt']:   # s1-007 (R2): the options use f, so the stem defines it
+            fails.append('p33 (factor-theorem-s1-007): the stem never defines f, though the options use f(2) and f(0)')
         if 'Which line proves it?' not in q33['prompt']:
             fails.append('p33 (factor-theorem-t5-004): the prompt does not ask "Which line proves it?"')
         poly = x ** nn - 2 ** nn
@@ -1080,6 +1082,8 @@ def play(fails, html, accepted, sweep=True):
             if KATEX_DIR:
                 ctx.route(lambda url: '/katex@0.16.9/dist/' in url, lambda route: route.fulfill(
                     path=os.path.join(KATEX_DIR, route.request.url.split('/dist/', 1)[1].split('?')[0])))
+            else:
+                ctx.route(lambda url: bc.is_font_cdn(url), bc.serve_real_font)     # KaTeX from the pinned local copy
             ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
                 status=200, content_type='text/html; charset=utf-8', body=html))
             page = ctx.new_page()
@@ -1309,6 +1313,11 @@ def verify(html):
 
 
 PLANTS = [
+    ('p33', "s1-003: Q33's wrong options ending on the key's conclusion (SR-31)",
+     r"\\(f(-2) = (-2)^n - 2^n = 0\\), so \\((x + 2)\\) is a factor.'", r"\\(f(-2) = (-2)^n - 2^n = 0\\), so \\((x - 2)\\) is a factor.'"),
+    ('p33', 's1-007: Q33 without f defined',
+     r"prompt:'Let \\(f(x) = x^n - 2^n\\). Prove that \\((x - 2)\\) is a factor of \\(f(x)\\) for all",
+     r"prompt:'Prove that \\((x - 2)\\) is a factor of \\(x^n - 2^n\\) for all"),
     ('p6.4', 't5-001: (x - 2)(x + 3) accepted for Q6', '"p6.4": ["-2|-3", "3|2"]', '"p6.4": ["-2|-3", "2|3", "3|2"]'),
     ('T4', 't5-003: the old T4',
      "has a factor (x \\u2212 3) and leaves remainder 12 when divided by (x \\u2212 1). Find a and b.',marks:3,"

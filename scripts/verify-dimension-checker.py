@@ -168,6 +168,11 @@ def check_bank(fails, bank):
     for i, (q, tg) in enumerate(zip(bank, TARGETS)):
         w = 'item %d (%s)%s' % (i, q['p'], ' (dimension-checker-%s)' % AUDIT[i] if i in AUDIT else '')
         opts = [q['c']] + q['d']
+        # s1-003, s1-006 (R1): every dimension bracket is spaced ([M L T⁻²], never [MLT⁻²]); every stem asks "Is ... dimensionally homogeneous?"
+        if re.search(r'\[[MLTA]{2,}', ' '.join(opts)):
+            fails.append('%s: a dimension bracket is not spaced in %s (dimension-checker-s1-003)' % (w, opts))
+        if re.match(r'In .+, is this homogeneous\?', q['p']):
+            fails.append('%s: the stem reads unlike the others ("Is ... dimensionally homogeneous?") (dimension-checker-s1-006)' % w)
         if len(set(opts)) != 4:
             fails.append('%s: %d options, not 4 distinct' % (w, len(set(opts))))
         text = q['p'] + ' ' + (q.get('ctx') or '')
@@ -233,7 +238,14 @@ SWEEP_JS = r"""() => {
 }"""
 
 
+def hud_fails(html):
+    """R7 (dimension-checker-s1-004): Hidden Count-Up, so the top bar shows no running Time."""
+    return ['hud: the running Time is on the top bar; Hidden Count-Up means it is never shown (R7, dimension-checker-s1-004)']\
+        if re.search(r'class="hud-label">Time<', html) or 'id="timer"' in html else []
+
+
 def play(fails, html):
+    fails.extend(hud_fails(html))
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
     try:
@@ -265,6 +277,10 @@ def play(fails, html):
 
 
 PLANTS = [
+    ('hud:', 's1-004: the HUD Time back', '<div class="hud-item"><div class="hud-label">Score</div>',
+     '<div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div><div class="hud-item"><div class="hud-label">Score</div>'),
+    ('item 1 ', 's1-003: [MLT⁻²] unspaced', "c:'No — [M L T⁻²] ≠ [M L T⁻¹]'", "c:'No — [MLT⁻²] ≠ [MLT⁻¹]'"),
+    ('item 18 ', 's1-006: the stem unlike the others', "p:'Is P = F²v dimensionally homogeneous?'", "p:'In P = F²v, is this homogeneous?'"),
     ('item 4 ', 't5-001: s = ut + at² keyed No', "c:'Yes — all terms are [L]',d:['No — it should be ½at², so the dimensions do not match'",
      "c:'No — it should be ½at², so the dimensions do not match',d:['Yes — all terms are [L]'"),
     ('item 25 ', "t5-002: Stokes' law without mu's dimensions", "ctx:'Viscosity μ has dimensions [M L⁻¹ T⁻¹].',", ''),

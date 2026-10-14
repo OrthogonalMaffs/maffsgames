@@ -266,7 +266,9 @@ findings:
     factor-theorem-s1-007.)'
   evidence: 'Prove that (x - 2) is a factor of x^n - 2^n for all positive integers n. Which line proves it? | key f(2) =
     2^n - 2^n = 0, so by the factor theorem (x - 2) is a factor. (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R5 (SR-4, SR-31): Q33''s two wrong options that ended on the key''s conclusion with a bad reason are named errors that do not: "f(-2) = (-2)^n - 2^n = 0, so (x + 2) is a factor" (evaluating at -2, true only for even n) and "f(0) = -2^n, so (x - 2) is not a factor" (testing at 0); the verifier''s contract list is updated and it fails the old options, with a plant.'
 - id: factor-theorem-s1-007
   severity: MEDIUM
   jc: true
@@ -278,7 +280,9 @@ findings:
     SWEEP-1-RULINGS step 1.)'
   evidence: 'Prove that (x - 2) is a factor of x^n - 2^n for all positive integers n. Which line proves it? | key f(2) =
     2^n - 2^n = 0, so by the factor theorem (x - 2) is a factor. (SWEEP-1, batch 11)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R2: Q33''s stem defines f ("Let f(x) = x^n - 2^n. Prove that (x - 2) is a factor of f(x) ..."), as the options use f(2) and f(0); the verifier pins it, with a plant.'
 - id: factor-theorem-s1-004
   severity: LOW
   jc: true

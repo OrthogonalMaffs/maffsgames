@@ -331,6 +331,25 @@ def check_working(it, ans_opt, out, where):
                 out.append("%s: working writes %s as if exact for a recurring value" % (where, m.group(1)))
 
 
+def check_words(it, ans_opt, want, out, where):
+    """SWEEP-1 free-daily-pizza-s1-001..-005 (R1, R3): what the feedback says is true of the option it names."""
+    if "The biggest number into both" in it["working"]:
+        out.append("%s: the working says 'The biggest number into both' (a word is missing: say 'factor of')" % where)
+    for i, o in enumerate(it["distractors"]):
+        w = "%s distractor %d (%s, %s)" % (where, i, o.get("text"), o.get("tag"))
+        says = o.get("says") or ""
+        if o.get("tag") == "inversion" and o["form"] != "f":
+            val, _ = read_option(o, w, [])
+            if val is not None and terminating_digits(want) is not None and terminating_digits(val) is None:
+                out.append(w + ": a recurring inverted value beside a terminating answer gives the key away")
+        if o.get("tag") == "place-value" and o["form"] == "f" and "Right digits" in says:
+            out.append(w + ": a fraction in lowest terms is called 'Right digits, wrong place'")
+        if o.get("tag") == "one-part-only" and it["kind"] == "ofamt-p" and "10%" not in says:
+            out.append(w + ": the amount ÷ 10 is called 'only one part' but it is 10% (the working's part is not a tenth)")
+        if o.get("tag") == "digit-reading" and it.get("from") == "p" and re.search(r"\d\.\d", says):
+            out.append(w + ": a percentage question is given a decimal example (%s)" % says)
+
+
 def check_item(it, out):
     where = it["id"]
     form, want, simplest = expected_answer(it)
@@ -384,6 +403,7 @@ def check_item(it, out):
             out.append(w + ": same value as another distractor")
         seen.append(val)
     check_working(it, a, out, where)
+    check_words(it, a, want, out, where)
 
 
 def check_pictures(it, rendered, out):
@@ -660,7 +680,7 @@ COLLECT_JS = r"""
       return { id: it.id, stage: it.stage, kind: it.kind, from: it.from, to: it.to, v: it.v, n: it.n, d: it.d,
                a: it.a, b: it.b, N: it.N, p: it.p, A: it.A, B: it.B, prompt: it.prompt, working: it.working,
                equation: it.equation, pictures: it.pictures, given: pick(it.given), answer: pick(it.answer),
-               distractors: it.distractors.map(pick) };
+               distractors: it.distractors.map(o => Object.assign(pick(o), { says: FDP.tagSays(o, it) })) };
     });
   });
   const tables = {};
@@ -1128,6 +1148,16 @@ FAULTS = [
      "static", "(() => { const it = FDP.item('S1:conv:f>d:3/4'); it.distractors[0].tag = 'inversion'; })()"),
     ("broken daily mix (4 from stage 1, 2 from stage 2)",
      "static", "FDP.DAILY_MIX = [[1, 4], [2, 2], [3, 2], [4, 2]];"),
+    ("a recurring inverted value beside a terminating answer",
+     "static", r"(() => { FDP.item('S1:conv:f>p:3/4').distractors[0] = { form: 'p', value: [4, 3], tag: 'inversion', text: '133\u2153%', tex: '133\\dfrac{1}{3}\\%', key: 'p:4/3' }; })()"),
+    ("a fraction called 'Right digits, wrong place'",
+     "static", "(() => { const o = FDP.tagSays; FDP.tagSays = (x, it) => x && x.tag === 'place-value' && x.form === 'f' ? 'Right digits, wrong place: that is 10 times too big.' : o(x, it); })()"),
+    ("'only one part' for 10% of the amount",
+     "static", "(() => { const o = FDP.tagSays; FDP.tagSays = (x, it) => x && x.tag === 'one-part-only' && it && it.kind === 'ofamt-p' ? FDP.TAGS['one-part-only'] : o(x, it); })()"),
+    ("a decimal example on a percentage question",
+     "static", "(() => { const o = FDP.tagSays; FDP.tagSays = (x, it) => x && x.tag === 'digit-reading' ? FDP.TAGS['digit-reading'] : o(x, it); })()"),
+    ("'The biggest number into both' (a word missing)",
+     "static", "FDP.BANK[2].forEach(it => { if (it.kind === 'simp') it.working = it.working.replace('factor of', 'number into'); });"),
     ("daily not easiest first (stages reversed)",
      "static", "(() => { const o = FDP.dailySet; FDP.dailySet = d => o(d).reverse(); })()"),
     ("recurring answer shown as exact (1/3 = 0.33)",

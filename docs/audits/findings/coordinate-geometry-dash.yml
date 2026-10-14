@@ -85,7 +85,9 @@ findings:
   where: 'games/coordinate-geometry-dash/index.html:260 (gcse[22])'
   summary: 'The context reads as if the perpendicular passes through the origin; the figure (drawLine(2, 0)) has L through the origin, and (4, 2) plays no part'
   evidence: '"Line L has gradient 2. Find the perpendicular from (4, 2) to L through the origin." | "Perpendicular gradient?" key −½ (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R3: gcse[22] reads "Line L has gradient 2. It passes through the origin. A second line, through (4, 2), is perpendicular to L." (the figure is unchanged); verify-coordinate-geometry-dash.py pins it with a plant.'
 - id: coordinate-geometry-dash-s1-003
   severity: LOW
   jc: false
@@ -94,7 +96,9 @@ findings:
   where: 'games/coordinate-geometry-dash/index.html:108 (start screen)'
   summary: '"A-Level: Adds circles ..." suggests the GCSE items too, but the level serves Q_ALEVEL only'
   evidence: 'Start screen (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R3: the A-Level line reads "Circles (equation, centre, radius, tangent/normal), ..." (no "Adds": the level serves the A-Level items only); the verifier pins it with a plant.'
 - id: coordinate-geometry-dash-s1-004
   severity: MEDIUM
   jc: false

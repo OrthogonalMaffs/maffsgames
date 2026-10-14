@@ -54,7 +54,9 @@ findings:
     "Angle at centre theorem" is defensible for the semicircle figure; no centre angle is marked'
   evidence: '"AB is a straight line through the centre O, and C is on the circle." | "Which theorem does this diagram
     show?" key "Angle in a semicircle = 90°", d "Angle at centre theorem", ... (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R5 (SR-4): the semicircle figure''s distractor "Angle at centre theorem" (the 180 degree case, defensible) is replaced by the named error "Angles in same segment". verify-circle-theorem-spotter.py pins it with a plant.'
 - id: circle-theorem-spotter-s1-004
   severity: LOW
   jc: true
@@ -76,7 +78,9 @@ findings:
     entry held 2 defects; the others are circle-theorem-spotter-s1-010.)'
   evidence: 'Q9 ctx "... What is the angle subtended at the circumference by the same arc?" | "Which theorem?"
     (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R3: Q9''s context no longer asks for an angle under a "Which theorem?" ask: it states the two angles and the ask is "Which theorem links the two angles?". verify-circle-theorem-spotter.py pins it with a plant.'
 - id: circle-theorem-spotter-s1-010
   severity: LOW
   jc: false
@@ -87,7 +91,9 @@ findings:
     circle-theorem-spotter-s1-005, SWEEP-1-RULINGS step 1.)'
   evidence: 'Q9 ctx "... What is the angle subtended at the circumference by the same arc?" | "Which theorem?"
     (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: Q22''s context states "The angle at the centre is 180°." and the ask is "What does this tell us about the chord?" (the key is a fact about the chord, not a shape). verify-circle-theorem-spotter.py pins it with a plant.'
 - id: circle-theorem-spotter-s1-006
   severity: LOW
   jc: false
@@ -96,7 +102,9 @@ findings:
   where: games/circle-theorem-spotter/index.html:447, :460
   summary: 'The distractors \sqrt{119} cm and \sqrt{39} cm render "cm" as italic maths run into the root'
   evidence: "d: ['17 cm','7 cm','\\\\sqrt{119} cm'] (SWEEP-1, batch 7)"
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: "cm" in the two root distractors is set as text (\text{ cm}), not italic maths. verify-circle-theorem-spotter.py pins it with a plant.'
 - id: circle-theorem-spotter-s1-007
   severity: MEDIUM
   jc: true
@@ -107,7 +115,9 @@ findings:
     time feeds the score; the same shape as surd-simplifier-s1-003 and trig-identity-duel-t2-010 (SR-23, for Jon to
     schedule)'
   evidence: 'tick() writes the seconds to #timer each second; handle() scores with the elapsed time (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R7: the running Time is gone from the HUD (the timer policy lists the game under Hidden Count-Up). NOTE for Jon: the answer time still feeds the score (BASE 100, T_K 0.15), which the same policy says a Hidden Count-Up game does not do; R7 covers the display only. verify-circle-theorem-spotter.py pins it with a plant.'
 - id: circle-theorem-spotter-s1-008
   severity: LOW
   jc: false
@@ -117,7 +127,9 @@ findings:
   summary: 'The start screen says "all seven circle theorems"; the options name eight properties (the chord bisector
     among them)'
   evidence: 'Start screen text; option names across the 11 "which theorem" items (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R3: the start screen reads "the circle theorems" (the options name eight properties). The <meta> description and the portal card still say "all seven" (data/games.json and index.html: the home lane''s). verify-circle-theorem-spotter.py pins it with a plant.'
 - id: circle-theorem-spotter-s1-009
   severity: MEDIUM
   jc: false

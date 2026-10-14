@@ -235,7 +235,7 @@ alevel:[
   {ctx:'',q:'\\dfrac{1-\\cos 2\\theta}{\\sin 2\\theta}',ask:'Simplify',correct:'\\tan\\theta',d:['\\cot\\theta','\\sin\\theta','\\cos\\theta']},
   {ctx:'Solve in [0\u00b0, 360\u00b0]: sin 2\u03b8 = 0.',q:'',ask:'How many solutions?',correct:'5',d:['2','4','3']},
   {ctx:'Solve in [0, 2\u03c0]: cos 2x = 1.',q:'',ask:'How many solutions?',correct:'3',d:['1','2','4']},
-  {ctx:'',q:'2\\sin\\theta\\cos\\theta + \\cos 2\\theta',ask:'Which double angle identity helps?',correct:'\\sin 2\\theta + \\cos 2\\theta',d:['2\\cos 2\\theta','\\sin 4\\theta','1']},
+  {ctx:'',q:'2\\sin\\theta\\cos\\theta + \\cos 2\\theta',ask:'Rewrite using a double angle identity',correct:'\\sin 2\\theta + \\cos 2\\theta',d:['2\\cos 2\\theta','\\sin 4\\theta','1']},
   {ctx:'',q:'(\\sin x + \\cos x)^2',ask:'Expand and write in terms of sin 2x',correct:'1 + \\sin 2x',d:['\\sin^2 x + \\cos^2 x','2 + \\sin 2x','1 + \\cos 2x']},
   {ctx:'',q:'(\\sin x - \\cos x)^2',ask:'Expand and write in terms of sin 2x',correct:'1 - \\sin 2x',d:['1 + \\sin 2x','\\sin^2 x - \\cos^2 x','1']},
 ]
@@ -246,7 +246,8 @@ alevel:[
 let level='gcse',questions=[],qIdx=0,score=0,streak=0,bestStreak=0,correctCount=0,totalQ=20,sessionStart=0;
 const BASE=100;
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false})}
+// UK specifications write cosec, not csc: the bank keeps \csc and KaTeX is told how to print it (trig-identity-duel-s1-001)
+function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false,macros:{'\\csc':'\\operatorname{cosec}'}})}
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');MaffsLock.screen(document.getElementById(id))}
 document.querySelectorAll('.level-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.level-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');level=b.dataset.level})});
 {const lv=MaffsLevel.resolve({slug:'trig-identity-duel',levels:['gcse','alevel'],fallback:'gcse'});if(lv!==level&&QUESTIONS[lv]){level=lv;document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}}

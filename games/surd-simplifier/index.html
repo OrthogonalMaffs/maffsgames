@@ -122,7 +122,6 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
       <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1/20</div></div>
       <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
       <div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="streak">0</div></div>
-      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0s</div></div>
     </div>
     <div class="progress" id="progress"></div>
     <div class="q-card"><div id="question"></div><div class="prompt" id="prompt"></div></div>
@@ -287,13 +286,8 @@ function showQ(){
   const oEl=document.getElementById('options');oEl.innerHTML='';
   opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;rk(b,v);b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});
   MaffsLock.fresh(oEl);
-  qStartTime=Date.now();
-  document.getElementById('timer').textContent='0s';
+  qStartTime=Date.now();   // Hidden Count-Up (timer policy): the clock runs for the score and is never shown
   clearInterval(timerInterval);
-  timerInterval=setInterval(()=>{
-    const s=Math.floor((Date.now()-qStartTime)/1000);
-    document.getElementById('timer').textContent=s+'s';
-  },200);
 }
 function handle(btn,q){
   if(!MaffsLock.lock(document.getElementById('options')))return;   // one mark per question (canon 7.6.0)

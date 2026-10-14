@@ -137,7 +137,9 @@ findings:
   where: 'games/trig-identity-duel/index.html:226-228'
   summary: '\csc renders "csc"; UK specifications (AQA, Edexcel, OCR) write cosec'
   evidence: 'q "1 + \cot^2\theta" key "\csc^2\theta" shows csc²θ (SWEEP-1, batch 6)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: cosec, not csc, is printed (KaTeX is given the macro \csc -> \operatorname{cosec}; the bank and keys are unchanged); the verifier fails any rendered csc, with a plant.'
 - id: trig-identity-duel-s1-002
   severity: LOW
   jc: false
@@ -146,4 +148,6 @@ findings:
   where: 'games/trig-identity-duel/index.html:238'
   summary: 'The ask "Which double angle identity helps?" is answered by options that are rewritten expressions, not identities'
   evidence: 'ask "Which double angle identity helps?" with expression options (SWEEP-1, batch 6)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: the ask reads "Rewrite using a double angle identity" (the options are rewritten expressions, not identities); the verifier pins it with a plant.'

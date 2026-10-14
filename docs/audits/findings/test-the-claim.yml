@@ -104,7 +104,9 @@ findings:
     than half of the whole class, so "insufficient evidence" contradicts the data; it needs a population and a sample
     (a new context, for Jon)'
   evidence: 'Stem as quoted (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'Part 2 #15 + Jon''s drafted context (content document): B10 is "A head teacher believes more than half of the county''s Year 11 will pass. In a sample of 22, 14 pass."; every number and key unchanged; verify-test-the-claim.py pins it with a plant.'
 - id: test-the-claim-s1-008
   severity: LOW
   jc: false
@@ -124,7 +126,9 @@ findings:
   summary: 'The model answer says "to suggest that" where Step 6 says "to support the claim that" (Split from
     test-the-claim-s1-008, SWEEP-1-RULINGS step 1.)'
   evidence: 'Reviewer''s reading (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: the model answer reads "to support the claim that", as Step 6 does; the verifier fails "to suggest that", with a plant.'
 - id: test-the-claim-s1-011
   severity: LOW
   jc: false

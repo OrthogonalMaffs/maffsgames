@@ -285,6 +285,11 @@ SWEEP_JS = r"""() => {
       showQ();
       const b = [...document.querySelectorAll('#options .opt-btn')].find(x => x.dataset.val === pick);
       if (!b) { out.push([lv, i, pick, 'not on screen']); continue; }
+      if (pick === q.correct) {   // UK specifications write cosec, never csc (trig-identity-duel-s1-001)
+        const gEl = document.getElementById('game').cloneNode(true);
+        gEl.querySelectorAll('.katex-mathml').forEach(m => m.remove());   // KaTeX's hidden MathML carries the TeX source
+        if (/csc/.test(gEl.textContent)) out.push([lv, i, pick, 'shows csc; it must read cosec']);
+      }
       b.click();
       const right = b.classList.contains('correct');
       if (right !== (pick === q.correct)) out.push([lv, i, pick, right ? 'marked right' : 'marked wrong']);
@@ -306,6 +311,8 @@ def play(fails, html):
             if KATEX_DIR:
                 ctx.route(lambda url: '/katex@0.16.9/dist/' in url, lambda route: route.fulfill(
                     path=os.path.join(KATEX_DIR, route.request.url.split('/dist/', 1)[1].split('?')[0])))
+            if not KATEX_DIR:
+                ctx.route(lambda url: bc.is_font_cdn(url), bc.serve_real_font)     # KaTeX from the pinned local copy
             ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
                 status=200, content_type='text/html; charset=utf-8', body=html))
             page = ctx.new_page()
@@ -329,6 +336,10 @@ def play(fails, html):
                 fails.append('the results screen submitted %d scores (MaffsLock.finishOnce)' % tm['submits'])
             page.reload(wait_until='load')
             page.wait_for_function('typeof QUESTIONS !== "undefined" && typeof katex !== "undefined"', timeout=15000)
+            for lv in ('gcse', 'alevel'):
+                for i, q in enumerate(bank.get(lv, [])):
+                    if 'identity helps' in q['ask']:   # s1-002 (R1): the options are rewritten expressions, not identities
+                        fails.append('%s[%d]: the ask %r is answered by expressions, not identities (trig-identity-duel-s1-002)' % (lv, i, q['ask']))
             for lv, i, pick, what in page.evaluate(SWEEP_JS):
                 fails.append('%s[%d] in Chromium: option %s %s' % (lv, i, pick, what))
             browser.close()
@@ -374,6 +385,9 @@ def u(s):
 
 
 PLANTS = [
+    ('alevel[', 's1-001: csc printed again',
+     "macros:{'\\\\csc':'\\\\operatorname{cosec}'}", "macros:{}"),
+    ('alevel[', 's1-002: the ask answered by expressions', "ask:'Rewrite using a double angle identity'", "ask:'Which double angle identity helps?'"),
     ('gcse[28]', 't2-001: the largest angle keyed 86.2°', u("correct:'85.9°'"), u("correct:'86.2°'")),
     ('alevel[31]', 't2-002: sin(A+B) keyed 56/65',
      "ask:'Find sin(A+B)',correct:'\\\\dfrac{63}{65}'", "ask:'Find sin(A+B)',correct:'\\\\dfrac{56}{65}'"),

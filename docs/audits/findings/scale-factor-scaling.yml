@@ -78,7 +78,9 @@ findings:
   where: 'games/scale-factor-scaling/index.html:132, :133, :149, :150'
   summary: 'Fractions mix Unicode glyphs (½ ⅓ ¼ ⅛) and ASCII ("1/16", "1/9", "2/9", "1/27", "2/27"), sometimes in one option set'
   evidence: 'T1 and T2 option sets (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: fractions are written a/b throughout (1/2, 1/3, 1/4, 1/8 for the glyphs); the verifier fails a fraction glyph, with a plant.'
 - id: scale-factor-scaling-s1-005
   severity: MEDIUM
   jc: false
@@ -87,7 +89,9 @@ findings:
   where: 'games/scale-factor-scaling/index.html:101 (HUD timer), :198'
   summary: 'Timer policy lists Scale Factor Scaling under Hidden Count-Up, but the HUD "Time" is visible (the CSS hides .timer, not #timer) and time feeds the score; the class of surd-simplifier-s1-003 and circle-theorem-spotter-s1-007 (SR-23, for Jon to schedule)'
   evidence: 'm=1/(1+T_K*Math.log(1+s)) (SWEEP-1, batch 7)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R7: the running Time is gone from the HUD. NOTE for Jon: the answer time still feeds the score, which the Hidden Count-Up policy says it should not; R7 covers the display only. The verifier fails a HUD Time, with a plant.'
 - id: scale-factor-scaling-s1-006
   severity: MEDIUM
   jc: false

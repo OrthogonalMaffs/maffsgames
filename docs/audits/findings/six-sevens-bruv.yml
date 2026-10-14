@@ -17,4 +17,6 @@ findings:
   summary: 'A miss is promised "It comes back in a few questions", but in a 20 or 40 session a miss in the last 2-5
     questions never returns (the cap stops the session; the results screen lists it). Wording, open'
   evidence: '"✗ You said <b>…</b>. It comes back in a few questions." (SWEEP-1, batch 5)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R3 (SR-33): the wrong-answer line says "It comes back if there is time." and the start screen "if the session has time left"; verify-six-sevens.py pins both with a plant.'

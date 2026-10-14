@@ -390,7 +390,7 @@ conclusions:[
 explanation:'Contract: \u00a330 + (24 \u00d7 \u00a325) = \u00a330 + \u00a3600 = \u00a3630. SIM-only: \u00a3280 + (24 \u00d7 \u00a312) = \u00a3280 + \u00a3288 = \u00a3568.'},
 
 {id:'bv_core_011',level:'core',type:'hidden',
-scenario:'A \u201csale\u201d sofa is advertised at \u00a3599. Buy now pay later: nothing for 12 months, then \u00a3599 if not paid. A rival store sells the same sofa for \u00a3549 cash.',
+scenario:'A \u201csale\u201d sofa is advertised at \u00a3599. Buy now pay later: nothing to pay for 12 months, then the full \u00a3599 is due if it has not been paid by then. A rival store sells the same sofa for \u00a3549 cash.',
 optionA:{label:'BNPL Store',details:[{key:'Price',value:'\u00a3599'},{key:'Payment',value:'Nothing for 12 months'}]},
 optionB:{label:'Rival Store',details:[{key:'Price',value:'\u00a3549'},{key:'Payment',value:'Cash'}]},
 conclusions:[
@@ -826,7 +826,7 @@ conclusions:[
 explanation:'Take off a sixth for tax and NI. Manchester: \u00a328,000 \u2212 a sixth (\u2248 \u00a34,667) \u2248 \u00a323,333 net \u00f7 12 \u2248 \u00a31,944/month \u2212 \u00a3650 rent \u2248 \u00a31,294 disposable. London: \u00a334,000 \u2212 a sixth (\u2248 \u00a35,667) \u2248 \u00a328,333 net \u00f7 12 \u2248 \u00a32,361/month \u2212 \u00a31,200 rent \u2248 \u00a31,161 disposable. A higher salary does not always mean more money in your pocket.'},
 
 {id:'bv_core_047',level:'core',type:'direct',
-scenario:'A homeowner is choosing between two window cleaners. Cleaner A: \u00a310 per clean, visits every 4 weeks (13 times/year). Cleaner B: \u00a315 per clean, visits every 6 weeks and uses a pure-water system that keeps windows cleaner for longer (roughly 9 times/year). The homeowner values the longer-lasting clean.',
+scenario:'A homeowner is choosing between two window cleaners. Cleaner A: \u00a310 per clean, visits every 4 weeks (13 times/year). Cleaner B: \u00a315 per clean, visits every 6 weeks and uses a pure-water system that keeps windows cleaner for longer (roughly 9 times/year: use 9). The homeowner values the longer-lasting clean.',
 optionA:{label:'Cleaner A',details:[{key:'Per clean',value:'\u00a310'},{key:'Frequency',value:'Every 4 weeks'},{key:'Cleans/year',value:'13'}]},
 optionB:{label:'Cleaner B',details:[{key:'Per clean',value:'\u00a315'},{key:'Frequency',value:'Every 6 weeks'},{key:'Cleans/year',value:'9'}]},
 conclusions:[
@@ -1096,19 +1096,19 @@ explanation:'Car Park A: \u00a36 \u00f7 4 = \u00a31.50/hour. Car Park B: \u00a38
 
 // === Break-Even (2) ===
 {id:'bv_gcse_019',level:'gcse',type:'breakeven',
-scenario:'A school lunch pass costs \u00a330 per month for unlimited lunches. Individual lunches cost \u00a32.50 each. How many lunches per month make the pass worth it?',
+scenario:'A school lunch pass costs \u00a330 per month for unlimited lunches. Individual lunches cost \u00a32.50 each. How many lunches per month make the pass worth it? (Worth it means cheaper, not the same price.)',
 optionA:{label:'Lunch Pass',details:[{key:'Monthly cost',value:'\u00a330'},{key:'Lunches',value:'Unlimited'}]},
 optionB:{label:'Pay Per Lunch',details:[{key:'Per lunch',value:'\u00a32.50'}]},
 conclusions:[
-{text:'The pass is worth it if you eat 12 or more lunches per month',correct:true},
+{text:'The pass is worth it if you eat more than 12 lunches per month \u2014 from the 13th lunch onwards',correct:true},
 {text:'The pass is worth it if you eat 8 or more lunches per month',correct:false},
 {text:'Individual lunches are always cheaper',correct:false},
 {text:'The pass is only worth it if you eat 15 or more lunches per month',correct:false}
 ],
-explanation:'\u00a330 \u00f7 \u00a32.50 = 12. If you eat 12 or more school lunches in a month, the pass is better value.'},
+explanation:'\u00a330 \u00f7 \u00a32.50 = 12. After 12 lunches both cost \u00a330, so the pass is not yet cheaper. From the 13th lunch onwards the pass is better value.'},
 
 {id:'bv_gcse_020',level:'gcse',type:'breakeven',
-scenario:'A reusable water bottle costs \u00a315. Buying bottled water costs \u00a31 per bottle. How many bottles of water must you drink for the reusable bottle to save money?',
+scenario:'A reusable water bottle costs \u00a315. Buying bottled water costs \u00a31 per bottle. How many bottles of water must you drink for the reusable bottle to save money? (Saving money means cheaper, not the same price.)',
 optionA:{label:'Reusable Bottle',details:[{key:'Upfront cost',value:'\u00a315'},{key:'Refill cost',value:'\u00a30'}]},
 optionB:{label:'Bottled Water',details:[{key:'Per bottle',value:'\u00a31'}]},
 conclusions:[

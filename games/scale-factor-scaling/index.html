@@ -98,7 +98,7 @@ This game drills the difference until it's automatic.
 <button class="start-btn" onclick="startGame()">Start</button>
 </div>
 <div id="game" class="screen">
-<div class="hud"><div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1</div></div><div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div><div class="hud-item"><div class="hud-label">Correct</div><div class="hud-val" id="correctCount">0</div></div><div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div></div>
+<div class="hud"><div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1</div></div><div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div><div class="hud-item"><div class="hud-label">Correct</div><div class="hud-val" id="correctCount">0</div></div></div>
 <div class="section-label" id="sectionLabel"></div>
 <div class="q-card"><div class="prompt" id="prompt"></div></div>
 <div class="options" id="options"></div>
@@ -129,9 +129,9 @@ const T1=[
 {sec:'Area SF',p:'Similar shapes. Lengths in ratio 2:5. Area ratio = ?',c:'4:25',d:['2:5','8:125','4:5'],s:['Area ratio = 2²:5² = 4:25']},
 {sec:'Area SF',p:'Similar triangles. Corresponding sides 3 cm and 9 cm. Area ratio = ?',c:'1:9',d:['1:3','1:27','1:6'],s:['Linear SF = 9/3 = 3','Area ratio = 1:3² = 1:9']},
 // Fractional
-{sec:'Area SF',p:'Length scale factor = ½. Area scale factor = ?',c:'¼',d:['½','⅛','1/16'],s:['(½)² = ¼'],mc:'Shrinking by half means area becomes a QUARTER, not half.'},
-{sec:'Area SF',p:'Length scale factor = ⅓. Area scale factor = ?',c:'1/9',d:['⅓','1/27','2/9'],s:['(⅓)² = 1/9']},
-{sec:'Area SF',p:'Lengths halved. Original area = 100 cm². New area = ?',c:'25 cm²',d:['50 cm²','12.5 cm²','200 cm²'],s:['Area SF = (½)² = ¼','100 × ¼ = 25 cm²']},
+{sec:'Area SF',p:'Length scale factor = 1/2. Area scale factor = ?',c:'1/4',d:['1/2','1/8','1/16'],s:['(1/2)² = 1/4'],mc:'Shrinking by half means area becomes a QUARTER, not half.'},
+{sec:'Area SF',p:'Length scale factor = 1/3. Area scale factor = ?',c:'1/9',d:['1/3','1/27','2/9'],s:['(1/3)² = 1/9']},
+{sec:'Area SF',p:'Lengths halved. Original area = 100 cm². New area = ?',c:'25 cm²',d:['50 cm²','12.5 cm²','200 cm²'],s:['Area SF = (1/2)² = 1/4','100 × 1/4 = 25 cm²']},
 {sec:'Area SF',p:'Scale factor = 1.5. Area scale factor = ?',c:'2.25',d:['1.5','3','4.5'],s:['1.5² = 2.25']},
 {sec:'Area SF',p:'Length scale factor = 0.5. Original area = 64 m². New area = ?',c:'16 m²',d:['32 m²','8 m²','128 m²'],s:['(0.5)² = 0.25','64 × 0.25 = 16 m²']},
 ];
@@ -146,9 +146,9 @@ const T2=[
 {sec:'Volume SF',p:'Lengths double. Original volume = 20 cm³. New volume = ?',c:'160 cm³',d:['40 cm³','80 cm³','320 cm³'],s:['Vol SF = 8','20 × 8 = 160 cm³']},
 {sec:'Volume SF',p:'Lengths triple. Original volume = 10 m³. New volume = ?',c:'270 m³',d:['30 m³','90 m³','810 m³'],s:['Vol SF = 27','10 × 27 = 270 m³']},
 {sec:'Volume SF',p:'Similar solids. Lengths in ratio 1:4. Volume ratio = ?',c:'1:64',d:['1:4','1:16','1:256'],s:['1³:4³ = 1:64']},
-{sec:'Volume SF',p:'Length scale factor = ½. Volume scale factor = ?',c:'⅛',d:['½','¼','1/16'],s:['(½)³ = ⅛'],mc:'Halving the length gives ONE EIGHTH of the volume, not half.'},
-{sec:'Volume SF',p:'Length scale factor = ⅓. Volume scale factor = ?',c:'1/27',d:['⅓','1/9','2/27'],s:['(⅓)³ = 1/27']},
-{sec:'Volume SF',p:'Lengths halved. Volume = 1000 cm³. New volume = ?',c:'125 cm³',d:['500 cm³','250 cm³','62.5 cm³'],s:['(½)³ = ⅛','1000 × ⅛ = 125 cm³']},
+{sec:'Volume SF',p:'Length scale factor = 1/2. Volume scale factor = ?',c:'1/8',d:['1/2','1/4','1/16'],s:['(1/2)³ = 1/8'],mc:'Halving the length gives ONE EIGHTH of the volume, not half.'},
+{sec:'Volume SF',p:'Length scale factor = 1/3. Volume scale factor = ?',c:'1/27',d:['1/3','1/9','2/27'],s:['(1/3)³ = 1/27']},
+{sec:'Volume SF',p:'Lengths halved. Volume = 1000 cm³. New volume = ?',c:'125 cm³',d:['500 cm³','250 cm³','62.5 cm³'],s:['(1/2)³ = 1/8','1000 × 1/8 = 125 cm³']},
 {sec:'Volume SF',p:'Scale factor = 1.5. Volume scale factor = ?',c:'3.375',d:['1.5','2.25','4.5'],s:['1.5³ = 3.375']},
 {sec:'Volume SF',p:'A model car is 1:20 scale. Real car volume = 4 m³. Model volume = ?',c:'0.0005 m³',d:['0.2 m³','0.01 m³','0.05 m³'],s:['Vol SF = (1/20)³ = 1/8000','4 ÷ 8000 = 0.0005 m³']},
 ];
@@ -193,8 +193,8 @@ function startGame(){
   if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'scale-factor-scaling',level:level,questions_answered:total})});}
   show('game');nextQ();
 }
-function nextQ(){if(window.MaffsNext)MaffsNext.clear(document.getElementById('solution'));if(qIdx>=pool.length){endGame();return}currentQ=pool[qIdx];qIdx++;total++;document.getElementById('qNum').textContent=total;document.getElementById('solution').className='solution';qStart=Date.now();updateTimer();document.getElementById('sectionLabel').textContent=currentQ.sec;document.getElementById('prompt').textContent=currentQ.p;const opts=shuffle([currentQ.c,...currentQ.d]);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;b.textContent=v;b.addEventListener('click',()=>handleAnswer(b));oEl.appendChild(b)});MaffsLock.fresh(oEl)}
-function updateTimer(){const el=document.getElementById('timer');const tick=()=>{if(document.getElementById('game').classList.contains('active')){el.textContent=Math.floor((Date.now()-qStart)/1000);requestAnimationFrame(tick)}};requestAnimationFrame(tick)}
+function nextQ(){if(window.MaffsNext)MaffsNext.clear(document.getElementById('solution'));if(qIdx>=pool.length){endGame();return}currentQ=pool[qIdx];qIdx++;total++;document.getElementById('qNum').textContent=total;document.getElementById('solution').className='solution';qStart=Date.now();   // Hidden Count-Up (timer policy): the clock runs for the score and is never shown
+document.getElementById('sectionLabel').textContent=currentQ.sec;document.getElementById('prompt').textContent=currentQ.p;const opts=shuffle([currentQ.c,...currentQ.d]);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;b.textContent=v;b.addEventListener('click',()=>handleAnswer(b));oEl.appendChild(b)});MaffsLock.fresh(oEl)}
 function handleAnswer(btn){if(!MaffsLock.lock(document.getElementById('options')))return;const q=currentQ,s=(Date.now()-qStart)/1000,ok=btn.dataset.val===q.c;document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.c)b.classList.add('correct')});if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));correctN++;updateHUD();MaffsLock.timer(nextQ,1000)}else{btn.classList.add('wrong');updateHUD();showExplain(q)}mfg('question_answered',{game_slug:'scale-factor-scaling',level:level,correct:ok,question_index:total});}
 function showExplain(q){const sol=document.getElementById('solution');let html='<h3>Worked solution</h3>';(q.s||[]).forEach(st=>{html+='<div class="step">'+st+'</div>'});if(q.mc)html+='<div class="misconception">⚠ '+q.mc+'</div>';sol.innerHTML=html;sol.className='solution show';
   // A wrong answer waits on Next under the worked solution (canon 7.6): one advance however it is pressed

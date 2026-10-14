@@ -786,7 +786,7 @@ FIGURES = {
     'es_core_020': [('E(X) = 2.0', lambda s: s.E == 2)],
     'es_gcse_001': [('E(X) = 2.5', lambda s: s.E == F('2.5'))],
     'es_gcse_002': [('E(X) = 3.85', lambda s: s.E == F('3.85'))],
-    'es_gcse_003': [('E(X) = 0 + 1/3 + 1 = 4/3 = £1.33', lambda s: F(0) + F(1, 3) + 1 == F(4, 3) == s.E)],
+    'es_gcse_003': [('E(X) = 0 + 1/3 + 1 = 4/3 ≈ £1.33', lambda s: F(0) + F(1, 3) + 1 == F(4, 3) == s.E)],
     'es_gcse_004': [('E(X) = 1.1', lambda s: s.E == F('1.1'))],
     'es_gcse_005': [('E(X) = 1.5', lambda s: s.E == F('1.5')),
                     ('if P(H) = 0.5, then E(X) = 3 x 0.5 = 1.5',
@@ -794,7 +794,7 @@ FIGURES = {
     'es_gcse_006': [('E(X) = 0(1/4) + 1(1/2) + 2(1/4) = 0 + 0.5 + 0.5 = 1',
                      lambda s: EX(s, [(0, '1/4'), (1, '1/2'), (2, '1/4')]) and s.E == 1)],
     'es_gcse_007': [('E(X) = 0.75', lambda s: s.E == F('0.75')), ('(200 x 0.75)', lambda s: 200 * F('0.75') == 150)],
-    'es_gcse_008': [('E(X) = 1(1/2) + 2(1/3) + 3(1/6) = 1/2 + 2/3 + 1/2 = 5/3 = 1.67',
+    'es_gcse_008': [('E(X) = 1(1/2) + 2(1/3) + 3(1/6) = 1/2 + 2/3 + 1/2 = 5/3 ≈ 1.67',
                      lambda s: EX(s, [(1, '1/2'), (2, '1/3'), (3, '1/6')]) and s.E == F(5, 3))],
     'es_gcse_009': [('E(X) = 0.75', lambda s: s.E == F('0.75')), ('(6 x 0.75 = 4.5)', lambda s: 6 * F('0.75') == F('4.5'))],
     'es_gcse_010': [('E(X) = 6.6', lambda s: s.E == F('6.6'))],
@@ -803,8 +803,7 @@ FIGURES = {
     'es_gcse_013': [('E(X) = 1.25', lambda s: s.E == F('1.25'))],
     'es_gcse_014': [('E(X) = 1.8', lambda s: s.E == F('1.8'))],
     'es_gcse_015': [('E(X) = 1.15', lambda s: s.E == F('1.15'))],
-    'es_alevel_001': [('k + 2k + 3k + 4k = 10k = 1, we get k = 0.1', lambda s: True),
-                      ('P(X=1)=0.1, P(X=2)=0.2, P(X=3)=0.3, P(X=4)=0.4', lambda s: [p for _, p in s.d] == [F('0.1'), F('0.2'), F('0.3'), F('0.4')]),
+    'es_alevel_001': [('P(X=1)=0.1, P(X=2)=0.2, P(X=3)=0.3, P(X=4)=0.4', lambda s: [p for _, p in s.d] == [F('0.1'), F('0.2'), F('0.3'), F('0.4')]),
                       ('E(X) = 0.1 + 0.4 + 0.9 + 1.6 = 3.0', lambda s: s.E == 3),
                       ('k + 2k + 3k + 4k = 10k = 1, so k = 0.1', lambda s: True)],
     'es_alevel_002': [('3k + 4k + 2k + k = 10k = 1, so k = 0.1', lambda s: True),
@@ -1621,19 +1620,11 @@ FIGURES_ADDED = {
         ('P(X = 3) = 0.10', lambda s: dict(s.d)[3] == F('0.10')),
         ('P(X = 0) = 0.30', lambda s: dict(s.d)[0] == F('0.30')),
     ],
-    'es_alevel_001': [  # add to the existing entry
-        ('1 − 0.70 = 0.30', lambda s: 1 - F('0.70') == F('0.30')),
-        ('P(X = 2) = 2 × P(X = 1)', lambda s: dict(s.d)[2] == 2 * dict(s.d)[1]),
-        ('3 × P(X = 1) = 0.30', lambda s: 3 * dict(s.d)[1] == F('0.30')),
-        ('P(X = 1) = 0.10', lambda s: dict(s.d)[1] == F('0.10')),
-        ('P(X = 2) = 0.20', lambda s: dict(s.d)[2] == F('0.20')),
-    ],
-    'es_alevel_002': [  # add to the existing entry
-        ('1 − 0.60 = 0.40', lambda s: 1 - F('0.60') == F('0.40')),
-        ('P(X = 0) = 3 × P(X = 3)', lambda s: dict(s.d)[0] == 3 * dict(s.d)[3]),
-        ('4 × P(X = 3) = 0.40', lambda s: 4 * dict(s.d)[3] == F('0.40')),
-        ('P(X = 3) = 0.10', lambda s: dict(s.d)[3] == F('0.10')),
-        ('P(X = 0) = 0.30', lambda s: dict(s.d)[0] == F('0.30')),
+    # s1-002 (R3): the explanations of the two k items find k from the total of the cells in k, never from a numerical total of the given cells
+    'es_alevel_001': [],
+    'es_alevel_002': [
+        ('P(X = 0) = 0.3, P(X = 1) = 0.4, P(X = 2) = 0.2 and P(X = 3) = 0.1',
+         lambda s: [dict(s.d)[i] for i in range(4)] == [F('0.3'), F('0.4'), F('0.2'), F('0.1')]),
     ],
     'es_alevel_004': [  # add to the existing entry
         ('1 − 0.65 = 0.35', lambda s: 1 - F('0.65') == F('0.35')),
@@ -2061,7 +2052,18 @@ def k_cell_fails(bank, blanks):
     return out
 
 
+def notation_fails(html):
+    """SWEEP-1 (R1): expectation-station-s1-006 / -008. The sum sign is written as one; a count of 1 is singular."""
+    out = []
+    if 'Sigma' in html:
+        out.append('es_core_001: the start screen writes "Sigma" for the sum sign; it must be \u03a3 (expectation-station-s1-006)')
+    if re.search(r'\b1 consoles\b', html):
+        out.append('es_gcse_021: "1 consoles" must read "1 console" (expectation-station-s1-008)')
+    return out
+
+
 def play(fails, html):
+    fails.extend(notation_fails(html))
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
     try:
@@ -2105,6 +2107,11 @@ def u(s):
 
 
 PLANTS = [
+    ('es_core_001', 's1-006: "Sigma" back', 'E(X) = \u03a3 xP(x)', 'E(X) = Sigma xP(x)'),
+    ('es_gcse_021', 's1-008: "1 consoles" back', 'the mean is 1 console per home', 'the mean is 1 consoles per home'),
+    ('es_alevel_001', 's1-002: the k explanation back on a numerical total',
+     'The probabilities add up to 1: k + 2k + 3k + 4k = 10k = 1, so k = 0.1. So P(X=1)=0.1,',
+     'The missing probabilities add up to 1 \\u2212 0.70 = 0.30. P(X = 2) = 2 \\u00d7 P(X = 1), so 3 \\u00d7 P(X = 1) = 0.30, giving P(X = 1) = 0.10 and P(X = 2) = 0.20. Since k + 2k + 3k + 4k = 10k = 1, we get k = 0.1. So P(X=1)=0.1,'),
     ('es_alevel_001', 't2-002: the true card "The median of X is 3"',
      'The mean is 3, so half the values of X are above 3', 'The median of X is 3'),
     ('es_alevel_006', 't2-012: Stage 1 marked to within 0.001',

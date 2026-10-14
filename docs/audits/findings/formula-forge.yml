@@ -146,7 +146,9 @@ findings:
   summary: 'Rearrangements that divide by an expression do not state it is non-zero: y ≠ 1 (:303), u ≠ f (:315), R₂ ≠
     R_T (:358); the same class as t4-006 (a ≠ c). Stating them is a stem change, for Jon'
   evidence: 'The keys divide by (1 − y), (u − f) and (R_T − R₂) (SWEEP-1, batch 8)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R2: one start-screen line, "Where an answer divides by an expression, assume that expression is not zero", covers y != 1, u != f and R_T != R_2 and every future item (class fix, not three stems); verify-formula-forge.py pins it with a plant.'
 - id: formula-forge-s1-004
   severity: MEDIUM
   jc: false

@@ -17,7 +17,7 @@ Checks, independent of the game's code (bearings measured clockwise from North, 
     points"; over 5 is a miss that costs a life, shows the target line, and reads "... You were D° off. Target was TTT°. N lives
     left!" with the Next control.
   Sessions: startGame() dealt five times: 24 bearings, whole numbers 0..359, the 16 fixed ones all present.
-  Flows: three misses read "DESTROYED!" and Next shows "Submarine Destroyed!" with the shots, hits and accuracy; twenty hits end
+  Flows: three misses read "HIT! Surface ships locked onto your position." and Next shows "Submarine Destroyed!" with the shots, hits and accuracy; twenty hits end
     with "All Ships Sunk!" and the score added up here.
 No analytics or leaderboard request leaves the stub server (every other request is aborted).
 
@@ -101,6 +101,16 @@ SHOT_JS = r"""([t, n]) => {
 SESSION_JS = r"""() => { const out = [];
   for (let k = 0; k < 5; k++) { startGame(); MaffsLock.clearTimers(); out.push(bearings.slice()); }
   return out; }"""
+SURV_JS = r"""(lives) => {
+  startGame(); MaffsLock.clearTimers(); livesLeft = lives;
+  for (let k = 0; k < 20; k++) {
+    currentAngle = targetBearing; drawCompass();
+    document.getElementById('fireBtn').click();
+    MaffsLock.clearTimers();
+    nextTarget();
+  }
+  return {stats: document.getElementById('statsLine').textContent};
+}"""
 WIN_JS = r"""(offs) => {
   startGame(); MaffsLock.clearTimers();
   const ts = [];
@@ -185,7 +195,7 @@ def play(fails, html):
                 page.locator('#nextMount button').first.click()
             lose = page.evaluate('() => ({title: document.getElementById("resultTitle").textContent, stats: document.getElementById("statsLine").textContent, active: document.getElementById("results").classList.contains("active")})')
             lose['msgs'] = msgs
-            want_last = 'DESTROYED!'
+            want_last = 'HIT! Surface ships locked onto your position.'
             if (len(lose['msgs']) != 3 or 'Depth charge dropped nearby!' not in lose['msgs'][0] or "They're getting closer!" not in lose['msgs'][1]
                     or want_last not in lose['msgs'][2] or lose['title'] != 'Submarine Destroyed!' or not lose['active']
                     or '0 ships sunk from 3 torpedoes' not in lose['stats'] or 'Accuracy: 0%' not in lose['stats']):
@@ -196,6 +206,21 @@ def play(fails, html):
             if win['title'] != 'All Ships Sunk!' or win['score'] != str(total) or '20 ships sunk from 20 torpedoes' not in win['stats'] \
                     or 'Accuracy: 100%' not in win['stats']:
                 fails.append('flow: twenty hits end %r, score %r (expected %d), %r' % (win['title'], win['score'], total, win['stats']))
+            # SWEEP-1 (bearing-blitz-s1-002, R1): "Survived with 1 life", "... 2 lives"
+            for lives, want in ((1, 'Survived with 1 life'), (2, 'Survived with 2 lives')):
+                surv = page.evaluate(SURV_JS, lives)
+                if want not in surv['stats'] or 'Survived with 1 lives' in surv['stats']:
+                    fails.append('flow: twenty hits with %d life left read %r, expected %r' % (lives, surv['stats'], want))
+            # SWEEP-1 (bearing-blitz-s1-001, -003, R6, R2): no death imagery, and the start screen says a miss repeats the target
+            page.evaluate('() => { show("menu"); }')
+            menu = page.inner_text('#menu')
+            if 'Fire first.' not in menu or 'Fire or die' in menu:
+                fails.append('start: the subtitle must read "Fire first." (SR-14: no "Fire or die", bearing-blitz-s1-001)')
+            if 'same target again' not in menu:
+                fails.append('start: the start screen must say that after a miss you get the same target again (bearing-blitz-s1-003)')
+            for bad in ('💀', 'DESTROYED!'):
+                if bad in html:
+                    fails.append('start: the page still carries %r (SR-14 death imagery, bearing-blitz-s1-005)' % bad)
             if errors:
                 fails.append('page errors: %s' % '; '.join(errors[:3]))
             browser.close()
@@ -207,6 +232,10 @@ def play(fails, html):
 
 
 PLANTS = [
+    ('s1-001: "Fire or die" back', 'start:', [("Fire first.</div>", "Fire or die.</div>")]),
+    ('s1-005: the skull and DESTROYED back', 'start:', [("msg.textContent='HIT! Surface", "msg.textContent='💀 DESTROYED! Surface")]),
+    ('s1-002: "Survived with 1 lives" back', 'flow:', [("(livesLeft===1?' life':' lives')", "' lives'")]),
+    ('s1-003: a repeated target not mentioned', 'start:', [(" After a miss you get the same target again.", "")]),
     ('a tolerance of 8 degrees', 'marking:', [("const TOLERANCE=5,MAX_TARGETS=20;", "const TOLERANCE=8,MAX_TARGETS=20;")]),
     ('no wrap at 0/360 (359 is 359 off 0)', 'marking:', [("if(diff>180)diff=360-diff;", "")]),
     ('the 100-point band at 2 degrees', 'marking:', [("else if(diff<=3)pts=100;", "else if(diff<=2)pts=100;")]),

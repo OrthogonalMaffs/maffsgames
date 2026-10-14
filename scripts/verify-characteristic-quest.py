@@ -270,7 +270,15 @@ MARK_JS = r"""(i) => {
   return out; }"""
 
 
+def hud_fails(html):
+    """SWEEP-1 (R7, characteristic-quest-s1-004): the game is listed under Hidden Count-Up in .claude/rules/timer-policy.md, so the
+    HUD shows no running Time."""
+    return ['hud: the running Time is on the HUD; Hidden Count-Up means it is never shown (R7, characteristic-quest-s1-004)'] \
+        if re.search(r'class="hud-label">Time<', html) or 'id="timer"' in html else []
+
+
 def play(fails, html):
+    fails.extend(hud_fails(html))
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
     stats = {}
@@ -328,6 +336,7 @@ def play(fails, html):
 
 
 PLANTS = [
+    ('the HUD Time back', 'hud:', [('<div class="hud-item"><div class="hud-label">Score</div>', '<div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div><div class="hud-item"><div class="hud-label">Score</div>')]),
     ('a wrong key (trace sign flipped)', 'key:', [("{m:[[2,1],[0,3]],c:'\\\\lambda^2 - 5\\\\lambda + 6 = 0',d:['\\\\lambda^2 - 5\\\\lambda + 3 = 0','\\\\lambda^2 + 5\\\\lambda + 6 = 0'",
                                                      "{m:[[2,1],[0,3]],c:'\\\\lambda^2 + 5\\\\lambda + 6 = 0',d:['\\\\lambda^2 - 5\\\\lambda + 3 = 0','\\\\lambda^2 - 5\\\\lambda + 6 = 0'")]),
     ('SR-4/16: a distractor that is the key doubled', 'options:', [("d:['\\\\lambda^2 - 5\\\\lambda + 3 = 0','\\\\lambda^2 + 5\\\\lambda + 6 = 0','\\\\lambda^2 - 6\\\\lambda + 5 = 0'],s:['(2-",

@@ -110,7 +110,9 @@ findings:
     linear-equation-solver-s1-001, SWEEP-1-RULINGS step 1.)'
   evidence: 'A1 x + 7 = 12: options "-7 → x = 12 - 7", "-7 → x = 12", "-7 → x + 7 = 12 - 7", "-7 → x = 12 + 7" (SWEEP-1,
     batch 9)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R3: the start screen says a slower move "loses half as many points as a wrong move" (it costs A_COST = W_COST / 2 = 12.5 points; it did not score half); the verifier pins the sentence and the constant.'
 - id: linear-equation-solver-s1-004
   severity: LOW
   jc: false

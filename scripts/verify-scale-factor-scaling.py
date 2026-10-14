@@ -82,8 +82,8 @@ TARGETS = {
         ('Length scale factor = 4. Original area = 10 cm²', N(10 * 4 ** 2, 'cm²')),
         ('Lengths in ratio 2:5. Area ratio', R(4, 25)),
         ('Corresponding sides 3 cm and 9 cm. Area ratio', R(1, 9)),
-        ('Length scale factor = ½. Area', N(F(1, 2) ** 2)),
-        ('Length scale factor = ⅓. Area', N(F(1, 3) ** 2)),
+        ('Length scale factor = 1/2. Area', N(F(1, 2) ** 2)),
+        ('Length scale factor = 1/3. Area', N(F(1, 3) ** 2)),
         ('Lengths halved. Original area = 100 cm²', N(100 * F(1, 2) ** 2, 'cm²')),
         ('Scale factor = 1.5. Area', N(F(3, 2) ** 2)),
         ('Length scale factor = 0.5. Original area = 64 m²', N(64 * F(1, 2) ** 2, 'm²')),
@@ -97,8 +97,8 @@ TARGETS = {
         ('Lengths double. Original volume = 20 cm³', N(20 * 2 ** 3, 'cm³')),
         ('Lengths triple. Original volume = 10 m³', N(10 * 3 ** 3, 'm³')),
         ('Lengths in ratio 1:4. Volume ratio', R(1, 64)),
-        ('Length scale factor = ½. Volume', N(F(1, 2) ** 3)),
-        ('Length scale factor = ⅓. Volume', N(F(1, 3) ** 3)),
+        ('Length scale factor = 1/2. Volume', N(F(1, 2) ** 3)),
+        ('Length scale factor = 1/3. Volume', N(F(1, 3) ** 3)),
         ('Lengths halved. Volume = 1000 cm³', N(1000 * F(1, 2) ** 3, 'cm³')),
         ('Scale factor = 1.5. Volume', N(F(3, 2) ** 3)),
         ('1:20 scale. Real car volume = 4 m³', N(4 * F(1, 20) ** 3, 'm³')),
@@ -185,7 +185,21 @@ SWEEP_JS = r"""() => {
 }"""
 
 
+def text_fails(html):
+    """SWEEP-1 rulings (13 Oct 2026): R7, the timer policy lists this game under Hidden Count-Up, so the HUD shows no running Time."""
+    out = []
+    if re.search(r'class="hud-label">Time<', html) or 'id="timer"' in html:
+        out.append('hud: the running Time is on the HUD; Hidden Count-Up means it is never shown (R7, scale-factor-scaling-s1-005)')
+    return out
+
+
+def notation_fails(html):
+    """scale-factor-scaling-s1-004 (R1): fractions are written one way, as a/b; the glyphs (1/2 and a half glyph) are not mixed in one option set."""
+    return ['notation: a fraction glyph (%s) is in the page; write it as a/b' % ''.join(sorted(set(re.findall('[\u00bd\u2153\u00bc\u215b\u2154\u00be]', html))))] if re.search('[\u00bd\u2153\u00bc\u215b\u2154\u00be]', html) else []
+
+
 def play(fails, html):
+    fails.extend(text_fails(html) + notation_fails(html))
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
     try:
@@ -217,6 +231,9 @@ def play(fails, html):
 
 # (the item the failure must name, what is planted, today's text, main's text before LISTED-HIGH).
 PLANTS = [
+    ('hud:', 's1-005: the HUD Time back', '<div class="hud-item"><div class="hud-label">Correct</div>',
+     '<div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div><div class="hud-item"><div class="hud-label">Correct</div>'),
+    ('notation:', 's1-004: a fraction glyph back', "c:'1/4',d:['1/2','1/8','1/16']", "c:'\u00bc',d:['1/2','1/8','1/16']"),
     ('T4[4]', 't1-001: the paint item with no original quantity',
      "{sec:'Context',p:'Paint covers 10 m² per litre. A shape with surface area 10 m² is enlarged so its dimensions double. How many litres for the larger shape?',c:'4 litres',d:['2 litres','8 litres','1 litre'],s:['Surface area scales by k² = 2² = 4','New surface area = 10 × 4 = 40 m²','40 ÷ 10 = 4 litres'],mc:'Paint covers area, so it scales by k², not k.'}", "{sec:'Context',p:'Paint covers 10 m² per litre. If dimensions double, how many litres for the larger shape?',c:'4 litres per 10 m²',d:['2 litres','8 litres','1 litre'],s:['Surface area scales by k² = 4','4× more paint needed']}"),
     ('T1[8]', 'SR-4: two wrong options equal in value (4:10 = 2:5)',

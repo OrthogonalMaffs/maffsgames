@@ -209,6 +209,8 @@ def check_bank(fails, bank):
         if q['q'] in seen:
             fails.append('options: %s: question repeated' % where)
         seen.add(q['q'])
+        if re.fullmatch(r'[a-z]\^1', q['correct']):   # index-laws-s1-002 (R1): Q4 keys the same result "x"
+            fails.append('notation: %s: keyed %r; a power of 1 is written without its index' % (where, q['correct']))
         opts = [q['correct']] + list(q['wrong'])
         if len(q['wrong']) != 3 or len(set(opts)) != 4:
             fails.append('options: %s: %d wrong options, %d different strings with the key' % (where, len(q['wrong']), len(set(opts))))
@@ -390,6 +392,8 @@ def form_needed(q):
 
 
 PLANTS = [
+    ('s1-002: x^1 keyed for x^(1/3) times x^(2/3)', 'notation:',
+     [("correct:'x',\n    wrong:['x^{\\\\frac{2}{9}}'", "correct:'x^1',\n    wrong:['x^{\\\\frac{2}{9}}'")]),
     ('SR-17: x^-3 with no ask naming its form', 'form:',
      [("q:'x^{-3}', ask:'Write with a positive index', correct:", "q:'x^{-3}', correct:")]),
     ('a wrong key (x^8 for x^3 times x^4)', 'key:',

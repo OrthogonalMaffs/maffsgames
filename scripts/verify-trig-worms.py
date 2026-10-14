@@ -30,6 +30,7 @@ O=?, an angle key that ignores the shown sides, an angle question with no stated
     python scripts/verify-trig-worms.py [--no-selftest] [--against FILE]
 """
 import argparse
+import math
 import os
 import re
 import sys
@@ -106,7 +107,9 @@ def expect(type_, angle, hyp, ratio):
         named.append(('the other acute angle: 90° − θ', 90 - theta))
         named = [(w, deg(v)) for w, v in named if deg(v) not in ('0°', '90°')]
         named.append(('calculator in radians', '%s°' % half_up(theta * mp.pi / 180, 2)))
-        key, prec, unrounded = deg(theta), 'to the nearest degree', half_up(theta, 1)
+        # s1-003 (R3): theta is shown to 1 d.p. unless that rounds to a different whole number than the key (37.46 -> 37.5 -> 38)
+        key, prec = deg(theta), 'to the nearest degree'
+        unrounded = next((half_up(theta, dp) for dp in (1, 2, 3, 4) if half_up(half_up(theta, dp), 0) == half_up(theta, 0)), half_up(theta, 4))
     elif type_ == 'side':
         if ratio == 'SOH':
             v, named, labels = H * S, [('cos instead of sin', H * C), ('tan instead of sin', H * T),
@@ -144,13 +147,14 @@ def outcomes():
 SWEEP_JS = r"""(cases) => {
   window.setInterval = () => 0; window.setTimeout = () => 0;   // no shot animation, no advance
   const C = CanvasRenderingContext2D.prototype, rec = [];
-  for (const k of ['moveTo','lineTo','fillText','strokeText']) { const f = C[k]; C[k] = function(...a){ rec.push([k, ...a]); return f.apply(this, a); }; }
+  for (const k of ['moveTo','lineTo','fillText','strokeText','arc']) { const f = C[k]; C[k] = function(...a){ rec.push([k, ...a]); return f.apply(this, a); }; }
   const out = [];
   for (const [t, a, h, r] of cases) {
     const q = questionFrom(t, a, h, r);
     rec.length = 0; drawScene(q);
     const path = rec.filter(c => c[0] === 'moveTo' || c[0] === 'lineTo');
     const texts = rec.filter(c => c[0] === 'fillText').map(c => c[1]);
+    const arcs = rec.filter(c => c[0] === 'arc').map(c => c.slice(1, 4)), th = rec.find(c => c[0] === 'fillText' && c[1] === 'θ');
     // the triangle: the moveTo followed by two lineTos that the diagram draws (the first such triple whose
     // second point is level with the first and third directly above the second)
     let tri = null;
@@ -167,7 +171,7 @@ SWEEP_JS = r"""(cases) => {
       marks.push([pick, document.getElementById('feedback').className, document.getElementById('expText').textContent]);
     }
     const shown = (questions = [q], qNum = 0, loadQ(), [...document.querySelectorAll('#choices .choice-btn')].map(b => b.textContent));
-    out.push({t, a, h, r, q, tri: tri && tri.map(p => [p[1], p[2]]), texts, marks, shown});
+    out.push({t, a, h, r, q, tri: tri && tri.map(p => [p[1], p[2]]), texts, marks, shown, arcs, theta: th && [th[2], th[3]]});
   }
   return out;
 }"""
@@ -239,6 +243,19 @@ def check(fails, html, label=''):
             want = mp.atan(mp.mpf(e['opp']) / mp.mpf(e['adj']))
             if abs(todeg(got - want)) > 1e-6:
                 fails.append('%s: the drawn angle is %.2f°, the given sides make %.2f°' % (where, todeg(got), todeg(want)))
+            # s1-001 (R8): the θ arc is at θ's vertex and no longer than the adjacent side; its glyph is nearer that vertex than the right angle
+            mine = [a for a in o['arcs'] if abs(a[0] - x0) < 1e-6 and abs(a[1] - y0) < 1e-6]   # the arc at θ's vertex (the worm's head is another)
+            if not mine or o['theta'] is None:
+                fails.append('trig-worms-s1-001: %s: the diagram draws no θ arc at the vertex, or no θ glyph' % where)
+            else:
+                ax, ay, ar = mine[0]
+                if ar > (x1 - x0) + 1e-9:
+                    fails.append('trig-worms-s1-001: %s: the θ arc (centre %.1f,%.1f radius %.1f) is not on the adjacent side (vertex %.1f,%.1f, length %.1f)'
+                                 % (where, ax, ay, ar, x0, y0, x1 - x0))
+                tx_, ty_ = o['theta']
+                if tx_ > x1 - 4 or math.hypot(tx_ - x0, ty_ - y0) > 30:
+                    fails.append('trig-worms-s1-001: %s: the θ glyph (%.1f,%.1f) is not at θ\'s vertex (%.1f,%.1f): it is level with or past the right-angle corner (x %.1f)'
+                                 % (where, tx_, ty_, x0, y0, x1))
         for pick, cls, exp_text in o['marks']:
             right = pick == e['key']
             if cls is None:
@@ -258,6 +275,8 @@ def check(fails, html, label=''):
 
 
 PLANTS = [
+    ("the θ arc a fixed 22 px (s1-001)", "const arcR=Math.min(22,triAdj*0.6);", "const arcR=22;"),
+    ("θ shown to 1 d.p. beside a key rounded down (s1-003)", "function thetaShown(theta,key){", "function thetaShown(theta,key){return theta.toFixed(1);"),
     ("the adjacent question labelled O=? (t1-002)", "labels={H:'H='+hyp,A:'A=?'}", "labels={H:'H='+hyp,O:'O=?'}"),
     ("an angle key that ignores the shown sides (t1-001, t1-003)", "    correct=deg(theta);\n", "    correct=angle+'°';\n"),
     ("an angle question with no stated precision (t1-001)", "\\nFind angle θ to the nearest degree.`", "\\nFind angle θ.`"),

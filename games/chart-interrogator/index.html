@@ -477,7 +477,8 @@ function drawStemLeaf(container){
 
   function getLeaf(val,stemVal,div,dec){
     if(dec){var remainder=val-stemVal*div;return Math.round(remainder*10).toString();}
-    return(val%div).toString();
+    // A leaf is as many digits as the stem unit has zeros (a 0 leaf under stems of 100 is '00'), as the key writes it.
+    return String(val%div).padStart(String(div).length-1,'0');
   }
 
   var html='<div style="width:100%"><table class="sl-table"><tr><th style="text-align:right">'+s.groupA+'</th><th>Stem</th><th>'+s.groupB+'</th></tr>';
@@ -487,7 +488,7 @@ function drawStemLeaf(container){
     // Left side reads right to left (reversed)
     var leftStr=aLeaves.slice().reverse().join('  ');
     var rightStr=bLeaves.join('  ');
-    var stemLabel=s.stemWidth===2&&st<10?'0'+st:st.toString();
+    var stemLabel=st.toString();   // as the key writes it ('2|40'), never padded to '02'
     html+='<tr><td class="sl-left">'+leftStr+'</td><td class="sl-stem">'+stemLabel+'</td><td class="sl-right">'+rightStr+'</td></tr>';
   });
   html+='</table><div class="sl-key">Key: '+s.key+'</div></div>';
@@ -634,6 +635,14 @@ function drawCumFreq(container){
   ctx.save();ctx.translate(18,200);ctx.rotate(-Math.PI/2);ctx.fillText('Cumulative frequency',0,0);ctx.restore();
 }
 
+// The drawn density axis: the tallest bar reaches 90% of the plot height, so the axis spans maxFD / 0.9.
+// drawHistogram draws on it and the frequency bands are read off it, so a band is always a share of the axis on screen.
+var HIST_FILL=0.9;
+function histAxis(s){
+  var maxFD=Math.max.apply(null,s.data.map(function(d){return d.fd;}));
+  return{maxFD:maxFD,span:maxFD/HIST_FILL};
+}
+
 function drawHistogram(container){
   var s=currentScenario;
   var canvas=document.createElement('canvas');
@@ -643,11 +652,11 @@ function drawHistogram(container){
 
   var data=s.data;
   var xMin=data[0].lo,xMax=data[data.length-1].hi;
-  var maxFD=Math.max.apply(null,data.map(function(d){return d.fd;}));
+  var maxFD=histAxis(s).maxFD;
 
   var pl=70,pr=560,pt=30,pb=320;
   function xc(val){return pl+(val-xMin)/(xMax-xMin)*(pr-pl);}
-  function yc(val){return pb-(val/maxFD)*(pb-pt)*0.9;}
+  function yc(val){return pb-(val/maxFD)*(pb-pt)*HIST_FILL;}
 
   // Grid
   ctx.strokeStyle='#2a2e3a';ctx.lineWidth=1;
@@ -730,10 +739,10 @@ function buildPhase1Questions(){
   }else if(selectedType==='cumfreq'){
     var T=cfTruth(s);
     phase1Questions=[
-      {text:'Use the graph to estimate the median.',expected:T.median,tolerance:T.tol.median,key:'median',type:'number',shown:T.shown.median},
-      {text:'Use the graph to estimate the lower quartile (Q1).',expected:T.q1,tolerance:T.tol.q1,key:'q1',type:'number',shown:T.shown.q1},
-      {text:'Use the graph to estimate the upper quartile (Q3).',expected:T.q3,tolerance:T.tol.q3,key:'q3',type:'number',shown:T.shown.q3},
-      {text:'Calculate the IQR.',expected:T.iqr,tolerance:T.tol.iqr,key:'iqr',type:'number',shown:T.shown.iqr}
+      {text:'Use the graph to estimate the median.',expected:T.median,tolerance:T.tol.median,alt:T.alt.median,key:'median',type:'number',shown:T.shown.median},
+      {text:'Use the graph to estimate the lower quartile (Q1).',expected:T.q1,tolerance:T.tol.q1,alt:T.alt.q1,key:'q1',type:'number',shown:T.shown.q1},
+      {text:'Use the graph to estimate the upper quartile (Q3).',expected:T.q3,tolerance:T.tol.q3,alt:T.alt.q3,key:'q3',type:'number',shown:T.shown.q3},
+      {text:'Calculate the IQR.',expected:T.iqr,tolerance:T.tol.iqr,alt:T.alt.iqr,key:'iqr',type:'number',shown:T.shown.iqr}
     ];
   }else if(selectedType==='histogram'){
     var hData=s.data;
@@ -746,6 +755,13 @@ function buildPhase1Questions(){
     // Pick a range for proportion question
     var propInterval=freqs[Math.min(3,freqs.length-1)];
     var proportion=Math.round(propInterval.freq/totalFreq*100);
+    // A frequency is read as a density off the drawn axis times a width, so its band is 2.5% of the density axis's span
+    // times that width (canon 7.1.2); the total adds the widths, so it takes the whole x width. Each band is capped below
+    // half the gap to the nearest named wrong answer: the density read as the frequency, the density summed for the total,
+    // and the asked class's frequency given for the total (chart-interrogator-s1-001).
+    var dBand=0.025*histAxis(s).span,sumFD=freqs.reduce(function(a,b){return a+b.fd;},0);
+    var freqTol=capTol(dBand*askInterval.width,askInterval.freq,[askInterval.fd,totalFreq]);
+    var totalTol=capTol(dBand*(hData[hData.length-1].hi-hData[0].lo),totalFreq,[sumFD,askInterval.freq]);
 
     phase1Questions=[
       // Four options, the named errors first: the tallest bar (density read as frequency) and the widest class, then
@@ -753,9 +769,9 @@ function buildPhase1Questions(){
       {text:'Which class interval has the highest frequency?',expected:maxFreqInterval.interval,key:'maxInterval',type:'mc',
        options:shuffleArr([maxFreqInterval,freqs.reduce(function(a,b){return a.fd>b.fd?a:b;}),freqs.reduce(function(a,b){return a.width>b.width?a:b;})]
          .concat(freqs).map(function(f){return f.interval;}).filter(unique).slice(0,4))},
-      {text:'Calculate the frequency for the '+askInterval.interval+' class interval.',expected:Math.round(askInterval.freq),tolerance:1,key:'askFreq',type:'number',hint:'Frequency = frequency density \u00d7 class width'},
-      {text:'How many '+s.contextPlural+' are in the sample altogether?',expected:Math.round(totalFreq),tolerance:1,key:'total',type:'number'},
-      {text:'Estimate the proportion of '+s.contextPlural+' in the range '+propInterval.interval+'.',expected:proportion,tolerance:2,key:'proportion',type:'number',suffix:'%'}
+      {text:'Calculate the frequency for the '+askInterval.interval+' class interval.',expected:Math.round(askInterval.freq),tolerance:freqTol,key:'askFreq',type:'number',hint:'Frequency = frequency density \u00d7 class width'},
+      {text:'How many '+s.contextPlural+' are in the sample altogether?',expected:Math.round(totalFreq),tolerance:totalTol,key:'total',type:'number'},
+      {text:'Estimate the proportion of '+s.contextPlural+' in the class '+propInterval.interval+'.',expected:proportion,tolerance:2,key:'proportion',type:'number',suffix:'%'}
     ];
   }
 }
@@ -802,6 +818,29 @@ function cfAtX(s,x){
   return cfBez(g,1,cfSolve(g,0,x));
 }
 
+// The other drawing students are taught: the same cumulative points joined by straight lines (a polygon).
+// It reads a little differently from the S-shaped curve, so a reading from either is marked (chart-interrogator-s1-005).
+function cfXAtPoly(s,cf){
+  var x=s.data[0].lo,c=0;
+  for(var i=0;i<s.data.length;i++){
+    var d=s.data[i];
+    if(cf<=c+d.f||i===s.data.length-1)return x+(d.hi-x)*Math.min(1,Math.max(0,(cf-c)/d.f));
+    x=d.hi;c+=d.f;
+  }
+}
+function cfAtXPoly(s,xv){
+  var x=s.data[0].lo,c=0;
+  for(var i=0;i<s.data.length;i++){
+    var d=s.data[i];
+    if(xv<=d.hi||i===s.data.length-1)return c+d.f*Math.min(1,Math.max(0,(xv-x)/(d.hi-x)));
+    x=d.hi;c+=d.f;
+  }
+}
+// A reading is right when it is within the band of the curve's value or of the polygon's.
+function readingOk(val,expected,tolerance,alt){
+  return Math.abs(val-expected)<=tolerance||(!!alt&&Math.abs(val-alt.expected)<=alt.tolerance);
+}
+
 // Every true value a cumfreq key needs, read off the drawn curve. A reading's tolerance is
 // 2.5% of the x axis's span, an IQR's twice that (it is the difference of two readings), a
 // count's 2.5% of n, each capped by capTol below the nearest named wrong answer (canon
@@ -819,7 +858,16 @@ function cfTruth(s){
   var tol={q1:capTol(xTol,q1,[median,q3,n/4]),median:capTol(xTol,median,[q1,q3,n/2]),
     q3:capTol(xTol,q3,[q1,median,n*3/4]),iqr:capTol(2*xTol,q3-q1,[n/2,span]),
     bench:capTol(0.025*n,bench,[n-bench])};
-  return{q1:q1,median:median,q3:q3,iqr:q3-q1,bench:bench,tol:tol,
+  // The polygon's own readings, each with a band capped below the nearest named wrong answer of either drawing.
+  var pq1=cfXAtPoly(s,n/4),pmed=cfXAtPoly(s,n/2),pq3=cfXAtPoly(s,n*3/4),pbelow=cfAtXPoly(s,s.benchVal);
+  var pbench=s.benchSide==='above'?n-pbelow:pbelow;
+  var alt={
+    q1:{expected:pq1,tolerance:capTol(xTol,pq1,[pmed,pq3,n/4,median,q3])},
+    median:{expected:pmed,tolerance:capTol(xTol,pmed,[pq1,pq3,n/2,q1,q3])},
+    q3:{expected:pq3,tolerance:capTol(xTol,pq3,[pq1,pmed,n*3/4,q1,median])},
+    iqr:{expected:pq3-pq1,tolerance:capTol(2*xTol,pq3-pq1,[n/2,span])},
+    bench:{expected:pbench,tolerance:capTol(0.025*n,pbench,[n-pbench,n-bench])}};
+  return{q1:q1,median:median,q3:q3,iqr:q3-q1,bench:bench,tol:tol,alt:alt,
     shown:{q1:r(q1),median:r(median),q3:r(q3),iqr:r(r(q3)-r(q1)),bench:Math.round(bench)}};
 }
 
@@ -888,7 +936,7 @@ function submitPhase1(){
   var aq=document.getElementById('activeQuestion');
   if(!MaffsLock.lock(aq))return;
 
-  if(Math.abs(val-q.expected)<=q.tolerance){
+  if(readingOk(val,q.expected,q.tolerance,q.alt)){
     sessionAnswers[q.key]=q.expected;window._ciQAnswered=(window._ciQAnswered||0)+1;
     mfg('question_answered',{game_slug:'chart-interrogator',level:selectedLevel,correct:true,question_index:currentQIndex+1});
     fb.textContent='Correct \u2014 '+(q.shown!==undefined?q.shown:q.expected)+(q.suffix||'');fb.className='q-feedback correct';
@@ -1015,7 +1063,7 @@ function cfParts(s,show){
   return[
     {lead:'The median '+ns.np+' '+ns.is+' approximately '+show(S.median)+'. The middle 50% of '+s.contextPlural+
       ' fall between '+show(S.q1)+' and '+show(S.q3)+' (an IQR of '+show(S.iqr)+').'},
-    {lead:s.benchmark+'. '+s.benchQuestion+' ',number:{expected:T.bench,tolerance:T.tol.bench,shown:S.bench}},
+    {lead:s.benchmark+'. '+s.benchQuestion+' ',number:{expected:T.bench,tolerance:T.tol.bench,alt:T.alt.bench,shown:S.bench}},
     {lead:'The IQR of '+show(withUnit(S.iqr,s.unit))+' compared with '+s.compLabel+' ('+withUnit(s.compIQR,s.unit)+
       ') shows this group is ',options:['more consistent','less consistent'],
      correct:T.iqr<s.compIQR?'more consistent':'less consistent'},
@@ -1028,7 +1076,7 @@ function buildCFScaffold(s){
   return cfParts(s,filled).map(function(c,i){
     if(c.options)return c.lead+dd('d'+i,c.options,c.correct)+'.';
     if(c.number)return c.lead+'<input type="number" id="num_'+i+'" data-expected="'+c.number.expected+
-      '" data-tolerance="'+c.number.tolerance+'" aria-label="Your answer" autocomplete="off">';
+      '" data-tolerance="'+c.number.tolerance+'" data-alt-expected="'+c.number.alt.expected+'" data-alt-tolerance="'+c.number.alt.tolerance+'" aria-label="Your answer" autocomplete="off">';
     return c.lead;
   }).join(' ');
 }
@@ -1124,7 +1172,8 @@ function submitPhase2(){
   // A typed answer in the scaffold (cumfreq's benchmark count) is marked on its tolerance
   inputs.forEach(function(inp){
     var v=parseFloat(inp.value);
-    if(!isNaN(v)&&Math.abs(v-parseFloat(inp.dataset.expected))<=parseFloat(inp.dataset.tolerance)){
+    var altOk=inp.dataset.altExpected!==undefined&&Math.abs(v-parseFloat(inp.dataset.altExpected))<=parseFloat(inp.dataset.altTolerance);
+    if(!isNaN(v)&&(Math.abs(v-parseFloat(inp.dataset.expected))<=parseFloat(inp.dataset.tolerance)||altOk)){
       inp.style.borderColor='var(--green)';inp.style.color='var(--green)';
     }else{
       inp.style.borderColor='var(--red)';inp.style.color='var(--red)';

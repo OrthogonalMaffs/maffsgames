@@ -55,7 +55,9 @@ findings:
   where: 'games/modular-battle/index.html:257-258 (dot-grid caption), :353 (goDetail)'
   summary: 'Singular nouns printed as plurals: "1 full groups" (22 of the 408 outcomes, quotient 1) and "1 correct answers" on the results screen'
   evidence: '`${a} dots in groups of ${b} — ${groups} full groups, and what is left over:`; `${Math.round(score/10)} correct answers`. The verifier asserts the caption text as written (SWEEP-1, batch 6)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R1: "1 full group", "1 correct answer"; the verifier covers both, with plants.'
 - id: modular-battle-s1-002
   severity: MEDIUM
   jc: true
@@ -64,4 +66,5 @@ findings:
   where: 'games/modular-battle/index.html (option builder), :173-178'
   summary: 'The wrong options are other remainders drawn at random, not named errors (SR-4); with b = 2 or 3 there are only 2 or 3 buttons. For Jon: whether a remainder drill is held to SR-4 (the code defends the small-b case at :173-178)'
   evidence: 'The options are the key and other remainders below b, chosen at random; none is tied to a slip such as giving the quotient or b - r (SWEEP-1, batch 6)'
-  status: open
+  status: ruled
+  ruling: 'Part 3 accepted with reason (Jon, 13 Oct): SR-4 fits multiple-choice items with authored distractors; a remainder drill draws its options from the other possible remainders, so they are not named errors by design of the game.'

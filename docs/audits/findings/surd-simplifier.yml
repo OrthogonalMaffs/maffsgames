@@ -78,4 +78,6 @@ findings:
   where: 'games/surd-simplifier/index.html:125 (HUD timer), :291-295, :301'
   summary: 'Timer policy lists Surd Simplifier under Hidden Count-Up, but the HUD shows a running "Time" and the time feeds the score; same shape as trig-identity-duel-t2-010 (SR-23 applies; a fix outside SWEEP-1''s checks, for Jon to schedule)'
   evidence: '<div class="hud-label">Time</div><div class="hud-val" id="timer">0s</div> (the CSS at :77 hides .timer, not #timer) (SWEEP-1, batch 6)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R7: the running Time is gone from the HUD. NOTE for Jon: the answer time still feeds the score, which the Hidden Count-Up policy says it should not; R7 covers the display only. The verifier fails a HUD Time, with a plant.'

@@ -233,7 +233,7 @@ def alevel_key(item):
         if len(sols) != 1:
             raise ValueError("%d solutions for a 'Find' question" % len(sols))
         return sols[0][0] if ask == "Find x" else sols[0][1]
-    if ask == "Find the values of x (sum)":
+    if ask == "Find the sum of the two values of x":
         return sp.simplify(sum(xs))
     m = re.match(r"Find the (positive|negative|non-zero|larger|smaller) ([xy]) value$", ask)
     if not m:
@@ -1087,6 +1087,28 @@ def s5_selftest(src, words):
     return fails
 
 
+def wording_fails(src, alevel):
+    """SWEEP-1 rulings (R1): the sum ask reads as a sentence; a Stage 2 end line does not say x is already on its own."""
+    out = []
+    if "is on its own:" in src or "is the only letter left:" not in src:   # s1-002: the other letter is eliminated, x is not yet isolated
+        out.append("simultaneous-solver-s1-002: the Stage 2 end line must say the letter is the only one left, not that it is 'on its own'")
+    if any(it["ask"] == "Find the values of x (sum)" for it in alevel):   # s1-001
+        out.append("simultaneous-solver-s1-001: the ask 'Find the values of x (sum)' is garbled; it wants 'the sum of the two values of x'")
+    return out
+
+
+def wording_selftest(src, alevel):
+    out = []
+    if wording_fails(src.replace("is the only letter left:", "is on its own:"), alevel) == []:
+        out.append("self-test: 'is on its own' back was not caught")
+    planted = [dict(it) for it in alevel]
+    planted[-1]["ask"] = "Find the values of x (sum)"
+    planted[0]["ask"] = "Find the values of x (sum)"
+    if wording_fails(src, planted) == []:
+        out.append("self-test: the garbled sum ask back was not caught")
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--static", action="store_true", help="the banks only, no browser")
@@ -1102,6 +1124,7 @@ def main():
     if gen.render(gen.build()) != open(PAGE, encoding="utf-8").read().split("/* GENERATED BANK START */\n", 1)[1].split("\n/* GENERATED BANK END */", 1)[0]:
         fails.append("the page's bank is not what scripts/gen-simultaneous.py generates (run it with --write)")
     src = open(PAGE, encoding="utf-8").read()
+    fails += wording_fails(src, alevel) + wording_selftest(src, alevel)
     words = read_words(src)
     fails += check_words(words, report)
     pairs = 0

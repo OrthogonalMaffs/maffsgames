@@ -60,7 +60,9 @@ findings:
   where: 'games/trig-worms/index.html:367, :417-421 (θ arc and glyph)'
   summary: 'Where the drawn adjacent side is shorter than the angle arc''s radius (70-85°, 155 of 1,204 outcomes) the θ arc and its glyph sit at the right-angle corner, not at θ''s vertex'
   evidence: '155 of the 1,204 servable outcomes, all at 70-85°, measured from the drawing code (SWEEP-1, batch 6)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R8: the theta arc is capped at 0.6 of the drawn adjacent side and its glyph sits outside the vertex when that side is short (never at the right-angle corner); the verifier measures the arc and glyph on all 1,204 outcomes, with a plant.'
 - id: trig-worms-s1-002
   severity: MEDIUM
   jc: false
@@ -79,4 +81,6 @@ findings:
   where: 'games/trig-worms/index.html:236 (exp)'
   summary: 'The working shows θ to 1 d.p. as x.5° and then rounds down to the nearest degree (the key is from the unrounded value)'
   evidence: 'exp: `… = ${round1(theta).toFixed(1)}° = ${correct} to the nearest degree`; 6 outcomes show a 1 d.p. value ending .5 beside a key rounded down (SWEEP-1, batch 6)'
-  status: open
+  status: fixed
+  pr: 371
+  ruling: 'R3: the working shows theta to as many decimal places as it takes to round to the same whole number as the key (37.46 shows as 37.46, not 37.5 beside 37); the verifier recomputes the shown value for all outcomes, with a plant.'

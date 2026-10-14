@@ -1081,7 +1081,10 @@ function refreshTrig(){
   tx.clearRect(0,0,198,118);
 
   const ox=18, oy=102;
-  const hw=cosV*145, hh=sinV*145;
+  // The hypotenuse is 145 px at most, shortened so the whole triangle stays on the 198 x 118 canvas (above about 45 degrees
+  // its apex was drawn off the top, trig-wars-s1-002)
+  const hyp=Math.min(145, (oy-10)/Math.max(sinV,0.01), (198-ox-16)/Math.max(cosV,0.01));
+  const hw=cosV*hyp, hh=sinV*hyp;
 
   // Grid
   tx.strokeStyle='rgba(77,255,42,0.06)'; tx.lineWidth=1;

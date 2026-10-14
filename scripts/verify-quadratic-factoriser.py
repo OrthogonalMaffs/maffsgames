@@ -137,6 +137,7 @@ async def fetch_pools(html=None, every=1):
     page_re = re.compile(r"/games/" + SLUG + r"/(\?[^/]*)?$")
 
     async def open_page(ctx):
+        await ctx.route(lambda u: bc.is_font_cdn(u), bc.serve_real_font_async)   # KaTeX from the pinned local copy
         if html is not None:
             await ctx.route(lambda u: bool(page_re.search(u)), lambda route: route.fulfill(
                 status=200, content_type="text/html; charset=utf-8", body=html))
@@ -314,6 +315,8 @@ def verify_guided(guided, n_pool, every=1):
             nums = [int(v) for v in re.findall(r"-?\d+", t)]
             if nums != [m, n, m * n, m, n, m + n]:
                 note(rec, "step 3 option %r does not show m x n and m + n correctly" % t)
+            if re.search(r"(?:\\times|\+) -", t):   # s1-004 (R1): a negative second number is bracketed
+                note(rec, "step 3 option %r writes a negative number straight after a sign" % t)
             if o["mis"]:
                 mt = re.findall(r"-?\d+", " ".join(o["mis"]["tex"]))
                 if m * n != c or [int(v) for v in mt[:1]] != [c] or str(a * c) not in mt:
@@ -325,10 +328,14 @@ def verify_guided(guided, n_pool, every=1):
                 note(rec, "the tutorial's step 3 states %r, not ac = %d and b = %d" % (lead, a * c, b))
         # Step 4: the split line equals the quadratic, and its middle terms are the accepted split.
         line = [t for p in steps[3]["prompts"] for t in p if "x^2" in t]
-        mid = re.match(r"^\d*x\^2 \+ (-?\d+)x \+ (-?\d+)x ", line[0]) if len(line) == 1 else None
+        mid = re.match(r"^\d*x\^2 ([+-]) (\d*)x ([+-]) (\d*)x ", line[0]) if len(line) == 1 else None
         if not mid:
             note(rec, "step 4's line %r is not read" % line); continue
-        m1, n1 = int(mid.group(1)), int(mid.group(2))
+        # s1-004, s1-007 (R1): a difference is written as one ("- 16x", never "+ -16x") and a coefficient of 1 is left out
+        if re.search(r"\+ -|(?<![\d])1x", line[0]):
+            note(rec, "step 4's line %r writes a negative term after a plus or a coefficient of 1" % line[0])
+        m1 = (-1 if mid.group(1) == "-" else 1) * (int(mid.group(2)) if mid.group(2) else 1)
+        n1 = (-1 if mid.group(3) == "-" else 1) * (int(mid.group(4)) if mid.group(4) else 1)
         if poly(line[0]) != Q:
             note(rec, "step 4's line %s does not equal the quadratic" % line[0])
         if acc3 and sorted([m1, n1]) != sorted(args_of(acc3["call"])):
@@ -649,8 +656,14 @@ PLANTS = [
      "if (pairsEqual([m, n], [split.m, split.n])) { hfStepCorrectAdvance(4); return; }",
      "if (pairsEqual([m, n], [split.m, split.n]) || m * n === currentQ.c) { hfStepCorrectAdvance(4); return; }"),
     ("step 4's line with the wrong constant",
-     "const line = `${a === 1 ? '' : a}x^2 + ${split.m}x + ${split.n}x ${c >= 0 ? '+' : '-'} ${Math.abs(c)}`;",
-     "const line = `${a === 1 ? '' : a}x^2 + ${split.m}x + ${split.n}x ${c >= 0 ? '+' : '-'} ${Math.abs(c) + 1}`;"),
+     "const line = `${a === 1 ? '' : a}x^2${hfLaterTerm(split.m, 'x')}${hfLaterTerm(split.n, 'x')}${hfLaterTerm(c, '')}`;",
+     "const line = `${a === 1 ? '' : a}x^2${hfLaterTerm(split.m, 'x')}${hfLaterTerm(split.n, 'x')}${hfLaterTerm(c + 1, '')}`;"),
+    ("s1-004: step 4 back to \"+ -16x\" and \"1x\"",
+     "function hfLaterTerm(coef, v) { return ` ${coef < 0 ? '-' : '+'} ${v && Math.abs(coef) === 1 ? '' : Math.abs(coef)}${v}`; }",
+     "function hfLaterTerm(coef, v) { return ` + ${coef}${v}`; }"),
+    ("s1-004: step 3's negative number unbracketed",
+     "${m} \\\\times ${n < 0 ? `(${n})` : n} = ${m * n},\\\\ \\\\ ${m} + ${n < 0 ? `(${n})` : n} = ${m + n}",
+     "${m} \\\\times ${n} = ${m * n},\\\\ \\\\ ${m} + ${n} = ${m + n}"),
     ("step 5's misconception with the wrong bracket",
      "const wrongR = -r, wrongS = -s;", "const wrongR = -r, wrongS = s;"),
     ("the Formula roots without the keypad (the decimal pad: no minus on iOS)",

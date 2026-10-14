@@ -206,7 +206,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     <p class="menu-info">
       Type the answer. Every fact you get right turns <strong>gold</strong> on your grid, both ways round:
       get 6 × 7 and 7 × 6 lights up too. Miss one and you will see how to work it out, then it comes back
-      a few questions later. The ×1 facts start gold; the other <strong>66</strong> are yours to earn.
+      a few questions later, if the session has time left. The ×1 facts start gold; the other <strong>66</strong> are yours to earn.
     </p>
 
     <div class="panel" id="gridPanel">
@@ -864,7 +864,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     $('keypad').parentNode.classList.add('fb-open');
     fb.innerHTML = '<div class="fb-wrong">' +
       '<div class="fb-fact">' + q.x + ' × ' + q.y + ' = ' + q.c + '</div>' +
-      '<div class="fb-said">✗ You said <b>' + given + '</b>. It comes back in a few questions.</div>' +
+      '<div class="fb-said">✗ You said <b>' + given + '</b>. It comes back if there is time.</div>' +
       '<div class="fb-hint"><span class="rule">' + h.rule + '</span>' + h.text + '</div>' +
       '</div>' +
       '<div class="array-wrap"><div class="array-label">' + q.x + (q.x === 1 ? ' row' : ' rows') + ' of ' + q.y + '</div>' +

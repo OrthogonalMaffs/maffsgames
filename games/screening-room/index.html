@@ -322,7 +322,7 @@ body.accessible{background-color:#12141f !important}
         <div class="icon-grid" id="iconGrid"></div>
         <div class="icon-legend" id="iconLegend">
           <div class="icon-legend-item"><div class="legend-dot" style="background:var(--icon-grey)"></div>No condition, not flagged</div>
-          <div class="icon-legend-item"><div class="legend-dot" style="background:var(--icon-condition)"></div><span id="legendCondLabel">Has condition</span></div>
+          <div class="icon-legend-item"><div class="legend-dot" style="background:var(--icon-condition)"></div><span id="legendCondLabel">Has the condition, not flagged</span></div>
           <div class="icon-legend-item"><div class="legend-dot" style="background:var(--icon-tp)"></div>True positive &#x2713;</div>
           <div class="icon-legend-item"><div class="legend-dot" style="background:var(--icon-fp)"></div>False positive &#x2717;</div>
         </div>
@@ -429,7 +429,7 @@ alevel: [
 {id:"alevel_15",context:"Abdominal aortic aneurysm screening",label:"Has AAA",N:12500,base:SOURCES.aaaPrevalence.value,tests:[[0.95,0.99]],scenario:"The NHS screens men aged 65 for AAA. About {base} have an aneurysm. Ultrasound has {sens} sensitivity and {spec} specificity. Consider {N} men.",explanation:"{pos} men have positive scans. {tp} actually have AAA. (Figures: NHS AAA screening programme reports.)",textNumbers:[65],sym:"A"},
 {id:"alevel_16",context:"Sequential evidence \u2014 medical diagnosis",label:"Has condition (after two tests)",N:10000,base:0.02,tests:[[0.9,0.85],[0.95,0.9]],scenario:"A patient has a {base} prior probability of a condition. Test A is positive (sensitivity {sens}, specificity {spec}). Test B is also positive (sensitivity {sens2}, specificity {spec2}). Assume the two tests' errors are independent. Consider {N} patients.",explanation:"After Test A, {pos1} patients test positive ({tp1} true, {fp1} false). After Test B, {tp} true and {fp} false positives remain: {pos} in all. Two moderately accurate tests raise the probability from {base} to {P}.",sym:"C"},
 {id:"alevel_17",context:"Meningitis rapid test",label:"Has bacterial meningitis",N:2000,base:0.15,tests:[[0.95,0.8]],scenario:"A rapid test for bacterial meningitis in A&E has {sens} sensitivity and {spec} specificity. Among symptomatic patients, {base} have bacterial meningitis. Consider {N} patients.",explanation:"{pos} patients test positive. {tp} have meningitis. But the {fn} missed cases are why doctors treat all symptomatic patients with antibiotics while awaiting confirmation.",sym:"M"},
-{id:"alevel_18",context:"Sensitivity/specificity trade-off \u2014 diabetes",label:"Has diabetes (lower threshold)",N:10000,base:0.08,tests:[[0.95,0.75]],scenario:"A diabetes blood glucose test. Lower threshold: sensitivity {sens}, specificity {spec}. Diabetes prevalence {base}. Consider {N} people.",explanation:"With the lower threshold, {pos} people test positive and {tp} have diabetes. A higher threshold flags fewer people without diabetes, so more of its positives are real, but it misses more cases.",sym:"D"},
+{id:"alevel_18",context:"Sensitivity/specificity trade-off \u2014 diabetes",label:"Has diabetes (lower threshold)",N:10000,base:0.08,tests:[[0.95,0.75]],scenario:"A diabetes blood glucose test. Lower threshold: sensitivity {sens}, specificity {spec}. Diabetes prevalence {base}. Consider {N} people.",explanation:"With the lower threshold, {pos} people test positive and {tp} have diabetes. A higher threshold flags fewer people without diabetes, so a larger share of its positives are real, but it misses more cases.",sym:"D"},
 {id:"alevel_19",context:"Vaccine side effect monitoring",label:"Genuine side effect",N:10000000,base:2e-05,tests:[[0.7,0.995]],scenario:"A vaccine has a true serious side effect rate of {baseOneIn}. The monitoring system identifies {sens} of genuine side effects. But {fpr} of people report coincidental symptoms. Consider {N} vaccinated people.",explanation:"{pos} reports received. Only {tp} are genuine vaccine side effects.",sym:"S"},
 {id:"alevel_20",context:"Cystic fibrosis carrier testing",label:"Is CF carrier",N:10000,base:0.04,tests:[[0.9,0.99]],scenario:"About {baseOneIn} people ({base}) of European descent are CF carriers. A carrier test has {sens} sensitivity and {spec} specificity. Consider {N} people.",explanation:"{pos} people test as carriers. {tp} genuinely are.",sym:"C"}
 ],
@@ -447,7 +447,7 @@ core: [
 {id:"core_11",context:"Earthquake early warning system",label:"Damaging earthquake",N:10000,base:0.005,tests:[[0.96,0.98]],scenario:"An earthquake early warning system monitors {N} seismic events per year. Only {c} ({base}) are genuine damaging earthquakes. The system correctly alerts for {sens}, but triggers false alarms for {fpr} of non-damaging events.",explanation:"{pos} alerts per year. Only {tp} are for real earthquakes."},
 {id:"core_12",context:"Counterfeit banknote detector",label:"Counterfeit",unit:"notes",N:400000,base:0.0005,tests:[[0.9,0.995]],scenario:"A cash centre's UV banknote checkers process {N} notes a week. About {c} notes ({base}) are counterfeit. The checkers correctly identify {sens} of fakes, but falsely reject {fpr} of genuine notes.",explanation:"{pos} notes are rejected. Only {tp} are actually fake."},
 {id:"core_13",context:"Home carbon monoxide alarm",label:"Genuine CO leak",N:20,base:0.05,tests:[[1.0,0.0]],scenario:"Over a 5-year period, a CO alarm activates {N} times. Only {c} event is a genuine CO leak ({base}). The alarm detects every real CO event but triggers false alarms from steam, cooking, and battery issues.",explanation:"Every activation is a positive. Only {tp} in {pos} is real.",textNumbers:[5]},
-{id:"core_14",context:"Clearing admission \u2014 predicted grades as a 'test'",label:"Actually fails first year",N:2000,base:0.25,tests:[[0.8,0.35]],scenario:"{N} students enter university through Clearing. Predicted grades suggested about {posPct} would struggle. In reality, {base} actually fail. The prediction correctly identified {sens} who would fail, but wrongly predicted failure for {fpr} who actually passed.",explanation:"{pos} students were predicted to struggle. Only {tp} actually failed."},
+{id:"core_14",context:"Clearing admission \u2014 predicted grades as a 'test'",label:"Actually fails first year",N:2000,base:0.25,tests:[[0.8,0.35]],scenario:"{N} students enter university through Clearing. Predicted grades suggested about {posPct} would fail. In reality, {base} actually fail. The prediction correctly identified {sens} who would fail, but wrongly predicted failure for {fpr} who actually passed.",explanation:"{pos} students were predicted to fail. Only {tp} actually failed."},
 {id:"core_15",context:"Smoke detector low-battery warning",label:"Battery genuinely low",N:50,base:0.1,tests:[[1.0,0.0]],scenario:"A smoke detector chirps {N} times over 2 years. On {c} occasions ({base}), the battery was genuinely low. The other {nc} times were caused by temperature changes, humidity, or insects.",explanation:"Every chirp is a 'positive'. Only {tp} in {pos} means a low battery.",textNumbers:[2]}
 ],
 level4: [
@@ -739,7 +739,8 @@ function showPhase2() {
   var q = currentQ;
   document.getElementById('qContext2').textContent = q.context;
   document.getElementById('qScenario2').textContent = q.scenarioText;
-  document.getElementById('legendCondLabel').textContent = q.condition.label;
+  // blue marks only the cases the test missed (the flagged ones are green), so the legend says so (screening-room-s1-005)
+  document.getElementById('legendCondLabel').textContent = q.condition.label + ', not flagged';
 
   var grid = document.getElementById('iconGrid');
   grid.innerHTML = '';
@@ -893,7 +894,7 @@ function showPhase2() {
 // ─── PHASE 3: CALCULATE ───
 function showPhase3() {
   var q = currentQ;
-  document.getElementById('calcPrompt').innerHTML = 'Of the <strong>' + numFmt(q.testPositive.total) + '</strong> positive results, how many are real? Calculate ' + kRender('P(\\text{condition} \\mid \\text{positive})') + '.';
+  document.getElementById('calcPrompt').innerHTML = 'Of the <strong>' + numFmt(q.testPositive.total) + '</strong> positive results, what percentage are real? Calculate ' + kRender('P(\\text{condition} \\mid \\text{positive})') + '.';
   // Jon, 13 Oct 2026 (screening-room-s1-001): the box is a percentage, its % shown beside it, and what is typed is
   // read as a percentage.
   var ex = [null, '12.5', '1.25', '0.125'][q.dp];
@@ -1075,7 +1076,7 @@ var endGame = MaffsLock.finishOnce(function () {
   insight.innerHTML = 'In this session, you saw <strong>8</strong> screening scenarios. ' +
     'On average, you estimated the chance that a positive result was real at <strong>' + avgEstimated + '%</strong> ' +
     'but the actual average was <strong>' + avgActual + '%</strong>. ' +
-    '<strong>The base rate matters more than test accuracy.</strong>';
+    '<strong>Even an accurate test gives mostly false positives when the condition is rare.</strong>';
 
   // Personal best check
   var pbKey = 'mfg_pb_screening-room_' + currentLevel;
