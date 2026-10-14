@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: better-value`
+`cloud-remaining: `
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -54,6 +54,8 @@ main's last full run is red; watch main's run after merging.
   - gcse_005 key "Larry is wrong — expected value ≠ guaranteed. P(at least one 6 in 6 rolls) = 1 − (5/6)⁶ ≈ 0.665, not 1" -> "Larry is wrong — the chance is about 0.665"; distractor "Larry is wrong — P(6) increases with each failed roll" -> "Larry is wrong — the chance rises after each miss".
   - core_012 key (61 words of working) -> "Lenny is wrong — it's £364.20 a month, £13,111.19 in total"; distractors keep their figure and method: "Lenny is wrong — it's £397 a month, compound interest on the whole £12,000".
 - **Distractors replaced, not reworded (for Jon):** gcse_011 (both games) "area = π × d = 10π" gave the same 31.42 as "area = π × 10 = 31.42cm²"; now "it's 157.08cm²" (the diameter used, then halved). ks3_017 (both games): every option says "in standard form it's …", so 0.34 × 10⁷ is false as written (terrible-advice-s1-002's rule). spot-the-muppet core_008 "pre-VAT = £120 × 0.80 = £96" gave the muppet's own £96 a second time beside "Roxanne is correct — it's £96"; now "Roxanne is wrong — it's £140" (adding £20, not 20%). gcse_003 and gcse_020 (the muppet is right) keep a claim, not a figure, in one distractor each ("subtracting is not allowed", "she should have added").
+
+- **Option parity (SR-34), better-value:** 81% / 0% -> 20% / 0% (PR open). Distractors lengthened into full parallel sentences (each still false, same error); eight keys that carried working or an extra clause shortened (core_031, 033, 037, 041, 044, 047, 048, 050), their figures already in the explanation; verifier REVIEW moves core_031's totals and core_037's ROIs to ALSO, and a MUST_SAY keeps core_037's key naming standard as the higher ROI (r-004). **Examples (my drafting under SR-34; Jon may overrule):** gcse_011 distractor "The website is cheaper at £25" -> "The website is cheaper — £25 vs £27 for the shop, with free delivery". core_050 key (168 characters of working) -> "Meal prep saves £35 in direct costs, but the 45 minutes a week could earn more than that". core_024 distractor "After 50 coffees the machine becomes better value" -> "After 50 coffees the machine becomes better value — break-even at 50 cups". **For Jon (existing, not made by SR-34): bv_core_019's distractor "Contract B pays more in total — £18,000 vs £11,520" is true as written** (A over 12 weeks is £320 × 3 × 12 = £11,520); the key is about the daily rate. Left unchanged: rewording it changes what it means.
 
 ## 2026-10-13 (cloud): SWEEP-1-RULINGS (finished 14 Oct; full entry in `docs/history/handover-cloud-archive.md`)
 
