@@ -234,6 +234,8 @@ PINS = [
     ('The Collatz Conjecture', [
         L('Try 7: 7 → 22 → 11 → 34 → 17 → 52 → 26 → 13 → 40 → 20 → 10 → 5 → 16 → 8 → 4 → 2 → 1',
           lambda: collatz(7) == [7, 22, 11, 34, 17, 52, 26, 13, 40, 20, 10, 5, 16, 8, 4, 2, 1]),
+        L('Every number anyone has ever tried reaches 1 — but nobody has proved they all do', None,
+          'J. C. Lagarias (1985), The 3x+1 problem and its generalizations, Amer. Math. Monthly 92(1): the conjecture is open'),
         P('checked every number up to more than 10(' + SUPRX + ')', lambda e: 2 ** 68 > 10 ** int(e.translate(SUP)),
           'D. Barina, J. Supercomputing 2021: verified to 2^68 = 2.95e20'),
         L('Paul Erdős is reported to have said: "Mathematics is not yet ready for such problems."', None,
@@ -374,6 +376,8 @@ PINS = [
           WIKI + 'Basel_problem (announced to the St Petersburg Academy 5 Dec 1735; Euler born 15 Apr 1707, so 28)'),
     ]),
     ('Barcodes Use Modular Arithmetic', [
+        L('Every barcode on a shop product has a check digit', None,
+          'GS1 General Specifications: the GTIN (EAN/UPC) check digit is mandatory; Code 39 and some industrial symbologies make it optional'),
         L('ISBN-13 uses mod 10: multiply digits alternately by 1 and 3', lambda: isbn13_ok('9780306406157') and not isbn13_ok('9780306406158')),
         L('Credit cards use the Luhn algorithm', lambda: luhn_ok('4539578763621486') and not luhn_ok('4539578763621487')),
         L('NHS numbers have a check digit too', None, 'NHS number: ten digits, the tenth a modulus-11 check digit (England NHS Data Dictionary)'),
@@ -398,6 +402,7 @@ PINS = [
         L('exactly 2^(1/12)', lambda: abs((2 ** (1 / 12)) ** 12 - 2) < 1e-12),
     ]),
     ('Matrices Run Your Phone', [
+        L('3D games, computer graphics and GPS all run on matrices', None, 'pinned wording: the hook claims the three, not "every" instance (no external source)'),
         L('A 4×4 matrix can translate, rotate, and project 3D objects', None, 'homogeneous coordinates: a 3D translation needs a 4x4 matrix'),
     ]),
     ('The Number e Is Everywhere', [
