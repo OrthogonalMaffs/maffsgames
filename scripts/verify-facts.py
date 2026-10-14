@@ -290,6 +290,8 @@ PINS = [
         P('([0-9]+) games, 2 outcomes each: 2(' + SUPRX + ') ≈ ([0-9.]+) × 10(' + SUPRX + ') possible brackets',
           lambda g, e, m, x: int(g) == 63 and int(e.translate(SUP)) == 63 and near(sci(m, x), 2 ** 63, 0.01)),
         L('about 1 in 9.2 quintillion', lambda: near(2 ** 63, 9.2e18, 0.01)),
+        L('If every match were a coin flip', lambda: near(2 ** 63, 9.2e18, 0.01),
+          'the figure is 2^63 only if each of the 63 games is a fair coin flip'),
         L('In 2014, a $1 billion prize for a perfect bracket was insured by Warren Buffett', None,
           '2014 Quicken Loans Billion Dollar Bracket, underwritten by Berkshire Hathaway (' + WIKI + 'March_Madness_(NCAA_basketball_tournaments))'),
         L('roughly 1 in 120 billion', None, 'NCAA / CBS Sports: 1 in 120.2 billion at 66.7% pick accuracy (cbssports.com 2023-ncaa-tournament-the-odds-of-filling-out-a-perfect-bracket-are-1-in-120-2-billion)'),
@@ -326,6 +328,11 @@ PINS = [
     ]),
     ('The Seven Bridges of Königsberg', [
         L('In 1736, Euler proved', None, 'Euler, "Solutio problematis ad geometriam situs pertinentis", 1736'),
+        L('as they stood then', None, 'the 1736 bridges; the present layout differs (Wikipedia, Seven Bridges of Königsberg)'),
+        L("Today's layout allows a walk crossing each bridge exactly once, though not one that finishes where it began",
+          lambda: sum((2, 2, 3, 3)) == 2 * 5 and sum(d % 2 for d in (2, 2, 3, 3)) == 2,
+          WIKI + 'Seven_Bridges_of_K%C3%B6nigsberg (five bridges remain at the original sites; two nodes of degree 2 and two of degree 3: '
+          'two odd nodes, so an Eulerian path exists and an Eulerian circuit does not)'),
         L('Königsberg had four odd nodes', lambda: sorted(d % 2 for d in (3, 3, 3, 5)) == [1, 1, 1, 1] and sum((3, 3, 3, 5)) == 2 * 7,
           'degrees 3,3,3,5 over seven bridges'),
         L('zero or two nodes have an odd number of edges', None, 'Euler\'s theorem'),
@@ -333,6 +340,8 @@ PINS = [
     ("Why You Can't Trisect an Angle", [
         L('proved in 1837', None, WIKI + 'Angle_trisection (Wantzel, 1837)'),
         L('Pierre Wantzel proved', None, WIKI + 'Angle_trisection'),
+        L('trisecting a general angle with just a compass and straightedge is impossible', None,
+          WIKI + 'Angle_trisection (Wantzel, 1837: impossible for an arbitrary angle with compass and straightedge; some angles, e.g. 90 degrees, can be)'),
         P('trisecting ([0-9]+)° requires constructing cos ([0-9]+)°, a solution of the cubic ([0-9]+)x³ − ([0-9]+)x − ([0-9]+) = 0',
           lambda a, t, c3, c1, c0: int(a) == 60 and int(t) * 3 == int(a) and
           abs(int(c3) * math.cos(math.radians(int(t))) ** 3 - int(c1) * math.cos(math.radians(int(t))) - int(c0)) < 1e-12 and
@@ -403,6 +412,8 @@ PINS = [
     ]),
     ('Matrices Run Your Phone', [
         L('3D games, computer graphics and GPS all run on matrices', None, 'pinned wording: the hook claims the three, not "every" instance (no external source)'),
+        L('this is how a 3D game works out where every object appears on screen', None,
+          'matrices place and project geometry; pixel colour comes from shading, which the fact no longer claims'),
         L('A 4×4 matrix can translate, rotate, and project 3D objects', None, 'homogeneous coordinates: a 3D translation needs a 4x4 matrix'),
     ]),
     ('The Number e Is Everywhere', [
