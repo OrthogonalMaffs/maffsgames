@@ -133,7 +133,8 @@ REVIEW = dict([
     r('bv_core_037', [1120 - 260, 800 - 180], [860 - 620, F(800 - 180, 180) * 100, F(1120 - 260, 260) * 100],
       'Premium flyers give more net profit', 'gt'),
     r('bv_core_038', [F(1200, 195), F(450, 68)], [25 * 195, 25 * 68], 'Cavity wall insulation has the shorter payback', 'lt'),
-    r('bv_core_039', [8], [12 * 45, 75 + 12 * 35, F(75, 45 - 35), 12 * (45 - 35), 12 * 35], 'rolling gym is better value from month 8'),
+    # BV-CORE-039 (14 Oct 2026): the 12-month contract commits £540 however soon you stop, so the rolling gym is cheaper every month
+    r('bv_core_039', [75 + 12 * 35, 12 * 45], [75 + 35, 12 * (45 - 35)], 'rolling gym is better value whichever month you stop', 'lt'),
     r('bv_core_040', [250 * 55, 250 * 48 + 250 * 5 + 50 * 20], [5 * 50, 250 * 48, 250 * 5, 50 * 20, 500],
       'Nursery A is better value', 'lt'),
     r('bv_core_041', [36 * 350 + 3 * 900, 12000 + 3 * 800 + 3 * 1200], [3 * 800, 3 * 1200, 36 * 350, 3 * 900, 2700],

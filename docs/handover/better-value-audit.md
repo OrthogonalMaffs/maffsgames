@@ -6,7 +6,7 @@ Report only; nothing in `games/` or `scripts/` changes. Contract BETTER-VALUE ME
 
 **How to read an item.** "Measure" is what the key actually relies on. "Criterion" is a proposed plain-words sentence for the scenario: it says what the person wants, without naming the calculation, so the student still has to choose the measure. Each conclusion is then TRUE, FALSE or JUDGEMENT *under that measure*, with the arithmetic. JUDGEMENT means the claim cannot be settled from the numbers the item gives. A conclusion marked TRUE that is not the key is a finding.
 
-**No key is outright wrong** (the contract's STOP IF): every key is true as written. Six items are not value-for-money comparisons (the other STOP IF), reported and audited with the rest: core_019 and gcse_016 (pay rate), core_046 (disposable income), core_021 (a charity's average donation), core_022 (fuel economy) and core_023 (a builder's hourly rate, with no question asked). Each still compares one measure, so the declared-measure design fits them.
+**One key was wrong: core_039** (corrected by contract BV-CORE-039, 14 Oct 2026). Its "from month 8" treated the no-joining-fee gym as month to month; under the stated 12-month contract (£540 however soon you stop) the rolling gym (at most £495) is cheaper every month. This audit first called it true as written but misleading; Jon ruled it a wrong key. Every other key is true as written. Six items are not value-for-money comparisons (the other STOP IF), reported and audited with the rest: core_019 and gcse_016 (pay rate), core_046 (disposable income), core_021 (a charity's average donation), core_022 (fuel economy) and core_023 (a builder's hourly rate, with no question asked). Each still compares one measure, so the declared-measure design fits them.
 
 ## Findings in brief
 
@@ -606,7 +606,7 @@ Report only; nothing in `games/` or `scripts/` changes. Contract BETTER-VALUE ME
 | C3 | They cost the same over 12 months | wrong | FALSE | £540 vs £495. |
 | C4 | The no-joining-fee gym is always cheaper, whichever month you stop going | wrong | FALSE | The no-fee gym costs £540 whenever you stop; rolling at most £495. |
 
-**Flags:** **Key, explanation and measure disagree.** The break-even (£75 ÷ £10 = 7.5 months) treats the no-fee gym as month-to-month, but the scenario and the explanation make it a 12-month contract. Not outright wrong: the key is true as written but misleading.
+**Flags:** **Key, explanation and measure disagree.** The break-even (£75 ÷ £10 = 7.5 months) treats the no-fee gym as month-to-month, but the scenario and the explanation make it a 12-month contract. Jon ruled this a wrong key (14 Oct); corrected by BV-CORE-039 to "whichever month you stop — at most £495 vs £540".
 
 ### bv_core_040 · core · direct
 
