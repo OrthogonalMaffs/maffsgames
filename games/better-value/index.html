@@ -491,12 +491,12 @@ scenario:'A freelancer is offered two contracts. Contract A: \u00a3320 per day, 
 optionA:{label:'Contract A',details:[{key:'Day rate',value:'\u00a3320'},{key:'Days/week',value:'3'}]},
 optionB:{label:'Contract B',details:[{key:'Total fee',value:'\u00a318,000'},{key:'Duration',value:'12 weeks \u00d7 5 days'}]},
 conclusions:[
-{text:'Contract B pays more in total \u2014 \u00a318,000 vs \u00a311,520',correct:false},
-{text:'Contract A pays better \u2014 \u00a3320/day vs \u00a3300/day for Contract B',correct:true},
+{text:'Contract B has the better day rate \u2014 \u00a318,000 \u00f7 12 = \u00a31,500/day',correct:false},
+{text:'Contract A has the better day rate \u2014 \u00a3320/day vs \u00a3300/day for Contract B',correct:true},
 {text:'They pay the same daily rate',correct:false},
-{text:'Contract B is better because it guarantees full-time work for 12 weeks',correct:false}
+{text:'Contract B has the better day rate \u2014 \u00a318,000 \u00f7 36 = \u00a3500/day',correct:false}
 ],
-explanation:'Contract A: \u00a3320/day. Contract B: \u00a318,000 \u00f7 (12 \u00d7 5) = \u00a318,000 \u00f7 60 = \u00a3300/day. Contract A pays \u00a320/day more.'},
+explanation:'Contract A: \u00a3320/day. Contract B: \u00a318,000 \u00f7 (12 \u00d7 5) = \u00a318,000 \u00f7 60 = \u00a3300/day. Contract A pays \u00a320/day more. Contract B does pay more in total (\u00a318,000 vs \u00a311,520 over 12 weeks), but only because it is 60 days of work against 36. The day rate tells you which pays better for your time.'},
 
 {id:'bv_core_020',level:'core',type:'rate',
 scenario:'Two juice cartons: Brand A is 750ml for \u00a31.89. Brand B is 1.25 litres for \u00a32.99.',
