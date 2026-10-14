@@ -53,17 +53,20 @@ OPTIONAL = {'pr', 'ruling'}
 
 # Exit bar point 3 (canon §0.2): shared checks green site-wide. Set each True in the PR that makes it so.
 SHARED_CHECKS_GREEN = {
-    'answer lock': False,    # still open 13 Oct 2026: glorious-gantt on NOT_YET, characteristic-quest on SCREEN_NOT_YET (check-answer-lock.py)
+    'answer lock': False,    # open 14 Oct 2026 on characteristic-quest alone (SCREEN_NOT_YET in check-answer-lock.py); glorious-gantt is excluded from point 3 (GATE_EXCLUDED)
     'level resolver': True,    # MaffsLevel in every game; NOT_YET empty in scripts/check-levels.py (LEVEL-RESOLVER, 13 Oct 2026)
-    'SR-14 fields': False,    # scripts/check-content-safety.py runs in CI site-wide; False until Jon rules on its 5 KNOWN hits (3 portal weekly facts)
+    'SR-14 fields': True,    # scripts/check-content-safety.py runs in CI site-wide with KNOWN empty: the 3 portal weekly facts were rewritten (FACTS-AND-NOTICE, 14 Oct 2026)
     'B11 parser': True,    # data/check-ledger.json holds no B11 entry for any game (B11-CLEAR, #331; LISTINGS-AND-GATE, 13 Oct 2026)
 }
-# Games left out of exit-bar points 1, 2 and 5 by Jon's named ruling: slug -> reason. Deliberately by name, not a general
+# Games left out of exit-bar points 1, 2, 3 and 5 by Jon's named ruling: slug -> reason. Deliberately by name, not a general
 # "unlisted games don't count" rule (canon §0.2). A slug that leaves the roster's Unlisted section fails validation, so
 # the exclusion ends when the game is relisted.
-GATE_EXCLUDED = {'glorious-gantt': "Jon, 12 Oct 2026: excluded from points 1, 2 and 5 while unlisted (canon §0.2)"}
+GATE_EXCLUDED = {'glorious-gantt': "Jon, 12 Oct 2026 (1, 2, 5) and 13 Oct 2026 (3): excluded while unlisted"}
 # Exit bar point 6: one sweep of the already-verified games for true wrong options and unstated conventions.
 SWEEP_DONE = False
+
+# Marker of the "we're correcting this game" banner: required on games unlisted for faults, forbidden on listed ones.
+NOTICE_MARKER = '<!-- maffs-correction-notice -->'
 
 # Roster-Unlisted games that no audit unlisted, so they need no register file: slug -> why.
 UNLISTED_NOT_BY_AUDIT = {'just-pythag-it-bruv': 'new, unlisted until Jon has played and approved it (todo START)'}
@@ -180,6 +183,17 @@ def validate(files, games, unlisted, root):
         if slug not in unlisted:
             errors.append('%s is in GATE_EXCLUDED (%s) but is no longer in the roster\'s Unlisted section: '
                           'the exclusion ends when the game is relisted; remove it from GATE_EXCLUDED' % (slug, why))
+    # The correction notice (FACTS-AND-NOTICE, 14 Oct 2026): every game unlisted for faults carries the marker on
+    # its page, and no other game does, so the notice goes when the game is relisted.
+    for slug in games:
+        page = os.path.join(root, 'games', slug, 'index.html')
+        if not os.path.isfile(page):
+            continue
+        carries = NOTICE_MARKER in read(root, os.path.join('games', slug, 'index.html'))
+        if slug in unlisted and slug not in UNLISTED_NOT_BY_AUDIT and not carries:
+            errors.append('%s is unlisted for faults but its page lacks %s: add the correction notice' % (slug, NOTICE_MARKER))
+        if slug not in unlisted and carries:
+            errors.append('%s is listed but its page carries %s: remove the correction notice' % (slug, NOTICE_MARKER))
     have = {os.path.basename(rel)[:-4] for rel, _ in files}
     for slug in unlisted:
         if slug not in have and slug not in UNLISTED_NOT_BY_AUDIT:
@@ -336,7 +350,7 @@ def render(files, games, unlisted, root):
     L.append('')
     L.append('**5. Unlisted (%d):** %s' % (len(gate_unlisted), ', '.join('`%s`' % s for s in gate_unlisted) or 'none'))
     L.append('')
-    L.append('**Excluded from points 1, 2 and 5 (%d):** %s' % (len(GATE_EXCLUDED), '; '.join('`%s`: %s' % kv for kv in GATE_EXCLUDED.items()) or 'none'))
+    L.append('**Excluded from points 1, 2, 3 and 5 (%d):** %s' % (len(GATE_EXCLUDED), '; '.join('`%s`: %s' % kv for kv in GATE_EXCLUDED.items()) or 'none'))
     L.append('')
     return '\n'.join(L)
 
@@ -400,6 +414,25 @@ def selftest(root):
         print('  self-test %-34s %s' % ('a relisted excluded game', 'caught' if caught else '*** MISSED ***'))
         ok = ok and caught
         open(rp, 'w', encoding='utf-8', newline='').write(rsrc)
+        # 4. the correction notice: missing from an unlisted game, and carried by a listed one
+        gp = os.path.join(tmp, 'games', 'glorious-gantt', 'index.html')
+        gsrc = open(gp, encoding='utf-8', newline='').read()
+        open(gp, 'w', encoding='utf-8', newline='').write(gsrc.replace(NOTICE_MARKER, ''))
+        errs, _ = run(tmp)
+        caught = any('lacks' in e and NOTICE_MARKER in e for e in errs)
+        print('  self-test %-34s %s' % ('an unlisted game with no notice', 'caught' if caught else '*** MISSED ***'))
+        ok = ok and caught
+        open(gp, 'w', encoding='utf-8', newline='').write(gsrc)
+        r_games, r_unlisted = roster(tmp)
+        other = next(g for g in sorted(r_games) if g not in r_unlisted and os.path.isfile(os.path.join(tmp, 'games', g, 'index.html')))
+        op = os.path.join(tmp, 'games', other, 'index.html')
+        osrc = open(op, encoding='utf-8', newline='').read()
+        open(op, 'w', encoding='utf-8', newline='').write(osrc.replace('</body>', NOTICE_MARKER + '</body>', 1))
+        errs, _ = run(tmp)
+        caught = any('is listed but its page carries' in e for e in errs)
+        print('  self-test %-34s %s' % ('a listed game carrying the notice', 'caught' if caught else '*** MISSED ***'))
+        ok = ok and caught
+        open(op, 'w', encoding='utf-8', newline='').write(osrc)
     return ok
 
 
