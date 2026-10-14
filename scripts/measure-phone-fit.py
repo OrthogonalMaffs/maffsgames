@@ -415,7 +415,7 @@ def write_report(results, path, elapsed, aa=False):
         cells = (["`%s`" % slug, st] + [cell(r["ask"]) for r in rows]
                  + [cell(r["wrong"]) for r in rows] + [side, detail.replace("|", "/")])
         lines.append("| " + " | ".join(cells) + " |")
-    with open(path, "w", encoding="utf-8") as fh:
+    with open(path, "w", encoding="utf-8", newline='') as fh:
         fh.write("\n".join(lines) + "\n")
     return games
 

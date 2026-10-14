@@ -954,7 +954,7 @@ def inject(path):
         out.append(txt[i:j] + "variants: " + body)
         i = end + 1
         filled += 1
-    path.write_text("".join(out), encoding="utf-8")
+    path.write_text("".join(out), encoding="utf-8", newline='')
     return filled
 
 
@@ -963,7 +963,7 @@ for rj in sorted(ROOMS.glob("*/room.js")):
     print(f"   injected {n} libraries into {rj.parent.name}/room.js")
 
 # ---------------------------------------------------------------- report
-OUT.write_text(json.dumps(V, indent=1), encoding="utf-8")
+OUT.write_text(json.dumps(V, indent=1), encoding="utf-8", newline='')
 total = 0
 for k, v in V.items():
     total += len(v)

@@ -319,7 +319,7 @@ def main():
                 r["loads_katex"] = "katex.min.js" in html
                 r["loads_mathtext"] = "mathtext.js" in html
                 out.append(r)
-    json.dump(out, open(os.path.join(WORK, "wrappers.json"), "w"), indent=1)
+    json.dump(out, open(os.path.join(WORK, "wrappers.json"), "w", newline=''), indent=1)
     for r in out:
         if r.get("parse_error"):
             print(r["file"], "PARSE ERROR"); continue

@@ -167,7 +167,7 @@ def selftest():
                 print('self-test %-34s *** CANNOT PLANT: %r not in %s ***' % (name, old, rel))
                 ok = False
                 return
-            target.write_text(text.replace(old, new, 1), encoding='utf-8')
+            target.write_text(text.replace(old, new, 1), encoding='utf-8', newline='')
             got = part(root)
         print('self-test %-34s %s' % (name, ('caught: ' + got[0][:110]) if got else '*** MISSED ***'))
         ok = ok and bool(got)

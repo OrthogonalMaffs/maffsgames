@@ -742,7 +742,7 @@ def selftest():
                 if new == src:
                     bad.append(name + ' (the plant changed nothing)'); continue
                 src = new
-            page.write_text(src, encoding='utf-8')
+            page.write_text(src, encoding='utf-8', newline='')
             fails, _, _ = check(page, only=set(only))
             # the two CI parts together must fail exactly when the whole run does
             parted = [f for i in (1, 2) for f in check(page, only=set(only), part=(i, 2))[0]]
@@ -768,7 +768,7 @@ def selftest():
                 if new == src:
                     bad.append(name + ' (the plant changed nothing)'); continue
                 src = new
-            page.write_text(src, encoding='utf-8')
+            page.write_text(src, encoding='utf-8', newline='')
             fails = tile_order_fails(page)
         finally:
             shutil.rmtree(d, ignore_errors=True)

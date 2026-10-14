@@ -409,7 +409,7 @@ def main():
     for s in selected:
         print("  %s%s" % (s, "" if run_all else "  <- " + ", ".join(picked[s][:3])))
     if a.github_output:
-        with open(a.github_output, "a", encoding="utf-8") as f:
+        with open(a.github_output, "a", encoding="utf-8", newline='') as f:
             f.write("run_all=%s\n" % ("true" if run_all else "false"))
             f.write("selected=%s\n" % json.dumps(selected))
     return 0

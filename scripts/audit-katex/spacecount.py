@@ -75,7 +75,7 @@ def main():
         e["spaced_visual"] = vis[(s, d)]
         e["lost_words"] = lost_words(s, vis[(s, d)])
         e["space_loss"] = bool(e["lost_words"])
-    json.dump(R, open(os.path.join(HERE, "results.json"), "w"), indent=1)
+    json.dump(R, open(os.path.join(HERE, "results.json"), "w", newline=''), indent=1)
 
 
 if __name__ == "__main__":

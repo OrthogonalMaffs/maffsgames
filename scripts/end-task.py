@@ -104,7 +104,7 @@ def selftest():
         os.makedirs(repo)
         g = lambda *a, cwd=repo: run(["git", "-c", "user.name=t", "-c", "user.email=t@t", "-c", "commit.gpgsign=false"] + list(a), cwd)
         g("init", "-q", "-b", "main")
-        open(os.path.join(repo, "a.txt"), "w").write("a\n")
+        open(os.path.join(repo, "a.txt"), "w", newline='').write("a\n")
         g("add", "."), g("commit", "-qm", "base")
         exists = lambda b: g("rev-parse", "--verify", "-q", "refs/heads/" + b).returncode == 0
 
@@ -112,7 +112,7 @@ def selftest():
             """A task branch in its own worktree with one commit; returns (worktree path, tip)."""
             wt = os.path.join(td, "wt-" + branch)
             g("worktree", "add", "-q", "-b", branch, wt, "main")
-            open(os.path.join(wt, branch + ".txt"), "w").write(branch + "\n")
+            open(os.path.join(wt, branch + ".txt"), "w", newline='').write(branch + "\n")
             g("add", ".", cwd=wt), g("commit", "-qm", branch, cwd=wt)
             return wt, g("rev-parse", branch).stdout.strip()
 
@@ -130,13 +130,13 @@ def selftest():
               end_task("open-pr", repo, stub("OPEN", tip), cwd=td) == 1 and exists("open-pr") and os.path.isdir(wt))
 
         wt, tip = make("extra")
-        open(os.path.join(wt, "more.txt"), "w").write("m\n")
+        open(os.path.join(wt, "more.txt"), "w", newline='').write("m\n")
         g("add", ".", cwd=wt), g("commit", "-qm", "local only", cwd=wt)
         check("an extra local commit: refuses, nothing deleted",
               end_task("extra", repo, stub("MERGED", tip), cwd=td) == 1 and exists("extra") and os.path.isdir(wt))
 
         wt, tip = make("dirty")
-        open(os.path.join(wt, "scratch.txt"), "w").write("s\n")
+        open(os.path.join(wt, "scratch.txt"), "w", newline='').write("s\n")
         check("a dirty worktree: refuses, nothing deleted",
               end_task("dirty", repo, stub("MERGED", tip), cwd=td) == 1 and exists("dirty") and os.path.isdir(wt))
 

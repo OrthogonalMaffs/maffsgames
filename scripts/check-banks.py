@@ -762,10 +762,10 @@ def ledger_write_fixtures():
         for f in os.listdir(tmp):
             os.remove(os.path.join(tmp, f))
         for slug, bk in banks.items():
-            with open(os.path.join(tmp, slug + ".json"), "w", encoding="utf-8") as fh:
+            with open(os.path.join(tmp, slug + ".json"), "w", encoding="utf-8", newline='') as fh:
                 json.dump(bk, fh)
         path = os.path.join(tmp, "ledger.json")
-        with open(path, "w", encoding="utf-8") as fh:
+        with open(path, "w", encoding="utf-8", newline='') as fh:
             json.dump(old, fh, indent=1, ensure_ascii=False, sort_keys=True)
         with open(path, encoding="utf-8") as fh:
             before = fh.read()
@@ -1074,7 +1074,7 @@ def write_ledger(path, findings_by_game, roster, only=None):
         for slug, reason in refused:
             print("  %s (%s)" % (slug, reason))
         return 1
-    with open(path, "w", encoding="utf-8") as fh:
+    with open(path, "w", encoding="utf-8", newline='') as fh:
         json.dump(merged, fh, indent=1, ensure_ascii=False, sort_keys=True)
     print("\nWrote %s (%d games)" % (path, len(merged)))
     for slug, reason, n in sorted(carried):

@@ -389,22 +389,22 @@ def selftest(root):
         data = yaml.safe_load(src)
         data['findings'][0]['status'] = 'fixed'
         data['findings'][0].pop('pr', None)
-        open(p, 'w', encoding='utf-8').write(yaml.safe_dump(data, allow_unicode=True, sort_keys=False))
+        open(p, 'w', encoding='utf-8', newline='').write(yaml.safe_dump(data, allow_unicode=True, sort_keys=False))
         errs, _ = run(tmp)
         caught = any('names no PR' in e for e in errs)
         print('  self-test %-34s %s' % ('a fixed entry with no PR', 'caught' if caught else '*** MISSED ***'))
         ok = ok and caught
-        open(p, 'w', encoding='utf-8').write(src)
+        open(p, 'w', encoding='utf-8', newline='').write(src)
         # 2. a schema fault: a severity the schema does not have, and a finding missing a field
         data = yaml.safe_load(src)
         data['findings'][0]['severity'] = 'SEVERE'
         data['findings'][-1].pop('evidence', None)
-        open(p, 'w', encoding='utf-8').write(yaml.safe_dump(data, allow_unicode=True, sort_keys=False))
+        open(p, 'w', encoding='utf-8', newline='').write(yaml.safe_dump(data, allow_unicode=True, sort_keys=False))
         errs, _ = run(tmp)
         caught = any("severity 'SEVERE'" in e for e in errs) and any('missing evidence' in e for e in errs)
         print('  self-test %-34s %s' % ('a schema fault (severity, field)', 'caught' if caught else '*** MISSED ***'))
         ok = ok and caught
-        open(p, 'w', encoding='utf-8').write(src)
+        open(p, 'w', encoding='utf-8', newline='').write(src)
         # 3. an excluded game that has been relisted
         rp = os.path.join(tmp, ROSTER)
         rsrc = open(rp, encoding='utf-8', newline='').read()

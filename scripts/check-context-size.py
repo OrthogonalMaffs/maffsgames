@@ -73,7 +73,7 @@ def selftest():
             for f in FILES:
                 p = os.path.join(tmp, f)
                 os.makedirs(os.path.dirname(p), exist_ok=True)
-                with open(p, "w", encoding="utf-8") as fh:
+                with open(p, "w", encoding="utf-8", newline='') as fh:
                     fh.write("x" * sizes.get(f, 1000))
 
         def case(name, sizes, deferred, want_fail):

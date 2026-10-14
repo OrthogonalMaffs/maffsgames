@@ -145,7 +145,7 @@ def main():
             for k in ("sources", "wrappers", "callers", "src_strings", "fields"):
                 e[k] = sorted(e[k], key=str)
         results[slug] = strings
-    json.dump(results, open(os.path.join(HERE, "results.json"), "w"), indent=1)
+    json.dump(results, open(os.path.join(HERE, "results.json"), "w", newline=''), indent=1)
     rows = []
     for slug, strings in results.items():
         n = len(strings)

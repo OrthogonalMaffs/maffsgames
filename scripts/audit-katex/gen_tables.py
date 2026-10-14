@@ -157,7 +157,7 @@ B7SEEN = "\n".join("| `%s` | %s |" % (s, ", ".join("`%s`" % f for f in fs)) for 
 kx_files = {r["slug"] for r in W if r["file"].endswith("index.html") and (r["wrappers"] or r["direct"])}
 loads_only = sorted(r["slug"] for r in W if r["file"].endswith("index.html") and r["loads_katex"] and not (r["wrappers"] or r["direct"]))
 no_katex = sorted(s for _, s in roster if s not in kx_files and s not in loads_only)
-open(os.path.join(HERE, "tables.md"), "w").write(
+open(os.path.join(HERE, "tables.md"), "w", newline='').write(
     "SUMMARY\n" + SUMMARY + "\n\nSECTIONS\n" + SECTIONS + "\n\nB7SEEN\n" + B7SEEN +
     "\n\nLOADS_ONLY %d\n" % len(loads_only) + ", ".join("`%s`" % s for s in loads_only) +
     "\n\nNO_KATEX %d\n" % len(no_katex) + ", ".join("`%s`" % s for s in no_katex) +

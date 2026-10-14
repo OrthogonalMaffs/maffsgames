@@ -17,7 +17,7 @@ HOOK = open(os.path.join(CODE, "kx_hook.js")).read()
 FIREBASE_STUB = ("(function(){var h={get:function(t,k){return k==='then'?undefined:P;},apply:function(){return P;}};"
                  "var P=new Proxy(function(){},h);window.firebase=P;})();")
 root, out_path, menu_choice, slugs = sys.argv[1], sys.argv[2], int(sys.argv[3]), sys.argv[4].split(",")
-OUT = open(out_path, "a")
+OUT = open(out_path, "a", newline='')
 
 _launch = bt.BrowserType.launch
 async def launch(self, *a, **kw):

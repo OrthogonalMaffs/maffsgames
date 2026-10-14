@@ -932,7 +932,7 @@ def selftest(games):
     html = open(os.path.join(ROOT, 'games', slug, 'index.html'), encoding='utf-8').read()
     m = INCLUDE.search(html)
     end = html.index('\n', m.end()) + 1
-    with tempfile.NamedTemporaryFile('w', suffix='.html', delete=False, encoding='utf-8') as f:
+    with tempfile.NamedTemporaryFile('w', suffix='.html', delete=False, encoding='utf-8', newline='') as f:
         f.write(html[:end] + PLANT + html[end:])
     try:
         res = asyncio.run(play_all([(slug, level)], f.name)).get(slug, [])
@@ -960,7 +960,7 @@ def selftest(games):
     if pcall not in phtml:
         errs.append('play-again plant: %s show() no longer ends with %r' % (pslug, pcall))
     else:
-        with tempfile.NamedTemporaryFile('w', suffix='.html', delete=False, encoding='utf-8') as f:
+        with tempfile.NamedTemporaryFile('w', suffix='.html', delete=False, encoding='utf-8', newline='') as f:
             f.write(phtml.replace(pcall, '}', 1))
         try:
             pres = asyncio.run(play_all([(pslug, dict(games).get(pslug))], f.name)).get(pslug, [])

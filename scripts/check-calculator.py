@@ -127,7 +127,7 @@ def selftest():
         return d
 
     def edit(path, fn):
-        path.write_text(fn(path.read_text(encoding="utf-8")), encoding="utf-8")
+        path.write_text(fn(path.read_text(encoding="utf-8")), encoding="utf-8", newline='')
 
     def retag(slug, old, new):
         return lambda s: re.sub(r"(`%s`.*\|\s*)%s(\s*\|\s*)$" % (re.escape(slug), old), r"\g<1>%s\g<2>" % new, s, flags=re.M)
@@ -160,7 +160,7 @@ def selftest():
                         .replace("</body>", "<script>/* keys: 'scientific' */</script></body>", 1))), False),
         ("a non-game page loads it",
          lambda d: (d / "about").mkdir() or (d / "about" / "index.html").write_text(
-             '<script src="/schools/assets/calculator.js"></script>', encoding="utf-8"), True),
+             '<script src="/schools/assets/calculator.js"></script>', encoding="utf-8", newline=''), True),
     ]
     out = []
     for name, plant, should_fail in cases:
