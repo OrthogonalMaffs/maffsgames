@@ -10,7 +10,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 |---|---|---|
 | 1 | Every live game has a verifier in CI | met: 0 of 96 live games have none (computed from `games/` and the verifiers CI runs) |
 | 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 1 open (0 CRITICAL, 1 HIGH) |
-| 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, SR-14 fields |
+| 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock |
 | 4 | Every level serves 40+ (tracked, not part of the gate: canon §0.2, Jon 12 Oct 2026) | not met, not gating: 126 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | met: 0 in the roster's Unlisted section |
 | 6 | One sweep of the verified games for true wrong options and unstated conventions | NOT MET (stated) |
@@ -266,4 +266,4 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 **5. Unlisted (0):** none
 
-**Excluded from points 1, 2 and 5 (1):** `glorious-gantt`: Jon, 12 Oct 2026: excluded from points 1, 2 and 5 while unlisted (canon §0.2)
+**Excluded from points 1, 2, 3 and 5 (1):** `glorious-gantt`: Jon, 12 Oct 2026 (1, 2, 5) and 13 Oct 2026 (3): excluded while unlisted
