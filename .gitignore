@@ -9,3 +9,7 @@ data/banks/
 
 # Local-only session context (personal details, local paths, handover). Never commit it.
 CLAUDE.local.md
+
+# Background processes a session started through scripts/bg.py (contract BG-LAUNCHER): per-worktree, local only.
+.claude/pids.json
+.claude/bg-*.log
