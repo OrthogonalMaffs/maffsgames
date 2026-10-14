@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: terrible-advice`
+`cloud-remaining: `
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -49,6 +49,8 @@ main's last full run is red; watch main's run after merging.
 - **#374 merged (d5120df)** after a merge of main into its branch (the conflict was the archived SWEEP-1-RULINGS bullet; its edit is carried into `docs/history/handover-cloud-archive.md`); main's run 38555231031 green. `scripts/end-task.py claude/boolean-blitz-recheck` REFUSED: no such local branch in this container (the work ran in another session); nothing deleted. Also left: this session's local `claude/pr374-merge` and `/home/user/wt-374` (not a PR head, so end-task cannot clear them).
 - **Part 2, option parity (SR-34).** Measure: an uncommitted scratch script over `data/banks/` after `extract-banks.py` (every option list of `{text, correct}` with one key; displayed length, TeX commands and braces stripped; fail over 40% key strictly longest or strictly shortest). Sandbox: `check-banks --ci` only matches the ledger with KaTeX served locally (`docs/sandbox-checks.md`, "Bank extraction"); without it three banks read as generators. **Rates, before -> after (strictly longest / strictly shortest):**
   - spot-the-muppet: 100% / 0% -> 6% / 14% (PR open). Every option "<Name> is wrong/correct — <result>"; all 50 items gain `explanation`, shown under the reply once marked, right or wrong. Three right-answer-wrong-method keys (gcse_008, gcse_012, core_002) are a verdict with no figure: "Sharon is right on the answer — but wrong on the method", the other three "right/wrong on the answer — …".
+  - terrible-advice: 98% / 0% -> 6% / 16% (PR open). The same rewrite item for item; core_007 (Wendy's right answer by an unweighted mean) joins the verdict form. Its three B6 ledger entries (the characters' "wait", "let me", "hmm") re-keyed with `--only=terrible-advice --write-ledger`, same details.
+- **terrible-advice examples (my drafting under SR-34; Jon may overrule):** gcse_020 key "Elaine is wrong — when subtracting, the second equation needs brackets: … The sign error on 2y was the problem" -> "Elaine is wrong — x = 3 and y = 3.5". core_006 key "Basil is wrong — the index number = (current ÷ base) × 100 = (150 ÷ 120) × 100 = 125. …" -> "Basil is wrong — it's 125". core_011 distractor "Hilda is wrong — 10 flips is not enough to test any hypothesis" -> "Hilda is wrong — 10 flips are too few to test" (beside the key "Hilda is wrong — this is a one-tailed test").
 - **spot-the-muppet examples (my drafting under SR-34; Jon may overrule):**
   - ks3_001 key "Beverley is wrong — 30% of 80 means multiply by 0.30: 0.30 × 80 = 24" -> "Beverley is wrong — it's 24" (working to the explanation).
   - gcse_005 key "Larry is wrong — expected value ≠ guaranteed. P(at least one 6 in 6 rolls) = 1 − (5/6)⁶ ≈ 0.665, not 1" -> "Larry is wrong — the chance is about 0.665"; distractor "Larry is wrong — P(6) increases with each failed roll" -> "Larry is wrong — the chance rises after each miss".
