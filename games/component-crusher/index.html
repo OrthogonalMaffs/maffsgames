@@ -205,7 +205,7 @@ gcse:[
    sqs:[
      {type:'vec2',prompt:'Find \\(\\overrightarrow{AB}\\).',answers:[3,2],labels:['x','y']},
      {type:'vec2',prompt:'Find \\(\\overrightarrow{BC}\\).',answers:[3,2],labels:['x','y']},
-     {type:'mcq',prompt:'Are A, B, C collinear?',correct:'Yes — BC = AB so parallel and share point B',wrong:['No — they form a triangle','Only if |AB| = |BC|','Cannot tell from vectors']}
+     {type:'mcq',prompt:'Are A, B, C collinear?',correct:'Yes — BC = AB so parallel and share point B',wrong:['No — A, B and C form a triangle, so they are not collinear','Only if |AB| = |BC|','Cannot tell from vectors']}
    ]},
   {id:'G4',desc:'Magnitude and scalar multiple',
    vectors:[{from:[0,0],to:[-4,3],label:'a',color:'#14b8a6'}],
@@ -220,7 +220,7 @@ gcse:[
    sqs:[
      {type:'vec2',prompt:'Find \\(\\mathbf{a} + \\mathbf{b}\\).',answers:[3,4],labels:['x','y']},
      {type:'num',prompt:'Find \\(|\\mathbf{a} + \\mathbf{b}|\\).',answer:5},
-     {type:'mcq',prompt:'Is \\(\\mathbf{b} = -\\frac{1}{2}\\mathbf{a}\\)?',correct:'Yes — b is parallel to a and half the length in opposite direction',wrong:['No — they are perpendicular','Only if |a| = |b|','Cannot determine from diagram']}
+     {type:'mcq',prompt:'Is \\(\\mathbf{b} = -\\frac{1}{2}\\mathbf{a}\\)?',correct:'Yes — b is parallel to a and half the length in opposite direction',wrong:['No — b is perpendicular to a, so it is not a multiple of a','Only if |a| = |b|','Cannot determine from diagram']}
    ]},
   {id:'G6',desc:'Translation vector',
    vectors:[{from:[1,3],to:[5,1],label:'',color:'#60a5fa'}],
@@ -295,7 +295,7 @@ gcse:[
    grid:{x:[-3,5],y:[-1,8]},
    sqs:[
      {type:'vec2',prompt:'Total displacement \\(= \\mathbf{a} + \\mathbf{b} + (-\\mathbf{a})\\). Calculate.',answers:[-1,4],labels:['x','y']},
-     {type:'mcq',prompt:'Explain why the total equals \\(\\mathbf{b}\\).',correct:'Adding a then −a cancels, leaving just b',wrong:['a and b are perpendicular','The path forms a triangle','Total is always zero']}
+     {type:'mcq',prompt:'Explain why the total equals \\(\\mathbf{b}\\).',correct:'Adding a then −a cancels, leaving just b',wrong:['a and b are perpendicular, so they cancel each other out','The path forms a triangle','Total is always zero']}
    ]}
 ],
 alevel:[
@@ -359,7 +359,7 @@ alevel:[
    vectors:[{from:[0,0],to:[4,3],label:'a',color:'#14b8a6'},{from:[0,0],to:[-8,-6],label:'b',color:'#f97316'}],
    grid:{x:[-10,6],y:[-8,5]},
    sqs:[
-     {type:'mcq',prompt:'Show \\(\\mathbf{a}\\) and \\(\\mathbf{b}\\) are parallel.',correct:'b = −2a → parallel (antiparallel)',wrong:['They are perpendicular','a·b = 0','Cannot determine']},
+     {type:'mcq',prompt:'Show \\(\\mathbf{a}\\) and \\(\\mathbf{b}\\) are parallel.',correct:'b = −2a → parallel (antiparallel)',wrong:['They are perpendicular to each other, not parallel','a·b = 0','Cannot determine']},
      {type:'num',prompt:'Find \\(|\\mathbf{a}|\\).',answer:5},
      {type:'num',prompt:'Find \\(|\\mathbf{b}|\\).',answer:10}
    ]},
@@ -396,7 +396,7 @@ alevel:[
    grid:{x:[-5,7],y:[-5,4]},
    sqs:[
      {type:'vec2',prompt:'Find R = F₁ + F₂ + F₃.',answers:[0,0],labels:['i','j']},
-     {type:'mcq',prompt:'The resultant is zero. What does this mean?',correct:'The system is in equilibrium — no net force',wrong:['The forces cancel in the i direction only','All forces are equal','The object accelerates']}
+     {type:'mcq',prompt:'The resultant is zero. What does this mean?',correct:'The system is in equilibrium — no net force',wrong:['The forces cancel out in the i direction only','All forces are equal','The object accelerates']}
    ]},
   {id:'AL14',desc:'Velocity from bearing (Mechanics)',
    vectors:[{from:[0,0],to:[12.99,7.5],label:'15 m/s on 060°',color:'#14b8a6'}],
@@ -462,7 +462,7 @@ level4:[
    sqs:[
      {type:'vec3',prompt:'Find \\(\\overrightarrow{AB}\\).',answers:[3,2,4],labels:['i','j','k']},
      {type:'vec3',prompt:'Find \\(\\overrightarrow{BC}\\).',answers:[3,2,4],labels:['i','j','k']},
-     {type:'mcq',prompt:'Are A, B, C collinear?',correct:'Yes — BC = AB, so parallel and share B',wrong:['No — different magnitudes','Only in 2D','Cannot determine in 3D']}
+     {type:'mcq',prompt:'Are A, B, C collinear?',correct:'Yes — BC = AB, so parallel and share B',wrong:['No — different magnitudes','Only in 2D','Cannot determine collinearity in 3D from the vectors']}
    ]},
   {id:'L7',desc:'Force at angle in xz-plane',
    vectors:[{from:[0,0,0],to:[7.07,0,7.07],label:'10N at 45°',color:'#14b8a6'}],
@@ -501,7 +501,7 @@ level4:[
    grid3d:true,
    sqs:[
      {type:'vec3',prompt:'Find the resultant of \\(F₁ + F₂ + F₃\\).',answers:[0,0,18],labels:['i','j','k']},
-     {type:'mcq',prompt:'Taking \\(\\mathbf{k}\\) as vertically upwards, what does this resultant tell us?',correct:'Purely vertical — mast is in horizontal equilibrium',wrong:['The mast will topple','All forces are equal','Net force is zero']}
+     {type:'mcq',prompt:'Taking \\(\\mathbf{k}\\) as vertically upwards, what does this resultant tell us?',correct:'Purely vertical — mast is in horizontal equilibrium',wrong:['The mast will topple over, as the forces are not balanced','All forces are equal','Net force is zero']}
    ]},
   {id:'L12',desc:'Displacement magnitude',
    given:{s:[4,-3,12]},
