@@ -236,8 +236,8 @@ PINS = [
           lambda: collatz(7) == [7, 22, 11, 34, 17, 52, 26, 13, 40, 20, 10, 5, 16, 8, 4, 2, 1]),
         P('checked every number up to more than 10(' + SUPRX + ')', lambda e: 2 ** 68 > 10 ** int(e.translate(SUP)),
           'D. Barina, J. Supercomputing 2021: verified to 2^68 = 2.95e20'),
-        L('Paul Erdős said: "Mathematics is not yet ready for such problems."', None,
-          'Lagarias, The 3x+1 Problem and its Generalizations (Erdős: "Mathematics may not be ready for such problems"; "not yet" is a documented variant)'),
+        L('Paul Erdős is reported to have said: "Mathematics is not yet ready for such problems."', None,
+          'J. C. Lagarias (1985), The 3x+1 problem and its generalizations, American Mathematical Monthly 92(1), 3-23: reports the remark; "not yet" is its wording'),
     ]),
     ('Small Samples Vary More', [
         P('getting ([0-9]+)[+] boys [(]([0-9]+)%[)]', lambda k, p: round(100 * int(k) / 15) == int(p)),
@@ -306,6 +306,9 @@ PINS = [
     ]),
     ('Regression to the Mean', [
         L('Israeli flight instructors', None, 'Kahneman, Nobel autobiography / Thinking, Fast and Slow ch. 17'),
+        L('gets an unusually high score on a test', None,
+          'Kahneman, Thinking, Fast and Slow ch. 17 (an extreme score is partly luck, so the next is expected nearer the mean)'),
+        L('Regression alone explains the pattern', None, 'Kahneman, Thinking, Fast and Slow ch. 17 (the flight-instructor story)'),
     ]),
     ('The Wheat and Chessboard Problem', [
         P('The 64th square alone has 2(' + SUPRX + ') ≈ ([0-9.]+) × 10(' + SUPRX + ') grains',
