@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: graph-sketcher`
+`cloud-remaining: `
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -45,12 +45,19 @@ main's last full run is red; watch main's run after merging.
 
 ## 2026-10-14 (cloud): TRUE-DISTRACTORS (contract `docs/handover/contracts/2026-10-14-true-distractors.md`)
 
-- **better-value bv_core_019 DONE.** Every option names the day rate: the key "Contract A has the better day rate — £320/day vs £300/day"; distractors "£18,000 ÷ 12 = £1,500/day" (weeks taken for days) and "£18,000 ÷ 36 = £500/day" (A's days); "They pay the same daily rate" kept. The total-pay point (£18,000 vs £11,520, 60 days against 36) is in the explanation. Verifier REVIEW: the new verdict words, and £11,520 (12 × 3 × £320) allowed. Parity 20% / 0% -> 21% / 0%.
+- **better-value bv_core_019 DONE (#392, a3c1e75).** Every option names the day rate: the key "Contract A has the better day rate — £320/day vs £300/day"; distractors "£18,000 ÷ 12 = £1,500/day" (weeks taken for days) and "£18,000 ÷ 36 = £500/day" (A's days); "They pay the same daily rate" kept. The total-pay point (£18,000 vs £11,520, 60 days against 36) is in the explanation. Verifier REVIEW: the new verdict words, and £11,520 (12 × 3 × £320) allowed. Parity 20% / 0% -> 21% / 0%.
 - **Class (a), better-value, for Jon** (every conclusion containing "better", 70 items; none fixed):
   - **True or defensible distractors, core_019's shape:** core_007 "Lease B is better if the business makes fewer than 1,000 copies" is true: B is £85 + 2p a copy, under £105 a month below 1,000 copies, against A's £120 (break-even 1,750); the scenario fixes 2,000, but the card is a true conditional. core_037 "Standard flyers are better value overall — they cost £80 less to print": on ROI (344% vs 331%) standard is the better value, and the key says "standard has the higher ROI"; the explanation's "The cheaper option is not the better value here" means net profit without saying so.
   - **Keys that are a judgement, not a computed measure:** core_047 (B "better value overall" at £135 vs £130, on "the homeowner values the longer-lasting clean"; its distractor "Cleaner A … saves £50 a year" is false only by its figure, £5); core_048 (A on cover; B's "£140 cheaper per year" is true); core_044 ("good, unless that money has a better use").
   - **"X is better because <true premise>"** (false only as "better" means least cost, and each key names a total or unit cost, so markable; for the distractor-falsity audit): gcse_002, 004, 014, 015, 017, 018; core_001, 002, 004, 010, 011, 017, 035.
   - No other distractor states a true fact with no verdict: the ten verdict-free ones (core_013, 015, 022 ×2, 023, 038 ×2, 046; gcse_010, 016) are each false as written.
+
+- **graph-sketcher CM8 DONE.** The roots distractor "Times of maximum speed" was true (speed |15 − 10t| is greatest, 15 m/s, at t = 0 and t = 3, the roots); now "The time taken to reach maximum height" (1.5 s). Nothing else in CM8 changed; the verifier pins no option text there. Parity 6% / 2% -> 6% / 2% (CM8's key, 43 characters, sits between 21 and 54 before and after).
+- **Class (b), every game, for Jon** (maximum/greatest/top speed or velocity wording, every roots question, every projectile item; none fixed):
+  - **No other ground-to-ground projectile item offers the wording; no STOP IF hit.** graph-sketcher L4_7 (h = 30t − 4.9t², ground to ground) has no multiple-choice question (a turning point and a typed time of flight).
+  - **Close wording, not a projectile:** graph-sketcher CM12 (fuel efficiency F against speed v), roots question, distractor "The speeds at which the car has maximum acceleration": false (the model says nothing of acceleration), but the same "maximum <rate>" shape.
+  - **The phrase elsewhere, not a roots distractor:** core-maths-paper2c, the concave-up v–t question, "The car has reached its maximum speed": false (the gradient is still rising).
+  - **Other projectile items checked, no such wording:** gradient-hunter gh_gcse_015 and gh_alevel_003 (chord interpretations, each distractor false), word-problem-decoder wpd_gcse_025 (topic identification), suvat (typed answers), trig-wars (no options).
 
 ## 2026-10-14 (cloud): MAIN-GREEN-AND-OPTION-PARITY (finished 14 Oct; full entry, with every game's rates and examples, in `docs/history/handover-cloud-archive.md`)
 
