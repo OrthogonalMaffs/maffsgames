@@ -285,7 +285,7 @@ scenario:'A family is choosing a broadband provider for 18 months.',
 optionA:{label:'Provider A',details:[{key:'Monthly fee',value:'\u00a329'},{key:'Setup fee',value:'\u00a30'},{key:'Router',value:'Free'}]},
 optionB:{label:'Provider B',details:[{key:'Monthly fee',value:'\u00a324'},{key:'Setup fee',value:'\u00a349'},{key:'Router',value:'Free'}]},
 conclusions:[
-{text:'Provider A is better value \u2014 total cost \u00a3522 vs \u00a3481',correct:false},
+{text:'Provider A is better value \u2014 total cost \u00a3522 vs \u00a3481 for Provider B',correct:false},
 {text:'Provider B is better value \u2014 total cost \u00a3481 vs \u00a3522 for Provider A',correct:true},
 {text:'Provider A is better because there is no setup fee',correct:false},
 {text:'They cost the same over 18 months',correct:false}
@@ -297,10 +297,10 @@ scenario:'Marcus is buying coffee. He drinks one cup per working day (260 days/y
 optionA:{label:'Coffee Shop',details:[{key:'Price per cup',value:'\u00a33.20'},{key:'Annual cost',value:'?'}]},
 optionB:{label:'Subscription Machine',details:[{key:'Annual fee',value:'\u00a3180'},{key:'Cost per cup',value:'\u00a30.40'}]},
 conclusions:[
-{text:'The coffee shop is cheaper \u2014 \u00a3832 vs \u00a3284',correct:false},
+{text:'The coffee shop is better value \u2014 annual cost \u00a3832 vs \u00a3284 for the subscription machine',correct:false},
 {text:'The subscription machine is better value \u2014 annual cost \u00a3284 vs \u00a3832 for the coffee shop',correct:true},
 {text:'The subscription machine is only worth it if he drinks more than 300 cups',correct:false},
-{text:'They cost about the same \u2014 both around \u00a3500 per year',correct:false}
+{text:'They cost about the same over a year \u2014 both around \u00a3500 for 260 cups',correct:false}
 ],
 explanation:'Coffee shop: 260 \u00d7 \u00a33.20 = \u00a3832. Machine: \u00a3180 + (260 \u00d7 \u00a30.40) = \u00a3180 + \u00a3104 = \u00a3284.'},
 
@@ -310,7 +310,7 @@ optionA:{label:'Insurer A',details:[{key:'Payment',value:'Annual'},{key:'Total c
 optionB:{label:'Insurer B',details:[{key:'Payment',value:'Monthly'},{key:'Monthly cost',value:'\u00a374'},{key:'Admin fee',value:'\u00a30'}]},
 conclusions:[
 {text:'Insurer A is better value \u2014 total cost \u00a3820 vs \u00a3888 per year for Insurer B',correct:true},
-{text:'Insurer B is better value \u2014 \u00a374 per month is less than \u00a3820',correct:false},
+{text:'Insurer B is better value \u2014 \u00a374 per month is less than \u00a3820 for Insurer A',correct:false},
 {text:'They cost the same \u2014 \u00a3820 is roughly 12 \u00d7 \u00a374',correct:false},
 {text:'Insurer B is better because you can cancel monthly',correct:false}
 ],
@@ -324,7 +324,7 @@ conclusions:[
 {text:'Supplier A is better value \u2014 total cost \u00a3225 vs \u00a3190',correct:false},
 {text:'Supplier B is better value \u2014 total cost \u00a3190 vs \u00a3225 for Supplier A',correct:true},
 {text:'They cost the same per book',correct:false},
-{text:'Supplier A is cheaper because individual pricing is always better',correct:false}
+{text:'Supplier A is cheaper because individual pricing is always the better deal',correct:false}
 ],
 explanation:'Supplier A: 500 \u00d7 \u00a30.45 = \u00a3225. Supplier B: 5 \u00d7 \u00a338 = \u00a3190. Supplier B is cheaper.'},
 
@@ -333,9 +333,9 @@ scenario:'A couple wants to visit a theme park. They plan to go twice this year.
 optionA:{label:'Day Tickets',details:[{key:'Price',value:'\u00a345 per person per visit'}]},
 optionB:{label:'Annual Pass',details:[{key:'Price',value:'\u00a375 per person'}]},
 conclusions:[
-{text:'Day tickets are cheaper for two visits \u2014 \u00a390 vs \u00a375',correct:false},
+{text:'Two day tickets are better value for two visits \u2014 \u00a390 vs \u00a375 for the annual pass',correct:false},
 {text:'The annual pass is better value for two visits \u2014 \u00a375 vs \u00a390 for two day tickets',correct:true},
-{text:'The annual pass is only worth it for 3+ visits',correct:false},
+{text:'The annual pass is only worth it for three or more visits in the year',correct:false},
 {text:'They cost the same for two visits',correct:false}
 ],
 explanation:'Two day tickets: 2 \u00d7 \u00a345 = \u00a390. Annual pass: \u00a375. The pass saves \u00a315 per person.'},
@@ -382,7 +382,7 @@ scenario:'A phone contract advertises \u201c\u00a325/month \u2014 the cheapest o
 optionA:{label:'Phone Contract',details:[{key:'Monthly',value:'\u00a325'},{key:'Upfront',value:'\u00a330'},{key:'Term',value:'24 months'}]},
 optionB:{label:'SIM-Only + Handset',details:[{key:'Monthly',value:'\u00a312'},{key:'Handset',value:'\u00a3280'},{key:'Term',value:'24 months'}]},
 conclusions:[
-{text:'The contract is cheaper \u2014 \u00a325/month vs \u00a312 plus \u00a3280 for a phone',correct:false},
+{text:'The contract is better value \u2014 \u00a325 a month vs \u00a312 a month plus \u00a3280 for the phone',correct:false},
 {text:'The SIM-only deal is better value \u2014 total cost \u00a3568 vs \u00a3630 for the contract',correct:true},
 {text:'They cost the same over 24 months',correct:false},
 {text:'The contract is better because you get the phone included',correct:false}
@@ -396,7 +396,7 @@ optionB:{label:'Rival Store',details:[{key:'Price',value:'\u00a3549'},{key:'Paym
 conclusions:[
 {text:'The BNPL store is free for 12 months so it is better value',correct:false},
 {text:'The rival store is better value if you can pay cash \u2014 \u00a3549 vs \u00a3599',correct:true},
-{text:'The BNPL store is better because you keep your money longer',correct:false},
+{text:'The BNPL store is better because you keep your money for longer, interest-free',correct:false},
 {text:'They cost the same \u2014 both are around \u00a3600',correct:false}
 ],
 explanation:'Buy now pay later often seems free but the full price is still \u00a3599. The rival store saves \u00a350. The danger of BNPL is forgetting to pay within the interest-free period.'},
@@ -406,7 +406,7 @@ scenario:'An energy company offers a \u201csmart meter discount\u201d of \u00a35
 optionA:{label:'Smart Meter Tariff',details:[{key:'Rate',value:'31p per kWh'},{key:'Discount',value:'\u00a350 off/year'}]},
 optionB:{label:'Standard Tariff',details:[{key:'Rate',value:'27p per kWh'},{key:'Discount',value:'None'}]},
 conclusions:[
-{text:'The smart meter tariff is cheaper thanks to the \u00a350 discount',correct:false},
+{text:'The smart meter tariff is cheaper over the year, thanks to its \u00a350 discount on annual bills',correct:false},
 {text:'The standard tariff is better value \u2014 annual cost \u00a3864 vs \u00a3942 for the smart meter tariff',correct:true},
 {text:'They cost about the same once the discount is applied',correct:false},
 {text:'The smart meter tariff is better for high-usage households',correct:false}
@@ -431,9 +431,9 @@ optionA:{label:'Supermarket A',details:[{key:'Offer',value:'2 for \u00a32.50'},{
 optionB:{label:'Supermarket B',details:[{key:'Offer',value:'Buy 3 get 1 free'},{key:'Single price',value:'\u00a31.40 each'}]},
 conclusions:[
 {text:'Supermarket A is better value per bottle if you only need 2 \u2014 \u00a31.25 each vs \u00a31.40 each',correct:true},
-{text:'Supermarket B is always better value because you get a free bottle',correct:false},
+{text:'Supermarket B is always better value per bottle, because you get a free bottle',correct:false},
 {text:'They cost the same per bottle',correct:false},
-{text:'Supermarket B is cheaper if you buy exactly 2 bottles',correct:false}
+{text:'Supermarket B is cheaper if you buy exactly 2 bottles, because of the free one',correct:false}
 ],
 explanation:'For 2 bottles: A = \u00a32.50, B = \u00a32.80. For 4 bottles: A = \u00a35.00, B = \u00a34.20 (3 \u00d7 \u00a31.40 for 4 bottles). The best value depends on how many you need.'},
 
@@ -442,7 +442,7 @@ scenario:'A student is choosing between two textbooks. Option A: new book \u00a3
 optionA:{label:'New Book',details:[{key:'Price',value:'\u00a348'},{key:'Revision guide',value:'Included'}]},
 optionB:{label:'Second-Hand',details:[{key:'Book price',value:'\u00a328'},{key:'Revision guide',value:'\u00a36 extra'}]},
 conclusions:[
-{text:'The new book is better value because it includes everything',correct:false},
+{text:'The new book is better value because it includes everything you need in one',correct:false},
 {text:'The second-hand book is better value \u2014 total cost \u00a334 vs \u00a348 for the new book',correct:true},
 {text:'They cost the same when you add the revision guide',correct:false},
 {text:'The second-hand book is worse because it might be outdated',correct:false}
@@ -454,10 +454,10 @@ scenario:'A landlord gets two quotes to repaint a flat. Decorator A: \u00a3800 a
 optionA:{label:'Decorator A',details:[{key:'Quote',value:'\u00a3800'},{key:'Includes',value:'All materials'}]},
 optionB:{label:'Decorator B',details:[{key:'Labour',value:'\u00a3600'},{key:'Materials',value:'\u00a3280 (at cost)'}]},
 conclusions:[
-{text:'Decorator B is cheaper \u2014 \u00a3600 vs \u00a3800',correct:false},
+{text:'Decorator B was better value \u2014 \u00a3600 for labour vs \u00a3800 all-inclusive from Decorator A',correct:false},
 {text:'Decorator A was better value \u2014 \u00a3800 vs \u00a3880 for Decorator B including materials',correct:true},
 {text:'They cost the same once materials are added',correct:false},
-{text:'Decorator B is always better because labour is cheaper',correct:false}
+{text:'Decorator B is always better value, because its labour charge is \u00a3200 cheaper',correct:false}
 ],
 explanation:'Decorator B total: \u00a3600 + \u00a3280 = \u00a3880. Decorator A: \u00a3800. All-inclusive quotes avoid cost overruns.'},
 
@@ -467,7 +467,7 @@ scenario:'A supermarket sells washing powder in two sizes. Small: 1.2 kg for \u0
 optionA:{label:'Small Box',details:[{key:'Weight',value:'1.2 kg'},{key:'Price',value:'\u00a33.60'}]},
 optionB:{label:'Large Box',details:[{key:'Weight',value:'2.5 kg'},{key:'Price',value:'\u00a36.75'}]},
 conclusions:[
-{text:'The small box is better value \u2014 \u00a33.00/kg vs \u00a32.70/kg',correct:false},
+{text:'The small box is better value \u2014 \u00a33.00/kg vs \u00a32.70/kg for the large box',correct:false},
 {text:'The large box is better value \u2014 \u00a32.70/kg vs \u00a33.00/kg for the small box',correct:true},
 {text:'They cost the same per kg',correct:false},
 {text:'The small box is better because you waste less',correct:false}
@@ -479,7 +479,7 @@ scenario:'Petrol costs \u00a31.52 per litre at Garage A. Garage B sells petrol a
 optionA:{label:'Garage A',details:[{key:'Price',value:'\u00a31.52 per litre'}]},
 optionB:{label:'Garage B',details:[{key:'Price',value:'\u00a36.84 per gallon'},{key:'Conversion',value:'1 gal = 4.55 L'}]},
 conclusions:[
-{text:'Garage A is cheaper at \u00a31.52/litre',correct:false},
+{text:'Garage A is cheaper \u2014 \u00a31.52/litre vs \u00a36.84 a gallon at Garage B',correct:false},
 {text:'Garage B is cheaper \u2014 \u00a31.50/litre vs \u00a31.52/litre at Garage A',correct:true},
 {text:'They cost the same per litre',correct:false},
 {text:'Garage A is cheaper because litres are the standard unit',correct:false}
@@ -494,7 +494,7 @@ conclusions:[
 {text:'Contract B pays more in total \u2014 \u00a318,000 vs \u00a311,520',correct:false},
 {text:'Contract A pays better \u2014 \u00a3320/day vs \u00a3300/day for Contract B',correct:true},
 {text:'They pay the same daily rate',correct:false},
-{text:'Contract B is better because it guarantees full-time work',correct:false}
+{text:'Contract B is better because it guarantees full-time work for 12 weeks',correct:false}
 ],
 explanation:'Contract A: \u00a3320/day. Contract B: \u00a318,000 \u00f7 (12 \u00d7 5) = \u00a318,000 \u00f7 60 = \u00a3300/day. Contract A pays \u00a320/day more.'},
 
@@ -503,7 +503,7 @@ scenario:'Two juice cartons: Brand A is 750ml for \u00a31.89. Brand B is 1.25 li
 optionA:{label:'Brand A',details:[{key:'Volume',value:'750 ml'},{key:'Price',value:'\u00a31.89'}]},
 optionB:{label:'Brand B',details:[{key:'Volume',value:'1.25 litres'},{key:'Price',value:'\u00a32.99'}]},
 conclusions:[
-{text:'Brand A is better value \u2014 \u00a32.52/litre vs \u00a32.39/litre',correct:false},
+{text:'Brand A is better value \u2014 \u00a32.52/litre vs \u00a32.39/litre for Brand B',correct:false},
 {text:'Brand B is better value \u2014 \u00a32.39/litre vs \u00a32.52/litre for Brand A',correct:true},
 {text:'They cost the same per litre',correct:false},
 {text:'Brand A is cheaper because the carton costs less',correct:false}
@@ -517,7 +517,7 @@ optionB:{label:'February',details:[{key:'Total donations',value:'\u00a35,100'},{
 conclusions:[
 {text:'January had better average giving \u2014 \u00a312 per donor vs \u00a310 per donor in February',correct:true},
 {text:'February was better \u2014 \u00a35,100 is more than \u00a34,200',correct:false},
-{text:'February had better average giving \u2014 more donors means more per person',correct:false},
+{text:'February had better average giving, because more donors means more given per person',correct:false},
 {text:'They had the same average donation',correct:false}
 ],
 explanation:'January: \u00a34,200 \u00f7 350 = \u00a312 per donor. February: \u00a35,100 \u00f7 510 = \u00a310 per donor.'},
@@ -530,7 +530,7 @@ conclusions:[
 {text:'Car A is more fuel efficient \u2014 420 miles is further than 350 miles',correct:false},
 {text:'Car B is more fuel efficient \u2014 8.75 miles per litre vs 8.4 miles per litre for Car A',correct:true},
 {text:'They have the same fuel efficiency',correct:false},
-{text:'Car A is more efficient \u2014 8.4 mpL vs 8.75 mpL',correct:false}
+{text:'Car A is more fuel efficient \u2014 8.4 miles per litre vs 8.75 miles per litre for Car B',correct:false}
 ],
 explanation:'Car A: 420 \u00f7 50 = 8.4 miles/litre. Car B: 350 \u00f7 40 = 8.75 miles/litre. Car B is more efficient \u2014 the question tests whether students calculate correctly rather than assume the larger number wins.'},
 
@@ -553,9 +553,9 @@ optionA:{label:'Coffee Machine',details:[{key:'Upfront cost',value:'\u00a385'},{
 optionB:{label:'Caf\u00e9',details:[{key:'Per coffee',value:'\u00a32.80'}]},
 conclusions:[
 {text:'After 34 coffees the machine becomes better value \u2014 break-even at 34 cups',correct:true},
-{text:'After 50 coffees the machine becomes better value',correct:false},
+{text:'After 50 coffees the machine becomes better value \u2014 break-even at 50 cups',correct:false},
 {text:'The caf\u00e9 is always cheaper',correct:false},
-{text:'After 25 coffees the machine becomes better value',correct:false}
+{text:'After 25 coffees the machine becomes better value \u2014 break-even at 25 cups',correct:false}
 ],
 explanation:'Cost of machine option: \u00a385 + 0.30n. Cost of caf\u00e9: 2.80n. Set equal: 85 + 0.30n = 2.80n \u2192 85 = 2.50n \u2192 n = 34.'},
 
@@ -565,8 +565,8 @@ optionA:{label:'Without Railcard',details:[{key:'Return fare',value:'\u00a39.60'
 optionB:{label:'With Railcard',details:[{key:'Card cost',value:'\u00a330/year'},{key:'Discount',value:'1/3 off fares'}]},
 conclusions:[
 {text:'Maya needs to make at least 10 return journeys for the railcard to be worth it',correct:true},
-{text:'Maya needs to make at least 5 return journeys',correct:false},
-{text:'Maya needs to make at least 15 return journeys',correct:false},
+{text:'Maya needs to make at least 5 return journeys for the railcard to be worth it',correct:false},
+{text:'Maya needs to make at least 15 return journeys for the railcard to be worth it',correct:false},
 {text:'The railcard is always worth buying',correct:false}
 ],
 explanation:'Saving per journey: \u00a39.60 \u00d7 1/3 = \u00a33.20. Break-even: \u00a330 \u00f7 \u00a33.20 = 9.375, so 10 journeys needed.'},
@@ -577,9 +577,9 @@ optionA:{label:'Solar Panels',details:[{key:'Installation',value:'\u00a34,500'},
 optionB:{label:'No Panels',details:[{key:'Annual saving',value:'\u00a30'}]},
 conclusions:[
 {text:'The panels pay for themselves after approximately 11.8 years \u2014 around year 12',correct:true},
-{text:'The panels pay for themselves after about 8 years',correct:false},
+{text:'The panels pay for themselves after approximately 8 years \u2014 around year 8',correct:false},
 {text:'The panels never pay for themselves',correct:false},
-{text:'The panels pay for themselves after about 15 years',correct:false}
+{text:'The panels pay for themselves after approximately 15 years \u2014 around year 15',correct:false}
 ],
 explanation:'Payback period: \u00a34,500 \u00f7 \u00a3380 = 11.84 years. The homeowner should stay in the property for at least 12 years to break even.'},
 
@@ -613,9 +613,9 @@ optionA:{label:'Electric Car',details:[{key:'Premium',value:'\u00a35,000 extra'}
 optionB:{label:'Petrol Car',details:[{key:'Premium',value:'\u00a30'},{key:'Annual fuel saving',value:'\u00a30'}]},
 conclusions:[
 {text:'The electric car becomes better value after approximately 4.2 years \u2014 in year 5',correct:true},
-{text:'The electric car becomes better value after about 2 years',correct:false},
+{text:'The electric car becomes better value after approximately 2 years \u2014 in year 2',correct:false},
 {text:'The electric car never pays for itself',correct:false},
-{text:'The electric car becomes better value after about 8 years',correct:false}
+{text:'The electric car becomes better value after approximately 8.5 years \u2014 in year 9',correct:false}
 ],
 explanation:'Payback: \u00a35,000 \u00f7 \u00a31,200 = 4.17 years. After 5 years, the electric car has saved \u00a36,000 \u2014 \u00a31,000 more than the price premium.'},
 
@@ -640,7 +640,7 @@ optionB:{label:'Rival Deal',details:[{key:'Monthly cost',value:'\u00a332 (all-in
 conclusions:[
 {text:'The advertised deal is cheaper \u2014 \u00a318/month beats \u00a332/month',correct:false},
 {text:'The rival deal is better value over its contract \u2014 \u00a3384 for 12 months vs \u00a3564 for 18 months on the advertised deal',correct:false},
-{text:'The advertised deal costs \u00a3564 over 18 months; the rival costs \u00a3384 over 12 months. Per month the advertised deal is cheaper, at \u00a331.33 vs \u00a332 \u2014 but it locks you in for 6 extra months',correct:true},
+{text:'Per month the advertised deal is cheaper, at \u00a331.33 vs \u00a332 \u2014 but it locks you in for 6 extra months',correct:true},
 {text:'They cost the same per month once you add line rental',correct:false}
 ],
 explanation:'Advertised: (18 \u00d7 \u00a328) + \u00a360 = \u00a3504 + \u00a360 = \u00a3564, i.e. \u00a331.33/month. Rival: 12 \u00d7 \u00a332 = \u00a3384, i.e. \u00a332/month. Per month the advertised deal is marginally cheaper, but it commits you for 18 months. The headline \u00a318 is misleading \u2014 the true cost is \u00a331.33/month.'},
@@ -650,7 +650,7 @@ scenario:'A furniture store advertises a \u00a31,200 sofa with \u201c0% interest
 optionA:{label:'0% Finance Deal',details:[{key:'Sofa price',value:'\u00a31,200'},{key:'Admin fee',value:'\u00a3145'},{key:'Protection',value:'\u00a35.99/month \u00d7 36'}]},
 optionB:{label:'Cash Purchase',details:[{key:'Sofa price',value:'\u00a31,050'},{key:'Other costs',value:'\u00a30'}]},
 conclusions:[
-{text:'The 0% deal is genuinely interest-free so it must be the better deal',correct:false},
+{text:'The 0% deal is genuinely interest-free, so it must be the better deal overall',correct:false},
 {text:'The cash purchase is better value \u2014 \u00a31,050 vs \u00a31,560.64 for the finance deal',correct:true},
 {text:'The 0% deal costs \u00a31,345 \u2014 only \u00a3295 more than cash',correct:false},
 {text:'They cost the same because 0% means no extra charges',correct:false}
@@ -662,10 +662,10 @@ scenario:'A household is considering switching energy tariff. Their current tari
 optionA:{label:'Current Tariff',details:[{key:'Rate',value:'28p/kWh'},{key:'Standing charge',value:'25p/day'}]},
 optionB:{label:'New Tariff',details:[{key:'Rate',value:'24p/kWh'},{key:'Standing charge',value:'42p/day'}]},
 conclusions:[
-{text:'The new tariff is better value above 4.25 kWh per day \u2014 the household uses 12 kWh so they should switch',correct:true},
+{text:'The new tariff is better value above 4.25 kWh per day, so at 12 kWh they should switch',correct:true},
 {text:'The current tariff is always cheaper because of the lower standing charge',correct:false},
-{text:'The new tariff is only better value above 10 kWh per day',correct:false},
-{text:'They cost the same at 12 kWh per day',correct:false}
+{text:'The new tariff is only better value once usage is above 10 kWh per day',correct:false},
+{text:'They cost the same at 12 kWh per day, so there is no point in switching',correct:false}
 ],
 explanation:'Set equal: 28d + 25 = 24d + 42 \u2192 4d = 17 \u2192 d = 4.25 kWh (both sides in pence per day). Above 4.25 kWh/day the new tariff is cheaper. At 12 kWh: current = 336p + 25p = 361p/day. New = 288p + 42p = 330p/day. Saving: 31p/day \u2248 \u00a3113/year.'},
 
@@ -675,7 +675,7 @@ optionA:{label:'\u201cFree Delivery\u201d Site',details:[{key:'Bag price',value:
 optionB:{label:'Rival Site',details:[{key:'Bag price',value:'\u00a374.99'},{key:'Standard delivery',value:'\u00a34.99'},{key:'Next-day delivery',value:'\u00a39.99'}]},
 conclusions:[
 {text:'The rival site is better value even with next-day delivery \u2014 \u00a384.98 vs \u00a389.99',correct:true},
-{text:'The free delivery site is better value because delivery is free',correct:false},
+{text:'The free delivery site is better value, because its next-day delivery is free',correct:false},
 {text:'They cost the same with next-day delivery',correct:false},
 {text:'The rival site is only cheaper with standard delivery',correct:false}
 ],
@@ -686,9 +686,9 @@ scenario:'A landlord needs boiler insurance. Policy A costs \u00a312/month with 
 optionA:{label:'Policy A',details:[{key:'Monthly',value:'\u00a312'},{key:'Excess',value:'\u00a360'},{key:'Cover',value:'Parts + labour'}]},
 optionB:{label:'Policy B',details:[{key:'Monthly',value:'\u00a38'},{key:'Excess',value:'\u00a3150'},{key:'Cover',value:'Parts only'},{key:'Labour',value:'\u00a380/hour'}]},
 conclusions:[
-{text:'Policy B is cheaper \u2014 \u00a38/month vs \u00a312/month',correct:false},
+{text:'Policy B is better with one repair per year \u2014 only \u00a38/month vs \u00a312/month for Policy A',correct:false},
 {text:'Policy A is better value with one repair per year \u2014 annual cost \u00a3204 vs \u00a3406 for Policy B',correct:true},
-{text:'They cost the same over a year with one repair',correct:false},
+{text:'They cost the same over a year with one repair, once the excess is paid',correct:false},
 {text:'Policy B is better because the monthly cost is lower',correct:false}
 ],
 explanation:'Policy A: (12 \u00d7 \u00a312) + \u00a360 = \u00a3144 + \u00a360 = \u00a3204. Policy B: (12 \u00d7 \u00a38) + \u00a3150 + (2 \u00d7 \u00a380) = \u00a396 + \u00a3150 + \u00a3160 = \u00a3406. Policy A saves \u00a3202 per repair.'},
@@ -699,7 +699,7 @@ optionA:{label:'Anytime Returns',details:[{key:'Price',value:'\u00a348 per retur
 optionB:{label:'Advance Returns',details:[{key:'Price',value:'\u00a322 per return'},{key:'Missed trains',value:'3 per year'},{key:'Replacement cost',value:'\u00a348 each'}]},
 conclusions:[
 {text:'Advance tickets are better value \u2014 total \u00a3584 vs \u00a3960 for Anytime, even with 3 missed trains',correct:true},
-{text:'Anytime tickets are better value because you never waste money on missed trains',correct:false},
+{text:'Anytime tickets are better value because you never waste money on missed trains or replacements',correct:false},
 {text:'They cost about the same once missed trains are factored in',correct:false},
 {text:'Advance tickets are only cheaper if she never misses a train',correct:false}
 ],
@@ -710,10 +710,10 @@ scenario:'A small business needs 10,000 flyers printed. Printer A charges \u00a3
 optionA:{label:'Standard Flyers',details:[{key:'Cost',value:'\u00a3180'},{key:'Expected sales',value:'\u00a3800'}]},
 optionB:{label:'Premium Flyers',details:[{key:'Cost',value:'\u00a3260'},{key:'Expected sales',value:'\u00a31,120 (40% more)'}]},
 conclusions:[
-{text:'Standard flyers are better value \u2014 they cost \u00a380 less',correct:false},
-{text:'Premium flyers give more net profit \u2014 \u00a3860 vs \u00a3620 for standard, though standard has the higher return on investment (344% vs 331%)',correct:true},
-{text:'Standard flyers have the same ROI as premium',correct:false},
-{text:'Premium flyers are only worth it if response rate doubles',correct:false}
+{text:'Standard flyers are better value overall \u2014 they cost \u00a380 less to print',correct:false},
+{text:'Premium flyers give more net profit, \u00a3860 vs \u00a3620, but standard has the higher ROI',correct:true},
+{text:'Standard flyers have the same ROI as premium, so neither is better value',correct:false},
+{text:'Premium flyers are only worth it if the response rate doubles, not rises 40%',correct:false}
 ],
 explanation:'Standard: profit = \u00a3800 \u2212 \u00a3180 = \u00a3620, ROI = 344%. Premium: profit = \u00a31,120 \u2212 \u00a3260 = \u00a3860, ROI = 331%. Although premium has slightly lower ROI, the absolute profit is \u00a3240 higher. The cheaper option is not the better value here.'},
 
@@ -723,9 +723,9 @@ optionA:{label:'Loft Insulation',details:[{key:'Cost',value:'\u00a3450'},{key:'A
 optionB:{label:'Cavity Wall',details:[{key:'Cost',value:'\u00a31,200'},{key:'Annual saving',value:'\u00a3195'}]},
 conclusions:[
 {text:'Cavity wall insulation has the shorter payback \u2014 6.15 years vs 6.62 years for loft insulation',correct:true},
-{text:'Loft insulation pays back faster because it costs less',correct:false},
+{text:'Loft insulation has the shorter payback, because it costs \u00a3750 less to install',correct:false},
 {text:'They have the same payback period',correct:false},
-{text:'Loft insulation pays back in about 4 years',correct:false}
+{text:'Loft insulation has the shorter payback \u2014 about 4 years vs 6.15 years for cavity wall',correct:false}
 ],
 explanation:'Loft: \u00a3450 \u00f7 \u00a368 = 6.62 years. Cavity wall: \u00a31,200 \u00f7 \u00a3195 = 6.15 years. Despite costing more, cavity wall pays back slightly faster and saves far more over 25 years (\u00a34,875 vs \u00a31,700 total savings).'},
 
@@ -734,10 +734,10 @@ scenario:'A gym advertises \u201cNo joining fee this January!\u201d at \u00a345/
 optionA:{label:'No Joining Fee Gym',details:[{key:'Monthly',value:'\u00a345'},{key:'Joining fee',value:'\u00a30'},{key:'Contract',value:'12 months'}]},
 optionB:{label:'Rolling Gym',details:[{key:'Monthly',value:'\u00a335'},{key:'Joining fee',value:'\u00a375'},{key:'Contract',value:'Rolling'}]},
 conclusions:[
-{text:'The no-joining-fee gym is cheaper because there is no upfront cost',correct:false},
+{text:'The no-joining-fee gym is better value, because there is no \u00a375 upfront cost to pay',correct:false},
 {text:'The rolling gym is better value from month 8 onwards \u2014 and you can cancel anytime',correct:true},
 {text:'They cost the same over 12 months',correct:false},
-{text:'The no-joining-fee gym is always cheaper',correct:false}
+{text:'The no-joining-fee gym is always cheaper, whichever month you stop going',correct:false}
 ],
 explanation:'No-fee gym: 12 \u00d7 \u00a345 = \u00a3540 (locked in). Rolling gym: \u00a375 + (12 \u00d7 \u00a335) = \u00a3495 (and you can leave). Break-even: \u00a375 \u00f7 (\u00a345 \u2212 \u00a335) = 7.5, so from month 8 the rolling gym is cheaper. The \u201cfree\u201d joining fee promotion hides \u00a3120/year in higher monthly costs.'},
 
@@ -746,7 +746,7 @@ scenario:'A parent is choosing between two nurseries for childcare, 5 days per w
 optionA:{label:'Nursery A',details:[{key:'Daily rate',value:'\u00a355'},{key:'Meals',value:'Included'},{key:'Nappies',value:'Included'}]},
 optionB:{label:'Nursery B',details:[{key:'Daily rate',value:'\u00a348'},{key:'Meals',value:'\u00a35/day extra'},{key:'Nappies',value:'\u00a320/week (parent supplies)'}]},
 conclusions:[
-{text:'Nursery B is cheaper because the daily rate is \u00a37 less',correct:false},
+{text:'Nursery B is better value because its daily rate is \u00a37 less than Nursery A\'s',correct:false},
 {text:'Nursery A is better value \u2014 annual cost \u00a313,750 vs \u00a314,250 for Nursery B',correct:true},
 {text:'They cost the same over a year',correct:false},
 {text:'Nursery B is \u00a31,000 cheaper per year',correct:false}
@@ -759,8 +759,8 @@ optionA:{label:'Buy Used Van',details:[{key:'Purchase',value:'\u00a312,000'},{ke
 optionB:{label:'Lease New Van',details:[{key:'Monthly lease',value:'\u00a3350 (inc. maintenance)'},{key:'Insurance',value:'\u00a3900/year'}]},
 conclusions:[
 {text:'Buying is cheaper \u2014 3-year cost \u00a318,000 vs \u00a315,300 for leasing',correct:false},
-{text:'Leasing is better value over 3 years \u2014 total cost \u00a315,300 vs \u00a318,000 for buying, plus you always have a reliable van',correct:true},
-{text:'Buying is better because you own the van afterwards',correct:false},
+{text:'Leasing is better value over 3 years \u2014 \u00a315,300 vs \u00a318,000 for buying',correct:true},
+{text:'Buying is better value because you own the van at the end of 3 years',correct:false},
 {text:'They cost the same over 3 years',correct:false}
 ],
 explanation:'Buy: \u00a312,000 + (3 \u00d7 \u00a3800) + (3 \u00d7 \u00a31,200) = \u00a312,000 + \u00a32,400 + \u00a33,600 = \u00a318,000. Lease: (36 \u00d7 \u00a3350) + (3 \u00d7 \u00a3900) = \u00a312,600 + \u00a32,700 = \u00a315,300. Leasing saves \u00a32,700 over 3 years (though you don\u2019t own the van).'},
@@ -770,9 +770,9 @@ scenario:'A student has \u00a3500 in savings earning 3% AER. She wants to buy a 
 optionA:{label:'Pay Cash Now',details:[{key:'Cost',value:'\u00a3500'},{key:'Interest earned',value:'\u00a30'}]},
 optionB:{label:'0% Credit Card',details:[{key:'Cost',value:'\u00a3500 (paid month 12)'},{key:'Interest earned',value:'\u00a315 on savings'}]},
 conclusions:[
-{text:'Paying cash is simpler so it is better value',correct:false},
+{text:'Paying cash is better value \u2014 it\'s simpler and the laptop costs \u00a3500 either way',correct:false},
 {text:'The 0% credit card is better value \u2014 she earns \u00a315 interest while the laptop costs the same',correct:true},
-{text:'The credit card will cost more due to hidden charges',correct:false},
+{text:'The credit card is worse value \u2014 hidden charges will cost more than the \u00a315',correct:false},
 {text:'They cost exactly the same either way',correct:false}
 ],
 explanation:'Cash: laptop costs \u00a3500, savings drop to \u00a30. Credit card: laptop costs \u00a3500 paid in month 12, meanwhile \u00a3500 \u00d7 3% = \u00a315 interest earned. Net cost with credit card: \u00a3500 \u2212 \u00a315 = \u00a3485. This is opportunity cost reasoning \u2014 what your money could earn elsewhere.'},
@@ -784,7 +784,7 @@ optionB:{label:'Bus Monthly Pass',details:[{key:'Monthly pass',value:'\u00a375'}
 conclusions:[
 {text:'Driving is cheaper because you control the costs',correct:false},
 {text:'The bus pass is better value \u2014 monthly cost \u00a375 vs approximately \u00a3193 for driving',correct:true},
-{text:'Driving costs about \u00a375 per month \u2014 the same as the bus pass',correct:false},
+{text:'Driving costs about \u00a375 per month in fuel and parking, the same as the monthly bus pass',correct:false},
 {text:'The bus is only cheaper if petrol prices rise above \u00a32/litre',correct:false}
 ],
 explanation:'Daily fuel: 16 miles at 30 mpg = 0.533 gallons = 2.43 litres \u00d7 \u00a31.55 = \u00a33.76/day. Driving: 22 \u00d7 (\u00a33.76 + \u00a35) = 22 \u00d7 \u00a38.76 = \u00a3192.72. Note: this excludes wear and tear. Bus pass: \u00a375/month. Bus saves over \u00a3100/month.'},
@@ -796,7 +796,7 @@ optionB:{label:'Buy What You Need',details:[{key:'Monthly spend',value:'\u00a380
 conclusions:[
 {text:'The subscription box is amazing value \u2014 \u00a3250 of products for \u00a329.99',correct:false},
 {text:'Buying what you need is better value \u2014 you spend \u00a380 on things you actually use vs paying \u00a329.99 for \u00a380 of usable products plus \u00a3170 of waste',correct:false},
-{text:'The subscription box gives \u00a380 of usable value for \u00a329.99, which is good value per-item \u2014 but only if you wouldn\u2019t spend that \u00a329.99 on something you want more',correct:true},
+{text:'The box gives \u00a380 of usable value for \u00a329.99 a month \u2014 good, unless that money has a better use',correct:true},
 {text:'The subscription is worthless because you don\u2019t use most of the products',correct:false}
 ],
 explanation:'The headline \u00a3250 value is based on RRP, not what you\u2019d actually buy. Usable value: \u00a380 for \u00a329.99 is still good per-item value. But the opportunity cost of \u00a3360/year should be weighed against what else that money could buy. Critical thinking: advertised value \u2260 personal value.'},
@@ -807,7 +807,7 @@ optionA:{label:'Variable Tariff',details:[{key:'Rate (months 1\u20136)',value:'2
 optionB:{label:'Fixed Tariff',details:[{key:'Rate',value:'26p/kWh all year'},{key:'Exit fee',value:'\u00a375 if leaving early'}]},
 conclusions:[
 {text:'The fixed tariff saves money \u2014 annual cost \u00a3936 vs \u00a31,116 for variable',correct:true},
-{text:'The variable tariff is cheaper because there is no exit fee',correct:false},
+{text:'The variable tariff is cheaper over the year because there is no \u00a375 exit fee',correct:false},
 {text:'They cost the same over the year',correct:false},
 {text:'The fixed tariff is only better if rates rise by more than 10p',correct:false}
 ],
@@ -818,9 +818,9 @@ scenario:'Two job offers for a graduate. Job A: \u00a328,000 salary in Mancheste
 optionA:{label:'Manchester Job',details:[{key:'Salary',value:'\u00a328,000'},{key:'Tax/NI',value:'about 1/6'},{key:'Rent',value:'\u00a3650/month'}]},
 optionB:{label:'London Job',details:[{key:'Salary',value:'\u00a334,000'},{key:'Tax/NI',value:'about 1/6'},{key:'Rent',value:'\u00a31,200/month'}]},
 conclusions:[
-{text:'The London job is better because the salary is \u00a36,000 higher',correct:false},
+{text:'The London job is better because the salary is \u00a36,000 a year higher',correct:false},
 {text:'The Manchester job gives more disposable income \u2014 about \u00a31,294/month vs \u00a31,161/month after tax and rent',correct:true},
-{text:'They give the same disposable income after rent',correct:false},
+{text:'They give the same disposable income once tax and rent are taken off',correct:false},
 {text:'The London job gives more disposable income because the salary is higher',correct:false}
 ],
 explanation:'Take off a sixth for tax and NI. Manchester: \u00a328,000 \u2212 a sixth (\u2248 \u00a34,667) \u2248 \u00a323,333 net \u00f7 12 \u2248 \u00a31,944/month \u2212 \u00a3650 rent \u2248 \u00a31,294 disposable. London: \u00a334,000 \u2212 a sixth (\u2248 \u00a35,667) \u2248 \u00a328,333 net \u00f7 12 \u2248 \u00a32,361/month \u2212 \u00a31,200 rent \u2248 \u00a31,161 disposable. A higher salary does not always mean more money in your pocket.'},
@@ -831,9 +831,9 @@ optionA:{label:'Cleaner A',details:[{key:'Per clean',value:'\u00a310'},{key:'Fre
 optionB:{label:'Cleaner B',details:[{key:'Per clean',value:'\u00a315'},{key:'Frequency',value:'Every 6 weeks'},{key:'Cleans/year',value:'9'}]},
 conclusions:[
 {text:'Cleaner A is better value because each clean costs less',correct:false},
-{text:'Cleaner B is better value overall \u2014 \u00a3135/year vs \u00a3130/year, but windows stay cleaner for longer and the difference is only \u00a35',correct:true},
-{text:'Cleaner A saves \u00a350 per year',correct:false},
-{text:'They cost the same per year',correct:false}
+{text:'Cleaner B is better value overall \u2014 \u00a3135 vs \u00a3130 a year, but the windows stay cleaner',correct:true},
+{text:'Cleaner A is the better value overall \u2014 it saves \u00a350 a year',correct:false},
+{text:'They cost the same per year once the extra visits are counted',correct:false}
 ],
 explanation:'Cleaner A: 13 \u00d7 \u00a310 = \u00a3130/year. Cleaner B: 9 \u00d7 \u00a315 = \u00a3135/year. Cleaner B costs just \u00a35 more per year but provides a superior result. Sometimes the slightly more expensive option gives better overall value when quality factors are considered.'},
 
@@ -842,9 +842,9 @@ scenario:'A car insurance comparison site shows: Insurer A at \u00a3480/year (co
 optionA:{label:'Insurer A',details:[{key:'Premium',value:'\u00a3480/year'},{key:'Cover',value:'Comprehensive'},{key:'Excess',value:'\u00a3250'},{key:'Courtesy car',value:'Yes'}]},
 optionB:{label:'Insurer B',details:[{key:'Premium',value:'\u00a3340/year'},{key:'Cover',value:'TPFT'},{key:'Excess',value:'\u00a3500'},{key:'Courtesy car',value:'No'}]},
 conclusions:[
-{text:'Insurer B is better value \u2014 \u00a3140 cheaper per year',correct:false},
-{text:'Insurer A is better value \u2014 the \u00a3140 extra buys comprehensive cover on a \u00a34,500 car, a lower excess, and a courtesy car',correct:true},
-{text:'They offer the same level of protection',correct:false},
+{text:'Insurer B is better value \u2014 it\'s \u00a3140 cheaper per year for the same car',correct:false},
+{text:'Insurer A is better value \u2014 \u00a3140 more buys full cover, a lower excess and a courtesy car',correct:true},
+{text:'They offer the same level of protection, so the cheaper one wins',correct:false},
 {text:'Insurer B is better because you save money every month',correct:false}
 ],
 explanation:'Insurer B saves \u00a3140/year but: no cover for damage to your own car in an accident (only TPFT), \u00a3250 higher excess per claim, and no courtesy car if yours is off the road. On a \u00a34,500 car, one own-fault accident would cost far more than the \u00a3140 saving. The cheapest policy is not the best value when risk is considered.'},
@@ -855,8 +855,8 @@ optionA:{label:'Hire Employee',details:[{key:'Hourly rate',value:'\u00a315/hour'
 optionB:{label:'Outsource',details:[{key:'Hourly rate',value:'\u00a340/hour'},{key:'Hours/week',value:'Variable'}]},
 conclusions:[
 {text:'Hiring becomes cheaper above approximately 8.5 hours per week of outsourced work',correct:true},
-{text:'Outsourcing is always cheaper because you only pay for hours needed',correct:false},
-{text:'Hiring is always cheaper because the hourly rate is lower',correct:false},
+{text:'Outsourcing is always cheaper, because you only pay for the hours of work you need',correct:false},
+{text:'Hiring is always cheaper, because \u00a315 an hour is less than \u00a340 an hour',correct:false},
 {text:'Hiring becomes cheaper above 15 hours per week',correct:false}
 ],
 explanation:'Weekly employee cost: (20 \u00d7 \u00a315) + (\u00a3180 \u00f7 4.33) = \u00a3300 + \u00a341.57 = \u00a3341.57. Weekly outsource cost: 40h. Set equal: 40h = 341.57 \u2192 h = 8.54 hours. Above about 8.5 hours/week of outsourced work, hiring a part-time employee is cheaper (and you get 20 hours of capacity).'},
@@ -867,7 +867,7 @@ optionA:{label:'Buy Lunch',details:[{key:'Per meal',value:'\u00a35.50'},{key:'We
 optionB:{label:'Meal Prep',details:[{key:'Weekly ingredients',value:'\u00a325'},{key:'Containers',value:'\u00a340 one-off'},{key:'Prep time',value:'45 min/week'},{key:'Opportunity cost',value:'\u00a311.44/hour'}]},
 conclusions:[
 {text:'Meal prep is clearly cheaper \u2014 \u00a3790 vs \u00a3825 for buying, because the time spent prepping costs nothing',correct:false},
-{text:'Meal prep saves \u00a335 in direct costs, but if the 45 minutes/week could be spent earning \u00a311.44/hour, the true cost of meal prep exceeds buying \u2014 opportunity cost matters',correct:true},
+{text:'Meal prep saves \u00a335 in direct costs, but the 45 minutes a week could earn more than that',correct:true},
 {text:'Meal prep saves over \u00a3200 per year',correct:false},
 {text:'Buying lunch is always better value because time is money',correct:false}
 ],
@@ -906,7 +906,7 @@ optionA:{label:'Shop A',details:[{key:'Pack price',value:'\u00a34.50'},{key:'Del
 optionB:{label:'Shop B',details:[{key:'Pack price',value:'\u00a35.80'},{key:'Delivery',value:'Free'}]},
 conclusions:[
 {text:'Shop A is cheaper \u2014 \u00a34.50 vs \u00a35.80',correct:false},
-{text:'Shop A is cheaper overall \u2014 \u00a36.50 vs \u00a35.80',correct:false},
+{text:'Shop A is cheaper overall \u2014 \u00a36.50 vs \u00a35.80 for Shop B',correct:false},
 {text:'Shop B is cheaper overall \u2014 \u00a35.80 vs \u00a36.50 for Shop A',correct:true},
 {text:'They cost the same once delivery is added',correct:false}
 ],
@@ -929,7 +929,7 @@ scenario:'Ella buys a sandwich every school day (5 days a week). She compares bu
 optionA:{label:'Canteen',details:[{key:'Per sandwich',value:'\u00a32.50'}]},
 optionB:{label:'Homemade',details:[{key:'Weekly ingredients',value:'\u00a36.00'}]},
 conclusions:[
-{text:'The canteen is cheaper \u2014 \u00a32.50 per sandwich is reasonable',correct:false},
+{text:'The canteen is cheaper \u2014 \u00a32.50 per sandwich vs \u00a36 per week for homemade',correct:false},
 {text:'Homemade is cheaper \u2014 \u00a36 per week vs \u00a312.50 per week for the canteen',correct:true},
 {text:'They cost the same per week',correct:false},
 {text:'The canteen saves \u00a36.50 per week',correct:false}
@@ -942,7 +942,7 @@ optionA:{label:'Quick Cabs',details:[{key:'Fixed fare',value:'\u00a312'}]},
 optionB:{label:'City Taxis',details:[{key:'Base fare',value:'\u00a33'},{key:'Per mile',value:'\u00a32'},{key:'Distance',value:'5 miles'}]},
 conclusions:[
 {text:'Quick Cabs is cheaper \u2014 \u00a312 vs \u00a313 for City Taxis',correct:true},
-{text:'City Taxis is cheaper \u2014 \u00a33 base is lower',correct:false},
+{text:'City Taxis is cheaper \u2014 its \u00a33 base fare is lower than \u00a312',correct:false},
 {text:'They cost the same',correct:false},
 {text:'City Taxis is cheaper at \u00a310',correct:false}
 ],
@@ -965,7 +965,7 @@ scenario:'Two cinemas show the same film. A group of 4 friends want to go.',
 optionA:{label:'Cineworld',details:[{key:'Adult ticket',value:'\u00a311 each'}]},
 optionB:{label:'Vue',details:[{key:'Group deal',value:'\u00a340 for up to 4'}]},
 conclusions:[
-{text:'Cineworld is cheaper \u2014 \u00a344 vs \u00a340',correct:false},
+{text:'Cineworld is cheaper \u2014 \u00a344 vs \u00a340 for Vue',correct:false},
 {text:'Vue is cheaper \u2014 \u00a340 vs \u00a344 for Cineworld',correct:true},
 {text:'They cost the same for 4 people',correct:false},
 {text:'Cineworld is cheaper per person',correct:false}
@@ -978,7 +978,7 @@ scenario:'A new game costs \u00a345 from the shop. An online marketplace has it 
 optionA:{label:'Shop',details:[{key:'Game price',value:'\u00a345'},{key:'Includes',value:'Protective case'}]},
 optionB:{label:'Online',details:[{key:'Game price',value:'\u00a338'},{key:'Delivery',value:'\u00a34.99'},{key:'Case',value:'\u00a33'}]},
 conclusions:[
-{text:'The online deal is cheaper at \u00a338',correct:false},
+{text:'The online deal is cheaper overall \u2014 \u00a338 vs \u00a345 for the shop',correct:false},
 {text:'The shop is cheaper overall \u2014 \u00a345 vs \u00a345.99 for online',correct:true},
 {text:'They cost the same',correct:false},
 {text:'Online saves \u00a37',correct:false}
@@ -990,7 +990,7 @@ scenario:'A mobile top-up deal offers 500 minutes for \u00a310. But calls to non
 optionA:{label:'Top-Up Deal',details:[{key:'Cost',value:'\u00a310'},{key:'Minutes',value:'500'},{key:'Non-network',value:'20p/min extra'}]},
 optionB:{label:'Unlimited Plan',details:[{key:'Cost',value:'\u00a315'},{key:'Minutes',value:'Unlimited'}]},
 conclusions:[
-{text:'The top-up deal is cheaper at \u00a310',correct:false},
+{text:'The top-up deal is cheaper \u2014 just \u00a310 vs \u00a315 for the unlimited plan',correct:false},
 {text:'The unlimited plan is cheaper \u2014 \u00a315 vs \u00a330 for the top-up deal',correct:true},
 {text:'They cost the same',correct:false},
 {text:'The top-up deal costs \u00a312 in total',correct:false}
@@ -1002,7 +1002,7 @@ scenario:'A \u201cfree delivery\u201d website sells a hoodie for \u00a325 but ch
 optionA:{label:'Website',details:[{key:'Hoodie',value:'\u00a325'},{key:'Service fee',value:'\u00a33.50'},{key:'Delivery',value:'Free'}]},
 optionB:{label:'Shop',details:[{key:'Hoodie',value:'\u00a327'},{key:'Extra fees',value:'None'}]},
 conclusions:[
-{text:'The website is cheaper at \u00a325',correct:false},
+{text:'The website is cheaper \u2014 \u00a325 vs \u00a327 for the shop, with free delivery',correct:false},
 {text:'The shop is cheaper \u2014 \u00a327 vs \u00a328.50 for the website',correct:true},
 {text:'They cost the same',correct:false},
 {text:'The website saves \u00a32',correct:false}
@@ -1015,7 +1015,7 @@ optionA:{label:'Coach',details:[{key:'Hire cost',value:'\u00a3200'},{key:'Studen
 optionB:{label:'Cars',details:[{key:'Petrol per car',value:'\u00a35'},{key:'Students per car',value:'4'},{key:'Parking per car',value:'\u00a38'}]},
 conclusions:[
 {text:'Cars are cheaper \u2014 \u00a35 per car vs \u00a3200 for a coach',correct:false},
-{text:'The coach is cheaper \u2014 \u00a35 per student vs \u00a33.25 per student for cars',correct:false},
+{text:'The coach is cheaper \u2014 \u00a35 per student vs \u00a33.25 per student for the cars',correct:false},
 {text:'Cars are cheaper \u2014 \u00a33.25 per student vs \u00a35 per student for the coach',correct:true},
 {text:'They cost the same per student',correct:false}
 ],
@@ -1028,7 +1028,7 @@ optionB:{label:'Other Store',details:[{key:'Headphones',value:'\u00a326'},{key:'
 conclusions:[
 {text:'The deal store is cheaper at \u00a320',correct:false},
 {text:'The deal store is cheaper overall \u2014 \u00a324.99 vs \u00a326',correct:true},
-{text:'The other store is cheaper at \u00a326',correct:false},
+{text:'The other store is cheaper, as its \u00a326 includes the warranty',correct:false},
 {text:'They cost the same',correct:false}
 ],
 explanation:'Deal store: \u00a320 + \u00a34.99 = \u00a324.99. Other store: \u00a326. Despite the hidden warranty cost, the deal store is still \u00a31.01 cheaper.'},
@@ -1039,7 +1039,7 @@ scenario:'Two bags of rice at the supermarket. Bag A: 2 kg for \u00a33.00. Bag B
 optionA:{label:'Bag A',details:[{key:'Weight',value:'2 kg'},{key:'Price',value:'\u00a33.00'}]},
 optionB:{label:'Bag B',details:[{key:'Weight',value:'5 kg'},{key:'Price',value:'\u00a36.50'}]},
 conclusions:[
-{text:'Bag A is better value \u2014 \u00a31.50/kg vs \u00a31.30/kg',correct:false},
+{text:'Bag A is better value \u2014 \u00a31.50/kg vs \u00a31.30/kg for Bag B',correct:false},
 {text:'Bag B is better value \u2014 \u00a31.30/kg vs \u00a31.50/kg for Bag A',correct:true},
 {text:'They cost the same per kg',correct:false},
 {text:'Bag A is better because it costs less overall',correct:false}
@@ -1051,7 +1051,7 @@ scenario:'Two packs of felt-tip pens. Pack A: 12 pens for \u00a33.60. Pack B: 20
 optionA:{label:'Pack A',details:[{key:'Pens',value:'12'},{key:'Price',value:'\u00a33.60'}]},
 optionB:{label:'Pack B',details:[{key:'Pens',value:'20'},{key:'Price',value:'\u00a35.00'}]},
 conclusions:[
-{text:'Pack A is better value \u2014 30p per pen vs 25p per pen',correct:false},
+{text:'Pack A is better value \u2014 30p per pen vs 25p per pen for Pack B',correct:false},
 {text:'Pack B is better value \u2014 25p per pen vs 30p per pen for Pack A',correct:true},
 {text:'They cost the same per pen',correct:false},
 {text:'Pack A is better because it costs less',correct:false}
@@ -1064,7 +1064,7 @@ optionA:{label:'Job A',details:[{key:'Pay',value:'\u00a354'},{key:'Hours',value:
 optionB:{label:'Job B',details:[{key:'Pay',value:'\u00a380'},{key:'Hours',value:'9'}]},
 conclusions:[
 {text:'Job A pays better per hour \u2014 \u00a39/hour vs \u00a38.89/hour for Job B',correct:true},
-{text:'Job B pays better \u2014 \u00a380 is more than \u00a354',correct:false},
+{text:'Job B pays better per hour, because \u00a380 is more than \u00a354 for Job A',correct:false},
 {text:'They pay the same hourly rate',correct:false},
 {text:'Job B pays \u00a310/hour',correct:false}
 ],
@@ -1075,7 +1075,7 @@ scenario:'Two bottles of shampoo. Bottle A: 300 ml for \u00a32.40. Bottle B: 500
 optionA:{label:'Bottle A',details:[{key:'Volume',value:'300 ml'},{key:'Price',value:'\u00a32.40'}]},
 optionB:{label:'Bottle B',details:[{key:'Volume',value:'500 ml'},{key:'Price',value:'\u00a33.50'}]},
 conclusions:[
-{text:'Bottle A is cheaper per ml \u2014 0.8p/ml vs 0.7p/ml',correct:false},
+{text:'Bottle A is cheaper per ml \u2014 0.8p/ml vs 0.7p/ml for Bottle B',correct:false},
 {text:'Bottle B is better value \u2014 0.7p/ml vs 0.8p/ml for Bottle A',correct:true},
 {text:'They cost the same per ml',correct:false},
 {text:'Bottle A is better because it costs less in total',correct:false}
@@ -1087,7 +1087,7 @@ scenario:'Two car parks near school. Car Park A charges \u00a36 for 4 hours. Car
 optionA:{label:'Car Park A',details:[{key:'Cost',value:'\u00a36'},{key:'Hours',value:'4'}]},
 optionB:{label:'Car Park B',details:[{key:'Cost',value:'\u00a38'},{key:'Hours',value:'6'}]},
 conclusions:[
-{text:'Car Park A is cheaper per hour \u2014 \u00a31.50/hour vs \u00a31.33/hour',correct:false},
+{text:'Car Park A is cheaper per hour \u2014 \u00a31.50/hour vs \u00a31.33/hour for Car Park B',correct:false},
 {text:'Car Park B is cheaper per hour \u2014 \u00a31.33/hour vs \u00a31.50/hour for Car Park A',correct:true},
 {text:'They cost the same per hour',correct:false},
 {text:'Car Park A is better because it costs less overall',correct:false}
@@ -1101,9 +1101,9 @@ optionA:{label:'Lunch Pass',details:[{key:'Monthly cost',value:'\u00a330'},{key:
 optionB:{label:'Pay Per Lunch',details:[{key:'Per lunch',value:'\u00a32.50'}]},
 conclusions:[
 {text:'The pass is worth it if you eat more than 12 lunches per month \u2014 from the 13th lunch onwards',correct:true},
-{text:'The pass is worth it if you eat 8 or more lunches per month',correct:false},
-{text:'Individual lunches are always cheaper',correct:false},
-{text:'The pass is only worth it if you eat 15 or more lunches per month',correct:false}
+{text:'The pass is worth it if you eat 8 or more lunches per month, about two a week',correct:false},
+{text:'Individual lunches are always cheaper, however many you eat in a month',correct:false},
+{text:'The pass is only worth it if you eat 15 or more lunches per month, three a week',correct:false}
 ],
 explanation:'\u00a330 \u00f7 \u00a32.50 = 12. After 12 lunches both cost \u00a330, so the pass is not yet cheaper. From the 13th lunch onwards the pass is better value.'},
 
@@ -1112,10 +1112,10 @@ scenario:'A reusable water bottle costs \u00a315. Buying bottled water costs \u0
 optionA:{label:'Reusable Bottle',details:[{key:'Upfront cost',value:'\u00a315'},{key:'Refill cost',value:'\u00a30'}]},
 optionB:{label:'Bottled Water',details:[{key:'Per bottle',value:'\u00a31'}]},
 conclusions:[
-{text:'The reusable bottle saves money after 15 bottles',correct:false},
+{text:'The reusable bottle saves money from the 15th bottle of water onwards',correct:false},
 {text:'The reusable bottle saves money after more than 15 bottles \u2014 from bottle 16 onwards',correct:true},
-{text:'Bottled water is always cheaper',correct:false},
-{text:'The reusable bottle saves money after 10 bottles',correct:false}
+{text:'Bottled water is always cheaper, however many bottles you drink',correct:false},
+{text:'The reusable bottle saves money from the 10th bottle of water onwards',correct:false}
 ],
 explanation:'Reusable: \u00a315 upfront then free. Bottled: \u00a31 each. After 15 bottles they cost the same (\u00a315 each). From bottle 16 onwards, the reusable bottle is cheaper.'}
 ]
