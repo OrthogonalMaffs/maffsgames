@@ -261,8 +261,8 @@ core:[
    iqs:[
      {type:'read',prompt:'Estimate the wind speed when wave height is 3 m.',answer:38.3,tol:2},
      {type:'extrap',prompt:'Use the model to estimate h when s = 70. Is this reliable?',answer:7.7,tol:0.5,reliable:false,reason:'Beyond the data range'},
-     {type:'mcq',prompt:'What property indicates wind speed has more effect at higher speeds?',correct:'The graph is steeper at higher wind speeds',wrong:['The graph is linear','The graph flattens off','The gradient is constant']},
-     {type:'mcq',prompt:'Describe one limitation of this model.',correct:'No upper limit — predicts unrealistically large wave heights',wrong:['The model is too accurate','It only works for hurricanes','Wave heights cannot be positive']}
+     {type:'mcq',prompt:'What property indicates wind speed has more effect at higher speeds?',correct:'The graph is steeper at higher wind speeds',wrong:['The graph is linear, so wind speed has the same effect at every speed','The graph flattens off','The gradient is constant']},
+     {type:'mcq',prompt:'Describe one limitation of this model.',correct:'No upper limit — predicts unrealistically large wave heights',wrong:['The model is too accurate','It only works for hurricanes','Wave heights cannot be positive, so the model gives nonsense at every wind speed']}
    ]},
   {id:'CM2',eqLatex:'P = x^3 - 6x^2 + 9x',context:'Profit P (£thousands) from selling x hundred items.',
    fn:x=>x*x*x-6*x*x+9*x,xRange:[0,5],yRange:[-2,22],xLabel:'x (hundreds)',yLabel:'P (£k)',
@@ -271,7 +271,7 @@ core:[
    iqs:[
      {type:'read',prompt:'Estimate P when x = 2.5.',answer:0.625,tol:0.3},
      {type:'mcq',prompt:'At what value of x does profit reach its turning point (local minimum)?',correct:'x = 3',wrong:['x = 0','x = 1','x = 5']},
-     {type:'mcq',prompt:'Describe one limitation of this model.',correct:'The model predicts profit keeps rising without limit as x increases',wrong:['The model predicts a loss when x = 3','The model is linear','x cannot be a whole number']}
+     {type:'mcq',prompt:'Describe one limitation of this model.',correct:'The model predicts profit keeps rising without limit as x increases',wrong:['The model predicts a loss when x = 3, at 300 items sold','The model is linear','x cannot be a whole number']}
    ]},
   {id:'CM3',eqLatex:'P = 100 \\times 1.05^t',context:'Population P (thousands), t = years since 2010.',
    fn:t=>100*Math.pow(1.05,t),xRange:[0,20],yRange:[90,280],xLabel:'t (years)',yLabel:'P (thousands)',
@@ -280,7 +280,7 @@ core:[
    iqs:[
      {type:'read',prompt:'Estimate the year when the population reaches 200,000.',answer:2024.2,tol:0.8},
      {type:'extrap',prompt:'Use the model to estimate P when t = 25. Is this reliable?',answer:338.6,tol:17,reliable:false,reason:'Assumes growth rate stays constant'},
-     {type:'mcq',prompt:'What does the increasing steepness tell you?',correct:'The population is growing at an increasing rate',wrong:['Population is decreasing','Growth rate is constant','Population will reach a maximum']}
+     {type:'mcq',prompt:'What does the increasing steepness tell you?',correct:'The population is growing at an increasing rate',wrong:['Population is decreasing','Growth rate is constant','The population will level off and reach a maximum soon']}
    ]},
   {id:'CM4',eqLatex:'d = 0.006v^2',context:'Braking distance d (m) vs speed v (mph).',
    fn:v=>0.006*v*v,xRange:[0,70],yRange:[0,32],xLabel:'v (mph)',yLabel:'d (m)',
@@ -288,7 +288,7 @@ core:[
    answers:{10:0.6,20:2.4,40:9.6,50:15.0,70:29.4},
    iqs:[
      {type:'read',prompt:'Estimate the speed at which braking distance reaches 20 m.',answer:57.7,tol:3},
-     {type:'mcq',prompt:'What does the shape tell you about speed and braking distance?',correct:'Braking distance increases more rapidly as speed increases',wrong:['Braking distance is proportional to speed','The relationship is linear','Braking distance decreases at high speeds']},
+     {type:'mcq',prompt:'What does the shape tell you about speed and braking distance?',correct:'Braking distance increases more rapidly as speed increases',wrong:['Braking distance is directly proportional to the speed of the car','The relationship is linear','Braking distance decreases at high speeds']},
      {type:'mcq',prompt:'Describe one limitation.',correct:'The model assumes the same road surface and brakes at every speed, but wet roads or worn tyres lengthen the braking distance',wrong:['The model is exact','Speed cannot be measured','Braking distance is always negative']}
    ]},
   {id:'CM5',eqLatex:'C = \\frac{2000}{n} + 5',context:'Average cost C (£) per item when producing n items.',
@@ -298,7 +298,7 @@ core:[
    iqs:[
      {type:'read',prompt:'Estimate how many items must be produced for the average cost to fall to £30.',answer:80,tol:8},
      {type:'mcq',prompt:'What value does C approach as n gets very large?',correct:'£5',wrong:['£0','£2000','£200']},
-     {type:'mcq',prompt:'Describe one limitation.',correct:'Model allows fractional items and n cannot be zero',wrong:['Cost is always £5','n must be negative','The model is linear']}
+     {type:'mcq',prompt:'Describe one limitation.',correct:'Model allows fractional items and n cannot be zero',wrong:['The average cost is always £5, whatever the number of items','n must be negative','The model is linear']}
    ]},
   {id:'CM6',eqLatex:'V = 4x^3 - 36x^2 + 80x',context:'Volume V (cm³) of an open box with corner cut x (cm).',
    fn:x=>4*x*x*x-36*x*x+80*x,xRange:[0,4],yRange:[0,60],xLabel:'x (cm)',yLabel:'V (cm³)',
@@ -306,7 +306,7 @@ core:[
    answers:{0.5:31.5,1:48,1.5:52.5,2.5:37.5,3:24,3.5:10.5},
    iqs:[
      {type:'read',prompt:'Estimate the maximum volume.',answer:52.5,tol:3},
-     {type:'mcq',prompt:'What do the roots of the graph represent in context?',correct:'The corner sizes that give zero volume',wrong:['Maximum volume points','The box dimensions','Points where cost is zero']}
+     {type:'mcq',prompt:'What do the roots of the graph represent in context?',correct:'The corner sizes that give zero volume',wrong:['The corner sizes that give the maximum volume','The box dimensions','Points where cost is zero']}
    ]},
   {id:'CM7',eqLatex:'M = 80 \\times 0.85^t',context:'Mass M (g) of a decaying substance, t = days.',
    fn:t=>80*Math.pow(0.85,t),xRange:[0,10],yRange:[0,85],xLabel:'t (days)',yLabel:'M (g)',
@@ -314,8 +314,8 @@ core:[
    answers:{2:57.8,4:41.8,6:30.2,8:21.8},
    iqs:[
      {type:'read',prompt:'Estimate the number of days for mass to halve (reach 40 g).',answer:4.3,tol:0.4},
-     {type:'mcq',prompt:'What does the decreasing steepness tell you?',correct:'The substance decays more slowly as time increases',wrong:['Decay rate is constant','The mass increases','Decay accelerates over time']},
-     {type:'mcq',prompt:'Describe one limitation.',correct:'Model predicts mass never reaches zero',wrong:['Mass becomes negative','The model is linear','Decay stops after 10 days']}
+     {type:'mcq',prompt:'What does the decreasing steepness tell you?',correct:'The substance decays more slowly as time increases',wrong:['Decay rate is constant','The mass increases','The substance decays more quickly as time increases']},
+     {type:'mcq',prompt:'Describe one limitation.',correct:'Model predicts mass never reaches zero',wrong:['Mass becomes negative','The model is linear','The model predicts that decay stops after 10 days']}
    ]},
   {id:'CM8',eqLatex:'h = 15t - 5t^2',context:'Height h (m) of a projectile, t = time (s).',
    fn:t=>15*t-5*t*t,xRange:[0,3],yRange:[0,13],xLabel:'t (s)',yLabel:'h (m)',
@@ -323,7 +323,7 @@ core:[
    answers:{0.5:6.25,1:10,2:10,2.5:6.25},
    iqs:[
      {type:'read',prompt:'Estimate the maximum height.',answer:11.25,tol:0.6},
-     {type:'mcq',prompt:'What do the roots represent in context?',correct:'The times when the object is at ground level',wrong:['Maximum height points','Points of zero velocity','Times of maximum speed']},
+     {type:'mcq',prompt:'What do the roots represent in context?',correct:'The times when the object is at ground level',wrong:['Maximum height points','The times when the object has zero velocity at the top','Times of maximum speed']},
      {type:'mcq',prompt:'Describe one limitation.',correct:'Model gives negative heights for t > 3 — not physically meaningful',wrong:['The model is exact','Height is always positive','Air resistance is included']}
    ]},
   {id:'CM9',eqLatex:'t = \\frac{120}{s}',context:'Journey time t (minutes) at average speed s (mph).',
@@ -333,7 +333,7 @@ core:[
    iqs:[
      {type:'read',prompt:'Estimate t when s = 50.',answer:2.4,tol:0.2},
      {type:'mcq',prompt:'What value does t approach as s gets very large?',correct:'0 minutes',wrong:['120 minutes','1 minute','Infinity']},
-     {type:'mcq',prompt:'Describe one limitation.',correct:'Speed cannot be zero or negative in reality',wrong:['Time is always 120 minutes','The relationship is linear','Speed has no effect on time']}
+     {type:'mcq',prompt:'Describe one limitation.',correct:'Speed cannot be zero or negative in reality',wrong:['Time is always 120 minutes','The relationship is linear','The speed has no effect at all on the journey time']}
    ]},
   {id:'CM10',eqLatex:'h = 0.001s^2 + 0.04s - 0.00002s^3',context:'Extended wave height model with cubic term.',
    fn:s=>0.001*s*s+0.04*s-0.00002*s*s*s,xRange:[0,70],yRange:[0,2.5],xLabel:'s (mph)',yLabel:'h (m)',
@@ -341,7 +341,7 @@ core:[
    answers:{10:0.48,20:1.04,40:1.92,50:2,60:1.68},
    iqs:[
      {type:'read',prompt:'Estimate h when s = 55.',answer:1.9,tol:0.3},
-     {type:'mcq',prompt:'How does this differ from a simpler quadratic at high speeds?',correct:'The cubic term causes the curve to flatten and eventually turn',wrong:['There is no difference','The cubic gives larger heights at high speeds','The cubic grows faster']}
+     {type:'mcq',prompt:'How does this differ from a simpler quadratic at high speeds?',correct:'The cubic term causes the curve to flatten and eventually turn',wrong:['There is no difference','The cubic term gives larger wave heights than the quadratic at high speeds','The cubic grows faster']}
    ]},
   {id:'CM11',eqLatex:'A = 500 \\times 1.04^n',context:'Account balance A (£) after n years at 4% interest.',
    fn:n=>500*Math.pow(1.04,n),xRange:[0,25],yRange:[400,1400],xLabel:'n (years)',yLabel:'A (£)',
@@ -357,7 +357,7 @@ core:[
    answers:{20:4.8,40:7.2,80:4.8},
    iqs:[
      {type:'read',prompt:'Estimate the maximum fuel efficiency.',answer:7.5,tol:0.5},
-     {type:'mcq',prompt:'What do the roots represent?',correct:'Speeds at which fuel efficiency is zero',wrong:['Maximum efficiency points','Speed limits','Points of maximum acceleration']}
+     {type:'mcq',prompt:'What do the roots represent?',correct:'Speeds at which fuel efficiency is zero',wrong:['Maximum efficiency points','Speed limits','The speeds at which the car has maximum acceleration']}
    ]},
   {id:'CM13',eqLatex:'P = 0.5x^3 - 4x^2 + 8x',context:'Profit P (£000) vs price x (£).',
    fn:x=>0.5*x*x*x-4*x*x+8*x,xRange:[0,6],yRange:[-2,14],xLabel:'x (£)',yLabel:'P (£k)',
@@ -365,7 +365,7 @@ core:[
    answers:{1:4.5,2:4,3:1.5,4:0,5:2.5},
    iqs:[
      {type:'read',prompt:'Estimate P when x = 5.5.',answer:6.2,tol:1},
-     {type:'mcq',prompt:'What does x = 4 represent in context?',correct:'The price at which profit is zero (break-even)',wrong:['Maximum profit','Minimum cost','The optimal price']}
+     {type:'mcq',prompt:'What does x = 4 represent in context?',correct:'The price at which profit is zero (break-even)',wrong:['Maximum profit','Minimum cost','The optimal price, the one giving the maximum profit']}
    ]},
   {id:'CM14',eqLatex:'P = \\frac{100}{V}',context:'Pressure P (kPa) vs volume V (litres). Boyle\'s Law.',
    fn:V=>100/V,xRange:[1,20],yRange:[0,110],xLabel:'V (litres)',yLabel:'P (kPa)',
@@ -373,8 +373,8 @@ core:[
    answers:{2:50,4:25,5:20},
    iqs:[
      {type:'read',prompt:'Estimate P when V = 8.',answer:12.5,tol:1},
-     {type:'mcq',prompt:'What type of relationship does this graph represent?',correct:'Inverse proportion',wrong:['Direct proportion','Linear','Exponential']},
-     {type:'mcq',prompt:'Describe one limitation.',correct:'Model is valid only at fixed temperature',wrong:['Pressure is always 100 kPa','Volume cannot change','The model is linear']}
+     {type:'mcq',prompt:'What type of relationship does this graph represent?',correct:'Inverse proportion',wrong:['Direct proportion','Linear relationship','Exponential']},
+     {type:'mcq',prompt:'Describe one limitation.',correct:'Model is valid only at fixed temperature',wrong:['Pressure is always 100 kPa, whatever the volume','Volume cannot change','The model is linear']}
    ]},
   {id:'CM15',eqLatex:'h = 5 + 3\\sin(30t)°',context:'Height h (m) above ground on a Ferris wheel, t = seconds.',
    fn:t=>5+3*Math.sin(30*t*Math.PI/180),xRange:[0,12],yRange:[0,10],xLabel:'t (s)',yLabel:'h (m)',
@@ -383,7 +383,7 @@ core:[
    iqs:[
      {type:'read',prompt:'What is the maximum height?',answer:8,tol:0.3},
      {type:'read',prompt:'At what time is maximum height first reached?',answer:3,tol:0.2},
-     {type:'mcq',prompt:'What does the value 5 represent in the model?',correct:'The mean height / centre of oscillation',wrong:['The amplitude','The period','The maximum height']}
+     {type:'mcq',prompt:'What does the value 5 represent in the model?',correct:'The mean height / centre of oscillation',wrong:['The amplitude','The period','The maximum height of the wheel above the ground']}
    ]}
 ],
 alevel:[
@@ -393,7 +393,7 @@ alevel:[
    iqs:[
      {type:'roots',prompt:'Write down the x-values where the graph crosses the x-axis.',answers:[2,3],tol:0.1},
      {type:'tp',prompt:'Write down the coordinates of the turning point.',answer:{x:2.5,y:-0.25},tol:0.15},
-     {type:'mcq',prompt:'Which equation could produce this graph shape?',correct:'y = x² - 5x + 6',wrong:['y = x³ - 5x','y = 6 - 5x','y = e^x - 5']}
+     {type:'mcq',prompt:'Which equation could produce this graph shape?',correct:'y = x² - 5x + 6',wrong:['y = x³ - 5x + 6','y = 6 - 5x','y = e^x - 5']}
    ]},
   {id:'AL2',eqLatex:'y = x^3 - 3x',context:'',
    fn:x=>x*x*x-3*x,xRange:[-3,3],yRange:[-20,20],xLabel:'x',yLabel:'y',
@@ -416,8 +416,8 @@ alevel:[
    tableX:[-4,-2,-1,1,2,4],given:{'-4':1,'-1':-2,4:3},answers:{'-2':0,1:6,2:4},
    iqs:[
      {type:'mcq',prompt:'What are the equations of the asymptotes?',correct:'x = 0 and y = 2',wrong:['x = 2 and y = 0','x = 4 and y = 2','x = 0 and y = 4']},
-     {type:'mcq',prompt:'Of the x-values in the table, where is the gradient steepest?',correct:'x = ±1 (closest to the asymptote)',wrong:['x = ±4','x = 0','x = ±2']},
-     {type:'mcq',prompt:'Which equation matches this shape?',correct:'y = 4/x + 2 (shifted reciprocal)',wrong:['y = 4x + 2','y = 2/x²','y = ln(x) + 2']}
+     {type:'mcq',prompt:'Of the x-values in the table, where is the gradient steepest?',correct:'x = ±1 (closest to the asymptote)',wrong:['x = ±4 (furthest from the asymptote)','x = 0','x = ±2']},
+     {type:'mcq',prompt:'Which equation matches this shape?',correct:'y = 4/x + 2 (shifted reciprocal)',wrong:['y = 4x + 2','y = 2/x²','y = ln(x) + 2 (shifted logarithm)']}
    ]},
   {id:'AL5',eqLatex:'y = 2\\sin(x) + 1',context:'For 0° ≤ x ≤ 360°.',
    fn:x=>2*Math.sin(x*Math.PI/180)+1,xRange:[0,360],yRange:[-2,4],xLabel:'x (°)',yLabel:'y',
@@ -447,7 +447,7 @@ alevel:[
    iqs:[
      {type:'mcq',prompt:'What is the equation of the horizontal asymptote?',correct:'y = 0',wrong:['y = 10','y = −0.5','x = 0']},
      {type:'mcq',prompt:'At which x-value is the rate of decrease greatest?',correct:'x = 0',wrong:['x = 4','x = 6','x = 2']},
-     {type:'mcq',prompt:'Which equation matches this shape?',correct:'y = 10e^(−0.5x) — exponential decay',wrong:['y = 10 − 0.5x','y = 10/x','y = 10 × 0.5x']}
+     {type:'mcq',prompt:'Which equation matches this shape?',correct:'y = 10e^(−0.5x) — exponential decay',wrong:['y = 10 − 0.5x — a straight-line decrease','y = 10/x','y = 10 × 0.5x']}
    ]},
   {id:'AL9',eqLatex:'y = \\cos(2x)',context:'For 0° ≤ x ≤ 360°.',
    fn:x=>Math.cos(2*x*Math.PI/180),xRange:[0,360],yRange:[-1.5,1.5],xLabel:'x (°)',yLabel:'y',
@@ -462,7 +462,7 @@ alevel:[
    tableX:[-2,-1,0,1,3,4,6],given:{'-2':2.75,1:2,6:3.25},answers:{'-1':2.67,0:2.5,3:4,4:3.5},
    iqs:[
      {type:'mcq',prompt:'What are the equations of the asymptotes?',correct:'x = 2 and y = 3',wrong:['x = 0 and y = 3','x = 3 and y = 2','x = 2 and y = 0']},
-     {type:'mcq',prompt:'Which equation matches this shape?',correct:'Shifted reciprocal: y = 1/(x−2) + 3',wrong:['y = 3x − 2','y = e^(x−2) + 3','y = (x−2)² + 3']}
+     {type:'mcq',prompt:'Which equation matches this shape?',correct:'Shifted reciprocal: y = 1/(x−2) + 3',wrong:['y = 3x − 2','Shifted exponential: y = e^(x−2) + 3','Shifted quadratic: y = (x−2)² + 3']}
    ]},
   {id:'AL11',eqLatex:'y = x^2(x-3)',context:'',
    fn:x=>x*x*(x-3),xRange:[-2,4],yRange:[-8,20],xLabel:'x',yLabel:'y',
@@ -470,7 +470,7 @@ alevel:[
    iqs:[
      {type:'roots',prompt:'Write down all roots.',answers:[0,3],tol:0.1},
      {type:'tp',prompt:'Write down the coordinates of the local minimum.',answer:{x:2,y:-4},tol:0.15},
-     {type:'mcq',prompt:'What does the double root at x = 0 tell you?',correct:'The graph touches but does not cross the x-axis at x = 0',wrong:['The graph crosses the x-axis twice at x = 0','There is a vertical asymptote','The gradient is zero everywhere']}
+     {type:'mcq',prompt:'What does the double root at x = 0 tell you?',correct:'The graph touches but does not cross the x-axis at x = 0',wrong:['The graph crosses the x-axis twice over, both times at x = 0','There is a vertical asymptote','The gradient is zero everywhere']}
    ]},
   {id:'AL12',eqLatex:'y = -2x^2 + 8x - 3',context:'',
    fn:x=>-2*x*x+8*x-3,xRange:[-1,5],yRange:[-12,7],xLabel:'x',yLabel:'y',
@@ -508,14 +508,14 @@ level4:[
    answers:{0.05:8.75,0.1:15,0.15:18.75,0.25:18.75,0.3:15,0.35:8.75},
    iqs:[
      {type:'tp',prompt:'Write down the coordinates of the maximum stress.',answer:{x:0.2,y:20},tol:0.01},
-     {type:'mcq',prompt:'What does the root at ε = 0.4 represent?',correct:'Fracture point — the material fails',wrong:['Maximum strength','Elastic limit','Zero strain']}
+     {type:'mcq',prompt:'What does the root at ε = 0.4 represent?',correct:'Fracture point — the material fails',wrong:['Maximum strength — the peak of the stress curve','Elastic limit','Zero strain']}
    ]},
   {id:'L4_2',eqLatex:'V = 12e^{-20t}',context:'Capacitor discharge. V = voltage (V), t = time (s). RC = 0.05s.',
    fn:t=>12*Math.exp(-20*t),xRange:[0,0.25],yRange:[0,13],xLabel:'t (s)',yLabel:'V (V)',
    tableX:[0,0.025,0.05,0.1,0.15,0.2],given:{0:12,0.1:1.62},answers:{0.025:7.28,0.05:4.41,0.15:0.60,0.2:0.22},
    iqs:[
      {type:'read',prompt:'At what time does V reach 6V?',answer:0.0347,tol:0.003},
-     {type:'mcq',prompt:'What is the time constant of this circuit?',correct:'0.05 seconds',wrong:['20 seconds','12 seconds','0.1 seconds']}
+     {type:'mcq',prompt:'What is the time constant of this circuit?',correct:'0.05 seconds',wrong:['20 seconds','12 seconds','0.10 seconds']}
    ]},
   {id:'L4_3',eqLatex:'V = 240\\sin(100\\pi t)',context:'An AC supply. V (volts), t (seconds). Frequency 50 Hz.',
    fn:t=>240*Math.sin(100*Math.PI*t),xRange:[0,0.02],yRange:[-260,260],xLabel:'t (s)',yLabel:'V (V)',
@@ -529,7 +529,7 @@ level4:[
    tableX:[0.1,0.2,0.5,1,2,4],given:{0.1:120,1:12,4:3},answers:{0.2:60,0.5:24,2:6},
    iqs:[
      {type:'read',prompt:'Estimate the current when resistance is 50 Ω.',answer:0.24,tol:0.03},
-     {type:'mcq',prompt:'What happens to R as I approaches 0?',correct:'R approaches infinity',wrong:['R approaches 0','R approaches 12','R stays constant']}
+     {type:'mcq',prompt:'What happens to R as I approaches 0?',correct:'R approaches infinity',wrong:['R approaches 0','R approaches 12','R stays constant at every current']}
    ]},
   {id:'L4_5',eqLatex:'y = x^3 - 6x^2 + 9x',context:'Beam deflection y (mm) at position x (m).',
    fn:x=>x*x*x-6*x*x+9*x,xRange:[0,4],yRange:[-2,6],xLabel:'x (m)',yLabel:'y (mm)',
@@ -542,7 +542,7 @@ level4:[
    fn:t=>5*Math.exp(-0.3*t),xRange:[0,10],yRange:[0,6],xLabel:'t (s)',yLabel:'A (mm)',
    tableX:[0,1,2,3,4,6,8,10],given:{0:5,4:1.51,10:0.25},answers:{1:3.70,2:2.74,3:2.03,6:0.83,8:0.45},
    iqs:[
-     {type:'mcq',prompt:'What does the exponential term represent?',correct:'The decaying amplitude envelope',wrong:['The frequency','The phase shift','The equilibrium position']},
+     {type:'mcq',prompt:'What does the exponential term represent?',correct:'The decaying amplitude envelope',wrong:['The frequency','The phase shift','The equilibrium position of the oscillation']},
      {type:'read',prompt:'Estimate A when t = 5.',answer:1.12,tol:0.1}
    ]},
   {id:'L4_7',eqLatex:'h = 30t - 4.9t^2',context:'Projectile height h (m), t = time (s).',
@@ -558,14 +558,14 @@ level4:[
    answers:{0.031:4,0.094:-2,0.157:4},
    iqs:[
      {type:'read',prompt:'What is the maximum displacement?',answer:4,tol:0.2},
-     {type:'mcq',prompt:'What does the value 1 represent?',correct:'The equilibrium position offset',wrong:['The amplitude','The frequency','The phase shift']}
+     {type:'mcq',prompt:'What does the value 1 represent?',correct:'The equilibrium position offset',wrong:['The amplitude','The frequency','The phase shift of the vibration']}
    ]},
   {id:'L4_9',eqLatex:'P = \\frac{1000}{R}',context:'Power P (W) vs resistance R (Ω).',
    fn:R=>1000/R,xRange:[5,100],yRange:[0,210],xLabel:'R (Ω)',yLabel:'P (W)',
    tableX:[5,10,20,25,50,100],given:{5:200,25:40,100:10},answers:{10:100,20:50,50:20},
    iqs:[
      {type:'read',prompt:'Estimate P when R = 15.',answer:66.7,tol:5},
-     {type:'mcq',prompt:'What happens to P as R approaches zero?',correct:'P approaches infinity — circuit would overheat',wrong:['P approaches 0','P approaches 1000','P stays constant']}
+     {type:'mcq',prompt:'What happens to P as R approaches zero?',correct:'P approaches infinity — circuit would overheat',wrong:['P approaches 0','P approaches 1000 — the circuit settles at a fixed power','P stays constant']}
    ]},
   {id:'L4_10',eqLatex:'G = \\frac{x^2}{x^2 + 2x + 1}',context:'Transfer function gain G vs frequency parameter x.',
    fn:x=>x*x/(x*x+2*x+1),xRange:[0,10],yRange:[0,1.1],xLabel:'x',yLabel:'G',
@@ -587,14 +587,14 @@ level4:[
    tableX:[0,1,2,3,4,5],given:{0:0,3:0.6,5:4},answers:{1:0.4,2:0.4,4:1.6},
    iqs:[
      {type:'read',prompt:'Estimate Q when h = 4.5.',answer:2.6,tol:0.4},
-     {type:'mcq',prompt:'What happens to the flow rate as head pressure increases beyond h = 2?',correct:'It increases at an accelerating rate due to the cubic term',wrong:['It decreases','It stays constant','It oscillates']}
+     {type:'mcq',prompt:'What happens to the flow rate as head pressure increases beyond h = 2?',correct:'It increases at an accelerating rate due to the cubic term',wrong:['It decreases','It stays constant, because the cubic and quadratic terms cancel out','It oscillates']}
    ]},
   {id:'L4_13',eqLatex:'F = 0.18v^2',context:'Aerodynamic drag force F (N) vs velocity v (m/s).',
    fn:v=>0.18*v*v,xRange:[0,30],yRange:[0,170],xLabel:'v (m/s)',yLabel:'F (N)',
    tableX:[0,5,10,15,20,25,30],given:{0:0,15:40.5,30:162},answers:{5:4.5,10:18,20:72,25:112.5},
    iqs:[
      {type:'read',prompt:'Estimate the velocity when drag force reaches 50 N.',answer:16.7,tol:1.5},
-     {type:'mcq',prompt:'What type of relationship exists between drag and velocity?',correct:'Quadratic — drag is proportional to v²',wrong:['Linear — drag is proportional to v','Inverse — drag decreases with v','Exponential']}
+     {type:'mcq',prompt:'What type of relationship exists between drag and velocity?',correct:'Quadratic — drag is proportional to v²',wrong:['Linear — drag is directly proportional to v','Inverse — drag decreases with v','Exponential']}
    ]},
   {id:'L4_14',eqLatex:'V = 12\\sin(\\omega t + \\pi/3)',context:'AC signal with phase shift. ω = 100π.',
    fn:t=>12*Math.sin(100*Math.PI*t+Math.PI/3),xRange:[0,0.02],yRange:[-14,14],xLabel:'t (s)',yLabel:'V (V)',
@@ -609,7 +609,7 @@ level4:[
    answers:{150:296296,200:125000,400:15625},
    iqs:[
      {type:'read',prompt:'Estimate the stress level that gives a fatigue life of 100,000 cycles.',answer:215,tol:15},
-     {type:'mcq',prompt:'What happens to fatigue life as stress doubles?',correct:'Fatigue life reduces by a factor of 8',wrong:['Halves','Reduces by factor of 4','Stays the same']}
+     {type:'mcq',prompt:'What happens to fatigue life as stress doubles?',correct:'Fatigue life reduces by a factor of 8',wrong:['Halves','Fatigue life reduces by a factor of 4','Stays the same']}
    ]}
 ]
 };
