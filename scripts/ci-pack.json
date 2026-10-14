@@ -88,6 +88,7 @@
   "Probability Pioneer (Stage 2 keys recomputed, Stages 1 and 3 pinned, every answer marked in Chromium)": "11",
   "Proof Builder (every counter-example checked, every induction stage by SymPy, every sorter order and rendered string in Chromium)": "5",
   "Proportion Blaster (every key recomputed from its stem, options distinct in value, every option marked in Chromium)": "16",
+  "Python minimum (scripts/ require Python 3.10 or later: CI pins an explicit version, the shared-module guard fires below 3.10)": "28",
   "Quadratic Factoriser (every pooled item recomputed, SymPy; every Higher item's six guided steps played in Chromium, each split, factor and line recomputed; Formula roots on the keypad with a minus key)": "32",
   "Quadratic Factoriser self-test (the old split and eight other faults planted in the guided steps and the keypad; each must fail)": "5",
   "Real fonts for the phone checks (scripts/fonts/ pinned and complete; the phone pass measures in them, the old font-blocking planted and caught)": "17",
