@@ -31,7 +31,7 @@ its 9m budget and turned main red though no verifier in it had changed, and the 
 hand-made group (B5, E2). Now a line names only its tier (TIERS below: content, or the answer-lock parts), and
 pack() deals each tier's lines into as many groups as it takes, from each line's seconds on main's last full run
 (scripts/ci-timings.json) plus the job's setup, so that every group is estimated at most 70% of its time budget
-(the budget is 75% of the timeout, where the workflow fails a group). A line with no recorded time counts as
+(the budget is 75% of the timeout, where the workflow warns about a group: TIMING-GATE). A line with no recorded time counts as
 the tier's DEFAULT and is flagged until a main run times it. The pack is stable: scripts/ci-pack.json holds
 each line's group, and a line moves only when its group would pass 70% (the fewest, smallest moves) or it is
 new; so the job names do not churn. --check fails CI, on every PR, when any group's estimate passes 80% of
@@ -70,7 +70,7 @@ TIMINGS = "scripts/ci-timings.json"     # each content line's seconds on a main 
 PACK = "scripts/ci-pack.json"           # each line's group (--write-pack, after each main full run)
 LOCK_PREFIX = "Answer lock"
 
-# The tiers. Each tier's groups share one timeout; the workflow fails a group past 75% of it (its budget).
+# The tiers. Each tier's groups share one timeout; the workflow warns about a group past 75% of it (its budget).
 # Canon §7.8.1: no "Content verifiers" job past 4 minutes. A content group is packed to 70% of a 6-minute
 # timeout's budget (3m09s with setup) and --check fails past 80% (3m36s), so even a fail is inside 4 minutes.
 # The answer-lock parts are one line each (check-answer-lock.py --part i/n, 2.5-5 minutes, too long to share a
