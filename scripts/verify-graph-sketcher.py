@@ -317,7 +317,7 @@ def rounds_to(key, true):
 
 # SWEEP-1-RULINGS (13 Oct 2026, Part 2 #14; graph-sketcher-s1-009 to -011): each ruling's fix stays fixed.
 CM2_KEY = 'The model predicts profit keeps rising without limit as x increases'
-CM2_WRONG = ['The model predicts a loss when x = 3', 'The model is linear', 'x cannot be a whole number']
+CM2_WRONG = ['The model predicts a loss when x = 3, at 300 items sold', 'The model is linear', 'x cannot be a whole number']   # SR-34: lengthened, same claim
 
 
 def _limit(s):
