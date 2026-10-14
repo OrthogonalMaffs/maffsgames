@@ -105,7 +105,7 @@ REVIEW = dict([
     r('bv_core_016', [600 + 280], [], 'Decorator A was better value', 'lt'),
     r('bv_core_017', [F('3.60') / F('1.2'), F('6.75') / F('2.5')], [], 'large box is better value', 'lt'),
     r('bv_core_018', [F('6.84') / F('4.55')], [F('1.52') - F('6.84') / F('4.55')], 'Garage B is cheaper', 'lt'),
-    r('bv_core_019', [F(18000, 12 * 5)], [12 * 5, 320 - 300], 'Contract A pays better', 'gt'),
+    r('bv_core_019', [F(18000, 12 * 5)], [12 * 5, 320 - 300, 12 * 3 * 320], 'Contract A has the better day rate', 'gt'),
     r('bv_core_020', [F('1.89') / F('0.75'), F('2.99') / F('1.25')], [F('0.75')], 'Brand B is better value', 'lt'),
     r('bv_core_021', [F(4200, 350), F(5100, 510)], [], 'January had better average giving', 'gt'),
     r('bv_core_022', [F(350, 40), F(420, 50)], [], 'Car B is more fuel efficient', 'gt'),
