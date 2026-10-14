@@ -412,15 +412,9 @@ def scan(root, override=None):
 # Every hit present on 4 Oct 2026 (SR-14 as amended that evening), for Jon to rule on: file -> {word: count}.
 # Reported, never failed. Lower a count (or drop the entry) in the PR that removes the words. 5 Oct 2026: the
 # idioms and the class names Jon ruled out of SR-14 (4 Oct, 20:06) are no longer hits (ALLOW, displayed()).
-# 13 Oct 2026 (LISTINGS-AND-GATE part B), the first read of the pages outside games/ and escape-rooms/: two of the
-# portal's weekly facts (index.html, the weekly list), three in all. "√2 is Irrational — and It Caused a Murder"
-# (murder, drowned), "Correlation Does Not Imply Causation" (drowned in swimming pools, deaths by bedsheet
-# entanglement) and "Survivorship Bias" ("everyone who died at 60") are tier (a)
-# wording on the front page. Jon rules: rewrite the two facts, or allow them with his reason in ALLOW. Until he does,
-# 'SR-14 fields' stays False in scripts/audit-register.py. Counts are of the words the scan finds on those lines.
-KNOWN = {
-    "index.html": {"drowned": 2, "murder": 1, "deaths": 1, "died": 1},
-}
+# Empty since 14 Oct 2026 (FACTS-AND-NOTICE): the three weekly facts that carried tier (a) wording on the front page
+# (the root-2 fact, Correlation, Survivorship Bias) were rewritten, so 'SR-14 fields' no longer waits on them.
+KNOWN = {}
 
 
 def compare(found, known):

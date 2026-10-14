@@ -36,6 +36,7 @@ a.back-link{display:inline-block;margin:.5rem 0;color:var(--muted);text-decorati
 .header{text-align:center;padding:1rem 0 .4rem}
 .header h1{font-size:1.7rem;font-weight:800;background:linear-gradient(135deg,var(--primary),#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .header .sub{font-size:.8rem;color:var(--muted);margin-top:.2rem}
+.correction-notice{margin:.4rem 0 .6rem;padding:.7rem .9rem;background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--primary);border-radius:8px;color:var(--text);font-size:.9rem;line-height:1.5}
 .screen{display:none}.screen.active{display:block}
 
 .menu-info{text-align:center;color:var(--muted);font-size:.82rem;line-height:1.7;margin:.6rem auto;max-width:560px}
@@ -138,6 +139,8 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 
 <!-- MENU -->
 <div id="menuScreen" class="screen active">
+  <!-- maffs-correction-notice -->
+  <div class="correction-notice" role="note">We're correcting this game. Some answers in the critical-path questions are currently wrong, so please don't rely on its marking until this notice is removed.</div>
   <div class="header"><h1>Glorious Gantt Game</h1><div class="sub">What's on the critical path — and what can slip?</div>  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
 </div>
   <div class="menu-info">Critical path analysis — calculate early and late times, identify the critical path, calculate floats, and interpret Gantt charts.</div>
