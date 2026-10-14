@@ -2,6 +2,7 @@
  "content": {
   "52-dle (every puzzle's number recomputed from its clue and hints; every guess marked exactly in Chromium)": "16",
   "Angle Ace (every diagram measured against its words and key; every option and reason marked in Chromium)": "6",
+  "Background launcher (bg.py starts a command detached and records its PID in <worktree>/.claude/pids.json; the registry reads back and is gitignored)": "6",
   "Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points and message figures recomputed around 0/360; lives and end flows played in Chromium)": "15",
   "Better Value (every keyed figure and explanation figure recomputed, one true card in four, every card marked in Chromium)": "16",
   "Better Value tax-and-NI rule of thumb (checked with uk_rates)": "10",
