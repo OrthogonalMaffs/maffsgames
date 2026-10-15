@@ -23,18 +23,18 @@ How to read it:
 
 ## For Jon: decisions in this draft
 
-**Read items 1 and 16 first; both need a ruling.**
+**Items 1 and 16 were ruled on by Jon on 15 Oct 2026 (below); the draft now follows both rulings.**
 
-1. **One rule question to rule on: “he flees when beaten” against “the antagonist loses graciously”.** The
-   voice contract’s fixed constraint: *“The antagonist loses graciously at the escape. No humiliation.”* (and
-   the working doc §4: *“The antagonist loses graciously. No humiliation.”*). Your brief: Strictmane
-   *“flees when beaten”*, goblins scattered, *“robes creased: ‘Formation! FORMATION! …Who authorised the
-   fire?’”* I have **kept your brief and not stopped**, because the rule’s purpose is not to humiliate a
-   character the way a teacher could be humiliated, and here nothing is aimed at him as a person: the
-   damage is to his drill and his paperwork, nobody laughs, nobody comments, he is a character the students
-   themselves are playing, and his last line is a bureaucrat’s question in his own voice. If you want the rule
-   met to the letter, I’ve added one **[X]** line to the win: a form he leaves behind asking for a re-match,
-   which is him conceding in his own register. Strike it if you don’t want it. Your call either way.
+1. **RULED (Jon, 15 Oct 2026): Strictmane’s defeat is gracious, in character.** The question was “he flees when
+   beaten” against the voice contract’s *“The antagonist loses graciously at the escape. No humiliation.”* Jon’s
+   ruling: *“keep the defeat, lose the scurrying, and let his own bureaucracy carry the comedy.”* So lock 3’s open
+   keeps the panic as the fireball lands (“Formation! FORMATION! …Who authorised the fire?”, panic and not
+   humiliation) and then he straightens his starched robes and withdraws in his own register: “A tactical
+   withdrawal. I shall be submitting Form R-1, requesting a rematch.” A pause. “In triplicate.” It echoes the
+   goblin’s Form G-14 as a running joke. The word “flees”, the creased robes and the scattering Strictmane are gone;
+   the goblins still scatter. The left-behind re-match form I had proposed for the win is removed (the line now
+   lives in lock 3’s open). Jon’s reason, for the record: Strictmane is a stand-in for a teacher, and a humiliated
+   antagonist turns the room mean.
 2. **Stars.** Your brief says ★★ and “GCSE Foundation (grades 1–3)”. Canon §11.3 derives the stars from the
    hardest lock’s `grade` field: ★★ Core is a hardest lock at grade 4–5, ★ Warm-up is grades 1–3. These do not
    conflict: “grades 1–3” is who the room is for (the audience line the Essentials page uses), the `grade`
@@ -45,8 +45,8 @@ How to read it:
 3. **Numbers in words that your brief gave as numerals.**
    - *“This corridor is 2.6 cm narrower than the plans…”* is Strictmane’s line, so it stays, with the number in
      words (“two point six centimetres”), the Car Trap precedent (its “For Jon” 3).
-   - **“Form G-14, in triplicate”** is kept as written, in the wrong-entry line and the first lock’s open, but
-     **not in any clue** (a numeral in a clue is a clue figure, and 14 is variant 0’s persuasion DC). If you’d
+   - **“Form G-14, in triplicate”** is kept as written, in the wrong-entry line and the first lock’s open (and
+     Jon’s “Form R-1” in the third lock’s open), but **not in any clue** (a numeral in a clue is a clue figure, and 14 is variant 0’s persuasion DC). If you’d
      rather there were no coincidence at all, change the form number; it’s a flavour string.
    - **“nat 20”** is written `nat {{gate.die}}` (the die’s faces, a token that is 20 in every variant), so
      the page still says “nat 20” and no bare numeral is typed.
@@ -96,8 +96,8 @@ How to read it:
     keypad. A percentage is expressible (The Rightful King’s “percent of those who saw it” is a keypad).
     Every lock has exactly one settable answer.
 
-16. **Lock 1’s variant pot cannot do all three things at once, and I have not changed Mrs Rogers’s line to
-    make it.** Your pot spec asks for (a) roughly half the sets with the climb as the better path, (b) a
+16. **RULED (Jon, 15 Oct 2026): accept the nine-set pot; the “half climb-better” constraint is withdrawn.**
+    The pot could not do all three things at once, and I had not changed Mrs Rogers’s line to make it. Your pot spec asks for (a) roughly half the sets with the climb as the better path, (b) a
     forgotten penalty that makes the **worse** path look better, and (c) (from your brief) her approved line,
     which needs the lower-DC path to be the worse bet.
     - **(a) and (b) cannot both hold.** The drizzle penalty applies to the climb only, so forgetting it can only
@@ -110,11 +110,13 @@ How to read it:
     - **What I built:** a pot where persuasion is the better path in all nine sets, the forgotten penalty flips
       the path in every one, and her line is true in every one. It breaks only “roughly half climbing”, and is
       limited to **nine** sets (the flipping sets have only nine distinct answers).
-    - **Your options.** (i) Keep this; her one line, and the nat 20 on persuasion, fit every set. (ii) Include the
-      climb-better sets and accept that their misconception is a wrong number with its own `missSays`. (iii) For
-      the climb-better half her line is false, so it would need an alternative line **for Mrs Rogers to approve**
-      (I have not written one for her), plus a climb version of the nat 20 beat. Recommend (i).
-
+    - **The ruling.** Jon: *“The constraint was wrong; the pot is right. Replayability doesn’t suffer much: a student
+      who learns ‘it’s always persuade’ still has to work out the percentage, and that changes across all nine
+      sets. The code is the maths, not the choice.”* Option (i), as built: persuasion is the better path in every
+      set, the forgotten penalty flips the path in every set, and her approved line is true in every set. No
+      alternative line for Mrs Rogers is needed. He also accepted seven plan sets and five fireball sets as within
+      the house range, and 182 valid joint combinations as plenty of replay; the widenings listed under locks 2
+      and 3 are therefore not taken.
 ---
 
 ## Title
@@ -187,9 +189,6 @@ character sheet.
 
 “Everyone keeps telling me what I’d be. Dwarf. Wizard. Final answer.” She writes it in the species box, and
 then, after a beat: “Don’t tell my husband he was right.”
-
-On the table, where Strictmane’s regulation plans were, a single form has been left behind. It is headed
-*REQUEST FOR A RE-MATCH. IN TRIPLICATE.* **[X: the re-match form, see “For Jon” 1]**
 
 ---
 
@@ -374,10 +373,12 @@ centimetres; `miss` the no-conversion value. Derived: `cm` = `L` × `S`; `real` 
   π × {{fb.r}}² = {{fb.exact}}, which is **{{fb.answer}} m²** to the nearest square metre. (With π = 3.14 the
   answer is the same.)
 - **onOpen:** The fireball lands. The goblins scatter with smouldering helmets, ranks knocked flat, and
-  Commandant Strictmane flees, robes creased. “Formation! FORMATION! …Who authorised the fire?”
+  Commandant Strictmane cries out. “Formation! FORMATION! …Who authorised the fire?” Then he straightens his
+  starched robes. “A tactical withdrawal. I shall be submitting Form R-1, requesting a rematch.” A pause. “In
+  triplicate.”
 
-  *(“Who authorised the fire?” is a bureaucrat’s question, in his own voice; see “For Jon” 1. “π”, “r” and “²”
-  are the method, as the kept lock text in Car Trap has its 2 × π × r.)*
+  *(Jon’s lines, 15 Oct 2026; see “For Jon” 1. “Form R-1” answers the goblin’s Form G-14, and neither is ever in a
+  clue. “π”, “r” and “²” are the method, as the kept lock text in Car Trap has its 2 × π × r.)*
 
 **Variant pot for lock 3.** Your rule: the radius is a whole even number of metres, 4–12 m (whole squares at the
 room’s fixed 2 m), and the area to the nearest square metre must be **the same whether π or 3.14 is used**. The
@@ -485,7 +486,7 @@ the character sheets and the die’s faces carry no readable writing.
 |---|---|
 | Students are always the heroes; the antagonist is the obstacle | **Pass.** The students are the DMs and the experts; Mrs Rogers is the learner and is never mocked; Strictmane is what they beat |
 | Wrong-entry lines never mock the student or their answer, only the lock | **Pass.** Every line is Strictmane about plans, forms and gates; none addresses or mentions a student |
-| The antagonist loses graciously; no humiliation | **Judgement call, flagged (“For Jon” 1).** He flees, as your brief says. Nothing aimed at him as a person, nobody laughs, his last line is in his own voice; an optional **[X]** re-match form is offered |
+| The antagonist loses graciously; no humiliation | **Pass.** Ruled by Jon, 15 Oct 2026 (“For Jon” 1): panic as the fireball lands, then a tactical withdrawal and a rematch request in his own bureaucratic register; no scurrying, no flight, nobody laughs at him |
 | Voice through the room setup, not a narrator layer | **Pass, with a note.** Hook and brief are narration, as in `hamster-heist`; Strictmane’s voice carries the wrong-entry slot |
 | “Idiot” and “stupid” never appear | **Pass** |
 | British English | **Pass.** Tea, marking, caretaker, “Miss” |
@@ -519,7 +520,7 @@ the character sheets and the die’s faces carry no readable writing.
 | No third never-knew ending for the antagonist | **Pass.** He sees his defeat |
 | Students win by putting something right | **Pass.** They teach her, and each lock is a rule she is shown |
 | If the students use the antagonist’s own method, the brief says why it is different | **Pass.** They do not; he measures a fortress to rule it, they read the same plans to teach |
-| No figure in the prose outside `{{tokens}}` | **Pass, with five exceptions in words or fixed names, all flagged:** “two point six centimetres” (his line); “Form G-14” (a form’s name, in the wrong-entry line and lock 1’s open, never a clue); “nat 20” is `nat {{gate.die}}`; the method π, r and ² in lock 3; “fifth level”, “twenty-sided” and “every face” are words. No numeral is typed into any clue |
+| No figure in the prose outside `{{tokens}}` | **Pass, with five exceptions in words or fixed names, all flagged:** “two point six centimetres” (his line); “Form G-14” and “Form R-1” (form names, in the wrong-entry line, lock 1’s open and lock 3’s open, never a clue); “nat 20” is `nat {{gate.die}}`; the method π, r and ² in lock 3; “fifth level”, “twenty-sided” and “every face” are words. No numeral is typed into any clue |
 | No tokens in `hook`, `brief`, `stakes` (written raw by the engine) | **Pass.** None |
 | Never “Ofsted”; no brand names; no year | **Pass.** “D&D” is the club’s name (“For Jon” 11); no logo, creature or character is named |
 | “Dungeon Master” never appears | **Pass.** “DM” throughout |
@@ -531,7 +532,7 @@ the character sheets and the die’s faces carry no readable writing.
 | Eight objects, at least two blanks | **Pass.** Six clues, two blanks (`mug`, `sign`) |
 | Each lock’s `brief` carries the new premise | **Pass.** All three |
 | Every lock has exactly one settable answer; the engine can express them | **Pass.** Three keypads, a percentage included |
-| Variant pot: 8–10 verified sets per lock, drawn jointly | **Partly.** Gate 9 ✓; plans 7 and fireball 5, short because of the spec’s own ranges (options in each lock); 182 of 315 joint draws VALID, variant 0 VALID. Lock 1 is not half climb-better (“For Jon” 16) |
+| Variant pot: 8–10 verified sets per lock, drawn jointly | **Pass, accepted by Jon 15 Oct 2026.** Gate 9, plans 7, fireball 5 (within the house range; the plan and fireball counts follow the spec’s own ranges); 182 of 315 joint draws VALID, variant 0 VALID. Lock 1 is persuasion-better in all nine sets by ruling (“For Jon” 16) |
 | No `missArt` | **Pass.** The fail picture is the end of the club |
 | The pictures are of what the room is | **Pass.** The three you generated: scene, fail, win |
 | Meta description 150–160 characters | **Pass.** 153 |
