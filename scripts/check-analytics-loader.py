@@ -46,7 +46,11 @@ def published_pages():
 
 # Withdrawn pages: a holding page with no tracking of its own. Naming them keeps every other noindex page (the
 # unlisted games, the teacher pages) held to the rule.
-WITHDRAWN = {"escape-rooms/it-vengeance/teacher.html", "games/regression-rumble/index.html"}
+# roll-for-initiative/play.html (DND-ROOM-BUILD, 15 Oct 2026): the new room, live but unlisted for Jon's play-test and
+# Mrs Rogers's preview, with analytics deliberately off so test plays never reach GA4 or the Events sheet. Its entry
+# comes out at release, when play.html becomes index.html with analytics on.
+WITHDRAWN = {"escape-rooms/it-vengeance/teacher.html", "games/regression-rumble/index.html",
+             "escape-rooms/roll-for-initiative/play.html"}
 
 
 def exempt(path, text):

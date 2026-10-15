@@ -3072,5 +3072,260 @@
    "each": 75,
    "hundred": 100
   }
+ ],
+ "gate-modifiers-probability": [
+  {
+   "dcc": 12,
+   "str": 2,
+   "wet": 2,
+   "dcp": 14,
+   "cha": 3,
+   "pc": 45,
+   "pp": 50,
+   "answer": 50,
+   "miss": 55,
+   "die": 20,
+   "needC": 12,
+   "needP": 11,
+   "chC": 9,
+   "chP": 10
+  },
+  {
+   "dcc": 11,
+   "str": 1,
+   "wet": 3,
+   "dcp": 13,
+   "cha": 1,
+   "pc": 40,
+   "pp": 45,
+   "answer": 45,
+   "miss": 55,
+   "die": 20,
+   "needC": 13,
+   "needP": 12,
+   "chC": 8,
+   "chP": 9
+  },
+  {
+   "dcc": 11,
+   "str": 2,
+   "wet": 2,
+   "dcp": 13,
+   "cha": 3,
+   "pc": 50,
+   "pp": 55,
+   "answer": 55,
+   "miss": 60,
+   "die": 20,
+   "needC": 11,
+   "needP": 10,
+   "chC": 10,
+   "chP": 11
+  },
+  {
+   "dcc": 13,
+   "str": 1,
+   "wet": 2,
+   "dcp": 14,
+   "cha": 1,
+   "pc": 35,
+   "pp": 40,
+   "answer": 40,
+   "miss": 45,
+   "die": 20,
+   "needC": 14,
+   "needP": 13,
+   "chC": 7,
+   "chP": 8
+  },
+  {
+   "dcc": 13,
+   "str": 1,
+   "wet": 3,
+   "dcp": 16,
+   "cha": 2,
+   "pc": 30,
+   "pp": 35,
+   "answer": 35,
+   "miss": 45,
+   "die": 20,
+   "needC": 15,
+   "needP": 14,
+   "chC": 6,
+   "chP": 7
+  },
+  {
+   "dcc": 14,
+   "str": 1,
+   "wet": 3,
+   "dcp": 16,
+   "cha": 1,
+   "pc": 25,
+   "pp": 30,
+   "answer": 30,
+   "miss": 40,
+   "die": 20,
+   "needC": 16,
+   "needP": 15,
+   "chC": 5,
+   "chP": 6
+  },
+  {
+   "dcc": 11,
+   "str": 3,
+   "wet": 2,
+   "dcp": 12,
+   "cha": 3,
+   "pc": 55,
+   "pp": 60,
+   "answer": 60,
+   "miss": 65,
+   "die": 20,
+   "needC": 10,
+   "needP": 9,
+   "chC": 11,
+   "chP": 12
+  },
+  {
+   "dcc": 10,
+   "str": 3,
+   "wet": 2,
+   "dcp": 11,
+   "cha": 3,
+   "pc": 60,
+   "pp": 65,
+   "answer": 65,
+   "miss": 70,
+   "die": 20,
+   "needC": 9,
+   "needP": 8,
+   "chC": 12,
+   "chP": 13
+  },
+  {
+   "dcc": 10,
+   "str": 4,
+   "wet": 2,
+   "dcp": 11,
+   "cha": 4,
+   "pc": 65,
+   "pp": 70,
+   "answer": 70,
+   "miss": 75,
+   "die": 20,
+   "needC": 8,
+   "needP": 7,
+   "chC": 13,
+   "chP": 14
+  }
+ ],
+ "fortress-plan-scale": [
+  {
+   "S": 500,
+   "L": 4,
+   "sq": 2,
+   "answer": 10,
+   "miss": 1000,
+   "cm": 2000,
+   "real": 20,
+   "cmperm": 100
+  },
+  {
+   "S": 100,
+   "L": 8,
+   "sq": 2,
+   "answer": 4,
+   "miss": 400,
+   "cm": 800,
+   "real": 8,
+   "cmperm": 100
+  },
+  {
+   "S": 250,
+   "L": 4,
+   "sq": 2,
+   "answer": 5,
+   "miss": 500,
+   "cm": 1000,
+   "real": 10,
+   "cmperm": 100
+  },
+  {
+   "S": 250,
+   "L": 8,
+   "sq": 2,
+   "answer": 10,
+   "miss": 1000,
+   "cm": 2000,
+   "real": 20,
+   "cmperm": 100
+  },
+  {
+   "S": 500,
+   "L": 2,
+   "sq": 2,
+   "answer": 5,
+   "miss": 500,
+   "cm": 1000,
+   "real": 10,
+   "cmperm": 100
+  },
+  {
+   "S": 500,
+   "L": 6,
+   "sq": 2,
+   "answer": 15,
+   "miss": 1500,
+   "cm": 3000,
+   "real": 30,
+   "cmperm": 100
+  },
+  {
+   "S": 500,
+   "L": 8,
+   "sq": 2,
+   "answer": 20,
+   "miss": 2000,
+   "cm": 4000,
+   "real": 40,
+   "cmperm": 100
+  }
+ ],
+ "fireball-circle-area": [
+  {
+   "r": 6,
+   "answer": 113,
+   "miss": 38,
+   "rsq": 3,
+   "exact": "113.10"
+  },
+  {
+   "r": 4,
+   "answer": 50,
+   "miss": 25,
+   "rsq": 2,
+   "exact": "50.27"
+  },
+  {
+   "r": 8,
+   "answer": 201,
+   "miss": 50,
+   "rsq": 4,
+   "exact": "201.06"
+  },
+  {
+   "r": 10,
+   "answer": 314,
+   "miss": 63,
+   "rsq": 5,
+   "exact": "314.16"
+  },
+  {
+   "r": 12,
+   "answer": 452,
+   "miss": 75,
+   "rsq": 6,
+   "exact": "452.39"
+  }
  ]
 }

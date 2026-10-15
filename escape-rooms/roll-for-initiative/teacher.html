@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Teacher page for Roll for Initiative escape room: answers, hint ladder, misconceptions and timings.">
+<title>Roll for Initiative — teacher page — MaffsGames</title>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/engine.css">
+<!--
+  Written 2026-10-15 for the new room (contract DND-ROOM-BUILD): the real teacher page, noindex and unlinked
+  until release. The room itself is live but unlisted at play.html; index.html is the holding page.
+-->
+</head>
+<body>
+<button class="a11y-toggle" onclick="toggleAa()" aria-label="Toggle easier-reading text">Aa</button>
+<div class="wrap">
+  <a class="back-link" href="../">&larr; All escape rooms</a>
+  <div id="app"></div>
+  <p class="lede credit">Built from a teacher&rsquo;s idea. Thank you, Mrs Rogers.</p>
+</div>
+<script src="room.js"></script>
+<!-- clueMap labels carry NO figures on purpose: teacher.js does not pass them
+     through fill(), so a number here would disagree with the drawn variant
+     (see docs/escape-room-voice-rewrite.md §8). Keys are room.js object ids. -->
+<script>
+window.TEACH = {
+  "lockMeta": [
+    {
+      "topic": "Probability from equally likely outcomes",
+      "minutes": 3,
+      "curriculum": "Probability &mdash; the chance of success from a count of equally likely outcomes on a twenty-sided die, with bonuses and a penalty: how many of the faces meet or beat the DC, out of twenty, as a percentage."
+    },
+    {
+      "topic": "Scale drawings and units",
+      "minutes": 2,
+      "curriculum": "Ratio &mdash; a length on a plan at a given scale, converted from centimetres to metres, then counted in squares of a stated size."
+    },
+    {
+      "topic": "Area of a circle",
+      "minutes": 3,
+      "curriculum": "Geometry &mdash; the area of a circle from its radius, to the nearest square metre. The answer is the same whether &pi; or 3.14 is used."
+    }
+  ],
+  "clueMap": {
+    "charsheet": "The gate &mdash; her Strength (Athletics) and Charisma (Persuasion) bonuses",
+    "dmscreen": "The gate &mdash; the DC of each path, and that a check meets or beats it",
+    "window": "The gate &mdash; the drizzle, and its penalty to the climb",
+    "plans": "Strictmane&rsquo;s plans &mdash; the scale and the corridor&rsquo;s length on the plan",
+    "mat": "Strictmane&rsquo;s plans &mdash; how big one square is",
+    "dice": "The fireball &mdash; the radius of the blast"
+  },
+  "notes": "<p class='lede'>A Core room: three short locks, each with a calculator-friendly answer. The students play the DMs teaching their teacher her first game; the room is built around her coming to enjoy it.</p><p class='lede'>The gate is built around forgetting the drizzle, which only ever helps the climb, so a group that forgets it picks the climb&rsquo;s dry-day chance and gets that response. The plans lock is built around skipping the centimetre-to-metre conversion, and the fireball around the distance round the edge. Each hint ladder is general: every group sees the same three hints, and none assumes a particular mistake.</p><p class='lede'>At time-out the end screen shows every lock&rsquo;s solution. For a second attempt, press Play again for fresh numbers.</p>"
+};
+</script>
+<script src="../assets/rating.js"></script>
+<script src="../assets/teacher.js"></script>
+</body>
+</html>
