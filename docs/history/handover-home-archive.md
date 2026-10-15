@@ -3,6 +3,53 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## 2026-10-15 (home): ESCAPE-SET-CHECKS, Canon sweep and WORKTREE-CLEANUP entries, moved to keep the handover under 20 KB (FREEZE-LIFT)
+
+**ESCAPE-SET-CHECKS (11 Oct, Jon's contract; branch `claude/escape-set-checks`).** The per-set checks moved out
+of `gen-escape-variants.py` into **`scripts/escape_set_checks.py`** (pure, no I/O), unchanged: keep()'s tests ->
+`check_set()`; each lock's instrument, clue figures and solver -> `LOCKS` (35 entries, lifted by an AST script,
+not retyped); rugby-scoreboard-bases and cookie-price-simultaneous (two instruments, checked inline before) ->
+`check_rugby_bases()` / `check_cookie_simultaneous()`, which read the answer and misconception from the set as
+served (the generator builds them from the same parameters, so its test is unchanged; CI's is stronger). The
+generator imports it, keeps only search + spread, and writes to this checkout (the E:\jon\maffsgames paths are
+gone). **Regeneration is byte-identical:** sha256 of variants.json and all 12 room.js equal before and after,
+and the generator's whole report too (299 sets, 37 locks, 2763 rejected). `check-escape-rooms.py` runs
+`check()` on every set of every live room (names room, lock, set index, check; a live lock missing from LOCKS
+fails), prints per-room verified sets and the total (11 Oct: 271 in 11 rooms, none failing; it-vengeance
+withdrawn, not checked), and plants the 10 broken sets in `scripts/fixtures/escape-broken-sets.json` (each of
+the 7 per-set checks, both two-instrument checks, an unregistered lock; every good original must pass).
+Mutation proof: with the clue test disabled the run fails, naming the uncaught plant. CLAUDE.md: new "Start of
+task" (fetch, new worktree from origin/main, never pull into the primary or an existing branch). Canon §11.3
+replay bullet rewritten: no figures. **Not changed, for Jon:** the ci-line label (it keys ci-pack.json and
+ci-timings.json); §11.3's "Ratings as of 10 Oct" (no Rightful King ★★★ or Library Jam ★) and "The live rooms
+all use `digits`" (both new rooms are live; maxDigits), stale; §11.4's rows for both scripts predate this.
+
+**Canon sweep (read-only; current-state counts derived from repo content; none changed).** Intro "What is
+authoritative where": roster "has all 93 rows". §Portal: "`escape-rooms` (12 items)". §3.2: "135 `.game-card`
+elements for 96 games". §7.5: "On 2 Oct 2026 the roster gives 67 games light and 30 dark" (dated). §8.2c and
+the shuffle note: "32 games hand-roll `shuffle(...)`", "the other ~30 games", "The other ~28 games". Coverage:
+heading "(96 live games)"; "94 of the 96 live games call `submitScore()`" (recounted 3 Oct); "Not counted in
+the 96 live games". Firebase/leaderboard: "Wired into 94 of the 96 live games". Tier 1: "125 controls across 47
+games ... (122 across 46 ...)". Tier 3: "95 of 96 games fire `question_answered`"; "27 games use
+`id="options"`, 8 use a class ... 60 use neither". §11.1: "Eleven rooms live, one withdrawn" and its 12-row
+table (accurate today). §11.3: the ratings roster above. §11.4: `check-escape-rooms.py` "(two faults planted)"
+(now three, plus the ten broken sets). §11.5: "All eight rooms are being rewritten" (eleven live now). Dated
+audit history (e.g. "17 games" 22 Sep, "125 pages", the [x] backlog's "60 games") is history, not drift: left out.
+
+**WORKTREE-CLEANUP (11 Oct, Jon's contract; branch `claude/worktree-cleanup`).** `git worktree list` found 35
+beside the primary. Each checked: branch tip an ancestor of origin/main, `status --porcelain` empty, no commit
+outside origin. New end-of-task step in CLAUDE.md (Task Contract): remove the task's worktree and local branch
+after merge, never `--force` / `-D`. Remote branches untouched. Every worktree found (all E:/jon/):
+
+| Worktree (branch `claude/…`) | Status | Action |
+|---|---|---|
+| mg-b1..b6, mg-b8 (f1-batch1..6, f1-batch8); mg-cib (ci-balance); mg-cp (checkpoint-8oct); mg-ctx (ctx); mg-cu (changed-utf8); mg-ea (escape-analytics); mg-ess (essentials); mg-ew (essentials-wording); mg-frac (answer-fraction); mg-ga (ga4-country-canon); mg-ga2 (gitattributes-bytes); mg-gs (graph-sketcher-fit); mg-gt (given-that-fractions); mg-hints (f1-lock-hints); mg-lf (ltc-focus-race); mg-lj (library-jam-art); mg-log (log-notation); mg-ltc (ltc-flake); mg-r3 (relist-3); mg-r9 (rulings-9oct); mg-rel (rooms-release-rk-lj); mg-rk (rightful-king-art); mg-rl (relist-sr21); mg-upd (updates); mg-vs (vocab-showthat) | merged, clean, pushed | removed; branch deleted (`-d`) |
+| mg-b7 (f1-batch7), mg-lock (f1-answer-lock), mg-sk (star-key) | merged, clean, pushed | unregistered and branch deleted (`-d`), but Windows refused to delete the folder ("Permission denied"; still busy): **an empty folder is left at each**, held by some process. Jon: delete the three empty folders after a reboot |
+| mg-pp-before (detached at a02d61d, ancestor of main) | **dirty**: `scripts/check-changed.py`, `scripts/test-escape-keypad.py` modified | **kept** (STOP IF: dirty). Jon: keep or discard those edits |
+
+Also, the same session: the **CANON-VERIFIED-COUNT** contract (canon §11.3's "199 verified number sets") STOPPED
+before any edit, reported to Jon in chat; nothing committed.
+
 ## 2026-10-15 (home): CI-TIMING-DIAGNOSIS entry, moved to keep the handover under 20 KB (DND-ROOM-BUILD)
 
 **CI-TIMING-DIAGNOSIS (14 Oct, Jon's contract; branch `claude/ci-timing-diagnosis`; report only, nothing changed).** Full report with data tables: **`docs/handover/ci-timing-diagnosis.md`**. Short answer: the failures on unchanged code come from the **per-run 75% clock** in each group's last step (160 runs, 25,323 timed lines: 2 runs failed on it, Equation Builder part 1 at 260 s and Spot the Muppet at 290 s, every verifier `ok`), not from the median-based packing or `--check`. It is not whole-run runner slowness (run-level factor 0.97 to 1.03) but rare single-line stalls (0.13% of lines). The Probability Paradox regression never touched the per-run clock; the median-of-5 pack check caught it on the 3rd slow main run. No per-run multiple can both catch it (1.26×) and pass the flakes (1.9× and 3.1×); persistence can. **Recommended (needs Jon's ruling, it changes what the 75% does on a single run):** make the per-run 75% a warning, keep the median pack and 80% `--check` as the blocking gate, and add a named persistence report to the main-only timings job. "Just Pythag It part 4 at 242 s" was not found in the sample.

@@ -38,20 +38,7 @@ The gatekeeper is still a teacher, now typically a resit lecturer in an FE colle
 
 ## 0.2 Priority order
 
-**BUILD FREEZE (Jon, 6 Oct 2026).** No new builds (games, modes, stages) until the exit bar is met:
-1. every live game has a verifier in CI;
-2. every CRITICAL and HIGH in the findings register fixed;
-3. shared checks green site-wide (answer lock, level resolver, SR-14 fields, B11 parser);
-4. ~~every level serves 40+~~ (no longer a gate condition; see below);
-5. every unlisted game relisted or archived;
-6. one sweep of the already-verified games for true wrong options and unstated conventions.
-
-Bank depth (40+ per level, and served bank size) is tracked in the register and worked on in parallel under SR-26; it does not block new builds (Jon, 12 Oct 2026: "increasing the question banks should not stop new builds, we can have that running alongside the builds.").
-
-**One named exception (Jon, 9 Oct 2026, 00:25): Simultaneous Solver Stage 5 only** (word problems, the two
-equations built from tiles; merged #203). No other build is excepted: a further exception needs Jon's own named
-ruling, never a contract's inference. **Glorious Gantt Game (`glorious-gantt`) is excluded from points 1, 2, 3 and 5 while it is in the roster's Unlisted section (Jon, 12 Oct 2026 for 1, 2 and 5; 13 Oct 2026 for 3). It stays live at its URL, as Jon accepted.** The register's exit-bar dashboard
-(`docs/audits/REGISTER.md`) shows how far the site is from each point.
+**Build freeze lifted (Jon, 15 Oct 2026).** "We remove the build freeze, we will never build anything new at this rate. The audits don't end, we're in a healthy place so lets start gradually building again, we will continue to push through improvements." The freeze (6 Oct 2026), its six-point exit bar and its exceptions are in `docs/history/build-freeze-2026-10.md`. New builds are governed by SR-30 (§0.3). The register's former exit-bar dashboard is now "Audit progress" (`docs/audits/REGISTER.md`): the same counts, no longer a gate. Glorious Gantt Game (`glorious-gantt`) stays excluded from its points 1, 2, 3 and 5 while it is in the roster's Unlisted section (Jon, 12 and 13 Oct 2026).
 
 When deciding what comes next:
 
@@ -102,6 +89,7 @@ Jon" list below. Where a ruling and a canon section say more, the section has th
 | SR-27 | **Pre-push checks for verifier-only PRs.** "A PR whose only changes are a new or edited scripts/verify-<slug>.py, that game's findings file and the lane's handover runs, instead of check-changed.py: the verifier and its self-test; ci-groups.py --check; audit-register.py --check; check-verifier-coverage.py; check-context-size.py. CI runs the rest. A PR that also changes a game page, a shared asset or any other script runs check-changed.py as before." Why: the full run took about 30 minutes in the cloud container and reported only environment failures (missing esprima and WebKit, blocked KaTeX CDN), while CI minutes are free. | 12 Oct 2026 | Jon, 12 Oct 2026 (chat, VERIFIERS-20) |
 | SR-28 | **Algebraic terms divide as a whole.** A term such as 2x² is one object: implied multiplication binds tighter than ÷, so 6x⁷ ÷ 2x² means division by 2x². Such stems are not ambiguous and need no brackets; SR-17 does not apply. A stem is ambiguous only if it reads two ways under this convention (for example ÷ followed by a sum or a bracket). | 12 Oct 2026 | Jon, 12 Oct 2026 (chat, ruling on index-laws-v20-001) |
 | SR-29 | **A listing names who a game is for, not a version of it.** A card or roster row may list an audience that a game's single bank suits, beside the level it was written for, provided the game offers that audience no separate level, level selector or board. The listing names who the game is for, not a version of it. A game that offers a level must serve content for it. This narrows "A level that serves another level's items is not listed as that level" (recorded with SR-16 to SR-20, below): read the two together. `scripts/check-levels.py` holds the permitted listings in `AUDIENCE_LISTINGS` and fails if one gains a level selector or a separate board. | 13 Oct 2026 | Jon, 13 Oct 2026 (level listings) |
+| SR-30 | **New builds ship checked.** A new game, room, mode or stage has its verifier running in CI in its first PR; it enters every shared check's MIGRATED list directly (theme, answer lock, levels); it has a findings file. A live wrong answer on an existing game outranks any build. One new build in flight at a time alongside improvement work. (Replaces the build freeze, lifted the same day.) | 15 Oct 2026 | Jon, 15 Oct 2026; §0.2 |
 
 **Also recorded with SR-16 to SR-20** (Jon, 6 Oct 2026, 20:30):
 - Start screens and cards state what the code does (timers, scoring claims).
@@ -126,7 +114,7 @@ and the change is dated in its row.
 Every audit finding lives in `docs/audits/findings/<slug>.yml`, one file per game (so parallel fix PRs never edit the
 same file), in the audits' own schema (`scripts/audit-register.py` holds it). `docs/audits/REGISTER.md` is generated
 from them: counts by severity, status, class and game; open CRITICAL and HIGH by game, Year 6/KS3/GCSE/Core first; the
-exit-bar dashboard for §0.2's freeze; and the live games no audit has covered. CI (the site-wide checks) fails if a
+audit-progress dashboard (the former exit bar, no longer a gate: §0.2); and the live games no audit has covered. CI (the site-wide checks) fails if a
 file breaks the schema, a `fixed` entry names no PR, or a roster-Unlisted game has no file.
 
 **No PR edits REGISTER.md** (7 Oct 2026). Every fix PR used to regenerate it, so any two PRs open at once conflicted
@@ -138,7 +126,7 @@ per-game files only and never reads REGISTER.md. So the file on main can lag a m
 each entry it fixes in `docs/audits/findings/<slug>.yml`, and edit no other register file. An entry closed by a ruling, not a code
 change, is `status: ruled` with `ruling:` naming the SR. A new audit adds its findings to the game's file (a second
 `audited` entry when the game was audited before); ids are `<slug>-t<n>-NNN` (tranche n) or `<slug>-r-NNN` (resit audit).
-Exit-bar points 3 and 6 are stated in the script (`SHARED_CHECKS_GREEN`, `SWEEP_DONE`): the PR that meets one sets it.
+Audit-progress points 3 and 6 are stated in the script (`SHARED_CHECKS_GREEN`, `SWEEP_DONE`): the PR that meets one sets it.
 
 **The per-game files are edited by hand** (Jon, 8 Oct 2026; since 7 Oct, when the one-off builders were retired to
 `~/.maffsgames-local/register-build/`), one game's file per PR; REGISTER.md never (above).
