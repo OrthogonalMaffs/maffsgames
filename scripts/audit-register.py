@@ -28,7 +28,7 @@ file if it changed.
 
 Fails on: a file that does not parse or breaks the schema; a duplicate id; a fixed entry with no
 PR; a ruled entry with no ruling; a file for a game with no games/<slug>/; and a roster
-"Unlisted" game with no register file. The dashboard's exit-bar points 1, 2, 4 and 5 are computed (canon §0.2); 3 and 6
+"Unlisted" game with no register file. The dashboard's audit-progress points 1, 2, 4 and 5 are computed (canon §0.2); 3 and 6
 are stated in SHARED_CHECKS_GREEN and SWEEP_DONE below, changed by the PR that meets them.
 """
 import argparse
@@ -51,18 +51,18 @@ STATUSES = ['open', 'fixed', 'ruled']
 FIELDS = ['id', 'severity', 'jc', 'class', 'level', 'where', 'summary', 'evidence', 'status']
 OPTIONAL = {'pr', 'ruling'}
 
-# Exit bar point 3 (canon §0.2): shared checks green site-wide. Set each True in the PR that makes it so.
+# Audit-progress point 3 (canon §0.2): shared checks green site-wide. Set each True in the PR that makes it so.
 SHARED_CHECKS_GREEN = {
     'answer lock': False,    # open 14 Oct 2026 on characteristic-quest alone (SCREEN_NOT_YET in check-answer-lock.py); glorious-gantt is excluded from point 3 (GATE_EXCLUDED)
     'level resolver': True,    # MaffsLevel in every game; NOT_YET empty in scripts/check-levels.py (LEVEL-RESOLVER, 13 Oct 2026)
     'SR-14 fields': True,    # scripts/check-content-safety.py runs in CI site-wide with KNOWN empty: the 3 portal weekly facts were rewritten (FACTS-AND-NOTICE, 14 Oct 2026)
     'B11 parser': True,    # data/check-ledger.json holds no B11 entry for any game (B11-CLEAR, #331; LISTINGS-AND-GATE, 13 Oct 2026)
 }
-# Games left out of exit-bar points 1, 2, 3 and 5 by Jon's named ruling: slug -> reason. Deliberately by name, not a general
+# Games left out of audit-progress points 1, 2, 3 and 5 by Jon's named ruling: slug -> reason. Deliberately by name, not a general
 # "unlisted games don't count" rule (canon §0.2). A slug that leaves the roster's Unlisted section fails validation, so
 # the exclusion ends when the game is relisted.
 GATE_EXCLUDED = {'glorious-gantt': "Jon, 12 Oct 2026 (1, 2, 5) and 13 Oct 2026 (3): excluded while unlisted"}
-# Exit bar point 6: one sweep of the already-verified games for true wrong options and unstated conventions.
+# Audit-progress point 6: one sweep of the already-verified games for true wrong options and unstated conventions.
 SWEEP_DONE = False
 
 # Marker of the "we're correcting this game" banner: required on games unlisted for faults, forbidden on listed ones.
@@ -250,7 +250,7 @@ def render(files, games, unlisted, root):
              'each tranche file `findings/tranche-<n>.yml` from its audit branch, split one file per game, data unchanged).')
     L.append('')
 
-    # ---- exit bar
+    # ---- audit progress (the former exit bar; no longer a gate, canon §0.2)
     gate_live = [s for s in live if s not in GATE_EXCLUDED]
     no_verifier = [s for s in gate_live if s not in full]
     lv_under = []
@@ -262,7 +262,9 @@ def render(files, games, unlisted, root):
             n = distinct(size)
             if n is not None and n < 40:
                 lv_under.append('%s %s (%s)' % (g, lvl, size))
-    L.append('## Exit bar (canon §0.2)')
+    L.append('## Audit progress (canon §0.2)')
+    L.append('')
+    L.append('Progress measures, not a gate: the build freeze they once gated was lifted on 15 Oct 2026.')
     L.append('')
     L.append('| # | Point | Status |')
     L.append('|---|---|---|')
@@ -342,7 +344,7 @@ def render(files, games, unlisted, root):
     un = [s for s in live if s not in by_game]
     L.append('%d of %d live games: %s' % (len(un), len(live), ', '.join('`%s`' % s for s in un) if un else 'none'))
     L.append('')
-    L.append('## Exit bar detail')
+    L.append('## Audit progress detail')
     L.append('')
     L.append('**1. No verifier in CI (%d):** %s' % (len(no_verifier), ', '.join('`%s`%s' % (s, ' (partial: %s)' % partial[s] if s in partial else '') for s in no_verifier)))
     L.append('')

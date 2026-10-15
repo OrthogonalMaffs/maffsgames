@@ -2,7 +2,7 @@
 # ci-line: Level resolver (MaffsLevel declarations equal the roster; every internal ?level= link and portal card names a level its game serves; no migrated game reads ?level itself; three planted faults) | --selftest && --check
 # ci-deps: index.html sitemap.xml .claude/rules/game-roster.md scripts/roster-levels.json schools/assets/level.js games/ essentials/ resit/ op/ spec-map/ parents/ leaderboards/ escape-rooms/ year6/ 6-7/ about/ updates/
 """Does every game read ?level= through MaffsLevel, and does every link and listing agree with the game?
-(contract LEVEL-RESOLVER, Jon, 12 Oct 2026; canon section 4.5; exit-bar point 3, "level resolver").
+(contract LEVEL-RESOLVER, Jon, 12 Oct 2026; canon section 4.5; audit-progress point 3, "level resolver").
 
     python scripts/check-levels.py --check       # the site (CI, every PR)
     python scripts/check-levels.py --selftest    # three planted faults are caught
