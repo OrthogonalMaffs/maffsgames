@@ -217,11 +217,20 @@ jobs:
               exit 1
             fi
             cat "$RUNNER_TEMP/check.txt" >> "$GITHUB_STEP_SUMMARY"
-            if git diff --quiet -- scripts/ci-timings.json scripts/ci-pack.json; then
+            # REGION-HISTORY: after the timings are settled, add the run to the per-region record (the last 10 times per
+            # line per region). A failure here is a warning, never a failure of this job, and leaves the file as it was.
+            if ! python scripts/ci-groups.py --record-regions "$RUN_ID" --from-dir "$TIMING_DIR" > "$RUNNER_TEMP/regions.txt" 2>&1; then
+              cat "$RUNNER_TEMP/regions.txt" | tee -a "$GITHUB_STEP_SUMMARY"
+              git checkout -q -- scripts/ci-timings-regions.json || true
+              echo "::warning::could not update ci-timings-regions.json for this run; the timings and pack are unaffected"
+            else
+              cat "$RUNNER_TEMP/regions.txt" | tee -a "$GITHUB_STEP_SUMMARY"
+            fi
+            if git diff --quiet -- scripts/ci-timings.json scripts/ci-pack.json scripts/ci-timings-regions.json; then
               echo "timings and pack unchanged at $(git rev-parse --short HEAD)" | tee -a "$GITHUB_STEP_SUMMARY"
               exit 0
             fi
-            git add scripts/ci-timings.json scripts/ci-pack.json
+            git add scripts/ci-timings.json scripts/ci-pack.json scripts/ci-timings-regions.json
             git commit -q -m "Record CI timings and repack (run $RUN_ID) [skip ci]"
             if git push -q origin HEAD:main; then
               echo "timings and pack committed: $(git rev-parse --short HEAD)" | tee -a "$GITHUB_STEP_SUMMARY"
