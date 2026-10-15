@@ -1098,8 +1098,8 @@ explanation:'Deal store: \u00a320 + \u00a34.99 = \u00a324.99. Other store: \u00a
 
 // === Rate Comparison (5) ===
 {id:'bv_gcse_014',level:'gcse',type:'rate',
-criterion:'The family will use all of either bag and wants the most rice for the money.',measure:'unit_cost',inputs:{A:{terms:[{name:'price',amount:3.0}],per:[2]},B:{terms:[{name:'price',amount:6.5}],per:[5]}},
-scenario:'Two bags of rice at the supermarket. Bag A: 2 kg for \u00a33.00. Bag B: 5 kg for \u00a36.50. The family will use all of either bag and wants the most rice for the money.',
+criterion:'A shopper is choosing between them. Whichever bag she buys, she will use all of it. She wants the most rice for the money.',measure:'unit_cost',inputs:{A:{terms:[{name:'price',amount:3.0}],per:[2]},B:{terms:[{name:'price',amount:6.5}],per:[5]}},
+scenario:'Two bags of rice at the supermarket. Bag A: 2 kg for \u00a33.00. Bag B: 5 kg for \u00a36.50. A shopper is choosing between them. Whichever bag she buys, she will use all of it. She wants the most rice for the money.',
 optionA:{label:'Bag A',details:[{key:'Weight',value:'2 kg'},{key:'Price',value:'\u00a33.00'}]},
 optionB:{label:'Bag B',details:[{key:'Weight',value:'5 kg'},{key:'Price',value:'\u00a36.50'}]},
 conclusions:[
@@ -1111,8 +1111,8 @@ conclusions:[
 explanation:'Bag A: \u00a33.00 \u00f7 2 = \u00a31.50/kg. Bag B: \u00a36.50 \u00f7 5 = \u00a31.30/kg.'},
 
 {id:'bv_gcse_015',level:'gcse',type:'rate',
-criterion:'The class will use all of either pack and wants the most pens for the money.',measure:'unit_cost',inputs:{A:{terms:[{name:'price in pence',amount:360}],per:[12]},B:{terms:[{name:'price in pence',amount:500}],per:[20]}},
-scenario:'Two packs of felt-tip pens. Pack A: 12 pens for \u00a33.60. Pack B: 20 pens for \u00a35.00. The class will use all of either pack and wants the most pens for the money.',
+criterion:'A shopper is choosing between them. Whichever pack she buys, she will use all of it. She wants the most pens for the money.',measure:'unit_cost',inputs:{A:{terms:[{name:'price in pence',amount:360}],per:[12]},B:{terms:[{name:'price in pence',amount:500}],per:[20]}},
+scenario:'Two packs of felt-tip pens. Pack A: 12 pens for \u00a33.60. Pack B: 20 pens for \u00a35.00. A shopper is choosing between them. Whichever pack she buys, she will use all of it. She wants the most pens for the money.',
 optionA:{label:'Pack A',details:[{key:'Pens',value:'12'},{key:'Price',value:'\u00a33.60'}]},
 optionB:{label:'Pack B',details:[{key:'Pens',value:'20'},{key:'Price',value:'\u00a35.00'}]},
 conclusions:[
@@ -1137,8 +1137,8 @@ conclusions:[
 explanation:'Job A: \u00a354 \u00f7 6 = \u00a39.00/hour. Job B: \u00a380 \u00f7 9 = \u00a38.89/hour.'},
 
 {id:'bv_gcse_017',level:'gcse',type:'rate',
-criterion:'The shopper will use all of either bottle and wants the most shampoo for the money.',measure:'unit_cost',inputs:{A:{terms:[{name:'price in pence',amount:240}],per:[300]},B:{terms:[{name:'price in pence',amount:350}],per:[500]}},
-scenario:'Two bottles of shampoo. Bottle A: 300 ml for \u00a32.40. Bottle B: 500 ml for \u00a33.50. The shopper will use all of either bottle and wants the most shampoo for the money.',
+criterion:'A shopper is choosing between them. Whichever bottle she buys, she will use all of it. She wants the most shampoo for the money.',measure:'unit_cost',inputs:{A:{terms:[{name:'price in pence',amount:240}],per:[300]},B:{terms:[{name:'price in pence',amount:350}],per:[500]}},
+scenario:'Two bottles of shampoo. Bottle A: 300 ml for \u00a32.40. Bottle B: 500 ml for \u00a33.50. A shopper is choosing between them. Whichever bottle she buys, she will use all of it. She wants the most shampoo for the money.',
 optionA:{label:'Bottle A',details:[{key:'Volume',value:'300 ml'},{key:'Price',value:'\u00a32.40'}]},
 optionB:{label:'Bottle B',details:[{key:'Volume',value:'500 ml'},{key:'Price',value:'\u00a33.50'}]},
 conclusions:[
@@ -1150,17 +1150,17 @@ conclusions:[
 explanation:'Bottle A: \u00a32.40 \u00f7 300 = 0.8p per ml. Bottle B: \u00a33.50 \u00f7 500 = 0.7p per ml.'},
 
 {id:'bv_gcse_018',level:'gcse',type:'rate',
-criterion:'A parent needs to park for 6 hours and wants to pay the least.',measure:'unit_cost',inputs:{A:{terms:[{name:'price',amount:6,times:[2]}],per:[8]},B:{terms:[{name:'price',amount:8}],per:[6]}},
-scenario:'Two car parks near school. Car Park A charges \u00a36 for 4 hours. Car Park B charges \u00a38 for 6 hours. A parent needs to park for 6 hours and wants to pay the least.',
+criterion:'The parent wants the car park that charges less for each hour.',measure:'unit_cost',inputs:{A:{terms:[{name:'price',amount:6}],per:[4]},B:{terms:[{name:'price',amount:8}],per:[6]}},
+scenario:'Two car parks near school. Car Park A charges \u00a36 for 4 hours. Car Park B charges \u00a38 for 6 hours. The parent wants the car park that charges less for each hour.',
 optionA:{label:'Car Park A',details:[{key:'Cost',value:'\u00a36'},{key:'Hours',value:'4'}]},
 optionB:{label:'Car Park B',details:[{key:'Cost',value:'\u00a38'},{key:'Hours',value:'6'}]},
 conclusions:[
 {text:'Car Park A is cheaper per hour \u2014 \u00a31.50/hour vs \u00a31.33/hour for Car Park B',correct:false,claim:{winner:'A',figures:[{option:'A',value:1.5},{option:'B',value:1.33}]}},
 {text:'Car Park B is cheaper per hour \u2014 \u00a31.33/hour vs \u00a31.50/hour for Car Park A',correct:true,claim:{winner:'B',figures:[{option:'B',value:1.33},{option:'A',value:1.5}]}},
 {text:'They cost the same per hour',correct:false,claim:{winner:'equal',figures:[]}},
-{text:'Car Park A is better because it costs less overall',correct:false,claim:{winner:'A',figures:[],measure:'total_cost'}}
+{text:'Car Park A is better because it costs less overall',correct:false,claim:{winner:'A',figures:[]}}
 ],
-explanation:'Car Park A: \u00a36 \u00f7 4 = \u00a31.50/hour. Car Park B: \u00a38 \u00f7 6 = \u00a31.33/hour. For the 6-hour stay Car Park A needs two tickets: 2 \u00d7 \u00a36 = \u00a312, against \u00a38 at Car Park B.'},
+explanation:'Car Park A: \u00a36 \u00f7 4 = \u00a31.50/hour. Car Park B: \u00a38 \u00f7 6 = \u00a31.33/hour.'},
 
 // === Break-Even (2) ===
 {id:'bv_gcse_019',level:'gcse',type:'breakeven',
