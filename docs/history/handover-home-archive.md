@@ -3,6 +3,15 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## 2026-10-15 (home): FACTS-29-35-11-36-49 entry, moved to keep the handover under 20 KB (CI-SLOWDOWN-401)
+
+**FACTS-29-35-11-36-49 (14 Oct, Jon's contract; branch `claude/facts-29-35-11-36-49`).** `verify-facts.py` passes (149 pins), zero KNOWN, self-test plants unchanged and caught. Facts 3, 10, 15, 20, 26, 39, 44, 46, every other fact, FACTS order and length untouched.
+- **29, Perfect Bracket (hook).** Old: "The probability of correctly predicting every match in an NCAA tournament is about 1 in 9.2 quintillion." New: "If every match were a coin flip, the probability of correctly predicting every match in an NCAA tournament would be about 1 in 9.2 quintillion." The body already uses 2^63 (63 games, 2 outcomes each); the existing recomputed pin on 2^63 ≈ 9.2 × 10^18 stays, plus a pin on the new condition.
+- **35, Königsberg.** Hook, old: "…crossing each of its seven bridges exactly once — and invented graph theory." New: "…crossing each of its seven bridges, as they stood then, exactly once — and invented graph theory." (it was already past tense). Body, added after "no solution.": "Wartime bombing and rebuilding changed the bridges. Today's layout allows a walk crossing each bridge exactly once, though not one that finishes where it began." Source confirmed (Wikipedia, Seven Bridges of Königsberg): five bridges remain at the original sites, two nodes of degree 2 and two of degree 3, so an Eulerian path exists and a circuit does not; the pin recomputes that (degree sum 10 = 2 × 5, two odd nodes).
+- **11, Hairy Ball: no change needed.** The hook and body speak only of a hairy sphere and the Earth; no head is implied. Left as is.
+- **36, Trisect: no change needed.** The hook already says "trisecting a general angle with just a compass and straightedge is impossible — proved in 1837". Added only a pin on that phrase (Wantzel, 1837), beside the existing "proved in 1837" and cubic pins.
+- **49, Matrices (body).** Old: "…this is how every pixel of every video game is calculated." New: "…this is how a 3D game works out where every object appears on screen." Pinned as a phrase.
+
 ## 2026-10-14 (home): HOOKS-20-44-49, PYTHON-MIN and FACTS-33-20 entries, moved to keep the handover under 20 KB (BG-LAUNCHER)
 **HOOKS-20-44-49 (14 Oct, Jon's contract; branch `claude/hooks-20-44-49`).** Three overstated hooks corrected (0-indexed; bodies, order, length, fact 3 and the nine other flagged hooks untouched). `verify-facts.py` passes, zero KNOWN, self-test plants unchanged and caught.
 - **Fact 20, Collatz.** Old: "…Repeat. You will ALWAYS reach 1. Nobody knows why." New: "…Repeat. Every number anyone has ever tried reaches 1 — but nobody has proved they all do." The old closing "Nobody knows why." is dropped as redundant beside the new sentence (the only wording change beyond the contract's replacement). Pinned to Lagarias (1985), Amer. Math. Monthly 92(1).
