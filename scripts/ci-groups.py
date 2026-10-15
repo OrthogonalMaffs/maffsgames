@@ -67,6 +67,8 @@ WORKFLOW = os.path.join(ROOT, ".github", "workflows", "check-site.yml")
 PREFIX = "Content verifiers"
 TIMINGS = "scripts/ci-timings.json"     # each content line's seconds on a main full run (--record-timings)
 
+REGIONS = "scripts/ci-timings-regions.json"   # per line, per runner region, the last REGION_KEEP times (--record-regions)
+
 PACK = "scripts/ci-pack.json"           # each line's group (--write-pack, after each main full run)
 LOCK_PREFIX = "Answer lock"
 
@@ -90,6 +92,8 @@ PULL_ALLOWANCE = 10
 TARGET, FAIL = 0.70, 0.80          # of a group's budget: pack to TARGET; --check fails past FAIL
 SETUP = 25                         # seconds before a group's first line, when the timings do not record it
 HISTORY = 5                        # main runs kept in ci-timings.json; the estimates are their medians
+REGION_KEEP = 10                   # times kept per line per region in ci-timings-regions.json (REGION-HISTORY, 15 Oct 2026)
+REGION_RUNS = 20                   # run ids remembered there, so the same run recorded twice is counted once
 # The hand-made group ids before CI-BALANCE: still accepted in a header, as their tier only.
 OLD_IDS = {"A", "B1", "B2", "B3", "B4", "B5", "C1", "C2", "C3", "C4", "D1", "D2", "E", "E2",
            "L1", "L2", "L3", "L4", "L5"}
@@ -555,6 +559,54 @@ def record_and_pack(run_id, from_dir=None):
     return commit(timings, gs, faults)
 
 
+def add_regions(existing, rec, keep=REGION_KEEP):
+    """The new ci-timings-regions.json content (REGION-HISTORY): existing with the run record rec added. For each timed
+    line it keeps, per region, the last `keep` seconds, oldest first; a line the run did not name a region for goes under
+    "unknown". Pure, and independent of ci-timings.json and the packer: nothing in either reads this. The run ids
+    recorded are remembered (the last REGION_RUNS) so the same run twice is counted once."""
+    if rec["run"] in existing.get("runs", []):
+        return existing
+    lines = {k: {r: list(v) for r, v in d.items()} for k, d in existing.get("lines", {}).items()}
+    for label, sec in rec["lines"].items():
+        region = rec.get("regions", {}).get(label) or "unknown"
+        lines.setdefault(label, {}).setdefault(region, []).append(sec)
+        lines[label][region] = lines[label][region][-keep:]
+    return {"keep": keep, "runs": (existing.get("runs", []) + [rec["run"]])[-REGION_RUNS:],
+            "lines": {k: dict(sorted(d.items())) for k, d in sorted(lines.items())}}
+
+
+def dump_regions(data):
+    """The file's text: one line per timed line, its regions' times inline, so the file stays small and a diff reads."""
+    out = ['{', ' "keep": %d,' % data["keep"], ' "runs": %s,' % json.dumps(data["runs"]), ' "lines": {']
+    rows = ['  %s: %s' % (json.dumps(k, ensure_ascii=False), json.dumps(v, ensure_ascii=False))
+            for k, v in data["lines"].items()]
+    out.append(",\n".join(rows))
+    out += [' }', '}', '']
+    return "\n".join(out)
+
+
+def write_regions(data):
+    path = os.path.join(ROOT, REGIONS)
+    with open(path + ".tmp", "w", encoding="utf-8", newline="\n") as f:
+        f.write(dump_regions(data))
+    os.replace(path + ".tmp", path)          # never a half-written file
+
+
+def record_regions(run_id, from_dir=None):
+    """The timings job's second step: add the run to ci-timings-regions.json. It reads and writes only that file; the
+    job treats a failure here as a warning (REGION-HISTORY), so nothing about ci-timings.json depends on it."""
+    rec = read_run(run_id, from_dir)
+    if rec is None:
+        return 1
+    existing = read_json(REGIONS)
+    data = add_regions(existing, rec)
+    write_regions(data)
+    n = sum(len(d) for d in data["lines"].values())
+    print("%s: run %s added; %d line(s), %d line/region record(s), %d bytes"
+          % (REGIONS, run_id, len(data["lines"]), n, len(dump_regions(data).encode("utf-8"))))
+    return 0
+
+
 def selftest():
     fails = []
 
@@ -684,6 +736,33 @@ def selftest():
     check("(c) a pack that fails --check is refused: exit 1, neither file written (%s)" % wrote, rc_bad == 1 and not wrote)
     rc_ok = commit(tm, gs, fl, sink)
     check("(c) a pack that passes is written (timings, then pack)", rc_ok == 0 and wrote == ["timings", "pack"])
+    # REGION-HISTORY: the per-region record keeps 10 per line per region and leaves ci-timings.json alone.
+    regs = ["eastus", "centralus", "westus"]
+
+    def rr(n):
+        # run n: line "a" ran in region n % 3; line "b" ran in region (n // 2) % 3; line "c" has no region
+        return dict(rn(n, 22, {"a": 10 + n, "b": 100 + n, "c": 50}), regions={"a": regs[n % 3], "b": regs[(n // 2) % 3]})
+    plain, with_step, reg = {}, {}, {}
+    for n in range(1, 13):
+        plain = add_run(plain, rr(n))
+        with_step = add_run(with_step, rr(n))
+        reg = add_regions(reg, rr(n))
+    check("12 runs across 3 regions: ci-timings.json is byte-identical with and without the region step",
+          json.dumps(plain, indent=1) == json.dumps(with_step, indent=1) and len(plain["history"]) == HISTORY)
+    check("a line keeps at most %d times per region, none lost below that" % REGION_KEEP,
+          all(len(v) <= REGION_KEEP for d in reg["lines"].values() for v in d.values())
+          and sum(len(v) for v in reg["lines"]["a"].values()) == 12)
+    check("a region with more than %d runs rolls the oldest off (line a, eastus: runs 3,6,9,12 only)" % REGION_KEEP,
+          reg["lines"]["a"]["eastus"] == [13, 16, 19, 22])
+    big = {}
+    for n in range(1, 31):
+        big = add_regions(big, dict(rn(n, 22, {"a": n}), regions={"a": "eastus"}))
+    check("30 runs in one region keep the newest %d, oldest first" % REGION_KEEP,
+          big["lines"]["a"]["eastus"] == list(range(21, 31)))
+    check("a line with no region is kept under 'unknown'", reg["lines"]["c"] == {"unknown": [50] * REGION_KEEP})
+    check("the same run twice is counted once", add_regions(reg, rr(12)) == reg)
+    check("the file text is small and parses back to the same data",
+          json.loads(dump_regions(reg)) == reg and len(dump_regions(reg)) < 2000)
     check("the repo's own headers parse", not errors())
     check("the repo's pack passes --check", not budget_faults())
     print("selftest: %s" % ("FAILED: " + ", ".join(fails) if fails else "PASS"))
@@ -698,12 +777,15 @@ def main():
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--record-timings", metavar="RUN_ID")
     ap.add_argument("--record-and-pack", metavar="RUN_ID", help="record, repack, check; write only if it passes")
+    ap.add_argument("--record-regions", metavar="RUN_ID", help="add the run to ci-timings-regions.json (needs --from-dir)")
     ap.add_argument("--from-dir", metavar="DIR", help="with --record-timings or --record-and-pack: the run's ci-timing-* artifacts")
     ap.add_argument("--write-pack", action="store_true")
     ap.add_argument("--check", action="store_true")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
+    if a.record_regions:
+        return record_regions(a.record_regions, a.from_dir)
     if a.record_and_pack:
         return record_and_pack(a.record_and_pack, a.from_dir)
     if a.record_timings:
