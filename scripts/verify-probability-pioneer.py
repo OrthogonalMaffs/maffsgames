@@ -75,9 +75,9 @@ STAGE3_KEYS = {
     "P(impossible event) = 0": (True, "definition"),
     "P(certain event) = 1": (True, "definition"),
     "You can have P(event) = 1.5": (False, "a probability never exceeds 1"),
-    "If two outcomes are equally likely, each has probability 0.5": (
-        False, "only when there are exactly two outcomes: two faces of a dice are equally likely, "
-               "each 1/6 (audit F2, Jon 4 Oct 2026)"),
+    "On a fair dice, rolling a 1 and rolling a 2 are equally likely, so each has probability 0.5.": (
+        False, "equally likely outcomes share the probability among all six faces, 1/6 each "
+               "(audit F2, Jon 4 Oct 2026; reworded PHRASING-FIX-2, Jon 15 Oct 2026)"),
     "P(A) + P(not A) always equals 1": (True, "complementary events"),
     "A probability of 0.9 means the event will definitely happen": (False, "only 1 is certain"),
     "The more times you repeat an experiment, the closer the results tend to get to the theoretical probability": (
@@ -420,7 +420,7 @@ def selftest(bank, scale):
     expect('value-equal distractors (1/2, 2/4)', value_equal)
 
     def flipped(b):
-        find(b['STAGE3'], 'statement', 'equally likely, each has')['answer'] = True   # the audit's F2
+        find(b['STAGE3'], 'statement', 'equally likely, so each has')['answer'] = True   # the audit's F2
     expect('changed Stage 3 key (0.5 statement True)', flipped)
 
     def second_point(b):
