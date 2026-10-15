@@ -1,6 +1,6 @@
 # Better Value: decisions for Jon (BV-CLAIMS, 14 Oct 2026)
 
-**Ruled by Jon, 15 Oct 2026 (contract BV-RULINGS, `docs/handover/contracts/2026-10-15-bv-rulings.md`):** every
+**Ruled by Jon, 15 Oct 2026 (contract BV-RULINGS, `docs/history/contracts/2026-10-15-bv-rulings.md`):** every
 item below except gcse_014, 015, 017 and 018 (batch 2); `docs/handover/cloud.md` lists old and new wording per item.
 
 Options with the arithmetic, for the items where a measure or a ruling is yours to choose. **No option is chosen
