@@ -1,5 +1,5 @@
-/* Room data for "roll-for-initiative" — shared by index.html (the room, live but unlisted) and
-   teacher.html (answers, hint ladder, misconceptions).
+/* Room data for "roll-for-initiative" — shared by index.html (the holding page), play.html (the room, live
+   but unlisted) and teacher.html (answers, hint ladder, misconceptions).
 
    Numbers are not written into the prose. Each lock carries a `variants`
    library and one set is drawn per play; {{key.token}} in any string below is
@@ -17,9 +17,9 @@
    CREDIT: "Built from a teacher's idea. Thank you, Mrs Rogers." (teacher page footer.) Mrs Rogers has agreed to
    her real name being used: consent recorded by Jon, 15 Oct 2026 (docs/handover/home.md).
 
-   STATUS: LIVE BUT UNLISTED, not released. The room is playable at /escape-rooms/roll-for-initiative/ for Jon's
-   play-test and Mrs Rogers's preview: noindex, analytics off, linked from nowhere (not in the hub, the front
-   page or the sitemap). Release is a separate instruction from Jon.
+   STATUS: LIVE BUT UNLISTED, not released. The room is playable at /escape-rooms/roll-for-initiative/play.html for
+   Jon's play-test and Mrs Rogers's preview: noindex, analytics off, linked from nowhere (not in the hub, the front
+   page or the sitemap); index.html is the holding page. Release is a separate instruction from Jon.
 
    GRADES (canon §11.3, ESCAPE-DIFFICULTY): the gate, a probability from the faces of a twenty-sided die with
    bonuses and a penalty (4); the plans, a scale drawing and units (3); the fireball, the area of a circle (4).
