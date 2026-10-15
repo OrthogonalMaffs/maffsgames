@@ -783,6 +783,63 @@ for p, d, n in [(15, 12, 30), (20, 15, 26), (20, 15, 32), (20, 10, 24), (10, 20,
     keep(store, "fines-pence-to-pounds", {"p": p, "d": d, "n": n, "answer": total // 100, "miss": total}, minsep=1)   # answers distinct (the draft's rule)
 V["fines-pence-to-pounds"] = store
 
+# ---------------------------------------------------- N4 (2026-10) probability with modifiers (keypad, 3 digits)
+# Roll for Initiative, the gate (contract DND-ROOM-BUILD; bank batch 11). Climb: DC dcc, Strength bonus str, and a
+# drizzle penalty wet taken off the climb only. Persuade: DC dcp, Charisma bonus cha. A check is a twenty-sided die
+# plus the bonus, meet or beat the DC, so a path needing n or more succeeds on 21 - n faces of 20. answer = the
+# better path's chance, a multiple of 5; miss = the climb's chance with the drizzle forgotten. The draft's rules
+# (Jon, 15 Oct 2026): DCs 10-16, bonuses 1-4, penalty 1-3; every required roll between 2 and 20, the forgotten-
+# penalty roll included; the two chances differ; forgetting the drizzle makes the WORSE path look better, which
+# with a climb-only penalty means persuasion is the better path in every set; and Mrs Rogers's approved line
+# ("the lower number isn't the better bet") is true, so the climb has the lower DC. The library is the draft's
+# nine sets, in its order (variant 0 is Jon's: DC 12 and 14, +2 and +3, drizzle -2). Nine is every distinct
+# answer the rules allow; spread is off (minsep 1e-9) because the answers are distinct by construction.
+store = []
+for dcc, st, wet, dcp, cha in [(12, 2, 2, 14, 3), (11, 1, 3, 13, 1), (11, 2, 2, 13, 3), (13, 1, 2, 14, 1),
+                               (13, 1, 3, 16, 2), (14, 1, 3, 16, 1), (11, 3, 2, 12, 3), (10, 3, 2, 11, 3),
+                               (10, 4, 2, 11, 4)]:
+    need_c, need_p, need_dry = dcc - st + wet, dcp - cha, dcc - st
+    if not (10 <= dcc <= 16 and 10 <= dcp <= 16 and 1 <= st <= 4 and 1 <= cha <= 4 and 1 <= wet <= 3):
+        continue
+    if not all(2 <= n <= 20 for n in (need_c, need_p, need_dry)):
+        continue
+    pc, pp, p0 = (21 - need_c) * 5, (21 - need_p) * 5, (21 - need_dry) * 5
+    if not (pc < pp < p0) or not dcc < dcp:
+        continue
+    keep(store, "gate-modifiers-probability",
+         {"dcc": dcc, "str": st, "wet": wet, "dcp": dcp, "cha": cha, "pc": pc, "pp": pp,
+          "answer": pp, "miss": p0}, minsep=1e-9)
+V["gate-modifiers-probability"] = store
+
+# ---------------------------------------------------- N5 (2026-10) scale drawings (keypad, 4 digits)
+# Roll for Initiative, Strictmane's plans. A corridor of L cm on a 1 : S plan is L x S cm = L x S / 100 m; the
+# club's square is fixed at 2 m (it is the same square lock 3 uses), so answer = L x S / 200 squares.
+# miss = L x S / 2, the centimetres taken straight into squares (100 times the answer, so a four-digit keypad).
+# The draft's rules: S in 100, 200, 250, 500; L a whole 2-9 cm; answer a whole number 4-30 and never L (which
+# excludes every 1 : 200 plan, where 1 cm is exactly one square). The library is the draft's seven sets.
+store = []
+for S, L in [(500, 4), (100, 8), (250, 4), (250, 8), (500, 2), (500, 6), (500, 8)]:
+    if S not in (100, 200, 250, 500) or not 2 <= L <= 9 or (L * S) % 200:
+        continue
+    ans = L * S // 200
+    if not 4 <= ans <= 30 or ans == L:
+        continue
+    keep(store, "fortress-plan-scale", {"S": S, "L": L, "sq": 2, "answer": ans, "miss": L * S // 2}, minsep=1e-9)
+V["fortress-plan-scale"] = store
+
+# ---------------------------------------------------- N6 (2026-10) area of a circle (keypad, 3 digits)
+# Roll for Initiative, the fireball. A blast of radius r (a whole even number of metres, 4-12, so whole squares at
+# 2 m) covers pi x r squared, to the nearest square metre. The rule (Jon, 15 Oct 2026): the whole number must be the
+# SAME whether pi or 3.14 is used, and a radius where the two round differently is rejected here (and by the
+# solver in escape_set_checks.py). miss = the circumference 2 x pi x r, rounded. The library is the draft's five.
+store = []
+for r in [6, 4, 8, 10, 12]:
+    a_pi, a_314 = math.floor(math.pi * r * r + 0.5), math.floor(3.14 * r * r + 0.5)
+    if r % 2 or not 4 <= r <= 12 or a_pi != a_314:
+        rejected.append(("fireball-circle-area", {"r": r}, "pi and 3.14 round differently")); continue
+    keep(store, "fireball-circle-area", {"r": r, "answer": a_pi, "miss": math.floor(2 * math.pi * r + 0.5)}, minsep=1e-9)
+V["fireball-circle-area"] = store
+
 # ------------------------------------------------- derived tokens
 # Values the prose wants to quote but that are not parameters: a squared
 # radius, a reduced fraction, a prime factorisation. Deriving them here keeps
@@ -909,6 +966,21 @@ for v in V["deflector-straight-line"]:
 for v in V["fines-pence-to-pounds"]:
     v["each"] = v["p"] * v["d"]
     v["hundred"] = 100
+# roll-for-initiative: the die's faces, the rolls each path needs and the faces that win, the square size and the
+# centimetres in a metre (constant in every set), the circle's radius in squares and its exact area
+for v in V["gate-modifiers-probability"]:
+    v["die"] = 20
+    v["needC"] = v["dcc"] - v["str"] + v["wet"]
+    v["needP"] = v["dcp"] - v["cha"]
+    v["chC"] = 21 - v["needC"]
+    v["chP"] = 21 - v["needP"]
+for v in V["fortress-plan-scale"]:
+    v["cm"] = v["L"] * v["S"]
+    v["real"] = v["cm"] // 100
+    v["cmperm"] = 100
+for v in V["fireball-circle-area"]:
+    v["rsq"] = v["r"] // 2
+    v["exact"] = f"{math.pi * v['r'] ** 2:.2f}"
 
 # ------------------------------------------------- display tokens
 # Instruments that read to one decimal place need their numbers written the

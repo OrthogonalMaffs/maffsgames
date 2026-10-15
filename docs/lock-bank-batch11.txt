@@ -1,0 +1,56 @@
+Batch 11 - Jon and Project Claude, 2026-10-15 (contract DND-ROOM-BUILD; the three locks were drafted in
+docs/escape-room-drafts/dnd-club-draft.md and approved by Jon with six changes on 15 Oct). Three locks, for
+Roll for Initiative, a new Core room built from Mrs Rogers's idea. Hints are not held here; like batches 3-10
+they live in the room's room.js.
+Notes on format, not touching the mathematics:
+  * All three locks use the keypad's maxDigits mode: the gate and the fireball up to three digits, the plans up
+    to four, so the misconception 1000 is settable.
+  * The CLUE lines quote each lock's variant 0. In the room every figure is a token.
+  * The gate's answer is the better path's chance of success, a multiple of 5. Persuasion is the better path
+    in every set (Jon, 15 Oct 2026: the drizzle penalty applies to the climb only, so a forgotten penalty can
+    only make the climb look better, and it makes the worse path look better only where persuasion is better).
+  * The fireball's area is the same to the nearest square metre whether pi or 3.14 is used; a radius where the
+    two round differently is rejected by the generator. VERIFY checks both.
+
+
+Room N - Roll for Initiative (GCSE)
+===================================
+
+ID:          gate-modifiers-probability
+LEVEL:       GCSE Foundation
+TOPIC:       Probability / Chance from a count of equally likely outcomes
+INSTRUMENT:  Keypad, up to three digits (maxDigits 3): the chance of success, as a percentage.
+CONTEXT:     Her adventurer can climb the wall or talk to the guard. Climb: Strength (Athletics) DC 12, Strength bonus 2, and it is drizzling, which takes 2 off a climb. Persuade: Charisma (Persuasion) DC 14, Charisma bonus 3. A check is a roll of a twenty-sided die plus the bonus, and it succeeds if the total meets or beats the DC. What is the chance of success on the better path, as a percentage?
+CLUE:        "Strength (Athletics): +2. Charisma (Persuasion): +3." / "Climb: DC 12. Persuade: DC 14. Meet or beat the DC." / "WET WEATHER: -2 to Strength (Athletics) checks."
+ANSWER:      50
+AHA:         The penalty takes 2 off the climb bonus, so the climb needs 12 or more (9 faces out of 20, 45%). Persuade needs 11 or more (10 faces out of 20, 50%). The path with the lower DC is not the better bet once the weather and the bonuses are counted.
+MISCONCEPTION: 55 (the climb with the drizzle forgotten: it needs 10 or more, 11 faces out of 20, which looks better than persuasion).
+SOLVE:       Climb: 12 - 2 + 2 = 12 needed, 9 faces of 20, 45%. Persuade: 14 - 3 = 11 needed, 10 faces of 20, 50%. Persuasion is better: 50%.
+TIME:        2
+VERIFY:      [n for n in range(1000) if n - max(5 * (21 - (12 - 2 + 2)), 5 * (21 - (14 - 3))) == 0]
+
+ID:          fortress-plan-scale
+LEVEL:       GCSE Foundation
+TOPIC:       Ratio / Scale drawings and units
+INSTRUMENT:  Keypad, up to four digits (maxDigits 4): the number of squares to move.
+CONTEXT:     Strictmane's plan is drawn to a scale of 1 : 500 and the main corridor measures 4 cm on it. The club's own rule is that one square on the mat is 2 m. How many squares must the party move along the corridor?
+CLUE:        "DRAWN TO REGULATION. Scale 1 : 500. Main corridor on the plan: 4 cm." / "ONE SQUARE = 2 m."
+ANSWER:      10
+AHA:         4 cm on the plan is 4 x 500 = 2000 cm, which is 20 m. At 2 m a square, that is 10 squares. The scale gives centimetres; the mat is measured in metres.
+MISCONCEPTION: 1000 (2000 cm taken straight into squares, with no conversion from centimetres to metres: 2000 / 2).
+SOLVE:       4 x 500 = 2000 cm = 20 m; 20 / 2 = 10 squares.
+TIME:        2
+VERIFY:      [n for n in range(10000) if n * 2 * 100 - 4 * 500 == 0]
+
+ID:          fireball-circle-area
+LEVEL:       GCSE Foundation
+TOPIC:       Geometry / Area of a circle
+INSTRUMENT:  Keypad, up to three digits (maxDigits 3): the area covered, in square metres.
+CONTEXT:     The fireball is a circle of radius 6 m centred on the target. What area does it cover, to the nearest square metre? The answer must be the same whether pi or 3.14 is used.
+CLUE:        "FIREBALL. The blast is a circle, radius 6 m, centred on the target."
+ANSWER:      113
+AHA:         Area = pi x r squared = pi x 36 = 113.1 to one decimal place, which is 113 to the nearest square metre. With 3.14 it is 113.04, also 113.
+MISCONCEPTION: 38 (the circumference, 2 x pi x 6 = 37.7, rounded: the distance round the edge, not the area inside).
+SOLVE:       pi x 6 x 6 = 113.10, so 113 square metres.
+TIME:        2
+VERIFY:      [n for n in range(1000) if abs(n - math.pi * 36) < 0.5 and abs(n - 3.14 * 36) < 0.5]

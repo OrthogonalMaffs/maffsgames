@@ -298,6 +298,24 @@ LOCKS = {
         keypad(4),
         lambda v: [v["p"], v["d"], v["n"]],
         lambda x, v: x * 100 == v["p"] * v["d"] * v["n"]),
+    # Roll for Initiative (contract DND-ROOM-BUILD, 15 Oct 2026; the draft's pot sections). The gate: the better
+    # path's chance as a percentage of the twenty-sided die's faces. Clue figures: the two bonuses, the two DCs and
+    # the drizzle penalty.
+    "gate-modifiers-probability": Lock(
+        keypad(3),
+        lambda v: [v["str"], v["cha"], v["dcc"], v["dcp"], v["wet"]],
+        lambda x, v: x == max(v["pc"], v["pp"])),
+    # The plans: corridor length on the plan x the scale, in metres, over the square size.
+    "fortress-plan-scale": Lock(
+        keypad(4),
+        lambda v: [v["S"], v["L"], v["sq"]],
+        lambda x, v: x * v["sq"] * 100 == v["L"] * v["S"]),
+    # The fireball: the area to the nearest square metre. The solver states the check: the whole number must be the
+    # same whether pi or 3.14 is used, so a radius where the two round differently has no solution and is rejected.
+    "fireball-circle-area": Lock(
+        keypad(3),
+        lambda v: [v["r"]],
+        lambda x, v: x == math.floor(math.pi * v["r"] ** 2 + 0.5) == math.floor(3.14 * v["r"] ** 2 + 0.5)),
 }
 
 TWO_INSTRUMENTS = {

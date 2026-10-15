@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Roll for Initiative — MaffsGames</title>
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/engine.css">
+<!--
+  LIVE BUT UNLISTED, 2026-10-15 (contract DND-ROOM-BUILD; Jon's clarification the same day: "live but not listed on
+  the site so it can be tested"). The room is playable at this URL for Jon's play-test and Mrs Rogers's preview. It
+  is noindex, linked from nowhere (not in the hub, the front page or the sitemap), and ANALYTICS ARE OFF, on
+  purpose: no gtag and no analytics.js, so window.mfg is never defined and engine.js track() never calls it (it
+  calls mfg only if it exists). Test plays never reach the Events sheet or GA4 as roll-for-initiative plays.
+
+  AT RELEASE (a separate contract, on Jon's word), in ONE PR: put the analytics lines back (copy the head of
+  escape-rooms/car-trap/index.html: gtag, analytics.js, the description, canonical, og: and twitter: lines), take
+  off the robots noindex, and add the hub and front-page cards with their difficulty chips, the sitemap entry
+  and the room counts (docs/escape-room-voice-rewrite.md §5c).
+-->
+</head>
+<body>
+<button class="a11y-toggle" onclick="toggleAa()" aria-label="Toggle easier-reading text">Aa</button>
+<div class="wrap">
+  <a class="back-link" href="../">&larr; All escape rooms</a>
+  <div id="app"></div>
+</div>
+
+<script src="room.js"></script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script src="../assets/rating.js"></script>
+<script src="../assets/engine.js"></script>
+</body>
+</html>
