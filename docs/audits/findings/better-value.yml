@@ -209,7 +209,9 @@ findings:
   summary: 'core_047 keys "Cleaner B is better value overall" on a stated preference. Stem change, for Jon (Split: the
     parent entry held 3 defects; the others are better-value-s1-008, better-value-s1-009.)'
   evidence: 'Scenario texts as quoted (SWEEP-1, batch 8)'
-  status: open
+  status: fixed
+  pr: 407
+  ruling: 'BV-RULINGS (Jon, 15 Oct 2026): windows stay clean 3 of A''s 4 weeks and all 6 of B''s; the criterion is the lowest cost per clean week; key "Cleaner B is better value — £2.50 vs £3.33 per clean week".'
 - id: better-value-s1-008
   severity: LOW
   jc: true

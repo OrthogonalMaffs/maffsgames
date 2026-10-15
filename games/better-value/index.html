@@ -400,17 +400,17 @@ conclusions:[
 explanation:'Contract: \u00a330 + (24 \u00d7 \u00a325) = \u00a330 + \u00a3600 = \u00a3630. SIM-only: \u00a3280 + (24 \u00d7 \u00a312) = \u00a3280 + \u00a3288 = \u00a3568.'},
 
 {id:'bv_core_011',level:'core',type:'hidden',
-criterion:'',measure:'total_cost',inputs:{A:{terms:[{name:'price',amount:599}]},B:{terms:[{name:'price',amount:549}]}},
-scenario:'A \u201csale\u201d sofa is advertised at \u00a3599. Buy now pay later: nothing to pay for 12 months, then the full \u00a3599 is due if it has not been paid by then. A rival store sells the same sofa for \u00a3549 cash.',
-optionA:{label:'BNPL Store',details:[{key:'Price',value:'\u00a3599'},{key:'Payment',value:'Nothing for 12 months'}]},
+criterion:'She wants the lowest cost once the interest her savings earn is counted.',measure:'total_cost',inputs:{A:{terms:[{name:'price',amount:599},{name:'interest earned',amount:-549,times:[0.03]}]},B:{terms:[{name:'price',amount:549}]}},
+scenario:'A \u201csale\u201d sofa is advertised at \u00a3599. Buy now pay later: nothing to pay for 12 months, then the full \u00a3599 is due if it has not been paid by then. A rival store sells the same sofa for \u00a3549 cash. The buyer has \u00a3549 in savings earning 3% AER, and keeps it there for the year if she uses BNPL. She wants the lowest cost once the interest her savings earn is counted.',
+optionA:{label:'BNPL Store',details:[{key:'Price',value:'\u00a3599'},{key:'Payment',value:'Nothing for 12 months'},{key:'Savings kept',value:'\u00a3549 at 3% AER'}]},
 optionB:{label:'Rival Store',details:[{key:'Price',value:'\u00a3549'},{key:'Payment',value:'Cash'}]},
 conclusions:[
 {text:'The BNPL store is free for 12 months so it is better value',correct:false,claim:{winner:'A',figures:[{option:null,value:12,of:'given'}]}},
-{text:'The rival store is better value if you can pay cash \u2014 \u00a3549 vs \u00a3599',correct:true,claim:{winner:'B',figures:[{option:'B',value:549},{option:'A',value:599}]}},
+{text:'The rival store is better value if you can pay cash \u2014 \u00a3549 vs \u00a3599',correct:true,claim:{winner:'B',figures:[{option:'B',value:549},{option:'A',value:599,of:'amount:price'}]}},
 {text:'The BNPL store is better because you keep your money for longer, interest-free',correct:false,claim:{winner:'A',figures:[]}},
 {text:'They cost the same \u2014 both are around \u00a3600',correct:false,claim:{winner:'equal',figures:[{option:'A',value:600},{option:'B',value:600}]}}
 ],
-explanation:'Buy now pay later often seems free but the full price is still \u00a3599. The rival store saves \u00a350. The danger of BNPL is forgetting to pay within the interest-free period.'},
+explanation:'Buy now pay later often seems free but the full price is still \u00a3599. Keeping her \u00a3549 in savings for the year earns \u00a3549 \u00d7 3% = \u00a316.47, so BNPL costs her \u00a3599 \u2212 \u00a316.47 = \u00a3582.53 net, against \u00a3549 cash: the rival store is still \u00a333.53 cheaper. BNPL would win only if her savings earned more than \u00a350 \u00f7 \u00a3549 = 9.1% a year. The danger of BNPL is forgetting to pay within the interest-free period.'},
 
 {id:'bv_core_012',level:'core',type:'hidden',
 criterion:'',measure:'total_cost',inputs:{kwh:3200,A:{terms:[{name:'rate',amount:0.31,times:['kwh']},{name:'discount',amount:-50}]},B:{terms:[{name:'rate',amount:0.27,times:['kwh']}]}},
@@ -577,7 +577,7 @@ optionA:{label:'Coffee Machine',details:[{key:'Upfront cost',value:'\u00a385'},{
 optionB:{label:'Caf\u00e9',details:[{key:'Per coffee',value:'\u00a32.80'}]},
 conclusions:[
 {text:'After 34 coffees the machine becomes better value \u2014 break-even at 34 cups',correct:true,claim:{winner:'A',figures:[{option:null,value:34,of:'crossover'}],threshold:{value:34,from:'above',discrete:true}}},
-{text:'After 50 coffees the machine becomes better value \u2014 break-even at 50 cups',correct:false,claim:{winner:'A',figures:[{option:null,value:50,of:'crossover'}],threshold:{value:50,from:'above',discrete:true}}},
+{text:'Only after 50 coffees does the machine become better value \u2014 break-even at 50 cups',correct:false,claim:{winner:'A',figures:[{option:null,value:50,of:'crossover'}],threshold:{value:50,from:'above',discrete:true}}},
 {text:'The caf\u00e9 is always cheaper',correct:false,claim:{winner:'B',figures:[],threshold:{value:null}}},
 {text:'After 25 coffees the machine becomes better value \u2014 break-even at 25 cups',correct:false,claim:{winner:'A',figures:[{option:null,value:25,of:'crossover'}],threshold:{value:25,from:'above',discrete:true}}}
 ],
@@ -605,7 +605,7 @@ conclusions:[
 {text:'The panels pay for themselves after approximately 11.8 years \u2014 around year 12',correct:true,claim:{winner:'A',figures:[{option:null,value:12,of:'first'}],threshold:{value:11.8,from:'above',discrete:false}}},
 {text:'The panels pay for themselves after approximately 8 years \u2014 around year 8',correct:false,claim:{winner:'A',figures:[{option:null,value:8,of:'first'}],threshold:{value:8,from:'above',discrete:false}}},
 {text:'The panels never pay for themselves',correct:false,claim:{winner:'B',figures:[],threshold:{value:null}}},
-{text:'The panels pay for themselves after approximately 15 years \u2014 around year 15',correct:false,claim:{winner:'A',figures:[{option:null,value:15,of:'first'}],threshold:{value:15,from:'above',discrete:false}}}
+{text:'The panels pay for themselves only after approximately 15 years \u2014 around year 15',correct:false,claim:{winner:'A',figures:[{option:null,value:15,of:'first'}],threshold:{value:15,from:'above',discrete:false}}}
 ],
 explanation:'Payback period: \u00a34,500 \u00f7 \u00a3380 = 11.84 years. The homeowner should stay in the property for at least 12 years to break even.'},
 
@@ -618,7 +618,7 @@ conclusions:[
 {text:'Tariff B becomes better value above 80 minutes of calls per month',correct:true,claim:{winner:'B',figures:[],threshold:{value:80,from:'above',discrete:false}}},
 {text:'Tariff B becomes better value above 50 minutes of calls per month',correct:false,claim:{winner:'B',figures:[],threshold:{value:50,from:'above',discrete:false}}},
 {text:'Tariff A is always cheaper',correct:false,claim:{winner:'A',figures:[],threshold:{value:null}}},
-{text:'Tariff B becomes better value above 160 minutes of calls per month',correct:false,claim:{winner:'B',figures:[],threshold:{value:160,from:'above',discrete:false}}}
+{text:'Tariff B becomes better value only above 160 minutes of calls per month',correct:false,claim:{winner:'B',figures:[],threshold:{value:160,from:'above',discrete:false}}}
 ],
 explanation:'Set equal: 0.15m = 8 + 0.05m \u2192 0.10m = 8 \u2192 m = 80 minutes. Below 80 mins: Tariff A cheaper. Above 80 mins: Tariff B cheaper.'},
 
@@ -644,14 +644,14 @@ conclusions:[
 {text:'The electric car becomes better value after approximately 4.2 years \u2014 in year 5',correct:true,claim:{winner:'A',figures:[{option:null,value:5,of:'first'}],threshold:{value:4.2,from:'above',discrete:false}}},
 {text:'The electric car becomes better value after approximately 2 years \u2014 in year 2',correct:false,claim:{winner:'A',figures:[{option:null,value:2,of:'first'}],threshold:{value:2,from:'above',discrete:false}}},
 {text:'The electric car never pays for itself',correct:false,claim:{winner:'B',figures:[],threshold:{value:null}}},
-{text:'The electric car becomes better value after approximately 8.5 years \u2014 in year 9',correct:false,claim:{winner:'A',figures:[{option:null,value:9,of:'first'}],threshold:{value:8.5,from:'above',discrete:false}}}
+{text:'The electric car becomes better value only after approximately 8.5 years \u2014 in year 9',correct:false,claim:{winner:'A',figures:[{option:null,value:9,of:'first'}],threshold:{value:8.5,from:'above',discrete:false}}}
 ],
 explanation:'Payback: \u00a35,000 \u00f7 \u00a31,200 = 4.17 years. After 5 years, the electric car has saved \u00a36,000 \u2014 \u00a31,000 more than the price premium.'},
 
 {id:'bv_core_030',level:'core',type:'breakeven',
 criterion:'',measure:'crossover',inputs:{unit:'pages',A:{fixed:120,per_unit:0.09},B:{fixed:0,per_unit:0.12}},
-scenario:'A printer costs \u00a3120 and uses ink cartridges at \u00a318 per 200 pages. A print shop charges \u00a30.12 per page. How many pages must you print for the home printer to become better value?',
-optionA:{label:'Home Printer',details:[{key:'Upfront cost',value:'\u00a3120'},{key:'Ink cost',value:'\u00a318 per 200 pages'}]},
+scenario:'A printer costs \u00a3120 and uses ink that works out at 9p a page. A print shop charges \u00a30.12 per page. How many pages must you print for the home printer to become better value?',
+optionA:{label:'Home Printer',details:[{key:'Upfront cost',value:'\u00a3120'},{key:'Ink cost',value:'9p a page'}]},
 optionB:{label:'Print Shop',details:[{key:'Per page',value:'\u00a30.12'}]},
 conclusions:[
 {text:'The home printer becomes better value after printing more than 4,000 pages',correct:true,claim:{winner:'A',figures:[],threshold:{value:4000,from:'above',discrete:true}}},
@@ -659,22 +659,22 @@ conclusions:[
 {text:'The print shop is always cheaper',correct:false,claim:{winner:'B',figures:[],threshold:{value:null}}},
 {text:'The home printer becomes better value after printing more than 2,000 pages',correct:false,claim:{winner:'A',figures:[],threshold:{value:2000,from:'above',discrete:true}}}
 ],
-explanation:'Home printer cost per page: \u00a318 \u00f7 200 = \u00a30.09. Saving per page vs print shop: \u00a30.12 \u2212 \u00a30.09 = \u00a30.03. Break-even: \u00a3120 \u00f7 \u00a30.03 = 4,000 pages.'},
+explanation:'Home printer ink: 9p a page, \u00a30.09. Saving per page vs print shop: \u00a30.12 \u2212 \u00a30.09 = \u00a30.03. Break-even: \u00a3120 \u00f7 \u00a30.03 = 4,000 pages.'},
 
 // === Complex Multi-Step / Hidden Costs / Opportunity Cost / Quality Reasoning (20) ===
 
 {id:'bv_core_031',level:'core',type:'hidden',
-criterion:'',measure:'unit_cost',inputs:{months_A:18,months_B:12,A:{terms:[{name:'broadband',amount:18,times:['months_A']},{name:'line rental',amount:10,times:['months_A']},{name:'installation',amount:60}],per:['months_A']},B:{terms:[{name:'monthly cost',amount:32,times:['months_B']}],per:['months_B']}},provisional:true,
-scenario:'A broadband provider advertises \u201c\u00a318/month broadband \u2014 cheapest in the UK!\u201d The small print shows a \u00a310/month line rental, a \u00a360 installation fee, and an 18-month minimum contract. A rival offers \u00a332/month all-inclusive with no installation fee on a 12-month contract.',
+criterion:'She\'ll stay for the whole contract and wants the lowest cost per month.',measure:'unit_cost',inputs:{months_A:18,months_B:12,A:{terms:[{name:'broadband',amount:18,times:['months_A']},{name:'line rental',amount:10,times:['months_A']},{name:'installation',amount:60}],per:['months_A']},B:{terms:[{name:'monthly cost',amount:32,times:['months_B']}],per:['months_B']}},
+scenario:'A customer is choosing between two broadband deals. A broadband provider advertises \u201c\u00a318/month broadband \u2014 cheapest in the UK!\u201d The small print shows a \u00a310/month line rental, a \u00a360 installation fee, and an 18-month minimum contract. A rival offers \u00a332/month all-inclusive with no installation fee on a 12-month contract. She\'ll stay for the whole contract and wants the lowest cost per month.',
 optionA:{label:'Advertised Deal',details:[{key:'Broadband',value:'\u00a318/month'},{key:'Line rental',value:'\u00a310/month'},{key:'Installation',value:'\u00a360'},{key:'Contract',value:'18 months'}]},
 optionB:{label:'Rival Deal',details:[{key:'Monthly cost',value:'\u00a332 (all-in)'},{key:'Installation',value:'\u00a30'},{key:'Contract',value:'12 months'}]},
 conclusions:[
 {text:'The advertised deal is cheaper \u2014 \u00a318/month beats \u00a332/month',correct:false,claim:{winner:'A',figures:[{option:'A',value:18},{option:'B',value:32}]}},
-{text:'The rival deal is better value over its contract \u2014 \u00a3384 for 12 months vs \u00a3564 for 18 months on the advertised deal',correct:false,claim:{winner:'B',figures:[{option:'B',value:384},{option:null,value:12,of:'given'},{option:'A',value:564},{option:null,value:18,of:'given'}],measure:'total_cost'}},
+{text:'The rival deal is better value \u2014 \u00a332 a month vs \u00a3564 \u00f7 12 = \u00a347 a month on the advertised deal',correct:false,claim:{winner:'B',figures:[{option:'B',value:32},{option:'A',value:564,of:'total'},{option:null,value:12,of:'given'},{option:'A',value:47}]}},
 {text:'Per month the advertised deal is cheaper, at \u00a331.33 vs \u00a332 \u2014 but it locks you in for 6 extra months',correct:true,claim:{winner:'A',figures:[{option:'A',value:31.33},{option:'B',value:32},{option:null,value:6,of:'premise'}]}},
 {text:'They cost the same per month once you add line rental',correct:false,claim:{winner:'equal',figures:[]}}
 ],
-explanation:'Advertised: (18 \u00d7 \u00a328) + \u00a360 = \u00a3504 + \u00a360 = \u00a3564, i.e. \u00a331.33/month. Rival: 12 \u00d7 \u00a332 = \u00a3384, i.e. \u00a332/month. Per month the advertised deal is marginally cheaper, but it commits you for 18 months. The headline \u00a318 is misleading \u2014 the true cost is \u00a331.33/month.'},
+explanation:'Advertised: (18 \u00d7 \u00a328) + \u00a360 = \u00a3504 + \u00a360 = \u00a3564, i.e. \u00a331.33/month. Rival: 12 \u00d7 \u00a332 = \u00a3384, i.e. \u00a332/month. She stays for the whole contract, so the cost per month decides it: the advertised deal is 67p a month cheaper, though it commits her for 18 months. Comparing \u00a3384 with \u00a3564 compares 12 months with 18. The headline \u00a318 is misleading \u2014 the true cost is \u00a331.33/month.'},
 
 {id:'bv_core_032',level:'core',type:'hidden',
 criterion:'',measure:'total_cost',inputs:{A:{terms:[{name:'sofa price',amount:1200},{name:'admin fee',amount:145},{name:'protection',amount:5.99,times:[36]}]},B:{terms:[{name:'sofa price',amount:1050}]}},
@@ -742,17 +742,17 @@ conclusions:[
 explanation:'Anytime: 20 \u00d7 \u00a348 = \u00a3960. Advance: (20 \u00d7 \u00a322) + (3 \u00d7 \u00a348 replacements) = \u00a3440 + \u00a3144 = \u00a3584. The 3 missed tickets are among the 20 she has already paid for, so only the replacements are extra. Risk-adjusted, Advance still saves \u00a3376.'},
 
 {id:'bv_core_037',level:'core',type:'direct',
-criterion:'',measure:'net_profit',inputs:{A:{sales:800,cost:180},B:{sales:1120,cost:260}},provisional:true,
-scenario:'A small business needs 10,000 flyers printed. Printer A charges \u00a3180 for 10,000 on standard 130gsm paper. Printer B charges \u00a3260 for 10,000 on premium 250gsm card with a gloss finish. The business owner estimates that premium flyers get a 40% higher response rate. Standard flyers typically generate \u00a3800 in sales from 10,000.',
+criterion:'She wants the most profit from this one print run.',measure:'net_profit',inputs:{A:{sales:800,cost:180},B:{sales:1120,cost:260}},
+scenario:'A small business needs 10,000 flyers printed. Printer A charges \u00a3180 for 10,000 on standard 130gsm paper. Printer B charges \u00a3260 for 10,000 on premium 250gsm card with a gloss finish. The business owner estimates that premium flyers get a 40% higher response rate. Standard flyers typically generate \u00a3800 in sales from 10,000. She wants the most profit from this one print run.',
 optionA:{label:'Standard Flyers',details:[{key:'Cost',value:'\u00a3180'},{key:'Expected sales',value:'\u00a3800'}]},
 optionB:{label:'Premium Flyers',details:[{key:'Cost',value:'\u00a3260'},{key:'Expected sales',value:'\u00a31,120 (40% more)'}]},
 conclusions:[
-{text:'Standard flyers are better value overall \u2014 they cost \u00a380 less to print',correct:false,claim:{winner:'A',figures:[{option:null,value:80,of:'premise'}],measure:'roi'}},
-{text:'Premium flyers give more net profit, \u00a3860 vs \u00a3620, but standard has the higher ROI',correct:true,claim:{winner:'B',figures:[{option:'B',value:860},{option:'A',value:620}]}},
+{text:'Standard flyers are better value \u2014 \u00a380 cheaper to print, so \u00a380 more profit',correct:false,claim:{winner:'A',figures:[{option:null,value:80,of:'difference'}]}},
+{text:'Premium flyers are better value \u2014 \u00a3860 vs \u00a3620 profit',correct:true,claim:{winner:'B',figures:[{option:'B',value:860},{option:'A',value:620}]}},
 {text:'Standard flyers have the same ROI as premium, so neither is better value',correct:false,claim:{winner:'equal',figures:[],measure:'roi'}},
 {text:'Premium flyers are only worth it if the response rate doubles, not rises 40%',correct:false,claim:{winner:'A',figures:[{option:null,value:40,of:'given'}]}}
 ],
-explanation:'Standard: profit = \u00a3800 \u2212 \u00a3180 = \u00a3620, ROI = 344%. Premium: profit = \u00a31,120 \u2212 \u00a3260 = \u00a3860, ROI = 331%. Although premium has slightly lower ROI, the absolute profit is \u00a3240 higher. The cheaper option is not the better value here.'},
+explanation:'Standard: profit = \u00a3800 \u2212 \u00a3180 = \u00a3620. Premium: profit = \u00a31,120 \u2212 \u00a3260 = \u00a3860. She wants the most profit from this print run, so premium is better value: \u00a3240 more profit, although it costs \u00a380 more to print. Standard returns more for each pound spent (ROI 344% against 331%), but that would matter only if the money saved bought more flyers. The cheaper option is not the better value here.'},
 
 {id:'bv_core_038',level:'core',type:'breakeven',
 criterion:'',measure:'crossover',inputs:{unit:'years',compare:'payback',A:{fixed:450,per_unit:68},B:{fixed:1200,per_unit:195}},
@@ -807,17 +807,17 @@ conclusions:[
 explanation:'Buy: \u00a312,000 + (3 \u00d7 \u00a3800) + (3 \u00d7 \u00a31,200) = \u00a312,000 + \u00a32,400 + \u00a33,600 = \u00a318,000. Lease: (36 \u00d7 \u00a3350) + (3 \u00d7 \u00a3900) = \u00a312,600 + \u00a32,700 = \u00a315,300. Leasing saves \u00a32,700 over 3 years (though you don\u2019t own the van).'},
 
 {id:'bv_core_042',level:'core',type:'direct',
-criterion:'',measure:'total_cost',inputs:{A:{terms:[{name:'price',amount:500}]},B:{terms:[{name:'price',amount:500},{name:'interest earned',amount:-500,times:[0.03]}]}},
-scenario:'A student has \u00a3500 in savings earning 3% AER. She wants to buy a \u00a3500 laptop. Option A: pay cash now. Option B: take a 12-month 0% credit card and keep the \u00a3500 in savings for the year.',
+criterion:'She wants the lowest cost once the interest her savings earn is counted.',measure:'total_cost',inputs:{A:{terms:[{name:'price',amount:500}]},B:{terms:[{name:'price',amount:500},{name:'interest earned',amount:-500,times:[0.03]}]}},
+scenario:'A student has \u00a3500 in savings earning 3% AER. She wants to buy a \u00a3500 laptop. Option A: pay cash now. Option B: take a 12-month 0% credit card and keep the \u00a3500 in savings for the year. She wants the lowest cost once the interest her savings earn is counted.',
 optionA:{label:'Pay Cash Now',details:[{key:'Cost',value:'\u00a3500'},{key:'Interest earned',value:'\u00a30'}]},
 optionB:{label:'0% Credit Card',details:[{key:'Cost',value:'\u00a3500 (paid month 12)'},{key:'Interest earned',value:'\u00a315 on savings'}]},
 conclusions:[
 {text:'Paying cash is better value \u2014 it\'s simpler and the laptop costs \u00a3500 either way',correct:false,claim:{winner:'A',figures:[{option:'A',value:500,of:'amount:price'},{option:'B',value:500,of:'amount:price'}]}},
 {text:'The 0% credit card is better value \u2014 she earns \u00a315 interest while the laptop costs the same',correct:true,claim:{winner:'B',figures:[{option:null,value:0,of:'given'},{option:'B',value:15,of:'term:interest earned'}]}},
-{text:'The credit card is worse value \u2014 hidden charges will cost more than the \u00a315',correct:false,claim:{winner:null,figures:[{option:null,value:15,of:'premise'}]}},
+{text:'The credit card is worse value \u2014 3% on \u00a3500 adds \u00a315, so it costs \u00a3515',correct:false,claim:{winner:'A',figures:[{option:null,value:3,of:'given'},{option:'B',value:500,of:'amount:price'},{option:'B',value:15,of:'term:interest earned'},{option:'B',value:515}]}},
 {text:'They cost exactly the same either way',correct:false,claim:{winner:'equal',figures:[]}}
 ],
-explanation:'Cash: laptop costs \u00a3500, savings drop to \u00a30. Credit card: laptop costs \u00a3500 paid in month 12, meanwhile \u00a3500 \u00d7 3% = \u00a315 interest earned. Net cost with credit card: \u00a3500 \u2212 \u00a315 = \u00a3485. This is opportunity cost reasoning \u2014 what your money could earn elsewhere.'},
+explanation:'Cash: laptop costs \u00a3500, savings drop to \u00a30. Credit card: laptop costs \u00a3500 paid in month 12, meanwhile \u00a3500 \u00d7 3% = \u00a315 interest earned. Net cost with credit card: \u00a3500 \u2212 \u00a315 = \u00a3485, against \u00a3500 cash. The card charges 0%, so the 3% is interest she earns, not a charge. This is opportunity cost reasoning \u2014 what your money could earn elsewhere.'},
 
 {id:'bv_core_043',level:'core',type:'direct',
 criterion:'',measure:'total_cost',inputs:{days:22,A:{terms:[{name:'petrol',amount:1.55,times:[16,4.55,'days'],per:[30]},{name:'parking',amount:5,times:['days']}]},B:{terms:[{name:'monthly pass',amount:75}]}},
@@ -872,30 +872,30 @@ conclusions:[
 explanation:'Take off a sixth for tax and NI. Manchester: \u00a328,000 \u2212 a sixth (\u2248 \u00a34,667) \u2248 \u00a323,333 net \u00f7 12 \u2248 \u00a31,944/month \u2212 \u00a3650 rent \u2248 \u00a31,294 disposable. London: \u00a334,000 \u2212 a sixth (\u2248 \u00a35,667) \u2248 \u00a328,333 net \u00f7 12 \u2248 \u00a32,361/month \u2212 \u00a31,200 rent \u2248 \u00a31,161 disposable. A higher salary does not always mean more money in your pocket.'},
 
 {id:'bv_core_047',level:'core',type:'direct',
-criterion:'',measure:'total_cost',inputs:{A:{terms:[{name:'per clean',amount:10,times:[13]}]},B:{terms:[{name:'per clean',amount:15,times:[9]}]}},
-scenario:'A homeowner is choosing between two window cleaners. Cleaner A: \u00a310 per clean, visits every 4 weeks (13 times/year). Cleaner B: \u00a315 per clean, visits every 6 weeks and uses a pure-water system that keeps windows cleaner for longer (roughly 9 times/year: use 9). The homeowner values the longer-lasting clean.',
-optionA:{label:'Cleaner A',details:[{key:'Per clean',value:'\u00a310'},{key:'Frequency',value:'Every 4 weeks'},{key:'Cleans/year',value:'13'}]},
-optionB:{label:'Cleaner B',details:[{key:'Per clean',value:'\u00a315'},{key:'Frequency',value:'Every 6 weeks'},{key:'Cleans/year',value:'9'}]},
+criterion:'The homeowner wants the lowest cost for each week the windows are clean.',measure:'unit_cost',inputs:{A:{terms:[{name:'per clean',amount:10,times:[13]}],per:[13,3]},B:{terms:[{name:'per clean',amount:15,times:[9]}],per:[9,6]}},
+scenario:'A homeowner is choosing between two window cleaners. Cleaner A: \u00a310 per clean, visits every 4 weeks (13 times/year). Cleaner B: \u00a315 per clean, visits every 6 weeks and uses a pure-water system that keeps windows cleaner for longer (roughly 9 times/year: use 9). After each visit from Cleaner A the windows stay clean for 3 of the 4 weeks; after each visit from Cleaner B, for all 6 weeks. The homeowner wants the lowest cost for each week the windows are clean.',
+optionA:{label:'Cleaner A',details:[{key:'Per clean',value:'\u00a310'},{key:'Frequency',value:'Every 4 weeks'},{key:'Cleans/year',value:'13'},{key:'Clean for',value:'3 of 4 weeks'}]},
+optionB:{label:'Cleaner B',details:[{key:'Per clean',value:'\u00a315'},{key:'Frequency',value:'Every 6 weeks'},{key:'Cleans/year',value:'9'},{key:'Clean for',value:'All 6 weeks'}]},
 conclusions:[
 {text:'Cleaner A is better value because each clean costs less',correct:false,claim:{winner:'A',figures:[]}},
-{text:'Cleaner B is better value overall \u2014 \u00a3135 vs \u00a3130 a year, but the windows stay cleaner',correct:true,claim:{winner:null,figures:[{option:'B',value:135},{option:'A',value:130}]}},
-{text:'Cleaner A is the better value overall \u2014 it saves \u00a350 a year',correct:false,claim:{winner:'A',figures:[{option:null,value:50,of:'difference'}]}},
-{text:'They cost the same per year once the extra visits are counted',correct:false,claim:{winner:'equal',figures:[]}}
+{text:'Cleaner B is better value \u2014 \u00a32.50 vs \u00a33.33 per clean week',correct:true,claim:{winner:'B',figures:[{option:'B',value:2.50},{option:'A',value:3.33}]}},
+{text:'Cleaner A is the better value overall \u2014 it saves \u00a350 a year',correct:false,claim:{winner:'A',figures:[{option:null,value:50,of:'difference'}],measure:'total_cost'}},
+{text:'They cost the same per year once the extra visits are counted',correct:false,claim:{winner:'equal',figures:[],measure:'total_cost'}}
 ],
-explanation:'Cleaner A: 13 \u00d7 \u00a310 = \u00a3130/year. Cleaner B: 9 \u00d7 \u00a315 = \u00a3135/year. Cleaner B costs just \u00a35 more per year but provides a superior result. Sometimes the slightly more expensive option gives better overall value when quality factors are considered.'},
+explanation:'Cleaner A: 13 \u00d7 \u00a310 = \u00a3130 a year, for 13 \u00d7 3 = 39 clean weeks: \u00a3130 \u00f7 39 = \u00a33.33 a clean week. Cleaner B: 9 \u00d7 \u00a315 = \u00a3135 a year, for 9 \u00d7 6 = 54 clean weeks: \u00a3135 \u00f7 54 = \u00a32.50 a clean week. Cleaner B costs \u00a35 more a year but gives 15 more clean weeks, so it is better value for what the homeowner wants.'},
 
 {id:'bv_core_048',level:'core',type:'hidden',
-criterion:'',measure:'total_cost',inputs:{A:{terms:[{name:'premium',amount:480}]},B:{terms:[{name:'premium',amount:340}]}},
-scenario:'A car insurance comparison site shows: Insurer A at \u00a3480/year (comprehensive, \u00a3250 excess, courtesy car included). Insurer B at \u00a3340/year (third party fire and theft, \u00a3500 excess, no courtesy car). The car is worth \u00a34,500.',
+criterion:'She wants to pay the least in total this year.',measure:'total_cost',inputs:{A:{terms:[{name:'premium',amount:480},{name:'excess',amount:250}]},B:{terms:[{name:'premium',amount:340},{name:'repair',amount:1200}]}},
+scenario:'A driver is choosing car insurance. A comparison site shows: Insurer A at \u00a3480/year (comprehensive, \u00a3250 excess, courtesy car included). Insurer B at \u00a3340/year (third party fire and theft, \u00a3500 excess, no courtesy car). The car is worth \u00a34,500. This year she has a minor accident: \u00a31,200 to repair her own car. She wants to pay the least in total this year.',
 optionA:{label:'Insurer A',details:[{key:'Premium',value:'\u00a3480/year'},{key:'Cover',value:'Comprehensive'},{key:'Excess',value:'\u00a3250'},{key:'Courtesy car',value:'Yes'}]},
 optionB:{label:'Insurer B',details:[{key:'Premium',value:'\u00a3340/year'},{key:'Cover',value:'TPFT'},{key:'Excess',value:'\u00a3500'},{key:'Courtesy car',value:'No'}]},
 conclusions:[
-{text:'Insurer B is better value \u2014 it\'s \u00a3140 cheaper per year for the same car',correct:false,claim:{winner:null,figures:[{option:null,value:140,of:'difference'}]}},
-{text:'Insurer A is better value \u2014 \u00a3140 more buys full cover, a lower excess and a courtesy car',correct:true,claim:{winner:null,figures:[{option:null,value:140,of:'difference'}]}},
+{text:'Insurer B is better value \u2014 it\'s \u00a3140 cheaper per year for the same car',correct:false,claim:{winner:'B',figures:[{option:null,value:140,of:'premise'}]}},
+{text:'Insurer A is better value this year \u2014 \u00a3730 vs \u00a31,540',correct:true,claim:{winner:'A',figures:[{option:'A',value:730},{option:'B',value:1540}]}},
 {text:'They offer the same level of protection, so the cheaper one wins',correct:false,claim:{winner:'equal',figures:[]}},
-{text:'Insurer B is better because you save money every month',correct:false,claim:{winner:null,figures:[]}}
+{text:'Insurer B is better because you save money every month',correct:false,claim:{winner:'B',figures:[]}}
 ],
-explanation:'Insurer B saves \u00a3140/year but: no cover for damage to your own car in an accident (only TPFT), \u00a3250 higher excess per claim, and no courtesy car if yours is off the road. On a \u00a34,500 car, one own-fault accident would cost far more than the \u00a3140 saving. The cheapest policy is not the best value when risk is considered.'},
+explanation:'Insurer A: \u00a3480 premium + \u00a3250 excess on the \u00a31,200 repair = \u00a3730. Insurer B is third party fire and theft, so it does not cover damage to her own car: \u00a3340 + \u00a31,200 = \u00a31,540. Insurer A is better value this year by \u00a3810, although its premium is \u00a3140 more. The cheapest policy is not the best value when risk is considered.'},
 
 {id:'bv_core_049',level:'core',type:'breakeven',
 criterion:'',measure:'crossover',inputs:{unit:'hours per week',A:{fixed:[{name:'wages',amount:15,times:[20]},{name:'employer NI and pension',amount:180,per:[4.33]}],per_unit:0},B:{fixed:0,per_unit:40}},
@@ -911,17 +911,17 @@ conclusions:[
 explanation:'Weekly employee cost: (20 \u00d7 \u00a315) + (\u00a3180 \u00f7 4.33) = \u00a3300 + \u00a341.57 = \u00a3341.57. Weekly outsource cost: 40h. Set equal: 40h = 341.57 \u2192 h = 8.54 hours. Above about 8.5 hours/week of outsourced work, hiring a part-time employee is cheaper (and you get 20 hours of capacity).'},
 
 {id:'bv_core_050',level:'core',type:'direct',
-criterion:'',measure:'total_cost',inputs:{weeks:30,A:{terms:[{name:'lunch',amount:5.5,times:[5,'weeks']}]},B:{terms:[{name:'containers',amount:40},{name:'ingredients',amount:25,times:['weeks']},{name:'prep time',amount:11.44,times:[0.75,'weeks']}]}},provisional:true,
-scenario:'A student can buy lunch at university or meal-prep at home. Buying: average \u00a35.50/meal, 5 days/week. Meal prep: \u00a325/week for ingredients (makes 5 lunches), plus a one-off \u00a340 for containers. Compare the cost over a 30-week academic year, and consider the 45 minutes/week spent meal-prepping (the student could work a part-time job at \u00a311.44/hour instead).',
+criterion:'She would work those 45 minutes at her part-time job if she didn\'t cook.',measure:'total_cost',inputs:{weeks:30,A:{terms:[{name:'lunch',amount:5.5,times:[5,'weeks']}]},B:{terms:[{name:'containers',amount:40},{name:'ingredients',amount:25,times:['weeks']},{name:'prep time',amount:11.44,times:[0.75,'weeks']}]}},
+scenario:'A student can buy lunch at university or meal-prep at home. Buying: average \u00a35.50/meal, 5 days/week. Meal prep: \u00a325/week for ingredients (makes 5 lunches), plus a one-off \u00a340 for containers. Compare the cost over a 30-week academic year, and consider the 45 minutes/week spent meal-prepping (the student could work a part-time job at \u00a311.44/hour instead). She would work those 45 minutes at her part-time job if she didn\'t cook.',
 optionA:{label:'Buy Lunch',details:[{key:'Per meal',value:'\u00a35.50'},{key:'Weekly cost',value:'\u00a327.50'}]},
 optionB:{label:'Meal Prep',details:[{key:'Weekly ingredients',value:'\u00a325'},{key:'Containers',value:'\u00a340 one-off'},{key:'Prep time',value:'45 min/week'},{key:'Opportunity cost',value:'\u00a311.44/hour'}]},
 conclusions:[
 {text:'Meal prep is clearly cheaper \u2014 \u00a3790 vs \u00a3825 for buying, because the time spent prepping costs nothing',correct:false,claim:{winner:'B',figures:[{option:'B',value:790},{option:'A',value:825}]}},
-{text:'Meal prep saves \u00a335 in direct costs, but the 45 minutes a week could earn more than that',correct:true,claim:{winner:'A',figures:[{option:null,value:35,of:'premise'},{option:null,value:45,of:'given'}]}},
+{text:'Buying lunch is better value \u2014 \u00a3825 vs \u00a31,047.40 once her prep time is counted',correct:true,claim:{winner:'A',figures:[{option:'A',value:825},{option:'B',value:1047.40}]}},
 {text:'Meal prep saves over \u00a3200 per year',correct:false,claim:{winner:'B',figures:[{option:null,value:200,of:'difference'}]}},
-{text:'Buying lunch is always better value because time is money',correct:false,claim:{winner:null,figures:[]}}
+{text:'Buying lunch saves her \u00a3257.40 \u2014 the value of her prep time',correct:false,claim:{winner:'A',figures:[{option:null,value:257.40,of:'difference'}]}}
 ],
-explanation:'Buying: 30 \u00d7 \u00a327.50 = \u00a3825. Meal prep: \u00a340 + (30 \u00d7 \u00a325) = \u00a3790 in direct costs. Opportunity cost of prep time: 30 \u00d7 0.75 hours \u00d7 \u00a311.44 = \u00a3257.40. Total meal prep cost including time: \u00a3790 + \u00a3257.40 = \u00a31,047.40. But the question is whether you would actually work those 45 minutes \u2014 if not, the direct saving is \u00a335. Opportunity cost only applies if the alternative use of time has real value.'}
+explanation:'Buying: 30 \u00d7 \u00a327.50 = \u00a3825. Meal prep: \u00a340 + (30 \u00d7 \u00a325) = \u00a3790 in direct costs. She would work those 45 minutes instead, so her prep time costs 30 \u00d7 0.75 hours \u00d7 \u00a311.44 = \u00a3257.40. Meal prep including time: \u00a3790 + \u00a3257.40 = \u00a31,047.40. Buying is better value by \u00a31,047.40 \u2212 \u00a3825 = \u00a3222.40: the \u00a3257.40 of time, less the \u00a335 that meal prep saves directly.'}
 ],
 
 gcse: [

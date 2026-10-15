@@ -70,20 +70,8 @@ KNOWN = {
     ('bv_core_017', 'quantity-unstated', 0),
     ('bv_core_017', 'judgement', 4),
     ('bv_core_020', 'true-under-own-measure', 4),    # "cheaper because the carton costs less": per carton
-    ('bv_core_031', 'provisional-measure', 0),
-    ('bv_core_031', 'true-under-own-measure', 2),    # total over each contract: £384 vs £564
-    ('bv_core_037', 'provisional-measure', 0),
-    ('bv_core_037', 'true-under-own-measure', 1),    # "better value overall": standard has the higher ROI
-    ('bv_core_042', 'judgement', 3),
     ('bv_core_044', 'judgement', 1),
     ('bv_core_044', 'judgement', 3),                 # the key
-    ('bv_core_047', 'judgement', 2),                 # the key
-    ('bv_core_047', 'distractor-true', 1),           # A costs £130 a year against £135
-    ('bv_core_048', 'judgement', 1),
-    ('bv_core_048', 'judgement', 2),                 # the key
-    ('bv_core_048', 'judgement', 4),
-    ('bv_core_050', 'provisional-measure', 0),
-    ('bv_core_050', 'judgement', 4),
     ('bv_gcse_003', 'true-under-own-measure', 1),    # "cheaper — £4.50 vs £5.80": the pack price
     ('bv_gcse_011', 'true-under-own-measure', 1),    # "cheaper — £25 vs £27": the price tag
     ('bv_gcse_014', 'quantity-unstated', 0),

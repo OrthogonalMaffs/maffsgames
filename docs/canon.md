@@ -980,6 +980,25 @@ the figures in `scripts/uk_rates.py`, this table, and every game `check-tax-year
   or student loans. A game that does so without being registered fails, so does a registered game
   that states a tax year other than the teaching year, and so does the April rule above.
 
+### 7.1.5 Better Value content rules: reading a threshold claim
+
+Ruled by Jon, 15 Oct 2026 (contract BV-RULINGS).
+
+**"Becomes … after N" and "only after N" name the switch point. "If" and "worth it when" state a
+sufficient condition.**
+
+- **Switch point** ("X becomes better value after N", "X is better value only above N"): true only
+  when N is the break-even itself: "after N" or "above N" means X is first strictly cheaper at N + 1, "from
+  N" means at N, and "approximately N" means N is within ±0.1 of the crossover. A threshold past the
+  break-even makes the claim false. A wrong threshold option in this form needs no other wording, though "only" may be added
+  to make the claim plain.
+- **Sufficient condition** ("X is better value if you buy N or more", "X is worth it when you use it at
+  least N times"): true whenever every count it covers is past the break-even, so a threshold past the
+  break-even is **true**. A wrong option in this form must either reach below the break-even or say
+  "only" (better-value-s1-001).
+- **Checked in CI:** `verify-better-value-claims.py` reads every crossover claim as a switch point;
+  `verify-better-value.py`'s BREAK_EVEN check fails a sufficient-condition option that is true as written.
+
 ## 7.2 KaTeX Reference — Common Patterns
 
 | **Pattern** | **LaTeX** | **Output** |

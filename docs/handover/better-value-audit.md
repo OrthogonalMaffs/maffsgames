@@ -349,7 +349,7 @@ Report only; nothing in `games/` or `scripts/` changes. Contract BETTER-VALUE ME
 | C1 | Car A is more fuel efficient — 420 miles is further than 350 miles | wrong | FALSE | A 420 ÷ 50 = 8.4; B 350 ÷ 40 = 8.75 miles per litre. |
 | C2 | Car B is more fuel efficient — 8.75 miles per litre vs 8.4 miles per litre for Car A | key | TRUE | 8.75 > 8.4. |
 | C3 | They have the same fuel efficiency | wrong | FALSE | 8.4 vs 8.75. |
-| C4 | Car A is more fuel efficient — 8.4 miles per litre vs 8.75 miles per litre for Car B | wrong | FALSE | The figures are swapped: A is 8.4, B 8.75. |
+| C4 | Car A is more fuel efficient — 8.4 miles per litre vs 8.75 miles per litre for Car B | wrong | FALSE | The figures are right (A 8.4, B 8.75); the verdict is wrong: 8.4 < 8.75, so Car A is the less efficient. (Corrected 15 Oct 2026, BV-RULINGS: the note said the figures were swapped.) |
 
 **Flags:** Not a purchase: fuel economy (reported under STOP IF).
 
