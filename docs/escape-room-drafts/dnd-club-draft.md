@@ -31,7 +31,7 @@ How to read it:
    keeps the panic as the fireball lands (“Formation! FORMATION! …Who authorised the fire?”, panic and not
    humiliation) and then he straightens his starched robes and withdraws in his own register: “A tactical
    withdrawal. I shall be submitting Form R-1, requesting a rematch.” A pause. “In triplicate.” It echoes the
-   goblin’s Form G-14 as a running joke. The word “flees”, the creased robes and the scattering Strictmane are gone;
+   goblin’s Form G as a running joke. The word “flees”, the creased robes and the scattering Strictmane are gone;
    the goblins still scatter. The left-behind re-match form I had proposed for the win is removed (the line now
    lives in lock 3’s open). Jon’s reason, for the record: Strictmane is a stand-in for a teacher, and a humiliated
    antagonist turns the room mean.
@@ -45,16 +45,17 @@ How to read it:
 3. **Numbers in words that your brief gave as numerals.**
    - *“This corridor is 2.6 cm narrower than the plans…”* is Strictmane’s line, so it stays, with the number in
      words (“two point six centimetres”), the Car Trap precedent (its “For Jon” 3).
-   - **“Form G-14, in triplicate”** is kept as written, in the wrong-entry line and the first lock’s open (and
-     Jon’s “Form R-1” in the third lock’s open), but **not in any clue** (a numeral in a clue is a clue figure, and 14 is variant 0’s persuasion DC). If you’d
-     rather there were no coincidence at all, change the form number; it’s a flavour string.
+   - **“Form G”, not “Form G-14” (Jon, 15 Oct 2026).** 14 is variant 0’s persuasion DC and a plausible DC in the
+     others, so a numbered form planted a false clue for a struggling student. The goblin’s form is now just
+     “Form G” and the joke survives. “Form R-1” appears only once the room is won, so it stays.
    - **“nat 20”** is written `nat {{gate.die}}` (the die’s faces, a token that is 20 in every variant), so
      the page still says “nat 20” and no bare numeral is typed.
    - Your lock 3 note “(3 squares)” is kept out of the **clue** (the clue gives the radius in metres) and carried in
      `solve` as `{{fb.rsq}}`: with the squares in the clue, variant 0’s Charisma +3 and the 3 squares collide
      (rule a) and variant 0 is an INVALID draw. The square is fixed at 2 m, so the number is always r ÷ 2.
-   - Your lock 2 hint 3, “Twenty what?”, becomes `{{plan.real}} what?`, which prints “20 what?” in variant 0.
-     Your wording, with the figure as a token.
+   - Your lock 2 hint 3, “Twenty what?”, is replaced by the general ladder below (Jon, 15 Oct 2026), so no hint
+     prints the corridor’s length in metres. Hint 2’s “100 cm in a metre” is the token `{{plan.cmperm}}`, 100 in
+     every set, so no figure is typed.
 4. **There is no `fail` slot in `room.js`.** The engine shows `stakes` after “If you get it wrong.” on the start
    screen and after “And so:” on the time-out screen, so your fail is written into `stakes` and reads
    correctly after both (Car Trap “For Jon” 1). **The fail is the club ending**: the caretaker puts the chairs
@@ -66,7 +67,7 @@ How to read it:
    running and speaks in the wrong-entry lines. He is present in the fiction, so “a character who is not
    present cannot be the threat” doesn’t apply.
 6. **Wrong-answer feedback never gives the answer.** `missTitle` and `missSays` name the wrong figure and
-   nudge; hint 3 on every lock stops one step short. The worked `solve` appears only on a solved lock’s panel
+   nudge; the hint ladders are general (every student sees them, so none assumes a particular mistake) and none prints a worked figure. The worked `solve` appears only on a solved lock’s panel
    and the end screen (`engine.js` lines 416 and 827) and on the teacher page. It is never shown for a wrong
    entry. (Some older rooms’ hint 3 spells out the answer; none here does.)
 7. **Her lock-1 line is a variant constraint.** “Hang on, so the lower number isn’t the better bet?” is only true
@@ -75,7 +76,7 @@ How to read it:
    always right. See 16 for what it costs.
 8. **Where the explanations of the D&D terms are [X].** Each term is explained the first time it appears, in
    the narration or a clue, never in Mrs Rogers’s mouth (so she says nothing you haven’t approved):
-   DM (hook), BBEG and roll for initiative (brief), species, Strength (Athletics) and Charisma (Persuasion)
+   DM (hook), BBEG (brief), roll for initiative (lock 3’s brief), species and class, Strength (Athletics) and Charisma (Persuasion)
    (her character sheet), DC (the DM screen), nat 20 (lock 1’s open), AoE (the fireball card).
 9. **Where the approved lines sit.** Start: the end of the hook. Lock 1 opens: lock 1’s `onOpen`. Lock 2
    (Mr Strictman): lock 2’s `onOpen`. Ending and character choice: the win, in the order your brief lists them
@@ -117,16 +118,23 @@ How to read it:
       alternative line for Mrs Rogers is needed. He also accepted seven plan sets and five fireball sets as within
       the house range, and 182 valid joint combinations as plenty of replay; the widenings listed under locks 2
       and 3 are therefore not taken.
+17. **Six changes from Jon’s review (15 Oct 2026), all applied.** (1) Roll for initiative moved from the brief to the
+    start of lock 3’s brief, where the fight is. (2) The end writes DWARF in the species box and WIZARD in the class
+    box (dwarf is a species, wizard a class; the character sheet now has a class line). (3) Locks 2 and 3 have
+    general hint ladders; lock 1’s was already fine. (4) Lock 2’s hint no longer prints the metres figure. (5) “Form G-14”
+    is now “Form G”. (6) Token names for phase 2: see “Notes for phase 2”. Title: Roll for Initiative. Also accepted:
+    grades 4, 3, 4 and ★★ Core, the [X] details, the credit line and the stakes ending.
+
 ---
 
 ## Title
 
-Propose three **[X]**; mark the one you want:
+**Chosen by Jon, 15 Oct 2026: Roll for Initiative.** With initiative now at the start of lock 3’s fight, the title
+earns its name. The two others are struck.
 
-- [ ] **Roll for Initiative** *(the phrase every table says first; a nice irony, since the first thing she
-  learns is that the lower number isn’t the better bet)*
-- [ ] **The Commandant’s Fortress**
-- [ ] **The D&D Club**
+- [x] **Roll for Initiative**
+- ~~The Commandant’s Fortress~~
+- ~~The D&D Club~~
 
 *(The slug is phase 2’s business. Whichever you pick, the hub and card strings come from it.)*
 
@@ -151,15 +159,11 @@ sides?”
 
 Every adventure needs a villain. You tell her that the one in charge, the big bad evil guy, is called the BBEG,
 and yours is Commandant Strictmane: a tyrant in starched robes who has built a fortress and measured every inch of
-it. He has put three obstacles between her adventurer and the end of the story, and none of them is a monster.
-Each one is a rule, and each one is a number she has to be shown how to find.
+it. He has put three obstacles between her adventurer and the end of the story: a gate, a corridor and, at the
+end, a grid of his goblins. Each one comes down to a number she has to be shown how to find.
 
 When you get one right, she will start to want the next. That is what you are here for. The club ends when the
 caretaker comes round to stack the chairs, and every wrong setting costs you time.
-
-When the three obstacles are down, there is a last piece of ceremony: you tell her to roll for initiative, which
-is how a game decides who goes first, and the fight starts. *(Phase 2: the engine’s end screen carries this;
-it is a sentence in the win, not a mechanic.)*
 
 ## Stakes (also the fail screen; see “For Jon” 4)
 
@@ -187,8 +191,8 @@ character sheet.
 
 “Miss, you’d definitely be a barbarian.”
 
-“Everyone keeps telling me what I’d be. Dwarf. Wizard. Final answer.” She writes it in the species box, and
-then, after a beat: “Don’t tell my husband he was right.”
+“Everyone keeps telling me what I’d be. Dwarf. Wizard. Final answer.” She writes DWARF in the species box and
+WIZARD in the class box, and then, after a beat: “Don’t tell my husband he was right.”
 
 ---
 
@@ -202,7 +206,7 @@ it. Every line is about the fortress and the forms. None mentions the students.
    narrower than the plans. This is not how it is done in MY fortress.”
 2. **head:** Nothing opens. The goblin on the gate stamps a form, very slowly, and slides it back across the
    table.
-   **body:** “Form G-14 is incomplete. Form G-14 is always incomplete. That is rather the point of Form G-14.”
+   **body:** “Form G is incomplete. Form G is always incomplete. That is rather the point of Form G.”
 3. **head:** The setting slides back to where it was.
    **body:** “Every gate in this fortress is inspected at dawn. Every lock is measured twice. No intruder has
    ever got through all three. I have the paperwork to prove it.”
@@ -210,7 +214,7 @@ it. Every line is about the fortress and the forms. None mentions the students.
    **body:** “Next form.”
 
 *(Line 4 repeating is the joke, as “Next bay.” was in Car Trap: he just keeps coming. Line 1 is your line, with
-the number in words. Line 2’s G-14 is the form’s name, not a clue; see “For Jon” 3.)*
+the number in words. Line 2’s “Form G” has no number on purpose; see “For Jon” 3.)*
 
 ---
 
@@ -221,7 +225,7 @@ this table. The two blanks are `mug` and `sign`.
 
 | # | id | name | where | clue or flavour |
 |---|---|---|---|---|
-| 1 | `charsheet` | Her character sheet | at her place at the table | **ADVENTURER.** Species: human *(her species is what kind of person she is: human, dwarf, elf; it’s the first box on every sheet)*. Golden curls, battered blue plate armour, engraved. **Strength (Athletics): +{{gate.str}}** *(Strength is how strong she is; Athletics is what she uses it for: climbing, jumping)*. **Charisma (Persuasion): +{{gate.cha}}** *(Charisma is how well she gets on with people; Persuasion is talking them round)*. |
+| 1 | `charsheet` | Her character sheet | at her place at the table | **ADVENTURER.** Species: human *(what kind of person she is: human, dwarf, elf)*. Class: fighter *(what she does: fighter, wizard, barbarian)*. Golden curls, battered blue plate armour, engraved. **Strength (Athletics): +{{gate.str}}** *(Strength is how strong she is; Athletics is what she uses it for: climbing, jumping)*. **Charisma (Persuasion): +{{gate.cha}}** *(Charisma is how well she gets on with people; Persuasion is talking them round)*. |
 | 2 | `dmscreen` | The DM screen | standing at the far side of the table | **THE GATE.** *Climb the wall*: Strength (Athletics), **DC {{gate.dcc}}**. *Talk to the guard*, who wants the paperwork in triplicate: Charisma (Persuasion), **DC {{gate.dcp}}**. *(DC means difficulty class: the number the roll has to reach.)* To make a check, roll the twenty-sided die, add your bonus, and **meet or beat the DC**. Every face is equally likely. |
 | 3 | `window` | The window | over the radiator | Rain runs down the glass: proper drizzle, the kind that gets into everything. A card is stuck to the frame in the club’s handwriting: **HOUSE RULE: WET WEATHER. −{{gate.wet}} to Strength (Athletics) checks.** |
 | 4 | `plans` | Strictmane’s plans | folded inside the marking pile, where you hid them so she wouldn’t peek | **DRAWN TO REGULATION.** Scale **1 : {{plan.S}}**. Main corridor on the plan: **{{plan.L}} cm.** Signed, in very straight capitals: COMMANDANT STRICTMANE. *(Only the plan’s words are on the object; the units are written in.)* |
@@ -261,7 +265,7 @@ fireball 4; derived rating ★★ Core** (“For Jon” 2).
   which is {{gate.chP}} out of {{gate.die}}, {{gate.pp}}%. Persuasion is the better path, at
   **{{gate.answer}}%**.
 - **onOpen:** She rolls for the guard and the die stops on a nat {{gate.die}}: a natural twenty, the die itself
-  showing the top number, no adding needed. The guard salutes and stamps her Form G-14. Mrs Rogers looks at
+  showing the top number, no adding needed. The guard salutes and stamps her Form G. Mrs Rogers looks at
   the die, then at the two DCs on the screen. “Hang on, so the lower number isn’t the better bet? That’s
   actually quite clever.”
 
@@ -313,8 +317,8 @@ is the climb’s chance with the drizzle forgotten (need = `dcc` − `str`).
   longer than the whole fortress.
 - **hints:**
   1. Did you use the Commandant’s scale?
-  2. Those are still centimetres. How many in a metre?
-  3. {{plan.real}} what? She’s moving in squares, not metres.
+  2. There are {{plan.cmperm}} cm in a metre.
+  3. One square on the mat is {{plan.sq}} m. How many fit along the corridor?
 - **solve:** The corridor is {{plan.L}} cm on the plan and the scale is 1 : {{plan.S}}, so it is
   {{plan.L}} × {{plan.S}} = {{plan.cm}} cm. That is {{plan.real}} m. One square is {{plan.sq}} m, so the party
   moves **{{plan.answer}} squares**.
@@ -358,17 +362,18 @@ centimetres; `miss` the no-conversion value. Derived: `cm` = `L` × `S`; `real` 
 
 - **id:** `fireball-circle-area` (proposed) · **key:** `fb` · **grade:** 4
 - **name:** The fireball
-- **brief:** Strictmane’s goblins stand drilled in a grid, one square each, in perfect ranks. The fireball is an
-  AoE, an area of effect: everything inside the blast is hit. Tell the DM how much ground it covers, to the
-  nearest square metre.
+- **brief:** The goblins have seen you. “Roll for initiative,” you tell her: it’s how a fight decides who goes
+  first. Strictmane’s goblins stand drilled in a grid, one square each, in perfect ranks, and she goes first. The
+  fireball is an AoE, an area of effect: everything inside the blast is hit. Tell the DM how much ground it
+  covers, to the nearest square metre.
 - **instrument:** keypad · **label:** AREA COVERED (SQUARE METRES) · `maxDigits: 3` · **verb:** Enter area
 - **missTitle:** {{fb.miss}} is the distance round the edge.
 - **missSays:** {{fb.miss}} is what you get from the length round the blast, not the ground inside it. The
   fireball fills the inside.
 - **hints:**
-  1. That’s the distance round the edge. The fireball fills the inside.
-  2. Area is in square metres. Did you square something?
-  3. That’s the square the circle sits in, {{fb.sq}}. The corners aren’t on fire.
+  1. The fireball covers the space inside the circle.
+  2. Area uses the radius squared.
+  3. Square the radius, multiply by π, then round.
 - **solve:** The radius is {{fb.r}} m ({{fb.rsq}} squares at {{plan.sq}} m each). Area = π × r² =
   π × {{fb.r}}² = {{fb.exact}}, which is **{{fb.answer}} m²** to the nearest square metre. (With π = 3.14 the
   answer is the same.)
@@ -377,14 +382,13 @@ centimetres; `miss` the no-conversion value. Derived: `cm` = `L` × `S`; `real` 
   starched robes. “A tactical withdrawal. I shall be submitting Form R-1, requesting a rematch.” A pause. “In
   triplicate.”
 
-  *(Jon’s lines, 15 Oct 2026; see “For Jon” 1. “Form R-1” answers the goblin’s Form G-14, and neither is ever in a
+  *(Jon’s lines, 15 Oct 2026; see “For Jon” 1. “Form R-1” answers the goblin’s Form G, and neither is ever in a
   clue. “π”, “r” and “²” are the method, as the kept lock text in Car Trap has its 2 × π × r.)*
 
 **Variant pot for lock 3.** Your rule: the radius is a whole even number of metres, 4–12 m (whole squares at the
 room’s fixed 2 m), and the area to the nearest square metre must be **the same whether π or 3.14 is used**. The
 clue gives the radius in metres only; `{{fb.rsq}}` (the radius in squares) is used in `solve` and the hints, not in
-the clue (see “For Jon” 3). `answer` = round(π × `r`²); `miss` = round(2π × `r`), the circumference; `sqr` =
-(2 × `r`)², the square the circle sits in (the figure hint 3 addresses).
+the clue (see “For Jon” 3). `answer` = round(π × `r`²); `miss` = round(2π × `r`), the circumference.
 
 - **Solver, with the check stated:** `lambda x, v: x == round(pi * v["r"] ** 2) == round(3.14 * v["r"] ** 2)`.
   A radius where the two roundings differ makes the set unsolvable and the generator rejects it. One value on the
@@ -398,13 +402,13 @@ the clue (see “For Jon” 3). `answer` = round(π × `r`²); `miss` = round(2�
   pass the π/3.14 test (5 is a half and rounds ambiguously), giving **8 sets**, but those radii are not whole
   squares at 2 m, which is the property you set. Your call.
 
-| r (m) | squares | π: area | 3.14: area | **answer** | miss (circumference) | square (hint 3) |
-|---|---|---|---|---|---|---|
-| 6 | 3 | 113.10 | 113.04 | **113** | 38 | 144 |
-| 4 | 2 | 50.27 | 50.24 | **50** | 25 | 64 |
-| 8 | 4 | 201.06 | 200.96 | **201** | 50 | 256 |
-| 10 | 5 | 314.16 | 314.00 | **314** | 63 | 400 |
-| 12 | 6 | 452.39 | 452.16 | **452** | 75 | 576 |
+| r (m) | squares | π: area | 3.14: area | **answer** | miss (circumference) |
+|---|---|---|---|---|---|
+| 6 | 3 | 113.10 | 113.04 | **113** | 38 |
+| 4 | 2 | 50.27 | 50.24 | **50** | 25 |
+| 8 | 4 | 201.06 | 200.96 | **201** | 50 |
+| 10 | 5 | 314.16 | 314.00 | **314** | 63 |
+| 12 | 6 | 452.39 | 452.16 | **452** | 75 |
 
 *(Variant 0 is yours, the first row.)*
 
@@ -478,6 +482,18 @@ the character sheets and the die’s faces carry no readable writing.
 
 ---
 
+## Notes for phase 2
+
+- **Keep token names distinct.** `plan.sq` is the club’s square size (2 m, constant); the fireball’s radius in squares
+  is `fb.rsq`; there is no `fb.sq` and no `sqr` token (the hint that used it is gone). Any new token gets a name that
+  cannot be mistaken for another lock’s.
+- **Constant tokens, supplied in every set:** `gate.die` (20), `plan.sq` (2), `plan.cmperm` (100).
+- **Hint ladders** are the ones in each lock above; `missTitle` and `missSays` still carry the specific nudge for the
+  named misconception (the forgotten penalty, the missing conversion, the circumference).
+- **Initiative** is in lock 3’s `brief`, not in the win.
+
+---
+
 ## Checklist: the voice contract, SR-14, SR-11, §7.5.3 and the room rules
 
 **Voice contract** (`docs/escape-room-voice-contract.md`, fixed constraints) and its STOP IF:
@@ -520,13 +536,14 @@ the character sheets and the die’s faces carry no readable writing.
 | No third never-knew ending for the antagonist | **Pass.** He sees his defeat |
 | Students win by putting something right | **Pass.** They teach her, and each lock is a rule she is shown |
 | If the students use the antagonist’s own method, the brief says why it is different | **Pass.** They do not; he measures a fortress to rule it, they read the same plans to teach |
-| No figure in the prose outside `{{tokens}}` | **Pass, with five exceptions in words or fixed names, all flagged:** “two point six centimetres” (his line); “Form G-14” and “Form R-1” (form names, in the wrong-entry line, lock 1’s open and lock 3’s open, never a clue); “nat 20” is `nat {{gate.die}}`; the method π, r and ² in lock 3; “fifth level”, “twenty-sided” and “every face” are words. No numeral is typed into any clue |
+| No figure in the prose outside `{{tokens}}` | **Pass, with four exceptions in words or fixed names, all flagged:** “two point six centimetres” (his line); “Form R-1” (a form name with a numeral, in lock 3’s open only, never a clue); “nat 20” is `nat {{gate.die}}`; the method π, r and ² in lock 3; “fifth level”, “twenty-sided” and “every face” are words. No numeral is typed into any clue |
 | No tokens in `hook`, `brief`, `stakes` (written raw by the engine) | **Pass.** None |
 | Never “Ofsted”; no brand names; no year | **Pass.** “D&D” is the club’s name (“For Jon” 11); no logo, creature or character is named |
 | “Dungeon Master” never appears | **Pass.** “DM” throughout |
 | Wizards of the Coast logos, creatures, named characters | **Pass.** Generic goblins, fireball, dwarf, wizard only |
 | No real child named | **Pass.** No student is named in the room or in this document |
 | Mrs Rogers’s approved lines used as written | **Pass.** Start, lock 1, lock 2, ending and character choice, word for word (including “a twenty-sided dice”) |
+| Hint ladders are general, not tied to one mistake (Jon, 15 Oct 2026) | **Pass.** Lock 1’s ladder was already general; locks 2 and 3 rewritten; no hint prints the metres figure or a worked result |
 | Wrong-answer feedback never gives the answer | **Pass.** Misconception text and hints stop short on every lock; the worked solution is in `solve` only |
 | UK school timings; St Martha’s | **Pass.** After the last lesson; no clock time; the school is not named |
 | Eight objects, at least two blanks | **Pass.** Six clues, two blanks (`mug`, `sign`) |
