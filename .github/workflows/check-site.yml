@@ -550,8 +550,13 @@ jobs:
           node --version
           mmss() { printf '%dm%02ds' $(($1 / 60)) $(($1 % 60)); }
           budget=$((TIMEOUT_MIN * 60 * 3 / 4)); over=""
-          timing="$RUNNER_TEMP/ci-timing/timing.txt"; mkdir -p "$(dirname "$timing")"; echo "$GROUP" > "$timing"
-          { echo "### $GROUP"; echo; echo "Time budget: $(mmss $budget) (75% of ${TIMEOUT_MIN}m)"; echo
+          # The runner's Azure region, from the instance metadata service (the same name the runner prints at the head of the
+          # log; 6 of 6 probe jobs agreed, 15 Oct). Verifier times differ by region (docs/handover/ci-slowdown-401.md), so the
+          # region is saved with the timings; 'unknown' when the service does not answer, and the job carries on.
+          region=$(curl -s -m 5 -H Metadata:true "${REGION_URL:-http://169.254.169.254/metadata/instance/compute/location?api-version=2021-02-01&format=text}" 2>/dev/null | tr 'A-Z' 'a-z' | tr -d '[:space:]' || true)
+          [[ "$region" =~ ^[a-z0-9]{3,30}$ ]] || region=unknown
+          timing="$RUNNER_TEMP/ci-timing/timing.txt"; mkdir -p "$(dirname "$timing")"; echo "$GROUP" > "$timing"; echo "region: $region" >> "$timing"
+          { echo "### $GROUP"; echo; echo "Time budget: $(mmss $budget) (75% of ${TIMEOUT_MIN}m). Runner region: $region."; echo
             echo "| Check | Result | Duration | Group elapsed |"; echo "|---|---|---|---|"; } >> "$GITHUB_STEP_SUMMARY"
           failed=(); slow=""; slowtook=0; slowmed=""; slowgap=-999999
           median_of() { python3 -c "import json,sys; v=json.load(open('scripts/ci-timings.json')).get('lines',{}).get(sys.argv[1]); print('' if v is None else v)" "$1" 2>/dev/null || true; }
@@ -578,10 +583,10 @@ jobs:
             printf '::error::FAILED: %s\n' "${failed[@]}"
           fi
           if [ -n "$over" ]; then
-            detail="the slowest line against its recorded median: ${slow} took ${slowtook}s (recorded median ${slowmed:-none}${slowmed:+s})"
+            detail="the slowest line against its recorded median: ${slow} took ${slowtook}s in ${region} (recorded median ${slowmed:-none}${slowmed:+s})"
             echo "::warning::time budget (a warning, the job is not failed): $over; $detail"
             { echo; echo "**Over the time budget (a warning; the job is not failed):** $over"; echo
-              echo "Group: $GROUP. Slowest line against its recorded median: ${slow} took ${slowtook}s (recorded median ${slowmed:-none}${slowmed:+s})."; } >> "$GITHUB_STEP_SUMMARY"
+              echo "Group: $GROUP. Runner region: ${region}. Slowest line against its recorded median: ${slow} took ${slowtook}s in ${region} (recorded median ${slowmed:-none}${slowmed:+s}; the median is over runs in any region)."; } >> "$GITHUB_STEP_SUMMARY"
           fi
           [ ${#failed[@]} -eq 0 ]
 
