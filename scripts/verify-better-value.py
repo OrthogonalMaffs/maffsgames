@@ -90,7 +90,9 @@ REVIEW = dict([
     r('bv_core_004', [12 * 74], [12 * 74 - 820], 'Insurer A is better value', 'lt'),
     r('bv_core_005', [500 * F('0.45'), 5 * 38], [], 'Supplier B is better value', 'lt'),
     r('bv_core_006', [2 * 45], [2 * 45 - 75], 'annual pass is better value for two visits', 'lt'),
-    r('bv_core_007', [36 * 120, 36 * (85 + 2000 * F('0.02'))], [85 + 2000 * F('0.02'), 2000 * F('0.02'), 36 * 125 - 36 * 120],
+    # BV-CRITERIA (15 Oct 2026): the explanation gives Lease B's break-even, (120 - 85) / 0.02 = 1,750 copies a month
+    r('bv_core_007', [36 * 120, 36 * (85 + 2000 * F('0.02'))], [85 + 2000 * F('0.02'), 2000 * F('0.02'), 36 * 125 - 36 * 120,
+                                                              (120 - 85) / F('0.02')],
       'Lease A is better value', 'lt'),
     r('bv_core_008', [350 * F('0.28'), 350 * F('0.24') + 12], [350 * F('0.24')], 'Tariff B is better value', 'lt'),
     r('bv_core_009', [24 * F(str(P009)), 24 * 95], [F(str(P009)), 24 * 95 - 24 * F(str(P009)), F('1.08'), 2000 * F('1.08') ** 2],
@@ -147,7 +149,8 @@ REVIEW = dict([
     r('bv_core_042', [500 * F('0.03')], [500 - 15], '0% credit card is better value'),
     r('bv_core_043', [], [F(16, 30), F(16, 30) * F('4.55'), F('3.76'), F('3.76') + 5, 22 * (F('3.76') + 5),
                           F(16, 30) * F('4.55') * F('1.55'), 193], 'bus pass is better value', 'lt'),
-    r('bv_core_044', [], [F('29.99') * 12, 360, 250 - 80], 'gives £80 of usable value for £29.99'),
+    # BV-CRITERIA (15 Oct 2026): she wants what she uses for the least money, so the key is a verdict: £29.99 vs £80
+    r('bv_core_044', [F('29.99'), 80], [80 - F('29.99')], 'subscription box is better value', 'lt'),
     r('bv_core_045', [3600 * F('0.26'), 1800 * F('0.29') + 1800 * F('0.33')], [1800, 1800 * F('0.29'), 1800 * F('0.33'), 180],
       'fixed tariff saves money', 'lt'),
     r('bv_core_046', [F(28000 * 5, 6 * 12) - 650, F(34000 * 5, 6 * 12) - 1200],
@@ -370,6 +373,8 @@ def play(fails, html):
         proc.wait()
 
 
+# Each plant's text occurs once in the page: BV-CRITERIA's criterion fields repeat the scenario's sentence, so a
+# plant on a stated criterion is anchored on scenario text before it.
 PLANTS = [
     ('bv_core_036', 'r-003: £518 keyed', "total \\u00a3584 vs", "total \\u00a3518 vs"),
     ('bv_core_037', 'r-004: premium keyed the better ROI',
@@ -378,11 +383,13 @@ PLANTS = [
     ('bv_core_037', 'r-004: the profit criterion not stated', " She wants the most profit from this one print run.", ""),
     ('bv_core_049', 'r-005: 8.8 hours', "above approximately 8.5 hours per week", "above approximately 8.8 hours per week"),
     ('bv_gcse_019', 's1-001: "15 or more lunches" true as written', "The pass is only worth it if you eat 15", "The pass is worth it if you eat 15"),
-    ('bv_gcse_019', 's1-002: the convention not stated', " (Worth it means cheaper, not the same price.)", ""),
+    ('bv_gcse_019', 's1-002: the convention not stated',
+     "each. How many lunches per month make the pass worth it? (Worth it means cheaper, not the same price.)",
+     "each. How many lunches per month make the pass worth it?"),
     ('bv_gcse_019', 's1-002: "12 or more" keyed', "more than 12 lunches per month \\u2014 from the 13th lunch onwards", "12 or more lunches per month"),
     ('bv_core_047', 's1-008: the 9 not stated as the figure to use', " (roughly 9 times/year: use 9)", " (roughly 9 times/year)"),
     ('bv_core_011', 's1-009: the garbled sentence back', "nothing to pay for 12 months, then the full \\u00a3599 is due if it has not been paid by then.", "nothing for 12 months, then \\u00a3599 if not paid."),
-    ('bv_core_041', 's1-004: the van\'s end value not set aside', "Compare over 3 years, ignoring what the van is worth at the end.", "Compare over 3 years."),
+    ('bv_core_041', 's1-004: the van\'s end value not set aside', "/year. Compare over 3 years, ignoring what the van is worth at the end.", "/year. Compare over 3 years."),
 ]
 
 

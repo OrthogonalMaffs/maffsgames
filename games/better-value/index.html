@@ -269,8 +269,8 @@ const QUESTIONS = {
 core: [
 // === Direct Comparison (8) ===
 {id:'bv_core_001',level:'core',type:'direct',
-criterion:'',measure:'total_cost',inputs:{months:12,A:{terms:[{name:'monthly fee',amount:35,times:['months']}]},B:{terms:[{name:'monthly fee',amount:28,times:['months']},{name:'joining fee',amount:60}]}},
-scenario:'Aisha is choosing between two gym memberships for a year.',
+criterion:'Aisha wants to pay as little as possible over the year.',measure:'total_cost',inputs:{months:12,A:{terms:[{name:'monthly fee',amount:35,times:['months']}]},B:{terms:[{name:'monthly fee',amount:28,times:['months']},{name:'joining fee',amount:60}]}},
+scenario:'Aisha is choosing between two gym memberships for a year. Aisha wants to pay as little as possible over the year.',
 optionA:{label:'Gym A',details:[{key:'Monthly fee',value:'\u00a335'},{key:'Joining fee',value:'\u00a30'},{key:'Contract',value:'12 months'}]},
 optionB:{label:'Gym B',details:[{key:'Monthly fee',value:'\u00a328'},{key:'Joining fee',value:'\u00a360'},{key:'Contract',value:'12 months'}]},
 conclusions:[
@@ -282,8 +282,8 @@ conclusions:[
 explanation:'Gym A: 12 \u00d7 \u00a335 = \u00a3420. Gym B: \u00a360 + (12 \u00d7 \u00a328) = \u00a360 + \u00a3336 = \u00a3396. Gym B is cheaper over 12 months despite the joining fee.'},
 
 {id:'bv_core_002',level:'core',type:'direct',
-criterion:'',measure:'total_cost',inputs:{months:18,A:{terms:[{name:'monthly fee',amount:29,times:['months']}]},B:{terms:[{name:'monthly fee',amount:24,times:['months']},{name:'setup fee',amount:49}]}},
-scenario:'A family is choosing a broadband provider for 18 months.',
+criterion:'The family wants to pay the least over the 18 months.',measure:'total_cost',inputs:{months:18,A:{terms:[{name:'monthly fee',amount:29,times:['months']}]},B:{terms:[{name:'monthly fee',amount:24,times:['months']},{name:'setup fee',amount:49}]}},
+scenario:'A family is choosing a broadband provider for 18 months. The family wants to pay the least over the 18 months.',
 optionA:{label:'Provider A',details:[{key:'Monthly fee',value:'\u00a329'},{key:'Setup fee',value:'\u00a30'},{key:'Router',value:'Free'}]},
 optionB:{label:'Provider B',details:[{key:'Monthly fee',value:'\u00a324'},{key:'Setup fee',value:'\u00a349'},{key:'Router',value:'Free'}]},
 conclusions:[
@@ -295,8 +295,8 @@ conclusions:[
 explanation:'Provider A: 18 \u00d7 \u00a329 = \u00a3522. Provider B: \u00a349 + (18 \u00d7 \u00a324) = \u00a349 + \u00a3432 = \u00a3481.'},
 
 {id:'bv_core_003',level:'core',type:'direct',
-criterion:'',measure:'total_cost',inputs:{cups:260,A:{terms:[{name:'price per cup',amount:3.2,times:['cups']}]},B:{terms:[{name:'annual fee',amount:180},{name:'cost per cup',amount:0.4,times:['cups']}]}},
-scenario:'Marcus is buying coffee. He drinks one cup per working day (260 days/year).',
+criterion:'Marcus wants to spend the least on coffee over a year.',measure:'total_cost',inputs:{cups:260,A:{terms:[{name:'price per cup',amount:3.2,times:['cups']}]},B:{terms:[{name:'annual fee',amount:180},{name:'cost per cup',amount:0.4,times:['cups']}]}},
+scenario:'Marcus is buying coffee. He drinks one cup per working day (260 days/year). Marcus wants to spend the least on coffee over a year.',
 optionA:{label:'Coffee Shop',details:[{key:'Price per cup',value:'\u00a33.20'},{key:'Annual cost',value:'?'}]},
 optionB:{label:'Subscription Machine',details:[{key:'Annual fee',value:'\u00a3180'},{key:'Cost per cup',value:'\u00a30.40'}]},
 conclusions:[
@@ -308,8 +308,8 @@ conclusions:[
 explanation:'Coffee shop: 260 \u00d7 \u00a33.20 = \u00a3832. Machine: \u00a3180 + (260 \u00d7 \u00a30.40) = \u00a3180 + \u00a3104 = \u00a3284.'},
 
 {id:'bv_core_004',level:'core',type:'direct',
-criterion:'',measure:'total_cost',inputs:{months:12,A:{terms:[{name:'annual cost',amount:820}]},B:{terms:[{name:'monthly cost',amount:74,times:['months']},{name:'admin fee',amount:0}]}},
-scenario:'A student needs car insurance. She gets two quotes for annual cover.',
+criterion:'She wants to pay the least for a year\u2019s cover.',measure:'total_cost',inputs:{months:12,A:{terms:[{name:'annual cost',amount:820}]},B:{terms:[{name:'monthly cost',amount:74,times:['months']},{name:'admin fee',amount:0}]}},
+scenario:'A student needs car insurance. She gets two quotes for annual cover. She wants to pay the least for a year\u2019s cover.',
 optionA:{label:'Insurer A',details:[{key:'Payment',value:'Annual'},{key:'Total cost',value:'\u00a3820'}]},
 optionB:{label:'Insurer B',details:[{key:'Payment',value:'Monthly'},{key:'Monthly cost',value:'\u00a374'},{key:'Admin fee',value:'\u00a30'}]},
 conclusions:[
@@ -321,8 +321,8 @@ conclusions:[
 explanation:'Insurer A: \u00a3820. Insurer B: 12 \u00d7 \u00a374 = \u00a3888. Paying monthly costs \u00a368 more.'},
 
 {id:'bv_core_005',level:'core',type:'direct',
-criterion:'',measure:'total_cost',inputs:{books:500,A:{terms:[{name:'price per book',amount:0.45,times:['books']}]},B:{terms:[{name:'price per box',amount:38,times:['books'],per:[100]}]}},
-scenario:'A school is buying exercise books in bulk. They need 500 books.',
+criterion:'The school wants its 500 books for the least money.',measure:'total_cost',inputs:{books:500,A:{terms:[{name:'price per book',amount:0.45,times:['books']}]},B:{terms:[{name:'price per box',amount:38,times:['books'],per:[100]}]}},
+scenario:'A school is buying exercise books in bulk. They need 500 books. The school wants its 500 books for the least money.',
 optionA:{label:'Supplier A',details:[{key:'Price per book',value:'\u00a30.45'},{key:'Delivery',value:'Free'}]},
 optionB:{label:'Supplier B',details:[{key:'Price per box',value:'\u00a338 (100 books)'},{key:'Delivery',value:'Free'}]},
 conclusions:[
@@ -334,8 +334,8 @@ conclusions:[
 explanation:'Supplier A: 500 \u00d7 \u00a30.45 = \u00a3225. Supplier B: 5 \u00d7 \u00a338 = \u00a3190. Supplier B is cheaper.'},
 
 {id:'bv_core_006',level:'core',type:'direct',
-criterion:'',measure:'total_cost',inputs:{visits:2,A:{terms:[{name:'day ticket',amount:45,times:['visits']}]},B:{terms:[{name:'annual pass',amount:75}]}},
-scenario:'A couple wants to visit a theme park. They plan to go twice this year.',
+criterion:'The couple want to pay the least for their two visits.',measure:'total_cost',inputs:{visits:2,A:{terms:[{name:'day ticket',amount:45,times:['visits']}]},B:{terms:[{name:'annual pass',amount:75}]}},
+scenario:'A couple wants to visit a theme park. They plan to go twice this year. The couple want to pay the least for their two visits.',
 optionA:{label:'Day Tickets',details:[{key:'Price',value:'\u00a345 per person per visit'}]},
 optionB:{label:'Annual Pass',details:[{key:'Price',value:'\u00a375 per person'}]},
 conclusions:[
@@ -347,21 +347,21 @@ conclusions:[
 explanation:'Two day tickets: 2 \u00d7 \u00a345 = \u00a390. Annual pass: \u00a375. The pass saves \u00a315 per person.'},
 
 {id:'bv_core_007',level:'core',type:'direct',
-criterion:'',measure:'total_cost',inputs:{months:36,copies:2000,A:{terms:[{name:'monthly cost',amount:120,times:['months']}]},B:{terms:[{name:'monthly cost',amount:85,times:['months']},{name:'per copy charge',amount:0.02,times:['copies','months']}]}},
-scenario:'A business is choosing between two photocopier lease options over 3 years. The business makes 2,000 copies per month.',
+criterion:'The business wants to pay the least over the 3 years.',measure:'total_cost',inputs:{months:36,copies:2000,A:{terms:[{name:'monthly cost',amount:120,times:['months']}]},B:{terms:[{name:'monthly cost',amount:85,times:['months']},{name:'per copy charge',amount:0.02,times:['copies','months']}]}},
+scenario:'A business is choosing between two photocopier lease options over 3 years. The business makes 2,000 copies per month. The business wants to pay the least over the 3 years.',
 optionA:{label:'Lease A',details:[{key:'Monthly cost',value:'\u00a3120'},{key:'Copies included',value:'All inclusive'}]},
 optionB:{label:'Lease B',details:[{key:'Monthly cost',value:'\u00a385'},{key:'Per copy charge',value:'\u00a30.02'}]},
 conclusions:[
 {text:'Lease A is better value \u2014 3-year cost \u00a34,320 vs \u00a34,500 for Lease B',correct:true,claim:{winner:'A',figures:[{option:null,value:3,of:'given'},{option:'A',value:4320},{option:'B',value:4500}]}},
 {text:'Lease B is better value \u2014 \u00a385/month is much cheaper than \u00a3120/month',correct:false,claim:{winner:'B',figures:[{option:'B',value:85,of:'amount:monthly cost'},{option:'A',value:120,of:'amount:monthly cost'}]}},
 {text:'They cost the same over 3 years',correct:false,claim:{winner:'equal',figures:[{option:null,value:3,of:'given'}]}},
-{text:'Lease B is better if the business makes fewer than 1,000 copies',correct:false,claim:{winner:'B',figures:[{option:null,value:1000,of:'premise'}],at:{copies:1000}}}
+{text:'Lease B is better if the business makes fewer than 2,500 copies a month',correct:false,claim:{winner:'B',figures:[{option:null,value:2500,of:'premise'}],at:{copies:2000}}}
 ],
-explanation:'Lease A: 36 \u00d7 \u00a3120 = \u00a34,320. Lease B: 36 \u00d7 (\u00a385 + 2000 \u00d7 \u00a30.02) = 36 \u00d7 \u00a3125 = \u00a34,500. Over 3 years, Lease A saves \u00a3180.'},
+explanation:'Lease A: 36 \u00d7 \u00a3120 = \u00a34,320. Lease B: 36 \u00d7 (\u00a385 + 2000 \u00d7 \u00a30.02) = 36 \u00d7 \u00a3125 = \u00a34,500. Over 3 years, Lease A saves \u00a3180. Lease B is cheaper only below 1,750 copies a month: \u00a385 + 1,750 \u00d7 \u00a30.02 = \u00a3120.'},
 
 {id:'bv_core_008',level:'core',type:'direct',
-criterion:'',measure:'total_cost',inputs:{kwh:350,A:{terms:[{name:'rate',amount:0.28,times:['kwh']}]},B:{terms:[{name:'rate',amount:0.24,times:['kwh']},{name:'standing charge',amount:12}]}},
-scenario:'A family is choosing an energy tariff. Their average monthly usage is 350 kWh.',
+criterion:'The family wants the lowest monthly bill.',measure:'total_cost',inputs:{kwh:350,A:{terms:[{name:'rate',amount:0.28,times:['kwh']}]},B:{terms:[{name:'rate',amount:0.24,times:['kwh']},{name:'standing charge',amount:12}]}},
+scenario:'A family is choosing an energy tariff. Their average monthly usage is 350 kWh. The family wants the lowest monthly bill.',
 optionA:{label:'Tariff A',details:[{key:'Rate',value:'28p per kWh'},{key:'Standing charge',value:'None'}]},
 optionB:{label:'Tariff B',details:[{key:'Rate',value:'24p per kWh'},{key:'Standing charge',value:'\u00a312/month'}]},
 conclusions:[
@@ -374,8 +374,8 @@ explanation:'Tariff A: 350 \u00d7 \u00a30.28 = \u00a398/month. Tariff B: (350 \u
 
 // === Hidden Cost (8) ===
 {id:'bv_core_009',level:'core',type:'hidden',
-criterion:'',measure:'total_cost',inputs:{months:24,A:{terms:[{name:'repayment',amount:90.2,times:['months']}]},B:{terms:[{name:'repayment',amount:95,times:['months']}]}},
-scenario:'Tom wants to borrow \u00a32,000 for 2 years, repaid monthly. He compares two loan options.',
+criterion:'Tom wants to pay back the least in total.',measure:'total_cost',inputs:{months:24,A:{terms:[{name:'repayment',amount:90.2,times:['months']}]},B:{terms:[{name:'repayment',amount:95,times:['months']}]}},
+scenario:'Tom wants to borrow \u00a32,000 for 2 years, repaid monthly. He compares two loan options. Tom wants to pay back the least in total.',
 optionA:{label:'Bank Loan',details:[{key:'Amount',value:'\u00a32,000'},{key:'APR',value:'8%'},{key:'Term',value:'2 years'},{key:'Repayment',value:'\u00a390.20/month'}]},
 optionB:{label:'Credit Union',details:[{key:'Repayment',value:'\u00a395/month'},{key:'Term',value:'24 months'}]},
 conclusions:[
@@ -387,8 +387,8 @@ conclusions:[
 explanation:'Bank loan: 24 \u00d7 \u00a390.20 = \u00a32,164.80. Credit union: 24 \u00d7 \u00a395 = \u00a32,280. The bank loan is \u00a3115.20 cheaper. (\u00a32,000 \u00d7 1.08\u00b2 = \u00a32,332.80 is what Tom would owe after 2 years with no repayments at all; repaying monthly, he pays interest only on what he still owes.) Always calculate total repayment, not just the rate.'},
 
 {id:'bv_core_010',level:'core',type:'hidden',
-criterion:'',measure:'total_cost',inputs:{months:24,A:{terms:[{name:'upfront',amount:30},{name:'monthly',amount:25,times:['months']}]},B:{terms:[{name:'handset',amount:280},{name:'monthly',amount:12,times:['months']}]}},
-scenario:'A phone contract advertises \u201c\u00a325/month \u2014 the cheapest on the market!\u201d The contract runs for 24 months and has a \u00a330 upfront cost. A SIM-only deal costs \u00a312/month with a handset purchased outright for \u00a3280.',
+criterion:'The buyer wants a phone and 24 months of service for the least money.',measure:'total_cost',inputs:{months:24,A:{terms:[{name:'upfront',amount:30},{name:'monthly',amount:25,times:['months']}]},B:{terms:[{name:'handset',amount:280},{name:'monthly',amount:12,times:['months']}]}},
+scenario:'A phone contract advertises \u201c\u00a325/month \u2014 the cheapest on the market!\u201d The contract runs for 24 months and has a \u00a330 upfront cost. A SIM-only deal costs \u00a312/month with a handset purchased outright for \u00a3280. The buyer wants a phone and 24 months of service for the least money.',
 optionA:{label:'Phone Contract',details:[{key:'Monthly',value:'\u00a325'},{key:'Upfront',value:'\u00a330'},{key:'Term',value:'24 months'}]},
 optionB:{label:'SIM-Only + Handset',details:[{key:'Monthly',value:'\u00a312'},{key:'Handset',value:'\u00a3280'},{key:'Term',value:'24 months'}]},
 conclusions:[
@@ -413,8 +413,8 @@ conclusions:[
 explanation:'Buy now pay later often seems free but the full price is still \u00a3599. Keeping her \u00a3549 in savings for the year earns \u00a3549 \u00d7 3% = \u00a316.47, so BNPL costs her \u00a3599 \u2212 \u00a316.47 = \u00a3582.53 net, against \u00a3549 cash: the rival store is still \u00a333.53 cheaper. BNPL would win only if her savings earned more than \u00a350 \u00f7 \u00a3549 = 9.1% a year. The danger of BNPL is forgetting to pay within the interest-free period.'},
 
 {id:'bv_core_012',level:'core',type:'hidden',
-criterion:'',measure:'total_cost',inputs:{kwh:3200,A:{terms:[{name:'rate',amount:0.31,times:['kwh']},{name:'discount',amount:-50}]},B:{terms:[{name:'rate',amount:0.27,times:['kwh']}]}},
-scenario:'An energy company offers a \u201csmart meter discount\u201d of \u00a350 off annual bills. However, the tariff rate is 31p/kWh vs 27p/kWh on the standard tariff. A household uses 3,200 kWh per year.',
+criterion:'The household wants the lowest bill for the year.',measure:'total_cost',inputs:{kwh:3200,A:{terms:[{name:'rate',amount:0.31,times:['kwh']},{name:'discount',amount:-50}]},B:{terms:[{name:'rate',amount:0.27,times:['kwh']}]}},
+scenario:'An energy company offers a \u201csmart meter discount\u201d of \u00a350 off annual bills. However, the tariff rate is 31p/kWh vs 27p/kWh on the standard tariff. A household uses 3,200 kWh per year. The household wants the lowest bill for the year.',
 optionA:{label:'Smart Meter Tariff',details:[{key:'Rate',value:'31p per kWh'},{key:'Discount',value:'\u00a350 off/year'}]},
 optionB:{label:'Standard Tariff',details:[{key:'Rate',value:'27p per kWh'},{key:'Discount',value:'None'}]},
 conclusions:[
@@ -426,8 +426,8 @@ conclusions:[
 explanation:'Smart meter: (3200 \u00d7 \u00a30.31) \u2212 \u00a350 = \u00a3992 \u2212 \u00a350 = \u00a3942. Standard: 3200 \u00d7 \u00a30.27 = \u00a3864. The discount does not offset the higher rate.'},
 
 {id:'bv_core_013',level:'core',type:'hidden',
-criterion:'',measure:'total_cost',inputs:{A:{terms:[{name:'monthly',amount:40,times:[12]}]},B:{terms:[{name:'monthly',amount:42,times:[11]}]}},
-scenario:'A gym offers a \u201cfree month\u201d promotion. Standard price: \u00a340/month for 12 months. Free month deal: pay for 11 months upfront at \u00a342/month, get the 12th free.',
+criterion:'The member wants 12 months at the gym for the least money.',measure:'total_cost',inputs:{A:{terms:[{name:'monthly',amount:40,times:[12]}]},B:{terms:[{name:'monthly',amount:42,times:[11]}]}},
+scenario:'A gym offers a \u201cfree month\u201d promotion. Standard price: \u00a340/month for 12 months. Free month deal: pay for 11 months upfront at \u00a342/month, get the 12th free. The member wants 12 months at the gym for the least money.',
 optionA:{label:'Standard Monthly',details:[{key:'Monthly',value:'\u00a340'},{key:'Term',value:'12 months'}]},
 optionB:{label:'Free Month Deal',details:[{key:'Monthly',value:'\u00a342'},{key:'Months paid',value:'11'},{key:'Free month',value:'Yes (12th)'}]},
 conclusions:[
@@ -439,8 +439,8 @@ conclusions:[
 explanation:'Standard: 12 \u00d7 \u00a340 = \u00a3480. Free month deal: 11 \u00d7 \u00a342 = \u00a3462. Despite the higher monthly rate, paying for 11 months at \u00a342 costs less than 12 months at \u00a340.'},
 
 {id:'bv_core_014',level:'core',type:'hidden',
-criterion:'',measure:'unit_cost',inputs:{need:2,unstated:['need'],A:{terms:[{name:'2 for \u00a32.50',amount:2.5,times:['need'],per:[2]}],per:['need']},B:{terms:[{name:'single price',amount:1.4,times:['need']}],per:['need']}},
-scenario:'Two supermarkets sell the same brand of orange juice. Supermarket A: 2 for \u00a32.50. Supermarket B: buy 3 get 1 free at \u00a31.40 each.',
+criterion:'The shopper needs exactly 2 bottles and wants to pay the least for them.',measure:'unit_cost',inputs:{need:2,A:{terms:[{name:'2 for \u00a32.50',amount:2.5,times:['need'],per:[2]}],per:['need']},B:{terms:[{name:'single price',amount:1.4,times:['need']}],per:['need']}},
+scenario:'Two supermarkets sell the same brand of orange juice. Supermarket A: 2 for \u00a32.50. Supermarket B: buy 3 get 1 free at \u00a31.40 each. The shopper needs exactly 2 bottles and wants to pay the least for them.',
 optionA:{label:'Supermarket A',details:[{key:'Offer',value:'2 for \u00a32.50'},{key:'Price per bottle',value:'\u00a31.25'}]},
 optionB:{label:'Supermarket B',details:[{key:'Offer',value:'Buy 3 get 1 free'},{key:'Single price',value:'\u00a31.40 each'}]},
 conclusions:[
@@ -452,21 +452,21 @@ conclusions:[
 explanation:'For 2 bottles: A = \u00a32.50, B = \u00a32.80. For 4 bottles: A = \u00a35.00, B = \u00a34.20 (3 \u00d7 \u00a31.40 for 4 bottles). The best value depends on how many you need.'},
 
 {id:'bv_core_015',level:'core',type:'hidden',
-criterion:'',measure:'total_cost',inputs:{A:{terms:[{name:'new book',amount:48}]},B:{terms:[{name:'book price',amount:28},{name:'revision guide',amount:6}]}},
-scenario:'A student is choosing between two textbooks. Option A: new book \u00a348. Option B: second-hand book \u00a328, but it needs a \u00a36 revision guide that the new book includes.',
+criterion:'The student wants the book and its revision guide for the least money.',measure:'total_cost',inputs:{A:{terms:[{name:'new book',amount:48}]},B:{terms:[{name:'book price',amount:28},{name:'revision guide',amount:6}]}},
+scenario:'A student is choosing between two textbooks. Option A: new book \u00a348. Option B: second-hand book \u00a328, but it needs a \u00a36 revision guide that the new book includes. The student wants the book and its revision guide for the least money.',
 optionA:{label:'New Book',details:[{key:'Price',value:'\u00a348'},{key:'Revision guide',value:'Included'}]},
 optionB:{label:'Second-Hand',details:[{key:'Book price',value:'\u00a328'},{key:'Revision guide',value:'\u00a36 extra'}]},
 conclusions:[
 {text:'The new book is better value because it includes everything you need in one',correct:false,claim:{winner:'A',figures:[]}},
 {text:'The second-hand book is better value \u2014 total cost \u00a334 vs \u00a348 for the new book',correct:true,claim:{winner:'B',figures:[{option:'B',value:34},{option:'A',value:48}]}},
 {text:'They cost the same when you add the revision guide',correct:false,claim:{winner:'equal',figures:[]}},
-{text:'The second-hand book is worse because it might be outdated',correct:false,claim:{winner:null,figures:[]}}
+{text:'The second-hand book is worse value because it might be outdated',correct:false,claim:{winner:'A',figures:[]}}
 ],
 explanation:'New book: \u00a348. Second-hand with guide: \u00a328 + \u00a36 = \u00a334. Always add the cost of necessary accessories.'},
 
 {id:'bv_core_016',level:'core',type:'hidden',
-criterion:'',measure:'total_cost',inputs:{A:{terms:[{name:'quote',amount:800}]},B:{terms:[{name:'labour',amount:600},{name:'materials',amount:280}]}},
-scenario:'A landlord gets two quotes to repaint a flat. Decorator A: \u00a3800 all-inclusive. Decorator B: \u00a3600 labour, materials at cost. Materials end up costing \u00a3280.',
+criterion:'The landlord wants the flat repainted for the least money.',measure:'total_cost',inputs:{A:{terms:[{name:'quote',amount:800}]},B:{terms:[{name:'labour',amount:600},{name:'materials',amount:280}]}},
+scenario:'A landlord gets two quotes to repaint a flat. Decorator A: \u00a3800 all-inclusive. Decorator B: \u00a3600 labour, materials at cost. Materials end up costing \u00a3280. The landlord wants the flat repainted for the least money.',
 optionA:{label:'Decorator A',details:[{key:'Quote',value:'\u00a3800'},{key:'Includes',value:'All materials'}]},
 optionB:{label:'Decorator B',details:[{key:'Labour',value:'\u00a3600'},{key:'Materials',value:'\u00a3280 (at cost)'}]},
 conclusions:[
@@ -479,21 +479,21 @@ explanation:'Decorator B total: \u00a3600 + \u00a3280 = \u00a3880. Decorator A: 
 
 // === Rate Comparison (7) ===
 {id:'bv_core_017',level:'core',type:'rate',
-criterion:'',measure:'unit_cost',inputs:{unstated:['need'],A:{terms:[{name:'price',amount:3.6}],per:[1.2]},B:{terms:[{name:'price',amount:6.75}],per:[2.5]}},
-scenario:'A supermarket sells washing powder in two sizes. Small: 1.2 kg for \u00a33.60. Large: 2.5 kg for \u00a36.75.',
+criterion:'The shopper will use all of either box and wants the most powder for the money.',measure:'unit_cost',inputs:{A:{terms:[{name:'price',amount:3.6}],per:[1.2]},B:{terms:[{name:'price',amount:6.75}],per:[2.5]}},
+scenario:'A supermarket sells washing powder in two sizes. Small: 1.2 kg for \u00a33.60. Large: 2.5 kg for \u00a36.75. The shopper will use all of either box and wants the most powder for the money.',
 optionA:{label:'Small Box',details:[{key:'Weight',value:'1.2 kg'},{key:'Price',value:'\u00a33.60'}]},
 optionB:{label:'Large Box',details:[{key:'Weight',value:'2.5 kg'},{key:'Price',value:'\u00a36.75'}]},
 conclusions:[
 {text:'The small box is better value \u2014 \u00a33.00/kg vs \u00a32.70/kg for the large box',correct:false,claim:{winner:'A',figures:[{option:'A',value:3.0},{option:'B',value:2.7}]}},
 {text:'The large box is better value \u2014 \u00a32.70/kg vs \u00a33.00/kg for the small box',correct:true,claim:{winner:'B',figures:[{option:'B',value:2.7},{option:'A',value:3.0}]}},
 {text:'They cost the same per kg',correct:false,claim:{winner:'equal',figures:[]}},
-{text:'The small box is better because you waste less',correct:false,claim:{winner:null,figures:[]}}
+{text:'The small box is better because you waste less',correct:false,claim:{winner:'A',figures:[]}}
 ],
 explanation:'Small: \u00a33.60 \u00f7 1.2 = \u00a33.00/kg. Large: \u00a36.75 \u00f7 2.5 = \u00a32.70/kg. Always calculate price per unit.'},
 
 {id:'bv_core_018',level:'core',type:'rate',
-criterion:'',measure:'unit_cost',inputs:{A:{terms:[{name:'price',amount:1.52}],per:[1]},B:{terms:[{name:'price',amount:6.84}],per:[4.55]}},
-scenario:'Petrol costs \u00a31.52 per litre at Garage A. Garage B sells petrol at \u00a36.84 per gallon. (1 gallon = 4.55 litres)',
+criterion:'The driver wants to pay the least for the same amount of petrol.',measure:'unit_cost',inputs:{A:{terms:[{name:'price',amount:1.52}],per:[1]},B:{terms:[{name:'price',amount:6.84}],per:[4.55]}},
+scenario:'Petrol costs \u00a31.52 per litre at Garage A. Garage B sells petrol at \u00a36.84 per gallon. (1 gallon = 4.55 litres) The driver wants to pay the least for the same amount of petrol.',
 optionA:{label:'Garage A',details:[{key:'Price',value:'\u00a31.52 per litre'}]},
 optionB:{label:'Garage B',details:[{key:'Price',value:'\u00a36.84 per gallon'},{key:'Conversion',value:'1 gal = 4.55 L'}]},
 conclusions:[
@@ -505,8 +505,8 @@ conclusions:[
 explanation:'Garage B: \u00a36.84 \u00f7 4.55 = \u00a31.503/litre. Garage A: \u00a31.52/litre. Garage B is marginally cheaper by about 1.7p per litre.'},
 
 {id:'bv_core_019',level:'core',type:'rate',
-criterion:'',measure:'day_rate',inputs:{A:{terms:[{name:'day rate',amount:320}],per:[1]},B:{terms:[{name:'total fee',amount:18000}],per:[12,5]}},
-scenario:'A freelancer is offered two contracts. Contract A: \u00a3320 per day, 3 days per week. Contract B: \u00a318,000 for a 12-week full-time project (5 days/week).',
+criterion:'The freelancer wants the best pay for each day worked.',measure:'day_rate',inputs:{A:{terms:[{name:'day rate',amount:320}],per:[1]},B:{terms:[{name:'total fee',amount:18000}],per:[12,5]}},
+scenario:'A freelancer is offered two contracts. Contract A: \u00a3320 per day, 3 days per week. Contract B: \u00a318,000 for a 12-week full-time project (5 days/week). The freelancer wants the best pay for each day worked.',
 optionA:{label:'Contract A',details:[{key:'Day rate',value:'\u00a3320'},{key:'Days/week',value:'3'}]},
 optionB:{label:'Contract B',details:[{key:'Total fee',value:'\u00a318,000'},{key:'Duration',value:'12 weeks \u00d7 5 days'}]},
 conclusions:[
@@ -518,34 +518,34 @@ conclusions:[
 explanation:'Contract A: \u00a3320/day. Contract B: \u00a318,000 \u00f7 (12 \u00d7 5) = \u00a318,000 \u00f7 60 = \u00a3300/day. Contract A pays \u00a320/day more. Contract B does pay more in total (\u00a318,000 vs \u00a311,520 over 12 weeks), but only because it is 60 days of work against 36. The day rate tells you which pays better for your time.'},
 
 {id:'bv_core_020',level:'core',type:'rate',
-criterion:'',measure:'unit_cost',inputs:{A:{terms:[{name:'carton price',amount:1.89}],per:[0.75]},B:{terms:[{name:'carton price',amount:2.99}],per:[1.25]}},
-scenario:'Two juice cartons: Brand A is 750ml for \u00a31.89. Brand B is 1.25 litres for \u00a32.99.',
+criterion:'The shopper will drink all of either carton and wants the most juice for the money.',measure:'unit_cost',inputs:{A:{terms:[{name:'carton price',amount:1.89}],per:[0.75]},B:{terms:[{name:'carton price',amount:2.99}],per:[1.25]}},
+scenario:'Two juice cartons: Brand A is 750ml for \u00a31.89. Brand B is 1.25 litres for \u00a32.99. The shopper will drink all of either carton and wants the most juice for the money.',
 optionA:{label:'Brand A',details:[{key:'Volume',value:'750 ml'},{key:'Price',value:'\u00a31.89'}]},
 optionB:{label:'Brand B',details:[{key:'Volume',value:'1.25 litres'},{key:'Price',value:'\u00a32.99'}]},
 conclusions:[
 {text:'Brand A is better value \u2014 \u00a32.52/litre vs \u00a32.39/litre for Brand B',correct:false,claim:{winner:'A',figures:[{option:'A',value:2.52},{option:'B',value:2.39}]}},
 {text:'Brand B is better value \u2014 \u00a32.39/litre vs \u00a32.52/litre for Brand A',correct:true,claim:{winner:'B',figures:[{option:'B',value:2.39},{option:'A',value:2.52}]}},
 {text:'They cost the same per litre',correct:false,claim:{winner:'equal',figures:[]}},
-{text:'Brand A is cheaper because the carton costs less',correct:false,claim:{winner:'A',figures:[],measure:'total_cost'}}
+{text:'Brand A is cheaper per litre because the carton costs less',correct:false,claim:{winner:'A',figures:[]}}
 ],
 explanation:'Brand A: \u00a31.89 \u00f7 0.75 = \u00a32.52/litre. Brand B: \u00a32.99 \u00f7 1.25 = \u00a32.392/litre. Brand B is slightly cheaper per litre.'},
 
 {id:'bv_core_021',level:'core',type:'rate',
-criterion:'',measure:'average',inputs:{A:{terms:[{name:'total donations',amount:4200}],per:[350]},B:{terms:[{name:'total donations',amount:5100}],per:[510]}},
+criterion:'A trustee wants to know which month had better average giving.',measure:'average',inputs:{A:{terms:[{name:'total donations',amount:4200}],per:[350]},B:{terms:[{name:'total donations',amount:5100}],per:[510]}},
 scenario:'A charity collects donations. In January they received \u00a34,200 from 350 donors. In February they received \u00a35,100 from 510 donors. A trustee wants to know which month had better average giving.',
 optionA:{label:'January',details:[{key:'Total donations',value:'\u00a34,200'},{key:'Number of donors',value:'350'}]},
 optionB:{label:'February',details:[{key:'Total donations',value:'\u00a35,100'},{key:'Number of donors',value:'510'}]},
 conclusions:[
 {text:'January had better average giving \u2014 \u00a312 per donor vs \u00a310 per donor in February',correct:true,claim:{winner:'A',figures:[{option:'A',value:12},{option:'B',value:10}]}},
-{text:'February was better \u2014 \u00a35,100 is more than \u00a34,200',correct:false,claim:{winner:'B',figures:[{option:'B',value:5100,of:'total'},{option:'A',value:4200,of:'total'}]}},
+{text:'February had better giving \u2014 \u00a35,100 is more than \u00a34,200',correct:false,claim:{winner:'B',figures:[{option:'B',value:5100,of:'total'},{option:'A',value:4200,of:'total'}]}},
 {text:'February had better average giving, because more donors means more given per person',correct:false,claim:{winner:'B',figures:[]}},
 {text:'They had the same average donation',correct:false,claim:{winner:'equal',figures:[]}}
 ],
 explanation:'January: \u00a34,200 \u00f7 350 = \u00a312 per donor. February: \u00a35,100 \u00f7 510 = \u00a310 per donor.'},
 
 {id:'bv_core_022',level:'core',type:'rate',
-criterion:'',measure:'fuel_economy',inputs:{A:{terms:[{name:'distance',amount:420}],per:[50]},B:{terms:[{name:'distance',amount:350}],per:[40]}},
-scenario:'A driver records fuel economy. Car A: travels 420 miles on 50 litres. Car B: travels 350 miles on 40 litres.',
+criterion:'The driver wants the car that uses the least fuel for the same journey.',measure:'fuel_economy',inputs:{A:{terms:[{name:'distance',amount:420}],per:[50]},B:{terms:[{name:'distance',amount:350}],per:[40]}},
+scenario:'A driver records fuel economy. Car A: travels 420 miles on 50 litres. Car B: travels 350 miles on 40 litres. The driver wants the car that uses the least fuel for the same journey.',
 optionA:{label:'Car A',details:[{key:'Distance',value:'420 miles'},{key:'Fuel used',value:'50 litres'}]},
 optionB:{label:'Car B',details:[{key:'Distance',value:'350 miles'},{key:'Fuel used',value:'40 litres'}]},
 conclusions:[
@@ -557,8 +557,8 @@ conclusions:[
 explanation:'Car A: 420 \u00f7 50 = 8.4 miles/litre. Car B: 350 \u00f7 40 = 8.75 miles/litre. Car B is more efficient \u2014 the question tests whether students calculate correctly rather than assume the larger number wins.'},
 
 {id:'bv_core_023',level:'core',type:'rate',
-criterion:'',measure:'hourly_rate',inputs:{A:{terms:[{name:'quote',amount:240}],per:[8]},B:{terms:[{name:'quote',amount:175}],per:[6]}},
-scenario:'Two builders quote for a job. Builder A: \u00a3240 for 8 hours work. Builder B: \u00a3175 for 6 hours work.',
+criterion:'Which builder charges more for each hour of work?',measure:'hourly_rate',inputs:{A:{terms:[{name:'quote',amount:240}],per:[8]},B:{terms:[{name:'quote',amount:175}],per:[6]}},
+scenario:'Two builders quote for a job. Builder A: \u00a3240 for 8 hours work. Builder B: \u00a3175 for 6 hours work. Which builder charges more for each hour of work?',
 optionA:{label:'Builder A',details:[{key:'Quote',value:'\u00a3240'},{key:'Hours',value:'8'}]},
 optionB:{label:'Builder B',details:[{key:'Quote',value:'\u00a3175'},{key:'Hours',value:'6'}]},
 conclusions:[
@@ -571,7 +571,7 @@ explanation:'Builder A: \u00a3240 \u00f7 8 = \u00a330/hour. Builder B: \u00a3175
 
 // === Break-Even (7) ===
 {id:'bv_core_024',level:'core',type:'breakeven',
-criterion:'',measure:'crossover',inputs:{unit:'coffees',A:{fixed:85,per_unit:0.3},B:{fixed:0,per_unit:2.8}},
+criterion:'After how many coffees does the machine become better value?',measure:'crossover',inputs:{unit:'coffees',A:{fixed:85,per_unit:0.3},B:{fixed:0,per_unit:2.8}},
 scenario:'Option A: Buy a coffee machine for \u00a385, pods cost \u00a30.30 each. Option B: Buy coffee from a caf\u00e9 for \u00a32.80 each. After how many coffees does the machine become better value?',
 optionA:{label:'Coffee Machine',details:[{key:'Upfront cost',value:'\u00a385'},{key:'Per coffee',value:'\u00a30.30'}]},
 optionB:{label:'Caf\u00e9',details:[{key:'Per coffee',value:'\u00a32.80'}]},
@@ -584,8 +584,8 @@ conclusions:[
 explanation:'Cost of machine option: \u00a385 + 0.30n. Cost of caf\u00e9: 2.80n. Set equal: 85 + 0.30n = 2.80n \u2192 85 = 2.50n \u2192 n = 34.'},
 
 {id:'bv_core_025',level:'core',type:'breakeven',
-criterion:'',measure:'crossover',inputs:{unit:'return journeys',A:{fixed:0,per_unit:9.6},B:{fixed:30,per_unit:6.4}},
-scenario:'A National Rail card costs \u00a330/year and gives 1/3 off all fares. Maya\u2019s standard commute costs \u00a39.60 per return journey. How many return journeys must she make for the railcard to be worth buying?',
+criterion:'How many return journeys must she make for the railcard to be worth buying? (Worth buying means cheaper, not the same price.)',measure:'crossover',inputs:{unit:'return journeys',A:{fixed:0,per_unit:9.6},B:{fixed:30,per_unit:6.4}},
+scenario:'A National Rail card costs \u00a330/year and gives 1/3 off all fares. Maya\u2019s standard commute costs \u00a39.60 per return journey. How many return journeys must she make for the railcard to be worth buying? (Worth buying means cheaper, not the same price.)',
 optionA:{label:'Without Railcard',details:[{key:'Return fare',value:'\u00a39.60'}]},
 optionB:{label:'With Railcard',details:[{key:'Card cost',value:'\u00a330/year'},{key:'Discount',value:'1/3 off fares'}]},
 conclusions:[
@@ -597,7 +597,7 @@ conclusions:[
 explanation:'Saving per journey: \u00a39.60 \u00d7 1/3 = \u00a33.20. Break-even: \u00a330 \u00f7 \u00a33.20 = 9.375, so 10 journeys needed.'},
 
 {id:'bv_core_026',level:'core',type:'breakeven',
-criterion:'',measure:'crossover',inputs:{unit:'years',A:{fixed:4500,per_unit:0},B:{fixed:0,per_unit:380}},
+criterion:'A homeowner wants to know how long before the panels pay for themselves.',measure:'crossover',inputs:{unit:'years',A:{fixed:4500,per_unit:0},B:{fixed:0,per_unit:380}},
 scenario:'Solar panels cost \u00a34,500 to install and save \u00a3380 per year on energy bills. A homeowner wants to know how long before the panels pay for themselves.',
 optionA:{label:'Solar Panels',details:[{key:'Installation',value:'\u00a34,500'},{key:'Annual saving',value:'\u00a3380'}]},
 optionB:{label:'No Panels',details:[{key:'Annual saving',value:'\u00a30'}]},
@@ -610,7 +610,7 @@ conclusions:[
 explanation:'Payback period: \u00a34,500 \u00f7 \u00a3380 = 11.84 years. The homeowner should stay in the property for at least 12 years to break even.'},
 
 {id:'bv_core_027',level:'core',type:'breakeven',
-criterion:'',measure:'crossover',inputs:{unit:'minutes',A:{fixed:0,per_unit:0.15},B:{fixed:8,per_unit:0.05}},
+criterion:'At what call duration per month does Tariff B become better value?',measure:'crossover',inputs:{unit:'minutes',A:{fixed:0,per_unit:0.15},B:{fixed:8,per_unit:0.05}},
 scenario:'Tariff A charges 15p/min for calls with no monthly fee. Tariff B charges \u00a38/month but only 5p/min. At what call duration per month does Tariff B become better value?',
 optionA:{label:'Tariff A',details:[{key:'Monthly fee',value:'\u00a30'},{key:'Call rate',value:'15p/min'}]},
 optionB:{label:'Tariff B',details:[{key:'Monthly fee',value:'\u00a38'},{key:'Call rate',value:'5p/min'}]},
@@ -623,7 +623,7 @@ conclusions:[
 explanation:'Set equal: 0.15m = 8 + 0.05m \u2192 0.10m = 8 \u2192 m = 80 minutes. Below 80 mins: Tariff A cheaper. Above 80 mins: Tariff B cheaper.'},
 
 {id:'bv_core_028',level:'core',type:'breakeven',
-criterion:'',measure:'crossover',inputs:{unit:'films',A:{fixed:9.99,per_unit:0},B:{fixed:0,per_unit:12.5}},
+criterion:'At what point per month does the streaming service represent better value than cinema visits?',measure:'crossover',inputs:{unit:'films',A:{fixed:9.99,per_unit:0},B:{fixed:0,per_unit:12.5}},
 scenario:'A streaming service costs \u00a39.99/month. Cinema tickets cost \u00a312.50 each. At what point per month does the streaming service represent better value than cinema visits?',
 optionA:{label:'Streaming',details:[{key:'Monthly cost',value:'\u00a39.99'},{key:'Films',value:'Unlimited'}]},
 optionB:{label:'Cinema',details:[{key:'Per film',value:'\u00a312.50'}]},
@@ -636,7 +636,7 @@ conclusions:[
 explanation:'Streaming: \u00a39.99 for unlimited films. Cinema: \u00a312.50 per film. Break-even: \u00a39.99 \u00f7 \u00a312.50 = 0.8 films/month. Watch at least 1 film per month and streaming wins.'},
 
 {id:'bv_core_029',level:'core',type:'breakeven',
-criterion:'',measure:'crossover',inputs:{unit:'years',A:{fixed:5000,per_unit:0},B:{fixed:0,per_unit:1200}},
+criterion:'How many years before the electric car becomes better value overall?',measure:'crossover',inputs:{unit:'years',A:{fixed:5000,per_unit:0},B:{fixed:0,per_unit:1200}},
 scenario:'An electric car costs \u00a35,000 more than a petrol equivalent. The electric car saves \u00a31,200/year on fuel. How many years before the electric car becomes better value overall?',
 optionA:{label:'Electric Car',details:[{key:'Premium',value:'\u00a35,000 extra'},{key:'Annual fuel saving',value:'\u00a31,200'}]},
 optionB:{label:'Petrol Car',details:[{key:'Premium',value:'\u00a30'},{key:'Annual fuel saving',value:'\u00a30'}]},
@@ -649,7 +649,7 @@ conclusions:[
 explanation:'Payback: \u00a35,000 \u00f7 \u00a31,200 = 4.17 years. After 5 years, the electric car has saved \u00a36,000 \u2014 \u00a31,000 more than the price premium.'},
 
 {id:'bv_core_030',level:'core',type:'breakeven',
-criterion:'',measure:'crossover',inputs:{unit:'pages',A:{fixed:120,per_unit:0.09},B:{fixed:0,per_unit:0.12}},
+criterion:'How many pages must you print for the home printer to become better value?',measure:'crossover',inputs:{unit:'pages',A:{fixed:120,per_unit:0.09},B:{fixed:0,per_unit:0.12}},
 scenario:'A printer costs \u00a3120 and uses ink that works out at 9p a page. A print shop charges \u00a30.12 per page. How many pages must you print for the home printer to become better value?',
 optionA:{label:'Home Printer',details:[{key:'Upfront cost',value:'\u00a3120'},{key:'Ink cost',value:'9p a page'}]},
 optionB:{label:'Print Shop',details:[{key:'Per page',value:'\u00a30.12'}]},
@@ -677,8 +677,8 @@ conclusions:[
 explanation:'Advertised: (18 \u00d7 \u00a328) + \u00a360 = \u00a3504 + \u00a360 = \u00a3564, i.e. \u00a331.33/month. Rival: 12 \u00d7 \u00a332 = \u00a3384, i.e. \u00a332/month. She stays for the whole contract, so the cost per month decides it: the advertised deal is 67p a month cheaper, though it commits her for 18 months. Comparing \u00a3384 with \u00a3564 compares 12 months with 18. The headline \u00a318 is misleading \u2014 the true cost is \u00a331.33/month.'},
 
 {id:'bv_core_032',level:'core',type:'hidden',
-criterion:'',measure:'total_cost',inputs:{A:{terms:[{name:'sofa price',amount:1200},{name:'admin fee',amount:145},{name:'protection',amount:5.99,times:[36]}]},B:{terms:[{name:'sofa price',amount:1050}]}},
-scenario:'A furniture store advertises a \u00a31,200 sofa with \u201c0% interest over 3 years!\u201d The small print includes a \u00a3145 admin fee and compulsory \u00a35.99/month furniture protection. A competitor sells the same sofa for \u00a31,050 cash.',
+criterion:'The buyer wants the sofa for the least money.',measure:'total_cost',inputs:{A:{terms:[{name:'sofa price',amount:1200},{name:'admin fee',amount:145},{name:'protection',amount:5.99,times:[36]}]},B:{terms:[{name:'sofa price',amount:1050}]}},
+scenario:'A furniture store advertises a \u00a31,200 sofa with \u201c0% interest over 3 years!\u201d The small print includes a \u00a3145 admin fee and compulsory \u00a35.99/month furniture protection. A competitor sells the same sofa for \u00a31,050 cash. The buyer wants the sofa for the least money.',
 optionA:{label:'0% Finance Deal',details:[{key:'Sofa price',value:'\u00a31,200'},{key:'Admin fee',value:'\u00a3145'},{key:'Protection',value:'\u00a35.99/month \u00d7 36'}]},
 optionB:{label:'Cash Purchase',details:[{key:'Sofa price',value:'\u00a31,050'},{key:'Other costs',value:'\u00a30'}]},
 conclusions:[
@@ -690,7 +690,7 @@ conclusions:[
 explanation:'Finance deal: \u00a31,200 + \u00a3145 + (36 \u00d7 \u00a35.99) = \u00a31,200 + \u00a3145 + \u00a3215.64 = \u00a31,560.64. Cash: \u00a31,050. The \u201c0% interest\u201d hides \u00a3510.64 in extra costs.'},
 
 {id:'bv_core_033',level:'core',type:'breakeven',
-criterion:'',measure:'crossover',inputs:{unit:'kWh per day',A:{fixed:25,per_unit:28},B:{fixed:42,per_unit:24}},
+criterion:'At what daily usage does the new tariff become better value?',measure:'crossover',inputs:{unit:'kWh per day',A:{fixed:25,per_unit:28},B:{fixed:42,per_unit:24}},
 scenario:'A household is considering switching energy tariff. Their current tariff charges 28p/kWh with a 25p/day standing charge. A new tariff charges 24p/kWh with a 42p/day standing charge. The household uses an average of 12 kWh per day. At what daily usage does the new tariff become better value?',
 optionA:{label:'Current Tariff',details:[{key:'Rate',value:'28p/kWh'},{key:'Standing charge',value:'25p/day'}]},
 optionB:{label:'New Tariff',details:[{key:'Rate',value:'24p/kWh'},{key:'Standing charge',value:'42p/day'}]},
@@ -703,8 +703,8 @@ conclusions:[
 explanation:'Set equal: 28d + 25 = 24d + 42 \u2192 4d = 17 \u2192 d = 4.25 kWh (both sides in pence per day). Above 4.25 kWh/day the new tariff is cheaper. At 12 kWh: current = 336p + 25p = 361p/day. New = 288p + 42p = 330p/day. Saving: 31p/day \u2248 \u00a3113/year.'},
 
 {id:'bv_core_034',level:'core',type:'hidden',
-criterion:'',measure:'total_cost',inputs:{A:{terms:[{name:'bag price',amount:89.99}]},B:{terms:[{name:'bag price',amount:74.99},{name:'next-day delivery',amount:9.99}]}},
-scenario:'An online retailer offers \u201cfree next-day delivery\u201d on a \u00a389.99 laptop bag. The same bag on a rival site costs \u00a374.99 with \u00a34.99 standard delivery (3\u20135 days) or \u00a39.99 next-day delivery.',
+criterion:'The buyer wants the bag delivered next day for the least money.',measure:'total_cost',inputs:{A:{terms:[{name:'bag price',amount:89.99}]},B:{terms:[{name:'bag price',amount:74.99},{name:'next-day delivery',amount:9.99}]}},
+scenario:'An online retailer offers \u201cfree next-day delivery\u201d on a \u00a389.99 laptop bag. The same bag on a rival site costs \u00a374.99 with \u00a34.99 standard delivery (3\u20135 days) or \u00a39.99 next-day delivery. The buyer wants the bag delivered next day for the least money.',
 optionA:{label:'\u201cFree Delivery\u201d Site',details:[{key:'Bag price',value:'\u00a389.99'},{key:'Delivery',value:'Free next-day'}]},
 optionB:{label:'Rival Site',details:[{key:'Bag price',value:'\u00a374.99'},{key:'Standard delivery',value:'\u00a34.99'},{key:'Next-day delivery',value:'\u00a39.99'}]},
 conclusions:[
@@ -716,8 +716,8 @@ conclusions:[
 explanation:'Free delivery site: \u00a389.99. Rival with next-day: \u00a374.99 + \u00a39.99 = \u00a384.98. Rival with standard: \u00a374.99 + \u00a34.99 = \u00a379.98. The \u201cfree delivery\u201d cost is baked into the higher item price.'},
 
 {id:'bv_core_035',level:'core',type:'direct',
-criterion:'',measure:'total_cost',inputs:{months:12,A:{terms:[{name:'monthly',amount:12,times:['months']},{name:'excess',amount:60}]},B:{terms:[{name:'monthly',amount:8,times:['months']},{name:'excess',amount:150},{name:'labour',amount:80,times:[2]}]}},
-scenario:'A landlord needs boiler insurance. Policy A costs \u00a312/month with a \u00a360 excess per claim and covers parts and labour. Policy B costs \u00a38/month with a \u00a3150 excess per claim and covers parts only (labour charged at \u00a380/hour). An average boiler repair takes 2 hours and happens once per year.',
+criterion:'The landlord wants the lowest yearly cost, allowing for one 2-hour repair a year.',measure:'total_cost',inputs:{months:12,A:{terms:[{name:'monthly',amount:12,times:['months']},{name:'excess',amount:60}]},B:{terms:[{name:'monthly',amount:8,times:['months']},{name:'excess',amount:150},{name:'labour',amount:80,times:[2]}]}},
+scenario:'A landlord needs boiler insurance. Policy A costs \u00a312/month with a \u00a360 excess per claim and covers parts and labour. Policy B costs \u00a38/month with a \u00a3150 excess per claim and covers parts only (labour charged at \u00a380/hour). An average boiler repair takes 2 hours and happens once per year. The landlord wants the lowest yearly cost, allowing for one 2-hour repair a year.',
 optionA:{label:'Policy A',details:[{key:'Monthly',value:'\u00a312'},{key:'Excess',value:'\u00a360'},{key:'Cover',value:'Parts + labour'}]},
 optionB:{label:'Policy B',details:[{key:'Monthly',value:'\u00a38'},{key:'Excess',value:'\u00a3150'},{key:'Cover',value:'Parts only'},{key:'Labour',value:'\u00a380/hour'}]},
 conclusions:[
@@ -729,8 +729,8 @@ conclusions:[
 explanation:'Policy A: (12 \u00d7 \u00a312) + \u00a360 = \u00a3144 + \u00a360 = \u00a3204. Policy B: (12 \u00d7 \u00a38) + \u00a3150 + (2 \u00d7 \u00a380) = \u00a396 + \u00a3150 + \u00a3160 = \u00a3406. Policy A saves \u00a3202 per repair.'},
 
 {id:'bv_core_036',level:'core',type:'direct',
-criterion:'',measure:'total_cost',inputs:{trips:20,misses:3,A:{terms:[{name:'anytime return',amount:48,times:['trips']}]},B:{terms:[{name:'advance return',amount:22,times:['trips']},{name:'replacement',amount:48,times:['misses']}]}},
-scenario:'A student is choosing between two train ticket options for a 40-week university year. She travels home every other weekend (20 return trips). An Anytime Return costs \u00a348. An Advance Return costs \u00a322 but is non-refundable and train-specific (she estimates she will miss 3 trains per year and have to buy replacements).',
+criterion:'She wants to pay the least for her 20 trips, allowing for the 3 missed trains.',measure:'total_cost',inputs:{trips:20,misses:3,A:{terms:[{name:'anytime return',amount:48,times:['trips']}]},B:{terms:[{name:'advance return',amount:22,times:['trips']},{name:'replacement',amount:48,times:['misses']}]}},
+scenario:'A student is choosing between two train ticket options for a 40-week university year. She travels home every other weekend (20 return trips). An Anytime Return costs \u00a348. An Advance Return costs \u00a322 but is non-refundable and train-specific (she estimates she will miss 3 trains per year and have to buy replacements). She wants to pay the least for her 20 trips, allowing for the 3 missed trains.',
 optionA:{label:'Anytime Returns',details:[{key:'Price',value:'\u00a348 per return'},{key:'Flexibility',value:'Any train'}]},
 optionB:{label:'Advance Returns',details:[{key:'Price',value:'\u00a322 per return'},{key:'Missed trains',value:'3 per year'},{key:'Replacement cost',value:'\u00a348 each'}]},
 conclusions:[
@@ -755,7 +755,7 @@ conclusions:[
 explanation:'Standard: profit = \u00a3800 \u2212 \u00a3180 = \u00a3620. Premium: profit = \u00a31,120 \u2212 \u00a3260 = \u00a3860. She wants the most profit from this print run, so premium is better value: \u00a3240 more profit, although it costs \u00a380 more to print. Standard returns more for each pound spent (ROI 344% against 331%), but that would matter only if the money saved bought more flyers. The cheaper option is not the better value here.'},
 
 {id:'bv_core_038',level:'core',type:'breakeven',
-criterion:'',measure:'crossover',inputs:{unit:'years',compare:'payback',A:{fixed:450,per_unit:68},B:{fixed:1200,per_unit:195}},
+criterion:'Which has the shorter payback period?',measure:'crossover',inputs:{unit:'years',compare:'payback',A:{fixed:450,per_unit:68},B:{fixed:1200,per_unit:195}},
 scenario:'A household can install loft insulation for \u00a3450. This reduces heating bills by \u00a368 per year. Alternatively, they can install cavity wall insulation for \u00a31,200 which saves \u00a3195 per year. Both last 25+ years. Which has the shorter payback period?',
 optionA:{label:'Loft Insulation',details:[{key:'Cost',value:'\u00a3450'},{key:'Annual saving',value:'\u00a368'}]},
 optionB:{label:'Cavity Wall',details:[{key:'Cost',value:'\u00a31,200'},{key:'Annual saving',value:'\u00a3195'}]},
@@ -781,8 +781,8 @@ conclusions:[
 explanation:'No-fee gym: the 12-month contract commits you to 12 \u00d7 \u00a345 = \u00a3540, however soon you stop going. Rolling gym: \u00a375 + \u00a335 = \u00a3110 after 1 month, rising to \u00a375 + (12 \u00d7 \u00a335) = \u00a3495 after 12 (and you can leave). Whichever month you stop, the rolling gym costs less. The \u201cfree\u201d joining fee promotion hides \u00a3120/year in higher monthly costs.'},
 
 {id:'bv_core_040',level:'core',type:'direct',
-criterion:'',measure:'total_cost',inputs:{days:250,weeks:50,A:{terms:[{name:'daily rate',amount:55,times:['days']}]},B:{terms:[{name:'daily rate',amount:48,times:['days']},{name:'meals',amount:5,times:['days']},{name:'nappies',amount:20,times:['weeks']}]}},
-scenario:'A parent is choosing between two nurseries for childcare, 5 days per week, 50 weeks per year. Nursery A costs \u00a355/day but includes all meals and nappies. Nursery B costs \u00a348/day but meals are \u00a35/day extra and parents must supply nappies (approximately \u00a320/week).',
+criterion:'The parent wants the lowest childcare cost for the year.',measure:'total_cost',inputs:{days:250,weeks:50,A:{terms:[{name:'daily rate',amount:55,times:['days']}]},B:{terms:[{name:'daily rate',amount:48,times:['days']},{name:'meals',amount:5,times:['days']},{name:'nappies',amount:20,times:['weeks']}]}},
+scenario:'A parent is choosing between two nurseries for childcare, 5 days per week, 50 weeks per year. Nursery A costs \u00a355/day but includes all meals and nappies. Nursery B costs \u00a348/day but meals are \u00a35/day extra and parents must supply nappies (approximately \u00a320/week). The parent wants the lowest childcare cost for the year.',
 optionA:{label:'Nursery A',details:[{key:'Daily rate',value:'\u00a355'},{key:'Meals',value:'Included'},{key:'Nappies',value:'Included'}]},
 optionB:{label:'Nursery B',details:[{key:'Daily rate',value:'\u00a348'},{key:'Meals',value:'\u00a35/day extra'},{key:'Nappies',value:'\u00a320/week (parent supplies)'}]},
 conclusions:[
@@ -794,7 +794,7 @@ conclusions:[
 explanation:'Nursery A: 250 \u00d7 \u00a355 = \u00a313,750. Nursery B: (250 \u00d7 \u00a348) + (250 \u00d7 \u00a35) + (50 \u00d7 \u00a320) = \u00a312,000 + \u00a31,250 + \u00a31,000 = \u00a314,250. The \u201ccheaper\u201d daily rate hides \u00a3500/year in extra costs.'},
 
 {id:'bv_core_041',level:'core',type:'direct',
-criterion:'',measure:'total_cost',inputs:{years:3,A:{terms:[{name:'purchase',amount:12000},{name:'repairs',amount:800,times:['years']},{name:'insurance',amount:1200,times:['years']}]},B:{terms:[{name:'monthly lease',amount:350,times:[36]},{name:'insurance',amount:900,times:['years']}]}},
+criterion:'Compare over 3 years, ignoring what the van is worth at the end.',measure:'total_cost',inputs:{years:3,A:{terms:[{name:'purchase',amount:12000},{name:'repairs',amount:800,times:['years']},{name:'insurance',amount:1200,times:['years']}]},B:{terms:[{name:'monthly lease',amount:350,times:[36]},{name:'insurance',amount:900,times:['years']}]}},
 scenario:'A tradesperson needs a van. Option A: buy a 3-year-old van for \u00a312,000 cash. Expected repairs: \u00a3800/year. Insurance: \u00a31,200/year. Option B: lease a new van for \u00a3350/month including maintenance. Insurance: \u00a3900/year. Compare over 3 years, ignoring what the van is worth at the end.',
 optionA:{label:'Buy Used Van',details:[{key:'Purchase',value:'\u00a312,000'},{key:'Repairs',value:'\u00a3800/year'},{key:'Insurance',value:'\u00a31,200/year'}]},
 optionB:{label:'Lease New Van',details:[{key:'Monthly lease',value:'\u00a3350 (inc. maintenance)'},{key:'Insurance',value:'\u00a3900/year'}]},
@@ -820,8 +820,8 @@ conclusions:[
 explanation:'Cash: laptop costs \u00a3500, savings drop to \u00a30. Credit card: laptop costs \u00a3500 paid in month 12, meanwhile \u00a3500 \u00d7 3% = \u00a315 interest earned. Net cost with credit card: \u00a3500 \u2212 \u00a315 = \u00a3485, against \u00a3500 cash. The card charges 0%, so the 3% is interest she earns, not a charge. This is opportunity cost reasoning \u2014 what your money could earn elsewhere.'},
 
 {id:'bv_core_043',level:'core',type:'direct',
-criterion:'',measure:'total_cost',inputs:{days:22,A:{terms:[{name:'petrol',amount:1.55,times:[16,4.55,'days'],per:[30]},{name:'parking',amount:5,times:['days']}]},B:{terms:[{name:'monthly pass',amount:75}]}},
-scenario:'A commuter can drive to work (8 miles each way) or take the bus. Driving: 30 mpg, petrol at \u00a31.55/litre (1 gallon = 4.55 litres), plus \u00a35/day parking. Bus: \u00a34.20 return ticket, or a monthly pass for \u00a375 (22 working days/month).',
+criterion:'The commuter wants the lowest monthly cost of getting to work.',measure:'total_cost',inputs:{days:22,A:{terms:[{name:'petrol',amount:1.55,times:[16,4.55,'days'],per:[30]},{name:'parking',amount:5,times:['days']}]},B:{terms:[{name:'monthly pass',amount:75}]}},
+scenario:'A commuter can drive to work (8 miles each way) or take the bus. Driving: 30 mpg, petrol at \u00a31.55/litre (1 gallon = 4.55 litres), plus \u00a35/day parking. Bus: \u00a34.20 return ticket, or a monthly pass for \u00a375 (22 working days/month). The commuter wants the lowest monthly cost of getting to work.',
 optionA:{label:'Driving',details:[{key:'Distance',value:'16 miles/day'},{key:'Fuel economy',value:'30 mpg'},{key:'Petrol',value:'\u00a31.55/litre'},{key:'Parking',value:'\u00a35/day'}]},
 optionB:{label:'Bus Monthly Pass',details:[{key:'Monthly pass',value:'\u00a375'},{key:'Working days',value:'22/month'}]},
 conclusions:[
@@ -833,21 +833,21 @@ conclusions:[
 explanation:'Daily fuel: 16 miles at 30 mpg = 0.533 gallons = 2.43 litres \u00d7 \u00a31.55 = \u00a33.76/day. Driving: 22 \u00d7 (\u00a33.76 + \u00a35) = 22 \u00d7 \u00a38.76 = \u00a3192.72. Note: this excludes wear and tear. Bus pass: \u00a375/month. Bus saves over \u00a3100/month.'},
 
 {id:'bv_core_044',level:'core',type:'hidden',
-criterion:'',measure:'total_cost',inputs:{A:{terms:[{name:'monthly box',amount:29.99}]},B:{terms:[{name:'monthly spend',amount:80}]}},
-scenario:'A subscription box advertises \u201c\u00a3250 of products for just \u00a329.99/month!\u201d The 12-month contract costs \u00a3359.88 per year. The subscriber estimates she would actually buy about \u00a380 of the products each box \u2014 the rest she doesn\u2019t use.',
+criterion:'She wants the things she actually uses for the least money.',measure:'total_cost',inputs:{A:{terms:[{name:'monthly box',amount:29.99}]},B:{terms:[{name:'monthly spend',amount:80}]}},
+scenario:'A subscription box advertises \u201c\u00a3250 of products for just \u00a329.99/month!\u201d The 12-month contract costs \u00a3359.88 per year. The subscriber estimates she would actually buy about \u00a380 of the products each box \u2014 the rest she doesn\u2019t use. She wants the things she actually uses for the least money.',
 optionA:{label:'Subscription Box',details:[{key:'Monthly',value:'\u00a329.99'},{key:'Advertised value',value:'\u00a3250/box'},{key:'Usable value',value:'\u00a380/box'}]},
 optionB:{label:'Buy What You Need',details:[{key:'Monthly spend',value:'\u00a380 (only items you want)'}]},
 conclusions:[
-{text:'The subscription box is amazing value \u2014 \u00a3250 of products for \u00a329.99',correct:false,claim:{winner:null,figures:[{option:null,value:250,of:'given'},{option:'A',value:29.99}]}},
+{text:'The subscription box saves her \u00a3220.01 a month \u2014 \u00a3250 of products for \u00a329.99',correct:false,claim:{winner:'A',figures:[{option:null,value:220.01,of:'difference'},{option:null,value:250,of:'given'},{option:'A',value:29.99}]}},
 {text:'Buying what you need is better value \u2014 you spend \u00a380 on things you actually use vs paying \u00a329.99 for \u00a380 of usable products plus \u00a3170 of waste',correct:false,claim:{winner:'B',figures:[{option:'B',value:80},{option:'A',value:29.99},{option:null,value:80,of:'given'},{option:null,value:170,of:'premise'}]}},
-{text:'The box gives \u00a380 of usable value for \u00a329.99 a month \u2014 good, unless that money has a better use',correct:true,claim:{winner:null,figures:[{option:null,value:80,of:'given'},{option:'A',value:29.99}]}},
+{text:'The subscription box is better value \u2014 \u00a329.99 vs \u00a380 a month for the things she uses',correct:true,claim:{winner:'A',figures:[{option:'A',value:29.99},{option:'B',value:80}]}},
 {text:'The subscription is worthless because you don\u2019t use most of the products',correct:false,claim:{winner:'B',figures:[]}}
 ],
-explanation:'The headline \u00a3250 value is based on RRP, not what you\u2019d actually buy. Usable value: \u00a380 for \u00a329.99 is still good per-item value. But the opportunity cost of \u00a3360/year should be weighed against what else that money could buy. Critical thinking: advertised value \u2260 personal value.'},
+explanation:'The headline \u00a3250 is the full shop price of everything in the box, not what she would buy. The things she uses are worth \u00a380 a month: buying them herself costs \u00a380, the box \u00a329.99, so the box saves her \u00a380 \u2212 \u00a329.99 = \u00a350.01 a month (\u00a3359.88 a year). Advertised value is not personal value.'},
 
 {id:'bv_core_045',level:'core',type:'breakeven',
-criterion:'',measure:'total_cost',inputs:{A:{terms:[{name:'months 1-6',amount:0.29,times:[1800]},{name:'months 7-12',amount:0.33,times:[1800]}]},B:{terms:[{name:'fixed rate',amount:0.26,times:[3600]}]}},
-scenario:'A household is comparing two electricity tariffs for a year. Tariff A: variable rate, currently 29p/kWh, no exit fee. Tariff B: fixed rate at 26p/kWh for 12 months with a \u00a375 exit fee if you leave early. The household uses 3,600 kWh per year. If variable rates rise by 4p/kWh after 6 months, which is better value?',
+criterion:'The household wants the lowest bill for the year.',measure:'total_cost',inputs:{A:{terms:[{name:'months 1-6',amount:0.29,times:[1800]},{name:'months 7-12',amount:0.33,times:[1800]}]},B:{terms:[{name:'fixed rate',amount:0.26,times:[3600]}]}},
+scenario:'A household is comparing two electricity tariffs for a year. Tariff A: variable rate, currently 29p/kWh, no exit fee. Tariff B: fixed rate at 26p/kWh for 12 months with a \u00a375 exit fee if you leave early. The household uses 3,600 kWh per year. If variable rates rise by 4p/kWh after 6 months, which is better value? The household wants the lowest bill for the year.',
 optionA:{label:'Variable Tariff',details:[{key:'Rate (months 1\u20136)',value:'29p/kWh'},{key:'Rate (months 7\u201312)',value:'33p/kWh'},{key:'Exit fee',value:'None'}]},
 optionB:{label:'Fixed Tariff',details:[{key:'Rate',value:'26p/kWh all year'},{key:'Exit fee',value:'\u00a375 if leaving early'}]},
 conclusions:[
@@ -859,7 +859,7 @@ conclusions:[
 explanation:'Variable: (1,800 \u00d7 \u00a30.29) + (1,800 \u00d7 \u00a30.33) = \u00a3522 + \u00a3594 = \u00a31,116. Fixed: 3,600 \u00d7 \u00a30.26 = \u00a3936. The fixed tariff saves \u00a3180. This demonstrates why fixed tariffs protect against price rises.'},
 
 {id:'bv_core_046',level:'core',type:'direct',
-criterion:'',measure:'disposable_income',inputs:{A:{terms:[{name:'salary after tax and NI',amount:28000,times:[5],per:[6,12]},{name:'rent',amount:-650}]},B:{terms:[{name:'salary after tax and NI',amount:34000,times:[5],per:[6,12]},{name:'rent',amount:-1200}]}},
+criterion:'Compare monthly disposable income after rent.',measure:'disposable_income',inputs:{A:{terms:[{name:'salary after tax and NI',amount:28000,times:[5],per:[6,12]},{name:'rent',amount:-650}]},B:{terms:[{name:'salary after tax and NI',amount:34000,times:[5],per:[6,12]},{name:'rent',amount:-1200}]}},
 scenario:'Two job offers for a graduate. Job A: \u00a328,000 salary in Manchester (average rent \u00a3650/month). Job B: \u00a334,000 salary in London (average rent \u00a31,200/month). Tax and NI are roughly a sixth of gross salary at these salaries. Compare monthly disposable income after rent.',
 optionA:{label:'Manchester Job',details:[{key:'Salary',value:'\u00a328,000'},{key:'Tax/NI',value:'about 1/6'},{key:'Rent',value:'\u00a3650/month'}]},
 optionB:{label:'London Job',details:[{key:'Salary',value:'\u00a334,000'},{key:'Tax/NI',value:'about 1/6'},{key:'Rent',value:'\u00a31,200/month'}]},
@@ -898,7 +898,7 @@ conclusions:[
 explanation:'Insurer A: \u00a3480 premium + \u00a3250 excess on the \u00a31,200 repair = \u00a3730. Insurer B is third party fire and theft, so it does not cover damage to her own car: \u00a3340 + \u00a31,200 = \u00a31,540. Insurer A is better value this year by \u00a3810, although its premium is \u00a3140 more. The cheapest policy is not the best value when risk is considered.'},
 
 {id:'bv_core_049',level:'core',type:'breakeven',
-criterion:'',measure:'crossover',inputs:{unit:'hours per week',A:{fixed:[{name:'wages',amount:15,times:[20]},{name:'employer NI and pension',amount:180,per:[4.33]}],per_unit:0},B:{fixed:0,per_unit:40}},
+criterion:'At what weekly outsourcing hours does hiring become cheaper?',measure:'crossover',inputs:{unit:'hours per week',A:{fixed:[{name:'wages',amount:15,times:[20]},{name:'employer NI and pension',amount:180,per:[4.33]}],per_unit:0},B:{fixed:0,per_unit:40}},
 scenario:'A small business is choosing between hiring a part-time employee or outsourcing work. Employee: \u00a315/hour for 20 hours/week, plus \u00a3180/month employer NI and pension. Outsourcing: \u00a340/hour, estimated 8 hours/week needed. At what weekly outsourcing hours does hiring become cheaper?',
 optionA:{label:'Hire Employee',details:[{key:'Hourly rate',value:'\u00a315/hour'},{key:'Hours/week',value:'20'},{key:'Employer costs',value:'\u00a3180/month'}]},
 optionB:{label:'Outsource',details:[{key:'Hourly rate',value:'\u00a340/hour'},{key:'Hours/week',value:'Variable'}]},
@@ -927,8 +927,8 @@ explanation:'Buying: 30 \u00d7 \u00a327.50 = \u00a3825. Meal prep: \u00a340 + (3
 gcse: [
 // === Direct Comparison (8) ===
 {id:'bv_gcse_001',level:'gcse',type:'direct',
-criterion:'',measure:'total_cost',inputs:{pizzas:9,A:{terms:[{name:'per pizza',amount:8,times:['pizzas']}]},B:{terms:[{name:'3 for \u00a321',amount:21,times:['pizzas'],per:[3]}]}},
-scenario:'Two pizza deals for a school party. Pizza Palace: \u00a38 per pizza. Slice House: 3 pizzas for \u00a321. The school needs 9 pizzas.',
+criterion:'The school wants its 9 pizzas for the least money.',measure:'total_cost',inputs:{pizzas:9,A:{terms:[{name:'per pizza',amount:8,times:['pizzas']}]},B:{terms:[{name:'3 for \u00a321',amount:21,times:['pizzas'],per:[3]}]}},
+scenario:'Two pizza deals for a school party. Pizza Palace: \u00a38 per pizza. Slice House: 3 pizzas for \u00a321. The school needs 9 pizzas. The school wants its 9 pizzas for the least money.',
 optionA:{label:'Pizza Palace',details:[{key:'Price',value:'\u00a38 per pizza'}]},
 optionB:{label:'Slice House',details:[{key:'Deal',value:'3 for \u00a321'}]},
 conclusions:[
@@ -940,8 +940,8 @@ conclusions:[
 explanation:'Pizza Palace: 9 \u00d7 \u00a38 = \u00a372. Slice House: 3 \u00d7 \u00a321 = \u00a363. Slice House saves \u00a39.'},
 
 {id:'bv_gcse_002',level:'gcse',type:'direct',
-criterion:'',measure:'total_cost',inputs:{A:{terms:[{name:'monthly cost',amount:5.99,times:[12]}]},B:{terms:[{name:'annual cost',amount:59.99}]}},
-scenario:'Sam wants a music streaming subscription for a year.',
+criterion:'Sam wants a year of music for the least money.',measure:'total_cost',inputs:{A:{terms:[{name:'monthly cost',amount:5.99,times:[12]}]},B:{terms:[{name:'annual cost',amount:59.99}]}},
+scenario:'Sam wants a music streaming subscription for a year. Sam wants a year of music for the least money.',
 optionA:{label:'Plan A',details:[{key:'Monthly cost',value:'\u00a35.99'}]},
 optionB:{label:'Plan B',details:[{key:'Annual cost',value:'\u00a359.99'}]},
 conclusions:[
@@ -953,12 +953,12 @@ conclusions:[
 explanation:'Plan A: 12 \u00d7 \u00a35.99 = \u00a371.88. Plan B: \u00a359.99. The annual plan saves \u00a311.89.'},
 
 {id:'bv_gcse_003',level:'gcse',type:'direct',
-criterion:'',measure:'total_cost',inputs:{A:{terms:[{name:'pack price',amount:4.5},{name:'delivery',amount:2.0}]},B:{terms:[{name:'pack price',amount:5.8}]}},
-scenario:'Two shops sell the same pack of coloured pencils.',
+criterion:'The buyer wants the pencils delivered for the least money.',measure:'total_cost',inputs:{A:{terms:[{name:'pack price',amount:4.5},{name:'delivery',amount:2.0}]},B:{terms:[{name:'pack price',amount:5.8}]}},
+scenario:'Two shops sell the same pack of coloured pencils. The buyer wants the pencils delivered for the least money.',
 optionA:{label:'Shop A',details:[{key:'Pack price',value:'\u00a34.50'},{key:'Delivery',value:'\u00a32.00'}]},
 optionB:{label:'Shop B',details:[{key:'Pack price',value:'\u00a35.80'},{key:'Delivery',value:'Free'}]},
 conclusions:[
-{text:'Shop A is cheaper \u2014 \u00a34.50 vs \u00a35.80',correct:false,claim:{winner:'A',figures:[{option:'A',value:4.5},{option:'B',value:5.8}],measure:'term:pack price'}},
+{text:'Shop A is cheaper delivered \u2014 \u00a34.50 vs \u00a35.80',correct:false,claim:{winner:'A',figures:[{option:'A',value:4.5},{option:'B',value:5.8}]}},
 {text:'Shop A is cheaper overall \u2014 \u00a36.50 vs \u00a35.80 for Shop B',correct:false,claim:{winner:'A',figures:[{option:'A',value:6.5},{option:'B',value:5.8}]}},
 {text:'Shop B is cheaper overall \u2014 \u00a35.80 vs \u00a36.50 for Shop A',correct:true,claim:{winner:'B',figures:[{option:'B',value:5.8},{option:'A',value:6.5}]}},
 {text:'They cost the same once delivery is added',correct:false,claim:{winner:'equal',figures:[]}}
@@ -966,8 +966,8 @@ conclusions:[
 explanation:'Shop A: \u00a34.50 + \u00a32.00 = \u00a36.50. Shop B: \u00a35.80 + \u00a30 = \u00a35.80. Shop B is cheaper.'},
 
 {id:'bv_gcse_004',level:'gcse',type:'direct',
-criterion:'',measure:'total_cost',inputs:{nights:5,A:{terms:[{name:'per night',amount:80,times:['nights']}]},B:{terms:[{name:'per night',amount:70,times:['nights']},{name:'booking fee',amount:40}]}},
-scenario:'A family is choosing between two holiday parks for a 5-night stay.',
+criterion:'The family wants the 5 nights for the least money.',measure:'total_cost',inputs:{nights:5,A:{terms:[{name:'per night',amount:80,times:['nights']}]},B:{terms:[{name:'per night',amount:70,times:['nights']},{name:'booking fee',amount:40}]}},
+scenario:'A family is choosing between two holiday parks for a 5-night stay. The family wants the 5 nights for the least money.',
 optionA:{label:'Park A',details:[{key:'Per night',value:'\u00a380'},{key:'Booking fee',value:'\u00a30'}]},
 optionB:{label:'Park B',details:[{key:'Per night',value:'\u00a370'},{key:'Booking fee',value:'\u00a340'}]},
 conclusions:[
@@ -979,8 +979,8 @@ conclusions:[
 explanation:'Park A: 5 \u00d7 \u00a380 = \u00a3400. Park B: \u00a340 + (5 \u00d7 \u00a370) = \u00a340 + \u00a3350 = \u00a3390.'},
 
 {id:'bv_gcse_005',level:'gcse',type:'direct',
-criterion:'',measure:'total_cost',inputs:{days:5,A:{terms:[{name:'per sandwich',amount:2.5,times:['days']}]},B:{terms:[{name:'weekly ingredients',amount:6.0}]}},
-scenario:'Ella buys a sandwich every school day (5 days a week). She compares buying from the canteen vs making her own.',
+criterion:'Ella wants her week of sandwiches for the least money.',measure:'total_cost',inputs:{days:5,A:{terms:[{name:'per sandwich',amount:2.5,times:['days']}]},B:{terms:[{name:'weekly ingredients',amount:6.0}]}},
+scenario:'Ella buys a sandwich every school day (5 days a week). She compares buying from the canteen vs making her own. Ella wants her week of sandwiches for the least money.',
 optionA:{label:'Canteen',details:[{key:'Per sandwich',value:'\u00a32.50'}]},
 optionB:{label:'Homemade',details:[{key:'Weekly ingredients',value:'\u00a36.00'}]},
 conclusions:[
@@ -992,8 +992,8 @@ conclusions:[
 explanation:'Canteen: 5 \u00d7 \u00a32.50 = \u00a312.50/week. Homemade: \u00a36.00/week. Homemade saves \u00a36.50 per week.'},
 
 {id:'bv_gcse_006',level:'gcse',type:'direct',
-criterion:'',measure:'total_cost',inputs:{A:{terms:[{name:'fixed fare',amount:12}]},B:{terms:[{name:'base fare',amount:3},{name:'per mile',amount:2,times:[5]}]}},
-scenario:'Two taxi companies quote for a trip from school to the train station.',
+criterion:'The school wants to pay the least for the trip.',measure:'total_cost',inputs:{A:{terms:[{name:'fixed fare',amount:12}]},B:{terms:[{name:'base fare',amount:3},{name:'per mile',amount:2,times:[5]}]}},
+scenario:'Two taxi companies quote for a trip from school to the train station. The school wants to pay the least for the trip.',
 optionA:{label:'Quick Cabs',details:[{key:'Fixed fare',value:'\u00a312'}]},
 optionB:{label:'City Taxis',details:[{key:'Base fare',value:'\u00a33'},{key:'Per mile',value:'\u00a32'},{key:'Distance',value:'5 miles'}]},
 conclusions:[
@@ -1005,21 +1005,21 @@ conclusions:[
 explanation:'Quick Cabs: \u00a312. City Taxis: \u00a33 + (5 \u00d7 \u00a32) = \u00a33 + \u00a310 = \u00a313. Quick Cabs saves \u00a31.'},
 
 {id:'bv_gcse_007',level:'gcse',type:'direct',
-criterion:'',measure:'total_cost',inputs:{A:{terms:[{name:'price',amount:18.5},{name:'delivery',amount:3.99}]},B:{terms:[{name:'price',amount:23.0}]}},
-scenario:'A student needs a calculator for GCSE exams. Two shops have the same model.',
+criterion:'The student wants the calculator for the least money.',measure:'total_cost',inputs:{A:{terms:[{name:'price',amount:18.5},{name:'delivery',amount:3.99}]},B:{terms:[{name:'price',amount:23.0}]}},
+scenario:'A student needs a calculator for GCSE exams. Two shops have the same model. The student wants the calculator for the least money.',
 optionA:{label:'Online Store',details:[{key:'Price',value:'\u00a318.50'},{key:'Delivery',value:'\u00a33.99'}]},
 optionB:{label:'High Street Shop',details:[{key:'Price',value:'\u00a323.00'},{key:'Delivery',value:'N/A (collect)'}]},
 conclusions:[
 {text:'The online store is cheaper \u2014 \u00a322.49 vs \u00a323.00',correct:true,claim:{winner:'A',figures:[{option:'A',value:22.49},{option:'B',value:23.0}]}},
 {text:'The high street shop is cheaper because there is no delivery',correct:false,claim:{winner:'B',figures:[]}},
 {text:'They cost the same',correct:false,claim:{winner:'equal',figures:[]}},
-{text:'The online store costs \u00a318.50 so it is much cheaper',correct:false,claim:{winner:'A',figures:[{option:'A',value:18.5}]}}
+{text:'The online store costs less \u2014 \u00a318.50 vs \u00a323.00 at the high street shop',correct:false,claim:{winner:'A',figures:[{option:'A',value:18.5},{option:'B',value:23.0}]}}
 ],
 explanation:'Online: \u00a318.50 + \u00a33.99 = \u00a322.49. High street: \u00a323.00. The online store is 51p cheaper.'},
 
 {id:'bv_gcse_008',level:'gcse',type:'direct',
-criterion:'',measure:'total_cost',inputs:{people:4,A:{terms:[{name:'adult ticket',amount:11,times:['people']}]},B:{terms:[{name:'group deal',amount:40}]}},
-scenario:'Two cinemas show the same film. A group of 4 friends want to go.',
+criterion:'The four friends want to see the film for the least money.',measure:'total_cost',inputs:{people:4,A:{terms:[{name:'adult ticket',amount:11,times:['people']}]},B:{terms:[{name:'group deal',amount:40}]}},
+scenario:'Two cinemas show the same film. A group of 4 friends want to go. The four friends want to see the film for the least money.',
 optionA:{label:'Cineworld',details:[{key:'Adult ticket',value:'\u00a311 each'}]},
 optionB:{label:'Vue',details:[{key:'Group deal',value:'\u00a340 for up to 4'}]},
 conclusions:[
@@ -1032,8 +1032,8 @@ explanation:'Cineworld: 4 \u00d7 \u00a311 = \u00a344. Vue group deal: \u00a340. 
 
 // === Hidden Cost (5) ===
 {id:'bv_gcse_009',level:'gcse',type:'hidden',
-criterion:'',measure:'total_cost',inputs:{A:{terms:[{name:'game price',amount:45}]},B:{terms:[{name:'game price',amount:38},{name:'delivery',amount:4.99},{name:'case',amount:3}]}},
-scenario:'A new game costs \u00a345 from the shop. An online marketplace has it for \u00a338 but charges \u00a34.99 delivery plus \u00a33 for a protective case that the shop includes free.',
+criterion:'The buyer wants the game and a case for the least money.',measure:'total_cost',inputs:{A:{terms:[{name:'game price',amount:45}]},B:{terms:[{name:'game price',amount:38},{name:'delivery',amount:4.99},{name:'case',amount:3}]}},
+scenario:'A new game costs \u00a345 from the shop. An online marketplace has it for \u00a338 but charges \u00a34.99 delivery plus \u00a33 for a protective case that the shop includes free. The buyer wants the game and a case for the least money.',
 optionA:{label:'Shop',details:[{key:'Game price',value:'\u00a345'},{key:'Includes',value:'Protective case'}]},
 optionB:{label:'Online',details:[{key:'Game price',value:'\u00a338'},{key:'Delivery',value:'\u00a34.99'},{key:'Case',value:'\u00a33'}]},
 conclusions:[
@@ -1045,8 +1045,8 @@ conclusions:[
 explanation:'Shop: \u00a345 (case included). Online: \u00a338 + \u00a34.99 + \u00a33 = \u00a345.99. The shop is 99p cheaper.'},
 
 {id:'bv_gcse_010',level:'gcse',type:'hidden',
-criterion:'',measure:'total_cost',inputs:{A:{terms:[{name:'cost',amount:10},{name:'non-network',amount:0.2,times:[100]}]},B:{terms:[{name:'cost',amount:15}]}},
-scenario:'A mobile top-up deal offers 500 minutes for \u00a310. But calls to non-network numbers cost 20p/min extra. Jake makes 100 of his 500 minutes to non-network numbers. A rival offers unlimited calls for \u00a315.',
+criterion:'Jake wants his calls for the least money.',measure:'total_cost',inputs:{A:{terms:[{name:'cost',amount:10},{name:'non-network',amount:0.2,times:[100]}]},B:{terms:[{name:'cost',amount:15}]}},
+scenario:'A mobile top-up deal offers 500 minutes for \u00a310. But calls to non-network numbers cost 20p/min extra. Jake makes 100 of his 500 minutes to non-network numbers. A rival offers unlimited calls for \u00a315. Jake wants his calls for the least money.',
 optionA:{label:'Top-Up Deal',details:[{key:'Cost',value:'\u00a310'},{key:'Minutes',value:'500'},{key:'Non-network',value:'20p/min extra'}]},
 optionB:{label:'Unlimited Plan',details:[{key:'Cost',value:'\u00a315'},{key:'Minutes',value:'Unlimited'}]},
 conclusions:[
@@ -1058,12 +1058,12 @@ conclusions:[
 explanation:'Top-up: \u00a310 + (100 \u00d7 \u00a30.20) = \u00a310 + \u00a320 = \u00a330. Unlimited: \u00a315. The hidden charges make the cheap deal much more expensive.'},
 
 {id:'bv_gcse_011',level:'gcse',type:'hidden',
-criterion:'',measure:'total_cost',inputs:{A:{terms:[{name:'hoodie',amount:25},{name:'service fee',amount:3.5}]},B:{terms:[{name:'hoodie',amount:27}]}},
-scenario:'A \u201cfree delivery\u201d website sells a hoodie for \u00a325 but charges a \u00a33.50 \u201cservice fee\u201d. A shop sells the same hoodie for \u00a327 with nothing extra to pay.',
+criterion:'The buyer wants the hoodie for the least money.',measure:'total_cost',inputs:{A:{terms:[{name:'hoodie',amount:25},{name:'service fee',amount:3.5}]},B:{terms:[{name:'hoodie',amount:27}]}},
+scenario:'A \u201cfree delivery\u201d website sells a hoodie for \u00a325 but charges a \u00a33.50 \u201cservice fee\u201d. A shop sells the same hoodie for \u00a327 with nothing extra to pay. The buyer wants the hoodie for the least money.',
 optionA:{label:'Website',details:[{key:'Hoodie',value:'\u00a325'},{key:'Service fee',value:'\u00a33.50'},{key:'Delivery',value:'Free'}]},
 optionB:{label:'Shop',details:[{key:'Hoodie',value:'\u00a327'},{key:'Extra fees',value:'None'}]},
 conclusions:[
-{text:'The website is cheaper \u2014 \u00a325 vs \u00a327 for the shop, with free delivery',correct:false,claim:{winner:'A',figures:[{option:'A',value:25},{option:'B',value:27}],measure:'term:hoodie'}},
+{text:'The website is cheaper in total \u2014 \u00a325 vs \u00a327 for the shop, with free delivery',correct:false,claim:{winner:'A',figures:[{option:'A',value:25},{option:'B',value:27}]}},
 {text:'The shop is cheaper \u2014 \u00a327 vs \u00a328.50 for the website',correct:true,claim:{winner:'B',figures:[{option:'B',value:27},{option:'A',value:28.5}]}},
 {text:'They cost the same',correct:false,claim:{winner:'equal',figures:[]}},
 {text:'The website saves \u00a32',correct:false,claim:{winner:'A',figures:[{option:null,value:2,of:'difference'}]}}
@@ -1071,8 +1071,8 @@ conclusions:[
 explanation:'Website: \u00a325 + \u00a33.50 = \u00a328.50. Shop: \u00a327. The service fee makes the website \u00a31.50 more expensive.'},
 
 {id:'bv_gcse_012',level:'gcse',type:'hidden',
-criterion:'',measure:'unit_cost',inputs:{students:40,cars:10,A:{terms:[{name:'hire cost',amount:200}],per:['students']},B:{terms:[{name:'petrol per car',amount:5,times:['cars']},{name:'parking per car',amount:8,times:['cars']}],per:['students']}},
-scenario:'School trip option A: coach hire \u00a3200 shared between 40 students. Option B: parents drive \u2014 petrol costs \u00a35 per car, 4 students per car, but parking is \u00a38 per car.',
+criterion:'The school wants to take the 40 students for the least money.',measure:'unit_cost',inputs:{students:40,cars:10,A:{terms:[{name:'hire cost',amount:200}],per:['students']},B:{terms:[{name:'petrol per car',amount:5,times:['cars']},{name:'parking per car',amount:8,times:['cars']}],per:['students']}},
+scenario:'School trip option A: coach hire \u00a3200 shared between 40 students. Option B: parents drive \u2014 petrol costs \u00a35 per car, 4 students per car, but parking is \u00a38 per car. The school wants to take the 40 students for the least money.',
 optionA:{label:'Coach',details:[{key:'Hire cost',value:'\u00a3200'},{key:'Students',value:'40'}]},
 optionB:{label:'Cars',details:[{key:'Petrol per car',value:'\u00a35'},{key:'Students per car',value:'4'},{key:'Parking per car',value:'\u00a38'}]},
 conclusions:[
@@ -1084,8 +1084,8 @@ conclusions:[
 explanation:'Coach: \u00a3200 \u00f7 40 = \u00a35 per student. Cars: 40 \u00f7 4 = 10 cars needed. Total: 10 \u00d7 (\u00a35 + \u00a38) = 10 \u00d7 \u00a313 = \u00a3130. Per student: \u00a3130 \u00f7 40 = \u00a33.25.'},
 
 {id:'bv_gcse_013',level:'gcse',type:'hidden',
-criterion:'',measure:'total_cost',inputs:{A:{terms:[{name:'headphones',amount:20},{name:'warranty',amount:4.99}]},B:{terms:[{name:'headphones',amount:26}]}},
-scenario:'A \u201cheadphones deal\u201d offers \u00a320 headphones with a \u201cfree\u201d 2-year warranty that costs \u00a34.99. The same headphones cost \u00a326 elsewhere with a free 2-year warranty included.',
+criterion:'The buyer wants the headphones and a 2-year warranty for the least money.',measure:'total_cost',inputs:{A:{terms:[{name:'headphones',amount:20},{name:'warranty',amount:4.99}]},B:{terms:[{name:'headphones',amount:26}]}},
+scenario:'A \u201cheadphones deal\u201d offers \u00a320 headphones with a \u201cfree\u201d 2-year warranty that costs \u00a34.99. The same headphones cost \u00a326 elsewhere with a free 2-year warranty included. The buyer wants the headphones and a 2-year warranty for the least money.',
 optionA:{label:'Deal Store',details:[{key:'Headphones',value:'\u00a320'},{key:'Warranty',value:'\u00a34.99'}]},
 optionB:{label:'Other Store',details:[{key:'Headphones',value:'\u00a326'},{key:'Warranty',value:'Included'}]},
 conclusions:[
@@ -1098,8 +1098,8 @@ explanation:'Deal store: \u00a320 + \u00a34.99 = \u00a324.99. Other store: \u00a
 
 // === Rate Comparison (5) ===
 {id:'bv_gcse_014',level:'gcse',type:'rate',
-criterion:'',measure:'unit_cost',inputs:{unstated:['need'],A:{terms:[{name:'price',amount:3.0}],per:[2]},B:{terms:[{name:'price',amount:6.5}],per:[5]}},
-scenario:'Two bags of rice at the supermarket. Bag A: 2 kg for \u00a33.00. Bag B: 5 kg for \u00a36.50.',
+criterion:'A shopper is choosing between them. Whichever bag she buys, she will use all of it. She wants the most rice for the money.',measure:'unit_cost',inputs:{A:{terms:[{name:'price',amount:3.0}],per:[2]},B:{terms:[{name:'price',amount:6.5}],per:[5]}},
+scenario:'Two bags of rice at the supermarket. Bag A: 2 kg for \u00a33.00. Bag B: 5 kg for \u00a36.50. A shopper is choosing between them. Whichever bag she buys, she will use all of it. She wants the most rice for the money.',
 optionA:{label:'Bag A',details:[{key:'Weight',value:'2 kg'},{key:'Price',value:'\u00a33.00'}]},
 optionB:{label:'Bag B',details:[{key:'Weight',value:'5 kg'},{key:'Price',value:'\u00a36.50'}]},
 conclusions:[
@@ -1111,8 +1111,8 @@ conclusions:[
 explanation:'Bag A: \u00a33.00 \u00f7 2 = \u00a31.50/kg. Bag B: \u00a36.50 \u00f7 5 = \u00a31.30/kg.'},
 
 {id:'bv_gcse_015',level:'gcse',type:'rate',
-criterion:'',measure:'unit_cost',inputs:{unstated:['need'],A:{terms:[{name:'price in pence',amount:360}],per:[12]},B:{terms:[{name:'price in pence',amount:500}],per:[20]}},
-scenario:'Two packs of felt-tip pens. Pack A: 12 pens for \u00a33.60. Pack B: 20 pens for \u00a35.00.',
+criterion:'A shopper is choosing between them. Whichever pack she buys, she will use all of it. She wants the most pens for the money.',measure:'unit_cost',inputs:{A:{terms:[{name:'price in pence',amount:360}],per:[12]},B:{terms:[{name:'price in pence',amount:500}],per:[20]}},
+scenario:'Two packs of felt-tip pens. Pack A: 12 pens for \u00a33.60. Pack B: 20 pens for \u00a35.00. A shopper is choosing between them. Whichever pack she buys, she will use all of it. She wants the most pens for the money.',
 optionA:{label:'Pack A',details:[{key:'Pens',value:'12'},{key:'Price',value:'\u00a33.60'}]},
 optionB:{label:'Pack B',details:[{key:'Pens',value:'20'},{key:'Price',value:'\u00a35.00'}]},
 conclusions:[
@@ -1124,8 +1124,8 @@ conclusions:[
 explanation:'Pack A: \u00a33.60 \u00f7 12 = 30p per pen. Pack B: \u00a35.00 \u00f7 20 = 25p per pen.'},
 
 {id:'bv_gcse_016',level:'gcse',type:'rate',
-criterion:'',measure:'hourly_rate',inputs:{A:{terms:[{name:'pay',amount:54}],per:[6]},B:{terms:[{name:'pay',amount:80}],per:[9]}},
-scenario:'Two part-time jobs for a student. Job A pays \u00a354 for a 6-hour shift. Job B pays \u00a380 for a 9-hour shift.',
+criterion:'The student wants the best pay for each hour worked.',measure:'hourly_rate',inputs:{A:{terms:[{name:'pay',amount:54}],per:[6]},B:{terms:[{name:'pay',amount:80}],per:[9]}},
+scenario:'Two part-time jobs for a student. Job A pays \u00a354 for a 6-hour shift. Job B pays \u00a380 for a 9-hour shift. The student wants the best pay for each hour worked.',
 optionA:{label:'Job A',details:[{key:'Pay',value:'\u00a354'},{key:'Hours',value:'6'}]},
 optionB:{label:'Job B',details:[{key:'Pay',value:'\u00a380'},{key:'Hours',value:'9'}]},
 conclusions:[
@@ -1137,8 +1137,8 @@ conclusions:[
 explanation:'Job A: \u00a354 \u00f7 6 = \u00a39.00/hour. Job B: \u00a380 \u00f7 9 = \u00a38.89/hour.'},
 
 {id:'bv_gcse_017',level:'gcse',type:'rate',
-criterion:'',measure:'unit_cost',inputs:{unstated:['need'],A:{terms:[{name:'price in pence',amount:240}],per:[300]},B:{terms:[{name:'price in pence',amount:350}],per:[500]}},
-scenario:'Two bottles of shampoo. Bottle A: 300 ml for \u00a32.40. Bottle B: 500 ml for \u00a33.50.',
+criterion:'A shopper is choosing between them. Whichever bottle she buys, she will use all of it. She wants the most shampoo for the money.',measure:'unit_cost',inputs:{A:{terms:[{name:'price in pence',amount:240}],per:[300]},B:{terms:[{name:'price in pence',amount:350}],per:[500]}},
+scenario:'Two bottles of shampoo. Bottle A: 300 ml for \u00a32.40. Bottle B: 500 ml for \u00a33.50. A shopper is choosing between them. Whichever bottle she buys, she will use all of it. She wants the most shampoo for the money.',
 optionA:{label:'Bottle A',details:[{key:'Volume',value:'300 ml'},{key:'Price',value:'\u00a32.40'}]},
 optionB:{label:'Bottle B',details:[{key:'Volume',value:'500 ml'},{key:'Price',value:'\u00a33.50'}]},
 conclusions:[
@@ -1150,21 +1150,21 @@ conclusions:[
 explanation:'Bottle A: \u00a32.40 \u00f7 300 = 0.8p per ml. Bottle B: \u00a33.50 \u00f7 500 = 0.7p per ml.'},
 
 {id:'bv_gcse_018',level:'gcse',type:'rate',
-criterion:'',measure:'unit_cost',inputs:{unstated:['need'],A:{terms:[{name:'price',amount:6}],per:[4]},B:{terms:[{name:'price',amount:8}],per:[6]}},
-scenario:'Two car parks near school. Car Park A charges \u00a36 for 4 hours. Car Park B charges \u00a38 for 6 hours.',
+criterion:'The parent wants the car park that charges less for each hour.',measure:'unit_cost',inputs:{A:{terms:[{name:'price',amount:6}],per:[4]},B:{terms:[{name:'price',amount:8}],per:[6]}},
+scenario:'Two car parks near school. Car Park A charges \u00a36 for 4 hours. Car Park B charges \u00a38 for 6 hours. The parent wants the car park that charges less for each hour.',
 optionA:{label:'Car Park A',details:[{key:'Cost',value:'\u00a36'},{key:'Hours',value:'4'}]},
 optionB:{label:'Car Park B',details:[{key:'Cost',value:'\u00a38'},{key:'Hours',value:'6'}]},
 conclusions:[
 {text:'Car Park A is cheaper per hour \u2014 \u00a31.50/hour vs \u00a31.33/hour for Car Park B',correct:false,claim:{winner:'A',figures:[{option:'A',value:1.5},{option:'B',value:1.33}]}},
 {text:'Car Park B is cheaper per hour \u2014 \u00a31.33/hour vs \u00a31.50/hour for Car Park A',correct:true,claim:{winner:'B',figures:[{option:'B',value:1.33},{option:'A',value:1.5}]}},
 {text:'They cost the same per hour',correct:false,claim:{winner:'equal',figures:[]}},
-{text:'Car Park A is better because it costs less overall',correct:false,claim:{winner:'A',figures:[],measure:'total_cost'}}
+{text:'Car Park A is better because it costs less overall',correct:false,claim:{winner:'A',figures:[]}}
 ],
 explanation:'Car Park A: \u00a36 \u00f7 4 = \u00a31.50/hour. Car Park B: \u00a38 \u00f7 6 = \u00a31.33/hour.'},
 
 // === Break-Even (2) ===
 {id:'bv_gcse_019',level:'gcse',type:'breakeven',
-criterion:'',measure:'crossover',inputs:{unit:'lunches',A:{fixed:30,per_unit:0},B:{fixed:0,per_unit:2.5}},
+criterion:'How many lunches per month make the pass worth it? (Worth it means cheaper, not the same price.)',measure:'crossover',inputs:{unit:'lunches',A:{fixed:30,per_unit:0},B:{fixed:0,per_unit:2.5}},
 scenario:'A school lunch pass costs \u00a330 per month for unlimited lunches. Individual lunches cost \u00a32.50 each. How many lunches per month make the pass worth it? (Worth it means cheaper, not the same price.)',
 optionA:{label:'Lunch Pass',details:[{key:'Monthly cost',value:'\u00a330'},{key:'Lunches',value:'Unlimited'}]},
 optionB:{label:'Pay Per Lunch',details:[{key:'Per lunch',value:'\u00a32.50'}]},
@@ -1177,7 +1177,7 @@ conclusions:[
 explanation:'\u00a330 \u00f7 \u00a32.50 = 12. After 12 lunches both cost \u00a330, so the pass is not yet cheaper. From the 13th lunch onwards the pass is better value.'},
 
 {id:'bv_gcse_020',level:'gcse',type:'breakeven',
-criterion:'',measure:'crossover',inputs:{unit:'bottles',A:{fixed:15,per_unit:0},B:{fixed:0,per_unit:1}},
+criterion:'How many bottles of water must you drink for the reusable bottle to save money? (Saving money means cheaper, not the same price.)',measure:'crossover',inputs:{unit:'bottles',A:{fixed:15,per_unit:0},B:{fixed:0,per_unit:1}},
 scenario:'A reusable water bottle costs \u00a315. Buying bottled water costs \u00a31 per bottle. How many bottles of water must you drink for the reusable bottle to save money? (Saving money means cheaper, not the same price.)',
 optionA:{label:'Reusable Bottle',details:[{key:'Upfront cost',value:'\u00a315'},{key:'Refill cost',value:'\u00a30'}]},
 optionB:{label:'Bottled Water',details:[{key:'Per bottle',value:'\u00a31'}]},

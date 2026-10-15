@@ -3,9 +3,9 @@
 """Better Value: each item declares the measure "better" is judged by, and each conclusion what it claims.
 
 Contract BV-CLAIMS (14 Oct 2026; verbatim with its amendment in docs/history/contracts/2026-10-14-bv-claims.md).
-The game's items carry data the page never renders: `criterion` (empty for now), `measure`, `inputs` (the
-named quantities per option), optionally `provisional` (a measure Jon has still to choose; see
-docs/handover/better-value-decisions.md), and on every conclusion a `claim`:
+The game's items carry data the page never renders: `criterion` (the scenario's plain-words sentence saying
+what the person wants), `measure`, `inputs` (the named quantities per option), optionally `provisional` (a
+measure Jon has still to choose; see docs/handover/better-value-decisions.md), and on every conclusion a `claim`:
     {winner: 'A' | 'B' | 'equal' | null, figures: [{option, value, of}], threshold?, measure?, at?}
 This script computes the measure for each option from the inputs and checks, for every item:
   - the key's claim is true: the right winner and every checked figure right;
@@ -62,24 +62,10 @@ MEASURES = {'unit_cost': 'lower', 'total_cost': 'lower', 'day_rate': 'higher', '
 RATIO = {'unit_cost', 'day_rate', 'hourly_rate', 'average', 'fuel_economy'}
 NUM = re.compile(r'(?<![\w.])(\d[\d,]*(?:\.\d+)?)')
 
-# Today's failures (14 Oct 2026, docs/handover/better-value-audit.md). Each is fixed by a content batch, then removed.
-KNOWN = {
-    ('bv_core_007', 'distractor-true', 4),          # "Lease B is better if ... fewer than 1,000 copies": true (break-even 1,750)
-    ('bv_core_014', 'quantity-unstated', 0),         # how many bottles
-    ('bv_core_015', 'judgement', 4),
-    ('bv_core_017', 'quantity-unstated', 0),
-    ('bv_core_017', 'judgement', 4),
-    ('bv_core_020', 'true-under-own-measure', 4),    # "cheaper because the carton costs less": per carton
-    ('bv_core_044', 'judgement', 1),
-    ('bv_core_044', 'judgement', 3),                 # the key
-    ('bv_gcse_003', 'true-under-own-measure', 1),    # "cheaper — £4.50 vs £5.80": the pack price
-    ('bv_gcse_011', 'true-under-own-measure', 1),    # "cheaper — £25 vs £27": the price tag
-    ('bv_gcse_014', 'quantity-unstated', 0),
-    ('bv_gcse_015', 'quantity-unstated', 0),
-    ('bv_gcse_017', 'quantity-unstated', 0),
-    ('bv_gcse_018', 'quantity-unstated', 0),
-    ('bv_gcse_018', 'true-under-own-measure', 4),    # "costs less overall": £6 vs £8, true for a stay of 4 hours or less
-}
+# Today's failures. Empty since BV-CRITERIA (15 Oct 2026): the audit's content changes are made and every scenario
+# but core_039's states its criterion (core_039's key holds whichever month you stop). A new failure fails; an entry
+# is added only on Jon's ruling.
+KNOWN = set()
 
 
 # ---------------------------------------------------------------- reading the bank from the page source
