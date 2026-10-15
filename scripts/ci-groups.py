@@ -411,7 +411,9 @@ def compare(path):
 def read_run(run_id, from_dir=None):
     """One finished run's record, from its content and lock jobs: each line's seconds, read from the
     'ok  <label>  (Ns; group at ...)' lines, and the longest setup (a group's total less its lines).
-    {"run", "date", "branch", "event", "setup", "lines"}, or None when there is nothing to read.
+    {"run", "date", "branch", "event", "setup", "lines", "regions"}, or None when there is nothing to read. "regions" maps
+    each line to the Azure region of the runner that timed it ('unknown' when the job did not say); nothing reads it
+    but the warning and the persistence report, and a record from before it (no "regions") reads as 'unknown'.
     On main the "CI timings" job passes --from-dir: each group job saves those lines as an artifact
     (ci-timing-*), downloaded into one folder, because the job-log API failed for the workflow's own token
     on every fetch (9 Oct, runs 37964707421, 37965228268, 37966843652). From a workstation, without
@@ -420,6 +422,12 @@ def read_run(run_id, from_dir=None):
         mine = [(m.group(1), int(m.group(2))) for m in re.finditer(r"(?:ok|FAILED)  (.+?)  \((\d+)s; group at", text)]
         tot = re.findall(r"group total: (\d+)m(\d+)s of", text)
         return mine, (int(tot[-1][0]) * 60 + int(tot[-1][1]) - sum(t for _, t in mine)) if tot and mine else None
+
+    def region_of(text):
+        """The runner's Azure region: the 'region: x' line the group step saves in its timing file, or the 'Region: x'
+        line the runner prints at the head of a job log; 'unknown' when neither is there."""
+        m = re.search(r"^region: ([a-z0-9]+)\s*$", text, re.M) or re.search(r"Region: ([A-Za-z0-9]+)\s*$", text, re.M)
+        return m.group(1).lower() if m else "unknown"
 
     texts = []
     if from_dir:
@@ -448,14 +456,16 @@ def read_run(run_id, from_dir=None):
         jobs = json.loads(gh("repos/{owner}/{repo}/actions/runs/%s/jobs?per_page=100" % run_id))["jobs"]
         texts = [gh("repos/{owner}/{repo}/actions/jobs/%s/logs" % j["id"]) for j in jobs
                  if j["name"].startswith(PREFIX) or j["name"].startswith(LOCK_PREFIX)]
-    secs, setups = {}, []
+    secs, setups, regions = {}, [], {}
     for text in texts:
         mine, setup = parse(text)
         secs.update(mine)
+        regions.update({label: region_of(text) for label, _ in mine})
         if setup is not None:
             setups.append(setup)
     rec = {"run": int(run_id), "date": run["created_at"][:10], "branch": run["head_branch"],
-           "event": run["event"], "setup": max(setups) if setups else SETUP, "lines": dict(sorted(secs.items()))}
+           "event": run["event"], "setup": max(setups) if setups else SETUP, "lines": dict(sorted(secs.items())),
+           "regions": dict(sorted(regions.items()))}
     return rec
 
 

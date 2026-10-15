@@ -19,6 +19,7 @@ Paradox's 14 Oct rise (161 s to about 210 s) reports on the third slow run, the 
                                                                            rise, and the workflow step run with a planted slow line
 """
 import argparse
+import http.server
 import importlib.util
 import json
 import os
@@ -26,6 +27,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -88,17 +90,19 @@ def report(runs):
     if len(runs) < LAST + 3:
         return ("### Persistence report\n\nOnly %d run(s) of history are readable; the rule needs at least %d. Nothing to report.\n"
                 % (len(runs), LAST + 3)), []
-    series = {}
+    series, regs = {}, {}
     for r in runs:
         for label, sec in r["lines"].items():
             series.setdefault(label, []).append(sec)
+            regs.setdefault(label, []).append((r.get("regions") or {}).get(label, "unknown"))   # a record from before regions: unknown
     found = []
     for label, s in series.items():
         if s and runs[-1]["lines"].get(label) is not None:
             h = hits(s)
             if h and h[-1][0] == len(s) - 1:                      # the window ends at the newest run
-                found.append((label, h[-1][1], h[-1][2]))
+                found.append((label, h[-1][1], h[-1][2], regs[label][-LAST:]))
     found.sort(key=lambda f: -(f[2][-1] - f[1]))
+    # Region is shown, never used: the flagging above is region-blind until there are about 10 runs per region group.
     md = ["### Persistence report (warning only)", "",
           "Last %d of %d main runs each more than %d%% and at least %ds over the median of the runs before them."
           % (LAST, len(runs), int(PCT * 100), SECS), ""]
@@ -106,11 +110,14 @@ def report(runs):
     if not found:
         md.append("No verifier has grown and stayed grown.")
     else:
-        md += ["| Verifier | before (median s) | last %d runs (s) | rise |" % LAST, "|---|---|---|---|"]
-        for label, b, last in found:
+        md += ["| Verifier | before (median s) | last %d runs (s) | region of each of those runs | rise |" % LAST, "|---|---|---|---|---|"]
+        for label, b, last, where in found:
             short = label.split(" (")[0]
-            md.append("| %s | %d | %s | +%d%% |" % (short, b, ", ".join(str(x) for x in last), round(100 * (median(last) / b - 1))))
-            warns.append("::warning::persistent rise: %s was %ds, now %s (last %d runs)" % (short, b, "/".join(str(x) for x in last), LAST))
+            md.append("| %s | %d | %s | %s | +%d%% |" % (short, b, ", ".join(str(x) for x in last), ", ".join(where),
+                                                        round(100 * (median(last) / b - 1))))
+            warns.append("::warning::persistent rise: %s was %ds, now %s (last %d runs, in %s)"
+                         % (short, b, "/".join(str(x) for x in last), LAST, "/".join(where)))
+        md += ["", "Verifier times differ by runner region (docs/handover/ci-slowdown-401.md); the rule does not yet allow for it."]
     return "\n".join(md) + "\n", warns
 
 
@@ -159,7 +166,7 @@ def takes(seconds):
     return 'echo $(( $(cat "$FAKE_CLOCK") + %d )) > "$FAKE_CLOCK"' % seconds
 
 
-def run_step(script, checks, timeout_min, age, td, fake=True):
+def run_step(script, checks, timeout_min, age, td, region_url="http://127.0.0.1:9/", fake=True):
     scripts = os.path.join(td, "scripts")
     os.makedirs(scripts, exist_ok=True)
     with open(os.path.join(scripts, "ci-timings.json"), "w", encoding="utf-8", newline="") as fh:
@@ -175,7 +182,8 @@ def run_step(script, checks, timeout_min, age, td, fake=True):
     else:
         t0 = int(time.time()) - age
     env = dict(os.environ, CHECKS=checks, GROUP="Content verifiers 99", TIMEOUT_MIN=str(timeout_min),
-               JOB_T0=str(t0), RUNNER_TEMP=td, GITHUB_STEP_SUMMARY=summary, FAKE_CLOCK=clock)
+               JOB_T0=str(t0), RUNNER_TEMP=td, GITHUB_STEP_SUMMARY=summary, FAKE_CLOCK=clock,
+               REGION_URL=region_url)
     py = '"%s"' % sys.executable.replace("\\", "/")
     r = subprocess.run(["bash", "-c", script.replace("python3 -c", py + " -c")], cwd=td, env=env, capture_output=True,
                        text=True, encoding="utf-8")
@@ -207,18 +215,72 @@ def selftest():
           "Probability Paradox" in md and len(warns) == 1 and warns[0].startswith("::warning::"))
     md, warns = report([{"run": i, "lines": {"Probability Paradox": v}} for i, v in enumerate(PP[:11], 1)])
     check("the report is silent on the second slow run", warns == [] and "No verifier" in md)
+    rr = [{"run": i, "lines": {"Probability Paradox": v}} for i, v in enumerate(PP[:12], 1)]
+    for r, g in zip(rr[-3:], ("eastus", "westus", "centralus")):
+        r["regions"] = {"Probability Paradox": g}
+    md, warns = report(rr)
+    check("the report lists the region of each of the 3 flagged runs, in the table and in the annotation",
+          "| eastus, westus, centralus |" in md and warns and "in eastus/westus/centralus" in warns[0])
+    rr[-1].pop("regions")
+    md, warns = report(rr)
+    check("... and 'unknown' for a flagged run recorded before regions", "| eastus, westus, unknown |" in md)
+    md2, warns2 = report([{"run": r["run"], "lines": r["lines"]} for r in rr])
+    check("the regions change only what is shown: the same runs without regions flag the same line at the same figures",
+          len(warns2) == len(warns) == 1 and "unknown, unknown, unknown" in md2)
 
     with open(os.path.join(ROOT, WORKFLOW), encoding="utf-8", newline="") as fh:
         text = fh.read()
     check("the workflow no longer raises the budget as an error", "::error::time budget" not in text)
     script = workflow_step(text)
     check("the step's pass/fail is the checks alone (the budget is not in its exit test)", re.search(r"^\[ \$\{#failed\[@\]\} -eq 0 \]\s*$", script, re.M) is not None)
+    class Metadata(http.server.BaseHTTPRequestHandler):          # answers like the instance metadata service: a mixed-case name
+        def do_GET(self):
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b"WestUS3\n")
+
+        def log_message(self, *a):
+            pass
+
+    srv = http.server.HTTPServer(("127.0.0.1", 0), Metadata)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    url = "http://127.0.0.1:%d/" % srv.server_address[1]
     with tempfile.TemporaryDirectory() as td:
-        code, out, summ = run_step(script, "Slow verifier|%s\nFast verifier|%s" % (takes(2), takes(0)), 1, 100, td)
+        code, out, summ = run_step(script, "Slow verifier|%s\nFast verifier|%s" % (takes(2), takes(0)), 1, 100, td, url)
         check("a planted slow line past the 75% budget leaves the job green (exit 0)", code == 0)
-        check("... with a warning annotation in the log", "::warning::time budget (a warning, the job is not failed)" in out)
-        check("... and the summary names the group, the slow line, its time and its recorded median",
-              "Content verifiers 99" in summ and "Slow verifier took 2s (recorded median 1s)" in summ and "Over the time budget" in summ)
+        check("... with a warning annotation in the log, naming the runner region",
+              "::warning::time budget (a warning, the job is not failed)" in out and "Slow verifier took 2s in westus3" in out)
+        check("... and the summary names the group, the slow line, its time, its region and its recorded median",
+              "Content verifiers 99" in summ and "Slow verifier took 2s in westus3 (recorded median 1s" in summ
+              and "Runner region: westus3." in summ and "Over the time budget" in summ)
+        with open(os.path.join(td, "ci-timing", "timing.txt"), encoding="utf-8") as fh:
+            saved = fh.read()
+        check("the saved timing file carries the region under the group name, and its lines are unchanged in form",
+              saved.split("\n")[:2] == ["Content verifiers 99", "region: westus3"]
+              and re.search(r"^ok  Slow verifier  [(]\d+s; group at ", saved, re.M) is not None)
+        d = os.path.join(td, "artifacts", "ci-timing-content-1")
+        os.makedirs(d)
+        with open(os.path.join(d, "timing.txt"), "w", encoding="utf-8", newline="") as fh:
+            fh.write(saved)
+        old_d = os.path.join(td, "artifacts", "ci-timing-content-2")      # an artifact from before regions: no region line
+        os.makedirs(old_d)
+        with open(os.path.join(old_d, "timing.txt"), "w", encoding="utf-8", newline="") as fh:
+            fh.write("Content verifiers 98\nok  Old line  (7s; group at 0m07s of 6m)\ngroup total: 0m09s of 6m (budget 4m30s)\n")
+        rec = new_run(1, os.path.join(td, "artifacts"))
+        check("a recorded run stores a region for every timed line (the old-format artifact reads as unknown)",
+              rec["regions"] == {"Fast verifier": "westus3", "Old line": "unknown", "Slow verifier": "westus3"}
+              and sorted(rec["lines"]) == sorted(rec["regions"]))
+        spec = importlib.util.spec_from_file_location("ci_groups2", os.path.join(ROOT, "scripts", "ci-groups.py"))
+        cg = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(cg)
+        tm = cg.add_run({}, rec)
+        check("the timing file's lines and medians are untouched by the regions (the packer and median-of-5 read what they did)",
+              tm["lines"] == rec["lines"] and set(tm) == {"run", "date", "branch", "event", "setup", "lines", "history"})
+    with tempfile.TemporaryDirectory() as td:
+        code, out, summ = run_step(script, "Slow verifier|%s\nFast verifier|%s" % (takes(2), takes(0)), 1, 100, td)  # the service does not answer
+        check("with no answer from the metadata service the region is 'unknown' and the job is unaffected",
+              code == 0 and "Slow verifier took 2s in unknown" in out and "Runner region: unknown." in summ)
+    srv.shutdown()
     with tempfile.TemporaryDirectory() as td:
         code, out, summ = run_step(script, "Slow verifier|%s" % takes(1), 1, 5, td)
         check("inside the budget: green and no warning", code == 0 and "::warning::" not in out and "Over the time budget" not in summ)

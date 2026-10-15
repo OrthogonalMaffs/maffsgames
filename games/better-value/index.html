@@ -872,17 +872,17 @@ conclusions:[
 explanation:'Take off a sixth for tax and NI. Manchester: \u00a328,000 \u2212 a sixth (\u2248 \u00a34,667) \u2248 \u00a323,333 net \u00f7 12 \u2248 \u00a31,944/month \u2212 \u00a3650 rent \u2248 \u00a31,294 disposable. London: \u00a334,000 \u2212 a sixth (\u2248 \u00a35,667) \u2248 \u00a328,333 net \u00f7 12 \u2248 \u00a32,361/month \u2212 \u00a31,200 rent \u2248 \u00a31,161 disposable. A higher salary does not always mean more money in your pocket.'},
 
 {id:'bv_core_047',level:'core',type:'direct',
-criterion:'The homeowner wants the lowest cost for each week the windows are clean.',measure:'unit_cost',inputs:{A:{terms:[{name:'per clean',amount:10,times:[13]}],per:[13,3]},B:{terms:[{name:'per clean',amount:15,times:[9]}],per:[9,6]}},
-scenario:'A homeowner is choosing between two window cleaners. Cleaner A: \u00a310 per clean, visits every 4 weeks (13 times/year). Cleaner B: \u00a315 per clean, visits every 6 weeks and uses a pure-water system that keeps windows cleaner for longer (roughly 9 times/year: use 9). After each visit from Cleaner A the windows stay clean for 3 of the 4 weeks; after each visit from Cleaner B, for all 6 weeks. The homeowner wants the lowest cost for each week the windows are clean.',
+criterion:'The homeowner wants the lowest cost for each week the windows are clean.',measure:'unit_cost',inputs:{A:{terms:[{name:'per clean',amount:10,times:[13]}],per:[13,3]},B:{terms:[{name:'per clean',amount:15,times:[9]}],per:[52]}},
+scenario:'A homeowner is choosing between two window cleaners. Cleaner A: \u00a310 per clean, visits every 4 weeks (13 times/year). Cleaner B: \u00a315 per clean, visits every 6 weeks and uses a pure-water system that keeps windows cleaner for longer (roughly 9 times/year: use 9). After each visit from Cleaner A the windows stay clean for 3 of the 4 weeks; Cleaner B\u2019s windows stay clean until the next visit, so all year. The homeowner wants the lowest cost for each week the windows are clean.',
 optionA:{label:'Cleaner A',details:[{key:'Per clean',value:'\u00a310'},{key:'Frequency',value:'Every 4 weeks'},{key:'Cleans/year',value:'13'},{key:'Clean for',value:'3 of 4 weeks'}]},
-optionB:{label:'Cleaner B',details:[{key:'Per clean',value:'\u00a315'},{key:'Frequency',value:'Every 6 weeks'},{key:'Cleans/year',value:'9'},{key:'Clean for',value:'All 6 weeks'}]},
+optionB:{label:'Cleaner B',details:[{key:'Per clean',value:'\u00a315'},{key:'Frequency',value:'Every 6 weeks'},{key:'Cleans/year',value:'9'},{key:'Clean for',value:'All year'}]},
 conclusions:[
 {text:'Cleaner A is better value because each clean costs less',correct:false,claim:{winner:'A',figures:[]}},
-{text:'Cleaner B is better value \u2014 \u00a32.50 vs \u00a33.33 per clean week',correct:true,claim:{winner:'B',figures:[{option:'B',value:2.50},{option:'A',value:3.33}]}},
+{text:'Cleaner B is better value \u2014 \u00a32.60 vs \u00a33.33 per clean week',correct:true,claim:{winner:'B',figures:[{option:'B',value:2.60},{option:'A',value:3.33}]}},
 {text:'Cleaner A is the better value overall \u2014 it saves \u00a350 a year',correct:false,claim:{winner:'A',figures:[{option:null,value:50,of:'difference'}],measure:'total_cost'}},
 {text:'They cost the same per year once the extra visits are counted',correct:false,claim:{winner:'equal',figures:[],measure:'total_cost'}}
 ],
-explanation:'Cleaner A: 13 \u00d7 \u00a310 = \u00a3130 a year, for 13 \u00d7 3 = 39 clean weeks: \u00a3130 \u00f7 39 = \u00a33.33 a clean week. Cleaner B: 9 \u00d7 \u00a315 = \u00a3135 a year, for 9 \u00d7 6 = 54 clean weeks: \u00a3135 \u00f7 54 = \u00a32.50 a clean week. Cleaner B costs \u00a35 more a year but gives 15 more clean weeks, so it is better value for what the homeowner wants.'},
+explanation:'Cleaner A: 13 \u00d7 \u00a310 = \u00a3130 a year, for 13 \u00d7 3 = 39 clean weeks: \u00a3130 \u00f7 39 = \u00a33.33 a clean week. Cleaner B: 9 \u00d7 \u00a315 = \u00a3135 a year, and the windows are clean all 52 weeks: \u00a3135 \u00f7 52 = \u00a32.60 a clean week. Cleaner B costs \u00a35 more a year but gives 13 more clean weeks, so it is better value for what the homeowner wants.'},
 
 {id:'bv_core_048',level:'core',type:'hidden',
 criterion:'She wants to pay the least in total this year.',measure:'total_cost',inputs:{A:{terms:[{name:'premium',amount:480},{name:'excess',amount:250}]},B:{terms:[{name:'premium',amount:340},{name:'repair',amount:1200}]}},

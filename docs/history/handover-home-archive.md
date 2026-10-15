@@ -3,6 +3,15 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## 2026-10-15 (home): MG-PP-BEFORE entry, moved to keep the handover under 20 KB (TIMING-SELFTEST)
+
+**MG-PP-BEFORE (11 Oct, Jon's contract; read-only).** Worktree unchanged since the WORKTREE-CLEANUP entry
+(detached at a02d61d, the same two files, nothing else). **Both edits are already in main, byte for byte**
+(same git blob): `scripts/check-changed.py` is main's as landed by PREPUSH-SCOPE (6192382, two queues), and
+`scripts/test-escape-keypad.py`'s one-line ci-deps change (`kiln-disaster/room.js` -> `escape-rooms/`) is
+2414310. Nothing in main relies on their absence. **Recommendation: discard** (nothing to keep): Jon runs
+`git -C E:/jon/mg-pp-before checkout -- .`, then `git worktree remove E:/jon/mg-pp-before`.
+
 ## 2026-10-15 (home): FACTS-29-35-11-36-49 entry, moved to keep the handover under 20 KB (CI-SLOWDOWN-401)
 
 **FACTS-29-35-11-36-49 (14 Oct, Jon's contract; branch `claude/facts-29-35-11-36-49`).** `verify-facts.py` passes (149 pins), zero KNOWN, self-test plants unchanged and caught. Facts 3, 10, 15, 20, 26, 39, 44, 46, every other fact, FACTS order and length untouched.
