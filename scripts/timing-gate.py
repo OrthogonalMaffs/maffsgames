@@ -140,15 +140,49 @@ def workflow_step(text):
     return "\n".join(l[10:] if l.startswith("          ") else l for l in text[a:b].split("\n"))
 
 
-def run_step(script, checks, timeout_min, age, td, region_url="http://127.0.0.1:9/"):
+# The step reads time twice: bash's $SECONDS for each line and `date +%s` for the group. A self-test on the real clock
+# is racy ($SECONDS counts whole seconds, so `sleep 2` reads as 3 whenever start-up overhead crosses a second; it failed
+# once on main, run 38736408794). So the self-test runs a copy of the step whose clock reads come from a file, and each
+# planted check advances that file by the seconds it is meant to take. The step's logic is the workflow's, unchanged.
+CLOCK_SEAMS = [("start=$SECONDS", 'start=$(cat "$FAKE_CLOCK")', 1),
+               ("took=$((SECONDS - start))", 'took=$(( $(cat "$FAKE_CLOCK") - start ))', 1),
+               ("$(date +%s)", '$(cat "$FAKE_CLOCK")', 2)]
+
+
+def on_fake_clock(script):
+    """The step with its clock reads taken from $FAKE_CLOCK; refuses if the step reads time some other way."""
+    for old, new, n in CLOCK_SEAMS:
+        if script.count(old) != n:
+            raise SystemExit("timing-gate selftest: the step reads time differently (%r appears %d times, expected %d): "
+                             "update CLOCK_SEAMS" % (old, script.count(old), n))
+        script = script.replace(old, new)
+    if re.search(r"\bSECONDS\b|date \+%s", script):
+        raise SystemExit("timing-gate selftest: a clock read is left on the real clock: update CLOCK_SEAMS")
+    return script
+
+
+def takes(seconds):
+    """A planted check that takes `seconds` on the fake clock, instantly on the real one."""
+    return 'echo $(( $(cat "$FAKE_CLOCK") + %d )) > "$FAKE_CLOCK"' % seconds
+
+
+def run_step(script, checks, timeout_min, age, td, region_url="http://127.0.0.1:9/", fake=True):
     scripts = os.path.join(td, "scripts")
     os.makedirs(scripts, exist_ok=True)
     with open(os.path.join(scripts, "ci-timings.json"), "w", encoding="utf-8", newline="") as fh:
         json.dump({"lines": {"Slow verifier": 1, "Fast verifier": 1}}, fh)
     summary = os.path.join(td, "summary.md")
     open(summary, "w", encoding="utf-8", newline="").close()
+    clock = os.path.join(td, "clock")
+    with open(clock, "w", encoding="utf-8", newline="") as fh:
+        fh.write("0\n")
+    if fake:
+        script = on_fake_clock(script)
+        t0 = -age                     # the group started `age` seconds before the fake clock's 0
+    else:
+        t0 = int(time.time()) - age
     env = dict(os.environ, CHECKS=checks, GROUP="Content verifiers 99", TIMEOUT_MIN=str(timeout_min),
-               JOB_T0=str(int(time.time()) - age), RUNNER_TEMP=td, GITHUB_STEP_SUMMARY=summary,
+               JOB_T0=str(t0), RUNNER_TEMP=td, GITHUB_STEP_SUMMARY=summary, FAKE_CLOCK=clock,
                REGION_URL=region_url)
     py = '"%s"' % sys.executable.replace("\\", "/")
     r = subprocess.run(["bash", "-c", script.replace("python3 -c", py + " -c")], cwd=td, env=env, capture_output=True,
@@ -212,7 +246,7 @@ def selftest():
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     url = "http://127.0.0.1:%d/" % srv.server_address[1]
     with tempfile.TemporaryDirectory() as td:
-        code, out, summ = run_step(script, "Slow verifier|sleep 2\nFast verifier|true", 1, 100, td, url)
+        code, out, summ = run_step(script, "Slow verifier|%s\nFast verifier|%s" % (takes(2), takes(0)), 1, 100, td, url)
         check("a planted slow line past the 75% budget leaves the job green (exit 0)", code == 0)
         check("... with a warning annotation in the log, naming the runner region",
               "::warning::time budget (a warning, the job is not failed)" in out and "Slow verifier took 2s in westus3" in out)
@@ -243,17 +277,22 @@ def selftest():
         check("the timing file's lines and medians are untouched by the regions (the packer and median-of-5 read what they did)",
               tm["lines"] == rec["lines"] and set(tm) == {"run", "date", "branch", "event", "setup", "lines", "history"})
     with tempfile.TemporaryDirectory() as td:
-        code, out, summ = run_step(script, "Slow verifier|sleep 2\nFast verifier|true", 1, 100, td)       # the service does not answer
+        code, out, summ = run_step(script, "Slow verifier|%s\nFast verifier|%s" % (takes(2), takes(0)), 1, 100, td)  # the service does not answer
         check("with no answer from the metadata service the region is 'unknown' and the job is unaffected",
               code == 0 and "Slow verifier took 2s in unknown" in out and "Runner region: unknown." in summ)
     srv.shutdown()
     with tempfile.TemporaryDirectory() as td:
-        code, out, summ = run_step(script, "Slow verifier|true", 1, 5, td)
+        code, out, summ = run_step(script, "Slow verifier|%s" % takes(1), 1, 5, td)
         check("inside the budget: green and no warning", code == 0 and "::warning::" not in out and "Over the time budget" not in summ)
     with tempfile.TemporaryDirectory() as td:
-        code, out, summ = run_step(script, "Bad verifier|false\nSlow verifier|true", 1, 100, td)
+        code, out, summ = run_step(script, "Bad verifier|%s; false\nSlow verifier|%s" % (takes(1), takes(1)), 1, 100, td)
         check("a failing check still fails the job, and the checks after it still run",
               code == 1 and "::error::FAILED: Bad verifier" in out and "Slow verifier" in summ)
+    with tempfile.TemporaryDirectory() as td:
+        # The one run of the step on the real clock: it runs and passes. Nothing here depends on how long it takes.
+        code, out, summ = run_step(script, "Fast verifier|true", 1, 0, td, fake=False)
+        check("the real step (real clock) runs a check and exits green, with its summary table",
+              code == 0 and "| Fast verifier | ok |" in summ)
     print("selftest: %s" % ("FAILED: " + ", ".join(fails) if fails else "PASS"))
     return 1 if fails else 0
 
