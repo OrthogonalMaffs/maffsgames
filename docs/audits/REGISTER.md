@@ -24,14 +24,14 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | CRITICAL | 1 | 34 | 0 | 35 |
 | HIGH | 8 | 229 | 0 | 237 |
 | MEDIUM | 175 | 320 | 5 | 500 |
-| LOW | 93 | 238 | 1 | 332 |
-| **All** | 277 | 821 | 6 | 1104 |
+| LOW | 92 | 239 | 1 | 332 |
+| **All** | 276 | 822 | 6 | 1104 |
 
 ### By class
 
 | Class | open | total |
 |---|---|---|
-| NEW:wording | 29 | 128 |
+| NEW:wording | 28 | 128 |
 | 2 | 12 | 111 |
 | NEW:text-contradicts-content | 20 | 90 |
 | 3 | 5 | 86 |
@@ -142,7 +142,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `52dle` | yes | verify-52dle.py | 0 | 1 | 5 | 6 | 4 | 8 | 0 |
 | `angle-ace` | yes | verify-angle-ace.py | 0 | 6 | 7 | 2 | 0 | 15 | 0 |
 | `bearing-blitz` | yes | verify-bearing-blitz.py | 0 | 0 | 3 | 2 | 1 | 4 | 0 |
-| `better-value` | yes | verify-better-value.py | 0 | 5 | 9 | 4 | 5 | 13 | 0 |
+| `better-value` | yes | verify-better-value.py | 0 | 5 | 9 | 4 | 4 | 14 | 0 |
 | `binomial-blaster` | yes | verify-binomial-blaster.py | 2 | 16 | 6 | 4 | 2 | 26 | 0 |
 | `boolean-blitz` | yes | verify-boolean-blitz.py | 0 | 3 | 3 | 8 | 8 | 6 | 0 |
 | `characteristic-quest` | yes | verify-characteristic-quest.py | 0 | 1 | 4 | 5 | 5 | 5 | 0 |
