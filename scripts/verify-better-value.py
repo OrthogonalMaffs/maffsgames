@@ -154,7 +154,7 @@ REVIEW = dict([
       [F(28000, 6), F(28000 * 5, 6), F(28000 * 5, 6 * 12), F(34000, 6), F(34000 * 5, 6), F(34000 * 5, 6 * 12)],
       'Manchester job gives more disposable income', 'gt'),
     # BV-RULINGS (15 Oct 2026): clean 3 of A's 4 weeks and all 6 of B's; cost per clean week
-    r('bv_core_047', [F(9 * 15, 9 * 6), F(13 * 10, 13 * 3)], [9 * 15, 13 * 10, 5, 13 * 3, 9 * 6], 'Cleaner B is better value', 'lt'),
+    r('bv_core_047', [F(9 * 15, 52), F(13 * 10, 13 * 3)], [9 * 15, 13 * 10, 5, 13 * 3, 52, 52 - 13 * 3], 'Cleaner B is better value', 'lt'),
     # BV-RULINGS (15 Oct 2026): a £1,200 repair to her own car this year; A pays the £250 excess, B (TPFT) the whole repair
     r('bv_core_048', [480 + 250, 340 + 1200], [(340 + 1200) - (480 + 250), 480 - 340], 'Insurer A is better value', 'lt'),
     r('bv_core_049', [(20 * 15 + F('180') / F('4.33')) / 40], [20 * 15, F('180') / F('4.33'), 20 * 15 + F('180') / F('4.33')],
