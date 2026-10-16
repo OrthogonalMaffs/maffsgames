@@ -344,15 +344,34 @@ PINS = {
 # Every 'tp' question is checked against the game's fn at both ends of xRange, in the direction its prompt asks,
 # unless the prompt says "local" (an end of the drawn range is not a local maximum or minimum of the function).
 # "first" maximum / minimum: only an end before the keyed point competes. An end within the question's own x
-# tolerance of the key is the keyed point itself. A prompt that asks for neither a maximum, a minimum nor "the
-# turning point" fails: what it asks must be read before it is checked.
+# tolerance of the key is the keyed point itself, and is exempt only where the printed equation is stationary
+# there (f' ~ 0, as cos x at x = 0, AL9; Jon, 16 Oct); a key at an end where the curve is still rising or falling
+# is not a turning point, and fails whatever the prompt says. A prompt that asks for neither a maximum, a minimum
+# nor "the turning point" fails: what it asks must be read before it is checked.
+STATIONARY = 1e-6     # |f'(key x)| at most this times the drawn gradient scale (y span / x span)
+
+
 def check_endpoints(rep, s, fn_vals):
     ends = {x: y for x, y in fn_vals}
     lo, hi = s['xRange']
+    try:
+        var, f = parse_model(s, SPECS.get(s['id'], {}))
+    except Exception:  # noqa: BLE001  (reported by check_scenario)
+        return
+    df = sp.lambdify(var, sp.diff(f, var), 'math')
+    scale = max(1, abs(s['yRange'][1] - s['yRange'][0]) / abs(hi - lo))
     for i, iq in enumerate(s['iqs']):
         if iq['type'] != 'tp':
             continue
         prompt = iq['prompt'].lower()
+        kx, ky = iq['answer']['x'], iq['answer']['y']
+        tol = iq.get('tol', 0.15)
+        at_end = [e for e in (lo, hi) if abs(e - kx) <= tol]
+        if at_end and abs(df(kx)) > STATIONARY * scale:
+            rep.fail(s['id'], 'iq %d endpoint' % i, '%r is keyed (%s, %s), at the end of the range x = %s, where the curve '
+                     'is still %s (gradient %.6g): not a turning point'
+                     % (iq['prompt'], kx, ky, at_end[0], 'rising' if df(kx) > 0 else 'falling', df(kx)))
+            continue
         if re.search(r'\blocal\b', prompt):
             continue
         if 'maximum' in prompt:
@@ -364,8 +383,6 @@ def check_endpoints(rep, s, fn_vals):
         else:
             rep.fail(s['id'], 'iq %d endpoint' % i, 'cannot tell whether %r asks for a maximum or a minimum' % iq['prompt'])
             continue
-        kx, ky = iq['answer']['x'], iq['answer']['y']
-        tol = iq.get('tol', 0.15)
         for e in (lo, hi):
             y = ends.get(e)
             if y is None or abs(e - kx) <= tol or ('first' in prompt and e > kx):
@@ -729,6 +746,14 @@ def selftest(bank, fn_vals, played):
     beat = dict(fn_vals)
     beat['AL12'] = [(x, (al12['iqs'][0]['answer']['y'] + 1) if x == al12['xRange'][1] else y) for x, y in fn_vals['AL12']]
     expect('an end beats the keyed maximum (AL12)', lambda rep: check_bank(rep, bank, beat), 'endpoint')
+    # Jon (16 Oct): a key at an end is exempt only where the curve is stationary; L4_5 keyed at (4, 4), still rising
+    def key_at_rising_end(sc):
+        next(iq for iq in sc['iqs'] if iq['type'] == 'tp')['answer'] = {'x': 4, 'y': 4}
+    expect('a key at an end, curve still rising (L4_5)', lambda rep: check_bank(rep, put_back('L4_5', key_at_rising_end), fn_vals),
+           'still rising')
+    stat = [f for f in base.fails if f.startswith('AL9 ') and 'endpoint' in f]
+    ok = ok and not stat
+    lines.append('  control   %-34s %s' % ("AL9 keyed at x = 0, f' = 0", '*** FLAGGED ***' if stat else 'not flagged'))
     expect('Part 2 #14: CM2 negative-profit key', lambda rep: check_bank(rep, put_back('CM2', old_cm2), fn_vals))
     expect('Part 2 #14: CM4 reaction-time key', lambda rep: check_bank(rep, put_back('CM4', old_cm4), fn_vals))
     expect('Part 2 #14: CM11 one reliability answer', lambda rep: check_bank(rep, put_back('CM11', old_cm11), fn_vals))
