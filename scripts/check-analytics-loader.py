@@ -49,8 +49,9 @@ def published_pages():
 # roll-for-initiative/play.html (DND-ROOM-BUILD, 15 Oct 2026): the new room, live but unlisted for Jon's play-test and
 # Mrs Rogers's preview, with analytics deliberately off so test plays never reach GA4 or the Events sheet. Its entry
 # comes out at release, when play.html becomes index.html with analytics on.
+# big-school-begins/play.html (BSB-ROOM-BUILD, 16 Oct 2026): the same, for Jon's play-test; out at its release.
 WITHDRAWN = {"escape-rooms/it-vengeance/teacher.html", "games/regression-rumble/index.html",
-             "escape-rooms/roll-for-initiative/play.html"}
+             "escape-rooms/roll-for-initiative/play.html", "escape-rooms/big-school-begins/play.html"}
 
 
 def exempt(path, text):

@@ -3327,5 +3327,421 @@
    "rsq": 6,
    "exact": "452.39"
   }
+ ],
+ "school-map-coordinates": [
+  {
+   "x": 3,
+   "y": 7,
+   "answer": 37,
+   "miss": 73
+  },
+  {
+   "x": 6,
+   "y": 2,
+   "answer": 62,
+   "miss": 26
+  },
+  {
+   "x": 8,
+   "y": 4,
+   "answer": 84,
+   "miss": 48
+  },
+  {
+   "x": 2,
+   "y": 9,
+   "answer": 29,
+   "miss": 92
+  },
+  {
+   "x": 4,
+   "y": 6,
+   "answer": 46,
+   "miss": 64
+  },
+  {
+   "x": 9,
+   "y": 3,
+   "answer": 93,
+   "miss": 39
+  },
+  {
+   "x": 7,
+   "y": 1,
+   "answer": 71,
+   "miss": 17
+  },
+  {
+   "x": 6,
+   "y": 8,
+   "answer": 68,
+   "miss": 86
+  },
+  {
+   "x": 2,
+   "y": 4,
+   "answer": 24,
+   "miss": 42
+  },
+  {
+   "x": 4,
+   "y": 9,
+   "answer": 49,
+   "miss": 94
+  }
+ ],
+ "library-compass-turn": [
+  {
+   "from": "south",
+   "to": "west",
+   "steps": 2,
+   "answer": 90,
+   "miss": 270,
+   "fromU": "SOUTH",
+   "toU": "WEST",
+   "whole": 360,
+   "eighth": 45
+  },
+  {
+   "from": "north",
+   "to": "north-west",
+   "steps": 7,
+   "answer": 315,
+   "miss": 45,
+   "fromU": "NORTH",
+   "toU": "NORTH-WEST",
+   "whole": 360,
+   "eighth": 45
+  },
+  {
+   "from": "north-east",
+   "to": "north-west",
+   "steps": 6,
+   "answer": 270,
+   "miss": 90,
+   "fromU": "NORTH-EAST",
+   "toU": "NORTH-WEST",
+   "whole": 360,
+   "eighth": 45
+  },
+  {
+   "from": "east",
+   "to": "south-west",
+   "steps": 3,
+   "answer": 135,
+   "miss": 225,
+   "fromU": "EAST",
+   "toU": "SOUTH-WEST",
+   "whole": 360,
+   "eighth": 45
+  },
+  {
+   "from": "south-east",
+   "to": "north",
+   "steps": 5,
+   "answer": 225,
+   "miss": 135,
+   "fromU": "SOUTH-EAST",
+   "toU": "NORTH",
+   "whole": 360,
+   "eighth": 45
+  },
+  {
+   "from": "south-west",
+   "to": "west",
+   "steps": 1,
+   "answer": 45,
+   "miss": 315,
+   "fromU": "SOUTH-WEST",
+   "toU": "WEST",
+   "whole": 360,
+   "eighth": 45
+  },
+  {
+   "from": "west",
+   "to": "north",
+   "steps": 2,
+   "answer": 90,
+   "miss": 270,
+   "fromU": "WEST",
+   "toU": "NORTH",
+   "whole": 360,
+   "eighth": 45
+  },
+  {
+   "from": "north-west",
+   "to": "south-west",
+   "steps": 6,
+   "answer": 270,
+   "miss": 90,
+   "fromU": "NORTH-WEST",
+   "toU": "SOUTH-WEST",
+   "whole": 360,
+   "eighth": 45
+  }
+ ],
+ "taster-lesson-end-time": [
+  {
+   "hh": 10,
+   "mm": 35,
+   "m": 55,
+   "answer": 1130,
+   "miss": 1090,
+   "start": "10:35",
+   "end": "11:30",
+   "next": "11:00",
+   "tohour": 25,
+   "rest": 30,
+   "hourmins": 60
+  },
+  {
+   "hh": 10,
+   "mm": 15,
+   "m": 50,
+   "answer": 1105,
+   "miss": 1065,
+   "start": "10:15",
+   "end": "11:05",
+   "next": "11:00",
+   "tohour": 45,
+   "rest": 5,
+   "hourmins": 60
+  },
+  {
+   "hh": 10,
+   "mm": 25,
+   "m": 45,
+   "answer": 1110,
+   "miss": 1070,
+   "start": "10:25",
+   "end": "11:10",
+   "next": "11:00",
+   "tohour": 35,
+   "rest": 10,
+   "hourmins": 60
+  },
+  {
+   "hh": 11,
+   "mm": 25,
+   "m": 45,
+   "answer": 1210,
+   "miss": 1170,
+   "start": "11:25",
+   "end": "12:10",
+   "next": "12:00",
+   "tohour": 35,
+   "rest": 10,
+   "hourmins": 60
+  },
+  {
+   "hh": 11,
+   "mm": 20,
+   "m": 45,
+   "answer": 1205,
+   "miss": 1165,
+   "start": "11:20",
+   "end": "12:05",
+   "next": "12:00",
+   "tohour": 40,
+   "rest": 5,
+   "hourmins": 60
+  },
+  {
+   "hh": 11,
+   "mm": 30,
+   "m": 50,
+   "answer": 1220,
+   "miss": 1180,
+   "start": "11:30",
+   "end": "12:20",
+   "next": "12:00",
+   "tohour": 30,
+   "rest": 20,
+   "hourmins": 60
+  },
+  {
+   "hh": 11,
+   "mm": 5,
+   "m": 55,
+   "answer": 1200,
+   "miss": 1160,
+   "start": "11:05",
+   "end": "12:00",
+   "next": "12:00",
+   "tohour": 55,
+   "rest": 0,
+   "hourmins": 60
+  },
+  {
+   "hh": 10,
+   "mm": 20,
+   "m": 55,
+   "answer": 1115,
+   "miss": 1075,
+   "start": "10:20",
+   "end": "11:15",
+   "next": "11:00",
+   "tohour": 40,
+   "rest": 15,
+   "hourmins": 60
+  },
+  {
+   "hh": 10,
+   "mm": 30,
+   "m": 50,
+   "answer": 1120,
+   "miss": 1080,
+   "start": "10:30",
+   "end": "11:20",
+   "next": "11:00",
+   "tohour": 30,
+   "rest": 20,
+   "hourmins": 60
+  },
+  {
+   "hh": 10,
+   "mm": 40,
+   "m": 55,
+   "answer": 1135,
+   "miss": 1095,
+   "start": "10:40",
+   "end": "11:35",
+   "next": "11:00",
+   "tohour": 20,
+   "rest": 35,
+   "hourmins": 60
+  }
+ ],
+ "lunch-card-change": [
+  {
+   "card": 500,
+   "answer": 135,
+   "miss": 265,
+   "i1": "a pasta pot",
+   "p1": "&pound;1.85",
+   "i2": "a fruit cup",
+   "p2": "60p",
+   "i3": "a carton of milk",
+   "p3": "&pound;1.20",
+   "total": 365,
+   "totalP": "&pound;3.65"
+  },
+  {
+   "card": 500,
+   "answer": 255,
+   "miss": 345,
+   "i1": "a sandwich",
+   "p1": "&pound;1.75",
+   "i2": "an apple",
+   "p2": "40p",
+   "i3": "a bottle of water",
+   "p3": "30p",
+   "total": 245,
+   "totalP": "&pound;2.45"
+  },
+  {
+   "card": 500,
+   "answer": 85,
+   "miss": 115,
+   "i1": "a slice of pizza",
+   "p1": "&pound;2.10",
+   "i2": "a smoothie",
+   "p2": "&pound;1.35",
+   "i3": "a cookie",
+   "p3": "70p",
+   "total": 415,
+   "totalP": "&pound;4.15"
+  },
+  {
+   "card": 500,
+   "answer": 175,
+   "miss": 225,
+   "i1": "a jacket potato",
+   "p1": "&pound;1.90",
+   "i2": "a yoghurt",
+   "p2": "85p",
+   "i3": "a carton of apple juice",
+   "p3": "50p",
+   "total": 325,
+   "totalP": "&pound;3.25"
+  },
+  {
+   "card": 500,
+   "answer": 215,
+   "miss": 385,
+   "i1": "a bowl of soup",
+   "p1": "&pound;1.55",
+   "i2": "a bread roll",
+   "p2": "40p",
+   "i3": "a rice pudding",
+   "p3": "90p",
+   "total": 285,
+   "totalP": "&pound;2.85"
+  },
+  {
+   "card": 500,
+   "answer": 65,
+   "miss": 135,
+   "i1": "a hot dinner",
+   "p1": "&pound;2.45",
+   "i2": "a flapjack",
+   "p2": "80p",
+   "i3": "a milkshake",
+   "p3": "&pound;1.10",
+   "total": 435,
+   "totalP": "&pound;4.35"
+  },
+  {
+   "card": 500,
+   "answer": 125,
+   "miss": 275,
+   "i1": "a wrap",
+   "p1": "&pound;2.05",
+   "i2": "a bag of crisps",
+   "p2": "55p",
+   "i3": "a carton of orange juice",
+   "p3": "&pound;1.15",
+   "total": 375,
+   "totalP": "&pound;3.75"
+  },
+  {
+   "card": 500,
+   "answer": 235,
+   "miss": 365,
+   "i1": "a cheese toastie",
+   "p1": "&pound;1.50",
+   "i2": "a carton of squash",
+   "p2": "70p",
+   "i3": "a biscuit",
+   "p3": "45p",
+   "total": 265,
+   "totalP": "&pound;2.65"
+  },
+  {
+   "card": 500,
+   "answer": 105,
+   "miss": 295,
+   "i1": "a plate of curry and rice",
+   "p1": "&pound;2.25",
+   "i2": "a piece of garlic bread",
+   "p2": "60p",
+   "i3": "a carton of fruit juice",
+   "p3": "&pound;1.10",
+   "total": 395,
+   "totalP": "&pound;3.95"
+  },
+  {
+   "card": 500,
+   "answer": 275,
+   "miss": 325,
+   "i1": "a pasta bake",
+   "p1": "&pound;1.40",
+   "i2": "a salad pot",
+   "p2": "50p",
+   "i3": "a banana",
+   "p3": "35p",
+   "total": 225,
+   "totalP": "&pound;2.25"
+  }
  ]
 }

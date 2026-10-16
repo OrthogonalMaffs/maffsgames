@@ -1,0 +1,66 @@
+Batch 12 - Jon and Project Claude, 2026-10-16 (contract BSB-ROOM-BUILD; the four locks were drafted in
+docs/escape-room-drafts/big-school-begins-draft.md, merged in #422, and approved by Jon with rulings on 16 Oct).
+Four locks, for Big School Begins, a new Warm-up room for the transition day (four locks and a twenty-minute clock
+are this room's named exceptions, Jon's ruling 1). Hints are not held here; like batches 3-11 they live in the
+room's room.js.
+Notes on format, not touching the mathematics:
+  * The three keypads use the keypad's maxDigits mode: the map up to two digits, the lesson up to four, the lunch
+    card up to three (so the two-digit answers 85 and 65 in its library are typed as they are).
+  * The dial is a full turn (sweep: 360, max 360), so the needle points the way the turn goes.
+  * The CLUE lines quote each lock's variant 0. In the room every figure is a token.
+  * The lesson lengths are 45, 50 or 55 minutes only (Jon's ruling 7, 16 Oct 2026).
+  * The lunch card's five pounds is written in words in the room, so it is not a clue figure. Its clue figures,
+    for the room's set checks, are every price as printed and in pence (draft item 16).
+  * No TIME is given: per-lock minutes are set after a play-through (the draft's teacher-page note).
+
+
+Room N - Big School Begins (Year 6)
+===================================
+
+ID:          school-map-coordinates
+LEVEL:       Year 6
+TOPIC:       Geometry / Coordinates in the first quadrant
+INSTRUMENT:  Keypad, up to two digits (maxDigits 2): the coordinates as a code, no brackets, no comma.
+CONTEXT:     On the school map the grid lines are numbered along the bottom and up the side. The library is drawn where grid line 7 up crosses grid line 3 along. Write its coordinates as a code, with no brackets and no comma.
+CLUE:        "The library is the little open book, drawn where two grid lines cross: 7 up and 3 along."
+ANSWER:      37
+AHA:         Coordinates go across first, then up: (3, 7). The map gives "up" first on purpose, so the order has to come from the convention, not from the clue.
+MISCONCEPTION: 73 (the coordinates read in the order the map gives them, up then along: (7, 3)).
+SOLVE:       Along 3, up 7: (3, 7), code 37.
+VERIFY:      [n for n in range(100) if n // 10 == 3 and n % 10 == 7]
+
+ID:          library-compass-turn
+LEVEL:       Year 6
+TOPIC:       Geometry / Turns and compass directions
+INSTRUMENT:  Dial 0 to 360 degrees, step 45, full turn (sweep 360): the clockwise turn.
+CONTEXT:     The compass rose has eight points: north, north-east, east, south-east, south, south-west, west, north-west, clockwise. You face south. Your next stop is west. Turn clockwise. How many degrees do you turn?
+CLUE:        "North at the top and then, going round clockwise, north-east, east, south-east, south, south-west, west and north-west." / "FACE SOUTH. YOUR NEXT STOP IS WEST. TURN CLOCKWISE."
+ANSWER:      90
+AHA:         South to south-west to west is two steps clockwise, and each step between compass points is 45 degrees.
+MISCONCEPTION: 270 (the turn anticlockwise, the other way round: 360 - 90).
+SOLVE:       South to west clockwise is 2 steps; 2 x 45 = 90 degrees.
+VERIFY:      [n for n in range(0, 361, 45) if (4 + n // 45) % 8 == 6]
+
+ID:          taster-lesson-end-time
+LEVEL:       Year 6
+TOPIC:       Measures / Time: durations across the hour on the 24-hour clock
+INSTRUMENT:  Keypad, up to four digits (maxDigits 4): the end time on the 24-hour clock, no colon.
+CONTEXT:     A taster lesson starts at 10:35 and lasts 55 minutes. When does it end? Type the four digits of the time on the 24-hour clock, without the colon.
+CLUE:        "TASTER LESSON: SCIENCE. Starts at 10:35. Lasts 55 minutes."
+ANSWER:      1130
+AHA:         An hour has 60 minutes, not 100. Count on 25 minutes to 11:00, then the 30 minutes left: 11:30.
+MISCONCEPTION: 1090 (the start read as the number 1035 with 55 added: a time that cannot exist).
+SOLVE:       10:35 to 11:00 is 25 minutes; 55 - 25 = 30; 11:30, typed 1130.
+VERIFY:      [n for n in range(10000) if n % 100 < 60 and (n // 100) * 60 + n % 100 == 10 * 60 + 35 + 55]
+
+ID:          lunch-card-change
+LEVEL:       Year 6
+TOPIC:       Number / Money: subtraction with exchanges across zeros
+INSTRUMENT:  Keypad, up to three digits (maxDigits 3): what is left on the card, in pence.
+CONTEXT:     A lunch card is topped up with five pounds. Lunch is a pasta pot at £1.85, a fruit cup at 60p and a carton of milk at £1.20. The till keeps the rest on the card. How much is left on the card, in pence?
+CLUE:        "On the tray: a pasta pot, £1.85; a fruit cup, 60p; and a carton of milk, £1.20." / "LUNCH CARD. Topped up this morning with five pounds."
+ANSWER:      135
+AHA:         185 + 60 + 120 = 365 pence. 500 - 365 needs an exchange in the tens and the units, because the top number has nothing in either.
+MISCONCEPTION: 265 (smaller from larger in every column: 5 - 3 = 2, 6 - 0 = 6, 5 - 0 = 5).
+SOLVE:       185 + 60 + 120 = 365p; 500 - 365 = 135p.
+VERIFY:      [n for n in range(1000) if n + 185 + 60 + 120 == 500]

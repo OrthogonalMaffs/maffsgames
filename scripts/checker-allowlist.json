@@ -1654,6 +1654,13 @@
   ],
   "tier1_phone_overflow": [
     {
+      "path": "escape-rooms/big-school-begins/teacher.html",
+      "at": "load",
+      "width": 555,
+      "todo": "§1.37",
+      "where": "table.tt; table.tt"
+    },
+    {
       "path": "escape-rooms/canteen-hack/teacher.html",
       "at": "load",
       "width": 617,

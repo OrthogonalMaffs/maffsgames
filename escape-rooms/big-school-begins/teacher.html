@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Teacher page for Big School Begins escape room: answers, hint ladder, misconceptions and timings.">
+<title>Big School Begins — teacher page — MaffsGames</title>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/engine.css">
+<!--
+  Written 2026-10-16 for the new room (contract BSB-ROOM-BUILD): the real teacher page, noindex and unlinked
+  until release. The room itself is live but unlisted at play.html; index.html is the holding page. Per-lock
+  minutes are not given: they are set after a play-through (the draft's teacher-page note).
+-->
+</head>
+<body>
+<button class="a11y-toggle" onclick="toggleAa()" aria-label="Toggle easier-reading text">Aa</button>
+<div class="wrap">
+  <a class="back-link" href="../">&larr; All escape rooms</a>
+  <div id="app"></div>
+</div>
+<script src="room.js"></script>
+<!-- clueMap labels carry NO figures on purpose: teacher.js does not pass them
+     through fill(), so a number here would disagree with the drawn variant
+     (see docs/escape-room-voice-rewrite.md §8). Keys are room.js object ids. -->
+<script>
+window.TEACH = {
+  "lockMeta": [
+    {
+      "topic": "Coordinates in the first quadrant",
+      "curriculum": "Geometry &mdash; position: naming the point where two grid lines cross by its coordinates, across first, then up."
+    },
+    {
+      "topic": "Turns and compass directions",
+      "curriculum": "Geometry &mdash; turns in degrees on an eight-point compass: each step between neighbouring points is 45&deg;, and clockwise is the way a clock&rsquo;s hands go."
+    },
+    {
+      "topic": "Time: durations across the hour",
+      "curriculum": "Measures &mdash; adding a length of time in minutes to a start time on the 24-hour clock, across the hour: an hour is 60 minutes, not 100."
+    },
+    {
+      "topic": "Money: change with exchanges",
+      "curriculum": "Number &mdash; adding three prices in pounds and pence, then taking the total from five pounds in pence, exchanging across the zeros."
+    }
+  ],
+  "clueMap": {
+    "map": "The hall map &mdash; where the library is, up and along",
+    "rose": "Bibby&rsquo;s directions &mdash; the eight compass points, in order",
+    "bibby-card": "Bibby&rsquo;s directions &mdash; which way to face, where the next stop is",
+    "timetable": "William&rsquo;s lesson &mdash; when it starts and how long it lasts",
+    "tray": "The lunch card &mdash; the three prices",
+    "lunch-card": "The lunch card &mdash; what is on it"
+  },
+  "notes": "<p class='lede'>A Warm-up room: four short locks on a twenty-minute clock. <b>No calculator is needed</b>: every lock is mental or written arithmetic, and every price is a multiple of 5p.</p><p class='lede'>The four cards can be done in any order. Each lock is built around one named mistake: the coordinates read up before along; the turn made anticlockwise; an hour treated as a hundred minutes; and the smaller digit taken from the larger in every column. A group that makes that mistake gets Daisy&rsquo;s response, her own memory of making it, never the answer. Each hint ladder is general: every group sees the same three hints, and none assumes a particular mistake.</p><p class='lede'>At time-out the end screen shows every lock&rsquo;s solution. For a second attempt, press Play again for fresh numbers.</p>"
+};
+</script>
+<script src="../assets/rating.js"></script>
+<script src="../assets/teacher.js"></script>
+</body>
+</html>

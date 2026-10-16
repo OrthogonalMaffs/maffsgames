@@ -27,7 +27,7 @@ import json, math, pathlib, random
 from fractions import Fraction
 from math import gcd, factorial
 
-from escape_set_checks import LOCKS, check, is_prime, factor_count, prime_count
+from escape_set_checks import COMPASS, LOCKS, check, is_prime, factor_count, pence, prime_count
 
 ROOMS = pathlib.Path(__file__).resolve().parent.parent / "escape-rooms"
 OUT = ROOMS / "variants.json"
@@ -840,6 +840,92 @@ for r in [6, 4, 8, 10, 12]:
     keep(store, "fireball-circle-area", {"r": r, "answer": a_pi, "miss": math.floor(2 * math.pi * r + 0.5)}, minsep=1e-9)
 V["fireball-circle-area"] = store
 
+# ---------------------------------------------------- O1 (2026-10) coordinates, first quadrant (keypad, maxDigits 2)
+# Big School Begins, the hall map (contract BSB-ROOM-BUILD; bank batch 12). The library is drawn where grid line x
+# along crosses grid line y up; the code is x then y. Misconception: y then x (the map gives "up" before "along" on
+# purpose, draft item 14). The draft's rules: x and y 1-9, x != y; no 5 in either and no x of 1, so no answer or
+# misconception ends in 0 or 5 or falls in lock C's hours; no two sets each other's reversal. The library is the
+# draft's ten sets, in its order (variant 0 is the draft's 37).
+store = []
+for x, y in [(3, 7), (6, 2), (8, 4), (2, 9), (4, 6), (9, 3), (7, 1), (6, 8), (2, 4), (4, 9)]:
+    if not (1 <= x <= 9 and 1 <= y <= 9) or x == y or 5 in (x, y) or x == 1:
+        continue
+    if any((v["x"], v["y"]) == (y, x) for v in store):
+        continue
+    keep(store, "school-map-coordinates", {"x": x, "y": y, "answer": 10 * x + y, "miss": 10 * y + x}, minsep=1e-9)
+V["school-map-coordinates"] = store
+
+# ---------------------------------------------------- O2 (2026-10) turns in eighths (dial 0-360 by 45, sweep 360)
+# Big School Begins, Bibby's directions. Face `from`, turn clockwise to `to`: answer = the clockwise steps round the
+# eight-point rose x 45. Misconception: the anticlockwise turn, 360 - answer. The draft's rules: never 180 (the two
+# directions agree); every point the start once. Only six answers exist, so answers repeat from different starting
+# points and spread is off (minsep 1e-9; the Library Jam lock-A precedent). The library is the draft's eight.
+store = []
+for frm, to in [("south", "west"), ("north", "north-west"), ("north-east", "north-west"), ("east", "south-west"),
+                ("south-east", "north"), ("south-west", "west"), ("west", "north"), ("north-west", "south-west")]:
+    steps = (COMPASS.index(to) - COMPASS.index(frm)) % 8
+    if steps in (0, 4) or any(v["from"] == frm for v in store):
+        continue
+    keep(store, "library-compass-turn", {"from": frm, "to": to, "steps": steps, "answer": 45 * steps,
+                                         "miss": 360 - 45 * steps}, minsep=1e-9)
+V["library-compass-turn"] = store
+
+# ---------------------------------------------------- O3 (2026-10) durations across the hour (keypad, maxDigits 4)
+# Big School Begins, William's lesson. A lesson starting hh:mm and lasting m minutes ends at the time typed as four
+# digits, no colon. Misconception: the start read as a number plus m (1035 + 55 = 1090), a time that cannot exist.
+# The rules (the draft's, with Jon's ruling 7 of 16 Oct 2026): start 10:00-11:30 in fives (before the lunch bell
+# that ends the hunt); m is 45, 50 or 55; the lesson crosses exactly one hour and mm + m stays under 100, so the
+# misconception always has more than fifty-nine minutes and is the answer less 40. Sets 0, 1, 4, 5 and 6 are the
+# draft's; sets 2, 3, 7, 8 and 9 replace its 35-, 65- and 70-minute lessons (ruling 7), chosen for distinct start
+# times and a spread of lengths. All ten answers distinct (minsep 1). Variant 0 is Jon's example, 10:35 + 55.
+store = []
+for hh, mm, m in [(10, 35, 55), (10, 15, 50), (10, 25, 45), (11, 25, 45), (11, 20, 45), (11, 30, 50), (11, 5, 55),
+                  (10, 20, 55), (10, 30, 50), (10, 40, 55)]:
+    if m not in (45, 50, 55) or mm % 5 or not (10 * 60 <= hh * 60 + mm <= 11 * 60 + 30):
+        continue
+    if not 60 <= mm + m < 100:
+        continue
+    end = hh * 60 + mm + m
+    keep(store, "taster-lesson-end-time", {"hh": hh, "mm": mm, "m": m, "answer": 100 * (end // 60) + end % 60,
+                                           "miss": 100 * hh + mm + m}, minsep=1)
+V["taster-lesson-end-time"] = store
+
+# ---------------------------------------------------- O4 (2026-10) change with exchanges (keypad, maxDigits 3)
+# Big School Begins, the lunch card. Three prices off a card of five pounds: answer = 500 - total, in pence.
+# Misconception: smaller from larger in every column of 500 - total. The draft's rules: prices in multiples of 5p;
+# total 200-450 with units digit 5 and a non-zero tens digit (both columns exchange, and the misconception is never
+# the answer); prices of a pound or more printed in pounds, under a pound in pence; no price, in pence, equal to its
+# set's answer (the solver's clue figures carry every price in pence too, draft item 16); no item priced twice
+# across the library. The library is the draft's ten trays, in its order (variant 0 is Jon's total, 365).
+def price(p):
+    return f"&pound;{p // 100}.{p % 100:02d}" if p >= 100 else f"{p}p"
+
+
+store = []
+for tray in [(("a pasta pot", 185), ("a fruit cup", 60), ("a carton of milk", 120)),
+             (("a sandwich", 175), ("an apple", 40), ("a bottle of water", 30)),
+             (("a slice of pizza", 210), ("a smoothie", 135), ("a cookie", 70)),
+             (("a jacket potato", 190), ("a yoghurt", 85), ("a carton of apple juice", 50)),
+             (("a bowl of soup", 155), ("a bread roll", 40), ("a rice pudding", 90)),
+             (("a hot dinner", 245), ("a flapjack", 80), ("a milkshake", 110)),
+             (("a wrap", 205), ("a bag of crisps", 55), ("a carton of orange juice", 115)),
+             (("a cheese toastie", 150), ("a carton of squash", 70), ("a biscuit", 45)),
+             (("a plate of curry and rice", 225), ("a piece of garlic bread", 60), ("a carton of fruit juice", 110)),
+             (("a pasta bake", 140), ("a salad pot", 50), ("a banana", 35))]:
+    total = sum(p for _, p in tray)
+    if any(p % 5 for _, p in tray) or not (200 <= total <= 450 and total % 10 == 5 and total // 10 % 10):
+        continue
+    names = [i for i, _ in tray]
+    if any(i in (v[k] for v in store for k in ("i1", "i2", "i3")) for i in names):
+        continue
+    var = {"card": 500, "answer": 500 - total,
+           "miss": 100 * (5 - total // 100) + 10 * (total // 10 % 10) + total % 10}
+    for n, (item, p) in enumerate(tray, 1):
+        var[f"i{n}"], var[f"p{n}"] = item, price(p)
+    assert sum(pence(var[k]) for k in ("p1", "p2", "p3")) == total
+    keep(store, "lunch-card-change", var, minsep=1)
+V["lunch-card-change"] = store
+
 # ------------------------------------------------- derived tokens
 # Values the prose wants to quote but that are not parameters: a squared
 # radius, a reduced fraction, a prime factorisation. Deriving them here keeps
@@ -981,6 +1067,21 @@ for v in V["fortress-plan-scale"]:
 for v in V["fireball-circle-area"]:
     v["rsq"] = v["r"] // 2
     v["exact"] = f"{math.pi * v['r'] ** 2:.2f}"
+# big-school-begins: the card's capitals, the rose's constants, the lesson's times and jumps, the tray's total
+for v in V["library-compass-turn"]:
+    v["fromU"], v["toU"] = v["from"].upper(), v["to"].upper()
+    v["whole"], v["eighth"] = 360, 45
+for v in V["taster-lesson-end-time"]:
+    end = v["hh"] * 60 + v["mm"] + v["m"]
+    v["start"] = f"{v['hh']}:{v['mm']:02d}"
+    v["end"] = f"{end // 60}:{end % 60:02d}"
+    v["next"] = f"{v['hh'] + 1}:00"
+    v["tohour"] = 60 - v["mm"]
+    v["rest"] = v["mm"] + v["m"] - 60
+    v["hourmins"] = 60
+for v in V["lunch-card-change"]:
+    v["total"] = v["card"] - v["answer"]
+    v["totalP"] = price(v["total"])
 
 # ------------------------------------------------- display tokens
 # Instruments that read to one decimal place need their numbers written the
