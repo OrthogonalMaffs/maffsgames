@@ -536,7 +536,7 @@ level4:[
    tableX:[0,0.5,1,1.5,2,2.5,3,3.5,4],given:{0:0,3:0,4:4},answers:{0.5:3.125,1:4,1.5:3.375,2:2,2.5:0.625,3.5:0.875},
    iqs:[
      {type:'roots',prompt:'Write down the x-values where deflection is zero.',answers:[0,3],tol:0.1},
-     {type:'tp',prompt:'Write down the coordinates of maximum deflection.',answer:{x:1,y:4},tol:0.15}
+     {type:'tp',prompt:'Write down the coordinates of the local maximum.',answer:{x:1,y:4},tol:0.15}
    ]},
   {id:'L4_6',eqLatex:'A = 5e^{-0.3t}',context:'Damped oscillation amplitude envelope (mm). t = seconds.',
    fn:t=>5*Math.exp(-0.3*t),xRange:[0,10],yRange:[0,6],xLabel:'t (s)',yLabel:'A (mm)',
