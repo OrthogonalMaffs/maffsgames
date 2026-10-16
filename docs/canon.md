@@ -2008,9 +2008,9 @@ Narrative maths escape rooms at `/escape-rooms/`. Started 2026-08-26; reference 
 **Unlock!**. **Under 15 minutes each** — built to end a lesson, not fill one, and to be played by three or
 four students round one screen. Not counted in the 96 live games.
 
-## 11.1 Current state — 10 October 2026
+## 11.1 Current state — 16 October 2026
 
-**Eleven rooms live, one withdrawn.** The site ships a room as its voice rewrite finishes (§11.5).
+**Twelve rooms live, one withdrawn.** The site ships a room as its voice rewrite finishes (§11.5).
 
 | Room | Slug | Level | Antagonist | State |
 | --- | --- | --- | --- | --- |
@@ -2025,6 +2025,7 @@ four students round one screen. Not counted in the 96 live games.
 | The Headteacher's Car Trap | `car-trap` | GCSE / Core | Mr Strictman, the deputy head | **Live** (10/10/2026, rewritten; ★★) |
 | The Rightful King | `rightful-king` | GCSE Higher | — (Mr Brian Narry, IT, is an ally; the bully is offstage and unnamed) | **Live** (10/10/2026; ★★★) |
 | The Library Jam | `library-jam` | GCSE Foundation | — (Mrs Barb Phile, "Bibby", the librarian, is stern, never a villain; the clock is the fines email) | **Live** (10/10/2026; ★) |
+| Roll for Initiative | `roll-for-initiative` | GCSE | Commandant Strictmane (invented; Mr Strictman cameos, never speaks). Built from Mrs Rogers's idea; she is credited | **Live** (16/10/2026; ★★) |
 | The IT Teacher's Vengeance | `it-vengeance` | GCSE Higher | — | Withdrawn (its URL redirects to The Rightful King) |
 
 Two further rooms, **A (Coach Trip Hijack) and B (Tuck Shop Heist)**, are narratives only. Their locks were
