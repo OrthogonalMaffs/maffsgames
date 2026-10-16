@@ -89,9 +89,12 @@ findings:
     (the contract: a drafted wording that proves wrong on checking is reported, not rewritten): "the turning
     point" is ambiguous for L4_5, because y = x^3 - 6x^2 + 9x has two turning points on 0 <= x <= 4, (1, 4) a
     local maximum and (3, 0) a local minimum, and the key is (1, 4). Proposed for Jon: "the local maximum" (it
-    excludes the endpoint (4, 4) and names the key).'
+    excludes the endpoint (4, 4) and names the key). Fixed in #420 (GS-L4-5-ENDPOINT, Jon''s ruling 16 Oct): the
+    prompt is "Write down the coordinates of the local maximum.", key (1, 4) unchanged; the verifier now fails
+    any turning-point key that an end of its range ties with or beats, unless the prompt says "local".'
   evidence: 'Items as quoted (SWEEP-1, batch 10)'
-  status: open
+  status: fixed
+  pr: 420
 - id: graph-sketcher-s1-009
   severity: HIGH
   jc: true

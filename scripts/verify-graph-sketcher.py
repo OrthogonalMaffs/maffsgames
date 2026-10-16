@@ -15,6 +15,9 @@ so), and then
     the prompt asks (evaluate, solve, maximum, roots, turning point, gradient), and the
     key must be that value correctly rounded at the precision it is stored to. A turning
     point checks both coordinates; a roots key must list exactly the roots asked for.
+  - every turning-point question that asks for the maximum or the minimum (not "local") is checked against the
+    game's fn at both ends of its range: an end that ties with or beats the keyed point is a second right answer
+    (GS-L4-5-ENDPOINT, graph-sketcher-s1-006).
 
 The marking is then played in the page through the game's own functions (SWEEP-1, graph-sketcher-s1-001,
 s1-002): every table cell typed with the true value at the table's precision (exact where every value is
@@ -24,8 +27,9 @@ with the true value is marked correct; roots with an extra value, and a turning 
 of its axis (graph readings, canon 7.1.2: 2.5% of the axis), are not.
 
 A fault-injection self-test (a wrong cell, a wrong given value, a wrong reading key, a
-graph that disagrees with its equation, a reworded prompt, and the old cell band, extra-root
-acceptance and turning-point y band played in the page) must FAIL each time; it runs
+graph that disagrees with its equation, a reworded prompt, L4_5's old "maximum" prompt and an end
+that beats a keyed maximum, and the old cell band, extra-root acceptance and turning-point y band
+played in the page) must FAIL each time; it runs
 unless --no-selftest.
 
     python scripts/verify-graph-sketcher.py [--verbose] [--no-selftest]
@@ -157,7 +161,7 @@ SPECS = {
     'L4_2': dict(iq={0: ('solve', 6, 'V reach 6V')}),
     'L4_3': dict(iq={0: ('tp', 'firstmax', 'first maximum')}),
     'L4_4': dict(iq={0: ('solve', 50, 'resistance is 50')}),
-    'L4_5': dict(iq={0: ('roots', None, 'deflection is zero'), 1: ('tp', 'max', 'maximum deflection')}),
+    'L4_5': dict(iq={0: ('roots', None, 'deflection is zero'), 1: ('tp', 'localmax', 'local maximum')}),   # s1-006 (16 Oct)
     'L4_6': dict(iq={1: ('eval', 5, 'A when t = 5')}),
     'L4_7': dict(iq={0: ('tp', 'max', 'maximum height'), 1: ('rootpos', None, 'time of flight')}),
     'L4_8': dict(iq={0: ('max', None, 'maximum displacement')}),
@@ -335,6 +339,60 @@ PINS = {
 }
 
 
+# GS-L4-5-ENDPOINT (16 Oct 2026; graph-sketcher-s1-006): a turning-point question that asks for the maximum or the
+# minimum on the drawn range has a second right answer when an end of that range ties with or beats the keyed point.
+# Every 'tp' question is checked against the game's fn at both ends of xRange, in the direction its prompt asks,
+# unless the prompt says "local" (an end of the drawn range is not a local maximum or minimum of the function).
+# "first" maximum / minimum: only an end before the keyed point competes. An end within the question's own x
+# tolerance of the key is the keyed point itself, and is exempt only where the printed equation is stationary
+# there (f' ~ 0, as cos x at x = 0, AL9; Jon, 16 Oct); a key at an end where the curve is still rising or falling
+# is not a turning point, and fails whatever the prompt says. A prompt that asks for neither a maximum, a minimum
+# nor "the turning point" fails: what it asks must be read before it is checked.
+STATIONARY = 1e-6     # |f'(key x)| at most this times the drawn gradient scale (y span / x span)
+
+
+def check_endpoints(rep, s, fn_vals):
+    ends = {x: y for x, y in fn_vals}
+    lo, hi = s['xRange']
+    try:
+        var, f = parse_model(s, SPECS.get(s['id'], {}))
+    except Exception:  # noqa: BLE001  (reported by check_scenario)
+        return
+    df = sp.lambdify(var, sp.diff(f, var), 'math')
+    scale = max(1, abs(s['yRange'][1] - s['yRange'][0]) / abs(hi - lo))
+    for i, iq in enumerate(s['iqs']):
+        if iq['type'] != 'tp':
+            continue
+        prompt = iq['prompt'].lower()
+        kx, ky = iq['answer']['x'], iq['answer']['y']
+        tol = iq.get('tol', 0.15)
+        at_end = [e for e in (lo, hi) if abs(e - kx) <= tol]
+        if at_end and abs(df(kx)) > STATIONARY * scale:
+            rep.fail(s['id'], 'iq %d endpoint' % i, '%r is keyed (%s, %s), at the end of the range x = %s, where the curve '
+                     'is still %s (gradient %.6g): not a turning point'
+                     % (iq['prompt'], kx, ky, at_end[0], 'rising' if df(kx) > 0 else 'falling', df(kx)))
+            continue
+        if re.search(r'\blocal\b', prompt):
+            continue
+        if 'maximum' in prompt:
+            sign = 1
+        elif 'minimum' in prompt:
+            sign = -1
+        elif 'turning point' in prompt:
+            continue                    # an end of the range is not a turning point
+        else:
+            rep.fail(s['id'], 'iq %d endpoint' % i, 'cannot tell whether %r asks for a maximum or a minimum' % iq['prompt'])
+            continue
+        for e in (lo, hi):
+            y = ends.get(e)
+            if y is None or abs(e - kx) <= tol or ('first' in prompt and e > kx):
+                continue
+            if sign * (y - ky) >= -1e-9 * max(1, abs(ky)):
+                rep.fail(s['id'], 'iq %d endpoint' % i, '%r is keyed (%s, %s), but the end of the range (%s, %.6g) %s it: '
+                         'two right answers (say "local", or move the range)'
+                         % (iq['prompt'], kx, ky, e, y, 'ties with' if abs(y - ky) <= 1e-9 * max(1, abs(ky)) else 'beats'))
+
+
 def check_scenario(rep, s, fn_vals, verbose=False):
     sid = s['id']
     spec = SPECS.get(sid, {})
@@ -420,6 +478,7 @@ def check_bank(rep, bank, fn_vals, verbose=False):
             rep.fail(sid, 'spec', 'no scenario with this id any more')
     for s in scenarios:
         check_scenario(rep, s, fn_vals.get(s['id'], []), verbose)
+        check_endpoints(rep, s, fn_vals.get(s['id'], []))
     return scenarios
 
 
@@ -593,11 +652,11 @@ def selftest(bank, fn_vals, played):
     check_played(base, check_bank(base, bank, fn_vals), played)
     clean = [s for lvl in bank.values() for s in lvl if not any(f.startswith(s['id'] + ' ') for f in base.fails)]
 
-    def expect(name, fn):
+    def expect(name, fn, want=None):
         nonlocal ok
         rep = Report()
         fn(rep)
-        rep.fails = [f for f in rep.fails if f not in base.fails]
+        rep.fails = [f for f in rep.fails if f not in base.fails and (want is None or want in f)]
         caught = bool(rep.fails)
         ok = ok and caught
         lines.append('  self-test %-34s %s' % (name, ('caught: ' + rep.fails[0][:110]) if caught else '*** MISSED ***'))
@@ -679,6 +738,22 @@ def selftest(bank, fn_vals, played):
     def old_cm11(sc):
         for iq in sc['iqs']:
             iq.pop('either', None)
+    # GS-L4-5-ENDPOINT: L4_5's old prompt (the end (4, 4) ties with the keyed (1, 4)), and an end that beats a key
+    def old_l4_5(sc):
+        next(iq for iq in sc['iqs'] if iq['type'] == 'tp')['prompt'] = 'Write down the coordinates of maximum deflection.'
+    expect('s1-006: L4_5 "maximum", an end ties', lambda rep: check_bank(rep, put_back('L4_5', old_l4_5), fn_vals), 'endpoint')
+    al12 = next(s for lvl in bank.values() for s in lvl if s['id'] == 'AL12')
+    beat = dict(fn_vals)
+    beat['AL12'] = [(x, (al12['iqs'][0]['answer']['y'] + 1) if x == al12['xRange'][1] else y) for x, y in fn_vals['AL12']]
+    expect('an end beats the keyed maximum (AL12)', lambda rep: check_bank(rep, bank, beat), 'endpoint')
+    # Jon (16 Oct): a key at an end is exempt only where the curve is stationary; L4_5 keyed at (4, 4), still rising
+    def key_at_rising_end(sc):
+        next(iq for iq in sc['iqs'] if iq['type'] == 'tp')['answer'] = {'x': 4, 'y': 4}
+    expect('a key at an end, curve still rising (L4_5)', lambda rep: check_bank(rep, put_back('L4_5', key_at_rising_end), fn_vals),
+           'still rising')
+    stat = [f for f in base.fails if f.startswith('AL9 ') and 'endpoint' in f]
+    ok = ok and not stat
+    lines.append('  control   %-34s %s' % ("AL9 keyed at x = 0, f' = 0", '*** FLAGGED ***' if stat else 'not flagged'))
     expect('Part 2 #14: CM2 negative-profit key', lambda rep: check_bank(rep, put_back('CM2', old_cm2), fn_vals))
     expect('Part 2 #14: CM4 reaction-time key', lambda rep: check_bank(rep, put_back('CM4', old_cm4), fn_vals))
     expect('Part 2 #14: CM11 one reliability answer', lambda rep: check_bank(rep, put_back('CM11', old_cm11), fn_vals))
