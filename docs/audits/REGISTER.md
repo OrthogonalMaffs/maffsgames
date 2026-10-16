@@ -11,7 +11,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | met: 0 of 96 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 1 open (0 CRITICAL, 1 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | met: 0 open (0 CRITICAL, 0 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock |
 | 4 | Every level serves 40+ (tracked, not part of the gate: canon §0.2, Jon 12 Oct 2026) | not met, not gating: 126 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | met: 0 in the roster's Unlisted section |
@@ -24,10 +24,10 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
-| HIGH | 8 | 229 | 0 | 237 |
+| HIGH | 7 | 230 | 0 | 237 |
 | MEDIUM | 175 | 320 | 5 | 500 |
 | LOW | 92 | 239 | 1 | 332 |
-| **All** | 276 | 822 | 6 | 1104 |
+| **All** | 275 | 823 | 6 | 1104 |
 
 ### By class
 
@@ -57,7 +57,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | NEW:equal-value-options | 0 | 9 |
 | NEW:timer-policy | 0 | 9 |
 | NEW:hand-typed explanation figure | 4 | 8 |
-| NEW:second-correct-answer | 1 | 8 |
+| NEW:second-correct-answer | 0 | 8 |
 | NEW:hint-gives-answer | 4 | 7 |
 | NEW:wrong-explanation | 0 | 7 |
 | NEW:ill-posed wording | 1 | 6 |
@@ -185,7 +185,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | `given-that` | yes | verify-given-that.py | 0 | 3 | 2 | 3 | 2 | 6 | 0 |
 | `glorious-gantt` | unlisted | none | 1 | 7 | 4 | 1 | 13 | 0 | 0 |
 | `gradient-hunter` | yes | verify-gradient-hunter.py | 1 | 0 | 6 | 2 | 0 | 9 | 0 |
-| `graph-sketcher` | yes | verify-graph-sketcher.py | 1 | 3 | 5 | 4 | 5 | 8 | 0 |
+| `graph-sketcher` | yes | verify-graph-sketcher.py | 1 | 3 | 5 | 4 | 4 | 9 | 0 |
 | `graph-transformer` | yes | verify-graph-transformer.py | 0 | 0 | 3 | 3 | 1 | 5 | 0 |
 | `growth-and-decay` | yes | verify-growth-and-decay.py | 1 | 0 | 9 | 4 | 6 | 8 | 0 |
 | `higher-power` | yes | verify-higher-power.py | 0 | 1 | 8 | 6 | 5 | 10 | 0 |
@@ -251,10 +251,6 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 - **HIGH** glorious-gantt-t4-006, `games/glorious-gantt/index.html:684 (L4_B2)`: Floats of C and E wrong (keys 5 and 4; true 8 and 1); node 4 late keyed 12, LF(C) = 15
 - **HIGH** glorious-gantt-t4-007, `games/glorious-gantt/index.html:541 (CM_B2)`: Node 3 late keyed 6; LF(B) = 9 by the table, and node 3 is a dead end in the drawing
 - **HIGH** glorious-gantt-t4-008, `games/glorious-gantt/index.html:968,1003,1089,1188,1236`: Retries score full marks; double-clicking Check scores twice and skips items; inflated score submitted
-
-### `graph-sketcher` (Core, A-Level, L4)
-
-- **HIGH** graph-sketcher-s1-006 (JC), `games/graph-sketcher/index.html L4_5 (:538), CM2 (:273), CM11 (:351), CM4 (:291)`: L4_5's "maximum deflection" on 0 ≤ x ≤ 4 is 4 at both x = 1 and x = 4 (the endpoint), so (4, 4) is also right. Part 2 #14: the ask becomes "the turning point"; the key is unchanged (Split: the parent entry held 4 defe...
 
 ## Live games no audit has covered
 
