@@ -196,6 +196,12 @@ Items 6 to 10 are the contract’s a to e. The rest I found while drafting.
 18. **Calculator: not needed, and the teacher page should say so.** Every lock is mental or written KS2
     arithmetic, the Kiln and Library standard.
 
+19. **Lock A marks a point, not a square.** The brief says “grid reference” and “coordinates”. In KS2 maths,
+    coordinates name a point where two grid lines cross; numbered squares are a geography grid reference. The
+    across-first rule is the same in both, but a struggling student should meet the maths version, so the map
+    numbers its grid lines and draws the library where two of them cross. My first wording numbered squares; I
+    changed it before sending this.
+
 ---
 
 ## Title
@@ -289,7 +295,7 @@ are tokens (the Kiln rule, working doc §5i).
 
 | # | id | name | where | clue or flavour |
 |---|---|---|---|---|
-| 1 | `map` | The school map | on an easel by the stage in the hall | A big map of the whole school, every building drawn in. The squares are numbered along the bottom and up the side, both counting from the bottom-left corner. The library is the little open book, **{{map.y}} squares up** and **{{map.x}} squares along**. *(“For Jon” 14: up before along, on purpose.)* |
+| 1 | `map` | The school map | on an easel by the stage in the hall | A big map of the whole school, every building drawn on a grid. The grid lines are numbered along the bottom and up the side, counting from the bottom-left corner. The library is the little open book, drawn where two grid lines cross: **{{map.y}} up** and **{{map.x}} along**. *(“For Jon” 14: up before along, on purpose; 19: a point, not a square.)* |
 | 2 | `rose` | The compass rose | set into the library carpet | Set into the carpet in front of the desk: north at the top and then, going round clockwise, north-east, east, south-east, south, south-west, west and north-west. **[X]** |
 | 3 | `bibby-card` | Bibby’s directions | on a card she slides across the library desk | In very neat capitals: **FACE {{dir.fromU}}. YOUR NEXT STOP IS {{dir.toU}}. TURN CLOCKWISE.** Signed B. PHILE, and underlined once, exactly. |
 | 4 | `timetable` | William’s timetable | clipped to his clipboard | TASTER LESSON: SCIENCE **[X]**. Starts at **{{tt.start}}**. Lasts **{{tt.m}} minutes**. Underneath, in a teacher’s writing: *please collect from the lab door when the lesson ends*. |
@@ -321,11 +327,11 @@ teacher page.
 - **missSays:** “When I started, I read the grid backwards. What fixed it for me was: along the corridor, then up
   the stairs.” *(The first sentence is your example line, ruling 5.)*
 - **hints:**
-  1. Find the little open book on the map, then count the squares to it from the corner.
+  1. Find the little open book on the map, and the two grid lines that cross where it is drawn.
   2. Coordinates always go across first, then up.
   3. The code is the two coordinates written next to each other, with no brackets and no comma.
-- **solve:** The library is {{map.x}} squares along and {{map.y}} squares up, so its coordinates are
-  ({{map.x}}, {{map.y}}): across first, then up. The code is **{{map.answer}}**.
+- **solve:** The library is where grid line {{map.x}} along crosses grid line {{map.y}} up, so its coordinates
+  are ({{map.x}}, {{map.y}}): across first, then up. The code is **{{map.answer}}**.
 - **onOpen:** Daisy ticks the box: the library, found. At the edge of the crowd, standing much too close to the
   map, is William. He drifted off to look for it on his own and got as far as the map. When you call him, he
   comes.
@@ -335,7 +341,8 @@ constraints: x and y from 1 to 9, x ≠ y; answer 10x + y, misconception 10y + x
 and no x of 1. Those two rules mean no A answer or misconception ends in 0 or 5, and no A answer falls in C’s hours
 (10 to 14). Every other lock’s answers, misconceptions and clue figures either end in 0 or 5, have four digits,
 or are C’s hours, and A’s own clue figures are single digits other than 5, so **lock A collides with nothing in any
-draw** (the scratch run confirms it for this pot: A is in none of the INVALID draws). No two sets are each other’s reversal (37 and 73 are never both in the pot).
+draw** (the scratch run confirms it for this pot: A is in none of the INVALID draws). No two sets are each
+other’s reversal (37 and 73 are never both in the pot).
 
 | # | x (along) | y (up) | answer, x then y | miss, y then x |
 |---|---|---|---|---|
@@ -400,7 +407,7 @@ Generator rules: dial (0, 360, 45), `sweep: 360`; tokens `from`, `to` (lower cas
 (capitals, for her card), `steps`, `answer`, `miss`, and the constants `whole` (360) and `eighth` (45), carried
 as tokens as Library Jam carries `half`. Solver: `x == ((POINTS.index(to) − POINTS.index(from)) mod 8) × 45`, one
 setting on the grid by construction; `clue_numbers` `[]` (the card prints words only). Every answer is between
-45 and 315, inside the 4% end-of-travel margin of a 0 to 360 dial. Variant 0 is my choice **[X]**, and was picked
+45 and 315, clear of the end-of-travel margin (4% of the range, 14.4°) at each end of a 0 to 360 dial. Variant 0 is my choice **[X]**, and was picked
 so that variant 0 is a VALID draw (an earlier pick, 135°, shared its answer with D’s variant 0).
 
 ### Lock C: William’s lesson (durations across the hour)
@@ -476,7 +483,7 @@ units digit of 5 and a non-zero tens digit, so both columns need an exchange and
 tens digit, 5) never equals the answer. That leaves 22 possible totals, from 215 to 445. **Added [X]:** prices of
 £1 or more are printed in pounds (£1.85) and under £1 in pence (60p), as canteens print them and as KS2 teaches
 both; no price, in pence, equals its own set’s answer (“For Jon” 16); the items are an everyday canteen list,
-names as tokens.
+names as tokens, and no item has two prices across the pot (a student who replays would notice).
 
 | # | tray (`i1 p1`; `i2 p2`; `i3 p3`) | total | **answer** (500 − total) | miss, smaller from larger |
 |---|---|---|---|---|
@@ -484,10 +491,10 @@ names as tokens.
 | 1 | a sandwich £1.75; an apple 40p; a bottle of water 30p | £2.45 | **255** | 345 |
 | 2 | a slice of pizza £2.10; a smoothie £1.35; a cookie 70p | £4.15 | **85** | 115 |
 | 3 | a jacket potato £1.90; a yoghurt 85p; a carton of apple juice 50p | £3.25 | **175** | 225 |
-| 4 | a bowl of soup £1.55; a bread roll 40p; a yoghurt 90p | £2.85 | **215** | 385 |
+| 4 | a bowl of soup £1.55; a bread roll 40p; a rice pudding 90p | £2.85 | **215** | 385 |
 | 5 | a hot dinner £2.45; a flapjack 80p; a milkshake £1.10 | £4.35 | **65** | 135 |
 | 6 | a wrap £2.05; a bag of crisps 55p; a carton of orange juice £1.15 | £3.75 | **125** | 275 |
-| 7 | a cheese toastie £1.50; a carton of orange juice 70p; a biscuit 45p | £2.65 | **235** | 365 |
+| 7 | a cheese toastie £1.50; a carton of squash 70p; a biscuit 45p | £2.65 | **235** | 365 |
 | 8 | a plate of curry and rice £2.25; a piece of garlic bread 60p; a carton of fruit juice £1.10 | £3.95 | **105** | 295 |
 | 9 | a pasta bake £1.40; a salad pot 50p; a banana 35p | £2.25 | **275** | 325 |
 
@@ -510,9 +517,10 @@ table.
   and the dial’s answers off the end of its travel.
 - **The joint pot: 10 × 8 × 10 × 10 = 8,000 draws, of which 5,710 are VALID; variant 0 is a VALID draw.** The
   floor is 20. Every set takes part in at least 420 VALID draws, so none is dead weight.
-- **Where the 2,290 INVALID draws come from:** C and D (1,410: a lunch answer such as 55 or 65 against a lesson’s
-  start minutes or length, or a price in pence against one), B and D (600: 45, 135, 225 and 315 can be both a turn
-  and a lunch answer or misconception), B and C (170: a 45° turn against a 45-minute figure), and combinations of
+- **Where the 2,290 INVALID draws come from** (counted, by pair and rule): C and D (1,410 draws: mostly a price
+  in pence, 35p to 70p, equal to a lesson’s start minutes or length, rule a; and the 65p answer against a
+  65-minute lesson), B and D (600: a 90° or 45° turn against a 90p or 45p price, and 135° or 225° against a lunch
+  answer or misconception), B and C (170: a 45° turn against a 45-minute figure), and draws with more than one of
   those (110). **Lock A is in none**, by design.
 - **Joint-draw facts that depend on wording:** the compass rose and the lunch card carry no token, so they carry
   no clue figures. “Five pounds” in words keeps the card out of the count (item 15). Times print as “10:35”,
@@ -529,7 +537,7 @@ table.
   away past a doorway lined with bookshelves, and a canteen counter is just visible at the far end. A box of lost
   property sits by the doors.
 - **failAlt [X]:** A crowded school canteen at lunchtime, every table full, trays everywhere, and one chair at the
-  end of a long table pulled slightly apart from the rest.
+  end of a long table pulled slightly apart from the rest. *(Follows whichever fail you choose, item 5.)*
 - **winAlt [X]:** A school canteen by a sunny window, one long table with every seat taken by trays and clipboards,
   a hunt card lying in the middle with every box ticked.
 
