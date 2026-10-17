@@ -49,11 +49,18 @@ BV-CRITERIA (15 Oct, contract now `docs/history/contracts/2026-10-15-bv-criteria
 GS-L4-5-ENDPOINT (16 Oct, contract now `docs/history/contracts/2026-10-16-gs-l4-5-endpoint.md`): **DONE (#420, main green).** Entry below.
 BSB-ROOM-DRAFT (16 Oct, contract now `docs/history/contracts/2026-10-16-bsb-room-draft.md`): phase 1 of "Big School Begins": draft only, `docs/escape-room-drafts/big-school-begins-draft.md`. **DONE (#422, merged as c484459; main green, run 38910693628).** Approved by Jon with rulings (BSB-ROOM-BUILD).
 BSB-ROOM-BUILD (16 Oct, contract `docs/handover/contracts/2026-10-16-bsb-room-build.md`): phase 2, build Big School Begins from the draft with Jon's rulings and hold it behind a holding page for his play-test. **Hold released by Jon (17 Oct): option (b), no findings file for now; merged on green.** Not released until the home lane extends the audit register to escape rooms. Entry below.
+ESSENTIALS-FALSE-TEXT (17 Oct, contract `docs/handover/contracts/2026-10-17-essentials-false-text.md`): four listed Essentials games whose screens state or show something false, one game per PR, each claimed on the remaining line first: 1 like-terms-collector DONE (#426); 2 factor-race; 3 new-shapes; 4 shape-shifter.
 **Standing authorisation (Jon, 10 Oct):** the cloud lane merges any PR of its own once its Gate is green and main's last full run is green, without asking each time; it still watches main's run after each merge. The 10 Oct queue (RIGHTFUL-KING, LIBRARY-JAM, FONT-FIT) is DONE and moved to `docs/history/handover-cloud-archive.md`, with Jon's rulings for the two room builds and FONT-FIT's known problems.
 **Holds and self-scheduled tasks (Jon, 16 Oct 2026):** a hold the cloud lane states on a PR is released only by Jon. Stating a hold cancels, or rewrites to report-only, any pending task this lane scheduled for that PR. A task this lane schedules for itself carries no authority beyond the standing rules at the time it fires, and its report names it as the lane's own follow-up, not a request. Self-scheduled tasks may read CI status and report; they never merge, push or edit while a hold stands. (Contract GS-L4-5-ENDPOINT; canon §7.8 records it via the home lane.)
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-17 (cloud): ESSENTIALS-FALSE-TEXT (contract `docs/handover/contracts/2026-10-17-essentials-false-text.md`)
+
+- **1 like-terms-collector (#426).** Every Stage 1 picture checked against its Unicode name (table in the PR): three mismatches, not two. The bucket under "plums" became 🍓 "strawberries" (the contract's 🍐 and 🍇 are already items 5 and 2; 🍓 is Unicode 6.0, so no empty box on old devices); "limes" became "kiwis"; "oranges" under U+1F34A TANGERINE became "tangerines" by the contract's own test (**for Jon:** "oranges" is defensible, one word to revert). Keys unchanged. `verify-like-terms-collector.py` now checks every picture's name against its label (`PICTURES`) and fails on main's copy naming all three. Closes r-001, r-002, t3-003.
+- **new-shapes STOP IF hit (reported, not reworded):** the game teaches two area formulae (parallelogram, trapezium) and one volume formula (prism); rectangle and triangle are only named on the start screen as ones the student "may already know". The count is not four. Waits on Jon's ruling.
+- **Local checks in this container:** the proxy refuses the KaTeX CDN (403), `esprima` will not build and WebKit is absent, so every KaTeX game, the answer-lock parts and the level resolver fail here for reasons unrelated to a change; CI is the judge for those. A full `check-changed.py` also outlasts the 30-minute background limit.
 
 ## 2026-10-16 (cloud): BSB-ROOM-BUILD (contract `docs/handover/contracts/2026-10-16-bsb-room-build.md`)
 
@@ -67,13 +74,7 @@ main's last full run is red; watch main's run after merging.
 - **Played in Chromium** (`scripts/serve-stubbed.py`): 10 VALID draws covering every set of every lock, each to a win, at 390 and 1280 px, plus a time-out at each; every misconception response fired; dial needle and wedge at every turn; no sideways scroll; lock D's answer never on screen. Screenshots in `docs/screenshots/bsb-room-build/`.
 - **For Jon at play-test:** the hook's last line has no "Daisy says" (Jon's line alone, as ruled); the stakes' nested quote rendered with the room's double quotes. Release waits on the register extension (above) and Jon's play-test. Main's run on the merge: see the PR.
 
-## 2026-10-16 (cloud): BSB-ROOM-DRAFT (contract now `docs/history/contracts/2026-10-16-bsb-room-draft.md`)
-
-- **DONE (this PR), phase 1 only: nothing served changed.** Draft: `docs/escape-room-drafts/big-school-begins-draft.md`. Four locks (map coordinates, Bibby's compass turn, William's lesson end time, lunch-card change), 20 minutes, 45 s penalty, every lock grade 1. Pots 10/8/10/10, all 38 sets through `check_set`; joint draw **5,710 of 8,000 VALID, variant 0 VALID**, every set in at least 420 VALID draws. Measured with `check-escape-rooms.py`'s own `figures()`/`draw_is_valid()` lifted by `ast` (scratch, not committed).
-- **For Jon at review (19 items in the draft):** SR-11 against the year groups in the brief (prose kept free of them; label and title are the exception); Bibby speaks only in Library Jam, so here she writes a card and is never quoted; [X] lunch-bell clock (so C's sets all start 10:00-11:30, inside his range); [X] ending; [X] fail, with a gentler alternative (tone, for an anxious audience); theme: canon §7.5 retired "playful" on 2 Oct and every room is dark, so light is a set-wide call; a `label` field proposal for "Year 6/7"; `sweep: 360` recommended (on a 270° sweep a 90° setting points anticlockwise); the hub and front page's "three locks, fifteen minutes" become false at release.
-- **Found while drafting, for phase 2:** `check_set` reads a price under the £ sign as printed (£1.25 as 1.25), so a set whose answer was 125p passed with £1.25 on the tray; replaced, and the draft asks for `clue_numbers` in pence too. My first meta description was 170 characters; counted and cut to 155.
-- Phase 2 (build) and the shared-code exceptions (label, theme if ruled, canon entries) wait on Jon's review.
-- **Merged as c484459 (#422); main's full run on it green (run 38910693628, every job passed).** Jon approved the draft with rulings on 16 Oct: contract BSB-ROOM-BUILD (phase 2).
+## 2026-10-16 (cloud): BSB-ROOM-DRAFT (finished 16 Oct, #422; full entry in `docs/history/handover-cloud-archive.md`)
 
 ## 2026-10-16 (cloud): GS-L4-5-ENDPOINT (finished 16 Oct, #420; full entry in `docs/history/handover-cloud-archive.md`)
 
