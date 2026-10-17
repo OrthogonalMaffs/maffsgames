@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: `
+`cloud-remaining: factor-race`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -49,7 +49,7 @@ BV-CRITERIA (15 Oct, contract now `docs/history/contracts/2026-10-15-bv-criteria
 GS-L4-5-ENDPOINT (16 Oct, contract now `docs/history/contracts/2026-10-16-gs-l4-5-endpoint.md`): **DONE (#420, main green).** Entry below.
 BSB-ROOM-DRAFT (16 Oct, contract now `docs/history/contracts/2026-10-16-bsb-room-draft.md`): phase 1 of "Big School Begins": draft only, `docs/escape-room-drafts/big-school-begins-draft.md`. **DONE (#422, merged as c484459; main green, run 38910693628).** Approved by Jon with rulings (BSB-ROOM-BUILD).
 BSB-ROOM-BUILD (16 Oct, contract `docs/handover/contracts/2026-10-16-bsb-room-build.md`): phase 2, build Big School Begins from the draft with Jon's rulings and hold it behind a holding page for his play-test. **Hold released by Jon (17 Oct): option (b), no findings file for now; merged on green.** Not released until the home lane extends the audit register to escape rooms. Entry below.
-ESSENTIALS-FALSE-TEXT (17 Oct, contract `docs/handover/contracts/2026-10-17-essentials-false-text.md`): four listed Essentials games whose screens state or show something false, one game per PR, each claimed on the remaining line first: 1 like-terms-collector DONE (#426); 2 factor-race; 3 new-shapes; 4 shape-shifter.
+ESSENTIALS-FALSE-TEXT (17 Oct, contract `docs/handover/contracts/2026-10-17-essentials-false-text.md`): four listed Essentials games whose screens state or show something false, one game per PR, each claimed on the remaining line first: 1 like-terms-collector DONE (#426, ef84989); 2 factor-race (claimed); 3 new-shapes; 4 shape-shifter.
 **Standing authorisation (Jon, 10 Oct):** the cloud lane merges any PR of its own once its Gate is green and main's last full run is green, without asking each time; it still watches main's run after each merge. The 10 Oct queue (RIGHTFUL-KING, LIBRARY-JAM, FONT-FIT) is DONE and moved to `docs/history/handover-cloud-archive.md`, with Jon's rulings for the two room builds and FONT-FIT's known problems.
 **Holds and self-scheduled tasks (Jon, 16 Oct 2026):** a hold the cloud lane states on a PR is released only by Jon. Stating a hold cancels, or rewrites to report-only, any pending task this lane scheduled for that PR. A task this lane schedules for itself carries no authority beyond the standing rules at the time it fires, and its report names it as the lane's own follow-up, not a request. Self-scheduled tasks may read CI status and report; they never merge, push or edit while a hold stands. (Contract GS-L4-5-ENDPOINT; canon §7.8 records it via the home lane.)
 
