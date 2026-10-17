@@ -2099,6 +2099,7 @@ usually six clues and two blanks (`comic-caper` has four and four); at least two
   locks' `grade` fields, recorded as `data-stars` on its hub and front-page cards, and printed for every live
   room in `check-escape-rooms.py`'s CI log. **A new room adds `grade` to every lock before release**; The
   Rightful King and The Library Jam came out as Jon ruled on 9 Oct.
+- **Keypad display format (COORD-KEYPAD, 17 Oct 2026).** A `digits: 2` keypad may add `format: 'coordinates'`: the display reads `( – , – )`, `( 3 , – )`, `( 3 , 7 )` and the teacher page shows the answer as `(x, y)`; the typed value, Set and the check are still the two digits, the typed fallback also takes `(3, 7)`, and a keypad without `format` is unchanged. First user: Big School Begins' lock A.
 - **Keypads: fixed length, or up to N digits (KEYPAD-VARIABLE, 10 Oct 2026).** `digits: N` takes exactly N
   digits, empty slots shown (60 is entered as 060), and Set with too few says "Not enough digits." at no
   cost. `maxDigits: N` instead is **"up to N digits, Set to submit"**: the display shows only what has

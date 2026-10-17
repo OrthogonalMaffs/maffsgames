@@ -155,10 +155,10 @@ window.ROOM = {
       key: 'map',
       grade: 1,
       name: 'The hall map',
-      brief: 'Daisy&rsquo;s clue card for the hall says: FIND THE LIBRARY ON THE MAP. WRITE ITS COORDINATES AS A ' +
-             'CODE: NO BRACKETS, NO COMMA. The map is on an easel by the stage, and every group in the hall is ' +
+      brief: 'Daisy&rsquo;s clue card for the hall says: FIND THE LIBRARY ON THE MAP. WRITE ITS COORDINATES. ' +
+             'The map is on an easel by the stage, and every group in the hall is ' +
              'crowded round it.',
-      instrument: { kind: 'keypad', label: 'LIBRARY: COORDINATES AS A CODE', maxDigits: 2, verb: 'Write it in' },
+      instrument: { kind: 'keypad', label: 'LIBRARY: COORDINATES', digits: 2, format: 'coordinates', verb: 'Write it in' },
       variants: [
         {
           "x": 3,
@@ -226,10 +226,10 @@ window.ROOM = {
       hints: [
         'Find the little open book on the map, and the two grid lines that cross where it is drawn.',
         'Coordinates always go across first, then up.',
-        'The code is the two coordinates written next to each other, with no brackets and no comma.'
+        'Write the coordinates as (across, up).'
       ],
       solve: 'The library is where grid line {{map.x}} along crosses grid line {{map.y}} up, so its coordinates ' +
-             'are ({{map.x}}, {{map.y}}): across first, then up. The code is <b>{{map.answer}}</b>.',
+             'are ({{map.x}}, {{map.y}}): across first, then up.',
       onOpen: 'Daisy ticks the box: the library, found. At the edge of the crowd, standing much too close to the ' +
               'map, is William. He drifted off to look for it on his own and got as far as the map. When you call ' +
               'him, he comes.'

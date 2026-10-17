@@ -466,6 +466,16 @@
   // leading zero is never kept. A keypad with `digits` behaves exactly as it did before maxDigits existed.
   function keyLen(ins) { return ins.maxDigits || ins.digits; }
 
+  // A keypad may also carry `format: 'coordinates'` (contract COORD-KEYPAD, 17 Oct 2026; with `digits: 2` only): a
+  // display-only format. The display reads "( – , – )", then "( 3 , – )", then "( 3 , 7 )"; the typed value, the
+  // stored value, Set and the check are still the two digits. The typed fallback also takes "(3, 7)" and "3,7"
+  // (its existing non-digit stripping), so its box is wider. A keypad without `format` is unchanged.
+  function isCoords(ins) { return ins.format === 'coordinates'; }
+  function coordsText(c) {
+    function slot(i) { return i < c.length ? c[i] : '<span class="blank">&ndash;</span>'; }
+    return '( ' + slot(0) + ' , ' + slot(1) + ' )';
+  }
+
   // The one rule the keys and the typed fallback share in maxDigits mode: digits only, no leading zero, at most N.
   function upTo(ins, c) {
     return c.replace(/[^0-9]/g, '').replace(/^0+(?=\d)/, '').slice(0, ins.maxDigits);
@@ -481,9 +491,9 @@
         return '<button data-key="' + k + '">' + k + '</button>';
       }).join('') + '</div>' +
       '<div class="fallback">' +
-        '<label for="numK">Or type the code</label>' +
+        '<label for="numK">Or type the ' + (isCoords(ins) ? 'coordinates' : 'code') + '</label>' +
         '<div class="fallback-row">' +
-          '<input class="numin" type="text" inputmode="numeric" id="numK" maxlength="' + keyLen(ins) + '" value="">' +
+          '<input class="numin" type="text" inputmode="numeric" id="numK" maxlength="' + (isCoords(ins) ? 12 : keyLen(ins)) + '" value="">' +
           '<span class="count">' + (ins.maxDigits ? 'up to ' + ins.maxDigits : ins.digits) + ' digits</span>' +
         '</div>' +
       '</div>';
@@ -601,9 +611,11 @@
       var c = pending[l.id] || '';
       var out = '';
       if (ins.maxDigits) out = c;
+      else if (isCoords(ins)) out = coordsText(c);
       else for (var i = 0; i < ins.digits; i++) out += i < c.length ? c[i] : '<span class="blank">&ndash;</span>';
       disp.innerHTML = out;
-      if (num.value !== c) num.value = c;
+      // A coordinates box may hold "(3, 7)" for the digits "37": leave what was typed when its digits are the value.
+      if ((isCoords(ins) ? num.value.replace(/[^0-9]/g, '').slice(0, ins.digits) : num.value) !== c) num.value = c;
     }
     Array.prototype.forEach.call(document.querySelectorAll('.keypad [data-key]'), function (b) {
       b.onclick = function () {
