@@ -1,0 +1,10 @@
+# Findings register for the escape room kiln-disaster (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# AUDIT-ROOMS, 17 Oct 2026: rooms are in the register (escape-rooms/kiln-disaster/). Not yet audited: tranche says so,
+# head is main when the file was made, served is empty. A fix PR sets status: fixed and pr: <n> on the entries it closes.
+game: kiln-disaster
+audited:
+  tranche: none (not yet audited)
+  head: f657998
+  date: 2026-10-17
+  served: {}
+findings: []
