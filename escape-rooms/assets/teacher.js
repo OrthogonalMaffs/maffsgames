@@ -62,16 +62,25 @@
     return ' &middot; ' + lead + M.html(r) + (r.stars === 3 ? ' &middot; <span class="topset">Suits a top set</span>' : '');
   }
 
+  // A keypad lock with `format: 'coordinates'` (COORD-KEYPAD) shows its two-digit value as (x, y).
+  function coords(n, ins) {
+    var s = String(n);
+    while (s.length < ins.digits) s = '0' + s;
+    return '(' + s.charAt(0) + ', ' + s.charAt(1) + ')';
+  }
+
   function ansOf(l, v) {
     v = v || variantOf(l);
     var a = v.answer !== undefined ? v.answer : l.answer;
     if (Array.isArray(a)) return a.join(' and ');
+    if (l.instrument.format === 'coordinates') return coords(a, l.instrument);
     return a + (l.instrument.unit ? ' ' + l.instrument.unit : '');
   }
   function missOf(l, v) {
     v = v || variantOf(l);
     var m = v.miss !== undefined ? v.miss : l.miss;
     if (m === undefined || m === null) return '&mdash;';
+    if (l.instrument.format === 'coordinates') return coords(m, l.instrument);
     return Array.isArray(m) ? m.join(' and ') : String(m);
   }
 

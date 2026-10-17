@@ -20,6 +20,10 @@ the same rule. A keypad with `digits` behaves exactly as before.
              the typed fallback: "0054" becomes "54", "12345" becomes "1234", and Set then opens on "54"
   fixed    kiln-disaster's own two-digit keypad, unchanged: two empty slots to begin with; 5 then Set says
            "Not enough digits." and costs nothing
+  coords   Big School Begins' lock A (COORD-KEYPAD, 17 Oct 2026: `digits: 2, format: 'coordinates'`, play.html,
+           the drawn set pinned to x 3, y 7): the display reads "( – , – )", "( 3 , – )", "( 3 , 7 )"; 3 then Set is
+           "Not enough digits."; the typed fallback "(3, 7)" displays "( 3 , 7 )", keeps what was typed, and Set
+           opens; 4,2,Set is wrong (no named response, not open); 7,3,Set (y then x) raises Daisy's misconception
   plant    the fixture against the old fixed-length rule (maxDigits read as digits): it must FAIL
 """
 import argparse
@@ -58,6 +62,76 @@ STATE = """() => ({
   open: !document.getElementById('setBtn') && !!document.querySelector('.feedback.good.show'),
   clock: (document.getElementById('clock') || {}).textContent || ''
 })"""
+
+
+COORD_ROOM, COORD_LOCK = "big-school-begins", "school-map-coordinates"
+COORD_FIXTURE = """(() => {
+  let r;
+  Object.defineProperty(window, 'ROOM', { configurable: true, get: () => r, set: (v) => {
+    const l = v.locks.find(x => x.id === '%s');
+    l.variants = [{ x: 3, y: 7, answer: 37, miss: 73 }];
+    r = v;
+  }});
+})()""" % COORD_LOCK
+COORD_RUNS = {
+    "show": [("look", "empty"), ("key", "3"), ("look", "one"), ("key", "7"), ("look", "two")],
+    "short": [("key", "3"), ("set",), ("look", "after")],
+    "typed": [("type", "(3, 7)"), ("look", "typed"), ("set",), ("look", "after")],
+    "wrong": [("key", "4"), ("key", "2"), ("set",), ("look", "after")],
+    "miss": [("key", "7"), ("key", "3"), ("set",), ("look", "after")],
+}
+
+
+def judge_coords(got):
+    f = []
+
+    def want(cond, msg):
+        if not cond:
+            f.append(msg)
+    sh = got["show"]
+    for k, w in (("empty", "( – , – )"), ("one", "( 3 , – )"), ("two", "( 3 , 7 )")):
+        want(sh[k]["disp"] == w, "coords: the display reads %r, want %r" % (sh[k]["disp"], w))
+    s_ = got["short"]["after"]
+    want("Not enough digits." in s_["fbText"], "coords: 3,Set gave %r, want 'Not enough digits.'" % s_["fbText"][:60])
+    t = got["typed"]
+    want(t["typed"]["disp"] == "( 3 , 7 )", "coords: typed (3, 7) displays %r" % t["typed"]["disp"])
+    want(t["typed"]["numk"] == "(3, 7)", "coords: the typed box was rewritten to %r" % t["typed"]["numk"])
+    want(t["after"]["open"], "coords: typed (3, 7) then Set did not open the lock (%s)" % (t["after"]["fbText"][:60] or "no feedback"))
+    w = got["wrong"]["after"]
+    want(not w["open"] and "near" not in w["fb"] and w["fb"], "coords: 4,2,Set was not marked plainly wrong (%s, %s)" % (w["fb"], w["fbText"][:60]))
+    m = got["miss"]["after"]
+    want("near" in m["fb"] and not m["open"], "coords: 7,3,Set (y then x) did not raise Daisy's misconception (%s)" % (m["fbText"][:60] or "no feedback"))
+    want("along the corridor" in m["fbText"].lower(), "coords: the misconception line is %r" % m["fbText"][:80])
+    return f
+
+
+async def coords_scenario(browser, base, steps):
+    ctx = await browser.new_context(viewport={"width": 1280, "height": 900})
+    try:
+        await ctx.route(lambda u: not u.startswith(base), lambda r: r.abort())
+        await ctx.add_init_script(COORD_FIXTURE)
+        page = await ctx.new_page()
+        await page.goto(base + "/escape-rooms/%s/play.html" % COORD_ROOM, wait_until="load", timeout=20000)
+        await page.click("#startBtn")
+        i = await page.evaluate("(id) => window.ROOM.locks.findIndex(l => l.id === id)", COORD_LOCK)
+        await page.click('[data-lock="%d"]' % i)
+        await page.wait_for_timeout(150)
+        seen = {}
+        for st in steps:
+            if st[0] == "key":
+                await page.click('.keypad [data-key="%s"]' % st[1])
+            elif st[0] == "type":
+                await page.fill("#numK", st[1])
+            elif st[0] == "set":
+                await page.click("#setBtn")
+            await page.wait_for_timeout(60)
+            if st[0] == "look" or st[0] == "set":
+                now = await page.evaluate(STATE)
+                now["numk"] = await page.evaluate("() => (document.getElementById('numK') || {}).value")
+                seen[st[1] if st[0] == "look" else "after"] = now
+        return seen
+    finally:
+        await ctx.close()
 
 
 def plant(src):
@@ -167,17 +241,25 @@ async def run(engine_js, with_fixed):
                 async with sem:
                     return await scenario(browser, base, engine_js, fixture, steps)
             names = list(FIXTURE_RUNS)
+            cnames = list(COORD_RUNS)
+
+            async def climited(steps):
+                async with sem:
+                    return await coords_scenario(browser, base, steps)
             jobs = [limited(True, FIXTURE_RUNS[n]) for n in names]
             if with_fixed:
                 jobs.append(limited(False, FIXED_RUN))
+            cres = await asyncio.gather(*[climited(COORD_RUNS[n]) for n in cnames], return_exceptions=True) if with_fixed else []
             res = await asyncio.gather(*jobs, return_exceptions=True)
             await browser.close()
     finally:
         proc.terminate()
-    errs = [str(r).splitlines()[0][:120] for r in res if isinstance(r, Exception)]
+    errs = [str(r).splitlines()[0][:120] for r in list(res) + list(cres) if isinstance(r, Exception)]
     if errs:
         return ["could not drive the page: " + e for e in errs], []
     fixed = judge_fixed(res[-1]) if with_fixed else []
+    if with_fixed:
+        fixed += judge_coords(dict(zip(cnames, cres)))
     return judge_fixture(dict(zip(names, res))), fixed
 
 
@@ -189,7 +271,7 @@ def main():
     fix, fixed = asyncio.run(run(None, True))
     print("Escape-room keypad (KEYPAD-VARIABLE): fixture %s/%s at maxDigits 4, answer 54, misconception 5400" % (ROOM, LOCK))
     print("  %s  fixture%s" % ("FAIL" if fix else "ok  ", (": " + "; ".join(fix)) if fix else ""))
-    print("  %s  fixed two-digit keypad unchanged%s" % ("FAIL" if fixed else "ok  ", (": " + "; ".join(fixed)) if fixed else ""))
+    print("  %s  fixed two-digit keypad unchanged, and the coordinates keypad (COORD-KEYPAD)%s" % ("FAIL" if fixed else "ok  ", (": " + "; ".join(fixed)) if fixed else ""))
     ok = not fix and not fixed
     if not a.no_plants:
         pfix, _ = asyncio.run(run(plant(ENGINE.read_text(encoding="utf-8")), False))
