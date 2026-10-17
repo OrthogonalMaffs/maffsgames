@@ -20,11 +20,13 @@ Checks:
     ("CORRECT!", the card styled correct, 10 points); the other is marked wrong ("WRONG! a has X factors; b has Y."
     with the recomputed counts, the key card styled correct). Both cards then read "X factors" and "Y factors". A time-out
     reads "TOO SLOW! a has X factors; b has Y." and scores nothing.
+  Start screen: the time it states per question is the countdown's, TIME_PER_Q (it said 5 seconds against a 30 s
+    countdown: factor-race-t3-001).
 No analytics or leaderboard request leaves the stub server (every other request is aborted).
 
 A self-test plants faults in a copy of the page and each must FAIL: a tie in the Year 6 bank (12 against 18, both with
-6 factors), a wrong answer marked right (any card), a wrong factor count shown (the divisor loop drops n itself) and a
-bad pair table (equal counts admitted).
+6 factors), a wrong answer marked right (any card), a wrong factor count shown (the divisor loop drops n itself), a
+bad pair table (equal counts admitted) and the start screen's old "5 seconds".
 
     python scripts/verify-factor-race.py [--no-selftest] [--against FILE]
 """
@@ -146,6 +148,13 @@ def open_page(pw, base, html, qs):
     return browser, page, errors
 
 
+# The seconds per question the start screen states, and the countdown the game runs.
+STATED_JS = """() => {
+  const m = document.getElementById('startScreen').textContent.match(/You have (\\d+) seconds per question/);
+  return { seconds: m ? Number(m[1]) : null, countdown: TIME_PER_Q };
+}"""
+
+
 def play(fails, html):
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
@@ -165,6 +174,10 @@ def play(fails, html):
                 fails.append('Year 6 page errors: %s' % '; '.join(errors[:3]))
             browser.close()
             browser, page, errors = open_page(pw, base, html, '')
+            said = page.evaluate(STATED_JS)
+            if said['seconds'] is None or said['seconds'] * 1000 != said['countdown']:
+                fails.append('start screen states %s seconds per question; the countdown is %s ms (TIME_PER_Q)' % (
+                    said['seconds'], said['countdown']))
             table = page.evaluate(TABLE_JS)
             want = check_table(fails, table)
             draws = page.evaluate(GEN_JS, DRAWS)
@@ -193,6 +206,8 @@ PLANTS = [
      [('for(let i = 1; i <= n; i++) if(n % i === 0) f.push(i);', 'for(let i = 1; i < n; i++) if(n % i === 0) f.push(i);')]),
     ('a bad pair table (equal counts admitted)', 'KS3 table',
      [('if (counts[a] !== counts[b]) pairs.push([a, b]);', 'if (true) pairs.push([a, b]);')]),
+    ('the start screen\'s old "5 seconds"', 'start screen states',
+     [('You have 30 seconds per question', 'You have 5 seconds per question')]),
 ]
 
 
