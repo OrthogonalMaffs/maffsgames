@@ -91,7 +91,8 @@ findings:
   summary: 'After a wrong answer the correct shape is drawn navy #1a2744 on the #0a0c12 canvas; feedback says ''correct
     shape shown in navy'' but it is effectively invisible'
   evidence: Contrast 1.32:1; screenshots after a wrong answer in translation Q1 and rotation Q2
-  status: open
+  status: fixed
+  pr: 431
 - id: shape-shifter-t3-002
   severity: MEDIUM
   jc: false
