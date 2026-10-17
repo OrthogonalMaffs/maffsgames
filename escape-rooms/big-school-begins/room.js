@@ -26,8 +26,9 @@
 
    NAME (ruling 8, draft item 17): no line plays on William's surname. He is named in full once, in the hook, and
    is "William" after that. None of the eight words draft item 17 lists appears anywhere in this room, about him
-   or anyone (they are not repeated here). One drafted item contains one of them inside another word: lock D's
-   set 5 has "a milkshake" on the tray, kept as drafted and approved, and flagged to Jon in the build PR.
+   or anyone (they are not repeated here), not even inside another word: lock D's set 5 drafted one inside an item
+   name, and Jon ruled (17 Oct 2026) that it becomes "a smoothie" at the same price; set 2's smoothie became "a hot
+   chocolate", so no item name appears twice in the library. Prices, totals and answers unchanged.
 
    SR-11: no student-facing slot names a year group, key stage, primary or secondary. The "Starter" label on
    student surfaces (ruling 2) is the home lane's label contract: there is no label or star field here, and the
@@ -548,7 +549,7 @@ window.ROOM = {
           "miss": 115,
           "i1": "a slice of pizza",
           "p1": "&pound;2.10",
-          "i2": "a smoothie",
+          "i2": "a hot chocolate",
           "p2": "&pound;1.35",
           "i3": "a cookie",
           "p3": "70p",
@@ -589,7 +590,7 @@ window.ROOM = {
           "p1": "&pound;2.45",
           "i2": "a flapjack",
           "p2": "80p",
-          "i3": "a milkshake",
+          "i3": "a smoothie",
           "p3": "&pound;1.10",
           "total": 435,
           "totalP": "&pound;4.35"

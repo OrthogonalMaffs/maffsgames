@@ -3645,7 +3645,7 @@
    "miss": 115,
    "i1": "a slice of pizza",
    "p1": "&pound;2.10",
-   "i2": "a smoothie",
+   "i2": "a hot chocolate",
    "p2": "&pound;1.35",
    "i3": "a cookie",
    "p3": "70p",
@@ -3686,7 +3686,7 @@
    "p1": "&pound;2.45",
    "i2": "a flapjack",
    "p2": "80p",
-   "i3": "a milkshake",
+   "i3": "a smoothie",
    "p3": "&pound;1.10",
    "total": 435,
    "totalP": "&pound;4.35"

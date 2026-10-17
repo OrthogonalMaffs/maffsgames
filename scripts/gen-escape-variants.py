@@ -904,10 +904,10 @@ def price(p):
 store = []
 for tray in [(("a pasta pot", 185), ("a fruit cup", 60), ("a carton of milk", 120)),
              (("a sandwich", 175), ("an apple", 40), ("a bottle of water", 30)),
-             (("a slice of pizza", 210), ("a smoothie", 135), ("a cookie", 70)),
+             (("a slice of pizza", 210), ("a hot chocolate", 135), ("a cookie", 70)),
              (("a jacket potato", 190), ("a yoghurt", 85), ("a carton of apple juice", 50)),
              (("a bowl of soup", 155), ("a bread roll", 40), ("a rice pudding", 90)),
-             (("a hot dinner", 245), ("a flapjack", 80), ("a milkshake", 110)),
+             (("a hot dinner", 245), ("a flapjack", 80), ("a smoothie", 110)),
              (("a wrap", 205), ("a bag of crisps", 55), ("a carton of orange juice", 115)),
              (("a cheese toastie", 150), ("a carton of squash", 70), ("a biscuit", 45)),
              (("a plate of curry and rice", 225), ("a piece of garlic bread", 60), ("a carton of fruit juice", 110)),
