@@ -27,7 +27,9 @@ A fix PR closes an entry in the same PR: status fixed and pr set, in its own gam
 file if it changed.
 
 Fails on: a file that does not parse or breaks the schema; a duplicate id; a fixed entry with no
-PR; a ruled entry with no ruling; a file for a game with no games/<slug>/; and a roster
+PR; a ruled entry with no ruling; a file whose slug has neither games/<slug>/ nor a room folder
+escape-rooms/<slug>/ with a room.js (AUDIT-ROOMS, 17 Oct 2026: rooms have findings files too, and are
+listed in their own "Escape rooms" section of REGISTER.md, never counted as games); and a roster
 "Unlisted" game with no register file. The dashboard's audit-progress points 1, 2, 4 and 5 are computed (canon §0.2); 3 and 6
 are stated in SHARED_CHECKS_GREEN and SWEEP_DONE below, changed by the PR that meets them.
 """
@@ -120,6 +122,12 @@ def load(root):
     return out, errors
 
 
+def is_room(root, slug):
+    """A room: escape-rooms/<slug>/ holding a room.js, and no game of that slug."""
+    return (not os.path.isdir(os.path.join(root, 'games', slug))
+            and os.path.isfile(os.path.join(root, 'escape-rooms', slug, 'room.js')))
+
+
 def audits(data):
     a = data.get('audited')
     return a if isinstance(a, list) else [a]
@@ -134,8 +142,8 @@ def validate(files, games, unlisted, root):
             continue
         if data.get('game') != slug:
             errors.append('%s: game is %r, the file is named for %r' % (rel, data.get('game'), slug))
-        if not os.path.isdir(os.path.join(root, 'games', slug)):
-            errors.append('%s: there is no games/%s/' % (rel, slug))
+        if not os.path.isdir(os.path.join(root, 'games', slug)) and not is_room(root, slug):
+            errors.append('%s: there is neither games/%s/ nor escape-rooms/%s/ (a room folder with a room.js)' % (rel, slug, slug))
         extra = set(data) - {'game', 'audited', 'findings'}
         if extra:
             errors.append('%s: unknown top-level keys %s' % (rel, sorted(extra)))
@@ -229,7 +237,9 @@ def distinct(size):
     return int(m.group(1).replace(',', '')) if m else None
 
 
-def render(files, games, unlisted, root):
+def render(all_files, games, unlisted, root):
+    files = [(r, d) for r, d in all_files if not is_room(root, os.path.basename(r)[:-4])]
+    room_files = [(r, d) for r, d in all_files if is_room(root, os.path.basename(r)[:-4])]
     every = [(data['game'], f) for _, data in files for f in data['findings']]
     by_game = {data['game']: data for _, data in files}
     open_ch = [(g, f) for g, f in every if f['status'] == 'open' and f['severity'] in ('CRITICAL', 'HIGH')]
@@ -354,6 +364,26 @@ def render(files, games, unlisted, root):
     L.append('')
     L.append('**Excluded from points 1, 2, 3 and 5 (%d):** %s' % (len(GATE_EXCLUDED), '; '.join('`%s`: %s' % kv for kv in GATE_EXCLUDED.items()) or 'none'))
     L.append('')
+
+    # ---- escape rooms (AUDIT-ROOMS): their own section; none of the games' counts above include them
+    L.append('## Escape rooms')
+    L.append('')
+    L.append('Rooms have findings files like games (canon §0.3, SR-30) but are not games: nothing above counts them.')
+    L.append('')
+    L.append('| Room | Audited | C | H | M | L | open | fixed | ruled |')
+    L.append('|---|---|---|---|---|---|---|---|---|')
+    for _, data in sorted(room_files, key=lambda rd: rd[1]['game']):
+        fs = data['findings']
+        sc = collections.Counter(f['severity'] for f in fs)
+        st = collections.Counter(f['status'] for f in fs)
+        a = audits(data)[-1]
+        L.append('| `%s` | %s | %d | %d | %d | %d | %d | %d | %d |' % (
+            data['game'], str(a['tranche']).replace('|', '/'), sc['CRITICAL'], sc['HIGH'], sc['MEDIUM'], sc['LOW'],
+            st['open'], st['fixed'], st['ruled']))
+    L.append('')
+    open_rooms = [(data['game'], f) for _, data in room_files for f in data['findings'] if f['status'] == 'open']
+    L.append('%d rooms, %d open findings.' % (len(room_files), len(open_rooms)))
+    L.append('')
     return '\n'.join(L)
 
 
@@ -373,6 +403,16 @@ def run(root):
     return errors, render(files, games, unlisted, root)
 
 
+ROOM_STUB = '''game: {slug}
+audited:
+  tranche: none
+  head: abc1234
+  date: 2026-10-17
+  served: {{}}
+findings: []
+'''
+
+
 def selftest(root):
     """A fixed entry with no PR, and an entry that breaks the schema, must each fail; the real tree must pass."""
     import shutil
@@ -380,6 +420,9 @@ def selftest(root):
     with tempfile.TemporaryDirectory() as tmp:
         for rel in (FINDINGS, os.path.dirname(ROSTER), os.path.dirname(WORKFLOW), 'scripts', 'games'):
             shutil.copytree(os.path.join(root, rel), os.path.join(tmp, rel), dirs_exist_ok=True)
+        shutil.copytree(os.path.join(root, 'escape-rooms'), os.path.join(tmp, 'escape-rooms'),
+                        ignore=lambda d, names: [n for n in names if os.path.isfile(os.path.join(d, n)) and n != 'room.js'
+                                                 or n in ('assets', 'variants.json')], dirs_exist_ok=True)
         base, _ = run(tmp)
         if base:
             print('self-test: the tree fails before any fault is planted: %s' % base[0])
@@ -435,6 +478,24 @@ def selftest(root):
         print('  self-test %-34s %s' % ('a listed game carrying the notice', 'caught' if caught else '*** MISSED ***'))
         ok = ok and caught
         open(op, 'w', encoding='utf-8', newline='').write(osrc)
+        # 5. rooms (AUDIT-ROOMS): a findings file for a room folder with a room.js is accepted; one with neither folder fails
+        rs = ROOM_STUB.format(slug='selftest-room')
+        os.makedirs(os.path.join(tmp, 'escape-rooms', 'selftest-room'))
+        open(os.path.join(tmp, 'escape-rooms', 'selftest-room', 'room.js'), 'w', newline='').write('')
+        rf = os.path.join(tmp, FINDINGS, 'selftest-room.yml')
+        open(rf, 'w', encoding='utf-8', newline='').write(rs)
+        errs, text = run(tmp)
+        caught = not errs and '`selftest-room`' in text.split('## Escape rooms')[-1] and '`selftest-room`' not in text.split('## Escape rooms')[0]
+        print('  self-test %-34s %s' % ('a room findings file is accepted', 'accepted' if caught else '*** MISSED ***'))
+        ok = ok and caught
+        bf = os.path.join(tmp, FINDINGS, 'no-such-room.yml')
+        open(bf, 'w', encoding='utf-8', newline='').write(ROOM_STUB.format(slug='no-such-room'))
+        errs, _ = run(tmp)
+        caught = any('neither games/no-such-room/ nor escape-rooms/no-such-room/' in e for e in errs)
+        print('  self-test %-34s %s' % ('a findings file with neither folder', 'caught' if caught else '*** MISSED ***'))
+        ok = ok and caught
+        os.remove(bf)
+        os.remove(rf)
     return ok
 
 
