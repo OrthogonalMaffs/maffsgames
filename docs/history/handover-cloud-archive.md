@@ -3,6 +3,14 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-16 (cloud): BSB-ROOM-DRAFT (contract now `docs/history/contracts/2026-10-16-bsb-room-draft.md`)
+
+- **DONE (this PR), phase 1 only: nothing served changed.** Draft: `docs/escape-room-drafts/big-school-begins-draft.md`. Four locks (map coordinates, Bibby's compass turn, William's lesson end time, lunch-card change), 20 minutes, 45 s penalty, every lock grade 1. Pots 10/8/10/10, all 38 sets through `check_set`; joint draw **5,710 of 8,000 VALID, variant 0 VALID**, every set in at least 420 VALID draws. Measured with `check-escape-rooms.py`'s own `figures()`/`draw_is_valid()` lifted by `ast` (scratch, not committed).
+- **For Jon at review (19 items in the draft):** SR-11 against the year groups in the brief (prose kept free of them; label and title are the exception); Bibby speaks only in Library Jam, so here she writes a card and is never quoted; [X] lunch-bell clock (so C's sets all start 10:00-11:30, inside his range); [X] ending; [X] fail, with a gentler alternative (tone, for an anxious audience); theme: canon §7.5 retired "playful" on 2 Oct and every room is dark, so light is a set-wide call; a `label` field proposal for "Year 6/7"; `sweep: 360` recommended (on a 270° sweep a 90° setting points anticlockwise); the hub and front page's "three locks, fifteen minutes" become false at release.
+- **Found while drafting, for phase 2:** `check_set` reads a price under the £ sign as printed (£1.25 as 1.25), so a set whose answer was 125p passed with £1.25 on the tray; replaced, and the draft asks for `clue_numbers` in pence too. My first meta description was 170 characters; counted and cut to 155.
+- Phase 2 (build) and the shared-code exceptions (label, theme if ruled, canon entries) wait on Jon's review.
+- **Merged as c484459 (#422); main's full run on it green (run 38910693628, every job passed).** Jon approved the draft with rulings on 16 Oct: contract BSB-ROOM-BUILD (phase 2).
+
 ## 2026-10-16 (cloud): GS-L4-5-ENDPOINT (contract now `docs/history/contracts/2026-10-16-gs-l4-5-endpoint.md`)
 
 - **DONE (#420).** graph-sketcher L4_5's prompt "Write down the coordinates of maximum deflection." -> "Write down the coordinates of the local maximum." (Jon's ruling; key (1, 4), fn, range, table and givens unchanged). The end (4, 4) had tied with the key; y' = 3x² − 12x + 9 is zero at x = 1 (max) and 3 (min), so (1, 4) is the one local maximum. graph-sketcher-s1-006 fixed (pr: 420). Ledger: Tier 4 layer A matched exactly, no change.

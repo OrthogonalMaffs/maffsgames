@@ -24,7 +24,8 @@ findings:
     "plums". The keys (9, 10) are right for the counts shown. U+1FAA3 is Unicode 13 (2020), so older school devices
     may show an empty box instead.'
   evidence: 'docs/audit-resit-correctness-2026-10-04.md F1. Share affected: 1 of 5 Stage 1 questions.'
-  status: open
+  status: fixed
+  pr: 426
 - id: like-terms-collector-r-002
   severity: MEDIUM
   jc: false
@@ -34,7 +35,8 @@ findings:
   summary: 'Question: "4 🍋 + 3 🍋 + 5 🥝 + 2 🥝", boxes labelled "lemons" and "limes". The second emoji is U+1F95D
     **KIWIFRUIT**, not a lime. The keys (7, 7) are right for the counts shown.'
   evidence: 'docs/audit-resit-correctness-2026-10-04.md F2. Share affected: 1 of 5 Stage 1 questions.'
-  status: open
+  status: fixed
+  pr: 426
 - id: like-terms-collector-t3-001
   severity: CRITICAL
   jc: true
@@ -68,7 +70,8 @@ findings:
   summary: 'Fruit pictures do not match labels: ''limes'' drawn as U+1F95D kiwifruit, ''plums'' as U+1FAA3 bucket'
   evidence: Source surrogate escapes decode to U+1F95D KIWIFRUIT (🥝) and U+1FAA3 BUCKET (🪣); keys (7,7) and (9,10)
     correct
-  status: open
+  status: fixed
+  pr: 426
 - id: like-terms-collector-t3-004
   severity: LOW
   jc: true
