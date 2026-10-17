@@ -57,7 +57,9 @@
   function ratingLabel() {
     var M = window.MaffsEscapeRating, r = M && M.rating(R);
     if (!r) return '';
-    return ' &middot; ' + M.html(r) + (r.stars === 3 ? ' &middot; <span class="topset">Suits a top set</span>' : '');
+    // A labelled room (STARTER-LABEL): the label, "for <labelFor>", then the derived stars chip as for any room.
+    var lead = R.label ? M.html(r, R) + (R.labelFor ? ', for ' + esc(R.labelFor) : '') + ' &middot; ' : '';
+    return ' &middot; ' + lead + M.html(r) + (r.stars === 3 ? ' &middot; <span class="topset">Suits a top set</span>' : '');
   }
 
   function ansOf(l, v) {

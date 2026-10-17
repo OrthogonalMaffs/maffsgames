@@ -68,6 +68,8 @@ window.ROOM = {
   slug: 'escape-big-school-begins',
   title: 'Big School Begins',
   level: 'year6',
+  label: 'Starter',
+  labelFor: 'Year 6 and new Year 7',
   minutes: 20,
   penalty: 45,
 

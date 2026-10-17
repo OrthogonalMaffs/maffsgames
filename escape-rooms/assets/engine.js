@@ -202,9 +202,10 @@
   // ---------- helpers ----------
   function el(id) { return document.getElementById(id); }
   // The room's difficulty from its locks' grades (rating.js, contract ESCAPE-DIFFICULTY), then a separator.
+  // A room with a `label` (STARTER-LABEL) shows the label here, never the stars.
   function ratingLabel() {
     var M = window.MaffsEscapeRating, r = M && M.rating(R);
-    return r ? M.html(r) + ' &middot; ' : '';
+    return r ? M.html(r, R) + ' &middot; ' : '';
   }
 
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
