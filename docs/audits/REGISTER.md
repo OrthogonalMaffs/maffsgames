@@ -25,9 +25,9 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
 | HIGH | 7 | 230 | 0 | 237 |
-| MEDIUM | 175 | 320 | 5 | 500 |
+| MEDIUM | 172 | 323 | 5 | 500 |
 | LOW | 92 | 239 | 1 | 332 |
-| **All** | 275 | 823 | 6 | 1104 |
+| **All** | 272 | 826 | 6 | 1104 |
 
 ### By class
 
@@ -39,7 +39,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | 3 | 5 | 86 |
 | NEW:convention-unstated | 7 | 78 |
 | NEW:wrong-explanation-text | 12 | 71 |
-| 6 | 24 | 56 |
+| 6 | 21 | 56 |
 | NEW:true-wrong-option | 2 | 51 |
 | NEW:verifier-gap | 49 | 49 |
 | 1 | 5 | 37 |
@@ -191,7 +191,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | `higher-power` | yes | verify-higher-power.py | 0 | 1 | 8 | 6 | 5 | 10 | 0 |
 | `index-laws` | yes | verify-index-laws.py | 0 | 0 | 3 | 1 | 0 | 3 | 1 |
 | `integration-duel` | yes | verify-integration-duel.py | 0 | 2 | 8 | 3 | 2 | 11 | 0 |
-| `like-terms-collector` | yes | verify-like-terms-collector.py | 1 | 1 | 3 | 1 | 4 | 2 | 0 |
+| `like-terms-collector` | yes | verify-like-terms-collector.py | 1 | 1 | 3 | 1 | 1 | 5 | 0 |
 | `linear-equation-solver` | yes | verify-linear-equation-solver.py | 1 | 1 | 3 | 4 | 4 | 5 | 0 |
 | `log-laws` | yes | verify-log-laws.py | 1 | 4 | 3 | 4 | 2 | 10 | 0 |
 | `maths-court` | yes | verify-maths-court.py | 0 | 1 | 7 | 4 | 1 | 11 | 0 |
@@ -265,3 +265,25 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 **5. Unlisted (0):** none
 
 **Excluded from points 1, 2, 3 and 5 (1):** `glorious-gantt`: Jon, 12 Oct 2026 (1, 2, 5) and 13 Oct 2026 (3): excluded while unlisted
+
+## Escape rooms
+
+Rooms have findings files like games (canon §0.3, SR-30) but are not games: nothing above counts them.
+
+| Room | Audited | C | H | M | L | open | fixed | ruled |
+|---|---|---|---|---|---|---|---|---|
+| `big-school-begins` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `canteen-hack` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `car-trap` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `comic-caper` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `hamster-heist` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `heatwave-mutiny` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `kiln-disaster` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `library-jam` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `pe-shed-rebellion` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `prom-budget` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `rightful-king` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `roll-for-initiative` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `rugby-mud` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+
+13 rooms, 0 open findings.
