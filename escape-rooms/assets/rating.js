@@ -11,7 +11,13 @@
    teacher.js (the teacher page) both call MaffsEscapeRating.rating(ROOM). The hub and front-page cards
    are static HTML, so scripts/check-escape-rooms.py derives the same rating from room.js (same bands)
    and fails if any card's data-stars disagrees or any lock has no grade. "Suits a top set" is for
-   ★★★ teacher pages only, never a card or a student-facing screen. */
+   ★★★ teacher pages only, never a card or a student-facing screen.
+
+   A room may carry an optional `label` (contract STARTER-LABEL, 17 Oct 2026; Jon, 16 Oct 2026): an
+   age-neutral word shown on student surfaces in place of the stars (Big School Begins: "Starter", the SR-11
+   name for the Year 6 level). html(r, room) returns the label chip when room.label is set and the star chip
+   otherwise, byte-identical to before. rating() and BANDS are unchanged: the derived rating still orders the
+   hub and appears on the teacher page. */
 (function () {
   'use strict';
   var BANDS = [
@@ -36,7 +42,13 @@
 
   // The visible label with its text equivalent: the stars are hidden from screen readers, which read
   // "Difficulty: 2 of 3, Core, grades 4–5" instead. The star count, not colour, carries the rating.
-  function html(r) {
+  function html(r, room) {
+    if (room && room.label) {
+      return '<span class="rating" data-label="' + String(room.label).toLowerCase() + '">' +
+        '<span aria-hidden="true">' + room.label + '</span>' +
+        '<span class="sr-only">Level: ' + room.label + '</span>' +
+        '</span>';
+    }
     if (!r) return '';
     var stars = new Array(r.stars + 1).join('★');
     return '<span class="rating" data-stars="' + r.stars + '">' +
