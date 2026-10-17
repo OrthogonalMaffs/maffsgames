@@ -90,6 +90,21 @@ def passcodes(k, L):
     return sum(1 for t in itertools.product(range(k), repeat=L) if len(set(t)) == L)
 
 
+# Big School Begins (contract BSB-ROOM-BUILD, 16 Oct 2026): the eight points of the compass rose, clockwise from
+# north, and a canteen price as the tray prints it ("&pound;1.85" or "60p") read as a printed figure and in pence.
+COMPASS = ["north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west"]
+
+
+def printed_price(s):
+    """The figure a price prints: "&pound;1.85" prints 1.85, "60p" prints 60."""
+    return float(s.replace("&pound;", "").rstrip("p"))
+
+
+def pence(s):
+    """A price in pence: "&pound;1.85" is 185, "60p" is 60."""
+    return round(printed_price(s) * 100) if s.startswith("&pound;") else int(s.rstrip("p"))
+
+
 # ---------------------------------------------------------------- one instrument
 def check_set(var, ins, clue_numbers, solver):
     """The first test a set fails, or None if it passes every one."""
@@ -316,6 +331,31 @@ LOCKS = {
         keypad(3),
         lambda v: [v["r"]],
         lambda x, v: x == math.floor(math.pi * v["r"] ** 2 + 0.5) == math.floor(3.14 * v["r"] ** 2 + 0.5)),
+    # Big School Begins (contract BSB-ROOM-BUILD, 16 Oct 2026; the draft's pot sections). The hall map: the
+    # library's coordinates as a two-digit code, along then up. Clue figures: the two coordinates.
+    "school-map-coordinates": Lock(
+        keypad(2),
+        lambda v: [v["x"], v["y"]],
+        lambda x, v: x == 10 * v["x"] + v["y"]),
+    # Bibby's directions: the clockwise turn from the way you face to your next stop, in eighths of a whole turn.
+    # Her card prints words only, so it has no clue figures.
+    "library-compass-turn": Lock(
+        (0, 360, 45),
+        lambda v: [],
+        lambda x, v: x == (COMPASS.index(v["to"]) - COMPASS.index(v["from"])) % 8 * 45),
+    # William's lesson: the end time on the twenty-four-hour clock, typed without the colon. Clue figures: the start
+    # time's hour and minutes and the lesson's length.
+    "taster-lesson-end-time": Lock(
+        keypad(4),
+        lambda v: [v["hh"], v["mm"], v["m"]],
+        lambda x, v: x == 100 * ((60 * v["hh"] + v["mm"] + v["m"]) // 60) + (60 * v["hh"] + v["mm"] + v["m"]) % 60),
+    # The lunch card: what is left on a card of `card` pence after the three prices. Clue figures: every price as
+    # printed AND in pence (draft item 16), so a price of 125p printed as "&pound;1.25" still counts against an
+    # answer of 125.
+    "lunch-card-change": Lock(
+        keypad(3),
+        lambda v: [printed_price(v[k]) for k in ("p1", "p2", "p3")] + [pence(v[k]) for k in ("p1", "p2", "p3")],
+        lambda x, v: x == v["card"] - sum(pence(v[k]) for k in ("p1", "p2", "p3"))),
 }
 
 TWO_INSTRUMENTS = {
