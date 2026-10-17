@@ -7,7 +7,9 @@ two boxes each; Stage 3 (30) is four options.
 
 Keys, recomputed with SymPy from what the student reads (the bank is read from the live page):
   - Stage 1: the prompt's pictures, one symbol per fruit in order of first appearance, matched to
-    the labels in that order; each box's key is the coefficient of its fruit.
+    the labels in that order; each box's key is the coefficient of its fruit. Each picture's Unicode
+    name must be the one its label names (PICTURES): a box labelled "plums" once sat under U+1FAA3
+    BUCKET and "limes" under U+1F95D KIWIFRUIT (like-terms-collector-r-001, -r-002, -t3-003).
   - Stage 2: the prompt parsed as algebra; each box's key is the coefficient of its label.
   - Stage 3: the expression simplified; the key must equal it and no distractor may (canon SR-16:
     a true statement is never a wrong option); the four options are distinct.
@@ -28,6 +30,7 @@ import argparse
 import os
 import re
 import sys
+import unicodedata
 
 from sympy import Symbol, expand, sympify
 from sympy.parsing.sympy_parser import (implicit_multiplication_application, parse_expr,
@@ -43,6 +46,10 @@ TRANSFORMS = standard_transformations + (implicit_multiplication_application,)
 # The fix's marking call, and the parseInt marking the self-test plants back in its place.
 FIXED = "MaffsAnswer.exact(inp.value,q.answers[k])"
 PLANTED = "(parseInt(inp.value,10)===q.answers[k]?'correct':'wrong')"
+# Stage 1: each label and the Unicode name of the picture it must sit under. A label not listed fails.
+PICTURES = {'apples': 'RED APPLE', 'tangerines': 'TANGERINE', 'bananas': 'BANANA', 'grapes': 'GRAPES',
+            'lemons': 'LEMON', 'kiwis': 'KIWIFRUIT', 'cherries': 'CHERRIES', 'strawberries': 'STRAWBERRY',
+            'pears': 'PEAR', 'mangoes': 'MANGO'}
 
 
 def algebra(text):
@@ -67,6 +74,11 @@ def check_bank(fails, bank, verbose=False):
         if len(kinds) != len(q['labels']):
             fails.append('stage 1 item %d: %d kinds of picture for %d labels' % (i + 1, len(kinds), len(q['labels'])))
             continue
+        for pic, label in zip(kinds, q['labels']):
+            name = ' '.join(unicodedata.name(c, 'U+%04X' % ord(c)) for c in pic)
+            if PICTURES.get(label) != name:
+                fails.append('stage 1 item %d: box "%s" sits under %s, expected %s'
+                             % (i + 1, label, name, PICTURES.get(label, 'a listed label')))
         want = [int(sympify(expr).coeff(Symbol('f%d' % k))) for k in range(len(kinds))]
         if want != q['answers']:
             fails.append('stage 1 item %d (%s): keyed %s, recomputed %s' % (i + 1, q['prompt'], q['answers'], want))
