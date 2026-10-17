@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: factor-race`
+`cloud-remaining: `
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -49,7 +49,7 @@ BV-CRITERIA (15 Oct, contract now `docs/history/contracts/2026-10-15-bv-criteria
 GS-L4-5-ENDPOINT (16 Oct, contract now `docs/history/contracts/2026-10-16-gs-l4-5-endpoint.md`): **DONE (#420, main green).** Entry below.
 BSB-ROOM-DRAFT (16 Oct, contract now `docs/history/contracts/2026-10-16-bsb-room-draft.md`): phase 1 of "Big School Begins": draft only, `docs/escape-room-drafts/big-school-begins-draft.md`. **DONE (#422, merged as c484459; main green, run 38910693628).** Approved by Jon with rulings (BSB-ROOM-BUILD).
 BSB-ROOM-BUILD (16 Oct, contract `docs/handover/contracts/2026-10-16-bsb-room-build.md`): phase 2, build Big School Begins from the draft with Jon's rulings and hold it behind a holding page for his play-test. **Hold released by Jon (17 Oct): option (b), no findings file for now; merged on green.** Not released until the home lane extends the audit register to escape rooms. Entry below.
-ESSENTIALS-FALSE-TEXT (17 Oct, contract `docs/handover/contracts/2026-10-17-essentials-false-text.md`): four listed Essentials games whose screens state or show something false, one game per PR, each claimed on the remaining line first: 1 like-terms-collector DONE (#426, ef84989); 2 factor-race (claimed); 3 new-shapes; 4 shape-shifter.
+ESSENTIALS-FALSE-TEXT (17 Oct, contract `docs/handover/contracts/2026-10-17-essentials-false-text.md`): four listed Essentials games whose screens state or show something false, one game per PR, each claimed on the remaining line first: 1 like-terms-collector DONE (#426, ef84989); 2 factor-race DONE (#428); 3 new-shapes; 4 shape-shifter.
 **Standing authorisation (Jon, 10 Oct):** the cloud lane merges any PR of its own once its Gate is green and main's last full run is green, without asking each time; it still watches main's run after each merge. The 10 Oct queue (RIGHTFUL-KING, LIBRARY-JAM, FONT-FIT) is DONE and moved to `docs/history/handover-cloud-archive.md`, with Jon's rulings for the two room builds and FONT-FIT's known problems.
 **Holds and self-scheduled tasks (Jon, 16 Oct 2026):** a hold the cloud lane states on a PR is released only by Jon. Stating a hold cancels, or rewrites to report-only, any pending task this lane scheduled for that PR. A task this lane schedules for itself carries no authority beyond the standing rules at the time it fires, and its report names it as the lane's own follow-up, not a request. Self-scheduled tasks may read CI status and report; they never merge, push or edit while a hold stands. (Contract GS-L4-5-ENDPOINT; canon §7.8 records it via the home lane.)
 
@@ -59,6 +59,7 @@ main's last full run is red; watch main's run after merging.
 ## 2026-10-17 (cloud): ESSENTIALS-FALSE-TEXT (contract `docs/handover/contracts/2026-10-17-essentials-false-text.md`)
 
 - **1 like-terms-collector (#426).** Every Stage 1 picture checked against its Unicode name (table in the PR): three mismatches, not two. The bucket under "plums" became 🍓 "strawberries" (the contract's 🍐 and 🍇 are already items 5 and 2; 🍓 is Unicode 6.0, so no empty box on old devices); "limes" became "kiwis"; "oranges" under U+1F34A TANGERINE became "tangerines" by the contract's own test (**for Jon:** "oranges" is defensible, one word to revert). Keys unchanged. `verify-like-terms-collector.py` now checks every picture's name against its label (`PICTURES`) and fails on main's copy naming all three. Closes r-001, r-002, t3-003.
+- **2 factor-race (#428).** The start screen says "You have 30 seconds per question" (it said 5; `TIME_PER_Q` is 30000). Timer unchanged. `verify-factor-race.py` now checks the stated seconds against `TIME_PER_Q`, with a self-test planting the old text. Closes t3-001. Main's run on #426 (ef84989) green: 39036055316.
 - **new-shapes STOP IF hit (reported, not reworded):** the game teaches two area formulae (parallelogram, trapezium) and one volume formula (prism); rectangle and triangle are only named on the start screen as ones the student "may already know". The count is not four. Waits on Jon's ruling.
 - **Local checks in this container:** the proxy refuses the KaTeX CDN (403), `esprima` will not build and WebKit is absent, so every KaTeX game, the answer-lock parts and the level resolver fail here for reasons unrelated to a change; CI is the judge for those. A full `check-changed.py` also outlasts the 30-minute background limit.
 
