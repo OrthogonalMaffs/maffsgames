@@ -481,7 +481,7 @@ def selftest(root):
         # 5. rooms (AUDIT-ROOMS): a findings file for a room folder with a room.js is accepted; one with neither folder fails
         rs = ROOM_STUB.format(slug='selftest-room')
         os.makedirs(os.path.join(tmp, 'escape-rooms', 'selftest-room'))
-        open(os.path.join(tmp, 'escape-rooms', 'selftest-room', 'room.js'), 'w').write('')
+        open(os.path.join(tmp, 'escape-rooms', 'selftest-room', 'room.js'), 'w', newline='').write('')
         rf = os.path.join(tmp, FINDINGS, 'selftest-room.yml')
         open(rf, 'w', encoding='utf-8', newline='').write(rs)
         errs, text = run(tmp)
