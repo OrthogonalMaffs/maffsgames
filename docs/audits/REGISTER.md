@@ -265,3 +265,25 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 **5. Unlisted (0):** none
 
 **Excluded from points 1, 2, 3 and 5 (1):** `glorious-gantt`: Jon, 12 Oct 2026 (1, 2, 5) and 13 Oct 2026 (3): excluded while unlisted
+
+## Escape rooms
+
+Rooms have findings files like games (canon §0.3, SR-30) but are not games: nothing above counts them.
+
+| Room | Audited | C | H | M | L | open | fixed | ruled |
+|---|---|---|---|---|---|---|---|---|
+| `big-school-begins` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `canteen-hack` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `car-trap` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `comic-caper` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `hamster-heist` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `heatwave-mutiny` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `kiln-disaster` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `library-jam` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `pe-shed-rebellion` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `prom-budget` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `rightful-king` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `roll-for-initiative` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `rugby-mud` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+
+13 rooms, 0 open findings.
