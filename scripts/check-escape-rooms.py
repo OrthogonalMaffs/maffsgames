@@ -305,6 +305,12 @@ def lock_grades(js):
     return out
 
 
+def room_label(js):
+    """A room's optional student-facing label (contract STARTER-LABEL), or None."""
+    m = re.search(r"\n  label: '([^']+)',", js.replace("\r\n", "\n"))
+    return m.group(1) if m else None
+
+
 def room_rating(grades):
     top = max(grades)
     return next((stars, name, gr) for t, stars, name, gr in BANDS if top <= t)
@@ -326,10 +332,24 @@ def check_ratings(room_js, live, pages, rating_js):
         for m in re.finditer(pat + r".*?</a>", html, re.S):
             slug = m.group(1)
             seen.append(slug)
-            c = re.search(r'<span class="%s" data-stars="(\d)"><span aria-hidden="true">([^<]*)</span>'
-                          r'<span class="sr-only">([^<]*)</span></span>' % chip, m.group(0))
             if slug not in want:
                 continue
+            # A labelled room's card shows its label chip and never data-stars (STARTER-LABEL); the order below
+            # still uses the derived rating.
+            lab = room_label(room_js[slug])
+            if lab:
+                want_chip = ('<span class="%s" data-label="%s"><span aria-hidden="true">%s</span>'
+                             '<span class="sr-only">Level: %s</span></span>' % (chip, lab.lower(), lab, lab))
+                if 'data-stars' in m.group(0):
+                    out.append(f"{page}: {slug}'s card carries data-stars, but the room has the label {lab!r}")
+                elif want_chip not in m.group(0):
+                    out.append(f"{page}: {slug}'s card has no label chip (want {want_chip})")
+                continue
+            if re.search(r'<span class="%s" data-label=' % chip, m.group(0)):
+                out.append(f"{page}: {slug}'s card shows a label chip, but the room has no label")
+                continue
+            c = re.search(r'<span class="%s" data-stars="(\d)"><span aria-hidden="true">([^<]*)</span>'
+                          r'<span class="sr-only">([^<]*)</span></span>' % chip, m.group(0))
             stars, name, gr = want[slug]
             label = "%s %s &middot; grades %s" % ("★" * stars, name, gr)
             sr = "Difficulty: %d of 3, %s, grades %s" % (stars, name, gr)
@@ -416,6 +436,16 @@ if "rugby-mud" in live:
     if not any("the star key says" in g for g in key_mismatch):
         problems.append(f"planted fault NOT caught: the hub's star key saying grades 4–6 "
                         f"(the star-key check found {key_mismatch or 'nothing'})")
+    # STARTER-LABEL: a label chip on an unlabelled room's card, and a star chip on a labelled room's card.
+    label_chip = ('<span class="chip" data-label="starter"><span aria-hidden="true">Starter</span>'
+                  '<span class="sr-only">Level: Starter</span></span>')
+    star_chip = re.search(r'<span class="chip" data-stars="\d">.*?</span></span>', hub_card, re.S).group(0)
+    plants["a label chip on Rugby Mud's card, which has no label"] = (
+        room_js, dict(pages, hub=pages["hub"].replace(hub_card, hub_card.replace(star_chip, label_chip))),
+        "shows a label chip, but the room has no label")
+    plants["a star chip on the card of a labelled room"] = (
+        dict(room_js, **{"rugby-mud": room_js["rugby-mud"].replace("\n  level:", "\n  label: 'Starter',\n  level:", 1)}),
+        pages, "carries data-stars")
     for what, (rj, pg, expect) in plants.items():
         got = check_ratings(rj, live, pg, rating_js)
         if not any(expect in g for g in got):

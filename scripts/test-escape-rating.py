@@ -13,6 +13,10 @@ plays them in Chromium and holds them to the hub card:
            same visible label ("★★ Core · grades 4–5") and the text equivalent ("Difficulty: 2 of 3, Core,
            grades 4–5"); "Suits a top set" appears nowhere on it
   teacher  the room's teacher.html shows the same rating, and "Suits a top set" exactly when it is ★★★
+  label    a labelled room (room.js `label`/`labelFor`, contract STARTER-LABEL: Big School Begins, held, so its
+           room is play.html) shows its label chip and no stars on the start screen ("Starter", data-label,
+           "Level: Starter", no data-stars, no ★), and its teacher page shows the label, "for <labelFor>" and
+           the derived stars chip ("Starter, for Year 6 and new Year 7 · ★ Warm-up · grades 1–3")
   phone    at 320x568, no sideways scroll on each room's start screen, each teacher page, the hub and the
            front page (the longest label is "★★★ Challenge · grades 6–9"). On a teacher page the answer
            tables (table.tt) are hidden first: they are its known overflow, allowlisted in check-site
@@ -46,6 +50,18 @@ def hub_cards():
         c = re.search(r'data-stars="(\d)"><span aria-hidden="true">([^<]*)</span><span class="sr-only">([^<]*)</span>', m.group(0))
         if c:
             out[m.group(1)] = {"stars": c.group(1), "label": c.group(2).replace("&middot;", "·"), "sr": c.group(3)}
+    return out
+
+
+def labelled_rooms():
+    """{slug: (label, labelFor, the page that holds its engine)} for every room.js with a label."""
+    out = {}
+    for d in sorted((ROOT / "escape-rooms").iterdir()):
+        js = (d / "room.js").read_text(encoding="utf-8") if (d / "room.js").exists() else ""
+        m = re.search(r"\n  label: '([^']+)',\n  labelFor: '([^']+)',", js.replace("\r\n", "\n"))
+        if m:
+            page = "play.html" if (d / "play.html").exists() else ""
+            out[d.name] = (m.group(1), m.group(2), page)
     return out
 
 
@@ -91,6 +107,32 @@ async def run(rooms, cards):
                     faults.append("%s: the teacher page %s \"Suits a top set\" at %s star(s)"
                                   % (slug, "says" if teach_top else "does not say", want["stars"]))
 
+            async def labelled(slug, label, label_for, page_name):
+                async with sem:
+                    ctx, page = await page_at(1280, 900)
+                    try:
+                        await page.goto(base + "/escape-rooms/%s/%s" % (slug, page_name), wait_until="load", timeout=20000)
+                        start = await page.evaluate(RATING, "#scrBrief")
+                        start_text = await page.evaluate("() => document.querySelector('#scrBrief').textContent")
+                        await page.goto(base + "/escape-rooms/%s/teacher.html" % slug, wait_until="load", timeout=20000)
+                        await page.wait_for_timeout(200)
+                        teach = await page.evaluate(RATING, "body")
+                        sub = await page.evaluate("() => { const c = document.querySelector('h1 .sub').cloneNode(true); "
+                                               "c.querySelectorAll('.sr-only').forEach(n => n.remove()); return c.textContent; }")
+                    finally:
+                        await ctx.close()
+                want = {"stars": None, "label": label, "sr": "Level: " + label}
+                if len(start) != 1 or start[0] != want:
+                    faults.append("%s: the start screen's rating is %s, want the label chip %s" % (slug, start, want))
+                if "★" in start_text:
+                    faults.append("%s: the start screen shows a star" % slug)
+                if not any(t.get("stars") == "1" and t["label"] == "★ Warm-up · grades 1–3" for t in teach) \
+                        or not any(t.get("stars") is None and t["label"] == label for t in teach):
+                    faults.append("%s: the teacher page does not show both the label and the stars chip: %s" % (slug, teach))
+                expect = "Teacher page · %s, for %s · ★ Warm-up · grades 1–3" % (label, label_for)
+                if expect not in sub.replace("\xa0", " "):
+                    faults.append("%s: the teacher page's sub line is %r, want it to contain %r" % (slug, sub, expect))
+
             async def narrow(path):
                 async with sem:
                     ctx, page = await page_at(320, 568)
@@ -110,7 +152,8 @@ async def run(rooms, cards):
                     faults.append("%s: scrolls sideways by %d px at 320x568" % (path, over))
 
             paths = ["/", "/escape-rooms/"] + ["/escape-rooms/%s/%s" % (r, t) for r in rooms for t in ("", "teacher.html")]
-            await asyncio.gather(*([room(r) for r in rooms] + [narrow(x) for x in paths]))
+            await asyncio.gather(*([room(r) for r in rooms] + [narrow(x) for x in paths]
+                                   + [labelled(s, *v) for s, v in labelled_rooms().items()]))
             await browser.close()
     finally:
         proc.terminate()
@@ -124,6 +167,7 @@ def main():
     faults = asyncio.run(run(rooms, cards))
     print("Escape-room difficulty (ESCAPE-DIFFICULTY): %d live room(s): %s" % (
         len(rooms), ", ".join("%s %s" % (r, "★" * int(cards[r]["stars"])) for r in rooms if r in cards)))
+    print("labelled rooms (STARTER-LABEL): " + (", ".join(labelled_rooms()) or "none"))
     for f in faults:
         print("  FAIL  " + f)
     print("PASS" if not faults else "FAIL")
