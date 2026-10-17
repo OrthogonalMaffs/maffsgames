@@ -61,9 +61,8 @@
    misconception on each lock is handled by missTitle and missSays alone, and no wrong-entry response gives the
    answer.
 
-   ART: pending (contract ART-PENDING). There is no `art` field, so the engine requests no scene, fail or win
-   picture; Project Claude writes the prompts after this build. The draft's provisional alts are in the draft, to
-   be rewritten against the pictures when they are filed. */
+   ART: filed (contract BSB-ART, 17 Oct 2026): docs/art/big-school-begins-{scene,fail,win}.webp, with alts written
+   from the filed pictures (no people, no figures, nothing that reads as a clue to a lock). */
 window.ROOM = {
   slug: 'escape-big-school-begins',
   title: 'Big School Begins',
@@ -72,6 +71,10 @@ window.ROOM = {
   labelFor: 'Year 6 and new Year 7',
   minutes: 20,
   penalty: 45,
+  art: 'big-school-begins',
+  sceneAlt: 'The school hall, empty, in bright light from tall windows. A stage with its curtains drawn back stands at the far end, with an easel holding a map of the school in front of it, and double doors at the side open onto a long corridor. Rows of plastic chairs face the stage, some with clipboards resting on them, and the floor is marked with sports court lines. A cardboard box of spare clothes and a water bottle sits on the floor with a trainer beside it.',
+  failAlt: 'The school canteen at the height of lunch, with nobody in it. Long tables are crowded with trays of half-eaten jacket potatoes and chilli, crisp packets, screwed-up paper and plain drinks cans, with blazers hung over the chair backs and bags on the floor. Steam rises behind the serving counter. A clipboard on a desk at the front and another on a table to the right each show a row of empty boxes.',
+  winAlt: 'A long canteen table in calm sunlight by tall windows, set with trays holding clean plates, cutlery and cups, with a pink milkshake and a mug of hot chocolate between them. A clipboard in the middle of the table has every box ticked, with a blank clipboard either side. Beyond the windows lies a green playing field, and the rest of the canteen is quiet.',
 
   hook: 'It&rsquo;s transition day at St Martha&rsquo;s: the day you come and see the school you start at in ' +
         'September, and find out it is much, much bigger than the one you are leaving. You arrived this morning ' +
