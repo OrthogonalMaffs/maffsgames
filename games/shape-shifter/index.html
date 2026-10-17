@@ -669,7 +669,7 @@ function drawGrid() {
     for (let i = 0; i < rotationOptions.length; i++) {
       const opt = rotationOptions[i];
       if (MaffsLock.isLocked(gameEl) && opt.correct) {
-        drawShape(opt.shape, '#1a2744', 'rgba(26,39,68,0.3)', 2);
+        drawShape(opt.shape, '#22c55e', 'rgba(34,197,94,0.3)', 2);
       } else if (MaffsLock.isLocked(gameEl) && selectedOption === i && !opt.correct) {
         drawShape(opt.shape, '#ef4444', 'rgba(239,68,68,0.2)', 2);
       } else if (i === hoveredOption && !MaffsLock.isLocked(gameEl)) {
@@ -719,10 +719,10 @@ function drawGrid() {
     }
   }
 
-  // After answering: show correct shape in navy
+  // After answering: show correct shape in green (--green; 8.58:1 against the #0a0c12 canvas)
   if (MaffsLock.isLocked(gameEl) && mode !== 'rotation') {
     const target = expectedVertices;
-    drawShape(target, '#1a2744', 'rgba(26,39,68,0.3)', 2);
+    drawShape(target, '#22c55e', 'rgba(34,197,94,0.3)', 2);
   }
 }
 
@@ -882,7 +882,7 @@ function checkVertexAnswer() {
     fb.textContent = 'Correct!';
     fb.className = 'feedback-bar correct';
   } else {
-    fb.textContent = 'Not quite — correct shape shown in navy';
+    fb.textContent = 'Not quite — correct shape shown in green';
     fb.className = 'feedback-bar incorrect';
   }
 

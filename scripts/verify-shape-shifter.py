@@ -29,8 +29,12 @@ Checks, independent of the game's code (the maths is integer-exact, so no Fracti
     each mode and 0/10 when every answer is wrong.
 No analytics or leaderboard request leaves the stub server (every other request is aborted).
 
-Not asserted (open findings, left open): the correct shape shown in navy on a dark canvas (t3-001), no 180 degree
-rotation ever built (t3-002), 15 items a mode (t3-004), the shared board and no keyboard path (t3-005).
+Colour (t3-001, fixed in ESSENTIALS-FALSE-TEXT 4/4): after an answer the correct shape is stroked in the page's own
+--green, at both drawing sites (the shape tapped and the rotation option), with a contrast of at least 3:1 against the
+canvas background (WCAG 1.4.11), and the wrong-answer feedback names that colour, "correct shape shown in green".
+
+Not asserted (open findings, left open): no 180 degree rotation ever built (t3-002), 15 items a mode (t3-004), the
+shared board and no keyboard path (t3-005).
 
     python scripts/verify-shape-shifter.py [--no-selftest] [--against FILE]
 """
@@ -380,7 +384,7 @@ def vertex_checks(fails, page, mode, bank):
             if r['fb'] != 'Correct!' or r['d'] != 1:
                 fails.append('%s: marking: the image tapped in some order reads %r (score %d)' % (where, r['fb'], r['d']))
                 break
-        bad = 'Not quite — correct shape shown in navy'
+        bad = 'Not quite — correct shape shown in green'
         for r in res['sweep']:
             hit = [r['gx'], r['gy']] == exp[r['k']]
             want, d = ('Correct!', 1) if hit else (bad, 0)
@@ -478,8 +482,41 @@ def session_checks(fails, page, nbank):
                     fails.append('session %s: a question from another bank: %r' % (m, idx))
 
 
+def luminance(hexc):
+    c = [int(hexc[i:i + 2], 16) / 255 for i in (1, 3, 5)]
+    c = [x / 12.92 if x <= 0.04045 else ((x + 0.055) / 1.055) ** 2.4 for x in c]
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+
+
+def contrast(a, b):
+    hi, lo = sorted((luminance(a), luminance(b)), reverse=True)
+    return (hi + 0.05) / (lo + 0.05)
+
+
+def colour_checks(fails, html):
+    """t3-001: the correct shape after an answer is drawn in the page's --green at both sites, at least 3:1 against
+    the canvas (WCAG 1.4.11), and the feedback names the colour it is drawn in."""
+    green = re.search(r'--green:\s*(#[0-9a-fA-F]{6})', html)
+    canvas = re.search(r'canvas\{[^}]*background:\s*(#[0-9a-fA-F]{6})', html)
+    sites = {'the shape tapped': re.search(r"const target = expectedVertices;\s*drawShape\(target,\s*'([^']+)'", html),
+             'the rotation option': re.search(r"opt\.correct\)\s*\{\s*drawShape\(opt\.shape,\s*'([^']+)'", html)}
+    named = re.search(r"correct shape shown in (\w+)'", html)
+    if not (green and canvas and named and all(sites.values())):
+        fails.append('colour: cannot read --green, the canvas background, both correct-shape drawing sites and the feedback')
+        return
+    for where, m in sites.items():
+        col = m.group(1).lower()
+        if col != green.group(1).lower():
+            fails.append('colour: the correct shape (%s) is drawn in %s, not the page\'s --green %s' % (where, col, green.group(1)))
+        elif not col.startswith('#') or contrast(col, canvas.group(1)) < 3:
+            fails.append('colour: the correct shape (%s) in %s is under 3:1 against the canvas %s' % (where, col, canvas.group(1)))
+    if named.group(1) != 'green':
+        fails.append('colour: the feedback says the correct shape is shown in %s, but it is drawn in --green' % named.group(1))
+
+
 def play(fails, html, expected_hit):
     from playwright.sync_api import sync_playwright
+    colour_checks(fails, html)
     proc, base = bc.start_stub_server()
     stats = {}
     try:
@@ -552,6 +589,10 @@ PLANTS = [
      [("— tap all ${expectedVertices.length} vertices of the new shape`;", "— tap each vertex position`;")]),
     ('the y-axis reflection computed as the x-axis', 'marking',
      [("if (axis === 'y') return shape.map(([x,y]) => [-x, y]);", "if (axis === 'y') return shape.map(([x,y]) => [x, -y]);")]),
+    ('the correct shape drawn in navy again (t3-001)', 'colour',
+     [("drawShape(target, '#22c55e', 'rgba(34,197,94,0.3)', 2);", "drawShape(target, '#1a2744', 'rgba(26,39,68,0.3)', 2);")]),
+    ('the feedback naming navy again (t3-001)', 'colour',
+     [("correct shape shown in green';", "correct shape shown in navy';")]),
 ]
 VERTEX_JS_FN = '(function(){' + VERTEX_JS + '})()'
 ROTATION_JS_FN = '(function(){' + ROTATION_JS + '})()'
@@ -576,8 +617,10 @@ def main():
           'in Chromium' % (SLUG, st.get('translation', 0), st.get('reflection', 0), st.get('rotation', 0), ROT_DEALS, DEALS))
     for k, v in sorted(EXPECTED.items()):
         print('  expected failure left open: %s (%s item with shape %s)' % (v, k[0], list(k[1])))
-    print('  not asserted (open): the answer shown in navy on the dark canvas (t3-001), no 180 degree rotation built (t3-002), '
-          '15 items a mode (t3-004), board and keyboard (t3-005)')
+    print('  correct shape after an answer drawn in --green at both sites, %.2f:1 against the canvas; the feedback names it (t3-001)'
+          % contrast(re.search(r'--green:\s*(#[0-9a-fA-F]{6})', html).group(1),
+                     re.search(r'canvas\{[^}]*background:\s*(#[0-9a-fA-F]{6})', html).group(1)))
+    print('  not asserted (open): no 180 degree rotation built (t3-002), 15 items a mode (t3-004), board and keyboard (t3-005)')
     ok = True
     if not args.no_selftest and not args.against:
         for what, tag, edits in PLANTS:
