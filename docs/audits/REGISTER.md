@@ -25,9 +25,9 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
 | HIGH | 7 | 230 | 0 | 237 |
-| MEDIUM | 172 | 323 | 5 | 500 |
+| MEDIUM | 171 | 324 | 5 | 500 |
 | LOW | 92 | 239 | 1 | 332 |
-| **All** | 272 | 826 | 6 | 1104 |
+| **All** | 271 | 827 | 6 | 1104 |
 
 ### By class
 
@@ -38,7 +38,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | NEW:text-contradicts-content | 20 | 90 |
 | 3 | 5 | 86 |
 | NEW:convention-unstated | 7 | 78 |
-| NEW:wrong-explanation-text | 12 | 71 |
+| NEW:wrong-explanation-text | 11 | 71 |
 | 6 | 21 | 56 |
 | NEW:true-wrong-option | 2 | 51 |
 | NEW:verifier-gap | 49 | 49 |
@@ -172,7 +172,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | `estimation-golf` | yes | verify-estimation-golf.py | 0 | 2 | 5 | 5 | 4 | 8 | 0 |
 | `expectation-station` | yes | verify-expectation-station.py | 2 | 13 | 8 | 5 | 2 | 26 | 0 |
 | `expected-damage` | yes | verify-expected-damage.py | 0 | 1 | 6 | 2 | 3 | 6 | 0 |
-| `factor-race` | yes | verify-factor-race.py | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
+| `factor-race` | yes | verify-factor-race.py | 0 | 0 | 4 | 1 | 4 | 1 | 0 |
 | `factor-theorem` | yes | verify-factor-theorem.py | 2 | 5 | 15 | 4 | 5 | 20 | 1 |
 | `fermi-lab` | yes | verify-fermi-lab.py | 0 | 2 | 1 | 1 | 0 | 4 | 0 |
 | `force-resolver` | yes | verify-force-resolver.py | 1 | 7 | 12 | 5 | 3 | 22 | 0 |
