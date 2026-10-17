@@ -24,7 +24,8 @@ findings:
   where: games/factor-race/index.html:133
   summary: Start screen says 'You have 5 seconds per question'; the countdown is 30s (TIME_PER_Q = 30000, :177)
   evidence: Source read; timer-policy.md gives Factor Race 30s
-  status: open
+  status: fixed
+  pr: 428
 - id: factor-race-t3-002
   severity: MEDIUM
   jc: false
