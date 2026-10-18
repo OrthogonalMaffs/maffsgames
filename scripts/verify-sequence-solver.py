@@ -104,6 +104,11 @@ def number(s):
     raise ValueError('not a number: %r' % s)
 
 
+def untex(s):
+    """The text inside MaffsText's \\( \\) delimiters, which the game uses to mark maths (RAW-TEX-LAST-2)."""
+    return s.replace('\\(', '').replace('\\)', '')
+
+
 def terms(seq):
     """The numbers shown in a sequence line, with None for a gap ('__')."""
     out = []
@@ -119,7 +124,7 @@ def terms(seq):
 
 def tn(item):
     """The T_n formula an item states (in seq or q), as SymPy in n."""
-    for f in (item['seq'], item.get('q', '')):
+    for f in (untex(item['seq']), untex(item.get('q', ''))):
         m = re.match(r'T_n = (.+)$', f or '')
         if m:
             return expr(m.group(1))
@@ -240,7 +245,7 @@ def SECOND(q):
 
 def TN_K(q):
     f = tn(q)
-    ts = [t for t in terms(q['seq'])] if not q['seq'].startswith('T_n') else []
+    ts = [t for t in terms(q['seq'])] if not untex(q['seq']).startswith('T_n') else []
     for i, t in enumerate(ts, 1):
         if f.subs(n, i) != t:
             raise ValueError('T_n does not give the shown term %s' % t)
@@ -352,24 +357,24 @@ def half_up(v, dp):
 H = F(1, 2)
 # (words the item must carry, answer). Every A-level answer from the item's own numbers.
 ALEVEL = [
-    ('Find S\u2081\u2080 when a = 3, d = 4', V(S_ap(3, 4, 10))),
+    ('Find S_{10} when a = 3, d = 4', V(S_ap(3, 4, 10))),
     ('Sum of first 20 terms if a = 5, l = 62', V(F(20, 2) * (5 + 62))),
-    ('a = 2, d = 3|Find S\u2082\u2080', V(S_ap(2, 3, 20))),
-    ('a = 10, d = -2|Find S\u2081\u2085', V(S_ap(10, -2, 15))),
+    ('a = 2, d = 3|Find S_{20}', V(S_ap(2, 3, 20))),
+    ('a = 10, d = -2|Find S_{15}', V(S_ap(10, -2, 15))),
     ('S_{10} = 200, a = 2|Find d', V((F(200) * 2 / 10 - 2 * 2) / 9)),
-    ('5 + 8 + 11|Find S\u2083\u2080', V(S_ap(5, 3, 30))),
-    ('a = 1, d = 1|Find S\u2081\u2080\u2080', V(S_ap(1, 1, 100))),
+    ('5 + 8 + 11|Find S_{30}', V(S_ap(5, 3, 30))),
+    ('a = 1, d = 1|Find S_{100}', V(S_ap(1, 1, 100))),
     ('a = 7, d = 5|first exceeds 100', ('n=', first_exceeding(lambda k: 7 + 5 * (k - 1), 100))),
     ('u_5 = 17, \\; u_{12} = 38.|Find d', V(F(38 - 17, 12 - 5))),
     ('u_5 = 17, d = 3|Find a', V(17 - 4 * 3)),
     ('last term } l|Which formula gives the sum?', ('verdict', 'S_n = \\dfrac{n}{2}(a + l)')),
     ('Sum of integers from 1 to } n|Formula', ('expr_n', sp.summation(sp.Symbol('r'), (sp.Symbol('r'), 1, n)))),
-    ('Find S\u2085 when a = 3, r = 2', V(S_gp(3, 2, 5))),
-    ('a = 1, r = 3|Find S\u2086', V(S_gp(1, 3, 6))),
-    ('a = 100, r = 0.5|Find S\u2088 (2 d.p.)', V(half_up(S_gp(100, H, 8), 2))),
-    ('a = 4, r = -2|Find S\u2086', V(S_gp(4, -2, 6))),
-    ('a = 10, r = \\dfrac{1}{2}|Find S\u2084', V(S_gp(10, H, 4))),
-    ('2 + 6 + 18 + 54|Find S\u2088', V(S_gp(2, 3, 8))),
+    ('Find S_5 when a = 3, r = 2', V(S_gp(3, 2, 5))),
+    ('a = 1, r = 3|Find S_6', V(S_gp(1, 3, 6))),
+    ('a = 100, r = 0.5|Find S_8 (2 d.p.)', V(half_up(S_gp(100, H, 8), 2))),
+    ('a = 4, r = -2|Find S_6', V(S_gp(4, -2, 6))),
+    ('a = 10, r = \\dfrac{1}{2}|Find S_4', V(S_gp(10, H, 4))),
+    ('2 + 6 + 18 + 54|Find S_8', V(S_gp(2, 3, 8))),
     ('u_1 = 5, \\; u_4 = 40.|Find r', V(sp.Rational(40, 5) ** sp.Rational(1, 3))),
     ('u_3 = 12, \\; u_6 = 96|Find r', V(sp.Rational(96, 12) ** sp.Rational(1, 3))),
     ('u_3 = 12, r = 2|Find a', V(F(12, 4))),
@@ -396,23 +401,24 @@ ALEVEL = [
     ('\\sum_{r=1}^{10} (2r - 1)|Evaluate', V(sum(2 * r - 1 for r in range(1, 11)))),
     ('\\sum_{r=1}^{\\infty} \\left(\\dfrac{1}{2}\\right)^r|Evaluate', V(H / (1 - H))),
     ('\\sum_{r=1}^{\\infty} 3 \\left(\\dfrac{1}{4}\\right)^r|Evaluate', V(3 * F(1, 4) / (1 - F(1, 4)))),
-    ('u_{n+1} = u_n + 3, \\; u_1 = 5|Find u\u2084', V(rec(5, lambda u, i: u + 3, 4))),
-    ('u_{n+1} = 2u_n, \\; u_1 = 3|Find u\u2085', V(rec(3, lambda u, i: 2 * u, 5))),
-    ('u_{n+1} = u_n + n, \\; u_1 = 1|Find u\u2084', V(rec(1, lambda u, i: u + i, 4))),
-    ('u_{n+1} = u_n^2 - 1, \\; u_1 = 2|Find u\u2083', V(rec(2, lambda u, i: u * u - 1, 3))),
+    ('u_{n+1} = u_n + 3, \\; u_1 = 5|Find u_4', V(rec(5, lambda u, i: u + 3, 4))),
+    ('u_{n+1} = 2u_n, \\; u_1 = 3|Find u_5', V(rec(3, lambda u, i: 2 * u, 5))),
+    ('u_{n+1} = u_n + n, \\; u_1 = 1|Find u_4', V(rec(1, lambda u, i: u + i, 4))),
+    ('u_{n+1} = u_n^2 - 1, \\; u_1 = 2|Find u_3', V(rec(2, lambda u, i: u * u - 1, 3))),
     ('Prove S_n for a = 1, d = 1', ('verdict', 'Substitute: \\(\\dfrac{n}{2}(2 + n - 1) = \\dfrac{n(n+1)}{2}\\)')),
     ('0.\\dot{9} = \\displaystyle\\sum_{r=1}^{\\infty} 9 \\times 10^{-r}|What does this sum equal?',
      V(F(9, 10) / (1 - F(1, 10)))),
     ('a = 12, \\; S_\\infty = 36|Find r', V(1 - F(12, 36))),
     ('a + ar + ar^2 + \\cdots = \\dfrac{a}{1-r}|This requires', ('verdict', '|r| < 1')),
     ('\\sum_{r=1}^{20} (3r - 2)|Evaluate', V(sum(3 * r - 2 for r in range(1, 21)))),
-    ('S_{10} = 120 \\text{ and } S_{20} = 440|Find S\u2083\u2080', V(two_sums())),
+    ('S_{10} = 120 \\text{ and } S_{20} = 440|Find S_{30}', V(two_sums())),
 ]
 AUDIT = {('alevel', 49): 'sequence-solver-r-001', ('gcse', 6): 'B11, audit F6', ('alevel', 23): 'sequence-solver-r-003, jc'}
 
 
 def value_of(kind, o):
     """An option's value for comparison, by the kind of answer."""
+    o = untex(o)
     if kind in ('val',):
         return number(o)
     if kind == 'ord':
@@ -452,7 +458,7 @@ def check_item(fails, w, q, target):
     if len(q['d']) != 3 or len(set(opts)) != 4:
         fails.append('%s: the options %s are not four distinct strings' % (w, opts))
     if kind == 'verdict':
-        if q['correct'] != target[1]:
+        if untex(q['correct']) != untex(target[1]):
             fails.append('%s: keyed %r, reviewed %r' % (w, q['correct'], target[1]))
         return
     if kind == 'converges':
@@ -516,7 +522,7 @@ def check_bank(fails, bank):
         for i, q in enumerate(bank[lv]):
             w = '%s[%d] (%s | %s | %s)%s' % (lv, i, q['seq'], q.get('q', ''), q['ask'],
                                              ' (%s)' % AUDIT[(lv, i)] if (lv, i) in AUDIT else '')
-            if re.fullmatch(r'a = -?[\d.]+, r = -?[\d.]+', q['seq']) and 'ar^{n-1}' not in q.get('q', ''):
+            if re.fullmatch(r'a = -?[\d.]+, r = -?[\d.]+', untex(q['seq'])) and 'ar^{n-1}' not in q.get('q', ''):
                 fails.append('%s: an a/r item without the T_n = ar^{n-1} line leaves the type to the letter r (R2, sequence-solver-s1-004)' % w)
             try:
                 if lv == 'alevel':
@@ -608,11 +614,12 @@ def run(html):
 PLANTS = [
     ('alevel[49]', 'r-001: 0.999... beside the key 1', "correct:'1',d:['10','\\\\dfrac{9}{10}','\\\\infty']",
      "correct:'1',d:['0.999...','\\\\dfrac{9}{10}','\\\\infty']"),
-    ('gcse[6]', 'B11: 10 - 3n beside -3n + 10', "d:['-3n + 10','3n + 7','-3n + 7']", "d:['-3n + 10','10 - 3n','-3n + 7']"),
+    ('gcse[6]', 'B11: 10 - 3n beside -3n + 10', "d:['\\\\(-3n + 10\\\\)','\\\\(3n + 7\\\\)','\\\\(-3n + 7\\\\)']",
+     "d:['\\\\(-3n + 10\\\\)','\\\\(10 - 3n\\\\)','\\\\(-3n + 7\\\\)']"),
     ('alevel[48]', 'R8: raw TeX in the prompt', "ask:'Prove \\\\(S_n\\\\) for \\\\(a = 1, d = 1\\\\) gives \\\\(\\\\dfrac{n(n+1)}{2}\\\\)'",
      "ask:'Prove S_n for a = 1, d = 1 gives \\\\dfrac{n(n+1)}{2}'"),
-    ('alevel[32]', 'R8: a prose key set in maths mode', "correct:'No, |r| ≥ 1'", "correct:'No, |r| \\\\geq 1'"),
-    ('gcse[39]', 'R2: a/r item without the formula line', "{seq:'a = 2, r = -2',q:'T_n = ar^{n-1}',", "{seq:'a = 2, r = -2',q:'',"),
+    ('alevel[32]', 'R8: a prose key set in maths mode', "correct:'No, \\\\(|r| \\\\geq 1\\\\)'", "correct:'No, |r| \\\\geq 1'"),
+    ('gcse[39]', 'R2: a/r item without the formula line', "{seq:'\\\\(a = 2, r = -2\\\\)',q:'T_n = ar^{n-1}',", "{seq:'\\\\(a = 2, r = -2\\\\)',q:'',"),
     ('gcse[48]', 'SR-17: fill the gaps, type unstated', "ask:'If arithmetic, fill the gaps'", "ask:'Fill in the gaps'"),
 ]
 
