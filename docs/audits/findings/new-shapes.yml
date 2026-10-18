@@ -97,7 +97,8 @@ findings:
   where: games/new-shapes/index.html:326 (reveal screen)
   summary: '''You now know five area formulae'' - the game names four (rectangle, triangle, parallelogram, trapezium)'
   evidence: Start screen :259 names rectangles + triangles, then adds two shapes
-  status: open
+  status: fixed
+  pr: 437
 - id: new-shapes-t3-008
   severity: LOW
   jc: true

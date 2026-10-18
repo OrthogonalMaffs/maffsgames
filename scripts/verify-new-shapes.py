@@ -29,11 +29,14 @@ Not asserted, because the findings are still open and the redraw is a design cal
 (parallelogram always 180x100, trapezium top always half the base, prism cross-section always a square: t3-003,
 t3-004, r-001) and the prism's l arrow, which spans the front width plus the depth rather than the depth edge (r-001,
 t3-005). The numbers on the diagram are checked; its geometry is not.
+The reveal screen (new-shapes-t3-007; Jon's ruling, 18 Oct 2026): it states what the bank teaches, the number of new
+  area formulae (distinct "Area of ..." formulas) in words and the one volume formula, the prism's: "You now know two
+  new area formulae and the volume of a prism." (It said "five area formulae and one volume formula".)
 No analytics or leaderboard request leaves the stub server (every other request is aborted).
 
 A self-test plants faults in a copy of the page and each must FAIL: a wrong key (first parallelogram 25), a wrong answer
-marked right (within 1), a wrong working figure, a wrong formula text (prism V = A + l) and a wrong number in the
-diagram's description.
+marked right (within 1), a wrong working figure, a wrong formula text (prism V = A + l), a wrong number in the
+diagram's description and the reveal screen's old "five area formulae".
 
     python scripts/verify-new-shapes.py [--no-selftest] [--against FILE]
 """
@@ -277,6 +280,23 @@ def mark_all(fails, page, bank):
                         where, got))
 
 
+WORDS = {1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five', 6: 'six'}
+
+
+def check_reveal(fails, bank, said):
+    """The reveal line states the formulae the bank teaches (new-shapes-t3-007; Jon's ruling, 18 Oct 2026)."""
+    names = {q['formulaName'] for q in bank}
+    areas = sorted(n for n in names if n.startswith('Area of '))
+    volumes = sorted(n for n in names if n.startswith('Volume of '))
+    if volumes != ['Volume of a prism']:
+        fails.append('reveal: the bank teaches volume formulae %r, not the prism\'s alone' % volumes)
+        return
+    want = 'You now know %s new area formulae and the volume of a prism.' % WORDS.get(len(areas), len(areas))
+    if said != want:
+        fails.append('reveal: the screen says %r; the bank teaches %d area formulae (%s) and the prism\'s volume: %r'
+                     % (said, len(areas), ', '.join(areas), want))
+
+
 def play(fails, html):
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
@@ -305,6 +325,7 @@ def play(fails, html):
                     if len(set(d)) != len(d) or split != SESSIONS[int(n)] or not set(d) <= set(sec):
                         fails.append('a %s-question session is %r (split %r, expected %r)' % (n, d[:4], split, SESSIONS[int(n)]))
             mark_all(fails, page, bank)
+            check_reveal(fails, bank, page.evaluate("() => document.querySelector('#revealScreen .reveal-message strong').textContent"))
             if errors:
                 fails.append('page errors: %s' % '; '.join(errors[:3]))
             browser.close()
@@ -329,6 +350,9 @@ PLANTS = [
      [("hLabel.style.right = '81px';", "hLabel.style.right = '20px';")]),
     ('a wrong number in the diagram description', 'the diagram says',
      [("' and height ' + h);", "' and height ' + b);")]),
+    ('the reveal screen\'s old count (t3-007)', 'reveal:',
+     [('You now know two new area formulae and the volume of a prism.',
+       'You now know five area formulae and one volume formula.')]),
 ]
 
 
