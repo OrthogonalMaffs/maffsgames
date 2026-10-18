@@ -61,9 +61,11 @@ findings:
   class: 6
   level: year6
   where: games/formula-plug-in/index.html:453
-  summary: Header score-display shows questions done (currentIndex), not correct answers
+  summary: 'Header score-display shows questions done (currentIndex), not correct answers. Fixed (ESSENTIALS-SCREEN-TRUTH-2
+    1/4): the slot reads right answers over answers given; verify-formula-plug-in.py checks it after each answer.'
   evidence: After one wrong answer the header reads '1/10' while correctCount = 0
-  status: open
+  status: fixed
+  pr: 441
 - id: formula-plug-in-t3-006
   severity: LOW
   jc: true
