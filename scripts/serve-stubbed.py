@@ -57,6 +57,15 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         pass
 
 
+class Server(http.server.ThreadingHTTPServer):
+    """The listen queue is the fix for LOCAL-FLAKES (18 Oct 2026). socketserver's default is 5; a page load opens
+    up to six connections at once and the checks load several pages at once, so on a loaded Windows machine the
+    accept loop falls behind, the queue fills and Windows REFUSES the next connection (net::ERR_CONNECTION_REFUSED).
+    A script or the page itself then never arrives and the check fails on an error the game never had. A queue
+    deep enough for every page a check can have in flight leaves nothing to refuse."""
+    request_queue_size = 128
+
+
 def main():
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 8765
     os.chdir(ROOT)
@@ -76,7 +85,7 @@ def main():
         # Threading matters: a single-threaded HTTPServer wedges completely if
         # one keep-alive connection is left hanging, which a closed browser tab
         # does routinely. ThreadingHTTPServer keeps serving.
-        srv = http.server.ThreadingHTTPServer(("127.0.0.1", port), Handler)
+        srv = Server(("127.0.0.1", port), Handler)
         srv.daemon_threads = True
         srv.serve_forever()
     except KeyboardInterrupt:
