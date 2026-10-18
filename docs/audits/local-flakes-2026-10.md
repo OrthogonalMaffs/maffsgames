@@ -39,7 +39,8 @@ enough for every page a check can have in flight leaves nothing to refuse. No ga
 | Answer lock part 6 | 10/10 | failed in the full run | 10/10 |
 | Answer lock part 1 (with self-test) | 10/10 | failed in the full run | 10/10 |
 
-After the fix: 70/70 idle runs passed. "Loaded" means a full `check-changed.py` running alongside.
+After the fix: 70/70 idle runs passed and 70/70 loaded runs passed (7 checks, 10 each). "Loaded" means a full
+`check-changed.py --full` running alongside on the same machine.
 
 ### Per check
 
@@ -53,7 +54,10 @@ After the fix: 70/70 idle runs passed. "Loaded" means a full `check-changed.py` 
 - **Text writes.** Failed once in a full run because my own scratch scripts were in `scripts/`; deleted, passes. Not a
   flake.
 
-## Still open
+## Second local-versus-CI difference, not this cause
 
-The loaded post-fix 10x set is running as this PR goes up (the load is a full `check-changed.py --full` on this
-branch). Its result will be added here in the next PR.
+Every full local pass during the loaded series failed one check, `Tier 1 (page load) shard 4/4`, on one page:
+`phone:page:parents/fractions` "stale: recorded at 321px in tier1_phone_overflow (section 1.34), now fits at
+320x568; remove the entry". It fails the same way in every completed full pass and when the shard is run on its own, so it is not a flake and
+not the server. CI measures 321 px there and passes; the difference looks like local font rendering (not proven). Not touched here: the entry is correct for CI and removing it would fail CI. If Jon wants it quiet locally,
+that is a separate contract.
