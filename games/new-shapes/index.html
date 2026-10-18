@@ -740,7 +740,6 @@ function startGame() {
   MaffsLock.newSession();
 
   showScreen('gameScreen');
-  document.getElementById('scoreTotal').textContent = sessionQuestions.length;
 
   if (typeof mfg === 'function') {
     mfg('game_started', { game_slug: GAME_SLUG, level: LEVEL, mode: sessionQuestions[0].section });
@@ -753,8 +752,8 @@ function loadQuestion() {
   var q = sessionQuestions[currentIndex];
   inputValue = '';
 
-  // Update header
-  document.getElementById('scoreNum').textContent = currentIndex;
+  // Update header: correct answers over questions answered so far
+  showScore(currentIndex);
 
   // Mode pill
   var modeNames = { parallelogram: 'Parallelogram', trapezium: 'Trapezium', prism: 'Prism' };
@@ -805,6 +804,11 @@ function loadQuestion() {
   MaffsLock.fresh(numpadEl);
 }
 
+function showScore(answered) {
+  document.getElementById('scoreNum').textContent = correctCount;
+  document.getElementById('scoreTotal').textContent = answered;
+}
+
 function updateAnswerDisplay() {
   var ad = document.getElementById('answerDisplay');
   if (inputValue === '') {
@@ -840,6 +844,7 @@ function submitAnswer() {
   var isCorrect = userAnswer === q.answer;
 
   if (isCorrect) correctCount++;
+  showScore(currentIndex + 1);
 
   // Update answer display style
   var ad = document.getElementById('answerDisplay');

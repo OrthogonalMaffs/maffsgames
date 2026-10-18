@@ -105,8 +105,28 @@ findings:
   class: NEW:cosmetic
   level: year6
   where: games/new-shapes/index.html:751,967
-  summary: Header score slot shows questions done; no units on any answer (cm2 vs cm3 never practised); game_completed/personal_best_set
-    lack mode
+  summary: 'Header score slot shows questions done, not correct answers. (Split: the parent entry held 3 defects; the
+    others are new-shapes-t3-009, new-shapes-t3-010; ESSENTIALS-SCREEN-TRUTH-2 step 2.)'
+  evidence: After 3 wrong answers the header reads 3/20; prompts are 'What is A?'/'What is V?'
+  status: open
+- id: new-shapes-t3-009
+  severity: LOW
+  jc: true
+  class: NEW:cosmetic
+  level: year6
+  where: games/new-shapes/index.html:751,967
+  summary: 'No units on any answer (cm2 vs cm3 never practised). Open (Split from new-shapes-t3-008,
+    ESSENTIALS-SCREEN-TRUTH-2 step 2.)'
+  evidence: After 3 wrong answers the header reads 3/20; prompts are 'What is A?'/'What is V?'
+  status: open
+- id: new-shapes-t3-010
+  severity: LOW
+  jc: true
+  class: NEW:cosmetic
+  level: year6
+  where: games/new-shapes/index.html:751,967
+  summary: 'game_completed/personal_best_set lack mode. Open (Split from new-shapes-t3-008, ESSENTIALS-SCREEN-TRUTH-2
+    step 2.)'
   evidence: After 3 wrong answers the header reads 3/20; prompts are 'What is A?'/'What is V?'
   status: open
 - id: new-shapes-s1-001
