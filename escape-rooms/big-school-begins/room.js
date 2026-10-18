@@ -1,5 +1,4 @@
-/* Room data for "big-school-begins" — shared by index.html (the holding page), play.html (the room, live but
-   unlisted) and teacher.html (answers, hint ladder, misconceptions).
+/* Room data for "big-school-begins" — shared by index.html (the room) and teacher.html (answers, hint ladder, misconceptions).
 
    Numbers are not written into the prose. Each lock carries a `variants`
    library and one set is drawn per play; {{key.token}} in any string below is
@@ -34,9 +33,8 @@
    student surfaces (ruling 2) is the home lane's label contract: there is no label or star field here, and the
    derived rating is ★ Warm-up (every lock grade 1).
 
-   STATUS: LIVE BUT UNLISTED, not released. The room is playable at /escape-rooms/big-school-begins/play.html for
-   Jon's play-test: noindex, analytics off, linked from nowhere (not in the hub, the front page or the sitemap);
-   index.html is the holding page. Release is a separate instruction from Jon.
+   STATUS: LIVE (contract BSB-RELEASE, 18 Oct 2026). index.html is the room, indexed, with analytics on; it is in
+   the hub, the front page and the sitemap. teacher.html stays noindex.
 
    GRADES (canon §11.3, ESCAPE-DIFFICULTY): every lock is grade 1 (first-quadrant coordinates; turns in eighths of
    a whole turn; durations across the hour; change from five pounds with exchanges across zeros), so the room is
@@ -101,7 +99,7 @@ window.ROOM = {
           'You&rsquo;ll get another go.&rdquo;',
   win: 'The lunch bell goes, and every box on the card has a tick in it. Daisy finds a table by the window big ' +
        'enough for all of you, and you all sit down at it: William too, between two people he hadn&rsquo;t met ' +
-       'this morning, eating and, for the first time today, talking.<br><br>' +
+       'this morning, and he hasn&rsquo;t stopped talking.<br><br>' +
        'Daisy hands in the card and sits down at the end.<br><br>' +
        'William says, &ldquo;My big brother said I&rsquo;d definitely get my head flushed down the toilet, but ' +
        'you guys are really nice.&rdquo;<br><br>' +

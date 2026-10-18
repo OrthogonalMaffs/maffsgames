@@ -152,7 +152,8 @@ async def run(rooms, cards):
                     faults.append("%s: scrolls sideways by %d px at 320x568" % (path, over))
 
             paths = ["/", "/escape-rooms/"] + ["/escape-rooms/%s/%s" % (r, t) for r in rooms for t in ("", "teacher.html")]
-            await asyncio.gather(*([room(r) for r in rooms] + [narrow(x) for x in paths]
+            # A labelled room has no stars on its hub card; labelled() above checks it. It still gets the 320 px pass.
+            await asyncio.gather(*([room(r) for r in rooms if r not in labelled_rooms()] + [narrow(x) for x in paths]
                                    + [labelled(s, *v) for s, v in labelled_rooms().items()]))
             await browser.close()
     finally:

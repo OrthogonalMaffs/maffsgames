@@ -20,7 +20,7 @@ the same rule. A keypad with `digits` behaves exactly as before.
              the typed fallback: "0054" becomes "54", "12345" becomes "1234", and Set then opens on "54"
   fixed    kiln-disaster's own two-digit keypad, unchanged: two empty slots to begin with; 5 then Set says
            "Not enough digits." and costs nothing
-  coords   Big School Begins' lock A (COORD-KEYPAD, 17 Oct 2026: `digits: 2, format: 'coordinates'`, play.html,
+  coords   Big School Begins' lock A (COORD-KEYPAD, 17 Oct 2026: `digits: 2, format: 'coordinates'`, index.html,
            the drawn set pinned to x 3, y 7): the display reads "( – , – )", "( 3 , – )", "( 3 , 7 )"; 3 then Set is
            "Not enough digits."; the typed fallback "(3, 7)" displays "( 3 , 7 )", keeps what was typed, and Set
            opens; 4,2,Set is wrong (no named response, not open); 7,3,Set (y then x) raises Daisy's misconception
@@ -111,7 +111,7 @@ async def coords_scenario(browser, base, steps):
         await ctx.route(lambda u: not u.startswith(base), lambda r: r.abort())
         await ctx.add_init_script(COORD_FIXTURE)
         page = await ctx.new_page()
-        await page.goto(base + "/escape-rooms/%s/play.html" % COORD_ROOM, wait_until="load", timeout=20000)
+        await page.goto(base + "/escape-rooms/%s/" % COORD_ROOM, wait_until="load", timeout=20000)
         await page.click("#startBtn")
         i = await page.evaluate("(id) => window.ROOM.locks.findIndex(l => l.id === id)", COORD_LOCK)
         await page.click('[data-lock="%d"]' % i)

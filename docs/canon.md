@@ -265,7 +265,7 @@ opening (read in the capture phase, before the page flips it), as `fact_expanded
 `preventDefault` or delays a link; `mfg()` posts with `keepalive`. Never label anything inside a
 `.game-card`: one click would then fire both events. Sheet columns (the endpoint keeps a fixed list):
 `item` → `game_slug`, `section` → `filter_type`, and `v1|pos=<position>;action=<action>` →
-`filter_value`. Labels on the portal: `escape-rooms` (12 items), `parent-guides` (1), `new-2026-27`
+`filter_value`. Labels on the portal: `escape-rooms` (13 items), `parent-guides` (1), `new-2026-27`
 (its "Show them" toggle), `essentials-link` (the homepage badge, item `open-essentials`).
 `scripts/test-section-clicks.py` (CI) clicks every labelled element and checks the payload, and that game
 cards and `fact_expanded` are unchanged.
@@ -2005,12 +2005,12 @@ this specific defect. The "4 collisions" count is a floor, not a guaranteed tota
 # 11. Escape Rooms
 
 Narrative maths escape rooms at `/escape-rooms/`. Started 2026-08-26; reference point
-**Unlock!**. **Under 15 minutes each** — built to end a lesson, not fill one, and to be played by three or
+**Unlock!**. **15 to 20 minutes each** — built to end a lesson, not fill one, and to be played by three or
 four students round one screen. Not counted in the 96 live games.
 
-## 11.1 Current state — 16 October 2026
+## 11.1 Current state — 18 October 2026
 
-**Twelve rooms live, one withdrawn.** The site ships a room as its voice rewrite finishes (§11.5).
+**Thirteen rooms live, one withdrawn.** The site ships a room as its voice rewrite finishes (§11.5).
 
 | Room | Slug | Level | Antagonist | State |
 | --- | --- | --- | --- | --- |
@@ -2026,6 +2026,7 @@ four students round one screen. Not counted in the 96 live games.
 | The Rightful King | `rightful-king` | GCSE Higher | — (Mr Brian Narry, IT, is an ally; the bully is offstage and unnamed) | **Live** (10/10/2026; ★★★) |
 | The Library Jam | `library-jam` | GCSE Foundation | — (Mrs Barb Phile, "Bibby", the librarian, is stern, never a villain; the clock is the fines email) | **Live** (10/10/2026; ★) |
 | Roll for Initiative | `roll-for-initiative` | GCSE | Commandant Strictmane (invented; Mr Strictman cameos, never speaks). Built from Mrs Rogers's idea; she is credited | **Live** (16/10/2026; ★★) |
+| Big School Begins | `big-school-begins` | Starter | — (no antagonist; Daisy Reddington, the buddy, William Trembles, the lost new boy, and Mrs Barb Phile, the librarian, are the cast) | **Live** (18/10/2026; Starter, label not stars; four locks, 20 minutes) |
 | The IT Teacher's Vengeance | `it-vengeance` | GCSE Higher | — | Withdrawn (its URL redirects to The Rightful King) |
 
 Two further rooms, **A (Coach Trip Hijack) and B (Tuck Shop Heist)**, are narratives only. Their locks were
