@@ -112,3 +112,17 @@ findings:
   evidence: 'seq "a = 2, r = -2", q "", ask "Find the 6th term", key "-64", options "64", "-32", "32" (SWEEP-1, batch 2)'
   status: fixed
   pr: 369
+- id: sequence-solver-rt2-001
+  severity: LOW
+  jc: false
+  class: NEW:phone-layout
+  level: alevel
+  where: games/sequence-solver/index.html:337 (option renderer), alevel[48] (:303)
+  summary: 'The key "Substitute: \(\dfrac{n}{2}(2 + n - 1) = \dfrac{n(n+1)}{2}\)", the bank''s only option mixing
+    prose and maths on main, was written straight into the flex .opt-btn: each prose run and KaTeX span became its
+    own flex item, so the fraction stacked in a narrow column beside "Substitute:" and the key stood out from its three
+    plain-text siblings. Found on screen during RAW-TEX-LAST-2; recorded on Jon''s instruction (18 Oct 2026). Fixed in
+    #435: mixed options sit in one inline span.'
+  evidence: 'docs/screenshots/raw-tex-last-2/sequence-solver-alevel-48-390.webp (main beside #435, 390 px)'
+  status: fixed
+  pr: 435

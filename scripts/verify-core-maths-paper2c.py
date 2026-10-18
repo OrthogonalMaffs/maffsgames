@@ -50,7 +50,14 @@ def sr31_lead(o):
     return m.group(1).strip() if m else None
 
 
+def untex(s):
+    """The text inside MaffsText's \\( \\) delimiters, which the game uses to mark maths (RAW-TEX-LAST-2)."""
+    return s.replace('\\(', '').replace('\\)', '')
+
+
 def check_bank(fails, bank):
+    bank = [dict(q, stem=untex(q['stem']), working=untex(q['working']), options=[untex(o) for o in q['options']])
+            for q in bank]
     if len(bank) != COUNT:
         fails.append('bank: %d questions, expected %d' % (len(bank), COUNT))
     for i, q in enumerate(bank):
@@ -157,13 +164,13 @@ def esc(x):
 # (the text the failure must start with, what is planted, [(today's text, the fault), ...]).
 PLANTS = [
     ('Q12 (t4-002)', 't4-002: Q12 without "f is a quadratic"',
-     [("stem:'f is a quadratic. The graph of y = f(x)", "stem:'The graph of y = f(x)")]),
+     [("stem:'\\\\(f\\\\) is a quadratic. The graph of \\\\(y = f(x)\\\\)", "stem:'The graph of \\\\(y = f(x)\\\\)")]),
     ('Q35 (t4-003)', "t4-003: Q35 with D not accepted", [('    accept:[1,3],\n', '')]),
-    ('Q6 units', 's1-001: Q6 without its units', [("velocity–time graph (t in seconds, v in m/s) shows a straight line from (0, 0)",
+    ('Q6 units', 's1-001: Q6 without its units', [("velocity–time graph (\\\\(t\\\\) in seconds, \\\\(v\\\\) in m/s) shows a straight line from (0, 0)",
                                                     "velocity–time graph shows a straight line from (0, 0)")]),
     ('Q6 SR-31', "SR-31: Q6's old D (the key's Yes)", [("'No — the acceleration is 30 m/s², the final velocity']",
                                                        "'Yes — but only when the line is horizontal']")]),
-    ('Q33 units', 's1-002: Q33 without t in years', [("e^(0.06t), where t is the time in years.", "e^(0.06t).")]),
+    ('Q33 units', 's1-002: Q33 without t in years', [("e^{0.06t}\\\\), where \\\\(t\\\\) is the time in years.", "e^{0.06t}\\\\).")]),
     ('t4-001', 't4-001: no fresh lock on a new question (before F1 batch 10)',
      [('  MaffsLock.fresh(container);   // a new question', '  // a new question'),
       ('  MaffsLock.fresh(oc);\n  currentQ++;', '  currentQ++;')]),
