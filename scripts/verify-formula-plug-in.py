@@ -24,11 +24,14 @@ Checks, independent of the game's code:
     (the key plus and minus one, and the answer a student gets from the usual slip: adding for multiplying, dropping the
     half, multiplying for adding, squaring for doubling, and so on, where it differs from the key) reads "Not quite - the
     answer is [key]" and is not counted, and its working steps shown are the item's, each as the TeX of a KaTeX line.
+  Score slot (formula-plug-in-t3-005): in a session played right, wrong, right, the header's "n/m" reads 0/0 before the
+    first answer and then this file's own count of right answers over answers given (1/1, 1/2, 2/3), after each answer
+    and on the next question; never questions done.
 No analytics or leaderboard request leaves the stub server (every other request is aborted).
 
 A self-test plants faults in a copy of the page and each must FAIL: a wrong key (the first rectangle area 41), a wrong
 answer marked right (within 1 of the key), a wrong working figure (A = 8 x 5 changed to 8 x 6) and a wrong formula
-text (the triangle's half dropped).
+text (the triangle's half dropped), the Mean prompt, and the score slot counting questions done (t3-005).
 
     python scripts/verify-formula-plug-in.py [--no-selftest] [--against FILE]
 """
@@ -185,6 +188,21 @@ MARK_JS = r"""(args) => {
           ws: [...document.querySelectorAll('#workingSteps > div')].map(d => tex(d).join('')),
           wsShown: document.getElementById('workingSteps').style.display};
 }"""
+SCORE_JS = r"""(plan) => {
+  const slot = () => document.getElementById('scoreNum').textContent + '/' + document.getElementById('scoreTotal').textContent;
+  selectSession(10); startGame(); MaffsLock.clearTimers();
+  const out = [['start', slot()]];
+  plan.forEach((right, i) => {
+    const q = sessionQuestions[currentIndex];
+    for (const ch of String(right ? q.answer : q.answer + 1)) numInput(ch);
+    submitAnswer(); MaffsLock.clearTimers();
+    out.push(['after answer ' + (i + 1), slot()]);
+    nextQuestion(); MaffsLock.clearTimers();
+    out.push(['question ' + (i + 2) + ' shown', slot()]);
+  });
+  return out;
+}"""
+SCORE_PLAN = [True, False, True]
 DEAL_JS = r"""() => { const out = {};
   for (const n of %s) { out[n] = []; selectSession(n);
     for (let k = 0; k < %d; k++) { startGame(); out[n].push(sessionQuestions.map(q => q.id)); MaffsLock.clearTimers(); } }
@@ -215,6 +233,19 @@ def mark_all(fails, page, bank):
                         where, got))
 
 
+def check_score_slot(fails, page):
+    got = page.evaluate(SCORE_JS, SCORE_PLAN)
+    want, right = [('start', '0/0')], 0
+    for i, r in enumerate(SCORE_PLAN):
+        right += r
+        want += [('after answer %d' % (i + 1), '%d/%d' % (right, i + 1)),
+                 ('question %d shown' % (i + 2), '%d/%d' % (right, i + 1))]
+    for (w, g) in zip(want, got):
+        if tuple(g) != w:
+            fails.append('score slot: at %s it reads %s, expected %s (right answers over answers given; t3-005)' % (
+                w[0], g[1], w[1]))
+
+
 def play(fails, html):
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
@@ -242,6 +273,7 @@ def play(fails, html):
                     if len(d) != min(int(n), len(bank)) or len(set(d)) != len(d) or not set(d) <= ids:
                         fails.append('a %s-question session is not that many different bank items: %r' % (n, d[:5]))
             mark_all(fails, page, bank)
+            check_score_slot(fails, page)
             if errors:
                 fails.append('page errors: %s' % '; '.join(errors[:3]))
             browser.close()
@@ -262,6 +294,8 @@ PLANTS = [
      [("formulaKatex:'A = \\\\tfrac{1}{2} \\\\times b \\\\times h',variables:[{name:'b',value:6}", "formulaKatex:'A = b \\\\times h',variables:[{name:'b',value:6}")]),
     ('the Mean prompt "What is Mean?" (R1, formula-plug-in-s1-001)', 'the question shows',
      [("'What is ' + (q.resultVar.length > 1 ? 'the ' + q.resultVar.toLowerCase() : q.resultVar) + '?';", "'What is ' + q.resultVar + '?';")]),
+    ('the score slot counting questions done (t3-005)', 'score slot',
+     [("document.getElementById('scoreNum').textContent = correctCount;", "document.getElementById('scoreNum').textContent = answered;")]),
 ]
 
 

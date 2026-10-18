@@ -440,7 +440,6 @@ function startGame() {
   MaffsLock.newSession();
 
   showScreen('gameScreen');
-  document.getElementById('scoreTotal').textContent = sessionQuestions.length;
 
   if (typeof mfg === 'function') {
     mfg('game_started', { game_slug: GAME_SLUG, level: LEVEL });
@@ -453,8 +452,8 @@ function loadQuestion() {
   const q = sessionQuestions[currentIndex];
   inputValue = '';
 
-  // Update header
-  document.getElementById('scoreNum').textContent = currentIndex;
+  // Update header: correct answers over questions answered so far
+  showScore(currentIndex);
 
   // Formula card
   document.getElementById('formulaName').textContent = q.formulaName;
@@ -483,6 +482,11 @@ function loadQuestion() {
   // Enable numpad
   enableNumpad(true);
   MaffsLock.fresh(numpadEl);
+}
+
+function showScore(answered) {
+  document.getElementById('scoreNum').textContent = correctCount;
+  document.getElementById('scoreTotal').textContent = answered;
 }
 
 function updateAnswerDisplay() {
@@ -522,6 +526,7 @@ function submitAnswer() {
   const isCorrect = userAnswer === q.answer;
 
   if (isCorrect) correctCount++;
+  showScore(currentIndex + 1);
 
   // Update answer display style
   const ad = document.getElementById('answerDisplay');
