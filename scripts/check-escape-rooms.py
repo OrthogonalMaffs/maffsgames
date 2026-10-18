@@ -311,6 +311,14 @@ def room_label(js):
     return m.group(1) if m else None
 
 
+def order_rank(label, stars):
+    """Where a room sorts in the easiest-first order (contract STARTER-FIRST): a Starter room before every
+    starred room (rank 0), an unlabelled room by its stars. Any other label has no rank until Jon rules (None)."""
+    if label is None:
+        return stars
+    return 0 if label == "Starter" else None
+
+
 def room_rating(grades):
     top = max(grades)
     return next((stars, name, gr) for t, stars, name, gr in BANDS if top <= t)
@@ -318,7 +326,7 @@ def room_rating(grades):
 
 def check_ratings(room_js, live, pages, rating_js):
     """Problems with the difficulty stars. room_js {slug: text}; live {slug}; pages {name: html}."""
-    out, want, seqs = [], {}, {}
+    out, want, seqs, rank = [], {}, {}, {}
     for slug in sorted(live):
         gs = lock_grades(room_js[slug])
         missing = [lid for lid, g in gs if g is None or not 1 <= g <= 9]
@@ -326,6 +334,11 @@ def check_ratings(room_js, live, pages, rating_js):
             out.append(f"{slug}: lock(s) with no grade 1-9: {', '.join(missing)}")
             continue
         want[slug] = room_rating([g for _, g in gs])
+        rank[slug] = order_rank(room_label(room_js[slug]), want[slug][0])
+        if rank[slug] is None:
+            out.append(f"{slug}: the label {room_label(room_js[slug])!r} has no place in the easiest-first order; "
+                       "it needs a ruling from Jon (contract STARTER-FIRST)")
+            rank[slug] = want[slug][0]
     for page, html in pages.items():
         pat, chip = CARD[page]
         seen = []
@@ -363,10 +376,11 @@ def check_ratings(room_js, live, pages, rating_js):
         # Every page that lists rooms lists them easiest first (FRONT-PAGE-ROOM-ORDER, 12 Oct 2026; the hub
         # says "Ordered easiest to hardest").
         seqs[page] = [s for s in seen if s in want]
-        order = [want[s][0] for s in seqs[page]]
+        # A Starter room sorts before every starred room (STARTER-FIRST); an unlabelled room by its stars.
+        order = [rank[s] for s in seqs[page]]
         if order != sorted(order):
-            out.append(f"{page}: cards are not in rating order (easiest first): "
-                       + ", ".join(f"{s} {want[s][0]}" for s in seqs[page]))
+            out.append(f"{page}: cards are not in rating order (easiest first, Starter before every star): "
+                       + ", ".join(f"{s} {'Starter' if rank[s] == 0 else '*' * rank[s]}" for s in seqs[page]))
     # The hub is the one source for the order within a star band: the front page lists the same rooms in the same order.
     if "hub" in seqs:
         for page, seq in seqs.items():
@@ -421,6 +435,16 @@ star_report = {s: room_rating([g for _, g in lock_grades(room_js[s])]) for s in 
                if all(g for _, g in lock_grades(room_js[s]))}
 
 # Planted faults: each must be caught, or the rule has stopped working.
+HUB_CARD = r'<a class="room-card" href="%s/".*?</a>'
+
+
+def swap_cards(html, a, b, pat=r'<a class="esc-card" href="escape-rooms/%s/".*?</a>'):
+    """The page with the whole cards (with any wrapper's note left in place) of rooms a and b swapped."""
+    ma, mb = re.search(pat % a, html, re.S), re.search(pat % b, html, re.S)
+    (x, y) = sorted([ma, mb], key=lambda m: m.start())
+    return (html[:x.start()] + y.group(0) + html[x.end():y.start()] + x.group(0) + html[y.end():])
+
+
 if "rugby-mud" in live:
     hub_card = re.search(r'<a class="room-card" href="rugby-mud/".*?</a>', pages["hub"], re.S).group(0)
     one_star = re.sub(r'data-stars="\d"><span aria-hidden="true">[^<]*</span><span class="sr-only">[^<]*</span>',
@@ -446,6 +470,18 @@ if "rugby-mud" in live:
     plants["a star chip on the card of a labelled room"] = (
         dict(room_js, **{"rugby-mud": room_js["rugby-mud"].replace("\n  level:", "\n  label: 'Starter',\n  level:", 1)}),
         pages, "carries data-stars")
+    # STARTER-FIRST: a Starter room's card after a starred room's card, and a label with no rank.
+    starters = [s for s in live if room_label(room_js[s]) == "Starter"]
+    if starters:
+        st = starters[0]
+        first_star = next(s for s in re.findall(CARD["hub"][0], pages["hub"]) if s in live and s != st
+                          and room_label(room_js[s]) is None)
+        plants["a Starter card placed after a starred card on the hub"] = (
+            room_js, dict(pages, hub=swap_cards(pages["hub"], st, first_star, HUB_CARD)),
+            "hub: cards are not in rating order")
+    plants["a label other than Starter, which has no rank"] = (
+        dict(room_js, **{"rugby-mud": room_js["rugby-mud"].replace("\n  level:", "\n  label: 'Beginner',\n  level:", 1)}),
+        pages, "needs a ruling")
     for what, (rj, pg, expect) in plants.items():
         got = check_ratings(rj, live, pg, rating_js)
         if not any(expect in g for g in got):
@@ -455,17 +491,9 @@ else:
     plant_line = "planted faults: skipped (rugby-mud is not live)"
 
 
-def swap_cards(html, a, b):
-    """The front page with the whole cards (with any wrapper's note left in place) of rooms a and b swapped."""
-    pat = r'<a class="esc-card" href="escape-rooms/%s/".*?</a>'
-    ma, mb = re.search(pat % a, html, re.S), re.search(pat % b, html, re.S)
-    (x, y) = sorted([ma, mb], key=lambda m: m.start())
-    return (html[:x.start()] + y.group(0) + html[x.end():y.start()] + x.group(0) + html[y.end():])
-
-
 # Order faults on the front page (FRONT-PAGE-ROOM-ORDER): each must be caught, or the order rule has stopped working.
 hub_seq = re.findall(CARD["hub"][0], pages["hub"])
-stars_of = {s: room_rating([g for _, g in lock_grades(room_js[s])])[0] for s in live}
+stars_of = {s: order_rank(room_label(room_js[s]), room_rating([g for _, g in lock_grades(room_js[s])])[0]) for s in live}
 hub_seq = [s for s in hub_seq if s in stars_of]
 same_band = next(((a, b) for a, b in zip(hub_seq, hub_seq[1:]) if stars_of[a] == stars_of[b]), None)
 order_plants = {}
