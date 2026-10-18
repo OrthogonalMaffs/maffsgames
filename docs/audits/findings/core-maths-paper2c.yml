@@ -67,9 +67,11 @@ findings:
   class: NEW:raw-tex-on-screen
   level: core
   where: games/core-maths-paper2c/index.html:18-19,377
-  summary: Raw notation (3^4.2, e^(kt)) with KaTeX loaded and never called
+  summary: 'Raw notation (3^4.2, e^(kt)) with KaTeX loaded and never called. Fixed (RAW-TEX-LAST-2): every expression
+    in 33 items (stem, options, working, table headers), ASCII or Unicode, is TeX in \( \) rendered by MaffsText.'
   evidence: Listed in docs/audit-katex-wrappers.md:560.
-  status: open
+  status: fixed
+  pr: 436
 - id: core-maths-paper2c-t4-007
   severity: MEDIUM
   jc: true
