@@ -36,9 +36,12 @@ findings:
     in `seq` reaches the student raw (confirmed in Chromium). Worst cases: :219 shows `T_n = 3 \times 2^{n-1}`,
     :220 `T_n = 5 \times 3^{n-1}`, :229 `T_n = 3 \times 2^n`, :232 `T_n = (-1)^n \times n` (4 questions whose rule
     is unreadable to a grade 1-3 student). Milder: `n^2` and `T_n` shown raw at :193-196, :209-212, :227-228, :230
-    (11 more). 15 of 50 GCSE questions in all; canon §7.1.1 requires KaTeX for expressions.'
+    (11 more). 15 of 50 GCSE questions in all; canon §7.1.1 requires KaTeX for expressions. Fixed (RAW-TEX-LAST-2):
+    the sequence line goes through MaffsText when it carries \( \), plain sequences unchanged; every other field
+    holding notation (GCSE options, A-level asks and options) is marked with \( \) too.'
   evidence: 'docs/audit-resit-correctness-2026-10-04.md F2. '
-  status: open
+  status: fixed
+  pr: 435
 - id: sequence-solver-r-003
   severity: MEDIUM
   jc: true
