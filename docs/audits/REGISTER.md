@@ -25,9 +25,9 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
 | HIGH | 7 | 230 | 0 | 237 |
-| MEDIUM | 167 | 328 | 5 | 500 |
+| MEDIUM | 166 | 329 | 5 | 500 |
 | LOW | 95 | 241 | 1 | 337 |
-| **All** | 270 | 833 | 6 | 1109 |
+| **All** | 269 | 834 | 6 | 1109 |
 
 ### By class
 
@@ -39,7 +39,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | 3 | 5 | 86 |
 | NEW:convention-unstated | 7 | 78 |
 | NEW:wrong-explanation-text | 10 | 71 |
-| 6 | 21 | 56 |
+| 6 | 20 | 56 |
 | NEW:true-wrong-option | 2 | 51 |
 | NEW:verifier-gap | 49 | 49 |
 | 1 | 8 | 41 |
@@ -177,7 +177,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | `fermi-lab` | yes | verify-fermi-lab.py | 0 | 2 | 1 | 1 | 0 | 4 | 0 |
 | `force-resolver` | yes | verify-force-resolver.py | 1 | 7 | 12 | 5 | 3 | 22 | 0 |
 | `formula-forge` | yes | verify-formula-forge.py | 0 | 1 | 8 | 3 | 7 | 5 | 0 |
-| `formula-plug-in` | yes | verify-formula-plug-in.py | 0 | 1 | 4 | 2 | 5 | 2 | 0 |
+| `formula-plug-in` | yes | verify-formula-plug-in.py | 0 | 1 | 4 | 2 | 4 | 3 | 0 |
 | `formula-unlocked` | yes | verify-formula-unlocked.py | 0 | 1 | 1 | 7 | 1 | 8 | 0 |
 | `four-quadrant-explorer` | yes | verify-four-quadrant-explorer.py | 0 | 1 | 2 | 1 | 3 | 1 | 0 |
 | `fraction-equivalence` | yes | verify-fraction-equivalence.py | 0 | 0 | 2 | 2 | 3 | 1 | 0 |
