@@ -19,15 +19,15 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 
 ## Counts
 
-1104 findings in 97 games.
+1109 findings in 97 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
 | HIGH | 7 | 230 | 0 | 237 |
-| MEDIUM | 169 | 326 | 5 | 500 |
-| LOW | 92 | 239 | 1 | 332 |
-| **All** | 269 | 829 | 6 | 1104 |
+| MEDIUM | 168 | 327 | 5 | 500 |
+| LOW | 95 | 241 | 1 | 337 |
+| **All** | 271 | 832 | 6 | 1109 |
 
 ### By class
 
@@ -42,7 +42,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | 6 | 21 | 56 |
 | NEW:true-wrong-option | 2 | 51 |
 | NEW:verifier-gap | 49 | 49 |
-| 1 | 5 | 37 |
+| 1 | 8 | 41 |
 | 5 | 27 | 27 |
 | 4 | 5 | 22 |
 | NEW:unstated-convention | 1 | 17 |
@@ -52,7 +52,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | NEW:value-equal distractors | 0 | 14 |
 | 8 | 3 | 11 |
 | NEW:marking-tolerance | 0 | 11 |
-| NEW:raw-tex-on-screen | 1 | 11 |
+| NEW:raw-tex-on-screen | 0 | 11 |
 | NEW:degenerate-item | 8 | 9 |
 | NEW:equal-value-options | 0 | 9 |
 | NEW:timer-policy | 0 | 9 |
@@ -61,10 +61,10 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | NEW:hint-gives-answer | 4 | 7 |
 | NEW:wrong-explanation | 0 | 7 |
 | NEW:ill-posed wording | 1 | 6 |
+| NEW:phone-layout | 4 | 6 |
 | 11 | 0 | 5 |
 | NEW:board-mixes-session-lengths | 5 | 5 |
 | NEW:marking-by-structure | 0 | 5 |
-| NEW:phone-layout | 4 | 5 |
 | B7 (ledgered) | 3 | 4 |
 | NEW:level-content-mismatch | 2 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
@@ -157,7 +157,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | `core-maths-paper1` | yes | verify-core-maths-paper1.py | 0 | 4 | 8 | 4 | 2 | 14 | 0 |
 | `core-maths-paper2a` | yes | verify-core-maths-paper2a.py | 1 | 1 | 4 | 5 | 6 | 5 | 0 |
 | `core-maths-paper2b` | yes | verify-core-maths-paper2b.py | 0 | 1 | 3 | 3 | 3 | 4 | 0 |
-| `core-maths-paper2c` | yes | verify-core-maths-paper2c.py | 0 | 3 | 8 | 3 | 7 | 7 | 0 |
+| `core-maths-paper2c` | yes | verify-core-maths-paper2c.py | 0 | 3 | 8 | 7 | 9 | 9 | 0 |
 | `correlation-or-coincidence` | yes | verify-correlation-or-coincidence.py | 2 | 0 | 4 | 3 | 2 | 7 | 0 |
 | `curling-friction` | yes | verify-curling-friction.py | 0 | 3 | 5 | 7 | 2 | 13 | 0 |
 | `decimal-detective` | yes | verify-decimal-detective.py | 0 | 2 | 2 | 0 | 0 | 4 | 0 |
@@ -213,7 +213,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | `quadratic-factoriser` | yes | verify-quadratic-factoriser.py | 1 | 1 | 1 | 4 | 1 | 6 | 0 |
 | `scale-factor-scaling` | yes | verify-scale-factor-scaling.py | 0 | 1 | 4 | 3 | 1 | 7 | 0 |
 | `screening-room` | yes | verify-screening-room.py | 1 | 4 | 14 | 8 | 2 | 24 | 1 |
-| `sequence-solver` | yes | verify-sequence-solver.py | 0 | 1 | 4 | 2 | 1 | 6 | 0 |
+| `sequence-solver` | yes | verify-sequence-solver.py | 0 | 1 | 4 | 3 | 1 | 7 | 0 |
 | `seven-bridges` | yes | verify-seven-bridges.py | 0 | 2 | 7 | 4 | 7 | 6 | 0 |
 | `shape-shifter` | yes | verify-shape-shifter.py | 2 | 1 | 5 | 3 | 4 | 7 | 0 |
 | `simultaneous-solver` | yes | verify-simultaneous-solver.py | 0 | 0 | 1 | 2 | 1 | 2 | 0 |
