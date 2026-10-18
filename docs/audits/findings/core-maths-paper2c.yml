@@ -96,8 +96,46 @@ findings:
   class: '1'
   level: core
   where: games/core-maths-paper2c/index.html:149-150,491
-  summary: Next below the fold at 375x667; literal '\u2192' rendered in signposts; two Enters in one frame skip;
-    renderSVG undefined (dead code); Q2 and Q36 test the same point
+  summary: 'Literal ''\u2192'' rendered in the two signposts. (Split: the parent entry held 5 defects; the others are
+    core-maths-paper2c-t4-010, -t4-011, -t4-012, -t4-013.) Fixed (Jon''s ruling, 18 Oct 2026, RAW-TEX-LAST-2): the
+    signposts show the arrow.'
+  evidence: Agent's evidence.
+  status: fixed
+  pr: 436
+- id: core-maths-paper2c-t4-010
+  severity: LOW
+  jc: false
+  class: '1'
+  level: core
+  where: games/core-maths-paper2c/index.html:149-150,491
+  summary: 'Next below the fold at 375x667. Open (Split from core-maths-paper2c-t4-009, SWEEP-1-RULINGS step 1; Jon, 18 Oct 2026.)'
+  evidence: Agent's evidence.
+  status: open
+- id: core-maths-paper2c-t4-011
+  severity: LOW
+  jc: false
+  class: '1'
+  level: core
+  where: games/core-maths-paper2c/index.html:149-150,491
+  summary: 'Two Enters in one frame skip. Open (Split from core-maths-paper2c-t4-009, SWEEP-1-RULINGS step 1; Jon, 18 Oct 2026.)'
+  evidence: Agent's evidence.
+  status: open
+- id: core-maths-paper2c-t4-012
+  severity: LOW
+  jc: false
+  class: '1'
+  level: core
+  where: games/core-maths-paper2c/index.html:149-150,491
+  summary: 'renderSVG undefined (dead code). Open (Split from core-maths-paper2c-t4-009, SWEEP-1-RULINGS step 1; Jon, 18 Oct 2026.)'
+  evidence: Agent's evidence.
+  status: open
+- id: core-maths-paper2c-t4-013
+  severity: LOW
+  jc: false
+  class: '1'
+  level: core
+  where: games/core-maths-paper2c/index.html:149-150,491
+  summary: 'Q2 and Q36 test the same point. Open (Split from core-maths-paper2c-t4-009, SWEEP-1-RULINGS step 1; Jon, 18 Oct 2026.)'
   evidence: Agent's evidence.
   status: open
 - id: core-maths-paper2c-s1-001
