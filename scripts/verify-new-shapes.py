@@ -32,11 +32,14 @@ t3-005). The numbers on the diagram are checked; its geometry is not.
 The reveal screen (new-shapes-t3-007; Jon's ruling, 18 Oct 2026): it states what the bank teaches, the number of new
   area formulae (distinct "Area of ..." formulas) in words and the one volume formula, the prism's: "You now know two
   new area formulae and the volume of a prism." (It said "five area formulae and one volume formula".)
+The score slot (new-shapes-t3-008): in a session played right, wrong, right, the header's "n/m" reads 0/0 before the
+  first answer and then this file's own count of right answers over answers given (1/1, 1/2, 2/3), after each answer
+  and on the next question; never questions done.
 No analytics or leaderboard request leaves the stub server (every other request is aborted).
 
 A self-test plants faults in a copy of the page and each must FAIL: a wrong key (first parallelogram 25), a wrong answer
 marked right (within 1), a wrong working figure, a wrong formula text (prism V = A + l), a wrong number in the
-diagram's description and the reveal screen's old "five area formulae".
+diagram's description, the reveal screen's old "five area formulae" and the score slot counting questions done (t3-008).
 
     python scripts/verify-new-shapes.py [--no-selftest] [--against FILE]
 """
@@ -220,6 +223,21 @@ MARK_JS = r"""(args) => {
   return {shown: shown, count: correctCount, ind: document.getElementById('feedbackIndicator').textContent.trim(),
           ws: [...document.querySelectorAll('#workingSteps > div')].map(d => tex(d).join(''))};
 }"""
+SCORE_JS = r"""(plan) => {
+  const slot = () => document.getElementById('scoreNum').textContent + '/' + document.getElementById('scoreTotal').textContent;
+  selectSession(10); startGame(); MaffsLock.clearTimers();
+  const out = [['start', slot()]];
+  plan.forEach((right, i) => {
+    const q = sessionQuestions[currentIndex];
+    for (const ch of String(right ? q.answer : q.answer + 1)) numInput(ch);
+    submitAnswer(); MaffsLock.clearTimers();
+    out.push(['after answer ' + (i + 1), slot()]);
+    nextQuestion(); MaffsLock.clearTimers();
+    out.push(['question ' + (i + 2) + ' shown', slot()]);
+  });
+  return out;
+}"""
+SCORE_PLAN = [True, False, True]
 DEAL_JS = r"""() => { const out = {};
   for (const n of %s) { out[n] = []; selectSession(n);
     for (let k = 0; k < %d; k++) { startGame(); out[n].push(sessionQuestions.map(q => q.id)); MaffsLock.clearTimers(); } }
@@ -283,6 +301,19 @@ def mark_all(fails, page, bank):
 WORDS = {1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five', 6: 'six'}
 
 
+def check_score_slot(fails, page):
+    got = page.evaluate(SCORE_JS, SCORE_PLAN)
+    want, right = [('start', '0/0')], 0
+    for i, r in enumerate(SCORE_PLAN):
+        right += r
+        want += [('after answer %d' % (i + 1), '%d/%d' % (right, i + 1)),
+                 ('question %d shown' % (i + 2), '%d/%d' % (right, i + 1))]
+    for (w, g) in zip(want, got):
+        if tuple(g) != w:
+            fails.append('score slot: at %s it reads %s, expected %s (right answers over answers given; t3-008)' % (
+                w[0], g[1], w[1]))
+
+
 def check_reveal(fails, bank, said):
     """The reveal line states the formulae the bank teaches (new-shapes-t3-007; Jon's ruling, 18 Oct 2026)."""
     names = {q['formulaName'] for q in bank}
@@ -325,6 +356,7 @@ def play(fails, html):
                     if len(set(d)) != len(d) or split != SESSIONS[int(n)] or not set(d) <= set(sec):
                         fails.append('a %s-question session is %r (split %r, expected %r)' % (n, d[:4], split, SESSIONS[int(n)]))
             mark_all(fails, page, bank)
+            check_score_slot(fails, page)
             check_reveal(fails, bank, page.evaluate("() => document.querySelector('#revealScreen .reveal-message strong').textContent"))
             if errors:
                 fails.append('page errors: %s' % '; '.join(errors[:3]))
@@ -353,6 +385,8 @@ PLANTS = [
     ('the reveal screen\'s old count (t3-007)', 'reveal:',
      [('You now know two new area formulae and the volume of a prism.',
        'You now know five area formulae and one volume formula.')]),
+    ('the score slot counting questions done (t3-008)', 'score slot',
+     [("document.getElementById('scoreNum').textContent = correctCount;", "document.getElementById('scoreNum').textContent = answered;")]),
 ]
 
 
