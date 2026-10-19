@@ -36,8 +36,8 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .header-div{width:1px;height:18px;background:rgba(255,255,255,0.15)}
 .header-title{font-size:17px;font-weight:700}
 .header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
-.score-display{font-size:14px;font-weight:600;color:var(--muted)}
-.score-display span{color:var(--accent)}
+.score-display{font-size:14px;font-weight:600;color:var(--muted);white-space:nowrap}
+.score-display span span{color:var(--accent)}
 .level-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.04em;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(99,102,241,0.3)}
 .mode-pill{font-size:11px;font-weight:500;padding:3px 10px;border-radius:12px;background:var(--surface-alt);color:var(--muted);border:1px solid var(--border)}
 
@@ -179,6 +179,9 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
   .back-link{display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-size:20px}
   .back-text,.header-div,.mode-pill,.level-pill{display:none}
   .header-title{font-size:16px;white-space:nowrap}
+  .score-display{font-size:12px;line-height:1.2;text-align:right}
+  .score-q,.score-r{display:block}
+  .score-sep{display:none}
   .a11y-toggle{width:44px;height:44px}
   .screen{padding:8px 12px}
   .formula-card{padding:8px 10px;margin:0 0 8px;border-radius:12px}
@@ -251,7 +254,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
     <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
     <span class="mode-pill" id="modePill"></span>
     <span class="level-pill">Starter</span>
-    <span class="score-display"><span id="scoreNum">0</span>/<span id="scoreTotal">0</span></span>
+    <span class="score-display"><span class="score-q">Q<span id="qNum">0</span> of <span id="qTotal">0</span></span><span class="score-sep"> · </span><span class="score-r"><span id="scoreNum">0</span> right</span></span>
   </div>
 </div>
 
@@ -752,8 +755,8 @@ function loadQuestion() {
   var q = sessionQuestions[currentIndex];
   inputValue = '';
 
-  // Update header: correct answers over questions answered so far
-  showScore(currentIndex);
+  // Update header: the question on screen of the session, and right answers so far
+  showScore();
 
   // Mode pill
   var modeNames = { parallelogram: 'Parallelogram', trapezium: 'Trapezium', prism: 'Prism' };
@@ -804,9 +807,10 @@ function loadQuestion() {
   MaffsLock.fresh(numpadEl);
 }
 
-function showScore(answered) {
+function showScore() {
+  document.getElementById('qNum').textContent = currentIndex + 1;
+  document.getElementById('qTotal').textContent = sessionQuestions.length;
   document.getElementById('scoreNum').textContent = correctCount;
-  document.getElementById('scoreTotal').textContent = answered;
 }
 
 function updateAnswerDisplay() {
@@ -844,7 +848,7 @@ function submitAnswer() {
   var isCorrect = userAnswer === q.answer;
 
   if (isCorrect) correctCount++;
-  showScore(currentIndex + 1);
+  showScore();
 
   // Update answer display style
   var ad = document.getElementById('answerDisplay');

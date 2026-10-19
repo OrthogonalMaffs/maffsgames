@@ -32,14 +32,15 @@ t3-005). The numbers on the diagram are checked; its geometry is not.
 The reveal screen (new-shapes-t3-007; Jon's ruling, 18 Oct 2026): it states what the bank teaches, the number of new
   area formulae (distinct "Area of ..." formulas) in words and the one volume formula, the prism's: "You now know two
   new area formulae and the volume of a prism." (It said "five area formulae and one volume formula".)
-The score slot (new-shapes-t3-008): in a session played right, wrong, right, the header's "n/m" reads 0/0 before the
-  first answer and then this file's own count of right answers over answers given (1/1, 1/2, 2/3), after each answer
-  and on the next question; never questions done.
+The score slot (new-shapes-t3-008; Jon's ruling, 19 Oct 2026): in a 10-question session played right, wrong, right, the header
+  reads "Q{n} of {N} · {right} right": n the question on screen, N the session length, right this file's own count
+  of right answers. Read at Q1 before any answer, after each answer and when the next question is shown (Q1 of 10 ·
+  0 right, Q1 of 10 · 1 right, Q2 of 10 · 1 right, ...).
 No analytics or leaderboard request leaves the stub server (every other request is aborted).
 
 A self-test plants faults in a copy of the page and each must FAIL: a wrong key (first parallelogram 25), a wrong answer
 marked right (within 1), a wrong working figure, a wrong formula text (prism V = A + l), a wrong number in the
-diagram's description, the reveal screen's old "five area formulae" and the score slot counting questions done (t3-008).
+diagram's description, the reveal screen's old "five area formulae" and the header counting answers given as right, and the header's question number off by one (t3-008 follow-up).
 
     python scripts/verify-new-shapes.py [--no-selftest] [--against FILE]
 """
@@ -224,16 +225,16 @@ MARK_JS = r"""(args) => {
           ws: [...document.querySelectorAll('#workingSteps > div')].map(d => tex(d).join(''))};
 }"""
 SCORE_JS = r"""(plan) => {
-  const slot = () => document.getElementById('scoreNum').textContent + '/' + document.getElementById('scoreTotal').textContent;
+  const slot = () => document.querySelector('.score-display').textContent;
   selectSession(10); startGame(); MaffsLock.clearTimers();
-  const out = [['start', slot()]];
+  const out = [['Q1 shown', slot()]];
   plan.forEach((right, i) => {
     const q = sessionQuestions[currentIndex];
     for (const ch of String(right ? q.answer : q.answer + 1)) numInput(ch);
     submitAnswer(); MaffsLock.clearTimers();
     out.push(['after answer ' + (i + 1), slot()]);
     nextQuestion(); MaffsLock.clearTimers();
-    out.push(['question ' + (i + 2) + ' shown', slot()]);
+    out.push(['Q' + (i + 2) + ' shown', slot()]);
   });
   return out;
 }"""
@@ -303,14 +304,14 @@ WORDS = {1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five', 6: 'six'}
 
 def check_score_slot(fails, page):
     got = page.evaluate(SCORE_JS, SCORE_PLAN)
-    want, right = [('start', '0/0')], 0
+    head = lambda n, right: 'Q%d of 10 · %d right' % (n, right)
+    want, right = [('Q1 shown', head(1, 0))], 0
     for i, r in enumerate(SCORE_PLAN):
         right += r
-        want += [('after answer %d' % (i + 1), '%d/%d' % (right, i + 1)),
-                 ('question %d shown' % (i + 2), '%d/%d' % (right, i + 1))]
+        want += [('after answer %d' % (i + 1), head(i + 1, right)), ('Q%d shown' % (i + 2), head(i + 2, right))]
     for (w, g) in zip(want, got):
         if tuple(g) != w:
-            fails.append('score slot: at %s it reads %s, expected %s (right answers over answers given; t3-008)' % (
+            fails.append('header: at %s it reads %r, expected %r (question on screen of session length, right answers; t3-008 follow-up)' % (
                 w[0], g[1], w[1]))
 
 
@@ -385,8 +386,10 @@ PLANTS = [
     ('the reveal screen\'s old count (t3-007)', 'reveal:',
      [('You now know two new area formulae and the volume of a prism.',
        'You now know five area formulae and one volume formula.')]),
-    ('the score slot counting questions done (t3-008)', 'score slot',
-     [("document.getElementById('scoreNum').textContent = correctCount;", "document.getElementById('scoreNum').textContent = answered;")]),
+    ('the header counting answers given as right (t3-008 follow-up)', 'header:',
+     [("document.getElementById('scoreNum').textContent = correctCount;", "document.getElementById('scoreNum').textContent = currentIndex + 1;")]),
+    ('the header question number off by one (t3-008 follow-up)', 'header:',
+     [("document.getElementById('qNum').textContent = currentIndex + 1;", "document.getElementById('qNum').textContent = currentIndex;")]),
 ]
 
 
