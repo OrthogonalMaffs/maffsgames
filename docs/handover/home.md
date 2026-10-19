@@ -1,5 +1,7 @@
 # Handover: home lane
 
+**DEPS-SRC-HAZARD (19 Oct; cloud lane, Jon's contract).** `scripts/ci-deps.py`: `src_hazard()` replaces the computed-src regex; selftest has an always-run budget of 12 (now 9, was 125). Detail: cloud handover.
+
 **ROOM-CREDIT v2 (19 Oct; cloud lane, under Jon's lane exception).** Shared files the cloud lane edited: `escape-rooms/assets/engine.js` (start-screen credit note), `escape-rooms/assets/teacher.js` (teacher-page credit note), `scripts/check-escape-rooms.py` (card notes held to room.js `credit`) and, on Jon's ruling, `escape-rooms/assets/rating.js` (`credit()`, `INVITE`). Rebase on them knowingly. Detail: cloud handover, ROOM-CREDIT v2.
 
 **STARTER-FIRST (18 Oct, Jon's contract; branch `claude/starter-first`).** A Starter-labelled room is listed before every starred room, on the hub and the front page. `check-escape-rooms.py` ranks a labelled card below every star rating (`order_rank`) and fails "cards are not in rating order (easiest first, Starter before every star)"; two planted faults (`swap_cards`) prove it. Order before: stars 1.. then Big School Begins; after: Big School Begins first, rest unchanged. Canon §11.3 has the one-sentence rule. Local full run was lost to the LOCAL-FLAKES server cause (#438); CI was the judge.
