@@ -25,9 +25,9 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
 | HIGH | 7 | 230 | 0 | 237 |
-| MEDIUM | 165 | 330 | 5 | 500 |
+| MEDIUM | 164 | 331 | 5 | 500 |
 | LOW | 96 | 242 | 1 | 339 |
-| **All** | 269 | 836 | 6 | 1111 |
+| **All** | 268 | 837 | 6 | 1111 |
 
 ### By class
 
@@ -53,7 +53,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | 8 | 3 | 11 |
 | NEW:marking-tolerance | 0 | 11 |
 | NEW:raw-tex-on-screen | 0 | 11 |
-| NEW:degenerate-item | 8 | 9 |
+| NEW:degenerate-item | 7 | 9 |
 | NEW:equal-value-options | 0 | 9 |
 | NEW:timer-policy | 0 | 9 |
 | NEW:hand-typed explanation figure | 4 | 8 |
@@ -215,7 +215,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | `screening-room` | yes | verify-screening-room.py | 1 | 4 | 14 | 8 | 2 | 24 | 1 |
 | `sequence-solver` | yes | verify-sequence-solver.py | 0 | 1 | 4 | 3 | 1 | 7 | 0 |
 | `seven-bridges` | yes | verify-seven-bridges.py | 0 | 2 | 7 | 4 | 7 | 6 | 0 |
-| `shape-shifter` | yes | verify-shape-shifter.py | 2 | 1 | 5 | 3 | 4 | 7 | 0 |
+| `shape-shifter` | yes | verify-shape-shifter.py | 2 | 1 | 5 | 3 | 3 | 8 | 0 |
 | `simultaneous-solver` | yes | verify-simultaneous-solver.py | 0 | 0 | 1 | 2 | 1 | 2 | 0 |
 | `six-sevens-bruv` | yes | verify-six-sevens.py | 0 | 0 | 0 | 1 | 0 | 1 | 0 |
 | `split-it` | yes | verify-split-it.py | 0 | 0 | 1 | 7 | 0 | 8 | 0 |
