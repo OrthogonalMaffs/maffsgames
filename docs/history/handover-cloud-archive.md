@@ -3,6 +3,14 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-18 (cloud): ESSENTIALS-FALSE-TEXT 3/4 new-shapes (#437; contract now `docs/history/contracts/2026-10-17-essentials-false-text.md`)
+
+- **Jon's ruling (18 Oct 2026), releasing the 17 Oct STOP:** the reveal line becomes "You now know two new area formulae and the volume of a prism." (it said "five area formulae and one volume formula"; the game teaches the parallelogram and trapezium areas and the prism's volume).
+- **Done in #437:** `games/new-shapes/index.html:329` carries the ruled line, nothing else changed. `verify-new-shapes.py` checks the line against the served bank (distinct "Area of ..." formulas in words; the only volume formula is the prism's) with a self-test plant of the old line: PASS, plant caught; main's copy FAILS on exactly that line. Screenshot `docs/screenshots/new-shapes-reveal-390.webp`. t3-007 fixed; new-shapes off the remaining line; contract moved. `check-changed.py` on c04b59a: verifier `ok`, 25 local failures (the KaTeX-CDN/WebKit set of #435/#436).
+- **Next:** merge on a green Gate; record main's run here in the next PR. Queue then empty of claimed work: no game on the remaining line.
+- **Learned:** `check-answer-lock.py` counts every backticked `cloud-remaining` token with a colon in this file, prose included, and fails on two. The 18 Oct checkpoint (aff4f2b) wrote one in prose and would have failed CI; caught before #437's first Gate. Never write the token in backticks outside line 17.
+- **#436's main run (Jon asked it be recorded here):** 39144824676 on 373fa6d, green, 53 of 53 jobs.
+
 ## 2026-10-18 (cloud): RAW-TEX-LAST-2 (contract now `docs/history/contracts/2026-10-18-raw-tex-last-2.md`)
 
 - **1 sequence-solver (#435).** The `seq` line goes through `MaffsText` when it carries `\( \)`, else `textContent` (136 plain sequence lines byte-identical in the DOM; all 50 KS3 items unchanged). Notation marked with `\( \)`: 18 GCSE seq lines, GCSE nth-term and `n = k` options, A-level asks (`S₁₀`, `S∞`, `u₄` were Unicode; `a = …`, `Find r`), A-level options (`S_n = n(a + l)` was shown raw; the convergence options). Keys keep their meaning; matching unchanged. Mixed prose-and-maths options now sit in one `<span>`: in the flex `.opt-btn` each run was a flex item and lost its spaces (it also wrecked alevel[48]'s key on main). Verifier: reading changes only (`untex`), checks unchanged. Closes r-002. Item lists and screenshots in the PR.
