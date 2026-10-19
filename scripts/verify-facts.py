@@ -370,8 +370,19 @@ PINS = [
           'energy ratio 10^(1.5 x 1.3) = 89; magnitudes: USGS Tohoku 9.1 (2011), Kahramanmaras 7.8 (2023)'),
     ]),
     ('100 Doors Makes Monty Hall Obvious', [
-        P('Monty opens ([0-9]+) goat doors.*from ([0-9]+)% to ([0-9]+)%', lambda o, a, b: int(o) == 98 and int(a) + int(b) == 100 and int(b) == 99),
-        L('1/100', lambda: Fraction(1, 100) + Fraction(99, 100) == 1),
+        # MONTY-CARD (19 Oct 2026): the setup and the condition are stated; every figure follows from 100 doors.
+        P('([0-9]+) doors: a car behind one, goats behind the other ([0-9]+)[.]', lambda d, g: int(g) == int(d) - 1),
+        P('The host, who knows where the car is, opens ([0-9]+) of the others, all goats', lambda o: int(o) == 100 - 1 - 1),
+        P('Switching wins ([0-9]+) times in ([0-9]+)[.]', lambda a, b: Fraction(int(a), int(b)) == 1 - Fraction(1, 100)),
+        P('Your door was a ([0-9]+)-in-([0-9]+) guess', lambda a, b: Fraction(int(a), int(b)) == Fraction(1, 100)),
+        P('The other ([0-9]+) doors held the car ([0-9]+) times in ([0-9]+)[.]',
+          lambda d, a, b: int(d) == 99 and Fraction(int(a), int(b)) == Fraction(99, 100)),
+        # A host opening 98 of the other 99 at random, and showing only goats: P(goats | car behind yours) = 1,
+        # P(goats | car elsewhere) = 1/99 (the car's door is the one left shut), so your door is 1/2.
+        L('If he opened doors at random and just happened to show goats, it would be 50/50',
+          lambda: Fraction(1, 100) / (Fraction(1, 100) + Fraction(99, 100) * Fraction(1, 99)) == Fraction(1, 2)),
+        P('switching wins ([0-9]+)/([0-9]+), staying ([0-9]+)/([0-9]+)',
+          lambda a, b, c, d: Fraction(int(a), int(b)) == 1 - Fraction(1, 3) and Fraction(int(c), int(d)) == Fraction(1, 3)),
     ]),
     ('Dimensional Analysis Saves Lives', [
         L('In 1999, NASA lost a $125 million Mars orbiter', None, 'NASA Mars Climate Orbiter Mishap Investigation Board, Nov 1999 (' + WIKI + 'Mars_Climate_Orbiter)'),
