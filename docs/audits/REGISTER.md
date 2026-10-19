@@ -19,15 +19,15 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 
 ## Counts
 
-1109 findings in 97 games.
+1111 findings in 97 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
 | HIGH | 7 | 230 | 0 | 237 |
 | MEDIUM | 166 | 329 | 5 | 500 |
-| LOW | 95 | 241 | 1 | 337 |
-| **All** | 269 | 834 | 6 | 1109 |
+| LOW | 96 | 242 | 1 | 339 |
+| **All** | 270 | 835 | 6 | 1111 |
 
 ### By class
 
@@ -66,6 +66,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | NEW:board-mixes-session-lengths | 5 | 5 |
 | NEW:marking-by-structure | 0 | 5 |
 | B7 (ledgered) | 3 | 4 |
+| NEW:cosmetic | 2 | 4 |
 | NEW:level-content-mismatch | 2 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
 | 9 | 1 | 3 |
@@ -77,7 +78,6 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | uncounted | 0 | 3 |
 | NEW:analytics | 0 | 2 |
 | NEW:board-key-mismatch | 2 | 2 |
-| NEW:cosmetic | 1 | 2 |
 | NEW:docs | 2 | 2 |
 | NEW:double-finish | 0 | 2 |
 | NEW:hidden-data | 0 | 2 |
@@ -199,7 +199,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | `modular-battle` | yes | verify-modular-battle.py | 0 | 0 | 4 | 2 | 3 | 2 | 1 |
 | `moments-master` | yes | verify-moments-master.py | 1 | 9 | 9 | 4 | 5 | 18 | 0 |
 | `negative-number-line` | yes | verify-negative-number-line.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
-| `new-shapes` | yes | verify-new-shapes.py | 0 | 2 | 7 | 1 | 7 | 3 | 0 |
+| `new-shapes` | yes | verify-new-shapes.py | 0 | 2 | 7 | 3 | 8 | 4 | 0 |
 | `normal-navigator` | yes | verify-normal-navigator.py | 0 | 0 | 4 | 7 | 5 | 6 | 0 |
 | `partial-fractions-duel` | yes | verify-partial-fractions-duel.py | 0 | 7 | 4 | 2 | 1 | 12 | 0 |
 | `percentage-flip` | yes | verify-percentage-flip.py | 0 | 0 | 2 | 0 | 1 | 1 | 0 |
