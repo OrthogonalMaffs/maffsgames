@@ -17,7 +17,13 @@
    age-neutral word shown on student surfaces in place of the stars (Big School Begins: "Starter", the SR-11
    name for the Year 6 level). html(r, room) returns the label chip when room.label is set and the star chip
    otherwise, byte-identical to before. rating() and BANDS are unchanged: the derived rating still orders the
-   hub and appears on the teacher page. */
+   hub and appears on the teacher page.
+
+   A room may carry an optional `credit` (contract ROOM-CREDIT v2, 19 Oct 2026): its own credit sentence(s).
+   credit(room) returns that sentence and the one shared invitation, "Want something built? Let us know.",
+   with "Let us know." linking to /feedback/; '' when the room has no credit. engine.js (start screen) and
+   teacher.js (teacher page) both draw it; the hub and front-page card notes are static copies that
+   scripts/check-escape-rooms.py holds to the field. */
 (function () {
   'use strict';
   var BANDS = [
@@ -57,5 +63,11 @@
       '</span>';
   }
 
-  window.MaffsEscapeRating = { rating: rating, html: html, BANDS: BANDS };
+  var INVITE = 'Want something built? <a href="/feedback/">Let us know.</a>';
+  function credit(room) {
+    if (!room || !room.credit) return '';
+    return String(room.credit).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') + ' ' + INVITE;
+  }
+
+  window.MaffsEscapeRating = { rating: rating, html: html, credit: credit, INVITE: INVITE, BANDS: BANDS };
 })();

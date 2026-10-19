@@ -31,6 +31,7 @@
 window.ROOM = {
   slug: 'escape-kiln-disaster',
   title: 'The Kiln Disaster',
+  credit: "Built from a site user's request.",
   level: 'gcse',
   minutes: 15,
   penalty: 45,

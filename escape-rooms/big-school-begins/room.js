@@ -64,6 +64,7 @@
 window.ROOM = {
   slug: 'escape-big-school-begins',
   title: 'Big School Begins',
+  credit: "Mrs Rogers' idea, and she stars in it.",
   level: 'year6',
   label: 'Starter',
   labelFor: 'Year 6 and new Year 7',

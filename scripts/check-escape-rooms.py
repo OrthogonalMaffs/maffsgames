@@ -23,6 +23,11 @@ Run after any edit to escape-rooms/*/room.js. It catches:
     page that says what the stars mean must name exactly the bands above, with the stars
     hidden from screen readers and read as "one star, Warm-up, grades 1 to 3" and so on, and
     must not say who a room suits. A key saying "Core, grades 4–6" is planted and must fail.
+  * credits (contract ROOM-CREDIT v2, 19 Oct 2026): a room's optional `credit` in room.js is its credit
+    sentence(s); the room page and teacher page draw it with the shared invitation (rating.js). The hub
+    and front-page cards are static, so each card's note (print-note on the hub, esc-note on the front
+    page, straight after the card) must read the credit + INVITE exactly; a note on a room with no credit
+    and a credited room with no note both fail. Three faults are planted on every run and must be caught.
   * on a `maxDigits: N` keypad ("up to N digits, Set to submit", KEYPAD-VARIABLE),
     an answer or misconception the keypad cannot take: it must be a whole
     number of 1 to N digits with no leading zero, so a four-digit misconception
@@ -311,6 +316,41 @@ def room_label(js):
     return m.group(1) if m else None
 
 
+def room_credit(js):
+    """A room's optional credit sentence(s) (contract ROOM-CREDIT v2), or None."""
+    m = re.search(r'\n  credit: "([^"\\]+)",', js.replace("\r\n", "\n"))
+    return m.group(1) if m else None
+
+
+# The one invitation that follows every credit (rating.js INVITE draws it on the room and teacher pages).
+INVITE = 'Want something built? <a href="/feedback/">Let us know.</a>'
+NOTE = {"hub": r'\s*<p class="print-note">(.*?)</p>', "front page": r'\s*<span class="esc-note">(.*?)</span>'}
+
+
+def check_credits(room_js, live, pages, rating_js):
+    """Problems with the room credits: every card's note, if any, against its room's credit + INVITE."""
+    out = []
+    if "var INVITE = '%s';" % INVITE not in rating_js:
+        out.append(f"escape-rooms/assets/rating.js INVITE differs from this checker's {INVITE!r}")
+    for page, html in pages.items():
+        pat, _ = CARD[page]
+        for m in re.finditer(pat + r".*?</a>", html, re.S):
+            slug = m.group(1)
+            if slug not in live:
+                continue
+            note = re.match(NOTE[page], html[m.end():], re.S)
+            got = " ".join(note.group(1).split()) if note else None
+            cr = room_credit(room_js[slug])
+            want = (cr.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") + " " + INVITE) if cr else None
+            if want and got is None:
+                out.append(f"{page}: {slug} has a credit but its card has no note (want {want!r})")
+            elif got and want is None:
+                out.append(f"{page}: {slug}'s card carries a note, but the room has no credit ({got!r})")
+            elif got != want:
+                out.append(f"{page}: {slug}'s card note reads {got!r}, its room's credit + invitation is {want!r}")
+    return out
+
+
 def order_rank(label, stars):
     """Where a room sorts in the easiest-first order (contract STARTER-FIRST): a Starter room before every
     starred room (rank 0), an unlabelled room by its stars. Any other label has no rank until Jon rules (None)."""
@@ -431,6 +471,7 @@ pages = {"hub": (ROOMS / "index.html").read_text(encoding="utf-8"),
 rating_js = (ROOMS / "assets" / "rating.js").read_text(encoding="utf-8")
 problems += check_ratings(room_js, live, pages, rating_js)
 problems += check_star_key(pages)
+problems += check_credits(room_js, live, pages, rating_js)
 star_report = {s: room_rating([g for _, g in lock_grades(room_js[s])]) for s in sorted(live)
                if all(g for _, g in lock_grades(room_js[s]))}
 
@@ -490,6 +531,39 @@ if "rugby-mud" in live:
 else:
     plant_line = "planted faults: skipped (rugby-mud is not live)"
 
+
+# Credit faults (ROOM-CREDIT v2): each must be caught, or the credit rule has stopped working.
+credited = sorted(s for s in live if room_credit(room_js[s]))
+credit_plants = {}
+
+
+def hub_note_of(slug):
+    card = re.search(HUB_CARD % slug, pages["hub"], re.S)
+    note = card and re.match(NOTE["hub"], pages["hub"][card.end():], re.S)
+    return note.group(0) if note else None
+
+
+noted = [s for s in credited if hub_note_of(s)]
+if noted and "rugby-mud" in live and not room_credit(room_js["rugby-mud"]):
+    c0 = noted[0]
+    hub_note = hub_note_of(c0)
+    credit_plants[f"{c0}'s hub note reworded"] = (
+        room_js, dict(pages, hub=pages["hub"].replace(hub_note, hub_note.replace("Want something built?", "Want one?"), 1)),
+        f"hub: {c0}'s card note reads")
+    credit_plants[f"{c0}'s credit removed from its room.js"] = (
+        dict(room_js, **{c0: re.sub(r'\n  credit: "[^"]*",', "", room_js[c0], count=1)}), pages,
+        f"{c0}'s card carries a note, but the room has no credit")
+    credit_plants["a credit given to Rugby Mud, whose cards have no note"] = (
+        dict(room_js, **{"rugby-mud": room_js["rugby-mud"].replace("\n  level:", '\n  credit: "Planted.",\n  level:', 1)}),
+        pages, "rugby-mud has a credit but its card has no note")
+for what, (rj, pg, expect) in credit_plants.items():
+    got = check_credits(rj, live, pg, rating_js)
+    if not any(expect in g for g in got):
+        problems.append(f"planted fault NOT caught: {what} (the credit check found {got or 'nothing'})")
+if len(credit_plants) != 3:
+    problems.append(f"credit plants: expected 3, built {len(credit_plants)} (need a credited room and an uncredited rugby-mud)")
+credit_line = ("credits: " + ", ".join(f"{s} {room_credit(room_js[s])!r}" for s in credited)
+               + "; faults caught: " + "; ".join(credit_plants))
 
 # Order faults on the front page (FRONT-PAGE-ROOM-ORDER): each must be caught, or the order rule has stopped working.
 hub_seq = re.findall(CARD["hub"][0], pages["hub"])
@@ -554,6 +628,7 @@ for slug, (stars, name, gr) in star_report.items():
     print(f"  {slug:<20} {'★' * stars:<3} {name} (grades {gr})")
 print(plant_line)
 print(order_line)
+print(credit_line)
 print("verified sets per live room (every set re-checked by scripts/escape_set_checks.py):")
 for slug, n in set_counts.items():
     print(f"  {slug:<20} {n:>4}")
