@@ -217,6 +217,33 @@ def resolve(ref, base_dir):
     return p if exists(p) else None
 
 
+SRC_SET = re.compile(r"\.src\s*=(?!\s*[\"'`])")       # a .src given anything but a literal
+SRC_LIT = re.compile(r"\.src\s*=\s*([\"'`])(.*?)\1([^;\n]*)")    # a .src given a literal, and what follows it
+
+
+def src_hazard(text):
+    """True when a script element's .src in this file is computed. A literal is fine. A literal https prefix joined
+    only to constants (names assigned a literal in this file) is a constant external endpoint, so fine too; any
+    other literal joined to something is computed. (The old test, \\.src\\s*=\\s*(?!quote), let \\s* backtrack to
+    zero spaces and fired on every literal: 117 of 129 selective verifiers always ran.)"""
+    if SRC_SET.search(text):
+        return True
+    for m in SRC_LIT.finditer(text):
+        rest = m.group(3).strip()
+        if not rest:
+            continue
+        parts = [x.strip() for x in rest.split("+")]
+        if parts[0] != "" or not re.match(r"^https?://", m.group(2)):
+            return True
+        for part in parts[1:]:
+            if re.match(r"^([\"'`]).*\1$", part):
+                continue
+            if not (re.match(r"^[A-Za-z_$][\w$]*$", part)
+                    and re.search(r"\b%s\s*=\s*[\"'`][^\"'`]*[\"'`]\s*[;,\n]" % re.escape(part), text)):
+                return True
+    return False
+
+
 def page_deps(page, seen=None, hazards=None):
     """Local files a page (or a JS/CSS file) loads, transitively; hazards = computed-path loads found."""
     seen = set() if seen is None else seen
@@ -234,8 +261,8 @@ def page_deps(page, seen=None, hazards=None):
                 page_deps(p, seen, hazards)
     for m in DYNAMIC.finditer(text):
         if m.group(0).startswith("createElement"):
-            # A script element: fine when every .src it is given in this file is a literal.
-            if re.search(r"\.src\s*=\s*(?![\"'`])", text):
+            # A script element: fine when every .src it is given in this file is a literal (src_hazard).
+            if src_hazard(text):
                 hazards.append("%s: a script element with a computed src" % page)
             continue
         arg = m.group(2).strip()
@@ -333,6 +360,9 @@ def changed_since(base):
 
 
 # ---------------------------------------------------------------- the selection proofs
+ALWAYS_BUDGET = 12          # selective verifiers that may run on every change; past it, selection has stopped working
+
+
 def selftest():
     dmap = dependency_map()
     sel = {s: i for s, i in dmap.items() if i["selective"]}
@@ -344,10 +374,22 @@ def selftest():
             fails.append(name)
 
     always = {s for s, i in sel.items() if i["always"]}
-    # (a) one game's page runs the verifiers that name that game, and no other.
+    # Assertions that do not lean on the always-set (each (a)-(b) check below is "expected | always", so it
+    # passed while the always-set swallowed the suite).
+    for line, want in (("x.src = 'a.js';", False), ("x.src = path;", True), ("x.src = 'games/' + slug + '.js';", True),
+                       ("var K = 'k1';\nx.src = 'https://e.example/t.js?id=' + K;", False),
+                       ("x.src = 'https://e.example/t.js?id=' + k;", True)):
+        check("src hazard: %s" % line.replace("\n", " "), src_hazard(line) == want, "want %s" % want)
+    _, hz = page_deps("schools/assets/analytics.js")
+    check("schools/assets/analytics.js has no hazard", not hz, "; ".join(hz))
+    check("always-run verifiers at most ALWAYS_BUDGET (%d)" % ALWAYS_BUDGET, len(always) <= ALWAYS_BUDGET,
+          "%d: %s" % (len(always), ", ".join(sorted(os.path.basename(s) for s in always))))
+    # (a) one game's page runs the verifiers that name that game, or read every game (a games/ directory dependency:
+    # check-levels, test-level...), and no other. The second kind was hidden while the always-set held nearly all.
+    every_game = {t for t, j in sel.items() if "games/" in j["deps"]}
     for g in sorted({g for i in sel.values() for g in i["games"]}):
         _, _, picked = select(["games/%s/index.html" % g], dmap)
-        want = {t for t, j in sel.items() if g in j["games"]} | always
+        want = {t for t, j in sel.items() if g in j["games"]} | every_game | always
         check("(a) games/%s/index.html" % g, set(picked) == want and bool(picked),
               "-> " + ", ".join(sorted(os.path.basename(p) for p in picked)))
     # (b) a shared asset fans out to every verifier whose pages load it, and to none that don't.
