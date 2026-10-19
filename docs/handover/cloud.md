@@ -37,7 +37,7 @@ start-up load). When the work merges, move the file to `docs/history/`.
 SWEEP-1-RULINGS (13 Oct, contract and Jon's two documents verbatim in `docs/handover/contracts/2026-10-13-sweep-1-rulings-2.md`): Jon approved the triage in full (20:35): standing rules R1-R9 (SR-33, below), 18 Part 2 rulings, Part 3 deferrals; R10 is the home lane's (contract LEVEL-LOGGED). Order: step 0 record, step 1 split bundled entries, step 2 R4 money check, step 3 per-game fixes (Year 6, KS3, Essentials at GCSE, other GCSE, Core, A-Level, L4), step 4 proportion-blaster-003 class count.
 ESSENTIALS-SCREEN-TRUTH-2 (18 Oct, contract `docs/handover/contracts/2026-10-18-essentials-screen-truth-2.md`): four listed Essentials games whose screens show something untrue or unreadable, one game per PR, each claimed on the remaining line first: 1 formula-plug-in DONE (#441); 2 new-shapes DONE (#442); 3 four-quadrant-explorer DONE (#443); 4 shape-shifter DONE (#445; Jon's ruling (a), 19 Oct); then (Jon, 19 Oct) 5 formula-plug-in and 6 new-shapes: header "Q{n} of {N} · {right} right". Rulings verbatim at the end of the contract file.
 ROOM-CREDIT v2 (19 Oct, contract and v1 verbatim `docs/handover/contracts/2026-10-19-room-credit.md`; Jon's lane exception plus his rating.js ruling): one optional room.js `credit`, drawn on the room and teacher pages, checked on the hub and front-page cards; four rooms credited. **DONE (#446, 9a94e78, merged 12:33 BST).**
-PYTHAG-REPORT (19 Oct, contract `docs/handover/contracts/2026-10-19-pythag-report.md`, research only): **DONE (#447)**; report `docs/handover/pythag-report.md`, for Jon's ruling on a "Formula only" mode. Then ruling (2) of 19 Oct: formula-plug-in (in progress, this PR) and new-shapes headers, one PR each.
+PYTHAG-REPORT (19 Oct, contract `docs/handover/contracts/2026-10-19-pythag-report.md`, research only): **DONE (#447)**; report `docs/handover/pythag-report.md`, for Jon's ruling on a "Formula only" mode. Then ruling (2) of 19 Oct: formula-plug-in DONE (#449, 531c988); new-shapes (this PR).
 MONTY-CARD (19 Oct, contract `docs/handover/contracts/2026-10-19-monty-card.md`; Jon's ruling on the phone gap at its end): the "100 Doors" card states its setup and condition; step 3 list in the entry below. **DONE (#448, b973e23).**
 **Standing authorisation (Jon, 10 Oct):** the cloud lane merges any PR of its own once its Gate is green and main's last full run is green, without asking each time; it still watches main's run after each merge. The 10 Oct queue (RIGHTFUL-KING, LIBRARY-JAM, FONT-FIT) is DONE and moved to `docs/history/handover-cloud-archive.md`, with Jon's rulings for the two room builds and FONT-FIT's known problems.
 **Holds and self-scheduled tasks (Jon, 16 Oct 2026):** a hold the cloud lane states on a PR is released only by Jon. Stating a hold cancels, or rewrites to report-only, any pending task this lane scheduled for that PR. A task this lane schedules for itself carries no authority beyond the standing rules at the time it fires, and its report names it as the lane's own follow-up, not a request. Self-scheduled tasks may read CI status and report; they never merge, push or edit while a hold stands. (Contract GS-L4-5-ENDPOINT; canon §7.8 records it via the home lane.)
@@ -47,7 +47,8 @@ main's last full run is red; watch main's run after merging.
 
 ## 2026-10-19 (cloud): HEADER "Q{n} of {N} · {right} right" (Jon's ruling (2), 19 Oct; follow-up to formula-plug-in-t3-005 and new-shapes-t3-008, nothing new closed)
 
-- **formula-plug-in (this PR):** the header slot reads "Q{n} of {N} · {right} right" (n the question on screen, N the session length, right the right answers so far); `showScore()` writes it from `loadQuestion` and straight after marking. Display only. Both games have a fixed session length (10/20/30 chosen before Start), so the ruling's STOP IF does not fire. On phones (600 px and below) the slot stacks as "Q{n} of {N}" over "{right} right" at 12 px; on one line it overflowed 320 px by 19 px. Verifier checks both numbers through right, wrong, right; two plants (answers given counted as right; question number off by one) caught; main fails only on the header.
+- **formula-plug-in (#449):** the header slot reads "Q{n} of {N} · {right} right" (n the question on screen, N the session length, right the right answers so far); `showScore()` writes it from `loadQuestion` and straight after marking. Display only. Both games have a fixed session length (10/20/30 chosen before Start), so the ruling's STOP IF does not fire. On phones (600 px and below) the slot stacks as "Q{n} of {N}" over "{right} right" at 12 px; on one line it overflowed 320 px by 19 px. Verifier checks both numbers through right, wrong, right; two plants (answers given counted as right; question number off by one) caught; main fails only on the header.
+- **new-shapes (this PR):** the same header, `showScore()`, phone stacking and verifier check as formula-plug-in (#449). Its session is 10/20/30 (split 3/4/3, 6/8/6, 9/12/9), fixed before Start. The reveal line (#437, Jon's 18 Oct ruling) is on main and not touched. Main fails only on the header.
 
 ## 2026-10-19 (cloud): MONTY-CARD (contract `docs/handover/contracts/2026-10-19-monty-card.md`)
 
@@ -85,10 +86,7 @@ total              2048              7                    95     102
 
   The 7 key collisions are all round-3 ladders, in metres below about 3 (sqrt(2a+2b) or c^2-a^2 rounds to the key). 87 of the 95 pair collisions are two identities: c-a = sqrt(2c-2a) when c-a = 2, and sqrt(|b^2-a^2|) = sqrt(2a+2b) when b-a = 2. Examples and the full list are in the report.
 
-## 2026-10-19 (cloud): ROOM-CREDIT v2 (contract `docs/handover/contracts/2026-10-19-room-credit.md`)
-
-- **v1 stopped (10:12)** on its first STOP IF: the request line was hand-written in four places (hub :79-80, :94-95; front page :813-814, :825-826), plus Roll for Initiative's teacher.html :24. v2 (10:32) rules the shape.
-- **Done:** `credit: "..."` in room.js (Big School Begins, Roll for Initiative, Comic Caper, Kiln Disaster); `rating.js` `credit(room)` + the one `INVITE` (Jon's ruling, 19 Oct: rating.js is the one file both pages load); engine.js draws it under the start screen's buttons, teacher.js after the brief; RfI's hand-written line and its room.js comment removed; hub and front-page notes added for BSB and RfI in the existing wrapper markup. `check-escape-rooms.py` reads the credit by regex (as it reads `label`) and fails a differing note, a note on an uncredited room and a credited room with no note (three plants); main's pages fail exactly on BSB and RfI, both pages. New `scripts/test-escape-credit.py` (CI): text once, link to /feedback/, no overflow or cut title at 320/390/1280; main's assets fail on all four rooms.
+## 2026-10-19 (cloud): ROOM-CREDIT v2 (#446; full entry in `docs/history/handover-cloud-archive.md`)
 
 ## 2026-10-18 (cloud): ESSENTIALS-SCREEN-TRUTH-2 (contract `docs/handover/contracts/2026-10-18-essentials-screen-truth-2.md`)
 
@@ -109,16 +107,4 @@ total              2048              7                    95     102
 
 ## 2026-10-18 (cloud): RAW-TEX-LAST-2 (#435, #436; full entry in `docs/history/handover-cloud-archive.md`)
 
-## 2026-10-17 (cloud): ESSENTIALS-FALSE-TEXT (#426, #428, #431; new-shapes awaits Jon; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-16 (cloud): BSB-ROOM-BUILD (finished 17 Oct, #425 and #429; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-16 (cloud): BSB-ROOM-DRAFT (finished 16 Oct, #422; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-16 (cloud): GS-L4-5-ENDPOINT (finished 16 Oct, #420; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-15 (cloud): BV-CRITERIA (finished 15 Oct, #416; full entry, with every old and new wording, in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-15 (cloud): BV-RULINGS (finished 15 Oct, #407; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-14 (cloud): TRUE-DISTRACTORS and MAIN-GREEN-AND-OPTION-PARITY (finished 14 Oct; full entries in `docs/history/handover-cloud-archive.md`)
+Older entries (17 Oct and before): `docs/history/handover-cloud-archive.md`.
