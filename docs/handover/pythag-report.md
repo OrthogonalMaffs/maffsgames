@@ -1,7 +1,7 @@
 # Just Pythag It, Bruv: the hypotenuse step, scoring, questions and misconception feedback (PYTHAG-REPORT)
 
 Contract PYTHAG-REPORT (Project Claude for Jon, 19 Oct 2026, 10:24; verbatim in
-`docs/handover/contracts/2026-10-19-pythag-report.md`). Research only: nothing in the game changed. Read from
+`docs/history/contracts/2026-10-19-pythag-report.md`). Research only: nothing in the game changed. Read from
 `games/just-pythag-it-bruv/index.html` on main (597a8b3); the measurement ran against the live page in Chromium.
 
 ## CLASS CHECK: whose code is it?
