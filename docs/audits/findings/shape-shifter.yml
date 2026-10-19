@@ -111,10 +111,12 @@ findings:
   class: NEW:degenerate-item
   level: year6
   where: games/shape-shifter/index.html:292 (REFLECTION_QUESTIONS[14])
-  summary: Shape (-4,-1),(-2,-1),(-2,1),(-4,1) reflected in the x-axis is itself; tapping the original's corners
-    scores correct
+  summary: 'Shape (-4,-1),(-2,-1),(-2,1),(-4,1) reflected in the x-axis is itself; tapping the original''s corners
+    scores correct. Fixed (ESSENTIALS-SCREEN-TRUTH-2 4/4, Jon''s ruling (a), 19 Oct 2026): the item is now
+    (-4,1),(-2,1),(-2,3),(-4,3); verify-shape-shifter.py fails any reflection item that is its own image.'
   evidence: (x,-y) maps the vertex set onto itself; key correct, item tests nothing
-  status: open
+  status: fixed
+  pr: 445
 - id: shape-shifter-t3-004
   severity: MEDIUM
   jc: false
