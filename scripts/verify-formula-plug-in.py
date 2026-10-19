@@ -24,14 +24,16 @@ Checks, independent of the game's code:
     (the key plus and minus one, and the answer a student gets from the usual slip: adding for multiplying, dropping the
     half, multiplying for adding, squaring for doubling, and so on, where it differs from the key) reads "Not quite - the
     answer is [key]" and is not counted, and its working steps shown are the item's, each as the TeX of a KaTeX line.
-  Score slot (formula-plug-in-t3-005): in a session played right, wrong, right, the header's "n/m" reads 0/0 before the
-    first answer and then this file's own count of right answers over answers given (1/1, 1/2, 2/3), after each answer
-    and on the next question; never questions done.
+  Header (formula-plug-in-t3-005; Jon's ruling, 19 Oct 2026): in a 10-question session played right, wrong, right, the
+    header reads "Q{n} of {N} · {right} right": n the question on screen, N the session length, right this file's own
+    count of right answers. Read at Q1 before any answer, after each answer and when the next question is shown (Q1 of
+    10 · 0 right, Q1 of 10 · 1 right, Q2 of 10 · 1 right, ...).
 No analytics or leaderboard request leaves the stub server (every other request is aborted).
 
 A self-test plants faults in a copy of the page and each must FAIL: a wrong key (the first rectangle area 41), a wrong
 answer marked right (within 1 of the key), a wrong working figure (A = 8 x 5 changed to 8 x 6) and a wrong formula
-text (the triangle's half dropped), the Mean prompt, and the score slot counting questions done (t3-005).
+text (the triangle's half dropped), the Mean prompt, the header counting answers given as right, and the header's
+question number off by one (t3-005 follow-up).
 
     python scripts/verify-formula-plug-in.py [--no-selftest] [--against FILE]
 """
@@ -189,16 +191,16 @@ MARK_JS = r"""(args) => {
           wsShown: document.getElementById('workingSteps').style.display};
 }"""
 SCORE_JS = r"""(plan) => {
-  const slot = () => document.getElementById('scoreNum').textContent + '/' + document.getElementById('scoreTotal').textContent;
+  const slot = () => document.querySelector('.score-display').textContent;
   selectSession(10); startGame(); MaffsLock.clearTimers();
-  const out = [['start', slot()]];
+  const out = [['Q1 shown', slot()]];
   plan.forEach((right, i) => {
     const q = sessionQuestions[currentIndex];
     for (const ch of String(right ? q.answer : q.answer + 1)) numInput(ch);
     submitAnswer(); MaffsLock.clearTimers();
     out.push(['after answer ' + (i + 1), slot()]);
     nextQuestion(); MaffsLock.clearTimers();
-    out.push(['question ' + (i + 2) + ' shown', slot()]);
+    out.push(['Q' + (i + 2) + ' shown', slot()]);
   });
   return out;
 }"""
@@ -235,14 +237,14 @@ def mark_all(fails, page, bank):
 
 def check_score_slot(fails, page):
     got = page.evaluate(SCORE_JS, SCORE_PLAN)
-    want, right = [('start', '0/0')], 0
+    head = lambda n, right: 'Q%d of 10 · %d right' % (n, right)
+    want, right = [('Q1 shown', head(1, 0))], 0
     for i, r in enumerate(SCORE_PLAN):
         right += r
-        want += [('after answer %d' % (i + 1), '%d/%d' % (right, i + 1)),
-                 ('question %d shown' % (i + 2), '%d/%d' % (right, i + 1))]
+        want += [('after answer %d' % (i + 1), head(i + 1, right)), ('Q%d shown' % (i + 2), head(i + 2, right))]
     for (w, g) in zip(want, got):
         if tuple(g) != w:
-            fails.append('score slot: at %s it reads %s, expected %s (right answers over answers given; t3-005)' % (
+            fails.append('header: at %s it reads %r, expected %r (question on screen of session length, right answers; t3-005 follow-up)' % (
                 w[0], g[1], w[1]))
 
 
@@ -294,8 +296,10 @@ PLANTS = [
      [("formulaKatex:'A = \\\\tfrac{1}{2} \\\\times b \\\\times h',variables:[{name:'b',value:6}", "formulaKatex:'A = b \\\\times h',variables:[{name:'b',value:6}")]),
     ('the Mean prompt "What is Mean?" (R1, formula-plug-in-s1-001)', 'the question shows',
      [("'What is ' + (q.resultVar.length > 1 ? 'the ' + q.resultVar.toLowerCase() : q.resultVar) + '?';", "'What is ' + q.resultVar + '?';")]),
-    ('the score slot counting questions done (t3-005)', 'score slot',
-     [("document.getElementById('scoreNum').textContent = correctCount;", "document.getElementById('scoreNum').textContent = answered;")]),
+    ('the header counting answers given as right (t3-005 follow-up)', 'header:',
+     [("document.getElementById('scoreNum').textContent = correctCount;", "document.getElementById('scoreNum').textContent = currentIndex + 1;")]),
+    ('the header question number off by one (t3-005 follow-up)', 'header:',
+     [("document.getElementById('qNum').textContent = currentIndex + 1;", "document.getElementById('qNum').textContent = currentIndex;")]),
 ]
 
 
