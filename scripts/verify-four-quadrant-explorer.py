@@ -25,11 +25,16 @@ Checks, independent of the game's code:
     all 121 points as a first try (the fourth corner scores 1 and reads "Correct! First attempt."; any other reads
     "Not quite - try once more"), then fourth corner after a miss ("Got it! (No point - not first
     attempt)", no score) and two misses (shows "The fourth corner was (x, y)").
+  Labels (four-quadrant-explorer-r-001), in Chromium at 320, 390 and 1280 px wide (Outfit served from the pinned copy):
+    every piece of text drawGrid() writes on the canvas is measured where it is drawn (measureText's bounding box at
+    its alignment); the tick labels -5..5 on both axes are all there, the origin label "(0,0)" once, and no two
+    boxes overlap, so "(0,0)" covers no tick label and every tick label can be read.
 No analytics or leaderboard request leaves the stub server (every other request is aborted).
 
 A self-test plants faults in a copy of the page and each must FAIL: a wrong read key (the second option made the key),
 a second correct read option (a distractor equal to the point), a wrong shape key, a plot tolerance of 1.4 cells (a
-wrong tap marked right) and a wrong figure in the plot feedback (x and y swapped).
+wrong tap marked right), a wrong figure in the plot feedback (x and y swapped) and the origin label back below-left of
+the origin, over the -1 labels (r-001).
 
     python scripts/verify-four-quadrant-explorer.py [--no-selftest] [--against FILE]
 """
@@ -178,6 +183,22 @@ READ_JS = r"""(q) => {
   MaffsLock.clearTimers();
   return {answers: out, hits: hits};
 }""" % POINT_RGB
+LABEL_WIDTHS = (320, 390, 1280)
+LABELS_JS = r"""async () => {
+  await document.fonts.load('12px Outfit');
+  startGame(); MaffsLock.clearTimers();
+  initCanvas();
+  const rec = [], orig = ctx.fillText;
+  ctx.fillText = function (t, x, y) {
+    const m = ctx.measureText(String(t));
+    rec.push({t: String(t), l: x - m.actualBoundingBoxLeft, r: x + m.actualBoundingBoxRight,
+              top: y - m.actualBoundingBoxAscent, bot: y + m.actualBoundingBoxDescent});
+    return orig.apply(this, arguments);
+  };
+  drawGrid();
+  delete ctx.fillText;
+  return rec;
+}"""
 QUEUE_JS = r"""() => { const out = {};
   for (const n of %s) { out[n] = [];
     for (let k = 0; k < %d; k++) out[n].push(buildQueue(n).map(q => q.type)); }
@@ -231,6 +252,19 @@ def play_checks(fails, page, plots, reads, shapes):
             fails.append('shape %r: two misses read %r' % (q['verts'], s2))
 
 
+def check_labels(fails, width, boxes):
+    texts = [b['t'] for b in boxes]
+    ticks = sorted(str(i) for i in RANGE if i) * 2
+    if sorted(t for t in texts if t != '(0,0)' and not t.startswith('Q')) != sorted(ticks) or texts.count('(0,0)') != 1:
+        fails.append('labels at %d px: drawn %r, expected the tick labels -5..5 on both axes and "(0,0)" once' % (width, texts))
+    for i, a in enumerate(boxes):
+        for c in boxes[i + 1:]:
+            if a['l'] < c['r'] and c['l'] < a['r'] and a['top'] < c['bot'] and c['top'] < a['bot']:
+                fails.append('labels at %d px: "%s" covers "%s" (boxes %s and %s; r-001)' % (
+                    width, a['t'], c['t'], [round(a[k]) for k in ('l', 'top', 'r', 'bot')],
+                    [round(c[k]) for k in ('l', 'top', 'r', 'bot')]))
+
+
 def play(fails, html):
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
@@ -244,6 +278,18 @@ def play(fails, html):
             ctx.route(lambda url: not url.startswith(base), lambda route: route.abort())
             ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
                 status=200, content_type='text/html; charset=utf-8', body=html))
+            for w in LABEL_WIDTHS:
+                lctx = browser.new_context(viewport={'width': w, 'height': 900})
+                lctx.add_init_script(bc.NO_LOCK_FRESH_INIT)
+                lctx.route(lambda url: not url.startswith(base), lambda route: route.abort())
+                lctx.route(lambda u: bc.is_font_cdn(u), bc.serve_real_font)   # Outfit from the pinned copy
+                lctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
+                    status=200, content_type='text/html; charset=utf-8', body=html))
+                lpage = lctx.new_page()
+                lpage.goto(base + '/games/%s/?cb=labels%d' % (SLUG, w), wait_until='load', timeout=20000)
+                lpage.wait_for_function('typeof drawGrid === "function"', timeout=15000)
+                check_labels(fails, w, lpage.evaluate(LABELS_JS))
+                lctx.close()
             page = ctx.new_page()
             errors = []
             page.on('pageerror', lambda e: errors.append(str(e)))
@@ -279,6 +325,9 @@ PLANTS = [
      [("const tolerance = 0.4;\n  const dx = Math.abs(snapped.x - q.x);", "const tolerance = 1.4;\n  const dx = Math.abs(snapped.x - q.x);")]),
     ('a wrong figure in the plot feedback (x and y swapped)', 'tapped',
      [("showFeedback(false, 'The correct position was (' + q.x + ', ' + q.y + ')');", "showFeedback(false, 'The correct position was (' + q.y + ', ' + q.x + ')');")]),
+    ('the origin label back over the -1 labels (r-001)', 'covers',
+     [("  ctx.textAlign = 'left';\n  ctx.textBaseline = 'bottom';\n  ctx.fillText('(0,0)', toCanvasX(0) + 6, toCanvasY(0) - 6);",
+       "  ctx.textAlign = 'right';\n  ctx.textBaseline = 'top';\n  ctx.fillText('(0,0)', toCanvasX(0) - 6, toCanvasY(0) + 6);")]),
 ]
 
 
