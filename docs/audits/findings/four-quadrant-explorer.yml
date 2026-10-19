@@ -21,14 +21,17 @@ findings:
   where: 'year6, all three modes, `drawGrid` lines 389-392: on phone widths the origin label "(0,0)" is printed
     over the -1 tick labels of both axes, so the -1 on the x-axis and the -1 on the y-axis cannot be read.'
   summary: 'year6, all three modes, `drawGrid` lines 389-392: on phone widths the origin label "(0,0)" is printed
-    over the -1 tick labels of both axes, so the -1 on the x-axis and the -1 on the y-axis cannot be read.'
+    over the -1 tick labels of both axes, so the -1 on the x-axis and the -1 on the y-axis cannot be read. Fixed
+    (ESSENTIALS-SCREEN-TRUTH-2 3/4): "(0,0)" is drawn above-right of the origin, the quadrant with no tick label;
+    verify-four-quadrant-explorer.py measures every canvas label at 320, 390 and 1280 px and fails any overlap.'
   evidence: 'docs/audit-resit-correctness-2026-10-04.md F1. Evidence: "(0,0)" is drawn right-aligned 6px left of
     the origin and 6px below the x-axis, 12px font, about 26px wide; the grid spacing is 20px at 320 wide and 27px
     at 390 wide, so the -1 labels (centred 20-27px left of the origin, and right-aligned 6px left of the y-axis
     20-27px below it) sit under it. Close-up `origin_320.png`: the x-axis "-1" is printed inside "(0,0)" and the
     y-axis "-1" overlaps its lower edge; at 1280 (`origin_1280.png`, spacing 48px) the labels are clear. Share affected:
     every question on screens up to roughly 430px wide; the scale is what the student counts from.'
-  status: open
+  status: fixed
+  pr: 443
 - id: four-quadrant-explorer-t3-001
   severity: HIGH
   jc: true

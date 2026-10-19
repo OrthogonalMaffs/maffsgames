@@ -405,10 +405,10 @@ function drawGrid() {
     ctx.textBaseline = 'top';
   }
 
-  // Origin label
-  ctx.textAlign = 'right';
-  ctx.textBaseline = 'top';
-  ctx.fillText('(0,0)', toCanvasX(0) - 6, toCanvasY(0) + 6);
+  // Origin label: above and right of the origin, the one quadrant with no tick labels (below-left it covered both -1s)
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'bottom';
+  ctx.fillText('(0,0)', toCanvasX(0) + 6, toCanvasY(0) - 6);
 
   // Quadrant labels
   ctx.fillStyle = 'rgba(122, 127, 144, 0.4)';
