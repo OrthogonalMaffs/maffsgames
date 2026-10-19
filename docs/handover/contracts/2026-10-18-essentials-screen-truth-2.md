@@ -84,3 +84,24 @@ STOP IF:
 - You would schedule any task that merges, pushes or edits.
 
 END OF CONTRACT
+
+---
+
+Rulings, Jon, 19 Oct 2026 (verbatim; on the 18 Oct STOP at item 4 and the report after items 1-3).
+
+(1) shape-shifter: option (a). "Overlaps" meant a duplicate item. Go as
+written: rerun python scripts/check-changed.py, then PR, and merge on
+green with main green.
+
+(2) formula-plug-in and new-shapes: restore a progress count beside the
+score. The header reads "Q{n} of {N} · {right} right" (n = the question
+on screen, N = the session length). Display only. Each verifier checks
+both numbers through right, wrong, right. One PR per game, after
+shape-shifter. Close nothing new; note it in each game's handover entry
+as a follow-up to t3-005 and t3-008.
+STOP IF either game has no fixed session length: report how its
+session ends, and wait.
+
+(3) Before starting new-shapes, report whether #437 applied the reveal
+line "You now know two new area formulae and the volume of a prism."
+Do not apply it in this work either way.
