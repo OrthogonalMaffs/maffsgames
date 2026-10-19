@@ -80,7 +80,7 @@ Jon" list below. Where a ruling and a canon section say more, the section has th
 | SR-18 | **Game-specific rulings.** Probability Paradox states assumptions; Sleeping Beauty accepts 1/2 and 1/3; the envelope item is "can't tell". Word Problem Decoder: one category scheme, both accepted where both fit. Spot the Error: a strategy choice is not an error. Truth Buster's statements are worded so the key holds as written. | 6 Oct 2026 | Jon, 6 Oct 2026 (20:30), rulings on audit tranches 3-6 |
 | SR-19 | **Bank size alone never unlists a game.** | 6 Oct 2026 | Jon, 6 Oct 2026 (20:30), rulings on audit tranches 3-6 |
 | SR-20 | **When a game is unlisted.** A game is unlisted until its verifier merges when a level reaches CRITICAL (10%+ of its items mark a correct answer wrong or a wrong one right) or 3+ items mark a correct answer wrong. Jon may unlist beyond this (tranche 5: all eleven). | 6 Oct 2026 | Jon, 6 Oct 2026 (20:30), rulings on audit tranches 3-6 |
-| SR-21 | **Relisting an unlisted game.** A game unlisted for audit faults is ready to relist when its verifier runs in CI and the findings register has no open CRITICAL or HIGH entry for it. The home lane relists every ready game in one batched docs PR. That PR puts back everything the unlisting removed: the roster row in its old section, the portal cards and weekly-fact links, the sitemap, the spec map, the leaderboard hub row (out of `NOT_ON_HUB`), and `/resit/` and parent-guide links. Open MEDIUM and LOW entries do not hold a game back; they stay in the register. A game still on the cloud lane's `cloud-remaining:` list waits until it comes off it, and Jon may hold a named game (expectation-station, 7 Oct). | 7 Oct 2026 | Jon, 7 Oct 2026, contract F1 |
+| SR-21 | **Relisting an unlisted game.** A game unlisted for audit faults is ready to relist when its verifier runs in CI and the findings register has no open CRITICAL or HIGH entry for it. The home lane relists every ready game in one batched docs PR. That PR puts back everything the unlisting removed: the roster row in its old section, the portal cards and weekly-fact links, the sitemap, the spec map, the leaderboard hub row (out of `NOT_ON_HUB`), and `/resit/` and parent-guide links. Open MEDIUM and LOW entries do not hold a game back; they stay in the register. A game still on the cloud lane's `cloud-remaining` list (`scripts/answer-lock-state.json`) waits until it comes off it, and Jon may hold a named game (expectation-station, 7 Oct). | 7 Oct 2026; the list's file, 19 Oct 2026 | Jon, 7 Oct 2026, contract F1; Jon, 19 Oct 2026, contract ANSWER-LOCK-STATE |
 | SR-22 | **One leaderboard per mode or session length.** Where a game's modes or session lengths have different maxima or measure different things, each has its own board (its own level key in the leaderboard name); runs never share a board with a mode they cannot be compared to. Prime Sprint's board key (its session length) is shown on the hub, so a student sees which board a score is on. Prisoner's Dilemma ranks the tournament total only: single matches against one opponent are not submitted. New level keys are added; existing keys never change (SR-11). Open entries it decides: proof-builder-t5-023 and prisoners-dilemma-t4-001 (code still to change). | 7 Oct 2026 | Jon, 7 Oct 2026, his ruling R15 |
 | SR-23 | **Timers follow `.claude/rules/timer-policy.md`.** A game listed under Hidden Count-Up runs a silent clock with no score multiplier, its time shown on the results screen only. Trig Identity Duel and Glorious Gantt Game follow it, as listed (their timers are visible now and Trig Identity Duel's feeds the score); scores before the change will not compare with scores after it, and that is accepted. Open entries it decides: trig-identity-duel-t2-010 and the timer part of glorious-gantt's entry at :783/:968 (code still to change). | 7 Oct 2026 | Jon, 7 Oct 2026, timer ruling |
 | SR-24 | **A counterexample must refute the statement as written, not a softer one.** For Spot the Error-type games; read with SR-16 and SR-18. | 8 Oct 2026 | Jon, 8 Oct 2026 (contract CTX's "For Jon" list; first written in a CLAUDE.md handover, 5 Oct 2026, SR-14 fix batch) |
@@ -1150,8 +1150,8 @@ stale timers that fired after the student moved on (two games finished and submi
   asks for `window.MaffsLock` only when it advances), so either may load first.
 - **The home lane adds a game to `MIGRATED`.** A game the cloud lane migrates is judged in full as soon
   as its page loads the lock. Its failures are reported, not failed, only while it is on the
-  `cloud-remaining:` line in `docs/handover/cloud.md`. Once the cloud lane takes it off that line, a failure
-  fails CI.
+  `cloud-remaining` list in `scripts/answer-lock-state.json`. Once the cloud lane takes it off that list, a
+  failure fails CI.
 
 ### 7.6.1 The phone rule — the reason and the control both above the fold
 
@@ -1493,11 +1493,12 @@ and is not edited by fix PRs.
   verifier, closing its register entries in its own `docs/audits/findings/<slug>.yml`. It never edits
   `schools/assets/`, the shared modules in `scripts/`, the workflow, canon, the roster's listed section or
   `docs/todo.md`.
-- **The cloud lane may fix listed games it has claimed on the `cloud-remaining:` line in
-  `docs/handover/cloud.md`** (Jon, 8 Oct 2026, contract CLAIM). It claims one game at a time, before starting
-  it, in a handover commit of its own, and removes the game in the PR that fixes it. The home lane never claims
-  or edits a game on that line: before building each batch it reads the line on main and drops any claimed
-  game. **For a listed game the claim is a process lock only** (Jon's ruling, 8 Oct): `check-answer-lock.py`
+- **The cloud lane may fix listed games it has claimed on the `cloud-remaining` list in
+  `scripts/answer-lock-state.json`** (Jon, 8 Oct 2026, contract CLAIM; the list moved there from the cloud
+  handover on 19 Oct 2026, contract ANSWER-LOCK-STATE). It claims one game at a time, before starting it, in a
+  commit of its own that adds the game to that list, and removes the game in the PR that fixes it. The home lane
+  never claims or edits a game on that list: before building each batch it reads the list on main and drops any
+  claimed game. **For a listed game the claim is a process lock only** (Jon's ruling, 8 Oct): `check-answer-lock.py`
   judges it exactly as if unclaimed (a migrated game must pass; a NOT_YET game is reported). The
   reported-not-failed exemption holds only for games in the roster's Unlisted section, so no time bound is needed.
 - **A new verifier never edits the workflow** (contract V, Jon, 7 Oct 2026). It declares its CI lines in its

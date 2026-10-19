@@ -89,11 +89,12 @@ Two sessions may run side by side. They stay out of each other's files:
 - **Neither lane merges while main's last full run is red.**
 - **Before the first push of every PR: `python scripts/check-changed.py`** (one PR on 7 Oct 2026 cost three runs).
 - **Relisting a fixed game** is a home-lane docs PR, batched.
-- **The cloud lane may fix listed games it has claimed on the `cloud-remaining:` line in
-  `docs/handover/cloud.md`** (Jon, 8 Oct 2026, contract CLAIM). It claims one game at a time, before starting
-  it, in a handover commit of its own, and removes the game in the PR that fixes it. The home lane never claims
-  or edits a game on that line: before building each batch it reads the line on main and drops any claimed
-  game. **For a listed game the claim is a process lock only** (Jon's ruling, 8 Oct): `check-answer-lock.py`
+- **The cloud lane may fix listed games it has claimed on the `cloud-remaining` list in
+  `scripts/answer-lock-state.json`** (Jon, 8 Oct 2026, contract CLAIM; the list moved there from the cloud
+  handover on 19 Oct 2026, contract ANSWER-LOCK-STATE). It claims one game at a time, before starting it, in a
+  commit of its own that adds the game to that list, and removes the game in the PR that fixes it. The home lane
+  never claims or edits a game on that list: before building each batch it reads the list on main and drops any
+  claimed game. **For a listed game the claim is a process lock only** (Jon's ruling, 8 Oct): `check-answer-lock.py`
   judges it exactly as if unclaimed (a migrated game must pass; a NOT_YET game is reported). The
   reported-not-failed exemption holds only for games in the roster's Unlisted section, so no time bound is needed.
 
