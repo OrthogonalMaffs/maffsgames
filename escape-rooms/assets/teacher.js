@@ -54,6 +54,12 @@
   }
 
   // The same rating as the start screen (rating.js); "Suits a top set" on a ★★★ teacher page only.
+  // The room's credit and the shared invitation (rating.js, contract ROOM-CREDIT v2), when it has one.
+  function creditNote() {
+    var M = window.MaffsEscapeRating, c = M && M.credit ? M.credit(R) : '';
+    return c ? '<p class="lede credit">' + c + '</p>' : '';
+  }
+
   function ratingLabel() {
     var M = window.MaffsEscapeRating, r = M && M.rating(R);
     if (!r) return '';
@@ -112,6 +118,7 @@
       '<div class="card">' +
         '<h1><span class="sub">Teacher page' + ratingLabel() + '</span>' + esc(R.title) + '</h1>' +
         '<p class="lede">' + fill(R.brief) + '</p>' +
+        creditNote() +
         banner +
         '<div class="unlisted"><b>At a glance.</b> ' + R.locks.length + ' locks, ' +
           (totalTime ? totalTime + ' minutes of puzzle for a group of three or four, ' : '') +

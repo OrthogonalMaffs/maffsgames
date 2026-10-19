@@ -25,6 +25,7 @@
 window.ROOM = {
   slug: 'escape-comic-caper',
   title: 'The Comic Caper',
+  credit: "Built from a site user's request.",
   level: 'gcse',
   minutes: 15,
   penalty: 45,

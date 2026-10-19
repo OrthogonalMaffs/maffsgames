@@ -203,6 +203,12 @@
   function el(id) { return document.getElementById(id); }
   // The room's difficulty from its locks' grades (rating.js, contract ESCAPE-DIFFICULTY), then a separator.
   // A room with a `label` (STARTER-LABEL) shows the label here, never the stars.
+  // The room's credit and the shared invitation (rating.js, contract ROOM-CREDIT v2), when it has one.
+  function creditNote() {
+    var M = window.MaffsEscapeRating, c = M && M.credit ? M.credit(R) : '';
+    return c ? '<p class="print-note credit">' + c + '</p>' : '';
+  }
+
   function ratingLabel() {
     var M = window.MaffsEscapeRating, r = M && M.rating(R);
     return r ? M.html(r, R) + ' &middot; ' : '';
@@ -259,6 +265,7 @@
             '<button class="btn ghost" id="resumeBtn" style="display:none">Resume</button>' +
             '<a class="btn ghost" href="teacher.html" target="_blank" rel="noopener">Teacher page</a>' +
           '</div>' +
+          creditNote() +
         '</div>' +
       '</section>';
   }

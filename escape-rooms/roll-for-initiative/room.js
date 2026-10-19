@@ -14,8 +14,7 @@
    open, and the ending and character choice (the win). No student is named anywhere. Strictmane is the BBEG,
    invented, mapping to no real person; Mr Strictman is a cameo, recognised and never speaking.
 
-   CREDIT: "Built from a teacher's idea. Thank you, Mrs Rogers." (teacher page footer.) Mrs Rogers has agreed to
-   her real name being used: consent recorded by Jon, 15 Oct 2026 (docs/handover/home.md).
+   Mrs Rogers has agreed to her real name being used: consent recorded by Jon, 15 Oct 2026 (docs/handover/home.md).
 
    RELEASED 2026-10-16 (contract DND-ROOM-RELEASE) after Jon's play-test and Mrs Rogers's preview: index.html is
    the room, play.html is gone, and it has its hub and front-page cards.
@@ -48,6 +47,7 @@
 window.ROOM = {
   slug: 'escape-roll-for-initiative',
   title: 'Roll for Initiative',
+  credit: "Built from a teacher's idea. Thank you, Mrs Rogers.",
   level: 'gcse',
   minutes: 15,
   penalty: 45,
