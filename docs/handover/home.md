@@ -39,9 +39,9 @@ contracts/2026-10-09-it-room-brief.md. SCI-CALC (item 6) is saved as docs/histor
 - **Answer-lock L1 flake:** act only if it recurs (the follow-up below stands).
 - **Standing F1 item: done for every listed game but graph-sketcher** (NOT_YET: glorious-gantt, unlisted and the cloud
   lane's; graph-sketcher, blocked by its phone overflow, batch 10 entry). unit-converter loads the lock (cloud lane,
-  #196) and is judged in full, but is not in MIGRATED: Jon's call (the overnight contract left it to the cloud lane). **Before building each batch** (contract CLAIM, canon §7.8.2): read `cloud-remaining:` in
-  `docs/handover/cloud.md` on main and drop every game on it from the batch. Never claim or edit a game on that
-  line. For a listed game the claim is a process lock only: check-answer-lock.py still judges it as unclaimed.
+  #196) and is judged in full, but is not in MIGRATED: Jon's call (the overnight contract left it to the cloud lane). **Before building each batch** (contract CLAIM, canon §7.8.2): read `cloud-remaining` in
+  `scripts/answer-lock-state.json` on main and drop every game on it from the batch. Never claim or edit a game on that
+  list. For a listed game the claim is a process lock only: check-answer-lock.py still judges it as unclaimed.
 - **Follow-up (home lane, CI): Answer lock L1 failed on main once (b66ccde, run 37776985917)** with five games at
   once (binomial-blaster, curling-friction, differentiation-duel by touch at 390px; force-resolver, moments-master
   UNPLAYABLE after Start). The same slice passed 20/20 locally on that commit, the parallel run (3878582) was green, and

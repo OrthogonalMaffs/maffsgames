@@ -13,10 +13,10 @@ schools/assets/answer-lock.js) or on NOT_YET. NOT_YET is reported, never failed,
 it must be a subset of NOT_YET_AT_START (the games when contract F1 began), so a new game cannot be put on
 it. A game on NOT_YET that already loads answer-lock.js (the cloud lane adopts the lock in its own PRs) is
 played and judged like a migrated one: its failures fail, and when it passes the home lane moves it to
-MIGRATED. The one exception: while the game is on the cloud lane's remaining list (the `cloud-remaining:`
-line in docs/handover/cloud.md), its failures are reported, not failed. That state ends when the cloud lane
+MIGRATED. The one exception: while the game is on the cloud lane's remaining list (the "cloud-remaining"
+value in scripts/answer-lock-state.json), its failures are reported, not failed. That state ends when the cloud lane
 takes the game off its list (contract LH, 7 Oct 2026). A missing list fails the check. The exemption holds only
-for a game in the roster's Unlisted section: a listed game on the line is claimed for the cloud lane's work
+for a game in the roster's Unlisted section: a listed game on the list is claimed for the cloud lane's work
 (the home lane's batches skip it), but this check judges it exactly as if unclaimed (contract CLAIM, Jon, 8 Oct
 2026; canon 7.8.2).
 
@@ -78,24 +78,40 @@ WORKERS = 4
 SEED = 1           # the run's seed (--seed): every page's Math.random is seeded with it, and it is printed
 WAIT_MS = 15000    # the longest any wait on the game's state runs (real clock) before the driver gives up on it
 
-# The cloud lane's remaining list: the one `cloud-remaining: <slug> <slug> ...` line in its own handover. While a
+# The cloud lane's remaining list: the one "cloud-remaining" value, a list of slugs, in scripts/answer-lock-state.json
+# (contract ANSWER-LOCK-STATE, 19 Oct 2026: state, not prose, so a handover edit no longer selects this check). While a
 # game is on it, a failure here is reported, not failed; the cloud lane takes a game off in the PR that finishes it.
-CLOUD_HANDOVER = os.path.join(ROOT, 'docs', 'handover', 'cloud.md')
-CLOUD_LIST = re.compile(r'`cloud-remaining:([^`]*)`')
+CLOUD_STATE = os.path.join(ROOT, 'scripts', 'answer-lock-state.json')
+CLOUD_KEY = 'cloud-remaining'
 
 
 def cloud_remaining(text=None):
-    """The slugs on the cloud lane's remaining list; ValueError if the handover has no single such line."""
+    """The slugs on the cloud lane's remaining list; ValueError unless the state file holds exactly one
+    "cloud-remaining" value, and nothing else, and that value is a list of slugs."""
+    import json
     if text is None:
-        text = open(CLOUD_HANDOVER, encoding='utf-8').read()
-    found = CLOUD_LIST.findall(text)
-    if len(found) != 1:
-        raise ValueError('docs/handover/cloud.md has %d `cloud-remaining:` lines (exactly one)' % len(found))
-    return set(found[0].split())
+        text = open(CLOUD_STATE, encoding='utf-8').read()
+    where = 'scripts/answer-lock-state.json'
+
+    def pairs(items):
+        keys = [k for k, _ in items]
+        if len(keys) != len(set(keys)):
+            raise ValueError('%s repeats a key (exactly one "%s" value)' % (where, CLOUD_KEY))
+        return dict(items)
+    try:
+        state = json.loads(text, object_pairs_hook=pairs)
+    except json.JSONDecodeError as e:
+        raise ValueError('%s is not JSON: %s' % (where, e))
+    if not isinstance(state, dict) or list(state) != [CLOUD_KEY]:
+        raise ValueError('%s must hold exactly one key, "%s"' % (where, CLOUD_KEY))
+    slugs = state[CLOUD_KEY]
+    if not isinstance(slugs, list) or not all(isinstance(s, str) and re.fullmatch(r'[a-z0-9-]+', s) for s in slugs):
+        raise ValueError('%s: "%s" must be a list of game slugs' % (where, CLOUD_KEY))
+    return set(slugs)
 
 def unlisted_games(text=None):
     """The slugs in the roster's Unlisted section (.claude/rules/game-roster.md; audit-register.py reads it the
-    same way). Only these may be exempted by the cloud lane's line (contract CLAIM)."""
+    same way). Only these may be exempted by the cloud lane's list (contract CLAIM)."""
     if text is None:
         text = open(bc.ROSTER_PATH, encoding='utf-8').read()
     out, section = set(), None
@@ -109,8 +125,8 @@ def unlisted_games(text=None):
 
 
 def exempt(claimed, unlisted):
-    """The games whose failures are reported, not failed: on the cloud lane's line AND unlisted. A listed game on
-    the line is a process lock only (Jon, 8 Oct 2026): judged as if it were not there."""
+    """The games whose failures are reported, not failed: on the cloud lane's list AND unlisted. A listed game on
+    the list is a process lock only (Jon, 8 Oct 2026): judged as if it were not there."""
     return set(claimed) & set(unlisted)
 
 # Every roster game that recorded question_answered when contract F1 began (7 Oct 2026). Frozen: never add
@@ -897,12 +913,13 @@ def selftest(games):
     """The reported state is bounded: a planted failing game off the cloud lane's list is caught, on it reported."""
     import tempfile
     errs = []
-    if cloud_remaining('x `cloud-remaining: a b` y') != {'a', 'b'}:
+    if cloud_remaining('{"cloud-remaining": ["a", "b"]}') != {'a', 'b'}:
         errs.append('cloud_remaining() misreads a list')
-    for bad in ('no list here', '`cloud-remaining: a` and `cloud-remaining: b`'):
+    for bad in ('{}', '{"cloud-remaining": ["a"], "cloud-remaining": ["b"]}', '{"cloud-remaining": "a b"}',
+                '{"cloud-remaining": ["a"], "other": []}', '["a"]', 'cloud-remaining: a'):
         try:
             cloud_remaining(bad)
-            errs.append('cloud_remaining() accepted %r (a missing or doubled list must fail)' % bad)
+            errs.append('cloud_remaining() accepted %r (a missing, doubled or malformed list must fail)' % bad)
         except ValueError:
             pass
     try:
@@ -1007,7 +1024,7 @@ def main():
     except ValueError as e:
         fails.append(str(e))
         claimed = set()
-    remaining = exempt(claimed, unlisted_games())     # what the line exempts: its unlisted games only
+    remaining = exempt(claimed, unlisted_games())     # what the list exempts: its unlisted games only
     for s in sorted(NOT_YET - NOT_YET_AT_START):
         fails.append('%s: on NOT_YET but not in NOT_YET_AT_START (a new game is migrated from the start)' % s)
     for s in sorted(NOT_YET - slugs):
