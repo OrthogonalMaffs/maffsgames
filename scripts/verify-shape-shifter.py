@@ -11,7 +11,9 @@ Checks, independent of the game's code (the maths is integer-exact, so no Fracti
     stored in the item agree with the words; the shape is a triangle, a rectangle or a square as its type says; the
     shape and its image are on the grid (so every vertex can be tapped); the image is not the shape itself.
   Reflection: the axis in the words is the item's axis; the image is the shape with y (x-axis) or x (y-axis) negated;
-    on the grid; not the shape itself (shape-shifter-t3-003 is an expected failure: one item is its own image).
+    on the grid; not the shape itself as a set of vertices (shape-shifter-t3-003, fixed: the one item that was its own
+    image now sits clear of the axis). The bank is the one Reflection and Random Mix both deal from (Sessions, below),
+    so no mode can serve such an item.
   Rotation: the words ("Rotate 90 degrees clockwise about (0,0)") are parsed and the true image is turned here, a quarter
     turn clockwise as (x, y) -> (y, -x) about the centre and anticlockwise as (x, y) -> (-y, x). The item's key is that
     image. Four options, no two the same shape, exactly one the true image, none the shape itself; every wrong option is a
@@ -55,7 +57,7 @@ ROT_DEALS = 8
 MODES = ('translation', 'reflection', 'rotation', 'mix')
 # Expected failures: items that break a rule and whose finding stays open. The check fails on any other item that does,
 # and fails if one of these stops failing (close the finding then).
-EXPECTED = {('reflection', ((-4, -1), (-2, -1), (-2, 1), (-4, 1))): 'shape-shifter-t3-003'}
+EXPECTED = {}
 
 
 def fs(shape):
@@ -593,6 +595,9 @@ PLANTS = [
      [("drawShape(target, '#22c55e', 'rgba(34,197,94,0.3)', 2);", "drawShape(target, '#1a2744', 'rgba(26,39,68,0.3)', 2);")]),
     ('the feedback naming navy again (t3-001)', 'colour',
      [("correct shape shown in green';", "correct shape shown in navy';")]),
+    ('a reflection item that is its own image (the old t3-003 square)', 'reflection image is the shape itself',
+     [("{ shape:[[-4,1],[-2,1],[-2,3],[-4,3]], axis:'x', desc:'Reflect in the x-axis', type:'rectangle' },",
+       "{ shape:[[-4,-1],[-2,-1],[-2,1],[-4,1]], axis:'x', desc:'Reflect in the x-axis', type:'rectangle' },")]),
 ]
 VERTEX_JS_FN = '(function(){' + VERTEX_JS + '})()'
 ROTATION_JS_FN = '(function(){' + ROTATION_JS + '})()'
