@@ -106,9 +106,11 @@ findings:
   level: year6
   where: games/new-shapes/index.html:751,967
   summary: 'Header score slot shows questions done, not correct answers. (Split: the parent entry held 3 defects; the
-    others are new-shapes-t3-009, new-shapes-t3-010; ESSENTIALS-SCREEN-TRUTH-2 step 2.)'
+    others are new-shapes-t3-009, new-shapes-t3-010; ESSENTIALS-SCREEN-TRUTH-2 step 2.) Fixed: the slot reads right
+    answers over answers given; verify-new-shapes.py checks it after each answer.'
   evidence: After 3 wrong answers the header reads 3/20; prompts are 'What is A?'/'What is V?'
-  status: open
+  status: fixed
+  pr: 442
 - id: new-shapes-t3-009
   severity: LOW
   jc: true
