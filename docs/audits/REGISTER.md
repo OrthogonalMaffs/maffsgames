@@ -25,9 +25,9 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
 | HIGH | 7 | 230 | 0 | 237 |
-| MEDIUM | 166 | 329 | 5 | 500 |
+| MEDIUM | 165 | 330 | 5 | 500 |
 | LOW | 96 | 242 | 1 | 339 |
-| **All** | 270 | 835 | 6 | 1111 |
+| **All** | 269 | 836 | 6 | 1111 |
 
 ### By class
 
@@ -61,7 +61,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | NEW:hint-gives-answer | 4 | 7 |
 | NEW:wrong-explanation | 0 | 7 |
 | NEW:ill-posed wording | 1 | 6 |
-| NEW:phone-layout | 4 | 6 |
+| NEW:phone-layout | 3 | 6 |
 | 11 | 0 | 5 |
 | NEW:board-mixes-session-lengths | 5 | 5 |
 | NEW:marking-by-structure | 0 | 5 |
@@ -179,7 +179,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | `formula-forge` | yes | verify-formula-forge.py | 0 | 1 | 8 | 3 | 7 | 5 | 0 |
 | `formula-plug-in` | yes | verify-formula-plug-in.py | 0 | 1 | 4 | 2 | 4 | 3 | 0 |
 | `formula-unlocked` | yes | verify-formula-unlocked.py | 0 | 1 | 1 | 7 | 1 | 8 | 0 |
-| `four-quadrant-explorer` | yes | verify-four-quadrant-explorer.py | 0 | 1 | 2 | 1 | 3 | 1 | 0 |
+| `four-quadrant-explorer` | yes | verify-four-quadrant-explorer.py | 0 | 1 | 2 | 1 | 2 | 2 | 0 |
 | `fraction-equivalence` | yes | verify-fraction-equivalence.py | 0 | 0 | 2 | 2 | 3 | 1 | 0 |
 | `free-daily-pizza` | yes | verify-free-daily-pizza.py | 0 | 0 | 1 | 4 | 0 | 5 | 0 |
 | `given-that` | yes | verify-given-that.py | 0 | 3 | 2 | 3 | 2 | 6 | 0 |
