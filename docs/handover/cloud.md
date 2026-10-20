@@ -40,9 +40,9 @@ ROOM-CREDIT v2 (19 Oct, contract and v1 verbatim `docs/history/contracts/2026-10
 PYTHAG-REPORT (19 Oct, contract `docs/history/contracts/2026-10-19-pythag-report.md`, research only): **DONE (#447)**; report `docs/handover/pythag-report.md`, for Jon's ruling on a "Formula only" mode. Then ruling (2) of 19 Oct: formula-plug-in DONE (#449, 531c988); new-shapes DONE (#450, e0377e9).
 MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; Jon's ruling on the phone gap at its end): the "100 Doors" card states its setup and condition; step 3 list in the entry below. **DONE (#448, b973e23).**
 **START HERE (next session; written 19 Oct, 18:10 BST).**
-- **Done since:** the new-shapes header DONE (#450, e0377e9; main run 39299844863, green); DEPS-SRC-HAZARD DONE (#451, 0dd1b68; main run 39309543642, green, 53 jobs). No claimed game work remains.
-- **In flight (19 Oct evening):** ANSWER-LOCK-STATE (this PR; entry below).
-- **Main:** green after every merge on 19 Oct (#445 39233921992, #446 39245413455, #447 39259197128, #448 39273656313, #449 39287568708, #450 39299844863, #451 39309543642).
+- **Done since:** the new-shapes header DONE (#450, e0377e9; main run 39299844863, green); DEPS-SRC-HAZARD DONE (#451, 0dd1b68; main run 39309543642, green, 53 jobs); ANSWER-LOCK-STATE DONE (#452, b23fceb; main run 39315432381, green, 53 jobs).
+- **In flight (20 Oct):** PYTHAG-KEY-COLLIDE (contract `docs/handover/contracts/2026-10-20-pythag-key-collide.md`): just-pythag-it-bruv claimed in `scripts/answer-lock-state.json`; no generated question may have a named error equal to its key.
+- **Main:** green after every merge on 19 Oct (#445 39233921992, #446 39245413455, #447 39259197128, #448 39273656313, #449 39287568708, #450 39299844863, #451 39309543642, #452 39315432381).
 - **Waiting on Jon (no contract yet):** (1) the front page's compact mode hides every fact card's summary on phones (600 px and below, no toggle), so the new MONTY-CARD setup is unseen there: a layout contract; (2) card 2 "The Monty Hall Problem" has the same unstated setup as the 100 Doors card had (full list of cards with unstated setup in the MONTY-CARD entry); (3) PYTHAG-REPORT's findings, for his "Formula only" ruling (the roster says 15 triples, the code has 14); (4) the phone stacking of the two headers was this lane's layout choice (one line overflowed 320 px), to confirm.
 - **Container setup (every fresh session):** `pip install playwright==1.56.0 sympy mpmath pyyaml`; `pip download --no-deps esprima==4.0.1`, untar into the scratchpad, `PYTHONPATH=<that>/esprima-4.0.1 python scripts/check-changed.py`. A run takes about 70 minutes and reports the same 25 KaTeX-CDN/WebKit failures every time (by name: the set in #441's PR); run one at a time, in the background; verifiers in scratch worktrees can run beside it (free ports). Remote branches are deleted on merge: after a squash merge, `git checkout -B claude/brave-allen-reghhq origin/main` and push without `--force-with-lease`.
 
@@ -52,7 +52,7 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
-## 2026-10-19 (cloud): ANSWER-LOCK-STATE (contract and Jon's ruling A verbatim: `docs/handover/contracts/2026-10-19-answer-lock-state.md`)
+## 2026-10-19 (cloud): ANSWER-LOCK-STATE (contract and Jon's ruling A verbatim: `docs/history/contracts/2026-10-19-answer-lock-state.md`). **DONE (#452, b23fceb; main run 39315432381, green).**
 
 - **Root cause:** `check-answer-lock.py` read the cloud lane's remaining list from this file, so every handover edit selected all six answer-lock parts. The list is state, not prose.
 - **Fix:** the list is now `scripts/answer-lock-state.json` (`{"cloud-remaining": [...]}`, empty). `cloud_remaining()` reads it and fails unless it holds exactly that one key, once, with a list of slugs (selftest: missing, repeated, string, extra key, non-object, old line format, each rejected). Answer-lock logic, parts and report-not-fail unchanged.
