@@ -7,3 +7,14 @@ EXACT CHANGE: In scripts/survey-key-collisions.py, after counting collisions per
 DO NOT TOUCH: any game, verifier, shared module, findings file, register or workflow; CI wiring (the script stays out of CI); the methods-agree and two-way sections, apart from adding the reclassified cases.
 SUCCESS CONDITION: The self-test passes; the report shows corrected coincidence counts for all 14 games, with the reclassified cases identified; the control still reports 0; handover updated with the PR and main run.
 STOP IF: a reclassified group would hide a case where the identity does NOT hold for some question in it; any game's genuine coincidence count rises; the corrected total for any listed game is still above 20. If so, list them and stop for a ruling.
+
+---
+
+Rulings (Jon, 20 Oct), verbatim:
+
+COLLISION-IDENTITIES:
+(1) Assumption 1 accepted: count an error only where its value is a residue the game offers.
+(2) Assumption 2 not accepted as stated. Classify by error type, not by grouping. “Ratio rounded before the inverse” is “agree (precision)” in every case, grouped or not, including the 9 at TOA 65°: it is a precision slip, and where it changes the degree the student is already marked wrong. Wrong-function and upside-down errors that give the key are coincidences even where they hold across a whole group at the nearest degree. That restores the 30 upside-down cases (CAH 80° and 85°).
+(3) modular-battle: accept all 123. Record why: 123 across 4 errors × 408 questions is 7.5% per error per question, below the 1-in-9 floor at which a random residue hits the key, so no method beats guessing; filtering 30% of the questions would teach that b/2 is never the answer.
+(4) trig-worms: filter, under TRIG-WORMS-FILTER.
+Finish the report with these classes, merge it, then return to TRIG-WORMS-FILTER.
