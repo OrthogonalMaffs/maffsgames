@@ -86,7 +86,7 @@ RESULTS = {
     "boolean-blitz": "resultsScreen", "truth-will-set-you-free": "resultsScreen", "complex-converter": "endScreen",
     "matrix-crunch": "results", "characteristic-quest": "results", "eigenvalue-extractor": "results",
     "eigenvector-engine": "results", "six-sevens-bruv": "results", "free-daily-pizza": "results",
-    "just-pythag-it-bruv": "results", "estimation-engine": "results",
+    "just-pythag-it-bruv": "results", "estimation-engine": "results", "how-many-parts": "results",
 }
 
 START_SCREEN = {
