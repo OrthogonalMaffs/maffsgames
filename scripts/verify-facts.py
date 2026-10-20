@@ -91,6 +91,20 @@ def luhn_ok(digits):
     return s % 10 == 0
 
 
+def monty(doors):
+    """(P(stay wins), P(switch wins)) for a host who knows where the car is, always opens a goat door that is not
+    yours, and always offers the switch: every (car, pick) pair listed, each equally likely, exact fractions."""
+    stay = switch = Fraction(0)
+    for car in range(doors):
+        for pick in range(doors):
+            w = Fraction(1, doors * doors)
+            if pick == car:
+                stay += w                 # switching moves to a goat
+            else:
+                switch += w               # the host's only choice leaves the car as the one to switch to
+    return stay, switch
+
+
 def P(rx, chk=None, src=None, known=None):
     return {'rx': rx, 'chk': chk, 'src': src, 'known': known}
 
@@ -122,6 +136,13 @@ PINS = [
         L('1/3 chance of being right', lambda: Fraction(1, 3) + Fraction(2, 3) == 1),
         L('Switching gives you 2/3; staying gives you 1/3', lambda: Fraction(2, 3) == 1 - Fraction(1, 3)),
         L('switching doubles your chances', lambda: Fraction(2, 3) == 2 * Fraction(1, 3)),
+        # MONTY-CARD-2 (20 Oct 2026): the summary states the setup. Recomputed by listing every (car, pick) pair of
+        # three doors, equally likely, with a host who knows and always opens a goat door: stay 1/3, switch 2/3.
+        P('([A-Za-z]+) doors: a car behind one, goats behind the other ([a-z]+)[.]',
+          lambda d, g: d == 'Three' and g == 'two'),
+        L('The host, who knows where the car is, always opens another door to show a goat, then offers you the switch',
+          lambda: monty(3) == (Fraction(1, 3), Fraction(2, 3))),
+        L('Yes: switching doubles your chances of winning', lambda: monty(3)[1] == 2 * monty(3)[0]),
     ]),
     ('More Card Shuffles Than Atoms in Earth', [
         P('roughly (' + NUM + ') × 10(' + SUPRX + ')', lambda m, e: near(sci(m, e), F52, 0.05),

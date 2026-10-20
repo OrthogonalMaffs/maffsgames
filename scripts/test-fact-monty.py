@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-# ci-line: Weekly fact "100 Doors" (the front-page card shows its summary and expanded text exactly, with its button and Share, at 320, 390 and 1280 px, with no overflow) |
+# ci-line: Weekly facts "Monty Hall" (both Monty Hall cards show their summary and expanded text exactly, with the button and Share, at 320, 390 and 1280 px, with no overflow) |
 # ci-deps: index.html
-"""Browser test for the "Monty Hall, With 100 Doors" weekly fact (contracts MONTY-CARD, 19 Oct 2026, and
-MONTY-100-RETITLE, 20 Oct 2026: the title no longer says "Obvious", and the expanded text is Jon's 20 Oct wording).
+"""Browser test for the two Monty Hall weekly facts: "Monty Hall, With 100 Doors" (contracts MONTY-CARD, 19 Oct 2026,
+and MONTY-100-RETITLE, 20 Oct 2026: the title no longer says "Obvious", and the expanded text is Jon's 20 Oct wording)
+and "The Monty Hall Problem" (contract MONTY-CARD-2, 20 Oct 2026: the summary states the setup, one car and two goats,
+and that the host knows, always opens a goat door and always offers the switch). Each card is held in CARDS.
 
     python scripts/test-fact-monty.py [--against FILE]
 
@@ -43,6 +45,16 @@ EXPANDED = ("You pick door 1. The host opens every other door except door 57. Wh
             "it would be 50/50. Three doors work the same way (switching wins 2 times in 3); it just doesn't feel "
             "as clear.")
 BUTTON = 'Test your probability intuition →'
+CARD2_SUMMARY = ('Three doors: a car behind one, goats behind the other two. You pick one. The host, who knows where the car '
+                 'is, always opens another door to show a goat, then offers you the switch. Should you switch? Yes: '
+                 'switching doubles your chances of winning.')
+CARD2_EXPANDED = ('This famously fooled thousands of readers, nearly 1,000 of them with PhDs, when Marilyn vos Savant published '
+                  'it in 1990. The intuition says "two doors left, 50-50." But your initial pick had a 1/3 chance of being '
+                  "right. That means there's a 2/3 chance the car is behind one of the other doors. When the host opens a "
+                  'losing door, all of that 2/3 probability concentrates on the one remaining door. Switching gives you 2/3; '
+                  'staying gives you 1/3.')
+CARDS = ((TITLE, SUMMARY, EXPANDED, BUTTON, 'games/probability-paradox/'),
+         ('The Monty Hall Problem', CARD2_SUMMARY, CARD2_EXPANDED, BUTTON, 'games/probability-paradox/'))
 WIDTHS = ((320, 568), (390, 844), (1280, 900))
 
 SHOW = """(title) => { const i = FACTS.findIndex(f => f.t === title); if (i < 0) return -1;
@@ -69,50 +81,51 @@ def run(html):
     try:
         with sync_playwright() as pw:
             browser = pw.chromium.launch()
-            for w, h in WIDTHS:
-                ctx = browser.new_context(viewport={'width': w, 'height': h})
-                ctx.route(lambda u: not u.startswith(base) and not bc.is_font_cdn(u), lambda r: r.abort())
-                ctx.route(lambda u: bc.is_font_cdn(u), bc.serve_real_font)   # Outfit from the pinned copy
-                if html is not None:
-                    ctx.route(re.compile(r'^%s/(\?[^/]*)?$' % re.escape(base)), lambda r: r.fulfill(
-                        status=200, content_type='text/html; charset=utf-8', body=html))
-                page = ctx.new_page()
-                page.goto(base + '/?cb=monty%d' % w, wait_until='load', timeout=30000)
-                page.wait_for_function('typeof FACTS !== "undefined" && typeof loadFact === "function"', timeout=15000)
-                if page.evaluate(SHOW, TITLE) < 0:
-                    faults.append('no fact titled %r' % TITLE)
+            for title, summary, expanded, button, href in CARDS:
+                for w, h in WIDTHS:
+                    ctx = browser.new_context(viewport={'width': w, 'height': h})
+                    ctx.route(lambda u: not u.startswith(base) and not bc.is_font_cdn(u), lambda r: r.abort())
+                    ctx.route(lambda u: bc.is_font_cdn(u), bc.serve_real_font)   # Outfit from the pinned copy
+                    if html is not None:
+                        ctx.route(re.compile(r'^%s/(\?[^/]*)?$' % re.escape(base)), lambda r: r.fulfill(
+                            status=200, content_type='text/html; charset=utf-8', body=html))
+                    page = ctx.new_page()
+                    page.goto(base + '/?cb=monty%d' % w, wait_until='load', timeout=30000)
+                    page.wait_for_function('typeof FACTS !== "undefined" && typeof loadFact === "function"', timeout=15000)
+                    if page.evaluate(SHOW, title) < 0:
+                        faults.append('no fact titled %r' % title)
+                        ctx.close()
+                        break
+                    page.wait_for_timeout(150)
+                    closed = page.evaluate(READ)
+                    page.click('#factToggle')
+                    page.wait_for_timeout(200)
+                    opened = page.evaluate(READ)
                     ctx.close()
-                    break
-                page.wait_for_timeout(150)
-                closed = page.evaluate(READ)
-                page.click('#factToggle')
-                page.wait_for_timeout(200)
-                opened = page.evaluate(READ)
-                ctx.close()
-                at = '%d px' % w
-                if closed['title'] != TITLE:
-                    faults.append('%s: the title reads %r' % (at, closed['title']))
-                if closed['hook'] != SUMMARY:
-                    faults.append('%s: the summary reads %r, want %r' % (at, closed['hook'], SUMMARY))
-                if w > 600 and not closed['hookShown']:
-                    faults.append('%s: the summary is not shown' % at)
-                if w <= 600:
-                    notes.append('%s: summary %s (compact mode)' % (at, 'shown' if closed['hookShown'] else 'hidden'))
-                if not opened['textShown']:
-                    faults.append('%s: expanded, the text is not shown' % at)
-                if closed['open'] or closed['textShown']:
-                    faults.append('%s: the expanded text shows before "Read more"' % at)
-                if not opened['open'] or opened['text'] != EXPANDED:
-                    faults.append('%s: expanded, the text reads %r, want %r' % (at, opened['text'], EXPANDED))
-                if opened['hook'] != SUMMARY:
-                    faults.append('%s: expanded, the summary reads %r' % (at, opened['hook']))
-                if opened['btn'] != [BUTTON, 'games/probability-paradox/']:
-                    faults.append('%s: the button is %r, want %r to games/probability-paradox/' % (at, opened['btn'], BUTTON))
-                if opened['share'] != 'Share':
-                    faults.append('%s: Share is %r' % (at, opened['share']))
-                for state, r in (('summary', closed), ('expanded', opened)):
-                    for f in r['fit']:
-                        faults.append('%s, %s: %s' % (at, state, f))
+                    at = '%s, %d px' % (title, w)
+                    if closed['title'] != title:
+                        faults.append('%s: the title reads %r' % (at, closed['title']))
+                    if closed['hook'] != summary:
+                        faults.append('%s: the summary reads %r, want %r' % (at, closed['hook'], summary))
+                    if w > 600 and not closed['hookShown']:
+                        faults.append('%s: the summary is not shown' % at)
+                    if w <= 600:
+                        notes.append('%s: summary %s (compact mode)' % (at, 'shown' if closed['hookShown'] else 'hidden'))
+                    if not opened['textShown']:
+                        faults.append('%s: expanded, the text is not shown' % at)
+                    if closed['open'] or closed['textShown']:
+                        faults.append('%s: the expanded text shows before "Read more"' % at)
+                    if not opened['open'] or opened['text'] != expanded:
+                        faults.append('%s: expanded, the text reads %r, want %r' % (at, opened['text'], expanded))
+                    if opened['hook'] != summary:
+                        faults.append('%s: expanded, the summary reads %r' % (at, opened['hook']))
+                    if opened['btn'] != [button, href]:
+                        faults.append('%s: the button is %r, want %r to %s' % (at, opened['btn'], button, href))
+                    if opened['share'] != 'Share':
+                        faults.append('%s: Share is %r' % (at, opened['share']))
+                    for state, r in (('summary', closed), ('expanded', opened)):
+                        for f in r['fit']:
+                            faults.append('%s, %s: %s' % (at, state, f))
             browser.close()
     finally:
         proc.terminate()
@@ -127,8 +140,8 @@ def main():
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
     html = open(args.against, encoding='utf-8').read() if args.against else None
     faults, notes = run(html)
-    print('Weekly fact %r: summary and expanded text, button and Share, at %s px' % (
-        TITLE, ', '.join(str(w) for w, _ in WIDTHS)))
+    print('Weekly facts %s: summary and expanded text, button and Share, at %s px' % (
+        ', '.join(repr(c[0]) for c in CARDS), ', '.join(str(w) for w, _ in WIDTHS)))
     for n in notes:
         print('  note  ' + n)
     for f in faults:
