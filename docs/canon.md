@@ -1467,6 +1467,25 @@ at 5m17s of 6m; each fix was another hand-made group (B5, E2), which only bought
 - **CI fails, on every PR, when any group is estimated past 80% of its budget** (`ci-groups.py --check` in the
   plan job), naming the group and its largest lines. Packing keeps every group under 70%, so only a single line
   too long for any group can fail it: split its script (`--part`, `--shard`).
+- **No single line may pass 70% of its group's budget, and a slower setup alone is a warning, not a failure**
+  (PER-LINE-LIMIT, Jon, 20 Oct 2026; replaces his temporary ruling of 20 Oct that "main's red from the timings job
+  alone does not block merges"). **Why:** the packer moves lines between groups but cannot split one, and a group's
+  estimate is the median setup plus its lines' medians. Content verifiers 1 and 2 each held a single line (Just
+  Pythag It, Bruv part 4, 164 s; Free Daily Pizza, 171 s) at 68% and 71% of a 270 s budget; when setup ran 53, 59 and
+  87 s (main runs 39390699573, 39398807202, 39401811389, against about 20 s before and since) the estimates crossed
+  80%, the timings job refused the pack, and main went red with no code change to blame and nothing a repack could
+  fix. Nothing checked a line's size on the PR that grew it. Now:
+  - **`ci-groups.py --check` (every PR) fails any single timed line whose median plus the median setup passes 70% of
+    its group's budget** (the pack target), naming the line and its figures. Split its script (`--part`, `--shard`)
+    in the PR that makes it that long. A line with no timing is not judged until a main run times it.
+  - **When the timings job's pack fails `--check`, it says why.** If the same pack passes at the previous pack's median
+    setup (the committed `ci-timings.json`'s), only setup moved it: the job warns (`::warning::`), commits nothing
+    (exit status 2 from `--record-and-pack`, which the workflow reads as "stop") and does not fail. Any other refusal
+    (a line grew, or a line is over the limit whatever the setup was) still fails the job, as before. The 70% and 80%
+    figures, the budgets, `HISTORY` (5) and how setup is measured (the longest group's, per run) are unchanged.
+  - Done in the same contract: Free Daily Pizza is now two lines (part 1 static, daily seed, UI play and the
+    fault-injection self-test; part 2 every item at three phone sizes, with two planted phone faults of its own), and
+    Just Pythag It, Bruv part 4 is parts 4 and 5 (WebKit, play-through and the self-test moved to part 5).
 - **After every full run on main the "CI timings and pack" job** records that run's times and repacks, and
   commits both files if they changed (`[skip ci]`, as the register job does).
 - "70%" and "80%" are of the budget, not the timeout (Jon's own wording, 9 Oct: "kept to 70% of the budget,

@@ -2,7 +2,8 @@
 # ci-line: Just Pythag It, Bruv, part 1 (fit at 320px; a quarter of the planted layout faults) | --part-selftest && --part 1
 # ci-line: Just Pythag It, Bruv, part 2 (fit at 390 and 412px; a quarter of the planted layout faults) | --part-selftest && --part 2
 # ci-line: Just Pythag It, Bruv, part 3 (fit at 375px and the three desktop sizes; a quarter of the planted layout faults) | --part-selftest && --part 3
-# ci-line: Just Pythag It, Bruv, part 4 (every key and triangle recomputed over 300 sessions, WebKit, play-through, a quarter of the layout faults, fault-injection self-test) | --part-selftest && --part 4
+# ci-line: Just Pythag It, Bruv, part 4 (every key and triangle recomputed over 300 sessions, named errors, a quarter of the layout faults) | --part-selftest && --part 4
+# ci-line: Just Pythag It, Bruv, part 5 (WebKit, play-through, fault-injection self-test) | --part-selftest && --part 5
 """Independent verification for Just Pythag It, Bruv (games/just-pythag-it-bruv/), built 4 Oct 2026.
 
 WHY THIS READS THE LIVE PAGE
@@ -112,7 +113,7 @@ hypotenuse sloping one way only; the box ignoring the figure's width; the triang
 USAGE
     python scripts/verify-just-pythag-it-bruv.py
     python scripts/verify-just-pythag-it-bruv.py --no-selftest --seeds 50
-    python scripts/verify-just-pythag-it-bruv.py --part 1         # CI job C1 (C2-C4: --part 2, 3, 4)
+    python scripts/verify-just-pythag-it-bruv.py --part 1         # CI job C1 (C2-C5: --part 2, 3, 4, 5)
     python scripts/verify-just-pythag-it-bruv.py --part-selftest  # the parts are the whole run
 """
 import argparse
@@ -1697,19 +1698,22 @@ async def selftest(browser):
     return ok, lines
 
 
-# ---------------------------------------------------------------- parts (CI runs four in parallel)
+# ---------------------------------------------------------------- parts (CI runs five in parallel)
 #
-# Since 7 Oct 2026 CI runs this script as parallel jobs, `--part 1` .. `--part 4` (one job took 9m41s
+# Since 7 Oct 2026 CI runs this script as parallel jobs, `--part 1` .. `--part 5` (one job took 9m41s
 # on main, the critical path of every full run; three parts still came to about 4 minutes a job, so a
-# fourth was added the same day, to keep every content job under 4 minutes). Every check is a task in
+# fourth was added the same day, to keep every content job under 4 minutes; a fifth on 20 Oct, when part 4
+# alone was a 150 s line, 64% of a content group's budget with setup: PER-LINE-LIMIT, canon 7.8.1). Every check is a task in
 # exactly one part, dealt by measured cost (local seconds, 7 Oct 2026; about 2 minutes each): the fit
 # pass at 320 in part 1, at 390 and 412 in part 2, at 375 and the three desktop sizes in part 3; the
-# planted layout faults dealt in turn across parts 1-4 in list order; the sessions, WebKit, the
-# play-through and the fault-injection self-test in part 4. Every part first reads the page's scale
+# planted layout faults dealt in turn across parts 1-4 in list order; the sessions and the named
+# errors in part 4; WebKit, the play-through and the fault-injection self-test in part 5 (local seconds,
+# 20 Oct 2026: part 4 about 78, part 5 about 59). Every part first reads the page's scale
 # and compact heights, which the checks are held to. With no --part, every task runs, as before.
 # --part-selftest proves that the parts together are exactly the unsplit task list, nothing twice,
 # and that the workflow runs every part.
-PARTS = ("1", "2", "3", "4")
+PARTS = ("1", "2", "3", "4", "5")
+DEAL_PARTS = PARTS[:4]          # the layout faults are dealt across these, as before the fifth part
 FIT_PART = {(320, 568): "1", (375, 667): "3", (390, 844): "2", (412, 915): "2",
             (1280, 720): "3", (1366, 768): "3", (1920, 1080): "3"}
 
@@ -1725,13 +1729,13 @@ def ci_commands():
 
 def plan(no_phone=False, no_selftest=False):
     """[(task, part)] in the order the unsplit script ran them."""
-    tasks = [("sessions", "4"), ("named errors", "4"), ("webkit", "4"), ("play-through", "4")]
+    tasks = [("sessions", "4"), ("named errors", "4"), ("webkit", "5"), ("play-through", "5")]
     if not no_phone:
         tasks += [("fit %dx%d" % sz, FIT_PART[sz]) for sz in PHONES + DESKTOPS]
     if not no_selftest and not no_phone:
-        tasks += [("layout fault: " + name, PARTS[i % len(PARTS)]) for i, (name, _, _) in enumerate(UI_FAULTS)]
+        tasks += [("layout fault: " + name, DEAL_PARTS[i % len(DEAL_PARTS)]) for i, (name, _, _) in enumerate(UI_FAULTS)]
     if not no_selftest:
-        tasks += [("fault-injection self-test", "4")]
+        tasks += [("fault-injection self-test", "5")]
     return tasks
 
 
@@ -1765,7 +1769,9 @@ def part_selftest():
     print("Parts: %s" % "; ".join("part %s %d tasks" % (p, len(parts[p])) for p in PARTS))
     # Planted faults, each must be caught: a task dropped from part 1, a part-1 task copied into part 2.
     for name, bad in (("a task dropped", dict(parts, **{"1": parts["1"][1:]})),
-                      ("a task in two parts", dict(parts, **{"2": parts["2"] + parts["1"][:1]}))):
+                      ("a task in two parts", dict(parts, **{"2": parts["2"] + parts["1"][:1]})),
+                      ("a part 5 task dropped", dict(parts, **{"5": parts["5"][1:]})),
+                      ("a part 5 task in part 4", dict(parts, **{"4": parts["4"] + parts["5"][:1]}))):
         caught = bool(split_faults(every, bad))
         print("  planted: %-22s %s" % (name, "caught" if caught else "*** MISSED ***"))
         if not caught:
@@ -1874,7 +1880,7 @@ def main():
     ap.add_argument("--no-selftest", action="store_true", help="skip the fault-injection self-test")
     ap.add_argument("--no-phone", action="store_true", help="skip the phone-fit measurement")
     ap.add_argument("--seeds", type=int, default=300, help="sessions to check (default 300)")
-    ap.add_argument("--part", choices=PARTS, help="run one of the four parts CI runs in parallel (default: all)")
+    ap.add_argument("--part", choices=PARTS, help="run one of the five parts CI runs in parallel (default: all)")
     ap.add_argument("--part-selftest", action="store_true",
                     help="prove the parts together run every task once, and the workflow runs every part; no browser")
     args = ap.parse_args()

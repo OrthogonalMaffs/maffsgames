@@ -52,6 +52,18 @@ runs --record-and-pack, which works the new timings and pack out in memory, appl
 writes neither file if it fails (the job then fails, so a genuine overrun shows on main instead of in every PR).
 Even-sized histories round the middle pair up.
 
+A LINE IS JUDGED ALONE, AND A SLOWER SETUP IS A WARNING (contract PER-LINE-LIMIT, 20 Oct 2026; canon §7.8.1). The packer
+moves lines between groups but cannot split one, so a group holding one long line is only as safe as that line.
+Content verifiers 1 and 2 each held one (Just Pythag It, Bruv part 4, 164 s; Free Daily Pizza, 171 s) at 68% and 71% of
+a 270 s budget, and when setup ran 53, 59 and 87 s (main runs 39390699573, 39398807202, 39401811389, against about 20 s
+before and since) the median-setup estimate crossed 80%, the timings job refused the pack, and main went red with no
+code change to blame and nothing a repack could fix. So --check now also fails, on the PR that grows the line, any
+single timed line whose median plus the median setup passes TARGET (70%) of its group's budget, naming the line and
+its figures; split its script (--part). And when the timings job's pack is refused, record-and-pack asks why: if the
+same pack passes at the PREVIOUS median setup (the committed ci-timings.json's), only setup moved it, and the job warns,
+writes nothing and does not fail (exit status SETUP_ONLY, 2, which the workflow reads as "stop, commit nothing"). Any
+other refusal still fails the job, as before.
+
 Old headers ("# ci-line: B4 | ..."): a hand-made group id is still accepted and read as its tier only (L* is
 the lock tier, any other is content), so a branch made before CI-BALANCE still passes; the repo's own headers
 use the new form. Lines run in the order: scripts by file name, then each script's headers in file order. The
@@ -270,16 +282,37 @@ def estimate(g, timings=None):
             [l for l, _ in g["lines"] if l not in secs])
 
 
-def budget_faults(gs=None, timings=None):
-    """[fault]: every group whose estimate passes FAIL of its budget, naming its largest lines."""
+def line_faults(gs=None, timings=None):
+    """[fault]: every timed line whose median plus the median setup passes TARGET of its group's budget (PER-LINE-LIMIT,
+    20 Oct 2026). The packer can move a line between groups but cannot split it, so a line this size is one slow setup
+    from failing a group that nothing can repack. A line with no timing counts as its tier's default and is not
+    judged here (the group check and the NO TIMING flag cover it)."""
     timings = read_json(TIMINGS) if timings is None else timings
     gs = groups(timings=timings) if gs is None else gs
-    secs = timings.get("lines", {})
+    secs, setup = timings.get("lines", {}), timings.get("setup", SETUP)
     faults = []
+    for g in gs:
+        b = budget(g["tier"])
+        for l, _ in g["lines"]:
+            if l in secs and secs[l] + setup > TARGET * b:
+                faults.append("%s: line over the per-line limit: %s %ss (median) + %ss setup = %ds, %d%% of its %ds budget; "
+                              "the limit is %d%% (%ds). Split its script (--part, --shard)."
+                              % (g["name"], l, secs[l], setup, secs[l] + setup, 100 * (secs[l] + setup) / b, b,
+                                 TARGET * 100, TARGET * b))
+    return faults
+
+
+def budget_faults(gs=None, timings=None):
+    """[fault]: every line past the per-line limit (line_faults), and every group whose estimate passes FAIL of its
+    budget, naming its largest lines. A group with a line past the limit is reported by that line, not twice."""
+    timings = read_json(TIMINGS) if timings is None else timings
+    gs = groups(timings=timings) if gs is None else gs
+    secs, setup = timings.get("lines", {}), timings.get("setup", SETUP)
+    faults = line_faults(gs, timings)
     for g in gs:
         est, _ = estimate(g, timings)
         b = budget(g["tier"])
-        if est > FAIL * b:
+        if est > FAIL * b and not any(l in secs and secs[l] + setup > TARGET * b for l, _ in g["lines"]):
             big = sorted(g["lines"], key=lambda lc: -secs.get(lc[0], TIERS[g["tier"]][3]))[:3]
             faults.append("%s: estimated %ds, past %d%% of its %ds budget (%d%%). Largest: %s. A line this long "
                           "cannot share a job: split its script (--part, --shard)."
@@ -522,14 +555,27 @@ def settle(existing, rec, hdrs=None, prev=None):
     return timings, gs, budget_faults(gs, timings)
 
 
-def commit(timings, gs, faults, writers=None):
-    """What the timings job does with settle()'s result: with any fault, say so and write NOTHING (return 1); else
-    write the timings and the pack (return 0). writers = (write_timings, write_pack), for the self-test."""
+SETUP_ONLY = 2      # record_and_pack's exit status when only a slower setup refused the pack: a warning, not a failure
+
+
+def commit(timings, gs, faults, writers=None, calm=None, prev_setup=0):
+    """What the timings job does with settle()'s result. With no fault, write the timings and the pack (return 0).
+    With a fault, write NOTHING, and say why: if `calm` (the faults the same pack has at the previous pack's median
+    setup) is an empty list, setup alone moved it (a slow runner, not a slow line): warn and return SETUP_ONLY (the
+    job warns and does not fail); any other fault returns 1 (the job fails). calm=None means the cause is unknown: 1.
+    writers = (write_timings, write_pack), for the self-test."""
     wt, wp = writers or (write_timings, write_pack)
     if faults:
         for x in faults:
             print("FAIL  " + x)
-        print("record-and-pack: the pack for these timings fails --check; neither %s nor %s was written" % (TIMINGS, PACK))
+        if calm is not None and not calm:
+            print("record-and-pack: WARNING: setup alone moved these groups past the limit (they all pass at the previous "
+                  "median setup, %ds); neither %s nor %s was written, and this is not a failure"
+                  % (prev_setup, TIMINGS, PACK))
+            return SETUP_ONLY
+        print("record-and-pack: the pack for these timings fails --check%s; neither %s nor %s was written"
+              % ("" if calm is None else " even at the previous median setup (%d fault(s): the lines grew, or a line is "
+                 "over the per-line limit)" % len(calm), TIMINGS, PACK))
         return 1
     wt(timings)
     wp(gs)
@@ -547,16 +593,28 @@ def record_timings(run_id, from_dir=None):
     return 0
 
 
+def calm_faults(existing, timings, gs, faults):
+    """The cause test (PER-LINE-LIMIT): the faults the same pack gs has when the setup is the previous pack's median
+    (existing's, the committed ci-timings.json) and every line keeps its new median. [] means the new setup alone
+    moved the pack past the limit; a non-empty list means a line grew (or is over the per-line limit) whatever the setup
+    was. None when there is no fault to explain."""
+    if not faults:
+        return None
+    return budget_faults(gs, dict(timings, setup=existing.get("setup", SETUP)))
+
+
 def record_and_pack(run_id, from_dir=None):
     """The timings job: add the run, repack from the medians, apply --check's test, and write the timings and the
     pack only if it passes."""
     rec = read_run(run_id, from_dir)
     if rec is None:
         return 1
-    timings, gs, faults = settle(read_json(TIMINGS), rec)
+    existing = read_json(TIMINGS)
+    timings, gs, faults = settle(existing, rec)
     print("run %s: setup %ds (median %ds of %d run(s)); %d line(s) timed" % (
         run_id, rec["setup"], timings["setup"], len(timings["history"]), len(rec["lines"])))
-    return commit(timings, gs, faults)
+    return commit(timings, gs, faults, calm=calm_faults(existing, timings, gs, faults),
+                  prev_setup=existing.get("setup", SETUP))
 
 
 def add_regions(existing, rec, keep=REGION_KEEP):
@@ -736,6 +794,52 @@ def selftest():
     check("(c) a pack that fails --check is refused: exit 1, neither file written (%s)" % wrote, rc_bad == 1 and not wrote)
     rc_ok = commit(tm, gs, fl, sink)
     check("(c) a pack that passes is written (timings, then pack)", rc_ok == 0 and wrote == ["timings", "pack"])
+    # PER-LINE-LIMIT (20 Oct 2026): a single line past 70% of its budget with the median setup fails --check on the PR that
+    # grows it, because the packer cannot split a line and one slow setup would then refuse every pack. Setup 20 s,
+    # budget 270 s: the limit is 189 s, so a line of 169 s is at it (189, passes) and 170 s is over (190, fails).
+    one = lambda a: T(dict(t["lines"], a=a))
+    for sec, want in ((168, False), (169, False), (170, True), (400, True)):
+        ft = one(sec)
+        fl = budget_faults(groups(hd, ft, {}), ft)
+        check("per-line limit: a line of %ds (+20s setup) %s" % (sec, "fails" if want else "passes"), bool(fl) == want)
+    ft = one(170)
+    fl = line_faults(groups(hd, ft, {}), ft)
+    check("PLANT: a 170 s line fails, naming the line and its figures, once: %s" % (fl[:1],),
+          len(fl) == 1 and "a 170s (median) + 20s setup = 190s" in fl[0] and "Content verifiers" in fl[0] and "70%" in fl[0]
+          and len(budget_faults(groups(hd, ft, {}), ft)) == 1)
+    check("a line with no timing is not judged by the per-line limit (the group check and the NO TIMING flag cover it)",
+          not line_faults([{"name": "g", "tier": "lock", "id": "L1", "lines": [("new", "")]}], T({})))
+    # The cause of a refusal (PER-LINE-LIMIT): setup alone (warn, write nothing, exit SETUP_ONLY, not a failure) or anything else.
+    hdc = {"verify-x.py": parse("verify-x.py", "".join("# ci-line: %s | \n" % x for x in "abcde"))}
+    f165 = {x: 165 for x in "abcde"}                       # 165 + 20 = 185 s: under the 189 s limit at the usual setup
+    ex2 = {}
+    for n, st in enumerate([20, 20, 20, 80, 80], 1):       # the committed medians: setup 20
+        ex2 = add_run(ex2, rn(n, st, f165))
+    tmA, gsA, flA = settle(ex2, rn(6, 80, f165), hdc, {})   # a third slow runner: the median setup moves to 80
+    calmA = calm_faults(ex2, tmA, gsA, flA)
+    wrote.clear()
+    rcA = commit(tmA, gsA, flA, sink, calm=calmA, prev_setup=ex2["setup"])
+    check("(d) setup alone (median %d -> %d s): %d fault(s) now, %d at the previous setup; exit %d (warning), nothing written"
+          % (ex2["setup"], tmA["setup"], len(flA), len(calmA or []), rcA),
+          ex2["setup"] == 20 and tmA["setup"] == 80 and flA and calmA == [] and rcA == SETUP_ONLY and not wrote)
+    exB = {}
+    for n, a in enumerate([165, 165, 200, 200], 1):         # a line that grew: three of five runs slow, setup unchanged
+        exB = add_run(exB, rn(n, 20, dict(f165, a=a)))
+    tmB, gsB, flB = settle(exB, rn(5, 20, dict(f165, a=200)), hdc, {})
+    calmB = calm_faults(exB, tmB, gsB, flB)
+    rcB = commit(tmB, gsB, flB, sink, calm=calmB, prev_setup=exB["setup"])
+    check("(d) a line that grew (setup unchanged at %d s): the faults stay at the previous setup (%d); exit %d, a failure, nothing written"
+          % (tmB["setup"], len(calmB or []), rcB), flB and calmB and rcB == 1 and not wrote)
+    exC = {}
+    for n, (st, a) in enumerate([(20, 165), (20, 165), (20, 200), (80, 200)], 1):
+        exC = add_run(exC, rn(n, st, dict(f165, a=a)))      # setup median 20; a's median is 165 until the next run
+    tmC, gsC, flC = settle(exC, rn(5, 80, dict(f165, a=200)), hdc, {})   # both at once: the setup moved AND a line grew
+    calmC = calm_faults(exC, tmC, gsC, flC)
+    check("(d) setup moved and a line is over the limit even at the old setup: a failure, exit %d"
+          % commit(tmC, gsC, flC, sink, calm=calmC, prev_setup=20), bool(calmC) and commit(tmC, gsC, flC, sink, calm=calmC, prev_setup=20) == 1)
+    check("(d) a refusal whose cause is unknown (no calm result) still fails", commit(tmA, gsA, flA, sink) == 1 and not wrote)
+    check("(d) no fault, no cause to explain; the pack is written", calm_faults(ex2, tm, gs, []) is None
+          and commit(tm, gs, [], sink) == 0 and wrote == ["timings", "pack"])
     # REGION-HISTORY: the per-region record keeps 10 per line per region and leaves ci-timings.json alone.
     regs = ["eastus", "centralus", "westus"]
 
