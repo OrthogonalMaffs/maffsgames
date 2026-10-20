@@ -31,12 +31,31 @@
  *                                      Anything else goes to decimal() against num/den rounded
  *                                      half up, exactly, to dp places: 0.429 'correct', 0.4286
  *                                      'format', 0.43 'wrong' for 3/7 at 3 d.p.
+ *   MaffsAnswer.fractionForm(raw, key, opts)  a typed fraction judged by VALUE and by FORM (20 Oct 2026; How
+ *                                      Many Parts?). key = {num, den} or {whole, num, den} (a negative whole
+ *                                      makes the whole number negative); opts.form = 'simplest' (default) or
+ *                                      'mixed'. Reads "a/b", "-a/b", "w a/b" (also "-w a/b") and whole numbers,
+ *                                      spaces tolerated; no decimals, no sign on the denominator, no zero
+ *                                      denominator (all 'unreadable'). Never reduces what was typed:
+ *                                        'correct'  equal in value and in the asked form. 'simplest': lowest
+ *                                                   terms, or a whole number when the key is one. 'mixed': a
+ *                                                   whole number when the key is one, else a mixed number with
+ *                                                   a proper fractional part in lowest terms (a key under 1 in
+ *                                                   magnitude has no whole part: a proper fraction in lowest
+ *                                                   terms);
+ *                                        'format'   equal in value, wrong form: not in lowest terms (2/4, 6/3,
+ *                                                   0/5 for 0), improper when mixed is asked (7/4), or mixed
+ *                                                   when it is not asked (1 3/4 under 'simplest'). NEVER
+ *                                                   MARKED, like every 'format';
+ *                                        'wrong'    a different value;
+ *                                        'unreadable'.
  *   MaffsAnswer.parse(raw)             the typed value as a Number, or null if unreadable.
  *   MaffsAnswer.message(result, raw, opts)  the words to show for 'format' / 'unreadable';
  *                                      opts.currency ('£' or '€') for money, opts.dp for decimal,
  *                                      opts.sf when the question states significant figures (the
  *                                      marking is still at opts.dp places), opts.fraction when a
- *                                      fraction is accepted too.
+ *                                      fraction is accepted too: true (a fraction or a decimal), or, for
+ *                                      fractionForm(), 'simplest' / 'mixed' (the form messages).
  *
  * scripts/test-answer-js.py runs every outcome in a browser, in CI.
  */
@@ -127,6 +146,37 @@
     return { num: num && (m[1] === '-') !== (m[3] === '-') ? -num : num, den: den };
   }
 
+  // fractionForm(): value and form, never reducing what was typed. Reads whole numbers, a/b and w a/b.
+  var FF_INT = /^([+-]?)(\d+)$/, FF_FRAC = /^([+-]?)(\d+)\s*\/\s*(\d+)$/, FF_MIXED = /^([+-]?)(\d+)\s+(\d+)\s*\/\s*(\d+)$/;
+
+  function ffRead(raw) {
+    var s = strip(raw, false), m, neg, w, a, b;
+    if ((m = FF_INT.exec(s))) { w = Number(m[2]); a = 0; b = 1; neg = m[1] === '-'; m = { shape: 'int' }; }
+    else if ((m = FF_FRAC.exec(s))) { w = 0; a = Number(m[2]); b = Number(m[3]); neg = m[1] === '-'; m = { shape: 'frac' }; }
+    else if ((m = FF_MIXED.exec(s))) { w = Number(m[2]); a = Number(m[3]); b = Number(m[4]); neg = m[1] === '-'; m = { shape: 'mixed' }; }
+    else return null;
+    if (!b || !Number.isSafeInteger(w) || !Number.isSafeInteger(a) || !Number.isSafeInteger(b)) return null;
+    var n = w * b + a;
+    if (!Number.isSafeInteger(n)) return null;
+    m.n = neg ? -n : n; m.d = b; m.w = w; m.a = a;
+    return m;
+  }
+
+  function fractionForm(raw, key, opts) {
+    var r = ffRead(raw);
+    if (!r) return 'unreadable';
+    var kd = key.den, kw = key.whole || 0, kn = Math.abs(kw) * kd + key.num;
+    if (kw < 0) kn = -kn;
+    if (r.n * kd !== kn * r.d) return 'wrong';
+    var kInt = kn % kd === 0, lowest = gcd(Math.abs(r.n), r.d) === 1;
+    if (kInt) return r.shape === 'int' ? 'correct' : 'format';
+    if (opts && opts.form === 'mixed') {
+      if (Math.abs(kn) < kd) return r.shape === 'frac' && r.a < r.d && lowest ? 'correct' : 'format';
+      return r.shape === 'mixed' && r.w > 0 && r.a > 0 && r.a < r.d && gcd(r.a, r.d) === 1 ? 'correct' : 'format';
+    }
+    return r.shape === 'frac' && lowest ? 'correct' : 'format';
+  }
+
   // num/den rounded half up (away from zero on the magnitude) to dp places, as a decimal string,
   // worked in integers.
   function fractionAt(num, den, dp) {
@@ -147,10 +197,16 @@
   function message(result, raw, opts) {
     opts = opts || {};
     if (result === 'unreadable') {
+      if (opts.fraction === 'simplest') return 'Type a fraction or a whole number, e.g. 3/7';
+      if (opts.fraction === 'mixed') return 'Type a mixed number, e.g. 1 3/4';
       return opts.fraction ? 'Type a fraction or a decimal, e.g. 3/7 or 0.429' : 'Type just the number, e.g. 12.34';
     }
     if (result !== 'format') return '';
     var fig = strip(raw, !!opts.currency);
+    if (opts.fraction === 'simplest') return 'Right value, but simplify it fully. In the exam, ' + fig + ' may lose the mark. Fix it and resubmit.';
+    if (opts.fraction === 'mixed') {
+      return 'Right value, but write it as a mixed number in its simplest form. In the exam, ' + fig + ' may lose the mark. Fix it and resubmit.';
+    }
     if (opts.currency) {
       return 'Right amount, but money always has two decimal places. In the exam, ' + opts.currency +
         fig + ' loses the mark. Fix it and resubmit.';
@@ -162,5 +218,5 @@
   }
 
   window.MaffsAnswer = { money: money, decimal: decimal, exact: exact, fraction: fraction,
-    fractionOrDecimal: fractionOrDecimal, parse: parse, message: message };
+    fractionOrDecimal: fractionOrDecimal, fractionForm: fractionForm, parse: parse, message: message };
 })();
