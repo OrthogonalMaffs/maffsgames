@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-# ci-line: Free Daily Pizza (independent recomputation + daily seed + phone fit) | --require-katex
+# ci-line: Free Daily Pizza, part 1 (independent recomputation + daily seed + UI play + fault-injection self-test) | --require-katex --part 1
+# ci-line: Free Daily Pizza, part 2 (every item at three phone sizes + phone-fit fault-injection self-test) | --require-katex --part 2
 """Independent verification for Free Daily Pizza (games/free-daily-pizza/), built 30 Sep 2026.
 
 WHAT IS READ FROM THE PAGE, AND WHAT IS NOT
@@ -1096,13 +1097,16 @@ MEASURE_JS = r"""
 """
 
 
-async def phone(browser, by_id, out, screens=None):
+async def phone(browser, by_id, out, screens=None, patch_css=None):
+    """Measure every item in by_id at the three phone sizes. patch_css (the self-test's plant) is added to each page."""
     worst = {}
     shots = {"S1:conv:f>d:2/3", "S3:frac:3/5:45", "S4:p:15/60"}
     for w, h in VIEWPORTS:
         ctx, page, errors = await new_page(browser, viewport={"width": w, "height": h})
         worst[(w, h)] = 0
         try:
+            if patch_css:
+                await page.add_style_tag(content=patch_css)
             await page.evaluate(EVENTS_JS)
             for iid, it in by_id.items():
                 await page.evaluate("(i) => FDP.ui.serve([i])", iid)
@@ -1221,12 +1225,70 @@ async def selftest(browser, by_id):
     return ok, lines
 
 
+PHONE_FAULTS = [
+    ("Next pushed below the fold (600px margin above it)", "#feedback .maffs-next { margin-top: 600px !important; }"),
+    ("horizontal scroll (page 900px wide)", "body { min-width: 900px !important; }"),
+]
+
+
+async def phone_selftest(browser, by_id):
+    """Part 2's plants: each CSS fault is added to the page, three items are measured, and phone() must report it."""
+    lines, ok = [], True
+    few = {k: by_id[k] for k in list(by_id)[:3]}
+    for name, css in PHONE_FAULTS:
+        found = []
+        await phone(browser, few, found, patch_css=css)
+        caught = bool(found)
+        ok = ok and caught
+        lines.append("  %-62s %s" % (name, ("CAUGHT (%d, e.g. %s)" % (len(found), found[0][:80])) if caught
+                                          else "*** MISSED ***"))
+    return ok, lines
+
+
 # ------------------------------------------------------------ main
+
+async def phone_report(browser, by_id, args):
+    ph_out = []
+    worst = await phone(browser, by_id, ph_out, args.screens)
+    for f in ph_out:
+        fail(f)
+    print("Phone: %d items x 3 viewports; lowest Next bottom edge: %s" % (len(by_id), ", ".join(
+        "%dx%d %.0fpx (fold %d)" % (w, h, worst[(w, h)], h - FOOTER) for w, h in VIEWPORTS)))
+
+
+async def selftest_report(browser, by_id, fn, what):
+    ok, lines = await fn(browser, by_id)
+    print()
+    print("Fault-injection self-test%s (patched into a fresh page; the file is never touched):" % what)
+    for ln in lines:
+        print(ln)
+    if not ok:
+        fail("fault-injection self-test%s: at least one fault was not caught" % what)
+
+
+async def run_phone_part(browser, args):
+    """--part 2: the bank is read and recomputed as in part 1 (the phone check needs the recomputed right answers), then every
+    item is measured at the three phone sizes, then the phone plants are run. Part 1 holds everything else."""
+    ctx, page, errors = await new_page(browser)
+    data = await page.evaluate(COLLECT_JS)
+    found = []
+    by_id, _ = check_banks(data, found)
+    await ctx.close()
+    for f in found:
+        fail(f)
+    await phone_report(browser, by_id, args)
+    if not args.no_selftest:
+        await selftest_report(browser, by_id, phone_selftest, " (phone fit)")
+
 
 async def run_all(args):
     from playwright.async_api import async_playwright
     async with async_playwright() as pw:
         browser = await pw.chromium.launch()
+        if args.part == 2:
+            await run_phone_part(browser, args)
+            await browser.close()
+            return
         ctx, page, errors = await new_page(browser)
         found, data, by_id, exp, dates = await collect_static(page)
         # A fresh page must serve the same pizzas (nothing carried over from a first load).
@@ -1266,22 +1328,13 @@ async def run_all(args):
         for n in notes:
             print("UI " + n)
 
-        if not args.no_phone:
-            ph_out = []
-            worst = await phone(browser, by_id, ph_out, args.screens)
-            for f in ph_out:
-                fail(f)
-            print("Phone: %d items x 3 viewports; lowest Next bottom edge: %s" % (len(by_id), ", ".join(
-                "%dx%d %.0fpx (fold %d)" % (w, h, worst[(w, h)], h - FOOTER) for w, h in VIEWPORTS)))
+        if not args.no_phone and args.part is None:
+            await phone_report(browser, by_id, args)
 
         if not args.no_selftest:
-            ok, lines = await selftest(browser, by_id)
-            print()
-            print("Fault-injection self-test (patched into a fresh page; the file is never touched):")
-            for ln in lines:
-                print(ln)
-            if not ok:
-                fail("fault-injection self-test: at least one fault was not caught")
+            await selftest_report(browser, by_id, selftest, "")
+            if args.part is None and not args.no_phone:
+                await selftest_report(browser, by_id, phone_selftest, " (phone fit)")
         await browser.close()
 
 
@@ -1290,6 +1343,7 @@ def main():
     ap.add_argument("--no-selftest", action="store_true")
     ap.add_argument("--no-phone", action="store_true", help="skip measuring every item at three phone sizes")
     ap.add_argument("--require-katex", action="store_true", help="fail if KaTeX cannot load (CI)")
+    ap.add_argument("--part", type=int, choices=(1, 2), help="CI split: 1 = everything but the phone check, 2 = the phone check and its plants (default: both)")
     ap.add_argument("--screens", help="save wrong-answer screenshots at the three phone sizes to this folder")
     args = ap.parse_args()
     global PORT

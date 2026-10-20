@@ -1,6 +1,8 @@
 # Handover: home lane
 
-**ROSTER-PYTHAG-14 (20 Oct, Jon's contract; branch `roster-pythag-14`).** `.claude/rules/game-roster.md` row 98 (Just Pythag It, Bruv): "from 15 triples" -> "from 14 triples"; the code has 14 (3-4-5 x1-8 and x10, 5-12-13 x1-3, 8-15-17, 7-24-25). Nothing else touched. **The cloud lane's item for this row is closed.**
+**PER-LINE-LIMIT (20 Oct, Jon's contract; branch `timings-line-limit`; replaces his temporary ruling of 20 Oct, which stands in `cloud.md` until that lane next edits it).** `ci-groups.py --check` now fails any timed line whose median + median setup passes 70% of its group's budget (named, with figures); `--record-and-pack` exits 2 (the workflow warns, commits nothing, does not fail) when the refused pack passes at the previous median setup, else fails as before. Selftests prove both paths and the limit (169 s passes, 170 s fails). Replayed on the 5 recorded runs: it tells setup from line growth (a reconstructed 39479308670 is setup-only; 260 s lines are not). **Free Daily Pizza is split into parts 1 and 2 (`--part 1|2`; part 2 has its own two planted phone faults) and Just Pythag It, Bruv into parts 1-5 (part 5: WebKit, play-through, self-test); cloud lane: rebase knowingly.** Canon §7.8.1. At today's medians the limit names no line (Pizza 69%, Pythag part 4 63%): both were split on Jon's instruction, not because it named them. Status: PR and main run below.
+
+**ROSTER-PYTHAG-14 (20 Oct, #464; main run 39479308670 red from the timings job alone: setup 66 s, Content verifiers 2 at 81%).** Row 98 of `game-roster.md` now says 14 triples (the code has 14). The cloud lane's item is closed.
 
 **DEPS-SRC-HAZARD (19 Oct; cloud lane, Jon's contract).** `scripts/ci-deps.py`: `src_hazard()` replaces the computed-src regex; selftest has an always-run budget of 12 (now 9, was 125). Detail: cloud handover.
 
@@ -31,26 +33,3 @@
 
 **CI-RUNNER-REGION (15 Oct, Jon's contract; branch `claude/runner-region`).** Each group job reads its Azure region from the instance metadata service (probed first on a throwaway branch: inside the Playwright container, 6 of 6 jobs matched the region the runner prints; case differs, so it is lowercased; "unknown" if the call fails) and saves `region: x` as line 2 of its timing artifact. `ci-groups.read_run` stores `regions` {line: region} in each history record (old records and old artifacts read "unknown"); `lines`, medians, packer and `--check` are untouched (self-test proves the record's `lines` and top-level keys are unchanged). The 75% warning and summary now say "<line> took Ns in <region> (recorded median Ms)"; the persistence report adds a region column and `in a/b/c` to its annotation. Flagging logic and thresholds untouched. Canon §7.8.1 has the paragraph, including that within-region comparison is deferred to about 10 runs per region group. The first main run after this records regions; the persistence report reads them from the 5-run history, so older runs show "unknown" for a few runs.
 **CI-SLOWDOWN-401 (15 Oct, Jon's contract; branch `claude/ci-slowdown-401`; report only).** Full report: **`docs/handover/ci-slowdown-401.md`**. Equatle (47 to 76 s) and Log Laws Solve (33 to 60 s) are not slower because of #401: they run at 46-64 s / 32-46 s on a runner in Azure region centralus and 69-79 s / 52-64 s in every other region (17 main runs, no overlap), and #401's run and the two after it landed outside centralus; #405's run, in centralus, was 49 s and 33 s. #401 changed no file either verifier reads. Equation Builder part 1 follows the same split (78-98 s fast, 152-159 s slow, 106-138 s between). No fix needed; the persistence report cannot tell a region switch from a regression, and the report proposes comparing the flagged line with the other lines timed in the same runs (Jon's call: it touches `timing-gate.py`).
-
-**QUEUE (home lane, Jon 9 Oct 16:10):** 1 RULINGS-9OCT (#215, merged), 2 GRAPH-SKETCHER-FIT, 3 CI-BALANCE, 4 PLAY-AGAIN-SCREEN,
-5 SCORES-OFFLINE, 6 SCI-CALC, 7 DOCS-9OCT, then CHECKPOINT. (E2 merged as #213; main green.)
-CAR-TRAP-DRAFT: the cloud lane's (Jon, 20:17); contract at
-`docs/handover/contracts/2026-10-09-car-trap-draft.md` on main (HOOK-FIX let it through the hook). Jon also sent the
-IT room rewrite brief (Narry, secret ballot; 3 open rulings): a brief, not yet a contract, saved as
-contracts/2026-10-09-it-room-brief.md. SCI-CALC (item 6) is saved as docs/history/contracts/2026-10-09-sci-calc.md.
-- **Answer-lock L1 flake:** act only if it recurs (the follow-up below stands).
-- **Standing F1 item: done for every listed game but graph-sketcher** (NOT_YET: glorious-gantt, unlisted and the cloud
-  lane's; graph-sketcher, blocked by its phone overflow, batch 10 entry). unit-converter loads the lock (cloud lane,
-  #196) and is judged in full, but is not in MIGRATED: Jon's call (the overnight contract left it to the cloud lane). **Before building each batch** (contract CLAIM, canon §7.8.2): read `cloud-remaining` in
-  `scripts/answer-lock-state.json` on main and drop every game on it from the batch. Never claim or edit a game on that
-  list. For a listed game the claim is a process lock only: check-answer-lock.py still judges it as unclaimed.
-- **Follow-up (home lane, CI): Answer lock L1 failed on main once (b66ccde, run 37776985917)** with five games at
-  once (binomial-blaster, curling-friction, differentiation-duel by touch at 390px; force-resolver, moments-master
-  UNPLAYABLE after Start). The same slice passed 20/20 locally on that commit, the parallel run (3878582) was green, and
-  a rerun of the failed job passed. Canon 7.6.0 says a verdict never depends on timing: if it recurs, find what the
-  driver waits on that a slow runner breaks (start(), the touch path), and fix it there, not with retries.
-
-**Jon's rulings, 9 Oct (on the overnight questions; RULINGS-9OCT):** unit-converter moves to MIGRATED (done,
-seeds 1-3 pass). wrong-on-the-internet keeps its 3 s pause before Try again: feedback on a wrong answer is shown, not
-skipped (Jon, 8 Oct). complex-converter's Play Again keeps replaying the mode, as its Menu is one tap from the end
-screen. graph-sketcher: fix its phone overflow now, then put it on the lock (item 2). The first two are in canon §7.6.

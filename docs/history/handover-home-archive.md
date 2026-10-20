@@ -3,6 +3,31 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## 2026-10-20 (home): the oldest entries (9 Oct queue and rulings), moved to keep the handover under 20 KB (PER-LINE-LIMIT)
+
+**QUEUE (home lane, Jon 9 Oct 16:10):** 1 RULINGS-9OCT (#215, merged), 2 GRAPH-SKETCHER-FIT, 3 CI-BALANCE, 4 PLAY-AGAIN-SCREEN,
+5 SCORES-OFFLINE, 6 SCI-CALC, 7 DOCS-9OCT, then CHECKPOINT. (E2 merged as #213; main green.)
+CAR-TRAP-DRAFT: the cloud lane's (Jon, 20:17); contract at
+`docs/handover/contracts/2026-10-09-car-trap-draft.md` on main (HOOK-FIX let it through the hook). Jon also sent the
+IT room rewrite brief (Narry, secret ballot; 3 open rulings): a brief, not yet a contract, saved as
+contracts/2026-10-09-it-room-brief.md. SCI-CALC (item 6) is saved as docs/history/contracts/2026-10-09-sci-calc.md.
+- **Answer-lock L1 flake:** act only if it recurs (the follow-up below stands).
+- **Standing F1 item: done for every listed game but graph-sketcher** (NOT_YET: glorious-gantt, unlisted and the cloud
+  lane's; graph-sketcher, blocked by its phone overflow, batch 10 entry). unit-converter loads the lock (cloud lane,
+  #196) and is judged in full, but is not in MIGRATED: Jon's call (the overnight contract left it to the cloud lane). **Before building each batch** (contract CLAIM, canon §7.8.2): read `cloud-remaining` in
+  `scripts/answer-lock-state.json` on main and drop every game on it from the batch. Never claim or edit a game on that
+  list. For a listed game the claim is a process lock only: check-answer-lock.py still judges it as unclaimed.
+- **Follow-up (home lane, CI): Answer lock L1 failed on main once (b66ccde, run 37776985917)** with five games at
+  once (binomial-blaster, curling-friction, differentiation-duel by touch at 390px; force-resolver, moments-master
+  UNPLAYABLE after Start). The same slice passed 20/20 locally on that commit, the parallel run (3878582) was green, and
+  a rerun of the failed job passed. Canon 7.6.0 says a verdict never depends on timing: if it recurs, find what the
+  driver waits on that a slow runner breaks (start(), the touch path), and fix it there, not with retries.
+
+**Jon's rulings, 9 Oct (on the overnight questions; RULINGS-9OCT):** unit-converter moves to MIGRATED (done,
+seeds 1-3 pass). wrong-on-the-internet keeps its 3 s pause before Try again: feedback on a wrong answer is shown, not
+skipped (Jon, 8 Oct). complex-converter's Play Again keeps replaying the mode, as its Menu is one tap from the end
+screen. graph-sketcher: fix its phone overflow now, then put it on the lock (item 2). The first two are in canon §7.6.
+
 ## 2026-10-20 (home): Jon's 7 Oct rulings, moved to keep the handover under 20 KB (ROSTER-PYTHAG-14)
 
 **Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
