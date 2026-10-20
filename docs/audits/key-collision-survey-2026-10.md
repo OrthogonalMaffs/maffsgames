@@ -1,18 +1,22 @@
 # Key-collision survey, October 2026
 
-Contract KEY-COLLISION-SURVEY (Jon, 20 Oct 2026; verbatim in `docs/history/contracts/2026-10-20-key-collision-survey.md`).
-Report only: no game, verifier, shared module, findings file, register or workflow was changed.
+Contract KEY-COLLISION-SURVEY (Jon, 20 Oct 2026; verbatim in `docs/history/contracts/2026-10-20-key-collision-survey.md`),
+reclassified under contract COLLISION-IDENTITIES and Jon's rulings of 20 Oct 2026 (both verbatim in
+`docs/handover/contracts/2026-10-20-collision-identities.md`). Report only: no game, verifier, shared module,
+findings file, register or workflow was changed.
 
 **The question.** In every game that generates its questions, is there a question where a named or common error,
 rounded as the game rounds its key, gives the key? The game marks by value (typed answers) or by the option the
 student picks (multiple choice), so a student using that wrong method is marked right.
 
 **The script.** `scripts/survey-key-collisions.py` (not wired into CI). Every count below is its output, pasted
-unedited from one run (`python scripts/survey-key-collisions.py`, 20 Oct 2026, on main at dd22aa0). It loads each game through the stub server, reads the question space from the page itself
-(the game's own pools, or its own generator driven through every choice it can make: `rInt`/`randInt` and
-`Math.random` replaced by a counter and every path walked), then recomputes every key and every error in Python,
-exactly (fractions, integer square roots, or 50-digit `mpmath` for trigonometry and logs), from the numbers the
-question shows, rounded exactly as the game rounds its key.
+unedited from one run (`python scripts/survey-key-collisions.py`, 20 Oct 2026, on main at 878d83e). It loads each
+game through the stub server, reads the question space from the page itself (the game's own pools, or its own
+generator driven through every choice it can make: `rInt`/`randInt` and `Math.random` replaced by a counter and every
+path walked), then recomputes every key and every error in Python, exactly (fractions, integer square roots, or
+50-digit `mpmath` for trigonometry and logs), from the numbers the question shows, rounded exactly as the game rounds
+its key. `python scripts/survey-key-collisions.py --selftest` checks the classification rule against fixed cases
+(below) and the control.
 
 **The control.** Just Pythag It, Bruv reported 7 before #453 (PYTHAG-KEY-COLLIDE). It reports **0** here, over all
 2,041 questions its pools can produce.
@@ -28,59 +32,103 @@ question shows, rounded exactly as the game rounds its key.
   question of that shape can tell them apart (halving "simplifies" a ratio whose HCF is 2; sharing equally is
   right when the ratio is 3:3; reading 7/100 as 7% is right). A student holding the misconception is still
   marked right; whether that matters is a design question (how often a game should ask the questions that
-  separate the methods), not a wrong key.
+  separate the methods), not a wrong key. Two further classes count here:
+  - **agree (identity)**: a coincidence as first counted that is an exact identity for the question's
+    parameters: the error equals the key on EVERY question sharing the parameter it turns on (at least two
+    questions), named in the row (e.g. `b - r [identity: b = 2]`: 2 - r = r whenever r is 1, the only residue the
+    error can reach; "share by one part" with the ratio 2 : 2, for every amount).
+  - **agree (precision)**: a precision slip, classed by its type, grouped or not (Jon's ruling (2)): trig-worms'
+    "ratio rounded to 1 d.p. before the inverse". Where the slip changes the whole degree the student is already
+    marked wrong; where it does not, the method is right to the precision asked.
 - **two-way**: a rule of thumb's agreement with a two-way choice (which card has more factors; equivalent or
   not; which pack is better value). Chance alone gives about half. Reported, never counted as a collision.
 
+**The classification rule (COLLISION-IDENTITIES, Jon's rulings of 20 Oct).** Each coincidence error is grouped by the
+parameters its comparison with the key turns on, an identity holding for every value of the rest: modular-battle by b
+(every a); split-it by the ratio (every amount); quadratic-factoriser step 2 by the two coefficients its comparison
+with ac turns on (a x b = ac on b and c; b x c on a and b; a + c and a - c on a and c); Free Daily Pizza's
+of-an-amount errors by p or a/b (every amount). Only exact identities are grouped. **trig-worms is classed by error
+type, never grouped (ruling (2))**: a wrong function or the ratio upside down landing on the key is a coincidence even
+where it does so for every hypotenuse at one angle at the nearest degree (tan-1 of hyp/adj at cos 80 deg is 80.15
+deg); rounding the ratio first is agree (precision). **What "applies" means for modular-battle (ruling (1)):** an
+error counts only where its value is a residue the game offers, 0..b-1; any other value cannot be picked.
+
+**Self-test fixtures** (all pass): 11 mod 2 / b - r, 13 mod 5 / last digit, 12 mod 9 / first digit after the point:
+agree (identity); 12 mod 5 / quotient: coincidence; trig-worms cos 80 deg / ratio upside down: coincidence;
+trig-worms tan 65 deg / ratio rounded first: agree (precision); Just Pythag It, Bruv: 0.
+
 ## Headline (this script's output)
 
-| game | listed | parts surveyed | coincidence collisions | methods-agree collisions |
-|---|---|---|---|---|
-| just-pythag-it-bruv | yes | 1 | 0 | 0 |
-| six-sevens-bruv | yes | 1 | 1 | 0 |
-| split-it | yes | 12 | 109 | 1786 |
-| free-daily-pizza | yes | 4 | 2 | 80 |
-| trig-worms | yes | 3 | 128 | 0 |
-| distinctly-average | yes | 12 | 2 | 241 |
-| quadratic-factoriser | yes | 3 | 15 | 1188 |
-| modular-battle | yes | 1 | 231 | 0 |
-| factor-race | yes | 1 | 0 | 0 |
-| fraction-equivalence | yes | 1 | 0 | 0 |
-| bearing-blitz | yes | 2 | 0 | 24 |
-| shape-shifter | yes | 1 | 0 | 0 |
-| equatle | yes | 1 | 0 | 3093 |
-| log-laws | yes | 6 | 0 | 46 |
-| **all** | | 49 | **488** | **6458** |
+Before = coincidences as first counted (#458); identities = exact identities, the error equal to the key on every question of its group; precision = precision slips, by type; both moved to methods agree; after = the coincidences left.
 
-## STOP IF: wrong methods marked right in listed games (for Jon)
+| game | listed | parts surveyed | coincidence before | identities | precision | coincidence after | methods-agree collisions |
+|---|---|---|---|---|---|---|---|
+| just-pythag-it-bruv | yes | 1 | 0 | 0 | 0 | 0 | 0 |
+| six-sevens-bruv | yes | 1 | 1 | 0 | 0 | 1 | 0 |
+| split-it | yes | 12 | 109 | 109 | 0 | 0 | 1895 |
+| free-daily-pizza | yes | 4 | 2 | 0 | 0 | 2 | 80 |
+| trig-worms | yes | 3 | 128 | 0 | 76 | 52 | 76 |
+| distinctly-average | yes | 12 | 2 | 0 | 0 | 2 | 241 |
+| quadratic-factoriser | yes | 3 | 15 | 10 | 0 | 5 | 1198 |
+| modular-battle | yes | 1 | 231 | 108 | 0 | 123 | 108 |
+| factor-race | yes | 1 | 0 | 0 | 0 | 0 | 0 |
+| fraction-equivalence | yes | 1 | 0 | 0 | 0 | 0 | 0 |
+| bearing-blitz | yes | 2 | 0 | 0 | 0 | 0 | 24 |
+| shape-shifter | yes | 1 | 0 | 0 | 0 | 0 | 0 |
+| equatle | yes | 1 | 0 | 0 | 0 | 0 | 3093 |
+| log-laws | yes | 6 | 0 | 0 | 0 | 0 | 46 |
+| **all** | | 49 | **488** | **227** | **76** | **185** | **6761** |
 
-The contract stops on "a collision where a wrong method is marked right in a listed game". Every game below is
-listed. Coincidence collisions (the closest match to #453's), with the clearest example of each:
+**No game's coincidence count rose; the control is 0.**
 
-- **six-sevens-bruv (1):** "2 x 2 = ?": adding gives 4.
-- **split-it (109):** "Share £8 in the ratio 2 : 2" (and every 2 : 2 share, KS3 95, GCSE 14): dividing the amount
-  by one part, not the total, gives each share.
+## Reclassified (coincidence as first counted, now methods agree)
+
+- **split-it, 109 identities:** dividing the amount by one ratio part, not the total, is right for every amount
+  when the ratio is 2 : 2 (95, KS3 and GCSE divide) or 3 : 3 : 3 (14): a / 2 = 2a / 4. Example: share £8 in the ratio
+  2 : 2, key 4 : 4.
+- **modular-battle, 108 identities:** b - r at b = 2 (25: 2 - 1 = 1); the last digit of a at b = 2 and b = 5 (37:
+  a last digit the game can offer, 0..b-1, is the remainder); the first digit after the point of a / 9 (46: r / 9 =
+  0.rrr...). Example: 12 mod 9 = 3, 12 / 9 = 1.333....
+- **quadratic-factoriser, 10 identities** (Higher, guided step 2, find ac): a x b when b = c = -1 (3); b x c when
+  a = b = 4 or 9 (5); a + c when a = c = 2 (2). Example: 2x^2 + 5x + 2, a + c = 4 = ac.
+- **trig-worms, 76 precision** (find the angle): rounding the ratio to 1 d.p. before the inverse, at TOA 35, 50,
+  60, 65, 70 and 75 deg. Example: tan 65 deg from opposite and adjacent, ratio 2.1 rounded first still gives 65 deg.
+
+## Coincidences left, per game, and Jon's rulings
+
+- **modular-battle (123), accepted, not filtered (ruling (3)):** the quotient (25; a a multiple of b + 1, e.g. 12
+  mod 5, quotient 2 = remainder 2), b - r (28; r = b/2 for b = 4, 6, 8, e.g. 14 mod 4 = 2), the last digit of a (28;
+  b = 3, 4, 6, 8, e.g. 21 mod 4 = 1), the first digit after the point of a / b (42; b = 6, 7, 8, e.g. 11 mod 8 = 3,
+  11 / 8 = 1.375). **Why accepted (Jon):** 123 across 4 errors x 408 questions is 7.5% per error per question,
+  below the 1 in 9 at which a random residue hits the key (b = 9), so no method beats guessing; filtering 30% of the
+  questions would teach that b/2 is never the answer. **Checked against the buttons shown:** the single worst error
+  left, the first digit after the point, is 42 / 408 = 10.3%, still under 1 in 9. Counting its identity cases too
+  (b = 9), a student using it every time is right on 88 / 408 = 21.6%, which is above 1 in 9; but the game shows
+  min(4, b) buttons, so guessing among them is right on 29.2% of the 408 questions, and no error's full rate
+  (quotient 6.1%, b - r 13.0%, last digit 15.9%, first digit after the point 21.6%) reaches it. The conclusion holds;
+  the fairer yardstick is the buttons, not 1 in 9.
+- **trig-worms (52), to be filtered (ruling (4), contract TRIG-WORMS-FILTER):** all find the angle, 52 distinct
+  (ratio, angle, hypotenuse) entries of 588: tan-1 of the ratio upside down 38 (CAH 75 deg 8 of 15 hypotenuses; CAH
+  80 and 85 deg 15 of 15, so the filter removes those two pairs, as ruled), tan-1 for sin-1 8 (SOH 15 deg), the other
+  inverse 6 (TOA 15 deg, sin-1 of opp/adj). Example: cos 75 deg with adjacent 2.1, hypotenuse 8: tan-1(8 / 2.1) =
+  75.3 deg, key 75 deg. `questionFrom` drops a named distractor equal to the key, so the student using it picks the
+  key.
+- **quadratic-factoriser (5):** step 2, a x b = ac on 4 more trinomials where b = c, each the only trinomial in the
+  pool with its b and c, so no group shows the identity (one question is no evidence; e.g. 2x^2 + 9x + 9); GCSE "x^2 + 4x + 4": swapping sum and product gives (x + 2)(x + 2) (1).
 - **free-daily-pizza (2):** "60% of 150" (subtracting the percentage, 150 - 60, gives 90); "10% as a fraction"
   (putting the percentage number on the bottom gives 1/10).
-- **trig-worms (128, all "find the angle"):** rounding the ratio to 1 d.p. before the inverse (76), tan-1 of the
-  ratio upside down (38), tan-1 for sin-1 or cos-1 (8) and the other inverse (6) give the same whole number of
-  degrees, e.g. 75 deg from adjacent and hypotenuse with tan-1 of hyp/adj. The game already lists most of these
-  errors and silently drops the ones that coincide (`questionFrom` keeps "three named errors ... only if they
-  differ from the key"), so the student using them picks the key.
-- **distinctly-average (2):** two bimodal items whose two largest (or two smallest) values are the modes.
-- **quadratic-factoriser (15):** GCSE "x^2 + 4x + 4": swapping sum and product gives (x + 2)(x + 2); Higher guided
-  step 2 (find ac): a x b, b x c or a + c equals ac on 14 trinomials (b = c, a = b, or a = c = 2).
-- **modular-battle (231):** the remainder equals the first digit after the point of a / b (88: every a / 9 with a remainder, and
-  others such as 11 mod 8, 1.375), the last digit of a (65), b - r (53, when b = 2r) or the quotient (25).
+- **distinctly-average (2):** two bimodal items whose two largest (or two smallest) values are the modes, e.g.
+  [14, 20, 15, 20, 16, 18, 17, 18], key 18 and 20.
+- **six-sevens-bruv (1):** "2 x 2 = ?": adding gives 4.
+- **Zero:** just-pythag-it-bruv (control), factor-race, fraction-equivalence, bearing-blitz, shape-shifter, equatle,
+  log-laws.
 
-Methods-agree collisions are listed per game below; the largest are split-it (1,786: mostly "the HCF of the first
-two parts" for three-part ratios, and sharing equally when the parts are equal), quadratic-factoriser (1,188: every
-error still ends at "No real solutions" on the 184 no-real-roots items; swapping the constants when p = r or
-q = s), equatle (3,093 of 4,430 mixed-operation equations give the same value worked left to right), and
-distinctly-average (241: on every one of its 73 mean items the median equals the mean, and on 43 the mode does,
-by its pair-swap construction).
-
-Nothing was fixed (the contract forbids it, even under SR-30; no standing ruling decides these cases).
+No game other than trig-worms is ruled for a fix. Methods-agree collisions are listed per game below; the largest
+are equatle (3,093 of 4,430 mixed-operation equations give the same value worked left to right), split-it (1,895:
+mostly "the HCF of the first two parts" for three-part ratios, sharing equally when the parts are equal, and the 109
+identities), quadratic-factoriser (1,198: every error still ends at "No real solutions" on the 184 no-real-roots
+items; swapping the constants when p = r or q = s) and distinctly-average (241: on every one of its 73 mean items the
+median equals the mean, and on 43 the mode does, by its pair-swap construction).
 
 ## Which games generate their questions, and how that was decided
 
@@ -202,17 +250,18 @@ fixed bank at runtime. Fourteen generate some or all of their questions; all fou
 | error tested | kind | questions it applies to | collisions |
 |---|---|---|---|
 | shared equally (amount / number of parts) | agree | 3420 | 570 |
-| amount / each ratio part (divide by one part, not the total) | coincidence | 3420 | 95 |
+| amount / each ratio part (divide by one part, not the total) [identity: ratio 2:2, every amount] | agree (identity) | 3420 | 95 |
+| amount / each ratio part (divide by one part, not the total) | coincidence | 3420 | 0 |
   - shared equally (amount / number of parts): Share £4 in the ratio 1 : 1: key 2:2
   - shared equally (amount / number of parts): Share £8 in the ratio 2 : 2: key 4:4
   - shared equally (amount / number of parts): Share £12 in the ratio 2 : 2: key 6:6
   - shared equally (amount / number of parts): Share 12  in the ratio 2 : 2: key 6:6
   - shared equally (amount / number of parts): Share 12 kg in the ratio 2 : 2: key 6:6
-  - amount / each ratio part (divide by one part, not the total): Share £8 in the ratio 2 : 2: key 4:4
-  - amount / each ratio part (divide by one part, not the total): Share £12 in the ratio 2 : 2: key 6:6
-  - amount / each ratio part (divide by one part, not the total): Share 12  in the ratio 2 : 2: key 6:6
-  - amount / each ratio part (divide by one part, not the total): Share 12 kg in the ratio 2 : 2: key 6:6
-  - amount / each ratio part (divide by one part, not the total): Share 12 ml in the ratio 2 : 2: key 6:6
+  - amount / each ratio part (divide by one part, not the total) [identity: ratio 2:2, every amount]: Share £8 in the ratio 2 : 2: key 4:4
+  - amount / each ratio part (divide by one part, not the total) [identity: ratio 2:2, every amount]: Share £12 in the ratio 2 : 2: key 6:6
+  - amount / each ratio part (divide by one part, not the total) [identity: ratio 2:2, every amount]: Share 12  in the ratio 2 : 2: key 6:6
+  - amount / each ratio part (divide by one part, not the total) [identity: ratio 2:2, every amount]: Share 12 kg in the ratio 2 : 2: key 6:6
+  - amount / each ratio part (divide by one part, not the total) [identity: ratio 2:2, every amount]: Share 12 ml in the ratio 2 : 2: key 6:6
 
 ### split-it: divide, gcse
 - question space: 1750 distinct questions (1750 paths walked, 0 redraw paths cut); enumerated (generators[mode] driven through every rInt and Math.random choice)
@@ -222,17 +271,18 @@ fixed bank at runtime. Fourteen generate some or all of their questions; all fou
 | error tested | kind | questions it applies to | collisions |
 |---|---|---|---|
 | shared equally (amount / number of parts) | agree | 1750 | 70 |
-| amount / each ratio part (divide by one part, not the total) | coincidence | 1750 | 14 |
+| amount / each ratio part (divide by one part, not the total) [identity: ratio 3:3:3, every amount] | agree (identity) | 1750 | 14 |
+| amount / each ratio part (divide by one part, not the total) | coincidence | 1750 | 0 |
   - shared equally (amount / number of parts): Divide 6 in the ratio 1 : 1 : 1: key 2:2:2
   - shared equally (amount / number of parts): Divide 12 in the ratio 2 : 2 : 2: key 4:4:4
   - shared equally (amount / number of parts): Divide 18 in the ratio 2 : 2 : 2: key 6:6:6
   - shared equally (amount / number of parts): Divide 24 in the ratio 2 : 2 : 2: key 8:8:8
   - shared equally (amount / number of parts): Divide 30 in the ratio 2 : 2 : 2: key 10:10:10
-  - amount / each ratio part (divide by one part, not the total): Divide 18 in the ratio 3 : 3 : 3: key 6:6:6
-  - amount / each ratio part (divide by one part, not the total): Divide 27 in the ratio 3 : 3 : 3: key 9:9:9
-  - amount / each ratio part (divide by one part, not the total): Divide 36 in the ratio 3 : 3 : 3: key 12:12:12
-  - amount / each ratio part (divide by one part, not the total): Divide 45 in the ratio 3 : 3 : 3: key 15:15:15
-  - amount / each ratio part (divide by one part, not the total): Divide 54 in the ratio 3 : 3 : 3: key 18:18:18
+  - amount / each ratio part (divide by one part, not the total) [identity: ratio 3:3:3, every amount]: Divide 18 in the ratio 3 : 3 : 3: key 6:6:6
+  - amount / each ratio part (divide by one part, not the total) [identity: ratio 3:3:3, every amount]: Divide 27 in the ratio 3 : 3 : 3: key 9:9:9
+  - amount / each ratio part (divide by one part, not the total) [identity: ratio 3:3:3, every amount]: Divide 36 in the ratio 3 : 3 : 3: key 12:12:12
+  - amount / each ratio part (divide by one part, not the total) [identity: ratio 3:3:3, every amount]: Divide 45 in the ratio 3 : 3 : 3: key 15:15:15
+  - amount / each ratio part (divide by one part, not the total) [identity: ratio 3:3:3, every amount]: Divide 54 in the ratio 3 : 3 : 3: key 18:18:18
 
 ### split-it: fractions, ks3
 - question space: 84 distinct questions (84 paths walked, 0 redraw paths cut); enumerated (generators[mode] driven through every rInt and Math.random choice)
@@ -410,7 +460,7 @@ fixed bank at runtime. Fourteen generate some or all of their questions; all fou
 | other inverse: sin<->cos (or sin/cos for tan) | coincidence | 588 | 6 |
 | tan-1 of the ratio (wrong inverse) | coincidence | 414 | 8 |
 | ratio upside down | coincidence | 588 | 38 |
-| ratio rounded to 1 d.p. first | coincidence | 556 | 76 |
+| ratio rounded to 1 d.p. first | agree (precision) | 556 | 76 |
 | the other angle: 90 - theta | coincidence | 588 | 0 |
 | calculator in radians (radians read as degrees) | coincidence | 588 | 0 |
 | cos-1 instead of tan-1 (of the smaller over the larger) | coincidence | 174 | 0 |
@@ -685,27 +735,32 @@ fixed bank at runtime. Fourteen generate some or all of their questions; all fou
 |---|---|---|---|
 | the two constants swapped: (px + s)(rx + q) | agree | 3760 | 440 |
 | both signs flipped: (px - q)(rx - s) | coincidence | 3760 | 0 |
-| step 2 (find ac): a x b | coincidence | 752 | 7 |
-| step 2 (find ac): b x c | coincidence | 752 | 5 |
-| step 2 (find ac): a + c | coincidence | 752 | 2 |
+| step 2 (find ac): a x b [identity: b, c = -1, -1, every a] | agree (identity) | 752 | 3 |
+| step 2 (find ac): a x b | coincidence | 752 | 4 |
+| step 2 (find ac): b x c [identity: a, b = 4, 4, every c; a, b = 9, 9, every c] | agree (identity) | 752 | 5 |
+| step 2 (find ac): b x c | coincidence | 752 | 0 |
+| step 2 (find ac): a + c [identity: a, c = 2, 2, every b] | agree (identity) | 752 | 2 |
+| step 2 (find ac): a + c | coincidence | 752 | 0 |
 | step 2 (find ac): a - c | coincidence | 752 | 0 |
   - the two constants swapped: (px + s)(rx + q): 2x^2 -15x +25 = (1x -5)(2x -5)
   - the two constants swapped: (px + s)(rx + q): 2x^2 -9x +9 = (1x -3)(2x -3)
   - the two constants swapped: (px + s)(rx + q): 2x^2 -3x +1 = (1x -1)(2x -1)
   - the two constants swapped: (px + s)(rx + q): 2x^2 +3x +1 = (1x +1)(2x +1)
   - the two constants swapped: (px + s)(rx + q): 2x^2 +9x +9 = (1x +3)(2x +3)
-  - step 2 (find ac): a x b: 2x^2 -1x -1: ac = -2
+  - step 2 (find ac): a x b [identity: b, c = -1, -1, every a]: 2x^2 -1x -1: ac = -2
+  - step 2 (find ac): a x b [identity: b, c = -1, -1, every a]: 6x^2 -1x -1: ac = -6
+  - step 2 (find ac): a x b [identity: b, c = -1, -1, every a]: 12x^2 -1x -1: ac = -12
   - step 2 (find ac): a x b: 2x^2 +9x +9: ac = 18
   - step 2 (find ac): a x b: 3x^2 -4x -4: ac = -12
   - step 2 (find ac): a x b: 3x^2 +16x +16: ac = 48
   - step 2 (find ac): a x b: 4x^2 -9x -9: ac = -36
-  - step 2 (find ac): b x c: 4x^2 +4x -15: ac = -60
-  - step 2 (find ac): b x c: 4x^2 +4x -3: ac = -12
-  - step 2 (find ac): b x c: 4x^2 +4x +1: ac = 4
-  - step 2 (find ac): b x c: 9x^2 +9x -4: ac = -36
-  - step 2 (find ac): b x c: 9x^2 +9x +2: ac = 18
-  - step 2 (find ac): a + c: 2x^2 -5x +2: ac = 4
-  - step 2 (find ac): a + c: 2x^2 +5x +2: ac = 4
+  - step 2 (find ac): b x c [identity: a, b = 4, 4, every c; a, b = 9, 9, every c]: 4x^2 +4x -15: ac = -60
+  - step 2 (find ac): b x c [identity: a, b = 4, 4, every c; a, b = 9, 9, every c]: 4x^2 +4x -3: ac = -12
+  - step 2 (find ac): b x c [identity: a, b = 4, 4, every c; a, b = 9, 9, every c]: 4x^2 +4x +1: ac = 4
+  - step 2 (find ac): b x c [identity: a, b = 4, 4, every c; a, b = 9, 9, every c]: 9x^2 +9x -4: ac = -36
+  - step 2 (find ac): b x c [identity: a, b = 4, 4, every c; a, b = 9, 9, every c]: 9x^2 +9x +2: ac = 18
+  - step 2 (find ac): a + c [identity: a, c = 2, 2, every b]: 2x^2 -5x +2: ac = 4
+  - step 2 (find ac): a + c [identity: a, c = 2, 2, every b]: 2x^2 +5x +2: ac = 4
 
 ### quadratic-factoriser: the quadratic formula
 - question space: 1254 questions (the whole pool: 1070 real, 184 no real roots); enumerated (QF_POOLS.formula)
@@ -752,30 +807,49 @@ fixed bank at runtime. Fourteen generate some or all of their questions; all fou
 
 | error tested | kind | questions it applies to | collisions |
 |---|---|---|---|
-| the quotient instead of the remainder | coincidence | 408 | 25 |
-| b - r (counted the other way) | coincidence | 408 | 53 |
-| the last digit of a | coincidence | 408 | 65 |
-| the first digit after the point of a / b | coincidence | 408 | 88 |
+| the quotient instead of the remainder | coincidence | 188 | 25 |
+| b - r (counted the other way) [identity: b = 2] | agree (identity) | 314 | 25 |
+| b - r (counted the other way) | coincidence | 314 | 28 |
+| the last digit of a [identity: b = 2; b = 5] | agree (identity) | 228 | 37 |
+| the last digit of a | coincidence | 228 | 28 |
+| the first digit after the point of a / b [identity: b = 9] | agree (identity) | 171 | 46 |
+| the first digit after the point of a / b | coincidence | 171 | 42 |
   - the quotient instead of the remainder: 12 mod 5: key 2
   - the quotient instead of the remainder: 14 mod 6: key 2
   - the quotient instead of the remainder: 15 mod 4: key 3
   - the quotient instead of the remainder: 16 mod 7: key 2
   - the quotient instead of the remainder: 18 mod 5: key 3
-  - b - r (counted the other way): 11 mod 2: key 1
+  - b - r (counted the other way) [identity: b = 2]: 11 mod 2: key 1
+  - b - r (counted the other way) [identity: b = 2]: 13 mod 2: key 1
+  - b - r (counted the other way) [identity: b = 2]: 15 mod 2: key 1
+  - b - r (counted the other way) [identity: b = 2]: 17 mod 2: key 1
+  - b - r (counted the other way) [identity: b = 2]: 19 mod 2: key 1
   - b - r (counted the other way): 12 mod 8: key 4
-  - b - r (counted the other way): 13 mod 2: key 1
   - b - r (counted the other way): 14 mod 4: key 2
-  - b - r (counted the other way): 15 mod 2: key 1
-  - the last digit of a: 10 mod 2: key 0
-  - the last digit of a: 11 mod 2: key 1
-  - the last digit of a: 11 mod 5: key 1
-  - the last digit of a: 12 mod 5: key 2
-  - the last digit of a: 13 mod 5: key 3
+  - b - r (counted the other way): 15 mod 6: key 3
+  - b - r (counted the other way): 18 mod 4: key 2
+  - b - r (counted the other way): 20 mod 8: key 4
+  - the last digit of a [identity: b = 2; b = 5]: 10 mod 2: key 0
+  - the last digit of a [identity: b = 2; b = 5]: 11 mod 2: key 1
+  - the last digit of a [identity: b = 2; b = 5]: 11 mod 5: key 1
+  - the last digit of a [identity: b = 2; b = 5]: 12 mod 5: key 2
+  - the last digit of a [identity: b = 2; b = 5]: 13 mod 5: key 3
+  - the last digit of a: 20 mod 4: key 0
+  - the last digit of a: 21 mod 4: key 1
+  - the last digit of a: 22 mod 4: key 2
+  - the last digit of a: 23 mod 4: key 3
+  - the last digit of a: 30 mod 3: key 0
+  - the first digit after the point of a / b [identity: b = 9]: 11 mod 9: key 2
+  - the first digit after the point of a / b [identity: b = 9]: 12 mod 9: key 3
+  - the first digit after the point of a / b [identity: b = 9]: 13 mod 9: key 4
+  - the first digit after the point of a / b [identity: b = 9]: 14 mod 9: key 5
+  - the first digit after the point of a / b [identity: b = 9]: 15 mod 9: key 6
   - the first digit after the point of a / b: 11 mod 8: key 3
-  - the first digit after the point of a / b: 11 mod 9: key 2
-  - the first digit after the point of a / b: 12 mod 9: key 3
   - the first digit after the point of a / b: 13 mod 6: key 1
-  - the first digit after the point of a / b: 13 mod 9: key 4
+  - the first digit after the point of a / b: 15 mod 7: key 1
+  - the first digit after the point of a / b: 16 mod 7: key 2
+  - the first digit after the point of a / b: 17 mod 8: key 1
+- note: accepted, not filtered (Jon's ruling (3), 20 Oct 2026): the coincidences left are 7.5% per error per question (123 / (4 x 408)), below the 1 in 9 at which a random residue hits the key at b = 9, so no method beats guessing; filtering would remove about 30% of the questions and teach that b/2 is never the answer
 
 ### factor-race: KS3/GCSE pairs
 - question space: 2694 ordered pairs (VALID_PAIRS); enumerated (VALID_PAIRS)

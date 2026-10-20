@@ -3,6 +3,22 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-20 (cloud): MONTY-100-RETITLE (contract `docs/history/contracts/2026-10-20-monty-100-retitle.md`). **DONE (#455, ed61533; main run 39398807202, green).**
+
+- **Root cause:** the title called the 100-door version "Obvious" while its expanded text repeated the probability argument and never gave the picture that makes it persuasive. Jon's ruling, 20 Oct: drop "obvious", use his wording.
+- **Done:** `FACTS[41]` `t` is now "Monty Hall, With 100 Doors" and `x` is Jon's text exactly; `h`, `g`, `gl` unchanged. No card 2 PR was open (STOP IF clear).
+- **verify-facts.py:** re-keyed; the summary's three pins kept; the new text's pins recompute 1 in 100 stay and 99 in 100 switch (with the skipped door the same in all three places and not yours), 99 others, 50/50 for a random host (exact fractions) and 2 in 3 for three doors. Fails on main's page (old title), on the new title with the old text, and on a mismatched door.
+- **test-fact-monty.py:** TITLE, EXPANDED and docstring; passes at 320/390/1280 with no overflow; fails on both plants. Its ci-line label ("Weekly fact \"100 Doors\"") still fits the new title, so it is unchanged (CI timings key on it).
+- **Old title elsewhere:** only `docs/history/contracts/2026-10-19-monty-card.md` and this contract's verbatim copy; `og:` metadata and the share image are site-wide, not per fact.
+
+## 2026-10-20 (cloud): PYTHAG-KEY-COLLIDE (contract `docs/history/contracts/2026-10-20-pythag-key-collide.md`). **DONE (#453, 54e0fe9; main run 39390699573, green); claim (620aa2a) released.**
+
+- **Root cause:** round 3's ladder pools held small lengths where a named error rounds to the key at 1 d.p., and the game marks by value, so that wrong method was marked right. PYTHAG-REPORT §5's seven, exactly: hyp [8,24] [9,24] [11,24] [8,25] [11,25] (sqrt(2a+2b), e.g. 0.8 and 2.4 m: 2a+2b = a²+b² = 6.4); short [45,44] [50,49] (c²−a² = 0.89 and 0.99, rounding as their roots do).
+- **Fix (the game's own generator; no shared module):** `J.errors`/`J.errorIsKey` compute the eight named errors in the numbers' own units, rounded as the key is (exact integers: `J.roundSqrt`, new `J.roundRat`). One pass after every pool is built keeps only entries no named error gets right: triples (all three questions a triple can ask), round 2, all five situations. Draws come from what is left. **Not "reject and redraw", as the contract worded it:** canon §12 and SR-5 forbid a redraw loop ("draw from the values that qualify"); the filter meets the contract's aim, computed in code at generation, so a later pool change is filtered too. Ladder hyp 292 → 287, ladder short 92 → 90, nothing else changed; smallest situation pool TV hyp 21 (TV 59 in all), so the under-20 STOP IF does not fire; type sequence untouched.
+- **Verifier (part 4, task "named errors"):** reads every pool from the page, recomputes keys and the eight errors in exact fractions: 2,041 questions, none at the key; each situation at least 20; the plant (the page with the filter cut out, the old generator) shows 2,048 and the seven, CAUGHT; the filter drops exactly those entries. Main's page served as the real one fails on all seven.
+- **Untouched:** the 95 two-error ties (they wait for the Formula-only ruling), the tap step, scoring, leaderboard, session length, the add-instead-of-subtract diagnosis.
+- **For the home lane (roster):** the row says round 1 draws "from 15 triples"; the code has 14 (3-4-5 ×1-8 and ×10, 5-12-13 ×1-3, 8-15-17, 7-24-25), and the filter drops none.
+
 ## 2026-10-19 (cloud): ANSWER-LOCK-STATE (contract and Jon's ruling A verbatim: `docs/history/contracts/2026-10-19-answer-lock-state.md`). **DONE (#452, b23fceb; main run 39315432381, green).**
 
 - **Root cause:** `check-answer-lock.py` read the cloud lane's remaining list from this file, so every handover edit selected all six answer-lock parts. The list is state, not prose.
