@@ -40,9 +40,9 @@ ROOM-CREDIT v2 (19 Oct, contract and v1 verbatim `docs/history/contracts/2026-10
 PYTHAG-REPORT (19 Oct, contract `docs/history/contracts/2026-10-19-pythag-report.md`, research only): **DONE (#447)**; report `docs/handover/pythag-report.md`, for Jon's ruling on a "Formula only" mode. Then ruling (2) of 19 Oct: formula-plug-in DONE (#449, 531c988); new-shapes DONE (#450, e0377e9).
 MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; Jon's ruling on the phone gap at its end): the "100 Doors" card states its setup and condition; step 3 list in the entry below. **DONE (#448, b973e23).**
 **START HERE (next session; written 19 Oct, 18:10 BST).**
-- **Done since:** the new-shapes header DONE (#450, e0377e9; main run 39299844863, green); DEPS-SRC-HAZARD DONE (#451, 0dd1b68; main run 39309543642, green, 53 jobs). No claimed game work remains.
-- **In flight (19 Oct evening):** ANSWER-LOCK-STATE (this PR; entry below).
-- **Main:** green after every merge on 19 Oct (#445 39233921992, #446 39245413455, #447 39259197128, #448 39273656313, #449 39287568708, #450 39299844863, #451 39309543642).
+- **Done since:** the new-shapes header DONE (#450, e0377e9; main run 39299844863, green); DEPS-SRC-HAZARD DONE (#451, 0dd1b68; main run 39309543642, green, 53 jobs); ANSWER-LOCK-STATE DONE (#452, b23fceb; main run 39315432381, green, 53 jobs).
+- **In flight (20 Oct):** PYTHAG-KEY-COLLIDE (this PR; entry below): just-pythag-it-bruv claimed in its own commit (620aa2a) and released in this PR.
+- **Main:** green after every merge on 19 Oct (#445 39233921992, #446 39245413455, #447 39259197128, #448 39273656313, #449 39287568708, #450 39299844863, #451 39309543642, #452 39315432381).
 - **Waiting on Jon (no contract yet):** (1) the front page's compact mode hides every fact card's summary on phones (600 px and below, no toggle), so the new MONTY-CARD setup is unseen there: a layout contract; (2) card 2 "The Monty Hall Problem" has the same unstated setup as the 100 Doors card had (full list of cards with unstated setup in the MONTY-CARD entry); (3) PYTHAG-REPORT's findings, for his "Formula only" ruling (the roster says 15 triples, the code has 14); (4) the phone stacking of the two headers was this lane's layout choice (one line overflowed 320 px), to confirm.
 - **Container setup (every fresh session):** `pip install playwright==1.56.0 sympy mpmath pyyaml`; `pip download --no-deps esprima==4.0.1`, untar into the scratchpad, `PYTHONPATH=<that>/esprima-4.0.1 python scripts/check-changed.py`. A run takes about 70 minutes and reports the same 25 KaTeX-CDN/WebKit failures every time (by name: the set in #441's PR); run one at a time, in the background; verifiers in scratch worktrees can run beside it (free ports). Remote branches are deleted on merge: after a squash merge, `git checkout -B claude/brave-allen-reghhq origin/main` and push without `--force-with-lease`.
 
@@ -52,7 +52,15 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
-## 2026-10-19 (cloud): ANSWER-LOCK-STATE (contract and Jon's ruling A verbatim: `docs/handover/contracts/2026-10-19-answer-lock-state.md`)
+## 2026-10-20 (cloud): PYTHAG-KEY-COLLIDE (contract `docs/handover/contracts/2026-10-20-pythag-key-collide.md`)
+
+- **Root cause:** round 3's ladder pools held small lengths where a named error rounds to the key at 1 d.p., and the game marks by value, so that wrong method was marked right. PYTHAG-REPORT §5's seven, exactly: hyp [8,24] [9,24] [11,24] [8,25] [11,25] (sqrt(2a+2b), e.g. 0.8 and 2.4 m: 2a+2b = a²+b² = 6.4); short [45,44] [50,49] (c²−a² = 0.89 and 0.99, rounding as their roots do).
+- **Fix (the game's own generator; no shared module):** `J.errors`/`J.errorIsKey` compute the eight named errors in the numbers' own units, rounded as the key is (exact integers: `J.roundSqrt`, new `J.roundRat`). One pass after every pool is built keeps only entries no named error gets right: triples (all three questions a triple can ask), round 2, all five situations. Draws come from what is left. **Not "reject and redraw", as the contract worded it:** canon §12 and SR-5 forbid a redraw loop ("draw from the values that qualify"); the filter meets the contract's aim, computed in code at generation, so a later pool change is filtered too. Ladder hyp 292 → 287, ladder short 92 → 90, nothing else changed; smallest situation pool TV hyp 21 (TV 59 in all), so the under-20 STOP IF does not fire; type sequence untouched.
+- **Verifier (part 4, task "named errors"):** reads every pool from the page, recomputes keys and the eight errors in exact fractions: 2,041 questions, none at the key; each situation at least 20; the plant (the page with the filter cut out, the old generator) shows 2,048 and the seven, CAUGHT; the filter drops exactly those entries. Main's page served as the real one fails on all seven.
+- **Untouched:** the 95 two-error ties (they wait for the Formula-only ruling), the tap step, scoring, leaderboard, session length, the add-instead-of-subtract diagnosis.
+- **For the home lane (roster):** the row says round 1 draws "from 15 triples"; the code has 14 (3-4-5 ×1-8 and ×10, 5-12-13 ×1-3, 8-15-17, 7-24-25), and the filter drops none.
+
+## 2026-10-19 (cloud): ANSWER-LOCK-STATE (contract and Jon's ruling A verbatim: `docs/history/contracts/2026-10-19-answer-lock-state.md`). **DONE (#452, b23fceb; main run 39315432381, green).**
 
 - **Root cause:** `check-answer-lock.py` read the cloud lane's remaining list from this file, so every handover edit selected all six answer-lock parts. The list is state, not prose.
 - **Fix:** the list is now `scripts/answer-lock-state.json` (`{"cloud-remaining": [...]}`, empty). `cloud_remaining()` reads it and fails unless it holds exactly that one key, once, with a list of slugs (selftest: missing, repeated, string, extra key, non-object, old line format, each rejected). Answer-lock logic, parts and report-not-fail unchanged.
@@ -64,26 +72,9 @@ main's last full run is red; watch main's run after merging.
 - **Root cause:** `ci-deps.py`'s computed-src test `\.src\s*=\s*(?!quote)` backtracked `\s*` to zero and fired on every literal, so `analytics.js`'s `.src = 'https://...' + GA_ID` made every page that loads it a hazard: 125 of 129 selective verifiers always ran. Only `analytics.js` creates a script element on the site, and its one src is a literal https prefix plus the constant `GA_ID`: no real hidden hazard.
 - **Fix:** `src_hazard(text)`: `\.src\s*=(?!\s*quote)` (the contract's regex), plus a literal joined to anything is computed unless it is an https prefix joined only to constants (names assigned a literal in the file). Selftest gains fixture lines, `analytics.js` has no hazard, and `ALWAYS_BUDGET = 12` (now 9). Check (a) now also expects the verifiers that read every game (a `games/` directory dependency: check-levels, check-level-logged, test-level), which the always-set had hidden.
 
-## 2026-10-19 (cloud): HEADER "Q{n} of {N} · {right} right" (Jon's ruling (2), 19 Oct; follow-up to formula-plug-in-t3-005 and new-shapes-t3-008, nothing new closed)
+## 2026-10-19 (cloud): HEADER "Q{n} of {N} · {right} right" (#449, #450; full entry in `docs/history/handover-cloud-archive.md`)
 
-- **formula-plug-in (#449):** the header slot reads "Q{n} of {N} · {right} right" (n the question on screen, N the session length, right the right answers so far); `showScore()` writes it from `loadQuestion` and straight after marking. Display only. Both games have a fixed session length (10/20/30 chosen before Start), so the ruling's STOP IF does not fire. On phones (600 px and below) the slot stacks as "Q{n} of {N}" over "{right} right" at 12 px; on one line it overflowed 320 px by 19 px. Verifier checks both numbers through right, wrong, right; two plants (answers given counted as right; question number off by one) caught; main fails only on the header.
-- **new-shapes (this PR):** the same header, `showScore()`, phone stacking and verifier check as formula-plug-in (#449). Its session is 10/20/30 (split 3/4/3, 6/8/6, 9/12/9), fixed before Start. The reveal line (#437, Jon's 18 Oct ruling) is on main and not touched. Main fails only on the header.
-
-## 2026-10-19 (cloud): MONTY-CARD (contract `docs/history/contracts/2026-10-19-monty-card.md`)
-
-- **Source:** one entry, `FACTS[41]` in `index.html` (`t`/`h`/`x`/`g`/`gl`), drawn by `loadFact()`. Share copies `h` at run time; no other page, share image or metadata carries the text. `scripts/verify-facts.py` pinned the old words, so its pins for this card now hold the new claims, each recomputed (50/50 for a random host by exact fractions).
-- **Done:** summary and expanded text exactly as the contract; title, label, button, link and Share unchanged. New `scripts/test-fact-monty.py` (CI): both texts exact, button and Share shown, no overflow, at 320/390/1280; main fails on the text.
-- **Phone gap (Jon's ruling, 19 Oct: ship, test truthfully):** at 600 px and below the compact mode hides every fact card's summary with no toggle, so phone readers never see the setup sentence; the test records it. A later layout contract.
-- **Step 3: other cards that rely on setup, terms or conditions they never state** (changed: none):
-  - **2 The Monty Hall Problem** (strongest, the same gap): "He opens another to reveal a goat. Should you switch?" never says one car and two goats, nor that the host knows where the car is and always opens a goat door and always offers the switch; the body then uses "the car" unintroduced.
-  - **27 The Prisoner's Dilemma:** "If both stay silent: 1 year each" never sets up two suspects questioned separately who cannot confer; "tit-for-tat won both" names two tournaments never introduced.
-  - **31 The Unexpected Hanging Paradox:** "can't be Friday" assumes a Monday-to-Friday week, and never says what "a surprise" means (he cannot work out the day the night before).
-  - **33 Regression to the Mean:** "Israeli flight instructors concluded criticism worked and praise didn't" omits the story: praise came after unusually good landings, criticism after unusually bad ones.
-  - **21 Small Samples Vary More:** the hospital figures assume each birth is a boy or a girl with equal chance, independently; never stated.
-  - **8 Benford's Law:** "In most real-world datasets" omits the condition (data spanning several orders of magnitude); the "11% you'd expect" assumes each first digit 1-9 equally likely, unstated.
-  - **47 Why Sample Size Matters:** "±3% margin of error" assumes a 95% confidence level and a proportion near 50%; unstated.
-  - **29 The Perfect Bracket Is Impossible:** "NCAA tournament", "bracket" and "higher seeds" assume US college basketball's 64-team knockout.
-  - **Terms used but never explained:** 14 "P(disease|positive)" (conditional-probability notation); 17 "r ≈ 0.96" (the correlation coefficient); 19 "e" (only i is defined); 43 "the Taylor series for sin(x)"; 50 "a random arrangement has no fixed point".
+## 2026-10-19 (cloud): MONTY-CARD (#448; full entry, with the cards that rely on unstated setup, in `docs/history/handover-cloud-archive.md`)
 
 ## 2026-10-19 (cloud): PYTHAG-REPORT (contract `docs/history/contracts/2026-10-19-pythag-report.md`; full report `docs/handover/pythag-report.md`)
 

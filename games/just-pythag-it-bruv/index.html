@@ -359,6 +359,30 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     var t = Math.floor(J.isqrt(S * 1000000) / D);
     return Math.floor(t / 1000) + '.' + ('00' + (t % 1000)).slice(-3);
   };
+  // N/M (N >= 0) rounded half up to dp places (0 or 1), as an integer count of 10^-dp units.
+  J.roundRat = function (N, M, dp) { var f = dp === 1 ? 10 : 1; return Math.floor((2 * N * f + M) / (2 * M)); };
+
+  /* ---------- named errors never mark right (Jon, 20 Oct 2026; PYTHAG-REPORT §5) ---------- */
+  // The game marks by value, so a question where a common wrong method lands on the key would mark that
+  // method right. The eight named errors, in the given numbers' own units and rounded as the key is, as
+  // [name, count of 10^-dp units]. x, y in units of 1/D: the two legs ('hyp'); or the hypotenuse, then
+  // the given leg ('short').
+  J.errors = function (type, x, y, D, dp) {
+    if (type === 'hyp') return [
+      ['sqrt(|b^2-a^2|)', J.roundSqrt(Math.abs(y * y - x * x), D, dp)],
+      ['a^2+b^2', J.roundRat(x * x + y * y, D * D, dp)],
+      ['a+b', J.roundRat(x + y, D, dp)],
+      ['sqrt(2a+2b)', J.roundSqrt(2 * (x + y) * D, D, dp)]];
+    return [
+      ['sqrt(c^2+a^2)', J.roundSqrt(x * x + y * y, D, dp)],
+      ['c^2-a^2', J.roundRat(x * x - y * y, D * D, dp)],
+      ['c-a', J.roundRat(x - y, D, dp)],
+      ['sqrt(2c-2a)', J.roundSqrt(2 * (x - y) * D, D, dp)]];
+  };
+  J.errorIsKey = function (type, x, y, D, dp) {
+    var key = J.roundSqrt(type === 'hyp' ? x * x + y * y : x * x - y * y, D, dp);
+    return J.errors(type, x, y, D, dp).some(function (e) { return e[1] === key; });
+  };
 
   /* ---------- the type sequence ---------- */
   // Runs of 'short' (S) of length 1 or 2, separated by runs of 'hyp' (H) of length 1 or 2, with up
@@ -501,6 +525,23 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
       var hh = Math.sqrt(R * R - s * s), p2 = deg(Math.acos(s / R));
       if (p2 >= 20 && p2 <= 50 && hh >= 12 && hh <= 35 && !J.isSquare(R * R - s * s)) C.roof.pool.short.push([R, s]);
     }
+  })();
+
+  // Every pool, once built, keeps only the questions no named error gets right (J.errorIsKey), so a later
+  // change to a pool is filtered too. Draws come from what is left: nothing is redrawn (canon §12).
+  (function () {
+    function ok(type, x, y, D, dp) { return !J.errorIsKey(type, x, y, D, dp); }
+    J.TRIPLES = J.TRIPLES.filter(function (t) {
+      var s = t.base.map(function (v) { return v * t.k; });
+      return ok('hyp', s[0], s[1], 1, 0) && ok('short', s[2], s[0], 1, 0) && ok('short', s[2], s[1], 1, 0);
+    });
+    ['hyp', 'short'].forEach(function (t) {
+      J.POOL_B[t] = J.POOL_B[t].filter(function (e) { return ok(t, e[0], e[1], 1, 1); });
+      J.CONTEXT_IDS.forEach(function (id) {
+        var C = J.CONTEXTS[id];
+        C.pool[t] = C.pool[t].filter(function (e) { return ok(t, e[0], e[1], C.D, 1); });
+      });
+    });
   })();
 
   /* ---------- building one question ---------- */

@@ -37,6 +37,12 @@ WHAT IT ASSERTS (Jon's contract, docs/next-contract-just-pythag-it-bruv.md, poin
               whole number on a round-1 question) and on nothing else (the key, the key +/- 0.1,
               the hypotenuse, any 'hyp' question); the first three per session get the worked
               example, later ones the nudge.
+  Named       (PYTHAG-KEY-COLLIDE, Jon, 20 Oct 2026) every question the pools can produce, recomputed here:
+  errors      none has one of PYTHAG-REPORT §5's eight named errors (sqrt(|b^2-a^2|), a^2+b^2, a+b,
+              sqrt(2a+2b); sqrt(c^2+a^2), c^2-a^2, c-a, sqrt(2c-2a)), rounded as the key is, equal to its
+              key, which would mark that method right; every situation keeps at least 20 questions. The
+              plant, the page with its pool filter cut out (the old generator), must show the collisions,
+              and the filter must drop exactly the colliding entries, no more.
   Contexts    every number plausible: ladder at 65-80 degrees to the ground, 2.5-7 m long; 16:9 TV
               screens 70-200 cm across the diagonal; ramps 1:15 to 1:20 with a run up to 5 m (the
               ramp is a hypotenuse question only); fields 0.4-1 times as wide as long; roofs pitched
@@ -191,6 +197,49 @@ def round_half_up(x, dp):
 
 def fmt1(x):
     return "%.1f" % float(x)
+
+
+# ---------------------------------------------------------------- named errors (PYTHAG-KEY-COLLIDE, 20 Oct 2026)
+
+MIN_SITUATION = 20        # the contract's floor: every round-3 situation keeps at least this many questions
+
+
+def named_errors(kind, x, y, dp):
+    """PYTHAG-REPORT §5's eight named errors, rounded half up as the key is: [(name, value)]. x, y exact, in
+    the question's own units: the two legs ('hyp'); or the hypotenuse, then the given leg ('short')."""
+    def rd(v):
+        return round_half_up(v, dp)
+    if kind == "hyp":
+        return [("sqrt(|b^2-a^2|)", round_sqrt(abs(y * y - x * x), dp)), ("a^2+b^2", rd(x * x + y * y)),
+                ("a+b", rd(x + y)), ("sqrt(2a+2b)", round_sqrt(2 * (x + y), dp))]
+    return [("sqrt(c^2+a^2)", round_sqrt(x * x + y * y, dp)), ("c^2-a^2", rd(x * x - y * y)),
+            ("c-a", rd(x - y)), ("sqrt(2c-2a)", round_sqrt(2 * (x - y), dp))]
+
+
+def all_questions(d):
+    """Every question the page's pools can produce: (entry, kind, x, y, dp). A round-1 triple is one entry
+    with three questions (find the hypotenuse; find either leg)."""
+    qs = []
+    for t in d["triples"]:
+        a, b, c = (F(v) for v in t)
+        e = "round 1 %s" % t
+        qs += [(e, "hyp", a, b, 0), (e, "short", c, a, 0), (e, "short", c, b, 0)]
+    for kind in ("hyp", "short"):
+        qs += [("round 2 %s %s" % (kind, e), kind, F(e[0]), F(e[1]), 1) for e in d["b"][kind]]
+        for cid in sorted(d["ctx"]):
+            D = d["ctx"][cid]["D"]
+            qs += [("round 3 %s %s %s" % (cid, kind, e), kind, Fraction(e[0], D), Fraction(e[1], D), 1)
+                   for e in d["ctx"][cid]["pool"][kind]]
+    return qs
+
+
+def key_collisions(qs):
+    """[(entry, kind, name, value, dp)]: each named error that rounds to the question's key."""
+    hits = []
+    for entry, kind, x, y, dp in qs:
+        key = round_sqrt(x * x + y * y if kind == "hyp" else x * x - y * y, dp)
+        hits += [(entry, kind, name, v, dp) for name, v in named_errors(kind, x, y, dp) if v == key]
+    return hits
 
 
 NUM = re.compile(r"^\s*[+-]?(\d+(\.\d*)?|\.\d+)\s*$")
@@ -754,6 +803,84 @@ async def new_page(browser, viewport=(1200, 1000), touch=False):
                     wait_until="load", timeout=20000)
     await page.wait_for_function("!!window.JPIB && !!window.JPIB.ui", timeout=8000)
     return ctx, page, errors
+
+
+POOLS_JS = """() => { const J = JPIB, ctx = {};
+  J.CONTEXT_IDS.forEach(id => { const C = J.CONTEXTS[id]; ctx[id] = { D: C.D, types: C.types, pool: C.pool }; });
+  return { triples: J.TRIPLES.map(t => t.base.map(x => x * t.k)), b: J.POOL_B, ctx: ctx, n_a: J.STAGES[0].n }; }"""
+FILTER_START = "\n  // Every pool, once built, keeps only the questions no named error gets right"
+
+
+def old_generator(html):
+    """The plant: the page with its pool filter cut out, as it was before PYTHAG-KEY-COLLIDE. None if not found."""
+    i = html.find(FILTER_START)
+    j = html.find("\n  })();\n", i)
+    return None if i < 0 or j < 0 else html[:i] + html[j + len("\n  })();"):]
+
+
+async def pools(browser, html=None):
+    """The pools the page draws every question from, read after it loads; html: serve this page instead."""
+    ctx = await browser.new_context()
+
+    async def route(r):
+        if not r.request.url.startswith("http://127.0.0.1:%d/" % PORT):
+            await r.abort()
+        elif html is not None and r.request.resource_type == "document":
+            await r.fulfill(status=200, content_type="text/html", body=html)
+        else:
+            await r.continue_()
+    await ctx.route("**/*", route)
+    page = await ctx.new_page()
+    errors = []
+    page.on("pageerror", lambda e: errors.append(str(e)))
+    await page.goto("http://127.0.0.1:%d/games/%s/?cb=%d" % (PORT, SLUG, int(time.time() * 1000)),
+                    wait_until="load", timeout=20000)
+    await page.wait_for_function("!!window.JPIB && !!window.JPIB.CONTEXTS", timeout=8000)
+    d = await page.evaluate(POOLS_JS)
+    await ctx.close()
+    return d, errors
+
+
+async def check_named_errors(browser, out):
+    """No question the pools can produce has a named error equal to its key; every situation keeps
+    MIN_SITUATION questions; the filter drops exactly the colliding entries (judged against the plant, the
+    old generator), and the plant is caught. Returns the lines to print."""
+    d, errors = await pools(browser)
+    out.extend("page error: " + e for e in errors)
+    qs = all_questions(d)
+    hits = key_collisions(qs)
+    for entry, kind, name, v, dp in hits[:10]:
+        out.append("%s (%s): the named error %s gives %.*f, the key, so it is marked right"
+                   % (entry, kind, name, dp, float(v)))
+    if hits:
+        out.append("%d named errors equal their question's key" % len(hits))
+    for cid, c in sorted(d["ctx"].items()):
+        n = sum(len(c["pool"][t]) for t in c["types"])
+        if n < MIN_SITUATION:
+            out.append("round 3 %s: %d questions left, under %d" % (cid, n, MIN_SITUATION))
+        out.extend("round 3 %s: no '%s' question left" % (cid, t) for t in c["types"] if not c["pool"][t])
+    if len(d["triples"]) < d["n_a"]:
+        out.append("round 1: %d triples left for %d questions" % (len(d["triples"]), d["n_a"]))
+    lines = ["Named errors: %d questions the pools can produce, %d with a named error equal to the key"
+             % (len(qs), len(hits))]
+    old = old_generator(open(os.path.join(ROOT, "games", SLUG, "index.html"), encoding="utf-8").read())
+    if old is None:
+        out.append("the plant could not be built: the pool filter was not found in the page")
+        return lines
+    d0, errors0 = await pools(browser, old)
+    out.extend("plant page error: " + e for e in errors0)
+    q0 = all_questions(d0)
+    h0 = key_collisions(q0)
+    bad = {h[0] for h in h0}
+    want, got = {q[0] for q in q0} - bad, {q[0] for q in qs}
+    if want != got:
+        out.append("the filter kept %s and dropped %s: it must drop exactly the entries with a named error at the key"
+                   % (sorted(got - want)[:5], sorted(want - got)[:5]))
+    lines.append("Plant (the old generator, the pool filter cut out): %d questions, %d named errors at the key, "
+                 "in %s: %s" % (len(q0), len(h0), ", ".join(sorted(bad)), "CAUGHT" if h0 else "*** MISSED ***"))
+    if not h0:
+        out.append("the plant (the old generator) was not caught: no named error equals a key there")
+    return lines
 
 
 STUBS = """() => { window.__submits = []; window.__events = []; window.__next = [];
@@ -1598,7 +1725,7 @@ def ci_commands():
 
 def plan(no_phone=False, no_selftest=False):
     """[(task, part)] in the order the unsplit script ran them."""
-    tasks = [("sessions", "4"), ("webkit", "4"), ("play-through", "4")]
+    tasks = [("sessions", "4"), ("named errors", "4"), ("webkit", "4"), ("play-through", "4")]
     if not no_phone:
         tasks += [("fit %dx%d" % sz, FIT_PART[sz]) for sz in PHONES + DESKTOPS]
     if not no_selftest and not no_phone:
@@ -1684,6 +1811,13 @@ async def run_all(args):
             nq = sum(len(s["questions"]) for s in data)
             ns = sum(1 for s in data for q in s["questions"] if q["type"] == "short")
             print("Sessions: %d   questions: %d (%d find-a-shorter-side, %.1f%%)" % (len(data), nq, ns, 100.0 * ns / nq))
+
+        if "named errors" in todo:
+            ne_out = []
+            for ln in await check_named_errors(browser, ne_out):
+                print(ln)
+            for f in ne_out:
+                fail(f)
 
         if "webkit" in todo:
             wk_out = []
