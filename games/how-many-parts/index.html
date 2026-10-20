@@ -259,9 +259,9 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
  *  - Each pool is built once, then filtered once (as PR 453): a question leaves if ANY named error equals the key
  *    in value, or if fewer than three named errors with distinct values apply. Draws come from what is left;
  *    nothing is redrawn (canon §12, SR-5).
- *  - Stages d-f (multiply, divide, mixed numbers) are typed and are marked only by FRACTION-FORM's shared
- *    function in answer.js (the home lane's). Until that is on main they are not built: a session serves the
- *    built stages of its level (BUILT).
+ *  - Stages d-f (multiply, divide, mixed numbers) are typed and are marked only by FRACTION-FORM's function in
+ *    the shared answer checker, MaffsAnswer (the home lane's). Until that is on main they are not built: a
+ *    session serves the built stages of its level (BUILT).
  */
 (function () {
   'use strict';
