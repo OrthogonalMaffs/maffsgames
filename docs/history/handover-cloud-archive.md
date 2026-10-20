@@ -3,6 +3,27 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-19 (cloud): HEADER "Q{n} of {N} · {right} right" (Jon's ruling (2), 19 Oct; follow-up to formula-plug-in-t3-005 and new-shapes-t3-008, nothing new closed)
+
+- **formula-plug-in (#449):** the header slot reads "Q{n} of {N} · {right} right" (n the question on screen, N the session length, right the right answers so far); `showScore()` writes it from `loadQuestion` and straight after marking. Display only. Both games have a fixed session length (10/20/30 chosen before Start), so the ruling's STOP IF does not fire. On phones (600 px and below) the slot stacks as "Q{n} of {N}" over "{right} right" at 12 px; on one line it overflowed 320 px by 19 px. Verifier checks both numbers through right, wrong, right; two plants (answers given counted as right; question number off by one) caught; main fails only on the header.
+- **new-shapes (this PR):** the same header, `showScore()`, phone stacking and verifier check as formula-plug-in (#449). Its session is 10/20/30 (split 3/4/3, 6/8/6, 9/12/9), fixed before Start. The reveal line (#437, Jon's 18 Oct ruling) is on main and not touched. Main fails only on the header.
+
+## 2026-10-19 (cloud): MONTY-CARD (contract `docs/history/contracts/2026-10-19-monty-card.md`)
+
+- **Source:** one entry, `FACTS[41]` in `index.html` (`t`/`h`/`x`/`g`/`gl`), drawn by `loadFact()`. Share copies `h` at run time; no other page, share image or metadata carries the text. `scripts/verify-facts.py` pinned the old words, so its pins for this card now hold the new claims, each recomputed (50/50 for a random host by exact fractions).
+- **Done:** summary and expanded text exactly as the contract; title, label, button, link and Share unchanged. New `scripts/test-fact-monty.py` (CI): both texts exact, button and Share shown, no overflow, at 320/390/1280; main fails on the text.
+- **Phone gap (Jon's ruling, 19 Oct: ship, test truthfully):** at 600 px and below the compact mode hides every fact card's summary with no toggle, so phone readers never see the setup sentence; the test records it. A later layout contract.
+- **Step 3: other cards that rely on setup, terms or conditions they never state** (changed: none):
+  - **2 The Monty Hall Problem** (strongest, the same gap): "He opens another to reveal a goat. Should you switch?" never says one car and two goats, nor that the host knows where the car is and always opens a goat door and always offers the switch; the body then uses "the car" unintroduced.
+  - **27 The Prisoner's Dilemma:** "If both stay silent: 1 year each" never sets up two suspects questioned separately who cannot confer; "tit-for-tat won both" names two tournaments never introduced.
+  - **31 The Unexpected Hanging Paradox:** "can't be Friday" assumes a Monday-to-Friday week, and never says what "a surprise" means (he cannot work out the day the night before).
+  - **33 Regression to the Mean:** "Israeli flight instructors concluded criticism worked and praise didn't" omits the story: praise came after unusually good landings, criticism after unusually bad ones.
+  - **21 Small Samples Vary More:** the hospital figures assume each birth is a boy or a girl with equal chance, independently; never stated.
+  - **8 Benford's Law:** "In most real-world datasets" omits the condition (data spanning several orders of magnitude); the "11% you'd expect" assumes each first digit 1-9 equally likely, unstated.
+  - **47 Why Sample Size Matters:** "±3% margin of error" assumes a 95% confidence level and a proportion near 50%; unstated.
+  - **29 The Perfect Bracket Is Impossible:** "NCAA tournament", "bracket" and "higher seeds" assume US college basketball's 64-team knockout.
+  - **Terms used but never explained:** 14 "P(disease|positive)" (conditional-probability notation); 17 "r ≈ 0.96" (the correlation coefficient); 19 "e" (only i is defined); 43 "the Taylor series for sin(x)"; 50 "a random arrangement has no fixed point".
+
 ## 2026-10-18 (cloud): ESSENTIALS-SCREEN-TRUTH-2 (contract `docs/history/contracts/2026-10-18-essentials-screen-truth-2.md`)
 
 - **#437's main run (the contract asks it be recorded):** 39157734021 on 32ac21b, green. Main's latest full run at the start of this contract: 39159103668 on 925738e (#439), green. Open home-lane PR #440 (LOCAL-FLAKES follow-up) touches no game.
