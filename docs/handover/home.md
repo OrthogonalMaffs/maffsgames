@@ -1,5 +1,7 @@
 # Handover: home lane
 
+**ROSTER-PYTHAG-14 (20 Oct, Jon's contract; branch `roster-pythag-14`).** `.claude/rules/game-roster.md` row 98 (Just Pythag It, Bruv): "from 15 triples" -> "from 14 triples"; the code has 14 (3-4-5 x1-8 and x10, 5-12-13 x1-3, 8-15-17, 7-24-25). Nothing else touched. **The cloud lane's item for this row is closed.**
+
 **DEPS-SRC-HAZARD (19 Oct; cloud lane, Jon's contract).** `scripts/ci-deps.py`: `src_hazard()` replaces the computed-src regex; selftest has an always-run budget of 12 (now 9, was 125). Detail: cloud handover.
 
 **ROOM-CREDIT v2 (19 Oct; cloud lane, under Jon's lane exception).** Shared files the cloud lane edited: `escape-rooms/assets/engine.js` (start-screen credit note), `escape-rooms/assets/teacher.js` (teacher-page credit note), `scripts/check-escape-rooms.py` (card notes held to room.js `credit`) and, on Jon's ruling, `escape-rooms/assets/rating.js` (`credit()`, `INVITE`). Rebase on them knowingly. Detail: cloud handover, ROOM-CREDIT v2.
@@ -52,7 +54,3 @@ contracts/2026-10-09-it-room-brief.md. SCI-CALC (item 6) is saved as docs/histor
 seeds 1-3 pass). wrong-on-the-internet keeps its 3 s pause before Try again: feedback on a wrong answer is shown, not
 skipped (Jon, 8 Oct). complex-converter's Play Again keeps replaying the mode, as its Menu is one tap from the end
 screen. graph-sketcher: fix its phone overflow now, then put it on the lock (item 2). The first two are in canon §7.6.
-
-**Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
-eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
-verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
