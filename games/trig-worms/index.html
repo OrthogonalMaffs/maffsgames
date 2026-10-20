@@ -209,7 +209,7 @@ function questionFrom(type, angle, hyp, ratio){
   const adj=round1(hyp*Math.cos(toRad(angle)));
   const deg=v=>Math.round(v+1e-9)+'°';        // to the nearest degree, half up
   const dp1=v=>round1(v).toFixed(1);          // to 1 decimal place
-  let qType,qText,correct,named,exp,labels,findSide;
+  let qType,qText,correct,named,exp,labels,findSide,slips=[];
   if(type==='angle'){
     qType='FIND THE ANGLE θ';
     let g1,g2,n1,n2,fn,inv,theta,lab;
@@ -228,6 +228,9 @@ function questionFrom(type, angle, hyp, ratio){
       : [[(fn==='sin'?'cos':'sin')+'⁻¹ instead of '+fn+'⁻¹', toDeg(fn==='sin'?Math.acos(r):Math.asin(r))],
          ['tan⁻¹ instead of '+fn+'⁻¹', toDeg(Math.atan(r))],
          ['tan⁻¹ of the ratio upside down', toDeg(Math.atan(1/r))]];
+    // The three wrong-function and upside-down slips, as the game marks them: the pool leaves out a question where
+    // one lands on the key (below).
+    slips=named.map(([why,v])=>deg(v));
     // Two more named errors, used only when one above coincides with the key or another option.
     const rr=Math.round(r*10)/10, rs=Math.round(small*10)/10;
     named.push(ratio==='TOA'
@@ -272,7 +275,7 @@ function questionFrom(type, angle, hyp, ratio){
   // Three named errors, kept only if they differ from the key and from each other as shown (never by retry).
   const wrong=[], why=[], seen=new Set([correct]);
   for(const [w,v] of named){ if(wrong.length<3&&!seen.has(v)){ seen.add(v); wrong.push(v); why.push(w); } }
-  return {qType,qText,correct,wrong,why,exp,angle,hyp,opp,adj,ratio,findSide,labels};
+  return {qType,qText,correct,wrong,why,exp,angle,hyp,opp,adj,ratio,findSide,labels,slips};
 }
 
 // Every outcome the generator can serve, enumerated once: the (angle, hypotenuse, ratio) sets of each type whose
@@ -285,6 +288,12 @@ for(const type of ['angle','side','hypotenuse'])
     for(let hyp=8;hyp<=22;hyp++)
       for(const ratio of (type==='angle'?['SOH','CAH','TOA']:type==='side'?['SOH','CAH']:['SOH']))
         if(questionFrom(type,angle,hyp,ratio).wrong.length===3) POOL[type].push([angle,hyp,ratio]);
+// One pass, once (TRIG-WORMS-FILTER, Jon, 20 Oct 2026): leave out every find-the-angle outcome where a wrong function
+// or the ratio upside down gives the key to the nearest degree. questionFrom drops that distractor as equal to the
+// key, so a student using the slip would pick the key and be marked right. All of cos 80° and 85° goes (tan⁻¹ of
+// hyp/adj lands on the key for every hypotenuse there). Filtered, never redrawn (canon §12, SR-5); rounding the ratio
+// first is a precision slip and stays.
+POOL.angle=POOL.angle.filter(([angle,hyp,ratio])=>{ const q=questionFrom('angle',angle,hyp,ratio); return !q.slips.includes(q.correct); });
 
 function generateQuestion(difficulty){
   const type=difficulty<4?'angle':difficulty<7?'side':'hypotenuse';

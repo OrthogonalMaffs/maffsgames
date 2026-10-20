@@ -16,7 +16,12 @@ hypotenuse 8-22, each ratio) and each is built by the page's own questionFrom() 
     "to 1 decimal place"; SR-1). The question must state that precision.
   Distractors: each is recomputed from its stated named error; it must differ from the key and the others as
     shown, and the only valid route (the givens and the ratio) gives the key, so no distractor is a correct
-    answer (SR-4, SR-16). The pool must be exactly the outcomes that have three distinct named errors.
+    answer (SR-4, SR-16). The pool must be exactly the outcomes that have three distinct named errors, less
+    every find-the-angle outcome where a wrong function or the ratio upside down (the first three named errors),
+    rounded to the nearest degree as the game marks, gives the key (TRIG-WORMS-FILTER, Jon, 20 Oct 2026; the
+    game would drop that distractor and the student using the slip would pick the key). Rounding the ratio first
+    is a precision slip and is not filtered. Every (ratio, angle) pair served before still appears, except cos 80°
+    and 85° (Jon's ruling: no triangle there separates tan⁻¹(H/A) from cos⁻¹(A/H)); the loss per pair is printed.
   Explanation: its unrounded figure and its key are recomputed.
   Diagram: only the two given sides are labelled, with the values shown in the question, and the asked side
     carries "?" (a third labelled side gave a second valid answer). The canvas calls are recorded: the drawn
@@ -24,8 +29,9 @@ hypotenuse 8-22, each ratio) and each is built by the page's own questionFrom() 
     are exactly those.
   Marking (Chromium, 390x844): through the game's own loadQ() and guess(), the key is marked a hit and every
     distractor a miss whose feedback names its error.
-A self-test plants three of the audit's faults back into a copy of the page (the adjacent question labelled
-O=?, an angle key that ignores the shown sides, an angle question with no stated precision); each must FAIL.
+A self-test plants the audit's faults back into a copy of the page (the adjacent question labelled O=?, an angle
+key that ignores the shown sides, an angle question with no stated precision, ...) and the pool without the
+TRIG-WORMS-FILTER pass; each must FAIL.
 
     python scripts/verify-trig-worms.py [--no-selftest] [--against FILE]
 """
@@ -46,6 +52,7 @@ SLUG = 'trig-worms'
 GAME = os.path.join(os.path.dirname(HERE), 'games', SLUG, 'index.html')
 mp.mp.dps = 50
 ANGLES = [15, 20, 25, 30, 35, 40, 50, 55, 60, 65, 70, 75, 80, 85]
+EMPTIED = {('CAH', 80), ('CAH', 85)}       # the only pairs the filter may empty (Jon, 20 Oct 2026)
 
 
 def half_up(v, places):
@@ -77,6 +84,7 @@ def expect(type_, angle, hyp, ratio):
     opp, adj = [d.to_integral() if d == d.to_integral() else d for d in (opp, adj)]
     O, A, H = mp.mpf(str(opp)), mp.mpf(str(adj)), mp.mpf(hyp)
     S, C, T = mp.sin(rad(angle)), mp.cos(rad(angle)), mp.tan(rad(angle))
+    slips = []
     if type_ == 'angle':
         if ratio == 'SOH':
             g1, g2, fn, theta, labels = O, H, 'sin', todeg(mp.asin(O / H)), {'O': 'O=%s' % opp, 'H': 'H=%d' % hyp}
@@ -104,6 +112,8 @@ def expect(type_, angle, hyp, ratio):
                      ('tan⁻¹ of the ratio upside down', todeg(mp.atan(1 / r))),
                      ('ratio rounded to 1 d.p. before ' + fn + '⁻¹',
                       todeg((mp.asin if fn == 'sin' else mp.acos)(mp.mpf(str(half_up(r, 1))))))]
+        # the wrong-function and upside-down slips (the first three) that land on the key: the pool leaves these out
+        slips = [w for w, v in named[:3] if deg(v) == deg(theta)]
         named.append(('the other acute angle: 90° − θ', 90 - theta))
         named = [(w, deg(v)) for w, v in named if deg(v) not in ('0°', '90°')]
         named.append(('calculator in radians', '%s°' % half_up(theta * mp.pi / 180, 2)))
@@ -131,7 +141,7 @@ def expect(type_, angle, hyp, ratio):
             wrong.append(x)
             why.append(w)
     return {'opp': str(opp), 'adj': str(adj), 'key': key, 'wrong': wrong, 'why': why, 'labels': labels,
-            'prec': prec, 'unrounded': unrounded}
+            'prec': prec, 'unrounded': unrounded, 'slips': slips}
 
 
 def outcomes():
@@ -177,7 +187,7 @@ SWEEP_JS = r"""(cases) => {
 }"""
 
 
-def check(fails, html, label=''):
+def check(fails, html, label='', losses=None):
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
     n = 0
@@ -206,13 +216,20 @@ def check(fails, html, label=''):
         proc.terminate()
         proc.wait()
     want_pool = {t: [] for t in ('angle', 'side', 'hypotenuse')}
+    before, lost, served_slips = {}, {}, []
     for o in res:
         t, a, h, r, q = o['t'], o['a'], o['h'], o['r'], o['q']
         e = expect(t, a, h, r)
-        if len(e['wrong']) == 3:
-            want_pool[t].append([a, h, r])
         where = '%s %d° H=%d %s' % (t, a, h, r)
-        if len(e['wrong']) < 3:
+        if len(e['wrong']) == 3 and t == 'angle':
+            before[(r, a)] = before.get((r, a), 0) + 1
+            if e['slips']:
+                lost[(r, a)] = lost.get((r, a), 0) + 1
+                if [a, h, r] in pool['angle']:
+                    served_slips.append('%s (%s gives %s)' % (where, ', '.join(e['slips']), e['key']))
+        if len(e['wrong']) == 3 and not e['slips']:
+            want_pool[t].append([a, h, r])
+        if len(e['wrong']) < 3 or e['slips']:
             continue          # not servable: the pool check below holds the page to that
         n += 1
         if (q['opp'], q['adj']) != (float(e['opp']), float(e['adj'])):
@@ -264,6 +281,15 @@ def check(fails, html, label=''):
                 fails.append('%s: picking %s was marked %s' % (where, pick, cls))
             elif not right and pick in e['wrong'] and e['why'][e['wrong'].index(pick)] not in exp_text:
                 fails.append('%s: the feedback for %s does not name its error' % (where, pick))
+    if served_slips:
+        fails.append('TRIG-WORMS-FILTER: the pool serves %d find-the-angle questions where a wrong function or the ratio '
+                     'upside down gives the key: %s' % (len(served_slips), '; '.join(served_slips[:3])))
+    served = {(r, a) for a, h, r in pool['angle']}
+    for pair in sorted(before):
+        if pair not in served and pair not in EMPTIED:
+            fails.append('TRIG-WORMS-FILTER: %s %d° is no longer served (only cos 80° and 85° may go)' % pair)
+    if losses is not None:
+        losses.update({pair: (lost.get(pair, 0), before[pair]) for pair in before})
     if pool != want_pool:
         for t in want_pool:
             extra = [p for p in pool[t] if p not in want_pool[t]]
@@ -282,6 +308,8 @@ PLANTS = [
     ("an angle question with no stated precision (t1-001)", "\\nFind angle θ to the nearest degree.`", "\\nFind angle θ.`"),
     ("'sin⁻¹ instead of tan⁻¹' naming sin⁻¹(A/O) when O > A (s1-002)",
      "['sin⁻¹'+over, toDeg(Math.asin(small))]", "['sin⁻¹ instead of tan⁻¹', toDeg(Math.asin(small))]"),
+    ("the pool without the TRIG-WORMS-FILTER pass (52 slips served)",
+     "POOL.angle=POOL.angle.filter(", "POOL.angle.filter("),
 ]
 
 
@@ -336,11 +364,17 @@ def main():
     args = ap.parse_args()
     html = open(args.against or GAME, encoding='utf-8').read()
     fails = []
+    losses = {}
     if 'function questionFrom(' in html:
-        n = check(fails, html)
+        n = check(fails, html, losses=losses)
     else:
         n = check_legacy(fails, html)
     print('%s: %d servable outcomes recomputed (mpmath), drawn and marked in Chromium at 390px' % (SLUG, n))
+    if losses:
+        gone = sum(v[0] for v in losses.values())
+        print('  find the angle, TRIG-WORMS-FILTER: %d of %d outcomes left out (%.1f%%); per (ratio, angle), lost of before:'
+              % (gone, sum(v[1] for v in losses.values()), 100.0 * gone / sum(v[1] for v in losses.values())))
+        print('    ' + ', '.join('%s %d° %d/%d' % (r, a, l, b) for (r, a), (l, b) in sorted(losses.items()) if l))
     ok = True
     if not args.no_selftest and not args.against:
         for what, old, new in PLANTS:
