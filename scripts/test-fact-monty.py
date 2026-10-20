@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # ci-line: Weekly fact "100 Doors" (the front-page card shows its summary and expanded text exactly, with its button and Share, at 320, 390 and 1280 px, with no overflow) |
 # ci-deps: index.html
-"""Browser test for the "100 Doors Makes Monty Hall Obvious" weekly fact (contract MONTY-CARD, 19 Oct 2026).
+"""Browser test for the "Monty Hall, With 100 Doors" weekly fact (contracts MONTY-CARD, 19 Oct 2026, and
+MONTY-100-RETITLE, 20 Oct 2026: the title no longer says "Obvious", and the expanded text is Jon's 20 Oct wording).
 
     python scripts/test-fact-monty.py [--against FILE]
 
@@ -32,14 +33,15 @@ sys.path.insert(0, HERE)
 import bank_common as bc  # noqa: E402
 
 PAGE = os.path.join(os.path.dirname(HERE), 'index.html')
-TITLE = '100 Doors Makes Monty Hall Obvious'
+TITLE = 'Monty Hall, With 100 Doors'
 SUMMARY = ('100 doors: a car behind one, goats behind the other 99. You pick one. The host, who knows where the car '
            'is, opens 98 of the others, all goats. Should you switch? Switching wins 99 times in 100.')
-EXPANDED = ("Your door was a 1-in-100 guess, and nothing the host does changes that. The other 99 doors held the car "
-            "99 times in 100. The host has to avoid the car, so all of that chance ends up on the one door he leaves "
-            "shut. The catch: he must know where the car is. If he opened doors at random and just happened to show "
-            "goats, it would be 50/50. The 3-door version works the same way (switching wins 2/3, staying 1/3); it "
-            "just doesn't feel as dramatic.")
+EXPANDED = ("You pick door 1. The host opens every other door except door 57. Why did he skip 57? Either your door "
+            "hides the car, which happens 1 time in 100, or 57 does, which happens the other 99 times. Switching is "
+            "the same as swapping your one door for all 99 others; the host has just opened the empty ones for you. "
+            "The catch: he must know where the car is. If he opened doors at random and happened to show only goats, "
+            "it would be 50/50. Three doors work the same way (switching wins 2 times in 3); it just doesn't feel "
+            "as clear.")
 BUTTON = 'Test your probability intuition →'
 WIDTHS = ((320, 568), (390, 844), (1280, 900))
 

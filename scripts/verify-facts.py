@@ -369,20 +369,27 @@ PINS = [
           lambda a, n, b: near(10 ** (1.5 * (float(a) - float(b))), int(n), 0.05),
           'energy ratio 10^(1.5 x 1.3) = 89; magnitudes: USGS Tohoku 9.1 (2011), Kahramanmaras 7.8 (2023)'),
     ]),
-    ('100 Doors Makes Monty Hall Obvious', [
+    ('Monty Hall, With 100 Doors', [
         # MONTY-CARD (19 Oct 2026): the setup and the condition are stated; every figure follows from 100 doors.
         P('([0-9]+) doors: a car behind one, goats behind the other ([0-9]+)[.]', lambda d, g: int(g) == int(d) - 1),
         P('The host, who knows where the car is, opens ([0-9]+) of the others, all goats', lambda o: int(o) == 100 - 1 - 1),
         P('Switching wins ([0-9]+) times in ([0-9]+)[.]', lambda a, b: Fraction(int(a), int(b)) == 1 - Fraction(1, 100)),
-        P('Your door was a ([0-9]+)-in-([0-9]+) guess', lambda a, b: Fraction(int(a), int(b)) == Fraction(1, 100)),
-        P('The other ([0-9]+) doors held the car ([0-9]+) times in ([0-9]+)[.]',
-          lambda d, a, b: int(d) == 99 and Fraction(int(a), int(b)) == Fraction(99, 100)),
-        # A host opening 98 of the other 99 at random, and showing only goats: P(goats | car behind yours) = 1,
+        # MONTY-100-RETITLE (20 Oct 2026): the expanded text. A host who knows opens every door but yours and one
+        # other, so your door keeps its 1/100 and the one he skips holds the other 99/100.
+        # The door he skips is the same door all three times, and not yours.
+        P('You pick door ([0-9]+)[.] The host opens every other door except door ([0-9]+)[.] Why did he skip ([0-9]+)[?] '
+          'Either your door hides the car, which happens ([0-9]+) time in ([0-9]+), or ([0-9]+) does, which happens the '
+          'other ([0-9]+) times[.]',
+          lambda y, s1, s2, a, n, s3, o: s1 == s2 == s3 and y != s1 and 1 <= int(y) <= 100 and 1 <= int(s1) <= 100
+          and int(n) == 100 and Fraction(int(a), int(n)) == Fraction(1, 100)
+          and Fraction(int(o), int(n)) == 1 - Fraction(1, 100)),
+        P('swapping your one door for all ([0-9]+) others', lambda n: int(n) == 100 - 1),
+        # At random, opening 98 of the other 99 and showing only goats: P(goats | car behind yours) = 1,
         # P(goats | car elsewhere) = 1/99 (the car's door is the one left shut), so your door is 1/2.
-        L('If he opened doors at random and just happened to show goats, it would be 50/50',
+        L('If he opened doors at random and happened to show only goats, it would be 50/50',
           lambda: Fraction(1, 100) / (Fraction(1, 100) + Fraction(99, 100) * Fraction(1, 99)) == Fraction(1, 2)),
-        P('switching wins ([0-9]+)/([0-9]+), staying ([0-9]+)/([0-9]+)',
-          lambda a, b, c, d: Fraction(int(a), int(b)) == 1 - Fraction(1, 3) and Fraction(int(c), int(d)) == Fraction(1, 3)),
+        P('Three doors work the same way [(]switching wins ([0-9]+) times in ([0-9]+)[)]',
+          lambda a, b: Fraction(int(a), int(b)) == 1 - Fraction(1, 3)),
     ]),
     ('Dimensional Analysis Saves Lives', [
         L('In 1999, NASA lost a $125 million Mars orbiter', None, 'NASA Mars Climate Orbiter Mishap Investigation Board, Nov 1999 (' + WIKI + 'Mars_Climate_Orbiter)'),
