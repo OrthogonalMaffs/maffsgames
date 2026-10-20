@@ -3,6 +3,21 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-20 (cloud): MONTY-CARD-2 (contract `docs/history/contracts/2026-10-20-monty-card-2.md`). **DONE (#459, 223d498; main run 39411995366, green).**
+
+- **Done:** card 2 "The Monty Hall Problem": `h` is Jon's wording exactly (one car, two goats; the host knows, always opens a goat door, always offers the switch); `t`, `x`, `g`, `gl` unchanged.
+- **verify-facts.py:** three pins on the new summary; `monty(doors)` lists every (car, pick) pair with a knowing host: stay 1/3, switch 2/3, so "doubles" holds exactly. The card's existing `x` pins kept. Fails on the old summary.
+- **test-fact-monty.py extended, not a sibling:** it now holds CARDS (both Monty Hall cards; ci-line label renamed to cover both); each card exact, button and Share, no overflow at 320/390/1280; fails on the old summary. The phone compact mode still hides both summaries (known, not touched).
+- **Old wording elsewhere:** only the cloud archive's MONTY-CARD step 3 and this contract.
+
+## 2026-10-20 (cloud): KEY-COLLISION-SURVEY (contract `docs/history/contracts/2026-10-20-key-collision-survey.md`; report only). **DONE (#458, a3d431a).**
+
+- **Report:** `docs/audits/key-collision-survey-2026-10.md`; script `scripts/survey-key-collisions.py` (not in CI; every count is its output). Nothing in any game, verifier, findings file, register or workflow changed.
+- **Generated games (14, all surveyed):** just-pythag-it-bruv (control), six-sevens-bruv, split-it, free-daily-pizza, trig-worms, distinctly-average, quadratic-factoriser, modular-battle, factor-race and fraction-equivalence (KS3/GCSE), bearing-blitz (8 random bearings), shape-shifter (Rotation), equatle, log-laws (Solve). Found by reading every roster game (three read-only agents, evidence by file:line); simultaneous-solver's bank is generated offline, so a fixed bank at runtime.
+- **Control:** just-pythag-it-bruv **0** over 2,041 questions (7 before #453).
+- **Headline (error x question pairs):** coincidence **488**, methods agree **6,458**; two-way rules of thumb reported, not counted. Coincidence by game: modular-battle 231, trig-worms 128, split-it 109, quadratic-factoriser 15, free-daily-pizza 2, distinctly-average 2, six-sevens-bruv 1; zero in the rest. Method lesson: a game's own misconception list can hide exactly these cases (log-laws drops a `mis` equal to the answer; trig-worms and free-daily-pizza drop a distractor equal to the key), so every error is recomputed from its definition, never read back.
+- **STOP IF (for Jon):** wrong methods marked right in listed games: all seven above (examples in the report's STOP section: 2 x 2 by adding; 2 : 2 shares; 60% of 150 = 150 - 60; trig-worms angles; x^2 + 4x + 4; modular remainders read off a / 9). Not fixed: no standing ruling covers them. The remedy (per-game pool filters as #453, or a shared check in the verifier layer) is Jon's and the home lane's.
+
 ## 2026-10-20 (cloud): MONTY-100-RETITLE (contract `docs/history/contracts/2026-10-20-monty-100-retitle.md`). **DONE (#455, ed61533; main run 39398807202, green).**
 
 - **Root cause:** the title called the 100-door version "Obvious" while its expanded text repeated the probability argument and never gave the picture that makes it persuasive. Jon's ruling, 20 Oct: drop "obvious", use his wording.
