@@ -121,8 +121,14 @@ a.back-link:hover{color:var(--text)}
 .sfrac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.1;margin:0 .1em}
 .sfrac>span:first-child{border-bottom:2px solid currentColor;padding:0 .15em}
 
-/* Phone rule (canon §7.6.1): on a wrong answer the options go and the feedback takes their place. */
-.qcard.fb-open .options,.qcard.fb-open .msg,.qcard.fb-open #qbars{display:none}
+/* Phone rule (canon §7.6.1): the reason and Next above the fold. On a wrong answer the options go and the feedback
+   takes their place; the verdict restates the sum, so the prompt folds away; on a phone (600px wide or less) and on
+   any screen 800px tall or less the bar model moves below Next (visual order only: the reading order stays fact,
+   hint, working, picture, Next), and at 600px tall or less so do the score bar and the stage label, which nothing
+   changes while the feedback shows. */
+.qcard.fb-open .options,.qcard.fb-open .msg,.qcard.fb-open #qbars,.qcard.fb-open .prompt{display:none}
+.fb-next{order:5}
+@media (max-height:800px),(max-width:600px){.fb .bars{order:10}}
 @media (max-height:600px){
   .qcard{gap:.45rem}
   body.fb-open .hud,.qcard.fb-open .stage-label{display:none}
@@ -498,10 +504,10 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     var L = H.lcm(q.b, q.d), A = q.a * L / q.b, C = q.c * L / q.d, s = H.sign(q.op), lines = [];
     var R = [A + s * C, L], k = H.key(q), o = H.opTex(q.op);
     if (q.b === q.d) {
-      lines.push({ kind: 'text', text: 'Same bottom number: the parts are the same size, so ' +
+      lines.push({ kind: 'text', role: 'why', text: 'Same bottom number: the parts are the same size, so ' +
         (q.op === '+' ? 'add' : 'take away') + ' the tops and keep the bottom.' });
     } else {
-      lines.push({ kind: 'text', text: 'Different bottom numbers: make the parts the same size first. ' + L +
+      lines.push({ kind: 'text', role: 'why', text: 'Different bottom numbers: make the parts the same size first. ' + L +
         ' is a multiple of both ' + q.b + ' and ' + q.d + '.' });
       lines.push({ kind: 'tex', tex: H.tex([q.a, q.b]) + ' = ' + H.tex([A, L]) + ',\\quad ' + H.tex([q.c, q.d]) + ' = ' + H.tex([C, L]) });
     }
@@ -520,7 +526,8 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     var e = H.ERR[id], f = e.f(q), lines = [];
     // What the student did, as they would write it, then as the option showed it (in its simplest form).
     var shown = H.simp(f);
-    var did = { kind: 'tex', tex: q.sumTex + ' \\;\\to\\; ' + H.tex(f) + (shown[1] !== f[1] ? ' = ' + H.tex(shown) : '') };
+    var raw = '\\dfrac{' + f[0] + '}{' + f[1] + '}';   // as written, even 2/1, never collapsed to 2
+    var did = { kind: 'tex', tex: q.sumTex + ' \\;\\to\\; ' + raw + (shown[1] !== f[1] ? ' = ' + H.tex(shown) : '') };
     lines.push(did);
     if (id === 'TB') {
       lines.push({ kind: 'text', text: 'The bottom number says how many parts the whole is cut into. ' +
@@ -720,13 +727,18 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     if (help === 'example') h += '<div class="fb-help" data-help="example" data-err="' + id + '"><span class="rule">' +
       esc(H.ERR[id].name(q.op)) + '</span>' + renderLines(H.example(q, id)) + '</div>';
     else h += '<div class="fb-nudge" data-help="nudge" data-err="' + id + '">' + esc(H.NUDGES[id]) + '</div>';
+    // With the worked example on screen, the working drops its opening sentence (the example has said why), so the
+    // reason and Next stay above the fold on a 320x568 phone (canon 7.6.1).
+    var work = H.worked(q);
+    if (help === 'example') work = work.filter(function (l) { return l.role !== 'why'; });
+    h += '<div class="fb-work">' + renderLines(work) + '</div>';
     h += '<div class="bars" data-bars="feedback">' + renderBars(H.barModel(q, true)) + '</div>';
-    h += '<div class="fb-work">' + renderLines(H.worked(q)) + '</div></div>';
+    h += '<div class="fb-next"></div></div>';
     $('feedback').innerHTML = h;
     $('qcard').classList.add('fb-open');
     document.body.classList.add('fb-open');
     barNext = true;
-    var opts = { mount: $('feedback').firstChild, onAdvance: nextQuestion };
+    var opts = { mount: $('feedback').querySelector('.fb-next'), onAdvance: nextQuestion };
     if (help === 'example') opts.fallbackMs = NO_FALLBACK;
     MaffsNext.wrong(opts);
   }
@@ -777,7 +789,17 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     question: function () { return q ? JSON.parse(JSON.stringify(q)) : null; },
     index: function () { return q ? q.index : 0; },
     session: function () { return session ? JSON.parse(JSON.stringify(session)) : null; },
-    errCount: function () { return JSON.parse(JSON.stringify(errCount)); }
+    errCount: function () { return JSON.parse(JSON.stringify(errCount)); },
+    // The wrong-answer screen for one pool entry, picked error and help form, drawn by the game's own path, so
+    // scripts/verify-how-many-parts.py can measure every shape (canon 7.6.1) without playing to each.
+    preview: function (src, stage, err, help) {
+      if (window.MaffsNext) MaffsNext.clear($('feedback'));
+      q = H.makeQuestion(src, stage, H.mulberry32(1));
+      q.index = 1; q.inStage = 1;
+      state = 'wrong';
+      var c = H.option(H.ERR[err].f(q), err);
+      showWrong(c, help);
+    }
   };
 })();
 </script>

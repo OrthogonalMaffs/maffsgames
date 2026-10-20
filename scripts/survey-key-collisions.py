@@ -231,6 +231,50 @@ def survey_jpib(pages):
     return [r]
 
 
+# ---------------------------------------------------------------- how-many-parts (contract HOW-MANY-PARTS, 20 Oct 2026)
+
+def survey_how_many_parts(pages):
+    """Stages 1-3 (adding and taking away): every pool entry, every named error written out here from the contract's
+    words. The game filters its pools so none equals its key (as PR 453), so every count here should be 0."""
+    ctx, p = pages.page("how-many-parts", "!!window.HMP && !!HMP.POOLS")
+    pools = p.evaluate("() => ({ a: HMP.POOLS.a, b: HMP.POOLS.b, c: HMP.POOLS.c })")
+    ctx.close()
+
+    def lcm(x, y):
+        return x * y // gcd(x, y)
+
+    def frac(n, m):
+        return Fraction(n, m) if n > 0 and m > 0 else None
+    errs = (("adding (taking away) the tops and the bottoms", lambda a, b, s, c, d: frac(a + s * c, b + s * d)),
+            ("changing a denominator without its numerator",
+             lambda a, b, s, c, d: frac(a + s * c, lcm(b, d)) if b != d else None),
+            ("adding the numerators and keeping the larger denominator",
+             lambda a, b, s, c, d: frac(a + s * c, max(b, d)) if b != d else None),
+            ("multiplying the denominators but adding the numerators", lambda a, b, s, c, d: frac(a + s * c, b * d)),
+            ("multiplying the fractions", lambda a, b, s, c, d: frac(a * c, b * d)),
+            ("the other operation", lambda a, b, s, c, d: abs(Fraction(a, b) - s * Fraction(c, d)) or None))
+    results = []
+    for st, label in (("a", "stage 1, same denominator"), ("b", "stage 2, one denominator a multiple of the other"),
+                      ("c", "stage 3, different denominators")):
+        qs = pools[st]
+        r = Result("how-many-parts", label, "%d questions (the whole pool)" % len(qs), "enumerated (HMP.POOLS)",
+                   "multiple choice, by dataset.val: the exact value in its simplest form")
+        for name, f in errs:
+            applies, hits = 0, []
+            for q in qs:
+                sg = 1 if q["op"] == "+" else -1
+                key = Fraction(q["a"], q["b"]) + sg * Fraction(q["c"], q["d"])
+                v = f(q["a"], q["b"], sg, q["c"], q["d"])
+                if v is None:
+                    continue
+                applies += 1
+                if v == key:
+                    hits.append(q)
+            r.add(name, applies, hits, lambda h: "%d/%d %s %d/%d" % (h["a"], h["b"], h["op"], h["c"], h["d"]))
+        results.append(r)
+    return results
+
+
 # ---------------------------------------------------------------- six-sevens-bruv
 
 def survey_ssb(pages):
@@ -1043,6 +1087,7 @@ SURVEYS = {
     "shape-shifter": survey_shape_shifter,
     "equatle": survey_equatle,
     "log-laws": survey_log_laws,
+    "how-many-parts": survey_how_many_parts,
 }
 
 
