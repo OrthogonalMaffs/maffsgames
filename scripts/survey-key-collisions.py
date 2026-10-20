@@ -140,13 +140,35 @@ class Result:
     def __init__(self, slug, part, space, method, marking):
         self.slug, self.part, self.space, self.method, self.marking = slug, part, space, method, marking
         self.errors = []          # (name, kind, how many questions it applies to, collisions, [examples])
+        self.members = {}         # row name -> every colliding question (the self-test reads it)
+        self.reclassified = 0     # coincidences moved to 'agree' as identities (COLLISION-IDENTITIES)
         self.notes = []
 
-    def add(self, name, applies, hits, example_fmt, kind="coincidence"):
+    def add(self, name, applies, hits, example_fmt, kind="coincidence", group=None, universe=None, label=str):
         """kind: 'coincidence' (a wrong formula whose value happens to equal the key), 'agree' (on these questions
         the wrong method is the same calculation as the right one, so no question of this shape can tell them
-        apart), or 'two-way' (a rule of thumb's agreement with a two-way choice: not a collision, not counted)."""
+        apart), or 'two-way' (a rule of thumb's agreement with a two-way choice: not a collision, not counted).
+
+        group, universe (contract COLLISION-IDENTITIES, Jon, 20 Oct 2026): group(q) is the question parameter an
+        identity would be about (b, for a mod b), universe every question the error applies to. A coincidence is
+        an identity, and moves to 'agree', when the error equals the key on EVERY question of its group and the
+        group has at least two questions (one question alone is no evidence of an identity). label(g) names the
+        group in the report."""
+        if group is not None and kind == "coincidence" and hits:
+            hit = {id(h) for h in hits}
+            groups = {}
+            for q in universe:
+                groups.setdefault(group(q), []).append(q)
+            whole = {g for g, qs in groups.items() if len(qs) >= 2 and all(id(q) in hit for q in qs)}
+            ident = [h for h in hits if group(h) in whole]
+            if ident:
+                gname = "%s [identity: %s]" % (name, "; ".join(label(g) for g in sorted(whole, key=str)))
+                self.errors.append((gname, "agree", applies, len(ident), [example_fmt(h) for h in ident[:5]]))
+                self.members[gname] = ident
+                self.reclassified += len(ident)
+                hits = [h for h in hits if group(h) not in whole]
         self.errors.append((name, kind, applies, len(hits), [example_fmt(h) for h in hits[:5]]))
+        self.members[name] = hits
 
     @property
     def collisions(self):
@@ -289,7 +311,8 @@ def survey_split_mode(r, mode, level, qs):
         def per_part(q):
             return [Fraction(q["total"], x) for x in q["ratio"]]
         r.add("amount / each ratio part (divide by one part, not the total)", len(qs),
-              [q for q in qs if per_part(q) == A(q)], ex)
+              [q for q in qs if per_part(q) == A(q)], ex, group=lambda q: tuple(q["ratio"]), universe=qs,
+              label=lambda g: "ratio %s, every amount" % ":".join(map(str, g)))
     elif mode == "fractions":
         def over_other(q):
             parts = nums(q["prompt"])                    # the ratio's parts, in order
@@ -433,7 +456,13 @@ def survey_fdp(pages):
                     names[name][1].append(it)
         for name, (applies, hits) in names.items():
             kind = "agree" if name.startswith(("raw-part", "complement", "one-part-only")) else "coincidence"
-            r.add(name, applies, hits, lambda h: "%s (offered: %s)" % (h["id"], ", ".join(h["offered"])), kind)
+            # An identity on an of-an-amount item holds at one percentage or fraction for every amount N; the other
+            # kinds have no free parameter (the item is its numbers), so they are not grouped.
+            uni = [it for it in items if any(n == name for n, _ in mis(it))]
+            amt = all(it["kind"] in ("ofamt-p", "ofamt-f") for it in uni)
+            r.add(name, applies, hits, lambda h: "%s (offered: %s)" % (h["id"], ", ".join(h["offered"])), kind,
+                  group=(lambda it: (it["kind"], it["p"], it["a"], it["b"])) if amt else None, universe=uni,
+                  label=lambda g: ("p = %s%%" % g[1] if g[0] == "ofamt-p" else "%s/%s" % (g[2], g[3])) + ", every amount")
         results.append(r)
     return results
 
@@ -484,12 +513,13 @@ def survey_trig_worms(pages):
                     v = f()
                     if v is None:
                         continue
-                    errs.setdefault(name, [0, []])
-                    errs[name][0] += 1
+                    q = (ratio, angle, hyp, "%s: key %d deg" % (where, key))
+                    errs.setdefault(name, [[], []])
+                    errs[name][0].append(q)
                     if r0(v) == key and name != "calculator in radians (radians read as degrees)":
-                        errs[name][1].append("%s: key %d deg" % (where, key))
+                        errs[name][1].append(q)
                     elif name == "calculator in radians (radians read as degrees)" and r1(v * 10) / 10 == key:
-                        errs[name][1].append("%s: key %d deg" % (where, key))
+                        errs[name][1].append(q)
             else:
                 if typ == "side":
                     fn = mpmath.sin if ratio == "SOH" else mpmath.cos
@@ -503,12 +533,15 @@ def survey_trig_worms(pages):
                     cands = [("multiplied instead of divided", O * mpmath.sin(D(angle))), ("cos instead of sin", O / mpmath.cos(D(angle))),
                              ("tan instead of sin", O / mpmath.tan(D(angle))), ("calculator in radians", O / mpmath.sin(mpmath.mpf(angle)))]
                 for name, v in cands:
-                    errs.setdefault(name, [0, []])
-                    errs[name][0] += 1
+                    q = (ratio, angle, hyp, "%s: key %s" % (where, float(key)))
+                    errs.setdefault(name, [[], []])
+                    errs[name][0].append(q)
                     if r1(v) == key:
-                        errs[name][1].append("%s: key %s" % (where, float(key)))
-        for name, (applies, hits) in errs.items():
-            r.add(name, applies, hits, lambda h: h)
+                        errs[name][1].append(q)
+        # An identity here holds at one ratio and angle for every hypotenuse served with them (tan 45 = 1, say).
+        for name, (uni, hits) in errs.items():
+            r.add(name, len(uni), hits, lambda h: h[3], group=lambda q: (q[0], q[1]), universe=uni,
+                  label=lambda g: "%s %d deg, every hypotenuse" % g)
         results.append(r)
     return results
 
@@ -673,12 +706,18 @@ def survey_quadratic_factoriser(pages):
     r.add("both signs flipped: (px - q)(rx - s)", len(h), [it for it in h if same([(it["p"], -it["q"]), (it["r"], -it["s"])], kf(it))],
           lambda x: "(%dx %+d)(%dx %+d)" % (x["p"], x["q"], x["r"], x["s"]))
     base = [it for it in h if it["stage"] == "base"]
-    for name, f, kind in (("step 2 (find ac): a x b", lambda a, b, c: a * b, "coincidence"),
-                          ("step 2 (find ac): b x c", lambda a, b, c: b * c, "coincidence"),
-                          ("step 2 (find ac): a + c", lambda a, b, c: a + c, "coincidence"),
-                          ("step 2 (find ac): a - c", lambda a, b, c: a - c, "coincidence")):
+    # Each is grouped by the two coefficients its comparison with ac turns on, so an identity holds for every value
+    # of the third: a x b = ac turns on b and c (a cancels), b x c on a and b (c cancels), a + c and a - c on a and c.
+    by = {"b, c": lambda it: ("b, c", it["b"], it["c"]), "a, b": lambda it: ("a, b", it["a"], it["b"]),
+          "a, c": lambda it: ("a, c", it["a"], it["c"])}
+    free = {"b, c": "a", "a, b": "c", "a, c": "b"}
+    for name, f, kind, g in (("step 2 (find ac): a x b", lambda a, b, c: a * b, "coincidence", "b, c"),
+                             ("step 2 (find ac): b x c", lambda a, b, c: b * c, "coincidence", "a, b"),
+                             ("step 2 (find ac): a + c", lambda a, b, c: a + c, "coincidence", "a, c"),
+                             ("step 2 (find ac): a - c", lambda a, b, c: a - c, "coincidence", "a, c")):
         r.add(name, len(base), [it for it in base if f(it["a"], it["b"], it["c"]) == it["a"] * it["c"]],
-              lambda x: "%dx^2 %+dx %+d: ac = %d" % (x["a"], x["b"], x["c"], x["a"] * x["c"]), kind)
+              lambda x: "%dx^2 %+dx %+d: ac = %d" % (x["a"], x["b"], x["c"], x["a"] * x["c"]), kind,
+              group=by[g], universe=base, label=lambda k: "%s = %d, %d, every %s" % (k[0], k[1], k[2], free[k[0]]))
     results.append(r)
     # formula: two typed roots, each rounded with round2 = Math.round(x*100)/100 (half up, towards +infinity), either order
     f = pools["formula"]
@@ -730,19 +769,28 @@ def survey_modular_battle(pages):
     ctx, p = pages.page("modular-battle", "typeof generateQ === 'function' && typeof randInt === 'function'")
     e = p.evaluate(ENUM_JS, ["randInt", "generateQ()", 6])
     ctx.close()
-    qs = e["questions"]
-    r = Result("modular-battle", "a mod b", "%d questions (%d paths walked)" % (len(qs), e["paths"]),
-               "enumerated (generateQ driven through every randInt choice)",
+    return [modular_result(e["questions"], "%d questions (%d paths walked)" % (len(e["questions"]), e["paths"]))]
+
+
+def modular_result(qs, space):
+    """The four errors for a mod b. The game offers residues 0..b-1 only, so an error applies to a question when
+    its value is one of them (a value outside that range cannot be picked, so it cannot be marked right). Each is
+    grouped by b: an error that gives the key for every question with that b is an identity there."""
+    r = Result("modular-battle", "a mod b", space, "enumerated (generateQ driven through every randInt choice)",
                "multiple choice of residues 0..b-1 (random others, none named); exact")
     ex = lambda h: "%d mod %d: key %d" % (h["a"], h["b"], h["ans"])
-    r.add("the quotient instead of the remainder", len(qs), [q for q in qs if q["a"] // q["b"] == q["ans"]], ex)
-    r.add("b - r (counted the other way)", len(qs), [q for q in qs if q["b"] - q["ans"] == q["ans"]], ex)
-    r.add("the last digit of a", len(qs), [q for q in qs if q["a"] % 10 == q["ans"]], ex)
     def dec_digit(q):
         fr = Fraction(q["a"], q["b"]) - q["a"] // q["b"]
         return None if fr == 0 else int(fr * 10)
-    r.add("the first digit after the point of a / b", len(qs), [q for q in qs if dec_digit(q) == q["ans"]], ex)
-    return [r]
+    errs = (("the quotient instead of the remainder", lambda q: q["a"] // q["b"]),
+            ("b - r (counted the other way)", lambda q: q["b"] - q["ans"]),
+            ("the last digit of a", lambda q: q["a"] % 10),
+            ("the first digit after the point of a / b", dec_digit))
+    for name, f in errs:
+        uni = [q for q in qs if f(q) is not None and 0 <= f(q) < q["b"]]
+        r.add(name, len(uni), [q for q in uni if f(q) == q["ans"]], ex,
+              group=lambda q: q["b"], universe=uni, label=lambda g: "b = %d" % g)
+    return r
 
 
 # ---------------------------------------------------------------- factor-race and fraction-equivalence (two-way)
@@ -984,12 +1032,46 @@ SURVEYS = {
 }
 
 
+def row_of(r, a, b):
+    """The kind of the row holding the question a mod b among r's collisions, or None if it collides nowhere."""
+    for name, kind, _, _, _ in r.errors:
+        if any(q["a"] == a and q["b"] == b for q in r.members[name]):
+            yield name, kind
+
+
+def selftest():
+    """Contract COLLISION-IDENTITIES' fixtures: the identity rule on a mod b over generateQ's own ranges (a 10..60,
+    b 2..9; no browser needed), and the control, Just Pythag It, Bruv, still at 0."""
+    qs = [{"a": a, "b": b, "ans": a % b} for a in range(10, 61) for b in range(2, 10)]
+    r = modular_result(qs, "fixture")
+    want = ((11, 2, "b - r", "agree"), (13, 5, "the last digit of a", "agree"),
+            (12, 9, "the first digit after the point", "agree"), (12, 5, "the quotient", "coincidence"))
+    bad = 0
+    for a, b, err, kind in want:
+        got = [k for name, k in row_of(r, a, b) if name.startswith(err)]
+        ok = got == [kind]
+        bad += not ok
+        print("%s %d mod %d / %s -> %s (got %s)" % ("PASS" if ok else "FAIL", a, b, err, kind, got or "no collision"))
+    pages = Pages()
+    try:
+        c = sum(x.collisions for x in survey_jpib(pages))
+    finally:
+        pages.close()
+    print("%s the control, just-pythag-it-bruv: %d collisions (want 0)" % ("PASS" if c == 0 else "FAIL", c))
+    bad += c != 0
+    print("selftest: %s" % ("PASS" if not bad else "FAIL (%d)" % bad))
+    return 1 if bad else 0
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--game", action="append", help="survey only these games")
     ap.add_argument("--json", help="also write the results here")
+    ap.add_argument("--selftest", action="store_true", help="run the identity rule's fixtures and the control, then stop")
     args = ap.parse_args()
     sys.stdout.reconfigure(encoding="utf-8")
+    if args.selftest:
+        return selftest()
     listed = listed_games()
     pages = Pages()
     results = []
@@ -1018,18 +1100,22 @@ def main():
         print()
     tot = {}
     for r in results:
-        c, a, parts = tot.get(r.slug, (0, 0, 0))
-        tot[r.slug] = (c + r.by_kind("coincidence"), a + r.by_kind("agree"), parts + 1)
+        c, a, parts, rc = tot.get(r.slug, (0, 0, 0, 0))
+        tot[r.slug] = (c + r.by_kind("coincidence"), a + r.by_kind("agree"), parts + 1, rc + r.reclassified)
     print("## Headline (this script's output)")
     print()
-    print("| game | listed | parts surveyed | coincidence collisions | methods-agree collisions |")
-    print("|---|---|---|---|---|")
-    for k, v in tot.items():
-        print("| %s | %s | %d | %d | %d |" % (k, "yes" if k in listed else "no", v[2], v[0], v[1]))
-    print("| **all** | | %d | **%d** | **%d** |" % (sum(v[2] for v in tot.values()), sum(v[0] for v in tot.values()),
-                                                   sum(v[1] for v in tot.values())))
+    print("Before = coincidences as first counted; identities = those that equal the key on every question of their group,"
+          " moved to methods agree; after = the genuine coincidences left.")
     print()
-    print("TOTALS (coincidence, methods agree): " + "; ".join("%s %d, %d" % (k, v[0], v[1]) for k, v in tot.items()))
+    print("| game | listed | parts surveyed | coincidence before | identities | coincidence after | methods-agree collisions |")
+    print("|---|---|---|---|---|---|---|")
+    for k, v in tot.items():
+        print("| %s | %s | %d | %d | %d | %d | %d |" % (k, "yes" if k in listed else "no", v[2], v[0] + v[3], v[3], v[0], v[1]))
+    S = lambda i: sum(v[i] for v in tot.values())
+    print("| **all** | | %d | **%d** | **%d** | **%d** | **%d** |" % (S(2), S(0) + S(3), S(3), S(0), S(1)))
+    print()
+    print("TOTALS (coincidence before, after; methods agree): " +
+          "; ".join("%s %d, %d; %d" % (k, v[0] + v[3], v[0], v[1]) for k, v in tot.items()))
     if args.json:
         with open(args.json, "w", encoding="utf-8", newline="") as fh:
             json.dump([r.__dict__ for r in results], fh, indent=1, default=str)
