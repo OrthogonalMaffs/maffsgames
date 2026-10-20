@@ -41,8 +41,9 @@ PYTHAG-REPORT (19 Oct, contract `docs/history/contracts/2026-10-19-pythag-report
 MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; Jon's ruling on the phone gap at its end): the "100 Doors" card states its setup and condition; step 3 list in the entry below. **DONE (#448, b973e23).**
 **START HERE (next session; written 19 Oct, 18:10 BST).**
 - **Done since:** the new-shapes header DONE (#450, e0377e9; main run 39299844863, green); DEPS-SRC-HAZARD DONE (#451, 0dd1b68; main run 39309543642, green, 53 jobs); ANSWER-LOCK-STATE DONE (#452, b23fceb; main run 39315432381, green, 53 jobs); PYTHAG-KEY-COLLIDE DONE (#453, 54e0fe9; main run 39390699573, green, 53 jobs); MONTY-100-RETITLE DONE (#455, ed61533; main run 39398807202, green, 53 jobs).
-- **In flight (20 Oct):** nothing. No game claimed (`scripts/answer-lock-state.json` is empty).
-- **Main:** green after every merge on 19 Oct (#445 39233921992, #446 39245413455, #447 39259197128, #448 39273656313, #449 39287568708, #450 39299844863, #451 39309543642, #452 39315432381, #453 39390699573, #454 39393567338, #455 39398807202).
+- **In flight (20 Oct):** the named-error survey (Jon: "carry on with the survey"); its contract is not in the repo yet, asked for. No game claimed (`scripts/answer-lock-state.json` is empty).
+- **Main:** green after every merge on 19 Oct (#445 39233921992, #446 39245413455, #447 39259197128, #448 39273656313, #449 39287568708, #450 39299844863, #451 39309543642, #452 39315432381, #453 39390699573, #454 39393567338, #455 39398807202). **#456's run 39401811389 is red on the timings job alone** ("CI timings and pack (main only)"; 52 of 53 green): the median-of-5 pack failed `ci-groups.py --check` (content groups 1 and 2 at 80% and 82% of 270 s) because this run's setup was 87 s (recorded setups 20, 19, 53, 27, 59: median 27 would become 53); nothing was written, so the committed pack is unchanged and PRs still pass `--check`. Groups 1 and 2 each hold one long line (Just Pythag It, Bruv part 4, median 164 s; Free Daily Pizza 171 s), at 70% and 73% on the committed pack.
+- **Ruling (Jon, 20 Oct; expires when the home lane next picks up CI tonight):** main's red from the timings job alone, with every content job green and the committed pack unchanged, does not block merges; any other failure on main still does. No manual run (it skips the timings job, so proves nothing). Do not split Just Pythag It, Bruv part 4: the fix is architectural and the home lane's.
 - **Waiting on Jon (no contract yet):** (1) the front page's compact mode hides every fact card's summary on phones (600 px and below, no toggle), so the new MONTY-CARD setup is unseen there: a layout contract; (2) card 2 "The Monty Hall Problem" has the same unstated setup as the 100 Doors card had (full list of cards with unstated setup in the MONTY-CARD entry); (3) PYTHAG-REPORT's findings, for his "Formula only" ruling (the roster says 15 triples, the code has 14); (4) the phone stacking of the two headers was this lane's layout choice (one line overflowed 320 px), to confirm. **Ruled, Jon, 20 Oct:** PYTHAG-KEY-COLLIDE's filter-each-pool-once is correct under §12 and SR-5 (his "reject and redraw" was wrong); the roster's "15 triples" for Just Pythag It, Bruv (the code has 14) is left for the home lane.
 - **Container setup (every fresh session):** `pip install playwright==1.56.0 sympy mpmath pyyaml`; `pip download --no-deps esprima==4.0.1`, untar into the scratchpad, `PYTHONPATH=<that>/esprima-4.0.1 python scripts/check-changed.py`. A run takes about 70 minutes and reports the same 25 KaTeX-CDN/WebKit failures every time (by name: the set in #441's PR); run one at a time, in the background; verifiers in scratch worktrees can run beside it (free ports). Remote branches are deleted on merge: after a squash merge, `git checkout -B claude/brave-allen-reghhq origin/main` and push without `--force-with-lease`.
 
@@ -68,41 +69,15 @@ main's last full run is red; watch main's run after merging.
 - **Untouched:** the 95 two-error ties (they wait for the Formula-only ruling), the tap step, scoring, leaderboard, session length, the add-instead-of-subtract diagnosis.
 - **For the home lane (roster):** the row says round 1 draws "from 15 triples"; the code has 14 (3-4-5 ×1-8 and ×10, 5-12-13 ×1-3, 8-15-17, 7-24-25), and the filter drops none.
 
-## 2026-10-19 (cloud): ANSWER-LOCK-STATE (contract and Jon's ruling A verbatim: `docs/history/contracts/2026-10-19-answer-lock-state.md`). **DONE (#452, b23fceb; main run 39315432381, green).**
+## 2026-10-19 (cloud): ANSWER-LOCK-STATE (#452; full entry in `docs/history/handover-cloud-archive.md`)
 
-- **Root cause:** `check-answer-lock.py` read the cloud lane's remaining list from this file, so every handover edit selected all six answer-lock parts. The list is state, not prose.
-- **Fix:** the list is now `scripts/answer-lock-state.json` (`{"cloud-remaining": [...]}`, empty). `cloud_remaining()` reads it and fails unless it holds exactly that one key, once, with a list of slugs (selftest: missing, repeated, string, extra key, non-object, old line format, each rejected). Answer-lock logic, parts and report-not-fail unchanged.
-- **STOP IF fired, then ruled (Jon, A):** the claim process wrote and read the line, so CLAUDE.md, canon SR-21, §7.6 and §7.8.2, `docs/handover/home.md` (its batch rule) and this file's lane rules now name the JSON. A claim or unclaim commit edits the JSON and so still selects answer-lock (it changes its result; Jon agreed). Verbatim contracts and archives keep their wording.
-- **Other scripts reading `docs/handover/` or `docs/todo.md` as state:** none. `check-context-size.py` measures the handover's size (its job; it always runs anyway); `verify-simultaneous-solver.py` reads a contract file under `contracts/`, not a handover; every other match is a comment.
-
-## 2026-10-19 (cloud): DEPS-SRC-HAZARD (contract `docs/history/contracts/2026-10-19-deps-src-hazard.md`; Jon gave this shared-script fix to the cloud lane). **DONE (#451, 0dd1b68; main run 39309543642, green).**
-
-- **Root cause:** `ci-deps.py`'s computed-src test `\.src\s*=\s*(?!quote)` backtracked `\s*` to zero and fired on every literal, so `analytics.js`'s `.src = 'https://...' + GA_ID` made every page that loads it a hazard: 125 of 129 selective verifiers always ran. Only `analytics.js` creates a script element on the site, and its one src is a literal https prefix plus the constant `GA_ID`: no real hidden hazard.
-- **Fix:** `src_hazard(text)`: `\.src\s*=(?!\s*quote)` (the contract's regex), plus a literal joined to anything is computed unless it is an https prefix joined only to constants (names assigned a literal in the file). Selftest gains fixture lines, `analytics.js` has no hazard, and `ALWAYS_BUDGET = 12` (now 9). Check (a) now also expects the verifiers that read every game (a `games/` directory dependency: check-levels, check-level-logged, test-level), which the always-set had hidden.
+## 2026-10-19 (cloud): DEPS-SRC-HAZARD (#451; full entry in `docs/history/handover-cloud-archive.md`)
 
 ## 2026-10-19 (cloud): HEADER "Q{n} of {N} · {right} right" (#449, #450; full entry in `docs/history/handover-cloud-archive.md`)
 
 ## 2026-10-19 (cloud): MONTY-CARD (#448; full entry, with the cards that rely on unstated setup, in `docs/history/handover-cloud-archive.md`)
 
-## 2026-10-19 (cloud): PYTHAG-REPORT (contract `docs/history/contracts/2026-10-19-pythag-report.md`; full report `docs/handover/pythag-report.md`)
-
-- Research only; nothing in the game changed. The flow, tap, diagnosis and scoring are the game's own code (`window.JPIB`); only marking (`MaffsAnswer`), session buttons, lock, Next, calculator, leaderboard and history are shared. No shared stage layer exists.
-- **1** The tap is round 1 only (7 of 20), and a wrong tap blocks until the hypotenuse is tapped. **2** The tap scores nothing and costs nothing (score is timed from the answer box opening); leaderboard `ks3` takes the summed time-weighted score over 20, plus score history and `jpib_best_ks3`; the session is always 20. **3** Generated from pools: round 1 from **14** triples (the roster says 15), round 2 from 164 hyp / 236 short pairs, round 3 from five situations (1,083 hyp / 523 short); keys are sqrt(S)/D half up, round 1 exact; marking is exact at 1 d.p. with no tolerance (an unrounded answer gets a "round" message). **4** One diagnosis now: added instead of subtracting (worked example x3, then a nudge). **6** The start screen's Questions panel can take a mode row; modes elsewhere are cards (Shape Shifter) or boards per mode (Simultaneous Solver `foundation-s1..4`).
-- **5** Script output (scratch `measure.py`, every question rounded as the game rounds):
-
-```
-Questions the game can ask: 2048 (round 1: 42; round 2: 400; round 3: 1606)
-round  type   questions  candidate=key  two candidates equal  either
-1      hyp           14              0                     1       1
-1      short         28              0                     7       7
-2      hyp          164              0                    15      15
-2      short        236              0                    18      18
-3      hyp         1083              5                    43      48
-3      short        523              2                    11      13
-total              2048              7                    95     102
-```
-
-  The 7 key collisions are all round-3 ladders, in metres below about 3 (sqrt(2a+2b) or c^2-a^2 rounds to the key). 87 of the 95 pair collisions are two identities: c-a = sqrt(2c-2a) when c-a = 2, and sqrt(|b^2-a^2|) = sqrt(2a+2b) when b-a = 2. Examples and the full list are in the report.
+## 2026-10-19 (cloud): PYTHAG-REPORT (#447; full entry in `docs/history/handover-cloud-archive.md`; report `docs/handover/pythag-report.md`)
 
 ## 2026-10-19 (cloud): ROOM-CREDIT v2 (#446; full entry in `docs/history/handover-cloud-archive.md`)
 

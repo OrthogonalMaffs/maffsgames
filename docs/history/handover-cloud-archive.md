@@ -3,6 +3,38 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-19 (cloud): ANSWER-LOCK-STATE (contract and Jon's ruling A verbatim: `docs/history/contracts/2026-10-19-answer-lock-state.md`). **DONE (#452, b23fceb; main run 39315432381, green).**
+
+- **Root cause:** `check-answer-lock.py` read the cloud lane's remaining list from this file, so every handover edit selected all six answer-lock parts. The list is state, not prose.
+- **Fix:** the list is now `scripts/answer-lock-state.json` (`{"cloud-remaining": [...]}`, empty). `cloud_remaining()` reads it and fails unless it holds exactly that one key, once, with a list of slugs (selftest: missing, repeated, string, extra key, non-object, old line format, each rejected). Answer-lock logic, parts and report-not-fail unchanged.
+- **STOP IF fired, then ruled (Jon, A):** the claim process wrote and read the line, so CLAUDE.md, canon SR-21, §7.6 and §7.8.2, `docs/handover/home.md` (its batch rule) and this file's lane rules now name the JSON. A claim or unclaim commit edits the JSON and so still selects answer-lock (it changes its result; Jon agreed). Verbatim contracts and archives keep their wording.
+- **Other scripts reading `docs/handover/` or `docs/todo.md` as state:** none. `check-context-size.py` measures the handover's size (its job; it always runs anyway); `verify-simultaneous-solver.py` reads a contract file under `contracts/`, not a handover; every other match is a comment.
+
+## 2026-10-19 (cloud): DEPS-SRC-HAZARD (contract `docs/history/contracts/2026-10-19-deps-src-hazard.md`; Jon gave this shared-script fix to the cloud lane). **DONE (#451, 0dd1b68; main run 39309543642, green).**
+
+- **Root cause:** `ci-deps.py`'s computed-src test `\.src\s*=\s*(?!quote)` backtracked `\s*` to zero and fired on every literal, so `analytics.js`'s `.src = 'https://...' + GA_ID` made every page that loads it a hazard: 125 of 129 selective verifiers always ran. Only `analytics.js` creates a script element on the site, and its one src is a literal https prefix plus the constant `GA_ID`: no real hidden hazard.
+- **Fix:** `src_hazard(text)`: `\.src\s*=(?!\s*quote)` (the contract's regex), plus a literal joined to anything is computed unless it is an https prefix joined only to constants (names assigned a literal in the file). Selftest gains fixture lines, `analytics.js` has no hazard, and `ALWAYS_BUDGET = 12` (now 9). Check (a) now also expects the verifiers that read every game (a `games/` directory dependency: check-levels, check-level-logged, test-level), which the always-set had hidden.
+
+## 2026-10-19 (cloud): PYTHAG-REPORT (contract `docs/history/contracts/2026-10-19-pythag-report.md`; full report `docs/handover/pythag-report.md`)
+
+- Research only; nothing in the game changed. The flow, tap, diagnosis and scoring are the game's own code (`window.JPIB`); only marking (`MaffsAnswer`), session buttons, lock, Next, calculator, leaderboard and history are shared. No shared stage layer exists.
+- **1** The tap is round 1 only (7 of 20), and a wrong tap blocks until the hypotenuse is tapped. **2** The tap scores nothing and costs nothing (score is timed from the answer box opening); leaderboard `ks3` takes the summed time-weighted score over 20, plus score history and `jpib_best_ks3`; the session is always 20. **3** Generated from pools: round 1 from **14** triples (the roster says 15), round 2 from 164 hyp / 236 short pairs, round 3 from five situations (1,083 hyp / 523 short); keys are sqrt(S)/D half up, round 1 exact; marking is exact at 1 d.p. with no tolerance (an unrounded answer gets a "round" message). **4** One diagnosis now: added instead of subtracting (worked example x3, then a nudge). **6** The start screen's Questions panel can take a mode row; modes elsewhere are cards (Shape Shifter) or boards per mode (Simultaneous Solver `foundation-s1..4`).
+- **5** Script output (scratch `measure.py`, every question rounded as the game rounds):
+
+```
+Questions the game can ask: 2048 (round 1: 42; round 2: 400; round 3: 1606)
+round  type   questions  candidate=key  two candidates equal  either
+1      hyp           14              0                     1       1
+1      short         28              0                     7       7
+2      hyp          164              0                    15      15
+2      short        236              0                    18      18
+3      hyp         1083              5                    43      48
+3      short        523              2                    11      13
+total              2048              7                    95     102
+```
+
+  The 7 key collisions are all round-3 ladders, in metres below about 3 (sqrt(2a+2b) or c^2-a^2 rounds to the key). 87 of the 95 pair collisions are two identities: c-a = sqrt(2c-2a) when c-a = 2, and sqrt(|b^2-a^2|) = sqrt(2a+2b) when b-a = 2. Examples and the full list are in the report.
+
 ## 2026-10-19 (cloud): HEADER "Q{n} of {N} · {right} right" (Jon's ruling (2), 19 Oct; follow-up to formula-plug-in-t3-005 and new-shapes-t3-008, nothing new closed)
 
 - **formula-plug-in (#449):** the header slot reads "Q{n} of {N} · {right} right" (n the question on screen, N the session length, right the right answers so far); `showScore()` writes it from `loadQuestion` and straight after marking. Display only. Both games have a fixed session length (10/20/30 chosen before Start), so the ruling's STOP IF does not fire. On phones (600 px and below) the slot stacks as "Q{n} of {N}" over "{right} right" at 12 px; on one line it overflowed 320 px by 19 px. Verifier checks both numbers through right, wrong, right; two plants (answers given counted as right; question number off by one) caught; main fails only on the header.
