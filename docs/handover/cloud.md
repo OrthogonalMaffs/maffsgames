@@ -55,11 +55,10 @@ main's last full run is red; watch main's run after merging.
 
 ## 2026-10-21 (cloud): LINE-LIMIT-SCOPE (contract verbatim: `docs/handover/contracts/2026-10-21-line-limit-scope.md`). **In flight.**
 
-- **Jon's ruling, 21 Oct:** a line past 70% of its budget is a split candidate. On main it warns and is listed in `ci-pack.json` under `split-candidates`; the pack commits. On a PR it fails only if the PR selects its verifier (ci-deps `select()`); otherwise it warns. The group rule (80%) and the setup-only exit 2 are unchanged. Canon §7.8.1 updated.
-- **Why:** main run 39559284220 (#472) was red on the timings job. The setup median was 57 s, which put four unchanged lines over the limit.
-- **Done:** `scripts/ci-groups.py` reads the PR's base from the run's own event, so the plan job is unchanged. It builds the selection (about 63 s in CI) only when a candidate exists. Selftests cover every path, including that run's shape.
-- **Split candidates, for the home lane** (39559284220's figures): Shape Shifter; Equation Builder part 1; Just Pythag It, Bruv part 2; Answer lock part 1. On the pack committed by 39562229614 (setup 32) none is over.
-- **Jon, 21 Oct (second ruling):** a PR whose selection is everything (CI, unknown path) only warns. Only a PR that selects a line's verifier for its own reason fails. With a candidate over the limit, the plan job takes about 3m16s of 5 min, which Jon accepts.
+- **Jon's rulings, 21 Oct:** a line past 70% is a split candidate. On main it warns and is listed under `split-candidates` in `ci-pack.json`, and the pack commits. On a PR it fails only if the PR selects its verifier for its own reason; a selection of "everything" (CI, unknown path) warns. The group 80% rule and the setup-only exit 2 are unchanged. Canon §7.8.1.
+- **Why:** main run 39559284220 (#472) was red: a 57 s setup median put four unchanged lines over the limit.
+- **Done:** `--check` reads the PR's base from the event, so the plan job is unchanged. It builds the selection (about 63 s) only when a candidate exists; the plan job then takes about 3m16s of 5 min, which Jon accepts. Selftests cover every path.
+- **Split candidates (home lane):** Shape Shifter; Equation Builder part 1; Just Pythag It, Bruv part 2; Answer lock part 1. None is over the limit at setup 32 (run 39562229614).
 
 ## 2026-10-20 (cloud): HOW-MANY-PARTS (contract verbatim: `docs/handover/contracts/2026-10-20-how-many-parts.md`). **DONE (#469, 3cad200, merged unlisted on Jon's go, 21 Oct; main run 39556536598, green, 59 jobs).**
 
