@@ -50,8 +50,8 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 **Standing authorisation (Jon, 10 Oct):** the cloud lane merges any PR of its own once its Gate is green and main's last full run is green, without asking each time; it still watches main's run after each merge. The 10 Oct queue (RIGHTFUL-KING, LIBRARY-JAM, FONT-FIT) is DONE and moved to `docs/history/handover-cloud-archive.md`, with Jon's rulings for the two room builds and FONT-FIT's known problems.
 **Holds and self-scheduled tasks (Jon, 16 Oct 2026):** a hold the cloud lane states on a PR is released only by Jon. Stating a hold cancels, or rewrites to report-only, any pending task this lane scheduled for that PR. A task this lane schedules for itself carries no authority beyond the standing rules at the time it fires, and its report names it as the lane's own follow-up, not a request. Self-scheduled tasks may read CI status and report; they never merge, push or edit while a hold stands. (Contract GS-L4-5-ENDPOINT; canon §7.8 records it via the home lane.)
 
-**Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
-main's last full run is red; watch main's run after merging.
+**Every PR:** `python scripts/check-changed.py` before the first push; merge only via `python scripts/merge-pr.py <n>`
+(needs a green Gate and main, §7.8.3); watch main's run after.
 
 ## 2026-10-21 (cloud): LINE-LIMIT-SCOPE (contract verbatim: `docs/handover/contracts/2026-10-21-line-limit-scope.md`). **DONE (#474, 2d2c24e; main run 39625941008 green; pack 599c0c7, no candidates at setup 32).**
 

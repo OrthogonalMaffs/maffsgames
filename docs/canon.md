@@ -1566,6 +1566,26 @@ and is not edited by fix PRs.
   session start: CLAUDE.md names the two handover files, and `scripts/check-context-size.py` measures only those
   and CLAUDE.md.
 
+### 7.8.3 Merging: one command, one guard (Jon, 21 Oct 2026)
+
+"Neither lane merges while main's last full run is red" was a rule each session had to remember; #473 (home lane, 07:28:30Z
+21 Oct) merged while main's newest finished run, 39559284220 (#472's push, red on "CI timings and pack (main only)"), had
+finished red at 07:13:43Z. It is now enforced by one command both lanes use for every merge: `python scripts/merge-pr.py <number>`.
+
+- **(a)** the PR is open, aimed at main, and its `Gate (every job passed)` is a completed success on the PR's head commit
+  (the newest Gate check on that commit wins, so a rerun that passed counts).
+- **(b)** of main's `check-site` runs, counting only `push` to main and `workflow_dispatch` on main (the API's `event` field
+  separates them from pull-request runs, which are selective, and from the Monday schedule), none is queued or in progress,
+  and the newest completed one is a success. A run still going is NOT green: `--wait <seconds>` polls for it, nothing assumes
+  it; a red or cancelled run is never waited out.
+- On success it squash-merges, pinned to the head commit (a) judged, and prints main's head and the run it judged. The merging
+  session then waits for main's run on that commit and reports it (above); `end-task.py` runs after, unchanged.
+- `--override "<Jon's ruling and date>"` waives (b) only, writes the ruling and the run it overrode as a PR comment before
+  merging, and still requires (a). An empty ruling is refused. Only Jon's ruling is a reason to use it.
+- `--selftest` replays recorded API shapes: green and green merges; red, cancelled, in-progress or absent main refuses; red Gate
+  refuses even with `--override`; the override comment is written; with the red-main check removed the selftest fails.
+- Branch protection on GitHub is Jon's and is not changed by this script.
+
 ## 7.9 Verifier conventions (Jon, 8 Oct 2026)
 
 - **Read a mark from what the page shows, never from a wrapped `mfg`.** analytics.js can replace `window.mfg` after a
