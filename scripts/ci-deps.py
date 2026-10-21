@@ -14,7 +14,9 @@ this script selects it. Every other group, and the leaderboard-coverage job, alw
 main, the weekly schedule and a manual run, everything runs.
 
 A verifier's dependencies, derived from its source and the pages it tests:
-  - the script itself and every local module it imports (recursively), or names as a file;
+  - the script itself and every local module it imports (recursively), or names as a file, except CI's own modules
+    (scripts/ci-*): a change to one already runs everything, so following one would only make its literals (its own
+    self-test fixtures among them) false dependencies of every verifier that loads it (LINE-LIMIT-SCOPE, 21 Oct 2026);
   - every repo path its string literals name (a file, or a folder as a prefix);
   - each game it names (a literal equal to a games/ folder name, or containing games/<slug>/): that whole
     folder, plus every local file the game's page loads (src/href and quoted asset paths), followed through
@@ -145,7 +147,7 @@ def script_deps(script, seen=None, origin=OWN):
         if t.endswith(".py") and exists("scripts/" + os.path.basename(t)):
             mods.add(os.path.basename(t)[:-3])
     for m in mods:
-        if exists("scripts/%s.py" % m):
+        if exists("scripts/%s.py" % m) and not m.startswith("ci-"):     # CI's own modules: see the docstring
             p, l = script_deps("scripts/%s.py" % m, seen, LIB)
             paths |= p
             lits += l
@@ -408,6 +410,16 @@ def selftest():
     # A doc-only change runs no verifier (beyond any that always run).
     _, _, picked = select(["docs/todo.md", "CLAUDE.md"], dmap)
     check("docs-only change runs no verifier", set(picked) == always, "-> %d" % len(picked))
+    # A verifier that loads CI's own modules inherits none of their literals (LINE-LIMIT-SCOPE, 21 Oct 2026): ci-groups.py
+    # loads ci-deps.py, whose self-test names docs/todo.md, and following it made that file a dependency of every verifier
+    # that reads ci-groups.py (verify-equation-builder.py, verify-just-pythag-it-bruv.py).
+    loaders = {t for t in sel if "ci-groups.py" in open(os.path.join(ROOT, t), encoding="utf-8").read()}
+    check("verifiers that load ci-groups.py: at least one (the next check is not vacuous)", bool(loaders),
+          ", ".join(sorted(os.path.basename(t) for t in loaders)))
+    leaked = {os.path.basename(t): sorted(d for d in sel[t]["deps"] if d in ("scripts/ci-deps.py", "docs/todo.md"))
+              for t in loaders}
+    check("none inherits ci-deps.py or its fixture docs/todo.md", not any(leaked.values()),
+          "; ".join("%s: %s" % (k, ", ".join(v)) for k, v in sorted(leaked.items()) if v))
     # Every selective verifier is reachable: some path selects it (or it always runs).
     for s, i in sorted(sel.items()):
         _, _, picked = select([s], dmap)

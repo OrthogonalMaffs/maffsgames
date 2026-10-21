@@ -204,7 +204,9 @@ jobs:
             # Record the run into the 5-run history, repack from the medians, and write the timings and the pack
             # only if that pack passes --check; otherwise nothing is written and the job fails (CI-TIMINGS-MEDIAN),
             # unless the pack passes at the previous median setup: then only a slower setup refused it, and the job
-            # warns and commits nothing (exit status 2; PER-LINE-LIMIT, canon 7.8.1).
+            # warns and commits nothing (exit status 2; PER-LINE-LIMIT, canon 7.8.1). Only the group rule (past 80%)
+            # refuses a pack: a line over the per-line limit is a split candidate, printed as a warning and listed in
+            # ci-pack.json, and the pack commits (LINE-LIMIT-SCOPE, Jon's ruling 21 Oct 2026).
             rc=0
             python scripts/ci-groups.py --record-and-pack "$RUN_ID" --from-dir "$TIMING_DIR" > "$RUNNER_TEMP/pack.txt" 2>&1 || rc=$?
             if [ "$rc" -eq 2 ]; then
