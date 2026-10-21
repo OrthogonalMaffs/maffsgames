@@ -35,6 +35,7 @@ time; it runs unless --no-selftest.
 """
 import argparse
 import copy
+import json
 import os
 import re
 import sys
@@ -488,6 +489,45 @@ def check_text(html, bank):
             out.append('item: the semicircle figure offers "Angle at centre theorem" (the 180 degree case), a true option (R5, circle-theorem-spotter-s1-003)')
     return out
 
+COPY = 'Spot and apply the circle theorems, with a diagram on every question.'
+CARD = 'The circle theorems. Name the theorem, calculate the angle, state the reason.'
+
+
+def read_copies(page_html):
+    """Every hand-copied statement of the game's scope: games.json, the page <meta>s, the portal cards."""
+    root = os.path.dirname(HERE)
+    games = json.load(open(os.path.join(root, 'data', 'games.json'), encoding='utf-8'))
+    games = games.get('games', games) if isinstance(games, dict) else games
+    desc = next(g['description'] for g in games if g.get('slug') == SLUG)
+    metas = re.findall(r'<meta (?:name="description"|property="og:description") content="([^"]*)"', page_html)
+    portal = open(os.path.join(root, 'index.html'), encoding='utf-8').read()
+    cards = [re.search(r'class="card-desc">([^<]*)<', c).group(1)
+             for c in re.findall(r'<a href="games/%s/[^>]*class="game-card".*?</a>' % SLUG, portal, re.S)]
+    return {'games.json': [desc], 'meta': metas, 'portal card': cards}
+
+
+def check_copies(copies):
+    """s1-008: the options name eight properties, so no copy may count the theorems ('seven' or any figure)."""
+    out = []
+    want = {'games.json': COPY, 'meta': COPY + ' For GCSE. Free, no sign-up.', 'portal card': CARD}
+    n = {'games.json': 1, 'meta': 2, 'portal card': 2}
+    for where, texts in copies.items():
+        if len(texts) != n[where]:
+            out.append('copies: expected %d %s text(s), found %d' % (n[where], where, len(texts)))
+        for t in texts:
+            if re.search(r'seven', t, re.I):
+                out.append('copies: %s says "seven": %r (circle-theorem-spotter-s1-008)' % (where, t))
+            elif t != want[where]:
+                out.append('copies: %s reads %r, expected %r' % (where, t, want[where]))
+    return out
+
+
+def copy_plants(copies):
+    for where in copies:
+        c = copy.deepcopy(copies)
+        c[where][0] = c[where][0].replace('the circle', 'all seven circle', 1).replace('The circle', 'All seven circle', 1)
+        yield 'old "all seven" back in %s' % where, c
+
 
 TEXT_PLANTS = [
     ('"all seven circle theorems" back', "GCSE Higher — the circle theorems.", "GCSE Higher — all seven circle theorems."),
@@ -534,6 +574,11 @@ def selftest(bank):
         print(f'self-test {"caught " if fails else "MISSED "} {name}' + (f': {fails[0][:100]}' if fails else ''))
         if not fails:
             bad.append(name)
+    for name, c in copy_plants(read_copies(html)):
+        fails = check_copies(c)
+        print(f'self-test {"caught " if fails else "MISSED "} {name}' + (f': {fails[0][:100]}' if fails else ''))
+        if not fails:
+            bad.append(name)
     for name, old, new in FIG_PLANTS:
         if html.count(old) != 1:
             print(f'self-test CANNOT PLANT {name}')
@@ -566,6 +611,7 @@ def main():
     figs = read_tangent_figures(open(args.file, encoding='utf-8').read())
     fails += tangent_side_fails(figs)
     fails += check_text(open(args.file, encoding='utf-8').read(), bank)
+    fails += check_copies(read_copies(open(args.file, encoding='utf-8').read()))
     if len(figs) < 9:
         fails.append('figure: only %d tangent figures with a marked tangent angle read (expected 9)' % len(figs))
     for f in fails:

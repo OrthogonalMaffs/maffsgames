@@ -129,7 +129,7 @@ findings:
   evidence: 'Start screen text; option names across the 11 "which theorem" items (SWEEP-1, batch 7)'
   status: fixed
   pr: 371
-  ruling: 'R3: the start screen reads "the circle theorems" (the options name eight properties). The <meta> description and the portal card still say "all seven" (data/games.json and index.html: the home lane''s). verify-circle-theorem-spotter.py pins it with a plant.'
+  ruling: 'R3: the start screen reads "the circle theorems" (the options name eight properties). The home-lane copies are fixed too (#470): data/games.json, the page''s two meta descriptions and both portal cards now say "the circle theorems". verify-circle-theorem-spotter.py pins the start screen and all those copies with plants (any "seven" fails).'
 - id: circle-theorem-spotter-s1-009
   severity: MEDIUM
   jc: false
