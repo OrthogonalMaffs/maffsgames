@@ -22,9 +22,11 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <style>
-/* Theme: schools/assets/theme.css (canon §7.5). This game sets its accent and the two colours of its bars. */
-:root{--accent:#1d4ed8;--accent-dim:#dbeafe;--on-accent:#ffffff;
-  --part-a:#3b82f6;--part-b:#a855f7;--bar-line:#1a2744;--bar-empty:#ffffff;--area-a:#bfdbfe;--area-b:#e9d5ff}
+/* Theme: schools/assets/theme.css (canon §7.5), light row. This game's own tokens: a generic chocolate bar in warm
+   browns (contract HMP-CHOCOLATE, Jon, 21 Oct 2026): no brand, no wrapper, no purple; one gold-foil accent (the
+   title's underline). */
+:root{--accent:#7b4a26;--accent-dim:#f3e5d6;--on-accent:#ffffff;
+  --choc-body:#4a2a14;--choc-a:#9a6233;--choc-b:#5e361a;--choc-stripe:#dcb68b;--choc-pale:#f2e3d1;--gold:#b8901f}
 *{margin:0;padding:0;box-sizing:border-box}
 body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
 .container{max-width:720px;width:100%;padding:1rem}
@@ -33,7 +35,7 @@ body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;ali
 a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
 a.back-link:hover{color:var(--text)}
 .header{text-align:center;padding:.6rem 0 .5rem}
-.header h1{font-size:1.9rem;font-weight:700;color:var(--accent);line-height:1.15}
+.header h1{font-size:1.9rem;font-weight:700;color:var(--accent);line-height:1.15;display:inline-block;padding-bottom:.15rem;border-bottom:3px solid var(--gold)}
 .header .sub{font-size:.95rem;color:var(--muted);margin:.3rem 0 .5rem}
 @media (max-width:420px){.header h1{font-size:1.6rem}}
 .screen{display:none}.screen.active{display:block}
@@ -69,10 +71,26 @@ a.back-link:hover{color:var(--text)}
 .hud-val{font-family:var(--font-num);font-size:.95rem;font-weight:700}
 .qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem;display:flex;flex-direction:column;gap:.7rem}
 .stage-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);font-weight:700}
+.qrow{display:flex;align-items:center;justify-content:center;gap:.55rem}
+.qrow.stacked{flex-direction:column}
+/* Beside the boxes, the sum's fraction bar lines up with the boxes' (their top box is 44px, then a .6rem gap). */
+.qrow:not(.stacked){align-items:flex-start}
+.qrow:not(.stacked) .prompt .sum{margin-top:1.2rem}
+.qrow:not(.stacked) .eq{margin-top:2.55rem}
+.qrow .eq{font-size:1.5rem;font-family:var(--font-num)}
+.qrow .eq[hidden]{display:none}
 .prompt{font-size:1rem;line-height:1.55;text-align:center}
 .prompt .sum{display:block;font-size:1.5rem;margin:.2rem 0}
-.prompt .ask{font-size:.9rem;color:var(--muted)}
+.prompt .ask{display:block;font-size:.9rem;color:var(--muted)}
+.qcol{display:flex;flex-direction:column;align-items:center;gap:.35rem;min-width:0;max-width:13rem}
+.qrow:not(.stacked) .ask-line{min-width:10rem}
+.ask-line{text-align:center;font-size:.9rem;color:var(--muted)}
+.ask-line:empty,.check-slot:empty{display:none}
+.check-row{display:flex;justify-content:center}
+.check-row[hidden]{display:none}
+.check-row .btn{min-width:8rem}
 .options{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.options:empty{display:none}
 .opt{min-width:0;overflow:hidden;min-height:64px;padding:.5rem;border-radius:12px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-family:var(--font-num);font-size:1.3rem;font-weight:700;cursor:pointer;touch-action:manipulation}
 .opt .katex{font-size:1.25em}
 .opt:hover{border-color:var(--accent)}
@@ -80,53 +98,45 @@ a.back-link:hover{color:var(--text)}
 .opt.correct{border-color:var(--correct);color:var(--correct)}
 .opt.picked-wrong{border-color:var(--wrong);color:var(--wrong)}
 .msg{min-height:1.2em;text-align:center;font-size:.9rem;color:var(--hint)}
-/* The typed answer (stages 4-6): a whole-number box (stage 6), then a fraction drawn as one, top over bottom. Each
+/* The typed answer (stages 1 and 4-6): a whole-number box (stage 6), then a fraction drawn as one, top over bottom. Each
    box has its own host, so the keypad's "typing here" tag sits on its own box. */
 .typed{display:flex;align-items:center;justify-content:center;gap:.7rem;flex-wrap:wrap}
 .typed[hidden]{display:none}
-.tfrac{display:inline-flex;flex-direction:column;align-items:center;gap:.9rem}
+.tfrac{display:inline-flex;flex-direction:column;align-items:center;gap:.6rem}
 .tcell{display:block}
 .tw.off{display:none}
 .typed input{width:4.4rem;min-height:44px;padding:.3rem;border:2px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font-family:var(--font-num);font-size:1.25rem;text-align:center}
 .typed input:focus{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent)}
 .tbar{display:block;width:100%;height:3px;border-radius:2px;background:var(--text)}
-.bar i.g{border-left:3px solid var(--bar-line)}
-.whole-chip{flex:none;font-family:var(--font-num);font-size:.85rem;font-weight:700;color:var(--text);white-space:nowrap}
-/* The area model (fraction x fraction): a grid of cols x rows small parts; the first a columns and c rows shaded,
-   their overlap the answer. */
-.area{display:grid;width:100%;max-width:300px;aspect-ratio:4/3;margin:0 auto;border:2px solid var(--bar-line);border-radius:4px;overflow:hidden}
-.area i{border-left:1px solid var(--bar-line);border-top:1px solid var(--bar-line);background:var(--bar-empty)}
-.area i.ca{background:var(--area-a)}.area i.rb{background:var(--area-b)}.area i.ov{background:var(--part-b)}
 .msg:empty{display:none}
 
-/* The bar model (Jon, 20 Oct 2026): every fraction as a bar cut into its denominator's number of equal parts. */
-.bars{display:flex;flex-direction:column;gap:.45rem}
-.bar-row{display:flex;align-items:center;gap:.5rem}
-.bar-lab{flex:none;width:3.4rem;text-align:right;font-family:var(--font-num);font-weight:700}
-.bar-lab .katex{font-size:1.05em}
-.bar{flex:1;display:grid;height:30px;border:2px solid var(--bar-line);border-radius:4px;overflow:hidden;background:var(--bar-empty)}
-.bar i{display:block;border-left:1px solid var(--bar-line)}
-.bar i:first-child{border-left:none}
-.bar i.a{background:var(--part-a)}
-.bar i.b{background:var(--part-b)}
-/* Taken away: the parts are still drawn, crossed out, so the student sees what went. */
-.bar i.gone{background:repeating-linear-gradient(135deg,var(--part-a) 0 3px,var(--bar-empty) 3px 7px)}
-.bar-step{font-size:.85rem;color:var(--muted);line-height:1.4}
-.bar-note{font-size:.88rem;font-weight:600;color:var(--accent);line-height:1.4}
-.bar-step .katex,.bar-note .katex{font-size:1.05em}
+/* The chocolate bar (HMP-CHOCOLATE): one SVG figure per screen. Squares with rounded corners on the bar's body, so
+   the gaps between them read as scored lines; deeper grooves mark the pieces before they were cut. The second
+   number's squares are striped, never told apart by colour alone; taken-away squares are eaten (emptied, bitten). */
+.choc{margin:0 auto;width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;gap:.35rem}
+.choc svg{display:block;max-width:100%;height:auto}
+.choc figcaption{font-size:.88rem;color:var(--muted);text-align:center;line-height:1.35}
+.choc .c-body{fill:var(--choc-body)}
+.choc .c-a{fill:var(--choc-a)}
+.choc .c-b{fill:var(--choc-b)}
+.choc .c-stripe{fill:var(--choc-stripe)}
+.choc .c-pale{fill:var(--choc-pale)}
+.choc .c-piece{stroke:var(--choc-pale);stroke-width:1.4}
+.choc .c-eaten{fill:var(--surface);stroke:var(--choc-a);stroke-width:1.2;stroke-dasharray:3 2}
+.choc .c-lot{fill:none;stroke:var(--surface);stroke-width:2.4}
+/* The slab (a fraction times a fraction): its top fraction along the top, its side fraction down the left. */
+.slab{display:grid;grid-template-columns:auto auto;grid-template-rows:auto auto;align-items:center;justify-items:center;gap:.25rem .4rem}
+.slab-top{grid-column:2;font-family:var(--font-num);font-weight:700}
+.slab-side{grid-column:1;grid-row:2;font-family:var(--font-num);font-weight:700}
+.slab svg{grid-column:2;grid-row:2}
 
 .feedback:empty{display:none}
-.fb{border-radius:12px;padding:.75rem .85rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.5rem}
+.fb{border-radius:12px;padding:.75rem .85rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.6rem}
 .fb.wrong{border-color:var(--wrong)}
-.fb-verdict{font-weight:700;font-size:1rem;color:var(--text)}
-.fb-verdict .katex{font-size:1.15em}
-.fb-said{font-size:.88rem;font-weight:400;color:var(--muted);margin-left:.4rem}
-.fb-help,.fb-nudge{padding:.45rem .65rem;border-left:3px solid var(--hint);border-radius:0 8px 8px 0;font-size:.92rem;line-height:1.5}
-.fb-help .rule{display:block;font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--hint);font-weight:700}
-.fb-nudge{font-weight:700;color:var(--hint)}
-.fb-work{font-size:.92rem;line-height:1.5}
-.fb-work .line,.fb-help .line{font-family:var(--font-num);margin:.15rem 0;overflow-x:auto}
-.fb-work .katex,.fb-help .katex{font-size:1.05em}
+.fb-line{font-size:.95rem;line-height:1.5;padding:.4rem .65rem;border-left:3px solid var(--hint);border-radius:0 8px 8px 0}
+.fb-line .katex{font-size:1.05em}
+.fb-sum{text-align:center;font-weight:700;overflow-x:auto}
+.fb-sum .katex{font-size:1.1em}
 .fb-quick{font-weight:700;color:var(--correct);text-align:center;font-size:1.05rem}
 .fb-quick .katex{font-size:1.15em}
 .results{text-align:center;padding:1rem 0}
@@ -138,30 +148,32 @@ a.back-link:hover{color:var(--text)}
 .sfrac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.1;margin:0 .1em}
 .sfrac>span:first-child{border-bottom:2px solid currentColor;padding:0 .15em}
 
-/* Phone rule (canon §7.6.1): the reason and Next above the fold. On a wrong answer the options go and the feedback
-   takes their place; the verdict restates the sum, so the prompt folds away; on a phone (600px wide or less) and on
-   any screen 800px tall or less the bar model moves below Next (visual order only: the reading order stays fact,
-   hint, working, picture, Next), and at 600px tall or less so do the score bar and the stage label, which nothing
-   changes while the feedback shows. */
-.qcard.fb-open .options,.qcard.fb-open .msg,.qcard.fb-open #qbars,.qcard.fb-open .prompt,.qcard.fb-open .typed,.qcard.fb-open #kpHolder{display:none}
-.fb-next{order:5}
-@media (max-height:800px),(max-width:600px){.fb .bars{order:10}}
+/* Phone rule (canon §7.6.1): the reason and Next above the fold. On a wrong answer the question, the options and the
+   answer box go and the feedback takes their place (it restates the sum); at 600px tall or less so do the score bar
+   and the stage label, which nothing changes while the feedback shows. */
+.qcard.fb-open .options,.qcard.fb-open .msg,.qcard.fb-open #qbars,.qcard.fb-open .qrow,.qcard.fb-open #kpHolder,.qcard.fb-open .check-row{display:none}
 @media (max-height:600px){
   .qcard{gap:.45rem}
   body.fb-open .hud,.qcard.fb-open .stage-label{display:none}
+  /* A typed question: the bar, the answer and the keypad in the window together (Jon, 21 Oct 2026); the score bar
+     still shows the stage. */
+  .qcard.typing .stage-label{display:none}
+  .ask-line{font-size:.8rem}
+  .qcard.typing{padding-top:.45rem}
+  .hud{margin-bottom:.35rem}
 }
 @media (max-width:420px){
   .container{padding:.6rem}
   .qcard{padding:.75rem .7rem}
   .fb{padding:.6rem .65rem}
   .hud{padding:.35rem .5rem}
-  .bar-lab{width:2.8rem}
-  .fb-work,.fb-help{font-size:.86rem}
+  .fb-line{font-size:.9rem}
 }
 
 body.accessible{letter-spacing:.12em;word-spacing:.16em}
 body.accessible .hud-label,body.accessible .hud-val{letter-spacing:0}
-body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2;max-width:65ch}
+body.accessible p,body.accessible .prompt,body.accessible .fb-line{line-height:2;max-width:65ch}
+body.accessible .prompt .sum{line-height:1.2}
 .a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;transition:background .15s}
 .a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
@@ -174,7 +186,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
 <script src="../../schools/assets/options.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
-<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Stages 1-3: i = 0 presses the first option; i >= 1 presses the first option that is not the key. Stages 4-6 (typed): i = 0 types the key, i >= 1 the key plus one whole (still in lowest terms, so it is marked wrong, never sent back as a format). 'ready' is the game's own state: on a phone the boxes are read-only (the keypad types into them).
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Stages 2-3: i = 0 presses the first option; i >= 1 presses the first option that is not the key. Stages 1 and 4-6 (typed): i = 0 types the key, i >= 1 the key plus one whole (still in lowest terms, so it is marked wrong, never sent back as a format). 'ready' is the game's own state: on a phone the boxes are read-only (the keypad types into them).
 {
   "start": "document.getElementById('startBtn').click()",
   "ready": "!!window.HMP && !!HMP.ui && HMP.ui.state() === 'asking'",
@@ -203,7 +215,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
 <div class="container">
   <a href="../../" class="back-link">← Back to Games</a>
   <div id="menu" class="screen active">
-    <div class="header"><h1>How Many Parts?</h1><div class="sub">Adding and taking away fractions.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="header"><h1>How Many Parts?</h1><div class="sub">Fractions, one bar of chocolate at a time.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
     <div class="badges">
       <span class="level-tag" id="levelTag">Foundation</span>
       <span class="calc-badge" data-calc="not-allowed">Non-calculator</span>
@@ -213,7 +225,8 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
         <span data-tex="\dfrac{3}{4}">3/4</span> is 3 parts of a whole cut into 4.</p>
       <p>Only parts of the <strong>same size</strong> can be added or taken away. When the bottoms are different, cut
         both into the same number of parts first.</p>
-      <p>From stage 4 you type the answer: a fraction in its simplest form, or a whole number.</p>
+      <p>Stages 2 and 3 give you choices. In the others you type the answer: a fraction in its simplest form, or a
+        whole number (in stage 6, a mixed number).</p>
     </div>
     <div class="panel">
       <h2>Level</h2>
@@ -246,20 +259,25 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     </div>
     <div class="qcard" id="qcard">
       <div class="stage-label" id="stageLabel"></div>
-      <div class="prompt" id="prompt"></div>
-      <div class="bars" id="qbars"></div>
+      <!-- The question. A one-fraction answer (stages 1, 4 and 5) is typed beside the sum, "= [top over bottom]"; a
+           mixed number (stage 6) below it. -->
+      <div class="qrow" id="qrow">
+        <div class="qcol"><div class="prompt" id="prompt"></div><div class="ask-line" id="askLine"></div><div class="check-slot" id="checkSlot"></div></div>
+        <span class="eq" id="eqSign" aria-hidden="true">=</span>
+        <!-- Stages 1 and 4-6: typed, marked by MaffsAnswer.fractionForm. A whole-number box in stage 6 only. -->
+        <form class="typed" id="typedForm" autocomplete="off" hidden>
+          <span class="tcell tw"><input id="tWhole" type="text" inputmode="numeric" aria-label="Whole number"></span>
+          <span class="tfrac">
+            <span class="tcell"><input id="tNum" type="text" inputmode="numeric" aria-label="Top of the fraction (numerator)"></span>
+            <span class="tbar" aria-hidden="true"></span>
+            <span class="tcell"><input id="tDen" type="text" inputmode="numeric" aria-label="Bottom of the fraction (denominator)"></span>
+          </span>
+        </form>
+      </div>
+      <div id="qbars"></div>
       <div class="options" id="options" role="group" aria-label="Answer options"></div>
-      <!-- Stages 4-6: typed, marked by MaffsAnswer.fractionForm. A whole-number box in stage 6 only. -->
-      <form class="typed" id="typedForm" autocomplete="off" hidden>
-        <span class="tcell tw"><input id="tWhole" type="text" inputmode="numeric" aria-label="Whole number"></span>
-        <span class="tfrac">
-          <span class="tcell"><input id="tNum" type="text" inputmode="numeric" aria-label="Top of the fraction (numerator)"></span>
-          <span class="tbar" aria-hidden="true"></span>
-          <span class="tcell"><input id="tDen" type="text" inputmode="numeric" aria-label="Bottom of the fraction (denominator)"></span>
-        </span>
-        <button class="btn solid" type="submit" id="checkBtn">Check</button>
-      </form>
       <div id="kpHolder"></div>
+      <div class="check-row" id="checkRow" hidden><button class="btn solid" type="submit" form="typedForm" id="checkBtn">Check</button></div>
       <div class="msg" id="msg" aria-live="polite"></div>
       <div class="feedback" id="feedback" aria-live="polite"></div>
     </div>
@@ -277,41 +295,36 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
 </div>
 
 <script>
-/* How Many Parts? — adding and taking away fractions. Resit strand, slate item 3 (contract HOW-MANY-PARTS,
- * Jon, 20 Oct 2026; verbatim in docs/handover/contracts/2026-10-20-how-many-parts.md).
+/* How Many Parts? — the four operations with fractions. Resit strand, slate item 3 (contract HOW-MANY-PARTS, Jon,
+ * 20 Oct 2026; redesigned under HMP-CHOCOLATE, Jon, 21 Oct 2026; both verbatim in docs/handover/contracts/).
  *
  * The premise is the name: the denominator says how many parts; only parts of the same size can be added or
- * taken away. Every bar-model message says so.
+ * taken away. The start screen says so, and so does the feedback after a wrong answer.
  *
- * Everything that decides what a student sees (the pools, every key, every option and the named error behind it,
- * the bar model, the worked lines, the worked example for each error) lives on window.HMP as plain functions with
- * no DOM. The UI calls them through HMP, and scripts/verify-how-many-parts.py drives the SAME functions from the
- * live page.
+ * Everything that decides what a student sees (the pools, every key, every option and the error behind it, the
+ * chocolate-bar model, the feedback lines) lives on window.HMP as plain functions with no DOM. The UI calls them
+ * through HMP, and scripts/verify-how-many-parts.py drives the SAME functions from the live page.
  *
  * Rules the engine keeps (and the verifier checks):
  *  - Fractions are [numerator, denominator] pairs of whole numbers, compared exactly (cross-multiplication).
  *  - Stage a: same denominator; b: one denominator a multiple of the other; c: neither a multiple of the other,
- *    their lowest common multiple at most 24 (so a bar's part is never thinner than about 11px on a 320px phone).
- *    The two fractions are proper; the answer is between 0 and 1. In stages b and c each fraction is in its
- *    simplest form.
- *  - Every option is a named error (SR-4), shown in its simplest form, none equal in value to the key or to
- *    another option. The required errors come first where they apply: adding the tops and the bottoms; keeping
- *    the larger denominator; changing a denominator without its numerator; multiplying the denominators but
- *    adding the numerators. Multiplying the fractions and the other operation fill in when fewer than three
- *    apply. Two errors with one value are one option, named by the first in ERRORS' order.
- *  - Each pool is built once, then filtered once (as PR 453): a question leaves if ANY named error equals the key
- *    in value, or if fewer than three named errors with distinct values apply. Draws come from what is left;
- *    nothing is redrawn (canon §12, SR-5).
- *  - Stages d-f are typed on MaffsKeypad (numerator and denominator boxes; a whole-number box too in stage f) and
- *    marked ONLY by MaffsAnswer.fractionForm (FRACTION-FORM, PR 467): d (multiply: a fraction times a whole number,
- *    then a fraction times a fraction) and e (divide: "how many quarters are in 3?", then a fraction divided by a
- *    fraction) in simplest form, f (mixed numbers, one question for each operation) as a mixed number. An equal but
- *    unsimplified answer gets the format message, neither right nor wrong (SR-3). Each kind has its named errors,
- *    used for the worked example and nudge (a typed answer is that error when fractionForm finds it equal in value)
- *    and for the filter: a question leaves if any of them equals its key. Valid methods are never errors: dividing
- *    across where it divides exactly, adding wholes and parts separately, give the key and are marked right.
- *    Multiplying mixed numbers' wholes and parts separately IS an error (Jon, 20 Oct 2026).
- *  - Every bar or area model has at most 24 parts across, so a part is never thinner than about 11px at 320px.
+ *    their lowest common multiple at most 24. The two fractions are proper; the answer is between 0 and 1. In
+ *    stages b and c each fraction is in its simplest form.
+ *  - The pools are built once and filtered once (as PR 453), by the 20 Oct catalogue of errors (H.FILTER): a
+ *    question leaves if any of them equals its key, and in stages a-c if fewer than three of them have distinct
+ *    values. Nothing is redrawn (canon §12, SR-5). That catalogue is the filter's only use (HMP-CHOCOLATE keeps
+ *    the pools as they were).
+ *  - What a student is offered, or told about a wrong answer, comes only from the stage's own list of the errors
+ *    students make there (H.LISTS, Jon, 21 Oct 2026). Stages b and c are multiple choice: every option but the key
+ *    is a listed error, in its simplest form, none equal in value to the key or to another option (SR-4); where
+ *    fewer than three listed errors apply, the question shows three options, never an invented fourth.
+ *  - Stages a and d-f are typed on MaffsKeypad and marked ONLY by MaffsAnswer.fractionForm (FRACTION-FORM, PR 467):
+ *    a (adding and taking away with one bottom), d (multiply) and e (divide) in simplest form, f (mixed numbers,
+ *    one question for each operation) as a mixed number. An equal but unsimplified answer gets the format message,
+ *    neither right nor wrong (SR-3). A wrong answer equal in value to a listed error gets that error's worked
+ *    example (the first three in a session) or its nudge.
+ *  - The model is one chocolate bar (or one slab), drawn in SVG from H.model's numbers: squares in warm browns,
+ *    the second number's striped, taken-away squares eaten. No image files, no brand, no purple.
  */
 (function () {
   'use strict';
@@ -333,7 +346,9 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     f: { n: 6, label: 'Stage 6 · Mixed numbers' }
   };
   // The typed stages and the form fractionForm asks of the answer.
-  H.FORM = { d: 'simplest', e: 'simplest', f: 'mixed' };
+  H.FORM = { a: 'simplest', d: 'simplest', e: 'simplest', f: 'mixed' };
+  // The typed stages whose pools hold kinds of question (a's are the add and take-away sums of stages b and c).
+  H.KINDED = ['d', 'e', 'f'];
   H.BAR_FIRST = 3;        // the bar model on the first 3 questions of every stage
   H.HELP_EXAMPLES = 3;    // worked examples for a named error, per session; then a nudge
   H.MAX_PARTS = 24;       // stage c's common denominator at most this
@@ -387,10 +402,10 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     return PARTS[n] || 'parts of ' + n;
   };
 
-  /* ---------- the named errors (SR-4) ---------- */
-  // Each returns the student's answer as an unsimplified [n, d], or null where the error does not apply (a zero or
-  // negative result, or a zero denominator: subtracting the bottoms of 1/5 - 2/5). ERRORS' order is the precedence
-  // when two give one value. 'req' marks the four the contract requires where they apply.
+  /* ---------- the pools' filter: the 20 Oct catalogue of errors ---------- */
+  // HOW-MANY-PARTS's catalogue, kept ONLY to filter the pools exactly as before (HMP-CHOCOLATE leaves the pools as
+  // they were). Nothing here is offered or shown to a student: that is H.LISTS, below. Each returns the student's
+  // answer as an unsimplified [n, d], or null where the error does not apply.
   H.ERRORS = [
     { id: 'TB', req: true,
       name: function (op) { return op === '+' ? 'You added the tops and added the bottoms' : 'You took away the tops and took away the bottoms'; },
@@ -416,10 +431,8 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
         return [Math.abs(q.a * L / q.b - H.sign(q.op) * q.c * L / q.d), L];
       } }
   ];
-  H.ERR = {};
-  H.ERRORS.forEach(function (e) { H.ERR[e.id] = e; });
-  // Every named error that applies to q, in ERRORS' order: [{id, f}] with f the raw [n, d].
-  H.errors = function (q) {
+  // Every catalogue error that applies to q, in ERRORS' order: [{id, f}] with f the raw [n, d]. The filter's only.
+  H.filterErrors = function (q) {
     var out = [];
     (q.kind ? H.TERRORS[q.kind] : H.ERRORS).forEach(function (e) {
       var f = e.f(q);
@@ -429,12 +442,12 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
   };
   H.errorIsKey = function (q) {
     var k = H.key(q);
-    return H.errors(q).some(function (e) { return H.eq(e.f, k); });
+    return H.filterErrors(q).some(function (e) { return H.eq(e.f, k); });
   };
-  // The applicable errors, one per value (the first in ERRORS' order keeps it).
-  H.distinctErrors = function (q) {
+  // The catalogue errors that apply, one per value (the filter's three-distinct test).
+  H.filterDistinct = function (q) {
     var seen = [], out = [];
-    H.errors(q).forEach(function (e) {
+    H.filterErrors(q).forEach(function (e) {
       if (seen.some(function (f) { return H.eq(f, e.f); })) return;
       seen.push(e.f); out.push(e);
     });
@@ -466,18 +479,88 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
       }
     }
   })();
-  // The filter (as PR 453): no named error may equal the key, and three distinct named errors must apply (SR-4).
-  H.servable = function (q) { return !H.errorIsKey(q) && (!!q.kind || H.distinctErrors(q).length >= 3); };
+  // The filter (as PR 453): no catalogue error may equal the key, and in stages a-c three must apply, distinct in value.
+  H.servable = function (q) { return !H.errorIsKey(q) && (!!q.kind || H.filterDistinct(q).length >= 3); };
   ['a', 'b', 'c'].forEach(function (st) { H.POOLS[st] = H.POOLS[st].filter(H.servable); });
 
+  /* ---------- each stage's own errors (Jon, 21 Oct 2026) ---------- */
+  // The errors students really make at each stage (HMP-CHOCOLATE). Stages b and c draw their distractors only from
+  // their lists; stages a and d-f are typed, so theirs only name a wrong answer, for its worked example or nudge.
+  // f returns the student's answer unsimplified, or null where the error does not apply; an answer with a zero or
+  // negative top or bottom never counts (listErrors drops it). A list's order is the precedence when two errors
+  // give one value.
+  function sg(q) { return H.sign(q.op); }
+  function did(q) { return q.op === '+' ? 'added' : 'took away'; }
+  var E_TB = { id: 'TB', f: function (q) { return [q.a + sg(q) * q.c, q.b + sg(q) * q.d]; },
+    name: function (q) { return 'You ' + did(q) + ' the tops and the bottoms'; } };
+  var E_OP = { id: 'OP', f: function (q) { var L = H.lcm(q.b, q.d); return [Math.abs(q.a * L / q.b - sg(q) * q.c * L / q.d), L]; },
+    name: function (q) { return q.op === '+' ? 'You took away instead of adding' : 'You added instead of taking away'; } };
+  var E_DN = { id: 'DN', f: function (q) { return [q.a + sg(q) * q.c, H.lcm(q.b, q.d)]; },
+    name: function () { return 'You changed the bottom but not the top'; } };
+  H.LISTS = {
+    a: [E_TB, E_OP,
+      { id: 'TABB', f: function (q) { return q.op === '-' ? [q.a - q.c, q.b + q.d] : null; },
+        name: function () { return 'You took the tops away but added the bottoms'; } },
+      { id: 'COUNT', f: function (q) { return [q.a + sg(q) * q.c, 1]; },
+        name: function () { return 'You gave the number of pieces, not the fraction'; } }],
+    b: [E_TB,
+      { id: 'KL', f: function (q) { return [q.a + sg(q) * q.c, Math.max(q.b, q.d)]; },
+        name: function (q) { return 'You ' + did(q) + ' the tops and kept the bigger bottom'; } },
+      E_DN, E_OP],
+    c: [E_TB,
+      { id: 'MD', f: function (q) { return q.op === '+' ? [q.a + q.c, q.b * q.d] : null; },
+        name: function () { return 'You multiplied the bottoms but added the tops as they were'; } },
+      E_DN, E_OP],
+    d: [
+      { id: 'D_ADD', f: function (q) { return q.kind === 'xw' ? [q.a + q.n * q.b, q.b] : H.addF([q.a, q.b], [q.c, q.d]); },
+        name: function () { return 'You added instead of multiplying'; } },
+      { id: 'D_KEEPB', f: function (q) { return q.kind === 'xf' ? [q.a * q.c, q.b] : null; },
+        name: function () { return 'You multiplied the tops but kept a bottom'; } },
+      { id: 'D_KEEPD', f: function (q) { return q.kind === 'xf' ? [q.a * q.c, q.d] : null; },
+        name: function () { return 'You multiplied the tops but kept a bottom'; } },
+      { id: 'XW_BOTH', f: function (q) { return q.kind === 'xw' ? [q.a * q.n, q.b * q.n] : null; },
+        name: function (q) { return 'You multiplied the top and the bottom by ' + q.n; } }],
+    e: [
+      { id: 'DF_NOFLIP', f: function (q) { return q.kind === 'df' ? [q.a * q.c, q.b * q.d] : null; },
+        name: function () { return 'You multiplied without turning the second fraction over'; } },
+      { id: 'DF_FLIP1', f: function (q) { return q.kind === 'df' ? [q.b * q.c, q.a * q.d] : null; },
+        name: function () { return 'You turned the first fraction over'; } },
+      { id: 'DW_DIV', f: function (q) { return q.kind === 'dw' ? [q.n, q.m] : null; },
+        name: function (q) { return 'You divided ' + q.n + ' by ' + q.m; } }],
+    f: [
+      { id: 'M_SEP', f: function (q) { return q.op === 'x' ? [q.w1 * q.w2 * q.b * q.d + q.a * q.c, q.b * q.d] : null; },
+        name: function () { return 'You multiplied the wholes and the parts separately'; } },
+      { id: 'M_SWAP', f: function (q) {
+          if (q.op !== '-' || q.a * q.d >= q.c * q.b) return null;
+          var L = H.lcm(q.b, q.d); return [(q.w1 - q.w2) * L + q.c * L / q.d - q.a * L / q.b, L]; },
+        name: function () { return 'You took the smaller part from the bigger one'; } },
+      { id: 'M_CONV', f: function (q) {
+          var X = [q.w1 + q.a, q.b], Y = [q.w2 + q.c, q.d];
+          return q.op === '+' ? H.addF(X, Y) : q.op === '-' ? H.addF(X, Y, -1) : q.op === 'x' ? H.mul(X, Y) : H.div(X, Y); },
+        name: function () { return 'You turned the mixed numbers into fractions the wrong way'; } }]
+  };
+  H.ERR = {};
+  Object.keys(H.LISTS).forEach(function (st) { H.LISTS[st].forEach(function (e) { H.ERR[e.id] = e; }); });
+  // The listed errors of q's stage that apply, in the list's order: [{id, f}] with f the raw [n, d].
+  H.listErrors = function (q) {
+    var out = [];
+    (H.LISTS[q.stage] || []).forEach(function (e) {
+      var f = e.f(q);
+      if (f && f[0] > 0 && f[1] > 0) out.push({ id: e.id, f: f });
+    });
+    return out;
+  };
+
   /* ---------- one question ---------- */
-  // The three distractors: the required errors that apply first (in a seeded order, so each is seen), then the
-  // fill-ins. All distinct in value and none equal to the key (servable() guarantees it).
+  // The distractors (stages b and c): the listed errors that apply, one per value, none equal to the key, in a seeded
+  // order, three at most. Fewer than three gives a question of three options (SR-4 exception, Jon, 21 Oct 2026).
   H.pickErrors = function (q, rng) {
-    var all = H.distinctErrors(q);
-    var req = H.shuffle(all.filter(function (e) { return H.ERR[e.id].req; }), rng);
-    var fill = H.shuffle(all.filter(function (e) { return !H.ERR[e.id].req; }), rng);
-    return req.concat(fill).slice(0, 3);
+    var k = H.key(q), seen = [k], out = [];
+    H.listErrors(q).forEach(function (e) {
+      if (seen.some(function (f) { return H.eq(f, e.f); })) return;
+      seen.push(e.f); out.push(e);
+    });
+    return H.shuffle(out, rng).slice(0, 3);
   };
   H.option = function (f, err) {
     var s = H.simp(f);
@@ -493,13 +576,13 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     q.choices = H.pickErrors(q, rng).map(function (e) { return H.option(e.f, e.id); });
     return q;
   };
-  // A session: each served stage of the level in order, `per` questions each, about half adding and half taking
-  // away, drawn without replacement from each stage's shuffled pools.
+  // A session: each served stage of the level in order, `per` questions each, drawn without replacement from each
+  // stage's shuffled pools. Stages a-c: about half adding and half taking away.
   H.buildSession = function (seed, level) {
     var L = H.LEVELS[level] || H.LEVELS.ks3, rng = H.mulberry32(seed), qs = [];
     var stages = L.stages.filter(function (s) { return H.BUILT.indexOf(s) !== -1; });
     stages.forEach(function (st) {
-      if (H.FORM[st]) { H.typedStage(st, L.per, rng).forEach(function (q) { q.index = qs.length + 1; qs.push(q); }); return; }
+      if (H.KINDED.indexOf(st) !== -1) { H.typedStage(st, L.per, rng).forEach(function (q) { q.index = qs.length + 1; qs.push(q); }); return; }
       var byOp = {
         '+': H.shuffle(H.POOLS[st].filter(function (q) { return q.op === '+'; }), rng),
         '-': H.shuffle(H.POOLS[st].filter(function (q) { return q.op === '-'; }), rng)
@@ -521,114 +604,6 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     return Math.max(1, Math.round(H.BASE / (1 + H.T_K * Math.log(1 + Math.max(0, seconds)))));
   };
   H.helpFor = function (nth) { return nth <= H.HELP_EXAMPLES ? 'example' : 'nudge'; };
-
-  /* ---------- the bar model ---------- */
-  // Plain data. rows: {tex, n, a, b, gone} = a bar of n equal parts, the first a coloured 'a', the next b
-  // coloured 'b', and the last `gone` of the 'a' parts crossed out (taken away). steps: words between rows.
-  // full = false is the question's scaffold (the two fractions, cut to the same size when they differ);
-  // full = true adds the answer (feedback).
-  H.PREMISE = function (op) {
-    return 'The denominator says how many parts. Only parts of the same size can be ' +
-      (op === '+' ? 'added.' : 'taken away.');
-  };
-  H.barModel = function (q, full) {
-    if (q.kind) return H.typedBars(q, full);
-    var L = H.lcm(q.b, q.d), A = q.a * L / q.b, C = q.c * L / q.d, items = [];
-    items.push({ kind: 'note', text: H.PREMISE(q.op) });
-    items.push({ kind: 'row', tex: H.tex([q.a, q.b]), n: q.b, a: q.a, b: 0, gone: 0 });
-    items.push({ kind: 'row', tex: H.tex([q.c, q.d]), n: q.d, a: 0, b: q.c, gone: 0 });
-    if (q.b !== q.d) {
-      items.push({ kind: 'step', text: 'Different-sized parts. Cut both bars into ' + L + ' equal parts (' +
-        H.partsName(L) + '):' });
-      items.push({ kind: 'row', tex: H.tex([A, L]), n: L, a: A, b: 0, gone: 0 });
-      items.push({ kind: 'row', tex: H.tex([C, L]), n: L, a: 0, b: C, gone: 0 });
-    } else {
-      items.push({ kind: 'step', text: 'Same-sized parts: both are ' + H.partsName(L) + '.' });
-    }
-    if (full) {
-      if (q.op === '+') {
-        items.push({ kind: 'step', text: 'Put them together: ' + A + ' + ' + C + ' = ' + (A + C) + ' ' + H.partsName(L, A + C) + '.' });
-        items.push({ kind: 'row', tex: H.tex([A + C, L]), n: L, a: A, b: C, gone: 0 });
-      } else {
-        items.push({ kind: 'step', text: 'Take ' + C + ' away from ' + A + ': ' + (A - C) + ' ' + H.partsName(L, A - C) + ' left.' });
-        items.push({ kind: 'row', tex: H.tex([A - C, L]), n: L, a: A, b: 0, gone: C });
-      }
-    }
-    return items;
-  };
-
-  /* ---------- worked solutions and worked examples ---------- */
-  // Plain data: {kind: 'text', text} and {kind: 'tex', tex}. The UI renders them; the verifier reads them.
-  H.worked = function (q) {
-    if (q.kind) return H.typedWorked(q);
-    var L = H.lcm(q.b, q.d), A = q.a * L / q.b, C = q.c * L / q.d, s = H.sign(q.op), lines = [];
-    var R = [A + s * C, L], k = H.key(q), o = H.opTex(q.op);
-    if (q.b === q.d) {
-      lines.push({ kind: 'text', role: 'why', text: 'Same bottom number: the parts are the same size, so ' +
-        (q.op === '+' ? 'add' : 'take away') + ' the tops and keep the bottom.' });
-    } else {
-      lines.push({ kind: 'text', role: 'why', text: 'Different bottom numbers: make the parts the same size first. ' + L +
-        ' is a multiple of both ' + q.b + ' and ' + q.d + '.' });
-      lines.push({ kind: 'tex', tex: H.tex([q.a, q.b]) + ' = ' + H.tex([A, L]) + ',\\quad ' + H.tex([q.c, q.d]) + ' = ' + H.tex([C, L]) });
-    }
-    var t = H.tex([A, L]) + ' ' + o + ' ' + H.tex([C, L]) + ' = ' + H.tex(R);
-    if (R[1] !== k[1]) t += ' = ' + H.tex(k);
-    lines.push({ kind: 'tex', tex: t });
-    if (R[1] !== k[1]) {
-      var g = R[1] / k[1];
-      lines.push({ kind: 'text', text: 'Simplest form: divide the top and the bottom by ' + g + '.' });
-    }
-    return lines;
-  };
-  // The worked example for a named error, on the question's own numbers: what the student did, then why it fails.
-  H.example = function (q, id) {
-    if (q.kind) return H.typedExample(q, id);
-    var L = H.lcm(q.b, q.d), A = q.a * L / q.b, C = q.c * L / q.d, s = H.sign(q.op), o = H.opTex(q.op);
-    var e = H.ERR[id], f = e.f(q), lines = [];
-    // What the student did, as they would write it, then as the option showed it (in its simplest form).
-    var shown = H.simp(f);
-    var raw = '\\dfrac{' + f[0] + '}{' + f[1] + '}';   // as written, even 2/1, never collapsed to 2
-    var did = { kind: 'tex', tex: q.sumTex + ' \\;\\to\\; ' + raw + (shown[1] !== f[1] ? ' = ' + H.tex(shown) : '') };
-    lines.push(did);
-    if (id === 'TB') {
-      lines.push({ kind: 'text', text: 'The bottom number says how many parts the whole is cut into. ' +
-        (q.op === '+' ? 'Adding' : 'Taking away') + " doesn't cut the whole into more or fewer parts, so the bottoms are never " +
-        (q.op === '+' ? 'added.' : 'taken away.') });
-    } else if (id === 'DN') {
-      var which = [];
-      if (q.b !== L) which.push([q.a, q.b, A]);
-      if (q.d !== L) which.push([q.c, q.d, C]);
-      lines.push({ kind: 'text', text: 'Changing the bottom to ' + L + ' cuts each part into smaller pieces, so the top ' +
-        'needs the same change:' });
-      which.forEach(function (w) {
-        lines.push({ kind: 'tex', tex: H.tex([w[0], w[1]]) + ' = ' + H.tex([w[2], L]) + '\\quad\\text{not}\\quad ' + H.tex([w[0], L]) });
-      });
-    } else if (id === 'KL') {
-      var big = Math.max(q.b, q.d), small = Math.min(q.b, q.d);
-      lines.push({ kind: 'text', text: H.partsName(small).charAt(0).toUpperCase() + H.partsName(small).slice(1) + ' and ' +
-        H.partsName(big) + ' are different-sized parts, so they cannot be counted together until both are ' +
-        H.partsName(L) + ':' });
-      lines.push({ kind: 'tex', tex: H.tex([q.a, q.b]) + ' = ' + H.tex([A, L]) + ',\\quad ' + H.tex([q.c, q.d]) + ' = ' + H.tex([C, L]) });
-    } else if (id === 'MD') {
-      lines.push({ kind: 'text', text: 'Multiplying the bottoms makes smaller parts, so each top must be multiplied too:' });
-      lines.push({ kind: 'tex', tex: H.tex([q.a, q.b]) + ' = ' + H.tex([q.a * q.d, q.b * q.d]) + ',\\quad ' +
-        H.tex([q.c, q.d]) + ' = ' + H.tex([q.c * q.b, q.d * q.b]) });
-    } else if (id === 'MULT') {
-      lines.push({ kind: 'text', text: 'The sign is ' + (q.op === '+' ? '+, add' : '−, take away') +
-        '. Multiplying gives a different amount.' });
-    } else {
-      lines.push({ kind: 'text', text: 'The sign is ' + (q.op === '+' ? '+: add.' : '−: take away.') });
-    }
-    return lines.filter(function (l) { return l.kind !== 'text' || l.text; });
-  };
-  H.NUDGES = {
-    TB: 'The bottom says the size of the parts: never add or take away the bottoms.',
-    DN: 'Change the bottom? Then change the top the same way.',
-    KL: 'Same-sized parts first: make both bottoms the same.',
-    MD: 'Multiplied a bottom? Multiply its top by the same number.',
-    MULT: 'Check the sign before you start.',
-    OP: 'Check the sign before you start.'
-  };
 
   /* ================= stages d-f: typed, marked by MaffsAnswer.fractionForm ================= */
   // Kinds: 'xw' a/b x n; 'xf' a/b x c/d; 'dw' n / (1/m), "how many m-ths are in n?"; 'df' a/b / c/d;
@@ -658,7 +633,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
   H.mixedText = function (f) { var m = H.mixedParts(f); return m[1] === 0 ? String(m[0]) : (m[0] ? m[0] + ' ' : '') + m[1] + '/' + m[2]; };
   H.OP_TEX = { '+': '+', '-': '-', 'x': '\\times', '/': '\\div' };
 
-  // The named errors of each kind: what the student writes, unsimplified, or null where it does not apply.
+  // The 20 Oct catalogue for the typed kinds: the pools' filter only, as H.ERRORS above.
   function L2(q) { return H.lcm(q.b, q.d); }
   H.TERRORS = {
     xw: [
@@ -719,7 +694,6 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
       { id: 'M_ADD', name: function () { return 'You added instead of multiplying'; },
         f: function (q) { return q.op !== 'x' ? null : H.addF(H.improper(q.w1, q.a, q.b), H.improper(q.w2, q.c, q.d)); } }]
   };
-  Object.keys(H.TERRORS).forEach(function (k) { H.TERRORS[k].forEach(function (e) { H.ERR[e.id] = e; }); });
 
   // The pools (every model at most 24 parts across; a key's denominator at most 12 in stage f), built once and
   // filtered once: a question leaves if any named error equals its key.
@@ -760,6 +734,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
 
   H.sumTexOf = function (q) {
     var T = H.tex;
+    if (!q.kind) return T([q.a, q.b]) + ' ' + H.opTex(q.op) + ' ' + T([q.c, q.d]);
     if (q.kind === 'xw') return T([q.a, q.b]) + ' \\times ' + q.n;
     if (q.kind === 'xf') return T([q.a, q.b]) + ' \\times ' + T([q.c, q.d]);
     if (q.kind === 'dw') return q.n + ' \\div ' + T([1, q.m]);
@@ -777,8 +752,8 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     var mp = H.mixedParts(k);
     q.keyParts = q.form === 'mixed' ? { whole: mp[0], num: mp[1], den: mp[2] } : { num: k[0], den: k[1] };
     q.sumTex = H.sumTexOf(q);
-    q.ask = q.form === 'mixed' ? 'Give the answer as a mixed number in its simplest form.' :
-      'Give the answer as a fraction in its simplest form, or a whole number.';
+    q.ask = q.form === 'mixed' ? 'As a mixed number, in its simplest form.' :
+      stage === 'a' ? 'Simplest form.' : 'Simplest form, or a whole number.';
     q.lead = q.kind === 'dw' ? 'How many ' + H.partsName(q.m) + ' are in ' + q.n + '?' : 'Work out';
     q.choices = [];
     return q;
@@ -805,144 +780,179 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     });
   };
 
-  // Bar and area models for the typed stages. A row may carry whole numbers ahead of its bar ("2 wholes +"), and a
-  // bar may be marked in groups (a thicker line every `group` parts: the wholes of "how many quarters in 3").
-  function wrow(tex, f) {           // a value as whole bars plus a bar of its remaining parts
-    var m = H.mixedParts(f);
-    return { kind: 'row', tex: tex, wholes: m[0], n: m[1] ? m[2] : 0, a: m[1], b: 0, gone: 0 };
+  /* ---------- the chocolate bar (contract HMP-CHOCOLATE, Jon, 21 Oct 2026) ---------- */
+  // One model per screen, as plain data. The UI draws it as one SVG; the verifier reads the SVG back against it.
+  //   {kind: 'bars', bars: [{cells, groups, lots}], caption}
+  //     cells: 'a' the first number's squares, 'b' the second's (striped), 'eaten' taken away, 'o' a piece outlined to
+  //     be counted, '' a square of the bar not in the sum. groups: the pieces before they were cut, as runs of
+  //     squares (a deeper score between runs; all 1 when nothing was cut). lots: runs outlined together (dividing).
+  //   {kind: 'slab', cols, rows, a, c, top, side, caption}: one slab of cols x rows squares; the first a columns (the
+  //     top fraction) and the first c rows (the side fraction) shaded, their overlap the answer.
+  //   caption: one line, only where pieces are cut to a common size; otherwise null.
+  H.PREMISE = function (op) {
+    return 'The denominator says how many parts. Only parts of the same size can be ' +
+      (op === '+' ? 'added.' : 'taken away.');
+  };
+  function fill(n, runs) {
+    var c = [];
+    runs.forEach(function (r) { for (var i = 0; i < r[1]; i++) c.push(r[0]); });
+    while (c.length < n) c.push('');
+    return c;
   }
-  H.typedBars = function (q, full) {
-    var items = [], P = 'The denominator says how many parts. ';
-    if (q.kind === 'xw') {
-      items.push({ kind: 'note', text: P + 'Times ' + q.n + ' means ' + q.n + ' lots of the same-sized parts.' });
-      items.push({ kind: 'row', tex: H.tex([q.a, q.b]), n: q.b, a: q.a, b: 0, gone: 0 });
-      items.push({ kind: 'step', text: q.n + ' lots of ' + q.a + ' ' + H.partsName(q.b, q.a) + ':' });
-      if (full) {
-        items.push({ kind: 'step', text: q.n + ' × ' + q.a + ' = ' + q.a * q.n + ' ' + H.partsName(q.b, q.a * q.n) + '.' });
-        items.push(wrow(H.tex([q.a * q.n, q.b]), [q.a * q.n, q.b]));
-      }
-    } else if (q.kind === 'xf') {
-      items.push({ kind: 'note', text: P + 'Cut the whole into ' + q.b + ' × ' + q.d + ' = ' + q.b * q.d + ' small parts to find ' +
-        H.partsName(q.d, q.c).replace(/^/, q.c + ' ') + ' of ' + q.a + ' ' + H.partsName(q.b, q.a) + '.' });
-      items.push({ kind: 'area', cols: q.b, rows: q.d, a: q.a, c: q.c, overlap: !!full });
-      if (full) items.push({ kind: 'step', text: 'The overlap: ' + q.a + ' × ' + q.c + ' = ' + q.a * q.c + ' of the ' +
-        q.b * q.d + ' small parts.' });
-    } else if (q.kind === 'dw') {
-      items.push({ kind: 'note', text: P + 'Cut each of the ' + q.n + ' wholes into ' + q.m + ' ' + H.partsName(q.m) + ' and count them.' });
-      items.push({ kind: 'row', tex: String(q.n), n: q.n * q.m, a: full ? q.n * q.m : 0, b: 0, gone: 0, group: q.m });
-      if (full) items.push({ kind: 'step', text: q.n + ' wholes × ' + q.m + ' ' + H.partsName(q.m) + ' each = ' + q.n * q.m + ' ' + H.partsName(q.m) + '.' });
-    } else if (q.kind === 'df') {
-      var L = L2(q), A = q.a * L / q.b, C = q.c * L / q.d;
-      items.push({ kind: 'note', text: P + 'Make the parts the same size, then count how many lots of one fit into the other.' });
-      items.push({ kind: 'row', tex: H.tex([A, L]), n: L, a: A, b: 0, gone: 0 });
-      items.push({ kind: 'row', tex: H.tex([C, L]), n: L, a: 0, b: C, gone: 0 });
-      if (full) items.push({ kind: 'step', text: 'How many lots of ' + C + ' ' + H.partsName(L, C) + ' fit into ' + A + ' ' +
-        H.partsName(L, A) + '? ' + A + ' ÷ ' + C + ' = ' + H.mixedText([A, C]) + '.' });
-    } else {
-      var x = [q.w1, q.a, q.b], y = [q.w2, q.c, q.d];
-      if (q.op === '+' || q.op === '-') {
-        var M = L2(q);
-        items.push({ kind: 'note', text: P + 'Only parts of the same size can be ' + (q.op === '+' ? 'added.' : 'taken away.') });
-        items.push(wrow(q.w1 + H.tex([q.a, q.b]), H.improper(q.w1, q.a, q.b)));
-        items.push(wrow(q.w2 + H.tex([q.c, q.d]), H.improper(q.w2, q.c, q.d)));
-        if (q.b !== q.d) {
-          items.push({ kind: 'step', text: 'Cut the parts into ' + H.partsName(M) + ':' });
-          items.push({ kind: 'row', tex: q.w1 + H.tex([q.a * M / q.b, M]), wholes: q.w1, n: M, a: q.a * M / q.b, b: 0, gone: 0 });
-          items.push({ kind: 'row', tex: q.w2 + H.tex([q.c * M / q.d, M]), wholes: q.w2, n: M, a: 0, b: q.c * M / q.d, gone: 0 });
-        }
-      } else {
-        items.push({ kind: 'note', text: P + 'Write each mixed number as an improper fraction first: every whole is ' +
-          (q.b === q.d ? q.b + ' parts.' : 'cut into its fraction’s parts.') });
-        [x, y].forEach(function (v) {
-          var I = H.improper(v[0], v[1], v[2]);
-          items.push({ kind: 'row', tex: H.tex(I), n: (v[0] + 1) * v[2], a: I[0], b: 0, gone: 0, group: v[2] });
-        });
-      }
-      if (full) {
-        var k = H.key(q);
-        items.push({ kind: 'step', text: 'The answer: ' + H.mixedText(k) + '.' });
-        items.push(wrow(H.mixedTex(k), k));
-      }
+  function runsOf(total, size) { var g = []; for (var i = 0; i < total; i += size) g.push(size); return g; }
+  function ones(n) { return runsOf(n, 1); }
+  function bar(cells, groups, lots) { return { cells: cells, groups: groups || ones(cells.length), lots: lots || [] }; }
+  function cap(t) { return t.charAt(0).toUpperCase() + t.slice(1); }
+  // "Cut each quarter into 2 to make eighths." / "Cut halves into 3 and thirds into 2 to make sixths."
+  H.cutCaption = function (b, d) {
+    if (b === d) return null;
+    var L = H.lcm(b, d);
+    if (L === b || L === d) {
+      var big = Math.min(b, d);
+      return 'Cut each ' + H.partsName(big, 1) + ' into ' + L / big + ' to make ' + H.partsName(L) + '.';
     }
-    return items;
+    return cap(H.partsName(b)) + ' cut into ' + L / b + ' and ' + H.partsName(d) + ' cut into ' + L / d + ' make ' +
+      H.partsName(L) + '.';
+  };
+  // A value as whole bars plus a part bar, every square of it `type`.
+  function wholeBars(f, type) {
+    var m = H.mixedParts(f), out = [];
+    for (var i = 0; i < m[0]; i++) out.push(bar(fill(m[2], [[type, m[2]]])));
+    if (m[1]) out.push(bar(fill(m[2], [[type, m[1]]])));
+    return out;
+  }
+  // A run of squares split into bars of L.
+  function split(cells, L) { var out = []; for (var i = 0; i < cells.length; i += L) out.push(bar(cells.slice(i, i + L))); return out; }
+  H.model = function (q, full) {
+    var L, A, C, cells;
+    if (!q.kind) {
+      L = H.lcm(q.b, q.d); A = q.a * L / q.b; C = q.c * L / q.d;
+      var pa = L / q.b, pc = L / q.d, rest = L - A - C, g;
+      if (q.op === '+') {
+        cells = fill(L, [['a', A], ['b', C]]);
+        g = runsOf(A, pa).concat(runsOf(C, pc)).concat(rest % pc === 0 ? runsOf(rest, pc) : rest % pa === 0 ? runsOf(rest, pa) : ones(rest));
+      } else {
+        cells = fill(L, [['a', A - C], ['eaten', C]]);
+        g = runsOf(L, pa);
+      }
+      return { kind: 'bars', bars: [bar(cells, g)], caption: H.cutCaption(q.b, q.d) };
+    }
+    if (q.kind === 'xw') {
+      return { kind: 'bars', bars: Array.apply(null, Array(q.n)).map(function () { return bar(fill(q.b, [['a', q.a]])); }), caption: null };
+    }
+    if (q.kind === 'xf') {
+      return { kind: 'slab', cols: q.b, rows: q.d, a: q.a, c: q.c, top: H.tex([q.a, q.b]), side: H.tex([q.c, q.d]), caption: null };
+    }
+    if (q.kind === 'dw') {
+      return { kind: 'bars', bars: Array.apply(null, Array(q.n)).map(function () { return bar(fill(q.m, [['o', q.m]])); }), caption: null };
+    }
+    if (q.kind === 'df') {
+      L = H.lcm(q.b, q.d); A = q.a * L / q.b; C = q.c * L / q.d;
+      var lots = [];
+      for (var s0 = 0; s0 < A; s0 += C) lots.push([s0, Math.min(C, A - s0)]);
+      return { kind: 'bars', bars: [bar(fill(L, [['a', A]]), runsOf(L, L / q.b), lots)], caption: H.cutCaption(q.b, q.d) };
+    }
+    // mixed numbers: whole bars plus a part bar
+    if (q.op === '+' || q.op === '-') {
+      L = H.lcm(q.b, q.d);
+      var X = H.improper(q.w1, q.a, q.b)[0] * L / q.b, Y = H.improper(q.w2, q.c, q.d)[0] * L / q.d;
+      cells = q.op === '+' ? fill(Math.ceil((X + Y) / L) * L, [['a', X], ['b', Y]]) :
+        fill(Math.ceil(X / L) * L, [['a', X - Y], ['eaten', Y]]);
+      return { kind: 'bars', bars: split(cells, L), caption: H.cutCaption(q.b, q.d) };
+    }
+    return { kind: 'bars', bars: wholeBars(full ? H.key(q) : H.improper(q.w1, q.a, q.b), 'a'), caption: null };
   };
 
-  H.typedWorked = function (q) {
-    var lines = [], k = H.key(q), kt = q.form === 'mixed' ? H.mixedTex(k) : H.tex(k), T = H.tex, v = H.typedValue(q);
-    function end(f) { var s = H.simp(f); return (s[0] !== f[0] ? ' = ' + T(s) : '') + (q.form === 'mixed' && s[0] >= s[1] && s[1] !== 1 ? ' = ' + kt : ''); }
-    if (q.kind === 'xw') {
-      lines.push({ kind: 'text', role: 'why', text: 'Multiply the top by ' + q.n + ': the parts stay the same size, there are ' + q.n + ' times as many.' });
-      lines.push({ kind: 'tex', tex: q.sumTex + ' = ' + T([q.a * q.n, q.b]) + end([q.a * q.n, q.b]) });
-    } else if (q.kind === 'xf') {
-      lines.push({ kind: 'text', role: 'why', text: 'Multiply the tops, and multiply the bottoms.' });
-      lines.push({ kind: 'tex', tex: q.sumTex + ' = ' + T([q.a * q.c, q.b * q.d]) + end([q.a * q.c, q.b * q.d]) });
-    } else if (q.kind === 'dw') {
-      lines.push({ kind: 'text', role: 'why', text: 'Each whole is ' + q.m + ' ' + H.partsName(q.m) + ', so ' + q.n + ' wholes are ' + q.n + ' × ' + q.m + '.' });
-      lines.push({ kind: 'tex', tex: q.sumTex + ' = ' + q.n + ' \\times ' + q.m + ' = ' + q.n * q.m });
-    } else if (q.kind === 'df') {
-      lines.push({ kind: 'text', role: 'why', text: 'Dividing by a fraction is multiplying by it turned over.' });
-      lines.push({ kind: 'tex', tex: q.sumTex + ' = ' + T([q.a, q.b]) + ' \\times ' + T([q.d, q.c]) + ' = ' + T(v) + end(v) });
-    } else {
-      var X = H.improper(q.w1, q.a, q.b), Y = H.improper(q.w2, q.c, q.d), L = L2(q);
+  /* ---------- the feedback: one line, then the bar, then the sum once ---------- */
+  // A line is text with TeX between § marks. H.example: a listed error worked on the question's own numbers (the
+  // first three in a session); H.nudge: its one-line reminder after that; H.rule: any other wrong answer.
+  function fx(f) { return '§' + H.tex(f) + '§'; }
+  // What the student wrote, unsimplified (6/8 stays 6/8); a whole number as itself.
+  function fr(f) { return '§' + (f[1] === 1 ? String(f[0]) : '\\dfrac{' + f[0] + '}{' + f[1] + '}') + '§'; }
+  var WHY = {
+    TB: function (q) {
+      var L = H.lcm(q.b, q.d);
+      return (q.op === '+' ? 'Adding' : 'Taking away') + ' does not change the size of the pieces, so ' +
+        (q.b === q.d ? 'the bottom stays ' + L : 'once the pieces match, the bottom is ' + L) + '.';
+    },
+    TABB: function (q) { return 'Taking away does not change the size of the pieces, so the bottom stays ' + q.b + '.'; },
+    COUNT: function (q) {
+      var n = q.a + sg(q) * q.c;
+      return 'Each piece is a ' + H.partsName(q.b, 1) + ', so that is ' + fr([n, q.b]) + '.';
+    },
+    OP: function (q) { return q.op === '+' ? 'The sign is +: add.' : 'The sign is −: take away.'; },
+    KL: function (q) {
+      var small = Math.min(q.b, q.d), big = Math.max(q.b, q.d);
+      return cap(H.partsName(small)) + ' and ' + H.partsName(big) + ' are different-sized pieces: make them all ' +
+        H.partsName(H.lcm(q.b, q.d)) + ' first.';
+    },
+    DN: function (q) {
+      var L = H.lcm(q.b, q.d), ch = [];
+      if (q.b !== L) ch.push('§' + H.tex([q.a, q.b]) + ' = ' + H.tex([q.a * L / q.b, L]) + '§');
+      if (q.d !== L) ch.push('§' + H.tex([q.c, q.d]) + ' = ' + H.tex([q.c * L / q.d, L]) + '§');
+      return 'Cutting the pieces smaller makes more of them, so the top changes too: ' + ch.join(' and ') + '.';
+    },
+    MD: function (q) {
+      return 'Multiplying the bottoms cuts every piece smaller, so each top changes too: §' + H.tex([q.a, q.b]) + ' = ' +
+        H.tex([q.a * q.d, q.b * q.d]) + '§ and §' + H.tex([q.c, q.d]) + ' = ' + H.tex([q.c * q.b, q.b * q.d]) + '§.';
+    },
+    D_ADD: function () { return 'The sign is ×: multiply.'; },
+    D_KEEPB: function (q) { return 'Multiply the bottoms too: §' + q.b + ' \\times ' + q.d + ' = ' + q.b * q.d + '§.'; },
+    XW_BOTH: function (q) { return 'Times ' + q.n + ' on the top and the bottom gives an equal fraction, still ' + fx([q.a, q.b]) + ': multiply the top only.'; },
+    DF_NOFLIP: function (q) { return 'To divide by ' + fx([q.c, q.d]) + ', turn it over and multiply by ' + fx([q.d, q.c]) + '.'; },
+    DF_FLIP1: function (q) { return 'Keep ' + fx([q.a, q.b]) + ' as it is; turn over the fraction you divide by.'; },
+    DW_DIV: function (q) { return 'There are ' + q.m + ' ' + H.partsName(q.m) + ' in every bar, so ' + q.n + ' bars hold §' + q.n + ' \\times ' + q.m + '§.'; },
+    M_SEP: function (q) { return 'Make them improper first: §' + H.tex(H.improper(q.w1, q.a, q.b)) + ' \\times ' + H.tex(H.improper(q.w2, q.c, q.d)) + '§.'; },
+    M_SWAP: function () { return 'Take away the second from the first, even when its part is bigger: make them improper first.'; },
+    M_CONV: function (q) { return 'A whole is ' + q.b + ' ' + H.partsName(q.b) + ', not 1: §' + q.w1 + H.tex([q.a, q.b]) + ' = ' + H.tex(H.improper(q.w1, q.a, q.b)) + '§.'; }
+  };
+  WHY.D_KEEPD = WHY.D_KEEPB;
+  H.NUDGES = {
+    TB: 'Never add or take away the bottoms.', TABB: 'Never add or take away the bottoms.',
+    COUNT: 'Count the pieces, then say what size they are.', OP: 'Check the sign before you start.',
+    KL: 'Same-sized pieces first.', DN: 'Change a bottom? Change its top the same way.',
+    MD: 'Multiply a bottom? Multiply its top too.', D_ADD: 'Check the sign before you start.',
+    D_KEEPB: 'Multiply: top times top, bottom times bottom.', D_KEEPD: 'Multiply: top times top, bottom times bottom.',
+    XW_BOTH: 'Times a whole number: multiply the top only.', DF_NOFLIP: 'Divide: turn the second fraction over, then multiply.',
+    DF_FLIP1: 'Divide: turn the second fraction over, then multiply.', DW_DIV: 'Count the pieces in every bar.',
+    M_SEP: 'Mixed numbers: make them improper fractions first.', M_SWAP: 'First minus second: make them improper first.',
+    M_CONV: 'A whole is as many parts as the bottom says.'
+  };
+  H.example = function (q, id) { var e = H.ERR[id]; return e.name(q) + ' (' + fr(e.f(q)) + '). ' + WHY[id](q); };
+  H.nudge = function (q, id) { return H.ERR[id].name(q) + '. ' + H.NUDGES[id]; };
+  H.rule = function (q) {
+    if (!q.kind || ((q.op === '+' || q.op === '-') && q.kind === 'm')) return H.PREMISE(q.op);
+    if (q.kind === 'xw') return 'Times ' + q.n + ' is ' + q.n + ' lots of the same-sized pieces: multiply the top.';
+    if (q.kind === 'xf') return 'Multiply the tops, and multiply the bottoms.';
+    if (q.kind === 'dw') return 'Count the ' + H.partsName(q.m) + ' in every bar.';
+    if (q.kind === 'df') return 'Dividing by a fraction is multiplying by it turned over.';
+    return q.op === 'x' ? 'Make them improper fractions first, then multiply.' : 'Make them improper fractions first, then multiply by the second turned over.';
+  };
+  // The correct sum, once: the question, any step it needs, then the answer in the form asked.
+  H.sumLine = function (q) {
+    var T = H.tex, k = H.key(q), kt = q.form === 'mixed' ? H.mixedTex(k) : T(k), steps = [], L, A, C, X, Y, R;
+    function last(f) { var s = H.simp(f); return T(f) + (s[1] !== f[1] ? ' = ' + T(s) : '') + (q.form === 'mixed' && s[0] >= s[1] && s[1] !== 1 ? ' = ' + kt : ''); }
+    if (!q.kind) {
+      L = H.lcm(q.b, q.d); A = q.a * L / q.b; C = q.c * L / q.d;
+      if (q.b !== q.d) steps.push(T([A, L]) + ' ' + H.opTex(q.op) + ' ' + T([C, L]));
+      steps.push(last([A + sg(q) * C, L]));
+    } else if (q.kind === 'xw') steps.push(last([q.a * q.n, q.b]));
+    else if (q.kind === 'xf') steps.push(last([q.a * q.c, q.b * q.d]));
+    else if (q.kind === 'dw') steps.push(q.n + ' \\times ' + q.m + ' = ' + q.n * q.m);
+    else if (q.kind === 'df') { steps.push(T([q.a, q.b]) + ' \\times ' + T([q.d, q.c])); steps.push(last(H.typedValue(q))); }
+    else {
+      X = H.improper(q.w1, q.a, q.b); Y = H.improper(q.w2, q.c, q.d); L = H.lcm(q.b, q.d);
       if (q.op === '+' || q.op === '-') {
-        lines.push({ kind: 'text', role: 'why', text: (q.op === '+' ? 'Add' : 'Take away') + ' as improper fractions over a common bottom, ' + L + '.' });
-        var Xn = X[0] * L / q.b, Yn = Y[0] * L / q.d, R = [Xn + H.sign(q.op) * Yn, L];
-        lines.push({ kind: 'tex', tex: q.sumTex + ' = ' + T([Xn, L]) + ' ' + H.OP_TEX[q.op] + ' ' + T([Yn, L]) + ' = ' + T(R) + end(R) });
+        steps.push(T([X[0] * L / q.b, L]) + ' ' + H.OP_TEX[q.op] + ' ' + T([Y[0] * L / q.d, L]));
+        R = [X[0] * L / q.b + sg(q) * Y[0] * L / q.d, L];
       } else {
-        lines.push({ kind: 'text', role: 'why', text: 'Write each as an improper fraction, then ' + (q.op === 'x' ? 'multiply.' : 'multiply by the second turned over.') });
-        var Z = q.op === 'x' ? H.mul(X, Y) : H.div(X, Y);
-        lines.push({ kind: 'tex', tex: q.sumTex + ' = ' + T(X) + ' ' + H.OP_TEX[q.op] + ' ' + T(Y) + ' = ' + T(Z) + end(Z) });
+        steps.push(T(X) + (q.op === 'x' ? ' \\times ' + T(Y) : ' \\times ' + T([Y[1], Y[0]])));
+        R = q.op === 'x' ? H.mul(X, Y) : H.div(X, Y);
       }
+      steps.push(last(R));
     }
-    return lines;
+    return q.sumTex + ' = ' + steps.join(' = ');
   };
-  H.typedExample = function (q, id) {
-    var e = H.ERR[id], f = e.f(q), shown = H.simp(f), lines = [], T = H.tex;
-    var raw = '\\dfrac{' + f[0] + '}{' + f[1] + '}';   // as written, even 12/1, never collapsed
-    lines.push({ kind: 'tex', tex: q.sumTex + ' \\;\\to\\; ' + raw + (shown[1] !== f[1] ? ' = ' + T(shown) : '') });
-    var X, Y;
-    switch (id) {
-      case 'XW_BOTH': lines.push({ kind: 'text', text: 'Multiplying the top and the bottom by the same number makes an equal fraction: ' +
-        'it is still ' + T([q.a, q.b]).replace(/\\dfrac\{(\d+)\}\{(\d+)\}/, '$1/$2') + '. Times ' + q.n + ' multiplies the top only.' }); break;
-      case 'XW_BOT': lines.push({ kind: 'text', text: 'Multiplying the bottom makes the parts smaller, so the answer got smaller. ' +
-        'Times ' + q.n + ' gives ' + q.n + ' lots: multiply the top.' }); break;
-      case 'XW_ADD': lines.push({ kind: 'text', text: 'Times ' + q.n + ' is ' + q.n + ' lots of ' + q.a + ' parts, not ' + q.n + ' more parts.' }); break;
-      case 'XF_ADD': case 'M_ADD': lines.push({ kind: 'text', text: 'The sign is ×: multiply.' }); break;
-      case 'XF_TB': lines.push({ kind: 'text', text: 'When you multiply fractions, multiply the bottoms too.' }); break;
-      case 'XF_COMMON': lines.push({ kind: 'text', text: 'A common bottom is for adding and taking away. To multiply, multiply the tops and multiply the bottoms.' }); break;
-      case 'XF_CROSS': lines.push({ kind: 'text', text: 'Multiplying across the diagonals is a step in dividing. To multiply, multiply top by top and bottom by bottom.' }); break;
-      case 'DW_DIV': lines.push({ kind: 'text', text: 'Dividing by ' + T([1, q.m]).replace(/\\dfrac\{(\d+)\}\{(\d+)\}/, '$1/$2') + ' asks how many ' +
-        H.partsName(q.m) + ' fit into ' + q.n + '. There are ' + q.m + ' in every whole, so the answer is bigger than ' + q.n + '.' }); break;
-      case 'DW_REV': lines.push({ kind: 'text', text: 'Count the ' + H.partsName(q.m) + ' in ' + q.n + ' wholes: ' + q.m + ' in each whole.' }); break;
-      case 'DF_NOFLIP': case 'M_NOFLIP': lines.push({ kind: 'text', text: 'To divide by a fraction, turn the second one over, then multiply.' }); break;
-      case 'DF_FLIP1': case 'M_FLIP1': lines.push({ kind: 'text', text: 'Keep the first number as it is; turn over the one you divide by.' }); break;
-      case 'DF_FLIPBOTH': lines.push({ kind: 'text', text: 'Only the fraction you divide by is turned over. The first stays as it is.' }); break;
-      case 'M_SEP':
-        X = H.improper(q.w1, q.a, q.b); Y = H.improper(q.w2, q.c, q.d);
-        lines.push({ kind: 'text', text: 'Multiplying the wholes and the fractions separately misses the parts times the wholes. Make them improper first:' });
-        lines.push({ kind: 'tex', tex: T(X) + ' \\times ' + T(Y) + ' = ' + T(H.mul(X, Y)) });
-        break;
-      case 'M_SEPD':
-        X = H.improper(q.w1, q.a, q.b); Y = H.improper(q.w2, q.c, q.d);
-        lines.push({ kind: 'text', text: 'You cannot divide the wholes and the parts separately. Make them improper, then divide:' });
-        lines.push({ kind: 'tex', tex: T(X) + ' \\div ' + T(Y) + ' = ' + T(X) + ' \\times ' + T([Y[1], Y[0]]) });
-        break;
-      case 'M_WHOLES': lines.push({ kind: 'text', text: 'The fractions count too. Make both numbers improper fractions, then multiply.' }); break;
-      case 'M_SWAP': lines.push({ kind: 'text', text: 'Taking away goes first minus second, even when the second fraction is bigger. Make them improper fractions first.' }); break;
-      case 'M_TB': lines.push({ kind: 'text', text: 'The bottom number says the size of the parts: never add or take away the bottoms.' }); break;
-      default: lines.push({ kind: 'text', text: 'Keep the whole numbers: they are part of the amount.' });
-    }
-    return lines;
-  };
-  ['XW_BOTH', 'XW_BOT', 'XW_ADD'].forEach(function (i) { H.NUDGES[i] = 'Times a whole number: multiply the top only.'; });
-  ['XF_ADD', 'M_ADD'].forEach(function (i) { H.NUDGES[i] = 'Check the sign before you start.'; });
-  ['XF_TB', 'XF_COMMON', 'XF_CROSS'].forEach(function (i) { H.NUDGES[i] = 'Multiply: top times top, bottom times bottom.'; });
-  ['DW_DIV', 'DW_REV'].forEach(function (i) { H.NUDGES[i] = 'How many parts fit? Count the parts in every whole.'; });
-  ['DF_NOFLIP', 'DF_FLIP1', 'DF_FLIPBOTH', 'M_NOFLIP', 'M_FLIP1'].forEach(function (i) { H.NUDGES[i] = 'Divide: turn the second number over, then multiply.'; });
-  ['M_SEP', 'M_SEPD', 'M_WHOLES'].forEach(function (i) { H.NUDGES[i] = 'Mixed numbers: make them improper fractions first.'; });
-  H.NUDGES.M_SWAP = 'First minus second, even when the second fraction is bigger.';
-  H.NUDGES.M_TB = 'The bottom says the size of the parts: never add or take away the bottoms.';
-  H.NUDGES.M_DROPW = 'Keep the whole numbers: they are part of the amount.';
   window.HMP = H;
 })();
 </script>
@@ -970,36 +980,96 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
       .replace(/\\dfrac\{(\d+)\}\{(\d+)\}/g, '\u0001$1\u0002$2\u0003').replace(/-/g, '−').replace(/,/g, ', '))
       .replace(/\u0001(\d+)\u0002(\d+)\u0003/g, function (m, n, d) { return sfrac(n, d); });
   }
-  function renderLines(lines) {
-    return lines.map(function (l) {
-      return l.kind === 'tex' ? '<div class="line">' + tex(l.tex) + '</div>' : '<div class="txt">' + esc(l.text) + '</div>';
-    }).join('');
+  // A feedback line: text with TeX between § marks (HMP's line format).
+  function renderLine(line) {
+    return line.split('§').map(function (part, i) { return i % 2 ? tex(part) : esc(part); }).join('');
   }
-  function renderBars(items) {
-    return items.map(function (it) {
-      if (it.kind === 'note') return '<div class="bar-note">' + esc(it.text) + '</div>';
-      if (it.kind === 'step') return '<div class="bar-step">' + esc(it.text) + '</div>';
-      if (it.kind === 'area') {
-        var ac = '';
-        for (var r = 0; r < it.rows; r++) for (var c = 0; c < it.cols; c++) {
-          var inA = c < it.a, inC = r < it.c;
-          ac += '<i class="' + (inA && inC && it.overlap ? 'ov' : inA ? 'ca' : inC && it.overlap ? 'rb' : '') + '"></i>';
-        }
-        return '<div class="area" data-area="' + it.cols + 'x' + it.rows + '" style="grid-template-columns:repeat(' + it.cols +
-          ',1fr);grid-template-rows:repeat(' + it.rows + ',1fr)" role="img" aria-label="A whole cut into ' + it.cols * it.rows +
-          ' equal parts">' + ac + '</div>';
+
+  // The chocolate bar (contract HMP-CHOCOLATE): HMP.model's numbers drawn as ONE SVG figure. Every square carries
+  // data-cell (its role), every bar data-groups (its pieces before cutting), so the verifier reads the drawing back.
+  var SVG_N = 0;
+  var W = 300, GAP = 8, PAD = 3, SCORE = 2, GROOVE = 5;
+  function rect(x, y, w, h, rx, attrs) {
+    return '<rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + w.toFixed(1) + '" height="' + h.toFixed(1) +
+      '" rx="' + rx + '"' + (attrs ? ' ' + attrs : '') + '/>';
+  }
+  function patterns(id) {
+    // Stripes, so the second number never depends on colour alone: light on its dark squares, dark on a pale square.
+    return '<defs><pattern id="' + id + 'l" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">' +
+      '<rect width="6" height="6" class="c-b"/><rect width="2.2" height="6" class="c-stripe"/></pattern>' +
+      '<pattern id="' + id + 'd" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">' +
+      '<rect width="2.4" height="6" class="c-b"/></pattern></defs>';
+  }
+  function cellSvg(type, x, y, w, h, id) {
+    var at = 'data-cell="' + type + '"';
+    if (type === 'a') return rect(x, y, w, h, 3, at + ' class="c-a"');
+    if (type === 'b') return rect(x, y, w, h, 3, at + ' fill="url(#' + id + 'l)"');
+    if (type === 'o') return rect(x, y, w, h, 3, at + ' class="c-a c-piece"');
+    if (type === 'ab') return rect(x, y, w, h, 3, at + ' class="c-a"') + rect(x, y, w, h, 3, 'fill="url(#' + id + 'd)"');
+    if (type === 'bs') return rect(x, y, w, h, 3, at + ' class="c-pale"') + rect(x, y, w, h, 3, 'fill="url(#' + id + 'd)"');
+    if (type === 'eaten') {
+      // Emptied, its outline dashed, with a bite out of its top right corner (inside the square: the bar's body
+      // shows through).
+      var r = Math.min(w, h) * 0.42, f = function (v) { return v.toFixed(1); };
+      return '<path ' + at + ' class="c-eaten" d="M' + f(x + 3) + ' ' + f(y) + 'H' + f(x + w - r) + 'A' + f(r) + ' ' + f(r) +
+        ' 0 0 0 ' + f(x + w) + ' ' + f(y + r) + 'V' + f(y + h - 3) + 'Q' + f(x + w) + ' ' + f(y + h) + ' ' + f(x + w - 3) + ' ' +
+        f(y + h) + 'H' + f(x + 3) + 'Q' + f(x) + ' ' + f(y + h) + ' ' + f(x) + ' ' + f(y + h - 3) + 'V' + f(y + 3) + 'Q' + f(x) +
+        ' ' + f(y) + ' ' + f(x + 3) + ' ' + f(y) + 'Z"/>';
+    }
+    return rect(x, y, w, h, 3, at + ' class="c-pale"');
+  }
+  function barsSvg(m, id) {
+    var nb = m.bars.length, most = Math.max.apply(null, m.bars.map(function (b) { return b.cells.length; }));
+    var per = nb === 1 ? 1 : Math.min(nb, most <= 4 ? 4 : most <= 8 ? 3 : 2);
+    var bw = (W - GAP * (per - 1)) / per, rows = Math.ceil(nb / per), out = '', y = 0, rowH = 0;
+    m.bars.forEach(function (b, i) {
+      var n = b.cells.length, cut = {}, at = 0;
+      b.groups.forEach(function (g) { at += g; cut[at] = true; });
+      var gaps = 0;
+      for (var k = 1; k < n; k++) gaps += cut[k] ? GROOVE : SCORE;
+      var cw = (bw - 2 * PAD - gaps) / n, ch = Math.min(Math.max(cw, 22), 34);
+      var x0 = (i % per) * (bw + GAP);
+      y = Math.floor(i / per) * (ch + 2 * PAD + GAP);
+      rowH = ch + 2 * PAD;
+      var cells = '', xs = [], x = x0 + PAD;
+      for (var j = 0; j < n; j++) {
+        if (j) x += cut[j] ? GROOVE : SCORE;
+        xs.push(x);
+        cells += cellSvg(b.cells[j], x, y + PAD, cw, ch, id);
+        x += cw;
       }
-      var cells = '';
-      for (var i = 0; i < it.n; i++) {
-        var cls = i < it.a ? (i >= it.a - it.gone ? 'gone' : 'a') : (i < it.a + it.b ? 'b' : '');
-        if (it.group && i > 0 && i % it.group === 0) cls += ' g';
-        cells += '<i' + (cls.trim() ? ' class="' + cls.trim() + '"' : '') + '></i>';
-      }
-      var chip = it.wholes ? '<span class="whole-chip">' + it.wholes + (it.wholes === 1 ? ' whole' : ' wholes') + (it.n ? ' +' : '') + '</span>' : '';
-      return '<div class="bar-row" data-parts="' + it.n + '" data-wholes="' + (it.wholes || 0) + '"><span class="bar-lab">' + tex(it.tex) + '</span>' + chip +
-        (it.n ? '<div class="bar" style="grid-template-columns:repeat(' + it.n + ',1fr)" role="img" aria-label="' +
-        esc(it.tex.replace(/\\dfrac\{(\d+)\}\{(\d+)\}/, '$1 out of $2 equal parts')) + '">' + cells + '</div>' : '') + '</div>';
-    }).join('');
+      var lots = b.lots.map(function (l) {
+        var lx = xs[l[0]] - 1.5, rx = xs[l[0] + l[1] - 1] + cw + 1.5;
+        return rect(lx, y + PAD - 1.5, rx - lx, ch + 3, 4, 'data-lot="' + l[0] + ',' + l[1] + '" class="c-lot"');
+      }).join('');
+      out += '<g data-bar="' + i + '" data-cells="' + n + '" data-groups="' + b.groups.join(',') + '">' +
+        rect(x0, y, bw, ch + 2 * PAD, 6, 'class="c-body"') + cells + lots + '</g>';
+    });
+    var H2 = y + rowH;
+    var count = function (t) { return m.bars.reduce(function (s, b) { return s + b.cells.filter(function (c) { return c === t; }).length; }, 0); };
+    var label = (nb === 1 ? 'A chocolate bar of ' + m.bars[0].cells.length + ' squares' : nb + ' chocolate bars') +
+      (count('a') ? ', ' + count('a') + ' squares in milk chocolate' : '') + (count('b') ? ', ' + count('b') + ' striped' : '') +
+      (count('eaten') ? ', ' + count('eaten') + ' eaten' : '') + (count('o') ? ', ' + count('o') + ' pieces to count' : '') + '.';
+    return '<svg viewBox="0 0 ' + W + ' ' + H2.toFixed(1) + '" width="100%" role="img" aria-label="' + esc(label) + '" data-model="bars" data-bars="' + nb + '">' +
+      patterns(id) + out + '</svg>';
+  }
+  function slabSvg(m, id) {
+    var side = Math.min(44, (W - 40 - 2 * PAD - SCORE * (m.cols - 1)) / m.cols, (200 - 2 * PAD - SCORE * (m.rows - 1)) / m.rows);
+    var sw = 2 * PAD + m.cols * side + SCORE * (m.cols - 1), sh = 2 * PAD + m.rows * side + SCORE * (m.rows - 1), out = '';
+    for (var r = 0; r < m.rows; r++) for (var c = 0; c < m.cols; c++) {
+      var inA = c < m.a, inC = r < m.c;
+      out += cellSvg(inA && inC ? 'ab' : inA ? 'a' : inC ? 'bs' : '', PAD + c * (side + SCORE), PAD + r * (side + SCORE), side, side, id);
+    }
+    return '<div class="slab"><span class="slab-top">' + tex(m.top) + '</span><span class="slab-side">' + tex(m.side) + '</span>' +
+      '<svg viewBox="0 0 ' + sw.toFixed(1) + ' ' + sh.toFixed(1) + '" width="' + Math.round(sw) + '" role="img" aria-label="A slab of ' +
+      m.cols * m.rows + ' squares: ' + m.a + ' columns in milk chocolate, ' + m.c + ' rows striped, ' + m.a * m.c +
+      ' squares where they cross." data-model="slab" data-cols="' + m.cols + '" data-rows="' + m.rows + '">' +
+      patterns(id) + rect(0, 0, sw, sh, 6, 'class="c-body"') + out + '</svg></div>';
+  }
+  function renderModel(m) {
+    var id = 'hmp' + (++SVG_N);
+    return '<figure class="choc" data-model="' + m.kind + '">' + (m.kind === 'slab' ? slabSvg(m, id) : barsSvg(m, id)) +
+      (m.caption ? '<figcaption>' + esc(m.caption) + '</figcaption>' : '') + '</figure>';
   }
 
   var session = null, q = null, idx = 0, state = 'menu';
@@ -1051,16 +1121,29 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     $('qcard').classList.remove('fb-open');
     document.body.classList.remove('fb-open');
     if (idx >= session.questions.length) { finish(); return; }
-    q = session.questions[idx++];
+    ask(session.questions[idx++], session.questions.length);
+  }
+  // Draws one question: the stage, the question, the bar when it shows, then the options or the answer box.
+  function ask(nq, total) {
+    q = nq;
     $('stageLabel').textContent = H.STAGES[q.stage].label;
-    $('hudQ').textContent = q.index + '/' + session.questions.length;
+    $('hudQ').textContent = q.index + '/' + total;
     $('hudStage').textContent = String(H.STAGES[q.stage].n);
     $('hudScore').textContent = score;
-    $('prompt').innerHTML = '<span class="ask">' + esc(q.lead || 'Work out') + '</span><span class="sum">' + tex(q.sumTex) + '</span>' +
-      '<span class="ask">' + esc(q.ask || 'The answer is in its simplest form.') + '</span>';
+    $('prompt').innerHTML = (q.kind === 'dw' ? '<span class="ask">' + esc(q.lead) + '</span>' : '') +
+      '<span class="sum">' + tex(q.sumTex) + '</span>';
+    $('askLine').textContent = q.ask || '';
+    // A one-fraction answer sits beside the sum, with Check under the sum; a mixed number and its Check go below it;
+    // multiple choice has neither.
+    var inline = q.typed && q.form !== 'mixed';
+    $('qrow').classList.toggle('stacked', !inline);
+    $('eqSign').hidden = !inline;
+    (inline ? $('checkSlot') : $('checkRow')).appendChild($('checkBtn'));
+    $('checkRow').hidden = !q.typed || inline;
+    $('qcard').classList.toggle('typing', !!q.typed);
     q.barShown = q.bar || barNext;
     barNext = false;
-    $('qbars').innerHTML = q.barShown ? renderBars(H.barModel(q, false)) : '';
+    $('qbars').innerHTML = q.barShown ? renderModel(H.model(q, false)) : '';
     var box = $('options');
     box.innerHTML = '';
     if (q.typed) { askTyped(); return; }
@@ -1085,7 +1168,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     clock();
   }
 
-  // Stages 4-6: the boxes, and the phone keypad for them (touch screens only; with a mouse they are ordinary inputs).
+  // Stages 1 and 4-6: the boxes, and the phone keypad for them (touch screens only; with a mouse they are ordinary inputs).
   var kp = null, FOOTER_PX = 40;
   function askTyped() {
     var mixed = q.form === 'mixed';
@@ -1096,7 +1179,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     var holder = $('kpHolder'), el = document.createElement('div');
     holder.innerHTML = ''; holder.appendChild(el);
     document.querySelectorAll('#typedForm .maffs-keypad-cue').forEach(function (c) { c.remove(); });
-    kp = window.MaffsKeypad ? MaffsKeypad.mount(el, { targets: targets, keepInView: $('typedForm'), foldInset: FOOTER_PX }) : null;
+    kp = window.MaffsKeypad ? MaffsKeypad.mount(el, { targets: targets, keepInView: $('qrow'), foldInset: FOOTER_PX }) : null;
     MaffsLock.fresh($('typedForm'));
     state = 'asking';
     askStart = Date.now();
@@ -1123,9 +1206,10 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     if (res === 'format' || res === 'unreadable') { $('msg').textContent = MaffsAnswer.message(res, raw, { fraction: q.form }); return; }
     if (!MaffsLock.lock($('typedForm'))) return;
     $('msg').textContent = '';
-    // Which named error, if any: the first that fractionForm finds equal in value to what was typed.
+    // Which listed error, if any (the stage's own list): the first that fractionForm finds equal in value to what was
+    // typed.
     var named = null;
-    if (res === 'wrong') H.errors(q).some(function (e) {
+    if (res === 'wrong') H.listErrors(q).some(function (e) {
       if (MaffsAnswer.fractionForm(raw, { num: e.f[0], den: e.f[1] }, { form: q.form }) === 'wrong') return false;
       named = e.id; return true;
     });
@@ -1159,22 +1243,18 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     showWrong(chosen, help);
   }
 
-  // Order (canon §7.6.1): the true statement and what was picked, why the pick fails, the bar model on the
-  // question's own numbers, the working, then Next.
+  // The wrong-answer screen (HMP-CHOCOLATE): one line saying what went wrong, the one bar, the correct sum once, Next.
+  // Nothing else. The line is a listed error's worked example (the first three in a session) or its nudge; any other
+  // wrong answer gets what was typed and the stage's rule (the premise, for adding and taking away).
   function showWrong(chosen, help) {
-    var id = chosen.err;
+    var id = chosen.err, line;
+    if (help === 'example') line = H.example(q, id);
+    else if (help === 'nudge') line = H.nudge(q, id);
+    else line = 'You said §' + chosen.tex + '§. ' + H.rule(q);
     var h = '<div class="fb wrong">';
-    h += '<div class="fb-verdict">' + tex(q.sumTex + ' = ' + q.keyTex) +
-      ' <span class="fb-said">you ' + (chosen.typed ? 'said ' : 'picked ') + tex(chosen.tex) + '</span></div>';
-    if (help === 'example') h += '<div class="fb-help" data-help="example" data-err="' + id + '"><span class="rule">' +
-      esc(H.ERR[id].name(q.kind ? q : q.op)) + '</span>' + renderLines(H.example(q, id)) + '</div>';
-    else if (help === 'nudge') h += '<div class="fb-nudge" data-help="nudge" data-err="' + id + '">' + esc(H.NUDGES[id]) + '</div>';
-    // With the worked example on screen, the working drops its opening sentence (the example has said why), so the
-    // reason and Next stay above the fold on a 320x568 phone (canon 7.6.1).
-    var work = H.worked(q);
-    if (help === 'example') work = work.filter(function (l) { return l.role !== 'why'; });
-    h += '<div class="fb-work">' + renderLines(work) + '</div>';
-    h += '<div class="bars" data-bars="feedback">' + renderBars(H.barModel(q, true)) + '</div>';
+    h += '<div class="fb-line" data-help="' + (id ? help : 'rule') + '"' + (id ? ' data-err="' + id + '"' : '') + '>' + renderLine(line) + '</div>';
+    h += renderModel(H.model(q, true));
+    h += '<div class="fb-sum">' + tex(H.sumLine(q)) + '</div>';
     h += '<div class="fb-next"></div></div>';
     $('feedback').innerHTML = h;
     $('qcard').classList.add('fb-open');
@@ -1244,6 +1324,16 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
       var c = err ? H.option(H.ERR[err].f(q), err) : { err: null, tex: H.tex([H.key(q)[0] + 1, H.key(q)[1]]) };
       if (q.typed) c.typed = true;
       showWrong(c, err ? help : null);
+    },
+    // The question screen for one pool entry, drawn by the game's own path, with the bar shown.
+    ask: function (src, stage) {
+      if (window.MaffsNext) MaffsNext.clear($('feedback'));
+      $('feedback').innerHTML = '';
+      $('qcard').classList.remove('fb-open');
+      document.body.classList.remove('fb-open');
+      var nq = H.makeQuestion(src, stage, H.mulberry32(1));
+      nq.index = 1; nq.inStage = 1; nq.bar = true;
+      ask(nq, 1);
     },
     keypad: function () { return kp; }
   };
