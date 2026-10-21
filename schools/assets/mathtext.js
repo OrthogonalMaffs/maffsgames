@@ -42,6 +42,10 @@
  *     ? MaffsText.html(sq.prompt)   // authored with \( \), mixed prose+maths
  *     : K(sq.prompt)                // no delimiters, whole-expression string
  *
+ * Punctuation touching a maths segment never wraps away from it: a closing mark right
+ * after (. , ; : ! ? ) and closing quotes) or an opening bracket/quote right before goes
+ * inside one <span class="maffs-nowrap"> with the maths (scripts/test-mathtext.py).
+ *
  * Rendering never throws: each maths segment is rendered with
  * `{throwOnError: false}`, so a malformed segment shows KaTeX's own inline
  * error styling instead of breaking the page. Authoring mistakes (unbalanced
@@ -63,6 +67,42 @@
     return DELIM.test(str);
   }
 
+  // Punctuation that must stay on the line of the maths beside it: closing marks after
+  // a maths segment, opening marks before one. Without this the browser may break the
+  // line between the maths and the mark ("... = 12" / ".").
+  var CLOSING = /^[.,;:!?)\]”’"']+/;
+  var OPENING = /[(\[“‘"']+$/;
+  var HEAD = '<span class="katex-html" aria-hidden="true">';
+  var BASE = '<span class="base">';
+  var TAIL = '</span></span>';
+
+  // The rendered maths with the marks fixed to it, in one nowrap span. The inline style is the
+  // rule itself, because most MaffsText games do not link theme.css (the class carries no
+  // other rule). A long expression must still wrap between its own pieces (KaTeX's
+  // .base blocks), so the maths is split there: only the base beside a mark stays in the nowrap
+  // run (Chromium breaks after an inline-block unless the block's parent forbids it), and the
+  // rest keeps normal wrapping. The accessible MathML stays in the first piece only.
+  function glue(rendered, open, close) {
+    var h = rendered.indexOf(HEAD);
+    var inner = h < 0 || rendered.slice(-TAIL.length) !== TAIL ? '' : rendered.slice(h + HEAD.length, -TAIL.length);
+    var bases = inner.indexOf(BASE) === 0 ? inner.split(BASE).slice(1) : [];
+    var body = rendered;
+    if (bases.length > 1) {
+      bases = bases.map(function (b) { return BASE + b; });
+      var parts = [];
+      if (open) parts.push({ b: bases.shift(), wrap: true });
+      var tail = close ? bases.pop() : null;
+      if (bases.length) parts.push({ b: bases.join(''), wrap: true });
+      if (tail) parts.push({ b: tail, wrap: false });
+      var pre = rendered.slice(0, h);
+      body = parts.map(function (p, k) {
+        return (k === 0 ? pre : '<span class="katex">') +
+          HEAD.replace('">', '"' + (p.wrap ? ' style="white-space:normal"' : '') + '>') + p.b + TAIL;
+      }).join('');
+    }
+    return '<span class="maffs-nowrap" style="white-space:nowrap">' + escapeHtml(open) + body + escapeHtml(close) + '</span>';
+  }
+
   function html(str) {
     if (typeof str !== 'string') return '';
     var out = '';
@@ -70,11 +110,16 @@
     var m;
     DELIM.lastIndex = 0;
     while ((m = DELIM.exec(str))) {
-      out += escapeHtml(str.slice(last, m.index));
-      out += (typeof katex !== 'undefined')
+      var prose = str.slice(last, m.index);
+      var open = (OPENING.exec(prose) || [''])[0];
+      out += escapeHtml(prose.slice(0, prose.length - open.length));
+      var rendered = (typeof katex !== 'undefined')
         ? katex.renderToString(m[1], { throwOnError: false })
         : escapeHtml(m[0]);
       last = m.index + m[0].length;
+      var close = (CLOSING.exec(str.slice(last)) || [''])[0];
+      last += close.length;
+      out += (open || close) ? glue(rendered, open, close) : rendered;
     }
     out += escapeHtml(str.slice(last));
     return out;
