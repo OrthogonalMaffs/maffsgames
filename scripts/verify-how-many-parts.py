@@ -7,8 +7,8 @@
 # ci-line: How Many Parts?, part 6 (fault-injection self-test: five planted faults in play and the stage 1 fit, each caught) | --part 6
 # ci-deps: games/how-many-parts/
 """Independent verification for How Many Parts? (games/how-many-parts/), built 20 Oct 2026 (contract HOW-MANY-PARTS)
-and rebuilt for its redesign, 21 Oct 2026 (contract HMP-CHOCOLATE and Jon's rulings of that day; both verbatim in
-docs/handover/contracts/). SR-30: checked from its first PR.
+(verbatim in docs/history/contracts/) and rebuilt for its redesign, 21 Oct 2026 (contract HMP-CHOCOLATE and Jon's
+rulings of that day, verbatim in docs/handover/contracts/2026-10-21-hmp-chocolate.md). SR-30: checked from its first PR.
 
 WHY THIS READS THE LIVE PAGE
 -------------------------------------------------------------------------------
