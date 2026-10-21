@@ -59,7 +59,7 @@ main's last full run is red; watch main's run after merging.
 - **Why:** main run 39559284220 (#472) was red on the timings job. The setup median was 57 s, which put four unchanged lines over the limit.
 - **Done:** `scripts/ci-groups.py` reads the PR's base from the run's own event, so the plan job is unchanged. It builds the selection (about 63 s in CI) only when a candidate exists. Selftests cover every path, including that run's shape.
 - **Split candidates, for the home lane** (39559284220's figures): Shape Shifter; Equation Builder part 1; Just Pythag It, Bruv part 2; Answer lock part 1. On the pack committed by 39562229614 (setup 32) none is over.
-- **Note for Jon:** a PR that changes CI selects every verifier, so any candidate fails it.
+- **Jon, 21 Oct (second ruling):** a PR whose selection is everything (CI, unknown path) only warns. Only a PR that selects a line's verifier for its own reason fails. With a candidate over the limit, the plan job takes about 3m16s of 5 min, which Jon accepts.
 
 ## 2026-10-20 (cloud): HOW-MANY-PARTS (contract verbatim: `docs/handover/contracts/2026-10-20-how-many-parts.md`). **DONE (#469, 3cad200, merged unlisted on Jon's go, 21 Oct; main run 39556536598, green, 59 jobs).**
 

@@ -1488,9 +1488,11 @@ at 5m17s of 6m; each fix was another hand-made group (B5, E2), which only bought
   - **On a PR (`ci-groups.py --check`, the plan job) a line over the limit fails only if the PR's selection includes
     its verifier**, as the plan job selects (`ci-deps.py` `select()` on the files changed since the PR's base, which
     `--check` reads from the run's own event, so the plan job's interface is unchanged). Any other line over the limit
-    is a warning naming it as a split candidate. A PR that changes CI selects every verifier, so every line over the
-    limit fails it. The selection costs `ci-deps.py`'s dependency map (about a minute in CI), so `--check` computes it
-    only when a split candidate exists. A line with no timing is not judged until a main run times it.
+    is a warning naming it as a split candidate. **A PR whose selection is everything (a CI change or an unknown path)
+    warns on every line over the limit and never fails on one** (Jon, 21 Oct 2026): only a PR that selects a line's
+    verifier for a reason of its own fails on it. The selection costs `ci-deps.py`'s dependency map (about a minute in
+    CI), so `--check` computes it only when a split candidate exists; the plan job then takes about 3m16s of its
+    5 minutes (Jon: acceptable). A line with no timing is not judged until a main run times it.
   - **When the timings job's pack is refused, it says why.** If the same pack passes at the previous pack's median
     setup (the committed `ci-timings.json`'s), only setup moved it: the job warns, commits nothing (exit status 2 from
     `--record-and-pack`, which the workflow reads as "stop") and does not fail. Any other refusal (a group past 80%

@@ -73,7 +73,8 @@ as a warning and written to ci-pack.json under "split-candidates" (label, median
 --check fails on it only when the change being checked selects the line's script, as CI's plan job selects it
 (scripts/ci-deps.py select(), on the files changed since the pull request's base: read from the run's own event, so the
 plan job's interface is unchanged; locally, since the merge base with origin/main); any other line over the limit is a
-warning naming it. A change that selects every verifier (CI itself) selects every line. The group rule (past 80%) still
+warning naming it. A change whose selection is everything (CI itself, or an unknown path) selects no line for a reason
+of its own, so it warns too (Jon's ruling, 21 Oct 2026). The group rule (past 80%) still
 refuses the pack and fails --check everywhere, and the setup-only warning (exit 2) is unchanged.
 
 Old headers ("# ci-line: B4 | ..."): a hand-made group id is still accepted and read as its tier only (L* is
@@ -328,7 +329,7 @@ def line_message(c):
 
 def line_faults(gs=None, timings=None, selected=()):
     """(faults, warnings) for the split candidates (LINE-LIMIT-SCOPE). `selected` is the set of scripts the change being
-    checked selects (ci-deps.py's names), True when it selects every verifier, or () for none (main, the timings job): a
+    checked selects (ci-deps.py's names), True to judge every line strictly, or () for none (main, the timings job): a
     candidate whose script is selected is a fault, any other a warning, so runner noise on an unchanged line never fails
     main or a PR that does not touch it."""
     faults, warns = [], []
@@ -371,7 +372,9 @@ def warn(msgs):
 
 def pr_selection(env=None, deps=None):
     """(selected, how) for --check: the scripts the change being checked selects, as CI's plan job selects them
-    (scripts/ci-deps.py select() on the files changed since the base), True for every verifier, or () for none.
+    (scripts/ci-deps.py select() on the files changed since the base), or () for none. A change that selects every verifier
+    (CI itself, or an unknown path) selects none for a reason of its own, so it is () too (Jon, 21 Oct 2026). True (every
+    line) is only the strict answer when the base cannot be read.
     In a GitHub Actions run that is not a pull request (main, the schedule, a manual run): (). In a pull request run: the
     base is the event's pull_request.base.sha, the plan job's own BASE, read from GITHUB_EVENT_PATH, so the plan job's
     interface is unchanged. Locally: the merge base with origin/main. If the base cannot be read, every line counts as
@@ -403,7 +406,7 @@ def pr_selection(env=None, deps=None):
         return True, "the files changed since %s could not be listed (%s): every line counts as selected" % (base[:10], e)
     run_all, reasons, picked = deps.select(changed)
     if run_all:
-        return True, "this change selects every verifier (%s)" % (reasons[0] if reasons else "run all")
+        return (), "this change selects every verifier (%s), none for a reason of its own: a line over the limit warns" % (reasons[0] if reasons else "run all")
     return set(picked), "this change (%d file(s) since %s) selects %d verifier(s)" % (len(changed), base[:10], len(picked))
 
 
@@ -915,8 +918,7 @@ def selftest():
           not fl and len(wn) == 1 and "split candidate" in wn[0] and "a 170s" in wn[0] and not budget_faults(g170, ft, Y))
     check("on main (nothing selected) the same line is a warning, not a fault",
           not budget_faults(g170, ft) and len(line_faults(g170, ft)[1]) == 1)
-    check("a change that selects every verifier (CI itself) selects the line: it fails",
-          len(budget_faults(g170, ft, True)) == 1)
+    check("strict (the base unreadable): the line fails", len(budget_faults(g170, ft, True)) == 1)
     f400 = one(400)
     check("PLANT: past 80% the group rule fails whatever is selected (a 400 s line; main, unselected, selected, all)",
           all(any("past 80%" in x for x in budget_faults(groups(hs, f400, {}), f400, sel)) for sel in ((), Y, X, True)))
@@ -979,7 +981,12 @@ def selftest():
         sel2, how2 = pr_selection(env, d2)
     check("selection on a PR: ci-deps.py's select() on the files changed since the event's base (%s)" % how1,
           d1.base == "0123456789abcdef" and sel1 == X)
-    check("selection on a PR that changes CI: every line (%s)" % how2, sel2 is True)
+    check("selection on a PR that changes CI: none of its own (%s)" % how2, sel2 == ())
+    fl, wn = line_faults(g170, ft, sel2)
+    check("a CI PR and an unchanged line over the limit: a warning, never a fault (Jon, 21 Oct): %s" % (wn[:1],),
+          not fl and len(wn) == 1 and "split candidate" in wn[0] and not budget_faults(g170, ft, sel2))
+    check("a CI PR and a group past 80%: still a fault (the group rule holds whatever is selected)",
+          any("past 80%" in x for x in budget_faults(groups(hs, f400, {}), f400, sel2)))
     # REGION-HISTORY: the per-region record keeps 10 per line per region and leaves ci-timings.json alone.
     regs = ["eastus", "centralus", "westus"]
 
