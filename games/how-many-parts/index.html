@@ -6,16 +6,16 @@
 <!-- UNLISTED (contract HOW-MANY-PARTS, 20 Oct 2026): merged for Jon to play. Live at its URL, noindex, and off the
      portal, /resit/, the sitemap, the spec map and the leaderboard hub until he lists it. -->
 <meta name="robots" content="noindex">
-<meta name="description" content="Add and take away fractions with a bar model: only parts of the same size can be added or taken away. For KS3 and GCSE. Free, no sign-up.">
+<meta name="description" content="Add, take away, multiply and divide fractions and mixed numbers, with a bar model: the denominator says how many parts. For KS3 and GCSE. Free, no sign-up.">
 <link rel="canonical" href="https://maffsgames.co.uk/games/how-many-parts/">
-<meta property="og:title" content="Adding and Subtracting Fractions Maths Game | MaffsGames">
-<meta property="og:description" content="Add and take away fractions with a bar model: only parts of the same size can be added or taken away. For KS3 and GCSE. Free, no sign-up.">
+<meta property="og:title" content="Fraction Operations Game – KS3/GCSE Maths | MaffsGames">
+<meta property="og:description" content="Add, take away, multiply and divide fractions and mixed numbers, with a bar model: the denominator says how many parts. For KS3 and GCSE. Free, no sign-up.">
 <meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
 <meta property="og:url" content="https://maffsgames.co.uk/games/how-many-parts/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
-<title>Adding and Subtracting Fractions Maths Game | MaffsGames</title>
+<title>Fraction Operations Game – KS3/GCSE Maths | MaffsGames</title>
 <link rel="stylesheet" href="/schools/assets/theme.css">
 <script src="../../schools/assets/analytics.js"></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
@@ -303,7 +303,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
  *    in value, or if fewer than three named errors with distinct values apply. Draws come from what is left;
  *    nothing is redrawn (canon §12, SR-5).
  *  - Stages d-f are typed on MaffsKeypad (numerator and denominator boxes; a whole-number box too in stage f) and
- *    marked ONLY by MaffsAnswer.fractionForm (FRACTION-FORM, #467): d (multiply: a fraction times a whole number,
+ *    marked ONLY by MaffsAnswer.fractionForm (FRACTION-FORM, PR 467): d (multiply: a fraction times a whole number,
  *    then a fraction times a fraction) and e (divide: "how many quarters are in 3?", then a fraction divided by a
  *    fraction) in simplest form, f (mixed numbers, one question for each operation) as a mixed number. An equal but
  *    unsimplified answer gets the format message, neither right nor wrong (SR-3). Each kind has its named errors,
@@ -721,7 +721,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
   };
   Object.keys(H.TERRORS).forEach(function (k) { H.TERRORS[k].forEach(function (e) { H.ERR[e.id] = e; }); });
 
-  // The pools (every model at most 24 parts across; a key's denominator at most 24 in stage f), built once and
+  // The pools (every model at most 24 parts across; a key's denominator at most 12 in stage f), built once and
   // filtered once: a question leaves if any named error equals its key.
   function propers(maxd) {
     var out = [];
@@ -749,7 +749,9 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
         var q = { kind: 'm', op: op, w1: x[0], a: x[1], b: x[2], w2: y[0], c: y[1], d: y[2] };
         if ((op === '+' || op === '-') && H.lcm(x[2], y[2]) > 6) return;
         var k = H.simp(H.typedValue(q));
-        if (k[0] <= 0 || k[1] > 24 || (k[0] < k[1])) return;    // a positive answer of at least 1: a mixed number
+        // a mixed number of at least 1, its fraction at most twelfths: the answer's bar sits beside its whole numbers
+        // and stays at least 8px a part on a 320px phone
+        if (k[0] <= 0 || k[1] > 12 || (k[0] < k[1])) return;
         H.POOLS.f.push(q);
       }); }); });
     });
