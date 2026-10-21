@@ -136,6 +136,8 @@ a.back-link:hover{color:var(--text)}
 .fb-line{font-size:.95rem;line-height:1.5;padding:.4rem .65rem;border-left:3px solid var(--hint);border-radius:0 8px 8px 0}
 .fb-line .katex{font-size:1.05em}
 .fb-sum{text-align:center;font-weight:700;overflow-x:auto}
+/* The bar after Next, where it would push Next below the fold (showWrong measures it). */
+.fb.tight .fb-line{order:0}.fb.tight .fb-sum{order:1}.fb.tight .fb-next{order:2}.fb.tight .choc{order:3}
 .fb-sum .katex{font-size:1.1em}
 .fb-quick{font-weight:700;color:var(--correct);text-align:center;font-size:1.05rem}
 .fb-quick .katex{font-size:1.15em}
@@ -174,6 +176,8 @@ body.accessible{letter-spacing:.12em;word-spacing:.16em}
 body.accessible .hud-label,body.accessible .hud-val{letter-spacing:0}
 body.accessible p,body.accessible .prompt,body.accessible .fb-line{line-height:2;max-width:65ch}
 body.accessible .prompt .sum{line-height:1.2}
+/* Aa spaces out text, not mathematics: KaTeX keeps its own spacing. */
+body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 .a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;transition:background .15s}
 .a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
@@ -785,7 +789,8 @@ body.accessible .prompt .sum{line-height:1.2}
   //   {kind: 'bars', bars: [{cells, groups, lots}], caption}
   //     cells: 'a' the first number's squares, 'b' the second's (striped), 'eaten' taken away, 'o' a piece outlined to
   //     be counted, '' a square of the bar not in the sum. groups: the pieces before they were cut, as runs of
-  //     squares (a deeper score between runs; all 1 when nothing was cut). lots: runs outlined together (dividing).
+  //     squares (a deeper score between runs; all 1 when nothing was cut; the squares not in a sum one run). lots: runs
+  //     outlined together (dividing).
   //   {kind: 'slab', cols, rows, a, c, top, side, caption}: one slab of cols x rows squares; the first a columns (the
   //     top fraction) and the first c rows (the side fraction) shaded, their overlap the answer.
   //   caption: one line, only where pieces are cut to a common size; otherwise null.
@@ -830,7 +835,7 @@ body.accessible .prompt .sum{line-height:1.2}
       var pa = L / q.b, pc = L / q.d, rest = L - A - C, g;
       if (q.op === '+') {
         cells = fill(L, [['a', A], ['b', C]]);
-        g = runsOf(A, pa).concat(runsOf(C, pc)).concat(rest % pc === 0 ? runsOf(rest, pc) : rest % pa === 0 ? runsOf(rest, pa) : ones(rest));
+        g = runsOf(A, pa).concat(runsOf(C, pc)).concat(rest ? [rest] : []);   // the squares not in the sum: one run
       } else {
         cells = fill(L, [['a', A - C], ['eaten', C]]);
         g = runsOf(L, pa);
@@ -850,7 +855,9 @@ body.accessible .prompt .sum{line-height:1.2}
       L = H.lcm(q.b, q.d); A = q.a * L / q.b; C = q.c * L / q.d;
       var lots = [];
       for (var s0 = 0; s0 < A; s0 += C) lots.push([s0, Math.min(C, A - s0)]);
-      return { kind: 'bars', bars: [bar(fill(L, [['a', A]]), runsOf(L, L / q.b), lots)], caption: H.cutCaption(q.b, q.d) };
+      // The grooves follow the lots, so the bar shows how many lots of the second fraction fit into the first.
+      var lg = lots.map(function (l) { return l[1]; }).concat(L > A ? [L - A] : []);
+      return { kind: 'bars', bars: [bar(fill(L, [['a', A]]), lg, lots)], caption: H.cutCaption(q.b, q.d) };
     }
     // mixed numbers: whole bars plus a part bar
     if (q.op === '+' || q.op === '-') {
@@ -883,17 +890,17 @@ body.accessible .prompt .sum{line-height:1.2}
     OP: function (q) { return q.op === '+' ? 'The sign is +: add.' : 'The sign is −: take away.'; },
     KL: function (q) {
       var small = Math.min(q.b, q.d), big = Math.max(q.b, q.d);
-      return cap(H.partsName(small)) + ' and ' + H.partsName(big) + ' are different-sized pieces: make them all ' +
+      return cap(H.partsName(small)) + ' and ' + H.partsName(big) + ' are different sizes: make them all ' +
         H.partsName(H.lcm(q.b, q.d)) + ' first.';
     },
     DN: function (q) {
       var L = H.lcm(q.b, q.d), ch = [];
       if (q.b !== L) ch.push('§' + H.tex([q.a, q.b]) + ' = ' + H.tex([q.a * L / q.b, L]) + '§');
       if (q.d !== L) ch.push('§' + H.tex([q.c, q.d]) + ' = ' + H.tex([q.c * L / q.d, L]) + '§');
-      return 'Cutting the pieces smaller makes more of them, so the top changes too: ' + ch.join(' and ') + '.';
+      return 'Smaller pieces mean more of them, so the top changes too: ' + ch.join(' and ') + '.';
     },
     MD: function (q) {
-      return 'Multiplying the bottoms cuts every piece smaller, so each top changes too: §' + H.tex([q.a, q.b]) + ' = ' +
+      return 'Multiplied bottoms mean smaller pieces, so each top changes too: §' + H.tex([q.a, q.b]) + ' = ' +
         H.tex([q.a * q.d, q.b * q.d]) + '§ and §' + H.tex([q.c, q.d]) + ' = ' + H.tex([q.c * q.b, q.b * q.d]) + '§.';
     },
     D_ADD: function () { return 'The sign is ×: multiply.'; },
@@ -918,7 +925,12 @@ body.accessible .prompt .sum{line-height:1.2}
     M_SEP: 'Mixed numbers: make them improper fractions first.', M_SWAP: 'First minus second: make them improper first.',
     M_CONV: 'A whole is as many parts as the bottom says.'
   };
-  H.example = function (q, id) { var e = H.ERR[id]; return e.name(q) + ' (' + fr(e.f(q)) + '). ' + WHY[id](q); };
+  // The value in brackets is the answer as the student gave it: an option's simplest form, or what was typed in the
+  // asked form (a mixed number in stage 6).
+  H.example = function (q, id) {
+    var e = H.ERR[id], f = e.f(q);
+    return e.name(q) + ' (§' + (q.form === 'mixed' ? H.mixedTex(f) : H.tex(H.simp(f))) + '§). ' + WHY[id](q);
+  };
   H.nudge = function (q, id) { return H.ERR[id].name(q) + '. ' + H.NUDGES[id]; };
   H.rule = function (q) {
     if (!q.kind || ((q.op === '+' || q.op === '-') && q.kind === 'm')) return H.PREMISE(q.op);
@@ -1020,20 +1032,24 @@ body.accessible .prompt .sum{line-height:1.2}
   }
   function barsSvg(m, id) {
     var nb = m.bars.length, most = Math.max.apply(null, m.bars.map(function (b) { return b.cells.length; }));
-    var per = nb === 1 ? 1 : Math.min(nb, most <= 4 ? 4 : most <= 8 ? 3 : 2);
+    // Bars to a row: as many as keep a square at least 8px wide on a 320px phone, inside the feedback's box.
+    var per = nb === 1 ? 1 : Math.min(nb, most <= 4 ? 4 : most <= 6 ? 3 : 2);
     var bw = (W - GAP * (per - 1)) / per, rows = Math.ceil(nb / per), out = '', y = 0, rowH = 0;
     m.bars.forEach(function (b, i) {
       var n = b.cells.length, cut = {}, at = 0;
-      b.groups.forEach(function (g) { at += g; cut[at] = true; });
+      // A long bar's score lines are finer, so a square stays at least 8px wide on a 320px phone.
+      var score = n > 12 ? 1.2 : SCORE, groove = n > 12 ? 3.2 : GROOVE;
+      // Grooves only where the bar holds pieces that were cut (a group bigger than one square).
+      if (b.groups.some(function (g) { return g > 1; })) b.groups.forEach(function (g) { at += g; cut[at] = true; });
       var gaps = 0;
-      for (var k = 1; k < n; k++) gaps += cut[k] ? GROOVE : SCORE;
+      for (var k = 1; k < n; k++) gaps += cut[k] ? groove : score;
       var cw = (bw - 2 * PAD - gaps) / n, ch = Math.min(Math.max(cw, 22), 34);
       var x0 = (i % per) * (bw + GAP);
       y = Math.floor(i / per) * (ch + 2 * PAD + GAP);
       rowH = ch + 2 * PAD;
       var cells = '', xs = [], x = x0 + PAD;
       for (var j = 0; j < n; j++) {
-        if (j) x += cut[j] ? GROOVE : SCORE;
+        if (j) x += cut[j] ? groove : score;
         xs.push(x);
         cells += cellSvg(b.cells[j], x, y + PAD, cw, ch, id);
         x += cw;
@@ -1263,6 +1279,11 @@ body.accessible .prompt .sum{line-height:1.2}
     var opts = { mount: $('feedback').querySelector('.fb-next'), onAdvance: nextQuestion };
     if (help === 'example') opts.fallbackMs = NO_FALLBACK;
     MaffsNext.wrong(opts);
+    // The phone rule (canon 7.6.1): the line and Next above the fold. Where the bar would push Next below it (a
+    // small phone, Aa mode), the bar is drawn after Next instead: visual order only, the reading order stays.
+    var fb = $('feedback').querySelector('.fb'), nx = fb.querySelector('.fb-next button');
+    window.scrollTo(0, 0);
+    if (nx && nx.getBoundingClientRect().bottom > window.innerHeight - FOOTER_PX) fb.classList.add('tight');
   }
 
   // Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
