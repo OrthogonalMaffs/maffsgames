@@ -27,3 +27,11 @@ DO NOT TOUCH: Pools, keys, levels, stages, session lengths, scoring, leaderboard
 SUCCESS CONDITION: Every stage plays end to end at 320, 390 and 1280 px with one bar per screen and no overflow; the verifier passes and catches every plant; the survey reports 0; screenshots attached; check-changed.py finishes before the first push; merged through the standard merge rules on a green Gate; main green after.
 STOP IF: The slab model cannot show a fraction x fraction product legibly at 320 px for any question in the pool (list those questions); any stage leaves more than a quarter of its questions with only three options (report the counts; Jon decides); a chocolate design choice would need an image file or an external asset; or any shared file needs changing.
 FINISH: Committed and merged unlisted; docs/handover/cloud.md updated with the entry, PR, main run, the three-option counts per stage, and the screenshots' location for Jon to play-test again.
+
+## Rulings (Jon, 21 Oct), amending the contract, verbatim
+
+Rulings (Jon, 21 Oct), amending the redesign contract:
+(1) Stage (a) becomes typed, marked through MaffsAnswer.fractionForm like (d)-(f); this replaces the 20 Oct ruling that (a)-(c) are multiple choice, for (a) only. Its error list becomes a diagnosis list: added (or took away) the tops and the bottoms (never a zero bottom); did the other operation; took the tops away but added the bottoms; gave the count of parts as a whole number (5/7 - 2/7 -> 3).
+(2) Stages (b) and (c): the take-away versions apply ("took away the tops and the bottoms", "took away the tops and kept the larger bottom"), excluding any that give a zero or negative bottom. Three options where fewer than three listed errors apply, under the existing exception.
+(3) STOP IF 2 now applies to (b) and (c) only. Add: the keypad and the bar together must fit at 320 px on stage (a); if not, stop and report.
+Pushing the saved contract is fine. Then build.
