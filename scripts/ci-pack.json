@@ -83,6 +83,7 @@
   "Log Laws Solve (layers C + D, SymPy) and the Laws bank's keys and options (two faults planted)": "30",
   "Maths Court (independent recomputation + rendered page)": "5",
   "Matrix Crunch (one answer per question, an option or the singular flag: Enter and Tab+Enter never mark again; both levels; Chromium)": "10",
+  "Merge guard (scripts/merge-pr.py: green Gate and green main or no merge; override only for main; recorded API fixtures)": "4",
   "Modular Battle (all 408 questions the generator can draw, each driven through the game's own generator: key, options, dot grid and feedback figures recomputed; every option pressed in Chromium)": "13",
   "Moments Master (every key recomputed with SymPy, options distinct in value, every option clicked in Chromium)": "7",
   "Negative Number Line (keys recomputed, every placement marked by real taps, every target reached on three phones)": "6",
@@ -158,8 +159,8 @@
   {
    "label": "Answer lock in play, part 1 (canon 7.6.0: self-test, static rules; migrated games played in Chromium)",
    "median": 299,
-   "percent": 73,
-   "setup": 32
+   "percent": 71,
+   "setup": 24
   }
  ]
 }
