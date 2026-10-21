@@ -493,6 +493,11 @@
    "slug": "just-pythag-it-bruv",
    "search_phrase": "Pythagoras' Theorem",
    "description": "Use Pythagoras' theorem with a calculator to find the hypotenuse or a shorter side, from simple triangles to ladders and ramps."
+  },
+  {
+   "slug": "how-many-parts",
+   "search_phrase": "Fraction Operations",
+   "description": "Add, take away, multiply and divide fractions and mixed numbers, with a bar model: the denominator says how many parts."
   }
  ],
  "pages": {

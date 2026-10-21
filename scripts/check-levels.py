@@ -76,7 +76,7 @@ correlation-or-coincidence curling-friction decimal-detective differentiation-du
 distinctly-average eigenvalue-extractor eigenvector-engine equation-builder equatle estimation-engine
 estimation-golf expectation-station expected-damage factor-race factor-theorem fermi-lab force-resolver
 formula-forge formula-plug-in formula-unlocked four-quadrant-explorer fraction-equivalence free-daily-pizza
-given-that glorious-gantt gradient-hunter graph-sketcher graph-transformer growth-and-decay higher-power
+given-that glorious-gantt gradient-hunter graph-sketcher graph-transformer growth-and-decay higher-power how-many-parts
 index-laws integration-duel just-pythag-it-bruv like-terms-collector linear-equation-solver log-laws
 maths-court matrix-crunch modular-battle moments-master negative-number-line new-shapes normal-navigator
 partial-fractions-duel percentage-flip prime-factorisation prime-or-composite prisoners-dilemma

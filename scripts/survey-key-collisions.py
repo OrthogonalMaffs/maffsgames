@@ -231,6 +231,120 @@ def survey_jpib(pages):
     return [r]
 
 
+# ---------------------------------------------------------------- how-many-parts (contract HOW-MANY-PARTS, 20 Oct 2026)
+
+def survey_how_many_parts(pages):
+    """All six stages: every pool entry, every named error written out here from the contract's words. The game
+    filters its pools so none equals its key (as PR 453), so every count here should be 0. Stages 1-3 are multiple
+    choice; 4-6 typed, marked by MaffsAnswer.fractionForm (exact value; a right value in the wrong form is never
+    marked), so an error collides when its exact value is the key's."""
+    ctx, p = pages.page("how-many-parts", "!!window.HMP && !!HMP.POOLS")
+    pools = p.evaluate("() => HMP.POOLS")
+    ctx.close()
+
+    def lcm(x, y):
+        return x * y // gcd(x, y)
+
+    def frac(n, m):
+        return Fraction(n, m) if n > 0 and m > 0 else None
+    errs = (("adding (taking away) the tops and the bottoms", lambda a, b, s, c, d: frac(a + s * c, b + s * d)),
+            ("changing a denominator without its numerator",
+             lambda a, b, s, c, d: frac(a + s * c, lcm(b, d)) if b != d else None),
+            ("adding the numerators and keeping the larger denominator",
+             lambda a, b, s, c, d: frac(a + s * c, max(b, d)) if b != d else None),
+            ("multiplying the denominators but adding the numerators", lambda a, b, s, c, d: frac(a + s * c, b * d)),
+            ("multiplying the fractions", lambda a, b, s, c, d: frac(a * c, b * d)),
+            ("the other operation", lambda a, b, s, c, d: abs(Fraction(a, b) - s * Fraction(c, d)) or None))
+    results = []
+    for st, label in (("a", "stage 1, same denominator"), ("b", "stage 2, one denominator a multiple of the other"),
+                      ("c", "stage 3, different denominators")):
+        qs = pools[st]
+        r = Result("how-many-parts", label, "%d questions (the whole pool)" % len(qs), "enumerated (HMP.POOLS)",
+                   "multiple choice, by dataset.val: the exact value in its simplest form")
+        for name, f in errs:
+            applies, hits = 0, []
+            for q in qs:
+                sg = 1 if q["op"] == "+" else -1
+                key = Fraction(q["a"], q["b"]) + sg * Fraction(q["c"], q["d"])
+                v = f(q["a"], q["b"], sg, q["c"], q["d"])
+                if v is None:
+                    continue
+                applies += 1
+                if v == key:
+                    hits.append(q)
+            r.add(name, applies, hits, lambda h: "%d/%d %s %d/%d" % (h["a"], h["b"], h["op"], h["c"], h["d"]))
+        results.append(r)
+    F = Fraction
+
+    def mixed(w, a, b):
+        return w + F(a, b)
+    # stages 4-6: (kind, name, the error's value or None where it does not apply)
+    terrs = {
+        "xw": (("the top and the bottom both times n", lambda q: F(q["a"] * q["n"], q["b"] * q["n"])),
+               ("the bottom times n", lambda q: F(q["a"], q["b"] * q["n"])),
+               ("n added to the top", lambda q: F(q["a"] + q["n"], q["b"]))),
+        "xf": (("added instead of multiplying", lambda q: F(q["a"], q["b"]) + F(q["c"], q["d"])),
+               ("tops multiplied, bottoms added", lambda q: F(q["a"] * q["c"], q["b"] + q["d"])),
+               ("a common bottom first, then the tops multiplied",
+                lambda q: F((q["a"] * lcm(q["b"], q["d"]) // q["b"]) * (q["c"] * lcm(q["b"], q["d"]) // q["d"]), lcm(q["b"], q["d"]))),
+               ("multiplied across the diagonals", lambda q: F(q["a"] * q["d"], q["b"] * q["c"]))),
+        "dw": (("n divided by m", lambda q: F(q["n"], q["m"])), ("m divided by n", lambda q: F(q["m"], q["n"]))),
+        "df": (("multiplied without turning the second over", lambda q: F(q["a"] * q["c"], q["b"] * q["d"])),
+               ("turned the first over instead", lambda q: F(q["b"] * q["c"], q["a"] * q["d"])),
+               ("turned both over", lambda q: F(q["b"] * q["d"], q["a"] * q["c"]))),
+        "m": (("wholes and fractions multiplied separately",
+               lambda q: q["w1"] * q["w2"] + F(q["a"], q["b"]) * F(q["c"], q["d"]) if q["op"] == "x" else None),
+              ("wholes and fractions divided separately",
+               lambda q: F(q["w1"], q["w2"]) + F(q["a"], q["b"]) / F(q["c"], q["d"]) if q["op"] == "/" else None),
+              ("the smaller fraction from the bigger", lambda q: (q["w1"] - q["w2"]) + F(q["c"], q["d"]) - F(q["a"], q["b"])
+               if q["op"] == "-" and F(q["a"], q["b"]) < F(q["c"], q["d"]) else None),
+              ("wholes, then the tops and the bottoms", lambda q: q["w1"] + q["w2"] + F(q["a"] + q["c"], q["b"] + q["d"])
+               if q["op"] == "+" else (q["w1"] - q["w2"] + F(q["a"] - q["c"], q["b"] - q["d"])
+                                       if q["op"] == "-" and q["b"] > q["d"] and q["a"] > q["c"] else None)),
+              ("the whole numbers left out", lambda q: (F(q["a"], q["b"]) + F(q["c"], q["d"]) if q["op"] == "+" else
+                                                        F(q["a"], q["b"]) - F(q["c"], q["d"])) if q["op"] in "+-" else None),
+              ("multiplied without turning the second over",
+               lambda q: mixed(q["w1"], q["a"], q["b"]) * mixed(q["w2"], q["c"], q["d"]) if q["op"] == "/" else None),
+              ("turned the first over instead",
+               lambda q: mixed(q["w2"], q["c"], q["d"]) / mixed(q["w1"], q["a"], q["b"]) if q["op"] == "/" else None),
+              ("the whole numbers multiplied only", lambda q: F(q["w1"] * q["w2"]) if q["op"] == "x" else None),
+              ("added instead of multiplying",
+               lambda q: mixed(q["w1"], q["a"], q["b"]) + mixed(q["w2"], q["c"], q["d"]) if q["op"] == "x" else None))}
+
+    def tkey(q):
+        k = q["kind"]
+        if k == "xw":
+            return F(q["a"], q["b"]) * q["n"]
+        if k == "xf":
+            return F(q["a"], q["b"]) * F(q["c"], q["d"])
+        if k == "dw":
+            return F(q["n"] * q["m"])
+        if k == "df":
+            return F(q["a"], q["b"]) / F(q["c"], q["d"])
+        x, y = mixed(q["w1"], q["a"], q["b"]), mixed(q["w2"], q["c"], q["d"])
+        return {"+": x + y, "-": x - y, "x": x * y, "/": x / y}[q["op"]]
+    for st, label in (("d", "stage 4, multiply"), ("e", "stage 5, divide"), ("f", "stage 6, mixed numbers")):
+        qs = pools[st]
+        r = Result("how-many-parts", label, "%d questions (the whole pool)" % len(qs), "enumerated (HMP.POOLS)",
+                   "typed, MaffsAnswer.fractionForm: the exact value, in the asked form")
+        for kind in sorted({q["kind"] for q in qs}):
+            for name, f in terrs[kind]:
+                applies, hits = 0, []
+                for q in qs:
+                    if q["kind"] != kind:
+                        continue
+                    v = f(q)
+                    if v is None or v <= 0:
+                        continue
+                    applies += 1
+                    if v == tkey(q):
+                        hits.append(q)
+                if applies:
+                    r.add("%s (%s)" % (name, kind), applies, hits, lambda h: json.dumps(h))
+        results.append(r)
+    return results
+
+
 # ---------------------------------------------------------------- six-sevens-bruv
 
 def survey_ssb(pages):
@@ -1043,6 +1157,7 @@ SURVEYS = {
     "shape-shifter": survey_shape_shifter,
     "equatle": survey_equatle,
     "log-laws": survey_log_laws,
+    "how-many-parts": survey_how_many_parts,
 }
 
 
