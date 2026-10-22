@@ -277,6 +277,10 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
  *    only when each part is a whole number. They appear only after a wrong answer.
  *  - The daily pizza is 3 + 3 + 2 + 2 questions from stages 1-4, in stage order, drawn by a
  *    PRNG seeded from the UK date, with no two questions in a stage about the same value.
+ *  - The bank is built once and filtered once (FDP.keyIsSlip; contract FDP-KEY-COLLIDE, Jon, 22 Oct
+ *    2026, as #453 did): a question leaves it when subtracting the percentage from the amount, or
+ *    putting the percentage number on the bottom, gives the key, so that slip is never marked right.
+ *    Nothing is redrawn (canon §12, SR-5).
  */
 (function () {
   'use strict';
@@ -713,7 +717,16 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
         bank[4].push(outOfItem(f[0] * g, f[1] * g, 'p'));
       });
     });
+    [1, 2, 3, 4].forEach(function (s) { bank[s] = bank[s].filter(function (it) { return !FDP.keyIsSlip(it); }); });
     return bank;
+  };
+  /* True when one of two named slips gives the key (FDP-KEY-COLLIDE): "subtract-percent" (p% of N
+     as N - p: 60% of 150 = 90) and the percentage number put on the bottom ("digit-reading" from a
+     percentage: 10% = 1/10). Recomputed from the item's own numbers, as the distractors are. */
+  FDP.keyIsSlip = function (it) {
+    if (it.kind === 'ofamt-p') return it.N - it.p > 0 && eq(R(it.N - it.p, 1), R(it.p * it.N, 100));
+    if (it.kind === 'conv' && it.from === 'p' && it.to === 'f') { var d = digitReadPct(it.v); return !!d && eq(d, it.v); }
+    return false;
   };
   FDP.BANK = FDP.buildBank();
   FDP.index = function () {

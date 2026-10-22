@@ -69,7 +69,7 @@ WHAT IT ASSERTS
 FAULT-INJECTION SELF-TEST (every run; --no-selftest skips it)
 -------------------------------------------------------------------------------
 Each fault is patched into a FRESH page (never the file) and must FAIL: a wrong answer; a
-value-equal distractor; a wrong tag; the one-pass spread (FDP-SPREAD); a broken daily mix; a daily pizza not served easiest
+value-equal distractor; a wrong tag; the bank unfiltered (FDP-KEY-COLLIDE); the one-pass spread (FDP-SPREAD); a broken daily mix; a daily pizza not served easiest
 first; a pre-answer picture leak; a recurring answer shown as 0.33; a lossy picture; a fraction
 written with a slash on screen; a single-stage practice run that submits to a board.
 
@@ -452,8 +452,28 @@ def params_key(it):
                  for k in ("kind", "from", "to", "v", "n", "d", "a", "b", "N", "p", "A", "B"))
 
 
+def slip_is_key(kind, x, y=None):
+    """FDP-KEY-COLLIDE (Jon, 22 Oct 2026): True when one of the two named slips gives the key, from the parameters
+    alone. "ofamt-p", x = p, y = N: subtracting the percentage, N - p, equals p% of N. "p>f", x = (a, b): the
+    percentage number put on the bottom, 1/p with p = 100a/b, equals a/b."""
+    if kind == "ofamt-p":
+        return y - x > 0 and F(y - x) == F(x * y, 100)
+    pc = F(x[0], x[1]) * 100
+    return pc.denominator == 1 and pc >= 2 and F(1, pc.numerator) == F(x[0], x[1])
+
+
+def slipped_ids(tables):
+    """The ids the build-time filter must remove, per stage (the stage-1 and -2 "p>f" items and the stage-3 percentages)."""
+    out = {1: [], 2: [], 3: [], 4: []}
+    for s, key in ((1, "S1_VALUES"), (2, "S2_VALUES")):
+        out[s] += ["S%d:conv:p>f:%d/%d" % (s, a, b) for a, b in tables[key] if slip_is_key("p>f", (a, b))]
+    out[3] += ["S3:pct:%d:%d" % (pc, N) for pc, Ns in tables["S3_PERCENTS"] for N in Ns if slip_is_key("ofamt-p", pc, N)]
+    return out
+
+
 def expected_ids(tables):
-    """The documented enumeration order, rebuilt from the parameter tables."""
+    """The documented enumeration order, rebuilt from the parameter tables, less the questions a named slip gets right
+    (slipped_ids)."""
     ids = {1: [], 2: [], 3: [], 4: []}
     for a, b in tables["S1_VALUES"]:
         ids[1] += ["S1:conv:%s:%d/%d" % (p, a, b) for p in PAIRS]
@@ -468,7 +488,8 @@ def expected_ids(tables):
     for a, b in tables["S4_FRACTIONS"]:
         for g in tables["S4_SCALES"][str(b)]:
             ids[4] += ["S4:f:%d/%d" % (a * g, b * g), "S4:p:%d/%d" % (a * g, b * g)]
-    return ids
+    gone = slipped_ids(tables)
+    return {s: [i for i in ids[s] if i not in gone[s]] for s in ids}
 
 
 def family(it):
@@ -502,6 +523,11 @@ def check_banks(data, out):
         for it in items:
             if it["stage"] != s:
                 out.append("%s is in stage %d's bank" % (it["id"], s))
+            k = it["kind"]
+            if (k == "ofamt-p" and slip_is_key(k, it["p"], it["N"])) or \
+                    (k == "conv" and it["from"] + ">" + it["to"] == "p>f" and slip_is_key("p>f", tuple(it["v"]))):
+                out.append("%s: a named slip (subtracting the percentage, or the percentage number on the bottom) gives "
+                           "the key, so a student making it is marked right (FDP-KEY-COLLIDE)" % it["id"])
     s1 = {item_value(it) for it in bank["1"]}
     if s1 != CONTRACT_S1:
         out.append("stage 1 values %s are not the contract's benchmark set" % sorted(s1 ^ CONTRACT_S1))
@@ -1259,6 +1285,8 @@ FAULTS = [
      "static", "(() => { const o = FDP.tagSays; FDP.tagSays = (x, it) => x && x.tag === 'digit-reading' ? FDP.TAGS['digit-reading'] : o(x, it); })()"),
     ("'The biggest number into both' (a word missing)",
      "static", "FDP.BANK[2].forEach(it => { if (it.kind === 'simp') it.working = it.working.replace('factor of', 'number into'); });"),
+    ("the unfiltered bank (60% of 150, 10% as a fraction served)",
+     "static", "(() => { FDP.keyIsSlip = () => false; FDP.BANK = FDP.buildBank(); const ix = FDP.index(); FDP.item = id => ix[id] || null; })()"),
     ("the one-pass spread (FDP-SPREAD's plant: before 22 Oct 2026)",
      "sweep", r"""(() => { FDP.spread = function (list) {
        var a = list.slice(), n = a.length;
@@ -1420,6 +1448,10 @@ async def run_all(args):
         nd = sum(len(it["distractors"]) for s in (1, 2, 3, 4) for it in data["bank"][str(s)])
         npic = sum(len(v) for v in data["drawn"].values())
         print("Items: S1 %(1)d, S2 %(2)d, S3 %(3)d, S4 %(4)d" % counts, "  distractors recomputed: %d   pictures counted: %d" % (nd, npic))
+        gone = slipped_ids(data["tables"])
+        print("Removed by the slip filter (FDP-KEY-COLLIDE): " + ", ".join(
+            "S%d %d of %d (%s)" % (s, len(gone[s]), counts[str(s)] + len(gone[s]), ", ".join(gone[s]) or "none")
+            for s in (1, 2, 3, 4)))
         print("Practice sets swept (FDP-SPREAD): seeds 1-%d in each of %s; apart wherever possible; the first %d "
               "recomputed in full (blocks no order could separate: %s)"
               % (SWEEP_SEEDS, ", ".join(SWEEP_REPORT), SWEEP_EXACT, ", ".join("%s %d" % kv for kv in SWEEP_REPORT.items())))

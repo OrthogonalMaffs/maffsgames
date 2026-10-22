@@ -3,6 +3,12 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-22 (cloud): FDP-SPREAD (Jon's rulings verbatim, with the finding: `docs/history/contracts/2026-10-22-fdp-spread.md`). **DONE (#481, 20c7dd9; main run 39783533845 green; pack 76f2cc4, no split candidates; part 1 in CI 107 s, was 89-95). The claim stays for FDP-KEY-COLLIDE, which releases it.**
+
+- **Why:** FDP-KEY-COLLIDE's filter changed what practice seed 2026 draws, and the verifier's mixed/20 check failed: `FDP.spread`'s one pass of swaps left two questions about 1/100 together where 1/100, 4/5, 1/100, 1/8, 1/100 was possible. Over 10,000 seeds on main it did so in 245 mixed/20 sets and 4 mixed/40 (single-stage: 0).
+- **Fix (`FDP.spread` only):** each place takes the earliest remaining question, in the shuffled order, that differs in family from the one before and leaves the rest separable (no family above ceil(m/2), the one just placed not above floor(m/2)). A list already apart comes back unchanged. Questions, the daily pizza (it never calls spread), scoring and boards unchanged.
+- **Verifier (part 1):** seeds 1-10,000 in each of the ten practice modes, no neighbours alike wherever possible (families recomputed in Python); seeds 1-300 recomputed in full from the stated rule (the full port over 100,000 sets would cost about 75 s more in Python, past the line limit); the old spread planted and caught (325). Blocks no order could separate: mixed/20 14 of 40,000 (a value on four of a stage's five); every other mode 0. Part 1 locally 53 s of Python (was 22).
+
 ## 2026-10-21 (cloud): HMP-CHOCOLATE (contract and Jon's rulings verbatim: `docs/history/contracts/2026-10-21-hmp-chocolate.md`; his rulings (a)-(d) of 22 Oct: `docs/history/contracts/2026-10-22-answer-lock-static.md`). **DONE (#479, 0cf4494; main run 39771541559 green, 60 jobs; pack 358d7c5, no split candidates). Still unlisted, for Jon to play.**
 
 - **Done:** one chocolate bar per screen (SVG, warm browns, the second number striped, eaten squares; slab for x; whole bars plus a part bar). Each stage offers or names only its own errors. Stage 1 typed (ruling 1). Wrong answer: one line, the bar, the sum, Next. Pools and keys unchanged (sha256 checked) but for ruling (a); the 20 Oct catalogue only filters them.
