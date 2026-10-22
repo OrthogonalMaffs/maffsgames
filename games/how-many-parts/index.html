@@ -62,6 +62,16 @@ a.back-link:hover{color:var(--text)}
 .btn:hover{background:var(--accent-dim)}
 .btn.solid{background:var(--accent);color:var(--on-accent)}
 .start-btn{display:block;margin:1rem auto .3rem;padding:.75rem 2.6rem;font-size:1.05rem}
+/* Foundation's stages: one button each, all offered from the start (contract HMP-FOUNDATION-STAGES). */
+.panel[hidden]{display:none}
+.mode-pick{display:flex;flex-direction:column;gap:.45rem}
+.mode-btn{display:flex;gap:.7rem;align-items:baseline;text-align:left;min-height:44px;padding:.55rem .8rem;border-radius:10px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-size:.92rem;cursor:pointer;line-height:1.35}
+.mode-btn b{font-family:var(--font-num);color:var(--accent);white-space:nowrap}
+.mode-btn.selected{border-color:var(--accent);background:var(--accent);color:var(--on-accent)}
+.mode-btn.selected b{color:var(--on-accent)}
+.mode-note{font-size:.85rem;color:var(--muted);margin-top:.6rem;text-align:center}
+.res-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.res-btns [hidden]{display:none}
 .lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
 
 /* Play */
@@ -130,14 +140,27 @@ a.back-link:hover{color:var(--text)}
 .slab-side{grid-column:1;grid-row:2;font-family:var(--font-num);font-weight:700}
 .slab svg{grid-column:2;grid-row:2}
 
+/* The stepped explanation (contract HMP-FOUNDATION-STAGES): the bar, then its steps one tap at a time. The worked
+   example opens every stage; the same steps follow any wrong answer. */
+.explain{display:flex;flex-direction:column;gap:.5rem}
+.steps{list-style:none;display:flex;flex-direction:column;gap:.35rem;counter-reset:step}
+.steps li{counter-increment:step;display:flex;gap:.55rem;align-items:baseline;font-size:.95rem;line-height:1.5}
+.steps li::before{content:counter(step);flex:none;font-family:var(--font-num);font-weight:700;color:var(--accent);min-width:1.1rem;text-align:right}
+.steps li:last-child{font-weight:600}
+.steps .katex{font-size:1.05em}
+.step-row{display:flex;justify-content:center}
+.step-row .btn{min-width:10rem}
+.ex-tag{font-size:.8rem;color:var(--muted);text-align:center}
+/* A bracket stays on its line with the maths it holds (k-punctuation scan, 320px). */
+.glue{white-space:nowrap}
 .feedback:empty{display:none}
 .fb{border-radius:12px;padding:.75rem .85rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.6rem}
 .fb.wrong{border-color:var(--wrong)}
 .fb-line{font-size:.95rem;line-height:1.5;padding:.4rem .65rem;border-left:3px solid var(--hint);border-radius:0 8px 8px 0}
 .fb-line .katex{font-size:1.05em}
 .fb-sum{text-align:center;font-weight:700;overflow-x:auto}
-/* The bar after Next, where it would push Next below the fold (showWrong measures it). */
-.fb.tight .fb-line{order:0}.fb.tight .fb-sum{order:1}.fb.tight .fb-next{order:2}.fb.tight .choc{order:3}
+/* The bar and its steps after Next, where they would push Next below the fold (showWrong measures it). */
+.fb.tight .fb-line{order:0}.fb.tight .fb-sum{order:1}.fb.tight .fb-next{order:2}.fb.tight .explain{order:3}
 .fb-sum .katex{font-size:1.1em}
 .fb-quick{font-weight:700;color:var(--correct);text-align:center;font-size:1.05rem}
 .fb-quick .katex{font-size:1.15em}
@@ -190,9 +213,19 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 <script src="../../schools/assets/options.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
-<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Stages 2-3: i = 0 presses the first option; i >= 1 presses the first option that is not the key. Stages 1 and 4-6 (typed): i = 0 types the key, i >= 1 the key plus one whole (still in lowest terms, so it is marked wrong, never sent back as a format). 'ready' is the game's own state: on a phone the boxes are read-only (the keypad types into them).
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'start' presses Start, then steps through the worked example that opens the stage (each tap once its MaffsLock window has closed). Multiple choice (pools b and c): i = 0 presses the first option; i >= 1 presses the first option that is not the key. Typed (pools a and d-f): i = 0 types the key, i >= 1 the key plus one whole (still in lowest terms, so it is marked wrong, never sent back as a format). 'ready' is the game's own state: on a phone the boxes are read-only (the keypad types into them).
 {
-  "start": "document.getElementById('startBtn').click()",
+  "start": [
+    "(async () => {",
+    "  document.getElementById('startBtn').click();",
+    "  const t0 = performance.now();",
+    "  while (HMP.ui.state() === 'example' && performance.now() - t0 < 10000) {",
+    "    const b = document.getElementById('stepBtn');",
+    "    if (b && !MaffsLock.isFresh(b)) b.click();",
+    "    await new Promise(r => requestAnimationFrame(r));",
+    "  }",
+    "})()"
+  ],
   "ready": "!!window.HMP && !!HMP.ui && HMP.ui.state() === 'asking'",
   "answer": [
     "const q = HMP.ui.question();",
@@ -229,8 +262,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
         <span data-tex="\dfrac{3}{4}">3/4</span> is 3 parts of a whole cut into 4.</p>
       <p>Only parts of the <strong>same size</strong> can be added or taken away. When the bottoms are different, cut
         both into the same number of parts first.</p>
-      <p>Stages 2 and 3 give you choices. In the others you type the answer: a fraction in its simplest form, or a
-        whole number (in stage 6, a mixed number).</p>
+      <p>Some stages give you choices. In the others you type the answer: a fraction in its simplest form, or a
+        whole number (with mixed numbers, a mixed number).</p>
     </div>
     <div class="panel">
       <h2>Level</h2>
@@ -239,7 +272,20 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
         <button class="level-btn" data-level="gcse" type="button">Advanced<small>All four, and mixed numbers</small></button>
       </div>
     </div>
-    <div class="panel">
+    <!-- Foundation: five stages, one idea each, picked one at a time (contract HMP-FOUNDATION-STAGES). -->
+    <div class="panel" id="modePanel">
+      <h2>Pick a stage</h2>
+      <div class="mode-pick" id="modePick">
+        <button class="mode-btn" data-mode="stage1" type="button"><b>Stage 1</b><span>Same bottom number: the parts are already the same size.</span></button>
+        <button class="mode-btn" data-mode="stage2" type="button"><b>Stage 2</b><span>One bottom number is a multiple of the other.</span></button>
+        <button class="mode-btn" data-mode="stage3" type="button"><b>Stage 3</b><span>Different bottom numbers: multiply them to find parts both fit.</span></button>
+        <button class="mode-btn" data-mode="stage4" type="button"><b>Stage 4</b><span>Different bottom numbers: a smaller number of parts both fit.</span></button>
+        <button class="mode-btn" data-mode="stage5" type="button"><b>Stage 5</b><span>Multiply: a fraction by a whole number, then by a fraction.</span></button>
+      </div>
+      <p class="mode-note">Each stage: a worked example, then 10 questions, easiest first.</p>
+      <button class="btn solid start-btn" id="startBtn">Start</button>
+    </div>
+    <div class="panel" id="stagePanel">
       <h2>Stages, in order</h2>
       <ul class="stages" id="stageList">
         <li data-stage="a"><b>1</b><span>Same bottom number: the parts are already the same size.</span></li>
@@ -249,7 +295,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
         <li data-stage="e"><b>5</b><span>Divide: how many quarters are in 3? Then a fraction by a fraction.</span></li>
         <li data-stage="f"><b>6</b><span>Mixed numbers: add, take away, multiply and divide.</span></li>
       </ul>
-      <button class="btn solid start-btn" id="startBtn">Start</button>
+      <p class="mode-note">Each stage: a worked example, then 4 questions.</p>
+      <div id="startSlot"></div>
     </div>
     <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
   </div>
@@ -292,7 +339,10 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       <h2 id="resTitle">Session done</h2>
       <div class="final-score" id="resScore">0</div>
       <div class="stats" id="resStats"></div>
-      <button class="btn solid" id="againBtn">Play again</button>
+      <div class="res-btns">
+        <button class="btn solid" id="nextStageBtn" type="button" hidden>Next: Stage 2</button>
+        <button class="btn solid" id="againBtn" type="button">Play again</button>
+      </div>
       <p id="teacherInvite"></p>
     </div>
   </div>
@@ -330,16 +380,36 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
  *    example (the first three in a session) or its nudge.
  *  - The model is one chocolate bar (or one slab), drawn in SVG from H.model's numbers: squares in warm browns,
  *    the second number's striped, taken-away squares eaten. No image files, no brand, no purple.
+ *  - Foundation (contract HMP-FOUNDATION-STAGES, Jon, 22 Oct 2026, verbatim in docs/history/contracts/) is five
+ *    stages, one idea each, picked one at a time, each its own mode and board (H.FSTAGES): 1 pool a, 2 pool b, 3 the
+ *    pairs of pool c whose lowest common denominator is the product of the bottoms, 4 those where it is smaller, 5 pool
+ *    d. A stage is a worked example, then 10 questions served easiest first (H.ease). Advanced keeps its six stages of
+ *    4 questions, each now opened by a worked example too.
+ *  - The bar is never shown before answering. It comes with its steps (H.steps), one tap at a time on the question's
+ *    own numbers and ending on the answer: in the worked example, and after any wrong answer.
  */
 (function () {
   'use strict';
 
   var H = {};
   H.SLUG = 'how-many-parts';
-  // Level keys never change (SR-11); the labels are Jon's (20 Oct 2026). Each level is its own board (SR-22).
+  // Level keys never change (SR-11); the labels are Jon's (20 Oct 2026). Advanced is one board (SR-22); Foundation is
+  // five stages, each a mode the student picks and its own board (contract HMP-FOUNDATION-STAGES, Jon, 22 Oct 2026).
   H.LEVELS = {
-    ks3: { label: 'Foundation', stages: ['a', 'b', 'c', 'd'], per: 5 },
+    ks3: { label: 'Foundation', modes: ['stage1', 'stage2', 'stage3', 'stage4', 'stage5'], per: 10 },
     gcse: { label: 'Advanced', stages: ['a', 'b', 'c', 'd', 'e', 'f'], per: 4 }
+  };
+  // Foundation's stages, one idea each, as Simultaneous Solver's staged Foundation: the mode key is logged as
+  // analytics `mode`, the board is the mode's own. Each draws on one of the pools below (its `stage`, whose own list of
+  // errors it keeps); stages 3 and 4 split pool c by whether multiplying the bottoms gives the lowest common one.
+  H.FSTAGES = {
+    stage1: { n: 1, stage: 'a', board: 'foundation-s1', label: 'Stage 1 · Same bottom number' },
+    stage2: { n: 2, stage: 'b', board: 'foundation-s2', label: 'Stage 2 · One bottom a multiple of the other' },
+    stage3: { n: 3, stage: 'c', board: 'foundation-s3', label: 'Stage 3 · Different bottoms: multiply them',
+      keep: function (q) { return H.lcm(q.b, q.d) === q.b * q.d; } },
+    stage4: { n: 4, stage: 'c', board: 'foundation-s4', label: 'Stage 4 · Different bottoms: a smaller common one',
+      keep: function (q) { return H.lcm(q.b, q.d) < q.b * q.d; } },
+    stage5: { n: 5, stage: 'd', board: 'foundation-s5', label: 'Stage 5 · Multiply' }
   };
   H.BUILT = ['a', 'b', 'c', 'd', 'e', 'f'];
   H.STAGES = {
@@ -354,7 +424,6 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   H.FORM = { a: 'simplest', d: 'simplest', e: 'simplest', f: 'mixed' };
   // The typed stages whose pools hold kinds of question (a's are the add and take-away sums of stages b and c).
   H.KINDED = ['d', 'e', 'f'];
-  H.BAR_FIRST = 3;        // the bar model on the first 3 questions of every stage
   H.HELP_EXAMPLES = 3;    // worked examples for a named error, per session; then a nudge
   H.MAX_PARTS = 24;       // stage c's common denominator at most this
   H.BASE = 100;
@@ -581,29 +650,95 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     q.choices = H.pickErrors(q, rng).map(function (e) { return H.option(e.f, e.id); });
     return q;
   };
-  // A session: each served stage of the level in order, `per` questions each, drawn without replacement from each
-  // stage's shuffled pools. Stages a-c: about half adding and half taking away.
-  H.buildSession = function (seed, level) {
-    var L = H.LEVELS[level] || H.LEVELS.ks3, rng = H.mulberry32(seed), qs = [];
-    var stages = L.stages.filter(function (s) { return H.BUILT.indexOf(s) !== -1; });
-    stages.forEach(function (st) {
-      if (H.KINDED.indexOf(st) !== -1) { H.typedStage(st, L.per, rng).forEach(function (q) { q.index = qs.length + 1; qs.push(q); }); return; }
-      var byOp = {
-        '+': H.shuffle(H.POOLS[st].filter(function (q) { return q.op === '+'; }), rng),
-        '-': H.shuffle(H.POOLS[st].filter(function (q) { return q.op === '-'; }), rng)
-      };
-      var nSub = Math.floor(L.per / 2) + (L.per % 2 && rng() < 0.5 ? 1 : 0);
-      var ops = H.shuffle(Array.apply(null, Array(L.per)).map(function (_, i) { return i < nSub ? '-' : '+'; }), rng);
-      var used = { '+': 0, '-': 0 };
-      ops.forEach(function (op, i) {
-        var q = H.makeQuestion(byOp[op][used[op]++], st, rng);
-        q.inStage = i + 1;
-        q.bar = i < H.BAR_FIRST;
-        q.index = qs.length + 1;
-        qs.push(q);
-      });
+  // One stage's `per` questions, drawn without replacement from `pool` (that stage's, or a Foundation stage's part of
+  // it), shuffled. Stages a-c: about half adding and half taking away; d-f: H.typedStage's plan.
+  H.drawStage = function (pool, st, per, rng) {
+    if (H.KINDED.indexOf(st) !== -1) return H.typedStage(st, per, rng, pool);
+    var byOp = {
+      '+': H.shuffle(pool.filter(function (q) { return q.op === '+'; }), rng),
+      '-': H.shuffle(pool.filter(function (q) { return q.op === '-'; }), rng)
+    };
+    var nSub = Math.floor(per / 2) + (per % 2 && rng() < 0.5 ? 1 : 0);
+    var ops = H.shuffle(Array.apply(null, Array(per)).map(function (_, i) { return i < nSub ? '-' : '+'; }), rng);
+    var used = { '+': 0, '-': 0 };
+    return ops.map(function (op, i) {
+      var q = H.makeQuestion(byOp[op][used[op]++], st, rng);
+      q.inStage = i + 1;
+      return q;
     });
-    return { seed: seed, level: level, stages: stages, questions: qs };
+  };
+  // How easy a question is (contract HMP-FOUNDATION-STAGES, item 2): [kind, parts, simplify], compared in that order,
+  // smallest first. A Foundation stage serves its questions in this order.
+  //   kind      0, except a fraction times a fraction (1, after a fraction times a whole number), a fraction divided by
+  //             a fraction (1, after "how many quarters are in 3?") and mixed numbers (+ 0, - 1, x 2, / 3)
+  //   parts     the number of parts the answer is counted in before simplifying: adding and taking away, the common
+  //             denominator (the lowest); a fraction times a whole number, its bottom; times a fraction, the product of
+  //             the bottoms (the slab's squares); "how many quarters are in 3", the pieces counted (3 x 4); a fraction
+  //             divided by a fraction, the common denominator; mixed numbers, the bottom of the answer as worked
+  //   simplify  0 when that answer needs no simplifying, 1 when it does
+  H.unsimplified = function (q) {
+    var L = H.lcm(q.b, q.d);
+    if (!q.kind) return [q.a * L / q.b + H.sign(q.op) * q.c * L / q.d, L];
+    if (q.kind === 'm' && (q.op === '+' || q.op === '-')) {
+      return [H.improper(q.w1, q.a, q.b)[0] * L / q.b + H.sign(q.op) * H.improper(q.w2, q.c, q.d)[0] * L / q.d, L];
+    }
+    return H.typedValue(q);
+  };
+  H.ease = function (q) {
+    var u = H.unsimplified(q), kind = 0, parts = u[1];
+    if (q.kind === 'xf' || q.kind === 'df') kind = 1;
+    if (q.kind === 'm') kind = ['+', '-', 'x', '/'].indexOf(q.op);
+    if (q.kind === 'dw') parts = u[0];
+    if (q.kind === 'df') parts = H.lcm(q.b, q.d);
+    return [kind, parts, H.gcd(u[0], u[1]) === 1 ? 0 : 1];
+  };
+  H.byEase = function (x, y) {
+    var a = H.ease(x), b = H.ease(y);
+    for (var i = 0; i < a.length; i++) if (a[i] !== b[i]) return a[i] - b[i];
+    return 0;
+  };
+  // A question's defining numbers, to tell pool entries apart.
+  H.qid = function (q) { return [q.kind, q.op, q.a, q.b, q.c, q.d, q.n, q.m, q.w1, q.w2].join(','); };
+  // The worked example that opens every stage (item 3): an adding question (stage d's a fraction times a fraction, the
+  // slab; stage e's "how many quarters are in 3?") at the smallest H.ease among the stage's pool, not one of the
+  // questions drawn, picked by the seed among equals. Never scored, never counted, no question_answered.
+  H.EXAMPLE_KIND = { d: 'xf', e: 'dw' };
+  H.exampleFor = function (pool, st, drawn, rng) {
+    var ids = drawn.map(H.qid), want = H.EXAMPLE_KIND[st];
+    var cand = pool.filter(function (q) { return (want ? q.kind === want : q.op === '+') && ids.indexOf(H.qid(q)) === -1; });
+    if (!cand.length) return null;
+    cand.sort(H.byEase);
+    var low = cand.filter(function (q) { return H.byEase(q, cand[0]) === 0; });
+    var q = H.makeQuestion(low[Math.floor(rng() * low.length)], st, rng);
+    q.example = true;
+    return q;
+  };
+  // A Foundation stage's pool: its pool's questions with the stage's idea (stages 3 and 4 split pool c).
+  H.fpool = function (mode) {
+    var F = H.FSTAGES[mode];
+    return F.keep ? H.POOLS[F.stage].filter(F.keep) : H.POOLS[F.stage].slice();
+  };
+  // A session. Foundation (ks3): the one stage picked (`mode`), its worked example, then its 10 questions easiest first
+  // (H.byEase; Array sort is stable, so equals keep their shuffled order). Advanced (gcse): each stage in order, its
+  // worked example, then `per` questions as drawn. Only the questions after an example are numbered and scored.
+  H.buildSession = function (seed, level, mode) {
+    var rng = H.mulberry32(seed), qs = [], n = 0;
+    function put(list) { list.forEach(function (q) { if (!q) return; q.index = q.example ? 0 : ++n; qs.push(q); }); }
+    if (level !== 'gcse') {
+      mode = H.FSTAGES[mode] ? mode : 'stage1';
+      var F = H.FSTAGES[mode], pool = H.fpool(mode);
+      var drawn = H.drawStage(pool, F.stage, H.LEVELS.ks3.per, rng).sort(H.byEase);
+      drawn.forEach(function (q, i) { q.inStage = i + 1; });
+      put([H.exampleFor(pool, F.stage, drawn, rng)].concat(drawn));
+      qs.forEach(function (q) { q.mode = mode; });
+      return { seed: seed, level: 'ks3', mode: mode, stages: [F.stage], questions: qs };
+    }
+    var L = H.LEVELS.gcse;
+    L.stages.forEach(function (st) {
+      var drawn = H.drawStage(H.POOLS[st], st, L.per, rng);
+      put([H.exampleFor(H.POOLS[st], st, drawn, rng)].concat(drawn));
+    });
+    return { seed: seed, level: 'gcse', mode: 'all', stages: L.stages.slice(), questions: qs };
   };
   H.scoreFor = function (seconds) {
     return Math.max(1, Math.round(H.BASE / (1 + H.T_K * Math.log(1 + Math.max(0, seconds)))));
@@ -773,8 +908,9 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   };
   // A typed stage's questions: stage d a fraction times a whole number first, then fraction times fraction; stage
   // e "how many quarters are in 3?" first, then a fraction divided by a fraction; stage f one of each operation.
-  H.typedStage = function (st, per, rng) {
-    var pool = H.POOLS[st], plan;
+  H.typedStage = function (st, per, rng, pool) {
+    var plan;
+    pool = pool || H.POOLS[st];
     var first = Math.ceil(per / 2);
     if (st === 'd') plan = Array.apply(null, Array(per)).map(function (_, i) { return i < first ? 'xw' : 'xf'; });
     else if (st === 'e') plan = Array.apply(null, Array(per)).map(function (_, i) { return i < first ? 'dw' : 'df'; });
@@ -788,7 +924,6 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     return plan.map(function (t, i) {
       var q = H.makeTyped(bins[t][used[t]++], st);
       q.inStage = i + 1;
-      q.bar = i < H.BAR_FIRST;
       return q;
     });
   };
@@ -877,6 +1012,130 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       return { kind: 'bars', bars: split(cells, L), caption: H.cutCaption(q.b, q.d) };
     }
     return { kind: 'bars', bars: wholeBars(full ? H.key(q) : H.improper(q.w1, q.a, q.b), 'a'), caption: null };
+  };
+
+  /* ---------- the stepped explanation (contract HMP-FOUNDATION-STAGES, Jon, 22 Oct 2026) ---------- */
+  // The worked example that opens every stage, and the explanation after any wrong answer: the bar, with one line at a
+  // time on the question's own numbers, ending on the answer. H.steps(q) is [{text, model}]: text in the feedback
+  // line's format (TeX between § marks), model the figure drawn with that step, in H.model's format with no caption
+  // (the step says it). Adding and taking away hold one bar per number, one under the other (`stack`), until the last
+  // step puts them on one bar as H.model does; the fourth step is worded by how the bottoms relate: the same (just
+  // count), one a multiple of the other (only one bar is cut), or neither (both are cut). Multiplying fractions is the
+  // slab, explained the same way.
+  // A value as text and maths, simplified and (asked for) made a mixed number: "17/24", "6/8 = 3/4", "9/6 = 3/2 = 1 1/2".
+  H.chain = function (f, form) {
+    var s = H.simp(f);
+    return H.tex(f) + (s[1] !== f[1] ? ' = ' + H.tex(s) : '') + (form === 'mixed' && s[0] >= s[1] && s[1] !== 1 ? ' = ' + H.mixedTex(f) : '');
+  };
+  function sx(f) { return '§' + H.tex(f) + '§'; }
+  function mx(w, a, b) { return '§' + w + H.tex([a, b]) + '§'; }
+  function plural(n, one) { return n + ' ' + one + (n === 1 ? '' : 's'); }
+  function whole() { return bar(['']); }
+  function wholes(n) { return Array.apply(null, Array(n)).map(whole); }
+  // n squares of `type` in bars of L, each scored where its pieces of 1/den were before they were cut.
+  function recut(n, L, den, type) {
+    var out = [];
+    for (var i = 0; i * L < n; i++) out.push(bar(fill(L, [[type, Math.min(L, n - i * L)]]), runsOf(L, L / den)));
+    return out;
+  }
+  // The cutting that makes the pieces the same size ('' when they already are).
+  function cutting(b, d) {
+    var L = H.lcm(b, d), big = Math.min(b, d);
+    if (b === d) return '';
+    if (L === b || L === d) return 'cut each ' + H.partsName(big, 1) + ' into ' + L / big;
+    return 'cut each ' + H.partsName(b, 1) + ' into ' + L / b + ' and each ' + H.partsName(d, 1) + ' into ' + L / d;
+  }
+  function stacked(bars) { return { kind: 'bars', bars: bars, caption: null, stack: true }; }
+  function plain(bars) { return { kind: 'bars', bars: bars, caption: null }; }
+  function noCap(m) { m.caption = null; return m; }
+  function slabAt(q, a, c) {
+    return { kind: 'slab', cols: q.b, rows: q.d, a: a, c: c, top: a ? H.tex([q.a, q.b]) : '', side: c ? H.tex([q.c, q.d]) : '', caption: null };
+  }
+  function sumSteps(q) {
+    var L = H.lcm(q.b, q.d), A = q.a * L / q.b, C = q.c * L / q.d, R = A + sg(q) * C, cut = cutting(q.b, q.d);
+    var verb = q.op === '+' ? 'add' : 'take away';
+    var one = bar(fill(q.b, [['a', q.a]])), two = bar(fill(q.d, [['b', q.c]]));
+    var same = q.b === q.d ? 'Both bars are cut into ' + q.b + ': the pieces are already the same size, so just count them.' :
+      'You can only ' + verb + ' pieces the same size' + (H.lcm(q.b, q.d) === Math.max(q.b, q.d) ? '. Only one bar needs cutting: ' : ': ') +
+      cut + '. Both are now ' + H.partsName(L) + '.';
+    return [
+      { text: 'Each bar is one whole chocolate bar.', model: stacked([whole(), whole()]) },
+      { text: sx([q.a, q.b]) + ': cut a bar into ' + q.b + ', take ' + q.a + '.', model: stacked([one, whole()]) },
+      { text: sx([q.c, q.d]) + ': cut a bar into ' + q.d + ', take ' + q.c + '.', model: stacked([one, two]) },
+      { text: same, model: q.b === q.d ? stacked([one, two]) : stacked(recut(A, L, q.b, 'a').concat(recut(C, L, q.d, 'b'))) },
+      { text: sx([q.a, q.b]) + ' is ' + plural(A, 'piece') + ', ' + sx([q.c, q.d]) + ' is ' + C + ': ' + A + (q.op === '+' ? ' + ' : ' − ') +
+          C + ' = ' + R + ', so §' + H.chain([R, L]) + '§.', model: noCap(H.model(q, true)) }
+    ];
+  }
+  H.steps = function (q) {
+    var k, L, X, Y, R, cut, first, second;
+    if (!q.kind) return sumSteps(q);
+    if (q.kind === 'xw') {
+      k = [q.a * q.n, q.b];
+      return [
+        { text: 'Each bar is one whole chocolate bar.', model: plain(wholes(q.n)) },
+        { text: sx([q.a, q.b]) + ': cut each bar into ' + q.b + ', take ' + q.a + '.', model: H.model(q, true) },
+        { text: 'Times ' + q.n + ' is ' + q.n + ' lots of ' + sx([q.a, q.b]) + ': the pieces stay the same size, so the bottom stays ' + q.b + '.',
+          model: H.model(q, true) },
+        { text: q.a + ' × ' + q.n + ' = ' + plural(k[0], 'piece') + ', so §' + H.chain(k) + '§.', model: H.model(q, true) }
+      ];
+    }
+    if (q.kind === 'xf') {
+      k = [q.a * q.c, q.b * q.d];
+      return [
+        { text: 'The slab is one whole chocolate bar.', model: slabAt(q, 0, 0) },
+        { text: sx([q.a, q.b]) + ': take ' + q.a + ' of its ' + q.b + ' columns.', model: slabAt(q, q.a, 0) },
+        { text: sx([q.c, q.d]) + ' of that: take ' + q.c + ' of its ' + q.d + ' rows.', model: slabAt(q, q.a, q.c) },
+        { text: 'The slab is cut into ' + q.b + ' × ' + q.d + ' = ' + k[1] + ' squares, so each is ' + sx([1, k[1]]) + '.', model: slabAt(q, q.a, q.c) },
+        { text: q.a + ' × ' + q.c + ' = ' + plural(k[0], 'square') + ' where they cross, so §' + H.chain(k) + '§.', model: slabAt(q, q.a, q.c) }
+      ];
+    }
+    if (q.kind === 'dw') {
+      return [
+        { text: 'Each bar is one whole chocolate bar: there are ' + q.n + '.', model: plain(wholes(q.n)) },
+        { text: 'Cut each bar into ' + q.m + ': each piece is ' + sx([1, q.m]) + '.', model: H.model(q, true) },
+        { text: q.n + ' bars of ' + q.m + ' pieces: ' + q.n + ' × ' + q.m + ' = ' + q.n * q.m + ', so there are ' + q.n * q.m + ' ' +
+            H.partsName(q.m) + ' in ' + q.n + '.', model: H.model(q, true) }
+      ];
+    }
+    L = H.lcm(q.b, q.d);
+    cut = cutting(q.b, q.d);
+    if (q.kind === 'df') {
+      X = q.a * L / q.b; Y = q.c * L / q.d;
+      return [
+        { text: 'The bar is one whole chocolate bar.', model: plain([whole()]) },
+        { text: sx([q.a, q.b]) + ': cut it into ' + q.b + ', take ' + q.a + '.', model: plain([bar(fill(q.b, [['a', q.a]]))]) },
+        { text: (cut ? 'Make the pieces the same size: ' + cut + '. Both are now ' + H.partsName(L) + ': ' : 'The pieces are already the same size: ') +
+            sx([q.a, q.b]) + ' is ' + X + ', ' + sx([q.c, q.d]) + ' is ' + Y + '.', model: plain(recut(X, L, q.b, 'a')) },
+        { text: 'How many lots of ' + Y + ' fit into ' + X + '? ' + X + ' ÷ ' + Y + ', so §' + H.chain([X, Y]) + '§.', model: noCap(H.model(q, true)) }
+      ];
+    }
+    // mixed numbers: each as whole bars and a part bar
+    first = mx(q.w1, q.a, q.b) + ' is ' + plural(q.w1, 'whole bar') + ' and ' + sx([q.a, q.b]) + ' of another';
+    second = mx(q.w2, q.c, q.d) + ' is ' + plural(q.w2, 'whole bar') + ' and ' + sx([q.c, q.d]) + ' of another';
+    X = H.improper(q.w1, q.a, q.b); Y = H.improper(q.w2, q.c, q.d);
+    var bars1 = wholeBars(X, 'a'), bars12 = bars1.concat(wholeBars(Y, 'b'));
+    if (q.op === '+' || q.op === '-') {
+      var XL = X[0] * L / q.b, YL = Y[0] * L / q.d;
+      R = XL + sg(q) * YL;
+      return [
+        { text: 'Each bar is one whole chocolate bar: ' + first + '.', model: plain(bars1) },
+        { text: second + '.', model: plain(bars12) },
+        { text: (cut ? 'You can only ' + (q.op === '+' ? 'add' : 'take away') + ' pieces the same size: ' + cut + '. Every bar is now in ' +
+            H.partsName(L) + ': ' : 'The pieces are already the same size: ') + mx(q.w1, q.a, q.b) + ' is ' + XL + ', ' + mx(q.w2, q.c, q.d) +
+            ' is ' + YL + '.', model: plain(recut(XL, L, q.b, 'a').concat(recut(YL, L, q.d, 'b'))) },
+        { text: XL + (q.op === '+' ? ' + ' : ' − ') + YL + ' = ' + plural(R, 'piece') + ', so §' + H.chain([R, L], 'mixed') + '§.',
+          model: noCap(H.model(q, true)) }
+      ];
+    }
+    k = q.op === 'x' ? H.mul(X, Y) : H.div(X, Y);
+    return [
+      { text: 'Each bar is one whole chocolate bar: ' + first + ', so it is ' + sx(X) + '.', model: plain(bars1) },
+      { text: second + ', so it is ' + sx(Y) + '.', model: plain(bars12) },
+      { text: (q.op === 'x' ? 'Multiply the tops and the bottoms: §' + H.tex(X) + ' \\times ' + H.tex(Y) :
+          'Turn the second over and multiply: §' + H.tex(X) + ' \\times ' + H.tex([Y[1], Y[0]])) + ' = ' + H.tex(k) + '§.', model: plain(bars12) },
+      { text: 'As a mixed number: §' + H.chain(k, 'mixed') + '§.', model: noCap(H.model(q, true)) }
+    ];
   };
 
   /* ---------- the feedback: one line, then the bar, then the sum once ---------- */
@@ -982,9 +1241,12 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 (function () {
   'use strict';
   var H = window.HMP, SLUG = H.SLUG;
-  var level = MaffsLevel.resolve({ slug: 'how-many-parts', levels: ['ks3', 'gcse'], fallback: 'ks3' });
+  // Foundation's five stages are boards, not levels: the level stays ks3 (contract HMP-FOUNDATION-STAGES).
+  var level = MaffsLevel.resolve({ slug: 'how-many-parts', levels: ['ks3', 'gcse'], fallback: 'ks3',
+    boards: ['foundation-s1', 'foundation-s2', 'foundation-s3', 'foundation-s4', 'foundation-s5'] });
+  var mode = 'stage1';     // Foundation's stage, picked on the start screen
   var CORRECT_DELAY = 1100;
-  var NO_FALLBACK = 2147483647;      // the longest delay setTimeout takes: the worked example waits for Next
+  var NO_FALLBACK = 2147483647;      // the longest delay setTimeout takes: a wrong answer's steps wait for Next
   var $ = function (id) { return document.getElementById(id); };
   function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
   function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
@@ -1001,9 +1263,18 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       .replace(/\\dfrac\{(\d+)\}\{(\d+)\}/g, '\u0001$1\u0002$2\u0003').replace(/-/g, '−').replace(/,/g, ', '))
       .replace(/\u0001(\d+)\u0002(\d+)\u0003/g, function (m, n, d) { return sfrac(n, d); });
   }
-  // A feedback line: text with TeX between § marks (HMP's line format).
+  // A feedback line: text with TeX between § marks (HMP's line format). A bracket that opens just before the maths or
+  // closes just after it is kept on one line with it (k-punctuation scan, 22 Oct 2026: at 320px "(" ended a line and
+  // ")" started one): the bracket and the maths go in one nowrap span.
   function renderLine(line) {
-    return line.split('§').map(function (part, i) { return i % 2 ? tex(part) : esc(part); }).join('');
+    var p = line.split('§');
+    for (var i = 1; i < p.length; i += 2) {
+      var open = /\($/.test(p[i - 1]), close = i + 1 < p.length && /^\)/.test(p[i + 1]);
+      if (open) p[i - 1] = p[i - 1].slice(0, -1);
+      if (close) p[i + 1] = p[i + 1].slice(1);
+      p[i] = open || close ? '<span class="glue">' + (open ? '(' : '') + tex(p[i]) + (close ? ')' : '') + '</span>' : tex(p[i]);
+    }
+    return p.map(function (part, i) { return i % 2 ? part : esc(part); }).join('');
   }
 
   // The chocolate bar (contract HMP-CHOCOLATE): HMP.model's numbers drawn as ONE SVG figure. Every square carries
@@ -1041,8 +1312,9 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   }
   function barsSvg(m, id) {
     var nb = m.bars.length, most = Math.max.apply(null, m.bars.map(function (b) { return b.cells.length; }));
-    // Bars to a row: as many as keep a square at least 8px wide on a 320px phone, inside the feedback's box.
-    var per = nb === 1 ? 1 : Math.min(nb, most <= 4 ? 4 : most <= 6 ? 3 : 2);
+    // Bars to a row: as many as keep a square at least 8px wide on a 320px phone, inside the feedback's box; one, for
+    // the steps' bars of the two numbers (stack), which can be 24 squares long.
+    var per = nb === 1 || m.stack ? 1 : Math.min(nb, most <= 4 ? 4 : most <= 6 ? 3 : 2);
     var bw = (W - GAP * (per - 1)) / per, rows = Math.ceil(nb / per), out = '', y = 0, rowH = 0;
     m.bars.forEach(function (b, i) {
       var n = b.cells.length, cut = {}, at = 0;
@@ -1072,7 +1344,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     });
     var H2 = y + rowH;
     var count = function (t) { return m.bars.reduce(function (s, b) { return s + b.cells.filter(function (c) { return c === t; }).length; }, 0); };
-    var label = (nb === 1 ? 'A chocolate bar of ' + m.bars[0].cells.length + ' squares' : nb + ' chocolate bars') +
+    var label = (nb === 1 ? 'A chocolate bar of ' + m.bars[0].cells.length + (m.bars[0].cells.length === 1 ? ' square' : ' squares') : nb + ' chocolate bars') +
       (count('a') ? ', ' + count('a') + ' squares in milk chocolate' : '') + (count('b') ? ', ' + count('b') + ' striped' : '') +
       (count('eaten') ? ', ' + count('eaten') + ' eaten' : '') + (count('o') ? ', ' + count('o') + ' pieces to count' : '') + '.';
     return '<svg viewBox="0 0 ' + W + ' ' + H2.toFixed(1) + '" width="100%" role="img" aria-label="' + esc(label) + '" data-model="bars" data-bars="' + nb + '">' +
@@ -1097,9 +1369,12 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       (m.caption ? '<figcaption>' + esc(m.caption) + '</figcaption>' : '') + '</figure>';
   }
 
-  var session = null, q = null, idx = 0, state = 'menu';
+  var session = null, q = null, idx = 0, state = 'menu', scored = 0;
   var score = 0, correctCount = 0, errCount = {}, helpCount = 0, byStage = {}, askedMs = 0, askStart = 0, clockTimer = null;
-  var barNext = false;     // a wrong answer: the bar model is drawn again on the next question (Jon, 20 Oct 2026)
+  // What the events log as `mode` and the board a score goes to: Foundation's stage (Simultaneous Solver's pattern:
+  // mode 'stage3', board 'foundation-s3'); Advanced 'all' and its level's board, as before.
+  function modeKey() { return session.level === 'ks3' ? session.mode : 'all'; }
+  function boardKey() { return session.level === 'ks3' ? H.FSTAGES[session.mode].board : session.level; }
 
   function show(id) {
     ['menu', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
@@ -1122,20 +1397,32 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       bs[i].classList.toggle('selected', on);
       bs[i].setAttribute('aria-pressed', String(on));
     }
-    var served = H.LEVELS[level].stages.filter(function (s) { return H.BUILT.indexOf(s) !== -1; });
-    var li = $('stageList').querySelectorAll('li');
-    for (var j = 0; j < li.length; j++) li[j].classList.toggle('off', served.indexOf(li[j].getAttribute('data-stage')) === -1);
+    // Foundation: the five stages to pick from; Advanced: its six stages, in order. One Start, under whichever shows.
+    var f = level === 'ks3';
+    $('modePanel').hidden = !f;
+    $('stagePanel').hidden = f;
+    (f ? $('modePanel') : $('startSlot')).appendChild($('startBtn'));
+  }
+  function setMode(m) {
+    mode = H.FSTAGES[m] ? m : 'stage1';
+    var bs = $('modePick').querySelectorAll('.mode-btn');
+    for (var i = 0; i < bs.length; i++) {
+      var on = bs[i].getAttribute('data-mode') === mode;
+      bs[i].classList.toggle('selected', on);
+      bs[i].setAttribute('aria-pressed', String(on));
+    }
   }
 
   function startGame() {
     MaffsLock.newSession();
-    session = H.buildSession(H.newSeed(), level);
-    idx = 0; score = 0; correctCount = 0; errCount = {}; helpCount = 0; askedMs = 0; barNext = false;
+    session = H.buildSession(H.newSeed(), level, mode);
+    scored = session.questions.filter(function (x) { return !x.example; }).length;
+    idx = 0; score = 0; correctCount = 0; errCount = {}; helpCount = 0; askedMs = 0;
     byStage = {};
     session.stages.forEach(function (s) { byStage[s] = 0; });
     show('game');
     clearInterval(clockTimer); clockTimer = setInterval(clock, 1000);
-    ev('game_started', { game_slug: SLUG, level: level, mode: 'all' });
+    ev('game_started', { game_slug: SLUG, level: level, mode: modeKey() });
     nextQuestion();
   }
 
@@ -1146,31 +1433,32 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     $('qcard').classList.remove('fb-open');
     document.body.classList.remove('fb-open');
     if (idx >= session.questions.length) { finish(); return; }
-    ask(session.questions[idx++], session.questions.length);
+    ask(session.questions[idx++], scored);
   }
-  // Draws one question: the stage, the question, the bar when it shows, then the options or the answer box.
+  // Draws one question: the stage, the question, then the options or the answer box. No bar before answering
+  // (contract HMP-FOUNDATION-STAGES): the bar comes with its steps, in the worked example and after a wrong answer.
   function ask(nq, total) {
     q = nq;
-    $('stageLabel').textContent = H.STAGES[q.stage].label;
-    $('hudQ').textContent = q.index + '/' + total;
-    $('hudStage').textContent = String(H.STAGES[q.stage].n);
+    var F = q.mode ? H.FSTAGES[q.mode] : H.STAGES[q.stage];
+    $('stageLabel').textContent = F.label;
+    $('hudQ').textContent = q.example ? 'Example' : q.index + '/' + total;
+    $('hudStage').textContent = String(F.n);
     $('hudScore').textContent = score;
     $('prompt').innerHTML = (q.kind === 'dw' ? '<span class="ask">' + esc(q.lead) + '</span>' : '') +
       '<span class="sum">' + tex(q.sumTex) + '</span>';
-    $('askLine').textContent = q.ask || '';
+    $('askLine').textContent = q.example ? '' : q.ask || '';
     // A one-fraction answer sits beside the sum, with Check under the sum; a mixed number and its Check go below it;
-    // multiple choice has neither.
-    var inline = q.typed && q.form !== 'mixed';
+    // multiple choice and the worked example have neither.
+    var inline = q.typed && q.form !== 'mixed' && !q.example;
     $('qrow').classList.toggle('stacked', !inline);
     $('eqSign').hidden = !inline;
     (inline ? $('checkSlot') : $('checkRow')).appendChild($('checkBtn'));
-    $('checkRow').hidden = !q.typed || inline;
-    $('qcard').classList.toggle('typing', !!q.typed);
-    q.barShown = q.bar || barNext;
-    barNext = false;
-    $('qbars').innerHTML = q.barShown ? renderModel(H.model(q, false)) : '';
+    $('checkRow').hidden = !q.typed || inline || !!q.example;
+    $('qcard').classList.toggle('typing', !!q.typed && !q.example);
+    $('qbars').innerHTML = '';
     var box = $('options');
     box.innerHTML = '';
+    if (q.example) { askExample(); return; }
     if (q.typed) { askTyped(); return; }
     $('typedForm').hidden = true;
     $('kpHolder').innerHTML = '';
@@ -1190,6 +1478,44 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     state = 'asking';
     askStart = Date.now();
     window.scrollTo(0, 0);
+    clock();
+  }
+
+  // The bar and its steps (HMP.steps), revealed one tap at a time into `wrap` (contract HMP-FOUNDATION-STAGES). `done`:
+  // the worked example's way on, offered on its last step; a wrong answer's explanation has none (Next is its way on).
+  // After a tap, the button (or, on the last step of a wrong answer, Next) is kept above the fold.
+  function explain(wrap, eq, done) {
+    var steps = H.steps(eq), at = 0;
+    function draw() {
+      var last = at === steps.length - 1;
+      wrap.setAttribute('data-step', String(at + 1));
+      wrap.setAttribute('data-steps', String(steps.length));
+      wrap.innerHTML = renderModel(steps[at].model) + '<ol class="steps">' + steps.slice(0, at + 1).map(function (s) {
+        return '<li><span>' + renderLine(s.text) + '</span></li>';
+      }).join('') + '</ol>' + (last && !done ? '' : '<div class="step-row"><button class="btn' + (last ? ' solid' : '') +
+        '" type="button" id="stepBtn">' + (last ? 'Start the questions' : 'Show the next step') + '</button></div>');
+      var b = wrap.querySelector('#stepBtn');
+      if (b) b.addEventListener('click', function () { if (last) done(); else { at++; draw(); } });
+      MaffsLock.fresh(wrap);   // a double-tap reveals one step, never two
+      if (!at) return;
+      var keep = b || document.querySelector('#feedback .fb-next button');
+      var over = keep ? keep.getBoundingClientRect().bottom - (window.innerHeight - FOOTER_PX) : 0;
+      if (over > 0) window.scrollBy(0, over);
+    }
+    draw();
+  }
+  // Question 1 of every stage: the worked example. No answer, no score, no question_answered; its last step's button
+  // goes on to the questions.
+  function askExample() {
+    $('typedForm').hidden = true;
+    $('kpHolder').innerHTML = '';
+    kp = null;
+    var wrap = document.createElement('div');
+    wrap.className = 'explain';
+    $('qbars').appendChild(wrap);
+    state = 'example';
+    window.scrollTo(0, 0);
+    explain(wrap, q, nextQuestion);
     clock();
   }
 
@@ -1250,7 +1576,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     var secs = (Date.now() - askStart) / 1000;
     askedMs += Date.now() - askStart;
     state = ok ? 'right' : 'wrong';
-    ev('question_answered', { game_slug: SLUG, level: level, mode: q.stage, question_index: q.index, correct: ok });
+    ev('question_answered', { game_slug: SLUG, level: level, mode: q.mode || q.stage, question_index: q.index, correct: ok });
     if (ok) {
       correctCount++; byStage[q.stage]++;
       score += H.scoreFor(secs);
@@ -1268,9 +1594,11 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     showWrong(chosen, help);
   }
 
-  // The wrong-answer screen (HMP-CHOCOLATE): one line saying what went wrong, the one bar, the correct sum once, Next.
-  // Nothing else. The line is a listed error's worked example (the first three in a session) or its nudge; any other
-  // wrong answer gets what was typed and the stage's rule (the premise, for adding and taking away).
+  // The wrong-answer screen (HMP-CHOCOLATE): one line saying what went wrong, the bar with its steps (contract
+  // HMP-FOUNDATION-STAGES: the worked example's steps on this question's numbers), the correct sum once, Next. Nothing
+  // else. The line is a listed error's worked example (the first three in a session) or its nudge; any other wrong
+  // answer gets what was typed and the stage's rule (the premise, for adding and taking away). Next waits for the
+  // student (no fallback): there are steps to read.
   function showWrong(chosen, help) {
     var id = chosen.err, line;
     if (help === 'example') line = H.example(q, id);
@@ -1278,16 +1606,14 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     else line = 'You said §' + chosen.tex + '§. ' + H.rule(q);
     var h = '<div class="fb wrong">';
     h += '<div class="fb-line" data-help="' + (id ? help : 'rule') + '"' + (id ? ' data-err="' + id + '"' : '') + '>' + renderLine(line) + '</div>';
-    h += renderModel(H.model(q, true));
+    h += '<div class="explain"></div>';
     h += '<div class="fb-sum">' + tex(H.sumLine(q)) + '</div>';
     h += '<div class="fb-next"></div></div>';
     $('feedback').innerHTML = h;
     $('qcard').classList.add('fb-open');
     document.body.classList.add('fb-open');
-    barNext = true;
-    var opts = { mount: $('feedback').querySelector('.fb-next'), onAdvance: nextQuestion };
-    if (help === 'example') opts.fallbackMs = NO_FALLBACK;
-    MaffsNext.wrong(opts);
+    explain($('feedback').querySelector('.explain'), q, null);
+    MaffsNext.wrong({ mount: $('feedback').querySelector('.fb-next'), onAdvance: nextQuestion, fallbackMs: NO_FALLBACK });
     // The phone rule (canon 7.6.1): the line and Next above the fold. Where the bar would push Next below it (a
     // small phone, Aa mode), the bar is drawn after Next instead: visual order only, the reading order stays.
     var fb = $('feedback').querySelector('.fb'), nx = fb.querySelector('.fb-next button');
@@ -1299,20 +1625,26 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   var finish = MaffsLock.finishOnce(function () {
     state = 'done';
     clearInterval(clockTimer);
-    var n = session.questions.length, secs = Math.floor(elapsed() / 1000);
-    ev('game_completed', { game_slug: SLUG, level: level, mode: 'all', score: score, questions_answered: n, questions_correct: correctCount });
-    if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, level, score, n).catch(function () {});
-    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, level, score);
-    var pbKey = 'hmp_best_' + level;
+    var n = scored, secs = Math.floor(elapsed() / 1000), board = boardKey();
+    ev('game_completed', { game_slug: SLUG, level: level, mode: modeKey(), score: score, questions_answered: n, questions_correct: correctCount });
+    if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, board, score, n).catch(function () {});
+    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, board, score);
+    var pbKey = 'hmp_best_' + board;
     var prev = parseInt(lsGet(pbKey) || '0', 10) || 0;
     var pb = score > prev;
-    if (pb) { ev('personal_best_set', { game_slug: SLUG, level: level, mode: 'all', score: score, previous_best: prev }); lsSet(pbKey, String(score)); }
-    var per = H.LEVELS[session.level].per;
+    if (pb) { ev('personal_best_set', { game_slug: SLUG, level: level, mode: modeKey(), score: score, previous_best: prev }); lsSet(pbKey, String(score)); }
+    var per = H.LEVELS[session.level].per, F = session.level === 'ks3' ? H.FSTAGES[session.mode] : null;
+    $('resTitle').textContent = F ? 'Stage ' + F.n + ' done' : 'Session done';
     $('resScore').textContent = score;
     $('resStats').innerHTML = '<b>' + correctCount + '</b> right out of <b>' + n + '</b> · time <b>' +
-      Math.floor(secs / 60) + ':' + ('0' + (secs % 60)).slice(-2) + '</b><br>' +
-      session.stages.map(function (s) { return 'Stage ' + H.STAGES[s].n + ' <b>' + byStage[s] + '/' + per + '</b>'; }).join(' · ') +
+      Math.floor(secs / 60) + ':' + ('0' + (secs % 60)).slice(-2) + '</b>' +
+      (F ? '' : '<br>' + session.stages.map(function (s) { return 'Stage ' + H.STAGES[s].n + ' <b>' + byStage[s] + '/' + per + '</b>'; }).join(' · ')) +
       (pb ? '<br>New personal best' : '');
+    // Foundation: straight on to the next stage (none after stage 5).
+    var next = F && F.n < 5 ? 'stage' + (F.n + 1) : null;
+    $('nextStageBtn').hidden = !next;
+    $('nextStageBtn').textContent = next ? 'Next: Stage ' + (F.n + 1) : '';
+    $('nextStageBtn').setAttribute('data-mode', next || '');
     show('results');
   });
 
@@ -1320,11 +1652,17 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   $('startBtn').addEventListener('click', startGame);
   $('typedForm').addEventListener('submit', function (e) { e.preventDefault(); submitTyped(); });
   $('againBtn').addEventListener('click', function () { state = 'menu'; show('menu'); });
+  $('nextStageBtn').addEventListener('click', function () { setMode($('nextStageBtn').getAttribute('data-mode')); startGame(); });
   $('levelPick').addEventListener('click', function (e) {
     var b = e.target.closest('.level-btn');
     if (b) setLevel(b.getAttribute('data-level'));
   });
+  $('modePick').addEventListener('click', function (e) {
+    var b = e.target.closest('.mode-btn');
+    if (b) setMode(b.getAttribute('data-mode'));
+  });
   setLevel(level);
+  setMode(mode);
   var texEls = document.querySelectorAll('[data-tex]');
   for (var t = 0; t < texEls.length; t++) texEls[t].innerHTML = tex(texEls[t].getAttribute('data-tex'));
 
@@ -1347,6 +1685,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     // scripts/verify-how-many-parts.py can measure every shape (canon 7.6.1) without playing to each.
     preview: function (src, stage, err, help) {
       if (window.MaffsNext) MaffsNext.clear($('feedback'));
+      $('qbars').innerHTML = '';   // as after ask(): a question shows no bar
       q = H.makeQuestion(src, stage, H.mulberry32(1));
       q.index = 1; q.inStage = 1;
       state = 'wrong';
@@ -1355,16 +1694,17 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       if (q.typed) c.typed = true;
       showWrong(c, err ? help : null);
     },
-    // The question screen for one pool entry, drawn by the game's own path, with the bar shown.
-    ask: function (src, stage) {
+    // The question screen for one pool entry, drawn by the game's own path; with `example`, its worked example.
+    ask: function (src, stage, example) {
       if (window.MaffsNext) MaffsNext.clear($('feedback'));
       $('feedback').innerHTML = '';
       $('qcard').classList.remove('fb-open');
       document.body.classList.remove('fb-open');
       var nq = H.makeQuestion(src, stage, H.mulberry32(1));
-      nq.index = 1; nq.inStage = 1; nq.bar = true;
+      nq.index = example ? 0 : 1; nq.inStage = 1; nq.example = !!example;
       ask(nq, 1);
     },
+    mode: function () { return mode; },
     keypad: function () { return kp; }
   };
 })();
