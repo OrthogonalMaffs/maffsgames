@@ -11,4 +11,4 @@ Carry on with #479, then the K() scan, in your order.
 FDP.spread makes one pass of swaps. Over 10,000 seeds on main, 245 mixed/20 practice sets and 4 mixed/40 sets kept two
 neighbours about the same value although separation was possible (single-stage sets: 0). FDP-KEY-COLLIDE's filter
 changed what seed 2026 draws, and the verifier's mixed/20 seed-2026 check failed on it: stage 1's five were
-1/100, 1/100, 4/5, 1/8, 1/100 (separable as 1/100, 4/5, 1/100, 1/8, 1/100); spread left two 1/100 together.
+4/5, 1/100, 1/100, 1/8, 1/100 (separable as 1/100, 4/5, 1/100, 1/8, 1/100); spread left two 1/100 together.

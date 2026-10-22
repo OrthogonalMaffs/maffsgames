@@ -779,25 +779,37 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
   };
 
   /* ---------- practice sets ---------- */
-  /* No two neighbours share a family where a swap can fix it: first with a later item, else
-     with an earlier one that fits both places. One pass; each step scans the list at most once
-     each way, so it is bounded. */
+  /* No two neighbours share a family whenever an order exists that keeps them apart (FDP-SPREAD, Jon,
+     22 Oct 2026; the one-pass swap it replaces left 2.5% of mixed 20s with a pair it could have split).
+     Each place takes the EARLIEST remaining question, in the shuffled order, that differs in family from
+     the one before it and leaves the rest still separable: with m left, no family may hold more than
+     ceil(m / 2), and the family just placed no more than floor(m / 2), since it cannot come next. A list
+     that is already apart comes back unchanged. Where no order can keep them apart (one family holds
+     more than half), the earliest that differs is taken, else the earliest. n places, each scanning the
+     remaining list once: bounded. */
   FDP.spread = function (list) {
-    var a = list.slice(), n = a.length;
-    function fam(i) { return FDP.family(a[i]); }
-    function swap(i, j) { var t = a[i]; a[i] = a[j]; a[j] = t; }
-    for (var i = 1; i < n; i++) {
-      if (fam(i) !== fam(i - 1)) continue;
-      var moved = false, j;
-      for (j = i + 1; j < n && !moved; j++) {
-        if (fam(j) !== fam(i - 1)) { swap(i, j); moved = true; }
+    var rest = list.slice(), out = [], count = {};
+    rest.forEach(function (id) { var f = FDP.family(id); count[f] = (count[f] || 0) + 1; });
+    function separable(f, m) {          // after taking one of family f, with m left
+      for (var g in count) {
+        var c = count[g] - (g === f ? 1 : 0);
+        if (c > Math.ceil(m / 2) || (g === f && c > Math.floor(m / 2))) return false;
       }
-      for (j = 0; j < i - 1 && !moved; j++) {
-        if (fam(j) !== fam(i - 1) && (i + 1 >= n || fam(j) !== fam(i + 1)) &&
-            (j === 0 || fam(i) !== fam(j - 1)) && fam(i) !== fam(j + 1)) { swap(i, j); moved = true; }
-      }
+      return true;
     }
-    return a;
+    while (rest.length) {
+      var prev = out.length ? FDP.family(out[out.length - 1]) : null, pick = -1, other = -1;
+      for (var i = 0; i < rest.length && pick < 0; i++) {
+        var f = FDP.family(rest[i]);
+        if (f === prev) continue;
+        if (other < 0) other = i;
+        if (separable(f, rest.length - 1)) pick = i;
+      }
+      if (pick < 0) pick = other >= 0 ? other : 0;
+      count[FDP.family(rest[pick])]--;
+      out.push(rest.splice(pick, 1)[0]);
+    }
+    return out;
   };
   FDP.poolSize = function (stage) {
     return stage === 'mixed' ? Math.min.apply(null, [1, 2, 3, 4].map(function (s) { return FDP.BANK[s].length; })) * 4 : FDP.BANK[stage].length;
