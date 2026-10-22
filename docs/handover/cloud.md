@@ -53,6 +53,8 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only via `python scripts/merge-pr.py <n>`
 (needs a green Gate and main, §7.8.3); watch main's run after.
 
+## 2026-10-22 (cloud): COMIC-CAPER-LOCKS (report only): **all locks open** on the answer worked from the rendered clues, every set of all three locks (4/9/10), typed, slider and dial, desktop and phone, all 184 fresh draws won; no stale save splits clues from answer. Report and observations for Jon: `docs/audits/comic-caper-locks-2026-10-22.md`.
+
 ## 2026-10-22 (cloud): ANSWER-LOCK-STATIC (contract verbatim, with Jon's redesign rulings: `docs/handover/contracts/2026-10-22-answer-lock-static.md`; lane exception for `check-answer-lock.py` and canon §7.6.0). **In flight.**
 
 - **Done:** a new CI line "Answer lock, static rules and self-test" (`--selftest && --static`: static rules, NOT_YET, the cloud list, once; no game played); `--part i/6` plays games only, part 1 included. The static rules read page text only, never play state. Self-test adds: each judged game played by exactly one part; the static report on exactly one line; a static fault (a page without answer-lock.js) fails. Locally the self-test runs in 74 s, `--static` in 0.5 s.
