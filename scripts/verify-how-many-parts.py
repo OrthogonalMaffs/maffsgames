@@ -1662,30 +1662,29 @@ FOOTER = 40   # the fixed site footer (canon 7.6.1: measure against the viewport
 # ")" with what precedes it. Atoms are the visible characters of text and each KaTeX expression; two atoms share a
 # line when their boxes overlap vertically.
 BRACKETS_JS = r"""window.__hmpBrackets = function (el) {
+  if (!/[()]/.test(el.textContent)) return [];
+  // the visible characters and the KaTeX expressions in reading order; boxes measured only for a bracket and the atom
+  // beside it
   const atoms = [];
   const walk = (node) => {
-    if (node.nodeType === 1 && node.classList.contains('katex')) {
-      const rs = [...node.getClientRects()].filter(r => r.width > 0);
-      if (rs.length) atoms.push({ t: 'm', first: rs[0], last: rs[rs.length - 1] });
-      return;
-    }
+    if (node.nodeType === 1 && node.classList.contains('katex')) { atoms.push({ m: node }); return; }
     if (node.nodeType === 3) {
-      for (let i = 0; i < node.data.length; i++) {
-        if (/\s/.test(node.data[i])) continue;
-        const rg = document.createRange(); rg.setStart(node, i); rg.setEnd(node, i + 1);
-        const r = rg.getClientRects()[0];
-        if (r) atoms.push({ t: node.data[i], first: r, last: r });
-      }
+      for (let i = 0; i < node.data.length; i++) if (!/\s/.test(node.data[i])) atoms.push({ t: node.data[i], node, i });
       return;
     }
     node.childNodes.forEach(walk);
   };
   walk(el);
-  const same = (a, b) => a.top < b.bottom - 1 && b.top < a.bottom - 1;
+  const box = (a, end) => {
+    if (a.m) { const rs = [...a.m.getClientRects()].filter(r => r.width > 0); return rs.length ? rs[end ? rs.length - 1 : 0] : null; }
+    const rg = document.createRange(); rg.setStart(a.node, a.i); rg.setEnd(a.node, a.i + 1);
+    return rg.getClientRects()[0] || null;
+  };
+  const same = (a, b) => !a || !b || (a.top < b.bottom - 1 && b.top < a.bottom - 1);
   const bad = [];
   atoms.forEach((x, i) => {
-    if (x.t === '(' && atoms[i + 1] && !same(x.last, atoms[i + 1].first)) bad.push('"(" ends a line');
-    if (x.t === ')' && atoms[i - 1] && !same(atoms[i - 1].last, x.first)) bad.push('")" starts a line');
+    if (x.t === '(' && atoms[i + 1] && !same(box(x), box(atoms[i + 1], false))) bad.push('"(" ends a line');
+    if (x.t === ')' && atoms[i - 1] && !same(box(atoms[i - 1], true), box(x))) bad.push('")" starts a line');
   });
   return bad;
 };"""
