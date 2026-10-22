@@ -11,6 +11,10 @@
    the storage event so that when the class hits "play again" in
    the other tab, these answers change with them.
 
+   With no game on this device the page cannot know the set, so a lock
+   with two or more sets gets no single answer: its figures are given
+   per set, by the letter on the students' lock screen (rating.js).
+
    The page adds what the game has no use for: topic labels,
    per-lock timings, curriculum lines, which clue feeds which
    lock, and the whole library so a teacher can see the range.
@@ -30,6 +34,15 @@
       live = raw ? JSON.parse(raw) : null;
     } catch (e) { live = null; }
   }
+
+  // Set codes come from rating.js (one mapping for both pages). A lock with two or more sets has a code; a
+  // single-set lock has none and is shown as before.
+  function multi(l) { return (l.variants || []).length > 1; }
+  function codeOf(i) { var M = window.MaffsEscapeRating; return M && M.setCode ? M.setCode(i) : ''; }
+  // With no game on this device the page cannot know the set, so a multi-set lock never gets a single answer.
+  function undecided(l) { return !live && multi(l); }
+  var BY_SET = 'By set, see below';
+  function tag(l) { return multi(l) && live ? ' (Set ' + codeOf(indexOf(l)) + ')' : ''; }
 
   function indexOf(l) {
     if (live && live.vars && live.vars[l.id] !== undefined) return live.vars[l.id];
@@ -111,8 +124,9 @@
         ' on this device. Every answer, hint and worked solution below is the set the students are looking at. ' +
         'If they start again, this page updates itself.</div>'
       : '<div class="unlisted" id="liveBox"><b>No game running on this device.</b> Each lock draws its numbers ' +
-        'fresh when a room is started, so the figures below are the <i>first</i> set in each library, shown as an ' +
-        'example. Open the room in another tab and this page will switch to the numbers the students actually get.</div>';
+        'fresh when a room is started, so this page cannot know which set a group has. Ask each group for the set ' +
+        'letter at the top of its lock screen (&ldquo;Set C&rdquo;) and read that lock&rsquo;s row in the table ' +
+        'below it. Open the room in another tab on this device and this page will follow the numbers in play instead.</div>';
 
     var html = '' +
       '<div class="card">' +
@@ -136,16 +150,17 @@
           var insDesc = ins.kind === 'keypad' ? (ins.maxDigits ? 'keypad, up to ' + ins.maxDigits + ' digits' : ins.digits + '-digit keypad')
             : ins.kind === 'pair' ? 'two dials'
             : ins.kind + ', ' + ins.min + '&ndash;' + ins.max + (ins.step !== 1 ? ' in ' + ins.step + 's' : '');
-          return '<tr><td><b>' + esc(l.name) + '</b><br><code>' + esc(l.id) + '</code></td>' +
+          return '<tr data-lock="' + esc(l.id) + '"><td><b>' + esc(l.name) + '</b><br><code>' + esc(l.id) + '</code></td>' +
             '<td>' + esc(m.topic || '') + '</td>' +
             '<td>' + insDesc + '</td>' +
-            '<td class="ans">' + ansOf(l) + '</td>' +
-            '<td class="wrongans">' + missOf(l) + '</td>' +
+            '<td class="ans">' + (undecided(l) ? BY_SET : ansOf(l) + tag(l)) + '</td>' +
+            '<td class="wrongans">' + (undecided(l) ? BY_SET : missOf(l)) + '</td>' +
             '<td>' + (m.minutes ? m.minutes + ' min' : '&mdash;') + '</td></tr>';
         }).join('') +
         '</tbody></table>' +
 
         '<h2>Where the clues are, and what they say this time</h2>' +
+        (live ? '' : '<p class="print-note">With no game on this device, a clue below shows each lock&rsquo;s Set A figures, as an example.</p>') +
         '<p class="lede">The room deliberately does not tell students which note belongs to which lock &mdash; that ' +
           'is the first real piece of thinking, and it is where the difficulty lives. This table is for you.</p>' +
         '<table class="tt"><thead><tr><th>Object</th><th>Where</th><th>Feeds</th><th>What it says</th></tr></thead><tbody>' +
@@ -159,13 +174,15 @@
         '<h2>Answers, method and the hint ladder</h2>' +
         R.locks.map(function (l, i) {
           var m = meta[i] || {};
-          return '<div class="panel" style="margin-bottom:14px">' +
-            '<h3>' + esc(l.name) + ' &mdash; answer <span class="ans">' + ansOf(l) + '</span></h3>' +
+          return '<div class="panel" data-lock="' + esc(l.id) + '" style="margin-bottom:14px">' +
+            '<h3>' + esc(l.name) + ' &mdash; ' + (undecided(l) ? '<span class="ans">answer depends on the set</span>'
+              : 'answer <span class="ans">' + ansOf(l) + tag(l) + '</span>') + '</h3>' +
+            (undecided(l) ? '<p class="print-note">Worked for Set A, as an example. The method is the same for every set; the figures are in the table below.</p>' : '') +
             '<p style="margin-bottom:8px">' + fill(l.solve) + '</p>' +
             (m.curriculum ? '<p class="print-note">Curriculum: ' + m.curriculum + '</p>' : '') +
             '<p style="margin-top:10px"><b>The misconception it is built around</b> &mdash; ' +
-              '<span class="wrongans">' + missOf(l) + '</span>. ' + fill(l.missSays || '') + '</p>' +
-            '<p style="margin-top:10px"><b>Hint ladder</b> (students see these one at a time):</p>' +
+              '<span class="wrongans">' + (undecided(l) ? 'for your set, see the table below' : missOf(l)) + '</span>. ' + fill(l.missSays || '') + '</p>' +
+            '<p style="margin-top:10px"><b>Hint ladder</b>' + (undecided(l) ? ' (worked for Set A, as an example)' : '') + ' (students see these one at a time):</p>' +
             '<ol class="ladder">' + l.hints.map(function (h, k) {
               return '<li><b>' + ['Nudge', 'Method', 'Answer'][k] + ':</b> ' + fill(h) + '</li>';
             }).join('') + '</ol>' +
@@ -194,11 +211,12 @@
   // The whole library for one lock, with the set in play marked.
   function libraryTable(l) {
     var here = indexOf(l);
-    return '<p style="margin-top:12px"><b>The rest of this lock’s library</b> — what else can come up:</p>' +
+    return '<p style="margin-top:12px"><b>This lock’s library</b> — every set that can come up, by the letter on the lock screen:</p>' +
       '<table class="tt"><thead><tr><th>Set</th><th>Answer</th><th>Wrong answer</th></tr></thead><tbody>' +
       l.variants.map(function (v, i) {
-        return '<tr' + (i === here ? ' style="outline:2px solid var(--accent)"' : '') + '>' +
-          '<td>' + (i + 1) + (i === here ? ' <b>&larr; in play</b>' : '') + '</td>' +
+        var mark = live && i === here;
+        return '<tr data-set="' + codeOf(i) + '"' + (mark ? ' style="outline:2px solid var(--accent)"' : '') + '>' +
+          '<td><b>' + codeOf(i) + '</b>' + (mark ? ' <b>&larr; in play</b>' : '') + '</td>' +
           '<td class="ans">' + ansOf(l, v) + '</td>' +
           '<td class="wrongans">' + missOf(l, v) + '</td></tr>';
       }).join('') +

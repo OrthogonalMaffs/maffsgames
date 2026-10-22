@@ -409,7 +409,7 @@
     }
     var l = R.locks[activeLock];
     var open = !!st.open[l.id];
-    host.innerHTML =
+    host.innerHTML = setTag(l) +
       (l.art ? '<div class="artframe"><img onerror="mfgArtFallback(this)" src="' + ART + l.art +
                '.webp" alt="' + esc(l.artAlt) + '" loading="lazy"></div>' : '') +
       '<div class="lock-brief">' + fill(l.brief) + '</div>' +
@@ -417,6 +417,15 @@
       (open ? openedBody(l) : instrumentBody(l)) +
       (open ? '' : hintsBody(l));
     if (!open) wireInstrument(l);
+  }
+
+  // "Set C": which of the lock's number sets was drawn (rating.js owns the letters). Shown only when the lock
+  // has two or more sets, open or not, and derived from st.vars each time, so it needs no save field.
+  function setTag(l) {
+    var M = window.MaffsEscapeRating, n = (l.variants || []).length;
+    if (!M || !M.setCode || n < 2) return '';
+    var c = M.setCode(Math.min((st && st.vars && st.vars[l.id]) || 0, n - 1));
+    return c ? '<div class="set-code">Set ' + c + '</div>' : '';
   }
 
   function openedBody(l) {
