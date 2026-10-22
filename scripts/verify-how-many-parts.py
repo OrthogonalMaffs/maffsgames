@@ -3,7 +3,7 @@
 # ci-line: How Many Parts?, part 2 (every wrong-answer screen at 320x568, normal and Aa: the reason and Next above the fold; stage 1's bar, answer box and keypad in the window together) | --part 2
 # ci-line: How Many Parts?, part 3 (every wrong-answer screen at 375x667 and 390x844, normal and Aa: the reason and Next above the fold) | --part 3
 # ci-line: How Many Parts?, part 4 (every wrong-answer screen at 1280x800, normal and Aa: the reason and Next above the fold) | --part 4
-# ci-line: How Many Parts?, part 5 (fault-injection self-test: seven planted faults in the engine, the bar and the palette, each caught) | --part 5
+# ci-line: How Many Parts?, part 5 (fault-injection self-test: eight planted faults in the engine, the bar and the palette, each caught) | --part 5
 # ci-line: How Many Parts?, part 6 (fault-injection self-test: five planted faults in play and the stage 1 fit, each caught) | --part 6
 # ci-deps: games/how-many-parts/
 """Independent verification for How Many Parts? (games/how-many-parts/), built 20 Oct 2026 (contract HOW-MANY-PARTS)
@@ -37,8 +37,9 @@ WHAT IT ASSERTS
                  whole number divided by the bottom
                6 (typed) the wholes and the parts multiplied separately; the smaller part taken from the larger; a
                  mixed number converted wrongly (whole + top instead of whole x bottom + top)
-             No listed error equals its question's key, except the two stage 6 questions awaiting Jon's ruling
-             (KNOWN_COLLISIONS, printed on every run).
+             No listed error equals its question's key: the pools drop any question where one does (Jon's ruling (a),
+             22 Oct 2026: two stage 6 questions, 2 1/2 / 1 2/3 and 2 2/3 / 1 1/3, where a mixed number converted
+             wrongly gives the key).
   Questions  every pool entry over SEEDS seeds. Stages 2-3: the key in its simplest form; every other option a listed
              error of its stage, its value recomputed here, in its simplest form, named by the first listed error with
              that value, none equal in value to the key or to another option; four options, or three where fewer than
@@ -71,7 +72,7 @@ WHAT IT ASSERTS
              1280x800, normal and Aa: the line and Next above the fold (the viewport less the 40px footer); no
              sideways scroll. At 320x568, normal and Aa, every stage 1 question with its bar: the bar, the answer
              box, Check and the keypad all in the window together (Jon's ruling (3), 21 Oct 2026).
-  Self-test  twelve faults planted into a copy of the page; each must FAIL (part 5 the seven in the engine, the bar and
+  Self-test  thirteen faults planted into a copy of the page; each must FAIL (part 5 the eight in the engine, the bar and
              the palette; part 6 the five in play and the stage 1 fit).
 
     python scripts/verify-how-many-parts.py [--part 1-6] [--no-selftest] [--seeds N] [--sessions N] [--shots DIR]
@@ -103,10 +104,6 @@ LEVELS = {'ks3': {'per': 5, 'stages': ['a', 'b', 'c', 'd']}, 'gcse': {'per': 4, 
 MAX_PARTS = 24
 ORDER = ['TB', 'DN', 'KL', 'MD', 'MULT', 'OP']    # the 20 Oct catalogue's order (the pools' filter only)
 SIZES = [(320, 568), (390, 844), (1280, 800)]
-# Stage 6 questions where a listed error (a mixed number converted wrongly) equals the key: a student who converts
-# wrongly is marked right. Reported to Jon on 21 Oct 2026; the pools stay as they are until he rules (HMP-CHOCOLATE
-# keeps the pools). Printed on every run; any OTHER listed error equal to a key fails.
-KNOWN_COLLISIONS = {('m', '/', 2, 1, 2, 1, 2, 3), ('m', '/', 2, 2, 3, 1, 1, 3)}
 
 
 def lcm(a, b):
@@ -178,6 +175,8 @@ def expected_pools():
                             continue
                         e = named_errors(q)
                         if any(v == k for v in e.values()) or len(distinct(e)) < 3:
+                            continue
+                        if any(v == k for v in sum_list(q, st).values()):    # ruling (a): a listed error is the key
                             continue
                         pools[st].append((a, b, op, c, d))
     return pools
@@ -276,7 +275,7 @@ def expected_typed_pools():
     area model); n / (1/m) with n, m 2-8 and n x m <= 24; a/b / c/d with b, d <= 6 and lcm <= 24; mixed numbers with
     wholes 1-2, adding and taking away over denominators up to 6 with lcm <= 6, multiplying and dividing over
     denominators up to 4, the answer at least 1 with its simplest denominator at most 12. Less any question where a
-    named error equals the key."""
+    named error, or one of its stage's listed errors (Jon's ruling (a), 22 Oct 2026), equals the key."""
     raw = {'d': [], 'e': [], 'f': []}
     for a, b in propers(8):
         for n in range(2, 7):
@@ -303,7 +302,8 @@ def expected_typed_pools():
                     if k < 1 or k.denominator > 12:
                         continue
                     raw['f'].append(q)
-    return {st: sorted(tkey(q) for q in qs if not any(v == typed_value(q) for v in typed_errors(q).values()))
+    return {st: sorted(tkey(q) for q in qs if not any(v == typed_value(q) for v in typed_errors(q).values())
+                       and not any(v == typed_value(q) for v in typed_list(q).values()))
             for st, qs in raw.items()}
 
 
@@ -654,7 +654,7 @@ def check_options(q, out, where, three):
         vals.append(v)
 
 
-def check_typed(item, out, where, collisions):
+def check_typed(item, out, where):
     q = item['q']
     k = value_of(q)
     form = FORM[q['stage']]
@@ -691,10 +691,7 @@ def check_typed(item, out, where, collisions):
         out.append('%s: the page lists errors %s here, recomputed %s' % (where, item['listed'], list(errs)))
     hit = [i for i, v in errs.items() if v == k]
     if hit:
-        if q['stage'] != 'a' and tkey(q) in KNOWN_COLLISIONS:
-            collisions.add(tkey(q))
-        else:
-            out.append('%s: the listed error(s) %s equal the key %s: that slip would be marked right' % (where, hit, k))
+        out.append('%s: the listed error(s) %s equal the key %s: that slip would be marked right' % (where, hit, k))
 
 
 def check_feedback(item, out, where):
@@ -722,13 +719,13 @@ def check_feedback(item, out, where):
 def check_engine(page, out, seeds):
     sizes = check_pools(page, out)
     items = page.evaluate(QUESTIONS_JS, list(range(1, seeds + 1)))
-    three, collisions = {}, set()
+    three = {}
     for it in items:
         q = it['q']
         n0 = len(out)
         where = '%s %s' % (q['stage'], qkey(q))
         if q.get('typed'):
-            check_typed(it, out, where, collisions)
+            check_typed(it, out, where)
         else:
             check_options(q, out, where, three)
         check_feedback(it, out, where)
@@ -736,10 +733,8 @@ def check_engine(page, out, seeds):
         check_model(q, page_model(it['full']), True, out, where + ' (feedback)')
         if len(out) - n0 and len(out) > 200:
             break
-    for c in sorted(KNOWN_COLLISIONS - collisions):
-        out.append('KNOWN_COLLISIONS names %s, which no longer collides: take it out' % (c,))
     seeds_per = max(1, seeds)
-    return sizes, len(items), {st: (n // seeds_per, sizes[st]) for st, n in sorted(three.items())}, sorted(collisions)
+    return sizes, len(items), {st: (n // seeds_per, sizes[st]) for st, n in sorted(three.items())}
 
 
 # Every pool entry drawn by the game: its question screen with the bar (HMP.ui.ask), then its wrong-answer screen
@@ -1283,7 +1278,7 @@ def check(html, out, seeds=3, sessions=100, sizes=SIZES, engine=True, plays=True
                 br, page, errors = open_page(pw, base, html, size)
                 try:
                     if engine and n == 0:
-                        guarded(out, 'the engine', lambda: info.update(zip(('pools', 'questions', 'three', 'collisions'), check_engine(page, out, seeds))))
+                        guarded(out, 'the engine', lambda: info.update(zip(('pools', 'questions', 'three'), check_engine(page, out, seeds))))
                         guarded(out, 'the sessions', lambda: check_sessions(page, out, sessions))
                         guarded(out, 'the drawn screens', lambda: info.update(drawn=check_drawn(page, out, 8)))
                         prepare(page, reload=True)
@@ -1353,6 +1348,9 @@ PLANTS = [
      'H.servable = function (q) { return !!q.kind || H.filterDistinct(q).length >= 3; };', 'engine'),
     ('the typed stages\' filter cut',
      "  ['d', 'e', 'f'].forEach(function (st) { H.POOLS[st] = H.POOLS[st].filter(H.servable); });", "", 'engine'),
+    ('ruling (a)\'s cut: a question whose listed error is its key is served (stage 6)',
+     "  H.BUILT.forEach(function (st) { H.POOLS[st] = H.POOLS[st].filter(function (q) { return !H.listedIsKey(q, st); }); });",
+     "", 'engine'),
     ('the key shown unsimplified (stages 2-3)',
      '    q.keyTex = H.tex(k);\n', '    q.keyTex = H.tex([k[0] * 2, k[1] * 2]);\n', 'engine'),
     ('an off-list error offered (stage 2): the fractions multiplied',
@@ -1418,8 +1416,6 @@ def main():
               % (SLUG, info.get('pools'), info.get('questions', 0), info.get('drawn', 0), args.sessions, ', '.join(info.get('played', []))))
         print('three-option questions (fewer than three listed errors apply), of each pool: %s'
               % ', '.join('stage %s %d of %d (%.1f%%)' % (st, n, tot, 100.0 * n / tot) for st, (n, tot) in info.get('three', {}).items()))
-        for c in info.get('collisions', []):
-            print('KNOWN (awaiting Jon\'s ruling, HMP-CHOCOLATE): %s: a mixed number converted wrongly gives the key' % (c,))
     if phones:
         print('%s: wrong-answer screens measured %s' % (SLUG, ', '.join(info.get('phone', []))))
     ok = True

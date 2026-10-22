@@ -317,8 +317,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
  *    stages b and c each fraction is in its simplest form.
  *  - The pools are built once and filtered once (as PR 453), by the 20 Oct catalogue of errors (H.FILTER): a
  *    question leaves if any of them equals its key, and in stages a-c if fewer than three of them have distinct
- *    values. Nothing is redrawn (canon §12, SR-5). That catalogue is the filter's only use (HMP-CHOCOLATE keeps
- *    the pools as they were).
+ *    values. Nothing is redrawn (canon §12, SR-5). Then (Jon's ruling (a), 22 Oct 2026) a question leaves if one of its
+ *    own stage's listed errors (H.LISTS) equals its key; that drops two from pool f and nothing else.
  *  - What a student is offered, or told about a wrong answer, comes only from the stage's own list of the errors
  *    students make there (H.LISTS, Jon, 21 Oct 2026). Stages b and c are multiple choice: every option but the key
  *    is a listed error, in its simplest form, none equal in value to the key or to another option (SR-4); where
@@ -736,6 +736,14 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     });
   })();
   ['d', 'e', 'f'].forEach(function (st) { H.POOLS[st] = H.POOLS[st].filter(H.servable); });
+  // Ruling (a), Jon, 22 Oct 2026: a question also leaves if one of its OWN stage's listed errors equals its key, filtered
+  // once as PR 453 did, so a student making that slip is never marked right. Only pool f loses any: 2 1/2 / 1 2/3 and
+  // 2 2/3 / 1 1/3, where a mixed number converted wrongly (whole + top over the bottom) gives the key.
+  H.listedIsKey = function (q, st) {
+    var k = H.key(q);
+    return H.LISTS[st].some(function (e) { var f = e.f(q); return !!f && f[0] > 0 && f[1] > 0 && H.eq(f, k); });
+  };
+  H.BUILT.forEach(function (st) { H.POOLS[st] = H.POOLS[st].filter(function (q) { return !H.listedIsKey(q, st); }); });
 
   H.sumTexOf = function (q) {
     var T = H.tex;
