@@ -85,8 +85,7 @@ window.ROOM = {
       key: 'fc',
       grade: 2,
       name: 'Dial on the hinge side',
-      brief: 'A dial on the hinge side, numbered all the way round. It opens at the number of factors of the ' +
-             'cupboard&rsquo;s asset number.',
+      brief: 'A dial on the hinge side. It opens at the number of factors of the cupboard&rsquo;s asset number.',
       instrument: { kind: 'dial', label: 'NUMBER OF FACTORS', min: 0, max: 20, step: 1, decimals: 0,
                     start: 0, verb: 'Set dial' },
       variants: [
@@ -206,8 +205,9 @@ window.ROOM = {
       key: 'hcf',
       grade: 3,
       name: 'Slider across the handle',
-      brief: 'A brass slider across the handle. Every bundle has the same number of grammar books and ' +
-             'dictionaries, and every book is used.',
+      brief: 'A brass slider across the handle. It opens at the largest number of identical bundles you can make ' +
+             'from the grammar books and the dictionaries, using every book. Identical means every bundle has the ' +
+             'same number of grammar books as the others, and the same number of dictionaries.',
       instrument: { kind: 'slider', label: 'MOST IDENTICAL BUNDLES, EVERY BOOK USED', min: 0, max: 120, step: 1,
                     decimals: 0, start: 0, verb: 'Set slider' },
       variants: [
