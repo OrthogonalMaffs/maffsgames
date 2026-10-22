@@ -53,6 +53,8 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only via `python scripts/merge-pr.py <n>`
 (needs a green Gate and main, §7.8.3); watch main's run after.
 
+## 2026-10-22 (cloud): COMIC-CAPER-LOCKS (report only): **all locks open** on the answer worked from the rendered clues, every set of all three locks (4/9/10), typed, slider and dial, desktop and phone, all 184 fresh draws won; no stale save splits clues from answer. Report and observations for Jon: `docs/audits/comic-caper-locks-2026-10-22.md`.
+
 ## 2026-10-21 (cloud): HMP-CHOCOLATE (contract and Jon's rulings verbatim: `docs/handover/contracts/2026-10-21-hmp-chocolate.md`; his rulings (a)-(d) of 22 Oct: `docs/history/contracts/2026-10-22-answer-lock-static.md`). **In flight.**
 
 - **Done:** one chocolate bar per screen (SVG, warm browns, the second number striped, eaten squares; slab for x; whole bars plus a part bar). Each stage offers or names only its own errors. Stage 1 typed (ruling 1). Wrong answer: one line, the bar, the sum, Next. Pools and keys unchanged (sha256 checked) but for ruling (a); the 20 Oct catalogue only filters them.
