@@ -12,9 +12,16 @@ The guard, from the GitHub REST API through `gh api` (the credentials the lanes 
   (a) the PR is open, and its Gate ("Gate (every job passed)") is a completed success on the PR's head commit;
   (b) main's check-site runs, counting only a push to main or a manual run on main (a pull request run or the
       Monday schedule is not "main's full run"): none is queued or in progress, and the newest completed one is
-      a success. A run still going counts as NOT green; --wait polls for it, nothing assumes it.
+      a success, AND every job of that run has finished and none failed (a run can read "completed success" in the
+      list while GitHub's job records are still open, so the run's own status is not trusted alone): jobs are read
+      from actions/runs/<id>/jobs, all pages, latest attempt; success, skipped and neutral pass; a job queued or in
+      progress means "not finished" (--wait polls for it, and --wait is the ceiling: a job record GitHub never closes
+      ends in a refusal naming the job, not a hang); failure, cancelled, timed_out, action_required or anything else is
+      red; no jobs at all, or a jobs call that fails, is a refusal. A run still going counts as NOT green; nothing
+      assumes it.
 
---override "<ruling>" waives (b) and only (b): it writes the ruling, with the run it overrode, as a comment on the
+--override "<ruling>" waives (b) and only (b): it writes the ruling, with the run and any unfinished or red jobs it
+overrode, as a comment on the
 PR first, then merges. An empty ruling is refused. (a) is never waived. The merge is a squash pinned to the head
 commit that (a) judged, so a later push cannot ride in on an earlier green. GitHub deletes the head branch itself
 (canon §7.8.2). On success it prints main's head and the run it judged. end-task.py runs after, unchanged.
@@ -29,6 +36,7 @@ GATE = "Gate (every job passed)"
 WORKFLOW = "check-site.yml"
 MAIN_EVENTS = ("push", "workflow_dispatch")
 POLL_S = 30
+JOB_OK = ("success", "skipped", "neutral")
 
 
 class Refused(Exception):
@@ -69,8 +77,27 @@ def main_runs(api):
     return sorted(runs, key=lambda r: r["created_at"], reverse=True)
 
 
+def run_jobs(api, run_id):
+    """Every job of the run's latest attempt, all pages. Raises Refused if the call fails."""
+    jobs, page, total = [], 1, None
+    while page <= 20:
+        d = api("GET", "%s/actions/runs/%s/jobs?per_page=100&page=%d" % (R, run_id, page))
+        got = d.get("jobs", [])
+        jobs += got
+        total = d.get("total_count", len(jobs)) if total is None else total
+        if not got or len(jobs) >= total:
+            break
+        page += 1
+    return jobs
+
+
+def _named(jobs):
+    names = ["%s (%s)" % (j["name"], j["status"] if j["status"] != "completed" else j["conclusion"]) for j in jobs]
+    return ", ".join(names[:5]) + (" and %d more" % (len(names) - 5) if len(names) > 5 else "")
+
+
 def check_main(api):
-    """(b) -> (ok, why, run). Never guesses: an unfinished run, or no run at all, is not green."""
+    """(b) -> (ok, why, run). Never guesses: an unfinished run or job, or no run at all, is not green."""
     runs = main_runs(api)
     if not runs:
         return False, "no check-site run on main (push or manual) in the last 50 runs", None
@@ -82,7 +109,22 @@ def check_main(api):
     if r["conclusion"] != "success":
         return False, "main's last full run %s (%s, %s, finished %s) is %s" % (
             r["id"], r["event"], r["head_sha"][:7], r["updated_at"], r["conclusion"]), r
-    return True, "main's last full run %s is green (%s, finished %s)" % (r["id"], r["head_sha"][:7], r["updated_at"]), r
+    try:
+        jobs = run_jobs(api, r["id"])
+    except Refused as e:
+        return False, "main's run %s reads success but its jobs could not be read (%s)" % (r["id"], e), r
+    if not jobs:
+        return False, "main's run %s reads success but lists no jobs" % r["id"], r
+    open_ = [j for j in jobs if j["status"] != "completed"]
+    if open_:
+        return False, ("main's run %s reads completed but %d of %d jobs are not finished: %s "
+                       "(GitHub can leave a job record open; --wait ends the wait, then rerun or --override)"
+                       % (r["id"], len(open_), len(jobs), _named(open_))), r
+    bad = [j for j in jobs if j["conclusion"] not in JOB_OK]
+    if bad:
+        return False, "main's run %s reads success but %d of %d jobs did not pass: %s" % (r["id"], len(bad), len(jobs), _named(bad)), r
+    return True, "main's last full run %s is green: %d jobs, all finished, none failed (%s, finished %s)" % (
+        r["id"], len(jobs), r["head_sha"][:7], r["updated_at"]), r
 
 
 def guard(api, number, override=None, wait=0, main_check=check_main, sleep=time.sleep, log=print):
@@ -147,15 +189,36 @@ NOISE = [_run(39561331795, "pull_request", "completed", "failure", "2026-10-21T0
          _run(39600000000, "schedule", "completed", "failure", "2026-10-21T07:25:00Z")] + GREEN
 
 
+def _job(name, status="completed", concl="success"):
+    return {"name": name, "status": status, "conclusion": concl}
+
+
+JOBS_OK = [_job("Plan"), _job("Tier 1 (page load) shard 1/4"), _job("Content verifiers 1"), _job(GATE)]
+JOBS_SKIPPED = JOBS_OK + [_job("Answer locks 3", concl="skipped"), _job("Leaderboard", concl="neutral")]
+JOBS_OPEN = JOBS_OK + [_job("Content verifiers 10", "in_progress", None), _job("Tier 4 layer A", "queued", None)]
+JOBS_RED = JOBS_OK + [_job("Content verifiers 4", concl="failure")]
+
+
 class Fake:
-    def __init__(self, pr=PR_OPEN, gate=GATE_OK, runs=GREEN, script=None):
+    def __init__(self, pr=PR_OPEN, gate=GATE_OK, runs=GREEN, script=None, jobs=None, jobs_script=None, jobs_error=False):
         self.pr, self.gate, self.runs, self.calls = pr, gate, runs, []
         self.script = script or []   # successive run lists, for the wait case
+        # jobs: a list of pages (each a list of jobs); jobs_script: successive such lists, one per poll
+        self.jobs = jobs if jobs is not None else [JOBS_OK]
+        self.jobs_script, self.jobs_error = jobs_script or [], jobs_error
 
     def __call__(self, method, path, **fields):
         self.calls.append((method, path, fields))
         if method == "GET" and "/check-runs" in path:
             return self.gate
+        if method == "GET" and "/actions/runs/" in path and "/jobs" in path:
+            if self.jobs_error:
+                raise Refused("gh api GET %s failed: HTTP 403" % path)
+            page = int(path.rsplit("page=", 1)[1])
+            if self.jobs_script and page == 1:
+                self.jobs = self.jobs_script.pop(0) if len(self.jobs_script) > 1 else self.jobs_script[0]
+            pages = self.jobs
+            return {"total_count": sum(len(x) for x in pages), "jobs": pages[page - 1] if page <= len(pages) else []}
         if method == "GET" and "/actions/workflows/" in path:
             runs = self.script.pop(0) if len(self.script) > 1 else (self.script[0] if self.script else self.runs)
             return {"workflow_runs": runs}
@@ -263,7 +326,77 @@ def cases(main_check=check_main):
     f = Fake(script=[RED])
     err = _try(f, main_check=main_check, wait=120)
     case("--wait never waits out a red main", err and "failure" in err and not f.merged(), err or "MERGED")
+    # ---- the jobs of main's newest run (22 Oct 2026: a run's own status is not trusted alone) ----
+    f = Fake(jobs=[JOBS_OPEN])
+    err = _try(f, main_check=main_check)
+    case("(i) run completed/success but jobs queued or in progress refuses as not finished, naming them",
+         err and "not finished" in err and "Content verifiers 10 (in_progress)" in err and "Tier 4 layer A (queued)" in err
+         and not f.merged(), err or "MERGED")
+
+    f = Fake(jobs_script=[[JOBS_OPEN], [JOBS_OK]])
+    err = _try(f, main_check=main_check, wait=120)
+    case("(i) --wait: jobs still open, then done, merges", err is None and len(f.merged()) == 1, err or "")
+
+    f = Fake(jobs=[JOBS_OPEN])
+    err = _try(f, main_check=main_check, wait=0)
+    case("(i) --wait 0 on open jobs refuses at once (a job record never closed ends the wait in a refusal, not a hang)",
+         err and "not finished" in err and not f.merged(), err or "MERGED")
+
+    f = Fake(jobs_script=[[JOBS_RED]])
+    err = _try(f, main_check=main_check, wait=120)
+    case("(ii) run completed/success with one job failed refuses red, and --wait does not wait it out",
+         err and "Content verifiers 4 (failure)" in err and "not finished" not in err and not f.merged(), err or "MERGED")
+
+    for concl in ("cancelled", "timed_out", "action_required"):
+        f = Fake(jobs=[JOBS_OK + [_job("Z", concl=concl)]])
+        err = _try(f, main_check=main_check)
+        case("(ii) a %s job refuses" % concl, err and concl in err and not f.merged(), err or "MERGED")
+
+    f = Fake(jobs=[JOBS_SKIPPED])
+    err = _try(f, main_check=main_check)
+    case("(iii) skipped and neutral jobs beside successes pass", err is None and len(f.merged()) == 1, err or "")
+
+    f = Fake(jobs=[[]])
+    err = _try(f, main_check=main_check)
+    case("(iv) an empty jobs list refuses", err and "no jobs" in err and not f.merged(), err or "MERGED")
+
+    f = Fake(jobs_error=True)
+    err = _try(f, main_check=main_check)
+    case("(iv) a jobs call that errors refuses (never assumed green)", err and "could not be read" in err and not f.merged(), err or "MERGED")
+
+    f = Fake(jobs=[JOBS_OK[:2], JOBS_OK[2:] + [_job("Page two", concl="failure")]])
+    err = _try(f, main_check=main_check)
+    case("(v) jobs over two pages are both read (a failure on page 2 is seen)", err and "Page two (failure)" in err and not f.merged(), err or "MERGED")
+
+    f = Fake(jobs=[JOBS_OK[:2], JOBS_OK[2:]])
+    err = _try(f, main_check=main_check)
+    jobs_calls = [c for c in f.calls if "/jobs" in c[1]]
+    case("(v) two pages, all green, merges having read both pages", err is None and len(f.merged()) == 1 and len(jobs_calls) >= 2, err or "")
+
+    f = Fake(jobs=[JOBS_OPEN])
+    err = _try(f, main_check=main_check, override="Jon, 22 Oct 2026: job record stuck")
+    c = f.comments()
+    case("--override on open jobs waives (b) only: the comment names the jobs, then it merges",
+         err is None and len(c) == 1 and "Content verifiers 10 (in_progress)" in c[0][2]["body"] and len(f.merged()) == 1, err or "")
+
+    f = Fake(jobs=[JOBS_OPEN], gate=GATE_RED)
+    err = _try(f, main_check=main_check, override="Jon, 22 Oct 2026: x")
+    case("--override never waives a red Gate (open jobs)", err and "Gate" in err and not f.merged() and not f.comments(), err or "MERGED")
     return out
+
+
+def check_main_run_only(api):
+    """The check_main() before 22 Oct 2026, kept as the planted fault: the run's own status and conclusion, no jobs."""
+    runs = main_runs(api)
+    if not runs:
+        return False, "no check-site run on main", None
+    going = [r for r in runs if r["status"] != "completed"]
+    if going:
+        return False, "main's run %s is %s, not finished" % (going[0]["id"], going[0]["status"]), going[0]
+    r = runs[0]
+    if r["conclusion"] != "success":
+        return False, "main's last full run %s is %s" % (r["id"], r["conclusion"]), r
+    return True, "main's last full run %s is green" % r["id"], r
 
 
 def selftest():
@@ -279,6 +412,15 @@ def selftest():
     print("  %s  removing the red-main check fails %d of %d main cases%s" % (
         "PASS" if not missed else "FAIL", len(sens) - len(missed), len(sens), "" if not missed else ": still passing " + str(missed)))
     bad += bool(missed)
+    # ... and the jobs cases must catch the run-only judge (cases i, ii and iv)
+    old = [n for n, ok, _ in cases(main_check=check_main_run_only) if not ok]
+    allc = [n for n, _, _ in cases()]
+    for tag in ("(i)", "(ii)", "(iv)"):
+        caught = [n for n in old if n.startswith(tag)]
+        total = [n for n in allc if n.startswith(tag)]
+        print("  %s  planting the run-only check_main() fails %d of %d %s cases" % (
+            "PASS" if caught else "FAIL", len(caught), len(total), tag))
+        bad += not caught
     print("%s" % ("selftest FAILED" if bad else "selftest passed"))
     return 1 if bad else 0
 
