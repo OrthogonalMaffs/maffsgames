@@ -1270,6 +1270,9 @@ def check_palette(page, html, out):
     bad = {}
 
     def each(name):
+        # The pointer off every control first: a hover tint (MaffsNext's shared rgba grey) depends on where the test's
+        # mouse last rested, not on the game's colours.
+        page.mouse.move(0, 0)
         for rgb, where in page.evaluate(COLOURS_JS).items():
             t = tuple(int(x) for x in rgb.split(','))
             if is_purple(t):
@@ -1483,7 +1486,6 @@ def play_session(page, tag, out, mode, wrong_at=(1, 2, 4, 7, 8)):
     one applies), right on the rest. A typed question first gets its key in a form fractionForm sends back: the
     message, nothing marked. The last typed question gets a wrong value that is no listed error: the rule line.
     Every worked example is stepped through; so is every wrong answer's explanation. Returns the questions scored."""
-    page.evaluate("() => { window.__ev.length = 0; window.__sub.length = 0; }")
     named, scored = 0, 0
     sess = page.evaluate("() => HMP.ui.session()")
     total = sum(1 for q in sess['questions'] if not q.get('example'))
@@ -1626,6 +1628,8 @@ def play(page, level, size, out):
     played = []
     if level == 'ks3':
         page.click('.mode-btn[data-mode="stage1"]')
+    clear = "() => { window.__ev.length = 0; window.__sub.length = 0; }"   # before Start: game_started is the session's
+    page.evaluate(clear)
     page.click('#startBtn')
     for k, mode in enumerate(MODES if level == 'ks3' else ['all']):
         tag = '%s %s' % (tag0, mode)
@@ -1641,6 +1645,7 @@ def play(page, level, size, out):
             out.append('%s: the results offer %r, expected %r' % (tag, nxt, want))
         if want is None:
             break
+        page.evaluate(clear)
         page.click('#nextStageBtn')
     page.click('#againBtn')
     return played
