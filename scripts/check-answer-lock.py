@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-# ci-line: lock | Answer lock in play, part 1 (canon 7.6.0: self-test, static rules; migrated games played in Chromium) | --selftest && --part 1/6
+# ci-line: lock | Answer lock, static rules and self-test (canon 7.6.0: the static rules, NOT_YET and the cloud list once; no games played) | --selftest && --static
+# ci-line: lock | Answer lock in play, part 1 (canon 7.6.0: migrated games played in Chromium) | --part 1/6
 # ci-line: lock | Answer lock in play, part 2 (canon 7.6.0: migrated games played in Chromium) | --part 2/6
 # ci-line: lock | Answer lock in play, part 3 (canon 7.6.0: migrated games played in Chromium) | --part 3/6
 # ci-line: lock | Answer lock in play, part 4 (canon 7.6.0: migrated games played in Chromium) | --part 4/6
@@ -909,6 +910,54 @@ PLANT = ('<script>MaffsLock.lock = function () { return true; }; MaffsLock.isLoc
 PLANT_GAME = 'decimal-detective'   # the self-test's planted game (#133's): it needs MaffsLock to pass
 
 
+def static_results(judged, page, remaining, only=None, against=None):
+    """(fails, reported) from the static rules over the judged games: a fault fails, unless the game is on the cloud
+    lane's list (an unlisted game it adopted), where it is reported. No browser, no state from play."""
+    fails, reported = [], []
+    for s, _ in judged:
+        if only and s not in only:
+            continue
+        for f in static_faults(s, open(against, encoding='utf-8').read() if against else page[s]):
+            (fails if counts(s, remaining) or against else reported).append('%s: %s' % (s, f))
+    return fails, reported
+
+
+def part_slice(to_play, i, n):
+    """Part i of n: every n-th game in slug order, starting at the i-th."""
+    return [g for k, g in enumerate(sorted(to_play)) if k % n == i - 1]
+
+
+CI_LINE = re.compile(r'^# ci-line:\s*lock\s*\|\s*([^|]+?)\s*\|\s*(.*)$', re.M)
+
+
+def layout_errors(games):
+    """ANSWER-LOCK-STATIC (22 Oct 2026), from this file's own CI lines: each judged game is played by exactly one part;
+    the static report runs on exactly one line (the one without --part), and that line plays no game (--static)."""
+    errs = []
+    lines = CI_LINE.findall(open(os.path.abspath(__file__), encoding='utf-8').read())
+    parts = [re.search(r'--part (\d+)/(\d+)', a) for _, a in lines]
+    ns = {int(m.group(2)) for m in parts if m}
+    if len(ns) != 1:
+        return ['the play lines disagree on n: %s' % sorted(ns)]
+    n = ns.pop()
+    if sorted(int(m.group(1)) for m in parts if m) != list(range(1, n + 1)):
+        errs.append('the play lines are not --part 1/%d .. %d/%d, each once' % (n, n, n))
+    static = [(lab, a) for (lab, a), m in zip(lines, parts) if not m]
+    if len(static) != 1:
+        errs.append('%d lines report the static rules (exactly one: the line without --part)' % len(static))
+    elif '--static' not in static[0][1] or '--selftest' not in static[0][1]:
+        errs.append('the static line %r must run --selftest and --static (no games played)' % static[0][1])
+    if any(m and '--selftest' in a for (_, a), m in zip(lines, parts)):
+        errs.append('a play line runs the self-test (it belongs to the static line)')
+    judged = [(s, l) for s, l in games if s not in NOT_YET]
+    played = [g for i in range(1, n + 1) for g in part_slice(judged, i, n)]
+    if sorted(played) != sorted(judged):
+        twice = sorted({g[0] for g in played if played.count(g) > 1})
+        missed = sorted({g[0] for g in judged} - {g[0] for g in played})
+        errs.append('the %d parts play %s twice and miss %s' % (n, twice or 'none', missed or 'none'))
+    return errs
+
+
 def selftest(games):
     """The reported state is bounded: a planted failing game off the cloud lane's list is caught, on it reported."""
     import tempfile
@@ -926,6 +975,14 @@ def selftest(games):
         cloud_remaining()
     except ValueError as e:
         errs.append(str(e))
+    errs += layout_errors(games)
+    probe = next(g for g in games if g[0] == PLANT_GAME)
+    bare = re.sub(INCLUDE, '', open(os.path.join(ROOT, 'games', probe[0], 'index.html'), encoding='utf-8').read())
+    sf, _ = static_results([probe], {probe[0]: bare}, set())
+    if not sf:
+        errs.append('a static fault (%s without answer-lock.js) did not fail on the static line' % probe[0])
+    else:
+        print('  self-test: a static fault (%s without answer-lock.js) fails on the static line: CAUGHT (%s)' % (probe[0], sf[0][:90]))
     roster = ('## GCSE Games (2)\n| 1 | A | `listed-a` | GCSE |\n## Unlisted (1)\n- note\n\n| 2 | B | `unl-b` | GCSE |\n'
               '## Withdrawn (0)\n| \u2014 | C | `gone-c` | GCSE |\n')
     if unlisted_games(roster) != {'unl-b'}:
@@ -1033,18 +1090,15 @@ def main():
     # Adopted: on NOT_YET, but the page loads the lock (the cloud lane migrates its own games). Judged in full.
     adopted = {s for s in NOT_YET & slugs if INCLUDE.search(page[s])}
     judged = [(s, l) for s, l in games if s not in NOT_YET or s in adopted]
-    reported = []      # [(slug, fault)]: an adopted game still on the cloud lane's list
-    for s, _ in judged:
-        if args.game and s not in args.game:
-            continue
-        for f in static_faults(s, open(args.against, encoding='utf-8').read() if args.against else page[s]):
-            (fails if counts(s, remaining) or args.against else reported).append('%s: %s' % (s, f))
+    sf, reported = static_results(judged, page, remaining, args.game, args.against)
+    fails += sf
     to_play = [(s, l) for s, l in judged if not args.game or s in args.game]
     if args.part:
         i, n = (int(x) for x in args.part.split('/'))
-        to_play = [g for k, g in enumerate(sorted(to_play)) if k % n == i - 1]
-        if i != 1:
-            fails, reported = [], []    # the static rules and NOT_YET are part 1's (one report, not n)
+        to_play = part_slice(to_play, i, n)
+        # A part plays games only (contract ANSWER-LOCK-STATIC, 22 Oct 2026): the static rules, NOT_YET and the cloud
+        # list are reported once, by the line run without --part ("Answer lock, static rules and self-test").
+        fails, reported = [], []
     if args.not_yet:
         to_play += [(s, l) for s, l in games if s in NOT_YET - adopted and (not args.game or s in args.game)]
     if args.game and args.against and len(args.game) == 1:
