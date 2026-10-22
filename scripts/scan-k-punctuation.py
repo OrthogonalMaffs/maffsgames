@@ -440,7 +440,7 @@ def main():
     print('Not walked: %d: %s' % (len(unwalked), '; '.join('%s (%s)' % (s, res[s]['notes'][0] if res[s]['notes'] else '?')
                                                          for s in unwalked) or 'none'))
     if args.json:
-        with open(args.json, 'w', encoding='utf-8') as f:
+        with open(args.json, 'w', encoding='utf-8', newline='') as f:
             json.dump(res, f, indent=1, default=list)
 
 
