@@ -2,10 +2,11 @@
 # ci-line: How Many Parts?, part 1 (pools and Foundation's five, keys, every stage's own errors and options, every question's bar and worked steps recomputed, the palette, sessions easiest first, every Foundation stage and Advanced played at 320, 390 and 1280px) | --part 1
 # ci-line: How Many Parts?, part 2 (every question, worked example and wrong-answer screen drawn by the game and read back step by step: no bar before answering, each step's bar as recomputed) | --part 2
 # ci-line: How Many Parts?, part 3 (every wrong-answer screen and worked example at 320x568, normal and Aa: the reason and Next above the fold, brackets kept with their maths; typed questions' boxes and keypad in the window) | --part 3
-# ci-line: How Many Parts?, part 4 (every wrong-answer screen and worked example at 375x667 and 390x844, normal and Aa: the reason and Next above the fold, brackets kept with their maths) | --part 4
-# ci-line: How Many Parts?, part 5 (every wrong-answer screen and worked example at 1280x800, normal and Aa: the reason and Next above the fold, brackets kept with their maths) | --part 5
-# ci-line: How Many Parts?, part 6 (fault-injection self-test: eleven planted faults in the engine, the stages, the order, the steps, the bar and the palette, each caught) | --part 6
-# ci-line: How Many Parts?, part 7 (fault-injection self-test: seven planted faults in play, the worked example, the brackets and the typed fit, each caught) | --part 7
+# ci-line: How Many Parts?, part 4 (every wrong-answer screen and worked example at 375x667, normal and Aa: the reason and Next above the fold, brackets kept with their maths) | --part 4
+# ci-line: How Many Parts?, part 5 (every wrong-answer screen and worked example at 390x844, normal and Aa: the reason and Next above the fold, brackets kept with their maths) | --part 5
+# ci-line: How Many Parts?, part 6 (every wrong-answer screen and worked example at 1280x800, normal and Aa: the reason and Next above the fold, brackets kept with their maths) | --part 6
+# ci-line: How Many Parts?, part 7 (fault-injection self-test: eleven planted faults in the engine, the stages, the order, the steps, the bar and the palette, each caught) | --part 7
+# ci-line: How Many Parts?, part 8 (fault-injection self-test: seven planted faults in play, the worked example, the brackets and the typed fit, each caught) | --part 8
 # ci-deps: games/how-many-parts/
 """Independent verification for How Many Parts? (games/how-many-parts/), built 20 Oct 2026 (contract HOW-MANY-PARTS),
 rebuilt for its redesign, 21 Oct 2026 (contract HMP-CHOCOLATE and Jon's rulings of that day), and again for
@@ -84,7 +85,7 @@ WHAT IT ASSERTS
              no "(" at the end of a line or ")" at the start of one in the line or the steps (k-punctuation scan, 22
              Oct 2026). Every worked example stepped through at each size: after each tap its button inside the
              window. At 320x568 every typed question: the answer boxes, Check and the keypad in the window together.
-  Self-test  eighteen faults planted into a copy of the page; each must FAIL (part 6 the eleven in the engine, part 7
+  Self-test  eighteen faults planted into a copy of the page; each must FAIL (part 7 the eleven in the engine, part 8
              the seven in play and on the phone).
 
 EASE (contract HMP-FOUNDATION-STAGES, item 2; the page states it at H.ease): [kind, parts, simplify], compared in
@@ -92,8 +93,8 @@ order. kind: 0, but 1 for a fraction times a fraction (after times a whole numbe
 counted in before simplifying (adding and taking away: the lowest common denominator; times a whole number: the
 bottom; times a fraction: the product of the bottoms). simplify: 0 when that answer needs no simplifying, else 1.
 
-    python scripts/verify-how-many-parts.py [--part 1-7] [--no-selftest] [--seeds N] [--sessions N] [--shots DIR]
-    (CI runs the seven parts side by side; no --part runs all seven; --shots DIR saves the start screen and, per
+    python scripts/verify-how-many-parts.py [--part 1-8] [--no-selftest] [--seeds N] [--sessions N] [--shots DIR]
+    (CI runs the eight parts side by side; no --part runs all eight; --shots DIR saves the start screen and, per
     stage, its worked example step by step, a question and a wrong answer at 390px for Jon, and checks nothing)
 """
 import argparse
@@ -1655,7 +1656,7 @@ def play(page, level, size, out):
 # Phone fit (canon 7.6.1), normal and Aa
 
 PHONES = [(320, 568), (375, 667), (390, 844), (1280, 800)]
-PART_SIZES = {'3': [(320, 568)], '4': [(375, 667), (390, 844)], '5': [(1280, 800)]}
+PART_SIZES = {'3': [(320, 568)], '4': [(375, 667)], '5': [(390, 844)], '6': [(1280, 800)]}
 FOOTER = 40   # the fixed site footer (canon 7.6.1: measure against the viewport less it)
 
 # Brackets (k-punctuation scan, 22 Oct 2026): in an element, every "(" shares a line with what follows it and every
@@ -2010,7 +2011,7 @@ def main():
     ap.add_argument('--no-selftest', action='store_true')
     ap.add_argument('--seeds', type=int, default=3, help='seeds per pool entry in the multiple-choice stages (default 3)')
     ap.add_argument('--sessions', type=int, default=60, help='seeds per Foundation stage and for Advanced (default 60)')
-    ap.add_argument('--part', choices=['1', '2', '3', '4', '5', '6', '7'], help='one of the seven parts CI runs side by side (default: all)')
+    ap.add_argument('--part', choices=['1', '2', '3', '4', '5', '6', '7', '8'], help='one of the eight parts CI runs side by side (default: all)')
     ap.add_argument('--shots', metavar='DIR', help='save the start screen and every sample\'s screens at 390px; check nothing')
     args = ap.parse_args()
     html = open(GAME, encoding='utf-8').read()
@@ -2021,7 +2022,7 @@ def main():
     one = args.part in (None, '1')
     two = args.part in (None, '2')
     phones = PART_SIZES[args.part] if args.part in PART_SIZES else PHONES if args.part is None else []
-    selftests = args.part in (None, '6', '7') and not args.no_selftest
+    selftests = args.part in (None, '7', '8') and not args.no_selftest
     info = check(html, out, seeds=args.seeds, sessions=args.sessions, sizes=SIZES if one else [], engine=one, plays=one,
                  drawn=two, phones=phones) if (one or two or phones) else {}
     if one:
@@ -2036,7 +2037,7 @@ def main():
         print('%s: measured %s' % (SLUG, '; '.join(info.get('phone', []))))
     ok = True
     if selftests:
-        ok = selftest(html, {'6': ('engine',), '7': ('play', 'fit')}.get(args.part, ('engine', 'play', 'fit')))
+        ok = selftest(html, {'7': ('engine',), '8': ('play', 'fit')}.get(args.part, ('engine', 'play', 'fit')))
     for f in out[:int(os.environ.get("HMP_SHOW", "60"))]:
         print('FAIL  ' + f)
     if len(out) > int(os.environ.get("HMP_SHOW", "60")):
