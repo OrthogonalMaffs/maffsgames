@@ -3,6 +3,17 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-22 (cloud): K-PUNCTUATION-SCAN (report only; contract verbatim: `docs/history/contracts/2026-10-22-k-punctuation-scan.md`). **DONE (#483, 1d34ac0; main run 39787326200 green, 54 jobs).**
+
+- **Report:** `docs/audits/k-punctuation-scan-2026-10.md`; script `scripts/scan-k-punctuation.py` (not in CI; `--selftest` plants the fault and its glued control; `--static-only` lists the source joins).
+- **Headline:** 38 games render their own KaTeX (the home lane counted 36 on 21 Oct). **3 affected**, each in one place, none in a stem or an option: expectation-station (Worked Example "Prize (", 320 px), growth-and-decay (Worked Example ". " after t = 0, 390 px), how-many-parts (wrong-answer line brackets, 320 px). 34 clean; glorious-gantt not walkable (calls no KaTeX). Under 10, so no STOP.
+- **Swap:** no game's K() swaps for MaffsText.html directly (bare TeX in, prose built round it); how-many-parts' renderLine is the nearest (its `§` format). The class is the Worked Example block (`renderMethodRef`, copied into eight games): its root fix is one renderer for that block, Jon's design call.
+- **Not reached:** simultaneous-solver at A-level and glorious-gantt (driver cannot play them); truth-will-set-you-free's two joins (:871, :874).
+
+## 2026-10-22 (cloud): COMIC-CAPER-BRIEFS (contract from Jon, 22 Oct, after the report): lock 1 and lock 3 briefs reworded to Jon's exact wording in `escape-rooms/comic-caper/room.js`; nothing else in the room changed. New `scripts/verify-comic-caper.py` (own ci-line; selected by room.js) pins both as rendered at 320/390/1280 px, inside the panel, no sideways scroll; each old brief and a one-line overflow planted and caught. The report's lock script rerun on the new room: 184/184 draws won, 118/118 forced entries open, 6/6 saved states. **DONE (#482, dd2866f; main run 39785377549, green, 55 jobs).** Excluded, home lane's (the report's shared findings): teacher page set 1, dial ticks, lock-1 dial below the fold on phones, the room check reading stored data.
+
+## 2026-10-22 (cloud): COMIC-CAPER-LOCKS (report only): **all locks open** on the answer worked from the rendered clues, every set of all three locks (4/9/10), typed, slider and dial, desktop and phone, all 184 fresh draws won; no stale save splits clues from answer. Report and observations for Jon: `docs/audits/comic-caper-locks-2026-10-22.md`; **DONE (#480, 254c946; main run 39781113679, green).**
+
 ## 2026-10-22 (cloud): FDP-SPREAD (Jon's rulings verbatim, with the finding: `docs/history/contracts/2026-10-22-fdp-spread.md`). **DONE (#481, 20c7dd9; main run 39783533845 green; pack 76f2cc4, no split candidates; part 1 in CI 107 s, was 89-95). The claim stays for FDP-KEY-COLLIDE, which releases it.**
 
 - **Why:** FDP-KEY-COLLIDE's filter changed what practice seed 2026 draws, and the verifier's mixed/20 check failed: `FDP.spread`'s one pass of swaps left two questions about 1/100 together where 1/100, 4/5, 1/100, 1/8, 1/100 was possible. Over 10,000 seeds on main it did so in 245 mixed/20 sets and 4 mixed/40 (single-stage: 0).
