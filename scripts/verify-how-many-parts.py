@@ -1689,10 +1689,10 @@ BRACKETS_JS = r"""window.__hmpBrackets = function (el) {
   return bad;
 };"""
 
-PHONE_JS = r"""(fold) => {
+PHONE_JS = r"""([fold, stages]) => {
   const bad = [], r = el => el.getBoundingClientRect();
   let n = 0, tight = 0, lines = 0;
-  for (const st of ['a', 'b', 'c', 'd', 'e', 'f']) for (const src of HMP.POOLS[st]) {
+  for (const st of stages) for (const src of HMP.POOLS[st]) {
     const q0 = HMP.makeQuestion(src, st, HMP.mulberry32(1));
     const shapes = [];
     const ids = q0.typed ? HMP.listErrors(q0).map(e => e.id) : q0.choices.map(c => c.err);
@@ -1730,10 +1730,10 @@ PHONE_JS = r"""(fold) => {
 
 # Every worked example, stepped through: after each tap (the game keeps its button in view), the button inside the
 # window; no sideways scroll; brackets kept with their maths in every step.
-EXFIT_JS = r"""(fold) => {
+EXFIT_JS = r"""([fold, stages]) => {
   const bad = [], r = el => el.getBoundingClientRect();
   let n = 0;
-  for (const st of ['a', 'b', 'c', 'd', 'e', 'f']) for (const src of HMP.POOLS[st]) {
+  for (const st of stages) for (const src of HMP.POOLS[st]) {
     HMP.ui.ask(src, st, true);   // scrolled as the game leaves it (to the top, then its button into view)
     n++;
     const where = st + ' ' + JSON.stringify(src);
@@ -1755,10 +1755,10 @@ EXFIT_JS = r"""(fold) => {
 
 # A typed question at 320px (Jon's ruling (3), 21 Oct 2026, now with no bar before answering): the answer boxes,
 # Check and the keypad inside the window together, and no chocolate bar.
-FIT_JS = r"""(fold) => {
+FIT_JS = r"""([fold, stages]) => {
   const bad = [], r = el => el.getBoundingClientRect();
   let n = 0;
-  for (const st of ['a', 'd']) for (const src of HMP.POOLS[st]) {
+  for (const st of stages.filter(s => s === 'a' || s === 'd')) for (const src of HMP.POOLS[st]) {
     HMP.ui.ask(src, st);
     window.scrollTo(0, 0);
     n++;
@@ -1777,21 +1777,21 @@ FIT_JS = r"""(fold) => {
 }"""
 
 
-def check_phone(page, size, out, aa):
+def check_phone(page, size, out, aa, stages=BUILT):
     page.click('#startBtn')
     wait_for(page, "() => HMP.ui.state() === 'example'")
     page.evaluate("() => { %s }" % BRACKETS_JS)   # a function the string evaluates to would be called, so define it inside one
     tag = '%dx%d%s' % (size[0], size[1], ' Aa' if aa else '')
-    res = page.evaluate(PHONE_JS, size[1] - FOOTER)
+    res = page.evaluate(PHONE_JS, [size[1] - FOOTER, stages])
     for b in res['bad']:
         out.append('phone %s: %s' % (tag, b))
-    ex = page.evaluate(EXFIT_JS, size[1] - FOOTER)
+    ex = page.evaluate(EXFIT_JS, [size[1] - FOOTER, stages])
     for b in ex['bad']:
         out.append('worked example %s: %s' % (tag, b))
     n = '%d wrong answers (%d with the bar and steps after Next, %d lines read for brackets), %d worked examples' % (
         res['n'], res['tight'], res['lines'], ex['n'])
     if size == (320, 568):
-        fit = page.evaluate(FIT_JS, size[1] - FOOTER)
+        fit = page.evaluate(FIT_JS, [size[1] - FOOTER, stages])
         for b in fit['bad']:
             out.append('typed fit %s: %s' % (tag, b))
         if not page.evaluate("() => !!(HMP.ui.keypad() && HMP.ui.keypad().enabled && HMP.ui.keypad().enabled())"):
@@ -1859,7 +1859,7 @@ def guarded(out, what, f):
 
 
 def check(html, out, seeds=3, sessions=60, sizes=SIZES, engine=True, plays=True, drawn=False, phones=PHONES,
-          aa_modes=(False, True), levels=('ks3', 'gcse')):
+          aa_modes=(False, True), levels=('ks3', 'gcse'), phone_stages=BUILT):
     from playwright.sync_api import sync_playwright
     static_checks(html, out)
     proc, base = bc.start_stub_server()
@@ -1896,7 +1896,7 @@ def check(html, out, seeds=3, sessions=60, sizes=SIZES, engine=True, plays=True,
                     br, page, errors = open_page(pw, base, html, size, aa)
                     try:
                         guarded(out, 'the phone fit at %dx%d' % size, lambda: info.setdefault('phone', []).append(
-                            '%dx%d%s: %s' % (size[0], size[1], ' Aa' if aa else '', check_phone(page, size, out, aa))))
+                            '%dx%d%s: %s' % (size[0], size[1], ' Aa' if aa else '', check_phone(page, size, out, aa, phone_stages))))
                         if errors:
                             out.append('page errors at %dx%d: %s' % (size[0], size[1], '; '.join(errors[:3])))
                     finally:
@@ -1998,7 +1998,7 @@ def selftest(html, kinds=('engine', 'play', 'fit')):
         got = []
         check(html.replace(old, new), got, seeds=1, sessions=4, sizes=[(390, 844)] if kind != 'fit' else [],
               engine=kind == 'engine', plays=kind == 'play', phones=[(320, 568)] if kind == 'fit' else [],
-              aa_modes=(False, True) if kind == 'fit' else (), levels=('ks3',))
+              aa_modes=(False,), levels=('ks3',), phone_stages=['a'])   # a plant need only be shown caught: stage a, normal
         got = [g for g in got if not g.startswith('the page')]
         ok = ok and bool(got)
         print('  self-test %-60s %s' % (what, ('caught: ' + got[0][:110]) if got else '*** MISSED ***'))
