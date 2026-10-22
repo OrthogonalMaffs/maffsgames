@@ -1,0 +1,37 @@
+# HMP-CHOCOLATE (Jon, 21 Oct 2026), verbatim
+
+TASK: Redesign How Many Parts?'s visuals around one chocolate-bar model that is also the game's theme, cut each screen to what the student needs, and tie every distractor to the stage where students really make that error.
+ROOT CAUSE: Jon's play-test (21 Oct): overwhelming and underwhelming. Screens checked at 390 and 1280 px. Question screen: premise sentence, two separate bars and a caption above the options. Wrong-answer screen (5/7 - 2/7): the sum three times, two explanation blocks, the premise, three bars, a caption. The look is the default template with generic blue and purple and no character; purple is also close to a trademarked chocolate brand's colour. Distractors: HOW-MANY-PARTS listed errors "where they apply" without saying where, so stage 1 offers 3/49 ("multiplied the bottoms but took away the tops"), an error no student makes when the denominators are already equal.
+CLASS CHECK: Local. One unlisted game's own drawing, layout and distractor rules; no shared module draws bar models or picks distractors. The distractor fault is in this game's contract and generator, not a shared picker (MaffsOptions only assembles options it is given).
+EXACT CHANGE:
+Theme (Jon, 21 Oct): a generic chocolate bar. Squares with rounded corners and scored lines between them, in warm browns, on the light theme row (canon §7.5.1). No brand, wordmark, wrapper design or purple anywhere in the game. Header accent and buttons take the theme's brown; one gold-foil accent at most. Drawn in SVG in the page; no image files.
+One bar, not two:
+- Add: one bar with the denominator's squares; the first fraction's squares in one brown, the second's in a second brown with a pattern (not colour alone), side by side. The answer is the squares counted.
+- Take away: the first fraction's squares, with the taken ones shown eaten (bitten outline, emptied).
+- Different denominators: the bar shown scored into the common denominator's smaller squares, with one caption line ("Cut each piece into 2").
+- Multiply: fraction x fraction as one slab, one fraction along each side, the overlap the answer; fraction x whole as that many bars in a row.
+- Divide: "how many quarter-pieces fit in 3 bars", pieces outlined along the bars.
+- Mixed numbers: whole bars plus a part bar.
+Screens:
+- Question screen: the question, the bar when shown, the options or answer box. The premise sentence ("The denominator says how many parts...") moves to the start screen and to wrong-answer feedback; it is not on every question.
+- Wrong-answer screen: one line naming what went wrong (worked on the question's numbers for the first three per session, as now, but in one line plus the bar), the one bar, the correct sum once, Next. Nothing else.
+- When the bar shows (Jon, 20 Oct) is unchanged: first 3 questions of each stage, in the feedback after a wrong answer, and on the next question.
+Distractors (Jon, 21 Oct): each stage draws only from its own list of errors students make there:
+- (a) same denominator: added (or took away) the tops and the bottoms (never where it gives a zero bottom); did the other operation; took the tops away but added the bottoms.
+- (b) one denominator a multiple of the other: added tops and bottoms; added the tops and kept the larger bottom; changed the bottom but not the top; did the other operation.
+- (c) unrelated denominators: added tops and bottoms; multiplied the bottoms but added the tops as they were; changed the bottoms but not the tops; did the other operation.
+Stages (d)-(f) are typed, so their lists are for diagnosis only: (d) added instead of multiplying, multiplied the tops but kept a bottom, multiplied top and bottom by the whole number; (e) multiplied without turning the second fraction over, turned the first fraction over, divided the whole number by the bottom; (f) multiplied wholes and parts separately, subtracted the smaller part from the larger, converted a mixed number wrongly (whole + top instead of whole x bottom + top).
+Remove "multiplied the bottoms but took away the tops" and any other error not on its stage's list, including the lane's own two extra distractors unless they fit a list. Options stay distinct in value, none equal to the key (SR-4). If a question cannot get three distinct listed errors, it shows three options (the key and two) (SR-4 exception, Jon 21 Oct); never invent an error to make four.
+Verifier: every bar drawn is checked against its numbers (coloured, eaten and outlined square counts; one bar where one is required; the slab's overlap equals the product); every distractor's error is on its stage's list; no purple and no element outside the theme palette; plants: two bars on an add question, a wrong square count, an off-list error, a purple fill; all caught. Phone fit at 320, 390 and 1280 px, Aa mode included. Key-collision survey still 0. Screenshots of one question and one wrong-answer screen per stage, at 390 px, attached to the PR for Jon.
+DO NOT TOUCH: Pools, keys, levels, stages, session lengths, scoring, leaderboard boards, the fractionForm marking and its messages, MaffsLock, analytics events; schools/assets/; every other game; the roster's listed section. The game stays unlisted.
+SUCCESS CONDITION: Every stage plays end to end at 320, 390 and 1280 px with one bar per screen and no overflow; the verifier passes and catches every plant; the survey reports 0; screenshots attached; check-changed.py finishes before the first push; merged through the standard merge rules on a green Gate; main green after.
+STOP IF: The slab model cannot show a fraction x fraction product legibly at 320 px for any question in the pool (list those questions); any stage leaves more than a quarter of its questions with only three options (report the counts; Jon decides); a chocolate design choice would need an image file or an external asset; or any shared file needs changing.
+FINISH: Committed and merged unlisted; docs/handover/cloud.md updated with the entry, PR, main run, the three-option counts per stage, and the screenshots' location for Jon to play-test again.
+
+## Rulings (Jon, 21 Oct), amending the contract, verbatim
+
+Rulings (Jon, 21 Oct), amending the redesign contract:
+(1) Stage (a) becomes typed, marked through MaffsAnswer.fractionForm like (d)-(f); this replaces the 20 Oct ruling that (a)-(c) are multiple choice, for (a) only. Its error list becomes a diagnosis list: added (or took away) the tops and the bottoms (never a zero bottom); did the other operation; took the tops away but added the bottoms; gave the count of parts as a whole number (5/7 - 2/7 -> 3).
+(2) Stages (b) and (c): the take-away versions apply ("took away the tops and the bottoms", "took away the tops and kept the larger bottom"), excluding any that give a zero or negative bottom. Three options where fewer than three listed errors apply, under the existing exception.
+(3) STOP IF 2 now applies to (b) and (c) only. Add: the keypad and the bar together must fit at 320 px on stage (a); if not, stop and report.
+Pushing the saved contract is fine. Then build.

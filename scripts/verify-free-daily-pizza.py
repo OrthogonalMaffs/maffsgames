@@ -45,7 +45,10 @@ WHAT IT ASSERTS
               agree; the mix is 3/3/2/2 in stage order with no repeated value in a stage;
               dates differ; the UK date is right either side of both clock changes.
   Practice    seeded sets == Python's; right length, stage, no repeats, no neighbours about
-              the same value; mixed is a quarter per stage, stage by stage.
+              the same value; mixed is a quarter per stage, stage by stage. FDP-SPREAD (Jon,
+              22 Oct 2026): seeds 1-10,000 in each of the ten practice modes, no two
+              neighbours about the same value wherever an order could keep them apart (families
+              recomputed here); seeds 1-300 also recomputed in full from the stated rule.
   UI          played with a Firebase stub: stages 1-4 at 20 (rank NOWHERE: no submitScore call, history
               and personal best under stage-sN-q20, 'not ranked' on the end screen), mixed at 20
               and 40 (the only practice that ranks: practice-q20 / practice-q40), the
@@ -66,7 +69,7 @@ WHAT IT ASSERTS
 FAULT-INJECTION SELF-TEST (every run; --no-selftest skips it)
 -------------------------------------------------------------------------------
 Each fault is patched into a FRESH page (never the file) and must FAIL: a wrong answer; a
-value-equal distractor; a wrong tag; the bank unfiltered (FDP-KEY-COLLIDE); a broken daily mix; a daily pizza not served easiest
+value-equal distractor; a wrong tag; the bank unfiltered (FDP-KEY-COLLIDE); the one-pass spread (FDP-SPREAD); a broken daily mix; a daily pizza not served easiest
 first; a pre-answer picture leak; a recurring answer shown as 0.33; a lossy picture; a fraction
 written with a slash on screen; a single-stage practice run that submits to a board.
 
@@ -616,28 +619,119 @@ def daily_expected(d, exp_ids, by_id):
     return out
 
 
-def spread(lst, by_id):
-    a, n = list(lst), len(lst)
+def spread(lst, by_id, fam=None):
+    """FDP-SPREAD (Jon, 22 Oct 2026), from its stated rule: each place takes the earliest remaining question that
+    differs in family from the one before and leaves the rest separable (with m left, no family above ceil(m/2), the
+    one just placed not above floor(m/2)); where none does, the earliest that differs, else the earliest."""
+    fam = fam or {i: family(by_id[i]) for i in lst}
+    rest, out = list(lst), []
+    count = {}
+    for i in rest:
+        f = fam[i]
+        count[f] = count.get(f, 0) + 1
+    while rest:
+        prev = fam[out[-1]] if out else None
+        m = len(rest) - 1
+        pick = other = None
+        for k, i in enumerate(rest):
+            f = fam[i]
+            if f == prev:
+                continue
+            if other is None:
+                other = k
+            if all(c - (g == f) <= (m + 1) // 2 and (g != f or c - 1 <= m // 2) for g, c in count.items()):
+                pick = k
+                break
+        if pick is None:
+            pick = other if other is not None else 0
+        count[fam[rest[pick]]] -= 1
+        out.append(rest.pop(pick))
+    return out
 
-    def fam(i):
-        return family(by_id[a[i]])
-    for i in range(1, n):
-        if fam(i) != fam(i - 1):
-            continue
-        moved = False
-        for j in range(i + 1, n):
-            if fam(j) != fam(i - 1):
-                a[i], a[j] = a[j], a[i]
-                moved = True
-                break
-        if moved:
-            continue
-        for j in range(0, i - 1):
-            if (fam(j) != fam(i - 1) and (i + 1 >= n or fam(j) != fam(i + 1))
-                    and (j == 0 or fam(i) != fam(j - 1)) and fam(i) != fam(j + 1)):
-                a[i], a[j] = a[j], a[i]
-                break
-    return a
+
+def separable(lst, fam):
+    """Can lst be ordered with no two neighbours about the same value? Iff no family holds more than half, rounded up."""
+    c = {}
+    for i in lst:
+        f = fam[i]
+        c[f] = c.get(f, 0) + 1
+    return max(c.values()) <= (len(lst) + 1) // 2
+
+
+def _next(t):
+    """mulberry32's step on plain ints (the Mulberry32 class, unrolled for the 10,000-seed sweep; checked equal to it)."""
+    t = (t + 0x6D2B79F5) & M32
+    r = ((t ^ (t >> 15)) * (t | 1)) & M32
+    r = (r ^ (r + (((r ^ (r >> 7)) * (r | 61)) & M32))) & M32
+    return t, r ^ (r >> 14)
+
+
+def fast_practice(stage, n, seed, exp_ids, fam):
+    """practice_expected, with the shuffle unrolled: the sweep below runs it 100,000 times."""
+    t = seed & M32
+    out = []
+    for s, k in ([(stage, n)] if stage != "mixed" else [(1, n // 4), (2, n // 4), (3, n // 4), (4, n // 4)]):
+        a = list(exp_ids[s])
+        for i in range(len(a) - 1, 0, -1):
+            t, x = _next(t)
+            j = (x * (i + 1)) >> 32
+            a[i], a[j] = a[j], a[i]
+        out += spread(a[:k], None, fam)
+    return out
+
+
+SWEEP_SEEDS = 10000
+SWEEP_REPORT = {}      # mode -> how many of its blocks no order could keep apart (filled by the main run's sweep)
+SWEEP_MODES = [(s, n) for s in (1, 2, 3, 4, "mixed") for n in (20, 40)]
+SWEEP_EXACT = 300      # of those seeds, the first this many are also recomputed here in full (the port is slow in Python)
+SWEEP_JS = r"""
+(args) => {
+  // Every practice set for seeds 1..args.seeds in each mode, as indexes into one id list (compact to ship).
+  const ids = [1, 2, 3, 4].reduce((a, s) => a.concat(FDP.ids(s)), []), at = {};
+  ids.forEach((id, i) => { at[id] = i; });
+  const sets = {};
+  args.modes.forEach(([st, n]) => {
+    const rows = [];
+    for (let seed = 1; seed <= args.seeds; seed++) rows.push(FDP.practiceSet(st, n, FDP.mulberry32(seed)).map(id => at[id]));
+    sets[st + '/' + n] = rows;
+  });
+  return { ids, sets };
+}
+"""
+
+
+def check_practice_sweep(page, exp_ids, by_id, out, seeds=SWEEP_SEEDS):
+    """FDP-SPREAD: for every practice mode, the page's sets for seeds 1-10,000 keep no two neighbours about the same
+    value wherever an order could keep them apart (mixed: each stage's quarter on its own), judged on families
+    recomputed here; and for the first SWEEP_EXACT seeds the page's sets are exactly the stated rule's, recomputed here.
+    Returns, per mode, how many blocks no order could separate, for the report line."""
+    report = {}
+    fam = {i: family(it) for i, it in by_id.items()}
+    ids, sets = page["ids"], page["sets"]
+    for st, n in SWEEP_MODES:
+        key = "%s/%d" % (st, n)
+        rows = sets.get(key) or []
+        if len(rows) != seeds:
+            out.append("practice %s: the page gave %d sets for %d seeds" % (key, len(rows), seeds))
+        apart = impossible = 0
+        for seed, row in enumerate(rows, 1):
+            got = [ids[k] for k in row]
+            if seed <= SWEEP_EXACT and got != fast_practice(st, n, seed, exp_ids, fam):
+                out.append("practice %s seed %d: the page's set differs from the stated rule's" % (key, seed))
+            if len(got) != n or any(i not in fam for i in got):
+                out.append("practice %s seed %d: %d questions, or one not in the bank" % (key, seed, len(got)))
+                continue
+            blocks = [got] if st != "mixed" else [got[i:i + n // 4] for i in range(0, n, n // 4)]
+            for b in blocks:
+                if not separable(b, fam):
+                    impossible += 1
+                elif any(fam[x] == fam[y] for x, y in zip(b, b[1:])):
+                    apart += 1
+        if apart:
+            out.append("practice %s: %d of %d sets keep two neighbours about the same value where they could be apart"
+                       % (key, apart, seeds))
+        report[key] = impossible
+    return report
 
 
 def practice_expected(stage, n, seed, exp_ids, by_id):
@@ -796,7 +890,7 @@ async def new_page(browser, firebase=False, when=None, viewport=None, katex=True
     return ctx, page, errors
 
 
-async def collect_static(page, n_dates=400):
+async def collect_static(page, n_dates=400, sweep=0):
     out = []
     data = await page.evaluate(COLLECT_JS)
     by_id, exp = check_banks(data, out)
@@ -828,6 +922,9 @@ async def collect_static(page, n_dates=400):
     for s, (right, wrong) in zip(secs, res["scores"]):
         if right != score_for(s, True) or wrong != 0:
             out.append("score after %ss is %r/%r, expected %d/0" % (s, right, wrong, score_for(s, True)))
+    if sweep:
+        got = await page.evaluate(SWEEP_JS, {"modes": [[st, n] for st, n in SWEEP_MODES], "seeds": sweep})
+        SWEEP_REPORT.update(check_practice_sweep(got, exp, by_id, out, sweep))
     return out, data, by_id, exp, dates
 
 
@@ -1190,6 +1287,21 @@ FAULTS = [
      "static", "FDP.BANK[2].forEach(it => { if (it.kind === 'simp') it.working = it.working.replace('factor of', 'number into'); });"),
     ("the unfiltered bank (60% of 150, 10% as a fraction served)",
      "static", "(() => { FDP.keyIsSlip = () => false; FDP.BANK = FDP.buildBank(); const ix = FDP.index(); FDP.item = id => ix[id] || null; })()"),
+    ("the one-pass spread (FDP-SPREAD's plant: before 22 Oct 2026)",
+     "sweep", r"""(() => { FDP.spread = function (list) {
+       var a = list.slice(), n = a.length;
+       function fam(i) { return FDP.family(a[i]); }
+       function swap(i, j) { var t = a[i]; a[i] = a[j]; a[j] = t; }
+       for (var i = 1; i < n; i++) {
+         if (fam(i) !== fam(i - 1)) continue;
+         var moved = false, j;
+         for (j = i + 1; j < n && !moved; j++) { if (fam(j) !== fam(i - 1)) { swap(i, j); moved = true; } }
+         for (j = 0; j < i - 1 && !moved; j++) {
+           if (fam(j) !== fam(i - 1) && (i + 1 >= n || fam(j) !== fam(i + 1)) &&
+               (j === 0 || fam(i) !== fam(j - 1)) && fam(i) !== fam(j + 1)) { swap(i, j); moved = true; }
+         }
+       }
+       return a; }; })()"""),
     ("daily not easiest first (stages reversed)",
      "static", "(() => { const o = FDP.dailySet; FDP.dailySet = d => o(d).reverse(); })()"),
     ("recurring answer shown as exact (1/3 = 0.33)",
@@ -1212,8 +1324,8 @@ async def selftest(browser, by_id):
         found = []
         try:
             await page.evaluate(patch)
-            if kind == "static":
-                found, _, _, _, _ = await collect_static(page, n_dates=40)
+            if kind in ("static", "sweep"):
+                found, _, _, _, _ = await collect_static(page, n_dates=40, sweep=500 if kind == "sweep" else 0)
             elif kind == "stage":
                 await page.evaluate(SUBMITS_JS)
                 await start_practice(page, 1, 20)
@@ -1318,7 +1430,7 @@ async def run_all(args):
             await browser.close()
             return
         ctx, page, errors = await new_page(browser)
-        found, data, by_id, exp, dates = await collect_static(page)
+        found, data, by_id, exp, dates = await collect_static(page, sweep=SWEEP_SEEDS)
         # A fresh page must serve the same pizzas (nothing carried over from a first load).
         again = await page.evaluate("(ds) => ds.map(d => FDP.dailySet(d))", dates[:30])
         kbad = await page.evaluate(KATEX_JS)
@@ -1340,6 +1452,9 @@ async def run_all(args):
         print("Removed by the slip filter (FDP-KEY-COLLIDE): " + ", ".join(
             "S%d %d of %d (%s)" % (s, len(gone[s]), counts[str(s)] + len(gone[s]), ", ".join(gone[s]) or "none")
             for s in (1, 2, 3, 4)))
+        print("Practice sets swept (FDP-SPREAD): seeds 1-%d in each of %s; apart wherever possible; the first %d "
+              "recomputed in full (blocks no order could separate: %s)"
+              % (SWEEP_SEEDS, ", ".join(SWEEP_REPORT), SWEEP_EXACT, ", ".join("%s %d" % kv for kv in SWEEP_REPORT.items())))
         print("Daily pizzas recomputed from the seed: %d dates (+ %d on a fresh page); UK date at %d instants"
               % (len(dates), len(fresh), len(UK_DATES)))
         if kbad is None:
