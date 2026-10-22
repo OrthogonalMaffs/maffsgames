@@ -3,6 +3,13 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-22 (cloud): ANSWER-LOCK-STATIC (contract verbatim, with Jon's redesign rulings: `docs/history/contracts/2026-10-22-answer-lock-static.md`; lane exception for `check-answer-lock.py` and canon §7.6.0). **DONE (#478, 66ae9f1; main run 39758707435 green, timings job included; pack e6606a0, `split-candidates` empty).**
+
+- **Done:** a new CI line "Answer lock, static rules and self-test" (`--selftest && --static`: static rules, NOT_YET, the cloud list, once; no game played); `--part i/6` plays games only, part 1 included. The static rules read page text only, never play state. Self-test adds: each judged game played by exactly one part; the static report on exactly one line; a static fault (a page without answer-lock.js) fails.
+- **Main's run, each line (s; limit 315 = 70% of 450):** part 1 243 (was 299 with the self-test and static rules), 2 224, 3 167, 4 146, 5 171, 6 186; static and self-test 57. No timing-gate warning.
+- **Stale timing key (home lane, no action needed from this lane):** `scripts/ci-timings.json` still holds part 1's old label (299 s); no line carries it now.
+- **end-task.py refused** (`gh pr view` is GraphQL, refused in cloud sessions: "use the REST API"), so worktree `/home/user/wt-answer-lock-static` and local branch `claude/answer-lock-static` stay in this container (they go with it). **For the home lane:** end-task.py's PR lookup could use REST (`gh api repos/{owner}/{repo}/pulls?head=...&state=closed`), as merge-pr.py does.
+
 ## 2026-10-21 (cloud): LINE-LIMIT-SCOPE (contract verbatim: `docs/history/contracts/2026-10-21-line-limit-scope.md`). **DONE (#474, 2d2c24e; main run 39625941008 green; pack 599c0c7, no candidates at setup 32).**
 
 - **Rulings (Jon, 21 Oct):** a line past 70% is a split candidate. On main it warns, `ci-pack.json` lists it under `split-candidates`, and the pack commits. On a PR it fails only if the PR selects its verifier for its own reason; a selection of "everything" warns. The 80% group rule and setup-only exit 2 are unchanged. Canon §7.8.1.
