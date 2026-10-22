@@ -69,5 +69,16 @@
     return String(room.credit).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') + ' ' + INVITE;
   }
 
-  window.MaffsEscapeRating = { rating: rating, html: html, credit: credit, INVITE: INVITE, BANDS: BANDS };
+  // Set codes (contract SET-CODES, 22 Oct 2026; canon 11.3). Each lock draws one set from its library per play;
+  // the lock screen shows that set as a letter and the teacher page lists every set under the same letter, so a
+  // teacher on another device can read the right answer. This is the only place the mapping lives (this file is
+  // loaded by every room's index.html and teacher.html, so no room file changes): index 0 is A. No I, which
+  // reads as 1; no digits, so a code is never mistaken for a clue figure. A library may hold ten sets, no more.
+  var SET_CODES = 'ABCDEFGHJK';
+  function setCode(i) {
+    return typeof i === 'number' && i >= 0 && i < SET_CODES.length && i === Math.floor(i) ? SET_CODES.charAt(i) : '';
+  }
+
+  window.MaffsEscapeRating = { rating: rating, html: html, credit: credit, INVITE: INVITE, BANDS: BANDS,
+                               SET_CODES: SET_CODES, setCode: setCode };
 })();
