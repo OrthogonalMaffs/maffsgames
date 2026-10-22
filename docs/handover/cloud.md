@@ -53,7 +53,14 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only via `python scripts/merge-pr.py <n>`
 (needs a green Gate and main, §7.8.3); watch main's run after.
 
-## 2026-10-22 (cloud): FDP-SPREAD (Jon's rulings verbatim, with the finding: `docs/handover/contracts/2026-10-22-fdp-spread.md`). **In flight.**
+## 2026-10-22 (cloud): FDP-KEY-COLLIDE (contract verbatim: `docs/history/contracts/2026-10-22-fdp-key-collide.md`; Jon's rulings that put FDP-SPREAD first: `docs/history/contracts/2026-10-22-fdp-spread.md`). **This PR; merged near midnight UK.**
+
+- **Done:** one pass after the bank is built (`FDP.keyIsSlip`, as #453) removes every question where subtracting the percentage, or the percentage number put on the bottom, gives the key: stage 1 loses 1 of 90 (10% as a fraction, `S1:conv:p>f:1/10`), stage 3 1 of 138 (60% of 150, `S3:pct:60:150`), stages 2 and 4 none. No redraw (canon §12, SR-5).
+- **Verifier (part 1):** the removed set recomputed from the parameters; every served item checked for both slips; the unfiltered bank planted and caught. Survey: free-daily-pizza coincidence 2 -> **0** (its 80 "methods agree" rows are the survey's accepted identity class; its entry needed no change).
+- **The daily pizza changes on every date** from the deploy: the draw takes from one shuffled list per stage, so two fewer items move every later pick (30 of the next 30 dates differ). Merged near midnight UK on Jon's ruling; the first changed date is recorded below once main's run is in.
+- **Claim released** (`scripts/answer-lock-state.json` empty).
+
+## 2026-10-22 (cloud): FDP-SPREAD (Jon's rulings verbatim, with the finding: `docs/history/contracts/2026-10-22-fdp-spread.md`). **In flight.**
 
 - **Why:** FDP-KEY-COLLIDE's filter changed what practice seed 2026 draws, and the verifier's mixed/20 check failed: `FDP.spread`'s one pass of swaps left two questions about 1/100 together where 1/100, 4/5, 1/100, 1/8, 1/100 was possible. Over 10,000 seeds on main it did so in 245 mixed/20 sets and 4 mixed/40 (single-stage: 0).
 - **Fix (`FDP.spread` only):** each place takes the earliest remaining question, in the shuffled order, that differs in family from the one before and leaves the rest separable (no family above ceil(m/2), the one just placed not above floor(m/2)). A list already apart comes back unchanged. Questions, the daily pizza (it never calls spread), scoring and boards unchanged.
