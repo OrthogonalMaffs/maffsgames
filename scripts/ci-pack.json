@@ -93,7 +93,7 @@
   "Normal Navigator (independent recomputation + rendered labels)": "16",
   "Parent guides (every stated figure recomputed from the page)": "16",
   "Partial Fractions Duel (every key solved from its own stem with SymPy, every option checked and clicked)": "11",
-  "Percentage Flip (every key and every figure in the working recomputed; typed answers marked right and wrong in Chromium, both ways round)": "10",
+  "Percentage Flip (every key and every figure in the working recomputed; typed answers marked right and wrong in Chromium, both ways round)": "6",
   "Prime Sprint (every target factorised independently, every prime tap judged against a model in Chromium, the feedback and working recomputed)": "8",
   "Prime or Composite (every key, hint and explanation recomputed; every number marked both ways in Chromium)": "32",
   "Prisoner's Dilemma (no answers to mark: the payoffs, every opponent's play against its stated strategy, every score, count and stated figure recomputed; games and a tournament played in Chromium)": "35",
