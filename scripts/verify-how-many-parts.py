@@ -1735,8 +1735,7 @@ EXFIT_JS = r"""(fold) => {
   const bad = [], r = el => el.getBoundingClientRect();
   let n = 0;
   for (const st of ['a', 'b', 'c', 'd', 'e', 'f']) for (const src of HMP.POOLS[st]) {
-    HMP.ui.ask(src, st, true);
-    window.scrollTo(0, 0);
+    HMP.ui.ask(src, st, true);   // scrolled as the game leaves it (to the top, then its button into view)
     n++;
     const where = st + ' ' + JSON.stringify(src);
     for (let k = 1; k < 12; k++) {
