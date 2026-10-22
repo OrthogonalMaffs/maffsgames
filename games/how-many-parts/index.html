@@ -149,7 +149,7 @@ a.back-link:hover{color:var(--text)}
 .steps li:last-child{font-weight:600}
 .steps .katex{font-size:1.05em}
 .step-row{display:flex;justify-content:center}
-.step-row .btn{min-width:10rem}
+.step-row .btn{min-width:10rem;flex:none}
 .ex-tag{font-size:.8rem;color:var(--muted);text-align:center}
 /* A bracket stays on its line with the maths it holds (k-punctuation scan, 320px). */
 .glue{white-space:nowrap}
@@ -1483,7 +1483,9 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 
   // The bar and its steps (HMP.steps), revealed one tap at a time into `wrap` (contract HMP-FOUNDATION-STAGES). `done`:
   // the worked example's way on, offered on its last step; a wrong answer's explanation has none (Next is its way on).
-  // After a tap, the button (or, on the last step of a wrong answer, Next) is kept above the fold.
+  // The button (or, on the last step of a wrong answer, Next) is kept above the fold: after every tap, and from the
+  // first step of the worked example, which has no other way on. A wrong answer's first draw is the phone rule's
+  // (showWrong: the line and Next above the fold).
   function explain(wrap, eq, done) {
     var steps = H.steps(eq), at = 0;
     function draw() {
@@ -1497,7 +1499,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       var b = wrap.querySelector('#stepBtn');
       if (b) b.addEventListener('click', function () { if (last) done(); else { at++; draw(); } });
       MaffsLock.fresh(wrap);   // a double-tap reveals one step, never two
-      if (!at) return;
+      if (!at && !done) return;
       var keep = b || document.querySelector('#feedback .fb-next button');
       var over = keep ? keep.getBoundingClientRect().bottom - (window.innerHeight - FOOTER_PX) : 0;
       if (over > 0) window.scrollBy(0, over);
