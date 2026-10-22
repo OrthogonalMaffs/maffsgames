@@ -1583,14 +1583,18 @@ finished red at 07:13:43Z. It is now enforced by one command both lanes use for 
   (the newest Gate check on that commit wins, so a rerun that passed counts).
 - **(b)** of main's `check-site` runs, counting only `push` to main and `workflow_dispatch` on main (the API's `event` field
   separates them from pull-request runs, which are selective, and from the Monday schedule), none is queued or in progress,
-  and the newest completed one is a success. A run still going is NOT green: `--wait <seconds>` polls for it, nothing assumes
-  it; a red or cancelled run is never waited out.
+  and the newest completed one is a success **and every job of that run has finished and none failed** (read from
+  `actions/runs/<id>/jobs`, all pages: success, skipped and neutral pass; failure, cancelled, timed_out, action_required are red;
+  no jobs, or a jobs call that errors, refuses). A run or job still going is NOT green: `--wait <seconds>` polls for it and is the
+  ceiling (a job record GitHub never closes ends in a refusal naming the job, not a hang); nothing assumes it; a red or cancelled
+  run is never waited out.
 - On success it squash-merges, pinned to the head commit (a) judged, and prints main's head and the run it judged. The merging
   session then waits for main's run on that commit and reports it (above); `end-task.py` runs after, unchanged.
 - `--override "<Jon's ruling and date>"` waives (b) only, writes the ruling and the run it overrode as a PR comment before
   merging, and still requires (a). An empty ruling is refused. Only Jon's ruling is a reason to use it.
 - `--selftest` replays recorded API shapes: green and green merges; red, cancelled, in-progress or absent main refuses; red Gate
-  refuses even with `--override`; the override comment is written; with the red-main check removed the selftest fails.
+  refuses even with `--override`; the override comment is written; jobs still open, failed, empty, unreadable or over two pages
+  are each covered; with the red-main check removed, or the run-only `check_main()` planted, the selftest fails.
 - Branch protection on GitHub is Jon's and is not changed by this script.
 
 ## 7.9 Verifier conventions (Jon, 8 Oct 2026)
