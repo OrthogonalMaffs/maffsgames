@@ -3,6 +3,20 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-20 (cloud): TRIG-WORMS-FILTER (contract and Jon's amendment verbatim: `docs/handover/contracts/2026-10-20-trig-worms-filter.md`). **DONE (#462, c31cbbf; main run 39474891224, green, 53 jobs); claim released.**
+
+- **Root cause:** `questionFrom` drops a named distractor equal to the key, so on a find-the-angle question where a wrong function or the ratio upside down lands on the key's whole degree, the student using that slip picks the key and is marked right.
+- **Fix (the game's own pool; no shared module):** `questionFrom` returns `slips`, the three wrong-function and upside-down errors as marked; one pass after the pool is built drops every angle outcome whose slips include the key. Filtered once, never redrawn (canon §12, SR-5). Rounding the ratio first is not filtered (Jon). Count **52 of 588 (8.8%)**, as the merged report says.
+- **Lost per (ratio, angle), of 15 hypotenuses:** CAH 75° 8, **CAH 80° 15, CAH 85° 15** (emptied, as ruled: tan⁻¹(H/A) gives the key for every triangle there), SOH 15° 8, TOA 15° 6. Every other pair still served. Both levels share the one pool.
+- **Verifier (`verify-trig-worms.py`):** recomputes every slip in mpmath; the pool must be exactly the outcomes no slip gets right; every pair but CAH 80° and 85° must still be served; prints the loss per pair. Plant: the pool without the filter pass, caught ("serves 52 find-the-angle questions where a wrong function or the ratio upside down gives the key").
+- **Untouched:** find-a-side questions, distractor choice beyond the filter, scoring, levels, cannon.
+
+## 2026-10-20 (cloud): COLLISION-IDENTITIES (contract and Jon's rulings verbatim: `docs/handover/contracts/2026-10-20-collision-identities.md`). **DONE (#461, 118be76; main run 39472244834, green, 53 jobs).**
+
+- **Done:** `scripts/survey-key-collisions.py`: a coincidence moves to 'agree (identity)' when the error equals the key on EVERY question of its group (two or more), the group named in the row. Groups: modular by b (every a; "applies" = the offerable residues 0..b-1, ruling (1)); split-it by the ratio; QF step 2 by the two coefficients its comparison with ac turns on; FDP of-an-amount by p or a/b. **trig-worms by error type, never grouped (ruling (2)):** rounding first is 'agree (precision)' (all 76); wrong function and upside down stay coincidences. `--selftest`: four modular fixtures, two trig fixtures, the control (0); all PASS. Report `docs/audits/key-collision-survey-2026-10.md` rewritten (main 878d83e).
+- **Result:** coincidence 488 -> **185** (227 identities, 76 precision; none rose). modular-battle 231 -> 123, **accepted** (ruling (3), reason recorded; the report adds that guessing among the min(4, b) buttons shown is 29.2%, above every error's full rate); trig-worms 128 -> **52**, to be filtered (TRIG-WORMS-FILTER: CAH 75 8, CAH 80 15, CAH 85 15, SOH 15 8, TOA 15 6); split-it 109 -> 0; QF 15 -> 5; FDP 2, DA 2, six-sevens 1 unchanged.
+- **Next:** TRIG-WORMS-FILTER (count 52 from the merged report: matches).
+
 ## 2026-10-20 (cloud): MONTY-CARD-2 (contract `docs/history/contracts/2026-10-20-monty-card-2.md`). **DONE (#459, 223d498; main run 39411995366, green).**
 
 - **Done:** card 2 "The Monty Hall Problem": `h` is Jon's wording exactly (one car, two goats; the host knows, always opens a goat door, always offers the switch); `t`, `x`, `g`, `gl` unchanged.

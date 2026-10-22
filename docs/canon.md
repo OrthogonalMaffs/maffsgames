@@ -1129,6 +1129,13 @@ stale timers that fired after the student moved on (two games finished and submi
 - A control MaffsNext mounts, or anything inside `data-maffs-lock-skip`, is never locked.
 - Checked by `scripts/test-answer-lock.py` (the asset, with planted faults) and
   `scripts/check-answer-lock.py` (every migrated game played in Chromium; `NOT_YET` may only shrink).
+  In CI it is seven lines (contract ANSWER-LOCK-STATIC, Jon, 22 Oct 2026): "Answer lock, static rules and
+  self-test" (`--selftest && --static`: the static rules, `NOT_YET` and the cloud list, reported once, no game
+  played) and "Answer lock in play, part 1" to "part 6" (`--part i/6`: every sixth migrated game in slug order,
+  games only). Until then part 1 also ran the self-test and the static rules, so it was always the heaviest
+  part (median 299 s against 147-224 s) and, once How Many Parts? joined the migrated games, over the per-line
+  limit for every PR touching a migrated game. The self-test proves each game is played by exactly one part,
+  the static report runs on exactly one line, and a static fault still fails.
 - **Adopting MaffsLock includes the game's lock-hint declaration; the game passes `check-answer-lock.py`**
   (contract LH, 7 Oct 2026). The declaration says how the check produces a wrong answer. It is the game's
   own fact, so it lives in the game's page, never in the shared script: one HTML comment,
