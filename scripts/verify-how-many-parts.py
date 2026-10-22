@@ -1,83 +1,101 @@
 #!/usr/bin/env python3
-# ci-line: How Many Parts?, part 1 (pools, keys, every stage's own errors and options, every question's chocolate bar recomputed and read back from the page, the palette, sessions, both levels played at 320, 390 and 1280px) | --part 1
-# ci-line: How Many Parts?, part 2 (every wrong-answer screen at 320x568, normal and Aa: the reason and Next above the fold; stage 1's bar, answer box and keypad in the window together) | --part 2
-# ci-line: How Many Parts?, part 3 (every wrong-answer screen at 375x667 and 390x844, normal and Aa: the reason and Next above the fold) | --part 3
-# ci-line: How Many Parts?, part 4 (every wrong-answer screen at 1280x800, normal and Aa: the reason and Next above the fold) | --part 4
-# ci-line: How Many Parts?, part 5 (fault-injection self-test: eight planted faults in the engine, the bar and the palette, each caught) | --part 5
-# ci-line: How Many Parts?, part 6 (fault-injection self-test: five planted faults in play and the stage 1 fit, each caught) | --part 6
+# ci-line: How Many Parts?, part 1 (pools and Foundation's five, keys, every stage's own errors and options, every question's bar and worked steps recomputed, the palette, sessions easiest first, every Foundation stage and Advanced played at 320, 390 and 1280px) | --part 1
+# ci-line: How Many Parts?, part 2 (every question, worked example and wrong-answer screen drawn by the game and read back step by step: no bar before answering, each step's bar as recomputed) | --part 2
+# ci-line: How Many Parts?, part 3 (every wrong-answer screen and worked example at 320x568, normal and Aa: the reason and Next above the fold, brackets kept with their maths; typed questions' boxes and keypad in the window) | --part 3
+# ci-line: How Many Parts?, part 4 (every wrong-answer screen and worked example at 375x667, normal and Aa: the reason and Next above the fold, brackets kept with their maths) | --part 4
+# ci-line: How Many Parts?, part 5 (every wrong-answer screen and worked example at 390x844, normal and Aa: the reason and Next above the fold, brackets kept with their maths) | --part 5
+# ci-line: How Many Parts?, part 6 (every wrong-answer screen and worked example at 1280x800, normal and Aa: the reason and Next above the fold, brackets kept with their maths) | --part 6
+# ci-line: How Many Parts?, part 7 (fault-injection self-test: eleven planted faults in the engine, the stages, the order, the steps, the bar and the palette, each caught) | --part 7
+# ci-line: How Many Parts?, part 8 (fault-injection self-test: seven planted faults in play, the worked example, the brackets and the typed fit, each caught) | --part 8
 # ci-deps: games/how-many-parts/
-"""Independent verification for How Many Parts? (games/how-many-parts/), built 20 Oct 2026 (contract HOW-MANY-PARTS)
-(verbatim in docs/history/contracts/) and rebuilt for its redesign, 21 Oct 2026 (contract HMP-CHOCOLATE and Jon's
-rulings of that day, verbatim in docs/handover/contracts/2026-10-21-hmp-chocolate.md). SR-30: checked from its first PR.
+"""Independent verification for How Many Parts? (games/how-many-parts/), built 20 Oct 2026 (contract HOW-MANY-PARTS),
+rebuilt for its redesign, 21 Oct 2026 (contract HMP-CHOCOLATE and Jon's rulings of that day), and again for
+Foundation's five stages, 22 Oct 2026 (contract HMP-FOUNDATION-STAGES). Every contract is verbatim in
+docs/history/contracts/. SR-30: checked from its first PR.
 
 WHY THIS READS THE LIVE PAGE
 -------------------------------------------------------------------------------
 The game keeps every decision a student sees (the pools, every key, every option and the error behind it, the
-chocolate-bar model, the feedback lines) on window.HMP as plain functions, and its UI calls them through HMP. This
-script loads the page under Playwright, drives THOSE functions, draws every question through the game's own screens,
-and recomputes everything here, in Python, with exact fractions, from definitions written out below from the
-contracts' words, never read back from the page.
+chocolate-bar model, the worked steps, the feedback lines, the order a stage is served in) on window.HMP as plain
+functions, and its UI calls them through HMP. This script loads the page under Playwright, drives THOSE functions,
+draws every question through the game's own screens, and recomputes everything here, in Python, with exact
+fractions, from definitions written out below from the contracts' words, never read back from the page.
 
 WHAT IT ASSERTS
 -------------------------------------------------------------------------------
   Pools      every stage's pool is exactly the questions this script enumerates from the stated parameters, less
-             those the 20 Oct catalogue of errors filters out (one equal to the key, or, in stages 1-3, fewer than
-             three with distinct values). HMP-CHOCOLATE keeps the pools as they were: that catalogue is the filter's
-             only use. Each stage keeps at least 40.
+             those the 20 Oct catalogue of errors filters out (one equal to the key, or, in stages a-c, fewer than
+             three with distinct values) and those one of the stage's own listed errors equals (Jon's ruling (a),
+             22 Oct 2026). Each keeps at least 40.
+  Foundation five stages (contract HMP-FOUNDATION-STAGES), each exactly its idea: 1 pool a (the same bottom), 2 pool
+             b (one bottom a multiple of the other), 3 the pairs of pool c whose lowest common denominator IS the
+             product of the bottoms, 4 those where it is SMALLER, 5 pool d (multiply). Each at least 40.
   Lists      each stage's own errors (Jon, 21 Oct 2026), written out below, are the ONLY errors offered or named:
-               1 (typed) the tops and the bottoms added or taken away (never a zero bottom); the other operation;
+               a (typed) the tops and the bottoms added or taken away (never a zero bottom); the other operation;
                  the tops taken away and the bottoms added; the count of parts given as a whole number
-               2 the tops and the bottoms; the tops and the bigger bottom kept; a bottom changed but not its top; the
+               b the tops and the bottoms; the tops and the bigger bottom kept; a bottom changed but not its top; the
                  other operation (the taking-away versions too, never a zero or negative bottom)
-               3 the tops and the bottoms; the bottoms multiplied and the tops added as they were (adding only); the
+               c the tops and the bottoms; the bottoms multiplied and the tops added as they were (adding only); the
                  bottoms changed but not the tops; the other operation
-               4 (typed) added instead of multiplying; the tops multiplied but a bottom kept; the top and the bottom
+               d (typed) added instead of multiplying; the tops multiplied but a bottom kept; the top and the bottom
                  both multiplied by the whole number
-               5 (typed) multiplied without turning the second fraction over; the first fraction turned over; the
+               e (typed) multiplied without turning the second fraction over; the first fraction turned over; the
                  whole number divided by the bottom
-               6 (typed) the wholes and the parts multiplied separately; the smaller part taken from the larger; a
+               f (typed) the wholes and the parts multiplied separately; the smaller part taken from the larger; a
                  mixed number converted wrongly (whole + top instead of whole x bottom + top)
-             No listed error equals its question's key: the pools drop any question where one does (Jon's ruling (a),
-             22 Oct 2026: two stage 6 questions, 2 1/2 / 1 2/3 and 2 2/3 / 1 1/3, where a mixed number converted
-             wrongly gives the key).
-  Questions  every pool entry over SEEDS seeds. Stages 2-3: the key in its simplest form; every other option a listed
-             error of its stage, its value recomputed here, in its simplest form, named by the first listed error with
-             that value, none equal in value to the key or to another option; four options, or three where fewer than
-             three listed errors apply (SR-4 exception, Jon, 21 Oct 2026), counted per stage. Stages 1 and 4-6 typed:
-             the key, its form (simplest, or a mixed number in stage 6), the boxes' key parts, the question's numbers.
-             Every feedback line for a listed error starts from that error's value; the correct sum ends on the key in
+  Questions  every pool entry over SEEDS seeds. Multiple choice (b, c): the key in its simplest form; every other
+             option a listed error of its stage, recomputed here, in its simplest form, named by the first listed
+             error with that value, none equal in value to the key or to another option; four options, or three where
+             fewer than three listed errors apply (SR-4 exception, Jon, 21 Oct 2026). Typed (a, d-f): the key, its
+             form, the boxes' key parts, the question's numbers. Every feedback line for a listed error starts from
+             that error's value; the correct sum ends on the key in the asked form.
+  The bar    H.model for every question recomputed (contract HMP-CHOCOLATE): what the wrong-answer steps end on.
+  Steps      every question's worked steps (contract HMP-FOUNDATION-STAGES, item 3) recomputed here, word for word
+             and square for square: (1) each bar is one whole chocolate bar; (2) the first number, a bar cut into its
+             bottom, its top taken; (3) the second, the same; (4) by how the bottoms relate: the same (just count), one
+             a multiple of the other (only one bar is cut), neither (both are cut), each cut bar scored where its
+             pieces were; (5) the pieces counted and the answer. Multiplying fractions is the slab, the same way; a
+             fraction times a whole number, dividing and mixed numbers have their own. The last step ends on the key in
              the asked form.
-  The bar    every question's model recomputed here from its numbers (contract HMP-CHOCOLATE): adding, one bar of the
-             common denominator's squares, the first number's then the second's (striped), side by side; taking away,
-             the first number's squares with the taken ones eaten; different denominators, the pieces before cutting
-             as grooves and one caption line; a fraction times a whole number, that many bars; a fraction times a
-             fraction, one slab whose overlap is the product; "how many quarters in 3", the pieces outlined along 3
-             bars; a fraction divided by a fraction, lots outlined along the bar; mixed numbers, whole bars plus a
-             part bar. Then every question screen and every wrong-answer screen is drawn by the game and its SVG read
-             back square by square: exactly one figure on the screen, every square's role and count as recomputed,
-             every bar square at least 8px wide and every slab square at least 16px at 320px.
-  Palette    every element of every screen drawn (start, each stage's question and wrong answer): no purple, and every
-             colour one of the theme's (schools/assets/theme.css, light row) or the game's own tokens.
-  Screens    the question screen holds the question, the bar when shown and the options or the answer box; the
-             wrong-answer screen holds exactly one line, the bar, the correct sum and Next.
-  Sessions   SESSIONS seeds per level: Foundation 5 per stage, Advanced 4, stages in order; no question twice; adding
-             and taking away within one of half each in stages 1-3; the bar flagged on the first three of a stage only.
-  Play       both levels, end to end, at 320x568, 390x844 and 1280x800, read from what the page shows (canon 7.9): the
-             bar on the question exactly where flagged or after a wrong answer; a listed error gets the worked line
-             the first three times, then the nudge; any other wrong answer the rule; a typed key in a form
-             fractionForm sends back gets the message and nothing is marked; a right answer moves on by itself; the
-             events at the level played and one score to that level's board. No sideways scroll.
+  Palette    every element of every screen drawn (start, each stage's worked example step by step, its question and its
+             wrong answer): no purple, and every colour one of the theme's (schools/assets/theme.css, light row) or the
+             game's own tokens.
+  Drawn      every pool entry drawn by the game (part 2): its question screen has NO chocolate figure; its worked
+             example and its wrong-answer screen are stepped through by the step button, and at every step exactly one
+             figure, read back square by square from the SVG, is that step's recomputed model, with that many steps
+             listed; the worked example ends on "Start the questions", the wrong answer's steps on no button. Every
+             bar square at least 8px wide and every slab square at least 16px at 320px.
+  Sessions   SESSIONS seeds per Foundation stage and for Advanced. Foundation: question 1 the worked example
+             (unnumbered), then 10 questions from that stage's pool only, numbered 1-10, no question twice and not the
+             example; half adding and half taking away in stages 1-4, five times a whole number and five times a
+             fraction in stage 5; served in non-decreasing order of the measure (EASE, below); the worked example an
+             adding question (stage 5: a fraction times a fraction) at the smallest measure the pool has outside the
+             10. Advanced: each stage in order, a worked example, then 4 as before.
+  Play       every Foundation stage, one after another by "Next: Stage N+1", and Advanced, end to end, at 320x568,
+             390x844 and 1280x800, read from what the page shows (canon 7.9): the worked example first, its steps one
+             tap at a time, no event while it shows; no bar before answering; after a wrong answer the line, the bar
+             and its steps (stepped through to the end), the sum and Next; a listed error gets the worked line the first
+             three times, then the nudge; any other wrong answer the rule; a typed key in a form fractionForm sends
+             back gets the message and nothing is marked; a right answer moves on by itself. Every event at the level
+             played and with its stage's own mode; one score, to the stage's own board (foundation-s1..s5; Advanced
+             gcse). The results offer the next stage (none after 5, none for Advanced). No sideways scroll.
   Phone fit  (canon 7.6.1) every pool entry, with every error it can carry and both help forms (and, typed, a wrong
-             answer that is none), drawn by the game's own wrong-answer path at 320x568, 375x667, 390x844 and
-             1280x800, normal and Aa: the line and Next above the fold (the viewport less the 40px footer); no
-             sideways scroll. At 320x568, normal and Aa, every stage 1 question with its bar: the bar, the answer
-             box, Check and the keypad all in the window together (Jon's ruling (3), 21 Oct 2026).
-  Self-test  thirteen faults planted into a copy of the page; each must FAIL (part 5 the eight in the engine, the bar and
-             the palette; part 6 the five in play and the stage 1 fit).
+             answer that is none), drawn by the game's wrong-answer path at 320x568, 375x667, 390x844 and 1280x800,
+             normal and Aa: the line and Next above the fold (the viewport less the 40px footer); no sideways scroll;
+             no "(" at the end of a line or ")" at the start of one in the line or the steps (k-punctuation scan, 22
+             Oct 2026). Every worked example stepped through at each size: after each tap its button inside the
+             window. At 320x568 every typed question: the answer boxes, Check and the keypad in the window together.
+  Self-test  eighteen faults planted into a copy of the page; each must FAIL (part 7 the eleven in the engine, part 8
+             the seven in play and on the phone).
 
-    python scripts/verify-how-many-parts.py [--part 1-6] [--no-selftest] [--seeds N] [--sessions N] [--shots DIR]
-    (CI runs the six parts side by side; no --part runs all six; --shots DIR saves one question and one wrong-answer
-    screen per stage at 390px for Jon, and checks nothing)
+EASE (contract HMP-FOUNDATION-STAGES, item 2; the page states it at H.ease): [kind, parts, simplify], compared in
+order. kind: 0, but 1 for a fraction times a fraction (after times a whole number). parts: the parts the answer is
+counted in before simplifying (adding and taking away: the lowest common denominator; times a whole number: the
+bottom; times a fraction: the product of the bottoms). simplify: 0 when that answer needs no simplifying, else 1.
+
+    python scripts/verify-how-many-parts.py [--part 1-8] [--no-selftest] [--seeds N] [--sessions N] [--shots DIR]
+    (CI runs the eight parts side by side; no --part runs all eight; --shots DIR saves the start screen and, per
+    stage, its worked example step by step, a question and a wrong answer at 390px for Jon, and checks nothing)
 """
 import argparse
 import colorsys
@@ -98,12 +116,19 @@ GAME = os.path.join(ROOT, 'games', SLUG, 'index.html')
 THEME = os.path.join(ROOT, 'schools', 'assets', 'theme.css')
 BUILT = ['a', 'b', 'c', 'd', 'e', 'f']
 SUMS = ['a', 'b', 'c']                 # the adding and taking-away stages (their pools hold sums, no kind)
-MC = ['b', 'c']                        # multiple choice (stage 1 is typed: Jon's ruling (1), 21 Oct 2026)
+MC = ['b', 'c']                        # multiple choice (stage a is typed: Jon's ruling (1), 21 Oct 2026)
 FORM = {'a': 'simplest', 'd': 'simplest', 'e': 'simplest', 'f': 'mixed'}
-LEVELS = {'ks3': {'per': 5, 'stages': ['a', 'b', 'c', 'd']}, 'gcse': {'per': 4, 'stages': ['a', 'b', 'c', 'd', 'e', 'f']}}
+ADV = {'per': 4, 'stages': ['a', 'b', 'c', 'd', 'e', 'f']}
+F_PER = 10
+# Foundation's five stages (contract HMP-FOUNDATION-STAGES): mode -> (number, pool, the pairs it keeps, board)
+FSTAGES = {'stage1': (1, 'a', None, 'foundation-s1'), 'stage2': (2, 'b', None, 'foundation-s2'),
+           'stage3': (3, 'c', 'product', 'foundation-s3'), 'stage4': (4, 'c', 'smaller', 'foundation-s4'),
+           'stage5': (5, 'd', None, 'foundation-s5')}
+MODES = ['stage1', 'stage2', 'stage3', 'stage4', 'stage5']
 MAX_PARTS = 24
 ORDER = ['TB', 'DN', 'KL', 'MD', 'MULT', 'OP']    # the 20 Oct catalogue's order (the pools' filter only)
 SIZES = [(320, 568), (390, 844), (1280, 800)]
+MINUS = '\u2212'
 
 
 def lcm(a, b):
@@ -116,7 +141,7 @@ def key_of(q):
 
 
 def named_errors(q):
-    """{id: Fraction}: the 20 Oct catalogue (contract HOW-MANY-PARTS), now the pools' filter ONLY (HMP-CHOCOLATE keeps
+    """{id: Fraction}: the 20 Oct catalogue (contract HOW-MANY-PARTS), the pools' filter ONLY (HMP-CHOCOLATE keeps
     the pools as they were); what a student is offered is each stage's own list, sum_list below."""
     a, b, c, d, op = q['a'], q['b'], q['c'], q['d'], q['op']
     s = 1 if op == '+' else -1
@@ -180,6 +205,20 @@ def expected_pools():
                             continue
                         pools[st].append((a, b, op, c, d))
     return pools
+
+
+def foundation_pool(mode, pools, tpools):
+    """A Foundation stage's pool, from the contract's words: stage 3 keeps the pool c pairs whose lowest common
+    denominator is the product of the bottoms, stage 4 those where it is smaller."""
+    _, st, keep, _ = FSTAGES[mode]
+    if st == 'd':
+        return list(tpools['d'])
+    qs = pools[st]
+    if keep == 'product':
+        return [x for x in qs if lcm(x[1], x[4]) == x[1] * x[4]]
+    if keep == 'smaller':
+        return [x for x in qs if lcm(x[1], x[4]) < x[1] * x[4]]
+    return list(qs)
 
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -311,7 +350,7 @@ def expected_typed_pools():
 # Each stage's own errors (Jon, 21 Oct 2026), written out here from the contract's words, in the page's order
 
 def sum_list(q, st):
-    """{id: Fraction} for stages 1-3: the listed errors that apply (a positive top and bottom), in list order."""
+    """{id: Fraction} for stages a-c: the listed errors that apply (a positive top and bottom), in list order."""
     a, b, c, d, op = q['a'], q['b'], q['c'], q['d'], q['op']
     s = 1 if op == '+' else -1
     L = lcm(b, d)
@@ -344,7 +383,7 @@ def sum_list(q, st):
 
 
 def typed_list(q):
-    """{id: Fraction} for stages 4-6, in list order."""
+    """{id: Fraction} for stages d-f, in list order."""
     k, out = q['kind'], {}
 
     def put(i, v):
@@ -384,11 +423,44 @@ def listed(q):
 
 
 def value_of(q):
-    return key_of(q) if q['stage'] in SUMS else typed_value(q)
+    return key_of(q) if not q.get('kind') else typed_value(q)
 
 
 def qkey(q):
-    return (q['a'], q['b'], q['op'], q['c'], q['d']) if q['stage'] in SUMS else tkey(q)
+    return (q['a'], q['b'], q['op'], q['c'], q['d']) if not q.get('kind') else tkey(q)
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# The ordering measure (EASE in the docstring), written out from the contract's words
+
+def unsimplified(q):
+    """The answer as worked, before simplifying: (top, bottom)."""
+    k = q.get('kind')
+    if not k or (k == 'm' and q['op'] in '+-'):
+        s = 1 if q['op'] == '+' else -1
+        b, d = q['b'], q['d']
+        L = lcm(b, d)
+        x = q['a'] + (q['w1'] * b if k else 0)
+        y = q['c'] + (q['w2'] * d if k else 0)
+        return x * L // b + s * y * L // d, L
+    if k == 'xw':
+        return q['a'] * q['n'], q['b']
+    if k == 'xf':
+        return q['a'] * q['c'], q['b'] * q['d']
+    if k == 'dw':
+        return q['n'] * q['m'], 1
+    if k == 'df':
+        return q['a'] * q['d'], q['b'] * q['c']
+    X, Y = (q['w1'] * q['b'] + q['a'], q['b']), (q['w2'] * q['d'] + q['c'], q['d'])
+    return (X[0] * Y[0], X[1] * Y[1]) if q['op'] == 'x' else (X[0] * Y[1], X[1] * Y[0])
+
+
+def ease(q):
+    n, m = unsimplified(q)
+    k = q.get('kind')
+    kind = 1 if k in ('xf', 'df') else '+-x/'.index(q['op']) if k == 'm' else 0
+    parts = n if k == 'dw' else lcm(q['b'], q['d']) if k == 'df' else m
+    return (kind, parts, 0 if gcd(n, m) == 1 else 1)
 
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -400,6 +472,11 @@ PARTS_NAME = {2: 'halves', 3: 'thirds', 4: 'quarters', 5: 'fifths', 6: 'sixths',
               9: 'ninths', 10: 'tenths', 11: 'elevenths', 12: 'twelfths', 14: 'fourteenths', 15: 'fifteenths',
               16: 'sixteenths', 18: 'eighteenths', 20: 'twentieths', 21: 'twenty-firsts', 22: 'twenty-seconds',
               24: 'twenty-fourths'}
+PART_ONE = {2: 'half', 3: 'third', 4: 'quarter'}
+
+
+def part_one(n):
+    return PART_ONE.get(n) or PARTS_NAME[n][:-1]
 
 
 def runs(total, size):
@@ -410,16 +487,15 @@ def split(cells, L):
     return [cells[i:i + L] for i in range(0, len(cells), L)]
 
 
-def whole_bars(v):
+def whole_bars(v, t='a'):
     w, r = divmod(v.numerator, v.denominator)
     den = v.denominator
-    return ['a' * den] * w + (['a' * r + '-' * (den - r)] if r else [])
+    return [t * den] * w + ([t * r + '-' * (den - r)] if r else [])
 
 
 def expected_model(q, full):
     """{'kind', 'bars' | 'slab', 'groups', 'lots', 'cut'}: what the drawing must show."""
-    st = q['stage']
-    if st in SUMS:
+    if not q.get('kind'):
         a, b, c, d, op = q['a'], q['b'], q['c'], q['d'], q['op']
         L = lcm(b, d)
         A, C = a * L // b, c * L // d
@@ -465,7 +541,7 @@ def model_value(q, m):
         cols, rows, a, c = m['slab']
         return F(a * c, cols * rows)
     bars = m['bars']
-    if q['stage'] in SUMS or q.get('kind') == 'm' and q['op'] in '+-':
+    if not q.get('kind') or q.get('kind') == 'm' and q['op'] in '+-':
         L = m['L']
         return F(sum(x.count('a') + x.count('b') for x in bars), L)
     if q['kind'] == 'xw':
@@ -483,12 +559,12 @@ def page_model(m):
         return {'kind': 'slab', 'slab': (m['cols'], m['rows'], m['a'], m['c']), 'caption': m['caption']}
     letter = {'a': 'a', 'b': 'b', 'eaten': 'e', 'o': 'o', '': '-'}
     return {'kind': 'bars', 'bars': [''.join(letter.get(c, '?') for c in b['cells']) for b in m['bars']],
-            'groups': [b['groups'] for b in m['bars']], 'lots': [b['lots'] for b in m['bars']], 'caption': m['caption']}
+            'groups': [b['groups'] for b in m['bars']], 'lots': [b['lots'] for b in m['bars']], 'caption': m['caption'],
+            'stack': bool(m.get('stack'))}
 
 
 def check_model(q, m, full, out, where):
-    """m: page_model() of HMP.model (or of the SVG read back). The drawing must be exactly the recomputed one, and say
-    the answer."""
+    """m: page_model() of HMP.model. The drawing must be exactly the recomputed one, and say the answer."""
     want = expected_model(q, full)
     if m['kind'] != want['kind']:
         out.append('%s: a %s model, expected a %s' % (where, m['kind'], want['kind']))
@@ -519,6 +595,223 @@ def check_model(q, m, full, out, where):
         got = sum(F(x.count('a'), len(x)) for x in m['bars'])
         if got != typed_value(q):
             out.append('%s: the answer bars show %s, the key is %s' % (where, got, typed_value(q)))
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# The worked steps (contract HMP-FOUNDATION-STAGES, item 3), written out here word for word and square for square.
+# A step's model: {'kind': 'bars', 'bars': [letters], 'groups': [[...]], 'lots': [[...]], 'stack': bool} or
+# {'kind': 'slab', 'slab': (cols, rows, a, c)}; no caption (the step says it).
+
+def tex(n, d=1):
+    return str(n) if d == 1 else '\\dfrac{%d}{%d}' % (n, d)
+
+
+def tex_mixed(v):
+    w, r = divmod(v.numerator, v.denominator)
+    return str(w) if r == 0 else '%s\\dfrac{%d}{%d}' % (w or '', r, v.denominator)
+
+
+def chain(n, d, form='simplest'):
+    """The answer as worked, then simplified, then (asked for) a mixed number: '17/24', '6/8 = 3/4', '9/6 = 3/2 = 1 1/2'."""
+    s = F(n, d)
+    out = tex(n, d)
+    if s.denominator != d:
+        out += ' = ' + tex(s.numerator, s.denominator)
+    if form == 'mixed' and s.numerator >= s.denominator and s.denominator != 1:
+        out += ' = ' + tex_mixed(s)
+    return out
+
+
+def sx(n, d=1):
+    return '§%s§' % tex(n, d)
+
+
+def mx(w, a, b):
+    return '§%d%s§' % (w, tex(a, b))
+
+
+def plural(n, one):
+    return '%d %s%s' % (n, one, '' if n == 1 else 's')
+
+
+def mbar(cells, groups=None, lots=None):
+    return {'cells': cells, 'groups': groups or [1] * len(cells), 'lots': lots or []}
+
+
+def bars_model(bars, stack=False):
+    return {'kind': 'bars', 'bars': [b['cells'] for b in bars], 'groups': [b['groups'] for b in bars],
+            'lots': [b['lots'] for b in bars], 'stack': stack}
+
+
+def whole():
+    return mbar('-')
+
+
+def taken(den, n, t):
+    return mbar(t * n + '-' * (den - n))
+
+
+def recut(n, L, den, t):
+    """n squares of type t in bars of L, each scored where its pieces of 1/den were."""
+    out, i = [], 0
+    while i * L < n:
+        k = min(L, n - i * L)
+        out.append(mbar(t * k + '-' * (L - k), [L // den] * den))
+        i += 1
+    return out
+
+
+def full_model(q):
+    """H.model(q, true) as a step's model: the recomputed drawing, with its groups (all ones where it cuts nothing)."""
+    m = expected_model(q, True)
+    if m['kind'] == 'slab':
+        return {'kind': 'slab', 'slab': m['slab']}
+    bars = m['bars']
+    return {'kind': 'bars', 'bars': bars, 'groups': m.get('groups') or [[1] * len(x) for x in bars],
+            'lots': m.get('lots') or [[] for _ in bars], 'stack': False}
+
+
+def cutting(b, d):
+    L = lcm(b, d)
+    if b == d:
+        return ''
+    if L in (b, d):
+        big = min(b, d)
+        return 'cut each %s into %d' % (part_one(big), L // big)
+    return 'cut each %s into %d and each %s into %d' % (part_one(b), L // b, part_one(d), L // d)
+
+
+def expected_steps(q):
+    """[(text, model)]: every step of q's explanation."""
+    k = q.get('kind')
+    if not k:
+        a, b, c, d, op = q['a'], q['b'], q['c'], q['d'], q['op']
+        L = lcm(b, d)
+        A, C = a * L // b, c * L // d
+        R = A + C if op == '+' else A - C
+        verb = 'add' if op == '+' else 'take away'
+        one, two = taken(b, a, 'a'), taken(d, c, 'b')
+        if b == d:
+            four = ('Both bars are cut into %d: the pieces are already the same size, so just count them.' % b,
+                    bars_model([one, two], True))
+        else:
+            four = ('You can only %s pieces the same size%s%s. Both are now %s.'
+                    % (verb, '. Only one bar needs cutting: ' if L == max(b, d) else ': ', cutting(b, d), PARTS_NAME[L]),
+                    bars_model(recut(A, L, b, 'a') + recut(C, L, d, 'b'), True))
+        return [('Each bar is one whole chocolate bar.', bars_model([whole(), whole()], True)),
+                ('%s: cut a bar into %d, take %d.' % (sx(a, b), b, a), bars_model([one, whole()], True)),
+                ('%s: cut a bar into %d, take %d.' % (sx(c, d), d, c), bars_model([one, two], True)),
+                four,
+                ('%s is %s, %s is %d: %d %s %d = %d, so §%s§.' % (sx(a, b), plural(A, 'piece'), sx(c, d), C, A,
+                                                                 '+' if op == '+' else MINUS, C, R, chain(R, L)), full_model(q))]
+    if k == 'xw':
+        a, b, n = q['a'], q['b'], q['n']
+        fm = full_model(q)
+        return [('Each bar is one whole chocolate bar.', bars_model([whole()] * n)),
+                ('%s: cut each bar into %d, take %d.' % (sx(a, b), b, a), fm),
+                ('Times %d is %d lots of %s: the pieces stay the same size, so the bottom stays %d.' % (n, n, sx(a, b), b), fm),
+                ('%d × %d = %s, so §%s§.' % (a, n, plural(a * n, 'piece'), chain(a * n, b)), fm)]
+    if k == 'xf':
+        a, b, c, d = q['a'], q['b'], q['c'], q['d']
+        slab = lambda x, y: {'kind': 'slab', 'slab': (b, d, x, y)}  # noqa: E731
+        return [('The slab is one whole chocolate bar.', slab(0, 0)),
+                ('%s: take %d of its %d columns.' % (sx(a, b), a, b), slab(a, 0)),
+                ('%s of that: take %d of its %d rows.' % (sx(c, d), c, d), slab(a, c)),
+                ('The slab is cut into %d × %d = %d squares, so each is %s.' % (b, d, b * d, sx(1, b * d)), slab(a, c)),
+                ('%d × %d = %s where they cross, so §%s§.' % (a, c, plural(a * c, 'square'), chain(a * c, b * d)), slab(a, c))]
+    if k == 'dw':
+        n, m = q['n'], q['m']
+        fm = full_model(q)
+        return [('Each bar is one whole chocolate bar: there are %d.' % n, bars_model([whole()] * n)),
+                ('Cut each bar into %d: each piece is %s.' % (m, sx(1, m)), fm),
+                ('%d bars of %d pieces: %d × %d = %d, so there are %d %s in %d.' % (n, m, n, m, n * m, n * m, PARTS_NAME[m], n), fm)]
+    b, d = q['b'], q['d']
+    L, cut = lcm(b, d), cutting(b, d)
+    if k == 'df':
+        a, c = q['a'], q['c']
+        X, Y = a * L // b, c * L // d
+        return [('The bar is one whole chocolate bar.', bars_model([whole()])),
+                ('%s: cut it into %d, take %d.' % (sx(a, b), b, a), bars_model([taken(b, a, 'a')])),
+                ((('Make the pieces the same size: %s. Both are now %s: ' % (cut, PARTS_NAME[L])) if cut else
+                  'The pieces are already the same size: ') + '%s is %d, %s is %d.' % (sx(a, b), X, sx(c, d), Y),
+                 bars_model(recut(X, L, b, 'a'))),
+                ('How many lots of %d fit into %d? %d ÷ %d, so §%s§.' % (Y, X, X, Y, chain(X, Y)), full_model(q))]
+    op, w1, a, w2, c = q['op'], q['w1'], q['a'], q['w2'], q['c']
+    first = '%s is %s and %s of another' % (mx(w1, a, b), plural(w1, 'whole bar'), sx(a, b))
+    second = '%s is %s and %s of another' % (mx(w2, c, d), plural(w2, 'whole bar'), sx(c, d))
+    X, Y = (w1 * b + a, b), (w2 * d + c, d)
+    bars1 = [mbar(x) for x in whole_bars(F(*X), 'a')]
+    bars12 = bars1 + [mbar(x) for x in whole_bars(F(*Y), 'b')]
+    if op in '+-':
+        XL, YL = X[0] * L // b, Y[0] * L // d
+        R = XL + YL if op == '+' else XL - YL
+        three = ((('You can only %s pieces the same size: %s. Every bar is now in %s: '
+                   % ('add' if op == '+' else 'take away', cut, PARTS_NAME[L])) if cut else 'The pieces are already the same size: ') +
+                 '%s is %d, %s is %d.' % (mx(w1, a, b), XL, mx(w2, c, d), YL))
+        return [('Each bar is one whole chocolate bar: %s.' % first, bars_model(bars1)),
+                ('%s.' % second, bars_model(bars12)),
+                (three, bars_model(recut(XL, L, b, 'a') + recut(YL, L, d, 'b'))),
+                ('%d %s %d = %s, so §%s§.' % (XL, '+' if op == '+' else MINUS, YL, plural(R, 'piece'), chain(R, L, 'mixed')), full_model(q))]
+    kk = (X[0] * Y[0], X[1] * Y[1]) if op == 'x' else (X[0] * Y[1], X[1] * Y[0])
+    three = (('Multiply the tops and the bottoms: §%s \\times %s' % (tex(*X), tex(*Y))) if op == 'x' else
+             ('Turn the second over and multiply: §%s \\times %s' % (tex(*X), tex(Y[1], Y[0])))) + ' = %s§.' % tex(*kk)
+    return [('Each bar is one whole chocolate bar: %s, so it is %s.' % (first, sx(*X)), bars_model(bars1)),
+            ('%s, so it is %s.' % (second, sx(*Y)), bars_model(bars12)),
+            (three, bars_model(bars12)),
+            ('As a mixed number: §%s§.' % chain(kk[0], kk[1], 'mixed'), full_model(q))]
+
+
+def step_model(m):
+    """A page step's model (HMP.steps' or read back from the SVG) in expected_steps()'s letters."""
+    if m['kind'] == 'slab':
+        return {'kind': 'slab', 'slab': tuple(m['slab']) if 'slab' in m else (m['cols'], m['rows'], m['a'], m['c'])}
+    letter = {'a': 'a', 'b': 'b', 'eaten': 'e', 'o': 'o', '': '-'}
+    return {'kind': 'bars', 'bars': [''.join(letter.get(c, '?') for c in b['cells']) for b in m['bars']],
+            'groups': [b['groups'] for b in m['bars']], 'lots': [b['lots'] for b in m['bars']], 'stack': bool(m.get('stack'))}
+
+
+def same_model(got, want, layout=True):
+    """Whether two step models agree; `layout` compares the stack flag too (the page's data, not the SVG)."""
+    if got['kind'] != want['kind']:
+        return False
+    if got['kind'] == 'slab':
+        return tuple(got['slab']) == tuple(want['slab'])
+    keys = ('bars', 'groups', 'lots') + (('stack',) if layout else ())
+    return all(got[k] == want[k] for k in keys)
+
+
+def last_value(text):
+    """The last value the last §...§ of a step ends on ('... = \\dfrac{3}{4}§.'), as TeX."""
+    m = re.findall(r'§([^§]*)§', text)
+    return m[-1].split('=')[-1].strip() if m else None
+
+
+def check_steps(q, steps, out, where):
+    """The page's HMP.steps(q) against expected_steps(q): every word, every square, and the last on the key."""
+    want = expected_steps(q)
+    if len(steps) != len(want):
+        out.append('%s: %d steps, expected %d' % (where, len(steps), len(want)))
+        return
+    for i, (s, (text, model)) in enumerate(zip(steps, want)):
+        if s['text'] != text:
+            out.append('%s: step %d says %r, expected %r' % (where, i + 1, s['text'], text))
+        got = step_model(s['model'])
+        if not same_model(got, model):
+            out.append('%s: step %d draws %s, expected %s' % (where, i + 1, got, model))
+        if s['model'].get('caption'):
+            out.append('%s: step %d\'s bar has a caption (%r): the step says it' % (where, i + 1, s['model']['caption']))
+        if got['kind'] == 'bars' and any(len(x) > MAX_PARTS for x in got['bars']):
+            out.append('%s: step %d has a bar of more than %d squares' % (where, i + 1, MAX_PARTS))
+    k = value_of(q)
+    if q.get('kind') == 'dw':
+        # "how many quarters are in 3?": the answer is a count, said in words
+        if 'so there are %d %s in' % (k, PARTS_NAME[q['m']]) not in steps[-1]['text']:
+            out.append('%s: the last step %r does not end on the answer %s' % (where, steps[-1]['text'], k))
+        return
+    form = 'mixed' if q.get('kind') == 'm' else 'simplest'
+    want_end = tex_mixed(k) if form == 'mixed' else tex(k.numerator, k.denominator)
+    if last_value(steps[-1]['text']) != want_end:
+        out.append('%s: the last step ends on %s, not the answer %s' % (where, last_value(steps[-1]['text']), want_end))
 
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -555,11 +848,7 @@ def tex_frac(t):
     return F(int(t)) if re.fullmatch(r'\d+', t) else None
 
 
-def mixed_tex_of(v):
-    w, r = divmod(v.numerator, v.denominator)
-    if r == 0:
-        return str(w)
-    return '%s\\dfrac{%d}{%d}' % (w or '', r, v.denominator)
+mixed_tex_of = tex_mixed
 
 
 def first_value(line):
@@ -572,7 +861,10 @@ def first_value(line):
 
 def check_pools(page, out):
     got = page.evaluate("() => { const o = {}; for (const s of ['a','b','c']) o[s] = HMP.POOLS[s].map(q => [q.a, q.b, q.op, q.c, q.d]);"
-                        " for (const s of ['d','e','f']) o[s] = HMP.POOLS[s]; return o; }")
+                        " for (const s of ['d','e','f']) o[s] = HMP.POOLS[s];"
+                        " for (const m of HMP.LEVELS.ks3.modes) o[m] = HMP.fpool(m).map(q => q.kind ? q : [q.a, q.b, q.op, q.c, q.d]);"
+                        " o.modes = HMP.LEVELS.ks3.modes; o.boards = HMP.LEVELS.ks3.modes.map(m => HMP.FSTAGES[m].board);"
+                        " o.per = HMP.LEVELS.ks3.per; return o; }")
     want = expected_pools()
     tw = expected_typed_pools()
     for st in ('d', 'e', 'f'):
@@ -598,7 +890,27 @@ def check_pools(page, out):
         if len(g) < 40 or n_add < 15 or len(g) - n_add < 15:
             out.append('pool %s: %d entries (%d adding, %d taking away): the contract asks at least 40, each kind 15'
                        % (st, len(g), n_add, len(g) - n_add))
-    return {st: len(got[st]) for st in BUILT}
+    # Foundation's five stages (contract HMP-FOUNDATION-STAGES): each exactly its idea, at least 40 (the STOP IF).
+    if got['modes'] != MODES or got['boards'] != [FSTAGES[m][3] for m in MODES] or got['per'] != F_PER:
+        out.append('Foundation: modes %s, boards %s, %s a stage; expected %s, %s, %d'
+                   % (got['modes'], got['boards'], got['per'], MODES, [FSTAGES[m][3] for m in MODES], F_PER))
+    sizes = {}
+    for m in MODES:
+        st = FSTAGES[m][1]
+        g = sorted(tkey(q) for q in got[m]) if st == 'd' else sorted(tuple(x) for x in got[m])
+        w = sorted(foundation_pool(m, want, tw))
+        sizes[m] = len(g)
+        if g != w:
+            extra, miss = sorted(set(g) - set(w)), sorted(set(w) - set(g))
+            out.append('Foundation %s: serves %d entries outside its idea (%s...), leaves out %d of its own (%s...)'
+                       % (m, len(extra), extra[:3], len(miss), miss[:3]))
+        if len(set(g)) < 40:
+            out.append('Foundation %s: %d distinct questions (the contract stops below 40)' % (m, len(set(g))))
+        if m == 'stage3' and any(lcm(x[1], x[4]) < x[1] * x[4] for x in g):
+            out.append('Foundation stage3 holds a pair whose lowest common denominator is smaller than the product')
+        if m == 'stage4' and any(lcm(x[1], x[4]) == x[1] * x[4] for x in g):
+            out.append('Foundation stage4 holds a pair whose lowest common denominator is the product')
+    return dict({st: len(got[st]) for st in BUILT}, **sizes)
 
 
 QUESTIONS_JS = r"""(seeds) => {
@@ -608,7 +920,7 @@ QUESTIONS_JS = r"""(seeds) => {
     const q = HMP.makeQuestion(src, st, HMP.mulberry32(s * 7919 + (src.a || 0) * 131 + (src.b || 0) * 17 + (src.c || 0) * 5 + (src.d || 0)));
     const ids = q.typed ? HMP.listErrors(q).map(e => e.id) : q.choices.map(c => c.err);
     out.push({ q, part: HMP.model(q, false), full: HMP.model(q, true), sum: HMP.sumLine(q), rule: HMP.rule(q),
-               listed: HMP.listErrors(q).map(e => e.id),
+               listed: HMP.listErrors(q).map(e => e.id), steps: s === seeds[0] || HMP.FORM[st] ? tryOr(() => HMP.steps(q)) : null,
                ex: ids.map(id => ({ id, ex: tryOr(() => HMP.example(q, id)), nudge: tryOr(() => HMP.nudge(q, id)) })) });
   }
   return out;
@@ -616,7 +928,7 @@ QUESTIONS_JS = r"""(seeds) => {
 
 
 def check_options(q, out, where, three):
-    """Stages 2-3: every option but the key a listed error of the stage, recomputed; four options, or three where
+    """Stages b-c: every option but the key a listed error of the stage, recomputed; four options, or three where
     fewer than three listed errors apply."""
     k = key_of(q)
     if frac_of(q['keyVal']) != k or q['keyVal'] != simplest_text(k) or tex_value(q['keyTex']) != (k.numerator, k.denominator):
@@ -720,6 +1032,7 @@ def check_engine(page, out, seeds):
     sizes = check_pools(page, out)
     items = page.evaluate(QUESTIONS_JS, list(range(1, seeds + 1)))
     three = {}
+    n_steps = 0
     for it in items:
         q = it['q']
         n0 = len(out)
@@ -731,19 +1044,29 @@ def check_engine(page, out, seeds):
         check_feedback(it, out, where)
         check_model(q, page_model(it['part']), False, out, where + ' (question)')
         check_model(q, page_model(it['full']), True, out, where + ' (feedback)')
+        if it['steps'] is not None:
+            n_steps += 1
+            if isinstance(it['steps'], str):
+                out.append('%s: HMP.steps %s' % (where, it['steps']))
+            else:
+                check_steps(q, it['steps'], out, where + ' (steps)')
         if len(out) - n0 and len(out) > 200:
             break
     seeds_per = max(1, seeds)
-    return sizes, len(items), {st: (n // seeds_per, sizes[st]) for st, n in sorted(three.items())}
+    return sizes, len(items), n_steps, {st: (n // seeds_per, sizes[st]) for st, n in sorted(three.items())}
 
 
-# Every pool entry drawn by the game: its question screen with the bar (HMP.ui.ask), then its wrong-answer screen
-# (HMP.ui.preview, its first listed error or, typed, a wrong answer that is none). The figure on each read back from
-# the SVG: per bar its squares' roles, its pieces (data-groups), its outlined lots; a slab's squares row by row.
+# ---------------------------------------------------------------------------------------------------------------
+# Every pool entry drawn by the game (part 2): its question screen (HMP.ui.ask), its worked example (HMP.ui.ask with
+# the example flag) and its wrong-answer screen (HMP.ui.preview, its first listed error or, typed, a wrong answer that
+# is none), the last two stepped through by the step button. Each figure read back from the SVG: per bar its squares'
+# roles, its pieces (data-groups), its outlined lots; a slab's squares row by row.
+
 DRAWN_JS = r"""() => {
   const out = [];
+  const vis = el => !!el && el.getClientRects().length > 0;
   const read = (root) => {
-    const figs = [...root.querySelectorAll('figure.choc')].filter(f => f.getClientRects().length);
+    const figs = [...root.querySelectorAll('figure.choc')].filter(vis);
     const res = { n: figs.length };
     if (!figs.length) return res;
     const f = figs[0], svg = f.querySelector('svg'), cap = f.querySelector('figcaption');
@@ -751,9 +1074,7 @@ DRAWN_JS = r"""() => {
     const cells = [...svg.querySelectorAll('[data-cell]')];
     res.minW = Math.min(...cells.map(c => c.getBoundingClientRect().width));
     if (svg.dataset.model === 'slab') {
-      const cols = +svg.dataset.cols, rows = +svg.dataset.rows, t = cells.map(c => c.dataset.cell);
-      res.kind = 'slab';
-      res.slabCells = t; res.cols = cols; res.rows = rows;
+      res.kind = 'slab'; res.slabCells = cells.map(c => c.dataset.cell); res.cols = +svg.dataset.cols; res.rows = +svg.dataset.rows;
       return res;
     }
     res.kind = 'bars';
@@ -763,23 +1084,39 @@ DRAWN_JS = r"""() => {
       lots: [...g.querySelectorAll('[data-lot]')].map(l => l.dataset.lot.split(',').map(Number)) }));
     return res;
   };
+  // Step through an explanation: every step's figure, its listed steps and its button, until there is no button or
+  // the button goes on to the questions (pressed by the play check only: here there is no session to go on to).
+  const walk = (root) => {
+    const seq = [];
+    for (let k = 0; k < 12; k++) {
+      const ex = root.querySelector('.explain');
+      const b = ex && ex.querySelector('#stepBtn');
+      seq.push({ fig: read(ex || root), lis: ex ? ex.querySelectorAll('.steps li').length : 0,
+                 step: ex ? +ex.dataset.step : 0, btn: b ? b.textContent : null });
+      if (!b || /Start/.test(b.textContent)) break;
+      b.click();
+    }
+    return seq;
+  };
   for (const st of ['a', 'b', 'c', 'd', 'e', 'f']) for (const src of HMP.POOLS[st]) {
     HMP.ui.ask(src, st);
     const qScreen = read(document.getElementById('qcard'));
     const q = HMP.ui.question();
+    HMP.ui.ask(src, st, true);
+    const exState = HMP.ui.state(), example = walk(document.getElementById('qbars'));
     const errs = q.typed ? HMP.listErrors(q).map(e => e.id) : q.choices.map(c => c.err);
     HMP.ui.preview(src, st, errs.length ? errs[0] : null, errs.length ? 'example' : null);
     const fb = document.querySelector('#feedback .fb');
-    const kids = fb ? [...fb.children].map(c => c.tagName.toLowerCase() === 'figure' ? 'figure' : c.className) : [];
-    const wScreen = read(document.getElementById('qcard'));
-    out.push({ st, src, q: HMP.ui.question(), qScreen, wScreen, kids });
+    const kids = fb ? [...fb.children].map(c => c.className) : [];
+    const wrong = walk(document.getElementById('feedback'));
+    out.push({ st, src, q, qScreen, exState, example, kids, wrong });
   }
   return out;
 }"""
 
 
 def svg_model(r):
-    """A read-back figure in page_model()'s letters."""
+    """A read-back figure in step_model()'s letters."""
     if r['kind'] == 'slab':
         t = r['slabCells']
         cols, rows = r['cols'], r['rows']
@@ -787,34 +1124,58 @@ def svg_model(r):
         cc = sum(1 for i in range(rows) if t[i * cols] in ('bs', 'ab'))
         grid_ok = all(t[i * cols + j] == ('ab' if j < a and i < cc else 'a' if j < a else 'bs' if i < cc else '')
                       for i in range(rows) for j in range(cols))
-        return {'kind': 'slab', 'slab': (cols, rows, a, cc) if grid_ok else ('a slab not shaded in whole columns and rows', t),
-                'caption': r['caption']}
+        return {'kind': 'slab', 'slab': (cols, rows, a, cc) if grid_ok else ('a slab not shaded in whole columns and rows', t)}
     letter = {'a': 'a', 'b': 'b', 'eaten': 'e', 'o': 'o', '': '-'}
     return {'kind': 'bars', 'bars': [''.join(letter.get(c, '?') for c in b['cells']) for b in r['bars']],
-            'groups': [b['groups'] for b in r['bars']], 'lots': [b['lots'] for b in r['bars']], 'caption': r['caption']}
+            'groups': [b['groups'] for b in r['bars']], 'lots': [b['lots'] for b in r['bars']], 'stack': False}
+
+
+def check_walk(q, seq, out, where, example, min_px):
+    """A stepped explanation as drawn: one figure a step, each the recomputed one; the steps listed one more each tap;
+    the worked example ends on 'Start the questions', a wrong answer's steps on no button."""
+    want = expected_steps(q)
+    if len(seq) != len(want):
+        out.append('%s: %d steps drawn, expected %d' % (where, len(seq), len(want)))
+        return
+    for i, (s, (_, model)) in enumerate(zip(seq, want)):
+        last = i == len(want) - 1
+        tag = '%s, step %d' % (where, i + 1)
+        if s['fig']['n'] != 1:
+            out.append('%s: %d chocolate figures (exactly one)' % (tag, s['fig']['n']))
+            continue
+        got = svg_model(s['fig'])
+        if not same_model(got, model, layout=False):
+            out.append('%s: the bar drawn is %s, expected %s' % (tag, got, model))
+        if s['fig']['caption']:
+            out.append('%s: the bar has a caption (%r)' % (tag, s['fig']['caption']))
+        floor = 16 if s['fig']['kind'] == 'slab' else min_px
+        if s['fig']['minW'] < floor:
+            out.append('%s: a square is %.1fpx wide (at least %d)' % (tag, s['fig']['minW'], floor))
+        if s['lis'] != i + 1 or s['step'] != i + 1:
+            out.append('%s: %d steps listed (data-step %s), expected %d' % (tag, s['lis'], s['step'], i + 1))
+        want_btn = ('Start the questions' if last else 'Show the next step') if example else (None if last else 'Show the next step')
+        if s['btn'] != want_btn:
+            out.append('%s: the step button reads %r, expected %r' % (tag, s['btn'], want_btn))
 
 
 def check_drawn(page, out, min_px):
-    """Every question screen and wrong-answer screen, drawn by the game and its figure read back."""
+    """Every question screen (no bar), worked example and wrong-answer screen, drawn by the game and read back."""
     page.click('#startBtn')
-    wait_for(page, "() => HMP.ui.state() === 'asking'")
+    wait_for(page, "() => HMP.ui.state() === 'example'")
     n = 0
     for d in page.evaluate(DRAWN_JS):
-        q = d['q']
-        q['stage'] = d['st']
-        where = '%s %s' % (d['st'], qkey(dict(d['src'], stage=d['st'])))
+        q = dict(d['q'], stage=d['st'])
+        where = '%s %s' % (d['st'], qkey(q))
         n0 = len(out)
-        for name, scr, full in (('question screen', d['qScreen'], False), ('wrong-answer screen', d['wScreen'], True)):
-            if scr['n'] != 1:
-                out.append('%s: %d chocolate figures on the %s (exactly one)' % (where, scr['n'], name))
-                continue
-            check_model(q, svg_model(scr), full, out, '%s, %s' % (where, name))
-            floor = 16 if scr['kind'] == 'slab' else min_px
-            if scr['minW'] < floor:
-                out.append('%s, %s: a square is %.1fpx wide (at least %d)' % (where, name, scr['minW'], floor))
-        if d['kids'] != ['fb-line', 'figure', 'fb-sum', 'fb-next']:
-            out.append('%s: the wrong-answer screen holds %s (exactly the line, the bar, the correct sum and Next)' % (where, d['kids']))
-        n += 2
+        if d['qScreen']['n'] != 0:
+            out.append('%s: %d chocolate figure(s) on the question screen before answering (none)' % (where, d['qScreen']['n']))
+        if d['exState'] != 'example':
+            out.append('%s: the worked example\'s state is %r' % (where, d['exState']))
+        check_walk(q, d['example'], out, where + ' worked example', True, min_px)
+        if d['kids'] != ['fb-line', 'explain', 'fb-sum', 'fb-next']:
+            out.append('%s: the wrong-answer screen holds %s (exactly the line, the bar and its steps, the correct sum and Next)' % (where, d['kids']))
+        check_walk(q, d['wrong'], out, where + ' wrong answer', False, min_px)
+        n += 3
         if len(out) - n0 and len(out) > 300:
             break
     return n
@@ -867,25 +1228,42 @@ COLOURS_JS = r"""() => {
 }"""
 
 SAMPLES = {'a': {'a': 5, 'b': 7, 'op': '-', 'c': 2, 'd': 7}, 'b': {'a': 1, 'b': 4, 'op': '+', 'c': 3, 'd': 8},
-           'c': {'a': 1, 'b': 2, 'op': '+', 'c': 1, 'd': 3}, 'd': {'kind': 'xf', 'a': 2, 'b': 3, 'c': 3, 'd': 4},
+           'c': {'a': 1, 'b': 12, 'op': '+', 'c': 5, 'd': 8}, 'd': {'kind': 'xf', 'a': 2, 'b': 3, 'c': 3, 'd': 4},
            'e': {'kind': 'dw', 'n': 3, 'm': 4}, 'f': {'kind': 'm', 'op': '+', 'w1': 1, 'a': 1, 'b': 2, 'w2': 2, 'c': 1, 'd': 3}}
-EXTRA = [('d', {'kind': 'xw', 'a': 2, 'b': 5, 'n': 3}), ('e', {'kind': 'df', 'a': 2, 'b': 3, 'c': 1, 'd': 4}),
+EXTRA = [('c', {'a': 1, 'b': 2, 'op': '+', 'c': 1, 'd': 3}), ('d', {'kind': 'xw', 'a': 2, 'b': 5, 'n': 3}),
+         ('e', {'kind': 'df', 'a': 2, 'b': 3, 'c': 1, 'd': 4}),
          ('f', {'kind': 'm', 'op': '-', 'w1': 2, 'a': 1, 'b': 2, 'w2': 1, 'c': 1, 'd': 3}),
          ('f', {'kind': 'm', 'op': 'x', 'w1': 1, 'a': 1, 'b': 2, 'w2': 2, 'c': 1, 'd': 2}),
          ('f', {'kind': 'm', 'op': '/', 'w1': 1, 'a': 1, 'b': 2, 'w2': 1, 'c': 1, 'd': 3})]
 
 
 def screens(page, each):
-    """Calls each(name) on the start screen, then on every sample's question and wrong-answer screens."""
+    """Calls each(name) on the start screen (both levels), then on every sample's worked example (each step), its
+    question and its wrong-answer screen (each step)."""
     each('start')
+    page.click('.level-btn[data-level="gcse"]')
+    each('start-advanced')
+    page.click('.level-btn[data-level="ks3"]')
     page.click('#startBtn')
-    wait_for(page, "() => HMP.ui.state() === 'asking'")
+    wait_for(page, "() => HMP.ui.state() === 'example'")
     for st, src in list(SAMPLES.items()) + EXTRA:
+        page.evaluate("([s, q]) => HMP.ui.ask(q, s, true)", [st, src])
+        k = 1
+        while True:
+            each('%s example-%d %s' % (st, k, json.dumps(src)))
+            if not page.evaluate("() => { const b = document.getElementById('stepBtn'); if (!b || /Start/.test(b.textContent)) return false; b.click(); return true; }"):
+                break
+            k += 1
         page.evaluate("([s, q]) => HMP.ui.ask(q, s)", [st, src])
         each('%s question %s' % (st, json.dumps(src)))
         page.evaluate("""([s, q]) => { const x = HMP.makeQuestion(q, s, HMP.mulberry32(1)); const e = HMP.listErrors(x);
             HMP.ui.preview(q, s, e.length ? e[0].id : null, 'example'); }""", [st, src])
-        each('%s wrong %s' % (st, json.dumps(src)))
+        k = 1
+        while True:
+            each('%s wrong-%d %s' % (st, k, json.dumps(src)))
+            if not page.evaluate("() => { const b = document.getElementById('stepBtn'); if (!b) return false; b.click(); return true; }"):
+                break
+            k += 1
 
 
 def check_palette(page, html, out):
@@ -893,6 +1271,9 @@ def check_palette(page, html, out):
     bad = {}
 
     def each(name):
+        # The pointer off every control first: a hover tint (MaffsNext's shared rgba grey) depends on where the test's
+        # mouse last rested, not on the game's colours.
+        page.mouse.move(0, 0)
         for rgb, where in page.evaluate(COLOURS_JS).items():
             t = tuple(int(x) for x in rgb.split(','))
             if is_purple(t):
@@ -909,47 +1290,112 @@ def check_palette(page, html, out):
 
 SESSIONS_JS = r"""(n) => {
   const out = [];
-  for (const lv of ['ks3', 'gcse']) for (let s = 1; s <= n; s++) out.push(HMP.buildSession(s * 104729 + 3, lv));
+  for (let s = 1; s <= n; s++) {
+    for (const m of HMP.LEVELS.ks3.modes) out.push(HMP.buildSession(s * 104729 + 3, 'ks3', m));
+    out.push(HMP.buildSession(s * 104729 + 3, 'gcse'));
+  }
   return out;
 }"""
 
 
+def example_ok(ex, st, pool, drawn_keys, out, tag):
+    """The worked example: the stage's example kind, not one of the questions, at the smallest measure the pool has
+    outside them."""
+    want_kind = {'d': 'xf', 'e': 'dw'}.get(st)
+
+    def fits(x):
+        return x.get('kind') == want_kind if want_kind else x.get('op') == '+'
+    if not ex.get('example') or ex.get('index') != 0:
+        out.append('%s: question 1 is not the worked example (example %s, index %s)' % (tag, ex.get('example'), ex.get('index')))
+        return
+    if not fits(ex):
+        out.append('%s: the worked example is %s %s (expected %s)' % (tag, ex.get('kind'), ex.get('op'), want_kind or 'an adding question'))
+    if qkey(ex) in drawn_keys:
+        out.append('%s: the worked example %s is also one of the questions' % (tag, qkey(ex)))
+    cand = [x for x in pool if fits(x) and qkey(x) not in drawn_keys]
+    if cand and ease(ex) != min(ease(x) for x in cand):
+        out.append('%s: the worked example\'s measure is %s, the smallest available %s' % (tag, ease(ex), min(ease(x) for x in cand)))
+
+
+def as_q(x):
+    return x if isinstance(x, dict) else {'a': x[0], 'b': x[1], 'op': x[2], 'c': x[3], 'd': x[4]}
+
+
 def check_sessions(page, out, n):
+    pools, tpools = expected_pools(), expected_typed_pools()
+    def typed_q(t):
+        if t[0] == 'xw':
+            return {'kind': 'xw', 'a': t[1], 'b': t[2], 'n': t[3]}
+        if t[0] == 'xf':
+            return {'kind': 'xf', 'a': t[1], 'b': t[2], 'c': t[3], 'd': t[4]}
+        if t[0] == 'dw':
+            return {'kind': 'dw', 'n': t[1], 'm': t[2]}
+        if t[0] == 'df':
+            return {'kind': 'df', 'a': t[1], 'b': t[2], 'c': t[3], 'd': t[4]}
+        return {'kind': 'm', 'op': t[1], 'w1': t[2], 'a': t[3], 'b': t[4], 'w2': t[5], 'c': t[6], 'd': t[7]}
+    fpools = {m: [typed_q(t) if FSTAGES[m][1] == 'd' else as_q(t) for t in foundation_pool(m, pools, tpools)] for m in MODES}
+    apools = {st: [as_q(t) for t in pools[st]] if st in SUMS else [typed_q(t) for t in tpools[st]] for st in BUILT}
     for sess in page.evaluate(SESSIONS_JS, n):
-        lv = sess['level']
-        L = LEVELS[lv]
-        stages = [s for s in L['stages'] if s in BUILT]
-        qs = sess['questions']
-        tag = '%s seed %d' % (lv, sess['seed'])
-        if sess['stages'] != stages or len(qs) != L['per'] * len(stages):
-            out.append('%s: stages %s, %d questions; expected %s, %d' % (tag, sess['stages'], len(qs), stages, L['per'] * len(stages)))
+        lv, qs = sess['level'], sess['questions']
+        tag = '%s %s seed %d' % (lv, sess.get('mode'), sess['seed'])
+        if lv == 'ks3':
+            m = sess['mode']
+            st = FSTAGES[m][1]
+            if sess['stages'] != [st] or len(qs) != 1 + F_PER:
+                out.append('%s: stages %s, %d questions; expected [%s], 1 worked example + %d' % (tag, sess['stages'], len(qs), st, F_PER))
+                continue
+            ex, block = qs[0], qs[1:]
+            pool_keys = {qkey(x) for x in fpools[m]}
+            keys = [qkey(q) for q in block]
+            if any(q['stage'] != st or q.get('mode') != m for q in qs):
+                out.append('%s: a question of another stage or mode' % tag)
+            if any(k not in pool_keys for k in keys):
+                out.append('%s: serves %s, outside the stage\'s pool' % (tag, [k for k in keys if k not in pool_keys][:3]))
+            if qkey(ex) not in pool_keys:
+                out.append('%s: the worked example %s is outside the stage\'s pool' % (tag, qkey(ex)))
+            if any(q.get('example') for q in block) or [q['index'] for q in block] != list(range(1, F_PER + 1)):
+                out.append('%s: questions 2-11 numbered %s (1-10, none a worked example)' % (tag, [q['index'] for q in block]))
+            if len(set(keys)) != len(keys):
+                out.append('%s: a question twice' % tag)
+            eases = [ease(q) for q in block]
+            if eases != sorted(eases):
+                out.append('%s: not served easiest first: %s' % (tag, eases))
+            if st == 'd':
+                kinds = [q['kind'] for q in block]
+                if kinds.count('xw') != F_PER // 2 or kinds.count('xf') != F_PER - F_PER // 2:
+                    out.append('%s: %s (half times a whole number, half times a fraction)' % (tag, kinds))
+            else:
+                subs = sum(1 for q in block if q['op'] == '-')
+                if subs != F_PER // 2:
+                    out.append('%s: takes away on %d of %d (half)' % (tag, subs, F_PER))
+                if (st == 'a') != bool(block[0].get('typed')):
+                    out.append('%s: stage %s is %s (pool a typed, b and c multiple choice)' % (tag, st, 'typed' if block[0].get('typed') else 'multiple choice'))
+            example_ok(ex, st, fpools[m], set(keys), out, tag)
             continue
-        for i, st in enumerate(stages):
-            block = qs[i * L['per']:(i + 1) * L['per']]
-            if any(q['stage'] != st for q in block):
+        if sess['stages'] != ADV['stages'] or len(qs) != (1 + ADV['per']) * len(ADV['stages']):
+            out.append('%s: stages %s, %d questions; expected %s, %d' % (tag, sess['stages'], len(qs), ADV['stages'], (1 + ADV['per']) * 6))
+            continue
+        per, first = ADV['per'], (ADV['per'] + 1) // 2
+        for i, st in enumerate(ADV['stages']):
+            ex, block = qs[i * (per + 1)], qs[i * (per + 1) + 1:(i + 1) * (per + 1)]
+            if any(q['stage'] != st for q in [ex] + block):
                 out.append('%s: stage %s out of order' % (tag, st))
-            per, first = L['per'], (L['per'] + 1) // 2
             if st in ('d', 'e', 'f'):
                 plan = (['xw'] * first + ['xf'] * (per - first) if st == 'd' else ['dw'] * first + ['df'] * (per - first)
                         if st == 'e' else [['+', '-', 'x', '/'][j % 4] for j in range(per)])
                 got_plan = [q['op'] if q['kind'] == 'm' else q['kind'] for q in block]
                 if got_plan != plan:
                     out.append('%s: stage %s serves %s, expected %s' % (tag, st, got_plan, plan))
-                keys = [tkey(q) for q in block]
             else:
                 subs = sum(1 for q in block if q['op'] == '-')
                 if subs not in (per // 2, (per + 1) // 2):
                     out.append('%s: stage %s takes away on %d of %d' % (tag, st, subs, per))
-                keys = [(q['a'], q['b'], q['op'], q['c'], q['d']) for q in block]
-                if (st == 'a') != bool(block[0].get('typed')):
-                    out.append('%s: stage %s is %s (stage 1 typed, 2 and 3 multiple choice)' % (tag, st, 'typed' if block[0].get('typed') else 'multiple choice'))
+            keys = [qkey(q) for q in block]
             if len(set(keys)) != len(keys):
                 out.append('%s: stage %s repeats a question' % (tag, st))
-            flags = [q['bar'] for q in block]
-            if flags != [j < 3 for j in range(L['per'])]:
-                out.append('%s: stage %s flags the bar on %s (the first 3 only)' % (tag, st, flags))
-        if [q['index'] for q in qs] != list(range(1, len(qs) + 1)):
-            out.append('%s: question numbers %s' % (tag, [q['index'] for q in qs]))
+            example_ok(ex, st, apools[st], set(keys), out, '%s stage %s' % (tag, st))
+        if [q['index'] for q in qs if not q.get('example')] != list(range(1, per * 6 + 1)):
+            out.append('%s: question numbers %s' % (tag, [q['index'] for q in qs if not q.get('example')]))
 
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -960,8 +1406,8 @@ window.__ev = [];
 window.__sub = [];
 Object.defineProperty(window, 'mfg', { configurable: true, get() { return (n, p) => window.__ev.push([n, p]); }, set(v) {} });
 const __st = window.setTimeout;
-// Game timers at a quarter of their length (the right-answer pause, Next's fallback); the worked example's
-// "no fallback" stays as long as it is.
+// Game timers at a quarter of their length (the right-answer pause, Next's fallback); "no fallback" stays as long as
+// it is.
 window.setTimeout = function (f, ms, ...a) { return __st(f, ms >= 2147483647 ? ms : (ms || 0) / 4, ...a); };
 """
 
@@ -969,16 +1415,22 @@ STATE_JS = r"""() => {
   const fb = document.querySelector('#feedback');
   const line = fb.querySelector('.fb-line');
   const vis = el => !!el && el.getClientRects().length > 0;
+  const ex = document.querySelector('#qcard .explain');
+  const b = document.getElementById('stepBtn');
   return {
     state: HMP.ui.state(), index: HMP.ui.index(), q: HMP.ui.question(),
     screen: ['menu', 'game', 'results'].find(s => document.getElementById(s).classList.contains('active')),
-    qbarsVisible: vis(document.querySelector('#qbars figure.choc')),
+    hudQ: document.getElementById('hudQ').textContent, hudStage: document.getElementById('hudStage').textContent,
+    label: document.getElementById('stageLabel').textContent,
+    qbarsFigure: vis(document.querySelector('#qbars figure.choc')),
     figures: [...document.querySelectorAll('#qcard figure.choc')].filter(vis).length,
+    step: ex ? +ex.dataset.step : 0, steps: ex ? +ex.dataset.steps : 0,
+    lis: ex ? ex.querySelectorAll('.steps li').length : 0, btn: b && vis(b) ? b.textContent : null,
     right: !!fb.querySelector('.fb-quick'), wrong: !!fb.querySelector('.fb.wrong'),
     help: line ? line.getAttribute('data-help') : null, helpErr: line ? line.getAttribute('data-err') : null,
     sum: !!fb.querySelector('.fb-sum .katex'), next: !!fb.querySelector('.fb-next button'),
-    kids: [...(fb.querySelector('.fb') || { children: [] }).children].map(c => c.tagName.toLowerCase() === 'figure' ? 'figure' : c.className),
-    optH: [...document.querySelectorAll('#options .opt')].map(b => b.getBoundingClientRect().height),
+    kids: [...(fb.querySelector('.fb') || { children: [] }).children].map(c => c.className),
+    optH: [...document.querySelectorAll('#options .opt')].filter(vis).map(b => b.getBoundingClientRect().height),
     optKatex: [...document.querySelectorAll('#options .opt')].every(b => !!b.querySelector('.katex')),
     promptKatex: !!document.querySelector('#prompt .katex'),
     overflow: document.documentElement.scrollWidth - window.innerWidth,
@@ -1007,33 +1459,74 @@ def wait_for(page, js, ms=8000):
     page.wait_for_function(js, timeout=ms)
 
 
-def play(page, level, size, out, wrong_at=(1, 2, 4, 7, 8)):
-    """One full session at `level`: a listed error on the questions numbered in wrong_at (where one applies), right on
-    the rest. A typed question first gets its key in a form fractionForm sends back: the message, nothing marked. The
-    last typed question gets a wrong value that is no listed error: the rule line. Returns the number played."""
-    tag = '%s %dx%d' % (level, size[0], size[1])
-    page.evaluate("() => { window.__ev.length = 0; window.__sub.length = 0; }")
-    page.click('.level-btn[data-level="%s"]' % level)
-    page.click('#startBtn')
-    wait_for(page, "() => HMP.ui.state() === 'asking'")
-    named, seen_after_wrong = 0, False
-    n = page.evaluate("() => HMP.ui.session().questions.length")
-    for i in range(1, n + 1):
-        wait_for(page, "() => HMP.ui.state() === 'asking' && HMP.ui.index() === %d" % i)
+def step_through(page, q, out, where, example):
+    """Tap the step button to the end: one more step listed each tap. The worked example's last button goes on to the
+    questions (pressed by the caller)."""
+    want = len(expected_steps(q))
+    for k in range(1, want + 1):
+        s = page.evaluate(STATE_JS)
+        if s['step'] != k or s['lis'] != k or s['steps'] != want:
+            out.append('%s: step %d of %d shows step %s of %s, %d listed' % (where, k, want, s['step'], s['steps'], s['lis']))
+            return False
+        if s['figures'] != 1:
+            out.append('%s: step %d: %d chocolate figures (exactly one)' % (where, k, s['figures']))
+        last = k == want
+        want_btn = ('Start the questions' if last else 'Show the next step') if example else (None if last else 'Show the next step')
+        if s['btn'] != want_btn:
+            out.append('%s: step %d\'s button reads %r, expected %r' % (where, k, s['btn'], want_btn))
+            return False
+        if s['overflow'] > 0:
+            out.append('%s: step %d scrolls sideways by %dpx' % (where, k, s['overflow']))
+        if not last:
+            page.click('#stepBtn')
+    return True
+
+
+def play_session(page, tag, out, mode, wrong_at=(1, 2, 4, 7, 8)):
+    """One session from its first screen to the results: a listed error on the questions numbered in wrong_at (where
+    one applies), right on the rest. A typed question first gets its key in a form fractionForm sends back: the
+    message, nothing marked. The last typed question gets a wrong value that is no listed error: the rule line.
+    Every worked example is stepped through; so is every wrong answer's explanation. Returns the questions scored."""
+    named, scored = 0, 0
+    sess = page.evaluate("() => HMP.ui.session()")
+    total = sum(1 for q in sess['questions'] if not q.get('example'))
+    for pos, sq in enumerate(sess['questions']):
+        wait_for(page, "() => ['asking', 'example'].includes(HMP.ui.state()) && HMP.ui.question().index === %d && "
+                       "!!HMP.ui.question().example === %s" % (sq['index'], 'true' if sq.get('example') else 'false'))
         s = page.evaluate(STATE_JS)
         q = s['q']
-        where = '%s Q%d (%s %s)' % (tag, i, q['stage'], qkey(q))
-        want_bar = q['bar'] or seen_after_wrong
-        if s['qbarsVisible'] != want_bar:
-            out.append('%s: the bar is %s on the question; expected %s (first 3 of a stage: %s; after a wrong answer: %s)'
-                       % (where, 'shown' if s['qbarsVisible'] else 'missing', 'shown' if want_bar else 'none', q['bar'], seen_after_wrong))
-        if s['figures'] > 1:
-            out.append('%s: %d chocolate figures on the question screen' % (where, s['figures']))
+        where = '%s #%d (%s%s %s)' % (tag, pos + 1, 'worked example, ' if q.get('example') else '', q['stage'], qkey(q))
+        want_label = ('Stage %d · ' % FSTAGES[mode][0]) if mode in FSTAGES else ('Stage %d · ' % (BUILT.index(q['stage']) + 1))
+        if not s['label'].startswith(want_label) or s['hudStage'] != want_label.split(' ')[1]:
+            out.append('%s: labelled %r, stage %s (expected %r)' % (where, s['label'], s['hudStage'], want_label))
         if s['overflow'] > 0:
             out.append('%s: the page scrolls sideways by %dpx' % (where, s['overflow']))
+        if not s['promptKatex']:
+            out.append('%s: the question is not drawn by KaTeX' % where)
+        if q.get('example'):
+            n_ev = len(page.evaluate("() => window.__ev"))
+            if s['state'] != 'example' or s['hudQ'] != 'Example' or s['optH'] or s['inputs']:
+                out.append('%s: state %s, numbered %r, %d options, %d answer boxes (the worked example: none)' % (where, s['state'], s['hudQ'], len(s['optH']), s['inputs']))
+            if step_through(page, q, out, where, True):
+                if len(page.evaluate("() => window.__ev")) != n_ev:
+                    out.append('%s: the worked example sent %s' % (where, page.evaluate("() => window.__ev")[n_ev:]))
+                page.click('#stepBtn')
+                page.wait_for_timeout(30)
+                if len(page.evaluate("() => window.__ev")) != n_ev:
+                    out.append('%s: going on from the worked example sent %s' % (where, page.evaluate("() => window.__ev")[n_ev:]))
+            else:
+                out.append('%s: (play stopped here)' % where)
+                return scored
+            continue
+        i = q['index']
+        scored += 1
+        if s['hudQ'] != '%d/%d' % (i, total):
+            out.append('%s: numbered %r, expected %d/%d' % (where, s['hudQ'], i, total))
+        if s['qbarsFigure'] or s['figures']:
+            out.append('%s: a chocolate bar on the question before answering' % where)
         typed = bool(q.get('typed'))
-        if not s['promptKatex'] or (not typed and not s['optKatex']):
-            out.append('%s: a fraction is not drawn by KaTeX' % where)
+        if not typed and not s['optKatex']:
+            out.append('%s: an option is not drawn by KaTeX' % where)
         errs = listed(q)
         k = value_of(q)
         wrongs = [v for v in errs.values() if v != k]
@@ -1060,12 +1553,11 @@ def play(page, level, size, out, wrong_at=(1, 2, 4, 7, 8)):
                            % (where, fmt, g['state'], g['msg']))
                 if g['state'] != 'asking':
                     out.append('%s: (play stopped here)' % where)
-                    prepare(page, reload=True)
-                    return n
+                    return scored
             go_wrong = i in wrong_at and bool(wrongs)
             if go_wrong:
                 type_answer(page, typed_entries(q, wrongs[0], form))
-            elif i == n:
+            elif i == total:
                 bad = next(v for v in (k + 1, k + 2, k + 3) if v not in errs.values())
                 rule, go_wrong = True, True
                 type_answer(page, typed_entries(q, bad, form))
@@ -1087,18 +1579,16 @@ def play(page, level, size, out, wrong_at=(1, 2, 4, 7, 8)):
                 named += 1
             if not f['wrong'] or f['right']:
                 out.append('%s: a wrong answer was not marked wrong' % where)
-            if f['kids'] != ['fb-line', 'figure', 'fb-sum', 'fb-next']:
-                out.append('%s: the wrong-answer screen holds %s (the line, the bar, the correct sum, Next)' % (where, f['kids']))
-            if f['figures'] != 1:
-                out.append('%s: %d chocolate figures on the wrong-answer screen (exactly one)' % (where, f['figures']))
+            if f['kids'] != ['fb-line', 'explain', 'fb-sum', 'fb-next']:
+                out.append('%s: the wrong-answer screen holds %s (the line, the bar and its steps, the correct sum, Next)' % (where, f['kids']))
             if not f['sum']:
                 out.append('%s: the correct sum is not drawn by KaTeX' % where)
             want_help = 'rule' if rule else 'example' if named <= 3 else 'nudge'
             if f['help'] != want_help:
                 out.append('%s: %s got %s, expected %s' % (where, 'a wrong answer that is no listed error' if rule else
                                                             'listed error %d' % named, f['help'], want_help))
-            if f['overflow'] > 0:
-                out.append('%s: the feedback scrolls sideways by %dpx' % (where, f['overflow']))
+            if 'explain' in f['kids']:
+                step_through(page, q, out, where + ' wrong answer', False)
             if not f['next']:
                 out.append('%s: no Next after a wrong answer' % where)
             else:
@@ -1106,41 +1596,104 @@ def play(page, level, size, out, wrong_at=(1, 2, 4, 7, 8)):
                 if page.evaluate("() => HMP.ui.index()") != i or page.evaluate("() => HMP.ui.state()") != 'wrong':
                     out.append('%s: a wrong answer moved on without Next' % where)
                 page.click('#feedback .fb-next button')
-            seen_after_wrong = True
-        else:
-            if not f['right'] or f['wrong']:
-                out.append('%s: the key was not marked right' % where)
-            seen_after_wrong = False
+        elif not f['right'] or f['wrong']:
+            out.append('%s: the key was not marked right' % where)
     wait_for(page, "() => document.getElementById('results').classList.contains('active')")
+    return scored
+
+
+def check_events(page, tag, out, level, mode, n):
     ev = page.evaluate("() => window.__ev")
     sub = page.evaluate("() => window.__sub")
     names = [e[0] for e in ev]
     if names.count('game_started') != 1 or names.count('game_completed') != 1 or names.count('question_answered') != n:
-        out.append('%s: events %s' % (tag, {x: names.count(x) for x in set(names)}))
+        out.append('%s: events %s (one start, one end, %d answers)' % (tag, {x: names.count(x) for x in set(names)}, n))
+    want_mode = mode if level == 'ks3' else 'all'
     for name, p in ev:
-        if p.get('game_slug') != SLUG or p.get('level') != level or 'mode' not in p:
-            out.append('%s: %s sent %s' % (tag, name, p))
-    modes = [p['mode'] for nm, p in ev if nm == 'question_answered']
-    stages = [s for s in LEVELS[level]['stages'] if s in BUILT]
-    if modes != [s for s in stages for _ in range(LEVELS[level]['per'])]:
-        out.append('%s: question_answered modes %s' % (tag, modes))
-    if sub != [[SLUG, level, sub[0][2] if sub else None, n]]:
-        out.append('%s: submitScore calls %s (one, to %s, for %d questions)' % (tag, sub, level, n))
+        m = p.get('mode')
+        ok = m == want_mode if name != 'question_answered' or level == 'ks3' else m in BUILT
+        if p.get('game_slug') != SLUG or p.get('level') != level or not ok:
+            out.append('%s: %s sent %s (level %s, mode %s)' % (tag, name, p, level, want_mode))
+    if [p['question_index'] for nm, p in ev if nm == 'question_answered'] != list(range(1, n + 1)):
+        out.append('%s: question_index %s' % (tag, [p['question_index'] for nm, p in ev if nm == 'question_answered']))
+    board = FSTAGES[mode][3] if level == 'ks3' else level
+    if sub != [[SLUG, board, sub[0][2] if sub else None, n]]:
+        out.append('%s: submitScore calls %s (one, to %s, for %d questions)' % (tag, sub, board, n))
+
+
+def play(page, level, size, out):
+    """Foundation: every stage in turn, stage 1 from the start screen, each next by its results' "Next: Stage N+1";
+    Advanced: one session. Returns what was played."""
+    tag0 = '%s %dx%d' % (level, size[0], size[1])
+    page.click('.level-btn[data-level="%s"]' % level)
+    played = []
+    if level == 'ks3':
+        page.click('.mode-btn[data-mode="stage1"]')
+    clear = "() => { window.__ev.length = 0; window.__sub.length = 0; }"   # before Start: game_started is the session's
+    page.evaluate(clear)
+    page.click('#startBtn')
+    for k, mode in enumerate(MODES if level == 'ks3' else ['all']):
+        tag = '%s %s' % (tag0, mode)
+        if level == 'ks3' and page.evaluate("() => HMP.ui.session().mode") != mode:
+            out.append('%s: the session is %s' % (tag, page.evaluate("() => HMP.ui.session().mode")))
+            return played
+        n = play_session(page, tag, out, mode)
+        check_events(page, tag, out, level, mode, n)
+        played.append('%s %d' % (mode, n))
+        nxt = page.evaluate("() => { const b = document.getElementById('nextStageBtn'); return b.hidden ? null : b.textContent; }")
+        want = 'Next: Stage %d' % (k + 2) if level == 'ks3' and k < 4 else None
+        if nxt != want:
+            out.append('%s: the results offer %r, expected %r' % (tag, nxt, want))
+        if want is None:
+            break
+        page.evaluate(clear)
+        page.click('#nextStageBtn')
     page.click('#againBtn')
-    return n
+    return played
 
 
 # ---------------------------------------------------------------------------------------------------------------
 # Phone fit (canon 7.6.1), normal and Aa
 
 PHONES = [(320, 568), (375, 667), (390, 844), (1280, 800)]
-PART_SIZES = {'2': [(320, 568)], '3': [(375, 667), (390, 844)], '4': [(1280, 800)]}
+PART_SIZES = {'3': [(320, 568)], '4': [(375, 667)], '5': [(390, 844)], '6': [(1280, 800)]}
 FOOTER = 40   # the fixed site footer (canon 7.6.1: measure against the viewport less it)
 
-PHONE_JS = r"""(fold) => {
+# Brackets (k-punctuation scan, 22 Oct 2026): in an element, every "(" shares a line with what follows it and every
+# ")" with what precedes it. Atoms are the visible characters of text and each KaTeX expression; two atoms share a
+# line when their boxes overlap vertically.
+BRACKETS_JS = r"""window.__hmpBrackets = function (el) {
+  if (!/[()]/.test(el.textContent)) return [];
+  // the visible characters and the KaTeX expressions in reading order; boxes measured only for a bracket and the atom
+  // beside it
+  const atoms = [];
+  const walk = (node) => {
+    if (node.nodeType === 1 && node.classList.contains('katex')) { atoms.push({ m: node }); return; }
+    if (node.nodeType === 3) {
+      for (let i = 0; i < node.data.length; i++) if (!/\s/.test(node.data[i])) atoms.push({ t: node.data[i], node, i });
+      return;
+    }
+    node.childNodes.forEach(walk);
+  };
+  walk(el);
+  const box = (a, end) => {
+    if (a.m) { const rs = [...a.m.getClientRects()].filter(r => r.width > 0); return rs.length ? rs[end ? rs.length - 1 : 0] : null; }
+    const rg = document.createRange(); rg.setStart(a.node, a.i); rg.setEnd(a.node, a.i + 1);
+    return rg.getClientRects()[0] || null;
+  };
+  const same = (a, b) => !a || !b || (a.top < b.bottom - 1 && b.top < a.bottom - 1);
+  const bad = [];
+  atoms.forEach((x, i) => {
+    if (x.t === '(' && atoms[i + 1] && !same(box(x), box(atoms[i + 1], false))) bad.push('"(" ends a line');
+    if (x.t === ')' && atoms[i - 1] && !same(box(atoms[i - 1], true), box(x))) bad.push('")" starts a line');
+  });
+  return bad;
+};"""
+
+PHONE_JS = r"""([fold, stages]) => {
   const bad = [], r = el => el.getBoundingClientRect();
-  let n = 0, tight = 0;
-  for (const st of ['a', 'b', 'c', 'd', 'e', 'f']) for (const src of HMP.POOLS[st]) {
+  let n = 0, tight = 0, lines = 0;
+  for (const st of stages) for (const src of HMP.POOLS[st]) {
     const q0 = HMP.makeQuestion(src, st, HMP.mulberry32(1));
     const shapes = [];
     const ids = q0.typed ? HMP.listErrors(q0).map(e => e.id) : q0.choices.map(c => c.err);
@@ -1152,39 +1705,68 @@ PHONE_JS = r"""(fold) => {
       n++;
       const fb = document.querySelector('#feedback .fb');
       const where = st + ' ' + JSON.stringify(src) + ' ' + eid + ' ' + help;
-      const line = fb.querySelector('.fb-line'), nx = fb.querySelector('.fb-next button'), fig = fb.querySelector('figure.choc');
+      const line = fb.querySelector('.fb-line'), nx = fb.querySelector('.fb-next button'), ex = fb.querySelector('.explain');
+      const fig = ex && ex.querySelector('figure.choc');
       if (!nx || !line || !fig) { bad.push(where + ': the line, the bar or Next is missing'); continue; }
       if (r(line).top < 0) bad.push(where + ': the line starts above the screen');
       if (r(line).bottom > fold + 0.5) bad.push(where + ': the line ends at ' + Math.round(r(line).bottom) + 'px, below the fold at ' + fold + 'px');
       if (r(nx).bottom > fold + 0.5) bad.push(where + ': Next ends at ' + Math.round(r(nx).bottom) + 'px, below the fold at ' + fold + 'px');
       if (r(nx).height < 44) bad.push(where + ': Next is ' + r(nx).height + 'px tall');
       if (document.documentElement.scrollWidth > window.innerWidth) bad.push(where + ': scrolls sideways by ' + (document.documentElement.scrollWidth - window.innerWidth) + 'px');
+      for (const el of [line, ...ex.querySelectorAll('.steps li')]) { lines++; for (const b of window.__hmpBrackets(el)) bad.push(where + ': ' + b + ' in ' + JSON.stringify(el.textContent.slice(0, 60))); }
       const sum = fb.querySelector('.fb-sum');
       if (fb.classList.contains('tight')) {
-        // the bar moved after Next because it would have pushed Next below the fold: visual order line, sum, Next, bar
+        // the bar and its steps moved after Next because they would have pushed Next below the fold: visual order
+        // line, sum, Next, then the bar and its steps
         tight++;
-        if (!(r(line).bottom <= r(sum).top + 0.5 && r(sum).bottom <= r(nx).top + 0.5 && r(nx).bottom <= r(fig).top + 0.5)) bad.push(where + ': (tight) not drawn line, sum, Next, then the bar');
-      } else if (!(r(line).bottom <= r(fig).top + 0.5 && r(fig).bottom <= r(sum).top + 0.5 && r(sum).bottom <= r(nx).top + 0.5)) {
-        bad.push(where + ': not drawn line, bar, sum, Next');
+        if (!(r(line).bottom <= r(sum).top + 0.5 && r(sum).bottom <= r(nx).top + 0.5 && r(nx).bottom <= r(ex).top + 0.5)) bad.push(where + ': (tight) not drawn line, sum, Next, then the bar and its steps');
+      } else if (!(r(line).bottom <= r(ex).top + 0.5 && r(ex).bottom <= r(sum).top + 0.5 && r(sum).bottom <= r(nx).top + 0.5)) {
+        bad.push(where + ': not drawn line, the bar and its steps, sum, Next');
       }
-      if (bad.length > 4000) return { n, tight, bad };
+      if (bad.length > 4000) return { n, tight, lines, bad };
     }
   }
-  return { n, tight, bad };
+  return { n, tight, lines, bad };
 }"""
 
-# Jon's ruling (3), 21 Oct 2026: on stage 1 at 320px the bar and the keypad fit together. Every stage 1 question,
-# asked with its bar: the bar, the answer boxes, Check and the keypad all inside the window (above the footer).
-FIT_JS = r"""(fold) => {
+# Every worked example, stepped through: after each tap (the game keeps its button in view), the button inside the
+# window; no sideways scroll; brackets kept with their maths in every step.
+EXFIT_JS = r"""([fold, stages]) => {
   const bad = [], r = el => el.getBoundingClientRect();
   let n = 0;
-  for (const src of HMP.POOLS.a) {
-    HMP.ui.ask(src, 'a');
+  for (const st of stages) for (const src of HMP.POOLS[st]) {
+    HMP.ui.ask(src, st, true);   // scrolled as the game leaves it (to the top, then its button into view)
+    n++;
+    const where = st + ' ' + JSON.stringify(src);
+    for (let k = 1; k < 12; k++) {
+      const b = document.getElementById('stepBtn');
+      if (!b) { bad.push(where + ': step ' + k + ' has no button'); break; }
+      if (r(b).top < 0 || r(b).bottom > fold + 0.5) bad.push(where + ': step ' + k + '\'s button spans ' + Math.round(r(b).top) + '-' + Math.round(r(b).bottom) + 'px, outside the window (0-' + fold + 'px)');
+      if (document.documentElement.scrollWidth > window.innerWidth) bad.push(where + ': step ' + k + ' scrolls sideways');
+      if (/Start/.test(b.textContent)) {
+        for (const li of document.querySelectorAll('#qbars .steps li')) for (const x of window.__hmpBrackets(li)) bad.push(where + ': ' + x);
+        break;
+      }
+      b.click();
+    }
+    if (bad.length > 400) break;
+  }
+  return { n, bad };
+}"""
+
+# A typed question at 320px (Jon's ruling (3), 21 Oct 2026, now with no bar before answering): the answer boxes,
+# Check and the keypad inside the window together, and no chocolate bar.
+FIT_JS = r"""([fold, stages]) => {
+  const bad = [], r = el => el.getBoundingClientRect();
+  let n = 0;
+  for (const st of stages.filter(s => s === 'a' || s === 'd')) for (const src of HMP.POOLS[st]) {
+    HMP.ui.ask(src, st);
     window.scrollTo(0, 0);
     n++;
-    const parts = { bar: document.querySelector('#qbars figure.choc'), boxes: document.querySelector('#typedForm'),
-                    check: document.getElementById('checkBtn'), keypad: document.querySelector('#kpHolder > *') };
-    const where = 'a ' + JSON.stringify(src);
+    const parts = { boxes: document.querySelector('#typedForm'), check: document.getElementById('checkBtn'),
+                    keypad: document.querySelector('#kpHolder > *') };
+    const where = st + ' ' + JSON.stringify(src);
+    if ([...document.querySelectorAll('#qcard figure.choc')].some(f => f.getClientRects().length)) bad.push(where + ': a chocolate bar before answering');
     for (const [k, el] of Object.entries(parts)) {
       if (!el || !el.getClientRects().length) { bad.push(where + ': no ' + k + ' on the question'); continue; }
       if (r(el).top < 0 || r(el).bottom > fold + 0.5) bad.push(where + ': the ' + k + ' spans ' + Math.round(r(el).top) + '-' + Math.round(r(el).bottom) + 'px, outside the window (0-' + fold + 'px)');
@@ -1196,20 +1778,26 @@ FIT_JS = r"""(fold) => {
 }"""
 
 
-def check_phone(page, size, out, aa):
+def check_phone(page, size, out, aa, stages=BUILT):
     page.click('#startBtn')
-    wait_for(page, "() => HMP.ui.state() === 'asking'")
+    wait_for(page, "() => HMP.ui.state() === 'example'")
+    page.evaluate("() => { %s }" % BRACKETS_JS)   # a function the string evaluates to would be called, so define it inside one
     tag = '%dx%d%s' % (size[0], size[1], ' Aa' if aa else '')
-    res = page.evaluate(PHONE_JS, size[1] - FOOTER)
+    res = page.evaluate(PHONE_JS, [size[1] - FOOTER, stages])
     for b in res['bad']:
         out.append('phone %s: %s' % (tag, b))
-    n = '%d (%d with the bar after Next)' % (res['n'], res['tight'])
+    ex = page.evaluate(EXFIT_JS, [size[1] - FOOTER, stages])
+    for b in ex['bad']:
+        out.append('worked example %s: %s' % (tag, b))
+    n = '%d wrong answers (%d with the bar and steps after Next, %d lines read for brackets), %d worked examples' % (
+        res['n'], res['tight'], res['lines'], ex['n'])
     if size == (320, 568):
-        fit = page.evaluate(FIT_JS, size[1] - FOOTER)
+        fit = page.evaluate(FIT_JS, [size[1] - FOOTER, stages])
         for b in fit['bad']:
-            out.append('stage 1 fit %s: %s' % (tag, b))
+            out.append('typed fit %s: %s' % (tag, b))
         if not page.evaluate("() => !!(HMP.ui.keypad() && HMP.ui.keypad().enabled && HMP.ui.keypad().enabled())"):
-            out.append('stage 1 fit %s: the keypad is not drawn on this touch screen' % tag)
+            out.append('typed fit %s: the keypad is not drawn on this touch screen' % tag)
+        n += ', %d typed questions' % fit['n']
     return n
 
 
@@ -1257,6 +1845,10 @@ def static_checks(html, out):
         out.append('the page marks a typed answer with something other than MaffsAnswer.fractionForm')
     if re.search(r'<img\b|\.(png|jpe?g|webp|gif)\b', html.split('<body>')[1].split('<footer')[0], re.I):
         out.append('the game uses an image file (the chocolate is drawn in SVG in the page)')
+    # Foundation's stages are boards of level ks3 (MaffsLevel refuses a board it was not told of).
+    decl = re.search(r'MaffsLevel\.resolve\(\{(.*?)\}\)', html, re.S)
+    if not decl or any("'%s'" % FSTAGES[m][3] not in decl.group(1) for m in MODES):
+        out.append('MaffsLevel.resolve does not declare the boards %s' % [FSTAGES[m][3] for m in MODES])
 
 
 def guarded(out, what, f):
@@ -1267,27 +1859,34 @@ def guarded(out, what, f):
         out.append('%s threw: %s' % (what, str(e).splitlines()[0][:200]))
 
 
-def check(html, out, seeds=3, sessions=100, sizes=SIZES, engine=True, plays=True, phones=PHONES, aa_modes=(False, True)):
+def check(html, out, seeds=3, sessions=60, sizes=SIZES, engine=True, plays=True, drawn=False, phones=PHONES,
+          aa_modes=(False, True), levels=('ks3', 'gcse'), phone_stages=BUILT):
     from playwright.sync_api import sync_playwright
     static_checks(html, out)
     proc, base = bc.start_stub_server()
     info = {}
     try:
         with sync_playwright() as pw:
+            if drawn:
+                br, page, errors = open_page(pw, base, html, (320, 568))
+                try:
+                    guarded(out, 'the drawn screens', lambda: info.update(drawn=check_drawn(page, out, 8)))
+                    if errors:
+                        out.append('page errors at 320x568: %s' % '; '.join(errors[:3]))
+                finally:
+                    br.close()
             for n, size in enumerate(sizes):
                 br, page, errors = open_page(pw, base, html, size)
                 try:
                     if engine and n == 0:
-                        guarded(out, 'the engine', lambda: info.update(zip(('pools', 'questions', 'three'), check_engine(page, out, seeds))))
+                        guarded(out, 'the engine', lambda: info.update(zip(('pools', 'questions', 'steps', 'three'), check_engine(page, out, seeds))))
                         guarded(out, 'the sessions', lambda: check_sessions(page, out, sessions))
-                        guarded(out, 'the drawn screens', lambda: info.update(drawn=check_drawn(page, out, 8)))
-                        prepare(page, reload=True)
                         guarded(out, 'the palette', lambda: check_palette(page, html, out))
                         prepare(page, reload=True)
                     if plays:
-                        for lv in ('ks3', 'gcse'):
+                        for lv in levels:
                             guarded(out, 'play %s %dx%d' % (lv, size[0], size[1]), lambda: info.setdefault('played', []).append(
-                                '%s %dx%d: %d' % (lv, size[0], size[1], play(page, lv, size, out))))
+                                '%s %dx%d: %s' % (lv, size[0], size[1], ', '.join(play(page, lv, size, out)))))
                             prepare(page, reload=True)
                     if errors:
                         out.append('page errors at %dx%d: %s' % (size[0], size[1], '; '.join(errors[:3])))
@@ -1298,7 +1897,7 @@ def check(html, out, seeds=3, sessions=100, sizes=SIZES, engine=True, plays=True
                     br, page, errors = open_page(pw, base, html, size, aa)
                     try:
                         guarded(out, 'the phone fit at %dx%d' % size, lambda: info.setdefault('phone', []).append(
-                            '%dx%d%s: %s' % (size[0], size[1], ' Aa' if aa else '', check_phone(page, size, out, aa))))
+                            '%dx%d%s: %s' % (size[0], size[1], ' Aa' if aa else '', check_phone(page, size, out, aa, phone_stages))))
                         if errors:
                             out.append('page errors at %dx%d: %s' % (size[0], size[1], '; '.join(errors[:3])))
                     finally:
@@ -1310,7 +1909,8 @@ def check(html, out, seeds=3, sessions=100, sizes=SIZES, engine=True, plays=True
 
 
 def shots(html, folder):
-    """One question and one wrong-answer screen per stage at 390x844, for Jon. Checks nothing."""
+    """The start screen and, per sample, its worked example step by step, its question and its wrong answer, at
+    390x844, for Jon. Checks nothing."""
     from playwright.sync_api import sync_playwright
     os.makedirs(folder, exist_ok=True)
     proc, base = bc.start_stub_server()
@@ -1321,17 +1921,17 @@ def shots(html, folder):
                 names, seen = [], {}
 
                 def each(name):
-                    # 'start', or '<stage> question|wrong {...}': a1-question.png, a1-wrong.png, d2-question.png, ...
+                    # 'start', or '<stage> <screen> {...}': a1-example-1.png, a1-question.png, a1-wrong-1.png, ...
                     parts = name.split(' ')
                     if len(parts) == 1:
-                        fn = 'start.png'
+                        fn = parts[0] + '.png'
                     else:
-                        if parts[1] == 'question':
+                        if parts[1] == 'example-1':
                             seen[parts[0]] = seen.get(parts[0], 0) + 1
                         fn = '%s%d-%s.png' % (parts[0], seen[parts[0]], parts[1])
                     names.append(fn)
                     page.evaluate("() => window.scrollTo(0, 0)")
-                    page.screenshot(path=os.path.join(folder, fn))
+                    page.screenshot(path=os.path.join(folder, fn), full_page=True)
                 screens(page, each)
                 print('%d screenshots in %s' % (len(names), folder))
             finally:
@@ -1351,9 +1951,9 @@ PLANTS = [
     ('ruling (a)\'s cut: a question whose listed error is its key is served (stage 6)',
      "  H.BUILT.forEach(function (st) { H.POOLS[st] = H.POOLS[st].filter(function (q) { return !H.listedIsKey(q, st); }); });",
      "", 'engine'),
-    ('the key shown unsimplified (stages 2-3)',
+    ('the key shown unsimplified (multiple choice)',
      '    q.keyTex = H.tex(k);\n', '    q.keyTex = H.tex([k[0] * 2, k[1] * 2]);\n', 'engine'),
-    ('an off-list error offered (stage 2): the fractions multiplied',
+    ('an off-list error offered (pool b): the fractions multiplied',
      "    b: [E_TB,\n",
      "    b: [E_TB, { id: 'MULT', f: function (q) { return [q.a * q.c, q.b * q.d]; }, name: function () { return 'You multiplied the fractions'; } },\n",
      'engine'),
@@ -1363,14 +1963,27 @@ PLANTS = [
     ('a wrong square count (the second number one square short)',
      "        cells = fill(L, [['a', A], ['b', C]]);", "        cells = fill(L, [['a', A], ['b', Math.max(0, C - 1)]]);", 'engine'),
     ('a purple fill (the first number\'s squares)', '--choc-a:#9a6233', '--choc-a:#8b5cf6', 'engine'),
+    ('a stage 4 pair in stage 3 (a smaller common denominator than the product)',
+     'keep: function (q) { return H.lcm(q.b, q.d) === q.b * q.d; } },',
+     'keep: function (q) { return H.lcm(q.b, q.d) <= q.b * q.d; } },', 'engine'),
+    ('a reversed order (hardest first)',
+     'if (a[i] !== b[i]) return a[i] - b[i];', 'if (a[i] !== b[i]) return b[i] - a[i];', 'engine'),
+    ('a worked step that does not end on the answer (one piece too many)',
+     "' = ' + R + ', so §' + H.chain([R, L]) + '§.'", "' = ' + R + ', so §' + H.chain([R + 1, L]) + '§.'", 'engine'),
     ('a typed key in the wrong form marked right (unsimplified, or not a mixed number)',
      "    if (res === 'format' || res === 'unreadable') {",
      "    if (res === 'format') res = 'correct';\n    if (res === 'unreadable') {", 'play'),
-    ('the bar not redrawn after a wrong answer', '    barNext = true;\n', '\n', 'play'),
-    ('the wrong-answer screen without its bar', "    h += renderModel(H.model(q, true));\n", '\n', 'play'),
+    ('a bar before answering on question 2', "    $('qbars').innerHTML = '';\n    var box = $('options');",
+     "    $('qbars').innerHTML = q.example ? '' : renderModel(H.model(q, false));\n    var box = $('options');", 'play'),
+    ('the worked example logging an event', "    state = 'example';\n",
+     "    state = 'example';\n    ev('question_answered', { game_slug: SLUG, level: level, mode: q.mode || q.stage, question_index: 0, correct: true });\n",
+     'play'),
+    ('the wrong-answer screen without its bar and steps', "    explain($('feedback').querySelector('.explain'), q, null);\n", '\n', 'play'),
     ('no worked line for a listed error', 'H.HELP_EXAMPLES = 3;', 'H.HELP_EXAMPLES = 0;', 'play'),
-    ('stage 1 laid out as on 20 Oct (the answer box under the sum, Check under the keypad)',
-     "    var inline = q.typed && q.form !== 'mixed';", "    var inline = false;", 'fit'),
+    ('brackets left to break from their maths (the line before the k-punctuation fix)',
+     'var open = /\\($/.test(p[i - 1]), close = i + 1 < p.length && /^\\)/.test(p[i + 1]);', 'var open = false, close = false;', 'fit'),
+    ('a typed answer laid out as on 20 Oct (the answer box under the sum, Check under the keypad)',
+     "    var inline = q.typed && q.form !== 'mixed' && !q.example;", "    var inline = false;", 'fit'),
 ]
 
 
@@ -1384,9 +1997,9 @@ def selftest(html, kinds=('engine', 'play', 'fit')):
             ok = False
             continue
         got = []
-        check(html.replace(old, new), got, seeds=1, sessions=5, sizes=[(390, 844)] if kind != 'fit' else [],
+        check(html.replace(old, new), got, seeds=1, sessions=4, sizes=[(390, 844)] if kind != 'fit' else [],
               engine=kind == 'engine', plays=kind == 'play', phones=[(320, 568)] if kind == 'fit' else [],
-              aa_modes=(True,) if kind == 'fit' else ())
+              aa_modes=(False,), levels=('ks3',), phone_stages=['a'])   # a plant need only be shown caught: stage a, normal
         got = [g for g in got if not g.startswith('the page')]
         ok = ok and bool(got)
         print('  self-test %-60s %s' % (what, ('caught: ' + got[0][:110]) if got else '*** MISSED ***'))
@@ -1396,10 +2009,10 @@ def selftest(html, kinds=('engine', 'play', 'fit')):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--no-selftest', action='store_true')
-    ap.add_argument('--seeds', type=int, default=3, help='seeds per pool entry in stages 2-3 (default 3)')
-    ap.add_argument('--sessions', type=int, default=100, help='sessions per level (default 100)')
-    ap.add_argument('--part', choices=['1', '2', '3', '4', '5', '6'], help='one of the six parts CI runs side by side (default: all)')
-    ap.add_argument('--shots', metavar='DIR', help='save one question and one wrong-answer screen per stage at 390px; check nothing')
+    ap.add_argument('--seeds', type=int, default=3, help='seeds per pool entry in the multiple-choice stages (default 3)')
+    ap.add_argument('--sessions', type=int, default=60, help='seeds per Foundation stage and for Advanced (default 60)')
+    ap.add_argument('--part', choices=['1', '2', '3', '4', '5', '6', '7', '8'], help='one of the eight parts CI runs side by side (default: all)')
+    ap.add_argument('--shots', metavar='DIR', help='save the start screen and every sample\'s screens at 390px; check nothing')
     args = ap.parse_args()
     html = open(GAME, encoding='utf-8').read()
     if args.shots:
@@ -1407,20 +2020,24 @@ def main():
         return 0
     out = []
     one = args.part in (None, '1')
-    phones = PART_SIZES[args.part] if args.part in ('2', '3', '4') else PHONES if args.part is None else []
-    selftests = args.part in (None, '5', '6') and not args.no_selftest
-    info = check(html, out, seeds=args.seeds, sessions=args.sessions, sizes=SIZES if one else [],
-                 engine=one, plays=one, phones=phones) if (one or phones) else {}
+    two = args.part in (None, '2')
+    phones = PART_SIZES[args.part] if args.part in PART_SIZES else PHONES if args.part is None else []
+    selftests = args.part in (None, '7', '8') and not args.no_selftest
+    info = check(html, out, seeds=args.seeds, sessions=args.sessions, sizes=SIZES if one else [], engine=one, plays=one,
+                 drawn=two, phones=phones) if (one or two or phones) else {}
     if one:
-        print('%s: pools %s (after the filter); %d questions checked; %d screens drawn and read back; %d sessions per level; played %s'
-              % (SLUG, info.get('pools'), info.get('questions', 0), info.get('drawn', 0), args.sessions, ', '.join(info.get('played', []))))
+        print('%s: pools %s (after the filter; stage1-stage5 are Foundation\'s); %d questions checked, %d with their steps; '
+              '%d sessions per Foundation stage and for Advanced; played %s'
+              % (SLUG, info.get('pools'), info.get('questions', 0), info.get('steps', 0), args.sessions, '; '.join(info.get('played', []))))
         print('three-option questions (fewer than three listed errors apply), of each pool: %s'
               % ', '.join('stage %s %d of %d (%.1f%%)' % (st, n, tot, 100.0 * n / tot) for st, (n, tot) in info.get('three', {}).items()))
+    if two:
+        print('%s: %d screens drawn and read back step by step' % (SLUG, info.get('drawn', 0)))
     if phones:
-        print('%s: wrong-answer screens measured %s' % (SLUG, ', '.join(info.get('phone', []))))
+        print('%s: measured %s' % (SLUG, '; '.join(info.get('phone', []))))
     ok = True
     if selftests:
-        ok = selftest(html, {'5': ('engine',), '6': ('play', 'fit')}.get(args.part, ('engine', 'play', 'fit')))
+        ok = selftest(html, {'7': ('engine',), '8': ('play', 'fit')}.get(args.part, ('engine', 'play', 'fit')))
     for f in out[:int(os.environ.get("HMP_SHOW", "60"))]:
         print('FAIL  ' + f)
     if len(out) > int(os.environ.get("HMP_SHOW", "60")):
