@@ -2186,6 +2186,19 @@ usually six clues and two blanks (`comic-caper` has four and four); at least two
   derives it from room data.
 - **The teacher page follows the live game.** The room mirrors its draw into `localStorage` under
   `mfg_escape_vars_<slug>`; the teacher page reads it and re-renders on the `storage` event.
+- **Set codes (SET-CODES, 22 Oct 2026).** A lock with two or more sets shows the drawn set as a letter, "Set C",
+  as quiet text at the top of its lock panel, open or not (derived from `st.vars` at render, so `SAVE_V` and
+  the save shape are unchanged). The letters are `A B C D E F G H J K` (no I, which reads as 1; no digits, so a
+  code is never a clue figure), index 0 = A, so a library holds at most ten sets. They live once, in
+  `rating.js` (`MaffsEscapeRating.setCode`, `SET_CODES`), which every room's `index.html` and `teacher.html`
+  already load; neither page computes a code any other way. The teacher page lists every set of a lock under
+  its letter in the first column of the library table. **With no live game on the device the teacher page never
+  shows a single set's answer as the answer:** the "The locks" cells read "By set, see below", the heading
+  "answer depends on the set", and the worked solution and hints are labelled "Worked for Set A, as an
+  example"; the banner tells the teacher to ask each group for its letter. With a live game the in-play set's
+  answers show as before, with the letter beside each ("14 (Set C)"). Tested by
+  `scripts/test-escape-setcodes.py` (every set of every lock forced in Chromium; the teacher's answer for its
+  letter must open the lock).
 - **Premise copy lives in three places**: the room's own `index.html` (meta, og:, Twitter), its card on
   `escape-rooms/index.html`, and its card in the front-page band in `index.html`. All three go stale silently.
 
