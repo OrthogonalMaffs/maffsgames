@@ -1777,7 +1777,7 @@ FIT_JS = r"""(fold) => {
 def check_phone(page, size, out, aa):
     page.click('#startBtn')
     wait_for(page, "() => HMP.ui.state() === 'example'")
-    page.evaluate(BRACKETS_JS)
+    page.evaluate("() => { %s }" % BRACKETS_JS)   # a function the string evaluates to would be called, so define it inside one
     tag = '%dx%d%s' % (size[0], size[1], ' Aa' if aa else '')
     res = page.evaluate(PHONE_JS, size[1] - FOOTER)
     for b in res['bad']:
