@@ -1397,12 +1397,18 @@ counts Apps Script (`docs/apps-script-counts.js`, deployed by Jon, set up by `do
 project that reads the analytics Sheet through the Sheets advanced service with the read-only scope, counts `question_answered`
 rows per `game_slug` since 1 September (Europe/London; the counts restart each 1 September), incrementally, and answers
 `{as_of, since, total, games}`. `.github/workflows/answer-counts.yml` fetches it daily, `scripts/fetch-answer-counts.py`
-validates it, and `data/answer-counts.json` is committed with `[skip ci]`; a failed run leaves the file as it was.
+validates it, and `schools/assets/answer-counts.json` is committed with `[skip ci]`; a failed run leaves the file as it was.
 
 `schools/assets/answer-count.js` fills the start-screen mount (7.5.4) with that game's count from 1,000, and the
-homepage's `[data-maffs-answer-total]` with the total from 10,000. It shows the daily file's figure at once, then
-fetches the live address and counts up to a higher figure (never down; no animation under `prefers-reduced-motion`).
-A source whose `as_of` is more than 7 days old, or nothing loading, shows nothing; so does a page with no mount.
+homepage's `[data-maffs-answer-total]` with the total from 10,000. It shows the daily file's figure at once.
+**A game page shows the daily file's figure only and never calls the live address** (Jon, 23 Oct 2026: both Apps Scripts
+run as Jon and share one concurrent-execution limit, so a class opening games together could crowd out `doPost` and lose
+events). Only the homepage fetches the live address: once on load, then every 60 s while the tab is visible, for 10 minutes
+at most (a homepage left open in a classroom must not poll all day), counting up to a higher figure (never down; no
+animation under `prefers-reduced-motion`). The address appears in no page and no script but the loader (checked, and a game
+page requesting it fails in Chromium). A source whose `as_of` is more than 7 days old, or nothing loading, shows nothing;
+so does a page with no mount. The published file is `schools/assets/answer-counts.json`, not `data/` (`data/` is excluded
+from the site, canon 7.7).
 A page with a mount loads the script once, deferred, after `analytics.js` (one line per page; `scripts/check-answer-count.py`).
 Jon's own play on the live site is counted: nothing is filtered. The Sheet does not record the host, and `mfg()` was
 gated to the live host only on 16 Sep 2026, so test events written between 1 and 16 Sep are in the count.

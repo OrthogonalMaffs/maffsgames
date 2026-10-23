@@ -1,6 +1,6 @@
 /* "N questions answered since September" (contract ANSWER-COUNTS, 23 Oct 2026; canon 7.5.5).
 
-   A figure on a page is a claim, so it is never typed by hand: it comes from /data/answer-counts.json, written once a
+   A figure on a page is a claim, so it is never typed by hand: it comes from /schools/assets/answer-counts.json, written once a
    day by .github/workflows/answer-counts.yml from the counts Apps Script (docs/apps-script-counts.js), and from that
    script's live address. One shared file fills two kinds of mount; no game has code of its own for it:
 
@@ -8,10 +8,13 @@
      [data-maffs-answer-total]     the homepage: the total across every game and room, from 10,000, refreshed every
                                    minute while the tab is visible
 
-   The daily file's figure shows at once (nothing shifts, nothing waits on a network call to a slow service); the live
-   address is then fetched and, if its figure is higher, the number counts up to it (never down; no animation under
-   prefers-reduced-motion). A source whose as_of is more than 7 days old is ignored, a figure below its threshold shows
-   nothing, and so does a page where nothing loads. A page with no mount (52dle, Equatle, Estimation Golf, Factor
+   The daily file's figure shows at once (nothing shifts, nothing waits on a network call to a slow service). A GAME page
+   shows that figure and nothing else: it never calls the live address (Jon, 23 Oct 2026: the counts script and the
+   analytics script run as Jon and share his concurrent-execution limit, so a class opening games together must not be
+   able to crowd out event logging). Only the HOMEPAGE fetches the live address, once on load and then every minute while
+   the tab is visible, for 10 minutes at most, and its number counts up to a higher figure (never down; no animation
+   under prefers-reduced-motion). A source whose as_of is more than 7 days old is ignored, a figure below its threshold
+   shows nothing, and so does a page where nothing loads. A page with no mount (52dle, Equatle, Estimation Golf, Factor
    Theorem have no start screen) simply shows nothing: that is correct, not a failure.
 
    The text inherits the page's colour and font and adds no opacity: scripts/check-answer-count.py measures its contrast
@@ -22,12 +25,13 @@
 (function () {
   'use strict';
 
-  var DATA_URL = '/data/answer-counts.json';
+  var DATA_URL = '/schools/assets/answer-counts.json';
   var LIVE_URL = 'https://script.google.com/macros/s/AKfycbxvtM7Y5jtL7flZozfFUEoZZalNHieP44vK6rB4juUG5yPgQf5hfb8tOlgetoEtogZl8w/exec';
   var GAME_MIN = 1000;
   var TOTAL_MIN = 10000;
   var STALE_MS = 7 * 24 * 3600 * 1000;
   var POLL_MS = 60000;
+  var POLL_MAX_MS = 10 * 60 * 1000;   // a homepage left open in a classroom must not poll all day
   var ANIMATE_MS = 900;
 
   function format(n) {
@@ -90,7 +94,7 @@
 
   // run(opts): everything the page does, with its dependencies injectable so the selftest needs no network.
   //   doc, slug, get(url) -> Promise of a parsed object, now() -> ms, live (bool), reduced (bool), raf(fn),
-  //   visible() -> bool, setInterval/clearInterval
+  //   visible() -> bool, setInterval(fn, ms) -> id, clearInterval(id)
   function run(opts) {
     var doc = opts.doc, now = opts.now || Date.now;
     var mounts = [];
@@ -108,11 +112,17 @@
     function safe(url) {
       try { return Promise.resolve(opts.get(url)).catch(function () { return null; }); } catch (e) { return Promise.resolve(null); }
     }
-    function live() { return opts.live ? safe(LIVE_URL).then(apply) : Promise.resolve(); }
+    // Only the homepage (a total mount) ever calls the live address.
+    var useLive = opts.live && totals.length > 0;
+    function live() { return useLive ? safe(LIVE_URL).then(apply) : Promise.resolve(); }
 
     return safe(DATA_URL).then(apply).then(live).then(function () {
-      if (totals.length && opts.live && opts.setInterval) {
-        opts.setInterval(function () { if (!opts.visible || opts.visible()) live(); }, POLL_MS);
+      if (useLive && opts.setInterval) {
+        var t0 = now();
+        var id = opts.setInterval(function () {
+          if (now() - t0 >= POLL_MAX_MS) { if (opts.clearInterval) opts.clearInterval(id); return; }   // stop after 10 minutes
+          if (!opts.visible || opts.visible()) live();
+        }, POLL_MS);
       }
     });
   }
@@ -131,7 +141,7 @@
     });
   }
 
-  window.MaffsAnswerCount = { run: run, figure: figure, format: format, GAME_MIN: GAME_MIN, TOTAL_MIN: TOTAL_MIN, STALE_MS: STALE_MS };
+  window.MaffsAnswerCount = { run: run, figure: figure, format: format, GAME_MIN: GAME_MIN, TOTAL_MIN: TOTAL_MIN, STALE_MS: STALE_MS, POLL_MAX_MS: POLL_MAX_MS };
 
   function go() {
     var m = location.pathname.match(/\/games\/([a-z0-9-]+)\//);
@@ -143,7 +153,8 @@
         live: host === 'maffsgames.co.uk' || host === 'www.maffsgames.co.uk',
         raf: function (f) { window.requestAnimationFrame(f); },
         visible: function () { return document.visibilityState !== 'hidden'; },
-        setInterval: function (f, ms) { window.setInterval(f, ms); }
+        setInterval: function (f, ms) { return window.setInterval(f, ms); },
+        clearInterval: function (id) { window.clearInterval(id); }
       });
     } catch (e) { /* a figure is decoration: never let it break a page */ }
   }

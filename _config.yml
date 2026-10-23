@@ -19,6 +19,7 @@ exclude:
   - docs/*.md
   - docs/*.txt
   - docs/*.js
+  - docs/apps-script-counts.appsscript.json
   - docs/screens
   - docs/screenshots
   - docs/sources

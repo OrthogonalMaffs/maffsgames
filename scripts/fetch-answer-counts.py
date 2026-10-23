@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-# ci-line: Answer counts file (the validator that guards data/answer-counts.json: schema, roster slugs, whole numbers, total = sum, as_of today) | --selftest
-"""Fetch the answer counts from the counts Apps Script, validate them, and write data/answer-counts.json.
+"""Fetch the answer counts from the counts Apps Script, validate them, and write schools/assets/answer-counts.json.
 
 Contract ANSWER-COUNTS (23 Oct 2026). The daily workflow (.github/workflows/answer-counts.yml) runs this, then commits
 the file with "[skip ci]". A failure writes nothing, so the file on main stays as it was and only that job fails; the
 site hides every figure whose source is more than 7 days old (schools/assets/answer-count.js).
 
-    python scripts/fetch-answer-counts.py                 # fetch, validate, write data/answer-counts.json
+    python scripts/fetch-answer-counts.py                 # fetch, validate, write schools/assets/answer-counts.json
     python scripts/fetch-answer-counts.py --check         # validate the file already in the repo (as_of not required to be today)
     python scripts/fetch-answer-counts.py --selftest      # each planted fault must fail; the clean payload passes
 
@@ -20,7 +19,7 @@ The payload is exactly {as_of, since, total, games}. It is valid when:
 import argparse, datetime as dt, json, pathlib, re, sys, time, urllib.request
 
 BASE = pathlib.Path(__file__).resolve().parent.parent
-OUT = BASE / "data" / "answer-counts.json"
+OUT = BASE / "schools" / "assets" / "answer-counts.json"
 ENDPOINT = "https://script.google.com/macros/s/AKfycbxvtM7Y5jtL7flZozfFUEoZZalNHieP44vK6rB4juUG5yPgQf5hfb8tOlgetoEtogZl8w/exec"
 KEYS = {"as_of", "since", "total", "games"}
 AS_OF = re.compile(r"^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)([+-])(\d\d):(\d\d)$")
@@ -166,7 +165,7 @@ def selftest():
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--selftest", action="store_true")
-    ap.add_argument("--check", action="store_true", help="validate data/answer-counts.json as committed (as_of may be older)")
+    ap.add_argument("--check", action="store_true", help="validate schools/assets/answer-counts.json as committed (as_of may be older)")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
