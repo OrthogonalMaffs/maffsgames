@@ -132,7 +132,7 @@
   "Take a Walk, part 1 (every pool question's key recomputed from its drawn lengths, every missing length determined by the drawing and as many as its stage says, no named slip equal to its key, the worked steps ending on the key, sessions easiest first)": "27",
   "Take a Walk, part 2 (every pool question drawn by the game and read back: its labels the data's, every side drawn to one scale within 1 px)": "38",
   "Take a Walk, part 3 (every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, walk or cover, the find-it-first tap, the unit, the calculator in Stage 4 only, no sideways scroll)": "32",
-  "Take a Walk, part 4 (fault-injection self-test: seven planted faults, each caught)": "19",
+  "Take a Walk, part 4 (fault-injection self-test: seven planted faults, each caught)": "9",
   "Tax Theft (every key recomputed from HMRC 2025/26 + money-answer format check)": "16",
   "Terrible Advice (every equation in the advice and the keys recomputed; every key recomputed from its own givens; no distractor ends on the key's value (SR-16); answer once and Next once, played in Chromium)": "13",
   "Test the Claim (independent recomputation of every key)": "16",
