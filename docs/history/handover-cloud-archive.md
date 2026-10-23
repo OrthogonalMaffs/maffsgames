@@ -3,6 +3,14 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-23 (cloud): HMP-LIST (contract in Jon's message of 23 Oct, 07:11). **DONE (#493, f1bf5d0; main run 39922169172 green, 56 of 56 jobs; Pages deploy 39922169303 success).** Live check not done: the container's network policy denies maffsgames.co.uk (Jon asked to look, 23 Oct).
+
+- **Lane exception (Jon, 23 Oct 2026, 07:11):** the cloud lane edits the home-lane files this contract names, for this PR only (home lane idle). Recorded in the PR.
+- **Listed:** noindex removed; portal cards in KS3 and GCSE (New, 2026-10-23; 133 -> 135 cards, 96 -> 97 games, recounted); Essentials (Number, after Free Daily Pizza); sitemap; spec map N2; hub row `foundation-s1`..`-s5`, `gcse`; `NOT_ON_HUB` entry replaced by a `LEVEL_OVERRIDES` entry; roster row 99 to the Resit Fluency Strand; 96 -> 97 in CLAUDE.md and canon (§1, §7 card count, §Coverage, §11); /updates/ October line.
+- **Also changed:** `verify-how-many-parts.py`'s static check now fails if the page IS noindex (RELIST-3's flip for Just Pythag It).
+- **One departure from the contract:** the Essentials card is `data-kind="choose"` "Choose: Foundation" (key ks3), not `"one"`: the game shows a Foundation/Advanced picker, which `check-resit-page.py`'s rendered half fails on a "One level" card. SUITE updated (`check-resit-page.py`).
+- **Left as found, for the home lane:** canon §1's "97 numbered rows" and "99 directories" (now 98 and 100; stale since #469, not changed by listing) and §4's "96 numbered rows"; `/op/` lists neither Six Sevens nor Just Pythag It, so it was not given this game; the hub labels Advanced's board "GCSE" (shared `levelLabel()`), while the game calls it Advanced.
+
 ## 2026-10-22 (cloud): HMP-FOUNDATION-STAGES (contract verbatim: `docs/history/contracts/2026-10-22-hmp-foundation-stages.md`). **DONE (#491, 9ac77ba; main run 39858937128 green, 62 of 62 jobs, timings job included; pack 851a979).** Still unlisted, for Jon to play.
 
 - **Foundation (`ks3`):** five stages picked one at a time, each its own `mode` (`stage1`..`stage5`, logged on every event) and board (`foundation-s1`..`-s5`, Simultaneous Solver's pattern; the boards are declared in the page's `MaffsLevel.resolve`). Pools: **1 same bottom 429; 2 one a multiple of the other 117; 3 lcm = product 96; 4 lcm < product 76; 5 multiply 186** (STOP IF was under 40: none). Pool c split by `H.FSTAGES.keep`; `HMP.POOLS` keeps its a-f keys, so `survey-key-collisions.py` reads it unchanged.
