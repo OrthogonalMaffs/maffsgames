@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-# ci-line: Take a Walk, part 1 (every pool question's key recomputed from its drawn lengths, every missing length determined by the drawing and as many as its stage says, no named slip equal to its key, the worked steps ending on the key, sessions easiest first) | --part 1
+# ci-line: Take a Walk, part 1 (every pool question's lengths and products inside its stage's range, its key recomputed from its drawn lengths, every missing length determined by the drawing and as many as its stage says, no named slip equal to its key, the worked steps ending on the key, sessions easiest first) | --part 1
 # ci-line: Take a Walk, part 2 (every pool question drawn by the game and read back: its labels the data's, every side drawn to one scale within 1 px) | --part 2
 # ci-line: Take a Walk, part 3 (every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, walk or cover, the find-it-first tap, the unit, the calculator in Stage 4 only, no sideways scroll) | --part 3
-# ci-line: Take a Walk, part 4 (fault-injection self-test: seven planted faults, each caught) | --part 4
+# ci-line: Take a Walk, part 4 (fault-injection self-test: twelve planted faults, each caught) | --part 4
 # ci-deps: games/take-a-walk/
 """Independent verification for Take a Walk (games/take-a-walk/), built 23 Oct 2026 (contract TAKE-A-WALK, verbatim in
 docs/history/contracts/2026-10-23-take-a-walk.md; its calculator by stage, contract CALC-BY-STAGE). SR-30: checked from
@@ -374,9 +374,76 @@ def measure(q):
     return (1 if back else 0, PARTS[q['fam']], q['given'] if back else max(labs + [0]))
 
 
+# Each stage's lengths (contract TAKE-A-WALK-RANGES, Jon's play-test, 23 Oct 2026): whole metres, at most this many;
+# Stage 1's products inside the 10 x 10 tables, Stage 3's with a factor of 10 or less; every triangle's base x height
+# even. Stage 4 is as built (no limit here).
+RANGE = {'stage-1': 10, 'stage-2': 12, 'stage-3': 20}
+FIRST_THREE_MAX = 5          # Stage 1's first three questions after the worked example
+UNIT_WORDS = re.compile(r'\bin (?:m²|m\b|metres|square metres)', re.I)
+
+
+def lengths_of(q):
+    """Every length a student meets on q (the contract's list): every labelled side, every missing side, every
+    dimension, every part's dimensions, and working backwards the given side and the answer. A side with no label
+    that is not missing (a lone shape's own opposite side, a working-backwards triangle's slant) is never used."""
+    sh = q['shape']
+    miss = set(missing_of(sh, q['fam']))
+    out = [length(p) for i, p in enumerate(sh['path']) if p['t'] == 'L' and (p['lab'] is not None or i in miss)]
+    out += [math.hypot(d['b'][0] - d['a'][0], d['b'][1] - d['a'][1]) for d in sh['dims']]
+    for p in sh['parts']:
+        out += [p[k] for k in ('w', 'h', 'b') if p.get(k) is not None]
+    if q['ask'] in BACK:
+        out += [q['side'], q['hidden']] if q.get('side') is not None else [q['hidden']]
+    return out
+
+
+def products_of(q):
+    """The (factor, factor) products the working asks for: each part's area, and working backwards the given area."""
+    out = []
+    for p in q['shape']['parts']:
+        if p['k'] == 'rect':
+            out.append((p['w'], p['h']))
+        elif p['k'] in ('tri', 'para'):
+            out.append((p['b'], p['h']))
+    if q['ask'] in ('BA', 'BH'):
+        out.append((q['side'], q['hidden']))
+    if q['ask'] == 'BT':
+        out.append((q['side'], q['hidden']))
+    return out
+
+
+def check_ranges(q, mode, out, where):
+    sh = q['shape']
+    parts_area = sum(p['w'] * p['h'] if p['k'] == 'rect' else p['b'] * p['h'] / 2 if p['k'] == 'tri' else
+                     p['b'] * p['h'] if p['k'] == 'para' else math.pi * p['r'] ** 2 * (1 if p['k'] == 'circle' else 0.5)
+                     for p in sh['parts'])
+    if abs(parts_area - area(sh['path'])) > 1e-6:
+        out.append('%s: the parts the working multiplies do not make up the shape (%s, the boundary %s)' % (where, parts_area, area(sh['path'])))
+    for p in sh['parts']:
+        if p['k'] == 'tri' and round(p['b'] * p['h']) % 2:
+            out.append('%s: a triangle\'s base x height %s x %s is odd: halving gives no whole number' % (where, p['b'], p['h']))
+    if q['ask'] == 'BT' and round(q['side'] * q['hidden']) % 2:
+        out.append('%s: a triangle\'s base x height %s x %s is odd' % (where, q['side'], q['hidden']))
+    cap = RANGE.get(mode)
+    if cap is None:
+        return
+    for v in lengths_of(q):
+        if abs(v - round(v)) > EPS or v < 1 - EPS or v > cap + EPS:
+            out.append('%s: a length of %s m, outside %s\'s whole metres 1 to %d' % (where, round(v, 3), mode, cap))
+            break
+    for a, b in products_of(q):
+        if mode == 'stage-1' and max(a, b) > 10 + EPS:
+            out.append('%s: a product %s x %s beyond the 10 x 10 tables in Stage 1' % (where, a, b))
+        if mode == 'stage-3' and min(a, b) > 10 + EPS:
+            out.append('%s: a product %s x %s with no factor of 10 or less in Stage 3' % (where, a, b))
+    if UNIT_WORDS.search(q['text']):
+        out.append('%s: the question names the answer\'s unit: %r' % (where, q['text']))
+
+
 def check_question(q, mode, out, where):
     dp = DP[mode]
     sh = q['shape']
+    check_ranges(q, mode, out, where)
     exact = expected_key(q)
     if q['ask'] in BACK and not given_ok(q):
         out.append('%s: the given total or side is not the shape\'s' % where)
@@ -464,6 +531,10 @@ def check_engine(page, out, sessions=SESSIONS):
                 out.append('%s: not easiest first: %s' % (where, ms))
             if [x['index'] for x in ten] != list(range(1, 11)):
                 out.append('%s: numbered %s' % (where, [x['index'] for x in ten]))
+            if mode == 'stage-1':
+                big = [x['index'] for x in ten[:3] if max(lengths_of(x)) > FIRST_THREE_MAX + EPS]
+                if big:
+                    out.append('%s: question %s of the first three has a length over %d m' % (where, big, FIRST_THREE_MAX))
             ff = [x['index'] for x in ten if x.get('findFirst')]
             want = [x['index'] for x in ten if x['missing']][:1]
             if ff != want:
@@ -616,6 +687,9 @@ def play_stage(page, mode, size, out, before, wrong_at=(2, 4, 5, 7)):
                     if page.evaluate("document.querySelector('#figure .pitch').getAttribute('data-anim')") != ('cover' if kind == 'walk' else 'walk').replace('cover', 'mow'):
                         out.append('%s: a wrong choice did not play its picture' % where)
                 page.click('#choice [data-kind="%s"]' % kind)
+                line = page.inner_text('#promptLine')
+                if line.strip() != ('A walk: the perimeter.' if kind == 'walk' else 'A cover: the area.'):
+                    out.append('%s: the line under the question reads %r: walk or cover only, never the unit' % (where, line))
         elif state == 'choose':
             out.append('%s: walk or cover asked after Stage 1' % where)
         state = page.evaluate('TAW.ui.state()')
@@ -792,6 +866,21 @@ PLANTS = [
     ('the calculator mounted at Stage 2',
      [("    var on = H.STAGES[mode].calc === 'scientific';", "    var on = H.STAGES[mode].calc === 'scientific' || mode === 'stage-2';")], 'play',
      r'stage-2 .*the calculator'),
+    # TAKE-A-WALK-RANGES (Jon's play-test, 23 Oct 2026).
+    ('a 16 x 7 rectangle in Stage 1',
+     [("    [3, 4, 5, 6, 7, 8, 9, 10].forEach(function (l) {", "    [3, 4, 5, 6, 7, 8, 9, 10, 16].forEach(function (l) {")], 'engine',
+     r'stage-1 .*(16 x 7 beyond the 10 x 10|a length of 16 m)'),
+    ('a Stage 1 question in the first three with a side of 6',
+     [("[['sq', 'rect'], 'PA', 3, 5]", "[['sq', 'rect'], 'PA', 3, 6]")], 'engine', r'of the first three has a length over 5'),
+    ('a Stage 3 product of 13 x 14',
+     [("[14, 20].forEach(function (W) { [10, 15].forEach(function (Hf) { [5, 7].forEach(function (a) {",
+       "[14, 20].forEach(function (W) { [10, 14].forEach(function (Hf) { [5, 13].forEach(function (a) {")], 'engine',
+     r'stage-3 .*13 x 14 with no factor of 10 or less'),
+    ('an odd triangle product in Stage 3',
+     [("[[12, 8], [14, 6], [16, 5],", "[[9, 7], [12, 8], [14, 6], [16, 5],")], 'engine', r'base x height 9 x 7 is odd'),
+    ('the old "in m²" prompt',
+     [("'A walk: the perimeter.' : 'A cover: the area.'", "'A walk: the perimeter, in m.' : 'A cover: the area, in m².'")], 'play',
+     r'the line under the question reads'),
 ]
 
 
