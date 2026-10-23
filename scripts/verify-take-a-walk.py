@@ -798,8 +798,8 @@ def play(page, size, out):
 
 
 def static_checks(html, out):
-    if 'name="robots" content="noindex"' not in html:
-        out.append('the page is not noindex (the game is unlisted)')
+    if 'name="robots" content="noindex"' in html:   # listed 23 Oct 2026 (Jon approved it; TAKE-A-WALK-LIST)
+        out.append('the page is noindex, but the game is listed')
     if not re.search(r'<script type="application/json" id="maffs-calc-stages">\{"stage-1": "not allowed", "stage-2": "not allowed", '
                      r'"stage-3": "not allowed", "stage-4": "scientific"\}</script>', html):
         out.append('the calculator stage map is not Stages 1-3 not allowed, Stage 4 scientific')

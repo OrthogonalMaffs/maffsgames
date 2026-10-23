@@ -127,6 +127,8 @@
     'foundation-s1':'Foundation · Stage 1','foundation-s2':'Foundation · Stage 2',
     'foundation-s3':'Foundation · Stage 3','foundation-s4':'Foundation · Stage 4',
     'foundation-s5':'Foundation · Stage 5',
+    // Take a Walk: one board per stage (contract TAKE-A-WALK, 23 Oct 2026; labels by Jon's lane exception, 20:33).
+    'stage-1':'Stage 1','stage-2':'Stage 2','stage-3':'Stage 3','stage-4':'Stage 4',
     // Prisoner's Dilemma: one board per level, tournament totals only (SR-22).
     'ks3-tournament':'KS3 · Tournament','gcse-tournament':'GCSE · Tournament',
     'alevel-tournament':'A-Level · Tournament','core-tournament':'Core Maths · Tournament'

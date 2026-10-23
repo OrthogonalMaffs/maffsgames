@@ -19,8 +19,8 @@ Last updated: 3 October 2026
 | GA4 Measurement ID | G-992JLHLP2D |
 | Sheets Endpoint | Google Apps Script (see docs/apps-script-endpoint.js) |
 | Contact | contact@maffsgames.co.uk |
-| Total games | **97 live on the portal** (23 Oct 2026, contract HMP-LIST: `how-many-parts` listed on Jon's approval; 9 Oct 2026, contract DOCS-9OCT: `factor-theorem` relisted under SR-21, A-Level only; contract RELIST-SR: `screening-room` relisted under SR-21; 8 Oct, contract RELIST-3: `just-pythag-it-bruv` listed on Jon's approval, `expectation-station` and `truth-buster` relisted under SR-21), plus **1 roster game live but unlisted** pending its audit fixes (`glorious-gantt`; canon SR-20 and SR-21, the roster's "Unlisted" section). `regression-rumble` is **withdrawn** behind a `noindex` holding page pending its data rebuild (todo §1.26). Per-game detail in `.claude/rules/game-roster.md` (97 numbered rows, plus a Withdrawn section). `games/` holds **99 directories** — the extras are `regression-rumble` (withdrawn, a holding page) and `the-perfect-prank`, the unlisted escape-room prototype, deliberately not on the portal and not in the roster. Because the roster is where `scripts/check-site.py` reads each game's levels, that game is only ever loaded bare; it is recorded under `roster_exceptions` in `scripts/checker-allowlist.json` so the gap is declared rather than silent |
-| Escape rooms | **8 live at `/escape-rooms/`**, indexed, in the sitemap and led from the front page. Not counted in the 97. **Two more are built but withdrawn** (`it-vengeance`, `car-trap`) behind `noindex` holding pages at their own URLs until each one's voice rewrite is done. Teacher pages stay `noindex` deliberately — they hold every answer. Full detail in **§11**; the live work is `docs/escape-room-voice-rewrite.md` |
+| Total games | **98 live on the portal** (23 Oct 2026, contract TAKE-A-WALK-LIST: `take-a-walk` listed on Jon's approval; contract HMP-LIST: `how-many-parts` listed on Jon's approval; 9 Oct 2026, contract DOCS-9OCT: `factor-theorem` relisted under SR-21, A-Level only; contract RELIST-SR: `screening-room` relisted under SR-21; 8 Oct, contract RELIST-3: `just-pythag-it-bruv` listed on Jon's approval, `expectation-station` and `truth-buster` relisted under SR-21), plus **1 roster game live but unlisted** pending its audit fixes (`glorious-gantt`; canon SR-20 and SR-21, the roster's "Unlisted" section). `regression-rumble` is **withdrawn** behind a `noindex` holding page pending its data rebuild (todo §1.26). Per-game detail in `.claude/rules/game-roster.md` (97 numbered rows, plus a Withdrawn section). `games/` holds **99 directories** — the extras are `regression-rumble` (withdrawn, a holding page) and `the-perfect-prank`, the unlisted escape-room prototype, deliberately not on the portal and not in the roster. Because the roster is where `scripts/check-site.py` reads each game's levels, that game is only ever loaded bare; it is recorded under `roster_exceptions` in `scripts/checker-allowlist.json` so the gap is declared rather than silent |
+| Escape rooms | **8 live at `/escape-rooms/`**, indexed, in the sitemap and led from the front page. Not counted in the 98. **Two more are built but withdrawn** (`it-vengeance`, `car-trap`) behind `noindex` holding pages at their own URLs until each one's voice rewrite is done. Teacher pages stay `noindex` deliberately — they hold every answer. Full detail in **§11**; the live work is `docs/escape-room-voice-rewrite.md` |
 | Parent guides | **20 at `/parents/`**, plus the hub: 21 indexed URLs, in the sitemap and linked from the portal footer. Ported from MathsWins on 28 Sep 2026 and corrected again on 29 Sep against Jon's approved wording; the findings are in `docs/audit-parent-guides.md` and the fix-by-fix record is in `docs/migrate-parent-guides.md`. `averages` links Distinctly Average at `?level=ks3`. The section has one template: `parents/guide.css` and `parents/guide.js`, portal theme, adult register (the game theme, §7.5, does not apply -- the reader is the parent). **GCSE tier badge:** one component in `parents/guide.js` (its `TIERS` table, built from bold parts of `data/dfe-gcse-parts.json`) on exactly four guides and their hub cards; partly-Higher guides mark each Higher section in the body. `scripts/verify-parent-guides.py` reads every checked value back from the pages. **`scripts/check-site.py` does not discover these pages**: `build_page_list()` globs `games/` and `escape-rooms/` and otherwise walks a hard-coded list of root pages |
 
 ---
@@ -369,8 +369,8 @@ Cards carry a `data-topics` attribute; the portal filters on these six tokens, a
 per topic and the lists went stale silently as the roster grew from 60 to 93.
 
 **A game appears on more than one card.** Games are duplicated across level sections and the "New for
-2026/27" section, so the portal holds 135 `.game-card` elements for 97 games (recounted 23 Oct 2026 from `index.html` when How Many Parts? was listed: 133 before its two). `applyFilters()` de-dupes the
-visible count via `seen[href]` with `?...` stripped, so the count still reads 97. Copy cards **verbatim**
+2026/27" section, so the portal holds 137 `.game-card` elements for 98 games (recounted 23 Oct 2026 from `index.html` when Take a Walk was listed: 135 before its two). `applyFilters()` de-dupes the
+visible count via `seen[href]` with `?...` stripped, so the count still reads 98. Copy cards **verbatim**
 (same `href`, `data-levels`, `data-topics`) when duplicating one.
 
 ## 3.3 Privacy Page
@@ -469,7 +469,7 @@ map G20, sitemap and the leaderboard hub.
 ## 4.3 Games excluded from leaderboards
 
 `constructions-lab` and `given-that` — non-scored, exploratory formats. They are the only two of the
-97 that do not call `submitScore()`. (`distinctly-average` was briefly a third, 29 Sep 2026; Jon ruled it
+98 that do not call `submitScore()`. (`distinctly-average` was briefly a third, 29 Sep 2026; Jon ruled it
 should have a leaderboard, so it is wired and **held** rather than excluded — see §9.)
 
 ## 4.4 The calculator tag
@@ -1951,7 +1951,7 @@ this specific defect. The "4 collisions" count is a floor, not a guaranteed tota
   "Leaderboard Hub Page" below for the other. See §8 backlog for
   outstanding gaps.
 
-## Coverage (97 live games)
+## Coverage (98 live games)
 - **The hub registry is checked too (30 Sep 2026).** `scripts/check-leaderboard-coverage.js` reads
   the `GAMES` array in `leaderboards/index.html` and fails if a game that calls `submitScore()` is
   missing from it, or if a row's levels differ from the keys the game really submits under (call-site
@@ -2098,7 +2098,7 @@ this specific defect. The "4 collisions" count is a floor, not a guaranteed tota
 
 Narrative maths escape rooms at `/escape-rooms/`. Started 2026-08-26; reference point
 **Unlock!**. **15 to 20 minutes each** — built to end a lesson, not fill one, and to be played by three or
-four students round one screen. Not counted in the 97 live games.
+four students round one screen. Not counted in the 98 live games.
 
 ## 11.1 Current state — 18 October 2026
 
