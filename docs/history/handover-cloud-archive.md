@@ -3,6 +3,12 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-23 (cloud): CALC-BY-STAGE (contract verbatim: `docs/history/contracts/2026-10-23-calc-by-stage.md`). **DONE (#494, 6c59e7a; main run 39939100798 green, 56 of 56 jobs).**
+
+- **Lane exception (Jon, 23 Oct 2026, 09:45):** the cloud lane edits `scripts/check-calculator.py`, canon §4.4 and the roster's calculator-value list for this PR only, then builds Take a Walk on it.
+- **Why:** TAKE-A-WALK stopped on its STOP IF (the tag could not say "Stage 4 only"). New roster value `by stage`: the page declares `<script type="application/json" id="maffs-calc-stages">` (stage key -> required / scientific / not allowed / optional); each stage's choice carries its badge with `data-stage="<key>"` (theme.css untouched); the header's badge is empty in the source, filled at run time.
+- **Check:** map present, valid and only on a `by stage` game; one badge per badged stage of its value, no `optional` badge, no unstaged full badge; calculator.js + keypad.js when a stage needs one, a scientific mount when a stage is scientific, no calculator.js otherwise. Mounting in the right stages only is the game verifier's job. Self-test 12 -> 19 cases (a scratch-only fixture game, seven plants, each caught for its own reason). Every existing game's result unchanged.
+
 ## 2026-10-23 (cloud): HMP-LIST (contract in Jon's message of 23 Oct, 07:11). **DONE (#493, f1bf5d0; main run 39922169172 green, 56 of 56 jobs; Pages deploy 39922169303 success).** Live check not done: the container's network policy denies maffsgames.co.uk (Jon asked to look, 23 Oct).
 
 - **Lane exception (Jon, 23 Oct 2026, 07:11):** the cloud lane edits the home-lane files this contract names, for this PR only (home lane idle). Recorded in the PR.
