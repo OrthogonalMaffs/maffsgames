@@ -88,6 +88,7 @@ a.back-link:hover{color:var(--text)}
 .pitch .edge.cmp{stroke:var(--accent);stroke-width:5;stroke-dasharray:none}
 .pitch .join{stroke:var(--edge);stroke-width:1.5;stroke-dasharray:5 4;fill:none}
 .pitch .dim{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:3 3;fill:none}
+.pitch .dim.cmp{stroke:var(--accent);stroke-width:3.5}
 .pitch .lab{font-family:var(--font-num);font-size:12px;font-weight:700;fill:var(--text)}
 .pitch .lab.dimlab{fill:var(--muted)}
 .pitch .lab.found{fill:var(--accent)}
@@ -560,7 +561,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     q.text = words(q);
     q.id = stage + ':' + sh.fam + ':' + ask + ':' + JSON.stringify(sh.path.map(function (p) {
       return p.t === 'L' ? [p.a, p.b, p.lab] : [p.c, p.r];
-    })).replace(/[^0-9,.\-a-z]/gi, '') + (q.given !== undefined ? ':' + q.given : '');
+    })).replace(/[^0-9,.\-a-z]/gi, '') + ':' + sh.dims.map(function (d) { return d.kind + (d.val === null ? '?' : d.val); }).join(',') +
+      (q.given !== undefined ? ':' + q.given : '');
     q.size = Math.max.apply(null, H.labelled(sh).concat([0]));
     q.errors = H.errors(q);
     return q;
@@ -850,7 +852,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
           ' = ' + H.num(v) + '§ m.';
       shown = shown.concat([i]);
       out.push({ text: text, hl: [i], show: shown.slice(), anim: null,
-        cmp: ch.filter(function (c) { return c.src === 'side'; }).map(function (c) { return c.i; }) });
+        cmp: ch.filter(function (c) { return c.src === 'side'; }).map(function (c) { return c.i; }),
+        cmpDims: ch.filter(function (c) { return c.src === 'dim'; }).map(function (c) { return c.i; }) });
     });
     var all = shown.slice();
     if (q.ask === 'P') {
@@ -982,7 +985,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     return [mx + nx * 16, my + ny * 16 + 4, 'middle'];
   }
   var SVG_N = 0;
-  // opts: show (missing pieces now written in), hl (pieces highlighted), cmp (pieces to compare), tap (hit areas),
+  // opts: show (missing pieces now written in), hl (pieces highlighted), cmp (pieces to compare), cmpDims (dashed
+  // dimensions to compare), tap (hit areas),
   // ask (draw "?" on the length asked), stripes (rows mown so far, or null).
   H.draw = function (q, opts) {
     opts = opts || {};
@@ -1001,8 +1005,9 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       var cls = 'edge' + (hl.indexOf(i) >= 0 ? ' hl' : cmp.indexOf(i) >= 0 ? ' cmp' : '');
       out.push('<path class="' + cls + '" data-piece="' + i + '" d="' + pieceD(p, L, true) + '"/>');
     });
+    var cmpDims = opts.cmpDims || [];
     sh.dims.forEach(function (dm, i) {
-      out.push('<line class="dim" data-dim="' + i + '" x1="' + f1(L.X(dm.a[0])) + '" y1="' + f1(L.Y(dm.a[1])) + '" x2="' + f1(L.X(dm.b[0])) + '" y2="' + f1(L.Y(dm.b[1])) + '"/>');
+      out.push('<line class="dim' + (cmpDims.indexOf(i) >= 0 ? ' cmp' : '') + '" data-dim="' + i + '" x1="' + f1(L.X(dm.a[0])) + '" y1="' + f1(L.Y(dm.a[1])) + '" x2="' + f1(L.X(dm.b[0])) + '" y2="' + f1(L.Y(dm.b[1])) + '"/>');
     });
     // Labels: every labelled side, every dashed dimension, each found missing length, "?" on the asked one.
     sh.path.forEach(function (p, i) {
@@ -1236,7 +1241,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     }
     var ch = H.derive(q.shape, q.missing[0]);
     $('msg').textContent = 'That side has a label. Compare the highlighted sides: the missing one is opposite them.';
-    figure({ tap: true, cmp: ch.filter(function (c) { return c.src === 'side'; }).map(function (c) { return c.i; }) });
+    figure({ tap: true, cmp: ch.filter(function (c) { return c.src === 'side'; }).map(function (c) { return c.i; }),
+      cmpDims: ch.filter(function (c) { return c.src === 'dim'; }).map(function (c) { return c.i; }) });
   }
 
   function box() { return H.STAGES[mode].calc === 'scientific' ? $('ans4') : $('ans'); }
@@ -1341,7 +1347,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     $('feedback').appendChild(wrap);
     function draw() {
       var s = steps[at], last = at === steps.length - 1;
-      var fig = figure({ show: s.show, hl: s.hl, cmp: s.cmp || [] });
+      var fig = figure({ show: s.show, hl: s.hl, cmp: s.cmp || [], cmpDims: s.cmpDims || [] });
       if (s.anim) play(fig, s.anim, q);
       wrap.setAttribute('data-step', String(at + 1));
       wrap.setAttribute('data-steps', String(steps.length));

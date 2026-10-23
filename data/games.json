@@ -498,6 +498,11 @@
    "slug": "how-many-parts",
    "search_phrase": "Fraction Operations",
    "description": "Add, take away, multiply and divide fractions and mixed numbers, with a bar model: the denominator says how many parts."
+  },
+  {
+   "slug": "take-a-walk",
+   "search_phrase": "Perimeter and Area",
+   "description": "Perimeter and area on sports pitches: walk round the edge, or cover every blade of grass. Rectangles, compound shapes, triangles and circles."
   }
  ],
  "pages": {

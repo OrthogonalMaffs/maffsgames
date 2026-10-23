@@ -62,6 +62,7 @@ MIGRATED = [
     "split-it",           # the pilot, 2 Oct 2026
     "just-pythag-it-bruv",  # built to the theme, 4 Oct 2026 (unlisted until Jon approves it)
     "how-many-parts",  # built to the theme, 20 Oct 2026 (unlisted until Jon approves it)
+    "take-a-walk",  # built to the theme, 23 Oct 2026 (unlisted until Jon approves it)
     "correlation-or-coincidence",  # rebuilt to the theme, 4 Oct 2026 (resit audit rebuild)
     "estimation-engine",  # rebuilt to the theme, 5 Oct 2026 (SR-12 rebuild)
     "simultaneous-solver",  # rebuilt to the theme, 6 Oct 2026 (staged elimination; the keypad and the calculator badge live in theme.css)
