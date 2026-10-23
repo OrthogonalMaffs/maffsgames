@@ -1468,7 +1468,10 @@ grew with the number of games, not with the size of the change.
 - **Before pushing:** `python scripts/check-changed.py` runs the verifiers `ci-deps.py` selects for the
   branch, the fast site-wide checks, and the shared-asset tests when `schools/` changed; CI runs the rest.
   `--full` still runs everything locally, but is not required. Known Windows-only differences from CI:
-  todo §4 item 18.
+  todo §4 item 18. **Heavy checks reached only through a shared file are deferred to CI** (contract
+  CHECK-CHANGED-DEFER, 23 Oct 2026): `check-changed.py` lists them with the shared file that reached them and in the PR
+  line; nothing is skipped (CI runs every selected check on the PR and the Gate requires it), and `--all-heavy` runs
+  them locally; a game's own page, always-run checks and a CI-file change plan exactly as before.
 
 ### 7.8.1 The CI layout: shards and parts (7 Oct 2026)
 
