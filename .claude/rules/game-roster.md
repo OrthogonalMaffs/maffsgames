@@ -1,6 +1,7 @@
 # MaffsGames — Complete Game Roster
 
-**Calculator** (last column, canon §4.4): `required`, `scientific`, `not allowed`, `optional` or `untagged`. A game's
+**Calculator** (last column, canon §4.4): `required`, `scientific`, `not allowed`, `optional`, `untagged` or `by stage`
+(a staged game whose stages differ; its page declares each stage's value, canon §4.4). A game's
 tag shows as the shared `.calc-badge` (`schools/assets/theme.css`) on its start screen; `untagged`
 shows nothing. Every game is `untagged` until it is tagged in its own PR. A `required` or `scientific` game also loads the
 shared on-screen calculator (`scientific`: with its scientific keys) (`schools/assets/calculator.js`); `scripts/check-calculator.py` keeps the two in step.
