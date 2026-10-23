@@ -3,6 +3,12 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-23 (cloud): TAKE-A-WALK-FRAME (contract in Jon's message of 23 Oct, after his play-test). **DONE (#499, e1004c0; main run 39990459002 green, 58 of 58 jobs).**
+
+- **Root cause:** `pieceD` wrote every arc's SVG sweep flag backwards (y up in the shape, y down on screen), so every half arc bulged the wrong way while the box came from the true geometry; and the picture was always 320 wide, so tall shapes sat between empty bands. Fixed: sweep 0 for a counterclockwise arc; the viewBox framed round the shape with M = 40 on all four sides (scale unchanged); a half arc's radius written just under half its drawn chord, so SVG draws the exact semicircle.
+- **Affected before the fix** (the new frame check run on the old page): arcs, **68 questions, all Stage 4** (every half arc: 28 lone semicircles, 20 T-with-semicircle on the stem, 20 on the bar; the 28 semicircles ran out of the picture). Empty bands: Stage 1 149, Stage 2 411, Stage 3 75, Stage 4 134. After: none, at 320 and 1280 px.
+- **Verifier part 2:** every pool question drawn in the page at 320 and 1280 px and measured (getBBox): every side, join, dimension and label inside the picture; no empty band over the margin plus a grid square; every half arc half as deep as wide and bulging its own way. Plants 12 -> 16, each caught.
+
 ## 2026-10-23 (cloud): TAKE-A-WALK (contract verbatim: `docs/history/contracts/2026-10-23-take-a-walk.md`). **DONE (#495, ce1810e; main run 39950614778 green, 60 of 60 jobs).** Merged unlisted for Jon to play at https://maffsgames.co.uk/games/take-a-walk/.
 
 - **Lane exception (Jon, 23 Oct 2026, 08:32):** the cloud lane builds the game and edits what a new unlisted game needs: roster Unlisted row 100 (`by stage`), `data/games.json`, `NOT_ON_HUB`, and the suites of check-levels, check-answer-lock, check-theme, check-teacher-invite and audit-register.
