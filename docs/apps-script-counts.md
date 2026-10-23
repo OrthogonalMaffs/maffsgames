@@ -24,6 +24,8 @@ Files in this repo that you paste from: `docs/apps-script-counts.js` (the code) 
 3. In the editor, select everything in `Code.gs` and delete it.
 4. Open `docs/apps-script-counts.js` from the repo, copy all of it, and paste it into `Code.gs`.
 5. Find the line `const SHEET_ID = 'PASTE_THE_SHEET_ID_HERE';` and replace the text inside the quotes with the id from step 1.
+   Also check the next line, `const SHEET_NAME = 'Sheet1';`: it is the name of the **tab** at the bottom of the Sheet (the file is called
+   MaffsGames Events, but its tab is `Sheet1`). If the tab has another name, put that name in the quotes.
 6. Click **Save** (the disk icon).
 
 ## 3. Set the permissions and time zone (the settings file)

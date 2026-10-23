@@ -57,7 +57,7 @@ HARNESS = r"""
     },
   };
 
-  const NAME = 'MaffsGames Events';
+  const NAME = 'Sheet1';
   const HEAD = ['timestamp', 'event', 'game_slug', 'level', 'mode', 'question_index', 'correct', 'attempts', 'score',
     'questions_answered', 'questions_correct', 'previous_score', 'difficulty', 'filter_type', 'filter_value', 'client_ts', 'seq'];
   const colNum = s => s.split('').reduce((n, ch) => n * 26 + ch.charCodeAt(0) - 64, 0);

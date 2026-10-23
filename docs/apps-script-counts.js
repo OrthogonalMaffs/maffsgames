@@ -24,7 +24,7 @@
 //  Jon's own play on the live site is counted; nothing is filtered (Jon, 22 Oct 2026).
 
 const SHEET_ID = 'PASTE_THE_SHEET_ID_HERE';   // the long id in the Sheet's address: /spreadsheets/d/<ID>/edit
-const SHEET_NAME = 'MaffsGames Events';
+const SHEET_NAME = 'Sheet1';                  // the TAB's name (the file is called MaffsGames Events)
 const TIMEZONE = 'Europe/London';
 const COUNTED_EVENT = 'question_answered';
 const CHUNK_ROWS = 5000;                      // rows read per call

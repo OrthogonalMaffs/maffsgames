@@ -415,6 +415,8 @@ jobs:
               Money to the penny (canon SR-33 R4: every £/€ amount whole or two decimals, in source and in split-it generated output)|python scripts/check-money.py && python scripts/check-money.py --selftest
               Teacher feedback line (on every results screen, played in Chromium; own slug; exact wording)|python scripts/check-teacher-invite.py && python scripts/check-teacher-invite.py --selftest
               Start-screen mount (canon 7.5.4: one mount per game, in its start screen, shown before play and hidden during it)|python scripts/check-start-mount.py && python scripts/check-start-mount.py --selftest
+              Answer count line (canon 7.5.5: loaded once where a mount is, never typed by hand, readable at 320 px, loader cases)|python scripts/check-answer-count.py && python scripts/check-answer-count.py --selftest
+              Answer counts file (canon 7.5.5: the daily file's schema, roster slugs, whole numbers, total = sum; validator self-test)|python scripts/fetch-answer-counts.py --check && python scripts/fetch-answer-counts.py --selftest
               Search titles (every game page and /essentials/ carries the title and description data/games.json generates)|python scripts/check-meta.py && python scripts/check-meta.py --selftest
               Findings register (every audit finding filed per game, schema valid; fixed entries name their PR)|python scripts/audit-register.py --check --selftest
               Quoted figures (no figure the quoted-statistics audit found CONTRADICTED is still on its page)|python scripts/check-quoted-figures.py && python scripts/check-quoted-figures.py --selftest
