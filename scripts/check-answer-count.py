@@ -175,7 +175,11 @@ async def _page(browser, base, rel, slug, sel, big):
         for _ in range(40):                         # the loader runs after parse; wait for it, up to 4 s
             got = await page.evaluate(PROBE, sel)
             if got and (got["text"] or not big):
-                await page.wait_for_timeout(300)        # a live request, if the page makes one, is made by now
+                # Settle before measuring, the same for a page with the line and one without: a page's own header
+                # (Distinctly Average's Aa button) takes ~0.2 s to reach its place, and a request the page makes
+                # itself for the live address is made by now. Measured too early, the baseline read 14 px narrower.
+                await page.wait_for_timeout(700)
+                got = await page.evaluate(PROBE, sel)
                 got["live_calls"] = len(live_calls)
                 return got
             await page.wait_for_timeout(100)
