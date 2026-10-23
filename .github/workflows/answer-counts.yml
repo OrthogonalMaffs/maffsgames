@@ -1,0 +1,62 @@
+# The daily answer counts (contract ANSWER-COUNTS, 23 Oct 2026; canon 7.5.5).
+#
+# Once a day, early UK morning, fetch the figures from the counts Apps Script (docs/apps-script-counts.md), validate
+# them (scripts/fetch-answer-counts.py: schema, roster slugs, whole numbers, total = sum, as_of today) and commit
+# schools/assets/answer-counts.json to main as the workflow's GITHUB_TOKEN with "[skip ci]" (a push by GITHUB_TOKEN starts no
+# workflow anyway, so the full check-site run is not started by it). If main moves between the fetch and the push the
+# job fetches main and tries again.
+#
+# It is its own workflow, not a job of check-site.yml, so it is never part of "main's last full run" (scripts/merge-pr.py
+# judges check-site.yml only) and a failure here fails only this job: the file on main stays as it was, and the site
+# hides any figure whose source is more than 7 days old.
+name: answer-counts
+
+on:
+  schedule:
+    - cron: "40 5 * * *"          # 05:40 UTC daily: 06:40 in summer, 05:40 in winter
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: answer-counts
+  cancel-in-progress: false
+
+jobs:
+  counts:
+    name: Fetch and commit the answer counts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validator self-test
+        run: python scripts/fetch-answer-counts.py --selftest
+      - name: Fetch, validate, commit
+        run: |
+          set -eo pipefail          # a failing fetch or validation must fail the job, not just the pipe into tee
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3; do
+            git fetch -q origin main && git reset -q --hard origin/main
+            python scripts/fetch-answer-counts.py | tee -a "$GITHUB_STEP_SUMMARY"
+            if git diff --quiet -- schools/assets/answer-counts.json; then
+              echo "answer-counts.json unchanged at $(git rev-parse --short HEAD)" | tee -a "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            git add schools/assets/answer-counts.json
+            git commit -q -m "Record the answer counts [skip ci]"
+            if git push -q origin HEAD:main; then
+              echo "answer-counts.json committed: $(git rev-parse --short HEAD)" | tee -a "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            echo "main moved during attempt $attempt; fetching again"
+            sleep 5
+          done
+          echo "::error::could not push schools/assets/answer-counts.json after 3 attempts"
+          exit 1
