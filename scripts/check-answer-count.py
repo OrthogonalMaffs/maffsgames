@@ -431,7 +431,7 @@ def selftest():
             (d / "games" / s).mkdir(exist_ok=True)
         for r in sorted(p.name for p in (BASE / "escape-rooms").iterdir() if p.is_dir() and (p / "room.js").exists()):
             (d / "escape-rooms" / r).mkdir(parents=True, exist_ok=True)
-            (d / "escape-rooms" / r / "room.js").write_text("", encoding="utf-8")
+            (d / "escape-rooms" / r / "room.js").write_text("", encoding="utf-8", newline="")
         shutil.copy(BASE / "index.html", d / "index.html")
         return d
 
