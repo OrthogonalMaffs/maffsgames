@@ -62,7 +62,7 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 - **Verifier** `scripts/verify-take-a-walk.py`, four parts (local 1: ~60 s, 2: ~5 s, 3: ~85 s, 4: ~95 s); the seven plants each caught for their own reason. It caught two faults of the build, fixed: two circles with one id (radius vs diameter label); a wrong tap highlighted nothing when the chain runs through a dashed dimension (the house).
 - **Local leftover:** worktree `/home/user/taw` on local branch `claude/taw-wip` (never pushed; its commits were cherry-picked here). Remove it once this PR merges.
 
-## 2026-10-23 (cloud): CALC-BY-STAGE (contract verbatim: `docs/history/contracts/2026-10-23-calc-by-stage.md`). **DONE (#494, 6c59e7a; main run 39939100798, result in the TAKE-A-WALK entry).**
+## 2026-10-23 (cloud): CALC-BY-STAGE (contract verbatim: `docs/history/contracts/2026-10-23-calc-by-stage.md`). **DONE (#494, 6c59e7a; main run 39939100798 green, 56 of 56 jobs).**
 
 - **Lane exception (Jon, 23 Oct 2026, 09:45):** the cloud lane edits `scripts/check-calculator.py`, canon §4.4 and the roster's calculator-value list for this PR only, then builds Take a Walk on it.
 - **Why:** TAKE-A-WALK stopped on its STOP IF (the tag could not say "Stage 4 only"). New roster value `by stage`: the page declares `<script type="application/json" id="maffs-calc-stages">` (stage key -> required / scientific / not allowed / optional); each stage's choice carries its badge with `data-stage="<key>"` (theme.css untouched); the header's badge is empty in the source, filled at run time.
