@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # ci-line: Take a Walk, part 1 (every pool question's lengths and products inside its stage's range, its key recomputed from its drawn lengths, every missing length determined by the drawing and as many as its stage says, no named slip equal to its key, the worked steps ending on the key, sessions easiest first) | --part 1
-# ci-line: Take a Walk, part 2 (every pool question drawn by the game and read back: its labels the data's, every side drawn to one scale within 1 px) | --part 2
+# ci-line: Take a Walk, part 2 (every pool question drawn by the game and read back: its labels the data's, every side drawn to one scale within 1 px; at 320 and 1280 px every side, line and label inside its picture, framed round the shape, every half arc half as deep as wide and bulging its own way) | --part 2
 # ci-line: Take a Walk, part 3 (every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, walk or cover, the find-it-first tap, the unit, the calculator in Stage 4 only, no sideways scroll) | --part 3
-# ci-line: Take a Walk, part 4 (fault-injection self-test: twelve planted faults, each caught) | --part 4
+# ci-line: Take a Walk, part 4 (fault-injection self-test: sixteen planted faults, each caught) | --part 4
 # ci-deps: games/take-a-walk/
 """Independent verification for Take a Walk (games/take-a-walk/), built 23 Oct 2026 (contract TAKE-A-WALK, verbatim in
 docs/history/contracts/2026-10-23-take-a-walk.md; its calculator by stage, contract CALC-BY-STAGE). SR-30: checked from
@@ -815,6 +815,73 @@ def guarded(out, what, f):
         out.append('%s threw: %s' % (what, str(e).splitlines()[0][:200]))
 
 
+FRAME_SIZES = [(320, 568), (1280, 800)]
+# Every pool question drawn by the game into the live page and measured there (getBBox, the SVG's own units, at the
+# window width given): every side, join, dimension and label inside the picture (TAKE-A-WALK-FRAME, Jon's play-test,
+# 23 Oct 2026: a semicircle drawn bulging the wrong way ran out of the picture under an empty grid); no side of the
+# picture with an empty band wider than the margin plus one grid square; every half arc half as deep as it is wide,
+# and bulging the way its geometry says (its drawn middle where the shape's arc middle maps to, within 1.5 px).
+FRAME_JS = r"""() => {
+  const P = TAW.pools(), host = document.createElement('div'), out = {};
+  host.style.cssText = 'position:absolute;left:0;top:0;width:100%;';
+  document.body.appendChild(host);
+  for (const m in P) {
+    out[m] = P[m].map(q => {
+      host.innerHTML = TAW.draw(q, {});
+      const svg = host.querySelector('svg'), vb = svg.viewBox.baseVal, bad = [];
+      const k = +svg.dataset.k, x0 = +svg.dataset.x0, y1 = +svg.dataset.y1, ox = +svg.dataset.ox, M = +svg.dataset.m;
+      const X = x => ox + (x - x0) * k, Y = y => M + (y1 - y) * k;
+      for (const el of svg.querySelectorAll('path.edge, line.join, line.dim, text.lab, path.shape')) {
+        const b = el.getBBox();
+        if (b.x < -0.5 || b.y < -0.5 || b.x + b.width > vb.width + 0.5 || b.y + b.height > vb.height + 0.5)
+          bad.push((el.getAttribute('class') + ' ' + (el.dataset.piece || el.dataset.dim || '') + ' ' + (el.textContent || '')).trim() +
+            ' at ' + [b.x, b.y, b.x + b.width, b.y + b.height].map(v => v.toFixed(1)).join(',') + ' in 0,0,' + vb.width.toFixed(1) + ',' + vb.height.toFixed(1));
+      }
+      const s = svg.querySelector('path.shape').getBBox();
+      const gl = [...new Set([...svg.querySelectorAll('line.grid')].filter(l => l.getAttribute('x1') === l.getAttribute('x2'))
+        .map(l => +l.getAttribute('x1')))].sort((a, b) => a - b);
+      const sq = gl.length > 1 ? gl[1] - gl[0] : 0;
+      const gaps = [s.x, s.y, vb.width - s.x - s.width, vb.height - s.y - s.height];
+      const arcs = [];
+      q.shape.path.forEach((p, i) => {
+        if (p.t !== 'C' || Math.abs(p.a1 - p.a0) > 2 * Math.PI - 1e-9) return;
+        const el = svg.querySelector('path.edge[data-piece="' + i + '"]'), b = el.getBBox(), L = el.getTotalLength();
+        const mid = el.getPointAtLength(L / 2), am = (p.a0 + p.a1) / 2;
+        arcs.push({ i, w: b.width, h: b.height, chord: 2 * p.r * k,
+          off: Math.hypot(mid.x - X(p.c[0] + p.r * Math.cos(am)), mid.y - Y(p.c[1] + p.r * Math.sin(am))) });
+      });
+      return { id: q.id, bad, gaps, sq, M, arcs };
+    });
+  }
+  host.remove();
+  return out;
+}"""
+
+
+def check_frame(page, out, size):
+    """Every pool question's picture holds its whole shape, framed round it. Returns {stage: questions that fail}."""
+    got = page.evaluate(FRAME_JS)
+    failing = {}
+    for mode in MODES:
+        for r in got[mode]:
+            where = '%s %s at %dpx' % (mode, r['id'][:60], size[0])
+            f = len(out)
+            if r['bad']:
+                out.append('%s: drawn outside the picture: %s' % (where, '; '.join(r['bad'][:3])))
+            if any(g > r['M'] + r['sq'] + 1 for g in r['gaps']):
+                out.append('%s: an empty band round the shape (left, top, right, bottom %s px; margin %s, grid square %.1f)'
+                           % (where, [round(g, 1) for g in r['gaps']], r['M'], r['sq']))
+            for a in r['arcs']:
+                depth, width = min(a['w'], a['h']), max(a['w'], a['h'])
+                if abs(width - a['chord']) > 1 or abs(depth - a['chord'] / 2) > 1:
+                    out.append('%s: half arc %d drawn %.1f wide and %.1f deep, not %.1f by %.1f' % (where, a['i'], width, depth, a['chord'], a['chord'] / 2))
+                if a['off'] > 1.5:
+                    out.append('%s: half arc %d bulges the wrong way (its middle %.1f px from the shape\'s)' % (where, a['i'], a['off']))
+            if len(out) > f:
+                failing[mode] = failing.get(mode, 0) + 1
+    return failing
+
+
 def check(html, out, engine=True, drawn=False, sizes=(), sessions=SESSIONS):
     from playwright.sync_api import sync_playwright
     static_checks(html, out)
@@ -830,6 +897,12 @@ def check(html, out, engine=True, drawn=False, sizes=(), sessions=SESSIONS):
                     guarded(out, 'the drawing checks', lambda: info.update({'drawn': check_drawn(page, out)}))
                 out.extend('page error: ' + e for e in errs)
                 br.close()
+            if drawn:
+                for size in FRAME_SIZES:
+                    br, page, errs = open_page(pw, base, html, size)
+                    guarded(out, 'the frame checks at %dpx' % size[0],
+                            lambda: info.setdefault('framed', {}).update({size[0]: check_frame(page, out, size)}))
+                    br.close()
             for size in sizes:
                 br, page, errs = open_page(pw, base, html, size)
                 guarded(out, 'play at %dx%d' % size, lambda: play(page, size, out))
@@ -881,6 +954,17 @@ PLANTS = [
     ('the old "in m²" prompt',
      [("'A walk: the perimeter.' : 'A cover: the area.'", "'A walk: the perimeter, in m.' : 'A cover: the area, in m².'")], 'play',
      r'the line under the question reads'),
+    # TAKE-A-WALK-FRAME (Jon's play-test, 23 Oct 2026).
+    ('the arc left out of the picture\'s box',
+     [("      for (var j = 0; j <= 64; j++) {", "      for (var j = 0; j <= 0; j++) {")], 'drawn', r'drawn outside the picture|an empty band'),
+    ('the arc bulging the other way from the box',
+     [("    var sweep = p.a1 > p.a0 ? 0 : 1, span", "    var sweep = p.a1 > p.a0 ? 1 : 0, span")], 'drawn', r'bulges the wrong way'),
+    ('a full circle offset half outside the picture',
+     [("xs.push(p.c[0] + p.r * Math.cos(t));", "xs.push(p.c[0] + p.r * Math.cos(t) + (Math.abs(p.a1 - p.a0) > 6 ? p.r : 0));")], 'drawn',
+     r':circle:.*drawn outside the picture'),
+    ('a label placed outside the picture',
+     [("    if (Math.abs(nx) > 0.9) return [mx + nx * 6, my + 4,", "    if (Math.abs(nx) > 0.9) return [mx + nx * 60, my + 4,")], 'drawn',
+     r'drawn outside the picture: lab'),
 ]
 
 
@@ -899,7 +983,7 @@ def selftest(html):
             ok = False
             continue
         got = []
-        check(planted, got, engine=kind == 'engine', sizes=[(1280, 800)] if kind == 'play' else [], sessions=8)
+        check(planted, got, engine=kind == 'engine', drawn=kind == 'drawn', sizes=[(1280, 800)] if kind == 'play' else [], sessions=8)
         hit = [g for g in got if re.search(want, g)]
         ok = ok and bool(hit)
         print('  self-test %-62s %s' % (what, ('caught: ' + hit[0][:110]) if hit else '*** MISSED ***' + (' (other findings: %s)' % got[0][:80] if got else '')))
@@ -924,6 +1008,8 @@ def main():
                      sizes=SIZES if part in (None, '3') else [], sessions=args.sessions)
     if 'pools' in info:
         print('%s: pools %s; %d sessions a stage' % (SLUG, info['pools'], args.sessions))
+    if 'framed' in info:
+        print('%s: frame faults (questions) by width: %s' % (SLUG, info['framed']))
     if 'drawn' in info:
         print('%s: %d questions drawn and read back' % (SLUG, info['drawn']))
     if 'played' in info:

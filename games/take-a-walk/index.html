@@ -80,6 +80,7 @@ a.back-link:hover{color:var(--text)}
 /* The pitch: drawn to scale on a 1 m (or 2 m, 5 m) grid, its lengths labelled. */
 .pitch{margin:0 auto;width:100%;max-width:440px;display:flex;flex-direction:column;align-items:center;gap:.3rem}
 .pitch svg{display:block;width:100%;height:auto;touch-action:manipulation}
+/* Each picture is framed round its shape (H.layout): shown at its own width, never stretched past it. */
 .pitch figcaption{font-family:var(--font-num);font-size:.9rem;color:var(--text);min-height:1.2em;text-align:center}
 .pitch .grid{stroke:var(--gridline);stroke-width:1}
 .pitch .shape{fill:var(--grass);stroke:none}
@@ -970,18 +971,27 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     return { x0: Math.min.apply(null, xs), x1: Math.max.apply(null, xs), y0: Math.min.apply(null, ys), y1: Math.max.apply(null, ys) };
   }
   // The scale (px per metre, in the SVG's own units) and the map from metres to the drawing. Exported for the verifier.
+  // The picture is framed round the shape drawn (TAKE-A-WALK-FRAME, Jon's play-test, 23 Oct 2026): the box is the
+  // drawn geometry's, arcs included on the side they bulge, and the margin M is the same on all four sides. At most VW
+  // wide and VHMAX tall; the SVG is never shown wider than its own width.
   H.layout = function (sh) {
     var b = bbox(sh), w = b.x1 - b.x0, h = b.y1 - b.y0;
     var k = Math.min((VW - 2 * M) / w, (VHMAX - 2 * M) / h, KMAX);
-    var ox = (VW - w * k) / 2;
-    return { k: k, vw: VW, vh: h * k + 2 * M, b: b,
+    var ox = M;
+    return { k: k, vw: w * k + 2 * M, vh: h * k + 2 * M, b: b,
       X: function (x) { return ox + (x - b.x0) * k; }, Y: function (y) { return M + (b.y1 - y) * k; } };
   };
   function f1(v) { return (Math.round(v * 10) / 10).toFixed(1); }
   function pieceD(p, L, first) {
     if (p.t === 'L') return (first ? 'M' + f1(L.X(p.a[0])) + ' ' + f1(L.Y(p.a[1])) : '') + ' L' + f1(L.X(p.b[0])) + ' ' + f1(L.Y(p.b[1]));
-    var e = H.pieceEnds(p), d = first ? 'M' + f1(L.X(e[0][0])) + ' ' + f1(L.Y(e[0][1])) : '', R = f1(p.r * L.k);
-    var sweep = p.a1 > p.a0 ? 1 : 0, span = Math.abs(p.a1 - p.a0);
+    var e = H.pieceEnds(p), d = first ? 'M' + f1(L.X(e[0][0])) + ' ' + f1(L.Y(e[0][1])) : '';
+    // A half arc's radius is written just under half its drawn chord (the ends are rounded to 0.1 px): SVG then draws
+    // the exact semicircle on that chord. Rounded up instead, it would draw less than half a circle, too shallow.
+    var R = (Math.max(0, p.r * L.k - 0.06)).toFixed(2);
+    // The shape runs counterclockwise with y up; the SVG's y runs down, which mirrors the turn: an arc counterclockwise
+    // in the shape's coordinates is drawn with sweep 0 (counterclockwise on screen), so it bulges the way its geometry
+    // does (TAKE-A-WALK-FRAME: sweep 1 drew every half arc on the wrong side).
+    var sweep = p.a1 > p.a0 ? 0 : 1, span = Math.abs(p.a1 - p.a0);
     if (span > 2 * Math.PI - 1e-9) {   // a whole circle: two halves
       var mx = p.c[0] - p.r * Math.cos(p.a0), my = p.c[1] - p.r * Math.sin(p.a0);
       return d + ' A' + R + ' ' + R + ' 0 0 ' + sweep + ' ' + f1(L.X(mx)) + ' ' + f1(L.Y(my)) +
@@ -1048,7 +1058,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     });
     out.push('<g class="walker" data-walker="1" hidden><circle r="4.5" cx="0" cy="-9"/><line x1="0" y1="-4" x2="0" y2="5"/><line x1="0" y1="5" x2="-3.5" y2="11"/><line x1="0" y1="5" x2="3.5" y2="11"/><line x1="-4" y1="0" x2="4" y2="0"/></g>');
     if (opts.tap) sh.path.forEach(function (p, i) { out.push('<path class="hit" data-piece="' + i + '" d="' + pieceD(p, L, true) + '"/>'); });
-    return '<figure class="pitch" data-fam="' + sh.fam + '"><svg viewBox="0 0 ' + VW + ' ' + f1(L.vh) + '" role="img" aria-label="' +
+    return '<figure class="pitch" data-fam="' + sh.fam + '"><svg viewBox="0 0 ' + f1(L.vw) + ' ' + f1(L.vh) + '" width="' + f1(L.vw) + '" style="max-width:' + f1(L.vw) + 'px" role="img" aria-label="' +
       esc(describe(q)) + '" data-k="' + L.k + '" data-x0="' + L.b.x0 + '" data-y1="' + L.b.y1 + '" data-ox="' + f1(L.X(L.b.x0)) + '" data-m="' + M + '">' +
       out.join('') + '</svg><figcaption></figcaption></figure>';
   };
