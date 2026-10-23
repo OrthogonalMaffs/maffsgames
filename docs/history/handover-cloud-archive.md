@@ -3,6 +3,15 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-23 (cloud): TAKE-A-WALK (contract verbatim: `docs/history/contracts/2026-10-23-take-a-walk.md`). **DONE (#495, ce1810e; main run 39950614778 green, 60 of 60 jobs).** Merged unlisted for Jon to play at https://maffsgames.co.uk/games/take-a-walk/.
+
+- **Lane exception (Jon, 23 Oct 2026, 08:32):** the cloud lane builds the game and edits what a new unlisted game needs: roster Unlisted row 100 (`by stage`), `data/games.json`, `NOT_ON_HUB`, and the suites of check-levels, check-answer-lock, check-theme, check-teacher-invite and audit-register.
+- **Pools** (generated, filtered once, no redraw): Stage 1 176, Stage 2 282, Stage 3 162, Stage 4 150. **Ordering measure** (Jon accepted, 23 Oct): working backwards last, then fewest parts, then the largest length on the drawing (or the given total).
+- **Missing lengths** are fixed by grid lines: labelled sides and dashed dimensions join the missing side's two lines (`H.derive`; the verifier's own union-find). Stage 4's three missing are T shapes with a semicircle (the bar's two ends match, so do the stem's two sides). Parallelograms only alone (Jon accepted).
+- **Levels:** `ks3` and `gcse` declared, no picker, boards `stage-1`..`stage-4` (Free Daily Pizza's pattern; check-levels requires the roster's levels). **Next** keeps MaffsNext's 3 s floor, no fallback (Jon accepted).
+- **Verifier** `scripts/verify-take-a-walk.py`, four parts (local 1: ~60 s, 2: ~5 s, 3: ~85 s, 4: ~95 s); the seven plants each caught for their own reason. It caught two faults of the build, fixed: two circles with one id (radius vs diameter label); a wrong tap highlighted nothing when the chain runs through a dashed dimension (the house).
+- **Local leftover:** the worktree `/home/user/taw` is removed; its local branch `claude/taw-wip` (never pushed, its commits squash-merged in #495) is left, as branches are never deleted by hand.
+
 ## 2026-10-23 (cloud): TAKE-A-WALK-RANGES (contract in Jon's message of 23 Oct, after his play-test). **DONE (#497, 80eca0a; main run 39963313415 green, 58 of 58 jobs).**
 
 - **Why:** Stage 1 (non-calculator) asked for 16 m x 7 m; the prompt line "A cover: the area, in m²." gave away the unit.
