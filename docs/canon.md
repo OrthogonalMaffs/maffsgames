@@ -485,6 +485,17 @@ exam has a non-calculator paper and calculator papers.
 | `not allowed` | Practice for a non-calculator paper; the numbers are chosen to be done by hand | "Non-calculator" (Jon, 6 Oct 2026) |
 | `optional` | Either works | worded when the first game is tagged |
 | `untagged` | Not yet decided. Every game starts here and is tagged in its own PR | nothing |
+| `by stage` | A staged game whose stages differ (contract CALC-BY-STAGE, Jon, 23 Oct 2026): each stage has one of the four values above it, `untagged` excepted | each stage's badge on its choice; the header shows the badge of the stage being played |
+
+**`by stage`: the map, the badges, the check (CALC-BY-STAGE, 23 Oct 2026).** A game tagged `by stage` declares
+its stages once in its page, keyed by its stage (mode) keys: `<script type="application/json" id="maffs-calc-stages">{"stage-1": "not allowed", …, "stage-4": "scientific"}</script>`,
+each value `required`, `scientific`, `not allowed` or `optional`. Each stage's choice on the start screen carries that stage's badge,
+the usual markup and wording with `data-stage="<key>"` added (an `optional` stage shows none until that value is worded), and
+the header shows the badge of the stage being played, filled in at run time. `scripts/check-calculator.py` enforces, statically: the
+map is there and valid, and only on a `by stage` game; one badge per badged stage, of its value; no other full badge on the page;
+calculator.js and keypad.js when any stage is `required` or `scientific`, a `keys: 'scientific'` mount when any stage is `scientific`,
+and no calculator.js when no stage needs one. That the calculator mounts in its stages only, and the header follows the stage, is
+checked by the game's own verifier in play. Whole-game values are checked exactly as before. First planned user: `take-a-walk` (in its own PR).
 
 **One badge, one style.** The start screen shows `<span class="calc-badge" data-calc="…">…</span>`,
 styled once in `schools/assets/theme.css` (`.calc-badge`; `data-calc="required"` takes `--hint`,

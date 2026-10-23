@@ -26,16 +26,32 @@ Fails on:
   - a page that includes calculator.js without schools/assets/keypad.js (MaffsKeypad, the phone
     keypad its answer mode composes). keypad.js itself may load on any page, whatever the roster says:
     it is the keypad for typed answers, with no calculator in it;
-  - a roster value outside required / scientific / not allowed / optional / untagged; a roster with no rows at
-    all (the table changed shape; this check is blind).
+  - a roster value outside required / scientific / not allowed / optional / untagged / by stage; a roster with no
+    rows at all (the table changed shape; this check is blind).
+A `by stage` game (contract CALC-BY-STAGE, Jon, 23 Oct 2026) is a staged game whose stages differ: it declares
+<script type="application/json" id="maffs-calc-stages">{"stage-1": "not allowed", ..., "stage-4": "scientific"}</script>
+once in its page, keyed by its stage (mode) keys, each value required / scientific / not allowed / optional. Each
+stage's choice on the start screen carries that stage's badge, the usual markup with data-stage="<key>" added
+(an `optional` stage shows none: its wording is decided when the first game is tagged optional). Fails on:
+  - `by stage` with no map, a map that is not a JSON object of strings, or a value outside those four;
+  - a map on a game whose roster value is not `by stage`;
+  - a badged stage without exactly one badge of its value's markup and wording, a badge naming no stage in the
+    map, an `optional` stage with a badge, or a full badge with no data-stage (the header's badge, of the
+    stage being played, is filled in at run time and is empty in the source);
+  - a map with a required or scientific stage on a page without calculator.js (and keypad.js, as above); a map
+    with a scientific stage that never mounts MaffsCalc with keys: 'scientific'; calculator.js on a map with
+    no calculator stage.
+That the calculator is mounted in the calculator stages only, and the header shows the stage's badge, is the
+game's own verifier's job (it plays every stage), not this static check's.
 
 Stdlib only; about a second. A self-test runs first on every run.
 """
-import argparse, pathlib, re, shutil, sys, tempfile
+import json, argparse, pathlib, re, shutil, sys, tempfile
 
 BASE = pathlib.Path(__file__).resolve().parent.parent
 ROSTER = ".claude/rules/game-roster.md"
-VALUES = {"required", "scientific", "not allowed", "optional", "untagged"}
+VALUES = {"required", "scientific", "not allowed", "optional", "untagged", "by stage"}
+STAGE_VALUES = {"required", "scientific", "not allowed", "optional"}   # a `by stage` map's values
 CALC_VALUES = {"required", "scientific"}            # the two values that load the on-screen calculator
 INCLUDE = re.compile(r'<script\b[^>]*\bsrc="[^"]*schools/assets/calculator\.js"', re.I)
 # The phone keypad (MaffsKeypad) may load on any page; the calculator composes it, so every page that
@@ -44,6 +60,13 @@ KEYPAD = re.compile(r'<script\b[^>]*\bsrc="[^"]*schools/assets/keypad\.js"', re.
 BADGE = re.compile(r'<span class="calc-badge" data-calc="required"[^>]*>Calculator required</span>')
 SCI_BADGE = re.compile(r'<span class="calc-badge" data-calc="scientific"[^>]*>Scientific calculator required</span>')
 SCI_MOUNT = re.compile(r"""keys\s*:\s*['"]scientific['"]""")
+STAGE_MAP = re.compile(r'<script type="application/json" id="maffs-calc-stages">(.*?)</script>', re.S)
+# Any full badge (markup and wording); its data-stage, if any, is read separately.
+ANY_BADGE = re.compile(r'<span class="calc-badge"([^>]*)>([^<]+)</span>')
+# The markup and wording of each value that shows a badge (canon §4.4).
+BADGE_FOR = {"required": ("required", "Calculator required"),
+             "scientific": ("scientific", "Scientific calculator required"),
+             "not allowed": ("not-allowed", "Non-calculator")}
 # A game row: | 12 | Name | `slug` | ... | calculator |   (a withdrawn game is numbered "—")
 ROW = re.compile("^\\|\\s*(?:\\d+|—)\\s*\\|[^|]*\\|\\s*`([a-z0-9-]+)`\\s*\\|.*\\|\\s*([^|]*?)\\s*\\|\\s*$")
 SKIP_DIRS = {".git", ".github", ".claude", "node_modules", "scripts", "docs", "tools"}
@@ -72,6 +95,10 @@ def check(root):
         if not page.exists():
             continue
         src = page.read_text(encoding="utf-8")
+        m = STAGE_MAP.search(src)
+        if val == "by stage" or m:
+            fails.extend(by_stage(slug, val, src, m))
+            continue
         inc, badge, sbadge = bool(INCLUDE.search(src)), bool(BADGE.search(src)), bool(SCI_BADGE.search(src))
         if inc and not KEYPAD.search(src):
             fails.append("%s: loads the on-screen calculator without schools/assets/keypad.js, which its answer "
@@ -108,6 +135,58 @@ def check(root):
     return fails
 
 
+def by_stage(slug, val, src, m):
+    """The failures of a game tagged `by stage`, or of a stage map on a game tagged anything else."""
+    if val != "by stage":
+        return ["%s: declares a per-stage calculator map, but its roster field is %r, not 'by stage'" % (slug, val)]
+    if not m:
+        return ["%s: roster says by stage, but the page has no <script type=\"application/json\" "
+                "id=\"maffs-calc-stages\"> map" % slug]
+    try:
+        stages = json.loads(m.group(1))
+    except ValueError as e:
+        return ["%s: the calculator stage map is not valid JSON (%s)" % (slug, e)]
+    if not isinstance(stages, dict) or not stages or not all(isinstance(v, str) for v in stages.values()):
+        return ["%s: the calculator stage map must be a non-empty object of stage key -> value" % slug]
+    fails = []
+    for k, v in stages.items():
+        if v not in STAGE_VALUES:
+            fails.append("%s: stage %r has calculator value %r, not one of %s" % (slug, k, v, sorted(STAGE_VALUES)))
+    if fails:
+        return fails
+    found = {}
+    for attrs, text in ANY_BADGE.findall(src):
+        st = re.search(r'\bdata-stage="([^"]*)"', attrs)
+        calc = re.search(r'\bdata-calc="([^"]*)"', attrs)
+        if not st:
+            fails.append("%s: a by-stage game shows a badge with no data-stage (%r)" % (slug, text.strip()))
+            continue
+        found.setdefault(st.group(1), []).append(((calc.group(1) if calc else None), text.strip()))
+    for k in sorted(set(found) - set(stages)):
+        fails.append("%s: a badge names stage %r, which is not in the stage map" % (slug, k))
+    for k, v in sorted(stages.items()):
+        got = found.get(k, [])
+        if v == "optional":
+            if got:
+                fails.append("%s: stage %r is optional, which shows no badge, but has %s" % (slug, k, got))
+        elif got != [BADGE_FOR[v]]:
+            fails.append("%s: stage %r is %r, so it needs one badge data-calc=%r reading %r; it has %s"
+                         % (slug, k, v, BADGE_FOR[v][0], BADGE_FOR[v][1], got or "none"))
+    values = set(stages.values())
+    inc = bool(INCLUDE.search(src))
+    if values & CALC_VALUES:
+        if not inc:
+            fails.append("%s: a stage needs a calculator (%s), but the page does not load "
+                         "schools/assets/calculator.js" % (slug, ", ".join(sorted(values & CALC_VALUES))))
+        if not KEYPAD.search(src):
+            fails.append("%s: a stage needs a calculator, but the page does not load schools/assets/keypad.js" % slug)
+        if "scientific" in values and not SCI_MOUNT.search(src):
+            fails.append("%s: a stage is scientific, but the page never mounts MaffsCalc with keys: 'scientific'" % slug)
+    elif inc:
+        fails.append("%s: loads the on-screen calculator, but no stage in its map needs one" % slug)
+    return fails
+
+
 def selftest():
     """Each breach planted in a scratch copy of the relevant files must fail; the clean copy must pass."""
     tags = roster(BASE)
@@ -116,6 +195,19 @@ def selftest():
     if not req or not other:
         return ["self-test: needs one required and one other game in the roster"], 0
     r, o = req[0], other[0]
+    # A `by stage` game that exists only in the scratch copy (CALC-BY-STAGE): three non-calculator stages and a
+    # scientific fourth, each stage's choice with its badge, the header's badge empty until play.
+    f = "calc-stage-fixture"
+    fixture = ('<html><head><script src="../../schools/assets/keypad.js"></script>'
+               '<script src="../../schools/assets/calculator.js"></script></head><body>'
+               '<script type="application/json" id="maffs-calc-stages">{"stage-1": "not allowed", '
+               '"stage-2": "not allowed", "stage-3": "not allowed", "stage-4": "scientific"}</script>'
+               '<header><span class="calc-badge" id="calcBadge" hidden></span></header>' +
+               ''.join('<button data-mode="stage-%d">Stage %d <span class="calc-badge" data-calc="not-allowed" '
+                       'data-stage="stage-%d">Non-calculator</span></button>' % (i, i, i) for i in (1, 2, 3)) +
+               '<button data-mode="stage-4">Stage 4 <span class="calc-badge" data-calc="scientific" '
+               'data-stage="stage-4">Scientific calculator required</span></button>'
+               "<script>function go(){ MaffsCalc.mount(el, {keys: 'scientific'}); }</script></body></html>")
 
     def scratch():
         d = pathlib.Path(tempfile.mkdtemp(prefix="calc-check-"))
@@ -124,7 +216,13 @@ def selftest():
         for s in (r, o):
             (d / "games" / s).mkdir(parents=True)
             shutil.copy(BASE / "games" / s / "index.html", d / "games" / s / "index.html")
+        (d / "games" / f).mkdir(parents=True)
+        (d / "games" / f / "index.html").write_text(fixture, encoding="utf-8", newline='')
+        with open(d / ROSTER, "a", encoding="utf-8", newline='') as fh:
+            fh.write("\n| 999 | Fixture | `%s` | KS3 | Number | scratch only | by stage |\n" % f)
         return d
+
+    fpage = lambda d: d / "games" / f / "index.html"
 
     def edit(path, fn):
         path.write_text(fn(path.read_text(encoding="utf-8")), encoding="utf-8", newline='')
@@ -158,6 +256,26 @@ def selftest():
                     edit(d / "games" / r / "index.html", lambda s: BADGE.sub(
                         '<span class="calc-badge" data-calc="scientific">Scientific calculator required</span>', s)
                         .replace("</body>", "<script>/* keys: 'scientific' */</script></body>", 1))), False),
+        # CALC-BY-STAGE: the clean fixture passes in "clean copy passes"; each breach below must fail.
+        ("by stage with no map",
+         lambda d: edit(fpage(d), lambda s: STAGE_MAP.sub("", s)), True),
+        ("a stage map value outside the list",
+         lambda d: edit(fpage(d), lambda s: s.replace('"stage-2": "not allowed"', '"stage-2": "maybe"', 1)), True),
+        ("a stage badge disagreeing with its map value",
+         lambda d: edit(fpage(d), lambda s: s.replace(
+             'data-calc="not-allowed" data-stage="stage-3">Non-calculator',
+             'data-calc="scientific" data-stage="stage-3">Scientific calculator required', 1)), True),
+        ("a scientific stage with no scientific mount",
+         lambda d: edit(fpage(d), lambda s: SCI_MOUNT.sub("keys: 'basic'", s)), True),
+        ("a map that needs a calculator, but no calculator.js",
+         lambda d: edit(fpage(d), lambda s: INCLUDE.sub("<script data-x", s)), True),
+        ("calculator.js on a map with no calculator stage",
+         lambda d: edit(fpage(d), lambda s: s.replace('"stage-4": "scientific"', '"stage-4": "not allowed"', 1)
+                        .replace('data-calc="scientific" data-stage="stage-4">Scientific calculator required',
+                                 'data-calc="not-allowed" data-stage="stage-4">Non-calculator', 1)), True),
+        ("a stage map on a whole-game-tagged page",
+         lambda d: edit(d / "games" / r / "index.html", lambda s: s.replace(
+             "</body>", '<script type="application/json" id="maffs-calc-stages">{"stage-1": "required"}</script></body>', 1)), True),
         ("a non-game page loads it",
          lambda d: (d / "about").mkdir() or (d / "about" / "index.html").write_text(
              '<script src="/schools/assets/calculator.js"></script>', encoding="utf-8", newline=''), True),
@@ -196,9 +314,10 @@ def main():
     tags = roster(root)
     req = sorted(s for s, v in tags.items() if v == "required")
     sci = sorted(s for s, v in tags.items() if v == "scientific")
-    print("PASS: %d roster games; the on-screen calculator loads on exactly the 'required' ones (%s) and the "
-          "'scientific' ones (%s); self-test %d cases" % (len(tags), ", ".join(req) or "none", ", ".join(sci) or "none",
-                                                         ncases))
+    staged = sorted(s for s, v in tags.items() if v == "by stage")
+    print("PASS: %d roster games; the on-screen calculator loads on exactly the 'required' ones (%s), the "
+          "'scientific' ones (%s) and the 'by stage' ones whose map needs it (%s); self-test %d cases"
+          % (len(tags), ", ".join(req) or "none", ", ".join(sci) or "none", ", ".join(staged) or "none", ncases))
     return 0
 
 
