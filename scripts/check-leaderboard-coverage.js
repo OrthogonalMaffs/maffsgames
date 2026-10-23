@@ -160,9 +160,7 @@ const NOT_ON_HUB = {
   // Jon, 6 Oct 2026 (20:30): unlisted for the tranche 3-6 audits' faults (canon SR-20) until
   // each game's verifier merges and its register entries are fixed; the hub row is restored, and this
   // entry removed, in that PR.
-  'glorious-gantt': 'unlisted pending its tranche 4 audit fix; hub row restored at relisting',
-  // New (contract HOW-MANY-PARTS, Jon, 20 Oct 2026): merged unlisted for Jon to play; the hub row is added at listing.
-  'how-many-parts': 'new, unlisted until Jon has played and approved it; hub row added at listing'
+  'glorious-gantt': 'unlisted pending its tranche 4 audit fix; hub row restored at relisting'
 };
 
 // The levels a game submits under are read from its source: the level argument of
@@ -179,7 +177,8 @@ const LEVEL_OVERRIDES = {
   'chart-interrogator':   [['gcse', 'alevel', 'core', 'l4'], "selectedLevel = the level button's data-level; the L4 button says 'l4'"],
   'the-perfect-prank':    [['ks3'], "const LEVEL='ks3'; no roster row (unlisted prototype), so the default rule finds nothing"],
   'correlation-or-coincidence': [['gcse'], "const LEVEL='gcse': one board, as before the rebuild (4 Oct 2026); the roster's A-Level and Core tiers play the same bank"],
-  'simultaneous-solver':  [['foundation-s1', 'foundation-s2', 'foundation-s3', 'foundation-s4', 'foundation-s5', 'alevel'], "BOARD = board(): STAGES[stage].board for Foundation (one board per stage, never the old 'gcse' board), 'alevel' kept (Jon, 6 Oct 2026)"]
+  'simultaneous-solver':  [['foundation-s1', 'foundation-s2', 'foundation-s3', 'foundation-s4', 'foundation-s5', 'alevel'], "BOARD = board(): STAGES[stage].board for Foundation (one board per stage, never the old 'gcse' board), 'alevel' kept (Jon, 6 Oct 2026)"],
+  'how-many-parts':       [['foundation-s1', 'foundation-s2', 'foundation-s3', 'foundation-s4', 'foundation-s5', 'gcse'], "boardKey(): H.FSTAGES[mode].board for Foundation (one board per stage, the level staying ks3), the level 'gcse' for Advanced (one board; contract HMP-LEVELS, 22 Oct 2026)"]
 };
 
 // Games that may submit only under keys ending '-tournament' (SR-22): the level argument of every submitScore()

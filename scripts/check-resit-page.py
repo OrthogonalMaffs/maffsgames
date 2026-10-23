@@ -39,9 +39,11 @@ PAGE = "essentials/index.html"
 # returned the same day, rebuilt (labels before the answer, three answers, SR-14); equation-builder returned
 # 5 Oct 2026, its marking rebuilt (SR-13, the verifier's ACCEPTED lists). just-pythag-it-bruv added 8 Oct 2026 (Jon approved
 # it after playing it; contract RELIST-3): Geometry and measures, one level (it has no
-# picker and reads no ?level=, so the card says "One level"), calculator required.
+# picker and reads no ?level=, so the card says "One level"), calculator required. how-many-parts added 23 Oct 2026
+# (Jon approved it after playing it; contract HMP-LIST): Number, after free-daily-pizza; it shows a Foundation/Advanced
+# picker, so its card is "Choose: Foundation" (key ks3).
 SUITE = [
-    ("number", "Number", ["six-sevens-bruv", "free-daily-pizza", "negative-number-line",
+    ("number", "Number", ["six-sevens-bruv", "free-daily-pizza", "how-many-parts", "negative-number-line",
         "decimal-detective", "think-of-a-number", "factor-race", "prime-factorisation",
         "estimation-engine", "estimation-golf", "unit-converter"]),
     ("algebra", "Algebra", ["formula-plug-in", "like-terms-collector", "linear-equation-solver",

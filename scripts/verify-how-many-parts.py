@@ -1836,8 +1836,8 @@ def prepare(page, reload=False):
 
 
 def static_checks(html, out):
-    if 'name="robots" content="noindex"' not in html:
-        out.append('the page is not noindex (the game is unlisted)')
+    if 'name="robots" content="noindex"' in html:   # listed 23 Oct 2026 (Jon approved it; HMP-LIST)
+        out.append('the page is noindex, but the game is listed')
     # Typed fractions are marked only by the shared MaffsAnswer.fractionForm (FRACTION-FORM): no other marker.
     if 'MaffsAnswer.fractionForm(raw, q.keyParts, { form: q.form })' not in html:
         out.append('the typed answer is not marked by MaffsAnswer.fractionForm against the key')

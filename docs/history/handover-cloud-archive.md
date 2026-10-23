@@ -3,6 +3,14 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-22 (cloud): FDP-KEY-COLLIDE (contract verbatim: `docs/history/contracts/2026-10-22-fdp-key-collide.md`; Jon's rulings that put FDP-SPREAD first: `docs/history/contracts/2026-10-22-fdp-spread.md`). **DONE (#485, fac983f, merged 18:33 UK; main run 39823720730 green, Gate 17:41 UTC).**
+
+- **Done:** one pass after the bank is built (`FDP.keyIsSlip`, as #453) removes every question where subtracting the percentage, or the percentage number put on the bottom, gives the key: stage 1 loses 1 of 90 (10% as a fraction, `S1:conv:p>f:1/10`), stage 3 1 of 138 (60% of 150, `S3:pct:60:150`), stages 2 and 4 none. No redraw (canon §12, SR-5).
+- **Verifier (part 1):** the removed set recomputed from the parameters; every served item checked for both slips; the unfiltered bank planted and caught. Survey: free-daily-pizza coincidence 2 -> **0** (its 80 "methods agree" rows are the survey's accepted identity class; its entry needed no change).
+- **The daily pizza changes on every date** from the deploy: the draw takes from one shuffled list per stage, so two fewer items move every later pick (30 of the next 30 dates differ). **Merged early on Jon's ruling (22 Oct, 18:3x), accepting today's board mixing two sets:** deployed to Pages at **18:34 UK** (17:33:57 UTC). `daily-2026-10-22` served the old set before 18:34 and the new set after; **23 Oct 2026 is the first fully changed date.** Main's newest run (39797799822) had every job finished before the merge, as ruled.
+- **Claim released** (`scripts/answer-lock-state.json` empty).
+- **GitHub record left open (for the home lane):** in runs 39823720730 and 39783533845 one job (Content verifiers 10; Answer lock L4) still reads `in_progress` with no completion time although all its steps, "Complete job" included, read completed/success and the Gate passed after it. A watcher waiting on every job's status never returns on such a run; read the steps or the Gate.
+
 ## 2026-10-22 (cloud): K-PUNCTUATION-SCAN (report only; contract verbatim: `docs/history/contracts/2026-10-22-k-punctuation-scan.md`). **DONE (#483, 1d34ac0; main run 39787326200 green, 54 jobs).**
 
 - **Report:** `docs/audits/k-punctuation-scan-2026-10.md`; script `scripts/scan-k-punctuation.py` (not in CI; `--selftest` plants the fault and its glued control; `--static-only` lists the source joins).
