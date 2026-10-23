@@ -25,7 +25,7 @@
   "Correlation or Coincidence (bank, graphs' r, labels before the answer, phone fit)": "32",
   "Curling Friction (every numerical key recomputed exactly from its own context, every option checked, every item marked in Chromium)": "33",
   "Decimal Detective (Line-Up and Round Up keys recomputed, Place It start state, every answer marked in Chromium)": "36",
-  "Differentiation Duel (every key and option differentiated again with SymPy, explanations checked, every option marked in Chromium)": "32",
+  "Differentiation Duel (every key and option differentiated again with SymPy, explanations checked, every option marked in Chromium)": "29",
   "Dimension Checker (every key and option checked by dimension algebra, worked steps recomputed, every item marked in Chromium)": "26",
   "Distinctly Average (independent recomputation)": "16",
   "Eigenvalue Extractor (every characteristic equation solved in SymPy; every option read as its list of eigenvalues and classified; every worked line and check sum recomputed; every option pressed in Chromium)": "14",
