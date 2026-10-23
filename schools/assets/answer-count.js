@@ -13,7 +13,9 @@
    analytics script run as Jon and share his concurrent-execution limit, so a class opening games together must not be
    able to crowd out event logging). Only the HOMEPAGE fetches the live address, once on load and then every minute while
    the tab is visible, for 10 minutes at most, and its number counts up to a higher figure (never down; no animation
-   under prefers-reduced-motion). A source whose as_of is more than 7 days old is ignored, a figure below its threshold
+   under prefers-reduced-motion). The homepage shows the figure as a headline, and "Updated every 5 minutes" (the counts
+   script's refresh) under it only while the figure on screen is the live one: never from the daily file, and removed
+   again if a later refresh fails. A source whose as_of is more than 7 days old is ignored, a figure below its threshold
    shows nothing, and so does a page where nothing loads. A page with no mount (52dle, Equatle, Estimation Golf, Factor
    Theorem have no start screen) simply shows nothing: that is correct, not a failure.
 
@@ -71,9 +73,41 @@
   }
   Mount.prototype.set = function (n) {
     this.display = n;
-    this.el.textContent = line(n);
-    this.el.hidden = false;
+    if (this.el.hasAttribute('data-maffs-answer-total')) {
+      // the homepage headline: the number and its label are separate spans (the page styles them); textContent still
+      // reads "N questions answered since September"
+      var num = this.el.querySelector('.ac-num');
+      if (!num) {
+        this.el.innerHTML = '<span class="ac-num"></span> <span class="ac-label">questions answered since September</span>';
+        num = this.el.querySelector('.ac-num');
+      }
+      num.textContent = format(n);
+    } else {
+      this.el.textContent = line(n);
+    }
     this.el.setAttribute('data-maffs-count', String(n));
+    this.el.hidden = false;
+  };
+  // "Updated every 5 minutes" (the counts script refreshes every 5 minutes): present only while the figure on screen is
+  // the live one. A sibling of the block, so a hidden block never has it and the block's text is unchanged.
+  Mount.prototype.updated = function (on) {
+    var cur = this.el.nextElementSibling;
+    cur = cur && cur.hasAttribute('data-maffs-answer-updated') ? cur : null;
+    if (on && !cur) {
+      var d = this.el.ownerDocument.createElement('div');
+      d.className = 'answer-updated';
+      d.setAttribute('data-maffs-answer-updated', '');
+      d.textContent = 'Updated every 5 minutes';
+      this.el.parentNode.insertBefore(d, this.el.nextSibling);
+    } else if (!on && cur) {
+      cur.parentNode.removeChild(cur);
+    }
+  };
+  // Called with each live response: the line stays only when the live figure is valid, over the threshold and the
+  // one on screen (a lower live figure leaves the file's higher one showing, which is not the live figure).
+  Mount.prototype.live = function (v) {
+    var ok = v !== null && v >= this.min && v >= this.shown;
+    this.updated(ok);
   };
   Mount.prototype.offer = function (v) {
     if (v === null || v < this.min || v <= this.shown) return;     // below threshold, or not higher: ignored
@@ -105,18 +139,22 @@
     if (!mounts.length) return Promise.resolve();                  // no mount: nothing to show, and no error
     if (starts.length) style(doc);
 
-    function apply(src) {
+    function apply(src, isLive) {
       var t = now();
-      mounts.forEach(function (x) { x.m.offer(figure(src, opts.slug, x.total, t)); });
+      mounts.forEach(function (x) {
+        var v = figure(src, opts.slug, x.total, t);
+        x.m.offer(v);
+        if (isLive && x.total) x.m.live(v);
+      });
     }
     function safe(url) {
       try { return Promise.resolve(opts.get(url)).catch(function () { return null; }); } catch (e) { return Promise.resolve(null); }
     }
     // Only the homepage (a total mount) ever calls the live address.
     var useLive = opts.live && totals.length > 0;
-    function live() { return useLive ? safe(LIVE_URL).then(apply) : Promise.resolve(); }
+    function live() { return useLive ? safe(LIVE_URL).then(function (src) { apply(src, true); }) : Promise.resolve(); }
 
-    return safe(DATA_URL).then(apply).then(live).then(function () {
+    return safe(DATA_URL).then(function (src) { apply(src, false); }).then(live).then(function () {
       if (useLive && opts.setInterval) {
         var t0 = now();
         var id = opts.setInterval(function () {
