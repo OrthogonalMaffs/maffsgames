@@ -457,6 +457,7 @@ jobs:
               Shared Next control (schools/assets/next-control.js)|python scripts/test-next-control.py
               Portal section clicks (analytics.js section_clicked)|python scripts/test-section-clicks.py
               Shared answer checker (schools/assets/answer.js, every outcome)|python scripts/test-answer-js.py
+              Answer counts script (docs/apps-script-counts.js: period, incremental, time-boxed, read-only scope)|python scripts/test-apps-script-counts.py
               Shared on-screen calculator (schools/assets/calculator.js, MaffsCalc)|python scripts/test-calculator-js.py
               Shared phone keypad (schools/assets/keypad.js, MaffsKeypad)|python scripts/check-keypad.py
 
