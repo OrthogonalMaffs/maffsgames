@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- UNLISTED (contract TAKE-A-WALK, 23 Oct 2026): merged for Jon to play. Live at its URL, noindex, and off the
+     portal, Essentials, the sitemap, the spec map and the leaderboard hub until he lists it. -->
+<meta name="robots" content="noindex">
+<meta name="description" content="Perimeter and area on sports pitches: walk round the edge, or cover the grass. Rectangles, compound shapes and circles. For KS3 and GCSE. Free, no sign-up.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/take-a-walk/">
+<meta property="og:title" content="Perimeter and Area Game – KS3/GCSE Maths | MaffsGames">
+<meta property="og:description" content="Perimeter and area on sports pitches: walk round the edge, or cover the grass. Rectangles, compound shapes and circles. For KS3 and GCSE. Free, no sign-up.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/take-a-walk/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Perimeter and Area Game – KS3/GCSE Maths | MaffsGames</title>
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<style>
+/* Theme: schools/assets/theme.css (canon §7.5), light row. This game's own tokens: grass in two greens (the mown
+   stripes), a dark pitch-green edge and accent, white-free so every line reads on the light surface. */
+:root{--accent:#256029;--accent-dim:#e3f1df;--on-accent:#ffffff;
+  --grass:#d6ecc9;--grass-a:#b9dda6;--grass-b:#9ccc86;--edge:#1f4d22;--gridline:#dbe5d4;--walker:#1a2744}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:720px;width:100%;padding:1rem}
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.6rem 0 .5rem}
+.header h1{font-size:1.9rem;font-weight:700;color:var(--accent);line-height:1.15}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem 0 .5rem}
+@media (max-width:420px){.header h1{font-size:1.6rem}}
+.screen{display:none}.screen.active{display:block}
+[hidden]{display:none!important}
+
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.9rem auto;max-width:600px}
+.panel h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;margin-bottom:.6rem}
+.menu-info{color:var(--text);font-size:.95rem;line-height:1.65}
+.menu-info p+p{margin-top:.6rem}
+.mode-pick{display:flex;flex-direction:column;gap:.45rem}
+.mode-btn{display:flex;flex-wrap:wrap;gap:.3rem .7rem;align-items:baseline;text-align:left;min-height:44px;padding:.55rem .8rem;border-radius:10px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-size:.92rem;cursor:pointer;line-height:1.35}
+.mode-btn b{font-family:var(--font-num);color:var(--accent);white-space:nowrap}
+.mode-btn .what{flex:1 1 12rem}
+.mode-btn.selected{border-color:var(--accent);background:var(--accent-dim)}
+.mode-note{font-size:.85rem;color:var(--muted);margin-top:.6rem;text-align:center}
+.btn{min-height:44px;padding:.6rem 1.2rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--accent-dim)}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.start-btn{display:block;margin:1rem auto .3rem;padding:.75rem 2.6rem;font-size:1.05rem}
+.res-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
+
+.hud{display:flex;justify-content:space-between;padding:.45rem .8rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.5rem;gap:.3rem}
+.hud-item{text-align:center;min-width:48px}
+.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.hud-val{font-family:var(--font-num);font-size:.95rem;font-weight:700}
+.badge-row{display:flex;justify-content:center;margin-bottom:.5rem}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem;display:flex;flex-direction:column;gap:.7rem}
+.stage-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);font-weight:700}
+.qtext{font-size:1rem;line-height:1.55}
+.formulas{display:flex;justify-content:center;gap:1.4rem;flex-wrap:wrap;font-size:1.05rem;padding:.35rem;border:1px dashed var(--border);border-radius:10px}
+.prompt-line{text-align:center;font-weight:600;color:var(--accent)}
+.choice{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.choice .btn{min-height:56px;line-height:1.3}
+.choice small{display:block;font-weight:500;font-size:.78rem;color:var(--muted)}
+.ans-row{display:flex;align-items:center;justify-content:center;gap:.5rem;flex-wrap:wrap}
+.ans-row input{width:7.5rem;min-height:44px;padding:.3rem .5rem;border:2px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font-family:var(--font-num);font-size:1.25rem;text-align:center}
+.ans-row input:focus{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent)}
+.units{display:inline-flex;gap:.35rem}
+.unit-btn{min-width:52px;min-height:44px;border-radius:8px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-family:var(--font-num);font-size:1.05rem;font-weight:700;cursor:pointer}
+.unit-btn[aria-pressed="true"]{border-color:var(--accent);background:var(--accent);color:var(--on-accent)}
+.msg{min-height:1.2em;text-align:center;font-size:.9rem;color:var(--hint)}
+.msg:empty{display:none}
+
+/* The pitch: drawn to scale on a 1 m (or 2 m, 5 m) grid, its lengths labelled. */
+.pitch{margin:0 auto;width:100%;max-width:440px;display:flex;flex-direction:column;align-items:center;gap:.3rem}
+.pitch svg{display:block;width:100%;height:auto;touch-action:manipulation}
+.pitch figcaption{font-family:var(--font-num);font-size:.9rem;color:var(--text);min-height:1.2em;text-align:center}
+.pitch .grid{stroke:var(--gridline);stroke-width:1}
+.pitch .shape{fill:var(--grass);stroke:none}
+.pitch .edge{fill:none;stroke:var(--edge);stroke-width:2.5;stroke-linecap:round}
+.pitch .edge.hl{stroke:var(--hint);stroke-width:5}
+.pitch .edge.cmp{stroke:var(--accent);stroke-width:5;stroke-dasharray:none}
+.pitch .join{stroke:var(--edge);stroke-width:1.5;stroke-dasharray:5 4;fill:none}
+.pitch .dim{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:3 3;fill:none}
+.pitch .dim.cmp{stroke:var(--accent);stroke-width:3.5}
+.pitch .lab{font-family:var(--font-num);font-size:12px;font-weight:700;fill:var(--text)}
+.pitch .lab.dimlab{fill:var(--muted)}
+.pitch .lab.found{fill:var(--accent)}
+.pitch .lab.ask{fill:var(--hint)}
+.pitch .hit{stroke:transparent;stroke-width:28;fill:none;cursor:pointer;pointer-events:stroke}
+.pitch .stripe-a{fill:var(--grass-a)}
+.pitch .stripe-b{fill:var(--grass-b)}
+.pitch .walker circle{fill:var(--walker)}
+.pitch .walker line{stroke:var(--walker);stroke-width:2.2;stroke-linecap:round}
+
+.explain{display:flex;flex-direction:column;gap:.5rem}
+.steps{list-style:none;display:flex;flex-direction:column;gap:.35rem;counter-reset:step}
+.steps li{counter-increment:step;display:flex;gap:.55rem;align-items:baseline;font-size:.95rem;line-height:1.5}
+.steps li::before{content:counter(step);flex:none;font-family:var(--font-num);font-weight:700;color:var(--accent);min-width:1.1rem;text-align:right}
+.steps li:last-child{font-weight:600}
+.step-row{display:flex;justify-content:center}
+.step-row .btn{min-width:10rem}
+.ex-tag{font-size:.8rem;color:var(--muted);text-align:center}
+.glue{white-space:nowrap}
+.feedback:empty{display:none}
+.fb{border-radius:12px;padding:.75rem .85rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.6rem}
+.fb.wrong{border-color:var(--wrong)}
+.fb-line{font-size:.95rem;line-height:1.5;padding:.4rem .65rem;border-left:3px solid var(--hint);border-radius:0 8px 8px 0}
+.fb-ans{text-align:center;font-weight:700;font-family:var(--font-num)}
+.fb.tight .fb-line{order:0}.fb.tight .fb-ans{order:1}.fb.tight .fb-next{order:2}.fb.tight .pitch{order:3}.fb.tight .steps{order:4}
+.fb-quick{font-weight:700;color:var(--correct);text-align:center;font-size:1.05rem;font-family:var(--font-num)}
+.results{text-align:center;padding:1rem 0}
+.results h2{font-size:1.35rem;margin-bottom:.3rem}
+.final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.4rem 0}
+.stats{color:var(--muted);line-height:1.9;font-size:.95rem;margin-bottom:.8rem}
+.stats b{color:var(--text)}
+
+/* Phone rule (canon §7.6.1): on a wrong answer the question's controls go and the feedback takes their place. */
+.qcard.fb-open .choice,.qcard.fb-open .ans-block,.qcard.fb-open .msg,.qcard.fb-open #figure,.qcard.fb-open .prompt-line{display:none}
+@media (max-width:420px){
+  .container{padding:.6rem}
+  .qcard{padding:.75rem .7rem}
+  .fb{padding:.6rem .65rem}
+  .hud{padding:.35rem .5rem}
+}
+body.accessible{letter-spacing:.12em;word-spacing:.16em}
+body.accessible .hud-label,body.accessible .hud-val{letter-spacing:0}
+body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;max-width:65ch}
+body.accessible .katex{letter-spacing:normal;word-spacing:normal}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+<!-- The calculator, stage by stage (canon §4.4, `by stage`; contract CALC-BY-STAGE): no calculator in Stages 1-3, the
+     scientific calculator (its π key) in Stage 4 only. -->
+<script type="application/json" id="maffs-calc-stages">{"stage-1": "not allowed", "stage-2": "not allowed", "stage-3": "not allowed", "stage-4": "scientific"}</script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'start' presses Start, then steps through the worked example that opens the stage (each tap once its MaffsLock window has closed). 'answer': Stage 1 first picks walk or cover (the right one), a find-it-first question taps the missing side; then i = 0 types the key with its unit, i >= 1 the key plus one (marked wrong), and submits. 'ready' is the game's own state.
+{
+  "start": [
+    "(async () => {",
+    "  document.getElementById('startBtn').click();",
+    "  const t0 = performance.now();",
+    "  while (TAW.ui.state() === 'example' && performance.now() - t0 < 10000) {",
+    "    const b = document.getElementById('stepBtn');",
+    "    if (b && !MaffsLock.isFresh(b)) b.click();",
+    "    await new Promise(r => requestAnimationFrame(r));",
+    "  }",
+    "})()"
+  ],
+  "ready": "!!window.TAW && !!TAW.ui && ['asking', 'choose', 'tap'].indexOf(TAW.ui.state()) >= 0",
+  "answer": [
+    "const q = TAW.ui.question();",
+    "if (TAW.ui.state() === 'choose') document.querySelector('#choice [data-kind=\"' + TAW.kindOf(q) + '\"]').click();",
+    "if (TAW.ui.state() === 'tap') document.querySelector('#figure .hit[data-piece=\"' + q.missing[0] + '\"]').dispatchEvent(new MouseEvent('click', { bubbles: true }));",
+    "const box = TAW.ui.answerBox();",
+    "box.value = TAW.fmt(q.key + (i === 0 ? 0 : 1), q.dp);",
+    "document.querySelector('.unit-btn[data-unit=\"' + q.unit + '\"]').click();",
+    "document.getElementById('ansForm').requestSubmit();"
+  ]
+}
+-->
+<script src="../../schools/assets/answer.js"></script>
+<!-- The phone keypad for typed answers (MaffsKeypad), Stages 1-3; Stage 4's scientific calculator types its answer. -->
+<script src="../../schools/assets/keypad.js"></script>
+<script src="../../schools/assets/calculator.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Take a Walk</h1><div class="sub">Are we walking around the outside, or covering every blade of grass?</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="panel menu-info">
+      <p><strong>Walk</strong> round the edge and you measure the <strong>perimeter</strong>: add up every side, in metres (m).</p>
+      <p><strong>Cover</strong> every blade of grass and you measure the <strong>area</strong>: the squares inside, in square metres (m²).</p>
+      <p>Every shape is a pitch, or part of one, drawn to scale on a grid. A side with no label can be found from the drawing: compare it with the opposite sides.</p>
+    </div>
+    <div class="panel" id="modePanel">
+      <h2>Pick a stage</h2>
+      <div class="mode-pick" id="modePick">
+        <button class="mode-btn" data-mode="stage-1" type="button"><b>Stage 1</b><span class="what">Squares, rectangles, then L shapes. Every length given: walk or cover?</span><span class="calc-badge" data-calc="not-allowed" data-stage="stage-1">Non-calculator</span></button>
+        <button class="mode-btn" data-mode="stage-2" type="button"><b>Stage 2</b><span class="what">Rectangles joined together, one length missing.</span><span class="calc-badge" data-calc="not-allowed" data-stage="stage-2">Non-calculator</span></button>
+        <button class="mode-btn" data-mode="stage-3" type="button"><b>Stage 3</b><span class="what">Triangles, then shapes with triangles, two lengths missing.</span><span class="calc-badge" data-calc="not-allowed" data-stage="stage-3">Non-calculator</span></button>
+        <button class="mode-btn" data-mode="stage-4" type="button"><b>Stage 4</b><span class="what">Circles, semicircles and parallelograms, three lengths missing.</span><span class="calc-badge" data-calc="scientific" data-stage="stage-4">Scientific calculator required</span></button>
+      </div>
+      <p class="mode-note">Each stage: a worked example, then 10 questions, easiest first.</p>
+      <button class="btn solid start-btn" id="startBtn">Start</button>
+    </div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/10</div></div>
+      <div class="hud-item"><div class="hud-label">Stage</div><div class="hud-val" id="hudStage">1</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="hudClock">0:00</div></div>
+    </div>
+    <!-- The badge of the stage being played (canon §4.4, `by stage`): filled in when a stage starts. -->
+    <div class="badge-row"><span class="calc-badge" id="calcBadge"></span></div>
+    <div class="qcard" id="qcard">
+      <div class="stage-label" id="stageLabel"></div>
+      <div class="qtext" id="qtext"></div>
+      <div class="formulas" id="formulas" hidden><span data-tex="A = \pi r^2">A = πr²</span><span data-tex="C = \pi d">C = πd</span></div>
+      <div id="figure"></div>
+      <div class="prompt-line" id="promptLine" hidden></div>
+      <div class="choice" id="choice" hidden>
+        <button class="btn" type="button" data-kind="walk">Walk<small>round the edge: perimeter</small></button>
+        <button class="btn" type="button" data-kind="cover">Cover<small>every blade of grass: area</small></button>
+      </div>
+      <div class="ans-block" id="ansBlock" hidden>
+        <form class="ans-row" id="ansForm" autocomplete="off">
+          <input id="ans" type="text" inputmode="numeric" aria-label="Your answer">
+          <input id="ans4" type="text" inputmode="decimal" aria-label="Your answer, to 1 decimal place" hidden>
+          <span class="units" role="group" aria-label="Unit">
+            <button class="unit-btn" type="button" data-unit="m" aria-pressed="false">m</button>
+            <button class="unit-btn" type="button" data-unit="m2" aria-pressed="false">m²</button>
+          </span>
+          <button class="btn solid" type="submit" id="checkBtn">Check</button>
+        </form>
+        <div id="kpHolder"></div>
+        <div id="calcWrap" hidden><div id="calc"></div></div>
+      </div>
+      <div class="msg" id="msg" aria-live="polite"></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resTitle">Stage done</h2>
+      <div class="final-score" id="resScore">0</div>
+      <div class="stats" id="resStats"></div>
+      <div class="res-btns">
+        <button class="btn solid" id="nextStageBtn" type="button" hidden>Next: Stage 2</button>
+        <button class="btn" id="againBtn" type="button">Play again</button>
+      </div>
+      <p id="teacherInvite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Take a Walk — perimeter and area on sports pitches (contract TAKE-A-WALK, Jon, 23 Oct 2026, verbatim in
+ * docs/history/contracts/2026-10-23-take-a-walk.md). "Are we walking around the outside, or are we covering every
+ * blade of grass?" */
+(function () {
+  'use strict';
+  /* Take a Walk: the engine. Everything a student sees (the pools, every shape and its labels, every key, every named
+   * wrong answer, the worked steps, the order a stage is served in) is a plain function here, with no DOM. The UI calls
+   * it through window.TAW, and scripts/verify-take-a-walk.py drives the same functions from the live page and recomputes
+   * everything from the shapes' coordinates, independently.
+   *
+   * A shape is a closed boundary, counterclockwise, in metres (x right, y up): straight pieces {t:'L', a, b, lab} and
+   * arcs {t:'C', c, r, a0, a1} (radians, a1 > a0 for counterclockwise). `lab` is the length written on that side, or
+   * null: a side with no label is a MISSING length, found from the drawing. Internal lines are `joins` (dashed, never
+   * labelled: where the shape splits into parts) and `dims` (dashed, labelled: a triangle's perpendicular height, a
+   * radius, a base marked inside the shape).
+   *
+   * A missing length is determined by the drawing (rule 2) when labelled sides connect its two grid lines: every side
+   * runs along one x-line or y-line, and a labelled side between two lines fixes their distance. H.derive finds that
+   * chain of labelled sides and is what the worked steps show ("compare with the opposite sides"). A lone shape (one
+   * part) is never missing a length: its own opposite sides are equal (a rectangle, a square, a parallelogram) and
+   * its labels say what its formula needs.
+   */
+  var H = {};
+  H.SLUG = 'take-a-walk';
+  H.MODES = ['stage-1', 'stage-2', 'stage-3', 'stage-4'];
+  // Each stage: the shapes it uses, how many lengths a compound shape is missing, its calculator value (the page's
+  // maffs-calc-stages map says the same; canon §4.4, `by stage`), its answer precision.
+  H.STAGES = {
+    'stage-1': { n: 1, label: 'Stage 1 · Walk or cover?', missing: 0, calc: 'not allowed', dp: 0, choose: true },
+    'stage-2': { n: 2, label: 'Stage 2 · One length missing', missing: 1, calc: 'not allowed', dp: 0 },
+    'stage-3': { n: 3, label: 'Stage 3 · Triangles, two lengths missing', missing: 2, calc: 'not allowed', dp: 0 },
+    'stage-4': { n: 4, label: 'Stage 4 · Circles and parallelograms, three lengths missing', missing: 3, calc: 'scientific', dp: 1 }
+  };
+  H.PER = 10;
+  H.HELP_EXAMPLES = 3;    // worked examples for a named slip, per session; then a nudge
+  H.BASE = 100;
+  H.T_K = 0.15;
+  H.scoreFor = function (seconds) {
+    return Math.max(1, Math.round(H.BASE / (1 + H.T_K * Math.log(1 + Math.max(0, seconds)))));
+  };
+  H.helpFor = function (nth) { return nth <= H.HELP_EXAMPLES ? 'example' : 'nudge'; };
+
+  /* ---------- randomness: seeded, so a session can be replayed exactly ---------- */
+  H.mulberry32 = function (seed) {
+    var a = seed >>> 0;
+    return function () {
+      a = (a + 0x6D2B79F5) >>> 0;
+      var t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  };
+  H.shuffle = function (arr, rng) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(rng() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  };
+  H.newSeed = function () { return (Math.floor(Math.random() * 4294967296) ^ Date.now()) >>> 0; };
+
+  /* ---------- numbers ---------- */
+  // Half up to dp places, on the decimal digits (never a float tie: the pools leave out anything within 1e-6 of one).
+  H.round = function (x, dp) { var f = Math.pow(10, dp); return Math.round(x * f + 1e-9) / f; };
+  H.fmt = function (x, dp) { return dp ? H.round(x, dp).toFixed(dp) : String(H.round(x, 0)); };
+  H.nearTie = function (x, dp) { var f = Math.pow(10, dp) * x; return Math.abs(f - Math.floor(f) - 0.5) < 1e-6; };
+  // A number as the working shows it: whole numbers plain, halves as .5, anything else to 3 d.p. with "...".
+  H.num = function (x) {
+    if (Math.abs(x - Math.round(x)) < 1e-9) return String(Math.round(x));
+    if (Math.abs(x * 2 - Math.round(x * 2)) < 1e-9) return (Math.round(x * 2) / 2).toFixed(1);
+    return x.toFixed(3) + '\\ldots';
+  };
+  var PI = Math.PI;
+
+  /* ---------- shapes ---------- */
+  function seg(a, b, lab) { return { t: 'L', a: a, b: b, lab: lab === undefined ? null : lab }; }
+  function arc(c, r, a0, a1) { return { t: 'C', c: c, r: r, a0: a0, a1: a1, lab: null }; }
+  function poly(pts, labs) {
+    var out = [];
+    for (var i = 0; i < pts.length; i++) out.push(seg(pts[i], pts[(i + 1) % pts.length], labs[i]));
+    return out;
+  }
+  H.pieceLen = function (p) {
+    if (p.t === 'C') return p.r * Math.abs(p.a1 - p.a0);
+    return Math.sqrt(Math.pow(p.b[0] - p.a[0], 2) + Math.pow(p.b[1] - p.a[1], 2));
+  };
+  H.pieceEnds = function (p) {
+    if (p.t === 'L') return [p.a, p.b];
+    return [[p.c[0] + p.r * Math.cos(p.a0), p.c[1] + p.r * Math.sin(p.a0)],
+            [p.c[0] + p.r * Math.cos(p.a1), p.c[1] + p.r * Math.sin(p.a1)]];
+  };
+  // The axis a piece's ends differ along: 'x' (horizontal side, or an arc whose chord is horizontal), 'y', or null.
+  H.axis = function (p) {
+    var e = H.pieceEnds(p), dx = Math.abs(e[1][0] - e[0][0]), dy = Math.abs(e[1][1] - e[0][1]);
+    if (dx < 1e-9 && dy < 1e-9) return null;
+    if (dy < 1e-9) return 'x';
+    if (dx < 1e-9) return 'y';
+    return null;
+  };
+
+  // Families. Each returns { fam, parts, path, joins, dims, ... }. Part kinds: rect {w,h}, tri {b,h,s}, circle {r},
+  // semi {r}, para {b,h,s}.
+  H.F = {};
+  H.F.sq = function (s) {
+    return { fam: 'sq', parts: [{ k: 'rect', w: s, h: s }], path: poly([[0, 0], [s, 0], [s, s], [0, s]], [s, s, s, s]), joins: [], dims: [] };
+  };
+  H.F.rect = function (l, w) {
+    return { fam: 'rect', parts: [{ k: 'rect', w: l, h: w }], path: poly([[0, 0], [l, 0], [l, w], [0, w]], [l, w, l, w]), joins: [], dims: [] };
+  };
+  // L: a full-height left column a wide, and a block (W - a) by h2 on its right.
+  H.F.L = function (W, Hf, a, h2, hide) {
+    var pts = [[0, 0], [W, 0], [W, h2], [a, h2], [a, Hf], [0, Hf]];
+    var labs = [W, h2, W - a, Hf - h2, a, Hf].map(function (v, i) { return hide.indexOf(i) >= 0 ? null : v; });
+    return { fam: 'L', parts: [{ k: 'rect', w: a, h: Hf }, { k: 'rect', w: W - a, h: h2 }], path: poly(pts, labs),
+      joins: [{ a: [a, 0], b: [a, h2] }], dims: [], box: [W, Hf], overlap: W * h2 + a * Hf };
+  };
+  // T: a bar Tw by e on a stem w by s, the stem u from the left.
+  H.F.T = function (Tw, e, u, w, s, hide) {
+    var v = Tw - u - w;
+    var pts = [[u, 0], [u + w, 0], [u + w, s], [Tw, s], [Tw, s + e], [0, s + e], [0, s], [u, s]];
+    var labs = [w, s, v, e, Tw, e, u, s].map(function (x, i) { return hide.indexOf(i) >= 0 ? null : x; });
+    return { fam: 'T', parts: [{ k: 'rect', w: Tw, h: e }, { k: 'rect', w: w, h: s }], path: poly(pts, labs),
+      joins: [{ a: [u, s], b: [u + w, s] }], dims: [], box: [Tw, s + e], overlap: Tw * e + w * (s + e) };
+  };
+  // U: a W by H rectangle with a notch n wide and d deep cut from its top edge, a from the left.
+  H.F.U = function (W, Hh, a, n, d, hide) {
+    var c = W - a - n;
+    var pts = [[0, 0], [W, 0], [W, Hh], [a + n, Hh], [a + n, Hh - d], [a, Hh - d], [a, Hh], [0, Hh]];
+    var labs = [W, Hh, c, d, n, d, a, Hh].map(function (x, i) { return hide.indexOf(i) >= 0 ? null : x; });
+    return { fam: 'U', parts: [{ k: 'rect', w: a, h: Hh }, { k: 'rect', w: n, h: Hh - d }, { k: 'rect', w: c, h: Hh }],
+      path: poly(pts, labs), joins: [{ a: [a, 0], b: [a, Hh - d] }, { a: [a + n, 0], b: [a + n, Hh - d] }], dims: [], box: [W, Hh] };
+  };
+  // A right-angled triangle, legs b (along the bottom) and h, the right angle at the left or the right.
+  H.F.rtri = function (b, h, hyp, right) {
+    var pts = right ? [[0, 0], [b, 0], [b, h]] : [[0, 0], [b, 0], [0, h]];
+    var labs = right ? [b, h, hyp] : [b, hyp, h];
+    return { fam: 'rtri', parts: [{ k: 'tri', b: b, h: h, s: hyp }], path: poly(pts, labs), joins: [], dims: [] };
+  };
+  // An isosceles triangle, base b, perpendicular height h (dashed), slant sides s.
+  H.F.itri = function (b, h, s) {
+    return { fam: 'itri', parts: [{ k: 'tri', b: b, h: h, s: s }], path: poly([[0, 0], [b, 0], [b / 2, h]], [b, s, s]), joins: [],
+      dims: [{ a: [b / 2, 0], b: [b / 2, h], val: h, kind: 'height' }] };
+  };
+  // A house: a W by H rectangle, an isosceles triangle (base W, height th, slants s) on top. Missing: the bottom and the
+  // right wall; the triangle's base is marked on the join, its height dashed.
+  H.F.house = function (W, Hh, th, s) {
+    var pts = [[0, 0], [W, 0], [W, Hh], [W / 2, Hh + th], [0, Hh]];
+    return { fam: 'house', parts: [{ k: 'rect', w: W, h: Hh }, { k: 'tri', b: W, h: th, s: s }], path: poly(pts, [null, null, s, s, Hh]),
+      joins: [], dims: [{ a: [0, Hh], b: [W, Hh], val: W, kind: 'base' }, { a: [W / 2, Hh], b: [W / 2, Hh + th], val: th, kind: 'height' }],
+      box: [W, Hh + th] };
+  };
+  // A rectangle W by H with a right-angled triangle (base B, height H, slant S) on its right. Missing: the top and the
+  // left side; the triangle's base is marked along the bottom, its height on the dashed join.
+  H.F.rtrap = function (W, B, Hh, S) {
+    var pts = [[0, 0], [W + B, 0], [W, Hh], [0, Hh]];
+    return { fam: 'rtrap', parts: [{ k: 'rect', w: W, h: Hh }, { k: 'tri', b: B, h: Hh, s: S }], path: poly(pts, [W + B, S, null, null]),
+      joins: [], dims: [{ a: [W, 0], b: [W + B, 0], val: B, kind: 'base' }, { a: [W, 0], b: [W, Hh], val: Hh, kind: 'height' }],
+      box: [W + B, Hh] };
+  };
+  H.F.circle = function (r, byD) {
+    return { fam: 'circle', parts: [{ k: 'circle', r: r }], path: [arc([r, r], r, 0, 2 * PI)], joins: [],
+      dims: [byD ? { a: [0, r], b: [2 * r, r], val: 2 * r, kind: 'diam' } : { a: [r, r], b: [2 * r, r], val: r, kind: 'radius' }] };
+  };
+  // A semicircle, flat side down, its diameter d on the straight side.
+  H.F.semi = function (d) {
+    return { fam: 'semi', parts: [{ k: 'semi', r: d / 2 }], path: [seg([0, 0], [d, 0], d), arc([d / 2, 0], d / 2, 0, PI)], joins: [], dims: [] };
+  };
+  // A parallelogram: base b, the top shifted o to the right, perpendicular height h (dashed), slant sides s.
+  H.F.para = function (b, o, h, s) {
+    return { fam: 'para', parts: [{ k: 'para', b: b, h: h, s: s }], path: poly([[0, 0], [b, 0], [b + o, h], [o, h]], [b, null, null, s]),
+      joins: [], dims: [{ a: [o, 0], b: [o, h], val: h, kind: 'height' }] };
+  };
+  // A T with a semicircle on the end of its stem (the stem's bottom is the diameter). Missing: the right end of the bar,
+  // the right side of the stem and the semicircle's diameter.
+  H.F.Tsb = function (Tw, e, u, w, s) {
+    var v = Tw - u - w;
+    var path = [arc([u + w / 2, 0], w / 2, PI, 2 * PI), seg([u + w, 0], [u + w, s], null), seg([u + w, s], [Tw, s], v),
+      seg([Tw, s], [Tw, s + e], null), seg([Tw, s + e], [0, s + e], Tw), seg([0, s + e], [0, s], e), seg([0, s], [u, s], u), seg([u, s], [u, 0], s)];
+    return { fam: 'Tsb', parts: [{ k: 'rect', w: Tw, h: e }, { k: 'rect', w: w, h: s }, { k: 'semi', r: w / 2 }], path: path,
+      joins: [{ a: [u, s], b: [u + w, s] }, { a: [u, 0], b: [u + w, 0] }], dims: [] };
+  };
+  // A T with a semicircle on top of its bar (the bar's top is the diameter). Missing: the semicircle's diameter, the
+  // right end of the bar and the right side of the stem.
+  H.F.Tst = function (Tw, e, u, w, s) {
+    var v = Tw - u - w;
+    var path = [seg([u, 0], [u + w, 0], w), seg([u + w, 0], [u + w, s], null), seg([u + w, s], [Tw, s], v), seg([Tw, s], [Tw, s + e], null),
+      arc([Tw / 2, s + e], Tw / 2, 0, PI), seg([0, s + e], [0, s], e), seg([0, s], [u, s], u), seg([u, s], [u, 0], s)];
+    return { fam: 'Tst', parts: [{ k: 'rect', w: Tw, h: e }, { k: 'rect', w: w, h: s }, { k: 'semi', r: Tw / 2 }], path: path,
+      joins: [{ a: [u, s], b: [u + w, s] }, { a: [0, s + e], b: [Tw, s + e] }], dims: [] };
+  };
+
+  /* ---------- measuring ---------- */
+  H.perimeter = function (sh) { return sh.path.reduce(function (t, p) { return t + H.pieceLen(p); }, 0); };
+  H.partArea = function (p) {
+    if (p.k === 'rect') return p.w * p.h;
+    if (p.k === 'tri') return p.b * p.h / 2;
+    if (p.k === 'circle') return PI * p.r * p.r;
+    if (p.k === 'semi') return PI * p.r * p.r / 2;
+    return p.b * p.h;   // para
+  };
+  H.area = function (sh) { return sh.parts.reduce(function (t, p) { return t + H.partArea(p); }, 0); };
+  H.lone = function (sh) { return sh.parts.length === 1; };
+  H.missing = function (sh) {
+    if (H.lone(sh)) return [];
+    var out = [];
+    sh.path.forEach(function (p, i) { if (p.lab === null) out.push(i); });
+    return out;
+  };
+  // Every labelled length on the drawing (sides and dashed dimensions), for the measure and the read-back.
+  H.labelled = function (sh) {
+    return sh.path.filter(function (p) { return p.lab !== null; }).map(function (p) { return p.lab; })
+      .concat(sh.dims.filter(function (d) { return d.val !== null; }).map(function (d) { return d.val; }));
+  };
+  // The grid-line chain that fixes a missing piece (rule 2): the labelled sides and dimensions, each a span between
+  // two lines on its axis, walked from one end of the piece to the other. Returns [{sign, val}] whose signed sum is the
+  // piece's span (its length, or for an arc its diameter), or null if no chain exists (not determined by the drawing).
+  H.spans = function (sh, ax) {
+    var k = ax === 'x' ? 0 : 1, out = [];
+    sh.path.forEach(function (p, i) {
+      if (p.t !== 'L' || p.lab === null || H.axis(p) !== ax) return;
+      out.push({ p: p.a[k], q: p.b[k], val: p.lab, src: 'side', i: i });
+    });
+    sh.dims.forEach(function (d, i) {
+      if (d.val === null || Math.abs(d.a[1 - k] - d.b[1 - k]) > 1e-9) return;
+      out.push({ p: d.a[k], q: d.b[k], val: d.val, src: 'dim', i: i });
+    });
+    return out;
+  };
+  H.derive = function (sh, i) {
+    var p = sh.path[i], ax = H.axis(p);
+    if (!ax) return null;
+    var k = ax === 'x' ? 0 : 1, e = H.pieceEnds(p), from = e[0][k], to = e[1][k];
+    var spans = H.spans(sh, ax), key = function (v) { return Math.round(v * 1e6); };
+    // Breadth first over the lines, so the chain is the shortest (one opposite side where there is one).
+    var seen = {}, queue = [{ at: from, chain: [] }];
+    seen[key(from)] = true;
+    while (queue.length) {
+      var cur = queue.shift();
+      if (key(cur.at) === key(to)) return cur.chain;
+      for (var j = 0; j < spans.length; j++) {
+        var s = spans[j], nxt = null, sign = 0;
+        if (key(s.p) === key(cur.at)) { nxt = s.q; } else if (key(s.q) === key(cur.at)) { nxt = s.p; }
+        if (nxt === null || seen[key(nxt)]) continue;
+        sign = (nxt - cur.at) * (to - from) > 0 ? 1 : -1;
+        seen[key(nxt)] = true;
+        queue.push({ at: nxt, chain: cur.chain.concat([{ sign: sign, val: s.val, src: s.src, i: s.i }]) });
+      }
+    }
+    return null;
+  };
+  H.missingValue = function (sh, i) {
+    var p = sh.path[i];
+    return p.t === 'C' ? 2 * p.r : H.pieceLen(p);
+  };
+
+  /* ---------- questions ---------- */
+  // ask: 'P' perimeter (walk), 'A' area (cover), 'BA' a width from the area, 'BP' a width from the perimeter,
+  // 'BT' a triangle's height from its area, 'BC' a circle's diameter from its circumference, 'BH' a parallelogram's
+  // height from its area. Unit: P and every working-backwards answer in m, A in m².
+  H.BACK = { BA: 1, BP: 1, BT: 1, BC: 1, BH: 1 };
+  // A working-backwards shape: the length asked for is drawn with "?" and no value.
+  function asked(sh, pieces, dims) {
+    (pieces || []).forEach(function (i) { sh.path[i].lab = null; sh.path[i].ask = true; });
+    (dims || []).forEach(function (i) { sh.dims[i].val = null; sh.dims[i].ask = true; });
+    return sh;
+  }
+  var THINGS = {
+    sq: ['cricket square', 'practice square'], rect: ['five-a-side pitch', 'tennis court', 'netball court', 'penalty area', 'hockey pitch'],
+    L: ['training ground'], T: ['warm-up area'], U: ['stadium lawn'], rtri: ['corner patch of turf'], itri: ['triangle of turf'],
+    house: ['practice area'], rtrap: ['end of the training ground'], circle: ['centre circle'], semi: ['semicircle of turf behind the goal'],
+    para: ['strip of turf'], Tsb: ['training ground'], Tst: ['warm-up area']
+  };
+  function thing(fam, n) { var t = THINGS[fam]; return t[n % t.length]; }
+  function words(q) {
+    var t = q.thing, u = q.dp ? ' Give your answer to 1 decimal place.' : '';
+    switch (q.ask) {
+      case 'P': return 'A fence goes all the way round the ' + t + '. How long is the fence?' + u;
+      case 'A': return 'The ' + t + ' needs new turf, every blade of grass. How much turf is needed?' + u;
+      case 'BA': return 'The ' + t + ' has an area of ' + q.given + ' m². It is ' + q.side + ' m long. How wide is it?';
+      case 'BP': return 'A fence ' + q.given + ' m long goes all the way round the ' + t + '. It is ' + q.side + ' m long. How wide is it?';
+      case 'BT': return 'The ' + t + ' has an area of ' + q.given + ' m². Its base is ' + q.side + ' m. What is its perpendicular height?';
+      case 'BC': return 'The line round the ' + t + ' is ' + H.fmt(q.given, 1) + ' m long. What is its diameter? Give your answer to 1 decimal place.';
+      case 'BH': return 'The ' + t + ' has an area of ' + q.given + ' m². Its base is ' + q.side + ' m. What is its perpendicular height?';
+    }
+    return '';
+  }
+  // Walk or cover: what a question is really asking for (Stage 1's first choice, and the picture after a wrong answer).
+  H.kindOf = function (q) { return q.ask === 'A' || q.ask === 'BA' || q.ask === 'BT' || q.ask === 'BH' ? 'cover' : 'walk'; };
+
+  function make(stage, sh, ask, n, extra) {
+    var S = H.STAGES[stage];
+    var q = { mode: stage, stage: S.n, fam: sh.fam, ask: ask, shape: sh, dp: S.dp, thing: thing(sh.fam, n) };
+    for (var k in extra) if (Object.prototype.hasOwnProperty.call(extra, k)) q[k] = extra[k];
+    q.parts = sh.parts.length;
+    q.missing = H.missing(sh);
+    var exact;
+    if (ask === 'P') exact = H.perimeter(sh);
+    else if (ask === 'A') exact = H.area(sh);
+    else exact = q.hidden;   // working backwards: the hidden length
+    q.exact = exact;
+    q.key = H.round(exact, S.dp);
+    q.unit = ask === 'A' ? 'm2' : 'm';
+    q.text = words(q);
+    q.id = stage + ':' + sh.fam + ':' + ask + ':' + JSON.stringify(sh.path.map(function (p) {
+      return p.t === 'L' ? [p.a, p.b, p.lab] : [p.c, p.r];
+    })).replace(/[^0-9,.\-a-z]/gi, '') + ':' + sh.dims.map(function (d) { return d.kind + (d.val === null ? '?' : d.val); }).join(',') +
+      (q.given !== undefined ? ':' + q.given : '');
+    q.size = Math.max.apply(null, H.labelled(sh).concat([0]));
+    q.errors = H.errors(q);
+    return q;
+  }
+
+  /* ---------- named wrong answers ---------- */
+  // Each: { id, v } with v the number the slip gives. Only slips that apply to the question are listed. The lines a
+  // student reads for each are H.LINES.
+  H.errors = function (q) {
+    var sh = q.shape, P = H.perimeter(sh), A = H.area(sh), out = [];
+    function add(id, v) { out.push({ id: id, v: v }); }
+    var p0 = sh.parts[0], circ = p0.k === 'circle', semiOnly = sh.fam === 'semi', round = sh.parts.some(function (p) { return p.k === 'circle' || p.k === 'semi'; });
+    if (q.ask === 'A') {
+      add(circ ? 'PD' : 'AS', P);                                    // added the sides / pi d for a cover
+      if (sh.box) add('OB', sh.box[0] * sh.box[1]);                   // from the outer sides
+      if (sh.overlap) add('OL', sh.overlap);                          // an overlap counted twice
+      sh.parts.forEach(function (p) {
+        if (p.k === 'tri') { add('TH', A + p.b * p.h / 2); add('SL', A - p.b * p.h / 2 + p.b * p.s / 2); }
+        if (p.k === 'para') add('SL', p.b * p.s);
+        if (p.k === 'circle' || p.k === 'semi') {
+          var f = p.k === 'semi' ? 0.5 : 1, rest = A - f * PI * p.r * p.r;
+          add('DR', rest + f * PI * 4 * p.r * p.r);                   // the diameter used as the radius
+          add('SQ', rest + f * Math.pow(PI * p.r, 2));                // (pi r) squared
+          if (circ && sh.dims[0].kind === 'radius') add('RD', rest + f * PI * p.r * p.r / 4);   // the radius used as the diameter
+        }
+      });
+    }
+    if (q.ask === 'P') {
+      add(circ ? 'PR' : 'PM', A);                                    // multiplied / pi r squared for a walk
+      if ((sh.fam === 'rect' || sh.fam === 'sq')) add('LW', P / 2);   // two sides only
+      if (sh.fam === 'para') add('LW', P / 2);
+      var miss = H.missing(sh);
+      if (miss.length) {
+        var straight = miss.filter(function (i) { return sh.path[i].t === 'L'; });
+        if (straight.length) add('MS', P - straight.reduce(function (t, i) { return t + H.pieceLen(sh.path[i]); }, 0));
+        var wrongCopy = 0, any = false;
+        straight.forEach(function (i) {
+          var near = H.nearestLabel(sh, i);
+          if (near !== null && Math.abs(near - H.pieceLen(sh.path[i])) > 1e-9) { wrongCopy += near - H.pieceLen(sh.path[i]); any = true; }
+        });
+        if (any) add('NL', P + wrongCopy);
+      }
+      var joinLen = sh.joins.reduce(function (t, j) { return t + Math.abs(j.b[0] - j.a[0]) + Math.abs(j.b[1] - j.a[1]); }, 0);
+      if (joinLen) add('IJ', P + joinLen);
+      sh.path.forEach(function (p) {
+        if (p.t !== 'C') return;
+        if (circ) {
+          var r = p.r;
+          if (sh.dims[0].kind === 'diam') add('DR', 2 * PI * 2 * r);    // the diameter used as the radius: 2 pi d
+          else add('RD', PI * r);                                       // the radius used as the diameter: pi r
+        } else {
+          add('FC', P + PI * p.r);                                      // the full circle's edge, not half
+          if (semiOnly) add('ND', PI * p.r);                            // the straight diameter left out
+        }
+      });
+    }
+    if (q.ask === 'BP') add('LW', q.given - q.side);                  // P taken as l + w
+    if (q.ask === 'BT') add('TH', q.given / q.side);                  // not doubled
+    if (q.ask === 'BC') add('DR', q.given / (2 * PI));                // gave the radius
+    if (q.ask === 'BA') add('AS', q.given / 2 - q.side);              // treated the area as a perimeter
+    return out.filter(function (e) { return isFinite(e.v) && e.v > 0; });
+  };
+  // The labelled side parallel to piece i whose middle is nearest its middle (the slip copies that one).
+  H.nearestLabel = function (sh, i) {
+    var p = sh.path[i], ax = H.axis(p), best = null, bd = Infinity;
+    var mid = function (s) { return [(s.a[0] + s.b[0]) / 2, (s.a[1] + s.b[1]) / 2]; }, m = mid(p);
+    sh.path.forEach(function (s, j) {
+      if (j === i || s.t !== 'L' || s.lab === null || H.axis(s) !== ax) return;
+      var n = mid(s), d = Math.pow(n[0] - m[0], 2) + Math.pow(n[1] - m[1], 2);
+      if (d < bd - 1e-9) { bd = d; best = s.lab; }
+    });
+    return best;
+  };
+  // A question leaves its pool if a named slip gives its key (at the answer's precision), or a value sits on a
+  // rounding tie. Filtered once, nothing redrawn (canon §12, SR-5).
+  H.errorIsKey = function (q) {
+    return q.errors.some(function (e) { return H.round(e.v, q.dp) === q.key; });
+  };
+  H.servable = function (q) {
+    if (H.errorIsKey(q)) return false;
+    if (q.dp && H.nearTie(q.exact, q.dp)) return false;
+    if (q.ask === 'BC' && H.nearTie(q.given * 10, 0)) return false;
+    // Every missing length determined by the drawing (rule 2), and as many as the stage says.
+    var S = H.STAGES[q.mode];
+    if (!H.lone(q.shape) && !H.BACK[q.ask] && q.missing.length !== S.missing) return false;
+    return q.missing.every(function (i) {
+      var ch = H.derive(q.shape, i);
+      return ch && Math.abs(ch.reduce(function (t, c) { return t + c.sign * c.val; }, 0) - H.missingValue(q.shape, i)) < 1e-9;
+    });
+  };
+
+  /* ---------- the pools: enumerated from parameters, filtered once ---------- */
+  // Every stage's pool is every combination below, in this order, less H.servable's cut. `n` only picks a place name.
+  function range(a, b, step) { var out = []; for (var x = a; x <= b; x += (step || 1)) out.push(x); return out; }
+  var TRIPLES = [[3, 4, 5], [6, 8, 10], [5, 12, 13], [8, 15, 17], [9, 12, 15], [12, 16, 20], [4, 3, 5], [8, 6, 10], [12, 5, 13], [12, 9, 15]];
+  H.buildPools = function () {
+    var P = { 'stage-1': [], 'stage-2': [], 'stage-3': [], 'stage-4': [] }, n = 0;
+    function push(st, q) { P[st].push(q); }
+    // Stage 1: every length given; walk or cover.
+    range(3, 12).forEach(function (s) { ['P', 'A'].forEach(function (a) { push('stage-1', make('stage-1', H.F.sq(s), a, n++)); }); });
+    [6, 8, 10, 12, 14, 16, 18, 20].forEach(function (l) {
+      [3, 4, 5, 7, 9].forEach(function (w) { if (w < l) ['P', 'A'].forEach(function (a) { push('stage-1', make('stage-1', H.F.rect(l, w), a, n++)); }); });
+    });
+    [8, 12, 16].forEach(function (W) { [6, 9, 12].forEach(function (Hf) { [3, 5].forEach(function (a) { [2, 4].forEach(function (h2) {
+      ['P', 'A'].forEach(function (k) { push('stage-1', make('stage-1', H.F.L(W, Hf, a, h2, []), k, n++)); });
+    }); }); }); });
+    [[6, 4], [8, 3], [8, 5], [9, 4], [10, 6], [12, 5], [12, 7], [14, 3], [15, 4], [16, 9]].forEach(function (lw) {
+      var sh = asked(H.F.rect(lw[0], lw[1]), [1, 3]);
+      push('stage-1', make('stage-1', sh, 'BA', n++, { given: lw[0] * lw[1], side: lw[0], hidden: lw[1] }));
+      push('stage-1', make('stage-1', sh, 'BP', n++, { given: 2 * (lw[0] + lw[1]), side: lw[0], hidden: lw[1] }));
+    });
+    // Stage 2: compound rectangles, one length missing.
+    [10, 14, 18, 22].forEach(function (W) { [8, 12, 16].forEach(function (Hf) { [4, 6].forEach(function (a) { [3, 5].forEach(function (h2) {
+      [[2], [3], [4], [5]].forEach(function (hide, j) {
+        push('stage-2', make('stage-2', H.F.L(W, Hf, a, h2, hide), j % 2 ? 'A' : 'P', n++));
+      });
+    }); }); }); });
+    [[12, 3, 4, 4], [14, 4, 5, 4], [16, 3, 6, 4], [18, 4, 7, 4], [20, 5, 7, 6], [15, 3, 5, 5]].forEach(function (t) {
+      [6, 9, 12].forEach(function (s) {
+        [[3], [1], [2]].forEach(function (hide, j) { push('stage-2', make('stage-2', H.F.T(t[0], t[1], t[2], t[3], s, hide), j % 2 ? 'P' : 'A', n++)); });
+      });
+    });
+    [[14, 10, 4, 6, 5], [16, 12, 5, 6, 7], [20, 12, 6, 8, 5], [18, 14, 5, 8, 9], [22, 15, 7, 8, 6]].forEach(function (u) {
+      [[1], [2]].forEach(function (hide, j) { ['P', 'A'].forEach(function (k) { push('stage-2', make('stage-2', H.F.U(u[0], u[1], u[2], u[3], u[4], hide), k, n++)); }); });
+    });
+    [[18, 7], [20, 9], [22, 8], [24, 11], [25, 12], [30, 14], [16, 13], [28, 9]].forEach(function (lw) {
+      var sh = asked(H.F.rect(lw[0], lw[1]), [1, 3]);
+      push('stage-2', make('stage-2', sh, 'BA', n++, { given: lw[0] * lw[1], side: lw[0], hidden: lw[1] }));
+      push('stage-2', make('stage-2', sh, 'BP', n++, { given: 2 * (lw[0] + lw[1]), side: lw[0], hidden: lw[1] }));
+    });
+    // Stage 3: triangles on their own, then compound shapes with two lengths missing.
+    TRIPLES.forEach(function (t) { [false, true].forEach(function (right) { ['P', 'A'].forEach(function (k) {
+      push('stage-3', make('stage-3', H.F.rtri(t[0], t[1], t[2], right), k, n++));
+    }); }); });
+    [[6, 4, 5], [8, 3, 5], [16, 6, 10], [12, 8, 10], [10, 12, 13], [24, 5, 13], [16, 15, 17], [18, 12, 15]].forEach(function (t) {
+      ['P', 'A'].forEach(function (k) { push('stage-3', make('stage-3', H.F.itri(t[0], t[1], t[2]), k, n++)); });
+    });
+    [[6, 4, 5], [8, 3, 5], [12, 8, 10], [16, 6, 10], [10, 12, 13]].forEach(function (t) {
+      [6, 9].forEach(function (Hh) { ['P', 'A'].forEach(function (k) { push('stage-3', make('stage-3', H.F.house(t[0], Hh, t[1], t[2]), k, n++)); }); });
+    });
+    [[3, 4, 5], [6, 8, 10], [5, 12, 13], [9, 12, 15], [8, 6, 10]].forEach(function (t) {
+      [6, 10].forEach(function (W) { ['P', 'A'].forEach(function (k) { push('stage-3', make('stage-3', H.F.rtrap(W, t[0], t[1], t[2]), k, n++)); }); });
+    });
+    [14, 20].forEach(function (W) { [10, 15].forEach(function (Hf) { [5, 7].forEach(function (a) { [4, 6].forEach(function (h2) {
+      [[2, 5], [4, 1], [0, 3]].forEach(function (hide, j) { push('stage-3', make('stage-3', H.F.L(W, Hf, a, h2, hide), j % 2 ? 'A' : 'P', n++)); });
+    }); }); }); });
+    [[16, 4, 5, 6], [20, 5, 7, 6], [18, 4, 6, 5]].forEach(function (t) {
+      [8, 12].forEach(function (s) { [[3, 1], [3, 6]].forEach(function (hide, j) { ['P', 'A'].forEach(function (k) {
+        push('stage-3', make('stage-3', H.F.T(t[0], t[1], t[2], t[3], s, hide), k, n++));
+      }); }); });
+    });
+    [[24, 8], [30, 12], [36, 9], [40, 10], [28, 14], [32, 6], [20, 18], [42, 12], [18, 16], [26, 10]].forEach(function (bh) {
+      // The slant sides are left unlabelled: only the base and the area are given, the height is asked.
+      var t = asked({ fam: 'itri', parts: [{ k: 'tri', b: bh[0], h: bh[1], s: null }], path: poly([[0, 0], [bh[0], 0], [bh[0] / 2, bh[1]]], [bh[0], null, null]),
+        joins: [], dims: [{ a: [bh[0] / 2, 0], b: [bh[0] / 2, bh[1]], val: bh[1], kind: 'height' }] }, [], [0]);
+      push('stage-3', make('stage-3', t, 'BT', n++, { given: bh[0] * bh[1] / 2, side: bh[0], hidden: bh[1] }));
+    });
+    // Stage 4: circles, semicircles and parallelograms on their own, then T shapes with a semicircle, three lengths
+    // missing. Answers to 1 d.p. with the scientific calculator.
+    range(2, 15).forEach(function (r) { [false, true].forEach(function (byD) { ['P', 'A'].forEach(function (k) {
+      push('stage-4', make('stage-4', H.F.circle(r, byD), k, n++));
+    }); }); });
+    range(4, 30, 2).forEach(function (d) { ['P', 'A'].forEach(function (k) { push('stage-4', make('stage-4', H.F.semi(d), k, n++)); }); });
+    [[6, 3, 4, 5], [8, 4, 3, 5], [10, 6, 8, 10], [12, 8, 6, 10], [15, 5, 12, 13], [20, 12, 5, 13]].forEach(function (t) {
+      ['P', 'A'].forEach(function (k) { push('stage-4', make('stage-4', H.F.para(t[0], t[1], t[2], t[3]), k, n++)); });
+    });
+    [[16, 4, 5, 6], [20, 5, 6, 8], [18, 4, 6, 6], [14, 3, 4, 6], [24, 6, 8, 8]].forEach(function (t) {
+      [6, 10].forEach(function (s) { ['P', 'A'].forEach(function (k) {
+        push('stage-4', make('stage-4', H.F.Tsb(t[0], t[1], t[2], t[3], s), k, n++));
+        push('stage-4', make('stage-4', H.F.Tst(t[0], t[1], t[2], t[3], s), k, n++));
+      }); });
+    });
+    range(3, 14).forEach(function (d) {
+      var sh = asked(H.F.circle(d / 2, true), [], [0]);
+      push('stage-4', make('stage-4', sh, 'BC', n++, { given: H.round(PI * d, 1), hidden: d }));
+    });
+    [[12, 3, 4, 5], [15, 6, 8, 10], [18, 5, 12, 13], [20, 4, 3, 5], [24, 8, 6, 10], [16, 3, 4, 5]].forEach(function (t) {
+      var sh = asked(H.F.para(t[0], t[1], t[2], t[3]), [], [0]);
+      push('stage-4', make('stage-4', sh, 'BH', n++, { given: t[0] * t[2], side: t[0], hidden: t[2] }));
+    });
+    Object.keys(P).forEach(function (st) { P[st] = P[st].filter(H.servable); });
+    return P;
+  };
+
+  /* ---------- sessions: a worked example, then 10 questions, easiest first ---------- */
+  // The ease measure (contract TAKE-A-WALK): working backwards after perimeter and area (rule 4: in the later questions),
+  // then the fewest parts, then the smallest numbers (the largest length on the drawing, or the given total working
+  // backwards). Lexicographic; ties keep their shuffled order (Array sort is stable).
+  H.measure = function (q) { return [H.BACK[q.ask] ? 1 : 0, q.parts, H.BACK[q.ask] ? q.given : q.size]; };
+  H.byMeasure = function (x, y) {
+    var a = H.measure(x), b = H.measure(y);
+    for (var i = 0; i < a.length; i++) if (a[i] !== b[i]) return a[i] - b[i];
+    return 0;
+  };
+  // What each stage's 10 are drawn from, in groups: [families, asks, how many].
+  H.MIX = {
+    'stage-1': [[['sq'], 'PA', 2], [['rect'], 'PA', 3], [['L'], 'PA', 3], [['rect'], 'B', 2]],
+    'stage-2': [[['L'], 'PA', 3], [['T'], 'PA', 2], [['U'], 'PA', 2], [['rect'], 'B', 3]],
+    'stage-3': [[['rtri', 'itri'], 'PA', 2], [['house', 'rtrap'], 'PA', 2], [['L', 'T'], 'PA', 3], [['itri'], 'B', 3]],
+    'stage-4': [[['circle'], 'PA', 1], [['semi'], 'PA', 1], [['para'], 'PA', 1], [['Tsb', 'Tst'], 'PA', 4], [['circle', 'para'], 'B', 3]]
+  };
+  function inGroup(q, g) { return g[0].indexOf(q.fam) >= 0 && (g[1] === 'B' ? !!H.BACK[q.ask] : !H.BACK[q.ask]); }
+  H.buildSession = function (seed, mode) {
+    var pool = H.pools()[mode], rng = H.mulberry32(seed), picked = [], used = {};
+    H.MIX[mode].forEach(function (g) {
+      var cands = H.shuffle(pool.filter(function (q) { return inGroup(q, g); }), rng);
+      // The asks alternate in a group (perimeter and area; the working-backwards kinds the group has), so each is
+      // asked; never the same shape and answer twice in a session (a mirror image is the same question).
+      var want = g[1] === 'PA' ? ['P', 'A'] : Object.keys(H.BACK).filter(function (k) { return cands.some(function (q) { return q.ask === k; }); });
+      var taken = 0;
+      var fresh = function (q) { return !used[q.id] && !used[q.fam + q.ask + q.key]; };
+      for (var i = 0; taken < g[2] && i < cands.length * 2; i++) {
+        var need = want[taken % want.length];
+        var c = cands.filter(function (q) { return fresh(q) && q.ask === need; })[0] || cands.filter(fresh)[0];
+        if (!c) break;
+        used[c.id] = true; used[c.fam + c.ask + c.key] = true; picked.push(c); taken++;
+      }
+    });
+    picked.sort(H.byMeasure);
+    var qs = picked.map(function (q, i) { var c = JSON.parse(JSON.stringify(q)); c.index = i + 1; return c; });
+    // The first question of the stage with a missing length opens with the tap step (rule 3).
+    var first = qs.filter(function (q) { return q.missing.length; })[0];
+    if (first) first.findFirst = true;
+    // The worked example: a question outside the 10 at the smallest measure the stage's first group has.
+    var rest = H.shuffle(pool.filter(function (q) { return !used[q.id] && !used[q.fam + q.ask + q.key] && inGroup(q, H.MIX[mode][0]); }), rng).sort(H.byMeasure);
+    var ex = JSON.parse(JSON.stringify(rest[0]));
+    ex.index = 0; ex.example = true;
+    return { mode: mode, seed: seed, questions: [ex].concat(qs) };
+  };
+  var POOLS = null;
+  H.pools = function () { if (!POOLS) POOLS = H.buildPools(); return POOLS; };
+
+  /* ---------- the words: what each slip is, the worked example and the nudge ---------- */
+  H.LINES = {
+    AS: ['You added the sides: that is the walk round the edge, the perimeter.', 'Turf covers the inside: the area, length times width, in m².'],
+    PM: ['You multiplied: that is the grass inside, the area.', 'A fence goes round the edge: add the sides, the perimeter, in m.'],
+    LW: ['You added one length and one width: that is only half the walk.', 'A rectangle has four sides: two lengths and two widths.'],
+    MS: ['You left out the sides with no label.', 'Every side is walked, the unlabelled ones too: find them from the opposite sides.'],
+    IJ: ['You added the dashed line inside the shape.', 'The dashed line is where the shape splits. Nobody walks it: it is not on the edge.'],
+    OB: ['You multiplied the outer sides: that covers a rectangle bigger than the shape.', 'Split the shape into rectangles and add their areas.'],
+    OL: ['Your rectangles overlap, so a piece was counted twice.', 'Split the shape so the parts meet along the dashed line, never overlap.'],
+    NL: ['A missing side was copied from the nearest label.', 'Find a missing side from the opposite sides, not the nearest number.'],
+    TH: ['You did not halve: base times height is a whole rectangle.', 'A triangle is half the rectangle round it: half of base times height.'],
+    SL: ['You used the slant side, not the perpendicular height.', 'The height is the dashed line at right angles to the base.'],
+    DR: ['You used the diameter as if it were the radius.', 'The radius is half the diameter.'],
+    RD: ['You used the radius as if it were the diameter.', 'The diameter is twice the radius.'],
+    PR: ['You found πr²: that is the area inside the circle.', 'Walking round a circle is its circumference: C = πd.'],
+    PD: ['You found πd: that is the walk round the edge.', 'Covering a circle is its area: A = πr².'],
+    SQ: ['You squared π as well as the radius.', 'Only the radius is squared: π × r × r.'],
+    FC: ['You walked the whole circle, not half.', 'A semicircle\'s curved edge is half of πd.'],
+    ND: ['You left out the straight side.', 'Walking round a semicircle: the curved edge, then back along the diameter.']
+  };
+  H.nudge = function (q, id) { return (H.LINES[id] || ['', ''])[1]; };
+  // The worked line (the first three named slips in a session): the slip, its number on this question, and what the
+  // question needs on the same numbers.
+  H.example = function (q, id) {
+    var l = H.LINES[id] || ['', ''], e = q.errors.filter(function (x) { return x.id === id; })[0];
+    var got = e ? H.fmt(e.v, q.dp ? 1 : (Math.abs(e.v - Math.round(e.v)) < 1e-9 ? 0 : 1)) : null;
+    return l[0] + (got !== null ? ' That gives ' + got + '.' : '') + ' ' + l[1] + ' Here that is ' + H.answerText(q) + '.';
+  };
+
+  /* ---------- the working, step by step ---------- */
+  // Each step: { text (TeX between § marks), hl: [piece indices], dims: [dim indices], show: [missing pieces now
+  // labelled], anim: 'walk' | 'mow' | null }. The worked example reveals them one tap at a time; after a wrong answer
+  // all of them show at once. The last step ends on the key.
+  function sumTex(vals) { return vals.map(H.num).join(' + '); }
+  H.unitText = function (u) { return u === 'm2' ? 'm²' : 'm'; };
+  H.answerText = function (q) { return H.fmt(q.key, q.dp) + ' ' + H.unitText(q.unit); };
+  function partTex(p, sh) {
+    if (p.k === 'rect') return H.num(p.w) + ' \\times ' + H.num(p.h);
+    if (p.k === 'tri') return '\\tfrac{1}{2} \\times ' + H.num(p.b) + ' \\times ' + H.num(p.h);
+    if (p.k === 'para') return H.num(p.b) + ' \\times ' + H.num(p.h);
+    if (p.k === 'circle') return '\\pi \\times ' + H.num(p.r) + '^2';
+    return '\\tfrac{1}{2} \\times \\pi \\times ' + H.num(p.r) + '^2';
+  }
+  function partName(p) {
+    return { rect: 'Rectangle', tri: 'Triangle', para: 'Parallelogram', circle: 'Circle', semi: 'Semicircle' }[p.k];
+  }
+  H.steps = function (q) {
+    var sh = q.shape, out = [], S = H.STAGES[q.mode], ans = H.answerText(q), shown = [];
+    var kind = H.kindOf(q);
+    if (S.choose) {
+      out.push({ text: kind === 'walk' ? 'A fence goes round the edge, so this is a walk: the perimeter, in metres.'
+        : 'Turf covers every blade of grass, so this is a cover: the area, in square metres.', hl: [], show: [], anim: null });
+    }
+    q.missing.forEach(function (i) {
+      var ch = H.derive(sh, i), v = H.missingValue(sh, i), p = sh.path[i];
+      var what = p.t === 'C' ? 'The semicircle\'s diameter' : 'The side with no label';
+      // The added sides first, then the ones taken away: "14 - 8 = 6".
+      var ord = ch.filter(function (c) { return c.sign > 0; }).concat(ch.filter(function (c) { return c.sign < 0; }));
+      var text = ch.length === 1 ? what + ' is the same length as the opposite side: §' + H.num(v) + '§ m.'
+        : what + ', from the opposite sides: §' + ord.map(function (c, j) { return (j ? (c.sign > 0 ? ' + ' : ' - ') : '') + H.num(c.val); }).join('') +
+          ' = ' + H.num(v) + '§ m.';
+      shown = shown.concat([i]);
+      out.push({ text: text, hl: [i], show: shown.slice(), anim: null,
+        cmp: ch.filter(function (c) { return c.src === 'side'; }).map(function (c) { return c.i; }),
+        cmpDims: ch.filter(function (c) { return c.src === 'dim'; }).map(function (c) { return c.i; }) });
+    });
+    var all = shown.slice();
+    if (q.ask === 'P') {
+      var vals = sh.path.map(function (p) { return p.t === 'C' ? null : H.pieceLen(p); });
+      var arcs = sh.path.filter(function (p) { return p.t === 'C'; });
+      if (sh.fam === 'circle') {
+        var d = 2 * sh.parts[0].r;
+        if (sh.dims[0].kind === 'radius') out.push({ text: 'The diameter is twice the radius: §2 \\times ' + H.num(sh.parts[0].r) + ' = ' + H.num(d) + '§ m.', hl: [], show: all, anim: null });
+        out.push({ text: 'Walk round the circle: §C = \\pi d = \\pi \\times ' + H.num(d) + ' = ' + H.num(PI * d) + '§', hl: [], show: all, anim: 'walk' });
+      } else if (arcs.length) {
+        var curved = arcs.map(function (p) { return '\\tfrac{1}{2} \\times \\pi \\times ' + H.num(2 * p.r); });
+        var straight = vals.filter(function (v) { return v !== null; });
+        out.push({ text: 'The curved edge is half a circle: §' + curved[0] + ' = ' + H.num(PI * arcs[0].r) + '§', hl: [], show: all, anim: null });
+        out.push({ text: 'Walk round, adding every side: §' + sumTex(straight.concat([PI * arcs[0].r])) + ' = ' + H.num(H.perimeter(sh)) + '§', hl: [], show: all, anim: 'walk' });
+      } else {
+        out.push({ text: 'Walk round, adding every side: §' + sumTex(vals) + ' = ' + H.num(H.perimeter(sh)) + '§', hl: [], show: all, anim: 'walk' });
+      }
+    } else if (q.ask === 'A') {
+      if (sh.parts.length > 1) out.push({ text: 'Split it along the dashed line' + (sh.joins.length > 1 ? 's' : '') + ' into ' +
+        sh.parts.length + ' parts.', hl: [], show: all, anim: null });
+      sh.parts.forEach(function (p) {
+        if (p.k === 'circle' && sh.dims[0].kind === 'diam') out.push({ text: 'The radius is half the diameter: §' + H.num(2 * p.r) + ' \\div 2 = ' + H.num(p.r) + '§ m.', hl: [], show: all, anim: null });
+        if (p.k === 'semi') out.push({ text: 'The semicircle\'s radius is half its diameter: §' + H.num(2 * p.r) + ' \\div 2 = ' + H.num(p.r) + '§ m.', hl: [], show: all, anim: null });
+        out.push({ text: partName(p) + ': §' + partTex(p, sh) + ' = ' + H.num(H.partArea(p)) + '§' +
+          (p.k === 'tri' || p.k === 'para' ? ', with the perpendicular height, not the slant side.' : ''), hl: [], show: all, anim: sh.parts.length === 1 ? 'mow' : null });
+      });
+      if (sh.parts.length > 1) out.push({ text: 'Add the parts: §' + sumTex(sh.parts.map(H.partArea)) + ' = ' + H.num(H.area(sh)) + '§', hl: [], show: all, anim: 'mow' });
+    } else if (q.ask === 'BA') {
+      out.push({ text: 'Area is length times width, so the width is the area divided by the length: §' + q.given + ' \\div ' + q.side + ' = ' + q.hidden + '§', hl: [], show: all, anim: 'mow' });
+    } else if (q.ask === 'BP') {
+      out.push({ text: 'The fence is two lengths and two widths. Two lengths: §2 \\times ' + q.side + ' = ' + (2 * q.side) + '§', hl: [], show: all, anim: null });
+      out.push({ text: 'That leaves two widths: §' + q.given + ' - ' + (2 * q.side) + ' = ' + (q.given - 2 * q.side) + '§, so one width is §' +
+        (q.given - 2 * q.side) + ' \\div 2 = ' + q.hidden + '§', hl: [], show: all, anim: 'walk' });
+    } else if (q.ask === 'BT' || q.ask === 'BH') {
+      var tri = q.ask === 'BT';
+      out.push({ text: (tri ? 'A triangle\'s area is half of base times height, so base times height is §2 \\times ' + q.given + ' = ' + (2 * q.given) + '§'
+        : 'A parallelogram\'s area is base times perpendicular height.'), hl: [], show: all, anim: null });
+      out.push({ text: 'Height: §' + (tri ? 2 * q.given : q.given) + ' \\div ' + q.side + ' = ' + q.hidden + '§', hl: [], show: all, anim: 'mow' });
+    } else if (q.ask === 'BC') {
+      out.push({ text: 'The line round a circle is its circumference: §C = \\pi d§, so §d = C \\div \\pi = ' + H.fmt(q.given, 1) + ' \\div \\pi = ' + H.num(q.given / PI) + '§', hl: [], show: all, anim: 'walk' });
+    }
+    out.push({ text: (q.dp && Math.abs(q.exact - q.key) > 1e-9 ? 'To 1 decimal place: ' : 'The answer: ') + ans + '.', hl: [], show: all, anim: null, last: true });
+    return out;
+  };
+
+  window.TAW = H;
+})();
+</script>
+<script>
+(function () {
+  'use strict';
+  var H = window.TAW, SLUG = H.SLUG;
+  // One level of content; the roster lists KS3 and GCSE (Free Daily Pizza's pattern): the stages are boards, not
+  // levels, each its own analytics mode.
+  var level = MaffsLevel.resolve({ slug: 'take-a-walk', levels: ['ks3', 'gcse'], fallback: 'ks3',
+    boards: ['stage-1', 'stage-2', 'stage-3', 'stage-4'] });
+  var mode = 'stage-1';
+  var CORRECT_DELAY = 1100;
+  var NO_FALLBACK = 2147483647;      // the longest delay setTimeout takes: a wrong answer waits for Next
+  var FOOTER_PX = 40;
+  var $ = function (id) { return document.getElementById(id); };
+  function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  // KaTeX when the CDN loaded; otherwise the expression as readable text.
+  function tex(t) {
+    if (window.katex) {
+      try { return katex.renderToString(t, { throwOnError: false }); } catch (e) { /* fall through */ }
+    }
+    return esc(t.replace(/\\tfrac\{1\}\{2\}/g, '½').replace(/\\times/g, '×').replace(/\\div/g, '÷').replace(/\\pi/g, 'π')
+      .replace(/\\ldots/g, '…').replace(/\^2/g, '²').replace(/ - /g, ' − ').replace(/\\/g, ''));
+  }
+  // A line of text with TeX between § marks; a bracket or full stop right after the maths stays with it.
+  function renderLine(line) {
+    var p = line.split('§');
+    for (var i = 1; i < p.length; i += 2) {
+      var close = i + 1 < p.length && /^[).,]/.test(p[i + 1]) ? p[i + 1].charAt(0) : '';
+      if (close) p[i + 1] = p[i + 1].slice(1);
+      p[i] = close ? '<span class="glue">' + tex(p[i]) + close + '</span>' : tex(p[i]);
+    }
+    return p.map(function (part, i) { return i % 2 ? part : esc(part); }).join('');
+  }
+
+  /* ---------- the drawing: to scale, on a grid ---------- */
+  var VW = 320, M = 40, VHMAX = 260, KMAX = 26;
+  function bbox(sh) {
+    var xs = [], ys = [];
+    sh.path.forEach(function (p) {
+      if (p.t === 'L') { xs.push(p.a[0], p.b[0]); ys.push(p.a[1], p.b[1]); return; }
+      for (var j = 0; j <= 64; j++) {
+        var t = p.a0 + (p.a1 - p.a0) * j / 64;
+        xs.push(p.c[0] + p.r * Math.cos(t)); ys.push(p.c[1] + p.r * Math.sin(t));
+      }
+    });
+    return { x0: Math.min.apply(null, xs), x1: Math.max.apply(null, xs), y0: Math.min.apply(null, ys), y1: Math.max.apply(null, ys) };
+  }
+  // The scale (px per metre, in the SVG's own units) and the map from metres to the drawing. Exported for the verifier.
+  H.layout = function (sh) {
+    var b = bbox(sh), w = b.x1 - b.x0, h = b.y1 - b.y0;
+    var k = Math.min((VW - 2 * M) / w, (VHMAX - 2 * M) / h, KMAX);
+    var ox = (VW - w * k) / 2;
+    return { k: k, vw: VW, vh: h * k + 2 * M, b: b,
+      X: function (x) { return ox + (x - b.x0) * k; }, Y: function (y) { return M + (b.y1 - y) * k; } };
+  };
+  function f1(v) { return (Math.round(v * 10) / 10).toFixed(1); }
+  function pieceD(p, L, first) {
+    if (p.t === 'L') return (first ? 'M' + f1(L.X(p.a[0])) + ' ' + f1(L.Y(p.a[1])) : '') + ' L' + f1(L.X(p.b[0])) + ' ' + f1(L.Y(p.b[1]));
+    var e = H.pieceEnds(p), d = first ? 'M' + f1(L.X(e[0][0])) + ' ' + f1(L.Y(e[0][1])) : '', R = f1(p.r * L.k);
+    var sweep = p.a1 > p.a0 ? 1 : 0, span = Math.abs(p.a1 - p.a0);
+    if (span > 2 * Math.PI - 1e-9) {   // a whole circle: two halves
+      var mx = p.c[0] - p.r * Math.cos(p.a0), my = p.c[1] - p.r * Math.sin(p.a0);
+      return d + ' A' + R + ' ' + R + ' 0 0 ' + sweep + ' ' + f1(L.X(mx)) + ' ' + f1(L.Y(my)) +
+        ' A' + R + ' ' + R + ' 0 0 ' + sweep + ' ' + f1(L.X(e[1][0])) + ' ' + f1(L.Y(e[1][1]));
+    }
+    return d + ' A' + R + ' ' + R + ' 0 ' + (span > Math.PI ? 1 : 0) + ' ' + sweep + ' ' + f1(L.X(e[1][0])) + ' ' + f1(L.Y(e[1][1]));
+  }
+  function shapeD(sh, L) { return sh.path.map(function (p, i) { return pieceD(p, L, i === 0); }).join('') + ' Z'; }
+  // A label beside a piece's middle, on the side `dir` says (+1 outside: the boundary runs counterclockwise, so in
+  // screen coordinates, y down, its outward normal is (-dy, dx); -1 inside). Beside a vertical line the text starts or
+  // ends clear of it; above or below a horizontal one it is centred. Returns [x, y, anchor].
+  function labelAt(a, b, L, dir) {
+    var x1 = L.X(a[0]), y1 = L.Y(a[1]), x2 = L.X(b[0]), y2 = L.Y(b[1]);
+    var dx = x2 - x1, dy = y2 - y1, len = Math.sqrt(dx * dx + dy * dy) || 1;
+    var nx = -dy / len * (dir || 1), ny = dx / len * (dir || 1), mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+    if (Math.abs(nx) > 0.9) return [mx + nx * 6, my + 4, nx > 0 ? 'start' : 'end'];
+    if (Math.abs(ny) > 0.9) return [mx, ny > 0 ? my + 15 : my - 6, 'middle'];
+    return [mx + nx * 16, my + ny * 16 + 4, 'middle'];
+  }
+  var SVG_N = 0;
+  // opts: show (missing pieces now written in), hl (pieces highlighted), cmp (pieces to compare), cmpDims (dashed
+  // dimensions to compare), tap (hit areas),
+  // ask (draw "?" on the length asked), stripes (rows mown so far, or null).
+  H.draw = function (q, opts) {
+    opts = opts || {};
+    var sh = q.shape, L = H.layout(sh), id = 'taw' + (++SVG_N), out = [];
+    var g = L.k >= 6 ? 1 : L.k >= 3 ? 2 : 5;
+    var gx0 = Math.floor(L.b.x0 / g) * g, gy0 = Math.floor(L.b.y0 / g) * g;
+    for (var x = gx0; x <= L.b.x1 + 1e-9; x += g) out.push('<line class="grid" x1="' + f1(L.X(x)) + '" y1="' + f1(L.Y(L.b.y0)) + '" x2="' + f1(L.X(x)) + '" y2="' + f1(L.Y(L.b.y1)) + '"/>');
+    for (var y = gy0; y <= L.b.y1 + 1e-9; y += g) out.push('<line class="grid" x1="' + f1(L.X(L.b.x0)) + '" y1="' + f1(L.Y(y)) + '" x2="' + f1(L.X(L.b.x1)) + '" y2="' + f1(L.Y(y)) + '"/>');
+    var d = shapeD(sh, L);
+    out.push('<defs><clipPath id="' + id + 'c"><path d="' + d + '"/></clipPath></defs>');
+    out.push('<path class="shape" d="' + d + '"/>');
+    out.push('<g class="mow" clip-path="url(#' + id + 'c)" data-mow="1"></g>');
+    sh.joins.forEach(function (j) { out.push('<line class="join" x1="' + f1(L.X(j.a[0])) + '" y1="' + f1(L.Y(j.a[1])) + '" x2="' + f1(L.X(j.b[0])) + '" y2="' + f1(L.Y(j.b[1])) + '"/>'); });
+    var show = opts.show || [], hl = opts.hl || [], cmp = opts.cmp || [];
+    sh.path.forEach(function (p, i) {
+      var cls = 'edge' + (hl.indexOf(i) >= 0 ? ' hl' : cmp.indexOf(i) >= 0 ? ' cmp' : '');
+      out.push('<path class="' + cls + '" data-piece="' + i + '" d="' + pieceD(p, L, true) + '"/>');
+    });
+    var cmpDims = opts.cmpDims || [];
+    sh.dims.forEach(function (dm, i) {
+      out.push('<line class="dim' + (cmpDims.indexOf(i) >= 0 ? ' cmp' : '') + '" data-dim="' + i + '" x1="' + f1(L.X(dm.a[0])) + '" y1="' + f1(L.Y(dm.a[1])) + '" x2="' + f1(L.X(dm.b[0])) + '" y2="' + f1(L.Y(dm.b[1])) + '"/>');
+    });
+    // Labels: every labelled side, every dashed dimension, each found missing length, "?" on the asked one.
+    sh.path.forEach(function (p, i) {
+      var v = p.lab, cls = 'lab', txt = null;
+      if (v !== null) txt = H.num(v).replace('\\ldots', '…') + ' m';
+      else if (show.indexOf(i) >= 0) { v = H.missingValue(sh, i); txt = H.num(v) + ' m'; cls += ' found'; }
+      else if (p.ask) { txt = '?'; cls += ' ask'; }
+      if (txt === null) return;
+      var pos;
+      if (p.t === 'L') pos = labelAt(p.a, p.b, L, 1);
+      else { var e = H.pieceEnds(p); pos = labelAt(e[0], e[1], L, -1); }
+      out.push('<text class="' + cls + '" text-anchor="' + pos[2] + '" data-piece="' + i + '"' + (v !== null && v !== undefined ? ' data-val="' + v + '"' : '') +
+        ' x="' + f1(pos[0]) + '" y="' + f1(pos[1]) + '">' + esc(txt) + '</text>');
+    });
+    sh.dims.forEach(function (dm, i) {
+      // A horizontal dimension is labelled above its line, a vertical one to its right.
+      var horiz = Math.abs(dm.a[1] - dm.b[1]) < 1e-9, pos = horiz ? labelAt(dm.b, dm.a, L, 1) : labelAt(dm.a, dm.b, L, dm.a[1] < dm.b[1] ? 1 : -1);
+      var txt = dm.val === null ? '?' : (dm.kind === 'radius' ? 'r = ' : dm.kind === 'diam' ? 'd = ' : '') + H.num(dm.val) + ' m';
+      out.push('<text class="lab dimlab' + (dm.val === null ? ' ask' : '') + '" text-anchor="' + pos[2] + '" data-dim="' + i + '"' + (dm.val !== null ? ' data-val="' + dm.val + '"' : '') +
+        ' x="' + f1(pos[0]) + '" y="' + f1(pos[1]) + '">' + esc(txt) + '</text>');
+    });
+    out.push('<g class="walker" data-walker="1" hidden><circle r="4.5" cx="0" cy="-9"/><line x1="0" y1="-4" x2="0" y2="5"/><line x1="0" y1="5" x2="-3.5" y2="11"/><line x1="0" y1="5" x2="3.5" y2="11"/><line x1="-4" y1="0" x2="4" y2="0"/></g>');
+    if (opts.tap) sh.path.forEach(function (p, i) { out.push('<path class="hit" data-piece="' + i + '" d="' + pieceD(p, L, true) + '"/>'); });
+    return '<figure class="pitch" data-fam="' + sh.fam + '"><svg viewBox="0 0 ' + VW + ' ' + f1(L.vh) + '" role="img" aria-label="' +
+      esc(describe(q)) + '" data-k="' + L.k + '" data-x0="' + L.b.x0 + '" data-y1="' + L.b.y1 + '" data-ox="' + f1(L.X(L.b.x0)) + '" data-m="' + M + '">' +
+      out.join('') + '</svg><figcaption></figcaption></figure>';
+  };
+  function describe(q) {
+    var labs = q.shape.path.filter(function (p) { return p.lab !== null; }).map(function (p) { return H.num(p.lab) + ' m'; });
+    return 'The ' + q.thing + ', drawn to scale. Labelled lengths: ' + (labs.join(', ') || 'none') + '.';
+  }
+
+  /* ---------- the two pictures: the walk and the mowing ---------- */
+  var ANIM_MS = 2200;
+  try { if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) ANIM_MS = 0; } catch (e) {}
+  var animToken = 0;
+  // Points along the boundary, each with the distance walked so far (metres).
+  function walkPoints(sh) {
+    var pts = [], dist = 0;
+    sh.path.forEach(function (p) {
+      var n = p.t === 'L' ? 2 : 40, len = H.pieceLen(p);
+      for (var j = 0; j < n; j++) {
+        var t = j / (n - 1), pt;
+        if (p.t === 'L') pt = [p.a[0] + (p.b[0] - p.a[0]) * t, p.a[1] + (p.b[1] - p.a[1]) * t];
+        else { var a = p.a0 + (p.a1 - p.a0) * t; pt = [p.c[0] + p.r * Math.cos(a), p.c[1] + p.r * Math.sin(a)]; }
+        pts.push({ p: pt, d: dist + len * t });
+      }
+      dist += len;
+    });
+    return pts;
+  }
+  function frames(ms, each, done) {
+    var tok = ++animToken;
+    if (!ms) { each(1); if (done) done(); return; }
+    var t0 = null;
+    function step(now) {
+      if (tok !== animToken) return;
+      if (t0 === null) t0 = now;
+      var f = Math.min(1, (now - t0) / ms);
+      each(f);
+      if (f < 1) requestAnimationFrame(step); else if (done) done();   // lock-ok: an animation frame; it marks nothing
+    }
+    requestAnimationFrame(step);   // lock-ok: an animation frame; it marks nothing
+  }
+  // The walk: a small figure goes round the edge and a distance counter counts up as it goes.
+  H.walk = function (fig, q) {
+    var sh = q.shape, L = H.layout(sh), pts = walkPoints(sh), total = pts[pts.length - 1].d;
+    var w = fig.querySelector('[data-walker]'), cap = fig.querySelector('figcaption');
+    fig.setAttribute('data-anim', 'walk');
+    w.removeAttribute('hidden');
+    frames(ANIM_MS, function (f) {
+      var at = total * f, i = 0;
+      while (i < pts.length - 2 && pts[i + 1].d < at) i++;
+      var a = pts[i], b = pts[i + 1], t = b.d > a.d ? (at - a.d) / (b.d - a.d) : 1;
+      var x = a.p[0] + (b.p[0] - a.p[0]) * t, y = a.p[1] + (b.p[1] - a.p[1]) * t;
+      w.setAttribute('transform', 'translate(' + f1(L.X(x)) + ' ' + f1(L.Y(y)) + ')');
+      cap.textContent = 'Walked: ' + (f < 1 ? H.fmt(at, q.dp ? 1 : 0) : H.fmt(total, q.dp)) + ' m';
+    }, function () { fig.setAttribute('data-done', 'walk'); });
+  };
+  // The mowing: the grass is mown in stripes, one row of grid squares at a time, and a counter counts the squares.
+  H.mow = function (fig, q) {
+    var sh = q.shape, L = H.layout(sh), g = fig.querySelector('[data-mow]'), cap = fig.querySelector('figcaption');
+    var area = H.area(sh), rows = Math.ceil(L.b.y1 - L.b.y0 - 1e-9), html = [];
+    for (var r = 0; r < rows; r++) {
+      var y = L.b.y0 + r;
+      html.push('<rect class="' + (r % 2 ? 'stripe-b' : 'stripe-a') + '" data-row="' + r + '" x="' + f1(L.X(L.b.x0)) + '" y="' + f1(L.Y(Math.min(y + 1, L.b.y1))) +
+        '" width="' + f1((L.b.x1 - L.b.x0) * L.k) + '" height="' + f1((Math.min(y + 1, L.b.y1) - y) * L.k) + '" hidden/>');
+    }
+    g.innerHTML = html.join('');
+    var bars = g.querySelectorAll('rect');
+    fig.setAttribute('data-anim', 'mow');
+    frames(ANIM_MS, function (f) {
+      var n = Math.round(rows * f);
+      for (var i = 0; i < bars.length; i++) { if (i < n) bars[i].removeAttribute('hidden'); else bars[i].setAttribute('hidden', ''); }
+      cap.textContent = 'Covered: ' + (f < 1 ? H.fmt(area * f, q.dp ? 1 : 0) : H.fmt(area, q.dp)) + ' m²';
+    }, function () { fig.setAttribute('data-done', 'mow'); });
+  };
+  function play(fig, kind, q) { if (kind === 'walk') H.walk(fig, q); else H.mow(fig, q); }
+
+  /* ---------- play ---------- */
+  var session = null, q = null, idx = 0, state = 'menu', scored = 0, unit = null;
+  var score = 0, correctCount = 0, errCount = {}, helpCount = 0, askedMs = 0, askStart = 0, clockTimer = null;
+  var kp = null, calc = null;
+
+  function show(id) {
+    ['menu', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    document.body.classList.toggle('playing', id !== 'menu');
+    MaffsLock.screen($(id));
+  }
+  function elapsed() { return askedMs + (state === 'asking' || state === 'choose' || state === 'tap' ? Date.now() - askStart : 0); }
+  function clock() {
+    var s = Math.floor(elapsed() / 1000);
+    $('hudClock').textContent = Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2);
+  }
+  function setMode(m) {
+    mode = H.STAGES[m] ? m : 'stage-1';
+    var bs = $('modePick').querySelectorAll('.mode-btn');
+    for (var i = 0; i < bs.length; i++) {
+      var on = bs[i].getAttribute('data-mode') === mode;
+      bs[i].classList.toggle('selected', on);
+      bs[i].setAttribute('aria-pressed', String(on));
+    }
+  }
+  // The header shows the badge of the stage being played (canon §4.4, `by stage`): the same markup and wording as the
+  // stage's own badge on the start screen.
+  function stageBadge() {
+    var src = document.querySelector('.calc-badge[data-stage="' + mode + '"]'), b = $('calcBadge');
+    b.setAttribute('data-calc', src.getAttribute('data-calc'));
+    b.textContent = src.textContent;
+  }
+  // The scientific calculator: Stage 4 only. Mounted the first time Stage 4 is played; hidden in every other stage.
+  function calculator() {
+    var on = H.STAGES[mode].calc === 'scientific';
+    if (on && !calc && window.MaffsCalc) calc = MaffsCalc.mount($('calc'), { keys: 'scientific', dock: $('qcard'), answer: $('ans4') });
+    $('calcWrap').hidden = !on;
+    $('formulas').hidden = !on;
+    $('ans').hidden = on;
+    $('ans4').hidden = !on;
+  }
+
+  function startGame() {
+    MaffsLock.newSession();
+    session = H.buildSession(H.newSeed(), mode);
+    scored = session.questions.filter(function (x) { return !x.example; }).length;
+    idx = 0; score = 0; correctCount = 0; errCount = {}; helpCount = 0; askedMs = 0;
+    stageBadge();
+    calculator();
+    show('game');
+    clearInterval(clockTimer); clockTimer = setInterval(clock, 1000);
+    ev('game_started', { game_slug: SLUG, level: level, mode: mode });
+    nextQuestion();
+  }
+  function nextQuestion() {
+    animToken++;
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    $('feedback').innerHTML = '';
+    $('msg').textContent = '';
+    $('qcard').classList.remove('fb-open');
+    if (idx >= session.questions.length) { finish(); return; }
+    ask(session.questions[idx++]);
+  }
+  function figure(opts) {
+    $('figure').innerHTML = H.draw(q, opts);
+    return $('figure').querySelector('.pitch');
+  }
+  function ask(nq) {
+    q = nq;
+    var S = H.STAGES[q.mode];
+    $('stageLabel').textContent = S.label;
+    $('hudQ').textContent = q.example ? 'Example' : q.index + '/' + scored;
+    $('hudStage').textContent = String(S.n);
+    $('hudScore').textContent = score;
+    $('qtext').textContent = q.text;
+    $('choice').hidden = true;
+    $('ansBlock').hidden = true;
+    $('promptLine').hidden = true;
+    unit = null;
+    setUnit(null);
+    window.scrollTo(0, 0);
+    if (q.example) { askExample(); return; }
+    askStart = Date.now();
+    if (S.choose) {
+      figure({});
+      $('choice').hidden = false;
+      MaffsLock.fresh($('choice'));
+      state = 'choose';
+    } else if (q.findFirst) {
+      askTap();
+    } else {
+      figure({});
+      askAnswer();
+    }
+    clock();
+  }
+
+  // Stage 1, every question: walk or cover first (rule 1). A wrong choice plays its picture and asks again; nothing
+  // is scored or logged for the choice.
+  function choose(kind) {
+    if (state !== 'choose') return;
+    var want = H.kindOf(q), fig = $('figure').querySelector('.pitch');
+    if (kind === want) {
+      $('choice').hidden = true;
+      $('msg').textContent = '';
+      $('promptLine').hidden = false;
+      $('promptLine').textContent = kind === 'walk' ? 'A walk: the perimeter, in m.' : 'A cover: the area, in m².';
+      askAnswer();
+      return;
+    }
+    $('msg').textContent = kind === 'walk' ? 'That walks round the edge: the perimeter. Turf covers the inside. Try again.'
+      : 'That covers the grass inside: the area. A fence goes round the edge. Try again.';
+    figure({});
+    play($('figure').querySelector('.pitch'), kind, q);
+  }
+
+  // Find it first (rule 3): tap the side with no label. A wrong tap highlights the opposite sides to compare.
+  function askTap() {
+    state = 'tap';
+    $('promptLine').hidden = false;
+    $('promptLine').textContent = 'Click the side with missing information.';
+    figure({ tap: true });
+    MaffsLock.fresh($('figure'));
+  }
+  function tap(i) {
+    if (state !== 'tap') return;
+    if (q.missing.indexOf(i) >= 0) {
+      $('msg').textContent = '';
+      $('promptLine').textContent = 'That side has no label: find it from the opposite sides.';
+      figure({ hl: [i] });
+      askAnswer();
+      return;
+    }
+    var ch = H.derive(q.shape, q.missing[0]);
+    $('msg').textContent = 'That side has a label. Compare the highlighted sides: the missing one is opposite them.';
+    figure({ tap: true, cmp: ch.filter(function (c) { return c.src === 'side'; }).map(function (c) { return c.i; }),
+      cmpDims: ch.filter(function (c) { return c.src === 'dim'; }).map(function (c) { return c.i; }) });
+  }
+
+  function box() { return H.STAGES[mode].calc === 'scientific' ? $('ans4') : $('ans'); }
+  function askAnswer() {
+    $('ansBlock').hidden = false;
+    var input = box();
+    input.value = '';
+    if (H.STAGES[mode].calc !== 'scientific') {
+      var holder = $('kpHolder'), el = document.createElement('div');
+      holder.innerHTML = ''; holder.appendChild(el);
+      kp = window.MaffsKeypad ? MaffsKeypad.mount(el, { targets: [input], keepInView: $('ansForm'), foldInset: FOOTER_PX }) : null;
+    } else {
+      $('kpHolder').innerHTML = '';
+      kp = null;
+      if (calc) calc.clear();
+    }
+    MaffsLock.fresh($('ansForm'));
+    state = 'asking';
+    if (!(kp && kp.enabled && kp.enabled()) && !(calc && calc.answerMode && calc.answerMode())) {
+      try { input.focus({ preventScroll: true }); } catch (e) {}
+    }
+  }
+  function setUnit(u) {
+    unit = u;
+    var bs = document.querySelectorAll('.unit-btn');
+    for (var i = 0; i < bs.length; i++) bs[i].setAttribute('aria-pressed', String(bs[i].getAttribute('data-unit') === u));
+  }
+  // The typed answer: the number marked by MaffsAnswer (whole metres in Stages 1-3, 1 d.p. in Stage 4), then the unit.
+  // An unreadable entry, a number in the wrong form, no unit, or the right number with the wrong unit is never marked:
+  // a message, no score, no event, and the student fixes it (SR-3).
+  function mark1(raw, v, dp) { return dp ? MaffsAnswer.decimal(raw, H.round(v, 1), 1) : MaffsAnswer.exact(raw, v); }
+  function submit() {
+    if (state !== 'asking' || !q) return;
+    var raw = box().value.trim(), res = mark1(raw, q.key, q.dp);
+    if (res === 'unreadable' || res === 'format') { $('msg').textContent = MaffsAnswer.message(res, raw, { dp: 1 }); return; }
+    if (!unit) { $('msg').textContent = 'Choose the unit: m or m².'; return; }
+    if (res === 'correct' && unit !== q.unit) { $('msg').textContent = 'That would lose the mark in the exam. Check the unit.'; return; }
+    if (!MaffsLock.lock($('ansForm'))) return;
+    $('msg').textContent = '';
+    var named = null;
+    if (res === 'wrong') q.errors.some(function (e) {
+      if (mark1(raw, e.v, q.dp) === 'wrong') return false;
+      named = e.id; return true;
+    });
+    markAnswer(res === 'correct', named, raw);
+  }
+  function markAnswer(ok, named, raw) {
+    var secs = (Date.now() - askStart) / 1000;
+    askedMs += Date.now() - askStart;
+    state = ok ? 'right' : 'wrong';
+    ev('question_answered', { game_slug: SLUG, level: level, mode: q.mode, question_index: q.index, correct: ok });
+    if (ok) {
+      correctCount++;
+      score += H.scoreFor(secs);
+      $('hudScore').textContent = score;
+      $('feedback').innerHTML = '<div class="fb-quick">✓ ' + esc(H.answerText(q)) + '</div>';
+      MaffsLock.timer(function () { if (state === 'right') nextQuestion(); }, CORRECT_DELAY);
+      return;
+    }
+    var help = null;
+    if (named) { errCount[named] = (errCount[named] || 0) + 1; helpCount++; help = H.helpFor(helpCount); }
+    showWrong(named, help, raw);
+  }
+  // The picture a wrong answer replays: the slip's own (adding the sides for an area shows the walk; multiplying for a
+  // perimeter, the mowing), otherwise the one the question asks for.
+  H.picture = function (q, id) {
+    if (id === 'AS' || id === 'PD' || id === 'LW' || id === 'MS' || id === 'IJ' || id === 'NL' || id === 'FC' || id === 'ND') return 'walk';
+    if (id === 'PM' || id === 'PR' || id === 'OB' || id === 'OL') return 'mow';
+    return H.kindOf(q);
+  };
+  // The wrong-answer screen: the picture on this question's numbers, one line on the slip, the working, the answer,
+  // Next (at once; nothing moves on by itself).
+  function showWrong(id, help, raw) {
+    var line;
+    if (help === 'example') line = H.example(q, id);
+    else if (help === 'nudge') line = H.nudge(q, id);
+    else line = 'You said ' + raw + ' ' + H.unitText(unit) + '. ' + (H.kindOf(q) === 'walk' ? 'This is a walk round the edge: the perimeter.' : 'This is a cover: the area.');
+    var steps = H.steps(q), pic = H.picture(q, id);
+    var kind = H.STAGES[q.mode].choose ? '' : '<li><span>' + esc(H.kindOf(q) === 'walk' ? 'A walk round the edge: the perimeter.' : 'A cover of the inside: the area.') + '</span></li>';
+    var h = '<div class="fb wrong">' + H.draw(q, { show: q.missing }) +
+      '<div class="fb-line" data-help="' + (id ? help : 'rule') + '"' + (id ? ' data-err="' + id + '"' : '') + '>' + esc(line) + '</div>' +
+      '<ol class="steps">' + kind + steps.map(function (s) { return '<li><span>' + renderLine(s.text) + '</span></li>'; }).join('') + '</ol>' +
+      '<div class="fb-ans">' + esc(H.answerText(q)) + '</div><div class="fb-next"></div></div>';
+    $('feedback').innerHTML = h;
+    $('qcard').classList.add('fb-open');
+    var fb = $('feedback').querySelector('.fb');
+    fb.querySelector('.pitch').setAttribute('data-pic', pic);
+    play(fb.querySelector('.pitch'), pic, q);
+    MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: nextQuestion, fallbackMs: NO_FALLBACK });
+    window.scrollTo(0, 0);
+    var nx = fb.querySelector('.fb-next button');
+    if (nx && nx.getBoundingClientRect().bottom > window.innerHeight - FOOTER_PX) fb.classList.add('tight');
+  }
+
+  // Question 0 of every stage: the worked example. No answer, no score, no question_answered. One step per tap, on its
+  // own numbers, the picture following the steps and ending on the answer; its last button goes on to the questions.
+  function askExample() {
+    state = 'example';
+    var steps = H.steps(q), at = 0, wrap = document.createElement('div');
+    wrap.className = 'explain';
+    $('feedback').innerHTML = '<div class="ex-tag">Worked example</div>';
+    $('feedback').appendChild(wrap);
+    function draw() {
+      var s = steps[at], last = at === steps.length - 1;
+      var fig = figure({ show: s.show, hl: s.hl, cmp: s.cmp || [], cmpDims: s.cmpDims || [] });
+      if (s.anim) play(fig, s.anim, q);
+      wrap.setAttribute('data-step', String(at + 1));
+      wrap.setAttribute('data-steps', String(steps.length));
+      wrap.innerHTML = '<ol class="steps">' + steps.slice(0, at + 1).map(function (x) { return '<li><span>' + renderLine(x.text) + '</span></li>'; }).join('') +
+        '</ol><div class="step-row"><button class="btn' + (last ? ' solid' : '') + '" type="button" id="stepBtn">' +
+        (last ? 'Start the questions' : 'Show the next step') + '</button></div>';
+      wrap.querySelector('#stepBtn').addEventListener('click', function () { if (last) nextQuestion(); else { at++; draw(); } });
+      MaffsLock.fresh(wrap);   // a double-tap reveals one step, never two
+      var b = wrap.querySelector('#stepBtn'), over = b.getBoundingClientRect().bottom - (window.innerHeight - FOOTER_PX);
+      if (over > 0) window.scrollBy(0, over);
+    }
+    draw();
+  }
+
+  // Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+  var finish = MaffsLock.finishOnce(function () {
+    state = 'done';
+    clearInterval(clockTimer);
+    var n = scored, secs = Math.floor(elapsed() / 1000), board = mode;
+    ev('game_completed', { game_slug: SLUG, level: level, mode: mode, score: score, questions_answered: n, questions_correct: correctCount });
+    if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, board, score, n).catch(function () {});
+    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, board, score);
+    var pbKey = 'taw_best_' + board;
+    var prev = parseInt(lsGet(pbKey) || '0', 10) || 0;
+    var pb = score > prev;
+    if (pb) { ev('personal_best_set', { game_slug: SLUG, level: level, mode: mode, score: score, previous_best: prev }); lsSet(pbKey, String(score)); }
+    var S = H.STAGES[mode];
+    $('resTitle').textContent = 'Stage ' + S.n + ' done';
+    $('resScore').textContent = score;
+    $('resStats').innerHTML = '<b>' + correctCount + '</b> right out of <b>' + n + '</b> · time <b>' +
+      Math.floor(secs / 60) + ':' + ('0' + (secs % 60)).slice(-2) + '</b>' + (pb ? '<br>New personal best' : '');
+    var next = S.n < 4 ? 'stage-' + (S.n + 1) : null;
+    $('nextStageBtn').hidden = !next;
+    $('nextStageBtn').textContent = next ? 'Next: Stage ' + (S.n + 1) : '';
+    $('nextStageBtn').setAttribute('data-mode', next || '');
+    show('results');
+  });
+
+  /* ---------- wiring ---------- */
+  $('startBtn').addEventListener('click', startGame);
+  $('ansForm').addEventListener('submit', function (e) { e.preventDefault(); submit(); });
+  $('againBtn').addEventListener('click', function () { state = 'menu'; show('menu'); });
+  $('nextStageBtn').addEventListener('click', function () { setMode($('nextStageBtn').getAttribute('data-mode')); startGame(); });
+  $('modePick').addEventListener('click', function (e) { var b = e.target.closest('.mode-btn'); if (b) setMode(b.getAttribute('data-mode')); });
+  $('choice').addEventListener('click', function (e) { var b = e.target.closest('[data-kind]'); if (b) choose(b.getAttribute('data-kind')); });
+  $('figure').addEventListener('click', function (e) { var h = e.target.closest('.hit'); if (h) tap(parseInt(h.getAttribute('data-piece'), 10)); });
+  document.querySelector('.units').addEventListener('click', function (e) { var b = e.target.closest('.unit-btn'); if (b) setUnit(b.getAttribute('data-unit')); });
+  setMode(mode);
+  var texEls = document.querySelectorAll('[data-tex]');
+  for (var t = 0; t < texEls.length; t++) if (window.katex) texEls[t].innerHTML = tex(texEls[t].getAttribute('data-tex'));
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(lsGet(KEY) === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); lsSet(KEY, String(on)); apply(on); });
+  })();
+
+  // Read-only views of live state, and the animation speed, for scripts/verify-take-a-walk.py.
+  H.ui = {
+    state: function () { return state; },
+    level: function () { return level; },
+    mode: function () { return mode; },
+    question: function () { return q ? JSON.parse(JSON.stringify(q)) : null; },
+    session: function () { return session ? JSON.parse(JSON.stringify(session)) : null; },
+    answerBox: function () { return box(); },
+    calcMounted: function () { return !!calc; },
+    speed: function (ms) { ANIM_MS = ms; }
+  };
+})();
+</script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'take-a-walk');</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

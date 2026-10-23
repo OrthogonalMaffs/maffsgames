@@ -177,7 +177,7 @@ core-maths-paper2b core-maths-paper2c growth-and-decay normal-navigator log-laws
 characteristic-quest complex-converter
 eigenvalue-extractor matrix-crunch boolean-blitz
 eigenvalue-extractor matrix-crunch boolean-blitz
-unit-converter graph-sketcher how-many-parts
+unit-converter graph-sketcher how-many-parts take-a-walk
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
