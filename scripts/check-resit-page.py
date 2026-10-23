@@ -41,7 +41,8 @@ PAGE = "essentials/index.html"
 # it after playing it; contract RELIST-3): Geometry and measures, one level (it has no
 # picker and reads no ?level=, so the card says "One level"), calculator required. how-many-parts added 23 Oct 2026
 # (Jon approved it after playing it; contract HMP-LIST): Number, after free-daily-pizza; it shows a Foundation/Advanced
-# picker, so its card is "Choose: Foundation" (key ks3).
+# picker, so its card is "Choose: Foundation" (key ks3). take-a-walk added 23 Oct 2026 (Jon approved it after playing it;
+# contract TAKE-A-WALK-LIST): Geometry and measures, after just-pythag-it-bruv; it picks a stage, never a level, so "One level".
 SUITE = [
     ("number", "Number", ["six-sevens-bruv", "free-daily-pizza", "how-many-parts", "negative-number-line",
         "decimal-detective", "think-of-a-number", "factor-race", "prime-factorisation",
@@ -50,7 +51,7 @@ SUITE = [
         "equation-builder", "four-quadrant-explorer", "formula-unlocked", "formula-forge", "sequence-solver"]),
     ("ratio", "Ratio, proportion and percentages", ["split-it", "proportion-blaster",
         "better-value", "percentage-flip"]),
-    ("geometry", "Geometry and measures", ["new-shapes", "angle-ace", "shape-shifter", "just-pythag-it-bruv"]),
+    ("geometry", "Geometry and measures", ["new-shapes", "angle-ace", "shape-shifter", "just-pythag-it-bruv", "take-a-walk"]),
     ("probability", "Probability", ["probability-pioneer", "expected-damage", "given-that"]),
     ("statistics", "Statistics", ["distinctly-average", "stat-attack", "chart-interrogator",
         "correlation-or-coincidence"]),

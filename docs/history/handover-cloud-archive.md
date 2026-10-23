@@ -3,6 +3,14 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-23 (cloud): TAKE-A-WALK-RANGES (contract in Jon's message of 23 Oct, after his play-test). **DONE (#497, 80eca0a; main run 39963313415 green, 58 of 58 jobs).**
+
+- **Why:** Stage 1 (non-calculator) asked for 16 m x 7 m; the prompt line "A cover: the area, in m²." gave away the unit.
+- **Ranges** (`H.RANGE`, every labelled, missing and working-backwards length and every part): Stage 1 whole metres 1-10, its first three questions 5 m or less (H.MIX's first group, `[..., 3, 5]`); Stage 2 up to 12; Stage 3 up to 20, every product with a factor of 10 or less, every triangle's base x height even; Stage 4 unchanged. The prompt line is "A walk: the perimeter." / "A cover: the area."
+- **Pools, before -> after:** Stage 1 176 -> 181; Stage 2 282 -> 550; Stage 3 162 -> 152; Stage 4 150 -> 150.
+- **Verifier:** the ranges, products and halving asserted on every pool question; the parts the working multiplies must make up the boundary's area; Stage 1's first three in every session; no question text naming the answer's unit; the prompt line read in play. Plants 7 -> 12 (the contract's five added), each caught for its own finding.
+- **For the home lane:** the roster's row 100 still gives the old pool sizes (176, 282, 162, 150); this contract touched only the game and its verifier.
+
 ## 2026-10-23 (cloud): CALC-BY-STAGE (contract verbatim: `docs/history/contracts/2026-10-23-calc-by-stage.md`). **DONE (#494, 6c59e7a; main run 39939100798 green, 56 of 56 jobs).**
 
 - **Lane exception (Jon, 23 Oct 2026, 09:45):** the cloud lane edits `scripts/check-calculator.py`, canon §4.4 and the roster's calculator-value list for this PR only, then builds Take a Walk on it.
