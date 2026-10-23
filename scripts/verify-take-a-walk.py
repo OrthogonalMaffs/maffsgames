@@ -5,7 +5,7 @@
 # ci-line: Take a Walk, part 4 (fault-injection self-test: seven planted faults, each caught) | --part 4
 # ci-deps: games/take-a-walk/
 """Independent verification for Take a Walk (games/take-a-walk/), built 23 Oct 2026 (contract TAKE-A-WALK, verbatim in
-docs/handover/contracts/2026-10-23-take-a-walk.md; its calculator by stage, contract CALC-BY-STAGE). SR-30: checked from
+docs/history/contracts/2026-10-23-take-a-walk.md; its calculator by stage, contract CALC-BY-STAGE). SR-30: checked from
 its first PR.
 
 WHY THIS READS THE LIVE PAGE
