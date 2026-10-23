@@ -1375,6 +1375,21 @@ never scanned, so both still said "resit" ("resit page", "resit students", a lin
   room count (each was stale within a week: "96 games" while the portal listed 91); the range reads "KS3 to
   Further Maths" everywhere on the homepage.
 
+### 7.5.4 The start-screen mount: the one place for start-screen notes (Jon, 23 Oct 2026; contract START-MOUNT)
+
+Every game with a start screen carries `<div class="maffs-start-note" data-maffs-start-note></div>` once, as the last
+child of its start container (below the Start control and any level or mode picker). **A site-wide start-screen note
+mounts there and nowhere else**: it needs no per-game code and no loader that guesses a game's ids (the start containers
+are `#startScreen`, `#menu`, `#menuScreen` and five others). The mount is empty and takes no space until a script fills it.
+It is shown before play and hidden once play begins, because its container is.
+
+`scripts/check-start-mount.py` (CI, site-wide checks) holds the container each game uses (`CONTAINERS`) and fails if a live
+game is in neither that table nor `NO_START`, has no mount or two, has the mount outside its recorded container, shows it
+too late (not visible before Start) or too long (still visible once play has begun; each game is played to its first
+question in Chromium). `NO_START` lists the games that open straight into play (52dle, Equatle, Estimation Golf, Factor
+Theorem); they carry no mount. A new game takes the mount and a `CONTAINERS` entry in its first PR. `teacher-invite.js` and
+its mounts are separate (§7.1: the results screen) and are not touched by this.
+
 ## 7.7 What the site publishes — SITE and INTERNAL
 
 GitHub Pages builds `main` with Jekyll and publishes every tracked file except dot-paths
