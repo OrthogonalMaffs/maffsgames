@@ -414,6 +414,7 @@ jobs:
               Content safety (canon SR-14 tiers: no new banned wording, no illness or injury in humour)|python scripts/check-content-safety.py
               Money to the penny (canon SR-33 R4: every £/€ amount whole or two decimals, in source and in split-it generated output)|python scripts/check-money.py && python scripts/check-money.py --selftest
               Teacher feedback line (on every results screen, played in Chromium; own slug; exact wording)|python scripts/check-teacher-invite.py && python scripts/check-teacher-invite.py --selftest
+              Start-screen mount (canon 7.5.4: one mount per game, in its start screen, shown before play and hidden during it)|python scripts/check-start-mount.py && python scripts/check-start-mount.py --selftest
               Search titles (every game page and /essentials/ carries the title and description data/games.json generates)|python scripts/check-meta.py && python scripts/check-meta.py --selftest
               Findings register (every audit finding filed per game, schema valid; fixed entries name their PR)|python scripts/audit-register.py --check --selftest
               Quoted figures (no figure the quoted-statistics audit found CONTRADICTED is still on its page)|python scripts/check-quoted-figures.py && python scripts/check-quoted-figures.py --selftest
