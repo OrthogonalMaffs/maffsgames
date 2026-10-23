@@ -1,20 +1,24 @@
 # ci-deps: docs/apps-script-counts.js docs/apps-script-counts.appsscript.json
-"""Does the counts Apps Script (docs/apps-script-counts.js) count what the contract says it counts?
+"""Does the counts Apps Script (docs/apps-script-counts.js) count what the contract says it counts, with only the
+read-only Sheets scope?
 
 The script cannot run in CI (it needs Google's services), and Node is not installed on the Windows machine, so
 this loads the file's own source into Chromium behind small fakes of the Apps Script services it uses
-(SpreadsheetApp, PropertiesService, CacheService, LockService, Utilities, ContentService) and drives it:
+(the Sheets advanced service, PropertiesService, CacheService, LockService, Utilities, ContentService) and drives it.
+SpreadsheetApp is a trap: openById needs the full read-write scope (it failed at deploy, 23 Oct 2026, with only
+spreadsheets.readonly granted), so any call to it, or to DriveApp, ScriptApp or UrlFetchApp, fails this test.
 
+  - the manifest: oauthScopes is exactly spreadsheets.readonly, and the Sheets v4 advanced service is switched on;
   - the period: 1 September of the school year, Europe/London, restarting on 1 September;
   - only question_answered rows, per game_slug, with event time on or after the period start;
-  - the browser's clock when it agrees with arrival within a day, else arrival;
+  - the browser's clock when it agrees with arrival within a day, else arrival; a date cell (a serial number on the
+    spreadsheet's clock) is read as the right instant;
   - incremental: a second run reads only the rows added since (and finds the period start by binary search,
-    reading none of the older rows);
+    reading none of the older rows); trailing blank grid rows are not data;
   - chunked and time-boxed: a run cut off loses nothing, resumes, and as_of stays null until every row is read;
-  - a new school year, or a Sheet that shrank, starts the count again;
+  - a new school year, or rows deleted from under the stored place, starts the count again;
   - a held lock skips the run; doGet serves the 60-second cache and ?version=1;
-  - the payload is {as_of, since, total, games} with total = the sum of games;
-  - the manifest asks for the read-only Sheets scope and nothing else.
+  - the payload is {as_of, since, total, games} with total = the sum of games.
 
     python scripts/test-apps-script-counts.py
 """
@@ -40,6 +44,7 @@ HARNESS = r"""
     formatDate(d, tz, fmt) {
       const p = parts(d, tz), o = offsetMin(d, tz);
       const sign = o < 0 ? '-' : '+', a = Math.abs(o);
+      if (fmt === 'yyyy-MM-dd HH:mm:ss') return `${p.year}-${pad(p.month)}-${pad(p.day)} ${pad(p.hour)}:${pad(p.minute)}:${pad(p.second)}`;
       return fmt.replace("yyyy-MM-dd'T'HH:mm:ssXXX", `${p.year}-${pad(p.month)}-${pad(p.day)}T${pad(p.hour)}:${pad(p.minute)}:${pad(p.second)}${sign}${pad(Math.floor(a / 60))}:${pad(a % 60)}`)
                 .replace('yyyy', p.year).replace(/^M$/, p.month);
     },
@@ -52,25 +57,39 @@ HARNESS = r"""
     },
   };
 
-  // ---- fakes
+  const NAME = 'MaffsGames Events';
   const HEAD = ['timestamp', 'event', 'game_slug', 'level', 'mode', 'question_index', 'correct', 'attempts', 'score',
     'questions_answered', 'questions_correct', 'previous_score', 'difficulty', 'filter_type', 'filter_value', 'client_ts', 'seq'];
-  function makeEnv(rows) {
-    const env = { rows: [HEAD].concat(rows), reads: [], props: {}, cache: {}, locked: false, clock: 0 };
-    const sheet = {
-      getLastRow: () => env.rows.length,
-      getLastColumn: () => HEAD.length,
-      getRange(r, c, nr, nc) {
-        nr = nr || 1; nc = nc || 1;
-        return {
-          getValues() { env.reads.push([r, nr]); return env.rows.slice(r - 1, r - 1 + nr).map(x => x.slice(c - 1, c - 1 + nc)); },
-          getValue() { env.reads.push([r, 1]); return env.rows[r - 1][c - 1]; },
-        };
-      },
+  const colNum = s => s.split('').reduce((n, ch) => n * 26 + ch.charCodeAt(0) - 64, 0);
+  const trap = what => new Proxy({}, { get(_, k) { throw new Error(what + '.' + String(k) + ' called: it needs a wider scope than read-only'); } });
+
+  function makeEnv(rows, extraBlankRows = 50) {
+    const env = { rows: [HEAD].concat(rows), reads: [], props: {}, cache: {}, locked: false, clock: 0, extra: extraBlankRows, calls: [] };
+    const grid = () => env.rows.length + env.extra;                   // the grid is taller than the data
+    const get = (id, range, opts) => {
+      env.calls.push('values.get ' + range);
+      if (!opts || opts.valueRenderOption !== 'UNFORMATTED_VALUE') throw new Error('valueRenderOption must be UNFORMATTED_VALUE');
+      const m = range.match(/^'(.+)'!(?:([A-Z]+)(\d+)(?::([A-Z]+)(\d+))?|(\d+):(\d+))$/);
+      if (!m || m[1] !== NAME) throw new Error('bad range ' + range);
+      let r1, r2, c1, c2;
+      if (m[6]) { r1 = +m[6]; r2 = +m[7]; c1 = 1; c2 = HEAD.length; }
+      else { c1 = colNum(m[2]); r1 = +m[3]; c2 = m[4] ? colNum(m[4]) : c1; r2 = m[5] ? +m[5] : r1; }
+      if (r2 > grid()) throw new Error('range ' + range + ' exceeds grid limits');
+      let vals = [];
+      for (let r = r1; r <= r2; r++) vals.push((env.rows[r - 1] || []).slice(c1 - 1, c2));
+      // the API leaves off trailing empty cells in a row, and trailing empty rows
+      vals = vals.map(row => { const x = row.slice(); while (x.length && x[x.length - 1] === '') x.pop(); return x; });
+      while (vals.length && vals[vals.length - 1].length === 0) vals.pop();
+      env.reads.push([r1, vals.length]);
+      return vals.length ? { range, majorDimension: 'ROWS', values: vals } : { range, majorDimension: 'ROWS' };
     };
-    env.sheet = sheet;
     env.services = {
-      SpreadsheetApp: { openById: () => ({ getSheetByName: () => sheet }) },
+      Sheets: { Spreadsheets: {
+        get: (id, opts) => { env.calls.push('spreadsheets.get'); return { properties: { timeZone: 'Europe/London' },
+          sheets: [{ properties: { title: 'Dashboard', gridProperties: { rowCount: 10 } } },
+                   { properties: { title: NAME, gridProperties: { rowCount: grid() } } }] }; },
+        Values: { get } } },
+      SpreadsheetApp: trap('SpreadsheetApp'), DriveApp: trap('DriveApp'), ScriptApp: trap('ScriptApp'), UrlFetchApp: trap('UrlFetchApp'),
       PropertiesService: { getScriptProperties: () => ({
         getProperties: () => Object.assign({}, env.props),
         setProperties: (p, del) => { if (del) env.props = {}; Object.assign(env.props, p); },
@@ -97,41 +116,46 @@ HARNESS = r"""
     r[0] = arrival; r[1] = event; r[2] = slug; if (clientTs) r[15] = clientTs; return r;
   };
   const QA = 'question_answered';
-  const at = iso => iso;   // ISO strings, as the Sheet holds them
   const NOW_OCT = new Date('2026-10-23T12:00:00Z');
+  const serial = (y, mo, d, h, mi) => (Date.UTC(y, mo - 1, d, h, mi) - Date.UTC(1899, 11, 30)) / 86400000;   // wall-clock reading
+  const bulk = env => env.reads.filter(r => r[1] > 1).reduce((s, r) => s + r[1], 0);
 
   // ---- the period
   {
     const g = load(makeEnv([]));
     ok('period: 23 Oct 2026 -> 2026-09-01', g.sinceString_(NOW_OCT) === '2026-09-01', g.sinceString_(NOW_OCT));
-    ok('period: 31 Aug 2027 23:30 London -> still 2026-09-01', g.sinceString_(new Date('2027-08-31T22:30:00Z')) === '2026-09-01', g.sinceString_(new Date('2027-08-31T22:30:00Z')));
-    ok('period: 1 Sep 2027 00:30 London -> 2027-09-01', g.sinceString_(new Date('2027-08-31T23:30:00Z')) === '2027-09-01', g.sinceString_(new Date('2027-08-31T23:30:00Z')));
+    ok('period: 31 Aug 2027 23:30 London -> still 2026-09-01', g.sinceString_(new Date('2027-08-31T22:30:00Z')) === '2026-09-01');
+    ok('period: 1 Sep 2027 00:30 London -> 2027-09-01', g.sinceString_(new Date('2027-08-31T23:30:00Z')) === '2027-09-01');
     ok('period: January 2027 -> 2026-09-01', g.sinceString_(new Date('2027-01-15T12:00:00Z')) === '2026-09-01');
   }
 
   // ---- what counts
   {
     const env = makeEnv([
-      row(at('2026-08-20T10:00:00Z'), QA, 'old-game'),                                   // before the period
-      row(at('2026-09-01T09:00:00Z'), QA, 'a'),
-      row(at('2026-09-01T09:00:01Z'), 'game_started', 'a'),                              // not a question
-      row(at('2026-09-02T09:00:00Z'), QA, 'a'),
-      row(at('2026-09-02T09:00:01Z'), QA, 'b'),
-      row(at('2026-09-02T09:00:02Z'), QA, ''),                                           // no slug
-      row(at('2026-09-03T09:00:00Z'), QA, 'b', '2020-01-01T00:00:00.000Z'),              // wrong device clock: arrival wins
-      row(at('2026-09-01T00:30:00Z'), QA, 'c', '2026-08-31T22:30:00.000Z'),              // stamped before 1 Sept 00:00 BST
-      row(at('2026-09-01T00:30:00Z'), QA, 'c', '2026-08-31T23:30:00.000Z'),              // stamped after it
-      row(new Date('2026-09-04T09:00:00Z'), QA, 'a'),                                    // a Date cell, as Sheets may store it
+      row('2026-08-20T10:00:00Z', QA, 'old-game'),                                       // before the period
+      row('2026-09-01T09:00:00Z', QA, 'a'),
+      row('2026-09-01T09:00:01Z', 'game_started', 'a'),                                  // not a question
+      row('2026-09-02T09:00:00Z', QA, 'a'),
+      row('2026-09-02T09:00:01Z', QA, 'b'),
+      row('2026-09-02T09:00:02Z', QA, ''),                                               // no slug
+      row('2026-09-03T09:00:00Z', QA, 'b', '2020-01-01T00:00:00.000Z'),                  // wrong device clock: arrival wins
+      row('2026-09-01T00:30:00Z', QA, 'c', '2026-08-31T22:30:00.000Z'),                  // stamped before 1 Sept 00:00 BST
+      row('2026-09-01T00:30:00Z', QA, 'c', '2026-08-31T23:30:00.000Z'),                  // stamped after it
+      row(serial(2026, 9, 4, 9, 0), QA, 'a'),                                            // a date cell: a serial number
+      row(serial(2026, 9, 1, 0, 30), QA, 'd'),                                           // 00:30 London 1 Sept: counted
+      row(serial(2026, 8, 31, 23, 30), QA, 'd'),                                         // 23:30 London 31 Aug: not counted
     ]);
     const g = load(env);
     g.updateCounts_(1e9, 0);
     const st = g.loadState_();
-    ok('counts: per game, only question_answered, only from 1 Sept',
-       JSON.stringify(st.counts) === JSON.stringify({ a: 3, b: 2, c: 1 }), JSON.stringify(st.counts));
+    ok('counts: per game, only question_answered, only from 1 Sept (text and date cells)',
+       JSON.stringify(st.counts) === JSON.stringify({ a: 3, b: 2, c: 1, d: 1 }), JSON.stringify(st.counts));
     const p = g.payload_(st, NOW_OCT);
-    ok('payload: total is the sum of games', p.total === 6 && Object.values(p.games).reduce((x, y) => x + y, 0) === 6, JSON.stringify(p));
+    ok('payload: total is the sum of games', p.total === 7 && Object.values(p.games).reduce((x, y) => x + y, 0) === 7, JSON.stringify(p));
     ok('payload: exactly as_of, since, total, games', JSON.stringify(Object.keys(p).sort()) === '["as_of","games","since","total"]', Object.keys(p));
     ok('payload: caught up gives a dated as_of', /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d[+-]\d\d:\d\d$/.test(p.as_of), p.as_of);
+    ok('reads: only the Sheets advanced service was used (no SpreadsheetApp, DriveApp, ScriptApp, UrlFetchApp)',
+       env.calls.length > 0 && env.calls.every(c => /^(values\.get|spreadsheets\.get)/.test(c)), env.calls.slice(0, 3));
   }
 
   // ---- incremental
@@ -141,16 +165,17 @@ HARNESS = r"""
     const env = makeEnv(pre.concat(inP));
     const g = load(env);
     g.updateCounts_(1e9, 0);
-    const bulk = env.reads.filter(r => r[1] > 1).reduce((s, r) => s + r[1], 0);
-    ok('incremental: first run reads only the period (the 400 older rows are found by binary search, not read)', bulk <= 60 && g.loadState_().counts.x === 50, 'read ' + bulk + ' ' + JSON.stringify(g.loadState_().counts));
+    ok('incremental: first run reads only the period (the 400 older rows are found by binary search, not read)',
+       bulk(env) <= 60 && g.loadState_().counts.x === 50, 'read ' + bulk(env) + ' ' + JSON.stringify(g.loadState_().counts));
     env.reads.length = 0;
     for (let i = 0; i < 7; i++) env.rows.push(row(new Date(Date.UTC(2026, 8, 6) + i * 60000).toISOString(), QA, 'x'));
     g.updateCounts_(1e9, 0);
-    const again = env.reads.filter(r => r[1] > 1).reduce((s, r) => s + r[1], 0);
-    ok('incremental: the next run reads only the 7 new rows and adds them', again === 7 && g.loadState_().counts.x === 57, 'read ' + again + ' ' + JSON.stringify(g.loadState_().counts));
+    ok('incremental: the next run reads only the 7 new rows and adds them', bulk(env) === 7 && g.loadState_().counts.x === 57,
+       'read ' + bulk(env) + ' ' + JSON.stringify(g.loadState_().counts));
     env.reads.length = 0;
     g.updateCounts_(1e9, 0);
-    ok('incremental: a run with nothing new reads no rows', env.reads.filter(r => r[1] > 1).length === 0);
+    ok('incremental: a run with nothing new reads no rows', bulk(env) === 0 && g.loadState_().counts.x === 57, bulk(env));
+    ok('incremental: the empty grid below the data is never counted or tripped over', g.loadState_().lastRow === 458, g.loadState_().lastRow);
   }
 
   // ---- chunked and time-boxed
@@ -167,7 +192,7 @@ HARNESS = r"""
     ok('budget: the next run resumes and finishes without double-counting', st.counts.x === 25 && st.asOf !== null, JSON.stringify(st));
   }
 
-  // ---- new school year; shrunk sheet
+  // ---- new school year; rows deleted
   {
     const env = makeEnv([row('2026-10-01T10:00:00Z', QA, 'x'), row('2027-09-02T10:00:00Z', QA, 'y')]);
     const g = load(env);
@@ -182,9 +207,9 @@ HARNESS = r"""
     const env = makeEnv([row('2026-10-01T10:00:00Z', QA, 'x'), row('2026-10-01T10:00:01Z', QA, 'x'), row('2026-10-01T10:00:02Z', QA, 'x')]);
     const g = load(env);
     g.updateCounts_(1e9, 0);
-    env.rows.splice(1, 2);          // rows deleted: the stored row number is past the end
+    env.rows.splice(1, 1);          // a row deleted from the top: every stored row number now points one row late
     g.updateCounts_(1e9, 0);
-    ok('shrunk sheet: counted again from the start, not left stale', g.loadState_().counts.x === 1, JSON.stringify(g.loadState_().counts));
+    ok('rows deleted: counted again from the start, not left stale', g.loadState_().counts.x === 2, JSON.stringify(g.loadState_().counts));
   }
 
   // ---- lock, doGet, cache
@@ -210,15 +235,25 @@ HARNESS = r"""
 async def main():
     from playwright.async_api import async_playwright
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    adv = (manifest.get("dependencies") or {}).get("enabledAdvancedServices")
+    src = SRC.read_text(encoding="utf-8")
+    code = "\n".join(l for l in src.splitlines() if not l.lstrip().startswith("//"))
     results = [("manifest: the only OAuth scope is spreadsheets.readonly",
                 manifest.get("oauthScopes") == ["https://www.googleapis.com/auth/spreadsheets.readonly"], str(manifest.get("oauthScopes"))),
+               ("manifest: the Sheets v4 advanced service is switched on as `Sheets`",
+                adv == [{"userSymbol": "Sheets", "serviceId": "sheets", "version": "v4"}], str(adv)),
                ("manifest: Europe/London, web app runs as the deployer, open to anyone",
                 manifest.get("timeZone") == "Europe/London" and manifest.get("webapp") == {"executeAs": "USER_DEPLOYING", "access": "ANYONE_ANONYMOUS"},
-                str(manifest.get("webapp")))]
+                str(manifest.get("webapp"))),
+               ("source: no SpreadsheetApp, DriveApp, ScriptApp or UrlFetchApp outside comments",
+                not any(w in code for w in ("SpreadsheetApp", "DriveApp", "ScriptApp", "UrlFetchApp")), "")]
     async with async_playwright() as pw:
         browser = await pw.chromium.launch()
         page = await browser.new_page()
-        got = await page.evaluate(HARNESS, SRC.read_text(encoding="utf-8"))
+        try:
+            got = await page.evaluate(HARNESS, src)
+        except Exception as exc:     # a trapped service call, or a crash in the script, ends the run
+            got = [["the script runs to the end under the fakes", False, str(exc).splitlines()[0][:200]]]
         await browser.close()
     results += [tuple(r) for r in got]
     bad = 0

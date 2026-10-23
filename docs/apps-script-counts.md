@@ -3,9 +3,10 @@
 For the "N questions answered since September" lines (contract ANSWER-COUNTS, 23 Oct 2026).
 
 **This is a new, separate Apps Script project.** Do not paste it into the analytics project (`docs/apps-script-endpoint.js`):
-the point is that counting can never slow the script that records events. It only reads the Sheet. It asks for one
-permission, "See all your Google Sheets spreadsheets" (read only). **If Google asks for anything else, stop and tell
-Claude which permission it named.**
+the point is that counting can never slow the script that records events. It only reads the Sheet, through the
+**Google Sheets advanced service** (not `SpreadsheetApp`, which needs the read-and-write permission). It asks for one
+permission, read-only access to your spreadsheets (Google words it "See and download your spreadsheets").
+**If Google asks for anything else, stop and tell Claude which permission it named.**
 
 Files in this repo that you paste from: `docs/apps-script-counts.js` (the code) and
 `docs/apps-script-counts.appsscript.json` (the settings). Nothing in either is secret.
@@ -31,14 +32,22 @@ Files in this repo that you paste from: `docs/apps-script-counts.js` (the code) 
 2. Tick **Show "appsscript.json" manifest file in editor**.
 3. Click **Editor** (the `<>` icon), then click `appsscript.json` in the file list.
 4. Select everything in it, delete it, and paste the whole of `docs/apps-script-counts.appsscript.json`.
+   (It lists the read-only permission and switches on the Sheets service.)
 5. Click **Save**.
+6. **Check the Sheets service is on:** click `Code.gs`, then the **+** next to **Services** in the left column. If
+   **Google Sheets API** is already listed there, do nothing. If it is not, choose **Google Sheets API**, set the
+   version to **v4**, leave the identifier as `Sheets`, and click **Add**. (The settings file normally does this for you;
+   the symptom of it being off is `ReferenceError: Sheets is not defined`.)
 
 ## 4. Count the school year so far (the first run)
 
 1. In the editor, click `Code.gs`. In the function drop-down at the top choose **backfill** and click **Run**.
 2. Google asks you to review permissions: **Review permissions**, choose your account, then **Advanced** →
    **Go to MaffsGames Answer Counts (unsafe)** → **Allow**. (It says "unsafe" only because you wrote the script yourself.)
-   The only permission listed should be "See all your Google Sheets spreadsheets".
+   The only permission listed should be the read-only one ("See and download your spreadsheets").
+   If you already granted it earlier, Google may not ask again. If the run then fails with a permissions message, click
+   the **clock icon → Executions** and tell Claude the exact text.
+   (Some accounts also ask to switch on the Google Sheets API in the project's Google Cloud project: **Enable** it.)
 3. When it finishes, look at the **Execution log** at the bottom. The last line reads like
    `read 48210 rows in 31204 ms; last row 53901 of 53901; caught up: true`.
 4. If it says `caught up: false`, click **Run** again (it carries on from where it stopped) until it says `true`.
@@ -87,4 +96,6 @@ The address stays the same. Bump `SCRIPT_VERSION` when you do, so `?version=1` s
 - `total` is the sum of every game's count, including the escape rooms (their slugs begin `escape-`).
 - If a run is cut off by Google's time limit it saves its place and the next run carries on. While the first count is
   unfinished the address returns `"as_of": null`, and the site shows nothing rather than part of a count.
+- The Sheet is read through the Sheets API, so a timestamp cell Sheets has turned into a date is read on the spreadsheet's
+  own time zone, and a cell left as text is read as the ISO time it holds. Both give the same instant.
 - Reset (only if the numbers ever look wrong): run **resetCounts**, then **backfill** until it says `caught up: true`.

@@ -5,10 +5,11 @@
 //  Counts question_answered rows in the analytics Sheet, per game_slug, for the current school
 //  year (from 1 September, Europe/London), and serves the totals as JSON. It is its own project
 //  so it can never compete with the analytics script's doPost for capacity: it only READS the
-//  Sheet, and the analytics script does not know it exists.
+//  Sheet (through the Sheets advanced service, with the read-only scope), and the analytics script does not know it exists.
 //
 //  SETUP: docs/apps-script-counts.md (click by click). Paste this file into Code.gs, set SHEET_ID,
-//         and copy docs/apps-script-counts.appsscript.json over the project's appsscript.json.
+//         and copy docs/apps-script-counts.appsscript.json over the project's appsscript.json (it also
+//         switches on the Sheets advanced service, which every read goes through).
 //
 //  HOW IT COUNTS: the counts per game, the last row read and the period start live in script
 //  properties. Each run reads only the rows added since the last run (never the whole Sheet),
@@ -34,7 +35,7 @@ const MAX_SKEW_MS = 24 * 3600 * 1000;         // client_ts further than this fro
 const PROP_LIMIT = 8500;                      // script properties hold 9 KB a value
 
 // Bump when this file is redeployed; <exec URL>?version=1 then says which code is live.
-const SCRIPT_VERSION = '2026-10-23-a';
+const SCRIPT_VERSION = '2026-10-23-b';
 
 // ============================================================
 //  GET — the figures, from a 60-second cache
@@ -84,6 +85,8 @@ function preview() {
 // ============================================================
 //  The incremental count
 // ============================================================
+// Every read goes through the Sheets advanced service (Sheets.Spreadsheets.Values.get), which the read-only scope
+// covers. SpreadsheetApp is never called: openById needs the full read-write scope, and this project must not have it.
 function updateCounts_(budgetMs, lockWaitMs) {
   var lock = LockService.getScriptLock();
   if (!lock.tryLock(lockWaitMs)) { console.log('another run holds the lock; skipped'); return; }
@@ -92,34 +95,37 @@ function updateCounts_(budgetMs, lockWaitMs) {
     var now = new Date();
     var sinceStr = sinceString_(now);
     var sinceDate = londonMidnight_(sinceStr);
-    var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_NAME);
-    if (!sheet) throw new Error('no sheet named ' + SHEET_NAME);
-    var cols = columns_(sheet);
-    var lastRow = sheet.getLastRow();
+    var meta = meta_();
+    var cols = columns_();
     var st = loadState_();
 
-    // A new school year, no stored state, or a Sheet that has shrunk (rows were deleted, so a stored row
-    // number no longer points at the same rows): start the period again.
-    if (st.since !== sinceStr || st.lastRow > lastRow) {
-      st = { since: sinceStr, lastRow: startRow_(sheet, cols, sinceDate, lastRow) - 1, counts: {}, asOf: null };
+    // A new school year, no stored state, or rows that are not where the last run left them (the row it stopped on
+    // no longer holds the timestamp it recorded, so rows were deleted): start the period again.
+    var moved = st.lastRow > 1 && st.lastTs && String(readCell_(st.lastRow, cols.arrival)) !== st.lastTs;
+    if (st.since !== sinceStr || moved) {
+      st = { since: sinceStr, lastRow: startRow_(cols, sinceDate, meta) - 1, lastTs: '', counts: {}, asOf: null };
       console.log('period start ' + sinceStr + ': reading from row ' + (st.lastRow + 1));
     }
 
-    var rows = 0;
-    while (st.lastRow < lastRow && Date.now() - t0 < budgetMs) {
+    var rowsRead = 0, caughtUp = false;
+    while (Date.now() - t0 < budgetMs) {
       var from = st.lastRow + 1;
-      var n = Math.min(CHUNK_ROWS, lastRow - from + 1);
-      var vals = sheet.getRange(from, 1, n, cols.width).getValues();
-      tally_(vals, cols, sinceDate, st.counts);
-      st.lastRow = from + n - 1;
-      rows += n;
+      if (from > meta.rowCount) { caughtUp = true; break; }
+      var to = Math.min(from + CHUNK_ROWS - 1, meta.rowCount);
+      var rows = readRows_(from, to, cols.width);
+      tally_(rows, cols, sinceDate, meta.tz, st.counts);
+      if (rows.length) {
+        st.lastRow = from + rows.length - 1;
+        st.lastTs = String(rows[rows.length - 1][cols.arrival]);
+      }
+      rowsRead += rows.length;
       saveState_(st);
+      if (rows.length < to - from + 1) { caughtUp = true; break; }   // ran off the end of the data
     }
-    var caughtUp = st.lastRow >= lastRow;
     if (caughtUp) st.asOf = Utilities.formatDate(new Date(), TIMEZONE, "yyyy-MM-dd'T'HH:mm:ssXXX");
     saveState_(st);
     CacheService.getScriptCache().remove('payload');
-    console.log('read ' + rows + ' rows in ' + (Date.now() - t0) + ' ms; last row ' + st.lastRow + ' of ' + lastRow +
+    console.log('read ' + rowsRead + ' rows in ' + (Date.now() - t0) + ' ms; last row ' + st.lastRow +
                 '; caught up: ' + caughtUp);
   } finally {
     lock.releaseLock();
@@ -127,35 +133,82 @@ function updateCounts_(budgetMs, lockWaitMs) {
 }
 
 // Adds the counted rows of one chunk into `counts` (pure: no Sheet, no clock).
-function tally_(vals, cols, sinceDate, counts) {
+function tally_(vals, cols, sinceDate, tz, counts) {
   for (var i = 0; i < vals.length; i++) {
     var r = vals[i];
     if (r[cols.event] !== COUNTED_EVENT) continue;
     var slug = String(r[cols.slug] || '').trim();
     if (!slug) continue;
-    var t = eventTime_(r[cols.arrival], r[cols.clientTs]);
+    var t = eventTime_(r[cols.arrival], r[cols.clientTs], tz);
     if (!t || t < sinceDate) continue;
     counts[slug] = (counts[slug] || 0) + 1;
   }
 }
 
 // The browser's clock when it agrees with the arrival time to within a day, else the arrival time.
-function eventTime_(arrival, clientTs) {
-  var a = toDate_(arrival);
-  var c = toDate_(clientTs);
+function eventTime_(arrival, clientTs, tz) {
+  var a = toDate_(arrival, tz);
+  var c = toDate_(clientTs, tz);
   if (c && a && Math.abs(c - a) <= MAX_SKEW_MS) return c;
   return a;
 }
 
-function toDate_(v) {
+// A cell as the API returns it with UNFORMATTED_VALUE: text stays text (an ISO timestamp parses as it is), and a
+// cell Sheets turned into a date arrives as a serial number, days since 30 Dec 1899 on the SPREADSHEET's clock.
+function toDate_(v, tz) {
   if (v === '' || v === null || v === undefined) return null;
-  var d = (v instanceof Date) ? v : new Date(v);
+  var d;
+  if (typeof v === 'number') {
+    var w = new Date(Date.UTC(1899, 11, 30) + Math.round(v * 86400000));   // the wall-clock reading, held as UTC
+    d = Utilities.parseDate(Utilities.formatDate(w, 'UTC', 'yyyy-MM-dd HH:mm:ss'), tz, 'yyyy-MM-dd HH:mm:ss');
+  } else {
+    d = new Date(v);
+  }
   return isNaN(d.getTime()) ? null : d;
 }
 
+// ---- reads (the only place the Sheet is touched)
+function a1_(row1, row2, width) {
+  return "'" + SHEET_NAME + "'!A" + row1 + ':' + colLetter_(width) + row2;
+}
+
+function colLetter_(n) {
+  var s = '';
+  while (n > 0) { var m = (n - 1) % 26; s = String.fromCharCode(65 + m) + s; n = Math.floor((n - 1) / 26); }
+  return s;
+}
+
+function values_(range) {
+  var res = Sheets.Spreadsheets.Values.get(SHEET_ID, range, { valueRenderOption: 'UNFORMATTED_VALUE' });
+  return res.values || [];
+}
+
+// Rows from..to, each padded to `width` (the API leaves off trailing empty cells and trailing empty rows).
+function readRows_(from, to, width) {
+  return values_(a1_(from, to, width)).map(function (r) {
+    var out = r.slice(0, width);
+    while (out.length < width) out.push('');
+    return out;
+  });
+}
+
+// One cell, or '' when it is empty or past the end of the data.
+function readCell_(row, colIndex) {
+  var v = values_("'" + SHEET_NAME + "'!" + colLetter_(colIndex + 1) + row);
+  return v.length && v[0].length ? v[0][0] : '';
+}
+
+// The Sheet's time zone and its grid height (the last row that can hold data; the data ends where reads come back empty).
+function meta_() {
+  var m = Sheets.Spreadsheets.get(SHEET_ID, { fields: 'properties.timeZone,sheets.properties(title,gridProperties.rowCount)' });
+  var tab = (m.sheets || []).filter(function (s) { return s.properties.title === SHEET_NAME; })[0];
+  if (!tab) throw new Error('no sheet named ' + SHEET_NAME);
+  return { tz: m.properties.timeZone, rowCount: tab.properties.gridProperties.rowCount };
+}
+
 // The column positions, found by header name so a reordered Sheet cannot silently miscount.
-function columns_(sheet) {
-  var head = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+function columns_() {
+  var head = values_("'" + SHEET_NAME + "'!1:1")[0] || [];
   var at = function (name) {
     var i = head.indexOf(name);
     if (i < 0) throw new Error('Sheet has no column ' + name);
@@ -168,14 +221,16 @@ function columns_(sheet) {
 
 // First row to read for a period: the first row that arrived a day before the period began (rows arrive in
 // order; the day's slack covers an event stamped before midnight that arrived after). Binary search, one cell
-// per probe. An unreadable timestamp is treated as "before", so the search moves right past it.
-function startRow_(sheet, cols, sinceDate, lastRow) {
+// per probe. An empty cell is past the end of the data, so it counts as "after"; an unreadable timestamp is
+// treated as "before", so the search moves right past it.
+function startRow_(cols, sinceDate, meta) {
   var cutoff = new Date(sinceDate.getTime() - MAX_SKEW_MS);
-  var lo = 2, hi = lastRow + 1;               // answer is in [lo, hi]; hi means "none"
+  var lo = 2, hi = meta.rowCount + 1;         // answer is in [lo, hi]; hi means "none"
   while (lo < hi) {
     var mid = Math.floor((lo + hi) / 2);
-    var t = toDate_(sheet.getRange(mid, cols.arrival + 1).getValue());
-    if (t && t >= cutoff) hi = mid; else lo = mid + 1;
+    var cell = readCell_(mid, cols.arrival);
+    var t = toDate_(cell, meta.tz);
+    if (cell === '' || (t && t >= cutoff)) hi = mid; else lo = mid + 1;
   }
   return lo;
 }
@@ -200,6 +255,7 @@ function loadState_() {
   return {
     since: p.since || '',
     lastRow: p.lastRow ? Number(p.lastRow) : 0,
+    lastTs: p.lastTs || '',
     counts: p.counts ? JSON.parse(p.counts) : {},
     asOf: p.asOf || null
   };
@@ -208,7 +264,7 @@ function loadState_() {
 function saveState_(st) {
   var counts = JSON.stringify(st.counts);
   if (counts.length > PROP_LIMIT) throw new Error('counts are ' + counts.length + ' characters; split them across properties');
-  var p = { since: st.since, lastRow: String(st.lastRow), counts: counts };
+  var p = { since: st.since, lastRow: String(st.lastRow), lastTs: String(st.lastTs || ''), counts: counts };
   if (st.asOf) p.asOf = st.asOf;
   PropertiesService.getScriptProperties().setProperties(p, false);
   if (!st.asOf) PropertiesService.getScriptProperties().deleteProperty('asOf');
