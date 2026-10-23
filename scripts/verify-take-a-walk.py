@@ -569,7 +569,7 @@ def tap_piece(page, i):
     page.evaluate("i => document.querySelector('#figure .hit[data-piece=\"' + i + '\"]').dispatchEvent(new MouseEvent('click', { bubbles: true }))", i)
 
 
-def play_stage(page, mode, size, out, before, wrong_at=(2, 5)):
+def play_stage(page, mode, size, out, before, wrong_at=(2, 4, 5, 7)):
     """One stage, from its worked example to its results. `before`: the event count before the stage was started."""
     tag = '%s at %dx%d' % (mode, size[0], size[1])
     st = page.evaluate('TAW.ui.state()')
@@ -596,6 +596,7 @@ def play_stage(page, mode, size, out, before, wrong_at=(2, 5)):
     want = 'Scientific calculator required' if mode == 'stage-4' else 'Non-calculator'
     if badge != want:
         out.append('%s: the header badge reads %r, not %r' % (tag, badge, want))
+    named_n = 0
     for k in range(10):
         q = page.evaluate('TAW.ui.question()')
         where = '%s q%d' % (tag, k + 1)
@@ -645,10 +646,15 @@ def play_stage(page, mode, size, out, before, wrong_at=(2, 5)):
                 out.append('%s: the right number with the wrong unit was marked, or got no unit message' % where)
         wrong = k in wrong_at
         val = fmt
+        named = None
         if wrong:
             errs = [e for e in q['errors']]
             v = errs[0]['v'] if errs else q['key'] + 1
-            val = ('%.1f' % rnd(v, 1)) if q['dp'] else ('%d' % round(v) if abs(v - round(v)) < EPS else '%d' % (round(q['key']) + 1))
+            whole = abs(v - round(v)) < EPS
+            val = ('%.1f' % rnd(v, 1)) if q['dp'] else ('%d' % round(v) if whole else '%d' % (round(q['key']) + 1))
+            if errs and (q['dp'] or whole):
+                named = errs[0]['id']
+                named_n += 1
         page.evaluate("([b, v]) => { document.querySelector(b).value = v; }", [box, val])
         page.click('.unit-btn[data-unit="%s"]' % q['unit'])
         page.evaluate("document.getElementById('ansForm').requestSubmit()")
@@ -665,6 +671,12 @@ def play_stage(page, mode, size, out, before, wrong_at=(2, 5)):
                   ans: (f.querySelector('.fb-ans') || {}).textContent, next: !!f.querySelector('.fb-next button') } : null; }""")
             if not fb or not (fb['line'] and fb['pic'] and fb['steps'] and fb['next']) or fb['ans'] != fmt + ' ' + ('m²' if q['unit'] == 'm2' else 'm'):
                 out.append('%s: the wrong-answer screen is missing its picture, line, working, answer or Next: %s' % (where, fb))
+            # A named slip: its own line, the worked line for the first three in a session, then the nudge.
+            got = page.evaluate("""() => { const l = document.querySelector('#feedback .fb-line');
+                return l ? [l.getAttribute('data-err'), l.getAttribute('data-help')] : [null, null]; }""")
+            want_help = ('example' if named_n <= 3 else 'nudge') if named else 'rule'
+            if got != [named, want_help]:
+                out.append('%s: the wrong-answer line is %s, expected %s' % (where, got, [named, want_help]))
             page.click('#feedback .fb-next button')
         else:
             if st != 'right':

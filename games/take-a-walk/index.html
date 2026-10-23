@@ -816,7 +816,13 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     ND: ['You left out the straight side.', 'Walking round a semicircle: the curved edge, then back along the diameter.']
   };
   H.nudge = function (q, id) { return (H.LINES[id] || ['', ''])[1]; };
-  H.example = function (q, id) { var l = H.LINES[id] || ['', '']; return l[0] + ' ' + l[1]; };
+  // The worked line (the first three named slips in a session): the slip, its number on this question, and what the
+  // question needs on the same numbers.
+  H.example = function (q, id) {
+    var l = H.LINES[id] || ['', ''], e = q.errors.filter(function (x) { return x.id === id; })[0];
+    var got = e ? H.fmt(e.v, q.dp ? 1 : (Math.abs(e.v - Math.round(e.v)) < 1e-9 ? 0 : 1)) : null;
+    return l[0] + (got !== null ? ' That gives ' + got + '.' : '') + ' ' + l[1] + ' Here that is ' + H.answerText(q) + '.';
+  };
 
   /* ---------- the working, step by step ---------- */
   // Each step: { text (TeX between § marks), hl: [piece indices], dims: [dim indices], show: [missing pieces now
