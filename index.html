@@ -88,6 +88,35 @@
     font-weight:400;
   }
 
+  /* The questions-answered headline (schools/assets/answer-count.js fills it, only from 10,000; hidden otherwise,
+     so no rule or gap is left). Tabular figures keep the count-up from jittering. */
+  .answer-total{
+    margin-top:8px;
+    padding-top:12px;
+    border-top:1px solid #2f3e60;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:baseline;
+    gap:2px 10px;
+  }
+  .answer-total[hidden]{display:none;}
+  .answer-total .ac-num{
+    font-size:2.4rem;
+    font-weight:700;
+    line-height:1.1;
+    color:#ffffff;
+    font-variant-numeric:tabular-nums;
+    white-space:nowrap;
+  }
+  .answer-total .ac-label{
+    font-size:1rem;
+    color:rgba(255,255,255,0.7);
+  }
+  .answer-updated{
+    font-size:0.8rem;
+    color:rgba(255,255,255,0.7);
+  }
+
   .header-badges{
     display:flex;
     gap:10px;
@@ -681,7 +710,7 @@
       MaffsGames
     </h1>
     <div class="header-sub">Free curriculum-aligned maths games for UK schools, KS3 to Further Maths</div>
-    <div class="header-sub" data-maffs-answer-total hidden></div>
+    <div class="answer-total" data-maffs-answer-total hidden></div>
   </div>
   <div class="header-badges">
     <span data-mfg-section="essentials-link" style="display:contents">
