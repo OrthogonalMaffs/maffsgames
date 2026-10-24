@@ -3,6 +3,12 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-23 (cloud): TAKE-A-WALK-LIST (contract in Jon's message of 23 Oct, 20:00). **DONE (#504, ee7b1eb; main run 40026650364 green, 57 of 57 jobs).** Live pages not checked from here (the network policy denies maffsgames.co.uk); Project Claude checks them.
+
+- **Lane exceptions (Jon, 23 Oct 2026):** 20:00, the home-lane files the contract names, for this PR; 20:33, the four board labels `stage-1`..`stage-4` -> "Stage 1".."Stage 4" in `schools/assets/firebase-leaderboard.js` (LEVEL_NAMES) and nothing else there. The first try STOPPED on the coverage check ("levelLabel() cannot name"); unlisted games skip it, so #495 never met it.
+- **Listed:** noindex removed; portal cards in KS3 and GCSE after How Many Parts? (135 -> 137 cards, 97 -> 98 games, recounted); Essentials, Geometry and measures, `data-kind="one"` (a stage picker, no level control; SUITE updated); sitemap; spec map G16 only; hub row `stage-1`..`-4`; `NOT_ON_HUB` entry replaced by a `LEVEL_OVERRIDES` entry; roster row 100 to the Resit Fluency Strand with the verifier's pools (181, 550, 152, 150); 98 in CLAUDE.md and canon; /updates/ line. `verify-take-a-walk.py`'s static check now fails if the page IS noindex (HMP-LIST's flip).
+- **ANSWER-COUNTS (home lane, #503) merged first:** #504 merged main in; only `docs/handover/home.md` conflicted (both entries kept).
+
 ## 2026-10-23 (cloud): TAKE-A-WALK-FRAME (contract in Jon's message of 23 Oct, after his play-test). **DONE (#499, e1004c0; main run 39990459002 green, 58 of 58 jobs).**
 
 - **Root cause:** `pieceD` wrote every arc's SVG sweep flag backwards (y up in the shape, y down on screen), so every half arc bulged the wrong way while the box came from the true geometry; and the picture was always 320 wide, so tall shapes sat between empty bands. Fixed: sweep 0 for a counterclockwise arc; the viewBox framed round the shape with M = 40 on all four sides (scale unchanged); a half arc's radius written just under half its drawn chord, so SVG draws the exact semicircle.

@@ -77,6 +77,11 @@ a.back-link:hover{color:var(--text)}
 .unit-btn[aria-pressed="true"]{border-color:var(--accent);background:var(--accent);color:var(--on-accent)}
 .msg{min-height:1.2em;text-align:center;font-size:.9rem;color:var(--hint)}
 .msg:empty{display:none}
+/* The no-unit message (contract SQS-REAL-UNITS, Jon's play-test, 24 Oct 2026): impossible to miss. The accent, bold, at
+   body size, and the unit buttons outlined with a short pulse; both clear as soon as a unit is picked. */
+.msg.no-unit{color:var(--accent);font-weight:700;font-size:1.05rem}
+.units.need .unit-btn{outline:3px solid var(--accent);outline-offset:2px;animation:unitPulse .45s ease-in-out 4 alternate}
+@keyframes unitPulse{to{outline-offset:6px}}
 
 .explain{display:flex;flex-direction:column;gap:.5rem}
 .steps{list-style:none;display:flex;flex-direction:column;gap:.35rem;counter-reset:step}
@@ -202,6 +207,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
           <button class="btn solid" type="submit" id="checkBtn">Check</button>
           <span class="units" id="units" role="group" aria-label="Unit"></span>
         </form>
+        <!-- The no-unit message: its own line, straight under the unit buttons and above the keypad, so it is seen. -->
+        <div class="msg no-unit" id="noUnitMsg" aria-live="assertive"></div>
         <div id="kpHolder"></div>
         <div id="calcWrap" hidden><div id="calc"></div></div>
       </div>
@@ -303,13 +310,11 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   // area, 3 a volume (the no-unit message's "squared" or "cubed" squirrels).
   H.U = {
     km: { t: 'km' }, miles: { t: 'miles' }, m: { t: 'm', w: 'metre' }, h: { t: 'h', w: 'hour' }, min: { t: 'min', w: 'minute' },
-    s: { t: 's', w: 'second' }, g: { t: 'g' }, kg: { t: 'kg' }, N: { t: 'N' }, gbp: { t: '£' }, pitch: { t: 'pitches' },
-    cm3: { t: 'cm³', d: 3 }, m2: { t: 'm²', d: 2 }, sq: { t: 'squirrel²', d: 2, w: 'squared squirrel' },
+    s: { t: 's', w: 'second' }, g: { t: 'g' }, kg: { t: 'kg' }, N: { t: 'N' }, gbp: { t: '£' },
+    cm3: { t: 'cm³', d: 3 }, m2: { t: 'm²', d: 2 },
     kmh: { t: 'km/h', of: ['km', 'h'] }, mph: { t: 'mph', of: ['miles', 'h'] }, ms: { t: 'm/s', of: ['m', 's'] },
     gcm3: { t: 'g/cm³', of: ['g', 'cm3'] }, Nm2: { t: 'N/m²', of: ['N', 'm2'] },
-    gbpkg: { t: '£/kg', of: ['gbp', 'kg'] }, gbpm: { t: '£/m', of: ['gbp', 'm'] },
-    psq: { t: 'pitches/squirrel²', of: ['pitch', 'sq'] }, pph: { t: 'pitches/h', of: ['pitch', 'h'] },
-    ppm: { t: 'pitches/min', of: ['pitch', 'min'] }
+    gbpkg: { t: '£/kg', of: ['gbp', 'kg'] }, gbpm: { t: '£/m', of: ['gbp', 'm'] }
   };
   H.unitText = function (u) { return H.U[u] ? H.U[u].t : ''; };
   // A quantity as the page writes it: "240 km", "£12", "£3/kg", "3 h".
@@ -368,9 +373,9 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     { text: 'g/cm³ is…', right: 'g ÷ (cm × cm × cm)', wrong: [
       ['(cm × cm × cm) ÷ g', 'The wrong way round: g/cm³ has the g on top.'],
       ['g × cm × 3', 'The slash means divide, and cm³ is cm × cm × cm.']] },
-    { text: 'Football pitches per squared squirrel is…', right: 'football pitches ÷ (squirrel × squirrel)', wrong: [
-      ['(squirrel × squirrel) ÷ football pitches', 'The wrong way round: football pitches per squared squirrel has the football pitches first.'],
-      ['football pitches ÷ (squirrel × 2)', 'Squared means squirrel × squirrel, not times 2.']] },
+    { text: 'people/km² is…', right: 'people ÷ (km × km)', wrong: [
+      ['(km × km) ÷ people', 'The wrong way round: people/km² has the people on top.'],
+      ['people ÷ (km × 2)', 'Squared means km × km, not times 2.']] },
     { text: '12 miles in 3 hours. How many miles per hour?', typed: true }
   ];
 
@@ -378,7 +383,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   // Each: { id, v } with v the number the slip gives, in the answer's unit. Only slips that apply are listed.
   //   MUL multiplied instead of divided      DIV divided instead of multiplied     REV divided the wrong way round
   //   MD  minutes read as decimals (1 h 30 min as 1.3 h; 0.75 h as 75 minutes)
-  //   MU  a per-hour rate used with the minutes unconverted (or a per-minute rate left per minute)
+  //   MU  a per-hour rate used with the minutes unconverted
   //   SD  m/s and km/h by 3.6 the wrong way     SF  m/s and km/h by the wrong factor (only the time, or only the length)
   function rateOf(given) {   // a compare option's rate, its slips alongside
     var a = given[0], t = given[1], T = val(t);
@@ -408,9 +413,6 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       case 'toMs':    // km/h to m/s
         add('SD', G[0].v * 3.6); add('SF', G[0].v / 3600); add('SF', G[0].v * 1000);
         break;
-      case 'perHour': // per minute to per hour
-        add('MU', G[0].v); add('DIV', G[0].v / 60);
-        break;
       case 'cmp':     // the better of two rates
         var rs = q.opts.map(function (o) { return rateOf(o.given); });
         var best = function (k) {
@@ -435,7 +437,6 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       case 'back': return G[0].v / G[1].v * 60;
       case 'toKmh': return G[0].v * 3.6;
       case 'toMs': return G[0].v / 3.6;
-      case 'perHour': return G[0].v * 60;
       case 'cmp':
         var rs = q.opts.map(function (o) { return rateOf(o.given).r; });
         return q.pick === 'max' ? Math.max.apply(null, rs) : Math.min.apply(null, rs);
@@ -478,7 +479,6 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       if (c === 'pressure') return 'A force of ' + said(A) + ' acts on an area of ' + said(B) + '. What is the pressure?';
       if (c === 'price' && B.u === 'kg') return 'A ' + B.v + ' kg bag of ' + (A.v / B.v <= 4 ? 'rice' : 'coffee beans') + ' costs ' + said(A) + '. What is the price per kg?';
       if (c === 'price') return B.v + ' m of rope costs ' + said(A) + '. What is the price per metre?';
-      return A.v + ' football pitches fit on ' + B.v + ' squared squirrels. How many football pitches is that per squared squirrel?';
     }
     if (k === 'mult') {
       if (c === 'speed') return pickWord(SAY[H.U[A.u].of[0]], n) + ' travels at ' + said(A) + ' for ' + said(B) + '. How far does ' + the(pickWord(SAY[H.U[A.u].of[0]], n)) + ' go?' +
@@ -487,8 +487,6 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       if (c === 'pressure') return 'A pressure of ' + said(A) + ' acts on an area of ' + said(B) + '. What is the force?';
       if (c === 'price' && A.u === 'gbpkg') return 'Rice costs ' + said(A) + '. How much do ' + said(B) + ' cost?';
       if (c === 'price') return 'Rope costs ' + said(A) + '. How much do ' + said(B) + ' of it cost?';
-      if (A.u === 'pph') return 'A squirrel runs at ' + A.v + ' football pitches per hour for ' + said(B) + '. How many football pitches does it cross? Give your answer to 1 decimal place.';
-      return 'A park has ' + A.v + ' football pitches per squared squirrel. How many football pitches fit on ' + B.v + ' squared squirrels?';
     }
     if (k === 'divi') {
       if (c === 'speed') return pickWord(SAY[A.u], n) + ' travels ' + said(A) + ' at ' + said(B) + '. How long does it take?';
@@ -496,15 +494,12 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       if (c === 'pressure') return 'A force of ' + said(A) + ' gives a pressure of ' + said(B) + '. What is the area?';
       if (c === 'price' && B.u === 'gbpkg') return (q.dp ? 'Grass seed' : 'Rice') + ' costs ' + said(B) + '. How many kg can you buy for ' + said(A) + '?' + (q.dp ? ' Give your answer to 1 decimal place.' : '');
       if (c === 'price') return 'Rope costs ' + said(B) + '. How many metres can you buy for ' + said(A) + '?';
-      return A.v + ' football pitches fit at ' + B.v + ' football pitches per squared squirrel. How many squared squirrels is that?';
     }
     if (k === 'back') {
       if (c === 'speed') return 'A runner\'s average speed is ' + said(B) + '. How many minutes does a run of ' + said(A) + ' take? Give your answer to 1 decimal place.';
-      return 'A squirrel\'s average speed is ' + B.v + ' football pitches per hour. How many minutes does it take to cross ' + A.v + ' football pitches? Give your answer to 1 decimal place.';
     }
     if (k === 'toKmh') return 'A car travels at ' + said(A) + '. What is this speed in km/h? Give your answer to 1 decimal place.';
     if (k === 'toMs') return 'A car travels at ' + said(A) + '. What is this speed in m/s? Give your answer to 1 decimal place.';
-    if (k === 'perHour') return 'A squirrel runs across ' + A.v + ' football pitches per minute. How many football pitches per hour is that? Give your answer to 1 decimal place.';
     if (k === 'cmp' && q.pick === 'max') return q.opts.map(function (o) { return o.name + ' travels ' + said(o.given[0]) + ' in ' + said(o.given[1]) + '.'; }).join(' ') +
       ' Which car is faster? Give its average speed to 1 decimal place.';
     return q.opts.map(function (o) { return o.name + ': ' + said(o.given[1]) + ' of rice for ' + said(o.given[0]) + '.'; }).join(' ') +
@@ -534,8 +529,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     ['density', 'g', 'cm3', 'gcm3', [2, 3, 4, 5, 6, 7, 8, 9], [4, 5, 6, 10]],
     ['pressure', 'N', 'm2', 'Nm2', [20, 25, 50, 100, 200], [2, 3, 4, 5]],
     ['price', 'gbp', 'kg', 'gbpkg', [2, 3, 4, 5, 6, 7, 8, 9], [2, 3, 4, 5]],
-    ['price', 'gbp', 'm', 'gbpm', [2, 3, 4, 5], [3, 6, 10]],
-    ['nonsense', 'pitch', 'sq', 'psq', [2, 3, 4, 5, 6], [2, 3, 4]]
+    ['price', 'gbp', 'm', 'gbpm', [2, 3, 4, 5], [3, 6, 10]]
   ];
   H.buildPools = function () {
     var P = { 'stage-2': [], 'stage-3': [], 'stage-4': [], 'stage-5': [] }, n = 0;
@@ -570,14 +564,6 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     [18, 36, 54, 72, 90, 108, 50, 60, 80, 100, 120, 70].forEach(function (v) {
       push('stage-4', make('stage-4', 'toMs', 'toMs', 'speed', [{ v: v, u: 'kmh' }], 'ms', ['ms', 'kmh', 'km', 'm'], n++, D1));
     });
-    [2, 3, 4, 5, 6].forEach(function (R) {
-      push('stage-4', make('stage-4', 'nonsense', 'perHour', 'nonsense', [{ v: R, u: 'ppm' }], 'pph', ['pph', 'ppm', 'pitch', 'min'], n++, D1));
-    });
-    [60, 90, 120].forEach(function (R) {
-      [[0, 15], [0, 20], [0, 30], [0, 40], [0, 45], [1, 20]].forEach(function (t) {
-        push('stage-4', make('stage-4', 'nonsense', 'mult', 'nonsense', [{ v: R, u: 'pph' }, tm(t)], 'pitch', ['pitch', 'pph', 'h', 'min'], n++, D1));
-      });
-    });
     // Stage 5: backwards (a quantity from a total and a rate), time in minutes, and comparing two rates.
     [1.25, 2.35, 3.4, 4.55, 6.8].forEach(function (R) {
       [3, 4, 5, 6, 7, 8].forEach(function (Q) {
@@ -593,12 +579,6 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       [15, 20, 30, 40, 45, 50, 75, 90].forEach(function (M) {
         var D = R * M / 60;
         if (Math.abs(D - Math.round(D)) < 1e-9 && D <= 40) push('stage-5', make('stage-5', 'backT', 'back', 'speed', [{ v: D, u: 'km' }, { v: R, u: 'kmh' }], 'min', ['min', 'h', 'km', 'kmh'], n++, D1));
-      });
-    });
-    [60, 90, 120, 150].forEach(function (R) {
-      [20, 30, 40, 50].forEach(function (M) {
-        var D = R * M / 60;
-        if (Math.abs(D - Math.round(D)) < 1e-9) push('stage-5', make('stage-5', 'nonsense', 'back', 'nonsense', [{ v: D, u: 'pitch' }, { v: R, u: 'pph' }], 'min', ['min', 'h', 'pitch', 'pph'], n++, D1));
       });
     });
     // Compare speeds: two cars, each a whole-number speed over a time in hours and minutes.
@@ -629,7 +609,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   /* ---------- sessions: a worked example, then 10 questions, easiest first ---------- */
   // The ease measure, lexicographic, ties in their shuffled order:
   //   1. the kind's rank. Stage 3: multiply (find the total) before divide (find the time, volume, area or amount).
-  //      Stage 4: half hours, then quarter hours and per-minute rates, then thirds of an hour, then m/s and km/h.
+  //      Stage 4: half hours, then quarter hours, then thirds of an hour, then m/s and km/h.
   //      Stage 5: one division (cost or density) before a time in minutes before comparing two rates.
   //      Stage 2: one rank.
   //   2. the largest number written in the question (a time counts its hours and its minutes).
@@ -637,7 +617,6 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (q.mode === 'stage-3') return q.kind === 'mult' ? 0 : 1;
     if (q.mode === 'stage-4') {
       if (q.kind === 'toKmh' || q.kind === 'toMs') return 3;
-      if (q.kind === 'perHour') return 1;
       var t = q.given[1];
       return t.m === 30 ? 0 : (t.m === 15 || t.m === 45) ? 1 : 2;
     }
@@ -654,13 +633,14 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     for (var i = 0; i < a.length; i++) if (a[i] !== b[i]) return a[i] - b[i];
     return 0;
   };
-  // What each stage's 10 are drawn from: [groups, how many]. Exactly one question a session is a nonsense unit
-  // (about 1 in 10, as the contract asks): built like a real one, a check that the unit is read.
+  // What each stage's 10 are drawn from: [groups, how many]. Every context is real (contract SQS-REAL-UNITS, Jon's
+  // play-test, 24 Oct 2026: nonsense units inside questions confused students; squirrels live on only in the title and
+  // the no-unit message).
   H.MIX = {
-    'stage-2': [[['speed'], 3], [['density'], 2], [['pressure'], 2], [['price'], 2], [['nonsense'], 1]],
-    'stage-3': [[['speed'], 3], [['density'], 2], [['pressure'], 1], [['price'], 3], [['nonsense'], 1]],
-    'stage-4': [[['hmRate'], 3], [['hmDist'], 3], [['toKmh'], 1], [['toMs'], 2], [['nonsense'], 1]],
-    'stage-5': [[['back1'], 3], [['backT'], 2], [['cmpS'], 2], [['cmpV'], 2], [['nonsense'], 1]]
+    'stage-2': [[['speed'], 4], [['density'], 2], [['pressure'], 2], [['price'], 2]],
+    'stage-3': [[['speed'], 4], [['density'], 2], [['pressure'], 1], [['price'], 3]],
+    'stage-4': [[['hmRate'], 3], [['hmDist'], 3], [['toKmh'], 2], [['toMs'], 2]],
+    'stage-5': [[['back1'], 3], [['backT'], 3], [['cmpS'], 2], [['cmpV'], 2]]
   };
   H.buildSession = function (seed, mode) {
     var rng = H.mulberry32(seed);
@@ -754,9 +734,6 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     } else if (q.kind === 'toMs') {
       out.push({ text: H.qty(G[0].v, 'kmh') + ' means ' + G[0].v + ' km each hour: §' + G[0].v + ' \\times 1000 = ' + G[0].v * 1000 + '§ m.' });
       out.push({ text: 'An hour is 3600 seconds: §' + G[0].v * 1000 + ' \\div 3600 = ' + H.num(q.exact) + '§ m each second. So km/h to m/s is ÷ 3.6.' });
-    } else if (q.kind === 'perHour') {
-      out.push({ text: H.qty(G[0].v, 'ppm') + ' means ' + G[0].v + ' pitches each minute.' });
-      out.push({ text: 'An hour is 60 minutes: §' + G[0].v + ' \\times 60 = ' + G[0].v * 60 + '§.' });
     } else if (q.kind === 'cmp') {
       out.push({ text: 'For each ' + (q.pick === 'max' ? 'car' : 'pack') + ', the answer is in ' + H.unitText(q.unit) + ': ' + H.U[H.U[q.unit].of[0]].t + ' per ' + (H.U[H.U[q.unit].of[1]].w || H.unitText(H.U[q.unit].of[1])) + '.' });
       q.opts.forEach(function (o) {
@@ -781,13 +758,12 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       : '';
     switch (id) {
       case 'MUL': return ['You multiplied.', unitLine];
-      case 'DIV': return q.kind === 'perHour' ? ['You divided by 60.', 'There are 60 minutes in an hour, so per hour is more: multiply by 60.'] : ['You divided.', unitLine];
+      case 'DIV': return ['You divided.', unitLine];
       case 'REV': return ['You divided the wrong way round.', unitLine];
       case 'MD':
         if (q.kind === 'back') { var hr = G[0].v / G[1].v; return ['You read ' + H.num(hr).replace('\\ldots', '…') + ' h as ' + H.num(hr * 100).replace('\\ldots', '…') + ' minutes.', 'An hour is 60 minutes: multiply the hours by 60.']; }
         return ['You read ' + t.m + ' minutes as ' + H.num(t.m / 100) + ' of an hour.', 'An hour is 60 minutes: ' + t.m + ' minutes is ' + t.m + ' ÷ 60 of an hour.'];
       case 'MU':
-        if (q.kind === 'perHour') return ['You left it per minute.', 'An hour is 60 minutes: multiply by 60 for per hour.'];
         return ['You used the minutes as they are.', H.unitText(q.kind === 'cmp' || q.kind === 'rate' ? q.unit : G[0].u) + ' is per hour: change the time to hours first.'];
       case 'SD': return q.kind === 'toKmh' ? ['You divided by 3.6.', 'A speed in km/h is a bigger number than in m/s: multiply by 3.6.']
         : ['You multiplied by 3.6.', 'A speed in m/s is a smaller number than in km/h: divide by 3.6.'];
@@ -900,7 +876,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   function nextQuestion() {
     if (window.MaffsNext) MaffsNext.clear($('feedback'));
     $('feedback').innerHTML = '';
-    $('msg').textContent = '';
+    msg('');
     $('qcard').classList.remove('fb-open');
     if (idx >= session.questions.length) { finish(); return; }
     ask(session.questions[idx++]);
@@ -943,12 +919,12 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (first) ev('question_answered', { game_slug: SLUG, level: level, mode: q.mode, question_index: q.index, correct: o.ok });
     if (o.ok) {
       $('opts').querySelector('[data-i="' + i + '"]').classList.add('right');
-      $('msg').textContent = '';
+      msg('');
       right();
       return;
     }
     if (q.retry) {
-      $('msg').textContent = o.why + ' Try again.';
+      msg(o.why + ' Try again.');
       MaffsLock.fresh($('opts'));
       tried.push(i);
       tried.forEach(function (t) { $('opts').querySelector('[data-i="' + t + '"]').disabled = true; });
@@ -995,8 +971,16 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       try { input.focus({ preventScroll: true }); } catch (e) {}
     }
   }
+  // The line under the question. The no-unit message alone goes loud on its own line under the unit buttons, with the
+  // buttons outlined (noUnit true); every other message keeps the plain line.
+  function msg(text, noUnit) {
+    $('msg').textContent = noUnit ? '' : text;
+    $('noUnitMsg').textContent = noUnit ? text : '';
+    $('units').classList.toggle('need', !!noUnit);
+  }
   function setUnit(u) {
     unit = u;
+    if ($('noUnitMsg').textContent) msg('');   // picking a unit answers the no-unit message
     var bs = $('units').querySelectorAll('.unit-btn');
     for (var i = 0; i < bs.length; i++) bs[i].setAttribute('aria-pressed', String(bs[i].getAttribute('data-unit') === u));
   }
@@ -1011,13 +995,13 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (state !== 'asking' || !q) return;
     var raw = box().value.trim(), res = mark1(raw, q.key);
     if (res === 'unreadable' || res === 'format') {
-      $('msg').textContent = MaffsAnswer.message(res, raw, q.money ? { currency: '£' } : { dp: q.dp || 1 });
+      msg(MaffsAnswer.message(res, raw, q.money ? { currency: '£' } : { dp: q.dp || 1 }));
       return;
     }
-    if (!unit) { $('msg').textContent = H.noUnit(q, raw); return; }
-    if (res === 'correct' && unit !== q.unit) { $('msg').textContent = H.WRONG_UNIT; return; }
+    if (!unit) { msg(H.noUnit(q, raw), true); return; }
+    if (res === 'correct' && unit !== q.unit) { msg(H.WRONG_UNIT); return; }
     if (!MaffsLock.lock($('ansForm'))) return;
-    $('msg').textContent = '';
+    msg('');
     var named = null;
     if (res === 'wrong') q.errors.some(function (e) {
       if (mark1(raw, e.v) === 'wrong') return false;
