@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # ci-line: Football Pitches per Squared Squirrel, part 1 (Stage 1 the fixed ramp in order; every pool question's key recomputed from its data by units and dimensions, its unit the quantity asked, its named slips recomputed and none equal to the key, Stages 2-3 friendly whole numbers, at least 40 a stage, sessions easiest first; no nonsense unit or squirrel in any question, option, hint or worked line; no formula-triangle wording or drawing) | --part 1
 # ci-line: Football Pitches per Squared Squirrel, part 2 (every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, Stage 1's retry keeps the mark, the no-unit "squirrels" message loud, spaced from the unit buttons, marking nothing and cleared by picking a unit, the wrong unit marks nothing, named slips, the calculator in Stages 4-5 only, no sideways scroll) | --part 2
-# ci-line: Football Pitches per Squared Squirrel, part 3 (fault-injection self-test: twelve planted faults, each caught) | --part 3
+# ci-line: Football Pitches per Squared Squirrel, part 3 (fault-injection self-test: six of the twelve planted faults, each caught) | --part 3
+# ci-line: Football Pitches per Squared Squirrel, part 4 (fault-injection self-test: the other six planted faults, each caught) | --part 4
 # ci-deps: games/squared-squirrel/
 """Independent verification for Football Pitches per Squared Squirrel (games/squared-squirrel/), built 23 Oct 2026
 (contract FOOTBALL-PITCHES, Jon). SR-30: checked from its first PR.
@@ -799,9 +800,17 @@ PLANTS = [
 ]
 
 
-def selftest(html):
+# The plants in two CI lines (24 Oct 2026: one line of all twelve took 212 s, over ci-groups' per-line limit), balanced by
+# kind: the slow ones that play the game alternate between part 3 and part 4, and so do the quick ones.
+def plants_for(part):
+    heavy = [p for p in PLANTS if p[2] == 'play']
+    light = [p for p in PLANTS if p[2] != 'play']
+    return heavy[0::2] + light[1::2] if part == '3' else heavy[1::2] + light[0::2]
+
+
+def selftest(html, plants=None):
     ok = True
-    for what, edits, kind, want in PLANTS:
+    for what, edits, kind, want in (PLANTS if plants is None else plants):
         planted = html
         bad = False
         for old, new in edits:
@@ -826,7 +835,7 @@ def selftest(html):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--part', choices=['1', '2', '3'], help='one of the three parts CI runs side by side (default: all)')
+    ap.add_argument('--part', choices=['1', '2', '3', '4'], help='one of the four parts CI runs side by side (default: all)')
     ap.add_argument('--sessions', type=int, default=SESSIONS)
     args = ap.parse_args()
     try:
@@ -844,8 +853,8 @@ def main():
     if 'played' in info:
         print('%s: every stage played at %s' % (SLUG, ', '.join(info['played'])))
     ok = True
-    if part in (None, '3'):
-        ok = selftest(html)
+    if part in (None, '3', '4'):
+        ok = selftest(html, None if part is None else plants_for(part))
     for f in out[:60]:
         print('FAIL  ' + f)
     if len(out) > 60:
