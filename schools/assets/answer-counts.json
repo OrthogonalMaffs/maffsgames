@@ -1,5 +1,5 @@
 {
- "as_of": "2026-10-24T15:51:41+01:00",
+ "as_of": "2026-10-24T20:46:04+01:00",
  "games": {
   "52dle": 11,
   "angle-ace": 5,
@@ -40,6 +40,7 @@
   "factor-race": 1559,
   "factor-theorem": 3,
   "fermi-lab": 9,
+  "force-resolver": 4,
   "formula-forge": 69,
   "formula-plug-in": 103,
   "four-quadrant-explorer": 244,
@@ -72,7 +73,7 @@
   "proportion-blaster": 2,
   "quadratic-factoriser": 96,
   "screening-room": 4,
-  "sequence-solver": 160,
+  "sequence-solver": 162,
   "seven-bridges": 261,
   "shape-shifter": 5,
   "simultaneous-solver": 59,
@@ -80,7 +81,7 @@
   "split-it": 216,
   "spot-the-error": 13,
   "spot-the-muppet": 39,
-  "squared-squirrel": 34,
+  "squared-squirrel": 35,
   "standard-form-blitz": 43,
   "surd-simplifier": 237,
   "suvat": 19,
@@ -97,5 +98,5 @@
   "wrong-on-the-internet": 12
  },
  "since": "2026-09-01",
- "total": 16349
+ "total": 16356
 }
