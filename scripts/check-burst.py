@@ -253,11 +253,19 @@ async def nothing_written(browser, base, slug, lv, routes, control=False):
     await ctx.add_init_script(FAKE_SDK)
     try:
         page = await ctx.new_page()
-        warns = []
+        warns, errs = [], []
         page.on("console", lambda m: warns.append(m.text) if m.type == "warning" else None)
+        page.on("pageerror", lambda e: errs.append(str(e)[:100]) if "onclick" not in str(e) else None)
         await page.goto(url_for(base, slug, lv, None, burst=not control), wait_until="load", timeout=20000)
         await page.wait_for_timeout(300)
         have = await page.evaluate("() => ({lb: !!(window.MaffsLeaderboard && MaffsLeaderboard.submitScore), h: !!(window.MaffsScoreHistory && MaffsScoreHistory.record)})")
+        src = open(os.path.join(ROOT, "games", slug, "index.html"), encoding="utf-8").read()
+        if errs:
+            f.append("%s: page error: %s" % (slug, errs[0]))
+        if "firebase-leaderboard.js" in src and not have["lb"]:
+            f.append("%s: loads firebase-leaderboard.js but MaffsLeaderboard is not defined (the script failed?)" % slug)
+        if "score-history.js" in src and not have["h"]:
+            f.append("%s: loads score-history.js but MaffsScoreHistory is not defined (the script failed?)" % slug)
         if have["h"]:
             await page.evaluate("() => MaffsScoreHistory.record('%s', '%s', 7)" % (slug, lv or "all"))
             kept = await page.evaluate("() => Object.keys(localStorage).filter(k => k.indexOf('mfg_hist_v1') === 0).length")

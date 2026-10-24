@@ -426,7 +426,7 @@
   function submitScore(gameSlug, level, score, questionsAnswered) {
     // BURST (24 Oct 2026): a short run launched from The 6 P's never writes a score, asks for initials or touches a board.
     if (typeof window !== 'undefined' && window.MaffsBurst && window.MaffsBurst.active()) {
-      return Promise.resolve(reject('a burst session from The 6 P's submits nothing', gameSlug, level));
+      return Promise.resolve(reject("a burst session from The 6 P's submits nothing", gameSlug, level));
     }
     // LEVEL-RESOLVER (12 Oct 2026): a game that has declared its levels (MaffsLevel.resolve) cannot create a
     // board under a key it has not declared. A page with no declaration behaves as before.
