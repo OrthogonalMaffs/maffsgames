@@ -561,12 +561,16 @@
     DIAL_NICE.forEach(function (m) { if (m >= t && on(m, t)) cands.push(m); });
     DIAL_K.forEach(function (kk) { if (kk <= 20) cands.push(kk * t); });
     cands.sort(function (a, b) { return a - b; });
+    // a degree dial prefers right angles (45, 90, 180) to its tick interval where its ticks allow
+    if (isDegrees(ins)) cands = [45, 90, 180].filter(function (m) { return on(m, t); }).concat(cands);
     var labels = [0, n], seam = false;
     for (var ci = 0; ci < cands.length; ci++) {
       var idx = pick(cands[ci]);
       // a full circle has one top: its first and last ends share it, so they share one label
       var s = full && n > 0 && Math.abs(ang(n) - ang(0) - 360) < 1e-6;
       if (s) idx = idx.slice(0, -1);
+      // a degree dial's minimum can sit within a label's width of the top, where the maximum (360) is: the top keeps 360
+      if (isDegrees(ins) && !s && idx.length > 1 && 360 - (ang(idx[idx.length - 1]) - ang(idx[0])) < 24) idx = idx.slice(1);
       var ok = idx.length <= 11 && idx.length >= 4;
       for (var j = 1; ok && j < idx.length; j++) if (ang(idx[j]) - ang(idx[j - 1]) < 24) ok = false;
       if (ok && s && 360 - (ang(idx[idx.length - 1]) - ang(idx[0])) < 24) ok = false;
@@ -631,7 +635,12 @@
     paint(ins.start !== undefined ? ins.start : ins.min, false);
   }
 
+  // A full-circle dial in degrees (`sweep: 360, unit: '°'`) points at its true angle: the value, 0 at the top, clockwise
+  // (contract DIAL-MAPPING, 24 Oct 2026). Any other full-circle dial keeps the fraction of its range.
+  function isDegrees(ins) { return ins.sweep === 360 && ins.unit === '°'; }
+
   function dialAngle(ins, v) {
+    if (isDegrees(ins)) return v;
     // Full-circle instruments read their own angle; everything else
     // sweeps 270 degrees so the ends of the range are distinguishable.
     if (ins.sweep === 360) return (v - ins.min) / (ins.max - ins.min) * 360;
@@ -649,6 +658,7 @@
       if (!ins.wedge) { w.setAttribute('d', ''); return; }
       var end = (deg - 90) * Math.PI / 180, r = 68;
       var large = deg > 180 ? 1 : 0;
+      if (deg >= 360) { w.setAttribute('d', 'M 90 ' + (90 - r) + ' A ' + r + ' ' + r + ' 0 1 1 90 ' + (90 + r) + ' A ' + r + ' ' + r + ' 0 1 1 90 ' + (90 - r) + ' Z'); return; }
       w.setAttribute('d', deg <= 0 ? '' :
         'M 90 90 L 90 ' + (90 - r) + ' A ' + r + ' ' + r + ' 0 ' + large + ' 1 ' +
         (90 + r * Math.cos(end)).toFixed(2) + ' ' + (90 + r * Math.sin(end)).toFixed(2) + ' Z');
@@ -666,14 +676,15 @@
       var y = e.clientY - (b.top + b.height / 2);
       var deg = Math.atan2(y, x) * 180 / Math.PI + 90;   // 0 at the top, clockwise
       if (deg < 0) deg += 360;
-      var frac;
-      if (ins.sweep === 360) {
-        frac = deg / 360;
+      var raw;
+      if (isDegrees(ins)) {
+        raw = deg;                                        // the value is the angle; below the minimum clamps to it
+      } else if (ins.sweep === 360) {
+        raw = ins.min + deg / 360 * (ins.max - ins.min);
       } else {
-        if (deg > 225) deg -= 360;                        // -135 .. 135
-        frac = (Math.min(135, Math.max(-135, deg)) + 135) / 270;
+        if (deg > 180) deg -= 360;                        // -180 .. 180: the dead quarter goes to the nearer end
+        raw = ins.min + (Math.min(135, Math.max(-135, deg)) + 135) / 270 * (ins.max - ins.min);
       }
-      var raw = ins.min + frac * (ins.max - ins.min);
       var snapped = Math.round((raw - ins.min) / ins.step) * ins.step + ins.min;
       snapped = Math.min(ins.max, Math.max(ins.min, snapped));
       return Number(snapped.toFixed(ins.decimals || 0));

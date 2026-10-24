@@ -43,7 +43,7 @@ _spec.loader.exec_module(ti)
 
 ENGINE = ROOT / "escape-rooms" / "assets" / "engine.js"
 CSS = ROOT / "escape-rooms" / "assets" / "engine.css"
-PLANT_ROOMS = ["comic-caper", "big-school-begins", "pe-shed-rebellion", "library-jam"]
+PLANT_ROOMS = ["comic-caper", "big-school-begins", "pe-shed-rebellion", "library-jam"]   # the sprinkler dial is in pe-shed-rebellion
 FIXTURE_ROOM, ART_KEY = "comic-caper", "comic-caper-scene"
 ART_FIXTURE = """(() => {
   let r;
@@ -53,7 +53,7 @@ ART_FIXTURE = """(() => {
   }});
 })()""" % ART_KEY
 
-COUNT = {"dials": 0, "labels": 0, "drags": 0, "locks": 0}
+COUNT = {"dials": 0, "labels": 0, "drags": 0, "locks": 0, "presses": 0, "needles": 0}
 
 CTL = ".instrument .dial, .instrument .keypad, .instrument input[type=range], .instrument .pair-grid"
 
@@ -89,10 +89,45 @@ CTL_TOP = """(sel) => {
 }"""
 
 
+def is_deg(ins):
+    return ins.get("sweep") == 360 and ins.get("unit") == "\u00b0"
+
+
 def angle_of(ins, v):
-    """The scale's own rule, written out again: a full circle reads its own angle, the rest sweep 270 degrees."""
+    """The scale's own rule, written out again: a degree dial points at its value (0 at the top, clockwise), another
+    full circle reads its fraction of the range, the rest sweep 270 degrees (DIAL-MAPPING, 24 Oct 2026)."""
+    if is_deg(ins):
+        return v
     f = (v - ins["min"]) / (ins["max"] - ins["min"])
     return f * 360 if ins.get("sweep") == 360 else -135 + f * 270
+
+
+def _snap(ins, raw):
+    k = math.floor((raw - ins["min"]) / ins["step"] + 0.5)
+    return min(ins["max"], max(ins["min"], k * ins["step"] + ins["min"]))
+
+
+def drag_old(ins, deg):
+    """What a press at clockwise-from-top angle deg set before DIAL-MAPPING (the old fromPoint, written out again)."""
+    if ins.get("sweep") == 360:
+        raw = ins["min"] + deg / 360 * (ins["max"] - ins["min"])
+    else:
+        if deg > 225:
+            deg -= 360
+        raw = ins["min"] + (min(135, max(-135, deg)) + 135) / 270 * (ins["max"] - ins["min"])
+    return _snap(ins, raw)
+
+
+def drag_new(ins, deg):
+    """What it must set now: a degree dial's value is the angle (clamped to min..max); a 270 dial's dead quarter goes
+    to the nearer end; everything else as before."""
+    if is_deg(ins):
+        return _snap(ins, deg)
+    if ins.get("sweep") == 360:
+        return drag_old(ins, deg)
+    if deg > 180:
+        deg -= 360
+    return _snap(ins, ins["min"] + (min(135, max(-135, deg)) + 135) / 270 * (ins["max"] - ins["min"]))
 
 
 def signed(a):
@@ -113,6 +148,7 @@ def judge_dial(tag, ins, d, narrow=""):
     dec = ins.get("decimals") or 0
     n = round((ins["max"] - ins["min"]) / ins["step"])
     full = ins.get("sweep") == 360
+    seam = full and abs(signed(angle_of(ins, ins["max"]) - angle_of(ins, ins["min"]))) < 1e-6
 
     def bad(msg):
         f.append("%s%s: %s" % (tag, narrow, msg))
@@ -147,10 +183,11 @@ def judge_dial(tag, ins, d, narrow=""):
     vals = [l["v"] for l in ls]
     if not (4 <= len(ls) <= 11) and n + 1 >= 4:
         bad("%d labels, want 4 to 11" % len(ls))
-    for must, name in ((ins["min"], "min"), (ins["max"] if not full else ins["min"], "max")):
-        if must not in vals:
+    near_top = is_deg(ins) and not seam and abs(signed(angle_of(ins, ins["max"]) - angle_of(ins, ins["min"]))) < 24
+    for must, name in ((ins["min"], "min"), (ins["max"] if not seam else ins["min"], "max")):
+        if must not in vals and not (near_top and name == "min"):
             bad("%s %s is not labelled" % (name, must))
-    if full:
+    if seam:
         top = [l for l in ls if l["v"] == ins["min"]]
         if top and top[0]["text"] != dp(ins["min"], dec) + "/" + dp(ins["max"], dec):
             bad("the top label reads %r, want '%s/%s'" % (top[0]["text"], dp(ins["min"], dec), dp(ins["max"], dec)))
@@ -193,6 +230,7 @@ async def drive_room(browser, base, slug, engine_js, css, only_dials=False):
         if css is not None:
             await ctx.route(re.compile(r"/escape-rooms/assets/engine\.css(\?.*)?$"), lambda r: r.fulfill(
                 status=200, content_type="text/css; charset=utf-8", body=css))
+        await ctx.add_init_script("window.addEventListener('pointerdown', e => { window.__pd = [e.clientX, e.clientY]; }, true)")
         page = await ctx.new_page()
         await page.goto(base + "/escape-rooms/%s/" % slug, wait_until="load", timeout=20000)
         await page.click("#startBtn")
@@ -241,8 +279,101 @@ async def drive_room(browser, base, slug, engine_js, css, only_dials=False):
                     got = await page.evaluate("(id) => Number(document.getElementById(id).value)", sid)
                     if abs(got - lab) > 1e-9:
                         f.append("%s/%s%s: a press on the label %s set %s" % (slug, lk["id"], (" " + suffix) if suffix else "", lab, got))
+                f += await mapping_checks(page, "%s/%s%s" % (slug, lk["id"], (" " + suffix) if suffix else ""), pins, "ctl" + suffix, suffix, k)
     finally:
         await ctx.close()
+    return f
+
+
+NEEDLES = """([id, suffix, vals]) => vals.map(v => {
+  const r = document.getElementById(id); r.value = v; r.dispatchEvent(new Event('input'));
+  const n = document.getElementById('needle_' + id), w = document.getElementById('wedge_' + id);
+  return { v: v, got: Number(r.value), x: Number(n.getAttribute('x2')), y: Number(n.getAttribute('y2')),
+           ro: (document.getElementById('ro' + suffix) || {}).textContent, wedge: w ? w.getAttribute('d') : null };
+})"""
+PRESS = """([id]) => { const p = window.__pd || [null, null]; return [p[0], p[1], Number(document.getElementById(id).value)]; }"""
+
+
+async def press(page, d, ins, id, deg):
+    """A real mouse press at clockwise-from-top angle deg; returns (the angle the engine saw, the value it set)."""
+    r = 60 * d["scale"]
+    await page.mouse.click(d["cx"] + r * math.sin(math.radians(deg)), d["cy"] - r * math.cos(math.radians(deg)))
+    cx, cy, val = await page.evaluate(PRESS, [id])
+    COUNT["presses"] += 1
+    seen = math.degrees(math.atan2(cx - d["cx"], d["cy"] - cy)) % 360
+    return seen, val
+
+
+async def mapping_checks(page, tag, ins, id, suffix, k):
+    """DIAL-MAPPING: the needle and wedge read the value; a press sets what the rule says; a 270 dial's live range is
+    unchanged from the old mapping; the dead quarter goes to the nearer end."""
+    f = []
+    n = round((ins["max"] - ins["min"]) / ins["step"])
+    dec = ins.get("decimals") or 0
+    vals = [round(ins["min"] + i * ins["step"], dec + 3) for i in range(n + 1)]
+    start = await page.evaluate("(id) => Number(document.getElementById(id).value)", id)
+    for r in await page.evaluate(NEEDLES, [id, suffix, vals]):
+        want = angle_of(ins, r["v"])
+        COUNT["needles"] += 1
+        got = math.degrees(math.atan2(r["x"] - 90, 90 - r["y"]))
+        if abs(r["got"] - r["v"]) > 1e-9:
+            f.append("%s: the slider set %s for %s" % (tag, r["got"], r["v"]))
+        if abs(signed(got - want)) > 0.1:
+            f.append("%s: at %s the needle points to %.1f deg, want %.1f" % (tag, r["v"], got % 360, want % 360))
+        if is_deg(ins) and ins.get("wedge"):
+            w = r["wedge"] or ""
+            if want >= 360:
+                if w.count(" A ") != 2:
+                    f.append("%s: the wedge at %s is not a full turn (%r)" % (tag, r["v"], w[:50]))
+            elif want > 0:
+                m = re.search(r"A 68 68 0 (\d) 1 ([\d.]+) ([\d.]+) Z$", w)
+                if not m:
+                    f.append("%s: no wedge at %s" % (tag, r["v"]))
+                else:
+                    end = math.degrees(math.atan2(float(m.group(2)) - 90, 90 - float(m.group(3)))) % 360
+                    if abs(signed(end - want)) > 0.1 or int(m.group(1)) != (1 if want > 180 else 0):
+                        f.append("%s: the wedge at %s ends at %.1f deg (large %s), want %.1f" % (tag, r["v"], end, m.group(1), want))
+    await page.evaluate("([id, v]) => { const r = document.getElementById(id); r.value = v; r.dispatchEvent(new Event('input')); }", [id, start])
+    d = (await page.evaluate(DIALS))[k]
+    # presses across the live range (the whole circle for a full-circle dial), skipping half-step boundaries
+    if ins.get("sweep") == 360:
+        angles = [a + 1.1 for a in range(0, 358, 3)] + [0.2, 359.8]
+    else:
+        angles = [a + 1.1 - 135 for a in range(0, 268, 3)]
+    for a in angles:
+        deg = a % 360
+        if is_deg(ins):
+            frac = (deg - ins["min"]) / ins["step"]
+        elif ins.get("sweep") == 360:
+            frac = (deg / 360 * (ins["max"] - ins["min"])) / ins["step"]
+        else:
+            frac = (min(135, max(-135, signed(deg))) + 135) / 270 * (ins["max"] - ins["min"]) / ins["step"]
+        if abs(frac - math.floor(frac) - 0.5) < 0.03:
+            continue                      # a half-step boundary: the engine's last-bit rounding could tip it either way
+        seen, val = await press(page, d, ins, id, deg)
+        want = drag_new(ins, seen)
+        if abs(val - want) > 1e-9:
+            f.append("%s: a press at %.1f deg set %s, want %s" % (tag, seen, val, want))
+        elif ins.get("sweep") == 360 and not is_deg(ins) or ins.get("sweep") != 360:
+            if abs(val - drag_old(ins, seen)) > 1e-9:
+                f.append("%s: a press at %.1f deg set %s, it set %s before" % (tag, seen, val, drag_old(ins, seen)))
+    if is_deg(ins):
+        for v in vals:
+            a = v if v < ins["max"] else 360 - 0.3
+            if v == ins["min"] and v > 0:
+                a = v + 0.3
+            seen, val = await press(page, d, ins, id, a % 360)
+            if abs(val - v) > 1e-9:
+                f.append("%s: a press at the angle of %s (%.1f deg) set %s" % (tag, v, seen, val))
+        if ins["min"] > 3:
+            seen, val = await press(page, d, ins, id, ins["min"] / 2)
+            if val != ins["min"]:
+                f.append("%s: a press below the minimum (%.1f deg) set %s, want %s" % (tag, seen, val, ins["min"]))
+    elif ins.get("sweep") != 360:
+        for a, end, name in ((140, ins["max"], "max"), (175, ins["max"], "max"), (185, ins["min"], "min"), (220, ins["min"], "min")):
+            seen, val = await press(page, d, ins, id, a)
+            if val != end:
+                f.append("%s: a press %d deg round (in the dead quarter, nearer the %s) set %s, want %s" % (tag, a, name, val, end))
     return f
 
 
@@ -373,6 +504,27 @@ def plant_overlap(src):
     return src.replace(old3, "", 1)
 
 
+def plant_old_fraction(src):
+    """The engine before DIAL-MAPPING: a degree dial's needle is placed by its fraction of min..max."""
+    old = "function isDegrees(ins) { return ins.sweep === 360 && ins.unit === '\u00b0'; }"
+    assert old in src, "plant: the isDegrees line was not found"
+    return src.replace(old, "function isDegrees(ins) { return false; }", 1)
+
+
+def plant_dead_to_max(src):
+    """The dead quarter clamped to the maximum, as fromPoint did before DIAL-MAPPING."""
+    old = "if (deg > 180) deg -= 360;"
+    assert old in src, "plant: the dead-quarter line was not found"
+    return src.replace(old, "if (deg > 225) deg -= 360;", 1)
+
+
+def plant_shifted_step(src):
+    """A 270-degree dial's drag shifted by one step."""
+    old = "var snapped = Math.round((raw - ins.min) / ins.step) * ins.step + ins.min;"
+    assert old in src, "plant: the snap line was not found"
+    return src.replace(old, "var snapped = (Math.round((raw - ins.min) / ins.step) + (ins.sweep === 360 ? 0 : 1)) * ins.step + ins.min;", 1)
+
+
 def plant_art_uncapped(css):
     old = "max-height:30vh"
     assert old in css, "plant: the art cap was not found"
@@ -388,7 +540,7 @@ def main():
     rooms = a.rooms or live_rooms()
     fails = asyncio.run(run(rooms, None, None))
     print("Escape-room dial scale (DIAL-SCALE): %d live rooms, every dial, every lock on a 390x844 phone" % len(rooms))
-    print("  checked: %(dials)d dial drawings (3 widths each), %(labels)d labels, %(drags)d drags, %(locks)d phone locks" % COUNT)
+    print("  checked: %(dials)d dial drawings (3 widths each), %(labels)d labels, %(drags)d drags, %(locks)d phone locks, %(needles)d needle positions, %(presses)d presses" % COUNT)
     print("  %s  the scales, the drag and the phone layout%s" % ("FAIL" if fails else "ok  ", (":\n    " + "\n    ".join(fails[:40])) if fails else ""))
     ok = not fails
     if not a.no_plants:
@@ -399,6 +551,9 @@ def main():
             ("a label one step off its tick", plant_off_by_one(src), None, False),
             ("labels that overlap", plant_overlap(src), None, False),
             ("the lock art uncapped on a phone", None, plant_art_uncapped(css), True),
+            ("the old fraction mapping on the sprinkler dial", plant_old_fraction(src), None, False),
+            ("the dead quarter clamped to the maximum", plant_dead_to_max(src), None, False),
+            ("a 270-degree dial's drag shifted by one step", plant_shifted_step(src), None, False),
         ]
         for name, js, css_, art_only in plants:
             if art_only:

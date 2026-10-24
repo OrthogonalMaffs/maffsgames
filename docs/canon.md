@@ -2242,8 +2242,14 @@ usually six clues and two blanks (`comic-caper` has four and four); at least two
   Phone: when a lock is picked at 860 px wide or less, `showLockPanel()` scrolls its panel to just under the sticky
   clock (or, if the instrument would still fall below the fold, the brief's start), and lock art is capped at 30% of
   the screen height (`#lockPanel .artframe`, 1600x873 box, `object-fit: cover`). Tested by
-  `scripts/test-escape-dial.py`. **Known, not changed:** the drag maps the dead quarter's left half (below the
-  7-o'clock minimum) to the maximum, as `fromPoint()` always did.
+  `scripts/test-escape-dial.py`. **Degree dials (DIAL-MAPPING, 24 Oct 2026):** a
+  `sweep: 360` dial whose unit is "°" points at its true angle (angle = value, 0 at the top, clockwise; the scale's
+  ticks and labels sit at the same angles, the wedge runs from 0° to the value, and a full 360° wedge is a full
+  circle), and a drag is clamped to min..max, so pressing below the minimum sets the minimum; Big School Begins'
+  0-360 compass and Pe Shed Rebellion's sprinkler arc (10-360) are the two, and a `sweep: 360` dial in any other unit
+  keeps the fraction-of-range mapping (none exists). **Dead quarter:** a drag on a 270-degree dial's dead quarter
+  sets whichever end is nearer by angle (below the 7 o'clock minimum sets the minimum, past 5 o'clock the maximum);
+  slider, keyboard and typed values, and every drag inside the live range, are unchanged.
 - **`wrongLines`** — a room's escalating wrong-entry lines, `{head, body}` objects, indexed by
   `st.wrongs - 1` and clamped so the last repeats. A room without the array gets the original fixed string.
   A misconception hit consumes an index without printing a line, which is intended.
