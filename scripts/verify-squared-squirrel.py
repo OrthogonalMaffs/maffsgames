@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # ci-line: Football Pitches per Squared Squirrel, part 1 (Stage 1 the fixed ramp in order; every pool question's key recomputed from its data by units and dimensions, its unit the quantity asked, its named slips recomputed and none equal to the key, Stages 2-3 friendly whole numbers, at least 40 a stage, sessions easiest first; no nonsense unit or squirrel in any question, option, hint or worked line; no formula-triangle wording or drawing) | --part 1
-# ci-line: Football Pitches per Squared Squirrel, part 2 (every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, Stage 1's retry keeps the mark, the no-unit "squirrels" message loud, marking nothing and cleared by picking a unit, the wrong unit marks nothing, named slips, the calculator in Stages 4-5 only, no sideways scroll) | --part 2
-# ci-line: Football Pitches per Squared Squirrel, part 3 (fault-injection self-test: eleven planted faults, each caught) | --part 3
+# ci-line: Football Pitches per Squared Squirrel, part 2 (every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, Stage 1's retry keeps the mark, the no-unit "squirrels" message loud, spaced from the unit buttons, marking nothing and cleared by picking a unit, the wrong unit marks nothing, named slips, the calculator in Stages 4-5 only, no sideways scroll) | --part 2
+# ci-line: Football Pitches per Squared Squirrel, part 3 (fault-injection self-test: twelve planted faults, each caught) | --part 3
 # ci-deps: games/squared-squirrel/
 """Independent verification for Football Pitches per Squared Squirrel (games/squared-squirrel/), built 23 Oct 2026
 (contract FOOTBALL-PITCHES, Jon). SR-30: checked from its first PR.
@@ -549,6 +549,31 @@ LOUD_JS = r"""() => {
 }"""
 
 
+# Room to breathe (Jon's play-test, 24 Oct 2026): with the no-unit highlight on, buttons in a row at least 8 px apart and
+# far enough that their outlines (width plus the pulse's largest offset, from the page's own keyframes) never touch; the
+# message 10 px below the buttons and 12 px above whatever follows it (the keypad or the Calculator toggle).
+NEXT_JS = r"""() => { const n = [document.querySelector('#kpHolder > *'), document.querySelector('#calcWrap:not([hidden]) .maffs-calc-toggle')]
+  .filter(e => e && e.offsetHeight)[0]; return n ? n.getBoundingClientRect().top + window.scrollY : null; }"""
+LAYOUT_JS = r"""() => {
+  const btns = [...document.querySelectorAll('#units .unit-btn')].map(b => b.getBoundingClientRect());
+  const cs = getComputedStyle(document.querySelector('#units .unit-btn'));
+  let off = parseFloat(cs.outlineOffset) || 0;
+  for (const sh of document.styleSheets) { let rules; try { rules = sh.cssRules; } catch (e) { continue; }
+    for (const r of rules) if (r.type === CSSRule.KEYFRAMES_RULE && r.name === 'unitPulse')
+      for (const k of r.cssRules) off = Math.max(off, parseFloat(k.style.outlineOffset) || 0); }
+  const reach = (parseFloat(cs.outlineWidth) || 0) + off;
+  let gap = Infinity;
+  for (let i = 1; i < btns.length; i++) if (Math.abs(btns[i].top - btns[i - 1].top) < 2) gap = Math.min(gap, btns[i].left - btns[i - 1].right);
+  for (let i = 0; i < btns.length; i++) for (let j = 0; j < btns.length; j++) if (btns[j].top > btns[i].bottom - 1)
+    gap = Math.min(gap, btns[j].top - btns[i].bottom);
+  const m = document.getElementById('noUnitMsg').getBoundingClientRect(), u = document.getElementById('units').getBoundingClientRect();
+  const n = [document.querySelector('#kpHolder > *'), document.querySelector('#calcWrap:not([hidden]) .maffs-calc-toggle')].filter(e => e && e.offsetHeight)[0];
+  return { gap: gap === Infinity ? null : Math.round(gap * 10) / 10, reach, above: Math.round((m.top - u.bottom) * 10) / 10,
+    below: n ? Math.round((n.getBoundingClientRect().top - m.bottom) * 10) / 10 : null, height: m.height,
+    small: btns.some(b => b.width < 43.5 || b.height < 43.5) };
+}"""
+
+
 def play_typed(page, size, out, where, q, wrong, check_units, named_n=None):
     box = '#ans4' if q['mode'] in CALC_STAGES else '#ans'
     if page.evaluate('SQS.ui.state()') != 'asking':
@@ -558,7 +583,17 @@ def play_typed(page, size, out, where, q, wrong, check_units, named_n=None):
     key = typed(q, q['key'])
     if check_units:
         # No unit: the squirrels message, on the student's own number, and nothing marked.
+        next0 = page.evaluate(NEXT_JS)
         submit(page, box, key, None)
+        lay, next1 = page.evaluate(LAYOUT_JS), page.evaluate(NEXT_JS)
+        if lay['gap'] is not None and (lay['gap'] < 8 or lay['gap'] <= 2 * lay['reach']):
+            out.append('%s: the unit buttons are %s px apart with the highlight on (at least 8, and more than twice the outline\'s %s px reach)' % (where, lay['gap'], lay['reach']))
+        if lay['small']:
+            out.append('%s: a unit button is under 44 px' % where)
+        if lay['above'] < 9.5 or (lay['below'] is not None and lay['below'] < 11.5):
+            out.append('%s: the no-unit message has %s px above it and %s px below (at least 10 and 12)' % (where, lay['above'], lay['below']))
+        if next0 is not None and next1 is not None and next1 - next0 > lay['height'] + 1:
+            out.append('%s: showing the message moved what follows by %.1f px, more than its own %.1f px' % (where, next1 - next0, lay['height']))
         want = '%s %s? Pick the unit, or that\'s what the examiner will read.' % (key, squirrels(q['unit']))
         if page.inner_text('#noUnitMsg').strip() != want or page.evaluate('window.__ev.length') != n0 or page.evaluate('SQS.ui.state()') != 'asking':
             out.append('%s: an answer with no unit got %r and was %s; expected %r, not marked' % (
@@ -741,6 +776,10 @@ PLANTS = [
     ('a Stage 4 key using 1.3 for 1 h 30 min',
      [("      case 'rate': return G[0].v / val(G[1]);", "      case 'rate': return G[0].v / (G[1].u === 'hm' ? H.decimalSlip(G[1]) : val(G[1]));"), FILTER],
      'engine', r'stage-4 .*:rate:.*key \S+, recomputed from its data'),
+    # Room to breathe (Jon's play-test, 24 Oct 2026).
+    ('the unit buttons with no gap',
+     [(".units{flex-basis:100%;display:flex;flex-wrap:wrap;justify-content:center;gap:1.25rem}",
+       ".units{flex-basis:100%;display:flex;flex-wrap:wrap;justify-content:center;gap:0}")], 'play', r'the unit buttons are 0(\.0)? px apart'),
     # Contract SQS-REAL-UNITS (Jon's play-test, 24 Oct 2026).
     ('a nonsense-unit question left in Stage 3',
      [("    gbpkg: { t: '£/kg', of: ['gbp', 'kg'] }, gbpm: { t: '£/m', of: ['gbp', 'm'] }\n  };",
