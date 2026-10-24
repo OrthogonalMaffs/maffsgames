@@ -3,6 +3,12 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-24 (cloud): SQS-LIST (Jon's contract of 24 Oct, 19:02, "lets set it live please"; named here). **DONE (#519, 840655a; main run 40122839801 green, 59 of 59, started on the merge).** Live checks for Project Claude (this container cannot reach the site). Local leftover: branch `claude/sqs-list-wip` (never pushed; its commit went in as #519), its worktree removed.
+
+- **Lane exception (Jon, 24 Oct 2026, 19:02):** the cloud lane edits the home-lane files this contract names, for this PR only; recorded here and in the PR, not in `docs/handover/home.md`.
+- **Listed:** noindex removed (a dated LISTED comment); portal cards in KS3 and GCSE after Take a Walk's (`data-topics="number"`, Ratio and Number tags, as Split It's; New badge 2026-10-24; not in "New for 2026/27", as Take a Walk is not); Essentials, Ratio, proportion and percentages, after Percentage Flip, `data-kind="one"` (a stage picker, no level control; SUITE updated); sitemap; spec map R11 only; hub row `stage-1`..`-5`; `NOT_ON_HUB` entry replaced by a `LEVEL_OVERRIDES` entry; roster row 101 moved to the Resit Fluency Strand (5) and corrected (no nonsense units, question 9 people/km², pools 154/308/179/132 from the verifier, the loud no-unit message); 139 cards for 99 games (recounted), 99 in CLAUDE.md and canon; an /updates/ line.
+- **Listing checks updated:** `check-resit-page.py` SUITE; `verify-squared-squirrel.py`'s static check now fails if the page IS noindex (Take a Walk's flip).
+
 ## 2026-10-24 (cloud): SQS-SPACING (Jon's contract of 24 Oct, after his Stage 5 play-test; named here). **DONE (#514, c5554f8).** Main run 40094257443 was red: first group 21 failed uploading its timing artifact (ECONNRESET; its check passed); the one re-run then failed the timings job, which is this lane's fault (below).
 
 - **Why:** with the no-unit highlight on, the unit buttons touched (5.6 px apart, the outline reaching 9 px beyond each at the pulse's peak), and the message sat tight against the buttons and the Calculator toggle.
