@@ -11,13 +11,15 @@ The table below is the one place the audit's figures are typed: an audit of 18 O
 of its own (a figure on a page is a claim); scripts/verify-the-6-ps.py holds both to that.
 
   COVERED      a topic a real game already teaches, with its route: the game, the level it opens at, and the game's
-               own mode keys to choose from (one is picked per session; none means the game's own menu). Where the
+               own mode keys to choose from (one is picked per session; none means the game's own menu). Three stages
+               are Jon's rulings of 25 Oct 2026: how-many-parts Foundation stage 3, simultaneous-solver Foundation
+               stage 4, shape-shifter Random Mix. Where the
                contract named no level, the route takes the game's declared fallback (MaffsLevel.resolve), and the
                verifier checks every level is one the game declares.
   band         Jon's grade band for the topic (24 Oct 2026; his judgement from the audit, not OCR data). Used only to
                order a session's six topics, lower bound first, then upper. Never shown as a grade.
-  COMING_SOON  a topic with no game yet ("in development"), shown on the page with its marks and offered in the
-               results' tick-list. Never drawn into a session.
+  COMING_SOON  a topic with no game that can run it as a burst yet ("in development"), shown on the page with its
+               marks and offered in the results' tick-list. Never drawn into a session.
 
 Game names are read from .claude/rules/game-roster.md (the one copy), never typed here.
 """
@@ -48,16 +50,15 @@ COVERED = [
     ("arithmetic-negatives", "Negative numbers", 7.0, 5, (1, 3), "negative-number-line", "year6", ["calc"]),
     ("fdp-convert", "Fractions, decimals and percentages", 6.8, 6, (1, 3), "free-daily-pizza", "ks3", ["1", "2"]),
     ("number-vocabulary", "Factors, multiples and primes", 6.7, 6, (1, 3), "factor-race", "ks3", []),
-    ("fraction-operations", "Calculating with fractions", 6.5, 6, (1, 4), "how-many-parts", "ks3", []),
+    ("fraction-operations", "Calculating with fractions", 6.5, 6, (1, 4), "how-many-parts", "ks3", ["stage3"]),
     ("fraction-percentage-of-amount", "Fractions and percentages of amounts", 6.3, 6, (1, 4), "free-daily-pizza", "ks3", ["3"]),
     ("averages", "Averages and range", 6.3, 6, (1, 4), "distinctly-average", "ks3", []),
     ("area", "Area", 6.0, 6, (1, 5), "take-a-walk", "ks3", ["stage-1", "stage-2", "stage-3"]),
     ("inverse-operations", "Inverse operations", 5.3, 6, (1, 3), "think-of-a-number", "year6", []),
     ("trigonometry", "Trigonometry", 5.0, 6, (4, 5), "trig-worms", "gcse", []),
     ("venn", "Venn diagrams", 4.2, 6, (3, 4), "given-that", "gcse", ["venn"]),
-    ("simultaneous", "Simultaneous equations", 4.2, 4, (4, 5), "simultaneous-solver", "gcse", []),
-    ("constructions", "Constructions", 4.0, 6, (3, 5), "constructions-lab", "gcse", []),
-    ("transformations", "Transformations", 4.0, 5, (1, 4), "shape-shifter", "year6", []),
+    ("simultaneous", "Simultaneous equations", 4.2, 4, (4, 5), "simultaneous-solver", "gcse", ["stage4"]),
+    ("transformations", "Transformations", 4.0, 5, (1, 4), "shape-shifter", "year6", ["mix"]),
     ("simplify-expressions", "Simplifying expressions", 3.7, 5, (1, 3), "like-terms-collector", "year6", []),
     ("basic-probability", "Probability", 3.7, 5, (1, 3), "probability-pioneer", "year6", []),
     ("substitution", "Substitution", 3.5, 5, (1, 4), "formula-plug-in", "year6", []),
@@ -91,6 +92,8 @@ COMING_SOON = [
     ("similarity-congruence", "Similarity and congruence", 4.7, 6, None),
     ("listing-outcomes", "Listing outcomes", 4.5, 6, None),
     ("scale-bearings", "Scale drawings and bearings", 4.5, 5, None),
+    # Moved from COVERED (Jon, 25 Oct 2026): Constructions Lab reports no individual answers, so it cannot run as a burst.
+    ("constructions", "Constructions", 4.0, 6, None),
     ("pie-charts", "Pie charts", 4.0, 4, "Who Ate All the Pies?"),
     ("2d-shapes", "2D shapes", 3.8, 5, None),
     ("quadratic-graphs", "Quadratic graphs", 3.5, 5, None),

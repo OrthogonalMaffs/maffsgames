@@ -194,7 +194,9 @@
     "slug": "how-many-parts",
     "game": "How Many Parts?",
     "level": "ks3",
-    "modes": []
+    "modes": [
+     "stage3"
+    ]
    }
   },
   {
@@ -314,23 +316,9 @@
     "slug": "simultaneous-solver",
     "game": "Simultaneous Solver",
     "level": "gcse",
-    "modes": []
-   }
-  },
-  {
-   "id": "constructions",
-   "name": "Constructions",
-   "marks": 4.0,
-   "series": 6,
-   "band": [
-    3,
-    5
-   ],
-   "route": {
-    "slug": "constructions-lab",
-    "game": "Constructions Lab",
-    "level": "gcse",
-    "modes": []
+    "modes": [
+     "stage4"
+    ]
    }
   },
   {
@@ -346,7 +334,9 @@
     "slug": "shape-shifter",
     "game": "Shape Shifter",
     "level": "year6",
-    "modes": []
+    "modes": [
+     "mix"
+    ]
    }
   },
   {
@@ -691,6 +681,13 @@
    "name": "Scale drawings and bearings",
    "marks": 4.5,
    "series": 5,
+   "planned": null
+  },
+  {
+   "id": "constructions",
+   "name": "Constructions",
+   "marks": 4.0,
+   "series": 6,
    "planned": null
   },
   {
