@@ -16,6 +16,7 @@
   }
 
   function record(gameSlug, level, score) {
+    if (window.MaffsBurst && window.MaffsBurst.active()) return;   // BURST: a burst keeps no history (24 Oct 2026)
     try {
       var k = key(gameSlug, level);
       var arr = JSON.parse(localStorage.getItem(k) || '[]');

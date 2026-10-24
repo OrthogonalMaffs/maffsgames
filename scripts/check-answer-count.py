@@ -601,7 +601,7 @@ def selftest():
         ("a page loading it twice", lambda d: edit(d, "games/%s/index.html" % slug, lambda s: s.replace(inc(s), inc(s) + "\n" + inc(s))), "2 times"),
         ("a page loading it without a mount", lambda d: edit(d, "games/%s/index.html" % slug,
             lambda s: s.replace('<div class="maffs-start-note" data-maffs-start-note></div>', "")), "no start-note mount"),
-        ("include not deferred", lambda d: edit(d, "games/%s/index.html" % slug, lambda s: s.replace(" defer></script>", "></script>", 1) if "answer-count.js\" defer" in s else s), "defer"),
+        ("include not deferred", lambda d: edit(d, "games/%s/index.html" % slug, lambda s: s.replace("answer-count.js\" defer>", "answer-count.js\">", 1)), "defer"),
         ("a hand-typed figure on a game page", lambda d: edit(d, "games/%s/index.html" % slug,
             lambda s: s.replace("</body>", "<p>12,000 questions answered</p></body>", 1)), "hand-typed figure"),
         ("a hand-typed figure on the homepage", lambda d: edit(d, "index.html",
