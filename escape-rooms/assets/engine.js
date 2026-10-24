@@ -399,6 +399,22 @@
     activeLock = i;
     renderLockBtns();
     renderLockPanel();
+    showLockPanel();
+  }
+
+  // On a phone the lock panel sits far below the buttons (contract DIAL-SCALE, 24 Oct 2026): bring it up so its
+  // instrument is on screen the moment a lock opens. The panel's top (its art, if any, and the brief) goes just
+  // under the sticky clock; if the instrument still falls below the fold, the brief's start goes there instead.
+  function showLockPanel() {
+    if (!window.matchMedia || !window.matchMedia('(max-width:860px)').matches) return;
+    var hud = document.querySelector('.hud');
+    var top = (hud ? hud.offsetHeight : 0) + 16;
+    function to(node) {
+      if (node) window.scrollTo(0, Math.max(0, node.getBoundingClientRect().top + window.pageYOffset - top));
+    }
+    var host = el('lockPanel'), ctl = host.querySelector('.instrument .dial, .instrument .keypad, .instrument input[type=range], .instrument .pair-grid');
+    to(host.firstElementChild);
+    if (ctl && ctl.getBoundingClientRect().top > window.innerHeight - 100) to(host.querySelector('.lock-brief'));
   }
 
   function renderLockPanel() {
@@ -451,7 +467,7 @@
     var start = ins.start !== undefined ? ins.start : ins.min;
     pending[l.id + suffix] = start;
     var dial = ins.kind === 'dial'
-      ? '<div class="dial-wrap">' + dialSVG(id) + '</div><p class="dial-hint">Drag the needle, or use the slider &mdash; both set the same value.</p>'
+      ? '<div class="dial-wrap">' + dialSVG(id, ins) + '</div><p class="dial-hint">Drag the needle, or use the slider &mdash; both set the same value.</p>'
       : '';
     return dial +
       '<div class="readout" id="ro' + suffix + '" aria-hidden="true">' + dp(start, ins.decimals) +
@@ -515,22 +531,73 @@
       '</div>';
   }
 
-  function dialSVG(id) {
-    var ticks = '';
-    for (var i = 0; i <= 36; i++) {
-      var a = (i / 36) * 360 - 90;
-      var rad = a * Math.PI / 180;
-      var major = i % 3 === 0;
-      var r1 = major ? 66 : 71, r2 = 78;
-      ticks += '<line class="tick' + (major ? ' major' : '') + '" x1="' + (90 + r1 * Math.cos(rad)).toFixed(1) +
-        '" y1="' + (90 + r1 * Math.sin(rad)).toFixed(1) + '" x2="' + (90 + r2 * Math.cos(rad)).toFixed(1) +
-        '" y2="' + (90 + r2 * Math.sin(rad)).toFixed(1) + '"/>';
+  // The dial scale (contract DIAL-SCALE, 24 Oct 2026): every tick and label is drawn from the instrument's own
+  // min/max/step/sweep, at dialAngle(ins, value), so a value sits exactly on its tick and the dead quarter of a
+  // 270-degree dial is blank. Minor ticks fall on multiples of an interval t that is itself a multiple of the step
+  // (anchored at zero, so 0-100 ticks at 0, 5, 10 ...), plus the two ends; t is the first of 1, 2, 5, 10 ... steps
+  // that gives 8 to 40 ticks. Labels fall on a major interval m (a multiple of t) plus the two ends, the smallest m
+  // that gives at most 11 labels no closer than 24 degrees of dial.
+  var DIAL_K = [1, 2, 5, 10, 20, 25, 50, 100, 200, 500, 1000];
+  var DIAL_NICE = [1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000];
+  function dialPlan(ins) {
+    var d = ins.decimals || 0, step = ins.step, n = Math.round((ins.max - ins.min) / step);
+    function val(i) { return Number((ins.min + i * step).toFixed(d + 3)); }
+    function on(v, w) { var q = v / w; return Math.abs(q - Math.round(q)) < 1e-9; }
+    function pick(w) {                       // grid indices that sit on a multiple of w, plus both ends
+      var out = [];
+      for (var i = 0; i <= n; i++) if (i === 0 || i === n || on(val(i), w)) out.push(i);
+      return out;
     }
+    var k, t = step, ticks = pick(t);
+    for (k = 0; k < DIAL_K.length; k++) {
+      var w = DIAL_K[k] * step, c = pick(w);
+      t = w; ticks = c;
+      if (c.length >= 8 && c.length <= 40) break;
+      if (c.length < 8 && k === 0) break;     // a very short range keeps every step
+    }
+    var full = ins.sweep === 360;
+    function ang(i) { return dialAngle(ins, val(i)); }
+    var cands = [];
+    DIAL_NICE.forEach(function (m) { if (m >= t && on(m, t)) cands.push(m); });
+    DIAL_K.forEach(function (kk) { if (kk <= 20) cands.push(kk * t); });
+    cands.sort(function (a, b) { return a - b; });
+    var labels = [0, n], seam = false;
+    for (var ci = 0; ci < cands.length; ci++) {
+      var idx = pick(cands[ci]);
+      // a full circle has one top: its first and last ends share it, so they share one label
+      var s = full && n > 0 && Math.abs(ang(n) - ang(0) - 360) < 1e-6;
+      if (s) idx = idx.slice(0, -1);
+      var ok = idx.length <= 11 && idx.length >= 4;
+      for (var j = 1; ok && j < idx.length; j++) if (ang(idx[j]) - ang(idx[j - 1]) < 24) ok = false;
+      if (ok && s && 360 - (ang(idx[idx.length - 1]) - ang(idx[0])) < 24) ok = false;
+      if (ok) { labels = idx; seam = s; break; }
+    }
+    return { n: n, val: val, ang: ang, ticks: ticks, labels: labels, seam: seam, t: t };
+  }
+
+  function dialSVG(id, ins) {
+    var P = dialPlan(ins), d = ins.decimals || 0, ticks = '', labels = '';
+    function xy(deg, r) {
+      var rad = (deg - 90) * Math.PI / 180;
+      return [(90 + r * Math.cos(rad)).toFixed(1), (90 + r * Math.sin(rad)).toFixed(1)];
+    }
+    P.ticks.forEach(function (i) {
+      if (P.seam && i === P.n) return;           // the top tick is drawn once
+      var major = P.labels.indexOf(i) >= 0 || (P.seam && i === 0), a = P.ang(i);
+      var p1 = xy(a, major ? 66 : 71), p2 = xy(a, 78);
+      ticks += '<line class="tick' + (major ? ' major' : '') + '" data-v="' + P.val(i) + '" x1="' + p1[0] + '" y1="' + p1[1] +
+        '" x2="' + p2[0] + '" y2="' + p2[1] + '"/>';
+    });
+    P.labels.forEach(function (i) {
+      var p = xy(P.ang(i), 52), v = P.val(i);
+      var text = (P.seam && i === 0) ? dp(v, d) + '/' + dp(ins.max, d) : dp(v, d);
+      labels += '<text class="lbl" data-v="' + v + '" x="' + p[0] + '" y="' + p[1] + '" text-anchor="middle" dominant-baseline="central">' + text + '</text>';
+    });
     return '<svg class="dial" id="dial_' + id + '" viewBox="0 0 180 180" aria-hidden="true">' +
       '<circle class="face" cx="90" cy="90" r="84"/>' + ticks +
       '<path id="wedge_' + id + '" fill="rgba(245,165,36,0.18)" stroke="none"></path>' +
       '<line class="needle" id="needle_' + id + '" x1="90" y1="90" x2="90" y2="22"/>' +
-      '<circle class="boss" cx="90" cy="90" r="7"/>' +
+      '<circle class="boss" cx="90" cy="90" r="7"/>' + labels +      // numbers last: the needle never hides one
       '</svg>';
   }
 
