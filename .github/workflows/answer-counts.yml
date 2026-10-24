@@ -1,6 +1,6 @@
 # The daily answer counts (contract ANSWER-COUNTS, 23 Oct 2026; canon 7.5.5).
 #
-# Once a day, early UK morning, fetch the figures from the counts Apps Script (docs/apps-script-counts.md), validate
+# Three times a day (05:40, 11:40 and 17:40 UTC), fetch the figures from the counts Apps Script (docs/apps-script-counts.md), validate
 # them (scripts/fetch-answer-counts.py: schema, roster slugs, whole numbers, total = sum, as_of today) and commit
 # schools/assets/answer-counts.json to main as the workflow's GITHUB_TOKEN with "[skip ci]" (a push by GITHUB_TOKEN starts no
 # workflow anyway, so the full check-site run is not started by it). If main moves between the fetch and the push the
@@ -9,11 +9,14 @@
 # It is its own workflow, not a job of check-site.yml, so it is never part of "main's last full run" (scripts/merge-pr.py
 # judges check-site.yml only) and a failure here fails only this job: the file on main stays as it was, and the site
 # hides any figure whose source is more than 7 days old.
+#
+# Three slots, not one (Jon, 24 Oct 2026): GitHub starts scheduled runs late and may drop one, and the first 05:40 run
+# did not start at all. A run whose figures match the file commits nothing, so extra runs cost nothing but a log line.
 name: answer-counts
 
 on:
   schedule:
-    - cron: "40 5 * * *"          # 05:40 UTC daily: 06:40 in summer, 05:40 in winter
+    - cron: "40 5,11,17 * * *"    # 05:40, 11:40 and 17:40 UTC (06:40, 12:40, 18:40 in summer)
   workflow_dispatch: {}
 
 permissions:
