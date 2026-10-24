@@ -1413,6 +1413,26 @@ A page with a mount loads the script once, deferred, after `analytics.js` (one l
 Jon's own play on the live site is counted: nothing is filtered. The Sheet does not record the host, and `mfg()` was
 gated to the live host only on 16 Sep 2026, so test events written between 1 and 16 Sep are in the count.
 
+### 7.5.6 Burst mode: a game as a short run from The 6 P's (Jon, 24 Oct 2026; contract BURST)
+The 6 P's (the exam route, architecture (b)) sends a student into a real game for a few answers and takes them back.
+`schools/assets/burst.js` is the one shared module: a game opts in with one deferred line after `analytics.js`
+(`scripts/check-burst.py` holds the list of adopted games, 31 on 24 Oct 2026, and fails a page that loads it and is not
+on it). **The link:** `/games/<slug>/?burst=N&from=six-ps&topic=<id>`, with the game's own `?level=` (MaffsLevel) and
+optionally `&mode=<name>`. `burst` is 1-10, `from` is exactly `six-ps`, `topic` is `[a-z0-9-]` up to 40; anything else and the
+module does nothing at all (no wrap, no element, no press; `MaffsBurst.active()` is false). **The count:** it wraps the
+global `mfg()` (so it loads after `analytics.js`); every call goes through unchanged, and each `question_answered` is
+counted (right when `correct` is true), so no game carries counting code. After the Nth answer a fixed bar at the foot of the
+screen, portal navy, 44 px controls, says "That's N. Back to The 6 P's (R of N)" and links to
+`/the-6-ps/?done=<topic>&r=<R>&n=<N>`; the game is not stopped, the page keeps room for the bar, and the counts freeze at N.
+**Stages:** `?mode=<name>` presses the start screen's `[data-mode="<name>"]` button once and nothing else; a game whose stages
+are not `data-mode` buttons opens at its level only (the list is in `check-burst.py` `NO_MODE` and the handover). **Leaderboards:**
+a burst never writes: `firebase-leaderboard.js`'s `submitScore` returns at once (no initials, no board, no ticker entry) and
+`score-history.js`'s `record()` keeps nothing, both on `MaffsBurst.active()`; a game that keeps its own best in
+`localStorage` (index-laws, factor-race, distinctly-average, trig-worms, quadratic-factoriser) is not reached and only writes
+it at the end of a full run. A game that does not report `question_answered` cannot be adopted (constructions-lab, non-scored):
+counting is never added to a game. **Privacy:** no change; the return link carries a topic id and a score, and nothing is
+stored or sent. Tested by `scripts/check-burst.py` (each adopted game played for five answers in Chromium; four plants).
+
 ## 7.7 What the site publishes — SITE and INTERNAL
 
 GitHub Pages builds `main` with Jekyll and publishes every tracked file except dot-paths
