@@ -140,7 +140,7 @@
   "Tax Theft (every key recomputed from HMRC 2025/26 + money-answer format check)": "16",
   "Terrible Advice (every equation in the advice and the keys recomputed; every key recomputed from its own givens; no distractor ends on the key's value (SR-16); answer once and Next once, played in Chromium)": "13",
   "Test the Claim (independent recomputation of every key)": "16",
-  "Text writes (every text-mode write in scripts/ passes newline='', so Windows cannot turn LF into CRLF)": "9",
+  "Text writes (every text-mode write in scripts/ passes newline='', so Windows cannot turn LF into CRLF)": "4",
   "The Comic Caper (lock 1 and lock 3 briefs rendered exactly, inside their panel at 320, 390 and 1280 px; the old wording and an overflow planted and caught)": "36",
   "The Truth Will Set You Free (every truth table from its key, distractors not equivalent, scoring by correct cells, MaffsLock)": "18",
   "Think of a Number (every item run forwards from its answer and backwards from its result, undo working recomputed, typed answers marked in Chromium)": "6",
