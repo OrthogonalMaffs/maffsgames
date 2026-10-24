@@ -2230,6 +2230,20 @@ usually six clues and two blanks (`comic-caper` has four and four); at least two
   misconception cannot be set. It was built for The Rightful King's passcode and The Library Jam's fines
   lock, the first `maxDigits` locks; which mode each keypad lock uses is set in its room's `room.js`
   (`instrument`), not listed here. Tested by `scripts/test-escape-keypad.py`.
+- **The dial's scale and its phone rule (DIAL-SCALE, 24 Oct 2026).** `dialSVG()` draws every dial's ticks and numbers
+  from the instrument's own `min`/`max`/`step`/`sweep`, at `dialAngle(ins, value)`, so a value sits exactly on its
+  tick; the dead quarter of a 270-degree dial is blank, and a full-circle (`sweep: 360`) dial draws its top tick
+  once and labels it "min/max" ("0/360"). Minor ticks fall on multiples of an interval `t` that is a multiple of the
+  step (anchored at zero, so 0-100 ticks at 0, 5, 10 ...; the two ends always get a tick, which is how 1-100 and
+  1-60 dials work): the first of 1, 2, 5, 10, 20, 25, 50 ... steps that gives 8 to 40 ticks. Labels fall on the
+  smallest nice major interval (a multiple of `t`) that gives 4 to 11 labels no closer than 24 degrees of dial; min
+  and max are always labelled. Numbers are 11 px as rendered, in the page font, drawn above the needle, with the
+  unit left to the readout. **No room needs to do anything:** a new dial's range gets its scale automatically.
+  Phone: when a lock is picked at 860 px wide or less, `showLockPanel()` scrolls its panel to just under the sticky
+  clock (or, if the instrument would still fall below the fold, the brief's start), and lock art is capped at 30% of
+  the screen height (`#lockPanel .artframe`, 1600x873 box, `object-fit: cover`). Tested by
+  `scripts/test-escape-dial.py`. **Known, not changed:** the drag maps the dead quarter's left half (below the
+  7-o'clock minimum) to the maximum, as `fromPoint()` always did.
 - **`wrongLines`** — a room's escalating wrong-entry lines, `{head, body}` objects, indexed by
   `st.wrongs - 1` and clamped so the last repeats. A room without the array gets the original fixed string.
   A misconception hit consumes an index without printing a line, which is intended.
@@ -2267,6 +2281,7 @@ usually six clues and two blanks (`comic-caper` has four and four); at least two
 | `scripts/escape_set_checks.py` | The per-set checks, one copy: exactly one setting solves the set, answer and misconception settable and different, the answer not printed in its clue, off the end of a dial's or slider's travel; each lock's instrument, clue figures and solver (`LOCKS`), and the checks for locks set on two instruments (a pair as the answer). Imported by the generator and the gate. **A new lock adds its entry here first** |
 | `scripts/gen-escape-variants.py` | Searches for each lock's sets, admits only those `escape_set_checks.py` passes and that keep the library spread; writes `variants.json` and fills each `room.js` in the checkout it runs in. Regenerating an unchanged library is byte-identical |
 | `scripts/test-escape-keypad.py` | The keypad's maxDigits mode on a fixture lock (5,4,Set opens; 5,4,0,0,Set is the misconception; no empty slots), a fixed keypad unchanged, the old rule planted |
+| `scripts/test-escape-dial.py` | Every live room's dials: ticks on their values, labels with min and max, no overlap, drag sets the labelled value, no tick in the dead quarter; every lock's instrument on screen at 390x844; four plants |
 | `scripts/check-lock-bank.py` | Rejects a lock with more than one settable answer |
 | `scripts/strip-gen-watermark.py` | Removes the generator's sparkle and reframes to 1600x873. **Run on every image** — it is a no-op on a clean one |
 | `scripts/serve-stubbed.py` | Serve the site locally with analytics stubbed. **Escape rooms load analytics too** — never render-test against the live endpoint |
