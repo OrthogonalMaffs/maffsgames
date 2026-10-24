@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- UNLISTED (contract FOOTBALL-PITCHES, 23 Oct 2026): merged for Jon to play. Live at its URL, noindex, and off the
+     portal, Essentials, the sitemap, the spec map and the leaderboard hub until he lists it. -->
+<meta name="robots" content="noindex">
+<meta name="description" content="Speed, density, pressure and unit price: read the unit and you know the calculation, because km/h means km ÷ h. For KS3 and GCSE. Free, no sign-up.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/squared-squirrel/">
+<meta property="og:title" content="Compound Measures Game – KS3/GCSE Maths | MaffsGames">
+<meta property="og:description" content="Speed, density, pressure and unit price: read the unit and you know the calculation, because km/h means km ÷ h. For KS3 and GCSE. Free, no sign-up.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/squared-squirrel/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Compound Measures Game – KS3/GCSE Maths | MaffsGames</title>
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/answer-count.js" defer></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<style>
+/* Theme: schools/assets/theme.css (canon §7.5), light row. This game's own accent: a russet brown (a squirrel's). */
+:root{--accent:#7a3e12;--accent-dim:#f5e6d8;--on-accent:#ffffff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:720px;width:100%;padding:1rem}
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.6rem 0 .5rem}
+.header h1{font-size:1.9rem;font-weight:700;color:var(--accent);line-height:1.15}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem 0 .5rem}
+@media (max-width:420px){.header h1{font-size:1.5rem}}
+.screen{display:none}.screen.active{display:block}
+[hidden]{display:none!important}
+
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.9rem auto;max-width:600px}
+.panel h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;margin-bottom:.6rem}
+.menu-info{color:var(--text);font-size:.95rem;line-height:1.65}
+.menu-info p+p{margin-top:.6rem}
+.mode-pick{display:flex;flex-direction:column;gap:.45rem}
+.mode-btn{display:flex;flex-wrap:wrap;gap:.3rem .7rem;align-items:baseline;text-align:left;min-height:44px;padding:.55rem .8rem;border-radius:10px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-size:.92rem;cursor:pointer;line-height:1.35}
+.mode-btn b{font-family:var(--font-num);color:var(--accent);white-space:nowrap}
+.mode-btn .what{flex:1 1 12rem}
+.mode-btn.selected{border-color:var(--accent);background:var(--accent-dim)}
+.mode-note{font-size:.85rem;color:var(--muted);margin-top:.6rem;text-align:center}
+.btn{min-height:44px;padding:.6rem 1.2rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--accent-dim)}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.start-btn{display:block;margin:1rem auto .3rem;padding:.75rem 2.6rem;font-size:1.05rem}
+.res-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
+
+.hud{display:flex;justify-content:space-between;padding:.45rem .8rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.5rem;gap:.3rem}
+.hud-item{text-align:center;min-width:48px}
+.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.hud-val{font-family:var(--font-num);font-size:.95rem;font-weight:700}
+.badge-row{display:flex;justify-content:center;margin-bottom:.5rem}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem;display:flex;flex-direction:column;gap:.7rem}
+.stage-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);font-weight:700}
+.qtext{font-size:1.05rem;line-height:1.55}
+.qtext:empty{display:none}
+.opts{display:flex;flex-direction:column;gap:.5rem}
+.opts .btn{text-align:left;line-height:1.35;font-weight:500;color:var(--text);border-color:var(--border);background:var(--surface-alt)}
+.opts .btn:hover{border-color:var(--accent)}
+.opts .btn.right{border-color:var(--correct);background:var(--surface)}
+.ans-row{display:flex;align-items:center;justify-content:center;gap:.5rem;flex-wrap:wrap}
+.ans-row input{width:8rem;min-height:44px;padding:.3rem .5rem;border:2px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font-family:var(--font-num);font-size:1.25rem;text-align:center}
+.ans-row input:focus{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent)}
+/* The unit buttons: their own row under the answer, wrapping on a phone. */
+.units{flex-basis:100%;display:flex;flex-wrap:wrap;justify-content:center;gap:.35rem}
+.unit-btn{min-width:52px;min-height:44px;padding:0 .6rem;border-radius:8px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-family:var(--font-num);font-size:1rem;font-weight:700;cursor:pointer}
+.unit-btn[aria-pressed="true"]{border-color:var(--accent);background:var(--accent);color:var(--on-accent)}
+.msg{min-height:1.2em;text-align:center;font-size:.9rem;color:var(--hint)}
+.msg:empty{display:none}
+
+.explain{display:flex;flex-direction:column;gap:.5rem}
+.steps{list-style:none;display:flex;flex-direction:column;gap:.35rem;counter-reset:step}
+.steps li{counter-increment:step;display:flex;gap:.55rem;align-items:baseline;font-size:.95rem;line-height:1.5}
+.steps li::before{content:counter(step);flex:none;font-family:var(--font-num);font-weight:700;color:var(--accent);min-width:1.1rem;text-align:right}
+.steps li:last-child{font-weight:600}
+.step-row{display:flex;justify-content:center}
+.step-row .btn{min-width:10rem}
+.ex-tag{font-size:.8rem;color:var(--muted);text-align:center}
+.glue{white-space:nowrap}
+.feedback:empty{display:none}
+.fb{border-radius:12px;padding:.75rem .85rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.6rem}
+.fb.wrong{border-color:var(--wrong)}
+.fb-line{font-size:.95rem;line-height:1.5;padding:.4rem .65rem;border-left:3px solid var(--hint);border-radius:0 8px 8px 0}
+.fb-ans{text-align:center;font-weight:700;font-family:var(--font-num)}
+.fb.tight .fb-line{order:0}.fb.tight .fb-ans{order:1}.fb.tight .fb-next{order:2}.fb.tight .steps{order:3}
+.fb-quick{font-weight:700;color:var(--correct);text-align:center;font-size:1.05rem;font-family:var(--font-num)}
+.results{text-align:center;padding:1rem 0}
+.results h2{font-size:1.35rem;margin-bottom:.3rem}
+.final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.4rem 0}
+.stats{color:var(--muted);line-height:1.9;font-size:.95rem;margin-bottom:.8rem}
+.stats b{color:var(--text)}
+
+/* Phone rule (canon §7.6.1): on a wrong answer the question's controls go and the feedback takes their place. */
+.qcard.fb-open .opts,.qcard.fb-open .ans-block,.qcard.fb-open .msg{display:none}
+@media (max-width:420px){
+  .container{padding:.6rem}
+  .qcard{padding:.75rem .7rem}
+  .fb{padding:.6rem .65rem}
+  .hud{padding:.35rem .5rem}
+}
+body.accessible{letter-spacing:.12em;word-spacing:.16em}
+body.accessible .hud-label,body.accessible .hud-val{letter-spacing:0}
+body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;max-width:65ch}
+body.accessible .katex{letter-spacing:normal;word-spacing:normal}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+<!-- The calculator, stage by stage (canon §4.4, `by stage`; contract CALC-BY-STAGE): no calculator in Stages 1-3, the
+     scientific calculator in Stages 4 and 5. -->
+<script type="application/json" id="maffs-calc-stages">{"stage-1": "not allowed", "stage-2": "not allowed", "stage-3": "not allowed", "stage-4": "scientific", "stage-5": "scientific"}</script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Stage 1's first three questions let a wrong first try be tried again (contract FOOTBALL-PITCHES), so the check plays Stage 2, the first typed stage: 'start' picks Stage 2, presses Start and steps through its worked example (each tap once its MaffsLock window has closed). 'answer': i = 0 types the key with its unit, i >= 1 the key plus one (marked wrong), and submits. 'ready' is the game's own state.
+{
+  "start": [
+    "(async () => {",
+    "  document.querySelector('.mode-btn[data-mode=\"stage-2\"]').click();",
+    "  document.getElementById('startBtn').click();",
+    "  const t0 = performance.now();",
+    "  while (SQS.ui.state() === 'example' && performance.now() - t0 < 10000) {",
+    "    const b = document.getElementById('stepBtn');",
+    "    if (b && !MaffsLock.isFresh(b)) b.click();",
+    "    await new Promise(r => requestAnimationFrame(r));",
+    "  }",
+    "})()"
+  ],
+  "ready": "!!window.SQS && !!SQS.ui && SQS.ui.state() === 'asking'",
+  "answer": [
+    "const q = SQS.ui.question();",
+    "const box = SQS.ui.answerBox();",
+    "box.value = SQS.fmt(q.key + (i === 0 ? 0 : 1), q.dp);",
+    "document.querySelector('.unit-btn[data-unit=\"' + q.unit + '\"]').click();",
+    "document.getElementById('ansForm').requestSubmit();"
+  ]
+}
+-->
+<script src="../../schools/assets/answer.js"></script>
+<!-- The phone keypad for typed answers (MaffsKeypad), Stages 1-3; in Stages 4-5 the scientific calculator types it. -->
+<script src="../../schools/assets/keypad.js"></script>
+<script src="../../schools/assets/calculator.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Football Pitches per Squared Squirrel</h1><div class="sub">Read the unit, and you know the calculation.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="panel menu-info">
+      <p><strong>Per</strong> means <strong>for each</strong>, and it means divide: km/h is km&nbsp;÷&nbsp;h, and £/kg is £&nbsp;÷&nbsp;kg.</p>
+      <p>So football pitches per squared squirrel is football pitches ÷ (squirrel × squirrel). The unit tells you what to do.</p>
+      <p>Every answer needs its unit: type the number, then pick the unit.</p>
+    </div>
+    <div class="panel" id="modePanel">
+      <h2>Pick a stage</h2>
+      <div class="mode-pick" id="modePick">
+        <button class="mode-btn" data-mode="stage-1" type="button"><b>Stage 1</b><span class="what">Read the unit: what per, m² and g/cm³ mean.</span><span class="calc-badge" data-calc="not-allowed" data-stage="stage-1">Non-calculator</span></button>
+        <button class="mode-btn" data-mode="stage-2" type="button"><b>Stage 2</b><span class="what">Find the rate: speed, density, pressure and price.</span><span class="calc-badge" data-calc="not-allowed" data-stage="stage-2">Non-calculator</span></button>
+        <button class="mode-btn" data-mode="stage-3" type="button"><b>Stage 3</b><span class="what">Use the rate: find the distance, time, mass or cost.</span><span class="calc-badge" data-calc="not-allowed" data-stage="stage-3">Non-calculator</span></button>
+        <button class="mode-btn" data-mode="stage-4" type="button"><b>Stage 4</b><span class="what">Units that don't match: minutes and hours, m/s and km/h.</span><span class="calc-badge" data-calc="scientific" data-stage="stage-4">Scientific calculator required</span></button>
+        <button class="mode-btn" data-mode="stage-5" type="button"><b>Stage 5</b><span class="what">Mixed and backwards: which is faster, which is better value.</span><span class="calc-badge" data-calc="scientific" data-stage="stage-5">Scientific calculator required</span></button>
+      </div>
+      <p class="mode-note">Each stage: a worked example, then 10 questions, easiest first.</p>
+      <button class="btn solid start-btn" id="startBtn">Start</button>
+    </div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+    <div class="maffs-start-note" data-maffs-start-note></div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/10</div></div>
+      <div class="hud-item"><div class="hud-label">Stage</div><div class="hud-val" id="hudStage">1</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="hudClock">0:00</div></div>
+    </div>
+    <!-- The badge of the stage being played (canon §4.4, `by stage`): filled in when a stage starts. -->
+    <div class="badge-row"><span class="calc-badge" id="calcBadge"></span></div>
+    <div class="qcard" id="qcard">
+      <div class="stage-label" id="stageLabel"></div>
+      <div class="qtext" id="qtext"></div>
+      <div class="opts" id="opts" role="group" aria-label="Options" hidden></div>
+      <div class="ans-block" id="ansBlock" hidden>
+        <form class="ans-row" id="ansForm" autocomplete="off">
+          <input id="ans" type="text" inputmode="decimal" aria-label="Your answer">
+          <input id="ans4" type="text" inputmode="decimal" aria-label="Your answer" hidden>
+          <button class="btn solid" type="submit" id="checkBtn">Check</button>
+          <span class="units" id="units" role="group" aria-label="Unit"></span>
+        </form>
+        <div id="kpHolder"></div>
+        <div id="calcWrap" hidden><div id="calc"></div></div>
+      </div>
+      <div class="msg" id="msg" aria-live="polite"></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resTitle">Stage done</h2>
+      <div class="final-score" id="resScore">0</div>
+      <div class="stats" id="resStats"></div>
+      <div class="res-btns">
+        <button class="btn solid" id="nextStageBtn" type="button" hidden>Next: Stage 2</button>
+        <button class="btn" id="againBtn" type="button">Play again</button>
+      </div>
+      <p id="teacherInvite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Football Pitches per Squared Squirrel: compound measures (contract FOOTBALL-PITCHES, Jon, 23 Oct 2026). "Football
+ * pitches per squared squirrel" means football pitches ÷ (squirrel × squirrel): read the unit and you know the
+ * calculation. */
+(function () {
+  'use strict';
+  /* Football Pitches per Squared Squirrel: the engine. Everything a student sees (the fixed Stage 1 ramp, the pools,
+   * every key, every named wrong answer, the worked steps, the order a stage is served in) is a plain function here,
+   * with no DOM. The UI calls it through window.SQS, and scripts/verify-squared-squirrel.py reads the same pools from
+   * the live page and recomputes every key from the question's own data (its given quantities and their units), by
+   * dimensions, independently.
+   *
+   * A question: { mode, g (its group in a session), kind, given: [{v, u} or a time {h, m, u: 'hm'}], unit (the answer's
+   * unit), units (the unit buttons), dp, money, key, exact, errors, text }. Compare questions give two options instead:
+   * opts: [{name, given}], and pick 'max' (faster) or 'min' (better value).
+   *
+   * One idea throughout: the unit says what to do. km/h is km per h, and per means divide.
+   */
+  var H = {};
+  H.SLUG = 'squared-squirrel';
+  H.MODES = ['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5'];
+  // Each stage's calculator value (the page's maffs-calc-stages map says the same; canon §4.4, `by stage`).
+  H.STAGES = {
+    'stage-1': { n: 1, label: 'Stage 1 · Read the unit', calc: 'not allowed' },
+    'stage-2': { n: 2, label: 'Stage 2 · Find the rate', calc: 'not allowed' },
+    'stage-3': { n: 3, label: 'Stage 3 · Use the rate', calc: 'not allowed' },
+    'stage-4': { n: 4, label: 'Stage 4 · Units that don\'t match', calc: 'scientific' },
+    'stage-5': { n: 5, label: 'Stage 5 · Mixed and backwards', calc: 'scientific' }
+  };
+  H.PER = 10;
+  H.HELP_EXAMPLES = 3;    // worked lines for a named slip, per session; then a nudge
+  H.RETRY = 3;            // Stage 1's first three questions: a wrong first try is tried again, the mark kept
+  H.BASE = 100;
+  H.T_K = 0.15;
+  H.scoreFor = function (seconds) {
+    return Math.max(1, Math.round(H.BASE / (1 + H.T_K * Math.log(1 + Math.max(0, seconds)))));
+  };
+  H.helpFor = function (nth) { return nth <= H.HELP_EXAMPLES ? 'example' : 'nudge'; };
+
+  /* ---------- randomness: seeded, so a session can be replayed exactly ---------- */
+  H.mulberry32 = function (seed) {
+    var a = seed >>> 0;
+    return function () {
+      a = (a + 0x6D2B79F5) >>> 0;
+      var t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  };
+  H.shuffle = function (arr, rng) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(rng() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  };
+  H.newSeed = function () { return (Math.floor(Math.random() * 4294967296) ^ Date.now()) >>> 0; };
+
+  /* ---------- numbers ---------- */
+  // Half up to dp places (never a float tie: the pools leave out anything within 1e-6 of one).
+  H.round = function (x, dp) { var f = Math.pow(10, dp); return Math.round(x * f + 1e-9) / f; };
+  H.fmt = function (x, dp) { return dp ? H.round(x, dp).toFixed(dp) : String(H.round(x, 0)); };
+  H.nearTie = function (x, dp) { var f = Math.pow(10, dp) * x; return Math.abs(f - Math.floor(f) - 0.5) < 1e-6; };
+  // A number as the working shows it: whole numbers plain, up to 3 d.p. exactly, anything else to 3 d.p. with "...".
+  H.num = function (x) {
+    if (Math.abs(x - Math.round(x)) < 1e-9) return String(Math.round(x));
+    for (var d = 1; d <= 3; d++) if (Math.abs(x * Math.pow(10, d) - Math.round(x * Math.pow(10, d))) < 1e-9) return x.toFixed(d);
+    return x.toFixed(3) + '\\ldots';
+  };
+  // Money in the working: always 2 d.p. (£3.60), a whole number of pounds plain.
+  H.pounds = function (x) { return Math.abs(x - Math.round(x)) < 1e-9 ? String(Math.round(x)) : x.toFixed(2); };
+
+  /* ---------- units ---------- */
+  // Every unit a question uses: what its button says (t), and for a rate the two units it divides (of). d: 2 an
+  // area, 3 a volume (the no-unit message's "squared" or "cubed" squirrels).
+  H.U = {
+    km: { t: 'km' }, miles: { t: 'miles' }, m: { t: 'm', w: 'metre' }, h: { t: 'h', w: 'hour' }, min: { t: 'min', w: 'minute' },
+    s: { t: 's', w: 'second' }, g: { t: 'g' }, kg: { t: 'kg' }, N: { t: 'N' }, gbp: { t: '£' }, pitch: { t: 'pitches' },
+    cm3: { t: 'cm³', d: 3 }, m2: { t: 'm²', d: 2 }, sq: { t: 'squirrel²', d: 2, w: 'squared squirrel' },
+    kmh: { t: 'km/h', of: ['km', 'h'] }, mph: { t: 'mph', of: ['miles', 'h'] }, ms: { t: 'm/s', of: ['m', 's'] },
+    gcm3: { t: 'g/cm³', of: ['g', 'cm3'] }, Nm2: { t: 'N/m²', of: ['N', 'm2'] },
+    gbpkg: { t: '£/kg', of: ['gbp', 'kg'] }, gbpm: { t: '£/m', of: ['gbp', 'm'] },
+    psq: { t: 'pitches/squirrel²', of: ['pitch', 'sq'] }, pph: { t: 'pitches/h', of: ['pitch', 'h'] },
+    ppm: { t: 'pitches/min', of: ['pitch', 'min'] }
+  };
+  H.unitText = function (u) { return H.U[u] ? H.U[u].t : ''; };
+  // A quantity as the page writes it: "240 km", "£12", "£3/kg", "3 h".
+  H.qty = function (v, u, money) {
+    var t = H.unitText(u), n = money ? H.pounds(v) : (typeof v === 'number' ? H.num(v).replace('\\ldots', '…') : v);
+    return t.charAt(0) === '£' ? '£' + n + t.slice(1) : n + ' ' + t;
+  };
+  // A whole-number key shows plain (48 km/h) even where the question asks for 1 d.p.
+  H.answerText = function (q) { return H.qty(q.money ? H.fmtMoney(q.key) : H.fmt(q.key, q.dp && Math.abs(q.key - Math.round(q.key)) > 1e-9 ? q.dp : 0), q.unit); };
+  H.fmtMoney = function (x) { return Math.abs(x - Math.round(x)) < 1e-9 ? String(Math.round(x)) : x.toFixed(2); };
+  // "km/h means km ÷ h"
+  H.means = function (r) { var o = H.U[r].of; return H.U[r].t + ' means ' + H.U[o[0]].t + ' ÷ ' + H.U[o[1]].t; };
+  // The no-unit message (SR-3 pattern: never marked). An area is squared squirrels, a volume cubed.
+  H.squirrels = function (q) { var d = (H.U[q.unit] || {}).d; return d === 2 ? 'squared squirrels' : d === 3 ? 'cubed squirrels' : 'squirrels'; };
+  H.noUnit = function (q, raw) { return raw + ' ' + H.squirrels(q) + '? Pick the unit, or that\'s what the examiner will read.'; };
+  H.WRONG_UNIT = 'That would lose the mark in the exam. Check the unit.';
+
+  /* ---------- times ---------- */
+  H.hours = function (t) { return t.h + t.m / 60; };
+  H.minutes = function (t) { return 60 * t.h + t.m; };
+  H.decimalSlip = function (t) { return t.h + t.m / 100; };   // 1 h 30 min read as 1.3 h
+  H.timeText = function (t) {
+    var out = [];
+    if (t.h) out.push(t.h + (t.h === 1 ? ' hour' : ' hours'));
+    if (t.m) out.push(t.m + ' minutes');
+    return out.join(' ');
+  };
+  // A given quantity's number, in the unit it is written in (a time in hours).
+  function val(g) { return g.u === 'hm' ? H.hours(g) : g.v; }
+
+  /* ---------- Stage 1: a fixed ramp, served in this order every time (contract FOOTBALL-PITCHES) ---------- */
+  // Each: the question, the right option, and each wrong option with its one-line reason. Question 10 is typed.
+  H.RAMP_EXAMPLE = ['Crisps are 80p per bag: 80p for each bag.', '“Per” means “for each”.'];
+  H.RAMP = [
+    { text: '“The sign says 30 mph.” What does it mean?', right: '30 miles every hour', wrong: [
+      ['30 hours every mile', 'That is the wrong way round: mph is miles per hour, miles for each hour.'],
+      ['30 miles in total', 'Per hour means for each hour: 30 miles every hour, not 30 miles altogether.']] },
+    { text: '“Apples are £2 per kg.”', right: '£2 for each kg', wrong: [
+      ['£2 for all the apples', 'Per kg means for each kg: every kg costs £2.'],
+      ['2 kg for each £1', 'That turns it round: £2 per kg is £2 for each kg.']] },
+    { text: 'Miles per hour is…', right: 'miles ÷ hours', wrong: [
+      ['hours ÷ miles', 'The wrong way round: miles per hour has the miles first, miles ÷ hours.'],
+      ['miles × hours', 'Per means divide: miles per hour is miles ÷ hours.']] },
+    { text: 'km/h is…', right: 'km ÷ h', wrong: [
+      ['h ÷ km', 'The wrong way round: km/h has the km on top, km ÷ h.'],
+      ['km × h', 'The slash means per, and per means divide: km ÷ h.']] },
+    { text: '£/kg is said…', right: 'pounds per kilogram', wrong: [
+      ['kilograms per pound', 'The wrong way round: £/kg has the £ on top, pounds per kilogram.'],
+      ['pounds times kilograms', 'The slash is per, not times: pounds per kilogram.']] },
+    { text: 'm² means…', right: 'm × m', wrong: [
+      ['m × 2', 'The little 2 means m times m, not times 2.'],
+      ['m + m', 'm² is m × m, multiplied: square metres.']] },
+    { text: 'cm³ means…', right: 'cm × cm × cm', wrong: [
+      ['cm × 3', 'The little 3 means three cm multiplied together, not times 3.'],
+      ['cm + cm + cm', 'cm³ is cm × cm × cm, multiplied: cubic centimetres.']] },
+    { text: 'g/cm³ is…', right: 'g ÷ (cm × cm × cm)', wrong: [
+      ['(cm × cm × cm) ÷ g', 'The wrong way round: g/cm³ has the g on top.'],
+      ['g × cm × 3', 'The slash means divide, and cm³ is cm × cm × cm.']] },
+    { text: 'Football pitches per squared squirrel is…', right: 'football pitches ÷ (squirrel × squirrel)', wrong: [
+      ['(squirrel × squirrel) ÷ football pitches', 'The wrong way round: football pitches per squared squirrel has the football pitches first.'],
+      ['football pitches ÷ (squirrel × 2)', 'Squared means squirrel × squirrel, not times 2.']] },
+    { text: '12 miles in 3 hours. How many miles per hour?', typed: true }
+  ];
+
+  /* ---------- the named wrong answers (contract FOOTBALL-PITCHES) ---------- */
+  // Each: { id, v } with v the number the slip gives, in the answer's unit. Only slips that apply are listed.
+  //   MUL multiplied instead of divided      DIV divided instead of multiplied     REV divided the wrong way round
+  //   MD  minutes read as decimals (1 h 30 min as 1.3 h; 0.75 h as 75 minutes)
+  //   MU  a per-hour rate used with the minutes unconverted (or a per-minute rate left per minute)
+  //   SD  m/s and km/h by 3.6 the wrong way     SF  m/s and km/h by the wrong factor (only the time, or only the length)
+  function rateOf(given) {   // a compare option's rate, its slips alongside
+    var a = given[0], t = given[1], T = val(t);
+    return { r: a.v / T, MUL: a.v * T, REV: T / a.v, MD: t.u === 'hm' ? a.v / H.decimalSlip(t) : null, MU: t.u === 'hm' ? a.v / H.minutes(t) : null };
+  }
+  H.errors = function (q) {
+    var out = [], G = q.given;
+    function add(id, v) { if (v !== null && isFinite(v) && v > 0) out.push({ id: id, v: v }); }
+    switch (q.kind) {
+      case 'rate':    // A ÷ B
+        add('MUL', G[0].v * val(G[1])); add('REV', val(G[1]) / G[0].v);
+        if (G[1].u === 'hm') { add('MD', G[0].v / H.decimalSlip(G[1])); add('MU', G[0].v / H.minutes(G[1])); }
+        break;
+      case 'mult':    // R × B
+        add('DIV', G[0].v / val(G[1]));
+        if (G[1].u === 'hm') { add('MD', G[0].v * H.decimalSlip(G[1])); add('MU', G[0].v * H.minutes(G[1])); }
+        break;
+      case 'divi':    // A ÷ R
+        add('MUL', G[0].v * G[1].v); add('REV', G[1].v / G[0].v);
+        break;
+      case 'back':    // A ÷ R hours, asked in minutes
+        add('MUL', G[0].v * G[1].v); add('REV', G[1].v / G[0].v * 60); add('MD', G[0].v / G[1].v * 100);
+        break;
+      case 'toKmh':   // m/s to km/h
+        add('SD', G[0].v / 3.6); add('SF', G[0].v * 3600); add('SF', G[0].v / 1000);
+        break;
+      case 'toMs':    // km/h to m/s
+        add('SD', G[0].v * 3.6); add('SF', G[0].v / 3600); add('SF', G[0].v * 1000);
+        break;
+      case 'perHour': // per minute to per hour
+        add('MU', G[0].v); add('DIV', G[0].v / 60);
+        break;
+      case 'cmp':     // the better of two rates
+        var rs = q.opts.map(function (o) { return rateOf(o.given); });
+        var best = function (k) {
+          var vs = rs.map(function (r) { return r[k]; });
+          if (vs.some(function (v) { return v === null; })) return null;
+          return q.pick === 'max' ? Math.max.apply(null, vs) : Math.min.apply(null, vs);
+        };
+        var w = rs.reduce(function (b, r) { return (q.pick === 'max' ? r.r > b.r : r.r < b.r) ? r : b; });
+        add('MUL', w.MUL); add('REV', w.REV);
+        add('MD', best('MD')); add('MU', best('MU'));
+        break;
+    }
+    return out;
+  };
+  // The key: one place, from the data.
+  H.exact = function (q) {
+    var G = q.given;
+    switch (q.kind) {
+      case 'rate': return G[0].v / val(G[1]);
+      case 'mult': return G[0].v * val(G[1]);
+      case 'divi': return G[0].v / G[1].v;
+      case 'back': return G[0].v / G[1].v * 60;
+      case 'toKmh': return G[0].v * 3.6;
+      case 'toMs': return G[0].v / 3.6;
+      case 'perHour': return G[0].v * 60;
+      case 'cmp':
+        var rs = q.opts.map(function (o) { return rateOf(o.given).r; });
+        return q.pick === 'max' ? Math.max.apply(null, rs) : Math.min.apply(null, rs);
+    }
+    return NaN;
+  };
+  H.slipValue = function (q, e) { return q.money ? H.round(e.v, 2) : H.round(e.v, q.dp); };
+  // A question leaves its pool if a named slip gives its key at the answer's precision, or a value sits on a
+  // rounding tie (canon §12, SR-5). Filtered once, nothing redrawn.
+  H.errorIsKey = function (q) { return q.errors.some(function (e) { return H.slipValue(q, e) === q.key; }); };
+  H.servable = function (q) {
+    if (!isFinite(q.exact) || q.exact <= 0) return false;
+    if (H.errorIsKey(q)) return false;
+    if (q.money ? H.nearTie(q.exact, 2) : (q.dp && H.nearTie(q.exact, q.dp))) return false;
+    if (!q.money && !q.dp && Math.abs(q.exact - Math.round(q.exact)) > 1e-9) return false;   // whole numbers in Stages 2-3
+    return true;
+  };
+
+  /* ---------- the words ---------- */
+  var SAY = {
+    km: ['A train', 'A coach', 'A car', 'A lorry'], miles: ['A car', 'A van', 'A motorbike'], m: ['A runner', 'A cyclist']
+  };
+  function pickWord(list, n) { return list[n % list.length]; }
+  function the(who) { return 'the ' + who.slice(2).toLowerCase(); }
+  function q2(v, u) { return H.qty(v, u, H.unitText(u).charAt(0) === '£'); }
+  // A given quantity in a sentence: times in words ("2 hours 30 minutes"), hours and seconds spelled out.
+  function said(g) {
+    if (g.u === 'hm') return H.timeText(g);
+    if (g.u === 'h') return g.v + (g.v === 1 ? ' hour' : ' hours');
+    if (g.u === 's') return g.v + ' seconds';
+    return q2(g.v, g.u);
+  }
+  function words(q, n) {
+    var G = q.given || [], k = q.kind, c = q.ctx;
+    var A = G[0], B = G[1];
+    if (k === 'rate') {
+      if (c === 'speed') return pickWord(SAY[A.u], n) + ' travels ' + said(A) + ' in ' + said(B) + '. What is the average speed?' +
+        (q.dp ? ' Give your answer to 1 decimal place.' : '');
+      if (c === 'density') return 'A block of metal has a mass of ' + said(A) + ' and a volume of ' + said(B) + '. What is its density?';
+      if (c === 'pressure') return 'A force of ' + said(A) + ' acts on an area of ' + said(B) + '. What is the pressure?';
+      if (c === 'price' && B.u === 'kg') return 'A ' + B.v + ' kg bag of ' + (A.v / B.v <= 4 ? 'rice' : 'coffee beans') + ' costs ' + said(A) + '. What is the price per kg?';
+      if (c === 'price') return B.v + ' m of rope costs ' + said(A) + '. What is the price per metre?';
+      return A.v + ' football pitches fit on ' + B.v + ' squared squirrels. How many football pitches is that per squared squirrel?';
+    }
+    if (k === 'mult') {
+      if (c === 'speed') return pickWord(SAY[H.U[A.u].of[0]], n) + ' travels at ' + said(A) + ' for ' + said(B) + '. How far does ' + the(pickWord(SAY[H.U[A.u].of[0]], n)) + ' go?' +
+        (q.dp ? ' Give your answer to 1 decimal place.' : '');
+      if (c === 'density') return 'A metal has a density of ' + said(A) + '. A block of it has a volume of ' + said(B) + '. What is its mass?';
+      if (c === 'pressure') return 'A pressure of ' + said(A) + ' acts on an area of ' + said(B) + '. What is the force?';
+      if (c === 'price' && A.u === 'gbpkg') return 'Rice costs ' + said(A) + '. How much do ' + said(B) + ' cost?';
+      if (c === 'price') return 'Rope costs ' + said(A) + '. How much do ' + said(B) + ' of it cost?';
+      if (A.u === 'pph') return 'A squirrel runs at ' + A.v + ' football pitches per hour for ' + said(B) + '. How many football pitches does it cross? Give your answer to 1 decimal place.';
+      return 'A park has ' + A.v + ' football pitches per squared squirrel. How many football pitches fit on ' + B.v + ' squared squirrels?';
+    }
+    if (k === 'divi') {
+      if (c === 'speed') return pickWord(SAY[A.u], n) + ' travels ' + said(A) + ' at ' + said(B) + '. How long does it take?';
+      if (c === 'density') return 'A metal has a density of ' + said(B) + '. A block of it has a mass of ' + said(A) + '. What is its volume?' + (q.dp ? ' Give your answer to 1 decimal place.' : '');
+      if (c === 'pressure') return 'A force of ' + said(A) + ' gives a pressure of ' + said(B) + '. What is the area?';
+      if (c === 'price' && B.u === 'gbpkg') return (q.dp ? 'Grass seed' : 'Rice') + ' costs ' + said(B) + '. How many kg can you buy for ' + said(A) + '?' + (q.dp ? ' Give your answer to 1 decimal place.' : '');
+      if (c === 'price') return 'Rope costs ' + said(B) + '. How many metres can you buy for ' + said(A) + '?';
+      return A.v + ' football pitches fit at ' + B.v + ' football pitches per squared squirrel. How many squared squirrels is that?';
+    }
+    if (k === 'back') {
+      if (c === 'speed') return 'A runner\'s average speed is ' + said(B) + '. How many minutes does a run of ' + said(A) + ' take? Give your answer to 1 decimal place.';
+      return 'A squirrel\'s average speed is ' + B.v + ' football pitches per hour. How many minutes does it take to cross ' + A.v + ' football pitches? Give your answer to 1 decimal place.';
+    }
+    if (k === 'toKmh') return 'A car travels at ' + said(A) + '. What is this speed in km/h? Give your answer to 1 decimal place.';
+    if (k === 'toMs') return 'A car travels at ' + said(A) + '. What is this speed in m/s? Give your answer to 1 decimal place.';
+    if (k === 'perHour') return 'A squirrel runs across ' + A.v + ' football pitches per minute. How many football pitches per hour is that? Give your answer to 1 decimal place.';
+    if (k === 'cmp' && q.pick === 'max') return q.opts.map(function (o) { return o.name + ' travels ' + said(o.given[0]) + ' in ' + said(o.given[1]) + '.'; }).join(' ') +
+      ' Which car is faster? Give its average speed to 1 decimal place.';
+    return q.opts.map(function (o) { return o.name + ': ' + said(o.given[1]) + ' of rice for ' + said(o.given[0]) + '.'; }).join(' ') +
+      ' Which pack is better value? Give its price per kg, to the nearest penny.';
+  }
+
+  /* ---------- the pools ---------- */
+  var TIMES = [[0, 30], [1, 30], [2, 30], [0, 15], [0, 45], [1, 15], [1, 45], [2, 15], [0, 20], [0, 40], [1, 20], [1, 40]];
+  function tm(t) { return { h: t[0], m: t[1], u: 'hm' }; }
+  function make(mode, g, kind, ctx, given, unit, units, n, extra) {
+    var q = { mode: mode, g: g, kind: kind, ctx: ctx, given: given, unit: unit, units: units, dp: 0, money: false };
+    if (extra) Object.keys(extra).forEach(function (k) { q[k] = extra[k]; });
+    q.exact = H.exact(q);
+    q.key = q.money ? H.round(q.exact, 2) : H.round(q.exact, q.dp);
+    q.errors = H.errors(q);
+    q.text = words(q, n);
+    q.id = mode + ':' + kind + ':' + ctx + ':' + unit + ':' + JSON.stringify(q.opts ? q.opts.map(function (o) { return o.given; }) : given).replace(/[^0-9a-z.,]/gi, '');
+    return q;
+  }
+  // Stages 2 and 3 (non-calculator): [context, numerator unit, denominator unit, rate unit, rates, denominators].
+  // Every rate a whole number, every denominator small: the division in Stage 2 and both operations in Stage 3 come
+  // out whole, with one number at most 10 or a multiple of 10 (the friendly numbers the contract asks for).
+  H.FRIENDLY = [
+    ['speed', 'km', 'h', 'kmh', [20, 30, 40, 50, 60, 70, 80, 90], [2, 3, 4, 5]],
+    ['speed', 'miles', 'h', 'mph', [30, 40, 50, 60], [2, 3, 4]],
+    ['speed', 'm', 's', 'ms', [2, 3, 4, 5, 6, 7, 8], [10, 20]],
+    ['density', 'g', 'cm3', 'gcm3', [2, 3, 4, 5, 6, 7, 8, 9], [4, 5, 6, 10]],
+    ['pressure', 'N', 'm2', 'Nm2', [20, 25, 50, 100, 200], [2, 3, 4, 5]],
+    ['price', 'gbp', 'kg', 'gbpkg', [2, 3, 4, 5, 6, 7, 8, 9], [2, 3, 4, 5]],
+    ['price', 'gbp', 'm', 'gbpm', [2, 3, 4, 5], [3, 6, 10]],
+    ['nonsense', 'pitch', 'sq', 'psq', [2, 3, 4, 5, 6], [2, 3, 4]]
+  ];
+  H.buildPools = function () {
+    var P = { 'stage-2': [], 'stage-3': [], 'stage-4': [], 'stage-5': [] }, n = 0;
+    function push(st, q) { P[st].push(q); }
+    H.FRIENDLY.forEach(function (f) {
+      var ctx = f[0], nu = f[1], de = f[2], ru = f[3];
+      f[4].forEach(function (R) {
+        f[5].forEach(function (B) {
+          var A = R * B;
+          push('stage-2', make('stage-2', ctx, 'rate', ctx, [{ v: A, u: nu }, { v: B, u: de }], ru, [ru, nu, de], n++));
+          push('stage-3', make('stage-3', ctx, 'mult', ctx, [{ v: R, u: ru }, { v: B, u: de }], nu, [nu, ru, de], n++));
+          push('stage-3', make('stage-3', ctx, 'divi', ctx, [{ v: A, u: nu }, { v: R, u: ru }], de, [de, nu, ru], n++));
+        });
+      });
+    });
+    // Stage 4: hours and minutes to hours, rates over minutes, m/s and km/h. Calculator; answers to 1 d.p.
+    var D1 = { dp: 1 };
+    [24, 36, 48, 60, 72, 84, 96].forEach(function (R) {
+      TIMES.forEach(function (t) {
+        var T = tm(t), A = H.round(R * H.hours(T), 6);
+        push('stage-4', make('stage-4', 'hmRate', 'rate', 'speed', [{ v: A, u: 'km' }, T], 'kmh', ['kmh', 'km', 'h', 'min'], n++, D1));
+      });
+    });
+    [12, 18, 30, 42, 54, 66].forEach(function (R) {
+      TIMES.forEach(function (t) {
+        push('stage-4', make('stage-4', 'hmDist', 'mult', 'speed', [{ v: R, u: 'kmh' }, tm(t)], 'km', ['km', 'kmh', 'h', 'min'], n++, D1));
+      });
+    });
+    [5, 8, 10, 12, 13, 15, 17, 20, 25, 30, 35].forEach(function (v) {
+      push('stage-4', make('stage-4', 'toKmh', 'toKmh', 'speed', [{ v: v, u: 'ms' }], 'kmh', ['kmh', 'ms', 'km', 'm'], n++, D1));
+    });
+    [18, 36, 54, 72, 90, 108, 50, 60, 80, 100, 120, 70].forEach(function (v) {
+      push('stage-4', make('stage-4', 'toMs', 'toMs', 'speed', [{ v: v, u: 'kmh' }], 'ms', ['ms', 'kmh', 'km', 'm'], n++, D1));
+    });
+    [2, 3, 4, 5, 6].forEach(function (R) {
+      push('stage-4', make('stage-4', 'nonsense', 'perHour', 'nonsense', [{ v: R, u: 'ppm' }], 'pph', ['pph', 'ppm', 'pitch', 'min'], n++, D1));
+    });
+    [60, 90, 120].forEach(function (R) {
+      [[0, 15], [0, 20], [0, 30], [0, 40], [0, 45], [1, 20]].forEach(function (t) {
+        push('stage-4', make('stage-4', 'nonsense', 'mult', 'nonsense', [{ v: R, u: 'pph' }, tm(t)], 'pitch', ['pitch', 'pph', 'h', 'min'], n++, D1));
+      });
+    });
+    // Stage 5: backwards (a quantity from a total and a rate), time in minutes, and comparing two rates.
+    [1.25, 2.35, 3.4, 4.55, 6.8].forEach(function (R) {
+      [3, 4, 5, 6, 7, 8].forEach(function (Q) {
+        push('stage-5', make('stage-5', 'back1', 'divi', 'price', [{ v: H.round(R * Q, 2), u: 'gbp' }, { v: R, u: 'gbpkg' }], 'kg', ['kg', 'gbp', 'gbpkg'], n++, D1));
+      });
+    });
+    [2.5, 7.5, 8.4, 10.5, 11.2].forEach(function (R) {
+      [12, 20, 36, 50, 64].forEach(function (V) {
+        push('stage-5', make('stage-5', 'back1', 'divi', 'density', [{ v: H.round(R * V, 1), u: 'g' }, { v: R, u: 'gcm3' }], 'cm3', ['cm3', 'g', 'gcm3'], n++, D1));
+      });
+    });
+    [12, 16, 18, 20, 24, 30, 36, 40, 48].forEach(function (R) {
+      [15, 20, 30, 40, 45, 50, 75, 90].forEach(function (M) {
+        var D = R * M / 60;
+        if (Math.abs(D - Math.round(D)) < 1e-9 && D <= 40) push('stage-5', make('stage-5', 'backT', 'back', 'speed', [{ v: D, u: 'km' }, { v: R, u: 'kmh' }], 'min', ['min', 'h', 'km', 'kmh'], n++, D1));
+      });
+    });
+    [60, 90, 120, 150].forEach(function (R) {
+      [20, 30, 40, 50].forEach(function (M) {
+        var D = R * M / 60;
+        if (Math.abs(D - Math.round(D)) < 1e-9) push('stage-5', make('stage-5', 'nonsense', 'back', 'nonsense', [{ v: D, u: 'pitch' }, { v: R, u: 'pph' }], 'min', ['min', 'h', 'pitch', 'pph'], n++, D1));
+      });
+    });
+    // Compare speeds: two cars, each a whole-number speed over a time in hours and minutes.
+    var CARS = [[48, [1, 15]], [54, [1, 40]], [60, [2, 30]], [45, [1, 20]], [64, [0, 45]], [72, [1, 40]], [36, [2, 15]], [50, [1, 30]], [42, [1, 20]], [56, [0, 45]]];
+    CARS.forEach(function (a, i) {
+      CARS.forEach(function (b, j) {
+        if (j <= i || a[0] === b[0] || (i + j) % 3) return;
+        var opts = [a, b].map(function (c, k) { var T = tm(c[1]); return { name: k ? 'Car B' : 'Car A', given: [{ v: H.round(c[0] * H.hours(T), 6), u: 'km' }, T] }; });
+        push('stage-5', make('stage-5', 'cmpS', 'cmp', 'speed', null, 'kmh', ['kmh', 'km', 'h', 'min'], n++, { dp: 1, opts: opts, pick: 'max' }));
+      });
+    });
+    // Compare value: two packs, each a whole number of pence per kg.
+    var PACKS = [[2, 180], [5, 170], [2.5, 160], [4, 175], [10, 155], [3, 190], [1.5, 220], [6, 165]];
+    PACKS.forEach(function (a, i) {
+      PACKS.forEach(function (b, j) {
+        if (j <= i || a[1] === b[1] || (i + j) % 2) return;
+        var opts = [a, b].map(function (c, k) { return { name: k ? 'Pack B' : 'Pack A', given: [{ v: H.round(c[0] * c[1] / 100, 2), u: 'gbp' }, { v: c[0], u: 'kg' }] }; });
+        push('stage-5', make('stage-5', 'cmpV', 'cmp', 'price', null, 'gbpkg', ['gbpkg', 'gbp', 'kg'], n++, { money: true, opts: opts, pick: 'min' }));
+      });
+    });
+    Object.keys(P).forEach(function (st) {
+      var seen = {};
+      P[st] = P[st].filter(function (q) { if (seen[q.id] || !H.servable(q)) return false; seen[q.id] = true; return true; });
+    });
+    return P;
+  };
+
+  /* ---------- sessions: a worked example, then 10 questions, easiest first ---------- */
+  // The ease measure, lexicographic, ties in their shuffled order:
+  //   1. the kind's rank. Stage 3: multiply (find the total) before divide (find the time, volume, area or amount).
+  //      Stage 4: half hours, then quarter hours and per-minute rates, then thirds of an hour, then m/s and km/h.
+  //      Stage 5: one division (cost or density) before a time in minutes before comparing two rates.
+  //      Stage 2: one rank.
+  //   2. the largest number written in the question (a time counts its hours and its minutes).
+  H.rank = function (q) {
+    if (q.mode === 'stage-3') return q.kind === 'mult' ? 0 : 1;
+    if (q.mode === 'stage-4') {
+      if (q.kind === 'toKmh' || q.kind === 'toMs') return 3;
+      if (q.kind === 'perHour') return 1;
+      var t = q.given[1];
+      return t.m === 30 ? 0 : (t.m === 15 || t.m === 45) ? 1 : 2;
+    }
+    if (q.mode === 'stage-5') return q.kind === 'divi' ? 0 : q.kind === 'back' ? 1 : 2;
+    return 0;
+  };
+  H.largest = function (q) {
+    var all = q.opts ? q.opts.reduce(function (a, o) { return a.concat(o.given); }, []) : q.given;
+    return Math.max.apply(null, all.map(function (g) { return g.u === 'hm' ? Math.max(g.h, g.m) : g.v; }));
+  };
+  H.measure = function (q) { return [H.rank(q), H.largest(q)]; };
+  H.byMeasure = function (x, y) {
+    var a = H.measure(x), b = H.measure(y);
+    for (var i = 0; i < a.length; i++) if (a[i] !== b[i]) return a[i] - b[i];
+    return 0;
+  };
+  // What each stage's 10 are drawn from: [groups, how many]. Exactly one question a session is a nonsense unit
+  // (about 1 in 10, as the contract asks): built like a real one, a check that the unit is read.
+  H.MIX = {
+    'stage-2': [[['speed'], 3], [['density'], 2], [['pressure'], 2], [['price'], 2], [['nonsense'], 1]],
+    'stage-3': [[['speed'], 3], [['density'], 2], [['pressure'], 1], [['price'], 3], [['nonsense'], 1]],
+    'stage-4': [[['hmRate'], 3], [['hmDist'], 3], [['toKmh'], 1], [['toMs'], 2], [['nonsense'], 1]],
+    'stage-5': [[['back1'], 3], [['backT'], 2], [['cmpS'], 2], [['cmpV'], 2], [['nonsense'], 1]]
+  };
+  H.buildSession = function (seed, mode) {
+    var rng = H.mulberry32(seed);
+    if (mode === 'stage-1') return H.rampSession(rng);
+    var pool = H.pools()[mode], picked = [], used = {};
+    H.MIX[mode].forEach(function (grp) {
+      var cands = H.shuffle(pool.filter(function (q) { return grp[0].indexOf(q.g) >= 0; }), rng);
+      // The kinds alternate in a group (multiply and divide in Stage 3), so each is asked.
+      var kinds = [];
+      cands.forEach(function (q) { if (kinds.indexOf(q.kind) < 0) kinds.push(q.kind); });
+      kinds.sort();
+      for (var taken = 0, i = 0; taken < grp[1] && i < cands.length * 2; i++) {
+        var need = kinds[taken % kinds.length];
+        var c = cands.filter(function (q) { return !used[q.id] && q.kind === need; })[0] || cands.filter(function (q) { return !used[q.id]; })[0];
+        if (!c) break;
+        used[c.id] = true; picked.push(c); taken++;
+      }
+    });
+    picked.sort(H.byMeasure);
+    var qs = picked.map(function (q, i) { var c = JSON.parse(JSON.stringify(q)); c.index = i + 1; c.buttons = H.shuffle(c.units, rng); return c; });
+    // The worked example: a question outside the 10, at the smallest measure the stage's first group has.
+    var rest = H.shuffle(pool.filter(function (q) { return !used[q.id] && H.MIX[mode][0][0].indexOf(q.g) >= 0; }), rng).sort(H.byMeasure);
+    var ex = JSON.parse(JSON.stringify(rest[0]));
+    ex.index = 0; ex.example = true; ex.buttons = ex.units.slice();
+    return { mode: mode, seed: seed, questions: [ex].concat(qs) };
+  };
+  // Stage 1: the worked example, then the ramp in its fixed order; only the options are shuffled.
+  H.rampSession = function (rng) {
+    var qs = H.RAMP.map(function (r, i) {
+      var q = { mode: 'stage-1', index: i + 1, text: r.text, retry: i < H.RETRY };
+      if (r.typed) {
+        var t = make('stage-1', 'speed', 'rate', 'speed', [{ v: 12, u: 'miles' }, { v: 3, u: 'h' }], 'mph', ['mph', 'miles', 'h'], 0);
+        Object.keys(t).forEach(function (k) { if (k !== 'text' && k !== 'mode') q[k] = t[k]; });
+        q.index = i + 1; q.typed = true; q.retry = false; q.buttons = H.shuffle(q.units, rng);
+        return q;
+      }
+      q.options = H.shuffle([{ text: r.right, ok: true }].concat(r.wrong.map(function (w) { return { text: w[0], ok: false, why: w[1] }; })), rng);
+      q.answer = r.right;
+      return q;
+    });
+    return { mode: 'stage-1', questions: [{ mode: 'stage-1', index: 0, example: true, ramp: true }].concat(qs) };
+  };
+  var POOLS = null;
+  H.pools = function () { if (!POOLS) POOLS = H.buildPools(); return POOLS; };
+
+  /* ---------- the working, step by step ---------- */
+  // Each step: { text } with TeX between § marks. The worked example reveals them one tap at a time; after a wrong
+  // answer all of them show at once. The last step ends on the key. Every step points at the unit.
+  function nm(x, money) { return money ? H.pounds(x) : H.num(x); }
+  function timeStep(t) {
+    var T = H.hours(t);
+    var sum = t.h ? '§' + t.h + ' + ' + t.m + ' \\div 60 = ' + H.num(T) + '§' : '§' + t.m + ' \\div 60 = ' + H.num(T) + '§';
+    return H.timeText(t) + ' is ' + sum + ' h, not ' + H.num(H.decimalSlip(t)) + ': an hour is 60 minutes.';
+  }
+  function finalStep(q) {
+    var rounded = Math.abs(q.exact - q.key) > 1e-9;
+    return { text: (rounded ? (q.money ? 'To the nearest penny: ' : 'To 1 decimal place: ') : 'The answer: ') + H.answerText(q) + '.', last: true };
+  }
+  function eachStep(R, ru) {
+    var o = H.U[ru].of;
+    return H.qty(nm(R, o[0] === 'gbp'), ru) + ' means ' + H.qty(nm(R, o[0] === 'gbp'), o[0]) + ' for each ' + (H.U[o[1]].w || H.unitText(o[1])) + '.';
+  }
+  function rateSteps(given, ru) {   // A ÷ B for one rate
+    var A = given[0], B = given[1], money = A.u === 'gbp', out = [];
+    if (B.u === 'hm') out.push({ text: timeStep(B) });
+    out.push({ text: 'Per means divide, ' + H.U[H.U[ru].of[0]].t + ' ÷ ' + H.U[H.U[ru].of[1]].t + ': §' + nm(A.v, money) + ' \\div ' + H.num(val(B)) + ' = ' + nm(A.v / val(B), money) + '§' });
+    return out;
+  }
+  H.steps = function (q) {
+    var G = q.given, out = [];
+    if (q.kind === 'rate') {
+      out.push({ text: 'The answer is in ' + H.unitText(q.unit) + ': ' + H.U[H.U[q.unit].of[0]].t + ' per ' + (H.U[H.U[q.unit].of[1]].w || H.unitText(H.U[q.unit].of[1])) + '.' });
+      out = out.concat(rateSteps(G, q.unit));
+    } else if (q.kind === 'mult') {
+      out.push({ text: eachStep(G[0].v, G[0].u) + (G[1].u === 'hm' ? ' The time must be in hours.' : '') });
+      if (G[1].u === 'hm') out.push({ text: timeStep(G[1]) });
+      out.push({ text: 'For ' + (G[1].u === 'hm' ? H.num(val(G[1])) + ' h' : H.qty(G[1].v, G[1].u)) + ', multiply: §' + nm(G[0].v, G[0].u === 'gbpkg' || G[0].u === 'gbpm') + ' \\times ' + H.num(val(G[1])) + ' = ' + nm(q.exact, q.unit === 'gbp') + '§' });
+    } else if (q.kind === 'divi') {
+      var money = G[0].u === 'gbp';
+      out.push({ text: eachStep(G[1].v, G[1].u) });
+      out.push({ text: 'How many lots of ' + H.qty(nm(G[1].v, money), H.U[G[1].u].of[0]) + ' are in ' + H.qty(nm(G[0].v, money), G[0].u) + '? Divide: §' +
+        nm(G[0].v, money) + ' \\div ' + nm(G[1].v, money) + ' = ' + H.num(q.exact) + '§' });
+    } else if (q.kind === 'back') {
+      var hrs = G[0].v / G[1].v;
+      out.push({ text: eachStep(G[1].v, G[1].u) });
+      out.push({ text: 'How many hours for ' + H.qty(G[0].v, G[0].u) + '? Divide: §' + G[0].v + ' \\div ' + G[1].v + ' = ' + H.num(hrs) + '§ h.' });
+      out.push({ text: 'In minutes: §' + H.num(hrs) + ' \\times 60 = ' + H.num(q.exact) + '§, not ' + H.num(hrs * 100) + ': an hour is 60 minutes.' });
+    } else if (q.kind === 'toKmh') {
+      out.push({ text: H.qty(G[0].v, 'ms') + ' means ' + G[0].v + ' m each second. An hour is 3600 seconds.' });
+      out.push({ text: 'In an hour: §' + G[0].v + ' \\times 3600 = ' + G[0].v * 3600 + '§ m, which is §' + G[0].v * 3600 + ' \\div 1000 = ' + H.num(q.exact) + '§ km. So m/s to km/h is × 3.6.' });
+    } else if (q.kind === 'toMs') {
+      out.push({ text: H.qty(G[0].v, 'kmh') + ' means ' + G[0].v + ' km each hour: §' + G[0].v + ' \\times 1000 = ' + G[0].v * 1000 + '§ m.' });
+      out.push({ text: 'An hour is 3600 seconds: §' + G[0].v * 1000 + ' \\div 3600 = ' + H.num(q.exact) + '§ m each second. So km/h to m/s is ÷ 3.6.' });
+    } else if (q.kind === 'perHour') {
+      out.push({ text: H.qty(G[0].v, 'ppm') + ' means ' + G[0].v + ' pitches each minute.' });
+      out.push({ text: 'An hour is 60 minutes: §' + G[0].v + ' \\times 60 = ' + G[0].v * 60 + '§.' });
+    } else if (q.kind === 'cmp') {
+      out.push({ text: 'For each ' + (q.pick === 'max' ? 'car' : 'pack') + ', the answer is in ' + H.unitText(q.unit) + ': ' + H.U[H.U[q.unit].of[0]].t + ' per ' + (H.U[H.U[q.unit].of[1]].w || H.unitText(H.U[q.unit].of[1])) + '.' });
+      q.opts.forEach(function (o) {
+        var rs = rateSteps(o.given, q.unit);
+        rs.forEach(function (s, i) { out.push({ text: (i ? '' : o.name + ': ') + s.text }); });
+      });
+      var rs = q.opts.map(function (o) { return rateOf(o.given).r; });
+      var w = q.pick === 'max' ? (rs[0] > rs[1] ? 0 : 1) : (rs[0] < rs[1] ? 0 : 1);
+      out.push({ text: q.pick === 'max' ? q.opts[w].name + ' has the bigger speed, so it is faster.' : q.opts[w].name + ' costs less for each kg, so it is better value.' });
+    }
+    out.push(finalStep(q));
+    return out;
+  };
+
+  /* ---------- the words for each named slip: what was done, and what the unit says ---------- */
+  H.line = function (q, id) {
+    var G = q.given, t = G && G[1] && G[1].u === 'hm' ? G[1] : null;
+    if (q.kind === 'cmp') t = q.opts[0].given[1];
+    var unitLine = q.kind === 'rate' || q.kind === 'cmp' ? H.means(q.unit) + ': divide.'
+      : q.kind === 'mult' ? eachStep(G[0].v, G[0].u) + ' Multiply.'
+      : q.kind === 'divi' || q.kind === 'back' ? eachStep(G[1].v, G[1].u) + ' Count the lots of ' + H.qty(nm(G[1].v, G[0].u === 'gbp'), H.U[G[1].u].of[0]) + ': divide.'
+      : '';
+    switch (id) {
+      case 'MUL': return ['You multiplied.', unitLine];
+      case 'DIV': return q.kind === 'perHour' ? ['You divided by 60.', 'There are 60 minutes in an hour, so per hour is more: multiply by 60.'] : ['You divided.', unitLine];
+      case 'REV': return ['You divided the wrong way round.', unitLine];
+      case 'MD':
+        if (q.kind === 'back') { var hr = G[0].v / G[1].v; return ['You read ' + H.num(hr).replace('\\ldots', '…') + ' h as ' + H.num(hr * 100).replace('\\ldots', '…') + ' minutes.', 'An hour is 60 minutes: multiply the hours by 60.']; }
+        return ['You read ' + t.m + ' minutes as ' + H.num(t.m / 100) + ' of an hour.', 'An hour is 60 minutes: ' + t.m + ' minutes is ' + t.m + ' ÷ 60 of an hour.'];
+      case 'MU':
+        if (q.kind === 'perHour') return ['You left it per minute.', 'An hour is 60 minutes: multiply by 60 for per hour.'];
+        return ['You used the minutes as they are.', H.unitText(q.kind === 'cmp' || q.kind === 'rate' ? q.unit : G[0].u) + ' is per hour: change the time to hours first.'];
+      case 'SD': return q.kind === 'toKmh' ? ['You divided by 3.6.', 'A speed in km/h is a bigger number than in m/s: multiply by 3.6.']
+        : ['You multiplied by 3.6.', 'A speed in m/s is a smaller number than in km/h: divide by 3.6.'];
+      case 'SF': return q.kind === 'toKmh' ? ['You changed only the seconds, or only the metres.', 'm/s to km/h: × 3600 for the hour, ÷ 1000 for the km. Together, × 3.6.']
+        : ['You changed only the hours, or only the km.', 'km/h to m/s: × 1000 for the metres, ÷ 3600 for the seconds. Together, ÷ 3.6.'];
+    }
+    return ['', ''];
+  };
+  H.nudge = function (q, id) { return H.line(q, id)[1]; };
+  // The worked line (the first three named slips in a session): the slip, its number here, and the right answer.
+  H.example = function (q, id) {
+    var l = H.line(q, id), e = q.errors.filter(function (x) { return x.id === id; })[0];
+    var got = e ? (q.money ? H.fmtMoney(H.round(e.v, 2)) : H.num(e.v).replace('\\ldots', '…')) : null;
+    return l[0] + (got !== null ? ' That gives ' + got + (/…$/.test(got) ? '' : '.') : '') + ' ' + l[1] + ' Here that is ' + H.answerText(q) + '.';
+  };
+  // An answer with no named slip: what was said, and the first step (the unit).
+  H.rule = function (q, raw, unit) { return 'You said ' + H.qty(raw, unit) + '. ' + H.steps(q)[0].text.replace(/§/g, ''); };
+
+  window.SQS = H;
+})();
+</script>
+<script>
+(function () {
+  'use strict';
+  var H = window.SQS, SLUG = H.SLUG;
+  // One level of content; the roster lists KS3 and GCSE (Free Daily Pizza's and Take a Walk's pattern): the stages
+  // are boards, not levels, each its own analytics mode.
+  var level = MaffsLevel.resolve({ slug: 'squared-squirrel', levels: ['ks3', 'gcse'], fallback: 'ks3',
+    boards: ['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5'] });
+  var mode = 'stage-1';
+  var CORRECT_DELAY = 1100;
+  var NO_FALLBACK = 2147483647;      // the longest delay setTimeout takes: a wrong answer waits for Next
+  var FOOTER_PX = 40;
+  var $ = function (id) { return document.getElementById(id); };
+  function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  // KaTeX when the CDN loaded; otherwise the expression as readable text.
+  function tex(t) {
+    if (window.katex) {
+      try { return katex.renderToString(t, { throwOnError: false }); } catch (e) { /* fall through */ }
+    }
+    return esc(t.replace(/\\times/g, '×').replace(/\\div/g, '÷').replace(/\\ldots/g, '…').replace(/\\/g, ''));
+  }
+  // A line of text with TeX between § marks; a bracket or full stop right after the maths stays with it.
+  function renderLine(line) {
+    var p = line.split('§');
+    for (var i = 1; i < p.length; i += 2) {
+      var close = i + 1 < p.length && /^[).,:]/.test(p[i + 1]) ? p[i + 1].charAt(0) : '';
+      if (close) p[i + 1] = p[i + 1].slice(1);
+      p[i] = close ? '<span class="glue">' + tex(p[i]) + close + '</span>' : tex(p[i]);
+    }
+    return p.map(function (part, i) { return i % 2 ? part : esc(part); }).join('');
+  }
+
+  /* ---------- play ---------- */
+  var session = null, q = null, idx = 0, state = 'menu', scored = 0, unit = null, tries = 0, tried = [];
+  var score = 0, correctCount = 0, helpCount = 0, askedMs = 0, askStart = 0, clockTimer = null;
+  var kp = null, calc = null;
+
+  function show(id) {
+    ['menu', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    document.body.classList.toggle('playing', id !== 'menu');
+    MaffsLock.screen($(id));
+  }
+  function elapsed() { return askedMs + (state === 'asking' || state === 'pick' ? Date.now() - askStart : 0); }
+  function clock() {
+    var s = Math.floor(elapsed() / 1000);
+    $('hudClock').textContent = Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2);
+  }
+  function setMode(m) {
+    mode = H.STAGES[m] ? m : 'stage-1';
+    var bs = $('modePick').querySelectorAll('.mode-btn');
+    for (var i = 0; i < bs.length; i++) {
+      var on = bs[i].getAttribute('data-mode') === mode;
+      bs[i].classList.toggle('selected', on);
+      bs[i].setAttribute('aria-pressed', String(on));
+    }
+  }
+  // The header shows the badge of the stage being played (canon §4.4, `by stage`): the same markup and wording as the
+  // stage's own badge on the start screen.
+  function stageBadge() {
+    var src = document.querySelector('.calc-badge[data-stage="' + mode + '"]'), b = $('calcBadge');
+    b.setAttribute('data-calc', src.getAttribute('data-calc'));
+    b.textContent = src.textContent;
+  }
+  // The scientific calculator: Stages 4 and 5 only. Mounted the first time one of them is played; hidden in the others.
+  function calculator() {
+    var on = H.STAGES[mode].calc === 'scientific';
+    if (on && !calc && window.MaffsCalc) calc = MaffsCalc.mount($('calc'), { keys: 'scientific', dock: $('qcard'), answer: $('ans4') });
+    $('calcWrap').hidden = !on;
+    $('ans').hidden = on;
+    $('ans4').hidden = !on;
+  }
+
+  function startGame() {
+    MaffsLock.newSession();
+    session = H.buildSession(H.newSeed(), mode);
+    scored = session.questions.filter(function (x) { return !x.example; }).length;
+    idx = 0; score = 0; correctCount = 0; helpCount = 0; askedMs = 0;
+    stageBadge();
+    calculator();
+    show('game');
+    clearInterval(clockTimer); clockTimer = setInterval(clock, 1000);
+    ev('game_started', { game_slug: SLUG, level: level, mode: mode });
+    nextQuestion();
+  }
+  function nextQuestion() {
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    $('feedback').innerHTML = '';
+    $('msg').textContent = '';
+    $('qcard').classList.remove('fb-open');
+    if (idx >= session.questions.length) { finish(); return; }
+    ask(session.questions[idx++]);
+  }
+  function ask(nq) {
+    q = nq;
+    var S = H.STAGES[q.mode];
+    $('stageLabel').textContent = S.label;
+    $('hudQ').textContent = q.example ? 'Example' : q.index + '/' + scored;
+    $('hudStage').textContent = String(S.n);
+    $('hudScore').textContent = score;
+    $('qtext').textContent = q.ramp ? '' : q.text;
+    $('opts').hidden = true;
+    $('ansBlock').hidden = true;
+    unit = null;
+    window.scrollTo(0, 0);
+    if (q.example) { askExample(); return; }
+    askStart = Date.now();
+    tries = 0; tried = [];
+    if (q.options) askPick(); else askAnswer();
+    clock();
+  }
+
+  // Stage 1, questions 1-9: three options. Questions 1-3: a wrong first try shows its reason and is tried again, the
+  // mark kept (one question_answered, logged at the first try). Questions 4-9: a wrong answer shows its reason, the
+  // answer and Next.
+  function askPick() {
+    $('opts').innerHTML = q.options.map(function (o, i) {
+      return '<button class="btn" type="button" data-i="' + i + '">' + esc(o.text) + '</button>';
+    }).join('');
+    $('opts').hidden = false;
+    MaffsLock.fresh($('opts'));
+    state = 'pick';
+  }
+  function pick(i) {
+    if (state !== 'pick') return;
+    if (!MaffsLock.lock($('opts'))) return;
+    var o = q.options[i], first = tries === 0;
+    tries++;
+    if (first) ev('question_answered', { game_slug: SLUG, level: level, mode: q.mode, question_index: q.index, correct: o.ok });
+    if (o.ok) {
+      $('opts').querySelector('[data-i="' + i + '"]').classList.add('right');
+      $('msg').textContent = '';
+      right();
+      return;
+    }
+    if (q.retry) {
+      $('msg').textContent = o.why + ' Try again.';
+      MaffsLock.fresh($('opts'));
+      tried.push(i);
+      tried.forEach(function (t) { $('opts').querySelector('[data-i="' + t + '"]').disabled = true; });
+      return;
+    }
+    askedMs += Date.now() - askStart;
+    state = 'wrong';
+    var h = '<div class="fb wrong"><div class="fb-line" data-help="reason">' + esc(o.why) + '</div>' +
+      '<div class="fb-ans">' + esc(q.answer) + '</div><div class="fb-next"></div></div>';
+    openWrong(h);
+  }
+  // A right answer: scored on its time (a Stage 1 retry keeps its mark: the time includes the first try).
+  function right() {
+    var secs = (Date.now() - askStart) / 1000;
+    askedMs += Date.now() - askStart;
+    state = 'right';
+    correctCount++;
+    score += H.scoreFor(secs);
+    $('hudScore').textContent = score;
+    $('feedback').innerHTML = '<div class="fb-quick">✓ ' + esc(q.options ? q.answer : H.answerText(q)) + '</div>';
+    MaffsLock.timer(function () { if (state === 'right') nextQuestion(); }, CORRECT_DELAY);
+  }
+
+  function box() { return H.STAGES[mode].calc === 'scientific' ? $('ans4') : $('ans'); }
+  function askAnswer() {
+    $('units').innerHTML = q.buttons.map(function (u) {
+      return '<button class="unit-btn" type="button" data-unit="' + u + '" aria-pressed="false">' + esc(H.unitText(u)) + '</button>';
+    }).join('');
+    $('ansBlock').hidden = false;
+    var input = box();
+    input.value = '';
+    if (H.STAGES[mode].calc !== 'scientific') {
+      var holder = $('kpHolder'), el = document.createElement('div');
+      holder.innerHTML = ''; holder.appendChild(el);
+      kp = window.MaffsKeypad ? MaffsKeypad.mount(el, { targets: [input], keepInView: $('ansForm'), foldInset: FOOTER_PX }) : null;
+    } else {
+      $('kpHolder').innerHTML = '';
+      kp = null;
+      if (calc) calc.clear();
+    }
+    MaffsLock.fresh($('ansForm'));
+    state = 'asking';
+    if (!(kp && kp.enabled && kp.enabled()) && !(calc && calc.answerMode && calc.answerMode())) {
+      try { input.focus({ preventScroll: true }); } catch (e) {}
+    }
+  }
+  function setUnit(u) {
+    unit = u;
+    var bs = $('units').querySelectorAll('.unit-btn');
+    for (var i = 0; i < bs.length; i++) bs[i].setAttribute('aria-pressed', String(bs[i].getAttribute('data-unit') === u));
+  }
+  // The typed answer: the number marked by MaffsAnswer (whole numbers in Stages 1-3, 1 d.p. in Stages 4-5, money to
+  // the penny), then the unit. An unreadable entry, a number in the wrong form, no unit (the squirrels message), or the
+  // right number with the wrong unit is never marked: a message, no score, no event, and the student fixes it (SR-3).
+  function mark1(raw, v) {
+    if (q.money) return MaffsAnswer.money(raw, H.round(v, 2));
+    return q.dp ? MaffsAnswer.decimal(raw, H.round(v, q.dp), q.dp) : MaffsAnswer.exact(raw, v);
+  }
+  function submit() {
+    if (state !== 'asking' || !q) return;
+    var raw = box().value.trim(), res = mark1(raw, q.key);
+    if (res === 'unreadable' || res === 'format') {
+      $('msg').textContent = MaffsAnswer.message(res, raw, q.money ? { currency: '£' } : { dp: q.dp || 1 });
+      return;
+    }
+    if (!unit) { $('msg').textContent = H.noUnit(q, raw); return; }
+    if (res === 'correct' && unit !== q.unit) { $('msg').textContent = H.WRONG_UNIT; return; }
+    if (!MaffsLock.lock($('ansForm'))) return;
+    $('msg').textContent = '';
+    var named = null;
+    if (res === 'wrong') q.errors.some(function (e) {
+      if (mark1(raw, e.v) === 'wrong') return false;
+      named = e.id; return true;
+    });
+    ev('question_answered', { game_slug: SLUG, level: level, mode: q.mode, question_index: q.index, correct: res === 'correct' });
+    if (res === 'correct') { right(); return; }
+    askedMs += Date.now() - askStart;
+    state = 'wrong';
+    var help = null;
+    if (named) { helpCount++; help = H.helpFor(helpCount); }
+    var line = help === 'example' ? H.example(q, named) : help === 'nudge' ? H.nudge(q, named) : H.rule(q, raw, unit);
+    var h = '<div class="fb wrong"><div class="fb-line" data-help="' + (named ? help : 'rule') + '"' + (named ? ' data-err="' + named + '"' : '') + '>' + esc(line) + '</div>' +
+      '<ol class="steps">' + H.steps(q).map(function (s) { return '<li><span>' + renderLine(s.text) + '</span></li>'; }).join('') + '</ol>' +
+      '<div class="fb-ans">' + esc(H.answerText(q)) + '</div><div class="fb-next"></div></div>';
+    openWrong(h);
+  }
+  // The wrong-answer screen: the line, the working, the answer, Next (at once; nothing moves on by itself).
+  function openWrong(h) {
+    $('feedback').innerHTML = h;
+    $('qcard').classList.add('fb-open');
+    var fb = $('feedback').querySelector('.fb');
+    MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: nextQuestion, fallbackMs: NO_FALLBACK });
+    window.scrollTo(0, 0);
+    var nx = fb.querySelector('.fb-next button');
+    if (nx && nx.getBoundingClientRect().bottom > window.innerHeight - FOOTER_PX) fb.classList.add('tight');
+  }
+
+  // Question 0 of every stage: the worked example. No answer, no score, no question_answered. One step per tap; its
+  // last button goes on to the questions.
+  function askExample() {
+    state = 'example';
+    var steps = q.ramp ? H.RAMP_EXAMPLE.map(function (t) { return { text: t }; }) : H.steps(q), at = 0, wrap = document.createElement('div');
+    wrap.className = 'explain';
+    $('feedback').innerHTML = '<div class="ex-tag">Worked example</div>';
+    $('feedback').appendChild(wrap);
+    function draw() {
+      var last = at === steps.length - 1;
+      wrap.setAttribute('data-step', String(at + 1));
+      wrap.setAttribute('data-steps', String(steps.length));
+      wrap.innerHTML = '<ol class="steps">' + steps.slice(0, at + 1).map(function (x) { return '<li><span>' + renderLine(x.text) + '</span></li>'; }).join('') +
+        '</ol><div class="step-row"><button class="btn' + (last ? ' solid' : '') + '" type="button" id="stepBtn">' +
+        (last ? 'Start the questions' : 'Show the next step') + '</button></div>';
+      wrap.querySelector('#stepBtn').addEventListener('click', function () { if (last) nextQuestion(); else { at++; draw(); } });
+      MaffsLock.fresh(wrap);   // a double-tap reveals one step, never two
+      var b = wrap.querySelector('#stepBtn'), over = b.getBoundingClientRect().bottom - (window.innerHeight - FOOTER_PX);
+      if (over > 0) window.scrollBy(0, over);
+    }
+    draw();
+  }
+
+  // Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+  var finish = MaffsLock.finishOnce(function () {
+    state = 'done';
+    clearInterval(clockTimer);
+    var n = scored, secs = Math.floor(elapsed() / 1000), board = mode;
+    ev('game_completed', { game_slug: SLUG, level: level, mode: mode, score: score, questions_answered: n, questions_correct: correctCount });
+    if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, board, score, n).catch(function () {});
+    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, board, score);
+    var pbKey = 'sqs_best_' + board;
+    var prev = parseInt(lsGet(pbKey) || '0', 10) || 0;
+    var pb = score > prev;
+    if (pb) { ev('personal_best_set', { game_slug: SLUG, level: level, mode: mode, score: score, previous_best: prev }); lsSet(pbKey, String(score)); }
+    var S = H.STAGES[mode];
+    $('resTitle').textContent = 'Stage ' + S.n + ' done';
+    $('resScore').textContent = score;
+    $('resStats').innerHTML = '<b>' + correctCount + '</b> right out of <b>' + n + '</b> · time <b>' +
+      Math.floor(secs / 60) + ':' + ('0' + (secs % 60)).slice(-2) + '</b>' + (pb ? '<br>New personal best' : '');
+    var next = S.n < 5 ? 'stage-' + (S.n + 1) : null;
+    $('nextStageBtn').hidden = !next;
+    $('nextStageBtn').textContent = next ? 'Next: Stage ' + (S.n + 1) : '';
+    $('nextStageBtn').setAttribute('data-mode', next || '');
+    show('results');
+  });
+
+  /* ---------- wiring ---------- */
+  $('startBtn').addEventListener('click', startGame);
+  $('ansForm').addEventListener('submit', function (e) { e.preventDefault(); submit(); });
+  $('againBtn').addEventListener('click', function () { state = 'menu'; show('menu'); });
+  $('nextStageBtn').addEventListener('click', function () { setMode($('nextStageBtn').getAttribute('data-mode')); startGame(); });
+  $('modePick').addEventListener('click', function (e) { var b = e.target.closest('.mode-btn'); if (b) setMode(b.getAttribute('data-mode')); });
+  $('opts').addEventListener('click', function (e) { var b = e.target.closest('[data-i]'); if (b) pick(parseInt(b.getAttribute('data-i'), 10)); });
+  $('units').addEventListener('click', function (e) { var b = e.target.closest('.unit-btn'); if (b) setUnit(b.getAttribute('data-unit')); });
+  setMode(mode);
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(lsGet(KEY) === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); lsSet(KEY, String(on)); apply(on); });
+  })();
+
+  // Read-only views of live state, for scripts/verify-squared-squirrel.py.
+  H.ui = {
+    state: function () { return state; },
+    level: function () { return level; },
+    mode: function () { return mode; },
+    question: function () { return q ? JSON.parse(JSON.stringify(q)) : null; },
+    session: function () { return session ? JSON.parse(JSON.stringify(session)) : null; },
+    answerBox: function () { return box(); },
+    calcMounted: function () { return !!calc; }
+  };
+})();
+</script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'squared-squirrel');</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>
