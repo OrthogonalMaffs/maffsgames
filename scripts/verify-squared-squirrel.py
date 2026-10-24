@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-# ci-line: Football Pitches per Squared Squirrel, part 1 (Stage 1 the fixed ramp in order; every pool question's key recomputed from its data by units and dimensions, its unit the quantity asked, its named slips recomputed and none equal to the key, Stages 2-3 friendly whole numbers, at least 40 a stage, sessions easiest first with one nonsense unit; no formula-triangle wording or drawing) | --part 1
-# ci-line: Football Pitches per Squared Squirrel, part 2 (every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, Stage 1's retry keeps the mark, the no-unit "squirrels" message marks nothing, the wrong unit marks nothing, named slips, the calculator in Stages 4-5 only, no sideways scroll) | --part 2
-# ci-line: Football Pitches per Squared Squirrel, part 3 (fault-injection self-test: seven planted faults, each caught) | --part 3
+# ci-line: Football Pitches per Squared Squirrel, part 1 (Stage 1 the fixed ramp in order; every pool question's key recomputed from its data by units and dimensions, its unit the quantity asked, its named slips recomputed and none equal to the key, Stages 2-3 friendly whole numbers, at least 40 a stage, sessions easiest first; no nonsense unit or squirrel in any question, option, hint or worked line; no formula-triangle wording or drawing) | --part 1
+# ci-line: Football Pitches per Squared Squirrel, part 2 (every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, Stage 1's retry keeps the mark, the no-unit "squirrels" message loud, marking nothing and cleared by picking a unit, the wrong unit marks nothing, named slips, the calculator in Stages 4-5 only, no sideways scroll) | --part 2
+# ci-line: Football Pitches per Squared Squirrel, part 3 (fault-injection self-test: eleven planted faults, each caught) | --part 3
 # ci-deps: games/squared-squirrel/
 """Independent verification for Football Pitches per Squared Squirrel (games/squared-squirrel/), built 23 Oct 2026
 (contract FOOTBALL-PITCHES, Jon). SR-30: checked from its first PR.
@@ -27,9 +27,13 @@ question's data and the contract's words, never from the game's own functions:
              division whose divisor or quotient is 10 or less.
   Ramp       Stage 1 is exactly the contract's ten questions, in its order, each wrong option with a reason.
   Sessions   SESSIONS seeds a stage: a worked example (not one of the 10), then 10 from the stage's pool, distinct,
-             exactly one nonsense unit, served in non-decreasing order of the measure (recomputed here from the
+             no nonsense unit, served in non-decreasing order of the measure (recomputed here from the
              contract's comment: the kind's rank, then the largest number written in the question).
   Static     no formula triangle: not the word, not a drawing (a polygon or a triangle character), not "cover up".
+  Real units no question, option, hint, worked line, slip line or unit button says "squirrel" or "football pitch"
+             (contract SQS-REAL-UNITS, Jon's play-test, 24 Oct 2026): squirrels live only in the title, the start
+             screen's premise and the no-unit message, which must be loud (the accent, bold, body size, the unit
+             buttons outlined) and clear as soon as a unit is picked.
   Play       every stage end to end at 1280x800 and 320x568, read from the page (canon 7.9).
 """
 import argparse
@@ -64,8 +68,8 @@ RAMP = [
     ('m² means…', 'm × m', ['m × 2', 'm + m']),
     ('cm³ means…', 'cm × cm × cm', ['cm × 3', 'cm + cm + cm']),
     ('g/cm³ is…', 'g ÷ (cm × cm × cm)', ['(cm × cm × cm) ÷ g', 'g × cm × 3']),
-    ('Football pitches per squared squirrel is…', 'football pitches ÷ (squirrel × squirrel)',
-     ['(squirrel × squirrel) ÷ football pitches', 'football pitches ÷ (squirrel × 2)']),
+    # Question 9 since contract SQS-REAL-UNITS (Jon's play-test, 24 Oct 2026): a real unit, not the title's.
+    ('people/km² is…', 'people ÷ (km × km)', ['(km × km) ÷ people', 'people ÷ (km × 2)']),
 ]
 RAMP_TYPED = ('12 miles in 3 hours. How many miles per hour?', 4, 'mph')
 RAMP_EXAMPLE = ['Crisps are 80p per bag: 80p for each bag.', '“Per” means “for each”.']
@@ -358,8 +362,30 @@ def check_engine(page, out, sessions=SESSIONS):
             out.append('%s: %d questions in its pool, fewer than %d' % (mode, len(P), MIN_POOL))
         for q in P:
             check_question(q, out, '%s %s' % (mode, q['id'][:70]))
-        if not any(nonsense(q) for q in P):
-            out.append('%s: no nonsense-unit question in the pool' % mode)
+        for q in P:
+            if nonsense(q):
+                out.append('%s %s: a nonsense unit in a question (real contexts only)' % (mode, q['id'][:70]))
+    # Every word a question can show, in every stage: no squirrel and no football pitch (the title, the start screen's
+    # premise and the no-unit message aside, none of which is here).
+    words = page.evaluate(r'''(() => {
+      const out = [], P = SQS.pools();
+      const add = (where, t) => out.push([where, String(t)]);
+      SQS.RAMP.forEach((r, i) => { add('stage-1 q' + (i + 1), r.text); if (r.right) add('stage-1 q' + (i + 1), r.right);
+        (r.wrong || []).forEach(w => { add('stage-1 q' + (i + 1), w[0]); add('stage-1 q' + (i + 1), w[1]); }); });
+      SQS.RAMP_EXAMPLE.forEach(t => add('stage-1 example', t));
+      const t = SQS.buildSession(1, 'stage-1').questions[10];
+      const qs = [t].concat(...Object.keys(P).map(m => P[m]));
+      for (const q of qs) {
+        const w = (q.mode || '') + ' ' + (q.id || '').slice(0, 60);
+        add(w, q.text); SQS.steps(q).forEach(s => add(w, s.text)); (q.units || []).forEach(u => add(w, SQS.unitText(u)));
+        add(w, SQS.answerText(q)); add(w, SQS.rule(q, '1', q.unit));
+        q.errors.forEach(e => { SQS.line(q, e.id).forEach(l => add(w, l)); add(w, SQS.example(q, e.id)); add(w, SQS.nudge(q, e.id)); });
+      }
+      document.querySelectorAll('.mode-btn').forEach(b => add('start screen stage button', b.textContent));
+      return out; })()''')
+    for where, t in words:
+        if re.search(r'squirrel|football pitch', t, re.I):
+            out.append('%s: shows %r: squirrels only in the title, the premise and the no-unit message' % (where, t[:90]))
     # The worked steps of every pool question end on its answer (read through the page in one call).
     st = page.evaluate('(() => { const P = SQS.pools(), out = []; for (const m in P) for (const q of P[m]) out.push([m, q.id, SQS.steps(q), SQS.answerText(q)]); return out; })()')
     for m, i, steps, ans in st:
@@ -374,8 +400,8 @@ def check_engine(page, out, sessions=SESSIONS):
                 out.append('%s: the worked example is missing or one of the 10' % where)
             if len(qs) != 10 or len({q['id'] for q in qs}) != 10 or any(q['id'] not in ids for q in qs):
                 out.append('%s: %d questions, not 10 distinct from the pool' % (where, len(qs)))
-            if sum(1 for q in qs if nonsense(q)) != 1:
-                out.append('%s: %d nonsense-unit questions, not one in 10' % (where, sum(1 for q in qs if nonsense(q))))
+            if any(nonsense(q) for q in qs):
+                out.append('%s: a nonsense-unit question in the session' % where)
             ms = [measure(q) for q in qs]
             if ms != sorted(ms):
                 out.append('%s: not easiest first by the measure: %s' % (where, ms))
@@ -503,6 +529,26 @@ def play_ramp(page, size, out, tag):
     return right
 
 
+# The no-unit message as shown (its own line under the unit buttons, above the keypad, and inside the window): its colour is the accent (read from an element painted in it), bold, at least the body
+# text's size, 4.5:1 on the card, and every unit button outlined.
+LOUD_JS = r"""() => {
+  const m = document.getElementById('noUnitMsg'), cs = getComputedStyle(m), card = getComputedStyle(document.getElementById('qcard'));
+  const accent = getComputedStyle(document.getElementById('stageLabel')).color;
+  const rgb = c => (c.match(/[\d.]+/g) || []).slice(0, 3).map(Number);
+  const lum = c => { const v = rgb(c).map(x => { x /= 255; return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4); });
+    return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]; };
+  const a = lum(cs.color), b = lum(card.backgroundColor);
+  const btns = [...document.querySelectorAll('#units .unit-btn')];
+  return { accent: cs.color === accent, bold: parseInt(cs.fontWeight, 10) >= 700,
+    size: parseFloat(cs.fontSize) >= parseFloat(getComputedStyle(document.querySelector('.qtext')).fontSize) - 0.5,
+    contrast: Math.round((Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05) * 100) / 100,
+    seen: m.getBoundingClientRect().height > 0 && m.getBoundingClientRect().bottom <= window.innerHeight - 40 &&
+      (!document.getElementById('kpHolder').firstElementChild || !document.getElementById('kpHolder').firstElementChild.offsetHeight ||
+       m.getBoundingClientRect().bottom <= document.getElementById('kpHolder').getBoundingClientRect().top + 1),
+    outlined: btns.length > 0 && btns.every(x => getComputedStyle(x).outlineStyle === 'solid' && parseFloat(getComputedStyle(x).outlineWidth) >= 2) };
+}"""
+
+
 def play_typed(page, size, out, where, q, wrong, check_units, named_n=None):
     box = '#ans4' if q['mode'] in CALC_STAGES else '#ans'
     if page.evaluate('SQS.ui.state()') != 'asking':
@@ -514,11 +560,19 @@ def play_typed(page, size, out, where, q, wrong, check_units, named_n=None):
         # No unit: the squirrels message, on the student's own number, and nothing marked.
         submit(page, box, key, None)
         want = '%s %s? Pick the unit, or that\'s what the examiner will read.' % (key, squirrels(q['unit']))
-        if page.inner_text('#msg').strip() != want or page.evaluate('window.__ev.length') != n0 or page.evaluate('SQS.ui.state()') != 'asking':
+        if page.inner_text('#noUnitMsg').strip() != want or page.evaluate('window.__ev.length') != n0 or page.evaluate('SQS.ui.state()') != 'asking':
             out.append('%s: an answer with no unit got %r and was %s; expected %r, not marked' % (
-                where, page.inner_text('#msg'), 'marked' if page.evaluate('window.__ev.length') != n0 else 'not marked', want))
+                where, page.inner_text('#noUnitMsg'), 'marked' if page.evaluate('window.__ev.length') != n0 else 'not marked', want))
+        loud = page.evaluate(LOUD_JS)
+        if not loud['accent'] or not loud['bold'] or not loud['size'] or loud['contrast'] < 4.5 or not loud['outlined'] or not loud['seen']:
+            out.append('%s: the no-unit message is not loud: %s (the accent, bold, body size or larger, 4.5:1, the unit buttons outlined, above the keypad and in the window)' % (where, loud))
         other = [u for u in q['buttons'] if u != q['unit']][0]
-        submit(page, box, key, other)
+        page.click('.unit-btn[data-unit="%s"]' % other)
+        after = page.evaluate("() => ({ msg: document.getElementById('noUnitMsg').textContent, "
+                              "need: document.getElementById('units').classList.contains('need') })")
+        if after['msg'] or after['need']:
+            out.append('%s: picking a unit did not clear the no-unit message and the outline: %s' % (where, after))
+        page.evaluate("document.getElementById('ansForm').requestSubmit()")
         if 'Check the unit' not in page.inner_text('#msg') or page.evaluate('window.__ev.length') != n0:
             out.append('%s: the right number with the wrong unit was marked, or got no unit message' % where)
     val, named = key, None
@@ -679,7 +733,7 @@ PLANTS = [
     ('the word "triangle" in a hint',
      [("'Per means divide, '", "'Per means divide (use the formula triangle), '")], 'static', r'formula triangles: the word'),
     ('a no-unit answer marked wrong',
-     [("    if (!unit) { $('msg').textContent = H.noUnit(q, raw); return; }", "    if (!unit) { res = 'wrong'; unit = q.unit; }")], 'play',
+     [("    if (!unit) { msg(H.noUnit(q, raw), true); return; }", "    if (!unit) { res = 'wrong'; unit = q.unit; }")], 'play',
      r'an answer with no unit got .* and was marked'),
     ('the calculator in Stage 2',
      [("    var on = H.STAGES[mode].calc === 'scientific';", "    var on = H.STAGES[mode].calc === 'scientific' || mode === 'stage-2';")], 'play',
@@ -687,6 +741,22 @@ PLANTS = [
     ('a Stage 4 key using 1.3 for 1 h 30 min',
      [("      case 'rate': return G[0].v / val(G[1]);", "      case 'rate': return G[0].v / (G[1].u === 'hm' ? H.decimalSlip(G[1]) : val(G[1]));"), FILTER],
      'engine', r'stage-4 .*:rate:.*key \S+, recomputed from its data'),
+    # Contract SQS-REAL-UNITS (Jon's play-test, 24 Oct 2026).
+    ('a nonsense-unit question left in Stage 3',
+     [("    gbpkg: { t: '£/kg', of: ['gbp', 'kg'] }, gbpm: { t: '£/m', of: ['gbp', 'm'] }\n  };",
+       "    gbpkg: { t: '£/kg', of: ['gbp', 'kg'] }, gbpm: { t: '£/m', of: ['gbp', 'm'] },\n    pitch: { t: 'pitches' }, sq: { t: 'squirrel²', d: 2 }, psq: { t: 'pitches/squirrel²', of: ['pitch', 'sq'] }\n  };"),
+      ("    ['price', 'gbp', 'm', 'gbpm', [2, 3, 4, 5], [3, 6, 10]]\n  ];",
+       "    ['price', 'gbp', 'm', 'gbpm', [2, 3, 4, 5], [3, 6, 10]],\n    ['price', 'pitch', 'sq', 'psq', [2, 3], [2, 3]]\n  ];")], 'engine',
+     r'stage-3 .*psq.*(a nonsense unit in a question|squirrel)'),
+    ('the old Stage 1 question 9',
+     [("{ text: 'people/km² is…', right: 'people ÷ (km × km)', wrong: [",
+       "{ text: 'Football pitches per squared squirrel is…', right: 'football pitches ÷ (squirrel × squirrel)', wrong: [")], 'engine',
+     r'Stage 1 question 9 is .*Football pitches'),
+    ('the no-unit message in the old muted style',
+     [(".msg.no-unit{color:var(--accent);font-weight:700;font-size:1.05rem}\n", "")], 'play', r'the no-unit message is not loud'),
+    ('the message not clearing after a unit is picked',
+     [("    if ($('noUnitMsg').textContent) msg('');   // picking a unit answers the no-unit message\n", "")], 'play',
+     r'picking a unit did not clear the no-unit message'),
 ]
 
 
