@@ -16,6 +16,11 @@ screen's mount (canon 7.5.4, `[data-maffs-start-note]`) from 1,000 and the homep
             answered since September" on its start screen, visible, inside the viewport at 320 px, adding no sideways
             scroll, at 4.5:1 contrast, and not squeezed into a flex row or grid; the homepage line likewise.
 
+  headline  the homepage's block is a headline (the number large and bold in white, its label beside it, a 1 px rule above;
+            23 Oct 2026, option A): at 320 px the header does not scroll sideways and the number does not wrap mid-figure;
+            the number, the label and the "Updated every 5 minutes" line each read at 4.5:1 on the navy; below its threshold
+            the block is hidden and leaves no rule, gap or updated line; the updated line exists only with the live figure.
+
     python scripts/check-answer-count.py              # static + Chromium
     python scripts/check-answer-count.py --static     # the static half only (no browser)
     python scripts/check-answer-count.py --selftest   # the loader's cases, and each planted fault must fail
@@ -206,7 +211,7 @@ async def _check_one(browser, base, rel, slug, sel, want):
             f.append("%s: the line is not visible on the page as loaded" % where)
         if not got["inside"]:
             f.append("%s: the line runs outside the 320 px viewport" % where)
-        if got["ratio"] < 4.5:
+        if got["ratio"] < 4.5 and TOTAL_MOUNT not in sel:        # the homepage block's number, label and updated line are measured by _check_headline
             f.append("%s: the line's contrast is %.2f:1 against the background behind it (want 4.5:1)" % (where, got["ratio"]))
         if got["row"]:
             f.append("%s: the line sits inside %s, a flex row or grid, so it is squeezed in beside the controls" % (where, got["parent"]))
@@ -217,6 +222,102 @@ async def _check_one(browser, base, rel, slug, sel, want):
         return f
     except Exception as exc:
         return ["%s: %s" % (where, str(exc).splitlines()[0][:160])]
+
+
+HEAD_PROBE = r"""() => {
+  const m = document.querySelector('[data-maffs-answer-total]');
+  const rgb = s => { const v = (s.match(/rgba?\(([^)]+)\)/) || [0, ''])[1].split(/[ ,\/]+/).filter(Boolean).map(Number);
+    return v.length < 3 ? null : {r: v[0], g: v[1], b: v[2], a: v.length > 3 ? v[3] : 1}; };
+  const lum = x => { const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+    return 0.2126 * f(x.r) + 0.7152 * f(x.g) + 0.0722 * f(x.b); };
+  const ratio = el => {
+    const layers = [];
+    for (let e = el; e; e = e.parentElement) { const b = rgb(getComputedStyle(e).backgroundColor); if (b && b.a > 0) { layers.push(b); if (b.a >= 0.99) break; } }
+    let bg = {r: 255, g: 255, b: 255};
+    for (let i = layers.length - 1; i >= 0; i--) { const L = layers[i]; bg = {r: L.r * L.a + bg.r * (1 - L.a), g: L.g * L.a + bg.g * (1 - L.a), b: L.b * L.a + bg.b * (1 - L.a)}; }
+    const c = rgb(getComputedStyle(el).color);
+    const fg = {r: c.r * c.a + bg.r * (1 - c.a), g: c.g * c.a + bg.g * (1 - c.a), b: c.b * c.a + bg.b * (1 - c.a)};
+    const l1 = lum(fg), l2 = lum(bg);
+    return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+  };
+  const num = m && m.querySelector('.ac-num'), lab = m && m.querySelector('.ac-label');
+  const upd = document.querySelector('[data-maffs-answer-updated]');
+  const hdr = document.querySelector('.header');
+  const cs = m && getComputedStyle(m);
+  return {
+    sw: document.scrollingElement.scrollWidth, vw: document.documentElement.clientWidth,
+    blockShown: !!(m && m.checkVisibility()), blockDisplay: m && cs.display, rule: m && cs.borderTopWidth + ' ' + cs.borderTopColor,
+    headerH: hdr && Math.round(hdr.getBoundingClientRect().height),
+    num: num && {text: num.textContent, lines: num.getClientRects().length, size: parseFloat(getComputedStyle(num).fontSize),
+                 weight: getComputedStyle(num).fontWeight, tab: getComputedStyle(num).fontVariantNumeric, ratio: ratio(num),
+                 right: Math.round(num.getBoundingClientRect().right), h: Math.round(num.getBoundingClientRect().height)},
+    label: lab && {text: lab.textContent, ratio: ratio(lab), size: parseFloat(getComputedStyle(lab).fontSize)},
+    upd: upd && {text: upd.textContent, ratio: ratio(upd), size: parseFloat(getComputedStyle(upd).fontSize), shown: upd.checkVisibility()},
+    updCount: document.querySelectorAll('[data-maffs-answer-updated]').length,
+  };
+}"""
+
+
+async def _headline(browser, base, width, big, live):
+    ctx = await browser.new_context(viewport={"width": width, "height": 800})
+    page = await ctx.new_page()
+
+    async def stub(route):
+        await route.fulfill(status=200, content_type="application/json", body=_fixture("", big))
+    await page.route("**/answer-counts.json*", stub)
+    try:
+        await page.goto(base + "/", wait_until="domcontentloaded")
+        await page.wait_for_timeout(900)
+        if live:      # the loader keeps the live address off localhost, so run it again as it would run on the live host
+            await page.evaluate("""(body) => MaffsAnswerCount.run({doc: document, slug: '', now: Date.now, live: true, reduced: true,
+                raf: f => f(0), visible: () => true, setInterval: () => 1, clearInterval: () => {},
+                get: () => Promise.resolve(JSON.parse(body))})""", _fixture("", big))
+            await page.wait_for_timeout(300)
+        return await page.evaluate(HEAD_PROBE)
+    finally:
+        await ctx.close()
+
+
+async def _check_headline_list(browser, base):
+    try:
+        return await _check_headline(browser, base)
+    except Exception as exc:
+        return ["index.html (headline): %s" % str(exc).splitlines()[0][:160]]
+
+
+async def _check_headline(browser, base):
+    f = []
+    for width in (320, 1280):
+        w = "index.html (%d px)" % width
+        got = await _headline(browser, base, width, True, True)
+        if not got["blockShown"] or not got["num"]:
+            f.append("%s: the headline block is not shown with a large figure" % w)
+            continue
+        n, lab, upd = got["num"], got["label"], got["upd"]
+        if got["sw"] > got["vw"]:
+            f.append("%s: the header scrolls sideways (%d px wide in %d)" % (w, got["sw"], got["vw"]))
+        if n["text"] != "99,999" or n["lines"] != 1:
+            f.append("%s: the number %r is set on %d lines (it must not wrap mid-figure)" % (w, n["text"], n["lines"]))
+        if n["size"] < 36 or int(n["weight"]) < 700 or "tabular" not in n["tab"]:
+            f.append("%s: the number is %.0f px, weight %s, %r (want about 2.4rem, 700, tabular figures)" % (w, n["size"], n["weight"], n["tab"]))
+        if not got["rule"].startswith("1px"):
+            f.append("%s: the rule above the block is %r, want 1px" % (w, got["rule"]))
+        if n["right"] > got["vw"]:
+            f.append("%s: the number runs past the right edge" % w)
+        for what, r in (("number", n["ratio"]), ("label", lab["ratio"]), ("updated line", upd and upd["ratio"])):
+            if r is not None and r < 4.5:
+                f.append("%s: the %s's contrast is %.2f:1 on the navy (want 4.5:1)" % (w, what, r))
+        if not upd or upd["text"] != "Updated every 5 minutes" or not upd["shown"] or got["updCount"] != 1:
+            f.append("%s: with the live figure loaded the updated line is %r (want exactly one 'Updated every 5 minutes')" % (w, upd))
+        # the daily file's figure alone: no updated line
+        only = await _headline(browser, base, width, True, False)
+        if only["updCount"]:
+            f.append("%s: the updated line is present with only the daily file's figure" % w)
+        # below the threshold: the block is hidden and leaves nothing behind
+        small = await _headline(browser, base, width, False, True)
+        if small["blockShown"] or small["updCount"] or small["blockDisplay"] != "none":
+            f.append("%s: a figure under 10,000 leaves a visible block, rule or updated line behind" % w)
+    return f
 
 
 def check_browser(root, slugs=None, home=True, workers=4):
@@ -237,9 +338,10 @@ def check_browser(root, slugs=None, home=True, workers=4):
                     for s in slugs]
             if home:
                 jobs.append(lim(_check_one(browser, base, "/", "", "[%s]" % TOTAL_MOUNT, "99,999 questions answered since September")))
+                jobs.append(lim(_check_headline_list(browser, base)))
             out = await asyncio.gather(*jobs)
             await browser.close()
-            return [x for fs in out for x in fs], len(jobs)
+            return [x for fs in out for x in fs], len(jobs) - (1 if home else 0)
     try:
         return asyncio.run(run())
     finally:
@@ -373,6 +475,50 @@ async ([src]) => {
   await new Promise(res => setTimeout(res, 20));
   ok('homepage: a hidden tab does not fetch', r.calls.length === before + 1, r.calls.length);
 
+  // "Updated every 5 minutes": only while the figure on screen is the live one
+  const upd = r => r.doc.querySelector('[data-maffs-answer-updated]');
+  r = await page(T, { sources: { file: fileT(20000), live: fileT(26000, NOW - 1000) } });
+  ok('homepage: with the live figure loaded, the updated line shows', upd(r) && upd(r).textContent === 'Updated every 5 minutes', upd(r));
+  ok('homepage: the block still reads "N questions answered since September" (number and label in spans)',
+     r.m.textContent === '20,000 questions answered since September' && !!r.m.querySelector('.ac-num') && !!r.m.querySelector('.ac-label'), r.m.textContent);
+  r = await page(T, { sources: { file: fileT(20000), live: fileT(20000, NOW - 1000) } });
+  ok('homepage: live equal to the file figure: the figure shown is the live one, so the line shows', !!upd(r));
+  r = await page(T, { sources: { file: fileT(20000) } });
+  ok('homepage: daily file only (live down): no updated line', upd(r) === null);
+  r = await page(T, { sources: { file: fileT(20000), live: fileT(15000, NOW - 1000) } });
+  ok('homepage: live lower than the file figure: the file figure shows, no updated line', upd(r) === null);
+  {
+    // the live address still loading: the daily file's figure is on screen and the line must not be
+    const doc = holder.contentDocument;
+    doc.body.innerHTML = T;
+    const pending = A.run({ doc, slug: '', now: () => NOW, live: true, reduced: true, raf: f => f(0), visible: () => true,
+      setInterval: () => 1, clearInterval() {},
+      get: url => (url.indexOf('/exec') >= 0 ? new Promise(() => {}) : Promise.resolve(fileT(20000))) });
+    await new Promise(res => setTimeout(res, 30));
+    const blk = doc.querySelector('[data-maffs-answer-total]');
+    ok('homepage: daily file only, live still loading: no updated line',
+       blk.textContent === '20,000 questions answered since September' && doc.querySelector('[data-maffs-answer-updated]') === null, blk.textContent);
+  }
+  r = await page(T, { sources: { file: fileT(5000), live: fileT(9000, NOW - 1000) } });
+  ok('homepage: block hidden (under 10,000) with a live response: no updated line', r.text() === '' && r.m.hidden === true && upd(r) === null);
+  r = await page(T, { sources: { file: fileT(20000), live: fileT(30000, NOW - 8 * day) } });
+  ok('homepage: a stale live response: no updated line', upd(r) === null);
+  r = await page(G, { sources: { file: fresh(2000), live: fresh(2600) } });
+  ok('game page: never an updated line', upd(r) === null);
+  {
+    const s4 = { file: fileT(20000), live: fileT(26000, NOW - 1000) };
+    r = await page(T, { sources: s4 });
+    ok('homepage: live loaded, line present before the failure', !!upd(r));
+    s4.live = undefined;
+    r.opts.timer();
+    await new Promise(res => setTimeout(res, 20));
+    ok('homepage: a later refresh failing removes the updated line', upd(r) === null);
+    s4.live = fileT(27000, NOW - 500);
+    r.opts.timer();
+    await new Promise(res => setTimeout(res, 20));
+    ok('homepage: and a later refresh succeeding puts it back', !!upd(r));
+  }
+
   // one live fetch on load, then at most 10 minutes of refreshing
   let clock = NOW, cleared = 0;
   const src3 = { file: file(NOW - 3600000, 68412, {}), live: file(NOW - 500, 70000, {}) };
@@ -411,7 +557,9 @@ def selftest():
     loader = (BASE / LOADER).read_text(encoding="utf-8")
     for name, a, b, want in (
             ("a homepage that refreshes for ever", "if (now() - t0 >= POLL_MAX_MS) {", "if (false) {", "stops refreshing after 10 minutes"),
-            ("a game page that calls the live address", "var useLive = opts.live && totals.length > 0;", "var useLive = opts.live;", "no request to the live address")):
+            ("a game page that calls the live address", "var useLive = opts.live && totals.length > 0;", "var useLive = opts.live;", "no request to the live address"),
+            ("the updated line shown from the daily file", "if (isLive && x.total) x.m.live(v);", "if (x.total) x.m.live(v);", "daily file only"),
+            ("the updated line present while the block is hidden", "var ok = v !== null && v >= this.min && v >= this.shown;", "var ok = v !== null;", "block hidden")):
         assert a in loader, a
         got = [r for r in asyncio.run(_loader_cases(loader.replace(a, b, 1))) if not r[1]]
         ok = any(want in r[0] for r in got)
@@ -493,7 +641,7 @@ def selftest():
         print("  %s  %-48s %s" % ("PASS" if ok else "FAIL", name, got[0][:110] if got else "(no failures)"))
         if not ok:
             bad.append(name)
-    print("selftest: %s (%d loader cases, %d planted faults)" % ("FAILED: " + ", ".join(bad) if bad else "PASS", len(results), len(cases) + 3))
+    print("selftest: %s (%d loader cases, %d planted faults)" % ("FAILED: " + ", ".join(bad) if bad else "PASS", len(results), len(cases) + 5))
     return 1 if bad else 0
 
 

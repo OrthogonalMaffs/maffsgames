@@ -44,6 +44,8 @@ answer-lock parts side by side all failed (UNPLAYABLE), so never run heavy ones 
 two queues): docs-only 353 -> 167 s; one game 1565 -> 1375 s; shared asset (#232's files) 4198 -> 2907 s.
 The last line printed is the PR line "checks deferred to CI: ..." (tiers 1-2, tier 4 banks, leaderboard
 coverage). `--files a b` plans for given paths; `--workers 1` runs the light queue serially too.
+**Heavy checks reached only through a shared file (e.g. `schools/assets/*`) are deferred to CI** and listed with the file
+that reached them (CHECK-CHANGED-DEFER, 23 Oct 2026): nothing is skipped, the Gate still requires them, and `--all-heavy` runs them here.
 **Byte-compared files need a `.gitattributes` line (GITATTR-BYTES, 10 Oct 2026):** Windows checks text out as
 CRLF (core.autocrlf), so a check that hashes or sizes a tracked file must have its path pinned there
 (`-text` or `eol=lf`), or it fails only on Windows. Covered: `scripts/fonts/**`, CLAUDE.md, both handovers, todo.md.
