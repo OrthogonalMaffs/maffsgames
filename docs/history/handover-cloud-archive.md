@@ -3,6 +3,14 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-24 (cloud): SQS-REAL-UNITS (Jon's contract of 24 Oct, after his play-test; named here). **DONE (#512, 13bab98; main run 40088694758 green, 60 of 60, started on the merge).**
+
+- **Why:** a nonsense unit inside a question confused students; squirrels stay in the title, the start screen's premise and the no-unit message only.
+- **Done:** Stage 1 question 9 is now "people/km² is…" (people ÷ (km × km); the wrong way round; km × 2). Every nonsense question, generator, word, step and unit (`pitch`, `sq`, `psq`, `pph`, `ppm`, `perHour`) is gone. Each session's freed slot goes to a real group: Stage 2 speed 4, Stage 3 speed 4, Stage 4 m/s to km/h 2, Stage 5 time in minutes 3. **Pools, before -> after:** Stage 2 169 -> 154; Stage 3 338 -> 308; Stage 4 202 -> 179; Stage 5 148 -> 132. No refill was needed.
+- **The no-unit message:** loud, on its own line straight under the unit buttons and above the phone keypad (under the keypad it sat behind the footer at 320 px). It is bold, at body size, in the russet accent (8.3:1), and the unit buttons are outlined and pulse (no motion under reduced motion). Picking a unit clears both. It still marks nothing. Other messages are unchanged.
+- **Verifier:** no "squirrel" or "football pitch" in any question, option, step, slip line, worked line, unit button or stage button; Stage 1 is the new sequence; the message is checked for accent, bold, size, 4.5:1, being above the keypad and in the window, and the outline, and is cleared by picking a unit. Plants 7 -> 11, each caught.
+- **For the home lane:** the roster's row 101 still says "One nonsense-unit question in each session of 10" and gives the old pool sizes. This contract touched only the game and its verifier.
+
 ## 2026-10-23 (cloud): FOOTBALL-PITCHES (contract verbatim: `docs/history/contracts/2026-10-23-football-pitches.md`). **DONE (#509, 253e202; main run 40074161154 green, 60 of 60 jobs, started on the merge).** Merged unlisted for Jon to play at https://maffsgames.co.uk/games/squared-squirrel/. #509 first conflicted with #506-#508 in `docs/handover/home.md` only (no CI ran on it until resolved): main merged in, both entries kept.
 
 - **Lane exception (Jon, 23 Oct 2026, 23:05):** the cloud lane builds the game and edits what a new unlisted game needs, for this PR only: the roster's Unlisted row 101 (`by stage`), `data/games.json`, the `NOT_ON_HUB` entry, the game lists in check-levels, check-answer-lock, check-theme, check-teacher-invite, check-start-mount and audit-register, and one label `stage-5` -> "Stage 5" in `firebase-leaderboard.js` (nothing else there).
