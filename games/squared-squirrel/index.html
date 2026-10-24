@@ -72,7 +72,9 @@ a.back-link:hover{color:var(--text)}
 .ans-row input{width:8rem;min-height:44px;padding:.3rem .5rem;border:2px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font-family:var(--font-num);font-size:1.25rem;text-align:center}
 .ans-row input:focus{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent)}
 /* The unit buttons: their own row under the answer, wrapping on a phone. */
-.units{flex-basis:100%;display:flex;flex-wrap:wrap;justify-content:center;gap:.35rem}
+/* 20 px between buttons, both ways (Jon's play-test, 24 Oct 2026): the no-unit outline reaches 9 px beyond each button
+   at its pulse's peak (3 px wide, offset up to 6 px), so neighbours' outlines stay apart; narrow rows wrap, never shrink. */
+.units{flex-basis:100%;display:flex;flex-wrap:wrap;justify-content:center;gap:1.25rem}
 .unit-btn{min-width:52px;min-height:44px;padding:0 .6rem;border-radius:8px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-family:var(--font-num);font-size:1rem;font-weight:700;cursor:pointer}
 .unit-btn[aria-pressed="true"]{border-color:var(--accent);background:var(--accent);color:var(--on-accent)}
 .msg{min-height:1.2em;text-align:center;font-size:.9rem;color:var(--hint)}
@@ -80,6 +82,9 @@ a.back-link:hover{color:var(--text)}
 /* The no-unit message (contract SQS-REAL-UNITS, Jon's play-test, 24 Oct 2026): impossible to miss. The accent, bold, at
    body size, and the unit buttons outlined with a short pulse; both clear as soon as a unit is picked. */
 .msg.no-unit{color:var(--accent);font-weight:700;font-size:1.05rem}
+/* Its line is always there, reserved (one line high) with its space above and below, so the layout does not jump when it
+   shows. */
+#noUnitMsg,#noUnitMsg:empty{display:block;margin:10px 0 12px}
 .units.need .unit-btn{outline:3px solid var(--accent);outline-offset:2px;animation:unitPulse .45s ease-in-out 4 alternate}
 @keyframes unitPulse{to{outline-offset:6px}}
 
