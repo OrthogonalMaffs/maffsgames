@@ -1,0 +1,753 @@
+{
+ "_generated": "by scripts/gen-exam-topics.py from its table; never edit by hand",
+ "board": "OCR",
+ "tier": "Foundation",
+ "source": "From 18 OCR GCSE Foundation papers, June 2025 back to November 2022.",
+ "papers": 18,
+ "series": 6,
+ "marks_per_series": 300,
+ "covered": [
+  {
+   "id": "ratio",
+   "name": "Ratio",
+   "marks": 13.3,
+   "series": 6,
+   "band": [
+    2,
+    5
+   ],
+   "route": {
+    "slug": "split-it",
+    "game": "Split It",
+    "level": "ks3",
+    "modes": [
+     "simplify",
+     "divide"
+    ]
+   }
+  },
+  {
+   "id": "direct-proportion",
+   "name": "Direct proportion",
+   "marks": 11.7,
+   "series": 6,
+   "band": [
+    1,
+    4
+   ],
+   "route": {
+    "slug": "split-it",
+    "game": "Split It",
+    "level": "ks3",
+    "modes": [
+     "unitary",
+     "scale"
+    ]
+   }
+  },
+  {
+   "id": "powers-roots",
+   "name": "Powers and roots",
+   "marks": 9.0,
+   "series": 6,
+   "band": [
+    2,
+    5
+   ],
+   "route": {
+    "slug": "index-laws",
+    "game": "Index Laws",
+    "level": "gcse",
+    "modes": []
+   }
+  },
+  {
+   "id": "compound-measures",
+   "name": "Compound measures",
+   "marks": 8.2,
+   "series": 6,
+   "band": [
+    3,
+    5
+   ],
+   "route": {
+    "slug": "squared-squirrel",
+    "game": "Football Pitches per Squared Squirrel",
+    "level": "ks3",
+    "modes": [
+     "stage-2",
+     "stage-3"
+    ]
+   }
+  },
+  {
+   "id": "linear-equations",
+   "name": "Linear equations",
+   "marks": 7.5,
+   "series": 6,
+   "band": [
+    2,
+    5
+   ],
+   "route": {
+    "slug": "linear-equation-solver",
+    "game": "Linear Equation Solver",
+    "level": "gcse",
+    "modes": []
+   }
+  },
+  {
+   "id": "sequences",
+   "name": "Sequences",
+   "marks": 7.3,
+   "series": 6,
+   "band": [
+    1,
+    4
+   ],
+   "route": {
+    "slug": "sequence-solver",
+    "game": "Sequence Solver",
+    "level": "ks3",
+    "modes": []
+   }
+  },
+  {
+   "id": "angles",
+   "name": "Angles",
+   "marks": 7.2,
+   "series": 6,
+   "band": [
+    1,
+    4
+   ],
+   "route": {
+    "slug": "angle-ace",
+    "game": "Angle Ace",
+    "level": "gcse",
+    "modes": []
+   }
+  },
+  {
+   "id": "arithmetic-negatives",
+   "name": "Negative numbers",
+   "marks": 7.0,
+   "series": 5,
+   "band": [
+    1,
+    3
+   ],
+   "route": {
+    "slug": "negative-number-line",
+    "game": "Negative Number Line",
+    "level": "year6",
+    "modes": [
+     "calc"
+    ]
+   }
+  },
+  {
+   "id": "fdp-convert",
+   "name": "Fractions, decimals and percentages",
+   "marks": 6.8,
+   "series": 6,
+   "band": [
+    1,
+    3
+   ],
+   "route": {
+    "slug": "free-daily-pizza",
+    "game": "Free Daily Pizza",
+    "level": "ks3",
+    "modes": [
+     "1",
+     "2"
+    ]
+   }
+  },
+  {
+   "id": "number-vocabulary",
+   "name": "Factors, multiples and primes",
+   "marks": 6.7,
+   "series": 6,
+   "band": [
+    1,
+    3
+   ],
+   "route": {
+    "slug": "factor-race",
+    "game": "Factor Race",
+    "level": "ks3",
+    "modes": []
+   }
+  },
+  {
+   "id": "fraction-operations",
+   "name": "Calculating with fractions",
+   "marks": 6.5,
+   "series": 6,
+   "band": [
+    1,
+    4
+   ],
+   "route": {
+    "slug": "how-many-parts",
+    "game": "How Many Parts?",
+    "level": "ks3",
+    "modes": []
+   }
+  },
+  {
+   "id": "fraction-percentage-of-amount",
+   "name": "Fractions and percentages of amounts",
+   "marks": 6.3,
+   "series": 6,
+   "band": [
+    1,
+    4
+   ],
+   "route": {
+    "slug": "free-daily-pizza",
+    "game": "Free Daily Pizza",
+    "level": "ks3",
+    "modes": [
+     "3"
+    ]
+   }
+  },
+  {
+   "id": "averages",
+   "name": "Averages and range",
+   "marks": 6.3,
+   "series": 6,
+   "band": [
+    1,
+    4
+   ],
+   "route": {
+    "slug": "distinctly-average",
+    "game": "Distinctly Average",
+    "level": "ks3",
+    "modes": []
+   }
+  },
+  {
+   "id": "area",
+   "name": "Area",
+   "marks": 6.0,
+   "series": 6,
+   "band": [
+    1,
+    5
+   ],
+   "route": {
+    "slug": "take-a-walk",
+    "game": "Take a Walk",
+    "level": "ks3",
+    "modes": [
+     "stage-1",
+     "stage-2",
+     "stage-3"
+    ]
+   }
+  },
+  {
+   "id": "inverse-operations",
+   "name": "Inverse operations",
+   "marks": 5.3,
+   "series": 6,
+   "band": [
+    1,
+    3
+   ],
+   "route": {
+    "slug": "think-of-a-number",
+    "game": "Think of a Number",
+    "level": "year6",
+    "modes": []
+   }
+  },
+  {
+   "id": "trigonometry",
+   "name": "Trigonometry",
+   "marks": 5.0,
+   "series": 6,
+   "band": [
+    4,
+    5
+   ],
+   "route": {
+    "slug": "trig-worms",
+    "game": "Trig Worms",
+    "level": "gcse",
+    "modes": []
+   }
+  },
+  {
+   "id": "venn",
+   "name": "Venn diagrams",
+   "marks": 4.2,
+   "series": 6,
+   "band": [
+    3,
+    4
+   ],
+   "route": {
+    "slug": "given-that",
+    "game": "Given That",
+    "level": "gcse",
+    "modes": [
+     "venn"
+    ]
+   }
+  },
+  {
+   "id": "simultaneous",
+   "name": "Simultaneous equations",
+   "marks": 4.2,
+   "series": 4,
+   "band": [
+    4,
+    5
+   ],
+   "route": {
+    "slug": "simultaneous-solver",
+    "game": "Simultaneous Solver",
+    "level": "gcse",
+    "modes": []
+   }
+  },
+  {
+   "id": "constructions",
+   "name": "Constructions",
+   "marks": 4.0,
+   "series": 6,
+   "band": [
+    3,
+    5
+   ],
+   "route": {
+    "slug": "constructions-lab",
+    "game": "Constructions Lab",
+    "level": "gcse",
+    "modes": []
+   }
+  },
+  {
+   "id": "transformations",
+   "name": "Transformations",
+   "marks": 4.0,
+   "series": 5,
+   "band": [
+    1,
+    4
+   ],
+   "route": {
+    "slug": "shape-shifter",
+    "game": "Shape Shifter",
+    "level": "year6",
+    "modes": []
+   }
+  },
+  {
+   "id": "simplify-expressions",
+   "name": "Simplifying expressions",
+   "marks": 3.7,
+   "series": 5,
+   "band": [
+    1,
+    3
+   ],
+   "route": {
+    "slug": "like-terms-collector",
+    "game": "Like Terms Collector",
+    "level": "year6",
+    "modes": []
+   }
+  },
+  {
+   "id": "basic-probability",
+   "name": "Probability",
+   "marks": 3.7,
+   "series": 5,
+   "band": [
+    1,
+    3
+   ],
+   "route": {
+    "slug": "probability-pioneer",
+    "game": "Probability Pioneer",
+    "level": "year6",
+    "modes": []
+   }
+  },
+  {
+   "id": "substitution",
+   "name": "Substitution",
+   "marks": 3.5,
+   "series": 5,
+   "band": [
+    1,
+    4
+   ],
+   "route": {
+    "slug": "formula-plug-in",
+    "game": "Formula Plug-In",
+    "level": "year6",
+    "modes": []
+   }
+  },
+  {
+   "id": "two-way-tables",
+   "name": "Two-way tables",
+   "marks": 3.5,
+   "series": 3,
+   "band": [
+    2,
+    4
+   ],
+   "route": {
+    "slug": "given-that",
+    "game": "Given That",
+    "level": "gcse",
+    "modes": [
+     "table"
+    ]
+   }
+  },
+  {
+   "id": "perimeter",
+   "name": "Perimeter",
+   "marks": 3.3,
+   "series": 4,
+   "band": [
+    1,
+    4
+   ],
+   "route": {
+    "slug": "take-a-walk",
+    "game": "Take a Walk",
+    "level": "ks3",
+    "modes": [
+     "stage-1"
+    ]
+   }
+  },
+  {
+   "id": "standard-form",
+   "name": "Standard form",
+   "marks": 3.2,
+   "series": 5,
+   "band": [
+    4,
+    5
+   ],
+   "route": {
+    "slug": "standard-form-blitz",
+    "game": "Standard Form Blitz",
+    "level": "gcse",
+    "modes": []
+   }
+  },
+  {
+   "id": "quadratics-factorise",
+   "name": "Factorising quadratics",
+   "marks": 3.0,
+   "series": 6,
+   "band": [
+    4,
+    5
+   ],
+   "route": {
+    "slug": "quadratic-factoriser",
+    "game": "Quadratic Factoriser",
+    "level": "gcse",
+    "modes": []
+   }
+  },
+  {
+   "id": "estimation",
+   "name": "Estimation",
+   "marks": 3.0,
+   "series": 5,
+   "band": [
+    2,
+    4
+   ],
+   "route": {
+    "slug": "estimation-engine",
+    "game": "Estimation Engine",
+    "level": "gcse",
+    "modes": []
+   }
+  },
+  {
+   "id": "metric-units",
+   "name": "Metric units",
+   "marks": 3.0,
+   "series": 4,
+   "band": [
+    1,
+    3
+   ],
+   "route": {
+    "slug": "unit-converter",
+    "game": "Unit Converter",
+    "level": "gcse",
+    "modes": []
+   }
+  },
+  {
+   "id": "vectors",
+   "name": "Vectors",
+   "marks": 2.8,
+   "series": 5,
+   "band": [
+    3,
+    4
+   ],
+   "route": {
+    "slug": "component-crusher",
+    "game": "Component Crusher",
+    "level": "gcse",
+    "modes": []
+   }
+  },
+  {
+   "id": "form-expressions",
+   "name": "Forming expressions and equations",
+   "marks": 2.7,
+   "series": 5,
+   "band": [
+    3,
+    4
+   ],
+   "route": {
+    "slug": "equation-builder",
+    "game": "Equation Builder",
+    "level": "ks3",
+    "modes": []
+   }
+  },
+  {
+   "id": "rounding",
+   "name": "Rounding",
+   "marks": 2.3,
+   "series": 5,
+   "band": [
+    1,
+    3
+   ],
+   "route": {
+    "slug": "decimal-detective",
+    "game": "Decimal Detective",
+    "level": "year6",
+    "modes": []
+   }
+  },
+  {
+   "id": "pythagoras",
+   "name": "Pythagoras' theorem",
+   "marks": 2.3,
+   "series": 3,
+   "band": [
+    4,
+    5
+   ],
+   "route": {
+    "slug": "just-pythag-it-bruv",
+    "game": "Just Pythag It, Bruv",
+    "level": "ks3",
+    "modes": []
+   }
+  },
+  {
+   "id": "change-subject",
+   "name": "Changing the subject",
+   "marks": 2.0,
+   "series": 5,
+   "band": [
+    4,
+    5
+   ],
+   "route": {
+    "slug": "formula-unlocked",
+    "game": "Formula Unlocked",
+    "level": "gcse",
+    "modes": []
+   }
+  },
+  {
+   "id": "coordinates",
+   "name": "Coordinates",
+   "marks": 1.8,
+   "series": 5,
+   "band": [
+    1,
+    2
+   ],
+   "route": {
+    "slug": "four-quadrant-explorer",
+    "game": "Four Quadrant Explorer",
+    "level": "year6",
+    "modes": []
+   }
+  }
+ ],
+ "coming_soon": [
+  {
+   "id": "everyday-multi-step",
+   "name": "Everyday multi-step problems",
+   "marks": 14.3,
+   "series": 6,
+   "planned": null
+  },
+  {
+   "id": "interest-depreciation",
+   "name": "Interest and depreciation",
+   "marks": 7.3,
+   "series": 6,
+   "planned": null
+  },
+  {
+   "id": "scatter-graphs",
+   "name": "Scatter graphs",
+   "marks": 6.2,
+   "series": 6,
+   "planned": null
+  },
+  {
+   "id": "percentage-change",
+   "name": "Percentage change",
+   "marks": 6.0,
+   "series": 6,
+   "planned": null
+  },
+  {
+   "id": "volume-surface-area",
+   "name": "Volume and surface area",
+   "marks": 5.5,
+   "series": 6,
+   "planned": null
+  },
+  {
+   "id": "hcf-lcm",
+   "name": "HCF and LCM",
+   "marks": 5.3,
+   "series": 6,
+   "planned": null
+  },
+  {
+   "id": "expand-factorise",
+   "name": "Expanding and factorising",
+   "marks": 5.3,
+   "series": 6,
+   "planned": "The HC Factor"
+  },
+  {
+   "id": "tree-diagrams",
+   "name": "Tree diagrams",
+   "marks": 5.3,
+   "series": 5,
+   "planned": null
+  },
+  {
+   "id": "bar-pictogram-line",
+   "name": "Bar charts, pictograms and line graphs",
+   "marks": 5.2,
+   "series": 5,
+   "planned": null
+  },
+  {
+   "id": "relative-frequency",
+   "name": "Relative frequency",
+   "marks": 4.8,
+   "series": 6,
+   "planned": null
+  },
+  {
+   "id": "straight-line-graphs",
+   "name": "Straight-line graphs",
+   "marks": 4.7,
+   "series": 6,
+   "planned": "Y So Steep?"
+  },
+  {
+   "id": "similarity-congruence",
+   "name": "Similarity and congruence",
+   "marks": 4.7,
+   "series": 6,
+   "planned": null
+  },
+  {
+   "id": "listing-outcomes",
+   "name": "Listing outcomes",
+   "marks": 4.5,
+   "series": 6,
+   "planned": null
+  },
+  {
+   "id": "scale-bearings",
+   "name": "Scale drawings and bearings",
+   "marks": 4.5,
+   "series": 5,
+   "planned": null
+  },
+  {
+   "id": "pie-charts",
+   "name": "Pie charts",
+   "marks": 4.0,
+   "series": 4,
+   "planned": "Who Ate All the Pies?"
+  },
+  {
+   "id": "2d-shapes",
+   "name": "2D shapes",
+   "marks": 3.8,
+   "series": 5,
+   "planned": null
+  },
+  {
+   "id": "quadratic-graphs",
+   "name": "Quadratic graphs",
+   "marks": 3.5,
+   "series": 5,
+   "planned": null
+  },
+  {
+   "id": "real-life-graphs",
+   "name": "Real-life graphs",
+   "marks": 3.2,
+   "series": 4,
+   "planned": null
+  },
+  {
+   "id": "3d-solids",
+   "name": "3D solids",
+   "marks": 3.0,
+   "series": 6,
+   "planned": null
+  },
+  {
+   "id": "bounds",
+   "name": "Bounds",
+   "marks": 2.8,
+   "series": 5,
+   "planned": null
+  },
+  {
+   "id": "inequalities",
+   "name": "Inequalities",
+   "marks": 2.5,
+   "series": 5,
+   "planned": null
+  },
+  {
+   "id": "enlargement",
+   "name": "Enlargement",
+   "marks": 1.7,
+   "series": 3,
+   "planned": null
+  }
+ ]
+}

@@ -3,6 +3,13 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-24 (cloud): SQS-SPACING (Jon's contract of 24 Oct, after his Stage 5 play-test; named here). **DONE (#514, c5554f8).** Main run 40094257443 was red: first group 21 failed uploading its timing artifact (ECONNRESET; its check passed); the one re-run then failed the timings job, which is this lane's fault (below).
+
+- **Why:** with the no-unit highlight on, the unit buttons touched (5.6 px apart, the outline reaching 9 px beyond each at the pulse's peak), and the message sat tight against the buttons and the Calculator toggle.
+- **Done (CSS only):** the unit row's gap is now 20 px both ways, so neighbours' outlines stay apart; narrow rows wrap, and every button stays at least 44 px. The no-unit line is always reserved, with 10 px above and 12 px below, so showing the message moves what follows by no more than its own height. Wording, colour and pulse are unchanged.
+- **Verifier:** at 1280 and 320 px with the highlight on, buttons are at least 8 px apart and more than twice the outline's reach (read from the page's keyframes); 10 px above the message and 12 px below; the jump no more than the message's height; no sideways scroll. Plants 11 -> 12 (no gap, caught).
+- **Main red, the cause:** the plant self-test (part 3) had grown to a 212 s median with every plant added (each one that plays the game replays it), over ci-groups' per-line limit, so the timings job's new pack failed `--check` and nothing was committed. **Fix:** the plants split across part 3 (every other one) and a new part 4, #515 (db4a59f), merged under Jon's override of 24 Oct 2026, 18:42; main run 40117385405 green, 60 of 60, the timings job included.
+
 ## 2026-10-24 (cloud): SQS-REAL-UNITS (Jon's contract of 24 Oct, after his play-test; named here). **DONE (#512, 13bab98; main run 40088694758 green, 60 of 60, started on the merge).**
 
 - **Why:** a nonsense unit inside a question confused students; squirrels stay in the title, the start screen's premise and the no-unit message only.
