@@ -1,5 +1,5 @@
 {
- "as_of": "2026-10-24T08:17:04+01:00",
+ "as_of": "2026-10-24T15:51:41+01:00",
  "games": {
   "52dle": 11,
   "angle-ace": 5,
@@ -80,8 +80,9 @@
   "split-it": 216,
   "spot-the-error": 13,
   "spot-the-muppet": 39,
+  "squared-squirrel": 34,
   "standard-form-blitz": 43,
-  "surd-simplifier": 217,
+  "surd-simplifier": 237,
   "suvat": 19,
   "take-a-walk": 13,
   "tax-theft": 64,
@@ -91,10 +92,10 @@
   "trig-identity-duel": 3,
   "trig-wars": 235,
   "truth-buster": 33,
-  "unit-converter": 506,
+  "unit-converter": 526,
   "word-problem-decoder": 29,
   "wrong-on-the-internet": 12
  },
  "since": "2026-09-01",
- "total": 16275
+ "total": 16349
 }
