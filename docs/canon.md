@@ -1396,7 +1396,7 @@ A figure on a page is a claim, so this one comes from one generated source and i
 counts Apps Script (`docs/apps-script-counts.js`, deployed by Jon, set up by `docs/apps-script-counts.md`) is a separate
 project that reads the analytics Sheet through the Sheets advanced service with the read-only scope, counts `question_answered`
 rows per `game_slug` since 1 September (Europe/London; the counts restart each 1 September), incrementally, and answers
-`{as_of, since, total, games}`. `.github/workflows/answer-counts.yml` fetches it daily, `scripts/fetch-answer-counts.py`
+`{as_of, since, total, games}`. `.github/workflows/answer-counts.yml` fetches it three times a day (cron `40 5,11,17 * * *`, UTC; Jon, 24 Oct 2026: GitHub started no scheduled run on the first morning, so there are three slots, and a run with unchanged figures commits nothing), `scripts/fetch-answer-counts.py`
 validates it, and `schools/assets/answer-counts.json` is committed with `[skip ci]`; a failed run leaves the file as it was.
 
 `schools/assets/answer-count.js` fills the start-screen mount (7.5.4) with that game's count from 1,000, and the
