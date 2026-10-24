@@ -800,8 +800,14 @@ PLANTS = [
 ]
 
 
-# The plants in two CI lines (24 Oct 2026: one line of all twelve took 212 s, over ci-groups' per-line limit): part 3 runs
-# every other plant from the first, part 4 the rest, so each gets two or three of the slow ones that play the game.
+# The plants in two CI lines (24 Oct 2026: one line of all twelve took 212 s, over ci-groups' per-line limit), balanced by
+# kind: the slow ones that play the game alternate between part 3 and part 4, and so do the quick ones.
+def plants_for(part):
+    heavy = [p for p in PLANTS if p[2] == 'play']
+    light = [p for p in PLANTS if p[2] != 'play']
+    return heavy[0::2] + light[1::2] if part == '3' else heavy[1::2] + light[0::2]
+
+
 def selftest(html, plants=None):
     ok = True
     for what, edits, kind, want in (PLANTS if plants is None else plants):
@@ -848,7 +854,7 @@ def main():
         print('%s: every stage played at %s' % (SLUG, ', '.join(info['played'])))
     ok = True
     if part in (None, '3', '4'):
-        ok = selftest(html, None if part is None else PLANTS[0::2] if part == '3' else PLANTS[1::2])
+        ok = selftest(html, None if part is None else plants_for(part))
     for f in out[:60]:
         print('FAIL  ' + f)
     if len(out) > 60:
