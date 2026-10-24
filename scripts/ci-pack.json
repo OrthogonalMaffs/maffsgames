@@ -147,7 +147,7 @@
   "Trig Identity Duel (every option read into SymPy: exactly one equals the key, compound-angle and triangle keys recomputed, marking in Chromium)": "35",
   "Trig Wars (each side scores its own hits; the trig panel's numbers agree; hits found along the path; miss advice true by the physics; briefing and SR-14 text)": "31",
   "Trig Worms (every generator outcome recomputed exactly, its diagram measured from the canvas, every option marked in Chromium)": "33",
-  "Truth Buster (every key reviewed against its statement's own words, SR-18; every reveal figure recomputed; all 60 played in Chromium)": "9",
+  "Truth Buster (every key reviewed against its statement's own words, SR-18; every reveal figure recomputed; all 60 played in Chromium)": "38",
   "UK rates module (unit tests against the gov.uk 2025/26 figures)": "16",
   "Unit Converter (every key recomputed from its prompt, exact pi; precision stated; displayed numbers comma-grouped, marking unchanged; answer once; level key; score by correct answers only; calculator on a phone)": "26",
   "Weekly facts \"Monty Hall\" (both Monty Hall cards show their summary and expanded text exactly, with the button and Share, at 320, 390 and 1280 px, with no overflow)": "25",
@@ -173,7 +173,7 @@
    "label": "Football Pitches per Squared Squirrel, part 3 (fault-injection self-test: eleven planted faults, each caught)",
    "median": 175,
    "percent": 71,
-   "setup": 19
+   "setup": 18
   }
  ]
 }
