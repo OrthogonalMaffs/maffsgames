@@ -189,6 +189,9 @@ def validate(q):
         f.append("calc")
     if re.search(r"<[a-zA-Z/]", q["stem"]) or "$" in q["stem"]:
         f.append("stem has HTML or $")
+    if (q["format"] in ("number", "number_unit") and "dp" not in q["answer"]
+            and re.search(r"decimal place|d\.p\.|significant figure|nearest", q["stem"], re.I)):
+        f.append("the stem states a rounding but the answer has no dp (schema: write dp on every such number answer)")
     if len(q["worked"]) > 5:
         f.append("worked has %d lines" % len(q["worked"]))
     for w in q["worked"] + [s["line"] for s in q["slip"]]:
