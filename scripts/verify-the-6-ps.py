@@ -451,15 +451,31 @@ async def burst_ctx(CB, browser, base):
 
 
 # A stage the game's lock hint was not written for (it plays the stage check-answer-lock.py plays). Simultaneous Solver's
-# hint answers Stage 1's first step (mult); Stage 4 opens with "Which letter will you eliminate?", a step the game does
-# not score (its scored() drops 'letter'), so the letter is chosen through the game's own SS.ui.choose and the hint's
-# answer then runs on the mult step as written.
+# hint answers Stage 1, a one-step problem (mult). A Stage 4 problem is six steps (letter, mult, op, combine, solve, sub)
+# and is marked only when the last closes (problemDone, state 'feedback'), so one answer walks every step through the
+# game's own controls: the letter and the operation by SS.ui.choose, each typed step by SS.ui.type and Check, and a
+# wrong step's Next; it ends when the problem is marked. The values are fixed, so most steps are wrong: what is checked
+# here is the burst's count and return, not the student's maths.
+SS_WALK = """return new Promise(res => { const t0 = Date.now(); (function w() {
+  const s = SS.ui.state();
+  if (s === 'feedback') { res(); return; }
+  if (s === 'letter') SS.ui.choose('x');
+  else if (s === 'op') SS.ui.choose('add');
+  else if (s === 'mult' || s === 'combine' || s === 'solve' || s === 'sub') {
+    const n = document.getElementById('stepBody').querySelectorAll('input').length;
+    SS.ui.type(Array(n).fill('7')); document.getElementById('checkBtn').click();
+  } else if (s === 'stepfb') {
+    const b = document.querySelector('#feedback .maffs-next'); if (b && !b.disabled) b.click();
+  }
+  if (Date.now() - t0 < 20000) setTimeout(w, 150); else res(); })(); });"""
+
+
 def _ss_stage(stage, hint):
     if not stage or stage == 'stage1':
         return hint
     h = dict(hint)
-    h['ready'] = "!!window.SS && (SS.ui.state() === 'mult' || SS.ui.state() === 'letter')"
-    h['answer'] = "if (SS.ui.state() === 'letter') SS.ui.choose('x');\n" + hint['answer']
+    h['ready'] = "!!window.SS && (SS.ui.state() === 'letter' || SS.ui.state() === 'mult')"
+    h['answer'] = SS_WALK
     return h
 
 
