@@ -3,6 +3,13 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-25 (cloud): SHAPE-SHIFTER-DATA-MODE (contract: see the queue). **DONE (#526, 10c1921).** Main run 40179130126 red on the timings job alone (entry above).
+
+- **Why:** a burst opens a game at a mode by pressing `[data-mode="<name>"]` once (burst.js); Shape Shifter's four mode cards were bare `onclick` cards, so a burst from The 6 P's landed on the menu.
+- **Done:** `data-mode` on the four cards (`translation`, `reflection`, `rotation`, `random-mix`); `onclick`, look and order unchanged. STOP IF checked: each card has its own `onclick` (no shared or delegated handler), and `startGame('mix')` is the whole of Random Mix's setup, so one press starts it once.
+- **Verifier** (`verify-shape-shifter.py`): each card's `data-mode` names its own `onclick` mode, in order; `?burst=5&from=six-ps&topic=transformations&mode=random-mix` starts Random Mix once (`selectedMode`, the game screen, one `game_started` with mode `mix`); without a burst nothing is pressed and each card, clicked, starts its own mode once. Plants 12 -> 14 (the Random Mix card without its attribute; a card naming another mode), both caught. The card checks run only in the main run and their two plants (about 148 s in CI, 61% of its budget).
+- **Claim:** Shape Shifter added to `cloud-remaining` in its own commit, removed in this PR.
+
 ## 2026-10-24 (cloud): SQS-LIST (Jon's contract of 24 Oct, 19:02, "lets set it live please"; named here). **DONE (#519, 840655a; main run 40122839801 green, 59 of 59, started on the merge).** Live checks for Project Claude (this container cannot reach the site). Local leftover: branch `claude/sqs-list-wip` (never pushed; its commit went in as #519), its worktree removed.
 
 - **Lane exception (Jon, 24 Oct 2026, 19:02):** the cloud lane edits the home-lane files this contract names, for this PR only; recorded here and in the PR, not in `docs/handover/home.md`.

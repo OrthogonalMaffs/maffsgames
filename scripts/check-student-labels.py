@@ -37,7 +37,8 @@ from html.parser import HTMLParser
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 LABEL = re.compile(r'\b(re-?sits?|re-?takes?|post-?16)\b', re.I)
-PORTALS = ['index.html', 'escape-rooms/index.html', 'op/index.html', 'essentials/index.html', 'updates/index.html']
+PORTALS = ['index.html', 'escape-rooms/index.html', 'op/index.html', 'essentials/index.html', 'updates/index.html',
+           'the-6-ps/index.html']
 SURFACES = ['games/**/index.html', 'escape-rooms/*/index.html']
 META = re.compile(r'^(description|og:.*|twitter:.*)$', re.I)
 SHOWN_ATTRS = ('alt', 'title', 'aria-label', 'placeholder')

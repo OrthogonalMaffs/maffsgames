@@ -60,6 +60,7 @@ GLOBS = ("games/**/*.html", "games/**/*.js", "escape-rooms/**/*.html", "escape-r
          # and the rest are read too). Games and escape rooms stay first; a file is read once.
          "*.html", "essentials/**/*.html", "resit/**/*.html", "op/**/*.html", "parents/**/*.html",
          "spec-map/**/*.html", "year6/**/*.html", "6-7/**/*.html", "about/**/*.html", "updates/**/*.html",
+         "the-6-ps/**/*.html",
          "leaderboards/**/*.html", "privacy/**/*.html", "feedback/**/*.html", "schools/**/*.html",
          "schools/assets/*.js")
 
