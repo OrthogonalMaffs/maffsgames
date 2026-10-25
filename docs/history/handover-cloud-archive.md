@@ -3,7 +3,7 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
-## 2026-10-24 (cloud): THE-6-PS (contract and rulings: see the queue). **DONE (#531, 88f5238; main run 40190498252 green, 66 of 66, started on the merge).** Merged unlisted for Jon to play at https://maffsgames.co.uk/the-6-ps/; listing (the 100th item) after he plays it.
+## 2026-10-24 (cloud): THE-6-PS (contract and rulings: see the queue). **DONE (#531, 88f5238; main run 40190498252 green, 66 of 66).** Live unlisted at https://maffsgames.co.uk/the-6-ps/. **Superseded (Jon, 25 Oct):** v2 is rebuilt self-contained (queue); this burst-based v1 is not listed.
 
 - **Lane exception (Jon, 24 Oct 2026):** the cloud lane creates `/the-6-ps/` and `schools/assets/exam-topics-ocr-foundation.json`, and registers the page where new pages are registered, for this PR only; recorded here and in the PR only.
 - **Built:** `scripts/gen-exam-topics.py` (the one typed copy of the audit; game names from the roster) writes the data file (32 covered, 168.6 marks; 25 coming soon). Page: noindex + UNLISTED, portal palette, the essentials header and footer; types no figure. Sessions: inclusion exactly 6 x marks / total (systematic sampling when storage is blocked; a per-device credit rotation otherwise); ordered by Jon's bands (`band`, never shown). Session kept in localStorage, else `window.name`.
