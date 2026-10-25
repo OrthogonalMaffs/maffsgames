@@ -67,6 +67,7 @@ MIGRATED = [
     "correlation-or-coincidence",  # rebuilt to the theme, 4 Oct 2026 (resit audit rebuild)
     "estimation-engine",  # rebuilt to the theme, 5 Oct 2026 (SR-12 rebuild)
     "factor-race",  # migrated 25 Oct 2026 (contract THEME-FR-DA)
+    "distinctly-average",  # migrated 25 Oct 2026 (contract LOOK-REDS-2)
     "simultaneous-solver",  # rebuilt to the theme, 6 Oct 2026 (staged elimination; the keypad and the calculator badge live in theme.css)
 ]
 NOT_YET = [
@@ -77,7 +78,7 @@ NOT_YET = [
     "wrong-on-the-internet", "maths-court", "expected-damage", "negative-number-line",
     "think-of-a-number", "formula-plug-in", "decimal-detective", "four-quadrant-explorer",
     "like-terms-collector", "probability-pioneer", "shape-shifter", "new-shapes", "higher-power",
-    "prisoners-dilemma", "seven-bridges", "distinctly-average",
+    "prisoners-dilemma", "seven-bridges",
     "index-laws", "quadratic-factoriser", "trig-wars", "trig-worms", "modular-battle",
     "surd-simplifier", "proportion-blaster", "trig-identity-duel", "standard-form-blitz",
     "circle-theorem-spotter", "probability-paradox", "angle-ace",
