@@ -1,0 +1,1285 @@
+{
+ "topic": "change-subject",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "change-subject-515115a4",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[0]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(u\\) the subject of \\(v = u + at\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(u = \\frac{v}{at}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(u = v + at\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(u = at - v\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(u = v - at\\)"
+    }
+   ],
+   "worked": [
+    "\\(v = u + at\\)",
+    "\\(v - at = u\\)",
+    "\\(u = v - at\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-07f62955",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[1]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(m\\) the subject of \\(F = ma\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(m = F - a\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(m = \\frac{a}{F}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(m = \\frac{F}{a}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(m = Fa\\)"
+    }
+   ],
+   "worked": [
+    "\\(F = ma\\)",
+    "\\(\\frac{F}{a} = m\\)",
+    "\\(m = \\frac{F}{a}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-008b7297",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[2]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(I\\) the subject of \\(P = IV\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(I = \\frac{P}{V}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(I = P - V\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(I = \\frac{V}{P}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(I = PV\\)"
+    }
+   ],
+   "worked": [
+    "\\(P = IV\\)",
+    "\\(\\frac{P}{V} = I\\)",
+    "\\(I = \\frac{P}{V}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-d60a3732",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[3]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(s\\) the subject of \\(d = st\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(s = \\frac{d}{t}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(s = d - t\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(s = \\frac{t}{d}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(s = dt\\)"
+    }
+   ],
+   "worked": [
+    "\\(d = st\\)",
+    "\\(\\frac{d}{t} = s\\)",
+    "\\(s = \\frac{d}{t}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-6822aa1d",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[4]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(d\\) the subject of \\(C = \\pi d\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(d = C\\pi\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(d = \\frac{\\pi}{C}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(d = \\frac{C}{\\pi}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(d = C - \\pi\\)"
+    }
+   ],
+   "worked": [
+    "\\(C = \\pi d\\)",
+    "\\(d = \\frac{C}{\\pi}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-307d991d",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[5]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(c\\) the subject of \\(y = mx + c\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(c = y + mx\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(c = \\frac{y}{mx}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(c = mx - y\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(c = y - mx\\)"
+    }
+   ],
+   "worked": [
+    "\\(y = mx + c\\)",
+    "\\(y - mx = c\\)",
+    "\\(c = y - mx\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-d4de225a",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[6]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(R\\) the subject of \\(V = IR\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(R = \\frac{V}{I}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(R = V - I\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(R = \\frac{I}{V}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(R = VI\\)"
+    }
+   ],
+   "worked": [
+    "\\(V = IR\\)",
+    "\\(R = \\frac{V}{I}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-3d706c8b",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[7]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(g\\) the subject of \\(W = mg\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(g = \\frac{m}{W}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(g = Wm\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(g = \\frac{W}{m}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(g = W - m\\)"
+    }
+   ],
+   "worked": [
+    "\\(W = mg\\)",
+    "\\(g = \\frac{W}{m}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-f1de87cb",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[8]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(F\\) the subject of \\(p = \\frac{F}{A}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(F = p + A\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(F = pA\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(F = \\frac{A}{p}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(F = \\frac{p}{A}\\)"
+    }
+   ],
+   "worked": [
+    "\\(p = \\frac{F}{A}\\)",
+    "\\(pA = F\\)",
+    "\\(F = pA\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-e5bca59a",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[9]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(m\\) the subject of \\(\\rho = \\frac{m}{V}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(m = \\rho V\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(m = \\rho + V\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(m = \\frac{\\rho}{V}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(m = \\frac{V}{\\rho}\\)"
+    }
+   ],
+   "worked": [
+    "\\(\\rho = \\frac{m}{V}\\)",
+    "\\(m = \\rho V\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-178be64b",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[11]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(a\\) the subject of \\(v = u + at\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(a = \\frac{v - u}{t}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(a = (v - u)t\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(a = \\frac{v + u}{t}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(a = \\frac{v}{u + t}\\)"
+    }
+   ],
+   "worked": [
+    "\\(v - u = at\\)",
+    "\\(a = \\frac{v - u}{t}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-55f879e2",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[12]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(x\\) the subject of \\(y = mx + c\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = \\frac{y + c}{m}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = \\frac{y}{m} - c\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = \\frac{y - c}{m}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = m(y - c)\\)"
+    }
+   ],
+   "worked": [
+    "\\(y - c = mx\\)",
+    "\\(x = \\frac{y - c}{m}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-832b04ab",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[13]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(t\\) the subject of \\(P = \\frac{E}{t}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(t = E - P\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(t = EP\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(t = \\frac{P}{E}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(t = \\frac{E}{P}\\)"
+    }
+   ],
+   "worked": [
+    "\\(Pt = E\\)",
+    "\\(t = \\frac{E}{P}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-83e661e4",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[14]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(a\\) the subject of \\(s = \\frac{1}{2}at^2\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(a = 2st^2\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(a = \\frac{s}{t^2}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(a = \\frac{2s}{t^2}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(a = \\frac{s}{2t^2}\\)"
+    }
+   ],
+   "worked": [
+    "\\(2s = at^2\\)",
+    "\\(a = \\frac{2s}{t^2}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-46f327fa",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[15]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(h\\) the subject of \\(A = \\frac{1}{2}bh\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(h = \\frac{A}{2b}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(h = 2Ab\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(h = \\frac{Ab}{2}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(h = \\frac{2A}{b}\\)"
+    }
+   ],
+   "worked": [
+    "\\(2A = bh\\)",
+    "\\(h = \\frac{2A}{b}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-caa4b9db",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[16]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(\\Delta T\\) the subject of \\(Q = mc\\Delta T\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\Delta T = Qmc\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\Delta T = \\frac{mc}{Q}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\Delta T = \\frac{Q}{mc}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\Delta T = Q - mc\\)"
+    }
+   ],
+   "worked": [
+    "\\(Q = mc\\Delta T\\)",
+    "\\(\\Delta T = \\frac{Q}{mc}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-5213a314",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[17]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(s\\) the subject of \\(v^2 = u^2 + 2as\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(s = \\frac{v^2 - u^2}{2a}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(s = \\frac{v^2 + u^2}{2a}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(s = \\frac{v - u}{2a}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(s = 2a(v^2 - u^2)\\)"
+    }
+   ],
+   "worked": [
+    "\\(v^2 - u^2 = 2as\\)",
+    "\\(s = \\frac{v^2 - u^2}{2a}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-871863fe",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[18]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Make \\(v\\) the subject of \\(E = \\frac{1}{2}mv^2\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(v = \\frac{E}{2m}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(v = \\sqrt{\\frac{2E}{m}}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(v = \\frac{\\sqrt{2E}}{m}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(v = \\frac{2E}{m}\\)"
+    }
+   ],
+   "worked": [
+    "\\(2E = mv^2\\)",
+    "\\(\\frac{2E}{m} = v^2\\)",
+    "\\(v = \\sqrt{\\frac{2E}{m}}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-94ccd751",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[19]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Make \\(r\\) the subject of \\(A = \\pi r^2\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(r = \\frac{A}{2\\pi}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(r = \\sqrt{\\frac{A}{\\pi}}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(r = \\frac{A}{\\pi}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(r = \\frac{\\sqrt{A}}{\\pi}\\)"
+    }
+   ],
+   "worked": [
+    "\\(\\frac{A}{\\pi} = r^2\\)",
+    "\\(r = \\sqrt{\\frac{A}{\\pi}}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-f71048f9",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[20]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Make \\(l\\) the subject of \\(T = 2\\pi\\sqrt{\\frac{l}{g}}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(l = \\frac{gT}{2\\pi}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(l = \\frac{gT^2}{4\\pi^2}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(l = \\frac{T^2 g}{2\\pi}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(l = \\frac{T^2}{4\\pi^2 g}\\)"
+    }
+   ],
+   "worked": [
+    "\\(\\frac{T}{2\\pi} = \\sqrt{\\frac{l}{g}}\\)",
+    "\\(\\frac{T^2}{4\\pi^2} = \\frac{l}{g}\\)",
+    "\\(l = \\frac{gT^2}{4\\pi^2}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-6f116bf9",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[21]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Make \\(a\\) the subject of \\(c^2 = a^2 + b^2\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(a = c^2 - b^2\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(a = \\sqrt{c^2 - b^2}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(a = c - b\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(a = \\sqrt{c^2 + b^2}\\)"
+    }
+   ],
+   "worked": [
+    "\\(c^2 - b^2 = a^2\\)",
+    "\\(a = \\sqrt{c^2 - b^2}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-9580c12b",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[22]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Make \\(r\\) the subject of \\(V = \\frac{4}{3}\\pi r^3\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(r = \\sqrt{\\frac{3V}{4\\pi}}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(r = \\sqrt[3]{\\frac{4V}{3\\pi}}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(r = \\sqrt[3]{\\frac{3V}{4\\pi}}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(r = \\frac{3V}{4\\pi}\\)"
+    }
+   ],
+   "worked": [
+    "\\(\\frac{3V}{4\\pi} = r^3\\)",
+    "\\(r = \\sqrt[3]{\\frac{3V}{4\\pi}}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-0fbb7c84",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[23]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Make \\(v\\) the subject of \\(v^2 = u^2 + 2as\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(v = \\sqrt{u^2 + as}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(v = \\sqrt{u^2 + 2as}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(v = u^2 + 2as\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(v = u + \\sqrt{2as}\\)"
+    }
+   ],
+   "worked": [
+    "\\(v^2 = u^2 + 2as\\)",
+    "\\(v = \\sqrt{u^2 + 2as}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-6413cd5a",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[24]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Make \\(I\\) the subject of \\(P = I^2 R\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(I = \\sqrt{\\frac{P}{R}}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(I = \\frac{\\sqrt{P}}{R}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(I = \\frac{P}{R}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(I = \\frac{P}{R^2}\\)"
+    }
+   ],
+   "worked": [
+    "\\(\\frac{P}{R} = I^2\\)",
+    "\\(I = \\sqrt{\\frac{P}{R}}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-56f632c7",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[25]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Make \\(x\\) the subject of \\(ax + b = cx + d\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = (a - c)(d - b)\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = \\frac{b - d}{a - c}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = \\frac{d + b}{a + c}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = \\frac{d - b}{a - c}\\)"
+    }
+   ],
+   "worked": [
+    "\\(ax - cx = d - b\\)",
+    "\\(x(a - c) = d - b\\)",
+    "\\(x = \\frac{d - b}{a - c}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-c4c49bec",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[26]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Make \\(x\\) the subject of \\(y = \\frac{x + 1}{x - 1}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = \\frac{y + 1}{y - 1}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = \\frac{1 + y}{1 - y}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = \\frac{y - 1}{y + 1}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = y(x - 1) + 1\\)"
+    }
+   ],
+   "worked": [
+    "\\(y(x - 1) = x + 1\\)",
+    "\\(yx - y = x + 1\\)",
+    "\\(yx - x = y + 1\\)",
+    "\\(x(y - 1) = y + 1\\)",
+    "\\(x = \\frac{y + 1}{y - 1}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-80591a09",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[27]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Make \\(f\\) the subject of \\(\\frac{1}{u} + \\frac{1}{v} = \\frac{1}{f}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(f = u + v\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(f = \\frac{u + v}{uv}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(f = \\frac{uv}{u + v}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(f = \\frac{1}{u + v}\\)"
+    }
+   ],
+   "worked": [
+    "\\(\\frac{1}{f} = \\frac{1}{u} + \\frac{1}{v} = \\frac{u + v}{uv}\\)",
+    "\\(f = \\frac{uv}{u + v}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-0d49add3",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[28]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Make \\(r\\) the subject of \\(S = \\frac{a}{1 - r}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(r = 1 - \\frac{a}{S}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(r = 1 + \\frac{a}{S}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(r = \\frac{S - a}{a}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(r = \\frac{a - S}{S}\\)"
+    }
+   ],
+   "worked": [
+    "\\(S(1 - r) = a\\)",
+    "\\(1 - r = \\frac{a}{S}\\)",
+    "\\(r = 1 - \\frac{a}{S}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-df30f7fe",
+   "topic": "change-subject",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:change-subject-01"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(x\\) the subject of \\(y = 4x - 7\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = \\frac{y - 7}{4}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = \\frac{y + 7}{4}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = \\frac{y}{4} + 7\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 4y + 7\\)"
+    }
+   ],
+   "worked": [
+    "Add 7 to both sides: \\(y + 7 = 4x\\).",
+    "Divide both sides by 4: \\(x = \\frac{y + 7}{4}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "To undo \\(-7\\), add 7 to both sides."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Add 7 before dividing by 4."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "To undo \\(\\times 4\\), divide by 4."
+    }
+   ]
+  },
+  {
+   "id": "change-subject-51b8a643",
+   "topic": "change-subject",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:change-subject-02"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(r\\) the subject of \\(C = 2\\pi r\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(r = C - 2\\pi\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(r = \\frac{C}{2\\pi}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(r = \\frac{C\\pi}{2}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(r = 2\\pi C\\)"
+    }
+   ],
+   "worked": [
+    "\\(C = 2\\pi r\\) means \\(2\\pi\\) times \\(r\\).",
+    "Divide both sides by \\(2\\pi\\): \\(r = \\frac{C}{2\\pi}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "\\(2\\pi r\\) is \\(2\\pi\\) times \\(r\\), so divide."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Divide by the whole of \\(2\\pi\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "To undo \\(\\times 2\\pi\\), divide by \\(2\\pi\\)."
+    }
+   ]
+  },
+  {
+   "id": "change-subject-2f4615b7",
+   "topic": "change-subject",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:change-subject-03"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Make \\(t\\) the subject of \\(v = u + at\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(t = a(v - u)\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(t = \\frac{v}{a} - u\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(t = \\frac{v - u}{a}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(t = \\frac{v + u}{a}\\)"
+    }
+   ],
+   "worked": [
+    "Take \\(u\\) from both sides: \\(v - u = at\\).",
+    "Divide both sides by \\(a\\): \\(t = \\frac{v - u}{a}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "To undo \\(\\times a\\), divide by \\(a\\)."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Take \\(u\\) away before dividing by \\(a\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "To undo \\(+u\\), take \\(u\\) away from both sides."
+    }
+   ]
+  }
+ ]
+}
