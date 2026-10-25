@@ -1,0 +1,3666 @@
+{
+ "topic": "fraction-operations",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "fraction-operations-3a7ce3d2",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:0"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{2} + \\frac{1}{3}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{1}{3}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{5}{6}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{2}{5}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{1}{6}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
+    "You can only add pieces the same size: cut each half into 3 and each third into 2. Both are now sixths.",
+    "\\(\\frac{1}{2}\\) is 3 pieces, \\(\\frac{1}{3}\\) is 2: 3 + 2 = 5, so \\(\\frac{5}{6}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You took away instead of adding."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-3adfd2b5",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:1"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{2} + \\frac{1}{5}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{2}{7}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{1}{5}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{7}{10}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{3}{10}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "\\(\\frac{1}{5}\\): cut a bar into 5, take 1.",
+    "You can only add pieces the same size: cut each half into 5 and each fifth into 2. Both are now tenths.",
+    "\\(\\frac{1}{2}\\) is 5 pieces, \\(\\frac{1}{5}\\) is 2: 5 + 2 = 7, so \\(\\frac{7}{10}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-189a14a4",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:3"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{2} + \\frac{1}{7}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{5}{14}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{2}{9}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{1}{7}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{9}{14}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "\\(\\frac{1}{7}\\): cut a bar into 7, take 1.",
+    "You can only add pieces the same size: cut each half into 7 and each seventh into 2. Both are now fourteenths.",
+    "\\(\\frac{1}{2}\\) is 7 pieces, \\(\\frac{1}{7}\\) is 2: 7 + 2 = 9, so \\(\\frac{9}{14}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-2c433d29",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:5"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{2} + \\frac{3}{7}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{4}{9}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{13}{14}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{1}{14}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{2}{7}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "\\(\\frac{3}{7}\\): cut a bar into 7, take 3.",
+    "You can only add pieces the same size: cut each half into 7 and each seventh into 2. Both are now fourteenths.",
+    "\\(\\frac{1}{2}\\) is 7 pieces, \\(\\frac{3}{7}\\) is 6: 7 + 6 = 13, so \\(\\frac{13}{14}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-bc7ee4b3",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:7"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{2} + \\frac{2}{9}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{13}{18}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{5}{18}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{3}{11}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{1}{6}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "\\(\\frac{2}{9}\\): cut a bar into 9, take 2.",
+    "You can only add pieces the same size: cut each half into 9 and each ninth into 2. Both are now eighteenths.",
+    "\\(\\frac{1}{2}\\) is 9 pieces, \\(\\frac{2}{9}\\) is 4: 9 + 4 = 13, so \\(\\frac{13}{18}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You added the tops and the bottoms."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-9a5ad9a4",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:8"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{2} + \\frac{4}{9}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{17}{18}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{1}{18}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{5}{18}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{5}{11}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "\\(\\frac{4}{9}\\): cut a bar into 9, take 4.",
+    "You can only add pieces the same size: cut each half into 9 and each ninth into 2. Both are now eighteenths.",
+    "\\(\\frac{1}{2}\\) is 9 pieces, \\(\\frac{4}{9}\\) is 8: 9 + 8 = 17, so \\(\\frac{17}{18}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-eb05362c",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:10"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{2} + \\frac{2}{11}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{3}{22}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{3}{13}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{7}{22}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{15}{22}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "\\(\\frac{2}{11}\\): cut a bar into 11, take 2.",
+    "You can only add pieces the same size: cut each half into 11 and each eleventh into 2. Both are now twenty-seconds.",
+    "\\(\\frac{1}{2}\\) is 11 pieces, \\(\\frac{2}{11}\\) is 4: 11 + 4 = 15, so \\(\\frac{15}{22}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-9a89b5e9",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:11"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{2} + \\frac{3}{11}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{17}{22}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{2}{11}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{5}{22}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{4}{13}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "\\(\\frac{3}{11}\\): cut a bar into 11, take 3.",
+    "You can only add pieces the same size: cut each half into 11 and each eleventh into 2. Both are now twenty-seconds.",
+    "\\(\\frac{1}{2}\\) is 11 pieces, \\(\\frac{3}{11}\\) is 6: 11 + 6 = 17, so \\(\\frac{17}{22}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-551812b5",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:13"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{2} + \\frac{5}{11}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{3}{11}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{1}{22}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{21}{22}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{6}{13}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "\\(\\frac{5}{11}\\): cut a bar into 11, take 5.",
+    "You can only add pieces the same size: cut each half into 11 and each eleventh into 2. Both are now twenty-seconds.",
+    "\\(\\frac{1}{2}\\) is 11 pieces, \\(\\frac{5}{11}\\) is 10: 11 + 10 = 21, so \\(\\frac{21}{22}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You took away instead of adding."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-3c8a37dd",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:14"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{3} + \\frac{1}{2}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{2}{5}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{1}{6}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{5}{6}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{1}{3}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "You can only add pieces the same size: cut each third into 2 and each half into 3. Both are now sixths.",
+    "\\(\\frac{1}{3}\\) is 2 pieces, \\(\\frac{1}{2}\\) is 3: 2 + 3 = 5, so \\(\\frac{5}{6}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You added the tops and the bottoms."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-9406bf01",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:16"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{2}{3} + \\frac{1}{4}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{11}{12}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{1}{4}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{3}{7}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{5}{12}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{2}{3}\\): cut a bar into 3, take 2.",
+    "\\(\\frac{1}{4}\\): cut a bar into 4, take 1.",
+    "You can only add pieces the same size: cut each third into 4 and each quarter into 3. Both are now twelfths.",
+    "\\(\\frac{2}{3}\\) is 8 pieces, \\(\\frac{1}{4}\\) is 3: 8 + 3 = 11, so \\(\\frac{11}{12}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-ea3461f1",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:19"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{3} + \\frac{2}{5}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{11}{15}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{1}{15}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{3}{8}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{1}{5}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
+    "\\(\\frac{2}{5}\\): cut a bar into 5, take 2.",
+    "You can only add pieces the same size: cut each third into 5 and each fifth into 3. Both are now fifteenths.",
+    "\\(\\frac{1}{3}\\) is 5 pieces, \\(\\frac{2}{5}\\) is 6: 5 + 6 = 11, so \\(\\frac{11}{15}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-1732dcb9",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:23"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{3} + \\frac{1}{7}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{4}{21}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{2}{21}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{1}{5}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{10}{21}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
+    "\\(\\frac{1}{7}\\): cut a bar into 7, take 1.",
+    "You can only add pieces the same size: cut each third into 7 and each seventh into 3. Both are now twenty-firsts.",
+    "\\(\\frac{1}{3}\\) is 7 pieces, \\(\\frac{1}{7}\\) is 3: 7 + 3 = 10, so \\(\\frac{10}{21}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-97db301b",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:24"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{3} + \\frac{2}{7}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{1}{21}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{13}{21}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{1}{7}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{3}{10}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
+    "\\(\\frac{2}{7}\\): cut a bar into 7, take 2.",
+    "You can only add pieces the same size: cut each third into 7 and each seventh into 3. Both are now twenty-firsts.",
+    "\\(\\frac{1}{3}\\) is 7 pieces, \\(\\frac{2}{7}\\) is 6: 7 + 6 = 13, so \\(\\frac{13}{21}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-86e49f3e",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:27"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{2}{3} + \\frac{1}{7}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{3}{10}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{17}{21}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{11}{21}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{1}{7}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{2}{3}\\): cut a bar into 3, take 2.",
+    "\\(\\frac{1}{7}\\): cut a bar into 7, take 1.",
+    "You can only add pieces the same size: cut each third into 7 and each seventh into 3. Both are now twenty-firsts.",
+    "\\(\\frac{2}{3}\\) is 14 pieces, \\(\\frac{1}{7}\\) is 3: 14 + 3 = 17, so \\(\\frac{17}{21}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-da5c1618",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:29"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{2}{3} + \\frac{2}{7}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{20}{21}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{4}{21}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{2}{5}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{8}{21}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{2}{3}\\): cut a bar into 3, take 2.",
+    "\\(\\frac{2}{7}\\): cut a bar into 7, take 2.",
+    "You can only add pieces the same size: cut each third into 7 and each seventh into 3. Both are now twenty-firsts.",
+    "\\(\\frac{2}{3}\\) is 14 pieces, \\(\\frac{2}{7}\\) is 6: 14 + 6 = 20, so \\(\\frac{20}{21}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-59e8fa20",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:31"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{3} + \\frac{3}{8}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{17}{24}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{1}{6}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{1}{24}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{4}{11}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
+    "\\(\\frac{3}{8}\\): cut a bar into 8, take 3.",
+    "You can only add pieces the same size: cut each third into 8 and each eighth into 3. Both are now twenty-fourths.",
+    "\\(\\frac{1}{3}\\) is 8 pieces, \\(\\frac{3}{8}\\) is 9: 8 + 9 = 17, so \\(\\frac{17}{24}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-2b6cdeaf",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:32"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{3} + \\frac{5}{8}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{7}{24}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{6}{11}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{1}{4}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{23}{24}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
+    "\\(\\frac{5}{8}\\): cut a bar into 8, take 5.",
+    "You can only add pieces the same size: cut each third into 8 and each eighth into 3. Both are now twenty-fourths.",
+    "\\(\\frac{1}{3}\\) is 8 pieces, \\(\\frac{5}{8}\\) is 15: 8 + 15 = 23, so \\(\\frac{23}{24}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You added the tops and the bottoms."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-9e7f7727",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:35"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{4} + \\frac{1}{3}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{1}{12}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{7}{12}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{1}{6}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{2}{7}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{4}\\): cut a bar into 4, take 1.",
+    "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
+    "You can only add pieces the same size: cut each quarter into 3 and each third into 4. Both are now twelfths.",
+    "\\(\\frac{1}{4}\\) is 3 pieces, \\(\\frac{1}{3}\\) is 4: 3 + 4 = 7, so \\(\\frac{7}{12}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-a0c324de",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:37"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\frac{3}{4} - \\frac{1}{3}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(2\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{5}{12}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{13}{12}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{1}{6}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{3}{4}\\): cut a bar into 4, take 3.",
+    "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
+    "You can only take away pieces the same size: cut each quarter into 3 and each third into 4. Both are now twelfths.",
+    "\\(\\frac{3}{4}\\) is 9 pieces, \\(\\frac{1}{3}\\) is 4: 9 − 4 = 5, so \\(\\frac{5}{12}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You added instead of taking away."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You changed the bottom but not the top."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You took away the tops and the bottoms."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-8c288242",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:38"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{4} + \\frac{1}{5}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{2}{9}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{1}{20}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{9}{20}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{1}{10}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{4}\\): cut a bar into 4, take 1.",
+    "\\(\\frac{1}{5}\\): cut a bar into 5, take 1.",
+    "You can only add pieces the same size: cut each quarter into 5 and each fifth into 4. Both are now twentieths.",
+    "\\(\\frac{1}{4}\\) is 5 pieces, \\(\\frac{1}{5}\\) is 4: 5 + 4 = 9, so \\(\\frac{9}{20}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-782957ee",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:40"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{4} + \\frac{3}{5}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{1}{5}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{4}{9}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{7}{20}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{17}{20}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{4}\\): cut a bar into 4, take 1.",
+    "\\(\\frac{3}{5}\\): cut a bar into 5, take 3.",
+    "You can only add pieces the same size: cut each quarter into 5 and each fifth into 4. Both are now twentieths.",
+    "\\(\\frac{1}{4}\\) is 5 pieces, \\(\\frac{3}{5}\\) is 12: 5 + 12 = 17, so \\(\\frac{17}{20}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You took away instead of adding."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-29aeb9de",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:44"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{5} + \\frac{1}{2}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{7}{10}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{1}{5}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{2}{7}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{3}{10}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{5}\\): cut a bar into 5, take 1.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "You can only add pieces the same size: cut each fifth into 2 and each half into 5. Both are now tenths.",
+    "\\(\\frac{1}{5}\\) is 2 pieces, \\(\\frac{1}{2}\\) is 5: 2 + 5 = 7, so \\(\\frac{7}{10}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You took away instead of adding."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-9cce914c",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:45"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{2}{5} + \\frac{1}{2}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{3}{10}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{9}{10}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{1}{10}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{3}{7}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{2}{5}\\): cut a bar into 5, take 2.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "You can only add pieces the same size: cut each fifth into 2 and each half into 5. Both are now tenths.",
+    "\\(\\frac{2}{5}\\) is 4 pieces, \\(\\frac{1}{2}\\) is 5: 4 + 5 = 9, so \\(\\frac{9}{10}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-cf55784e",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:46"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\frac{3}{5} - \\frac{1}{2}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{1}{10}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{11}{10}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{2}{3}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{1}{5}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{3}{5}\\): cut a bar into 5, take 3.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "You can only take away pieces the same size: cut each fifth into 2 and each half into 5. Both are now tenths.",
+    "\\(\\frac{3}{5}\\) is 6 pieces, \\(\\frac{1}{2}\\) is 5: 6 − 5 = 1, so \\(\\frac{1}{10}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You changed the bottom but not the top."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You added instead of taking away."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You took away the tops and the bottoms."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-93fd0eb5",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:49"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{2}{5} + \\frac{1}{3}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{1}{15}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{3}{8}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{1}{5}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{11}{15}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{2}{5}\\): cut a bar into 5, take 2.",
+    "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
+    "You can only add pieces the same size: cut each fifth into 3 and each third into 5. Both are now fifteenths.",
+    "\\(\\frac{2}{5}\\) is 6 pieces, \\(\\frac{1}{3}\\) is 5: 6 + 5 = 11, so \\(\\frac{11}{15}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-d55429a7",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:51"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\frac{3}{5} - \\frac{1}{3}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(1\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{2}{15}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{4}{15}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{14}{15}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{3}{5}\\): cut a bar into 5, take 3.",
+    "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
+    "You can only take away pieces the same size: cut each fifth into 3 and each third into 5. Both are now fifteenths.",
+    "\\(\\frac{3}{5}\\) is 9 pieces, \\(\\frac{1}{3}\\) is 5: 9 − 5 = 4, so \\(\\frac{4}{15}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You took away the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You added instead of taking away."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You changed the bottom but not the top."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-b5373eb6",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:52"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\frac{4}{5} - \\frac{1}{3}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{3}{2}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{17}{15}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{1}{5}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{7}{15}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{4}{5}\\): cut a bar into 5, take 4.",
+    "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
+    "You can only take away pieces the same size: cut each fifth into 3 and each third into 5. Both are now fifteenths.",
+    "\\(\\frac{4}{5}\\) is 12 pieces, \\(\\frac{1}{3}\\) is 5: 12 − 5 = 7, so \\(\\frac{7}{15}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You took away the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You added instead of taking away."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You changed the bottom but not the top."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-553e8c39",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:53"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{5} + \\frac{1}{4}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{2}{9}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{9}{20}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{1}{10}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{1}{20}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{5}\\): cut a bar into 5, take 1.",
+    "\\(\\frac{1}{4}\\): cut a bar into 4, take 1.",
+    "You can only add pieces the same size: cut each fifth into 4 and each quarter into 5. Both are now twentieths.",
+    "\\(\\frac{1}{5}\\) is 4 pieces, \\(\\frac{1}{4}\\) is 5: 4 + 5 = 9, so \\(\\frac{9}{20}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You took away instead of adding."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-b8835f44",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:56"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\frac{2}{5} - \\frac{1}{4}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{3}{20}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{1}{20}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{13}{20}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(1\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{2}{5}\\): cut a bar into 5, take 2.",
+    "\\(\\frac{1}{4}\\): cut a bar into 4, take 1.",
+    "You can only take away pieces the same size: cut each fifth into 4 and each quarter into 5. Both are now twentieths.",
+    "\\(\\frac{2}{5}\\) is 8 pieces, \\(\\frac{1}{4}\\) is 5: 8 − 5 = 3, so \\(\\frac{3}{20}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You added instead of taking away."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You changed the bottom but not the top."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You took away the tops and the bottoms."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-aa6cd9f4",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:57"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{3}{5} + \\frac{1}{4}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{4}{9}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{7}{20}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{17}{20}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{1}{5}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{3}{5}\\): cut a bar into 5, take 3.",
+    "\\(\\frac{1}{4}\\): cut a bar into 4, take 1.",
+    "You can only add pieces the same size: cut each fifth into 4 and each quarter into 5. Both are now twentieths.",
+    "\\(\\frac{3}{5}\\) is 12 pieces, \\(\\frac{1}{4}\\) is 5: 12 + 5 = 17, so \\(\\frac{17}{20}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You took away instead of adding."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-ee50b258",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:58"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\frac{3}{5} - \\frac{1}{4}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{1}{10}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(2\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{7}{20}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{17}{20}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{3}{5}\\): cut a bar into 5, take 3.",
+    "\\(\\frac{1}{4}\\): cut a bar into 4, take 1.",
+    "You can only take away pieces the same size: cut each fifth into 4 and each quarter into 5. Both are now twentieths.",
+    "\\(\\frac{3}{5}\\) is 12 pieces, \\(\\frac{1}{4}\\) is 5: 12 − 5 = 7, so \\(\\frac{7}{20}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You changed the bottom but not the top."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You added instead of taking away."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You took away the tops and the bottoms."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-04e4027d",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:59"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\frac{4}{5} - \\frac{1}{4}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{21}{20}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{3}{20}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(3\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{11}{20}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{4}{5}\\): cut a bar into 5, take 4.",
+    "\\(\\frac{1}{4}\\): cut a bar into 4, take 1.",
+    "You can only take away pieces the same size: cut each fifth into 4 and each quarter into 5. Both are now twentieths.",
+    "\\(\\frac{4}{5}\\) is 16 pieces, \\(\\frac{1}{4}\\) is 5: 16 − 5 = 11, so \\(\\frac{11}{20}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You took away the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You changed the bottom but not the top."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You added instead of taking away."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-2810bbb0",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:60"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{7} + \\frac{1}{2}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{2}{9}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{1}{7}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{5}{14}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{9}{14}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{7}\\): cut a bar into 7, take 1.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "You can only add pieces the same size: cut each seventh into 2 and each half into 7. Both are now fourteenths.",
+    "\\(\\frac{1}{7}\\) is 2 pieces, \\(\\frac{1}{2}\\) is 7: 2 + 7 = 9, so \\(\\frac{9}{14}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You added the tops and the bottoms."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-c7f7b67d",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:63"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\frac{4}{7} - \\frac{1}{2}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{3}{5}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{1}{14}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{15}{14}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{3}{14}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{4}{7}\\): cut a bar into 7, take 4.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "You can only take away pieces the same size: cut each seventh into 2 and each half into 7. Both are now fourteenths.",
+    "\\(\\frac{4}{7}\\) is 8 pieces, \\(\\frac{1}{2}\\) is 7: 8 − 7 = 1, so \\(\\frac{1}{14}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You changed the bottom but not the top."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You took away the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You added instead of taking away."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-92f66478",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:64"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\frac{5}{7} - \\frac{1}{2}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{17}{14}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{3}{14}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{2}{7}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{4}{5}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{5}{7}\\): cut a bar into 7, take 5.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "You can only take away pieces the same size: cut each seventh into 2 and each half into 7. Both are now fourteenths.",
+    "\\(\\frac{5}{7}\\) is 10 pieces, \\(\\frac{1}{2}\\) is 7: 10 − 7 = 3, so \\(\\frac{3}{14}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You added instead of taking away."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You took away the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You changed the bottom but not the top."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-387f1ab5",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:65"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{7} + \\frac{1}{3}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{4}{21}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{1}{5}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{2}{21}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{10}{21}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{7}\\): cut a bar into 7, take 1.",
+    "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
+    "You can only add pieces the same size: cut each seventh into 3 and each third into 7. Both are now twenty-firsts.",
+    "\\(\\frac{1}{7}\\) is 3 pieces, \\(\\frac{1}{3}\\) is 7: 3 + 7 = 10, so \\(\\frac{10}{21}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-f4aa2431",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:66"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{7} + \\frac{2}{3}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{1}{7}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{17}{21}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{11}{21}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{3}{10}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{7}\\): cut a bar into 7, take 1.",
+    "\\(\\frac{2}{3}\\): cut a bar into 3, take 2.",
+    "You can only add pieces the same size: cut each seventh into 3 and each third into 7. Both are now twenty-firsts.",
+    "\\(\\frac{1}{7}\\) is 3 pieces, \\(\\frac{2}{3}\\) is 14: 3 + 14 = 17, so \\(\\frac{17}{21}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-dfd7507e",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:68"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{2}{7} + \\frac{2}{3}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{2}{5}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{20}{21}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{8}{21}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{4}{21}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{2}{7}\\): cut a bar into 7, take 2.",
+    "\\(\\frac{2}{3}\\): cut a bar into 3, take 2.",
+    "You can only add pieces the same size: cut each seventh into 3 and each third into 7. Both are now twenty-firsts.",
+    "\\(\\frac{2}{7}\\) is 6 pieces, \\(\\frac{2}{3}\\) is 14: 6 + 14 = 20, so \\(\\frac{20}{21}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-b7417f3c",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:69"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{3}{7} + \\frac{1}{3}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{2}{5}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{4}{21}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{2}{21}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{16}{21}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{3}{7}\\): cut a bar into 7, take 3.",
+    "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
+    "You can only add pieces the same size: cut each seventh into 3 and each third into 7. Both are now twenty-firsts.",
+    "\\(\\frac{3}{7}\\) is 9 pieces, \\(\\frac{1}{3}\\) is 7: 9 + 7 = 16, so \\(\\frac{16}{21}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-a618b8de",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:71"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\frac{4}{7} - \\frac{1}{3}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{3}{4}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{5}{21}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{1}{7}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{19}{21}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{4}{7}\\): cut a bar into 7, take 4.",
+    "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
+    "You can only take away pieces the same size: cut each seventh into 3 and each third into 7. Both are now twenty-firsts.",
+    "\\(\\frac{4}{7}\\) is 12 pieces, \\(\\frac{1}{3}\\) is 7: 12 − 7 = 5, so \\(\\frac{5}{21}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You added instead of taking away."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You changed the bottom but not the top."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You took away the tops and the bottoms."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-6be3ce98",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:72"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\frac{5}{7} - \\frac{1}{3}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(1\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{8}{21}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{22}{21}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{4}{21}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{5}{7}\\): cut a bar into 7, take 5.",
+    "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
+    "You can only take away pieces the same size: cut each seventh into 3 and each third into 7. Both are now twenty-firsts.",
+    "\\(\\frac{5}{7}\\) is 15 pieces, \\(\\frac{1}{3}\\) is 7: 15 − 7 = 8, so \\(\\frac{8}{21}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You took away the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You changed the bottom but not the top."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You added instead of taking away."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-7db66c5a",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:73"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\frac{5}{7} - \\frac{2}{3}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{29}{21}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{3}{4}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{1}{7}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{1}{21}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{5}{7}\\): cut a bar into 7, take 5.",
+    "\\(\\frac{2}{3}\\): cut a bar into 3, take 2.",
+    "You can only take away pieces the same size: cut each seventh into 3 and each third into 7. Both are now twenty-firsts.",
+    "\\(\\frac{5}{7}\\) is 15 pieces, \\(\\frac{2}{3}\\) is 14: 15 − 14 = 1, so \\(\\frac{1}{21}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You took away the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You changed the bottom but not the top."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You added instead of taking away."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-fb13395e",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:74"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\frac{6}{7} - \\frac{1}{3}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{5}{4}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{5}{21}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{25}{21}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{11}{21}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{6}{7}\\): cut a bar into 7, take 6.",
+    "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
+    "You can only take away pieces the same size: cut each seventh into 3 and each third into 7. Both are now twenty-firsts.",
+    "\\(\\frac{6}{7}\\) is 18 pieces, \\(\\frac{1}{3}\\) is 7: 18 − 7 = 11, so \\(\\frac{11}{21}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You added instead of taking away."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You took away the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You changed the bottom but not the top."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-84506cf2",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:76"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{8} + \\frac{2}{3}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{3}{11}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{13}{24}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{19}{24}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{1}{8}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{8}\\): cut a bar into 8, take 1.",
+    "\\(\\frac{2}{3}\\): cut a bar into 3, take 2.",
+    "You can only add pieces the same size: cut each eighth into 3 and each third into 8. Both are now twenty-fourths.",
+    "\\(\\frac{1}{8}\\) is 3 pieces, \\(\\frac{2}{3}\\) is 16: 3 + 16 = 19, so \\(\\frac{19}{24}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-e5585336",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:77"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{3}{8} + \\frac{1}{3}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{4}{11}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{17}{24}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{1}{24}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{1}{6}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{3}{8}\\): cut a bar into 8, take 3.",
+    "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
+    "You can only add pieces the same size: cut each eighth into 3 and each third into 8. Both are now twenty-fourths.",
+    "\\(\\frac{3}{8}\\) is 9 pieces, \\(\\frac{1}{3}\\) is 8: 9 + 8 = 17, so \\(\\frac{17}{24}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You took away instead of adding."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-8587c24b",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:78"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\frac{3}{8} - \\frac{1}{3}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{1}{12}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{1}{24}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{2}{5}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{17}{24}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{3}{8}\\): cut a bar into 8, take 3.",
+    "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
+    "You can only take away pieces the same size: cut each eighth into 3 and each third into 8. Both are now twenty-fourths.",
+    "\\(\\frac{3}{8}\\) is 9 pieces, \\(\\frac{1}{3}\\) is 8: 9 − 8 = 1, so \\(\\frac{1}{24}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You took away the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You added instead of taking away."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You changed the bottom but not the top."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-5bfc05bb",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:80"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\frac{5}{8} - \\frac{1}{3}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{23}{24}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{4}{5}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{7}{24}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{1}{6}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{5}{8}\\): cut a bar into 8, take 5.",
+    "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
+    "You can only take away pieces the same size: cut each eighth into 3 and each third into 8. Both are now twenty-fourths.",
+    "\\(\\frac{5}{8}\\) is 15 pieces, \\(\\frac{1}{3}\\) is 8: 15 − 8 = 7, so \\(\\frac{7}{24}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You changed the bottom but not the top."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You took away the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You added instead of taking away."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-7a96b37f",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:81"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\frac{7}{8} - \\frac{1}{3}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{13}{24}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{6}{5}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{29}{24}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{1}{4}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{7}{8}\\): cut a bar into 8, take 7.",
+    "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
+    "You can only take away pieces the same size: cut each eighth into 3 and each third into 8. Both are now twenty-fourths.",
+    "\\(\\frac{7}{8}\\) is 21 pieces, \\(\\frac{1}{3}\\) is 8: 21 − 8 = 13, so \\(\\frac{13}{24}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You added instead of taking away."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You changed the bottom but not the top."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You took away the tops and the bottoms."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-63ffd3e7",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:82"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{9} + \\frac{1}{2}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{11}{18}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{7}{18}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{1}{9}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{2}{11}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{9}\\): cut a bar into 9, take 1.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "You can only add pieces the same size: cut each ninth into 2 and each half into 9. Both are now eighteenths.",
+    "\\(\\frac{1}{9}\\) is 2 pieces, \\(\\frac{1}{2}\\) is 9: 2 + 9 = 11, so \\(\\frac{11}{18}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You added the tops and the bottoms."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-1cf1745b",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:83"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{2}{9} + \\frac{1}{2}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{5}{18}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{1}{6}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{3}{11}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{13}{18}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{2}{9}\\): cut a bar into 9, take 2.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "You can only add pieces the same size: cut each ninth into 2 and each half into 9. Both are now eighteenths.",
+    "\\(\\frac{2}{9}\\) is 4 pieces, \\(\\frac{1}{2}\\) is 9: 4 + 9 = 13, so \\(\\frac{13}{18}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-fe3a1d93",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:85"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\frac{5}{9} - \\frac{1}{2}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{19}{18}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{4}{7}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{1}{18}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{2}{9}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{5}{9}\\): cut a bar into 9, take 5.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "You can only take away pieces the same size: cut each ninth into 2 and each half into 9. Both are now eighteenths.",
+    "\\(\\frac{5}{9}\\) is 10 pieces, \\(\\frac{1}{2}\\) is 9: 10 − 9 = 1, so \\(\\frac{1}{18}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You added instead of taking away."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You took away the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You changed the bottom but not the top."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-08fc53c1",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:86"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\frac{7}{9} - \\frac{1}{2}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{1}{3}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{23}{18}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{6}{7}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{5}{18}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{7}{9}\\): cut a bar into 9, take 7.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "You can only take away pieces the same size: cut each ninth into 2 and each half into 9. Both are now eighteenths.",
+    "\\(\\frac{7}{9}\\) is 14 pieces, \\(\\frac{1}{2}\\) is 9: 14 − 9 = 5, so \\(\\frac{5}{18}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You took away the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You changed the bottom but not the top."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You added instead of taking away."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-169379a8",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:87"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{1}{11} + \\frac{1}{2}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{13}{22}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{1}{11}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{9}{22}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{2}{13}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{1}{11}\\): cut a bar into 11, take 1.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "You can only add pieces the same size: cut each eleventh into 2 and each half into 11. Both are now twenty-seconds.",
+    "\\(\\frac{1}{11}\\) is 2 pieces, \\(\\frac{1}{2}\\) is 11: 2 + 11 = 13, so \\(\\frac{13}{22}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You added the tops and the bottoms."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-28d5ae94",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:88"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{2}{11} + \\frac{1}{2}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{15}{22}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{3}{22}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{7}{22}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{3}{13}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{2}{11}\\): cut a bar into 11, take 2.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "You can only add pieces the same size: cut each eleventh into 2 and each half into 11. Both are now twenty-seconds.",
+    "\\(\\frac{2}{11}\\) is 4 pieces, \\(\\frac{1}{2}\\) is 11: 4 + 11 = 15, so \\(\\frac{15}{22}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You took away instead of adding."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You added the tops and the bottoms."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-280bcfa7",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:90"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(\\frac{4}{11} + \\frac{1}{2}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{19}{22}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{3}{22}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{5}{13}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{5}{22}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{4}{11}\\): cut a bar into 11, take 4.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "You can only add pieces the same size: cut each eleventh into 2 and each half into 11. Both are now twenty-seconds.",
+    "\\(\\frac{4}{11}\\) is 8 pieces, \\(\\frac{1}{2}\\) is 11: 8 + 11 = 19, so \\(\\frac{19}{22}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You multiplied the bottoms but added the tops as they were."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You added the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You took away instead of adding."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-14071ecf",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:92"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\frac{6}{11} - \\frac{1}{2}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{5}{22}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{23}{22}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{1}{22}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{5}{9}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{6}{11}\\): cut a bar into 11, take 6.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "You can only take away pieces the same size: cut each eleventh into 2 and each half into 11. Both are now twenty-seconds.",
+    "\\(\\frac{6}{11}\\) is 12 pieces, \\(\\frac{1}{2}\\) is 11: 12 − 11 = 1, so \\(\\frac{1}{22}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You changed the bottom but not the top."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You added instead of taking away."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You took away the tops and the bottoms."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-f7297b88",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:93"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\frac{7}{11} - \\frac{1}{2}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{3}{11}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{3}{22}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{2}{3}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{25}{22}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{7}{11}\\): cut a bar into 11, take 7.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "You can only take away pieces the same size: cut each eleventh into 2 and each half into 11. Both are now twenty-seconds.",
+    "\\(\\frac{7}{11}\\) is 14 pieces, \\(\\frac{1}{2}\\) is 11: 14 − 11 = 3, so \\(\\frac{3}{22}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You added instead of taking away."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You took away the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You changed the bottom but not the top."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-0448b9c1",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:94"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\frac{8}{11} - \\frac{1}{2}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{7}{22}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{27}{22}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{5}{22}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{7}{9}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{8}{11}\\): cut a bar into 11, take 8.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "You can only take away pieces the same size: cut each eleventh into 2 and each half into 11. Both are now twenty-seconds.",
+    "\\(\\frac{8}{11}\\) is 16 pieces, \\(\\frac{1}{2}\\) is 11: 16 − 11 = 5, so \\(\\frac{5}{22}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You added instead of taking away."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You took away the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You changed the bottom but not the top."
+    }
+   ]
+  },
+  {
+   "id": "fraction-operations-cd456193",
+   "topic": "fraction-operations",
+   "source": {
+    "game": "how-many-parts",
+    "ref": "fpool:stage3:95"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\frac{9}{11} - \\frac{1}{2}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{29}{22}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{7}{22}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{8}{9}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{4}{11}\\)"
+    }
+   ],
+   "worked": [
+    "Each bar is one whole chocolate bar.",
+    "\\(\\frac{9}{11}\\): cut a bar into 11, take 9.",
+    "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
+    "You can only take away pieces the same size: cut each eleventh into 2 and each half into 11. Both are now twenty-seconds.",
+    "\\(\\frac{9}{11}\\) is 18 pieces, \\(\\frac{1}{2}\\) is 11: 18 − 11 = 7, so \\(\\frac{7}{22}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You added instead of taking away."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You took away the tops and the bottoms."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You changed the bottom but not the top."
+    }
+   ]
+  }
+ ]
+}

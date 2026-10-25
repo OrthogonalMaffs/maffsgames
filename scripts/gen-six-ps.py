@@ -1628,6 +1628,279 @@ async def topic_number_vocabulary(h):
     return out
 
 
+# --- fraction-operations: how-many-parts' Foundation stage 3 (add or take away, different bottom numbers) ---
+HMP_STAGE3_JS = r"""() => {
+  const pool = HMP.fpool('stage3'), out = [];
+  for (let i = 0; i < pool.length; i++) {
+    let s = i * 2654435761 + 12345;
+    const rng = () => { s |= 0; s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+    const q = HMP.makeQuestion(pool[i], 'c', rng);
+    out.push({a: q.a, b: q.b, op: q.op, c: q.c, d: q.d, keyVal: q.keyVal, keyTex: q.keyTex, sumTex: q.sumTex,
+      choices: q.choices.map(c => ({val: c.val, tex: c.tex, err: c.err, name: HMP.ERR[c.err].name(q)})),
+      steps: HMP.steps(q).map(s => s.text)});
+  }
+  return out;
+}"""
+
+
+def frac_of(s):
+    return Fraction(s)                                  # "5/6", or "1" for a whole number
+
+
+def frac_err_value(err, a, b, op, c, d):
+    """The value the game's named error gives, worked out here from the error's own words."""
+    sg = 1 if op == "+" else -1
+    L = b * d // math.gcd(b, d)
+    if err == "TB":                                     # added or took away the tops and the bottoms
+        return Fraction(a + sg * c, b + sg * d)
+    if err == "MD":                                     # multiplied the bottoms, added the tops as they were
+        return Fraction(a + c, b * d)
+    if err == "DN":                                     # changed the bottom (to the common one) but not the top
+        return Fraction(a + sg * c, L)
+    if err == "OP":                                     # took away instead of adding, or the reverse
+        return Fraction(abs(a * (L // b) - sg * c * (L // d)), L)
+    raise AssertionError("fraction-operations: no rule for the error %s" % err)
+
+
+async def topic_fraction_operations(h):
+    """Stage 3 of how-many-parts, a choice: the game's own key and three of its named errors (the game picks them with
+    its seeded pickErrors), each wrong option's slip being the game's name for that error, the worked lines being
+    HMP.steps. The key and every error are recomputed here. 60, spread evenly between adding and taking away."""
+    pg = await h.page("how-many-parts", "level=ks3")
+    items = await pg.evaluate(HMP_STAGE3_JS)
+    out = []
+    for i, it in enumerate(items):
+        a, b, c, d, op = it["a"], it["b"], it["c"], it["d"], it["op"]
+        key = Fraction(a, b) + Fraction(c, d) if op == "+" else Fraction(a, b) - Fraction(c, d)
+        assert frac_of(it["keyVal"]) == key, ("fraction-operations key", it)
+        if len(it["choices"]) < 3:                      # the game shows these with two wrong answers: no four options
+            continue
+        assert len(it["choices"]) == 3 and all(frac_of(x["val"]) != key for x in it["choices"]), ("fraction-operations options", it)
+        assert len({x["val"] for x in it["choices"]}) == 3, ("fraction-operations options repeat", it)
+        for x in it["choices"]:
+            assert frac_of(x["val"]) == frac_err_value(x["err"], a, b, op, c, d), ("fraction-operations error", it, x)
+        stem = "Work out %s." % tex("\\frac{%d}{%d} %s \\frac{%d}{%d}" % (a, b, "+" if op == "+" else "-", c, d))
+        labels = [tex(it["keyTex"].replace("\\dfrac", "\\frac"))] + [tex(x["tex"].replace("\\dfrac", "\\frac")) for x in it["choices"]]
+        opts, ans = choice("hmp-%d" % i, labels[0], labels[1:])
+        slips = [{"answer": {"val": next(o["val"] for o in opts if o["label"] == tex(x["tex"].replace("\\dfrac", "\\frac")))},
+                  "line": x["name"] + "."} for x in it["choices"]]
+        worked = [maths(s).replace("\\dfrac", "\\frac") for s in it["steps"]]
+        out.append((op, mk("fraction-operations", "how-many-parts", "fpool:stage3:%d" % i, 2 if op == "+" else 3, False,
+                           stem, "choice", ans, options=opts, worked=worked, slip=slips)))
+    return [q for _, q in spread(out, GEN_TOPIC, lambda x: x[0])]
+
+
+# --- averages: distinctly-average's Foundation (ks3) pool, a choice with the game's own named wrong answers ---
+DA_JS = r"""() => DA_ITEMS.ks3.map((x, i) => ({x: x, prompt: DA_PROMPTS.ks3[i], expl: explainHTML(x),
+  slips: x.distractors.map(d => MC[d.misconception])}))"""
+DA_BAND = {"range": 1, "modeUnique": 1, "mean": 2, "modeBimodal": 2}
+
+
+def da_key(cat, data):
+    """The right answer as the game writes it, worked out from the data."""
+    n = len(data)
+    s = sorted(data)
+    counts = {v: data.count(v) for v in set(data)}
+    top = max(counts.values())
+    modes = sorted(v for v, c in counts.items() if c == top)
+    if cat == "mean":
+        return Fraction(sum(data), n)
+    if cat == "median":
+        return Fraction(s[n // 2]) if n % 2 else Fraction(s[n // 2 - 1] + s[n // 2], 2)
+    if cat == "range":
+        return Fraction(s[-1] - s[0])
+    if cat == "modeUnique":
+        assert len(modes) == 1, ("distinctly-average: a unique mode has ties", data)
+        return Fraction(modes[0])
+    if cat == "modeBimodal":
+        assert len(modes) == 2, ("distinctly-average: a bimodal set needs two modes", data)
+        return modes
+    raise AssertionError("distinctly-average: no rule for " + cat)
+
+
+def da_text(v):
+    """A value as the game writes it ('2', '2.5', '1 and 3')."""
+    if isinstance(v, list):
+        return " and ".join(str(x) for x in v)
+    return tnum(v)
+
+
+def da_slip_ok(cat, mis, val, data):
+    """Does the distractor's value fit the misconception the game names for it? (None: no rule here.)"""
+    n, s = len(data), sorted(data)
+    counts = {v: data.count(v) for v in set(data)}
+    mean = Fraction(sum(data), n)
+    f = lambda t: Fraction(t) if re.fullmatch(r"-?\d+(\.\d+)?", t) else None
+    v = f(val)
+    if mis == "sum_not_divided":
+        return v == sum(data)
+    if mis == "value_not_mean":
+        return v is not None and v in data
+    if mis == "position_not_value":
+        return v == Fraction(n + 1, 2) or v == Fraction(n, 2) or v == Fraction(n + 1, 2) - Fraction(1, 2)
+    if mis == "unsorted_median":                        # the middle of the list as it was given
+        mid = Fraction(data[n // 2]) if n % 2 else Fraction(data[n // 2 - 1] + data[n // 2], 2)
+        return v == mid
+    if mis == "mean_not_median" or mis == "mean_not_range":
+        return v is not None and abs(v - mean) < Fraction(1, 10)
+    if mis == "range_as_max":
+        return v == s[-1]
+    if mis == "range_as_min":
+        return v == s[0]
+    if mis == "mode_as_frequency":
+        return v == max(counts.values())
+    if mis == "wrong_value_picked":
+        return v is not None and v in data
+    if mis == "only_one_mode":
+        return v is not None and counts.get(int(v), 0) == max(counts.values())
+    if mis == "mode_and_wrong_value":
+        return " and " in val
+    return None
+
+
+async def topic_averages(h):
+    """Foundation (ks3) of distinctly-average: the game's key and its three named wrong answers as four options, the
+    game's explanation as the worked lines, and the game's one-line reading of each wrong answer as its slip. The key is
+    recomputed from the data and every named wrong answer is checked against the misconception it is named for. A pool
+    built at load, so 60, spread evenly between the five kinds (the median split by odd and even)."""
+    pg = await h.page("distinctly-average", "level=ks3")
+    items = await pg.evaluate(DA_JS)
+    out = []
+    for i, it in enumerate(items):
+        x = it["x"]
+        cat, data = x["cat"], x["data"]
+        want = da_key(cat, data)
+        assert da_text(want) == x["correct"], ("distinctly-average key", x["id"], x["correct"], want)
+        vals = [x["correct"]] + [d["val"] for d in x["distractors"]]
+        assert len(set(vals)) == 4, ("distinctly-average: options repeat or equal the key", x["id"], vals)
+        for d in x["distractors"]:
+            ok = da_slip_ok(cat, d["misconception"], d["val"], data)
+            assert ok is not False, ("distinctly-average: the wrong answer does not fit its misconception", x["id"], d)
+        prompt = strip_html(it["prompt"])
+        stem = "Here is a data set: %s. %s" % (", ".join(str(v) for v in data), prompt)
+        opts, ans = choice("da-%d" % i, vals[0], vals[1:])
+        slips = [{"answer": {"val": next(o["val"] for o in opts if o["label"] == d["val"])}, "line": line}
+                 for d, line in zip(x["distractors"], it["slips"])]
+        worked = [strip_html(p) for p in re.findall(r"<p>(.*?)</p>", it["expl"])]
+        band = DA_BAND.get(cat) or (2 if x["parity"] == "odd" else 3)
+        out.append(((cat, x.get("parity")), mk("averages", "distinctly-average", "DA_ITEMS.ks3[%d]" % i, band, False, stem,
+                                               "choice", ans, options=opts, worked=worked, slip=slips)))
+    return [q for _, q in spread(out, GEN_TOPIC, lambda t: t[0])]
+
+
+# --- area and perimeter: take-a-walk's shapes, drawn as one shared SVG from the game's own geometry ---
+TAW_JS = r"""(args) => {
+  const P = TAW.pools(), out = [];
+  args.stages.forEach(st => P[st].forEach((q, i) => { if (q.ask !== args.ask) return;
+    out.push({stage: st, i: i, fam: q.fam, text: q.text, thing: q.thing, key: q.key, unit: q.unit, dp: q.dp, shape: q.shape,
+      errors: q.errors, lines: q.errors.map(e => TAW.LINES[e.id][0]),
+      steps: TAW.steps(q).map(s => ({text: s.text, last: !!s.last})), svg: TAW.draw(q, {})});
+  }));
+  return out;
+}"""
+TAW_BAND = {"sq": 1, "rect": 1}
+
+
+def taw_svg(it):
+    """The game's own drawing of the shape as a self-contained SVG: the outline, the dashed lines and the labels, in
+    currentColor with the styling the game puts in its stylesheet written as attributes."""
+    s = it["svg"]
+    vb = re.search(r'viewBox="([^"]+)"', s).group(1)
+    shape = re.search(r'<path class="shape" d="([^"]+)"', s).group(1)
+    parts = ['<path d="%s" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>' % shape]
+    for cls in ("join", "dim"):
+        for m in re.finditer(r'<line class="%s[^"]*"[^>]*?x1="([^"]+)" y1="([^"]+)" x2="([^"]+)" y2="([^"]+)"' % cls, s):
+            parts.append('<line x1="%s" y1="%s" x2="%s" y2="%s" stroke="currentColor" stroke-width="1.5" stroke-dasharray="5 4"/>' % m.groups())
+    texts = []
+    for m in re.finditer(r'<text class="lab[^"]*" text-anchor="(\w+)"[^>]*? x="([^"]+)" y="([^"]+)">([^<]*)</text>', s):
+        texts.append('<text x="%s" y="%s" text-anchor="%s">%s</text>' % (m.group(2), m.group(3), m.group(1), m.group(4)))
+    return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="%s" role="img" fill="none" stroke="currentColor">%s'
+            '<g fill="currentColor" stroke="none" font-family="sans-serif" font-size="13">%s</g></svg>'
+            % (vb, "".join(parts), "".join(texts)))
+
+
+def taw_labels(svg):
+    return sorted(re.findall(r"<text[^>]*>([^<]*)</text>", svg))
+
+
+def taw_check(it):
+    """The key recomputed from the shape's own corners (shoelace for the area, the sides for the perimeter) and every
+    labelled side checked against its length."""
+    sh = it["shape"]
+    pts = []
+    for p in sh["path"]:
+        assert p["t"] == "L", ("take-a-walk: a curved side in a Foundation shape", it["stage"], it["fam"])
+        pts.append((Fraction(p["a"][0]), Fraction(p["a"][1])))
+        if p["lab"] is not None:
+            ln = math.hypot(p["b"][0] - p["a"][0], p["b"][1] - p["a"][1])
+            assert abs(ln - p["lab"]) < 1e-9, ("take-a-walk: a label is not its side's length", it["fam"], p)
+    ends = [(Fraction(p["b"][0]), Fraction(p["b"][1])) for p in sh["path"]]
+    assert ends[:-1] == pts[1:] and ends[-1] == pts[0], ("take-a-walk: the sides do not close", it["fam"])
+    area = abs(sum(x1 * y2 - x2 * y1 for (x1, y1), (x2, y2) in zip(pts, pts[1:] + pts[:1]))) / 2
+    per = sum(math.hypot(p["b"][0] - p["a"][0], p["b"][1] - p["a"][1]) for p in sh["path"])
+    return area if it["unit"] == "m2" else per
+
+
+def taw_worked(steps):
+    lines = [maths(s["text"]) for s in steps if not s["last"]]
+    if len(lines) > 5:                                  # the parts' lines (Rectangle: ..., Triangle: ...) as one
+        merged, run = [], []
+        for ln in lines + [""]:
+            if re.match(r"(Rectangle|Triangle):", ln):
+                run.append(ln)
+                continue
+            if run:
+                merged.append(" ".join(run))
+                run = []
+            if ln:
+                merged.append(ln)
+        lines = merged
+    assert len(lines) <= 5, ("take-a-walk: more than five worked lines", lines)
+    return lines
+
+
+async def taw_questions(h, topic, ask, stages):
+    pg = await h.page("take-a-walk", "level=ks3")
+    items = await pg.evaluate(TAW_JS, {"ask": ask, "stages": stages})
+    out = []
+    for n, it in enumerate(items):
+        want = taw_check(it)
+        assert abs(want - it["key"]) < 1e-9 and it["dp"] == 0 and float(it["key"]).is_integer(), \
+            ("take-a-walk key", it["stage"], it["fam"], it["key"], want)
+        svg = taw_svg(it)
+        sh = it["shape"]
+        want_labels = sorted([("%s m" % p["lab"]) for p in sh["path"] if p["lab"] is not None]
+                             + [("%s m" % d["val"]) for d in sh["dims"] if d["val"] is not None])
+        assert taw_labels(svg) == want_labels, ("take-a-walk: labels", it["stage"], it["fam"], taw_labels(svg), want_labels)
+        rect = all(p["a"][0] == p["b"][0] or p["a"][1] == p["b"][1] for p in sh["path"])
+        stem = "The diagram shows the %s, drawn to scale. %s%s%s" % (
+            it["thing"], "All the corners are right angles. " if rect else "",
+            "The dashed line is the perpendicular height. " if sh["dims"] else "", it["text"])
+        slips, seen = [], {int(it["key"])}
+        for e, line in zip(it["errors"], it["lines"]):
+            v = round(e["v"], 6)
+            v = int(v) if float(v).is_integer() else v
+            if v in seen:
+                continue
+            seen.add(v)
+            slips.append({"answer": {"value": v}, "line": line})
+        band = 1 if it["stage"] == "stage-1" and it["fam"] in TAW_BAND else 2 if it["stage"] == "stage-1" else 3 if it["stage"] == "stage-2" else 4
+        q = mk(topic, "take-a-walk", "TAW.pools()[%s][%d]" % (it["stage"], it["i"]), band, False, stem, "number",
+               {"value": int(it["key"])}, unit="m²" if it["unit"] == "m2" else "m",
+               worked=taw_worked(it["steps"]), slip=slips)
+        q["diagram"] = svg
+        out.append(((it["stage"], it["fam"]), q))
+    return [q for _, q in spread(out, GEN_TOPIC, lambda t: t[0])]
+
+
+async def topic_area(h):
+    return await taw_questions(h, "area", "A", ["stage-1", "stage-2", "stage-3"])
+
+
+async def topic_perimeter(h):
+    return await taw_questions(h, "perimeter", "P", ["stage-1"])
+
+
 # ───────────────────────────── the registry ─────────────────────────────
 # topic id -> (builder, rule notes). Topics not here have no bank yet (coming soon).
 BUILDERS = {
@@ -1647,6 +1920,10 @@ BUILDERS = {
     "vectors": topic_vectors,
     "change-subject": topic_change_subject,
     "number-vocabulary": topic_number_vocabulary,
+    "fraction-operations": topic_fraction_operations,
+    "averages": topic_averages,
+    "area": topic_area,
+    "perimeter": topic_perimeter,
 }
 
 
