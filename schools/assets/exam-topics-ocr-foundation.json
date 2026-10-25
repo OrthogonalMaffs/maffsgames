@@ -173,42 +173,6 @@
    }
   },
   {
-   "id": "number-vocabulary",
-   "name": "Factors, multiples and primes",
-   "marks": 6.7,
-   "series": 6,
-   "band": [
-    1,
-    3
-   ],
-   "route": {
-    "slug": "factor-race",
-    "game": "Factor Race",
-    "level": "ks3",
-    "modes": [],
-    "stages": []
-   }
-  },
-  {
-   "id": "fraction-operations",
-   "name": "Calculating with fractions",
-   "marks": 6.5,
-   "series": 6,
-   "band": [
-    1,
-    4
-   ],
-   "route": {
-    "slug": "how-many-parts",
-    "game": "How Many Parts?",
-    "level": "ks3",
-    "modes": [
-     "stage3"
-    ],
-    "stages": []
-   }
-  },
-  {
    "id": "fraction-percentage-of-amount",
    "name": "Fractions and percentages of amounts",
    "marks": 6.3,
@@ -225,356 +189,6 @@
     "stages": [
      "3"
     ]
-   }
-  },
-  {
-   "id": "averages",
-   "name": "Averages and range",
-   "marks": 6.3,
-   "series": 6,
-   "band": [
-    1,
-    4
-   ],
-   "route": {
-    "slug": "distinctly-average",
-    "game": "Distinctly Average",
-    "level": "ks3",
-    "modes": [],
-    "stages": []
-   }
-  },
-  {
-   "id": "area",
-   "name": "Area",
-   "marks": 6.0,
-   "series": 6,
-   "band": [
-    1,
-    5
-   ],
-   "route": {
-    "slug": "take-a-walk",
-    "game": "Take a Walk",
-    "level": "ks3",
-    "modes": [
-     "stage-1",
-     "stage-2",
-     "stage-3"
-    ],
-    "stages": []
-   }
-  },
-  {
-   "id": "inverse-operations",
-   "name": "Inverse operations",
-   "marks": 5.3,
-   "series": 6,
-   "band": [
-    1,
-    3
-   ],
-   "route": {
-    "slug": "think-of-a-number",
-    "game": "Think of a Number",
-    "level": "year6",
-    "modes": [],
-    "stages": []
-   }
-  },
-  {
-   "id": "trigonometry",
-   "name": "Trigonometry",
-   "marks": 5.0,
-   "series": 6,
-   "band": [
-    4,
-    5
-   ],
-   "route": {
-    "slug": "trig-worms",
-    "game": "Trig Worms",
-    "level": "gcse",
-    "modes": [],
-    "stages": []
-   }
-  },
-  {
-   "id": "simultaneous",
-   "name": "Simultaneous equations",
-   "marks": 4.2,
-   "series": 4,
-   "band": [
-    4,
-    5
-   ],
-   "route": {
-    "slug": "simultaneous-solver",
-    "game": "Simultaneous Solver",
-    "level": "gcse",
-    "modes": [],
-    "stages": [
-     "stage4"
-    ]
-   }
-  },
-  {
-   "id": "transformations",
-   "name": "Transformations",
-   "marks": 4.0,
-   "series": 5,
-   "band": [
-    1,
-    4
-   ],
-   "route": {
-    "slug": "shape-shifter",
-    "game": "Shape Shifter",
-    "level": "year6",
-    "modes": [
-     "random-mix"
-    ],
-    "stages": []
-   }
-  },
-  {
-   "id": "simplify-expressions",
-   "name": "Simplifying expressions",
-   "marks": 3.7,
-   "series": 5,
-   "band": [
-    1,
-    3
-   ],
-   "route": {
-    "slug": "like-terms-collector",
-    "game": "Like Terms Collector",
-    "level": "year6",
-    "modes": [],
-    "stages": []
-   }
-  },
-  {
-   "id": "basic-probability",
-   "name": "Probability",
-   "marks": 3.7,
-   "series": 5,
-   "band": [
-    1,
-    3
-   ],
-   "route": {
-    "slug": "probability-pioneer",
-    "game": "Probability Pioneer",
-    "level": "year6",
-    "modes": [],
-    "stages": []
-   }
-  },
-  {
-   "id": "substitution",
-   "name": "Substitution",
-   "marks": 3.5,
-   "series": 5,
-   "band": [
-    1,
-    4
-   ],
-   "route": {
-    "slug": "formula-plug-in",
-    "game": "Formula Plug-In",
-    "level": "year6",
-    "modes": [],
-    "stages": []
-   }
-  },
-  {
-   "id": "perimeter",
-   "name": "Perimeter",
-   "marks": 3.3,
-   "series": 4,
-   "band": [
-    1,
-    4
-   ],
-   "route": {
-    "slug": "take-a-walk",
-    "game": "Take a Walk",
-    "level": "ks3",
-    "modes": [
-     "stage-1"
-    ],
-    "stages": []
-   }
-  },
-  {
-   "id": "standard-form",
-   "name": "Standard form",
-   "marks": 3.2,
-   "series": 5,
-   "band": [
-    4,
-    5
-   ],
-   "route": {
-    "slug": "standard-form-blitz",
-    "game": "Standard Form Blitz",
-    "level": "gcse",
-    "modes": [],
-    "stages": []
-   }
-  },
-  {
-   "id": "quadratics-factorise",
-   "name": "Factorising quadratics",
-   "marks": 3.0,
-   "series": 6,
-   "band": [
-    4,
-    5
-   ],
-   "route": {
-    "slug": "quadratic-factoriser",
-    "game": "Quadratic Factoriser",
-    "level": "gcse",
-    "modes": [],
-    "stages": []
-   }
-  },
-  {
-   "id": "estimation",
-   "name": "Estimation",
-   "marks": 3.0,
-   "series": 5,
-   "band": [
-    2,
-    4
-   ],
-   "route": {
-    "slug": "estimation-engine",
-    "game": "Estimation Engine",
-    "level": "gcse",
-    "modes": [],
-    "stages": []
-   }
-  },
-  {
-   "id": "metric-units",
-   "name": "Metric units",
-   "marks": 3.0,
-   "series": 4,
-   "band": [
-    1,
-    3
-   ],
-   "route": {
-    "slug": "unit-converter",
-    "game": "Unit Converter",
-    "level": "gcse",
-    "modes": [],
-    "stages": []
-   }
-  },
-  {
-   "id": "vectors",
-   "name": "Vectors",
-   "marks": 2.8,
-   "series": 5,
-   "band": [
-    3,
-    4
-   ],
-   "route": {
-    "slug": "component-crusher",
-    "game": "Component Crusher",
-    "level": "gcse",
-    "modes": [],
-    "stages": []
-   }
-  },
-  {
-   "id": "form-expressions",
-   "name": "Forming expressions and equations",
-   "marks": 2.7,
-   "series": 5,
-   "band": [
-    3,
-    4
-   ],
-   "route": {
-    "slug": "equation-builder",
-    "game": "Equation Builder",
-    "level": "ks3",
-    "modes": [],
-    "stages": []
-   }
-  },
-  {
-   "id": "rounding",
-   "name": "Rounding",
-   "marks": 2.3,
-   "series": 5,
-   "band": [
-    1,
-    3
-   ],
-   "route": {
-    "slug": "decimal-detective",
-    "game": "Decimal Detective",
-    "level": "year6",
-    "modes": [],
-    "stages": []
-   }
-  },
-  {
-   "id": "pythagoras",
-   "name": "Pythagoras' theorem",
-   "marks": 2.3,
-   "series": 3,
-   "band": [
-    4,
-    5
-   ],
-   "route": {
-    "slug": "just-pythag-it-bruv",
-    "game": "Just Pythag It, Bruv",
-    "level": "ks3",
-    "modes": [],
-    "stages": []
-   }
-  },
-  {
-   "id": "change-subject",
-   "name": "Changing the subject",
-   "marks": 2.0,
-   "series": 5,
-   "band": [
-    4,
-    5
-   ],
-   "route": {
-    "slug": "formula-unlocked",
-    "game": "Formula Unlocked",
-    "level": "gcse",
-    "modes": [],
-    "stages": []
-   }
-  },
-  {
-   "id": "coordinates",
-   "name": "Coordinates",
-   "marks": 1.8,
-   "series": 5,
-   "band": [
-    1,
-    2
-   ],
-   "route": {
-    "slug": "four-quadrant-explorer",
-    "game": "Four Quadrant Explorer",
-    "level": "year6",
-    "modes": [],
-    "stages": []
    }
   }
  ],
@@ -594,6 +208,27 @@
    "planned": null
   },
   {
+   "id": "number-vocabulary",
+   "name": "Factors, multiples and primes",
+   "marks": 6.7,
+   "series": 6,
+   "planned": null
+  },
+  {
+   "id": "fraction-operations",
+   "name": "Calculating with fractions",
+   "marks": 6.5,
+   "series": 6,
+   "planned": null
+  },
+  {
+   "id": "averages",
+   "name": "Averages and range",
+   "marks": 6.3,
+   "series": 6,
+   "planned": null
+  },
+  {
    "id": "scatter-graphs",
    "name": "Scatter graphs",
    "marks": 6.2,
@@ -603,6 +238,13 @@
   {
    "id": "percentage-change",
    "name": "Percentage change",
+   "marks": 6.0,
+   "series": 6,
+   "planned": null
+  },
+  {
+   "id": "area",
+   "name": "Area",
    "marks": 6.0,
    "series": 6,
    "planned": null
@@ -636,10 +278,24 @@
    "planned": null
   },
   {
+   "id": "inverse-operations",
+   "name": "Inverse operations",
+   "marks": 5.3,
+   "series": 6,
+   "planned": null
+  },
+  {
    "id": "bar-pictogram-line",
    "name": "Bar charts, pictograms and line graphs",
    "marks": 5.2,
    "series": 5,
+   "planned": null
+  },
+  {
+   "id": "trigonometry",
+   "name": "Trigonometry",
+   "marks": 5.0,
+   "series": 6,
    "planned": null
   },
   {
@@ -685,6 +341,13 @@
    "planned": null
   },
   {
+   "id": "simultaneous",
+   "name": "Simultaneous equations",
+   "marks": 4.2,
+   "series": 4,
+   "planned": null
+  },
+  {
    "id": "constructions",
    "name": "Constructions",
    "marks": 4.0,
@@ -699,9 +362,30 @@
    "planned": "Who Ate All the Pies?"
   },
   {
+   "id": "transformations",
+   "name": "Transformations",
+   "marks": 4.0,
+   "series": 5,
+   "planned": null
+  },
+  {
    "id": "2d-shapes",
    "name": "2D shapes",
    "marks": 3.8,
+   "series": 5,
+   "planned": null
+  },
+  {
+   "id": "simplify-expressions",
+   "name": "Simplifying expressions",
+   "marks": 3.7,
+   "series": 5,
+   "planned": null
+  },
+  {
+   "id": "basic-probability",
+   "name": "Probability",
+   "marks": 3.7,
    "series": 5,
    "planned": null
   },
@@ -720,10 +404,31 @@
    "planned": null
   },
   {
+   "id": "substitution",
+   "name": "Substitution",
+   "marks": 3.5,
+   "series": 5,
+   "planned": null
+  },
+  {
+   "id": "perimeter",
+   "name": "Perimeter",
+   "marks": 3.3,
+   "series": 4,
+   "planned": null
+  },
+  {
    "id": "real-life-graphs",
    "name": "Real-life graphs",
    "marks": 3.2,
    "series": 4,
+   "planned": null
+  },
+  {
+   "id": "standard-form",
+   "name": "Standard form",
+   "marks": 3.2,
+   "series": 5,
    "planned": null
   },
   {
@@ -734,6 +439,27 @@
    "planned": null
   },
   {
+   "id": "quadratics-factorise",
+   "name": "Factorising quadratics",
+   "marks": 3.0,
+   "series": 6,
+   "planned": null
+  },
+  {
+   "id": "estimation",
+   "name": "Estimation",
+   "marks": 3.0,
+   "series": 5,
+   "planned": null
+  },
+  {
+   "id": "metric-units",
+   "name": "Metric units",
+   "marks": 3.0,
+   "series": 4,
+   "planned": null
+  },
+  {
    "id": "bounds",
    "name": "Bounds",
    "marks": 2.8,
@@ -741,9 +467,51 @@
    "planned": null
   },
   {
+   "id": "vectors",
+   "name": "Vectors",
+   "marks": 2.8,
+   "series": 5,
+   "planned": null
+  },
+  {
+   "id": "form-expressions",
+   "name": "Forming expressions and equations",
+   "marks": 2.7,
+   "series": 5,
+   "planned": null
+  },
+  {
    "id": "inequalities",
    "name": "Inequalities",
    "marks": 2.5,
+   "series": 5,
+   "planned": null
+  },
+  {
+   "id": "rounding",
+   "name": "Rounding",
+   "marks": 2.3,
+   "series": 5,
+   "planned": null
+  },
+  {
+   "id": "pythagoras",
+   "name": "Pythagoras' theorem",
+   "marks": 2.3,
+   "series": 3,
+   "planned": null
+  },
+  {
+   "id": "change-subject",
+   "name": "Changing the subject",
+   "marks": 2.0,
+   "series": 5,
+   "planned": null
+  },
+  {
+   "id": "coordinates",
+   "name": "Coordinates",
+   "marks": 1.8,
    "series": 5,
    "planned": null
   },

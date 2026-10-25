@@ -1,0 +1,1341 @@
+{
+ "topic": "fdp-convert",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "fdp-convert-4952ad92",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][0]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{1}{2}\\) as a decimal.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.5
+   },
+   "worked": [
+    "Multiply top and bottom by 5: \\(\\dfrac{1}{2} = \\dfrac{5}{10}\\), which is 5 tenths, \\(0.5\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-1d9a3c57",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][1]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{1}{2}\\) as a percentage.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 50
+   },
+   "unit": "%",
+   "worked": [
+    "Multiply top and bottom by 50: \\(\\dfrac{1}{2} = \\dfrac{50}{100}\\).",
+    "Out of 100 is per cent, so \\(50\\%\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-c8a1963f",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][2]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(0.5\\) as a fraction.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 2
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "\\(0.5\\) is 5 tenths: \\(\\dfrac{5}{10}\\).",
+    "Divide top and bottom by 5: \\(\\dfrac{5}{10} = \\dfrac{1}{2}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-36e867af",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][3]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(0.5\\) as a percentage.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 50
+   },
+   "unit": "%",
+   "worked": [
+    "Multiply by 100: \\(0.5 \\times 100 = 50\\), so \\(50\\%\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-821bab12",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][4]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(50\\%\\) as a decimal.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.5
+   },
+   "worked": [
+    "Divide by 100: \\(50 \\div 100 = 0.5\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-04094253",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][5]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(50\\%\\) as a fraction.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 2
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "\\(50\\%\\) means 50 out of 100: \\(\\dfrac{50}{100}\\).",
+    "Divide top and bottom by 50: \\(\\dfrac{50}{100} = \\dfrac{1}{2}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-7a12ebb0",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][12]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{3}{4}\\) as a decimal.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.75
+   },
+   "worked": [
+    "Multiply top and bottom by 25: \\(\\dfrac{3}{4} = \\dfrac{75}{100}\\), which is 75 hundredths, \\(0.75\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-77c03afb",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][13]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{3}{4}\\) as a percentage.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 75
+   },
+   "unit": "%",
+   "worked": [
+    "Multiply top and bottom by 25: \\(\\dfrac{3}{4} = \\dfrac{75}{100}\\).",
+    "Out of 100 is per cent, so \\(75\\%\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-b429fb9f",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][15]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(0.75\\) as a percentage.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 75
+   },
+   "unit": "%",
+   "worked": [
+    "Multiply by 100: \\(0.75 \\times 100 = 75\\), so \\(75\\%\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-5c29806d",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][16]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(75\\%\\) as a decimal.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.75
+   },
+   "worked": [
+    "Divide by 100: \\(75 \\div 100 = 0.75\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-69c0fd42",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][17]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(75\\%\\) as a fraction.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 3,
+    "d": 4
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "\\(75\\%\\) means 75 out of 100: \\(\\dfrac{75}{100}\\).",
+    "Divide top and bottom by 25: \\(\\dfrac{75}{100} = \\dfrac{3}{4}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-788c940a",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][20]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(0.2\\) as a fraction.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 5
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "\\(0.2\\) is 2 tenths: \\(\\dfrac{2}{10}\\).",
+    "Divide top and bottom by 2: \\(\\dfrac{2}{10} = \\dfrac{1}{5}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-43b80197",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][30]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{3}{5}\\) as a decimal.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.6
+   },
+   "worked": [
+    "Multiply top and bottom by 2: \\(\\dfrac{3}{5} = \\dfrac{6}{10}\\), which is 6 tenths, \\(0.6\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-f767ac78",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][31]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{3}{5}\\) as a percentage.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 60
+   },
+   "unit": "%",
+   "worked": [
+    "Multiply top and bottom by 20: \\(\\dfrac{3}{5} = \\dfrac{60}{100}\\).",
+    "Out of 100 is per cent, so \\(60\\%\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-2f0e4c07",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][33]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(0.6\\) as a percentage.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 60
+   },
+   "unit": "%",
+   "worked": [
+    "Multiply by 100: \\(0.6 \\times 100 = 60\\), so \\(60\\%\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-a022f5e6",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][34]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(60\\%\\) as a decimal.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.6
+   },
+   "worked": [
+    "Divide by 100: \\(60 \\div 100 = 0.6\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-adf850de",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][35]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(60\\%\\) as a fraction.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 3,
+    "d": 5
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "\\(60\\%\\) means 60 out of 100: \\(\\dfrac{60}{100}\\).",
+    "Divide top and bottom by 20: \\(\\dfrac{60}{100} = \\dfrac{3}{5}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-420575c0",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][38]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(0.8\\) as a fraction.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 4,
+    "d": 5
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "\\(0.8\\) is 8 tenths: \\(\\dfrac{8}{10}\\).",
+    "Divide top and bottom by 2: \\(\\dfrac{8}{10} = \\dfrac{4}{5}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-5fb26e63",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][42]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{1}{10}\\) as a decimal.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.1
+   },
+   "worked": [
+    "\\(\\dfrac{1}{10}\\) is 1 tenths, which is \\(0.1\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-e0368f4f",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][43]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{1}{10}\\) as a percentage.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 10
+   },
+   "unit": "%",
+   "worked": [
+    "Multiply top and bottom by 10: \\(\\dfrac{1}{10} = \\dfrac{10}{100}\\).",
+    "Out of 100 is per cent, so \\(10\\%\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-1e630b15",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][45]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(0.1\\) as a percentage.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 10
+   },
+   "unit": "%",
+   "worked": [
+    "Multiply by 100: \\(0.1 \\times 100 = 10\\), so \\(10\\%\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-fd2dcac8",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][46]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(10\\%\\) as a decimal.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.1
+   },
+   "worked": [
+    "Divide by 100: \\(10 \\div 100 = 0.1\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-bcc88ae1",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][55]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(0.7\\) as a fraction.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 7,
+    "d": 10
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "\\(0.7\\) is 7 tenths: \\(\\dfrac{7}{10}\\).",
+    "It will not simplify."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-f5e32200",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][58]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(70\\%\\) as a fraction.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 7,
+    "d": 10
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "\\(70\\%\\) means 70 out of 100: \\(\\dfrac{70}{100}\\).",
+    "Divide top and bottom by 10: \\(\\dfrac{70}{100} = \\dfrac{7}{10}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-70b01ba9",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][59]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{9}{10}\\) as a decimal.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.9
+   },
+   "worked": [
+    "\\(\\dfrac{9}{10}\\) is 9 tenths, which is \\(0.9\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-c851e6ee",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][60]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{9}{10}\\) as a percentage.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 90
+   },
+   "unit": "%",
+   "worked": [
+    "Multiply top and bottom by 10: \\(\\dfrac{9}{10} = \\dfrac{90}{100}\\).",
+    "Out of 100 is per cent, so \\(90\\%\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-56d97abf",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][62]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(0.9\\) as a percentage.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 90
+   },
+   "unit": "%",
+   "worked": [
+    "Multiply by 100: \\(0.9 \\times 100 = 90\\), so \\(90\\%\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-718faaab",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][63]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(90\\%\\) as a decimal.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.9
+   },
+   "worked": [
+    "Divide by 100: \\(90 \\div 100 = 0.9\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-4aeff894",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][73]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(0.\\dot{6}\\) as a fraction.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 2,
+    "d": 3
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "\\(0.\\dot{6}\\) is \\(0.666\\ldots\\), which is what \\(2 \\div 3\\) gives.",
+    "So it is \\(\\dfrac{2}{3}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-2f8e105a",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[1][76]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Write \\(66\\dfrac{2}{3}\\%\\) as a fraction.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 2,
+    "d": 3
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "\\(66\\dfrac{2}{3}\\%\\) is \\(\\dfrac{2}{3}\\) of 100%, so it is \\(\\dfrac{2}{3}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-d9ea64c3",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][0]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{3}{8}\\) as a decimal.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.375
+   },
+   "worked": [
+    "Multiply top and bottom by 125: \\(\\dfrac{3}{8} = \\dfrac{375}{1000}\\), which is 375 thousandths, \\(0.375\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-e953e73d",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][1]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{3}{8}\\) as a percentage.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 37.5
+   },
+   "unit": "%",
+   "worked": [
+    "\\(\\dfrac{3}{8} = \\dfrac{375}{1000} = 0.375\\), and \\(0.375 \\times 100 = 37.5\\), so \\(37.5\\%\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-3aa83724",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][2]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(0.375\\) as a fraction.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 3,
+    "d": 8
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "\\(0.375\\) is 375 thousandths: \\(\\dfrac{375}{1000}\\).",
+    "Divide top and bottom by 125: \\(\\dfrac{375}{1000} = \\dfrac{3}{8}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-496a52e5",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][3]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(0.375\\) as a percentage.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 37.5
+   },
+   "unit": "%",
+   "worked": [
+    "Multiply by 100: \\(0.375 \\times 100 = 37.5\\), so \\(37.5\\%\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-6c9c2b32",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][4]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(37.5\\%\\) as a decimal.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.375
+   },
+   "worked": [
+    "Divide by 100: \\(37.5 \\div 100 = 0.375\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-48fc4760",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][5]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(37.5\\%\\) as a fraction.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 3,
+    "d": 8
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "\\(37.5\\%\\) means 37.5 out of 100, which is \\(\\dfrac{375}{1000}\\).",
+    "Divide top and bottom by 125: \\(\\dfrac{375}{1000} = \\dfrac{3}{8}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-512398db",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][24]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{3}{20}\\) as a decimal.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.15
+   },
+   "worked": [
+    "Multiply top and bottom by 5: \\(\\dfrac{3}{20} = \\dfrac{15}{100}\\), which is 15 hundredths, \\(0.15\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-94ad2a0c",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][25]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{3}{20}\\) as a percentage.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 15
+   },
+   "unit": "%",
+   "worked": [
+    "Multiply top and bottom by 5: \\(\\dfrac{3}{20} = \\dfrac{15}{100}\\).",
+    "Out of 100 is per cent, so \\(15\\%\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-c3597caa",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][32]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(0.35\\) as a fraction.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 7,
+    "d": 20
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "\\(0.35\\) is 35 hundredths: \\(\\dfrac{35}{100}\\).",
+    "Divide top and bottom by 5: \\(\\dfrac{35}{100} = \\dfrac{7}{20}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-7022c990",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][33]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(0.35\\) as a percentage.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 35
+   },
+   "unit": "%",
+   "worked": [
+    "Multiply by 100: \\(0.35 \\times 100 = 35\\), so \\(35\\%\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-640151b3",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][34]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(35\\%\\) as a decimal.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.35
+   },
+   "worked": [
+    "Divide by 100: \\(35 \\div 100 = 0.35\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-cc1d8487",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][35]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(35\\%\\) as a fraction.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 7,
+    "d": 20
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "\\(35\\%\\) means 35 out of 100: \\(\\dfrac{35}{100}\\).",
+    "Divide top and bottom by 5: \\(\\dfrac{35}{100} = \\dfrac{7}{20}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-bb88fd1a",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][54]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{17}{20}\\) as a decimal.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.85
+   },
+   "worked": [
+    "Multiply top and bottom by 5: \\(\\dfrac{17}{20} = \\dfrac{85}{100}\\), which is 85 hundredths, \\(0.85\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-6347b813",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][55]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{17}{20}\\) as a percentage.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 85
+   },
+   "unit": "%",
+   "worked": [
+    "Multiply top and bottom by 5: \\(\\dfrac{17}{20} = \\dfrac{85}{100}\\).",
+    "Out of 100 is per cent, so \\(85\\%\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-2a206b48",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][68]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(0.03\\) as a fraction.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 3,
+    "d": 100
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "\\(0.03\\) is 3 hundredths: \\(\\dfrac{3}{100}\\).",
+    "It will not simplify."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-7c32f318",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][69]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(0.03\\) as a percentage.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "unit": "%",
+   "worked": [
+    "Multiply by 100: \\(0.03 \\times 100 = 3\\), so \\(3\\%\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-86218115",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][70]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(3\\%\\) as a decimal.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.03
+   },
+   "worked": [
+    "Divide by 100: \\(3 \\div 100 = 0.03\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-5aa434fe",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][71]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(3\\%\\) as a fraction.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 3,
+    "d": 100
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "\\(3\\%\\) means 3 out of 100: \\(\\dfrac{3}{100}\\).",
+    "It will not simplify."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-4d67aae3",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][78]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{9}{100}\\) as a decimal.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.09
+   },
+   "worked": [
+    "\\(\\dfrac{9}{100}\\) is 9 hundredths, which is \\(0.09\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-7e6305f8",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][79]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{9}{100}\\) as a percentage.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 9
+   },
+   "unit": "%",
+   "worked": [
+    "\\(\\dfrac{9}{100}\\) is 9 out of 100, and out of 100 is per cent: \\(9\\%\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-487c0121",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][104]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(0.21\\) as a fraction.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 21,
+    "d": 100
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "\\(0.21\\) is 21 hundredths: \\(\\dfrac{21}{100}\\).",
+    "It will not simplify."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-2abbc901",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][105]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(0.21\\) as a percentage.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 21
+   },
+   "unit": "%",
+   "worked": [
+    "Multiply by 100: \\(0.21 \\times 100 = 21\\), so \\(21\\%\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-45f28791",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][106]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(21\\%\\) as a decimal.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.21
+   },
+   "worked": [
+    "Divide by 100: \\(21 \\div 100 = 0.21\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-226c789d",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][107]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(21\\%\\) as a fraction.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 21,
+    "d": 100
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "\\(21\\%\\) means 21 out of 100: \\(\\dfrac{21}{100}\\).",
+    "It will not simplify."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-ab58d6b4",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][108]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{37}{100}\\) as a decimal.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.37
+   },
+   "worked": [
+    "\\(\\dfrac{37}{100}\\) is 37 hundredths, which is \\(0.37\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-a48dc938",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][109]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{37}{100}\\) as a percentage.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 37
+   },
+   "unit": "%",
+   "worked": [
+    "\\(\\dfrac{37}{100}\\) is 37 out of 100, and out of 100 is per cent: \\(37\\%\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-6bd8c2ca",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][138]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{2}{6}\\) in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 3
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "The biggest factor of both 2 and 6 is 2.",
+    "Divide top and bottom by 2: \\(\\dfrac{2}{6} = \\dfrac{1}{3}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-311b11d4",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][155]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{10}{12}\\) in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 5,
+    "d": 6
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "The biggest factor of both 10 and 12 is 2.",
+    "Divide top and bottom by 2: \\(\\dfrac{10}{12} = \\dfrac{5}{6}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-4bca0fc6",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][172]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{6}{18}\\) in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 3
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "The biggest factor of both 6 and 18 is 6.",
+    "Divide top and bottom by 6: \\(\\dfrac{6}{18} = \\dfrac{1}{3}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fdp-convert-371d8a65",
+   "topic": "fdp-convert",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[2][189]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(\\dfrac{16}{20}\\) in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 4,
+    "d": 5
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "The biggest factor of both 16 and 20 is 4.",
+    "Divide top and bottom by 4: \\(\\dfrac{16}{20} = \\dfrac{4}{5}\\)."
+   ],
+   "slip": []
+  }
+ ]
+}

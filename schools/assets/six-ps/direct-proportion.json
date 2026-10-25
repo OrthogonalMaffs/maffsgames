@@ -1,0 +1,1294 @@
+{
+ "topic": "direct-proportion",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "direct-proportion-b50df5b8",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:1"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "6 stickers cost £0.60. How much do 8 stickers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 80
+   },
+   "worked": [
+    "One sticker = £0.60 ÷ 6 = £0.10.",
+    "8 × £0.10 = £0.80."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-34abbc5b",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:2"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "7 rubbers cost £11.90. How much do 4 rubbers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 680
+   },
+   "worked": [
+    "One rubber = £11.90 ÷ 7 = £1.70.",
+    "4 × £1.70 = £6.80."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-4d5ebdb0",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:3"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "7 pens cost £1.40. How much do 6 pens cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 120
+   },
+   "worked": [
+    "One pen = £1.40 ÷ 7 = £0.20.",
+    "6 × £0.20 = £1.20."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-ec1f9c8a",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:4"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "8 pens cost £13.60. How much do 4 pens cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 680
+   },
+   "worked": [
+    "One pen = £13.60 ÷ 8 = £1.70.",
+    "4 × £1.70 = £6.80."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-b297ec53",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:5"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "6 rubbers cost £23.40. How much do 4 rubbers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1560
+   },
+   "worked": [
+    "One rubber = £23.40 ÷ 6 = £3.90.",
+    "4 × £3.90 = £15.60."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-9c067eb8",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:6"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "5 pencils cost £0.50. How much do 9 pencils cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 90
+   },
+   "worked": [
+    "One pencil = £0.50 ÷ 5 = £0.10.",
+    "9 × £0.10 = £0.90."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-aaa5cd85",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:7"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "2 notebooks cost £0.80. How much do 12 notebooks cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 480
+   },
+   "worked": [
+    "One notebook = £0.80 ÷ 2 = £0.40.",
+    "12 × £0.40 = £4.80."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-c1bdc88a",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:8"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "3 notebooks cost £9.60. How much do 6 notebooks cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1920
+   },
+   "worked": [
+    "One notebook = £9.60 ÷ 3 = £3.20.",
+    "6 × £3.20 = £19.20."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-43e638f1",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:9"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "3 notebooks cost £12.90. How much do 4 notebooks cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1720
+   },
+   "worked": [
+    "One notebook = £12.90 ÷ 3 = £4.30.",
+    "4 × £4.30 = £17.20."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-af35762a",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:10"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "5 notebooks cost £23.00. How much do 9 notebooks cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 4140
+   },
+   "worked": [
+    "One notebook = £23.00 ÷ 5 = £4.60.",
+    "9 × £4.60 = £41.40."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-9ca4854b",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:11"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "5 rubbers cost £13.50. How much do 9 rubbers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 2430
+   },
+   "worked": [
+    "One rubber = £13.50 ÷ 5 = £2.70.",
+    "9 × £2.70 = £24.30."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-153a4179",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:12"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "4 stickers cost £1.60. How much do 8 stickers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 320
+   },
+   "worked": [
+    "One sticker = £1.60 ÷ 4 = £0.40.",
+    "8 × £0.40 = £3.20."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-d740291d",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:13"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "5 pens cost £9.50. How much do 2 pens cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 380
+   },
+   "worked": [
+    "One pen = £9.50 ÷ 5 = £1.90.",
+    "2 × £1.90 = £3.80."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-84d6f3b6",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:14"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "5 rulers cost £11.00. How much do 8 rulers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1760
+   },
+   "worked": [
+    "One ruler = £11.00 ÷ 5 = £2.20.",
+    "8 × £2.20 = £17.60."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-2bbd614e",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:15"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "3 rulers cost £6.30. How much do 7 rulers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1470
+   },
+   "worked": [
+    "One ruler = £6.30 ÷ 3 = £2.10.",
+    "7 × £2.10 = £14.70."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-238b8e14",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:16"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "6 rulers cost £4.80. How much do 10 rulers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 800
+   },
+   "worked": [
+    "One ruler = £4.80 ÷ 6 = £0.80.",
+    "10 × £0.80 = £8.00."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-1283c649",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:17"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "6 pens cost £6.00. How much do 8 pens cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 800
+   },
+   "worked": [
+    "One pen = £6.00 ÷ 6 = £1.00.",
+    "8 × £1.00 = £8.00."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-9f7a48b0",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:18"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "4 pencils cost £12.40. How much do 8 pencils cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 2480
+   },
+   "worked": [
+    "One pencil = £12.40 ÷ 4 = £3.10.",
+    "8 × £3.10 = £24.80."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-659e21f3",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:19"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "2 notebooks cost £3.40. How much do 7 notebooks cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1190
+   },
+   "worked": [
+    "One notebook = £3.40 ÷ 2 = £1.70.",
+    "7 × £1.70 = £11.90."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-4e687885",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:20"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "7 pencils cost £14.00. How much do 8 pencils cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1600
+   },
+   "worked": [
+    "One pencil = £14.00 ÷ 7 = £2.00.",
+    "8 × £2.00 = £16.00."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-89ff75b8",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:21"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "5 rulers cost £11.50. How much do 4 rulers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 920
+   },
+   "worked": [
+    "One ruler = £11.50 ÷ 5 = £2.30.",
+    "4 × £2.30 = £9.20."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-e346772b",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:22"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "6 pencils cost £7.20. How much do 4 pencils cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 480
+   },
+   "worked": [
+    "One pencil = £7.20 ÷ 6 = £1.20.",
+    "4 × £1.20 = £4.80."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-6ad58152",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:23"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "2 pencils cost £0.80. How much do 9 pencils cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 360
+   },
+   "worked": [
+    "One pencil = £0.80 ÷ 2 = £0.40.",
+    "9 × £0.40 = £3.60."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-297a47d1",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:24"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "4 pens cost £19.60. How much do 5 pens cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 2450
+   },
+   "worked": [
+    "One pen = £19.60 ÷ 4 = £4.90.",
+    "5 × £4.90 = £24.50."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-54d9d1ab",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:25"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "6 notebooks cost £25.20. How much do 8 notebooks cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 3360
+   },
+   "worked": [
+    "One notebook = £25.20 ÷ 6 = £4.20.",
+    "8 × £4.20 = £33.60."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-28b4fa4c",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:26"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "5 pens cost £19.00. How much do 8 pens cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 3040
+   },
+   "worked": [
+    "One pen = £19.00 ÷ 5 = £3.80.",
+    "8 × £3.80 = £30.40."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-117ee77b",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:27"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "4 pencils cost £0.80. How much do 2 pencils cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 40
+   },
+   "worked": [
+    "One pencil = £0.80 ÷ 4 = £0.20.",
+    "2 × £0.20 = £0.40."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-cec67fed",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:28"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "4 notebooks cost £14.40. How much do 10 notebooks cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 3600
+   },
+   "worked": [
+    "One notebook = £14.40 ÷ 4 = £3.60.",
+    "10 × £3.60 = £36.00."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-c167d515",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:29"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "3 pencils cost £2.40. How much do 6 pencils cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 480
+   },
+   "worked": [
+    "One pencil = £2.40 ÷ 3 = £0.80.",
+    "6 × £0.80 = £4.80."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-8ce1eba5",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:30"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "8 pencils cost £35.20. How much do 6 pencils cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 2640
+   },
+   "worked": [
+    "One pencil = £35.20 ÷ 8 = £4.40.",
+    "6 × £4.40 = £26.40."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-0387ff9f",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:1:1"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A salad dressing recipe for 2 people uses 90 ml of oil, 30 ml of vinegar and 10 g of mustard. How much vinegar do you need for 8 people?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 120
+   },
+   "unit": "ml",
+   "worked": [
+    "Scale factor = \\(\\frac{8}{2}\\) = 4.",
+    "Multiply each amount by 4."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-3c156250",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:2:2"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A salad dressing recipe for 3 people uses 90 ml of oil, 30 ml of vinegar and 10 g of mustard. How much mustard do you need for 9 people?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 30
+   },
+   "unit": "g",
+   "worked": [
+    "Scale factor = \\(\\frac{9}{3}\\) = 3.",
+    "Multiply each amount by 3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-876ec1ac",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:3:0"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A salad dressing recipe for 2 people uses 90 ml of oil, 30 ml of vinegar and 10 g of mustard. How much oil do you need for 6 people?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 270
+   },
+   "unit": "ml",
+   "worked": [
+    "Scale factor = \\(\\frac{6}{2}\\) = 3.",
+    "Multiply each amount by 3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-5c37cb91",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:4:1"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A flapjacks recipe for 3 people uses 250 g of oats, 100 g of butter and 60 ml of syrup. How much butter do you need for 6 people?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 200
+   },
+   "unit": "g",
+   "worked": [
+    "Scale factor = \\(\\frac{6}{3}\\) = 2.",
+    "Multiply each amount by 2."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-8426ba84",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:5:2"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A salad dressing recipe for 6 people uses 90 ml of oil, 30 ml of vinegar and 10 g of mustard. How much mustard do you need for 12 people?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 20
+   },
+   "unit": "g",
+   "worked": [
+    "Scale factor = \\(\\frac{12}{6}\\) = 2.",
+    "Multiply each amount by 2."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-b2d727f9",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:6:0"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A concrete mix recipe for 2 wheelbarrows uses 12 kg of cement, 24 kg of sand and 8 kg of gravel. How much cement do you need for 8 wheelbarrows?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 48
+   },
+   "unit": "kg",
+   "worked": [
+    "Scale factor = \\(\\frac{8}{2}\\) = 4.",
+    "Multiply each amount by 4."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-0eceecc3",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:7:1"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A smoothie recipe for 2 people uses 300 ml of orange juice, 150 g of banana and 80 ml of yoghurt. How much banana do you need for 10 people?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 750
+   },
+   "unit": "g",
+   "worked": [
+    "Scale factor = \\(\\frac{10}{2}\\) = 5.",
+    "Multiply each amount by 5."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-b9f0c9c1",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:8:2"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A smoothie recipe for 5 people uses 300 ml of orange juice, 150 g of banana and 80 ml of yoghurt. How much yoghurt do you need for 15 people?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 240
+   },
+   "unit": "ml",
+   "worked": [
+    "Scale factor = \\(\\frac{15}{5}\\) = 3.",
+    "Multiply each amount by 3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-7da7cf8c",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:9:0"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A smoothie recipe for 8 people uses 300 ml of orange juice, 150 g of banana and 80 ml of yoghurt. How much orange juice do you need for 16 people?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 600
+   },
+   "unit": "ml",
+   "worked": [
+    "Scale factor = \\(\\frac{16}{8}\\) = 2.",
+    "Multiply each amount by 2."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-b9ee7913",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:10:1"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A concrete mix recipe for 8 wheelbarrows uses 12 kg of cement, 24 kg of sand and 8 kg of gravel. How much sand do you need for 32 wheelbarrows?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 96
+   },
+   "unit": "kg",
+   "worked": [
+    "Scale factor = \\(\\frac{32}{8}\\) = 4.",
+    "Multiply each amount by 4."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-c66cf576",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:11:2"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A concrete mix recipe for 5 wheelbarrows uses 12 kg of cement, 24 kg of sand and 8 kg of gravel. How much gravel do you need for 20 wheelbarrows?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 32
+   },
+   "unit": "kg",
+   "worked": [
+    "Scale factor = \\(\\frac{20}{5}\\) = 4.",
+    "Multiply each amount by 4."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-23652f6c",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:12:0"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A pancakes recipe for 2 people uses 200 g of flour, 300 ml of milk and 2 eggs. How much flour do you need for 8 people?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 800
+   },
+   "unit": "g",
+   "worked": [
+    "Scale factor = \\(\\frac{8}{2}\\) = 4.",
+    "Multiply each amount by 4."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-be56b93d",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:13:1"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A concrete mix recipe for 4 wheelbarrows uses 12 kg of cement, 24 kg of sand and 8 kg of gravel. How much sand do you need for 8 wheelbarrows?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 48
+   },
+   "unit": "kg",
+   "worked": [
+    "Scale factor = \\(\\frac{8}{4}\\) = 2.",
+    "Multiply each amount by 2."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-4b7ad9b1",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:14:2"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A concrete mix recipe for 4 wheelbarrows uses 12 kg of cement, 24 kg of sand and 8 kg of gravel. How much gravel do you need for 16 wheelbarrows?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 32
+   },
+   "unit": "kg",
+   "worked": [
+    "Scale factor = \\(\\frac{16}{4}\\) = 4.",
+    "Multiply each amount by 4."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-094739b1",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:15:0"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A pancakes recipe for 4 people uses 200 g of flour, 300 ml of milk and 2 eggs. How much flour do you need for 12 people?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 600
+   },
+   "unit": "g",
+   "worked": [
+    "Scale factor = \\(\\frac{12}{4}\\) = 3.",
+    "Multiply each amount by 3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-f725a360",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:16:1"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A salad dressing recipe for 2 people uses 90 ml of oil, 30 ml of vinegar and 10 g of mustard. How much vinegar do you need for 10 people?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 150
+   },
+   "unit": "ml",
+   "worked": [
+    "Scale factor = \\(\\frac{10}{2}\\) = 5.",
+    "Multiply each amount by 5."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-4e943cea",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:17:2"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A salad dressing recipe for 3 people uses 90 ml of oil, 30 ml of vinegar and 10 g of mustard. How much mustard do you need for 12 people?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 40
+   },
+   "unit": "g",
+   "worked": [
+    "Scale factor = \\(\\frac{12}{3}\\) = 4.",
+    "Multiply each amount by 4."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-7cefdc28",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:18:0"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A pancakes recipe for 5 people uses 200 g of flour, 300 ml of milk and 2 eggs. How much flour do you need for 20 people?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 800
+   },
+   "unit": "g",
+   "worked": [
+    "Scale factor = \\(\\frac{20}{5}\\) = 4.",
+    "Multiply each amount by 4."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-1473055a",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:19:1"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A smoothie recipe for 3 people uses 300 ml of orange juice, 150 g of banana and 80 ml of yoghurt. How much banana do you need for 9 people?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 450
+   },
+   "unit": "g",
+   "worked": [
+    "Scale factor = \\(\\frac{9}{3}\\) = 3.",
+    "Multiply each amount by 3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-f61b8348",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:20:2"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A salad dressing recipe for 4 people uses 90 ml of oil, 30 ml of vinegar and 10 g of mustard. How much mustard do you need for 16 people?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 40
+   },
+   "unit": "g",
+   "worked": [
+    "Scale factor = \\(\\frac{16}{4}\\) = 4.",
+    "Multiply each amount by 4."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-d5e6fcfd",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:21:0"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A concrete mix recipe for 4 wheelbarrows uses 12 kg of cement, 24 kg of sand and 8 kg of gravel. How much cement do you need for 12 wheelbarrows?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 36
+   },
+   "unit": "kg",
+   "worked": [
+    "Scale factor = \\(\\frac{12}{4}\\) = 3.",
+    "Multiply each amount by 3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-cfff7ec5",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:22:1"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A salad dressing recipe for 3 people uses 90 ml of oil, 30 ml of vinegar and 10 g of mustard. How much vinegar do you need for 6 people?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 60
+   },
+   "unit": "ml",
+   "worked": [
+    "Scale factor = \\(\\frac{6}{3}\\) = 2.",
+    "Multiply each amount by 2."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-61210088",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:23:2"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A smoothie recipe for 2 people uses 300 ml of orange juice, 150 g of banana and 80 ml of yoghurt. How much yoghurt do you need for 8 people?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 320
+   },
+   "unit": "ml",
+   "worked": [
+    "Scale factor = \\(\\frac{8}{2}\\) = 4.",
+    "Multiply each amount by 4."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-5494c182",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:24:0"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A pancakes recipe for 8 people uses 200 g of flour, 300 ml of milk and 2 eggs. How much flour do you need for 24 people?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 600
+   },
+   "unit": "g",
+   "worked": [
+    "Scale factor = \\(\\frac{24}{8}\\) = 3.",
+    "Multiply each amount by 3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-b94815cb",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:25:1"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A concrete mix recipe for 6 wheelbarrows uses 12 kg of cement, 24 kg of sand and 8 kg of gravel. How much sand do you need for 24 wheelbarrows?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 96
+   },
+   "unit": "kg",
+   "worked": [
+    "Scale factor = \\(\\frac{24}{6}\\) = 4.",
+    "Multiply each amount by 4."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-e0a04c48",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:27:0"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A concrete mix recipe for 2 wheelbarrows uses 12 kg of cement, 24 kg of sand and 8 kg of gravel. How much cement do you need for 4 wheelbarrows?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 24
+   },
+   "unit": "kg",
+   "worked": [
+    "Scale factor = \\(\\frac{4}{2}\\) = 2.",
+    "Multiply each amount by 2."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-ff3d1b53",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:29:2"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A pancakes recipe for 2 people uses 200 g of flour, 300 ml of milk and 2 eggs. How many eggs do you need for 6 people?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "Scale factor = \\(\\frac{6}{2}\\) = 3.",
+    "Multiply each amount by 3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-6b810aeb",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:30:0"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A flapjacks recipe for 8 people uses 250 g of oats, 100 g of butter and 60 ml of syrup. How much oats do you need for 24 people?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 750
+   },
+   "unit": "g",
+   "worked": [
+    "Scale factor = \\(\\frac{24}{8}\\) = 3.",
+    "Multiply each amount by 3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-1e6ff38d",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:31:1"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A salad dressing recipe for 8 people uses 90 ml of oil, 30 ml of vinegar and 10 g of mustard. How much vinegar do you need for 32 people?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 120
+   },
+   "unit": "ml",
+   "worked": [
+    "Scale factor = \\(\\frac{32}{8}\\) = 4.",
+    "Multiply each amount by 4."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-047969fa",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.scale:32:2"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A pancakes recipe for 6 people uses 200 g of flour, 300 ml of milk and 2 eggs. How many eggs do you need for 18 people?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "Scale factor = \\(\\frac{18}{6}\\) = 3.",
+    "Multiply each amount by 3."
+   ],
+   "slip": []
+  }
+ ]
+}
