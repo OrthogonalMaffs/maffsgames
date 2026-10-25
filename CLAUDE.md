@@ -64,6 +64,8 @@ one run's clock only **warns** (job summary and annotation naming the slowest li
 job stays green), and the main timings job reports, never fails on, a verifier whose last 3 runs are each 20% and
 15 s over the 5 before. **Why:** the per-run clock failed twice in 160 runs, both single-line stalls on unchanged
 code, and never saw the one real regression (the median did). Each job's summary lists every verifier's duration.
+**A PR is also judged on its own measured times (PR-MEASURED, 25 Oct 2026):** the "PR budget (measured times)" job fails a PR whose
+grown or renamed verifier would push its group past the budget, so a verifier's CI time needs no timing by hand before merging (canon §7.8.1).
 CI timings are the median of the last 5 main runs, and the timings job commits only a pack that passes `ci-groups.py --check`
 (CI-TIMINGS-MEDIAN, 12 Oct 2026): run 785's one slow group recorded a 125 s setup against 18-28 s before it, and the
 single-run pack it produced turned `--check` red on main and on every PR.

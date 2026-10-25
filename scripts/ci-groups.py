@@ -6,6 +6,7 @@
     python scripts/ci-groups.py --github-output FILE  # plan job: writes groups=<that JSON>
     python scripts/ci-groups.py --compare FILE        # equal, line for line, to FILE's static content groups?
     python scripts/ci-groups.py --check               # the budget check: fails past 80% (contract CI-BALANCE)
+    python scripts/ci-groups.py --check-measured --run-id ID --from-dir D  # the same check on this PR run's own times
     python scripts/ci-groups.py --selftest            # header parsing and packing proofs, with planted faults
     python scripts/ci-groups.py --record-timings ID   # scripts/ci-timings.json from a main full run (gh CLI)
     python scripts/ci-groups.py --record-and-pack ID --from-dir D  # the timings job: record, repack, check, write only if it passes
@@ -76,6 +77,21 @@ plan job's interface is unchanged; locally, since the merge base with origin/mai
 warning naming it. A change whose selection is everything (CI itself, or an unknown path) selects no line for a reason
 of its own, so it warns too (Jon's ruling, 21 Oct 2026). The group rule (past 80%) still
 refuses the pack and fails --check everywhere, and the setup-only warning (exit 2) is unchanged.
+
+A PR IS ALSO JUDGED ON ITS OWN MEASURED TIMES (contract PR-MEASURED, Jon's ruling 25 Oct 2026; canon §7.8.1). --check runs
+in the plan job, before any verifier has run, so it knows only main's medians: a line with none (new, or renamed) counts as
+its tier's default, 120 s, and a line a PR grew is judged on main's old figure. Three times a verifier passed its PR and
+turned main red after merge: Squared Squirrel (#515), Burst mode (BURST-STAGE #525 grew check-burst.py; the median caught
+up on #527, a record-only PR) and Shape Shifter (#526's renamed line, estimated at 120 s, took 205 s). The PR run measures
+every line it runs and saves the ci-timing-* artifacts the main timings job reads; the "PR budget (measured times)" job
+reads them on every run, after the content groups, and runs --check-measured, and the Gate needs it. The check lays this
+run's times over the committed timings (measured_timings()): a line the change selects (pr_selection(), as --check) takes
+the larger of main's median and this run's time; a line with no median takes this run's time; every other line keeps its
+median, so runner noise on an unchanged line moves nothing, and a time below the median never lowers it. The setup stays
+the committed median, never this run's. It then repacks from ci-pack.json and applies budget_faults() and line_faults()
+with the same selection: the same 70% and 80% rules, no second copy. A fault names the line, its main median (or
+"none"), this run's time and its group. A run that is not a pull request, or one with no content or lock timing file
+(no verifier ran), prints why and passes.
 
 Old headers ("# ci-line: B4 | ..."): a hand-made group id is still accepted and read as its tier only (L* is
 the lock tier, any other is content), so a branch made before CI-BALANCE still passes; the repo's own headers
@@ -316,15 +332,23 @@ def split_candidates(gs=None, timings=None):
         for l, c in g["lines"]:
             if l in secs and secs[l] + setup > TARGET * b:
                 out.append({"label": l, "median": secs[l], "setup": setup, "percent": int(100 * (secs[l] + setup) / b),
-                            "group": g["name"], "script": script_of(c), "budget": b})
+                            "group": g["name"], "script": script_of(c), "budget": b,
+                            "measured": timings.get("measured", {}).get(l)})
     return sorted(out, key=lambda c: c["label"])
 
 
+def source(m):
+    """How a line's figure was reached, for a message: "(median)", or with --check-measured the figures behind it."""
+    if not m:
+        return "(median)"
+    return "(main median %s, this run %ss)" % ("none" if m["median"] is None else "%ss" % m["median"], m["run"])
+
+
 def line_message(c):
-    return ("%s: line over the per-line limit: %s %ss (median) + %ss setup = %ds, %d%% of its %ds budget; "
+    return ("%s: line over the per-line limit: %s %ss %s + %ss setup = %ds, %d%% of its %ds budget; "
             "the limit is %d%% (%ds). Split its script (--part, --shard)."
-            % (c["group"], c["label"], c["median"], c["setup"], c["median"] + c["setup"], c["percent"], c["budget"],
-               TARGET * 100, TARGET * c["budget"]))
+            % (c["group"], c["label"], c["median"], source(c.get("measured")), c["setup"], c["median"] + c["setup"],
+               c["percent"], c["budget"], TARGET * 100, TARGET * c["budget"]))
 
 
 def line_faults(gs=None, timings=None, selected=()):
@@ -347,7 +371,7 @@ def budget_faults(gs=None, timings=None, selected=()):
     its budget, naming its largest lines. The group rule holds whatever is selected: it is what refuses a pack on main."""
     timings = read_json(TIMINGS) if timings is None else timings
     gs = groups(timings=timings) if gs is None else gs
-    secs = timings.get("lines", {})
+    secs, meas = timings.get("lines", {}), timings.get("measured", {})
     faults = line_faults(gs, timings, selected)[0]
     for g in gs:
         est, _ = estimate(g, timings)
@@ -357,7 +381,8 @@ def budget_faults(gs=None, timings=None, selected=()):
             faults.append("%s: estimated %ds, past %d%% of its %ds budget (%d%%). Largest: %s. A line this long "
                           "cannot share a job: split its script (--part, --shard)."
                           % (g["name"], est, FAIL * 100, b, 100 * est / b,
-                             "; ".join("%s %ss" % (l, secs.get(l, "no timing, counted as %d" % TIERS[g["tier"]][3]))
+                             "; ".join("%s %ss%s" % (l, secs.get(l, "no timing, counted as %d" % TIERS[g["tier"]][3]),
+                                                     " " + source(meas[l]) if l in meas else "")
                                        for l, _ in big)))
     return faults
 
@@ -718,6 +743,73 @@ def record_and_pack(run_id, from_dir=None):
                   prev_setup=existing.get("setup", SETUP))
 
 
+def measured_timings(timings, rec, selected, hdrs=None):
+    """The timings --check-measured judges (PR-MEASURED): `timings` (the committed medians) with the run record rec's times
+    laid over. A line the change selects (`selected`: scripts, True for every line, () for none) takes the larger of its
+    median and this run's time; a line with no median takes this run's time; every other line keeps its median. The
+    setup is the committed median, never the run's. "measured" records {label: {"median", "run"}} for each line whose
+    figure this run set or confirmed, for the messages. Pure."""
+    script = {l: script_of(c) for _, l, c in all_lines(hdrs)}
+    secs, meas = dict(timings.get("lines", {})), {}
+    for label, t in rec.get("lines", {}).items():
+        med = timings.get("lines", {}).get(label)
+        if med is None:
+            secs[label] = t
+        elif selected is True or script.get(label) in selected:
+            secs[label] = max(med, t)
+        else:
+            continue
+        meas[label] = {"median": med, "run": t}
+    return dict(timings, lines=secs, measured=meas)
+
+
+def check_measured(run_id, from_dir, env=None, rec=None, timings=None, hdrs=None, prev=None, deps=None):
+    """--check-measured (PR-MEASURED): judge this pull request run's own measured times with --check's rules. Returns
+    the exit status: 1 on a fault, 0 otherwise, and 0 with the reason printed when there is nothing to judge (not a pull
+    request; no content or lock timing file). rec, timings, hdrs, prev and deps are for the self-test."""
+    env = os.environ if env is None else env
+    if env.get("GITHUB_ACTIONS") == "true" and env.get("GITHUB_EVENT_NAME") != "pull_request":
+        print("check-measured: a %s run, not a pull request: nothing to judge here (main's timings job records its times)"
+              % (env.get("GITHUB_EVENT_NAME") or "non-PR"))
+        return 0
+    rec = read_run(run_id, from_dir) if rec is None else rec
+    if not rec or not rec.get("lines"):
+        print("check-measured: no content or lock timing file in this run (no verifier ran, or none was saved): "
+              "nothing to judge")
+        return 0
+    timings = read_json(TIMINGS) if timings is None else timings
+    prev = read_json(PACK) if prev is None else prev
+    meds = timings.get("lines", {})
+    # The selection costs ci-deps.py's dependency map; it matters only when this run raised a median, or a line is over
+    # the per-line limit.
+    base = measured_timings(timings, rec, (), hdrs)
+    grew = any(t > meds[l] for l, t in rec["lines"].items() if l in meds)
+    if grew or split_candidates(groups(hdrs, base, prev), base):
+        selected, how = pr_selection(env, deps)
+    else:
+        selected, how = (), "no line ran slower than its median and none is over the per-line limit"
+    print("selection: " + how)
+    mt = measured_timings(timings, rec, selected, hdrs)
+    gs = groups(hdrs, mt, prev)
+    for label, m in sorted(mt["measured"].items()):
+        print("measured  %s: this run %ss, main median %s: judged at %ss" % (
+            label, m["run"], "none" if m["median"] is None else "%ss" % m["median"], mt["lines"][label]))
+    for g in gs:
+        est, missing = estimate(g, mt)
+        b = budget(g["tier"])
+        print("%-22s %2d line(s)  estimated %4ds of %4ds budget (%3d%%)%s" % (
+            g["name"], len(g["lines"]), est, b, 100 * est / b,
+            "" if not missing else "  NO TIMING (counted as %ds each): %s" % (TIERS[g["tier"]][3], "; ".join(missing))))
+    faults = budget_faults(gs, mt, selected)
+    warn(line_faults(gs, mt, selected)[1])
+    for x in faults:
+        print("FAIL  " + x)
+    print("check-measured: %s (run %s: %d line(s) timed, %d judged on this run's time; setup %ds, main's median; timings "
+          "from main run %s)" % ("FAILED" if faults else "PASS", run_id, len(rec["lines"]), len(mt["measured"]),
+                                  mt.get("setup", SETUP), timings.get("run")))
+    return 1 if faults else 0
+
+
 def add_regions(existing, rec, keep=REGION_KEEP):
     """The new ci-timings-regions.json content (REGION-HISTORY): existing with the run record rec added. For each timed
     line it keeps, per region, the last `keep` seconds, oldest first; a line the run did not name a region for goes under
@@ -987,6 +1079,53 @@ def selftest():
           not fl and len(wn) == 1 and "split candidate" in wn[0] and not budget_faults(g170, ft, sel2))
     check("a CI PR and a group past 80%: still a fault (the group rule holds whatever is selected)",
           any("past 80%" in x for x in budget_faults(groups(hs, f400, {}), f400, sel2)))
+    # PR-MEASURED (Jon, 25 Oct 2026): a PR is also judged on its own run's measured times. Line a is verify-x.py's; setup
+    # 20 s, budget 270 s: the per-line limit is 189 s, a group fails past 216 s.
+    import contextlib, io
+    run = lambda lines: {"run": 1, "lines": dict(lines)}
+    hr = {"verify-x.py": parse("verify-x.py", "# ci-line: a2 | \n"),          # #526's shape: "a" renamed "a2"
+          "verify-y.py": parse("verify-y.py", "".join("# ci-line: %s | \n" % x for x in "bcde"))}
+    check("PLANT (1) before: a renamed line with no median passes --check on the 120 s default",
+          not budget_faults(groups(hr, t, {}), t, X))
+    mt = measured_timings(t, run({"a2": 205}), X, hr)
+    fl = budget_faults(groups(hr, mt, {}), mt, X)
+    check("PLANT (1) #526's shape: a renamed line, no median, measured 205 s: a fault naming the line, \"none\", 205 s and "
+          "its group: %s" % (fl[:1],), bool(fl) and all("a2 205s" in x and "main median none, this run 205s" in x
+                                                         and "Content verifiers" in x for x in fl))
+    mt = measured_timings(t, run({"a": 200}), X, hs)
+    fl = budget_faults(groups(hs, mt, {}), mt, X)
+    check("PLANT (2) #525's shape: a selected line, median 100 s, measured 200 s: a fault naming both figures: %s" % (fl[:1],),
+          mt["lines"]["a"] == 200 and bool(fl) and any("main median 100s, this run 200s" in x for x in fl))
+    mt = measured_timings(t, run({"a": 200}), (), hs)
+    check("PLANT (3) an unselected line measured slow on a run-all PR keeps its median (%ss): no fault" % mt["lines"]["a"],
+          mt["lines"]["a"] == 100 and not budget_faults(groups(hs, mt, {}), mt, ()))
+    mt = measured_timings(t, run({"a": 50}), X, hs)
+    check("PLANT (4) a measured time below the median never lowers the estimate (100 s measured 50 s: %ss)" % mt["lines"]["a"],
+          mt["lines"]["a"] == 100 and mt["setup"] == 20)
+    check("the setup is the committed median, never the run's",
+          measured_timings(t, dict(run({"a": 200}), setup=125), X, hs)["setup"] == 20)
+    out = io.StringIO()
+    with contextlib.redirect_stdout(out):
+        rc_none = check_measured("1", None, {}, rec={"lines": {}}, timings=t, hdrs=hs, prev={})
+        rc_push = check_measured("1", None, {"GITHUB_ACTIONS": "true", "GITHUB_EVENT_NAME": "push"}, rec=run({"a": 400}),
+                                 timings=t, hdrs=hs, prev={})
+    said = out.getvalue()
+    check("PLANT (5) no artifacts: exit 0 with a reason (%r)" % said.splitlines()[0][:60],
+          rc_none == 0 and "no content or lock timing file" in said)
+    check("not a pull request (a push run with a 400 s line): exit 0 with a reason", rc_push == 0 and "not a pull request" in said)
+    with tempfile.TemporaryDirectory() as td:
+        ev = os.path.join(td, "event.json")
+        with open(ev, "w", encoding="utf-8", newline="\n") as f:
+            json.dump({"pull_request": {"base": {"sha": "0123456789abcdef"}}}, f)
+        env = {"GITHUB_ACTIONS": "true", "GITHUB_EVENT_NAME": "pull_request", "GITHUB_EVENT_PATH": ev}
+        with contextlib.redirect_stdout(io.StringIO()) as o1:
+            rc1 = check_measured("1", None, env, rec=run({"a2": 205}), timings=t, hdrs=hr, prev={},
+                                 deps=Deps(["scripts/verify-x.py"], (False, [], {"scripts/verify-x.py": []})))
+        with contextlib.redirect_stdout(io.StringIO()) as o2:
+            rc2 = check_measured("1", None, env, rec=run({"a": 90, "b": 55}), timings=t, hdrs=hs, prev={},
+                                 deps=Deps(["scripts/verify-x.py"], (False, [], {"scripts/verify-x.py": []})))
+    check("end to end, #526's shape on a pull request run: exit 1, the line named", rc1 == 1 and "a2 205s" in o1.getvalue())
+    check("end to end, a run at or under its medians: exit 0", rc2 == 0 and "check-measured: PASS" in o2.getvalue())
     # REGION-HISTORY: the per-region record keeps 10 per line per region and leaves ci-timings.json alone.
     regs = ["eastus", "centralus", "westus"]
 
@@ -1032,6 +1171,9 @@ def main():
     ap.add_argument("--from-dir", metavar="DIR", help="with --record-timings or --record-and-pack: the run's ci-timing-* artifacts")
     ap.add_argument("--write-pack", action="store_true")
     ap.add_argument("--check", action="store_true")
+    ap.add_argument("--check-measured", action="store_true", help="the budget check on this PR run's measured times "
+                    "(needs --run-id and --from-dir)")
+    ap.add_argument("--run-id", metavar="ID", help="with --check-measured: this run's id")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
@@ -1043,6 +1185,8 @@ def main():
         return record_timings(a.record_timings, a.from_dir)
     if a.write_pack:
         return write_pack()
+    if a.check_measured:
+        return check_measured(a.run_id or "0", a.from_dir)
     if a.check:
         timings = read_json(TIMINGS)
         gs = groups(timings=timings)

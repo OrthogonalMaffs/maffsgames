@@ -1584,6 +1584,14 @@ at 5m17s of 6m; each fix was another hand-made group (B5, E2), which only bought
   - Done in the same contract: Free Daily Pizza is now two lines (part 1 static, daily seed, UI play and the
     fault-injection self-test; part 2 every item at three phone sizes, with two planted phone faults of its own), and
     Just Pythag It, Bruv part 4 is parts 4 and 5 (WebKit, play-through and the self-test moved to part 5).
+- **A PR is also judged on its own run's measured times** (PR-MEASURED, Jon's ruling 25 Oct 2026): the "PR budget
+  (measured times)" job runs after the content groups on every event and the Gate needs it. `ci-groups.py
+  --check-measured` reads the run's `ci-timing-*` files and judges each line the PR selects at the larger of main's
+  median and this run's time, and a line with no median (new or renamed) at this run's time; every other line keeps its
+  median and the setup stays main's median. It repacks and applies `--check`'s own 70% and 80% rules, naming the line,
+  its main median (or "none"), this run's time and its group. **Why:** `--check` runs before any verifier, so three times
+  a line passed its PR and turned main red after merge (#515; #525, caught only on #527; #526's renamed Shape Shifter
+  line, estimated at the 120 s default, took 205 s). Not a pull request, or no verifier ran: it says so and passes.
 - **After every full run on main the "CI timings and pack" job** records that run's times and repacks, and
   commits both files if they changed (`[skip ci]`, as the register job does).
 - "70%" and "80%" are of the budget, not the timeout (Jon's own wording, 9 Oct: "kept to 70% of the budget,

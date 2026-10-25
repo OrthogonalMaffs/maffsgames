@@ -101,7 +101,7 @@ jobs:
   gate:
     name: Gate (every job passed)
     if: always()
-    needs: [plan, coverage, check-site, content]
+    needs: [plan, coverage, check-site, content, pr-budget]
     runs-on: ubuntu-24.04
     timeout-minutes: 2
     steps:
@@ -112,6 +112,39 @@ jobs:
           echo "$RESULTS" | jq -r 'to_entries[] | "\(.key): \(.value.result)"'
           bad=$(echo "$RESULTS" | jq -r '[to_entries[] | select(.value.result != "success")] | length')
           if [ "$bad" != "0" ]; then echo "::error::$bad job(s) did not pass"; exit 1; fi
+
+  # The plan job's budget check (ci-groups.py --check) runs before any verifier and knows only main's medians, so a
+  # line a PR grew or renamed passed its PR and turned main red after merge (#515, #525/#527, #526). This job reads the
+  # run's own ci-timing-* files after the content groups and judges the lines this change selects at the larger of
+  # main's median and this run's time, and a line with no median at this run's time, with --check's own rules
+  # (contract PR-MEASURED, Jon's ruling 25 Oct 2026; canon 7.8.1). It runs on every event, so the Gate never sees it
+  # skipped: on main, the schedule and a manual run, and on a PR that ran no verifier, it says why and passes.
+  pr-budget:
+    name: PR budget (measured times)
+    needs: content
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read                # download-artifact from this run
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0           # the PR's base commit, for the selection's diff
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: The groups' timing files
+        uses: actions/download-artifact@v4
+        with:
+          pattern: ci-timing-*
+          path: ${{ runner.temp }}/ci-timings
+      - name: Budget check on this run's measured times
+        env:
+          RUN_ID: ${{ github.run_id }}
+          TIMING_DIR: ${{ runner.temp }}/ci-timings
+        run: python scripts/ci-groups.py --check-measured --run-id "$RUN_ID" --from-dir "$TIMING_DIR"
 
   # docs/audits/REGISTER.md is generated from docs/audits/findings/<slug>.yml, and no PR edits it (7 Oct 2026,
   # canon §0.4): every fix PR used to regenerate it, so any two PRs conflicted. On a push to main, once the Gate
