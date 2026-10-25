@@ -190,6 +190,91 @@
      "3"
     ]
    }
+  },
+  {
+   "id": "basic-probability",
+   "name": "Probability",
+   "marks": 3.7,
+   "series": 5,
+   "band": [
+    1,
+    3
+   ],
+   "route": {
+    "slug": "probability-pioneer",
+    "game": "Probability Pioneer",
+    "level": "year6",
+    "modes": [],
+    "stages": []
+   }
+  },
+  {
+   "id": "vectors",
+   "name": "Vectors",
+   "marks": 2.8,
+   "series": 5,
+   "band": [
+    3,
+    4
+   ],
+   "route": {
+    "slug": "component-crusher",
+    "game": "Component Crusher",
+    "level": "gcse",
+    "modes": [],
+    "stages": []
+   }
+  },
+  {
+   "id": "form-expressions",
+   "name": "Forming expressions and equations",
+   "marks": 2.7,
+   "series": 5,
+   "band": [
+    3,
+    4
+   ],
+   "route": {
+    "slug": "equation-builder",
+    "game": "Equation Builder",
+    "level": "ks3",
+    "modes": [],
+    "stages": []
+   }
+  },
+  {
+   "id": "rounding",
+   "name": "Rounding",
+   "marks": 2.3,
+   "series": 5,
+   "band": [
+    1,
+    3
+   ],
+   "route": {
+    "slug": "decimal-detective",
+    "game": "Decimal Detective",
+    "level": "year6",
+    "modes": [],
+    "stages": []
+   }
+  },
+  {
+   "id": "change-subject",
+   "name": "Changing the subject",
+   "marks": 2.0,
+   "series": 5,
+   "band": [
+    4,
+    5
+   ],
+   "route": {
+    "slug": "formula-unlocked",
+    "game": "Formula Unlocked",
+    "level": "gcse",
+    "modes": [],
+    "stages": []
+   }
   }
  ],
  "coming_soon": [
@@ -383,13 +468,6 @@
    "planned": null
   },
   {
-   "id": "basic-probability",
-   "name": "Probability",
-   "marks": 3.7,
-   "series": 5,
-   "planned": null
-  },
-  {
    "id": "two-way-tables",
    "name": "Two-way tables",
    "marks": 3.5,
@@ -467,30 +545,9 @@
    "planned": null
   },
   {
-   "id": "vectors",
-   "name": "Vectors",
-   "marks": 2.8,
-   "series": 5,
-   "planned": null
-  },
-  {
-   "id": "form-expressions",
-   "name": "Forming expressions and equations",
-   "marks": 2.7,
-   "series": 5,
-   "planned": null
-  },
-  {
    "id": "inequalities",
    "name": "Inequalities",
    "marks": 2.5,
-   "series": 5,
-   "planned": null
-  },
-  {
-   "id": "rounding",
-   "name": "Rounding",
-   "marks": 2.3,
    "series": 5,
    "planned": null
   },
@@ -499,13 +556,6 @@
    "name": "Pythagoras' theorem",
    "marks": 2.3,
    "series": 3,
-   "planned": null
-  },
-  {
-   "id": "change-subject",
-   "name": "Changing the subject",
-   "marks": 2.0,
-   "series": 5,
    "planned": null
   },
   {

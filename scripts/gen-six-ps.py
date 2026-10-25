@@ -190,8 +190,8 @@ def validate(q):
     if re.search(r"<[a-zA-Z/]", q["stem"]) or "$" in q["stem"]:
         f.append("stem has HTML or $")
     if (q["format"] in ("number", "number_unit") and "dp" not in q["answer"]
-            and re.search(r"decimal place|d\.p\.|significant figure|nearest", q["stem"], re.I)):
-        f.append("the stem states a rounding but the answer has no dp (schema: write dp on every such number answer)")
+            and re.search(r"decimal place|d\.p\.", q["stem"], re.I)):
+        f.append("the stem asks for decimal places but the answer has no dp (schema: write dp on every such number answer; significant figures are checked with the rounding)")
     if len(q["worked"]) > 5:
         f.append("worked has %d lines" % len(q["worked"]))
     for w in q["worked"] + [s["line"] for s in q["slip"]]:
@@ -863,6 +863,693 @@ async def topic_negatives(h):
     return [conv_neg_calc(i, it) for i, it in enumerate(calc)] + [conv_neg_order(i, it) for i, it in enumerate(order)]
 
 
+# ───────────────────────────── authored questions and worked lines (data/six-ps/) ─────────────────────────────
+# Project Claude's two data files (25 Oct 2026): authored.json holds questions in the schema for the topics the games
+# cannot fill (source.game "authored"); worked-lines.json holds the worked lines for the sequences items the template
+# does not cover, and the choice versions and worked lines for equation-builder's forming-equations items and
+# probability-pioneer's stage-1 items. The script merges them into their banks and checks them like any other item.
+DATA_DIR = os.path.join(ROOT, "data", "six-ps")
+NUMBER = re.compile(r"(?<![\w.])-?\d+(?:\.\d+)?")
+
+
+def load_data(name):
+    with open(os.path.join(DATA_DIR, name), encoding="utf-8") as f:
+        return json.load(f)
+
+
+def numbers_in(s):
+    """The numbers written in a string (a minus sign belongs to the number it touches), as Fractions."""
+    return [Fraction(x) for x in NUMBER.findall(s.replace("\u2212", "-"))]
+
+
+def tex_to_sympy(s, positive=False):
+    from sympy.parsing.sympy_parser import parse_expr, standard_transformations, implicit_multiplication_application
+    t = s.replace("\\dfrac", "\\frac").replace("\u2212", "-").replace("\u00f7", "/").replace("\u00d7", "*")
+    t = t.replace("\\times", "*").replace("\\left", "").replace("\\right", "")
+    for sym, letter in (("\\Delta T", "Z"), ("\\rho", "W")):      # a one-letter stand-in, only where that letter is free
+        if sym in t:
+            assert letter not in t, ("tex_to_sympy: %s needs a free %s" % (sym, letter), s)
+            t = t.replace(sym, letter)
+    t = t.replace("\\pi", " pi ")
+    for _ in range(6):                                           # innermost first: a fraction in a root in a fraction
+        t = re.sub(r"\\frac\{([^{}]*)\}\{([^{}]*)\}", r"((\1)/(\2))", t)
+        t = re.sub(r"\\sqrt\[(\d)\]\{([^{}]*)\}", r" ((\2)**(1/\1)) ", t)
+        t = re.sub(r"\\sqrt\{([^{}]*)\}", r" sqrt(\1) ", t)
+    t = t.replace("{", "(").replace("}", ")").replace("^", "**")
+    # a run of letters is a product of one-letter symbols ("as" is a Python keyword and must not reach the parser whole)
+    t = re.sub(r"[A-Za-z]{2,}", lambda m: m.group(0) if m.group(0) in ("pi", "sqrt") else "*".join(m.group(0)), t)
+    tr = standard_transformations + (implicit_multiplication_application,)
+    import sympy
+    local = {c: (sympy.Symbol(c, positive=True) if positive else sympy.Symbol(c)) for c in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"}   # S, N, C, E, I, Q are letters here
+    local["pi"] = sympy.pi
+    return parse_expr(t, local_dict=local, transformations=tr)
+
+
+def same_equation(a, b):
+    """Two equations (strings 'L = R', TeX allowed) say the same thing: L1 - R1 equals L2 - R2."""
+    import sympy
+    la, ra = a.split("=")
+    lb, rb = b.split("=")
+    return sympy.simplify((tex_to_sympy(la) - tex_to_sympy(ra)) - (tex_to_sympy(lb) - tex_to_sympy(rb))) == 0
+
+
+# --- the sequences worked lines: filled by bank id, every number in a line recomputed from the sequence ---
+def seq_allowed(stem):
+    seq = re.search(r"sequence: \\\((.*?)\\\)", stem).group(1)
+    t = [Fraction(x) for x in re.findall(r"-?\d+(?:\.\d+)?", seq.replace("\\ldots", ""))]
+    ok = set(t)
+    diffs = [t[i + 1] - t[i] for i in range(len(t) - 1)]
+    ok |= set(diffs) | {abs(x) for x in diffs}
+    d2 = [diffs[i + 1] - diffs[i] for i in range(len(diffs) - 1)]
+    ok |= set(d2) | {abs(x) for x in d2}
+    if t[0]:
+        ok |= {t[1] / t[0]}
+    d = diffs[0]
+    c = t[0] - d
+    ok |= {c, -c, t[0], d, -d, Fraction(1)}
+    for q in numbers_in(stem.split("\\)")[-1]):                     # the target (the 10th term, equals 41)
+        ok.add(q)
+        ok |= {q - c, (q - c) / d if d else 0, d * q, d * q + c, d * q - d + t[0]}
+    ok |= {Fraction(i) for i in range(1, len(t) + 4)}
+    return ok
+
+
+def apply_sequence_lines(qs):
+    lines = load_data("worked-lines.json")["sequences_worked_by_id"]
+    byid = {q["id"]: q for q in qs}
+    for qid, worked in lines.items():
+        q = byid.get(qid)
+        if q is None:
+            raise AssertionError("worked-lines.json: no sequences question %s" % qid)
+        if q["worked"]:
+            raise AssertionError("worked-lines.json: %s already has worked lines" % qid)
+        allowed = seq_allowed(q["stem"]) | {Fraction(q["answer"]["value"])} if q["format"] == "number" else None
+        for w in worked:
+            if allowed is not None:
+                for n in numbers_in(w):
+                    if n in allowed:
+                        continue
+                    # a prime sequence's line may name the numbers between the last term and the next prime: each must
+                    # be a whole number in that gap and not prime
+                    seq_t = [Fraction(x) for x in re.findall(r"-?\d+(?:\.\d+)?", re.search(r"sequence: \\\((.*?)\\\)", q["stem"]).group(1).replace("\\ldots", ""))]
+                    gap = n.denominator == 1 and "prime" in w and seq_t[-1] < n < Fraction(q["answer"]["value"]) \
+                        and any(n % p == 0 for p in range(2, int(n)))
+                    assert gap, ("sequences worked line quotes %s, not from the sequence" % n, qid, w)
+        q["worked"] = list(worked)
+        MISSING_WORKED[:] = [m for m in MISSING_WORKED if m != ("sequences", q["source"]["ref"])]
+    return qs
+
+
+# --- equation-builder: the forming-equations items as choice ---
+EB_BAND = 3
+
+
+async def eb_questions(h, topic):
+    pg = await h.page("equation-builder", "level=ks3")
+    items = await pg.evaluate("() => QUESTIONS")
+    spec = load_data("worked-lines.json")["equation_builder_ks3"]
+    out = []
+    for ref, s in spec.items():
+        i = int(re.fullmatch(r"QUESTIONS\[(\d+)\]", ref).group(1))
+        g = items[i]
+        assert g["level"] == "ks3" and g["topic"] == "Forming Equations", ("equation-builder", ref)
+        # the answer the game builds from its slots is the answer label, recomputed
+        game_eq = " ".join(g["slots"])
+        assert same_equation(game_eq, s["answer_label"]), ("equation-builder", ref, game_eq, s["answer_label"])
+        labels = [tex(s["answer_label"])] + [tex(w["label"]) for w in s["wrong"]]
+        assert len(set(labels)) == 4, ("equation-builder: options not distinct", ref)
+        opts, ans = choice("eb-" + ref, labels[0], labels[1:])
+        slips = [{"answer": {"val": next(o["val"] for o in opts if o["label"] == tex(w["label"]))}, "line": w["line"]}
+                 for w in s["wrong"]]
+        stem = s.get("stem_override") or g["text"]
+        # every number in the worked lines is one of the question's own
+        words = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9,
+                 "ten": 10, "eleven": 11, "twelve": 12, "twice": 2, "double": 2, "doubled": 2, "half": 2, "quarter": 4,
+                 "third": 3, "fifth": 5, "eighth": 8, "eighths": 8, "thirds": 3, "fifths": 5, "quarters": 4}
+        stem_words = {Fraction(words[w]) for w in re.findall(r"[a-z]+", stem.lower()) if w in words}
+        own = set(numbers_in(stem)) | stem_words | {n for l in labels for n in numbers_in(l)} | {Fraction(1), Fraction(2)}
+        for w in s["worked"]:
+            for n in numbers_in(w):
+                assert n in own, ("equation-builder worked line quotes %s, not from the question" % n, ref, w)
+        out.append(mk(topic, "equation-builder", ref, EB_BAND, False, stem, "choice", ans, options=opts,
+                      worked=s["worked"], slip=slips))
+    return out
+
+
+# --- probability-pioneer stage 1: the five words, the answer and the three nearest ---
+PROB_WORDS = ["Impossible", "Unlikely", "Even chance", "Likely", "Certain"]
+
+
+def prob_words(answer, ref):
+    a = PROB_WORDS.index(answer)
+    others = [w for w in PROB_WORDS if w != answer]
+    side = int(sha8("prob", ref), 16) % 2          # a tie between two equally far words is broken by the item's own hash
+    others.sort(key=lambda w: (abs(PROB_WORDS.index(w) - a), (PROB_WORDS.index(w) - a) * (1 if side else -1) < 0))
+    return [answer] + others[:3]
+
+
+async def prob_questions(h, topic):
+    pg = await h.page("probability-pioneer", "level=year6")
+    s1 = await pg.evaluate("() => STAGE1")
+    spec = load_data("worked-lines.json")["probability_stage1"]
+    assert spec["words"] == PROB_WORDS
+    out = []
+    for ref, s in spec["items"].items():
+        i = int(re.fullmatch(r"STAGE1\[(\d+)\]", ref).group(1))
+        g = s1[i]
+        game_word = g["label"].split(":")[0].strip()      # the game adds its reason after a colon
+        assert game_word.lower() == s["answer_label"].lower(), ("probability: the game labels it %s, not %s" % (game_word, s["answer_label"]), ref)
+        words = prob_words(s["answer_label"], ref)
+        assert len(set(words)) == 4
+        opts, ans = choice("prob-" + ref, words[0], words[1:])
+        out.append(mk(topic, "probability-pioneer", ref, 1, False,
+                      "Which word best describes how likely this is? " + g["event"] + ".", "choice", ans, options=opts,
+                      worked=s["worked"]))
+    return out
+
+
+# --- authored questions: schema, distinct options, and a recomputation per topic ---
+def half_up(x, places):
+    from decimal import Decimal, ROUND_HALF_UP
+    return Decimal(x).quantize(Decimal(1).scaleb(-places), rounding=ROUND_HALF_UP)
+
+
+def check_rounding(q):
+    import sympy
+    from decimal import Decimal, ROUND_HALF_UP
+    stem = q["stem"]
+    m = re.search(r"\\\((.*?)\\\)", stem)
+    if m:                                                      # a calculator expression
+        x = Decimal(str(sympy.N(tex_to_sympy(m.group(1)), 40)))
+    else:
+        x = Decimal(re.match(r"Round ([\d ]+(?:\.\d+)?)", stem).group(1).replace(" ", ""))
+    near = re.search(r"to the nearest (\d+)", stem)
+    whole = "to the nearest whole number" in stem
+    dpm = re.search(r"to (\d+) decimal place", stem)
+    sfm = re.search(r"to (\d+) significant figure", stem)
+    if near or whole:
+        n = int(near.group(1)) if near else 1
+        want = (x / n).quantize(Decimal(1), rounding=ROUND_HALF_UP) * n
+        want_dp = None
+    elif dpm:
+        want_dp = int(dpm.group(1))
+        want = half_up(x, want_dp)
+    else:
+        sf = int(sfm.group(1))
+        places = sf - 1 - x.adjusted()                         # x.adjusted() is the power of ten of the first digit
+        if places >= 0:
+            want = half_up(x, places)
+        else:
+            unit = Decimal(10) ** (-places)
+            want = (x / unit).quantize(Decimal(1), rounding=ROUND_HALF_UP) * unit
+        want_dp = places if places > 0 else None
+    f = []
+    a = q["answer"]
+    if Decimal(str(a["value"])) != want:
+        f.append("rounding: the answer is %s, round-half-up gives %s" % (a["value"], want))
+    if (a.get("dp") or None) != want_dp:
+        f.append("rounding: dp is %r, the stem gives %r" % (a.get("dp"), want_dp))
+    for s in q["slip"]:
+        if want_dp is not None and Decimal(str(s["answer"]["value"])) != want and \
+                half_up(Decimal(str(s["answer"]["value"])), want_dp) == want:
+            f.append("a slip (%s) would only get the format message under dp" % s["answer"]["value"])
+    return f
+
+
+def parse_vec(s):
+    m = re.findall(r"\\mathbf\{(\w)\} = \\begin\{pmatrix\} (-?\d+) \\\\ (-?\d+) \\end\{pmatrix\}", s)
+    return {k: (int(x), int(y)) for k, x, y in m}
+
+
+def label_vec(lbl):
+    m = re.fullmatch(r"\\\(\\begin\{pmatrix\} (-?\d+) \\\\ (-?\d+) \\end\{pmatrix\}\\\)", lbl)
+    return (int(m.group(1)), int(m.group(2)))
+
+
+def check_vectors(q):
+    stem = q["stem"]
+    v = parse_vec(stem)
+    sign = {"right": 1, "left": -1, "up": 1, "down": -1}
+    if v:
+        expr = re.search(r"\\\((.*)\\\)", stem.split("Work out")[1]).group(1)
+        e = re.sub(r"(\d+)\\mathbf\{(\w)\}", r"\1*\\mathbf{\2}", expr)
+        e = re.sub(r"\\mathbf\{(\w)\}", lambda m: "v" + m.group(1), e)
+        want = tuple(eval(e, {"__builtins__": {}}, {"v" + n: p[k] for n, p in v.items()}) for k in (0, 1))
+    else:
+        m = re.search(r"moved (\d+) squares? (right|left|up|down) and (\d+) squares? (right|left|up|down)", stem)
+        pos = {"right": 0, "left": 0, "up": 1, "down": 1}
+        comp = [0, 0]
+        comp[pos[m.group(2)]] = int(m.group(1)) * sign[m.group(2)]
+        comp[pos[m.group(4)]] = int(m.group(3)) * sign[m.group(4)]
+        want = tuple(comp)
+    key = next(o for o in q["options"] if o["val"] == q["answer"]["val"])
+    f = []
+    if label_vec(key["label"]) != want:
+        f.append("vectors: the key is %s, recomputed %s" % (label_vec(key["label"]), want))
+    for o in q["options"]:
+        if o["val"] != q["answer"]["val"] and label_vec(o["label"]) == want:
+            f.append("vectors: another option also equals the answer")
+    return f
+
+
+def check_change_subject(q):
+    import sympy
+    m = re.search(r"Make \\\((\w)\\\) the subject of \\\((.*)\\\)", q["stem"])
+    var, eq = m.group(1), m.group(2)
+    left, right = eq.split("=")
+    sol = sympy.solve(sympy.Eq(tex_to_sympy(left), tex_to_sympy(right)), sympy.Symbol(var))
+    assert len(sol) == 1, ("change-subject", eq, sol)
+    f = []
+    for o in q["options"]:
+        ol = re.fullmatch(r"\\\((\w) = (.*)\\\)", o["label"])
+        same = bool(ol) and ol.group(1) == var and sympy.simplify(tex_to_sympy(ol.group(2)) - sol[0]) == 0
+        if o["val"] == q["answer"]["val"] and not same:
+            f.append("change-subject: the key %s is not %s" % (o["label"], sol[0]))
+        if o["val"] != q["answer"]["val"] and same:
+            f.append("change-subject: option %s also equals the answer" % o["val"])
+    return f
+
+
+def authored_for(topic):
+    """The authored questions of a topic, each checked; a fault stops the build."""
+    data = load_data("authored.json")
+    out = []
+    for q in data["questions"]:
+        if q["topic"] != topic:
+            continue
+        faults = validate(q)
+        if q["id"] != "%s-%s" % (topic, sha8(q["source"]["game"], q["source"]["ref"])):
+            faults.append("id is not topic-hash of its source")
+        if q["source"]["game"] != "authored":
+            faults.append("source.game is not authored")
+        if q["format"] == "choice":
+            for s in q["slip"]:
+                if s["answer"] == q["answer"] or s["answer"].get("val") not in list("abcd"):
+                    faults.append("a slip names the key or no option")
+        if q["format"] == "number" and "dp" in q["answer"] and not (isinstance(q["answer"]["dp"], int) and q["answer"]["dp"] >= 0):
+            faults.append("dp is not a whole number")
+        if topic == "rounding":
+            faults += check_rounding(q)
+        elif topic == "vectors":
+            faults += check_vectors(q)
+        elif topic == "change-subject":
+            faults += check_change_subject(q)
+        if faults:
+            raise AssertionError("authored %s: %s" % (q["id"], "; ".join(faults)))
+        if not q["worked"]:
+            MISSING_WORKED.append((topic, q["source"]["ref"]))
+        out.append(q)
+    return out
+
+
+async def topic_sequences_full(h):
+    return apply_sequence_lines(await topic_sequences(h))
+
+
+async def topic_form_expressions(h):
+    return await eb_questions(h, "form-expressions") + authored_for("form-expressions")
+
+
+# ───────────────────────────── the games' own items for the four topics under 30 ─────────────────────────────
+# probability-pioneer stages 2 and 3, decimal-detective, formula-unlocked, component-crusher (25 Oct 2026). Authored
+# questions (data/six-ps/authored.json) are merged after them. Each answer is recomputed from its own stem.
+
+from decimal import Decimal  # noqa: E402
+
+
+# --- probability-pioneer stage 2: P(...) as a fraction ---
+def _is_prime(n):
+    return n > 1 and all(n % p for p in range(2, n))
+
+
+def _is_square(n):
+    return int(math.isqrt(n)) ** 2 == n
+
+
+def prob2_answer(inner):
+    """The probability a stage-2 'P(...)' names, worked out from the words, as a Fraction."""
+    m = re.fullmatch(r"rolling a (\d) on a fair die", inner)
+    if m:
+        return Fraction(1 if 1 <= int(m.group(1)) <= 6 else 0, 6)
+    die = {"rolling less than 3 on a die": lambda n: n < 3, "rolling greater than 4 on a dice": lambda n: n > 4,
+           "odd on a die": lambda n: n % 2 == 1, "multiple of 3 on a die": lambda n: n % 3 == 0,
+           "prime on a die": _is_prime, "square number on a die": _is_square,
+           "rolling 1 or 2 on a fair die": lambda n: n in (1, 2)}
+    if inner in die:
+        return Fraction(sum(1 for n in range(1, 7) if die[inner](n)), 6)
+    if inner == "flipping tails on a fair coin":
+        return Fraction(1, 2)
+    if inner == "heads twice in a row with a fair coin":
+        return Fraction(1, 2) ** 2
+    if inner == "heart from 52 cards":
+        return Fraction(13, 52)                       # one suit of four, thirteen cards
+    m = re.fullmatch(r"(?:picking )?(\w+) from ((?:\d+ \w+(?:, )?)+)", inner)
+    if m:
+        counts = {c: int(n) for n, c in re.findall(r"(\d+) (\w+)", m.group(2))}
+        return Fraction(counts[m.group(1)], sum(counts.values()))
+    m = re.fullmatch(r"(vowel|consonant) from ([A-Z](?:, [A-Z])*)", inner)
+    if m:
+        letters = m.group(2).split(", ")
+        return Fraction(sum(1 for c in letters if (c in "AEIOU") == (m.group(1) == "vowel")), len(letters))
+    if inner == "picture card (J, Q or K) from a pack of 52":
+        return Fraction(len("JQK") * 4, 52)
+    m = re.fullmatch(r"even from (\d+)\u2013(\d+)", inner)
+    if m:
+        nums = range(int(m.group(1)), int(m.group(2)) + 1)
+        return Fraction(sum(1 for n in nums if n % 2 == 0), len(nums))
+    m = re.fullmatch(r"letter in ([A-Z]+) also in ([A-Z]+)", inner)
+    if m:
+        return Fraction(len(set(m.group(1)) & set(m.group(2))), len(m.group(1)))
+    raise AssertionError("probability stage 2: no rule for %r" % inner)
+
+
+async def prob2_questions(h, topic):
+    pg = await h.page("probability-pioneer", "level=year6")
+    items = await pg.evaluate("() => STAGE2")
+    out = []
+    for i, g in enumerate(items):
+        inner = re.fullmatch(r"P\((.*)\)", g["q"]).group(1)
+        want = prob2_answer(inner)
+        n, d = (int(x) for x in g["answer"].split("/"))
+        assert Fraction(n, d) == want and math.gcd(n, d) == 1, ("probability stage 2", g["q"], g["answer"], want)
+        stem = "Work out " + tex("P(\\text{%s})" % inner) + ". Give your answer as a fraction in its simplest form."
+        out.append(mk(topic, "probability-pioneer", "STAGE2[%d]" % i, 2, False, stem, "fraction", {"n": n, "d": d},
+                      accept={"rule": "simplest"}, worked=split_working(g["why"]) if g.get("why") else []))
+    return out
+
+
+# --- probability-pioneer stage 3: true or false statements, asked as "which of these statements is true / false" ---
+async def prob3_questions(h, topic):
+    """The game's 15 true-or-false statements. The schema's choice has four options, so each statement is the key of one
+    question, the other three options being statements of the game's own with the opposite truth value (picked by the
+    statement's own hash). The worked line is the game's explanation of the key; a wrong option's slip is the game's
+    explanation of that option. Nothing is written here."""
+    pg = await h.page("probability-pioneer", "level=year6")
+    items = await pg.evaluate("() => STAGE3")
+    clean = lambda e: re.sub(r"^Correct\.\s*", "", strip_html(e))
+    out = []
+    for i, g in enumerate(items):
+        pool = [j for j, t in enumerate(items) if t["answer"] != g["answer"]]
+        picks = shuffled(pool, "prob3-%d" % i)[:3]
+        assert len(picks) == 3
+        labels = [g["statement"]] + [items[j]["statement"] for j in picks]
+        opts, ans = choice("prob3-%d" % i, labels[0], labels[1:])
+        # a wrong option in "which is true" is a false statement, and the game's explanation says why it is false; in
+        # "which is false" a wrong option is a true statement, whose explanation is no mistake's correction: no slips
+        slips = [{"answer": {"val": next(o["val"] for o in opts if o["label"] == items[j]["statement"])},
+                  "line": clean(items[j]["explanation"])} for j in picks] if g["answer"] else []
+        word = "true" if g["answer"] else "false"
+        out.append(mk(topic, "probability-pioneer", "STAGE3[%d]" % i, 3, False,
+                      "Which of these statements is %s?" % word, "choice", ans, options=opts,
+                      worked=split_working(clean(g["explanation"])), slip=slips))
+    # the numbers the statements and explanations quote (the rest are statements of principle, the game's own truth values)
+    assert Fraction(1) - Fraction(3, 10) == Fraction(7, 10) and Fraction(7, 6) > 1
+    return out
+
+
+async def topic_probability(h):
+    return (await prob_questions(h, "basic-probability") + await prob2_questions(h, "basic-probability")
+            + await prob3_questions(h, "basic-probability"))
+
+
+# --- rounding: decimal-detective's rounding items, typed (the game's four choices are not shown) ---
+ROUND_FORMS = {"Round to the nearest whole number": ("to the nearest whole number", 1),
+               "Round to the nearest tenth": ("to 1 decimal place", 2),
+               "Round to 2 decimal places": ("to 2 decimal places", 2),
+               "Round to 1 significant figure": ("to 1 significant figure", 3)}
+
+
+async def topic_rounding(h):
+    pg = await h.page("decimal-detective", "level=year6")
+    items = await pg.evaluate("() => ROUNDUP_QUESTIONS")
+    out = []
+    for i, it in enumerate(items):
+        form, band = ROUND_FORMS[it["instruction"]]
+        stem = "Round %s %s." % (it["value"], form)
+        a = {"value": numval(Decimal(it["answer"]))}
+        q = mk("rounding", "decimal-detective", "ROUNDUP_QUESTIONS[%d]" % i, band, False, stem, "number", a)
+        dp = re.search(r"to (\d) decimal place", stem)
+        if dp:
+            a["dp"] = int(dp.group(1))
+        elif "significant" in stem:
+            x = Decimal(it["value"])
+            places = 1 - 1 - x.adjusted()
+            if places > 0:
+                a["dp"] = places
+        faults = check_rounding(q)                      # round-half-up from the stem, and dp from the stem
+        assert not faults, ("rounding", it, faults)
+        assert Decimal(str(a["value"])) == Decimal(it["answer"]), ("rounding: the game's answer", it)
+        out.append(q)
+    return out + authored_for("rounding")
+
+
+# --- vectors: component-crusher's gcse scenarios, written out from the same numbers ---
+class Vec:
+    def __init__(self, x, y):
+        self.x, self.y = Fraction(x), Fraction(y)
+
+    def __add__(self, o):
+        return Vec(self.x + o.x, self.y + o.y)
+
+    def __sub__(self, o):
+        return Vec(self.x - o.x, self.y - o.y)
+
+    def __neg__(self):
+        return Vec(-self.x, -self.y)
+
+    def __mul__(self, k):
+        return Vec(self.x * k, self.y * k)
+
+    __rmul__ = __mul__
+
+    def __pos__(self):
+        return self
+
+    def __eq__(self, o):
+        return isinstance(o, Vec) and (self.x, self.y) == (o.x, o.y)
+
+    def __hash__(self):
+        return hash((self.x, self.y))
+
+
+def col(v):
+    return "\\(\\begin{pmatrix} %s \\\\ %s \\end{pmatrix}\\)" % (tnum(v.x), tnum(v.y))
+
+
+def col_in(v):
+    return "\\begin{pmatrix} %s \\\\ %s \\end{pmatrix}" % (tnum(v.x), tnum(v.y))
+
+
+def pt(p):
+    return "\\((%s, %s)\\)" % (tnum(p[0]), tnum(p[1]))
+
+
+def scenario_names(sc):
+    """The vectors and points a scenario draws, by the names its prompts use."""
+    vecs, pts = {}, {p["l"]: tuple(p["c"]) for p in sc.get("points", [])}
+    for v in sc["vectors"]:
+        d = Vec(v["to"][0] - v["from"][0], v["to"][1] - v["from"][1])
+        for name in v["label"].split("="):
+            if name and not name.startswith("-"):
+                vecs[name] = d
+    return vecs, pts
+
+
+def vec_value(name, vecs, pts):
+    if name in vecs:
+        return vecs[name]
+    if len(name) == 2 and name[0] in pts and name[1] in pts:
+        return Vec(pts[name[1]][0] - pts[name[0]][0], pts[name[1]][1] - pts[name[0]][1])
+    raise AssertionError("component-crusher: no vector %s" % name)
+
+
+def expr_python(tx):
+    """A prompt's TeX expression as Python over the names v_<name>."""
+    e = re.sub(r"\\frac\{(\d+)\}\{(\d+)\}", r"Fraction(\1,\2)", tx)
+    e = re.sub(r"\\mathbf\{(\w)\}", r"v_\1", e)
+    e = re.sub(r"\\overrightarrow\{(\w+)\}", r"v_\1", e)
+    return re.sub(r"(\d|\))(?=v_)", r"\1*", e)
+
+
+def eval_vec(py, vecs, pts):
+    names = {"v_" + n for n in re.findall(r"v_(\w+)", py)}
+    env = {n: vec_value(n[2:], vecs, pts) for n in names}
+    env["Fraction"] = Fraction
+    return eval(py, {"__builtins__": {}}, env)
+
+
+def vec_wrongs(py, key, vecs, pts):
+    """Three wrong column vectors: the expression with its + and - exchanged, the components swapped, then a sign
+    flipped (the next flip standing in when two coincide or one equals the key). All four are checked distinct."""
+    cands = []
+    swapped_ops = py.replace("+", "\u0000").replace("-", "+").replace("\u0000", "-")
+    if swapped_ops != py:
+        cands.append(eval_vec(swapped_ops, vecs, pts))
+    cands += [Vec(key.y, key.x), Vec(-key.x, key.y), Vec(key.x, -key.y), -key, Vec(-key.y, key.x), Vec(key.y, -key.x),
+              Vec(key.x + 1, key.y), Vec(key.x, key.y + 1)]
+    wrong = []
+    for c in cands:
+        if c != key and c not in wrong and len(wrong) < 3:
+            wrong.append(c)
+    assert len(wrong) == 3 and len({(v.x, v.y) for v in wrong + [key]}) == 4
+    return wrong
+
+
+def vec_preamble(prompt, sc, vecs, pts):
+    """What the written question must say that the picture showed: the vectors or points its prompt uses."""
+    names = list(dict.fromkeys(re.findall(r"\\mathbf\{(\w)\}", prompt)))
+    plist = list(dict.fromkeys(l for pair in re.findall(r"\\overrightarrow\{(\w+)\}", prompt) for l in pair if l in pts))
+    if not names and not plist and pts and "collinear" in prompt:
+        plist = [l for l in pts if l != "O"]
+    out = []
+    if names:
+        bits = ["\\(\\mathbf{%s} = %s\\)" % (n, col_in(vecs[n])) for n in names]
+        out.append(" and ".join(bits) + ".")
+    if plist:
+        bits = ["%s is the point %s" % (l, pt(pts[l])) for l in plist]
+        out.append((", ".join(bits[:-1]) + " and " + bits[-1] if len(bits) > 1 else bits[0]) + ".")
+    return " ".join(out)
+
+
+def vec_band(prompt, is_mcq, is_mag):
+    tx = re.search(r"\\\((.*?)\\\)", prompt)
+    py = expr_python(tx.group(1)) if tx else ""
+    tokens = len(re.findall(r"v_", py))
+    coef = bool(re.search(r"\d\*v_|\)\*v_", py))
+    return 4 if is_mcq or is_mag or tokens >= 3 or (tokens >= 2 and coef) else 3
+
+
+async def topic_vectors(h):
+    pg = await h.page("component-crusher", "level=gcse")
+    scenarios = await pg.evaluate("() => SCENARIOS.gcse")
+    out = []
+    for si, sc in enumerate(scenarios):
+        vecs, pts = scenario_names(sc)
+        for qi, sq in enumerate(sc["sqs"]):
+            ref = "SCENARIOS.gcse[%d].sqs[%d]" % (si, qi)
+            prompt = sq["prompt"]
+            if sq["type"] == "mcq":
+                opts, ans = choice("cc-" + ref, sq["correct"], sq["wrong"])
+                stem = (vec_preamble(prompt, sc, vecs, pts) + " " + prompt).strip()
+                if sc["id"] == "G15":                      # the path the picture drew, said in words
+                    stem = vec_preamble("\\mathbf{a}\\mathbf{b}", sc, vecs, pts) + \
+                        " The total displacement is \\(\\mathbf{a} + \\mathbf{b} + (-\\mathbf{a})\\). " + prompt
+                out.append(mk("vectors", "component-crusher", ref, 4, False, stem, "choice", ans, options=opts))
+                continue
+            first = re.search(r"\\\((.*?)\\\)", prompt)
+            if prompt.startswith("Write down vector"):                       # G1: a, read from the origin
+                v = vec_value("a", vecs, pts)
+                src = sc["vectors"][0]
+                assert src["from"] == [0, 0] and [v.x, v.y] == [Fraction(x) for x in sq["answers"]]
+                stem = "The vector \\(\\mathbf{a}\\) goes from the origin to the point %s. Write down \\(\\mathbf{a}\\) as a column vector." \
+                       % pt(src["to"])
+                key = v
+                py = "v_a"
+            elif sc["id"] == "G6":                                            # a translation, said as two points
+                a, b = sc["vectors"][0]["from"], sc["vectors"][0]["to"]
+                if qi == 0:
+                    key = Vec(b[0] - a[0], b[1] - a[1])
+                    stem = "A translation takes the point %s to the point %s. Write down the column vector of the translation." % (pt(a), pt(b))
+                else:
+                    key = Vec(a[0] - b[0], a[1] - b[1])
+                    stem = "A translation takes the point %s to the point %s. What translation takes %s back to %s?" % (pt(a), pt(b), pt(b), pt(a))
+                py = None
+            elif prompt.startswith("State the position of M"):                # G12: the midpoint, as coordinates
+                a, b, m = pts["A"], pts["B"], pts["M"]
+                assert (a[0] + b[0]) / 2 == m[0] and (a[1] + b[1]) / 2 == m[1] and \
+                    [m[0], m[1]] == sq["answers"], ("midpoint", sc["id"])
+                stem = "A is the point %s and B is the point %s. M is the midpoint of AB. Write down the coordinates of M." % (pt(a), pt(b))
+                out.append(mk("vectors", "component-crusher", ref, 3, False, stem, "coordinates",
+                              {"x": numval(m[0]), "y": numval(m[1])}))
+                continue
+            else:
+                tx = first.group(1).lstrip("= ").strip()
+                is_mag = tx.startswith("|") and tx.endswith("|")
+                py = expr_python(tx[1:-1] if is_mag else tx)
+                pre_prompt = prompt
+                midpoint = "(M is midpoint)" in prompt
+                if midpoint:                                                   # G12: AM, M the midpoint of AB
+                    pre_prompt = prompt.replace(" (M is midpoint)", "")
+                    pts2 = dict(pts)
+                    pts2["M"] = ((pts["A"][0] + pts["B"][0]) / 2, (pts["A"][1] + pts["B"][1]) / 2)
+                    assert pts2["M"] == pts["M"]
+                    pre = vec_preamble("\\overrightarrow{AB}", sc, vecs, pts) + " M is the midpoint of AB."
+                    stem = pre + " " + pre_prompt
+                else:
+                    pre = vec_preamble(prompt, sc, vecs, pts)
+                    stem = (pre + " " + prompt).strip()
+                key = eval_vec(py, vecs, pts)
+                if sq["type"] == "num":
+                    mag = math.sqrt(key.x ** 2 + key.y ** 2)
+                    assert is_mag
+                    if "dp" in sq:
+                        want = half_up(sympy_sqrt(key.x ** 2 + key.y ** 2), sq["dp"])
+                        assert Decimal(str(sq["answer"])) == want, ("vector magnitude", ref, sq["answer"], want)
+                        a = {"value": float(want), "dp": sq["dp"]}
+                        stem = stem.replace("Give to %d d.p." % sq["dp"], "Give your answer to %d decimal places." % sq["dp"])
+                    else:
+                        assert mag == int(mag) and int(mag) == sq["answer"], ("vector magnitude", ref, sq["answer"], mag)
+                        a = {"value": int(mag)}
+                    out.append(mk("vectors", "component-crusher", ref, 4, False, stem, "number", a,
+                                  worked=split_working(sq["working"]) if sq.get("working") else []))
+                    continue
+            assert sq["type"] == "vec2" and [key.x, key.y] == [Fraction(str(x)) for x in sq["answers"]], \
+                ("vector answer", ref, key.x, key.y, sq["answers"])
+            wrongs = vec_wrongs(py, key, vecs, pts) if py else vec_wrongs("v_t", key, {"t": key}, {})
+            opts, ans = choice("cc-" + ref, col(key), [col(w) for w in wrongs])
+            band = vec_band(prompt, False, False) if py and sc["id"] != "G6" else 3
+            out.append(mk("vectors", "component-crusher", ref, band, False, stem, "choice", ans, options=opts,
+                          worked=split_working(sq["working"]) if sq.get("working") else []))
+    return out + authored_for("vectors")
+
+
+def sympy_sqrt(x):
+    import sympy
+    return Decimal(str(sympy.N(sympy.sqrt(sympy.Rational(x.numerator, x.denominator)), 40)))
+
+
+# --- change-subject: formula-unlocked's gcse set (29), choice ---
+def fu_tex(s):
+    return s.replace("\\dfrac", "\\frac")
+
+
+def subject_holds(formula, target, label):
+    """The option '<target> = <expression>' makes the formula an identity (every letter taken positive, so a square root
+    is the positive one)."""
+    import sympy
+    left, right = formula.split("=", 1)
+    opt = re.fullmatch(r"\s*(.+?)\s*=\s*(.+)", label)
+    assert opt and opt.group(1).strip() == target.strip(), ("change-subject: option is not for the target", label)
+    sub = {tex_to_sympy(target, True): tex_to_sympy(opt.group(2), True)}
+    return sympy.simplify(tex_to_sympy(left, True).subs(sub) - tex_to_sympy(right, True).subs(sub)) == 0
+
+
+def conv_subject(i, it):
+    f, tgt = fu_tex(it["formula"]), it["target"]
+    correct, wrong = fu_tex(it["correct"]), [fu_tex(x) for x in it["d"]]
+    assert subject_holds(f, tgt, correct), ("change-subject: the key does not rearrange the formula", i)
+    assert tex_to_sympy(tgt) not in tex_to_sympy(correct.split("=", 1)[1]).free_symbols, ("key still has the target", i)
+    for w in wrong:
+        assert not subject_holds(f, tgt, w), ("change-subject: a wrong option also rearranges the formula", i, w)
+    assert fu_tex(it["steps"][-1]) == correct, ("change-subject: the last step is not the key", i)
+    labels = [tex(correct)] + [tex(w) for w in wrong]
+    opts, ans = choice("subject-%d" % i, labels[0], labels[1:])
+    return mk("change-subject", "formula-unlocked", "Q_GCSE[%d]" % i, 4 if it["stage"] <= 2 else 5, False,
+              "Make %s the subject of %s." % (tex(tgt), tex(f)), "choice", ans, options=opts,
+              worked=[tex(fu_tex(s)) for s in it["steps"]])
+
+
+async def topic_change_subject(h):
+    pg = await h.page("formula-unlocked", "level=gcse")
+    items = await pg.evaluate("() => Q_GCSE")
+    authored = authored_for("change-subject")
+    asked = {q["stem"] for q in authored}
+    # a game item that asks what an authored question already asks is left out (the authored one carries the slips):
+    # Q_GCSE[10], "Make t the subject of v = u + at"
+    game = [q for q in (conv_subject(i, it) for i, it in enumerate(items)) if q["stem"] not in asked]
+    return game + authored
+
+
 # ───────────────────────────── the registry ─────────────────────────────
 # topic id -> (builder, rule notes). Topics not here have no bank yet (coming soon).
 BUILDERS = {
@@ -871,11 +1558,16 @@ BUILDERS = {
     "powers-roots": topic_powers,
     "compound-measures": topic_compound,
     "linear-equations": topic_linear,
-    "sequences": topic_sequences,
+    "sequences": topic_sequences_full,
     "angles": topic_angles,
     "arithmetic-negatives": topic_negatives,
     "fdp-convert": topic_fdp_convert,
     "fraction-percentage-of-amount": topic_fdp_amount,
+    "form-expressions": topic_form_expressions,
+    "basic-probability": topic_probability,
+    "rounding": topic_rounding,
+    "vectors": topic_vectors,
+    "change-subject": topic_change_subject,
 }
 
 

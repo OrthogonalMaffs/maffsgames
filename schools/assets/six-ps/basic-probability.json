@@ -1,0 +1,1593 @@
+{
+ "topic": "basic-probability",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "basic-probability-441e84cd",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE1[0]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Which word best describes how likely this is? You will breathe today.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Likely"
+    },
+    {
+     "val": "b",
+     "label": "Even chance"
+    },
+    {
+     "val": "c",
+     "label": "Unlikely"
+    },
+    {
+     "val": "d",
+     "label": "Certain"
+    }
+   ],
+   "worked": [
+    "Breathing today must happen.",
+    "Something that must happen is certain."
+   ],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-f1241cb8",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE1[1]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Which word best describes how likely this is? You will roll a 7 on a standard die.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Unlikely"
+    },
+    {
+     "val": "b",
+     "label": "Impossible"
+    },
+    {
+     "val": "c",
+     "label": "Even chance"
+    },
+    {
+     "val": "d",
+     "label": "Likely"
+    }
+   ],
+   "worked": [
+    "The faces of a standard die are 1 to 6, so a 7 cannot happen.",
+    "Something that cannot happen is impossible."
+   ],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-bad59e87",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE1[2]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Which word best describes how likely this is? It will rain somewhere in Britain this week.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Likely"
+    },
+    {
+     "val": "b",
+     "label": "Certain"
+    },
+    {
+     "val": "c",
+     "label": "Even chance"
+    },
+    {
+     "val": "d",
+     "label": "Unlikely"
+    }
+   ],
+   "worked": [
+    "Rain somewhere in Britain in a week happens far more often than not.",
+    "It is not guaranteed, so it is likely, not certain."
+   ],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-1c28ca42",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE1[3]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Which word best describes how likely this is? You will flip heads on a fair coin.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Even chance"
+    },
+    {
+     "val": "b",
+     "label": "Unlikely"
+    },
+    {
+     "val": "c",
+     "label": "Certain"
+    },
+    {
+     "val": "d",
+     "label": "Likely"
+    }
+   ],
+   "worked": [
+    "A fair coin has 2 equally likely outcomes, and heads is 1 of them.",
+    "1 out of 2 is an even chance."
+   ],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-727f520f",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE1[4]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Which word best describes how likely this is? A randomly chosen month starts with J.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Likely"
+    },
+    {
+     "val": "b",
+     "label": "Even chance"
+    },
+    {
+     "val": "c",
+     "label": "Unlikely"
+    },
+    {
+     "val": "d",
+     "label": "Impossible"
+    }
+   ],
+   "worked": [
+    "January, June and July start with J: 3 of the 12 months.",
+    "3 out of 12 is less than half, so it is unlikely."
+   ],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-b08363e4",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE1[5]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Which word best describes how likely this is? You pick a red card from a standard pack.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Likely"
+    },
+    {
+     "val": "b",
+     "label": "Even chance"
+    },
+    {
+     "val": "c",
+     "label": "Unlikely"
+    },
+    {
+     "val": "d",
+     "label": "Impossible"
+    }
+   ],
+   "worked": [
+    "Half the cards in a standard pack are red: 26 of 52.",
+    "Half is an even chance."
+   ],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-288750b4",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE1[6]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Which word best describes how likely this is? You roll an even number on a die.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Certain"
+    },
+    {
+     "val": "b",
+     "label": "Likely"
+    },
+    {
+     "val": "c",
+     "label": "Unlikely"
+    },
+    {
+     "val": "d",
+     "label": "Even chance"
+    }
+   ],
+   "worked": [
+    "2, 4 and 6 are even: 3 of the 6 faces.",
+    "3 out of 6 is a half, an even chance."
+   ],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-9f9a57cb",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE1[7]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Which word best describes how likely this is? You win the lottery with one ticket.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Likely"
+    },
+    {
+     "val": "b",
+     "label": "Unlikely"
+    },
+    {
+     "val": "c",
+     "label": "Even chance"
+    },
+    {
+     "val": "d",
+     "label": "Impossible"
+    }
+   ],
+   "worked": [
+    "One ticket has about a 1 in 45 million chance of winning.",
+    "It could happen, so it is not impossible, but it is very unlikely."
+   ],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-b9fd78c2",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE1[8]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Which word best describes how likely this is? A baby born today is a boy.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Likely"
+    },
+    {
+     "val": "b",
+     "label": "Impossible"
+    },
+    {
+     "val": "c",
+     "label": "Even chance"
+    },
+    {
+     "val": "d",
+     "label": "Unlikely"
+    }
+   ],
+   "worked": [
+    "Boys and girls are born in very nearly equal numbers.",
+    "So it is about an even chance."
+   ],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-06e5bad9",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE1[9]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Which word best describes how likely this is? The sun will rise tomorrow.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Likely"
+    },
+    {
+     "val": "b",
+     "label": "Certain"
+    },
+    {
+     "val": "c",
+     "label": "Unlikely"
+    },
+    {
+     "val": "d",
+     "label": "Even chance"
+    }
+   ],
+   "worked": [
+    "The sun rises every day.",
+    "So it is certain."
+   ],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-c5da667b",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE2[0]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(P(\\text{rolling a 6 on a fair die})\\). Give your answer as a fraction in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 6
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-284bc5fb",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE2[1]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(P(\\text{picking red from 3 red, 7 blue})\\). Give your answer as a fraction in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 3,
+    "d": 10
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-56a20032",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE2[2]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(P(\\text{flipping tails on a fair coin})\\). Give your answer as a fraction in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 2
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-f4a9903a",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE2[3]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(P(\\text{vowel from A, B, C, D, E})\\). Give your answer as a fraction in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 2,
+    "d": 5
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-83a73b3e",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE2[4]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(P(\\text{rolling less than 3 on a die})\\). Give your answer as a fraction in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 3
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-fe191242",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE2[5]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(P(\\text{blue from 4 red, 6 blue})\\). Give your answer as a fraction in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 3,
+    "d": 5
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-3760594f",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE2[6]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(P(\\text{odd on a die})\\). Give your answer as a fraction in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 2
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-db0d2b63",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE2[7]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(P(\\text{heart from 52 cards})\\). Give your answer as a fraction in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 4
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-4f0749fe",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE2[8]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(P(\\text{rolling greater than 4 on a dice})\\). Give your answer as a fraction in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 3
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-e2c2d18c",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE2[9]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(P(\\text{green from 5 red, 3 green, 2 yellow})\\). Give your answer as a fraction in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 3,
+    "d": 10
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-dd74318e",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE2[10]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(P(\\text{multiple of 3 on a die})\\). Give your answer as a fraction in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 3
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-dd08412b",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE2[11]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(P(\\text{consonant from M, A, T, H, S})\\). Give your answer as a fraction in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 4,
+    "d": 5
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-1e9cbec6",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE2[12]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(P(\\text{heads twice in a row with a fair coin})\\). Give your answer as a fraction in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 4
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-e1d01fbc",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE2[13]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(P(\\text{rolling 1 or 2 on a fair die})\\). Give your answer as a fraction in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 3
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-f19ddb40",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE2[14]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(P(\\text{picture card (J, Q or K) from a pack of 52})\\). Give your answer as a fraction in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 3,
+    "d": 13
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-3ac52e87",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE2[15]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(P(\\text{prime on a die})\\). Give your answer as a fraction in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 2
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-d12b6f31",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE2[16]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(P(\\text{yellow from 8 red, 2 yellow})\\). Give your answer as a fraction in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 5
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-23bc088e",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE2[17]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(P(\\text{square number on a die})\\). Give your answer as a fraction in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 3
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-e1c8058a",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE2[18]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(P(\\text{even from 1–8})\\). Give your answer as a fraction in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 2
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-3a63ed5d",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE2[19]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out \\(P(\\text{letter in MATHS also in GAMES})\\). Give your answer as a fraction in its simplest form.",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 3,
+    "d": 5
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "M, A and S are in both, so 3 of 5."
+   ],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-53127240",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE3[0]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Which of these statements is true?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "P(rolling 7 on a standard die) = 7/6"
+    },
+    {
+     "val": "b",
+     "label": "If P(rain) = 0.4, it will rain on exactly 4 out of every 10 days"
+    },
+    {
+     "val": "c",
+     "label": "P(event) is always between 0 and 1 inclusive"
+    },
+    {
+     "val": "d",
+     "label": "You can have P(event) = 1.5"
+    }
+   ],
+   "worked": [
+    "Probability ranges from 0 (impossible) to 1 (certain).",
+    "It can never be negative or greater than 1."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "P(rain) = 0.4 means that over a very large number of days, about 40% will have rain. But in any specific set of 10 days, it could rain on 0, 1, 2, ... or even all 10 days."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Probability can never exceed 1. The maximum probability is 1 (certain) and the minimum is 0 (impossible)."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "A standard die only has numbers 1–6. Rolling a 7 is impossible, so P = 0. Also, 7/6 is greater than 1, which is impossible for any probability."
+    }
+   ]
+  },
+  {
+   "id": "basic-probability-d8af9346",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE3[1]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Which of these statements is true?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "A probability of 0.9 means the event will definitely happen"
+    },
+    {
+     "val": "b",
+     "label": "You can have P(event) = 1.5"
+    },
+    {
+     "val": "c",
+     "label": "On a fair dice, rolling a 1 and rolling a 2 are equally likely, so each has probability 0.5."
+    },
+    {
+     "val": "d",
+     "label": "If P(A) = 0.3, then P(not A) = 0.7"
+    }
+   ],
+   "worked": [
+    "The probability of an event not happening is 1 minus the probability of it happening.",
+    "1 − 0.3 = 0.7."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "0.9 means the event is very likely, but not certain. Only a probability of 1 means it will definitely happen. There is still a 0.1 (10%) chance it won't."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Equally likely outcomes share the probability equally among all the outcomes. A dice has six, so each is 1/6."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Probability can never exceed 1. The maximum probability is 1 (certain) and the minimum is 0 (impossible)."
+    }
+   ]
+  },
+  {
+   "id": "basic-probability-e191f8bd",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE3[2]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Which of these statements is false?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Probability can be written as a fraction, decimal or percentage"
+    },
+    {
+     "val": "b",
+     "label": "P(certain event) = 1"
+    },
+    {
+     "val": "c",
+     "label": "Flipping heads 5 times makes tails more likely next"
+    },
+    {
+     "val": "d",
+     "label": "Two events with the same probability are equally likely"
+    }
+   ],
+   "worked": [
+    "This is the gambler's fallacy.",
+    "Each coin flip is independent — the coin has no memory.",
+    "The probability of tails is still 0.5 no matter what happened before."
+   ],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-351a426b",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE3[3]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Which of these statements is true?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Flipping heads 5 times makes tails more likely next"
+    },
+    {
+     "val": "b",
+     "label": "P(impossible event) = 0"
+    },
+    {
+     "val": "c",
+     "label": "P(rolling 7 on a standard die) = 7/6"
+    },
+    {
+     "val": "d",
+     "label": "If P(rain) = 0.4, it will rain on exactly 4 out of every 10 days"
+    }
+   ],
+   "worked": [
+    "If something cannot happen, its probability is exactly 0."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "A standard die only has numbers 1–6. Rolling a 7 is impossible, so P = 0. Also, 7/6 is greater than 1, which is impossible for any probability."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "P(rain) = 0.4 means that over a very large number of days, about 40% will have rain. But in any specific set of 10 days, it could rain on 0, 1, 2, ... or even all 10 days."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "This is the gambler's fallacy. Each coin flip is independent — the coin has no memory. The probability of tails is still 0.5 no matter what happened before."
+    }
+   ]
+  },
+  {
+   "id": "basic-probability-784f92b3",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE3[4]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Which of these statements is true?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "P(certain event) = 1"
+    },
+    {
+     "val": "b",
+     "label": "Flipping heads 5 times makes tails more likely next"
+    },
+    {
+     "val": "c",
+     "label": "On a fair dice, rolling a 1 and rolling a 2 are equally likely, so each has probability 0.5."
+    },
+    {
+     "val": "d",
+     "label": "P(rolling 7 on a standard die) = 7/6"
+    }
+   ],
+   "worked": [
+    "If something is guaranteed to happen, its probability is exactly 1."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Equally likely outcomes share the probability equally among all the outcomes. A dice has six, so each is 1/6."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "A standard die only has numbers 1–6. Rolling a 7 is impossible, so P = 0. Also, 7/6 is greater than 1, which is impossible for any probability."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "This is the gambler's fallacy. Each coin flip is independent — the coin has no memory. The probability of tails is still 0.5 no matter what happened before."
+    }
+   ]
+  },
+  {
+   "id": "basic-probability-b6fef034",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE3[5]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Which of these statements is false?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "A fair six-sided die gives each number probability exactly 1/6"
+    },
+    {
+     "val": "b",
+     "label": "The more times you repeat an experiment, the closer the results tend to get to the theoretical probability"
+    },
+    {
+     "val": "c",
+     "label": "P(event) is always between 0 and 1 inclusive"
+    },
+    {
+     "val": "d",
+     "label": "You can have P(event) = 1.5"
+    }
+   ],
+   "worked": [
+    "Probability can never exceed 1.",
+    "The maximum probability is 1 (certain) and the minimum is 0 (impossible)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-7fa7be10",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE3[6]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Which of these statements is false?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "P(impossible event) = 0"
+    },
+    {
+     "val": "b",
+     "label": "Two events with the same probability are equally likely"
+    },
+    {
+     "val": "c",
+     "label": "The more times you repeat an experiment, the closer the results tend to get to the theoretical probability"
+    },
+    {
+     "val": "d",
+     "label": "On a fair dice, rolling a 1 and rolling a 2 are equally likely, so each has probability 0.5."
+    }
+   ],
+   "worked": [
+    "Equally likely outcomes share the probability equally among all the outcomes.",
+    "A dice has six, so each is 1/6."
+   ],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-0a5d3ea6",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE3[7]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Which of these statements is true?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "On a fair dice, rolling a 1 and rolling a 2 are equally likely, so each has probability 0.5."
+    },
+    {
+     "val": "b",
+     "label": "You can have P(event) = 1.5"
+    },
+    {
+     "val": "c",
+     "label": "If P(rain) = 0.4, it will rain on exactly 4 out of every 10 days"
+    },
+    {
+     "val": "d",
+     "label": "P(A) + P(not A) always equals 1"
+    }
+   ],
+   "worked": [
+    "An event either happens or it doesn't.",
+    "These two probabilities must always add up to 1."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Probability can never exceed 1. The maximum probability is 1 (certain) and the minimum is 0 (impossible)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "P(rain) = 0.4 means that over a very large number of days, about 40% will have rain. But in any specific set of 10 days, it could rain on 0, 1, 2, ... or even all 10 days."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Equally likely outcomes share the probability equally among all the outcomes. A dice has six, so each is 1/6."
+    }
+   ]
+  },
+  {
+   "id": "basic-probability-6a8670a5",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE3[8]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Which of these statements is false?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "A fair six-sided die gives each number probability exactly 1/6"
+    },
+    {
+     "val": "b",
+     "label": "P(certain event) = 1"
+    },
+    {
+     "val": "c",
+     "label": "A probability of 0.9 means the event will definitely happen"
+    },
+    {
+     "val": "d",
+     "label": "P(event) is always between 0 and 1 inclusive"
+    }
+   ],
+   "worked": [
+    "0.9 means the event is very likely, but not certain.",
+    "Only a probability of 1 means it will definitely happen.",
+    "There is still a 0.1 (10%) chance it won't."
+   ],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-0ff5b012",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE3[9]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Which of these statements is true?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "P(rolling 7 on a standard die) = 7/6"
+    },
+    {
+     "val": "b",
+     "label": "You can have P(event) = 1.5"
+    },
+    {
+     "val": "c",
+     "label": "On a fair dice, rolling a 1 and rolling a 2 are equally likely, so each has probability 0.5."
+    },
+    {
+     "val": "d",
+     "label": "The more times you repeat an experiment, the closer the results tend to get to the theoretical probability"
+    }
+   ],
+   "worked": [
+    "This is called the Law of Large Numbers.",
+    "With more trials, the experimental probability tends to get closer to the theoretical probability."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "A standard die only has numbers 1–6. Rolling a 7 is impossible, so P = 0. Also, 7/6 is greater than 1, which is impossible for any probability."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Equally likely outcomes share the probability equally among all the outcomes. A dice has six, so each is 1/6."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Probability can never exceed 1. The maximum probability is 1 (certain) and the minimum is 0 (impossible)."
+    }
+   ]
+  },
+  {
+   "id": "basic-probability-ba776754",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE3[10]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Which of these statements is true?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "On a fair dice, rolling a 1 and rolling a 2 are equally likely, so each has probability 0.5."
+    },
+    {
+     "val": "b",
+     "label": "A fair six-sided die gives each number probability exactly 1/6"
+    },
+    {
+     "val": "c",
+     "label": "You can have P(event) = 1.5"
+    },
+    {
+     "val": "d",
+     "label": "A probability of 0.9 means the event will definitely happen"
+    }
+   ],
+   "worked": [
+    "A fair die has 6 equally likely outcomes, so each has probability 1/6."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Equally likely outcomes share the probability equally among all the outcomes. A dice has six, so each is 1/6."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Probability can never exceed 1. The maximum probability is 1 (certain) and the minimum is 0 (impossible)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "0.9 means the event is very likely, but not certain. Only a probability of 1 means it will definitely happen. There is still a 0.1 (10%) chance it won't."
+    }
+   ]
+  },
+  {
+   "id": "basic-probability-beb9e3fd",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE3[11]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Which of these statements is false?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "P(certain event) = 1"
+    },
+    {
+     "val": "b",
+     "label": "P(rolling 7 on a standard die) = 7/6"
+    },
+    {
+     "val": "c",
+     "label": "P(impossible event) = 0"
+    },
+    {
+     "val": "d",
+     "label": "A fair six-sided die gives each number probability exactly 1/6"
+    }
+   ],
+   "worked": [
+    "A standard die only has numbers 1–6.",
+    "Rolling a 7 is impossible, so P = 0.",
+    "Also, 7/6 is greater than 1, which is impossible for any probability."
+   ],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-1f4acc5e",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE3[12]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Which of these statements is true?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Probability can be written as a fraction, decimal or percentage"
+    },
+    {
+     "val": "b",
+     "label": "Flipping heads 5 times makes tails more likely next"
+    },
+    {
+     "val": "c",
+     "label": "On a fair dice, rolling a 1 and rolling a 2 are equally likely, so each has probability 0.5."
+    },
+    {
+     "val": "d",
+     "label": "You can have P(event) = 1.5"
+    }
+   ],
+   "worked": [
+    "For example, the probability of flipping heads can be written as 1/2, 0.5, or 50%.",
+    "All three representations are valid."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "This is the gambler's fallacy. Each coin flip is independent — the coin has no memory. The probability of tails is still 0.5 no matter what happened before."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Probability can never exceed 1. The maximum probability is 1 (certain) and the minimum is 0 (impossible)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Equally likely outcomes share the probability equally among all the outcomes. A dice has six, so each is 1/6."
+    }
+   ]
+  },
+  {
+   "id": "basic-probability-034a4d72",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE3[13]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Which of these statements is false?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "A fair six-sided die gives each number probability exactly 1/6"
+    },
+    {
+     "val": "b",
+     "label": "If P(rain) = 0.4, it will rain on exactly 4 out of every 10 days"
+    },
+    {
+     "val": "c",
+     "label": "The more times you repeat an experiment, the closer the results tend to get to the theoretical probability"
+    },
+    {
+     "val": "d",
+     "label": "P(event) is always between 0 and 1 inclusive"
+    }
+   ],
+   "worked": [
+    "P(rain) = 0.4 means that over a very large number of days, about 40% will have rain.",
+    "But in any specific set of 10 days, it could rain on 0, 1, 2, ... or even all 10 days."
+   ],
+   "slip": []
+  },
+  {
+   "id": "basic-probability-21a1bb00",
+   "topic": "basic-probability",
+   "source": {
+    "game": "probability-pioneer",
+    "ref": "STAGE3[14]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Which of these statements is true?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "You can have P(event) = 1.5"
+    },
+    {
+     "val": "b",
+     "label": "Two events with the same probability are equally likely"
+    },
+    {
+     "val": "c",
+     "label": "P(rolling 7 on a standard die) = 7/6"
+    },
+    {
+     "val": "d",
+     "label": "A probability of 0.9 means the event will definitely happen"
+    }
+   ],
+   "worked": [
+    "If two events have the same probability, they are by definition equally likely to occur."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "A standard die only has numbers 1–6. Rolling a 7 is impossible, so P = 0. Also, 7/6 is greater than 1, which is impossible for any probability."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Probability can never exceed 1. The maximum probability is 1 (certain) and the minimum is 0 (impossible)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "0.9 means the event is very likely, but not certain. Only a probability of 1 means it will definitely happen. There is still a 0.1 (10%) chance it won't."
+    }
+   ]
+  }
+ ]
+}

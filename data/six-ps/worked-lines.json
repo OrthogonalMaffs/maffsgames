@@ -1,0 +1,389 @@
+{
+ "note": "Project Claude, 25 Oct 2026. Worked lines and choice items for SIX-PS-BANKS part C and the 24 sequences items.",
+ "sequences_worked_by_id": {
+  "sequences-1606673d": [
+   "The terms go up by 4, so the nth term starts \\(4n\\).",
+   "The first term is 1, which is \\(4 - 3\\), so the nth term is \\(4n - 3\\).",
+   "Solve \\(4n - 3 = 41\\): \\(4n = 44\\), so \\(n = 11\\).",
+   "41 is the 11th term."
+  ],
+  "sequences-5bce9d81": [
+   "The terms go up by 5, so the nth term starts \\(5n\\).",
+   "The first term is 3, which is \\(5 - 2\\), so the nth term is \\(5n - 2\\).",
+   "Solve \\(5n - 2 = 53\\): \\(5n = 55\\), so \\(n = 11\\).",
+   "53 is the 11th term."
+  ],
+  "sequences-1d46b2de": [
+   "Each term is multiplied by 2 to get the next.",
+   "\\(16 \\times 2 = 32\\)."
+  ],
+  "sequences-23c4dff2": [
+   "Each term is multiplied by 3 to get the next.",
+   "\\(81 \\times 3 = 243\\)."
+  ],
+  "sequences-0ad167d8": [
+   "Each term is multiplied by 5 to get the next.",
+   "\\(125 \\times 5 = 625\\)."
+  ],
+  "sequences-12509ad1": [
+   "Each term is halved to get the next.",
+   "\\(8 \\div 2 = 4\\)."
+  ],
+  "sequences-324ca2f5": [
+   "Each term is divided by 10 to get the next.",
+   "\\(1 \\div 10 = 0.1\\)."
+  ],
+  "sequences-c42efb23": [
+   "Each term is multiplied by 3 to get the next.",
+   "\\(54 \\times 3 = 162\\)."
+  ],
+  "sequences-f448c920": [
+   "Each term is multiplied by \\(-2\\) to get the next.",
+   "\\(-8 \\times (-2) = 16\\)."
+  ],
+  "sequences-23d9c7fc": [
+   "Each term is multiplied by 2 to get the next.",
+   "\\(40 \\times 2 = 80\\)."
+  ],
+  "sequences-c18bb063": [
+   "Each term is divided by 3 to get the next.",
+   "\\(3 \\div 3 = 1\\)."
+  ],
+  "sequences-8688f2c3": [
+   "Each term is multiplied by 2 to get the next.",
+   "\\(56 \\times 2 = 112\\)."
+  ],
+  "sequences-11740ca5": [
+   "The terms go up by 3 each time.",
+   "Adding the same amount each time makes an arithmetic sequence."
+  ],
+  "sequences-7e355c5b": [
+   "Each term is 3 times the one before.",
+   "Multiplying by the same number each time makes a geometric sequence."
+  ],
+  "sequences-363189a8": [
+   "Each term is the two before it added: \\(1 + 1 = 2\\), \\(1 + 2 = 3\\), \\(2 + 3 = 5\\).",
+   "That is a Fibonacci sequence."
+  ],
+  "sequences-f57f159f": [
+   "\\(1 = 1^2\\), \\(4 = 2^2\\), \\(9 = 3^2\\), \\(16 = 4^2\\), \\(25 = 5^2\\).",
+   "These are the square numbers."
+  ],
+  "sequences-6ea81df6": [
+   "The gaps are 2, 3, 4, 5: each gap is 1 more than the last.",
+   "1, 3, 6, 10, 15 are the triangular numbers."
+  ],
+  "sequences-b1b32b7d": [
+   "\\(1 = 1^3\\), \\(8 = 2^3\\), \\(27 = 3^3\\), \\(64 = 4^3\\), \\(125 = 5^3\\).",
+   "These are the cube numbers."
+  ],
+  "sequences-53b36ad9": [
+   "These are the prime numbers: each has exactly two factors.",
+   "14, 15 and 16 are not prime, so the next prime after 13 is 17."
+  ],
+  "sequences-89a6c630": [
+   "Each term is the two before it added.",
+   "\\(8 + 13 = 21\\)."
+  ],
+  "sequences-f8901bb3": [
+   "These are the square numbers: \\(25 = 5^2\\).",
+   "The next is \\(6^2 = 36\\)."
+  ],
+  "sequences-53dce314": [
+   "The gaps are 2, 3, 4, 5, so the next gap is 6.",
+   "\\(15 + 6 = 21\\)."
+  ],
+  "sequences-e9470fd2": [
+   "The gaps are 4, 6, 8, 10, so the next gap is 12.",
+   "\\(30 + 12 = 42\\)."
+  ],
+  "sequences-f75a559b": [
+   "Each term is the two before it added.",
+   "\\(13 + 21 = 34\\)."
+  ]
+ },
+ "equation_builder_ks3": {
+  "QUESTIONS[0]": {
+   "answer_label": "C = 2.5m + 3",
+   "wrong": [
+    {
+     "label": "C = 3m + 2.5",
+     "line": "The £2.50 is charged for each mile, so it goes with \\(m\\)."
+    },
+    {
+     "label": "C = 5.5m",
+     "line": "The £3 booking fee is paid once, not for each mile."
+    },
+    {
+     "label": "C = 2.5(m + 3)",
+     "line": "The booking fee is not multiplied by 2.5."
+    }
+   ],
+   "worked": [
+    "£2.50 for each of \\(m\\) miles: \\(2.5m\\).",
+    "Add the £3 booking fee, paid once: \\(C = 2.5m + 3\\)."
+   ],
+   "stem_override": null
+  },
+  "QUESTIONS[1]": {
+   "answer_label": "T = 6x",
+   "wrong": [
+    {
+     "label": "T = 5x",
+     "line": "That is the sand only: add the \\(x\\) kg of cement."
+    },
+    {
+     "label": "T = x + 5",
+     "line": "The sand is 5 times the cement, not 5 more."
+    },
+    {
+     "label": "T = x + 6",
+     "line": "Sand to cement is 5 : 1, so the sand is \\(5x\\), not 5."
+    }
+   ],
+   "worked": [
+    "Sand to cement is 5 : 1, so the sand is 5 times the cement: \\(5x\\) kg.",
+    "Total: \\(5x + x = 6x\\), so \\(T = 6x\\)."
+   ],
+   "stem_override": null
+  },
+  "QUESTIONS[2]": {
+   "answer_label": "T = 45h + 60",
+   "wrong": [
+    {
+     "label": "T = 60h + 45",
+     "line": "The £45 is charged each hour, so it goes with \\(h\\)."
+    },
+    {
+     "label": "T = 105h",
+     "line": "The £60 call-out is charged once, not each hour."
+    },
+    {
+     "label": "T = 45(h + 60)",
+     "line": "The call-out charge is not multiplied by 45."
+    }
+   ],
+   "worked": [
+    "£45 for each of \\(h\\) hours: \\(45h\\).",
+    "Add the £60 call-out, charged once: \\(T = 45h + 60\\)."
+   ],
+   "stem_override": null
+  },
+  "QUESTIONS[3]": {
+   "answer_label": "S = 5e - 4",
+   "wrong": [
+    {
+     "label": "S = 5e + 4",
+     "line": "Her brother is younger, so his age is \\(e - 4\\)."
+    },
+    {
+     "label": "S = 4e - 4",
+     "line": "That leaves out Ellie's own age, \\(e\\)."
+    },
+    {
+     "label": "S = 4e",
+     "line": "That leaves out her brother, \\(e - 4\\)."
+    }
+   ],
+   "worked": [
+    "Ellie: \\(e\\). Her brother: \\(e - 4\\). Their mum: \\(3e\\).",
+    "Add them: \\(S = e + (e - 4) + 3e = 5e - 4\\)."
+   ],
+   "stem_override": null
+  },
+  "QUESTIONS[10]": {
+   "answer_label": "N = 24x - 6",
+   "wrong": [
+    {
+     "label": "N = 24x + 6",
+     "line": "The 6 packets are kept aside, so take them away."
+    },
+    {
+     "label": "N = 18x",
+     "line": "The 6 packets are taken from the whole order once, not from every box."
+    },
+    {
+     "label": "N = 24(x - 6)",
+     "line": "That keeps back 6 boxes, not 6 packets."
+    }
+   ],
+   "worked": [
+    "Each box holds 24 packets: \\(x\\) boxes hold \\(24x\\).",
+    "Take away the 6 kept aside: \\(N = 24x - 6\\)."
+   ],
+   "stem_override": "Packets of crisps come in boxes of 24. A café orders \\(x\\) boxes and keeps 6 packets aside as samples. Write a formula for the number of packets, \\(N\\), available to sell."
+  },
+  "QUESTIONS[19]": {
+   "answer_label": "\\frac{3V}{8} = 360",
+   "wrong": [
+    {
+     "label": "\\frac{8V}{3} = 360",
+     "line": "Three-eighths means \\(\\frac{3}{8}\\) of \\(V\\): 3 on top, 8 underneath."
+    },
+    {
+     "label": "3V = 360",
+     "line": "Three-eighths of \\(V\\) is \\(3V\\) divided by 8."
+    },
+    {
+     "label": "V - \\frac{3}{8} = 360",
+     "line": "\"Three-eighths full\" means \\(\\frac{3}{8}\\) of \\(V\\), not \\(V\\) take away \\(\\frac{3}{8}\\)."
+    }
+   ],
+   "worked": [
+    "Three-eighths of the full amount \\(V\\) is \\(\\frac{3V}{8}\\).",
+    "That amount is 360 litres: \\(\\frac{3V}{8} = 360\\)."
+   ],
+   "stem_override": null
+  },
+  "QUESTIONS[29]": {
+   "answer_label": "h = \\frac{T - 60}{45}",
+   "wrong": [
+    {
+     "label": "h = \\frac{T + 60}{45}",
+     "line": "The £60 call-out is part of \\(T\\), so take it away."
+    },
+    {
+     "label": "h = \\frac{T}{45} - 60",
+     "line": "Take away the £60 before dividing by 45."
+    },
+    {
+     "label": "h = 45(T - 60)",
+     "line": "To find the hours, divide by the £45 an hour."
+    }
+   ],
+   "worked": [
+    "The charge is \\(T = 45h + 60\\).",
+    "Take the £60 call-out away: \\(T - 60 = 45h\\).",
+    "Divide by 45: \\(h = \\frac{T - 60}{45}\\)."
+   ],
+   "stem_override": null
+  },
+  "QUESTIONS[35]": {
+   "answer_label": "2n - 9 = 25",
+   "wrong": [
+    {
+     "label": "2n + 9 = 25",
+     "line": "9 is subtracted, so it is \\(- 9\\)."
+    },
+    {
+     "label": "2(n - 9) = 25",
+     "line": "The number is doubled first, then 9 is subtracted."
+    },
+    {
+     "label": "n^2 - 9 = 25",
+     "line": "Doubled means times 2, not squared."
+    }
+   ],
+   "worked": [
+    "Doubled: \\(2n\\).",
+    "Then subtract 9: \\(2n - 9\\).",
+    "That gives 25: \\(2n - 9 = 25\\)."
+   ],
+   "stem_override": null
+  },
+  "QUESTIONS[39]": {
+   "answer_label": "\\frac{3V}{8} = 360",
+   "wrong": [
+    {
+     "label": "\\frac{8V}{3} = 360",
+     "line": "Three-eighths means \\(\\frac{3}{8}\\) of \\(V\\): 3 on top, 8 underneath."
+    },
+    {
+     "label": "3V = 360",
+     "line": "Three-eighths of \\(V\\) is \\(3V\\) divided by 8."
+    },
+    {
+     "label": "V - \\frac{3}{8} = 360",
+     "line": "\"Three-eighths full\" means \\(\\frac{3}{8}\\) of \\(V\\), not \\(V\\) take away \\(\\frac{3}{8}\\)."
+    }
+   ],
+   "worked": [
+    "Three-eighths of the full capacity \\(V\\) is \\(\\frac{3V}{8}\\).",
+    "That amount is 360 litres: \\(\\frac{3V}{8} = 360\\)."
+   ],
+   "stem_override": null
+  }
+ },
+ "probability_stage1": {
+  "words": [
+   "Impossible",
+   "Unlikely",
+   "Even chance",
+   "Likely",
+   "Certain"
+  ],
+  "rule": "choice: the answer word plus the three other words nearest it on the scale (drop the one furthest away); no slip lines.",
+  "items": {
+   "STAGE1[0]": {
+    "answer_label": "Certain",
+    "worked": [
+     "Breathing today must happen.",
+     "Something that must happen is certain."
+    ]
+   },
+   "STAGE1[1]": {
+    "answer_label": "Impossible",
+    "worked": [
+     "The faces of a standard die are 1 to 6, so a 7 cannot happen.",
+     "Something that cannot happen is impossible."
+    ]
+   },
+   "STAGE1[2]": {
+    "answer_label": "Likely",
+    "worked": [
+     "Rain somewhere in Britain in a week happens far more often than not.",
+     "It is not guaranteed, so it is likely, not certain."
+    ]
+   },
+   "STAGE1[3]": {
+    "answer_label": "Even chance",
+    "worked": [
+     "A fair coin has 2 equally likely outcomes, and heads is 1 of them.",
+     "1 out of 2 is an even chance."
+    ]
+   },
+   "STAGE1[4]": {
+    "answer_label": "Unlikely",
+    "worked": [
+     "January, June and July start with J: 3 of the 12 months.",
+     "3 out of 12 is less than half, so it is unlikely."
+    ]
+   },
+   "STAGE1[5]": {
+    "answer_label": "Even chance",
+    "worked": [
+     "Half the cards in a standard pack are red: 26 of 52.",
+     "Half is an even chance."
+    ]
+   },
+   "STAGE1[6]": {
+    "answer_label": "Even chance",
+    "worked": [
+     "2, 4 and 6 are even: 3 of the 6 faces.",
+     "3 out of 6 is a half, an even chance."
+    ]
+   },
+   "STAGE1[7]": {
+    "answer_label": "Unlikely",
+    "worked": [
+     "One ticket has about a 1 in 45 million chance of winning.",
+     "It could happen, so it is not impossible, but it is very unlikely."
+    ]
+   },
+   "STAGE1[8]": {
+    "answer_label": "Even chance",
+    "worked": [
+     "Boys and girls are born in very nearly equal numbers.",
+     "So it is about an even chance."
+    ]
+   },
+   "STAGE1[9]": {
+    "answer_label": "Certain",
+    "worked": [
+     "The sun rises every day.",
+     "So it is certain."
+    ]
+   }
+  }
+ }
+}

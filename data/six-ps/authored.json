@@ -1,0 +1,2740 @@
+{
+ "schema": 1,
+ "note": "Authored by Project Claude, 25 Oct 2026, to fill shortfalls (vectors, form-expressions, rounding, change-subject). Merged by gen-six-ps.py into each topic bank. Updated after #536: dp added to every rounding answer the stem states as decimal places or that significant figures put after the point; slips that dp would turn into a format message removed.",
+ "questions": [
+  {
+   "id": "vectors-4b7f5f73",
+   "topic": "vectors",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:vectors-01"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "\\(\\mathbf{a} = \\begin{pmatrix} 3 \\\\ 2 \\end{pmatrix}\\) and \\(\\mathbf{b} = \\begin{pmatrix} 1 \\\\ 4 \\end{pmatrix}\\). Work out \\(\\mathbf{a} + \\mathbf{b}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\begin{pmatrix} 3 \\\\ 8 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\begin{pmatrix} 2 \\\\ -2 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\begin{pmatrix} 4 \\\\ 6 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\begin{pmatrix} 6 \\\\ 4 \\end{pmatrix}\\)"
+    }
+   ],
+   "worked": [
+    "Add the top numbers: \\(3 + 1 = 4\\).",
+    "Add the bottom numbers: \\(2 + 4 = 6\\).",
+    "So \\(\\mathbf{a} + \\mathbf{b} = \\begin{pmatrix} 4 \\\\ 6 \\end{pmatrix}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Adding vectors means adding the numbers, not multiplying them."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is \\(\\mathbf{a} - \\mathbf{b}\\): adding means add the top numbers and add the bottom numbers."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "The top and bottom numbers have swapped places: the top of the answer comes from the two top numbers."
+    }
+   ]
+  },
+  {
+   "id": "vectors-dd1458c2",
+   "topic": "vectors",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:vectors-02"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "\\(\\mathbf{a} = \\begin{pmatrix} 5 \\\\ -1 \\end{pmatrix}\\) and \\(\\mathbf{b} = \\begin{pmatrix} -2 \\\\ 3 \\end{pmatrix}\\). Work out \\(\\mathbf{a} + \\mathbf{b}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\begin{pmatrix} 2 \\\\ 3 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\begin{pmatrix} 7 \\\\ -4 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\begin{pmatrix} 7 \\\\ 4 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\begin{pmatrix} 3 \\\\ 2 \\end{pmatrix}\\)"
+    }
+   ],
+   "worked": [
+    "Add the top numbers: \\(5 + (-2) = 3\\).",
+    "Add the bottom numbers: \\((-1) + 3 = 2\\).",
+    "So \\(\\mathbf{a} + \\mathbf{b} = \\begin{pmatrix} 3 \\\\ 2 \\end{pmatrix}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The top and bottom numbers have swapped places: the top of the answer comes from the two top numbers."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is \\(\\mathbf{a} - \\mathbf{b}\\): adding means add the top numbers and add the bottom numbers."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check the signs: a negative number in a vector takes away."
+    }
+   ]
+  },
+  {
+   "id": "vectors-5c55edf1",
+   "topic": "vectors",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:vectors-03"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "\\(\\mathbf{a} = \\begin{pmatrix} -4 \\\\ 2 \\end{pmatrix}\\) and \\(\\mathbf{b} = \\begin{pmatrix} 1 \\\\ -5 \\end{pmatrix}\\). Work out \\(\\mathbf{a} + \\mathbf{b}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\begin{pmatrix} -3 \\\\ -3 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\begin{pmatrix} -5 \\\\ 7 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\begin{pmatrix} -4 \\\\ -10 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\begin{pmatrix} 3 \\\\ 3 \\end{pmatrix}\\)"
+    }
+   ],
+   "worked": [
+    "Add the top numbers: \\((-4) + 1 = -3\\).",
+    "Add the bottom numbers: \\(2 + (-5) = -3\\).",
+    "So \\(\\mathbf{a} + \\mathbf{b} = \\begin{pmatrix} -3 \\\\ -3 \\end{pmatrix}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is \\(\\mathbf{a} - \\mathbf{b}\\): adding means add the top numbers and add the bottom numbers."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Adding vectors means adding the numbers, not multiplying them."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check the signs: a negative number in a vector takes away."
+    }
+   ]
+  },
+  {
+   "id": "vectors-8bef6c17",
+   "topic": "vectors",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:vectors-04"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "\\(\\mathbf{a} = \\begin{pmatrix} 2 \\\\ 7 \\end{pmatrix}\\) and \\(\\mathbf{b} = \\begin{pmatrix} 6 \\\\ 0 \\end{pmatrix}\\). Work out \\(\\mathbf{a} + \\mathbf{b}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\begin{pmatrix} -4 \\\\ 7 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\begin{pmatrix} 12 \\\\ 0 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\begin{pmatrix} 7 \\\\ 8 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\begin{pmatrix} 8 \\\\ 7 \\end{pmatrix}\\)"
+    }
+   ],
+   "worked": [
+    "Add the top numbers: \\(2 + 6 = 8\\).",
+    "Add the bottom numbers: \\(7 + 0 = 7\\).",
+    "So \\(\\mathbf{a} + \\mathbf{b} = \\begin{pmatrix} 8 \\\\ 7 \\end{pmatrix}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is \\(\\mathbf{a} - \\mathbf{b}\\): adding means add the top numbers and add the bottom numbers."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Adding vectors means adding the numbers, not multiplying them."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "The top and bottom numbers have swapped places: the top of the answer comes from the two top numbers."
+    }
+   ]
+  },
+  {
+   "id": "vectors-b49bc4d1",
+   "topic": "vectors",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:vectors-05"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "\\(\\mathbf{a} = \\begin{pmatrix} 6 \\\\ 4 \\end{pmatrix}\\) and \\(\\mathbf{b} = \\begin{pmatrix} 2 \\\\ 1 \\end{pmatrix}\\). Work out \\(\\mathbf{a} - \\mathbf{b}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\begin{pmatrix} -4 \\\\ -3 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\begin{pmatrix} 3 \\\\ 4 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\begin{pmatrix} 8 \\\\ 5 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\begin{pmatrix} 4 \\\\ 3 \\end{pmatrix}\\)"
+    }
+   ],
+   "worked": [
+    "Take away the top numbers: \\(6 - 2 = 4\\).",
+    "Take away the bottom numbers: \\(4 - 1 = 3\\).",
+    "So \\(\\mathbf{a} - \\mathbf{b} = \\begin{pmatrix} 4 \\\\ 3 \\end{pmatrix}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is \\(\\mathbf{b} - \\mathbf{a}\\): take the numbers of \\(\\mathbf{b}\\) away from the numbers of \\(\\mathbf{a}\\), in that order."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "The top and bottom numbers have swapped places: the top of the answer comes from the two top numbers."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is \\(\\mathbf{a} + \\mathbf{b}\\): this question takes \\(\\mathbf{b}\\) away."
+    }
+   ]
+  },
+  {
+   "id": "vectors-304a067a",
+   "topic": "vectors",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:vectors-06"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "\\(\\mathbf{a} = \\begin{pmatrix} 3 \\\\ -2 \\end{pmatrix}\\) and \\(\\mathbf{b} = \\begin{pmatrix} 5 \\\\ 1 \\end{pmatrix}\\). Work out \\(\\mathbf{a} - \\mathbf{b}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\begin{pmatrix} 2 \\\\ 3 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\begin{pmatrix} -2 \\\\ -1 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\begin{pmatrix} -2 \\\\ -3 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\begin{pmatrix} 8 \\\\ -1 \\end{pmatrix}\\)"
+    }
+   ],
+   "worked": [
+    "Take away the top numbers: \\(3 - 5 = -2\\).",
+    "Take away the bottom numbers: \\((-2) - 1 = -3\\).",
+    "So \\(\\mathbf{a} - \\mathbf{b} = \\begin{pmatrix} -2 \\\\ -3 \\end{pmatrix}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is \\(\\mathbf{b} - \\mathbf{a}\\): take the numbers of \\(\\mathbf{b}\\) away from the numbers of \\(\\mathbf{a}\\), in that order."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check the bottom: \\(-2 - 1 = -3\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is \\(\\mathbf{a} + \\mathbf{b}\\): this question takes \\(\\mathbf{b}\\) away."
+    }
+   ]
+  },
+  {
+   "id": "vectors-104206ec",
+   "topic": "vectors",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:vectors-07"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "\\(\\mathbf{a} = \\begin{pmatrix} -1 \\\\ 4 \\end{pmatrix}\\) and \\(\\mathbf{b} = \\begin{pmatrix} -3 \\\\ -2 \\end{pmatrix}\\). Work out \\(\\mathbf{a} - \\mathbf{b}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\begin{pmatrix} -4 \\\\ 2 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\begin{pmatrix} 2 \\\\ 6 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\begin{pmatrix} -2 \\\\ -6 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\begin{pmatrix} 2 \\\\ 2 \\end{pmatrix}\\)"
+    }
+   ],
+   "worked": [
+    "Take away the top numbers: \\((-1) - (-3) = 2\\).",
+    "Take away the bottom numbers: \\(4 - (-2) = 6\\).",
+    "So \\(\\mathbf{a} - \\mathbf{b} = \\begin{pmatrix} 2 \\\\ 6 \\end{pmatrix}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is \\(\\mathbf{a} + \\mathbf{b}\\): this question takes \\(\\mathbf{b}\\) away."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is \\(\\mathbf{b} - \\mathbf{a}\\): take the numbers of \\(\\mathbf{b}\\) away from the numbers of \\(\\mathbf{a}\\), in that order."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Taking away a negative is adding: \\(4 - (-2) = 4 + 2 = 6\\)."
+    }
+   ]
+  },
+  {
+   "id": "vectors-fadd5b80",
+   "topic": "vectors",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:vectors-08"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "\\(\\mathbf{a} = \\begin{pmatrix} 0 \\\\ 5 \\end{pmatrix}\\) and \\(\\mathbf{b} = \\begin{pmatrix} 4 \\\\ -3 \\end{pmatrix}\\). Work out \\(\\mathbf{a} - \\mathbf{b}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\begin{pmatrix} -4 \\\\ 8 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\begin{pmatrix} 4 \\\\ -8 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\begin{pmatrix} 4 \\\\ 2 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\begin{pmatrix} -4 \\\\ 2 \\end{pmatrix}\\)"
+    }
+   ],
+   "worked": [
+    "Take away the top numbers: \\(0 - 4 = -4\\).",
+    "Take away the bottom numbers: \\(5 - (-3) = 8\\).",
+    "So \\(\\mathbf{a} - \\mathbf{b} = \\begin{pmatrix} -4 \\\\ 8 \\end{pmatrix}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is \\(\\mathbf{b} - \\mathbf{a}\\): take the numbers of \\(\\mathbf{b}\\) away from the numbers of \\(\\mathbf{a}\\), in that order."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is \\(\\mathbf{a} + \\mathbf{b}\\): this question takes \\(\\mathbf{b}\\) away."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Taking away a negative is adding: \\(5 - (-3) = 5 + 3 = 8\\)."
+    }
+   ]
+  },
+  {
+   "id": "vectors-71126f2d",
+   "topic": "vectors",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:vectors-09"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "\\(\\mathbf{a} = \\begin{pmatrix} 2 \\\\ -3 \\end{pmatrix}\\). Work out \\(3\\mathbf{a}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\begin{pmatrix} 5 \\\\ 0 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\begin{pmatrix} 6 \\\\ -9 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\begin{pmatrix} 6 \\\\ 9 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\begin{pmatrix} 6 \\\\ -3 \\end{pmatrix}\\)"
+    }
+   ],
+   "worked": [
+    "Multiply the top number by 3: \\(3 \\times 2 = 6\\).",
+    "Multiply the bottom number by 3: \\(3 \\times (-3) = -9\\).",
+    "So \\(3\\mathbf{a} = \\begin{pmatrix} 6 \\\\ -9 \\end{pmatrix}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Multiplying by 3 means 3 lots of the vector, not adding 3."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Keep the signs: a negative times a positive is negative."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Multiply both numbers: the bottom number is multiplied by 3 too."
+    }
+   ]
+  },
+  {
+   "id": "vectors-5fcb539a",
+   "topic": "vectors",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:vectors-10"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "\\(\\mathbf{b} = \\begin{pmatrix} -4 \\\\ 1 \\end{pmatrix}\\). Work out \\(5\\mathbf{b}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\begin{pmatrix} -20 \\\\ 5 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\begin{pmatrix} 1 \\\\ 6 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\begin{pmatrix} 20 \\\\ 5 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\begin{pmatrix} -20 \\\\ 1 \\end{pmatrix}\\)"
+    }
+   ],
+   "worked": [
+    "Multiply the top number by 5: \\(5 \\times (-4) = -20\\).",
+    "Multiply the bottom number by 5: \\(5 \\times 1 = 5\\).",
+    "So \\(5\\mathbf{b} = \\begin{pmatrix} -20 \\\\ 5 \\end{pmatrix}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Multiplying by 5 means 5 lots of the vector, not adding 5."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Keep the signs: a negative times a positive is negative."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Multiply both numbers: the bottom number is multiplied by 5 too."
+    }
+   ]
+  },
+  {
+   "id": "vectors-34c1ceea",
+   "topic": "vectors",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:vectors-11"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "\\(\\mathbf{a} = \\begin{pmatrix} 1 \\\\ 2 \\end{pmatrix}\\) and \\(\\mathbf{b} = \\begin{pmatrix} 3 \\\\ -1 \\end{pmatrix}\\). Work out \\(2\\mathbf{a} + \\mathbf{b}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\begin{pmatrix} 4 \\\\ 1 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\begin{pmatrix} 7 \\\\ 0 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\begin{pmatrix} 5 \\\\ 3 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\begin{pmatrix} 5 \\\\ 1 \\end{pmatrix}\\)"
+    }
+   ],
+   "worked": [
+    "\\(2\\mathbf{a} = \\begin{pmatrix} 2 \\\\ 4 \\end{pmatrix}\\) and \\(\\mathbf{b} = \\begin{pmatrix} 3 \\\\ -1 \\end{pmatrix}\\).",
+    "Add them: top \\(2 + 3 = 5\\), bottom \\(4 + (-1) = 3\\).",
+    "So \\(2\\mathbf{a} + \\mathbf{b} = \\begin{pmatrix} 5 \\\\ 3 \\end{pmatrix}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is \\(\\mathbf{a} + \\mathbf{b}\\): \\(\\mathbf{a}\\) has to be doubled first."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That doubles \\(\\mathbf{b}\\) instead of \\(\\mathbf{a}\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Both numbers of \\(\\mathbf{a}\\) are doubled, not just the top one."
+    }
+   ]
+  },
+  {
+   "id": "vectors-ed5fb044",
+   "topic": "vectors",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:vectors-12"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "\\(\\mathbf{a} = \\begin{pmatrix} 4 \\\\ 1 \\end{pmatrix}\\) and \\(\\mathbf{b} = \\begin{pmatrix} 1 \\\\ 3 \\end{pmatrix}\\). Work out \\(\\mathbf{a} - 2\\mathbf{b}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\begin{pmatrix} 6 \\\\ 7 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\begin{pmatrix} 2 \\\\ -2 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\begin{pmatrix} 3 \\\\ -2 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\begin{pmatrix} 2 \\\\ -5 \\end{pmatrix}\\)"
+    }
+   ],
+   "worked": [
+    "\\(\\mathbf{a} = \\begin{pmatrix} 4 \\\\ 1 \\end{pmatrix}\\) and \\(2\\mathbf{b} = \\begin{pmatrix} 2 \\\\ 6 \\end{pmatrix}\\).",
+    "Take away: top \\(4 - 2 = 2\\), bottom \\(1 - 6 = -5\\).",
+    "So \\(\\mathbf{a} - 2\\mathbf{b} = \\begin{pmatrix} 2 \\\\ -5 \\end{pmatrix}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That adds \\(2\\mathbf{b}\\): this question takes it away."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Both numbers of \\(\\mathbf{b}\\) are doubled, not just the top one."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is \\(\\mathbf{a} - \\mathbf{b}\\): \\(\\mathbf{b}\\) has to be doubled first."
+    }
+   ]
+  },
+  {
+   "id": "vectors-daf56e9e",
+   "topic": "vectors",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:vectors-13"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "\\(\\mathbf{a} = \\begin{pmatrix} -2 \\\\ 3 \\end{pmatrix}\\) and \\(\\mathbf{b} = \\begin{pmatrix} 2 \\\\ 2 \\end{pmatrix}\\). Work out \\(3\\mathbf{a} + 2\\mathbf{b}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\begin{pmatrix} 2 \\\\ 7 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\begin{pmatrix} -10 \\\\ 13 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\begin{pmatrix} -4 \\\\ 11 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\begin{pmatrix} -2 \\\\ 13 \\end{pmatrix}\\)"
+    }
+   ],
+   "worked": [
+    "\\(3\\mathbf{a} = \\begin{pmatrix} -6 \\\\ 9 \\end{pmatrix}\\) and \\(2\\mathbf{b} = \\begin{pmatrix} 4 \\\\ 4 \\end{pmatrix}\\).",
+    "Add them: top \\((-6) + 4 = -2\\), bottom \\(9 + 4 = 13\\).",
+    "So \\(3\\mathbf{a} + 2\\mathbf{b} = \\begin{pmatrix} -2 \\\\ 13 \\end{pmatrix}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is \\(\\mathbf{a} + 2\\mathbf{b}\\): \\(\\mathbf{a}\\) has to be multiplied by 3."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check the top: \\(-6 + 4 = -2\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is \\(3\\mathbf{a} + \\mathbf{b}\\): \\(\\mathbf{b}\\) has to be doubled too."
+    }
+   ]
+  },
+  {
+   "id": "vectors-9d3f570a",
+   "topic": "vectors",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:vectors-14"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A shape is moved 4 squares right and 3 squares down. Write this translation as a column vector.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\begin{pmatrix} -3 \\\\ 4 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\begin{pmatrix} -4 \\\\ 3 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\begin{pmatrix} 4 \\\\ -3 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\begin{pmatrix} 4 \\\\ 3 \\end{pmatrix}\\)"
+    }
+   ],
+   "worked": [
+    "The top number is the move across: right is positive, left is negative, so \\(4\\).",
+    "The bottom number is the move up or down: up is positive, down is negative, so \\(-3\\).",
+    "So the vector is \\(\\begin{pmatrix} 4 \\\\ -3 \\end{pmatrix}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The top number is the move across, the bottom number the move up or down."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Right and up are positive; left and down are negative."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Left and down are negative, so one number needs a minus sign."
+    }
+   ]
+  },
+  {
+   "id": "vectors-c98d6d73",
+   "topic": "vectors",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:vectors-15"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A shape is moved 2 squares left and 5 squares up. Write this translation as a column vector.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\begin{pmatrix} 2 \\\\ 5 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\begin{pmatrix} 2 \\\\ -5 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\begin{pmatrix} 5 \\\\ -2 \\end{pmatrix}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\begin{pmatrix} -2 \\\\ 5 \\end{pmatrix}\\)"
+    }
+   ],
+   "worked": [
+    "The top number is the move across: right is positive, left is negative, so \\(-2\\).",
+    "The bottom number is the move up or down: up is positive, down is negative, so \\(5\\).",
+    "So the vector is \\(\\begin{pmatrix} -2 \\\\ 5 \\end{pmatrix}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Left and down are negative, so one number needs a minus sign."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Right and up are positive; left and down are negative."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "The top number is the move across, the bottom number the move up or down."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-e4aa7e6e",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-01"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A ticket costs £\\(t\\). Write an expression for the cost of 4 tickets, in pounds.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(4t\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(t^4\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{t}{4}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(t + 4\\)"
+    }
+   ],
+   "worked": [
+    "4 tickets at £\\(t\\) each cost 4 lots of \\(t\\).",
+    "Write \\(4 \\times t\\) as \\(4t\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "\\(t^4\\) means \\(t \\times t \\times t \\times t\\): 4 tickets is \\(4 \\times t\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That divides the price by 4: 4 tickets is 4 lots of \\(t\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That adds 4 to the price: 4 tickets is 4 lots of \\(t\\)."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-4f3d2d6c",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-02"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Ali has £\\(n\\). Ben has £7 more than Ali. Write an expression for the amount Ben has, in pounds.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(n - 7\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(7n\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(n + 7\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{n}{7}\\)"
+    }
+   ],
+   "worked": [
+    "\"7 more than\" means add 7 to what Ali has.",
+    "So Ben has \\(n + 7\\) pounds."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Ben has more than Ali, so add 7."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "\"7 more than\" means add 7, not multiply by 7."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "\"7 more than\" means add 7."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-729937ac",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-03"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A plank is \\(x\\) cm long. 15 cm is cut off. Write an expression for the length left, in cm.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(15 - x\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x + 15\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x - 15\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(15x\\)"
+    }
+   ],
+   "worked": [
+    "Start with the whole plank, \\(x\\) cm.",
+    "Take away the 15 cm cut off: \\(x - 15\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The order matters: start with the plank, \\(x\\), and take 15 away."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Cutting off makes the plank shorter, so take 15 away."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Cutting off is taking away, not multiplying."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-6d7ca4f6",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-04"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A bill of £\\(b\\) is shared equally between 3 people. Write an expression for each person\\'s share, in pounds.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(3b\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{3}{b}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{b}{3}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(b - 3\\)"
+    }
+   ],
+   "worked": [
+    "Sharing equally between 3 people means dividing by 3.",
+    "Each share is \\(\\frac{b}{3}\\) pounds."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Sharing between 3 means dividing by 3, not multiplying."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "The bill is divided by 3, so \\(b\\) goes on top."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Sharing equally means dividing, not taking away."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-33b60fcb",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-05"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A number \\(m\\) is doubled, then 5 is added. Write an expression for the result.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(2(m + 5)\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(2m + 5\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(m + 7\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(5m + 2\\)"
+    }
+   ],
+   "worked": [
+    "Doubled: \\(2m\\).",
+    "Then add 5: \\(2m + 5\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That adds 5 first, then doubles: here the doubling comes first."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Doubling means times 2, not add 2."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "The number is doubled (times 2), then 5 is added."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-53b67504",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-06"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "5 is added to a number \\(y\\), then the result is multiplied by 3. Write an expression for the answer.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(3y + 5\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(3(y + 5)\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(5(y + 3)\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(y + 15\\)"
+    }
+   ],
+   "worked": [
+    "Add 5 first: \\(y + 5\\).",
+    "Multiply the whole result by 3, so use brackets: \\(3(y + 5)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The whole result is multiplied by 3, so it needs brackets: \\(3(y + 5)\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "5 is added first, and the result is multiplied by 3."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "The whole of \\(y + 5\\) is multiplied by 3, not just the 5."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-dc3d2bb8",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-07"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Pens cost \\(p\\) pence each and rulers cost \\(r\\) pence each. Write an expression for the total cost, in pence, of 3 pens and 2 rulers.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(2p + 3r\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(3p + 2r\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(6pr\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(5(p + r)\\)"
+    }
+   ],
+   "worked": [
+    "3 pens cost \\(3p\\) pence.",
+    "2 rulers cost \\(2r\\) pence.",
+    "Total: \\(3p + 2r\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The numbers have swapped: 3 pens is \\(3p\\) and 2 rulers is \\(2r\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "The costs of pens and rulers are added, not multiplied."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is 5 pens and 5 rulers."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-4b7e8313",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-08"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A taxi charges £3, plus £2 for each mile. Write an expression for the cost, in pounds, of a journey of \\(m\\) miles.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(2m + 3\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(m + 5\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(5m\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(3m + 2\\)"
+    }
+   ],
+   "worked": [
+    "£2 for each of \\(m\\) miles: \\(2m\\).",
+    "Add the £3 charged once: \\(2m + 3\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "£2 for each mile is \\(2m\\), not \\(m + 2\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "The £3 is charged once, not for each mile."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "The £2 is charged for each mile, so it goes with \\(m\\)."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-167b3f5d",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-09"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "A gym charges a £20 joining fee, then £15 a month. Write an expression for the total cost, in pounds, for \\(k\\) months.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(35k\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(20k + 15\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(15k + 20\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(15(k + 20)\\)"
+    }
+   ],
+   "worked": [
+    "£15 for each of \\(k\\) months: \\(15k\\).",
+    "Add the £20 joining fee, paid once: \\(15k + 20\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The £20 joining fee is paid once, not every month."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "The £15 is paid every month, so it goes with \\(k\\); the £20 is paid once."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "The joining fee is not multiplied by 15."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-ae382b94",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-10"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Cinema tickets cost £\\(a\\) for an adult and £\\(c\\) for a child. Write an expression for the cost, in pounds, of 2 adult tickets and 3 child tickets.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(6ac\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(3a + 2c\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(5(a + c)\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(2a + 3c\\)"
+    }
+   ],
+   "worked": [
+    "2 adult tickets: \\(2a\\).",
+    "3 child tickets: \\(3c\\).",
+    "Total: \\(2a + 3c\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The costs are added, not multiplied."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "The numbers have swapped: 2 adults is \\(2a\\) and 3 children is \\(3c\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is 5 adults and 5 children."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-ebd38395",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-11"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A rectangle is \\(x\\) cm long and 4 cm wide. Write an expression for its perimeter, in cm.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(4x\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(2x + 4\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(2x + 8\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x + 4\\)"
+    }
+   ],
+   "worked": [
+    "The perimeter is all four sides added: \\(x + 4 + x + 4\\).",
+    "Collect: \\(2x + 8\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That multiplies the length by the width: the perimeter adds the four sides."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "There are two widths of 4 cm, so add 8."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is one length and one width: the perimeter goes all the way round, two of each."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-d1a4c959",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-12"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "An equilateral triangle has sides of length \\(y\\) cm. Write an expression for its perimeter, in cm.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(y + 3\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(2y\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(y^3\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(3y\\)"
+    }
+   ],
+   "worked": [
+    "An equilateral triangle has three equal sides.",
+    "Perimeter: \\(y + y + y = 3y\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The three sides are each \\(y\\): \\(y + y + y\\)."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "A triangle has three sides."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "\\(y^3\\) is \\(y \\times y \\times y\\): the perimeter is \\(y + y + y\\)."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-6411053c",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-13"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "A rectangle has length \\(2a\\) cm and width \\(a\\) cm. Write an expression for its perimeter, in cm.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(4a\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(2a^2\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(6a\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(3a\\)"
+    }
+   ],
+   "worked": [
+    "Add all four sides: \\(2a + a + 2a + a\\).",
+    "Collect: \\(6a\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That adds the two lengths only: the two widths are needed too."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the area: the perimeter adds the sides."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is one length and one width: add all four sides."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-a3302820",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-14"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "A square has sides of length \\((x + 2)\\) cm. Write an expression for its perimeter, in cm.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(4x + 8\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\((x + 2)^2\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(4x + 2\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x + 8\\)"
+    }
+   ],
+   "worked": [
+    "A square has four equal sides: \\(4(x + 2)\\).",
+    "Expand: \\(4x + 8\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the area: the perimeter adds the four sides."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "The 2 is part of every side, so it is multiplied by 4 too."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "The \\(x\\) is part of every side, so it is multiplied by 4 too."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-0bea2a29",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-15"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Priya is \\(p\\) years old. Her brother is 6 years younger than her. Write an expression for her brother\\'s age.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(6p\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(p - 6\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(p + 6\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(6 - p\\)"
+    }
+   ],
+   "worked": [
+    "Younger means take away.",
+    "Her brother is \\(p - 6\\) years old."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Younger means take away, not multiply."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Younger means take away."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "The order matters: start with Priya's age and take 6 away."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-11b91644",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-16"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Sam is \\(s\\) years old. His mother is three times as old as Sam. Write an expression for his mother\\'s age in 5 years\\' time.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(3s + 5\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(3(s + 5)\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(3s\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(s + 8\\)"
+    }
+   ],
+   "worked": [
+    "His mother is three times as old: \\(3s\\).",
+    "In 5 years she is 5 years older: \\(3s + 5\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "In 5 years his mother is 5 years older: add 5 to her age, \\(3s\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is her age now: add 5 for 5 years' time."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Three times as old means multiply by 3."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-d761e190",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-17"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "A van costs £40 a day to hire, plus a £25 booking fee. Write a formula for the total cost, \\(C\\) pounds, of hiring the van for \\(d\\) days.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(C = 40(d + 25)\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(C = 65d\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(C = 25d + 40\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(C = 40d + 25\\)"
+    }
+   ],
+   "worked": [
+    "£40 for each of \\(d\\) days: \\(40d\\).",
+    "Add the £25 fee, paid once: \\(C = 40d + 25\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The booking fee is not multiplied by 40."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "The £25 booking fee is paid once, not each day."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "The £40 is charged each day, so it goes with \\(d\\)."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-2bd11226",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-18"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Each box holds 12 eggs. Write a formula for the number of eggs, \\(E\\), in \\(b\\) full boxes.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(E = 12b\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(E = b + 12\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(E = \\frac{b}{12}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(E = \\frac{12}{b}\\)"
+    }
+   ],
+   "worked": [
+    "Each box holds 12 eggs.",
+    "\\(b\\) boxes hold \\(12 \\times b\\): \\(E = 12b\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Each box holds 12, so \\(b\\) boxes hold \\(b\\) lots of 12."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "More boxes means more eggs: multiply by 12."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "More boxes means more eggs: multiply by 12."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-9ed583a5",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-19"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "A plumber charges £50 to call out and £30 for each hour worked. Write a formula for the total charge, \\(T\\) pounds, for a job lasting \\(h\\) hours.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(T = 80h\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(T = 50h + 30\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(T = 30h + 50\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(T = 30(h + 50)\\)"
+    }
+   ],
+   "worked": [
+    "£30 for each of \\(h\\) hours: \\(30h\\).",
+    "Add the £50 call-out, charged once: \\(T = 30h + 50\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The £50 call-out is charged once, not each hour."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "The £30 is charged each hour, so it goes with \\(h\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "The call-out charge is not multiplied by 30."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-9562fc54",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-20"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Write a formula for the perimeter, \\(P\\), of a rectangle with length \\(l\\) and width \\(w\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(P = 2lw\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(P = lw\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(P = l + w\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(P = 2l + 2w\\)"
+    }
+   ],
+   "worked": [
+    "A rectangle has two lengths and two widths.",
+    "Add them: \\(P = 2l + 2w\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The sides are added, not multiplied."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the area: the perimeter adds the sides."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is one length and one width: add all four sides."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-25960ca2",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-21"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Phone credit starts at £20. Each call costs £0.50. Write a formula for the credit left, \\(R\\) pounds, after \\(n\\) calls.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(R = 19.5n\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(R = 20 + 0.5n\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(R = 20 - 0.5n\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(R = 0.5n - 20\\)"
+    }
+   ],
+   "worked": [
+    "\\(n\\) calls at £0.50 each cost \\(0.5n\\).",
+    "Take that from the £20: \\(R = 20 - 0.5n\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Start with £20 and take away £0.50 for each call."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Calls use up credit, so take them away."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Start with the £20 and take the calls away."
+    }
+   ]
+  },
+  {
+   "id": "change-subject-df30f7fe",
+   "topic": "change-subject",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:change-subject-01"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(x\\) the subject of \\(y = 4x - 7\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = \\frac{y - 7}{4}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = \\frac{y + 7}{4}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = \\frac{y}{4} + 7\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 4y + 7\\)"
+    }
+   ],
+   "worked": [
+    "Add 7 to both sides: \\(y + 7 = 4x\\).",
+    "Divide both sides by 4: \\(x = \\frac{y + 7}{4}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "To undo \\(-7\\), add 7 to both sides."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Add 7 before dividing by 4."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "To undo \\(\\times 4\\), divide by 4."
+    }
+   ]
+  },
+  {
+   "id": "change-subject-51b8a643",
+   "topic": "change-subject",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:change-subject-02"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(r\\) the subject of \\(C = 2\\pi r\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(r = C - 2\\pi\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(r = \\frac{C}{2\\pi}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(r = \\frac{C\\pi}{2}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(r = 2\\pi C\\)"
+    }
+   ],
+   "worked": [
+    "\\(C = 2\\pi r\\) means \\(2\\pi\\) times \\(r\\).",
+    "Divide both sides by \\(2\\pi\\): \\(r = \\frac{C}{2\\pi}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "\\(2\\pi r\\) is \\(2\\pi\\) times \\(r\\), so divide."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Divide by the whole of \\(2\\pi\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "To undo \\(\\times 2\\pi\\), divide by \\(2\\pi\\)."
+    }
+   ]
+  },
+  {
+   "id": "change-subject-2f4615b7",
+   "topic": "change-subject",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:change-subject-03"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Make \\(t\\) the subject of \\(v = u + at\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(t = a(v - u)\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(t = \\frac{v}{a} - u\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(t = \\frac{v - u}{a}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(t = \\frac{v + u}{a}\\)"
+    }
+   ],
+   "worked": [
+    "Take \\(u\\) from both sides: \\(v - u = at\\).",
+    "Divide both sides by \\(a\\): \\(t = \\frac{v - u}{a}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "To undo \\(\\times a\\), divide by \\(a\\)."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Take \\(u\\) away before dividing by \\(a\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "To undo \\(+u\\), take \\(u\\) away from both sides."
+    }
+   ]
+  },
+  {
+   "id": "rounding-c98c65a4",
+   "topic": "rounding",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:rounding-01"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Round 3847 to the nearest 10.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3850
+   },
+   "worked": [
+    "Look at the units digit: 7.",
+    "7 is 5 or more, so round up: 3847 becomes 3850."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 3840
+     },
+     "line": "The units digit is 7, which is 5 or more, so round up."
+    }
+   ]
+  },
+  {
+   "id": "rounding-ba174e8a",
+   "topic": "rounding",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:rounding-02"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Round 26 350 to the nearest 1000.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 26000
+   },
+   "worked": [
+    "Look at the hundreds digit: 3.",
+    "3 is less than 5, so round down: 26 350 becomes 26 000."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 26400
+     },
+     "line": "That is to the nearest 100: this asks for the nearest 1000."
+    },
+    {
+     "answer": {
+      "value": 27000
+     },
+     "line": "The hundreds digit is 3, which is less than 5, so round down."
+    }
+   ]
+  },
+  {
+   "id": "rounding-1153ac0a",
+   "topic": "rounding",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:rounding-03"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Round 4962 to the nearest 100.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5000
+   },
+   "worked": [
+    "Look at the tens digit: 6.",
+    "6 is 5 or more, so round up: 4962 becomes 5000."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 4900
+     },
+     "line": "The tens digit is 6, which is 5 or more, so round up."
+    }
+   ]
+  },
+  {
+   "id": "rounding-3c5b8043",
+   "topic": "rounding",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:rounding-04"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Round 7.368 to 1 decimal place.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7.4,
+    "dp": 1
+   },
+   "worked": [
+    "Keep 1 digit after the point: 7.3, and look at the next digit: 6.",
+    "6 is 5 or more, so round up: 7.4."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 7.3
+     },
+     "line": "The next digit is 6, which is 5 or more, so round up."
+    }
+   ]
+  },
+  {
+   "id": "rounding-3b1cbaed",
+   "topic": "rounding",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:rounding-05"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Round 12.045 to 2 decimal places.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12.05,
+    "dp": 2
+   },
+   "worked": [
+    "Keep 2 digits after the point: 12.04, and look at the next digit: 5.",
+    "5 rounds up: 12.05."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 12.04
+     },
+     "line": "The next digit is 5, and 5 rounds up."
+    }
+   ]
+  },
+  {
+   "id": "rounding-6f3aa6e6",
+   "topic": "rounding",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:rounding-06"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Round 0.0847 to 2 decimal places.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.08,
+    "dp": 2
+   },
+   "worked": [
+    "Keep 2 digits after the point: 0.08, and look at the next digit: 4.",
+    "4 is less than 5, so round down: 0.08."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 0.09
+     },
+     "line": "The next digit is 4, which is less than 5, so round down."
+    }
+   ]
+  },
+  {
+   "id": "rounding-6011a61e",
+   "topic": "rounding",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:rounding-07"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Round 9.96 to 1 decimal place.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 10,
+    "dp": 1
+   },
+   "worked": [
+    "Keep 1 digit after the point: 9.9, and look at the next digit: 6.",
+    "Round up: 9.9 goes up to 10.0, which is 10."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 9.9
+     },
+     "line": "The next digit is 6, so round up: 9.9 goes up to 10.0."
+    }
+   ]
+  },
+  {
+   "id": "rounding-6184a4d9",
+   "topic": "rounding",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:rounding-08"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Round 4738 to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5000
+   },
+   "worked": [
+    "The first significant figure is the 4 (thousands). Look at the next figure: 7.",
+    "Round up: 5000."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 4000
+     },
+     "line": "The second figure is 7, which is 5 or more, so round up."
+    },
+    {
+     "answer": {
+      "value": 5
+     },
+     "line": "Keep the place value: 4738 rounds to 5000, not 5."
+    }
+   ]
+  },
+  {
+   "id": "rounding-5b19874a",
+   "topic": "rounding",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:rounding-09"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Round 0.0627 to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.06,
+    "dp": 2
+   },
+   "worked": [
+    "The zeros at the start do not count. The first significant figure is the 6. Look at the next figure: 2.",
+    "2 is less than 5, so round down: 0.06."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 0.1
+     },
+     "line": "That is 1 decimal place: the zeros at the start are not significant."
+    }
+   ]
+  },
+  {
+   "id": "rounding-23098fa4",
+   "topic": "rounding",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:rounding-10"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Round 38 520 to 2 significant figures.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 39000
+   },
+   "worked": [
+    "Keep the first two figures: 38, and look at the next figure: 5.",
+    "5 rounds up: 39 000."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 38000
+     },
+     "line": "The third figure is 5, and 5 rounds up."
+    },
+    {
+     "answer": {
+      "value": 39
+     },
+     "line": "Keep the place value: 38 520 rounds to 39 000, not 39."
+    }
+   ]
+  },
+  {
+   "id": "rounding-fd8ad4dc",
+   "topic": "rounding",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:rounding-11"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Round 0.004385 to 2 significant figures.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.0044,
+    "dp": 4
+   },
+   "worked": [
+    "The zeros at the start do not count. Keep the first two significant figures: 43, and look at the next figure: 8.",
+    "Round up: 0.0044."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 0.0043
+     },
+     "line": "The third significant figure is 8, so round up."
+    },
+    {
+     "answer": {
+      "value": 0.0
+     },
+     "line": "The zeros at the start are not significant: start counting at the 4."
+    }
+   ]
+  },
+  {
+   "id": "rounding-e4b124c7",
+   "topic": "rounding",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:rounding-12"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Round 6.0149 to 3 significant figures.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6.01,
+    "dp": 2
+   },
+   "worked": [
+    "The zero between 6 and 1 counts. Keep 6.01, and look at the next figure: 4.",
+    "4 is less than 5, so round down: 6.01."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 6.02
+     },
+     "line": "Look only at the next digit, 4: it is less than 5, so round down."
+    }
+   ]
+  },
+  {
+   "id": "rounding-dd2a964c",
+   "topic": "rounding",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:rounding-13"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Round 72.95 to 3 significant figures.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 73,
+    "dp": 1
+   },
+   "worked": [
+    "Keep the first three figures: 72.9, and look at the next figure: 5.",
+    "5 rounds up: 72.9 goes up to 73.0, which is 73."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 72.9
+     },
+     "line": "The next figure is 5, and 5 rounds up: 72.9 goes up to 73.0."
+    }
+   ]
+  },
+  {
+   "id": "rounding-080a631f",
+   "topic": "rounding",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:rounding-14"
+   },
+   "band": 3,
+   "calc": true,
+   "stem": "Use a calculator to work out \\(\\sqrt{50}\\). Give your answer to 2 decimal places.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7.07,
+    "dp": 2
+   },
+   "worked": [
+    "\\(\\sqrt{50} = 7.0710\\ldots\\)",
+    "Keep 2 digits after the point: 7.07, and look at the next digit: 1. Round down: 7.07."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 7.08
+     },
+     "line": "The calculator shows 7.0710..., and the next digit is 1, so round down."
+    }
+   ]
+  },
+  {
+   "id": "rounding-0229d254",
+   "topic": "rounding",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:rounding-15"
+   },
+   "band": 3,
+   "calc": true,
+   "stem": "Use a calculator to work out \\(\\frac{17.3}{2.4 + 1.9}\\). Give your answer to 3 significant figures.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4.02,
+    "dp": 2
+   },
+   "worked": [
+    "Work out the bottom first: \\(2.4 + 1.9 = 4.3\\).",
+    "\\(17.3 \\div 4.3 = 4.0232\\ldots\\)",
+    "To 3 significant figures: 4.02."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 9.11
+     },
+     "line": "Work out the bottom first: \\(2.4 + 1.9 = 4.3\\), then divide."
+    }
+   ]
+  }
+ ]
+}
