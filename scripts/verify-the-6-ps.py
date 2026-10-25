@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # ci-line: The 6 P's, part 1 (the topic data file is the generator's output; no mark figure, AQA or Edexcel typed in the page; the four past-paper sites linked before Start; every route's game declares its level and every launch link carries the burst parameters; 10,000 sessions each way: six distinct covered topics in band order, frequencies in proportion to marks; a full session played back through return links with localStorage working and blocked, results, nudge and tick-list event; 320 px without sideways scroll) | --part 1
+# ci-line: The 6 P's, part 2a (every COVERED route, each mode, opened in its real game from the page's link through burst.js: in a burst, at its level, at its stage as the game's own game_started reports it, five answers played, the return bar linking to /the-6-ps/?done=<id>&r=&n=5; a third of the routes) | --part 2 --shard 1/3
+# ci-line: The 6 P's, part 2b (the routes' launch checks, as part 2a: the second third) | --part 2 --shard 2/3
+# ci-line: The 6 P's, part 2c (the routes' launch checks, as part 2a: the last third) | --part 2 --shard 3/3
 # ci-line: The 6 P's, part 3 (fault-injection self-test: the planted faults, each caught) | --part 3
+# ci-line: The 6 P's, part 4 (a full session through the page and the real games: Start, each topic's link followed into its game, five answers, the return bar followed back, six times; the results show each score) | --part 4
 # ci-deps: the-6-ps/ schools/assets/exam-topics-ocr-foundation.json scripts/gen-exam-topics.py
 """Independent verification for The 6 P's (/the-6-ps/), built 24 Oct 2026 (contract THE-6-PS, Jon).
 
@@ -13,9 +17,12 @@ WHAT IS CHECKED, AND AGAINST WHAT
              past-paper sites are linked, each before the Start button.
   Routes     every COVERED route's game exists and declares its level in MaffsLevel.resolve; every launch link, for
              every mode the route offers, is /games/<slug>/?level=<level>[&mode=<mode>]&burst=5&from=six-ps&topic=<id>.
-             Whether each game OPENS at that level and mode in a burst is BURST's to deliver: --part 2 checks it once
-             schools/assets/burst.js is on main, and until then reports PENDING (contract STOP IF: the games are never
-             stubbed).
+  Launches   (part 2, three shards) every route, each mode, opened in its real game from the page's own link, driven as
+             scripts/check-burst.py drives it (its contexts and the answer-lock driver; KaTeX served from the pinned
+             copy): burst.js active, the level taken from the link, the stage the one the game's own game_started
+             reports (a pressed button alone proves nothing), five answers, and the return bar linking to
+             /the-6-ps/?done=<id>&r=<right>&n=5. The games are never stubbed.
+  Session    (part 4) one full session through the page and the real games and back, six topics, to the results.
   Sessions   the page's own plan(), run 10,000 times with storage blocked (systematic sampling) and 10,000 times on
              one device (the rotation): every session is six distinct COVERED topics in Jon's band order (lower bound,
              then upper), and each topic's frequency is within tolerance of 10,000 x 6 x marks / total marks. Random
@@ -30,10 +37,11 @@ WHAT IS CHECKED, AND AGAINST WHAT
              filter_type/filter_value for the Sheet, Jon's ruling of 24 Oct 2026).
   Phone      the start screen, a session and the results at 320 px: no sideways scroll.
 
-    python scripts/verify-the-6-ps.py              # parts 1 and 3
+    python scripts/verify-the-6-ps.py              # every part
     python scripts/verify-the-6-ps.py --part 1     # the checks
-    python scripts/verify-the-6-ps.py --part 2     # BURST launch checks (PENDING until burst.js is merged)
+    python scripts/verify-the-6-ps.py --part 2 [--shard k/3]   # every route launched in its real game
     python scripts/verify-the-6-ps.py --part 3     # the plants
+    python scripts/verify-the-6-ps.py --part 4     # a full session through the real games
 """
 import argparse
 import importlib.util
@@ -404,13 +412,192 @@ def guarded(out, what, f):
 
 
 # ---------------------------------------------------------------- BURST (part 2)
-def burst_part(out):
+# The real games, driven exactly as scripts/check-burst.py drives them (its contexts, the answer-lock driver and its
+# recorder), never stubbed. KaTeX's CDN is served from the pinned copy (bank_common.serve_real_font_async), so a KaTeX
+# game plays the same bytes here as in CI.
+LAUNCH_WORKERS = 4
+
+
+def burst_harness():
+    spec = importlib.util.spec_from_file_location('check_burst', os.path.join(HERE, 'check-burst.py'))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    mod.AL.CHECK_SITE = mod.AL.load_check_site()   # as check-burst.py's main() does
+    return mod
+
+
+def burst_init(CB):
+    """check-burst's page script, with each event's mode recorded too (a stage is honoured only when the game's own
+    game_started says it started there; a pressed button alone proves nothing)."""
+    src = CB.init_script()
+    assert 'lv: p && p.level,' in src, 'verify-the-6-ps: check-burst.py\'s recorder changed; update burst_init'
+    return src.replace('lv: p && p.level,', 'lv: p && p.level, m: p && p.mode,') % {
+        'scale': CB.AL.TIME_SCALE, 'seed': CB.AL.SEED}
+
+
+async def burst_ctx(CB, browser, base):
+    ctx = await CB.new_ctx(browser, base, [], init=False, viewport={'width': 1280, 'height': 900})
+    await ctx.add_init_script(burst_init(CB))
+    await ctx.route(lambda u: bc.is_font_cdn(u), bc.serve_real_font_async)
+    return ctx
+
+
+async def play_five(CB, page, slug, mode=None):
+    """Five answers through the answer-lock driver: (findings, right answers the page reported, the bar or None).
+    A game's lock hint may start play by pressing a stage of its own (squared-squirrel's presses stage-2, the stage
+    check-answer-lock.py plays); in a burst that names a mode, the hint presses the route's mode instead, as the
+    student would find it already selected."""
+    hint = dict(CB.AL.read_hint(open(os.path.join(ROOT, 'games', slug, 'index.html'), encoding='utf-8').read())[0])
+    if mode and isinstance(hint.get('start'), str):
+        hint['start'] = re.sub(r'data-mode="[^"]*"', 'data-mode="%s"' % mode, hint['start'])
+    d = CB.AL.Driver(page, slug, hint)
+    if not await d.start():
+        return ['UNPLAYABLE (no question reached)'], None, None
+    s = None
+    for k in range(BURST):
+        s = None
+        for attempt in range(14):
+            s = await d.answer(k * 14 + attempt, ms=1500)
+            if s is not None:
+                break
+            c = await d.ev('() => __lockContinue()')
+            if c and c['ready']:
+                await d.tap(c['rect'], False)
+        if s is None:
+            return ['answer %d was not recorded (driver)' % (k + 1)], None, None
+        bar = await page.evaluate(CB.BAR)
+        if k < BURST - 1:
+            if bar:
+                return ['the return bar is up after answer %d of %d' % (k + 1, BURST)], None, None
+            await d.to_next(s['lastFresh'])
+    return [], s['correct'], await page.evaluate(CB.BAR)
+
+
+async def launch_route(CB, browser, base, t, mode):
+    """Open one route's game at the page's launch link, play the burst and read the return link."""
+    slug, level = t['route']['slug'], t['route']['level']
+    where = '%s (%s%s)' % (t['id'], slug, ', mode ' + mode if mode else '')
+    f, stage = [], None
+    ctx = await burst_ctx(CB, browser, base)
+    try:
+        page = await ctx.new_page()
+        errs = []
+        page.on('pageerror', lambda e: errs.append(str(e)[:120]))
+        await page.goto(base + expected_launch(t, mode), wait_until='load', timeout=20000)
+        await page.wait_for_timeout(1200 if mode else 300)
+        if not await page.evaluate('() => !!(window.MaffsBurst && MaffsBurst.active())'):
+            return ['%s: the game is not in a burst (does it load burst.js?)' % where], None
+        got, right, bar = await play_five(CB, page, slug, mode)
+        f += ['%s: %s' % (where, g) for g in got]
+        started = await page.evaluate("() => (window.__lockEvents || []).filter(e => e.e === 'game_started').map(e => e.m)")
+        if mode:
+            stage = started[0] if started else None
+            if mode not in started:
+                f.append('%s: STAGE the game did not open at mode %r (game_started reported %r)' % (where, mode, started))
+        dec = await page.evaluate('(s) => (window.MaffsLevel && MaffsLevel.declared) ? MaffsLevel.declared(s) : null', slug)
+        if not dec or dec.get('fromUrl') is not True:
+            f.append('%s: the game did not take ?level=%s from the link (%r)' % (where, level, dec))
+        if right is not None:
+            want = '/the-6-ps/?done=%s&r=%d&n=%d' % (t['id'], right, BURST)
+            if not bar:
+                f.append('%s: no return bar after answer %d' % (where, BURST))
+            elif bar['href'] != want:
+                f.append('%s: the return bar links to %r, want %r' % (where, bar['href'], want))
+        f += ['%s: page error: %s' % (where, e) for e in errs]
+    finally:
+        await ctx.close()
+    return f, stage
+
+
+async def full_session(CB, browser, base, data, out):
+    """One session through the page and the real games: Start, each topic's link followed into its game, five
+    answers, the return bar followed back; then the results."""
+    covered = {t['name']: t for t in data['covered']}
+    ctx = await burst_ctx(CB, browser, base)
+    try:
+        page = await ctx.new_page()
+        await page.goto(base + '/the-6-ps/?cb=verify', wait_until='load', timeout=20000)
+        await page.wait_for_function('() => !!window.SixPs && !!SixPs.data()', timeout=10000)
+        await page.click('#startBtn')
+        played = []
+        for k in range(K):
+            await page.wait_for_selector('#session:not([hidden])', timeout=10000)
+            name = (await page.inner_text('#nextName')).strip()
+            t = covered.get(name)
+            if not t:
+                out.append('full session: topic %d is %r, not a covered topic' % (k + 1, name))
+                return
+            href = await page.get_attribute('#goBtn', 'href')
+            await page.click('#goBtn')
+            await page.wait_for_url('**/games/%s/**' % t['route']['slug'], timeout=20000)
+            await page.wait_for_load_state('load')
+            await page.wait_for_timeout(1200)
+            m = re.search(r'[?&]mode=([^&]+)', href or '')
+            got, right, bar = await play_five(CB, page, t['route']['slug'], m.group(1) if m else None)
+            if got or not bar:
+                out.append('full session: %s (%s): %s' % (t['id'], href, got or 'no return bar'))
+                return
+            await page.click('#mfg-burst-bar a')
+            await page.wait_for_url('**/the-6-ps/**', timeout=20000)
+            await page.wait_for_function('() => !!window.SixPs && !!SixPs.data()', timeout=10000)
+            played.append((t, right))
+        await page.wait_for_selector('#results:not([hidden])', timeout=10000)
+        rows = await page.evaluate("() => Array.from(document.querySelectorAll('#resultList li')).map(e => e.innerText)")
+        for (t, right), row in zip(played, rows):
+            if '%s: %d of %d' % (t['name'], right, BURST) not in row:
+                out.append('full session: the results row %r does not show %s: %d of %d' % (row, t['name'], right, BURST))
+        if len(rows) != K:
+            out.append('full session: %d results rows, not %d' % (len(rows), K))
+        print('the-6-ps: a full session played through the real games and back: %s'
+              % ', '.join('%s %d/%d' % (t['id'], r, BURST) for t, r in played))
+    finally:
+        await ctx.close()
+
+
+def burst_part(out, data, shard=None, shards=1, launches=True, session=True):
+    """Every COVERED route (each mode it offers) opened and played as a burst (part 2, in shards for CI); and one
+    full session through the page and the real games (part 4)."""
     if not os.path.isfile(BURST_JS):
-        print('PENDING  BURST is not merged (no schools/assets/burst.js): the launch checks, that each COVERED route '
-              'opens its game at its level and mode in a burst of %d and returns, wait for it' % BURST)
-        return False
-    out.append('BURST is merged: write the launch checks against its protocol before listing this part in CI')
-    return False
+        out.append('schools/assets/burst.js is missing: BURST is not on this branch')
+        return {}
+    import asyncio
+    from playwright.async_api import async_playwright
+    CB = burst_harness()
+    jobs = [(t, m) for t in data['covered'] for m in (t['route']['modes'] or [''])] if launches else []
+    if shard is not None:
+        jobs = jobs[shard - 1::shards]
+    stages = {}
+
+    async def main():
+        proc, base = bc.start_stub_server()
+        try:
+            async with async_playwright() as p:
+                browser = await p.chromium.launch()
+                sem = asyncio.Semaphore(LAUNCH_WORKERS)
+
+                async def one(t, m):
+                    async with sem:
+                        try:
+                            f, st = await asyncio.wait_for(launch_route(CB, browser, base, t, m), 180)
+                        except Exception as e:  # a crash is a failure, never a pass
+                            f, st = ['%s: the launch check stopped: %s: %s' % (t['id'], type(e).__name__, str(e).splitlines()[0] if str(e) else '')], None
+                        out.extend(f)
+                        if m:
+                            stages['%s/%s' % (t['id'], m)] = st
+                await asyncio.gather(*(one(t, m) for t, m in jobs))
+                if session:
+                    try:
+                        await asyncio.wait_for(full_session(CB, browser, base, data, out), 600)
+                    except Exception as e:
+                        out.append('full session stopped: %s: %s' % (type(e).__name__, str(e).splitlines()[0] if str(e) else ''))
+                await browser.close()
+        finally:
+            proc.terminate()
+
+    asyncio.run(main())
+    if launches:
+        print('the-6-ps: %d launches (%s)' % (len(jobs), 'shard %d of %d' % (shard, shards) if shard else 'all routes'))
+    return stages
 
 
 # ---------------------------------------------------------------- plants
@@ -499,7 +686,9 @@ def selftest(html, data):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--part', choices=['1', '2', '3'], help='1 the checks, 2 BURST launch checks, 3 the plants')
+    ap.add_argument('--part', choices=['1', '2', '3', '4'],
+                    help='1 the checks, 2 every route launched in its game, 3 the plants, 4 a full session through the real games')
+    ap.add_argument('--shard', help='part 2 only: k/n, every nth route from the kth')
     args = ap.parse_args()
     try:
         sys.stdout.reconfigure(encoding='utf-8')
@@ -517,8 +706,9 @@ def main():
         W = sum(t['marks'] for t in data['covered'])
         print('the-6-ps: %d covered topics (%.1f marks a series), %d coming soon; %d sessions drawn each way'
               % (len(data['covered']), W, len(data['coming_soon']), DRAWS))
-    if args.part == '2':
-        ok = burst_part(out)
+    if args.part in (None, '2', '4'):
+        k, n = (int(x) for x in args.shard.split('/')) if args.shard else (None, 1)
+        burst_part(out, data, shard=k, shards=n, launches=args.part != '4', session=args.part != '2')
     if args.part in (None, '3'):
         ok = selftest(html, data) and ok
     for f in out[:60]:
