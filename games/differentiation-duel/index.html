@@ -985,22 +985,19 @@ const endGame=MaffsLock.finishOnce(function(){
   var _elapsed=Math.floor((Date.now()-(sessionStart||Date.now()))/1000),_m=Math.floor(_elapsed/60),_s=_elapsed%60;document.getElementById('timeStat').textContent=(_m>0?_m+'m '+_s+'s':_s+'s');
   window._ggAbandoned=false;
   const _ddPrevBest=getBest();
-  saveBest(score);renderLB();
+  saveBest(score);
   mfg('game_completed',{game_slug:'differentiation-duel',level:LEVEL,score:score,questions_answered:TOTAL,accuracy:Math.round((window._ddCorrect||0)/TOTAL*100)});
-  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('differentiation-duel',LEVEL,score,TOTAL).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('differentiation-duel',LEVEL,score);}}
+  if(window.MaffsScoreHistory){MaffsScoreHistory.record('differentiation-duel',LEVEL,score);}if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('differentiation-duel',LEVEL,score,TOTAL).catch(function(){});}
+  renderLB();
   if(score>_ddPrevBest){mfg('personal_best_set',{game_slug:'differentiation-duel',level:LEVEL,score:score,previous_best:_ddPrevBest});}
 });
-const BEST_KEY='dd_best_'+(LEVEL==='level4'?'level4':'alevel'), SCORES_KEY='dd_scores_'+(LEVEL==='level4'?'level4':'alevel');
+const BEST_KEY='dd_best_'+(LEVEL==='level4'?'level4':'alevel');
 function getBest(){return parseInt(localStorage.getItem(BEST_KEY)||'0');}
 function saveBest(s){if(s>getBest())localStorage.setItem(BEST_KEY,s);document.getElementById('best').textContent=getBest();}
-function renderLB(){
-  const scores=JSON.parse(localStorage.getItem(SCORES_KEY)||'[]');
-  const ns=[...scores,{score,date:new Date().toLocaleDateString()}].sort((a,b)=>b.score-a.score).slice(0,5);
-  localStorage.setItem(SCORES_KEY,JSON.stringify(ns));
-  document.getElementById('lbList').innerHTML=ns.map((s,i)=>`<div class="lb-row"><span class="lb-rank">#${i+1}</span><span class="lb-date">${s.date}</span><span class="lb-score">${s.score}</span></div>`).join('')||'<div style="text-align:center;color:#94a3b8;font-size:13px;padding:12px">No scores yet</div>';
+function renderLB() {
+  if (window.MaffsScoreHistory) MaffsScoreHistory.renderTop(document.getElementById('lbList'), 'differentiation-duel', LEVEL, 5);
 }
 document.getElementById('best').textContent=getBest();
-renderLB();
 (function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
 </script>
 <script src="../../schools/assets/teacher-invite.js"></script>

@@ -1781,10 +1781,8 @@ const finishGame = MaffsLock.finishOnce(function () {
   // 'higher' (gave e.g. 150% on an all-correct run). Track the real count instead.
   const pct = total > 0 ? Math.round(correctCount / total * 100) : 0;
   mfg('game_completed', { game_slug: SLUG, level: currentLevel, score: score, questions_answered: total, accuracy: pct });
-  if (window.MaffsLeaderboard) {
-    MaffsLeaderboard.submitScore(SLUG, currentLevel, score, total).catch(function () {});
-    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, currentLevel, score);
-  }
+  if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, currentLevel, score);
+  if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, currentLevel, score, total).catch(function () {});
   const oldBest = getBest(currentLevel);
   saveBest(currentLevel, score);
   if (score > oldBest) mfg('personal_best_set', { game_slug: SLUG, level: currentLevel, score: score, previous_best: oldBest });
@@ -1793,7 +1791,7 @@ const finishGame = MaffsLock.finishOnce(function () {
 
 /* Local best/history is now kept per level (qf_best_<level>) so 'gcse',
    'higher' and 'formula' don't overwrite each other's device-local box. A
-   returning player's existing flat qf_best/qf_scores (single, gcse-only,
+   returning player's existing flat qf_best (single, gcse-only,
    pre-rebuild) is migrated once so their 'gcse' history is not silently lost —
    this is IN ADDITION TO the required leaderboard/PB key continuity above,
    which never changed: MaffsLeaderboard.submitScore always used, and still
@@ -1802,9 +1800,6 @@ const finishGame = MaffsLock.finishOnce(function () {
   try {
     if (localStorage.getItem('qf_best_gcse') === null && localStorage.getItem('qf_best') !== null) {
       localStorage.setItem('qf_best_gcse', localStorage.getItem('qf_best'));
-    }
-    if (localStorage.getItem('qf_scores_gcse') === null && localStorage.getItem('qf_scores') !== null) {
-      localStorage.setItem('qf_scores_gcse', localStorage.getItem('qf_scores'));
     }
   } catch (e) { /* localStorage unavailable */ }
 })();
@@ -1815,16 +1810,9 @@ function saveBest(level, s) {
   document.getElementById('best').textContent = getBest(level);
 }
 function renderLB() {
-  const key = 'qf_scores_' + currentLevel;
-  const scores = JSON.parse(localStorage.getItem(key) || '[]');
-  const ns = [...scores, { score, date: new Date().toLocaleDateString() }].sort((a, b) => b.score - a.score).slice(0, 5);
-  localStorage.setItem(key, JSON.stringify(ns));
-  document.getElementById('lbList').innerHTML = ns.map((s, i) =>
-    `<div class="lb-row"><span class="lb-rank">#${i + 1}</span><span class="lb-date">${s.date}</span><span class="lb-score">${s.score}</span></div>`
-  ).join('') || '<div style="text-align:center;color:var(--muted);font-size:13px;padding:12px">No scores yet</div>';
+  if (window.MaffsScoreHistory) MaffsScoreHistory.renderTop(document.getElementById('lbList'), SLUG, currentLevel, 5);
 }
 document.getElementById('best').textContent = getBest(currentLevel);
-renderLB();
 (function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
 </script>
 <script src="../../schools/assets/teacher-invite.js"></script>

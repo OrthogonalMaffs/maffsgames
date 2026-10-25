@@ -827,7 +827,7 @@ function renderLB(highlightName) {
     <div class="lb-row ${e.name === highlightName ? 'hl' : ''}">
       <span class="lb-rank">${i+1}</span>
       <span class="lb-name">${escHtml(e.name)}</span>
-      <span class="lb-score">${e.sc.toLocaleString()}</span>
+      <span class="lb-score">${e.sc.toLocaleString('en-GB')}</span>
       <span class="lb-g">${e.guesses}g</span>
       <span class="lb-h">${e.hints}h</span>
     </div>
@@ -971,7 +971,7 @@ function showModal(won, sc, secs) {
   const mins    = Math.floor(secs/60);
   const remSecs = secs%60;
   document.getElementById('modal-score').innerHTML = `
-    <div class="ms-item"><span class="ms-val">${sc.toLocaleString()}</span><span class="ms-lbl">Final Score</span></div>
+    <div class="ms-item"><span class="ms-val">${sc.toLocaleString('en-GB')}</span><span class="ms-lbl">Final Score</span></div>
     <div class="ms-item"><span class="ms-val">${guesses}/${MAX_GUESSES}</span><span class="ms-lbl">Guesses</span></div>
     <div class="ms-item"><span class="ms-val">${hints}</span><span class="ms-lbl">Hints Used</span></div>
     <div class="ms-item"><span class="ms-val">${mins}:${remSecs.toString().padStart(2,'0')}</span><span class="ms-lbl">Time</span></div>

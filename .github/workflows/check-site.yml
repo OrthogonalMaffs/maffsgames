@@ -428,6 +428,10 @@ jobs:
           # The search-titles check (stdlib, about a second): every game page's and /essentials/'s <title>, meta
           # description and og:/twitter: copies equal what data/games.json generates under Jon's rules of
           # 5 Oct 2026 (titles <= 60, descriptions <= 155, no "Year 6"); edit games.json, run apply-meta.py.
+          # The top-scores check, static half (stdlib, about a second; contract TOP-SCORES, Jon, 25 Oct 2026): no page
+          # under games/ formats a date or number in the browser's own locale (toLocale*String or Intl without 'en-GB'),
+          # keeps its own *_scores list, or draws a Top scores panel any way but MaffsScoreHistory.renderTop. Its Chromium
+          # half is a content line (scripts/test-top-scores.py).
           - name: Site-wide checks
             timeout: 10
             job_timeout: 20
@@ -453,6 +457,7 @@ jobs:
               Search titles (every game page and /essentials/ carries the title and description data/games.json generates)|python scripts/check-meta.py && python scripts/check-meta.py --selftest
               Findings register (every audit finding filed per game, schema valid; fixed entries name their PR)|python scripts/audit-register.py --check --selftest
               Quoted figures (no figure the quoted-statistics audit found CONTRADICTED is still on its page)|python scripts/check-quoted-figures.py && python scripts/check-quoted-figures.py --selftest
+              Top scores, static (no date or number in the browser's locale under games/; no own *_scores list; panels on renderTop)|python scripts/check-top-scores.py && python scripts/check-top-scores.py --selftest
 
           # Checker tier 4, layer A: does every game's question bank still look like the
           # one the ledger already knows about? Extracts fresh (the live bank, post any
