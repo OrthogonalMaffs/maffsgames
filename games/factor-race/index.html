@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,80 +14,109 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
 <title>Finding Factors Game – KS3 Maths | MaffsGames</title>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/schools/assets/theme.css">
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
 <style>
-  :root{--bg:#f0f4ff;--navy:#1a1a4e;--purple:#6c63ff;--yellow:#ffd93d;--green:#6bcb77;--red:#ff4757;--white:#fff;--text:#2d2d5e;}
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{padding-bottom:44px;background:var(--bg);font-family:'Nunito',sans-serif;color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;}
-  .header{width:100%;background:var(--navy);padding:16px 24px;display:flex;align-items:center;gap:16px;}
-  .back{color:var(--yellow);text-decoration:none;font-size:12px;font-family:'Press Start 2P',monospace;}
-  .title{font-family:'Press Start 2P',monospace;font-size:clamp(10px,3vw,16px);color:var(--yellow);}
-  .game-area{width:100%;max-width:760px;padding:24px;flex:1;display:flex;flex-direction:column;align-items:center;gap:20px;}
-  .scorebar{display:flex;justify-content:space-between;width:100%;background:var(--white);border-radius:12px;padding:16px 24px;box-shadow:0 4px 16px rgba(0,0,0,0.08);}
-  .score-item{text-align:center;}
-  .score-label{font-size:11px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:1px;}
-  .score-val{font-family:'Press Start 2P',monospace;font-size:18px;color:var(--navy);margin-top:4px;}
-  .score-val.streak{color:var(--purple);}
-  .question-area{width:100%;text-align:center;}
-  .question-text{font-size:14px;color:#888;font-weight:700;margin-bottom:8px;}
-  .question-sub{font-size:12px;color:#aaa;margin-bottom:24px;}
-  .cards-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
-  .num-card{
-    background:var(--white);
-    border:4px solid var(--purple);
-    border-radius:20px;
-    width:180px;height:180px;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    cursor:pointer;
-    transition:transform 0.15s,box-shadow 0.15s,background 0.15s;
-    box-shadow:0 6px 20px rgba(108,99,255,0.15);
-    user-select:none;
-    -webkit-tap-highlight-color:transparent;
-  }
-  .num-card:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 12px 32px rgba(108,99,255,0.25);}
-  .num-card:active{transform:scale(0.97);}
-  .num-card.correct{background:var(--green);border-color:var(--green);animation:correctPop 0.4s ease;}
-  .num-card.wrong{background:var(--red);border-color:var(--red);animation:wrongShake 0.4s ease;}
-  .num-card.reveal{background:#f8f8ff;border-color:#ddd;}
-  .num-big{font-family:'Press Start 2P',monospace;font-size:clamp(32px,8vw,52px);color:var(--navy);}
-  .num-card.correct .num-big,.num-card.wrong .num-big{color:white;}
-  .factors-reveal{font-size:11px;color:#888;margin-top:8px;font-weight:700;display:none;}
-  .num-card.reveal .factors-reveal{display:block;}
-  @keyframes correctPop{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
-  @keyframes wrongShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-  .feedback{font-family:'Press Start 2P',monospace;font-size:14px;min-height:32px;text-align:center;}
-  .feedback.correct{color:var(--green);}
-  .feedback.wrong{color:var(--red);}
-  .timer-bar{width:100%;height:10px;background:rgba(0,0,0,0.1);border-radius:5px;overflow:hidden;}
-  .timer-fill{height:100%;background:var(--purple);transition:width 0.1s linear;border-radius:5px;}
-  .timer-fill.warn{background:var(--yellow);}
-  .timer-fill.danger{background:var(--red);}
-  .leaderboard{width:100%;background:var(--white);border-radius:16px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,0.08);}
-  .lb-title{font-family:'Press Start 2P',monospace;font-size:9px;color:var(--navy);margin-bottom:12px;text-align:center;}
-  .lb-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:13px;font-weight:700;}
-  .lb-row:last-child{border-bottom:none;}
-  .lb-pos{font-family:'Press Start 2P',monospace;font-size:9px;color:var(--purple);width:28px;}
-  .lb-score{font-family:'Press Start 2P',monospace;font-size:10px;color:var(--navy);}
-  .game-over{width:100%;background:var(--white);border-radius:16px;padding:32px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,0.08);display:none;}
-  .game-over.visible{display:block;}
-  .go-title{font-family:'Press Start 2P',monospace;font-size:16px;color:var(--navy);margin-bottom:8px;}
-  .go-score{font-family:'Press Start 2P',monospace;font-size:28px;color:var(--purple);margin:16px 0;}
-  .go-detail{font-size:14px;color:#888;margin-bottom:24px;}
-  .btn{font-family:'Nunito',sans-serif;font-weight:900;font-size:16px;padding:14px 32px;border:none;border-radius:12px;cursor:pointer;transition:transform 0.1s,opacity 0.1s;}
-  .btn:active{transform:scale(0.97);}
-  .btn-primary{background:var(--purple);color:white;}
-  .btn-primary:hover{opacity:0.9;}
-  .question-area{display:none;}
-  .question-area.visible{display:block;}
-  .start-screen{width:100%;background:var(--white);border-radius:16px;padding:32px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,0.08);}
-  .start-emoji{font-size:64px;margin-bottom:16px;}
-  .start-title{font-family:'Press Start 2P',monospace;font-size:14px;color:var(--navy);margin-bottom:16px;line-height:1.6;}
-  .start-desc{font-size:15px;color:#666;line-height:1.6;margin-bottom:24px;}
-  .how-to{background:#f8f8ff;border-radius:12px;padding:16px;margin-bottom:24px;text-align:left;}
-  .how-to p{font-size:13px;color:#555;margin-bottom:6px;padding-left:8px;}
-  .how-to p::before{content:'▶ ';}
-body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+/* Theme: schools/assets/theme.css (canon §7.5), light row. This game's own tokens: one indigo accent (7.9:1 on the
+   white surface) and its tint. Everything else is a base token. */
+:root{--accent:#4338ca;--accent-dim:#e0e7ff;--on-accent:#ffffff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.header{width:100%;max-width:760px;padding:.6rem 1rem 0;display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.back{display:inline-flex;align-items:center;min-height:44px;color:var(--muted);text-decoration:none;font-size:.9rem}
+.back:hover{color:var(--text)}
+.title{font-size:1.6rem;font-weight:700;color:var(--accent);line-height:1.15;margin-left:auto;margin-right:auto}
+.game-area{width:100%;max-width:760px;padding:1rem;flex:1;display:flex;flex-direction:column;align-items:center;gap:1.1rem}
+.scorebar{display:flex;justify-content:space-between;width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.8rem 1.4rem}
+.score-item{text-align:center}
+.score-label{font-size:.7rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.score-val{font-family:var(--font-num);font-size:1.3rem;font-weight:700;color:var(--text);margin-top:.2rem}
+.score-val.streak{color:var(--accent)}
+.question-area{width:100%;text-align:center}
+.question-text{font-size:1rem;color:var(--text);font-weight:600;margin:.8rem 0 .4rem}
+.question-sub{font-size:.85rem;color:var(--muted);margin-bottom:1.2rem}
+.cards-row{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.num-card{
+  background:var(--surface);
+  border:3px solid var(--accent);
+  border-radius:16px;
+  width:180px;height:180px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;
+  transition:transform 0.15s,background 0.15s;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.num-card:hover{transform:translateY(-3px);background:var(--accent-dim)}
+.num-card:active{transform:scale(0.97)}
+.num-card.correct{background:var(--correct);border-color:var(--correct);animation:correctPop 0.4s ease}
+.num-card.wrong{background:var(--wrong);border-color:var(--wrong);animation:wrongShake 0.4s ease}
+.num-card.reveal{background:var(--surface-alt);border-color:var(--border)}
+.num-big{font-family:var(--font-num);font-weight:700;font-size:clamp(32px,8vw,52px);color:var(--text)}
+.num-card.correct .num-big,.num-card.wrong .num-big,.num-card.correct .factors-reveal,.num-card.wrong .factors-reveal{color:var(--on-accent)}
+.factors-reveal{font-size:.8rem;color:var(--muted);margin-top:.5rem;font-weight:600;display:none}
+.num-card.reveal .factors-reveal{display:block}
+@keyframes correctPop{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes wrongShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.feedback{font-weight:700;font-size:1rem;min-height:32px;text-align:center;margin-top:.6rem}
+.feedback.correct{color:var(--correct)}
+.feedback.wrong{color:var(--wrong)}
+.timer-bar{width:100%;height:10px;background:var(--border);border-radius:5px;overflow:hidden}
+.timer-fill{height:100%;background:var(--accent);transition:width 0.1s linear;border-radius:5px}
+.timer-fill.warn{background:var(--hint)}
+.timer-fill.danger{background:var(--wrong)}
+.leaderboard{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.1rem}
+.lb-title{font-size:.8rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.7rem;text-align:center}
+.lb-row{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid var(--border);font-size:.85rem;font-weight:600}
+.lb-row:last-child{border-bottom:none}
+.lb-pos{font-family:var(--font-num);font-size:.8rem;color:var(--accent);width:28px}
+.lb-score{font-family:var(--font-num);font-size:.9rem;color:var(--text)}
+.lb-empty{text-align:center;color:var(--muted);font-size:.85rem;padding:.75rem}
+.game-over{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.6rem;text-align:center;display:none}
+.game-over.visible{display:block}
+.go-title{font-size:1.3rem;font-weight:700;color:var(--text);margin-bottom:.5rem}
+.go-score{font-family:var(--font-num);font-size:2.2rem;font-weight:700;color:var(--accent);margin:1rem 0}
+.go-detail{font-size:.9rem;color:var(--muted);margin-bottom:1.4rem}
+.lb-link{text-align:center;font-size:.88rem;margin:.75rem 0}.lb-link a{color:var(--accent);text-decoration:none}
+.back-games{display:block;text-align:center;color:var(--muted);font-size:.9rem;text-decoration:none;margin-top:.75rem}
+.btn{font-weight:700;font-size:1rem;min-height:44px;padding:.7rem 2rem;border:none;border-radius:10px;cursor:pointer;transition:transform 0.1s,opacity 0.1s}
+.btn:active{transform:scale(0.97)}
+.btn-primary{background:var(--accent);color:var(--on-accent)}
+.btn-primary:hover{opacity:0.9}
+.question-area{display:none}
+.question-area.visible{display:block}
+.start-screen{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.6rem;text-align:center}
+.start-title{font-size:1.3rem;font-weight:700;color:var(--text);margin-bottom:.8rem;line-height:1.3}
+.start-desc{font-size:1rem;color:var(--text);line-height:1.6;margin-bottom:1.4rem}
+.how-to{background:var(--surface-alt);border-radius:12px;padding:1rem;margin-bottom:1.4rem;text-align:left}
+.how-to p{font-size:.9rem;color:var(--text);margin-bottom:.4rem;padding-left:.5rem}
+.how-to p::before{content:'\2022\00a0';color:var(--accent);font-weight:700}
+body.accessible{letter-spacing:.12em;word-spacing:.16em}
+body.accessible p,body.accessible .question-text,body.accessible .card-text{line-height:2;max-width:65ch}
+body.accessible .score-val,body.accessible .num-big,body.accessible .go-score{letter-spacing:0}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:44px;height:44px;font-size:12px;font-weight:700;cursor:pointer}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+/* Phone: the two cards sit side by side and the page is compact, so the cards, and Next after a wrong answer, stay
+   above the fold at 320x568 in normal and Aa mode (canon 7.6.1). */
+@media (max-width:480px){
+  .header{padding:.2rem .6rem 0;gap:.4rem}
+  .title{font-size:1.25rem}
+  .game-area{padding:.4rem .6rem;gap:.45rem}
+  .scorebar{padding:.3rem .9rem}
+  .score-label{font-size:.62rem}
+  .score-val{font-size:1.05rem;margin-top:0}
+  .question-text{font-size:.95rem;margin:.4rem 0 .1rem}
+  .question-sub{font-size:.8rem;margin-bottom:.5rem}
+  .cards-row{flex-wrap:nowrap;gap:.6rem}
+  .num-card{flex:1 1 0;min-width:0;width:auto;height:110px}
+  .num-big{font-size:clamp(26px,9vw,40px)}
+  .factors-reveal{margin-top:.15rem;font-size:.75rem}
+  .feedback{min-height:0;margin-top:.4rem;font-size:.9rem}
+  body.accessible{letter-spacing:.06em;word-spacing:.1em}
+  body.accessible .question-text{line-height:1.4}
+}
+.correct::after{content:' \2713';font-size:.85em;opacity:.8}
+.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
 </style>
 <!-- Google Analytics -->
 <script src="../../schools/assets/analytics.js"></script>
@@ -117,7 +146,7 @@ driver did, so the tap-through still meets right and wrong answers. -->
 <body>
 <div class="header">
   <a href="../../" class="back">← Back</a>
-  <div class="title">⚡ FACTOR RACE</div>
+  <h1 class="title">Factor Race</h1>
   <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
 </div>
 <div class="game-area">
@@ -129,8 +158,7 @@ driver did, so the tap-through still meets right and wrong answers. -->
 
   <!-- Start screen -->
   <div class="start-screen" id="startScreen">
-    <div class="start-emoji">⚡</div>
-    <div class="start-title">FACTOR RACE</div>
+    <div class="start-title">Factor Race</div>
     <div class="start-desc">Two numbers appear. Tap the one with <strong>more factors</strong>.</div>
     <div class="how-to">
       <p>A factor divides a number exactly (no remainder)</p>
@@ -138,15 +166,14 @@ driver did, so the tap-through still meets right and wrong answers. -->
       <p>Example: 7 has factors 1,7 — that's only 2 factors</p>
       <p>You have 30 seconds per question — don't overthink it!</p>
     </div>
-    <button class="btn btn-primary" onclick="startGame()">START GAME</button>
+    <button class="btn btn-primary" onclick="startGame()">Start game</button>
     <div class="maffs-start-note" data-maffs-start-note></div>
   </div>
 
   <!-- Question area -->
   <div class="question-area" id="questionArea">
     <div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
-    <br>
-    <div class="question-text">Which number has MORE FACTORS?</div>
+    <div class="question-text">Which number has more factors?</div>
     <div class="question-sub" id="questionNum">Question 1</div>
     <div class="cards-row" id="cardsRow">
       <div class="num-card" id="cardA" onclick="guess(0)">
@@ -164,12 +191,12 @@ driver did, so the tap-through still meets right and wrong answers. -->
 
   <!-- Game over -->
   <div class="game-over" id="gameOver">
-    <div class="go-title">GAME OVER</div>
+    <div class="go-title">Game over</div>
     <div class="go-score" id="finalScore">0</div>
     <div class="go-detail" id="goDetail"></div>
-  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
-    <button class="btn btn-primary" onclick="startGame()">PLAY AGAIN</button>
-  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+  <div class="lb-link"><a href="/leaderboards/">&#127942; Global leaderboard</a></div>
+    <button class="btn btn-primary" onclick="startGame()">Play again</button>
+  <a href="/" class="back-games">← Back to Games</a>
   <p id="teacherInvite"></p>
   </div>
 
@@ -409,7 +436,7 @@ function renderLB() {
   localStorage.setItem('fr_scores', JSON.stringify(newScores));
   document.getElementById('lbList').innerHTML = newScores.map((s,i) =>
     `<div class="lb-row"><span class="lb-pos">#${i+1}</span><span>${s.date}</span><span class="lb-score">${s.score}</span></div>`
-  ).join('') || '<div style="text-align:center;color:#aaa;font-size:13px;padding:12px">No scores yet</div>';
+  ).join('') || '<div class="lb-empty">No scores yet</div>';
   document.getElementById('best').textContent = getBest();
 }
 
