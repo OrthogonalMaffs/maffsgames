@@ -90,6 +90,7 @@ Two sessions may run side by side. They stay out of each other's files:
   **A per-game fix PR does not edit `docs/todo.md`:** the register records the fix.
 - **Neither lane merges while main's last full run is red, and every merge goes through `python scripts/merge-pr.py <number>`** (canon §7.8.3): it refuses unless the PR's Gate is green on its head and main's last full run is green (every job of it finished and none failed; a run or job in progress is not green), then squash-merges. Never `gh pr merge`, the merge button or a raw API call. Only Jon's ruling lifts the main rule, with `--override "<ruling and date>"`, which is written to the PR.
 - **Run `merge-pr.py` unpiped and check its exit status before any following step.** Never filter its output or chain cleanup with `;` (25 Oct 2026: a `| grep MERGED` hid a REFUSED line).
+- **Scripts call GitHub through `gh api` REST endpoints only; GraphQL-backed `gh` subcommands (`gh pr view`, `gh pr list`, `gh pr checks`, `gh pr status`, `gh issue view` and the like) fail in Claude Code sessions.**
 - **Before the first push of every PR: `python scripts/check-changed.py`** (one PR on 7 Oct 2026 cost three runs).
 - **Relisting a fixed game** is a home-lane docs PR, batched.
 - **The cloud lane may fix listed games it has claimed on the `cloud-remaining` list in
