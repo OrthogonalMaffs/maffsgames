@@ -1,0 +1,1186 @@
+{
+ "topic": "number-vocabulary",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "number-vocabulary-7170784a",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:2"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "How many factors does 2 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2
+   },
+   "worked": [
+    "The factors of 2 are 1, 2: that is 2 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-7eae7b12",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:3"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "How many factors does 3 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2
+   },
+   "worked": [
+    "The factors of 3 are 1, 3: that is 2 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-56afe1d6",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:4"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "How many factors does 4 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "worked": [
+    "The factors of 4 are 1, 2, 4: that is 3 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-383346f3",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:5"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "How many factors does 5 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2
+   },
+   "worked": [
+    "The factors of 5 are 1, 5: that is 2 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-96a2d04a",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:6"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "How many factors does 6 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "The factors of 6 are 1, 2, 3, 6: that is 4 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-fd4e35ba",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:7"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "How many factors does 7 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2
+   },
+   "worked": [
+    "The factors of 7 are 1, 7: that is 2 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-54e4cdef",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:8"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "How many factors does 8 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "The factors of 8 are 1, 2, 4, 8: that is 4 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-68ed163e",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:9"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "How many factors does 9 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "worked": [
+    "The factors of 9 are 1, 3, 9: that is 3 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-0883e968",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:10"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "How many factors does 10 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "The factors of 10 are 1, 2, 5, 10: that is 4 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-226b971c",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:11"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "How many factors does 11 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2
+   },
+   "worked": [
+    "The factors of 11 are 1, 11: that is 2 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-1d2206b8",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:12"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "How many factors does 12 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "The factors of 12 are 1, 2, 3, 4, 6, 12: that is 6 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-23bd62a0",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:13"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "How many factors does 13 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2
+   },
+   "worked": [
+    "The factors of 13 are 1, 13: that is 2 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-3d23dbf8",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:14"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "How many factors does 14 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "The factors of 14 are 1, 2, 7, 14: that is 4 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-23ce1953",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:15"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "How many factors does 15 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "The factors of 15 are 1, 3, 5, 15: that is 4 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-4a0f17e5",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:16"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "How many factors does 16 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "worked": [
+    "The factors of 16 are 1, 2, 4, 8, 16: that is 5 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-e150de1d",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:17"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "How many factors does 17 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2
+   },
+   "worked": [
+    "The factors of 17 are 1, 17: that is 2 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-5ce94d70",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:18"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "How many factors does 18 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "The factors of 18 are 1, 2, 3, 6, 9, 18: that is 6 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-e0848ebd",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:19"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "How many factors does 19 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2
+   },
+   "worked": [
+    "The factors of 19 are 1, 19: that is 2 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-37f5c979",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:20"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "How many factors does 20 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "The factors of 20 are 1, 2, 4, 5, 10, 20: that is 6 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-7455fab8",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:21"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "How many factors does 21 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "The factors of 21 are 1, 3, 7, 21: that is 4 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-ea3d6567",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:22"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "How many factors does 22 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "The factors of 22 are 1, 2, 11, 22: that is 4 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-65123072",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:23"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "How many factors does 23 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2
+   },
+   "worked": [
+    "The factors of 23 are 1, 23: that is 2 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-e838c2d3",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:24"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "How many factors does 24 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "The factors of 24 are 1, 2, 3, 4, 6, 8, 12, 24: that is 8 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-b7ff5814",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:25"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "How many factors does 25 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "worked": [
+    "The factors of 25 are 1, 5, 25: that is 3 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-2a3b6359",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:26"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "How many factors does 26 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "The factors of 26 are 1, 2, 13, 26: that is 4 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-a7a915bf",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:27"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "How many factors does 27 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "The factors of 27 are 1, 3, 9, 27: that is 4 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-76c8a5e9",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:28"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "How many factors does 28 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "The factors of 28 are 1, 2, 4, 7, 14, 28: that is 6 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-c3e607e2",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:29"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "How many factors does 29 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2
+   },
+   "worked": [
+    "The factors of 29 are 1, 29: that is 2 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-4b021b86",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:30"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "How many factors does 30 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "The factors of 30 are 1, 2, 3, 5, 6, 10, 15, 30: that is 8 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-a422891a",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:31"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "How many factors does 31 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2
+   },
+   "worked": [
+    "The factors of 31 are 1, 31: that is 2 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-5eab0f3b",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:32"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "How many factors does 32 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "The factors of 32 are 1, 2, 4, 8, 16, 32: that is 6 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-1cae2067",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:33"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "How many factors does 33 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "The factors of 33 are 1, 3, 11, 33: that is 4 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-cd0a9859",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:34"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "How many factors does 34 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "The factors of 34 are 1, 2, 17, 34: that is 4 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-f927f3b4",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:35"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "How many factors does 35 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "The factors of 35 are 1, 5, 7, 35: that is 4 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-930f8a3a",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:36"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "How many factors does 36 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 9
+   },
+   "worked": [
+    "The factors of 36 are 1, 2, 3, 4, 6, 9, 12, 18, 36: that is 9 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-ac0bc3c4",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:37"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "How many factors does 37 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2
+   },
+   "worked": [
+    "The factors of 37 are 1, 37: that is 2 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-187338ce",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:38"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "How many factors does 38 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "The factors of 38 are 1, 2, 19, 38: that is 4 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-02a1836a",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:39"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "How many factors does 39 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "The factors of 39 are 1, 3, 13, 39: that is 4 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-788ef98d",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:40"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "How many factors does 40 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "The factors of 40 are 1, 2, 4, 5, 8, 10, 20, 40: that is 8 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-e85fcb94",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:41"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "How many factors does 41 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2
+   },
+   "worked": [
+    "The factors of 41 are 1, 41: that is 2 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-e519a9aa",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:42"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "How many factors does 42 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "The factors of 42 are 1, 2, 3, 6, 7, 14, 21, 42: that is 8 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-b98599ee",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:43"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "How many factors does 43 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2
+   },
+   "worked": [
+    "The factors of 43 are 1, 43: that is 2 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-5122da7f",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:44"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "How many factors does 44 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "The factors of 44 are 1, 2, 4, 11, 22, 44: that is 6 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-53146545",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:45"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "How many factors does 45 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "The factors of 45 are 1, 3, 5, 9, 15, 45: that is 6 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-35f432b2",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:46"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "How many factors does 46 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "The factors of 46 are 1, 2, 23, 46: that is 4 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-7477eb7e",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:47"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "How many factors does 47 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2
+   },
+   "worked": [
+    "The factors of 47 are 1, 47: that is 2 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-17c7b4a8",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:48"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "How many factors does 48 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 10
+   },
+   "worked": [
+    "The factors of 48 are 1, 2, 3, 4, 6, 8, 12, 16, 24, 48: that is 10 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-4f863673",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:49"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "How many factors does 49 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "worked": [
+    "The factors of 49 are 1, 7, 49: that is 3 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-e7951e3c",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:50"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "How many factors does 50 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "The factors of 50 are 1, 2, 5, 10, 25, 50: that is 6 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-9139a265",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:51"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "How many factors does 51 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "The factors of 51 are 1, 3, 17, 51: that is 4 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-c4e993d3",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:52"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "How many factors does 52 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "The factors of 52 are 1, 2, 4, 13, 26, 52: that is 6 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-bcf6a939",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:53"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "How many factors does 53 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2
+   },
+   "worked": [
+    "The factors of 53 are 1, 53: that is 2 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-6bdd058c",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:54"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "How many factors does 54 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "The factors of 54 are 1, 2, 3, 6, 9, 18, 27, 54: that is 8 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-499a14c5",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:55"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "How many factors does 55 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "The factors of 55 are 1, 5, 11, 55: that is 4 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-67bb209b",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:56"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "How many factors does 56 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "The factors of 56 are 1, 2, 4, 7, 8, 14, 28, 56: that is 8 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-83000289",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:57"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "How many factors does 57 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "The factors of 57 are 1, 3, 19, 57: that is 4 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-0047b955",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:58"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "How many factors does 58 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "The factors of 58 are 1, 2, 29, 58: that is 4 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-edf31008",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:59"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "How many factors does 59 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2
+   },
+   "worked": [
+    "The factors of 59 are 1, 59: that is 2 factors."
+   ],
+   "slip": []
+  },
+  {
+   "id": "number-vocabulary-0d8e3608",
+   "topic": "number-vocabulary",
+   "source": {
+    "game": "factor-race",
+    "ref": "number:60"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "How many factors does 60 have?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "The factors of 60 are 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60: that is 12 factors."
+   ],
+   "slip": []
+  }
+ ]
+}

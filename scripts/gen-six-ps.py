@@ -1187,39 +1187,40 @@ def _is_square(n):
 
 
 def prob2_answer(inner):
-    """The probability a stage-2 'P(...)' names, worked out from the words, as a Fraction."""
+    """The probability a stage-2 'P(...)' names, worked out from the words, as (favourable, possible) outcomes,
+    not yet simplified."""
     m = re.fullmatch(r"rolling a (\d) on a fair die", inner)
     if m:
-        return Fraction(1 if 1 <= int(m.group(1)) <= 6 else 0, 6)
+        return (1 if 1 <= int(m.group(1)) <= 6 else 0, 6)
     die = {"rolling less than 3 on a die": lambda n: n < 3, "rolling greater than 4 on a dice": lambda n: n > 4,
            "odd on a die": lambda n: n % 2 == 1, "multiple of 3 on a die": lambda n: n % 3 == 0,
            "prime on a die": _is_prime, "square number on a die": _is_square,
            "rolling 1 or 2 on a fair die": lambda n: n in (1, 2)}
     if inner in die:
-        return Fraction(sum(1 for n in range(1, 7) if die[inner](n)), 6)
+        return (sum(1 for n in range(1, 7) if die[inner](n)), 6)
     if inner == "flipping tails on a fair coin":
-        return Fraction(1, 2)
+        return (1, 2)
     if inner == "heads twice in a row with a fair coin":
-        return Fraction(1, 2) ** 2
+        return (1, 4)                                  # HH out of HH, HT, TH, TT
     if inner == "heart from 52 cards":
-        return Fraction(13, 52)                       # one suit of four, thirteen cards
+        return (13, 52)                       # one suit of four, thirteen cards
     m = re.fullmatch(r"(?:picking )?(\w+) from ((?:\d+ \w+(?:, )?)+)", inner)
     if m:
         counts = {c: int(n) for n, c in re.findall(r"(\d+) (\w+)", m.group(2))}
-        return Fraction(counts[m.group(1)], sum(counts.values()))
+        return (counts[m.group(1)], sum(counts.values()))
     m = re.fullmatch(r"(vowel|consonant) from ([A-Z](?:, [A-Z])*)", inner)
     if m:
         letters = m.group(2).split(", ")
-        return Fraction(sum(1 for c in letters if (c in "AEIOU") == (m.group(1) == "vowel")), len(letters))
+        return (sum(1 for c in letters if (c in "AEIOU") == (m.group(1) == "vowel")), len(letters))
     if inner == "picture card (J, Q or K) from a pack of 52":
-        return Fraction(len("JQK") * 4, 52)
+        return (len("JQK") * 4, 52)
     m = re.fullmatch(r"even from (\d+)\u2013(\d+)", inner)
     if m:
         nums = range(int(m.group(1)), int(m.group(2)) + 1)
-        return Fraction(sum(1 for n in nums if n % 2 == 0), len(nums))
+        return (sum(1 for n in nums if n % 2 == 0), len(nums))
     m = re.fullmatch(r"letter in ([A-Z]+) also in ([A-Z]+)", inner)
     if m:
-        return Fraction(len(set(m.group(1)) & set(m.group(2))), len(m.group(1)))
+        return (len(set(m.group(1)) & set(m.group(2))), len(m.group(1)))
     raise AssertionError("probability stage 2: no rule for %r" % inner)
 
 
@@ -1229,38 +1230,42 @@ async def prob2_questions(h, topic):
     out = []
     for i, g in enumerate(items):
         inner = re.fullmatch(r"P\((.*)\)", g["q"]).group(1)
-        want = prob2_answer(inner)
+        k, tot = prob2_answer(inner)
         n, d = (int(x) for x in g["answer"].split("/"))
-        assert Fraction(n, d) == want and math.gcd(n, d) == 1, ("probability stage 2", g["q"], g["answer"], want)
-        stem = "Work out " + tex("P(\\text{%s})" % inner) + ". Give your answer as a fraction in its simplest form."
+        assert Fraction(n, d) == Fraction(k, tot) and math.gcd(n, d) == 1, ("probability stage 2", g["q"], g["answer"], k, tot)
+        stem = "Work out " + tex("P(\\text{%s})" % inner) + ". Give your answer as a fraction."
+        # Project Claude's template (25 Oct): "There are k <outcome> out of n equally likely outcomes, so P = k/n", then
+        # "= simplified" when it simplifies
+        eq = "P = \\frac{%d}{%d}" % (k, tot) + (" = \\frac{%d}{%d}" % (n, d) if (k, tot) != (n, d) else "")
+        worked = ["There %s %d favourable %s out of %d equally likely outcomes, so %s." %
+                  ("is" if k == 1 else "are", k, "outcome" if k == 1 else "outcomes", tot, tex(eq))]
         out.append(mk(topic, "probability-pioneer", "STAGE2[%d]" % i, 2, False, stem, "fraction", {"n": n, "d": d},
-                      accept={"rule": "simplest"}, worked=split_working(g["why"]) if g.get("why") else []))
+                      accept={"rule": "equivalent"}, worked=worked))
     return out
 
 
-# --- probability-pioneer stage 3: true or false statements, asked as "which of these statements is true / false" ---
+# --- probability-pioneer stage 3: the true statements, asked as "which of these statements is true" ---
 async def prob3_questions(h, topic):
-    """The game's 15 true-or-false statements. The schema's choice has four options, so each statement is the key of one
-    question, the other three options being statements of the game's own with the opposite truth value (picked by the
-    statement's own hash). The worked line is the game's explanation of the key; a wrong option's slip is the game's
-    explanation of that option. Nothing is written here."""
+    """Each of the game's true statements is the key of one question (never asked as "which is false"). The three wrong
+    options are false statements of the game's own, picked by the key's hash; the worked line is the game's explanation
+    of the key and each wrong option's slip is the game's explanation of why that statement is false. False statements
+    are used only as wrong options. Nothing is written here."""
     pg = await h.page("probability-pioneer", "level=year6")
     items = await pg.evaluate("() => STAGE3")
     clean = lambda e: re.sub(r"^Correct\.\s*", "", strip_html(e))
+    falses = [j for j, t in enumerate(items) if not t["answer"]]
     out = []
     for i, g in enumerate(items):
-        pool = [j for j, t in enumerate(items) if t["answer"] != g["answer"]]
-        picks = shuffled(pool, "prob3-%d" % i)[:3]
+        if not g["answer"]:
+            continue
+        picks = shuffled(falses, "prob3-%d" % i)[:3]
         assert len(picks) == 3
         labels = [g["statement"]] + [items[j]["statement"] for j in picks]
         opts, ans = choice("prob3-%d" % i, labels[0], labels[1:])
-        # a wrong option in "which is true" is a false statement, and the game's explanation says why it is false; in
-        # "which is false" a wrong option is a true statement, whose explanation is no mistake's correction: no slips
         slips = [{"answer": {"val": next(o["val"] for o in opts if o["label"] == items[j]["statement"])},
-                  "line": clean(items[j]["explanation"])} for j in picks] if g["answer"] else []
-        word = "true" if g["answer"] else "false"
+                  "line": clean(items[j]["explanation"])} for j in picks]
         out.append(mk(topic, "probability-pioneer", "STAGE3[%d]" % i, 3, False,
-                      "Which of these statements is %s?" % word, "choice", ans, options=opts,
+                      "Which of these statements is true?", "choice", ans, options=opts,
                       worked=split_working(clean(g["explanation"])), slip=slips))
     # the numbers the statements and explanations quote (the rest are statements of principle, the game's own truth values)
     assert Fraction(1) - Fraction(3, 10) == Fraction(7, 10) and Fraction(7, 6) > 1
@@ -1279,6 +1284,19 @@ ROUND_FORMS = {"Round to the nearest whole number": ("to the nearest whole numbe
                "Round to 1 significant figure": ("to 1 significant figure", 3)}
 
 
+def round_worked(value, form, answer):
+    """Project Claude's ROUNDING template (25 Oct): the digit after the place, then up or down."""
+    x = Decimal(value)
+    quantum = {"to the nearest whole number": 0, "to 1 decimal place": -1, "to 2 decimal places": -2}.get(form)
+    if quantum is None:                                 # 1 significant figure: the place of the first digit
+        assert form == "to 1 significant figure"
+        quantum = abs(x).adjusted()
+    digit = int(abs(x) / Decimal(10) ** (quantum - 1)) % 10
+    up = digit >= 5
+    return ["Look at the digit after the place you are rounding to: %s." % tex(str(digit)),
+            "%s is %s, so round %s: %s." % (tex(str(digit)), "5 or more" if up else "less than 5", "up" if up else "down", tex(answer))]
+
+
 async def topic_rounding(h):
     pg = await h.page("decimal-detective", "level=year6")
     items = await pg.evaluate("() => ROUNDUP_QUESTIONS")
@@ -1287,7 +1305,8 @@ async def topic_rounding(h):
         form, band = ROUND_FORMS[it["instruction"]]
         stem = "Round %s %s." % (it["value"], form)
         a = {"value": numval(Decimal(it["answer"]))}
-        q = mk("rounding", "decimal-detective", "ROUNDUP_QUESTIONS[%d]" % i, band, False, stem, "number", a)
+        q = mk("rounding", "decimal-detective", "ROUNDUP_QUESTIONS[%d]" % i, band, False, stem, "number", a,
+               worked=round_worked(it["value"], form, it["answer"]))
         dp = re.search(r"to (\d) decimal place", stem)
         if dp:
             a["dp"] = int(dp.group(1))
@@ -1419,7 +1438,79 @@ def vec_band(prompt, is_mcq, is_mag):
     return 4 if is_mcq or is_mag or tokens >= 3 or (tokens >= 2 and coef) else 3
 
 
+def brk(x):
+    return "(%s)" % tnum(x) if x < 0 else tnum(x)
+
+
+def coef_tex(k):
+    k = Fraction(k)
+    return tnum(k) if k.denominator == 1 else "\\frac{%d}{%d}" % (k.numerator, k.denominator)
+
+
+def vec_terms(py):
+    """'2*v_a-v_b' as [(coefficient, name)]: the signed coefficient of each vector the expression uses."""
+    py = py.replace(" ", "")
+    terms = re.findall(r"([+-]?)(?:(Fraction\(\d+,\d+\)|\d+)\*)?v_(\w+)", py)
+    assert "".join((s + (c + "*" if c else "") + "v_" + n) for s, c, n in terms) == py, ("vector expression", py)
+    return [((-1 if s == "-" else 1) * (eval(c, {"Fraction": Fraction}) if c else Fraction(1)), n) for s, c, n in terms]
+
+
+def vec_worked(label, py, key, vecs, pts):
+    """One line per row, as the authored items: the template Project Claude gave for component-crusher's items. Every
+    number in every line is computed here and the last line's column is the key."""
+    terms = vec_terms(py)
+    assert len(terms) <= 2, ("vector worked: more than two terms", py)
+    vs = [(k, vec_value(n, vecs, pts)) for k, n in terms]
+    rows = (("top", lambda v: v.x), ("bottom", lambda v: v.y))
+    last = "So " + tex("%s = %s" % (label, col_in(key))) + "."
+    if len(vs) == 1:
+        k, v = vs[0]
+        lines = []
+        for r, get in rows:
+            lines.append("Multiply the %s number by %s: %s." % (r, tex(coef_tex(k)), tex("%s \\times %s = %s" % (brk(k) if k.denominator == 1 else coef_tex(k), brk(get(v)), tnum(k * get(v))))))
+        return lines + [last]
+    (k1, v1), (k2, v2) = vs
+    assert k1 > 0, ("vector worked: a leading minus on two terms", py)
+    plain = k1 == 1 and abs(k2) == 1
+    minus = k2 < 0
+    ans = {"top": key.x, "bottom": key.y}
+    if plain:
+        verb = "Take away" if minus else "Add"
+        lines = []
+        for r, get in rows:
+            a, b = get(v1), get(v2)
+            res = a - b if minus else a + b
+            assert res == ans[r]
+            lines.append("%s the %s numbers: %s." % (verb, r, tex("%s %s %s = %s" % (brk(a), "-" if minus else "+", brk(b), tnum(res)))))
+        return lines + [last]
+    # a multiple on one or both vectors: the multiples first, then the rows together
+    first = " and ".join(tex("%s = %s" % (nm, col_in(v))) for nm, v in
+                         [(("%s\\mathbf{%s}" % ("" if abs(k) == 1 else coef_tex(abs(k)), n)), abs(k) * vec_value(n, vecs, pts))
+                          for k, n in terms])
+    lines = [first + "."]
+    rowtxt = []
+    for r, get in rows:
+        a, b = k1 * get(v1), abs(k2) * get(v2)
+        res = a - b if minus else a + b
+        assert res == ans[r]
+        rowtxt.append("%s %s" % (r, tex("%s %s %s = %s" % (brk(a), "-" if minus else "+", brk(b), tnum(res)))))
+    lines.append("%s: %s, %s." % ("Take away" if minus else "Add them", rowtxt[0], rowtxt[1]))
+    return lines + [last]
+
+
+def vec_move_worked(start, end, key, what):
+    """The two numbers of a move from one point to another, one line each, and the column."""
+    dx, dy = Fraction(end[0]) - Fraction(start[0]), Fraction(end[1]) - Fraction(start[1])
+    assert (dx, dy) == (key.x, key.y)
+    return ["Take the start away from the end. Top number: %s." % tex("%s - %s = %s" % (brk(Fraction(end[0])), brk(Fraction(start[0])), tnum(dx))),
+            "Bottom number: %s." % tex("%s - %s = %s" % (brk(Fraction(end[1])), brk(Fraction(start[1])), tnum(dy))),
+            "So %s is %s." % (what, tex(col_in(key)))]
+
+
 async def topic_vectors(h):
+    """Foundation only (Project Claude, 25 Oct): component-crusher's column-vector items, adding, taking away, multiplying
+    by a number and writing a translation. Magnitudes, the midpoint, collinearity and the reasoning items are above
+    Foundation and are left out. Worked lines follow the VECTORS template."""
     pg = await h.page("component-crusher", "level=gcse")
     scenarios = await pg.evaluate("() => SCENARIOS.gcse")
     out = []
@@ -1428,13 +1519,7 @@ async def topic_vectors(h):
         for qi, sq in enumerate(sc["sqs"]):
             ref = "SCENARIOS.gcse[%d].sqs[%d]" % (si, qi)
             prompt = sq["prompt"]
-            if sq["type"] == "mcq":
-                opts, ans = choice("cc-" + ref, sq["correct"], sq["wrong"])
-                stem = (vec_preamble(prompt, sc, vecs, pts) + " " + prompt).strip()
-                if sc["id"] == "G15":                      # the path the picture drew, said in words
-                    stem = vec_preamble("\\mathbf{a}\\mathbf{b}", sc, vecs, pts) + \
-                        " The total displacement is \\(\\mathbf{a} + \\mathbf{b} + (-\\mathbf{a})\\). " + prompt
-                out.append(mk("vectors", "component-crusher", ref, 4, False, stem, "choice", ans, options=opts))
+            if sq["type"] != "vec2" or "(M is midpoint)" in prompt or prompt.startswith("State the position of M"):
                 continue
             first = re.search(r"\\\((.*?)\\\)", prompt)
             if prompt.startswith("Write down vector"):                       # G1: a, read from the origin
@@ -1443,69 +1528,43 @@ async def topic_vectors(h):
                 assert src["from"] == [0, 0] and [v.x, v.y] == [Fraction(x) for x in sq["answers"]]
                 stem = "The vector \\(\\mathbf{a}\\) goes from the origin to the point %s. Write down \\(\\mathbf{a}\\) as a column vector." \
                        % pt(src["to"])
-                key = v
-                py = "v_a"
+                key, py = v, "v_a"
+                worked = vec_move_worked((0, 0), src["to"], key, tex("\\mathbf{a}"))
             elif sc["id"] == "G6":                                            # a translation, said as two points
                 a, b = sc["vectors"][0]["from"], sc["vectors"][0]["to"]
                 if qi == 0:
                     key = Vec(b[0] - a[0], b[1] - a[1])
                     stem = "A translation takes the point %s to the point %s. Write down the column vector of the translation." % (pt(a), pt(b))
+                    worked = vec_move_worked(a, b, key, "the translation")
                 else:
                     key = Vec(a[0] - b[0], a[1] - b[1])
                     stem = "A translation takes the point %s to the point %s. What translation takes %s back to %s?" % (pt(a), pt(b), pt(b), pt(a))
+                    worked = vec_move_worked(b, a, key, "the translation back")
                 py = None
-            elif prompt.startswith("State the position of M"):                # G12: the midpoint, as coordinates
-                a, b, m = pts["A"], pts["B"], pts["M"]
-                assert (a[0] + b[0]) / 2 == m[0] and (a[1] + b[1]) / 2 == m[1] and \
-                    [m[0], m[1]] == sq["answers"], ("midpoint", sc["id"])
-                stem = "A is the point %s and B is the point %s. M is the midpoint of AB. Write down the coordinates of M." % (pt(a), pt(b))
-                out.append(mk("vectors", "component-crusher", ref, 3, False, stem, "coordinates",
-                              {"x": numval(m[0]), "y": numval(m[1])}))
-                continue
             else:
                 tx = first.group(1).lstrip("= ").strip()
-                is_mag = tx.startswith("|") and tx.endswith("|")
-                py = expr_python(tx[1:-1] if is_mag else tx)
-                pre_prompt = prompt
-                midpoint = "(M is midpoint)" in prompt
-                if midpoint:                                                   # G12: AM, M the midpoint of AB
-                    pre_prompt = prompt.replace(" (M is midpoint)", "")
-                    pts2 = dict(pts)
-                    pts2["M"] = ((pts["A"][0] + pts["B"][0]) / 2, (pts["A"][1] + pts["B"][1]) / 2)
-                    assert pts2["M"] == pts["M"]
-                    pre = vec_preamble("\\overrightarrow{AB}", sc, vecs, pts) + " M is the midpoint of AB."
-                    stem = pre + " " + pre_prompt
-                else:
-                    pre = vec_preamble(prompt, sc, vecs, pts)
-                    stem = (pre + " " + prompt).strip()
-                key = eval_vec(py, vecs, pts)
-                if sq["type"] == "num":
-                    mag = math.sqrt(key.x ** 2 + key.y ** 2)
-                    assert is_mag
-                    if "dp" in sq:
-                        want = half_up(sympy_sqrt(key.x ** 2 + key.y ** 2), sq["dp"])
-                        assert Decimal(str(sq["answer"])) == want, ("vector magnitude", ref, sq["answer"], want)
-                        a = {"value": float(want), "dp": sq["dp"]}
-                        stem = stem.replace("Give to %d d.p." % sq["dp"], "Give your answer to %d decimal places." % sq["dp"])
-                    else:
-                        assert mag == int(mag) and int(mag) == sq["answer"], ("vector magnitude", ref, sq["answer"], mag)
-                        a = {"value": int(mag)}
-                    out.append(mk("vectors", "component-crusher", ref, 4, False, stem, "number", a,
-                                  worked=split_working(sq["working"]) if sq.get("working") else []))
+                assert not (tx.startswith("|") and tx.endswith("|")), ("magnitude", ref)
+                py = expr_python(tx)
+                if py.count("v_") > 2:                                        # a path of three terms: above Foundation
                     continue
+                pre = vec_preamble(prompt, sc, vecs, pts)
+                stem = (pre + " " + prompt).strip()
+                key = eval_vec(py, vecs, pts)
+                if re.fullmatch(r"v_[A-Z]{2}", py):                          # AB from two points
+                    worked = vec_move_worked(pts[py[2]], pts[py[3]], key, tex("\\overrightarrow{%s}" % py[2:]))
+                else:
+                    worked = vec_worked(tx, py, key, vecs, pts)
             assert sq["type"] == "vec2" and [key.x, key.y] == [Fraction(str(x)) for x in sq["answers"]], \
                 ("vector answer", ref, key.x, key.y, sq["answers"])
             wrongs = vec_wrongs(py, key, vecs, pts) if py else vec_wrongs("v_t", key, {"t": key}, {})
             opts, ans = choice("cc-" + ref, col(key), [col(w) for w in wrongs])
             band = vec_band(prompt, False, False) if py and sc["id"] != "G6" else 3
-            out.append(mk("vectors", "component-crusher", ref, band, False, stem, "choice", ans, options=opts,
-                          worked=split_working(sq["working"]) if sq.get("working") else []))
+            out.append(mk("vectors", "component-crusher", ref, band, False, stem, "choice", ans, options=opts, worked=worked))
     return out + authored_for("vectors")
 
 
-def sympy_sqrt(x):
-    import sympy
-    return Decimal(str(sympy.N(sympy.sqrt(sympy.Rational(x.numerator, x.denominator)), 40)))
+def k_first_positive(terms):
+    return terms[0][0] > 0
 
 
 # --- change-subject: formula-unlocked's gcse set (29), choice ---
@@ -1550,6 +1609,25 @@ async def topic_change_subject(h):
     return game + authored
 
 
+# --- number-vocabulary: factor-race's own numbers, asked as "how many factors does n have" ---
+async def topic_number_vocabulary(h):
+    """The game asks which of two numbers has more factors and has no written solution. Every number that appears in its
+    pairs (VALID_PAIRS) or its Year 6 bank is asked once as "How many factors does n have?" (a typed number, Project
+    Claude's ruling of 25 Oct); the factors come from the game's own getFactors and are recomputed here. Band by size
+    (to 20, to 40, above), the topic's band range being 1 to 3."""
+    pg = await h.page("factor-race", "level=ks3")
+    nums = await pg.evaluate("() => [...new Set([...VALID_PAIRS.flat(), ...YEAR6_BANK.flatMap(q => [q.a, q.b])])].sort((x, y) => x - y)")
+    out = []
+    for n in nums:
+        facs = await pg.evaluate("(n) => getFactors(n)", n)
+        want = [d for d in range(1, n + 1) if n % d == 0]
+        assert facs == want, ("factor-race getFactors", n, facs, want)
+        line = "The factors of %d are %s: that is %d factors." % (n, ", ".join(str(d) for d in want), len(want))
+        out.append(mk("number-vocabulary", "factor-race", "number:%d" % n, 1 if n <= 20 else 2 if n <= 40 else 3, False,
+                      "How many factors does %d have?" % n, "number", {"value": len(want)}, worked=[line]))
+    return out
+
+
 # ───────────────────────────── the registry ─────────────────────────────
 # topic id -> (builder, rule notes). Topics not here have no bank yet (coming soon).
 BUILDERS = {
@@ -1568,6 +1646,7 @@ BUILDERS = {
     "rounding": topic_rounding,
     "vectors": topic_vectors,
     "change-subject": topic_change_subject,
+    "number-vocabulary": topic_number_vocabulary,
 }
 
 
