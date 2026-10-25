@@ -156,6 +156,7 @@
   "The Truth Will Set You Free (every truth table from its key, distractors not equivalent, scoring by correct cells, MaffsLock)": "18",
   "Think of a Number (every item run forwards from its answer and backwards from its result, undo working recomputed, typed answers marked in Chromium)": "6",
   "Timing gate (the group budget step warns and does not fail; the persistence report finds Probability Paradox on its third slow run and ignores both flaky runs; contract TIMING-GATE)": "28",
+  "Top scores panel (contract TOP-SCORES: the 11 panel games, played to their end with Firebase blocked in an en-US browser, each record kept by score-history.js; the panel shows the best five, British dates, no 0; five plants caught)": "34",
   "Trig Identity Duel (every option read into SymPy: exactly one equals the key, compound-angle and triangle keys recomputed, marking in Chromium)": "35",
   "Trig Wars (each side scores its own hits; the trig panel's numbers agree; hits found along the path; miss advice true by the physics; briefing and SR-14 text)": "31",
   "Trig Worms (every generator outcome recomputed exactly, its diagram measured from the canvas, every option marked in Chromium)": "33",
