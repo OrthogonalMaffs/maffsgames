@@ -190,6 +190,25 @@
    }
   },
   {
+   "id": "fraction-operations",
+   "name": "Calculating with fractions",
+   "marks": 6.5,
+   "series": 6,
+   "band": [
+    1,
+    4
+   ],
+   "route": {
+    "slug": "how-many-parts",
+    "game": "How Many Parts?",
+    "level": "ks3",
+    "modes": [
+     "stage3"
+    ],
+    "stages": []
+   }
+  },
+  {
    "id": "fraction-percentage-of-amount",
    "name": "Fractions and percentages of amounts",
    "marks": 6.3,
@@ -209,6 +228,44 @@
    }
   },
   {
+   "id": "averages",
+   "name": "Averages and range",
+   "marks": 6.3,
+   "series": 6,
+   "band": [
+    1,
+    4
+   ],
+   "route": {
+    "slug": "distinctly-average",
+    "game": "Distinctly Average",
+    "level": "ks3",
+    "modes": [],
+    "stages": []
+   }
+  },
+  {
+   "id": "area",
+   "name": "Area",
+   "marks": 6.0,
+   "series": 6,
+   "band": [
+    1,
+    5
+   ],
+   "route": {
+    "slug": "take-a-walk",
+    "game": "Take a Walk",
+    "level": "ks3",
+    "modes": [
+     "stage-1",
+     "stage-2",
+     "stage-3"
+    ],
+    "stages": []
+   }
+  },
+  {
    "id": "basic-probability",
    "name": "Probability",
    "marks": 3.7,
@@ -222,6 +279,25 @@
     "game": "Probability Pioneer",
     "level": "year6",
     "modes": [],
+    "stages": []
+   }
+  },
+  {
+   "id": "perimeter",
+   "name": "Perimeter",
+   "marks": 3.3,
+   "series": 4,
+   "band": [
+    1,
+    4
+   ],
+   "route": {
+    "slug": "take-a-walk",
+    "game": "Take a Walk",
+    "level": "ks3",
+    "modes": [
+     "stage-1"
+    ],
     "stages": []
    }
   },
@@ -310,20 +386,6 @@
    "planned": null
   },
   {
-   "id": "fraction-operations",
-   "name": "Calculating with fractions",
-   "marks": 6.5,
-   "series": 6,
-   "planned": null
-  },
-  {
-   "id": "averages",
-   "name": "Averages and range",
-   "marks": 6.3,
-   "series": 6,
-   "planned": null
-  },
-  {
    "id": "scatter-graphs",
    "name": "Scatter graphs",
    "marks": 6.2,
@@ -333,13 +395,6 @@
   {
    "id": "percentage-change",
    "name": "Percentage change",
-   "marks": 6.0,
-   "series": 6,
-   "planned": null
-  },
-  {
-   "id": "area",
-   "name": "Area",
    "marks": 6.0,
    "series": 6,
    "planned": null
@@ -496,13 +551,6 @@
    "name": "Substitution",
    "marks": 3.5,
    "series": 5,
-   "planned": null
-  },
-  {
-   "id": "perimeter",
-   "name": "Perimeter",
-   "marks": 3.3,
-   "series": 4,
    "planned": null
   },
   {

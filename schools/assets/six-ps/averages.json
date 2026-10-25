@@ -1,0 +1,3506 @@
+{
+ "topic": "averages",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "averages-01eaa099",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[0]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 1, 3, 2, 2, 2. What is the mean of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "3"
+    },
+    {
+     "val": "b",
+     "label": "2.5"
+    },
+    {
+     "val": "c",
+     "label": "2"
+    },
+    {
+     "val": "d",
+     "label": "10"
+    }
+   ],
+   "worked": [
+    "Sum = 1 + 2 + 2 + 2 + 3 = 10",
+    "Mean = 10 ÷ 5 = 2"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is the total of all the values — you still need to divide by how many values there are."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is one of the values in the data set, not the mean of all of them."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You multiplied the mean by the wrong number of values."
+    }
+   ]
+  },
+  {
+   "id": "averages-df516d45",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[7]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 2, 10, 2, 10, 6, 6. What is the mean of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "7.2"
+    },
+    {
+     "val": "b",
+     "label": "36"
+    },
+    {
+     "val": "c",
+     "label": "6"
+    },
+    {
+     "val": "d",
+     "label": "10"
+    }
+   ],
+   "worked": [
+    "Sum = 2 + 2 + 6 + 6 + 10 + 10 = 36",
+    "Mean = 36 ÷ 6 = 6"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the total of all the values — you still need to divide by how many values there are."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is one of the values in the data set, not the mean of all of them."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You multiplied the mean by the wrong number of values."
+    }
+   ]
+  },
+  {
+   "id": "averages-53e91e14",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[14]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 15, 19, 15, 19, 17, 17. What is the mean of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "102"
+    },
+    {
+     "val": "b",
+     "label": "19"
+    },
+    {
+     "val": "c",
+     "label": "20.4"
+    },
+    {
+     "val": "d",
+     "label": "17"
+    }
+   ],
+   "worked": [
+    "Sum = 15 + 15 + 17 + 17 + 19 + 19 = 102",
+    "Mean = 102 ÷ 6 = 17"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is the total of all the values — you still need to divide by how many values there are."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is one of the values in the data set, not the mean of all of them."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You multiplied the mean by the wrong number of values."
+    }
+   ]
+  },
+  {
+   "id": "averages-1e7b72ca",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[21]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 7, 19, 7, 19, 7, 19, 13. What is the mean of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "19"
+    },
+    {
+     "val": "b",
+     "label": "13"
+    },
+    {
+     "val": "c",
+     "label": "91"
+    },
+    {
+     "val": "d",
+     "label": "15.2"
+    }
+   ],
+   "worked": [
+    "Sum = 7 + 7 + 7 + 13 + 19 + 19 + 19 = 91",
+    "Mean = 91 ÷ 7 = 13"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is the total of all the values — you still need to divide by how many values there are."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is one of the values in the data set, not the mean of all of them."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You multiplied the mean by the wrong number of values."
+    }
+   ]
+  },
+  {
+   "id": "averages-c5a4c9dd",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[29]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 11, 13, 12, 12, 12, 12, 12, 12. What is the mean of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "12"
+    },
+    {
+     "val": "b",
+     "label": "96"
+    },
+    {
+     "val": "c",
+     "label": "13.7"
+    },
+    {
+     "val": "d",
+     "label": "13"
+    }
+   ],
+   "worked": [
+    "Sum = 11 + 12 + 12 + 12 + 12 + 12 + 12 + 13 = 96",
+    "Mean = 96 ÷ 8 = 12"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the total of all the values — you still need to divide by how many values there are."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is one of the values in the data set, not the mean of all of them."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You multiplied the mean by the wrong number of values."
+    }
+   ]
+  },
+  {
+   "id": "averages-83a4bbd3",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[36]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 4, 10, 4, 10, 4, 10, 7, 7, 7. What is the mean of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "7"
+    },
+    {
+     "val": "b",
+     "label": "63"
+    },
+    {
+     "val": "c",
+     "label": "7.9"
+    },
+    {
+     "val": "d",
+     "label": "10"
+    }
+   ],
+   "worked": [
+    "Sum = 4 + 4 + 4 + 7 + 7 + 7 + 10 + 10 + 10 = 63",
+    "Mean = 63 ÷ 9 = 7"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the total of all the values — you still need to divide by how many values there are."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is one of the values in the data set, not the mean of all of them."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You multiplied the mean by the wrong number of values."
+    }
+   ]
+  },
+  {
+   "id": "averages-962ebc21",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[43]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 15, 17, 15, 17, 16, 16, 16, 16, 16. What is the mean of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "144"
+    },
+    {
+     "val": "b",
+     "label": "17"
+    },
+    {
+     "val": "c",
+     "label": "16"
+    },
+    {
+     "val": "d",
+     "label": "18"
+    }
+   ],
+   "worked": [
+    "Sum = 15 + 15 + 16 + 16 + 16 + 16 + 16 + 17 + 17 = 144",
+    "Mean = 144 ÷ 9 = 16"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is the total of all the values — you still need to divide by how many values there are."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is one of the values in the data set, not the mean of all of them."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You multiplied the mean by the wrong number of values."
+    }
+   ]
+  },
+  {
+   "id": "averages-c2bec6d8",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[51]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 3, 17, 3, 17, 3, 17, 3, 17, 10, 10. What is the mean of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "100"
+    },
+    {
+     "val": "b",
+     "label": "17"
+    },
+    {
+     "val": "c",
+     "label": "11.1"
+    },
+    {
+     "val": "d",
+     "label": "10"
+    }
+   ],
+   "worked": [
+    "Sum = 3 + 3 + 3 + 3 + 10 + 10 + 17 + 17 + 17 + 17 = 100",
+    "Mean = 100 ÷ 10 = 10"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is the total of all the values — you still need to divide by how many values there are."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is one of the values in the data set, not the mean of all of them."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You multiplied the mean by the wrong number of values."
+    }
+   ]
+  },
+  {
+   "id": "averages-1e06484a",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[58]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 16, 18, 16, 18, 16, 18, 16, 18, 16, 18. What is the mean of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "170"
+    },
+    {
+     "val": "b",
+     "label": "18"
+    },
+    {
+     "val": "c",
+     "label": "17"
+    },
+    {
+     "val": "d",
+     "label": "18.9"
+    }
+   ],
+   "worked": [
+    "Sum = 16 + 16 + 16 + 16 + 16 + 18 + 18 + 18 + 18 + 18 = 170",
+    "Mean = 170 ÷ 10 = 17"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is the total of all the values — you still need to divide by how many values there are."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is one of the values in the data set, not the mean of all of them."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You multiplied the mean by the wrong number of values."
+    }
+   ]
+  },
+  {
+   "id": "averages-4d8bac57",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[65]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 7, 13, 7, 13, 7, 13, 10, 10, 10, 10, 10. What is the mean of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "10"
+    },
+    {
+     "val": "b",
+     "label": "110"
+    },
+    {
+     "val": "c",
+     "label": "11"
+    },
+    {
+     "val": "d",
+     "label": "13"
+    }
+   ],
+   "worked": [
+    "Sum = 7 + 7 + 7 + 10 + 10 + 10 + 10 + 10 + 13 + 13 + 13 = 110",
+    "Mean = 110 ÷ 11 = 10"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the total of all the values — you still need to divide by how many values there are."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is one of the values in the data set, not the mean of all of them."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You multiplied the mean by the wrong number of values."
+    }
+   ]
+  },
+  {
+   "id": "averages-f0d58342",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[73]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 3, 9, 4, 7, 5. What is the median of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "5.6"
+    },
+    {
+     "val": "b",
+     "label": "3"
+    },
+    {
+     "val": "c",
+     "label": "4"
+    },
+    {
+     "val": "d",
+     "label": "5"
+    }
+   ],
+   "worked": [
+    "Sorted: 3, 4, 5, 7, 9",
+    "n = 5 (odd). Position = (5 + 1) ÷ 2 = 3",
+    "The 3rd value in the sorted list is the median: 5"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You found the middle of the list in the order it was given — the data has to be sorted from smallest to largest first."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the POSITION of the middle value in the sorted list, not the value itself."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
+    }
+   ]
+  },
+  {
+   "id": "averages-3a41bec0",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[76]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 5, 19, 6, 13, 7. What is the median of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "3"
+    },
+    {
+     "val": "b",
+     "label": "6"
+    },
+    {
+     "val": "c",
+     "label": "10"
+    },
+    {
+     "val": "d",
+     "label": "7"
+    }
+   ],
+   "worked": [
+    "Sorted: 5, 6, 7, 13, 19",
+    "n = 5 (odd). Position = (5 + 1) ÷ 2 = 3",
+    "The 3rd value in the sorted list is the median: 7"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You found the middle of the list in the order it was given — the data has to be sorted from smallest to largest first."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is the POSITION of the middle value in the sorted list, not the value itself."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
+    }
+   ]
+  },
+  {
+   "id": "averages-b56d6998",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[80]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 7, 19, 8, 14, 9. What is the median of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "11.4"
+    },
+    {
+     "val": "b",
+     "label": "3"
+    },
+    {
+     "val": "c",
+     "label": "8"
+    },
+    {
+     "val": "d",
+     "label": "9"
+    }
+   ],
+   "worked": [
+    "Sorted: 7, 8, 9, 14, 19",
+    "n = 5 (odd). Position = (5 + 1) ÷ 2 = 3",
+    "The 3rd value in the sorted list is the median: 9"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You found the middle of the list in the order it was given — the data has to be sorted from smallest to largest first."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the POSITION of the middle value in the sorted list, not the value itself."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
+    }
+   ]
+  },
+  {
+   "id": "averages-93c27f75",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[84]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 9, 15, 10, 13, 11. What is the median of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "11"
+    },
+    {
+     "val": "b",
+     "label": "3"
+    },
+    {
+     "val": "c",
+     "label": "10"
+    },
+    {
+     "val": "d",
+     "label": "11.6"
+    }
+   ],
+   "worked": [
+    "Sorted: 9, 10, 11, 13, 15",
+    "n = 5 (odd). Position = (5 + 1) ÷ 2 = 3",
+    "The 3rd value in the sorted list is the median: 11"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You found the middle of the list in the order it was given — the data has to be sorted from smallest to largest first."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the POSITION of the middle value in the sorted list, not the value itself."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
+    }
+   ]
+  },
+  {
+   "id": "averages-e27052ab",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[87]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 8, 20, 10, 16, 12. What is the median of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "13.2"
+    },
+    {
+     "val": "b",
+     "label": "3"
+    },
+    {
+     "val": "c",
+     "label": "10"
+    },
+    {
+     "val": "d",
+     "label": "12"
+    }
+   ],
+   "worked": [
+    "Sorted: 8, 10, 12, 16, 20",
+    "n = 5 (odd). Position = (5 + 1) ÷ 2 = 3",
+    "The 3rd value in the sorted list is the median: 12"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You found the middle of the list in the order it was given — the data has to be sorted from smallest to largest first."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the POSITION of the middle value in the sorted list, not the value itself."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
+    }
+   ]
+  },
+  {
+   "id": "averages-a7651db9",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[91]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 10, 20, 12, 17, 14. What is the median of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "14"
+    },
+    {
+     "val": "b",
+     "label": "3"
+    },
+    {
+     "val": "c",
+     "label": "14.6"
+    },
+    {
+     "val": "d",
+     "label": "12"
+    }
+   ],
+   "worked": [
+    "Sorted: 10, 12, 14, 17, 20",
+    "n = 5 (odd). Position = (5 + 1) ÷ 2 = 3",
+    "The 3rd value in the sorted list is the median: 14"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You found the middle of the list in the order it was given — the data has to be sorted from smallest to largest first."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the POSITION of the middle value in the sorted list, not the value itself."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
+    }
+   ]
+  },
+  {
+   "id": "averages-03f5e880",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[95]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 8, 18, 12, 17, 16. What is the median of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "14.2"
+    },
+    {
+     "val": "b",
+     "label": "12"
+    },
+    {
+     "val": "c",
+     "label": "3"
+    },
+    {
+     "val": "d",
+     "label": "16"
+    }
+   ],
+   "worked": [
+    "Sorted: 8, 12, 16, 17, 18",
+    "n = 5 (odd). Position = (5 + 1) ÷ 2 = 3",
+    "The 3rd value in the sorted list is the median: 16"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You found the middle of the list in the order it was given — the data has to be sorted from smallest to largest first."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is the POSITION of the middle value in the sorted list, not the value itself."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
+    }
+   ]
+  },
+  {
+   "id": "averages-b4cf06a8",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[98]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 2, 20, 3, 15, 4, 10, 5. What is the median of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "5"
+    },
+    {
+     "val": "b",
+     "label": "8.4"
+    },
+    {
+     "val": "c",
+     "label": "4"
+    },
+    {
+     "val": "d",
+     "label": "15"
+    }
+   ],
+   "worked": [
+    "Sorted: 2, 3, 4, 5, 10, 15, 20",
+    "n = 7 (odd). Position = (7 + 1) ÷ 2 = 4",
+    "The 4th value in the sorted list is the median: 5"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "You found the middle of the list in the order it was given — the data has to be sorted from smallest to largest first."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is the POSITION of the middle value in the sorted list, not the value itself."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
+    }
+   ]
+  },
+  {
+   "id": "averages-eae9ce2f",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[102]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 5, 14, 7, 13, 9, 12, 11. What is the median of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "11"
+    },
+    {
+     "val": "b",
+     "label": "10.1"
+    },
+    {
+     "val": "c",
+     "label": "13"
+    },
+    {
+     "val": "d",
+     "label": "4"
+    }
+   ],
+   "worked": [
+    "Sorted: 5, 7, 9, 11, 12, 13, 14",
+    "n = 7 (odd). Position = (7 + 1) ÷ 2 = 4",
+    "The 4th value in the sorted list is the median: 11"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You found the middle of the list in the order it was given — the data has to be sorted from smallest to largest first."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is the POSITION of the middle value in the sorted list, not the value itself."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
+    }
+   ]
+  },
+  {
+   "id": "averages-5b2dfab7",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[106]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 5, 20, 9, 19, 13, 18, 17. What is the median of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "14.4"
+    },
+    {
+     "val": "b",
+     "label": "19"
+    },
+    {
+     "val": "c",
+     "label": "4"
+    },
+    {
+     "val": "d",
+     "label": "17"
+    }
+   ],
+   "worked": [
+    "Sorted: 5, 9, 13, 17, 18, 19, 20",
+    "n = 7 (odd). Position = (7 + 1) ÷ 2 = 4",
+    "The 4th value in the sorted list is the median: 17"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "You found the middle of the list in the order it was given — the data has to be sorted from smallest to largest first."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is the POSITION of the middle value in the sorted list, not the value itself."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
+    }
+   ]
+  },
+  {
+   "id": "averages-0fe3c4d9",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[110]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Here is a data set: 1, 15, 2, 10, 3, 5. What is the median of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "6"
+    },
+    {
+     "val": "b",
+     "label": "4"
+    },
+    {
+     "val": "c",
+     "label": "3"
+    },
+    {
+     "val": "d",
+     "label": "3.5"
+    }
+   ],
+   "worked": [
+    "Sorted: 1, 2, 3, 5, 10, 15",
+    "n = 6 (even). Position = (6 + 1) ÷ 2 = 3.5",
+    "The position ends in .5, so the median is halfway between the 3rd and 4th values: 3 and 5 → 4"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "With an even number of values there are two middle numbers — you picked one of them instead of finding the value halfway between both."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You found the middle of the list in the order it was given — the data has to be sorted from smallest to largest first."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is the POSITION of the middle value in the sorted list, not the value itself."
+    }
+   ]
+  },
+  {
+   "id": "averages-ba78d198",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[112]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Here is a data set: 2, 10, 4, 9, 6, 8. What is the median of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "6"
+    },
+    {
+     "val": "b",
+     "label": "6.5"
+    },
+    {
+     "val": "c",
+     "label": "7"
+    },
+    {
+     "val": "d",
+     "label": "3.5"
+    }
+   ],
+   "worked": [
+    "Sorted: 2, 4, 6, 8, 9, 10",
+    "n = 6 (even). Position = (6 + 1) ÷ 2 = 3.5",
+    "The position ends in .5, so the median is halfway between the 3rd and 4th values: 6 and 8 → 7"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "With an even number of values there are two middle numbers — you picked one of them instead of finding the value halfway between both."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is the POSITION of the middle value in the sorted list, not the value itself."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
+    }
+   ]
+  },
+  {
+   "id": "averages-a0f5d7c1",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[114]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Here is a data set: 7, 15, 8, 13, 9, 11. What is the median of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "10.5"
+    },
+    {
+     "val": "b",
+     "label": "9"
+    },
+    {
+     "val": "c",
+     "label": "3.5"
+    },
+    {
+     "val": "d",
+     "label": "10"
+    }
+   ],
+   "worked": [
+    "Sorted: 7, 8, 9, 11, 13, 15",
+    "n = 6 (even). Position = (6 + 1) ÷ 2 = 3.5",
+    "The position ends in .5, so the median is halfway between the 3rd and 4th values: 9 and 11 → 10"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "With an even number of values there are two middle numbers — you picked one of them instead of finding the value halfway between both."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You found the middle of the list in the order it was given — the data has to be sorted from smallest to largest first."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is the POSITION of the middle value in the sorted list, not the value itself."
+    }
+   ]
+  },
+  {
+   "id": "averages-aa57d6d9",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[116]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Here is a data set: 2, 13, 6, 12, 10, 11. What is the median of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "10"
+    },
+    {
+     "val": "b",
+     "label": "9"
+    },
+    {
+     "val": "c",
+     "label": "3.5"
+    },
+    {
+     "val": "d",
+     "label": "10.5"
+    }
+   ],
+   "worked": [
+    "Sorted: 2, 6, 10, 11, 12, 13",
+    "n = 6 (even). Position = (6 + 1) ÷ 2 = 3.5",
+    "The position ends in .5, so the median is halfway between the 3rd and 4th values: 10 and 11 → 10.5"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "With an even number of values there are two middle numbers — you picked one of them instead of finding the value halfway between both."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is the POSITION of the middle value in the sorted list, not the value itself."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
+    }
+   ]
+  },
+  {
+   "id": "averages-308996eb",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[118]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Here is a data set: 9, 17, 10, 15, 11, 13. What is the median of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "3.5"
+    },
+    {
+     "val": "b",
+     "label": "11"
+    },
+    {
+     "val": "c",
+     "label": "12"
+    },
+    {
+     "val": "d",
+     "label": "12.5"
+    }
+   ],
+   "worked": [
+    "Sorted: 9, 10, 11, 13, 15, 17",
+    "n = 6 (even). Position = (6 + 1) ÷ 2 = 3.5",
+    "The position ends in .5, so the median is halfway between the 3rd and 4th values: 11 and 13 → 12"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "With an even number of values there are two middle numbers — you picked one of them instead of finding the value halfway between both."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is the POSITION of the middle value in the sorted list, not the value itself."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
+    }
+   ]
+  },
+  {
+   "id": "averages-18cc87f7",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[120]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Here is a data set: 9, 17, 11, 16, 13, 15. What is the median of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "3.5"
+    },
+    {
+     "val": "b",
+     "label": "13.5"
+    },
+    {
+     "val": "c",
+     "label": "14"
+    },
+    {
+     "val": "d",
+     "label": "13"
+    }
+   ],
+   "worked": [
+    "Sorted: 9, 11, 13, 15, 16, 17",
+    "n = 6 (even). Position = (6 + 1) ÷ 2 = 3.5",
+    "The position ends in .5, so the median is halfway between the 3rd and 4th values: 13 and 15 → 14"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "With an even number of values there are two middle numbers — you picked one of them instead of finding the value halfway between both."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is the POSITION of the middle value in the sorted list, not the value itself."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
+    }
+   ]
+  },
+  {
+   "id": "averages-869dc946",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[122]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Here is a data set: 2, 12, 3, 10, 4, 8, 5, 6. What is the median of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "6.3"
+    },
+    {
+     "val": "b",
+     "label": "4.5"
+    },
+    {
+     "val": "c",
+     "label": "7"
+    },
+    {
+     "val": "d",
+     "label": "5.5"
+    }
+   ],
+   "worked": [
+    "Sorted: 2, 3, 4, 5, 6, 8, 10, 12",
+    "n = 8 (even). Position = (8 + 1) ÷ 2 = 4.5",
+    "The position ends in .5, so the median is halfway between the 4th and 5th values: 5 and 6 → 5.5"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You found the middle of the list in the order it was given — the data has to be sorted from smallest to largest first."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the POSITION of the middle value in the sorted list, not the value itself."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
+    }
+   ]
+  },
+  {
+   "id": "averages-f997303e",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[124]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Here is a data set: 1, 18, 3, 15, 5, 12, 7, 9. What is the median of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "10"
+    },
+    {
+     "val": "b",
+     "label": "8"
+    },
+    {
+     "val": "c",
+     "label": "8.8"
+    },
+    {
+     "val": "d",
+     "label": "7"
+    }
+   ],
+   "worked": [
+    "Sorted: 1, 3, 5, 7, 9, 12, 15, 18",
+    "n = 8 (even). Position = (8 + 1) ÷ 2 = 4.5",
+    "The position ends in .5, so the median is halfway between the 4th and 5th values: 7 and 9 → 8"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "With an even number of values there are two middle numbers — you picked one of them instead of finding the value halfway between both."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You found the middle of the list in the order it was given — the data has to be sorted from smallest to largest first."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
+    }
+   ]
+  },
+  {
+   "id": "averages-5aca40f5",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[126]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Here is a data set: 4, 20, 6, 17, 8, 14, 10, 11. What is the median of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "11.3"
+    },
+    {
+     "val": "b",
+     "label": "10.5"
+    },
+    {
+     "val": "c",
+     "label": "12.5"
+    },
+    {
+     "val": "d",
+     "label": "4.5"
+    }
+   ],
+   "worked": [
+    "Sorted: 4, 6, 8, 10, 11, 14, 17, 20",
+    "n = 8 (even). Position = (8 + 1) ÷ 2 = 4.5",
+    "The position ends in .5, so the median is halfway between the 4th and 5th values: 10 and 11 → 10.5"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "You found the middle of the list in the order it was given — the data has to be sorted from smallest to largest first."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is the POSITION of the middle value in the sorted list, not the value itself."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
+    }
+   ]
+  },
+  {
+   "id": "averages-eedf2da8",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[128]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Here is a data set: 3, 17, 6, 16, 9, 15, 12, 14. What is the median of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "12.5"
+    },
+    {
+     "val": "b",
+     "label": "11.5"
+    },
+    {
+     "val": "c",
+     "label": "13"
+    },
+    {
+     "val": "d",
+     "label": "12"
+    }
+   ],
+   "worked": [
+    "Sorted: 3, 6, 9, 12, 14, 15, 16, 17",
+    "n = 8 (even). Position = (8 + 1) ÷ 2 = 4.5",
+    "The position ends in .5, so the median is halfway between the 4th and 5th values: 12 and 14 → 13"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "With an even number of values there are two middle numbers — you picked one of them instead of finding the value halfway between both."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "You found the middle of the list in the order it was given — the data has to be sorted from smallest to largest first."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
+    }
+   ]
+  },
+  {
+   "id": "averages-76f62573",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[131]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a data set: 3, 6, 4, 5, 4. What is the mode of this data set? (There may be more than one value.)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "5"
+    },
+    {
+     "val": "b",
+     "label": "4"
+    },
+    {
+     "val": "c",
+     "label": "6"
+    },
+    {
+     "val": "d",
+     "label": "2"
+    }
+   ],
+   "worked": [
+    "Data: 3, 6, 4, 5, 4",
+    "4 occurs more often than any other value → mode = 4"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is how many TIMES the mode appears, not the value that appears most often."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That value does not occur more often than the others — check which value is repeated most."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That value does not occur more often than the others — check which value is repeated most."
+    }
+   ]
+  },
+  {
+   "id": "averages-a89999a1",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[134]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a data set: 13, 16, 14, 15, 14. What is the mode of this data set? (There may be more than one value.)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "16"
+    },
+    {
+     "val": "b",
+     "label": "15"
+    },
+    {
+     "val": "c",
+     "label": "2"
+    },
+    {
+     "val": "d",
+     "label": "14"
+    }
+   ],
+   "worked": [
+    "Data: 13, 16, 14, 15, 14",
+    "14 occurs more often than any other value → mode = 14"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is how many TIMES the mode appears, not the value that appears most often."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That value does not occur more often than the others — check which value is repeated most."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That value does not occur more often than the others — check which value is repeated most."
+    }
+   ]
+  },
+  {
+   "id": "averages-6d46d566",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[137]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a data set: 9, 13, 10, 12, 11, 11. What is the mode of this data set? (There may be more than one value.)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "11"
+    },
+    {
+     "val": "b",
+     "label": "2"
+    },
+    {
+     "val": "c",
+     "label": "9"
+    },
+    {
+     "val": "d",
+     "label": "12"
+    }
+   ],
+   "worked": [
+    "Data: 9, 13, 10, 12, 11, 11",
+    "11 occurs more often than any other value → mode = 11"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is how many TIMES the mode appears, not the value that appears most often."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That value does not occur more often than the others — check which value is repeated most."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That value does not occur more often than the others — check which value is repeated most."
+    }
+   ]
+  },
+  {
+   "id": "averages-cacf646e",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[140]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a data set: 2, 7, 3, 6, 4, 5, 4. What is the mode of this data set? (There may be more than one value.)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "5"
+    },
+    {
+     "val": "b",
+     "label": "4"
+    },
+    {
+     "val": "c",
+     "label": "7"
+    },
+    {
+     "val": "d",
+     "label": "2"
+    }
+   ],
+   "worked": [
+    "Data: 2, 7, 3, 6, 4, 5, 4",
+    "4 occurs more often than any other value → mode = 4"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is how many TIMES the mode appears, not the value that appears most often."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That value does not occur more often than the others — check which value is repeated most."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That value does not occur more often than the others — check which value is repeated most."
+    }
+   ]
+  },
+  {
+   "id": "averages-21f5bc31",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[144]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a data set: 15, 19, 16, 18, 17, 17, 17. What is the mode of this data set? (There may be more than one value.)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "15"
+    },
+    {
+     "val": "b",
+     "label": "17"
+    },
+    {
+     "val": "c",
+     "label": "3"
+    },
+    {
+     "val": "d",
+     "label": "18"
+    }
+   ],
+   "worked": [
+    "Data: 15, 19, 16, 18, 17, 17, 17",
+    "17 occurs more often than any other value → mode = 17"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is how many TIMES the mode appears, not the value that appears most often."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That value does not occur more often than the others — check which value is repeated most."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That value does not occur more often than the others — check which value is repeated most."
+    }
+   ]
+  },
+  {
+   "id": "averages-f8ef7912",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[147]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a data set: 8, 14, 9, 13, 10, 12, 11, 11. What is the mode of this data set? (There may be more than one value.)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "11"
+    },
+    {
+     "val": "b",
+     "label": "8"
+    },
+    {
+     "val": "c",
+     "label": "2"
+    },
+    {
+     "val": "d",
+     "label": "12"
+    }
+   ],
+   "worked": [
+    "Data: 8, 14, 9, 13, 10, 12, 11, 11",
+    "11 occurs more often than any other value → mode = 11"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is how many TIMES the mode appears, not the value that appears most often."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That value does not occur more often than the others — check which value is repeated most."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That value does not occur more often than the others — check which value is repeated most."
+    }
+   ]
+  },
+  {
+   "id": "averages-02b678a0",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[150]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a data set: 1, 8, 2, 7, 3, 6, 4, 5, 4. What is the mode of this data set? (There may be more than one value.)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "2"
+    },
+    {
+     "val": "b",
+     "label": "8"
+    },
+    {
+     "val": "c",
+     "label": "5"
+    },
+    {
+     "val": "d",
+     "label": "4"
+    }
+   ],
+   "worked": [
+    "Data: 1, 8, 2, 7, 3, 6, 4, 5, 4",
+    "4 occurs more often than any other value → mode = 4"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is how many TIMES the mode appears, not the value that appears most often."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That value does not occur more often than the others — check which value is repeated most."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That value does not occur more often than the others — check which value is repeated most."
+    }
+   ]
+  },
+  {
+   "id": "averages-84fbbad1",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[154]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a data set: 14, 20, 15, 19, 16, 18, 17, 17, 17. What is the mode of this data set? (There may be more than one value.)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "14"
+    },
+    {
+     "val": "b",
+     "label": "17"
+    },
+    {
+     "val": "c",
+     "label": "18"
+    },
+    {
+     "val": "d",
+     "label": "3"
+    }
+   ],
+   "worked": [
+    "Data: 14, 20, 15, 19, 16, 18, 17, 17, 17",
+    "17 occurs more often than any other value → mode = 17"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is how many TIMES the mode appears, not the value that appears most often."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That value does not occur more often than the others — check which value is repeated most."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That value does not occur more often than the others — check which value is repeated most."
+    }
+   ]
+  },
+  {
+   "id": "averages-219d72be",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[157]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a data set: 7, 15, 8, 14, 9, 13, 10, 12, 11, 11. What is the mode of this data set? (There may be more than one value.)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "12"
+    },
+    {
+     "val": "b",
+     "label": "11"
+    },
+    {
+     "val": "c",
+     "label": "2"
+    },
+    {
+     "val": "d",
+     "label": "7"
+    }
+   ],
+   "worked": [
+    "Data: 7, 15, 8, 14, 9, 13, 10, 12, 11, 11",
+    "11 occurs more often than any other value → mode = 11"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is how many TIMES the mode appears, not the value that appears most often."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That value does not occur more often than the others — check which value is repeated most."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That value does not occur more often than the others — check which value is repeated most."
+    }
+   ]
+  },
+  {
+   "id": "averages-78926500",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[160]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a data set: 1, 10, 2, 9, 3, 8, 4, 7, 4, 6, 5. What is the mode of this data set? (There may be more than one value.)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "2"
+    },
+    {
+     "val": "b",
+     "label": "4"
+    },
+    {
+     "val": "c",
+     "label": "5"
+    },
+    {
+     "val": "d",
+     "label": "10"
+    }
+   ],
+   "worked": [
+    "Data: 1, 10, 2, 9, 3, 8, 4, 7, 4, 6, 5",
+    "4 occurs more often than any other value → mode = 4"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is how many TIMES the mode appears, not the value that appears most often."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That value does not occur more often than the others — check which value is repeated most."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That value does not occur more often than the others — check which value is repeated most."
+    }
+   ]
+  },
+  {
+   "id": "averages-0515c95f",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[164]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 1, 5, 1, 4, 3, 3. What is the mode of this data set? (There may be more than one value.)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "2"
+    },
+    {
+     "val": "b",
+     "label": "1 and 4"
+    },
+    {
+     "val": "c",
+     "label": "1 and 3"
+    },
+    {
+     "val": "d",
+     "label": "1"
+    }
+   ],
+   "worked": [
+    "Data: 1, 5, 1, 4, 3, 3",
+    "Two values are tied for the most common → mode = 1 and 3"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is how many TIMES the mode appears, not the value that appears most often."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "This data has TWO modes, tied for the most common value — you only gave one of them."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Only values tied for the most common count as modes. One of the two values you chose is a mode, but the other is not."
+    }
+   ]
+  },
+  {
+   "id": "averages-977d6b5d",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[168]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 1, 4, 1, 4, 1, 4, 2. What is the mode of this data set? (There may be more than one value.)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "1"
+    },
+    {
+     "val": "b",
+     "label": "3"
+    },
+    {
+     "val": "c",
+     "label": "1 and 2"
+    },
+    {
+     "val": "d",
+     "label": "1 and 4"
+    }
+   ],
+   "worked": [
+    "Data: 1, 4, 1, 4, 1, 4, 2",
+    "Two values are tied for the most common → mode = 1 and 4"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is how many TIMES the mode appears, not the value that appears most often."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "This data has TWO modes, tied for the most common value — you only gave one of them."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Only values tied for the most common count as modes. One of the two values you chose is a mode, but the other is not."
+    }
+   ]
+  },
+  {
+   "id": "averages-6dd58352",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[172]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 9, 14, 9, 14, 9, 14, 13. What is the mode of this data set? (There may be more than one value.)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "3"
+    },
+    {
+     "val": "b",
+     "label": "9 and 14"
+    },
+    {
+     "val": "c",
+     "label": "9"
+    },
+    {
+     "val": "d",
+     "label": "9 and 13"
+    }
+   ],
+   "worked": [
+    "Data: 9, 14, 9, 14, 9, 14, 13",
+    "Two values are tied for the most common → mode = 9 and 14"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is how many TIMES the mode appears, not the value that appears most often."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "This data has TWO modes, tied for the most common value — you only gave one of them."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Only values tied for the most common count as modes. One of the two values you chose is a mode, but the other is not."
+    }
+   ]
+  },
+  {
+   "id": "averages-a2d286da",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[176]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 1, 5, 2, 4, 2, 4, 2, 4. What is the mode of this data set? (There may be more than one value.)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "3"
+    },
+    {
+     "val": "b",
+     "label": "2"
+    },
+    {
+     "val": "c",
+     "label": "2 and 4"
+    },
+    {
+     "val": "d",
+     "label": "2 and 5"
+    }
+   ],
+   "worked": [
+    "Data: 1, 5, 2, 4, 2, 4, 2, 4",
+    "Two values are tied for the most common → mode = 2 and 4"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is how many TIMES the mode appears, not the value that appears most often."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "This data has TWO modes, tied for the most common value — you only gave one of them."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Only values tied for the most common count as modes. One of the two values you chose is a mode, but the other is not."
+    }
+   ]
+  },
+  {
+   "id": "averages-5d51bb4b",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[180]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 10, 14, 10, 14, 10, 14, 11, 13. What is the mode of this data set? (There may be more than one value.)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "10"
+    },
+    {
+     "val": "b",
+     "label": "3"
+    },
+    {
+     "val": "c",
+     "label": "10 and 14"
+    },
+    {
+     "val": "d",
+     "label": "10 and 13"
+    }
+   ],
+   "worked": [
+    "Data: 10, 14, 10, 14, 10, 14, 11, 13",
+    "Two values are tied for the most common → mode = 10 and 14"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is how many TIMES the mode appears, not the value that appears most often."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "This data has TWO modes, tied for the most common value — you only gave one of them."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Only values tied for the most common count as modes. One of the two values you chose is a mode, but the other is not."
+    }
+   ]
+  },
+  {
+   "id": "averages-5ea0ff18",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[185]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 3, 10, 4, 9, 5, 8, 5, 7, 7. What is the mode of this data set? (There may be more than one value.)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "2"
+    },
+    {
+     "val": "b",
+     "label": "9 and 10"
+    },
+    {
+     "val": "c",
+     "label": "5 and 7"
+    },
+    {
+     "val": "d",
+     "label": "5"
+    }
+   ],
+   "worked": [
+    "Data: 3, 10, 4, 9, 5, 8, 5, 7, 7",
+    "Two values are tied for the most common → mode = 5 and 7"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is how many TIMES the mode appears, not the value that appears most often."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "This data has TWO modes, tied for the most common value — you only gave one of them."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Those are the biggest (or smallest) values in the list. The mode is about how often a value occurs, not how big it is."
+    }
+   ]
+  },
+  {
+   "id": "averages-b49f6873",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[189]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 13, 18, 13, 17, 13, 16, 14, 16, 16. What is the mode of this data set? (There may be more than one value.)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "3"
+    },
+    {
+     "val": "b",
+     "label": "13 and 16"
+    },
+    {
+     "val": "c",
+     "label": "17 and 18"
+    },
+    {
+     "val": "d",
+     "label": "13"
+    }
+   ],
+   "worked": [
+    "Data: 13, 18, 13, 17, 13, 16, 14, 16, 16",
+    "Two values are tied for the most common → mode = 13 and 16"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is how many TIMES the mode appears, not the value that appears most often."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "This data has TWO modes, tied for the most common value — you only gave one of them."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Those are the biggest (or smallest) values in the list. The mode is about how often a value occurs, not how big it is."
+    }
+   ]
+  },
+  {
+   "id": "averages-27e50738",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[193]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 5, 11, 5, 10, 5, 10, 6, 10, 7, 9. What is the mode of this data set? (There may be more than one value.)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "10 and 11"
+    },
+    {
+     "val": "b",
+     "label": "5 and 10"
+    },
+    {
+     "val": "c",
+     "label": "3"
+    },
+    {
+     "val": "d",
+     "label": "5"
+    }
+   ],
+   "worked": [
+    "Data: 5, 11, 5, 10, 5, 10, 6, 10, 7, 9",
+    "Two values are tied for the most common → mode = 5 and 10"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is how many TIMES the mode appears, not the value that appears most often."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "This data has TWO modes, tied for the most common value — you only gave one of them."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those are the biggest (or smallest) values in the list. The mode is about how often a value occurs, not how big it is."
+    }
+   ]
+  },
+  {
+   "id": "averages-696a4293",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[197]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 12, 18, 13, 17, 14, 16, 14, 16, 14, 16. What is the mode of this data set? (There may be more than one value.)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "17 and 18"
+    },
+    {
+     "val": "b",
+     "label": "14"
+    },
+    {
+     "val": "c",
+     "label": "3"
+    },
+    {
+     "val": "d",
+     "label": "14 and 16"
+    }
+   ],
+   "worked": [
+    "Data: 12, 18, 13, 17, 14, 16, 14, 16, 14, 16",
+    "Two values are tied for the most common → mode = 14 and 16"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is how many TIMES the mode appears, not the value that appears most often."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "This data has TWO modes, tied for the most common value — you only gave one of them."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those are the biggest (or smallest) values in the list. The mode is about how often a value occurs, not how big it is."
+    }
+   ]
+  },
+  {
+   "id": "averages-1b2ffb2b",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[201]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a data set: 5, 12, 6, 11, 6, 10, 6, 10, 7, 10, 9. What is the mode of this data set? (There may be more than one value.)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "6 and 10"
+    },
+    {
+     "val": "b",
+     "label": "11 and 12"
+    },
+    {
+     "val": "c",
+     "label": "3"
+    },
+    {
+     "val": "d",
+     "label": "6"
+    }
+   ],
+   "worked": [
+    "Data: 5, 12, 6, 11, 6, 10, 6, 10, 7, 10, 9",
+    "Two values are tied for the most common → mode = 6 and 10"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is how many TIMES the mode appears, not the value that appears most often."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "This data has TWO modes, tied for the most common value — you only gave one of them."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Those are the biggest (or smallest) values in the list. The mode is about how often a value occurs, not how big it is."
+    }
+   ]
+  },
+  {
+   "id": "averages-e25da641",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[206]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a data set: 2, 8, 2, 2, 2. What is the range of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "8"
+    },
+    {
+     "val": "b",
+     "label": "6"
+    },
+    {
+     "val": "c",
+     "label": "2"
+    },
+    {
+     "val": "d",
+     "label": "3.2"
+    }
+   ],
+   "worked": [
+    "Largest = 8, smallest = 2",
+    "Range = 8 − 2 = 6"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is the largest value — the range is the largest value MINUS the smallest."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is the smallest value — the range is the largest value minus the smallest."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is the mean of the data — the range measures the spread (largest minus smallest), not the average."
+    }
+   ]
+  },
+  {
+   "id": "averages-8d5eab7e",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[211]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a data set: 11, 12, 11, 12, 11. What is the range of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "1"
+    },
+    {
+     "val": "b",
+     "label": "11.4"
+    },
+    {
+     "val": "c",
+     "label": "12"
+    },
+    {
+     "val": "d",
+     "label": "11"
+    }
+   ],
+   "worked": [
+    "Largest = 12, smallest = 11",
+    "Range = 12 − 11 = 1"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is the largest value — the range is the largest value MINUS the smallest."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is the smallest value — the range is the largest value minus the smallest."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the mean of the data — the range measures the spread (largest minus smallest), not the average."
+    }
+   ]
+  },
+  {
+   "id": "averages-4d4e5356",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[216]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a data set: 5, 12, 8, 11, 9, 10. What is the range of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "9.2"
+    },
+    {
+     "val": "b",
+     "label": "5"
+    },
+    {
+     "val": "c",
+     "label": "12"
+    },
+    {
+     "val": "d",
+     "label": "7"
+    }
+   ],
+   "worked": [
+    "Largest = 12, smallest = 5",
+    "Range = 12 − 5 = 7"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is the largest value — the range is the largest value MINUS the smallest."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the smallest value — the range is the largest value minus the smallest."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is the mean of the data — the range measures the spread (largest minus smallest), not the average."
+    }
+   ]
+  },
+  {
+   "id": "averages-856e7b46",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[221]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a data set: 1, 8, 3, 7, 4, 6, 5. What is the range of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "8"
+    },
+    {
+     "val": "b",
+     "label": "7"
+    },
+    {
+     "val": "c",
+     "label": "4.9"
+    },
+    {
+     "val": "d",
+     "label": "1"
+    }
+   ],
+   "worked": [
+    "Largest = 8, smallest = 1",
+    "Range = 8 − 1 = 7"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is the largest value — the range is the largest value MINUS the smallest."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is the smallest value — the range is the largest value minus the smallest."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is the mean of the data — the range measures the spread (largest minus smallest), not the average."
+    }
+   ]
+  },
+  {
+   "id": "averages-b95b6d95",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[227]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a data set: 11, 19, 12, 19, 14, 17, 16. What is the range of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "19"
+    },
+    {
+     "val": "b",
+     "label": "11"
+    },
+    {
+     "val": "c",
+     "label": "15.4"
+    },
+    {
+     "val": "d",
+     "label": "8"
+    }
+   ],
+   "worked": [
+    "Largest = 19, smallest = 11",
+    "Range = 19 − 11 = 8"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is the largest value — the range is the largest value MINUS the smallest."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the smallest value — the range is the largest value minus the smallest."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is the mean of the data — the range measures the spread (largest minus smallest), not the average."
+    }
+   ]
+  },
+  {
+   "id": "averages-09a87965",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[232]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a data set: 5, 18, 5, 12, 5, 12, 5, 12. What is the range of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "13"
+    },
+    {
+     "val": "b",
+     "label": "18"
+    },
+    {
+     "val": "c",
+     "label": "9.3"
+    },
+    {
+     "val": "d",
+     "label": "5"
+    }
+   ],
+   "worked": [
+    "Largest = 18, smallest = 5",
+    "Range = 18 − 5 = 13"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the largest value — the range is the largest value MINUS the smallest."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is the smallest value — the range is the largest value minus the smallest."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is the mean of the data — the range measures the spread (largest minus smallest), not the average."
+    }
+   ]
+  },
+  {
+   "id": "averages-b9f21423",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[237]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a data set: 1, 15, 5, 15, 6, 14, 7, 13, 12. What is the range of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "9.8"
+    },
+    {
+     "val": "b",
+     "label": "1"
+    },
+    {
+     "val": "c",
+     "label": "14"
+    },
+    {
+     "val": "d",
+     "label": "15"
+    }
+   ],
+   "worked": [
+    "Largest = 15, smallest = 1",
+    "Range = 15 − 1 = 14"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is the largest value — the range is the largest value MINUS the smallest."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the smallest value — the range is the largest value minus the smallest."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is the mean of the data — the range measures the spread (largest minus smallest), not the average."
+    }
+   ]
+  },
+  {
+   "id": "averages-fed44eef",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[243]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a data set: 12, 17, 12, 17, 13, 16, 14, 15, 14. What is the range of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "14.4"
+    },
+    {
+     "val": "b",
+     "label": "17"
+    },
+    {
+     "val": "c",
+     "label": "12"
+    },
+    {
+     "val": "d",
+     "label": "5"
+    }
+   ],
+   "worked": [
+    "Largest = 17, smallest = 12",
+    "Range = 17 − 12 = 5"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the largest value — the range is the largest value MINUS the smallest."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is the smallest value — the range is the largest value minus the smallest."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is the mean of the data — the range measures the spread (largest minus smallest), not the average."
+    }
+   ]
+  },
+  {
+   "id": "averages-e1d68b25",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[248]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a data set: 6, 11, 6, 11, 7, 10, 8, 9, 8, 9. What is the range of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "5"
+    },
+    {
+     "val": "b",
+     "label": "8.5"
+    },
+    {
+     "val": "c",
+     "label": "11"
+    },
+    {
+     "val": "d",
+     "label": "6"
+    }
+   ],
+   "worked": [
+    "Largest = 11, smallest = 6",
+    "Range = 11 − 6 = 5"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is the largest value — the range is the largest value MINUS the smallest."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is the smallest value — the range is the largest value minus the smallest."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the mean of the data — the range measures the spread (largest minus smallest), not the average."
+    }
+   ]
+  },
+  {
+   "id": "averages-4d23adbc",
+   "topic": "averages",
+   "source": {
+    "game": "distinctly-average",
+    "ref": "DA_ITEMS.ks3[253]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a data set: 3, 11, 3, 11, 4, 10, 5, 9, 6, 8, 7. What is the range of this data set?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "8"
+    },
+    {
+     "val": "b",
+     "label": "7"
+    },
+    {
+     "val": "c",
+     "label": "3"
+    },
+    {
+     "val": "d",
+     "label": "11"
+    }
+   ],
+   "worked": [
+    "Largest = 11, smallest = 3",
+    "Range = 11 − 3 = 8"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is the largest value — the range is the largest value MINUS the smallest."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is the smallest value — the range is the largest value minus the smallest."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the mean of the data — the range measures the spread (largest minus smallest), not the average."
+    }
+   ]
+  }
+ ]
+}
