@@ -9,7 +9,9 @@
   "Better Value tax-and-NI rule of thumb (checked with uk_rates)": "24",
   "Binomial Blaster (every key and option evaluated with SymPy, every item marked in Chromium)": "33",
   "Boolean Blitz (every key's truth table recomputed from its expression; an option right exactly when it has the key's truth table and no more literals; answer once; Chromium)": "20",
-  "Burst mode (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; four planted faults caught)": "42",
+  "Burst mode, part 1 (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; &stage= presses button[data-stage])": "42",
+  "Burst mode, part 2 (fault-injection self-test: the stage, four-answer bar and without-?burst planted faults, each caught)": "13",
+  "Burst mode, part 3 (fault-injection self-test: the score-submission and miscounted-score planted faults, each caught)": "18",
   "Characteristic Quest (every 2x2 characteristic equation recomputed from its matrix in SymPy; every option classified; every worked line, trace, determinant and eigenvalue claim checked; every option pressed in Chromium)": "17",
   "Chart Interrogator (independent recomputation of every key and tolerance)": "16",
   "Circle Theorem Spotter (every calculation key re-solved, SymPy + arc wording vs figure; each tangent angle drawn on the side the theorem needs, in Chromium)": "35",
@@ -173,12 +175,5 @@
   "Level resolver in play, part 3 (migrated games, as part 1)": "L4",
   "Level resolver in play, part 4 (migrated games, as part 1)": "L4"
  },
- "split-candidates": [
-  {
-   "label": "Burst mode (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; four planted faults caught)",
-   "median": 195,
-   "percent": 78,
-   "setup": 18
-  }
- ]
+ "split-candidates": []
 }
