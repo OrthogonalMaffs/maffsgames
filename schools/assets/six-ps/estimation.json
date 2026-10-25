@@ -1,0 +1,816 @@
+{
+ "topic": "estimation",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "estimation-92c32e81",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:A01"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Estimate the value of \\(48 \\times 21\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 1000
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-48437de7",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:A02"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Estimate the value of \\(387 \\times 52\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 20000
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-250e7821",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:A03"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Estimate the value of \\(612 \\times 38\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 24000
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-88183422",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:A04"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Estimate the value of \\(29 \\times 71\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2100
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-22d786a8",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:A05"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Estimate the value of \\(4127 \\times 19\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 80000
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-6faa5c43",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:A06"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Estimate the value of \\(83 \\times 293\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 24000
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-039cd414",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:A07"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Estimate the value of \\(9.2 \\times 31\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 270
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-20c13538",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:A08"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Estimate the value of \\(706 \\times 4.1\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2800
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-5e53450c",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:B01"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Estimate the value of \\(812 \\div 39\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 20
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-9e954432",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:B02"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Estimate the value of \\(6234 \\div 28\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 200
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-8f6d9cb1",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:B03"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Estimate the value of \\(587 \\div 2.9\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 200
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-8b1e810e",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:B04"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Estimate the value of \\(3912 \\div 81\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 50
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-c24c3e08",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:B05"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Estimate the value of \\(18.7 \\div 4.2\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-c73f1906",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:B06"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Estimate the value of \\(9.31 \\div 0.48\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 18
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-9ee00fd6",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:B07"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Estimate the value of \\(61.3 \\div 0.19\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 300
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-9d46c186",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:B08"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Estimate the value of \\(4180 \\div 19.6\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 200
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-2a57e950",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:C01"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Estimate the value of \\(0.32 \\times 61\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 18
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-5a129265",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:C02"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Estimate the value of \\(0.48 \\times 0.72\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.35
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-5f174c32",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:C03"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Estimate the value of \\(289 \\times 0.31\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 90
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-e8c0785b",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:C04"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Estimate the value of \\(0.087 \\times 412\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 36
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-876f7645",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:C05"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Estimate the value of \\(0.61 \\times 0.29\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.18
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-f3d01d57",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:C06"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Estimate the value of \\(7.8 \\times 0.0213\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.16
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-b27d41a0",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:C07"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Estimate the value of \\(0.392 \\div 0.0021\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 200
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-a62d57af",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:C08"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Estimate the value of \\(52.1 \\times 0.038\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-1a9c9405",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:D01"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Estimate the value of \\((21.3 \\times 3.98) \\div 0.49\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 160
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-b128f36f",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:D02"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Estimate the value of \\((6.12 \\times 19.8) \\div 3.94\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 30
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-2d4c1a32",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:D03"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Estimate the value of \\((48.7 \\times 9.1) \\div 0.21\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2250
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-d6de8797",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:D04"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Estimate the value of \\((312 \\times 7.9) \\div 41\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 60
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-1c88d7df",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:D05"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Estimate the value of \\((5.79 + 3.88) \\div 0.48\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 20
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-698763e6",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:D06"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Estimate the value of \\((81.2 - 18.9) \\div 2.11\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 30
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-004c4497",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:D07"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Estimate the value of \\((29.4 \\times 61.7) \\div (3.12 \\times 1.96)\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 300
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-f7f7ba01",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:D08"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Estimate the value of \\((0.38 \\times 412) \\div 7.6\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 20
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-05ef0e61",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:D09"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Estimate the value of \\((197 \\times 0.62) \\div 0.31\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 400
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-372081d2",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:D10"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Estimate the value of \\((9.87 + 20.3) \\times 4.1\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 120
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-a82cad02",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:E01"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Estimate the value of \\(3.9^2\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 16
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-3acb9b2d",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:E02"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Estimate the value of \\(19.2^2 \\div 4.1\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 100
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-cadd9e27",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:E03"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Estimate the value of \\(\\sqrt{3.92 \\times 4.11}\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-5e7aeb20",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:E04"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Estimate the value of \\(\\sqrt{4.87 \\times 19.6}\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 10
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-1728c753",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:E05"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Estimate the value of \\(0.29^2 \\times 512\\) by rounding each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 45
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-6ac5fbc7",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:F01"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A ticket costs £18.95. Estimate the cost of 42 tickets. Round each number to 1 significant figure.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 80000
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-9b52b398",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:F02"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A car travels 287 miles on 9.8 gallons. Estimate the miles per gallon. Round each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 30
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-16aff3fb",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:F03"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A field is 61.4 m by 38.7 m. Estimate its area in m². Round each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2400
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-b1370461",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:F04"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "£4,180 is shared equally between 21 people. Estimate each share. Round each number to 1 significant figure.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 20000
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-05e97627",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:F05"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Paint covers 11.8 m² per litre. Estimate the litres needed for 392 m². Round each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 40
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "estimation-701ae7b5",
+   "topic": "estimation",
+   "source": {
+    "game": "estimation-engine",
+    "ref": "BANK:F06"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A runner averages 3.12 m/s for 487 s. Estimate the distance in metres. Round each number to 1 significant figure.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 1500
+   },
+   "worked": [],
+   "slip": []
+  }
+ ]
+}

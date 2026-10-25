@@ -1,0 +1,1962 @@
+{
+ "topic": "standard-form",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "standard-form-c420767e",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[0]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Write \\(45000\\) in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(4.5 \\times 10^3\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(45 \\times 10^3\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(4.5 \\times 10^4\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(0.45 \\times 10^5\\)"
+    }
+   ],
+   "worked": [
+    "Move the point to get a number from 1 up to 10: \\(4.5\\).",
+    "It moved 4 places, so the power is \\(10^{4}\\).",
+    "\\(4.5 \\times 10^4\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-7250c499",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[1]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Write \\(3200\\) in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(32 \\times 10^2\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(3.2 \\times 10^2\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(0.32 \\times 10^4\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(3.2 \\times 10^3\\)"
+    }
+   ],
+   "worked": [
+    "Move the point to get a number from 1 up to 10: \\(3.2\\).",
+    "It moved 3 places, so the power is \\(10^{3}\\).",
+    "\\(3.2 \\times 10^3\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-066c66e4",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[2]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Write \\(670000\\) in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(67 \\times 10^4\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(0.67 \\times 10^6\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(6.7 \\times 10^5\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(6.7 \\times 10^4\\)"
+    }
+   ],
+   "worked": [
+    "Move the point to get a number from 1 up to 10: \\(6.7\\).",
+    "It moved 5 places, so the power is \\(10^{5}\\).",
+    "\\(6.7 \\times 10^5\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-64d776c6",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[3]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Write \\(91000000\\) in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(9.1 \\times 10^7\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(9.1 \\times 10^6\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(91 \\times 10^6\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(0.91 \\times 10^8\\)"
+    }
+   ],
+   "worked": [
+    "Move the point to get a number from 1 up to 10: \\(9.1\\).",
+    "It moved 7 places, so the power is \\(10^{7}\\).",
+    "\\(9.1 \\times 10^7\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-2cf38250",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[4]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Write \\(504\\) in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(50.4 \\times 10^1\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(5.04 \\times 10^2\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(5.04 \\times 10^3\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(504 \\times 10^0\\)"
+    }
+   ],
+   "worked": [
+    "Move the point to get a number from 1 up to 10: \\(5.04\\).",
+    "It moved 2 places, so the power is \\(10^{2}\\).",
+    "\\(5.04 \\times 10^2\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-ca12bb02",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[5]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Write \\(0.003\\) in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(0.3 \\times 10^{-2}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(30 \\times 10^{-4}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(3 \\times 10^{-3}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(3 \\times 10^{3}\\)"
+    }
+   ],
+   "worked": [
+    "Move the point to get a number from 1 up to 10: \\(3\\).",
+    "It moved 3 places, so the power is \\(10^{-3}\\).",
+    "\\(3 \\times 10^{-3}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-55f94b65",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[6]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Write \\(0.00056\\) in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(5.6 \\times 10^{-3}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(5.6 \\times 10^{-4}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(56 \\times 10^{-5}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(0.56 \\times 10^{-3}\\)"
+    }
+   ],
+   "worked": [
+    "Move the point to get a number from 1 up to 10: \\(5.6\\).",
+    "It moved 4 places, so the power is \\(10^{-4}\\).",
+    "\\(5.6 \\times 10^{-4}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-47c15e92",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[7]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Write \\(0.072\\) in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(7.2 \\times 10^{-2}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(72 \\times 10^{-3}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(7.2 \\times 10^{-1}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(0.72 \\times 10^{-1}\\)"
+    }
+   ],
+   "worked": [
+    "Move the point to get a number from 1 up to 10: \\(7.2\\).",
+    "It moved 2 places, so the power is \\(10^{-2}\\).",
+    "\\(7.2 \\times 10^{-2}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-93932358",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[8]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Write \\(0.0000091\\) in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(9.1 \\times 10^{-6}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(9.1 \\times 10^{-7}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(91 \\times 10^{-7}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(9.1 \\times 10^{-5}\\)"
+    }
+   ],
+   "worked": [
+    "Move the point to get a number from 1 up to 10: \\(9.1\\).",
+    "It moved 6 places, so the power is \\(10^{-6}\\).",
+    "\\(9.1 \\times 10^{-6}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-a9a80815",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[9]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Write \\(0.108\\) in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(1.08 \\times 10^{-2}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(10.8 \\times 10^{-2}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(108 \\times 10^{-3}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(1.08 \\times 10^{-1}\\)"
+    }
+   ],
+   "worked": [
+    "Move the point to get a number from 1 up to 10: \\(1.08\\).",
+    "It moved 1 places, so the power is \\(10^{-1}\\).",
+    "\\(1.08 \\times 10^{-1}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-9eec34f0",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[10]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Write \\(3.7 \\times 10^4\\) as an ordinary number.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(3700\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(370\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(37000\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(370000\\)"
+    }
+   ],
+   "worked": [
+    "\\(10^{4}\\) means move the point 4 places right.",
+    "\\(= 37000\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-52d90625",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[11]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Write \\(8.1 \\times 10^6\\) as an ordinary number.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(81000000\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(81000\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(810000\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(8100000\\)"
+    }
+   ],
+   "worked": [
+    "\\(10^{6}\\) means move the point 6 places right.",
+    "\\(= 8100000\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-8a877cca",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[12]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Write \\(5 \\times 10^3\\) as an ordinary number.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(500\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(5000\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(50000\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(5003\\)"
+    }
+   ],
+   "worked": [
+    "\\(10^{3}\\) means move the point 3 places right.",
+    "\\(= 5000\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-d38963a1",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[13]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Write \\(2.04 \\times 10^5\\) as an ordinary number.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(2040\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(204000\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(20400\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(2040000\\)"
+    }
+   ],
+   "worked": [
+    "\\(10^{5}\\) means move the point 5 places right.",
+    "\\(= 204000\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-c3e2a277",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[14]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Write \\(6.3 \\times 10^{-2}\\) as an ordinary number.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(0.063\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(0.0063\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(0.63\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(6.3\\)"
+    }
+   ],
+   "worked": [
+    "\\(10^{-2}\\) means move the point 2 places left.",
+    "\\(= 0.063\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-dc6d94d5",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[15]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Write \\(4 \\times 10^{-5}\\) as an ordinary number.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(0.00004\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(0.004\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(0.0004\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(0.000004\\)"
+    }
+   ],
+   "worked": [
+    "\\(10^{-5}\\) means move the point 5 places left.",
+    "\\(= 0.00004\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-0d1e8a74",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[16]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Write \\(1.5 \\times 10^{-3}\\) as an ordinary number.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(0.015\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(0.00015\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(0.0015\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(1.5\\)"
+    }
+   ],
+   "worked": [
+    "\\(10^{-3}\\) means move the point 3 places left.",
+    "\\(= 0.0015\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-8b45ead3",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[17]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Write \\(9.09 \\times 10^{-1}\\) as an ordinary number.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(0.909\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(0.0909\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(90.9\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(9.09\\)"
+    }
+   ],
+   "worked": [
+    "\\(10^{-1}\\) means move the point 1 places left.",
+    "\\(= 0.909\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-9a264336",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[18]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Calculate \\((2 \\times 10^3) \\times (3 \\times 10^4)\\). Give your answer in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(6 \\times 10^7\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(6 \\times 10^{12}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(5 \\times 10^7\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(6 \\times 10^8\\)"
+    }
+   ],
+   "worked": [
+    "Multiply the numbers: \\(2 \\times 3 = 6\\).",
+    "Add the powers: \\(10^{3} \\times 10^{4} = 10^{7}\\).",
+    "So the answer is \\(6 \\times 10^7\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-119dc7a2",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[19]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Calculate \\((4 \\times 10^5) \\times (2 \\times 10^3)\\). Give your answer in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(8 \\times 10^7\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(6 \\times 10^8\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(8 \\times 10^8\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(8 \\times 10^{15}\\)"
+    }
+   ],
+   "worked": [
+    "Multiply the numbers: \\(4 \\times 2 = 8\\).",
+    "Add the powers: \\(10^{5} \\times 10^{3} = 10^{8}\\).",
+    "So the answer is \\(8 \\times 10^8\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-9476a578",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[20]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Calculate \\((5 \\times 10^2) \\times (6 \\times 10^4)\\). Give your answer in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(30 \\times 10^6\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(3 \\times 10^7\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(3 \\times 10^8\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(3 \\times 10^6\\)"
+    }
+   ],
+   "worked": [
+    "Multiply the numbers: \\(5 \\times 6 = 30\\).",
+    "Add the powers: \\(10^{2} \\times 10^{4} = 10^{6}\\).",
+    "\\(30\\) is not between 1 and 10, so write it as \\(3 \\times 10^{1}\\) and add 1 to the power: \\(3 \\times 10^7\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-1064f40c",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[21]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Calculate \\((3 \\times 10^{-2}) \\times (4 \\times 10^5)\\). Give your answer in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(1.2 \\times 10^4\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(12 \\times 10^3\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(1.2 \\times 10^3\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(1.2 \\times 10^{-7}\\)"
+    }
+   ],
+   "worked": [
+    "Multiply the numbers: \\(3 \\times 4 = 12\\).",
+    "Add the powers: \\(10^{-2} \\times 10^{5} = 10^{3}\\).",
+    "\\(12\\) is not between 1 and 10, so write it as \\(1.2 \\times 10^{1}\\) and add 1 to the power: \\(1.2 \\times 10^4\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-81ff1748",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[22]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Calculate \\((8 \\times 10^3) \\times (5 \\times 10^{-2})\\). Give your answer in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(4 \\times 10^2\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(4 \\times 10^5\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(40 \\times 10^1\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(4 \\times 10^1\\)"
+    }
+   ],
+   "worked": [
+    "Multiply the numbers: \\(8 \\times 5 = 40\\).",
+    "Add the powers: \\(10^{3} \\times 10^{-2} = 10^{1}\\).",
+    "\\(40\\) is not between 1 and 10, so write it as \\(4 \\times 10^{1}\\) and add 1 to the power: \\(4 \\times 10^2\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-35fcf9eb",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[23]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Calculate \\((7 \\times 10^{-3}) \\times (2 \\times 10^{-4})\\). Give your answer in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(1.4 \\times 10^{-6}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(1.4 \\times 10^{-7}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(1.4 \\times 10^{12}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(14 \\times 10^{-7}\\)"
+    }
+   ],
+   "worked": [
+    "Multiply the numbers: \\(7 \\times 2 = 14\\).",
+    "Add the powers: \\(10^{-3} \\times 10^{-4} = 10^{-7}\\).",
+    "\\(14\\) is not between 1 and 10, so write it as \\(1.4 \\times 10^{1}\\) and add 1 to the power: \\(1.4 \\times 10^{-6}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-2aab5430",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[24]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Calculate \\((2.5 \\times 10^4) \\times (4 \\times 10^2)\\). Give your answer in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(1 \\times 10^7\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(1 \\times 10^8\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(1 \\times 10^6\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(10 \\times 10^6\\)"
+    }
+   ],
+   "worked": [
+    "Multiply the numbers: \\(2.5 \\times 4 = 10\\).",
+    "Add the powers: \\(10^{4} \\times 10^{2} = 10^{6}\\).",
+    "\\(10\\) is not between 1 and 10, so write it as \\(1 \\times 10^{1}\\) and add 1 to the power: \\(1 \\times 10^7\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-bfef67dd",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[25]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Calculate \\((6 \\times 10^2) \\times (6 \\times 10^2)\\). Give your answer in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(12 \\times 10^4\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(36 \\times 10^4\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(3.6 \\times 10^5\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(3.6 \\times 10^4\\)"
+    }
+   ],
+   "worked": [
+    "Multiply the numbers: \\(6 \\times 6 = 36\\).",
+    "Add the powers: \\(10^{2} \\times 10^{2} = 10^{4}\\).",
+    "\\(36\\) is not between 1 and 10, so write it as \\(3.6 \\times 10^{1}\\) and add 1 to the power: \\(3.6 \\times 10^5\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-39b930dc",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[26]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Calculate \\((1.5 \\times 10^3) \\times (2 \\times 10^{-1})\\). Give your answer in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(3 \\times 10^2\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(30 \\times 10^1\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(3 \\times 10^{-3}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(3 \\times 10^3\\)"
+    }
+   ],
+   "worked": [
+    "Multiply the numbers: \\(1.5 \\times 2 = 3\\).",
+    "Add the powers: \\(10^{3} \\times 10^{-1} = 10^{2}\\).",
+    "So the answer is \\(3 \\times 10^2\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-578a0724",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[27]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Calculate \\((9 \\times 10^8) \\times (3 \\times 10^{-5})\\). Give your answer in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(2.7 \\times 10^{-13}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(27 \\times 10^3\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(2.7 \\times 10^4\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(2.7 \\times 10^3\\)"
+    }
+   ],
+   "worked": [
+    "Multiply the numbers: \\(9 \\times 3 = 27\\).",
+    "Add the powers: \\(10^{8} \\times 10^{-5} = 10^{3}\\).",
+    "\\(27\\) is not between 1 and 10, so write it as \\(2.7 \\times 10^{1}\\) and add 1 to the power: \\(2.7 \\times 10^4\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-d6a86e9c",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[28]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Calculate \\((8 \\times 10^6) \\div (2 \\times 10^3)\\). Give your answer in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(4 \\times 10^3\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(4 \\times 10^2\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(4 \\times 10^9\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(6 \\times 10^3\\)"
+    }
+   ],
+   "worked": [
+    "Divide the numbers: \\(8 \\div 2 = 4\\).",
+    "Take away the powers: \\(10^{6} \\div 10^{3} = 10^{3}\\).",
+    "So the answer is \\(4 \\times 10^3\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-dd10beb4",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[29]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Calculate \\((9 \\times 10^8) \\div (3 \\times 10^2)\\). Give your answer in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(6 \\times 10^6\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(3 \\times 10^{10}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(3 \\times 10^6\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(3 \\times 10^4\\)"
+    }
+   ],
+   "worked": [
+    "Divide the numbers: \\(9 \\div 3 = 3\\).",
+    "Take away the powers: \\(10^{8} \\div 10^{2} = 10^{6}\\).",
+    "So the answer is \\(3 \\times 10^6\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-e4f06284",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[30]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Calculate \\((6 \\times 10^5) \\div (4 \\times 10^2)\\). Give your answer in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(1.5 \\times 10^2\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(2.4 \\times 10^3\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(1.5 \\times 10^7\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(1.5 \\times 10^3\\)"
+    }
+   ],
+   "worked": [
+    "Divide the numbers: \\(6 \\div 4 = 1.5\\).",
+    "Take away the powers: \\(10^{5} \\div 10^{2} = 10^{3}\\).",
+    "So the answer is \\(1.5 \\times 10^3\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-27844a45",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[31]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Calculate \\((3 \\times 10^{-2}) \\div (6 \\times 10^{-5})\\). Give your answer in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(0.5 \\times 10^3\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(5 \\times 10^3\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(5 \\times 10^2\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(5 \\times 10^{-7}\\)"
+    }
+   ],
+   "worked": [
+    "Divide the numbers: \\(3 \\div 6 = 0.5\\).",
+    "Take away the powers: \\(10^{-2} \\div 10^{-5} = 10^{3}\\).",
+    "\\(0.5\\) is not between 1 and 10, so write it as \\(5 \\times 10^{-1}\\) and take 1 from the power: \\(5 \\times 10^2\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-e573a004",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[32]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Calculate \\((4.8 \\times 10^7) \\div (1.2 \\times 10^3)\\). Give your answer in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(4 \\times 10^3\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(4 \\times 10^{10}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(3.6 \\times 10^4\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(4 \\times 10^4\\)"
+    }
+   ],
+   "worked": [
+    "Divide the numbers: \\(4.8 \\div 1.2 = 4\\).",
+    "Take away the powers: \\(10^{7} \\div 10^{3} = 10^{4}\\).",
+    "So the answer is \\(4 \\times 10^4\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-950b009e",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[33]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Calculate \\((1 \\times 10^{-3}) \\div (5 \\times 10^{-7})\\). Give your answer in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(5 \\times 10^3\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(2 \\times 10^{-10}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(2 \\times 10^4\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(2 \\times 10^3\\)"
+    }
+   ],
+   "worked": [
+    "Divide the numbers: \\(1 \\div 5 = 0.2\\).",
+    "Take away the powers: \\(10^{-3} \\div 10^{-7} = 10^{4}\\).",
+    "\\(0.2\\) is not between 1 and 10, so write it as \\(2 \\times 10^{-1}\\) and take 1 from the power: \\(2 \\times 10^3\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-1c660d5b",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[34]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Calculate \\((2.4 \\times 10^9) \\div (8 \\times 10^4)\\). Give your answer in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(3 \\times 10^4\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(1.6 \\times 10^5\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(3 \\times 10^{13}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(3 \\times 10^5\\)"
+    }
+   ],
+   "worked": [
+    "Divide the numbers: \\(2.4 \\div 8 = 0.3\\).",
+    "Take away the powers: \\(10^{9} \\div 10^{4} = 10^{5}\\).",
+    "\\(0.3\\) is not between 1 and 10, so write it as \\(3 \\times 10^{-1}\\) and take 1 from the power: \\(3 \\times 10^4\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-1476a937",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[35]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Calculate \\((5 \\times 10^3) \\div (2 \\times 10^5)\\). Give your answer in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(2.5 \\times 10^{-2}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(25 \\times 10^{-2}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(2.5 \\times 10^2\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(2.5 \\times 10^{-3}\\)"
+    }
+   ],
+   "worked": [
+    "Divide the numbers: \\(5 \\div 2 = 2.5\\).",
+    "Take away the powers: \\(10^{3} \\div 10^{5} = 10^{-2}\\).",
+    "So the answer is \\(2.5 \\times 10^{-2}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-d14cb9d2",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[36]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Calculate \\((7.2 \\times 10^{-1}) \\div (9 \\times 10^{-4})\\). Give your answer in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(8 \\times 10^2\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(0.8 \\times 10^3\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(8 \\times 10^{-3}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(8 \\times 10^3\\)"
+    }
+   ],
+   "worked": [
+    "Divide the numbers: \\(7.2 \\div 9 = 0.8\\).",
+    "Take away the powers: \\(10^{-1} \\div 10^{-4} = 10^{3}\\).",
+    "\\(0.8\\) is not between 1 and 10, so write it as \\(8 \\times 10^{-1}\\) and take 1 from the power: \\(8 \\times 10^2\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-8820699d",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[37]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Calculate \\((1.8 \\times 10^{12}) \\div (6 \\times 10^7)\\). Give your answer in standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(3 \\times 10^{19}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(3 \\times 10^4\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(0.3 \\times 10^5\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(3 \\times 10^5\\)"
+    }
+   ],
+   "worked": [
+    "Divide the numbers: \\(1.8 \\div 6 = 0.3\\).",
+    "Take away the powers: \\(10^{12} \\div 10^{7} = 10^{5}\\).",
+    "\\(0.3\\) is not between 1 and 10, so write it as \\(3 \\times 10^{-1}\\) and take 1 from the power: \\(3 \\times 10^4\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-6e55ac44",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[38]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Which of these is the largest? \\(3.1 \\times 10^4\\), \\(2.9 \\times 10^5\\), \\(8 \\times 10^3\\)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(3.1 \\times 10^4\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(2.9 \\times 10^5\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(8 \\times 10^3\\)"
+    },
+    {
+     "val": "d",
+     "label": "All equal"
+    }
+   ],
+   "worked": [
+    "Compare the powers first: the bigger the power, the bigger the number.",
+    "For the same power, compare the numbers in front.",
+    "So the largest is \\(2.9 \\times 10^5\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-b4c9028c",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[39]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Which of these is the smallest? \\(5 \\times 10^{-3}\\), \\(7 \\times 10^{-4}\\), \\(1.2 \\times 10^{-2}\\)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(1.2 \\times 10^{-2}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(7 \\times 10^{-4}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(5 \\times 10^{-3}\\)"
+    },
+    {
+     "val": "d",
+     "label": "All equal"
+    }
+   ],
+   "worked": [
+    "Compare the powers first: the bigger the power, the bigger the number.",
+    "For the same power, compare the numbers in front.",
+    "So the smallest is \\(7 \\times 10^{-4}\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-17fe2ddf",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[40]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Which two of these are equal? \\(4.5 \\times 10^6\\), \\(4.5 \\times 10^5\\), \\(45 \\times 10^5\\)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(4.5 \\times 10^6 \\text{ and } 45 \\times 10^5\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(4.5 \\times 10^5 \\text{ and } 45 \\times 10^5\\)"
+    },
+    {
+     "val": "c",
+     "label": "None are equal"
+    },
+    {
+     "val": "d",
+     "label": "All three"
+    }
+   ],
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "standard-form-b34cc071",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[41]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Which two of these are equal? \\(6 \\times 10^{-2}\\), \\(0.006\\), \\(6 \\times 10^{-3}\\)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "All three"
+    },
+    {
+     "val": "b",
+     "label": "\\(6 \\times 10^{-2} \\text{ and } 0.006\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(0.006 \\text{ and } 6 \\times 10^{-3}\\)"
+    },
+    {
+     "val": "d",
+     "label": "None"
+    }
+   ],
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "standard-form-1d20b1fa",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[42]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Which of these is larger? \\(1.01 \\times 10^3\\), \\(9.99 \\times 10^2\\)",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Cannot tell"
+    },
+    {
+     "val": "b",
+     "label": "They are equal"
+    },
+    {
+     "val": "c",
+     "label": "\\(9.99 \\times 10^2\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(1.01 \\times 10^3\\)"
+    }
+   ],
+   "worked": [
+    "Compare the powers first: the bigger the power, the bigger the number.",
+    "For the same power, compare the numbers in front.",
+    "So the larger is \\(1.01 \\times 10^3\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "standard-form-7a51072f",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[43]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "What is \\(3 \\times 10^0\\) as an ordinary number?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(1\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(30\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(0.3\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(3\\)"
+    }
+   ],
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "standard-form-d52b8593",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[44]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Write \\(34 \\times 10^5\\) in correct standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(3.4 \\times 10^6\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(0.34 \\times 10^7\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(3.4 \\times 10^5\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(34 \\times 10^5\\)"
+    }
+   ],
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "standard-form-425a459f",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[45]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Write \\(0.5 \\times 10^4\\) in correct standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(50 \\times 10^2\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(0.5 \\times 10^4\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(5 \\times 10^4\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(5 \\times 10^3\\)"
+    }
+   ],
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "standard-form-9b8d356a",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[46]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Write \\(72 \\times 10^{-3}\\) in correct standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(72 \\times 10^{-3}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(7.2 \\times 10^{-3}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(0.72 \\times 10^{-1}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(7.2 \\times 10^{-2}\\)"
+    }
+   ],
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "standard-form-de173b63",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[47]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Write \\(0.09 \\times 10^{-2}\\) in correct standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(9 \\times 10^{-4}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(0.09 \\times 10^{-2}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(9 \\times 10^{-3}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(0.9 \\times 10^{-3}\\)"
+    }
+   ],
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "standard-form-e84e9195",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[48]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Write \\(150 \\times 10^7\\) in correct standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(1.5 \\times 10^8\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(150 \\times 10^7\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(15 \\times 10^8\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(1.5 \\times 10^9\\)"
+    }
+   ],
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "standard-form-ae3b38fd",
+   "topic": "standard-form",
+   "source": {
+    "game": "standard-form-blitz",
+    "ref": "QUESTIONS.gcse[49]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Write \\(0.25 \\times 10^{-1}\\) in correct standard form.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(25 \\times 10^{-3}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(2.5 \\times 10^{-1}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(2.5 \\times 10^{-2}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(0.25 \\times 10^{-1}\\)"
+    }
+   ],
+   "worked": [],
+   "slip": []
+  }
+ ]
+}

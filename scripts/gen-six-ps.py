@@ -1174,7 +1174,7 @@ async def topic_form_expressions(h):
 # probability-pioneer stages 2 and 3, decimal-detective, formula-unlocked, component-crusher (25 Oct 2026). Authored
 # questions (data/six-ps/authored.json) are merged after them. Each answer is recomputed from its own stem.
 
-from decimal import Decimal  # noqa: E402
+from decimal import ROUND_HALF_UP, Decimal  # noqa: E402
 
 
 # --- probability-pioneer stage 2: P(...) as a fraction ---
@@ -2406,6 +2406,556 @@ async def topic_substitution(h):
     return out
 
 
+# --- standard-form: standard-form-blitz's 50 items, a choice with the game's own wrong answers ---
+SF_NUM = re.compile(r"(?<![\w.^{-])(\d+(?:\.\d+)?)")
+
+
+def sf_value(s):
+    """The value of one expression of the game's TeX ('4.5 \\times 10^{-3}', '0.006', '(2 \\times 10^3) \\times (3 \\times 10^4)') as a Fraction."""
+    e = s.strip().replace("\\times", "*").replace("\\div", "/")
+    e = re.sub(r"10\^\{?(-?\d+)\}?", lambda m: "P(%s)" % m.group(1), e)             # a power of ten first
+    e = re.sub(r"P\(-?\d+\)|(\d+(?:\.\d+)?)", lambda m: m.group(0) if m.group(1) is None else "Fraction('%s')" % m.group(1), e)
+    return eval(e, {"__builtins__": {}}, {"Fraction": Fraction, "P": lambda n: Fraction(10) ** n})
+
+
+def sf_is_standard(s):
+    m = re.fullmatch(r"\s*(\d+(?:\.\d+)?) \\times 10\^\{?(-?\d+)\}?\s*", s)
+    return bool(m) and 1 <= Fraction(m.group(1)) < 10
+
+
+def sf_parts(s):
+    m = re.fullmatch(r"\s*(\d+(?:\.\d+)?) \\times 10\^\{?(-?\d+)\}?\s*", s)
+    return (m.group(1), int(m.group(2))) if m else None
+
+
+def sf_tex(m, p):
+    return "%s \\times 10^{%d}" % (m, p) if p < 0 or p > 9 else "%s \\times 10^%d" % (m, p)
+
+
+def sf_as_standard(x):
+    """A positive Fraction as (mantissa string, power) in standard form."""
+    p = 0
+    while x >= 10:
+        x /= 10
+        p += 1
+    while x < 1:
+        x *= 10
+        p -= 1
+    return tnum(x), p
+
+
+def sf_worked(ask, q, key, d):
+    """Project Claude's STANDARD FORM template (25 Oct); [] where the item does not fit it."""
+    if ask == "Write in standard form":
+        v = Fraction(q)
+        m, p = sf_as_standard(v)
+        assert key == sf_tex(m, p), ("standard form: the key", q, key)
+        return ["Move the point to get a number from 1 up to 10: %s." % tex(m),
+                "It moved %d places, so the power is %s." % (abs(p), tex("10^{%d}" % p)),
+                "%s." % tex(key)]
+    if ask == "Write as an ordinary number":
+        m, p = sf_parts(q)
+        if p == 0:
+            return []
+        return ["%s means move the point %d places %s." % (tex("10^{%d}" % p), abs(p), "right" if p > 0 else "left"),
+                "%s." % tex("= " + key)]
+    if ask.startswith("Calculate"):
+        mm = re.fullmatch(r"\((.+?) \\times 10\^\{?(-?\d+)\}?\) \\(times|div) \((.+?) \\times 10\^\{?(-?\d+)\}?\)", q)
+        a, p, op, b, r = Fraction(mm.group(1)), int(mm.group(2)), mm.group(3), Fraction(mm.group(4)), int(mm.group(5))
+        ab = a * b if op == "times" else a / b
+        pw = p + r if op == "times" else p - r
+        sign = "\\times" if op == "times" else "\\div"
+        lines = ["%s the numbers: %s." % ("Multiply" if op == "times" else "Divide", tex("%s %s %s = %s" % (mm.group(1), sign, mm.group(4), tnum(ab)))),
+                 "%s the powers: %s." % ("Add" if op == "times" else "Take away",
+                                         tex("10^{%d} %s 10^{%d} = 10^{%d}" % (p, sign, r, pw)))]
+        m2, p2 = sf_as_standard(ab)
+        assert key == sf_tex(m2, pw + p2), ("standard form: the key", q, key, sf_tex(m2, pw + p2))
+        if p2 != 0:
+            lines.append("%s is not between 1 and 10, so write it as %s and %s: %s." % (
+                tex(tnum(ab)), tex("%s \\times 10^{%d}" % (m2, p2)), "add 1 to the power" if p2 == 1 else "take 1 from the power", tex(key)))
+        else:
+            lines.append("So the answer is %s." % tex(key))
+        return lines
+    return []
+
+
+def sf_check_option(ask, q, label, is_key, val):
+    """Is an option true of the item? Returns True or False; the key must be true and every wrong answer false."""
+    L = label.strip()
+    if ask in ("Write in standard form", "Write in correct standard form"):
+        return sf_is_standard(L) and sf_value(L) == val
+    if ask in ("Write as an ordinary number", "What is this as an ordinary number?"):
+        return sf_value(L) == val
+    if ask.startswith("Calculate"):
+        return sf_is_standard(L) and sf_value(L) == val
+    items = [x.strip() for x in q.split("\\quad")]
+    items = [x.rstrip(",").strip() for x in items]
+    vals = [sf_value(x) for x in items]
+    if ask in ("Which is largest?", "Which is larger?"):
+        if L in ("All equal", "They are equal"):
+            return len(set(vals)) == 1
+        if L == "Cannot tell":
+            return False
+        return sf_value(L) == max(vals) and vals.count(max(vals)) == 1
+    if ask == "Which is smallest?":
+        if L == "All equal":
+            return len(set(vals)) == 1
+        return sf_value(L) == min(vals) and vals.count(min(vals)) == 1
+    if ask == "Which two are equal?":
+        if L.lower().startswith("none"):
+            return len(set(vals)) == len(vals)
+        if L.lower().startswith("all"):
+            return len(set(vals)) == 1
+        a, b = [sf_value(x) for x in L.split("\\text{ and }")]
+        return a == b and vals.count(a) == 2
+    raise AssertionError("standard form: no rule for " + ask)
+
+
+async def topic_standard_form(h):
+    """Every item of standard-form-blitz (50), a choice with the game's own key and three wrong answers. The question's
+    value is recomputed from its TeX (Fractions), the key is checked true and each wrong answer false (for a standard
+    form answer: equal AND in standard form). Worked lines follow Project Claude's STANDARD FORM template where the item
+    fits it (41 of 50); the other 9 (correct form, which two are equal, 10 to the power 0) stay on the missing list."""
+    pg = await h.page("standard-form-blitz", "level=gcse")
+    items = await pg.evaluate("() => QUESTIONS.gcse")
+    out = []
+    for i, it in enumerate(items):
+        ask, q, key, wrongs = it["ask"], it["q"], it["correct"], it["d"]
+        val = None
+        if ask in ("Write in standard form", "Write as an ordinary number", "Write in correct standard form", "What is this as an ordinary number?"):
+            val = sf_value(q)
+        elif ask.startswith("Calculate"):
+            val = sf_value(q)
+        assert sf_check_option(ask, q, key, True, val), ("standard form: the key is not right", i, q, key)
+        for w in wrongs:
+            assert not sf_check_option(ask, q, w, False, val), ("standard form: a wrong answer is right", i, q, w)
+        stems = {"Write in standard form": "Write %s in standard form.", "Write as an ordinary number": "Write %s as an ordinary number.",
+                 "Write in correct standard form": "Write %s in correct standard form.",
+                 "What is this as an ordinary number?": "What is %s as an ordinary number?",
+                 "Which is largest?": "Which of these is the largest? %s", "Which is smallest?": "Which of these is the smallest? %s",
+                 "Which two are equal?": "Which two of these are equal? %s", "Which is larger?": "Which of these is larger? %s"}
+        if ask.startswith("Calculate"):
+            stem = "Calculate %s. Give your answer in standard form." % tex(q)
+        elif ask in ("Which is largest?", "Which is smallest?", "Which two are equal?", "Which is larger?"):
+            stem = stems[ask] % ", ".join(tex(x.strip().rstrip(",")) for x in q.split("\\quad"))
+        else:
+            stem = stems[ask] % tex(q)
+        lab = lambda s: tex(s) if re.search(r"[\\\d]", s) else s
+        opts, ans = choice("sf-%d" % i, lab(key), [lab(w) for w in wrongs])
+        worked = sf_worked(ask, q, key, wrongs)
+        if ask in ("Which is largest?", "Which is smallest?", "Which is larger?") and sf_value(q.split("\\quad")[0].rstrip(", ")):
+            word = {"Which is largest?": "largest", "Which is smallest?": "smallest", "Which is larger?": "larger"}[ask]
+            worked = ["Compare the powers first: the bigger the power, the bigger the number.",
+                      "For the same power, compare the numbers in front.", "So the %s is %s." % (word, tex(key))]
+        band = 4 if ask in ("Write in standard form", "Write as an ordinary number", "What is this as an ordinary number?") else 5
+        out.append(mk("standard-form", "standard-form-blitz", "QUESTIONS.gcse[%d]" % i, band, False, stem, "choice", ans,
+                      options=opts, worked=worked))
+    return out
+
+
+# --- quadratics-factorise: quadratic-factoriser's gcse pool (x² + bx + c), a choice of bracket pairs ---
+def quad_tex(b, c):
+    s = "x^2"
+    if b:
+        s += (" + " if b > 0 else " - ") + ("" if abs(b) == 1 else str(abs(b))) + "x"
+    if c:
+        s += (" + " if c > 0 else " - ") + str(abs(c))
+    return s
+
+
+def brackets_tex(p, q):
+    return "(x %s %d)(x %s %d)" % ("+" if p >= 0 else "-", abs(p), "+" if q >= 0 else "-", abs(q))
+
+
+async def topic_quadratics_factorise(h):
+    """quadratic-factoriser's gcse pool (174: both positive 45, one negative 72, both negative 45, difference of squares 12),
+    a choice of bracket pairs: the game's (x + p)(x + q), and three of: both signs changed, one sign changed (either),
+    the same bracket twice, each checked not to expand to the quadratic. The key is expanded and compared with x^2 + bx + c.
+    The game's guided steps are not written lines, so there are no worked lines (all on the missing list); it names no wrong
+    answer, so no slips. 60, spread over the four stages."""
+    pg = await h.page("quadratic-factoriser", "level=gcse")
+    pool = await pg.evaluate("() => QF_POOLS.gcse.pool")
+    out = []
+    for i, it in enumerate(pool):
+        p, q, b, c = it["p"], it["q"], it["b"], it["c"]
+        assert (p + q, p * q) == (b, c), ("quadratic-factoriser: the pool's own numbers", it)
+        cands = [(-p, -q), (p, -q), (-p, q), (p, p), (q, q), (-p, -p), (-q, -q), (p + 1, q), (p, q + 1)]
+        wrong, seen = [], {tuple(sorted((p, q)))}
+        for w in cands:
+            if tuple(sorted(w)) in seen or len(wrong) == 3:
+                continue
+            assert (w[0] + w[1], w[0] * w[1]) != (b, c)
+            seen.add(tuple(sorted(w)))
+            wrong.append(w)
+        assert len(wrong) == 3
+        opts, ans = choice("qf-%d" % i, tex(brackets_tex(p, q)), [tex(brackets_tex(*w)) for w in wrong])
+        band = 5 if it["stage"] in ("oneNeg", "dots") else 4
+        out.append((it["stage"], mk("quadratics-factorise", "quadratic-factoriser", "QF_POOLS.gcse.pool[%d]" % i, band, False,
+                                    "Factorise %s." % tex(quad_tex(b, c)), "choice", ans, options=opts)))
+    kept = [q for _, q in spread(out, GEN_TOPIC, lambda t: t[0])]
+    refs = {q["source"]["ref"] for q in kept}                       # the missing-worked list counts the kept questions only
+    MISSING_WORKED[:] = [m for m in MISSING_WORKED if m[0] != "quadratics-factorise" or m[1] in refs]
+    return kept
+
+
+# --- estimation: estimation-engine's 45 items, typed ---
+def round_sf1(s):
+    """A number as the game prints it, rounded to 1 significant figure, half up, as a Decimal."""
+    x = Decimal(s)
+    return x.quantize(Decimal(1).scaleb(x.adjusted()), rounding=ROUND_HALF_UP)
+
+
+def est_eval(shape, vals):
+    """The game's shape on Fractions (a, b, c, d in order); a square root is taken only of a perfect square."""
+    env = {k: Fraction(v) for k, v in zip("abcd", vals)}
+    sq = shape.startswith("sqrt(")
+    e = shape[5:-1] if sq else shape
+    r = eval(e, {"__builtins__": {}}, env)
+    if sq:
+        n, d = r.numerator, r.denominator
+        assert math.isqrt(n) ** 2 == n and math.isqrt(d) ** 2 == d, ("estimation: the root is not exact", shape, vals)
+        r = Fraction(math.isqrt(n), math.isqrt(d))
+    return r
+
+
+async def topic_estimation(h):
+    """Every item of estimation-engine (45): estimate by rounding each number to 1 significant figure. The game's rounded
+    numbers and its estimate are recomputed from the printed numbers and the shape (rounding half up). The game's answer
+    is the estimate alone, typed; a money question is `money`. The game has no written solution, so no worked lines
+    (45 on the missing list), and names no wrong answer, so no slips. Non-calculator."""
+    pg = await h.page("estimation-engine", "level=gcse")
+    items = await pg.evaluate("() => BANK")
+    out = []
+    band = {"A": 2, "B": 2, "C": 3, "D": 4, "E": 4, "F": 3}
+    for it in items:
+        rounded = [round_sf1(s) for s in it["nums"]]
+        assert [str(r) if r == r.to_integral_value() and False else tnum(Fraction(r)) for r in rounded] == it["rounded"], \
+            ("estimation: the rounded numbers", it["id"], rounded, it["rounded"])
+        est = est_eval(it["shape"], rounded)
+        assert est == Fraction(Decimal(it["estimate"])), ("estimation: the estimate", it["id"], est, it["estimate"])
+        if "tex" in it and it.get("tex"):
+            stem = "Estimate the value of %s by rounding each number to 1 significant figure." % tex(it["tex"])
+        else:
+            stem = it["text"] + " Round each number to 1 significant figure."
+        if it.get("money"):
+            assert est.denominator == 1
+            out.append(mk("estimation", "estimation-engine", "BANK:%s" % it["id"], band[it["group"]], False, stem, "money",
+                          {"pence": int(est * 100)}))
+        else:
+            out.append(mk("estimation", "estimation-engine", "BANK:%s" % it["id"], band[it["group"]], False, stem, "number",
+                          {"value": numval(Decimal(it["estimate"]))}))
+    return out
+
+
+# --- metric-units: unit-converter's gcse bank (length, area, volume, mixed units: 48), a choice ---
+UC_MM = {"mm": 1, "cm": 10, "m": 1000, "km": 10 ** 6, "metres": 1000}                       # in mm
+UC_UNITS = {}
+for _u, _f in UC_MM.items():
+    UC_UNITS[_u] = (Fraction(_f), 1)
+for _u, _f in (("mm", 1), ("cm", 10), ("m", 1000), ("km", 10 ** 6)):
+    UC_UNITS[_u + "²"] = (Fraction(_f) ** 2, 2)
+    UC_UNITS[_u + "³"] = (Fraction(_f) ** 3, 3)
+UC_UNITS["litres"] = UC_UNITS["litre"] = (Fraction(10 ** 6), 3)                              # 1 litre = 1000 cm³ = 10^6 mm³
+UC_UNITS["ml"] = (Fraction(1000), 3)
+UC_CONST = {"inches": ("2.54", "cm"), "feet": ("0.3048", "m")}
+
+
+def uc_num(s):
+    return Fraction(Decimal(s.replace(",", "")))
+
+
+def uc_expected(p):
+    """The answer to a 'Convert N unit to unit' item, worked out here from the words (None for a problem in words)."""
+    m = re.match(r"Convert ([\d.,]+) (\S+) to (\w[^\s(.]*)", p)
+    if not m:
+        return None
+    n, u1, u2 = uc_num(m.group(1)), m.group(2), m.group(3)
+    if u1 in UC_CONST:
+        k, base = UC_CONST[u1]
+        n, u1 = n * Fraction(Decimal(k)), base
+    f1, d1 = UC_UNITS[u1]
+    f2, d2 = UC_UNITS[u2]
+    assert d1 == d2, ("unit-converter: dimensions", p)
+    return n * f1 / f2, {"metres": "m", "litre": "litres"}.get(u2, u2)
+
+
+def uc_parse_answer(c):
+    m = re.fullmatch(r"([\d.,]+) (\S+)", c)
+    return uc_num(m.group(1)), m.group(2)
+
+
+# the problems in words, each worked out independently here (pi as the question gives it; otherwise exact)
+UC_WORDS = {
+    "A rectangle is 2 m by 50 cm. Area in m²?": Fraction(1),
+    "A square has side 300 mm. Area in cm²?": Fraction(900),
+    "A hectare is a square 100 m by 100 m. Convert 1 hectare to m²": Fraction(10000),
+    "A floor is 4.5 m by 3.2 m. Area in cm²?": Fraction(144000),
+    "A box is 50 cm × 30 cm × 20 cm. Volume in m³?": Fraction(3, 100),
+    "A cube has side 0.2 m. Volume in cm³?": Fraction(8000),
+    "A tank holds 0.5 m³. How many litres?": Fraction(500),
+    "Rectangle: 2.5 m by 80 cm. Area in m²?": Fraction(2),
+    "Box: 1.5 m × 60 cm × 400 mm. Volume in m³?": Fraction(36, 100),
+    "Circle: radius 50 cm. Area in m²? (use π ≈ 3.14)": Fraction(314, 100) * Fraction(1, 2) ** 2,
+    "Room: 5 m × 4 m × 2.8 m. Volume in litres?": Fraction(56000),
+    "Pipe: diameter 20 mm, length 3 m. Volume in cm³? (π ≈ 3.14)": Fraction(314, 100) * 1 * 300,
+    "Sheet metal: 1.2 m × 800 mm. Area in cm²?": Fraction(9600),
+    "A swimming pool is 25 m × 10 m × 1.5 m. Volume in litres?": Fraction(375000),
+}
+
+
+def uc_check(it):
+    p, key = it["p"], it["c"]
+    val, unit = uc_parse_answer(key)
+    if p.startswith("Cylinder: radius 10 cm, height 0.5 m."):               # 3 significant figures of 5000 pi
+        import sympy
+        assert half_sf(Decimal(str(sympy_n(5000 * sympy.pi))), 3) == Decimal(15700) and val == 15700, ("unit-converter: the cylinder", key)
+        return
+    exp = uc_expected(p)
+    if exp is not None:
+        assert (val, unit) == exp or (val == exp[0] and unit.rstrip("s") == exp[1].rstrip("s")), ("unit-converter: the answer", p, key, exp)
+        for d in it["d"]:
+            dv, du = uc_parse_answer(d)
+            assert dv != val or du != unit, ("unit-converter: a wrong answer equals the key", p, d)
+        return
+    assert val == UC_WORDS[p], ("unit-converter: the answer", p, key, UC_WORDS[p])
+    for d in it["d"]:
+        assert uc_parse_answer(d)[0] != val, ("unit-converter: a wrong answer equals the key", p, d)
+
+
+def half_sf(x, sf):
+    """x to `sf` significant figures, half up."""
+    return x.quantize(Decimal(1).scaleb(x.adjusted() - sf + 1), rounding=ROUND_HALF_UP)
+
+
+async def topic_metric_units(h):
+    """unit-converter's gcse bank: length 10, area 15, volume 15, mixed units 8 (48); the level 4 Engineering items are
+    above Foundation and are left out. A choice: the game's key and its three wrong answers, the game's steps as the
+    worked lines. Every answer is recomputed from the words (conversion factors, the item's own constants and its pi);
+    the game's `mc` line is a general reminder, not tied to an option, so it is not a slip. Non-calculator, except the one item that asks for 3 significant figures."""
+    pg = await h.page("unit-converter", "level=gcse")
+    items = await pg.evaluate("() => [].concat(L, A, V, T)")
+    out = []
+    band = {"Length": 1, "Area": 2, "Volume": 2, "Mixed Units": 3}
+    for i, it in enumerate(items):
+        uc_check(it)
+        opts, ans = choice("uc-%d" % i, it["c"], it["d"])
+        stem = it["p"] if it["p"].endswith(("?", ".")) else it["p"] + "."
+        assert len(it["s"]) <= 5
+        out.append(mk("metric-units", "unit-converter", "[L,A,V,T][%d]" % i, band[it["sec"]], "significant figures" in it["p"], stem, "choice", ans,
+                      options=opts, worked=[s if s.endswith((".", "?")) else s + "." for s in it["s"]]))
+    return out
+
+
+# --- pythagoras: just-pythag-it-bruv's generator, typed, with the game's own triangle ---
+JPIB_JS = r"""(seeds) => { const out = [], seen = new Set();
+  for (let s = 1; s <= seeds; s++) JPIB.buildSession(s).questions.forEach(q => {
+    const k = [q.stage, q.type, q.unknown, q.unit, q.context, JSON.stringify(q.given)].join('|');
+    if (seen.has(k)) return; seen.add(k);
+    const pic = JPIB.svg(q);
+    out.push({q: q, svg: pic.html, notToScale: pic.notToScale, worked: JPIB.worked(q)}); });
+  return out; }"""
+
+
+def jp_dec(s):
+    return Decimal(s)
+
+
+def jp_key(q):
+    """The answer worked out here from the sides shown: the square root of the sum (the hypotenuse) or of the difference (a
+    shorter side) of the squares, to the item's decimal places, half up."""
+    g = q["given"]
+    sq = lambda k: jp_dec(g[k]) ** 2
+    if q["type"] == "hyp":
+        s = sq("p") + sq("q")
+    else:
+        other = "p" if q["unknown"] == "q" else "q"
+        s = sq("r") - sq(other)
+    return s
+
+
+def jp_sqrt_round(s, dp):
+    import sympy
+    root = sympy.sqrt(sympy.Rational(str(s)))
+    return half_up(Decimal(str(sympy.N(root, 40))), dp)
+
+
+def jp_svg(it):
+    """The game's triangle as a self-contained SVG: the outline, the right-angle mark and the labels as text."""
+    s = it["svg"]
+    vb = re.search(r'viewBox="([^"]+)"', s).group(1)
+    poly = re.search(r'<polygon class="tri-fill" points="([^"]+)"', s).group(1)
+    right = re.search(r'<polyline class="tri-right" points="([^"]+)"', s).group(1)
+    texts = re.findall(r'<text class="tri-label"[^>]*? x="([^"]+)" y="([^"]+)"[^>]*>([^<]*)</text>', s)
+    body = "".join('<text x="%s" y="%s" text-anchor="middle" dominant-baseline="central">%s</text>' % (x, y, t) for x, y, t in texts)
+    return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="%s" role="img" fill="none" stroke="currentColor" stroke-width="2">'
+            '<polygon points="%s" stroke-linejoin="round"/><polyline points="%s" stroke-width="1.5"/>'
+            '<g fill="currentColor" stroke="none" font-family="sans-serif" font-size="15">%s</g></svg>' % (vb, poly, right, body)), \
+        sorted(t for _, _, t in texts)
+
+
+def jp_worked(steps, unit, dp):
+    lines = []
+    for st in steps:
+        if st["kind"] == "text":
+            lines.append(st["text"] if st["text"].endswith(".") else st["text"] + ".")
+        else:
+            after = st.get("after", "")
+            lines.append(tex(st["tex"] + (("\\text{%s}" % after) if after.strip() else "")) + ".")
+    return lines
+
+
+async def topic_pythagoras(h):
+    """just-pythag-it-bruv's questions from its own generator (seeds 1 to 300, each distinct question once): the right-angled
+    triangle the game draws (outline, right-angle mark, labels as text), the game's prompt, a typed answer in the
+    game's unit. The answer is recomputed from the sides shown (sympy, 40 digits, half up) and the triangle's labels are
+    checked against the sides; the game's worked solution is the worked lines, and its one named error, adding instead
+    of subtracting, is the slip on a shorter-side question. Whole-number answers (round 1) are non-calculator, decimal
+    ones a calculator. 60, ten of each of the six kinds (round, hypotenuse or shorter side)."""
+    pg = await h.page("just-pythag-it-bruv", "level=ks3")
+    items = await pg.evaluate(JPIB_JS, 300)
+    out = []
+    for n, it in enumerate(items):
+        q = it["q"]
+        s = jp_key(q)
+        want = jp_sqrt_round(s, q["dp"])
+        assert want == Decimal(q["keyText"]), ("pythagoras key", q["stage"], q["given"], want, q["keyText"])
+        if q["type"] == "short":
+            add = jp_sqrt_round(sum(jp_dec(q["given"][k]) ** 2 for k in ("p", "q", "r") if q["given"][k] is not None), q["dp"])
+            assert add == Decimal(q["add"]["k1Text"] if q["dp"] else q["add"]["k0Text"]) or q["dp"] == 0, ("pythagoras add error", q["given"], add)
+        svg, labels = jp_svg(it)
+        want_labels = sorted(("%s %s" % (v, q["unit"])) if v is not None else "?" for v in q["given"].values())
+        labels = ["?" if t == "x" else t for t in labels]                       # the unknown is x after round 1, ? in round 1
+        assert labels == want_labels, ("pythagoras labels", labels, want_labels)
+        out.append(((q["stage"], q["type"]), it))
+    keep = spread(out, GEN_TOPIC, lambda t: t[0])
+    res = []
+    for (_, it) in keep:
+        q = it["q"]
+        svg, _ = jp_svg(it)
+        stem = q["prompt"]
+        if q["dp"] and "decimal place" not in stem:
+            stem += " Give your answer to 1 decimal place."
+        if it["notToScale"]:
+            stem += " The diagram is not drawn accurately."
+        ans = {"value": float(Decimal(q["keyText"]))}
+        if q["dp"]:
+            ans["dp"] = q["dp"]
+        slips = []
+        if q["type"] == "short":
+            k = q["add"]["k1Text"] if q["dp"] else q["add"]["k0Text"]
+            if Decimal(k) != Decimal(q["keyText"]):
+                slips.append({"answer": {"value": float(Decimal(k))}, "line": "You added instead of subtracting."})
+        band = 5 if q["stage"] == "c" else 4
+        z = mk("pythagoras", "just-pythag-it-bruv", "JPIB:%s:%s:%s:%s:%s:%s" % (q["stage"], q["type"], q["unknown"], q["unit"], q["context"], json.dumps(q["given"], sort_keys=True)),
+               band, bool(q["dp"]), stem, "number", ans, unit=q["unit"], worked=jp_worked(it["worked"], q["unit"], q["dp"]), slip=slips)
+        z["diagram"] = svg
+        res.append(z)
+    return res
+
+
+# --- coordinates: four-quadrant-explorer's plot, read and shape items, each on a -5 to 5 grid ---
+COORD_JS = r"""() => ({plot: PLOT_QUESTIONS, read: READ_QUESTIONS, shape: SHAPE_QUESTIONS})"""
+
+
+def coord_svg(points, joined=False):
+    """A -5 to 5 grid with the axes, the numbers on the grid's border and each point a dot with its letter; `joined` draws
+    the line through the points in order."""
+    S, O, N = 24, 150, 5
+    px = lambda v: O + v * S
+    py = lambda v: O - v * S
+    f = lambda v: "%g" % round(v, 1)
+    parts = ['<g stroke-width="0.6" opacity="0.3">%s</g>' % "".join(
+        '<line x1="%s" y1="%s" x2="%s" y2="%s"/><line x1="%s" y1="%s" x2="%s" y2="%s"/>' %
+        (f(px(i)), f(py(-N)), f(px(i)), f(py(N)), f(px(-N)), f(py(i)), f(px(N)), f(py(i))) for i in range(-N, N + 1))]
+    parts.append('<path d="M%s %s L%s %s M%s %s L%s %s" stroke-width="1.5"/>' % (f(px(-N)), f(O), f(px(N)), f(O), f(O), f(py(N)), f(O), f(py(-N))))
+    if joined:
+        parts.append('<polyline points="%s" stroke-linejoin="round"/>' % " ".join("%s,%s" % (f(px(x)), f(py(y))) for x, y, _ in points))
+    parts.append("".join('<circle cx="%s" cy="%s" r="3.5" fill="currentColor" stroke="none"/>' % (f(px(x)), f(py(y))) for x, y, _ in points))
+    texts = []
+    for v in range(-N, N + 1):
+        if v:
+            texts.append((str(v), px(v), py(-N) + 14, "middle"))
+            texts.append((str(v), px(-N) - 5, py(v) + 4, "end"))
+    for x, y, lab in points:
+        # the letter goes to the side of the dot with the most room, off the axes' numbers
+        dx = 10 if x < 4 else -10
+        dy = -8 if y < 4 else 14
+        texts.append((lab, px(x) + dx, py(y) + dy, "middle"))
+    body = "".join('<text x="%s" y="%s" text-anchor="%s">%s</text>' % (f(x), f(y), a, t) for t, x, y, a in texts)
+    svg = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" role="img" fill="none" stroke="currentColor" stroke-width="2">%s'
+           '<g fill="currentColor" stroke="none" font-family="sans-serif" font-size="11">%s</g></svg>' % ("".join(parts), body))
+    return svg, sorted(t for t, _, _, _ in texts)
+
+
+def coord_read_worked(x, y):
+    """Project Claude's COORDINATES template (read or plot): across, then up or down, then the pair."""
+    across = ("%s means %d %s" % (tex(str(x)), abs(x), "right" if x > 0 else "left")) if x else "%s means no move across" % tex("0")
+    updown = ("%s means %d %s" % (tex(str(y)), abs(y), "up" if y > 0 else "down")) if y else "%s means no move up or down" % tex("0")
+    return ["The first number is across: %s." % across, "The second number is up or down: %s." % updown,
+            "So %s." % tex("(%d, %d)" % (x, y))]
+
+
+def coord_check(svg_labels_, points):
+    want = sorted([str(i) for i in range(-5, 6) if i] * 2 + [lab for _, _, lab in points])
+    assert svg_labels_ == want, ("coordinates: labels", svg_labels_, want)
+
+
+async def topic_coordinates(h):
+    """four-quadrant-explorer's 45 items, written out on a grid. READ (15): the game's own four options (a point shown, which
+    coordinates), a choice. PLOT (20): the game asks to place a point, which a typed bank cannot, so each is asked the other
+    way, as the coordinates of the point shown (`coordinates`); the four whose point a READ item already shows are left
+    out so no picture is asked twice. SHAPE (10): three corners of a rectangle shown, the fourth asked (`coordinates`); the
+    fourth corner is recomputed from the right angle. The game has no written solution and names no wrong answer."""
+    pg = await h.page("four-quadrant-explorer", "level=year6")
+    data = await pg.evaluate(COORD_JS)
+    out = []
+    read_pts = {(r["x"], r["y"]) for r in data["read"]}
+    for i, r in enumerate(data["read"]):
+        x, y = r["x"], r["y"]
+        label = lambda p: "(%s)" % p.strip("()").replace(",", ", ")
+        opts_txt = [label(o) for o in r["opts"]]
+        assert opts_txt[r["correct"]] == "(%d, %d)" % (x, y), ("coordinates: the game's key", r)
+        assert len(set(opts_txt)) == 4 and all(o != opts_txt[r["correct"]] for j, o in enumerate(opts_txt) if j != r["correct"])
+        svg, labs = coord_svg([(x, y, "P")])
+        coord_check(labs, [(x, y, "P")])
+        opts, ans = choice("coord-read-%d" % i, opts_txt[r["correct"]], [o for j, o in enumerate(opts_txt) if j != r["correct"]])
+        z = mk("coordinates", "four-quadrant-explorer", "READ_QUESTIONS[%d]" % i, 1, False,
+               "The point P is marked on the grid. What are the coordinates of P?", "choice", ans, options=opts,
+               worked=coord_read_worked(x, y))
+        z["diagram"] = svg
+        out.append(z)
+    for i, p in enumerate(data["plot"]):
+        if (p["x"], p["y"]) in read_pts:
+            continue
+        svg, labs = coord_svg([(p["x"], p["y"], "P")])
+        coord_check(labs, [(p["x"], p["y"], "P")])
+        z = mk("coordinates", "four-quadrant-explorer", "PLOT_QUESTIONS[%d]" % i, 1, False,
+               "The point P is marked on the grid. Write down the coordinates of P.", "coordinates", {"x": p["x"], "y": p["y"]},
+               worked=coord_read_worked(p["x"], p["y"]))
+        z["diagram"] = svg
+        out.append(z)
+    for i, s in enumerate(data["shape"]):
+        (ax, ay), (bx, by), (cx, cy) = [(v["x"], v["y"]) for v in s["verts"]]
+        assert (bx - ax) * (cx - bx) + (by - ay) * (cy - by) == 0 and (ax == bx or ay == by) and (bx == cx or by == cy), \
+            ("coordinates: not a right angle at B", s)
+        fourth = (ax + cx - bx, ay + cy - by)
+        assert fourth == (s["answer"]["x"], s["answer"]["y"]), ("coordinates: the fourth corner", s, fourth)
+        pts = [(ax, ay, "A"), (bx, by, "B"), (cx, cy, "C")]
+        xs, ys = ("C", "A") if ax == bx else ("A", "C")             # D's x is the x of the corner not above or below B
+        assert (cx if xs == "C" else ax) == fourth[0] and (ay if ys == "A" else cy) == fourth[1], ("coordinates: D lines up", s)
+        xy_from = (xs, ys)
+        svg, labs = coord_svg(pts, joined=True)
+        coord_check(labs, pts)
+        z = mk("coordinates", "four-quadrant-explorer", "SHAPE_QUESTIONS[%d]" % i, 2, False,
+               "A, B and C are three corners of a rectangle. Write down the coordinates of the fourth corner, D.", "coordinates",
+               {"x": fourth[0], "y": fourth[1]},
+               worked=["Opposite sides of a rectangle line up: the missing corner D shares its x with %s and its y with %s." % xy_from,
+                       "So %s." % tex("(%d, %d)" % fourth)])
+        z["diagram"] = svg
+        out.append(z)
+    return out
+
+
 # ───────────────────────────── the registry ─────────────────────────────
 # topic id -> (builder, rule notes). Topics not here have no bank yet (coming soon).
 BUILDERS = {
@@ -2435,6 +2985,12 @@ BUILDERS = {
     "transformations": topic_transformations,
     "simplify-expressions": topic_simplify_expressions,
     "substitution": topic_substitution,
+    "standard-form": topic_standard_form,
+    "quadratics-factorise": topic_quadratics_factorise,
+    "estimation": topic_estimation,
+    "metric-units": topic_metric_units,
+    "pythagoras": topic_pythagoras,
+    "coordinates": topic_coordinates,
 }
 
 
