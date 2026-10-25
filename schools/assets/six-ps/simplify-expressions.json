@@ -1,0 +1,1606 @@
+{
+ "topic": "simplify-expressions",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "simplify-expressions-56f32148",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE2[0]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Simplify \\(3x + 2x + 4y + y\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(25xy\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(6x + 5y\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(5x + 5y\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(5x + 4y\\)"
+    }
+   ],
+   "worked": [
+    "Collect the x terms: \\(3x + 2x = 5x\\).",
+    "Collect the y terms: \\(4y + y = 5y\\).",
+    "So the answer is \\(5x + 5y\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-5cb63746",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE2[1]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Simplify \\(6a + 3a + 2b + 5b\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(9a + 7b\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(63ab\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(10a + 7b\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(9a + 6b\\)"
+    }
+   ],
+   "worked": [
+    "Collect the a terms: \\(6a + 3a = 9a\\).",
+    "Collect the b terms: \\(2b + 5b = 7b\\).",
+    "So the answer is \\(9a + 7b\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-964d0f8b",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE2[2]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Simplify \\(4p + 7p + 3q + 2q\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(11p + 5q\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(12p + 5q\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(55pq\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(11p + 4q\\)"
+    }
+   ],
+   "worked": [
+    "Collect the p terms: \\(4p + 7p = 11p\\).",
+    "Collect the q terms: \\(3q + 2q = 5q\\).",
+    "So the answer is \\(11p + 5q\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-16422e64",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE2[3]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Simplify \\(5m + m + 8n + 3n\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(7m + 11n\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(6m + 10n\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(66mn\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(6m + 11n\\)"
+    }
+   ],
+   "worked": [
+    "Collect the m terms: \\(5m + m = 6m\\).",
+    "Collect the n terms: \\(8n + 3n = 11n\\).",
+    "So the answer is \\(6m + 11n\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-d14a3046",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE2[4]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Simplify \\(2c + 6c + 4d + 4d\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(8c + 8d\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(64cd\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(9c + 8d\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(8c + 7d\\)"
+    }
+   ],
+   "worked": [
+    "Collect the c terms: \\(2c + 6c = 8c\\).",
+    "Collect the d terms: \\(4d + 4d = 8d\\).",
+    "So the answer is \\(8c + 8d\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-9db4820e",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE2[5]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Simplify \\(7x + 3x + y + 5y\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(11x + 6y\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(60xy\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(10x + 5y\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(10x + 6y\\)"
+    }
+   ],
+   "worked": [
+    "Collect the x terms: \\(7x + 3x = 10x\\).",
+    "Collect the y terms: \\(y + 5y = 6y\\).",
+    "So the answer is \\(10x + 6y\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-9af3494a",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE2[6]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Simplify \\(4a + 4a + 3b + 7b\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(9a + 10b\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(8a + 9b\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(8a + 10b\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(80ab\\)"
+    }
+   ],
+   "worked": [
+    "Collect the a terms: \\(4a + 4a = 8a\\).",
+    "Collect the b terms: \\(3b + 7b = 10b\\).",
+    "So the answer is \\(8a + 10b\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-42c6313f",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE2[7]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Simplify \\(9p + 2p + 6q + q\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(11p + 6q\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(12p + 7q\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(77pq\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(11p + 7q\\)"
+    }
+   ],
+   "worked": [
+    "Collect the p terms: \\(9p + 2p = 11p\\).",
+    "Collect the q terms: \\(6q + q = 7q\\).",
+    "So the answer is \\(11p + 7q\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-158f51b7",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE2[8]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Simplify \\(3g + 5g + 2h + 8h\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(8g + 9h\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(9g + 10h\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(8g + 10h\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(80gh\\)"
+    }
+   ],
+   "worked": [
+    "Collect the g terms: \\(3g + 5g = 8g\\).",
+    "Collect the h terms: \\(2h + 8h = 10h\\).",
+    "So the answer is \\(8g + 10h\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-30654e6d",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE2[9]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Simplify \\(6t + 4t + 3u + 2u\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(50tu\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(11t + 5u\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(10t + 5u\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(10t + 4u\\)"
+    }
+   ],
+   "worked": [
+    "Collect the t terms: \\(6t + 4t = 10t\\).",
+    "Collect the u terms: \\(3u + 2u = 5u\\).",
+    "So the answer is \\(10t + 5u\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-3c2a7b71",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[0]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(5a + 3b - 2a + 4b\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(3a + b\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(5a + 4b\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(3a + 7b\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(7a + 7b\\)"
+    }
+   ],
+   "worked": [
+    "Collect the a terms: \\(5a - 2a = 3a\\).",
+    "Collect the b terms: \\(3b + 4b = 7b\\).",
+    "So the answer is \\(3a + 7b\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-d40e2a35",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[1]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(4x + 2y + 3x - y\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(7x - y\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(7x + y\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(7x + 3y\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(4x + y\\)"
+    }
+   ],
+   "worked": [
+    "Collect the x terms: \\(4x + 3x = 7x\\).",
+    "Collect the y terms: \\(2y - y = y\\).",
+    "So the answer is \\(7x + y\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-3c0b7d98",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[2]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(6m - 2m + 5n + 3n\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(8m + 2n\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(4m + 2n\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(8m + 8n\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(4m + 8n\\)"
+    }
+   ],
+   "worked": [
+    "Collect the m terms: \\(6m - 2m = 4m\\).",
+    "Collect the n terms: \\(5n + 3n = 8n\\).",
+    "So the answer is \\(4m + 8n\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-9c0039cf",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[3]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(8p + 2q - 3p - q\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(11p + q\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(5p - q\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(5p + q\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(5p + 3q\\)"
+    }
+   ],
+   "worked": [
+    "Collect the p terms: \\(8p - 3p = 5p\\).",
+    "Collect the q terms: \\(2q - q = q\\).",
+    "So the answer is \\(5p + q\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-ab0e7a8c",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[4]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(3a + 4b + 2a - b\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(5a + 3b\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(5a - 3b\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(a + 3b\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(5a + 5b\\)"
+    }
+   ],
+   "worked": [
+    "Collect the a terms: \\(3a + 2a = 5a\\).",
+    "Collect the b terms: \\(4b - b = 3b\\).",
+    "So the answer is \\(5a + 3b\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-a015cf0b",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[5]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(7x - 3x + 2y + 5y\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(4x + 3y\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(10x + 7y\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(4x - 7y\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(4x + 7y\\)"
+    }
+   ],
+   "worked": [
+    "Collect the x terms: \\(7x - 3x = 4x\\).",
+    "Collect the y terms: \\(2y + 5y = 7y\\).",
+    "So the answer is \\(4x + 7y\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-9d335cf8",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[6]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(5c + 3d - c + 4d\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(6c + 7d\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(4c - d\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(4c + 7d\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(5c + 7d\\)"
+    }
+   ],
+   "worked": [
+    "Collect the c terms: \\(5c - c = 4c\\).",
+    "Collect the d terms: \\(3d + 4d = 7d\\).",
+    "So the answer is \\(4c + 7d\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-365916cb",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[7]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(9t - 4t + 6u - 2u\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(5t + 4u\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(5t + 8u\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(13t + 4u\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(5t - 4u\\)"
+    }
+   ],
+   "worked": [
+    "Collect the t terms: \\(9t - 4t = 5t\\).",
+    "Collect the u terms: \\(6u - 2u = 4u\\).",
+    "So the answer is \\(5t + 4u\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-c28a1605",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[8]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(2a + 7b - a + 3b\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(2a + 10b\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(a + 10b\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(3a + 10b\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(a + 4b\\)"
+    }
+   ],
+   "worked": [
+    "Collect the a terms: \\(2a - a = a\\).",
+    "Collect the b terms: \\(7b + 3b = 10b\\).",
+    "So the answer is \\(a + 10b\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-c55092e4",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[9]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(6x + y - 2x + 4y\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(8x + 5y\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(4x - 5y\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(4x + 5y\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(4x + 3y\\)"
+    }
+   ],
+   "worked": [
+    "Collect the x terms: \\(6x - 2x = 4x\\).",
+    "Collect the y terms: \\(y + 4y = 5y\\).",
+    "So the answer is \\(4x + 5y\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-6593df8c",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[10]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(4m + 3n + 2m - n\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(6m + 4n\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(6m + 2n\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(6m - 2n\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(2m + 2n\\)"
+    }
+   ],
+   "worked": [
+    "Collect the m terms: \\(4m + 2m = 6m\\).",
+    "Collect the n terms: \\(3n - n = 2n\\).",
+    "So the answer is \\(6m + 2n\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-4841b713",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[11]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(8p - 3p + 4q - 2q\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(11p + 2q\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(5p - 2q\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(5p + 6q\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(5p + 2q\\)"
+    }
+   ],
+   "worked": [
+    "Collect the p terms: \\(8p - 3p = 5p\\).",
+    "Collect the q terms: \\(4q - 2q = 2q\\).",
+    "So the answer is \\(5p + 2q\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-3024f9da",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[12]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(3x + 2x + 4y - 3y\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(5x + y\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x + y\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(5x + 7y\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(5x - y\\)"
+    }
+   ],
+   "worked": [
+    "Collect the x terms: \\(3x + 2x = 5x\\).",
+    "Collect the y terms: \\(4y - 3y = y\\).",
+    "So the answer is \\(5x + y\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-69d2fe85",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[13]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(7a - 2a + 5b + b\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(5a - 6b\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(9a + 6b\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(5a + 6b\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(5a + 4b\\)"
+    }
+   ],
+   "worked": [
+    "Collect the a terms: \\(7a - 2a = 5a\\).",
+    "Collect the b terms: \\(5b + b = 6b\\).",
+    "So the answer is \\(5a + 6b\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-9edd0203",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[14]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(6c + 4c - 3d + 7d\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(10c - 4d\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(10c + 4d\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(2c + 4d\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(10c + 10d\\)"
+    }
+   ],
+   "worked": [
+    "Collect the c terms: \\(6c + 4c = 10c\\).",
+    "Collect the d terms: \\(-3d + 7d = 4d\\).",
+    "So the answer is \\(10c + 4d\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-05ea8c9e",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[15]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(2t + 8u + 3t - 5u\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(5t + 13u\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(5t + 3u\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(t + 3u\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(5t - 3u\\)"
+    }
+   ],
+   "worked": [
+    "Collect the t terms: \\(2t + 3t = 5t\\).",
+    "Collect the u terms: \\(8u - 5u = 3u\\).",
+    "So the answer is \\(5t + 3u\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-f960f504",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[16]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(9x - 5x + 2y - y\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(4x - y\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(14x + y\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(4x + 3y\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(4x + y\\)"
+    }
+   ],
+   "worked": [
+    "Collect the x terms: \\(9x - 5x = 4x\\).",
+    "Collect the y terms: \\(2y - y = y\\).",
+    "So the answer is \\(4x + y\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-1c210422",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[17]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(4a + 6b - 3a + 2b\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(7a + 8b\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(a - 8b\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(a + 4b\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(a + 8b\\)"
+    }
+   ],
+   "worked": [
+    "Collect the a terms: \\(4a - 3a = a\\).",
+    "Collect the b terms: \\(6b + 2b = 8b\\).",
+    "So the answer is \\(a + 8b\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-b1f8ba41",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[18]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(7p + 3q + 2p - 4q\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(9p + q\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(9p + 7q\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(5p - q\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(9p - q\\)"
+    }
+   ],
+   "worked": [
+    "Collect the p terms: \\(7p + 2p = 9p\\).",
+    "Collect the q terms: \\(3q - 4q = -q\\).",
+    "So the answer is \\(9p - q\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-d2cb442e",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[19]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(5m - m + 6n - 3n\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(4m + 3n\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(6m + 3n\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(4m + 9n\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(4m - 3n\\)"
+    }
+   ],
+   "worked": [
+    "Collect the m terms: \\(5m - m = 4m\\).",
+    "Collect the n terms: \\(6n - 3n = 3n\\).",
+    "So the answer is \\(4m + 3n\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-c4abc119",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[20]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Simplify \\(3x + 4y + x + 2y\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(4x + 6y\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(4x + 2y\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(10xy\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(3x + 6y\\)"
+    }
+   ],
+   "worked": [
+    "Collect the x terms: \\(3x + x = 4x\\).",
+    "Collect the y terms: \\(4y + 2y = 6y\\).",
+    "So the answer is \\(4x + 6y\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-39456eac",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[21]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(8a - 3b + 2a + 5b\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(10a + 8b\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(6a + 2b\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(10a - 2b\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(10a + 2b\\)"
+    }
+   ],
+   "worked": [
+    "Collect the a terms: \\(8a + 2a = 10a\\).",
+    "Collect the b terms: \\(-3b + 5b = 2b\\).",
+    "So the answer is \\(10a + 2b\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-d0d05e0b",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[22]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(6c - 2c + 4d - d\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(4c - 3d\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(4c + 5d\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(8c + 3d\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(4c + 3d\\)"
+    }
+   ],
+   "worked": [
+    "Collect the c terms: \\(6c - 2c = 4c\\).",
+    "Collect the d terms: \\(4d - d = 3d\\).",
+    "So the answer is \\(4c + 3d\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-25e7ff30",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[23]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(5t + 2u - 3t + 4u\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(2t + 6u\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(2t + 2u\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(8t + 6u\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(2t - 6u\\)"
+    }
+   ],
+   "worked": [
+    "Collect the t terms: \\(5t - 3t = 2t\\).",
+    "Collect the u terms: \\(2u + 4u = 6u\\).",
+    "So the answer is \\(2t + 6u\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-fee64c87",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[24]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(7x + 3x - 2y + y\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(4x - y\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(10x - y\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(10x - 3y\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(10x + y\\)"
+    }
+   ],
+   "worked": [
+    "Collect the x terms: \\(7x + 3x = 10x\\).",
+    "Collect the y terms: \\(-2y + y = -y\\).",
+    "So the answer is \\(10x - y\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-ed491af7",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[25]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(4a + 5b - 2a - 3b\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(2a - 2b\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(2a + 8b\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(6a + 8b\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(2a + 2b\\)"
+    }
+   ],
+   "worked": [
+    "Collect the a terms: \\(4a - 2a = 2a\\).",
+    "Collect the b terms: \\(5b - 3b = 2b\\).",
+    "So the answer is \\(2a + 2b\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-d0b7522f",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[26]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(9m - 4m + 2n - 2n\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(5m - 4n\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(5m\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(5m + 4n\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(13m\\)"
+    }
+   ],
+   "worked": [
+    "Collect the m terms: \\(9m - 4m = 5m\\).",
+    "Collect the n terms: \\(2n - 2n = 0\\).",
+    "So the answer is \\(5m\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-225bdad2",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[27]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(6p + 2q + p - 5q\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(5p - 3q\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(7p - 7q\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(7p - 3q\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(7p + 3q\\)"
+    }
+   ],
+   "worked": [
+    "Collect the p terms: \\(6p + p = 7p\\).",
+    "Collect the q terms: \\(2q - 5q = -3q\\).",
+    "So the answer is \\(7p - 3q\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-94e621e2",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[28]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(3x - x + 8y - 3y\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(4x + 5y\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(2x - 5y\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(2x + 5y\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(2x + 11y\\)"
+    }
+   ],
+   "worked": [
+    "Collect the x terms: \\(3x - x = 2x\\).",
+    "Collect the y terms: \\(8y - 3y = 5y\\).",
+    "So the answer is \\(2x + 5y\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simplify-expressions-73557cb5",
+   "topic": "simplify-expressions",
+   "source": {
+    "game": "like-terms-collector",
+    "ref": "STAGE3[29]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(5a + 3a + 4b - 4b\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(8a - 8b\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(8a\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(2a\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(8a + 8b\\)"
+    }
+   ],
+   "worked": [
+    "Collect the a terms: \\(5a + 3a = 8a\\).",
+    "Collect the b terms: \\(4b - 4b = 0\\).",
+    "So the answer is \\(8a\\)."
+   ],
+   "slip": []
+  }
+ ]
+}

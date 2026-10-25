@@ -1,0 +1,1066 @@
+{
+ "topic": "inverse-operations",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "inverse-operations-7fbf8a44",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_001"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "I think of a number. I add 6. My answer is 14. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "14 − 6 = 8"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-2c6b3daf",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_002"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "I think of a number. I subtract 4. My answer is 9. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 13
+   },
+   "worked": [
+    "9 + 4 = 13"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-968cbf02",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_003"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "I think of a number. I multiply it by 5. My answer is 35. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7
+   },
+   "worked": [
+    "35 ÷ 5 = 7"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-eba3395d",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_004"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "I think of a number. I divide it by 3. My answer is 8. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 24
+   },
+   "worked": [
+    "8 × 3 = 24"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-a7657754",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_005"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "I think of a number. I add 15. My answer is 23. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "23 − 15 = 8"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-19fe8277",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_006"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "I think of a number. I subtract 11. My answer is 7. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 18
+   },
+   "worked": [
+    "7 + 11 = 18"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-7a2c8dec",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_007"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "I think of a number. I multiply it by 4. My answer is 36. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 9
+   },
+   "worked": [
+    "36 ÷ 4 = 9"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-dc2f8de1",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_008"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "I think of a number. I divide it by 6. My answer is 7. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 42
+   },
+   "worked": [
+    "7 × 6 = 42"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-f10e214c",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_009"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "I think of a number. I add 9. My answer is 20. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 11
+   },
+   "worked": [
+    "20 − 9 = 11"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-167c6301",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_010"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "I think of a number. I subtract 8. My answer is 14. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 22
+   },
+   "worked": [
+    "14 + 8 = 22"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-fc1c80e4",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_011"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "I think of a number. I multiply it by 2. I add 5. My answer is 17. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "17 − 5 = 12",
+    "12 ÷ 2 = 6"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-4be70b9b",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_012"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "I think of a number. I add 8. I multiply it by 3. My answer is 36. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "36 ÷ 3 = 12",
+    "12 − 8 = 4"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-9b48eb87",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_013"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "I think of a number. I subtract 3. I multiply it by 4. My answer is 28. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 10
+   },
+   "worked": [
+    "28 ÷ 4 = 7",
+    "7 + 3 = 10"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-f9576c02",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_014"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "I think of a number. I divide it by 2. I add 6. My answer is 11. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 10
+   },
+   "worked": [
+    "11 − 6 = 5",
+    "5 × 2 = 10"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-a71d7280",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_015"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "I think of a number. I multiply it by 3. I subtract 6. My answer is 15. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7
+   },
+   "worked": [
+    "15 + 6 = 21",
+    "21 ÷ 3 = 7"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-98a43fd7",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_016"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "I think of a number. I add 7. I divide it by 2. My answer is 9. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 11
+   },
+   "worked": [
+    "9 × 2 = 18",
+    "18 − 7 = 11"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-58484057",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_017"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "I think of a number. I multiply it by 5. I subtract 10. My answer is 40. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 10
+   },
+   "worked": [
+    "40 + 10 = 50",
+    "50 ÷ 5 = 10"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-376578eb",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_018"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "I think of a number. I divide it by 4. I add 3. My answer is 8. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 20
+   },
+   "worked": [
+    "8 − 3 = 5",
+    "5 × 4 = 20"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-7d9fe8d2",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_019"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "I think of a number. I subtract 5. I multiply it by 3. My answer is 21. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "21 ÷ 3 = 7",
+    "7 + 5 = 12"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-c2ff7bf4",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_020"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "I think of a number. I add 4. I multiply it by 2. My answer is 18. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "worked": [
+    "18 ÷ 2 = 9",
+    "9 − 4 = 5"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-f87981dd",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_021"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "I think of a number. I multiply it by 6. I subtract 12. My answer is 24. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "24 + 12 = 36",
+    "36 ÷ 6 = 6"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-b34cce5f",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_022"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "I think of a number. I divide it by 3. I add 9. My answer is 13. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "13 − 9 = 4",
+    "4 × 3 = 12"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-62628de3",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_023"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "I think of a number. I multiply it by 4. I add 6. My answer is 30. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "30 − 6 = 24",
+    "24 ÷ 4 = 6"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-f71f98a3",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_024"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "I think of a number. I subtract 7. I multiply it by 5. My answer is 15. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 10
+   },
+   "worked": [
+    "15 ÷ 5 = 3",
+    "3 + 7 = 10"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-8f95ed41",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_025"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "I think of a number. I add 3. I divide it by 4. My answer is 6. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 21
+   },
+   "worked": [
+    "6 × 4 = 24",
+    "24 − 3 = 21"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-ca9d496c",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_026"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "I think of a number. I multiply it by 2. I add 9. My answer is 25. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "25 − 9 = 16",
+    "16 ÷ 2 = 8"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-65d862f5",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_027"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "I think of a number. I divide it by 5. I subtract 2. My answer is 6. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 40
+   },
+   "worked": [
+    "6 + 2 = 8",
+    "8 × 5 = 40"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-d5a2fbac",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_028"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "I think of a number. I add 6. I multiply it by 3. My answer is 33. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "worked": [
+    "33 ÷ 3 = 11",
+    "11 − 6 = 5"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-7f8416c5",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_029"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "I think of a number. I multiply it by 3. I subtract 4. My answer is 23. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 9
+   },
+   "worked": [
+    "23 + 4 = 27",
+    "27 ÷ 3 = 9"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-21dcb87c",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_030"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "I think of a number. I divide it by 2. I add 8. My answer is 14. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "14 − 8 = 6",
+    "6 × 2 = 12"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-b089d5e7",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_031"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "I think of a number. I multiply it by 2. I add 3. I multiply it by 4. My answer is 44. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "44 ÷ 4 = 11",
+    "11 − 3 = 8",
+    "8 ÷ 2 = 4"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-d88172ca",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_032"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "I think of a number. I add 5. I multiply it by 3. I subtract 6. My answer is 24. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "worked": [
+    "24 + 6 = 30",
+    "30 ÷ 3 = 10",
+    "10 − 5 = 5"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-8fce3e0e",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_033"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "I think of a number. I divide it by 2. I add 7. I multiply it by 3. My answer is 33. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "33 ÷ 3 = 11",
+    "11 − 7 = 4",
+    "4 × 2 = 8"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-f2d72ec1",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_034"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "I think of a number. I multiply it by 3. I subtract 4. I divide it by 2. My answer is 7. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "7 × 2 = 14",
+    "14 + 4 = 18",
+    "18 ÷ 3 = 6"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-693805fc",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_035"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "I think of a number. I add 8. I multiply it by 2. I subtract 6. My answer is 22. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "22 + 6 = 28",
+    "28 ÷ 2 = 14",
+    "14 − 8 = 6"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-80ae93c9",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_036"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "I think of a number. I divide it by 3. I multiply it by 5. I add 4. My answer is 24. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "24 − 4 = 20",
+    "20 ÷ 5 = 4",
+    "4 × 3 = 12"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-72c9ea25",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_037"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "I think of a number. I multiply it by 4. I add 7. I divide it by 3. My answer is 13. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "13 × 3 = 39",
+    "39 − 7 = 32",
+    "32 ÷ 4 = 8"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-91da49bb",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_038"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "I think of a number. I subtract 6. I multiply it by 5. I add 10. My answer is 35. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 11
+   },
+   "worked": [
+    "35 − 10 = 25",
+    "25 ÷ 5 = 5",
+    "5 + 6 = 11"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-3bd78492",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_039"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "I think of a number. I add 4. I divide it by 2. I multiply it by 7. My answer is 42. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "42 ÷ 7 = 6",
+    "6 × 2 = 12",
+    "12 − 4 = 8"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-8d3da0d6",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_040"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "I think of a number. I multiply it by 2. I subtract 3. I multiply it by 4. My answer is 36. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "36 ÷ 4 = 9",
+    "9 + 3 = 12",
+    "12 ÷ 2 = 6"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-98014448",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_041"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "I think of a number. I multiply it by 3. I add 5. I divide it by 2. My answer is 13. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7
+   },
+   "worked": [
+    "13 × 2 = 26",
+    "26 − 5 = 21",
+    "21 ÷ 3 = 7"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-e6c3b38b",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_042"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "I think of a number. I add 6. I multiply it by 4. I subtract 8. My answer is 32. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "32 + 8 = 40",
+    "40 ÷ 4 = 10",
+    "10 − 6 = 4"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-5634107c",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_043"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "I think of a number. I divide it by 2. I multiply it by 3. I add 7. My answer is 25. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "25 − 7 = 18",
+    "18 ÷ 3 = 6",
+    "6 × 2 = 12"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-df2de3c2",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_044"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "I think of a number. I multiply it by 5. I subtract 9. I divide it by 2. My answer is 8. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "worked": [
+    "8 × 2 = 16",
+    "16 + 9 = 25",
+    "25 ÷ 5 = 5"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-4a758ce5",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_045"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "I think of a number. I subtract 3. I multiply it by 6. I add 2. My answer is 20. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "20 − 2 = 18",
+    "18 ÷ 6 = 3",
+    "3 + 3 = 6"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-d541ac78",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_046"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "I think of a number. I add 10. I divide it by 3. I multiply it by 4. My answer is 24. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "24 ÷ 4 = 6",
+    "6 × 3 = 18",
+    "18 − 10 = 8"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-8f30a518",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_047"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "I think of a number. I multiply it by 2. I add 8. I divide it by 3. My answer is 8. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "8 × 3 = 24",
+    "24 − 8 = 16",
+    "16 ÷ 2 = 8"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-7f672c29",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_048"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "I think of a number. I subtract 4. I multiply it by 3. I add 5. My answer is 26. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 11
+   },
+   "worked": [
+    "26 − 5 = 21",
+    "21 ÷ 3 = 7",
+    "7 + 4 = 11"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-f2b99389",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_049"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "I think of a number. I divide it by 4. I add 6. I multiply it by 5. My answer is 45. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "45 ÷ 5 = 9",
+    "9 − 6 = 3",
+    "3 × 4 = 12"
+   ],
+   "slip": []
+  },
+  {
+   "id": "inverse-operations-421ec4c7",
+   "topic": "inverse-operations",
+   "source": {
+    "game": "think-of-a-number",
+    "ref": "QUESTIONS:ton_050"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "I think of a number. I multiply it by 3. I add 2. I multiply it by 2. My answer is 40. What was my number?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "40 ÷ 2 = 20",
+    "20 − 2 = 18",
+    "18 ÷ 3 = 6"
+   ],
+   "slip": []
+  }
+ ]
+}

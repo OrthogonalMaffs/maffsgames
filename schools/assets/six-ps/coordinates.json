@@ -1,0 +1,1171 @@
+{
+ "topic": "coordinates",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "coordinates-7ccc2c25",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "READ_QUESTIONS[0]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. What are the coordinates of P?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"102\" cy=\"78\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"112\" y=\"70\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "(2, 3)"
+    },
+    {
+     "val": "b",
+     "label": "(-2, 3)"
+    },
+    {
+     "val": "c",
+     "label": "(3, -2)"
+    },
+    {
+     "val": "d",
+     "label": "(-2, -3)"
+    }
+   ],
+   "worked": [
+    "The first number is across: \\(-2\\) means 2 left.",
+    "The second number is up or down: \\(3\\) means 3 up.",
+    "So \\((-2, 3)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-58a4a7f6",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "READ_QUESTIONS[1]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. What are the coordinates of P?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"246\" cy=\"174\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"236\" y=\"166\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "(-1, 4)"
+    },
+    {
+     "val": "b",
+     "label": "(4, -1)"
+    },
+    {
+     "val": "c",
+     "label": "(-4, 1)"
+    },
+    {
+     "val": "d",
+     "label": "(4, 1)"
+    }
+   ],
+   "worked": [
+    "The first number is across: \\(4\\) means 4 right.",
+    "The second number is up or down: \\(-1\\) means 1 down.",
+    "So \\((4, -1)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-1683c0d3",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "READ_QUESTIONS[2]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. What are the coordinates of P?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"78\" cy=\"246\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"88\" y=\"238\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "(-4, -3)"
+    },
+    {
+     "val": "b",
+     "label": "(3, 4)"
+    },
+    {
+     "val": "c",
+     "label": "(3, -4)"
+    },
+    {
+     "val": "d",
+     "label": "(-3, -4)"
+    }
+   ],
+   "worked": [
+    "The first number is across: \\(-3\\) means 3 left.",
+    "The second number is up or down: \\(-4\\) means 4 down.",
+    "So \\((-3, -4)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-0265d420",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "READ_QUESTIONS[3]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. What are the coordinates of P?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"150\" cy=\"222\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"160\" y=\"214\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "(3, 0)"
+    },
+    {
+     "val": "b",
+     "label": "(-3, 0)"
+    },
+    {
+     "val": "c",
+     "label": "(0, -3)"
+    },
+    {
+     "val": "d",
+     "label": "(0, 3)"
+    }
+   ],
+   "worked": [
+    "The first number is across: \\(0\\) means no move across.",
+    "The second number is up or down: \\(-3\\) means 3 down.",
+    "So \\((0, -3)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-b2820228",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "READ_QUESTIONS[4]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. What are the coordinates of P?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"30\" cy=\"102\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"40\" y=\"94\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "(5, -2)"
+    },
+    {
+     "val": "b",
+     "label": "(-2, 5)"
+    },
+    {
+     "val": "c",
+     "label": "(5, 2)"
+    },
+    {
+     "val": "d",
+     "label": "(-5, 2)"
+    }
+   ],
+   "worked": [
+    "The first number is across: \\(-5\\) means 5 left.",
+    "The second number is up or down: \\(2\\) means 2 up.",
+    "So \\((-5, 2)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-d70133e9",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "READ_QUESTIONS[5]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. What are the coordinates of P?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"174\" cy=\"246\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"184\" y=\"238\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "(4, -1)"
+    },
+    {
+     "val": "b",
+     "label": "(-4, 1)"
+    },
+    {
+     "val": "c",
+     "label": "(1, -4)"
+    },
+    {
+     "val": "d",
+     "label": "(-1, 4)"
+    }
+   ],
+   "worked": [
+    "The first number is across: \\(1\\) means 1 right.",
+    "The second number is up or down: \\(-4\\) means 4 down.",
+    "So \\((1, -4)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-c8c8dea9",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "READ_QUESTIONS[6]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. What are the coordinates of P?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"102\" cy=\"198\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"112\" y=\"190\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "(-2, 2)"
+    },
+    {
+     "val": "b",
+     "label": "(2, 2)"
+    },
+    {
+     "val": "c",
+     "label": "(-2, -2)"
+    },
+    {
+     "val": "d",
+     "label": "(2, -2)"
+    }
+   ],
+   "worked": [
+    "The first number is across: \\(-2\\) means 2 left.",
+    "The second number is up or down: \\(-2\\) means 2 down.",
+    "So \\((-2, -2)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-ae0c1162",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "READ_QUESTIONS[7]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. What are the coordinates of P?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"222\" cy=\"150\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"232\" y=\"142\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "(0, -3)"
+    },
+    {
+     "val": "b",
+     "label": "(0, 3)"
+    },
+    {
+     "val": "c",
+     "label": "(-3, 0)"
+    },
+    {
+     "val": "d",
+     "label": "(3, 0)"
+    }
+   ],
+   "worked": [
+    "The first number is across: \\(3\\) means 3 right.",
+    "The second number is up or down: \\(0\\) means no move up or down.",
+    "So \\((3, 0)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-bf95e3f3",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "READ_QUESTIONS[8]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. What are the coordinates of P?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"54\" cy=\"78\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"64\" y=\"70\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "(4, -3)"
+    },
+    {
+     "val": "b",
+     "label": "(-4, 3)"
+    },
+    {
+     "val": "c",
+     "label": "(-3, 4)"
+    },
+    {
+     "val": "d",
+     "label": "(3, -4)"
+    }
+   ],
+   "worked": [
+    "The first number is across: \\(-4\\) means 4 left.",
+    "The second number is up or down: \\(3\\) means 3 up.",
+    "So \\((-4, 3)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-32c89ec5",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "READ_QUESTIONS[9]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. What are the coordinates of P?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"198\" cy=\"222\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"208\" y=\"214\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "(3, -2)"
+    },
+    {
+     "val": "b",
+     "label": "(2, -3)"
+    },
+    {
+     "val": "c",
+     "label": "(-2, 3)"
+    },
+    {
+     "val": "d",
+     "label": "(-3, 2)"
+    }
+   ],
+   "worked": [
+    "The first number is across: \\(2\\) means 2 right.",
+    "The second number is up or down: \\(-3\\) means 3 down.",
+    "So \\((2, -3)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-32b86919",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "READ_QUESTIONS[10]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. What are the coordinates of P?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"126\" cy=\"270\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"136\" y=\"262\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "(-5, -1)"
+    },
+    {
+     "val": "b",
+     "label": "(1, 5)"
+    },
+    {
+     "val": "c",
+     "label": "(-1, -5)"
+    },
+    {
+     "val": "d",
+     "label": "(5, 1)"
+    }
+   ],
+   "worked": [
+    "The first number is across: \\(-1\\) means 1 left.",
+    "The second number is up or down: \\(-5\\) means 5 down.",
+    "So \\((-1, -5)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-ce8e9fce",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "READ_QUESTIONS[11]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. What are the coordinates of P?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"246\" cy=\"54\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"236\" y=\"68\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "(-4, -4)"
+    },
+    {
+     "val": "b",
+     "label": "(-4, 4)"
+    },
+    {
+     "val": "c",
+     "label": "(4, -4)"
+    },
+    {
+     "val": "d",
+     "label": "(4, 4)"
+    }
+   ],
+   "worked": [
+    "The first number is across: \\(4\\) means 4 right.",
+    "The second number is up or down: \\(4\\) means 4 up.",
+    "So \\((4, 4)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-bd0bedfe",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "READ_QUESTIONS[12]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. What are the coordinates of P?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"78\" cy=\"126\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"88\" y=\"118\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "(-1, 3)"
+    },
+    {
+     "val": "b",
+     "label": "(3, -1)"
+    },
+    {
+     "val": "c",
+     "label": "(1, -3)"
+    },
+    {
+     "val": "d",
+     "label": "(-3, 1)"
+    }
+   ],
+   "worked": [
+    "The first number is across: \\(-3\\) means 3 left.",
+    "The second number is up or down: \\(1\\) means 1 up.",
+    "So \\((-3, 1)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-7c2a2773",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "READ_QUESTIONS[13]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. What are the coordinates of P?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"150\" cy=\"54\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"160\" y=\"68\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "(0, -4)"
+    },
+    {
+     "val": "b",
+     "label": "(0, 4)"
+    },
+    {
+     "val": "c",
+     "label": "(4, 0)"
+    },
+    {
+     "val": "d",
+     "label": "(-4, 0)"
+    }
+   ],
+   "worked": [
+    "The first number is across: \\(0\\) means no move across.",
+    "The second number is up or down: \\(4\\) means 4 up.",
+    "So \\((0, 4)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-64f37ab7",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "READ_QUESTIONS[14]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. What are the coordinates of P?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"102\" cy=\"222\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"112\" y=\"214\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "(-2, -3)"
+    },
+    {
+     "val": "b",
+     "label": "(2, 3)"
+    },
+    {
+     "val": "c",
+     "label": "(-3, -2)"
+    },
+    {
+     "val": "d",
+     "label": "(3, 2)"
+    }
+   ],
+   "worked": [
+    "The first number is across: \\(-2\\) means 2 left.",
+    "The second number is up or down: \\(-3\\) means 3 down.",
+    "So \\((-2, -3)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-e7232694",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "PLOT_QUESTIONS[0]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. Write down the coordinates of P.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"78\" cy=\"54\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"88\" y=\"68\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -3,
+    "y": 4
+   },
+   "worked": [
+    "The first number is across: \\(-3\\) means 3 left.",
+    "The second number is up or down: \\(4\\) means 4 up.",
+    "So \\((-3, 4)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-84db610a",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "PLOT_QUESTIONS[1]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. Write down the coordinates of P.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"198\" cy=\"270\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"208\" y=\"262\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 2,
+    "y": -5
+   },
+   "worked": [
+    "The first number is across: \\(2\\) means 2 right.",
+    "The second number is up or down: \\(-5\\) means 5 down.",
+    "So \\((2, -5)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-9ab2118f",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "PLOT_QUESTIONS[2]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. Write down the coordinates of P.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"126\" cy=\"222\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"136\" y=\"214\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -1,
+    "y": -3
+   },
+   "worked": [
+    "The first number is across: \\(-1\\) means 1 left.",
+    "The second number is up or down: \\(-3\\) means 3 down.",
+    "So \\((-1, -3)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-4161df43",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "PLOT_QUESTIONS[3]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. Write down the coordinates of P.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"246\" cy=\"102\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"236\" y=\"94\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 4,
+    "y": 2
+   },
+   "worked": [
+    "The first number is across: \\(4\\) means 4 right.",
+    "The second number is up or down: \\(2\\) means 2 up.",
+    "So \\((4, 2)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-7e59a388",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "PLOT_QUESTIONS[4]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. Write down the coordinates of P.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"54\" cy=\"174\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"64\" y=\"166\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -4,
+    "y": -1
+   },
+   "worked": [
+    "The first number is across: \\(-4\\) means 4 left.",
+    "The second number is up or down: \\(-1\\) means 1 down.",
+    "So \\((-4, -1)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-d93c17a7",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "PLOT_QUESTIONS[5]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. Write down the coordinates of P.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"150\" cy=\"78\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"160\" y=\"70\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 0,
+    "y": 3
+   },
+   "worked": [
+    "The first number is across: \\(0\\) means no move across.",
+    "The second number is up or down: \\(3\\) means 3 up.",
+    "So \\((0, 3)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-271aeb67",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "PLOT_QUESTIONS[6]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. Write down the coordinates of P.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"102\" cy=\"150\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"112\" y=\"142\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -2,
+    "y": 0
+   },
+   "worked": [
+    "The first number is across: \\(-2\\) means 2 left.",
+    "The second number is up or down: \\(0\\) means no move up or down.",
+    "So \\((-2, 0)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-4c592690",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "PLOT_QUESTIONS[7]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. Write down the coordinates of P.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"222\" cy=\"222\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"232\" y=\"214\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 3,
+    "y": -3
+   },
+   "worked": [
+    "The first number is across: \\(3\\) means 3 right.",
+    "The second number is up or down: \\(-3\\) means 3 down.",
+    "So \\((3, -3)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-8d7738b7",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "PLOT_QUESTIONS[11]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. Write down the coordinates of P.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"246\" cy=\"198\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"236\" y=\"190\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 4,
+    "y": -2
+   },
+   "worked": [
+    "The first number is across: \\(4\\) means 4 right.",
+    "The second number is up or down: \\(-2\\) means 2 down.",
+    "So \\((4, -2)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-55beb60a",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "PLOT_QUESTIONS[13]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. Write down the coordinates of P.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"198\" cy=\"54\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"208\" y=\"68\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 2,
+    "y": 4
+   },
+   "worked": [
+    "The first number is across: \\(2\\) means 2 right.",
+    "The second number is up or down: \\(4\\) means 4 up.",
+    "So \\((2, 4)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-8e3c25f5",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "PLOT_QUESTIONS[15]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. Write down the coordinates of P.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"150\" cy=\"270\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"160\" y=\"262\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 0,
+    "y": -5
+   },
+   "worked": [
+    "The first number is across: \\(0\\) means no move across.",
+    "The second number is up or down: \\(-5\\) means 5 down.",
+    "So \\((0, -5)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-87cfde34",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "PLOT_QUESTIONS[16]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. Write down the coordinates of P.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"30\" cy=\"150\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"40\" y=\"142\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -5,
+    "y": 0
+   },
+   "worked": [
+    "The first number is across: \\(-5\\) means 5 left.",
+    "The second number is up or down: \\(0\\) means no move up or down.",
+    "So \\((-5, 0)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-7e201d71",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "PLOT_QUESTIONS[17]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. Write down the coordinates of P.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"222\" cy=\"78\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"232\" y=\"70\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 3,
+    "y": 3
+   },
+   "worked": [
+    "The first number is across: \\(3\\) means 3 right.",
+    "The second number is up or down: \\(3\\) means 3 up.",
+    "So \\((3, 3)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-21aecc85",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "PLOT_QUESTIONS[18]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. Write down the coordinates of P.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"78\" cy=\"150\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"88\" y=\"142\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -3,
+    "y": 0
+   },
+   "worked": [
+    "The first number is across: \\(-3\\) means 3 left.",
+    "The second number is up or down: \\(0\\) means no move up or down.",
+    "So \\((-3, 0)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-4c407318",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "PLOT_QUESTIONS[19]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The point P is marked on the grid. Write down the coordinates of P.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><circle cx=\"150\" cy=\"198\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"160\" y=\"190\" text-anchor=\"middle\">P</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 0,
+    "y": -2
+   },
+   "worked": [
+    "The first number is across: \\(0\\) means no move across.",
+    "The second number is up or down: \\(-2\\) means 2 down.",
+    "So \\((0, -2)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-ac8a90d6",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "SHAPE_QUESTIONS[0]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A, B and C are three corners of a rectangle. Write down the coordinates of the fourth corner, D.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polyline points=\"174,126 246,126 246,78\" stroke-linejoin=\"round\"/><circle cx=\"174\" cy=\"126\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"246\" cy=\"126\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"246\" cy=\"78\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"184\" y=\"118\" text-anchor=\"middle\">A</text><text x=\"236\" y=\"118\" text-anchor=\"middle\">B</text><text x=\"236\" y=\"70\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 1,
+    "y": 3
+   },
+   "worked": [
+    "Opposite sides of a rectangle line up: the missing corner D shares its x with A and its y with C.",
+    "So \\((1, 3)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-738d1e0e",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "SHAPE_QUESTIONS[1]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A, B and C are three corners of a rectangle. Write down the coordinates of the fourth corner, D.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polyline points=\"78,102 198,102 198,174\" stroke-linejoin=\"round\"/><circle cx=\"78\" cy=\"102\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"198\" cy=\"102\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"198\" cy=\"174\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"88\" y=\"94\" text-anchor=\"middle\">A</text><text x=\"208\" y=\"94\" text-anchor=\"middle\">B</text><text x=\"208\" y=\"166\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -3,
+    "y": -1
+   },
+   "worked": [
+    "Opposite sides of a rectangle line up: the missing corner D shares its x with A and its y with C.",
+    "So \\((-3, -1)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-7b8698ea",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "SHAPE_QUESTIONS[2]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A, B and C are three corners of a rectangle. Write down the coordinates of the fourth corner, D.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polyline points=\"54,198 174,198 174,78\" stroke-linejoin=\"round\"/><circle cx=\"54\" cy=\"198\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"174\" cy=\"198\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"174\" cy=\"78\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"64\" y=\"190\" text-anchor=\"middle\">A</text><text x=\"184\" y=\"190\" text-anchor=\"middle\">B</text><text x=\"184\" y=\"70\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -4,
+    "y": 3
+   },
+   "worked": [
+    "Opposite sides of a rectangle line up: the missing corner D shares its x with A and its y with C.",
+    "So \\((-4, 3)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-09910854",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "SHAPE_QUESTIONS[3]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A, B and C are three corners of a rectangle. Write down the coordinates of the fourth corner, D.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polyline points=\"150,150 222,150 222,78\" stroke-linejoin=\"round\"/><circle cx=\"150\" cy=\"150\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"222\" cy=\"150\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"222\" cy=\"78\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"160\" y=\"142\" text-anchor=\"middle\">A</text><text x=\"232\" y=\"142\" text-anchor=\"middle\">B</text><text x=\"232\" y=\"70\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 0,
+    "y": 3
+   },
+   "worked": [
+    "Opposite sides of a rectangle line up: the missing corner D shares its x with A and its y with C.",
+    "So \\((0, 3)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-58d99416",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "SHAPE_QUESTIONS[4]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A, B and C are three corners of a rectangle. Write down the coordinates of the fourth corner, D.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polyline points=\"102,126 222,126 222,198\" stroke-linejoin=\"round\"/><circle cx=\"102\" cy=\"126\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"222\" cy=\"126\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"222\" cy=\"198\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"112\" y=\"118\" text-anchor=\"middle\">A</text><text x=\"232\" y=\"118\" text-anchor=\"middle\">B</text><text x=\"232\" y=\"190\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -2,
+    "y": -2
+   },
+   "worked": [
+    "Opposite sides of a rectangle line up: the missing corner D shares its x with A and its y with C.",
+    "So \\((-2, -2)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-242d9c40",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "SHAPE_QUESTIONS[5]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A, B and C are three corners of a rectangle. Write down the coordinates of the fourth corner, D.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polyline points=\"126,222 246,222 246,102\" stroke-linejoin=\"round\"/><circle cx=\"126\" cy=\"222\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"246\" cy=\"222\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"246\" cy=\"102\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"136\" y=\"214\" text-anchor=\"middle\">A</text><text x=\"236\" y=\"214\" text-anchor=\"middle\">B</text><text x=\"236\" y=\"94\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -1,
+    "y": 2
+   },
+   "worked": [
+    "Opposite sides of a rectangle line up: the missing corner D shares its x with A and its y with C.",
+    "So \\((-1, 2)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-d25cdc44",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "SHAPE_QUESTIONS[6]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A, B and C are three corners of a rectangle. Write down the coordinates of the fourth corner, D.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polyline points=\"102,198 198,198 198,102\" stroke-linejoin=\"round\"/><circle cx=\"102\" cy=\"198\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"198\" cy=\"198\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"198\" cy=\"102\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"112\" y=\"190\" text-anchor=\"middle\">A</text><text x=\"208\" y=\"190\" text-anchor=\"middle\">B</text><text x=\"208\" y=\"94\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -2,
+    "y": 2
+   },
+   "worked": [
+    "Opposite sides of a rectangle line up: the missing corner D shares its x with A and its y with C.",
+    "So \\((-2, 2)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-792b3de8",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "SHAPE_QUESTIONS[7]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A, B and C are three corners of a rectangle. Write down the coordinates of the fourth corner, D.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polyline points=\"150,246 222,246 222,126\" stroke-linejoin=\"round\"/><circle cx=\"150\" cy=\"246\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"222\" cy=\"246\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"222\" cy=\"126\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"160\" y=\"238\" text-anchor=\"middle\">A</text><text x=\"232\" y=\"238\" text-anchor=\"middle\">B</text><text x=\"232\" y=\"118\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 0,
+    "y": 1
+   },
+   "worked": [
+    "Opposite sides of a rectangle line up: the missing corner D shares its x with A and its y with C.",
+    "So \\((0, 1)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-668b888c",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "SHAPE_QUESTIONS[8]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A, B and C are three corners of a rectangle. Write down the coordinates of the fourth corner, D.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polyline points=\"54,150 150,150 150,222\" stroke-linejoin=\"round\"/><circle cx=\"54\" cy=\"150\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"150\" cy=\"150\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"150\" cy=\"222\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"64\" y=\"142\" text-anchor=\"middle\">A</text><text x=\"160\" y=\"142\" text-anchor=\"middle\">B</text><text x=\"160\" y=\"214\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -4,
+    "y": -3
+   },
+   "worked": [
+    "Opposite sides of a rectangle line up: the missing corner D shares its x with A and its y with C.",
+    "So \\((-4, -3)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "coordinates-79a94886",
+   "topic": "coordinates",
+   "source": {
+    "game": "four-quadrant-explorer",
+    "ref": "SHAPE_QUESTIONS[9]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A, B and C are three corners of a rectangle. Write down the coordinates of the fourth corner, D.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polyline points=\"78,126 174,126 174,222\" stroke-linejoin=\"round\"/><circle cx=\"78\" cy=\"126\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"174\" cy=\"126\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><circle cx=\"174\" cy=\"222\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"88\" y=\"118\" text-anchor=\"middle\">A</text><text x=\"184\" y=\"118\" text-anchor=\"middle\">B</text><text x=\"184\" y=\"214\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -3,
+    "y": -3
+   },
+   "worked": [
+    "Opposite sides of a rectangle line up: the missing corner D shares its x with A and its y with C.",
+    "So \\((-3, -3)\\)."
+   ],
+   "slip": []
+  }
+ ]
+}
