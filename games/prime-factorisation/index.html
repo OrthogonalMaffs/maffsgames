@@ -428,7 +428,7 @@ var endGame = MaffsLock.finishOnce(function (completed) {
 
   var _acc = TOTAL_QS > 0 ? Math.round(qNum / TOTAL_QS * 100) : 0;
   mfg('game_completed',{game_slug:'prime-factorisation',level:gameLevel,score:score,questions_answered:qNum,accuracy:_acc});
-  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('prime-factorisation',gameLevel,score,qNum).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('prime-factorisation',gameLevel,score);}}
+  if(window.MaffsScoreHistory){MaffsScoreHistory.record('prime-factorisation',gameLevel,score);}if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('prime-factorisation',gameLevel,score,qNum).catch(function(){});}
   saveBest(score);
   renderLB();
 });
@@ -437,21 +437,10 @@ function getBest() { return parseInt(localStorage.getItem('ps_best') || '0'); }
 function saveBest(s) {
   var prev = getBest();
   if (s > prev) { localStorage.setItem('ps_best', String(s)); mfg('personal_best_set',{game_slug:'prime-factorisation',level:gameLevel,score:s,previous_best:prev}); }
-  var scores = JSON.parse(localStorage.getItem('ps_scores') || '[]');
-  scores.push({ score: s, date: new Date().toLocaleDateString() });
-  scores.sort(function(a, b) { return b.score - a.score; });
-  scores = scores.slice(0, 5);
-  localStorage.setItem('ps_scores', JSON.stringify(scores));
 }
 function renderLB() {
-  var scores = JSON.parse(localStorage.getItem('ps_scores') || '[]');
-  var el = document.getElementById('lbList');
-  if (!scores.length) { el.innerHTML = '<div style="text-align:center;color:#aaa;font-size:13px;padding:12px">No scores yet</div>'; return; }
-  el.innerHTML = scores.map(function(s, i) {
-    return '<div class="lb-row"><span>#' + (i + 1) + '</span><span>' + s.date + '</span><span class="lb-score">' + s.score + '</span></div>';
-  }).join('');
+  if (window.MaffsScoreHistory) MaffsScoreHistory.renderTop(document.getElementById('lbList'), 'prime-factorisation', gameLevel, 5);
 }
-renderLB();
 (function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
 </script>
 <script src="../../schools/assets/teacher-invite.js"></script>

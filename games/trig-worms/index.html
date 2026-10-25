@@ -598,7 +598,7 @@ const endGame=MaffsLock.finishOnce(function(){
   window._ggAbandoned=false;
   var _twPct=TOTAL>0?Math.round(_twCorrectCount/TOTAL*100):0;
   mfg('game_completed',{game_slug:'trig-worms',level:resolvedLevel,score:score,questions_answered:TOTAL,accuracy:_twPct});
-  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('trig-worms','gcse',score,TOTAL).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('trig-worms','gcse',score);}}
+  if(window.MaffsScoreHistory){MaffsScoreHistory.record('trig-worms','gcse',score);}if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('trig-worms','gcse',score,TOTAL).catch(function(){});}
   var _twOldBest=getBest();
   saveBest(score);
   if(score>_twOldBest){mfg('personal_best_set',{game_slug:'trig-worms',level:resolvedLevel,score:score,previous_best:_twOldBest});}
@@ -606,13 +606,10 @@ const endGame=MaffsLock.finishOnce(function(){
 });
 function getBest(){return parseInt(localStorage.getItem('tw_best')||'0');}
 function saveBest(s){if(s>getBest())localStorage.setItem('tw_best',s);document.getElementById('best').textContent=getBest();}
-function renderLB(){
-  const scores=JSON.parse(localStorage.getItem('tw_scores')||'[]');
-  const ns=[...scores,{score,date:new Date().toLocaleDateString()}].sort((a,b)=>b.score-a.score).slice(0,5);
-  localStorage.setItem('tw_scores',JSON.stringify(ns));
-  document.getElementById('lbList').innerHTML=ns.map((s,i)=>`<div class="lb-row"><span>#${i+1}</span><span>${s.date}</span><span class="lb-score">${s.score}</span></div>`).join('')||'<div style="text-align:center;color:#9aa3b2;font-size:12px;padding:10px">No scores yet</div>';
+function renderLB() {
+  if (window.MaffsScoreHistory) MaffsScoreHistory.renderTop(document.getElementById('lbList'), 'trig-worms', 'gcse', 5);
 }
-document.getElementById('best').textContent=getBest();renderLB();
+document.getElementById('best').textContent=getBest();
 (function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
 </script>
 <script src="../../schools/assets/teacher-invite.js"></script>

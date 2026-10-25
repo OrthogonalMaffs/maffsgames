@@ -500,7 +500,7 @@ function showModal(){
   MaffsLock.fresh(document.getElementById('modal'));
   document.getElementById('modal-result').textContent=score>1200?'Exceptional.':score>800?'Well Played.':'Keep Practising.';
   document.getElementById('modal-score').innerHTML=`
-    <div class="ms-item"><span class="ms-val">${score.toLocaleString()}</span><span class="ms-lbl">Final Score</span></div>
+    <div class="ms-item"><span class="ms-val">${score.toLocaleString('en-GB')}</span><span class="ms-lbl">Final Score</span></div>
     <div class="ms-item"><span class="ms-val">${correct}/${questions.length}</span><span class="ms-lbl">Correct</span></div>
     <div class="ms-item"><span class="ms-val">${Math.round(correct/questions.length*100)}%</span><span class="ms-lbl">Accuracy</span></div>
     <div class="ms-item"><span class="ms-val">${maxStreak}</span><span class="ms-lbl">Best Streak</span></div>
@@ -529,7 +529,7 @@ function renderLB(hl){
     <div class="lb-row ${e.name===hl?'hl':''}">
       <span class="lb-rank">${i+1}</span>
       <span class="lb-name">${escHtml(e.name)}</span>
-      <span class="lb-score">${e.sc.toLocaleString()}</span>
+      <span class="lb-score">${e.sc.toLocaleString('en-GB')}</span>
       <span class="lb-acc">${e.acc}%</span>
     </div>`).join('');
 }

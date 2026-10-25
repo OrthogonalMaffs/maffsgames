@@ -420,7 +420,7 @@ const endGame = MaffsLock.finishOnce(function () {
 
   window._ggAbandoned=false;
   mfg('game_completed',{game_slug:'factor-race',level:gameLevel,score:score,questions_answered:QUESTIONS,accuracy:accuracy});
-  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('factor-race',gameLevel,score,QUESTIONS).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('factor-race',gameLevel,score);}}
+  if(window.MaffsScoreHistory){MaffsScoreHistory.record('factor-race',gameLevel,score);}if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('factor-race',gameLevel,score,QUESTIONS).catch(function(){});}
   var _pbOld=getBest();if(score>_pbOld){mfg('personal_best_set',{game_slug:'factor-race',level:gameLevel,score:score,previous_best:_pbOld});}
   saveBest(score);
   renderLB();
@@ -430,17 +430,10 @@ function getBest() { return parseInt(localStorage.getItem('fr_best') || '0'); }
 function saveBest(s) { if(s > getBest()) localStorage.setItem('fr_best', s); }
 
 function renderLB() {
-  const scores = JSON.parse(localStorage.getItem('fr_scores') || '[]');
-  const newScores = [...scores, {score, date: new Date().toLocaleDateString()}]
-    .sort((a,b) => b.score - a.score).slice(0, 5);
-  localStorage.setItem('fr_scores', JSON.stringify(newScores));
-  document.getElementById('lbList').innerHTML = newScores.map((s,i) =>
-    `<div class="lb-row"><span class="lb-pos">#${i+1}</span><span>${s.date}</span><span class="lb-score">${s.score}</span></div>`
-  ).join('') || '<div class="lb-empty">No scores yet</div>';
+  if (window.MaffsScoreHistory) MaffsScoreHistory.renderTop(document.getElementById('lbList'), 'factor-race', gameLevel, 5);
   document.getElementById('best').textContent = getBest();
 }
 
-renderLB();
 document.getElementById('best').textContent = getBest();
 (function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
 </script>
