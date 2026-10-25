@@ -1,0 +1,2022 @@
+{
+ "topic": "simultaneous",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "simultaneous-4834d59f",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_01"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(6x - y = -7\\) and \\(-4x + 5y = 9\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 1, y = -1\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -1, y = -1\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = -1, y = 1\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 1, y = 1\\)"
+    }
+   ],
+   "worked": [
+    "Make the x terms match: multiply (1) by 2 and (2) by 3: \\(12x - 2y = -14\\) and \\(-12x + 15y = 27\\).",
+    "Different signs, so add: \\(13y = 13\\).",
+    "\\(y = 1\\).",
+    "Put \\(y = 1\\) into (1): \\(6x - 1 = -7\\), so \\(x = -1\\).",
+    "Check in (2): \\(-4 \\times (-1) + 5 \\times 1 = 9\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-2a9a07ed",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_02"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(3x + 2y = 10\\) and \\(9x - 10y = 46\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 4, y = -1\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = 4, y = 1\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = -4, y = -1\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -1, y = 4\\)"
+    }
+   ],
+   "worked": [
+    "Make the x terms match: multiply (1) by 3: \\(9x + 6y = 30\\) and \\(9x - 10y = 46\\).",
+    "Same sign, so subtract: \\(16y = -16\\).",
+    "\\(y = -1\\).",
+    "Put \\(y = -1\\) into (1): \\(3x + 2 \\times (-1) = 10\\), so \\(x = 4\\).",
+    "Check in (2): \\(9 \\times 4 - 10 \\times (-1) = 46\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-d9d29ab1",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_03"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(x - y = 6\\) and \\(4x + 5y = -39\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -1, y = -7\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -1, y = 7\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = -7, y = -1\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 1, y = -7\\)"
+    }
+   ],
+   "worked": [
+    "Make the x terms match: multiply (1) by 4: \\(4x - 4y = 24\\) and \\(4x + 5y = -39\\).",
+    "Same sign, so subtract: \\(-9y = 63\\).",
+    "\\(y = -7\\).",
+    "Put \\(y = -7\\) into (1): \\(x - (-7) = 6\\), so \\(x = -1\\).",
+    "Check in (2): \\(4 \\times (-1) + 5 \\times (-7) = -39\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-325556b4",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_04"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(x + 6y = 7\\) and \\(3x + 10y = 13\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -1, y = -1\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = 1, y = 1\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 1, y = -1\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -1, y = 1\\)"
+    }
+   ],
+   "worked": [
+    "Make the x terms match: multiply (1) by 3: \\(3x + 18y = 21\\) and \\(3x + 10y = 13\\).",
+    "Same sign, so subtract: \\(8y = 8\\).",
+    "\\(y = 1\\).",
+    "Put \\(y = 1\\) into (1): \\(x + 6 \\times 1 = 7\\), so \\(x = 1\\).",
+    "Check in (2): \\(3 \\times 1 + 10 \\times 1 = 13\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-a6dc9b2b",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_05"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(3x - 2y = -5\\) and \\(5x - 2y = 5\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 10, y = 5\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -5, y = 10\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 5, y = 10\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 5, y = -10\\)"
+    }
+   ],
+   "worked": [
+    "The y terms are the same size, so no multiplying is needed.",
+    "Same sign, so subtract: \\(-2x = -10\\).",
+    "\\(x = 5\\).",
+    "Put \\(x = 5\\) into (1): \\(3 \\times 5 - 2y = -5\\), so \\(y = 10\\).",
+    "Check in (2): \\(5 \\times 5 - 2 \\times 10 = 5\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-6206b373",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_06"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(x - 12y = -27\\) and \\(-x - 4y = -21\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 9, y = -3\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -9, y = 3\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 9, y = 3\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 3, y = 9\\)"
+    }
+   ],
+   "worked": [
+    "The x terms are the same size, so no multiplying is needed.",
+    "Different signs, so add: \\(-16y = -48\\).",
+    "\\(y = 3\\).",
+    "Put \\(y = 3\\) into (1): \\(x - 12 \\times 3 = -27\\), so \\(x = 9\\).",
+    "Check in (2): \\(-9 - 4 \\times 3 = -21\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-6c69636a",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_07"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(5x - 8y = -17\\) and \\(3x - 2y = -13\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -1, y = -5\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -5, y = -1\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 5, y = -1\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -5, y = 1\\)"
+    }
+   ],
+   "worked": [
+    "Make the y terms match: multiply (2) by 4: \\(5x - 8y = -17\\) and \\(12x - 8y = -52\\).",
+    "Same sign, so subtract: \\(-7x = 35\\).",
+    "\\(x = -5\\).",
+    "Put \\(x = -5\\) into (1): \\(5 \\times (-5) - 8y = -17\\), so \\(y = -1\\).",
+    "Check in (2): \\(3 \\times (-5) - 2 \\times (-1) = -13\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-1b197f6e",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_08"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(5x + y = -33\\) and \\(3x - 2y = -25\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -7, y = 2\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -7, y = -2\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 2, y = -7\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 7, y = 2\\)"
+    }
+   ],
+   "worked": [
+    "Make the y terms match: multiply (1) by 2: \\(10x + 2y = -66\\) and \\(3x - 2y = -25\\).",
+    "Different signs, so add: \\(13x = -91\\).",
+    "\\(x = -7\\).",
+    "Put \\(x = -7\\) into (1): \\(5 \\times (-7) + y = -33\\), so \\(y = 2\\).",
+    "Check in (2): \\(3 \\times (-7) - 2 \\times 2 = -25\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-44554896",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_09"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(x + 6y = 33\\) and \\(3x + 8y = 49\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 3, y = -5\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -3, y = 5\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 5, y = 3\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 3, y = 5\\)"
+    }
+   ],
+   "worked": [
+    "Make the x terms match: multiply (1) by 3: \\(3x + 18y = 99\\) and \\(3x + 8y = 49\\).",
+    "Same sign, so subtract: \\(10y = 50\\).",
+    "\\(y = 5\\).",
+    "Put \\(y = 5\\) into (1): \\(x + 6 \\times 5 = 33\\), so \\(x = 3\\).",
+    "Check in (2): \\(3 \\times 3 + 8 \\times 5 = 49\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-16d02e47",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_10"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(8x + 3y = 46\\) and \\(2x + y = 14\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -2, y = 10\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = 2, y = -10\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 10, y = 2\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 2, y = 10\\)"
+    }
+   ],
+   "worked": [
+    "Make the y terms match: multiply (2) by 3: \\(8x + 3y = 46\\) and \\(6x + 3y = 42\\).",
+    "Same sign, so subtract: \\(2x = 4\\).",
+    "\\(x = 2\\).",
+    "Put \\(x = 2\\) into (1): \\(8 \\times 2 + 3y = 46\\), so \\(y = 10\\).",
+    "Check in (2): \\(2 \\times 2 + 10 = 14\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-e69be133",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_11"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(5x - 6y = 10\\) and \\(3x + 2y = -22\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -5, y = -4\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -4, y = -5\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = -4, y = 5\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 4, y = -5\\)"
+    }
+   ],
+   "worked": [
+    "Make the y terms match: multiply (2) by 3: \\(5x - 6y = 10\\) and \\(9x + 6y = -66\\).",
+    "Different signs, so add: \\(14x = -56\\).",
+    "\\(x = -4\\).",
+    "Put \\(x = -4\\) into (1): \\(5 \\times (-4) - 6y = 10\\), so \\(y = -5\\).",
+    "Check in (2): \\(3 \\times (-4) + 2 \\times (-5) = -22\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-20b32966",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_12"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(11x + 6y = -2\\) and \\(11x + 3y = 10\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -4, y = 2\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = 2, y = -4\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = -2, y = -4\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 2, y = 4\\)"
+    }
+   ],
+   "worked": [
+    "The x terms are the same size, so no multiplying is needed.",
+    "Same sign, so subtract: \\(3y = -12\\).",
+    "\\(y = -4\\).",
+    "Put \\(y = -4\\) into (1): \\(11x + 6 \\times (-4) = -2\\), so \\(x = 2\\).",
+    "Check in (2): \\(11 \\times 2 + 3 \\times (-4) = 10\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-e4ef7138",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_13"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(x + 4y = 42\\) and \\(3x + 2y = 46\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 10, y = -8\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -10, y = 8\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 10, y = 8\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 8, y = 10\\)"
+    }
+   ],
+   "worked": [
+    "Make the y terms match: multiply (2) by 2: \\(x + 4y = 42\\) and \\(6x + 4y = 92\\).",
+    "Same sign, so subtract: \\(-5x = -50\\).",
+    "\\(x = 10\\).",
+    "Put \\(x = 10\\) into (1): \\(10 + 4y = 42\\), so \\(y = 8\\).",
+    "Check in (2): \\(3 \\times 10 + 2 \\times 8 = 46\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-2fa459a5",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_14"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(x - 3y = 4\\) and \\(5x - 2y = -32\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -4, y = -8\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -8, y = 4\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 8, y = -4\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -8, y = -4\\)"
+    }
+   ],
+   "worked": [
+    "Make the y terms match: multiply (1) by 2 and (2) by 3: \\(2x - 6y = 8\\) and \\(15x - 6y = -96\\).",
+    "Same sign, so subtract: \\(-13x = 104\\).",
+    "\\(x = -8\\).",
+    "Put \\(x = -8\\) into (1): \\((-8) - 3y = 4\\), so \\(y = -4\\).",
+    "Check in (2): \\(5 \\times (-8) - 2 \\times (-4) = -32\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-58544c28",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_15"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(8x + 5y = -39\\) and \\(6x + y = -21\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 3, y = -3\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -3, y = 3\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 3, y = 3\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -3, y = -3\\)"
+    }
+   ],
+   "worked": [
+    "Make the y terms match: multiply (2) by 5: \\(8x + 5y = -39\\) and \\(30x + 5y = -105\\).",
+    "Same sign, so subtract: \\(-22x = 66\\).",
+    "\\(x = -3\\).",
+    "Put \\(x = -3\\) into (1): \\(8 \\times (-3) + 5y = -39\\), so \\(y = -3\\).",
+    "Check in (2): \\(6 \\times (-3) + (-3) = -21\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-5177b831",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_16"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(7x - 6y = 25\\) and \\(7x - 2y = 41\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 7, y = 4\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = 4, y = 7\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 7, y = -4\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -7, y = 4\\)"
+    }
+   ],
+   "worked": [
+    "The x terms are the same size, so no multiplying is needed.",
+    "Same sign, so subtract: \\(-4y = -16\\).",
+    "\\(y = 4\\).",
+    "Put \\(y = 4\\) into (1): \\(7x - 6 \\times 4 = 25\\), so \\(x = 7\\).",
+    "Check in (2): \\(7 \\times 7 - 2 \\times 4 = 41\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-6c052980",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_17"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(5x + 4y = 22\\) and \\(-4x - 5y = -23\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 3, y = 2\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -2, y = 3\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 2, y = -3\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 2, y = 3\\)"
+    }
+   ],
+   "worked": [
+    "Make the y terms match: multiply (1) by 5 and (2) by 4: \\(25x + 20y = 110\\) and \\(-16x - 20y = -92\\).",
+    "Different signs, so add: \\(9x = 18\\).",
+    "\\(x = 2\\).",
+    "Put \\(x = 2\\) into (1): \\(5 \\times 2 + 4y = 22\\), so \\(y = 3\\).",
+    "Check in (2): \\(-4 \\times 2 - 5 \\times 3 = -23\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-5a7bd752",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_18"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(5x + 2y = -18\\) and \\(-2x - 5y = 24\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -4, y = -2\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = 2, y = -4\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = -2, y = -4\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -2, y = 4\\)"
+    }
+   ],
+   "worked": [
+    "Make the y terms match: multiply (1) by 5 and (2) by 2: \\(25x + 10y = -90\\) and \\(-4x - 10y = 48\\).",
+    "Different signs, so add: \\(21x = -42\\).",
+    "\\(x = -2\\).",
+    "Put \\(x = -2\\) into (1): \\(5 \\times (-2) + 2y = -18\\), so \\(y = -4\\).",
+    "Check in (2): \\(-2 \\times (-2) - 5 \\times (-4) = 24\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-31fac319",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_19"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(x + 6y = 54\\) and \\(2x + 3y = 18\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 6, y = 10\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -6, y = -10\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 10, y = -6\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -6, y = 10\\)"
+    }
+   ],
+   "worked": [
+    "Make the y terms match: multiply (2) by 2: \\(x + 6y = 54\\) and \\(4x + 6y = 36\\).",
+    "Same sign, so subtract: \\(-3x = 18\\).",
+    "\\(x = -6\\).",
+    "Put \\(x = -6\\) into (1): \\((-6) + 6y = 54\\), so \\(y = 10\\).",
+    "Check in (2): \\(2 \\times (-6) + 3 \\times 10 = 18\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-9bdb5db7",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_20"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(12x + y = -34\\) and \\(8x - y = -6\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 2, y = -10\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -2, y = 10\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = -10, y = -2\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -2, y = -10\\)"
+    }
+   ],
+   "worked": [
+    "The y terms are the same size, so no multiplying is needed.",
+    "Different signs, so add: \\(20x = -40\\).",
+    "\\(x = -2\\).",
+    "Put \\(x = -2\\) into (1): \\(12 \\times (-2) + y = -34\\), so \\(y = -10\\).",
+    "Check in (2): \\(8 \\times (-2) - (-10) = -6\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-2bbe7880",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_21"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(3x - 4y = -20\\) and \\(-x - 6y = 14\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -1, y = -8\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -8, y = 1\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = -8, y = -1\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 8, y = -1\\)"
+    }
+   ],
+   "worked": [
+    "Make the x terms match: multiply (2) by 3: \\(3x - 4y = -20\\) and \\(-3x - 18y = 42\\).",
+    "Different signs, so add: \\(-22y = 22\\).",
+    "\\(y = -1\\).",
+    "Put \\(y = -1\\) into (1): \\(3x - 4 \\times (-1) = -20\\), so \\(x = -8\\).",
+    "Check in (2): \\(-(-8) - 6 \\times (-1) = 14\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-a4430622",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_22"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(7x - 2y = -52\\) and \\(7x + 2y = -32\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -6, y = 5\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -6, y = -5\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 6, y = 5\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 5, y = -6\\)"
+    }
+   ],
+   "worked": [
+    "The y terms are the same size, so no multiplying is needed.",
+    "Different signs, so add: \\(14x = -84\\).",
+    "\\(x = -6\\).",
+    "Put \\(x = -6\\) into (1): \\(7 \\times (-6) - 2y = -52\\), so \\(y = 5\\).",
+    "Check in (2): \\(7 \\times (-6) + 2 \\times 5 = -32\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-e522c888",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_23"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(5x - y = -12\\) and \\(2x + y = -16\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -4, y = 8\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = 4, y = -8\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = -8, y = -4\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -4, y = -8\\)"
+    }
+   ],
+   "worked": [
+    "The y terms are the same size, so no multiplying is needed.",
+    "Different signs, so add: \\(7x = -28\\).",
+    "\\(x = -4\\).",
+    "Put \\(x = -4\\) into (1): \\(5 \\times (-4) - y = -12\\), so \\(y = -8\\).",
+    "Check in (2): \\(2 \\times (-4) + (-8) = -16\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-3ed626c1",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_24"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(3x - 4y = 1\\) and \\(-9x + 10y = -7\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 3, y = 2\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = 3, y = -2\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 2, y = 3\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -3, y = 2\\)"
+    }
+   ],
+   "worked": [
+    "Make the x terms match: multiply (1) by 3: \\(9x - 12y = 3\\) and \\(-9x + 10y = -7\\).",
+    "Different signs, so add: \\(-2y = -4\\).",
+    "\\(y = 2\\).",
+    "Put \\(y = 2\\) into (1): \\(3x - 4 \\times 2 = 1\\), so \\(x = 3\\).",
+    "Check in (2): \\(-9 \\times 3 + 10 \\times 2 = -7\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-e4aa193b",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_25"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(6x - 5y = 23\\) and \\(9x - 4y = 10\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -7, y = -2\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -2, y = 7\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 2, y = -7\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -2, y = -7\\)"
+    }
+   ],
+   "worked": [
+    "Make the x terms match: multiply (1) by 3 and (2) by 2: \\(18x - 15y = 69\\) and \\(18x - 8y = 20\\).",
+    "Same sign, so subtract: \\(-7y = 49\\).",
+    "\\(y = -7\\).",
+    "Put \\(y = -7\\) into (1): \\(6x - 5 \\times (-7) = 23\\), so \\(x = -2\\).",
+    "Check in (2): \\(9 \\times (-2) - 4 \\times (-7) = 10\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-bcece15b",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_26"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(3x + 2y = -9\\) and \\(9x + 8y = -39\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 1, y = 6\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -6, y = 1\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = -1, y = -6\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 1, y = -6\\)"
+    }
+   ],
+   "worked": [
+    "Make the x terms match: multiply (1) by 3: \\(9x + 6y = -27\\) and \\(9x + 8y = -39\\).",
+    "Same sign, so subtract: \\(-2y = 12\\).",
+    "\\(y = -6\\).",
+    "Put \\(y = -6\\) into (1): \\(3x + 2 \\times (-6) = -9\\), so \\(x = 1\\).",
+    "Check in (2): \\(9 \\times 1 + 8 \\times (-6) = -39\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-1b9b5e81",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_27"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(11x - 9y = 39\\) and \\(-11x + 3y = 9\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -3, y = -8\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = 3, y = -8\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = -3, y = 8\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -8, y = -3\\)"
+    }
+   ],
+   "worked": [
+    "The x terms are the same size, so no multiplying is needed.",
+    "Different signs, so add: \\(-6y = 48\\).",
+    "\\(y = -8\\).",
+    "Put \\(y = -8\\) into (1): \\(11x - 9 \\times (-8) = 39\\), so \\(x = -3\\).",
+    "Check in (2): \\(-11 \\times (-3) + 3 \\times (-8) = 9\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-e28cce92",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_28"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(x - 3y = -36\\) and \\(-2x - 3y = -9\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 9, y = 9\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = 9, y = -9\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = -9, y = -9\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -9, y = 9\\)"
+    }
+   ],
+   "worked": [
+    "The y terms are the same size, so no multiplying is needed.",
+    "Same sign, so subtract: \\(3x = -27\\).",
+    "\\(x = -9\\).",
+    "Put \\(x = -9\\) into (1): \\((-9) - 3y = -36\\), so \\(y = 9\\).",
+    "Check in (2): \\(-2 \\times (-9) - 3 \\times 9 = -9\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-6f9e6839",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_29"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(3x + 4y = -6\\) and \\(5x - y = -33\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -6, y = 3\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -6, y = -3\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 3, y = -6\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 6, y = 3\\)"
+    }
+   ],
+   "worked": [
+    "Make the y terms match: multiply (2) by 4: \\(3x + 4y = -6\\) and \\(20x - 4y = -132\\).",
+    "Different signs, so add: \\(23x = -138\\).",
+    "\\(x = -6\\).",
+    "Put \\(x = -6\\) into (1): \\(3 \\times (-6) + 4y = -6\\), so \\(y = 3\\).",
+    "Check in (2): \\(5 \\times (-6) - 3 = -33\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-ab84ee0a",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_30"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(8x - 3y = -22\\) and \\(6x + y = -10\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 2, y = 2\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = 2, y = -2\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = -2, y = 2\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -2, y = -2\\)"
+    }
+   ],
+   "worked": [
+    "Make the y terms match: multiply (2) by 3: \\(8x - 3y = -22\\) and \\(18x + 3y = -30\\).",
+    "Different signs, so add: \\(26x = -52\\).",
+    "\\(x = -2\\).",
+    "Put \\(x = -2\\) into (1): \\(8 \\times (-2) - 3y = -22\\), so \\(y = 2\\).",
+    "Check in (2): \\(6 \\times (-2) + 2 = -10\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-9255f921",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_31"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(x - 8y = -27\\) and \\(x - 12y = -39\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -3, y = -3\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -3, y = 3\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 3, y = -3\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 3, y = 3\\)"
+    }
+   ],
+   "worked": [
+    "The x terms are the same size, so no multiplying is needed.",
+    "Same sign, so subtract: \\(4y = 12\\).",
+    "\\(y = 3\\).",
+    "Put \\(y = 3\\) into (1): \\(x - 8 \\times 3 = -27\\), so \\(x = -3\\).",
+    "Check in (2): \\((-3) - 12 \\times 3 = -39\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-f5c01cb3",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_32"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(2x + y = -1\\) and \\(5x - 4y = -9\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -1, y = 1\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = 1, y = -1\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 1, y = 1\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -1, y = -1\\)"
+    }
+   ],
+   "worked": [
+    "Make the y terms match: multiply (1) by 4: \\(8x + 4y = -4\\) and \\(5x - 4y = -9\\).",
+    "Different signs, so add: \\(13x = -13\\).",
+    "\\(x = -1\\).",
+    "Put \\(x = -1\\) into (1): \\(2 \\times (-1) + y = -1\\), so \\(y = 1\\).",
+    "Check in (2): \\(5 \\times (-1) - 4 \\times 1 = -9\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-e8a77b2f",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_33"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(x + 9y = 42\\) and \\(2x + 3y = 24\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 4, y = 6\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -6, y = 4\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 6, y = -4\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 6, y = 4\\)"
+    }
+   ],
+   "worked": [
+    "Make the x terms match: multiply (1) by 2: \\(2x + 18y = 84\\) and \\(2x + 3y = 24\\).",
+    "Same sign, so subtract: \\(15y = 60\\).",
+    "\\(y = 4\\).",
+    "Put \\(y = 4\\) into (1): \\(x + 9 \\times 4 = 42\\), so \\(x = 6\\).",
+    "Check in (2): \\(2 \\times 6 + 3 \\times 4 = 24\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-8c8a87a3",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_34"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(x - y = -13\\) and \\(-3x - 4y = -3\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -7, y = 6\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = 6, y = -7\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = -7, y = -6\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 7, y = 6\\)"
+    }
+   ],
+   "worked": [
+    "Make the x terms match: multiply (1) by 3: \\(3x - 3y = -39\\) and \\(-3x - 4y = -3\\).",
+    "Different signs, so add: \\(-7y = -42\\).",
+    "\\(y = 6\\).",
+    "Put \\(y = 6\\) into (1): \\(x - 6 = -13\\), so \\(x = -7\\).",
+    "Check in (2): \\(-3 \\times (-7) - 4 \\times 6 = -3\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-ecec06cb",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_35"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(3x + 2y = 11\\) and \\(5x + 4y = 21\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 4, y = 1\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -1, y = 4\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 1, y = -4\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 1, y = 4\\)"
+    }
+   ],
+   "worked": [
+    "Make the y terms match: multiply (1) by 2: \\(6x + 4y = 22\\) and \\(5x + 4y = 21\\).",
+    "Same sign, so subtract: \\(x = 1\\).",
+    "\\(x = 1\\).",
+    "Put \\(x = 1\\) into (1): \\(3 \\times 1 + 2y = 11\\), so \\(y = 4\\).",
+    "Check in (2): \\(5 \\times 1 + 4 \\times 4 = 21\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-9b95a2f5",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_36"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(3x + y = 7\\) and \\(12x + 5y = 20\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 5, y = -8\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = 5, y = 8\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = -5, y = -8\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -8, y = 5\\)"
+    }
+   ],
+   "worked": [
+    "Make the x terms match: multiply (1) by 4: \\(12x + 4y = 28\\) and \\(12x + 5y = 20\\).",
+    "Same sign, so subtract: \\(-y = 8\\).",
+    "\\(y = -8\\).",
+    "Put \\(y = -8\\) into (1): \\(3x + (-8) = 7\\), so \\(x = 5\\).",
+    "Check in (2): \\(12 \\times 5 + 5 \\times (-8) = 20\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-3ab52cdb",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_37"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(2x - 5y = 17\\) and \\(4x - 5y = -1\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -7, y = -9\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = 9, y = -7\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = -9, y = 7\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -9, y = -7\\)"
+    }
+   ],
+   "worked": [
+    "The y terms are the same size, so no multiplying is needed.",
+    "Same sign, so subtract: \\(-2x = 18\\).",
+    "\\(x = -9\\).",
+    "Put \\(x = -9\\) into (1): \\(2 \\times (-9) - 5y = 17\\), so \\(y = -7\\).",
+    "Check in (2): \\(4 \\times (-9) - 5 \\times (-7) = -1\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-9cc194f0",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_38"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(3x + 2y = 13\\) and \\(-6x - y = -29\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 5, y = 1\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = 5, y = -1\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = -5, y = -1\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -1, y = 5\\)"
+    }
+   ],
+   "worked": [
+    "Make the y terms match: multiply (2) by 2: \\(3x + 2y = 13\\) and \\(-12x - 2y = -58\\).",
+    "Different signs, so add: \\(-9x = -45\\).",
+    "\\(x = 5\\).",
+    "Put \\(x = 5\\) into (1): \\(3 \\times 5 + 2y = 13\\), so \\(y = -1\\).",
+    "Check in (2): \\(-6 \\times 5 - (-1) = -29\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-3544cdff",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_39"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(5x + 6y = 19\\) and \\(-x + 2y = -7\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -5, y = -1\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = 5, y = 1\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 5, y = -1\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -1, y = 5\\)"
+    }
+   ],
+   "worked": [
+    "Make the y terms match: multiply (2) by 3: \\(5x + 6y = 19\\) and \\(-3x + 6y = -21\\).",
+    "Same sign, so subtract: \\(8x = 40\\).",
+    "\\(x = 5\\).",
+    "Put \\(x = 5\\) into (1): \\(5 \\times 5 + 6y = 19\\), so \\(y = -1\\).",
+    "Check in (2): \\(-5 + 2 \\times (-1) = -7\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-0d4c04a8",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_40"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(10x - 3y = 40\\) and \\(-4x + y = -14\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -10, y = 1\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = 1, y = 10\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = -1, y = -10\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 1, y = -10\\)"
+    }
+   ],
+   "worked": [
+    "Make the y terms match: multiply (2) by 3: \\(10x - 3y = 40\\) and \\(-12x + 3y = -42\\).",
+    "Different signs, so add: \\(-2x = -2\\).",
+    "\\(x = 1\\).",
+    "Put \\(x = 1\\) into (1): \\(10 \\times 1 - 3y = 40\\), so \\(y = -10\\).",
+    "Check in (2): \\(-4 \\times 1 + (-10) = -14\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-aee29804",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_41"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(7x + 2y = -42\\) and \\(-7x + y = 21\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -4, y = 7\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -7, y = -4\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 4, y = -7\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -4, y = -7\\)"
+    }
+   ],
+   "worked": [
+    "The x terms are the same size, so no multiplying is needed.",
+    "Different signs, so add: \\(3y = -21\\).",
+    "\\(y = -7\\).",
+    "Put \\(y = -7\\) into (1): \\(7x + 2 \\times (-7) = -42\\), so \\(x = -4\\).",
+    "Check in (2): \\(-7 \\times (-4) + (-7) = 21\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-8a3d2486",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_42"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(5x - 12y = -33\\) and \\(-x + 8y = 1\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -9, y = 1\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = 9, y = -1\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = -1, y = -9\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -9, y = -1\\)"
+    }
+   ],
+   "worked": [
+    "Make the y terms match: multiply (1) by 2 and (2) by 3: \\(10x - 24y = -66\\) and \\(-3x + 24y = 3\\).",
+    "Different signs, so add: \\(7x = -63\\).",
+    "\\(x = -9\\).",
+    "Put \\(x = -9\\) into (1): \\(5 \\times (-9) - 12y = -33\\), so \\(y = -1\\).",
+    "Check in (2): \\(-(-9) + 8 \\times (-1) = 1\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-e8b63de4",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_43"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(x - 5y = -8\\) and \\(4x + 5y = 43\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 3, y = 7\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = 7, y = -3\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 7, y = 3\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -7, y = 3\\)"
+    }
+   ],
+   "worked": [
+    "The y terms are the same size, so no multiplying is needed.",
+    "Different signs, so add: \\(5x = 35\\).",
+    "\\(x = 7\\).",
+    "Put \\(x = 7\\) into (1): \\(7 - 5y = -8\\), so \\(y = 3\\).",
+    "Check in (2): \\(4 \\times 7 + 5 \\times 3 = 43\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-ed9a86df",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_44"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(9x + 4y = 52\\) and \\(9x + 8y = 32\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 8, y = 5\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -8, y = -5\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = -5, y = 8\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 8, y = -5\\)"
+    }
+   ],
+   "worked": [
+    "The x terms are the same size, so no multiplying is needed.",
+    "Same sign, so subtract: \\(-4y = 20\\).",
+    "\\(y = -5\\).",
+    "Put \\(y = -5\\) into (1): \\(9x + 4 \\times (-5) = 52\\), so \\(x = 8\\).",
+    "Check in (2): \\(9 \\times 8 + 8 \\times (-5) = 32\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-879d5a4a",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_45"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(2x + 5y = 13\\) and \\(x + y = 2\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = -1, y = 3\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = 1, y = 3\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = 3, y = -1\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -1, y = -3\\)"
+    }
+   ],
+   "worked": [
+    "Make the x terms match: multiply (2) by 2: \\(2x + 5y = 13\\) and \\(2x + 2y = 4\\).",
+    "Same sign, so subtract: \\(3y = 9\\).",
+    "\\(y = 3\\).",
+    "Put \\(y = 3\\) into (1): \\(2x + 5 \\times 3 = 13\\), so \\(x = -1\\).",
+    "Check in (2): \\((-1) + 3 = 2\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-61c4e232",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_46"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(x + 3y = 11\\) and \\(4x + 9y = 26\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 6, y = -7\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = 7, y = 6\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = -7, y = 6\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -7, y = -6\\)"
+    }
+   ],
+   "worked": [
+    "Make the y terms match: multiply (1) by 3: \\(3x + 9y = 33\\) and \\(4x + 9y = 26\\).",
+    "Same sign, so subtract: \\(-x = 7\\).",
+    "\\(x = -7\\).",
+    "Put \\(x = -7\\) into (1): \\((-7) + 3y = 11\\), so \\(y = 6\\).",
+    "Check in (2): \\(4 \\times (-7) + 9 \\times 6 = 26\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-2a6e606d",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_47"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(9x - 4y = -41\\) and \\(3x + 2y = -17\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 5, y = -1\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -5, y = 1\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = -1, y = -5\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = -5, y = -1\\)"
+    }
+   ],
+   "worked": [
+    "Make the y terms match: multiply (2) by 2: \\(9x - 4y = -41\\) and \\(6x + 4y = -34\\).",
+    "Different signs, so add: \\(15x = -75\\).",
+    "\\(x = -5\\).",
+    "Put \\(x = -5\\) into (1): \\(9 \\times (-5) - 4y = -41\\), so \\(y = -1\\).",
+    "Check in (2): \\(3 \\times (-5) + 2 \\times (-1) = -17\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "simultaneous-d4f8d97a",
+   "topic": "simultaneous",
+   "source": {
+    "game": "simultaneous-solver",
+    "ref": "BANK.stage4:s4_48"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Solve the simultaneous equations \\(3x + 5y = 22\\) and \\(2x + 3y = 12\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = 8, y = -6\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = -6, y = -8\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = -6, y = 8\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = 6, y = 8\\)"
+    }
+   ],
+   "worked": [
+    "Make the x terms match: multiply (1) by 2 and (2) by 3: \\(6x + 10y = 44\\) and \\(6x + 9y = 36\\).",
+    "Same sign, so subtract: \\(y = 8\\).",
+    "\\(y = 8\\).",
+    "Put \\(y = 8\\) into (1): \\(3x + 5 \\times 8 = 22\\), so \\(x = -6\\).",
+    "Check in (2): \\(2 \\times (-6) + 3 \\times 8 = 12\\)."
+   ],
+   "slip": []
+  }
+ ]
+}

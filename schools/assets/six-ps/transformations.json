@@ -1,0 +1,861 @@
+{
+ "topic": "transformations",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "transformations-e6697118",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "TRANSLATION_QUESTIONS:0"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Translate 2 right and 1 up. Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"174,126 222,126 198,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"164.8\" y=\"137.1\" text-anchor=\"middle\">A</text><text x=\"231.2\" y=\"137.1\" text-anchor=\"middle\">B</text><text x=\"198\" y=\"72\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 3,
+    "y": 2
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-69469a1d",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "TRANSLATION_QUESTIONS:1"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The diagram shows a rectangle ABCD on a coordinate grid. Translate 4 right. Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"78,126 126,126 126,78 78,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"70.2\" y=\"138.8\" text-anchor=\"middle\">A</text><text x=\"133.8\" y=\"138.8\" text-anchor=\"middle\">B</text><text x=\"133.8\" y=\"75.2\" text-anchor=\"middle\">C</text><text x=\"70.2\" y=\"75.2\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 3,
+    "y": 1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-808e6bde",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "TRANSLATION_QUESTIONS:2"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Translate 1 left and 3 up. Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"150,198 198,198 174,126\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"142.2\" y=\"210.8\" text-anchor=\"middle\">A</text><text x=\"205.8\" y=\"210.8\" text-anchor=\"middle\">B</text><text x=\"174\" y=\"120\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 0,
+    "y": 4
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-8101cfb1",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "TRANSLATION_QUESTIONS:3"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The diagram shows a square ABCD on a coordinate grid. Translate 3 left and 2 down. Write down the coordinates of the image of D.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"198,102 246,102 246,54 198,54\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"190.2\" y=\"114.8\" text-anchor=\"middle\">A</text><text x=\"253.8\" y=\"114.8\" text-anchor=\"middle\">B</text><text x=\"253.8\" y=\"51.2\" text-anchor=\"middle\">C</text><text x=\"190.2\" y=\"51.2\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -1,
+    "y": 2
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-893756a3",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "TRANSLATION_QUESTIONS:4"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Translate 2 right and 2 up. Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"102,222 150,222 126,174\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"92.8\" y=\"233.1\" text-anchor=\"middle\">A</text><text x=\"159.2\" y=\"233.1\" text-anchor=\"middle\">B</text><text x=\"126\" y=\"168\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 2,
+    "y": -1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-8f6fb1d9",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "TRANSLATION_QUESTIONS:5"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Translate 2 left and 1 down. Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"174,174 222,174 198,126\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"164.8\" y=\"185.1\" text-anchor=\"middle\">A</text><text x=\"231.2\" y=\"185.1\" text-anchor=\"middle\">B</text><text x=\"198\" y=\"120\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 0,
+    "y": 0
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-5a4b84dc",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "TRANSLATION_QUESTIONS:6"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The diagram shows a rectangle ABCD on a coordinate grid. Translate 3 right and 2 up. Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"54,174 102,174 102,126 54,126\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"46.2\" y=\"186.8\" text-anchor=\"middle\">A</text><text x=\"109.8\" y=\"186.8\" text-anchor=\"middle\">B</text><text x=\"109.8\" y=\"123.2\" text-anchor=\"middle\">C</text><text x=\"46.2\" y=\"123.2\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 1,
+    "y": 3
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-71a93e3f",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "TRANSLATION_QUESTIONS:7"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The diagram shows a square ABCD on a coordinate grid. Translate 1 left and 3 down. Write down the coordinates of the image of D.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"150,150 198,150 198,102 150,102\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"142.2\" y=\"162.8\" text-anchor=\"middle\">A</text><text x=\"205.8\" y=\"162.8\" text-anchor=\"middle\">B</text><text x=\"205.8\" y=\"99.2\" text-anchor=\"middle\">C</text><text x=\"142.2\" y=\"99.2\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -1,
+    "y": -1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-11363fb3",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "TRANSLATION_QUESTIONS:8"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Translate 3 right and 1 down. Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"126,102 174,102 150,54\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"116.8\" y=\"113.1\" text-anchor=\"middle\">A</text><text x=\"183.2\" y=\"113.1\" text-anchor=\"middle\">B</text><text x=\"150\" y=\"48\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 3,
+    "y": 3
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-99b3fb5f",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "TRANSLATION_QUESTIONS:9"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The diagram shows a rectangle ABCD on a coordinate grid. Translate 4 left. Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"174,222 222,222 222,174 174,174\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"166.2\" y=\"234.8\" text-anchor=\"middle\">A</text><text x=\"229.8\" y=\"234.8\" text-anchor=\"middle\">B</text><text x=\"229.8\" y=\"171.2\" text-anchor=\"middle\">C</text><text x=\"166.2\" y=\"171.2\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -1,
+    "y": -3
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-b0c973db",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "TRANSLATION_QUESTIONS:10"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Translate 1 right and 3 up. Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"78,198 126,198 102,150\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"68.8\" y=\"209.1\" text-anchor=\"middle\">A</text><text x=\"135.2\" y=\"209.1\" text-anchor=\"middle\">B</text><text x=\"102\" y=\"144\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 0,
+    "y": 1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-fd1aae96",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "TRANSLATION_QUESTIONS:11"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Translate 2 left and 2 down. Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"150,126 198,126 174,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"140.8\" y=\"137.1\" text-anchor=\"middle\">A</text><text x=\"207.2\" y=\"137.1\" text-anchor=\"middle\">B</text><text x=\"174\" y=\"72\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -1,
+    "y": 1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-a45898b7",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "TRANSLATION_QUESTIONS:12"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The diagram shows a square ABCD on a coordinate grid. Translate 5 right. Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"102,150 150,150 150,102 102,102\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"94.2\" y=\"162.8\" text-anchor=\"middle\">A</text><text x=\"157.8\" y=\"162.8\" text-anchor=\"middle\">B</text><text x=\"157.8\" y=\"99.2\" text-anchor=\"middle\">C</text><text x=\"94.2\" y=\"99.2\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 3,
+    "y": 0
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-d3d46b6e",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "TRANSLATION_QUESTIONS:13"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Translate 3 left and 1 up. Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"198,198 246,198 222,150\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"188.8\" y=\"209.1\" text-anchor=\"middle\">A</text><text x=\"255.2\" y=\"209.1\" text-anchor=\"middle\">B</text><text x=\"222\" y=\"144\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 1,
+    "y": -1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-4ac3dc4c",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "TRANSLATION_QUESTIONS:14"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "The diagram shows a rectangle ABCD on a coordinate grid. Translate 2 right and 3 up. Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"126,246 174,246 174,198 126,198\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"118.2\" y=\"258.8\" text-anchor=\"middle\">A</text><text x=\"181.8\" y=\"258.8\" text-anchor=\"middle\">B</text><text x=\"181.8\" y=\"195.2\" text-anchor=\"middle\">C</text><text x=\"118.2\" y=\"195.2\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 3,
+    "y": 1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-aba4904e",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:0"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Reflect in the y-axis. Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"174,126 222,126 198,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"164.8\" y=\"137.1\" text-anchor=\"middle\">A</text><text x=\"231.2\" y=\"137.1\" text-anchor=\"middle\">B</text><text x=\"198\" y=\"72\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -1,
+    "y": 1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-87eb3535",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:1"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Reflect in the x-axis. Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"198,174 246,174 222,102\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"190.2\" y=\"186.8\" text-anchor=\"middle\">A</text><text x=\"253.8\" y=\"186.8\" text-anchor=\"middle\">B</text><text x=\"222\" y=\"96\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 4,
+    "y": 1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-77751af8",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:2"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "The diagram shows a rectangle ABCD on a coordinate grid. Reflect in the y-axis. Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"174,126 222,126 222,78 174,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"166.2\" y=\"138.8\" text-anchor=\"middle\">A</text><text x=\"229.8\" y=\"138.8\" text-anchor=\"middle\">B</text><text x=\"229.8\" y=\"75.2\" text-anchor=\"middle\">C</text><text x=\"166.2\" y=\"75.2\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -3,
+    "y": 1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-c4db4ead",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:3"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Reflect in the x-axis. Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"78,102 126,102 102,54\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"68.8\" y=\"113.1\" text-anchor=\"middle\">A</text><text x=\"135.2\" y=\"113.1\" text-anchor=\"middle\">B</text><text x=\"102\" y=\"48\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -3,
+    "y": -2
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-0ffd0244",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:4"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Reflect in the y-axis. Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"174,150 222,150 174,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"167.9\" y=\"164.2\" text-anchor=\"middle\">A</text><text x=\"230.8\" y=\"161.6\" text-anchor=\"middle\">B</text><text x=\"170.5\" y=\"72.6\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -3,
+    "y": 0
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-2e89e545",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:5"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "The diagram shows a rectangle ABCD on a coordinate grid. Reflect in the x-axis. Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"174,126 222,126 222,78 174,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"166.2\" y=\"138.8\" text-anchor=\"middle\">A</text><text x=\"229.8\" y=\"138.8\" text-anchor=\"middle\">B</text><text x=\"229.8\" y=\"75.2\" text-anchor=\"middle\">C</text><text x=\"166.2\" y=\"75.2\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 1,
+    "y": -1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-db616858",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:6"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Reflect in the y-axis. Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"102,126 54,126 78,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"111.2\" y=\"137.1\" text-anchor=\"middle\">A</text><text x=\"44.8\" y=\"137.1\" text-anchor=\"middle\">B</text><text x=\"78\" y=\"72\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 2,
+    "y": 1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-ca892e4d",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:7"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "The diagram shows a rectangle ABCD on a coordinate grid. Reflect in the y-axis. Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"150,126 198,126 198,78 150,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"142.2\" y=\"138.8\" text-anchor=\"middle\">A</text><text x=\"205.8\" y=\"138.8\" text-anchor=\"middle\">B</text><text x=\"205.8\" y=\"75.2\" text-anchor=\"middle\">C</text><text x=\"142.2\" y=\"75.2\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -2,
+    "y": 3
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-164fe6a4",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:8"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Reflect in the x-axis. Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"174,198 222,198 198,246\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"164.8\" y=\"196.9\" text-anchor=\"middle\">A</text><text x=\"231.2\" y=\"196.9\" text-anchor=\"middle\">B</text><text x=\"198\" y=\"262\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 2,
+    "y": 4
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-dd2d7a47",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:9"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "The diagram shows a rectangle ABCD on a coordinate grid. Reflect in the y-axis. Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"126,174 78,174 78,222 126,222\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"133.8\" y=\"171.2\" text-anchor=\"middle\">A</text><text x=\"70.2\" y=\"171.2\" text-anchor=\"middle\">B</text><text x=\"70.2\" y=\"234.8\" text-anchor=\"middle\">C</text><text x=\"133.8\" y=\"234.8\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 1,
+    "y": -1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-a24fabe0",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:10"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Reflect in the x-axis. Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"198,102 246,102 222,54\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"188.8\" y=\"113.1\" text-anchor=\"middle\">A</text><text x=\"255.2\" y=\"113.1\" text-anchor=\"middle\">B</text><text x=\"222\" y=\"48\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 4,
+    "y": -2
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-bfdf06db",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:11"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Reflect in the y-axis. Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"102,198 150,198 126,246\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"92.8\" y=\"196.9\" text-anchor=\"middle\">A</text><text x=\"159.2\" y=\"196.9\" text-anchor=\"middle\">B</text><text x=\"126\" y=\"262\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 1,
+    "y": -4
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-864b176f",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:12"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "The diagram shows a rectangle ABCD on a coordinate grid. Reflect in the x-axis. Write down the coordinates of the image of D.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"174,150 222,150 222,102 174,102\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"166.2\" y=\"162.8\" text-anchor=\"middle\">A</text><text x=\"229.8\" y=\"162.8\" text-anchor=\"middle\">B</text><text x=\"229.8\" y=\"99.2\" text-anchor=\"middle\">C</text><text x=\"166.2\" y=\"99.2\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 1,
+    "y": -2
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-e9d7e19a",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:13"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Reflect in the x-axis. Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"126,126 174,126 150,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"116.8\" y=\"137.1\" text-anchor=\"middle\">A</text><text x=\"183.2\" y=\"137.1\" text-anchor=\"middle\">B</text><text x=\"150\" y=\"72\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 1,
+    "y": -1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-969441b5",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:14"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "The diagram shows a rectangle ABCD on a coordinate grid. Reflect in the x-axis. Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"54,126 102,126 102,78 54,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"46.2\" y=\"138.8\" text-anchor=\"middle\">A</text><text x=\"109.8\" y=\"138.8\" text-anchor=\"middle\">B</text><text x=\"109.8\" y=\"75.2\" text-anchor=\"middle\">C</text><text x=\"46.2\" y=\"75.2\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -2,
+    "y": -1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-7370a7e2",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ROTATION_QUESTIONS:0"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Rotate 90° anticlockwise about (0,0). Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"174,126 222,126 198,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"164.8\" y=\"137.1\" text-anchor=\"middle\">A</text><text x=\"231.2\" y=\"137.1\" text-anchor=\"middle\">B</text><text x=\"198\" y=\"72\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -1,
+    "y": 1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-32c5cb1f",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ROTATION_QUESTIONS:1"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Rotate 90° clockwise about (0,0). Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"174,126 222,126 198,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"164.8\" y=\"137.1\" text-anchor=\"middle\">A</text><text x=\"231.2\" y=\"137.1\" text-anchor=\"middle\">B</text><text x=\"198\" y=\"72\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 1,
+    "y": -3
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-cd2729ec",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ROTATION_QUESTIONS:2"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Rotate 90° anticlockwise about (0,0). Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"150,126 198,126 150,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"142.2\" y=\"138.8\" text-anchor=\"middle\">A</text><text x=\"207.8\" y=\"135.9\" text-anchor=\"middle\">B</text><text x=\"145.1\" y=\"73.2\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -3,
+    "y": 0
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-29e7336a",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ROTATION_QUESTIONS:3"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Rotate 90° clockwise about (0,0). Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"150,126 198,126 150,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"142.2\" y=\"138.8\" text-anchor=\"middle\">A</text><text x=\"207.8\" y=\"135.9\" text-anchor=\"middle\">B</text><text x=\"145.1\" y=\"73.2\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 1,
+    "y": 0
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-6f8511d7",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ROTATION_QUESTIONS:4"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Rotate 90° anticlockwise about (0,0). Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"174,150 222,150 198,102\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"164.8\" y=\"161.1\" text-anchor=\"middle\">A</text><text x=\"231.2\" y=\"161.1\" text-anchor=\"middle\">B</text><text x=\"198\" y=\"96\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 0,
+    "y": 3
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-cc002c82",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ROTATION_QUESTIONS:5"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Rotate 90° anticlockwise about (0,0). Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"126,126 174,126 150,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"116.8\" y=\"137.1\" text-anchor=\"middle\">A</text><text x=\"183.2\" y=\"137.1\" text-anchor=\"middle\">B</text><text x=\"150\" y=\"72\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -3,
+    "y": 0
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-e4a3b0bd",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ROTATION_QUESTIONS:6"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Rotate 90° clockwise about (0,0). Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"126,126 174,126 150,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"116.8\" y=\"137.1\" text-anchor=\"middle\">A</text><text x=\"183.2\" y=\"137.1\" text-anchor=\"middle\">B</text><text x=\"150\" y=\"72\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 1,
+    "y": 1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-dfb21ea2",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ROTATION_QUESTIONS:7"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Rotate 90° anticlockwise about (0,0). Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"174,126 198,126 198,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"166.2\" y=\"138.8\" text-anchor=\"middle\">A</text><text x=\"202.9\" y=\"140.8\" text-anchor=\"middle\">B</text><text x=\"200.7\" y=\"72.3\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -1,
+    "y": 2
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-dd2627aa",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ROTATION_QUESTIONS:8"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Rotate 90° clockwise about (0,0). Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"174,126 198,126 198,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"166.2\" y=\"138.8\" text-anchor=\"middle\">A</text><text x=\"202.9\" y=\"140.8\" text-anchor=\"middle\">B</text><text x=\"200.7\" y=\"72.3\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 3,
+    "y": -2
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-53f5db79",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ROTATION_QUESTIONS:9"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a rectangle ABCD on a coordinate grid. Rotate 90° anticlockwise about (0,0). Write down the coordinates of the image of D.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"174,150 222,150 222,126 174,126\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"164.2\" y=\"159.9\" text-anchor=\"middle\">A</text><text x=\"231.8\" y=\"159.9\" text-anchor=\"middle\">B</text><text x=\"231.8\" y=\"126.1\" text-anchor=\"middle\">C</text><text x=\"164.2\" y=\"126.1\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -1,
+    "y": 1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-2def01f3",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ROTATION_QUESTIONS:10"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a rectangle ABCD on a coordinate grid. Rotate 90° clockwise about (0,0). Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"174,150 222,150 222,126 174,126\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"164.2\" y=\"159.9\" text-anchor=\"middle\">A</text><text x=\"231.8\" y=\"159.9\" text-anchor=\"middle\">B</text><text x=\"231.8\" y=\"126.1\" text-anchor=\"middle\">C</text><text x=\"164.2\" y=\"126.1\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 0,
+    "y": -1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-bd247482",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ROTATION_QUESTIONS:11"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Rotate 90° anticlockwise about (0,0). Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"174,102 222,102 198,54\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"164.8\" y=\"113.1\" text-anchor=\"middle\">A</text><text x=\"231.2\" y=\"113.1\" text-anchor=\"middle\">B</text><text x=\"198\" y=\"48\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -4,
+    "y": 2
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-58930d1b",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ROTATION_QUESTIONS:12"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Rotate 90° clockwise about (0,0). Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"174,102 222,102 198,54\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"164.8\" y=\"113.1\" text-anchor=\"middle\">A</text><text x=\"231.2\" y=\"113.1\" text-anchor=\"middle\">B</text><text x=\"198\" y=\"48\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 2,
+    "y": -1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-db820d40",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ROTATION_QUESTIONS:13"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Rotate 90° anticlockwise about (0,0). Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"102,126 150,126 126,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"92.8\" y=\"137.1\" text-anchor=\"middle\">A</text><text x=\"159.2\" y=\"137.1\" text-anchor=\"middle\">B</text><text x=\"126\" y=\"72\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -1,
+    "y": 0
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "transformations-37f1f653",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ROTATION_QUESTIONS:14"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Rotate 90° clockwise about (0,0). Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><polygon points=\"102,126 150,126 126,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"284\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"92.8\" y=\"137.1\" text-anchor=\"middle\">A</text><text x=\"159.2\" y=\"137.1\" text-anchor=\"middle\">B</text><text x=\"126\" y=\"72\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 3,
+    "y": 1
+   },
+   "worked": [],
+   "slip": []
+  }
+ ]
+}
