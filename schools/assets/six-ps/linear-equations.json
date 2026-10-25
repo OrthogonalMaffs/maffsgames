@@ -1,0 +1,3344 @@
+{
+ "topic": "linear-equations",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "linear-equations-dfcc749e",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[0]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(x + 7 = 12\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "worked": [
+    "\\(x + 7 = 12\\)",
+    "\\(\\text{Subtract } 7 \\text{ from both sides}\\)",
+    "\\(x = 5\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-8115ccf4",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[1]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(x + 9 = 4\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -5
+   },
+   "worked": [
+    "\\(x + 9 = 4\\)",
+    "\\(\\text{Subtract } 9 \\text{ from both sides}\\)",
+    "\\(x = -5\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-c15362fd",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[2]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(x + 15 = 8\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -7
+   },
+   "worked": [
+    "\\(x + 15 = 8\\)",
+    "\\(\\text{Subtract } 15 \\text{ from both sides}\\)",
+    "\\(x = -7\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-0d2e91d3",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[3]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(x + 6 = 31\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 25
+   },
+   "worked": [
+    "\\(x + 6 = 31\\)",
+    "\\(\\text{Subtract } 6 \\text{ from both sides}\\)",
+    "\\(x = 25\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-6fb6e846",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[4]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(x + 24 = 11\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -13
+   },
+   "worked": [
+    "\\(x + 24 = 11\\)",
+    "\\(\\text{Subtract } 24 \\text{ from both sides}\\)",
+    "\\(x = -13\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-9fcfb976",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[5]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(x + 13 = 13\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0
+   },
+   "worked": [
+    "\\(x + 13 = 13\\)",
+    "\\(\\text{Subtract } 13 \\text{ from both sides}\\)",
+    "\\(x = 0\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-26360190",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[6]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(x + 8 = 3\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -5
+   },
+   "worked": [
+    "\\(x + 8 = 3\\)",
+    "\\(\\text{Subtract } 8 \\text{ from both sides}\\)",
+    "\\(x = -5\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-e8d7565b",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[7]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(x + 19 = 40\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 21
+   },
+   "worked": [
+    "\\(x + 19 = 40\\)",
+    "\\(\\text{Subtract } 19 \\text{ from both sides}\\)",
+    "\\(x = 21\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-864daf4e",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[8]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(x - 9 = 4\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 13
+   },
+   "worked": [
+    "\\(x - 9 = 4\\)",
+    "\\(\\text{Add } 9 \\text{ to both sides}\\)",
+    "\\(x = 13\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-3b76a374",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[9]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(x - 5 = 12\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 17
+   },
+   "worked": [
+    "\\(x - 5 = 12\\)",
+    "\\(\\text{Add } 5 \\text{ to both sides}\\)",
+    "\\(x = 17\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-e38607ac",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[10]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(x - 14 = 6\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 20
+   },
+   "worked": [
+    "\\(x - 14 = 6\\)",
+    "\\(\\text{Add } 14 \\text{ to both sides}\\)",
+    "\\(x = 20\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-d176a4e1",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[11]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(x - 3 = 20\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 23
+   },
+   "worked": [
+    "\\(x - 3 = 20\\)",
+    "\\(\\text{Add } 3 \\text{ to both sides}\\)",
+    "\\(x = 23\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-f5730bd1",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[12]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(x - 11 = 2\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 13
+   },
+   "worked": [
+    "\\(x - 11 = 2\\)",
+    "\\(\\text{Add } 11 \\text{ to both sides}\\)",
+    "\\(x = 13\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-88cd138c",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[13]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(x - 17 = 17\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 34
+   },
+   "worked": [
+    "\\(x - 17 = 17\\)",
+    "\\(\\text{Add } 17 \\text{ to both sides}\\)",
+    "\\(x = 34\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-bac86a18",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[14]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(x - 6 = 25\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 31
+   },
+   "worked": [
+    "\\(x - 6 = 25\\)",
+    "\\(\\text{Add } 6 \\text{ to both sides}\\)",
+    "\\(x = 31\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-0be9daf0",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[15]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(12 + x = 30\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 18
+   },
+   "worked": [
+    "\\(12 + x = 30\\)",
+    "\\(\\text{Subtract } 12 \\text{ from both sides}\\)",
+    "\\(x = 18\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-b4a60854",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[16]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(5 + x = 2\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -3
+   },
+   "worked": [
+    "\\(5 + x = 2\\)",
+    "\\(\\text{Subtract } 5 \\text{ from both sides}\\)",
+    "\\(x = -3\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-9a2f21aa",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[17]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(21 + x = 9\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -12
+   },
+   "worked": [
+    "\\(21 + x = 9\\)",
+    "\\(\\text{Subtract } 21 \\text{ from both sides}\\)",
+    "\\(x = -12\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-377f07f9",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[18]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(8 + x = 41\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 33
+   },
+   "worked": [
+    "\\(8 + x = 41\\)",
+    "\\(\\text{Subtract } 8 \\text{ from both sides}\\)",
+    "\\(x = 33\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-64778f9a",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[19]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(6x = 42\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7
+   },
+   "worked": [
+    "\\(6x = 42\\)",
+    "\\(\\text{Divide both sides by } 6\\)",
+    "\\(x = 7\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-cb8156bc",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[20]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(9x = 54\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "\\(9x = 54\\)",
+    "\\(\\text{Divide both sides by } 9\\)",
+    "\\(x = 6\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-2ccad097",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[21]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(7x = 91\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 13
+   },
+   "worked": [
+    "\\(7x = 91\\)",
+    "\\(\\text{Divide both sides by } 7\\)",
+    "\\(x = 13\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-02741134",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[22]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(11x = 88\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "\\(11x = 88\\)",
+    "\\(\\text{Divide both sides by } 11\\)",
+    "\\(x = 8\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-3f3b750f",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[23]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(4x = 100\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 25
+   },
+   "worked": [
+    "\\(4x = 100\\)",
+    "\\(\\text{Divide both sides by } 4\\)",
+    "\\(x = 25\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-48c46027",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[24]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(3x = 51\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 17
+   },
+   "worked": [
+    "\\(3x = 51\\)",
+    "\\(\\text{Divide both sides by } 3\\)",
+    "\\(x = 17\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-64765e83",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[25]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x}{4} = 9\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 36
+   },
+   "worked": [
+    "\\(\\frac{x}{4} = 9\\)",
+    "\\(\\text{Multiply both sides by } 4\\)",
+    "\\(x = 36\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-799fa740",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[26]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x}{7} = 3\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 21
+   },
+   "worked": [
+    "\\(\\frac{x}{7} = 3\\)",
+    "\\(\\text{Multiply both sides by } 7\\)",
+    "\\(x = 21\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-0a5b9cda",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[27]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x}{5} = 12\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 60
+   },
+   "worked": [
+    "\\(\\frac{x}{5} = 12\\)",
+    "\\(\\text{Multiply both sides by } 5\\)",
+    "\\(x = 60\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-795d1261",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[28]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x}{6} = 7\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 42
+   },
+   "worked": [
+    "\\(\\frac{x}{6} = 7\\)",
+    "\\(\\text{Multiply both sides by } 6\\)",
+    "\\(x = 42\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-38df2f8a",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[29]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x}{9} = 4\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 36
+   },
+   "worked": [
+    "\\(\\frac{x}{9} = 4\\)",
+    "\\(\\text{Multiply both sides by } 9\\)",
+    "\\(x = 36\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-a090b9a4",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[30]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x}{2} = 17\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 34
+   },
+   "worked": [
+    "\\(\\frac{x}{2} = 17\\)",
+    "\\(\\text{Multiply both sides by } 2\\)",
+    "\\(x = 34\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-68c4ac87",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[31]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(-4x = 20\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -5
+   },
+   "worked": [
+    "\\(-4x = 20\\)",
+    "\\(\\text{Divide both sides by } -4\\)",
+    "\\(x = -5\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-6177c624",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[32]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(5x = -35\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -7
+   },
+   "worked": [
+    "\\(5x = -35\\)",
+    "\\(\\text{Divide both sides by } 5\\)",
+    "\\(x = -7\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-9f7536da",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[33]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(-3x = -27\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 9
+   },
+   "worked": [
+    "\\(-3x = -27\\)",
+    "\\(\\text{Divide both sides by } -3\\)",
+    "\\(x = 9\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-d3bd4687",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[34]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(-7x = 42\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -6
+   },
+   "worked": [
+    "\\(-7x = 42\\)",
+    "\\(\\text{Divide both sides by } -7\\)",
+    "\\(x = -6\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-77f36a81",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[35]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(8x = -56\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -7
+   },
+   "worked": [
+    "\\(8x = -56\\)",
+    "\\(\\text{Divide both sides by } 8\\)",
+    "\\(x = -7\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-35ea15c3",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[36]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x}{3} = -6\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -18
+   },
+   "worked": [
+    "\\(\\frac{x}{3} = -6\\)",
+    "\\(\\text{Multiply both sides by } 3\\)",
+    "\\(x = -18\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-ae168cb8",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[37]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x}{5} = -4\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -20
+   },
+   "worked": [
+    "\\(\\frac{x}{5} = -4\\)",
+    "\\(\\text{Multiply both sides by } 5\\)",
+    "\\(x = -20\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-bc145bbc",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[38]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x}{2} = -13\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -26
+   },
+   "worked": [
+    "\\(\\frac{x}{2} = -13\\)",
+    "\\(\\text{Multiply both sides by } 2\\)",
+    "\\(x = -26\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-307e0584",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[39]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(-\\frac{x}{3} = 5\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -15
+   },
+   "worked": [
+    "\\(-\\frac{x}{3} = 5\\)",
+    "\\(\\text{Multiply both sides by } -3\\)",
+    "\\(x = -15\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-79296c71",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[40]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Solve \\(-\\frac{x}{4} = -2\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "\\(-\\frac{x}{4} = -2\\)",
+    "\\(\\text{Multiply both sides by } -4\\)",
+    "\\(x = 8\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-f51dd3a0",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[41]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(8x = 12\\).",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 3,
+    "d": 2
+   },
+   "accept": {
+    "rule": "equivalent"
+   },
+   "worked": [
+    "\\(8x = 12\\)",
+    "\\(\\text{Divide both sides by } 8\\)",
+    "\\(x = \\frac{3}{2}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-375c850e",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[42]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(10x = -4\\).",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": -2,
+    "d": 5
+   },
+   "accept": {
+    "rule": "equivalent"
+   },
+   "worked": [
+    "\\(10x = -4\\)",
+    "\\(\\text{Divide both sides by } 10\\)",
+    "\\(x = -\\frac{2}{5}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-784f4aa4",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[43]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(6x = 15\\).",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 5,
+    "d": 2
+   },
+   "accept": {
+    "rule": "equivalent"
+   },
+   "worked": [
+    "\\(6x = 15\\)",
+    "\\(\\text{Divide both sides by } 6\\)",
+    "\\(x = \\frac{5}{2}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-8be7aa1f",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[44]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(4x = 10\\).",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 5,
+    "d": 2
+   },
+   "accept": {
+    "rule": "equivalent"
+   },
+   "worked": [
+    "\\(4x = 10\\)",
+    "\\(\\text{Divide both sides by } 4\\)",
+    "\\(x = \\frac{5}{2}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-98ad8c09",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[45]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(9x = -6\\).",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": -2,
+    "d": 3
+   },
+   "accept": {
+    "rule": "equivalent"
+   },
+   "worked": [
+    "\\(9x = -6\\)",
+    "\\(\\text{Divide both sides by } 9\\)",
+    "\\(x = -\\frac{2}{3}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-ee09e8e2",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[46]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(\\frac{2}{3}x = 8\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "\\(\\frac{2}{3}x = 8\\)",
+    "\\(\\text{Multiply both sides by } \\frac{3}{2}\\)",
+    "\\(x = 12\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-72a18e9a",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[47]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(\\frac{3}{5}x = 9\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 15
+   },
+   "worked": [
+    "\\(\\frac{3}{5}x = 9\\)",
+    "\\(\\text{Multiply both sides by } \\frac{5}{3}\\)",
+    "\\(x = 15\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-21ea77a6",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[48]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(\\frac{4}{7}x = 12\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 21
+   },
+   "worked": [
+    "\\(\\frac{4}{7}x = 12\\)",
+    "\\(\\text{Multiply both sides by } \\frac{7}{4}\\)",
+    "\\(x = 21\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-c28aa42f",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[49]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(\\frac{5}{2}x = 15\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "\\(\\frac{5}{2}x = 15\\)",
+    "\\(\\text{Multiply both sides by } \\frac{2}{5}\\)",
+    "\\(x = 6\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-fb87db82",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[50]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(\\frac{2}{9}x = 6\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 27
+   },
+   "worked": [
+    "\\(\\frac{2}{9}x = 6\\)",
+    "\\(\\text{Multiply both sides by } \\frac{9}{2}\\)",
+    "\\(x = 27\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-80ca0435",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[51]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(12 = x + 7\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "worked": [
+    "\\(12 = x + 7\\)",
+    "\\(\\text{Subtract } 7 \\text{ from both sides}\\)",
+    "\\(5 = x\\)",
+    "\\(x = 5\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-73a905e0",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[52]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(19 = x + 4\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 15
+   },
+   "worked": [
+    "\\(19 = x + 4\\)",
+    "\\(\\text{Subtract } 4 \\text{ from both sides}\\)",
+    "\\(15 = x\\)",
+    "\\(x = 15\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-0cedf41d",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[53]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(5 = x + 13\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -8
+   },
+   "worked": [
+    "\\(5 = x + 13\\)",
+    "\\(\\text{Subtract } 13 \\text{ from both sides}\\)",
+    "\\(-8 = x\\)",
+    "\\(x = -8\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-b0e4dcda",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[54]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(-2 = x + 9\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -11
+   },
+   "worked": [
+    "\\(-2 = x + 9\\)",
+    "\\(\\text{Subtract } 9 \\text{ from both sides}\\)",
+    "\\(-11 = x\\)",
+    "\\(x = -11\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-a30f7e59",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[55]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(3x + 7 = 22\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "worked": [
+    "\\(3x + 7 = 22\\)",
+    "\\(\\text{Subtract } 7 \\text{ from both sides}\\)",
+    "\\(3x = 15\\)",
+    "\\(\\text{Divide both sides by } 3\\)",
+    "\\(x = 5\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-41acac14",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[56]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(5x - 4 = 31\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7
+   },
+   "worked": [
+    "\\(5x - 4 = 31\\)",
+    "\\(\\text{Add } 4 \\text{ to both sides}\\)",
+    "\\(5x = 35\\)",
+    "\\(\\text{Divide both sides by } 5\\)",
+    "\\(x = 7\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-a4a96fbd",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[57]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(2x + 9 = 25\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "\\(2x + 9 = 25\\)",
+    "\\(\\text{Subtract } 9 \\text{ from both sides}\\)",
+    "\\(2x = 16\\)",
+    "\\(\\text{Divide both sides by } 2\\)",
+    "\\(x = 8\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-5d082aad",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[58]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(7x - 12 = 30\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "\\(7x - 12 = 30\\)",
+    "\\(\\text{Add } 12 \\text{ to both sides}\\)",
+    "\\(7x = 42\\)",
+    "\\(\\text{Divide both sides by } 7\\)",
+    "\\(x = 6\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-c77ee55b",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[59]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(4x + 11 = 39\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7
+   },
+   "worked": [
+    "\\(4x + 11 = 39\\)",
+    "\\(\\text{Subtract } 11 \\text{ from both sides}\\)",
+    "\\(4x = 28\\)",
+    "\\(\\text{Divide both sides by } 4\\)",
+    "\\(x = 7\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-3365bc5d",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[60]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(6x - 5 = 37\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7
+   },
+   "worked": [
+    "\\(6x - 5 = 37\\)",
+    "\\(\\text{Add } 5 \\text{ to both sides}\\)",
+    "\\(6x = 42\\)",
+    "\\(\\text{Divide both sides by } 6\\)",
+    "\\(x = 7\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-4a998c42",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[61]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(8x + 3 = 59\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7
+   },
+   "worked": [
+    "\\(8x + 3 = 59\\)",
+    "\\(\\text{Subtract } 3 \\text{ from both sides}\\)",
+    "\\(8x = 56\\)",
+    "\\(\\text{Divide both sides by } 8\\)",
+    "\\(x = 7\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-6682fbc0",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[62]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(9x - 7 = 65\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "\\(9x - 7 = 65\\)",
+    "\\(\\text{Add } 7 \\text{ to both sides}\\)",
+    "\\(9x = 72\\)",
+    "\\(\\text{Divide both sides by } 9\\)",
+    "\\(x = 8\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-3bac1563",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[63]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(5x + 13 = 48\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7
+   },
+   "worked": [
+    "\\(5x + 13 = 48\\)",
+    "\\(\\text{Subtract } 13 \\text{ from both sides}\\)",
+    "\\(5x = 35\\)",
+    "\\(\\text{Divide both sides by } 5\\)",
+    "\\(x = 7\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-4884ab52",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[64]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(3x - 8 = 16\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "\\(3x - 8 = 16\\)",
+    "\\(\\text{Add } 8 \\text{ to both sides}\\)",
+    "\\(3x = 24\\)",
+    "\\(\\text{Divide both sides by } 3\\)",
+    "\\(x = 8\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-a1b76d85",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[65]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(12x + 5 = 41\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "worked": [
+    "\\(12x + 5 = 41\\)",
+    "\\(\\text{Subtract } 5 \\text{ from both sides}\\)",
+    "\\(12x = 36\\)",
+    "\\(\\text{Divide both sides by } 12\\)",
+    "\\(x = 3\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-976de8b9",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[66]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(7x + 6 = 62\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "\\(7x + 6 = 62\\)",
+    "\\(\\text{Subtract } 6 \\text{ from both sides}\\)",
+    "\\(7x = 56\\)",
+    "\\(\\text{Divide both sides by } 7\\)",
+    "\\(x = 8\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-c7771c30",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[67]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x}{2} + 5 = 11\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "\\(\\frac{x}{2} + 5 = 11\\)",
+    "\\(\\text{Subtract } 5 \\text{ from both sides}\\)",
+    "\\(\\frac{x}{2} = 6\\)",
+    "\\(\\text{Multiply both sides by } 2\\)",
+    "\\(x = 12\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-225875a9",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[68]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x}{3} - 4 = 2\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 18
+   },
+   "worked": [
+    "\\(\\frac{x}{3} - 4 = 2\\)",
+    "\\(\\text{Add } 4 \\text{ to both sides}\\)",
+    "\\(\\frac{x}{3} = 6\\)",
+    "\\(\\text{Multiply both sides by } 3\\)",
+    "\\(x = 18\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-bf3488a2",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[69]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x}{5} + 7 = 12\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 25
+   },
+   "worked": [
+    "\\(\\frac{x}{5} + 7 = 12\\)",
+    "\\(\\text{Subtract } 7 \\text{ from both sides}\\)",
+    "\\(\\frac{x}{5} = 5\\)",
+    "\\(\\text{Multiply both sides by } 5\\)",
+    "\\(x = 25\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-7f607676",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[70]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x}{4} - 9 = 1\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 40
+   },
+   "worked": [
+    "\\(\\frac{x}{4} - 9 = 1\\)",
+    "\\(\\text{Add } 9 \\text{ to both sides}\\)",
+    "\\(\\frac{x}{4} = 10\\)",
+    "\\(\\text{Multiply both sides by } 4\\)",
+    "\\(x = 40\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-3b882fe5",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[71]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x}{6} + 3 = 8\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 30
+   },
+   "worked": [
+    "\\(\\frac{x}{6} + 3 = 8\\)",
+    "\\(\\text{Subtract } 3 \\text{ from both sides}\\)",
+    "\\(\\frac{x}{6} = 5\\)",
+    "\\(\\text{Multiply both sides by } 6\\)",
+    "\\(x = 30\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-9b322d97",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[72]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x}{7} - 2 = 5\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 49
+   },
+   "worked": [
+    "\\(\\frac{x}{7} - 2 = 5\\)",
+    "\\(\\text{Add } 2 \\text{ to both sides}\\)",
+    "\\(\\frac{x}{7} = 7\\)",
+    "\\(\\text{Multiply both sides by } 7\\)",
+    "\\(x = 49\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-0d6b83d1",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[73]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(2(x + 3) = 16\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "worked": [
+    "\\(2(x + 3) = 16\\)",
+    "\\(\\text{Divide both sides by } 2\\)",
+    "\\(x + 3 = 8\\)",
+    "\\(\\text{Subtract } 3 \\text{ from both sides}\\)",
+    "\\(x = 5\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-71672a6f",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[74]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(5(x - 2) = 35\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 9
+   },
+   "worked": [
+    "\\(5(x - 2) = 35\\)",
+    "\\(\\text{Divide both sides by } 5\\)",
+    "\\(x - 2 = 7\\)",
+    "\\(\\text{Add } 2 \\text{ to both sides}\\)",
+    "\\(x = 9\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-8a5d777f",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[75]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(3(x + 4) = 27\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "worked": [
+    "\\(3(x + 4) = 27\\)",
+    "\\(\\text{Divide both sides by } 3\\)",
+    "\\(x + 4 = 9\\)",
+    "\\(\\text{Subtract } 4 \\text{ from both sides}\\)",
+    "\\(x = 5\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-fda4a18b",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[76]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(4(x - 5) = 28\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "\\(4(x - 5) = 28\\)",
+    "\\(\\text{Divide both sides by } 4\\)",
+    "\\(x - 5 = 7\\)",
+    "\\(\\text{Add } 5 \\text{ to both sides}\\)",
+    "\\(x = 12\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-3975733e",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[77]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(6(x + 2) = 42\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "worked": [
+    "\\(6(x + 2) = 42\\)",
+    "\\(\\text{Divide both sides by } 6\\)",
+    "\\(x + 2 = 7\\)",
+    "\\(\\text{Subtract } 2 \\text{ from both sides}\\)",
+    "\\(x = 5\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-b158e82d",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[78]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(7(x - 3) = 49\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 10
+   },
+   "worked": [
+    "\\(7(x - 3) = 49\\)",
+    "\\(\\text{Divide both sides by } 7\\)",
+    "\\(x - 3 = 7\\)",
+    "\\(\\text{Add } 3 \\text{ to both sides}\\)",
+    "\\(x = 10\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-04970d81",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[79]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(2(x + 9) = 30\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "\\(2(x + 9) = 30\\)",
+    "\\(\\text{Divide both sides by } 2\\)",
+    "\\(x + 9 = 15\\)",
+    "\\(\\text{Subtract } 9 \\text{ from both sides}\\)",
+    "\\(x = 6\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-ec7b7eff",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[80]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(3(x - 6) = 15\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 11
+   },
+   "worked": [
+    "\\(3(x - 6) = 15\\)",
+    "\\(\\text{Divide both sides by } 3\\)",
+    "\\(x - 6 = 5\\)",
+    "\\(\\text{Add } 6 \\text{ to both sides}\\)",
+    "\\(x = 11\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-e5dad7f1",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[81]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x + 4}{3} = 5\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 11
+   },
+   "worked": [
+    "\\(\\frac{x + 4}{3} = 5\\)",
+    "\\(\\text{Multiply both sides by } 3\\)",
+    "\\(x + 4 = 15\\)",
+    "\\(\\text{Subtract } 4 \\text{ from both sides}\\)",
+    "\\(x = 11\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-79418a80",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[82]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x - 6}{2} = 7\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 20
+   },
+   "worked": [
+    "\\(\\frac{x - 6}{2} = 7\\)",
+    "\\(\\text{Multiply both sides by } 2\\)",
+    "\\(x - 6 = 14\\)",
+    "\\(\\text{Add } 6 \\text{ to both sides}\\)",
+    "\\(x = 20\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-acfc003b",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[83]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x + 3}{5} = 4\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 17
+   },
+   "worked": [
+    "\\(\\frac{x + 3}{5} = 4\\)",
+    "\\(\\text{Multiply both sides by } 5\\)",
+    "\\(x + 3 = 20\\)",
+    "\\(\\text{Subtract } 3 \\text{ from both sides}\\)",
+    "\\(x = 17\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-968d0e87",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[84]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x - 7}{4} = 2\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 15
+   },
+   "worked": [
+    "\\(\\frac{x - 7}{4} = 2\\)",
+    "\\(\\text{Multiply both sides by } 4\\)",
+    "\\(x - 7 = 8\\)",
+    "\\(\\text{Add } 7 \\text{ to both sides}\\)",
+    "\\(x = 15\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-5002f63c",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[85]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x + 5}{6} = 3\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 13
+   },
+   "worked": [
+    "\\(\\frac{x + 5}{6} = 3\\)",
+    "\\(\\text{Multiply both sides by } 6\\)",
+    "\\(x + 5 = 18\\)",
+    "\\(\\text{Subtract } 5 \\text{ from both sides}\\)",
+    "\\(x = 13\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-1c902714",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[86]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x - 2}{3} = 9\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 29
+   },
+   "worked": [
+    "\\(\\frac{x - 2}{3} = 9\\)",
+    "\\(\\text{Multiply both sides by } 3\\)",
+    "\\(x - 2 = 27\\)",
+    "\\(\\text{Add } 2 \\text{ to both sides}\\)",
+    "\\(x = 29\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-d8f5b18e",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[87]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(7 + 3x = 22\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "worked": [
+    "\\(7 + 3x = 22\\)",
+    "\\(\\text{Subtract } 7 \\text{ from both sides}\\)",
+    "\\(3x = 15\\)",
+    "\\(\\text{Divide both sides by } 3\\)",
+    "\\(x = 5\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-fbcdb063",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[88]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(5 + 4x = 29\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "\\(5 + 4x = 29\\)",
+    "\\(\\text{Subtract } 5 \\text{ from both sides}\\)",
+    "\\(4x = 24\\)",
+    "\\(\\text{Divide both sides by } 4\\)",
+    "\\(x = 6\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-a1f7b3c5",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[89]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(11 + 6x = 47\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "\\(11 + 6x = 47\\)",
+    "\\(\\text{Subtract } 11 \\text{ from both sides}\\)",
+    "\\(6x = 36\\)",
+    "\\(\\text{Divide both sides by } 6\\)",
+    "\\(x = 6\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-4960a576",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[90]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(9 + 2x = 25\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "\\(9 + 2x = 25\\)",
+    "\\(\\text{Subtract } 9 \\text{ from both sides}\\)",
+    "\\(2x = 16\\)",
+    "\\(\\text{Divide both sides by } 2\\)",
+    "\\(x = 8\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-77d65caf",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[91]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(13 + 5x = 38\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "worked": [
+    "\\(13 + 5x = 38\\)",
+    "\\(\\text{Subtract } 13 \\text{ from both sides}\\)",
+    "\\(5x = 25\\)",
+    "\\(\\text{Divide both sides by } 5\\)",
+    "\\(x = 5\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-f28fe212",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[92]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(4 + 8x = 60\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7
+   },
+   "worked": [
+    "\\(4 + 8x = 60\\)",
+    "\\(\\text{Subtract } 4 \\text{ from both sides}\\)",
+    "\\(8x = 56\\)",
+    "\\(\\text{Divide both sides by } 8\\)",
+    "\\(x = 7\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-50b257ca",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[93]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(6 + 7x = 55\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7
+   },
+   "worked": [
+    "\\(6 + 7x = 55\\)",
+    "\\(\\text{Subtract } 6 \\text{ from both sides}\\)",
+    "\\(7x = 49\\)",
+    "\\(\\text{Divide both sides by } 7\\)",
+    "\\(x = 7\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-c0e6d0ff",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[94]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(22 = 3x + 7\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "worked": [
+    "\\(22 = 3x + 7\\)",
+    "\\(\\text{Subtract } 7 \\text{ from both sides}\\)",
+    "\\(15 = 3x\\)",
+    "\\(\\text{Divide both sides by } 3\\)",
+    "\\(x = 5\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-7f566362",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[95]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(31 = 5x - 4\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7
+   },
+   "worked": [
+    "\\(31 = 5x - 4\\)",
+    "\\(\\text{Add } 4 \\text{ to both sides}\\)",
+    "\\(35 = 5x\\)",
+    "\\(\\text{Divide both sides by } 5\\)",
+    "\\(x = 7\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-d014ec18",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[96]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(19 = 2x + 9\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "worked": [
+    "\\(19 = 2x + 9\\)",
+    "\\(\\text{Subtract } 9 \\text{ from both sides}\\)",
+    "\\(10 = 2x\\)",
+    "\\(\\text{Divide both sides by } 2\\)",
+    "\\(x = 5\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-24c60f44",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[97]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(43 = 6x - 5\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "\\(43 = 6x - 5\\)",
+    "\\(\\text{Add } 5 \\text{ to both sides}\\)",
+    "\\(48 = 6x\\)",
+    "\\(\\text{Divide both sides by } 6\\)",
+    "\\(x = 8\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-e22d6fea",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[98]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(37 = 4x + 13\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "\\(37 = 4x + 13\\)",
+    "\\(\\text{Subtract } 13 \\text{ from both sides}\\)",
+    "\\(24 = 4x\\)",
+    "\\(\\text{Divide both sides by } 4\\)",
+    "\\(x = 6\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-e7558372",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[99]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(58 = 9x + 4\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "\\(58 = 9x + 4\\)",
+    "\\(\\text{Subtract } 4 \\text{ from both sides}\\)",
+    "\\(54 = 9x\\)",
+    "\\(\\text{Divide both sides by } 9\\)",
+    "\\(x = 6\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-055a21c5",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[100]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(3x + 14 = 5\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -3
+   },
+   "worked": [
+    "\\(3x + 14 = 5\\)",
+    "\\(\\text{Subtract } 14 \\text{ from both sides}\\)",
+    "\\(3x = -9\\)",
+    "\\(\\text{Divide both sides by } 3\\)",
+    "\\(x = -3\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-560308af",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[101]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(2x - 7 = -19\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -6
+   },
+   "worked": [
+    "\\(2x - 7 = -19\\)",
+    "\\(\\text{Add } 7 \\text{ to both sides}\\)",
+    "\\(2x = -12\\)",
+    "\\(\\text{Divide both sides by } 2\\)",
+    "\\(x = -6\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-963059b7",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[102]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(6x + 25 = 7\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -3
+   },
+   "worked": [
+    "\\(6x + 25 = 7\\)",
+    "\\(\\text{Subtract } 25 \\text{ from both sides}\\)",
+    "\\(6x = -18\\)",
+    "\\(\\text{Divide both sides by } 6\\)",
+    "\\(x = -3\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-7c70995d",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[103]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(4x + 9 = -11\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -5
+   },
+   "worked": [
+    "\\(4x + 9 = -11\\)",
+    "\\(\\text{Subtract } 9 \\text{ from both sides}\\)",
+    "\\(4x = -20\\)",
+    "\\(\\text{Divide both sides by } 4\\)",
+    "\\(x = -5\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-1202a923",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[104]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(5x + 18 = 3\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -3
+   },
+   "worked": [
+    "\\(5x + 18 = 3\\)",
+    "\\(\\text{Subtract } 18 \\text{ from both sides}\\)",
+    "\\(5x = -15\\)",
+    "\\(\\text{Divide both sides by } 5\\)",
+    "\\(x = -3\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-0d8a4c15",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[105]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(8x + 30 = 6\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -3
+   },
+   "worked": [
+    "\\(8x + 30 = 6\\)",
+    "\\(\\text{Subtract } 30 \\text{ from both sides}\\)",
+    "\\(8x = -24\\)",
+    "\\(\\text{Divide both sides by } 8\\)",
+    "\\(x = -3\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-f59ed190",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[106]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(5 - 2x = 13\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -4
+   },
+   "worked": [
+    "\\(5 - 2x = 13\\)",
+    "\\(\\text{Subtract } 5 \\text{ from both sides}\\)",
+    "\\(-2x = 8\\)",
+    "\\(\\text{Divide both sides by } -2\\)",
+    "\\(x = -4\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-8b4a4dee",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[107]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(10 - 3x = 1\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "worked": [
+    "\\(10 - 3x = 1\\)",
+    "\\(\\text{Subtract } 10 \\text{ from both sides}\\)",
+    "\\(-3x = -9\\)",
+    "\\(\\text{Divide both sides by } -3\\)",
+    "\\(x = 3\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-04e04a0a",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[108]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(8 - 4x = 24\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -4
+   },
+   "worked": [
+    "\\(8 - 4x = 24\\)",
+    "\\(\\text{Subtract } 8 \\text{ from both sides}\\)",
+    "\\(-4x = 16\\)",
+    "\\(\\text{Divide both sides by } -4\\)",
+    "\\(x = -4\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-6e8bf7ff",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[109]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(7 - 5x = 32\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -5
+   },
+   "worked": [
+    "\\(7 - 5x = 32\\)",
+    "\\(\\text{Subtract } 7 \\text{ from both sides}\\)",
+    "\\(-5x = 25\\)",
+    "\\(\\text{Divide both sides by } -5\\)",
+    "\\(x = -5\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-d27e0626",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[110]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(12 - 2x = 20\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -4
+   },
+   "worked": [
+    "\\(12 - 2x = 20\\)",
+    "\\(\\text{Subtract } 12 \\text{ from both sides}\\)",
+    "\\(-2x = 8\\)",
+    "\\(\\text{Divide both sides by } -2\\)",
+    "\\(x = -4\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-cd94c002",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[111]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(-4x + 9 = 33\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -6
+   },
+   "worked": [
+    "\\(-4x + 9 = 33\\)",
+    "\\(\\text{Subtract } 9 \\text{ from both sides}\\)",
+    "\\(-4x = 24\\)",
+    "\\(\\text{Divide both sides by } -4\\)",
+    "\\(x = -6\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-e06ab4b7",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[112]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(-3x + 5 = 20\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -5
+   },
+   "worked": [
+    "\\(-3x + 5 = 20\\)",
+    "\\(\\text{Subtract } 5 \\text{ from both sides}\\)",
+    "\\(-3x = 15\\)",
+    "\\(\\text{Divide both sides by } -3\\)",
+    "\\(x = -5\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-f95f53ff",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[113]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(-6x + 11 = 47\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -6
+   },
+   "worked": [
+    "\\(-6x + 11 = 47\\)",
+    "\\(\\text{Subtract } 11 \\text{ from both sides}\\)",
+    "\\(-6x = 36\\)",
+    "\\(\\text{Divide both sides by } -6\\)",
+    "\\(x = -6\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-1aef5c7c",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[114]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(-x + 6 = 10\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -4
+   },
+   "worked": [
+    "\\(-x + 6 = 10\\)",
+    "\\(\\text{Subtract } 6 \\text{ from both sides}\\)",
+    "\\(-x = 4\\)",
+    "\\(\\text{Multiply both sides by } -1\\)",
+    "\\(x = -4\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-e3991252",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[115]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(-x + 9 = 15\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -6
+   },
+   "worked": [
+    "\\(-x + 9 = 15\\)",
+    "\\(\\text{Subtract } 9 \\text{ from both sides}\\)",
+    "\\(-x = 6\\)",
+    "\\(\\text{Multiply both sides by } -1\\)",
+    "\\(x = -6\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-f6bf910f",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[116]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(-x + 4 = 11\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -7
+   },
+   "worked": [
+    "\\(-x + 4 = 11\\)",
+    "\\(\\text{Subtract } 4 \\text{ from both sides}\\)",
+    "\\(-x = 7\\)",
+    "\\(\\text{Multiply both sides by } -1\\)",
+    "\\(x = -7\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-26626c7c",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[117]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(-x + 12 = 20\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -8
+   },
+   "worked": [
+    "\\(-x + 12 = 20\\)",
+    "\\(\\text{Subtract } 12 \\text{ from both sides}\\)",
+    "\\(-x = 8\\)",
+    "\\(\\text{Multiply both sides by } -1\\)",
+    "\\(x = -8\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-7bd961da",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[118]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x}{4} + 9 = 5\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -16
+   },
+   "worked": [
+    "\\(\\frac{x}{4} + 9 = 5\\)",
+    "\\(\\text{Subtract } 9 \\text{ from both sides}\\)",
+    "\\(\\frac{x}{4} = -4\\)",
+    "\\(\\text{Multiply both sides by } 4\\)",
+    "\\(x = -16\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-c16a1c78",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[119]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x}{3} + 8 = 2\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -18
+   },
+   "worked": [
+    "\\(\\frac{x}{3} + 8 = 2\\)",
+    "\\(\\text{Subtract } 8 \\text{ from both sides}\\)",
+    "\\(\\frac{x}{3} = -6\\)",
+    "\\(\\text{Multiply both sides by } 3\\)",
+    "\\(x = -18\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-274538e0",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[120]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(\\frac{x}{5} + 6 = 1\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -25
+   },
+   "worked": [
+    "\\(\\frac{x}{5} + 6 = 1\\)",
+    "\\(\\text{Subtract } 6 \\text{ from both sides}\\)",
+    "\\(\\frac{x}{5} = -5\\)",
+    "\\(\\text{Multiply both sides by } 5\\)",
+    "\\(x = -25\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-ea74e173",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[121]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(3(x + 8) = 9\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -5
+   },
+   "worked": [
+    "\\(3(x + 8) = 9\\)",
+    "\\(\\text{Divide both sides by } 3\\)",
+    "\\(x + 8 = 3\\)",
+    "\\(\\text{Subtract } 8 \\text{ from both sides}\\)",
+    "\\(x = -5\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-94f5cc54",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[122]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(2(x - 5) = -24\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -7
+   },
+   "worked": [
+    "\\(2(x - 5) = -24\\)",
+    "\\(\\text{Divide both sides by } 2\\)",
+    "\\(x - 5 = -12\\)",
+    "\\(\\text{Add } 5 \\text{ to both sides}\\)",
+    "\\(x = -7\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-200274f3",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[123]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(4(x + 7) = 12\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -4
+   },
+   "worked": [
+    "\\(4(x + 7) = 12\\)",
+    "\\(\\text{Divide both sides by } 4\\)",
+    "\\(x + 7 = 3\\)",
+    "\\(\\text{Subtract } 7 \\text{ from both sides}\\)",
+    "\\(x = -4\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-eca765c9",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[124]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Solve \\(5(x - 3) = -20\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -1
+   },
+   "worked": [
+    "\\(5(x - 3) = -20\\)",
+    "\\(\\text{Divide both sides by } 5\\)",
+    "\\(x - 3 = -4\\)",
+    "\\(\\text{Add } 3 \\text{ to both sides}\\)",
+    "\\(x = -1\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-b067f90b",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[125]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(2x + 1 = 8\\).",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 7,
+    "d": 2
+   },
+   "accept": {
+    "rule": "equivalent"
+   },
+   "worked": [
+    "\\(2x + 1 = 8\\)",
+    "\\(\\text{Subtract } 1 \\text{ from both sides}\\)",
+    "\\(2x = 7\\)",
+    "\\(\\text{Divide both sides by } 2\\)",
+    "\\(x = \\frac{7}{2}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-1fd594cc",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[126]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(4x - 3 = 7\\).",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 5,
+    "d": 2
+   },
+   "accept": {
+    "rule": "equivalent"
+   },
+   "worked": [
+    "\\(4x - 3 = 7\\)",
+    "\\(\\text{Add } 3 \\text{ to both sides}\\)",
+    "\\(4x = 10\\)",
+    "\\(\\text{Divide both sides by } 4\\)",
+    "\\(x = \\frac{5}{2}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-2a420f2a",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[127]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(6x + 5 = 12\\).",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 7,
+    "d": 6
+   },
+   "accept": {
+    "rule": "equivalent"
+   },
+   "worked": [
+    "\\(6x + 5 = 12\\)",
+    "\\(\\text{Subtract } 5 \\text{ from both sides}\\)",
+    "\\(6x = 7\\)",
+    "\\(\\text{Divide both sides by } 6\\)",
+    "\\(x = \\frac{7}{6}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-bdf265f7",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[128]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(3x + 2 = 6\\).",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 4,
+    "d": 3
+   },
+   "accept": {
+    "rule": "equivalent"
+   },
+   "worked": [
+    "\\(3x + 2 = 6\\)",
+    "\\(\\text{Subtract } 2 \\text{ from both sides}\\)",
+    "\\(3x = 4\\)",
+    "\\(\\text{Divide both sides by } 3\\)",
+    "\\(x = \\frac{4}{3}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-9a1b9df4",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[129]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(8x - 1 = 3\\).",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 2
+   },
+   "accept": {
+    "rule": "equivalent"
+   },
+   "worked": [
+    "\\(8x - 1 = 3\\)",
+    "\\(\\text{Add } 1 \\text{ to both sides}\\)",
+    "\\(8x = 4\\)",
+    "\\(\\text{Divide both sides by } 8\\)",
+    "\\(x = \\frac{1}{2}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-0cf165ca",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[130]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(10x + 7 = 13\\).",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 3,
+    "d": 5
+   },
+   "accept": {
+    "rule": "equivalent"
+   },
+   "worked": [
+    "\\(10x + 7 = 13\\)",
+    "\\(\\text{Subtract } 7 \\text{ from both sides}\\)",
+    "\\(10x = 6\\)",
+    "\\(\\text{Divide both sides by } 10\\)",
+    "\\(x = \\frac{3}{5}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-47c0eebb",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[131]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(9x + 4 = 10\\).",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 2,
+    "d": 3
+   },
+   "accept": {
+    "rule": "equivalent"
+   },
+   "worked": [
+    "\\(9x + 4 = 10\\)",
+    "\\(\\text{Subtract } 4 \\text{ from both sides}\\)",
+    "\\(9x = 6\\)",
+    "\\(\\text{Divide both sides by } 9\\)",
+    "\\(x = \\frac{2}{3}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-57060791",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[132]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(4x + 5 = 8\\).",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 3,
+    "d": 4
+   },
+   "accept": {
+    "rule": "equivalent"
+   },
+   "worked": [
+    "\\(4x + 5 = 8\\)",
+    "\\(\\text{Subtract } 5 \\text{ from both sides}\\)",
+    "\\(4x = 3\\)",
+    "\\(\\text{Divide both sides by } 4\\)",
+    "\\(x = \\frac{3}{4}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-a1664553",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[133]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(6x - 7 = 2\\).",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 3,
+    "d": 2
+   },
+   "accept": {
+    "rule": "equivalent"
+   },
+   "worked": [
+    "\\(6x - 7 = 2\\)",
+    "\\(\\text{Add } 7 \\text{ to both sides}\\)",
+    "\\(6x = 9\\)",
+    "\\(\\text{Divide both sides by } 6\\)",
+    "\\(x = \\frac{3}{2}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-e170f71e",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[134]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(8x + 3 = 10\\).",
+   "diagram": null,
+   "format": "fraction",
+   "answer": {
+    "n": 7,
+    "d": 8
+   },
+   "accept": {
+    "rule": "equivalent"
+   },
+   "worked": [
+    "\\(8x + 3 = 10\\)",
+    "\\(\\text{Subtract } 3 \\text{ from both sides}\\)",
+    "\\(8x = 7\\)",
+    "\\(\\text{Divide both sides by } 8\\)",
+    "\\(x = \\frac{7}{8}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-06e8f9b0",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[135]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(\\frac{2}{3}x + 4 = 10\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 9
+   },
+   "worked": [
+    "\\(\\frac{2}{3}x + 4 = 10\\)",
+    "\\(\\text{Subtract } 4 \\text{ from both sides}\\)",
+    "\\(\\frac{2}{3}x = 6\\)",
+    "\\(\\text{Multiply both sides by } \\frac{3}{2}\\)",
+    "\\(x = 9\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-de352624",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[136]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(\\frac{3}{4}x - 2 = 7\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "\\(\\frac{3}{4}x - 2 = 7\\)",
+    "\\(\\text{Add } 2 \\text{ to both sides}\\)",
+    "\\(\\frac{3}{4}x = 9\\)",
+    "\\(\\text{Multiply both sides by } \\frac{4}{3}\\)",
+    "\\(x = 12\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-307798f3",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[137]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(\\frac{2}{5}x - 3 = 5\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 20
+   },
+   "worked": [
+    "\\(\\frac{2}{5}x - 3 = 5\\)",
+    "\\(\\text{Add } 3 \\text{ to both sides}\\)",
+    "\\(\\frac{2}{5}x = 8\\)",
+    "\\(\\text{Multiply both sides by } \\frac{5}{2}\\)",
+    "\\(x = 20\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-2d4a59f4",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[138]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(\\frac{5}{6}x + 4 = 14\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "\\(\\frac{5}{6}x + 4 = 14\\)",
+    "\\(\\text{Subtract } 4 \\text{ from both sides}\\)",
+    "\\(\\frac{5}{6}x = 10\\)",
+    "\\(\\text{Multiply both sides by } \\frac{6}{5}\\)",
+    "\\(x = 12\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-d67aef33",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[139]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(\\frac{3}{8}x - 1 = 5\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 16
+   },
+   "worked": [
+    "\\(\\frac{3}{8}x - 1 = 5\\)",
+    "\\(\\text{Add } 1 \\text{ to both sides}\\)",
+    "\\(\\frac{3}{8}x = 6\\)",
+    "\\(\\text{Multiply both sides by } \\frac{8}{3}\\)",
+    "\\(x = 16\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "linear-equations-672d03b7",
+   "topic": "linear-equations",
+   "source": {
+    "game": "linear-equation-solver",
+    "ref": "QUESTIONS.gcse[140]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Solve \\(\\frac{4}{5}x + 6 = 18\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 15
+   },
+   "worked": [
+    "\\(\\frac{4}{5}x + 6 = 18\\)",
+    "\\(\\text{Subtract } 6 \\text{ from both sides}\\)",
+    "\\(\\frac{4}{5}x = 12\\)",
+    "\\(\\text{Multiply both sides by } \\frac{5}{4}\\)",
+    "\\(x = 15\\)"
+   ],
+   "slip": []
+  }
+ ]
+}

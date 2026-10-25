@@ -1,0 +1,1086 @@
+{
+ "topic": "sequences",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "sequences-a12ff63b",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[0]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(2, 4, 6, 8, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 10
+   },
+   "worked": [
+    "The terms go up by \\(2\\) each time.",
+    "\\(8 + 2 = 10\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-0ec66888",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[1]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(5, 10, 15, 20, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 25
+   },
+   "worked": [
+    "The terms go up by \\(5\\) each time.",
+    "\\(20 + 5 = 25\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-17289c4d",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[2]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(3, 7, 11, 15, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 19
+   },
+   "worked": [
+    "The terms go up by \\(4\\) each time.",
+    "\\(15 + 4 = 19\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-c36b1133",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[3]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(1, 4, 7, 10, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 13
+   },
+   "worked": [
+    "The terms go up by \\(3\\) each time.",
+    "\\(10 + 3 = 13\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-cf971025",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[4]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(100, 95, 90, 85, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 80
+   },
+   "worked": [
+    "The terms go down by \\(5\\) each time.",
+    "\\(85 + (-5) = 80\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-3803ba0b",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[5]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(50, 43, 36, 29, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 22
+   },
+   "worked": [
+    "The terms go down by \\(7\\) each time.",
+    "\\(29 + (-7) = 22\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-0d565efa",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[6]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(2, 5, 8, 11, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 14
+   },
+   "worked": [
+    "The terms go up by \\(3\\) each time.",
+    "\\(11 + 3 = 14\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-132f10cc",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[7]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(-3, -1, 1, 3, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "worked": [
+    "The terms go up by \\(2\\) each time.",
+    "\\(3 + 2 = 5\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-1a7ba4a2",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[8]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(10, 7, 4, 1, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -2
+   },
+   "worked": [
+    "The terms go down by \\(3\\) each time.",
+    "\\(1 + (-3) = -2\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-83d62e16",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[9]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(0.5, 1, 1.5, 2, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2.5
+   },
+   "worked": [
+    "The terms go up by \\(0.5\\) each time.",
+    "\\(2 + 0.5 = 2.5\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-570ef483",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[10]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(-10, -6, -2, 2, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "The terms go up by \\(4\\) each time.",
+    "\\(2 + 4 = 6\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-1e851027",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[11]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(1, 3, 5, 7, 9, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 11
+   },
+   "worked": [
+    "The terms go up by \\(2\\) each time.",
+    "\\(9 + 2 = 11\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-4f5801ae",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[12]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(4, 9, 14, 19, 24\\). Write down the common difference.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "worked": [
+    "Each term is \\(5\\) more than the one before, so the rule is add \\(5\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-89ffd6dc",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[13]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(20, 17, 14, 11, 8\\). Write down the common difference.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -3
+   },
+   "worked": [
+    "Each term is \\(3\\) less than the one before, so the rule is take away \\(3\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-561ebf58",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[14]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(1, 4, 7, 10, 13\\). Write down the common difference.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "worked": [
+    "Each term is \\(3\\) more than the one before, so the rule is add \\(3\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-877a0792",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[15]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(100, 88, 76, 64\\). Write down the common difference.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -12
+   },
+   "worked": [
+    "Each term is \\(12\\) less than the one before, so the rule is take away \\(12\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-ed52af30",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[16]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(0.2, 0.5, 0.8, 1.1\\). Write down the common difference.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.3
+   },
+   "worked": [
+    "Each term is \\(0.3\\) more than the one before, so the rule is add \\(0.3\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-9d5a156b",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[17]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(-7, -3, 1, 5, 9\\). Write down the common difference.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "Each term is \\(4\\) more than the one before, so the rule is add \\(4\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-ada9b377",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[18]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(3, 6, 9, 12, \\ldots\\). Work out the 10th term of the sequence.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 30
+   },
+   "worked": [
+    "The nth term is \\(3n\\).",
+    "Put \\(n = 10\\): \\(3 \\times 10 = 30\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-aa4773f4",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[19]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(5, 8, 11, 14, \\ldots\\). Work out the 8th term of the sequence.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 26
+   },
+   "worked": [
+    "The nth term is \\(3n + 2\\).",
+    "Put \\(n = 8\\): \\(3 \\times 8 + 2 = 26\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-ef492b2b",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[20]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(2, 7, 12, 17, \\ldots\\). Work out the 20th term of the sequence.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 97
+   },
+   "worked": [
+    "The nth term is \\(5n - 3\\).",
+    "Put \\(n = 20\\): \\(5 \\times 20 + (-3) = 97\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-bf073dd6",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[21]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(1, 4, 7, 10, \\ldots\\). Work out the 50th term of the sequence.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 148
+   },
+   "worked": [
+    "The nth term is \\(3n - 2\\).",
+    "Put \\(n = 50\\): \\(3 \\times 50 + (-2) = 148\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-8a9519e3",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[22]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(10, 8, 6, 4, \\ldots\\). Work out the 15th term of the sequence.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": -18
+   },
+   "worked": [
+    "The nth term is \\(-2n + 12\\).",
+    "Put \\(n = 15\\): \\((-2) \\times 15 + 12 = -18\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-8795ea07",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[23]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(100, 93, 86, 79, \\ldots\\). Work out the 12th term of the sequence.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 23
+   },
+   "worked": [
+    "The nth term is \\(-7n + 107\\).",
+    "Put \\(n = 12\\): \\((-7) \\times 12 + 107 = 23\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-d612225d",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[24]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(0, 3, 6, 9, \\ldots\\). Work out the 100th term of the sequence.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 297
+   },
+   "worked": [
+    "The nth term is \\(3n - 3\\).",
+    "Put \\(n = 100\\): \\(3 \\times 100 + (-3) = 297\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-a017b33c",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[25]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(-5, -2, 1, 4, \\ldots\\). Work out the 7th term of the sequence.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 13
+   },
+   "worked": [
+    "The nth term is \\(3n - 8\\).",
+    "Put \\(n = 7\\): \\(3 \\times 7 + (-8) = 13\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "sequences-1606673d",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[26]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(1, 5, 9, 13, \\ldots\\). Which term of the sequence is equal to 41? Give the term number.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 11
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "sequences-5bce9d81",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[27]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(3, 8, 13, 18, \\ldots\\). Which term of the sequence is equal to 53? Give the term number.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 11
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "sequences-1d46b2de",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[28]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(2, 4, 8, 16, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 32
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "sequences-23c4dff2",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[29]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(3, 9, 27, 81, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 243
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "sequences-0ad167d8",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[30]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(1, 5, 25, 125, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 625
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "sequences-12509ad1",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[31]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(64, 32, 16, 8, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "sequences-324ca2f5",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[32]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(1000, 100, 10, 1, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "sequences-c42efb23",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[33]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(2, 6, 18, 54, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 162
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "sequences-f448c920",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[34]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(1, -2, 4, -8, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 16
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "sequences-23d9c7fc",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[35]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(5, 10, 20, 40, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 80
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "sequences-c18bb063",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[36]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(81, 27, 9, 3, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "sequences-8688f2c3",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[37]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(7, 14, 28, 56, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 112
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "sequences-11740ca5",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[38]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(3, 6, 9, 12, 15\\). What type of sequence is it?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Fibonacci"
+    },
+    {
+     "val": "b",
+     "label": "Geometric"
+    },
+    {
+     "val": "c",
+     "label": "Arithmetic"
+    },
+    {
+     "val": "d",
+     "label": "Quadratic"
+    }
+   ],
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "sequences-7e355c5b",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[39]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(2, 6, 18, 54\\). What type of sequence is it?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Geometric"
+    },
+    {
+     "val": "b",
+     "label": "Quadratic"
+    },
+    {
+     "val": "c",
+     "label": "Fibonacci"
+    },
+    {
+     "val": "d",
+     "label": "Arithmetic"
+    }
+   ],
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "sequences-363189a8",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[40]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(1, 1, 2, 3, 5, 8\\). What type of sequence is it?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Quadratic"
+    },
+    {
+     "val": "b",
+     "label": "Arithmetic"
+    },
+    {
+     "val": "c",
+     "label": "Fibonacci"
+    },
+    {
+     "val": "d",
+     "label": "Geometric"
+    }
+   ],
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "sequences-f57f159f",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[41]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(1, 4, 9, 16, 25\\). What type of sequence is it?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Geometric"
+    },
+    {
+     "val": "b",
+     "label": "Square numbers"
+    },
+    {
+     "val": "c",
+     "label": "Arithmetic"
+    },
+    {
+     "val": "d",
+     "label": "Triangular"
+    }
+   ],
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "sequences-6ea81df6",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[42]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(1, 3, 6, 10, 15\\). What type of sequence is it?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Triangular numbers"
+    },
+    {
+     "val": "b",
+     "label": "Arithmetic"
+    },
+    {
+     "val": "c",
+     "label": "Square numbers"
+    },
+    {
+     "val": "d",
+     "label": "Fibonacci"
+    }
+   ],
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "sequences-b1b32b7d",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[43]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(1, 8, 27, 64, 125\\). What type of sequence is it?",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Cube numbers"
+    },
+    {
+     "val": "b",
+     "label": "Powers of 2"
+    },
+    {
+     "val": "c",
+     "label": "Geometric"
+    },
+    {
+     "val": "d",
+     "label": "Square numbers"
+    }
+   ],
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "sequences-53b36ad9",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[44]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(2, 3, 5, 7, 11, 13, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 17
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "sequences-89a6c630",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[45]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(1, 1, 2, 3, 5, 8, 13, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 21
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "sequences-f8901bb3",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[46]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(1, 4, 9, 16, 25, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 36
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "sequences-53dce314",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[47]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(1, 3, 6, 10, 15, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 21
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "sequences-e9470fd2",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[48]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(2, 6, 12, 20, 30, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 42
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "sequences-f75a559b",
+   "topic": "sequences",
+   "source": {
+    "game": "sequence-solver",
+    "ref": "QUESTIONS.ks3[49]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Here is a number sequence: \\(0, 1, 1, 2, 3, 5, 8, 13, 21, \\ldots\\). Write down the next term.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 34
+   },
+   "worked": [],
+   "slip": []
+  }
+ ]
+}

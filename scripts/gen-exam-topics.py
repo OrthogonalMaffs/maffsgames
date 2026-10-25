@@ -20,6 +20,9 @@ of its own (a figure on a page is a claim); scripts/verify-the-6-ps.py holds bot
                verifier checks every level is one the game declares.
   band         Jon's grade band for the topic (24 Oct 2026; his judgement from the audit, not OCR data). Used only to
                order a session's six topics, lower bound first, then upper. Never shown as a grade.
+  COVERED needs a bank (SIX-PS-BANKS (h), 25 Oct 2026): a topic below is covered only if
+               schools/assets/six-ps/<topic-id>.json exists and holds at least MIN_BANK (30) questions; any other
+               topic is written to coming_soon with its marks. Derived from the files, never from a manifest.
   COMING_SOON  a topic with no game that can run it as a burst yet ("in development"), shown on the page with its
                marks and offered in the results' tick-list. Never drawn into a session.
 
@@ -109,6 +112,19 @@ COMING_SOON = [
 ]
 
 
+MIN_BANK = 30   # a topic is covered only if schools/assets/six-ps/<id>.json holds at least this many questions
+BANK_DIR = os.path.join(ROOT, "schools", "assets", "six-ps")
+
+
+def bank_size(tid):
+    """Questions in the topic's bank, 0 if it has none. Derived from the file: no manifest."""
+    try:
+        with open(os.path.join(BANK_DIR, tid + ".json"), encoding="utf-8") as f:
+            return len(json.load(f).get("questions", []))
+    except (OSError, ValueError):
+        return 0
+
+
 def roster_names():
     """{slug: game name} from the roster's numbered rows (a withdrawn row, numbered with a dash, is left out)."""
     names = {}
@@ -125,15 +141,22 @@ def build():
     names = roster_names()
     errors = []
     covered = []
+    coming = [{"id": tid, "name": name, "marks": marks, "series": series, "planned": planned}
+              for tid, name, marks, series, planned in COMING_SOON]
     for tid, name, marks, series, band, slug, level, modes, stages in COVERED:
         if slug not in names:
             errors.append("%s: game %s is not a numbered roster row" % (tid, slug))
+        if bank_size(tid) < MIN_BANK:
+            # Covered only by a bank (SIX-PS-BANKS (h), 25 Oct 2026): with fewer than MIN_BANK questions the topic is
+            # coming soon, with its marks as now, placed where its marks put it among the others.
+            entry = {"id": tid, "name": name, "marks": marks, "series": series, "planned": None}
+            at = next((i for i, c in enumerate(coming) if c["marks"] < marks), len(coming))
+            coming.insert(at, entry)
+            continue
         covered.append({
             "id": tid, "name": name, "marks": marks, "series": series, "band": list(band),
             "route": {"slug": slug, "game": names.get(slug, ""), "level": level, "modes": modes, "stages": stages},
         })
-    coming = [{"id": tid, "name": name, "marks": marks, "series": series, "planned": planned}
-              for tid, name, marks, series, planned in COMING_SOON]
     ids = [t["id"] for t in covered] + [t["id"] for t in coming]
     dup = sorted({i for i in ids if ids.count(i) > 1})
     if dup:
