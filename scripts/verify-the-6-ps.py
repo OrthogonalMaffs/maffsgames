@@ -450,6 +450,30 @@ async def burst_ctx(CB, browser, base):
     return ctx
 
 
+# A stage the game's lock hint was not written for (it plays the stage check-answer-lock.py plays). Simultaneous Solver's
+# hint answers Stage 1's first step (mult); Stage 4 opens with "Which letter will you eliminate?", a step the game does
+# not score (its scored() drops 'letter'), so the letter is chosen through the game's own SS.ui.choose and the hint's
+# answer then runs on the mult step as written.
+def _ss_stage(stage, hint):
+    if not stage or stage == 'stage1':
+        return hint
+    h = dict(hint)
+    h['ready'] = "!!window.SS && (SS.ui.state() === 'mult' || SS.ui.state() === 'letter')"
+    h['answer'] = "if (SS.ui.state() === 'letter') SS.ui.choose('x');\n" + hint['answer']
+    return h
+
+
+STAGE_DRIVING = {'simultaneous-solver': _ss_stage}
+
+# A stage route is started as the student starts it: burst.js has selected the stage, and the game's own Start is
+# pressed (as check-burst.py's stage cases do), never the lock hint's start, which may open another mode.
+START_AFTER_STAGE = """async () => {
+  for (let k = 0; k < 40 && !(window.MaffsBurst && MaffsBurst.stagePressed); k++) await new Promise(r => setTimeout(r, 50));
+  const b = document.getElementById('startBtn');
+  if (b && b.offsetParent !== null && !b.disabled) { b.click(); return true; }
+  return false; }"""
+
+
 async def play_five(CB, page, slug, mode=None, stage=None):
     """Five answers through the answer-lock driver: (findings, right answers the page reported, the bar or None).
     A game's lock hint may start play by pressing a stage of its own (squared-squirrel's presses stage-2, the stage
@@ -460,7 +484,10 @@ async def play_five(CB, page, slug, mode=None, stage=None):
         hint['start'] = re.sub(r'data-mode="[^"]*"', 'data-mode="%s"' % mode, hint['start'])
     if stage and isinstance(hint.get('start'), str):
         hint['start'] = re.sub(r'data-stage="[^"]*"', 'data-stage="%s"' % stage, hint['start'])
+    hint = STAGE_DRIVING.get(slug, lambda st, h: h)(stage, hint)
     d = CB.AL.Driver(page, slug, hint)
+    if stage and not await page.evaluate(START_AFTER_STAGE):
+        return ['the stage was not selected, or the game has no Start to press after it'], None, None
     if not await d.start():
         return ['UNPLAYABLE (no question reached)'], None, None
     s = None

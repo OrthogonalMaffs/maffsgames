@@ -1424,8 +1424,12 @@ global `mfg()` (so it loads after `analytics.js`); every call goes through uncha
 counted (right when `correct` is true), so no game carries counting code. After the Nth answer a fixed bar at the foot of the
 screen, portal navy, 44 px controls, says "That's N. Back to The 6 P's (R of N)" and links to
 `/the-6-ps/?done=<topic>&r=<R>&n=<N>`; the game is not stopped, the page keeps room for the bar, and the counts freeze at N.
-**Stages:** `?mode=<name>` presses the start screen's `[data-mode="<name>"]` button once and nothing else; a game whose stages
-are not `data-mode` buttons opens at its level only (the list is in `check-burst.py` `NO_MODE` and the handover). **Leaderboards:**
+**Stages:** `?mode=<name>` presses the start screen's `[data-mode="<name>"]` button once and nothing else;
+`&stage=<value>` (BURST-STAGE, 25 Oct 2026) then presses the start screen's `button[data-stage="<value>"]` once, the mode
+first if both are given, using the button's own value (free-daily-pizza `1`-`4` and `mixed`, simultaneous-solver
+`stage1`-`stage5`). Both presses only select; the game's own Start button is never pressed. If no such button appears within
+3 s the game opens normally and one `console.warn` names `stage=`. A game with neither opens at its level only (the list
+is in `check-burst.py` `NO_MODE` and the handover). **Leaderboards:**
 a burst never writes: `firebase-leaderboard.js`'s `submitScore` returns at once (no initials, no board, no ticker entry) and
 `score-history.js`'s `record()` keeps nothing, both on `MaffsBurst.active()`; a game that keeps its own best in
 `localStorage` (index-laws, factor-race, distinctly-average, trig-worms, quadratic-factoriser) is not reached and only writes

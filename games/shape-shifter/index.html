@@ -157,22 +157,22 @@ body.accessible .instruction-bar,body.accessible .reveal-text,body.accessible .s
   <div class="start-title">Shape Shifter</div>
   <div class="start-sub">Transformations — moving, flipping and rotating shapes — is one of the most visual topics in maths.</div>
   <div class="mode-cards">
-    <div class="mode-card" onclick="startGame('translation')">
+    <div class="mode-card" data-mode="translation" onclick="startGame('translation')">
       <h3>Translation</h3>
       <div class="mode-count">10 questions</div>
       <p>Move shapes by tapping where each vertex should land</p>
     </div>
-    <div class="mode-card" onclick="startGame('reflection')">
+    <div class="mode-card" data-mode="reflection" onclick="startGame('reflection')">
       <h3>Reflection</h3>
       <div class="mode-count">10 questions</div>
       <p>Reflect shapes in the x-axis or y-axis</p>
     </div>
-    <div class="mode-card" onclick="startGame('rotation')">
+    <div class="mode-card" data-mode="rotation" onclick="startGame('rotation')">
       <h3>Rotation</h3>
       <div class="mode-count">10 questions</div>
       <p>Pick the correctly rotated shape</p>
     </div>
-    <div class="mode-card mix" onclick="startGame('mix')">
+    <div class="mode-card mix" data-mode="random-mix" onclick="startGame('mix')">
       <h3>Random Mix</h3>
       <div class="mode-count">10 questions</div>
       <p>A mix of all three transformation types</p>
