@@ -8,7 +8,7 @@
 
 This repo squash-merges every PR, so a merged branch's tip is never an ancestor of main and `git branch -d`
 refuses. This helper checks instead, then deletes. It deletes only when ALL hold:
-  1. the branch's PR is MERGED (gh pr view <branch> --json state,headRefOid,mergeCommit);
+  1. the branch's PR is MERGED (REST: gh api repos/{owner}/{repo}/pulls?head=<owner>:<branch>&state=all; no GraphQL);
   2. the local tip equals the PR's headRefOid (nothing local that was not in the PR);
   3. the branch's worktree, if it has one, is clean (git status --porcelain is empty).
 Then, first, it stops what the session registered through scripts/bg.py (<worktree>/.claude/pids.json: each process
@@ -148,13 +148,27 @@ def unregistered(wt, exclude=()):
     return found
 
 
+def pr_from_rest(pulls):
+    """{state, headRefOid, mergeCommit} of the newest PR in a REST pulls list (state MERGED, CLOSED or OPEN), or None.
+    The REST list has no `merged` flag: a PR is merged when merged_at is set."""
+    if not isinstance(pulls, list) or not pulls:
+        return None
+    pr = max((x for x in pulls if isinstance(x, dict) and isinstance(x.get("number"), int)),
+             key=lambda x: x["number"], default=None)
+    if pr is None or not isinstance(pr.get("head"), dict) or not pr["head"].get("sha"):
+        return None
+    state = "MERGED" if pr.get("merged_at") else ("OPEN" if pr.get("state") == "open" else "CLOSED")
+    return {"state": state, "headRefOid": pr["head"]["sha"], "mergeCommit": {"oid": pr.get("merge_commit_sha")}}
+
+
 def gh_pr(branch, cwd=None):
-    """The PR's {state, headRefOid, mergeCommit} from the gh CLI, or None if gh cannot say."""
-    r = run(["gh", "pr", "view", branch, "--json", "state,headRefOid,mergeCommit"], cwd)
+    """The PR's {state, headRefOid, mergeCommit} through the REST API (`gh api`; GraphQL is refused in Claude Code
+    sessions), or None if gh cannot say."""
+    r = run(["gh", "api", "repos/{owner}/{repo}/pulls?head={owner}:%s&state=all&per_page=30" % branch], cwd)
     if r.returncode != 0:
         return None
     try:
-        return json.loads(r.stdout)
+        return pr_from_rest(json.loads(r.stdout))
     except ValueError:
         return None
 
@@ -292,6 +306,14 @@ def selftest():
               end_task("inside", repo, stub("MERGED", tip), cwd=wt) == 1 and exists("inside") and os.path.isdir(wt))
 
         check("gh cannot report: refuses", end_task("dirty", repo, lambda b: None, cwd=td) == 1 and exists("dirty"))
+        sha = "a" * 40
+        pr = lambda n, state, merged, s=sha: {"number": n, "state": state, "merged_at": merged, "head": {"sha": s}, "merge_commit_sha": "m" * 40}
+        check("REST: a merged PR reads MERGED with its head", pr_from_rest([pr(5, "closed", "2026-10-25T00:00:00Z")]) == {"state": "MERGED", "headRefOid": sha, "mergeCommit": {"oid": "m" * 40}})
+        check("REST: closed unmerged reads CLOSED", pr_from_rest([pr(5, "closed", None)])["state"] == "CLOSED")
+        check("REST: open reads OPEN", pr_from_rest([pr(5, "open", None)])["state"] == "OPEN")
+        check("REST: the newest PR for a branch wins", pr_from_rest([pr(5, "closed", "x"), pr(9, "open", None)])["state"] == "OPEN")
+        check("REST: no PR, a malformed list or a missing head reads None",
+              pr_from_rest([]) is None and pr_from_rest({"message": "Not Found"}) is None and pr_from_rest([{"number": 1, "state": "open", "head": {}}]) is None)
         check("no such branch: refuses", end_task("nope", repo, stub("MERGED", "0" * 40), cwd=td) == 1)
 
         g("worktree", "add", "-q", "--detach", os.path.join(td, "det"), "main")
