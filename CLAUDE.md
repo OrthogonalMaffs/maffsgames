@@ -58,8 +58,9 @@ is fixed before any new work starts.** **Why:** a PR runs only the verifiers its
 group that has outgrown its timeout passes on every PR and fails only on main. Group B was cancelled at
 its 12-minute limit on every main run from #68 to #71, and it was seen only when a PR touched every game.
 **What blocks and what warns (TIMING-GATE, 14 Oct 2026; `docs/handover/ci-timing-diagnosis.md`):** a group
-estimated past 80% of its budget from the median of the last 5 main runs fails (`ci-groups.py --check`, every PR
-and the main timings job), and each job has a hard timeout against a hang. A group that passes 75% of its timeout on
+estimated past 80% of its budget from the median of the last 5 main runs fails a PR that selects one of its lines, and past
+100% fails everywhere, the main timings job included (MAIN-WARN, 25 Oct 2026: on main 80-100% is a warning, listed under
+`over-budget` in ci-pack.json), and each job has a hard timeout against a hang. A group that passes 75% of its timeout on
 one run's clock only **warns** (job summary and annotation naming the slowest line against its recorded median; the
 job stays green), and the main timings job reports, never fails on, a verifier whose last 3 runs are each 20% and
 15 s over the 5 before. **Why:** the per-run clock failed twice in 160 runs, both single-line stalls on unchanged

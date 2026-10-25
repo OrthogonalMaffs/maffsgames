@@ -1566,8 +1566,8 @@ at 5m17s of 6m; each fix was another hand-made group (B5, E2), which only bought
   `--check` on every PR. Now:
   - **On main (`ci-groups.py --record-and-pack`, the timings job) a line over the limit never refuses the pack.** It is
     printed as a warning (`::warning::`) and written to `scripts/ci-pack.json` under `split-candidates` (label, median,
-    setup, percent) for the lane that splits it, and the pack commits. Only the group rule (an estimate past 80%)
-    refuses a pack.
+    setup, percent) for the lane that splits it, and the pack commits. Only the group rule refuses a pack (an estimate
+    past 80% until MAIN-WARN, 25 Oct 2026; past 100% since, below).
   - **On a PR (`ci-groups.py --check`, the plan job) a line over the limit fails only if the PR's selection includes
     its verifier**, as the plan job selects (`ci-deps.py` `select()` on the files changed since the PR's base, which
     `--check` reads from the run's own event, so the plan job's interface is unchanged). Any other line over the limit
@@ -1592,6 +1592,15 @@ at 5m17s of 6m; each fix was another hand-made group (B5, E2), which only bought
   its main median (or "none"), this run's time and its group. **Why:** `--check` runs before any verifier, so three times
   a line passed its PR and turned main red after merge (#515; #525, caught only on #527; #526's renamed Shape Shifter
   line, estimated at the 120 s default, took 205 s). Not a pull request, or no verifier ran: it says so and passes.
+- **On main a group over budget is a recorded warning; it fails only a PR that selects it** (MAIN-WARN, Jon's ruling
+  25 Oct 2026, reversing CI-TIMINGS-MEDIAN's fail-on-main between 80% and 100%). The main timings job writes the timings
+  and the pack whatever group passes 80%, lists each in `scripts/ci-pack.json` under `over-budget` (group, estimate,
+  percent, its largest lines and their scripts) with a `::warning::`, and passes. A group past 100% of its budget (`HARD`,
+  75% of its timeout) still refuses the pack and fails. On a PR (`--check`, `--check-measured`) a group past 80% is a
+  fault only when the PR selects a script with a line in that group (the base unreadable counts as everything); a
+  run-all change warns (Jon, 21 Oct). **Why:** runner speed differs by about 25% between regions; #526's Shape Shifter,
+  unchanged, took 163 s on its PR and 205 s on main (Content verifiers 34 at 82%), the timings job refused the pack and
+  main went red, blocking every merge, while the group's timeout (6 minutes) was far off (PR-MEASURED's replay).
 - **After every full run on main the "CI timings and pack" job** records that run's times and repacks, and
   commits both files if they changed (`[skip ci]`, as the register job does).
 - "70%" and "80%" are of the budget, not the timeout (Jon's own wording, 9 Oct: "kept to 70% of the budget,
