@@ -1,0 +1,1750 @@
+{
+ "topic": "form-expressions",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "form-expressions-0a18641b",
+   "topic": "form-expressions",
+   "source": {
+    "game": "equation-builder",
+    "ref": "QUESTIONS[0]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A taxi company charges a fixed booking fee of £3 plus £2.50 for every mile of the journey. A customer wants to know the total cost C pounds of a journey of m miles. Write a formula for C.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(C = 2.5(m + 3)\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(C = 2.5m + 3\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(C = 5.5m\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(C = 3m + 2.5\\)"
+    }
+   ],
+   "worked": [
+    "£2.50 for each of \\(m\\) miles: \\(2.5m\\).",
+    "Add the £3 booking fee, paid once: \\(C = 2.5m + 3\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "The £2.50 is charged for each mile, so it goes with \\(m\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "The £3 booking fee is paid once, not for each mile."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The booking fee is not multiplied by 2.5."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-92f36efb",
+   "topic": "form-expressions",
+   "source": {
+    "game": "equation-builder",
+    "ref": "QUESTIONS[1]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A farmer mixes sand and cement in the ratio 5:1 to make mortar. He uses x kg of cement. Write a formula for the total mass T kg of the mortar mixture.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(T = 5x\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(T = 6x\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(T = x + 6\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(T = x + 5\\)"
+    }
+   ],
+   "worked": [
+    "Sand to cement is 5 : 1, so the sand is 5 times the cement: \\(5x\\) kg.",
+    "Total: \\(5x + x = 6x\\), so \\(T = 6x\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That is the sand only: add the \\(x\\) kg of cement."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "The sand is 5 times the cement, not 5 more."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Sand to cement is 5 : 1, so the sand is \\(5x\\), not 5."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-531258ed",
+   "topic": "form-expressions",
+   "source": {
+    "game": "equation-builder",
+    "ref": "QUESTIONS[2]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A plumber charges £45 for each hour he works, plus a fixed call-out charge of £60. Write a formula for the total charge T pounds when the plumber works for h hours.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(T = 105h\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(T = 45(h + 60)\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(T = 60h + 45\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(T = 45h + 60\\)"
+    }
+   ],
+   "worked": [
+    "£45 for each of \\(h\\) hours: \\(45h\\).",
+    "Add the £60 call-out, charged once: \\(T = 45h + 60\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "The £45 is charged each hour, so it goes with \\(h\\)."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The £60 call-out is charged once, not each hour."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "The call-out charge is not multiplied by 45."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-6713da9a",
+   "topic": "form-expressions",
+   "source": {
+    "game": "equation-builder",
+    "ref": "QUESTIONS[3]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Ellie is e years old. Her brother is 4 years younger than her. Their mum is three times Ellie’s age. Write a formula for S, the sum of all three ages.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(S = 5e - 4\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(S = 4e\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(S = 4e - 4\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(S = 5e + 4\\)"
+    }
+   ],
+   "worked": [
+    "Ellie: \\(e\\). Her brother: \\(e - 4\\). Their mum: \\(3e\\).",
+    "Add them: \\(S = e + (e - 4) + 3e = 5e - 4\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Her brother is younger, so his age is \\(e - 4\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That leaves out Ellie's own age, \\(e\\)."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That leaves out her brother, \\(e - 4\\)."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-ccf61403",
+   "topic": "form-expressions",
+   "source": {
+    "game": "equation-builder",
+    "ref": "QUESTIONS[10]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Packets of crisps come in boxes of 24. A café orders \\(x\\) boxes and keeps 6 packets aside as samples. Write a formula for the number of packets, \\(N\\), available to sell.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(N = 24x + 6\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(N = 24x - 6\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(N = 18x\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(N = 24(x - 6)\\)"
+    }
+   ],
+   "worked": [
+    "Each box holds 24 packets: \\(x\\) boxes hold \\(24x\\).",
+    "Take away the 6 kept aside: \\(N = 24x - 6\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The 6 packets are kept aside, so take them away."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "The 6 packets are taken from the whole order once, not from every box."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That keeps back 6 boxes, not 6 packets."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-aeffc058",
+   "topic": "form-expressions",
+   "source": {
+    "game": "equation-builder",
+    "ref": "QUESTIONS[19]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A swimming pool holds V litres when full. It is currently three-eighths full and contains 360 litres. Write an equation to find V.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{3V}{8} = 360\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(V - \\frac{3}{8} = 360\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(3V = 360\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{8V}{3} = 360\\)"
+    }
+   ],
+   "worked": [
+    "Three-eighths of the full amount \\(V\\) is \\(\\frac{3V}{8}\\).",
+    "That amount is 360 litres: \\(\\frac{3V}{8} = 360\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Three-eighths means \\(\\frac{3}{8}\\) of \\(V\\): 3 on top, 8 underneath."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Three-eighths of \\(V\\) is \\(3V\\) divided by 8."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "\"Three-eighths full\" means \\(\\frac{3}{8}\\) of \\(V\\), not \\(V\\) take away \\(\\frac{3}{8}\\)."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-01b39634",
+   "topic": "form-expressions",
+   "source": {
+    "game": "equation-builder",
+    "ref": "QUESTIONS[29]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A plumber charges £45 per hour plus £60 call-out. A customer pays £T. Write the formula for the number of hours h worked.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(h = 45(T - 60)\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(h = \\frac{T}{45} - 60\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(h = \\frac{T + 60}{45}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(h = \\frac{T - 60}{45}\\)"
+    }
+   ],
+   "worked": [
+    "The charge is \\(T = 45h + 60\\).",
+    "Take the £60 call-out away: \\(T - 60 = 45h\\).",
+    "Divide by 45: \\(h = \\frac{T - 60}{45}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "The £60 call-out is part of \\(T\\), so take it away."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Take away the £60 before dividing by 45."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "To find the hours, divide by the £45 an hour."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-fe28fa23",
+   "topic": "form-expressions",
+   "source": {
+    "game": "equation-builder",
+    "ref": "QUESTIONS[35]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A number n is doubled and then 9 is subtracted to give 25. Write the equation.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(2n + 9 = 25\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(2n - 9 = 25\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(n^2 - 9 = 25\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(2(n - 9) = 25\\)"
+    }
+   ],
+   "worked": [
+    "Doubled: \\(2n\\).",
+    "Then subtract 9: \\(2n - 9\\).",
+    "That gives 25: \\(2n - 9 = 25\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "9 is subtracted, so it is \\(- 9\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "The number is doubled first, then 9 is subtracted."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Doubled means times 2, not squared."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-2b457bf5",
+   "topic": "form-expressions",
+   "source": {
+    "game": "equation-builder",
+    "ref": "QUESTIONS[39]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A water tank is three-eighths full and holds 360 litres. Write the equation for the full capacity V litres.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\frac{3V}{8} = 360\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(3V = 360\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{8V}{3} = 360\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(V - \\frac{3}{8} = 360\\)"
+    }
+   ],
+   "worked": [
+    "Three-eighths of the full capacity \\(V\\) is \\(\\frac{3V}{8}\\).",
+    "That amount is 360 litres: \\(\\frac{3V}{8} = 360\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Three-eighths means \\(\\frac{3}{8}\\) of \\(V\\): 3 on top, 8 underneath."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Three-eighths of \\(V\\) is \\(3V\\) divided by 8."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "\"Three-eighths full\" means \\(\\frac{3}{8}\\) of \\(V\\), not \\(V\\) take away \\(\\frac{3}{8}\\)."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-e4aa7e6e",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-01"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A ticket costs £\\(t\\). Write an expression for the cost of 4 tickets, in pounds.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(4t\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(t^4\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{t}{4}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(t + 4\\)"
+    }
+   ],
+   "worked": [
+    "4 tickets at £\\(t\\) each cost 4 lots of \\(t\\).",
+    "Write \\(4 \\times t\\) as \\(4t\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "\\(t^4\\) means \\(t \\times t \\times t \\times t\\): 4 tickets is \\(4 \\times t\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That divides the price by 4: 4 tickets is 4 lots of \\(t\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That adds 4 to the price: 4 tickets is 4 lots of \\(t\\)."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-4f3d2d6c",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-02"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Ali has £\\(n\\). Ben has £7 more than Ali. Write an expression for the amount Ben has, in pounds.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(n - 7\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(7n\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(n + 7\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\frac{n}{7}\\)"
+    }
+   ],
+   "worked": [
+    "\"7 more than\" means add 7 to what Ali has.",
+    "So Ben has \\(n + 7\\) pounds."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Ben has more than Ali, so add 7."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "\"7 more than\" means add 7, not multiply by 7."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "\"7 more than\" means add 7."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-729937ac",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-03"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A plank is \\(x\\) cm long. 15 cm is cut off. Write an expression for the length left, in cm.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(15 - x\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x + 15\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x - 15\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(15x\\)"
+    }
+   ],
+   "worked": [
+    "Start with the whole plank, \\(x\\) cm.",
+    "Take away the 15 cm cut off: \\(x - 15\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The order matters: start with the plank, \\(x\\), and take 15 away."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Cutting off makes the plank shorter, so take 15 away."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Cutting off is taking away, not multiplying."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-6d7ca4f6",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-04"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A bill of £\\(b\\) is shared equally between 3 people. Write an expression for each person\\'s share, in pounds.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(3b\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{3}{b}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\frac{b}{3}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(b - 3\\)"
+    }
+   ],
+   "worked": [
+    "Sharing equally between 3 people means dividing by 3.",
+    "Each share is \\(\\frac{b}{3}\\) pounds."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Sharing between 3 means dividing by 3, not multiplying."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "The bill is divided by 3, so \\(b\\) goes on top."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Sharing equally means dividing, not taking away."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-33b60fcb",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-05"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A number \\(m\\) is doubled, then 5 is added. Write an expression for the result.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(2(m + 5)\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(2m + 5\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(m + 7\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(5m + 2\\)"
+    }
+   ],
+   "worked": [
+    "Doubled: \\(2m\\).",
+    "Then add 5: \\(2m + 5\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That adds 5 first, then doubles: here the doubling comes first."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Doubling means times 2, not add 2."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "The number is doubled (times 2), then 5 is added."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-53b67504",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-06"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "5 is added to a number \\(y\\), then the result is multiplied by 3. Write an expression for the answer.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(3y + 5\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(3(y + 5)\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(5(y + 3)\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(y + 15\\)"
+    }
+   ],
+   "worked": [
+    "Add 5 first: \\(y + 5\\).",
+    "Multiply the whole result by 3, so use brackets: \\(3(y + 5)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The whole result is multiplied by 3, so it needs brackets: \\(3(y + 5)\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "5 is added first, and the result is multiplied by 3."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "The whole of \\(y + 5\\) is multiplied by 3, not just the 5."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-dc3d2bb8",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-07"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Pens cost \\(p\\) pence each and rulers cost \\(r\\) pence each. Write an expression for the total cost, in pence, of 3 pens and 2 rulers.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(2p + 3r\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(3p + 2r\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(6pr\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(5(p + r)\\)"
+    }
+   ],
+   "worked": [
+    "3 pens cost \\(3p\\) pence.",
+    "2 rulers cost \\(2r\\) pence.",
+    "Total: \\(3p + 2r\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The numbers have swapped: 3 pens is \\(3p\\) and 2 rulers is \\(2r\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "The costs of pens and rulers are added, not multiplied."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is 5 pens and 5 rulers."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-4b7e8313",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-08"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A taxi charges £3, plus £2 for each mile. Write an expression for the cost, in pounds, of a journey of \\(m\\) miles.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(2m + 3\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(m + 5\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(5m\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(3m + 2\\)"
+    }
+   ],
+   "worked": [
+    "£2 for each of \\(m\\) miles: \\(2m\\).",
+    "Add the £3 charged once: \\(2m + 3\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "£2 for each mile is \\(2m\\), not \\(m + 2\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "The £3 is charged once, not for each mile."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "The £2 is charged for each mile, so it goes with \\(m\\)."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-167b3f5d",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-09"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "A gym charges a £20 joining fee, then £15 a month. Write an expression for the total cost, in pounds, for \\(k\\) months.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(35k\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(20k + 15\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(15k + 20\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(15(k + 20)\\)"
+    }
+   ],
+   "worked": [
+    "£15 for each of \\(k\\) months: \\(15k\\).",
+    "Add the £20 joining fee, paid once: \\(15k + 20\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The £20 joining fee is paid once, not every month."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "The £15 is paid every month, so it goes with \\(k\\); the £20 is paid once."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "The joining fee is not multiplied by 15."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-ae382b94",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-10"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Cinema tickets cost £\\(a\\) for an adult and £\\(c\\) for a child. Write an expression for the cost, in pounds, of 2 adult tickets and 3 child tickets.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(6ac\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(3a + 2c\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(5(a + c)\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(2a + 3c\\)"
+    }
+   ],
+   "worked": [
+    "2 adult tickets: \\(2a\\).",
+    "3 child tickets: \\(3c\\).",
+    "Total: \\(2a + 3c\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The costs are added, not multiplied."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "The numbers have swapped: 2 adults is \\(2a\\) and 3 children is \\(3c\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is 5 adults and 5 children."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-ebd38395",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-11"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A rectangle is \\(x\\) cm long and 4 cm wide. Write an expression for its perimeter, in cm.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(4x\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(2x + 4\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(2x + 8\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x + 4\\)"
+    }
+   ],
+   "worked": [
+    "The perimeter is all four sides added: \\(x + 4 + x + 4\\).",
+    "Collect: \\(2x + 8\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That multiplies the length by the width: the perimeter adds the four sides."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "There are two widths of 4 cm, so add 8."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is one length and one width: the perimeter goes all the way round, two of each."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-d1a4c959",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-12"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "An equilateral triangle has sides of length \\(y\\) cm. Write an expression for its perimeter, in cm.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(y + 3\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(2y\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(y^3\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(3y\\)"
+    }
+   ],
+   "worked": [
+    "An equilateral triangle has three equal sides.",
+    "Perimeter: \\(y + y + y = 3y\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The three sides are each \\(y\\): \\(y + y + y\\)."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "A triangle has three sides."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "\\(y^3\\) is \\(y \\times y \\times y\\): the perimeter is \\(y + y + y\\)."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-6411053c",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-13"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "A rectangle has length \\(2a\\) cm and width \\(a\\) cm. Write an expression for its perimeter, in cm.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(4a\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(2a^2\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(6a\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(3a\\)"
+    }
+   ],
+   "worked": [
+    "Add all four sides: \\(2a + a + 2a + a\\).",
+    "Collect: \\(6a\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "That adds the two lengths only: the two widths are needed too."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the area: the perimeter adds the sides."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "That is one length and one width: add all four sides."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-a3302820",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-14"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "A square has sides of length \\((x + 2)\\) cm. Write an expression for its perimeter, in cm.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(4x + 8\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\((x + 2)^2\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(4x + 2\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x + 8\\)"
+    }
+   ],
+   "worked": [
+    "A square has four equal sides: \\(4(x + 2)\\).",
+    "Expand: \\(4x + 8\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the area: the perimeter adds the four sides."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "The 2 is part of every side, so it is multiplied by 4 too."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "The \\(x\\) is part of every side, so it is multiplied by 4 too."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-0bea2a29",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-15"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Priya is \\(p\\) years old. Her brother is 6 years younger than her. Write an expression for her brother\\'s age.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(6p\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(p - 6\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(p + 6\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(6 - p\\)"
+    }
+   ],
+   "worked": [
+    "Younger means take away.",
+    "Her brother is \\(p - 6\\) years old."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Younger means take away, not multiply."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Younger means take away."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "The order matters: start with Priya's age and take 6 away."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-11b91644",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-16"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Sam is \\(s\\) years old. His mother is three times as old as Sam. Write an expression for his mother\\'s age in 5 years\\' time.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(3s + 5\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(3(s + 5)\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(3s\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(s + 8\\)"
+    }
+   ],
+   "worked": [
+    "His mother is three times as old: \\(3s\\).",
+    "In 5 years she is 5 years older: \\(3s + 5\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "In 5 years his mother is 5 years older: add 5 to her age, \\(3s\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is her age now: add 5 for 5 years' time."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Three times as old means multiply by 3."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-d761e190",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-17"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "A van costs £40 a day to hire, plus a £25 booking fee. Write a formula for the total cost, \\(C\\) pounds, of hiring the van for \\(d\\) days.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(C = 40(d + 25)\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(C = 65d\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(C = 25d + 40\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(C = 40d + 25\\)"
+    }
+   ],
+   "worked": [
+    "£40 for each of \\(d\\) days: \\(40d\\).",
+    "Add the £25 fee, paid once: \\(C = 40d + 25\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The booking fee is not multiplied by 40."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "The £25 booking fee is paid once, not each day."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "The £40 is charged each day, so it goes with \\(d\\)."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-2bd11226",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-18"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Each box holds 12 eggs. Write a formula for the number of eggs, \\(E\\), in \\(b\\) full boxes.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(E = 12b\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(E = b + 12\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(E = \\frac{b}{12}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(E = \\frac{12}{b}\\)"
+    }
+   ],
+   "worked": [
+    "Each box holds 12 eggs.",
+    "\\(b\\) boxes hold \\(12 \\times b\\): \\(E = 12b\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Each box holds 12, so \\(b\\) boxes hold \\(b\\) lots of 12."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "More boxes means more eggs: multiply by 12."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "More boxes means more eggs: multiply by 12."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-9ed583a5",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-19"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "A plumber charges £50 to call out and £30 for each hour worked. Write a formula for the total charge, \\(T\\) pounds, for a job lasting \\(h\\) hours.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(T = 80h\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(T = 50h + 30\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(T = 30h + 50\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(T = 30(h + 50)\\)"
+    }
+   ],
+   "worked": [
+    "£30 for each of \\(h\\) hours: \\(30h\\).",
+    "Add the £50 call-out, charged once: \\(T = 30h + 50\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The £50 call-out is charged once, not each hour."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "The £30 is charged each hour, so it goes with \\(h\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "The call-out charge is not multiplied by 30."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-9562fc54",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-20"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Write a formula for the perimeter, \\(P\\), of a rectangle with length \\(l\\) and width \\(w\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(P = 2lw\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(P = lw\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(P = l + w\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(P = 2l + 2w\\)"
+    }
+   ],
+   "worked": [
+    "A rectangle has two lengths and two widths.",
+    "Add them: \\(P = 2l + 2w\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The sides are added, not multiplied."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "That is the area: the perimeter adds the sides."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "That is one length and one width: add all four sides."
+    }
+   ]
+  },
+  {
+   "id": "form-expressions-25960ca2",
+   "topic": "form-expressions",
+   "source": {
+    "game": "authored",
+    "ref": "project-claude-2026-10-25:form-expressions-21"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Phone credit starts at £20. Each call costs £0.50. Write a formula for the credit left, \\(R\\) pounds, after \\(n\\) calls.",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(R = 19.5n\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(R = 20 + 0.5n\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(R = 20 - 0.5n\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(R = 0.5n - 20\\)"
+    }
+   ],
+   "worked": [
+    "\\(n\\) calls at £0.50 each cost \\(0.5n\\).",
+    "Take that from the £20: \\(R = 20 - 0.5n\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Start with £20 and take away £0.50 for each call."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Calls use up credit, so take them away."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Start with the £20 and take the calls away."
+    }
+   ]
+  }
+ ]
+}
