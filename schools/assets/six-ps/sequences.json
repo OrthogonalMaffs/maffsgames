@@ -17,7 +17,10 @@
    "answer": {
     "value": 10
    },
-   "worked": [],
+   "worked": [
+    "The terms go up by \\(2\\) each time.",
+    "\\(8 + 2 = 10\\)"
+   ],
    "slip": []
   },
   {
@@ -35,7 +38,10 @@
    "answer": {
     "value": 25
    },
-   "worked": [],
+   "worked": [
+    "The terms go up by \\(5\\) each time.",
+    "\\(20 + 5 = 25\\)"
+   ],
    "slip": []
   },
   {
@@ -53,7 +59,10 @@
    "answer": {
     "value": 19
    },
-   "worked": [],
+   "worked": [
+    "The terms go up by \\(4\\) each time.",
+    "\\(15 + 4 = 19\\)"
+   ],
    "slip": []
   },
   {
@@ -71,7 +80,10 @@
    "answer": {
     "value": 13
    },
-   "worked": [],
+   "worked": [
+    "The terms go up by \\(3\\) each time.",
+    "\\(10 + 3 = 13\\)"
+   ],
    "slip": []
   },
   {
@@ -89,7 +101,10 @@
    "answer": {
     "value": 80
    },
-   "worked": [],
+   "worked": [
+    "The terms go down by \\(5\\) each time.",
+    "\\(85 + (-5) = 80\\)"
+   ],
    "slip": []
   },
   {
@@ -107,7 +122,10 @@
    "answer": {
     "value": 22
    },
-   "worked": [],
+   "worked": [
+    "The terms go down by \\(7\\) each time.",
+    "\\(29 + (-7) = 22\\)"
+   ],
    "slip": []
   },
   {
@@ -125,7 +143,10 @@
    "answer": {
     "value": 14
    },
-   "worked": [],
+   "worked": [
+    "The terms go up by \\(3\\) each time.",
+    "\\(11 + 3 = 14\\)"
+   ],
    "slip": []
   },
   {
@@ -143,7 +164,10 @@
    "answer": {
     "value": 5
    },
-   "worked": [],
+   "worked": [
+    "The terms go up by \\(2\\) each time.",
+    "\\(3 + 2 = 5\\)"
+   ],
    "slip": []
   },
   {
@@ -161,7 +185,10 @@
    "answer": {
     "value": -2
    },
-   "worked": [],
+   "worked": [
+    "The terms go down by \\(3\\) each time.",
+    "\\(1 + (-3) = -2\\)"
+   ],
    "slip": []
   },
   {
@@ -179,7 +206,10 @@
    "answer": {
     "value": 2.5
    },
-   "worked": [],
+   "worked": [
+    "The terms go up by \\(0.5\\) each time.",
+    "\\(2 + 0.5 = 2.5\\)"
+   ],
    "slip": []
   },
   {
@@ -197,7 +227,10 @@
    "answer": {
     "value": 6
    },
-   "worked": [],
+   "worked": [
+    "The terms go up by \\(4\\) each time.",
+    "\\(2 + 4 = 6\\)"
+   ],
    "slip": []
   },
   {
@@ -215,7 +248,10 @@
    "answer": {
     "value": 11
    },
-   "worked": [],
+   "worked": [
+    "The terms go up by \\(2\\) each time.",
+    "\\(9 + 2 = 11\\)"
+   ],
    "slip": []
   },
   {
@@ -233,7 +269,9 @@
    "answer": {
     "value": 5
    },
-   "worked": [],
+   "worked": [
+    "Each term is \\(5\\) more than the one before, so the rule is add \\(5\\)."
+   ],
    "slip": []
   },
   {
@@ -251,7 +289,9 @@
    "answer": {
     "value": -3
    },
-   "worked": [],
+   "worked": [
+    "Each term is \\(3\\) less than the one before, so the rule is take away \\(3\\)."
+   ],
    "slip": []
   },
   {
@@ -269,7 +309,9 @@
    "answer": {
     "value": 3
    },
-   "worked": [],
+   "worked": [
+    "Each term is \\(3\\) more than the one before, so the rule is add \\(3\\)."
+   ],
    "slip": []
   },
   {
@@ -287,7 +329,9 @@
    "answer": {
     "value": -12
    },
-   "worked": [],
+   "worked": [
+    "Each term is \\(12\\) less than the one before, so the rule is take away \\(12\\)."
+   ],
    "slip": []
   },
   {
@@ -305,7 +349,9 @@
    "answer": {
     "value": 0.3
    },
-   "worked": [],
+   "worked": [
+    "Each term is \\(0.3\\) more than the one before, so the rule is add \\(0.3\\)."
+   ],
    "slip": []
   },
   {
@@ -323,7 +369,9 @@
    "answer": {
     "value": 4
    },
-   "worked": [],
+   "worked": [
+    "Each term is \\(4\\) more than the one before, so the rule is add \\(4\\)."
+   ],
    "slip": []
   },
   {
@@ -341,7 +389,10 @@
    "answer": {
     "value": 30
    },
-   "worked": [],
+   "worked": [
+    "The nth term is \\(3n\\).",
+    "Put \\(n = 10\\): \\(3 \\times 10 = 30\\)."
+   ],
    "slip": []
   },
   {
@@ -359,7 +410,10 @@
    "answer": {
     "value": 26
    },
-   "worked": [],
+   "worked": [
+    "The nth term is \\(3n + 2\\).",
+    "Put \\(n = 8\\): \\(3 \\times 8 + 2 = 26\\)."
+   ],
    "slip": []
   },
   {
@@ -377,7 +431,10 @@
    "answer": {
     "value": 97
    },
-   "worked": [],
+   "worked": [
+    "The nth term is \\(5n - 3\\).",
+    "Put \\(n = 20\\): \\(5 \\times 20 + (-3) = 97\\)."
+   ],
    "slip": []
   },
   {
@@ -395,7 +452,10 @@
    "answer": {
     "value": 148
    },
-   "worked": [],
+   "worked": [
+    "The nth term is \\(3n - 2\\).",
+    "Put \\(n = 50\\): \\(3 \\times 50 + (-2) = 148\\)."
+   ],
    "slip": []
   },
   {
@@ -413,7 +473,10 @@
    "answer": {
     "value": -18
    },
-   "worked": [],
+   "worked": [
+    "The nth term is \\(-2n + 12\\).",
+    "Put \\(n = 15\\): \\((-2) \\times 15 + 12 = -18\\)."
+   ],
    "slip": []
   },
   {
@@ -431,7 +494,10 @@
    "answer": {
     "value": 23
    },
-   "worked": [],
+   "worked": [
+    "The nth term is \\(-7n + 107\\).",
+    "Put \\(n = 12\\): \\((-7) \\times 12 + 107 = 23\\)."
+   ],
    "slip": []
   },
   {
@@ -449,7 +515,10 @@
    "answer": {
     "value": 297
    },
-   "worked": [],
+   "worked": [
+    "The nth term is \\(3n - 3\\).",
+    "Put \\(n = 100\\): \\(3 \\times 100 + (-3) = 297\\)."
+   ],
    "slip": []
   },
   {
@@ -467,7 +536,10 @@
    "answer": {
     "value": 13
    },
-   "worked": [],
+   "worked": [
+    "The nth term is \\(3n - 8\\).",
+    "Put \\(n = 7\\): \\(3 \\times 7 + (-8) = 13\\)."
+   ],
    "slip": []
   },
   {

@@ -39,42 +39,6 @@
    ]
   },
   {
-   "id": "compound-measures-350988d0",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][3]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "A coach travels 100 km in 5 hours. What is the average speed?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 20,
-    "unit": "km/h"
-   },
-   "units": [
-    "km/h",
-    "km",
-    "h"
-   ],
-   "worked": [
-    "The answer is in km/h: km per hour.",
-    "Per means divide, km ÷ h: \\(100 \\div 5 = 20\\)",
-    "The answer: 20 km/h."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 500,
-      "unit": "km/h"
-     },
-     "line": "You multiplied. km/h means km ÷ h: divide."
-    }
-   ]
-  },
-  {
    "id": "compound-measures-bb3030fb",
    "topic": "compound-measures",
    "source": {
@@ -104,42 +68,6 @@
     {
      "answer": {
       "value": 480,
-      "unit": "km/h"
-     },
-     "line": "You multiplied. km/h means km ÷ h: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-98eaac8b",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][9]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "A lorry travels 120 km in 3 hours. What is the average speed?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 40,
-    "unit": "km/h"
-   },
-   "units": [
-    "km/h",
-    "km",
-    "h"
-   ],
-   "worked": [
-    "The answer is in km/h: km per hour.",
-    "Per means divide, km ÷ h: \\(120 \\div 3 = 40\\)",
-    "The answer: 40 km/h."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 360,
       "unit": "km/h"
      },
      "line": "You multiplied. km/h means km ÷ h: divide."
@@ -183,51 +111,15 @@
    ]
   },
   {
-   "id": "compound-measures-bd4b3592",
+   "id": "compound-measures-2e30d60b",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][15]"
+    "ref": "SQS.pools()['stage-2'][19]"
    },
    "band": 3,
    "calc": false,
-   "stem": "A coach travels 250 km in 5 hours. What is the average speed?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 50,
-    "unit": "km/h"
-   },
-   "units": [
-    "km/h",
-    "km",
-    "h"
-   ],
-   "worked": [
-    "The answer is in km/h: km per hour.",
-    "Per means divide, km ÷ h: \\(250 \\div 5 = 50\\)",
-    "The answer: 50 km/h."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 1250,
-      "unit": "km/h"
-     },
-     "line": "You multiplied. km/h means km ÷ h: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-5383a5f6",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][18]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "A car travels 240 km in 4 hours. What is the average speed?",
+   "stem": "A coach travels 300 km in 5 hours. What is the average speed?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -241,13 +133,13 @@
    ],
    "worked": [
     "The answer is in km/h: km per hour.",
-    "Per means divide, km ÷ h: \\(240 \\div 4 = 60\\)",
+    "Per means divide, km ÷ h: \\(300 \\div 5 = 60\\)",
     "The answer: 60 km/h."
    ],
    "slip": [
     {
      "answer": {
-      "value": 960,
+      "value": 1500,
       "unit": "km/h"
      },
      "line": "You multiplied. km/h means km ÷ h: divide."
@@ -255,51 +147,15 @@
    ]
   },
   {
-   "id": "compound-measures-e28654f0",
+   "id": "compound-measures-844dc519",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][21]"
+    "ref": "SQS.pools()['stage-2'][25]"
    },
    "band": 3,
    "calc": false,
-   "stem": "A lorry travels 210 km in 3 hours. What is the average speed?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 70,
-    "unit": "km/h"
-   },
-   "units": [
-    "km/h",
-    "km",
-    "h"
-   ],
-   "worked": [
-    "The answer is in km/h: km per hour.",
-    "Per means divide, km ÷ h: \\(210 \\div 3 = 70\\)",
-    "The answer: 70 km/h."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 630,
-      "unit": "km/h"
-     },
-     "line": "You multiplied. km/h means km ÷ h: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-7fb335e1",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][24]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "A train travels 160 km in 2 hours. What is the average speed?",
+   "stem": "A lorry travels 240 km in 3 hours. What is the average speed?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -313,13 +169,13 @@
    ],
    "worked": [
     "The answer is in km/h: km per hour.",
-    "Per means divide, km ÷ h: \\(160 \\div 2 = 80\\)",
+    "Per means divide, km ÷ h: \\(240 \\div 3 = 80\\)",
     "The answer: 80 km/h."
    ],
    "slip": [
     {
      "answer": {
-      "value": 320,
+      "value": 720,
       "unit": "km/h"
      },
      "line": "You multiplied. km/h means km ÷ h: divide."
@@ -327,87 +183,15 @@
    ]
   },
   {
-   "id": "compound-measures-db72294a",
+   "id": "compound-measures-ed610de3",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][27]"
+    "ref": "SQS.pools()['stage-2'][32]"
    },
    "band": 3,
    "calc": false,
-   "stem": "A coach travels 400 km in 5 hours. What is the average speed?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 80,
-    "unit": "km/h"
-   },
-   "units": [
-    "km/h",
-    "km",
-    "h"
-   ],
-   "worked": [
-    "The answer is in km/h: km per hour.",
-    "Per means divide, km ÷ h: \\(400 \\div 5 = 80\\)",
-    "The answer: 80 km/h."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 2000,
-      "unit": "km/h"
-     },
-     "line": "You multiplied. km/h means km ÷ h: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-f452229e",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][30]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "A car travels 360 km in 4 hours. What is the average speed?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 90,
-    "unit": "km/h"
-   },
-   "units": [
-    "km/h",
-    "km",
-    "h"
-   ],
-   "worked": [
-    "The answer is in km/h: km per hour.",
-    "Per means divide, km ÷ h: \\(360 \\div 4 = 90\\)",
-    "The answer: 90 km/h."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 1440,
-      "unit": "km/h"
-     },
-     "line": "You multiplied. km/h means km ÷ h: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-19933f9b",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][33]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "A car travels 90 miles in 3 hours. What is the average speed?",
+   "stem": "A car travels 60 miles in 2 hours. What is the average speed?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -421,13 +205,49 @@
    ],
    "worked": [
     "The answer is in mph: miles per hour.",
-    "Per means divide, miles ÷ h: \\(90 \\div 3 = 30\\)",
+    "Per means divide, miles ÷ h: \\(60 \\div 2 = 30\\)",
     "The answer: 30 mph."
    ],
    "slip": [
     {
      "answer": {
-      "value": 270,
+      "value": 120,
+      "unit": "mph"
+     },
+     "line": "You multiplied. mph means miles ÷ h: divide."
+    }
+   ]
+  },
+  {
+   "id": "compound-measures-01d5f6a9",
+   "topic": "compound-measures",
+   "source": {
+    "game": "squared-squirrel",
+    "ref": "SQS.pools()['stage-2'][34]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A car travels 120 miles in 4 hours. What is the average speed?",
+   "diagram": null,
+   "format": "number_unit",
+   "answer": {
+    "value": 30,
+    "unit": "mph"
+   },
+   "units": [
+    "mph",
+    "miles",
+    "h"
+   ],
+   "worked": [
+    "The answer is in mph: miles per hour.",
+    "Per means divide, miles ÷ h: \\(120 \\div 4 = 30\\)",
+    "The answer: 30 mph."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 480,
       "unit": "mph"
      },
      "line": "You multiplied. mph means miles ÷ h: divide."
@@ -471,15 +291,15 @@
    ]
   },
   {
-   "id": "compound-measures-b404d20a",
+   "id": "compound-measures-4d6a20f4",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][40]"
+    "ref": "SQS.pools()['stage-2'][39]"
    },
    "band": 3,
    "calc": false,
-   "stem": "A car travels 200 miles in 4 hours. What is the average speed?",
+   "stem": "A car travels 150 miles in 3 hours. What is the average speed?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -493,13 +313,13 @@
    ],
    "worked": [
     "The answer is in mph: miles per hour.",
-    "Per means divide, miles ÷ h: \\(200 \\div 4 = 50\\)",
+    "Per means divide, miles ÷ h: \\(150 \\div 3 = 50\\)",
     "The answer: 50 mph."
    ],
    "slip": [
     {
      "answer": {
-      "value": 800,
+      "value": 450,
       "unit": "mph"
      },
      "line": "You multiplied. mph means miles ÷ h: divide."
@@ -507,15 +327,15 @@
    ]
   },
   {
-   "id": "compound-measures-854de6d5",
+   "id": "compound-measures-c7d0644f",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][43]"
+    "ref": "SQS.pools()['stage-2'][41]"
    },
    "band": 3,
    "calc": false,
-   "stem": "A car travels 240 miles in 4 hours. What is the average speed?",
+   "stem": "A car travels 120 miles in 2 hours. What is the average speed?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -529,13 +349,13 @@
    ],
    "worked": [
     "The answer is in mph: miles per hour.",
-    "Per means divide, miles ÷ h: \\(240 \\div 4 = 60\\)",
+    "Per means divide, miles ÷ h: \\(120 \\div 2 = 60\\)",
     "The answer: 60 mph."
    ],
    "slip": [
     {
      "answer": {
-      "value": 960,
+      "value": 240,
       "unit": "mph"
      },
      "line": "You multiplied. mph means miles ÷ h: divide."
@@ -543,15 +363,58 @@
    ]
   },
   {
-   "id": "compound-measures-2783c497",
+   "id": "compound-measures-25327ca3",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][46]"
+    "ref": "SQS.pools()['stage-2'][44]"
    },
    "band": 3,
    "calc": false,
-   "stem": "A runner travels 30 m in 10 seconds. What is the average speed?",
+   "stem": "A runner travels 20 m in 10 seconds. What is the average speed?",
+   "diagram": null,
+   "format": "number_unit",
+   "answer": {
+    "value": 2,
+    "unit": "m/s"
+   },
+   "units": [
+    "m/s",
+    "m",
+    "s"
+   ],
+   "worked": [
+    "The answer is in m/s: m per second.",
+    "Per means divide, m ÷ s: \\(20 \\div 10 = 2\\)",
+    "The answer: 2 m/s."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 200,
+      "unit": "m/s"
+     },
+     "line": "You multiplied. m/s means m ÷ s: divide."
+    },
+    {
+     "answer": {
+      "value": 1,
+      "unit": "m/s"
+     },
+     "line": "You divided the wrong way round. m/s means m ÷ s: divide."
+    }
+   ]
+  },
+  {
+   "id": "compound-measures-b0952ea4",
+   "topic": "compound-measures",
+   "source": {
+    "game": "squared-squirrel",
+    "ref": "SQS.pools()['stage-2'][47]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "A cyclist travels 60 m in 20 seconds. What is the average speed?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -565,13 +428,13 @@
    ],
    "worked": [
     "The answer is in m/s: m per second.",
-    "Per means divide, m ÷ s: \\(30 \\div 10 = 3\\)",
+    "Per means divide, m ÷ s: \\(60 \\div 20 = 3\\)",
     "The answer: 3 m/s."
    ],
    "slip": [
     {
      "answer": {
-      "value": 300,
+      "value": 1200,
       "unit": "m/s"
      },
      "line": "You multiplied. m/s means m ÷ s: divide."
@@ -579,19 +442,19 @@
    ]
   },
   {
-   "id": "compound-measures-3e07d278",
+   "id": "compound-measures-8f86b2ed",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][49]"
+    "ref": "SQS.pools()['stage-2'][51]"
    },
    "band": 3,
    "calc": false,
-   "stem": "A cyclist travels 80 m in 20 seconds. What is the average speed?",
+   "stem": "A cyclist travels 100 m in 20 seconds. What is the average speed?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
-    "value": 4,
+    "value": 5,
     "unit": "m/s"
    },
    "units": [
@@ -601,13 +464,13 @@
    ],
    "worked": [
     "The answer is in m/s: m per second.",
-    "Per means divide, m ÷ s: \\(80 \\div 20 = 4\\)",
-    "The answer: 4 m/s."
+    "Per means divide, m ÷ s: \\(100 \\div 20 = 5\\)",
+    "The answer: 5 m/s."
    ],
    "slip": [
     {
      "answer": {
-      "value": 1600,
+      "value": 2000,
       "unit": "m/s"
      },
      "line": "You multiplied. m/s means m ÷ s: divide."
@@ -615,51 +478,15 @@
    ]
   },
   {
-   "id": "compound-measures-9ef08cca",
+   "id": "compound-measures-030952c3",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][52]"
+    "ref": "SQS.pools()['stage-2'][54]"
    },
    "band": 3,
    "calc": false,
-   "stem": "A runner travels 60 m in 10 seconds. What is the average speed?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 6,
-    "unit": "m/s"
-   },
-   "units": [
-    "m/s",
-    "m",
-    "s"
-   ],
-   "worked": [
-    "The answer is in m/s: m per second.",
-    "Per means divide, m ÷ s: \\(60 \\div 10 = 6\\)",
-    "The answer: 6 m/s."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 600,
-      "unit": "m/s"
-     },
-     "line": "You multiplied. m/s means m ÷ s: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-45b13e28",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][55]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "A cyclist travels 140 m in 20 seconds. What is the average speed?",
+   "stem": "A runner travels 70 m in 10 seconds. What is the average speed?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -673,13 +500,13 @@
    ],
    "worked": [
     "The answer is in m/s: m per second.",
-    "Per means divide, m ÷ s: \\(140 \\div 20 = 7\\)",
+    "Per means divide, m ÷ s: \\(70 \\div 10 = 7\\)",
     "The answer: 7 m/s."
    ],
    "slip": [
     {
      "answer": {
-      "value": 2800,
+      "value": 700,
       "unit": "m/s"
      },
      "line": "You multiplied. m/s means m ÷ s: divide."
@@ -730,94 +557,15 @@
    ]
   },
   {
-   "id": "compound-measures-3c64794d",
+   "id": "compound-measures-241f6c81",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][61]"
+    "ref": "SQS.pools()['stage-2'][66]"
    },
    "band": 3,
    "calc": false,
-   "stem": "A block of metal has a mass of 20 g and a volume of 10 cm³. What is its density?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 2,
-    "unit": "g/cm³"
-   },
-   "units": [
-    "g/cm³",
-    "g",
-    "cm³"
-   ],
-   "worked": [
-    "The answer is in g/cm³: g per cm³.",
-    "Per means divide, g ÷ cm³: \\(20 \\div 10 = 2\\)",
-    "The answer: 2 g/cm³."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 200,
-      "unit": "g/cm³"
-     },
-     "line": "You multiplied. g/cm³ means g ÷ cm³: divide."
-    },
-    {
-     "answer": {
-      "value": 1,
-      "unit": "g/cm³"
-     },
-     "line": "You divided the wrong way round. g/cm³ means g ÷ cm³: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-63e13b66",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][64]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "A block of metal has a mass of 18 g and a volume of 6 cm³. What is its density?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 3,
-    "unit": "g/cm³"
-   },
-   "units": [
-    "g/cm³",
-    "g",
-    "cm³"
-   ],
-   "worked": [
-    "The answer is in g/cm³: g per cm³.",
-    "Per means divide, g ÷ cm³: \\(18 \\div 6 = 3\\)",
-    "The answer: 3 g/cm³."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 108,
-      "unit": "g/cm³"
-     },
-     "line": "You multiplied. g/cm³ means g ÷ cm³: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-764eb595",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][67]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "A block of metal has a mass of 20 g and a volume of 5 cm³. What is its density?",
+   "stem": "A block of metal has a mass of 16 g and a volume of 4 cm³. What is its density?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -831,13 +579,13 @@
    ],
    "worked": [
     "The answer is in g/cm³: g per cm³.",
-    "Per means divide, g ÷ cm³: \\(20 \\div 5 = 4\\)",
+    "Per means divide, g ÷ cm³: \\(16 \\div 4 = 4\\)",
     "The answer: 4 g/cm³."
    ],
    "slip": [
     {
      "answer": {
-      "value": 100,
+      "value": 64,
       "unit": "g/cm³"
      },
      "line": "You multiplied. g/cm³ means g ÷ cm³: divide."
@@ -845,87 +593,15 @@
    ]
   },
   {
-   "id": "compound-measures-6ca39cbd",
+   "id": "compound-measures-9318391f",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][70]"
+    "ref": "SQS.pools()['stage-2'][74]"
    },
    "band": 3,
    "calc": false,
-   "stem": "A block of metal has a mass of 20 g and a volume of 4 cm³. What is its density?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 5,
-    "unit": "g/cm³"
-   },
-   "units": [
-    "g/cm³",
-    "g",
-    "cm³"
-   ],
-   "worked": [
-    "The answer is in g/cm³: g per cm³.",
-    "Per means divide, g ÷ cm³: \\(20 \\div 4 = 5\\)",
-    "The answer: 5 g/cm³."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 80,
-      "unit": "g/cm³"
-     },
-     "line": "You multiplied. g/cm³ means g ÷ cm³: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-a7a78267",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][73]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "A block of metal has a mass of 50 g and a volume of 10 cm³. What is its density?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 5,
-    "unit": "g/cm³"
-   },
-   "units": [
-    "g/cm³",
-    "g",
-    "cm³"
-   ],
-   "worked": [
-    "The answer is in g/cm³: g per cm³.",
-    "Per means divide, g ÷ cm³: \\(50 \\div 10 = 5\\)",
-    "The answer: 5 g/cm³."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 500,
-      "unit": "g/cm³"
-     },
-     "line": "You multiplied. g/cm³ means g ÷ cm³: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-ac9378ca",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][77]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "A block of metal has a mass of 60 g and a volume of 10 cm³. What is its density?",
+   "stem": "A block of metal has a mass of 24 g and a volume of 4 cm³. What is its density?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -939,13 +615,13 @@
    ],
    "worked": [
     "The answer is in g/cm³: g per cm³.",
-    "Per means divide, g ÷ cm³: \\(60 \\div 10 = 6\\)",
+    "Per means divide, g ÷ cm³: \\(24 \\div 4 = 6\\)",
     "The answer: 6 g/cm³."
    ],
    "slip": [
     {
      "answer": {
-      "value": 600,
+      "value": 96,
       "unit": "g/cm³"
      },
      "line": "You multiplied. g/cm³ means g ÷ cm³: divide."
@@ -953,51 +629,15 @@
    ]
   },
   {
-   "id": "compound-measures-0066821f",
+   "id": "compound-measures-3d6c0f03",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][80]"
+    "ref": "SQS.pools()['stage-2'][82]"
    },
    "band": 3,
    "calc": false,
-   "stem": "A block of metal has a mass of 42 g and a volume of 6 cm³. What is its density?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 7,
-    "unit": "g/cm³"
-   },
-   "units": [
-    "g/cm³",
-    "g",
-    "cm³"
-   ],
-   "worked": [
-    "The answer is in g/cm³: g per cm³.",
-    "Per means divide, g ÷ cm³: \\(42 \\div 6 = 7\\)",
-    "The answer: 7 g/cm³."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 252,
-      "unit": "g/cm³"
-     },
-     "line": "You multiplied. g/cm³ means g ÷ cm³: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-6b0c3559",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][83]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "A block of metal has a mass of 40 g and a volume of 5 cm³. What is its density?",
+   "stem": "A block of metal has a mass of 32 g and a volume of 4 cm³. What is its density?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -1011,13 +651,13 @@
    ],
    "worked": [
     "The answer is in g/cm³: g per cm³.",
-    "Per means divide, g ÷ cm³: \\(40 \\div 5 = 8\\)",
+    "Per means divide, g ÷ cm³: \\(32 \\div 4 = 8\\)",
     "The answer: 8 g/cm³."
    ],
    "slip": [
     {
      "answer": {
-      "value": 200,
+      "value": 128,
       "unit": "g/cm³"
      },
      "line": "You multiplied. g/cm³ means g ÷ cm³: divide."
@@ -1025,87 +665,15 @@
    ]
   },
   {
-   "id": "compound-measures-6e668cc9",
+   "id": "compound-measures-3ae60052",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][86]"
+    "ref": "SQS.pools()['stage-2'][90]"
    },
    "band": 3,
    "calc": false,
-   "stem": "A block of metal has a mass of 36 g and a volume of 4 cm³. What is its density?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 9,
-    "unit": "g/cm³"
-   },
-   "units": [
-    "g/cm³",
-    "g",
-    "cm³"
-   ],
-   "worked": [
-    "The answer is in g/cm³: g per cm³.",
-    "Per means divide, g ÷ cm³: \\(36 \\div 4 = 9\\)",
-    "The answer: 9 g/cm³."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 144,
-      "unit": "g/cm³"
-     },
-     "line": "You multiplied. g/cm³ means g ÷ cm³: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-de0f3537",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][89]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "A block of metal has a mass of 90 g and a volume of 10 cm³. What is its density?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 9,
-    "unit": "g/cm³"
-   },
-   "units": [
-    "g/cm³",
-    "g",
-    "cm³"
-   ],
-   "worked": [
-    "The answer is in g/cm³: g per cm³.",
-    "Per means divide, g ÷ cm³: \\(90 \\div 10 = 9\\)",
-    "The answer: 9 g/cm³."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 900,
-      "unit": "g/cm³"
-     },
-     "line": "You multiplied. g/cm³ means g ÷ cm³: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-bebe8295",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][92]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "A force of 80 N acts on an area of 4 m². What is the pressure?",
+   "stem": "A force of 40 N acts on an area of 2 m². What is the pressure?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -1119,13 +687,13 @@
    ],
    "worked": [
     "The answer is in N/m²: N per m².",
-    "Per means divide, N ÷ m²: \\(80 \\div 4 = 20\\)",
+    "Per means divide, N ÷ m²: \\(40 \\div 2 = 20\\)",
     "The answer: 20 N/m²."
    ],
    "slip": [
     {
      "answer": {
-      "value": 320,
+      "value": 80,
       "unit": "N/m²"
      },
      "line": "You multiplied. N/m² means N ÷ m²: divide."
@@ -1169,15 +737,15 @@
    ]
   },
   {
-   "id": "compound-measures-acddb0e5",
+   "id": "compound-measures-affca1f8",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][98]"
+    "ref": "SQS.pools()['stage-2'][100]"
    },
    "band": 3,
    "calc": false,
-   "stem": "A force of 100 N acts on an area of 2 m². What is the pressure?",
+   "stem": "A force of 200 N acts on an area of 4 m². What is the pressure?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -1191,13 +759,13 @@
    ],
    "worked": [
     "The answer is in N/m²: N per m².",
-    "Per means divide, N ÷ m²: \\(100 \\div 2 = 50\\)",
+    "Per means divide, N ÷ m²: \\(200 \\div 4 = 50\\)",
     "The answer: 50 N/m²."
    ],
    "slip": [
     {
      "answer": {
-      "value": 200,
+      "value": 800,
       "unit": "N/m²"
      },
      "line": "You multiplied. N/m² means N ÷ m²: divide."
@@ -1205,51 +773,15 @@
    ]
   },
   {
-   "id": "compound-measures-71932afe",
+   "id": "compound-measures-b781df17",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][101]"
+    "ref": "SQS.pools()['stage-2'][105]"
    },
    "band": 3,
    "calc": false,
-   "stem": "A force of 250 N acts on an area of 5 m². What is the pressure?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 50,
-    "unit": "N/m²"
-   },
-   "units": [
-    "N/m²",
-    "N",
-    "m²"
-   ],
-   "worked": [
-    "The answer is in N/m²: N per m².",
-    "Per means divide, N ÷ m²: \\(250 \\div 5 = 50\\)",
-    "The answer: 50 N/m²."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 1250,
-      "unit": "N/m²"
-     },
-     "line": "You multiplied. N/m² means N ÷ m²: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-631b4e5f",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][104]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "A force of 400 N acts on an area of 4 m². What is the pressure?",
+   "stem": "A force of 500 N acts on an area of 5 m². What is the pressure?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -1263,49 +795,13 @@
    ],
    "worked": [
     "The answer is in N/m²: N per m².",
-    "Per means divide, N ÷ m²: \\(400 \\div 4 = 100\\)",
+    "Per means divide, N ÷ m²: \\(500 \\div 5 = 100\\)",
     "The answer: 100 N/m²."
    ],
    "slip": [
     {
      "answer": {
-      "value": 1600,
-      "unit": "N/m²"
-     },
-     "line": "You multiplied. N/m² means N ÷ m²: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-49718234",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][107]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "A force of 600 N acts on an area of 3 m². What is the pressure?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 200,
-    "unit": "N/m²"
-   },
-   "units": [
-    "N/m²",
-    "N",
-    "m²"
-   ],
-   "worked": [
-    "The answer is in N/m²: N per m².",
-    "Per means divide, N ÷ m²: \\(600 \\div 3 = 200\\)",
-    "The answer: 200 N/m²."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 1800,
+      "value": 2500,
       "unit": "N/m²"
      },
      "line": "You multiplied. N/m² means N ÷ m²: divide."
@@ -1356,94 +852,15 @@
    ]
   },
   {
-   "id": "compound-measures-32f811e3",
+   "id": "compound-measures-27e41ed1",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][113]"
+    "ref": "SQS.pools()['stage-2'][118]"
    },
    "band": 3,
    "calc": false,
-   "stem": "A 5 kg bag of rice costs £10. What is the price per kg?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 2,
-    "unit": "£/kg"
-   },
-   "units": [
-    "£/kg",
-    "£",
-    "kg"
-   ],
-   "worked": [
-    "The answer is in £/kg: £ per kg.",
-    "Per means divide, £ ÷ kg: \\(10 \\div 5 = 2\\)",
-    "The answer: £2/kg."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 50,
-      "unit": "£/kg"
-     },
-     "line": "You multiplied. £/kg means £ ÷ kg: divide."
-    },
-    {
-     "answer": {
-      "value": 1,
-      "unit": "£/kg"
-     },
-     "line": "You divided the wrong way round. £/kg means £ ÷ kg: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-f96fd3b9",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][117]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "A 5 kg bag of rice costs £15. What is the price per kg?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 3,
-    "unit": "£/kg"
-   },
-   "units": [
-    "£/kg",
-    "£",
-    "kg"
-   ],
-   "worked": [
-    "The answer is in £/kg: £ per kg.",
-    "Per means divide, £ ÷ kg: \\(15 \\div 5 = 3\\)",
-    "The answer: £3/kg."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 75,
-      "unit": "£/kg"
-     },
-     "line": "You multiplied. £/kg means £ ÷ kg: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-864462cd",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][120]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "A 4 kg bag of rice costs £16. What is the price per kg?",
+   "stem": "A 2 kg bag of rice costs £8. What is the price per kg?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -1457,49 +874,13 @@
    ],
    "worked": [
     "The answer is in £/kg: £ per kg.",
-    "Per means divide, £ ÷ kg: \\(16 \\div 4 = 4\\)",
+    "Per means divide, £ ÷ kg: \\(8 \\div 2 = 4\\)",
     "The answer: £4/kg."
    ],
    "slip": [
     {
      "answer": {
-      "value": 64,
-      "unit": "£/kg"
-     },
-     "line": "You multiplied. £/kg means £ ÷ kg: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-1d43befe",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][123]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "A 3 kg bag of coffee beans costs £15. What is the price per kg?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 5,
-    "unit": "£/kg"
-   },
-   "units": [
-    "£/kg",
-    "£",
-    "kg"
-   ],
-   "worked": [
-    "The answer is in £/kg: £ per kg.",
-    "Per means divide, £ ÷ kg: \\(15 \\div 3 = 5\\)",
-    "The answer: £5/kg."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 45,
+      "value": 16,
       "unit": "£/kg"
      },
      "line": "You multiplied. £/kg means £ ÷ kg: divide."
@@ -1543,87 +924,15 @@
    ]
   },
   {
-   "id": "compound-measures-55b44701",
+   "id": "compound-measures-6867f695",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][129]"
+    "ref": "SQS.pools()['stage-2'][134]"
    },
    "band": 3,
    "calc": false,
-   "stem": "A 5 kg bag of coffee beans costs £30. What is the price per kg?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 6,
-    "unit": "£/kg"
-   },
-   "units": [
-    "£/kg",
-    "£",
-    "kg"
-   ],
-   "worked": [
-    "The answer is in £/kg: £ per kg.",
-    "Per means divide, £ ÷ kg: \\(30 \\div 5 = 6\\)",
-    "The answer: £6/kg."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 150,
-      "unit": "£/kg"
-     },
-     "line": "You multiplied. £/kg means £ ÷ kg: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-c27823ad",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][132]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "A 4 kg bag of coffee beans costs £28. What is the price per kg?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 7,
-    "unit": "£/kg"
-   },
-   "units": [
-    "£/kg",
-    "£",
-    "kg"
-   ],
-   "worked": [
-    "The answer is in £/kg: £ per kg.",
-    "Per means divide, £ ÷ kg: \\(28 \\div 4 = 7\\)",
-    "The answer: £7/kg."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 112,
-      "unit": "£/kg"
-     },
-     "line": "You multiplied. £/kg means £ ÷ kg: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-0d48d28b",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][135]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "A 3 kg bag of coffee beans costs £24. What is the price per kg?",
+   "stem": "A 2 kg bag of coffee beans costs £16. What is the price per kg?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -1637,13 +946,13 @@
    ],
    "worked": [
     "The answer is in £/kg: £ per kg.",
-    "Per means divide, £ ÷ kg: \\(24 \\div 3 = 8\\)",
+    "Per means divide, £ ÷ kg: \\(16 \\div 2 = 8\\)",
     "The answer: £8/kg."
    ],
    "slip": [
     {
      "answer": {
-      "value": 72,
+      "value": 32,
       "unit": "£/kg"
      },
      "line": "You multiplied. £/kg means £ ÷ kg: divide."
@@ -1651,87 +960,15 @@
    ]
   },
   {
-   "id": "compound-measures-d465a16e",
+   "id": "compound-measures-1c7d1eea",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][138]"
+    "ref": "SQS.pools()['stage-2'][142]"
    },
    "band": 3,
    "calc": false,
-   "stem": "A 2 kg bag of coffee beans costs £18. What is the price per kg?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 9,
-    "unit": "£/kg"
-   },
-   "units": [
-    "£/kg",
-    "£",
-    "kg"
-   ],
-   "worked": [
-    "The answer is in £/kg: £ per kg.",
-    "Per means divide, £ ÷ kg: \\(18 \\div 2 = 9\\)",
-    "The answer: £9/kg."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 36,
-      "unit": "£/kg"
-     },
-     "line": "You multiplied. £/kg means £ ÷ kg: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-1ea2c214",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][141]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "A 5 kg bag of coffee beans costs £45. What is the price per kg?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 9,
-    "unit": "£/kg"
-   },
-   "units": [
-    "£/kg",
-    "£",
-    "kg"
-   ],
-   "worked": [
-    "The answer is in £/kg: £ per kg.",
-    "Per means divide, £ ÷ kg: \\(45 \\div 5 = 9\\)",
-    "The answer: £9/kg."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 225,
-      "unit": "£/kg"
-     },
-     "line": "You multiplied. £/kg means £ ÷ kg: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-83314d2c",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][144]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "10 m of rope costs £20. What is the price per metre?",
+   "stem": "3 m of rope costs £6. What is the price per metre?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -1745,13 +982,13 @@
    ],
    "worked": [
     "The answer is in £/m: £ per metre.",
-    "Per means divide, £ ÷ m: \\(20 \\div 10 = 2\\)",
+    "Per means divide, £ ÷ m: \\(6 \\div 3 = 2\\)",
     "The answer: £2/m."
    ],
    "slip": [
     {
      "answer": {
-      "value": 200,
+      "value": 18,
       "unit": "£/m"
      },
      "line": "You multiplied. £/m means £ ÷ m: divide."
@@ -1766,15 +1003,15 @@
    ]
   },
   {
-   "id": "compound-measures-2278ceb9",
+   "id": "compound-measures-fdb9a8bb",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][147]"
+    "ref": "SQS.pools()['stage-2'][145]"
    },
    "band": 3,
    "calc": false,
-   "stem": "10 m of rope costs £30. What is the price per metre?",
+   "stem": "3 m of rope costs £9. What is the price per metre?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -1788,13 +1025,13 @@
    ],
    "worked": [
     "The answer is in £/m: £ per metre.",
-    "Per means divide, £ ÷ m: \\(30 \\div 10 = 3\\)",
+    "Per means divide, £ ÷ m: \\(9 \\div 3 = 3\\)",
     "The answer: £3/m."
    ],
    "slip": [
     {
      "answer": {
-      "value": 300,
+      "value": 27,
       "unit": "£/m"
      },
      "line": "You multiplied. £/m means £ ÷ m: divide."
@@ -1802,15 +1039,15 @@
    ]
   },
   {
-   "id": "compound-measures-a7ec2803",
+   "id": "compound-measures-868c8411",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-2'][150]"
+    "ref": "SQS.pools()['stage-2'][148]"
    },
    "band": 3,
    "calc": false,
-   "stem": "10 m of rope costs £40. What is the price per metre?",
+   "stem": "3 m of rope costs £12. What is the price per metre?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -1824,13 +1061,49 @@
    ],
    "worked": [
     "The answer is in £/m: £ per metre.",
-    "Per means divide, £ ÷ m: \\(40 \\div 10 = 4\\)",
+    "Per means divide, £ ÷ m: \\(12 \\div 3 = 4\\)",
     "The answer: £4/m."
    ],
    "slip": [
     {
      "answer": {
-      "value": 400,
+      "value": 36,
+      "unit": "£/m"
+     },
+     "line": "You multiplied. £/m means £ ÷ m: divide."
+    }
+   ]
+  },
+  {
+   "id": "compound-measures-a7928ca6",
+   "topic": "compound-measures",
+   "source": {
+    "game": "squared-squirrel",
+    "ref": "SQS.pools()['stage-2'][151]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "3 m of rope costs £15. What is the price per metre?",
+   "diagram": null,
+   "format": "number_unit",
+   "answer": {
+    "value": 5,
+    "unit": "£/m"
+   },
+   "units": [
+    "£/m",
+    "£",
+    "m"
+   ],
+   "worked": [
+    "The answer is in £/m: £ per metre.",
+    "Per means divide, £ ÷ m: \\(15 \\div 3 = 5\\)",
+    "The answer: £5/m."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 45,
       "unit": "£/m"
      },
      "line": "You multiplied. £/m means £ ÷ m: divide."
@@ -1874,87 +1147,15 @@
    ]
   },
   {
-   "id": "compound-measures-ea069c3c",
+   "id": "compound-measures-e59665a6",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][3]"
+    "ref": "SQS.pools()['stage-3'][1]"
    },
    "band": 4,
    "calc": false,
-   "stem": "A coach travels 60 km at 20 km/h. How long does it take?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 3,
-    "unit": "h"
-   },
-   "units": [
-    "h",
-    "km",
-    "km/h"
-   ],
-   "worked": [
-    "20 km/h means 20 km for each hour.",
-    "How many lots of 20 km are in 60 km? Divide: \\(60 \\div 20 = 3\\)",
-    "The answer: 3 h."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 1200,
-      "unit": "h"
-     },
-     "line": "You multiplied. 20 km/h means 20 km for each hour. Count the lots of 20 km: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-f26948ce",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][6]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A car travels at 20 km/h for 5 hours. How far does the car go?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 100,
-    "unit": "km"
-   },
-   "units": [
-    "km",
-    "km/h",
-    "h"
-   ],
-   "worked": [
-    "20 km/h means 20 km for each hour.",
-    "For 5 h, multiply: \\(20 \\times 5 = 100\\)",
-    "The answer: 100 km."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 4,
-      "unit": "km"
-     },
-     "line": "You divided. 20 km/h means 20 km for each hour. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-e8611c33",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][9]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A car travels 60 km at 30 km/h. How long does it take?",
+   "stem": "A car travels 40 km at 20 km/h. How long does it take?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -1967,113 +1168,41 @@
     "km/h"
    ],
    "worked": [
-    "30 km/h means 30 km for each hour.",
-    "How many lots of 30 km are in 60 km? Divide: \\(60 \\div 30 = 2\\)",
+    "20 km/h means 20 km for each hour.",
+    "How many lots of 20 km are in 40 km? Divide: \\(40 \\div 20 = 2\\)",
     "The answer: 2 h."
    ],
    "slip": [
     {
      "answer": {
-      "value": 1800,
+      "value": 800,
       "unit": "h"
      },
-     "line": "You multiplied. 30 km/h means 30 km for each hour. Count the lots of 30 km: divide."
+     "line": "You multiplied. 20 km/h means 20 km for each hour. Count the lots of 20 km: divide."
     },
     {
      "answer": {
       "value": 1,
       "unit": "h"
      },
-     "line": "You divided the wrong way round. 30 km/h means 30 km for each hour. Count the lots of 30 km: divide."
+     "line": "You divided the wrong way round. 20 km/h means 20 km for each hour. Count the lots of 20 km: divide."
     }
    ]
   },
   {
-   "id": "compound-measures-5b7e2ac8",
+   "id": "compound-measures-9d7221c8",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][12]"
+    "ref": "SQS.pools()['stage-3'][20]"
    },
    "band": 4,
    "calc": false,
-   "stem": "A lorry travels at 30 km/h for 4 hours. How far does the lorry go?",
+   "stem": "A lorry travels at 40 km/h for 4 hours. How far does the lorry go?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
-    "value": 120,
-    "unit": "km"
-   },
-   "units": [
-    "km",
-    "km/h",
-    "h"
-   ],
-   "worked": [
-    "30 km/h means 30 km for each hour.",
-    "For 4 h, multiply: \\(30 \\times 4 = 120\\)",
-    "The answer: 120 km."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 8,
-      "unit": "km"
-     },
-     "line": "You divided. 30 km/h means 30 km for each hour. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-5be0ea64",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][15]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A lorry travels 150 km at 30 km/h. How long does it take?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 5,
-    "unit": "h"
-   },
-   "units": [
-    "h",
-    "km",
-    "km/h"
-   ],
-   "worked": [
-    "30 km/h means 30 km for each hour.",
-    "How many lots of 30 km are in 150 km? Divide: \\(150 \\div 30 = 5\\)",
-    "The answer: 5 h."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 4500,
-      "unit": "h"
-     },
-     "line": "You multiplied. 30 km/h means 30 km for each hour. Count the lots of 30 km: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-820d5aaf",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][18]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A train travels at 40 km/h for 3 hours. How far does the train go?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 120,
+    "value": 160,
     "unit": "km"
    },
    "units": [
@@ -2083,152 +1212,8 @@
    ],
    "worked": [
     "40 km/h means 40 km for each hour.",
-    "For 3 h, multiply: \\(40 \\times 3 = 120\\)",
-    "The answer: 120 km."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 13,
-      "unit": "km"
-     },
-     "line": "You divided. 40 km/h means 40 km for each hour. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-a4bb6d96",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][21]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A train travels 160 km at 40 km/h. How long does it take?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 4,
-    "unit": "h"
-   },
-   "units": [
-    "h",
-    "km",
-    "km/h"
-   ],
-   "worked": [
-    "40 km/h means 40 km for each hour.",
-    "How many lots of 40 km are in 160 km? Divide: \\(160 \\div 40 = 4\\)",
-    "The answer: 4 h."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 6400,
-      "unit": "h"
-     },
-     "line": "You multiplied. 40 km/h means 40 km for each hour. Count the lots of 40 km: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-345b8bd2",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][24]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A coach travels at 50 km/h for 2 hours. How far does the coach go?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 100,
-    "unit": "km"
-   },
-   "units": [
-    "km",
-    "km/h",
-    "h"
-   ],
-   "worked": [
-    "50 km/h means 50 km for each hour.",
-    "For 2 h, multiply: \\(50 \\times 2 = 100\\)",
-    "The answer: 100 km."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 25,
-      "unit": "km"
-     },
-     "line": "You divided. 50 km/h means 50 km for each hour. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-784f9d96",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][27]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A coach travels 150 km at 50 km/h. How long does it take?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 3,
-    "unit": "h"
-   },
-   "units": [
-    "h",
-    "km",
-    "km/h"
-   ],
-   "worked": [
-    "50 km/h means 50 km for each hour.",
-    "How many lots of 50 km are in 150 km? Divide: \\(150 \\div 50 = 3\\)",
-    "The answer: 3 h."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 7500,
-      "unit": "h"
-     },
-     "line": "You multiplied. 50 km/h means 50 km for each hour. Count the lots of 50 km: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-507a49ab",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][30]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A car travels at 50 km/h for 5 hours. How far does the car go?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 250,
-    "unit": "km"
-   },
-   "units": [
-    "km",
-    "km/h",
-    "h"
-   ],
-   "worked": [
-    "50 km/h means 50 km for each hour.",
-    "For 5 h, multiply: \\(50 \\times 5 = 250\\)",
-    "The answer: 250 km."
+    "For 4 h, multiply: \\(40 \\times 4 = 160\\)",
+    "The answer: 160 km."
    ],
    "slip": [
     {
@@ -2236,358 +1221,20 @@
       "value": 10,
       "unit": "km"
      },
-     "line": "You divided. 50 km/h means 50 km for each hour. Multiply."
+     "line": "You divided. 40 km/h means 40 km for each hour. Multiply."
     }
    ]
   },
   {
-   "id": "compound-measures-ed3e996b",
+   "id": "compound-measures-9e008ea2",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][33]"
+    "ref": "SQS.pools()['stage-3'][29]"
    },
    "band": 4,
    "calc": false,
-   "stem": "A car travels 120 km at 60 km/h. How long does it take?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 2,
-    "unit": "h"
-   },
-   "units": [
-    "h",
-    "km",
-    "km/h"
-   ],
-   "worked": [
-    "60 km/h means 60 km for each hour.",
-    "How many lots of 60 km are in 120 km? Divide: \\(120 \\div 60 = 2\\)",
-    "The answer: 2 h."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 7200,
-      "unit": "h"
-     },
-     "line": "You multiplied. 60 km/h means 60 km for each hour. Count the lots of 60 km: divide."
-    },
-    {
-     "answer": {
-      "value": 1,
-      "unit": "h"
-     },
-     "line": "You divided the wrong way round. 60 km/h means 60 km for each hour. Count the lots of 60 km: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-8833da94",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][36]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A lorry travels at 60 km/h for 4 hours. How far does the lorry go?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 240,
-    "unit": "km"
-   },
-   "units": [
-    "km",
-    "km/h",
-    "h"
-   ],
-   "worked": [
-    "60 km/h means 60 km for each hour.",
-    "For 4 h, multiply: \\(60 \\times 4 = 240\\)",
-    "The answer: 240 km."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 15,
-      "unit": "km"
-     },
-     "line": "You divided. 60 km/h means 60 km for each hour. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-96666a20",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][40]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A coach travels at 70 km/h for 2 hours. How far does the coach go?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 140,
-    "unit": "km"
-   },
-   "units": [
-    "km",
-    "km/h",
-    "h"
-   ],
-   "worked": [
-    "70 km/h means 70 km for each hour.",
-    "For 2 h, multiply: \\(70 \\times 2 = 140\\)",
-    "The answer: 140 km."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 35,
-      "unit": "km"
-     },
-     "line": "You divided. 70 km/h means 70 km for each hour. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-8cb41b5e",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][43]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A coach travels 210 km at 70 km/h. How long does it take?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 3,
-    "unit": "h"
-   },
-   "units": [
-    "h",
-    "km",
-    "km/h"
-   ],
-   "worked": [
-    "70 km/h means 70 km for each hour.",
-    "How many lots of 70 km are in 210 km? Divide: \\(210 \\div 70 = 3\\)",
-    "The answer: 3 h."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 14700,
-      "unit": "h"
-     },
-     "line": "You multiplied. 70 km/h means 70 km for each hour. Count the lots of 70 km: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-2854ea98",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][46]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A car travels at 70 km/h for 5 hours. How far does the car go?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 350,
-    "unit": "km"
-   },
-   "units": [
-    "km",
-    "km/h",
-    "h"
-   ],
-   "worked": [
-    "70 km/h means 70 km for each hour.",
-    "For 5 h, multiply: \\(70 \\times 5 = 350\\)",
-    "The answer: 350 km."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 14,
-      "unit": "km"
-     },
-     "line": "You divided. 70 km/h means 70 km for each hour. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-910a6d6c",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][49]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A car travels 160 km at 80 km/h. How long does it take?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 2,
-    "unit": "h"
-   },
-   "units": [
-    "h",
-    "km",
-    "km/h"
-   ],
-   "worked": [
-    "80 km/h means 80 km for each hour.",
-    "How many lots of 80 km are in 160 km? Divide: \\(160 \\div 80 = 2\\)",
-    "The answer: 2 h."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 12800,
-      "unit": "h"
-     },
-     "line": "You multiplied. 80 km/h means 80 km for each hour. Count the lots of 80 km: divide."
-    },
-    {
-     "answer": {
-      "value": 1,
-      "unit": "h"
-     },
-     "line": "You divided the wrong way round. 80 km/h means 80 km for each hour. Count the lots of 80 km: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-53beefbc",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][52]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A lorry travels at 80 km/h for 4 hours. How far does the lorry go?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 320,
-    "unit": "km"
-   },
-   "units": [
-    "km",
-    "km/h",
-    "h"
-   ],
-   "worked": [
-    "80 km/h means 80 km for each hour.",
-    "For 4 h, multiply: \\(80 \\times 4 = 320\\)",
-    "The answer: 320 km."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 20,
-      "unit": "km"
-     },
-     "line": "You divided. 80 km/h means 80 km for each hour. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-7d14ef2e",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][55]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A lorry travels 400 km at 80 km/h. How long does it take?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 5,
-    "unit": "h"
-   },
-   "units": [
-    "h",
-    "km",
-    "km/h"
-   ],
-   "worked": [
-    "80 km/h means 80 km for each hour.",
-    "How many lots of 80 km are in 400 km? Divide: \\(400 \\div 80 = 5\\)",
-    "The answer: 5 h."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 32000,
-      "unit": "h"
-     },
-     "line": "You multiplied. 80 km/h means 80 km for each hour. Count the lots of 80 km: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-ccf2de44",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][58]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A train travels at 90 km/h for 3 hours. How far does the train go?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 270,
-    "unit": "km"
-   },
-   "units": [
-    "km",
-    "km/h",
-    "h"
-   ],
-   "worked": [
-    "90 km/h means 90 km for each hour.",
-    "For 3 h, multiply: \\(90 \\times 3 = 270\\)",
-    "The answer: 270 km."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 30,
-      "unit": "km"
-     },
-     "line": "You divided. 90 km/h means 90 km for each hour. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-61a1bcc8",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][61]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A train travels 360 km at 90 km/h. How long does it take?",
+   "stem": "A train travels 200 km at 50 km/h. How long does it take?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -2600,14 +1247,86 @@
     "km/h"
    ],
    "worked": [
-    "90 km/h means 90 km for each hour.",
-    "How many lots of 90 km are in 360 km? Divide: \\(360 \\div 90 = 4\\)",
+    "50 km/h means 50 km for each hour.",
+    "How many lots of 50 km are in 200 km? Divide: \\(200 \\div 50 = 4\\)",
     "The answer: 4 h."
    ],
    "slip": [
     {
      "answer": {
-      "value": 32400,
+      "value": 10000,
+      "unit": "h"
+     },
+     "line": "You multiplied. 50 km/h means 50 km for each hour. Count the lots of 50 km: divide."
+    }
+   ]
+  },
+  {
+   "id": "compound-measures-d7a8da4d",
+   "topic": "compound-measures",
+   "source": {
+    "game": "squared-squirrel",
+    "ref": "SQS.pools()['stage-3'][42]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "A train travels at 70 km/h for 3 hours. How far does the train go?",
+   "diagram": null,
+   "format": "number_unit",
+   "answer": {
+    "value": 210,
+    "unit": "km"
+   },
+   "units": [
+    "km",
+    "km/h",
+    "h"
+   ],
+   "worked": [
+    "70 km/h means 70 km for each hour.",
+    "For 3 h, multiply: \\(70 \\times 3 = 210\\)",
+    "The answer: 210 km."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 23,
+      "unit": "km"
+     },
+     "line": "You divided. 70 km/h means 70 km for each hour. Multiply."
+    }
+   ]
+  },
+  {
+   "id": "compound-measures-df4786d8",
+   "topic": "compound-measures",
+   "source": {
+    "game": "squared-squirrel",
+    "ref": "SQS.pools()['stage-3'][59]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "A coach travels 270 km at 90 km/h. How long does it take?",
+   "diagram": null,
+   "format": "number_unit",
+   "answer": {
+    "value": 3,
+    "unit": "h"
+   },
+   "units": [
+    "h",
+    "km",
+    "km/h"
+   ],
+   "worked": [
+    "90 km/h means 90 km for each hour.",
+    "How many lots of 90 km are in 270 km? Divide: \\(270 \\div 90 = 3\\)",
+    "The answer: 3 h."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 24300,
       "unit": "h"
      },
      "line": "You multiplied. 90 km/h means 90 km for each hour. Count the lots of 90 km: divide."
@@ -2651,55 +1370,19 @@
    ]
   },
   {
-   "id": "compound-measures-744aca1d",
+   "id": "compound-measures-686979c3",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][67]"
+    "ref": "SQS.pools()['stage-3'][72]"
    },
    "band": 4,
    "calc": false,
-   "stem": "A motorbike travels 90 miles at 30 mph. How long does it take?",
+   "stem": "A van travels at 40 mph for 3 hours. How far does the van go?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
-    "value": 3,
-    "unit": "h"
-   },
-   "units": [
-    "h",
-    "miles",
-    "mph"
-   ],
-   "worked": [
-    "30 mph means 30 miles for each hour.",
-    "How many lots of 30 miles are in 90 miles? Divide: \\(90 \\div 30 = 3\\)",
-    "The answer: 3 h."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 2700,
-      "unit": "h"
-     },
-     "line": "You multiplied. 30 mph means 30 miles for each hour. Count the lots of 30 miles: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-597ea5ac",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][70]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A van travels at 40 mph for 2 hours. How far does the van go?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 80,
+    "value": 120,
     "unit": "miles"
    },
    "units": [
@@ -2709,95 +1392,16 @@
    ],
    "worked": [
     "40 mph means 40 miles for each hour.",
-    "For 2 h, multiply: \\(40 \\times 2 = 80\\)",
-    "The answer: 80 miles."
+    "For 3 h, multiply: \\(40 \\times 3 = 120\\)",
+    "The answer: 120 miles."
    ],
    "slip": [
     {
      "answer": {
-      "value": 20,
+      "value": 13,
       "unit": "miles"
      },
      "line": "You divided. 40 mph means 40 miles for each hour. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-086a23a8",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][73]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A motorbike travels 120 miles at 40 mph. How long does it take?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 3,
-    "unit": "h"
-   },
-   "units": [
-    "h",
-    "miles",
-    "mph"
-   ],
-   "worked": [
-    "40 mph means 40 miles for each hour.",
-    "How many lots of 40 miles are in 120 miles? Divide: \\(120 \\div 40 = 3\\)",
-    "The answer: 3 h."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 4800,
-      "unit": "h"
-     },
-     "line": "You multiplied. 40 mph means 40 miles for each hour. Count the lots of 40 miles: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-7da095fc",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][77]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A motorbike travels 100 miles at 50 mph. How long does it take?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 2,
-    "unit": "h"
-   },
-   "units": [
-    "h",
-    "miles",
-    "mph"
-   ],
-   "worked": [
-    "50 mph means 50 miles for each hour.",
-    "How many lots of 50 miles are in 100 miles? Divide: \\(100 \\div 50 = 2\\)",
-    "The answer: 2 h."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 5000,
-      "unit": "h"
-     },
-     "line": "You multiplied. 50 mph means 50 miles for each hour. Count the lots of 50 miles: divide."
-    },
-    {
-     "answer": {
-      "value": 1,
-      "unit": "h"
-     },
-     "line": "You divided the wrong way round. 50 mph means 50 miles for each hour. Count the lots of 50 miles: divide."
     }
    ]
   },
@@ -2838,83 +1442,32 @@
    ]
   },
   {
-   "id": "compound-measures-18d14798",
+   "id": "compound-measures-d0136a3d",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][83]"
+    "ref": "SQS.pools()['stage-3'][88]"
    },
    "band": 4,
    "calc": false,
-   "stem": "A motorbike travels 120 miles at 60 mph. How long does it take?",
+   "stem": "A cyclist travels at 2 m/s for 10 seconds. How far does the cyclist go?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
-    "value": 2,
-    "unit": "h"
+    "value": 20,
+    "unit": "m"
    },
    "units": [
-    "h",
-    "miles",
-    "mph"
+    "m",
+    "m/s",
+    "s"
    ],
    "worked": [
-    "60 mph means 60 miles for each hour.",
-    "How many lots of 60 miles are in 120 miles? Divide: \\(120 \\div 60 = 2\\)",
-    "The answer: 2 h."
+    "2 m/s means 2 m for each second.",
+    "For 10 s, multiply: \\(2 \\times 10 = 20\\)",
+    "The answer: 20 m."
    ],
-   "slip": [
-    {
-     "answer": {
-      "value": 7200,
-      "unit": "h"
-     },
-     "line": "You multiplied. 60 mph means 60 miles for each hour. Count the lots of 60 miles: divide."
-    },
-    {
-     "answer": {
-      "value": 1,
-      "unit": "h"
-     },
-     "line": "You divided the wrong way round. 60 mph means 60 miles for each hour. Count the lots of 60 miles: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-a0ec2485",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][86]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A van travels at 60 mph for 4 hours. How far does the van go?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 240,
-    "unit": "miles"
-   },
-   "units": [
-    "miles",
-    "mph",
-    "h"
-   ],
-   "worked": [
-    "60 mph means 60 miles for each hour.",
-    "For 4 h, multiply: \\(60 \\times 4 = 240\\)",
-    "The answer: 240 miles."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 15,
-      "unit": "miles"
-     },
-     "line": "You divided. 60 mph means 60 miles for each hour. Multiply."
-    }
-   ]
+   "slip": []
   },
   {
    "id": "compound-measures-38cb07a5",
@@ -2953,83 +1506,19 @@
    ]
   },
   {
-   "id": "compound-measures-dd76f6f7",
+   "id": "compound-measures-f92a2814",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][92]"
+    "ref": "SQS.pools()['stage-3'][96]"
    },
    "band": 4,
    "calc": false,
-   "stem": "A cyclist travels at 3 m/s for 10 seconds. How far does the cyclist go?",
+   "stem": "A cyclist travels at 4 m/s for 10 seconds. How far does the cyclist go?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
-    "value": 30,
-    "unit": "m"
-   },
-   "units": [
-    "m",
-    "m/s",
-    "s"
-   ],
-   "worked": [
-    "3 m/s means 3 m for each second.",
-    "For 10 s, multiply: \\(3 \\times 10 = 30\\)",
-    "The answer: 30 m."
-   ],
-   "slip": []
-  },
-  {
-   "id": "compound-measures-db70962e",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][95]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A cyclist travels 60 m at 3 m/s. How long does it take?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 20,
-    "unit": "s"
-   },
-   "units": [
-    "s",
-    "m",
-    "m/s"
-   ],
-   "worked": [
-    "3 m/s means 3 m for each second.",
-    "How many lots of 3 m are in 60 m? Divide: \\(60 \\div 3 = 20\\)",
-    "The answer: 20 s."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 180,
-      "unit": "s"
-     },
-     "line": "You multiplied. 3 m/s means 3 m for each second. Count the lots of 3 m: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-bd89edb3",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][98]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A runner travels at 4 m/s for 20 seconds. How far does the runner go?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 80,
+    "value": 40,
     "unit": "m"
    },
    "units": [
@@ -3039,21 +1528,21 @@
    ],
    "worked": [
     "4 m/s means 4 m for each second.",
-    "For 20 s, multiply: \\(4 \\times 20 = 80\\)",
-    "The answer: 80 m."
+    "For 10 s, multiply: \\(4 \\times 10 = 40\\)",
+    "The answer: 40 m."
    ],
    "slip": []
   },
   {
-   "id": "compound-measures-97eefbd0",
+   "id": "compound-measures-231de4bd",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][101]"
+    "ref": "SQS.pools()['stage-3'][97]"
    },
    "band": 4,
    "calc": false,
-   "stem": "A runner travels 50 m at 5 m/s. How long does it take?",
+   "stem": "A runner travels 40 m at 4 m/s. How long does it take?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -3066,34 +1555,34 @@
     "m/s"
    ],
    "worked": [
-    "5 m/s means 5 m for each second.",
-    "How many lots of 5 m are in 50 m? Divide: \\(50 \\div 5 = 10\\)",
+    "4 m/s means 4 m for each second.",
+    "How many lots of 4 m are in 40 m? Divide: \\(40 \\div 4 = 10\\)",
     "The answer: 10 s."
    ],
    "slip": [
     {
      "answer": {
-      "value": 250,
+      "value": 160,
       "unit": "s"
      },
-     "line": "You multiplied. 5 m/s means 5 m for each second. Count the lots of 5 m: divide."
+     "line": "You multiplied. 4 m/s means 4 m for each second. Count the lots of 4 m: divide."
     }
    ]
   },
   {
-   "id": "compound-measures-f587164f",
+   "id": "compound-measures-16827c05",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][104]"
+    "ref": "SQS.pools()['stage-3'][106]"
    },
    "band": 4,
    "calc": false,
-   "stem": "A cyclist travels at 6 m/s for 10 seconds. How far does the cyclist go?",
+   "stem": "A runner travels at 6 m/s for 20 seconds. How far does the runner go?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
-    "value": 60,
+    "value": 120,
     "unit": "m"
    },
    "units": [
@@ -3103,18 +1592,10 @@
    ],
    "worked": [
     "6 m/s means 6 m for each second.",
-    "For 10 s, multiply: \\(6 \\times 10 = 60\\)",
-    "The answer: 60 m."
+    "For 20 s, multiply: \\(6 \\times 20 = 120\\)",
+    "The answer: 120 m."
    ],
-   "slip": [
-    {
-     "answer": {
-      "value": 1,
-      "unit": "m"
-     },
-     "line": "You divided. 6 m/s means 6 m for each second. Multiply."
-    }
-   ]
+   "slip": []
   },
   {
    "id": "compound-measures-1a6c6364",
@@ -3153,66 +1634,38 @@
    ]
   },
   {
-   "id": "compound-measures-bd15914f",
+   "id": "compound-measures-d5dba6c5",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][110]"
+    "ref": "SQS.pools()['stage-3'][116]"
    },
    "band": 4,
    "calc": false,
-   "stem": "A runner travels at 7 m/s for 20 seconds. How far does the runner go?",
+   "stem": "A metal has a density of 2 g/cm³. A block of it has a volume of 4 cm³. What is its mass?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
-    "value": 140,
-    "unit": "m"
+    "value": 8,
+    "unit": "g"
    },
    "units": [
-    "m",
-    "m/s",
-    "s"
+    "g",
+    "g/cm³",
+    "cm³"
    ],
    "worked": [
-    "7 m/s means 7 m for each second.",
-    "For 20 s, multiply: \\(7 \\times 20 = 140\\)",
-    "The answer: 140 m."
-   ],
-   "slip": []
-  },
-  {
-   "id": "compound-measures-5d05dbd3",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][113]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A runner travels 80 m at 8 m/s. How long does it take?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 10,
-    "unit": "s"
-   },
-   "units": [
-    "s",
-    "m",
-    "m/s"
-   ],
-   "worked": [
-    "8 m/s means 8 m for each second.",
-    "How many lots of 8 m are in 80 m? Divide: \\(80 \\div 8 = 10\\)",
-    "The answer: 10 s."
+    "2 g/cm³ means 2 g for each cm³.",
+    "For 4 cm³, multiply: \\(2 \\times 4 = 8\\)",
+    "The answer: 8 g."
    ],
    "slip": [
     {
      "answer": {
-      "value": 640,
-      "unit": "s"
+      "value": 1,
+      "unit": "g"
      },
-     "line": "You multiplied. 8 m/s means 8 m for each second. Count the lots of 8 m: divide."
+     "line": "You divided. 2 g/cm³ means 2 g for each cm³. Multiply."
     }
    ]
   },
@@ -3253,155 +1706,19 @@
    ]
   },
   {
-   "id": "compound-measures-42e8ef89",
+   "id": "compound-measures-db7bae99",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][120]"
+    "ref": "SQS.pools()['stage-3'][136]"
    },
    "band": 4,
    "calc": false,
-   "stem": "A metal has a density of 2 g/cm³. A block of it has a volume of 6 cm³. What is its mass?",
+   "stem": "A metal has a density of 4 g/cm³. A block of it has a volume of 6 cm³. What is its mass?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
-    "value": 12,
-    "unit": "g"
-   },
-   "units": [
-    "g",
-    "g/cm³",
-    "cm³"
-   ],
-   "worked": [
-    "2 g/cm³ means 2 g for each cm³.",
-    "For 6 cm³, multiply: \\(2 \\times 6 = 12\\)",
-    "The answer: 12 g."
-   ],
-   "slip": []
-  },
-  {
-   "id": "compound-measures-fcee200a",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][123]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A metal has a density of 2 g/cm³. A block of it has a mass of 20 g. What is its volume?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 10,
-    "unit": "cm³"
-   },
-   "units": [
-    "cm³",
-    "g",
-    "g/cm³"
-   ],
-   "worked": [
-    "2 g/cm³ means 2 g for each cm³.",
-    "How many lots of 2 g are in 20 g? Divide: \\(20 \\div 2 = 10\\)",
-    "The answer: 10 cm³."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 40,
-      "unit": "cm³"
-     },
-     "line": "You multiplied. 2 g/cm³ means 2 g for each cm³. Count the lots of 2 g: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-52d608b9",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][126]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A metal has a density of 3 g/cm³. A block of it has a volume of 5 cm³. What is its mass?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 15,
-    "unit": "g"
-   },
-   "units": [
-    "g",
-    "g/cm³",
-    "cm³"
-   ],
-   "worked": [
-    "3 g/cm³ means 3 g for each cm³.",
-    "For 5 cm³, multiply: \\(3 \\times 5 = 15\\)",
-    "The answer: 15 g."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 1,
-      "unit": "g"
-     },
-     "line": "You divided. 3 g/cm³ means 3 g for each cm³. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-279605d8",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][129]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A metal has a density of 3 g/cm³. A block of it has a mass of 18 g. What is its volume?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 6,
-    "unit": "cm³"
-   },
-   "units": [
-    "cm³",
-    "g",
-    "g/cm³"
-   ],
-   "worked": [
-    "3 g/cm³ means 3 g for each cm³.",
-    "How many lots of 3 g are in 18 g? Divide: \\(18 \\div 3 = 6\\)",
-    "The answer: 6 cm³."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 54,
-      "unit": "cm³"
-     },
-     "line": "You multiplied. 3 g/cm³ means 3 g for each cm³. Count the lots of 3 g: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-db4e3a01",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][132]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A metal has a density of 4 g/cm³. A block of it has a volume of 4 cm³. What is its mass?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 16,
+    "value": 24,
     "unit": "g"
    },
    "units": [
@@ -3411,8 +1728,8 @@
    ],
    "worked": [
     "4 g/cm³ means 4 g for each cm³.",
-    "For 4 cm³, multiply: \\(4 \\times 4 = 16\\)",
-    "The answer: 16 g."
+    "For 6 cm³, multiply: \\(4 \\times 6 = 24\\)",
+    "The answer: 24 g."
    ],
    "slip": [
     {
@@ -3425,79 +1742,15 @@
    ]
   },
   {
-   "id": "compound-measures-b97e76a1",
+   "id": "compound-measures-885ebb22",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][135]"
+    "ref": "SQS.pools()['stage-3'][149]"
    },
    "band": 4,
    "calc": false,
-   "stem": "A metal has a density of 4 g/cm³. A block of it has a mass of 20 g. What is its volume?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 5,
-    "unit": "cm³"
-   },
-   "units": [
-    "cm³",
-    "g",
-    "g/cm³"
-   ],
-   "worked": [
-    "4 g/cm³ means 4 g for each cm³.",
-    "How many lots of 4 g are in 20 g? Divide: \\(20 \\div 4 = 5\\)",
-    "The answer: 5 cm³."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 80,
-      "unit": "cm³"
-     },
-     "line": "You multiplied. 4 g/cm³ means 4 g for each cm³. Count the lots of 4 g: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-f73e5432",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][138]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A metal has a density of 4 g/cm³. A block of it has a volume of 10 cm³. What is its mass?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 40,
-    "unit": "g"
-   },
-   "units": [
-    "g",
-    "g/cm³",
-    "cm³"
-   ],
-   "worked": [
-    "4 g/cm³ means 4 g for each cm³.",
-    "For 10 cm³, multiply: \\(4 \\times 10 = 40\\)",
-    "The answer: 40 g."
-   ],
-   "slip": []
-  },
-  {
-   "id": "compound-measures-581248f6",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][141]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A metal has a density of 5 g/cm³. A block of it has a mass of 20 g. What is its volume?",
+   "stem": "A metal has a density of 6 g/cm³. A block of it has a mass of 24 g. What is its volume?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -3510,214 +1763,34 @@
     "g/cm³"
    ],
    "worked": [
-    "5 g/cm³ means 5 g for each cm³.",
-    "How many lots of 5 g are in 20 g? Divide: \\(20 \\div 5 = 4\\)",
+    "6 g/cm³ means 6 g for each cm³.",
+    "How many lots of 6 g are in 24 g? Divide: \\(24 \\div 6 = 4\\)",
     "The answer: 4 cm³."
    ],
    "slip": [
     {
      "answer": {
-      "value": 100,
+      "value": 144,
       "unit": "cm³"
      },
-     "line": "You multiplied. 5 g/cm³ means 5 g for each cm³. Count the lots of 5 g: divide."
+     "line": "You multiplied. 6 g/cm³ means 6 g for each cm³. Count the lots of 6 g: divide."
     }
    ]
   },
   {
-   "id": "compound-measures-90cd0f00",
+   "id": "compound-measures-995a1dbd",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][144]"
+    "ref": "SQS.pools()['stage-3'][158]"
    },
    "band": 4,
    "calc": false,
-   "stem": "A metal has a density of 5 g/cm³. A block of it has a volume of 6 cm³. What is its mass?",
+   "stem": "A metal has a density of 7 g/cm³. A block of it has a volume of 5 cm³. What is its mass?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
-    "value": 30,
-    "unit": "g"
-   },
-   "units": [
-    "g",
-    "g/cm³",
-    "cm³"
-   ],
-   "worked": [
-    "5 g/cm³ means 5 g for each cm³.",
-    "For 6 cm³, multiply: \\(5 \\times 6 = 30\\)",
-    "The answer: 30 g."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 1,
-      "unit": "g"
-     },
-     "line": "You divided. 5 g/cm³ means 5 g for each cm³. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-2afb8052",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][147]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A metal has a density of 5 g/cm³. A block of it has a mass of 50 g. What is its volume?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 10,
-    "unit": "cm³"
-   },
-   "units": [
-    "cm³",
-    "g",
-    "g/cm³"
-   ],
-   "worked": [
-    "5 g/cm³ means 5 g for each cm³.",
-    "How many lots of 5 g are in 50 g? Divide: \\(50 \\div 5 = 10\\)",
-    "The answer: 10 cm³."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 250,
-      "unit": "cm³"
-     },
-     "line": "You multiplied. 5 g/cm³ means 5 g for each cm³. Count the lots of 5 g: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-6c07b56c",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][150]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A metal has a density of 6 g/cm³. A block of it has a volume of 5 cm³. What is its mass?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 30,
-    "unit": "g"
-   },
-   "units": [
-    "g",
-    "g/cm³",
-    "cm³"
-   ],
-   "worked": [
-    "6 g/cm³ means 6 g for each cm³.",
-    "For 5 cm³, multiply: \\(6 \\times 5 = 30\\)",
-    "The answer: 30 g."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 1,
-      "unit": "g"
-     },
-     "line": "You divided. 6 g/cm³ means 6 g for each cm³. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-8bcb5e87",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][154]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A metal has a density of 6 g/cm³. A block of it has a volume of 10 cm³. What is its mass?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 60,
-    "unit": "g"
-   },
-   "units": [
-    "g",
-    "g/cm³",
-    "cm³"
-   ],
-   "worked": [
-    "6 g/cm³ means 6 g for each cm³.",
-    "For 10 cm³, multiply: \\(6 \\times 10 = 60\\)",
-    "The answer: 60 g."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 1,
-      "unit": "g"
-     },
-     "line": "You divided. 6 g/cm³ means 6 g for each cm³. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-b134b51f",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][157]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A metal has a density of 7 g/cm³. A block of it has a mass of 28 g. What is its volume?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 4,
-    "unit": "cm³"
-   },
-   "units": [
-    "cm³",
-    "g",
-    "g/cm³"
-   ],
-   "worked": [
-    "7 g/cm³ means 7 g for each cm³.",
-    "How many lots of 7 g are in 28 g? Divide: \\(28 \\div 7 = 4\\)",
-    "The answer: 4 cm³."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 196,
-      "unit": "cm³"
-     },
-     "line": "You multiplied. 7 g/cm³ means 7 g for each cm³. Count the lots of 7 g: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-8130be8e",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][160]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A metal has a density of 7 g/cm³. A block of it has a volume of 6 cm³. What is its mass?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 42,
+    "value": 35,
     "unit": "g"
    },
    "units": [
@@ -3727,8 +1800,8 @@
    ],
    "worked": [
     "7 g/cm³ means 7 g for each cm³.",
-    "For 6 cm³, multiply: \\(7 \\times 6 = 42\\)",
-    "The answer: 42 g."
+    "For 5 cm³, multiply: \\(7 \\times 5 = 35\\)",
+    "The answer: 35 g."
    ],
    "slip": [
     {
@@ -3741,218 +1814,38 @@
    ]
   },
   {
-   "id": "compound-measures-1ec2b6cf",
+   "id": "compound-measures-6dd6482e",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][163]"
+    "ref": "SQS.pools()['stage-3'][180]"
    },
    "band": 4,
    "calc": false,
-   "stem": "A metal has a density of 7 g/cm³. A block of it has a mass of 70 g. What is its volume?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 10,
-    "unit": "cm³"
-   },
-   "units": [
-    "cm³",
-    "g",
-    "g/cm³"
-   ],
-   "worked": [
-    "7 g/cm³ means 7 g for each cm³.",
-    "How many lots of 7 g are in 70 g? Divide: \\(70 \\div 7 = 10\\)",
-    "The answer: 10 cm³."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 490,
-      "unit": "cm³"
-     },
-     "line": "You multiplied. 7 g/cm³ means 7 g for each cm³. Count the lots of 7 g: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-8e4b5d16",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][166]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A metal has a density of 8 g/cm³. A block of it has a volume of 5 cm³. What is its mass?",
+   "stem": "A pressure of 20 N/m² acts on an area of 2 m². What is the force?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
     "value": 40,
-    "unit": "g"
+    "unit": "N"
    },
    "units": [
-    "g",
-    "g/cm³",
-    "cm³"
+    "N",
+    "N/m²",
+    "m²"
    ],
    "worked": [
-    "8 g/cm³ means 8 g for each cm³.",
-    "For 5 cm³, multiply: \\(8 \\times 5 = 40\\)",
-    "The answer: 40 g."
+    "20 N/m² means 20 N for each m².",
+    "For 2 m², multiply: \\(20 \\times 2 = 40\\)",
+    "The answer: 40 N."
    ],
    "slip": [
     {
      "answer": {
-      "value": 2,
-      "unit": "g"
+      "value": 10,
+      "unit": "N"
      },
-     "line": "You divided. 8 g/cm³ means 8 g for each cm³. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-05cbb484",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][169]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A metal has a density of 8 g/cm³. A block of it has a mass of 48 g. What is its volume?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 6,
-    "unit": "cm³"
-   },
-   "units": [
-    "cm³",
-    "g",
-    "g/cm³"
-   ],
-   "worked": [
-    "8 g/cm³ means 8 g for each cm³.",
-    "How many lots of 8 g are in 48 g? Divide: \\(48 \\div 8 = 6\\)",
-    "The answer: 6 cm³."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 384,
-      "unit": "cm³"
-     },
-     "line": "You multiplied. 8 g/cm³ means 8 g for each cm³. Count the lots of 8 g: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-31133004",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][172]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A metal has a density of 9 g/cm³. A block of it has a volume of 4 cm³. What is its mass?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 36,
-    "unit": "g"
-   },
-   "units": [
-    "g",
-    "g/cm³",
-    "cm³"
-   ],
-   "worked": [
-    "9 g/cm³ means 9 g for each cm³.",
-    "For 4 cm³, multiply: \\(9 \\times 4 = 36\\)",
-    "The answer: 36 g."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 2,
-      "unit": "g"
-     },
-     "line": "You divided. 9 g/cm³ means 9 g for each cm³. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-02ccb11e",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][175]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A metal has a density of 9 g/cm³. A block of it has a mass of 45 g. What is its volume?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 5,
-    "unit": "cm³"
-   },
-   "units": [
-    "cm³",
-    "g",
-    "g/cm³"
-   ],
-   "worked": [
-    "9 g/cm³ means 9 g for each cm³.",
-    "How many lots of 9 g are in 45 g? Divide: \\(45 \\div 9 = 5\\)",
-    "The answer: 5 cm³."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 405,
-      "unit": "cm³"
-     },
-     "line": "You multiplied. 9 g/cm³ means 9 g for each cm³. Count the lots of 9 g: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-9241851e",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][178]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A metal has a density of 9 g/cm³. A block of it has a volume of 10 cm³. What is its mass?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 90,
-    "unit": "g"
-   },
-   "units": [
-    "g",
-    "g/cm³",
-    "cm³"
-   ],
-   "worked": [
-    "9 g/cm³ means 9 g for each cm³.",
-    "For 10 cm³, multiply: \\(9 \\times 10 = 90\\)",
-    "The answer: 90 g."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 1,
-      "unit": "g"
-     },
-     "line": "You divided. 9 g/cm³ means 9 g for each cm³. Multiply."
+     "line": "You divided. 20 N/m² means 20 N for each m². Multiply."
     }
    ]
   },
@@ -4000,193 +1893,6 @@
    ]
   },
   {
-   "id": "compound-measures-7e55f0ad",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][184]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A pressure of 20 N/m² acts on an area of 4 m². What is the force?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 80,
-    "unit": "N"
-   },
-   "units": [
-    "N",
-    "N/m²",
-    "m²"
-   ],
-   "worked": [
-    "20 N/m² means 20 N for each m².",
-    "For 4 m², multiply: \\(20 \\times 4 = 80\\)",
-    "The answer: 80 N."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 5,
-      "unit": "N"
-     },
-     "line": "You divided. 20 N/m² means 20 N for each m². Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-8e81eb5e",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][187]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A force of 100 N gives a pressure of 20 N/m². What is the area?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 5,
-    "unit": "m²"
-   },
-   "units": [
-    "m²",
-    "N",
-    "N/m²"
-   ],
-   "worked": [
-    "20 N/m² means 20 N for each m².",
-    "How many lots of 20 N are in 100 N? Divide: \\(100 \\div 20 = 5\\)",
-    "The answer: 5 m²."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 2000,
-      "unit": "m²"
-     },
-     "line": "You multiplied. 20 N/m² means 20 N for each m². Count the lots of 20 N: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-ab92af9b",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][190]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A pressure of 25 N/m² acts on an area of 3 m². What is the force?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 75,
-    "unit": "N"
-   },
-   "units": [
-    "N",
-    "N/m²",
-    "m²"
-   ],
-   "worked": [
-    "25 N/m² means 25 N for each m².",
-    "For 3 m², multiply: \\(25 \\times 3 = 75\\)",
-    "The answer: 75 N."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 8,
-      "unit": "N"
-     },
-     "line": "You divided. 25 N/m² means 25 N for each m². Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-3fb70c75",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][194]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A pressure of 25 N/m² acts on an area of 5 m². What is the force?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 125,
-    "unit": "N"
-   },
-   "units": [
-    "N",
-    "N/m²",
-    "m²"
-   ],
-   "worked": [
-    "25 N/m² means 25 N for each m².",
-    "For 5 m², multiply: \\(25 \\times 5 = 125\\)",
-    "The answer: 125 N."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 5,
-      "unit": "N"
-     },
-     "line": "You divided. 25 N/m² means 25 N for each m². Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-cfe264c2",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][197]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A force of 100 N gives a pressure of 50 N/m². What is the area?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 2,
-    "unit": "m²"
-   },
-   "units": [
-    "m²",
-    "N",
-    "N/m²"
-   ],
-   "worked": [
-    "50 N/m² means 50 N for each m².",
-    "How many lots of 50 N are in 100 N? Divide: \\(100 \\div 50 = 2\\)",
-    "The answer: 2 m²."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 5000,
-      "unit": "m²"
-     },
-     "line": "You multiplied. 50 N/m² means 50 N for each m². Count the lots of 50 N: divide."
-    },
-    {
-     "answer": {
-      "value": 1,
-      "unit": "m²"
-     },
-     "line": "You divided the wrong way round. 50 N/m² means 50 N for each m². Count the lots of 50 N: divide."
-    }
-   ]
-  },
-  {
    "id": "compound-measures-a5126f02",
    "topic": "compound-measures",
    "source": {
@@ -4223,87 +1929,15 @@
    ]
   },
   {
-   "id": "compound-measures-aadbb333",
+   "id": "compound-measures-a67e99b0",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][203]"
+    "ref": "SQS.pools()['stage-3'][201]"
    },
    "band": 4,
    "calc": false,
-   "stem": "A force of 250 N gives a pressure of 50 N/m². What is the area?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 5,
-    "unit": "m²"
-   },
-   "units": [
-    "m²",
-    "N",
-    "N/m²"
-   ],
-   "worked": [
-    "50 N/m² means 50 N for each m².",
-    "How many lots of 50 N are in 250 N? Divide: \\(250 \\div 50 = 5\\)",
-    "The answer: 5 m²."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 12500,
-      "unit": "m²"
-     },
-     "line": "You multiplied. 50 N/m² means 50 N for each m². Count the lots of 50 N: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-08dc6820",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][206]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A pressure of 100 N/m² acts on an area of 3 m². What is the force?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 300,
-    "unit": "N"
-   },
-   "units": [
-    "N",
-    "N/m²",
-    "m²"
-   ],
-   "worked": [
-    "100 N/m² means 100 N for each m².",
-    "For 3 m², multiply: \\(100 \\times 3 = 300\\)",
-    "The answer: 300 N."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 33,
-      "unit": "N"
-     },
-     "line": "You divided. 100 N/m² means 100 N for each m². Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-2553b07f",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][209]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A force of 400 N gives a pressure of 100 N/m². What is the area?",
+   "stem": "A force of 200 N gives a pressure of 50 N/m². What is the area?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -4316,125 +1950,53 @@
     "N/m²"
    ],
    "worked": [
-    "100 N/m² means 100 N for each m².",
-    "How many lots of 100 N are in 400 N? Divide: \\(400 \\div 100 = 4\\)",
+    "50 N/m² means 50 N for each m².",
+    "How many lots of 50 N are in 200 N? Divide: \\(200 \\div 50 = 4\\)",
     "The answer: 4 m²."
    ],
    "slip": [
     {
      "answer": {
-      "value": 40000,
+      "value": 10000,
       "unit": "m²"
      },
-     "line": "You multiplied. 100 N/m² means 100 N for each m². Count the lots of 100 N: divide."
+     "line": "You multiplied. 50 N/m² means 50 N for each m². Count the lots of 50 N: divide."
     }
    ]
   },
   {
-   "id": "compound-measures-77d00238",
+   "id": "compound-measures-0954e3ff",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][212]"
+    "ref": "SQS.pools()['stage-3'][220]"
    },
    "band": 4,
    "calc": false,
-   "stem": "A pressure of 200 N/m² acts on an area of 2 m². What is the force?",
+   "stem": "Rice costs £2/kg. How much do 2 kg cost?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
-    "value": 400,
-    "unit": "N"
+    "value": 4,
+    "unit": "£"
    },
    "units": [
-    "N",
-    "N/m²",
-    "m²"
+    "£",
+    "£/kg",
+    "kg"
    ],
    "worked": [
-    "200 N/m² means 200 N for each m².",
-    "For 2 m², multiply: \\(200 \\times 2 = 400\\)",
-    "The answer: 400 N."
+    "£2/kg means £2 for each kg.",
+    "For 2 kg, multiply: \\(2 \\times 2 = 4\\)",
+    "The answer: £4."
    ],
    "slip": [
     {
      "answer": {
-      "value": 100,
-      "unit": "N"
+      "value": 1,
+      "unit": "£"
      },
-     "line": "You divided. 200 N/m² means 200 N for each m². Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-dd28ceba",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][215]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A force of 600 N gives a pressure of 200 N/m². What is the area?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 3,
-    "unit": "m²"
-   },
-   "units": [
-    "m²",
-    "N",
-    "N/m²"
-   ],
-   "worked": [
-    "200 N/m² means 200 N for each m².",
-    "How many lots of 200 N are in 600 N? Divide: \\(600 \\div 200 = 3\\)",
-    "The answer: 3 m²."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 120000,
-      "unit": "m²"
-     },
-     "line": "You multiplied. 200 N/m² means 200 N for each m². Count the lots of 200 N: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-daa0ed26",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][218]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "A pressure of 200 N/m² acts on an area of 5 m². What is the force?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 1000,
-    "unit": "N"
-   },
-   "units": [
-    "N",
-    "N/m²",
-    "m²"
-   ],
-   "worked": [
-    "200 N/m² means 200 N for each m².",
-    "For 5 m², multiply: \\(200 \\times 5 = 1000\\)",
-    "The answer: 1000 N."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 40,
-      "unit": "N"
-     },
-     "line": "You divided. 200 N/m² means 200 N for each m². Multiply."
+     "line": "You divided. £2/kg means £2 for each kg. Multiply."
     }
    ]
   },
@@ -4482,159 +2044,15 @@
    ]
   },
   {
-   "id": "compound-measures-9aeb5ba0",
+   "id": "compound-measures-a4480583",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][224]"
+    "ref": "SQS.pools()['stage-3'][253]"
    },
    "band": 4,
    "calc": false,
-   "stem": "Rice costs £2/kg. How much do 4 kg cost?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 8,
-    "unit": "£"
-   },
-   "units": [
-    "£",
-    "£/kg",
-    "kg"
-   ],
-   "worked": [
-    "£2/kg means £2 for each kg.",
-    "For 4 kg, multiply: \\(2 \\times 4 = 8\\)",
-    "The answer: £8."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 1,
-      "unit": "£"
-     },
-     "line": "You divided. £2/kg means £2 for each kg. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-52a28ad8",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][227]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "Rice costs £2/kg. How many kg can you buy for £10?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 5,
-    "unit": "kg"
-   },
-   "units": [
-    "kg",
-    "£",
-    "£/kg"
-   ],
-   "worked": [
-    "£2/kg means £2 for each kg.",
-    "How many lots of £2 are in £10? Divide: \\(10 \\div 2 = 5\\)",
-    "The answer: 5 kg."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 20,
-      "unit": "kg"
-     },
-     "line": "You multiplied. £2/kg means £2 for each kg. Count the lots of £2: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-c3cf4176",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][231]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "Rice costs £3/kg. How many kg can you buy for £9?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 3,
-    "unit": "kg"
-   },
-   "units": [
-    "kg",
-    "£",
-    "£/kg"
-   ],
-   "worked": [
-    "£3/kg means £3 for each kg.",
-    "How many lots of £3 are in £9? Divide: \\(9 \\div 3 = 3\\)",
-    "The answer: 3 kg."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 27,
-      "unit": "kg"
-     },
-     "line": "You multiplied. £3/kg means £3 for each kg. Count the lots of £3: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-11929b7a",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][234]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "Rice costs £3/kg. How much do 5 kg cost?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 15,
-    "unit": "£"
-   },
-   "units": [
-    "£",
-    "£/kg",
-    "kg"
-   ],
-   "worked": [
-    "£3/kg means £3 for each kg.",
-    "For 5 kg, multiply: \\(3 \\times 5 = 15\\)",
-    "The answer: £15."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 1,
-      "unit": "£"
-     },
-     "line": "You divided. £3/kg means £3 for each kg. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-f098b42a",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][237]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "Rice costs £4/kg. How many kg can you buy for £8?",
+   "stem": "Rice costs £6/kg. How many kg can you buy for £12?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
@@ -4647,319 +2065,24 @@
     "£/kg"
    ],
    "worked": [
-    "£4/kg means £4 for each kg.",
-    "How many lots of £4 are in £8? Divide: \\(8 \\div 4 = 2\\)",
+    "£6/kg means £6 for each kg.",
+    "How many lots of £6 are in £12? Divide: \\(12 \\div 6 = 2\\)",
     "The answer: 2 kg."
    ],
    "slip": [
     {
      "answer": {
-      "value": 32,
-      "unit": "kg"
-     },
-     "line": "You multiplied. £4/kg means £4 for each kg. Count the lots of £4: divide."
-    },
-    {
-     "answer": {
-      "value": 1,
-      "unit": "kg"
-     },
-     "line": "You divided the wrong way round. £4/kg means £4 for each kg. Count the lots of £4: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-1838799b",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][240]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "Rice costs £4/kg. How much do 4 kg cost?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 16,
-    "unit": "£"
-   },
-   "units": [
-    "£",
-    "£/kg",
-    "kg"
-   ],
-   "worked": [
-    "£4/kg means £4 for each kg.",
-    "For 4 kg, multiply: \\(4 \\times 4 = 16\\)",
-    "The answer: £16."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 1,
-      "unit": "£"
-     },
-     "line": "You divided. £4/kg means £4 for each kg. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-6c8b2f52",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][243]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "Rice costs £4/kg. How many kg can you buy for £20?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 5,
-    "unit": "kg"
-   },
-   "units": [
-    "kg",
-    "£",
-    "£/kg"
-   ],
-   "worked": [
-    "£4/kg means £4 for each kg.",
-    "How many lots of £4 are in £20? Divide: \\(20 \\div 4 = 5\\)",
-    "The answer: 5 kg."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 80,
-      "unit": "kg"
-     },
-     "line": "You multiplied. £4/kg means £4 for each kg. Count the lots of £4: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-556fd0db",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][246]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "Rice costs £5/kg. How much do 3 kg cost?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 15,
-    "unit": "£"
-   },
-   "units": [
-    "£",
-    "£/kg",
-    "kg"
-   ],
-   "worked": [
-    "£5/kg means £5 for each kg.",
-    "For 3 kg, multiply: \\(5 \\times 3 = 15\\)",
-    "The answer: £15."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 2,
-      "unit": "£"
-     },
-     "line": "You divided. £5/kg means £5 for each kg. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-4e77d5f2",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][249]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "Rice costs £5/kg. How many kg can you buy for £20?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 4,
-    "unit": "kg"
-   },
-   "units": [
-    "kg",
-    "£",
-    "£/kg"
-   ],
-   "worked": [
-    "£5/kg means £5 for each kg.",
-    "How many lots of £5 are in £20? Divide: \\(20 \\div 5 = 4\\)",
-    "The answer: 4 kg."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 100,
-      "unit": "kg"
-     },
-     "line": "You multiplied. £5/kg means £5 for each kg. Count the lots of £5: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-10d7e7ea",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][252]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "Rice costs £6/kg. How much do 2 kg cost?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 12,
-    "unit": "£"
-   },
-   "units": [
-    "£",
-    "£/kg",
-    "kg"
-   ],
-   "worked": [
-    "£6/kg means £6 for each kg.",
-    "For 2 kg, multiply: \\(6 \\times 2 = 12\\)",
-    "The answer: £12."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 3,
-      "unit": "£"
-     },
-     "line": "You divided. £6/kg means £6 for each kg. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-af29dcad",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][255]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "Rice costs £6/kg. How many kg can you buy for £18?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 3,
-    "unit": "kg"
-   },
-   "units": [
-    "kg",
-    "£",
-    "£/kg"
-   ],
-   "worked": [
-    "£6/kg means £6 for each kg.",
-    "How many lots of £6 are in £18? Divide: \\(18 \\div 6 = 3\\)",
-    "The answer: 3 kg."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 108,
+      "value": 72,
       "unit": "kg"
      },
      "line": "You multiplied. £6/kg means £6 for each kg. Count the lots of £6: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-d0a7f726",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][258]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "Rice costs £6/kg. How much do 5 kg cost?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 30,
-    "unit": "£"
-   },
-   "units": [
-    "£",
-    "£/kg",
-    "kg"
-   ],
-   "worked": [
-    "£6/kg means £6 for each kg.",
-    "For 5 kg, multiply: \\(6 \\times 5 = 30\\)",
-    "The answer: £30."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 1,
-      "unit": "£"
-     },
-     "line": "You divided. £6/kg means £6 for each kg. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-e24cb5bc",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][261]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "Rice costs £7/kg. How many kg can you buy for £14?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 2,
-    "unit": "kg"
-   },
-   "units": [
-    "kg",
-    "£",
-    "£/kg"
-   ],
-   "worked": [
-    "£7/kg means £7 for each kg.",
-    "How many lots of £7 are in £14? Divide: \\(14 \\div 7 = 2\\)",
-    "The answer: 2 kg."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 98,
-      "unit": "kg"
-     },
-     "line": "You multiplied. £7/kg means £7 for each kg. Count the lots of £7: divide."
     },
     {
      "answer": {
       "value": 1,
       "unit": "kg"
      },
-     "line": "You divided the wrong way round. £7/kg means £7 for each kg. Count the lots of £7: divide."
+     "line": "You divided the wrong way round. £6/kg means £6 for each kg. Count the lots of £6: divide."
     }
    ]
   },
@@ -5000,270 +2123,19 @@
    ]
   },
   {
-   "id": "compound-measures-9dbc58d5",
+   "id": "compound-measures-0c9355d9",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][267]"
+    "ref": "SQS.pools()['stage-3'][285]"
    },
    "band": 4,
    "calc": false,
-   "stem": "Rice costs £7/kg. How many kg can you buy for £35?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 5,
-    "unit": "kg"
-   },
-   "units": [
-    "kg",
-    "£",
-    "£/kg"
-   ],
-   "worked": [
-    "£7/kg means £7 for each kg.",
-    "How many lots of £7 are in £35? Divide: \\(35 \\div 7 = 5\\)",
-    "The answer: 5 kg."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 245,
-      "unit": "kg"
-     },
-     "line": "You multiplied. £7/kg means £7 for each kg. Count the lots of £7: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-10f8f756",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][271]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "Rice costs £8/kg. How many kg can you buy for £24?",
+   "stem": "Rope costs £2/m. How many metres can you buy for £6?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
     "value": 3,
-    "unit": "kg"
-   },
-   "units": [
-    "kg",
-    "£",
-    "£/kg"
-   ],
-   "worked": [
-    "£8/kg means £8 for each kg.",
-    "How many lots of £8 are in £24? Divide: \\(24 \\div 8 = 3\\)",
-    "The answer: 3 kg."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 192,
-      "unit": "kg"
-     },
-     "line": "You multiplied. £8/kg means £8 for each kg. Count the lots of £8: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-b220bbef",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][274]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "Rice costs £8/kg. How much do 5 kg cost?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 40,
-    "unit": "£"
-   },
-   "units": [
-    "£",
-    "£/kg",
-    "kg"
-   ],
-   "worked": [
-    "£8/kg means £8 for each kg.",
-    "For 5 kg, multiply: \\(8 \\times 5 = 40\\)",
-    "The answer: £40."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 2,
-      "unit": "£"
-     },
-     "line": "You divided. £8/kg means £8 for each kg. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-a92dd5b5",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][277]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "Rice costs £9/kg. How many kg can you buy for £18?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 2,
-    "unit": "kg"
-   },
-   "units": [
-    "kg",
-    "£",
-    "£/kg"
-   ],
-   "worked": [
-    "£9/kg means £9 for each kg.",
-    "How many lots of £9 are in £18? Divide: \\(18 \\div 9 = 2\\)",
-    "The answer: 2 kg."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 162,
-      "unit": "kg"
-     },
-     "line": "You multiplied. £9/kg means £9 for each kg. Count the lots of £9: divide."
-    },
-    {
-     "answer": {
-      "value": 1,
-      "unit": "kg"
-     },
-     "line": "You divided the wrong way round. £9/kg means £9 for each kg. Count the lots of £9: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-fe98e2ee",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][280]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "Rice costs £9/kg. How much do 4 kg cost?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 36,
-    "unit": "£"
-   },
-   "units": [
-    "£",
-    "£/kg",
-    "kg"
-   ],
-   "worked": [
-    "£9/kg means £9 for each kg.",
-    "For 4 kg, multiply: \\(9 \\times 4 = 36\\)",
-    "The answer: £36."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 2,
-      "unit": "£"
-     },
-     "line": "You divided. £9/kg means £9 for each kg. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-704a03b9",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][283]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "Rice costs £9/kg. How many kg can you buy for £45?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 5,
-    "unit": "kg"
-   },
-   "units": [
-    "kg",
-    "£",
-    "£/kg"
-   ],
-   "worked": [
-    "£9/kg means £9 for each kg.",
-    "How many lots of £9 are in £45? Divide: \\(45 \\div 9 = 5\\)",
-    "The answer: 5 kg."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 405,
-      "unit": "kg"
-     },
-     "line": "You multiplied. £9/kg means £9 for each kg. Count the lots of £9: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-b5481d3e",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][286]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "Rope costs £2/m. How much do 6 m of it cost?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 12,
-    "unit": "£"
-   },
-   "units": [
-    "£",
-    "£/m",
-    "m"
-   ],
-   "worked": [
-    "£2/m means £2 for each metre.",
-    "For 6 m, multiply: \\(2 \\times 6 = 12\\)",
-    "The answer: £12."
-   ],
-   "slip": []
-  },
-  {
-   "id": "compound-measures-4a292608",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][289]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "Rope costs £2/m. How many metres can you buy for £20?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 10,
     "unit": "m"
    },
    "units": [
@@ -5273,13 +2145,13 @@
    ],
    "worked": [
     "£2/m means £2 for each metre.",
-    "How many lots of £2 are in £20? Divide: \\(20 \\div 2 = 10\\)",
-    "The answer: 10 m."
+    "How many lots of £2 are in £6? Divide: \\(6 \\div 2 = 3\\)",
+    "The answer: 3 m."
    ],
    "slip": [
     {
      "answer": {
-      "value": 40,
+      "value": 12,
       "unit": "m"
      },
      "line": "You multiplied. £2/m means £2 for each metre. Count the lots of £2: divide."
@@ -5287,127 +2159,19 @@
    ]
   },
   {
-   "id": "compound-measures-965d53c6",
+   "id": "compound-measures-a68eea3e",
    "topic": "compound-measures",
    "source": {
     "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][292]"
+    "ref": "SQS.pools()['stage-3'][297]"
    },
    "band": 4,
    "calc": false,
-   "stem": "Rope costs £3/m. How much do 6 m of it cost?",
+   "stem": "Rope costs £4/m. How many metres can you buy for £12?",
    "diagram": null,
    "format": "number_unit",
    "answer": {
-    "value": 18,
-    "unit": "£"
-   },
-   "units": [
-    "£",
-    "£/m",
-    "m"
-   ],
-   "worked": [
-    "£3/m means £3 for each metre.",
-    "For 6 m, multiply: \\(3 \\times 6 = 18\\)",
-    "The answer: £18."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 1,
-      "unit": "£"
-     },
-     "line": "You divided. £3/m means £3 for each metre. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-096648d6",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][295]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "Rope costs £3/m. How many metres can you buy for £30?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 10,
-    "unit": "m"
-   },
-   "units": [
-    "m",
-    "£",
-    "£/m"
-   ],
-   "worked": [
-    "£3/m means £3 for each metre.",
-    "How many lots of £3 are in £30? Divide: \\(30 \\div 3 = 10\\)",
-    "The answer: 10 m."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 90,
-      "unit": "m"
-     },
-     "line": "You multiplied. £3/m means £3 for each metre. Count the lots of £3: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-941fb2cc",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][298]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "Rope costs £4/m. How much do 6 m of it cost?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 24,
-    "unit": "£"
-   },
-   "units": [
-    "£",
-    "£/m",
-    "m"
-   ],
-   "worked": [
-    "£4/m means £4 for each metre.",
-    "For 6 m, multiply: \\(4 \\times 6 = 24\\)",
-    "The answer: £24."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 1,
-      "unit": "£"
-     },
-     "line": "You divided. £4/m means £4 for each metre. Multiply."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-61dc5a3d",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][301]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "Rope costs £4/m. How many metres can you buy for £40?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 10,
+    "value": 3,
     "unit": "m"
    },
    "units": [
@@ -5417,52 +2181,16 @@
    ],
    "worked": [
     "£4/m means £4 for each metre.",
-    "How many lots of £4 are in £40? Divide: \\(40 \\div 4 = 10\\)",
-    "The answer: 10 m."
+    "How many lots of £4 are in £12? Divide: \\(12 \\div 4 = 3\\)",
+    "The answer: 3 m."
    ],
    "slip": [
     {
      "answer": {
-      "value": 160,
+      "value": 48,
       "unit": "m"
      },
      "line": "You multiplied. £4/m means £4 for each metre. Count the lots of £4: divide."
-    }
-   ]
-  },
-  {
-   "id": "compound-measures-69d649f2",
-   "topic": "compound-measures",
-   "source": {
-    "game": "squared-squirrel",
-    "ref": "SQS.pools()['stage-3'][304]"
-   },
-   "band": 4,
-   "calc": false,
-   "stem": "Rope costs £5/m. How much do 6 m of it cost?",
-   "diagram": null,
-   "format": "number_unit",
-   "answer": {
-    "value": 30,
-    "unit": "£"
-   },
-   "units": [
-    "£",
-    "£/m",
-    "m"
-   ],
-   "worked": [
-    "£5/m means £5 for each metre.",
-    "For 6 m, multiply: \\(5 \\times 6 = 30\\)",
-    "The answer: £30."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "value": 1,
-      "unit": "£"
-     },
-     "line": "You divided. £5/m means £5 for each metre. Multiply."
     }
    ]
   }

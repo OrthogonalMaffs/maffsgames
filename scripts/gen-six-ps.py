@@ -47,8 +47,9 @@ ROOT = bc.ROOT
 OUT_DIR = os.path.join(ROOT, "schools", "assets", "six-ps")
 TOPICS_JSON = os.path.join(ROOT, "schools", "assets", "exam-topics-ocr-foundation.json")
 MIN_QUESTIONS = 30
-CAP = 150            # most questions a bank keeps
-GEN_PER_MODE = 60    # distinct questions kept from a generator mode
+CAP = 150            # most questions a list topic keeps (every Foundation item up to this)
+GEN_TOPIC = 60       # a generator topic keeps this many, spread evenly across the game's question types and stages
+                     # (Jon's ruling of 25 Oct 2026), from a fixed seed order, so --check is stable
 FORMATS = ("number", "money", "fraction", "ratio", "coordinates", "choice", "number_unit")
 
 MULBERRY = ("function mul(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);"
@@ -95,6 +96,25 @@ def stride(items, n):
     return [items[(i * len(items)) // n] for i in range(n)]
 
 
+def spread(items, n, key):
+    """n items spread evenly across the groups key() names: one from each group in turn, each group taken evenly
+    through its own order, so every question type and stage is as near equal as the pool allows."""
+    groups = {}
+    for it in items:
+        groups.setdefault(key(it), []).append(it)
+    names = list(groups)
+    take = {g: 0 for g in names}
+    left = n
+    while left > 0 and any(take[g] < len(groups[g]) for g in names):
+        for g in names:
+            if left > 0 and take[g] < len(groups[g]):
+                take[g] += 1
+                left -= 1
+    picked = {g: stride(groups[g], take[g]) for g in names}
+    keep = {id(x) for g in names for x in picked[g]}
+    return [it for it in items if id(it) in keep]
+
+
 def rng_of(seed_text):
     state = [int(hashlib.sha1(seed_text.encode()).hexdigest()[:8], 16) or 1]
 
@@ -130,6 +150,9 @@ def pence(x):
     return int(round(float(x) * 100))
 
 
+MISSING_WORKED = []   # (topic, ref) of every question built with no worked solution: the missing-worked list
+
+
 # ───────────────────────────── the question, and its validation ─────────────────────────────
 def mk(topic, game, ref, band, calc, stem, fmt, answer, accept=None, unit=None, units=None, options=None,
        worked=None, slip=None):
@@ -144,6 +167,8 @@ def mk(topic, game, ref, band, calc, stem, fmt, answer, accept=None, unit=None, 
     if options is not None:
         q["options"] = options
     q["worked"] = worked or []
+    if not worked:
+        MISSING_WORKED.append((topic, ref))
     q["slip"] = slip or []
     return q
 
@@ -282,32 +307,50 @@ def conv_split_unitary(topic, seed, q):
     return mk(topic, "split-it", ref, 3, False, p, "money", {"pence": pence(ans)}, worked=split_working(q["working"]))
 
 
+def conv_split_scale(topic, seed, q):
+    """One ingredient per question (Jon's ruling of 25 Oct 2026): the ingredient is the seed's turn through the recipe."""
+    p = strip_html(q["prompt"])
+    m = re.match(r"An? (.+?) recipe for (\d+) (\w+) uses the amounts below\. How much of each do you need for (\d+) \3\?", p)
+    name, a, noun, b = m.group(1), int(m.group(2)), m.group(3), int(m.group(4))
+    items = q["items"]
+    k = seed % len(items)
+
+    def part(it, last=False):
+        n = it["n"].lower()
+        return "%s %s %s" % (it["v"], it["u"], "of " + n) if it["u"] else "%s %s" % (it["v"], n)
+    parts = [part(it) for it in items]
+    uses = ", ".join(parts[:-1]) + " and " + parts[-1] if len(parts) > 1 else parts[0]
+    it = items[k]
+    want = Fraction(it["v"]) * b / a
+    assert abs(float(want) - q["answers"][k]) < 1e-9, ("scale", p, q["answers"])
+    ask = ("How many %s do you need for %d %s?" % (it["n"].lower(), b, noun)) if not it["u"] else \
+          ("How much %s do you need for %d %s?" % (it["n"].lower(), b, noun))
+    stem = "A %s recipe for %d %s uses %s. %s" % (name.lower(), a, noun, uses, ask)
+    ref = "generator:generators.scale:%d:%d" % (seed, k)
+    return mk(topic, "split-it", ref, 2, False, stem, "number", {"value": numval(want)}, unit=it["u"] or None,
+              worked=split_working(q["working"]))
+
+
 async def topic_ratio(h):
     out = []
     for mode, fn in (("simplify", conv_split_simplify), ("divide", conv_split_divide)):
-        for r in await seeded(h, "split-it", "level=ks3", "generators.%s('ks3')" % mode, GEN_PER_MODE * 2):
+        got = []
+        for r in await seeded(h, "split-it", "level=ks3", "generators.%s('ks3')" % mode, GEN_TOPIC * 2):
             q = fn("ratio", r["seed"], r["q"])
             if q:
-                out.append(q)
-    return balance(out, "simplify", "divide")
+                got.append(q)
+        out += got[:GEN_TOPIC // 2]
+    return out
 
 
 async def topic_direct(h):
     out = []
-    for r in await seeded(h, "split-it", "level=ks3", "generators.unitary('ks3')", GEN_PER_MODE):
-        out.append(conv_split_unitary("direct-proportion", r["seed"], r["q"]))
-    return out
-
-
-def balance(qs, *_):
-    """Evenly many of each mode's questions up to GEN_PER_MODE each (they arrive grouped by mode)."""
-    modes = {}
-    for q in qs:
-        modes.setdefault(q["source"]["ref"].split(":")[1], []).append(q)
-    out = []
-    for k in modes:
-        out += modes[k][:GEN_PER_MODE]
-    return out
+    got = [conv_split_unitary("direct-proportion", r["seed"], r["q"])
+           for r in await seeded(h, "split-it", "level=ks3", "generators.unitary('ks3')", GEN_TOPIC)]
+    out += got[:GEN_TOPIC // 2]
+    got = [conv_split_scale("direct-proportion", r["seed"], r["q"])
+           for r in await seeded(h, "split-it", "level=ks3", "generators.scale('ks3')", GEN_TOPIC)]
+    return out + got[:GEN_TOPIC // 2]
 
 
 # ───────────────────────────── powers and roots (index-laws) ─────────────────────────────
@@ -397,9 +440,13 @@ async def topic_compound(h):
             if not (3 <= len(units) <= 4):
                 continue
             ref = "SQS.pools()['%s'][%d]" % (st, idx)
-            out.append(mk("compound-measures", "squared-squirrel", ref, band, False, q["text"], "number_unit", ans,
-                          units=units, worked=[maths(t) for t in it["steps"]], slip=slips))
-    return [x for x in stride(out, CAP)]
+            out.append(((st, q["kind"], q["unit"]), mk("compound-measures", "squared-squirrel", ref, band, False,
+                        q["text"], "number_unit", ans, units=units, worked=[maths(t) for t in it["steps"]], slip=slips)))
+    # 60: the two stages evenly, and within a stage the question types (rate, amount, time) and units evenly
+    per_stage = []
+    for st in ("stage-2", "stage-3"):
+        per_stage += spread([x for x in out if x[0][0] == st], GEN_TOPIC // 2, lambda x: x[0][1:])
+    return [q for _, q in per_stage]
 
 
 # ───────────────────────────── linear equations (linear-equation-solver) ─────────────────────────────
@@ -466,6 +513,50 @@ def next_term(t):
     raise AssertionError("no pattern in %s" % t)
 
 
+def tnum(x):
+    """A Fraction as the digits a student would write (decimals stay decimals)."""
+    x = Fraction(x)
+    if x.denominator == 1:
+        return str(x.numerator)
+    s = ("%.6f" % float(x)).rstrip("0").rstrip(".")
+    assert Fraction(s) == x, "not a terminating decimal: %s" % x
+    return s
+
+
+def tneg(x):
+    """The number, in brackets when it is negative (a negative written after a sign)."""
+    return "(%s)" % tnum(x) if Fraction(x) < 0 else tnum(x)
+
+
+def seq_worked(ask, terms, want, k):
+    """Project Claude's worked-solution template for sequences (25 Oct 2026), filled from the terms and recomputed.
+    [] for an item the template does not cover (a geometric or other pattern, 'which term', 'what type'): listed."""
+    d = terms[1] - terms[0]
+    if d == 0 or any(terms[i + 1] - terms[i] != d for i in range(len(terms) - 1)):
+        return []
+    a = terms[0]
+    if ask == "Find the next term":
+        nxt = terms[-1] + d
+        assert nxt == want
+        way = "go up by \\(%s\\) each time." % tnum(d) if d > 0 else "go down by \\(%s\\) each time." % tnum(-d)
+        return ["The terms " + way, "\\(%s + %s = %s\\)" % (tnum(terms[-1]), tneg(d), tnum(nxt))]
+    if ask == "What is the common difference?":
+        assert d == want
+        more = "Each term is \\(%s\\) more than the one before, so the rule is add \\(%s\\)." % (tnum(d), tnum(d))
+        less = "Each term is \\(%s\\) less than the one before, so the rule is take away \\(%s\\)." % (tnum(-d), tnum(-d))
+        return [more if d > 0 else less]
+    if k is not None:
+        c = a - d
+        coef = "n" if d == 1 else "-n" if d == -1 else tnum(d) + "n"
+        rule = coef + ("" if c == 0 else " + %s" % tnum(c) if c > 0 else " - %s" % tnum(-c))
+        total = d * k + c
+        assert total == want and d * 1 + c == a          # the rule gives the first term and the asked term
+        const = "" if c == 0 else " + %s" % tneg(c)
+        return ["The nth term is \\(%s\\)." % rule,
+                "Put \\(n = %d\\): \\(%s \\times %d%s = %s\\)." % (k, tneg(d), k, const, tnum(total))]
+    return []
+
+
 def conv_sequence(i, it):
     ask = it["ask"]
     terms = seq_terms(it["seq"])
@@ -500,8 +591,10 @@ def conv_sequence(i, it):
         raise AssertionError("unknown sequence ask " + ask)
     given = Fraction(re.sub(r"(st|nd|rd|th)$", "", it["correct"]))
     assert want == given, ("sequence", it["seq"], ask, want, given)           # recomputed from the terms
+    kth = re.fullmatch(r"Find the (\d+)(?:st|nd|rd|th) term", ask)
+    worked = seq_worked(ask, terms, want, int(kth.group(1)) if kth else None)
     return mk("sequences", "sequence-solver", ref, band, False, stem_seq + " " + text, "number",
-              {"value": numval(want)})
+              {"value": numval(want)}, worked=worked)
 
 
 async def topic_sequences(h):
@@ -591,8 +684,9 @@ async def topic_fdp(h, stages, topic):
         for i, rec in enumerate(data[str(st)]):
             q = conv_fdp(topic, st, i, rec)
             if q:
-                out.append(q)
-    return stride(out, CAP)
+                out.append((st, rec["it"]["kind"], rec["it"].get("from"), rec["it"].get("to"), q))
+    # 60, spread evenly across the stage, the kind of question and the form it converts from and to
+    return [x[-1] for x in spread(out, GEN_TOPIC, lambda x: x[:4])]
 
 
 async def topic_fdp_convert(h):
@@ -763,6 +857,11 @@ def main():
         print("FAIL  " + x)
     if faults:
         return 1
+    miss = {}
+    for t, ref in MISSING_WORKED:
+        miss[t] = miss.get(t, 0) + 1
+    for t, n in sorted(miss.items()):
+        print("missing worked solution: %s %d of %d" % (t, n, len(banks[t]["questions"])))
     # A bank under MIN_QUESTIONS is a shortfall: reported, never written, and its topic stays coming soon.
     short = {t: len(b["questions"]) for t, b in banks.items() if len(b["questions"]) < MIN_QUESTIONS}
     banks = {t: b for t, b in banks.items() if t not in short}
