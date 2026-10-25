@@ -3,6 +3,12 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-25 (cloud): SHAPE-SHIFTER-SPLIT (this lane's fault after #526). **DONE (#528, 6177d59, under Jon's override of 25 Oct; main run 40180828473 green, 62 of 62).** CI: part 2 92 s, part 3 59 s, all 14 plants caught.
+
+- **Main red, the cause:** #526 grew `verify-shape-shifter.py` (mode-card checks and two plants that replay the game) and changed its ci-line label, so the line had no recorded median and the PR's `ci-groups.py --check` could not see the growth (my estimate, scaled from local times, said 148 s). On main it ran 205 s; Content verifiers 34 reached 82% of 270 s, the timings job's pack failed `--check` and nothing was committed (run 40179130126; 59 of 60 green).
+- **Fix:** the verifier in three CI lines (`--part 1` the checks, `--part 2` and `--part 3` every other plant, one mode-card plant in each), as #515 split Squared Squirrel. Local 22 s, 124 s, 126 s (about 17, 94, 94 s in CI). SR-27 checks pass. Merge needs Jon's override (main is red).
+- **Lesson:** a changed ci-line label drops its recorded median; time a grown verifier in CI terms (local x 0.75 on this container) against the 70% line limit before merging. **Jon, 25 Oct: no more hand splits;** a verifier nearing its budget is stopped and reported (an architectural contract on unrecorded medians and config-sharded plants is coming).
+
 ## 2026-10-25 (cloud): SHAPE-SHIFTER-DATA-MODE (contract: see the queue). **DONE (#526, 10c1921).** Main run 40179130126 red on the timings job alone (entry above).
 
 - **Why:** a burst opens a game at a mode by pressing `[data-mode="<name>"]` once (burst.js); Shape Shifter's four mode cards were bare `onclick` cards, so a burst from The 6 P's landed on the menu.
