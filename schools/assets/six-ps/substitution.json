@@ -1,0 +1,1116 @@
+{
+ "topic": "substitution",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "substitution-d9aea3a3",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_001"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(A = l \\times w\\). Work out \\(A\\) when \\(l = 6\\) and \\(w = 4\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 24
+   },
+   "worked": [
+    "\\(A = l \\times w\\)",
+    "\\(A = 6 \\times 4\\)",
+    "\\(A = 24\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-cac413e0",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_002"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(A = l \\times w\\). Work out \\(A\\) when \\(l = 8\\) and \\(w = 5\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 40
+   },
+   "worked": [
+    "\\(A = l \\times w\\)",
+    "\\(A = 8 \\times 5\\)",
+    "\\(A = 40\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-c18e1352",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_003"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(A = l \\times w\\). Work out \\(A\\) when \\(l = 12\\) and \\(w = 3\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 36
+   },
+   "worked": [
+    "\\(A = l \\times w\\)",
+    "\\(A = 12 \\times 3\\)",
+    "\\(A = 36\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-38c84e10",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_004"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(A = l \\times w\\). Work out \\(A\\) when \\(l = 7\\) and \\(w = 9\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 63
+   },
+   "worked": [
+    "\\(A = l \\times w\\)",
+    "\\(A = 7 \\times 9\\)",
+    "\\(A = 63\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-f149b4bf",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_005"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(A = l \\times w\\). Work out \\(A\\) when \\(l = 11\\) and \\(w = 4\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 44
+   },
+   "worked": [
+    "\\(A = l \\times w\\)",
+    "\\(A = 11 \\times 4\\)",
+    "\\(A = 44\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-1aa415c1",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_006"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Use the formula \\(P = 2(l + w)\\). Work out \\(P\\) when \\(l = 5\\) and \\(w = 3\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 16
+   },
+   "worked": [
+    "\\(P = 2(l + w)\\)",
+    "\\(P = 2(5 + 3)\\)",
+    "\\(P = 2 \\times 8\\)",
+    "\\(P = 16\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-24eb55fd",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_007"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Use the formula \\(P = 2(l + w)\\). Work out \\(P\\) when \\(l = 8\\) and \\(w = 6\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 28
+   },
+   "worked": [
+    "\\(P = 2(l + w)\\)",
+    "\\(P = 2(8 + 6)\\)",
+    "\\(P = 2 \\times 14\\)",
+    "\\(P = 28\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-a05863f3",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_008"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Use the formula \\(P = 2(l + w)\\). Work out \\(P\\) when \\(l = 10\\) and \\(w = 4\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 28
+   },
+   "worked": [
+    "\\(P = 2(l + w)\\)",
+    "\\(P = 2(10 + 4)\\)",
+    "\\(P = 2 \\times 14\\)",
+    "\\(P = 28\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-cf5c5d47",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_009"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Use the formula \\(P = 2(l + w)\\). Work out \\(P\\) when \\(l = 7\\) and \\(w = 7\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 28
+   },
+   "worked": [
+    "\\(P = 2(l + w)\\)",
+    "\\(P = 2(7 + 7)\\)",
+    "\\(P = 2 \\times 14\\)",
+    "\\(P = 28\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-0ece65ff",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_010"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Use the formula \\(P = 2(l + w)\\). Work out \\(P\\) when \\(l = 9\\) and \\(w = 5\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 28
+   },
+   "worked": [
+    "\\(P = 2(l + w)\\)",
+    "\\(P = 2(9 + 5)\\)",
+    "\\(P = 2 \\times 14\\)",
+    "\\(P = 28\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-18011295",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_011"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Use the formula \\(A = \\tfrac{1}{2} \\times b \\times h\\). Work out \\(A\\) when \\(b = 6\\) and \\(h = 4\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "\\(A = \\tfrac{1}{2} \\times b \\times h\\)",
+    "\\(A = \\tfrac{1}{2} \\times 6 \\times 4\\)",
+    "\\(A = \\tfrac{1}{2} \\times 24\\)",
+    "\\(A = 12\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-f7a5e8f1",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_012"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Use the formula \\(A = \\tfrac{1}{2} \\times b \\times h\\). Work out \\(A\\) when \\(b = 10\\) and \\(h = 5\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 25
+   },
+   "worked": [
+    "\\(A = \\tfrac{1}{2} \\times b \\times h\\)",
+    "\\(A = \\tfrac{1}{2} \\times 10 \\times 5\\)",
+    "\\(A = \\tfrac{1}{2} \\times 50\\)",
+    "\\(A = 25\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-d09f5e1f",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_013"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Use the formula \\(A = \\tfrac{1}{2} \\times b \\times h\\). Work out \\(A\\) when \\(b = 8\\) and \\(h = 3\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "\\(A = \\tfrac{1}{2} \\times b \\times h\\)",
+    "\\(A = \\tfrac{1}{2} \\times 8 \\times 3\\)",
+    "\\(A = \\tfrac{1}{2} \\times 24\\)",
+    "\\(A = 12\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-69ac3c1c",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_014"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Use the formula \\(A = \\tfrac{1}{2} \\times b \\times h\\). Work out \\(A\\) when \\(b = 12\\) and \\(h = 6\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 36
+   },
+   "worked": [
+    "\\(A = \\tfrac{1}{2} \\times b \\times h\\)",
+    "\\(A = \\tfrac{1}{2} \\times 12 \\times 6\\)",
+    "\\(A = \\tfrac{1}{2} \\times 72\\)",
+    "\\(A = 36\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-6dc94c81",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_015"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Use the formula \\(A = \\tfrac{1}{2} \\times b \\times h\\). Work out \\(A\\) when \\(b = 7\\) and \\(h = 4\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 14
+   },
+   "worked": [
+    "\\(A = \\tfrac{1}{2} \\times b \\times h\\)",
+    "\\(A = \\tfrac{1}{2} \\times 7 \\times 4\\)",
+    "\\(A = \\tfrac{1}{2} \\times 28\\)",
+    "\\(A = 14\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-e079da6e",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_016"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(S = D \\div T\\). Work out \\(S\\) when \\(D = 60\\) and \\(T = 3\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 20
+   },
+   "worked": [
+    "\\(S = D \\div T\\)",
+    "\\(S = 60 \\div 3\\)",
+    "\\(S = 20\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-a1416647",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_017"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(S = D \\div T\\). Work out \\(S\\) when \\(D = 100\\) and \\(T = 5\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 20
+   },
+   "worked": [
+    "\\(S = D \\div T\\)",
+    "\\(S = 100 \\div 5\\)",
+    "\\(S = 20\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-c0d63631",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_018"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(S = D \\div T\\). Work out \\(S\\) when \\(D = 48\\) and \\(T = 6\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "\\(S = D \\div T\\)",
+    "\\(S = 48 \\div 6\\)",
+    "\\(S = 8\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-7524621e",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_019"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(S = D \\div T\\). Work out \\(S\\) when \\(D = 72\\) and \\(T = 8\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 9
+   },
+   "worked": [
+    "\\(S = D \\div T\\)",
+    "\\(S = 72 \\div 8\\)",
+    "\\(S = 9\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-ac6fef4f",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_020"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(S = D \\div T\\). Work out \\(S\\) when \\(D = 90\\) and \\(T = 10\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 9
+   },
+   "worked": [
+    "\\(S = D \\div T\\)",
+    "\\(S = 90 \\div 10\\)",
+    "\\(S = 9\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-f498551c",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_021"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(D = S \\times T\\). Work out \\(D\\) when \\(S = 40\\) and \\(T = 3\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 120
+   },
+   "worked": [
+    "\\(D = S \\times T\\)",
+    "\\(D = 40 \\times 3\\)",
+    "\\(D = 120\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-21dfc116",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_022"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(D = S \\times T\\). Work out \\(D\\) when \\(S = 60\\) and \\(T = 2\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 120
+   },
+   "worked": [
+    "\\(D = S \\times T\\)",
+    "\\(D = 60 \\times 2\\)",
+    "\\(D = 120\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-db01ab06",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_023"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(D = S \\times T\\). Work out \\(D\\) when \\(S = 30\\) and \\(T = 5\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 150
+   },
+   "worked": [
+    "\\(D = S \\times T\\)",
+    "\\(D = 30 \\times 5\\)",
+    "\\(D = 150\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-31e8f83b",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_024"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(D = S \\times T\\). Work out \\(D\\) when \\(S = 50\\) and \\(T = 4\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 200
+   },
+   "worked": [
+    "\\(D = S \\times T\\)",
+    "\\(D = 50 \\times 4\\)",
+    "\\(D = 200\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-929937e0",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_025"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(D = S \\times T\\). Work out \\(D\\) when \\(S = 25\\) and \\(T = 6\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 150
+   },
+   "worked": [
+    "\\(D = S \\times T\\)",
+    "\\(D = 25 \\times 6\\)",
+    "\\(D = 150\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-1f9dc89e",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_026"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(P = 4s\\). Work out \\(P\\) when \\(s = 5\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 20
+   },
+   "worked": [
+    "\\(P = 4s\\)",
+    "\\(P = 4 \\times 5\\)",
+    "\\(P = 20\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-aa51fa69",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_027"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(P = 4s\\). Work out \\(P\\) when \\(s = 8\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 32
+   },
+   "worked": [
+    "\\(P = 4s\\)",
+    "\\(P = 4 \\times 8\\)",
+    "\\(P = 32\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-490c7d87",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_028"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(P = 4s\\). Work out \\(P\\) when \\(s = 11\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 44
+   },
+   "worked": [
+    "\\(P = 4s\\)",
+    "\\(P = 4 \\times 11\\)",
+    "\\(P = 44\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-c85a5ff2",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_029"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(P = 4s\\). Work out \\(P\\) when \\(s = 6\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 24
+   },
+   "worked": [
+    "\\(P = 4s\\)",
+    "\\(P = 4 \\times 6\\)",
+    "\\(P = 24\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-39491ef1",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_030"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(P = 4s\\). Work out \\(P\\) when \\(s = 9\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 36
+   },
+   "worked": [
+    "\\(P = 4s\\)",
+    "\\(P = 4 \\times 9\\)",
+    "\\(P = 36\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-bda33f42",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_031"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Use the formula \\(A = s^2\\). Work out \\(A\\) when \\(s = 5\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 25
+   },
+   "worked": [
+    "\\(A = s^2\\)",
+    "\\(A = 5^2\\)",
+    "\\(A = 25\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-6784819b",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_032"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Use the formula \\(A = s^2\\). Work out \\(A\\) when \\(s = 7\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 49
+   },
+   "worked": [
+    "\\(A = s^2\\)",
+    "\\(A = 7^2\\)",
+    "\\(A = 49\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-3198bd03",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_033"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Use the formula \\(A = s^2\\). Work out \\(A\\) when \\(s = 9\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 81
+   },
+   "worked": [
+    "\\(A = s^2\\)",
+    "\\(A = 9^2\\)",
+    "\\(A = 81\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-f0628b99",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_034"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Use the formula \\(A = s^2\\). Work out \\(A\\) when \\(s = 6\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 36
+   },
+   "worked": [
+    "\\(A = s^2\\)",
+    "\\(A = 6^2\\)",
+    "\\(A = 36\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-c06c2560",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_035"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Use the formula \\(A = s^2\\). Work out \\(A\\) when \\(s = 8\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 64
+   },
+   "worked": [
+    "\\(A = s^2\\)",
+    "\\(A = 8^2\\)",
+    "\\(A = 64\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-ca9aea23",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_036"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Use the formula \\(V = l \\times w \\times h\\). Work out \\(V\\) when \\(l = 4\\) and \\(w = 3\\) and \\(h = 2\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 24
+   },
+   "worked": [
+    "\\(V = l \\times w \\times h\\)",
+    "\\(V = 4 \\times 3 \\times 2\\)",
+    "\\(V = 24\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-7a8c9a5b",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_037"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Use the formula \\(V = l \\times w \\times h\\). Work out \\(V\\) when \\(l = 5\\) and \\(w = 5\\) and \\(h = 4\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 100
+   },
+   "worked": [
+    "\\(V = l \\times w \\times h\\)",
+    "\\(V = 5 \\times 5 \\times 4\\)",
+    "\\(V = 100\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-eae440f6",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_038"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Use the formula \\(V = l \\times w \\times h\\). Work out \\(V\\) when \\(l = 6\\) and \\(w = 3\\) and \\(h = 3\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 54
+   },
+   "worked": [
+    "\\(V = l \\times w \\times h\\)",
+    "\\(V = 6 \\times 3 \\times 3\\)",
+    "\\(V = 54\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-bdc2cf0e",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_039"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Use the formula \\(V = l \\times w \\times h\\). Work out \\(V\\) when \\(l = 8\\) and \\(w = 2\\) and \\(h = 5\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 80
+   },
+   "worked": [
+    "\\(V = l \\times w \\times h\\)",
+    "\\(V = 8 \\times 2 \\times 5\\)",
+    "\\(V = 80\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-982b4f62",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_040"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Use the formula \\(V = l \\times w \\times h\\). Work out \\(V\\) when \\(l = 7\\) and \\(w = 4\\) and \\(h = 3\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 84
+   },
+   "worked": [
+    "\\(V = l \\times w \\times h\\)",
+    "\\(V = 7 \\times 4 \\times 3\\)",
+    "\\(V = 84\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-90bd7865",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_041"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(C = n \\times p\\). Work out \\(C\\) when \\(n = 5\\) and \\(p = 4\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 20
+   },
+   "worked": [
+    "\\(C = n \\times p\\)",
+    "\\(C = 5 \\times 4\\)",
+    "\\(C = 20\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-ad27fe08",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_042"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(C = n \\times p\\). Work out \\(C\\) when \\(n = 8\\) and \\(p = 3\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 24
+   },
+   "worked": [
+    "\\(C = n \\times p\\)",
+    "\\(C = 8 \\times 3\\)",
+    "\\(C = 24\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-68828e1c",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_043"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(C = n \\times p\\). Work out \\(C\\) when \\(n = 12\\) and \\(p = 5\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 60
+   },
+   "worked": [
+    "\\(C = n \\times p\\)",
+    "\\(C = 12 \\times 5\\)",
+    "\\(C = 60\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-51f5c964",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_044"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(C = n \\times p\\). Work out \\(C\\) when \\(n = 6\\) and \\(p = 7\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 42
+   },
+   "worked": [
+    "\\(C = n \\times p\\)",
+    "\\(C = 6 \\times 7\\)",
+    "\\(C = 42\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-3543ccf8",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_045"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(C = n \\times p\\). Work out \\(C\\) when \\(n = 9\\) and \\(p = 8\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 72
+   },
+   "worked": [
+    "\\(C = n \\times p\\)",
+    "\\(C = 9 \\times 8\\)",
+    "\\(C = 72\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-bc187bce",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_046"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(\\text{Mean} = \\text{Sum} \\div n\\). Work out \\(\\text{Mean}\\) when \\(\\text{Sum} = 30\\) and \\(n = 6\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "worked": [
+    "\\(\\text{Mean} = \\text{Sum} \\div n\\)",
+    "\\(\\text{Mean} = 30 \\div 6\\)",
+    "\\(\\text{Mean} = 5\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-7f8c1f95",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_047"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(\\text{Mean} = \\text{Sum} \\div n\\). Work out \\(\\text{Mean}\\) when \\(\\text{Sum} = 48\\) and \\(n = 8\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "\\(\\text{Mean} = \\text{Sum} \\div n\\)",
+    "\\(\\text{Mean} = 48 \\div 8\\)",
+    "\\(\\text{Mean} = 6\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-8b870da7",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_048"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(\\text{Mean} = \\text{Sum} \\div n\\). Work out \\(\\text{Mean}\\) when \\(\\text{Sum} = 35\\) and \\(n = 7\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "worked": [
+    "\\(\\text{Mean} = \\text{Sum} \\div n\\)",
+    "\\(\\text{Mean} = 35 \\div 7\\)",
+    "\\(\\text{Mean} = 5\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-e55b2f99",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_049"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(\\text{Mean} = \\text{Sum} \\div n\\). Work out \\(\\text{Mean}\\) when \\(\\text{Sum} = 56\\) and \\(n = 8\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7
+   },
+   "worked": [
+    "\\(\\text{Mean} = \\text{Sum} \\div n\\)",
+    "\\(\\text{Mean} = 56 \\div 8\\)",
+    "\\(\\text{Mean} = 7\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "substitution-1624b40a",
+   "topic": "substitution",
+   "source": {
+    "game": "formula-plug-in",
+    "ref": "QUESTIONS:fpi_050"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Use the formula \\(\\text{Mean} = \\text{Sum} \\div n\\). Work out \\(\\text{Mean}\\) when \\(\\text{Sum} = 45\\) and \\(n = 9\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "worked": [
+    "\\(\\text{Mean} = \\text{Sum} \\div n\\)",
+    "\\(\\text{Mean} = 45 \\div 9\\)",
+    "\\(\\text{Mean} = 5\\)"
+   ],
+   "slip": []
+  }
+ ]
+}
