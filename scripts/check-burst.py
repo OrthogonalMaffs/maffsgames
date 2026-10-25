@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-# ci-line: Burst mode (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; four planted faults caught) |
+# ci-line: Burst mode, part 1 (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; &stage= presses button[data-stage]) | --part 1
+# ci-line: Burst mode, part 2 (fault-injection self-test: the stage, four-answer bar and without-?burst planted faults, each caught) | --part 2
+# ci-line: Burst mode, part 3 (fault-injection self-test: the score-submission and miscounted-score planted faults, each caught) | --part 3
 # ci-deps: schools/assets/burst.js schools/assets/firebase-leaderboard.js schools/assets/score-history.js scripts/check-answer-lock.py
 """Browser check for burst mode (contract BURST, 24 Oct 2026; canon 7.5.6; schools/assets/burst.js).
 
@@ -465,8 +467,12 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--no-plants", action="store_true")
     ap.add_argument("--game", nargs="*")
+    ap.add_argument("--part", choices=["1", "2", "3"],
+                    help="1 the checks, 2 and 3 a share of the plants each (CI runs the three side by side); default all")
     a = ap.parse_args()
     AL.CHECK_SITE = AL.load_check_site()
+    if a.part in ("2", "3"):
+        return plant_part(a.part)
     games = a.game or ADOPTED
     stat = static_faults(None)
     print("Burst mode (BURST): %d adopted games; not adopted: %s" % (len(ADOPTED), ", ".join("%s (%s)" % kv for kv in NOT_ADOPTED.items())))
@@ -481,14 +487,30 @@ def main():
     for s, why in NO_MODE.items():
         print("  note  %s cannot be opened at a stage by ?mode=: %s" % (s, why))
     ok = not stat and not fails
-    if not a.no_plants:
-        for name, routes, subset, phases in plants():
-            if phases == ("stage",):
-                pf = asyncio.run(run_stage(routes))
-            else:
-                pf, _ = asyncio.run(run(subset, routes, phases, control=False))
-            print("plant (%s): %s" % (name, ("CAUGHT: " + "; ".join(pf[:2])) if pf else "MISSED"))
-            ok = ok and bool(pf)
+    if not a.no_plants and a.part is None:
+        ok = run_plants(plants()) and ok
+    print("PASS" if ok else "FAIL")
+    return 0 if ok else 1
+
+
+# The plants in two CI lines (25 Oct 2026: one line of the checks and all five plants took 220 s on main, 88% of its group's
+# budget): the five split three and two, the two that play five answers (the bar after four, the miscount) in different parts.
+def run_plants(chosen):
+    ok = True
+    for name, routes, subset, phases in chosen:
+        if phases == ("stage",):
+            pf = asyncio.run(run_stage(routes))
+        else:
+            pf, _ = asyncio.run(run(subset, routes, phases, control=False))
+        print("plant (%s): %s" % (name, ("CAUGHT: " + "; ".join(pf[:2])) if pf else "MISSED"))
+        ok = ok and bool(pf)
+    return ok
+
+
+def plant_part(part):
+    every = plants()
+    pick = (0, 1, 4) if part == "2" else (2, 3)       # stage, bar after four, without ?burst | submit, miscount
+    ok = run_plants([every[i] for i in pick])
     print("PASS" if ok else "FAIL")
     return 0 if ok else 1
 
