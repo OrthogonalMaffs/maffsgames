@@ -10,6 +10,10 @@
  *   level  the game's own ?level= (MaffsLevel reads it; this file does not).
  *   mode   optional: the start screen's [data-mode="<name>"] button is pressed once after load (the stage or mode
  *          a staged game opens at). Nothing else on the page is pressed.
+ *   stage  optional: the start screen's button[data-stage="<value>"] is pressed once, after the mode if both are given.
+ *          The value is the button's own, e.g. 1 and mixed (free-daily-pizza), stage4 (simultaneous-solver). If no such
+ *          button exists the game opens normally and one console.warn names the parameter. That press selects the stage;
+ *          the game's own Start button is not pressed.
  *
  * Without all three of burst, from and topic, and valid, this file does nothing at all: it wraps nothing, adds
  * nothing to the page and presses nothing. MaffsBurst.active() is then false.
@@ -38,13 +42,14 @@
   function read() {
     var q;
     try { q = new URLSearchParams(global.location.search); } catch (e) { return null; }
-    var b = q.get('burst'), from = q.get('from'), topic = q.get('topic'), mode = q.get('mode');
+    var b = q.get('burst'), from = q.get('from'), topic = q.get('topic'), mode = q.get('mode'), stage = q.get('stage');
     if (b === null || !/^\d{1,2}$/.test(b)) return null;
     var n = parseInt(b, 10);
     if (n < 1 || n > 10) return null;
     if (from !== 'six-ps') return null;
     if (topic === null || !TOPIC.test(topic)) return null;
-    return { n: n, topic: topic, mode: (mode !== null && MODE.test(mode)) ? mode : null };
+    return { n: n, topic: topic, mode: (mode !== null && MODE.test(mode)) ? mode : null,
+             stage: (stage !== null && MODE.test(stage)) ? stage : null };
   }
 
   var cfg = read();
@@ -102,22 +107,35 @@
   }
   wrap();
 
-  // The stage or mode a staged game opens at: press the start screen's own button once, and nothing else.
-  function openMode() {
-    if (!cfg.mode) return;
+  // Press a start-screen control once, waiting up to 3 s for it to be there; done(found) then runs.
+  function press(selector, done) {
     var tries = 0;
     (function look() {
-      var btns = document.querySelectorAll('[data-mode]');
+      var btns = document.querySelectorAll(selector);
       for (var i = 0; i < btns.length; i++) {
         var b = btns[i];
-        if (b.getAttribute('data-mode') === cfg.mode && !b.disabled && b.offsetParent !== null) {
-          global.MaffsBurst.modePressed = true;
+        if (!b.disabled && b.offsetParent !== null) {
+          if (selector.indexOf('[data-mode') === 0) global.MaffsBurst.modePressed = true;
+          else global.MaffsBurst.stagePressed = true;
           b.click();
-          return;
+          return done(true);
         }
       }
       if (++tries < 30) global.setTimeout(look, 100);
+      else done(false);
     })();
+  }
+
+  // The mode, then the stage, a staged game opens at: press the start screen's own buttons once, and nothing else.
+  function openMode() {
+    function stage() {
+      if (!cfg.stage) return;
+      press('button[data-stage="' + cfg.stage + '"]', function (found) {
+        if (!found && global.console && console.warn) console.warn('MaffsBurst: no button[data-stage="' + cfg.stage + '"] to press for stage=' + cfg.stage + '; the game opens normally');
+      });
+    }
+    if (cfg.mode) press('[data-mode="' + cfg.mode + '"]', stage);
+    else stage();
   }
   if (document.readyState === 'complete') global.setTimeout(openMode, 50);
   else global.addEventListener('load', function () { global.setTimeout(openMode, 50); });

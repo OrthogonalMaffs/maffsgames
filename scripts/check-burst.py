@@ -60,10 +60,10 @@ NOT_ADOPTED = {"constructions-lab": "reports no question_answered"}
 STAGED = ["how-many-parts", "take-a-walk", "squared-squirrel", "free-daily-pizza", "simultaneous-solver"]
 # Staged games whose stage buttons are not [data-mode] buttons (found by probing every declared level's start screen,
 # 24 Oct 2026): burst.js presses [data-mode] only, so these open at their level, and a stage cannot be named. Listed, not hacked.
+# BURST-STAGE (25 Oct 2026): the buttons of free-daily-pizza and simultaneous-solver are button[data-stage], opened by
+# &stage= (checked in STAGE_CASES below), so they are no longer listed here.
 NO_MODE = {
-    "how-many-parts": "Foundation (ks3) stages are data-mode and work; Advanced (gcse) stages a-f are data-stage buttons",
-    "simultaneous-solver": "its five stages are data-stage buttons",
-    "free-daily-pizza": "stages 1-4 and mixed are data-stage buttons; only ?mode=daily (today's pizza) is a data-mode button",
+    "how-many-parts": "Foundation (ks3) stages are data-mode and work; Advanced (gcse) stages a-f are not buttons at all (list items)",
 }
 TOPIC = "fractions-add"
 BURST = 5
@@ -355,6 +355,86 @@ async def run(games, routes, phases=("play", "nothing", "without"), control=True
     return fails, listing
 
 
+# BURST-STAGE: &stage= presses button[data-stage="<value>"] (after &mode= when both are given). Each case loads the link,
+# checks that exactly the wanted buttons were pressed and the page warned (or not) as stated, then presses the game's own
+# Start button and reads the game's game_started event: its `mode` is the proof the game started at that stage.
+# (slug, extra query, start button, buttons pressed, warnings, game_started mode)
+STAGE_CASES = [
+    ("free-daily-pizza", "stage=1", "startBtn", [], 0, "stage-s1-q20"),
+    ("free-daily-pizza", "stage=2", "startBtn", [], 0, "stage-s2-q20"),
+    ("free-daily-pizza", "stage=3", "startBtn", [], 0, "stage-s3-q20"),
+    ("free-daily-pizza", "stage=4", "startBtn", [], 0, "stage-s4-q20"),
+    ("free-daily-pizza", "stage=mixed", "startBtn", [], 0, "practice-q20"),   # mixed is the default pick: weak, but the press is checked below
+    ("simultaneous-solver", "stage=stage4", "startBtn", [], 0, "stage4"),
+    ("how-many-parts", "level=ks3&mode=stage3", "startBtn", ["stage3"], 0, "stage3"),
+    ("how-many-parts", "level=ks3&mode=stage3&stage=none", "startBtn", ["stage3"], 1, "stage3"),
+    ("free-daily-pizza", "stage=99", "startBtn", [], 1, "practice-q20"),
+]
+STAGE_INIT = """(function () {
+  let real = null, depth = 0;
+  window.__ev = []; window.__warns = []; window.__modeClicks = [];
+  Object.defineProperty(window, 'mfg', { configurable: true,
+    get() { const cur = real; const f = function (e, p) {
+      if (!depth) { try { window.__ev.push({ e: e, p: p }); } catch (x) {} }
+      depth++;
+      try { if (typeof cur === 'function') { try { return cur.apply(this, arguments); } catch (x) {} } } finally { depth--; }
+    }; return f; },
+    set(v) { real = v; } });
+  const w = console.warn; console.warn = function () { window.__warns.push(Array.prototype.join.call(arguments, ' ')); return w.apply(console, arguments); };
+  window.addEventListener('click', function (e) {
+    const b = e.target && e.target.closest ? e.target.closest('[data-mode]') : null;
+    if (b) window.__modeClicks.push(b.getAttribute('data-mode'));
+  }, true);
+})();"""
+
+
+async def stage_cases(browser, base, routes):
+    f = []
+    for slug, extra, start, want_modes, want_warns, want_mode in STAGE_CASES:
+        ctx = await new_ctx(browser, base, routes, init=False, viewport={"width": 1280, "height": 900})
+        try:
+            await ctx.add_init_script(STAGE_INIT)
+            page = await ctx.new_page()
+            errs = []
+            page.on("pageerror", lambda e: errs.append(str(e)))
+            q = "burst=%d&from=six-ps&topic=%s&%s" % (BURST, TOPIC, extra)
+            await page.goto(base + "/games/%s/?%s" % (slug, q), wait_until="load", timeout=20000)
+            await page.wait_for_timeout(4200 if want_warns else 1500)
+            tag = "%s ?%s" % (slug, extra)
+            got = await page.evaluate("() => ({ modes: __modeClicks, warns: __warns.filter(w => w.indexOf('MaffsBurst') === 0) })")
+            if got["modes"] != want_modes:
+                f.append("%s: pressed data-mode %r, want %r" % (tag, got["modes"], want_modes))
+            if len(got["warns"]) != want_warns:
+                f.append("%s: %d MaffsBurst warnings %r, want %d" % (tag, len(got["warns"]), got["warns"], want_warns))
+            if want_warns and got["warns"] and "stage=" not in got["warns"][0]:
+                f.append("%s: the warning does not name the parameter: %r" % (tag, got["warns"][0]))
+            await page.evaluate("(id) => document.getElementById(id).click()", start)
+            await page.wait_for_timeout(600)
+            ev = await page.evaluate("() => __ev.filter(x => x.e === 'game_started').map(x => x.p && x.p.mode)")
+            if ev != [want_mode]:
+                f.append("%s: game_started mode %r, want [%r]" % (tag, ev, want_mode))
+            if errs:
+                f.append("%s: page error %s" % (tag, errs[0][:100]))
+        finally:
+            await ctx.close()
+    return f
+
+
+async def run_stage(routes):
+    from playwright.async_api import async_playwright
+    proc, base = bc.start_stub_server()
+    try:
+        async with async_playwright() as p:
+            browser = await p.chromium.launch()
+            try:
+                return await stage_cases(browser, base, routes)
+            finally:
+                await browser.close()
+    finally:
+        proc.terminate()
+        proc.wait()
+
+
 def plants():
     js = open(os.path.join(ROOT, "schools", "assets", "burst.js"), encoding="utf-8").read()
     lb = open(os.path.join(ROOT, "schools", "assets", "firebase-leaderboard.js"), encoding="utf-8").read()
@@ -370,7 +450,9 @@ def plants():
     jsr = r"/schools/assets/burst\.js(\?.*)?$"
     lbr = r"/schools/assets/firebase-leaderboard\.js(\?.*)?$"
     mime = "application/javascript; charset=utf-8"
+    nostage = sub(js, "if (!cfg.stage) return;", "return;", "the stage line")
     return [
+        ("stage= ignored", [(jsr, nostage, mime)], None, ("stage",)),
         ("the bar after four answers", [(jsr, bar4, mime)], ["split-it"], ("play",)),
         ("a score submitted in a burst", [(lbr, submit, mime)], ["split-it"], ("nothing",)),
         ("the right count miscounted", [(jsr, miscount, mime)], ["split-it"], ("play",)),
@@ -390,6 +472,10 @@ def main():
     print("Burst mode (BURST): %d adopted games; not adopted: %s" % (len(ADOPTED), ", ".join("%s (%s)" % kv for kv in NOT_ADOPTED.items())))
     print("  %s  burst.js loaded once, after analytics.js, in exactly the adopted games%s" % ("FAIL" if stat else "ok  ", (": " + "; ".join(stat)) if stat else ""))
     fails, listing = asyncio.run(run(games, []))
+    sf = asyncio.run(run_stage([]))
+    print("  %s  &stage= presses button[data-stage] (%d cases: free-daily-pizza 1, 2, 3 and mixed, simultaneous-solver stage4, how-many-parts ?mode= unchanged, no match warns once)%s"
+          % ("FAIL" if sf else "ok  ", len(STAGE_CASES), (":\n    " + "\n    ".join(sf)) if sf else ""))
+    fails = fails + sf
     print("  %s  a %d-answer burst, nothing written, nothing changed without ?burst (%d games)%s"
           % ("FAIL" if fails else "ok  ", BURST, len(games), (":\n    " + "\n    ".join(fails[:40])) if fails else ""))
     for s, why in NO_MODE.items():
@@ -397,7 +483,10 @@ def main():
     ok = not stat and not fails
     if not a.no_plants:
         for name, routes, subset, phases in plants():
-            pf, _ = asyncio.run(run(subset, routes, phases, control=False))
+            if phases == ("stage",):
+                pf = asyncio.run(run_stage(routes))
+            else:
+                pf, _ = asyncio.run(run(subset, routes, phases, control=False))
             print("plant (%s): %s" % (name, ("CAUGHT: " + "; ".join(pf[:2])) if pf else "MISSED"))
             ok = ok and bool(pf)
     print("PASS" if ok else "FAIL")
