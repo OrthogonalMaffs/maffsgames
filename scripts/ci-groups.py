@@ -93,6 +93,18 @@ with the same selection: the same 70% and 80% rules, no second copy. A fault nam
 "none"), this run's time and its group. A run that is not a pull request, or one with no content or lock timing file
 (no verifier ran), prints why and passes.
 
+ON MAIN A GROUP OVER BUDGET IS A RECORDED WARNING (contract MAIN-WARN, Jon's ruling 25 Oct 2026; canon §7.8.1), reversing
+CI-TIMINGS-MEDIAN's fail-on-main for groups between FAIL (80%) and HARD (100%). The estimate moves with runner speed, which
+differs by about 25% between regions: #526's Shape Shifter, unchanged code, took 163 s on its PR run and 205 s on main
+(Content verifiers 34 at 82%), the timings job refused the pack, main went red and merge-pr.py refused every merge, while
+the job's real limit, its 6-minute timeout, was far off. Now the timings job (--record-and-pack, main_pack()) writes the
+timings and the pack whatever group passes 80%, lists each such group in ci-pack.json under "over-budget" (group,
+estimate, percent, its largest lines and their scripts), prints a ::warning:: naming them, and exits 0. A group past
+HARD (100% of its budget, 75% of its timeout, close to the hang guard) still refuses the pack and fails, as before. On a
+PR (--check, --check-measured) a group past 80% is a fault only where the change selects a script with a line in it
+(group_faults(), as line_faults() scopes a single line; the base unreadable selects everything); otherwise, and on a
+run-all change, a warning naming it. Past 100% is a fault everywhere. SETUP_ONLY (exit 2) is unchanged.
+
 Old headers ("# ci-line: B4 | ..."): a hand-made group id is still accepted and read as its tier only (L* is
 the lock tier, any other is content), so a branch made before CI-BALANCE still passes; the repo's own headers
 use the new form. Lines run in the order: scripts by file name, then each script's headers in file order. The
@@ -131,6 +143,7 @@ TIER_ORDER = ["content", "lock"]
 # initialising against its 360 s timeout and was cancelled before it ran a check.
 PULL_ALLOWANCE = 10
 TARGET, FAIL = 0.70, 0.80          # of a group's budget: pack to TARGET; --check fails past FAIL
+HARD = 1.00                        # of a group's budget: past it a group fails everywhere, main included (MAIN-WARN)
 SETUP = 25                         # seconds before a group's first line, when the timings do not record it
 HISTORY = 5                        # main runs kept in ci-timings.json; the estimates are their medians
 REGION_KEEP = 10                   # times kept per line per region in ci-timings-regions.json (REGION-HISTORY, 15 Oct 2026)
@@ -366,33 +379,66 @@ def line_faults(gs=None, timings=None, selected=()):
     return faults, warns
 
 
-def budget_faults(gs=None, timings=None, selected=()):
-    """[fault]: every split candidate the change selects (line_faults), and every group whose estimate passes FAIL of
-    its budget, naming its largest lines. The group rule holds whatever is selected: it is what refuses a pack on main."""
+def over_budget(gs=None, timings=None):
+    """[{group, estimate, percent, budget, message, scripts, lines}]: every group whose estimate passes FAIL of its budget,
+    by group name. `lines` are its three largest ({label, seconds, script}); `scripts` every verifier with a line in it;
+    `message` names the group, its estimate and its largest lines."""
     timings = read_json(TIMINGS) if timings is None else timings
     gs = groups(timings=timings) if gs is None else gs
     secs, meas = timings.get("lines", {}), timings.get("measured", {})
-    faults = line_faults(gs, timings, selected)[0]
+    out = []
     for g in gs:
         est, _ = estimate(g, timings)
         b = budget(g["tier"])
         if est > FAIL * b:
-            big = sorted(g["lines"], key=lambda lc: -secs.get(lc[0], TIERS[g["tier"]][3]))[:3]
-            faults.append("%s: estimated %ds, past %d%% of its %ds budget (%d%%). Largest: %s. A line this long "
-                          "cannot share a job: split its script (--part, --shard)."
-                          % (g["name"], est, FAIL * 100, b, 100 * est / b,
-                             "; ".join("%s %ss%s" % (l, secs.get(l, "no timing, counted as %d" % TIERS[g["tier"]][3]),
-                                                     " " + source(meas[l]) if l in meas else "")
-                                       for l, _ in big)))
-    return faults
+            default = TIERS[g["tier"]][3]
+            big = sorted(g["lines"], key=lambda lc: -secs.get(lc[0], default))[:3]
+            msg = ("%s: estimated %ds, past %d%% of its %ds budget (%d%%). Largest: %s. A line this long "
+                   "cannot share a job: split its script (--part, --shard)."
+                   % (g["name"], est, FAIL * 100, b, 100 * est / b,
+                      "; ".join("%s %ss%s" % (l, secs.get(l, "no timing, counted as %d" % default),
+                                              " " + source(meas[l]) if l in meas else "")
+                                for l, _ in big)))
+            out.append({"group": g["name"], "estimate": est, "percent": int(100 * est / b), "budget": b, "message": msg,
+                        "scripts": sorted({script_of(c) for _, c in g["lines"]} - {None}),
+                        "lines": [{"label": l, "seconds": secs.get(l, default), "script": script_of(c)} for l, c in big]})
+    return sorted(out, key=lambda o: o["group"])
 
 
-def warn(msgs):
-    """Print each warning; in a GitHub Actions run, also as a ::warning:: annotation, so a split candidate shows on the run."""
+def group_faults(gs=None, timings=None, selected=()):
+    """(faults, warnings) for the groups past FAIL (MAIN-WARN, Jon's ruling 25 Oct 2026, scoping the group rule as
+    LINE-LIMIT-SCOPE scoped the line rule). A group past HARD (100%) of its budget is a fault everywhere, main included.
+    Between FAIL and HARD it is a fault only where the change selects a script with a line in it (`selected` True, the
+    base unreadable, counts as every script); otherwise, on main and on a run-all change, a warning naming it."""
+    faults, warns = [], []
+    for o in over_budget(gs, timings):
+        if o["estimate"] > HARD * o["budget"]:
+            faults.append(o["message"] + " It is past %d%% of its budget: a fault everywhere, main included." % (HARD * 100))
+        elif selected is True or set(o["scripts"]) & set(selected):
+            hit = o["scripts"] if selected is True else sorted(set(o["scripts"]) & set(selected))
+            faults.append(o["message"] + " This change selects its verifier%s (%s)." % ("s" if len(hit) > 1 else "", ", ".join(hit)))
+        else:
+            warns.append("over budget (a warning, not a failure: nothing checked here selects %s): %s"
+                         % (", ".join(o["scripts"]), o["message"]))
+    return faults, warns
+
+
+def budget_faults(gs=None, timings=None, selected=()):
+    """[fault]: every split candidate the change selects (line_faults), and every group past FAIL that it selects or
+    that is past HARD (group_faults). With nothing selected (main) only a group past HARD is a fault: it is what refuses
+    a pack on main."""
+    timings = read_json(TIMINGS) if timings is None else timings
+    gs = groups(timings=timings) if gs is None else gs
+    return line_faults(gs, timings, selected)[0] + group_faults(gs, timings, selected)[0]
+
+
+def warn(msgs, title="split candidate"):
+    """Print each warning; in a GitHub Actions run, also as a ::warning:: annotation, so a split candidate or a group
+    over budget shows on the run."""
     for x in msgs:
         print("WARN  " + x)
         if os.environ.get("GITHUB_ACTIONS") == "true":
-            print("::warning title=split candidate::" + x)
+            print("::warning title=%s::%s" % (title, x))
 
 
 def pr_selection(env=None, deps=None):
@@ -436,13 +482,16 @@ def pr_selection(env=None, deps=None):
 
 
 def pack_record(gs, timings=None):
-    """ci-pack.json's content: {tier: {label: group id}}, and "split-candidates" (LINE-LIMIT-SCOPE): each line over the
-    per-line limit, as {label, median, setup, percent}, for the lane that splits it. pack() reads only the tiers."""
+    """ci-pack.json's content: {tier: {label: group id}}, "split-candidates" (LINE-LIMIT-SCOPE): each line over the
+    per-line limit, as {label, median, setup, percent}, and "over-budget" (MAIN-WARN): each group past FAIL, as {group,
+    estimate, percent, lines: its largest, each {label, seconds, script}}, for the lane that splits them. pack() reads
+    only the tiers."""
     rec = {}
     for g in gs:
         rec.setdefault(g["tier"], {}).update({l: g["id"] for l, _ in g["lines"]})
     rec["split-candidates"] = [{k: c[k] for k in ("label", "median", "setup", "percent")}
                                for c in split_candidates(gs, timings)]
+    rec["over-budget"] = [{k: o[k] for k in ("group", "estimate", "percent", "lines")} for o in over_budget(gs, timings)]
     return rec
 
 
@@ -672,8 +721,9 @@ def write_timings(timings):
 
 def settle(existing, rec, hdrs=None, prev=None):
     """(timings, groups, faults): the timings with the run rec added, the groups packed from them (from prev, the
-    current pack), and the faults that refuse that pack on main: the group rule only, since main selects no line and a
-    line over the per-line limit is a split candidate, a warning (LINE-LIMIT-SCOPE). Nothing is written."""
+    current pack), and the faults that refuse that pack on main: a group past HARD only, since main selects nothing, a
+    line over the per-line limit is a warning (LINE-LIMIT-SCOPE) and so is a group past FAIL (MAIN-WARN). Nothing is
+    written."""
     timings = add_run(existing, rec)
     gs = groups(hdrs, timings, read_json(PACK) if prev is None else prev)
     return timings, gs, budget_faults(gs, timings)
@@ -728,19 +778,26 @@ def calm_faults(existing, timings, gs, faults):
     return budget_faults(gs, dict(timings, setup=existing.get("setup", SETUP)))
 
 
+def main_pack(existing, rec, hdrs=None, prev=None, writers=None):
+    """The timings job's work on one run record: add it, repack from the medians, and write the timings and the pack
+    unless a group is past HARD (MAIN-WARN). A line over the per-line limit and a group past FAIL are printed as warnings
+    and listed in the pack ("split-candidates", "over-budget"). Returns commit()'s exit status."""
+    timings, gs, faults = settle(existing, rec, hdrs, prev)
+    print("run %s: setup %ds (median %ds of %d run(s)); %d line(s) timed" % (
+        rec["run"], rec["setup"], timings["setup"], len(timings["history"]), len(rec["lines"])))
+    warn(line_faults(gs, timings)[1])
+    warn(group_faults(gs, timings)[1], "over budget")
+    return commit(timings, gs, faults, writers, calm=calm_faults(existing, timings, gs, faults),
+                  prev_setup=existing.get("setup", SETUP))
+
+
 def record_and_pack(run_id, from_dir=None):
-    """The timings job: add the run, repack from the medians, apply the group rule, and write the timings and the
-    pack only if it passes. A line over the per-line limit is printed as a warning and listed in the pack."""
+    """The timings job: add the run, repack from the medians, and write the timings and the pack unless a group is past
+    HARD of its budget (MAIN-WARN; before it, past FAIL). Warnings for lines over the limit and groups over budget."""
     rec = read_run(run_id, from_dir)
     if rec is None:
         return 1
-    existing = read_json(TIMINGS)
-    timings, gs, faults = settle(existing, rec)
-    print("run %s: setup %ds (median %ds of %d run(s)); %d line(s) timed" % (
-        run_id, rec["setup"], timings["setup"], len(timings["history"]), len(rec["lines"])))
-    warn(line_faults(gs, timings)[1])
-    return commit(timings, gs, faults, calm=calm_faults(existing, timings, gs, faults),
-                  prev_setup=existing.get("setup", SETUP))
+    return main_pack(read_json(TIMINGS), rec)
 
 
 def measured_timings(timings, rec, selected, hdrs=None):
@@ -784,7 +841,8 @@ def check_measured(run_id, from_dir, env=None, rec=None, timings=None, hdrs=None
     # the per-line limit.
     base = measured_timings(timings, rec, (), hdrs)
     grew = any(t > meds[l] for l, t in rec["lines"].items() if l in meds)
-    if grew or split_candidates(groups(hdrs, base, prev), base):
+    gb = groups(hdrs, base, prev)
+    if grew or split_candidates(gb, base) or over_budget(gb, base):
         selected, how = pr_selection(env, deps)
     else:
         selected, how = (), "no line ran slower than its median and none is over the per-line limit"
@@ -802,6 +860,7 @@ def check_measured(run_id, from_dir, env=None, rec=None, timings=None, hdrs=None
             "" if not missing else "  NO TIMING (counted as %ds each): %s" % (TIERS[g["tier"]][3], "; ".join(missing))))
     faults = budget_faults(gs, mt, selected)
     warn(line_faults(gs, mt, selected)[1])
+    warn(group_faults(gs, mt, selected)[1], "over budget")
     for x in faults:
         print("FAIL  " + x)
     print("check-measured: %s (run %s: %d line(s) timed, %d judged on this run's time; setup %ds, main's median; timings "
@@ -960,8 +1019,11 @@ def selftest():
     alone = rn(5, 125, flat)                      # the old rule: the one run's own figures
     check("(a) one 125 s setup in five runs: the median setup is %ds and the pack passes --check: %s"
           % (tm["setup"], fl[:1]), tm["setup"] == 22 and len(tm["history"]) == 5 and not fl)
-    check("(a) the same run alone (the old rule) fails --check, which is what turned every PR red",
-          bool(budget_faults(groups(hd5, alone, {}), alone)))
+    ga = groups(hd5, alone, {})
+    check("(a) the same run alone (the old rule) puts its groups past 80%%: on main now an over-budget warning, not the "
+          "refusal that turned every PR red (MAIN-WARN reverses CI-TIMINGS-MEDIAN's fail-on-main below 100%%): %d warning(s)"
+          % len(group_faults(ga, alone)[1]),
+          not budget_faults(ga, alone) and group_faults(ga, alone)[1] and budget_faults(ga, alone, True))
     check("history keeps the last %d runs, oldest dropped, the same run twice counted once" % HISTORY,
           [h["run"] for h in add_run(tm, rn(6, 22, flat))["history"]] == [2, 3, 4, 5, 6]
           and len(add_run(tm, rn(5, 22, flat))["history"]) == 5 and add_run(tm, rn(6, 22, flat))["run"] == 6)
@@ -1012,7 +1074,7 @@ def selftest():
           not budget_faults(g170, ft) and len(line_faults(g170, ft)[1]) == 1)
     check("strict (the base unreadable): the line fails", len(budget_faults(g170, ft, True)) == 1)
     f400 = one(400)
-    check("PLANT: past 80% the group rule fails whatever is selected (a 400 s line; main, unselected, selected, all)",
+    check("PLANT: past 100% the group rule fails whatever is selected (a 400 s line; main, unselected, selected, all)",
           all(any("past 80%" in x for x in budget_faults(groups(hs, f400, {}), f400, sel)) for sel in ((), Y, X, True)))
     check("a line with no timing is not judged by the per-line limit (the group check and the NO TIMING flag cover it)",
           line_faults([{"name": "g", "tier": "lock", "id": "L1", "lines": [("new", "")]}], T({}), True) == ([], []))
@@ -1077,7 +1139,7 @@ def selftest():
     fl, wn = line_faults(g170, ft, sel2)
     check("a CI PR and an unchanged line over the limit: a warning, never a fault (Jon, 21 Oct): %s" % (wn[:1],),
           not fl and len(wn) == 1 and "split candidate" in wn[0] and not budget_faults(g170, ft, sel2))
-    check("a CI PR and a group past 80%: still a fault (the group rule holds whatever is selected)",
+    check("a CI PR and a group past 100%: still a fault (past HARD the group rule holds whatever is selected)",
           any("past 80%" in x for x in budget_faults(groups(hs, f400, {}), f400, sel2)))
     # PR-MEASURED (Jon, 25 Oct 2026): a PR is also judged on its own run's measured times. Line a is verify-x.py's; setup
     # 20 s, budget 270 s: the per-line limit is 189 s, a group fails past 216 s.
@@ -1126,6 +1188,51 @@ def selftest():
                                  deps=Deps(["scripts/verify-x.py"], (False, [], {"scripts/verify-x.py": []})))
     check("end to end, #526's shape on a pull request run: exit 1, the line named", rc1 == 1 and "a2 205s" in o1.getvalue())
     check("end to end, a run at or under its medians: exit 0", rc2 == 0 and "check-measured: PASS" in o2.getvalue())
+    # MAIN-WARN (Jon, 25 Oct 2026): a group between 80% and 100% of its budget is a warning on main, recorded in the pack, and a
+    # fault only on a PR that selects one of its scripts; past 100% it fails everywhere. #526's shape: Shape Shifter, one line,
+    # 202 s + 20 s setup = 222 s, 82% of 270 s; at 253 s it is 273 s, 101%.
+    SS = "scripts/verify-shape-shifter.py"
+    hss = {"verify-shape-shifter.py": parse("verify-shape-shifter.py", "# ci-line: Shape Shifter | \n"),
+           "verify-y.py": parse("verify-y.py", "".join("# ci-line: %s | \n" % x for x in "bcde"))}
+    ss = lambda sec: dict(t["lines"], **{"Shape Shifter": sec})
+    for sec, want in ((202, "82%"), (253, "101%")):
+        exm = {}
+        for n in range(1, 5):
+            exm = add_run(exm, rn(n, 20, ss(sec)))
+        wrote.clear()
+        packed.clear()
+        with contextlib.redirect_stdout(io.StringIO()) as o:
+            rcm = main_pack(exm, rn(5, 20, ss(sec)), hss, {}, sink4)
+        said = o.getvalue()
+        if sec == 202:
+            ob = packed[-1].get("over-budget") if packed else None
+            check("PLANT (1) #526's shape on main, a group at %s: timings and pack written, exit %d, the pack's over-budget "
+                  "lists it (%s), a warning names the group and Shape Shifter" % (want, rcm, ob and ob[0]["group"]),
+                  rcm == 0 and wrote == ["timings", "pack"] and ob and ob[0]["percent"] == 82
+                  and ob[0]["lines"][0]["label"] == "Shape Shifter" and ob[0]["lines"][0]["script"] == SS
+                  and re.search(r"WARN  over budget.*Content verifiers \d+: estimated 222s.*Shape Shifter 202s", said))
+        else:
+            check("PLANT (2) a group at %s on main: the pack is refused, exit %d, nothing written" % (want, rcm),
+                  rcm == 1 and not wrote and "past 100% of its budget" in said)
+    t82 = T(ss(202))
+    g82 = groups(hss, t82, {})
+    check("PLANT (3) a PR that selects a script in a group at 82%: a fault naming it",
+          any("estimated 222s" in x and SS in x for x in budget_faults(g82, t82, {SS})))
+    fl, wn = group_faults(g82, t82, Y)
+    check("PLANT (4) a PR that selects none of its scripts: a warning only (%s)" % (wn[:1],),
+          not fl and not budget_faults(g82, t82, Y) and len(wn) == 1 and "over budget" in wn[0] and "Shape Shifter" in wn[0])
+    with tempfile.TemporaryDirectory() as td:
+        ev = os.path.join(td, "event.json")
+        with open(ev, "w", encoding="utf-8", newline="\n") as f:
+            json.dump({"pull_request": {"base": {"sha": "0123456789abcdef"}}}, f)
+        sel5, how5 = pr_selection({"GITHUB_ACTIONS": "true", "GITHUB_EVENT_NAME": "pull_request", "GITHUB_EVENT_PATH": ev},
+                                  Deps([".github/workflows/check-site.yml"], (True, ["CI itself"], {})))
+    check("PLANT (5) a run-all PR (CI itself): a warning only (%s)" % how5,
+          sel5 == () and not budget_faults(g82, t82, sel5) and len(group_faults(g82, t82, sel5)[1]) == 1)
+    check("PLANT (6) the base unreadable (every line selected): a fault", len(group_faults(g82, t82, True)[0]) == 1
+          and bool(budget_faults(g82, t82, True)))
+    check("a pack with no group past 80% carries an empty over-budget list",
+          pack_record(groups(hs, t, {}), t)["over-budget"] == [])
     # REGION-HISTORY: the per-region record keeps 10 per line per region and leaves ci-timings.json alone.
     regs = ["eastus", "centralus", "westus"]
 
@@ -1198,15 +1305,17 @@ def main():
                 "" if not missing else "  NO TIMING (counted as %ds each): %s" % (TIERS[g["tier"]][3], "; ".join(missing))))
         # The selection costs ci-deps.py's dependency map (about a minute in CI), and it matters only for a split
         # candidate: with none, nothing is computed.
-        selected, how = pr_selection() if split_candidates(gs, timings) else ((), "no line is over the per-line limit")
+        selected, how = (pr_selection() if split_candidates(gs, timings) or over_budget(gs, timings)
+                         else ((), "no line is over the per-line limit and no group past %d%%" % (FAIL * 100)))
         print("selection: " + how)
         faults = budget_faults(gs, timings, selected)
         warn(line_faults(gs, timings, selected)[1])
+        warn(group_faults(gs, timings, selected)[1], "over budget")
         for x in faults:
             print("FAIL  " + x)
-        print("check: %s (pack to %d%% of each budget; a line past %d%% fails only where it is selected; a group fails "
-              "past %d%%; timings from main run %s)"
-              % ("FAILED" if faults else "PASS", TARGET * 100, TARGET * 100, FAIL * 100, timings.get("run")))
+        print("check: %s (pack to %d%% of each budget; a line past %d%% or a group past %d%% fails only where it is selected; "
+              "a group past %d%% fails everywhere; timings from main run %s)"
+              % ("FAILED" if faults else "PASS", TARGET * 100, TARGET * 100, FAIL * 100, HARD * 100, timings.get("run")))
         return 1 if faults else 0
     if a.compare:
         return compare(a.compare)
