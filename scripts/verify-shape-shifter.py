@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-# ci-line: Shape Shifter (every translation, reflection and rotation image recomputed from its words; every rotation option classified; every vertex and every letter tapped on the real canvas in Chromium; each mode card's data-mode its own mode, a burst at random-mix starting Random Mix once, each card starting its mode once without a burst) |
+# ci-line: Shape Shifter, part 1 (every translation, reflection and rotation image recomputed from its words; every rotation option classified; every vertex and every letter tapped on the real canvas in Chromium; each mode card's data-mode its own mode, a burst at random-mix starting Random Mix once, each card starting its mode once without a burst) | --part 1
+# ci-line: Shape Shifter, part 2 (fault-injection self-test: half the planted faults, each caught) | --part 2
+# ci-line: Shape Shifter, part 3 (fault-injection self-test: the other half of the planted faults, each caught) | --part 3
 """Shape Shifter: translate, reflect and rotate a shape on a -5..5 grid; three static banks, four modes.
 
 Banks, read from the page as served: TRANSLATION_QUESTIONS (15, tap the image's vertices), REFLECTION_QUESTIONS (15, tap
@@ -681,12 +683,20 @@ WORDING_JS_FN = '(function(){' + WORDING_JS + '})()'
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--no-selftest', action='store_true')
+    ap.add_argument('--part', choices=['1', '2', '3'],
+                    help='1 the checks, 2 and 3 a half of the plants each (CI runs the three side by side); default all')
     ap.add_argument('--against', help='serve this file as the game page')
     args = ap.parse_args()
     sys.stdout.reconfigure(encoding='utf-8')
     html = open(args.against or GAME, encoding='utf-8').read()
     fails = []
     hit = set()
+    if args.part in ('2', '3'):
+        ok = selftest(html, PLANTS[0::2] if args.part == '2' else PLANTS[1::2])
+        if not ok:
+            print('FAIL  self-test: a planted fault was not caught')
+        print('PASS' if ok else 'FAILED')
+        return 0 if ok else 1
     st = play(fails, html, hit)
     for k in EXPECTED:
         if k not in hit:
@@ -701,27 +711,36 @@ def main():
                      re.search(r'canvas\{[^}]*background:\s*(#[0-9a-fA-F]{6})', html).group(1)))
     print('  not asserted (open): no 180 degree rotation built (t3-002), 15 items a mode (t3-004), board and keyboard (t3-005)')
     ok = True
-    if not args.no_selftest and not args.against:
-        for what, tag, edits in PLANTS:
-            bad = [o for o, n in edits if html.count(o) != 1]
-            if bad:
-                print('  self-test %-58s *** CANNOT PLANT (%r) ***' % (what, bad[0][:60]))
-                ok = False
-                continue
-            planted = html
-            for o, n in edits:
-                planted = planted.replace(o, n)
-            rep = []
-            play(rep, planted, set(), cards=tag == 'mode cards')
-            found = [f for f in rep if tag in f]
-            ok = ok and bool(found)
-            print('  self-test %-58s %s' % (what, ('caught: ' + found[0][:100]) if found else '*** MISSED ***'))
+    if not args.no_selftest and not args.against and args.part is None:
+        ok = selftest(html, PLANTS)
     for f in fails[:40]:
         print('FAIL  ' + f[:400])
     if not ok:
         print('FAIL  self-test: a planted fault was not caught')
     print('FAILED' if fails or not ok else 'PASS')
     return 1 if fails or not ok else 0
+
+
+# The plants in two CI lines (25 Oct 2026: one line of all fourteen took 205 s on main, over ci-groups' per-line limit),
+# every other one in each, so each half holds one of the two mode-card plants.
+def selftest(html, plants):
+    """Each plant's fault, made in a copy of the page, must be caught by a finding carrying its tag."""
+    ok = True
+    for what, tag, edits in plants:
+        bad = [o for o, n in edits if html.count(o) != 1]
+        if bad:
+            print('  self-test %-58s *** CANNOT PLANT (%r) ***' % (what, bad[0][:60]))
+            ok = False
+            continue
+        planted = html
+        for o, n in edits:
+            planted = planted.replace(o, n)
+        rep = []
+        play(rep, planted, set(), cards=tag == 'mode cards')
+        found = [f for f in rep if tag in f]
+        ok = ok and bool(found)
+        print('  self-test %-58s %s' % (what, ('caught: ' + found[0][:100]) if found else '*** MISSED ***'))
+    return ok
 
 
 if __name__ == '__main__':
