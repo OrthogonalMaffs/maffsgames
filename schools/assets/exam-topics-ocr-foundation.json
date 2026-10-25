@@ -173,6 +173,23 @@
    }
   },
   {
+   "id": "number-vocabulary",
+   "name": "Factors, multiples and primes",
+   "marks": 6.7,
+   "series": 6,
+   "band": [
+    1,
+    3
+   ],
+   "route": {
+    "slug": "factor-race",
+    "game": "Factor Race",
+    "level": "ks3",
+    "modes": [],
+    "stages": []
+   }
+  },
+  {
    "id": "fraction-percentage-of-amount",
    "name": "Fractions and percentages of amounts",
    "marks": 6.3,
@@ -289,13 +306,6 @@
    "id": "interest-depreciation",
    "name": "Interest and depreciation",
    "marks": 7.3,
-   "series": 6,
-   "planned": null
-  },
-  {
-   "id": "number-vocabulary",
-   "name": "Factors, multiples and primes",
-   "marks": 6.7,
    "series": 6,
    "planned": null
   },

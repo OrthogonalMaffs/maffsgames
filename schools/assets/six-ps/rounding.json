@@ -18,7 +18,10 @@
     "value": 3.7,
     "dp": 1
    },
-   "worked": [],
+   "worked": [
+    "Look at the digit after the place you are rounding to: \\(4\\).",
+    "\\(4\\) is less than 5, so round down: \\(3.7\\)."
+   ],
    "slip": []
   },
   {
@@ -37,7 +40,10 @@
     "value": 2.6,
     "dp": 1
    },
-   "worked": [],
+   "worked": [
+    "Look at the digit after the place you are rounding to: \\(6\\).",
+    "\\(6\\) is 5 or more, so round up: \\(2.6\\)."
+   ],
    "slip": []
   },
   {
@@ -56,7 +62,10 @@
     "value": 0.8,
     "dp": 1
    },
-   "worked": [],
+   "worked": [
+    "Look at the digit after the place you are rounding to: \\(3\\).",
+    "\\(3\\) is less than 5, so round down: \\(0.8\\)."
+   ],
    "slip": []
   },
   {
@@ -75,7 +84,10 @@
     "value": 5,
     "dp": 1
    },
-   "worked": [],
+   "worked": [
+    "Look at the digit after the place you are rounding to: \\(5\\).",
+    "\\(5\\) is 5 or more, so round up: \\(5.0\\)."
+   ],
    "slip": []
   },
   {
@@ -93,7 +105,10 @@
    "answer": {
     "value": 1
    },
-   "worked": [],
+   "worked": [
+    "Look at the digit after the place you are rounding to: \\(2\\).",
+    "\\(2\\) is less than 5, so round down: \\(1\\)."
+   ],
    "slip": []
   },
   {
@@ -111,7 +126,10 @@
    "answer": {
     "value": 7
    },
-   "worked": [],
+   "worked": [
+    "Look at the digit after the place you are rounding to: \\(7\\).",
+    "\\(7\\) is 5 or more, so round up: \\(7\\)."
+   ],
    "slip": []
   },
   {
@@ -129,7 +147,10 @@
    "answer": {
     "value": 3
    },
-   "worked": [],
+   "worked": [
+    "Look at the digit after the place you are rounding to: \\(4\\).",
+    "\\(4\\) is less than 5, so round down: \\(3\\)."
+   ],
    "slip": []
   },
   {
@@ -147,7 +168,10 @@
    "answer": {
     "value": 10
    },
-   "worked": [],
+   "worked": [
+    "Look at the digit after the place you are rounding to: \\(5\\).",
+    "\\(5\\) is 5 or more, so round up: \\(10\\)."
+   ],
    "slip": []
   },
   {
@@ -166,7 +190,10 @@
     "value": 0.46,
     "dp": 2
    },
-   "worked": [],
+   "worked": [
+    "Look at the digit after the place you are rounding to: \\(6\\).",
+    "\\(6\\) is 5 or more, so round up: \\(0.46\\)."
+   ],
    "slip": []
   },
   {
@@ -185,7 +212,10 @@
     "value": 1.23,
     "dp": 2
    },
-   "worked": [],
+   "worked": [
+    "Look at the digit after the place you are rounding to: \\(4\\).",
+    "\\(4\\) is less than 5, so round down: \\(1.23\\)."
+   ],
    "slip": []
   },
   {
@@ -204,7 +234,10 @@
     "value": 7.9,
     "dp": 2
    },
-   "worked": [],
+   "worked": [
+    "Look at the digit after the place you are rounding to: \\(5\\).",
+    "\\(5\\) is 5 or more, so round up: \\(7.90\\)."
+   ],
    "slip": []
   },
   {
@@ -223,7 +256,10 @@
     "value": 3.15,
     "dp": 2
    },
-   "worked": [],
+   "worked": [
+    "Look at the digit after the place you are rounding to: \\(5\\).",
+    "\\(5\\) is 5 or more, so round up: \\(3.15\\)."
+   ],
    "slip": []
   },
   {
@@ -242,7 +278,10 @@
     "value": 0.7,
     "dp": 1
    },
-   "worked": [],
+   "worked": [
+    "Look at the digit after the place you are rounding to: \\(7\\).",
+    "\\(7\\) is 5 or more, so round up: \\(0.7\\)."
+   ],
    "slip": []
   },
   {
@@ -260,7 +299,10 @@
    "answer": {
     "value": 4
    },
-   "worked": [],
+   "worked": [
+    "Look at the digit after the place you are rounding to: \\(3\\).",
+    "\\(3\\) is less than 5, so round down: \\(4\\)."
+   ],
    "slip": []
   },
   {
@@ -278,7 +320,10 @@
    "answer": {
     "value": 10
    },
-   "worked": [],
+   "worked": [
+    "Look at the digit after the place you are rounding to: \\(2\\).",
+    "\\(2\\) is less than 5, so round down: \\(10\\)."
+   ],
    "slip": []
   },
   {

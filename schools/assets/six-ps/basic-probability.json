@@ -401,7 +401,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{rolling a 6 on a fair die})\\). Give your answer as a fraction in its simplest form.",
+   "stem": "Work out \\(P(\\text{rolling a 6 on a fair die})\\). Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -409,9 +409,11 @@
     "d": 6
    },
    "accept": {
-    "rule": "simplest"
+    "rule": "equivalent"
    },
-   "worked": [],
+   "worked": [
+    "There is 1 favourable outcome out of 6 equally likely outcomes, so \\(P = \\frac{1}{6}\\)."
+   ],
    "slip": []
   },
   {
@@ -423,7 +425,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{picking red from 3 red, 7 blue})\\). Give your answer as a fraction in its simplest form.",
+   "stem": "Work out \\(P(\\text{picking red from 3 red, 7 blue})\\). Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -431,9 +433,11 @@
     "d": 10
    },
    "accept": {
-    "rule": "simplest"
+    "rule": "equivalent"
    },
-   "worked": [],
+   "worked": [
+    "There are 3 favourable outcomes out of 10 equally likely outcomes, so \\(P = \\frac{3}{10}\\)."
+   ],
    "slip": []
   },
   {
@@ -445,7 +449,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{flipping tails on a fair coin})\\). Give your answer as a fraction in its simplest form.",
+   "stem": "Work out \\(P(\\text{flipping tails on a fair coin})\\). Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -453,9 +457,11 @@
     "d": 2
    },
    "accept": {
-    "rule": "simplest"
+    "rule": "equivalent"
    },
-   "worked": [],
+   "worked": [
+    "There is 1 favourable outcome out of 2 equally likely outcomes, so \\(P = \\frac{1}{2}\\)."
+   ],
    "slip": []
   },
   {
@@ -467,7 +473,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{vowel from A, B, C, D, E})\\). Give your answer as a fraction in its simplest form.",
+   "stem": "Work out \\(P(\\text{vowel from A, B, C, D, E})\\). Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -475,9 +481,11 @@
     "d": 5
    },
    "accept": {
-    "rule": "simplest"
+    "rule": "equivalent"
    },
-   "worked": [],
+   "worked": [
+    "There are 2 favourable outcomes out of 5 equally likely outcomes, so \\(P = \\frac{2}{5}\\)."
+   ],
    "slip": []
   },
   {
@@ -489,7 +497,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{rolling less than 3 on a die})\\). Give your answer as a fraction in its simplest form.",
+   "stem": "Work out \\(P(\\text{rolling less than 3 on a die})\\). Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -497,9 +505,11 @@
     "d": 3
    },
    "accept": {
-    "rule": "simplest"
+    "rule": "equivalent"
    },
-   "worked": [],
+   "worked": [
+    "There are 2 favourable outcomes out of 6 equally likely outcomes, so \\(P = \\frac{2}{6} = \\frac{1}{3}\\)."
+   ],
    "slip": []
   },
   {
@@ -511,7 +521,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{blue from 4 red, 6 blue})\\). Give your answer as a fraction in its simplest form.",
+   "stem": "Work out \\(P(\\text{blue from 4 red, 6 blue})\\). Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -519,9 +529,11 @@
     "d": 5
    },
    "accept": {
-    "rule": "simplest"
+    "rule": "equivalent"
    },
-   "worked": [],
+   "worked": [
+    "There are 6 favourable outcomes out of 10 equally likely outcomes, so \\(P = \\frac{6}{10} = \\frac{3}{5}\\)."
+   ],
    "slip": []
   },
   {
@@ -533,7 +545,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{odd on a die})\\). Give your answer as a fraction in its simplest form.",
+   "stem": "Work out \\(P(\\text{odd on a die})\\). Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -541,9 +553,11 @@
     "d": 2
    },
    "accept": {
-    "rule": "simplest"
+    "rule": "equivalent"
    },
-   "worked": [],
+   "worked": [
+    "There are 3 favourable outcomes out of 6 equally likely outcomes, so \\(P = \\frac{3}{6} = \\frac{1}{2}\\)."
+   ],
    "slip": []
   },
   {
@@ -555,7 +569,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{heart from 52 cards})\\). Give your answer as a fraction in its simplest form.",
+   "stem": "Work out \\(P(\\text{heart from 52 cards})\\). Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -563,9 +577,11 @@
     "d": 4
    },
    "accept": {
-    "rule": "simplest"
+    "rule": "equivalent"
    },
-   "worked": [],
+   "worked": [
+    "There are 13 favourable outcomes out of 52 equally likely outcomes, so \\(P = \\frac{13}{52} = \\frac{1}{4}\\)."
+   ],
    "slip": []
   },
   {
@@ -577,7 +593,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{rolling greater than 4 on a dice})\\). Give your answer as a fraction in its simplest form.",
+   "stem": "Work out \\(P(\\text{rolling greater than 4 on a dice})\\). Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -585,9 +601,11 @@
     "d": 3
    },
    "accept": {
-    "rule": "simplest"
+    "rule": "equivalent"
    },
-   "worked": [],
+   "worked": [
+    "There are 2 favourable outcomes out of 6 equally likely outcomes, so \\(P = \\frac{2}{6} = \\frac{1}{3}\\)."
+   ],
    "slip": []
   },
   {
@@ -599,7 +617,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{green from 5 red, 3 green, 2 yellow})\\). Give your answer as a fraction in its simplest form.",
+   "stem": "Work out \\(P(\\text{green from 5 red, 3 green, 2 yellow})\\). Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -607,9 +625,11 @@
     "d": 10
    },
    "accept": {
-    "rule": "simplest"
+    "rule": "equivalent"
    },
-   "worked": [],
+   "worked": [
+    "There are 3 favourable outcomes out of 10 equally likely outcomes, so \\(P = \\frac{3}{10}\\)."
+   ],
    "slip": []
   },
   {
@@ -621,7 +641,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{multiple of 3 on a die})\\). Give your answer as a fraction in its simplest form.",
+   "stem": "Work out \\(P(\\text{multiple of 3 on a die})\\). Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -629,9 +649,11 @@
     "d": 3
    },
    "accept": {
-    "rule": "simplest"
+    "rule": "equivalent"
    },
-   "worked": [],
+   "worked": [
+    "There are 2 favourable outcomes out of 6 equally likely outcomes, so \\(P = \\frac{2}{6} = \\frac{1}{3}\\)."
+   ],
    "slip": []
   },
   {
@@ -643,7 +665,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{consonant from M, A, T, H, S})\\). Give your answer as a fraction in its simplest form.",
+   "stem": "Work out \\(P(\\text{consonant from M, A, T, H, S})\\). Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -651,9 +673,11 @@
     "d": 5
    },
    "accept": {
-    "rule": "simplest"
+    "rule": "equivalent"
    },
-   "worked": [],
+   "worked": [
+    "There are 4 favourable outcomes out of 5 equally likely outcomes, so \\(P = \\frac{4}{5}\\)."
+   ],
    "slip": []
   },
   {
@@ -665,7 +689,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{heads twice in a row with a fair coin})\\). Give your answer as a fraction in its simplest form.",
+   "stem": "Work out \\(P(\\text{heads twice in a row with a fair coin})\\). Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -673,9 +697,11 @@
     "d": 4
    },
    "accept": {
-    "rule": "simplest"
+    "rule": "equivalent"
    },
-   "worked": [],
+   "worked": [
+    "There is 1 favourable outcome out of 4 equally likely outcomes, so \\(P = \\frac{1}{4}\\)."
+   ],
    "slip": []
   },
   {
@@ -687,7 +713,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{rolling 1 or 2 on a fair die})\\). Give your answer as a fraction in its simplest form.",
+   "stem": "Work out \\(P(\\text{rolling 1 or 2 on a fair die})\\). Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -695,9 +721,11 @@
     "d": 3
    },
    "accept": {
-    "rule": "simplest"
+    "rule": "equivalent"
    },
-   "worked": [],
+   "worked": [
+    "There are 2 favourable outcomes out of 6 equally likely outcomes, so \\(P = \\frac{2}{6} = \\frac{1}{3}\\)."
+   ],
    "slip": []
   },
   {
@@ -709,7 +737,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{picture card (J, Q or K) from a pack of 52})\\). Give your answer as a fraction in its simplest form.",
+   "stem": "Work out \\(P(\\text{picture card (J, Q or K) from a pack of 52})\\). Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -717,9 +745,11 @@
     "d": 13
    },
    "accept": {
-    "rule": "simplest"
+    "rule": "equivalent"
    },
-   "worked": [],
+   "worked": [
+    "There are 12 favourable outcomes out of 52 equally likely outcomes, so \\(P = \\frac{12}{52} = \\frac{3}{13}\\)."
+   ],
    "slip": []
   },
   {
@@ -731,7 +761,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{prime on a die})\\). Give your answer as a fraction in its simplest form.",
+   "stem": "Work out \\(P(\\text{prime on a die})\\). Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -739,9 +769,11 @@
     "d": 2
    },
    "accept": {
-    "rule": "simplest"
+    "rule": "equivalent"
    },
-   "worked": [],
+   "worked": [
+    "There are 3 favourable outcomes out of 6 equally likely outcomes, so \\(P = \\frac{3}{6} = \\frac{1}{2}\\)."
+   ],
    "slip": []
   },
   {
@@ -753,7 +785,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{yellow from 8 red, 2 yellow})\\). Give your answer as a fraction in its simplest form.",
+   "stem": "Work out \\(P(\\text{yellow from 8 red, 2 yellow})\\). Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -761,9 +793,11 @@
     "d": 5
    },
    "accept": {
-    "rule": "simplest"
+    "rule": "equivalent"
    },
-   "worked": [],
+   "worked": [
+    "There are 2 favourable outcomes out of 10 equally likely outcomes, so \\(P = \\frac{2}{10} = \\frac{1}{5}\\)."
+   ],
    "slip": []
   },
   {
@@ -775,7 +809,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{square number on a die})\\). Give your answer as a fraction in its simplest form.",
+   "stem": "Work out \\(P(\\text{square number on a die})\\). Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -783,9 +817,11 @@
     "d": 3
    },
    "accept": {
-    "rule": "simplest"
+    "rule": "equivalent"
    },
-   "worked": [],
+   "worked": [
+    "There are 2 favourable outcomes out of 6 equally likely outcomes, so \\(P = \\frac{2}{6} = \\frac{1}{3}\\)."
+   ],
    "slip": []
   },
   {
@@ -797,7 +833,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{even from 1–8})\\). Give your answer as a fraction in its simplest form.",
+   "stem": "Work out \\(P(\\text{even from 1–8})\\). Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -805,9 +841,11 @@
     "d": 2
    },
    "accept": {
-    "rule": "simplest"
+    "rule": "equivalent"
    },
-   "worked": [],
+   "worked": [
+    "There are 4 favourable outcomes out of 8 equally likely outcomes, so \\(P = \\frac{4}{8} = \\frac{1}{2}\\)."
+   ],
    "slip": []
   },
   {
@@ -819,7 +857,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{letter in MATHS also in GAMES})\\). Give your answer as a fraction in its simplest form.",
+   "stem": "Work out \\(P(\\text{letter in MATHS also in GAMES})\\). Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -827,10 +865,10 @@
     "d": 5
    },
    "accept": {
-    "rule": "simplest"
+    "rule": "equivalent"
    },
    "worked": [
-    "M, A and S are in both, so 3 of 5."
+    "There are 3 favourable outcomes out of 5 equally likely outcomes, so \\(P = \\frac{3}{5}\\)."
    ],
    "slip": []
   },
@@ -951,46 +989,6 @@
    ]
   },
   {
-   "id": "basic-probability-e191f8bd",
-   "topic": "basic-probability",
-   "source": {
-    "game": "probability-pioneer",
-    "ref": "STAGE3[2]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "Which of these statements is false?",
-   "diagram": null,
-   "format": "choice",
-   "answer": {
-    "val": "c"
-   },
-   "options": [
-    {
-     "val": "a",
-     "label": "Probability can be written as a fraction, decimal or percentage"
-    },
-    {
-     "val": "b",
-     "label": "P(certain event) = 1"
-    },
-    {
-     "val": "c",
-     "label": "Flipping heads 5 times makes tails more likely next"
-    },
-    {
-     "val": "d",
-     "label": "Two events with the same probability are equally likely"
-    }
-   ],
-   "worked": [
-    "This is the gambler's fallacy.",
-    "Each coin flip is independent — the coin has no memory.",
-    "The probability of tails is still 0.5 no matter what happened before."
-   ],
-   "slip": []
-  },
-  {
    "id": "basic-probability-351a426b",
    "topic": "basic-probability",
    "source": {
@@ -1105,84 +1103,6 @@
    ]
   },
   {
-   "id": "basic-probability-b6fef034",
-   "topic": "basic-probability",
-   "source": {
-    "game": "probability-pioneer",
-    "ref": "STAGE3[5]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "Which of these statements is false?",
-   "diagram": null,
-   "format": "choice",
-   "answer": {
-    "val": "d"
-   },
-   "options": [
-    {
-     "val": "a",
-     "label": "A fair six-sided die gives each number probability exactly 1/6"
-    },
-    {
-     "val": "b",
-     "label": "The more times you repeat an experiment, the closer the results tend to get to the theoretical probability"
-    },
-    {
-     "val": "c",
-     "label": "P(event) is always between 0 and 1 inclusive"
-    },
-    {
-     "val": "d",
-     "label": "You can have P(event) = 1.5"
-    }
-   ],
-   "worked": [
-    "Probability can never exceed 1.",
-    "The maximum probability is 1 (certain) and the minimum is 0 (impossible)."
-   ],
-   "slip": []
-  },
-  {
-   "id": "basic-probability-7fa7be10",
-   "topic": "basic-probability",
-   "source": {
-    "game": "probability-pioneer",
-    "ref": "STAGE3[6]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "Which of these statements is false?",
-   "diagram": null,
-   "format": "choice",
-   "answer": {
-    "val": "d"
-   },
-   "options": [
-    {
-     "val": "a",
-     "label": "P(impossible event) = 0"
-    },
-    {
-     "val": "b",
-     "label": "Two events with the same probability are equally likely"
-    },
-    {
-     "val": "c",
-     "label": "The more times you repeat an experiment, the closer the results tend to get to the theoretical probability"
-    },
-    {
-     "val": "d",
-     "label": "On a fair dice, rolling a 1 and rolling a 2 are equally likely, so each has probability 0.5."
-    }
-   ],
-   "worked": [
-    "Equally likely outcomes share the probability equally among all the outcomes.",
-    "A dice has six, so each is 1/6."
-   ],
-   "slip": []
-  },
-  {
    "id": "basic-probability-0a5d3ea6",
    "topic": "basic-probability",
    "source": {
@@ -1239,46 +1159,6 @@
      "line": "Equally likely outcomes share the probability equally among all the outcomes. A dice has six, so each is 1/6."
     }
    ]
-  },
-  {
-   "id": "basic-probability-6a8670a5",
-   "topic": "basic-probability",
-   "source": {
-    "game": "probability-pioneer",
-    "ref": "STAGE3[8]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "Which of these statements is false?",
-   "diagram": null,
-   "format": "choice",
-   "answer": {
-    "val": "c"
-   },
-   "options": [
-    {
-     "val": "a",
-     "label": "A fair six-sided die gives each number probability exactly 1/6"
-    },
-    {
-     "val": "b",
-     "label": "P(certain event) = 1"
-    },
-    {
-     "val": "c",
-     "label": "A probability of 0.9 means the event will definitely happen"
-    },
-    {
-     "val": "d",
-     "label": "P(event) is always between 0 and 1 inclusive"
-    }
-   ],
-   "worked": [
-    "0.9 means the event is very likely, but not certain.",
-    "Only a probability of 1 means it will definitely happen.",
-    "There is still a 0.1 (10%) chance it won't."
-   ],
-   "slip": []
   },
   {
    "id": "basic-probability-0ff5b012",
@@ -1396,46 +1276,6 @@
    ]
   },
   {
-   "id": "basic-probability-beb9e3fd",
-   "topic": "basic-probability",
-   "source": {
-    "game": "probability-pioneer",
-    "ref": "STAGE3[11]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "Which of these statements is false?",
-   "diagram": null,
-   "format": "choice",
-   "answer": {
-    "val": "b"
-   },
-   "options": [
-    {
-     "val": "a",
-     "label": "P(certain event) = 1"
-    },
-    {
-     "val": "b",
-     "label": "P(rolling 7 on a standard die) = 7/6"
-    },
-    {
-     "val": "c",
-     "label": "P(impossible event) = 0"
-    },
-    {
-     "val": "d",
-     "label": "A fair six-sided die gives each number probability exactly 1/6"
-    }
-   ],
-   "worked": [
-    "A standard die only has numbers 1–6.",
-    "Rolling a 7 is impossible, so P = 0.",
-    "Also, 7/6 is greater than 1, which is impossible for any probability."
-   ],
-   "slip": []
-  },
-  {
    "id": "basic-probability-1f4acc5e",
    "topic": "basic-probability",
    "source": {
@@ -1492,45 +1332,6 @@
      "line": "Equally likely outcomes share the probability equally among all the outcomes. A dice has six, so each is 1/6."
     }
    ]
-  },
-  {
-   "id": "basic-probability-034a4d72",
-   "topic": "basic-probability",
-   "source": {
-    "game": "probability-pioneer",
-    "ref": "STAGE3[13]"
-   },
-   "band": 3,
-   "calc": false,
-   "stem": "Which of these statements is false?",
-   "diagram": null,
-   "format": "choice",
-   "answer": {
-    "val": "b"
-   },
-   "options": [
-    {
-     "val": "a",
-     "label": "A fair six-sided die gives each number probability exactly 1/6"
-    },
-    {
-     "val": "b",
-     "label": "If P(rain) = 0.4, it will rain on exactly 4 out of every 10 days"
-    },
-    {
-     "val": "c",
-     "label": "The more times you repeat an experiment, the closer the results tend to get to the theoretical probability"
-    },
-    {
-     "val": "d",
-     "label": "P(event) is always between 0 and 1 inclusive"
-    }
-   ],
-   "worked": [
-    "P(rain) = 0.4 means that over a very large number of days, about 40% will have rain.",
-    "But in any specific set of 10 days, it could rain on 0, 1, 2, ... or even all 10 days."
-   ],
-   "slip": []
   },
   {
    "id": "basic-probability-21a1bb00",
