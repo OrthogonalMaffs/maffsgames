@@ -19,3 +19,7 @@ DO NOT TOUCH: The main timings job (record-and-pack, the SETUP_ONLY exit 2, spli
 SUCCESS CONDITION: All five plants caught in --selftest. Replayed against #526's PR run artifacts, --check-measured fails naming Shape Shifter with its measured time; against #525's PR run it reports Burst mode's measured figure (state it, pass or fail); against a PR run with no verifiers it passes. The new job is green on this PR itself. Main's full run green after merge, timings job included. Work committed, handover written with the replay figures.
 
 STOP IF: The replay against #526's PR run would NOT have failed (the root-cause analysis is wrong; report the figures). PR runs do not upload ci-timing-* artifacts, or they have expired for #525/#526. The gate's needs or no-skips logic needs any change beyond adding the job. Replaying the last 20 retained PR runs shows more than 2 would have failed on measured times with no verifier change to blame (runner noise; report before shipping). The estimate needs the PR run's own setup figure to work.
+
+# Jon's ruling, via Project Claude, 25 Oct 2026, verbatim (after the session's STOP IF 1: #526's PR run replay passes)
+
+"PR-MEASURED: thank you for the replay; it showed my root cause for #526 was wrong. Ship it as built: open the PR and merge when its run and the Gate are green. No more replays, and no further storage hosts are needed: say so in the handover, and Jon will remove the sa18 host."
