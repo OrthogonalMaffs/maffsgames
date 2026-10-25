@@ -1627,7 +1627,10 @@
      "label": "All three"
     }
    ],
-   "worked": [],
+   "worked": [
+    "Write each as an ordinary number: \\(4.5 \\times 10^6 = 4500000\\), \\(4.5 \\times 10^5 = 450000\\), \\(45 \\times 10^5 = 4500000\\).",
+    "\\(4.5 \\times 10^6\\) and \\(45 \\times 10^5\\) are both \\(4500000\\)."
+   ],
    "slip": []
   },
   {
@@ -1663,7 +1666,10 @@
      "label": "None"
     }
    ],
-   "worked": [],
+   "worked": [
+    "Write each as an ordinary number: \\(6 \\times 10^{-2} = 0.06\\), \\(0.006 = 0.006\\), \\(6 \\times 10^{-3} = 0.006\\).",
+    "\\(0.006\\) and \\(6 \\times 10^{-3}\\) are both \\(0.006\\)."
+   ],
    "slip": []
   },
   {
@@ -1739,7 +1745,10 @@
      "label": "\\(3\\)"
     }
    ],
-   "worked": [],
+   "worked": [
+    "Any number (except 0) to the power 0 is 1, so \\(10^{0} = 1\\).",
+    "So \\(3 \\times 10^{0} = 3\\)."
+   ],
    "slip": []
   },
   {
@@ -1775,7 +1784,10 @@
      "label": "\\(34 \\times 10^5\\)"
     }
    ],
-   "worked": [],
+   "worked": [
+    "Standard form is \\(A \\times 10^{n}\\) with \\(A\\) from 1 up to but not including 10, and \\(n\\) a whole number.",
+    "Only \\(3.4 \\times 10^6\\) has that form and the same value as \\(34 \\times 10^5\\)."
+   ],
    "slip": []
   },
   {
@@ -1811,7 +1823,10 @@
      "label": "\\(5 \\times 10^3\\)"
     }
    ],
-   "worked": [],
+   "worked": [
+    "Standard form is \\(A \\times 10^{n}\\) with \\(A\\) from 1 up to but not including 10, and \\(n\\) a whole number.",
+    "Only \\(5 \\times 10^3\\) has that form and the same value as \\(0.5 \\times 10^4\\)."
+   ],
    "slip": []
   },
   {
@@ -1847,7 +1862,10 @@
      "label": "\\(7.2 \\times 10^{-2}\\)"
     }
    ],
-   "worked": [],
+   "worked": [
+    "Standard form is \\(A \\times 10^{n}\\) with \\(A\\) from 1 up to but not including 10, and \\(n\\) a whole number.",
+    "Only \\(7.2 \\times 10^{-2}\\) has that form and the same value as \\(72 \\times 10^{-3}\\)."
+   ],
    "slip": []
   },
   {
@@ -1883,7 +1901,10 @@
      "label": "\\(0.9 \\times 10^{-3}\\)"
     }
    ],
-   "worked": [],
+   "worked": [
+    "Standard form is \\(A \\times 10^{n}\\) with \\(A\\) from 1 up to but not including 10, and \\(n\\) a whole number.",
+    "Only \\(9 \\times 10^{-4}\\) has that form and the same value as \\(0.09 \\times 10^{-2}\\)."
+   ],
    "slip": []
   },
   {
@@ -1919,7 +1940,10 @@
      "label": "\\(1.5 \\times 10^9\\)"
     }
    ],
-   "worked": [],
+   "worked": [
+    "Standard form is \\(A \\times 10^{n}\\) with \\(A\\) from 1 up to but not including 10, and \\(n\\) a whole number.",
+    "Only \\(1.5 \\times 10^9\\) has that form and the same value as \\(150 \\times 10^7\\)."
+   ],
    "slip": []
   },
   {
@@ -1955,7 +1979,10 @@
      "label": "\\(0.25 \\times 10^{-1}\\)"
     }
    ],
-   "worked": [],
+   "worked": [
+    "Standard form is \\(A \\times 10^{n}\\) with \\(A\\) from 1 up to but not including 10, and \\(n\\) a whole number.",
+    "Only \\(2.5 \\times 10^{-2}\\) has that form and the same value as \\(0.25 \\times 10^{-1}\\)."
+   ],
    "slip": []
   }
  ]
