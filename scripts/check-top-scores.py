@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Top scores panel (contract TOP-SCORES: the 11 panel games, played to their end with Firebase blocked in an en-US browser, each record kept by score-history.js; the panel shows the best five, British dates, no 0; the plants caught) | && python scripts/check-top-scores.py --selftest
+# ci-line: Top scores panel (contract TOP-SCORES: the 11 panel games, played to their end with Firebase blocked in an en-US browser, each record kept by score-history.js; the panel shows the best five, British dates, no 0; the plants caught) | && --selftest
 # ci-deps: schools/assets/score-history.js
 """Does every game's "Top scores" panel come from score-history.js, in British dates, with no score of 0?
 
