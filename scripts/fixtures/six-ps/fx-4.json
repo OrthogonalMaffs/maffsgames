@@ -1,0 +1,208 @@
+{
+ "topic": "fixture",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "fixture-e7a43137",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-4[0]"
+   },
+   "band": 1,
+   "calc": false,
+   "diagram": null,
+   "format": "choice",
+   "stem": "Which is equal to \\(2^3\\)?",
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(6\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(8\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(9\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(5\\)"
+    }
+   ],
+   "answer": {
+    "val": "b"
+   },
+   "worked": [
+    "\\(2^3 = 2 \\times 2 \\times 2 = 8\\)"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "6 is 2 × 3, not 2 cubed."
+    }
+   ]
+  },
+  {
+   "id": "fixture-d9b5789a",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-4[1]"
+   },
+   "band": 2,
+   "calc": false,
+   "diagram": null,
+   "format": "choice",
+   "stem": "Which is the largest?",
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(0.5\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\frac{2}{5}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(45\\%\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(0.55\\)"
+    }
+   ],
+   "answer": {
+    "val": "d"
+   },
+   "worked": [
+    "As decimals: 0.5, 0.4, 0.45, 0.55."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fixture-3ee0b7bb",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-4[2]"
+   },
+   "band": 2,
+   "calc": false,
+   "diagram": null,
+   "format": "choice",
+   "stem": "Which is a prime number?",
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(21\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(27\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(29\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(33\\)"
+    }
+   ],
+   "answer": {
+    "val": "c"
+   },
+   "worked": [
+    "21, 27 and 33 are all multiples of 3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fixture-18ca93c0",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-4[3]"
+   },
+   "band": 3,
+   "calc": false,
+   "diagram": null,
+   "format": "choice",
+   "stem": "Which expression is \\(3(x + 2)\\) expanded?",
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(3x + 2\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(3x + 6\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x + 6\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(3x + 5\\)"
+    }
+   ],
+   "answer": {
+    "val": "b"
+   },
+   "worked": [
+    "Multiply both terms by 3."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "3x + 2 multiplies only the first term."
+    }
+   ]
+  },
+  {
+   "id": "fixture-f4b58523",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-4[4]"
+   },
+   "band": 4,
+   "calc": false,
+   "diagram": null,
+   "format": "choice",
+   "stem": "Which is \\(\\frac{1}{4}\\) as a percentage?",
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(14\\%\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(4\\%\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(25\\%\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(40\\%\\)"
+    }
+   ],
+   "answer": {
+    "val": "c"
+   },
+   "worked": [],
+   "slip": []
+  }
+ ]
+}

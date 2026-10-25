@@ -1,0 +1,153 @@
+{
+ "topic": "fixture",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "fixture-1e150d30",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-5[0]"
+   },
+   "band": 2,
+   "calc": false,
+   "diagram": null,
+   "format": "number_unit",
+   "stem": "A car travels 120 km in 3 hours. Work out its average speed.",
+   "units": [
+    "km/h",
+    "km",
+    "h",
+    "m/s"
+   ],
+   "answer": {
+    "value": 40,
+    "unit": "km/h"
+   },
+   "worked": [
+    "Speed = distance ÷ time",
+    "\\(120 \\div 3 = 40\\) km/h"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 40,
+      "unit": "km"
+     },
+     "line": "km is a distance: a speed is distance per time."
+    }
+   ]
+  },
+  {
+   "id": "fixture-c042dfa6",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-5[1]"
+   },
+   "band": 3,
+   "calc": true,
+   "diagram": null,
+   "format": "number_unit",
+   "stem": "A block has a mass of 25 g and a volume of 9.8 cm³. Work out its density to 1 decimal place.",
+   "units": [
+    "g/cm³",
+    "g",
+    "cm³"
+   ],
+   "answer": {
+    "value": 2.6,
+    "dp": 1,
+    "unit": "g/cm³"
+   },
+   "worked": [
+    "\\(25 \\div 9.8 = 2.551\\ldots\\)",
+    "To 1 decimal place: 2.6 g/cm³"
+   ],
+   "slip": []
+  },
+  {
+   "id": "fixture-acb8a785",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-5[2]"
+   },
+   "band": 3,
+   "calc": false,
+   "diagram": null,
+   "format": "number_unit",
+   "stem": "A cyclist rides at 15 km/h for 2 hours. How far does the cyclist go?",
+   "units": [
+    "km/h",
+    "km",
+    "h",
+    "m/s"
+   ],
+   "answer": {
+    "value": 30,
+    "unit": "km"
+   },
+   "worked": [
+    "Distance = speed × time",
+    "\\(15 \\times 2 = 30\\) km"
+   ],
+   "slip": []
+  },
+  {
+   "id": "fixture-b6fcc3b8",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-5[3]"
+   },
+   "band": 4,
+   "calc": false,
+   "diagram": null,
+   "format": "number_unit",
+   "stem": "A train goes 200 km at 50 km/h. How long does it take?",
+   "units": [
+    "km/h",
+    "km",
+    "h",
+    "m/s"
+   ],
+   "answer": {
+    "value": 4,
+    "unit": "h"
+   },
+   "worked": [
+    "Time = distance ÷ speed",
+    "\\(200 \\div 50 = 4\\) hours"
+   ],
+   "slip": []
+  },
+  {
+   "id": "fixture-f757f629",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-5[4]"
+   },
+   "band": 5,
+   "calc": false,
+   "diagram": null,
+   "format": "number_unit",
+   "stem": "A runner covers 100 m in 20 seconds. Work out the speed in metres per second.",
+   "units": [
+    "m/s",
+    "km/h",
+    "m",
+    "s"
+   ],
+   "answer": {
+    "value": 5,
+    "unit": "m/s"
+   },
+   "worked": [
+    "\\(100 \\div 20 = 5\\)"
+   ],
+   "slip": []
+  }
+ ]
+}
