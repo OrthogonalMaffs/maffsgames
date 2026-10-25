@@ -1,0 +1,186 @@
+{
+ "topic": "fixture",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "fixture-648cc7e9",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-seen[0]"
+   },
+   "band": 1,
+   "calc": false,
+   "diagram": null,
+   "format": "number",
+   "stem": "Work out \\(0 + 1\\).",
+   "answer": {
+    "value": 1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "fixture-12a5e84d",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-seen[1]"
+   },
+   "band": 2,
+   "calc": false,
+   "diagram": null,
+   "format": "number",
+   "stem": "Work out \\(1 + 2\\).",
+   "answer": {
+    "value": 3
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "fixture-f04ab1bf",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-seen[2]"
+   },
+   "band": 3,
+   "calc": false,
+   "diagram": null,
+   "format": "number",
+   "stem": "Work out \\(2 + 3\\).",
+   "answer": {
+    "value": 5
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "fixture-6f32dbf3",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-seen[3]"
+   },
+   "band": 4,
+   "calc": false,
+   "diagram": null,
+   "format": "number",
+   "stem": "Work out \\(3 + 4\\).",
+   "answer": {
+    "value": 7
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "fixture-0fe58b98",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-seen[4]"
+   },
+   "band": 5,
+   "calc": false,
+   "diagram": null,
+   "format": "number",
+   "stem": "Work out \\(4 + 5\\).",
+   "answer": {
+    "value": 9
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "fixture-819d6ce8",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-seen[5]"
+   },
+   "band": 1,
+   "calc": false,
+   "diagram": null,
+   "format": "number",
+   "stem": "Work out \\(5 + 6\\).",
+   "answer": {
+    "value": 11
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "fixture-c89667ad",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-seen[6]"
+   },
+   "band": 2,
+   "calc": false,
+   "diagram": null,
+   "format": "number",
+   "stem": "Work out \\(6 + 7\\).",
+   "answer": {
+    "value": 13
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "fixture-f61b8439",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-seen[7]"
+   },
+   "band": 3,
+   "calc": false,
+   "diagram": null,
+   "format": "number",
+   "stem": "Work out \\(7 + 8\\).",
+   "answer": {
+    "value": 15
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "fixture-5f9f9813",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-seen[8]"
+   },
+   "band": 4,
+   "calc": false,
+   "diagram": null,
+   "format": "number",
+   "stem": "Work out \\(8 + 9\\).",
+   "answer": {
+    "value": 17
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "fixture-85d47356",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-seen[9]"
+   },
+   "band": 5,
+   "calc": false,
+   "diagram": null,
+   "format": "number",
+   "stem": "Work out \\(9 + 10\\).",
+   "answer": {
+    "value": 19
+   },
+   "worked": [],
+   "slip": []
+  }
+ ]
+}

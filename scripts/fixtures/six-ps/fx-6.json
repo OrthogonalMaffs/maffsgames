@@ -1,0 +1,180 @@
+{
+ "topic": "fixture",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "fixture-eea7f54a",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-6[0]"
+   },
+   "band": 1,
+   "calc": false,
+   "diagram": null,
+   "format": "number",
+   "stem": "Work out \\(7 \\times 8\\).",
+   "answer": {
+    "value": 56
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "fixture-9db695f0",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-6[1]"
+   },
+   "band": 1,
+   "calc": false,
+   "diagram": null,
+   "format": "number",
+   "stem": "Work out \\(81 \\div 9\\).",
+   "answer": {
+    "value": 9
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "fixture-889b95b0",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-6[2]"
+   },
+   "band": 2,
+   "calc": false,
+   "diagram": null,
+   "format": "money",
+   "stem": "Work out £5 − £1.25.",
+   "answer": {
+    "pence": 375
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "fixture-9816b0ec",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-6[3]"
+   },
+   "band": 2,
+   "calc": false,
+   "diagram": null,
+   "format": "number",
+   "stem": "Work out \\(15 - 23\\).",
+   "answer": {
+    "value": -8
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "fixture-aeb37463",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-6[4]"
+   },
+   "band": 3,
+   "calc": false,
+   "diagram": null,
+   "format": "ratio",
+   "stem": "Write \\(4 : 10\\) in its simplest form.",
+   "answer": {
+    "parts": [
+     2,
+     5
+    ]
+   },
+   "accept": "simplest",
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "fixture-448586ea",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-6[5]"
+   },
+   "band": 1,
+   "calc": false,
+   "diagram": null,
+   "format": "percentage",
+   "stem": "LEFT OUT: an unknown format.",
+   "answer": {
+    "value": 1
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "fixture-176fa960",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-6[6]"
+   },
+   "band": 1,
+   "calc": false,
+   "diagram": null,
+   "format": "number",
+   "stem": "LEFT OUT: a range reaching half way to a slip.",
+   "answer": {
+    "value": 5
+   },
+   "accept": {
+    "rule": "range",
+    "lo": 4,
+    "hi": 6
+   },
+   "slip": [
+    {
+     "answer": {
+      "value": 6
+     },
+     "line": "x"
+    }
+   ],
+   "worked": []
+  },
+  {
+   "id": "fixture-9862582f",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-6[7]"
+   },
+   "band": 1,
+   "calc": false,
+   "diagram": null,
+   "format": "choice",
+   "stem": "LEFT OUT: three options.",
+   "options": [
+    {
+     "val": "a",
+     "label": "1"
+    },
+    {
+     "val": "b",
+     "label": "2"
+    },
+    {
+     "val": "c",
+     "label": "3"
+    }
+   ],
+   "answer": {
+    "val": "a"
+   },
+   "worked": [],
+   "slip": []
+  }
+ ]
+}

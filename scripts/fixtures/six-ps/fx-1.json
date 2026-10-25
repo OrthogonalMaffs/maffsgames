@@ -1,0 +1,145 @@
+{
+ "topic": "fixture",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "fixture-9a0d1c0c",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-1[0]"
+   },
+   "band": 1,
+   "calc": false,
+   "diagram": null,
+   "format": "number",
+   "stem": "Work out \\(3.2 + 4.8 - 1.5\\).",
+   "answer": {
+    "value": 6.5
+   },
+   "worked": [
+    "\\(3.2 + 4.8 = 8\\)",
+    "\\(8 - 1.5 = 6.5\\)"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 9.5
+     },
+     "line": "9.5 adds the 1.5 instead of taking it away."
+    }
+   ]
+  },
+  {
+   "id": "fixture-a4726f15",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-1[1]"
+   },
+   "band": 2,
+   "calc": true,
+   "diagram": null,
+   "format": "number",
+   "stem": "Work out \\(10 \\div 3\\). Give your answer to 1 decimal place.",
+   "answer": {
+    "value": 3.3,
+    "dp": 1
+   },
+   "worked": [
+    "\\(10 \\div 3 = 3.333\\ldots\\)",
+    "To 1 decimal place: 3.3"
+   ],
+   "slip": []
+  },
+  {
+   "id": "fixture-8d11e523",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-1[2]"
+   },
+   "band": 2,
+   "calc": false,
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 60\"><line x1=\"20\" y1=\"30\" x2=\"280\" y2=\"30\" stroke=\"currentColor\" stroke-width=\"2\"/><line x1=\"20\" y1=\"22\" x2=\"20\" y2=\"38\" stroke=\"currentColor\"/><text x=\"20\" y=\"54\" text-anchor=\"middle\" fill=\"currentColor\" font-size=\"14\">0</text><line x1=\"280\" y1=\"22\" x2=\"280\" y2=\"38\" stroke=\"currentColor\"/><text x=\"280\" y=\"54\" text-anchor=\"middle\" fill=\"currentColor\" font-size=\"14\">10</text><path d=\"M150 4 L150 26 M144 18 L150 26 L156 18\" stroke=\"currentColor\" fill=\"none\" stroke-width=\"2\"/><script>window.__svgRan=1</script></svg>",
+   "format": "number",
+   "stem": "Not drawn accurately. The scale goes from 0 to 10. Read the value at the arrow.",
+   "answer": {
+    "value": 5
+   },
+   "accept": {
+    "rule": "range",
+    "lo": 4.8,
+    "hi": 5.2
+   },
+   "worked": [
+    "The arrow is half way from 0 to 10.",
+    "Half of 10 is 5."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 6
+     },
+     "line": "6 counts one mark too many from the left."
+    }
+   ]
+  },
+  {
+   "id": "fixture-777ef8db",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-1[3]"
+   },
+   "band": 3,
+   "calc": false,
+   "diagram": null,
+   "format": "money",
+   "stem": "A pen costs £1.75. Work out the cost of 2 pens.",
+   "answer": {
+    "pence": 350
+   },
+   "worked": [
+    "\\(2 \\times 1.75 = 3.50\\)",
+    "£3.50"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 175
+     },
+     "line": "£1.75 is the cost of one pen."
+    }
+   ]
+  },
+  {
+   "id": "fixture-d01393fe",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-1[4]"
+   },
+   "band": 4,
+   "calc": false,
+   "diagram": null,
+   "format": "number",
+   "unit": "°C",
+   "stem": "The temperature is 4 °C. It falls by 9 degrees. Work out the new temperature.",
+   "answer": {
+    "value": -5
+   },
+   "worked": [
+    "\\(4 - 9 = -5\\)"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 5
+     },
+     "line": "5 is 9 − 4: the temperature went below zero."
+    }
+   ]
+  }
+ ]
+}

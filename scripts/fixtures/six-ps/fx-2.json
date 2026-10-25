@@ -1,0 +1,136 @@
+{
+ "topic": "fixture",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "fixture-6d7f1e7e",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-2[0]"
+   },
+   "band": 1,
+   "calc": false,
+   "diagram": null,
+   "format": "fraction",
+   "stem": "Work out \\(\\frac{1}{2} + \\frac{1}{4}\\).",
+   "answer": {
+    "n": 3,
+    "d": 4
+   },
+   "worked": [
+    "\\(\\frac{1}{2} = \\frac{2}{4}\\)",
+    "\\(\\frac{2}{4} + \\frac{1}{4} = \\frac{3}{4}\\)"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "n": 2,
+      "d": 6
+     },
+     "line": "Adding the tops and the bottoms gives 2/6: the parts must be the same size first."
+    }
+   ]
+  },
+  {
+   "id": "fixture-1b0878ba",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-2[1]"
+   },
+   "band": 2,
+   "calc": false,
+   "diagram": null,
+   "format": "fraction",
+   "stem": "Write \\(\\frac{6}{8}\\) in its simplest form.",
+   "answer": {
+    "n": 3,
+    "d": 4
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "Divide the top and the bottom by 2."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fixture-0bc951b7",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-2[2]"
+   },
+   "band": 3,
+   "calc": false,
+   "diagram": null,
+   "format": "fraction",
+   "stem": "Write \\(\\frac{7}{4}\\) as a mixed number.",
+   "answer": {
+    "w": 1,
+    "n": 3,
+    "d": 4
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "\\(7 \\div 4 = 1\\) remainder 3",
+    "\\(1\\frac{3}{4}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "fixture-e33a7eea",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-2[3]"
+   },
+   "band": 3,
+   "calc": false,
+   "diagram": null,
+   "format": "fraction",
+   "stem": "Work out \\(\\frac{2}{3} \\times \\frac{3}{4}\\).",
+   "answer": {
+    "n": 1,
+    "d": 2
+   },
+   "worked": [
+    "\\(\\frac{2 \\times 3}{3 \\times 4} = \\frac{6}{12} = \\frac{1}{2}\\)"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "n": 5,
+      "d": 7
+     },
+     "line": "5/7 adds the tops and the bottoms; multiply them."
+    }
+   ]
+  },
+  {
+   "id": "fixture-8c2a7b57",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-2[4]"
+   },
+   "band": 4,
+   "calc": false,
+   "diagram": null,
+   "format": "fraction",
+   "stem": "Work out \\(\\frac{1}{4} - \\frac{3}{4}\\).",
+   "answer": {
+    "n": -1,
+    "d": 2
+   },
+   "worked": [
+    "\\(\\frac{1}{4} - \\frac{3}{4} = -\\frac{2}{4} = -\\frac{1}{2}\\)"
+   ],
+   "slip": []
+  }
+ ]
+}

@@ -1,0 +1,140 @@
+{
+ "topic": "fixture",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "fixture-da053c3f",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-3[0]"
+   },
+   "band": 1,
+   "calc": false,
+   "diagram": null,
+   "format": "ratio",
+   "stem": "Write \\(12 : 18\\) in its simplest form.",
+   "answer": {
+    "parts": [
+     2,
+     3
+    ]
+   },
+   "accept": "simplest",
+   "worked": [
+    "Divide both parts by 6."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fixture-a1cfbc1f",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-3[1]"
+   },
+   "band": 2,
+   "calc": false,
+   "diagram": null,
+   "format": "ratio",
+   "stem": "A recipe uses 1 cup of oats, 2 of flour and 3 of milk. Write the ratio of oats to flour to milk.",
+   "answer": {
+    "parts": [
+     1,
+     2,
+     3
+    ]
+   },
+   "worked": [],
+   "slip": []
+  },
+  {
+   "id": "fixture-2d4dbd33",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-3[2]"
+   },
+   "band": 2,
+   "calc": false,
+   "diagram": null,
+   "format": "ratio",
+   "stem": "A class has 10 boys and 25 girls. Write the ratio of boys to girls in its simplest form.",
+   "answer": {
+    "parts": [
+     2,
+     5
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "\\(10 : 25\\)",
+    "Divide both by 5: \\(2 : 5\\)"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "parts": [
+       5,
+       2
+      ]
+     },
+     "line": "5 : 2 is girls to boys: keep the order the question gives."
+    }
+   ]
+  },
+  {
+   "id": "fixture-a167ef8d",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-3[3]"
+   },
+   "band": 3,
+   "calc": false,
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 200 200\" onload=\"window.__svgRan=1\"><line x1=\"100\" y1=\"0\" x2=\"100\" y2=\"200\" stroke=\"currentColor\"/><line x1=\"0\" y1=\"100\" x2=\"200\" y2=\"100\" stroke=\"currentColor\"/><circle cx=\"60\" cy=\"0\" r=\"4\" fill=\"currentColor\"/><text x=\"66\" y=\"14\" fill=\"currentColor\" font-size=\"14\">A</text><image href=\"https://example.com/x.png\" width=\"1\" height=\"1\"/></svg>",
+   "format": "coordinates",
+   "stem": "Write down the coordinates of point A.",
+   "answer": {
+    "x": -2,
+    "y": 5
+   },
+   "worked": [
+    "Across first: \\(-2\\).",
+    "Then up: 5."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": 5,
+      "y": -2
+     },
+     "line": "(5, −2) gives the up first: across comes first."
+    }
+   ]
+  },
+  {
+   "id": "fixture-1a1707c3",
+   "topic": "fixture",
+   "source": {
+    "game": "fixture",
+    "ref": "fx-3[4]"
+   },
+   "band": 4,
+   "calc": false,
+   "diagram": null,
+   "format": "coordinates",
+   "stem": "Write down the coordinates of the point where the line crosses the x-axis at 3.",
+   "answer": {
+    "x": 3,
+    "y": 0
+   },
+   "worked": [
+    "On the x-axis, y is 0."
+   ],
+   "slip": []
+  }
+ ]
+}
