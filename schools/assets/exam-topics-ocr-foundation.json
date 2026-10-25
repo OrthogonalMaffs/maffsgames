@@ -23,7 +23,8 @@
     "modes": [
      "simplify",
      "divide"
-    ]
+    ],
+    "stages": []
    }
   },
   {
@@ -42,7 +43,8 @@
     "modes": [
      "unitary",
      "scale"
-    ]
+    ],
+    "stages": []
    }
   },
   {
@@ -58,7 +60,8 @@
     "slug": "index-laws",
     "game": "Index Laws",
     "level": "gcse",
-    "modes": []
+    "modes": [],
+    "stages": []
    }
   },
   {
@@ -77,7 +80,8 @@
     "modes": [
      "stage-2",
      "stage-3"
-    ]
+    ],
+    "stages": []
    }
   },
   {
@@ -93,7 +97,8 @@
     "slug": "linear-equation-solver",
     "game": "Linear Equation Solver",
     "level": "gcse",
-    "modes": []
+    "modes": [],
+    "stages": []
    }
   },
   {
@@ -109,7 +114,8 @@
     "slug": "sequence-solver",
     "game": "Sequence Solver",
     "level": "ks3",
-    "modes": []
+    "modes": [],
+    "stages": []
    }
   },
   {
@@ -125,7 +131,8 @@
     "slug": "angle-ace",
     "game": "Angle Ace",
     "level": "gcse",
-    "modes": []
+    "modes": [],
+    "stages": []
    }
   },
   {
@@ -141,9 +148,8 @@
     "slug": "negative-number-line",
     "game": "Negative Number Line",
     "level": "year6",
-    "modes": [
-     "calc"
-    ]
+    "modes": [],
+    "stages": []
    }
   },
   {
@@ -159,7 +165,8 @@
     "slug": "free-daily-pizza",
     "game": "Free Daily Pizza",
     "level": "ks3",
-    "modes": [
+    "modes": [],
+    "stages": [
      "1",
      "2"
     ]
@@ -178,7 +185,8 @@
     "slug": "factor-race",
     "game": "Factor Race",
     "level": "ks3",
-    "modes": []
+    "modes": [],
+    "stages": []
    }
   },
   {
@@ -196,7 +204,8 @@
     "level": "ks3",
     "modes": [
      "stage3"
-    ]
+    ],
+    "stages": []
    }
   },
   {
@@ -212,7 +221,8 @@
     "slug": "free-daily-pizza",
     "game": "Free Daily Pizza",
     "level": "ks3",
-    "modes": [
+    "modes": [],
+    "stages": [
      "3"
     ]
    }
@@ -230,7 +240,8 @@
     "slug": "distinctly-average",
     "game": "Distinctly Average",
     "level": "ks3",
-    "modes": []
+    "modes": [],
+    "stages": []
    }
   },
   {
@@ -250,7 +261,8 @@
      "stage-1",
      "stage-2",
      "stage-3"
-    ]
+    ],
+    "stages": []
    }
   },
   {
@@ -266,7 +278,8 @@
     "slug": "think-of-a-number",
     "game": "Think of a Number",
     "level": "year6",
-    "modes": []
+    "modes": [],
+    "stages": []
    }
   },
   {
@@ -282,25 +295,8 @@
     "slug": "trig-worms",
     "game": "Trig Worms",
     "level": "gcse",
-    "modes": []
-   }
-  },
-  {
-   "id": "venn",
-   "name": "Venn diagrams",
-   "marks": 4.2,
-   "series": 6,
-   "band": [
-    3,
-    4
-   ],
-   "route": {
-    "slug": "given-that",
-    "game": "Given That",
-    "level": "gcse",
-    "modes": [
-     "venn"
-    ]
+    "modes": [],
+    "stages": []
    }
   },
   {
@@ -316,7 +312,8 @@
     "slug": "simultaneous-solver",
     "game": "Simultaneous Solver",
     "level": "gcse",
-    "modes": [
+    "modes": [],
+    "stages": [
      "stage4"
     ]
    }
@@ -335,8 +332,9 @@
     "game": "Shape Shifter",
     "level": "year6",
     "modes": [
-     "mix"
-    ]
+     "random-mix"
+    ],
+    "stages": []
    }
   },
   {
@@ -352,7 +350,8 @@
     "slug": "like-terms-collector",
     "game": "Like Terms Collector",
     "level": "year6",
-    "modes": []
+    "modes": [],
+    "stages": []
    }
   },
   {
@@ -368,7 +367,8 @@
     "slug": "probability-pioneer",
     "game": "Probability Pioneer",
     "level": "year6",
-    "modes": []
+    "modes": [],
+    "stages": []
    }
   },
   {
@@ -384,25 +384,8 @@
     "slug": "formula-plug-in",
     "game": "Formula Plug-In",
     "level": "year6",
-    "modes": []
-   }
-  },
-  {
-   "id": "two-way-tables",
-   "name": "Two-way tables",
-   "marks": 3.5,
-   "series": 3,
-   "band": [
-    2,
-    4
-   ],
-   "route": {
-    "slug": "given-that",
-    "game": "Given That",
-    "level": "gcse",
-    "modes": [
-     "table"
-    ]
+    "modes": [],
+    "stages": []
    }
   },
   {
@@ -420,7 +403,8 @@
     "level": "ks3",
     "modes": [
      "stage-1"
-    ]
+    ],
+    "stages": []
    }
   },
   {
@@ -436,7 +420,8 @@
     "slug": "standard-form-blitz",
     "game": "Standard Form Blitz",
     "level": "gcse",
-    "modes": []
+    "modes": [],
+    "stages": []
    }
   },
   {
@@ -452,7 +437,8 @@
     "slug": "quadratic-factoriser",
     "game": "Quadratic Factoriser",
     "level": "gcse",
-    "modes": []
+    "modes": [],
+    "stages": []
    }
   },
   {
@@ -468,7 +454,8 @@
     "slug": "estimation-engine",
     "game": "Estimation Engine",
     "level": "gcse",
-    "modes": []
+    "modes": [],
+    "stages": []
    }
   },
   {
@@ -484,7 +471,8 @@
     "slug": "unit-converter",
     "game": "Unit Converter",
     "level": "gcse",
-    "modes": []
+    "modes": [],
+    "stages": []
    }
   },
   {
@@ -500,7 +488,8 @@
     "slug": "component-crusher",
     "game": "Component Crusher",
     "level": "gcse",
-    "modes": []
+    "modes": [],
+    "stages": []
    }
   },
   {
@@ -516,7 +505,8 @@
     "slug": "equation-builder",
     "game": "Equation Builder",
     "level": "ks3",
-    "modes": []
+    "modes": [],
+    "stages": []
    }
   },
   {
@@ -532,7 +522,8 @@
     "slug": "decimal-detective",
     "game": "Decimal Detective",
     "level": "year6",
-    "modes": []
+    "modes": [],
+    "stages": []
    }
   },
   {
@@ -548,7 +539,8 @@
     "slug": "just-pythag-it-bruv",
     "game": "Just Pythag It, Bruv",
     "level": "ks3",
-    "modes": []
+    "modes": [],
+    "stages": []
    }
   },
   {
@@ -564,7 +556,8 @@
     "slug": "formula-unlocked",
     "game": "Formula Unlocked",
     "level": "gcse",
-    "modes": []
+    "modes": [],
+    "stages": []
    }
   },
   {
@@ -580,7 +573,8 @@
     "slug": "four-quadrant-explorer",
     "game": "Four Quadrant Explorer",
     "level": "year6",
-    "modes": []
+    "modes": [],
+    "stages": []
    }
   }
  ],
@@ -656,6 +650,13 @@
    "planned": null
   },
   {
+   "id": "venn",
+   "name": "Venn diagrams",
+   "marks": 4.2,
+   "series": 6,
+   "planned": null
+  },
+  {
    "id": "straight-line-graphs",
    "name": "Straight-line graphs",
    "marks": 4.7,
@@ -702,6 +703,13 @@
    "name": "2D shapes",
    "marks": 3.8,
    "series": 5,
+   "planned": null
+  },
+  {
+   "id": "two-way-tables",
+   "name": "Two-way tables",
+   "marks": 3.5,
+   "series": 3,
    "planned": null
   },
   {

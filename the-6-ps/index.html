@@ -261,9 +261,11 @@
     });
   }
 
-  function launchUrl(t, mode) {
+  // A route opens its game at a mode ([data-mode]) or a stage ([data-stage]), never both (gen-exam-topics.py).
+  function launchUrl(t, mode, stage) {
     var r = t.route, q = 'level=' + encodeURIComponent(r.level);
     if (mode) q += '&mode=' + encodeURIComponent(mode);
+    if (stage) q += '&stage=' + encodeURIComponent(stage);
     q += '&burst=' + BURST + '&from=six-ps&topic=' + encodeURIComponent(t.id);
     return '/games/' + r.slug + '/?' + q;
   }
@@ -284,8 +286,9 @@
     return {
       v: 1,
       plan: bandOrder(picked).map(function (t) {
-        var m = t.route.modes;
-        return { id: t.id, mode: m.length ? m[Math.floor(rnd() * m.length)] : '' };
+        var m = t.route.modes, st = t.route.stages || [];
+        return { id: t.id, mode: m.length ? m[Math.floor(rnd() * m.length)] : '',
+                 stage: st.length ? st[Math.floor(rnd() * st.length)] : '' };
       }),
       i: 0, results: {}, finishedSent: false, feedbackSent: false
     };
@@ -421,7 +424,7 @@
     $('nextCount').textContent = 'Topic ' + (session.i + 1) + ' of ' + session.plan.length;
     $('nextName').textContent = t.name;
     $('nextWhat').textContent = BURST + ' questions in ' + t.route.game + '. It brings you back here when you’ve done.';
-    $('goBtn').href = launchUrl(t, cur.mode);
+    $('goBtn').href = launchUrl(t, cur.mode, cur.stage);
     var list = $('planList');
     list.textContent = '';
     session.plan.forEach(function (p, k) {

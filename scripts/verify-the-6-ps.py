@@ -159,10 +159,18 @@ def about(marks):
     return max(1, int(math.floor(marks + 0.5)))
 
 
-def expected_launch(t, mode):
+def openers(t):
+    """[(mode, stage)] a route may open its game at: each mode, or each stage, or neither."""
+    r = t['route']
+    return [(m, '') for m in r['modes']] + [('', st) for st in r.get('stages', [])] or [('', '')]
+
+
+def expected_launch(t, mode, stage=''):
     q = 'level=%s' % t['route']['level']
     if mode:
         q += '&mode=%s' % mode
+    if stage:
+        q += '&stage=%s' % stage
     return '/games/%s/?%s&burst=%d&from=six-ps&topic=%s' % (t['route']['slug'], q, BURST, t['id'])
 
 
@@ -219,10 +227,10 @@ def check_engine(b, data, out):
     """Launch links and 10,000 sessions each way, from the page's own functions."""
     p = b.page
     for t in data['covered']:
-        for mode in (t['route']['modes'] or ['']):
-            got = p.evaluate('([id, mode]) => SixPs.launchUrl(SixPs.data().covered.find(t => t.id === id), mode)',
-                             [t['id'], mode])
-            want = expected_launch(t, mode)
+        for mode, stage in openers(t):
+            got = p.evaluate('([id, mode, stage]) => SixPs.launchUrl(SixPs.data().covered.find(t => t.id === id), mode, stage)',
+                             [t['id'], mode, stage])
+            want = expected_launch(t, mode, stage)
             if got != want:
                 out.append('%s: launch link %r, expected %r' % (t['id'], got, want))
     res = p.evaluate("""(n) => {
@@ -308,7 +316,7 @@ def play(pw, base, html, data, out, blocked, narrow=False):
         scores = [(4, 5), None, (2, 5), (5, 5), (3, 5), (1, 5)]   # None: skipped
         for k, t in enumerate(topics):
             href = p.get_attribute('#goBtn', 'href')
-            want = [expected_launch(t, m) for m in (t['route']['modes'] or [''])]
+            want = [expected_launch(t, m, st) for m, st in openers(t)]
             if href not in want:
                 out.append('%s: topic %d link %r, expected one of %s' % (tag, k + 1, href, want))
             if scores[k] is None:
@@ -442,7 +450,7 @@ async def burst_ctx(CB, browser, base):
     return ctx
 
 
-async def play_five(CB, page, slug, mode=None):
+async def play_five(CB, page, slug, mode=None, stage=None):
     """Five answers through the answer-lock driver: (findings, right answers the page reported, the bar or None).
     A game's lock hint may start play by pressing a stage of its own (squared-squirrel's presses stage-2, the stage
     check-answer-lock.py plays); in a burst that names a mode, the hint presses the route's mode instead, as the
@@ -450,6 +458,8 @@ async def play_five(CB, page, slug, mode=None):
     hint = dict(CB.AL.read_hint(open(os.path.join(ROOT, 'games', slug, 'index.html'), encoding='utf-8').read())[0])
     if mode and isinstance(hint.get('start'), str):
         hint['start'] = re.sub(r'data-mode="[^"]*"', 'data-mode="%s"' % mode, hint['start'])
+    if stage and isinstance(hint.get('start'), str):
+        hint['start'] = re.sub(r'data-stage="[^"]*"', 'data-stage="%s"' % stage, hint['start'])
     d = CB.AL.Driver(page, slug, hint)
     if not await d.start():
         return ['UNPLAYABLE (no question reached)'], None, None
@@ -473,27 +483,49 @@ async def play_five(CB, page, slug, mode=None):
     return [], s['correct'], await page.evaluate(CB.BAR)
 
 
-async def launch_route(CB, browser, base, t, mode):
+# How each game's own game_started names the mode or stage it started at, read from the games' code: a [data-mode]
+# card's onclick may call the game's own key (Shape Shifter's random-mix card calls startGame('mix')); Free Daily
+# Pizza reports a stage as FDP.modeFor's 'stage-s<stage>-q<length>'; Simultaneous Solver's mode() is its stage key.
+STAGE_REPORTS = {'free-daily-pizza': lambda st, m: bool(m) and m.startswith('stage-s%s-' % st),
+                 'simultaneous-solver': lambda st, m: m == st}
+
+
+def game_mode_name(slug, mode):
+    with open(os.path.join(ROOT, 'games', slug, 'index.html'), encoding='utf-8') as f:
+        src = f.read()
+    m = re.search(r'<[^>]*\bdata-mode="%s"[^>]*>' % re.escape(mode), src)
+    oc = m and re.search(r"onclick=\"startGame\('([^']+)'\)\"", m.group(0))
+    return oc.group(1) if oc else mode
+
+
+def opened_at(slug, mode, stage, started):
+    if mode:
+        return game_mode_name(slug, mode) in started
+    report = STAGE_REPORTS.get(slug, lambda st, m: m == st)
+    return any(report(stage, m) for m in started)
+
+
+async def launch_route(CB, browser, base, t, mode, stage=''):
     """Open one route's game at the page's launch link, play the burst and read the return link."""
     slug, level = t['route']['slug'], t['route']['level']
-    where = '%s (%s%s)' % (t['id'], slug, ', mode ' + mode if mode else '')
-    f, stage = [], None
+    where = '%s (%s%s%s)' % (t['id'], slug, ', mode ' + mode if mode else '', ', stage ' + stage if stage else '')
+    f, reported = [], None
     ctx = await burst_ctx(CB, browser, base)
     try:
         page = await ctx.new_page()
         errs = []
         page.on('pageerror', lambda e: errs.append(str(e)[:120]))
-        await page.goto(base + expected_launch(t, mode), wait_until='load', timeout=20000)
-        await page.wait_for_timeout(1200 if mode else 300)
+        await page.goto(base + expected_launch(t, mode, stage), wait_until='load', timeout=20000)
+        await page.wait_for_timeout(1200 if mode or stage else 300)
         if not await page.evaluate('() => !!(window.MaffsBurst && MaffsBurst.active())'):
             return ['%s: the game is not in a burst (does it load burst.js?)' % where], None
-        got, right, bar = await play_five(CB, page, slug, mode)
+        got, right, bar = await play_five(CB, page, slug, mode, stage)
         f += ['%s: %s' % (where, g) for g in got]
         started = await page.evaluate("() => (window.__lockEvents || []).filter(e => e.e === 'game_started').map(e => e.m)")
-        if mode:
-            stage = started[0] if started else None
-            if mode not in started:
-                f.append('%s: STAGE the game did not open at mode %r (game_started reported %r)' % (where, mode, started))
+        if (mode or stage) and not opened_at(slug, mode, stage, started):
+            f.append('%s: STAGE the game did not open at %s %r (its own game_started reported %r)'
+                     % (where, 'mode' if mode else 'stage', mode or stage, started))
+        reported = started[0] if started else None
         dec = await page.evaluate('(s) => (window.MaffsLevel && MaffsLevel.declared) ? MaffsLevel.declared(s) : null', slug)
         if not dec or dec.get('fromUrl') is not True:
             f.append('%s: the game did not take ?level=%s from the link (%r)' % (where, level, dec))
@@ -506,7 +538,7 @@ async def launch_route(CB, browser, base, t, mode):
         f += ['%s: page error: %s' % (where, e) for e in errs]
     finally:
         await ctx.close()
-    return f, stage
+    return f, reported
 
 
 async def full_session(CB, browser, base, data, out):
@@ -533,7 +565,8 @@ async def full_session(CB, browser, base, data, out):
             await page.wait_for_load_state('load')
             await page.wait_for_timeout(1200)
             m = re.search(r'[?&]mode=([^&]+)', href or '')
-            got, right, bar = await play_five(CB, page, t['route']['slug'], m.group(1) if m else None)
+            st = re.search(r'[?&]stage=([^&]+)', href or '')
+            got, right, bar = await play_five(CB, page, t['route']['slug'], m.group(1) if m else None, st.group(1) if st else None)
             if got or not bar:
                 out.append('full session: %s (%s): %s' % (t['id'], href, got or 'no return bar'))
                 return
@@ -563,7 +596,7 @@ def burst_part(out, data, shard=None, shards=1, launches=True, session=True):
     import asyncio
     from playwright.async_api import async_playwright
     CB = burst_harness()
-    jobs = [(t, m) for t in data['covered'] for m in (t['route']['modes'] or [''])] if launches else []
+    jobs = [(t, m, st) for t in data['covered'] for m, st in openers(t)] if launches else []
     if shard is not None:
         jobs = jobs[shard - 1::shards]
     stages = {}
@@ -575,16 +608,16 @@ def burst_part(out, data, shard=None, shards=1, launches=True, session=True):
                 browser = await p.chromium.launch()
                 sem = asyncio.Semaphore(LAUNCH_WORKERS)
 
-                async def one(t, m):
+                async def one(t, m, st):
                     async with sem:
                         try:
-                            f, st = await asyncio.wait_for(launch_route(CB, browser, base, t, m), 180)
+                            f, rep = await asyncio.wait_for(launch_route(CB, browser, base, t, m, st), 180)
                         except Exception as e:  # a crash is a failure, never a pass
-                            f, st = ['%s: the launch check stopped: %s: %s' % (t['id'], type(e).__name__, str(e).splitlines()[0] if str(e) else '')], None
+                            f, rep = ['%s: the launch check stopped: %s: %s' % (t['id'], type(e).__name__, str(e).splitlines()[0] if str(e) else '')], None
                         out.extend(f)
                         if m:
-                            stages['%s/%s' % (t['id'], m)] = st
-                await asyncio.gather(*(one(t, m) for t, m in jobs))
+                            stages['%s/%s' % (t['id'], m or st)] = rep
+                await asyncio.gather(*(one(t, m, st) for t, m, st in jobs))
                 if session:
                     try:
                         await asyncio.wait_for(full_session(CB, browser, base, data, out), 600)

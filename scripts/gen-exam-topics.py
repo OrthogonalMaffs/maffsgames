@@ -11,9 +11,11 @@ The table below is the one place the audit's figures are typed: an audit of 18 O
 of its own (a figure on a page is a claim); scripts/verify-the-6-ps.py holds both to that.
 
   COVERED      a topic a real game already teaches, with its route: the game, the level it opens at, and the game's
-               own mode keys to choose from (one is picked per session; none means the game's own menu). Three stages
-               are Jon's rulings of 25 Oct 2026: how-many-parts Foundation stage 3, simultaneous-solver Foundation
-               stage 4, shape-shifter Random Mix. Where the
+               own keys to choose from, one picked per session: modes (sent as &mode=, a [data-mode] button) or stages
+               (sent as &stage=, a [data-stage] button); none means the game's own menu. Jon's rulings of 25 Oct 2026:
+               how-many-parts Foundation stage 3, simultaneous-solver stage 4 and free-daily-pizza stages 1-3 (by
+               &stage=), shape-shifter Random Mix (random-mix), negative-number-line with no mode; venn and
+               two-way-tables moved to coming soon (Given That's second question is always P(A|B), Higher content). Where the
                contract named no level, the route takes the game's declared fallback (MaffsLevel.resolve), and the
                verifier checks every level is one the game declares.
   band         Jon's grade band for the topic (24 Oct 2026; his judgement from the audit, not OCR data). Used only to
@@ -38,42 +40,40 @@ PAPERS = 18
 SERIES = 6
 MARKS_PER_SERIES = 300
 
-# id, name, avg marks per series, series appeared (of 6), band (lo, hi), game slug, level, mode keys
+# id, name, avg marks per series, series appeared (of 6), band (lo, hi), game slug, level, mode keys, stage keys
 COVERED = [
-    ("ratio", "Ratio", 13.3, 6, (2, 5), "split-it", "ks3", ["simplify", "divide"]),
-    ("direct-proportion", "Direct proportion", 11.7, 6, (1, 4), "split-it", "ks3", ["unitary", "scale"]),
-    ("powers-roots", "Powers and roots", 9.0, 6, (2, 5), "index-laws", "gcse", []),
-    ("compound-measures", "Compound measures", 8.2, 6, (3, 5), "squared-squirrel", "ks3", ["stage-2", "stage-3"]),
-    ("linear-equations", "Linear equations", 7.5, 6, (2, 5), "linear-equation-solver", "gcse", []),
-    ("sequences", "Sequences", 7.3, 6, (1, 4), "sequence-solver", "ks3", []),
-    ("angles", "Angles", 7.2, 6, (1, 4), "angle-ace", "gcse", []),
-    ("arithmetic-negatives", "Negative numbers", 7.0, 5, (1, 3), "negative-number-line", "year6", ["calc"]),
-    ("fdp-convert", "Fractions, decimals and percentages", 6.8, 6, (1, 3), "free-daily-pizza", "ks3", ["1", "2"]),
-    ("number-vocabulary", "Factors, multiples and primes", 6.7, 6, (1, 3), "factor-race", "ks3", []),
-    ("fraction-operations", "Calculating with fractions", 6.5, 6, (1, 4), "how-many-parts", "ks3", ["stage3"]),
-    ("fraction-percentage-of-amount", "Fractions and percentages of amounts", 6.3, 6, (1, 4), "free-daily-pizza", "ks3", ["3"]),
-    ("averages", "Averages and range", 6.3, 6, (1, 4), "distinctly-average", "ks3", []),
-    ("area", "Area", 6.0, 6, (1, 5), "take-a-walk", "ks3", ["stage-1", "stage-2", "stage-3"]),
-    ("inverse-operations", "Inverse operations", 5.3, 6, (1, 3), "think-of-a-number", "year6", []),
-    ("trigonometry", "Trigonometry", 5.0, 6, (4, 5), "trig-worms", "gcse", []),
-    ("venn", "Venn diagrams", 4.2, 6, (3, 4), "given-that", "gcse", ["venn"]),
-    ("simultaneous", "Simultaneous equations", 4.2, 4, (4, 5), "simultaneous-solver", "gcse", ["stage4"]),
-    ("transformations", "Transformations", 4.0, 5, (1, 4), "shape-shifter", "year6", ["mix"]),
-    ("simplify-expressions", "Simplifying expressions", 3.7, 5, (1, 3), "like-terms-collector", "year6", []),
-    ("basic-probability", "Probability", 3.7, 5, (1, 3), "probability-pioneer", "year6", []),
-    ("substitution", "Substitution", 3.5, 5, (1, 4), "formula-plug-in", "year6", []),
-    ("two-way-tables", "Two-way tables", 3.5, 3, (2, 4), "given-that", "gcse", ["table"]),
-    ("perimeter", "Perimeter", 3.3, 4, (1, 4), "take-a-walk", "ks3", ["stage-1"]),
-    ("standard-form", "Standard form", 3.2, 5, (4, 5), "standard-form-blitz", "gcse", []),
-    ("quadratics-factorise", "Factorising quadratics", 3.0, 6, (4, 5), "quadratic-factoriser", "gcse", []),
-    ("estimation", "Estimation", 3.0, 5, (2, 4), "estimation-engine", "gcse", []),
-    ("metric-units", "Metric units", 3.0, 4, (1, 3), "unit-converter", "gcse", []),
-    ("vectors", "Vectors", 2.8, 5, (3, 4), "component-crusher", "gcse", []),
-    ("form-expressions", "Forming expressions and equations", 2.7, 5, (3, 4), "equation-builder", "ks3", []),
-    ("rounding", "Rounding", 2.3, 5, (1, 3), "decimal-detective", "year6", []),
-    ("pythagoras", "Pythagoras' theorem", 2.3, 3, (4, 5), "just-pythag-it-bruv", "ks3", []),
-    ("change-subject", "Changing the subject", 2.0, 5, (4, 5), "formula-unlocked", "gcse", []),
-    ("coordinates", "Coordinates", 1.8, 5, (1, 2), "four-quadrant-explorer", "year6", []),
+    ("ratio", "Ratio", 13.3, 6, (2, 5), "split-it", "ks3", ["simplify", "divide"], []),
+    ("direct-proportion", "Direct proportion", 11.7, 6, (1, 4), "split-it", "ks3", ["unitary", "scale"], []),
+    ("powers-roots", "Powers and roots", 9.0, 6, (2, 5), "index-laws", "gcse", [], []),
+    ("compound-measures", "Compound measures", 8.2, 6, (3, 5), "squared-squirrel", "ks3", ["stage-2", "stage-3"], []),
+    ("linear-equations", "Linear equations", 7.5, 6, (2, 5), "linear-equation-solver", "gcse", [], []),
+    ("sequences", "Sequences", 7.3, 6, (1, 4), "sequence-solver", "ks3", [], []),
+    ("angles", "Angles", 7.2, 6, (1, 4), "angle-ace", "gcse", [], []),
+    ("arithmetic-negatives", "Negative numbers", 7.0, 5, (1, 3), "negative-number-line", "year6", [], []),
+    ("fdp-convert", "Fractions, decimals and percentages", 6.8, 6, (1, 3), "free-daily-pizza", "ks3", [], ["1", "2"]),
+    ("number-vocabulary", "Factors, multiples and primes", 6.7, 6, (1, 3), "factor-race", "ks3", [], []),
+    ("fraction-operations", "Calculating with fractions", 6.5, 6, (1, 4), "how-many-parts", "ks3", ["stage3"], []),
+    ("fraction-percentage-of-amount", "Fractions and percentages of amounts", 6.3, 6, (1, 4), "free-daily-pizza", "ks3", [], ["3"]),
+    ("averages", "Averages and range", 6.3, 6, (1, 4), "distinctly-average", "ks3", [], []),
+    ("area", "Area", 6.0, 6, (1, 5), "take-a-walk", "ks3", ["stage-1", "stage-2", "stage-3"], []),
+    ("inverse-operations", "Inverse operations", 5.3, 6, (1, 3), "think-of-a-number", "year6", [], []),
+    ("trigonometry", "Trigonometry", 5.0, 6, (4, 5), "trig-worms", "gcse", [], []),
+    ("simultaneous", "Simultaneous equations", 4.2, 4, (4, 5), "simultaneous-solver", "gcse", [], ["stage4"]),
+    ("transformations", "Transformations", 4.0, 5, (1, 4), "shape-shifter", "year6", ["random-mix"], []),
+    ("simplify-expressions", "Simplifying expressions", 3.7, 5, (1, 3), "like-terms-collector", "year6", [], []),
+    ("basic-probability", "Probability", 3.7, 5, (1, 3), "probability-pioneer", "year6", [], []),
+    ("substitution", "Substitution", 3.5, 5, (1, 4), "formula-plug-in", "year6", [], []),
+    ("perimeter", "Perimeter", 3.3, 4, (1, 4), "take-a-walk", "ks3", ["stage-1"], []),
+    ("standard-form", "Standard form", 3.2, 5, (4, 5), "standard-form-blitz", "gcse", [], []),
+    ("quadratics-factorise", "Factorising quadratics", 3.0, 6, (4, 5), "quadratic-factoriser", "gcse", [], []),
+    ("estimation", "Estimation", 3.0, 5, (2, 4), "estimation-engine", "gcse", [], []),
+    ("metric-units", "Metric units", 3.0, 4, (1, 3), "unit-converter", "gcse", [], []),
+    ("vectors", "Vectors", 2.8, 5, (3, 4), "component-crusher", "gcse", [], []),
+    ("form-expressions", "Forming expressions and equations", 2.7, 5, (3, 4), "equation-builder", "ks3", [], []),
+    ("rounding", "Rounding", 2.3, 5, (1, 3), "decimal-detective", "year6", [], []),
+    ("pythagoras", "Pythagoras' theorem", 2.3, 3, (4, 5), "just-pythag-it-bruv", "ks3", [], []),
+    ("change-subject", "Changing the subject", 2.0, 5, (4, 5), "formula-unlocked", "gcse", [], []),
+    ("coordinates", "Coordinates", 1.8, 5, (1, 2), "four-quadrant-explorer", "year6", [], []),
 ]
 
 # id, name, avg marks per series, series appeared (of 6), planned game name (or None)
@@ -88,6 +88,9 @@ COMING_SOON = [
     ("tree-diagrams", "Tree diagrams", 5.3, 5, None),
     ("bar-pictogram-line", "Bar charts, pictograms and line graphs", 5.2, 5, None),
     ("relative-frequency", "Relative frequency", 4.8, 6, None),
+    # Moved from COVERED (Jon, 25 Oct 2026): Given That's second question is always P(A|B), Higher content, so no
+    # Foundation burst serves them.
+    ("venn", "Venn diagrams", 4.2, 6, None),
     ("straight-line-graphs", "Straight-line graphs", 4.7, 6, "Y So Steep?"),
     ("similarity-congruence", "Similarity and congruence", 4.7, 6, None),
     ("listing-outcomes", "Listing outcomes", 4.5, 6, None),
@@ -96,6 +99,7 @@ COMING_SOON = [
     ("constructions", "Constructions", 4.0, 6, None),
     ("pie-charts", "Pie charts", 4.0, 4, "Who Ate All the Pies?"),
     ("2d-shapes", "2D shapes", 3.8, 5, None),
+    ("two-way-tables", "Two-way tables", 3.5, 3, None),   # moved from COVERED with venn (Jon, 25 Oct 2026)
     ("quadratic-graphs", "Quadratic graphs", 3.5, 5, None),
     ("real-life-graphs", "Real-life graphs", 3.2, 4, None),
     ("3d-solids", "3D solids", 3.0, 6, None),
@@ -121,12 +125,12 @@ def build():
     names = roster_names()
     errors = []
     covered = []
-    for tid, name, marks, series, band, slug, level, modes in COVERED:
+    for tid, name, marks, series, band, slug, level, modes, stages in COVERED:
         if slug not in names:
             errors.append("%s: game %s is not a numbered roster row" % (tid, slug))
         covered.append({
             "id": tid, "name": name, "marks": marks, "series": series, "band": list(band),
-            "route": {"slug": slug, "game": names.get(slug, ""), "level": level, "modes": modes},
+            "route": {"slug": slug, "game": names.get(slug, ""), "level": level, "modes": modes, "stages": stages},
         })
     coming = [{"id": tid, "name": name, "marks": marks, "series": series, "planned": planned}
               for tid, name, marks, series, planned in COMING_SOON]
@@ -142,6 +146,8 @@ def build():
         if not (1 <= t["series"] <= SERIES):
             errors.append("%s: series %r is not 1 to %d" % (t["id"], t["series"], SERIES))
     for t in covered:
+        if t["route"]["modes"] and t["route"]["stages"]:
+            errors.append("%s: a route opens by mode or by stage, not both" % t["id"])
         lo, hi = t["band"]
         if not (1 <= lo <= hi <= 9):
             errors.append("%s: band %r is not a grade range" % (t["id"], t["band"]))
