@@ -35,8 +35,24 @@
      "label": "\\((x + 1)(x + 1)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(1\\) and add to \\(2\\): \\(1\\) and \\(1\\), because \\(1 \\times 1 = 1\\) and \\(1 + 1 = 2\\).",
+    "So \\(x^2 + 2x + 1 = (x + 1)(x + 1)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-e32bcd8d",
@@ -71,8 +87,30 @@
      "label": "\\((x - 1)(x - 3)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(3\\) and add to \\(4\\): \\(1\\) and \\(3\\), because \\(1 \\times 3 = 3\\) and \\(1 + 3 = 4\\).",
+    "So \\(x^2 + 4x + 3 = (x + 1)(x + 3)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-1a5198d4",
@@ -107,8 +145,30 @@
      "label": "\\((x + 1)(x - 6)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(6\\) and add to \\(7\\): \\(1\\) and \\(6\\), because \\(1 \\times 6 = 6\\) and \\(1 + 6 = 7\\).",
+    "So \\(x^2 + 7x + 6 = (x + 1)(x + 6)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-2b43878f",
@@ -143,8 +203,30 @@
      "label": "\\((x + 1)(x - 9)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(9\\) and add to \\(10\\): \\(1\\) and \\(9\\), because \\(1 \\times 9 = 9\\) and \\(1 + 9 = 10\\).",
+    "So \\(x^2 + 10x + 9 = (x + 1)(x + 9)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-3da0fc58",
@@ -179,8 +261,30 @@
      "label": "\\((x + 2)(x + 4)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(8\\) and add to \\(6\\): \\(2\\) and \\(4\\), because \\(2 \\times 4 = 8\\) and \\(2 + 4 = 6\\).",
+    "So \\(x^2 + 6x + 8 = (x + 2)(x + 4)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-863d16cd",
@@ -215,8 +319,30 @@
      "label": "\\((x - 2)(x + 7)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(14\\) and add to \\(9\\): \\(2\\) and \\(7\\), because \\(2 \\times 7 = 14\\) and \\(2 + 7 = 9\\).",
+    "So \\(x^2 + 9x + 14 = (x + 2)(x + 7)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-911a125e",
@@ -251,8 +377,30 @@
      "label": "\\((x + 2)(x - 9)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(18\\) and add to \\(11\\): \\(2\\) and \\(9\\), because \\(2 \\times 9 = 18\\) and \\(2 + 9 = 11\\).",
+    "So \\(x^2 + 11x + 18 = (x + 2)(x + 9)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-51b84120",
@@ -287,8 +435,30 @@
      "label": "\\((x - 3)(x - 5)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(15\\) and add to \\(8\\): \\(3\\) and \\(5\\), because \\(3 \\times 5 = 15\\) and \\(3 + 5 = 8\\).",
+    "So \\(x^2 + 8x + 15 = (x + 3)(x + 5)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-78a8ef2c",
@@ -323,8 +493,30 @@
      "label": "\\((x + 3)(x - 8)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(24\\) and add to \\(11\\): \\(3\\) and \\(8\\), because \\(3 \\times 8 = 24\\) and \\(3 + 8 = 11\\).",
+    "So \\(x^2 + 11x + 24 = (x + 3)(x + 8)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-44d21762",
@@ -359,8 +551,30 @@
      "label": "\\((x - 4)(x + 5)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(20\\) and add to \\(9\\): \\(4\\) and \\(5\\), because \\(4 \\times 5 = 20\\) and \\(4 + 5 = 9\\).",
+    "So \\(x^2 + 9x + 20 = (x + 4)(x + 5)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-a6841293",
@@ -395,8 +609,30 @@
      "label": "\\((x + 4)(x - 8)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(32\\) and add to \\(12\\): \\(4\\) and \\(8\\), because \\(4 \\times 8 = 32\\) and \\(4 + 8 = 12\\).",
+    "So \\(x^2 + 12x + 32 = (x + 4)(x + 8)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-0870682a",
@@ -431,8 +667,24 @@
      "label": "\\((x + 5)(x + 5)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(25\\) and add to \\(10\\): \\(5\\) and \\(5\\), because \\(5 \\times 5 = 25\\) and \\(5 + 5 = 10\\).",
+    "So \\(x^2 + 10x + 25 = (x + 5)(x + 5)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-b1446d9d",
@@ -467,8 +719,30 @@
      "label": "\\((x + 5)(x - 8)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(40\\) and add to \\(13\\): \\(5\\) and \\(8\\), because \\(5 \\times 8 = 40\\) and \\(5 + 8 = 13\\).",
+    "So \\(x^2 + 13x + 40 = (x + 5)(x + 8)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-de7879ec",
@@ -503,8 +777,30 @@
      "label": "\\((x - 6)(x - 7)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(42\\) and add to \\(13\\): \\(6\\) and \\(7\\), because \\(6 \\times 7 = 42\\) and \\(6 + 7 = 13\\).",
+    "So \\(x^2 + 13x + 42 = (x + 6)(x + 7)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-d5138b96",
@@ -539,8 +835,24 @@
      "label": "\\((x + 8)(x + 7)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(49\\) and add to \\(14\\): \\(7\\) and \\(7\\), because \\(7 \\times 7 = 49\\) and \\(7 + 7 = 14\\).",
+    "So \\(x^2 + 14x + 49 = (x + 7)(x + 7)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-0e84e92a",
@@ -575,8 +887,24 @@
      "label": "\\((x + 8)(x - 8)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(64\\) and add to \\(16\\): \\(8\\) and \\(8\\), because \\(8 \\times 8 = 64\\) and \\(8 + 8 = 16\\).",
+    "So \\(x^2 + 16x + 64 = (x + 8)(x + 8)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-af3c7d5a",
@@ -611,8 +939,30 @@
      "label": "\\((x - 1)(x - 9)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(-9\\) and add to \\(-8\\): \\(1\\) and \\(-9\\), because \\(1 \\times (-9) = -9\\) and \\(1 + (-9) = -8\\).",
+    "So \\(x^2 - 8x - 9 = (x + 1)(x - 9)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-1349f83b",
@@ -647,8 +997,30 @@
      "label": "\\((x - 1)(x - 5)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(-5\\) and add to \\(-4\\): \\(1\\) and \\(-5\\), because \\(1 \\times (-5) = -5\\) and \\(1 + (-5) = -4\\).",
+    "So \\(x^2 - 4x - 5 = (x + 1)(x - 5)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-3f0617e4",
@@ -683,8 +1055,30 @@
      "label": "\\((x + 2)(x - 8)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(-16\\) and add to \\(-6\\): \\(2\\) and \\(-8\\), because \\(2 \\times (-8) = -16\\) and \\(2 + (-8) = -6\\).",
+    "So \\(x^2 - 6x - 16 = (x + 2)(x - 8)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-465b9107",
@@ -719,8 +1113,30 @@
      "label": "\\((x + 2)(x - 4)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(-8\\) and add to \\(-2\\): \\(2\\) and \\(-4\\), because \\(2 \\times (-4) = -8\\) and \\(2 + (-4) = -2\\).",
+    "So \\(x^2 - 2x - 8 = (x + 2)(x - 4)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-446b7914",
@@ -755,8 +1171,30 @@
      "label": "\\((x + 3)(x - 7)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(-21\\) and add to \\(-4\\): \\(3\\) and \\(-7\\), because \\(3 \\times (-7) = -21\\) and \\(3 + (-7) = -4\\).",
+    "So \\(x^2 - 4x - 21 = (x + 3)(x - 7)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-3f641851",
@@ -791,8 +1229,30 @@
      "label": "\\((x - 3)(x - 2)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(-6\\) and add to \\(1\\): \\(3\\) and \\(-2\\), because \\(3 \\times (-2) = -6\\) and \\(3 + (-2) = 1\\).",
+    "So \\(x^2 + x - 6 = (x + 3)(x - 2)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-20d8099b",
@@ -827,8 +1287,30 @@
      "label": "\\((x + 4)(x + 6)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(-24\\) and add to \\(-2\\): \\(4\\) and \\(-6\\), because \\(4 \\times (-6) = -24\\) and \\(4 + (-6) = -2\\).",
+    "So \\(x^2 - 2x - 24 = (x + 4)(x - 6)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-4d81852d",
@@ -863,8 +1345,30 @@
      "label": "\\((x - 4)(x - 1)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(-4\\) and add to \\(3\\): \\(4\\) and \\(-1\\), because \\(4 \\times (-1) = -4\\) and \\(4 + (-1) = 3\\).",
+    "So \\(x^2 + 3x - 4 = (x + 4)(x - 1)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-adda37bf",
@@ -899,8 +1403,30 @@
      "label": "\\((x + 5)(x - 4)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(-20\\) and add to \\(1\\): \\(5\\) and \\(-4\\), because \\(5 \\times (-4) = -20\\) and \\(5 + (-4) = 1\\).",
+    "So \\(x^2 + x - 20 = (x + 5)(x - 4)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-67e98cd8",
@@ -935,8 +1461,30 @@
      "label": "\\((x - 6)(x - 9)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(-54\\) and add to \\(-3\\): \\(6\\) and \\(-9\\), because \\(6 \\times (-9) = -54\\) and \\(6 + (-9) = -3\\).",
+    "So \\(x^2 - 3x - 54 = (x + 6)(x - 9)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-ac252097",
@@ -971,8 +1519,30 @@
      "label": "\\((x + 6)(x - 3)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(-18\\) and add to \\(3\\): \\(6\\) and \\(-3\\), because \\(6 \\times (-3) = -18\\) and \\(6 + (-3) = 3\\).",
+    "So \\(x^2 + 3x - 18 = (x + 6)(x - 3)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-c3f7669a",
@@ -1007,8 +1577,30 @@
      "label": "\\((x - 7)(x + 8)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(-56\\) and add to \\(-1\\): \\(7\\) and \\(-8\\), because \\(7 \\times (-8) = -56\\) and \\(7 + (-8) = -1\\).",
+    "So \\(x^2 - x - 56 = (x + 7)(x - 8)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-d81b4222",
@@ -1043,8 +1635,30 @@
      "label": "\\((x + 7)(x - 2)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(-14\\) and add to \\(5\\): \\(7\\) and \\(-2\\), because \\(7 \\times (-2) = -14\\) and \\(7 + (-2) = 5\\).",
+    "So \\(x^2 + 5x - 14 = (x + 7)(x - 2)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-7112b02e",
@@ -1079,8 +1693,30 @@
      "label": "\\((x + 8)(x - 6)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(-48\\) and add to \\(2\\): \\(8\\) and \\(-6\\), because \\(8 \\times (-6) = -48\\) and \\(8 + (-6) = 2\\).",
+    "So \\(x^2 + 2x - 48 = (x + 8)(x - 6)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-e1a1824d",
@@ -1115,8 +1751,30 @@
      "label": "\\((x + 8)(x + 1)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(-8\\) and add to \\(7\\): \\(8\\) and \\(-1\\), because \\(8 \\times (-1) = -8\\) and \\(8 + (-1) = 7\\).",
+    "So \\(x^2 + 7x - 8 = (x + 8)(x - 1)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-f1b2cadc",
@@ -1151,8 +1809,30 @@
      "label": "\\((x + 9)(x + 5)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(-45\\) and add to \\(4\\): \\(9\\) and \\(-5\\), because \\(9 \\times (-5) = -45\\) and \\(9 + (-5) = 4\\).",
+    "So \\(x^2 + 4x - 45 = (x + 9)(x - 5)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-9a210356",
@@ -1187,8 +1867,24 @@
      "label": "\\((x - 9)(x + 9)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(81\\) and add to \\(-18\\): \\(-9\\) and \\(-9\\), because \\((-9) \\times (-9) = 81\\) and \\((-9) + (-9) = -18\\).",
+    "So \\(x^2 - 18x + 81 = (x - 9)(x - 9)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-e3715bb8",
@@ -1223,8 +1919,30 @@
      "label": "\\((x + 9)(x + 7)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(63\\) and add to \\(-16\\): \\(-9\\) and \\(-7\\), because \\((-9) \\times (-7) = 63\\) and \\((-9) + (-7) = -16\\).",
+    "So \\(x^2 - 16x + 63 = (x - 9)(x - 7)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-4c96dbf9",
@@ -1259,8 +1977,30 @@
      "label": "\\((x - 9)(x - 4)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(36\\) and add to \\(-13\\): \\(-9\\) and \\(-4\\), because \\((-9) \\times (-4) = 36\\) and \\((-9) + (-4) = -13\\).",
+    "So \\(x^2 - 13x + 36 = (x - 9)(x - 4)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-5dd9ceea",
@@ -1295,8 +2035,30 @@
      "label": "\\((x - 9)(x - 1)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(9\\) and add to \\(-10\\): \\(-9\\) and \\(-1\\), because \\((-9) \\times (-1) = 9\\) and \\((-9) + (-1) = -10\\).",
+    "So \\(x^2 - 10x + 9 = (x - 9)(x - 1)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-26a71625",
@@ -1331,8 +2093,30 @@
      "label": "\\((x - 8)(x - 6)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(48\\) and add to \\(-14\\): \\(-8\\) and \\(-6\\), because \\((-8) \\times (-6) = 48\\) and \\((-8) + (-6) = -14\\).",
+    "So \\(x^2 - 14x + 48 = (x - 8)(x - 6)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-e8da57ca",
@@ -1367,8 +2151,30 @@
      "label": "\\((x - 8)(x + 3)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(24\\) and add to \\(-11\\): \\(-8\\) and \\(-3\\), because \\((-8) \\times (-3) = 24\\) and \\((-8) + (-3) = -11\\).",
+    "So \\(x^2 - 11x + 24 = (x - 8)(x - 3)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-361f6656",
@@ -1403,8 +2209,30 @@
      "label": "\\((x + 8)(x - 1)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(8\\) and add to \\(-9\\): \\(-8\\) and \\(-1\\), because \\((-8) \\times (-1) = 8\\) and \\((-8) + (-1) = -9\\).",
+    "So \\(x^2 - 9x + 8 = (x - 8)(x - 1)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-15cf3f67",
@@ -1439,8 +2267,30 @@
      "label": "\\((x + 7)(x - 5)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(35\\) and add to \\(-12\\): \\(-7\\) and \\(-5\\), because \\((-7) \\times (-5) = 35\\) and \\((-7) + (-5) = -12\\).",
+    "So \\(x^2 - 12x + 35 = (x - 7)(x - 5)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-026547f5",
@@ -1475,8 +2325,30 @@
      "label": "\\((x + 7)(x + 2)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(14\\) and add to \\(-9\\): \\(-7\\) and \\(-2\\), because \\((-7) \\times (-2) = 14\\) and \\((-7) + (-2) = -9\\).",
+    "So \\(x^2 - 9x + 14 = (x - 7)(x - 2)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-4f32a154",
@@ -1511,8 +2383,30 @@
      "label": "\\((x - 6)(x + 5)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(30\\) and add to \\(-11\\): \\(-6\\) and \\(-5\\), because \\((-6) \\times (-5) = 30\\) and \\((-6) + (-5) = -11\\).",
+    "So \\(x^2 - 11x + 30 = (x - 6)(x - 5)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-b604262a",
@@ -1547,8 +2441,30 @@
      "label": "\\((x + 6)(x - 2)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(12\\) and add to \\(-8\\): \\(-6\\) and \\(-2\\), because \\((-6) \\times (-2) = 12\\) and \\((-6) + (-2) = -8\\).",
+    "So \\(x^2 - 8x + 12 = (x - 6)(x - 2)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-6049d294",
@@ -1583,8 +2499,24 @@
      "label": "\\((x - 5)(x - 5)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(25\\) and add to \\(-10\\): \\(-5\\) and \\(-5\\), because \\((-5) \\times (-5) = 25\\) and \\((-5) + (-5) = -10\\).",
+    "So \\(x^2 - 10x + 25 = (x - 5)(x - 5)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-8e9893d0",
@@ -1619,8 +2551,30 @@
      "label": "\\((x + 5)(x + 2)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(10\\) and add to \\(-7\\): \\(-5\\) and \\(-2\\), because \\((-5) \\times (-2) = 10\\) and \\((-5) + (-2) = -7\\).",
+    "So \\(x^2 - 7x + 10 = (x - 5)(x - 2)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-6bd90ff9",
@@ -1655,8 +2609,30 @@
      "label": "\\((x - 4)(x - 3)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(12\\) and add to \\(-7\\): \\(-4\\) and \\(-3\\), because \\((-4) \\times (-3) = 12\\) and \\((-4) + (-3) = -7\\).",
+    "So \\(x^2 - 7x + 12 = (x - 4)(x - 3)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-a8196dab",
@@ -1691,8 +2667,24 @@
      "label": "\\((x + 3)(x + 3)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(9\\) and add to \\(-6\\): \\(-3\\) and \\(-3\\), because \\((-3) \\times (-3) = 9\\) and \\((-3) + (-3) = -6\\).",
+    "So \\(x^2 - 6x + 9 = (x - 3)(x - 3)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-0dc32cbb",
@@ -1727,8 +2719,24 @@
      "label": "\\((x + 2)(x + 2)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "Find two numbers that multiply to \\(4\\) and add to \\(-4\\): \\(-2\\) and \\(-2\\), because \\((-2) \\times (-2) = 4\\) and \\((-2) + (-2) = -4\\).",
+    "So \\(x^2 - 4x + 4 = (x - 2)(x - 2)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-a380e74f",
@@ -1763,8 +2771,24 @@
      "label": "\\((x - 1)(x - 1)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "\\(x^2 - 1\\) is a difference of two squares.",
+    "So it factorises to \\((x + 1)(x - 1)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-c7e24737",
@@ -1799,8 +2823,24 @@
      "label": "\\((x + 3)(x - 2)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "\\(x^2 - 4\\) is a difference of two squares.",
+    "So it factorises to \\((x + 2)(x - 2)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-d58d07e5",
@@ -1835,8 +2875,24 @@
      "label": "\\((x - 3)(x - 3)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "\\(x^2 - 9\\) is a difference of two squares.",
+    "So it factorises to \\((x + 3)(x - 3)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-0ea84d3e",
@@ -1871,8 +2927,24 @@
      "label": "\\((x + 4)(x - 4)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "\\(x^2 - 16\\) is a difference of two squares.",
+    "So it factorises to \\((x + 4)(x - 4)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-46190995",
@@ -1907,8 +2979,24 @@
      "label": "\\((x + 5)(x - 5)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "\\(x^2 - 25\\) is a difference of two squares.",
+    "So it factorises to \\((x + 5)(x - 5)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-46ffc3c1",
@@ -1943,8 +3031,24 @@
      "label": "\\((x + 6)(x + 6)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "\\(x^2 - 36\\) is a difference of two squares.",
+    "So it factorises to \\((x + 6)(x - 6)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-ab1cd9af",
@@ -1979,8 +3083,24 @@
      "label": "\\((x + 7)(x - 7)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "\\(x^2 - 49\\) is a difference of two squares.",
+    "So it factorises to \\((x + 7)(x - 7)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-c265d940",
@@ -2015,8 +3135,24 @@
      "label": "\\((x + 8)(x - 8)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "\\(x^2 - 64\\) is a difference of two squares.",
+    "So it factorises to \\((x + 8)(x - 8)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-00486a13",
@@ -2051,8 +3187,24 @@
      "label": "\\((x - 9)(x - 9)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "\\(x^2 - 81\\) is a difference of two squares.",
+    "So it factorises to \\((x + 9)(x - 9)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-3c62bdd3",
@@ -2087,8 +3239,24 @@
      "label": "\\((x + 11)(x - 10)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "\\(x^2 - 100\\) is a difference of two squares.",
+    "So it factorises to \\((x + 10)(x - 10)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-67fcb53c",
@@ -2123,8 +3291,24 @@
      "label": "\\((x + 12)(x - 11)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "\\(x^2 - 121\\) is a difference of two squares.",
+    "So it factorises to \\((x + 11)(x - 11)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    }
+   ]
   },
   {
    "id": "quadratics-factorise-008b2c0d",
@@ -2159,8 +3343,24 @@
      "label": "\\((x + 12)(x - 12)\\)"
     }
    ],
-   "worked": [],
-   "slip": []
+   "worked": [
+    "\\(x^2 - 144\\) is a difference of two squares.",
+    "So it factorises to \\((x + 12)(x - 12)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+    }
+   ]
   }
  ]
 }

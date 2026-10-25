@@ -17,7 +17,10 @@
    "answer": {
     "value": 1000
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 48 is 50, 21 is 20.",
+    "Work it out with the rounded numbers: \\(50 \\times 20 = 1000\\)."
+   ],
    "slip": []
   },
   {
@@ -35,7 +38,10 @@
    "answer": {
     "value": 20000
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 387 is 400, 52 is 50.",
+    "Work it out with the rounded numbers: \\(400 \\times 50 = 20000\\)."
+   ],
    "slip": []
   },
   {
@@ -53,7 +59,10 @@
    "answer": {
     "value": 24000
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 612 is 600, 38 is 40.",
+    "Work it out with the rounded numbers: \\(600 \\times 40 = 24000\\)."
+   ],
    "slip": []
   },
   {
@@ -71,7 +80,10 @@
    "answer": {
     "value": 2100
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 29 is 30, 71 is 70.",
+    "Work it out with the rounded numbers: \\(30 \\times 70 = 2100\\)."
+   ],
    "slip": []
   },
   {
@@ -89,7 +101,10 @@
    "answer": {
     "value": 80000
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 4127 is 4000, 19 is 20.",
+    "Work it out with the rounded numbers: \\(4000 \\times 20 = 80000\\)."
+   ],
    "slip": []
   },
   {
@@ -107,7 +122,10 @@
    "answer": {
     "value": 24000
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 83 is 80, 293 is 300.",
+    "Work it out with the rounded numbers: \\(80 \\times 300 = 24000\\)."
+   ],
    "slip": []
   },
   {
@@ -125,7 +143,10 @@
    "answer": {
     "value": 270
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 9.2 is 9, 31 is 30.",
+    "Work it out with the rounded numbers: \\(9 \\times 30 = 270\\)."
+   ],
    "slip": []
   },
   {
@@ -143,7 +164,10 @@
    "answer": {
     "value": 2800
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 706 is 700, 4.1 is 4.",
+    "Work it out with the rounded numbers: \\(700 \\times 4 = 2800\\)."
+   ],
    "slip": []
   },
   {
@@ -161,7 +185,10 @@
    "answer": {
     "value": 20
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 812 is 800, 39 is 40.",
+    "Work it out with the rounded numbers: \\(800 \\div 40 = 20\\)."
+   ],
    "slip": []
   },
   {
@@ -179,7 +206,10 @@
    "answer": {
     "value": 200
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 6234 is 6000, 28 is 30.",
+    "Work it out with the rounded numbers: \\(6000 \\div 30 = 200\\)."
+   ],
    "slip": []
   },
   {
@@ -197,7 +227,10 @@
    "answer": {
     "value": 200
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 587 is 600, 2.9 is 3.",
+    "Work it out with the rounded numbers: \\(600 \\div 3 = 200\\)."
+   ],
    "slip": []
   },
   {
@@ -215,7 +248,10 @@
    "answer": {
     "value": 50
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 3912 is 4000, 81 is 80.",
+    "Work it out with the rounded numbers: \\(4000 \\div 80 = 50\\)."
+   ],
    "slip": []
   },
   {
@@ -233,7 +269,10 @@
    "answer": {
     "value": 5
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 18.7 is 20, 4.2 is 4.",
+    "Work it out with the rounded numbers: \\(20 \\div 4 = 5\\)."
+   ],
    "slip": []
   },
   {
@@ -251,7 +290,10 @@
    "answer": {
     "value": 18
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 9.31 is 9, 0.48 is 0.5.",
+    "Work it out with the rounded numbers: \\(9 \\div 0.5 = 18\\)."
+   ],
    "slip": []
   },
   {
@@ -269,7 +311,10 @@
    "answer": {
     "value": 300
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 61.3 is 60, 0.19 is 0.2.",
+    "Work it out with the rounded numbers: \\(60 \\div 0.2 = 300\\)."
+   ],
    "slip": []
   },
   {
@@ -287,7 +332,10 @@
    "answer": {
     "value": 200
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 4180 is 4000, 19.6 is 20.",
+    "Work it out with the rounded numbers: \\(4000 \\div 20 = 200\\)."
+   ],
    "slip": []
   },
   {
@@ -305,7 +353,10 @@
    "answer": {
     "value": 18
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 0.32 is 0.3, 61 is 60.",
+    "Work it out with the rounded numbers: \\(0.3 \\times 60 = 18\\)."
+   ],
    "slip": []
   },
   {
@@ -323,7 +374,10 @@
    "answer": {
     "value": 0.35
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 0.48 is 0.5, 0.72 is 0.7.",
+    "Work it out with the rounded numbers: \\(0.5 \\times 0.7 = 0.35\\)."
+   ],
    "slip": []
   },
   {
@@ -341,7 +395,10 @@
    "answer": {
     "value": 90
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 289 is 300, 0.31 is 0.3.",
+    "Work it out with the rounded numbers: \\(300 \\times 0.3 = 90\\)."
+   ],
    "slip": []
   },
   {
@@ -359,7 +416,10 @@
    "answer": {
     "value": 36
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 0.087 is 0.09, 412 is 400.",
+    "Work it out with the rounded numbers: \\(0.09 \\times 400 = 36\\)."
+   ],
    "slip": []
   },
   {
@@ -377,7 +437,10 @@
    "answer": {
     "value": 0.18
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 0.61 is 0.6, 0.29 is 0.3.",
+    "Work it out with the rounded numbers: \\(0.6 \\times 0.3 = 0.18\\)."
+   ],
    "slip": []
   },
   {
@@ -395,7 +458,10 @@
    "answer": {
     "value": 0.16
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 7.8 is 8, 0.0213 is 0.02.",
+    "Work it out with the rounded numbers: \\(8 \\times 0.02 = 0.16\\)."
+   ],
    "slip": []
   },
   {
@@ -413,7 +479,10 @@
    "answer": {
     "value": 200
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 0.392 is 0.4, 0.0021 is 0.002.",
+    "Work it out with the rounded numbers: \\(0.4 \\div 0.002 = 200\\)."
+   ],
    "slip": []
   },
   {
@@ -431,7 +500,10 @@
    "answer": {
     "value": 2
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 52.1 is 50, 0.038 is 0.04.",
+    "Work it out with the rounded numbers: \\(50 \\times 0.04 = 2\\)."
+   ],
    "slip": []
   },
   {
@@ -449,7 +521,10 @@
    "answer": {
     "value": 160
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 21.3 is 20, 3.98 is 4, 0.49 is 0.5.",
+    "Work it out with the rounded numbers: \\(20 \\times 4 \\div 0.5 = 160\\)."
+   ],
    "slip": []
   },
   {
@@ -467,7 +542,10 @@
    "answer": {
     "value": 30
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 6.12 is 6, 19.8 is 20, 3.94 is 4.",
+    "Work it out with the rounded numbers: \\(6 \\times 20 \\div 4 = 30\\)."
+   ],
    "slip": []
   },
   {
@@ -485,7 +563,10 @@
    "answer": {
     "value": 2250
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 48.7 is 50, 9.1 is 9, 0.21 is 0.2.",
+    "Work it out with the rounded numbers: \\(50 \\times 9 \\div 0.2 = 2250\\)."
+   ],
    "slip": []
   },
   {
@@ -503,7 +584,10 @@
    "answer": {
     "value": 60
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 312 is 300, 7.9 is 8, 41 is 40.",
+    "Work it out with the rounded numbers: \\(300 \\times 8 \\div 40 = 60\\)."
+   ],
    "slip": []
   },
   {
@@ -521,7 +605,10 @@
    "answer": {
     "value": 20
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 5.79 is 6, 3.88 is 4, 0.48 is 0.5.",
+    "Work it out with the rounded numbers: \\((6 + 4) \\div 0.5 = 20\\)."
+   ],
    "slip": []
   },
   {
@@ -539,7 +626,10 @@
    "answer": {
     "value": 30
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 81.2 is 80, 18.9 is 20, 2.11 is 2.",
+    "Work it out with the rounded numbers: \\((80 - 20) \\div 2 = 30\\)."
+   ],
    "slip": []
   },
   {
@@ -557,7 +647,10 @@
    "answer": {
     "value": 300
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 29.4 is 30, 61.7 is 60, 3.12 is 3, 1.96 is 2.",
+    "Work it out with the rounded numbers: \\((30 \\times 60) \\div (3 \\times 2) = 300\\)."
+   ],
    "slip": []
   },
   {
@@ -575,7 +668,10 @@
    "answer": {
     "value": 20
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 0.38 is 0.4, 412 is 400, 7.6 is 8.",
+    "Work it out with the rounded numbers: \\(0.4 \\times 400 \\div 8 = 20\\)."
+   ],
    "slip": []
   },
   {
@@ -593,7 +689,10 @@
    "answer": {
     "value": 400
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 197 is 200, 0.62 is 0.6, 0.31 is 0.3.",
+    "Work it out with the rounded numbers: \\(200 \\times 0.6 \\div 0.3 = 400\\)."
+   ],
    "slip": []
   },
   {
@@ -611,7 +710,10 @@
    "answer": {
     "value": 120
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 9.87 is 10, 20.3 is 20, 4.1 is 4.",
+    "Work it out with the rounded numbers: \\((10 + 20) \\times 4 = 120\\)."
+   ],
    "slip": []
   },
   {
@@ -629,7 +731,10 @@
    "answer": {
     "value": 16
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 3.9 is 4.",
+    "Work it out with the rounded numbers: \\(4^2 = 16\\)."
+   ],
    "slip": []
   },
   {
@@ -647,7 +752,10 @@
    "answer": {
     "value": 100
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 19.2 is 20, 4.1 is 4.",
+    "Work it out with the rounded numbers: \\(20^2 \\div 4 = 100\\)."
+   ],
    "slip": []
   },
   {
@@ -665,7 +773,10 @@
    "answer": {
     "value": 4
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 3.92 is 4, 4.11 is 4.",
+    "Work it out with the rounded numbers: \\(\\sqrt{4 \\times 4} = \\sqrt{16} = 4\\)."
+   ],
    "slip": []
   },
   {
@@ -683,7 +794,10 @@
    "answer": {
     "value": 10
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 4.87 is 5, 19.6 is 20.",
+    "Work it out with the rounded numbers: \\(\\sqrt{5 \\times 20} = \\sqrt{100} = 10\\)."
+   ],
    "slip": []
   },
   {
@@ -701,7 +815,10 @@
    "answer": {
     "value": 45
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 0.29 is 0.3, 512 is 500.",
+    "Work it out with the rounded numbers: \\(0.3^2 \\times 500 = 45\\)."
+   ],
    "slip": []
   },
   {
@@ -719,7 +836,10 @@
    "answer": {
     "pence": 80000
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 18.95 is 20, 42 is 40.",
+    "Work it out with the rounded numbers: \\(20 \\times 40 = 800\\)."
+   ],
    "slip": []
   },
   {
@@ -737,7 +857,10 @@
    "answer": {
     "value": 30
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 287 is 300, 9.8 is 10.",
+    "Work it out with the rounded numbers: \\(300 \\div 10 = 30\\)."
+   ],
    "slip": []
   },
   {
@@ -755,7 +878,10 @@
    "answer": {
     "value": 2400
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 61.4 is 60, 38.7 is 40.",
+    "Work it out with the rounded numbers: \\(60 \\times 40 = 2400\\)."
+   ],
    "slip": []
   },
   {
@@ -773,7 +899,10 @@
    "answer": {
     "pence": 20000
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 4180 is 4000, 21 is 20.",
+    "Work it out with the rounded numbers: \\(4000 \\div 20 = 200\\)."
+   ],
    "slip": []
   },
   {
@@ -791,7 +920,10 @@
    "answer": {
     "value": 40
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 11.8 is 10, 392 is 400.",
+    "Work it out with the rounded numbers: \\(400 \\div 10 = 40\\)."
+   ],
    "slip": []
   },
   {
@@ -809,7 +941,10 @@
    "answer": {
     "value": 1500
    },
-   "worked": [],
+   "worked": [
+    "Round each number to 1 significant figure: 3.12 is 3, 487 is 500.",
+    "Work it out with the rounded numbers: \\(3 \\times 500 = 1500\\)."
+   ],
    "slip": []
   }
  ]

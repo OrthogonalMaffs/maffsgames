@@ -40,7 +40,26 @@
     "Collect the y terms: \\(4y + y = 5y\\).",
     "So the answer is \\(5x + 5y\\)."
    ],
-   "slip": []
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Count again: add the numbers in front of the like terms."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Count again: add the numbers in front of the like terms."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Like terms are added, not multiplied: \\(3x + 2x = 5x\\)."
+    }
+   ]
   },
   {
    "id": "simplify-expressions-5cb63746",
@@ -80,7 +99,26 @@
     "Collect the b terms: \\(2b + 5b = 7b\\).",
     "So the answer is \\(9a + 7b\\)."
    ],
-   "slip": []
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Count again: add the numbers in front of the like terms."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Count again: add the numbers in front of the like terms."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Like terms are added, not multiplied: \\(6a + 3a = 9a\\)."
+    }
+   ]
   },
   {
    "id": "simplify-expressions-964d0f8b",
@@ -120,7 +158,26 @@
     "Collect the q terms: \\(3q + 2q = 5q\\).",
     "So the answer is \\(11p + 5q\\)."
    ],
-   "slip": []
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Count again: add the numbers in front of the like terms."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Count again: add the numbers in front of the like terms."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Like terms are added, not multiplied: \\(4p + 7p = 11p\\)."
+    }
+   ]
   },
   {
    "id": "simplify-expressions-16422e64",
@@ -160,7 +217,26 @@
     "Collect the n terms: \\(8n + 3n = 11n\\).",
     "So the answer is \\(6m + 11n\\)."
    ],
-   "slip": []
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Count again: add the numbers in front of the like terms."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Count again: add the numbers in front of the like terms."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Like terms are added, not multiplied: \\(5m + m = 6m\\)."
+    }
+   ]
   },
   {
    "id": "simplify-expressions-d14a3046",
@@ -200,7 +276,26 @@
     "Collect the d terms: \\(4d + 4d = 8d\\).",
     "So the answer is \\(8c + 8d\\)."
    ],
-   "slip": []
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Count again: add the numbers in front of the like terms."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Count again: add the numbers in front of the like terms."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Like terms are added, not multiplied: \\(2c + 6c = 8c\\)."
+    }
+   ]
   },
   {
    "id": "simplify-expressions-9db4820e",
@@ -240,7 +335,26 @@
     "Collect the y terms: \\(y + 5y = 6y\\).",
     "So the answer is \\(10x + 6y\\)."
    ],
-   "slip": []
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Count again: add the numbers in front of the like terms."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Count again: add the numbers in front of the like terms."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Like terms are added, not multiplied: \\(7x + 3x = 10x\\)."
+    }
+   ]
   },
   {
    "id": "simplify-expressions-9af3494a",
@@ -280,7 +394,26 @@
     "Collect the b terms: \\(3b + 7b = 10b\\).",
     "So the answer is \\(8a + 10b\\)."
    ],
-   "slip": []
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Count again: add the numbers in front of the like terms."
+    },
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Count again: add the numbers in front of the like terms."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Like terms are added, not multiplied: \\(4a + 4a = 8a\\)."
+    }
+   ]
   },
   {
    "id": "simplify-expressions-42c6313f",
@@ -320,7 +453,26 @@
     "Collect the q terms: \\(6q + q = 7q\\).",
     "So the answer is \\(11p + 7q\\)."
    ],
-   "slip": []
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Count again: add the numbers in front of the like terms."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Count again: add the numbers in front of the like terms."
+    },
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "Like terms are added, not multiplied: \\(9p + 2p = 11p\\)."
+    }
+   ]
   },
   {
    "id": "simplify-expressions-158f51b7",
@@ -360,7 +512,26 @@
     "Collect the h terms: \\(2h + 8h = 10h\\).",
     "So the answer is \\(8g + 10h\\)."
    ],
-   "slip": []
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Count again: add the numbers in front of the like terms."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Count again: add the numbers in front of the like terms."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Like terms are added, not multiplied: \\(3g + 5g = 8g\\)."
+    }
+   ]
   },
   {
    "id": "simplify-expressions-30654e6d",
@@ -400,7 +571,26 @@
     "Collect the u terms: \\(3u + 2u = 5u\\).",
     "So the answer is \\(10t + 5u\\)."
    ],
-   "slip": []
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "Count again: add the numbers in front of the like terms."
+    },
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "Count again: add the numbers in front of the like terms."
+    },
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "Like terms are added, not multiplied: \\(6t + 4t = 10t\\)."
+    }
+   ]
   },
   {
    "id": "simplify-expressions-3c2a7b71",

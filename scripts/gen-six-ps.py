@@ -2249,11 +2249,34 @@ def transf_svg(shape):
     return svg, sorted(t for t, _, _, _ in texts)
 
 
+def transf_worked(it, name, pt, img):
+    """Project Claude's TRANSFORMATIONS template (25 Oct): the rule for the point, then the image of the corner; every figure
+    is computed here and the image is the one the words give."""
+    x, y = pt
+    q, desc = it["q"], it["q"]["desc"]
+    if it["k"] == "T":
+        dx, dy = q["dx"], q["dy"]
+        sgn = lambda v, s: s if v == 0 else "%s %s %d" % (s, "+" if v > 0 else "-", abs(v))
+        rule = ["A translation moves every point %s across and %s up or down." % (tex(str(dx)), tex(str(dy))),
+                "%s goes to %s." % (tex("(x, y)"), tex("(%s, %s)" % (sgn(dx, "x"), sgn(dy, "y"))))]
+        assert (x + dx, y + dy) == img
+    elif it["k"] == "F":
+        axis = q["axis"]
+        rule = ["A reflection in the %s-axis: %s goes to %s." % (axis, tex("(x, y)"), tex("(-x, y)" if axis == "y" else "(x, -y)"))]
+        assert img == ((-x, y) if axis == "y" else (x, -y))
+    else:
+        turn, new = {180: ("180°", "(-x, -y)"), -90: ("90° clockwise", "(y, -x)"), 90: ("90° anticlockwise", "(-y, x)")}[q["angle"]]
+        rule = ["A rotation of %s about the origin: %s goes to %s." % (turn, tex("(x, y)"), tex(new))]
+        assert img == {180: (-x, -y), -90: (y, -x), 90: (-y, x)}[q["angle"]]
+    return rule + ["So the image of %s is %s." % (name, tex("(%d, %d)" % img))]
+
+
 async def topic_transformations(h):
     """The 45 items of shape-shifter's Random Mix (15 translations, 15 reflections, 15 rotations). The game asks the student
     to place the image on a grid, which a typed bank cannot, so each item is asked as the coordinates of the image of one
     corner (A, B, C or D in turn), the object drawn on a grid. The image is recomputed from the item's words, and for a
-    rotation compared with the game's own correct shape. The game has no written solution, so no worked lines."""
+    rotation compared with the game's own correct shape. The game has no written solution: the worked lines are Project
+    Claude's template."""
     pg = await h.page("shape-shifter", "level=year6")
     items = await pg.evaluate(TRANSF_JS)
     out = []
@@ -2273,7 +2296,7 @@ async def topic_transformations(h):
             "an" if name[0] in "aeiou" else "a", name + " " + letters, q["desc"], "ABCD"[v])
         band = {"T": 1, "F": 2}.get(it["k"]) or (3 if q["angle"] == 180 else 4)
         z = mk("transformations", "shape-shifter", "%s:%d" % ({"T": "TRANSLATION_QUESTIONS", "F": "REFLECTION_QUESTIONS", "R": "ROTATION_QUESTIONS"}[it["k"]], it["i"]),
-               band, False, stem, "coordinates", {"x": img[0], "y": img[1]})
+               band, False, stem, "coordinates", {"x": img[0], "y": img[1]}, worked=transf_worked(it, "ABCD"[v], shape[v], img))
         z["diagram"] = svg
         out.append(z)
     return out
@@ -2346,9 +2369,14 @@ async def topic_simplify_expressions(h):
                   "%d%s%s" % (a * b, order[0], order[1])]
         assert len({key} | set(wrongs)) == 4
         opts, ans = choice("lt2-%d" % i, tex(key), [tex(w) for w in wrongs])
+        mine = [k for k, l in terms if l == order[0]]                  # the first letter's terms, as the example in the slip
+        chain = " + ".join(("" if k == 1 else str(k)) + order[0] for k in mine)
+        lines = ["Count again: add the numbers in front of the like terms.", "Count again: add the numbers in front of the like terms.",
+                 "Like terms are added, not multiplied: %s." % tex("%s = %s" % (chain, lt_text({order[0]: a}, [order[0]])))]
+        slips = [{"answer": {"val": next(o["val"] for o in opts if o["label"] == tex(w))}, "line": ln} for w, ln in zip(wrongs, lines)]
         out.append(mk("simplify-expressions", "like-terms-collector", "STAGE2[%d]" % i, 1, False,
                       "Simplify %s." % tex(it["prompt"].replace(" ", " ")), "choice", ans, options=opts,
-                      worked=lt_worked(it["prompt"], coefs, order, key)))
+                      worked=lt_worked(it["prompt"], coefs, order, key), slip=slips))
     for i, it in enumerate(s3):
         terms = lt_terms(it["expr"])
         coefs = lt_collect(terms)
@@ -2476,6 +2504,27 @@ def sf_worked(ask, q, key, d):
         else:
             lines.append("So the answer is %s." % tex(key))
         return lines
+    plain = lambda x: format((Decimal(x.numerator) / Decimal(x.denominator)).normalize(), "f")
+    if ask == "Write in correct standard form":
+        val = sf_value(q)
+        assert sum(1 for x in [key] + list(d) if sf_is_standard(x) and sf_value(x) == val) == 1, ("standard form: not one option", q)
+        # Project Claude's second line is "Only <key> has that." That is not true of an option in standard form with the
+        # wrong value (3.4 x 10^5 for 34 x 10^5), so the line also says the value matches.
+        return ["Standard form is %s with %s from 1 up to but not including 10, and %s a whole number." %
+                (tex("A \\times 10^{n}"), tex("A"), tex("n")),
+                "Only %s has that form and the same value as %s." % (tex(key), tex(q))]
+    if ask == "Which two are equal?":
+        items = [x.strip().rstrip(",").strip() for x in q.split("\\quad")]
+        vals = [sf_value(x) for x in items]
+        one, two = [x.strip() for x in key.split("\\text{ and }")]
+        assert sf_value(one) == sf_value(two) and vals.count(sf_value(one)) == 2, ("standard form: the equal pair", q, key)
+        return ["Write each as an ordinary number: %s." % ", ".join(tex("%s = %s" % (x, plain(v))) for x, v in zip(items, vals)),
+                "%s and %s are both %s." % (tex(one), tex(two), tex(plain(sf_value(one))))]
+    if ask == "What is this as an ordinary number?":
+        m, p = sf_parts(q)
+        assert p == 0 and sf_value(q) == Fraction(m), ("standard form: a power of 0", q)
+        return ["Any number (except 0) to the power 0 is 1, so %s." % tex("10^{0} = 1"),
+                "So %s." % tex("%s \\times 10^{0} = %s" % (m, m))]
     return []
 
 
@@ -2515,7 +2564,7 @@ async def topic_standard_form(h):
     """Every item of standard-form-blitz (50), a choice with the game's own key and three wrong answers. The question's
     value is recomputed from its TeX (Fractions), the key is checked true and each wrong answer false (for a standard
     form answer: equal AND in standard form). Worked lines follow Project Claude's STANDARD FORM template where the item
-    fits it (41 of 50); the other 9 (correct form, which two are equal, 10 to the power 0) stay on the missing list."""
+    fits it, all 50 now (the correct-form items say "has that form and the same value as", since the template's "Only the key has that" is not true of every option)."""
     pg = await h.page("standard-form-blitz", "level=gcse")
     items = await pg.evaluate("() => QUESTIONS.gcse")
     out = []
@@ -2567,12 +2616,33 @@ def brackets_tex(p, q):
     return "(x %s %d)(x %s %d)" % ("+" if p >= 0 else "-", abs(p), "+" if q >= 0 else "-", abs(q))
 
 
+QF_SLIPS = {
+    "both": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term.",
+    "one": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\).",
+    "twice": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\).",
+}
+
+
+def qf_worked(it):
+    p, q, b, c = it["p"], it["q"], it["b"], it["c"]
+    if b == 0:                                                   # a difference of two squares, x^2 - a^2
+        a = q if q > 0 else p
+        assert p == -q and c == -a * a, ("quadratic-factoriser: a difference of squares", it)
+        return ["%s is a difference of two squares." % tex("x^2 - %d" % (a * a)),
+                "So it factorises to %s." % tex("(x + %d)(x - %d)" % (a, a))]
+    n = lambda v: "(%d)" % v if v < 0 else str(v)
+    return ["Find two numbers that multiply to %s and add to %s: %s and %s, because %s and %s." %
+            (tex(str(c)), tex(str(b)), tex(str(p)), tex(str(q)), tex("%s \\times %s = %d" % (n(p), n(q), c)),
+             tex("%s + %s = %d" % (n(p), n(q), b))),
+            "So %s." % tex("%s = %s" % (quad_tex(b, c), brackets_tex(p, q)))]
+
+
 async def topic_quadratics_factorise(h):
     """quadratic-factoriser's gcse pool (174: both positive 45, one negative 72, both negative 45, difference of squares 12),
     a choice of bracket pairs: the game's (x + p)(x + q), and three of: both signs changed, one sign changed (either),
-    the same bracket twice, each checked not to expand to the quadratic. The key is expanded and compared with x^2 + bx + c.
-    The game's guided steps are not written lines, so there are no worked lines (all on the missing list); it names no wrong
-    answer, so no slips. 60, spread over the four stages."""
+    the same bracket twice, each checked not to expand to the quadratic (a fourth, p + 1, stands in for a difference of
+    squares, which has only two of the three kinds and no slip). The slips are Project Claude's lines (25 Oct), the worked
+    lines his template. The key is expanded and compared with x^2 + bx + c. 60, spread over the four stages."""
     pg = await h.page("quadratic-factoriser", "level=gcse")
     pool = await pg.evaluate("() => QF_POOLS.gcse.pool")
     out = []
@@ -2588,14 +2658,16 @@ async def topic_quadratics_factorise(h):
             seen.add(tuple(sorted(w)))
             wrong.append(w)
         assert len(wrong) == 3
-        opts, ans = choice("qf-%d" % i, tex(brackets_tex(p, q)), [tex(brackets_tex(*w)) for w in wrong])
+        labels = [tex(brackets_tex(*w)) for w in wrong]
+        opts, ans = choice("qf-%d" % i, tex(brackets_tex(p, q)), labels)
+        kind = lambda w: "both" if w == (-p, -q) else "twice" if w[0] == w[1] else "one" if w in ((p, -q), (-p, q)) else None
+        slips = [{"answer": {"val": next(o["val"] for o in opts if o["label"] == lab)}, "line": QF_SLIPS[kind(w)]}
+                 for w, lab in zip(wrong, labels) if kind(w)]
         band = 5 if it["stage"] in ("oneNeg", "dots") else 4
         out.append((it["stage"], mk("quadratics-factorise", "quadratic-factoriser", "QF_POOLS.gcse.pool[%d]" % i, band, False,
-                                    "Factorise %s." % tex(quad_tex(b, c)), "choice", ans, options=opts)))
-    kept = [q for _, q in spread(out, GEN_TOPIC, lambda t: t[0])]
-    refs = {q["source"]["ref"] for q in kept}                       # the missing-worked list counts the kept questions only
-    MISSING_WORKED[:] = [m for m in MISSING_WORKED if m[0] != "quadratics-factorise" or m[1] in refs]
-    return kept
+                                    "Factorise %s." % tex(quad_tex(b, c)), "choice", ans, options=opts,
+                                    worked=qf_worked(it), slip=slips)))
+    return [q for _, q in spread(out, GEN_TOPIC, lambda t: t[0])]
 
 
 # --- estimation: estimation-engine's 45 items, typed ---
@@ -2618,11 +2690,34 @@ def est_eval(shape, vals):
     return r
 
 
+def est_expr(shape, vals):
+    """The shape on the rounded numbers as TeX ('50 \\times 3 \\div 10'), a root as \\sqrt{...}."""
+    sq = shape.startswith("sqrt(")
+    e = shape[5:-1] if sq else shape
+    e = re.sub(r"\((\w)\*(\w)\)/(\w)$", r"\1*\2/\3", e)                 # (a*b)/c reads a x b / c
+    e = re.sub(r"[abcd]", lambda m: tnum(Fraction(vals["abcd".index(m.group(0))])), e)        # the numbers first: "\\div" has a d
+    e = e.replace("**2", "^2").replace("*", " \\times ").replace("/", " \\div ").replace("+", " + ").replace("-", " - ")
+    return "\\sqrt{%s}" % e if sq else e
+
+
+def est_worked(it, rounded, est):
+    """Project Claude's ESTIMATION template (25 Oct): round each number, then work it out with the rounded numbers."""
+    shown = ", ".join("%s is %s" % (n, tnum(Fraction(r))) for n, r in zip(it["nums"], rounded))
+    expr = est_expr(it["shape"], rounded)
+    if it["shape"].startswith("sqrt("):
+        inner = est_eval(it["shape"][5:-1], rounded)
+        tail = "\\sqrt{%s} = \\sqrt{%s} = %s" % (est_expr(it["shape"][5:-1], rounded), tnum(inner), tnum(est))
+    else:
+        tail = "%s = %s" % (expr, tnum(est))
+    return ["Round each number to 1 significant figure: %s." % shown,
+            "Work it out with the rounded numbers: %s." % tex(tail)]
+
+
 async def topic_estimation(h):
     """Every item of estimation-engine (45): estimate by rounding each number to 1 significant figure. The game's rounded
     numbers and its estimate are recomputed from the printed numbers and the shape (rounding half up). The game's answer
-    is the estimate alone, typed; a money question is `money`. The game has no written solution, so no worked lines
-    (45 on the missing list), and names no wrong answer, so no slips. Non-calculator."""
+    is the estimate alone, typed; a money question is `money`. The worked lines are Project Claude's template, every
+    number in them computed here; the game names no wrong answer, so no slips. Non-calculator."""
     pg = await h.page("estimation-engine", "level=gcse")
     items = await pg.evaluate("() => BANK")
     out = []
@@ -2640,10 +2735,10 @@ async def topic_estimation(h):
         if it.get("money"):
             assert est.denominator == 1
             out.append(mk("estimation", "estimation-engine", "BANK:%s" % it["id"], band[it["group"]], False, stem, "money",
-                          {"pence": int(est * 100)}))
+                          {"pence": int(est * 100)}, worked=est_worked(it, rounded, est)))
         else:
             out.append(mk("estimation", "estimation-engine", "BANK:%s" % it["id"], band[it["group"]], False, stem, "number",
-                          {"value": numval(Decimal(it["estimate"]))}))
+                          {"value": numval(Decimal(it["estimate"]))}, worked=est_worked(it, rounded, est)))
     return out
 
 
@@ -2956,6 +3051,259 @@ async def topic_coordinates(h):
     return out
 
 
+# --- the diagram label check (Project Claude, 25 Oct): no label's text box crosses a drawn line other than the side it labels ---
+def _svg_parse(svg):
+    import xml.etree.ElementTree as ET
+    root = ET.fromstring(svg)
+    strip = lambda t: t.split("}")[-1]
+    return root, strip
+
+
+def _arc_points(p0, rx, large, sweep, p1, n=16):
+    """Points along an SVG circular arc (rx = ry, no rotation) from p0 to p1."""
+    (x1, y1), (x2, y2) = p0, p1
+    dx, dy = (x1 - x2) / 2, (y1 - y2) / 2
+    d2 = dx * dx + dy * dy
+    if d2 == 0:
+        return [p0]
+    r = max(rx, math.sqrt(d2))
+    k = math.sqrt(max(0.0, (r * r - d2) / d2))
+    if large == sweep:
+        k = -k
+    cx = (x1 + x2) / 2 + k * dy
+    cy = (y1 + y2) / 2 - k * dx
+    a1 = math.atan2(y1 - cy, x1 - cx)
+    a2 = math.atan2(y2 - cy, x2 - cx)
+    da = a2 - a1
+    if sweep and da < 0:
+        da += 2 * math.pi
+    if not sweep and da > 0:
+        da -= 2 * math.pi
+    return [(cx + r * math.cos(a1 + da * i / n), cy + r * math.sin(a1 + da * i / n)) for i in range(n + 1)]
+
+
+_ARC_ID = [0]
+
+
+def _path_segments(d):
+    toks = re.findall(r"[MLAZ]|-?\d+(?:\.\d+)?", d)
+    segs, i, cur, start, cmd = [], 0, None, None, None
+    while i < len(toks):
+        if toks[i] in "MLAZ":
+            cmd = toks[i]
+            i += 1
+            if cmd == "Z":
+                if cur and start and cur != start:
+                    segs.append((cur, start, None))
+                cur = start
+            continue
+        if cmd in ("M", "L"):
+            pt = (float(toks[i]), float(toks[i + 1]))
+            i += 2
+            if cmd == "M" or cur is None:
+                start = pt
+            else:
+                segs.append((cur, pt, None))
+            cur = pt
+            if cmd == "M":
+                cmd = "L"
+        elif cmd == "A":
+            rx, ry, rot, large, sweep, x, y = (float(t) for t in toks[i:i + 7])
+            i += 7
+            assert rx == ry and rot == 0, "diagram check: only circular arcs"
+            pts = _arc_points(cur, rx, int(large), int(sweep), (x, y))
+            _ARC_ID[0] += 1
+            segs += [(a, b, ("arc", _ARC_ID[0])) for a, b in zip(pts, pts[1:])]
+            cur = (x, y)
+        else:
+            raise AssertionError("diagram check: path command " + str(cmd))
+    return segs
+
+
+def diagram_segments(svg):
+    """The drawn lines of a diagram: line, polygon, polyline and path elements, not the faint grid (a group with opacity below 1)."""
+    root, strip = _svg_parse(svg)
+    segs = []
+
+    def walk(el, faint):
+        faint = faint or float(el.get("opacity", "1")) < 1
+        t = strip(el.tag)
+        if not faint:
+            if t == "line":
+                segs.append(((float(el.get("x1")), float(el.get("y1"))), (float(el.get("x2")), float(el.get("y2"))), None))
+            elif t in ("polygon", "polyline"):
+                pts = [tuple(float(v) for v in p.split(",")) for p in el.get("points").split()]
+                segs.extend((a, b, None) for a, b in zip(pts, pts[1:]))
+                if t == "polygon":
+                    segs.append((pts[-1], pts[0], None))
+            elif t == "path":
+                segs.extend(_path_segments(el.get("d")))
+        for ch in el:
+            walk(ch, faint)
+    walk(root, False)
+    return segs
+
+
+def diagram_labels(svg):
+    """Every text label's box (x0, y0, x1, y1) and its text; the width is 0.55 of the font size a character."""
+    root, strip = _svg_parse(svg)
+    out = []
+
+    def walk(el, fs, central):
+        fs = float(el.get("font-size", fs))
+        central = el.get("dominant-baseline", central)
+        if strip(el.tag) == "text":
+            txt = "".join(el.itertext())
+            w, h = 0.55 * fs * len(txt), fs
+            x, y = float(el.get("x")), float(el.get("y"))
+            anchor = el.get("text-anchor", "start")
+            x0 = x - w / 2 if anchor == "middle" else x - w if anchor == "end" else x
+            if central == "central":
+                y0 = y - h / 2
+            else:
+                y0 = y - 0.8 * h
+            out.append(((x0, y0, x0 + w, y0 + h), txt))
+        for ch in el:
+            walk(ch, fs, central)
+    walk(root, 16.0, "")
+    return out
+
+
+def _seg_hits_box(seg, box):
+    (x1, y1), (x2, y2) = seg[0], seg[1]
+    x0, y0, xb, yb = box
+    t0, t1 = 0.0, 1.0
+    dx, dy = x2 - x1, y2 - y1
+    for p, q in ((-dx, x1 - x0), (dx, xb - x1), (-dy, y1 - y0), (dy, yb - y1)):
+        if p == 0:
+            if q < 0:
+                return False
+        else:
+            r = q / p
+            if p < 0:
+                t0 = max(t0, r)
+            else:
+                t1 = min(t1, r)
+            if t0 > t1:
+                return False
+    return True
+
+
+def _seg_dist(seg, pt):
+    (x1, y1), (x2, y2) = seg[0], seg[1]
+    dx, dy = x2 - x1, y2 - y1
+    L = dx * dx + dy * dy
+    t = 0 if L == 0 else max(0, min(1, ((pt[0] - x1) * dx + (pt[1] - y1) * dy) / L))
+    return math.hypot(pt[0] - (x1 + t * dx), pt[1] - (y1 + t * dy))
+
+
+def diagram_clashes(svg):
+    """[(label text, line)] for every label whose box a drawn line crosses, other than the side the label belongs to: the
+    line nearest the label's centre, and for a single-letter label the lines that end at the corner it names."""
+    segs = diagram_segments(svg)
+    bad = []
+    for box, txt in diagram_labels(svg):
+        c = ((box[0] + box[2]) / 2, (box[1] + box[3]) / 2)
+        if not segs:
+            continue
+        nearest = min(segs, key=lambda s: _seg_dist(s, c))
+        for s in segs:
+            if not _seg_hits_box(s, box):
+                continue
+            if s is nearest or (s[2] is not None and s[2] == nearest[2]):
+                continue
+            if len(txt) == 1 and txt.isalpha() and any(math.hypot(e[0] - c[0], e[1] - c[1]) <= 16 for e in s[:2]):
+                continue
+            bad.append((txt, s[:2]))
+    return bad
+
+
+def diagram_overlaps(svg):
+    """[(text, text)] for every two labels whose boxes overlap."""
+    L = diagram_labels(svg)
+    return [(L[i][1], L[j][1]) for i in range(len(L)) for j in range(i + 1, len(L))
+            if L[i][0][0] < L[j][0][2] and L[j][0][0] < L[i][0][2] and L[i][0][1] < L[j][0][3] and L[j][0][1] < L[i][0][3]]
+
+
+PAD = 1.5
+
+
+def _box_pad(b, pad=PAD):
+    return (b[0] - pad, b[1] - pad, b[2] + pad, b[3] + pad)
+
+
+def _viewbox(svg):
+    return tuple(float(v) for v in re.search(r'viewBox="([^"]+)"', svg).group(1).split())
+
+
+def diagram_problems(svg, strict=True):
+    """What is wrong with a diagram's labels: a drawn line through a label's box, two labels' boxes overlapping, a box outside
+    the viewBox. `strict` counts any line through a box, the label's own side included (a label sits beside its side, never
+    on it); not strict is the rule as first worded: only a line other than the side the label belongs to."""
+    out = []
+    segs = diagram_segments(svg)
+    labels = diagram_labels(svg)
+    x0, y0, w, h = _viewbox(svg)
+    if strict:
+        for box, txt in labels:
+            if any(_seg_hits_box(s, _box_pad(box)) for s in segs):
+                out.append(("line", txt))
+    else:
+        out += [("line", t) for t, _ in diagram_clashes(svg)]
+    out += [("overlap", a + "|" + b) for a, b in diagram_overlaps(svg)]
+    for box, txt in labels:
+        if box[0] < x0 or box[1] < y0 or box[2] > x0 + w or box[3] > y0 + h:
+            out.append(("outside", txt))
+    return out
+
+
+_OFFSETS = [(0, 0)] + [(r * dx, r * dy) for r in (4, 7, 10, 14, 18, 24, 30)
+                        for dx, dy in ((0, -1), (0, 1), (-1, 0), (1, 0), (1, -1), (-1, -1), (1, 1), (-1, 1))]
+
+
+def tidy_labels(svg):
+    """Move each label that a drawn line crosses, or that overlaps another label or leaves the viewBox, the shortest way that
+    clears all three (up to 30 px); a label that is already clear stays where the game or the builder put it."""
+    if not diagram_problems(svg):
+        return svg
+    segs = diagram_segments(svg)
+    labels = diagram_labels(svg)
+    x0, y0, w, h = _viewbox(svg)
+    boxes = [b for b, _ in labels]
+    shift = [(0.0, 0.0)] * len(labels)
+
+    def ok(i, box):
+        if any(_seg_hits_box(s, _box_pad(box)) for s in segs):
+            return False
+        if box[0] < x0 or box[1] < y0 or box[2] > x0 + w or box[3] > y0 + h:
+            return False
+        for j, o in enumerate(boxes):
+            if j != i and box[0] < o[2] and o[0] < box[2] and box[1] < o[3] and o[1] < box[3]:
+                return False
+        return True
+    for i, (b, _) in enumerate(labels):
+        if ok(i, b):
+            continue
+        for dx, dy in _OFFSETS[1:]:
+            cand = (b[0] + dx, b[1] + dy, b[2] + dx, b[3] + dy)
+            if ok(i, cand):
+                boxes[i] = cand
+                shift[i] = (dx, dy)
+                break
+    it = iter(shift)
+
+    def move(m):
+        dx, dy = next(it)
+        tag = m.group(0)
+        if dx == 0 and dy == 0:
+            return tag
+        x = float(re.search(r' x="([^"]+)"', tag).group(1)) + dx
+        y = float(re.search(r' y="([^"]+)"', tag).group(1)) + dy
+        tag = re.sub(r' x="[^"]+"', ' x="%g"' % round(x, 1), tag, 1)
+        return re.sub(r' y="[^"]+"', ' y="%g"' % round(y, 1), tag, 1)
+    return re.sub(r"<text\b[^>]*>", move, svg)
+
+
 # ───────────────────────────── the registry ─────────────────────────────
 # topic id -> (builder, rule notes). Topics not here have no bank yet (coming soon).
 BUILDERS = {
@@ -3004,8 +3352,41 @@ async def build_all(only):
             ids = [q["id"] for q in qs]
             if len(set(ids)) != len(ids):
                 raise AssertionError("%s: duplicate ids" % tid)
+            for q in qs:                                   # the diagram label check, then the labels moved where it finds a fault
+                if q.get("diagram"):
+                    st = DIAGRAM_STATS.setdefault(tid, {"diagrams": 0, "as_worded": 0, "strict": 0, "overlap": 0, "left": 0})
+                    st["diagrams"] += 1
+                    probs = diagram_problems(q["diagram"], strict=False)
+                    st["as_worded"] += any(k == "line" for k, _ in probs)
+                    full = diagram_problems(q["diagram"])
+                    st["strict"] += any(k == "line" for k, _ in full)
+                    st["overlap"] += any(k != "line" for k, _ in full)
+                    q["diagram"] = tidy_labels(q["diagram"])
+                    st["left"] += bool(diagram_problems(q["diagram"]))
             banks[tid] = {"topic": tid, "schema": 1, "questions": qs}
     return banks
+
+
+DIAGRAM_STATS = {}
+
+
+def diagram_selftest():
+    """The diagram label check on four planted diagrams: a clean one is passed, a label with a line through it, two labels
+    on top of each other and a label outside the viewBox are each caught, and the labels are moved clear. [] if all hold."""
+    head = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><line x1="0" y1="50" x2="100" y2="50"/><g font-size="13">'
+    case = lambda body: head + body + "</g></svg>"
+    text = lambda x, y, t="5 m": '<text x="%s" y="%s" text-anchor="middle">%s</text>' % (x, y, t)
+    faults = []
+    if diagram_problems(case(text(50, 30))):
+        faults.append("diagram check: a clean label was flagged")
+    for what, svg, kind in (("a line through a label", case(text(50, 50)), "line"),
+                            ("two labels overlapping", case(text(50, 30) + text(52, 31)), "overlap"),
+                            ("a label outside the viewBox", case(text(2, 30)), "outside")):
+        if not any(k == kind for k, _ in diagram_problems(svg)):
+            faults.append("diagram check: planted fault not caught: " + what)
+        if diagram_problems(tidy_labels(svg)):
+            faults.append("diagram check: the labels were not moved clear: " + what)
+    return faults
 
 
 def dump(bank):
@@ -3137,6 +3518,15 @@ def main():
                 faults.append("%s %s: %s" % (t, q["id"], x))
         print("%-32s %3d questions  bands %s" % (t, len(b["questions"]),
               sorted({q["band"] for q in b["questions"]})))
+    for t, st in DIAGRAM_STATS.items():                # the diagram label check, over every diagram the run built
+        print("diagram labels  %-20s %3d diagrams: line through a label %2d as first worded, %2d strict; labels overlapping %2d; "
+              "still faulty after the labels are moved %d" % (t, st["diagrams"], st["as_worded"], st["strict"], st["overlap"], st["left"]))
+        if st["left"]:
+            faults.append("%s: %d diagrams still have a label crossed, overlapped or outside" % (t, st["left"]))
+    if DIAGRAM_STATS:
+        tot = lambda k: sum(s[k] for s in DIAGRAM_STATS.values())
+        print("diagram labels  TOTAL %d diagrams: %d with a line through a label as first worded, %d strict, %d with overlapping labels; "
+              "%d still faulty after the labels are moved" % (tot("diagrams"), tot("as_worded"), tot("strict"), tot("overlap"), tot("left")))
     for x in faults[:40]:
         print("FAIL  " + x)
     if faults:
@@ -3174,6 +3564,7 @@ def main():
             if t not in banks and t not in short and not a.only:
                 bad.append("%s.json has no builder in gen-six-ps.py" % t)
         bad += coverage_faults()
+        bad += diagram_selftest()
         for x in bad:
             print("FAIL  " + x)
         if bad:
