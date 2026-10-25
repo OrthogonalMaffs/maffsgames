@@ -1,0 +1,787 @@
+{
+ "topic": "angles",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "angles-04bc35e9",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[0]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"14\" y1=\"70\" x2=\"346\" y2=\"70\"/><line x1=\"14\" y1=\"171\" x2=\"346\" y2=\"171\"/><line x1=\"254.6\" y1=\"14\" x2=\"105.4\" y2=\"227\" opacity=\"0.6\"/><path d=\"M195.4 70 A20 20 0 0 0 203.9 86.4\"/><path d=\"M164.6 171 A20 20 0 0 0 156.1 154.6\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,64 338,70 327,76\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,165 338,171 327,177\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"176.1\" y=\"84.8\">55°</text><text x=\"174.3\" y=\"155.6\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 55
+   },
+   "unit": "°",
+   "worked": [
+    "The transversal crosses two parallel lines",
+    "x and 55° are alternate angles (Z-shape)",
+    "Alternate angles are equal",
+    "x = 55°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-a36fc3dc",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[1]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"14\" y1=\"70\" x2=\"346\" y2=\"70\"/><line x1=\"14\" y1=\"171\" x2=\"346\" y2=\"171\"/><line x1=\"141.2\" y1=\"14\" x2=\"218.8\" y2=\"227\" opacity=\"0.6\"/><path d=\"M168.5 88.8 A20 20 0 0 0 181.6 70\"/><path d=\"M191.5 152.2 A20 20 0 0 0 178.4 171\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,64 338,70 327,76\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,165 338,171 327,177\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"195.5\" y=\"93.7\">70°</text><text x=\"170.5\" y=\"151.5\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 70
+   },
+   "unit": "°",
+   "worked": [
+    "70° and x are alternate angles",
+    "Alternate angles are equal",
+    "x = 70°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-0142ae35",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[2]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"14\" y1=\"70\" x2=\"346\" y2=\"70\"/><line x1=\"14\" y1=\"171\" x2=\"346\" y2=\"171\"/><line x1=\"298.2\" y1=\"21.3\" x2=\"61.8\" y2=\"219.7\" opacity=\"0.6\"/><path d=\"M220.2 70 A20 20 0 0 0 224.9 82.9\"/><path d=\"M139.8 171 A20 20 0 0 0 135.1 158.1\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,64 338,70 327,76\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,165 338,171 327,177\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"188.2\" y=\"83.9\">40°</text><text x=\"157.4\" y=\"157.3\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 40
+   },
+   "unit": "°",
+   "worked": [
+    "x and 40° are alternate angles (Z-shape)",
+    "x = 40°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-937b7c36",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[3]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"14\" y1=\"70\" x2=\"346\" y2=\"70\"/><line x1=\"14\" y1=\"171\" x2=\"346\" y2=\"171\"/><line x1=\"269.4\" y1=\"14\" x2=\"90.6\" y2=\"227\" opacity=\"0.6\"/><path d=\"M242.4 70 A20 20 0 0 0 235.2 54.7\"/><path d=\"M157.6 171 A20 20 0 0 0 150.5 155.7\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,64 338,70 327,76\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,165 338,171 327,177\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"265.3\" y=\"55.4\">50°</text><text x=\"167.8\" y=\"156.9\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 50
+   },
+   "unit": "°",
+   "worked": [
+    "x and 50° are in the same position at each intersection",
+    "These are corresponding angles (F-shape)",
+    "Corresponding angles are equal",
+    "x = 50°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-14d02ce2",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[4]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"14\" y1=\"70\" x2=\"346\" y2=\"70\"/><line x1=\"14\" y1=\"171\" x2=\"346\" y2=\"171\"/><line x1=\"130.3\" y1=\"14\" x2=\"229.7\" y2=\"227\" opacity=\"0.6\"/><path d=\"M148 51.9 A20 20 0 0 0 136.5 70\"/><path d=\"M195.1 152.9 A20 20 0 0 0 183.5 171\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,64 338,70 327,76\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,165 338,171 327,177\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"121.5\" y=\"47.7\">65°</text><text x=\"175\" y=\"152.8\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 65
+   },
+   "unit": "°",
+   "worked": [
+    "Same position at each intersection → corresponding angles",
+    "x = 65°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-a17663d8",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[5]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"14\" y1=\"70\" x2=\"346\" y2=\"70\"/><line x1=\"14\" y1=\"171\" x2=\"346\" y2=\"171\"/><line x1=\"314.2\" y1=\"26.6\" x2=\"45.8\" y2=\"214.4\" opacity=\"0.6\"/><path d=\"M272.1 70 A20 20 0 0 0 268.5 58.5\"/><path d=\"M127.9 171 A20 20 0 0 0 124.3 159.5\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,64 338,70 327,76\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,165 338,171 327,177\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"310.1\" y=\"56.5\">35°</text><text x=\"151.1\" y=\"157.4\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 35
+   },
+   "unit": "°",
+   "worked": [
+    "Corresponding angles are equal",
+    "x = 35°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-f174499c",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[6]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"14\" y1=\"70\" x2=\"346\" y2=\"70\"/><line x1=\"14\" y1=\"171\" x2=\"346\" y2=\"171\"/><line x1=\"241.5\" y1=\"14\" x2=\"118.5\" y2=\"227\" opacity=\"0.6\"/><path d=\"M189.2 70 A20 20 0 0 0 199.2 87.3\"/><path d=\"M160.8 153.7 A20 20 0 0 0 130.8 171\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,64 338,70 327,76\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,165 338,171 327,177\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"173.3\" y=\"90.7\">60°</text><text x=\"133.5\" y=\"140.9\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 120
+   },
+   "unit": "°",
+   "worked": [
+    "60° and x are co-interior angles (same side of transversal, between parallel lines)",
+    "Co-interior angles sum to 180°",
+    "x = 180° − 60° = 120°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-abfe0a9b",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[7]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"14\" y1=\"70\" x2=\"346\" y2=\"70\"/><line x1=\"14\" y1=\"171\" x2=\"346\" y2=\"171\"/><line x1=\"151.5\" y1=\"14\" x2=\"208.5\" y2=\"227\" opacity=\"0.6\"/><path d=\"M171.6 89.3 A20 20 0 0 0 186.5 70\"/><path d=\"M213.5 171 A20 20 0 0 0 188.4 151.7\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,64 338,70 327,76\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,165 338,171 327,177\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"199.2\" y=\"95.1\">75°</text><text x=\"214.6\" y=\"143.5\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 105
+   },
+   "unit": "°",
+   "worked": [
+    "Co-interior angles sum to 180°",
+    "x = 180° − 75° = 105°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-bed9f9e4",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[8]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"14\" y1=\"70\" x2=\"346\" y2=\"70\"/><line x1=\"14\" y1=\"171\" x2=\"346\" y2=\"171\"/><line x1=\"275.9\" y1=\"14\" x2=\"84.1\" y2=\"227\" opacity=\"0.6\"/><path d=\"M205.5 70 A20 20 0 0 0 212.1 84.9\"/><path d=\"M147.9 156.1 A20 20 0 0 0 114.5 171\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,64 338,70 327,76\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,165 338,171 327,177\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"180.9\" y=\"84.5\">48°</text><text x=\"120.4\" y=\"139.3\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 132
+   },
+   "unit": "°",
+   "worked": [
+    "Co-interior (allied) angles: x + 48° = 180°",
+    "x = 132°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-58f0eb0c",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[9]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"14\" y1=\"192\" x2=\"346\" y2=\"192\"/><line x1=\"180\" y1=\"192\" x2=\"250.2\" y2=\"41.6\"/><path d=\"M200 192 A20 20 0 0 0 188.5 173.9\"/><path d=\"M188.5 173.9 A20 20 0 0 0 160 192\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"214.9\" y=\"169.7\">65°</text><text x=\"161.3\" y=\"162.7\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 115
+   },
+   "unit": "°",
+   "worked": [
+    "x and 65° are on a straight line",
+    "Angles on a straight line sum to 180°",
+    "x = 180° − 65° = 115°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-09263ab7",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[10]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"14\" y1=\"192\" x2=\"346\" y2=\"192\"/><line x1=\"180\" y1=\"192\" x2=\"286.7\" y2=\"64.8\"/><line x1=\"180\" y1=\"192\" x2=\"73.3\" y2=\"64.8\"/><path d=\"M200 192 A20 20 0 0 0 192.9 176.7\"/><path d=\"M192.9 176.7 A20 20 0 0 0 167.1 176.7\"/><path d=\"M167.1 176.7 A20 20 0 0 0 160 192\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"222.9\" y=\"177.4\">50°</text><text x=\"180\" y=\"158.5\">80°</text><text x=\"149.9\" y=\"177.9\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 50
+   },
+   "unit": "°",
+   "worked": [
+    "Three angles on a straight line: 50° + 80° + x = 180°",
+    "x = 180° − 130° = 50°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-43ed9cd1",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[11]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"14\" y1=\"192\" x2=\"346\" y2=\"192\"/><line x1=\"180\" y1=\"192\" x2=\"231.3\" y2=\"34.1\"/><path d=\"M200 192 A20 20 0 0 0 186.2 173\"/><path d=\"M186.2 173 A20 20 0 0 0 160 192\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"213.4\" y=\"167.7\">72°</text><text x=\"159.6\" y=\"163.9\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 108
+   },
+   "unit": "°",
+   "worked": [
+    "Angles on a straight line = 180°",
+    "x = 180° − 72° = 108°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-029239eb",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[12]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"180\" y1=\"120\" x2=\"328\" y2=\"185.9\"/><line x1=\"180\" y1=\"120\" x2=\"328\" y2=\"54.1\"/><line x1=\"180\" y1=\"120\" x2=\"32\" y2=\"54.1\"/><line x1=\"180\" y1=\"120\" x2=\"32\" y2=\"185.9\"/><path d=\"M198.3 128.1 A20 20 0 0 0 198.3 111.9\"/><path d=\"M161.7 111.9 A20 20 0 0 0 161.7 128.1\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"220.2\" y=\"120\">48°</text><text x=\"148.8\" y=\"120\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 48
+   },
+   "unit": "°",
+   "worked": [
+    "x and 48° are vertically opposite",
+    "Vertically opposite angles are equal",
+    "x = 48°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-72198a84",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[13]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"180\" y1=\"120\" x2=\"247.5\" y2=\"226\"/><line x1=\"180\" y1=\"120\" x2=\"247.5\" y2=\"14\"/><line x1=\"180\" y1=\"120\" x2=\"112.5\" y2=\"14\"/><line x1=\"180\" y1=\"120\" x2=\"112.5\" y2=\"226\"/><path d=\"M190.7 136.9 A20 20 0 0 0 190.7 103.1\"/><path d=\"M190.7 103.1 A20 20 0 0 0 169.3 103.1\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"224\" y=\"120\">115°</text><text x=\"180\" y=\"86.5\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 65
+   },
+   "unit": "°",
+   "worked": [
+    "115° and x are on a straight line (supplementary)",
+    "x = 180° − 115° = 65°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-8a3e289f",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[14]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"180\" y1=\"120\" x2=\"342\" y2=\"120\"/><line x1=\"180\" y1=\"120\" x2=\"180\" y2=\"14\"/><line x1=\"180\" y1=\"120\" x2=\"27.8\" y2=\"175.4\"/><line x1=\"180\" y1=\"120\" x2=\"241.2\" y2=\"226\"/><polyline points=\"192,120 192,108 180,108\"/><path d=\"M180 100 A20 20 0 0 0 161.2 126.8\"/><path d=\"M161.2 126.8 A20 20 0 0 0 190 137.3\"/><path d=\"M190 137.3 A20 20 0 0 0 200 120\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"208.9\" y=\"91.1\">90°</text><text x=\"143.1\" y=\"94.2\">110°</text><text x=\"166.6\" y=\"156.8\">100°</text><text x=\"209.1\" y=\"136.8\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 60
+   },
+   "unit": "°",
+   "worked": [
+    "Angles at a point sum to 360°",
+    "90° + 110° + 100° + x = 360°",
+    "x = 360° − 300° = 60°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-6249aaec",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[15]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"180\" y1=\"120\" x2=\"342\" y2=\"120\"/><line x1=\"180\" y1=\"120\" x2=\"118.8\" y2=\"14\"/><line x1=\"180\" y1=\"120\" x2=\"141.4\" y2=\"226\"/><path d=\"M200 120 A20 20 0 0 0 170 102.7\"/><path d=\"M170 102.7 A20 20 0 0 0 173.2 138.8\"/><path d=\"M173.2 138.8 A20 20 0 0 0 200 120\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"200.7\" y=\"84.1\">120°</text><text x=\"135.6\" y=\"123.9\">130°</text><text x=\"199.9\" y=\"148.4\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 110
+   },
+   "unit": "°",
+   "worked": [
+    "120° + 130° + x = 360°",
+    "x = 360° − 250° = 110°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-6451af15",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[16]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"57.3\" y1=\"222\" x2=\"302.7\" y2=\"222\"/><line x1=\"302.7\" y1=\"222\" x2=\"228.5\" y2=\"18\"/><line x1=\"228.5\" y1=\"18\" x2=\"57.3\" y2=\"222\"/><path d=\"M77.3 222 A20 20 0 0 0 70.1 206.7\"/><path d=\"M295.9 203.2 A20 20 0 0 0 282.7 222\"/><path d=\"M215.6 33.3 A20 20 0 0 0 235.3 36.8\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"100.2\" y=\"207.4\">50°</text><text x=\"268.8\" y=\"198.3\">70°</text><text x=\"222.5\" y=\"51.6\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 60
+   },
+   "unit": "°",
+   "worked": [
+    "Angles in a triangle sum to 180°",
+    "50° + 70° + x = 180°",
+    "x = 60°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-a45475a5",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[17]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"49.4\" y1=\"222\" x2=\"310.6\" y2=\"222\"/><line x1=\"310.6\" y1=\"222\" x2=\"310.6\" y2=\"18\"/><line x1=\"310.6\" y1=\"18\" x2=\"49.4\" y2=\"222\"/><path d=\"M69.4 222 A20 20 0 0 0 65.2 209.7\"/><polyline points=\"310.6,210 298.6,210 298.6,222\"/><path d=\"M294.8 30.3 A20 20 0 0 0 310.6 38\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"103.7\" y=\"208.2\">38°</text><text x=\"281.7\" y=\"193.1\">90°</text><text x=\"295.3\" y=\"49.2\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 52
+   },
+   "unit": "°",
+   "worked": [
+    "38° + 90° + x = 180°",
+    "x = 180° − 128° = 52°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-e90277cd",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[18]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "The triangle is isosceles (marked sides equal). Find \\(x\\).. The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"18\" y1=\"176.7\" x2=\"342\" y2=\"176.7\"/><line x1=\"342\" y1=\"176.7\" x2=\"180\" y2=\"63.3\"/><line x1=\"180\" y1=\"63.3\" x2=\"18\" y2=\"176.7\"/><line x1=\"95.6\" y1=\"115.1\" x2=\"102.4\" y2=\"124.9\"/><line x1=\"257.6\" y1=\"124.9\" x2=\"264.4\" y2=\"115.1\"/><path d=\"M38 176.7 A20 20 0 0 0 34.4 165.2\"/><path d=\"M325.6 165.2 A20 20 0 0 0 322 176.7\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"75.9\" y=\"163.2\">35°</text><text x=\"298.8\" y=\"163.1\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 35
+   },
+   "unit": "°",
+   "worked": [
+    "Isosceles triangle: base angles are equal",
+    "x is one of the two base angles",
+    "The other base angle is 35°, so x = 35°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-f67724ce",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[19]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Find exterior angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"36\" y1=\"185.8\" x2=\"324\" y2=\"185.8\"/><line x1=\"228\" y1=\"185.8\" x2=\"192.8\" y2=\"54.2\"/><line x1=\"192.8\" y1=\"54.2\" x2=\"36\" y2=\"185.8\"/><path d=\"M56 185.8 A20 20 0 0 0 51.3 172.9\"/><path d=\"M177.4 67.1 A20 20 0 0 0 197.9 73.6\"/><path d=\"M248 185.8 A20 20 0 0 0 222.8 166.4\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"88\" y=\"171.8\">40°</text><text x=\"181.6\" y=\"89.7\">65°</text><text x=\"249.1\" y=\"158.2\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 105
+   },
+   "unit": "°",
+   "worked": [
+    "The exterior angle of a triangle equals the sum of the two interior opposite angles",
+    "x = 40° + 65° = 105°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-7325d6d4",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[20]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Find exterior angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"36\" y1=\"176.5\" x2=\"324\" y2=\"176.5\"/><line x1=\"228\" y1=\"176.5\" x2=\"115.1\" y2=\"63.5\"/><line x1=\"115.1\" y1=\"63.5\" x2=\"36\" y2=\"176.5\"/><path d=\"M56 176.5 A20 20 0 0 0 47.5 160.1\"/><path d=\"M103.6 79.9 A20 20 0 0 0 129.2 77.7\"/><path d=\"M248 176.5 A20 20 0 0 0 213.9 162.3\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"75.2\" y=\"161.7\">55°</text><text x=\"118.1\" y=\"98.1\">80°</text><text x=\"241.3\" y=\"144.5\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 135
+   },
+   "unit": "°",
+   "worked": [
+    "Exterior angle = 55° + 80° = 135°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-6f5b3425",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[21]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find angle \\(x\\) (two steps needed). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"14\" y1=\"70\" x2=\"346\" y2=\"70\"/><line x1=\"14\" y1=\"171\" x2=\"346\" y2=\"171\"/><line x1=\"236.6\" y1=\"14\" x2=\"123.4\" y2=\"227\" opacity=\"0.6\"/><path d=\"M226.9 70 A20 20 0 0 0 216.2 52.3\"/><path d=\"M173.1 171 A20 20 0 0 0 162.5 153.3\"/><path d=\"M162.5 153.3 A20 20 0 0 0 133.1 171\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,64 338,70 327,76\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,165 338,171 327,177\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"242.4\" y=\"48.7\">62°</text><text x=\"182.1\" y=\"153.6\" font-weight=\"700\">y</text><text x=\"135.3\" y=\"141.2\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 118
+   },
+   "unit": "°",
+   "worked": [
+    "First: y and 62° are corresponding angles → y = 62°",
+    "Then: x + y = 180° (angles on a straight line)",
+    "x = 180° − 62° = 118°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-6c9b5d0f",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[22]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"14\" y1=\"70\" x2=\"346\" y2=\"70\"/><line x1=\"14\" y1=\"171\" x2=\"346\" y2=\"171\"/><line x1=\"147.4\" y1=\"14\" x2=\"212.6\" y2=\"227\" opacity=\"0.6\"/><path d=\"M170.4 89.1 A20 20 0 0 0 184.6 70\"/><path d=\"M189.6 151.9 A20 20 0 0 0 175.4 171\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,64 338,70 327,76\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,165 338,171 327,177\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"197.8\" y=\"94.6\">73°</text><text x=\"168\" y=\"150.7\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 73
+   },
+   "unit": "°",
+   "worked": [
+    "73° and x are alternate angles",
+    "x = 73°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-0b4950af",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[23]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find angle \\(x\\) in the triangle. The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"14\" y1=\"70.5\" x2=\"346\" y2=\"70.5\"/><line x1=\"14\" y1=\"169.5\" x2=\"346\" y2=\"169.5\"/><line x1=\"44.8\" y1=\"70.5\" x2=\"143.8\" y2=\"169.5\" opacity=\"0.6\"/><line x1=\"315.2\" y1=\"70.5\" x2=\"143.8\" y2=\"169.5\" opacity=\"0.6\"/><path d=\"M129.6 155.4 A20 20 0 0 0 123.8 169.5\"/><path d=\"M295.2 70.5 A20 20 0 0 0 297.9 80.5\"/><path d=\"M161.1 159.5 A20 20 0 0 0 129.6 155.4\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"95,64.4958277186395 106,70.4958277186395 95,76.4958277186395\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,163.50417228136047 338,169.50417228136047 327,175.50417228136047\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"96.6\" y=\"155.2\">45°</text><text x=\"249.9\" y=\"83.5\">30°</text><text x=\"148.2\" y=\"135.8\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 105
+   },
+   "unit": "°",
+   "worked": [
+    "The 45° angle and the angle at the top of the triangle are alternate angles → top angle = 45°",
+    "The triangle has angles: 45° + 30° + x = 180°",
+    "x = 180° − 75° = 105°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-1b14e8ee",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[24]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"14\" y1=\"70\" x2=\"346\" y2=\"70\"/><line x1=\"14\" y1=\"171\" x2=\"346\" y2=\"171\"/><line x1=\"113.5\" y1=\"14\" x2=\"246.5\" y2=\"227\" opacity=\"0.6\"/><path d=\"M159 87 A20 20 0 0 0 168.4 70\"/><path d=\"M201 154 A20 20 0 0 0 191.6 171\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,64 338,70 327,76\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,165 338,171 327,177\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"184.7\" y=\"90.1\">58°</text><text x=\"182.2\" y=\"154.7\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 58
+   },
+   "unit": "°",
+   "worked": [
+    "Alternate angles → x = 58°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-e564c0d6",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[25]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"14\" y1=\"70\" x2=\"346\" y2=\"70\"/><line x1=\"14\" y1=\"171\" x2=\"346\" y2=\"171\"/><line x1=\"292.4\" y1=\"19.3\" x2=\"67.6\" y2=\"221.7\" opacity=\"0.6\"/><path d=\"M216.1 70 A20 20 0 0 0 221.2 83.4\"/><path d=\"M103.9 171 A20 20 0 0 0 109.1 184.4\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,64 338,70 327,76\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,165 338,171 327,177\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"186.1\" y=\"84.1\">42°</text><text x=\"88.3\" y=\"184.7\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 42
+   },
+   "unit": "°",
+   "worked": [
+    "Corresponding angles → x = 42°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-7a32cc40",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[26]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"14\" y1=\"70\" x2=\"346\" y2=\"70\"/><line x1=\"14\" y1=\"171\" x2=\"346\" y2=\"171\"/><line x1=\"141.2\" y1=\"14\" x2=\"218.8\" y2=\"227\" opacity=\"0.6\"/><path d=\"M141.6 70 A20 20 0 0 0 168.5 88.8\"/><path d=\"M191.5 152.2 A20 20 0 0 0 178.4 171\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,64 338,70 327,76\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,165 338,171 327,177\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"137.3\" y=\"104.8\">110°</text><text x=\"170.5\" y=\"151.5\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 70
+   },
+   "unit": "°",
+   "worked": [
+    "Co-interior angles sum to 180°",
+    "x = 180° − 110° = 70°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-8104230d",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[27]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"14\" y1=\"192\" x2=\"346\" y2=\"192\"/><line x1=\"180\" y1=\"192\" x2=\"214.5\" y2=\"29.6\"/><path d=\"M200 192 A20 20 0 0 0 184.2 172.4\"/><path d=\"M184.2 172.4 A20 20 0 0 0 160 192\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"212\" y=\"166.1\">78°</text><text x=\"158.2\" y=\"165.1\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 102
+   },
+   "unit": "°",
+   "worked": [
+    "Angles on a straight line: x + 78° = 180°",
+    "x = 102°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-6f5ae140",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[28]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"180\" y1=\"120\" x2=\"221.8\" y2=\"226\"/><line x1=\"180\" y1=\"120\" x2=\"221.8\" y2=\"14\"/><line x1=\"180\" y1=\"120\" x2=\"138.2\" y2=\"14\"/><line x1=\"180\" y1=\"120\" x2=\"138.2\" y2=\"226\"/><path d=\"M187.3 138.6 A20 20 0 0 0 187.3 101.4\"/><path d=\"M187.3 101.4 A20 20 0 0 0 172.7 101.4\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"224\" y=\"120\">137°</text><text x=\"180\" y=\"86.5\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 43
+   },
+   "unit": "°",
+   "worked": [
+    "137° + x = 180° (straight line)",
+    "x = 43°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-0fe385be",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[29]"
+   },
+   "band": 1,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"180\" y1=\"120\" x2=\"318.1\" y2=\"204.6\"/><line x1=\"180\" y1=\"120\" x2=\"318.1\" y2=\"35.4\"/><line x1=\"180\" y1=\"120\" x2=\"41.9\" y2=\"35.4\"/><line x1=\"180\" y1=\"120\" x2=\"41.9\" y2=\"204.6\"/><path d=\"M197.1 130.4 A20 20 0 0 0 197.1 109.6\"/><path d=\"M162.9 109.6 A20 20 0 0 0 162.9 130.4\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"219.5\" y=\"120\">63°</text><text x=\"149.5\" y=\"120\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 63
+   },
+   "unit": "°",
+   "worked": [
+    "Vertically opposite angles are equal",
+    "x = 63°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-f452c9eb",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[30]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"19.1\" y1=\"222\" x2=\"340.9\" y2=\"222\"/><line x1=\"340.9\" y1=\"222\" x2=\"136.9\" y2=\"18\"/><line x1=\"136.9\" y1=\"18\" x2=\"19.1\" y2=\"222\"/><path d=\"M39.1 222 A20 20 0 0 0 29.1 204.7\"/><path d=\"M326.7 207.9 A20 20 0 0 0 320.9 222\"/><path d=\"M126.9 35.3 A20 20 0 0 0 151 32.1\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"55\" y=\"201.3\">60°</text><text x=\"293.8\" y=\"207.7\">45°</text><text x=\"141.3\" y=\"51.7\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 75
+   },
+   "unit": "°",
+   "worked": [
+    "60° + 45° + x = 180°",
+    "x = 75°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-4fc7fe98",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[31]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"14\" y1=\"70\" x2=\"346\" y2=\"70\"/><line x1=\"14\" y1=\"171\" x2=\"346\" y2=\"171\"/><line x1=\"223\" y1=\"14\" x2=\"137\" y2=\"227\" opacity=\"0.6\"/><path d=\"M180.4 70 A20 20 0 0 0 192.9 88.5\"/><path d=\"M179.6 171 A20 20 0 0 0 167.1 152.5\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,64 338,70 327,76\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,165 338,171 327,177\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"166.1\" y=\"93.1\">68°</text><text x=\"187.7\" y=\"152\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 68
+   },
+   "unit": "°",
+   "worked": [
+    "Alternate angles are equal",
+    "x = 68°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-a310d0be",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[32]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Find angle \\(x\\). The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"14\" y1=\"70\" x2=\"346\" y2=\"70\"/><line x1=\"14\" y1=\"171\" x2=\"346\" y2=\"171\"/><line x1=\"254.6\" y1=\"14\" x2=\"105.4\" y2=\"227\" opacity=\"0.6\"/><path d=\"M203.9 86.4 A20 20 0 0 0 235.4 70\"/><path d=\"M164.6 171 A20 20 0 0 0 156.1 154.6\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,64 338,70 327,76\"/><polygon fill=\"currentColor\" stroke=\"none\" points=\"327,165 338,171 327,177\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"234.3\" y=\"106.3\">125°</text><text x=\"174.3\" y=\"155.6\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 55
+   },
+   "unit": "°",
+   "worked": [
+    "Co-interior: x + 125° = 180°",
+    "x = 55°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-8f55c67d",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[33]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find angle \\(x\\) in the right-angled triangle. The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"28.8\" y1=\"222\" x2=\"331.2\" y2=\"222\"/><line x1=\"331.2\" y1=\"222\" x2=\"331.2\" y2=\"18\"/><line x1=\"331.2\" y1=\"18\" x2=\"28.8\" y2=\"222\"/><path d=\"M48.8 222 A20 20 0 0 0 45.4 210.8\"/><polyline points=\"331.2,210 319.2,210 319.2,222\"/><path d=\"M314.6 29.2 A20 20 0 0 0 331.2 38\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"88\" y=\"208.6\">34°</text><text x=\"314.9\" y=\"48.7\" font-weight=\"700\">x</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 56
+   },
+   "unit": "°",
+   "worked": [
+    "34° + 90° + x = 180°",
+    "x = 56°"
+   ],
+   "slip": []
+  },
+  {
+   "id": "angles-72d0721b",
+   "topic": "angles",
+   "source": {
+    "game": "angle-ace",
+    "ref": "QUESTIONS_BY_LEVEL.gcse[34]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Three angles on a straight line. Find \\(x\\).. The diagram is not drawn accurately.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 360 240\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"14\" y1=\"192\" x2=\"346\" y2=\"192\"/><line x1=\"180\" y1=\"192\" x2=\"286.7\" y2=\"64.8\"/><line x1=\"180\" y1=\"192\" x2=\"52.8\" y2=\"85.3\"/><path d=\"M200 192 A20 20 0 0 0 192.9 176.7\"/><path d=\"M192.9 176.7 A20 20 0 0 0 164.7 179.1\"/><path d=\"M164.7 179.1 A20 20 0 0 0 160 192\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\" text-anchor=\"middle\" dominant-baseline=\"central\"><text x=\"222.9\" y=\"177.4\">50°</text><text x=\"177\" y=\"158.3\" font-weight=\"700\">x</text><text x=\"128\" y=\"178.1\">40°</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 90
+   },
+   "unit": "°",
+   "worked": [
+    "Angles on a straight line add up to 180°",
+    "40° + x + 50° = 180°",
+    "x = 90°"
+   ],
+   "slip": []
+  }
+ ]
+}

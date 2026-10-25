@@ -356,6 +356,7 @@ async def topic_direct(h):
 # ───────────────────────────── powers and roots (index-laws) ─────────────────────────────
 def tex_eval(s, x):
     """A small TeX evaluator for index-law expressions: numbers, one letter, \\times, \\div, \\frac, ^, braces, ( )."""
+    s = s.replace("\\dfrac", "\\frac")
     t = re.sub(r"\\div\s*(\([^()]*\)|\d*[a-z]?(?:\^\{[^{}]*\}|\^-?\d+)?)", r"\\div (\1)", s)   # a divisor is one term
     t = t.replace("\\times", "*").replace("\\div", "/").replace("\\,", "").replace("\\left", "").replace("\\right", "")
     for _ in range(6):
@@ -372,8 +373,8 @@ def tex_eval(s, x):
 
 
 def conv_index(topic, i, it):
-    if "frac" in it["q"] or "frac" in it["correct"] or "sqrt" in it["q"]:
-        return None                                  # fractional powers: Higher content, left out (listed)
+    if it["rule"] == "Fractional Power" or re.search(r"\^\{?\s*\\frac|\^\{?\s*\d+/\d+", it["q"] + it["correct"]):
+        return None                                  # fractional indices only: Higher content (Jon, 25 Oct 2026)
     for x in (2.0, 3.0, 1.5):
         a = tex_eval(it["q"], x)
         b = tex_eval(it["correct"], x)
@@ -697,6 +698,168 @@ async def topic_fdp_amount(h):
     return await topic_fdp(h, (3,), "fraction-percentage-of-amount")
 
 
+# ───────────────────────────── angles (angle-ace) ─────────────────────────────
+# Angle Ace draws on a canvas, so the SVG is drawn here from the item's numbers in one shared style (Jon, 25 Oct 2026):
+# the game's own geometry (FIG[...] returns the segments, arcs and labels in pixels, placeLabel the label boxes) is read in
+# the page and written out as an SVG with a viewBox, currentColor and text labels. The check below matches every label.
+ANGLE_SVG_JS = r"""(fig) => {
+  const W = 360, H = 240, S = FIG[fig.t](fig, W, H);
+  const r = v => Math.round(v * 10) / 10, boxes = [], out = [];
+  S.segs.forEach(s => out.push('<line x1="' + r(s[0][0]) + '" y1="' + r(s[0][1]) + '" x2="' + r(s[1][0]) + '" y2="' + r(s[1][1]) + '"' + (s[2] === 'trans' ? ' opacity="0.6"' : '') + '/>'));
+  (S.ticks || []).forEach(t => { const M = [(t[0][0] + t[1][0]) / 2, (t[0][1] + t[1][1]) / 2], n = dirOf(t[0], t[1]) + 90, a = at(M, n, 6), b = at(M, n + 180, 6);
+    out.push('<line x1="' + r(a[0]) + '" y1="' + r(a[1]) + '" x2="' + r(b[0]) + '" y2="' + r(b[1]) + '"/>'); });
+  const texts = [];
+  S.marks.forEach(m => {
+    const unk = m.lab === 'x' || m.lab === 'y', text = unk ? m.lab : m.lab + '°';
+    if (m.sq) { const p = at(m.V, m.a, SQ), q = at(m.V, m.b, SQ);
+      out.push('<polyline points="' + r(p[0]) + ',' + r(p[1]) + ' ' + r(p[0] + q[0] - m.V[0]) + ',' + r(p[1] + q[1] - m.V[1]) + ' ' + r(q[0]) + ',' + r(q[1]) + '"/>'); }
+    else { const a0 = at(m.V, m.a, ARC), a1 = at(m.V, m.b, ARC), sweepDeg = m.b - m.a;
+      out.push('<path d="M' + r(a0[0]) + ' ' + r(a0[1]) + ' A' + ARC + ' ' + ARC + ' 0 ' + (sweepDeg > 180 ? 1 : 0) + ' 0 ' + r(a1[0]) + ' ' + r(a1[1]) + '"/>'); }
+    if (m.lab === '') return;
+    const b = placeLabel(m, text.length * 9, 15, S, boxes, W, H); boxes.push(b);
+    texts.push('<text x="' + r((b[0] + b[2]) / 2) + '" y="' + r((b[1] + b[3]) / 2) + '"' + (unk ? ' font-weight="700"' : '') + '>' + text + '</text>');
+  });
+  (S.par || []).forEach(y => { for (let k = 0; k < 12; k++) { const x = k % 2 ? PAD + 14 + (k >> 1) * 18 : W - PAD - 14 - (k >> 1) * 18, b = [x - 6, y - 7, x + 7, y + 7];
+    if (!boxes.some(o => !(b[2] < o[0] || b[0] > o[2] || b[3] < o[1] || b[1] > o[3])) && !(S.avoid || []).some(p => Math.hypot(p[0] - x, p[1] - y) < 40)) {
+      out.push('<polygon fill="currentColor" stroke="none" points="' + (x - 5) + ',' + (y - 6) + ' ' + (x + 6) + ',' + y + ' ' + (x - 5) + ',' + (y + 6) + '"/>'); break; } } });
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' ' + H + '" role="img" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+    + out.join('') + '<g fill="currentColor" stroke="none" font-family="sans-serif" font-size="15" text-anchor="middle" dominant-baseline="central">' + texts.join('') + '</g></svg>';
+}"""
+
+ANGLE_BAND = {"VERTOP": 1, "STRAIGHT": 2, "POINT": 2, "TRIANGLE": 2, "ISOSC": 3, "ALT": 3, "CORR": 3, "COINT": 4, "EXTERIOR": 4}
+ANGLE_REASON = {"Alternate angles are equal": "ALT", "Corresponding angles are equal": "CORR",
+                "Co-interior angles sum to 180°": "COINT", "Angles on a straight line sum to 180°": "STRAIGHT",
+                "Angles at a point sum to 360°": "POINT", "Vertically opposite angles are equal": "VERTOP",
+                "Angles in a triangle sum to 180°": "TRIANGLE",
+                "Base angles of an isosceles triangle are equal": "ISOSC",
+                "Exterior angle equals sum of interior opposite angles": "EXTERIOR"}
+
+
+def fig_labels(fig):
+    """The labels a figure must show, from its numbers: every number in it, and its x or y."""
+    out = []
+
+    def walk(v):
+        if isinstance(v, bool) or v is None:
+            return
+        if isinstance(v, (int, float)):
+            out.append(str(int(v)) + "°")
+        elif isinstance(v, str):
+            if v in ("x", "y"):
+                out.append(v)
+        elif isinstance(v, list):
+            for x in v:
+                walk(x)
+        elif isinstance(v, dict):
+            for k, x in v.items():
+                if k != "t":
+                    walk(x)
+    walk(fig)
+    return sorted(out)
+
+
+def svg_labels(svg):
+    return sorted(re.findall(r"<text[^>]*>([^<]*)</text>", svg))
+
+
+async def topic_angles(h):
+    pg = await h.page("angle-ace", "level=gcse")
+    items = await pg.evaluate("() => QUESTIONS_BY_LEVEL.gcse")
+    out = []
+    for i, it in enumerate(items):
+        svg = await pg.evaluate(ANGLE_SVG_JS, it["fig"])
+        # the check: every label in the drawing is one of the item's numbers, and every number is drawn
+        assert svg_labels(svg) == fig_labels(it["fig"]), ("angles", i, svg_labels(svg), fig_labels(it["fig"]))
+        # the answer is recomputed from the figure's numbers by the rule the figure states
+        t, f = it["fig"]["t"], it["fig"]
+        nums = lambda xs: [x for x in xs if isinstance(x, (int, float))]
+        if t == "line":
+            want = 180 - sum(nums(f["r"]))
+        elif t == "point":
+            want = 360 - sum(nums(f["r"]))
+        elif t == "tri" and f.get("iso"):
+            want = f["A"]                                              # base angles of an isosceles triangle are equal
+        elif t == "tri":
+            want = 180 - sum(90 if f[k] == "sq" else f[k] for k in "ABC" if f[k] != "x")
+        elif t == "partri":
+            want = 180 - f["q0"] - f["R"]
+        elif t == "ext":
+            want = f["A"] + f["C"]
+        elif t == "cross":
+            k = next(j for j, x in enumerate(f["r"]) if isinstance(x, (int, float)))
+            xi = f["r"].index("x")
+            want = f["r"][k] if (xi - k) % 2 == 0 else 180 - f["r"][k]      # opposite angles equal, adjacent make 180
+        elif t == "par":
+            known = nums([m[2] for m in f["m"]])[0]
+            want = known if ANGLE_REASON[it["reason"]] in ("ALT", "CORR") else (180 - known)
+        else:
+            raise AssertionError("angle figure type " + t)
+        assert want == it["answer"], ("angles", i, t, f, want, it["answer"])
+        prompt = it["prompt"].replace(" x", " \\(x\\)")
+        stem = prompt + ". The diagram is not drawn accurately."
+        q = mk("angles", "angle-ace", "QUESTIONS_BY_LEVEL.gcse[%d]" % i, ANGLE_BAND[ANGLE_REASON[it["reason"]]], False,
+               stem, "number", {"value": it["answer"]}, unit="°", worked=it["steps"][:5])
+        q["diagram"] = svg
+        out.append(q)
+    return out
+
+
+# ───────────────────────────── negative numbers (negative-number-line) ─────────────────────────────
+def conv_neg_order(i, it):
+    nums = it["nums"]
+    right = sorted(nums)
+    assert it["answer"] == right, ("negatives order", nums, it["answer"])
+    by_abs = sorted(nums, key=lambda n: (abs(n), n))
+    largest_first = sorted(nums, reverse=True)
+
+    def swapped(k):
+        s = list(right)
+        s[k], s[k + 1] = s[k + 1], s[k]
+        return s
+    # Jon's three wrong orderings in his order: by size ignoring the minus signs, largest first, the right order with a
+    # neighbouring pair swapped; when two coincide (or one is the right order) the next neighbouring swap stands in.
+    wrong = []
+    for cand in [by_abs, largest_first] + [swapped(k) for k in range(len(right) - 1)] + [sorted(nums, key=lambda n: -abs(n))]:
+        if cand != right and cand not in wrong and len(wrong) < 3:
+            wrong.append(cand)
+    assert len(wrong) == 3 and len({tuple(x) for x in wrong + [right]}) == 4, \
+        ("negatives order: the four orderings are not distinct", nums)
+    lab = lambda xs: tex(", ".join(str(n) for n in xs))
+    opts, ans = choice("negatives-order-%d" % i, lab(right), [lab(w) for w in wrong])
+    worked = ["On a number line, further left is smaller.", "Smallest first: " + tex(", ".join(str(n) for n in right)) + "."]
+    return mk("arithmetic-negatives", "negative-number-line", "ORDER_QUESTIONS[%d]" % i, 1, False,
+              "Write these numbers in order, smallest first: " + tex(", ".join(str(n) for n in nums)) + ".", "choice", ans,
+              options=opts, worked=worked)
+
+
+def conv_neg_calc(i, it):
+    a, b, op = it["start"], it["val"], it["op"]
+    ans = a + b if op == "add" else a - b
+    assert ans == it["answer"], ("negatives calc", it)
+    sign = "+" if op == "add" else "-"
+    expr = "%d %s %s" % (a, sign, ("(%d)" % b) if b < 0 else str(b))
+    if op == "add" and b >= 0:
+        w = "Start at \\(%d\\). Adding \\(%d\\) moves \\(%d\\) to the right: \\(%d + %d = %d\\)." % (a, b, b, a, b, ans)
+        band = 1
+    elif op == "add":
+        w = "Adding \\(%d\\) moves \\(%d\\) to the left: \\(%d + (%d) = %d\\)." % (b, -b, a, b, ans)
+        band = 2
+    elif b >= 0:
+        w = "Start at \\(%d\\). Taking away \\(%d\\) moves \\(%d\\) to the left: \\(%d - %d = %d\\)." % (a, b, b, a, b, ans)
+        band = 1
+    else:
+        w = "Taking away \\(%d\\) is the same as adding \\(%d\\): \\(%d - (%d) = %d + %d = %d\\)." % (b, -b, a, b, a, -b, ans)
+        band = 2
+    return mk("arithmetic-negatives", "negative-number-line", "CALC_QUESTIONS[%d]" % i, band, False,
+              "Work out " + tex(expr) + ".", "number", {"value": ans}, worked=[w])
+
+
+async def topic_negatives(h):
+    pg = await h.page("negative-number-line", "level=year6")
+    order, calc = await pg.evaluate("() => [ORDER_QUESTIONS, CALC_QUESTIONS]")
+    return [conv_neg_calc(i, it) for i, it in enumerate(calc)] + [conv_neg_order(i, it) for i, it in enumerate(order)]
+
+
 # ───────────────────────────── the registry ─────────────────────────────
 # topic id -> (builder, rule notes). Topics not here have no bank yet (coming soon).
 BUILDERS = {
@@ -706,6 +869,8 @@ BUILDERS = {
     "compound-measures": topic_compound,
     "linear-equations": topic_linear,
     "sequences": topic_sequences,
+    "angles": topic_angles,
+    "arithmetic-negatives": topic_negatives,
     "fdp-convert": topic_fdp_convert,
     "fraction-percentage-of-amount": topic_fdp_amount,
 }
@@ -776,6 +941,7 @@ nav button[aria-pressed="true"]{background:var(--accent);color:#fff;border-color
 .ans{background:var(--tint);border-radius:6px;padding:6px 10px;margin:6px 0;overflow-wrap:anywhere}
 .ans b{color:var(--accent)}
 ol{margin:4px 0 4px 1.2rem;padding:0}li{overflow-wrap:anywhere}
+.fig{max-width:300px;margin:6px 0;color:var(--ink)}.fig svg{width:100%;height:auto;display:block}
 .none{color:var(--bad);font-size:.85rem}
 .slip{color:var(--muted);font-size:.85rem}
 .opts{margin:4px 0 0 0;padding:0;list-style:none;display:grid;gap:2px}
@@ -808,7 +974,7 @@ function show(t){
   b.questions.forEach(function(q){
     var rule=q.accept?' ('+esc(q.accept.rule)+')':'';
     h+='<div class="card"><div class="meta"><span>'+esc(q.id)+'</span><span>band '+q.band+'</span><span>'+(q.calc?'calculator':'non-calculator')+'</span><span>'+esc(q.format)+rule+'</span></div>'
-      +'<div class="stem">'+rich(q.stem)+'</div>';
+      +'<div class="stem">'+rich(q.stem)+'</div>'+(q.diagram?'<div class="fig">'+q.diagram+'</div>':'');
     if(q.format==='choice'){h+='<ul class="opts">'+q.options.map(function(o){return '<li'+(o.val===q.answer.val?' class="right"':'')+'>'+o.val+') '+rich(o.label)+'</li>'}).join('')+'</ul>';}
     else{h+='<div class="ans">Answer: <b>'+ansText(q)+'</b>'+(q.units?' <span class="slip">(unit buttons: '+q.units.map(esc).join(', ')+')</span>':'')+'</div>';}
     h+=q.worked.length?'<ol>'+q.worked.map(function(w){return '<li>'+rich(w)+'</li>'}).join('')+'</ol>':'<div class="none">No worked solution in the game</div>';

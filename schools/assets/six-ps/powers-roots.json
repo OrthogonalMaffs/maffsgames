@@ -1,0 +1,1222 @@
+{
+ "topic": "powers-roots",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "powers-roots-1094f978",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[0]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Simplify \\(x^3 \\times x^4\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x^7\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(2x^7\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x^{34}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x^{12}\\)"
+    }
+   ],
+   "worked": [
+    "Add the powers: 3+4=7"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-014a45cf",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[1]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Simplify \\(2x^2 \\times 3x^5\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(6x^{10}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(6x^3\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(6x^7\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(5x^7\\)"
+    }
+   ],
+   "worked": [
+    "Multiply coefficients, add powers: 2×3=6, 2+5=7"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-c985488c",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[2]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Simplify \\(a^{-2} \\times a^5\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(a^{-3}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(a^7\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(a^{-10}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(a^3\\)"
+    }
+   ],
+   "worked": [
+    "Add the powers: -2+5=3"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-f3f848f9",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[4]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Simplify \\(a^6 \\times a^{-1}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(a^5\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(a^{-6}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(a^7\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(a^{-5}\\)"
+    }
+   ],
+   "worked": [
+    "Add the powers: 6+(-1)=5"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-231127ce",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[5]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Simplify \\(5x^3 \\times 2x^{-1}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(10x^4\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(10x^2\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(7x^2\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(10x^{-3}\\)"
+    }
+   ],
+   "worked": [
+    "Multiply coefficients: 5×2=10, add powers: 3+(-1)=2"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-918eb057",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[6]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Simplify \\(3^4 \\times 3^2\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(3^6\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(3^8\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(3^2\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(9^6\\)"
+    }
+   ],
+   "worked": [
+    "Same base, add powers: 4+2=6"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-50f701f1",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[8]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Simplify \\(x^8 \\div x^3\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x^{24}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x^{-5}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x^5\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x^{11}\\)"
+    }
+   ],
+   "worked": [
+    "Subtract the powers: 8-3=5"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-a58300a5",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[9]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Simplify \\(6x^7 \\div 2x^2\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(3x^5\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(3x^9\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(12x^5\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(4x^5\\)"
+    }
+   ],
+   "worked": [
+    "Divide coefficients, subtract powers: 6÷2=3, 7-2=5"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-31f50738",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[10]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Simplify \\(x^3 \\div x^7\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x^{-10}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x^4\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x^{10}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x^{-4}\\)"
+    }
+   ],
+   "worked": [
+    "Subtract the powers: 3-7=-4"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-c095f6a0",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[11]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Simplify \\(a^{10} \\div a^{10}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(1\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(a\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(a^{20}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(0\\)"
+    }
+   ],
+   "worked": [
+    "Subtract powers: 10-10=0, and a⁰=1"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-39039a3a",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[12]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Simplify \\(12x^9 \\div 4x^3\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(3x^6\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(8x^6\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(3x^{12}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(3x^3\\)"
+    }
+   ],
+   "worked": [
+    "Divide coefficients: 12÷4=3, subtract powers: 9-3=6"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-d9771c8d",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[13]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Simplify \\(\\dfrac{2^7}{2^3}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(2^4\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(1^4\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(2^{21}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(2^{10}\\)"
+    }
+   ],
+   "worked": [
+    "Same base, subtract powers: 7-3=4"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-52dec1bb",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[14]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Simplify \\(x^6 \\div x^{-3}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x^{-9}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x^3\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x^{-18}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x^9\\)"
+    }
+   ],
+   "worked": [
+    "Subtract powers: 6-(-3)=9"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-b3ccbb3c",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[15]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Simplify \\(20a^4 \\div 5a\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(15a^3\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(4a^5\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(4a^4\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(4a^3\\)"
+    }
+   ],
+   "worked": [
+    "Divide coefficients: 20÷5=4, subtract powers: 4-1=3"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-401b25dd",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[16]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\((x^3)^4\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x^{12}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x^{34}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x^{43}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x^7\\)"
+    }
+   ],
+   "worked": [
+    "Multiply the powers: 3×4=12"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-29c511ad",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[17]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\((2x^2)^3\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(6x^6\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(2x^6\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(8x^6\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(8x^5\\)"
+    }
+   ],
+   "worked": [
+    "Cube the coefficient: 2³=8, multiply powers: 2×3=6"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-952b3fc5",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[18]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\((a^5)^2\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(a^{25}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(a^7\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(a^{52}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(a^{10}\\)"
+    }
+   ],
+   "worked": [
+    "Multiply the powers: 5×2=10"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-1ceb2e76",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[19]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\((x^{-2})^3\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x^6\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x^{-5}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x^{-8}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x^{-6}\\)"
+    }
+   ],
+   "worked": [
+    "Multiply the powers: -2×3=-6"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-83be7c2e",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[20]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\((3a^4)^2\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(9a^6\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(9a^8\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(6a^8\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(3a^8\\)"
+    }
+   ],
+   "worked": [
+    "Square the coefficient: 3²=9, multiply powers: 4×2=8"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-7a198409",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[22]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\((5^2)^3\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(5^6\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(5^8\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(5^5\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(25^3\\)"
+    }
+   ],
+   "worked": [
+    "Multiply the powers: 2×3=6"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-5dfb91d8",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[23]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(7x^0\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(0\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(7x\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(1\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(7\\)"
+    }
+   ],
+   "worked": [
+    "x⁰=1, so 7×1=7"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-21b8096d",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[24]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\((3x^2)^0\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(0\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(3\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(3x^2\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(1\\)"
+    }
+   ],
+   "worked": [
+    "Anything (non-zero) to the power 0 equals 1"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-538eceb9",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[25]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(6 \\times (2x)^0\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(6\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(0\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(12\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(12x\\)"
+    }
+   ],
+   "worked": [
+    "(2x)⁰=1, so 6×1=6"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-57698aa4",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[26]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Simplify \\(10a^3 \\times a^0\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(0\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(10\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(10a^3\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(10a\\)"
+    }
+   ],
+   "worked": [
+    "a⁰=1, so multiplying by a⁰ changes nothing"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-0ea8c7c8",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[27]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Simplify \\(x^{-3}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(-\\dfrac{1}{x^3}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x^3\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(-x^3\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\dfrac{1}{x^3}\\)"
+    }
+   ],
+   "worked": [
+    "Negative power = reciprocal"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-5473e0eb",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[28]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Simplify \\(2^{-4}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\dfrac{1}{8}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(16\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\dfrac{1}{16}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(-16\\)"
+    }
+   ],
+   "worked": [
+    "2⁴=16, so 2⁻⁴=1/16"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-84288e3b",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[29]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Simplify \\(5^{-2}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(-10\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(-25\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\dfrac{1}{25}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\dfrac{1}{10}\\)"
+    }
+   ],
+   "worked": [
+    "5²=25, so 5⁻²=1/25"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-26b36322",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[30]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Simplify \\(\\dfrac{1}{x^5}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x^{-5}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(-x^5\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x^5\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x^{\\frac{1}{5}}\\)"
+    }
+   ],
+   "worked": [
+    "1/xⁿ = x⁻ⁿ"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-4d98727c",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[31]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Simplify \\(3^{-1}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(-3\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\dfrac{1}{-3}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(-1\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\dfrac{1}{3}\\)"
+    }
+   ],
+   "worked": [
+    "3⁻¹ = 1/3"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-329b4f29",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[32]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Simplify \\((2x)^{-2}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\dfrac{1}{2x^2}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\dfrac{-1}{4x^2}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\dfrac{1}{4x^2}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(-4x^2\\)"
+    }
+   ],
+   "worked": [
+    "(2x)²=4x², so (2x)⁻²=1/(4x²)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-dc244e13",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[33]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Simplify \\(10^{-3}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\dfrac{1}{1000}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\dfrac{1}{100}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(-1000\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(\\dfrac{1}{30}\\)"
+    }
+   ],
+   "worked": [
+    "10³=1000, so 10⁻³=1/1000"
+   ],
+   "slip": []
+  },
+  {
+   "id": "powers-roots-a3c21f8d",
+   "topic": "powers-roots",
+   "source": {
+    "game": "index-laws",
+    "ref": "QUESTIONS[34]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Simplify \\(4x^{-1}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(\\dfrac{x}{4}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(\\dfrac{4}{x}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(\\dfrac{1}{4x}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(-4x\\)"
+    }
+   ],
+   "worked": [
+    "x⁻¹=1/x, and the 4 stays as coefficient"
+   ],
+   "slip": []
+  }
+ ]
+}
