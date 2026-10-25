@@ -58,3 +58,14 @@ INPUT PARSING: trim spaces; strip thousands commas (1,200); accept the Unicode m
 SLIPS: after a wrong answer, compare it with each slip's answer by the same rule that marks the question; on a match show that slip's line, then the worked solution.
 
 ANALYTICS (Jon's ruling, 25 Oct 2026), replacing (d)'s "detail = topic id": question_answered carries filter_type='six_ps' and filter_value='v1|topic=<id>', as your recommendation and the 24 Oct ruling 2 pattern. game_started and game_completed unchanged.
+
+# Jon via Project Claude, 25 Oct 2026, verbatim (answers to the session's two questions)
+
+1. Topics with no bank: option 1. Draw as now; a topic whose bank does not load shows "This topic's questions aren't ready yet" with Skip only. This is interim: the home lane will make the topic file count a topic as covered only when its bank exists, so no student will see that card once the page is listed.
+2. SR-3: confirmed as you wrote it. A right value in the wrong form gets the format message and is not marked (no score, no penalty, no event). Keep the doc's note; my "marked wrong" line was the error.
+
+# Jon, 25 Oct 2026, verbatim (answer to the session's second STOP: the schema against MaffsAnswer)
+
+"happy with your rulings there sir."
+
+(Approving the session's three recommendations: (1) an optional `dp` on `number` and `number_unit` answers whose stem states a rounding, marked by `MaffsAnswer.decimal`, else `MaffsAnswer.exact`; (2) money by SR-2, so 3.5 gets the format message; (3) thousands commas and "−" stay unreadable, as `MaffsAnswer` reads them.)

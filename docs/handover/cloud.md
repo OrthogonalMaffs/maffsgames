@@ -55,10 +55,11 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 
 ## 2026-10-25 (cloud): SIX-PS-PLAYER (contract: see the queue). **IN PROGRESS.**
 
-- **(a) schema PR:** `docs/six-ps-schema.md` (schema 1), Project Claude's schema in full. **Home lane: start writing the banks (`schools/assets/six-ps/<topic-id>.json`) once this PR merges, to that file.** Two notes recorded in it: maths in `\( \)` is rendered by `MaffsText.html()` (the repo's convention, same delimiter; never `$`); SR-3 applied to an equal-but-wrong-form answer (format message, not marked, no event), where the schema's text said "marked wrong with SR-3's format message".
+- **(a) schema DONE (#535, squash 8ffcd9a; main run 40203074545 green, 61 of 61, started on the merge).** `docs/six-ps-schema.md` (schema 1), Project Claude's schema in full. **Home lane: the schema is merged; write the banks (`schools/assets/six-ps/<topic-id>.json`) to it.** Two notes recorded in it: maths in `\( \)` is rendered by `MaffsText.html()` (the repo's convention, same delimiter; never `$`); SR-3 applied to an equal-but-wrong-form answer (format message, not marked, no event), where the schema's text said "marked wrong with SR-3's format message".
 - **Ruled (Jon, 25 Oct):** `question_answered` carries `filter_type='six_ps'`, `filter_value='v1|topic=<id>'` (the Sheets endpoint has no `detail` column).
 - **Checked:** removing `?done=` handling breaks nothing outside `the-6-ps/` (`check-burst.py` checks only the bar's href string).
-- **Next:** (b)-(e) on a fresh branch from main after (a) merges. Jon, 25 Oct: no hand splits; a verifier nearing its budget is stopped and reported.
+- **(a2) schema follow-up (Jon's ruling of 25 Oct, after the session's second STOP; verbatim in the contract):** every format marked through `MaffsAnswer` (canon §7.1.3): optional `dp` on `number`/`number_unit` answers whose stem states a rounding (`decimal()`, else `exact()`); money by SR-2 (3.5 is the format case; the doc as first merged was wrong there); commas and "−" unreadable; a `range` capped below half the gap to any slip (§7.1.2); fractions typed in top and bottom boxes, joined for `fractionForm`. **Home lane: give `dp` on every rounded `number` item.**
+- **Next:** (b)-(e), branch reset from main after #535. **Ruled (Jon, 25 Oct; verbatim in the contract):** (1) no bank: drawing unchanged, "This topic's questions aren't ready yet", Skip only (interim; the home lane counts a topic covered only once its bank exists); (2) SR-3 confirmed. Jon, 25 Oct: no hand splits; a verifier nearing its budget is stopped and reported.
 
 ## 2026-10-25 (cloud): SHAPE-SHIFTER-SPLIT (#528; full entry in `docs/history/handover-cloud-archive.md`; lesson: a renamed ci-line has no median)
 
@@ -104,30 +105,4 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 
 ## 2026-10-21 (cloud): LINE-LIMIT-SCOPE (#474; full entry in `docs/history/handover-cloud-archive.md`)
 
-## 2026-10-20 (cloud): HOW-MANY-PARTS (#469; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-20 (cloud): TRIG-WORMS-FILTER (#462; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-20 (cloud): COLLISION-IDENTITIES (#461; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-20 (cloud): MONTY-CARD-2 (#459; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-20 (cloud): KEY-COLLISION-SURVEY (#458; full entry in `docs/history/handover-cloud-archive.md`; report `docs/audits/key-collision-survey-2026-10.md`)
-
-## 2026-10-20 (cloud): MONTY-100-RETITLE (#455; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-20 (cloud): PYTHAG-KEY-COLLIDE (#453; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-19 (cloud): ANSWER-LOCK-STATE (#452; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-19 (cloud): DEPS-SRC-HAZARD (#451; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-19 (cloud): HEADER "Q{n} of {N} · {right} right" (#449, #450; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-19 (cloud): MONTY-CARD (#448; full entry, with the cards that rely on unstated setup, in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-19 (cloud): PYTHAG-REPORT (#447; full entry in `docs/history/handover-cloud-archive.md`; report `docs/handover/pythag-report.md`)
-
-## 2026-10-19 (cloud): ROOM-CREDIT v2 (#446; full entry in `docs/history/handover-cloud-archive.md`)
-
-Older entries (18 Oct and before): `docs/history/handover-cloud-archive.md`.
+Older entries (20 Oct and before): `docs/history/handover-cloud-archive.md`.
