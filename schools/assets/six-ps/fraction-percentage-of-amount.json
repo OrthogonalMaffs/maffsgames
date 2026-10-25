@@ -1,0 +1,2930 @@
+{
+ "topic": "fraction-percentage-of-amount",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "fraction-percentage-of-amount-95c67b2c",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][0]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{2}\\) of 6.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "worked": [
+    "\\(\\dfrac{1}{2}\\) of 6: divide by 2.",
+    "\\(6 \\div 2 = 3\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-def37538",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][1]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{2}\\) of 8.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "\\(\\dfrac{1}{2}\\) of 8: divide by 2.",
+    "\\(8 \\div 2 = 4\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-5ecffd37",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][2]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{2}\\) of 12.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "\\(\\dfrac{1}{2}\\) of 12: divide by 2.",
+    "\\(12 \\div 2 = 6\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-db2c32d2",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][3]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{2}\\) of 14.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7
+   },
+   "worked": [
+    "\\(\\dfrac{1}{2}\\) of 14: divide by 2.",
+    "\\(14 \\div 2 = 7\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-863722db",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][4]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{2}\\) of 18.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 9
+   },
+   "worked": [
+    "\\(\\dfrac{1}{2}\\) of 18: divide by 2.",
+    "\\(18 \\div 2 = 9\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-e068698f",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][5]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{2}\\) of 24.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "\\(\\dfrac{1}{2}\\) of 24: divide by 2.",
+    "\\(24 \\div 2 = 12\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-fa06695b",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][6]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{3}\\) of 9.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "worked": [
+    "\\(\\dfrac{1}{3}\\) of 9: divide by 3.",
+    "\\(9 \\div 3 = 3\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-b5ecf767",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][7]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{3}\\) of 12.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "\\(\\dfrac{1}{3}\\) of 12: divide by 3.",
+    "\\(12 \\div 3 = 4\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-2358a914",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][8]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{3}\\) of 18.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "\\(\\dfrac{1}{3}\\) of 18: divide by 3.",
+    "\\(18 \\div 3 = 6\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-1bb890e5",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][9]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{3}\\) of 21.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7
+   },
+   "worked": [
+    "\\(\\dfrac{1}{3}\\) of 21: divide by 3.",
+    "\\(21 \\div 3 = 7\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-96a637f2",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][10]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{3}\\) of 27.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 9
+   },
+   "worked": [
+    "\\(\\dfrac{1}{3}\\) of 27: divide by 3.",
+    "\\(27 \\div 3 = 9\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-c3387664",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][11]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{3}\\) of 36.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "\\(\\dfrac{1}{3}\\) of 36: divide by 3.",
+    "\\(36 \\div 3 = 12\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-34168d11",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][12]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{2}{3}\\) of 9.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{3}\\) of 9 first: \\(9 \\div 3 = 3\\).",
+    "Then \\(\\dfrac{2}{3}\\) is 2 lots of that: \\(3 \\times 2 = 6\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-97be8a17",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][13]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{2}{3}\\) of 12.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{3}\\) of 12 first: \\(12 \\div 3 = 4\\).",
+    "Then \\(\\dfrac{2}{3}\\) is 2 lots of that: \\(4 \\times 2 = 8\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-48931e4b",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][14]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{2}{3}\\) of 18.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{3}\\) of 18 first: \\(18 \\div 3 = 6\\).",
+    "Then \\(\\dfrac{2}{3}\\) is 2 lots of that: \\(6 \\times 2 = 12\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-643f40f4",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][15]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{2}{3}\\) of 21.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 14
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{3}\\) of 21 first: \\(21 \\div 3 = 7\\).",
+    "Then \\(\\dfrac{2}{3}\\) is 2 lots of that: \\(7 \\times 2 = 14\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-95ff2337",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][16]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{2}{3}\\) of 27.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 18
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{3}\\) of 27 first: \\(27 \\div 3 = 9\\).",
+    "Then \\(\\dfrac{2}{3}\\) is 2 lots of that: \\(9 \\times 2 = 18\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-1501ec1a",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][17]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{2}{3}\\) of 36.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 24
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{3}\\) of 36 first: \\(36 \\div 3 = 12\\).",
+    "Then \\(\\dfrac{2}{3}\\) is 2 lots of that: \\(12 \\times 2 = 24\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-c9a16f3d",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][18]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{4}\\) of 12.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "worked": [
+    "\\(\\dfrac{1}{4}\\) of 12: divide by 4.",
+    "\\(12 \\div 4 = 3\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-11b064bb",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][19]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{4}\\) of 16.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "\\(\\dfrac{1}{4}\\) of 16: divide by 4.",
+    "\\(16 \\div 4 = 4\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-07c4bb02",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][20]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{4}\\) of 24.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "\\(\\dfrac{1}{4}\\) of 24: divide by 4.",
+    "\\(24 \\div 4 = 6\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-bc68239e",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][21]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{4}\\) of 28.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7
+   },
+   "worked": [
+    "\\(\\dfrac{1}{4}\\) of 28: divide by 4.",
+    "\\(28 \\div 4 = 7\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-a7413465",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][22]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{4}\\) of 36.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 9
+   },
+   "worked": [
+    "\\(\\dfrac{1}{4}\\) of 36: divide by 4.",
+    "\\(36 \\div 4 = 9\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-5e077a2b",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][23]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{4}\\) of 48.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "\\(\\dfrac{1}{4}\\) of 48: divide by 4.",
+    "\\(48 \\div 4 = 12\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-39f44970",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][24]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{4}\\) of 12.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 9
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{4}\\) of 12 first: \\(12 \\div 4 = 3\\).",
+    "Then \\(\\dfrac{3}{4}\\) is 3 lots of that: \\(3 \\times 3 = 9\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-4056da6a",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][25]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{4}\\) of 16.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{4}\\) of 16 first: \\(16 \\div 4 = 4\\).",
+    "Then \\(\\dfrac{3}{4}\\) is 3 lots of that: \\(4 \\times 3 = 12\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-b5b2695a",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][26]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{4}\\) of 24.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 18
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{4}\\) of 24 first: \\(24 \\div 4 = 6\\).",
+    "Then \\(\\dfrac{3}{4}\\) is 3 lots of that: \\(6 \\times 3 = 18\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-b275de8f",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][27]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{4}\\) of 28.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 21
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{4}\\) of 28 first: \\(28 \\div 4 = 7\\).",
+    "Then \\(\\dfrac{3}{4}\\) is 3 lots of that: \\(7 \\times 3 = 21\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-87d79106",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][28]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{4}\\) of 36.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 27
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{4}\\) of 36 first: \\(36 \\div 4 = 9\\).",
+    "Then \\(\\dfrac{3}{4}\\) is 3 lots of that: \\(9 \\times 3 = 27\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-d5024350",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][29]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{4}\\) of 48.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 36
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{4}\\) of 48 first: \\(48 \\div 4 = 12\\).",
+    "Then \\(\\dfrac{3}{4}\\) is 3 lots of that: \\(12 \\times 3 = 36\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-08f358d6",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][30]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{5}\\) of 15.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "worked": [
+    "\\(\\dfrac{1}{5}\\) of 15: divide by 5.",
+    "\\(15 \\div 5 = 3\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-730eaf0b",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][31]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{5}\\) of 20.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "\\(\\dfrac{1}{5}\\) of 20: divide by 5.",
+    "\\(20 \\div 5 = 4\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-ff9bdf61",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][32]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{5}\\) of 30.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "\\(\\dfrac{1}{5}\\) of 30: divide by 5.",
+    "\\(30 \\div 5 = 6\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-dc817817",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][33]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{5}\\) of 35.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7
+   },
+   "worked": [
+    "\\(\\dfrac{1}{5}\\) of 35: divide by 5.",
+    "\\(35 \\div 5 = 7\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-d11f4e94",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][34]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{5}\\) of 45.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 9
+   },
+   "worked": [
+    "\\(\\dfrac{1}{5}\\) of 45: divide by 5.",
+    "\\(45 \\div 5 = 9\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-25dd7e21",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][35]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{5}\\) of 60.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "\\(\\dfrac{1}{5}\\) of 60: divide by 5.",
+    "\\(60 \\div 5 = 12\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-0319d1bd",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][36]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{2}{5}\\) of 15.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{5}\\) of 15 first: \\(15 \\div 5 = 3\\).",
+    "Then \\(\\dfrac{2}{5}\\) is 2 lots of that: \\(3 \\times 2 = 6\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-8e455c39",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][37]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{2}{5}\\) of 20.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{5}\\) of 20 first: \\(20 \\div 5 = 4\\).",
+    "Then \\(\\dfrac{2}{5}\\) is 2 lots of that: \\(4 \\times 2 = 8\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-8fef1d24",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][38]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{2}{5}\\) of 30.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{5}\\) of 30 first: \\(30 \\div 5 = 6\\).",
+    "Then \\(\\dfrac{2}{5}\\) is 2 lots of that: \\(6 \\times 2 = 12\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-f8cafc0e",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][39]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{2}{5}\\) of 35.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 14
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{5}\\) of 35 first: \\(35 \\div 5 = 7\\).",
+    "Then \\(\\dfrac{2}{5}\\) is 2 lots of that: \\(7 \\times 2 = 14\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-b2a56a69",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][40]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{2}{5}\\) of 45.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 18
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{5}\\) of 45 first: \\(45 \\div 5 = 9\\).",
+    "Then \\(\\dfrac{2}{5}\\) is 2 lots of that: \\(9 \\times 2 = 18\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-34c0f9f2",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][41]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{2}{5}\\) of 60.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 24
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{5}\\) of 60 first: \\(60 \\div 5 = 12\\).",
+    "Then \\(\\dfrac{2}{5}\\) is 2 lots of that: \\(12 \\times 2 = 24\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-1886ec36",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][42]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{5}\\) of 15.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 9
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{5}\\) of 15 first: \\(15 \\div 5 = 3\\).",
+    "Then \\(\\dfrac{3}{5}\\) is 3 lots of that: \\(3 \\times 3 = 9\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-284d38e5",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][43]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{5}\\) of 20.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{5}\\) of 20 first: \\(20 \\div 5 = 4\\).",
+    "Then \\(\\dfrac{3}{5}\\) is 3 lots of that: \\(4 \\times 3 = 12\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-555b7c13",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][44]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{5}\\) of 30.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 18
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{5}\\) of 30 first: \\(30 \\div 5 = 6\\).",
+    "Then \\(\\dfrac{3}{5}\\) is 3 lots of that: \\(6 \\times 3 = 18\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-02fffa59",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][45]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{5}\\) of 35.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 21
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{5}\\) of 35 first: \\(35 \\div 5 = 7\\).",
+    "Then \\(\\dfrac{3}{5}\\) is 3 lots of that: \\(7 \\times 3 = 21\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-b581cedb",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][46]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{5}\\) of 45.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 27
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{5}\\) of 45 first: \\(45 \\div 5 = 9\\).",
+    "Then \\(\\dfrac{3}{5}\\) is 3 lots of that: \\(9 \\times 3 = 27\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-034c634e",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][47]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{5}\\) of 60.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 36
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{5}\\) of 60 first: \\(60 \\div 5 = 12\\).",
+    "Then \\(\\dfrac{3}{5}\\) is 3 lots of that: \\(12 \\times 3 = 36\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-20b201a1",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][48]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{4}{5}\\) of 15.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{5}\\) of 15 first: \\(15 \\div 5 = 3\\).",
+    "Then \\(\\dfrac{4}{5}\\) is 4 lots of that: \\(3 \\times 4 = 12\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-6e93c2fc",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][49]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{4}{5}\\) of 20.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 16
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{5}\\) of 20 first: \\(20 \\div 5 = 4\\).",
+    "Then \\(\\dfrac{4}{5}\\) is 4 lots of that: \\(4 \\times 4 = 16\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-7b6bc476",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][50]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{4}{5}\\) of 30.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 24
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{5}\\) of 30 first: \\(30 \\div 5 = 6\\).",
+    "Then \\(\\dfrac{4}{5}\\) is 4 lots of that: \\(6 \\times 4 = 24\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-2e445203",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][51]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{4}{5}\\) of 35.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 28
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{5}\\) of 35 first: \\(35 \\div 5 = 7\\).",
+    "Then \\(\\dfrac{4}{5}\\) is 4 lots of that: \\(7 \\times 4 = 28\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-064022ed",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][52]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{4}{5}\\) of 45.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 36
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{5}\\) of 45 first: \\(45 \\div 5 = 9\\).",
+    "Then \\(\\dfrac{4}{5}\\) is 4 lots of that: \\(9 \\times 4 = 36\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-8c644790",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][53]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{4}{5}\\) of 60.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 48
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{5}\\) of 60 first: \\(60 \\div 5 = 12\\).",
+    "Then \\(\\dfrac{4}{5}\\) is 4 lots of that: \\(12 \\times 4 = 48\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-22c16a0e",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][54]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{8}\\) of 24.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "worked": [
+    "\\(\\dfrac{1}{8}\\) of 24: divide by 8.",
+    "\\(24 \\div 8 = 3\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-2b411d21",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][55]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{8}\\) of 32.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "\\(\\dfrac{1}{8}\\) of 32: divide by 8.",
+    "\\(32 \\div 8 = 4\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-573bfad0",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][56]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{8}\\) of 48.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "\\(\\dfrac{1}{8}\\) of 48: divide by 8.",
+    "\\(48 \\div 8 = 6\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-3641f8ef",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][57]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{8}\\) of 56.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7
+   },
+   "worked": [
+    "\\(\\dfrac{1}{8}\\) of 56: divide by 8.",
+    "\\(56 \\div 8 = 7\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-9399c332",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][58]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{8}\\) of 72.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 9
+   },
+   "worked": [
+    "\\(\\dfrac{1}{8}\\) of 72: divide by 8.",
+    "\\(72 \\div 8 = 9\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-f40b417e",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][59]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{8}\\) of 96.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "\\(\\dfrac{1}{8}\\) of 96: divide by 8.",
+    "\\(96 \\div 8 = 12\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-76c09956",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][60]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{8}\\) of 24.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 9
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{8}\\) of 24 first: \\(24 \\div 8 = 3\\).",
+    "Then \\(\\dfrac{3}{8}\\) is 3 lots of that: \\(3 \\times 3 = 9\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-0c1c923f",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][61]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{8}\\) of 32.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{8}\\) of 32 first: \\(32 \\div 8 = 4\\).",
+    "Then \\(\\dfrac{3}{8}\\) is 3 lots of that: \\(4 \\times 3 = 12\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-ae526e28",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][62]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{8}\\) of 48.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 18
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{8}\\) of 48 first: \\(48 \\div 8 = 6\\).",
+    "Then \\(\\dfrac{3}{8}\\) is 3 lots of that: \\(6 \\times 3 = 18\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-f43835a4",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][63]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{8}\\) of 56.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 21
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{8}\\) of 56 first: \\(56 \\div 8 = 7\\).",
+    "Then \\(\\dfrac{3}{8}\\) is 3 lots of that: \\(7 \\times 3 = 21\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-7681a3b1",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][64]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{8}\\) of 72.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 27
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{8}\\) of 72 first: \\(72 \\div 8 = 9\\).",
+    "Then \\(\\dfrac{3}{8}\\) is 3 lots of that: \\(9 \\times 3 = 27\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-4f49af2c",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][65]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{8}\\) of 96.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 36
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{8}\\) of 96 first: \\(96 \\div 8 = 12\\).",
+    "Then \\(\\dfrac{3}{8}\\) is 3 lots of that: \\(12 \\times 3 = 36\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-07afde7d",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][66]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{5}{8}\\) of 24.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 15
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{8}\\) of 24 first: \\(24 \\div 8 = 3\\).",
+    "Then \\(\\dfrac{5}{8}\\) is 5 lots of that: \\(3 \\times 5 = 15\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-ed1c3f6e",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][67]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{5}{8}\\) of 32.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 20
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{8}\\) of 32 first: \\(32 \\div 8 = 4\\).",
+    "Then \\(\\dfrac{5}{8}\\) is 5 lots of that: \\(4 \\times 5 = 20\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-3c5b6461",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][68]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{5}{8}\\) of 48.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 30
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{8}\\) of 48 first: \\(48 \\div 8 = 6\\).",
+    "Then \\(\\dfrac{5}{8}\\) is 5 lots of that: \\(6 \\times 5 = 30\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-dda0e795",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][69]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{5}{8}\\) of 56.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 35
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{8}\\) of 56 first: \\(56 \\div 8 = 7\\).",
+    "Then \\(\\dfrac{5}{8}\\) is 5 lots of that: \\(7 \\times 5 = 35\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-c98b5ba4",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][70]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{5}{8}\\) of 72.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 45
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{8}\\) of 72 first: \\(72 \\div 8 = 9\\).",
+    "Then \\(\\dfrac{5}{8}\\) is 5 lots of that: \\(9 \\times 5 = 45\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-c1382071",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][71]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{5}{8}\\) of 96.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 60
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{8}\\) of 96 first: \\(96 \\div 8 = 12\\).",
+    "Then \\(\\dfrac{5}{8}\\) is 5 lots of that: \\(12 \\times 5 = 60\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-2c44a0c5",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][72]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{10}\\) of 30.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "worked": [
+    "\\(\\dfrac{1}{10}\\) of 30: divide by 10.",
+    "\\(30 \\div 10 = 3\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-65071968",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][73]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{10}\\) of 40.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "\\(\\dfrac{1}{10}\\) of 40: divide by 10.",
+    "\\(40 \\div 10 = 4\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-3d0a968b",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][74]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{10}\\) of 60.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "\\(\\dfrac{1}{10}\\) of 60: divide by 10.",
+    "\\(60 \\div 10 = 6\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-dcf551c4",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][75]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{10}\\) of 70.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7
+   },
+   "worked": [
+    "\\(\\dfrac{1}{10}\\) of 70: divide by 10.",
+    "\\(70 \\div 10 = 7\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-7546f58c",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][76]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{10}\\) of 90.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 9
+   },
+   "worked": [
+    "\\(\\dfrac{1}{10}\\) of 90: divide by 10.",
+    "\\(90 \\div 10 = 9\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-24134730",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][77]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{1}{10}\\) of 120.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "\\(\\dfrac{1}{10}\\) of 120: divide by 10.",
+    "\\(120 \\div 10 = 12\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-2c782872",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][78]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{10}\\) of 30.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 9
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{10}\\) of 30 first: \\(30 \\div 10 = 3\\).",
+    "Then \\(\\dfrac{3}{10}\\) is 3 lots of that: \\(3 \\times 3 = 9\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-02196d52",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][79]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{10}\\) of 40.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{10}\\) of 40 first: \\(40 \\div 10 = 4\\).",
+    "Then \\(\\dfrac{3}{10}\\) is 3 lots of that: \\(4 \\times 3 = 12\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-36ab7d5e",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][80]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{10}\\) of 60.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 18
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{10}\\) of 60 first: \\(60 \\div 10 = 6\\).",
+    "Then \\(\\dfrac{3}{10}\\) is 3 lots of that: \\(6 \\times 3 = 18\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-2f8f4e94",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][81]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{10}\\) of 70.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 21
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{10}\\) of 70 first: \\(70 \\div 10 = 7\\).",
+    "Then \\(\\dfrac{3}{10}\\) is 3 lots of that: \\(7 \\times 3 = 21\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-fbcb0949",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][82]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{10}\\) of 90.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 27
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{10}\\) of 90 first: \\(90 \\div 10 = 9\\).",
+    "Then \\(\\dfrac{3}{10}\\) is 3 lots of that: \\(9 \\times 3 = 27\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-99f55283",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][83]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{3}{10}\\) of 120.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 36
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{10}\\) of 120 first: \\(120 \\div 10 = 12\\).",
+    "Then \\(\\dfrac{3}{10}\\) is 3 lots of that: \\(12 \\times 3 = 36\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-0c2800b0",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][84]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{7}{10}\\) of 30.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 21
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{10}\\) of 30 first: \\(30 \\div 10 = 3\\).",
+    "Then \\(\\dfrac{7}{10}\\) is 7 lots of that: \\(3 \\times 7 = 21\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-50fb7c95",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][85]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{7}{10}\\) of 40.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 28
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{10}\\) of 40 first: \\(40 \\div 10 = 4\\).",
+    "Then \\(\\dfrac{7}{10}\\) is 7 lots of that: \\(4 \\times 7 = 28\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-3eaff20b",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][86]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{7}{10}\\) of 60.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 42
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{10}\\) of 60 first: \\(60 \\div 10 = 6\\).",
+    "Then \\(\\dfrac{7}{10}\\) is 7 lots of that: \\(6 \\times 7 = 42\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-f27f9d6a",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][87]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{7}{10}\\) of 70.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 49
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{10}\\) of 70 first: \\(70 \\div 10 = 7\\).",
+    "Then \\(\\dfrac{7}{10}\\) is 7 lots of that: \\(7 \\times 7 = 49\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-4666881e",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][88]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{7}{10}\\) of 90.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 63
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{10}\\) of 90 first: \\(90 \\div 10 = 9\\).",
+    "Then \\(\\dfrac{7}{10}\\) is 7 lots of that: \\(9 \\times 7 = 63\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-cb295542",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][89]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Work out \\(\\dfrac{7}{10}\\) of 120.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 84
+   },
+   "worked": [
+    "Find \\(\\dfrac{1}{10}\\) of 120 first: \\(120 \\div 10 = 12\\).",
+    "Then \\(\\dfrac{7}{10}\\) is 7 lots of that: \\(12 \\times 7 = 84\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-708340c2",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][90]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 50% of 30.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 15
+   },
+   "worked": [
+    "\\(50\\% = \\dfrac{1}{2}\\).",
+    "\\(\\dfrac{1}{2}\\) of 30: divide by 2.",
+    "\\(30 \\div 2 = 15\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-ac4cd72a",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][91]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 50% of 90.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 45
+   },
+   "worked": [
+    "\\(50\\% = \\dfrac{1}{2}\\).",
+    "\\(\\dfrac{1}{2}\\) of 90: divide by 2.",
+    "\\(90 \\div 2 = 45\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-30eca246",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][92]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 50% of 140.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 70
+   },
+   "worked": [
+    "\\(50\\% = \\dfrac{1}{2}\\).",
+    "\\(\\dfrac{1}{2}\\) of 140: divide by 2.",
+    "\\(140 \\div 2 = 70\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-1b5b1f21",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][93]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 50% of 260.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 130
+   },
+   "worked": [
+    "\\(50\\% = \\dfrac{1}{2}\\).",
+    "\\(\\dfrac{1}{2}\\) of 260: divide by 2.",
+    "\\(260 \\div 2 = 130\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-c4f5a54c",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][94]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 25% of 40.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 10
+   },
+   "worked": [
+    "\\(25\\% = \\dfrac{1}{4}\\).",
+    "\\(\\dfrac{1}{4}\\) of 40: divide by 4.",
+    "\\(40 \\div 4 = 10\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-65ef22d5",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][95]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 25% of 80.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 20
+   },
+   "worked": [
+    "\\(25\\% = \\dfrac{1}{4}\\).",
+    "\\(\\dfrac{1}{4}\\) of 80: divide by 4.",
+    "\\(80 \\div 4 = 20\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-e5124b03",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][96]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 25% of 120.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 30
+   },
+   "worked": [
+    "\\(25\\% = \\dfrac{1}{4}\\).",
+    "\\(\\dfrac{1}{4}\\) of 120: divide by 4.",
+    "\\(120 \\div 4 = 30\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-a39ea0f6",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][97]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 25% of 200.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 50
+   },
+   "worked": [
+    "\\(25\\% = \\dfrac{1}{4}\\).",
+    "\\(\\dfrac{1}{4}\\) of 200: divide by 4.",
+    "\\(200 \\div 4 = 50\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-9ce50178",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][98]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 75% of 20.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 15
+   },
+   "worked": [
+    "\\(75\\% = \\dfrac{3}{4}\\).",
+    "Find \\(\\dfrac{1}{4}\\) of 20 first: \\(20 \\div 4 = 5\\).",
+    "Then \\(\\dfrac{3}{4}\\) is 3 lots of that: \\(5 \\times 3 = 15\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-2c420fec",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][99]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 75% of 40.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 30
+   },
+   "worked": [
+    "\\(75\\% = \\dfrac{3}{4}\\).",
+    "Find \\(\\dfrac{1}{4}\\) of 40 first: \\(40 \\div 4 = 10\\).",
+    "Then \\(\\dfrac{3}{4}\\) is 3 lots of that: \\(10 \\times 3 = 30\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-f52af818",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][100]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 75% of 80.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 60
+   },
+   "worked": [
+    "\\(75\\% = \\dfrac{3}{4}\\).",
+    "Find \\(\\dfrac{1}{4}\\) of 80 first: \\(80 \\div 4 = 20\\).",
+    "Then \\(\\dfrac{3}{4}\\) is 3 lots of that: \\(20 \\times 3 = 60\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-ea726a5f",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][101]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 75% of 120.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 90
+   },
+   "worked": [
+    "\\(75\\% = \\dfrac{3}{4}\\).",
+    "Find \\(\\dfrac{1}{4}\\) of 120 first: \\(120 \\div 4 = 30\\).",
+    "Then \\(\\dfrac{3}{4}\\) is 3 lots of that: \\(30 \\times 3 = 90\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-c97c7139",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][102]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 10% of 70.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7
+   },
+   "worked": [
+    "\\(10\\% = \\dfrac{1}{10}\\).",
+    "\\(\\dfrac{1}{10}\\) of 70: divide by 10.",
+    "\\(70 \\div 10 = 7\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-381bfad2",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][103]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 10% of 150.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 15
+   },
+   "worked": [
+    "\\(10\\% = \\dfrac{1}{10}\\).",
+    "\\(\\dfrac{1}{10}\\) of 150: divide by 10.",
+    "\\(150 \\div 10 = 15\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-0e8abd26",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][104]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 10% of 230.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 23
+   },
+   "worked": [
+    "\\(10\\% = \\dfrac{1}{10}\\).",
+    "\\(\\dfrac{1}{10}\\) of 230: divide by 10.",
+    "\\(230 \\div 10 = 23\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-3f526d14",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][105]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 10% of 480.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 48
+   },
+   "worked": [
+    "\\(10\\% = \\dfrac{1}{10}\\).",
+    "\\(\\dfrac{1}{10}\\) of 480: divide by 10.",
+    "\\(480 \\div 10 = 48\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-5bf01d8b",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][106]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 20% of 35.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7
+   },
+   "worked": [
+    "\\(20\\% = \\dfrac{1}{5}\\).",
+    "\\(\\dfrac{1}{5}\\) of 35: divide by 5.",
+    "\\(35 \\div 5 = 7\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-f4d36362",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][107]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 20% of 60.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "\\(20\\% = \\dfrac{1}{5}\\).",
+    "\\(\\dfrac{1}{5}\\) of 60: divide by 5.",
+    "\\(60 \\div 5 = 12\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-4afff8ca",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][108]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 20% of 90.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 18
+   },
+   "worked": [
+    "\\(20\\% = \\dfrac{1}{5}\\).",
+    "\\(\\dfrac{1}{5}\\) of 90: divide by 5.",
+    "\\(90 \\div 5 = 18\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-a0f73a76",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][109]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 20% of 250.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 50
+   },
+   "worked": [
+    "\\(20\\% = \\dfrac{1}{5}\\).",
+    "\\(\\dfrac{1}{5}\\) of 250: divide by 5.",
+    "\\(250 \\div 5 = 50\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-5758d748",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][110]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 30% of 50.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 15
+   },
+   "worked": [
+    "\\(30\\% = \\dfrac{3}{10}\\).",
+    "Find \\(\\dfrac{1}{10}\\) of 50 first: \\(50 \\div 10 = 5\\).",
+    "Then \\(\\dfrac{3}{10}\\) is 3 lots of that: \\(5 \\times 3 = 15\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-4696f3b0",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][111]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 30% of 80.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 24
+   },
+   "worked": [
+    "\\(30\\% = \\dfrac{3}{10}\\).",
+    "Find \\(\\dfrac{1}{10}\\) of 80 first: \\(80 \\div 10 = 8\\).",
+    "Then \\(\\dfrac{3}{10}\\) is 3 lots of that: \\(8 \\times 3 = 24\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-b29f6d08",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][112]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 30% of 120.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 36
+   },
+   "worked": [
+    "\\(30\\% = \\dfrac{3}{10}\\).",
+    "Find \\(\\dfrac{1}{10}\\) of 120 first: \\(120 \\div 10 = 12\\).",
+    "Then \\(\\dfrac{3}{10}\\) is 3 lots of that: \\(12 \\times 3 = 36\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-ed3721f9",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][113]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 30% of 200.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 60
+   },
+   "worked": [
+    "\\(30\\% = \\dfrac{3}{10}\\).",
+    "Find \\(\\dfrac{1}{10}\\) of 200 first: \\(200 \\div 10 = 20\\).",
+    "Then \\(\\dfrac{3}{10}\\) is 3 lots of that: \\(20 \\times 3 = 60\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-3709cec1",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][114]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 40% of 20.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "\\(40\\% = \\dfrac{2}{5}\\).",
+    "Find \\(\\dfrac{1}{5}\\) of 20 first: \\(20 \\div 5 = 4\\).",
+    "Then \\(\\dfrac{2}{5}\\) is 2 lots of that: \\(4 \\times 2 = 8\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-f224cb4b",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][115]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 40% of 45.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 18
+   },
+   "worked": [
+    "\\(40\\% = \\dfrac{2}{5}\\).",
+    "Find \\(\\dfrac{1}{5}\\) of 45 first: \\(45 \\div 5 = 9\\).",
+    "Then \\(\\dfrac{2}{5}\\) is 2 lots of that: \\(9 \\times 2 = 18\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-c31d106e",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][116]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 40% of 70.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 28
+   },
+   "worked": [
+    "\\(40\\% = \\dfrac{2}{5}\\).",
+    "Find \\(\\dfrac{1}{5}\\) of 70 first: \\(70 \\div 5 = 14\\).",
+    "Then \\(\\dfrac{2}{5}\\) is 2 lots of that: \\(14 \\times 2 = 28\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-4f6b4eee",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][117]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 40% of 150.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 60
+   },
+   "worked": [
+    "\\(40\\% = \\dfrac{2}{5}\\).",
+    "Find \\(\\dfrac{1}{5}\\) of 150 first: \\(150 \\div 5 = 30\\).",
+    "Then \\(\\dfrac{2}{5}\\) is 2 lots of that: \\(30 \\times 2 = 60\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-ea72185d",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][118]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 60% of 40.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 24
+   },
+   "worked": [
+    "\\(60\\% = \\dfrac{3}{5}\\).",
+    "Find \\(\\dfrac{1}{5}\\) of 40 first: \\(40 \\div 5 = 8\\).",
+    "Then \\(\\dfrac{3}{5}\\) is 3 lots of that: \\(8 \\times 3 = 24\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-01214ea7",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][119]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 60% of 70.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 42
+   },
+   "worked": [
+    "\\(60\\% = \\dfrac{3}{5}\\).",
+    "Find \\(\\dfrac{1}{5}\\) of 70 first: \\(70 \\div 5 = 14\\).",
+    "Then \\(\\dfrac{3}{5}\\) is 3 lots of that: \\(14 \\times 3 = 42\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-88a2be16",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][120]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 60% of 300.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 180
+   },
+   "worked": [
+    "\\(60\\% = \\dfrac{3}{5}\\).",
+    "Find \\(\\dfrac{1}{5}\\) of 300 first: \\(300 \\div 5 = 60\\).",
+    "Then \\(\\dfrac{3}{5}\\) is 3 lots of that: \\(60 \\times 3 = 180\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-3f5e1758",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][121]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 5% of 60.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "worked": [
+    "\\(5\\% = \\dfrac{1}{20}\\).",
+    "\\(\\dfrac{1}{20}\\) of 60: divide by 20.",
+    "\\(60 \\div 20 = 3\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-37a85c2f",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][122]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 5% of 120.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "\\(5\\% = \\dfrac{1}{20}\\).",
+    "\\(\\dfrac{1}{20}\\) of 120: divide by 20.",
+    "\\(120 \\div 20 = 6\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-b2111620",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][123]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 5% of 180.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 9
+   },
+   "worked": [
+    "\\(5\\% = \\dfrac{1}{20}\\).",
+    "\\(\\dfrac{1}{20}\\) of 180: divide by 20.",
+    "\\(180 \\div 20 = 9\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-03122725",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][124]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 5% of 400.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 20
+   },
+   "worked": [
+    "\\(5\\% = \\dfrac{1}{20}\\).",
+    "\\(\\dfrac{1}{20}\\) of 400: divide by 20.",
+    "\\(400 \\div 20 = 20\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-02e0695c",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][125]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 1% of 300.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "worked": [
+    "\\(1\\% = \\dfrac{1}{100}\\).",
+    "\\(\\dfrac{1}{100}\\) of 300: divide by 100.",
+    "\\(300 \\div 100 = 3\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-6fa36b9c",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][126]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 1% of 500.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "worked": [
+    "\\(1\\% = \\dfrac{1}{100}\\).",
+    "\\(\\dfrac{1}{100}\\) of 500: divide by 100.",
+    "\\(500 \\div 100 = 5\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-2ac91ba2",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][127]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 1% of 800.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "\\(1\\% = \\dfrac{1}{100}\\).",
+    "\\(\\dfrac{1}{100}\\) of 800: divide by 100.",
+    "\\(800 \\div 100 = 8\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-96a1ce14",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][128]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 1% of 1200.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "\\(1\\% = \\dfrac{1}{100}\\).",
+    "\\(\\dfrac{1}{100}\\) of 1200: divide by 100.",
+    "\\(1200 \\div 100 = 12\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-5fb78fef",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][129]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 15% of 40.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "\\(15\\% = \\dfrac{3}{20}\\).",
+    "Find \\(\\dfrac{1}{20}\\) of 40 first: \\(40 \\div 20 = 2\\).",
+    "Then \\(\\dfrac{3}{20}\\) is 3 lots of that: \\(2 \\times 3 = 6\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-6f6c71cb",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][130]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 15% of 80.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "\\(15\\% = \\dfrac{3}{20}\\).",
+    "Find \\(\\dfrac{1}{20}\\) of 80 first: \\(80 \\div 20 = 4\\).",
+    "Then \\(\\dfrac{3}{20}\\) is 3 lots of that: \\(4 \\times 3 = 12\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-62fc8fdf",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][131]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 15% of 120.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 18
+   },
+   "worked": [
+    "\\(15\\% = \\dfrac{3}{20}\\).",
+    "Find \\(\\dfrac{1}{20}\\) of 120 first: \\(120 \\div 20 = 6\\).",
+    "Then \\(\\dfrac{3}{20}\\) is 3 lots of that: \\(6 \\times 3 = 18\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-dbd2679d",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][132]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 15% of 200.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 30
+   },
+   "worked": [
+    "\\(15\\% = \\dfrac{3}{20}\\).",
+    "Find \\(\\dfrac{1}{20}\\) of 200 first: \\(200 \\div 20 = 10\\).",
+    "Then \\(\\dfrac{3}{20}\\) is 3 lots of that: \\(10 \\times 3 = 30\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-825b48b9",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][133]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 90% of 30.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 27
+   },
+   "worked": [
+    "\\(90\\% = \\dfrac{9}{10}\\).",
+    "Find \\(\\dfrac{1}{10}\\) of 30 first: \\(30 \\div 10 = 3\\).",
+    "Then \\(\\dfrac{9}{10}\\) is 9 lots of that: \\(3 \\times 9 = 27\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-ba0cdfad",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][134]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 90% of 50.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 45
+   },
+   "worked": [
+    "\\(90\\% = \\dfrac{9}{10}\\).",
+    "Find \\(\\dfrac{1}{10}\\) of 50 first: \\(50 \\div 10 = 5\\).",
+    "Then \\(\\dfrac{9}{10}\\) is 9 lots of that: \\(5 \\times 9 = 45\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-87b6b568",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][135]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 90% of 70.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 63
+   },
+   "worked": [
+    "\\(90\\% = \\dfrac{9}{10}\\).",
+    "Find \\(\\dfrac{1}{10}\\) of 70 first: \\(70 \\div 10 = 7\\).",
+    "Then \\(\\dfrac{9}{10}\\) is 9 lots of that: \\(7 \\times 9 = 63\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "fraction-percentage-of-amount-88b0467e",
+   "topic": "fraction-percentage-of-amount",
+   "source": {
+    "game": "free-daily-pizza",
+    "ref": "FDP.BANK[3][136]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Work out 90% of 200.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 180
+   },
+   "worked": [
+    "\\(90\\% = \\dfrac{9}{10}\\).",
+    "Find \\(\\dfrac{1}{10}\\) of 200 first: \\(200 \\div 10 = 20\\).",
+    "Then \\(\\dfrac{9}{10}\\) is 9 lots of that: \\(20 \\times 9 = 180\\)."
+   ],
+   "slip": []
+  }
+ ]
+}

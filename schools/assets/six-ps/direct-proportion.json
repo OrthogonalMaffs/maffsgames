@@ -1,0 +1,1266 @@
+{
+ "topic": "direct-proportion",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "direct-proportion-b50df5b8",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:1"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "6 stickers cost £0.60. How much do 8 stickers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 80
+   },
+   "worked": [
+    "One sticker = £0.60 ÷ 6 = £0.10.",
+    "8 × £0.10 = £0.80."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-34abbc5b",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:2"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "7 rubbers cost £11.90. How much do 4 rubbers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 680
+   },
+   "worked": [
+    "One rubber = £11.90 ÷ 7 = £1.70.",
+    "4 × £1.70 = £6.80."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-4d5ebdb0",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:3"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "7 pens cost £1.40. How much do 6 pens cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 120
+   },
+   "worked": [
+    "One pen = £1.40 ÷ 7 = £0.20.",
+    "6 × £0.20 = £1.20."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-ec1f9c8a",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:4"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "8 pens cost £13.60. How much do 4 pens cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 680
+   },
+   "worked": [
+    "One pen = £13.60 ÷ 8 = £1.70.",
+    "4 × £1.70 = £6.80."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-b297ec53",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:5"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "6 rubbers cost £23.40. How much do 4 rubbers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1560
+   },
+   "worked": [
+    "One rubber = £23.40 ÷ 6 = £3.90.",
+    "4 × £3.90 = £15.60."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-9c067eb8",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:6"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "5 pencils cost £0.50. How much do 9 pencils cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 90
+   },
+   "worked": [
+    "One pencil = £0.50 ÷ 5 = £0.10.",
+    "9 × £0.10 = £0.90."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-aaa5cd85",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:7"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "2 notebooks cost £0.80. How much do 12 notebooks cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 480
+   },
+   "worked": [
+    "One notebook = £0.80 ÷ 2 = £0.40.",
+    "12 × £0.40 = £4.80."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-c1bdc88a",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:8"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "3 notebooks cost £9.60. How much do 6 notebooks cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1920
+   },
+   "worked": [
+    "One notebook = £9.60 ÷ 3 = £3.20.",
+    "6 × £3.20 = £19.20."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-43e638f1",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:9"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "3 notebooks cost £12.90. How much do 4 notebooks cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1720
+   },
+   "worked": [
+    "One notebook = £12.90 ÷ 3 = £4.30.",
+    "4 × £4.30 = £17.20."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-af35762a",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:10"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "5 notebooks cost £23.00. How much do 9 notebooks cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 4140
+   },
+   "worked": [
+    "One notebook = £23.00 ÷ 5 = £4.60.",
+    "9 × £4.60 = £41.40."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-9ca4854b",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:11"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "5 rubbers cost £13.50. How much do 9 rubbers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 2430
+   },
+   "worked": [
+    "One rubber = £13.50 ÷ 5 = £2.70.",
+    "9 × £2.70 = £24.30."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-153a4179",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:12"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "4 stickers cost £1.60. How much do 8 stickers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 320
+   },
+   "worked": [
+    "One sticker = £1.60 ÷ 4 = £0.40.",
+    "8 × £0.40 = £3.20."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-d740291d",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:13"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "5 pens cost £9.50. How much do 2 pens cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 380
+   },
+   "worked": [
+    "One pen = £9.50 ÷ 5 = £1.90.",
+    "2 × £1.90 = £3.80."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-84d6f3b6",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:14"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "5 rulers cost £11.00. How much do 8 rulers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1760
+   },
+   "worked": [
+    "One ruler = £11.00 ÷ 5 = £2.20.",
+    "8 × £2.20 = £17.60."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-2bbd614e",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:15"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "3 rulers cost £6.30. How much do 7 rulers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1470
+   },
+   "worked": [
+    "One ruler = £6.30 ÷ 3 = £2.10.",
+    "7 × £2.10 = £14.70."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-238b8e14",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:16"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "6 rulers cost £4.80. How much do 10 rulers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 800
+   },
+   "worked": [
+    "One ruler = £4.80 ÷ 6 = £0.80.",
+    "10 × £0.80 = £8.00."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-1283c649",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:17"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "6 pens cost £6.00. How much do 8 pens cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 800
+   },
+   "worked": [
+    "One pen = £6.00 ÷ 6 = £1.00.",
+    "8 × £1.00 = £8.00."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-9f7a48b0",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:18"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "4 pencils cost £12.40. How much do 8 pencils cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 2480
+   },
+   "worked": [
+    "One pencil = £12.40 ÷ 4 = £3.10.",
+    "8 × £3.10 = £24.80."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-659e21f3",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:19"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "2 notebooks cost £3.40. How much do 7 notebooks cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1190
+   },
+   "worked": [
+    "One notebook = £3.40 ÷ 2 = £1.70.",
+    "7 × £1.70 = £11.90."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-4e687885",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:20"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "7 pencils cost £14.00. How much do 8 pencils cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1600
+   },
+   "worked": [
+    "One pencil = £14.00 ÷ 7 = £2.00.",
+    "8 × £2.00 = £16.00."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-89ff75b8",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:21"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "5 rulers cost £11.50. How much do 4 rulers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 920
+   },
+   "worked": [
+    "One ruler = £11.50 ÷ 5 = £2.30.",
+    "4 × £2.30 = £9.20."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-e346772b",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:22"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "6 pencils cost £7.20. How much do 4 pencils cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 480
+   },
+   "worked": [
+    "One pencil = £7.20 ÷ 6 = £1.20.",
+    "4 × £1.20 = £4.80."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-6ad58152",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:23"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "2 pencils cost £0.80. How much do 9 pencils cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 360
+   },
+   "worked": [
+    "One pencil = £0.80 ÷ 2 = £0.40.",
+    "9 × £0.40 = £3.60."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-297a47d1",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:24"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "4 pens cost £19.60. How much do 5 pens cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 2450
+   },
+   "worked": [
+    "One pen = £19.60 ÷ 4 = £4.90.",
+    "5 × £4.90 = £24.50."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-54d9d1ab",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:25"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "6 notebooks cost £25.20. How much do 8 notebooks cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 3360
+   },
+   "worked": [
+    "One notebook = £25.20 ÷ 6 = £4.20.",
+    "8 × £4.20 = £33.60."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-28b4fa4c",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:26"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "5 pens cost £19.00. How much do 8 pens cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 3040
+   },
+   "worked": [
+    "One pen = £19.00 ÷ 5 = £3.80.",
+    "8 × £3.80 = £30.40."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-117ee77b",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:27"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "4 pencils cost £0.80. How much do 2 pencils cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 40
+   },
+   "worked": [
+    "One pencil = £0.80 ÷ 4 = £0.20.",
+    "2 × £0.20 = £0.40."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-cec67fed",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:28"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "4 notebooks cost £14.40. How much do 10 notebooks cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 3600
+   },
+   "worked": [
+    "One notebook = £14.40 ÷ 4 = £3.60.",
+    "10 × £3.60 = £36.00."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-c167d515",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:29"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "3 pencils cost £2.40. How much do 6 pencils cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 480
+   },
+   "worked": [
+    "One pencil = £2.40 ÷ 3 = £0.80.",
+    "6 × £0.80 = £4.80."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-8ce1eba5",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:30"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "8 pencils cost £35.20. How much do 6 pencils cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 2640
+   },
+   "worked": [
+    "One pencil = £35.20 ÷ 8 = £4.40.",
+    "6 × £4.40 = £26.40."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-cf79afb4",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:31"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "6 pens cost £25.20. How much do 10 pens cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 4200
+   },
+   "worked": [
+    "One pen = £25.20 ÷ 6 = £4.20.",
+    "10 × £4.20 = £42.00."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-31cf1018",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:32"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "4 stickers cost £16.00. How much do 5 stickers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 2000
+   },
+   "worked": [
+    "One sticker = £16.00 ÷ 4 = £4.00.",
+    "5 × £4.00 = £20.00."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-8bf7e67e",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:33"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "5 pens cost £18.50. How much do 9 pens cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 3330
+   },
+   "worked": [
+    "One pen = £18.50 ÷ 5 = £3.70.",
+    "9 × £3.70 = £33.30."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-064e2fb2",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:34"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "6 rulers cost £25.20. How much do 3 rulers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1260
+   },
+   "worked": [
+    "One ruler = £25.20 ÷ 6 = £4.20.",
+    "3 × £4.20 = £12.60."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-b510dd7b",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:35"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "2 stickers cost £5.20. How much do 10 stickers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 2600
+   },
+   "worked": [
+    "One sticker = £5.20 ÷ 2 = £2.60.",
+    "10 × £2.60 = £26.00."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-6406fdd2",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:36"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "8 pens cost £38.40. How much do 4 pens cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1920
+   },
+   "worked": [
+    "One pen = £38.40 ÷ 8 = £4.80.",
+    "4 × £4.80 = £19.20."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-7ae2949d",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:37"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "5 notebooks cost £25.00. How much do 2 notebooks cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1000
+   },
+   "worked": [
+    "One notebook = £25.00 ÷ 5 = £5.00.",
+    "2 × £5.00 = £10.00."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-56fb68f6",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:38"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "7 notebooks cost £30.10. How much do 2 notebooks cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 860
+   },
+   "worked": [
+    "One notebook = £30.10 ÷ 7 = £4.30.",
+    "2 × £4.30 = £8.60."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-566b5367",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:39"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "2 pens cost £7.60. How much do 8 pens cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 3040
+   },
+   "worked": [
+    "One pen = £7.60 ÷ 2 = £3.80.",
+    "8 × £3.80 = £30.40."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-9c4d4381",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:40"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "6 notebooks cost £24.60. How much do 2 notebooks cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 820
+   },
+   "worked": [
+    "One notebook = £24.60 ÷ 6 = £4.10.",
+    "2 × £4.10 = £8.20."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-6dbe3021",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:41"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "7 rubbers cost £18.20. How much do 9 rubbers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 2340
+   },
+   "worked": [
+    "One rubber = £18.20 ÷ 7 = £2.60.",
+    "9 × £2.60 = £23.40."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-33aa42f7",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:42"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "6 notebooks cost £13.80. How much do 11 notebooks cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 2530
+   },
+   "worked": [
+    "One notebook = £13.80 ÷ 6 = £2.30.",
+    "11 × £2.30 = £25.30."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-bae9b189",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:43"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "8 pens cost £11.20. How much do 7 pens cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 980
+   },
+   "worked": [
+    "One pen = £11.20 ÷ 8 = £1.40.",
+    "7 × £1.40 = £9.80."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-da044d8b",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:44"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "7 notebooks cost £5.60. How much do 2 notebooks cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 160
+   },
+   "worked": [
+    "One notebook = £5.60 ÷ 7 = £0.80.",
+    "2 × £0.80 = £1.60."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-28b335f6",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:45"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "2 rulers cost £9.20. How much do 10 rulers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 4600
+   },
+   "worked": [
+    "One ruler = £9.20 ÷ 2 = £4.60.",
+    "10 × £4.60 = £46.00."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-55f62748",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:46"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "2 notebooks cost £9.20. How much do 7 notebooks cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 3220
+   },
+   "worked": [
+    "One notebook = £9.20 ÷ 2 = £4.60.",
+    "7 × £4.60 = £32.20."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-2e1fdb86",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:47"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "6 rubbers cost £3.00. How much do 7 rubbers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 350
+   },
+   "worked": [
+    "One rubber = £3.00 ÷ 6 = £0.50.",
+    "7 × £0.50 = £3.50."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-4c03fe94",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:48"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "7 pens cost £18.90. How much do 4 pens cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1080
+   },
+   "worked": [
+    "One pen = £18.90 ÷ 7 = £2.70.",
+    "4 × £2.70 = £10.80."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-0863b491",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:49"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "4 pens cost £12.40. How much do 10 pens cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 3100
+   },
+   "worked": [
+    "One pen = £12.40 ÷ 4 = £3.10.",
+    "10 × £3.10 = £31.00."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-8aa0d694",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:50"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "5 pens cost £3.00. How much do 6 pens cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 360
+   },
+   "worked": [
+    "One pen = £3.00 ÷ 5 = £0.60.",
+    "6 × £0.60 = £3.60."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-319972d4",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:51"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "3 pens cost £1.20. How much do 7 pens cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 280
+   },
+   "worked": [
+    "One pen = £1.20 ÷ 3 = £0.40.",
+    "7 × £0.40 = £2.80."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-a3d003fa",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:52"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "3 notebooks cost £0.30. How much do 7 notebooks cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 70
+   },
+   "worked": [
+    "One notebook = £0.30 ÷ 3 = £0.10.",
+    "7 × £0.10 = £0.70."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-6282a464",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:53"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "2 stickers cost £8.40. How much do 3 stickers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1260
+   },
+   "worked": [
+    "One sticker = £8.40 ÷ 2 = £4.20.",
+    "3 × £4.20 = £12.60."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-345bbe08",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:54"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "3 rulers cost £10.20. How much do 6 rulers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 2040
+   },
+   "worked": [
+    "One ruler = £10.20 ÷ 3 = £3.40.",
+    "6 × £3.40 = £20.40."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-164b2885",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:55"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "5 notebooks cost £22.00. How much do 10 notebooks cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 4400
+   },
+   "worked": [
+    "One notebook = £22.00 ÷ 5 = £4.40.",
+    "10 × £4.40 = £44.00."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-1c66bf24",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:56"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "3 pencils cost £7.20. How much do 10 pencils cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 2400
+   },
+   "worked": [
+    "One pencil = £7.20 ÷ 3 = £2.40.",
+    "10 × £2.40 = £24.00."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-0796ee25",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:57"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "7 rubbers cost £7.70. How much do 3 rubbers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 330
+   },
+   "worked": [
+    "One rubber = £7.70 ÷ 7 = £1.10.",
+    "3 × £1.10 = £3.30."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-cb048517",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:58"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "5 pens cost £16.50. How much do 10 pens cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 3300
+   },
+   "worked": [
+    "One pen = £16.50 ÷ 5 = £3.30.",
+    "10 × £3.30 = £33.00."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-6679393e",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:59"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "4 pens cost £12.40. How much do 5 pens cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1550
+   },
+   "worked": [
+    "One pen = £12.40 ÷ 4 = £3.10.",
+    "5 × £3.10 = £15.50."
+   ],
+   "slip": []
+  },
+  {
+   "id": "direct-proportion-1829a20f",
+   "topic": "direct-proportion",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.unitary:60"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "4 rubbers cost £4.00. How much do 5 rubbers cost?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 500
+   },
+   "worked": [
+    "One rubber = £4.00 ÷ 4 = £1.00.",
+    "5 × £1.00 = £5.00."
+   ],
+   "slip": []
+  }
+ ]
+}

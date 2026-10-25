@@ -1,0 +1,2979 @@
+{
+ "topic": "ratio",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "ratio-6173435e",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:1"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(5 : 25\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     1,
+     5
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 5.",
+    "5÷5 : 25÷5 = 1:5."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-e9d20eb3",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:2"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(18 : 30\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     3,
+     5
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 6.",
+    "18÷6 : 30÷6 = 3:5."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-63bc5c52",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:3"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(6 : 24\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     1,
+     4
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 6.",
+    "6÷6 : 24÷6 = 1:4."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-3e8e635c",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:4"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(30 : 20\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     3,
+     2
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 10.",
+    "30÷10 : 20÷10 = 3:2."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-a30f2cf7",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:5"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(42 : 12\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     7,
+     2
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 6.",
+    "42÷6 : 12÷6 = 7:2."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-80e0bef5",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:6"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(5 : 30\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     1,
+     6
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 5.",
+    "5÷5 : 30÷5 = 1:6."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-c029f5a9",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:7"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(2 : 16\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     1,
+     8
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 2.",
+    "2÷2 : 16÷2 = 1:8."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-7a4f03d0",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:8"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(12 : 6\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     2,
+     1
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 6.",
+    "12÷6 : 6÷6 = 2:1."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-50564a23",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:9"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(21 : 6\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     7,
+     2
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 3.",
+    "21÷3 : 6÷3 = 7:2."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-e5b45754",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:10"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(40 : 30\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     4,
+     3
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 10.",
+    "40÷10 : 30÷10 = 4:3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-73513d93",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:11"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(25 : 35\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     5,
+     7
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 5.",
+    "25÷5 : 35÷5 = 5:7."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-07646416",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:12"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(3 : 15\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     1,
+     5
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 3.",
+    "3÷3 : 15÷3 = 1:5."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-9837cda5",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:13"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(15 : 5\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     3,
+     1
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 5.",
+    "15÷5 : 5÷5 = 3:1."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-7f58bbc7",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:14"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(16 : 20\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     4,
+     5
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 4.",
+    "16÷4 : 20÷4 = 4:5."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-3990c824",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:16"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(10 : 35\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     2,
+     7
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 5.",
+    "10÷5 : 35÷5 = 2:7."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-d3e03442",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:17"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(12 : 30\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     2,
+     5
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 6.",
+    "12÷6 : 30÷6 = 2:5."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-e05863b1",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:18"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(20 : 8\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     5,
+     2
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 4.",
+    "20÷4 : 8÷4 = 5:2."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-cfd29225",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:19"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(6 : 8\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     3,
+     4
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 2.",
+    "6÷2 : 8÷2 = 3:4."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-e10035c5",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:20"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(24 : 30\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     4,
+     5
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 6.",
+    "24÷6 : 30÷6 = 4:5."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-0559c6f6",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:21"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(16 : 12\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     4,
+     3
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 4.",
+    "16÷4 : 12÷4 = 4:3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-94a5cc5c",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:22"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(10 : 15\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     2,
+     3
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 5.",
+    "10÷5 : 15÷5 = 2:3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-6e69d56e",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:23"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(2 : 12\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     1,
+     6
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 2.",
+    "2÷2 : 12÷2 = 1:6."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-d821f154",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:24"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(24 : 9\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     8,
+     3
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 3.",
+    "24÷3 : 9÷3 = 8:3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-5835d078",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:25"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(35 : 25\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     7,
+     5
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 5.",
+    "35÷5 : 25÷5 = 7:5."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-3153de09",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:26"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(30 : 25\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     6,
+     5
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 5.",
+    "30÷5 : 25÷5 = 6:5."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-c7aa5864",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:27"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(4 : 8\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     1,
+     2
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 4.",
+    "4÷4 : 8÷4 = 1:2."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-f81ce88f",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:28"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(24 : 12\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     2,
+     1
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 12.",
+    "24÷12 : 12÷12 = 2:1."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-5cab425d",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:29"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(6 : 9\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     2,
+     3
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 3.",
+    "6÷3 : 9÷3 = 2:3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-5a8bab97",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:30"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(70 : 40\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     7,
+     4
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 10.",
+    "70÷10 : 40÷10 = 7:4."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-a7618068",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:31"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(42 : 36\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     7,
+     6
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 6.",
+    "42÷6 : 36÷6 = 7:6."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-96d9d019",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:32"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(28 : 12\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     7,
+     3
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 4.",
+    "28÷4 : 12÷4 = 7:3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-1e51fd4f",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:34"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(35 : 5\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     7,
+     1
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 5.",
+    "35÷5 : 5÷5 = 7:1."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-256e0030",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:35"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(10 : 12\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     5,
+     6
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 2.",
+    "10÷2 : 12÷2 = 5:6."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-1a7c10f4",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:36"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(80 : 30\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     8,
+     3
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 10.",
+    "80÷10 : 30÷10 = 8:3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-f0a6e84b",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:37"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(40 : 5\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     8,
+     1
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 5.",
+    "40÷5 : 5÷5 = 8:1."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-8932c165",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:38"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(42 : 6\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     7,
+     1
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 6.",
+    "42÷6 : 6÷6 = 7:1."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-a6e947b3",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:39"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(14 : 10\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     7,
+     5
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 2.",
+    "14÷2 : 10÷2 = 7:5."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-92adb8c7",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:41"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(50 : 60\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     5,
+     6
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 10.",
+    "50÷10 : 60÷10 = 5:6."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-5b043f8b",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:42"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(20 : 35\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     4,
+     7
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 5.",
+    "20÷5 : 35÷5 = 4:7."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-424a40c2",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:43"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(30 : 50\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     3,
+     5
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 10.",
+    "30÷10 : 50÷10 = 3:5."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-7680f0da",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:44"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(20 : 10\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     2,
+     1
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 10.",
+    "20÷10 : 10÷10 = 2:1."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-c4f0e859",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:45"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(16 : 14\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     8,
+     7
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 2.",
+    "16÷2 : 14÷2 = 8:7."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-27148802",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:46"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(16 : 8\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     2,
+     1
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 8.",
+    "16÷8 : 8÷8 = 2:1."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-08bb2219",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:47"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(5 : 20\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     1,
+     4
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 5.",
+    "5÷5 : 20÷5 = 1:4."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-ac083b8c",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:48"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(50 : 30\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     5,
+     3
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 10.",
+    "50÷10 : 30÷10 = 5:3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-a9f001be",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:49"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(20 : 28\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     5,
+     7
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 4.",
+    "20÷4 : 28÷4 = 5:7."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-993e7191",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:50"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(5 : 15\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     1,
+     3
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 5.",
+    "5÷5 : 15÷5 = 1:3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-0860f789",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:51"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(2 : 8\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     1,
+     4
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 2.",
+    "2÷2 : 8÷2 = 1:4."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-55b9c4e2",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:52"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(3 : 12\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     1,
+     4
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 3.",
+    "3÷3 : 12÷3 = 1:4."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-0a7447df",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:53"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(14 : 2\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     7,
+     1
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 2.",
+    "14÷2 : 2÷2 = 7:1."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-889281bf",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:54"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(18 : 9\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     2,
+     1
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 9.",
+    "18÷9 : 9÷9 = 2:1."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-cce1a1c8",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:55"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(28 : 24\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     7,
+     6
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 4.",
+    "28÷4 : 24÷4 = 7:6."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-be12eeca",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:56"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(8 : 12\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     2,
+     3
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 4.",
+    "8÷4 : 12÷4 = 2:3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-315c4559",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:57"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(12 : 36\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     1,
+     3
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 12.",
+    "12÷12 : 36÷12 = 1:3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-00312d17",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:58"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(24 : 4\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     6,
+     1
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 4.",
+    "24÷4 : 4÷4 = 6:1."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-9378976d",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:59"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(20 : 12\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     5,
+     3
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 4.",
+    "20÷4 : 12÷4 = 5:3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-6a2d6eeb",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:60"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(6 : 15\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     2,
+     5
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 3.",
+    "6÷3 : 15÷3 = 2:5."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-fff3a013",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:61"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(30 : 40\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     3,
+     4
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 10.",
+    "30÷10 : 40÷10 = 3:4."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-6724dc1b",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:62"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(12 : 24\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     1,
+     2
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 12.",
+    "12÷12 : 24÷12 = 1:2."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-071286d8",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.simplify:63"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Write \\(3 : 9\\) in its simplest form.",
+   "diagram": null,
+   "format": "ratio",
+   "answer": {
+    "parts": [
+     1,
+     3
+    ]
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "HCF = 3.",
+    "3÷3 : 9÷3 = 1:3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-8f2ba7ed",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:1"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 60 cm in the ratio \\(4 : 1\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 48
+   },
+   "unit": "cm",
+   "worked": [
+    "Total parts = 5.",
+    "One part = 60÷5 = 12.",
+    "4×12 = 48, 1×12 = 12."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-8d1299b6",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:2"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 49 kg in the ratio \\(5 : 2\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 35
+   },
+   "unit": "kg",
+   "worked": [
+    "Total parts = 7.",
+    "One part = 49÷7 = 7.",
+    "5×7 = 35, 2×7 = 14."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-38533bee",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:3"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share £60 in the ratio \\(5 : 1\\). Work out the larger share.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 5000
+   },
+   "worked": [
+    "Total parts = 6.",
+    "One part = 60÷6 = 10.",
+    "5×10 = 50, 1×10 = 10."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-690101cf",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:4"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share £48 in the ratio \\(6 : 2\\). Work out the larger share.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 3600
+   },
+   "worked": [
+    "Total parts = 8.",
+    "One part = 48÷8 = 6.",
+    "6×6 = 36, 2×6 = 12."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-ecfdd17c",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:6"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 70 in the ratio \\(4 : 1\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 56
+   },
+   "worked": [
+    "Total parts = 5.",
+    "One part = 70÷5 = 14.",
+    "4×14 = 56, 1×14 = 14."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-75232e0a",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:8"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 35 ml in the ratio \\(1 : 4\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 28
+   },
+   "unit": "ml",
+   "worked": [
+    "Total parts = 5.",
+    "One part = 35÷5 = 7.",
+    "1×7 = 7, 4×7 = 28."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-57e0066c",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:9"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 32 cm in the ratio \\(2 : 6\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 24
+   },
+   "unit": "cm",
+   "worked": [
+    "Total parts = 8.",
+    "One part = 32÷8 = 4.",
+    "2×4 = 8, 6×4 = 24."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-da19ae19",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:10"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 150 cm in the ratio \\(4 : 6\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 90
+   },
+   "unit": "cm",
+   "worked": [
+    "Total parts = 10.",
+    "One part = 150÷10 = 15.",
+    "4×15 = 60, 6×15 = 90."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-3194d107",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:12"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 39 cm in the ratio \\(2 : 1\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 26
+   },
+   "unit": "cm",
+   "worked": [
+    "Total parts = 3.",
+    "One part = 39÷3 = 13.",
+    "2×13 = 26, 1×13 = 13."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-7643b8ac",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:13"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share £21 in the ratio \\(4 : 3\\). Work out the larger share.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1200
+   },
+   "worked": [
+    "Total parts = 7.",
+    "One part = 21÷7 = 3.",
+    "4×3 = 12, 3×3 = 9."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-ce634d33",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:15"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 45 kg in the ratio \\(2 : 3\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 27
+   },
+   "unit": "kg",
+   "worked": [
+    "Total parts = 5.",
+    "One part = 45÷5 = 9.",
+    "2×9 = 18, 3×9 = 27."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-a3c55d38",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:16"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 80 in the ratio \\(4 : 1\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 64
+   },
+   "worked": [
+    "Total parts = 5.",
+    "One part = 80÷5 = 16.",
+    "4×16 = 64, 1×16 = 16."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-e62c31d3",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:17"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share £84 in the ratio \\(5 : 2\\). Work out the larger share.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 6000
+   },
+   "worked": [
+    "Total parts = 7.",
+    "One part = 84÷7 = 12.",
+    "5×12 = 60, 2×12 = 24."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-e9e2126c",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:18"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share £77 in the ratio \\(3 : 4\\). Work out the larger share.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 4400
+   },
+   "worked": [
+    "Total parts = 7.",
+    "One part = 77÷7 = 11.",
+    "3×11 = 33, 4×11 = 44."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-4a0dc02f",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:19"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 30 ml in the ratio \\(1 : 2\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 20
+   },
+   "unit": "ml",
+   "worked": [
+    "Total parts = 3.",
+    "One part = 30÷3 = 10.",
+    "1×10 = 10, 2×10 = 20."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-f88d1edb",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:20"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 104 in the ratio \\(5 : 3\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 65
+   },
+   "worked": [
+    "Total parts = 8.",
+    "One part = 104÷8 = 13.",
+    "5×13 = 65, 3×13 = 39."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-d8ce7c49",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:22"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 36 in the ratio \\(4 : 2\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 24
+   },
+   "worked": [
+    "Total parts = 6.",
+    "One part = 36÷6 = 6.",
+    "4×6 = 24, 2×6 = 12."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-91b63b46",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:24"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share £56 in the ratio \\(2 : 6\\). Work out the larger share.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 4200
+   },
+   "worked": [
+    "Total parts = 8.",
+    "One part = 56÷8 = 7.",
+    "2×7 = 14, 6×7 = 42."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-0766a929",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:25"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 108 ml in the ratio \\(4 : 5\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 60
+   },
+   "unit": "ml",
+   "worked": [
+    "Total parts = 9.",
+    "One part = 108÷9 = 12.",
+    "4×12 = 48, 5×12 = 60."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-06404ecc",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:26"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share £99 in the ratio \\(4 : 5\\). Work out the larger share.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 5500
+   },
+   "worked": [
+    "Total parts = 9.",
+    "One part = 99÷9 = 11.",
+    "4×11 = 44, 5×11 = 55."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-493d38d2",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:27"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share £8 in the ratio \\(3 : 1\\). Work out the larger share.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 600
+   },
+   "worked": [
+    "Total parts = 4.",
+    "One part = 8÷4 = 2.",
+    "3×2 = 6, 1×2 = 2."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-2e6adb7c",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:28"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 128 ml in the ratio \\(3 : 5\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 80
+   },
+   "unit": "ml",
+   "worked": [
+    "Total parts = 8.",
+    "One part = 128÷8 = 16.",
+    "3×16 = 48, 5×16 = 80."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-6dd1f087",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:29"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 21 in the ratio \\(2 : 1\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 14
+   },
+   "worked": [
+    "Total parts = 3.",
+    "One part = 21÷3 = 7.",
+    "2×7 = 14, 1×7 = 7."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-0e13ee18",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:31"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share £176 in the ratio \\(5 : 6\\). Work out the larger share.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 9600
+   },
+   "worked": [
+    "Total parts = 11.",
+    "One part = 176÷11 = 16.",
+    "5×16 = 80, 6×16 = 96."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-97af880d",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:32"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 48 cm in the ratio \\(3 : 5\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 30
+   },
+   "unit": "cm",
+   "worked": [
+    "Total parts = 8.",
+    "One part = 48÷8 = 6.",
+    "3×6 = 18, 5×6 = 30."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-1623787e",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:33"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share £117 in the ratio \\(4 : 5\\). Work out the larger share.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 6500
+   },
+   "worked": [
+    "Total parts = 9.",
+    "One part = 117÷9 = 13.",
+    "4×13 = 52, 5×13 = 65."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-e7f65779",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:34"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 36 in the ratio \\(4 : 5\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 20
+   },
+   "worked": [
+    "Total parts = 9.",
+    "One part = 36÷9 = 4.",
+    "4×4 = 16, 5×4 = 20."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-2c161e09",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:35"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 75 cm in the ratio \\(1 : 4\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 60
+   },
+   "unit": "cm",
+   "worked": [
+    "Total parts = 5.",
+    "One part = 75÷5 = 15.",
+    "1×15 = 15, 4×15 = 60."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-7f294aeb",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:37"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 20 ml in the ratio \\(4 : 6\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "unit": "ml",
+   "worked": [
+    "Total parts = 10.",
+    "One part = 20÷10 = 2.",
+    "4×2 = 8, 6×2 = 12."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-87b35dce",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:38"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 33 ml in the ratio \\(5 : 6\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 18
+   },
+   "unit": "ml",
+   "worked": [
+    "Total parts = 11.",
+    "One part = 33÷11 = 3.",
+    "5×3 = 15, 6×3 = 18."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-3a8a90af",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:39"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share £72 in the ratio \\(1 : 5\\). Work out the larger share.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 6000
+   },
+   "worked": [
+    "Total parts = 6.",
+    "One part = 72÷6 = 12.",
+    "1×12 = 12, 5×12 = 60."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-e854782b",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:40"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 18 ml in the ratio \\(4 : 5\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 10
+   },
+   "unit": "ml",
+   "worked": [
+    "Total parts = 9.",
+    "One part = 18÷9 = 2.",
+    "4×2 = 8, 5×2 = 10."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-ac511b76",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:41"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 140 kg in the ratio \\(6 : 4\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 84
+   },
+   "unit": "kg",
+   "worked": [
+    "Total parts = 10.",
+    "One part = 140÷10 = 14.",
+    "6×14 = 84, 4×14 = 56."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-fb8d2f67",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:42"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 126 ml in the ratio \\(4 : 3\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 72
+   },
+   "unit": "ml",
+   "worked": [
+    "Total parts = 7.",
+    "One part = 126÷7 = 18.",
+    "4×18 = 72, 3×18 = 54."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-1de7a690",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:43"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share £96 in the ratio \\(6 : 2\\). Work out the larger share.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 7200
+   },
+   "worked": [
+    "Total parts = 8.",
+    "One part = 96÷8 = 12.",
+    "6×12 = 72, 2×12 = 24."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-09c13801",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:44"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 21 cm in the ratio \\(6 : 1\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 18
+   },
+   "unit": "cm",
+   "worked": [
+    "Total parts = 7.",
+    "One part = 21÷7 = 3.",
+    "6×3 = 18, 1×3 = 3."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-c08b595e",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:45"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 112 in the ratio \\(1 : 6\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 96
+   },
+   "worked": [
+    "Total parts = 7.",
+    "One part = 112÷7 = 16.",
+    "1×16 = 16, 6×16 = 96."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-0c235c8c",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:46"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 70 ml in the ratio \\(1 : 6\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 60
+   },
+   "unit": "ml",
+   "worked": [
+    "Total parts = 7.",
+    "One part = 70÷7 = 10.",
+    "1×10 = 10, 6×10 = 60."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-fa9045dc",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:47"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 50 kg in the ratio \\(4 : 1\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 40
+   },
+   "unit": "kg",
+   "worked": [
+    "Total parts = 5.",
+    "One part = 50÷5 = 10.",
+    "4×10 = 40, 1×10 = 10."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-2fa09c7d",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:48"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share £60 in the ratio \\(6 : 4\\). Work out the larger share.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 3600
+   },
+   "worked": [
+    "Total parts = 10.",
+    "One part = 60÷10 = 6.",
+    "6×6 = 36, 4×6 = 24."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-5f53a39c",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:49"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share £112 in the ratio \\(3 : 4\\). Work out the larger share.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 6400
+   },
+   "worked": [
+    "Total parts = 7.",
+    "One part = 112÷7 = 16.",
+    "3×16 = 48, 4×16 = 64."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-de70eced",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:50"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share £40 in the ratio \\(4 : 1\\). Work out the larger share.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 3200
+   },
+   "worked": [
+    "Total parts = 5.",
+    "One part = 40÷5 = 8.",
+    "4×8 = 32, 1×8 = 8."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-4fa6dcf7",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:52"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 30 cm in the ratio \\(2 : 1\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 20
+   },
+   "unit": "cm",
+   "worked": [
+    "Total parts = 3.",
+    "One part = 30÷3 = 10.",
+    "2×10 = 20, 1×10 = 10."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-41997716",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:53"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 18 cm in the ratio \\(1 : 5\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 15
+   },
+   "unit": "cm",
+   "worked": [
+    "Total parts = 6.",
+    "One part = 18÷6 = 3.",
+    "1×3 = 3, 5×3 = 15."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-ae163dc8",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:54"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 48 kg in the ratio \\(2 : 4\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 32
+   },
+   "unit": "kg",
+   "worked": [
+    "Total parts = 6.",
+    "One part = 48÷6 = 8.",
+    "2×8 = 16, 4×8 = 32."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-3d0bbd36",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:55"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 135 ml in the ratio \\(3 : 6\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 90
+   },
+   "unit": "ml",
+   "worked": [
+    "Total parts = 9.",
+    "One part = 135÷9 = 15.",
+    "3×15 = 45, 6×15 = 90."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-026c44b0",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:56"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 60 in the ratio \\(1 : 3\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 45
+   },
+   "worked": [
+    "Total parts = 4.",
+    "One part = 60÷4 = 15.",
+    "1×15 = 15, 3×15 = 45."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-e86d230b",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:57"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 28 ml in the ratio \\(5 : 2\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 20
+   },
+   "unit": "ml",
+   "worked": [
+    "Total parts = 7.",
+    "One part = 28÷7 = 4.",
+    "5×4 = 20, 2×4 = 8."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-0c12163b",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:58"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share £105 in the ratio \\(3 : 4\\). Work out the larger share.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 6000
+   },
+   "worked": [
+    "Total parts = 7.",
+    "One part = 105÷7 = 15.",
+    "3×15 = 45, 4×15 = 60."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-b92cfa77",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:59"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share £49 in the ratio \\(3 : 4\\). Work out the larger share.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 2800
+   },
+   "worked": [
+    "Total parts = 7.",
+    "One part = 49÷7 = 7.",
+    "3×7 = 21, 4×7 = 28."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-170adbfb",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:61"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 162 ml in the ratio \\(4 : 5\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 90
+   },
+   "unit": "ml",
+   "worked": [
+    "Total parts = 9.",
+    "One part = 162÷9 = 18.",
+    "4×18 = 72, 5×18 = 90."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-f71e3c00",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:62"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 35 kg in the ratio \\(5 : 2\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 25
+   },
+   "unit": "kg",
+   "worked": [
+    "Total parts = 7.",
+    "One part = 35÷7 = 5.",
+    "5×5 = 25, 2×5 = 10."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-c284747b",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:63"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share £21 in the ratio \\(2 : 1\\). Work out the larger share.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1400
+   },
+   "worked": [
+    "Total parts = 3.",
+    "One part = 21÷3 = 7.",
+    "2×7 = 14, 1×7 = 7."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-7928c66b",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:64"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 126 in the ratio \\(6 : 3\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 84
+   },
+   "worked": [
+    "Total parts = 9.",
+    "One part = 126÷9 = 14.",
+    "6×14 = 84, 3×14 = 42."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-3b595a10",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:65"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 52 ml in the ratio \\(1 : 3\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 39
+   },
+   "unit": "ml",
+   "worked": [
+    "Total parts = 4.",
+    "One part = 52÷4 = 13.",
+    "1×13 = 13, 3×13 = 39."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-91da2ac3",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:67"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 108 kg in the ratio \\(6 : 3\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 72
+   },
+   "unit": "kg",
+   "worked": [
+    "Total parts = 9.",
+    "One part = 108÷9 = 12.",
+    "6×12 = 72, 3×12 = 36."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-2bfb6a16",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:68"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 20 cm in the ratio \\(3 : 2\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "unit": "cm",
+   "worked": [
+    "Total parts = 5.",
+    "One part = 20÷5 = 4.",
+    "3×4 = 12, 2×4 = 8."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-bb08ed1a",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:69"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 112 cm in the ratio \\(5 : 2\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 80
+   },
+   "unit": "cm",
+   "worked": [
+    "Total parts = 7.",
+    "One part = 112÷7 = 16.",
+    "5×16 = 80, 2×16 = 32."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-43781200",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:70"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 56 kg in the ratio \\(5 : 2\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 40
+   },
+   "unit": "kg",
+   "worked": [
+    "Total parts = 7.",
+    "One part = 56÷7 = 8.",
+    "5×8 = 40, 2×8 = 16."
+   ],
+   "slip": []
+  },
+  {
+   "id": "ratio-a79b3449",
+   "topic": "ratio",
+   "source": {
+    "game": "split-it",
+    "ref": "generator:generators.divide:71"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Share 78 ml in the ratio \\(5 : 1\\). Work out the larger share.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 65
+   },
+   "unit": "ml",
+   "worked": [
+    "Total parts = 6.",
+    "One part = 78÷6 = 13.",
+    "5×13 = 65, 1×13 = 13."
+   ],
+   "slip": []
+  }
+ ]
+}
