@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Shape Shifter (every translation, reflection and rotation image recomputed from its words; every rotation option classified; every vertex and every letter tapped on the real canvas in Chromium) |
+# ci-line: Shape Shifter (every translation, reflection and rotation image recomputed from its words; every rotation option classified; every vertex and every letter tapped on the real canvas in Chromium; each mode card's data-mode its own mode, a burst at random-mix starting Random Mix once, each card starting its mode once without a burst) |
 """Shape Shifter: translate, reflect and rotate a shape on a -5..5 grid; three static banks, four modes.
 
 Banks, read from the page as served: TRANSLATION_QUESTIONS (15, tap the image's vertices), REFLECTION_QUESTIONS (15, tap
@@ -516,7 +516,73 @@ def colour_checks(fails, html):
         fails.append('colour: the feedback says the correct shape is shown in %s, but it is drawn in --green' % named.group(1))
 
 
-def play(fails, html, expected_hit):
+# The mode cards' data-mode attributes (contract SHAPE-SHIFTER-DATA-MODE, Jon, 25 Oct 2026): burst.js opens a burst at a
+# mode by pressing the start screen's [data-mode="<name>"] once. Each card's attribute names its own onclick mode, in
+# the cards' order, Random Mix as random-mix.
+CARD_MODES = [('translation', 'translation'), ('reflection', 'reflection'), ('rotation', 'rotation'), ('random-mix', 'mix')]
+CARD = re.compile(r'<div class="mode-card(?: [^"]*)?"([^>]*)>')   # a card, not the mode-cards row round them
+# game_started recorded once per call however many wrappers stand round mfg (burst.js wraps it): the outermost call only.
+MFG_RECORDER = """(() => { let real = null, depth = 0; window.__starts = [];
+  Object.defineProperty(window, 'mfg', { configurable: true,
+    get() { const cur = real; return function (n, p) {
+      if (!depth && n === 'game_started') window.__starts.push(p && p.mode);
+      depth++; try { if (typeof cur === 'function') return cur.apply(this, arguments); } catch (e) {} finally { depth--; } }; },
+    set(v) { real = v; } }); })();"""
+
+
+def mode_card_checks(fails, html, browser, base):
+    got = []
+    for attrs in CARD.findall(html):
+        dm = re.search(r'data-mode="([^"]*)"', attrs)
+        oc = re.search(r"onclick=\"startGame\('([^']*)'\)\"", attrs)
+        got.append((dm.group(1) if dm else None, oc.group(1) if oc else None))
+    if got != CARD_MODES:
+        fails.append('mode cards: the cards are %s (data-mode, onclick mode); expected %s, in that order' % (got, CARD_MODES))
+    page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
+
+    def fresh(query):
+        ctx = browser.new_context(viewport={'width': 390, 'height': 844})
+        ctx.add_init_script(MFG_RECORDER)
+        ctx.route(lambda url: not url.startswith(base), lambda route: route.abort())
+        ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
+            status=200, content_type='text/html; charset=utf-8', body=html))
+        page = ctx.new_page()
+        page.goto(base + '/games/%s/%s' % (SLUG, query), wait_until='load', timeout=20000)
+        page.wait_for_function('typeof startGame === "function"', timeout=15000)
+        return ctx, page
+
+    state = """() => ({ selected: selectedMode, game: document.getElementById('gameScreen').classList.contains('active'),
+        menu: document.getElementById('startScreen').classList.contains('active'), starts: window.__starts,
+        burst: !!(window.MaffsBurst && MaffsBurst.active()) })"""
+    # A burst at random-mix: burst.js presses the Random Mix card once, and the game starts Random Mix.
+    ctx, page = fresh('?burst=5&from=six-ps&topic=transformations&mode=random-mix&cb=verify')
+    try:
+        page.wait_for_timeout(1500)
+        st = page.evaluate(state)
+        if not (st['burst'] and st['selected'] == 'mix' and st['game'] and not st['menu'] and st['starts'] == ['mix']):
+            fails.append('mode cards: a burst at mode=random-mix did not start Random Mix once (the game\'s state: %r)' % st)
+    finally:
+        ctx.close()
+    # Played normally: no card is pressed for the student, and each card, clicked, starts its own mode once.
+    for dm, mode in CARD_MODES:
+        ctx, page = fresh('?cb=verify')
+        try:
+            page.wait_for_timeout(300)
+            st = page.evaluate(state)
+            if st['burst'] or st['starts'] or not st['menu']:
+                fails.append('mode cards: without a burst the menu did not wait for the student (%r)' % st)
+            page.click('.mode-card[data-mode="%s"]' % dm, timeout=5000)
+            page.wait_for_timeout(200)
+            st = page.evaluate(state)
+            if not (st['selected'] == mode and st['game'] and st['starts'] == [mode]):
+                fails.append('mode cards: clicking the %s card did not start %s once (the game\'s state: %r)' % (dm, mode, st))
+        except Exception as e:
+            fails.append('mode cards: the %s card could not be clicked: %s' % (dm, str(e).splitlines()[0]))
+        finally:
+            ctx.close()
+
+
+def play(fails, html, expected_hit, cards=True):
     from playwright.sync_api import sync_playwright
     colour_checks(fails, html)
     proc, base = bc.start_stub_server()
@@ -556,6 +622,8 @@ def play(fails, html, expected_hit):
                     fails.append('session %s played with every answer wrong scores %r, expected 0/10' % (m, bad))
             if errors:
                 fails.append('page errors: %s' % '; '.join(errors[:3]))
+            if cards:   # the bank plants need none of it; only the main run and the mode-card plants pay for it
+                mode_card_checks(fails, html, browser, base)
             browser.close()
             stats = {'translation': len(tq), 'reflection': len(rq), 'rotation': len(oq)}
     finally:
@@ -595,6 +663,12 @@ PLANTS = [
      [("drawShape(target, '#22c55e', 'rgba(34,197,94,0.3)', 2);", "drawShape(target, '#1a2744', 'rgba(26,39,68,0.3)', 2);")]),
     ('the feedback naming navy again (t3-001)', 'colour',
      [("correct shape shown in green';", "correct shape shown in navy';")]),
+    ('the Random Mix card without its data-mode (a burst lands on the menu)', 'mode cards',
+     [('<div class="mode-card mix" data-mode="random-mix" onclick="startGame(\'mix\')">',
+       '<div class="mode-card mix" onclick="startGame(\'mix\')">')]),
+    ('a card whose data-mode names another mode', 'mode cards',
+     [('<div class="mode-card" data-mode="rotation" onclick="startGame(\'rotation\')">',
+       '<div class="mode-card" data-mode="reflection" onclick="startGame(\'rotation\')">')]),
     ('a reflection item that is its own image (the old t3-003 square)', 'reflection image is the shape itself',
      [("{ shape:[[-4,1],[-2,1],[-2,3],[-4,3]], axis:'x', desc:'Reflect in the x-axis', type:'rectangle' },",
        "{ shape:[[-4,-1],[-2,-1],[-2,1],[-4,1]], axis:'x', desc:'Reflect in the x-axis', type:'rectangle' },")]),
@@ -638,7 +712,7 @@ def main():
             for o, n in edits:
                 planted = planted.replace(o, n)
             rep = []
-            play(rep, planted, set())
+            play(rep, planted, set(), cards=tag == 'mode cards')
             found = [f for f in rep if tag in f]
             ok = ok and bool(found)
             print('  self-test %-58s %s' % (what, ('caught: ' + found[0][:100]) if found else '*** MISSED ***'))
