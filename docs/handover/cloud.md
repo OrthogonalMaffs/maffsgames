@@ -55,10 +55,10 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 
 ## 2026-10-25 (cloud): SIX-PS-PLAYER (contract: see the queue). **IN PROGRESS.**
 
-- **(a) schema PR:** `docs/six-ps-schema.md` (schema 1), Project Claude's schema in full. **Home lane: start writing the banks (`schools/assets/six-ps/<topic-id>.json`) once this PR merges, to that file.** Two notes recorded in it: maths in `\( \)` is rendered by `MaffsText.html()` (the repo's convention, same delimiter; never `$`); SR-3 applied to an equal-but-wrong-form answer (format message, not marked, no event), where the schema's text said "marked wrong with SR-3's format message".
+- **(a) schema DONE (#535, squash 8ffcd9a; main run 40203074545 green, 61 of 61, started on the merge).** `docs/six-ps-schema.md` (schema 1), Project Claude's schema in full. **Home lane: the schema is merged; write the banks (`schools/assets/six-ps/<topic-id>.json`) to it.** Two notes recorded in it: maths in `\( \)` is rendered by `MaffsText.html()` (the repo's convention, same delimiter; never `$`); SR-3 applied to an equal-but-wrong-form answer (format message, not marked, no event), where the schema's text said "marked wrong with SR-3's format message".
 - **Ruled (Jon, 25 Oct):** `question_answered` carries `filter_type='six_ps'`, `filter_value='v1|topic=<id>'` (the Sheets endpoint has no `detail` column).
 - **Checked:** removing `?done=` handling breaks nothing outside `the-6-ps/` (`check-burst.py` checks only the bar's href string).
-- **Next:** (b)-(e) on a fresh branch from main after (a) merges. Jon, 25 Oct: no hand splits; a verifier nearing its budget is stopped and reported.
+- **Next:** (b)-(e), branch reset from main after #535. **Open for Jon:** (1) a drawn topic with no bank yet (recommended: drawing unchanged, the topic says its questions aren't ready, Skip only); (2) confirm SR-3 over the schema's "marked wrong". Jon, 25 Oct: no hand splits; a verifier nearing its budget is stopped and reported.
 
 ## 2026-10-25 (cloud): SHAPE-SHIFTER-SPLIT (#528; full entry in `docs/history/handover-cloud-archive.md`; lesson: a renamed ci-line has no median)
 
