@@ -190,6 +190,23 @@
      "3"
     ]
    }
+  },
+  {
+   "id": "form-expressions",
+   "name": "Forming expressions and equations",
+   "marks": 2.7,
+   "series": 5,
+   "band": [
+    3,
+    4
+   ],
+   "route": {
+    "slug": "equation-builder",
+    "game": "Equation Builder",
+    "level": "ks3",
+    "modes": [],
+    "stages": []
+   }
   }
  ],
  "coming_soon": [
@@ -470,13 +487,6 @@
    "id": "vectors",
    "name": "Vectors",
    "marks": 2.8,
-   "series": 5,
-   "planned": null
-  },
-  {
-   "id": "form-expressions",
-   "name": "Forming expressions and equations",
-   "marks": 2.7,
    "series": 5,
    "planned": null
   },

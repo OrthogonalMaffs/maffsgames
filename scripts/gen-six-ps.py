@@ -190,8 +190,8 @@ def validate(q):
     if re.search(r"<[a-zA-Z/]", q["stem"]) or "$" in q["stem"]:
         f.append("stem has HTML or $")
     if (q["format"] in ("number", "number_unit") and "dp" not in q["answer"]
-            and re.search(r"decimal place|d\.p\.|significant figure|nearest", q["stem"], re.I)):
-        f.append("the stem states a rounding but the answer has no dp (schema: write dp on every such number answer)")
+            and re.search(r"decimal place|d\.p\.", q["stem"], re.I)):
+        f.append("the stem asks for decimal places but the answer has no dp (schema: write dp on every such number answer; significant figures are checked with the rounding)")
     if len(q["worked"]) > 5:
         f.append("worked has %d lines" % len(q["worked"]))
     for w in q["worked"] + [s["line"] for s in q["slip"]]:
@@ -863,6 +863,319 @@ async def topic_negatives(h):
     return [conv_neg_calc(i, it) for i, it in enumerate(calc)] + [conv_neg_order(i, it) for i, it in enumerate(order)]
 
 
+# ───────────────────────────── authored questions and worked lines (data/six-ps/) ─────────────────────────────
+# Project Claude's two data files (25 Oct 2026): authored.json holds questions in the schema for the topics the games
+# cannot fill (source.game "authored"); worked-lines.json holds the worked lines for the sequences items the template
+# does not cover, and the choice versions and worked lines for equation-builder's forming-equations items and
+# probability-pioneer's stage-1 items. The script merges them into their banks and checks them like any other item.
+DATA_DIR = os.path.join(ROOT, "data", "six-ps")
+NUMBER = re.compile(r"(?<![\w.])-?\d+(?:\.\d+)?")
+
+
+def load_data(name):
+    with open(os.path.join(DATA_DIR, name), encoding="utf-8") as f:
+        return json.load(f)
+
+
+def numbers_in(s):
+    """The numbers written in a string (a minus sign belongs to the number it touches), as Fractions."""
+    return [Fraction(x) for x in NUMBER.findall(s.replace("\u2212", "-"))]
+
+
+def tex_to_sympy(s):
+    from sympy.parsing.sympy_parser import parse_expr, standard_transformations, implicit_multiplication_application
+    t = s.replace("\\dfrac", "\\frac").replace("\u2212", "-").replace("\u00f7", "/").replace("\u00d7", "*")
+    t = t.replace("\\times", "*").replace("\\pi", "pi").replace("\\left", "").replace("\\right", "")
+    for _ in range(6):
+        t = re.sub(r"\\frac\{([^{}]*)\}\{([^{}]*)\}", r"((\1)/(\2))", t)
+    t = re.sub(r"\\sqrt\{([^{}]*)\}", r"sqrt(\1)", t).replace("{", "(").replace("}", ")").replace("^", "**")
+    tr = standard_transformations + (implicit_multiplication_application,)
+    import sympy
+    local = {c: sympy.Symbol(c) for c in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"}   # S, N, C, E, I, Q are letters here
+    local["pi"] = sympy.pi
+    return parse_expr(t, local_dict=local, transformations=tr)
+
+
+def same_equation(a, b):
+    """Two equations (strings 'L = R', TeX allowed) say the same thing: L1 - R1 equals L2 - R2."""
+    import sympy
+    la, ra = a.split("=")
+    lb, rb = b.split("=")
+    return sympy.simplify((tex_to_sympy(la) - tex_to_sympy(ra)) - (tex_to_sympy(lb) - tex_to_sympy(rb))) == 0
+
+
+# --- the sequences worked lines: filled by bank id, every number in a line recomputed from the sequence ---
+def seq_allowed(stem):
+    seq = re.search(r"sequence: \\\((.*?)\\\)", stem).group(1)
+    t = [Fraction(x) for x in re.findall(r"-?\d+(?:\.\d+)?", seq.replace("\\ldots", ""))]
+    ok = set(t)
+    diffs = [t[i + 1] - t[i] for i in range(len(t) - 1)]
+    ok |= set(diffs) | {abs(x) for x in diffs}
+    d2 = [diffs[i + 1] - diffs[i] for i in range(len(diffs) - 1)]
+    ok |= set(d2) | {abs(x) for x in d2}
+    if t[0]:
+        ok |= {t[1] / t[0]}
+    d = diffs[0]
+    c = t[0] - d
+    ok |= {c, -c, t[0], d, -d, Fraction(1)}
+    for q in numbers_in(stem.split("\\)")[-1]):                     # the target (the 10th term, equals 41)
+        ok.add(q)
+        ok |= {q - c, (q - c) / d if d else 0, d * q, d * q + c, d * q - d + t[0]}
+    ok |= {Fraction(i) for i in range(1, len(t) + 4)}
+    return ok
+
+
+def apply_sequence_lines(qs):
+    lines = load_data("worked-lines.json")["sequences_worked_by_id"]
+    byid = {q["id"]: q for q in qs}
+    for qid, worked in lines.items():
+        q = byid.get(qid)
+        if q is None:
+            raise AssertionError("worked-lines.json: no sequences question %s" % qid)
+        if q["worked"]:
+            raise AssertionError("worked-lines.json: %s already has worked lines" % qid)
+        allowed = seq_allowed(q["stem"]) | {Fraction(q["answer"]["value"])} if q["format"] == "number" else None
+        for w in worked:
+            if allowed is not None:
+                for n in numbers_in(w):
+                    if n in allowed:
+                        continue
+                    # a prime sequence's line may name the numbers between the last term and the next prime: each must
+                    # be a whole number in that gap and not prime
+                    seq_t = [Fraction(x) for x in re.findall(r"-?\d+(?:\.\d+)?", re.search(r"sequence: \\\((.*?)\\\)", q["stem"]).group(1).replace("\\ldots", ""))]
+                    gap = n.denominator == 1 and "prime" in w and seq_t[-1] < n < Fraction(q["answer"]["value"]) \
+                        and any(n % p == 0 for p in range(2, int(n)))
+                    assert gap, ("sequences worked line quotes %s, not from the sequence" % n, qid, w)
+        q["worked"] = list(worked)
+        MISSING_WORKED[:] = [m for m in MISSING_WORKED if m != ("sequences", q["source"]["ref"])]
+    return qs
+
+
+# --- equation-builder: the forming-equations items as choice ---
+EB_BAND = 3
+
+
+async def eb_questions(h, topic):
+    pg = await h.page("equation-builder", "level=ks3")
+    items = await pg.evaluate("() => QUESTIONS")
+    spec = load_data("worked-lines.json")["equation_builder_ks3"]
+    out = []
+    for ref, s in spec.items():
+        i = int(re.fullmatch(r"QUESTIONS\[(\d+)\]", ref).group(1))
+        g = items[i]
+        assert g["level"] == "ks3" and g["topic"] == "Forming Equations", ("equation-builder", ref)
+        # the answer the game builds from its slots is the answer label, recomputed
+        game_eq = " ".join(g["slots"])
+        assert same_equation(game_eq, s["answer_label"]), ("equation-builder", ref, game_eq, s["answer_label"])
+        labels = [tex(s["answer_label"])] + [tex(w["label"]) for w in s["wrong"]]
+        assert len(set(labels)) == 4, ("equation-builder: options not distinct", ref)
+        opts, ans = choice("eb-" + ref, labels[0], labels[1:])
+        slips = [{"answer": {"val": next(o["val"] for o in opts if o["label"] == tex(w["label"]))}, "line": w["line"]}
+                 for w in s["wrong"]]
+        stem = s.get("stem_override") or g["text"]
+        # every number in the worked lines is one of the question's own
+        words = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9,
+                 "ten": 10, "eleven": 11, "twelve": 12, "twice": 2, "double": 2, "doubled": 2, "half": 2, "quarter": 4,
+                 "third": 3, "fifth": 5, "eighth": 8, "eighths": 8, "thirds": 3, "fifths": 5, "quarters": 4}
+        stem_words = {Fraction(words[w]) for w in re.findall(r"[a-z]+", stem.lower()) if w in words}
+        own = set(numbers_in(stem)) | stem_words | {n for l in labels for n in numbers_in(l)} | {Fraction(1), Fraction(2)}
+        for w in s["worked"]:
+            for n in numbers_in(w):
+                assert n in own, ("equation-builder worked line quotes %s, not from the question" % n, ref, w)
+        out.append(mk(topic, "equation-builder", ref, EB_BAND, False, stem, "choice", ans, options=opts,
+                      worked=s["worked"], slip=slips))
+    return out
+
+
+# --- probability-pioneer stage 1: the five words, the answer and the three nearest ---
+PROB_WORDS = ["Impossible", "Unlikely", "Even chance", "Likely", "Certain"]
+
+
+def prob_words(answer, ref):
+    a = PROB_WORDS.index(answer)
+    others = [w for w in PROB_WORDS if w != answer]
+    side = int(sha8("prob", ref), 16) % 2          # a tie between two equally far words is broken by the item's own hash
+    others.sort(key=lambda w: (abs(PROB_WORDS.index(w) - a), (PROB_WORDS.index(w) - a) * (1 if side else -1) < 0))
+    return [answer] + others[:3]
+
+
+async def prob_questions(h, topic):
+    pg = await h.page("probability-pioneer", "level=year6")
+    s1 = await pg.evaluate("() => STAGE1")
+    spec = load_data("worked-lines.json")["probability_stage1"]
+    assert spec["words"] == PROB_WORDS
+    out = []
+    for ref, s in spec["items"].items():
+        i = int(re.fullmatch(r"STAGE1\[(\d+)\]", ref).group(1))
+        g = s1[i]
+        game_word = g["label"].split(":")[0].strip()      # the game adds its reason after a colon
+        assert game_word.lower() == s["answer_label"].lower(), ("probability: the game labels it %s, not %s" % (game_word, s["answer_label"]), ref)
+        words = prob_words(s["answer_label"], ref)
+        assert len(set(words)) == 4
+        opts, ans = choice("prob-" + ref, words[0], words[1:])
+        out.append(mk(topic, "probability-pioneer", ref, 1, False,
+                      "Which word best describes how likely this is? " + g["event"] + ".", "choice", ans, options=opts,
+                      worked=s["worked"]))
+    return out
+
+
+# --- authored questions: schema, distinct options, and a recomputation per topic ---
+def half_up(x, places):
+    from decimal import Decimal, ROUND_HALF_UP
+    return Decimal(x).quantize(Decimal(1).scaleb(-places), rounding=ROUND_HALF_UP)
+
+
+def check_rounding(q):
+    import sympy
+    from decimal import Decimal, ROUND_HALF_UP
+    stem = q["stem"]
+    m = re.search(r"\\\((.*?)\\\)", stem)
+    if m:                                                      # a calculator expression
+        x = Decimal(str(sympy.N(tex_to_sympy(m.group(1)), 40)))
+    else:
+        x = Decimal(re.match(r"Round ([\d ]+(?:\.\d+)?)", stem).group(1).replace(" ", ""))
+    near = re.search(r"to the nearest (\d+)", stem)
+    dpm = re.search(r"to (\d+) decimal place", stem)
+    sfm = re.search(r"to (\d+) significant figure", stem)
+    if near:
+        n = int(near.group(1))
+        want = (x / n).quantize(Decimal(1), rounding=ROUND_HALF_UP) * n
+        want_dp = None
+    elif dpm:
+        want_dp = int(dpm.group(1))
+        want = half_up(x, want_dp)
+    else:
+        sf = int(sfm.group(1))
+        places = sf - 1 - x.adjusted()                         # x.adjusted() is the power of ten of the first digit
+        if places >= 0:
+            want = half_up(x, places)
+        else:
+            unit = Decimal(10) ** (-places)
+            want = (x / unit).quantize(Decimal(1), rounding=ROUND_HALF_UP) * unit
+        want_dp = places if places > 0 else None
+    f = []
+    a = q["answer"]
+    if Decimal(str(a["value"])) != want:
+        f.append("rounding: the answer is %s, round-half-up gives %s" % (a["value"], want))
+    if (a.get("dp") or None) != want_dp:
+        f.append("rounding: dp is %r, the stem gives %r" % (a.get("dp"), want_dp))
+    for s in q["slip"]:
+        if want_dp is not None and Decimal(str(s["answer"]["value"])) != want and \
+                half_up(Decimal(str(s["answer"]["value"])), want_dp) == want:
+            f.append("a slip (%s) would only get the format message under dp" % s["answer"]["value"])
+    return f
+
+
+def parse_vec(s):
+    m = re.findall(r"\\mathbf\{(\w)\} = \\begin\{pmatrix\} (-?\d+) \\\\ (-?\d+) \\end\{pmatrix\}", s)
+    return {k: (int(x), int(y)) for k, x, y in m}
+
+
+def label_vec(lbl):
+    m = re.fullmatch(r"\\\(\\begin\{pmatrix\} (-?\d+) \\\\ (-?\d+) \\end\{pmatrix\}\\\)", lbl)
+    return (int(m.group(1)), int(m.group(2)))
+
+
+def check_vectors(q):
+    stem = q["stem"]
+    v = parse_vec(stem)
+    sign = {"right": 1, "left": -1, "up": 1, "down": -1}
+    if v:
+        expr = re.search(r"\\\((.*)\\\)", stem.split("Work out")[1]).group(1)
+        e = re.sub(r"(\d+)\\mathbf\{(\w)\}", r"\1*\\mathbf{\2}", expr)
+        e = re.sub(r"\\mathbf\{(\w)\}", lambda m: "v" + m.group(1), e)
+        want = tuple(eval(e, {"__builtins__": {}}, {"v" + n: p[k] for n, p in v.items()}) for k in (0, 1))
+    else:
+        m = re.search(r"moved (\d+) squares? (right|left|up|down) and (\d+) squares? (right|left|up|down)", stem)
+        pos = {"right": 0, "left": 0, "up": 1, "down": 1}
+        comp = [0, 0]
+        comp[pos[m.group(2)]] = int(m.group(1)) * sign[m.group(2)]
+        comp[pos[m.group(4)]] = int(m.group(3)) * sign[m.group(4)]
+        want = tuple(comp)
+    key = next(o for o in q["options"] if o["val"] == q["answer"]["val"])
+    f = []
+    if label_vec(key["label"]) != want:
+        f.append("vectors: the key is %s, recomputed %s" % (label_vec(key["label"]), want))
+    for o in q["options"]:
+        if o["val"] != q["answer"]["val"] and label_vec(o["label"]) == want:
+            f.append("vectors: another option also equals the answer")
+    return f
+
+
+def check_change_subject(q):
+    import sympy
+    m = re.search(r"Make \\\((\w)\\\) the subject of \\\((.*)\\\)", q["stem"])
+    var, eq = m.group(1), m.group(2)
+    left, right = eq.split("=")
+    sol = sympy.solve(sympy.Eq(tex_to_sympy(left), tex_to_sympy(right)), sympy.Symbol(var))
+    assert len(sol) == 1, ("change-subject", eq, sol)
+    f = []
+    for o in q["options"]:
+        ol = re.fullmatch(r"\\\((\w) = (.*)\\\)", o["label"])
+        same = bool(ol) and ol.group(1) == var and sympy.simplify(tex_to_sympy(ol.group(2)) - sol[0]) == 0
+        if o["val"] == q["answer"]["val"] and not same:
+            f.append("change-subject: the key %s is not %s" % (o["label"], sol[0]))
+        if o["val"] != q["answer"]["val"] and same:
+            f.append("change-subject: option %s also equals the answer" % o["val"])
+    return f
+
+
+def authored_for(topic):
+    """The authored questions of a topic, each checked; a fault stops the build."""
+    data = load_data("authored.json")
+    out = []
+    for q in data["questions"]:
+        if q["topic"] != topic:
+            continue
+        faults = validate(q)
+        if q["id"] != "%s-%s" % (topic, sha8(q["source"]["game"], q["source"]["ref"])):
+            faults.append("id is not topic-hash of its source")
+        if q["source"]["game"] != "authored":
+            faults.append("source.game is not authored")
+        if q["format"] == "choice":
+            for s in q["slip"]:
+                if s["answer"] == q["answer"] or s["answer"].get("val") not in list("abcd"):
+                    faults.append("a slip names the key or no option")
+        if q["format"] == "number" and "dp" in q["answer"] and not (isinstance(q["answer"]["dp"], int) and q["answer"]["dp"] >= 0):
+            faults.append("dp is not a whole number")
+        if topic == "rounding":
+            faults += check_rounding(q)
+        elif topic == "vectors":
+            faults += check_vectors(q)
+        elif topic == "change-subject":
+            faults += check_change_subject(q)
+        if faults:
+            raise AssertionError("authored %s: %s" % (q["id"], "; ".join(faults)))
+        if not q["worked"]:
+            MISSING_WORKED.append((topic, q["source"]["ref"]))
+        out.append(q)
+    return out
+
+
+async def topic_sequences_full(h):
+    return apply_sequence_lines(await topic_sequences(h))
+
+
+async def topic_form_expressions(h):
+    return await eb_questions(h, "form-expressions") + authored_for("form-expressions")
+
+
+async def topic_probability(h):
+    return await prob_questions(h, "basic-probability")
+
+
+async def topic_rounding(h):
+    return authored_for("rounding")
+
+
+async def topic_vectors(h):
+    return authored_for("vectors")
+
+
+async def topic_change_subject(h):
+    return authored_for("change-subject")
+
+
 # ───────────────────────────── the registry ─────────────────────────────
 # topic id -> (builder, rule notes). Topics not here have no bank yet (coming soon).
 BUILDERS = {
@@ -871,11 +1184,16 @@ BUILDERS = {
     "powers-roots": topic_powers,
     "compound-measures": topic_compound,
     "linear-equations": topic_linear,
-    "sequences": topic_sequences,
+    "sequences": topic_sequences_full,
     "angles": topic_angles,
     "arithmetic-negatives": topic_negatives,
     "fdp-convert": topic_fdp_convert,
     "fraction-percentage-of-amount": topic_fdp_amount,
+    "form-expressions": topic_form_expressions,
+    "basic-probability": topic_probability,
+    "rounding": topic_rounding,
+    "vectors": topic_vectors,
+    "change-subject": topic_change_subject,
 }
 
 

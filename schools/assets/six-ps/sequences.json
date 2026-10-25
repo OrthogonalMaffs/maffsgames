@@ -557,7 +557,12 @@
    "answer": {
     "value": 11
    },
-   "worked": [],
+   "worked": [
+    "The terms go up by 4, so the nth term starts \\(4n\\).",
+    "The first term is 1, which is \\(4 - 3\\), so the nth term is \\(4n - 3\\).",
+    "Solve \\(4n - 3 = 41\\): \\(4n = 44\\), so \\(n = 11\\).",
+    "41 is the 11th term."
+   ],
    "slip": []
   },
   {
@@ -575,7 +580,12 @@
    "answer": {
     "value": 11
    },
-   "worked": [],
+   "worked": [
+    "The terms go up by 5, so the nth term starts \\(5n\\).",
+    "The first term is 3, which is \\(5 - 2\\), so the nth term is \\(5n - 2\\).",
+    "Solve \\(5n - 2 = 53\\): \\(5n = 55\\), so \\(n = 11\\).",
+    "53 is the 11th term."
+   ],
    "slip": []
   },
   {
@@ -593,7 +603,10 @@
    "answer": {
     "value": 32
    },
-   "worked": [],
+   "worked": [
+    "Each term is multiplied by 2 to get the next.",
+    "\\(16 \\times 2 = 32\\)."
+   ],
    "slip": []
   },
   {
@@ -611,7 +624,10 @@
    "answer": {
     "value": 243
    },
-   "worked": [],
+   "worked": [
+    "Each term is multiplied by 3 to get the next.",
+    "\\(81 \\times 3 = 243\\)."
+   ],
    "slip": []
   },
   {
@@ -629,7 +645,10 @@
    "answer": {
     "value": 625
    },
-   "worked": [],
+   "worked": [
+    "Each term is multiplied by 5 to get the next.",
+    "\\(125 \\times 5 = 625\\)."
+   ],
    "slip": []
   },
   {
@@ -647,7 +666,10 @@
    "answer": {
     "value": 4
    },
-   "worked": [],
+   "worked": [
+    "Each term is halved to get the next.",
+    "\\(8 \\div 2 = 4\\)."
+   ],
    "slip": []
   },
   {
@@ -665,7 +687,10 @@
    "answer": {
     "value": 0.1
    },
-   "worked": [],
+   "worked": [
+    "Each term is divided by 10 to get the next.",
+    "\\(1 \\div 10 = 0.1\\)."
+   ],
    "slip": []
   },
   {
@@ -683,7 +708,10 @@
    "answer": {
     "value": 162
    },
-   "worked": [],
+   "worked": [
+    "Each term is multiplied by 3 to get the next.",
+    "\\(54 \\times 3 = 162\\)."
+   ],
    "slip": []
   },
   {
@@ -701,7 +729,10 @@
    "answer": {
     "value": 16
    },
-   "worked": [],
+   "worked": [
+    "Each term is multiplied by \\(-2\\) to get the next.",
+    "\\(-8 \\times (-2) = 16\\)."
+   ],
    "slip": []
   },
   {
@@ -719,7 +750,10 @@
    "answer": {
     "value": 80
    },
-   "worked": [],
+   "worked": [
+    "Each term is multiplied by 2 to get the next.",
+    "\\(40 \\times 2 = 80\\)."
+   ],
    "slip": []
   },
   {
@@ -737,7 +771,10 @@
    "answer": {
     "value": 1
    },
-   "worked": [],
+   "worked": [
+    "Each term is divided by 3 to get the next.",
+    "\\(3 \\div 3 = 1\\)."
+   ],
    "slip": []
   },
   {
@@ -755,7 +792,10 @@
    "answer": {
     "value": 112
    },
-   "worked": [],
+   "worked": [
+    "Each term is multiplied by 2 to get the next.",
+    "\\(56 \\times 2 = 112\\)."
+   ],
    "slip": []
   },
   {
@@ -791,7 +831,10 @@
      "label": "Quadratic"
     }
    ],
-   "worked": [],
+   "worked": [
+    "The terms go up by 3 each time.",
+    "Adding the same amount each time makes an arithmetic sequence."
+   ],
    "slip": []
   },
   {
@@ -827,7 +870,10 @@
      "label": "Arithmetic"
     }
    ],
-   "worked": [],
+   "worked": [
+    "Each term is 3 times the one before.",
+    "Multiplying by the same number each time makes a geometric sequence."
+   ],
    "slip": []
   },
   {
@@ -863,7 +909,10 @@
      "label": "Geometric"
     }
    ],
-   "worked": [],
+   "worked": [
+    "Each term is the two before it added: \\(1 + 1 = 2\\), \\(1 + 2 = 3\\), \\(2 + 3 = 5\\).",
+    "That is a Fibonacci sequence."
+   ],
    "slip": []
   },
   {
@@ -899,7 +948,10 @@
      "label": "Triangular"
     }
    ],
-   "worked": [],
+   "worked": [
+    "\\(1 = 1^2\\), \\(4 = 2^2\\), \\(9 = 3^2\\), \\(16 = 4^2\\), \\(25 = 5^2\\).",
+    "These are the square numbers."
+   ],
    "slip": []
   },
   {
@@ -935,7 +987,10 @@
      "label": "Fibonacci"
     }
    ],
-   "worked": [],
+   "worked": [
+    "The gaps are 2, 3, 4, 5: each gap is 1 more than the last.",
+    "1, 3, 6, 10, 15 are the triangular numbers."
+   ],
    "slip": []
   },
   {
@@ -971,7 +1026,10 @@
      "label": "Square numbers"
     }
    ],
-   "worked": [],
+   "worked": [
+    "\\(1 = 1^3\\), \\(8 = 2^3\\), \\(27 = 3^3\\), \\(64 = 4^3\\), \\(125 = 5^3\\).",
+    "These are the cube numbers."
+   ],
    "slip": []
   },
   {
@@ -989,7 +1047,10 @@
    "answer": {
     "value": 17
    },
-   "worked": [],
+   "worked": [
+    "These are the prime numbers: each has exactly two factors.",
+    "14, 15 and 16 are not prime, so the next prime after 13 is 17."
+   ],
    "slip": []
   },
   {
@@ -1007,7 +1068,10 @@
    "answer": {
     "value": 21
    },
-   "worked": [],
+   "worked": [
+    "Each term is the two before it added.",
+    "\\(8 + 13 = 21\\)."
+   ],
    "slip": []
   },
   {
@@ -1025,7 +1089,10 @@
    "answer": {
     "value": 36
    },
-   "worked": [],
+   "worked": [
+    "These are the square numbers: \\(25 = 5^2\\).",
+    "The next is \\(6^2 = 36\\)."
+   ],
    "slip": []
   },
   {
@@ -1043,7 +1110,10 @@
    "answer": {
     "value": 21
    },
-   "worked": [],
+   "worked": [
+    "The gaps are 2, 3, 4, 5, so the next gap is 6.",
+    "\\(15 + 6 = 21\\)."
+   ],
    "slip": []
   },
   {
@@ -1061,7 +1131,10 @@
    "answer": {
     "value": 42
    },
-   "worked": [],
+   "worked": [
+    "The gaps are 4, 6, 8, 10, so the next gap is 12.",
+    "\\(30 + 12 = 42\\)."
+   ],
    "slip": []
   },
   {
@@ -1079,7 +1152,10 @@
    "answer": {
     "value": 34
    },
-   "worked": [],
+   "worked": [
+    "Each term is the two before it added.",
+    "\\(13 + 21 = 34\\)."
+   ],
    "slip": []
   }
  ]
