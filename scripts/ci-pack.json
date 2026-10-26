@@ -115,7 +115,7 @@
   "Quadratic Factoriser (every pooled item recomputed, SymPy; every Higher item's six guided steps played in Chromium, each split, factor and line recomputed; Formula roots on the keypad with a minus key)": "32",
   "Quadratic Factoriser self-test (the old split and eight other faults planted in the guided steps and the keypad; each must fail)": "5",
   "Real fonts for the phone checks (scripts/fonts/ pinned and complete; the phone pass measures in them, the old font-blocking planted and caught)": "17",
-  "Resit fixes of 4 Oct 2026 (five games' fixed faults, each fails on the old code)": "9",
+  "Resit fixes of 4 Oct 2026 (five games' fixed faults, each fails on the old code)": "12",
   "SUVAT Selector (every key from the data both ways, at its stated precision; marking through MaffsAnswer in Chromium)": "8",
   "Scale Factor Scaling (every key recomputed from the quantities its question states; every option marked in Chromium)": "16",
   "Scores offline (no page but firebase-leaderboard.js calls the Firebase SDK; /leaderboards/ and the portal with Firebase blocked and with a fake SDK; planted faults caught)": "17",
