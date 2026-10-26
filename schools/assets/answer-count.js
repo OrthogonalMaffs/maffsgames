@@ -15,7 +15,11 @@
    the tab is visible, for 10 minutes at most, and its number counts up to a higher figure (never down; no animation
    under prefers-reduced-motion). The homepage shows the figure as a headline, and "Updated every 5 minutes" (the counts
    script's refresh) under it only while the figure on screen is the live one: never from the daily file, and removed
-   again if a later refresh fails. A source whose as_of is more than 7 days old is ignored, a figure below its threshold
+   again if a later refresh fails. The homepage remembers the last live figure it showed for the rest of the browser session
+   (sessionStorage on the viewer's own device, Jon's ruling of 26 Oct 2026): a refresh starts from that figure, not from the
+   daily file's, so the count-up no longer replays the whole climb. It starts there only when the stored figure has the same
+   "since", is at least the file's figure and no more than the live one; otherwise from the file's figure, as before. A
+   source whose as_of (an ISO time with Z or +hh:mm, parsed by Date.parse) is more than 7 days old is ignored, a figure below its threshold
    shows nothing, and so does a page where nothing loads. A page with no mount (52dle, Equatle, Estimation Golf, Factor
    Theorem have no start screen) simply shows nothing: that is correct, not a failure.
 
@@ -35,6 +39,7 @@
   var POLL_MS = 60000;
   var POLL_MAX_MS = 10 * 60 * 1000;   // a homepage left open in a classroom must not poll all day
   var ANIMATE_MS = 900;
+  var MEMORY_KEY = 'maffsAnswerCount';   // sessionStorage: {n, since}, the last live figure the homepage showed
 
   function format(n) {
     return String(Math.floor(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -71,6 +76,8 @@
     this.display = 0;
     this.job = 0;
   }
+  // Put the figure on screen at once, with no animation and without counting from the previous one.
+  Mount.prototype.reset = function (n) { this.job++; this.shown = n; this.set(n); };
   Mount.prototype.set = function (n) {
     this.display = n;
     if (this.el.hasAttribute('data-maffs-answer-total')) {
@@ -109,11 +116,12 @@
     var ok = v !== null && v >= this.min && v >= this.shown;
     this.updated(ok);
   };
-  Mount.prototype.offer = function (v) {
+  // `done(v)` is called once v is on screen (the end of the count-up, or at once when there is none).
+  Mount.prototype.offer = function (v, done) {
     if (v === null || v < this.min || v <= this.shown) return;     // below threshold, or not higher: ignored
     var from = this.display, self = this, job = ++this.job;
     this.shown = v;
-    if (!from || this.o.reduced || !this.o.raf) { this.set(v); return; }
+    if (!from || this.o.reduced || !this.o.raf) { this.set(v); if (done) done(v); return; }
     var t0 = null;
     var step = function (ts) {
       if (job !== self.job) return;                                  // a newer figure took over
@@ -121,14 +129,15 @@
       var k = Math.min(1, (ts - t0) / ANIMATE_MS);
       var e = 1 - Math.pow(1 - k, 3);
       self.set(k >= 1 ? v : Math.round(from + (v - from) * e));
-      if (k < 1) self.o.raf(step);
+      if (k < 1) self.o.raf(step); else if (done) done(v);
     };
     self.o.raf(step);
   };
 
   // run(opts): everything the page does, with its dependencies injectable so the selftest needs no network.
   //   doc, slug, get(url) -> Promise of a parsed object, now() -> ms, live (bool), reduced (bool), raf(fn),
-  //   visible() -> bool, setInterval(fn, ms) -> id, clearInterval(id)
+  //   visible() -> bool, setInterval(fn, ms) -> id, clearInterval(id),
+  //   memory {read() -> {n, since} or null, write(n, since)}: the homepage's session memory (absent: none)
   function run(opts) {
     var doc = opts.doc, now = opts.now || Date.now;
     var mounts = [];
@@ -139,10 +148,41 @@
     if (!mounts.length) return Promise.resolve();                  // no mount: nothing to show, and no error
     if (starts.length) style(doc);
 
+    // The homepage's memory of the last live figure it showed. Every read and write is guarded: where storage is blocked or
+    // throws, the page behaves exactly as it did without a memory.
+    var memory = opts.memory || null;
+    function recall() {
+      try {
+        var m = memory ? memory.read() : null;
+        return m && typeof m === 'object' && whole(m.n) && typeof m.since === 'string' ? m : null;
+      } catch (e) { return null; }
+    }
+    function remember(n, since) {
+      try { if (memory) memory.write(n, since); } catch (e) { /* storage unavailable: nothing to remember with */ }
+    }
+
     function apply(src, isLive) {
       var t = now();
       mounts.forEach(function (x) {
         var v = figure(src, opts.slug, x.total, t);
+        if (x.total && memory) {
+          if (!isLive) {
+            // The daily file: start from the last live figure shown this session when it is the same school year's ("since") and
+            // at least the file's figure; the live figure (next) decides whether it was not too high.
+            x.file = v;
+            var m = v !== null ? recall() : null;
+            if (m && typeof src.since === 'string' && m.since === src.since && m.n >= v && m.n >= x.m.min) { x.stored = m; x.m.offer(m.n); }
+            else x.m.offer(v);
+            return;
+          }
+          if (x.stored && v !== null && (x.stored.n > v || x.stored.since !== src.since)) {
+            x.stored = null;               // above the live figure, or from another year: not a starting point after all
+            x.m.reset(x.file);             // back to the file's figure, then up to the live one as before
+          }
+          x.m.offer(v, function (n) { if (typeof src.since === 'string') remember(n, src.since); });
+          x.m.live(v);
+          return;
+        }
         x.m.offer(v);
         if (isLive && x.total) x.m.live(v);
       });
@@ -179,7 +219,18 @@
     });
   }
 
-  window.MaffsAnswerCount = { run: run, figure: figure, format: format, GAME_MIN: GAME_MIN, TOTAL_MIN: TOTAL_MIN, STALE_MS: STALE_MS, POLL_MAX_MS: POLL_MAX_MS };
+  window.MaffsAnswerCount = { run: run, figure: figure, format: format, GAME_MIN: GAME_MIN, TOTAL_MIN: TOTAL_MIN, STALE_MS: STALE_MS, POLL_MAX_MS: POLL_MAX_MS, MEMORY_KEY: MEMORY_KEY };
+
+  // The session memory on this device: sessionStorage, nothing else, never sent anywhere. Reading or writing it can throw
+  // (blocked storage, a private window, a full quota); every failure is swallowed.
+  var sessionMemory = {
+    read: function () {
+      try { var raw = window.sessionStorage.getItem(MEMORY_KEY); return raw ? JSON.parse(raw) : null; } catch (e) { return null; }
+    },
+    write: function (n, since) {
+      try { window.sessionStorage.setItem(MEMORY_KEY, JSON.stringify({ n: n, since: since })); } catch (e) { /* blocked */ }
+    }
+  };
 
   function go() {
     var m = location.pathname.match(/\/games\/([a-z0-9-]+)\//);
@@ -187,7 +238,7 @@
     var reduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     try {
       run({
-        doc: document, slug: m ? m[1] : '', get: xhr, now: Date.now, reduced: reduced,
+        doc: document, slug: m ? m[1] : '', get: xhr, now: Date.now, reduced: reduced, memory: sessionMemory,
         live: host === 'maffsgames.co.uk' || host === 'www.maffsgames.co.uk',
         raf: function (f) { window.requestAnimationFrame(f); },
         visible: function () { return document.visibilityState !== 'hidden'; },

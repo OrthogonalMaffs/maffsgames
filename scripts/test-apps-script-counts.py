@@ -153,7 +153,11 @@ HARNESS = r"""
     const p = g.payload_(st, NOW_OCT);
     ok('payload: total is the sum of games', p.total === 7 && Object.values(p.games).reduce((x, y) => x + y, 0) === 7, JSON.stringify(p));
     ok('payload: exactly as_of, since, total, games', JSON.stringify(Object.keys(p).sort()) === '["as_of","games","since","total"]', Object.keys(p));
-    ok('payload: caught up gives a dated as_of', /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d[+-]\d\d:\d\d$/.test(p.as_of), p.as_of);
+    ok('payload: caught up gives a dated as_of', /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(Z|[+-]\d\d:\d\d)$/.test(p.as_of), p.as_of);
+    // the offset is Z while London is on GMT ("XXX"): every reader accepts both forms (the validator did not until 26 Oct 2026)
+    const isoOffset = s => /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(Z|[+-]\d\d:\d\d)$/.test(s);
+    ok('payload: as_of offset forms Z, +00:00 and +01:00 are all accepted, the 26 Oct payload included',
+       ['2026-10-26T11:31:31Z', '2026-10-24T20:46:04+01:00', '2026-10-26T11:31:31+00:00'].every(isoOffset) && !isoOffset('2026-10-26T11:31:31') && !isoOffset('2026-10-26T11:31:31z'));
     ok('reads: only the Sheets advanced service was used (no SpreadsheetApp, DriveApp, ScriptApp, UrlFetchApp)',
        env.calls.length > 0 && env.calls.every(c => /^(values\.get|spreadsheets\.get)/.test(c)), env.calls.slice(0, 3));
   }
