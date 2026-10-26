@@ -24,3 +24,4 @@ exclude:
   - docs/screenshots
   - docs/sources
   - docs/audits/findings
+  - docs/audits/phone-fit-runs-2026-10-26
