@@ -181,7 +181,7 @@
   "Level resolver in play, part 1 (every migrated game loads at its default for constructor, __proto__ and nonsense, and at each declared level, with no page error)": "L6",
   "Level resolver in play, part 2 (migrated games, as part 1)": "L3",
   "Level resolver in play, part 3 (migrated games, as part 1)": "L4",
-  "Level resolver in play, part 4 (migrated games, as part 1)": "L4"
+  "Level resolver in play, part 4 (migrated games, as part 1)": "L3"
  },
  "over-budget": [],
  "split-candidates": []
