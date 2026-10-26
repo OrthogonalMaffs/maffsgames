@@ -479,14 +479,15 @@ function sameShape(a, b) {
   }
 })();
 
-// Enlargements by 2, 3 and 1/2 (never negative), about the origin and about grid points in every quadrant: sixteen.
+// Enlargements by 2, 3 and 1/2 (never negative), about the origin and about grid points in every quadrant: sixteen, no two with the same words.
 const ENLARGEMENT_QUESTIONS = [];
 (function buildEnlargementQuestions() {
   const rnd = seededRandom(26102027);
+  // Each scale factor and centre appears once, so no two questions read the same (the shapes differ, the words must too).
   const specs = [
-    [2, 1, 0, 0], [2, 1, 0, 0], [2, 1, 1, 1], [2, 1, -2, 1], [2, 1, -1, -2], [2, 1, 2, -1],
+    [2, 1, 0, 0], [2, 1, 1, 1], [2, 1, -2, 1], [2, 1, -1, -2], [2, 1, 2, -1], [2, 1, -1, 2],
     [3, 1, 0, 0], [3, 1, -1, -1], [3, 1, 1, -2], [3, 1, -2, 2],
-    [1, 2, 0, 0], [1, 2, 0, 0], [1, 2, 1, 1], [1, 2, -1, 2], [1, 2, -2, -1], [1, 2, 2, -3]
+    [1, 2, 0, 0], [1, 2, 1, 1], [1, 2, -1, 2], [1, 2, -2, -1], [1, 2, 2, -3], [1, 2, -2, 1]
   ];
   for (const [sfn, sfd, cx, cy] of specs) {
     for (let tries = 0; tries < 20000; tries++) {
