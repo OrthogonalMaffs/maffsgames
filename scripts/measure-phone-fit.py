@@ -1,9 +1,18 @@
 #!/usr/bin/env python3
-"""Does each game fit a phone? A report, not a gate (canon §7.6.1, the phone rule).
+"""Does each game fit a phone? A report with one gate (canon §7.6.1, the phone rule).
 
     python scripts/measure-phone-fit.py                 # every roster game -> docs/phone-fit-report.md
+    python scripts/measure-phone-fit.py --aa            # the same in Aa (OpenDyslexic) mode
     python scripts/measure-phone-fit.py --only new-shapes
     python scripts/measure-phone-fit.py --workers 6
+    python scripts/measure-phone-fit.py --selftest      # the classification, planted cases (no browser)
+
+THE GATE (contract LOOK-REDS-2, Jon, 26 Oct 2026): in either mode, at every size, the answer options must START
+above the fold (the top edge of the highest answer control). A game whose options start below it is HARD FAIL and
+the run exits 1. In Aa mode at 320x568 the content may scroll (OpenDyslexic cannot fit a long GCSE prompt and its
+feedback on that screen), so there an overflow that keeps the options starting above the fold is WARN (Aa at 320),
+never FAIL. Every other overflow (the last control or Next below the fold, sideways scroll) is FAIL as before:
+reported, not a gate.
 
 For every game on the roster, at 320x568, 375x667 and 390x844, it loads the game
 (bare URL, so its default level), gets to the first question and records:
@@ -99,6 +108,7 @@ CORRECT_INIT = r"""
     return s.display !== 'none' && s.visibility !== 'hidden' && s.opacity !== '0';
   }
   function bottom(el) { return Math.round(el.getBoundingClientRect().bottom + window.scrollY); }
+  function top(el) { return Math.round(el.getBoundingClientRect().top + window.scrollY); }
   function fold() {
     const f = document.querySelector('.site-footer');
     const fixed = f && getComputedStyle(f).position === 'fixed' && vis(f);
@@ -128,6 +138,7 @@ CORRECT_INIT = r"""
     return {
       n: els.length,
       bottom: els.length ? Math.max.apply(null, els.map(bottom)) : null,
+      top: els.length ? Math.min.apply(null, els.map(top)) : null,
       fold: fold(),
       sw: document.documentElement.scrollWidth, vw: window.innerWidth
     };
@@ -319,12 +330,27 @@ async def measure_one(browser, base, slug, size, args):
     return out
 
 
-def classify(rows):
-    """One game's three sizes -> (status, severity, detail)."""
+def classify(rows, aa=False):
+    """One game's three sizes -> (status, severity, detail).
+
+    GATE (contract LOOK-REDS-2, Jon, 26 Oct 2026; canon 7.6.1): answer options that START below the fold, at any
+    size and in either mode, are HARD_FAIL and make the run exit 1. In Aa mode at 320 x 568 content may scroll, so
+    there an overflow that keeps the options starting above the fold is WARN (Aa at 320), not FAIL. Every other
+    overflow is FAIL as before: reported, not a gate."""
     asks = [r for r in rows if r["ask"]]
     wrongs = [r for r in rows if r["wrong"]]
-    over_ask = [r["ask"]["bottom"] - r["ask"]["fold"] for r in asks]
-    over_next = [r["wrong"]["bottom"] - r["wrong"]["fold"] for r in wrongs if r["wrong"]["found"]]
+    if not asks:
+        return "UNMEASURABLE", -10 ** 7, rows[0]["note"] or "asking screen not reached"
+    start_over = [r["ask"]["top"] - r["ask"]["fold"] for r in asks if r["ask"].get("top") is not None]
+    if any(o > 0 for o in start_over):
+        bad = [r for r in asks if r["ask"].get("top") is not None and r["ask"]["top"] > r["ask"]["fold"]]
+        return HARD_FAIL, max(start_over), "options start below the fold at " + ", ".join(
+            "%dx%d (%d / %d)" % (r["w"], r["h"], r["ask"]["top"], r["ask"]["fold"]) for r in bad)
+    scrolls = lambda r: aa and r["w"] == 320           # canon 7.6.1: Aa at 320 x 568 may scroll
+    over_ask = [r["ask"]["bottom"] - r["ask"]["fold"] for r in asks if not scrolls(r)]
+    over_next = [r["wrong"]["bottom"] - r["wrong"]["fold"] for r in wrongs if r["wrong"]["found"] and not scrolls(r)]
+    warn = [r for r in rows if scrolls(r) and ((r["ask"] and r["ask"]["bottom"] > r["ask"]["fold"]) or
+            (r["wrong"] and r["wrong"]["found"] and r["wrong"]["bottom"] > r["wrong"]["fold"]))]
     hscroll = any((r["ask"] and r["ask"]["sw"] > r["ask"]["vw"]) or
                   (r["wrong"] and r["wrong"]["sw"] > r["wrong"]["vw"]) for r in rows)
     fails = []
@@ -335,12 +361,12 @@ def classify(rows):
     if hscroll:
         fails.append("sideways scroll")
     worst = max(over_ask + over_next + [-10 ** 6])
-    if not asks:
-        return "UNMEASURABLE", -10 ** 7, rows[0]["note"] or "asking screen not reached"
     if fails:
         # Ranked by how far past the fold the worst edge is; a game that only
         # scrolls sideways ranks after every fold failure.
         return "FAIL", max(worst, 0), "; ".join(fails)
+    if warn:
+        return WARN_AA, -10 ** 4, "Aa at 320x568 scrolls; the options start above the fold"
     if len(wrongs) < len(rows):
         return "PASS (asking only)", -10 ** 6, next((r["note"] for r in rows if r["note"]), "")
     if not over_next:
@@ -357,6 +383,9 @@ def cell(m, key="bottom"):
     return "%d / %d %s" % (m[key], m["fold"], "✗" if v > 0 else "✓")
 
 
+HARD_FAIL = "HARD FAIL"
+WARN_AA = "WARN (Aa at 320)"
+
 # --aa: the stored preference every game's Aa toggle reads on load.
 AA_INIT = "try { localStorage.setItem('mfg_accessible', 'true'); } catch (e) {}"
 
@@ -368,9 +397,9 @@ def write_report(results, path, elapsed, aa=False):
     games = []
     for slug, rows in by.items():
         rows.sort(key=lambda r: r["w"])
-        st, sev, detail = classify(rows)
+        st, sev, detail = classify(rows, aa)
         games.append((st, sev, slug, rows, detail))
-    order = {"FAIL": 0, "PASS (no Next)": 1, "PASS (asking only)": 2, "PASS": 3, "UNMEASURABLE": 4}
+    order = {HARD_FAIL: -1, "FAIL": 0, WARN_AA: 1, "PASS (no Next)": 2, "PASS (asking only)": 3, "PASS": 4, "UNMEASURABLE": 5}
     games.sort(key=lambda g: (order[g[0]], -g[1], g[2]))
 
     counts = {}
@@ -379,7 +408,8 @@ def write_report(results, path, elapsed, aa=False):
     lines = [
         "# Phone fit report",
         "",
-        "Generated by `scripts/measure-phone-fit.py` on %s (%d games, %.0f min). **A report, not a CI gate.**"
+        "Generated by `scripts/measure-phone-fit.py` on %s (%d games, %.0f min). **A report, with one gate:** answer options"
+        " that start below the fold (HARD FAIL) make the run exit 1 (canon §7.6.1, 26 Oct 2026)."
         % (datetime.date.today().isoformat(), len(games), elapsed / 60),
         "The standard is canon §7.6.1, the phone rule. Regenerate it with the same command; do not edit it by hand.",
         "",
@@ -461,9 +491,42 @@ async def run(args):
     for st, sev, slug, rows, detail in games:
         print("  %-20s %-28s %s" % (st, slug, detail))
     print("wrote", args.out)
+    hard = [g[2] for g in games if g[0] == HARD_FAIL]
+    if hard:
+        print("HARD FAIL: the answer options start below the fold in %d game(s): %s" % (len(hard), ", ".join(hard)))
+        sys.exit(1)
+
+
+def selftest():
+    """Planted rows through classify(): each must land on its status."""
+    def row(w, top, bottom, nxt, sw=320):
+        h = {320: 568, 375: 667, 390: 844}[w]
+        fold = h - 40
+        return {"w": w, "h": h, "note": "", "ask": {"top": top, "bottom": bottom, "fold": fold, "sw": sw, "vw": w},
+                "wrong": {"found": True, "bottom": nxt, "fold": fold, "sw": sw, "vw": w}}
+    fits = [row(320, 300, 400, 500), row(375, 300, 400, 500), row(390, 300, 400, 500)]
+    cases = [
+        ("everything above the fold", fits, False, "PASS"),
+        ("options start below the fold at 375", [fits[0], row(375, 640, 700, 800), fits[2]], False, HARD_FAIL),
+        ("options start below the fold in Aa at 320", [row(320, 540, 600, 700), fits[1], fits[2]], True, HARD_FAIL),
+        ("Aa at 320: Next below, options start above", [row(320, 300, 520, 700), fits[1], fits[2]], True, WARN_AA),
+        ("Aa at 320: the last option below, the first above", [row(320, 500, 600, 700), fits[1], fits[2]], True, WARN_AA),
+        ("normal at 320: Next below the fold", [row(320, 300, 400, 700), fits[1], fits[2]], False, "FAIL"),
+        ("Aa at 375: Next below the fold", [fits[0], row(375, 300, 400, 700), fits[2]], True, "FAIL"),
+        ("Aa at 320 scrolling sideways", [row(320, 300, 400, 500, sw=360), fits[1], fits[2]], True, "FAIL"),
+    ]
+    ok = True
+    for name, rows, aa, want in cases:
+        got = classify(rows, aa)[0]
+        print("  %s  %-52s %s" % ("ok  " if got == want else "FAIL", name, got))
+        ok = ok and got == want
+    print("selftest: %s" % ("PASS" if ok else "FAIL"))
+    return 0 if ok else 1
 
 
 def main():
+    if "--selftest" in sys.argv[1:]:
+        sys.exit(selftest())
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--only", help="one game slug")
     ap.add_argument("--workers", type=int, default=4)
