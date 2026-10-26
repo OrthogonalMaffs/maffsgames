@@ -1006,6 +1006,1269 @@
     "So the image of C is \\((3, 1)\\)."
    ],
    "slip": []
+  },
+  {
+   "id": "transformations-5009bcb0",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:15"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Reflect in the line \\(y = x\\). Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"30\" stroke-width=\"1.5\" stroke-dasharray=\"7 4\"/><polygon points=\"54,150 78,150 78,102\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"274\" y=\"27\" text-anchor=\"start\">y=x</text><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"46.2\" y=\"162.8\" text-anchor=\"middle\">A</text><text x=\"82.9\" y=\"164.8\" text-anchor=\"middle\">B</text><text x=\"80.7\" y=\"96.3\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 0,
+    "y": -4
+   },
+   "worked": [
+    "A reflection in \\(y = x\\) swaps the coordinates: \\((x, y)\\) goes to \\((y, x)\\).",
+    "So the image of A is \\((0, -4)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": 0,
+      "y": 4
+     },
+     "line": "That is a reflection in \\(y = -x\\). In \\(y = x\\) the coordinates swap and keep their signs."
+    }
+   ]
+  },
+  {
+   "id": "transformations-b7609879",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:16"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a square ABCD on a coordinate grid. Reflect in the line \\(y = x\\). Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"30\" stroke-width=\"1.5\" stroke-dasharray=\"7 4\"/><polygon points=\"222,174 246,174 246,150 222,150\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"274\" y=\"27\" text-anchor=\"start\">y=x</text><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"214.2\" y=\"186.8\" text-anchor=\"middle\">A</text><text x=\"253.8\" y=\"186.8\" text-anchor=\"middle\">B</text><text x=\"253.8\" y=\"143.2\" text-anchor=\"middle\">C</text><text x=\"214.2\" y=\"143.2\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 0,
+    "y": 4
+   },
+   "worked": [
+    "A reflection in \\(y = x\\) swaps the coordinates: \\((x, y)\\) goes to \\((y, x)\\).",
+    "So the image of C is \\((0, 4)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": 0,
+      "y": -4
+     },
+     "line": "That is a reflection in \\(y = -x\\). In \\(y = x\\) the coordinates swap and keep their signs."
+    }
+   ]
+  },
+  {
+   "id": "transformations-2c29bdb0",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:17"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a square ABCD on a coordinate grid. Reflect in the line \\(y = x\\). Write down the coordinates of the image of D.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"30\" stroke-width=\"1.5\" stroke-dasharray=\"7 4\"/><polygon points=\"126,78 174,78 174,30 126,30\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"274\" y=\"27\" text-anchor=\"start\">y=x</text><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"118.2\" y=\"90.8\" text-anchor=\"middle\">A</text><text x=\"181.8\" y=\"90.8\" text-anchor=\"middle\">B</text><text x=\"181.8\" y=\"27.2\" text-anchor=\"middle\">C</text><text x=\"118.2\" y=\"27.2\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 5,
+    "y": -1
+   },
+   "worked": [
+    "A reflection in \\(y = x\\) swaps the coordinates: \\((x, y)\\) goes to \\((y, x)\\).",
+    "So the image of D is \\((5, -1)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": -5,
+      "y": 1
+     },
+     "line": "That is a reflection in \\(y = -x\\). In \\(y = x\\) the coordinates swap and keep their signs."
+    }
+   ]
+  },
+  {
+   "id": "transformations-86ce6774",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:18"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Reflect in the line \\(y = x\\). Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"30\" stroke-width=\"1.5\" stroke-dasharray=\"7 4\"/><polygon points=\"222,246 246,246 222,174\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"274\" y=\"27\" text-anchor=\"start\">y=x</text><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"218.5\" y=\"261.4\" text-anchor=\"middle\">A</text><text x=\"252.1\" y=\"260.2\" text-anchor=\"middle\">B</text><text x=\"220.2\" y=\"168.1\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -4,
+    "y": 3
+   },
+   "worked": [
+    "A reflection in \\(y = x\\) swaps the coordinates: \\((x, y)\\) goes to \\((y, x)\\).",
+    "So the image of A is \\((-4, 3)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": 4,
+      "y": -3
+     },
+     "line": "That is a reflection in \\(y = -x\\). In \\(y = x\\) the coordinates swap and keep their signs."
+    }
+   ]
+  },
+  {
+   "id": "transformations-790965be",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:19"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a square ABCD on a coordinate grid. Reflect in the line \\(y = x\\). Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"30\" stroke-width=\"1.5\" stroke-dasharray=\"7 4\"/><polygon points=\"78,126 150,126 150,54 78,54\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"274\" y=\"27\" text-anchor=\"start\">y=x</text><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"70.2\" y=\"138.8\" text-anchor=\"middle\">A</text><text x=\"157.8\" y=\"131.8\" text-anchor=\"middle\">B</text><text x=\"157.8\" y=\"51.2\" text-anchor=\"middle\">C</text><text x=\"70.2\" y=\"51.2\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 1,
+    "y": 0
+   },
+   "worked": [
+    "A reflection in \\(y = x\\) swaps the coordinates: \\((x, y)\\) goes to \\((y, x)\\).",
+    "So the image of B is \\((1, 0)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": -1,
+      "y": 0
+     },
+     "line": "That is a reflection in \\(y = -x\\). In \\(y = x\\) the coordinates swap and keep their signs."
+    }
+   ]
+  },
+  {
+   "id": "transformations-9349f806",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:20"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Reflect in the line \\(y = -x\\). Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"270\" stroke-width=\"1.5\" stroke-dasharray=\"7 4\"/><polygon points=\"174,246 198,246 174,198\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"27\" y=\"23\" text-anchor=\"end\">y=-x</text><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"169.1\" y=\"260.8\" text-anchor=\"middle\">A</text><text x=\"205.8\" y=\"258.8\" text-anchor=\"middle\">B</text><text x=\"171.3\" y=\"192.3\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 2,
+    "y": -1
+   },
+   "worked": [
+    "A reflection in \\(y = -x\\) swaps the coordinates and changes both signs: \\((x, y)\\) goes to \\((-y, -x)\\).",
+    "So the image of C is \\((2, -1)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": -2,
+      "y": 1
+     },
+     "line": "That is a reflection in \\(y = x\\). In \\(y = -x\\) the coordinates swap and both change sign."
+    }
+   ]
+  },
+  {
+   "id": "transformations-98376463",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:21"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Reflect in the line \\(y = -x\\). Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"270\" stroke-width=\"1.5\" stroke-dasharray=\"7 4\"/><polygon points=\"246,150 270,150 246,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"27\" y=\"23\" text-anchor=\"end\">y=-x</text><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"242.5\" y=\"165.4\" text-anchor=\"middle\">A</text><text x=\"276.1\" y=\"164.2\" text-anchor=\"middle\">B</text><text x=\"244.2\" y=\"72.1\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 0,
+    "y": -4
+   },
+   "worked": [
+    "A reflection in \\(y = -x\\) swaps the coordinates and changes both signs: \\((x, y)\\) goes to \\((-y, -x)\\).",
+    "So the image of A is \\((0, -4)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": 0,
+      "y": 4
+     },
+     "line": "That is a reflection in \\(y = x\\). In \\(y = -x\\) the coordinates swap and both change sign."
+    }
+   ]
+  },
+  {
+   "id": "transformations-275e2760",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:22"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Reflect in the line \\(y = -x\\). Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"270\" stroke-width=\"1.5\" stroke-dasharray=\"7 4\"/><polygon points=\"102,174 150,174 150,150\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"27\" y=\"23\" text-anchor=\"end\">y=-x</text><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"91.3\" y=\"181.7\" text-anchor=\"middle\">A</text><text x=\"159.8\" y=\"183.9\" text-anchor=\"middle\">B</text><text x=\"157.8\" y=\"143.2\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 1,
+    "y": 0
+   },
+   "worked": [
+    "A reflection in \\(y = -x\\) swaps the coordinates and changes both signs: \\((x, y)\\) goes to \\((-y, -x)\\).",
+    "So the image of B is \\((1, 0)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": -1,
+      "y": 0
+     },
+     "line": "That is a reflection in \\(y = x\\). In \\(y = -x\\) the coordinates swap and both change sign."
+    }
+   ]
+  },
+  {
+   "id": "transformations-73fa34b7",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:23"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Reflect in the line \\(y = -x\\). Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"270\" stroke-width=\"1.5\" stroke-dasharray=\"7 4\"/><polygon points=\"198,174 246,174 222,102\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"27\" y=\"23\" text-anchor=\"end\">y=-x</text><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"190.2\" y=\"179.8\" text-anchor=\"middle\">A</text><text x=\"253.8\" y=\"186.8\" text-anchor=\"middle\">B</text><text x=\"222\" y=\"96\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -2,
+    "y": -3
+   },
+   "worked": [
+    "A reflection in \\(y = -x\\) swaps the coordinates and changes both signs: \\((x, y)\\) goes to \\((-y, -x)\\).",
+    "So the image of C is \\((-2, -3)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": 2,
+      "y": 3
+     },
+     "line": "That is a reflection in \\(y = x\\). In \\(y = -x\\) the coordinates swap and both change sign."
+    }
+   ]
+  },
+  {
+   "id": "transformations-ca15dcff",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:24"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Reflect in the line \\(y = -x\\). Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"270\" stroke-width=\"1.5\" stroke-dasharray=\"7 4\"/><polygon points=\"126,246 150,246 150,222\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"27\" y=\"23\" text-anchor=\"end\">y=-x</text><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"116.2\" y=\"255.9\" text-anchor=\"middle\">A</text><text x=\"157.8\" y=\"258.8\" text-anchor=\"middle\">B</text><text x=\"154.9\" y=\"217.2\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 4,
+    "y": 1
+   },
+   "worked": [
+    "A reflection in \\(y = -x\\) swaps the coordinates and changes both signs: \\((x, y)\\) goes to \\((-y, -x)\\).",
+    "So the image of A is \\((4, 1)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": -4,
+      "y": -1
+     },
+     "line": "That is a reflection in \\(y = x\\). In \\(y = -x\\) the coordinates swap and both change sign."
+    }
+   ]
+  },
+  {
+   "id": "transformations-8d0e3394",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:25"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Reflect in the line \\(x = 2\\). Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\" stroke-width=\"1.5\" stroke-dasharray=\"7 4\"/><polygon points=\"198,126 222,126 222,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"198\" y=\"24\" text-anchor=\"middle\">x=2</text><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"190.2\" y=\"138.8\" text-anchor=\"middle\">A</text><text x=\"226.9\" y=\"140.8\" text-anchor=\"middle\">B</text><text x=\"224.7\" y=\"72.3\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 1,
+    "y": 1
+   },
+   "worked": [
+    "A reflection in \\(x = 2\\): a point goes the same distance from the line, on the other side.",
+    "B is 1 to the right of the line, so its image is 1 to the left of the line: \\(x = 1\\), and \\(y = 1\\) stays the same.",
+    "So the image of B is \\((1, 1)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": -3,
+      "y": 1
+     },
+     "line": "That is a reflection in the y-axis. The mirror line here is \\(x = 2\\): measure each distance from that line."
+    },
+    {
+     "answer": {
+      "x": 3,
+      "y": 3
+     },
+     "line": "That is a reflection in \\(y = 2\\), a horizontal line. The line \\(x = 2\\) is vertical, so only \\(x\\) changes."
+    }
+   ]
+  },
+  {
+   "id": "transformations-0572eeff",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:26"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Reflect in the line \\(x = -3\\). Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\" stroke-width=\"1.5\" stroke-dasharray=\"7 4\"/><polygon points=\"54,174 78,174 78,102\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"78\" y=\"24\" text-anchor=\"middle\">x=-3</text><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"47.9\" y=\"188.2\" text-anchor=\"middle\">A</text><text x=\"85.5\" y=\"189.4\" text-anchor=\"middle\">B</text><text x=\"83.8\" y=\"96.1\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -3,
+    "y": 2
+   },
+   "worked": [
+    "A reflection in \\(x = -3\\): a point on the line stays where it is.",
+    "So the image of C is \\((-3, 2)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": 3,
+      "y": 2
+     },
+     "line": "That is a reflection in the y-axis. The mirror line here is \\(x = -3\\): measure each distance from that line."
+    },
+    {
+     "answer": {
+      "x": -3,
+      "y": -8
+     },
+     "line": "That is a reflection in \\(y = -3\\), a horizontal line. The line \\(x = -3\\) is vertical, so only \\(x\\) changes."
+    }
+   ]
+  },
+  {
+   "id": "transformations-f8ceb6f0",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:27"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Reflect in the line \\(x = 1\\). Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\" stroke-width=\"1.5\" stroke-dasharray=\"7 4\"/><polygon points=\"174,150 246,150 198,102\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"174\" y=\"24\" text-anchor=\"middle\">x=1</text><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"164.2\" y=\"163.9\" text-anchor=\"middle\">A</text><text x=\"256.2\" y=\"163.1\" text-anchor=\"middle\">B</text><text x=\"195.3\" y=\"96.3\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 1,
+    "y": 0
+   },
+   "worked": [
+    "A reflection in \\(x = 1\\): a point on the line stays where it is.",
+    "So the image of A is \\((1, 0)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": -1,
+      "y": 0
+     },
+     "line": "That is a reflection in the y-axis. The mirror line here is \\(x = 1\\): measure each distance from that line."
+    },
+    {
+     "answer": {
+      "x": 1,
+      "y": 2
+     },
+     "line": "That is a reflection in \\(y = 1\\), a horizontal line. The line \\(x = 1\\) is vertical, so only \\(x\\) changes."
+    }
+   ]
+  },
+  {
+   "id": "transformations-949b73e8",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:28"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "The diagram shows a square ABCD on a coordinate grid. Reflect in the line \\(x = -1\\). Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\" stroke-width=\"1.5\" stroke-dasharray=\"7 4\"/><polygon points=\"30,198 102,198 102,126 30,126\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"126\" y=\"24\" text-anchor=\"middle\">x=-1</text><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"198\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"137\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"22.2\" y=\"210.8\" text-anchor=\"middle\">A</text><text x=\"109.8\" y=\"210.8\" text-anchor=\"middle\">B</text><text x=\"109.8\" y=\"123.2\" text-anchor=\"middle\">C</text><text x=\"22.2\" y=\"123.2\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 0,
+    "y": 1
+   },
+   "worked": [
+    "A reflection in \\(x = -1\\): a point goes the same distance from the line, on the other side.",
+    "C is 1 to the left of the line, so its image is 1 to the right of the line: \\(x = 0\\), and \\(y = 1\\) stays the same.",
+    "So the image of C is \\((0, 1)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": 2,
+      "y": 1
+     },
+     "line": "That is a reflection in the y-axis. The mirror line here is \\(x = -1\\): measure each distance from that line."
+    },
+    {
+     "answer": {
+      "x": -2,
+      "y": -3
+     },
+     "line": "That is a reflection in \\(y = -1\\), a horizontal line. The line \\(x = -1\\) is vertical, so only \\(x\\) changes."
+    }
+   ]
+  },
+  {
+   "id": "transformations-39ccb403",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:29"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Reflect in the line \\(x = 3\\). Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\" stroke-width=\"1.5\" stroke-dasharray=\"7 4\"/><polygon points=\"246,198 270,198 246,126\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"222\" y=\"24\" text-anchor=\"middle\">x=3</text><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"242.5\" y=\"213.4\" text-anchor=\"middle\">A</text><text x=\"276.1\" y=\"212.2\" text-anchor=\"middle\">B</text><text x=\"244.2\" y=\"120.1\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 2,
+    "y": 1
+   },
+   "worked": [
+    "A reflection in \\(x = 3\\): a point goes the same distance from the line, on the other side.",
+    "C is 1 to the right of the line, so its image is 1 to the left of the line: \\(x = 2\\), and \\(y = 1\\) stays the same.",
+    "So the image of C is \\((2, 1)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": -4,
+      "y": 1
+     },
+     "line": "That is a reflection in the y-axis. The mirror line here is \\(x = 3\\): measure each distance from that line."
+    },
+    {
+     "answer": {
+      "x": 4,
+      "y": 5
+     },
+     "line": "That is a reflection in \\(y = 3\\), a horizontal line. The line \\(x = 3\\) is vertical, so only \\(x\\) changes."
+    }
+   ]
+  },
+  {
+   "id": "transformations-cce1eab1",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:30"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Reflect in the line \\(y = -2\\). Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\" stroke-width=\"1.5\" stroke-dasharray=\"7 4\"/><polygon points=\"54,270 102,270 102,246\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"274\" y=\"202\" text-anchor=\"start\">y=-2</text><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"43.3\" y=\"277.7\" text-anchor=\"middle\">A</text><text x=\"111.8\" y=\"279.9\" text-anchor=\"middle\">B</text><text x=\"109.8\" y=\"243.2\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -4,
+    "y": 1
+   },
+   "worked": [
+    "A reflection in \\(y = -2\\): a point goes the same distance from the line, on the other side.",
+    "A is 3 below the line, so its image is 3 above the line: \\(y = 1\\), and \\(x = -4\\) stays the same.",
+    "So the image of A is \\((-4, 1)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": -4,
+      "y": 5
+     },
+     "line": "That is a reflection in the x-axis. The mirror line here is \\(y = -2\\): measure each distance from that line."
+    },
+    {
+     "answer": {
+      "x": 0,
+      "y": -5
+     },
+     "line": "That is a reflection in \\(x = -2\\), a vertical line. The line \\(y = -2\\) is horizontal, so only \\(y\\) changes."
+    }
+   ]
+  },
+  {
+   "id": "transformations-309f3fbf",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:31"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Reflect in the line \\(y = 3\\). Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\" stroke-width=\"1.5\" stroke-dasharray=\"7 4\"/><polygon points=\"126,54 174,54 174,30\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"274\" y=\"82\" text-anchor=\"start\">y=3</text><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"115.3\" y=\"61.7\" text-anchor=\"middle\">A</text><text x=\"183.8\" y=\"63.9\" text-anchor=\"middle\">B</text><text x=\"181.8\" y=\"27.2\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 1,
+    "y": 2
+   },
+   "worked": [
+    "A reflection in \\(y = 3\\): a point goes the same distance from the line, on the other side.",
+    "B is 1 above the line, so its image is 1 below the line: \\(y = 2\\), and \\(x = 1\\) stays the same.",
+    "So the image of B is \\((1, 2)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": 1,
+      "y": -4
+     },
+     "line": "That is a reflection in the x-axis. The mirror line here is \\(y = 3\\): measure each distance from that line."
+    },
+    {
+     "answer": {
+      "x": 5,
+      "y": 4
+     },
+     "line": "That is a reflection in \\(x = 3\\), a vertical line. The line \\(y = 3\\) is horizontal, so only \\(y\\) changes."
+    }
+   ]
+  },
+  {
+   "id": "transformations-1ffc4e67",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:32"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Reflect in the line \\(y = 1\\). Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\" stroke-width=\"1.5\" stroke-dasharray=\"7 4\"/><polygon points=\"102,150 174,150 126,126\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"274\" y=\"130\" text-anchor=\"start\">y=1</text><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"91.3\" y=\"161.7\" text-anchor=\"middle\">A</text><text x=\"184.8\" y=\"161.2\" text-anchor=\"middle\">B</text><text x=\"121.1\" y=\"121.2\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -1,
+    "y": 1
+   },
+   "worked": [
+    "A reflection in \\(y = 1\\): a point on the line stays where it is.",
+    "So the image of C is \\((-1, 1)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": -1,
+      "y": -1
+     },
+     "line": "That is a reflection in the x-axis. The mirror line here is \\(y = 1\\): measure each distance from that line."
+    },
+    {
+     "answer": {
+      "x": 3,
+      "y": 1
+     },
+     "line": "That is a reflection in \\(x = 1\\), a vertical line. The line \\(y = 1\\) is horizontal, so only \\(y\\) changes."
+    }
+   ]
+  },
+  {
+   "id": "transformations-8717a726",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:33"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "The diagram shows a square ABCD on a coordinate grid. Reflect in the line \\(y = -3\\). Write down the coordinates of the image of D.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\" stroke-width=\"1.5\" stroke-dasharray=\"7 4\"/><polygon points=\"30,222 54,222 54,198 30,198\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"274\" y=\"226\" text-anchor=\"start\">y=-3</text><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"222\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"209\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"22.2\" y=\"234.8\" text-anchor=\"middle\">A</text><text x=\"61.8\" y=\"234.8\" text-anchor=\"middle\">B</text><text x=\"61.8\" y=\"195.2\" text-anchor=\"middle\">C</text><text x=\"22.2\" y=\"195.2\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -5,
+    "y": -4
+   },
+   "worked": [
+    "A reflection in \\(y = -3\\): a point goes the same distance from the line, on the other side.",
+    "D is 1 above the line, so its image is 1 below the line: \\(y = -4\\), and \\(x = -5\\) stays the same.",
+    "So the image of D is \\((-5, -4)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": -5,
+      "y": 2
+     },
+     "line": "That is a reflection in the x-axis. The mirror line here is \\(y = -3\\): measure each distance from that line."
+    },
+    {
+     "answer": {
+      "x": -1,
+      "y": -2
+     },
+     "line": "That is a reflection in \\(x = -3\\), a vertical line. The line \\(y = -3\\) is horizontal, so only \\(y\\) changes."
+    }
+   ]
+  },
+  {
+   "id": "transformations-16181e09",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "REFLECTION_QUESTIONS:34"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "The diagram shows a square ABCD on a coordinate grid. Reflect in the line \\(y = 2\\). Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\" stroke-width=\"1.5\" stroke-dasharray=\"7 4\"/><polygon points=\"150,174 174,174 174,150 150,150\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"274\" y=\"106\" text-anchor=\"start\">y=2</text><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"142.2\" y=\"186.8\" text-anchor=\"middle\">A</text><text x=\"181.8\" y=\"186.8\" text-anchor=\"middle\">B</text><text x=\"181.8\" y=\"143.2\" text-anchor=\"middle\">C</text><text x=\"142.2\" y=\"143.2\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 0,
+    "y": 5
+   },
+   "worked": [
+    "A reflection in \\(y = 2\\): a point goes the same distance from the line, on the other side.",
+    "A is 3 below the line, so its image is 3 above the line: \\(y = 5\\), and \\(x = 0\\) stays the same.",
+    "So the image of A is \\((0, 5)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": 0,
+      "y": 1
+     },
+     "line": "That is a reflection in the x-axis. The mirror line here is \\(y = 2\\): measure each distance from that line."
+    },
+    {
+     "answer": {
+      "x": 4,
+      "y": -1
+     },
+     "line": "That is a reflection in \\(x = 2\\), a vertical line. The line \\(y = 2\\) is horizontal, so only \\(y\\) changes."
+    }
+   ]
+  },
+  {
+   "id": "transformations-990fb050",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ENLARGEMENT_QUESTIONS:0"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Enlarge it by scale factor 2, centre \\((0, 0)\\). Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"150\" y1=\"150\" x2=\"30\" y2=\"150\" stroke-width=\"1\" stroke-dasharray=\"2 3\"/><circle cx=\"150\" cy=\"150\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><polygon points=\"126,174 150,174 126,150\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"118.2\" y=\"186.8\" text-anchor=\"middle\">A</text><text x=\"159.8\" y=\"183.9\" text-anchor=\"middle\">B</text><text x=\"121.1\" y=\"145.2\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -2,
+    "y": 0
+   },
+   "worked": [
+    "An enlargement with scale factor 2 about the origin: every distance from the centre is multiplied by 2.",
+    "From the centre to C is 1 left. Multiplied by 2, that is 2 left.",
+    "Starting at the origin and moving 2 left gives \\((-2, 0)\\).",
+    "So the image of C is \\((-2, 0)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "transformations-17c09c1b",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ENLARGEMENT_QUESTIONS:1"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Enlarge it by scale factor 2, centre \\((0, 0)\\). Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"150\" y1=\"150\" x2=\"30\" y2=\"210\" stroke-width=\"1\" stroke-dasharray=\"2 3\"/><circle cx=\"150\" cy=\"150\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><polygon points=\"102,174 150,174 150,126\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"99.2\" y=\"190.9\" text-anchor=\"middle\">A</text><text x=\"157.8\" y=\"186.8\" text-anchor=\"middle\">B</text><text x=\"154.9\" y=\"121.2\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -4,
+    "y": -2
+   },
+   "worked": [
+    "An enlargement with scale factor 2 about the origin: every distance from the centre is multiplied by 2.",
+    "From the centre to A is 2 left and 1 down. Multiplied by 2, that is 4 left and 2 down.",
+    "Starting at the origin and moving 4 left and 2 down gives \\((-4, -2)\\).",
+    "So the image of A is \\((-4, -2)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "transformations-7c23110d",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ENLARGEMENT_QUESTIONS:2"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Enlarge it by scale factor 2, centre \\((1, 1)\\). Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"174\" y1=\"126\" x2=\"270\" y2=\"222\" stroke-width=\"1\" stroke-dasharray=\"2 3\"/><circle cx=\"174\" cy=\"126\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><polygon points=\"198,174 222,174 222,150\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"188.2\" y=\"183.9\" text-anchor=\"middle\">A</text><text x=\"236.8\" y=\"179.8\" text-anchor=\"middle\">B</text><text x=\"226.9\" y=\"145.2\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 5,
+    "y": -3
+   },
+   "worked": [
+    "An enlargement with scale factor 2 about \\((1, 1)\\): every distance from the centre is multiplied by 2.",
+    "From the centre to B is 2 right and 2 down. Multiplied by 2, that is 4 right and 4 down.",
+    "Starting at \\((1, 1)\\) and moving 4 right and 4 down gives \\((5, -3)\\).",
+    "So the image of B is \\((5, -3)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": 6,
+      "y": -2
+     },
+     "line": "You enlarged from the origin. Measure from the centre \\((1, 1)\\) instead."
+    },
+    {
+     "answer": {
+      "x": 4,
+      "y": -4
+     },
+     "line": "That is the distance from the centre. Add it to the centre's coordinates."
+    },
+    {
+     "answer": {
+      "x": 2,
+      "y": 0
+     },
+     "line": "You divided by 2. A scale factor of 2 multiplies every distance from the centre by 2."
+    }
+   ]
+  },
+  {
+   "id": "transformations-b4904c06",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ENLARGEMENT_QUESTIONS:3"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Enlarge it by scale factor 2, centre \\((-2, 1)\\). Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"102\" y1=\"126\" x2=\"198\" y2=\"30\" stroke-width=\"1\" stroke-dasharray=\"2 3\"/><circle cx=\"102\" cy=\"126\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><polygon points=\"126,126 174,126 150,78\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"116.8\" y=\"137.1\" text-anchor=\"middle\">A</text><text x=\"183.2\" y=\"137.1\" text-anchor=\"middle\">B</text><text x=\"143\" y=\"72\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 2,
+    "y": 5
+   },
+   "worked": [
+    "An enlargement with scale factor 2 about \\((-2, 1)\\): every distance from the centre is multiplied by 2.",
+    "From the centre to C is 2 right and 2 up. Multiplied by 2, that is 4 right and 4 up.",
+    "Starting at \\((-2, 1)\\) and moving 4 right and 4 up gives \\((2, 5)\\).",
+    "So the image of C is \\((2, 5)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": 0,
+      "y": 6
+     },
+     "line": "You enlarged from the origin. Measure from the centre \\((-2, 1)\\) instead."
+    },
+    {
+     "answer": {
+      "x": 4,
+      "y": 4
+     },
+     "line": "That is the distance from the centre. Add it to the centre's coordinates."
+    },
+    {
+     "answer": {
+      "x": -1,
+      "y": 2
+     },
+     "line": "You divided by 2. A scale factor of 2 multiplies every distance from the centre by 2."
+    }
+   ]
+  },
+  {
+   "id": "transformations-69db9e35",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ENLARGEMENT_QUESTIONS:4"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Enlarge it by scale factor 2, centre \\((-1, -2)\\). Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"126\" y1=\"198\" x2=\"54\" y2=\"270\" stroke-width=\"1\" stroke-dasharray=\"2 3\"/><circle cx=\"126\" cy=\"198\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><polygon points=\"102,222 126,222 102,174\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"101.1\" y=\"240.8\" text-anchor=\"middle\">A</text><text x=\"133.8\" y=\"234.8\" text-anchor=\"middle\">B</text><text x=\"99.3\" y=\"168.3\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -3,
+    "y": -4
+   },
+   "worked": [
+    "An enlargement with scale factor 2 about \\((-1, -2)\\): every distance from the centre is multiplied by 2.",
+    "From the centre to A is 1 left and 1 down. Multiplied by 2, that is 2 left and 2 down.",
+    "Starting at \\((-1, -2)\\) and moving 2 left and 2 down gives \\((-3, -4)\\).",
+    "So the image of A is \\((-3, -4)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": -4,
+      "y": -6
+     },
+     "line": "You enlarged from the origin. Measure from the centre \\((-1, -2)\\) instead."
+    },
+    {
+     "answer": {
+      "x": -2,
+      "y": -2
+     },
+     "line": "That is the distance from the centre. Add it to the centre's coordinates."
+    }
+   ]
+  },
+  {
+   "id": "transformations-5c8f702f",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ENLARGEMENT_QUESTIONS:5"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Enlarge it by scale factor 2, centre \\((2, -1)\\). Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"198\" y1=\"174\" x2=\"30\" y2=\"174\" stroke-width=\"1\" stroke-dasharray=\"2 3\"/><circle cx=\"198\" cy=\"174\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><polygon points=\"126,174 150,174 126,150\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"118.2\" y=\"186.8\" text-anchor=\"middle\">A</text><text x=\"159.8\" y=\"187.9\" text-anchor=\"middle\">B</text><text x=\"121.1\" y=\"145.2\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -2,
+    "y": -1
+   },
+   "worked": [
+    "An enlargement with scale factor 2 about \\((2, -1)\\): every distance from the centre is multiplied by 2.",
+    "From the centre to B is 2 left. Multiplied by 2, that is 4 left.",
+    "Starting at \\((2, -1)\\) and moving 4 left gives \\((-2, -1)\\).",
+    "So the image of B is \\((-2, -1)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": 0,
+      "y": -2
+     },
+     "line": "You enlarged from the origin. Measure from the centre \\((2, -1)\\) instead."
+    },
+    {
+     "answer": {
+      "x": -4,
+      "y": 0
+     },
+     "line": "That is the distance from the centre. Add it to the centre's coordinates."
+    },
+    {
+     "answer": {
+      "x": 1,
+      "y": -1
+     },
+     "line": "You divided by 2. A scale factor of 2 multiplies every distance from the centre by 2."
+    }
+   ]
+  },
+  {
+   "id": "transformations-e5a0f914",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ENLARGEMENT_QUESTIONS:6"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "The diagram shows a square ABCD on a coordinate grid. Enlarge it by scale factor 3, centre \\((0, 0)\\). Write down the coordinates of the image of D.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"150\" y1=\"150\" x2=\"30\" y2=\"30\" stroke-width=\"1\" stroke-dasharray=\"2 3\"/><circle cx=\"150\" cy=\"150\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><polygon points=\"126,174 174,174 174,126 126,126\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"118.2\" y=\"186.8\" text-anchor=\"middle\">A</text><text x=\"181.8\" y=\"186.8\" text-anchor=\"middle\">B</text><text x=\"181.8\" y=\"123.2\" text-anchor=\"middle\">C</text><text x=\"125.2\" y=\"116.2\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -3,
+    "y": 3
+   },
+   "worked": [
+    "An enlargement with scale factor 3 about the origin: every distance from the centre is multiplied by 3.",
+    "From the centre to D is 1 left and 1 up. Multiplied by 3, that is 3 left and 3 up.",
+    "Starting at the origin and moving 3 left and 3 up gives \\((-3, 3)\\).",
+    "So the image of D is \\((-3, 3)\\)."
+   ],
+   "slip": []
+  },
+  {
+   "id": "transformations-053bf247",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ENLARGEMENT_QUESTIONS:7"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Enlarge it by scale factor 3, centre \\((-1, -1)\\). Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"126\" y1=\"174\" x2=\"30\" y2=\"270\" stroke-width=\"1\" stroke-dasharray=\"2 3\"/><circle cx=\"126\" cy=\"174\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><polygon points=\"102,198 126,198 102,150\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"101.1\" y=\"216.8\" text-anchor=\"middle\">A</text><text x=\"133.8\" y=\"210.8\" text-anchor=\"middle\">B</text><text x=\"99.3\" y=\"144.3\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -4,
+    "y": -4
+   },
+   "worked": [
+    "An enlargement with scale factor 3 about \\((-1, -1)\\): every distance from the centre is multiplied by 3.",
+    "From the centre to A is 1 left and 1 down. Multiplied by 3, that is 3 left and 3 down.",
+    "Starting at \\((-1, -1)\\) and moving 3 left and 3 down gives \\((-4, -4)\\).",
+    "So the image of A is \\((-4, -4)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": -6,
+      "y": -6
+     },
+     "line": "You enlarged from the origin. Measure from the centre \\((-1, -1)\\) instead."
+    },
+    {
+     "answer": {
+      "x": -3,
+      "y": -3
+     },
+     "line": "That is the distance from the centre. Add it to the centre's coordinates."
+    }
+   ]
+  },
+  {
+   "id": "transformations-fd3bd44e",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ENLARGEMENT_QUESTIONS:8"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a square ABCD on a coordinate grid. Enlarge it by scale factor 3, centre \\((1, -2)\\). Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"174\" y1=\"198\" x2=\"174\" y2=\"30\" stroke-width=\"1\" stroke-dasharray=\"2 3\"/><circle cx=\"174\" cy=\"198\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><polygon points=\"150,174 174,174 174,150 150,150\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"142.2\" y=\"186.8\" text-anchor=\"middle\">A</text><text x=\"181.8\" y=\"186.8\" text-anchor=\"middle\">B</text><text x=\"181.8\" y=\"143.2\" text-anchor=\"middle\">C</text><text x=\"142.2\" y=\"143.2\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 1,
+    "y": 1
+   },
+   "worked": [
+    "An enlargement with scale factor 3 about \\((1, -2)\\): every distance from the centre is multiplied by 3.",
+    "From the centre to B is 1 up. Multiplied by 3, that is 3 up.",
+    "Starting at \\((1, -2)\\) and moving 3 up gives \\((1, 1)\\).",
+    "So the image of B is \\((1, 1)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": 3,
+      "y": -3
+     },
+     "line": "You enlarged from the origin. Measure from the centre \\((1, -2)\\) instead."
+    },
+    {
+     "answer": {
+      "x": 0,
+      "y": 3
+     },
+     "line": "That is the distance from the centre. Add it to the centre's coordinates."
+    }
+   ]
+  },
+  {
+   "id": "transformations-8868aa7d",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ENLARGEMENT_QUESTIONS:9"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a square ABCD on a coordinate grid. Enlarge it by scale factor 3, centre \\((-2, 2)\\). Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"102\" y1=\"102\" x2=\"270\" y2=\"102\" stroke-width=\"1\" stroke-dasharray=\"2 3\"/><circle cx=\"102\" cy=\"102\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><polygon points=\"78,150 126,150 126,102 78,102\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"70.2\" y=\"162.8\" text-anchor=\"middle\">A</text><text x=\"133.8\" y=\"162.8\" text-anchor=\"middle\">B</text><text x=\"133.8\" y=\"95.2\" text-anchor=\"middle\">C</text><text x=\"70.2\" y=\"99.2\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 1,
+    "y": 2
+   },
+   "worked": [
+    "An enlargement with scale factor 3 about \\((-2, 2)\\): every distance from the centre is multiplied by 3.",
+    "From the centre to C is 1 right. Multiplied by 3, that is 3 right.",
+    "Starting at \\((-2, 2)\\) and moving 3 right gives \\((1, 2)\\).",
+    "So the image of C is \\((1, 2)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": -3,
+      "y": 6
+     },
+     "line": "You enlarged from the origin. Measure from the centre \\((-2, 2)\\) instead."
+    },
+    {
+     "answer": {
+      "x": 3,
+      "y": 0
+     },
+     "line": "That is the distance from the centre. Add it to the centre's coordinates."
+    }
+   ]
+  },
+  {
+   "id": "transformations-10391afb",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ENLARGEMENT_QUESTIONS:10"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a rectangle ABCD on a coordinate grid. Enlarge it by scale factor \\(\\frac{1}{2}\\), centre \\((0, 0)\\). Write down the coordinates of the image of D.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"150\" y1=\"150\" x2=\"30\" y2=\"30\" stroke-width=\"1\" stroke-dasharray=\"2 3\"/><circle cx=\"150\" cy=\"150\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><polygon points=\"54,150 102,150 102,54 54,54\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"49.1\" y=\"164.8\" text-anchor=\"middle\">A</text><text x=\"106.9\" y=\"164.8\" text-anchor=\"middle\">B</text><text x=\"106.9\" y=\"49.2\" text-anchor=\"middle\">C</text><text x=\"56.1\" y=\"42.2\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -2,
+    "y": 2
+   },
+   "worked": [
+    "An enlargement with scale factor \\(\\frac{1}{2}\\) about the origin: every distance from the centre is halved.",
+    "From the centre to D is 4 left and 4 up. Halved, that is 2 left and 2 up.",
+    "Starting at the origin and moving 2 left and 2 up gives \\((-2, 2)\\).",
+    "So the image of D is \\((-2, 2)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": -8,
+      "y": 8
+     },
+     "line": "You multiplied by 2. A scale factor of \\(\\frac{1}{2}\\) halves every distance from the centre."
+    }
+   ]
+  },
+  {
+   "id": "transformations-950946e2",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ENLARGEMENT_QUESTIONS:11"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Enlarge it by scale factor \\(\\frac{1}{2}\\), centre \\((0, 0)\\). Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"150\" y1=\"150\" x2=\"210\" y2=\"270\" stroke-width=\"1\" stroke-dasharray=\"2 3\"/><circle cx=\"150\" cy=\"150\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><polygon points=\"102,246 198,246 102,150\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"94.2\" y=\"258.8\" text-anchor=\"middle\">A</text><text x=\"207.8\" y=\"251.9\" text-anchor=\"middle\">B</text><text x=\"97.1\" y=\"145.2\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 1,
+    "y": -2
+   },
+   "worked": [
+    "An enlargement with scale factor \\(\\frac{1}{2}\\) about the origin: every distance from the centre is halved.",
+    "From the centre to B is 2 right and 4 down. Halved, that is 1 right and 2 down.",
+    "Starting at the origin and moving 1 right and 2 down gives \\((1, -2)\\).",
+    "So the image of B is \\((1, -2)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": 4,
+      "y": -8
+     },
+     "line": "You multiplied by 2. A scale factor of \\(\\frac{1}{2}\\) halves every distance from the centre."
+    }
+   ]
+  },
+  {
+   "id": "transformations-95b4c3cb",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ENLARGEMENT_QUESTIONS:12"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Enlarge it by scale factor \\(\\frac{1}{2}\\), centre \\((1, 1)\\). Write down the coordinates of the image of C.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"174\" y1=\"126\" x2=\"30\" y2=\"126\" stroke-width=\"1\" stroke-dasharray=\"2 3\"/><circle cx=\"174\" cy=\"126\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><polygon points=\"78,174 174,174 126,126\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"67.6\" y=\"182.5\" text-anchor=\"middle\">A</text><text x=\"184.4\" y=\"182.5\" text-anchor=\"middle\">B</text><text x=\"126\" y=\"120\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 0,
+    "y": 1
+   },
+   "worked": [
+    "An enlargement with scale factor \\(\\frac{1}{2}\\) about \\((1, 1)\\): every distance from the centre is halved.",
+    "From the centre to C is 2 left. Halved, that is 1 left.",
+    "Starting at \\((1, 1)\\) and moving 1 left gives \\((0, 1)\\).",
+    "So the image of C is \\((0, 1)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": -1,
+      "y": 0
+     },
+     "line": "That is the distance from the centre. Add it to the centre's coordinates."
+    },
+    {
+     "answer": {
+      "x": -3,
+      "y": 1
+     },
+     "line": "You multiplied by 2. A scale factor of \\(\\frac{1}{2}\\) halves every distance from the centre."
+    }
+   ]
+  },
+  {
+   "id": "transformations-cac78286",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ENLARGEMENT_QUESTIONS:13"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Enlarge it by scale factor \\(\\frac{1}{2}\\), centre \\((-1, 2)\\). Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"126\" y1=\"102\" x2=\"70\" y2=\"270\" stroke-width=\"1\" stroke-dasharray=\"2 3\"/><circle cx=\"126\" cy=\"102\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><polygon points=\"78,246 126,246 126,150\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"66.2\" y=\"258.8\" text-anchor=\"middle\">A</text><text x=\"130.9\" y=\"260.8\" text-anchor=\"middle\">B</text><text x=\"128.7\" y=\"144.3\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -2,
+    "y": -1
+   },
+   "worked": [
+    "An enlargement with scale factor \\(\\frac{1}{2}\\) about \\((-1, 2)\\): every distance from the centre is halved.",
+    "From the centre to A is 2 left and 6 down. Halved, that is 1 left and 3 down.",
+    "Starting at \\((-1, 2)\\) and moving 1 left and 3 down gives \\((-2, -1)\\).",
+    "So the image of A is \\((-2, -1)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": -1,
+      "y": -3
+     },
+     "line": "That is the distance from the centre. Add it to the centre's coordinates."
+    },
+    {
+     "answer": {
+      "x": -5,
+      "y": -10
+     },
+     "line": "You multiplied by 2. A scale factor of \\(\\frac{1}{2}\\) halves every distance from the centre."
+    }
+   ]
+  },
+  {
+   "id": "transformations-793745df",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ENLARGEMENT_QUESTIONS:14"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "The diagram shows a triangle ABC on a coordinate grid. Enlarge it by scale factor \\(\\frac{1}{2}\\), centre \\((-2, -1)\\). Write down the coordinates of the image of B.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"102\" y1=\"174\" x2=\"246\" y2=\"30\" stroke-width=\"1\" stroke-dasharray=\"2 3\"/><circle cx=\"102\" cy=\"174\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><polygon points=\"54,126 150,126 102,30\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"44.8\" y=\"137.1\" text-anchor=\"middle\">A</text><text x=\"159.2\" y=\"137.1\" text-anchor=\"middle\">B</text><text x=\"102\" y=\"24\" text-anchor=\"middle\">C</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": -1,
+    "y": 0
+   },
+   "worked": [
+    "An enlargement with scale factor \\(\\frac{1}{2}\\) about \\((-2, -1)\\): every distance from the centre is halved.",
+    "From the centre to B is 2 right and 2 up. Halved, that is 1 right and 1 up.",
+    "Starting at \\((-2, -1)\\) and moving 1 right and 1 up gives \\((-1, 0)\\).",
+    "So the image of B is \\((-1, 0)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": 1,
+      "y": 1
+     },
+     "line": "That is the distance from the centre. Add it to the centre's coordinates."
+    },
+    {
+     "answer": {
+      "x": 2,
+      "y": 3
+     },
+     "line": "You multiplied by 2. A scale factor of \\(\\frac{1}{2}\\) halves every distance from the centre."
+    }
+   ]
+  },
+  {
+   "id": "transformations-469256f3",
+   "topic": "transformations",
+   "source": {
+    "game": "shape-shifter",
+    "ref": "ENLARGEMENT_QUESTIONS:15"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "The diagram shows a square ABCD on a coordinate grid. Enlarge it by scale factor \\(\\frac{1}{2}\\), centre \\((2, -3)\\). Write down the coordinates of the image of A.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 300\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><g stroke-width=\"0.6\" opacity=\"0.3\"><line x1=\"30\" y1=\"270\" x2=\"30\" y2=\"30\"/><line x1=\"30\" y1=\"270\" x2=\"270\" y2=\"270\"/><line x1=\"54\" y1=\"270\" x2=\"54\" y2=\"30\"/><line x1=\"30\" y1=\"246\" x2=\"270\" y2=\"246\"/><line x1=\"78\" y1=\"270\" x2=\"78\" y2=\"30\"/><line x1=\"30\" y1=\"222\" x2=\"270\" y2=\"222\"/><line x1=\"102\" y1=\"270\" x2=\"102\" y2=\"30\"/><line x1=\"30\" y1=\"198\" x2=\"270\" y2=\"198\"/><line x1=\"126\" y1=\"270\" x2=\"126\" y2=\"30\"/><line x1=\"30\" y1=\"174\" x2=\"270\" y2=\"174\"/><line x1=\"150\" y1=\"270\" x2=\"150\" y2=\"30\"/><line x1=\"30\" y1=\"150\" x2=\"270\" y2=\"150\"/><line x1=\"174\" y1=\"270\" x2=\"174\" y2=\"30\"/><line x1=\"30\" y1=\"126\" x2=\"270\" y2=\"126\"/><line x1=\"198\" y1=\"270\" x2=\"198\" y2=\"30\"/><line x1=\"30\" y1=\"102\" x2=\"270\" y2=\"102\"/><line x1=\"222\" y1=\"270\" x2=\"222\" y2=\"30\"/><line x1=\"30\" y1=\"78\" x2=\"270\" y2=\"78\"/><line x1=\"246\" y1=\"270\" x2=\"246\" y2=\"30\"/><line x1=\"30\" y1=\"54\" x2=\"270\" y2=\"54\"/><line x1=\"270\" y1=\"270\" x2=\"270\" y2=\"30\"/><line x1=\"30\" y1=\"30\" x2=\"270\" y2=\"30\"/></g><path d=\"M30 150 L270 150 M150 30 L150 270\" stroke-width=\"1.5\"/><line x1=\"198\" y1=\"222\" x2=\"30\" y2=\"54\" stroke-width=\"1\" stroke-dasharray=\"2 3\"/><circle cx=\"198\" cy=\"222\" r=\"3.5\" fill=\"currentColor\" stroke=\"none\"/><polygon points=\"150,174 198,174 198,126 150,126\" fill=\"currentColor\" fill-opacity=\"0.15\" stroke-linejoin=\"round\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"30\" y=\"288\" text-anchor=\"middle\">-5</text><text x=\"25\" y=\"274\" text-anchor=\"end\">-5</text><text x=\"54\" y=\"284\" text-anchor=\"middle\">-4</text><text x=\"25\" y=\"250\" text-anchor=\"end\">-4</text><text x=\"78\" y=\"284\" text-anchor=\"middle\">-3</text><text x=\"25\" y=\"226\" text-anchor=\"end\">-3</text><text x=\"102\" y=\"284\" text-anchor=\"middle\">-2</text><text x=\"25\" y=\"202\" text-anchor=\"end\">-2</text><text x=\"126\" y=\"284\" text-anchor=\"middle\">-1</text><text x=\"25\" y=\"178\" text-anchor=\"end\">-1</text><text x=\"174\" y=\"284\" text-anchor=\"middle\">1</text><text x=\"25\" y=\"130\" text-anchor=\"end\">1</text><text x=\"198\" y=\"284\" text-anchor=\"middle\">2</text><text x=\"25\" y=\"106\" text-anchor=\"end\">2</text><text x=\"222\" y=\"284\" text-anchor=\"middle\">3</text><text x=\"25\" y=\"82\" text-anchor=\"end\">3</text><text x=\"246\" y=\"284\" text-anchor=\"middle\">4</text><text x=\"25\" y=\"58\" text-anchor=\"end\">4</text><text x=\"270\" y=\"284\" text-anchor=\"middle\">5</text><text x=\"25\" y=\"34\" text-anchor=\"end\">5</text><text x=\"142.2\" y=\"186.8\" text-anchor=\"middle\">A</text><text x=\"205.8\" y=\"186.8\" text-anchor=\"middle\">B</text><text x=\"205.8\" y=\"123.2\" text-anchor=\"middle\">C</text><text x=\"142.2\" y=\"123.2\" text-anchor=\"middle\">D</text></g></svg>",
+   "format": "coordinates",
+   "answer": {
+    "x": 1,
+    "y": -2
+   },
+   "worked": [
+    "An enlargement with scale factor \\(\\frac{1}{2}\\) about \\((2, -3)\\): every distance from the centre is halved.",
+    "From the centre to A is 2 left and 2 up. Halved, that is 1 left and 1 up.",
+    "Starting at \\((2, -3)\\) and moving 1 left and 1 up gives \\((1, -2)\\).",
+    "So the image of A is \\((1, -2)\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "x": -1,
+      "y": 1
+     },
+     "line": "That is the distance from the centre. Add it to the centre's coordinates."
+    },
+    {
+     "answer": {
+      "x": -2,
+      "y": 1
+     },
+     "line": "You multiplied by 2. A scale factor of \\(\\frac{1}{2}\\) halves every distance from the centre."
+    }
+   ]
   }
  ]
 }

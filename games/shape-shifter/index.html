@@ -155,7 +155,7 @@ body.accessible .instruction-bar,body.accessible .reveal-text,body.accessible .s
 <!-- START SCREEN -->
 <div class="screen active" id="startScreen">
   <div class="start-title">Shape Shifter</div>
-  <div class="start-sub">Transformations — moving, flipping and rotating shapes — is one of the most visual topics in maths.</div>
+  <div class="start-sub">Transformations — moving, flipping, rotating and enlarging shapes — is one of the most visual topics in maths.</div>
   <div class="mode-cards">
     <div class="mode-card" data-mode="translation" onclick="startGame('translation')">
       <h3>Translation</h3>
@@ -165,17 +165,22 @@ body.accessible .instruction-bar,body.accessible .reveal-text,body.accessible .s
     <div class="mode-card" data-mode="reflection" onclick="startGame('reflection')">
       <h3>Reflection</h3>
       <div class="mode-count">10 questions</div>
-      <p>Reflect shapes in the x-axis or y-axis</p>
+      <p>Reflect shapes in the axes and in lines like y = x and x = 2</p>
     </div>
     <div class="mode-card" data-mode="rotation" onclick="startGame('rotation')">
       <h3>Rotation</h3>
       <div class="mode-count">10 questions</div>
       <p>Pick the correctly rotated shape</p>
     </div>
+    <div class="mode-card" data-mode="enlargement" onclick="startGame('enlargement')">
+      <h3>Enlargement</h3>
+      <div class="mode-count">10 questions</div>
+      <p>Enlarge shapes from a centre, by a scale factor of 2, 3 or 1/2</p>
+    </div>
     <div class="mode-card mix" data-mode="random-mix" onclick="startGame('mix')">
       <h3>Random Mix</h3>
       <div class="mode-count">10 questions</div>
-      <p>A mix of all three transformation types</p>
+      <p>A mix of translation, reflection and rotation</p>
     </div>
   </div>
   <div class="maffs-start-note" data-maffs-start-note></div>
@@ -324,9 +329,20 @@ function rotateShape(shape, cx, cy, angleDeg) {
   return shape.map(([x,y]) => rotatePoint(x, y, cx, cy, angleDeg));
 }
 
+// A mirror line is named by its `axis`: 'x' (the x-axis), 'y' (the y-axis), 'y=x', 'y=-x', 'x=k' or 'y=k' (k a whole number).
 function reflectShape(shape, axis) {
   if (axis === 'y') return shape.map(([x,y]) => [-x, y]);
+  if (axis === 'y=x') return shape.map(([x,y]) => [y, x]);
+  if (axis === 'y=-x') return shape.map(([x,y]) => [-y, -x]);
+  const line = /^([xy])=(-?\d+)$/.exec(axis);
+  if (line && line[1] === 'x') return shape.map(([x,y]) => [2 * Number(line[2]) - x, y]);
+  if (line) return shape.map(([x,y]) => [x, 2 * Number(line[2]) - y]);
   return shape.map(([x,y]) => [x, -y]);
+}
+
+// An enlargement about (cx, cy) by the scale factor sfn/sfd: every point's offset from the centre is multiplied by it.
+function enlargeShape(shape, cx, cy, sfn, sfd) {
+  return shape.map(([x,y]) => [cx + (x - cx) * sfn / sfd, cy + (y - cy) * sfn / sfd]);
 }
 
 // Generate wrong rotation options
@@ -400,8 +416,96 @@ const ROTATION_QUESTIONS = [];
   }
 })();
 
+// ── GENERATED REFLECTIONS AND ENLARGEMENTS (26 Oct 2026) ──
+// Built the way the rotations are: from rules, so each key is right by construction (scripts/verify-shape-shifter.py
+// recomputes every one from its words). A fixed seed keeps the pool the same on every load. A candidate whose shape or
+// image leaves the -5 to 5 grid, or does not suit the rule, is dropped and another drawn.
+function seededRandom(seed) {
+  let a = seed >>> 0;
+  return function () {
+    a = (a + 0x6D2B79F5) >>> 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function drawShapeOn(rnd, sizes, apexStep) {
+  const pick = (a) => a[Math.floor(rnd() * a.length)];
+  const x0 = Math.floor(rnd() * 11) - 5, y0 = Math.floor(rnd() * 11) - 5;
+  const kind = pick(['triangle', 'rectangle', 'square', 'triangle']);
+  const b = pick(sizes), h = pick(sizes);
+  if (kind === 'triangle') {
+    const apex = apexStep * Math.floor(rnd() * (Math.floor(b / apexStep) + 1));
+    return { shape: [[x0, y0], [x0 + b, y0], [x0 + apex, y0 + h]], type: 'triangle' };
+  }
+  if (kind === 'square') return { shape: [[x0, y0], [x0 + b, y0], [x0 + b, y0 + b], [x0, y0 + b]], type: 'square' };
+  if (b === h) return null;
+  return { shape: [[x0, y0], [x0 + b, y0], [x0 + b, y0 + h], [x0, y0 + h]], type: 'rectangle' };
+}
+function shapeOnGrid(shape) {
+  return shape.every(([x,y]) => Number.isInteger(x) && Number.isInteger(y) && x >= GRID_MIN && x <= GRID_MAX && y >= GRID_MIN && y <= GRID_MAX);
+}
+function sameShape(a, b) {
+  const k = (s) => s.map(p => p.join(',')).sort().join(';');
+  return k(a) === k(b);
+}
+
+// Reflections in y = x, y = -x, x = k and y = k: five of each, the shape on alternate sides of the line, k of both signs.
+(function buildReflectionQuestions() {
+  const rnd = seededRandom(26102026);
+  const side = { 'y=x': (x, y) => y - x, 'y=-x': (x, y) => y + x };
+  const specs = [];
+  [1, -1, 1, -1, 1].forEach((sd, i) => specs.push(['y=x', sd]));
+  [-1, 1, -1, 1, -1].forEach((sd, i) => specs.push(['y=-x', sd]));
+  [[2, 1], [-3, -1], [1, 1], [-1, -1], [3, 1]].forEach(([k, sd]) => specs.push(['x=' + k, sd]));
+  [[-2, -1], [3, 1], [1, -1], [-3, 1], [2, -1]].forEach(([k, sd]) => specs.push(['y=' + k, sd]));
+  const seen = [];
+  for (const [axis, sd] of specs) {
+    const m = /^([xy])=(-?\d+)$/.exec(axis);
+    const dist = side[axis] || (m[1] === 'x' ? (x, y) => x - Number(m[2]) : (x, y) => y - Number(m[2]));
+    for (let tries = 0; tries < 5000; tries++) {
+      const c = drawShapeOn(rnd, [1, 2, 3], 1);
+      if (!c || !shapeOnGrid(c.shape)) continue;
+      const d = c.shape.map(([x,y]) => sd * dist(x, y));
+      if (d.some(v => v < 0) || Math.max(...d) < 1) continue;   // all on one side (a corner may touch the line), clear of it somewhere
+      const image = reflectShape(c.shape, axis);
+      if (!shapeOnGrid(image) || sameShape(image, c.shape)) continue;
+      if (seen.some(s => s.axis === axis && sameShape(s.shape, c.shape))) continue;
+      const q = { shape: c.shape, axis: axis, desc: 'Reflect in the line ' + axis.replace('=', ' = '), type: c.type };
+      seen.push(q);
+      REFLECTION_QUESTIONS.push(q);
+      break;
+    }
+  }
+})();
+
+// Enlargements by 2, 3 and 1/2 (never negative), about the origin and about grid points in every quadrant: sixteen.
+const ENLARGEMENT_QUESTIONS = [];
+(function buildEnlargementQuestions() {
+  const rnd = seededRandom(26102027);
+  const specs = [
+    [2, 1, 0, 0], [2, 1, 0, 0], [2, 1, 1, 1], [2, 1, -2, 1], [2, 1, -1, -2], [2, 1, 2, -1],
+    [3, 1, 0, 0], [3, 1, -1, -1], [3, 1, 1, -2], [3, 1, -2, 2],
+    [1, 2, 0, 0], [1, 2, 0, 0], [1, 2, 1, 1], [1, 2, -1, 2], [1, 2, -2, -1], [1, 2, 2, -3]
+  ];
+  for (const [sfn, sfd, cx, cy] of specs) {
+    for (let tries = 0; tries < 20000; tries++) {
+      const c = sfd === 2 ? drawShapeOn(rnd, [2, 4], 2) : drawShapeOn(rnd, [1, 2], 1);
+      if (!c || !shapeOnGrid(c.shape)) continue;
+      if (c.shape.some(([x,y]) => x === cx && y === cy)) continue;       // every corner moves
+      if (c.shape.some(([x,y]) => (x - cx) * sfn % sfd !== 0 || (y - cy) * sfn % sfd !== 0)) continue;   // a whole-number image
+      const image = enlargeShape(c.shape, cx, cy, sfn, sfd);
+      if (!shapeOnGrid(image) || sameShape(image, c.shape)) continue;
+      const desc = 'Enlarge by scale factor ' + (sfd === 1 ? sfn : sfn + '/' + sfd) + ' about (' + cx + ',' + cy + ')';
+      if (ENLARGEMENT_QUESTIONS.some(q => q.desc === desc && sameShape(q.shape, c.shape))) continue;
+      ENLARGEMENT_QUESTIONS.push({ shape: c.shape, sfn: sfn, sfd: sfd, cx: cx, cy: cy, desc: desc, type: c.type });
+      break;
+    }
+  }
+})();
+
 // ── GAME STATE ──
-let mode = 'translation'; // 'translation' | 'reflection' | 'rotation'
+let mode = 'translation'; // 'translation' | 'reflection' | 'rotation' | 'enlargement'
 let questions = [];
 let qIndex = 0;
 let currentQ = null;
@@ -466,6 +570,9 @@ function startGame(chosenMode) {
   } else if (chosenMode === 'rotation') {
     mode = 'rotation';
     questions = shuffle([...ROTATION_QUESTIONS]).slice(0, 10);
+  } else if (chosenMode === 'enlargement') {
+    mode = 'enlargement';
+    questions = shuffle([...ENLARGEMENT_QUESTIONS]).slice(0, 10);
   } else if (chosenMode === 'mix') {
     // Build a mixed bank: pick randomly from all three
     const tQ = shuffle([...TRANSLATION_QUESTIONS]);
@@ -507,7 +614,7 @@ function backToModeSelect() {
 
 function updateModePill() {
   const pill = document.getElementById('modePill');
-  const labels = { translation: 'Translation', reflection: 'Reflection', rotation: 'Rotation' };
+  const labels = { translation: 'Translation', reflection: 'Reflection', rotation: 'Rotation', enlargement: 'Enlargement' };
   if (selectedMode === 'mix') {
     pill.textContent = 'Mix: ' + labels[mode];
   } else {
@@ -546,6 +653,9 @@ function loadQuestion() {
     expectedVertices = reflectShape(currentQ.shape, currentQ.axis);
     const axisLabel = currentQ.axis === 'x' ? 'x-axis' : 'y-axis';
     instrBar.innerHTML = `<span class="highlight">${currentQ.desc}</span> — tap all ${expectedVertices.length} vertices of the reflected shape. A vertex on the mirror line stays where it is: tap it too.`;
+  } else if (mode === 'enlargement') {
+    expectedVertices = enlargeShape(currentQ.shape, currentQ.cx, currentQ.cy, currentQ.sfn, currentQ.sfd);
+    instrBar.innerHTML = `<span class="highlight">${currentQ.desc}</span> — tap all ${expectedVertices.length} vertices of the enlarged shape. The centre is the amber dot.`;
   } else if (mode === 'rotation') {
     expectedVertices = [];
     buildRotationOptions();
@@ -637,11 +747,34 @@ function drawGrid() {
     ctx.setLineDash([8, 6]);
     ctx.strokeStyle = '#f59e0b';
     ctx.lineWidth = 2;
-    if (currentQ.axis === 'x') {
-      ctx.beginPath(); ctx.moveTo(MARGIN, oy); ctx.lineTo(cw - MARGIN, oy); ctx.stroke();
-    } else {
-      ctx.beginPath(); ctx.moveTo(ox, MARGIN); ctx.lineTo(ox, cw - MARGIN); ctx.stroke();
+    const ml = mirrorLine(currentQ.axis);
+    const [ax, ay] = gridToPixel(ml.a[0], ml.a[1]), [bx, by] = gridToPixel(ml.b[0], ml.b[1]);
+    ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
+    if (ml.label) {   // a line that is not an axis is named just outside the grid, at one end
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#f59e0b';
+      ctx.font = '600 10px JetBrains Mono';
+      const end = ml.labelAtA ? [ax, ay] : [bx, by];
+      if (ml.vertical) {
+        ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(ml.label, end[0], end[1] - 4);
+      } else if (ml.horizontal) {
+        ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(ml.label, end[0] + 3, end[1]);
+      } else {
+        ctx.textAlign = ml.labelAtA ? 'right' : 'left'; ctx.textBaseline = 'bottom';
+        ctx.fillText(ml.label, end[0] + (ml.labelAtA ? -3 : 3), end[1] - 3);
+      }
     }
+    ctx.restore();
+  }
+
+  // Centre of enlargement
+  if (mode === 'enlargement') {
+    const [ecx, ecy] = gridToPixel(currentQ.cx, currentQ.cy);
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(ecx, ecy, 6, 0, Math.PI * 2);
+    ctx.fillStyle = '#f59e0b';
+    ctx.fill();
     ctx.restore();
   }
 
@@ -727,6 +860,18 @@ function drawGrid() {
     const target = expectedVertices;
     drawShape(target, '#22c55e', 'rgba(34,197,94,0.3)', 2);
   }
+}
+
+// The mirror line of a reflection as two grid points on the border of the grid, and the name it is given when it is not an axis.
+function mirrorLine(axis) {
+  if (axis === 'x') return { a: [GRID_MIN, 0], b: [GRID_MAX, 0] };
+  if (axis === 'y') return { a: [0, GRID_MIN], b: [0, GRID_MAX] };
+  const label = axis.replace('=', ' = ');
+  if (axis === 'y=x') return { a: [GRID_MIN, GRID_MIN], b: [GRID_MAX, GRID_MAX], label: label };
+  if (axis === 'y=-x') return { a: [GRID_MIN, GRID_MAX], b: [GRID_MAX, GRID_MIN], label: label, labelAtA: true };
+  const k = Number(axis.slice(2));
+  if (axis[0] === 'x') return { a: [k, GRID_MIN], b: [k, GRID_MAX], label: label, vertical: true };
+  return { a: [GRID_MIN, k], b: [GRID_MAX, k], label: label, horizontal: true };
 }
 
 function drawShape(vertices, strokeColor, fillColor, lineW) {
@@ -946,7 +1091,7 @@ const showResults = MaffsLock.finishOnce(function () {
   const maxQ = 10;
   const pct = Math.round(100 * total / maxQ);
 
-  const modeLabels = { translation: 'Translation', reflection: 'Reflection', rotation: 'Rotation', mix: 'Random Mix' };
+  const modeLabels = { translation: 'Translation', reflection: 'Reflection', rotation: 'Rotation', enlargement: 'Enlargement', mix: 'Random Mix' };
   document.getElementById('resultModeLabel').textContent = modeLabels[selectedMode];
   document.getElementById('finalScore').textContent = `${total}/${maxQ}`;
   document.getElementById('finalPct').textContent = `${pct}%`;
@@ -983,8 +1128,12 @@ function showReveal() {
       text: 'Translation means sliding a shape without rotating or flipping it. At GCSE you\'ll describe these using column vectors. You\'ve got the foundation.'
     },
     reflection: {
-      title: 'You just reflected shapes across the axes.',
-      text: 'Reflection creates a mirror image of a shape. At GCSE you\'ll reflect in lines like y = x and y = -x too. You\'ve got the foundation.'
+      title: 'You just reflected shapes in mirror lines.',
+      text: 'Reflection creates a mirror image of a shape. At GCSE you\'ll describe a reflection by giving its mirror line, such as y = x or x = 2. You\'ve got the foundation.'
+    },
+    enlargement: {
+      title: 'You just enlarged shapes from a centre.',
+      text: 'Enlargement multiplies every distance from the centre by the scale factor. At GCSE you\'ll describe one precisely: its scale factor and its centre. You\'ve got the foundation.'
     },
     rotation: {
       title: 'You just identified rotated shapes on a coordinate grid.',

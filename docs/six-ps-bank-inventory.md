@@ -27,7 +27,7 @@ All 32 covered topics route to 29 games. **Every game can be read from outside w
 | 15 | inverse-operations (5.3) | think-of-a-number year6 | 50 | list | yes | `steps` / `undoSteps` |
 | 16 | trigonometry (5.0) | trig-worms gcse | 1,152 (angle 536, side 412, hypotenuse 204) | pool built at load | yes: top-level `POOL` and `questionFrom(type, angle, hyp, ratio)` | `exp`, `slips` built inside `questionFrom` |
 | 17 | simultaneous (4.2) | simultaneous-solver gcse, stage 4 | 48 (stages 1-3 hold 48 each) | list | yes | **none** on stage 4 |
-| 18 | transformations (4.0) | shape-shifter year6, random-mix | 45 (translate 15, reflect 15, rotate 15) | list | yes | `desc` |
+| 18 | transformations (4.0) | shape-shifter year6, random-mix | 81 (translate 15, reflect 35: 15 in the axes and 20 built in y = x, y = -x, x = k, y = k; rotate 15; enlarge 16 built, from 26 Oct) | list | yes | `desc` |
 | 19 | simplify-expressions (3.7) | like-terms-collector year6 | 40 (stage 2: 10, stage 3: 30) | list | yes | **none** |
 | 20 | basic-probability (3.7) | probability-pioneer year6 | 45 (stage 1: 10, 2: 20, 3: 15) | list | yes | `why` (stage 2), `explanation` (stage 3) |
 | 21 | substitution (3.5) | formula-plug-in year6 | 50 | list | yes | `workingSteps` |
