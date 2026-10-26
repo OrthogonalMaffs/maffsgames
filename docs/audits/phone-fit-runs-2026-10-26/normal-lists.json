@@ -1,0 +1,197 @@
+{
+ "new": {
+  "estimation-golf": [
+   "320x568",
+   "375x667"
+  ],
+  "prime-factorisation": [
+   "320x568"
+  ],
+  "percentage-flip": [
+   "320x568",
+   "375x667"
+  ],
+  "equatle": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "52dle": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "constructions-lab": [
+   "320x568",
+   "375x667"
+  ],
+  "word-problem-decoder": [
+   "320x568",
+   "375x667"
+  ],
+  "equation-builder": [
+   "320x568"
+  ],
+  "spot-the-muppet": [
+   "320x568",
+   "375x667"
+  ],
+  "terrible-advice": [
+   "320x568",
+   "375x667"
+  ],
+  "wrong-on-the-internet": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "maths-court": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "think-of-a-number": [
+   "320x568",
+   "375x667"
+  ],
+  "decimal-detective": [
+   "320x568"
+  ],
+  "higher-power": [
+   "320x568"
+  ],
+  "index-laws": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "quadratic-factoriser": [
+   "320x568",
+   "375x667"
+  ],
+  "trig-worms": [
+   "320x568",
+   "375x667"
+  ],
+  "modular-battle": [
+   "320x568"
+  ],
+  "circle-theorem-spotter": [
+   "320x568",
+   "375x667"
+  ],
+  "coordinate-geometry-dash": [
+   "320x568"
+  ],
+  "chart-interrogator": [
+   "320x568",
+   "375x667"
+  ],
+  "component-crusher": [
+   "320x568"
+  ],
+  "expectation-station": [
+   "320x568"
+  ],
+  "better-value": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "given-that": [
+   "320x568",
+   "375x667"
+  ],
+  "screening-room": [
+   "320x568",
+   "375x667"
+  ],
+  "core-maths-paper1": [
+   "320x568"
+  ],
+  "core-maths-paper2a": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "core-maths-paper2b": [
+   "320x568",
+   "375x667"
+  ],
+  "core-maths-paper2c": [
+   "320x568"
+  ],
+  "tax-theft": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "stat-attack": [
+   "320x568"
+  ],
+  "growth-and-decay": [
+   "320x568",
+   "375x667"
+  ],
+  "test-the-claim": [
+   "320x568",
+   "375x667"
+  ],
+  "differentiation-duel": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "integration-duel": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "suvat": [
+   "320x568",
+   "375x667"
+  ],
+  "curling-friction": [
+   "320x568"
+  ],
+  "log-laws": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "partial-fractions-duel": [
+   "320x568",
+   "375x667"
+  ],
+  "fermi-lab": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "factor-theorem": [
+   "320x568"
+  ],
+  "boolean-blitz": [
+   "320x568"
+  ],
+  "truth-will-set-you-free": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "complex-converter": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ]
+ },
+ "newu": {
+  "spot-the-error": "started; no option group, input or submit; it shows \"Aa\"",
+  "gradient-hunter": "started; no option group, input or submit; it shows a canvas",
+  "four-quadrant-explorer": "started; no option group, input or submit; it shows \"Aa\", a canvas",
+  "shape-shifter": "started; no option group, input or submit; it shows \"Aa\", a canvas, \"Undo\"",
+  "just-pythag-it-bruv": "started; no option group, input or submit; it shows a drawing, \"\"",
+  "bearing-blitz": "started; no option group, input or submit; it shows a canvas, \"\ud83c\udfaf Fire Torpedo\"",
+  "glorious-gantt": "the start screen does not lead to a question generically (its first option, then 'Start'); no declared start"
+ }
+}
