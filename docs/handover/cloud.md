@@ -53,7 +53,12 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only via `python scripts/merge-pr.py <n>`
 (needs a green Gate and main, §7.8.3); watch main's run after.
 
-## 2026-10-26 (cloud): LOOK-REDS-2 (contract `docs/handover/contracts/2026-10-25-look-reds-2.md`, with Jon's Aa ruling of 26 Oct appended). **Distinctly Average built on the home lane's branch `claude/theme-distinctly-average` (rebased; claimed; home.md told); no PR yet. STOPPED twice on the 26 Oct ruling; waiting on Jon.**
+## 2026-10-26 (cloud): LOOK-REDS-2 (contract `docs/handover/contracts/2026-10-25-look-reds-2.md`, with Jon's Aa ruling of 26 Oct appended). **Distinctly Average built on the home lane's branch `claude/theme-distinctly-average` (rebased; claimed; home.md told); no PR yet. STOPPED twice on the 26 Oct ruling, then twice more on the second 26 Oct contract (below); waiting on Jon.**
+
+- **Second 26 Oct contract (Jon; tighter rule, shared reference card, then merge) — STOPPED on two STOP IFs, checkpoint (this commit).** Contract verbatim: `docs/handover/contracts/2026-10-26-look-reds-2-tighter.md`. Branch rebased on main 9a5baec (one conflict, the top line of home.md, resolved keeping main's text plus the cloud note).
+  - **Built:** `theme.css` `.maffs-ref` (one native `<details>`, scoped to its class, so no other page changes: The 6 P's `details.soon` untouched): collapsed it is a 44px "Show the rule" button, open a card titled by `.maffs-ref-title`; a game may tint it with `--ref-bg`/`--ref-edge`. Distinctly Average: the median card uses it, collapsed **below the options** while asking, open in the feedback after the working and misconception and before Next; its fade streak is gone (the card never opens on the asking screen now). Wording unchanged.
+  - **Measured, all 657 items, every wrong option (scratch `da-measure.py`):** the asking screen passes the tighter rule at every size and mode (Aa 320 GCSE: 12 items whose last option is below, worst 65 px, the allowed exception; was 184 px); Aa 375 asking 0 over (was 9). **STOP: the open card puts Next below the fold on every median item** (58 Foundation + 78 GCSE): normal 320 136/136 (median 182-202 px over, worst 353), normal 375 136/136 (18-20, worst 150), Aa 320 136/136 (worst 610), Aa 375 136/136 (worst 395), Aa 390 56/136 (worst 180); only normal 390 fits. Modelled with the card collapsed in the feedback instead: normal 320 GCSE 11 over (worst 37), Aa 320 74, Aa 375 GCSE 12 (worst 51). Non-median Next below the fold: Aa 320 GCSE 94 (the allowed exception) and Aa 375 GCSE 7 (six by under 1 px, one by 8 px: items 272-278, 397).
+  - **STOP: the known-failures list.** Fresh roster runs (normal and Aa, from the worktree, nothing chained) repeat the first runs exactly: first rule 34 live games, tighter rule 44 live (39 in normal mode alone), 24 beyond the 20; ten fail only the tighter rule. Lists: `docs/audits/phone-fit-gate-2026-10-26.md`. `measure-phone-fit.py`, canon §7.6.1/§7.6.2 and the PR are not done. Checks run here: check-theme.py OK (MIGRATED, every rule holds), verify-distinctly-average.py PASS, check-context-size PASS; `gen-six-ps.py --check` fails in this container identically on main 9a5baec (DA_PROMPTS and QUESTIONS undefined: Chromium here cannot reach the KaTeX CDN), so CI judges it. The rebased branch is committed locally only: pushing it needs a force-push (rebase), held for Jon.
 
 - **Before the ruling (all 657 items, every wrong option; scratch harness):** normal, every item fits at 320x568, 375x667, 390x844; Aa Foundation fits at all three; Aa GCSE 114 over at 320x568 (worst 184 px; on 12 the LAST option ends below the fold, not where the options start, as first reported), 9 at 375x667 (worst 8), none at 390x844. Main's page fails all 657 at 320. Screenshots: https://claude.ai/artifact/3XxqvDqZ33NXSibFqfeEB5
 - **Ruling 26 Oct, done (this commit):** `measure-phone-fit.py` gates: options that START below the fold (top of the highest answer control) are HARD FAIL, exit 1, any size, either mode; Aa at 320 overflow with the options starting above is WARN; `--selftest` (8 planted cases). Not in CI.
@@ -63,54 +68,5 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 
 ## 2026-10-25 (cloud): TOP-SCORES (#550, 8c3bff9; full entry in `docs/history/handover-cloud-archive.md`; Jon to rule on log-laws, fermi-lab, screening-room)
 
-## 2026-10-25 (cloud): MAIN-WARN (#548, caa172d, main run 40236003534 green, 62 jobs, pack carries "over-budget": []; full entry in `docs/history/handover-cloud-archive.md`: on main a group past 80% is a recorded warning under "over-budget" in ci-pack.json, past 100% still refused)
+Older entries (25 Oct and before; their full text in `docs/history/handover-cloud-archive.md`): MAIN-WARN, PR-MEASURED, SIX-PS-PLAYER, SHAPE-SHIFTER-SPLIT, SHAPE-SHIFTER-DATA-MODE, THE-6-PS, SQS-LIST, SQS-SPACING, SQS-REAL-UNITS, FOOTBALL-PITCHES, TAKE-A-WALK-LIST, TAKE-A-WALK-FRAME, TAKE-A-WALK-RANGES, TAKE-A-WALK, CALC-BY-STAGE, HMP-LIST, HMP-FOUNDATION-STAGES, FDP-KEY-COLLIDE, K-PUNCTUATION-SCAN, COMIC-CAPER-BRIEFS, FDP-SPREAD, COMIC-CAPER-LOCKS, HMP-CHOCOLATE, ANSWER-LOCK-STATIC, LINE-LIMIT-SCOPE.
 
-## 2026-10-25 (cloud): PR-MEASURED (#543; full entry in `docs/history/handover-cloud-archive.md`: replay #526 163 s PR / 205 s main; no more replays or storage hosts, Jon's ruling)
-
-## 2026-10-25 (cloud): SIX-PS-PLAYER (#535, #536, #538; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-25 (cloud): SHAPE-SHIFTER-SPLIT (#528; full entry in `docs/history/handover-cloud-archive.md`; its lesson, a renamed ci-line has no median, is now checked on every PR: PR-MEASURED)
-
-## 2026-10-25 (cloud): SHAPE-SHIFTER-DATA-MODE (#526; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-24 (cloud): THE-6-PS (#531; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-24 (cloud): SQS-LIST (#519; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-24 (cloud): SQS-SPACING (#514, split #515; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-24 (cloud): SQS-REAL-UNITS (#512; full entry in `docs/history/handover-cloud-archive.md`; pools 154, 308, 179, 132)
-
-## 2026-10-23 (cloud): FOOTBALL-PITCHES (#509; full entry in `docs/history/handover-cloud-archive.md`; pools 169, 338, 202, 148 before SQS-REAL-UNITS)
-
-## 2026-10-23 (cloud): TAKE-A-WALK-LIST (#504; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-23 (cloud): TAKE-A-WALK-FRAME (#499; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-23 (cloud): TAKE-A-WALK-RANGES (#497; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-23 (cloud): TAKE-A-WALK (#495; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-23 (cloud): CALC-BY-STAGE (#494; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-23 (cloud): HMP-LIST (#493; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-22 (cloud): HMP-FOUNDATION-STAGES (#491; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-22 (cloud): FDP-KEY-COLLIDE (#485; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-22 (cloud): K-PUNCTUATION-SCAN (#483; full entry in `docs/history/handover-cloud-archive.md`; report `docs/audits/k-punctuation-scan-2026-10.md`)
-
-## 2026-10-22 (cloud): COMIC-CAPER-BRIEFS (#482; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-22 (cloud): FDP-SPREAD (#481; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-22 (cloud): COMIC-CAPER-LOCKS (#480; full entry in `docs/history/handover-cloud-archive.md`; report `docs/audits/comic-caper-locks-2026-10-22.md`)
-
-## 2026-10-21 (cloud): HMP-CHOCOLATE (#479; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-22 (cloud): ANSWER-LOCK-STATIC (#478; full entry in `docs/history/handover-cloud-archive.md`)
-
-## 2026-10-21 (cloud): LINE-LIMIT-SCOPE (#474; full entry in `docs/history/handover-cloud-archive.md`)
-
-Older entries (20 Oct and before): `docs/history/handover-cloud-archive.md`.

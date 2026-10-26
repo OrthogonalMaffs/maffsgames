@@ -80,3 +80,67 @@ Only in Aa: `seven-bridges`, `screening-room`, `probability-paradox`, `glorious-
 `characteristic-quest`, `component-crusher`, `dimension-checker`, `eigenvalue-extractor`, `force-resolver`, `graph-sketcher`, `prisoners-dilemma`, `proportion-blaster`, `scale-factor-scaling`, `sequence-solver`, `standard-form-blitz`, `surd-simplifier`, `trig-identity-duel`, `unit-converter`.
 
 `glorious-gantt` is unlisted (roster Unlisted section); every other game here is live.
+
+## The tighter rule (Jon, 26 Oct 2026, second ruling): fresh runs on the rebased branch, 26 Oct, 15:00 UTC
+
+The normal and Aa roster runs were repeated from the worktree (one command each, nothing chained): they give the same 20 and 34 live games
+as above, so the first runs stand. The tighter rule: the **last** option ends above the fold, in normal mode at all three sizes and in Aa at
+375x667 and 390x844; Aa at 320x568 keeps the first rule (the options start above the fold). Read from the same runs (the asking cells are
+the bottom of the lowest answer control).
+
+| Rule | Games failing (live) | Normal mode alone |
+|---|---|---|
+| First worded: the options start above the fold | 35 (34) | 20 |
+| Tighter: the last option ends above the fold (Aa 320: the first rule) | 45 (44) | 39 |
+
+Ten games fail only the tighter rule (marked *new*). Unmeasurable in both modes (the generic driver cannot reach the asking screen; not
+failures): bearing-blitz, core-maths-paper1, -2a, -2b, -2c, equation-builder, four-quadrant-explorer, how-many-parts, just-pythag-it-bruv,
+shape-shifter, six-sevens-bruv, spot-the-error, squared-squirrel, take-a-walk. Distinctly Average passes both rules on its first question.
+
+| Game | Fails the tighter rule at |
+|---|---|
+| `52dle` | normal 320×568,375×667,390×844; aa 320×568,375×667,390×844 |
+| `better-value` | normal 320×568,375×667,390×844; aa 320×568,375×667,390×844 |
+| `boolean-blitz` *new* | normal 320×568 |
+| `chart-interrogator` *new* | normal 320×568; aa 375×667 |
+| `circle-theorem-spotter` | normal 320×568,375×667; aa 320×568,375×667 |
+| `complex-converter` | normal 320×568,375×667,390×844; aa 320×568,375×667,390×844 |
+| `constructions-lab` | normal 320×568,375×667; aa 320×568,375×667,390×844 |
+| `coordinate-geometry-dash` *new* | normal 320×568; aa 375×667 |
+| `correlation-or-coincidence` *new* | aa 375×667 |
+| `curling-friction` | normal 320×568; aa 320×568,375×667 |
+| `decimal-detective` | normal 320×568; aa 320×568,375×667 |
+| `differentiation-duel` | normal 320×568,375×667,390×844; aa 320×568,375×667,390×844 |
+| `equatle` *new* | normal 320×568,375×667,390×844; aa 375×667,390×844 |
+| `estimation-golf` *new* | normal 320×568,375×667; aa 375×667 |
+| `expectation-station` | normal 320×568; aa 320×568,375×667 |
+| `fermi-lab` *new* | normal 320×568,375×667,390×844; aa 375×667,390×844 |
+| `given-that` | normal 320×568; aa 320×568,375×667,390×844 |
+| `glorious-gantt` (unlisted) | aa 320×568,375×667 |
+| `gradient-hunter` | aa 320×568 |
+| `growth-and-decay` | normal 320×568; aa 320×568,375×667 |
+| `higher-power` | normal 320×568; aa 320×568,375×667 |
+| `index-laws` | normal 320×568,375×667,390×844; aa 320×568,375×667,390×844 |
+| `integration-duel` | normal 320×568,375×667,390×844; aa 320×568,375×667,390×844 |
+| `log-laws` | normal 320×568,375×667,390×844; aa 320×568,375×667,390×844 |
+| `maths-court` *new* | normal 320×568,375×667,390×844; aa 375×667,390×844 |
+| `modular-battle` | normal 320×568; aa 320×568 |
+| `negative-number-line` | aa 320×568 |
+| `partial-fractions-duel` *new* | normal 320×568,375×667; aa 375×667 |
+| `percentage-flip` | normal 320×568,375×667; aa 320×568,375×667 |
+| `prime-factorisation` *new* | normal 320×568; aa 375×667 |
+| `probability-paradox` | aa 320×568,375×667 |
+| `quadratic-factoriser` | normal 320×568,375×667; aa 320×568,375×667,390×844 |
+| `screening-room` | normal 320×568,375×667; aa 320×568,375×667,390×844 |
+| `seven-bridges` | normal 320×568,375×667,390×844; aa 320×568,375×667,390×844 |
+| `spot-the-muppet` | normal 320×568,375×667; aa 320×568,375×667,390×844 |
+| `stat-attack` | aa 320×568 |
+| `suvat` | normal 320×568,375×667; aa 320×568,375×667,390×844 |
+| `tax-theft` | normal 320×568,375×667,390×844; aa 320×568,375×667,390×844 |
+| `terrible-advice` | normal 320×568,375×667; aa 320×568,375×667,390×844 |
+| `test-the-claim` | normal 320×568; aa 320×568,375×667 |
+| `think-of-a-number` | normal 320×568,375×667; aa 320×568,375×667,390×844 |
+| `trig-worms` | normal 320×568,375×667; aa 320×568,375×667 |
+| `truth-will-set-you-free` | normal 320×568,375×667,390×844; aa 320×568,375×667,390×844 |
+| `word-problem-decoder` | normal 320×568,375×667; aa 320×568,375×667,390×844 |
+| `wrong-on-the-internet` | normal 320×568,375×667; aa 320×568,375×667,390×844 |

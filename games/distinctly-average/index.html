@@ -20,7 +20,8 @@
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
 <style>
 /* Theme: schools/assets/theme.css (canon §7.5), light row at every level (this game serves KS3 and GCSE). This game's
-   own tokens: a violet accent (6.3:1 on the white surface), its tint, the amber scaffold card and the two answer tints.
+   own tokens: a violet accent (6.3:1 on the white surface), its tint, the amber tint of the median reference card
+   (theme.css's .maffs-ref, canon 7.6.2) and the two answer tints.
    Everything else is a base token. */
 :root {
   --accent:      #5b3fc9;
@@ -28,8 +29,8 @@
   --on-accent:   #ffffff;
   --correct-lt:  rgba(22,101,52,0.12);
   --wrong-lt:    rgba(185,28,28,0.10);
-  --scaffold-bg: #fffaf0;
-  --scaffold-edge: #f0c869;
+  --ref-bg:      #fffaf0;
+  --ref-edge:    #f0c869;
   --shadow-sm: 0 1px 3px rgba(26,39,68,0.08), 0 1px 2px rgba(26,39,68,0.06);
   --shadow-md: 0 6px 20px rgba(26,39,68,0.08), 0 2px 6px rgba(26,39,68,0.05);
 }
@@ -111,14 +112,9 @@ body {
 .main-game { display: none; flex-direction: column; align-items: center; gap: 14px; width: 100%; }
 .main-game.visible { display: flex; }
 
-.scaffold-area { width: 100%; }
-.scaffold-card { background: var(--scaffold-bg); border: 2px dashed var(--scaffold-edge); border-radius: 14px; padding: 16px 18px; }
-.scaffold-title { font-size: 12px; font-weight: 700; color: var(--hint); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
 .scaffold-formula { text-align: center; font-size: 17px; margin: 6px 0 10px; color: var(--text); }
 .scaffold-steps { padding-left: 20px; font-size: 13.5px; color: var(--text); line-height: 1.6; display: flex; flex-direction: column; gap: 4px; }
 .scaffold-steps li::marker { color: var(--hint); font-weight: 700; }
-.show-rule-btn { display: block; margin: 0 auto; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 100px; min-height: 44px; padding: 7px 16px; font-size: 12px; font-weight: 600; cursor: pointer; }
-.show-rule-btn:hover { border-color: var(--accent); color: var(--accent); }
 
 .q-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; text-align: center; }
 .q-prompt { font-size: 15.5px; color: var(--text); text-align: center; margin-bottom: 16px; line-height: 1.5; }
@@ -190,16 +186,6 @@ body {
      they stay */
   .main-game:is([data-cat="mean"], [data-cat="median"], [data-cat="modeUnique"], [data-cat="modeBimodal"],
     [data-cat="compareMean"], [data-cat="compareRange"], [data-cat="outlierId"]):has(.opt-btn.wrong) #qData { display: none; }
-}
-/* On a short phone the scaffold card (an aid, not the question) sits below the answer, so the options stay above the fold;
-   the reading order is unchanged. */
-@media (max-width: 600px) and (max-height: 700px) {
-  .scaffold-area { order: 2; }
-}
-/* On any narrow screen it moves there too in Aa mode (OpenDyslexic makes it twice as tall), and after a wrong answer,
-   where the working above Next already shows the method step by step. */
-@media (max-width: 600px) {
-  body.accessible .scaffold-area, .main-game:has(.opt-btn.wrong) .scaffold-area { order: 2; }
 }
 /* === Accessibility === (the font and the page background come from theme.css) */
 body.accessible { letter-spacing: 0.12em; word-spacing: 0.16em; }
@@ -286,13 +272,12 @@ body.accessible .q-prompt { font-size: 1.1em; }
   </div>
 
   <div class="main-game" id="mainGame">
-    <div class="scaffold-area" id="scaffoldArea"></div>
-
     <div class="card">
       <div class="q-label" id="qCat">Mean</div>
       <div class="q-prompt" id="qPrompt"></div>
       <div id="qData"></div>
       <div class="options-grid" id="optionsGrid"></div>
+      <div id="scaffoldArea"></div>
       <div class="feedback" id="feedback"></div>
       <div class="explain-box" id="explainBox"></div>
       <div class="next-mount" id="nextMount"></div>
@@ -1210,26 +1195,15 @@ renderStartContent();
 renderSessionButtons();
 
 /* ----------------------------------------------------------------------------
-   Median scaffold (canon "scaffolds fade, never pre-announce"). Generic —
-   never shows the current item's value. Open until two correct in a row on
-   a median-type question, then collapses to a button; two wrong in a row
-   reopens it. Never removed entirely.
+   The median card: theme.css's reference card (.maffs-ref, canon 7.6.2; Jon's ruling, 26 Oct 2026). Generic,
+   never the current item's value. On a median question it waits collapsed as "Show the rule" below the options,
+   so it never pushes them down; after a wrong answer it is open in the feedback, after the working and before Next.
    ---------------------------------------------------------------------------- */
-let medianCorrectStreak = 0, medianWrongStreak = 0, scaffoldCollapsed = false;
 function isMedianCat(cat) { return cat === 'median' || cat === 'freqMedian'; }
-function updateScaffoldStreak(item, wasCorrect) {
-  if (!isMedianCat(item.cat)) return;
-  if (wasCorrect) {
-    medianCorrectStreak++; medianWrongStreak = 0;
-    if (medianCorrectStreak >= 2) scaffoldCollapsed = true;
-  } else {
-    medianWrongStreak++; medianCorrectStreak = 0;
-    if (medianWrongStreak >= 2) scaffoldCollapsed = false;
-  }
-}
-function renderScaffoldCard(mount) {
-  mount.innerHTML =
-    '<div class="scaffold-title">Finding the median</div>' +
+function medianCardHTML(open) {
+  return '<details class="maffs-ref"' + (open ? ' open' : '') + '>' +
+    '<summary><span class="maffs-ref-show">Show the rule</span><span class="maffs-ref-title">Finding the median</span></summary>' +
+    '<div class="maffs-ref-body">' +
     '<div class="scaffold-formula">' + tex('\\text{position} = \\dfrac{n+1}{2}') + '</div>' +
     '<ol class="scaffold-steps">' +
       '<li>Order the data from smallest to largest.</li>' +
@@ -1237,22 +1211,11 @@ function renderScaffoldCard(mount) {
       '<li>Is <i>n</i> odd or even?</li>' +
       '<li>Work out (<i>n</i> + 1) ÷ 2.</li>' +
       '<li><b>Odd</b> — the value at that position is the median.<br><b>Even</b> — the position ends in .5, so the median is halfway between the two values either side.</li>' +
-    '</ol>';
+    '</ol>' +
+    '</div></details>';
 }
 function renderScaffoldArea(item) {
-  const area = document.getElementById('scaffoldArea');
-  if (!isMedianCat(item.cat)) { area.style.display = 'none'; area.innerHTML = ''; return; }
-  area.style.display = '';
-  if (!scaffoldCollapsed) {
-    area.innerHTML = '<div class="scaffold-card" id="scaffoldCard"></div>';
-    renderScaffoldCard(document.getElementById('scaffoldCard'));
-  } else {
-    area.innerHTML = '<button class="show-rule-btn" type="button" id="showRuleBtn">Show the rule</button>';
-    document.getElementById('showRuleBtn').addEventListener('click', function () {
-      area.innerHTML = '<div class="scaffold-card" id="scaffoldCard"></div>';
-      renderScaffoldCard(document.getElementById('scaffoldCard'));
-    });
-  }
+  document.getElementById('scaffoldArea').innerHTML = isMedianCat(item.cat) ? medianCardHTML(false) : '';
 }
 
 /* ----------------------------------------------------------------------------
@@ -1304,7 +1267,6 @@ function startGame() {
   const pool = poolFor(currentLevel);
   sessionQuestions = MaffsOptions.shuffle(pool.slice()).slice(0, sessionLength);
   score = 0; correctCount = 0; qIndex = 0;
-  medianCorrectStreak = 0; medianWrongStreak = 0; scaffoldCollapsed = false;
   document.getElementById('startScreen').style.display = 'none';
   document.getElementById('gameOver').style.display = 'none';
   document.getElementById('mainGame').classList.add('visible');
@@ -1470,7 +1432,6 @@ function checkAnswer(selectedVal, btnEl) {
     else if (b === btnEl) b.classList.add('wrong');
   });
   mfg('question_answered', { game_slug: SLUG, level: currentLevel, question_index: qIndex, correct: isCorrect });
-  updateScaffoldStreak(currentItem, isCorrect);
 
   const feedback = document.getElementById('feedback');
   const explainBox = document.getElementById('explainBox');
@@ -1484,7 +1445,9 @@ function checkAnswer(selectedVal, btnEl) {
     feedback.textContent = 'WRONG';
     feedback.className = 'feedback wrong';
     const misId = currentDistMap[selectedVal];
-    explainBox.innerHTML = explainHTML(currentItem) + (misId ? '<div class="mc-box">' + MC[misId] + '</div>' : '');
+    document.getElementById('scaffoldArea').innerHTML = '';   // the median card moves into the feedback, open
+    explainBox.innerHTML = explainHTML(currentItem) + (misId ? '<div class="mc-box">' + MC[misId] + '</div>' : '') +
+      (isMedianCat(currentItem.cat) ? medianCardHTML(true) : '');
     // Fallback deliberately extended (24h, safely under setTimeout's ~24.8-day
     // ceiling) rather than the shared 20s default — canon §7.6 wants NO
     // timeout on the wrong-answer path here; MaffsNext.wrong's own
