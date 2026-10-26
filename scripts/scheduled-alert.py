@@ -339,7 +339,7 @@ def main_guarded():
         print("::error::" + msg)
         summary = os.environ.get("GITHUB_STEP_SUMMARY")
         if summary:
-            with open(summary, "a", encoding="utf-8") as f:
+            with open(summary, "a", encoding="utf-8", newline="") as f:
                 f.write("**Alert not filed.** " + msg + chr(10))
         return 1
 
