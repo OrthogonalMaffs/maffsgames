@@ -1,21 +1,33 @@
 #!/usr/bin/env python3
-# ci-line: Shape Shifter, part 1 (every translation, reflection and rotation image recomputed from its words; every rotation option classified; every vertex and every letter tapped on the real canvas in Chromium; each mode card's data-mode its own mode, a burst at random-mix starting Random Mix once, each card starting its mode once without a burst) | --part 1
-# ci-line: Shape Shifter, part 2 (fault-injection self-test: half the planted faults, each caught) | --part 2
-# ci-line: Shape Shifter, part 3 (fault-injection self-test: the other half of the planted faults, each caught) | --part 3
-"""Shape Shifter: translate, reflect and rotate a shape on a -5..5 grid; three static banks, four modes.
+# ci-line: Shape Shifter, part 1 (every translation, reflection (in the axes, y = x, y = -x, x = k and y = k), rotation and enlargement image recomputed from its words; every rotation option classified; every vertex and every letter tapped on the real canvas in Chromium; each mode card's data-mode its own mode, a burst at random-mix starting Random Mix once, each card starting its mode once without a burst) | --part 1
+# ci-line: Shape Shifter, part 2 (fault-injection self-test: a quarter of the planted faults, each caught) | --part 2
+# ci-line: Shape Shifter, part 3 (fault-injection self-test: the next quarter of the planted faults, each caught) | --part 3
+# ci-line: Shape Shifter, part 4 (fault-injection self-test: the next quarter of the planted faults, each caught) | --part 4
+# ci-line: Shape Shifter, part 5 (fault-injection self-test: the last quarter of the planted faults, each caught) | --part 5
+"""Shape Shifter: translate, reflect, rotate and enlarge a shape on a -5..5 grid; five modes.
 
-Banks, read from the page as served: TRANSLATION_QUESTIONS (15, tap the image's vertices), REFLECTION_QUESTIONS (15, tap
-the image's vertices) and ROTATION_QUESTIONS (15, built by the page from 12 bases, four options A-D, tap a shape). A
-session is 10 questions: one mode, or Random Mix (at least 3 of each mode, one extra).
+Banks, read from the page as served: TRANSLATION_QUESTIONS (15, tap the image's vertices), REFLECTION_QUESTIONS (15 typed
+in the axes, then 20 built by the page: five each in y = x, y = -x, x = k and y = k; tap the image's vertices),
+ROTATION_QUESTIONS (15, built by the page from 12 bases, four options A-D, tap a shape) and ENLARGEMENT_QUESTIONS (16,
+built by the page: scale factors 2, 3 and 1/2, centres at the origin and in every quadrant; tap the image's vertices).
+A session is 10 questions: one mode, or Random Mix (translation, reflection and rotation: at least 3 of each, one extra;
+no enlargement).
 
 Checks, independent of the game's code (the maths is integer-exact, so no Fraction is needed):
   Translation: the words ("Translate 3 right and 2 up") are parsed and the image is the shape moved by them; dx and dy
     stored in the item agree with the words; the shape is a triangle, a rectangle or a square as its type says; the
     shape and its image are on the grid (so every vertex can be tapped); the image is not the shape itself.
-  Reflection: the axis in the words is the item's axis; the image is the shape with y (x-axis) or x (y-axis) negated;
-    on the grid; not the shape itself as a set of vertices (shape-shifter-t3-003, fixed: the one item that was its own
+  Reflection: the mirror line in the words ("Reflect in the y-axis", "Reflect in the line x = 2") is the item's axis; the
+    image is worked out here as the reflection in that line (a x + b y = c, a point moved twice its signed distance along
+    the normal), not from the game's formulas; on the grid; not the shape itself as a set of vertices (shape-shifter-t3-003, fixed: the one item that was its own
     image now sits clear of the axis). The bank is the one Reflection and Random Mix both deal from (Sessions, below),
     so no mode can serve such an item.
+  Reflection coverage: at least five items in each of y = x, y = -x, x = k and y = k, k of both signs in the last two,
+    the shape on both sides of every one of the four lines.
+  Enlargement: the words ("Enlarge by scale factor 1/2 about (1,1)") are parsed (scale factors 2, 3 and 1/2 only, never
+    negative); the item's sfn, sfd, cx and cy agree; every image vertex is worked out here with Fractions, is a whole
+    number on the grid, and no corner is the centre; at least 15 items, 5 with scale factor 1/2, 8 with a centre other
+    than the origin, and a centre in every quadrant.
   Rotation: the words ("Rotate 90 degrees clockwise about (0,0)") are parsed and the true image is turned here, a quarter
     turn clockwise as (x, y) -> (y, -x) about the centre and anticlockwise as (x, y) -> (-y, x). The item's key is that
     image. Four options, no two the same shape, exactly one the true image, none the shape itself; every wrong option is a
@@ -27,7 +39,9 @@ Checks, independent of the game's code (the maths is integer-exact, so no Fracti
     translation and reflection: tapping the image's vertices in every order reads "Correct!" (and scores 1); every vertex
     replaced in turn by every one of the 121 grid points reads "Not quite" except the vertex itself; a vertex tapped
     twice, and each named whole-shape slip, read "Not quite" (translation: not moved, the opposite move, dx and dy
-    swapped, only x moved, only y moved; reflection: not reflected, the other axis, through the origin). Rotation: every
+    swapped, only x moved, only y moved; reflection: not reflected, each of the other three mirror lines among the x-axis,
+    y-axis, y = x and y = -x, through the origin; enlargement: not enlarged, about the origin instead of the centre, the
+    scale factor inverted, the offset from the centre not added back). Rotation: every
     option's letter tapped over eight deals: the true image reads "Correct! (L)", any other reads "Not quite - correct
     answer was L" naming the true image's letter. A whole session played from this script's own answers scores 10/10 in
     each mode and 0/10 when every answer is wrong.
@@ -37,7 +51,7 @@ Colour (t3-001, fixed in ESSENTIALS-FALSE-TEXT 4/4): after an answer the correct
 --green, at both drawing sites (the shape tapped and the rotation option), with a contrast of at least 3:1 against the
 canvas background (WCAG 1.4.11), and the wrong-answer feedback names that colour, "correct shape shown in green".
 
-Not asserted (open findings, left open): no 180 degree rotation ever built (t3-002), 15 items a mode (t3-004), the
+Not asserted (open findings, left open): no 180 degree rotation ever built (t3-002), 15 items in translation and rotation (t3-004), the
 shared board and no keyboard path (t3-005).
 
     python scripts/verify-shape-shifter.py [--no-selftest] [--against FILE]
@@ -45,6 +59,7 @@ shared board and no keyboard path (t3-005).
 import argparse
 import itertools
 import os
+from fractions import Fraction
 import re
 import sys
 
@@ -56,7 +71,7 @@ SLUG = 'shape-shifter'
 GAME = os.path.join(os.path.dirname(HERE), 'games', SLUG, 'index.html')
 DEALS = 5
 ROT_DEALS = 8
-MODES = ('translation', 'reflection', 'rotation', 'mix')
+MODES = ('translation', 'reflection', 'rotation', 'enlargement', 'mix')
 # Expected failures: items that break a rule and whose finding stays open. The check fails on any other item that does,
 # and fails if one of these stops failing (close the finding then).
 EXPECTED = {}
@@ -93,8 +108,39 @@ def translate(shape, dx, dy):
     return [(x + dx, y + dy) for x, y in shape]
 
 
+LINES = {'x': (0, 1, 0), 'y': (1, 0, 0), 'y=x': (1, -1, 0), 'y=-x': (1, 1, 0)}
+OTHER_LINES = ('x', 'y', 'y=x', 'y=-x')
+
+
+def mirror(axis):
+    """The mirror line an axis name gives as (a, b, c): a x + b y = c. 'x' is the x-axis, 'y' the y-axis."""
+    if axis in LINES:
+        return LINES[axis]
+    m = re.fullmatch(r'([xy])=(-?\d+)', axis)
+    return (1, 0, int(m.group(2))) if m.group(1) == 'x' else (0, 1, int(m.group(2)))
+
+
 def reflect(shape, axis):
-    return [(-x, y) for x, y in shape] if axis == 'y' else [(x, -y) for x, y in shape]
+    """The shape reflected in the line: each point moves twice its signed distance to the line, along the normal."""
+    a, b, c = mirror(axis)
+    out = []
+    for x, y in shape:
+        t2 = Fraction(2 * (a * x + b * y - c), a * a + b * b)
+        px, py = x - t2 * a, y - t2 * b
+        assert px.denominator == 1 and py.denominator == 1, ('a reflection image that is not a whole number', axis, x, y)
+        out.append((int(px), int(py)))
+    return out
+
+
+def enlarge(shape, sf, cx, cy):
+    """The shape enlarged by sf about (cx, cy); None if any image vertex is not a whole number."""
+    out = []
+    for x, y in shape:
+        px, py = cx + (x - cx) * sf, cy + (y - cy) * sf
+        if Fraction(px).denominator != 1 or Fraction(py).denominator != 1:
+            return None
+        out.append((int(px), int(py)))
+    return out
 
 
 def turn(shape, cx, cy, kind):
@@ -117,6 +163,53 @@ def parse_translation(desc):
     dx = int(m.group(1)) * (1 if m.group(2) == 'right' else -1)
     dy = 0 if m.group(3) is None else int(m.group(3)) * (1 if m.group(4) == 'up' else -1)
     return dx, dy
+
+
+def parse_reflection(desc):
+    """The axis name the words give: 'x' and 'y' for the axes, else 'y=x', 'y=-x', 'x=k' or 'y=k' (k a whole number, not 0)."""
+    m = re.fullmatch(r'Reflect in the (x|y)-axis', desc)
+    if m:
+        return m.group(1)
+    m = re.fullmatch(r'Reflect in the line (y = x|y = -x|x = -?[1-9]\d*|y = -?[1-9]\d*)', desc)
+    return m.group(1).replace(' ', '') if m else None
+
+
+def parse_enlargement(desc):
+    m = re.fullmatch(r'Enlarge by scale factor (2|3|1/2) about \((-?\d+),(-?\d+)\)', desc)
+    if not m:
+        return None
+    return Fraction(m.group(1)), int(m.group(2)), int(m.group(3))
+
+
+def answer_image(mode, q):
+    """The image a student should tap, worked out here from the item's words."""
+    if mode == 'translation':
+        return translate(q['shape'], *parse_translation(q['desc']))
+    if mode == 'reflection':
+        return reflect(q['shape'], parse_reflection(q['desc']))
+    sf, cx, cy = parse_enlargement(q['desc'])
+    return enlarge(q['shape'], sf, cx, cy)
+
+
+def wrong_images(mode, q):
+    """[(name, shape)]: the named whole-shape slips for a vertex-tapping mode."""
+    if mode == 'translation':
+        return [('not moved', q['shape']),
+                ('the opposite move', translate(q['shape'], -q['dx'], -q['dy'])),
+                ('dx and dy swapped', translate(q['shape'], q['dy'], q['dx'])),
+                ('only x moved', translate(q['shape'], q['dx'], 0)),
+                ('only y moved', translate(q['shape'], 0, q['dy']))]
+    if mode == 'reflection':
+        own = parse_reflection(q['desc'])
+        return ([('not reflected', q['shape'])]
+                + [('reflected in %s instead' % ln, reflect(q['shape'], ln)) for ln in OTHER_LINES if ln != own]
+                + [('through the origin', [(-x, -y) for x, y in q['shape']])])
+    sf, cx, cy = parse_enlargement(q['desc'])
+    out = [('not enlarged', q['shape']),
+           ('enlarged about the origin instead of the centre', enlarge(q['shape'], sf, 0, 0)),
+           ('the scale factor inverted', enlarge(q['shape'], 1 / sf, cx, cy)),
+           ('the offset from the centre not added back', [(int((x - cx) * sf), int((y - cy) * sf)) for x, y in q['shape']])]
+    return [(n, sh) for n, sh in out if sh is not None]
 
 
 def parse_rotation(desc):
@@ -145,7 +238,50 @@ def expect_or_fail(fails, expected_hit, mode, shape, msg):
         fails.append(msg)
 
 
-def check_banks(fails, expected_hit, tq, rq, oq):
+def check_reflection_coverage(fails, rq):
+    """The 20 built reflections: at least five in each of y = x, y = -x, x = k and y = k, k of both signs in the last two,
+    and the shape on both sides of each line."""
+    by = {}
+    for q in rq:
+        axis = parse_reflection(q['desc'])
+        if axis is None or axis in ('x', 'y'):
+            continue
+        kind = axis if axis in ('y=x', 'y=-x') else axis[0] + '=k'
+        a, b, c = mirror(axis)
+        sides = {(1 if a * x + b * y - c > 0 else -1) for x, y in q['shape'] if a * x + b * y - c != 0}
+        e = by.setdefault(kind, {'n': 0, 'k': set(), 'sides': set()})
+        e['n'] += 1
+        e['sides'] |= sides
+        if kind in ('x=k', 'y=k'):
+            e['k'].add(c > 0)
+    for kind in ('y=x', 'y=-x', 'x=k', 'y=k'):
+        e = by.get(kind, {'n': 0, 'k': set(), 'sides': set()})
+        if e['n'] < 5:
+            fails.append('reflection coverage: %d items in %s, at least 5 needed' % (e['n'], kind))
+        if kind in ('x=k', 'y=k') and e['k'] != {True, False}:
+            fails.append('reflection coverage: %s has k of one sign only' % kind)
+        if len(e['sides']) < 2:
+            fails.append('reflection coverage: every shape in %s is on the same side of the line' % kind)
+
+
+def check_enlargement_coverage(fails, eq):
+    """At least 15 enlargements, 5 with scale factor 1/2, 8 with a centre other than the origin, a centre in each quadrant."""
+    ds = [parse_enlargement(q['desc']) for q in eq]
+    ds = [d for d in ds if d]
+    if len(ds) < 15:
+        fails.append('enlargement coverage: %d items, at least 15 needed' % len(ds))
+    if sum(1 for sf, _, _ in ds if sf == Fraction(1, 2)) < 5:
+        fails.append('enlargement coverage: fewer than 5 items with scale factor 1/2')
+    if sum(1 for _, cx, cy in ds if (cx, cy) != (0, 0)) < 8:
+        fails.append('enlargement coverage: fewer than 8 items with a centre other than the origin')
+    quads = {(cx > 0, cy > 0) for _, cx, cy in ds if cx and cy}
+    if len(quads) < 4:
+        fails.append('enlargement coverage: centres in %d of the 4 quadrants' % len(quads))
+    if {sf for sf, _, _ in ds} - {Fraction(2), Fraction(3), Fraction(1, 2)}:
+        fails.append('enlargement coverage: a scale factor other than 2, 3 and 1/2')
+
+
+def check_banks(fails, expected_hit, tq, rq, oq, eq):
     seen = set()
     for i, q in enumerate(tq, 1):
         where = 'translation %d (%s)' % (i, q['desc'])
@@ -169,24 +305,53 @@ def check_banks(fails, expected_hit, tq, rq, oq):
         seen.add(k)
     for i, q in enumerate(rq, 1):
         where = 'reflection %d (%s)' % (i, q['desc'])
-        m = re.fullmatch(r'Reflect in the (x|y)-axis', q['desc'])
-        if not m:
+        axis = parse_reflection(q['desc'])
+        if axis is None:
             fails.append('%s: the words cannot be read as a reflection' % where)
             continue
-        if m.group(1) != q['axis']:
-            fails.append('%s: reflection key is the %s-axis but the words say the %s-axis' % (where, q['axis'], m.group(1)))
+        if axis != q['axis']:
+            fails.append('%s: reflection key is %r but the words say %r' % (where, q['axis'], axis))
         if not on_grid(q['shape']) or not kind_ok(q['type'], q['shape']):
             fails.append('%s: reflection shape %r is not a %s on the grid' % (where, q['shape'], q['type']))
             continue
-        img = reflect(q['shape'], m.group(1))
+        img = reflect(q['shape'], axis)
         if not on_grid(img):
             fails.append('%s: reflection image %r is off the grid' % (where, img))
         if fs(img) == fs(q['shape']):
             expect_or_fail(fails, expected_hit, 'reflection', q['shape'], '%s: reflection image is the shape itself' % where)
-        k = ('r', fs(q['shape']), m.group(1))
+        k = ('r', fs(q['shape']), axis)
         if k in seen:
             fails.append('%s: reflection item repeated' % where)
         seen.add(k)
+    check_reflection_coverage(fails, rq)
+    for i, q in enumerate(eq, 1):
+        where = 'enlargement %d (%s)' % (i, q['desc'])
+        d = parse_enlargement(q['desc'])
+        if d is None:
+            fails.append('%s: the words cannot be read as an enlargement by 2, 3 or 1/2' % where)
+            continue
+        sf, cx, cy = d
+        if (Fraction(q['sfn'], q['sfd']), q['cx'], q['cy']) != (sf, cx, cy):
+            fails.append('%s: enlargement key %s/%s about (%s,%s) but the words say %s about (%s,%s)' % (
+                where, q['sfn'], q['sfd'], q['cx'], q['cy'], sf, cx, cy))
+        if not on_grid(q['shape']) or not kind_ok(q['type'], q['shape']):
+            fails.append('%s: enlargement shape %r is not a %s on the grid' % (where, q['shape'], q['type']))
+            continue
+        img = enlarge(q['shape'], sf, cx, cy)
+        if img is None:
+            fails.append('%s: enlargement image is not made of whole numbers, so it cannot be tapped' % where)
+            continue
+        if not on_grid(img):
+            fails.append('%s: enlargement image %r is off the grid' % (where, img))
+        if fs(img) == fs(q['shape']):
+            fails.append('%s: enlargement image is the shape itself' % where)
+        if (cx, cy) in [tuple(p) for p in q['shape']]:
+            fails.append('%s: a corner of the shape is the centre, so it does not move' % where)
+        k = ('e', fs(q['shape']), d)
+        if k in seen:
+            fails.append('%s: enlargement item repeated' % where)
+        seen.add(k)
+    check_enlargement_coverage(fails, eq)
     for i, q in enumerate(oq, 1):
         where = 'rotation %d (%s)' % (i, q['desc'])
         d = parse_rotation(q['desc'])
@@ -269,7 +434,9 @@ return (args) => {
   const text = document.getElementById('instructionBar').textContent;
   // log every stroked path in the student's colour, with its points in the order they were joined
   const paths = []; let cur = null;
-  const o = {beginPath: ctx.beginPath, moveTo: ctx.moveTo, lineTo: ctx.lineTo, stroke: ctx.stroke};
+  const texts = [];
+  const o = {beginPath: ctx.beginPath, moveTo: ctx.moveTo, lineTo: ctx.lineTo, stroke: ctx.stroke, fillText: ctx.fillText};
+  ctx.fillText = function (t) { texts.push(String(t)); return o.fillText.apply(this, arguments); };
   ctx.beginPath = function () { cur = []; return o.beginPath.apply(this, arguments); };
   ctx.moveTo = function (x, y) { if (cur) cur.push([x, y]); return o.moveTo.apply(this, arguments); };
   ctx.lineTo = function (x, y) { if (cur) cur.push([x, y]); return o.lineTo.apply(this, arguments); };
@@ -279,7 +446,7 @@ return (args) => {
   const fb = fbText();
   Object.assign(ctx, o);
   MaffsLock.clearTimers();
-  return {text, fb, last: paths.length ? paths[paths.length - 1] : null,
+  return {text, fb, texts, last: paths.length ? paths[paths.length - 1] : null,
           want: expected.map(p => gridToPixel(p[0], p[1]))};
 };
 """
@@ -310,7 +477,7 @@ return (args) => {
 };
 """
 SESSION_JS = r"""() => {
-  const banks = {translation: TRANSLATION_QUESTIONS, reflection: REFLECTION_QUESTIONS, rotation: ROTATION_QUESTIONS};
+  const banks = {translation: TRANSLATION_QUESTIONS, reflection: REFLECTION_QUESTIONS, rotation: ROTATION_QUESTIONS, enlargement: ENLARGEMENT_QUESTIONS};
   const out = {};
   for (const m of %s) { out[m] = [];
     for (let k = 0; k < %d; k++) {
@@ -343,12 +510,23 @@ def play_session(page, m, wrong):
             if wrong:
                 taps = [list(p) for p in q['shape']]
         elif md == 'reflection':
-            ans = reflect(q['shape'], re.search(r'(x|y)-axis', q['desc']).group(1))
+            own = parse_reflection(q['desc'])
+            ans = reflect(q['shape'], own)
             taps = [list(p) for p in ans]
             if wrong:
-                taps = [list(p) for p in reflect(q['shape'], 'x' if re.search(r'(x|y)-axis', q['desc']).group(1) == 'y' else 'y')]
-                if fs(taps) == fs(ans):
+                taps = [list(p) for p in ans]
+                for ln in OTHER_LINES:
+                    cand = reflect(q['shape'], ln)
+                    if ln != own and fs(cand) != fs(ans) and on_grid(cand):
+                        taps = [list(p) for p in cand]
+                        break
+                else:
                     taps = [[-p[0], -p[1]] for p in ans]
+        elif md == 'enlargement':
+            ans = answer_image('enlargement', q)
+            taps = [list(p) for p in ans]
+            if wrong:
+                taps = [list(p) for p in q['shape']]
         else:
             kind, cx, cy = parse_rotation(q['desc'])
             true = fs(turn(q['shape'], cx, cy, kind))
@@ -365,19 +543,8 @@ def play_session(page, m, wrong):
 
 def vertex_checks(fails, page, mode, bank):
     for i, q in enumerate(bank, 1):
-        if mode == 'translation':
-            exp = translate(q['shape'], *parse_translation(q['desc']))
-            names = [('not moved', q['shape']),
-                     ('the opposite move', translate(q['shape'], -q['dx'], -q['dy'])),
-                     ('dx and dy swapped', translate(q['shape'], q['dy'], q['dx'])),
-                     ('only x moved', translate(q['shape'], q['dx'], 0)),
-                     ('only y moved', translate(q['shape'], 0, q['dy']))]
-        else:
-            ax = re.search(r'(x|y)-axis', q['desc']).group(1)
-            exp = reflect(q['shape'], ax)
-            names = [('not reflected', q['shape']),
-                     ('the other axis', reflect(q['shape'], 'x' if ax == 'y' else 'y')),
-                     ('through the origin', [(-x, -y) for x, y in q['shape']])]
+        exp = answer_image(mode, q)
+        names = wrong_images(mode, q)
         exp = [list(p) for p in exp]
         dup = [exp[0]] * len(exp)
         seqs = [dup] + [[list(p) for p in s] for _, s in names if on_grid(s) and fs(s) != fs(exp)]
@@ -421,8 +588,7 @@ def wording_checks(fails, page, mode, bank):
     """R2/R3 (SWEEP-1 shape-shifter-s1-001, -002): the instruction gives the count (and, in reflections, the vertex on
     the mirror line), and a correct answer is drawn as the shape's own outline whatever order it was tapped in."""
     for i, q in enumerate(bank, 1):
-        exp = [list(p) for p in (translate(q['shape'], *parse_translation(q['desc'])) if mode == 'translation'
-                                 else reflect(q['shape'], re.search(r'(x|y)-axis', q['desc']).group(1)))]
+        exp = [list(p) for p in answer_image(mode, q)]
         n = len(exp)
         where = '%s %d (%s)' % (mode, i, q['desc'])
         order = [0, 2, 1, 3] if n >= 4 else list(range(n))[::-1]
@@ -431,6 +597,10 @@ def wording_checks(fails, page, mode, bank):
             fails.append('%s: wording: the instruction %r does not give the count (tap all %d vertices)' % (where, r['text'], n))
         if mode == 'reflection' and 'A vertex on the mirror line stays where it is' not in r['text']:
             fails.append('%s: wording: the instruction %r does not say a vertex on the mirror line stays put' % (where, r['text']))
+        if mode == 'reflection' and parse_reflection(q['desc']) not in ('x', 'y'):
+            name = q['desc'].replace('Reflect in the line ', '')
+            if name not in r['texts']:
+                fails.append('%s: wording: the mirror line %r is not named on the grid (text drawn: %s)' % (where, name, r['texts'][:12]))
         if r['fb'] != 'Correct!':
             fails.append('%s: wording: the image tapped in order %s reads %r' % (where, order, r['fb']))
         elif not r['last'] or not is_cyclic_order(r['last'], r['want']):
@@ -520,8 +690,9 @@ def colour_checks(fails, html):
 
 # The mode cards' data-mode attributes (contract SHAPE-SHIFTER-DATA-MODE, Jon, 25 Oct 2026): burst.js opens a burst at a
 # mode by pressing the start screen's [data-mode="<name>"] once. Each card's attribute names its own onclick mode, in
-# the cards' order, Random Mix as random-mix.
-CARD_MODES = [('translation', 'translation'), ('reflection', 'reflection'), ('rotation', 'rotation'), ('random-mix', 'mix')]
+# the cards' order, Random Mix as random-mix (Enlargement, added 26 Oct 2026, sits before it).
+CARD_MODES = [('translation', 'translation'), ('reflection', 'reflection'), ('rotation', 'rotation'),
+              ('enlargement', 'enlargement'), ('random-mix', 'mix')]
 CARD = re.compile(r'<div class="mode-card(?: [^"]*)?"([^>]*)>')   # a card, not the mode-cards row round them
 # game_started recorded once per call however many wrappers stand round mfg (burst.js wraps it): the outermost call only.
 MFG_RECORDER = """(() => { let real = null, depth = 0; window.__starts = [];
@@ -602,18 +773,21 @@ def play(fails, html, expected_hit, cards=True):
             errors = []
             page.on('pageerror', lambda e: errors.append(str(e)))
             page.goto(base + '/games/%s/?cb=verify' % SLUG, wait_until='load', timeout=20000)
-            page.wait_for_function('typeof ROTATION_QUESTIONS !== "undefined" && typeof startGame === "function"', timeout=15000)
+            page.wait_for_function('typeof ENLARGEMENT_QUESTIONS !== "undefined" && typeof startGame === "function"', timeout=15000)
             tq = page.evaluate('() => JSON.parse(JSON.stringify(TRANSLATION_QUESTIONS))')
             rq = page.evaluate('() => JSON.parse(JSON.stringify(REFLECTION_QUESTIONS))')
             oq = page.evaluate('() => JSON.parse(JSON.stringify(ROTATION_QUESTIONS))')
-            check_banks(fails, expected_hit, tq, rq, oq)
+            eq = page.evaluate('() => JSON.parse(JSON.stringify(ENLARGEMENT_QUESTIONS))')
+            check_banks(fails, expected_hit, tq, rq, oq, eq)
             session_checks(fails, page, (len(tq), len(rq), len(oq)))
             letter_checks(fails, page)
             page.evaluate('() => { startGame("translation"); }')
             vertex_checks(fails, page, 'translation', tq)
             vertex_checks(fails, page, 'reflection', rq)
+            vertex_checks(fails, page, 'enlargement', eq)
             wording_checks(fails, page, 'translation', tq)
             wording_checks(fails, page, 'reflection', rq)
+            wording_checks(fails, page, 'enlargement', eq)
             rotation_checks(fails, page, oq)
             for m in MODES:
                 good = play_session(page, m, False)
@@ -627,7 +801,7 @@ def play(fails, html, expected_hit, cards=True):
             if cards:   # the bank plants need none of it; only the main run and the mode-card plants pay for it
                 mode_card_checks(fails, html, browser, base)
             browser.close()
-            stats = {'translation': len(tq), 'reflection': len(rq), 'rotation': len(oq)}
+            stats = {'translation': len(tq), 'reflection': len(rq), 'rotation': len(oq), 'enlargement': len(eq)}
     finally:
         proc.terminate()
         proc.wait()
@@ -665,6 +839,15 @@ PLANTS = [
      [("drawShape(target, '#22c55e', 'rgba(34,197,94,0.3)', 2);", "drawShape(target, '#1a2744', 'rgba(26,39,68,0.3)', 2);")]),
     ('the feedback naming navy again (t3-001)', 'colour',
      [("correct shape shown in green';", "correct shape shown in navy';")]),
+    ('the y = x reflection without the swap (no item can then be built)', 'reflection coverage',
+     [("if (axis === 'y=x') return shape.map(([x,y]) => [y, x]);", "if (axis === 'y=x') return shape.map(([x,y]) => [x, y]);")]),
+    ('the x = k reflection without the doubling (k - x for 2k - x)', 'marking',
+     [("[2 * Number(line[2]) - x, y]", "[Number(line[2]) - x, y]")]),
+    ('an enlargement about the origin, not the centre', 'marking',
+     [("[cx + (x - cx) * sfn / sfd, cy + (y - cy) * sfn / sfd]", "[x * sfn / sfd, y * sfn / sfd]")]),
+    ('an enlargement image off the grid is no longer dropped', 'off the grid',
+     [("      const image = enlargeShape(c.shape, cx, cy, sfn, sfd);\n      if (!shapeOnGrid(image) || sameShape(image, c.shape)) continue;",
+       "      const image = enlargeShape(c.shape, cx, cy, sfn, sfd);\n      if (sameShape(image, c.shape)) continue;")]),
     ('the Random Mix card without its data-mode (a burst lands on the menu)', 'mode cards',
      [('<div class="mode-card mix" data-mode="random-mix" onclick="startGame(\'mix\')">',
        '<div class="mode-card mix" onclick="startGame(\'mix\')">')]),
@@ -683,16 +866,16 @@ WORDING_JS_FN = '(function(){' + WORDING_JS + '})()'
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--no-selftest', action='store_true')
-    ap.add_argument('--part', choices=['1', '2', '3'],
-                    help='1 the checks, 2 and 3 a half of the plants each (CI runs the three side by side); default all')
+    ap.add_argument('--part', choices=['1', '2', '3', '4', '5'],
+                    help='1 the checks, 2 to 5 a quarter of the plants each (CI runs the five side by side); default all')
     ap.add_argument('--against', help='serve this file as the game page')
     args = ap.parse_args()
     sys.stdout.reconfigure(encoding='utf-8')
     html = open(args.against or GAME, encoding='utf-8').read()
     fails = []
     hit = set()
-    if args.part in ('2', '3'):
-        ok = selftest(html, PLANTS[0::2] if args.part == '2' else PLANTS[1::2])
+    if args.part in ('2', '3', '4', '5'):
+        ok = selftest(html, PLANTS[int(args.part) - 2::4])
         if not ok:
             print('FAIL  self-test: a planted fault was not caught')
         print('PASS' if ok else 'FAILED')
@@ -701,15 +884,17 @@ def main():
     for k in EXPECTED:
         if k not in hit:
             fails.append('expected failure %s (%s) no longer occurs: close the finding and remove it from EXPECTED' % (EXPECTED[k], k[0]))
-    print('%s: %d translation, %d reflection and %d rotation items recomputed from their words; every vertex of every translation '
-          'and reflection answer tapped at all 121 grid points, every rotation letter tapped over %d deals, %d sessions dealt per mode, '
-          'in Chromium' % (SLUG, st.get('translation', 0), st.get('reflection', 0), st.get('rotation', 0), ROT_DEALS, DEALS))
+    print('%s: %d translation, %d reflection, %d rotation and %d enlargement items recomputed from their words; every vertex of '
+          'every translation, reflection and enlargement answer tapped at all 121 grid points, every rotation letter tapped over '
+          '%d deals, %d sessions dealt per mode, in Chromium' % (
+              SLUG, st.get('translation', 0), st.get('reflection', 0), st.get('rotation', 0), st.get('enlargement', 0),
+              ROT_DEALS, DEALS))
     for k, v in sorted(EXPECTED.items()):
         print('  expected failure left open: %s (%s item with shape %s)' % (v, k[0], list(k[1])))
     print('  correct shape after an answer drawn in --green at both sites, %.2f:1 against the canvas; the feedback names it (t3-001)'
           % contrast(re.search(r'--green:\s*(#[0-9a-fA-F]{6})', html).group(1),
                      re.search(r'canvas\{[^}]*background:\s*(#[0-9a-fA-F]{6})', html).group(1)))
-    print('  not asserted (open): no 180 degree rotation built (t3-002), 15 items a mode (t3-004), board and keyboard (t3-005)')
+    print('  not asserted (open): no 180 degree rotation built (t3-002), 15 items in translation and rotation (t3-004), board and keyboard (t3-005)')
     ok = True
     if not args.no_selftest and not args.against and args.part is None:
         ok = selftest(html, PLANTS)
@@ -721,8 +906,8 @@ def main():
     return 1 if fails or not ok else 0
 
 
-# The plants in two CI lines (25 Oct 2026: one line of all fourteen took 205 s on main, over ci-groups' per-line limit),
-# every other one in each, so each half holds one of the two mode-card plants.
+# The plants in four CI lines (25 Oct 2026: one line of all fourteen took 205 s on main, over ci-groups' per-line limit; 26 Oct:
+# eighteen plants, each now playing 81 vertex items, took 226 s in each of two halves), every fourth one in each.
 def selftest(html, plants):
     """Each plant's fault, made in a copy of the page, must be caught by a finding carrying its tag."""
     ok = True

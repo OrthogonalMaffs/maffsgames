@@ -2193,10 +2193,55 @@ async def topic_simultaneous(h):
     return out
 
 
-# --- transformations: shape-shifter's 45 items (translate, reflect, rotate), asked as the image of one corner ---
+# --- transformations: shape-shifter's items (translate, reflect, rotate, enlarge), asked as the image of one corner ---
+# The first 45 items are the game's Random Mix as it was (15 translations, the 15 typed reflections in the axes, 15 rotations):
+# they come first, in that order, so each keeps the corner it was always asked about. The 20 reflections the game builds in
+# y = x, y = -x, x = k and y = k and its 16 enlargements follow (26 Oct 2026).
 TRANSF_JS = r"""() => [].concat(TRANSLATION_QUESTIONS.map((q, i) => ({k: 'T', i: i, q: q})),
-  REFLECTION_QUESTIONS.map((q, i) => ({k: 'F', i: i, q: q})), ROTATION_QUESTIONS.map((q, i) => ({k: 'R', i: i, q: q})))"""
+  REFLECTION_QUESTIONS.slice(0, 15).map((q, i) => ({k: 'F', i: i, q: q})), ROTATION_QUESTIONS.map((q, i) => ({k: 'R', i: i, q: q})),
+  REFLECTION_QUESTIONS.slice(15).map((q, i) => ({k: 'F', i: i + 15, q: q})), ENLARGEMENT_QUESTIONS.map((q, i) => ({k: 'E', i: i, q: q})))"""
 SHAPE_NAMES = {"triangle": "triangle", "rectangle": "rectangle", "square": "square"}
+MIRRORS = {"x": (0, 1, 0), "y": (1, 0, 0), "y=x": (1, -1, 0), "y=-x": (1, 1, 0)}      # a x + b y = c; "x" is the x-axis
+
+
+def mirror_line(axis):
+    if axis in MIRRORS:
+        return MIRRORS[axis]
+    m = re.fullmatch(r"([xy])=(-?[1-9]\d*)", axis)
+    assert m, ("shape-shifter: a mirror line", axis)
+    return (1, 0, int(m.group(2))) if m.group(1) == "x" else (0, 1, int(m.group(2)))
+
+
+def reflect_point(pt, axis):
+    """The point reflected in the line: moved twice its signed distance along the line's normal (not the game's formulas)."""
+    a, b, c = mirror_line(axis)
+    x, y = pt
+    t2 = Fraction(2 * (a * x + b * y - c), a * a + b * b)
+    px, py = x - t2 * a, y - t2 * b
+    assert px.denominator == 1 and py.denominator == 1, ("shape-shifter: a reflection that is not a whole number", axis, pt)
+    return (int(px), int(py))
+
+
+def transf_axis(desc):
+    """The mirror line the words of a reflection name: 'x' and 'y' for the axes, else 'y=x', 'y=-x', 'x=k' or 'y=k'."""
+    m = re.fullmatch(r"Reflect in the ([xy])-axis", desc)
+    if m:
+        return m.group(1)
+    m = re.fullmatch(r"Reflect in the line (y = x|y = -x|x = -?[1-9]\d*|y = -?[1-9]\d*)", desc)
+    assert m, ("shape-shifter: the words of a reflection", desc)
+    return m.group(1).replace(" ", "")
+
+
+def transf_enlargement(desc):
+    m = re.fullmatch(r"Enlarge by scale factor (2|3|1/2) about \((-?\d+),(-?\d+)\)", desc)
+    assert m, ("shape-shifter: the words of an enlargement", desc)
+    return Fraction(m.group(1)), int(m.group(2)), int(m.group(3))
+
+
+def enlarge_point(pt, sf, cx, cy):
+    px, py = cx + (pt[0] - cx) * sf, cy + (pt[1] - cy) * sf
+    assert px.denominator == 1 and py.denominator == 1, ("shape-shifter: an enlargement that is not a whole number", pt)
+    return (int(px), int(py))
 
 
 def transf_image(it, pt):
@@ -2210,9 +2255,13 @@ def transf_image(it, pt):
         assert (dx, dy) == (q["dx"], q["dy"]), ("shape-shifter: the translation's words", desc, q["dx"], q["dy"])
         return (x + dx, y + dy)
     if it["k"] == "F":
-        axis = re.fullmatch(r"Reflect in the ([xy])-axis", desc).group(1)
+        axis = transf_axis(desc)
         assert axis == q["axis"], ("shape-shifter: the axis", desc)
-        return (-x, y) if axis == "y" else (x, -y)
+        return reflect_point(pt, axis)
+    if it["k"] == "E":
+        sf, cx, cy = transf_enlargement(desc)
+        assert (Fraction(q["sfn"], q["sfd"]), q["cx"], q["cy"]) == (sf, cx, cy), ("shape-shifter: the enlargement's words", desc)
+        return enlarge_point(pt, sf, cx, cy)
     m = re.fullmatch(r"Rotate (90° anticlockwise|90° clockwise|180°) about \((-?\d+),(-?\d+)\)", desc)
     assert (int(m.group(2)), int(m.group(3))) == (q["cx"], q["cy"]) == (0, 0), ("shape-shifter: the centre", desc)
     turn = m.group(1)
@@ -2220,8 +2269,10 @@ def transf_image(it, pt):
     return {"90° anticlockwise": (-y, x), "90° clockwise": (y, -x), "180°": (-x, -y)}[turn]
 
 
-def transf_svg(shape):
-    """The object on a coordinate grid from -5 to 5: grid, axes, the numbers on the axes, the corners lettered."""
+def transf_svg(shape, mirror=None, centre=None, ray_to=None):
+    """The object on a coordinate grid from -5 to 5: grid, axes, the numbers on the axes, the corners lettered. With `mirror`
+    (a line that is not an axis) the dashed mirror line and its name; with `centre` the centre of an enlargement as a dot,
+    and with `ray_to` a dashed ray from it through that corner to the edge of the grid."""
     S, O, N = 24, 150, 5
     px = lambda v: O + v * S
     py = lambda v: O - v * S
@@ -2230,9 +2281,34 @@ def transf_svg(shape):
         '<line x1="%s" y1="%s" x2="%s" y2="%s"/><line x1="%s" y1="%s" x2="%s" y2="%s"/>' %
         (f(px(i)), f(py(-N)), f(px(i)), f(py(N)), f(px(-N)), f(py(i)), f(px(N)), f(py(i))) for i in range(-N, N + 1))]
     parts.append('<path d="M%s %s L%s %s M%s %s L%s %s" stroke-width="1.5"/>' % (f(px(-N)), f(O), f(px(N)), f(O), f(O), f(py(N)), f(O), f(py(-N))))
+    texts = []
+    if mirror:
+        if mirror == "y=x":
+            (x1, y1), (x2, y2) = (-N, -N), (N, N)
+            texts.append((mirror, px(N) + 4, py(N) - 3, "start"))
+        elif mirror == "y=-x":
+            (x1, y1), (x2, y2) = (-N, N), (N, -N)
+            texts.append((mirror, px(-N) - 3, py(N) - 3, "end"))
+        elif mirror[0] == "x":
+            k = int(mirror[2:])
+            (x1, y1), (x2, y2) = (k, -N), (k, N)
+            texts.append((mirror, px(k), py(N) - 6, "middle"))
+        else:
+            k = int(mirror[2:])
+            (x1, y1), (x2, y2) = (-N, k), (N, k)
+            texts.append((mirror, px(N) + 4, py(k) + 4, "start"))
+        parts.append('<line x1="%s" y1="%s" x2="%s" y2="%s" stroke-width="1.5" stroke-dasharray="7 4"/>' % (
+            f(px(x1)), f(py(y1)), f(px(x2)), f(py(y2))))
+    if centre:
+        cx, cy = centre
+        if ray_to:
+            dx, dy = ray_to[0] - cx, ray_to[1] - cy
+            t = min(((N if d > 0 else -N) - c) / d for c, d in ((cx, dx), (cy, dy)) if d)
+            parts.append('<line x1="%s" y1="%s" x2="%s" y2="%s" stroke-width="1" stroke-dasharray="2 3"/>' % (
+                f(px(cx)), f(py(cy)), f(round(px(cx + t * dx), 1)), f(round(py(cy + t * dy), 1))))
+        parts.append('<circle cx="%s" cy="%s" r="3.5" fill="currentColor" stroke="none"/>' % (f(px(cx)), f(py(cy))))
     poly = " ".join("%s,%s" % (f(px(a)), f(py(b))) for a, b in shape)
     parts.append('<polygon points="%s" fill="currentColor" fill-opacity="0.15" stroke-linejoin="round"/>' % poly)
-    texts = []
     for v in range(-N, N + 1):
         if v:
             texts.append((str(v), px(v), py(-N) + 14, "middle"))        # the numbers on the grid's border, clear of the corners
@@ -2249,11 +2325,23 @@ def transf_svg(shape):
     return svg, sorted(t for t, _, _, _ in texts)
 
 
+def off_words(dx, dy):
+    """'3 right and 1 down' for an offset (dx, dy), a zero part left out."""
+    parts = []
+    if dx:
+        parts.append("%d %s" % (abs(dx), "right" if dx > 0 else "left"))
+    if dy:
+        parts.append("%d %s" % (abs(dy), "up" if dy > 0 else "down"))
+    return " and ".join(parts)
+
+
 def transf_worked(it, name, pt, img):
     """Project Claude's TRANSFORMATIONS template (25 Oct): the rule for the point, then the image of the corner; every figure
-    is computed here and the image is the one the words give."""
+    is computed here and the image is the one the words give. The y = x, y = -x, x = k, y = k and enlargement lines (26 Oct)
+    follow its style: the rule, then the image."""
     x, y = pt
     q, desc = it["q"], it["q"]["desc"]
+    last = "So the image of %s is %s." % (name, tex("(%d, %d)" % img))
     if it["k"] == "T":
         dx, dy = q["dx"], q["dy"]
         sgn = lambda v, s: s if v == 0 else "%s %s %d" % (s, "+" if v > 0 else "-", abs(v))
@@ -2262,41 +2350,144 @@ def transf_worked(it, name, pt, img):
         assert (x + dx, y + dy) == img
     elif it["k"] == "F":
         axis = q["axis"]
-        rule = ["A reflection in the %s-axis: %s goes to %s." % (axis, tex("(x, y)"), tex("(-x, y)" if axis == "y" else "(x, -y)"))]
-        assert img == ((-x, y) if axis == "y" else (x, -y))
+        if axis in ("x", "y"):
+            rule = ["A reflection in the %s-axis: %s goes to %s." % (axis, tex("(x, y)"), tex("(-x, y)" if axis == "y" else "(x, -y)"))]
+            assert img == ((-x, y) if axis == "y" else (x, -y))
+        elif axis == "y=x":
+            rule = ["A reflection in %s swaps the coordinates: %s goes to %s." % (tex("y = x"), tex("(x, y)"), tex("(y, x)"))]
+            assert img == (y, x)
+        elif axis == "y=-x":
+            rule = ["A reflection in %s swaps the coordinates and changes both signs: %s goes to %s." % (
+                tex("y = -x"), tex("(x, y)"), tex("(-y, -x)"))]
+            assert img == (-y, -x)
+        else:
+            k = int(axis[2:])
+            line = tex("%s = %d" % (axis[0], k))
+            if axis[0] == "x":
+                d, sides, new, keep = x - k, ("to the right of", "to the left of"), "x = %d" % img[0], "y = %d" % y
+            else:
+                d, sides, new, keep = y - k, ("above", "below"), "y = %d" % img[1], "x = %d" % x
+            if d == 0:
+                rule = ["A reflection in %s: a point on the line stays where it is." % line]
+            else:
+                near, far = sides if d > 0 else sides[::-1]
+                rule = ["A reflection in %s: a point goes the same distance from the line, on the other side." % line,
+                        "%s is %d %s the line, so its image is %d %s the line: %s, and %s stays the same." % (
+                            name, abs(d), near, abs(d), far, tex(new), tex(keep))]
+            assert img == ((2 * k - x, y) if axis[0] == "x" else (x, 2 * k - y))
+    elif it["k"] == "E":
+        sf, cx, cy = transf_enlargement(desc)
+        ox, oy = x - cx, y - cy
+        mx, my = int(ox * sf), int(oy * sf)
+        sfw = "2" if sf == 2 else "3" if sf == 3 else tex("\\frac{1}{2}")
+        act = "halved" if sf < 1 else "multiplied by %s" % sfw
+        centre = "the origin" if (cx, cy) == (0, 0) else tex("(%d, %d)" % (cx, cy))
+        rule = ["An enlargement with scale factor %s about %s: every distance from the centre is %s." % (sfw, centre, act),
+                "From the centre to %s is %s. %s, that is %s." % (
+                    name, off_words(ox, oy), "Halved" if sf < 1 else "Multiplied by " + sfw, off_words(mx, my)),
+                "Starting at %s and moving %s gives %s." % (centre, off_words(mx, my), tex("(%d, %d)" % img))]
+        assert img == (cx + mx, cy + my)
     else:
         turn, new = {180: ("180°", "(-x, -y)"), -90: ("90° clockwise", "(y, -x)"), 90: ("90° anticlockwise", "(-y, x)")}[q["angle"]]
         rule = ["A rotation of %s about the origin: %s goes to %s." % (turn, tex("(x, y)"), tex(new))]
         assert img == {180: (-x, -y), -90: (y, -x), 90: (-y, x)}[q["angle"]]
-    return rule + ["So the image of %s is %s." % (name, tex("(%d, %d)" % img))]
+    return rule + [last]
+
+
+def transf_slips(it, pt, img):
+    """The named wrong answers of the new cases (the earlier 45 carry none): a wrong mirror line, an enlargement from the origin,
+    the distance from the centre not added back, the scale factor the wrong way round. Only answers that differ from the key and
+    from each other are kept; every figure is computed here."""
+    x, y = pt
+    q = it["q"]
+    out = []
+
+    def add(ans, line):
+        if ans != img and all(a != ans for a, _ in out):
+            out.append((ans, line))
+    if it["k"] == "F" and q["axis"] not in ("x", "y"):
+        axis = q["axis"]
+        if axis == "y=x":
+            add((-y, -x), "That is a reflection in %s. In %s the coordinates swap and keep their signs." % (tex("y = -x"), tex("y = x")))
+        elif axis == "y=-x":
+            add((y, x), "That is a reflection in %s. In %s the coordinates swap and both change sign." % (tex("y = x"), tex("y = -x")))
+        else:
+            k = int(axis[2:])
+            if axis[0] == "x":
+                add((-x, y), "That is a reflection in the y-axis. The mirror line here is %s: measure each distance from that line." % tex(axis[0] + " = %d" % k))
+                add((x, 2 * k - y), "That is a reflection in %s, a horizontal line. The line %s is vertical, so only %s changes." % (
+                    tex("y = %d" % k), tex("x = %d" % k), tex("x")))
+            else:
+                add((x, -y), "That is a reflection in the x-axis. The mirror line here is %s: measure each distance from that line." % tex(axis[0] + " = %d" % k))
+                add((2 * k - x, y), "That is a reflection in %s, a vertical line. The line %s is horizontal, so only %s changes." % (
+                    tex("x = %d" % k), tex("y = %d" % k), tex("y")))
+    elif it["k"] == "E":
+        sf, cx, cy = transf_enlargement(q["desc"])
+        sfw = "2" if sf == 2 else "3" if sf == 3 else tex("\\frac{1}{2}")
+        whole = lambda a, b: a.denominator == 1 and b.denominator == 1
+        if (cx, cy) != (0, 0):
+            if whole(x * sf, y * sf):
+                add((int(x * sf), int(y * sf)), "You enlarged from the origin. Measure from the centre %s instead." % tex("(%d, %d)" % (cx, cy)))
+            if whole((x - cx) * sf, (y - cy) * sf):
+                add((int((x - cx) * sf), int((y - cy) * sf)), "That is the distance from the centre. Add it to the centre's coordinates.")
+        ix, iy = cx + (x - cx) / sf, cy + (y - cy) / sf
+        if whole(ix, iy):
+            if sf < 1:
+                add((int(ix), int(iy)), "You multiplied by 2. A scale factor of %s halves every distance from the centre." % sfw)
+            else:
+                add((int(ix), int(iy)), "You divided by %s. A scale factor of %s multiplies every distance from the centre by %s." % (sfw, sfw, sfw))
+    return [{"answer": {"x": a[0], "y": a[1]}, "line": line} for a, line in out]
 
 
 async def topic_transformations(h):
-    """The 45 items of shape-shifter's Random Mix (15 translations, 15 reflections, 15 rotations). The game asks the student
-    to place the image on a grid, which a typed bank cannot, so each item is asked as the coordinates of the image of one
-    corner (A, B, C or D in turn), the object drawn on a grid. The image is recomputed from the item's words, and for a
-    rotation compared with the game's own correct shape. The game has no written solution: the worked lines are Project
-    Claude's template."""
+    """The items of shape-shifter's Random Mix (15 translations, 15 typed reflections in the axes, 15 rotations) and the 20
+    reflections and 16 enlargements the game builds (26 Oct 2026). The game asks the student to place the image on a grid,
+    which a typed bank cannot, so each item is asked as the coordinates of the image of one corner (A, B, C or D in turn),
+    the object drawn on a grid. The image is recomputed from the item's words, and for a rotation compared with the game's
+    own correct shape. The game has no written solution: the worked lines are Project Claude's template."""
     pg = await h.page("shape-shifter", "level=year6")
     items = await pg.evaluate(TRANSF_JS)
     out = []
     for n, it in enumerate(items):
         q = it["q"]
         shape = [tuple(p) for p in q["shape"]]
+        # the first 45 keep the corner they have always been asked about; the new ones continue the count
         v = n % len(shape)
         img = transf_image(it, shape[v])
         if it["k"] == "R":
             assert [list(transf_image(it, p)) for p in shape] == q["correct"], ("shape-shifter: the game's rotated shape", q["desc"])
+        if it["k"] == "F":
+            assert (q["axis"] in ("x", "y")) == (it["i"] < 15), ("shape-shifter: the typed reflections come first", q["desc"])
         assert all(-5 <= c <= 5 for c in img), ("shape-shifter: the image leaves the grid", q["desc"], img)
-        svg, labels = transf_svg(shape)
-        assert labels == sorted([str(i) for i in range(-5, 6) if i] * 2 + list("ABCD"[:len(shape)])), ("shape-shifter: labels", labels)
+        new_line = it["k"] == "F" and q["axis"] not in ("x", "y")
+        svg, labels = transf_svg(shape, mirror=q["axis"] if new_line else None,
+                                 centre=(q["cx"], q["cy"]) if it["k"] == "E" else None,
+                                 ray_to=shape[v] if it["k"] == "E" else None)
+        want = sorted([str(i) for i in range(-5, 6) if i] * 2 + list("ABCD"[:len(shape)]) + ([q["axis"]] if new_line else []))
+        assert labels == want, ("shape-shifter: labels", labels)
         name = SHAPE_NAMES[q["type"]]
         letters = "".join("ABCD"[:len(shape)])
-        stem = "The diagram shows %s %s on a coordinate grid. %s. Write down the coordinates of the image of %s." % (
-            "an" if name[0] in "aeiou" else "a", name + " " + letters, q["desc"], "ABCD"[v])
-        band = {"T": 1, "F": 2}.get(it["k"]) or (3 if q["angle"] == 180 else 4)
-        z = mk("transformations", "shape-shifter", "%s:%d" % ({"T": "TRANSLATION_QUESTIONS", "F": "REFLECTION_QUESTIONS", "R": "ROTATION_QUESTIONS"}[it["k"]], it["i"]),
-               band, False, stem, "coordinates", {"x": img[0], "y": img[1]}, worked=transf_worked(it, "ABCD"[v], shape[v], img))
+        corner = "ABCD"[v]
+        if new_line:
+            words = "Reflect in the line %s." % tex(q["desc"].replace("Reflect in the line ", ""))
+        elif it["k"] == "E":
+            sf, cx, cy = transf_enlargement(q["desc"])
+            words = "Enlarge it by scale factor %s, centre %s." % ("2" if sf == 2 else "3" if sf == 3 else tex("\\frac{1}{2}"), tex("(%d, %d)" % (cx, cy)))
+        else:
+            words = q["desc"] + "."
+        stem = "The diagram shows %s %s on a coordinate grid. %s Write down the coordinates of the image of %s." % (
+            "an" if name[0] in "aeiou" else "a", name + " " + letters, words, corner)
+        if it["k"] == "T":
+            band = 1
+        elif it["k"] == "F":
+            band = 2 if not new_line else {"y=x": 4, "y=-x": 5}.get(q["axis"], 3)
+        elif it["k"] == "E":
+            band = 3 + (1 if (q["cx"], q["cy"]) != (0, 0) else 0) + (1 if q["sfd"] == 2 else 0)    # 3 at the origin, 5 for 1/2 about another point
+        else:
+            band = 3 if q["angle"] == 180 else 4
+        ref = "%s:%d" % ({"T": "TRANSLATION_QUESTIONS", "F": "REFLECTION_QUESTIONS", "R": "ROTATION_QUESTIONS", "E": "ENLARGEMENT_QUESTIONS"}[it["k"]], it["i"])
+        z = mk("transformations", "shape-shifter", ref, band, False, stem, "coordinates", {"x": img[0], "y": img[1]},
+               worked=transf_worked(it, corner, shape[v], img), slip=transf_slips(it, shape[v], img))
         z["diagram"] = svg
         out.append(z)
     return out
