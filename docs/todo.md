@@ -662,6 +662,7 @@ Jon has not yet fixed. Spec references are DfE subject-content parts (`docs/resi
 ## 6. Jon — decisions and manual tasks
 
 **Blocking something:**
+- **The 6 P's transformations bank: content gap, awaiting Jon's ruling (26 Oct 2026).** Reflection in the lines `y = x` and `x = k`, and enlargement about a centre other than the origin, are Foundation content on all three boards but are missing from the source game (Shape Shifter), so the 45-question bank has no such items. No new questions are written until Jon rules; the options are to extend the game or to author the items in `data/six-ps/authored.json`.
 - ~~**Database rules — ready to deploy (30 Sep 2026).**~~ **DONE: deployed by Jon and verified 30 Sep 2026 (night)**; see the handover. `docs/firebase-rules-deploy.md`. The live Realtime Database lets anyone delete or overwrite scores (proved 30 Sep: 11 `JLF` entries removed with no login). `firebase/database.rules.json` makes scores create-only, and it is emulator-tested (32/32). Jon: save the current rules, paste and publish, then verify that a real score submits and a REST `DELETE` is refused. The site change it depends on (no client prune) merges with the rules file, so publish any time after that.
 - **Regression Rumble rebuild — needs Jon's content steer.** Withdrawn 30 Sep behind a holding page; what the rebuild needs is in §1.26.
 - ~~Commit checker tier 4 layer A, or hold it back?~~ Resolved: committed 27 Sep as `175fb64` and
