@@ -1482,14 +1482,14 @@ validator was wrong, not the script. Every reader of `as_of` was checked: the va
 the instant's date in London, whatever offset it is written in), the loader (`Date.parse`, which reads both), the Apps Script test and the
 loader self-test each carry cases for `Z`, `+01:00` and the exact 26 Oct payload.
 
-**A scheduled job that fails or goes quiet opens an issue** (Jon, 26 Oct 2026): `.github/workflows/scheduled-watch.yml` runs
-`scripts/scheduled-alert.py` when answer-counts or the weekly check-site finishes, and daily at 07:50 UTC. A failed run opens (or
-updates) the issue "Scheduled workflow failing: <name>", label `scheduled-failure`, naming the failing step with the log lines, and the
-next success closes it; a committed `answer-counts.json` whose `as_of` is over 24 hours old (a failing job, or a schedule GitHub never
-started) opens "answer-counts.json is stale" and closes when a fresh figure lands. The issue is in this repository, written with
-the workflow's own token (issues write, actions read): nothing leaves GitHub, and GitHub's notification with an `@` mention is how
-Jon sees it. The weekly check-site also holds the file to 24 hours (`fetch-answer-counts.py --check`, enforced only in a scheduled
-run, so a push or a pull request never goes red because the daily job is behind). A new scheduled workflow is added to the watch's `workflows:` and to `WATCHED` in the script.
+**The alert route for a failed scheduled job is GitHub's own e-mail, which Jon filters** (Jon, 26 Oct 2026; GitHub Issues stays off, so
+nothing opens an issue). A failed run of `answer-counts`, `scheduled-watch` or `check-site` on main sends a GitHub e-mail, and the four
+failed answer-counts runs of 25 and 26 Oct each sent one: they were buried among the rest, not missing, so Jon filters them in Gmail.
+A schedule GitHub never starts sends nothing, so `.github/workflows/scheduled-watch.yml` runs daily at 07:50 UTC and fails, with a plain
+reason (`as_of 2026-10-25T10:00:00Z is 30.0 hours old (limit 24): the daily answer-counts job has not committed a figure since`), when the
+committed `schools/assets/answer-counts.json` is over 24 hours old (`fetch-answer-counts.py --check --fresh`; its selftest plants stale files in every offset form). That failed run is
+its own alert. The weekly check-site holds the file to 24 hours too (`--check` enforces it only in a scheduled run, so a push or a pull
+request never goes red because the daily job is behind).
 
 **The homepage remembers its last live figure for the session** (Jon, 26 Oct 2026, option b). After the live figure is shown it is stored in
 `sessionStorage` (`maffsAnswerCount`: the figure and its `since`, on the viewer's own device, never sent). On load the count starts from it
