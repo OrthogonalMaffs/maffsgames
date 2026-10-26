@@ -81,6 +81,34 @@ DEFAULT_OUT = os.path.join(ROOT, "docs", "phone-fit-report.md")
 # the page assigns to window.mfg is kept and still called.
 CORRECT_INIT = r"""
 (() => {
+  // Timed changes still to come, for settle() (contract PHONE-FIT-DRIVER): a one-shot setTimeout of 200 ms to 5 s
+  // (a section banner, a reveal, MaffsNext's floor) is pending until it fires or is cleared. A timer armed again by
+  // its own callback with the same delay is a clock or an animation loop, not a change to wait for, and is ignored.
+  const pendingTimers = new Map();
+  let firingDelay = null;
+  const oSet = window.setTimeout, oClear = window.clearTimeout;
+  window.setTimeout = function (fn, delay) {
+    const d = Number(delay) || 0;
+    const chained = firingDelay !== null && firingDelay === d;
+    const rest = Array.prototype.slice.call(arguments, 2);
+    let id;
+    const wrapped = function () {
+      pendingTimers.delete(id);
+      const prev = firingDelay; firingDelay = d;
+      try { return typeof fn === 'function' ? fn.apply(this, rest) : (0, eval)(String(fn)); }
+      finally { firingDelay = prev; }
+    };
+    id = oSet.call(window, wrapped, delay);
+    if (d >= 200 && d <= 5000 && !chained) pendingTimers.set(id, Date.now() + d);
+    return id;
+  };
+  window.clearTimeout = function (id) { pendingTimers.delete(id); return oClear.call(window, id); };
+  window.__pfPending = function () {
+    const now = Date.now(); let n = 0;
+    pendingTimers.forEach(function (due, id) { if (due >= now - 50) n++; else pendingTimers.delete(id); });
+    return n;
+  };
+
   let real = null;
   try {
     Object.defineProperty(window, 'mfg', {
@@ -162,6 +190,32 @@ CORRECT_INIT = r"""
     return (hit.textContent || '').trim().slice(0, 20);
   };
 
+  // The layout's signature, for settle(): every visible control's box and the page's size. Text is left out on
+  // purpose: a ticking clock changes text every second without moving anything a student must reach.
+  window.__pfSig = function () {
+    const parts = [document.documentElement.scrollHeight, document.documentElement.scrollWidth];
+    document.querySelectorAll('button, a, input, select, textarea, canvas, svg, [role="button"]').forEach(function (el) {
+      if (!vis(el)) return;
+      const r = el.getBoundingClientRect();
+      parts.push(Math.round(r.left) + ',' + Math.round(r.top + window.scrollY) + ',' + Math.round(r.width) + ',' + Math.round(r.height));
+    });
+    return parts.join('|');
+  };
+
+  // The start screen, reported, never judged (Jon's correction, 26 Oct 2026): where the level picker (the option
+  // group tier 3 finds on the start screen) and the Start control end against the fold.
+  window.__pfStart = function () {
+    window.__mfgProbe();
+    const picker = (window.__mfgGroup || []).filter(vis);
+    const start = (window.__mfgStartEls ? window.__mfgStartEls() : []).filter(vis);
+    const f = fold();
+    return {
+      picker: picker.length ? { n: picker.length, top: Math.min.apply(null, picker.map(top)), bottom: Math.max.apply(null, picker.map(bottom)), fold: f } : null,
+      start: start.length ? { top: top(start[0]), bottom: bottom(start[0]), fold: f, label: (start[0].textContent || '').trim().slice(0, 20) } : null,
+      fold: f, sw: document.documentElement.scrollWidth, vw: window.innerWidth
+    };
+  };
+
   window.__pfNext = function () {
     let el = document.querySelector('.maffs-next');
     if (!vis(el)) {
@@ -181,6 +235,70 @@ CORRECT_INIT = r"""
   };
 })();
 """
+
+
+QUIET_MS, CEILING_MS, STEP_MS = 500, 5000, 100
+
+
+def settle_point(samples, quiet=QUIET_MS, ceiling=CEILING_MS):
+    """samples: [(t_ms, layout signature, timed changes pending), ...] in time order from the navigation. The time at
+    which the layout has been unchanged for `quiet` ms with no timed change still due, with True; or the ceiling,
+    with False (measured anyway). None: keep sampling. A banner that sits still for two seconds is stable to the eye
+    and to the layout, so the pending timer that will remove it is what keeps the wait going. Pure, so --selftest
+    plants a two-second banner through it."""
+    last_change, prev = 0, object()
+    for t, sig, pending in samples:
+        if sig != prev:
+            last_change, prev = t, sig
+        if t - last_change >= quiet and not pending:
+            return t, True
+        if t >= ceiling:
+            return t, False
+    return None
+
+
+async def settle(page):
+    """Wait until the layout has been still for 500 ms with no timed change due (ceiling 5 s), sampling every 100 ms."""
+    samples, t0 = [], time.monotonic()
+    while True:
+        try:
+            sig, pending = await asyncio.wait_for(page.evaluate(
+                "[window.__pfSig ? window.__pfSig() : '', window.__pfPending ? window.__pfPending() : 0]"), timeout=5)
+        except Exception:
+            sig, pending = None, 0
+        samples.append((int((time.monotonic() - t0) * 1000), sig, pending))
+        got = settle_point(samples)
+        if got:
+            return got
+        await page.wait_for_timeout(STEP_MS)
+
+
+# Why a game could not be measured, in the driver's own words: whether it started and what it could press.
+SEEN_JS = r"""() => {
+  const st = window.__mfgStats ? window.__mfgStats() : {};
+  const vis = el => { const r = el.getBoundingClientRect(); const s = getComputedStyle(el);
+    return r.width > 2 && r.height > 2 && s.display !== 'none' && s.visibility !== 'hidden' && !el.closest('.site-footer, header'); };
+  const seen = [...document.querySelectorAll('button, [role="button"], canvas, svg')].filter(vis)
+    .map(el => el.tagName === 'CANVAS' ? 'a canvas' : el.tagName.toLowerCase() === 'svg' ? 'a drawing' :
+         '"' + (el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 24) + '"')
+    .filter((x, i, a) => a.indexOf(x) === i).slice(0, 4);
+  return (st.started ? 'started; ' : 'not started; ') + 'no option group, input or submit; it shows ' + (seen.join(', ') || 'nothing to press');
+}"""
+
+
+_spec_al = importlib.util.spec_from_file_location("check_answer_lock", os.path.join(HERE, "check-answer-lock.py"))
+_al = None
+
+
+def declared_start(slug):
+    """The game's own 'start' from its maffs-lock-hint (canon 7.6.0), or ''. Read with check-answer-lock.py's parser."""
+    global _al
+    if _al is None:
+        _al = importlib.util.module_from_spec(_spec_al)
+        _spec_al.loader.exec_module(_al)
+    with open(os.path.join(ROOT, "games", slug, "index.html"), encoding="utf-8") as fh:
+        hint, faults = _al.read_hint(fh.read())
+    return "" if faults else hint.get("start", "")
 
 
 def roster_slugs():
@@ -232,35 +350,63 @@ async def measure_one(browser, base, slug, size, args):
         cb = "?cb=%d%d" % (int(time.time() * 1000), random.randint(1000, 9999))
         await page.goto(base + "/games/%s/index.html%s" % (slug, cb),
                         wait_until="domcontentloaded", timeout=20000)
-        await page.wait_for_timeout(800)
         try:
             await asyncio.wait_for(page.evaluate("document.fonts.ready.then(() => 1)"), timeout=8)
         except Exception:
             pass
+        await settle(page)
 
-        # Getting to question 1: tier 3's sequence, step for step (check-site.py, play_one).
-        for _ in range(4):
+        # The start screen, as it first shows, for the report (never judged): measured before anything is pressed.
+        if not (await ev("window.__mfgStats()"))["started"]:
+            await ev("window.scrollTo(0, 0)")
+            out["start"] = await ev("window.__pfStart()")
+
+        # Getting to question 1, generically (contract PHONE-FIT-DRIVER): the first level or option, then Start,
+        # waiting for the layout to settle after every press, so a timed banner (the Core Maths papers' two-second
+        # section card) is over before anything is measured.
+        picked = False
+        for _ in range(5):
             if (await ev("window.__mfgStats()"))["started"]:
                 break
-            if await ev("window.__mfgHasStart()"):
+            if not picked and (await ev("window.__mfgProbe()"))["n"] >= 2:
+                await ev("window.__mfgClickOpt(0)")
+                picked = True
+            elif await ev("window.__mfgHasStart()"):
                 await ev("window.__mfgClickStart()")
             elif (await ev("window.__mfgProbe()"))["n"] >= 2:
                 await ev("window.__mfgClickOpt(0)")
             else:
                 break
-            await page.wait_for_timeout(700)
+            await settle(page)
         if not (await ev("window.__mfgStats()"))["started"]:
             try:
                 await ev("typeof window.startGame === 'function' && window.startGame()")
-                await page.wait_for_timeout(700)
             except Exception:
                 pass
-        await page.wait_for_timeout(300)
+        await settle(page)
 
         await ev("window.scrollTo(0, 0)")
         ask = await ev("window.__pfAsking()")
+        on_start = out.get("start") and out["start"].get("picker") and ask["n"] and ask.get("top") == out["start"]["picker"]["top"]
+        hint = declared_start(slug)
+        if (not ask["n"] or not (await ev("window.__mfgStats()"))["started"] or on_start) and hint:
+            # The generic route reached no question; the page's own declared start (its maffs-lock-hint, canon 7.6.0).
+            try:
+                await asyncio.wait_for(page.evaluate("async () => { %s }" % hint), timeout=15)
+            except Exception:
+                pass
+            await settle(page)
+            await ev("window.scrollTo(0, 0)")
+            ask = await ev("window.__pfAsking()")
+            out["route"] = "declared start"
+            on_start = out.get("start") and out["start"].get("picker") and ask["n"] and ask.get("top") == out["start"]["picker"]["top"]
+        if on_start:
+            # Still the start screen: what would be measured is the level picker, not a question.
+            out["note"] = ("the start screen does not lead to a question generically (its first option, then %s); "
+                           "no declared start" % ("'%s'" % out["start"]["start"]["label"] if out["start"].get("start") else "no Start control"))
+            return out
         if not ask["n"]:
-            out["note"] = "no answer controls found"
+            out["note"] = await ev(SEEN_JS)
             return out
         out["ask"] = ask
 
@@ -310,7 +456,7 @@ async def measure_one(browser, base, slug, size, args):
                 out["note"] = "the game does not report correct/incorrect"
                 break
             if last["c"] is False:
-                await page.wait_for_timeout(700)
+                await settle(page)
                 await ev("window.scrollTo(0, 0)")
                 out["wrong"] = await ev("window.__pfNext()")
                 break
@@ -454,8 +600,13 @@ def load_state(aa):
 AA_INIT = "try { localStorage.setItem('mfg_accessible', 'true'); } catch (e) {}"
 
 
-def write_report(results, path, elapsed, aa=False, only=None):
-    known, unmeasurable = load_state(aa)
+BELOW_REPORT = "BELOW FOLD (report)"
+
+
+def write_report(results, path, elapsed, aa=False, only=None, sizes=None, report=False):
+    """report=True (--sizes, not the canon sizes): nothing is judged against the lists and nothing fails the run."""
+    sizes = sizes or SIZES
+    known, unmeasurable = ({}, set()) if report else load_state(aa)
     by = {}
     for r in results:
         by.setdefault(r["slug"], []).append(r)
@@ -466,8 +617,10 @@ def write_report(results, path, elapsed, aa=False, only=None):
     for slug, rows in by.items():
         rows.sort(key=lambda r: r["w"])
         st, sev, detail = classify(rows, aa, known.get(slug, ()), slug in unmeasurable)
+        if report:
+            st = {HARD_FAIL: BELOW_REPORT, UNMEASURABLE_NEW: UNMEASURABLE}.get(st, st)
         games.append((st, sev, slug, rows, detail))
-    order = {HARD_FAIL: -4, STALE: -3, UNMEASURABLE_NEW: -2, KNOWN_FAIL: -1, "FAIL": 0, WARN_AA: 1, "PASS (no Next)": 2,
+    order = {HARD_FAIL: -4, BELOW_REPORT: -4, STALE: -3, UNMEASURABLE_NEW: -2, KNOWN_FAIL: -1, "FAIL": 0, WARN_AA: 1, "PASS (no Next)": 2,
              "PASS (asking only)": 3, "PASS": 4, UNMEASURABLE: 5}
     games.sort(key=lambda g: (order[g[0]], -g[1], g[2]))
 
@@ -484,7 +637,9 @@ def write_report(results, path, elapsed, aa=False, only=None):
         % (datetime.date.today().isoformat(), len(games), elapsed / 60),
         "The standard is canon §7.6.1, the phone rule. Regenerate it with the same command; do not edit it by hand.",
         "",
-    ] + (["**Aa (OpenDyslexic) mode on** (`--aa`).", ""] if aa else []) + [
+    ] + (["**Aa (OpenDyslexic) mode on** (`--aa`).", ""] if aa else []) + (
+        ["**Report mode** (`--sizes`): measured at %s, judged against nothing; nothing here fails the run." %
+         ", ".join("%d×%d" % sz for sz in sizes), ""] if report else []) + [
         "Each cell is `bottom edge / fold` in CSS pixels from the top of the page, ✓ above the fold, ✗ below it.",
         "The fold is the viewport height minus the fixed site footer (40px; a page without one keeps the full",
         "height). **Asking**: the lowest answer control",
@@ -502,20 +657,32 @@ def write_report(results, path, elapsed, aa=False, only=None):
     ]
     for k in sorted(counts, key=lambda k: order[k]):
         lines.append("| %s | %d |" % (k, counts[k]))
-    lines += ["", "| Game | Status | Asking 320×568 | Asking 375×667 | Asking 390×844 | Wrong 320×568 | "
-                  "Wrong 375×667 | Wrong 390×844 | Sideways at 320 | Notes |",
-              "|---|---|---|---|---|---|---|---|---|---|"]
+    szs = ["%d×%d" % sz for sz in sizes]
+    lines += ["", "| Game | Status | " + " | ".join("Asking " + z for z in szs) + " | " + " | ".join("Wrong " + z for z in szs)
+              + " | Sideways at %d | Notes |" % sizes[0][0], "|---|---|" + "---|" * (2 * len(szs)) + "---|---|"]
     for st, sev, slug, rows, detail in games:
         side = "–"
         for r in rows:
-            if r["w"] != 320:
+            if r["w"] != sizes[0][0]:
                 continue
             ms = [m for m in (r["ask"], r["wrong"]) if m]
             if ms:
                 side = "**yes**" if any(m["sw"] > m["vw"] for m in ms) else "no"
-        cells = (["`%s`" % slug, st] + ([cell(r["ask"]) for r in rows] or ["–"] * 3)
-                 + ([cell(r["wrong"]) for r in rows] or ["–"] * 3) + [side, detail.replace("|", "/")])
+        cells = (["`%s`" % slug, st] + ([cell(r["ask"]) for r in rows] or ["–"] * len(szs))
+                 + ([cell(r["wrong"]) for r in rows] or ["–"] * len(szs)) + [side, detail.replace("|", "/")])
         lines.append("| " + " | ".join(cells) + " |")
+
+    # The start screen, measured and reported, never judged (Jon's correction to PHONE-FIT-DRIVER, 26 Oct 2026: a
+    # start-screen rule is his to rule on). A game that opens straight on its first question has no row.
+    starts = [(g[2], g[3]) for g in games if any(r.get("start") for r in g[3])]
+    lines += ["", "## Start screen (report only: no pass or fail until Jon rules on a start-screen rule)", "",
+              "Where the level picker (the option group on the start screen, if any) and the Start control end, as "
+              "`bottom edge / fold`, before anything is pressed. `–`: none on that screen.", "",
+              "| Game | " + " | ".join("Picker " + z for z in szs) + " | " + " | ".join("Start " + z for z in szs) + " |",
+              "|---|" + "---|" * (2 * len(szs))]
+    for slug, rows in sorted(starts):
+        lines.append("| `%s` | " % slug + " | ".join(cell((r.get("start") or {}).get("picker")) for r in rows) + " | "
+                     + " | ".join(cell((r.get("start") or {}).get("start")) for r in rows) + " |")
     with open(path, "w", encoding="utf-8", newline='') as fh:
         fh.write("\n".join(lines) + "\n")
     return games
@@ -540,7 +707,7 @@ async def run(args):
             browser = await p.chromium.launch(**launch)
             sem = asyncio.Semaphore(args.workers)
             done = [0]
-            jobs = [(s, sz) for s in slugs for sz in SIZES]
+            jobs = [(s, sz) for s in slugs for sz in args.sizes]
 
             async def job(s, sz):
                 async with sem:
@@ -558,10 +725,17 @@ async def run(args):
     if escaped:
         print("NETWORK GUARD BREACHED -- a write request completed:", escaped[:5])
         sys.exit(2)
-    games = write_report(results, args.out, time.time() - t0, args.aa, args.only)
+    if args.json:
+        with open(args.json, "w", encoding="utf-8", newline='') as fh:
+            json.dump(results, fh)
+    report = args.sizes != SIZES
+    games = write_report(results, args.out, time.time() - t0, args.aa, args.only, args.sizes, report)
     for st, sev, slug, rows, detail in games:
         print("  %-20s %-28s %s" % (st, slug, detail))
     print("wrote", args.out)
+    if report:
+        print("report mode (--sizes): nothing judged")
+        return
     print("known failures (reported, never failed): %d game(s); unmeasurable and listed: %d" % (
         sum(1 for g in games if g[0] == KNOWN_FAIL), sum(1 for g in games if g[0] == UNMEASURABLE)))
     bad = [g for g in games if g[0] in GATE_FAILS]
@@ -606,11 +780,44 @@ def selftest():
         ("Aa 375: Next below the fold (reported)", [fits[0], row(375, 300, 400, 700), fits[2]], True, (), False, "FAIL"),
         ("Aa 320 scrolling sideways", [row(320, 300, 400, 500, sw=360), fits[1], fits[2]], True, (), False, "FAIL"),
     ]
+    # The start screen is measured for the report, never judged (Jon's correction, 26 Oct 2026).
+    def with_start(rows, picker_bottom):
+        out = []
+        for r in rows:
+            r = dict(r); f = r["ask"]["fold"]
+            r["start"] = {"picker": {"n": 3, "top": 200, "bottom": picker_bottom, "fold": f},
+                          "start": {"top": picker_bottom + 10, "bottom": picker_bottom + 54, "fold": f, "label": "Start"}}
+            out.append(r)
+        return out
+    cases += [
+        ("start screen fits, question below the fold at 320", with_start([row(320, 500, 600, 400), fits[1], fits[2]], 300),
+         False, (), False, HARD_FAIL),
+        ("start screen below the fold, question fits (report only)", with_start(fits, 900), False, (), False, "PASS"),
+    ]
     ok = True
     for name, rows, aa, known, unl, want in cases:
         got = classify(rows, aa, known, unl)[0]
         print("  %s  %-52s %s" % ("ok  " if got == want else "FAIL", name, got))
         ok = ok and got == want
+
+    # A two-second banner (the Core Maths papers' section card): still for two seconds, with the timer that removes it
+    # pending. settle() must measure the question after it, never the banner; the planted wait that watches the
+    # layout alone measures the banner and is caught.
+    banner = [(t, "banner" if t < 2000 else "question", 1 if t < 2000 else 0) for t in range(0, 4000, 100)]
+    got = settle_point(banner)
+    sig_at = next(sig for t, sig, _ in reversed(banner) if t <= got[0]) if got else None
+    good = bool(got) and got[1] and got[0] >= 2500 and sig_at == "question"
+    print("  %s  %-52s %s" % ("ok  " if good else "FAIL", "a 2 s banner: measured after it, on the question", got))
+    planted = settle_point([(t, sig, 0) for t, sig, _ in banner])
+    caught = bool(planted) and planted[0] < 2000
+    print("  %s  %-52s %s" % ("ok  " if caught else "FAIL", "plant: a wait on the layout alone measures the banner",
+                              "caught (it settles at %d ms, on the banner)" % planted[0] if caught else planted))
+    clock = [(t, "q|%d" % (t // 1000), 0) for t in range(0, 6000, 100)]   # a ticking clock changes text, not layout
+    still = settle_point([(t, "q", 0) for t, _, _ in clock])
+    print("  %s  %-52s %s" % ("ok  " if still == (500, True) else "FAIL", "a still question settles after 500 ms", still))
+    ceiling = settle_point([(t, "move%d" % t, 0) for t in range(0, 6000, 100)])
+    print("  %s  %-52s %s" % ("ok  " if ceiling == (5000, False) else "FAIL", "a layout that never settles: the 5 s ceiling", ceiling))
+    ok = ok and good and caught and still == (500, True) and ceiling == (5000, False)
     with open(STATE, encoding="utf-8") as fh:
         st = json.load(fh)
     for mode in ("normal", "aa"):
@@ -620,6 +827,14 @@ def selftest():
                 ok = False
     print("selftest: %s" % ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
+
+
+def parse_sizes(text):
+    sizes = []
+    for part in text.split(","):
+        w, h = part.lower().strip().split("x")
+        sizes.append((int(w), int(h)))
+    return sizes
 
 
 def main():
@@ -638,6 +853,9 @@ def main():
     ap.add_argument("--aa", action="store_true",
                     help="measure with Aa (OpenDyslexic) mode on; use with --out, the default report is normal mode")
     ap.add_argument("--chromium", help="launch this Chromium binary instead of Playwright's own")
+    ap.add_argument("--sizes", type=parse_sizes, default=SIZES,
+                    help="WxH,WxH,... (report mode: measured, judged against nothing, never exits 1), e.g. 1366x768,1280x720")
+    ap.add_argument("--json", help="also write every raw measurement to this file")
     args = ap.parse_args()
     asyncio.run(run(args))
 

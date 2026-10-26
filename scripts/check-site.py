@@ -2044,6 +2044,7 @@ TIER3_INIT = r"""
   }
 
   window.__mfgHasStart = function () { return startEls().length > 0; };
+  window.__mfgStartEls = function () { return startEls(); };   // read by measure-phone-fit.py's start-screen report
 
   window.__mfgClickStart = function () {
     const els = startEls();

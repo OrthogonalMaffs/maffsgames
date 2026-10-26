@@ -1,0 +1,213 @@
+{
+ "new": {
+  "52dle": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "better-value": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "chart-interrogator": [
+   "320x568",
+   "375x667"
+  ],
+  "circle-theorem-spotter": [
+   "320x568",
+   "375x667"
+  ],
+  "complex-converter": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "constructions-lab": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "coordinate-geometry-dash": [
+   "375x667"
+  ],
+  "core-maths-paper1": [
+   "375x667"
+  ],
+  "core-maths-paper2a": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "core-maths-paper2b": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "core-maths-paper2c": [
+   "320x568",
+   "375x667"
+  ],
+  "correlation-or-coincidence": [
+   "375x667"
+  ],
+  "curling-friction": [
+   "320x568",
+   "375x667"
+  ],
+  "decimal-detective": [
+   "320x568",
+   "375x667"
+  ],
+  "differentiation-duel": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "equation-builder": [
+   "320x568",
+   "375x667"
+  ],
+  "equatle": [
+   "375x667",
+   "390x844"
+  ],
+  "estimation-golf": [
+   "375x667"
+  ],
+  "expectation-station": [
+   "320x568",
+   "375x667"
+  ],
+  "factor-theorem": [
+   "375x667",
+   "390x844"
+  ],
+  "fermi-lab": [
+   "375x667",
+   "390x844"
+  ],
+  "given-that": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "growth-and-decay": [
+   "320x568",
+   "375x667"
+  ],
+  "higher-power": [
+   "320x568",
+   "375x667"
+  ],
+  "index-laws": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "integration-duel": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "log-laws": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "maths-court": [
+   "375x667",
+   "390x844"
+  ],
+  "modular-battle": [
+   "320x568"
+  ],
+  "negative-number-line": [
+   "320x568"
+  ],
+  "partial-fractions-duel": [
+   "375x667"
+  ],
+  "percentage-flip": [
+   "320x568",
+   "375x667"
+  ],
+  "prime-factorisation": [
+   "375x667"
+  ],
+  "probability-paradox": [
+   "320x568",
+   "375x667"
+  ],
+  "quadratic-factoriser": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "screening-room": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "spot-the-muppet": [
+   "320x568",
+   "375x667"
+  ],
+  "stat-attack": [
+   "320x568",
+   "375x667"
+  ],
+  "suvat": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "tax-theft": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "terrible-advice": [
+   "320x568",
+   "375x667"
+  ],
+  "test-the-claim": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "think-of-a-number": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "trig-worms": [
+   "320x568",
+   "375x667"
+  ],
+  "truth-will-set-you-free": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "word-problem-decoder": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ],
+  "wrong-on-the-internet": [
+   "320x568",
+   "375x667",
+   "390x844"
+  ]
+ },
+ "newu": {
+  "bearing-blitz": "started; no option group, input or submit; it shows a canvas, \"\ud83c\udfaf Fire Torpedo\"",
+  "four-quadrant-explorer": "started; no option group, input or submit; it shows \"Aa\", a canvas",
+  "glorious-gantt": "the start screen does not lead to a question generically (its first option, then 'Start'); no declared start",
+  "gradient-hunter": "started; no option group, input or submit; it shows a canvas",
+  "just-pythag-it-bruv": "started; no option group, input or submit; it shows a drawing, \"\"",
+  "shape-shifter": "started; no option group, input or submit; it shows \"Aa\", a canvas, \"Undo\"",
+  "spot-the-error": "started; no option group, input or submit; it shows \"Aa\""
+ }
+}
