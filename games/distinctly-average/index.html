@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,167 +14,223 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
 <title>Mean, Median, Mode and Range Game – GCSE Maths | MaffsGames</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/schools/assets/theme.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
 <style>
-  /* canon 7.5.1: this game serves KS3 (default) and GCSE, so it takes the KS3 row
-     (light/playful, Nunito + Press Start 2P) at every level — the youngest
-     audience in the room decides the register, even for the GCSE tier's content. */
-  :root {
-    --bg:        #f5f1ff;
-    --white:     #ffffff;
-    --navy:      #2c2650;
-    --muted:     #6b6390;
-    --accent:    #7c5cff;
-    --accent-lt: rgba(124,92,255,0.14);
-    --pink:      #ff6b9d;
-    --green:     #22c55e;
-    --green-lt:  rgba(34,197,94,0.14);
-    --red:       #ef4444;
-    --red-lt:    rgba(239,68,68,0.14);
-    --border:    #e3ddfa;
-    --shadow-sm: 0 1px 3px rgba(44,38,80,0.08), 0 1px 2px rgba(44,38,80,0.06);
-    --shadow-md: 0 6px 20px rgba(44,38,80,0.10), 0 2px 6px rgba(44,38,80,0.06);
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    font-family: 'Nunito', sans-serif;
-    color: var(--navy);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-bottom: 44px;
-  }
-  .header {
-    width: 100%;
-    background: var(--white);
-    border-bottom: 1px solid var(--border);
-    padding: 14px 20px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-  .back {
-    color: var(--muted);
-    text-decoration: none;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 10px;
-  }
-  .back:hover { color: var(--accent); }
-  .header-divider { width: 1px; height: 18px; background: var(--border); }
-  .header-title {
-    font-family: 'Press Start 2P', monospace;
-    font-size: clamp(10px, 2.6vw, 14px);
-    color: var(--navy);
-  }
-  .header-level {
-    margin-left: auto;
-    font-size: 11px;
-    font-weight: 800;
-    color: var(--accent);
-    background: var(--accent-lt);
-    border: 1px solid rgba(124,92,255,0.35);
-    padding: 3px 10px;
-    border-radius: 100px;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-  .a11y-toggle { background: #1a2744; color: #fff; border: 1px solid #2a3a5c; border-radius: 6px; width: 34px; height: 34px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Outfit', 'Nunito', sans-serif; transition: background .15s; }
-  .a11y-toggle.active, .a11y-toggle:hover { background: #0d9488; }
+/* Theme: schools/assets/theme.css (canon §7.5), light row at every level (this game serves KS3 and GCSE). This game's
+   own tokens: a violet accent (6.3:1 on the white surface), its tint, the amber tint of the median reference card
+   (theme.css's .maffs-ref, canon 7.6.2) and the two answer tints.
+   Everything else is a base token. */
+:root {
+  --accent:      #5b3fc9;
+  --accent-dim:  rgba(91,63,201,0.12);
+  --on-accent:   #ffffff;
+  --correct-lt:  rgba(22,101,52,0.12);
+  --wrong-lt:    rgba(185,28,28,0.10);
+  --ref-bg:      #fffaf0;
+  --ref-edge:    #f0c869;
+  --shadow-sm: 0 1px 3px rgba(26,39,68,0.08), 0 1px 2px rgba(26,39,68,0.06);
+  --shadow-md: 0 6px 20px rgba(26,39,68,0.08), 0 2px 6px rgba(26,39,68,0.05);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 44px;
+}
+.header {
+  width: 100%;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 14px;
+}
+.back:hover { color: var(--accent); }
+.header-divider { width: 1px; height: 18px; background: var(--border); }
+.header-title {
+  font-size: clamp(16px, 4vw, 20px);
+  font-weight: 700;
+  color: var(--text);
+}
+.header-level {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-dim);
+  border: 1px solid var(--accent);
+  padding: 3px 10px;
+  border-radius: 100px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.a11y-toggle { flex-shrink: 0; background: var(--surface-alt); color: var(--text); border: 1px solid var(--border); border-radius: 6px; width: 44px; height: 44px; font-size: 12px; font-weight: 700; cursor: pointer; }
+.a11y-toggle.active, .a11y-toggle:hover { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
 
-  .game-area { width: 100%; max-width: 720px; padding: 22px 18px 48px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.game-area { width: 100%; max-width: 720px; padding: 22px 18px 48px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
 
-  .scorebar { display: flex; justify-content: space-between; width: 100%; background: var(--white); border-radius: 14px; padding: 14px 22px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
-  .score-item { text-align: center; }
-  .score-label { font-size: 10px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
-  .score-val { font-family: 'Press Start 2P', monospace; font-size: 17px; color: var(--navy); margin-top: 4px; }
+.scorebar { display: flex; justify-content: space-between; width: 100%; background: var(--surface); border-radius: 14px; padding: 14px 22px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+.score-item { text-align: center; }
+.score-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.score-val { font-family: var(--font-num); font-weight: 700; font-size: 18px; color: var(--text); margin-top: 4px; }
 
-  .card { width: 100%; background: var(--white); border-radius: 18px; padding: 26px 22px; border: 1px solid var(--border); box-shadow: var(--shadow-md); }
+.card { width: 100%; background: var(--surface); border-radius: 16px; padding: 26px 22px; border: 1px solid var(--border); box-shadow: var(--shadow-md); }
 
-  .start-glyph { font-size: 46px; font-weight: 900; color: var(--accent); opacity: 0.16; line-height: 1; margin-bottom: -6px; font-family: 'Nunito', sans-serif; }
-  .start-title { font-family: 'Press Start 2P', monospace; font-size: clamp(14px, 3.4vw, 18px); color: var(--navy); margin-bottom: 10px; text-align: center; }
-  .start-desc { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; text-align: center; }
-  .picker-label { font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; text-align: center; margin-bottom: 10px; margin-top: 4px; }
-  .level-select, .session-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 18px; }
-  .level-btn, .session-btn { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 13px; padding: 10px 18px; border: 2px solid var(--border); background: var(--bg); color: var(--muted); border-radius: 100px; cursor: pointer; transition: all .14s ease; }
-  .level-btn:hover, .session-btn:hover { border-color: var(--accent); color: var(--navy); }
-  .level-btn.selected, .session-btn.selected { border-color: var(--accent); background: var(--accent-lt); color: var(--accent); }
+.start-glyph { font-size: 46px; font-weight: 700; color: var(--accent); opacity: 0.16; line-height: 1; margin-bottom: -6px; }
+.start-glyph span { display: inline-block; line-height: 0.62; border-top: 0.07em solid currentColor; padding-top: 0.03em; }   /* x-bar, the mean: the bar drawn over the x in any font */
+.start-title { font-size: clamp(20px, 5vw, 26px); font-weight: 700; color: var(--text); margin-bottom: 10px; text-align: center; }
+.start-desc { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; text-align: center; }
+.picker-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; text-align: center; margin-bottom: 10px; margin-top: 4px; }
+.level-select, .session-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 18px; }
+.level-btn, .session-btn { font-weight: 700; font-size: 13px; min-height: 44px; padding: 10px 18px; border: 2px solid var(--border); background: var(--surface-alt); color: var(--muted); border-radius: 100px; cursor: pointer; transition: all .14s ease; }
+.level-btn:hover, .session-btn:hover { border-color: var(--accent); color: var(--text); }
+.level-btn.selected, .session-btn.selected { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); }
 
-  .how-to { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; margin-bottom: 22px; display: flex; flex-direction: column; gap: 8px; }
-  .how-to p { font-size: 13.5px; color: var(--navy); display: flex; align-items: center; gap: 8px; }
-  .how-to p::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--pink); flex-shrink: 0; }
-  .how-to p .katex { font-size: 1em; }
+.how-to { background: var(--surface-alt); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; margin-bottom: 22px; display: flex; flex-direction: column; gap: 8px; }
+.how-to p { font-size: 13.5px; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.how-to p::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.how-to p .katex { font-size: 1em; }
 
-  .btn { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 15px; padding: 13px 30px; border: none; border-radius: 100px; cursor: pointer; transition: all .14s ease; display: block; margin: 0 auto; }
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.btn { font-weight: 700; font-size: 15px; min-height: 44px; padding: 13px 30px; border: none; border-radius: 100px; cursor: pointer; transition: all .14s ease; display: block; margin: 0 auto; }
+.btn-primary { background: var(--accent); color: var(--on-accent); }
+.btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
 
-  .main-game { display: none; flex-direction: column; align-items: center; gap: 14px; width: 100%; }
-  .main-game.visible { display: flex; }
+.main-game { display: none; flex-direction: column; align-items: center; gap: 14px; width: 100%; }
+.main-game.visible { display: flex; }
 
-  .scaffold-area { width: 100%; }
-  .scaffold-card { background: #fffaf0; border: 2px dashed #f0c869; border-radius: 14px; padding: 16px 18px; }
-  .scaffold-title { font-size: 12px; font-weight: 800; color: #a1660c; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
-  .scaffold-formula { text-align: center; font-size: 17px; margin: 6px 0 10px; color: var(--navy); }
-  .scaffold-steps { padding-left: 20px; font-size: 13.5px; color: var(--navy); line-height: 1.6; display: flex; flex-direction: column; gap: 4px; }
-  .scaffold-steps li::marker { color: #a1660c; font-weight: 800; }
-  .show-rule-btn { display: block; margin: 0 auto; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 100px; padding: 7px 16px; font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; }
-  .show-rule-btn:hover { border-color: var(--accent); color: var(--accent); }
+.scaffold-formula { text-align: center; font-size: 17px; margin: 6px 0 10px; color: var(--text); }
+.scaffold-steps { padding-left: 20px; font-size: 13.5px; color: var(--text); line-height: 1.6; display: flex; flex-direction: column; gap: 4px; }
+.scaffold-steps li::marker { color: var(--hint); font-weight: 700; }
+/* The median card in the feedback (Jon's ruling, 26 Oct 2026): open where it fits, collapsed on a phone where it would
+   push Next below the fold, by viewport height within a width band, since the card's height depends on the width.
+   Measured on all 136 median items, open, Next needs a viewport this tall: normal 922px at 320 wide, 839 at 360,
+   817 at 375, 777 from 390 to 480; Aa 1178 at 320, 1062 at 375, 1024 at 390, 978 at 412; 481-600 wide (the phone
+   compaction stops at 480) 1289, Aa 1715. Wider than 600 it is open: canon 7.6.1 governs the narrow screen. */
+@media (max-width: 600px) {
+  .maffs-ref-fits { display: none; }
+  .maffs-ref-phone { display: block; }
+}
+@media (max-width: 480px) and (min-height: 930px), (min-width: 390px) and (max-width: 480px) and (min-height: 790px) {
+  body:not(.accessible) .maffs-ref-fits { display: block; }
+  body:not(.accessible) .maffs-ref-phone { display: none; }
+}
+@media (max-width: 480px) and (min-height: 1180px) {
+  body.accessible .maffs-ref-fits { display: block; }
+  body.accessible .maffs-ref-phone { display: none; }
+}
 
-  .q-label { font-size: 10px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; text-align: center; }
-  .q-prompt { font-size: 15.5px; color: var(--navy); text-align: center; margin-bottom: 16px; line-height: 1.5; }
+.q-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; text-align: center; }
+.q-prompt { font-size: 15.5px; color: var(--text); text-align: center; margin-bottom: 16px; line-height: 1.5; }
 
-  .data-list { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 4px; }
-  .data-chip { font-family: 'Press Start 2P', monospace; font-size: 13px; background: var(--bg); border: 2px solid var(--border); color: var(--navy); border-radius: 10px; padding: 8px 12px; }
+.data-list { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 4px; }
+.data-chip { font-family: var(--font-num); font-weight: 700; font-size: 14px; background: var(--surface-alt); border: 2px solid var(--border); color: var(--text); border-radius: 10px; padding: 6px 10px; }
 
-  .freq-table { width: 100%; border-collapse: collapse; margin: 6px 0; }
-  .freq-table th, .freq-table td { border: 1px solid var(--border); padding: 8px 10px; text-align: center; font-size: 14px; }
-  .freq-table th { background: var(--bg); font-weight: 800; color: var(--navy); }
+.freq-table { width: 100%; border-collapse: collapse; margin: 6px 0; }
+.freq-table th, .freq-table td { border: 1px solid var(--border); padding: 8px 10px; text-align: center; font-size: 14px; }
+.freq-table th { background: var(--surface-alt); font-weight: 700; color: var(--text); }
 
-  .compare-sets { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 4px; }
-  .compare-set { flex: 1; min-width: 150px; background: var(--bg); border: 2px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; }
-  .compare-set-label { font-family: 'Press Start 2P', monospace; font-size: 12px; color: var(--accent); margin-bottom: 8px; }
+.compare-sets { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 4px; }
+.compare-set { flex: 1; min-width: 150px; background: var(--surface-alt); border: 2px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; }
+.compare-set-label { font-weight: 700; font-size: 13px; color: var(--accent); margin-bottom: 8px; }
 
-  .options-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
-  .opt-btn { font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 700; padding: 13px 16px; border: 2px solid var(--border); background: var(--bg); color: var(--navy); border-radius: 12px; cursor: pointer; transition: all .14s ease; text-align: center; }
-  .opt-btn:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-lt); }
-  .opt-btn:disabled { cursor: default; }
-  .opt-btn.correct { border-color: var(--green); background: var(--green-lt); color: #15803d; }
-  .opt-btn.wrong { border-color: var(--red); background: var(--red-lt); color: #b91c1c; }
+.options-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+.opt-btn { font-size: 15px; font-weight: 600; min-height: 44px; padding: 13px 16px; border: 2px solid var(--border); background: var(--surface-alt); color: var(--text); border-radius: 12px; cursor: pointer; transition: all .14s ease; text-align: center; }
+.opt-btn:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-dim); }
+.opt-btn:disabled { cursor: default; }
+.opt-btn.correct { border-color: var(--correct); background: var(--correct-lt); color: var(--correct); }
+.opt-btn.wrong { border-color: var(--wrong); background: var(--wrong-lt); color: var(--wrong); }
 
-  .feedback { font-family: 'Press Start 2P', monospace; font-size: 13px; min-height: 24px; text-align: center; margin-top: 14px; }
-  .feedback.correct { color: var(--green); }
-  .feedback.wrong { color: var(--red); }
+.feedback { font-weight: 700; font-size: 15px; min-height: 24px; text-align: center; margin-top: 14px; }
+.feedback.correct { color: var(--correct); }
+.feedback.wrong { color: var(--wrong); }
 
-  .explain-box { margin-top: 4px; }
-  .explain-box p { font-size: 13.5px; color: var(--navy); line-height: 1.7; margin-bottom: 4px; }
-  .mc-box { font-size: 13.5px; color: #b91c1c; background: var(--red-lt); border: 1px solid rgba(239,68,68,0.35); border-radius: 10px; padding: 10px 14px; margin-top: 8px; line-height: 1.6; }
+.explain-box { margin-top: 4px; }
+.explain-box p { font-size: 13.5px; color: var(--text); line-height: 1.7; margin-bottom: 4px; }
+.mc-box { font-size: 13.5px; color: var(--wrong); background: var(--wrong-lt); border: 1px solid var(--wrong); border-radius: 10px; padding: 10px 14px; margin-top: 8px; line-height: 1.6; }
 
-  .next-mount { width: 100%; min-height: 4px; }
+.next-mount { width: 100%; min-height: 4px; }
 
-  .go-label { font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; text-align: center; }
-  .go-score { font-family: 'Press Start 2P', monospace; font-size: 40px; color: var(--accent); text-align: center; margin: 8px 0 6px; }
-  .go-detail { font-size: 14px; color: var(--muted); margin-bottom: 22px; text-align: center; }
-  .back-to-games { display: block; text-align: center; color: var(--muted); font-size: 14px; font-weight: 700; text-decoration: none; margin-top: 14px; }
-  .back-to-games:hover { color: var(--accent); }
+.go-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; text-align: center; }
+.go-score { font-family: var(--font-num); font-weight: 700; font-size: 40px; color: var(--accent); text-align: center; margin: 8px 0 6px; }
+.go-detail { font-size: 14px; color: var(--muted); margin-bottom: 22px; text-align: center; }
+.back-to-games { display: block; text-align: center; color: var(--muted); font-size: 14px; font-weight: 600; text-decoration: none; margin-top: 14px; }
+.back-to-games:hover { color: var(--accent); }
 
-  @media (max-width: 480px) {
-    .game-area { padding: 16px 12px 40px; }
-    .compare-sets { flex-direction: column; }
-  }
-  /* === Accessibility === */
-  body.accessible { font-family: 'OpenDyslexic', sans-serif !important; letter-spacing: 0.12em; word-spacing: 0.16em; }
-  body.accessible p, body.accessible .q-prompt, body.accessible .scaffold-steps li, body.accessible .opt-btn, body.accessible .explain-box p { line-height: 2.0; max-width: 65ch; }
-  body.accessible { background-color: #12141f !important; }
-  body.accessible.light-theme { background-color: #fdf6e3 !important; color: #2d2d2d !important; }
-  body.accessible .q-prompt { font-size: 1.1em; }
-  .correct::after { content: ' \2713'; font-size: 0.85em; opacity: 0.8; }
-  .incorrect::after { content: ' \2717'; font-size: 0.85em; opacity: 0.8; }
+/* Phone: compact, so the answer controls, and Next after a wrong answer, sit above the fold at 320x568 in normal and Aa mode
+   and nothing scrolls sideways (canon 7.6.1). The options sit two to a row where they fit. */
+@media (max-width: 480px) {
+  .header { padding: 4px 10px; gap: 8px; }
+  .game-area { padding: 8px 10px 40px; gap: 8px; }
+  .scorebar { padding: 6px 14px; }
+  .score-label { font-size: 9px; }
+  .score-val { font-size: 15px; margin-top: 0; }
+  .card { padding: 10px 12px; }
+  .q-label { margin-bottom: 4px; }
+  .q-prompt { font-size: 14.5px; margin-bottom: 8px; line-height: 1.4; }
+  .data-list { gap: 5px; }
+  .data-chip { font-size: 13px; padding: 4px 8px; border-width: 1px; }
+  .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 6px; margin-top: 8px; }
+  .opt-btn { padding: 8px 8px; font-size: 14px; }
+  .feedback { margin-top: 6px; min-height: 0; font-size: 14px; }
+  .compare-sets { gap: 6px; flex-wrap: nowrap; }
+  .compare-set { min-width: 0; padding: 6px; }
+  .compare-set-label { margin-bottom: 4px; }
+  .main-game { gap: 8px; }
+  .freq-table { margin: 2px 0; }
+  .freq-table th, .freq-table td { padding: 2px 8px; font-size: 13px; }
+  .explain-box p { font-size: 13px; line-height: 1.5; margin-bottom: 2px; }
+  .mc-box { padding: 6px 10px; margin-top: 4px; font-size: 13px; line-height: 1.4; }
+  /* canon 7.6.1: after a wrong answer the options are locked, so they step aside and the reason and Next take their place */
+  .options-grid:has(.opt-btn.wrong) { display: none; }
+  /* and the secondary panel folds away: the score bar is back with the next question */
+  .game-area:has(.opt-btn.wrong) .scorebar { display: none; }
+  /* where the working restates every value (mean, median, mode, the two compare sets, the outlier sorted), the data
+     chips above it repeat them, so they step aside too; where it does not (range, missing, tables, the outlier's effect),
+     they stay */
+  .main-game:is([data-cat="mean"], [data-cat="median"], [data-cat="modeUnique"], [data-cat="modeBimodal"],
+    [data-cat="compareMean"], [data-cat="compareRange"], [data-cat="outlierId"]):has(.opt-btn.wrong) #qData { display: none; }
+}
+/* === Accessibility === (the font and the page background come from theme.css) */
+body.accessible { letter-spacing: 0.12em; word-spacing: 0.16em; }
+body.accessible p, body.accessible .q-prompt, body.accessible .scaffold-steps li, body.accessible .opt-btn, body.accessible .explain-box p { line-height: 2.0; max-width: 65ch; }
+body.accessible .score-val, body.accessible .data-chip, body.accessible .go-score { letter-spacing: 0; }
+body.accessible .q-prompt { font-size: 1.1em; }
+@media (max-width: 480px) {
+  body.accessible { letter-spacing: 0.04em; word-spacing: 0.08em; }
+  body.accessible .q-prompt, body.accessible .opt-btn, body.accessible .explain-box p, body.accessible .mc-box,
+  body.accessible .scaffold-steps li { line-height: 1.4; }
+  body.accessible .q-prompt { font-size: 1em; }
+  body.accessible .explain-box p { margin-bottom: 0; }
+  body.accessible .feedback { margin-top: 2px; }
+  body.accessible .mc-box { padding: 4px 8px; margin-top: 2px; }
+  /* OpenDyslexic is wide: the header keeps to 320 px (no sideways scroll) with no divider and a tighter level badge */
+  body.accessible .header { gap: 6px; padding: 4px 6px; }
+  body.accessible .header-divider { display: none; }
+  body.accessible .back { font-size: 12px; }
+  body.accessible .header-title { font-size: 14px; line-height: 1.2; }   /* two lines no taller than the 44px controls beside them */
+  body.accessible .header-level { font-size: 10px; padding: 2px 5px; letter-spacing: 0; text-transform: none; }
+  body.accessible .freq-table th, body.accessible .freq-table td { padding: 1px 6px; }
+  body.accessible .game-area { padding-top: 6px; }
+  body.accessible .card { padding: 6px 10px 8px; }
+  body.accessible .q-label { margin-bottom: 2px; }
+  body.accessible .q-prompt { margin-bottom: 4px; }
+}
+.correct::after { content: ' \2713'; font-size: 0.85em; opacity: 0.8; }
+.incorrect::after { content: ' \2717'; font-size: 0.85em; opacity: 0.8; }
 </style>
 <!-- Google Analytics -->
 <script src="../../schools/assets/analytics.js"></script>
@@ -200,12 +256,12 @@
 <script src="../../schools/assets/options.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
-<body class="light-theme">
+<body>
 
 <div class="header">
   <a href="../../" class="back">&larr; Back</a>
   <div class="header-divider"></div>
-  <div class="header-title">Distinctly Average</div>
+  <h1 class="header-title">Distinctly Average</h1>
   <span class="header-level" id="headerLevel">Foundation</span>
   <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
 </div>
@@ -218,7 +274,7 @@
   </div>
 
   <div class="card" id="startScreen">
-    <div class="start-glyph" style="text-align:center">x&#772;</div>
+    <div class="start-glyph" style="text-align:center" aria-hidden="true"><span>x</span></div>
     <div class="start-title">Distinctly Average</div>
     <div class="start-desc" id="startDesc">Mean, median, mode and range — spot which one a question is really asking for.</div>
 
@@ -234,16 +290,15 @@
   </div>
 
   <div class="main-game" id="mainGame">
-    <div class="scaffold-area" id="scaffoldArea"></div>
-
     <div class="card">
       <div class="q-label" id="qCat">Mean</div>
       <div class="q-prompt" id="qPrompt"></div>
       <div id="qData"></div>
       <div class="options-grid" id="optionsGrid"></div>
+      <div id="scaffoldArea"></div>
       <div class="feedback" id="feedback"></div>
       <div class="explain-box" id="explainBox"></div>
-      <div class="next-mount" id="nextMount"></div>
+      <div class="maffs-ref-row" id="refRow"><div class="next-mount" id="nextMount"></div></div>
     </div>
   </div>
 
@@ -1158,26 +1213,16 @@ renderStartContent();
 renderSessionButtons();
 
 /* ----------------------------------------------------------------------------
-   Median scaffold (canon "scaffolds fade, never pre-announce"). Generic —
-   never shows the current item's value. Open until two correct in a row on
-   a median-type question, then collapses to a button; two wrong in a row
-   reopens it. Never removed entirely.
+   The median card: theme.css's reference card (.maffs-ref, canon 7.6.2; Jon's ruling, 26 Oct 2026). Generic,
+   never the current item's value. On a median question it waits collapsed as "Show the rule" below the options,
+   so it never pushes them down; after a wrong answer it is in the feedback, after the working and before Next: open
+   where it fits, collapsed on a phone where it would push Next below the fold (the CSS beside .scaffold-steps).
    ---------------------------------------------------------------------------- */
-let medianCorrectStreak = 0, medianWrongStreak = 0, scaffoldCollapsed = false;
 function isMedianCat(cat) { return cat === 'median' || cat === 'freqMedian'; }
-function updateScaffoldStreak(item, wasCorrect) {
-  if (!isMedianCat(item.cat)) return;
-  if (wasCorrect) {
-    medianCorrectStreak++; medianWrongStreak = 0;
-    if (medianCorrectStreak >= 2) scaffoldCollapsed = true;
-  } else {
-    medianWrongStreak++; medianCorrectStreak = 0;
-    if (medianWrongStreak >= 2) scaffoldCollapsed = false;
-  }
-}
-function renderScaffoldCard(mount) {
-  mount.innerHTML =
-    '<div class="scaffold-title">Finding the median</div>' +
+function medianCardHTML(open, cls) {
+  return '<details class="maffs-ref' + (cls ? ' ' + cls : '') + '"' + (open ? ' open' : '') + '>' +
+    '<summary><span class="maffs-ref-show">Show the rule</span><span class="maffs-ref-title">Finding the median</span></summary>' +
+    '<div class="maffs-ref-body">' +
     '<div class="scaffold-formula">' + tex('\\text{position} = \\dfrac{n+1}{2}') + '</div>' +
     '<ol class="scaffold-steps">' +
       '<li>Order the data from smallest to largest.</li>' +
@@ -1185,22 +1230,11 @@ function renderScaffoldCard(mount) {
       '<li>Is <i>n</i> odd or even?</li>' +
       '<li>Work out (<i>n</i> + 1) ÷ 2.</li>' +
       '<li><b>Odd</b> — the value at that position is the median.<br><b>Even</b> — the position ends in .5, so the median is halfway between the two values either side.</li>' +
-    '</ol>';
+    '</ol>' +
+    '</div></details>';
 }
 function renderScaffoldArea(item) {
-  const area = document.getElementById('scaffoldArea');
-  if (!isMedianCat(item.cat)) { area.style.display = 'none'; area.innerHTML = ''; return; }
-  area.style.display = '';
-  if (!scaffoldCollapsed) {
-    area.innerHTML = '<div class="scaffold-card" id="scaffoldCard"></div>';
-    renderScaffoldCard(document.getElementById('scaffoldCard'));
-  } else {
-    area.innerHTML = '<button class="show-rule-btn" type="button" id="showRuleBtn">Show the rule</button>';
-    document.getElementById('showRuleBtn').addEventListener('click', function () {
-      area.innerHTML = '<div class="scaffold-card" id="scaffoldCard"></div>';
-      renderScaffoldCard(document.getElementById('scaffoldCard'));
-    });
-  }
+  document.getElementById('scaffoldArea').innerHTML = isMedianCat(item.cat) ? medianCardHTML(false) : '';
 }
 
 /* ----------------------------------------------------------------------------
@@ -1252,7 +1286,6 @@ function startGame() {
   const pool = poolFor(currentLevel);
   sessionQuestions = MaffsOptions.shuffle(pool.slice()).slice(0, sessionLength);
   score = 0; correctCount = 0; qIndex = 0;
-  medianCorrectStreak = 0; medianWrongStreak = 0; scaffoldCollapsed = false;
   document.getElementById('startScreen').style.display = 'none';
   document.getElementById('gameOver').style.display = 'none';
   document.getElementById('mainGame').classList.add('visible');
@@ -1271,6 +1304,7 @@ function loadQuestion() {
   document.getElementById('feedback').textContent = '';
   document.getElementById('feedback').className = 'feedback';
   document.getElementById('explainBox').innerHTML = '';
+  document.querySelectorAll('#refRow > .maffs-ref').forEach(el => el.remove());
   renderScaffoldArea(currentItem);
   renderQuestionBody(currentItem);
 }
@@ -1306,6 +1340,7 @@ function optionLabel(item, v) {
 }
 
 function renderQuestionBody(item) {
+  document.getElementById('mainGame').dataset.cat = item.cat;   // a styling hook only: which panels fold away on a phone
   document.getElementById('qCat').textContent = CAT_LABEL[item.cat] || '';
   // Every CAT_PROMPT string is plain English with at most a <b> tag — no
   // \( \) maths at all, so it must NOT go through mx()/K(): math mode has no
@@ -1417,7 +1452,6 @@ function checkAnswer(selectedVal, btnEl) {
     else if (b === btnEl) b.classList.add('wrong');
   });
   mfg('question_answered', { game_slug: SLUG, level: currentLevel, question_index: qIndex, correct: isCorrect });
-  updateScaffoldStreak(currentItem, isCorrect);
 
   const feedback = document.getElementById('feedback');
   const explainBox = document.getElementById('explainBox');
@@ -1432,6 +1466,11 @@ function checkAnswer(selectedVal, btnEl) {
     feedback.className = 'feedback wrong';
     const misId = currentDistMap[selectedVal];
     explainBox.innerHTML = explainHTML(currentItem) + (misId ? '<div class="mc-box">' + MC[misId] + '</div>' : '');
+    if (isMedianCat(currentItem.cat)) {   // the median card moves into the feedback, just before Next
+      document.getElementById('scaffoldArea').innerHTML = '';
+      document.getElementById('nextMount').insertAdjacentHTML('beforebegin',
+        medianCardHTML(true, 'maffs-ref-fits') + medianCardHTML(false, 'maffs-ref-phone'));
+    }
     // Fallback deliberately extended (24h, safely under setTimeout's ~24.8-day
     // ceiling) rather than the shared 20s default — canon §7.6 wants NO
     // timeout on the wrong-answer path here; MaffsNext.wrong's own

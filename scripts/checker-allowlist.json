@@ -1650,7 +1650,8 @@
     "10 Oct 2026 (FONT-FIT): the phone pass now measures in the real fonts (scripts/fonts/). 12 entries",
     "recorded in the old fallback font fitted in them and were removed; distinctly-average (its Aa toggle) is",
     "new in them, listed for Jon to order (docs/audits/font-fit-2026-10-10.md). parents/fractions stays: CI's",
-    "Chromium measures it 321px wide in the real fonts (the cloud container's older build measured 320)."
+    "Chromium measures it 321px wide in the real fonts (the cloud container's older build measured 320).",
+    "26 Oct 2026 (LOOK-REDS-2): distinctly-average's two entries removed; on theme.css it fits 320px."
   ],
   "tier1_phone_overflow": [
     {
@@ -1764,20 +1765,6 @@
       "width": 334,
       "todo": "§3.9, in no batch yet",
       "where": "div.canvas-panel; div.right-panel"
-    },
-    {
-      "path": "games/distinctly-average/index.html",
-      "at": "load",
-      "width": 334,
-      "todo": "FONT-FIT findings (docs/audits/font-fit-2026-10-10.md): new in the real fonts, for Jon to order",
-      "where": "button#a11yToggle.a11y-toggle"
-    },
-    {
-      "path": "games/distinctly-average/index.html",
-      "at": "start",
-      "width": 334,
-      "todo": "FONT-FIT findings (docs/audits/font-fit-2026-10-10.md): new in the real fonts, for Jon to order",
-      "where": "button#a11yToggle.a11y-toggle"
     },
     {
       "path": "games/equation-builder/index.html",

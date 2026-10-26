@@ -79,3 +79,50 @@ h1, h2, h3, h4, button, input, select, textarea {
 code, kbd, samp, pre {
   font-family: var(--font-num);
 }
+
+/* The reference card: the house pattern for a help or reference panel (canon §7.6.2, Jon's ruling of 26 Oct 2026).
+   A rule or method a student may want while answering, such as Distinctly Average's "Finding the median".
+   On the asking screen it is collapsed to one 44px "Show the rule" button BELOW the options, so it never pushes them
+   down the screen; after a wrong answer it is inside the feedback, between the working and Next, where the student
+   who needs it reads it before moving on (canon §7.6.1: the hint never moves below Next).
+   One native <details>, so it needs no script and opens from the keyboard:
+     <details class="maffs-ref" [open]>
+       <summary><span class="maffs-ref-show">Show the rule</span><span class="maffs-ref-title">Finding the median</span></summary>
+       <div class="maffs-ref-body">...</div>
+     </details>
+   Closed, the summary reads its -show text; open, its -title. A game may tint the open card with two non-base
+   tokens, --ref-bg and --ref-edge; everything else is set here.
+   In the feedback, open where it fits and collapsed on a phone where it would push Next below the fold (Jon's
+   ruling, 26 Oct 2026): CSS cannot open a <details>, so the feedback carries two copies, .maffs-ref-fits (open) and
+   .maffs-ref-phone (collapsed), and exactly one shows. By default the open copy; the game's own media query, on
+   viewport height within a width band (its card's height depends on the width), from its measured heights, swaps
+   them. The hidden copy is display:none, so a screen reader reads one card.
+   .maffs-ref-row holds the feedback's copies and the Next mount, in that order: collapsed, the card sits beside Next on
+   one line (no height of its own on a phone); open, it takes the full width above Next. */
+.maffs-ref { width: 100%; margin-top: 10px; }
+.maffs-ref > summary {
+  list-style: none; cursor: pointer; min-height: 44px; box-sizing: border-box;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600;
+}
+.maffs-ref > summary::-webkit-details-marker { display: none; }
+.maffs-ref > summary:focus-visible { outline: 2px solid var(--accent, var(--text)); outline-offset: 2px; }
+.maffs-ref:not([open]) > summary {
+  width: fit-content; margin: 0 auto; padding: 7px 16px;
+  border: 1px solid var(--border); border-radius: 100px; color: var(--muted);
+}
+.maffs-ref:not([open]) > summary:hover { border-color: var(--accent, var(--text)); color: var(--accent, var(--text)); }
+.maffs-ref[open] {
+  background: var(--ref-bg, var(--surface-alt)); border: 2px dashed var(--ref-edge, var(--border));
+  border-radius: 14px; padding: 0 16px 12px;
+}
+.maffs-ref[open] > summary {
+  justify-content: flex-start; font-weight: 700; color: var(--hint);
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.maffs-ref:not([open]) .maffs-ref-title, .maffs-ref[open] .maffs-ref-show { display: none; }
+.maffs-ref-phone { display: none; }
+.maffs-ref-row { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: center; column-gap: 10px; width: 100%; }
+.maffs-ref-row > .maffs-ref[open] { flex: 0 0 100%; }
+.maffs-ref-row > .maffs-ref:not([open]) { width: auto; margin: 11px 0 2px; }
+.maffs-ref-row > :not(.maffs-ref) { flex: 0 1 auto; width: auto; }
