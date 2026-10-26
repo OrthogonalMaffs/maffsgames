@@ -23,7 +23,7 @@ unmeasurable 14 → 7 in each**, now each with its reason.
   passing; its first question 540 / 528 at 320 × 568) and `factor-theorem` (start 251 / 528; its first practice question, reached by its
   declared start, 705 / 528). Both join the list in normal mode at 320 × 568; `factor-theorem` also in Aa at 375 and 390.
 - **`estimation-golf` never had a start screen:** it calls `startGame()` on load, so what the audit measured was its first hole (six
-  options under a 206 px header), and it fails as a question, not a start screen (group D or C, not B).
+  options under a 206 px header), and it fails as a question, not as a start screen: a 206 px header above six options.
 - **`seven-bridges` fits on its question** at every size in both modes (last control 339 / 528 at 320 × 568; 205 / 528 in Aa at 320): it
   leaves the list in both modes. Its start screen does not fit anywhere (Start 972 / 528 at 320 × 568, 931 / 804 at 390 × 844).
 - **The Core Maths papers are measured and all four fail** (normal: paper 1 at 320; 2A at all three sizes; 2B at 320 and 375; 2C at 320;
@@ -53,9 +53,9 @@ question** (Aa at 320 × 568: where the options start, the recorded exception); 
 | 3 | `chart-interrogator` | GCSE | yes | declared start | 685 / 528 ✗ | 685 / 627 ✗ | 685 / 804 ✓ | start 738 / 528 ✗ | 781 / 627 ✗ | 781 / 804 ✓ |
 | 4 | `stat-attack` | GCSE | yes | generic | 591 / 528 ✗ | 556 / 627 ✓ | 536 / 804 ✓ | start 654 / 528 ✗ | 652 / 627 ✗ | 652 / 804 ✓ |
 | 5 | `seven-bridges` | KS3 |  | generic | 339 / 528 ✓ | 379 / 627 ✓ | 389 / 804 ✓ | start 205 / 528 ✓ | 411 / 627 ✓ | 422 / 804 ✓ |
-| 6 | `gradient-hunter` | GCSE |  | not reached | – | – | – | – | – | – |
+| 6 | `gradient-hunter` | GCSE |  | generic; a canvas graph, unmeasurable | – | – | – | – | – | – |
 | 7 | `growth-and-decay` | Core |  | generic | 611 / 528 ✗ | 633 / 627 ✗ | 612 / 804 ✓ | start 713 / 528 ✗ | 729 / 627 ✗ | 729 / 804 ✓ |
-| 8 | `glorious-gantt` | Core |  | not reached | – | – | – | – | – | – |
+| 8 | `glorious-gantt` | Core |  | not reached (unmeasurable) | – | – | – | – | – | – |
 | 9 | `core-maths-paper1` | Core |  | generic | 532 / 528 ✗ | 505 / 627 ✓ | 505 / 804 ✓ | start 507 / 528 ✓ | 705 / 627 ✗ | 673 / 804 ✓ |
 | 10 | `core-maths-paper2a` | Core |  | generic | 991 / 528 ✗ | 967 / 627 ✗ | 925 / 804 ✗ | start 1024 / 528 ✗ | 1332 / 627 ✗ | 1309 / 804 ✗ |
 | 11 | `core-maths-paper2b` | Core |  | generic | 677 / 528 ✗ | 677 / 627 ✗ | 677 / 804 ✓ | start 571 / 528 ✗ | 919 / 627 ✗ | 919 / 804 ✗ |
