@@ -77,7 +77,7 @@ body {
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
-.a11y-toggle { background: var(--surface-alt); color: var(--text); border: 1px solid var(--border); border-radius: 6px; width: 44px; height: 44px; font-size: 12px; font-weight: 700; cursor: pointer; }
+.a11y-toggle { flex-shrink: 0; background: var(--surface-alt); color: var(--text); border: 1px solid var(--border); border-radius: 6px; width: 44px; height: 44px; font-size: 12px; font-weight: 700; cursor: pointer; }
 .a11y-toggle.active, .a11y-toggle:hover { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
 
 .game-area { width: 100%; max-width: 720px; padding: 22px 18px 48px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
@@ -182,6 +182,13 @@ body {
   .mc-box { padding: 6px 10px; margin-top: 4px; font-size: 13px; line-height: 1.4; }
   /* canon 7.6.1: after a wrong answer the options are locked, so they step aside and the reason and Next take their place */
   .options-grid:has(.opt-btn.wrong) { display: none; }
+  /* and the secondary panel folds away: the score bar is back with the next question */
+  .game-area:has(.opt-btn.wrong) .scorebar { display: none; }
+  /* where the working restates every value (mean, median, mode, the two compare sets, the outlier sorted), the data
+     chips above it repeat them, so they step aside too; where it does not (range, missing, tables, the outlier's effect),
+     they stay */
+  .main-game:is([data-cat="mean"], [data-cat="median"], [data-cat="modeUnique"], [data-cat="modeBimodal"],
+    [data-cat="compareMean"], [data-cat="compareRange"], [data-cat="outlierId"]):has(.opt-btn.wrong) #qData { display: none; }
 }
 /* On a short phone the scaffold card (an aid, not the question) sits below the answer, so the options stay above the fold;
    the reading order is unchanged. */
@@ -195,7 +202,19 @@ body.accessible .score-val, body.accessible .data-chip, body.accessible .go-scor
 body.accessible .q-prompt { font-size: 1.1em; }
 @media (max-width: 480px) {
   body.accessible { letter-spacing: 0.04em; word-spacing: 0.08em; }
-  body.accessible .q-prompt, body.accessible .opt-btn { line-height: 1.4; }
+  body.accessible .q-prompt, body.accessible .opt-btn, body.accessible .explain-box p, body.accessible .mc-box,
+  body.accessible .scaffold-steps li { line-height: 1.4; }
+  body.accessible .q-prompt { font-size: 1em; }
+  body.accessible .explain-box p { margin-bottom: 0; }
+  body.accessible .feedback { margin-top: 2px; }
+  body.accessible .mc-box { padding: 4px 8px; margin-top: 2px; }
+  /* OpenDyslexic is wide: the header keeps to 320 px (no sideways scroll) with no divider and a tighter level badge */
+  body.accessible .header { gap: 6px; padding: 4px 6px; }
+  body.accessible .header-divider { display: none; }
+  body.accessible .back { font-size: 12px; }
+  body.accessible .header-title { font-size: 14px; }
+  body.accessible .header-level { font-size: 10px; padding: 2px 5px; letter-spacing: 0; text-transform: none; }
+  body.accessible .freq-table th, body.accessible .freq-table td { padding: 1px 6px; }
 }
 .correct::after { content: ' \2713'; font-size: 0.85em; opacity: 0.8; }
 .incorrect::after { content: ' \2717'; font-size: 0.85em; opacity: 0.8; }
@@ -1330,6 +1349,7 @@ function optionLabel(item, v) {
 }
 
 function renderQuestionBody(item) {
+  document.getElementById('mainGame').dataset.cat = item.cat;   // a styling hook only: which panels fold away on a phone
   document.getElementById('qCat').textContent = CAT_LABEL[item.cat] || '';
   // Every CAT_PROMPT string is plain English with at most a <b> tag — no
   // \( \) maths at all, so it must NOT go through mx()/K(): math mode has no
