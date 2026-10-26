@@ -83,8 +83,8 @@ code, kbd, samp, pre {
 /* The reference card: the house pattern for a help or reference panel (canon §7.6.2, Jon's ruling of 26 Oct 2026).
    A rule or method a student may want while answering, such as Distinctly Average's "Finding the median".
    On the asking screen it is collapsed to one 44px "Show the rule" button BELOW the options, so it never pushes them
-   down the screen; after a wrong answer it is open inside the feedback, between the working and Next, where the
-   student who needs it reads it before moving on (canon §7.6.1: the hint never moves below Next).
+   down the screen; after a wrong answer it is inside the feedback, between the working and Next, where the student
+   who needs it reads it before moving on (canon §7.6.1: the hint never moves below Next).
    One native <details>, so it needs no script and opens from the keyboard:
      <details class="maffs-ref" [open]>
        <summary><span class="maffs-ref-show">Show the rule</span><span class="maffs-ref-title">Finding the median</span></summary>

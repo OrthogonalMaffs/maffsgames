@@ -243,7 +243,8 @@ def averages():
 
     # The median wording agrees with Distinctly Average's own scaffold card.
     game = read("games/distinctly-average/index.html")
-    card = re.search(r"function renderScaffoldCard.*?\n\}", game, re.S)
+    # The card's own content (its "Finding the median" title through its steps list), wherever the page builds it.
+    card = re.search(r"Finding the median.*?scaffold-steps.*?</ol>", game, re.S)
     card_txt = re.sub(r"<[^>]+>", "", card.group(0)) if card else ""
     for phrase in ("(n + 1) ÷ 2", "halfway between"):
         check("AV-M", "MATCH", phrase in card_txt and phrase in text(slug),

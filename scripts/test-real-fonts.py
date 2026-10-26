@@ -11,9 +11,11 @@
             and was not re-fetched (scripts/fonts/fetch-fonts.py) would quietly be measured in the fallback font
   KaTeX     every KaTeX 0.16.9 file a page loads (katex.min.css, katex.min.js, contrib/auto-render.min.js) and every
             font file katex.min.css names is pinned
-  decides   the fonts change a verdict the phone pass gives: distinctly-average at 320x568 is 334px wide in the
-            real fonts (its Aa toggle; the page is set in Nunito) and fits with Google Fonts blocked. The plant is the old font-blocking
-            (Google Fonts aborted): the width must change, or the check is not measuring in the real fonts.
+  decides   the fonts change what the phone pass measures: distinctly-average's title, set on one line in its own
+            computed font at 320x568, is one width in the real fonts (Outfit) and another with Google Fonts blocked. The
+            plant is the old font-blocking (Google Fonts aborted): the width must change, or the check is not measuring
+            in the real fonts. (Until 26 Oct 2026 it measured the page's scroll width, which relied on the game
+            overflowing 320px in Nunito; LOOK-REDS-2 fixed that overflow, so the check now measures the text itself.)
 """
 import hashlib
 import os
@@ -73,7 +75,10 @@ def complete(fails):
     return len(urls)
 
 
-WIDTH_JS = "() => document.documentElement.scrollWidth"
+# The title on one line, in the page's own font: its width depends only on the face drawn, not on any layout.
+WIDTH_JS = """() => { const h = document.querySelector('.header-title'); const c = h.cloneNode(true);
+  c.style.cssText = 'position:absolute;left:0;top:0;white-space:nowrap;visibility:hidden';
+  document.body.appendChild(c); const w = c.getBoundingClientRect().width; c.remove(); return Math.round(w); }"""
 
 
 def width_at_320(fonts):
@@ -110,7 +115,7 @@ def main():
     real_w, real_outfit = width_at_320("real")
     old_w, old_outfit = width_at_320("fallback")
     print("pinned: %d files match SHA256SUMS; complete: %d Google Fonts stylesheets and KaTeX 0.16.9 pinned" % (n_files, n_css))
-    print("decides: distinctly-average at 320x568 is %dpx wide in the real fonts (Google faces loaded: %s), %dpx with "
+    print("decides: distinctly-average's title at 320x568 is %dpx wide in the real fonts (Google faces loaded: %s), %dpx with "
           "Google Fonts blocked (loaded: %s)" % (real_w, real_outfit or "none", old_w, old_outfit or "none"))
     if not real_outfit:
         fails.append("decides: no Google face loaded from the pinned copies")
