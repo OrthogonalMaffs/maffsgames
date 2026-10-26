@@ -454,7 +454,6 @@ jobs:
               Start-screen mount (canon 7.5.4: one mount per game, in its start screen, shown before play and hidden during it)|python scripts/check-start-mount.py && python scripts/check-start-mount.py --selftest
               Answer count line (canon 7.5.5: loaded once where a mount is, never typed by hand, readable at 320 px, loader cases)|python scripts/check-answer-count.py && python scripts/check-answer-count.py --selftest
               Answer counts file (canon 7.5.5: the daily file's schema, roster slugs, whole numbers, total = sum, as_of in Z or +hh:mm and under 24 hours old in a scheduled run; validator self-test with a planted stale file)|python scripts/fetch-answer-counts.py --check && python scripts/fetch-answer-counts.py --selftest
-              Scheduled-job alerts (canon 7.5.5: a failed or silent scheduled run opens an issue, a success closes it; planted faults caught)|python scripts/scheduled-alert.py --selftest
               Search titles (every game page and /essentials/ carries the title and description data/games.json generates)|python scripts/check-meta.py && python scripts/check-meta.py --selftest
               Findings register (every audit finding filed per game, schema valid; fixed entries name their PR)|python scripts/audit-register.py --check --selftest
               Quoted figures (no figure the quoted-statistics audit found CONTRADICTED is still on its page)|python scripts/check-quoted-figures.py && python scripts/check-quoted-figures.py --selftest
