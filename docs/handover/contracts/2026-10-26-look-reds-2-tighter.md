@@ -24,3 +24,12 @@ DO NOT TOUCH: Any question, explanation, misconception or help wording. gen-six-
 SUCCESS CONDITION: Distinctly Average passes the tighter rule at every size and mode, apart from the recorded Aa-320 exception. The median card is collapsed while asking and open in the feedback, above Next. measure-phone-fit.py exits 0 on main with the known-failures list, and 1 on any game added to it later. Canon carries the rule, the exception and the component. The PR is merged, main is green, and the handover is complete.
 
 STOP IF: The tighter rule puts more than 10 games on the known-failures list beyond the 20 already found (report the numbers; Jon decides). Distinctly Average can't pass the tighter rule by layout alone. The open median card in the feedback fails the gate. The component can't be added without changing how another live game renders.
+
+## Jon's rulings on the two STOPs (26 Oct 2026), verbatim
+
+Rulings, 26 Oct:
+
+1. Median card in feedback: collapsed on phones, open where it fits, decided by a CSS media query on viewport height (no script). The card stays collapsed while asking, as now. Close the 11 GCSE frequency-table items at normal 320 and the 7 Aa-375 Next overruns by layout only, no wording changes.
+2. The tighter rule and the 44-game known-failures list stand. Record, for each game, the sizes and modes it fails. Add a second list for the 14 games the driver can’t measure, also reported and only able to shrink, so they never read as passing. Write canon §7.6.1 and §7.6.2 accordingly, including that the feedback screen keeps Next above the fold (where Aa at 320 is the recorded exception).
+3. Don’t force-push. Push f2d4838 (plus the changes above) to a new branch, claude/theme-distinctly-average-2. Leave the old branch untouched, and note it in the handover.
+Then open the PR, merge once CI is green (CI judges the 6 P’s bank check), write the handover, and stop. I’ll send the next contract.
