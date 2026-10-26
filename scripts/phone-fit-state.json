@@ -1,5 +1,5 @@
 {
-  "note": "canon 7.6.1, Jon's rulings of 26 Oct 2026. Read by scripts/measure-phone-fit.py. Both lists may only shrink: take a game (or a size) off in the PR that fixes it; never add one. known-failures: per mode, each game with the sizes at which it fails the gate (reported, never failed). unmeasurable: per mode, the games the driver cannot measure (they never read as passing). First recorded 26 Oct 2026 from the roster runs on branch claude/theme-distinctly-average-2.",
+  "note": "canon 7.6.1, Jon's rulings of 26 Oct 2026. Read by scripts/measure-phone-fit.py. Both lists may only shrink: take a game (or a size) off in the PR that fixes it; never add one. known-failures: per mode, each game with the sizes at which it fails the gate (reported, never failed). unmeasurable: per mode, each game the driver cannot measure, with the reason (they never read as passing). First recorded 26 Oct 2026 from the roster runs on branch claude/theme-distinctly-average-2. Re-recorded once, 26 Oct 2026, under contract PHONE-FIT-DRIVER (Jon: the lists may grow, and are to match the new measurements exactly, the start screen driven to the first question and every screen measured after its layout settles): the runs are in docs/audits/phone-fit-runs-2026-10-26/.",
   "known-failures": {
     "normal": {
       "52dle": [
@@ -16,7 +16,8 @@
         "320x568"
       ],
       "chart-interrogator": [
-        "320x568"
+        "320x568",
+        "375x667"
       ],
       "circle-theorem-spotter": [
         "320x568",
@@ -27,11 +28,29 @@
         "375x667",
         "390x844"
       ],
+      "component-crusher": [
+        "320x568"
+      ],
       "constructions-lab": [
         "320x568",
         "375x667"
       ],
       "coordinate-geometry-dash": [
+        "320x568"
+      ],
+      "core-maths-paper1": [
+        "320x568"
+      ],
+      "core-maths-paper2a": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "core-maths-paper2b": [
+        "320x568",
+        "375x667"
+      ],
+      "core-maths-paper2c": [
         "320x568"
       ],
       "curling-friction": [
@@ -45,6 +64,9 @@
         "375x667",
         "390x844"
       ],
+      "equation-builder": [
+        "320x568"
+      ],
       "equatle": [
         "320x568",
         "375x667",
@@ -57,16 +79,21 @@
       "expectation-station": [
         "320x568"
       ],
+      "factor-theorem": [
+        "320x568"
+      ],
       "fermi-lab": [
         "320x568",
         "375x667",
         "390x844"
       ],
       "given-that": [
-        "320x568"
+        "320x568",
+        "375x667"
       ],
       "growth-and-decay": [
-        "320x568"
+        "320x568",
+        "375x667"
       ],
       "higher-power": [
         "320x568"
@@ -113,14 +140,12 @@
         "320x568",
         "375x667"
       ],
-      "seven-bridges": [
-        "320x568",
-        "375x667",
-        "390x844"
-      ],
       "spot-the-muppet": [
         "320x568",
         "375x667"
+      ],
+      "stat-attack": [
+        "320x568"
       ],
       "suvat": [
         "320x568",
@@ -136,7 +161,8 @@
         "375x667"
       ],
       "test-the-claim": [
-        "320x568"
+        "320x568",
+        "375x667"
       ],
       "think-of-a-number": [
         "320x568",
@@ -157,7 +183,8 @@
       ],
       "wrong-on-the-internet": [
         "320x568",
-        "375x667"
+        "375x667",
+        "390x844"
       ]
     },
     "aa": {
@@ -172,6 +199,7 @@
         "390x844"
       ],
       "chart-interrogator": [
+        "320x568",
         "375x667"
       ],
       "circle-theorem-spotter": [
@@ -191,6 +219,23 @@
       "coordinate-geometry-dash": [
         "375x667"
       ],
+      "core-maths-paper1": [
+        "375x667"
+      ],
+      "core-maths-paper2a": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "core-maths-paper2b": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "core-maths-paper2c": [
+        "320x568",
+        "375x667"
+      ],
       "correlation-or-coincidence": [
         "375x667"
       ],
@@ -207,6 +252,10 @@
         "375x667",
         "390x844"
       ],
+      "equation-builder": [
+        "320x568",
+        "375x667"
+      ],
       "equatle": [
         "375x667",
         "390x844"
@@ -218,6 +267,10 @@
         "320x568",
         "375x667"
       ],
+      "factor-theorem": [
+        "375x667",
+        "390x844"
+      ],
       "fermi-lab": [
         "375x667",
         "390x844"
@@ -226,13 +279,6 @@
         "320x568",
         "375x667",
         "390x844"
-      ],
-      "glorious-gantt": [
-        "320x568",
-        "375x667"
-      ],
-      "gradient-hunter": [
-        "320x568"
       ],
       "growth-and-decay": [
         "320x568",
@@ -291,18 +337,13 @@
         "375x667",
         "390x844"
       ],
-      "seven-bridges": [
-        "320x568",
-        "375x667",
-        "390x844"
-      ],
       "spot-the-muppet": [
         "320x568",
-        "375x667",
-        "390x844"
+        "375x667"
       ],
       "stat-attack": [
-        "320x568"
+        "320x568",
+        "375x667"
       ],
       "suvat": [
         "320x568",
@@ -316,12 +357,12 @@
       ],
       "terrible-advice": [
         "320x568",
-        "375x667",
-        "390x844"
+        "375x667"
       ],
       "test-the-claim": [
         "320x568",
-        "375x667"
+        "375x667",
+        "390x844"
       ],
       "think-of-a-number": [
         "320x568",
@@ -350,37 +391,23 @@
     }
   },
   "unmeasurable": {
-    "normal": [
-      "bearing-blitz",
-      "core-maths-paper1",
-      "core-maths-paper2a",
-      "core-maths-paper2b",
-      "core-maths-paper2c",
-      "equation-builder",
-      "four-quadrant-explorer",
-      "how-many-parts",
-      "just-pythag-it-bruv",
-      "shape-shifter",
-      "six-sevens-bruv",
-      "spot-the-error",
-      "squared-squirrel",
-      "take-a-walk"
-    ],
-    "aa": [
-      "bearing-blitz",
-      "core-maths-paper1",
-      "core-maths-paper2a",
-      "core-maths-paper2b",
-      "core-maths-paper2c",
-      "equation-builder",
-      "four-quadrant-explorer",
-      "how-many-parts",
-      "just-pythag-it-bruv",
-      "shape-shifter",
-      "six-sevens-bruv",
-      "spot-the-error",
-      "squared-squirrel",
-      "take-a-walk"
-    ]
+    "normal": {
+      "bearing-blitz": "started; no option group, input or submit; it shows a canvas, \"🎯 Fire Torpedo\"",
+      "four-quadrant-explorer": "started; no option group, input or submit; it shows \"Aa\", a canvas",
+      "glorious-gantt": "the start screen does not lead to a question generically (its first option, then 'Start'); no declared start",
+      "gradient-hunter": "started; no option group, input or submit; it shows a canvas",
+      "just-pythag-it-bruv": "started; no option group, input or submit; it shows a drawing, \"\"",
+      "shape-shifter": "started; no option group, input or submit; it shows \"Aa\", a canvas, \"Undo\"",
+      "spot-the-error": "started; no option group, input or submit; it shows \"Aa\""
+    },
+    "aa": {
+      "bearing-blitz": "started; no option group, input or submit; it shows a canvas, \"🎯 Fire Torpedo\"",
+      "four-quadrant-explorer": "started; no option group, input or submit; it shows \"Aa\", a canvas",
+      "glorious-gantt": "the start screen does not lead to a question generically (its first option, then 'Start'); no declared start",
+      "gradient-hunter": "started; no option group, input or submit; it shows a canvas",
+      "just-pythag-it-bruv": "started; no option group, input or submit; it shows a drawing, \"\"",
+      "shape-shifter": "started; no option group, input or submit; it shows \"Aa\", a canvas, \"Undo\"",
+      "spot-the-error": "started; no option group, input or submit; it shows \"Aa\""
+    }
   }
 }
