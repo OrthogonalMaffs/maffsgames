@@ -428,6 +428,57 @@ async ([src]) => {
   r = await page(T, { sources: { file: fileT(30000, NOW - 8 * day), live: fileT(31000, NOW - 8 * day) } });
   ok('homepage, both sources stale: hidden', r.text() === '', r.text());
 
+  // as_of in every ISO offset form (26 Oct 2026: the Apps Script writes Z while London is on GMT): Date.parse reads them all
+  const NOW26 = Date.parse('2026-10-26T12:00:00Z');
+  const asOfCase = (label, asOf) => page(G, { now: () => NOW26, sources: { file: { as_of: asOf, since: '2026-09-01', total: 5000, games: { x: 5000 } } } })
+    .then(res => ok('as_of ' + label + ': read, the figure shows', res.text() === '5,000 questions answered since September', res.text()));
+  await asOfCase('with Z (the exact 26 Oct payload 2026-10-26T11:31:31Z)', '2026-10-26T11:31:31Z');
+  await asOfCase('with +01:00', '2026-10-26T12:31:31+01:00');
+  await asOfCase('with +00:00', '2026-10-26T11:31:31+00:00');
+  r = await page(G, { now: () => NOW26, sources: { file: { as_of: '2026-10-18T11:31:31Z', since: '2026-09-01', total: 5000, games: { x: 5000 } } } });
+  ok('as_of with Z, 8 days old: still hidden', r.text() === '', r.text());
+
+  // the homepage remembers the last live figure it showed, for the session (sessionStorage, on this device only)
+  const mem = (init) => { const st = { v: init, wrote: [] }; return { read: () => st.v, write: (n, since) => { st.v = { n, since }; st.wrote.push([n, since]); }, st }; };
+  const drain = (r) => { const seen = []; let g = 0, t = 0; while (r.frames.length && g++ < 50) { const f = r.frames.shift(); f(t); seen.push(Number(r.m.getAttribute('data-maffs-count'))); t += 150; } return seen; };
+  const srcMem = { file: fileT(20000), live: fileT(26000, NOW - 1000) };
+  let mm = mem(null);
+  r = await page(T, { sources: srcMem, memory: mm });
+  ok('memory: nothing stored, the climb starts from the file figure', r.text() === '20,000 questions answered since September' && r.frames.length === 1, r.text());
+  let seenM = drain(r);
+  ok('memory: after the live figure is displayed it is stored with its since',
+     seenM[seenM.length - 1] === 26000 && mm.st.wrote.length === 1 && mm.st.wrote[0][0] === 26000 && mm.st.wrote[0][1] === '2026-09-01', JSON.stringify(mm.st.wrote));
+  mm = mem({ n: 24000, since: '2026-09-01' });
+  r = await page(T, { sources: srcMem, memory: mm });
+  ok('memory: a refresh starts from the stored figure, not the file figure', r.text() === '24,000 questions answered since September' && r.frames.length === 1, r.text());
+  seenM = drain(r);
+  ok('memory: and counts up from it to the live figure, never below it', seenM[seenM.length - 1] === 26000 && seenM.every(v => v >= 24000), seenM.join(','));
+  mm = mem({ n: 24000, since: '2025-09-01' });
+  r = await page(T, { sources: srcMem, memory: mm });
+  ok('memory: a stored figure from a different since (the 1 September reset) is ignored', r.text() === '20,000 questions answered since September', r.text());
+  mm = mem({ n: 24000, since: '2025-09-01' });
+  r = await page(T, { sources: { file: fileT(20000) }, memory: mm });
+  ok('memory: a stored figure from a different since is ignored when the live figure is down too', r.text() === '20,000 questions answered since September', r.text());
+  mm = mem({ n: 30000, since: '2026-09-01' });
+  r = await page(T, { sources: srcMem, memory: mm });
+  seenM = drain(r);
+  ok('memory: a stored figure above the live one is ignored (back to the file figure, then up to the live one)',
+     r.text() === '26,000 questions answered since September' && seenM.length > 0 && seenM.every(v => v <= 26000) && seenM[0] < 26000, r.text() + ' ' + seenM.join(','));
+  mm = mem({ n: 15000, since: '2026-09-01' });
+  r = await page(T, { sources: srcMem, memory: mm });
+  ok('memory: a stored figure below the file figure is ignored', r.text() === '20,000 questions answered since September', r.text());
+  mm = { read: () => { throw new Error('storage blocked'); }, write: () => { throw new Error('storage blocked'); } };
+  r = await page(T, { sources: srcMem, memory: mm });
+  seenM = drain(r);
+  ok('memory: storage that throws falls back to the file figure and still reaches the live one',
+     r.text() === '26,000 questions answered since September' && seenM.length > 0 && seenM[0] >= 20000 && seenM[0] < 26000, r.text() + ' ' + seenM.join(','));
+  mm = mem({ n: 24000, since: '2026-09-01' });
+  r = await page(T, { sources: srcMem, memory: mm, reduced: true });
+  ok('memory: reduced motion jumps straight to the live figure, no frames', r.text() === '26,000 questions answered since September' && r.frames.length === 0, r.text());
+  mm = mem({ n: 24000, since: '2026-09-01' });
+  r = await page(G, { sources: { file: fresh(2000) }, memory: mm });
+  ok('memory: a game start screen shows the daily figure only and never touches the memory', r.text() === '2,000 questions answered since September' && mm.st.wrote.length === 0, r.text());
+
   // missing / broken sources
   r = await page(G, { sources: {} });
   ok('missing: neither source loads, nothing shown', r.text() === '', r.text());
@@ -559,9 +610,19 @@ def selftest():
             ("a homepage that refreshes for ever", "if (now() - t0 >= POLL_MAX_MS) {", "if (false) {", "stops refreshing after 10 minutes"),
             ("a game page that calls the live address", "var useLive = opts.live && totals.length > 0;", "var useLive = opts.live;", "no request to the live address"),
             ("the updated line shown from the daily file", "if (isLive && x.total) x.m.live(v);", "if (x.total) x.m.live(v);", "daily file only"),
-            ("the updated line present while the block is hidden", "var ok = v !== null && v >= this.min && v >= this.shown;", "var ok = v !== null;", "block hidden")):
+            ("the updated line present while the block is hidden", "var ok = v !== null && v >= this.min && v >= this.shown;", "var ok = v !== null;", "block hidden"),
+            ("a loader that reads only +hh:mm (no Z)", "var t = Date.parse(src.as_of);", "var t = /[+-]\\d\\d:\\d\\d$/.test(src.as_of) ? Date.parse(src.as_of) : NaN;", "as_of with Z"),
+            ("the memory ignored: a refresh starts from the file figure", "if (m && typeof src.since === 'string' && m.since === src.since", "if (false && m && typeof src.since === 'string' && m.since === src.since", "starts from the stored figure"),
+            ("a stored figure from another since used", "m.since === src.since && m.n >= v", "m.n >= v", "different since"),
+            ("a stored figure above the live one used", "x.stored.n > v || x.stored.since !== src.since", "false", "above the live one"),
+            ("storage that throws on read breaks the page", "      } catch (e) { return null; }\n    }\n    function remember", "      } finally { }\n    }\n    function remember", "storage blocked"),
+            ("storage that throws on write breaks the page", "try { if (memory) memory.write(n, since); } catch (e) {", "try { if (memory) memory.write(n, since); } finally {", "storage blocked"),
+            ("the live figure never stored", "x.m.offer(v, function (n) { if (typeof src.since === 'string') remember(n, src.since); });", "x.m.offer(v);", "stored with its since")):
         assert a in loader, a
-        got = [r for r in asyncio.run(_loader_cases(loader.replace(a, b, 1))) if not r[1]]
+        try:
+            got = [r for r in asyncio.run(_loader_cases(loader.replace(a, b, 1))) if not r[1]]
+        except Exception as exc:                 # a fault that crashes the whole run (an uncaught throw) is caught too
+            got = [("the loader cases crashed: %s" % str(exc).splitlines()[0], False, "")]
         ok = any(want in r[0] for r in got)
         print("  %s  planted: %-40s %s" % ("PASS" if ok else "FAIL", name, got[0][0] if got else "(no case failed)"))
         if not ok:

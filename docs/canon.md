@@ -1474,6 +1474,29 @@ A page with a mount loads the script once, deferred, after `analytics.js` (one l
 Jon's own play on the live site is counted: nothing is filtered. The Sheet does not record the host, and `mfg()` was
 gated to the live host only on 16 Sep 2026, so test events written between 1 and 16 Sep are in the count.
 
+**The offset in `as_of` is `Z` or `+hh:mm`** (Jon, 26 Oct 2026). The Apps Script writes `as_of` with the `XXX` pattern, which prints
+`+01:00` in BST but `Z` while London is on GMT. Until 26 Oct the validator accepted only `+hh:mm`, so from the clock change on 25 Oct
+every scheduled run failed at "Fetch, validate, commit" (`as_of '2026-10-26T11:31:31Z' is not an ISO time with an offset`), four
+runs in a row, the file stuck at 24 Oct 20:46 and the count 16,356 against a live 17,184. `Z` is `+00:00` in ISO 8601 and RFC 3339, so the
+validator was wrong, not the script. Every reader of `as_of` was checked: the validator (now `Z|[+-]hh:mm`; "is today" is
+the instant's date in London, whatever offset it is written in), the loader (`Date.parse`, which reads both), the Apps Script test and the
+loader self-test each carry cases for `Z`, `+01:00` and the exact 26 Oct payload.
+
+**A scheduled job that fails or goes quiet opens an issue** (Jon, 26 Oct 2026): `.github/workflows/scheduled-watch.yml` runs
+`scripts/scheduled-alert.py` when answer-counts or the weekly check-site finishes, and daily at 07:50 UTC. A failed run opens (or
+updates) the issue "Scheduled workflow failing: <name>", label `scheduled-failure`, naming the failing step with the log lines, and the
+next success closes it; a committed `answer-counts.json` whose `as_of` is over 24 hours old (a failing job, or a schedule GitHub never
+started) opens "answer-counts.json is stale" and closes when a fresh figure lands. The issue is in this repository, written with
+the workflow's own token (issues write, actions read): nothing leaves GitHub, and GitHub's notification with an `@` mention is how
+Jon sees it. The weekly check-site also holds the file to 24 hours (`fetch-answer-counts.py --check`, enforced only in a scheduled
+run, so a push or a pull request never goes red because the daily job is behind). A new scheduled workflow is added to the watch's `workflows:` and to `WATCHED` in the script.
+
+**The homepage remembers its last live figure for the session** (Jon, 26 Oct 2026, option b). After the live figure is shown it is stored in
+`sessionStorage` (`maffsAnswerCount`: the figure and its `since`, on the viewer's own device, never sent). On load the count starts from it
+when it has the file's `since`, is at least the file's figure and is no more than the live one; otherwise from the file's figure, as before.
+Never animated down, no animation under reduced motion, every storage read and write in try/catch (blocked storage behaves as no memory).
+Game start screens show the daily figure only and never touch it.
+
 ### 7.5.6 Burst mode: a game as a short run from The 6 P's (Jon, 24 Oct 2026; contract BURST)
 The 6 P's (the exam route, architecture (b)) sends a student into a real game for a few answers and takes them back.
 `schools/assets/burst.js` is the one shared module: a game opts in with one deferred line after `analytics.js`

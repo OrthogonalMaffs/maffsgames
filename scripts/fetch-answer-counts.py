@@ -10,19 +10,52 @@ site hides every figure whose source is more than 7 days old (schools/assets/ans
     python scripts/fetch-answer-counts.py --selftest      # each planted fault must fail; the clean payload passes
 
 The payload is exactly {as_of, since, total, games}. It is valid when:
-  - as_of is an ISO time with an offset, and its date, in Europe/London, is today's;
+  - as_of is an ISO time with an offset (Z, +00:00 or +hh:mm), and its date, in Europe/London, is today's;
   - since is 1 September of the school year that today falls in;
   - every game count is a whole number >= 0 (not a boolean, float or string), keyed by a slug that is a game directory
     under games/ or an escape room (escape-<directory> under escape-rooms/);
   - total is a whole number equal to the sum of the game counts.
 """
-import argparse, datetime as dt, json, pathlib, re, sys, time, urllib.request
+import argparse, datetime as dt, json, os, pathlib, re, sys, time, urllib.request
 
 BASE = pathlib.Path(__file__).resolve().parent.parent
 OUT = BASE / "schools" / "assets" / "answer-counts.json"
 ENDPOINT = "https://script.google.com/macros/s/AKfycbxvtM7Y5jtL7flZozfFUEoZZalNHieP44vK6rB4juUG5yPgQf5hfb8tOlgetoEtogZl8w/exec"
 KEYS = {"as_of", "since", "total", "games"}
-AS_OF = re.compile(r"^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)([+-])(\d\d):(\d\d)$")
+# The offset is Z (zero, written by the Apps Script's "XXX" pattern while London is on GMT: ISO 8601 and RFC 3339 both allow it)
+# or +hh:mm / -hh:mm. Until 26 Oct 2026 only the second was accepted, and every run since the clocks went back failed on it.
+AS_OF = re.compile(r"^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)(Z|[+-]\d\d:\d\d)$")
+FRESH_HOURS = 24           # the daily file's as_of must be younger than this when the scheduled site check looks (canon 7.5.5)
+
+
+def as_of_utc(s):
+    """The instant an as_of names, as an aware UTC datetime; None when it is not an ISO time with an offset (Z or +hh:mm)."""
+    m = AS_OF.match(s) if isinstance(s, str) else None
+    if not m:
+        return None
+    try:
+        t = dt.datetime(*(int(m[i]) for i in range(1, 7)), tzinfo=dt.timezone.utc)
+    except ValueError:
+        return None
+    off = m[7]
+    if off != "Z":
+        mins = int(off[1:3]) * 60 + int(off[4:6])
+        t -= dt.timedelta(minutes=mins if off[0] == "+" else -mins)
+    return t
+
+
+def stale_faults(obj, now_utc=None, hours=FRESH_HOURS):
+    """[fault] when the file's as_of is not within `hours` of now (or not readable): the daily job has stopped committing."""
+    now_utc = now_utc or dt.datetime.now(dt.timezone.utc)
+    t = as_of_utc(obj.get("as_of") if isinstance(obj, dict) else None)
+    if t is None:
+        return ["as_of %r is not an ISO time with an offset, so its age is unknown" % (obj.get("as_of") if isinstance(obj, dict) else None,)]
+    age = (now_utc - t).total_seconds() / 3600
+    if age > hours:
+        return ["as_of %s is %.1f hours old (limit %d): the daily answer-counts job has not committed a figure since" % (obj["as_of"], age, hours)]
+    if age < -1:
+        return ["as_of %s is %.1f hours in the future" % (obj["as_of"], -age)]
+    return []
 
 
 def slugs(root=BASE):
@@ -66,7 +99,7 @@ def validate(obj, allowed, now_utc=None, require_today=True):
     if not m:
         f.append("as_of %r is not an ISO time with an offset" % (as_of,))
     elif require_today:
-        got = dt.date(int(m[1]), int(m[2]), int(m[3]))
+        got = london_date(as_of_utc(as_of)) if as_of_utc(as_of) else None      # the instant's date in London, whatever offset it is written in
         today = london_date(now_utc)
         if got != today:
             f.append("as_of %s is not today (%s in London): the counts are not current" % (as_of, today))
@@ -158,7 +191,47 @@ def selftest():
     print("  %s  school_year_start on 31 Aug and 1 Sep" % ("PASS" if ok else "FAIL"))
     if not ok:
         bad.append("school_year_start")
-    print("selftest: %s (%d cases)" % ("FAILED: " + ", ".join(bad) if bad else "PASS", len(cases) + len(edge) + 1))
+    # The offset forms (26 Oct 2026: the Apps Script writes Z while London is on GMT, and the validator rejected it): Z, +00:00 and
+    # +01:00 are all valid, and the exact payload that failed the 26 Oct 11:31 run is valid at the time it was fetched.
+    exact = {"as_of": "2026-10-26T11:31:31Z", "since": "2026-09-01", "total": 5, "games": {"a": 2, "b": 3}}
+    t26 = dt.datetime(2026, 10, 26, 11, 40, tzinfo=dt.timezone.utc)
+    t23 = dt.datetime(2026, 10, 23, 5, 30, tzinfo=dt.timezone.utc)
+    t24 = dt.datetime(2026, 10, 23, 23, 10, tzinfo=dt.timezone.utc)      # 00:10 on 24 Oct in London
+    forms = [
+        ("as_of Z: the exact 26 Oct payload", exact, t26, None),
+        ("as_of +01:00 (summer)", with_(as_of="2026-10-23T06:30:12+01:00"), t23, None),
+        ("as_of +00:00", with_(as_of="2026-10-23T05:30:12+00:00"), t23, None),
+        ("as_of Z in summer, the same London day", with_(as_of="2026-10-23T05:30:12Z"), t23, None),
+        ("as_of Z across London midnight (23:05Z is 00:05 on 24 Oct)", with_(as_of="2026-10-23T23:05:00Z"), t24, None),
+        ("as_of Z yesterday", with_(as_of="2026-10-25T11:31:31Z"), t26, "not today"),
+        ("as_of lower-case z", with_(as_of="2026-10-26T11:31:31z"), t26, "ISO time"),
+        ("as_of +0100 (no colon)", with_(as_of="2026-10-26T11:31:31+0100"), t26, "ISO time"),
+        ("as_of with no offset", with_(as_of="2026-10-26T11:31:31"), t26, "ISO time"),
+    ]
+    for name, obj, at, want in forms:
+        got = validate(obj, allowed, at)
+        ok = (not got) if want is None else any(want in g for g in got)
+        print("  %s  %-58s %s" % ("PASS" if ok else "FAIL", name, got[0] if got else "(valid)"))
+        if not ok:
+            bad.append(name)
+    # the file's age, read from any offset: a stale file is caught (the planted file is 30 hours old)
+    fresh_cases = [
+        ("fresh: Z, 23 hours old", exact, dt.datetime(2026, 10, 27, 10, 31, tzinfo=dt.timezone.utc), None),
+        ("fresh: +01:00, 5 hours old", with_(as_of="2026-10-23T06:30:12+01:00"), dt.datetime(2026, 10, 23, 10, 30, tzinfo=dt.timezone.utc), None),
+        ("stale: the exact 26 Oct payload, 24.5 hours old", exact, dt.datetime(2026, 10, 27, 12, 1, tzinfo=dt.timezone.utc), "hours old"),
+        ("stale: +01:00, 30 hours old", with_(as_of="2026-10-24T20:46:04+01:00"), dt.datetime(2026, 10, 26, 1, 46, tzinfo=dt.timezone.utc), "hours old"),
+        ("stale: Z, the planted 30-hour-old file", with_(as_of="2026-10-25T10:00:00Z"), dt.datetime(2026, 10, 26, 16, 0, tzinfo=dt.timezone.utc), "hours old"),
+        ("stale: unreadable as_of (age unknown)", with_(as_of="yesterday"), t26, "age is unknown"),
+        ("stale: as_of null", with_(as_of=None), t26, "age is unknown"),
+        ("stale: as_of in the future", with_(as_of="2026-10-26T20:00:00Z"), t26, "future"),
+    ]
+    for name, obj, at, want in fresh_cases:
+        got = stale_faults(obj, at)
+        ok = (not got) if want is None else any(want in g for g in got)
+        print("  %s  %-58s %s" % ("PASS" if ok else "FAIL", name, got[0] if got else "(fresh)"))
+        if not ok:
+            bad.append(name)
+    print("selftest: %s (%d cases)" % ("FAILED: " + ", ".join(bad) if bad else "PASS", len(cases) + len(edge) + 1 + len(forms) + len(fresh_cases)))
     return 1 if bad else 0
 
 
@@ -166,6 +239,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--check", action="store_true", help="validate schools/assets/answer-counts.json as committed (as_of may be older)")
+    ap.add_argument("--fresh", action="store_true", help="with --check: also fail when as_of is over 24 hours old (always on in a scheduled run)")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
@@ -173,6 +247,10 @@ def main():
     if a.check:
         obj = json.loads(OUT.read_text(encoding="utf-8"))
         faults = validate(obj, allowed, require_today=False)
+        # The weekly site check (a scheduled run) holds the file to 24 hours; a push or a PR must not go red because the daily
+        # job is behind, so it does not (the daily watch in scheduled-watch.yml is what raises that).
+        if a.fresh or os.environ.get("GITHUB_EVENT_NAME") == "schedule":
+            faults += stale_faults(obj)
         for f in faults:
             print("FAIL", f)
         print("answer counts file: %s (total %s over %d games, as_of %s)" % (

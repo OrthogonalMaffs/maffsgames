@@ -1,0 +1,75 @@
+# Make a failed or silent scheduled job visible (contract ANSWER-COUNTS-STALE, 26 Oct 2026; canon 7.5.5).
+#
+# The answer-counts job failed on every scheduled run from 25 Oct 2026 (its validator rejected the "Z" the Apps Script writes
+# while London is on GMT) and nothing told anyone: a failed scheduled run only turns a badge red, and a run GitHub never starts
+# leaves no trace at all. This workflow turns both into a GitHub issue, opened (or updated) by itself, labelled
+# `scheduled-failure`, naming the workflow and the failing step, and closed by itself on the next success:
+#
+#   workflow_run  answer-counts finished (any trigger), or the weekly check-site finished: failed -> open/update, succeeded -> close
+#   schedule      daily 07:50 UTC: the committed answer-counts.json older than 24 hours -> open/update, fresh -> close.
+#                 This catches a schedule that never fired, which no run reports.
+#   dispatch      a simulated failure or success of a test workflow, to watch an issue open and close
+#
+# Nothing leaves GitHub: the issue is in this repository, written with this workflow's own token. The script is
+# scripts/scheduled-alert.py (its self-test runs in check-site). A new scheduled workflow is added to `workflows:` below and to
+# WATCHED in that script.
+name: scheduled-watch
+
+on:
+  workflow_run:
+    workflows: [answer-counts, check-site]
+    types: [completed]
+  schedule:
+    - cron: "50 7 * * *"          # 07:50 UTC daily
+  workflow_dispatch:
+    inputs:
+      simulate:
+        description: "Simulate a run of the test workflow `test-alert` to watch an issue open or close (leave empty for the daily look)"
+        type: choice
+        options: ["", failure, success]
+        default: ""
+
+permissions:
+  contents: read
+  issues: write
+  actions: read
+
+concurrency:
+  group: scheduled-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    name: Raise or clear the alert
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: A watched run finished
+        if: github.event_name == 'workflow_run'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_NAME: ${{ github.event.workflow_run.name }}
+          RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          RUN_EVENT: ${{ github.event.workflow_run.event }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+        run: |
+          python scripts/scheduled-alert.py run --repo "$GITHUB_REPOSITORY" --name "$RUN_NAME" --conclusion "$RUN_CONCLUSION" \
+            --event "$RUN_EVENT" --run-id "$RUN_ID" --url "$RUN_URL" | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: The daily look at the committed answer counts
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.simulate == '')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/scheduled-alert.py freshness --repo "$GITHUB_REPOSITORY" | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: A simulated run (test)
+        if: github.event_name == 'workflow_dispatch' && inputs.simulate != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SIMULATE: ${{ inputs.simulate }}
+        run: python scripts/scheduled-alert.py simulate --repo "$GITHUB_REPOSITORY" --name test-alert --conclusion "$SIMULATE" | tee -a "$GITHUB_STEP_SUMMARY"
