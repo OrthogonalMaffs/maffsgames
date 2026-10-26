@@ -58,11 +58,23 @@ def gh_api(method, path, data=None):
         return out.stdout
 
 
+class RouteUnavailable(RuntimeError):
+    """GitHub Issues is switched off for the repository (HTTP 410): the alert cannot be filed where Jon would see it."""
+
+
 class Alerts:
     """The issue logic, against any `api(method, path, data=None)`; `bug` plants a fault for the selftest."""
 
     def __init__(self, api, repo, bug=None):
         self.api, self.repo, self.bug = api, repo, bug
+
+    def _call(self, method, path, data=None):
+        try:
+            return self.api(method, path, data)
+        except RuntimeError as exc:
+            if "Issues has been disabled" in str(exc) or "HTTP 410" in str(exc):
+                raise RouteUnavailable(str(exc))
+            raise
 
     def _label(self):
         try:
@@ -74,7 +86,7 @@ class Alerts:
     def _open_issue(self, title):
         page = 1
         while True:
-            items = self.api("GET", "/repos/%s/issues?labels=%s&state=open&per_page=100&page=%d" % (self.repo, LABEL, page)) or []
+            items = self._call("GET", "/repos/%s/issues?labels=%s&state=open&per_page=100&page=%d" % (self.repo, LABEL, page)) or []
             for i in items:
                 if "pull_request" not in i and i.get("title") == title:
                     return i
@@ -88,10 +100,10 @@ class Alerts:
             return ("opened", 0)
         found = None if self.bug == "duplicates" else self._open_issue(title)
         if found:
-            self.api("POST", "/repos/%s/issues/%d/comments" % (self.repo, found["number"]), {"body": body})
+            self._call("POST", "/repos/%s/issues/%d/comments" % (self.repo, found["number"]), {"body": body})
             return ("updated", found["number"])
         self._label()
-        made = self.api("POST", "/repos/%s/issues" % self.repo, {"title": title, "body": OWNER_MENTION + "\n\n" + body, "labels": [LABEL]})
+        made = self._call("POST", "/repos/%s/issues" % self.repo, {"title": title, "body": OWNER_MENTION + "\n\n" + body, "labels": [LABEL]})
         return ("opened", made["number"])
 
     def recovered(self, title, note):
@@ -100,12 +112,12 @@ class Alerts:
             return None
         found = self._open_issue(title) if self.bug != "closes_all" else None
         if self.bug == "closes_all":
-            items = self.api("GET", "/repos/%s/issues?labels=%s&state=open&per_page=100" % (self.repo, LABEL)) or []
+            items = self._call("GET", "/repos/%s/issues?labels=%s&state=open&per_page=100" % (self.repo, LABEL)) or []
             found = items[0] if items else None
         if not found:
             return None
-        self.api("POST", "/repos/%s/issues/%d/comments" % (self.repo, found["number"]), {"body": note})
-        self.api("PATCH", "/repos/%s/issues/%d" % (self.repo, found["number"]), {"state": "closed", "state_reason": "completed"})
+        self._call("POST", "/repos/%s/issues/%d/comments" % (self.repo, found["number"]), {"body": note})
+        self._call("PATCH", "/repos/%s/issues/%d" % (self.repo, found["number"]), {"state": "closed", "state_reason": "completed"})
         return found["number"]
 
     # ---- a finished run
@@ -265,6 +277,17 @@ def selftest():
         print("  %s  planted: %-12s %s" % ("PASS" if hit else "FAIL", bug, got[0] if got else "(no case failed)"))
         if not hit:
             bad.append("planted " + bug)
+    # Issues switched off (the repository's state on 26 Oct 2026): the alert fails the run, it never passes silently
+    def off(method, path, data=None):
+        raise RuntimeError("gh api %s %s: gh: Issues has been disabled in this repository. (HTTP 410)" % (method, path))
+    try:
+        Alerts(off, "O/R").failing("t", "b")
+        hit = False
+    except RouteUnavailable:
+        hit = True
+    print("  %s  Issues switched off: the alert raises, so the run fails loudly" % ("PASS" if hit else "FAIL"))
+    if not hit:
+        bad.append("issues off")
     print("selftest: %s" % ("FAILED: " + ", ".join(bad) if bad else "PASS"))
     return 1 if bad else 0
 
@@ -305,5 +328,21 @@ def main():
     return 0
 
 
+def main_guarded():
+    """main(), but an alert that cannot be filed (Issues switched off) fails this run loudly instead of passing: the red run
+    and GitHub's own failure e-mail are then the alert, and the reason is written where it is read."""
+    try:
+        return main()
+    except RouteUnavailable as exc:
+        msg = ("the alert could not be filed: GitHub Issues is disabled for this repository (Settings > General > Features > Issues). "
+               "Enable it and this route works; until then this run fails on purpose. %s" % exc)
+        print("::error::" + msg)
+        summary = os.environ.get("GITHUB_STEP_SUMMARY")
+        if summary:
+            with open(summary, "a", encoding="utf-8", newline="") as f:
+                f.write("**Alert not filed.** " + msg + chr(10))
+        return 1
+
+
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main_guarded())

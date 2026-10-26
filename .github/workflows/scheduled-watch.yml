@@ -60,16 +60,21 @@ jobs:
           RUN_ID: ${{ github.event.workflow_run.id }}
           RUN_URL: ${{ github.event.workflow_run.html_url }}
         run: |
+          set -o pipefail          # a failing alert must fail the step, not just the pipe into tee
           python scripts/scheduled-alert.py run --repo "$GITHUB_REPOSITORY" --name "$RUN_NAME" --conclusion "$RUN_CONCLUSION" \
             --event "$RUN_EVENT" --run-id "$RUN_ID" --url "$RUN_URL" | tee -a "$GITHUB_STEP_SUMMARY"
       - name: The daily look at the committed answer counts
         if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.simulate == '')
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python scripts/scheduled-alert.py freshness --repo "$GITHUB_REPOSITORY" | tee -a "$GITHUB_STEP_SUMMARY"
+        run: |
+          set -o pipefail
+          python scripts/scheduled-alert.py freshness --repo "$GITHUB_REPOSITORY" | tee -a "$GITHUB_STEP_SUMMARY"
       - name: A simulated run (test)
         if: github.event_name == 'workflow_dispatch' && inputs.simulate != ''
         env:
           GH_TOKEN: ${{ github.token }}
           SIMULATE: ${{ inputs.simulate }}
-        run: python scripts/scheduled-alert.py simulate --repo "$GITHUB_REPOSITORY" --name test-alert --conclusion "$SIMULATE" | tee -a "$GITHUB_STEP_SUMMARY"
+        run: |
+          set -o pipefail
+          python scripts/scheduled-alert.py simulate --repo "$GITHUB_REPOSITORY" --name test-alert --conclusion "$SIMULATE" | tee -a "$GITHUB_STEP_SUMMARY"
