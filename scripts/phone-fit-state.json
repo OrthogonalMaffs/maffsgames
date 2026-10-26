@@ -1,0 +1,386 @@
+{
+  "note": "canon 7.6.1, Jon's rulings of 26 Oct 2026. Read by scripts/measure-phone-fit.py. Both lists may only shrink: take a game (or a size) off in the PR that fixes it; never add one. known-failures: per mode, each game with the sizes at which it fails the gate (reported, never failed). unmeasurable: per mode, the games the driver cannot measure (they never read as passing). First recorded 26 Oct 2026 from the roster runs on branch claude/theme-distinctly-average-2.",
+  "known-failures": {
+    "normal": {
+      "52dle": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "better-value": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "boolean-blitz": [
+        "320x568"
+      ],
+      "chart-interrogator": [
+        "320x568"
+      ],
+      "circle-theorem-spotter": [
+        "320x568",
+        "375x667"
+      ],
+      "complex-converter": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "constructions-lab": [
+        "320x568",
+        "375x667"
+      ],
+      "coordinate-geometry-dash": [
+        "320x568"
+      ],
+      "curling-friction": [
+        "320x568"
+      ],
+      "decimal-detective": [
+        "320x568"
+      ],
+      "differentiation-duel": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "equatle": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "estimation-golf": [
+        "320x568",
+        "375x667"
+      ],
+      "expectation-station": [
+        "320x568"
+      ],
+      "fermi-lab": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "given-that": [
+        "320x568"
+      ],
+      "growth-and-decay": [
+        "320x568"
+      ],
+      "higher-power": [
+        "320x568"
+      ],
+      "index-laws": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "integration-duel": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "log-laws": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "maths-court": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "modular-battle": [
+        "320x568"
+      ],
+      "partial-fractions-duel": [
+        "320x568",
+        "375x667"
+      ],
+      "percentage-flip": [
+        "320x568",
+        "375x667"
+      ],
+      "prime-factorisation": [
+        "320x568"
+      ],
+      "quadratic-factoriser": [
+        "320x568",
+        "375x667"
+      ],
+      "screening-room": [
+        "320x568",
+        "375x667"
+      ],
+      "seven-bridges": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "spot-the-muppet": [
+        "320x568",
+        "375x667"
+      ],
+      "suvat": [
+        "320x568",
+        "375x667"
+      ],
+      "tax-theft": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "terrible-advice": [
+        "320x568",
+        "375x667"
+      ],
+      "test-the-claim": [
+        "320x568"
+      ],
+      "think-of-a-number": [
+        "320x568",
+        "375x667"
+      ],
+      "trig-worms": [
+        "320x568",
+        "375x667"
+      ],
+      "truth-will-set-you-free": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "word-problem-decoder": [
+        "320x568",
+        "375x667"
+      ],
+      "wrong-on-the-internet": [
+        "320x568",
+        "375x667"
+      ]
+    },
+    "aa": {
+      "52dle": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "better-value": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "chart-interrogator": [
+        "375x667"
+      ],
+      "circle-theorem-spotter": [
+        "320x568",
+        "375x667"
+      ],
+      "complex-converter": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "constructions-lab": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "coordinate-geometry-dash": [
+        "375x667"
+      ],
+      "correlation-or-coincidence": [
+        "375x667"
+      ],
+      "curling-friction": [
+        "320x568",
+        "375x667"
+      ],
+      "decimal-detective": [
+        "320x568",
+        "375x667"
+      ],
+      "differentiation-duel": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "equatle": [
+        "375x667",
+        "390x844"
+      ],
+      "estimation-golf": [
+        "375x667"
+      ],
+      "expectation-station": [
+        "320x568",
+        "375x667"
+      ],
+      "fermi-lab": [
+        "375x667",
+        "390x844"
+      ],
+      "given-that": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "glorious-gantt": [
+        "320x568",
+        "375x667"
+      ],
+      "gradient-hunter": [
+        "320x568"
+      ],
+      "growth-and-decay": [
+        "320x568",
+        "375x667"
+      ],
+      "higher-power": [
+        "320x568",
+        "375x667"
+      ],
+      "index-laws": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "integration-duel": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "log-laws": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "maths-court": [
+        "375x667",
+        "390x844"
+      ],
+      "modular-battle": [
+        "320x568"
+      ],
+      "negative-number-line": [
+        "320x568"
+      ],
+      "partial-fractions-duel": [
+        "375x667"
+      ],
+      "percentage-flip": [
+        "320x568",
+        "375x667"
+      ],
+      "prime-factorisation": [
+        "375x667"
+      ],
+      "probability-paradox": [
+        "320x568",
+        "375x667"
+      ],
+      "quadratic-factoriser": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "screening-room": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "seven-bridges": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "spot-the-muppet": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "stat-attack": [
+        "320x568"
+      ],
+      "suvat": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "tax-theft": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "terrible-advice": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "test-the-claim": [
+        "320x568",
+        "375x667"
+      ],
+      "think-of-a-number": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "trig-worms": [
+        "320x568",
+        "375x667"
+      ],
+      "truth-will-set-you-free": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "word-problem-decoder": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "wrong-on-the-internet": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ]
+    }
+  },
+  "unmeasurable": {
+    "normal": [
+      "bearing-blitz",
+      "core-maths-paper1",
+      "core-maths-paper2a",
+      "core-maths-paper2b",
+      "core-maths-paper2c",
+      "equation-builder",
+      "four-quadrant-explorer",
+      "how-many-parts",
+      "just-pythag-it-bruv",
+      "shape-shifter",
+      "six-sevens-bruv",
+      "spot-the-error",
+      "squared-squirrel",
+      "take-a-walk"
+    ],
+    "aa": [
+      "bearing-blitz",
+      "core-maths-paper1",
+      "core-maths-paper2a",
+      "core-maths-paper2b",
+      "core-maths-paper2c",
+      "equation-builder",
+      "four-quadrant-explorer",
+      "how-many-parts",
+      "just-pythag-it-bruv",
+      "shape-shifter",
+      "six-sevens-bruv",
+      "spot-the-error",
+      "squared-squirrel",
+      "take-a-walk"
+    ]
+  }
+}

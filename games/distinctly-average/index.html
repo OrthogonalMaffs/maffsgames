@@ -115,6 +115,23 @@ body {
 .scaffold-formula { text-align: center; font-size: 17px; margin: 6px 0 10px; color: var(--text); }
 .scaffold-steps { padding-left: 20px; font-size: 13.5px; color: var(--text); line-height: 1.6; display: flex; flex-direction: column; gap: 4px; }
 .scaffold-steps li::marker { color: var(--hint); font-weight: 700; }
+/* The median card in the feedback (Jon's ruling, 26 Oct 2026): open where it fits, collapsed on a phone where it would
+   push Next below the fold, by viewport height within a width band, since the card's height depends on the width.
+   Measured on all 136 median items, open, Next needs a viewport this tall: normal 922px at 320 wide, 839 at 360,
+   817 at 375, 777 from 390 to 480; Aa 1178 at 320, 1062 at 375, 1024 at 390, 978 at 412; 481-600 wide (the phone
+   compaction stops at 480) 1289, Aa 1715. Wider than 600 it is open: canon 7.6.1 governs the narrow screen. */
+@media (max-width: 600px) {
+  .maffs-ref-fits { display: none; }
+  .maffs-ref-phone { display: block; }
+}
+@media (max-width: 480px) and (min-height: 930px), (min-width: 390px) and (max-width: 480px) and (min-height: 790px) {
+  body:not(.accessible) .maffs-ref-fits { display: block; }
+  body:not(.accessible) .maffs-ref-phone { display: none; }
+}
+@media (max-width: 480px) and (min-height: 1180px) {
+  body.accessible .maffs-ref-fits { display: block; }
+  body.accessible .maffs-ref-phone { display: none; }
+}
 
 .q-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; text-align: center; }
 .q-prompt { font-size: 15.5px; color: var(--text); text-align: center; margin-bottom: 16px; line-height: 1.5; }
@@ -204,10 +221,11 @@ body.accessible .q-prompt { font-size: 1.1em; }
   body.accessible .header { gap: 6px; padding: 4px 6px; }
   body.accessible .header-divider { display: none; }
   body.accessible .back { font-size: 12px; }
-  body.accessible .header-title { font-size: 14px; }
+  body.accessible .header-title { font-size: 14px; line-height: 1.2; }   /* two lines no taller than the 44px controls beside them */
   body.accessible .header-level { font-size: 10px; padding: 2px 5px; letter-spacing: 0; text-transform: none; }
   body.accessible .freq-table th, body.accessible .freq-table td { padding: 1px 6px; }
-  body.accessible .card { padding: 8px 10px; }
+  body.accessible .game-area { padding-top: 6px; }
+  body.accessible .card { padding: 6px 10px 8px; }
   body.accessible .q-label { margin-bottom: 2px; }
   body.accessible .q-prompt { margin-bottom: 4px; }
 }
@@ -280,7 +298,7 @@ body.accessible .q-prompt { font-size: 1.1em; }
       <div id="scaffoldArea"></div>
       <div class="feedback" id="feedback"></div>
       <div class="explain-box" id="explainBox"></div>
-      <div class="next-mount" id="nextMount"></div>
+      <div class="maffs-ref-row" id="refRow"><div class="next-mount" id="nextMount"></div></div>
     </div>
   </div>
 
@@ -1197,11 +1215,12 @@ renderSessionButtons();
 /* ----------------------------------------------------------------------------
    The median card: theme.css's reference card (.maffs-ref, canon 7.6.2; Jon's ruling, 26 Oct 2026). Generic,
    never the current item's value. On a median question it waits collapsed as "Show the rule" below the options,
-   so it never pushes them down; after a wrong answer it is open in the feedback, after the working and before Next.
+   so it never pushes them down; after a wrong answer it is in the feedback, after the working and before Next: open
+   where it fits, collapsed on a phone where it would push Next below the fold (the CSS beside .scaffold-steps).
    ---------------------------------------------------------------------------- */
 function isMedianCat(cat) { return cat === 'median' || cat === 'freqMedian'; }
-function medianCardHTML(open) {
-  return '<details class="maffs-ref"' + (open ? ' open' : '') + '>' +
+function medianCardHTML(open, cls) {
+  return '<details class="maffs-ref' + (cls ? ' ' + cls : '') + '"' + (open ? ' open' : '') + '>' +
     '<summary><span class="maffs-ref-show">Show the rule</span><span class="maffs-ref-title">Finding the median</span></summary>' +
     '<div class="maffs-ref-body">' +
     '<div class="scaffold-formula">' + tex('\\text{position} = \\dfrac{n+1}{2}') + '</div>' +
@@ -1285,6 +1304,7 @@ function loadQuestion() {
   document.getElementById('feedback').textContent = '';
   document.getElementById('feedback').className = 'feedback';
   document.getElementById('explainBox').innerHTML = '';
+  document.querySelectorAll('#refRow > .maffs-ref').forEach(el => el.remove());
   renderScaffoldArea(currentItem);
   renderQuestionBody(currentItem);
 }
@@ -1445,9 +1465,12 @@ function checkAnswer(selectedVal, btnEl) {
     feedback.textContent = 'WRONG';
     feedback.className = 'feedback wrong';
     const misId = currentDistMap[selectedVal];
-    document.getElementById('scaffoldArea').innerHTML = '';   // the median card moves into the feedback, open
-    explainBox.innerHTML = explainHTML(currentItem) + (misId ? '<div class="mc-box">' + MC[misId] + '</div>' : '') +
-      (isMedianCat(currentItem.cat) ? medianCardHTML(true) : '');
+    explainBox.innerHTML = explainHTML(currentItem) + (misId ? '<div class="mc-box">' + MC[misId] + '</div>' : '');
+    if (isMedianCat(currentItem.cat)) {   // the median card moves into the feedback, just before Next
+      document.getElementById('scaffoldArea').innerHTML = '';
+      document.getElementById('nextMount').insertAdjacentHTML('beforebegin',
+        medianCardHTML(true, 'maffs-ref-fits') + medianCardHTML(false, 'maffs-ref-phone'));
+    }
     // Fallback deliberately extended (24h, safely under setTimeout's ~24.8-day
     // ceiling) rather than the shared 20s default — canon §7.6 wants NO
     // timeout on the wrong-answer path here; MaffsNext.wrong's own
