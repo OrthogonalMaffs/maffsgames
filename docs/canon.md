@@ -1222,6 +1222,67 @@ and `new-shapes`** (New Shapes' parallelogram asking screen is 11px over at 320 
 Pizza is not yet measured in Aa). Extending the picture-below-Next fallback to Aa mode on every phone is
 the obvious candidate; all three load the shared `schools/assets/opendyslexic.css`. See todo §3.9.
 
+**The gate: every answer option above the fold (26 Oct 2026, Jon's ruling; contract LOOK-REDS-2).**
+
+- **Asking screen.** In normal mode at 320 × 568, 375 × 667 and 390 × 844, and in Aa mode at 375 × 667 and
+  390 × 844, the **last** answer option ends above the fold. A rule that only asks that the options *start*
+  above the fold passes a question whose last option is hidden, so a student can be choosing from three of
+  four options without knowing it.
+- **The Aa exception: Aa mode at 320 × 568.** There content may scroll: the answer options must **start**
+  above the fold, and nothing may be clipped; an overflow beyond that is a warning, not a failure.
+  OpenDyslexic at 320 px cannot fit a four- or five-line GCSE prompt and its feedback on one screen, and
+  shortening the wording would weaken the feedback for every student. **First logged instance:** Distinctly
+  Average GCSE, 114 items over at 320 × 568 in Aa (worst 184px), measured 26 Oct 2026; after its layout pass,
+  the options start above the fold on every item, the last option ends below it on 12 GCSE items (worst 55px), and Next is below it on 145 items: 92 GCSE items that are not about the median (worst 174px) and 53 median items (16 Foundation, worst 33px; 37 GCSE), where the collapsed card (§7.6.2) is too wide in OpenDyslexic to sit beside Next and wraps above it.
+- **Feedback screen.** After a wrong answer, Next is above the fold at all three sizes in both modes, with
+  Aa at 320 × 568 the recorded exception. This is the paragraph "When the asking screen may scroll" above,
+  restated for Aa.
+- **How it is checked.** `scripts/measure-phone-fit.py` (and `--aa`) measures every roster game's first
+  question at its default level at the three sizes. The gate's asking-screen rule fails the run (exit 1); Next
+  below the fold and sideways scroll are reported, not gated, because a generic driver sees one question and a
+  game's own all-items measurement is the proof (Distinctly Average's: every item, every wrong option, three
+  sizes, both modes). The script is not yet in CI; that is a later contract.
+- **Two lists that only shrink** (the `check-theme.py` and answer-lock pattern), in
+  `scripts/phone-fit-state.json`, per mode. **`known-failures`**: each game already failing the gate, with
+  the sizes at which it fails; reported, never failed. **`unmeasurable`**: the games the driver cannot
+  measure (it cannot reach their asking screen), so they never read as passing. A gate failure that
+  is not on the list, a listed size that now passes, a listed unmeasurable game that now measures, and an
+  unmeasurable game not on its list each fail the run. A game comes off a list in the PR that fixes it; a
+  game is never added. **First recorded 26 Oct 2026:** 45 roster games on `known-failures` (44 live, and
+  `glorious-gantt`, unlisted; 39 in normal mode, 44 in Aa) and 14 on `unmeasurable`, in both modes; the
+  per-game sizes are in the file and in `docs/audits/phone-fit-gate-2026-10-26.md`. A game that took the
+  1 Oct exception for a question taller than the screen (todo §3.9) and fails the gate is on the list:
+  Better Value is.
+
+### 7.6.2 The reference card — the house pattern for help and reference panels (26 Oct 2026, Jon's ruling)
+
+A rule, method or reference a student may want while answering (Distinctly Average's "Finding the median")
+is a **reference card**: the shared `.maffs-ref` in `schools/assets/theme.css`, one native `<details>`, so it
+needs no script, opens from the keyboard and is read once by a screen reader. A help panel that sits open
+above a question pushes the options down the screen, which is the likeliest shared cause of the games on the
+known-failures list (§7.6.1).
+
+- **Asking screen: collapsed**, as one 44px "Show the rule" button **below the options**, so it never pushes
+  them down. Opening it is the student's choice.
+- **Feedback, after a wrong answer: between the working and Next**, never below Next (§7.6.1: the hint never
+  moves below Next). **Open where it fits; collapsed on a phone where it would push Next below the fold.**
+  CSS cannot open a `<details>`, so the feedback carries two copies, `.maffs-ref-fits` (open) and
+  `.maffs-ref-phone` (collapsed), and the game's own media query on viewport height swaps them, within a
+  width band, because the card's height depends on the width. The thresholds come from measuring every
+  item; no script decides. `.maffs-ref-row` holds the copies and the Next mount: collapsed, the card sits
+  beside Next on one line and costs no height; opened by the student, it takes the full width above Next.
+- **A game tints it** with two non-base tokens, `--ref-bg` and `--ref-edge`, and styles only its content;
+  everything else is in `theme.css`. Every rule is scoped to `.maffs-ref`, so a page without one is unchanged.
+- **Not a fading scaffold.** "Scaffolds fade" (§12) withdraws an open aid once the student can work without
+  it. A reference card is never open on the asking screen, so it has nothing to fade: Distinctly Average's
+  open-until-two-right streak was removed when its card moved onto this pattern.
+- **Distinctly Average, measured 26 Oct 2026** (all 136 median items open in the feedback): Next needs a
+  viewport 922px tall at 320 wide, 839 at 360, 817 at 375 and 777 from 390 to 480 in normal mode; 978 to
+  1,178 in Aa; 1,289 (Aa 1,715) from 481 to 600, where the phone compaction stops. So it opens at
+  390 × 844 in normal mode, and is collapsed at every other canon size. Wider than 600px it is open:
+  §7.6.1 governs the narrow screen. On a 1280 × 720 laptop a median item's Next sits at 931px against a
+  680px fold even without the card (outside this rule; recorded, not fixed).
+
 ## 7.5 Theme
 
 **Every game takes one register (Jon's ruling, 2 Oct 2026).** It replaces the three-row table
