@@ -90,6 +90,7 @@ body {
 .card { width: 100%; background: var(--surface); border-radius: 16px; padding: 26px 22px; border: 1px solid var(--border); box-shadow: var(--shadow-md); }
 
 .start-glyph { font-size: 46px; font-weight: 700; color: var(--accent); opacity: 0.16; line-height: 1; margin-bottom: -6px; }
+.start-glyph span { display: inline-block; line-height: 0.62; border-top: 0.07em solid currentColor; padding-top: 0.03em; }   /* x-bar, the mean: the bar drawn over the x in any font */
 .start-title { font-size: clamp(20px, 5vw, 26px); font-weight: 700; color: var(--text); margin-bottom: 10px; text-align: center; }
 .start-desc { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; text-align: center; }
 .picker-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; text-align: center; margin-bottom: 10px; margin-top: 4px; }
@@ -195,6 +196,11 @@ body {
 @media (max-width: 600px) and (max-height: 700px) {
   .scaffold-area { order: 2; }
 }
+/* On any narrow screen it moves there too in Aa mode (OpenDyslexic makes it twice as tall), and after a wrong answer,
+   where the working above Next already shows the method step by step. */
+@media (max-width: 600px) {
+  body.accessible .scaffold-area, .main-game:has(.opt-btn.wrong) .scaffold-area { order: 2; }
+}
 /* === Accessibility === (the font and the page background come from theme.css) */
 body.accessible { letter-spacing: 0.12em; word-spacing: 0.16em; }
 body.accessible p, body.accessible .q-prompt, body.accessible .scaffold-steps li, body.accessible .opt-btn, body.accessible .explain-box p { line-height: 2.0; max-width: 65ch; }
@@ -215,6 +221,9 @@ body.accessible .q-prompt { font-size: 1.1em; }
   body.accessible .header-title { font-size: 14px; }
   body.accessible .header-level { font-size: 10px; padding: 2px 5px; letter-spacing: 0; text-transform: none; }
   body.accessible .freq-table th, body.accessible .freq-table td { padding: 1px 6px; }
+  body.accessible .card { padding: 8px 10px; }
+  body.accessible .q-label { margin-bottom: 2px; }
+  body.accessible .q-prompt { margin-bottom: 4px; }
 }
 .correct::after { content: ' \2713'; font-size: 0.85em; opacity: 0.8; }
 .incorrect::after { content: ' \2717'; font-size: 0.85em; opacity: 0.8; }
@@ -261,7 +270,7 @@ body.accessible .q-prompt { font-size: 1.1em; }
   </div>
 
   <div class="card" id="startScreen">
-    <div class="start-glyph" style="text-align:center">x&#772;</div>
+    <div class="start-glyph" style="text-align:center" aria-hidden="true"><span>x</span></div>
     <div class="start-title">Distinctly Average</div>
     <div class="start-desc" id="startDesc">Mean, median, mode and range — spot which one a question is really asking for.</div>
 
