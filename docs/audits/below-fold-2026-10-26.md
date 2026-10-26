@@ -5,6 +5,128 @@ as merged in #554: the **last** answer option ends above the fold (normal mode a
 with Aa at 320 × 568 the recorded exception (the options **start** above the fold). `scripts/phone-fit-state.json` lists 45 games that fail it
 (39 in normal mode, 44 in Aa) and 14 the driver cannot measure.
 
+## Re-measured: the start screen driven to the question (contract PHONE-FIT-DRIVER, 26 Oct 2026)
+
+**This section corrects the report below; where they differ, this section stands.** `measure-phone-fit.py` now records the start
+screen before anything is pressed (where the level picker and Start end against the fold: **reported, never judged**, Jon's correction
+to the contract), then drives it generically (the first level or option, then Start) and, only where that reaches no question, by the
+page's declared start (its `maffs-lock-hint`, canon §7.6.0); every screen is measured after its layout has been still for 500 ms with no
+one-shot timer of 200 ms to 5 s pending (ceiling 5 s), so the Core Maths papers' two-second banner is waited out by the general rule,
+not a special case. Full runs, all 100 roster games, each 10 min: `docs/audits/phone-fit-runs-2026-10-26/` (`normal`, `aa`, `laptop`;
+`.md` the report, `.json` the raw cells, `-lists.json` the lists each run implies). `scripts/phone-fit-state.json` now matches them
+exactly, on Jon's ruling of 26 Oct (the lists may grow under this contract): **known failures 39 → 46 in normal mode, 44 → 47 in Aa;
+unmeasurable 14 → 7 in each**, now each with its reason.
+
+### What the re-measurement changes
+
+- **Two more games were being measured on their start screen, not only the nine of group B:** `component-crusher` (start screen 357 / 528,
+  passing; its first question 540 / 528 at 320 × 568) and `factor-theorem` (start 251 / 528; its first practice question, reached by its
+  declared start, 705 / 528). Both join the list in normal mode at 320 × 568; `factor-theorem` also in Aa at 375 and 390.
+- **`estimation-golf` never had a start screen:** it calls `startGame()` on load, so what the audit measured was its first hole (six
+  options under a 206 px header), and it fails as a question, not a start screen (group D or C, not B).
+- **`seven-bridges` fits on its question** at every size in both modes (last control 339 / 528 at 320 × 568; 205 / 528 in Aa at 320): it
+  leaves the list in both modes. Its start screen does not fit anywhere (Start 972 / 528 at 320 × 568, 931 / 804 at 390 × 844).
+- **The Core Maths papers are measured and all four fail** (normal: paper 1 at 320; 2A at all three sizes; 2B at 320 and 375; 2C at 320;
+  Aa: paper 1 at 375; 2A and 2B at all three; 2C at 320 and 375). Paper 2A ends its options 991 px down a 528 px screen.
+- **`equation-builder`** is measured and fails (normal 320; Aa 320 and 375). **`how-many-parts`, `six-sevens-bruv`, `squared-squirrel` and
+  `take-a-walk`** are measured and pass in both modes (all four leave the unmeasurable list).
+- **More sizes for games already listed:** `chart-interrogator`, `given-that`, `growth-and-decay` and `test-the-claim` fail on the question
+  at 375 × 667 as well (normal); `wrong-on-the-internet` at 390 × 844 too (818 / 804). In Aa, `spot-the-muppet` and `terrible-advice` now
+  pass at 390 × 844 and leave the list there.
+- **Unmeasurable, 7, each with its reason in the state file:** `glorious-gantt` (its first option then Start leaves it on the start
+  screen, and it declares no start; unlisted), four canvas questions the driver reaches but cannot read (`bearing-blitz`,
+  `four-quadrant-explorer`, `gradient-hunter`, `shape-shifter`), `just-pythag-it-bruv` (round 1's tap-the-hypotenuse drawing) and
+  `spot-the-error` (started, then no answer controls). The contract's STOP IF (more than 10 games not driven generically to a question)
+  did not fire: 10 were not, nine of them reached by their declared start and `glorious-gantt` not at all.
+- **The start screen, report only (Jon to rule on a start-screen rule):** 84 games show a Start control before play. In normal mode
+  Start ends below the fold in **60 of 84 at 320 × 568, 46 at 375 × 667 and 16 at 390 × 844**; in Aa in 83, 76 and 52.
+
+### The nine start-screen games and the Core Maths papers, corrected
+
+Resit suite first, then the lowest tier served. Each cell is the last answer control's bottom edge against the fold on the **first
+question** (Aa at 320 × 568: where the options start, the recorded exception); ✗ fails the gate. "Route" is how the driver reached it.
+
+| # | Game | Lowest tier | Resit suite | Route to the question | Question, normal 320×568 | 375×667 | 390×844 | Question, Aa 320×568 | 375×667 | 390×844 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | `estimation-golf` | Year 6 | yes | generic | 627 / 528 ✗ | 628 / 627 ✗ | 630 / 804 ✓ | start 407 / 528 ✓ | 738 / 627 ✗ | 740 / 804 ✓ |
+| 2 | `given-that` | GCSE | yes | generic | 743 / 528 ✗ | 777 / 627 ✗ | 786 / 804 ✓ | start 637 / 528 ✗ | 867 / 627 ✗ | 876 / 804 ✗ |
+| 3 | `chart-interrogator` | GCSE | yes | declared start | 685 / 528 ✗ | 685 / 627 ✗ | 685 / 804 ✓ | start 738 / 528 ✗ | 781 / 627 ✗ | 781 / 804 ✓ |
+| 4 | `stat-attack` | GCSE | yes | generic | 591 / 528 ✗ | 556 / 627 ✓ | 536 / 804 ✓ | start 654 / 528 ✗ | 652 / 627 ✗ | 652 / 804 ✓ |
+| 5 | `seven-bridges` | KS3 |  | generic | 339 / 528 ✓ | 379 / 627 ✓ | 389 / 804 ✓ | start 205 / 528 ✓ | 411 / 627 ✓ | 422 / 804 ✓ |
+| 6 | `gradient-hunter` | GCSE |  | not reached | – | – | – | – | – | – |
+| 7 | `growth-and-decay` | Core |  | generic | 611 / 528 ✗ | 633 / 627 ✗ | 612 / 804 ✓ | start 713 / 528 ✗ | 729 / 627 ✗ | 729 / 804 ✓ |
+| 8 | `glorious-gantt` | Core |  | not reached | – | – | – | – | – | – |
+| 9 | `core-maths-paper1` | Core |  | generic | 532 / 528 ✗ | 505 / 627 ✓ | 505 / 804 ✓ | start 507 / 528 ✓ | 705 / 627 ✗ | 673 / 804 ✓ |
+| 10 | `core-maths-paper2a` | Core |  | generic | 991 / 528 ✗ | 967 / 627 ✗ | 925 / 804 ✗ | start 1024 / 528 ✗ | 1332 / 627 ✗ | 1309 / 804 ✗ |
+| 11 | `core-maths-paper2b` | Core |  | generic | 677 / 528 ✗ | 677 / 627 ✗ | 677 / 804 ✓ | start 571 / 528 ✗ | 919 / 627 ✗ | 919 / 804 ✗ |
+| 12 | `core-maths-paper2c` | Core |  | generic | 660 / 528 ✗ | 549 / 627 ✓ | 549 / 804 ✓ | start 539 / 528 ✗ | 767 / 627 ✗ | 767 / 804 ✓ |
+| 13 | `test-the-claim` | A-Level |  | declared start | 864 / 528 ✗ | 821 / 627 ✗ | 784 / 804 ✓ | start 1146 / 528 ✗ | 1061 / 627 ✗ | 1037 / 804 ✗ |
+
+The start screens of the same games (report only, never judged): the bottom edge of the level picker and of Start against the fold.
+`estimation-golf` has none (it plays on load).
+
+| Game | Start screen, normal 320×568 | 375×667 | 390×844 | Aa 320×568 | 375×667 | 390×844 |
+|---|---|---|---|---|---|---|
+| `estimation-golf` | – | – | – | – | – | – |
+| `given-that` | picker 647, Start 724 / 528 | picker 580, Start 657 / 627 | picker 580, Start 657 / 804 | picker 1096, Start 1173 / 528 | picker 881, Start 958 / 627 | picker 881, Start 958 / 804 |
+| `chart-interrogator` | picker 654, Start 1093 / 528 | picker 588, Start 1027 / 627 | picker 588, Start 1027 / 804 | picker 805, Start 1245 / 528 | picker 773, Start 1213 / 627 | picker 743, Start 1183 / 804 |
+| `stat-attack` | picker 465, Start 619 / 528 | picker 429, Start 582 / 627 | picker 424, Start 577 / 804 | picker 715, Start 868 / 528 | picker 604, Start 758 / 627 | picker 599, Start 753 / 804 |
+| `seven-bridges` | picker 895, Start 972 / 528 | picker 854, Start 931 / 627 | picker 854, Start 931 / 804 | picker 1463, Start 1540 / 528 | picker 1276, Start 1353 / 627 | picker 1250, Start 1327 / 804 |
+| `gradient-hunter` | picker 418, Start 666 / 528 | picker 362, Start 610 / 627 | picker 362, Start 610 / 804 | picker 648, Start 902 / 528 | picker 561, Start 815 / 627 | picker 561, Start 815 / 804 |
+| `growth-and-decay` | picker 558, Start 711 / 528 | picker 467, Start 621 / 627 | picker 467, Start 621 / 804 | picker 830, Start 983 / 528 | picker 717, Start 871 / 627 | picker 717, Start 871 / 804 |
+| `glorious-gantt` | picker 477, Start 660 / 528 | picker 442, Start 626 / 627 | picker 420, Start 604 / 804 | picker 779, Start 963 / 528 | picker 677, Start 861 / 627 | picker 677, Start 861 / 804 |
+| `core-maths-paper1` | Start 493 / 528 | Start 436 / 627 | Start 412 / 804 | Start 849 / 528 | Start 769 / 627 | Start 741 / 804 |
+| `core-maths-paper2a` | Start 533 / 528 | Start 493 / 627 | Start 436 / 804 | Start 961 / 528 | Start 821 / 627 | Start 821 / 804 |
+| `core-maths-paper2b` | Start 509 / 528 | Start 469 / 627 | Start 436 / 804 | Start 849 / 528 | Start 821 / 627 | Start 793 / 804 |
+| `core-maths-paper2c` | Start 575 / 528 | Start 535 / 627 | Start 479 / 804 | Start 993 / 528 | Start 864 / 627 | Start 864 / 804 |
+| `test-the-claim` | picker 578, Start 816 / 528 | picker 578, Start 816 / 627 | picker 536, Start 774 / 804 | picker 901, Start 1153 / 528 | picker 812, Start 1064 / 627 | picker 793, Start 1045 / 804 |
+
+### Laptop sizes, re-measured (report mode, 1366 × 768 and 1280 × 720)
+
+93 of the 100 roster games measured (the seven unmeasurable as on the phone); nothing judged, as before. **23 end their last option
+below the fold at one size or both (14 at both), and 24 put Next below it after a wrong answer.** Against the table further down
+(21 and 21, at three sizes, with the old driver): two more end their last option below the fold, both now reaching a question they did
+not before, `core-maths-paper2a` (219 px over at 1280 × 720) and `given-that` (66); none drops off. Next newly below: `core-maths-paper2b`,
+`given-that`, `screening-room` and `truth-buster`; `trig-worms` drops out because this run's wrong answer showed no Next control at all ("no Next"), not because its Next fits. The
+cells are in `docs/audits/phone-fit-runs-2026-10-26/laptop.md`.
+
+## Canon §7.6.1's 1 Oct exception, word for word
+
+> **When the asking screen may scroll (Jon, 1 Oct 2026).** Only when the content needed to answer cannot
+> fit: when the question itself (Better Value's scenario, two deals and four conclusions; Expected Damage's
+> two track cards on its longest questions) is taller than the screen at a legible size. The feedback screen
+> must always fit: the reason and Next above the fold, by folding away what cannot be used and, on a short
+> screen, moving a picture below Next. Record each game that takes this exception in todo §3.9.
+
+## The 11 "question taller than the screen" games (group C), for Jon's ruling
+
+Resit suite first, then the lowest tier served (roster). **Fails at** is the gate's list after the re-measurement. **Worst over** is px
+past the fold at the worst failing cell. The last two columns are measured at **375 × 667, normal mode**, first question: **Question
+and header past the fold?** compares where the answer controls start (everything above them: header, score bar and the question) with
+the 627 px fold; **Question and options fit?** compares where the last control ends with it (the gate itself at that size).
+
+| # | Game | Lowest tier | Resit suite | Question type (the asking screen) | Fails at (normal; Aa) | Worst over | Question and header past the fold? (controls start / fold) | Question and options fit? (last control / fold) |
+|---|---|---|---|---|---|---|---|---|
+| 1 | `better-value` | GCSE | yes | A scenario and two deal cards, then four conclusion cards | 320, 375, 390; 320, 375, 390 | 880 (Aa 375) | **yes**, 716 / 627 | no, 1025 / 627 |
+| 2 | `fermi-lab` | KS3 | | A Fermi question, then its whole chain of steps at once, each a typed estimate with Lock and Skip | 320, 375, 390; 375, 390 | 586 (Aa 375) | no, 324 / 627 | no, 1056 / 627 |
+| 3 | `word-problem-decoder` | KS3 | | A word problem; four options naming the topic | 320, 375; 320, 375, 390 | 511 (Aa 320) | no, 559 / 627 | no, 797 / 627 |
+| 4 | `maths-court` | KS3 | | A dispute; three argument cards as the options | 320, 375, 390; 375, 390 | 423 (normal 320) | no, 292 / 627 | no, 902 / 627 |
+| 5 | `wrong-on-the-internet` | KS3 | | A social-media post; four options (stage 1 of two) | 320, 375, 390; 320, 375, 390 | 370 (Aa 375) | **yes, by 4 px**, 631 / 627 | no, 845 / 627 |
+| 6 | `spot-the-muppet` | KS3 | | A character card (name, title, biography, advice); four options | 320, 375; 320, 375 | 159 (Aa 375) | no, 370 / 627 | no, 640 / 627 |
+| 7 | `terrible-advice` | KS3 | | A character card (name, title, biography, advice); four options | 320, 375; 320, 375 | 184 (normal 320) | no, 424 / 627 | no, 688 / 627 |
+| 8 | `screening-room` | GCSE | | A screening scenario; four options | 320, 375; 320, 375, 390 | 368 (Aa 375) | no, 412 / 627 | no, 730 / 627 |
+| 9 | `expectation-station` | GCSE | | A context card and a probability table; five options | 320; 320, 375 | 135 (Aa 320) | no, 399 / 627 | **yes**, 511 / 627 |
+| 10 | `probability-paradox` | GCSE | | A paradox stated in full (the Two-Child Problem); four options | none; 320, 375 | 208 (Aa 320) | no, 379 / 627 | **yes**, 485 / 627 |
+| 11 | `truth-will-set-you-free` | L4 | | An engineering scenario and a truth table to fill in; one Submit | 320, 375, 390; 320, 375, 390 | 786 (Aa 320) | **yes**, 923 / 627 | no, 969 / 627 |
+
+**What the measurement says about the exception.** At 375 × 667 in normal mode the question with the header runs past the fold in only
+**three of the eleven** (`better-value`, `truth-will-set-you-free`, and `wrong-on-the-internet` by 4 px). In the other eight the question
+ends well above the fold (292 to 559 px) and what does not fit is the **options**: `maths-court`'s three argument cards (610 px), `fermi-lab`'s
+chain of inputs (732 px), the character games' four options under a long card. Read literally ("the question itself … is taller than the
+screen"), the exception covers at most those three at this size; `expectation-station` and `probability-paradox` already fit at 375 × 667
+in normal mode and fail only at 320 × 568 or in Aa. At 320 × 568 one more crosses: `word-problem-decoder`'s controls start at 648 against a 528 px fold (the
+three at 772, 673 and 972); the other seven start between 320 and 454 px. One sample each: the first question at the default level.
+
 ## Summary
 
 - **Every one of the 45 has an identified cause** (none unexplained; the STOP IF threshold was a quarter, 11). They fall into six groups:
