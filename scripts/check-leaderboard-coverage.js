@@ -164,7 +164,9 @@ const NOT_ON_HUB = {
   // New (contract FOUND-A-MARK, 27 Oct 2026): merged unlisted for Jon to play; the hub row is added at listing.
   'i-found-a-mark': 'new, unlisted until Jon has played and approved it; hub row added at listing',
   // New (contract HC-FACTOR, 27 Oct 2026): merged unlisted for Jon to play; the hub row is added at listing.
-  'hc-factor': 'new, unlisted until Jon has played and approved it; hub row added at listing'
+  'hc-factor': 'new, unlisted until Jon has played and approved it; hub row added at listing',
+  // New (contract Y-SO-STEEP, 27 Oct 2026): merged unlisted for Jon to play; the hub row is added at listing.
+  'y-so-steep': 'new, unlisted until Jon has played and approved it; hub row added at listing'
 };
 
 // The levels a game submits under are read from its source: the level argument of
@@ -185,7 +187,8 @@ const LEVEL_OVERRIDES = {
   'how-many-parts':       [['foundation-s1', 'foundation-s2', 'foundation-s3', 'foundation-s4', 'foundation-s5', 'gcse'], "boardKey(): H.FSTAGES[mode].board for Foundation (one board per stage, the level staying ks3), the level 'gcse' for Advanced (one board; contract HMP-LEVELS, 22 Oct 2026)"],
   'take-a-walk':          [['stage-1', 'stage-2', 'stage-3', 'stage-4'], "board = mode: one board per stage, stage-1..stage-4 (contract TAKE-A-WALK, 23 Oct 2026)"],
   'squared-squirrel':     [['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5'], "board = mode: one board per stage, stage-1..stage-5 (contract FOOTBALL-PITCHES, 23 Oct 2026)"],
-  'hc-factor':            [['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5'], "board = boardOf(stage): one board per round, stage-1..stage-5; round 6 submits nothing (its key needs a label in firebase-leaderboard.js; contract HC-FACTOR, 27 Oct 2026)"]
+  'hc-factor':            [['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5'], "board = boardOf(stage): one board per round, stage-1..stage-5; round 6 submits nothing (its key needs a label in firebase-leaderboard.js; contract HC-FACTOR, 27 Oct 2026)"],
+  'y-so-steep':           [['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5'], "board = boardOf(stage): one board per stage, stage-1..stage-5; stage 6 submits nothing (its key needs a label in firebase-leaderboard.js; contract Y-SO-STEEP, 27 Oct 2026)"]
 };
 
 // Games that may submit only under keys ending '-tournament' (SR-22): the level argument of every submitScore()

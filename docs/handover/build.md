@@ -16,10 +16,14 @@ Contracts are saved verbatim in `docs/handover/contracts/<date>-build-<slug>.md`
 ## Done
 DONE: 2026-10-27-build-found-a-mark.md   (merged: PR #569, squash 6c5cc59, 27 Oct 2026; held up by CI timing blocks, fixed by #570, then one real 320 x 568 fault on CI's real fonts, fixed)
 
+DONE: 2026-10-27-build-hc-factor.md   (merged: PR #571, squash f6eecad; main run 40510992524 green)
+DONE: 2026-10-27-build-y-so-steep.md   (merged: PR #574, squash f8083cc, 27 Oct 2026; main run 40518636405 green)
+
 ## Queue
-1. **found-a-mark** ("I Found a Mark"): MERGED (#569). Report still owed to Jon: its "Decided for you" list and the screenshots (375 x 667 and 1366 x 768 in the session scratchpad; re-make with `play.py` pattern: start stub server, `FAM.ui`).
-2. **hc-factor** ("The HC Factor"): BUILT, PR #571 (branch `claude/build-hc-factor`, worktree `E:/jon/mg-build-hc-factor`). Verifier passes all 3 parts; check-changed clean after the fixes below. CI: the PR budget job failed twice on Take a Walk part 4 (190 s vs the 189 s line limit; not ours; a re-run reuses the same measurements, only a new push re-measures). Then `python scripts/merge-pr.py 571` (unpiped), watch main, `python scripts/end-task.py claude/build-hc-factor`, then report with the screenshots.
-3. **y-so-steep** ("Y So Steep?"): contract `contracts/2026-10-27-build-y-so-steep.md`. Branch `claude/build-y-so-steep`, worktree `E:/jon/mg-build-y-so-steep`. NOT STARTED. Findings so far: `MaffsAnswer.fraction(raw)` already exists and is exact, but `MaffsKeypad` has NO "/" key (keys: digits, ".", optional minus). So item 4 applies: write the "/" key on MaffsKeypad's fraction variant (and MaffsAnswer use + test-answer-js.py / check-keypad.py cases) on its own UNMERGED branch, and ship the integer-gradient items first; fractional items (S3 and the fractions in Higher) on once that branch merges. Never a game-local parser.
+1. **found-a-mark**: MERGED (#569) + art swap MERGED (#573, aaef265, main run 40514401072 green). Report still owed to Jon: its "Decided for you" list and screenshots.
+2. **hc-factor**: MERGED (#571).
+3. **y-so-steep**: MERGED (#574). Unmerged side branch: the "/" key for MaffsKeypad on `claude/keypad-fraction-key` (799dbfd9, worktree `E:/jon/mg-keypad-slash`), NOT a PR. Home lane/Jon to rule on merging it; then set `FRACTIONS = true` in `games/y-so-steep/index.html` to bring in Stage 3 and the fractional items.
+Build queue empty (27 Oct 2026, after #574). Nothing uncontracted is started.
 
 ## Standing notes (Jon, 27 Oct 2026)
 - Roster numbers stay as they are (#102 found-a-mark, #103 hc-factor; next is #104). "The 100th" is the count of LISTED items on the portal, not a roster number. NEVER list anything: listing is the home lane's job and The 6 P's goes first.
@@ -39,3 +43,27 @@ Lessons that cost a round each (new-game checklist): the Theme check bans hex co
 - Unsigned boxes (no toggle) take 0 or more; a missing term is typed as 0.
 - Short phones (height under 620 px): Next sits under the one-line reason, the worked answer after it.
 - Rows: #103, Unlisted (3).
+
+## y-so-steep: state (27 Oct 2026)
+S1, S2, S4, S5, S6 shipped with whole-number items; S3 ("Rearrange it") and fractional items OFF. Generator `schools/assets/y-so-steep-gen.js` (whole-number and with-fractions banks, 48 items a stage; the 6 P's imports it later); verifier `scripts/verify-y-so-steep.py` (3 parts, about 22,000 probe answers marked both ways against an independent marker). Roster #104, Unlisted (4). Keypad: `MaffsKeypad.mount(..., {keys: {fraction: true}})` on the unmerged branch above; `MaffsAnswer.fraction()` already exists, so test-answer-js.py needed no new cases.
+Decided for you: light palette; fractions off until the keypad branch merges; Stage 6 has no board (stage-6 needs a label in firebase-leaderboard.js, shared; stages 1-5 use stage-1..stage-5, stage-3's declared but unused); Stage 5 has two steps (the gradient is given) and about 92% of its given points are off the y-intercept (minimum 75%); Stage 2's line comes from the figure data (no equation in its stem); marking by value through MaffsAnswer.fraction(), no game parser; extra slips on Stage 1 (m and c swapped; sign of c); a slip equal to the right answer is dropped; "run over rise" only fires once fractions are on; marks a question 1/1/1/3/2/3 (S1..S6).
+Lessons: merge-pr.py refuses while main's run is queued (other lanes push often): use `--wait 540`; end-task.py must be run from a CURRENT worktree (the primary checkout's scripts/ is stale), e.g. `python scripts/end-task.py <branch>` from any worktree.
+
+## found-a-mark art (27 Oct 2026, merged as #573, aaef265; main run 40514401072 green)
+Jon's sofa and coin illustrations replace the code-drawn ones in `games/i-found-a-mark/`.
+- Sources: the contract's art folder (jon/art/i-found-a-mark/ on the external drive) did not exist; the two images Jon attached to his message were used from his Downloads folder (Gemini_Generated_Image_reshrereshreresh.jpg 2752x1536 = sofa; Gemini_Generated_Image_uftykiuftykiufty.jpg 2048x2048 = coin). Jon confirmed (27 Oct) these are the intended files.
+- `assets/sofa.webp`: 1600x873, q80, 71,140 bytes. The source (2752 px) was ABOVE 1600 px wide, so it was downscaled, then cropped 10 px top and bottom to the house frame (never stretched).
+- `assets/coin.webp`: 512x512 with alpha, q80, 15,214 bytes. Paper and grey drop shadow removed by growing the border-connected light-grey region (the closed ink outline stops it), shrinking the subject 1 px with a 0.8 px soft edge, premultiplied resize; checked on dark (#182033), light (#f8fafc) and green surfaces: no halo; the ink glint at the top left kept. Total added 86 KB. No Gemini sparkle in either bottom-right corner.
+- Page: the start-screen SVG is now the sofa image with the coin image over the cushion gap (both eager, both visible there); `.slot.got` (found-mark coins in game and on results) uses the coin as its background, same size and drop animation. The marks bar stays CSS, retinted to the sofa green (#3f5953). Old drawing CSS and the unused tokens (--wall, --rug, --lamp, --coin-edge) deleted.
+
+## Decided for you (found-a-mark; PR #569, art #573)
+- Palette: LIGHT row with a warm-brown accent: check-theme derives it from the roster levels and GCSE is light. (Art swap: the marks bar takes the sofa's green.)
+- One level (key `gcse`), one board: unaided method marks in a session. A step shown with help ("Show me a step") is never counted: not in the HUD, the leaderboard, game_completed or the personal best.
+- Session: 5 questions, the four types (is it enough, ratio with a twist, interest and depreciation, the L-shaped garden) once each plus one more of a random type, in random order; every question is 3 method marks, with a dotted 4th "A" slot for the answer mark that is never asked for.
+- Marking: any valid calculation scores once its inputs are found (a form may have alternatives); a wrong tap shows the one-line slip plus MaffsNext (3 s floor), then the options return with that one struck out; no penalty.
+- "Bank it and move on" ends a question early and lists the steps still in the working.
+- Sound is a small clink, OFF by default, switched on from the menu.
+- Wording is plain and adult (no jokes; they are Jon's to add); the feedback line after a full question says the last mark is for the answer.
+- Phone fit: short phones (under 620 px high, and again under 580) tighten the card, the options and the HUD; found when CI's real fonts made the garden question's options wrap more than they do locally (it failed at 320 x 568 on CI, not locally).
+- Shared-file lines added (the minimum a new unlisted game folder needs, as #509): roster row #102 + Unlisted line, data/games.json entry, audit-register, check-answer-lock, check-leaderboard-coverage (NOT_ON_HUB), check-levels, check-start-mount, check-teacher-invite, check-theme, findings yml. Nothing listed.
+- Screenshots: 375 x 667 and 1366 x 768, one per question type, in the earlier session's scratchpad (re-make by playing a session with the stub server).
