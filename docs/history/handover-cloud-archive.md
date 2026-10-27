@@ -4,6 +4,14 @@ History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover
 and the last three entries; older entries move here, newest first, unchanged.
 
 
+## Moved 27 Oct 2026 (evening) from the cloud handover (history, unchanged)
+
+## 2026-10-27 (cloud): EB-SPLIT (#570, squash ac85425, Jon's priority ruling 27 Oct): Equation Builder's temporary hand split, 2 -> 3 parts, so new-game PRs passed the plan job. **Replaced by SHARD** (its 25 units, twelve slices).
+- **Components** live in `schools/assets/fold.css` (+ `fold.js`, R3's measured two-up), imported by theme.css as `calculator.css` is: 18 of the 19 games are not on theme.css and linking it would restyle them (a STOP IF). Canon §7.5.7 documents them (PR 2). **Canon §7.6.2 still says `.maffs-ref` is in theme.css:** Jon, 27 Oct, extends the lane exception to §7.6.2; PR 5 corrects it.
+- **PR 1 DONE: #563, squash 18efca5, main run 40476256973 green (65 jobs).** Laptop rule (`--laptop`), sideways gate, canvas measurement, selftest plants; lists from fresh runs. I first told Jon 7/12 sideways games from cut-off output; the full runs show 9 (normal) and 26 (Aa); corrected.
+- **PR 2 DONE: #564, squash 61d82fc, main green** (it carried the JPIB fit-pass move; detail and the repack question SHARD answered: archive, 27 Oct).
+- **Main red (27 Oct 15:37):** run 40529609805 (#576, home lane) failed The 6 P's part 3: "375 x 667: fraction-percentage-of-amount-2c420fec (number, wrong): Next is not on the screen ([638, 682] of 667 px)", the same class as #565's red main; `the-6-ps/` is not ours. #578 is green and waits (merge-pr.py refuses; no override).
+
 ## Moved 27 Oct 2026 (afternoon) from FOLD-COMPONENTS' entry (history, unchanged)
 
 - **PR 2, #564 (branch `claude/fold-ref`): GREEN on 17320cf (run 40479020812, every job). Merge REFUSED by merge-pr.py: main's run 40479208314 (#565, home lane, f1a299d) is red on Content verifiers 46, The 6 P's part 3: "375 x 667: fraction-percentage-of-amount-6f6c71cb (number, wrong): Next is not on the screen ([638, 682] of 667 px)". The check draws a random question per bank, so this is a real fault on that question, seen when drawn; `the-6-ps/` is not this lane's (Jon). Waiting on Jon: the home lane's fix, or his override.** Before: the Plan job failed CI's timing check: the theme.css change selects every theme game's verifier, and Just Pythag It, Bruv, part 2 is 145 s (median) + 46 s setup = 191 s, over the per-line limit of 70% (189 s). Group A results: six games off the known-failures lists; constructions-lab, trig-worms (laptop) and suvat (320, Aa) remain with reasons in `docs/audits/fold-components-2026-10-27.md`. Local checks: only the known KaTeX/WebKit failures.
