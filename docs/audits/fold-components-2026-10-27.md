@@ -108,3 +108,20 @@ Each game claimed on `cloud-remaining` in a commit of its own before it was edit
   (index-laws 655, differentiation-duel 625, integration-duel 610, log-laws 631, against 528).
 - Log Laws at 320 x 568: the collapsed card, which carries "log means log₁₀", sits just below the fold on the asking screen;
   before, the open panel was at the top.
+
+## PR 3: group F, four full-width options
+
+Both games already set their options two to a row on desktop and forced one to a row on phones (500 px and narrower). Each
+now carries `.maffs-options` and links `fold.css` and `fold.js`, so on a phone the options go two to a row only when every
+option fits on one line at half width with 44 px tap targets (R3), decided by measuring them. Each claimed on `cloud-remaining`
+in its own commit first; both released in this PR.
+
+| Game | Lowest tier | Before (normal; Aa; laptop) | After (normal; Aa; laptop) |
+|---|---|---|---|
+| `partial-fractions-duel` | A-Level | 320, 375; 375; – | passes everywhere |
+| `boolean-blitz` | L4 | 320; –; 1280 next | –; –; 1280 next (Next 720 / 680) |
+
+**Known failures:** normal 42 -> 40, Aa 42 -> 41, laptop unchanged at 31. **Not fixed by the group's component (1):**
+`boolean-blitz` at 1280 x 720, Next 40 px below the fold after a wrong answer: on a laptop its options are already two to a row,
+so the overflow is the header, question card, options and feedback together, not four stacked options. In Aa its Next is below
+the fold on a phone (reported, not gated).
