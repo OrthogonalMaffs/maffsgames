@@ -538,6 +538,11 @@
    "slug": "as-you-can-see",
    "search_phrase": "Reading Charts",
    "description": "Read pictograms, bar charts, line and scatter graphs, and spot the chart that is lying."
+  },
+  {
+   "slug": "possibly-maybe",
+   "search_phrase": "Probability",
+   "description": "Probability from the scale to tree diagrams: not, outcomes, expected frequency and trees."
   }
  ],
  "pages": {

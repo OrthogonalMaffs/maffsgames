@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- UNLISTED (contract POSSIBLY-MAYBE, 27 Oct 2026): live at its URL for Jon to play; off the portal, the sitemap and the leaderboard hub until he lists it. -->
+<meta name="description" content="Probability from the scale to tree diagrams: not, outcomes, expected frequency and trees. For KS3 and GCSE. Free, no sign-up.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/possibly-maybe/">
+<meta property="og:title" content="Probability Game – KS3/GCSE Maths | MaffsGames">
+<meta property="og:description" content="Probability from the scale to tree diagrams: not, outcomes, expected frequency and trees. For KS3 and GCSE. Free, no sign-up.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/possibly-maybe/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Probability Game – KS3/GCSE Maths | MaffsGames</title>
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/answer-count.js" defer></script>
+<script src="/schools/assets/fold.js" defer></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<style>
+/* Theme: schools/assets/theme.css (canon §7.5), light row: the check derives the palette from the roster's levels and the lowest
+   tier served is KS3. This game's own tokens: a teal accent and three series colours (each series also has its own pattern and a
+   written label in the key, so colour is never the only thing telling them apart). */
+:root{--accent:#6a3fa0;--accent-dim:#ece4f6;--on-accent:#ffffff;--ink:#1f2340;--grid:#cbd5e1;
+  --k-red:#e8a29a;--k-blue:#9cc3ea;--k-green:#a5d6a7;--k-yellow:#f3dd8a;--k-white:#f4f4f4;--branch:#475569}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:720px;width:100%;padding:1rem}
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.4rem 0}
+.header h1{font-size:1.9rem;font-weight:700;color:var(--accent);line-height:1.15}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem 0 .5rem}
+@media (max-width:420px){.header h1{font-size:1.5rem}}
+.screen{display:none}.screen.active{display:block}
+[hidden]{display:none!important}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.9rem auto;max-width:600px}
+.menu-info{color:var(--text);font-size:.95rem;line-height:1.65}
+.menu-info p+p{margin-top:.6rem}
+.btn{min-height:44px;padding:.6rem 1.2rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--accent-dim)}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.res-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
+
+.logo{display:block;width:100%;max-width:300px;height:auto;margin:.2rem auto .4rem}
+.logo .bg{fill:var(--accent-dim)}.logo .ax{stroke:var(--ink);stroke-width:2.5;fill:none}.logo .b0{fill:var(--surface);stroke:var(--ink);stroke-width:2.5}.logo .b1{fill:var(--accent)}.logo .pip{fill:var(--ink)}
+
+.stages{display:flex;flex-direction:column;gap:.5rem;margin-top:.8rem}
+.stage-btn{display:flex;align-items:center;gap:.7rem;width:100%;text-align:left;min-height:56px;padding:.45rem .8rem;border-radius:12px;border:1px solid var(--border);background:var(--surface-alt);color:var(--text);cursor:pointer;font:inherit}
+.stage-btn:hover:not(:disabled){border-color:var(--accent)}
+.stage-btn:disabled{opacity:.55;cursor:default}
+.stage-btn .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:700}
+.stage-btn .t{font-weight:700;font-size:.95rem;line-height:1.2}
+.stage-btn .d{display:block;font-weight:400;font-size:.8rem;color:var(--muted);line-height:1.3}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.3rem .8rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.5rem;gap:.3rem}
+.hud-item{text-align:center;min-width:48px}
+.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.hud-val{font-family:var(--font-num);font-size:.95rem;font-weight:700}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.8rem;display:flex;flex-direction:column;gap:.5rem}
+.qtext{font-size:1.02rem;line-height:1.5}
+.glue{white-space:nowrap}
+.charts{display:flex;flex-direction:column;align-items:center;gap:.15rem}
+.charts svg{display:block;max-width:100%;height:auto}
+.charts text{font-family:var(--font-num);font-size:12px;fill:var(--ink)}
+.charts text.b{font-weight:700}
+.charts text.lt{font-weight:700;font-size:13px}
+.charts .axis{stroke:var(--ink);stroke-width:1.6;fill:none}
+.charts .wedge,.charts .disc{stroke:var(--ink);stroke-width:1.2}
+.charts .k-red{fill:var(--k-red)}.charts .k-blue{fill:var(--k-blue)}.charts .k-green{fill:var(--k-green)}.charts .k-yellow{fill:var(--k-yellow)}.charts .k-white{fill:var(--k-white)}
+.charts .ptr{fill:var(--ink)}
+.charts .cellbox{fill:var(--surface);stroke:var(--grid);stroke-width:1}
+.charts .br{stroke:var(--branch);stroke-width:1.6}
+.charts text.pl{font-weight:700}
+.ask-line{display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;min-height:1.4em}
+.ask-line h2{font-size:.92rem;font-weight:700}
+.msg{font-size:.85rem;font-weight:700;color:var(--muted);text-align:right}
+
+.ans-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.5rem .6rem;font-family:var(--font-num);font-size:1.15rem;font-weight:700;padding:.2rem 0}
+.ans-row .btn{min-width:6.5rem}
+.nb input{width:96px;height:44px;text-align:center;font:inherit;font-size:1.1rem;border:2px solid var(--border);border-radius:9px;background:var(--surface-alt);color:var(--text)}
+.nb input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:.45rem}
+.opts.one{grid-template-columns:1fr}
+.opts .btn{min-height:46px;text-align:center;line-height:1.25;font-weight:600;color:var(--text);border-color:var(--border);background:var(--surface-alt);padding:.3rem .5rem;font-size:.9rem}
+.opts .btn:hover{border-color:var(--accent)}
+.kp-holder{margin-top:.1rem}
+.unit-sign{font-family:var(--font-num);font-weight:700}
+.nb input{width:110px}
+
+.fb{border-radius:12px;padding:.7rem .8rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.5rem}
+.fb.wrong{border-color:var(--wrong)}
+.fb.done{border-color:var(--correct)}
+.fb-line{font-size:.95rem;line-height:1.45;padding:.35rem .65rem;border-left:3px solid var(--hint);border-radius:0 8px 8px 0}
+.fb.done .fb-line{border-left-color:var(--correct)}
+.worked{margin:0;padding:0 0 0 1.25rem;font-size:.9rem;line-height:1.45;color:var(--text)}
+.worked li+li{margin-top:.2rem}
+.worked-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.fb-next{display:flex;justify-content:center}
+.feedback:empty{display:none}
+.example .tag{font-size:.74rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
+.example .steps{margin:.3rem 0 .2rem;padding-left:1.25rem;font-size:.95rem;line-height:1.5}
+.example .steps li+li{margin-top:.25rem}
+.example .step-row{display:flex;justify-content:center;margin-top:.4rem}
+.results{text-align:center;padding:1rem 0}
+.results h2{font-size:1.35rem;margin-bottom:.3rem}
+.final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.4rem 0 .1rem}
+.final-of{color:var(--muted);font-size:.9rem;margin-bottom:.5rem}
+.stats{color:var(--muted);line-height:1.9;font-size:.95rem;margin-bottom:.8rem}
+.stats b{color:var(--text)}
+
+/* Phone rule (canon §7.6.1): once a question is marked, the boxes and keys go and the feedback takes their place. */
+.qcard.fb-open #answer,.qcard.fb-open .ask-line,.qcard.fb-open #kpHolder{display:none}
+body.playing a.back-link{display:none}
+@media (max-width:420px){
+  .container{padding:.5rem}
+  .qcard{padding:.6rem .55rem;gap:.4rem}
+  .qtext{font-size:.96rem}
+  .hud{padding:.2rem .5rem}
+}
+@media (max-height:700px){.qtext{font-size:.9rem;line-height:1.35}.fb{padding:.5rem .6rem;gap:.35rem}.worked{font-size:.84rem}.hud-label{display:none}.hud{padding:.1rem .5rem;margin-bottom:.3rem}.qcard{gap:.3rem}.ans-row{padding:0}.ask-line{min-height:1.2em}.ask-line h2{display:none}.container{padding:.4rem}}
+@media (max-height:680px){.qcard.fb-open.keyfig #figure{display:none}}
+@media (max-height:620px){.qtext{font-size:.86rem;line-height:1.3}.hud-val{font-size:.85rem}.hud{padding:0 .5rem}.msg,.ask-line{display:none}.opts .btn{min-height:42px;padding:.2rem .4rem;font-size:.86rem}}
+@media (max-height:620px){.fb-next{order:1}.fb>.worked-h,.fb>.worked{order:2}}
+body.accessible{letter-spacing:.12em;word-spacing:.16em}
+body.accessible .hud-label,body.accessible .hud-val,body.accessible .ans-row,body.accessible .charts{letter-spacing:0}
+body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;max-width:65ch}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'answer' types the box (or taps an option) with i = 0 the right answer, i >= 1 a wrong one (named, then Next).
+{
+  "start": "PM.ui.start(1)",
+  "ready": "!!window.PM && PM.ui.state() === 'asking'",
+  "answer": [
+    "PM.ui.answer(i === 0);"
+  ]
+}
+-->
+<script src="../../schools/assets/answer.js"></script>
+<!-- The phone keypad for typed answers (MaffsKeypad, canon §4.4): no calculator in this game, so the keypad only. Fractions are typed in two boxes (MaffsFractionInput). -->
+<script src="../../schools/assets/keypad.js"></script>
+<script src="../../schools/assets/fraction-input.js"></script>
+<script src="../../schools/assets/probability-generator.js"></script>
+<script src="../../schools/assets/probability-game.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Possibly, Maybe</h1><div class="sub">Probability, from the scale to tree diagrams.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <svg class="logo" viewBox="0 0 300 100" role="img" aria-label="A probability scale from 0 to 1 with a dice">
+      <rect class="bg" x="0" y="0" width="300" height="100" rx="12"/>
+      <path class="ax" d="M40 70 H260"/><path class="ax" d="M40 62 V78 M150 62 V78 M260 62 V78"/>
+      <rect class="b0" x="104" y="14" width="40" height="40" rx="7"/><circle class="pip" cx="116" cy="26" r="3.5"/><circle class="pip" cx="124" cy="34" r="3.5"/><circle class="pip" cx="132" cy="42" r="3.5"/>
+      <path class="b1" d="M182 54 l12 -20 l12 20 Z"/>
+    </svg>
+    <div class="panel menu-info">
+      <p>Probability is a number from 0 (it cannot happen) to 1 (it must happen). Each stage starts with a worked example, then ten questions, easiest first.</p>
+      <p>Type fractions in the two boxes, top and bottom: 2/4 counts the same as 1/2 unless the question asks for the simplest form. Decimals and whole numbers go in the box. No calculator needed.</p>
+      <div class="stages" id="stageList"></div>
+      <p class="hud-label" style="text-align:center;margin-top:.7rem">No calculator · 10 questions a stage</p>
+    </div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+    <div class="maffs-start-note" data-maffs-start-note></div>
+  </div>
+
+  <div id="example" class="screen">
+    <div class="qcard example" id="exCard">
+      <div class="tag" id="exTag">Worked example</div>
+      <div class="qtext" id="exText"></div>
+      <div class="charts" id="exFigure"></div>
+      <ol class="steps" id="exSteps"></ol>
+      <div class="step-row"><button class="btn solid" id="exBtn" type="button">Show the first step</button></div>
+    </div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Stage</div><div class="hud-val" id="hudStage">1</div></div>
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/10</div></div>
+      <div class="hud-item"><div class="hud-label">Marks</div><div class="hud-val" id="hudScore">0</div></div>
+    </div>
+    <div class="qcard" id="qcard">
+      <div class="qtext" id="qtext"></div>
+      <div class="charts" id="figure"></div>
+      <div class="ask-line"><h2 id="instr">Type your answer</h2><div class="msg" id="msg" aria-live="polite"></div></div>
+      <div id="answer"></div>
+      <div class="kp-holder" id="kpHolder" hidden></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resTitle">Stage done</h2>
+      <div class="final-score" id="resScore">0</div>
+      <div class="final-of" id="resOf">marks</div>
+      <div class="stats" id="resStats"></div>
+      <div class="res-btns">
+        <button class="btn solid" id="nextStageBtn" type="button">Next: Stage 2</button>
+        <button class="btn" id="againBtn" type="button">Play this stage again</button>
+        <button class="btn" id="menuBtn" type="button">All stages</button>
+      </div>
+      <p id="teacherInvite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var G = window.MaffsProbabilityGame, A = window.MaffsAnswer, SLUG = 'possibly-maybe', PER = G.PER_STAGE, LAST = 5, FOOTER_PX = 40;
+  // One level of content (keys ks3 and gcse, no picker); the stages are boards, not levels, each its own analytics mode.
+  var level = MaffsLevel.resolve({ slug: 'possibly-maybe', levels: ['ks3', 'gcse'], fallback: 'ks3',
+    boards: ['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5'] });
+  var $ = function (id) { return document.getElementById(id); };
+  function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function touch() { return !!(window.matchMedia && matchMedia('(pointer: coarse)').matches); }
+  function boardOf(n) { return 'stage-' + n; }
+
+  var stage = 1, session = [], qi = 0, Q = null, state = 'menu', kp = null, inputs = [], fi = null, exQ = null, exAt = 0;
+  var marks = 0, answered = 0, rightCount = 0;
+
+  function show(id) {
+    ['menu', 'example', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    document.body.classList.toggle('playing', id === 'game' || id === 'example');
+    MaffsLock.screen($(id));
+  }
+
+  /* ---------- the menu ---------- */
+  (function () {
+    var h = '';
+    for (var n = 1; n <= LAST; n++) {
+      var S = G.STAGES[n];
+      h += '<button class="stage-btn" type="button" data-stage="' + n + '"><span class="n">' + n + '</span><span><span class="t">' + esc(S.name) +
+        '</span><span class="d">' + esc(S.blurb) + '</span></span></button>';
+    }
+    $('stageList').innerHTML = h;
+  })();
+
+  /* ---------- the pictures, drawn from the data ---------- */
+  var NS = 'http://www.w3.org/2000/svg', uid = 0;
+  function el(name, attrs, text) {
+    var e = document.createElementNS(NS, name);
+    for (var k in attrs) if (attrs.hasOwnProperty(k)) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function dims() {
+    var h = window.innerHeight;
+    return { spin: h < 560 ? 46 : (h < 620 ? 54 : (h < 700 ? 64 : 76)), cell: h < 620 ? 24 : 28, leaf: h < 560 ? 22 : (h < 620 ? 24 : (h < 700 ? 28 : 34)) };
+  }
+  function done(svg, W, H, label) {
+    svg.setAttribute('width', W); svg.setAttribute('height', Math.ceil(H)); svg.setAttribute('viewBox', '0 0 ' + W + ' ' + Math.ceil(H));
+    svg.setAttribute('aria-label', label);
+    return svg;
+  }
+
+  // Equal sectors round a circle, each with its colour's letter, and a key under it (letter and word, never colour alone).
+  function spinnerFig(ch, W) {
+    var d = dims(), r = d.spin, cx = W / 2, cy = r + 14, n = ch.sectors.length, svg = el('svg', { role: 'img', 'data-n': n });
+    var i, names = [];
+    for (i = 0; i < n; i++) {
+      var a0 = -Math.PI / 2 + 2 * Math.PI * i / n, a1 = -Math.PI / 2 + 2 * Math.PI * (i + 1) / n, s = ch.sectors[i];
+      var x0 = cx + r * Math.cos(a0), y0 = cy + r * Math.sin(a0), x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1);
+      svg.appendChild(el('path', { class: 'wedge k-' + s.name, 'data-colour': s.name, d: 'M' + cx.toFixed(1) + ' ' + cy.toFixed(1) + ' L' + x0.toFixed(1) + ' ' + y0.toFixed(1) +
+        ' A' + r + ' ' + r + ' 0 0 1 ' + x1.toFixed(1) + ' ' + y1.toFixed(1) + ' Z' }));
+      var am = (a0 + a1) / 2, rr = r * (n > 6 ? 0.72 : 0.62);
+      svg.appendChild(el('text', { class: 'lt', x: (cx + rr * Math.cos(am)).toFixed(1), y: (cy + rr * Math.sin(am) + 4).toFixed(1), 'text-anchor': 'middle' }, s.letter));
+      if (names.indexOf(s.name) < 0) names.push(s.name);
+    }
+    svg.appendChild(el('path', { class: 'ptr', d: 'M' + (cx - 6) + ' 2 L' + (cx + 6) + ' 2 L' + cx + ' 14 Z' }));
+    var key = names.map(function (nm) { return nm.charAt(0).toUpperCase() + ' = ' + nm; }).join('   ');
+    var H = cy + r + 18;
+    svg.appendChild(el('text', { x: (W / 2).toFixed(1), y: H - 2, 'text-anchor': 'middle', class: 'b', 'data-key-text': 1 }, key));
+    return done(svg, W, H + 6, 'A spinner with ' + n + ' equal sectors');
+  }
+  // A bag of counters drawn as discs, each with its colour's letter.
+  function bagFig(ch, W) {
+    var svg = el('svg', { role: 'img' }), r = 11, step = 27, per = Math.max(3, Math.floor((W - 8) / step)), k = 0, names = [];
+    ch.items.forEach(function (it) {
+      for (var j = 0; j < it.count; j++, k++) {
+        var cx = 6 + r + (k % per) * step, cy = 6 + r + Math.floor(k / per) * step;
+        svg.appendChild(el('circle', { class: 'disc k-' + it.name, 'data-colour': it.name, cx: cx, cy: cy, r: r }));
+        svg.appendChild(el('text', { class: 'lt', x: cx, y: cy + 4, 'text-anchor': 'middle' }, it.letter));
+      }
+      names.push(it.letter + ' = ' + it.name);
+    });
+    var rows = Math.ceil(k / per), H = 6 + rows * step + 18;
+    svg.appendChild(el('text', { x: (W / 2).toFixed(1), y: H - 4, 'text-anchor': 'middle', class: 'b', 'data-key-text': 1 }, names.join('   ')));
+    return done(svg, W, H + 4, 'A bag of counters');
+  }
+  function numberlineFig(ch, W) {
+    var svg = el('svg', { role: 'img', 'data-at': ch.at }), x0 = 30, x1 = W - 30, y = 46;
+    var X = function (v) { return x0 + v * (x1 - x0); };
+    svg.appendChild(el('line', { class: 'axis', x1: x0, x2: x1, y1: y, y2: y }));
+    [[0, '0'], [0.5, '1/2'], [1, '1']].forEach(function (t) {
+      svg.appendChild(el('line', { class: 'axis', x1: X(t[0]), x2: X(t[0]), y1: y - 6, y2: y + 6 }));
+      svg.appendChild(el('text', { x: X(t[0]).toFixed(1), y: y + 22, 'text-anchor': 'middle', class: 'b' }, t[1]));
+    });
+    svg.appendChild(el('path', { class: 'ptr', 'data-arrow': ch.at, d: 'M' + X(ch.at).toFixed(1) + ' ' + (y - 2) + ' l-7 -16 h14 Z' }));
+    return done(svg, W, y + 32, 'A probability scale from 0 to 1 with an arrow');
+  }
+  function textCell(svg, x, y, w, h, t, cls) {
+    svg.appendChild(el('rect', { class: 'cellbox', x: x.toFixed(1), y: y.toFixed(1), width: w.toFixed(1), height: h }));
+    svg.appendChild(el('text', { class: cls || '', x: (x + w / 2).toFixed(1), y: (y + h / 2 + 4).toFixed(1), 'text-anchor': 'middle', 'data-cell': t }, t));
+  }
+  function gridFig(ch, W) {
+    var d = dims(), nC = ch.colHead.length, hw = ch.flat ? 64 : d.cell + 2, cw = Math.min(ch.flat ? 40 : 34, Math.floor((W - hw - 2) / nC)), ch_ = ch.rowHead.length >= 6 && window.innerHeight < 700 ? 20 : d.cell;
+    var svg = el('svg', { role: 'img', 'data-cols': nC, 'data-rows': ch.rowHead.length }), i, j;
+    textCell(svg, 0, 0, hw, ch_, ch.corner || '', 'b');
+    for (j = 0; j < nC; j++) textCell(svg, hw + j * cw, 0, cw, ch_, ch.colHead[j], 'b');
+    for (i = 0; i < ch.rowHead.length; i++) {
+      textCell(svg, 0, (i + 1) * ch_, hw, ch_, ch.rowHead[i], 'b');
+      for (j = 0; j < nC; j++) textCell(svg, hw + j * cw, (i + 1) * ch_, cw, ch_, ch.cells[i][j]);
+    }
+    return done(svg, hw + nC * cw + 2, (ch.rowHead.length + 1) * ch_ + 2, 'A table of all the outcomes');
+  }
+  function tableFig(ch, W) {
+    var d = dims(), n = ch.head.length, cw = Math.min(64, Math.floor((W - 2) / n)), h = d.cell, y = 0;
+    var svg = el('svg', { role: 'img', 'data-cols': n });
+    if (ch.caption) { svg.appendChild(el('text', { x: 2, y: 13, class: 'b' }, ch.caption)); y = 20; }
+    ch.head.forEach(function (t, j) { textCell(svg, j * cw, y, cw, h, t, 'b'); });
+    ch.rows.forEach(function (row, i) { row.forEach(function (t, j) { textCell(svg, j * cw, y + (i + 1) * h, cw, h, t, t === '?' ? 'b' : ''); }); });
+    return done(svg, n * cw + 2, y + (ch.rows.length + 1) * h + 2, 'A table of probabilities or results');
+  }
+  // A two-stage tree: the first event's branches, then the second event's from each. Probabilities sit on the branches.
+  function treeFig(ch, W) {
+    var d = dims(), ls = d.leaf, H = ls * 4 + 14, svg = el('svg', { role: 'img', 'data-tree': 1 });
+    var xr = 8, x1 = Math.round(W * 0.34), x2 = Math.round(W * 0.64), yr = H / 2, i, j;
+    var y1 = [ls + 7, 3 * ls + 7];
+    for (i = 0; i < 2; i++) {
+      svg.appendChild(el('line', { class: 'br', x1: xr, y1: yr, x2: x1, y2: y1[i] }));
+      svg.appendChild(el('text', { class: 'pl', 'data-branch': 1, 'data-p': ch.first[i].p, x: ((xr + x1) / 2 + (i ? 6 : -6)).toFixed(1), y: ((yr + y1[i]) / 2 + (i ? 14 : -5)).toFixed(1), 'text-anchor': 'middle' }, ch.first[i].p));
+      var ly = [y1[i] - ls / 2, y1[i] + ls / 2];
+      for (j = 0; j < 2; j++) {
+        var b = ch.second[i][j];
+        svg.appendChild(el('line', { class: 'br', x1: x1, y1: y1[i], x2: x2, y2: ly[j] }));
+        svg.appendChild(el('text', { class: 'pl', 'data-branch': 2, 'data-p': b.p, x: ((x1 + x2) / 2).toFixed(1), y: ((y1[i] + ly[j]) / 2 + (j ? 14 : -4)).toFixed(1), 'text-anchor': 'middle' }, b.p));
+        svg.appendChild(el('text', { x: x2 + 6, y: ly[j] + 4, 'data-leaf': ch.first[i].label + ',' + b.label }, ch.first[i].label + ', ' + b.label));
+      }
+      svg.appendChild(el('text', { x: x1 + 4, y: y1[i] + (i ? 15 : -5), class: 'b', 'data-node': ch.first[i].label }, ch.first[i].label));
+    }
+    return done(svg, W, H, 'A tree diagram of two events, each Yes or No');
+  }
+
+  function drawFigure(into, q) {
+    into.innerHTML = '';
+    var ch = q.chart;
+    if (!ch) { into.hidden = true; return; }
+    into.hidden = false;
+    var W = Math.min((into.parentNode.clientWidth || 304) - 24, 340), f;
+    if (ch.type === 'spinner') f = spinnerFig(ch, W);
+    else if (ch.type === 'bag') f = bagFig(ch, W);
+    else if (ch.type === 'numberline') f = numberlineFig(ch, W);
+    else if (ch.type === 'grid') f = gridFig(ch, W);
+    else if (ch.type === 'table') f = tableFig(ch, W);
+    else f = treeFig(ch, W);
+    into.appendChild(f);
+  }
+
+  /* ---------- the stage's worked example ---------- */
+  function workedLines(q) { return q.worked.slice(); }
+  function renderLine(t) { return esc(t); }
+
+  function startStage(n, skipExample) {
+    MaffsLock.newSession();
+    stage = n;
+    ev('game_started', { game_slug: SLUG, level: level, mode: 'stage-' + n });
+    if (skipExample) { startQuestions(); return; }
+    exQ = G.example(n); exAt = 0;
+    show('example');
+    $('exTag').textContent = 'Stage ' + n + ': ' + G.STAGES[n].name + '. Worked example';
+    $('exText').innerHTML = '<p>' + renderLine(exQ.stem) + '</p>';
+    drawFigure($('exFigure'), exQ);
+    $('exSteps').innerHTML = '';
+    $('exBtn').textContent = 'Show the first step';
+    $('exBtn').className = 'btn solid';
+    MaffsLock.fresh($('exCard'));
+  }
+  $('exBtn').addEventListener('click', function () {
+    var lines = workedLines(exQ);
+    if (!MaffsLock.lock($('exCard'))) return;
+    if (exAt >= lines.length) { startQuestions(); return; }
+    $('exSteps').insertAdjacentHTML('beforeend', '<li>' + renderLine(lines[exAt]) + '</li>');
+    exAt++;
+    $('exBtn').textContent = exAt >= lines.length ? 'Start the questions' : 'Show the next step';
+    MaffsLock.fresh($('exCard'));
+    var b = $('exBtn').getBoundingClientRect(), over = b.bottom - (window.innerHeight - FOOTER_PX);
+    if (over > 0) window.scrollBy(0, over);
+  });
+
+  /* ---------- play ---------- */
+  function startQuestions() {
+    session = G.session(stage, Math.floor(Math.random() * 4294967296), PER);
+    qi = 0; marks = 0; answered = 0; rightCount = 0;
+    show('game');
+    $('hudStage').textContent = stage;
+    nextQuestion();
+  }
+  function nextQuestion() {
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    $('feedback').innerHTML = '';
+    $('qcard').classList.remove('fb-open');
+    if (qi >= session.length) { finish(); return; }
+    Q = session[qi++]; state = 'asking';
+    $('hudQ').textContent = qi + '/' + PER;
+    $('hudScore').textContent = marks;
+    $('qtext').innerHTML = '<p>' + renderLine(Q.stem) + '</p>';
+    $('figure').hidden = false;
+    drawFigure($('figure'), Q);
+    $('instr').textContent = Q.type === 'choice' ? 'Choose one' : (Q.type === 'fraction' ? 'Type the fraction' : 'Type the number');
+    $('msg').textContent = Q.type === 'choice' ? '' : (Q.simplest ? 'Give it in its simplest form' : 'No calculator');
+    buildAnswer();
+    MaffsLock.fresh($('answer'));
+    window.scrollTo(0, 0);
+  }
+
+  var CHECK = '<button class="btn solid" id="checkBtn" type="button" disabled>Check</button>';
+  function buildAnswer() {
+    var a = $('answer'), h = '';
+    $('kpHolder').innerHTML = ''; $('kpHolder').hidden = true; kp = null; inputs = []; fi = null;
+    if (Q.type === 'choice') {
+      var long = Q.options.some(function (o) { return o.length > 20; });
+      h = '<div class="opts' + (long ? ' one' : '') + '" role="group" aria-label="Answers">' + Q.options.map(function (o, i) { return '<button class="btn" type="button" data-opt="' + i + '">' + esc(o) + '</button>'; }).join('') + '</div>';
+      a.innerHTML = h; return;
+    }
+    if (Q.type === 'fraction') {
+      a.innerHTML = '<div class="ans-row" role="group" aria-label="Your answer"><span id="fracHost"></span>' + CHECK + '</div>';
+      fi = MaffsFractionInput.mount($('fracHost'), { label: 'Your answer as a fraction' });
+      inputs = fi.inputs.slice();
+    } else {
+      a.innerHTML = '<div class="ans-row" role="group" aria-label="Your answer"><label class="nb"><input type="text" inputmode="decimal" autocomplete="off" maxlength="6" aria-label="Your answer" data-i="0"></label>' +
+        (Q.unit ? '<span class="unit-sign" aria-hidden="true">' + esc(Q.unit) + '</span>' : '') + CHECK + '</div>';
+      inputs = Array.prototype.slice.call(a.querySelectorAll('input'));
+    }
+    var holder = $('kpHolder'), k = document.createElement('div');
+    holder.innerHTML = ''; holder.hidden = false; holder.appendChild(k);
+    kp = window.MaffsKeypad ? MaffsKeypad.mount(k, { targets: inputs, keys: {}, maxLength: 5, keepInView: a, foldInset: FOOTER_PX }) : null;
+    if (!(kp && kp.enabled && kp.enabled())) { holder.hidden = true; try { inputs[0].focus({ preventScroll: true }); } catch (e) {} }
+  }
+  // A number box takes digits and one decimal point; the fraction boxes (MaffsFractionInput) take digits only.
+  function cleanTyped(v) {
+    v = v.replace(/[^0-9.]/g, '');
+    var i = v.indexOf('.'); if (i >= 0) v = v.slice(0, i + 1) + v.slice(i + 1).replace(/\./g, '');
+    return v;
+  }
+  function raws() { return fi ? [fi.raw()] : inputs.map(function (i) { return i.value.trim(); }); }
+  function filled() { return fi ? fi.filled() : (inputs[0] && inputs[0].value.trim() !== ''); }
+  function refresh() { var b = $('checkBtn'); if (b) b.disabled = !filled(); }
+
+  function mark(rawsIn) {
+    if (state !== 'asking') return;
+    var r = G.mark(Q, rawsIn);
+    if (r.kind === 'unreadable' || r.kind === 'format') { $('msg').textContent = r.why; return; }
+    if (!MaffsLock.lock($('answer'))) return;
+    var ok = r.kind === 'right';
+    if (fi) fi.mark(ok ? 'right' : 'wrong');
+    answered++; if (ok) { rightCount++; marks++; }
+    $('hudScore').textContent = marks;
+    ev('question_answered', { game_slug: SLUG, level: level, mode: 'stage-' + stage, question_index: qi, correct: ok });
+    var fb = $('feedback'), last = qi >= PER;
+    $('qcard').classList.add('fb-open');
+    $('qcard').classList.add('keyfig');
+    if (ok) {
+      state = 'done';
+      var wl = workedLines(Q);
+      fb.innerHTML = '<div class="fb done"><div class="fb-line">Yes. ' + renderLine(wl[wl.length - 1]) + '</div>' +
+        '<div class="fb-next"><button class="btn solid" id="nextBtn" type="button">' + (last ? 'See results →' : 'Next →') + '</button></div></div>';
+      MaffsLock.fresh(fb);
+      $('nextBtn').focus();
+    } else {
+      state = 'wrong';
+      fb.innerHTML = '<div class="fb wrong"><div class="fb-line" data-help="reason">' + renderLine(r.why) + '</div><div class="fb-next"></div>' +
+        '<div class="worked-h">How it goes</div><ol class="worked">' + workedLines(Q).map(function (l) { return '<li>' + renderLine(l) + '</li>'; }).join('') + '</ol></div>';
+      MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance });
+    }
+  }
+  function advance() {
+    if (state === 'moving') return;
+    state = 'moving';
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    nextQuestion();
+  }
+
+  var finish = MaffsLock.finishOnce(function () {
+    state = 'done';
+    var S = G.STAGES[stage], max = PER, board = boardOf(stage), score = marks;
+    ev('game_completed', { game_slug: SLUG, level: level, mode: 'stage-' + stage, score: score, questions_answered: answered, questions_correct: rightCount });
+    if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, board, score, answered).catch(function () {});
+    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, board, score);
+    var pbKey = 'pm_best_' + stage, prev = parseInt(lsGet(pbKey) || '0', 10) || 0, pb = score > prev;
+    if (pb) { ev('personal_best_set', { game_slug: SLUG, level: level, mode: 'stage-' + stage, score: score, previous_best: prev }); lsSet(pbKey, String(score)); }
+    $('kpHolder').innerHTML = ''; $('kpHolder').hidden = true;
+    $('resTitle').textContent = 'Stage ' + stage + ' done: ' + S.name;
+    $('resScore').textContent = score;
+    $('resOf').textContent = 'marks, out of ' + max;
+    $('resStats').innerHTML = '<b>' + rightCount + '</b> right out of <b>' + answered + '</b> answers' + (pb ? '<br>New personal best' : '');
+    $('nextStageBtn').hidden = stage >= LAST;
+    $('nextStageBtn').dataset.stage = stage + 1;
+    $('nextStageBtn').textContent = 'Next: Stage ' + (stage + 1);
+    show('results');
+  });
+
+  /* ---------- wiring ---------- */
+  $('stageList').addEventListener('click', function (e) { var b = e.target.closest('[data-stage]'); if (b) startStage(parseInt(b.dataset.stage, 10)); });
+  $('nextStageBtn').addEventListener('click', function () { startStage(parseInt($('nextStageBtn').dataset.stage, 10)); });
+  $('againBtn').addEventListener('click', function () { startStage(stage); });
+  $('menuBtn').addEventListener('click', function () { state = 'menu'; show('menu'); });
+  $('answer').addEventListener('click', function (e) {
+    var o = e.target.closest('[data-opt]');
+    if (o) { mark([o.dataset.opt]); return; }
+    if (e.target.closest('#checkBtn')) mark(raws());
+  });
+  $('answer').addEventListener('input', function (e) {
+    if (e.target.tagName === 'INPUT') { if (!fi) e.target.value = cleanTyped(e.target.value); refresh(); }
+  });
+  $('answer').addEventListener('fraction-submit', function () { if (filled()) mark(raws()); });
+  $('answer').addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' || e.target.tagName !== 'INPUT' || fi) return;
+    e.preventDefault();
+    if (filled()) mark(raws());
+  });
+  $('feedback').addEventListener('click', function (e) { if (e.target.closest('#nextBtn') && state === 'done') advance(); });
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(lsGet(KEY) === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); lsSet(KEY, String(on)); apply(on); });
+  })();
+
+  // Read-only views of live state, for scripts/verify-possibly-maybe.py and the lock hint above.
+  window.PM = {
+    SLUG: SLUG,
+    ui: {
+      state: function () { return state; },
+      level: function () { return level; },
+      stage: function () { return stage; },
+      question: function () { return Q ? JSON.parse(JSON.stringify(Q)) : null; },
+      score: function () { return marks; },
+      start: function (n, example) { startStage(n, !example); },
+      // One bank question on screen by itself (stage, slot, seed), so a verifier can see every kind of question at every size.
+      preview: function (n, slot, seed) {
+        MaffsLock.newSession(); stage = n; marks = 0; answered = 0; rightCount = 0; qi = 0;
+        session = [G.adapt(window.MaffsProbability.question(n, slot, G.makeRng(seed || 1)))];
+        show('game'); $('hudStage').textContent = n; nextQuestion();
+      },
+      // Fill the boxes with a raw answer (a fraction as "n/d") and press Check, or tap a choice.
+      type: function (raw) {
+        if (Q.type === 'choice') { var b = $('answer').querySelector('[data-opt="' + raw + '"]'); if (b) b.click(); return; }
+        if (fi) { var p = String(raw).split('/'); fi.inputs[0].value = p[0] || ''; fi.inputs[1].value = p[1] || ''; }
+        else inputs[0].value = String(raw);
+        refresh();
+        $('checkBtn').click();
+      },
+      // Answer the question on screen: the right answer, or a wrong one.
+      answer: function (right) {
+        if (Q.type === 'choice') {
+          var pick = right ? Q.key : (Q.key + 1) % Q.options.length;
+          var b = $('answer').querySelector('[data-opt="' + pick + '"]'); if (b) b.click(); return;
+        }
+        if (Q.type === 'fraction') { this.type(right ? Q.key.num + '/' + Q.key.den : (Q.key.num + 7) + '/' + (Q.key.den + 11)); return; }
+        this.type(right ? Q.key : String(parseFloat(Q.key) + 7.5));
+      }
+    }
+  };
+})();
+</script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'possibly-maybe');</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>
