@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ci-line: The 6 P's, part 1 (the topic data file is the generator's output; no mark figure, AQA, Edexcel or "in development" in the page, no launch into a game; the four past-paper sites before Start; 10,000 sessions each way: six distinct covered topics in band order, frequencies in proportion to marks; every format marked by value through the page's own judge(), schema faults left out, five picked unseen first) | --part 1
-# ci-line: The 6 P's, part 2 (a full session at 1280 px with localStorage working, on fixture banks covering all seven formats: every format answered right and wrong, never-marked answers not marked, slips, working, five a topic and a topic card, results, nudge, practice links, tick-list and events; resumed mid-topic after a reload) | --part 2
+# ci-line: The 6 P's, part 2 (a full session at 1280 px with localStorage working, on fixture banks covering all nine formats: every format answered right and wrong, never-marked answers not marked, slips, working, five a topic and a topic card, results, nudge, practice links, tick-list and events; resumed mid-topic after a reload) | --part 2
 # ci-line: The 6 P's, part 3 (the same session at 320 px on a touch screen, typed on the phone keypad, with localStorage blocked: no sideways scroll on any screen, resumed mid-topic from window.name; a topic with no bank offers Skip only) | --part 3
 # ci-line: The 6 P's, part 4 (fault-injection self-test: the planted faults, each caught) | --part 4
 # ci-deps: the-6-ps/ schools/assets/exam-topics-ocr-foundation.json scripts/gen-exam-topics.py scripts/fixtures/six-ps/
@@ -13,11 +13,12 @@ WHAT IS CHECKED, AND AGAINST WHAT
              table (compared as data). The page types no figure: no number next to "mark", no audit figure (13.3,
              ...) and not the source sentence; every figure it shows is read from the file.
   Claims     neither "AQA" nor "Edexcel" appears in the page; "in development" appears nowhere (SIX-PS-SOON's intent);
-             no emoji outside the shared footer; the four past-paper sites are linked, each before Start.
+             no emoji outside the shared footer; the four past-paper sites are linked, each after Start (Start is the first thing
+             on the screen: contract SIX-PS-PLAYER-FIXES (f), Jon, 27 Oct 2026).
   No launch  no link into a game with burst parameters, no ?done= return handling, none of v1's tool events.
   Sessions   the page's own plan(), run 10,000 times with storage blocked and 10,000 times on one device: six distinct
              COVERED topics in Jon's band order, frequencies within tolerance of 10,000 x 6 x marks / total (as v1).
-  Marking    every fixture question (scripts/fixtures/six-ps/, all seven formats; not published) marked through the
+  Marking    every fixture question (scripts/fixtures/six-ps/, all nine formats; not published) marked through the
              page's own judge() against a table typed here from the schema (docs/six-ps-schema.md) and canon 7.1.3:
              right forms (6.50 for 6.5, 6/8 under "equivalent", 2 : 4 : 6), wrong values, SR-3's format cases (3.33 at
              1 d.p., 6/8 under "simplest", 7/4 for a mixed answer, 4 : 6), SR-2's money case (3.5), unreadable entries
@@ -116,8 +117,8 @@ SCRIPT = {
     'fx-4[0]': [('a', 'wrong+slip')],
     'fx-4[1]': [('d', 'right')],
     'fx-4[2]': [('a', 'wrong')],
-    'fx-4[3]': [('b', 'right')],
-    'fx-4[4]': [('c', 'right')],
+    'fx-4[3]': [({'x': '3', 'y': '-2'}, 'right')],
+    'fx-4[4]': [({'m': '45', 'e': '3'}, 'format'), ({'m': '4.5', 'e': '4'}, 'right')],
     'fx-5[0]': [(('40', None), 'nounit'), (('40', 'km'), 'wrong+slip')],
     'fx-5[1]': [(('2.55', 'g/cm³'), 'format'), (('2.6', 'g/cm³'), 'right')],
     'fx-5[2]': [(('30', 'km'), 'right')],
@@ -151,6 +152,12 @@ MARKING = [
     ('fx-3[3]', {'x': '-2', 'y': '5'}, 'correct'), ('fx-3[3]', {'x': '-2', 'y': '5.0'}, 'correct'),
     ('fx-3[3]', {'x': '2', 'y': '5'}, 'wrong'), ('fx-3[3]', {'x': '', 'y': '5'}, 'unreadable'),
     ('fx-4[0]', 'b', 'correct'), ('fx-4[0]', 'c', 'wrong'), ('fx-4[0]', '\\(8\\)', 'wrong'), ('fx-4[0]', '8', 'wrong'),
+    ('fx-4[3]', {'x': '3', 'y': '-2'}, 'correct'), ('fx-4[3]', {'x': '3.0', 'y': '-2.0'}, 'correct'),
+    ('fx-4[3]', {'x': '-2', 'y': '3'}, 'wrong'), ('fx-4[3]', {'x': '3', 'y': '2'}, 'wrong'), ('fx-4[3]', {'x': '', 'y': '3'}, 'unreadable'),
+    ('fx-4[4]', {'m': '4.5', 'e': '4'}, 'correct'), ('fx-4[4]', {'m': '45', 'e': '3'}, 'format'), ('fx-4[4]', {'m': '0.45', 'e': '5'}, 'format'),
+    ('fx-4[4]', {'m': '450', 'e': '2'}, 'format'), ('fx-4[4]', {'m': '4.5', 'e': '3'}, 'wrong'), ('fx-4[4]', {'m': '5.4', 'e': '4'}, 'wrong'),
+    ('fx-4[4]', {'m': '4.5', 'e': '5'}, 'wrong'), ('fx-4[4]', {'m': '', 'e': '4'}, 'unreadable'), ('fx-4[4]', {'m': '4.5', 'e': 'x'}, 'unreadable'),
+    ('fx-4[4]', {'m': '4.5', 'e': '4.5'}, 'unreadable'),
     ('fx-5[0]', ('40', 'km/h'), 'correct'), ('fx-5[0]', ('40', 'm/s'), 'wrong'), ('fx-5[0]', ('41', 'km/h'), 'wrong'),
     ('fx-5[0]', ('', 'km/h'), 'unreadable'),
     ('fx-5[1]', ('2.60', 'g/cm³'), 'correct'), ('fx-5[1]', ('2.55', 'g'), 'wrong'),
@@ -170,7 +177,7 @@ def as_input(q, v):
         return {'whole': v.get('whole', ''), 'num': v.get('num', ''), 'den': v.get('den', '')}
     if f == 'ratio':
         return {'parts': v}
-    if f == 'coordinates':
+    if f in ('coordinates', 'pair', 'standard_form'):
         return v
     if f == 'choice':
         return {'val': v}
@@ -197,7 +204,20 @@ def shown_answer(q):
         return ' : '.join(js_num(p) for p in a['parts'])
     if f == 'coordinates':
         return '(%s, %s)' % (sgn(a['x']), sgn(a['y']))
+    if f == 'pair':
+        return 'x = %s, y = %s' % (sgn(a['x']), sgn(a['y']))
+    if f == 'standard_form':
+        return '%s × 10%s' % (js_num(a['m']), sgn(a['e']))
     return None
+
+
+def squash(s):
+    """Text with every space (and no-break space) taken out: KaTeX sets its own spacing, so the answer line is compared without it."""
+    return re.sub(r'[\s\u00a0]+', '', s)
+
+
+ANSWER_LINE_JS = ("() => { const c = document.getElementById('qAnswerLine').cloneNode(true); "
+                  "c.querySelectorAll('.katex-mathml').forEach(e => e.remove()); return c.textContent; }")
 
 
 # ---------------------------------------------------------------- data and static
@@ -263,8 +283,8 @@ def static_checks(html, data, out):
         at = html.find('href="%s"' % url)
         if at < 0:
             out.append('the page does not link %s' % url)
-        elif start >= 0 and at > start:
-            out.append('%s is linked after the Start button' % url)
+        elif start >= 0 and at < start:
+            out.append('%s is linked before the Start button (Start comes first)' % url)
     if start < 0:
         out.append('the page has no Start button (id="startBtn")')
     if "'/schools/assets/exam-topics-ocr-foundation.json'" not in html:
@@ -336,6 +356,7 @@ class Browser:
         self.warnings = []
         self.queue = list(SESSION_FIXTURES if queue is None else queue)
         self.assigned = {}
+        self.real = {}           # topic id -> a real bank served in place of a fixture
         self.unmarked = 0        # never-marked answers typed (format, unreadable, no unit)
         self.formats = set()     # (format, right or wrong) marked
         self.ctx.expose_function('__mfgRecord', lambda n, p: self.events.append((n, json.loads(p))))
@@ -372,6 +393,8 @@ class Browser:
             self.errors.append('console.error: ' + m.text)
 
     def serve_bank(self, route, topic):
+        if topic in self.real:
+            return route.fulfill(status=200, content_type='application/json', body=json.dumps(self.real[topic]))
         if topic not in self.assigned:
             self.assigned[topic] = self.queue.pop(0) if self.queue else None
         name = self.assigned[topic]
@@ -524,9 +547,12 @@ def answer(b, q, v):
     elif f == 'ratio':
         for i, x in enumerate(v):
             fill(b, 'p%d' % i, x)
-    elif f == 'coordinates':
+    elif f in ('coordinates', 'pair'):
         fill(b, 'x', v['x'])
         fill(b, 'y', v['y'])
+    elif f == 'standard_form':
+        fill(b, 'm', v['m'])
+        fill(b, 'e', v['e'])
     elif f == 'number_unit':
         fill(b, 'value', v[0])
         if v[1]:
@@ -624,11 +650,11 @@ def play_topic(b, m, topic, out, tag, narrow=False, stop_after=None, offset=0, r
                     out.append('%s: %s: a wrong answer does not show its %d lines of working' % (tag, ref, len(worked)))
                 if slip and worked and p.evaluate("() => !(document.getElementById('qSlip').compareDocumentPosition(document.getElementById('qWorked')) & 4)"):
                     out.append('%s: %s: the slip line is not before the working' % (tag, ref))
-                line = p.inner_text('#qAnswerLine').strip() if p.is_visible('#qAnswerLine') else ''
+                line = p.evaluate(ANSWER_LINE_JS) if p.is_visible('#qAnswerLine') else ''
                 want_line = shown_answer(q)
-                if not line.startswith('The answer: ') or (want_line and line != 'The answer: ' + want_line) or \
-                        (want_line is None and not p.query_selector('#qAnswerLine .katex')):
-                    out.append('%s: %s: answer line %r, expected %r' % (tag, ref, line, want_line or '(KaTeX)'))
+                if not line.startswith('The answer: ') or (want_line and squash(line) != squash('The answer: ' + want_line)) or \
+                        (q['format'] != 'choice' and not p.query_selector('#qAnswerLine .katex')):
+                    out.append('%s: %s: answer line %r, expected %r drawn by KaTeX' % (tag, ref, line, want_line or '(KaTeX)'))
                 if q['format'] == 'choice' and not p.query_selector('#qOpts button.key[data-val="%s"]' % q['answer']['val']):
                     out.append('%s: %s: the right option is not marked after a wrong answer' % (tag, ref))
             if narrow:
@@ -703,11 +729,17 @@ def play(pw, base, html, data, out, blocked, narrow=False):
                 scores.append(play_topic(b, m, t, out, tag, narrow))
             if scores[-1] is None:
                 return
+            n_plan = p.eval_on_selector_all('#planList li', 'e => e.length')
+            n_state = p.evaluate('() => SixPs.session().plan.length')
+            if n_plan != K or n_state != K:
+                out.append('%s: after topic %d "Your six" shows %d topics and the session holds %d, not %d' % (tag, m, n_plan, n_state, K))
             tap('#nextTopicBtn')
         p.wait_for_selector('#results:not([hidden])', timeout=5000)
         if narrow:
             sideways(p, 'the results', out)
         rows = visible_text(p, '#resultList li')
+        if len(rows) != K:
+            out.append('%s: the results list %d topics, not %d' % (tag, len(rows), K))
         links = p.evaluate("() => Array.from(document.querySelectorAll('#resultList li .more a')).map(a => [a.getAttribute('href'), a.textContent])")
         for k, t in enumerate(topics):
             row = rows[k] if k < len(rows) else ''
@@ -796,6 +828,120 @@ def no_bank(pw, base, html, data, out):
         b.close()
 
 
+def check_start_screen(pw, base, html, out):
+    """Start is on the screen at 320 x 568 without a scroll; the explainer is open on a first visit and closed on a return."""
+    b = Browser(pw, base, html, size=(320, 568))
+    try:
+        b.open()
+        pos = b.page.evaluate("() => { const s = document.getElementById('startBtn').getBoundingClientRect(); "
+                              "return { bottom: Math.round(s.bottom), vh: innerHeight, open: document.getElementById('aboutBox').open }; }")
+        if pos['bottom'] > pos['vh']:
+            out.append('the start screen at 320 x 568: Start ends at %d px, below the %d px fold' % (pos['bottom'], pos['vh']))
+        if not pos['open']:
+            out.append('the start screen: the explainer is closed on a first visit')
+        b.page.reload()
+        b.page.wait_for_function("() => !!window.SixPs && !!SixPs.data()", timeout=10000)
+        if b.page.evaluate("() => document.getElementById('aboutBox').open"):
+            out.append('the start screen: the explainer is open on a return visit (it should be under "About The 6 P\u2019s", closed)')
+        out.extend('start screen: page error: %s' % e for e in b.errors)
+    finally:
+        b.close()
+
+
+def check_expiry(pw, base, html, data, out):
+    """A saved session is offered for four hours and then not: one ten minutes old is, one five hours old is not."""
+    for age_h, offered in ((0.2, True), (5, False)):
+        b = Browser(pw, base, html)
+        try:
+            ids = [t['id'] for t in data['covered']][:K]
+            sess = {'v': 2, 'plan': [{'id': x} for x in ids], 'i': 0, 'results': {}, 'cur': None, 'qn': 0, 'finishedSent': False,
+                    'feedbackSent': False, 'at': 0}
+            b.ctx.add_init_script("try { var s = %s; s.at = Date.now() - %d; localStorage.setItem('six-ps-session-v2', JSON.stringify(s)); } catch (e) {}"
+                                  % (json.dumps(sess), int(age_h * 3600 * 1000)))
+            b.open()
+            if b.page.is_visible('#resumeBtn') != offered:
+                out.append('a saved session %s hours old is %s: stale session offered' % (age_h, 'not offered' if offered else 'offered'))
+        finally:
+            b.close()
+
+
+def check_chosen(pw, base, html, out):
+    """A unit picked but not yet checked is navy, never the green or red that means right or wrong."""
+    b = Browser(pw, base, html, queue=['fx-5'] * K)
+    try:
+        b.open()
+        b.page.click('#startBtn')
+        b.page.wait_for_selector('#qUnits button', timeout=5000)
+        b.page.click('#qUnits button')
+        col = b.page.evaluate("() => getComputedStyle(document.querySelector('#qUnits button[aria-pressed=true]')).borderTopColor")
+        if col != 'rgb(26, 39, 68)':
+            out.append('a unit chosen but not checked has the border %s, not navy: it reads as right or wrong' % col)
+    finally:
+        b.close()
+
+
+def real_value(q, wrong=False):
+    """A typed value for a real question: its own answer, or one that is wrong."""
+    a, f = q['answer'], q['format']
+    if f == 'choice':
+        return next(o['val'] for o in q['options'] if (o['val'] != a['val']) == wrong and (wrong or o['val'] == a['val']))
+    if f == 'number':
+        return '7' if wrong else (('%.*f' % (a['dp'], a['value'])) if 'dp' in a else js_num(a['value']))
+    if f == 'money':
+        return '1.23' if wrong else '%.2f' % (a['pence'] / 100)
+    if f == 'fraction':
+        return {'whole': '', 'num': '9', 'den': '13'} if wrong else \
+            {'whole': str(a['w']) if 'w' in a else '', 'num': str(a['n']), 'den': str(a['d'])}
+    if f == 'ratio':
+        return ['7', '9'] if wrong else [js_num(p) for p in a['parts']]
+    if f in ('coordinates', 'pair'):
+        return {'x': '8', 'y': '9'} if wrong else {'x': js_num(a['x']), 'y': js_num(a['y'])}
+    if f == 'standard_form':
+        return {'m': '9', 'e': '9'} if wrong else {'m': js_num(a['m']), 'e': js_num(a['e'])}
+    if f == 'number_unit':
+        return ('7', a['unit']) if wrong else (js_num(a['value']), a['unit'])
+    raise AssertionError(f)
+
+
+def phone_feedback(pw, base, html, data, out):
+    """On a 375 x 667 phone, on every real bank: after Check the keypad is gone and the verdict and Next are on the screen with no scroll,
+    one answer right and one wrong, and nothing scrolls sideways."""
+    for topic in data['covered']:
+        bank = json.load(open(os.path.join(ROOT, 'schools', 'assets', 'six-ps', topic['id'] + '.json'), encoding='utf-8'))
+        b = Browser(pw, base, html, size=(375, 667))
+        b.real[topic['id']] = bank
+        others = [x['id'] for x in data['covered'] if x['id'] != topic['id']][:K - 1]
+        sess = {'v': 2, 'plan': [{'id': x} for x in [topic['id']] + others], 'i': 0, 'results': {}, 'cur': None, 'qn': 0,
+                'finishedSent': False, 'feedbackSent': False}
+        b.ctx.add_init_script("try { var s = %s; s.at = Date.now(); localStorage.setItem('six-ps-session-v2', JSON.stringify(s)); } catch (e) {}" % json.dumps(sess))
+        try:
+            b.open()
+            b.page.tap('#resumeBtn')
+            for n, wrong in enumerate((False, True)):
+                b.page.wait_for_selector('#play:not([hidden])', timeout=8000)
+                q = b.page.evaluate('() => SixPs.question()')
+                answer(b, q, real_value(q, wrong))
+                b.page.wait_for_selector('#qFb:not([hidden])', timeout=4000)
+                m = b.page.evaluate("""() => { const r = id => { const e = document.getElementById(id); return e && !e.hidden ? e.getBoundingClientRect() : null; };
+                    const nb = document.querySelector('#qNext button'), nr = nb ? nb.getBoundingClientRect() : null, vr = r('qVerdict');
+                    return { verdict: vr ? [Math.round(vr.top), Math.round(vr.bottom)] : null, next: nr ? [Math.round(nr.top), Math.round(nr.bottom)] : null,
+                             vh: innerHeight, sx: document.documentElement.scrollWidth - innerWidth, keys: !document.getElementById('qKeys').hidden }; }""")
+                what = '%s %s (%s, %s)' % (topic['id'], q['id'], q['format'], 'wrong' if wrong else 'right')
+                if m['keys']:
+                    out.append('375 x 667: %s: the keypad is still showing after Check' % what)
+                if not m['verdict'] or m['verdict'][0] < 0 or m['verdict'][1] > m['vh']:
+                    out.append('375 x 667: %s: the verdict is not on the screen (%s of %d px)' % (what, m['verdict'], m['vh']))
+                if not m['next'] or m['next'][1] > m['vh']:
+                    out.append('375 x 667: %s: Next is not on the screen (%s of %d px)' % (what, m['next'], m['vh']))
+                if m['sx'] > 0:
+                    out.append('375 x 667: %s: the page scrolls sideways by %d px' % (what, m['sx']))
+                if n == 0:
+                    b.page.tap('#qNext button')
+            out.extend('375 x 667: %s: page error: %s' % (topic['id'], e) for e in b.errors)
+        finally:
+            b.close()
+
+
 def one_topic(pw, base, html, data, out, name):
     """One topic on fixture `name`, to its card (the plants' short flow)."""
     b = Browser(pw, base, html, queue=[name] * K)
@@ -827,6 +973,14 @@ def check(html, data, out, parts):
                     out.extend('page error: ' + e for e in b.errors)
                 finally:
                     b.close()
+            if '2' in parts or 'start' in parts:
+                guarded(out, 'the start screen at 320 x 568', lambda: check_start_screen(pw, base, html, out))
+            if '2' in parts or 'expiry' in parts:
+                guarded(out, 'the saved-session expiry', lambda: check_expiry(pw, base, html, data, out))
+            if '2' in parts or 'chosen' in parts:
+                guarded(out, 'the chosen-unit colour', lambda: check_chosen(pw, base, html, out))
+            if '3' in parts:
+                guarded(out, 'the verdict and Next on a 375 x 667 phone', lambda: phone_feedback(pw, base, html, data, out))
             if '2' in parts:
                 guarded(out, 'the session at 1280 px', lambda: play(pw, base, html, data, out, blocked=False))
             if '3' in parts:
@@ -870,6 +1024,19 @@ PLANTS = [
     ('"in development" restored',
      [("These topics carry marks too, and they're next on the list.", "These topics carry marks too, and their games are in development.")],
      ['static'], r'"in development" appears'),
+    ('a list drawn twice appends to itself ("Your six" doubled after a resume)',
+     [("    el.textContent = '';\n    el.appendChild(frag);", "    el.appendChild(frag);")],
+     ['2'], r'"Your six" shows'),
+    ('a unit chosen but not checked drawn green',
+     [("border-color: var(--navy); background: #e8ecf5; box-shadow: inset 0 0 0 1px var(--navy); }   /* chosen, not checked: navy */",
+       "border-color: var(--correct); background: #e8ecf5; box-shadow: inset 0 0 0 1px var(--correct); }")],
+     ['chosen'], r'not navy'),
+    ('a standard-form answer of 45 x 10^3 marked correct',
+     [("if (!(Math.abs(m) >= 1 && Math.abs(m) < 10)) {", "if (false) {")],
+     ['marking'], r"fx-4\[4\] typed .* gave 'correct', expected 'format'"),
+    ('a session left five hours still offered',
+     [("(now === undefined ? Date.now() : now) - s.at > SESSION_MAX_MS", "false")],
+     ['expiry'], r'stale session offered'),
     ('a right value in the wrong form marked wrong (SR-3)',
      [("if (res.result !== 'correct' && res.result !== 'wrong') {", "if (res.result === 'unreadable' || res.result === 'nounit') {")],
      ['topic:fx-2'], r"\(format\) was marked"),

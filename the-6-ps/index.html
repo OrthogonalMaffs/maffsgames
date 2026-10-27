@@ -106,12 +106,17 @@
   .qtopic { display: flex; flex-wrap: wrap; gap: 0.25rem 0.75rem; align-items: baseline; margin-bottom: 0.6rem; }
   .qtopic h3 { margin: 0; }
   .calc { font-size: 0.85rem; font-weight: 600; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 0.05rem 0.6rem; }
-  .stem { font-size: 1.1rem; margin-bottom: 0.75rem; }
+  .stem { font-size: 1.1rem; line-height: 1.8; margin-bottom: 1rem; }
   .stem .katex, .opt .katex { font-size: 1.15em; }
   .worked .katex, .answer-line .katex, .slip .katex { font-size: 1.05em; }
+  /* Room for tall maths (fractions, powers, roots): a line of the question, an option and a working line each have height to spare. */
+  .stem .katex, .opt .katex, .worked .katex, .answer-line .katex, .slip .katex { display: inline-block; padding: 0.15em 0; line-height: 1.5; }
+  .opt { line-height: 1.7; }
+  .worked li, .slip, .answer-line { line-height: 1.8; }
+  .nb { white-space: nowrap; }   /* an equation in plain text never breaks inside itself */
   .diagram { margin: 0.5rem 0 1rem; color: var(--text); }
   .diagram svg { display: block; max-width: 100%; height: auto; max-height: 320px; margin: 0 auto; }
-  .area { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; margin: 0.5rem 0; }
+  .area { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; margin: 1.1rem 0 0.5rem; }
   .boxes { display: inline-flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; font-family: var(--font-num); font-size: 1.15rem; }
   .ans-in {
     font: inherit; font-family: var(--font-num); font-size: 1.15rem; width: 7.5rem; min-height: 44px;
@@ -119,6 +124,16 @@
   }
   .ans-in.short { width: 4.2rem; text-align: center; }
   .ans-in:focus { outline: 3px solid var(--accent); outline-offset: 1px; border-color: var(--accent-dim); }
+  .ans-in.maffs-keypad-selected { border-color: var(--navy); outline-color: var(--navy); }   /* chosen, not checked: navy */
+  .ans-in.right { border-color: var(--correct); background: var(--tint); outline: 0; }
+  .ans-in.wrong { border-color: var(--wrong); outline: 0; }
+  /* The shared keypad's "typing here" tag sits wholly above its box, with room reserved for it. */
+  .maffs-keypad-cue-answer { transform: translateY(-85%); }
+  .boxes { padding-top: 0.5rem; }
+  .lab { font-weight: 700; color: var(--navy); }
+  .ans-in.pow { width: 3.6rem; text-align: center; }
+  .times { display: inline-flex; align-items: center; gap: 0.3rem; }
+  .times sup, .times .exp { position: relative; top: -0.6rem; }
   .frac { display: inline-flex; flex-direction: column; align-items: center; gap: 0.2rem; }
   .frac .bar { width: 100%; height: 2px; background: var(--text); }
   .units, .opts { display: flex; flex-wrap: wrap; gap: 0.5rem; }
@@ -128,27 +143,36 @@
   }
   .opts { flex-direction: column; align-items: stretch; margin: 0.5rem 0; }
   .opt { text-align: left; font-size: 1.05rem; }
-  .unit:hover, .opt:hover { border-color: var(--accent); }
-  .unit[aria-pressed="true"] { border-color: var(--accent-dim); background: var(--tint); box-shadow: inset 0 0 0 1px var(--accent-dim); }
-  .opt.picked.right { border-color: var(--correct); }
+  @media (hover: hover) { .unit:hover, .opt:hover { border-color: var(--navy); } }   /* never a sticky hover on a touch screen */
+  .unit[aria-pressed="true"] { border-color: var(--navy); background: #e8ecf5; box-shadow: inset 0 0 0 1px var(--navy); }   /* chosen, not checked: navy */
+  .opt.picked.right { border-color: var(--correct); background: var(--tint); }
   .opt.picked.wrong { border-color: var(--wrong); }
-  .opt.key { border-color: var(--correct); border-style: dashed; }
+  .opt.picked.right::after { content: "  \2713 Correct"; color: var(--correct); font-weight: 700; }
+  .opt.picked.wrong::after { content: "  \2717 Not quite"; color: var(--wrong); font-weight: 700; }
+  .opt.key { border-color: var(--correct); background: var(--tint); }
+  .opt.key::after { content: "  \2713 The answer"; color: var(--correct); font-weight: 700; }
   .msg { color: var(--hint); font-weight: 600; min-height: 1.6em; margin: 0.25rem 0; }
   .fb { border-radius: 10px; padding: 0.75rem 1rem; margin: 0.75rem 0; border: 2px solid var(--border); }
   .fb[data-verdict="right"] { border-color: var(--correct); }
   .fb[data-verdict="wrong"] { border-color: var(--wrong); }
-  .verdict { font-weight: 700; font-size: 1.1rem; }
+  .verdict { font-weight: 700; font-size: 1.15rem; }
   .fb[data-verdict="right"] .verdict { color: var(--correct); }
   .fb[data-verdict="wrong"] .verdict { color: var(--wrong); }
   .slip { font-weight: 600; margin: 0.35rem 0; }
   .worked { margin: 0.35rem 0 0.35rem 1.25rem; }
   .worked li { margin: 0.15rem 0; }
-  .answer-line { margin-top: 0.35rem; }
+  .answer-line { margin-top: 0.35rem; color: var(--correct); font-weight: 700; }
+  .slim { color: var(--navy); font-weight: 700; font-size: 0.95rem; margin: 0 0 0.6rem; }
+  .lede { font-size: 1.05rem; margin: 0.25rem 0 0; }
+  details.about { margin: 1.25rem 0 0.5rem; }
+  details.about > summary { cursor: pointer; color: var(--accent-dim); font-weight: 700; font-size: 1.1rem; padding: 0.6rem 0; min-height: 44px; }
+  .worked.single { list-style: none; margin-left: 0; }
   .next { margin-top: 0.5rem; }
   [hidden] { display: none !important; }
   @media (max-width: 480px) {
     h1 { font-size: 1.8rem; }
-    .container { padding: 1.5rem 1rem 3.5rem; }   /* clear of the fixed 40 px footer */
+    .saying { font-size: 1rem; margin: 0.2rem 0 0.6rem; }
+    .container { padding: 1rem 1rem 3.5rem; }   /* clear of the fixed 40 px footer */
     .nav { padding: 0.85rem 1rem; }
     .card { padding: 1rem; }
   }
@@ -169,15 +193,25 @@
 
 <main class="container">
 
+<header id="mast">
 <h1>The 6 P's</h1>
 <p class="saying">Proper Preparation Prevents Pretty Poor Performance.</p>
+</header>
+<p class="slim" id="slim" hidden></p>
 
 <p id="loadError" class="note" hidden>The topic list didn't load. Refresh the page to try again.</p>
 
 <!-- Start screen -->
 <section id="intro">
-  <p>Six short sets of questions on the topics that carry the most marks at GCSE Foundation, five questions each, in
-    about 20 to 25 minutes. Everything happens on this page.</p>
+  <p class="lede">Six topics, five questions each, about 20 minutes.</p>
+
+  <div class="actions" id="startActions">
+    <button class="btn" id="startBtn" type="button" disabled>Start</button>
+    <button class="btn secondary" id="resumeBtn" type="button" hidden>Carry on where you left off</button>
+  </div>
+
+  <details class="about" id="aboutBox" open>
+  <summary>About The 6 P's</summary>
   <p>Built closest to OCR's Foundation papers. These are the core skills every board's Foundation papers test, so it's useful whichever board you sit.</p>
 
   <h2>What it isn't</h2>
@@ -190,11 +224,7 @@
   </ul>
   <p class="muted">Nothing here is timed against you, and nothing is a test. Get some wrong: that's where the marks are hiding.
     This is new and still being built, so tell us what works and what doesn't on the <a href="/feedback/">feedback page</a>.</p>
-
-  <div class="actions" id="startActions">
-    <button class="btn" id="startBtn" type="button" disabled>Start</button>
-    <button class="btn secondary" id="resumeBtn" type="button" hidden>Carry on where you left off</button>
-  </div>
+  </details>
 
   <h2>Coming soon</h2>
   <p class="muted">These topics carry marks too, and they're next on the list.</p>
@@ -222,16 +252,16 @@
       <div class="opts" id="qOpts" hidden></div>
       <div class="actions" id="qCheckRow"><button class="btn" id="checkBtn" type="button">Check</button></div>
     </div>
-    <div id="qKeys"></div>
     <p class="msg" id="qMsg" role="status" aria-live="polite"></p>
     <div class="fb" id="qFb" hidden>
       <p class="verdict" id="qVerdict"></p>
+      <p class="answer-line" id="qAnswerLine" hidden></p>
       <p class="slip" id="qSlip" hidden></p>
       <button class="linkish" id="showWorkBtn" type="button" hidden>Show the working</button>
       <ol class="worked" id="qWorked" hidden></ol>
-      <p class="answer-line" id="qAnswerLine" hidden></p>
       <div class="next" id="qNext" data-maffs-lock-skip></div>
     </div>
+    <div id="qKeys"></div>
   </div>
   <div class="actions"><button class="linkish" id="skipBtn" type="button">Skip this topic</button></div>
 </section>
@@ -307,11 +337,13 @@
   var CREDIT_KEY = 'six-ps-credit-v1';
   var SEEN_KEY = 'six-ps-seen-v1';
   var SEEN_CAP = 60;      // ids remembered a topic
+  var SESSION_MAX_MS = 4 * 60 * 60 * 1000;   // a saved session older than this is not offered (shared computers; Jon, 27 Oct 2026)
+  var VISITED_KEY = 'six-ps-visited-v1';     // a return visit opens with the explainer closed
   var NAME_PREFIX = 'six-ps:';
   var SLUG = 'the-6-ps';
   var LEVEL = 'all';      // the page has no levels
   var NO_FALLBACK = 2147483647;   // the longest delay setTimeout takes: a wrong answer's working waits for Next
-  var FORMATS = ['number', 'money', 'fraction', 'ratio', 'coordinates', 'choice', 'number_unit'];
+  var FORMATS = ['number', 'money', 'fraction', 'ratio', 'coordinates', 'choice', 'number_unit', 'pair', 'standard_form'];
 
   function tenths(t) { return Math.round(t.marks * 10); }
 
@@ -431,13 +463,16 @@
       case 'ratio': return Array.isArray(a.parts) && (a.parts.length === 2 || a.parts.length === 3) &&
         a.parts.every(function (p) { return isNum(p) && p > 0; });
       case 'coordinates': return isNum(a.x) && isNum(a.y);
+      case 'pair': return isNum(a.x) && isNum(a.y);
+      case 'standard_form': return isNum(a.m) && isInt(a.e) && Math.abs(a.m) >= 1 && Math.abs(a.m) < 10;   // the key is itself in standard form
       case 'choice': return isStr(a.val);
     }
     return false;
   }
 
   var RULES = { number: ['exact', 'range'], number_unit: ['exact', 'range'], fraction: ['equivalent', 'simplest'],
-                ratio: ['equivalent', 'simplest'], money: ['exact'], coordinates: ['exact'], choice: ['exact'] };
+                ratio: ['equivalent', 'simplest'], money: ['exact'], coordinates: ['exact'], choice: ['exact'],
+                pair: ['exact'], standard_form: ['exact'] };
 
   // The accept rule as {rule, lo, hi}: absent means the format's default (the schema's ratio rule may be a bare string).
   function acceptOf(q) {
@@ -557,10 +592,23 @@
         }
         return { result: 'correct', msg: '' };
       }
-      case 'coordinates': {
+      case 'coordinates':
+      case 'pair': {
         var rx = MaffsAnswer.exact(inp.x, ans.x), ry = MaffsAnswer.exact(inp.y, ans.y);
         if (rx === 'unreadable' || ry === 'unreadable') return { result: 'unreadable', msg: MaffsAnswer.message('unreadable', '', {}) };
         return { result: rx === 'correct' && ry === 'correct' ? 'correct' : 'wrong', msg: '' };
+      }
+      case 'standard_form': {
+        // m x 10^e is right when its value is the key's AND m is at least 1 and under 10. The same value in another form
+        // (45 x 10^3 for 4.5 x 10^4) is never marked: SR-3's format message, and the student writes it again.
+        var m = MaffsAnswer.parse(inp.m), e = MaffsAnswer.parse(inp.e);
+        if (m === null || e === null || Math.floor(e) !== e) return { result: 'unreadable', msg: MaffsAnswer.message('unreadable', '', {}) };
+        var d = e - ans.e, same = Math.abs(m * Math.pow(10, d) - ans.m) <= 1e-9 * Math.max(1, Math.abs(ans.m));
+        if (!same) return { result: 'wrong', msg: '' };
+        if (!(Math.abs(m) >= 1 && Math.abs(m) < 10)) {
+          return { result: 'format', msg: 'Right value, but not in standard form: the first number must be at least 1 and less than 10.' };
+        }
+        return { result: 'correct', msg: '' };
       }
       case 'choice':
         return { result: inp.val === ans.val ? 'correct' : 'wrong', msg: '' };
@@ -579,20 +627,24 @@
   }
 
   function signed(x) { return String(x).replace(/^-/, '−'); }
+  function tx(s) { return '\\(' + s + '\\)'; }
+  function num(x, dp) { return dp !== undefined ? x.toFixed(dp) : String(x); }   // for KaTeX: a leading "-" is its own minus
 
-  // The answer as it is shown after marking (\( \) where it is maths).
+  // The answer as it is shown after marking: every number through KaTeX, as the working is, so the page has one maths font.
   function answerText(q) {
     var a = q.answer;
     switch (q.format) {
-      case 'number': return (a.dp !== undefined ? signed(a.value.toFixed(a.dp)) : signed(a.value)) + (q.unit ? ' ' + q.unit : '');
-      case 'number_unit': return (a.dp !== undefined ? signed(a.value.toFixed(a.dp)) : signed(a.value)) + ' ' + a.unit;
+      case 'number': return tx(num(a.value, a.dp)) + (q.unit ? (q.unit === '°' ? '' : ' ') + q.unit : '');
+      case 'number_unit': return tx(num(a.value, a.dp)) + ' ' + a.unit;
       case 'money':
-        return '£' + (a.pence / 100).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        return tx('\\pounds ' + (a.pence / 100).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '{,}'));
       case 'fraction':
         return '\\(' + (a.w !== undefined ? a.w : '') + (a.w === undefined && a.n < 0 ? '-' : '') +
           '\\frac{' + Math.abs(a.n) + '}{' + a.d + '}\\)';
-      case 'ratio': return a.parts.join(' : ');
-      case 'coordinates': return '(' + signed(a.x) + ', ' + signed(a.y) + ')';
+      case 'ratio': return tx(a.parts.join(' : '));
+      case 'coordinates': return tx('(' + a.x + ', ' + a.y + ')');
+      case 'pair': return tx('x = ' + a.x + ',\\ y = ' + a.y);
+      case 'standard_form': return tx(num(a.m) + ' \\times 10^{' + a.e + '}');
       case 'choice':
         for (var i = 0; i < q.options.length; i++) if (q.options[i].val === a.val) return q.options[i].label;
     }
@@ -653,6 +705,7 @@
         return readName();
       },
       setSession: function (s) {
+        s.at = Date.now();      // when the session was last saved: a session left for SESSION_MAX_MS is not offered
         var json = JSON.stringify(s);
         if (ls) { try { ls.setItem(SESSION_KEY, json); return; } catch (e) { /* fall through */ } }
         try { window.name = NAME_PREFIX + json; } catch (e) { /* in memory only */ }
@@ -663,6 +716,8 @@
       },
       // undefined: no rotation possible (blocked); {} or a stored map: rotate.
       getCredit: function () { return ls ? readJson(CREDIT_KEY) : undefined; },
+      visited: function () { try { return !!(ls && ls.getItem(VISITED_KEY)); } catch (e) { return false; } },
+      setVisited: function () { try { if (ls) ls.setItem(VISITED_KEY, '1'); } catch (e) { /* ignore */ } },
       setCredit: function (c) { if (ls) { try { ls.setItem(CREDIT_KEY, JSON.stringify(c)); } catch (e) { /* ignore */ } } },
       getSeen: function (topic) { var m = ls ? readJson(SEEN_KEY) : {}; return Array.isArray(m[topic]) ? m[topic] : []; },
       addSeen: function (topic, ids) {
@@ -688,7 +743,7 @@
     K: K, PER_TOPIC: PER_TOPIC, DATA_URL: DATA_URL, BANK_DIR: BANK_DIR, FORMATS: FORMATS,
     canDraw: canDraw, drawRandom: drawRandom, drawRotating: drawRotating, bandOrder: bandOrder,
     practiceUrl: practiceUrl, plan: plan, skip: skip, totals: totals, weakest: weakest, marksText: marksText,
-    makeStore: makeStore, problem: problem, judge: judge, slipFor: slipFor, answerText: answerText, pickFive: pickFive,
+    makeStore: makeStore, problem: problem, valid: valid, SESSION_MAX_MS: SESSION_MAX_MS, judge: judge, slipFor: slipFor, answerText: answerText, pickFive: pickFive,
     data: function () { return data; },
     session: function () { return session; },
     question: function () { return q; }
@@ -697,6 +752,34 @@
   function rich(el, s) {
     if (window.MaffsText && MaffsText.hasMaths(s)) el.innerHTML = MaffsText.html(s);
     else el.textContent = s;
+    keepEquations(el);
+  }
+
+  // A sum or equation written in plain text ("10 ÷ 100 = 0.1") is wrapped so it can break between the maths and the words
+  // around it, never inside itself. Text inside KaTeX is left alone (KaTeX sets its own lines).
+  var OPERAND = '[£−-]?\\d[\\d.,]*(?:%|°)?|\\b[a-z]\\b';
+  var EQUATION = new RegExp('(?:' + OPERAND + ')(?:\\s*[=×÷+−/]\\s*(?:' + OPERAND + '))+', 'g');
+  function keepEquations(root) {
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), nodes = [], n;
+    while ((n = walker.nextNode())) {
+      if (!n.parentNode.closest || !n.parentNode.closest('.katex')) nodes.push(n);
+    }
+    nodes.forEach(function (t) {
+      var text = t.nodeValue, m, last = 0, frag = null;
+      EQUATION.lastIndex = 0;
+      while ((m = EQUATION.exec(text))) {
+        if (!/\d/.test(m[0])) continue;
+        frag = frag || document.createDocumentFragment();
+        if (m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+        var span = document.createElement('span'); span.className = 'nb'; span.textContent = m[0];
+        frag.appendChild(span);
+        last = m.index + m[0].length;
+      }
+      if (frag) {
+        if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+        t.parentNode.replaceChild(frag, t);
+      }
+    });
   }
 
   function li(name, what, cls) {
@@ -708,8 +791,22 @@
     return el;
   }
 
+  // Replace an element's children with the given nodes: one swap, so a list drawn twice is still one list.
+  function fill(el, nodes) {
+    var frag = document.createDocumentFragment();
+    nodes.forEach(function (n) { frag.appendChild(n); });
+    el.textContent = '';
+    el.appendChild(frag);
+  }
+
   function show(id) {
     ['intro', 'loading', 'play', 'between', 'results'].forEach(function (s) { $(s).hidden = s !== id; });
+    // The title and strapline are for the start screen only; everywhere else they shrink to one slim line.
+    $('mast').hidden = id !== 'intro';
+    var slim = $('slim');
+    slim.hidden = id === 'intro';
+    if (id === 'results') slim.textContent = 'The 6 P’s · How it went';
+    else if (id !== 'intro' && session) slim.textContent = 'The 6 P’s · Topic ' + Math.min(session.i + 1, session.plan.length) + ' of ' + session.plan.length;
     window.scrollTo(0, 0);
   }
 
@@ -718,30 +815,28 @@
   function renderIntro() {
     var soon = data.coming_soon.slice().sort(function (a, b) { return b.marks - a.marks || (a.id < b.id ? -1 : 1); });
     var top = soon.slice(0, 3), rest = soon.slice(3);
-    $('comingList').textContent = '';
-    top.forEach(function (t) { $('comingList').appendChild(li(t.name, aboutMarks(t))); });
-    $('comingRest').textContent = '';
-    rest.forEach(function (t) { $('comingRest').appendChild(li(t.name, aboutMarks(t))); });
+    fill($('comingList'), top.map(function (t) { return li(t.name, aboutMarks(t)); }));
+    fill($('comingRest'), rest.map(function (t) { return li(t.name, aboutMarks(t)); }));
     $('comingMore').hidden = !rest.length;
     $('comingMore').open = false;
     $('comingMoreLabel').textContent = 'See all ' + rest.length + ' more topics';
     $('sourceLine').textContent = data.source;
     $('startBtn').disabled = false;
     $('resumeBtn').hidden = !(session && session.i < session.plan.length);
+    $('aboutBox').open = !store.visited();     // the explainer is open the first time and closed on a return visit
+    store.setVisited();
     show('intro');
   }
 
   function planList() {
-    var list = $('planList');
-    list.textContent = '';
-    session.plan.forEach(function (p, k) {
+    fill($('planList'), session.plan.map(function (p, k) {
       var x = session.results[p.id], t = byId[p.id], what;
       if (x && x.skipped) what = 'skipped';
       else if (x) what = x.r + ' of ' + x.n;
       else if (k === session.i) what = 'up next';
       else what = '';
-      list.appendChild(li(t.name, what, k === session.i && !x ? 'current' : (x && !x.skipped ? 'done' : '')));
-    });
+      return li(t.name, what, k === session.i && !x ? 'current' : (x && !x.skipped ? 'done' : ''));
+    }));
   }
 
   // A topic finished: its score and weight, and Next topic. Never a sixth question.
@@ -863,6 +958,21 @@
         add(box('y', 'y-coordinate', 'short'));
         wrap.appendChild(sym(')'));
         break;
+      case 'pair':        // x = [ ]   y = [ ]
+        wrap.appendChild(sym('x ='));
+        add(box('x', 'The value of x', 'short'));
+        wrap.appendChild(sym('y ='));
+        add(box('y', 'The value of y', 'short'));
+        break;
+      case 'standard_form': {   // [ ] × 10 ^ [ ]
+        add(box('m', 'The number from 1 up to 10', 'short'));
+        var t = document.createElement('span'); t.className = 'times'; t.textContent = '× 10';
+        var ex = box('e', 'The power of 10', 'pow');
+        boxes.push(ex);
+        t.appendChild(ex);
+        wrap.appendChild(t);
+        break;
+      }
       case 'number_unit':
         add(box('value', 'Your answer'));
         $('qUnits').hidden = false;
@@ -898,6 +1008,8 @@
       case 'fraction': return { whole: get('whole'), num: get('num'), den: get('den') };
       case 'ratio': return { parts: q.answer.parts.map(function (_, i) { return get('p' + i); }) };
       case 'coordinates': return { x: get('x'), y: get('y') };
+      case 'pair': return { x: get('x'), y: get('y') };
+      case 'standard_form': return { m: get('m'), e: get('e') };
       case 'choice': return { val: val };
       case 'number_unit': {
         var on = $('qUnits').querySelector('[aria-pressed="true"]');
@@ -921,6 +1033,8 @@
     d.hidden = !svg;
     $('qMsg').textContent = '';
     $('qFb').hidden = true;
+    $('qKeys').hidden = false;
+    $('qCheckRow').hidden = false;
     if (window.MaffsNext) MaffsNext.clear($('qNext'));   // and its timers
     $('qNext').textContent = '';
     inputs = buildInputs();
@@ -929,7 +1043,7 @@
     if (inputs.length && window.MaffsKeypad) {
       var el = document.createElement('div');
       $('qKeys').appendChild(el);
-      var minus = ['number', 'number_unit', 'fraction', 'coordinates'].indexOf(q.format) >= 0;
+      var minus = ['number', 'number_unit', 'fraction', 'coordinates', 'pair', 'standard_form'].indexOf(q.format) >= 0;
       keypad = MaffsKeypad.mount(el, { targets: inputs, keys: { minus: minus }, keepInView: $('qArea'), foldInset: 40 });
     }
     if (window.MaffsLock) MaffsLock.fresh($('qArea'));
@@ -959,13 +1073,16 @@
   function feedback(right, inp, last) {
     var fb = $('qFb'), worked = q.worked || [];
     fb.dataset.verdict = right ? 'right' : 'wrong';
-    $('qVerdict').textContent = right ? 'Right.' : 'Not quite.';
+    $('qVerdict').textContent = right ? '\u2713 Correct' : '\u2717 Not quite';
+    $('qKeys').hidden = true;                // the keypad has done its job: the verdict takes its place
+    $('qCheckRow').hidden = true;
+    (inputs || []).forEach(function (b) { b.classList.remove('maffs-keypad-selected'); b.classList.add(right ? 'right' : 'wrong'); b.readOnly = true; });
     var slip = right ? null : slipFor(q, inp);
     $('qSlip').hidden = !slip;
     if (slip) rich($('qSlip'), slip.line);
     var ol = $('qWorked');
-    ol.textContent = '';
-    worked.forEach(function (w) { var x = document.createElement('li'); rich(x, w); ol.appendChild(x); });
+    fill(ol, worked.map(function (w) { var x = document.createElement('li'); rich(x, w); return x; }));
+    ol.classList.toggle('single', worked.length === 1);        // one line is not a list: no "1."
     ol.hidden = right || !worked.length;
     $('showWorkBtn').hidden = !right || !worked.length;
     var al = $('qAnswerLine');
@@ -988,6 +1105,8 @@
     } else {
       MaffsNext.wrong({ mount: $('qNext'), onAdvance: advance, fallbackMs: NO_FALLBACK, label: label });
     }
+    // The verdict, and Next with it where it fits, are in view without a scroll of the student's own.
+    try { fb.scrollIntoView({ block: 'nearest' }); } catch (e) { /* ignore */ }
   }
 
   function advance() {
@@ -1000,9 +1119,7 @@
   }
 
   function renderResults() {
-    var list = $('resultList');
-    list.textContent = '';
-    session.plan.forEach(function (p) {
+    fill($('resultList'), session.plan.map(function (p) {
       var x = session.results[p.id], t = byId[p.id];
       var score = x && !x.skipped ? x.r + ' of ' + x.n : 'skipped';
       var row = li(t.name + ': ' + score, marksText(t), x && !x.skipped ? 'done' : '');
@@ -1011,8 +1128,8 @@
       var a = document.createElement('a'); a.href = practiceUrl(t); a.textContent = t.route.game;
       more.appendChild(a);
       row.appendChild(more);
-      list.appendChild(row);
-    });
+      return row;
+    }));
     var w = weakest(session, byId), nudge = $('nudge');
     nudge.textContent = '';
     if (w) {
@@ -1026,15 +1143,14 @@
       nudge.hidden = true;
     }
     var ticks = $('tickList');
-    ticks.textContent = '';
-    data.coming_soon.map(function (t) { return [t.id, t.name]; }).concat([['other', 'Something else']]).forEach(function (o) {
+    fill(ticks, data.coming_soon.map(function (t) { return [t.id, t.name]; }).concat([['other', 'Something else']]).map(function (o) {
       var lab = document.createElement('label');
       var box = document.createElement('input');
       box.type = 'checkbox'; box.name = 'topic'; box.value = o[0];
       lab.appendChild(box);
       lab.appendChild(document.createTextNode(o[1]));
-      ticks.appendChild(lab);
-    });
+      return lab;
+    }));
     var sent = !!session.feedbackSent;
     $('thanks').hidden = !sent;
     Array.prototype.forEach.call(ticks.querySelectorAll('input'), function (b) { b.disabled = sent; });
@@ -1057,9 +1173,11 @@
     startTopic();
   }
 
-  function valid(s) {
+  function valid(s, now) {
     if (!s || s.v !== 2 || !Array.isArray(s.plan) || s.plan.length !== K || typeof s.i !== 'number' || !s.results) return false;
-    return s.plan.every(function (p) { return p && byId[p.id]; });
+    if (typeof s.at !== 'number' || (now === undefined ? Date.now() : now) - s.at > SESSION_MAX_MS) return false;   // left for over four hours: start fresh
+    var seen = {};
+    return s.plan.every(function (p) { if (!p || !byId[p.id] || seen[p.id]) return false; seen[p.id] = true; return true; });
   }
 
   function start() {
@@ -1074,7 +1192,7 @@
     data.covered.forEach(function (t) { byId[t.id] = t; });
     if (!canDraw(data.covered, K)) { $('loadError').hidden = false; return; }
     session = store.getSession();
-    if (!valid(session)) session = null;
+    if (!valid(session)) { if (session) store.clearSession(); session = null; }
     renderIntro();    // a fresh visit opens on the start screen; one in progress offers "Carry on"
   }
 
@@ -1107,6 +1225,14 @@
     session.feedbackSent = true;
     store.setSession(session);
     renderResults();
+  });
+
+  // A page restored from the back-forward cache keeps its old DOM: draw it again from the saved session, as a reload would.
+  window.addEventListener('pageshow', function (e) {
+    if (!e.persisted || !data) return;
+    session = store.getSession();
+    if (!valid(session)) { if (session) store.clearSession(); session = null; }
+    renderIntro();
   });
 
   // XMLHttpRequest, not fetch: the stub server replaces fetch site-wide (CLAUDE.md), and these are file reads.

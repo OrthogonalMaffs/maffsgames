@@ -13,28 +13,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(6x - y = -7\\) and \\(-4x + 5y = 9\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "c"
+    "x": -1,
+    "y": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 1, y = -1\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -1, y = -1\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = -1, y = 1\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = 1, y = 1\\)"
-    }
-   ],
    "worked": [
     "Make the x terms match: multiply (1) by 2 and (2) by 3: \\(12x - 2y = -14\\) and \\(-12x + 15y = 27\\).",
     "Different signs, so add: \\(13y = 13\\).",
@@ -55,28 +38,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(3x + 2y = 10\\) and \\(9x - 10y = 46\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "a"
+    "x": 4,
+    "y": -1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 4, y = -1\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = 4, y = 1\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = -4, y = -1\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -1, y = 4\\)"
-    }
-   ],
    "worked": [
     "Make the x terms match: multiply (1) by 3: \\(9x + 6y = 30\\) and \\(9x - 10y = 46\\).",
     "Same sign, so subtract: \\(16y = -16\\).",
@@ -97,28 +63,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(x - y = 6\\) and \\(4x + 5y = -39\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "a"
+    "x": -1,
+    "y": -7
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -1, y = -7\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -1, y = 7\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = -7, y = -1\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = 1, y = -7\\)"
-    }
-   ],
    "worked": [
     "Make the x terms match: multiply (1) by 4: \\(4x - 4y = 24\\) and \\(4x + 5y = -39\\).",
     "Same sign, so subtract: \\(-9y = 63\\).",
@@ -139,28 +88,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(x + 6y = 7\\) and \\(3x + 10y = 13\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "b"
+    "x": 1,
+    "y": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -1, y = -1\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = 1, y = 1\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 1, y = -1\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -1, y = 1\\)"
-    }
-   ],
    "worked": [
     "Make the x terms match: multiply (1) by 3: \\(3x + 18y = 21\\) and \\(3x + 10y = 13\\).",
     "Same sign, so subtract: \\(8y = 8\\).",
@@ -181,28 +113,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(3x - 2y = -5\\) and \\(5x - 2y = 5\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "c"
+    "x": 5,
+    "y": 10
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 10, y = 5\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -5, y = 10\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 5, y = 10\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = 5, y = -10\\)"
-    }
-   ],
    "worked": [
     "The y terms are the same size, so no multiplying is needed.",
     "Same sign, so subtract: \\(-2x = -10\\).",
@@ -223,28 +138,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(x - 12y = -27\\) and \\(-x - 4y = -21\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "c"
+    "x": 9,
+    "y": 3
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 9, y = -3\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -9, y = 3\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 9, y = 3\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = 3, y = 9\\)"
-    }
-   ],
    "worked": [
     "The x terms are the same size, so no multiplying is needed.",
     "Different signs, so add: \\(-16y = -48\\).",
@@ -265,28 +163,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(5x - 8y = -17\\) and \\(3x - 2y = -13\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "b"
+    "x": -5,
+    "y": -1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -1, y = -5\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -5, y = -1\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 5, y = -1\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -5, y = 1\\)"
-    }
-   ],
    "worked": [
     "Make the y terms match: multiply (2) by 4: \\(5x - 8y = -17\\) and \\(12x - 8y = -52\\).",
     "Same sign, so subtract: \\(-7x = 35\\).",
@@ -307,28 +188,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(5x + y = -33\\) and \\(3x - 2y = -25\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "a"
+    "x": -7,
+    "y": 2
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -7, y = 2\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -7, y = -2\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 2, y = -7\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = 7, y = 2\\)"
-    }
-   ],
    "worked": [
     "Make the y terms match: multiply (1) by 2: \\(10x + 2y = -66\\) and \\(3x - 2y = -25\\).",
     "Different signs, so add: \\(13x = -91\\).",
@@ -349,28 +213,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(x + 6y = 33\\) and \\(3x + 8y = 49\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "d"
+    "x": 3,
+    "y": 5
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 3, y = -5\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -3, y = 5\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 5, y = 3\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = 3, y = 5\\)"
-    }
-   ],
    "worked": [
     "Make the x terms match: multiply (1) by 3: \\(3x + 18y = 99\\) and \\(3x + 8y = 49\\).",
     "Same sign, so subtract: \\(10y = 50\\).",
@@ -391,28 +238,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(8x + 3y = 46\\) and \\(2x + y = 14\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "d"
+    "x": 2,
+    "y": 10
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -2, y = 10\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = 2, y = -10\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 10, y = 2\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = 2, y = 10\\)"
-    }
-   ],
    "worked": [
     "Make the y terms match: multiply (2) by 3: \\(8x + 3y = 46\\) and \\(6x + 3y = 42\\).",
     "Same sign, so subtract: \\(2x = 4\\).",
@@ -433,28 +263,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(5x - 6y = 10\\) and \\(3x + 2y = -22\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "b"
+    "x": -4,
+    "y": -5
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -5, y = -4\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -4, y = -5\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = -4, y = 5\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = 4, y = -5\\)"
-    }
-   ],
    "worked": [
     "Make the y terms match: multiply (2) by 3: \\(5x - 6y = 10\\) and \\(9x + 6y = -66\\).",
     "Different signs, so add: \\(14x = -56\\).",
@@ -475,28 +288,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(11x + 6y = -2\\) and \\(11x + 3y = 10\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "b"
+    "x": 2,
+    "y": -4
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -4, y = 2\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = 2, y = -4\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = -2, y = -4\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = 2, y = 4\\)"
-    }
-   ],
    "worked": [
     "The x terms are the same size, so no multiplying is needed.",
     "Same sign, so subtract: \\(3y = -12\\).",
@@ -517,28 +313,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(x + 4y = 42\\) and \\(3x + 2y = 46\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "c"
+    "x": 10,
+    "y": 8
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 10, y = -8\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -10, y = 8\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 10, y = 8\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = 8, y = 10\\)"
-    }
-   ],
    "worked": [
     "Make the y terms match: multiply (2) by 2: \\(x + 4y = 42\\) and \\(6x + 4y = 92\\).",
     "Same sign, so subtract: \\(-5x = -50\\).",
@@ -559,28 +338,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(x - 3y = 4\\) and \\(5x - 2y = -32\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "d"
+    "x": -8,
+    "y": -4
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -4, y = -8\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -8, y = 4\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 8, y = -4\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -8, y = -4\\)"
-    }
-   ],
    "worked": [
     "Make the y terms match: multiply (1) by 2 and (2) by 3: \\(2x - 6y = 8\\) and \\(15x - 6y = -96\\).",
     "Same sign, so subtract: \\(-13x = 104\\).",
@@ -601,28 +363,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(8x + 5y = -39\\) and \\(6x + y = -21\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "d"
+    "x": -3,
+    "y": -3
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 3, y = -3\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -3, y = 3\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 3, y = 3\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -3, y = -3\\)"
-    }
-   ],
    "worked": [
     "Make the y terms match: multiply (2) by 5: \\(8x + 5y = -39\\) and \\(30x + 5y = -105\\).",
     "Same sign, so subtract: \\(-22x = 66\\).",
@@ -643,28 +388,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(7x - 6y = 25\\) and \\(7x - 2y = 41\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "a"
+    "x": 7,
+    "y": 4
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 7, y = 4\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = 4, y = 7\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 7, y = -4\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -7, y = 4\\)"
-    }
-   ],
    "worked": [
     "The x terms are the same size, so no multiplying is needed.",
     "Same sign, so subtract: \\(-4y = -16\\).",
@@ -685,28 +413,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(5x + 4y = 22\\) and \\(-4x - 5y = -23\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "d"
+    "x": 2,
+    "y": 3
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 3, y = 2\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -2, y = 3\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 2, y = -3\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = 2, y = 3\\)"
-    }
-   ],
    "worked": [
     "Make the y terms match: multiply (1) by 5 and (2) by 4: \\(25x + 20y = 110\\) and \\(-16x - 20y = -92\\).",
     "Different signs, so add: \\(9x = 18\\).",
@@ -727,28 +438,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(5x + 2y = -18\\) and \\(-2x - 5y = 24\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "c"
+    "x": -2,
+    "y": -4
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -4, y = -2\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = 2, y = -4\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = -2, y = -4\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -2, y = 4\\)"
-    }
-   ],
    "worked": [
     "Make the y terms match: multiply (1) by 5 and (2) by 2: \\(25x + 10y = -90\\) and \\(-4x - 10y = 48\\).",
     "Different signs, so add: \\(21x = -42\\).",
@@ -769,28 +463,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(x + 6y = 54\\) and \\(2x + 3y = 18\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "d"
+    "x": -6,
+    "y": 10
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 6, y = 10\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -6, y = -10\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 10, y = -6\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -6, y = 10\\)"
-    }
-   ],
    "worked": [
     "Make the y terms match: multiply (2) by 2: \\(x + 6y = 54\\) and \\(4x + 6y = 36\\).",
     "Same sign, so subtract: \\(-3x = 18\\).",
@@ -811,28 +488,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(12x + y = -34\\) and \\(8x - y = -6\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "d"
+    "x": -2,
+    "y": -10
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 2, y = -10\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -2, y = 10\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = -10, y = -2\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -2, y = -10\\)"
-    }
-   ],
    "worked": [
     "The y terms are the same size, so no multiplying is needed.",
     "Different signs, so add: \\(20x = -40\\).",
@@ -853,28 +513,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(3x - 4y = -20\\) and \\(-x - 6y = 14\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "c"
+    "x": -8,
+    "y": -1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -1, y = -8\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -8, y = 1\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = -8, y = -1\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = 8, y = -1\\)"
-    }
-   ],
    "worked": [
     "Make the x terms match: multiply (2) by 3: \\(3x - 4y = -20\\) and \\(-3x - 18y = 42\\).",
     "Different signs, so add: \\(-22y = 22\\).",
@@ -895,28 +538,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(7x - 2y = -52\\) and \\(7x + 2y = -32\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "a"
+    "x": -6,
+    "y": 5
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -6, y = 5\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -6, y = -5\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 6, y = 5\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = 5, y = -6\\)"
-    }
-   ],
    "worked": [
     "The y terms are the same size, so no multiplying is needed.",
     "Different signs, so add: \\(14x = -84\\).",
@@ -937,28 +563,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(5x - y = -12\\) and \\(2x + y = -16\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "d"
+    "x": -4,
+    "y": -8
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -4, y = 8\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = 4, y = -8\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = -8, y = -4\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -4, y = -8\\)"
-    }
-   ],
    "worked": [
     "The y terms are the same size, so no multiplying is needed.",
     "Different signs, so add: \\(7x = -28\\).",
@@ -979,28 +588,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(3x - 4y = 1\\) and \\(-9x + 10y = -7\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "a"
+    "x": 3,
+    "y": 2
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 3, y = 2\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = 3, y = -2\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 2, y = 3\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -3, y = 2\\)"
-    }
-   ],
    "worked": [
     "Make the x terms match: multiply (1) by 3: \\(9x - 12y = 3\\) and \\(-9x + 10y = -7\\).",
     "Different signs, so add: \\(-2y = -4\\).",
@@ -1021,28 +613,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(6x - 5y = 23\\) and \\(9x - 4y = 10\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "d"
+    "x": -2,
+    "y": -7
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -7, y = -2\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -2, y = 7\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 2, y = -7\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -2, y = -7\\)"
-    }
-   ],
    "worked": [
     "Make the x terms match: multiply (1) by 3 and (2) by 2: \\(18x - 15y = 69\\) and \\(18x - 8y = 20\\).",
     "Same sign, so subtract: \\(-7y = 49\\).",
@@ -1063,28 +638,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(3x + 2y = -9\\) and \\(9x + 8y = -39\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "d"
+    "x": 1,
+    "y": -6
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 1, y = 6\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -6, y = 1\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = -1, y = -6\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = 1, y = -6\\)"
-    }
-   ],
    "worked": [
     "Make the x terms match: multiply (1) by 3: \\(9x + 6y = -27\\) and \\(9x + 8y = -39\\).",
     "Same sign, so subtract: \\(-2y = 12\\).",
@@ -1105,28 +663,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(11x - 9y = 39\\) and \\(-11x + 3y = 9\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "a"
+    "x": -3,
+    "y": -8
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -3, y = -8\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = 3, y = -8\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = -3, y = 8\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -8, y = -3\\)"
-    }
-   ],
    "worked": [
     "The x terms are the same size, so no multiplying is needed.",
     "Different signs, so add: \\(-6y = 48\\).",
@@ -1147,28 +688,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(x - 3y = -36\\) and \\(-2x - 3y = -9\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "d"
+    "x": -9,
+    "y": 9
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 9, y = 9\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = 9, y = -9\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = -9, y = -9\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -9, y = 9\\)"
-    }
-   ],
    "worked": [
     "The y terms are the same size, so no multiplying is needed.",
     "Same sign, so subtract: \\(3x = -27\\).",
@@ -1189,28 +713,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(3x + 4y = -6\\) and \\(5x - y = -33\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "a"
+    "x": -6,
+    "y": 3
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -6, y = 3\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -6, y = -3\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 3, y = -6\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = 6, y = 3\\)"
-    }
-   ],
    "worked": [
     "Make the y terms match: multiply (2) by 4: \\(3x + 4y = -6\\) and \\(20x - 4y = -132\\).",
     "Different signs, so add: \\(23x = -138\\).",
@@ -1231,28 +738,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(8x - 3y = -22\\) and \\(6x + y = -10\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "c"
+    "x": -2,
+    "y": 2
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 2, y = 2\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = 2, y = -2\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = -2, y = 2\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -2, y = -2\\)"
-    }
-   ],
    "worked": [
     "Make the y terms match: multiply (2) by 3: \\(8x - 3y = -22\\) and \\(18x + 3y = -30\\).",
     "Different signs, so add: \\(26x = -52\\).",
@@ -1273,28 +763,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(x - 8y = -27\\) and \\(x - 12y = -39\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "b"
+    "x": -3,
+    "y": 3
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -3, y = -3\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -3, y = 3\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 3, y = -3\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = 3, y = 3\\)"
-    }
-   ],
    "worked": [
     "The x terms are the same size, so no multiplying is needed.",
     "Same sign, so subtract: \\(4y = 12\\).",
@@ -1315,28 +788,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(2x + y = -1\\) and \\(5x - 4y = -9\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "a"
+    "x": -1,
+    "y": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -1, y = 1\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = 1, y = -1\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 1, y = 1\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -1, y = -1\\)"
-    }
-   ],
    "worked": [
     "Make the y terms match: multiply (1) by 4: \\(8x + 4y = -4\\) and \\(5x - 4y = -9\\).",
     "Different signs, so add: \\(13x = -13\\).",
@@ -1357,28 +813,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(x + 9y = 42\\) and \\(2x + 3y = 24\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "d"
+    "x": 6,
+    "y": 4
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 4, y = 6\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -6, y = 4\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 6, y = -4\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = 6, y = 4\\)"
-    }
-   ],
    "worked": [
     "Make the x terms match: multiply (1) by 2: \\(2x + 18y = 84\\) and \\(2x + 3y = 24\\).",
     "Same sign, so subtract: \\(15y = 60\\).",
@@ -1399,28 +838,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(x - y = -13\\) and \\(-3x - 4y = -3\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "a"
+    "x": -7,
+    "y": 6
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -7, y = 6\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = 6, y = -7\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = -7, y = -6\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = 7, y = 6\\)"
-    }
-   ],
    "worked": [
     "Make the x terms match: multiply (1) by 3: \\(3x - 3y = -39\\) and \\(-3x - 4y = -3\\).",
     "Different signs, so add: \\(-7y = -42\\).",
@@ -1441,28 +863,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(3x + 2y = 11\\) and \\(5x + 4y = 21\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "d"
+    "x": 1,
+    "y": 4
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 4, y = 1\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -1, y = 4\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 1, y = -4\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = 1, y = 4\\)"
-    }
-   ],
    "worked": [
     "Make the y terms match: multiply (1) by 2: \\(6x + 4y = 22\\) and \\(5x + 4y = 21\\).",
     "Same sign, so subtract: \\(x = 1\\).",
@@ -1483,28 +888,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(3x + y = 7\\) and \\(12x + 5y = 20\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "a"
+    "x": 5,
+    "y": -8
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 5, y = -8\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = 5, y = 8\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = -5, y = -8\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -8, y = 5\\)"
-    }
-   ],
    "worked": [
     "Make the x terms match: multiply (1) by 4: \\(12x + 4y = 28\\) and \\(12x + 5y = 20\\).",
     "Same sign, so subtract: \\(-y = 8\\).",
@@ -1525,28 +913,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(2x - 5y = 17\\) and \\(4x - 5y = -1\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "d"
+    "x": -9,
+    "y": -7
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -7, y = -9\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = 9, y = -7\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = -9, y = 7\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -9, y = -7\\)"
-    }
-   ],
    "worked": [
     "The y terms are the same size, so no multiplying is needed.",
     "Same sign, so subtract: \\(-2x = 18\\).",
@@ -1567,28 +938,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(3x + 2y = 13\\) and \\(-6x - y = -29\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "b"
+    "x": 5,
+    "y": -1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 5, y = 1\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = 5, y = -1\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = -5, y = -1\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -1, y = 5\\)"
-    }
-   ],
    "worked": [
     "Make the y terms match: multiply (2) by 2: \\(3x + 2y = 13\\) and \\(-12x - 2y = -58\\).",
     "Different signs, so add: \\(-9x = -45\\).",
@@ -1609,28 +963,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(5x + 6y = 19\\) and \\(-x + 2y = -7\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "c"
+    "x": 5,
+    "y": -1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -5, y = -1\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = 5, y = 1\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 5, y = -1\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -1, y = 5\\)"
-    }
-   ],
    "worked": [
     "Make the y terms match: multiply (2) by 3: \\(5x + 6y = 19\\) and \\(-3x + 6y = -21\\).",
     "Same sign, so subtract: \\(8x = 40\\).",
@@ -1651,28 +988,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(10x - 3y = 40\\) and \\(-4x + y = -14\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "d"
+    "x": 1,
+    "y": -10
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -10, y = 1\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = 1, y = 10\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = -1, y = -10\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = 1, y = -10\\)"
-    }
-   ],
    "worked": [
     "Make the y terms match: multiply (2) by 3: \\(10x - 3y = 40\\) and \\(-12x + 3y = -42\\).",
     "Different signs, so add: \\(-2x = -2\\).",
@@ -1693,28 +1013,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(7x + 2y = -42\\) and \\(-7x + y = 21\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "d"
+    "x": -4,
+    "y": -7
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -4, y = 7\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -7, y = -4\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 4, y = -7\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -4, y = -7\\)"
-    }
-   ],
    "worked": [
     "The x terms are the same size, so no multiplying is needed.",
     "Different signs, so add: \\(3y = -21\\).",
@@ -1735,28 +1038,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(5x - 12y = -33\\) and \\(-x + 8y = 1\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "d"
+    "x": -9,
+    "y": -1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -9, y = 1\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = 9, y = -1\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = -1, y = -9\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -9, y = -1\\)"
-    }
-   ],
    "worked": [
     "Make the y terms match: multiply (1) by 2 and (2) by 3: \\(10x - 24y = -66\\) and \\(-3x + 24y = 3\\).",
     "Different signs, so add: \\(7x = -63\\).",
@@ -1777,28 +1063,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(x - 5y = -8\\) and \\(4x + 5y = 43\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "c"
+    "x": 7,
+    "y": 3
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 3, y = 7\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = 7, y = -3\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 7, y = 3\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -7, y = 3\\)"
-    }
-   ],
    "worked": [
     "The y terms are the same size, so no multiplying is needed.",
     "Different signs, so add: \\(5x = 35\\).",
@@ -1819,28 +1088,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(9x + 4y = 52\\) and \\(9x + 8y = 32\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "d"
+    "x": 8,
+    "y": -5
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 8, y = 5\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -8, y = -5\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = -5, y = 8\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = 8, y = -5\\)"
-    }
-   ],
    "worked": [
     "The x terms are the same size, so no multiplying is needed.",
     "Same sign, so subtract: \\(-4y = 20\\).",
@@ -1861,28 +1113,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(2x + 5y = 13\\) and \\(x + y = 2\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "a"
+    "x": -1,
+    "y": 3
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = -1, y = 3\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = 1, y = 3\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = 3, y = -1\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -1, y = -3\\)"
-    }
-   ],
    "worked": [
     "Make the x terms match: multiply (2) by 2: \\(2x + 5y = 13\\) and \\(2x + 2y = 4\\).",
     "Same sign, so subtract: \\(3y = 9\\).",
@@ -1903,28 +1138,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(x + 3y = 11\\) and \\(4x + 9y = 26\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "c"
+    "x": -7,
+    "y": 6
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 6, y = -7\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = 7, y = 6\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = -7, y = 6\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -7, y = -6\\)"
-    }
-   ],
    "worked": [
     "Make the y terms match: multiply (1) by 3: \\(3x + 9y = 33\\) and \\(4x + 9y = 26\\).",
     "Same sign, so subtract: \\(-x = 7\\).",
@@ -1945,28 +1163,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(9x - 4y = -41\\) and \\(3x + 2y = -17\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "d"
+    "x": -5,
+    "y": -1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 5, y = -1\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -5, y = 1\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = -1, y = -5\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = -5, y = -1\\)"
-    }
-   ],
    "worked": [
     "Make the y terms match: multiply (2) by 2: \\(9x - 4y = -41\\) and \\(6x + 4y = -34\\).",
     "Different signs, so add: \\(15x = -75\\).",
@@ -1987,28 +1188,11 @@
    "calc": false,
    "stem": "Solve the simultaneous equations \\(3x + 5y = 22\\) and \\(2x + 3y = 12\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "pair",
    "answer": {
-    "val": "c"
+    "x": -6,
+    "y": 8
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(x = 8, y = -6\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(x = -6, y = -8\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x = -6, y = 8\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(x = 6, y = 8\\)"
-    }
-   ],
    "worked": [
     "Make the x terms match: multiply (1) by 2 and (2) by 3: \\(6x + 10y = 44\\) and \\(6x + 9y = 36\\).",
     "Same sign, so subtract: \\(y = 8\\).",

@@ -50,7 +50,7 @@ MIN_QUESTIONS = 30
 CAP = 150            # most questions a list topic keeps (every Foundation item up to this)
 GEN_TOPIC = 60       # a generator topic keeps this many, spread evenly across the game's question types and stages
                      # (Jon's ruling of 25 Oct 2026), from a fixed seed order, so --check is stable
-FORMATS = ("number", "money", "fraction", "ratio", "coordinates", "choice", "number_unit")
+FORMATS = ("number", "money", "fraction", "ratio", "coordinates", "choice", "number_unit", "pair", "standard_form")
 
 MULBERRY = ("function mul(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);"
             "t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}")
@@ -199,7 +199,8 @@ def validate(q):
             f.append("worked or slip line has HTML, $ or §: " + w[:40])
     a, fm = q["answer"], q["format"]
     need = {"number": ("value",), "money": ("pence",), "fraction": ("n", "d"), "ratio": ("parts",),
-            "coordinates": ("x", "y"), "choice": ("val",), "number_unit": ("value", "unit")}[fm] if fm in FORMATS else ()
+            "coordinates": ("x", "y"), "choice": ("val",), "number_unit": ("value", "unit"),
+            "pair": ("x", "y"), "standard_form": ("m", "e")}[fm] if fm in FORMATS else ()
     for k in need:
         if k not in a:
             f.append("answer lacks " + k)
@@ -3495,6 +3496,229 @@ def tidy_labels(svg):
     return re.sub(r"<text\b[^>]*>", move, svg)
 
 
+# ───────────────────────────── typed answers (contract SIX-PS-PLAYER-FIXES (h), Jon, 27 Oct 2026) ─────────────────────────────
+# A multiple-choice question whose answer a student can write is asked as a typed answer: a guess scores 25% and the exam asks for a
+# written answer. The rule is applied here to every bank after its builder has run (a source game is never changed, and no bank is
+# edited by hand); the question's id, stem, diagram, working and band stay as they were, the options go, and a distractor that had a
+# slip line becomes a slip matched by value. Multiple choice stays for algebra answers (Jon, 25 Oct), probability words and
+# statements, ordering, "can you tell" questions and column vectors.
+TYPED_TOPICS = ("metric-units", "averages", "trigonometry", "fraction-operations", "coordinates", "simultaneous", "standard-form")
+CONVERSIONS = {}          # topic -> {"from": n, "to": {format: n}} for the handover
+CONVERSION_NOTES = []     # rounding added, or not determinable (listed for Project Claude)
+
+
+def _label_of(q, val):
+    return next(o["label"] for o in q["options"] if o["val"] == val)
+
+
+def _plain_number(s):
+    """'300,000' or '2.5' as an exact Fraction (thousands commas are in the source's labels, never typed)."""
+    return Fraction(s.replace(",", ""))
+
+
+def _latex_value(label):
+    """A label such as \\(4.5 \\times 10^{3}\\) as an exact Fraction, by evaluating it (a path separate from the converter's parse)."""
+    s = label.replace("\\(", "").replace("\\)", "").replace("\\times", "*").replace("{", "(").replace("}", ")")
+    s = re.sub(r"(-?\d+(?:\.\d+)?)", r"Fraction('\1')", s).replace("^", "**")
+    return eval(s, {"Fraction": Fraction})        # a label of digits, * and ^ only: checked by the converter's own regex first
+
+
+def _frac_label(label):
+    """(whole or None, n, d) of a label that is a fraction, a mixed number or a whole number; None if it is none of them."""
+    m = re.fullmatch(r"\\\((-?\d+)\\frac\{(\d+)\}\{(\d+)\}\\\)", label)
+    if m:
+        return (int(m.group(1)), int(m.group(2)), int(m.group(3)))
+    m = re.fullmatch(r"\\\((-?\d+)\\\)", label)
+    if m:
+        return (None, int(m.group(1)), 1)
+    m = re.fullmatch(r"\\\(\\frac\{(-?\d+)\}\{(\d+)\}\\\)", label)
+    return (None, int(m.group(1)), int(m.group(2))) if m else None
+
+
+def _typed_answer_for(topic, q, label):
+    """(format, answer, extras) for one label of a question q in a typed topic, or raises ValueError."""
+    if topic == "metric-units":
+        m = re.fullmatch(r"(-?[\d,]+(?:\.\d+)?)\s*(\S.*)", label)
+        if not m:
+            raise ValueError("metric label %r" % label)
+        unit = {"litre": "litres"}.get(m.group(2), m.group(2))
+        return "number", {"value": float(_plain_number(m.group(1))) if "." in m.group(1) else int(_plain_number(m.group(1)))}, {"unit": unit}
+    if topic == "averages":
+        if not re.fullmatch(r"-?\d+(?:\.\d+)?", label):
+            raise ValueError("average label %r" % label)
+        return "number", {"value": float(label) if "." in label else int(label)}, {}
+    if topic == "trigonometry":
+        deg = label.endswith("°")
+        num = label[:-1] if deg else label
+        if not re.fullmatch(r"-?\d+(?:\.\d+)?", num):
+            raise ValueError("trig label %r" % label)
+        stem = q["stem"]
+        dps = [d for pat, d in (("nearest degree", 0), ("1 decimal place", 1), ("2 decimal places", 2)) if pat in stem]
+        if len(dps) != 1:
+            raise ValueError("the rounding in %r cannot be told" % stem)
+        dp = dps[0]
+        if ("." in num) != (dp > 0) or (dp > 0 and len(num.split(".")[1]) != dp):
+            raise ValueError("label %r is not at %d d.p." % (label, dp))
+        return "number", {"value": float(num) if dp else int(num), "dp": dp}, ({"unit": "°"} if deg else {})
+    if topic == "fraction-operations":
+        fr = _frac_label(label)
+        if not fr:
+            raise ValueError("fraction label %r" % label)
+        w, n, d = fr
+        return "fraction", ({"n": n, "d": d} if w is None else {"w": w, "n": n, "d": d}), {}
+    if topic == "coordinates":
+        m = re.fullmatch(r"\((-?\d+), (-?\d+)\)", label)
+        if not m:
+            raise ValueError("coordinates label %r" % label)
+        return "coordinates", {"x": int(m.group(1)), "y": int(m.group(2))}, {}
+    if topic == "simultaneous":
+        m = re.fullmatch(r"\\\(x = (-?\d+), y = (-?\d+)\\\)", label)
+        if not m:
+            raise ValueError("simultaneous label %r" % label)
+        return "pair", {"x": int(m.group(1)), "y": int(m.group(2))}, {}
+    if topic == "standard-form":
+        m = re.fullmatch(r"\\\((-?\d+(?:\.\d+)?) \\times 10\^\{?(-?\d+)\}?\\\)", label)
+        if m:
+            mant = float(m.group(1)) if "." in m.group(1) else int(m.group(1))
+            if not 1 <= abs(mant) < 10:
+                raise ValueError("the key %r is not in standard form" % label)
+            return "standard_form", {"m": mant, "e": int(m.group(2))}, {}
+        m = re.fullmatch(r"\\\((-?\d+(?:\.\d+)?)\\\)", label)      # "write ... as an ordinary number": a plain number
+        if m:
+            return "number", {"value": float(m.group(1)) if "." in m.group(1) else int(m.group(1))}, {}
+        raise ValueError("standard-form label %r" % label)
+    raise ValueError(topic)
+
+
+def _typed_value(fmt, a):
+    """The value a typed answer stands for, as an exact Fraction or tuple (the second path of the source-equality check)."""
+    if fmt == "number":
+        return Fraction(str(a["value"]))
+    if fmt == "fraction":
+        w = a.get("w")
+        return Fraction(a["n"], a["d"]) if w is None else (w + Fraction(a["n"], a["d"]) if w >= 0 else w - Fraction(a["n"], a["d"]))
+    if fmt in ("coordinates", "pair"):
+        return (Fraction(a["x"]), Fraction(a["y"]))
+    if fmt == "standard_form":
+        return Fraction(str(a["m"])) * Fraction(10) ** a["e"]
+    raise ValueError(fmt)
+
+
+def _label_value(topic, label):
+    """The source label's value by its own reading: a plain number, a fraction, a pair of numbers, or an evaluated product."""
+    if topic == "metric-units":
+        return _plain_number(re.match(r"(-?[\d,]+(?:\.\d+)?)", label).group(1))
+    if topic == "averages":
+        return Fraction(label)
+    if topic == "trigonometry":
+        return Fraction(label.rstrip("°"))
+    if topic == "fraction-operations":
+        w, n, d = _frac_label(label)
+        return Fraction(n, d) + (0 if w is None else w)
+    if topic in ("coordinates", "simultaneous"):
+        nums = re.findall(r"-?\d+", label)
+        return (Fraction(nums[0]), Fraction(nums[1]))
+    if topic == "standard-form":
+        return _latex_value(label)
+    raise ValueError(topic)
+
+
+def _stat_of(stem):
+    """An average's key worked out from the data set in its stem (a check that no source label was rounded)."""
+    m = re.search(r"data set: ([\d, .]+)\.", stem)
+    if not m:
+        return None
+    xs = sorted(Fraction(x) for x in re.findall(r"\d+(?:\.\d+)?", m.group(1)))
+    for word, f in (("mean", lambda: sum(xs) / len(xs)), ("median", lambda: xs[len(xs) // 2] if len(xs) % 2 else (xs[len(xs) // 2 - 1] + xs[len(xs) // 2]) / 2),
+                    ("range", lambda: xs[-1] - xs[0])):
+        if "the %s of" % word in stem:
+            return f()
+    if "the mode of" in stem:
+        top = max(xs.count(x) for x in xs)
+        modes = sorted({x for x in xs if xs.count(x) == top})
+        return modes[0] if len(modes) == 1 else None
+    return None
+
+
+def conversion_selftest():
+    """to_typed on planted faults: a question converts cleanly; a typed answer that is not the source's, a slip that is not the source's
+    and a rounding that cannot be told are each caught. [] if all hold."""
+    base = {"id": "t-1", "topic": "metric-units", "source": {"game": "g", "ref": "r"}, "band": 1, "calc": False, "diagram": None,
+            "stem": "Convert 2500 mm to m.", "format": "choice", "worked": ["x"], "slip": [],
+            "options": [{"val": "a", "label": "250 m"}, {"val": "b", "label": "25 m"}, {"val": "c", "label": "2.5 m"}, {"val": "d", "label": "0.25 m"}],
+            "answer": {"val": "c"}}
+    out = []
+    try:
+        z = to_typed("metric-units", dict(base))
+        if not (z["format"] == "number" and z["answer"] == {"value": 2.5} and z.get("unit") == "m" and "options" not in z):
+            out.append("conversion check: a clean question did not convert to the typed answer %r" % (z["answer"],))
+    except Exception as e:           # noqa: BLE001
+        out.append("conversion check: a clean question was refused: %s" % e)
+    saved = globals()["_typed_answer_for"]
+    try:
+        globals()["_typed_answer_for"] = lambda topic, q, label: ("number", {"value": 25}, {"unit": "m"})   # the wrong option's value
+        try:
+            to_typed("metric-units", dict(base))
+            out.append("conversion check: planted fault not caught: a typed answer that differs from its source")
+        except AssertionError:
+            pass
+    finally:
+        globals()["_typed_answer_for"] = saved
+    trig = dict(base, topic="trigonometry", stem="Find the angle.", options=[{"val": "a", "label": "46\u00b0"}, {"val": "b", "label": "16\u00b0"},
+                                                                                 {"val": "c", "label": "44\u00b0"}, {"val": "d", "label": "74\u00b0"}], answer={"val": "b"})
+    try:
+        to_typed("trigonometry", trig)
+        out.append("conversion check: planted fault not caught: a rounding that the question does not state")
+    except ValueError:
+        pass
+    return out
+
+
+def to_typed(topic, q):
+    """The question as a typed answer if its topic is converted and it is multiple choice; otherwise unchanged."""
+    if topic not in TYPED_TOPICS or q["format"] != "choice":
+        return q
+    key_label = _label_of(q, q["answer"]["val"])
+    if topic == "averages" and re.fullmatch(r"-?[\d.]+( and -?[\d.]+)+", key_label):      # a mode with two values: not one number to type
+        CONVERSION_NOTES.append("averages %s stays multiple choice: its answer is %r, two values" % (q["id"], key_label))
+        return q
+    if topic == "standard-form" and q["stem"].startswith("Which"):      # "which two of these are equal?": a selection, not a value
+        CONVERSION_NOTES.append("standard-form %s stays multiple choice: %r is a selection" % (q["id"], q["stem"][:40]))
+        return q
+    fmt, ans, extra = _typed_answer_for(topic, q, key_label)
+    if _typed_value(fmt, ans) != _label_value(topic, key_label):
+        raise AssertionError("%s %s: the typed answer %r is not the source's %r" % (topic, q["id"], ans, key_label))
+    if topic == "averages":
+        want = _stat_of(q["stem"])
+        if want is not None and want != _typed_value(fmt, ans):
+            raise AssertionError("%s %s: the source label %r is not the statistic %s (rounded?)" % (topic, q["id"], key_label, want))
+    z = dict(q)
+    z.pop("options", None)
+    z["format"], z["answer"] = fmt, ans
+    if "unit" in extra:
+        z["unit"] = extra["unit"]
+    if fmt == "fraction":
+        z["accept"] = {"rule": "simplest" if re.search(r"simplest|lowest terms", q["stem"]) else "equivalent"}
+    slips = []
+    for s in q["slip"]:
+        lab = _label_of(q, s["answer"]["val"])
+        try:
+            sfmt, sans, _ = _typed_answer_for(topic, q, lab)
+        except ValueError:      # a distractor a typed answer cannot hold (an unrounded 1.39 for "the nearest degree"): dropped
+            CONVERSION_NOTES.append("%s %s: slip %r dropped, not an answer at the asked precision" % (topic, q["id"], lab))
+            continue
+        if _typed_value(sfmt, sans) == _typed_value(fmt, ans):
+            continue
+        if _typed_value(sfmt, sans) != _label_value(topic, lab):
+            raise AssertionError("%s %s: a slip's typed answer %r is not the source's %r" % (topic, q["id"], sans, lab))
+        slips.append({"answer": sans, "line": s["line"]})
+    z["slip"] = slips
+    c = CONVERSIONS.setdefault(topic, {"from": 0, "to": {}})
+    c["from"] += 1
+    c["to"][fmt] = c["to"].get(fmt, 0) + 1
+    return z
+
+
 # ───────────────────────────── the registry ─────────────────────────────
 # topic id -> (builder, rule notes). Topics not here have no bank yet (coming soon).
 BUILDERS = {
@@ -3539,7 +3763,7 @@ async def build_all(only):
         for tid, fn in BUILDERS.items():
             if only and tid not in only:
                 continue
-            qs = await fn(h)
+            qs = [to_typed(tid, q) for q in await fn(h)]
             ids = [q["id"] for q in qs]
             if len(set(ids)) != len(ids):
                 raise AssertionError("%s: duplicate ids" % tid)
@@ -3656,6 +3880,8 @@ function ansText(q){
   if(q.format==='fraction')return (a.w?a.w+' ':'')+a.n+'/'+a.d;
   if(q.format==='ratio')return a.parts.join(' : ');
   if(q.format==='coordinates')return '('+a.x+', '+a.y+')';
+  if(q.format==='pair')return 'x = '+a.x+', y = '+a.y;
+  if(q.format==='standard_form')return a.m+' \u00d7 10^'+a.e;
   if(q.format==='number_unit')return a.value+' '+esc(a.unit);
   return a.value+(q.unit?' '+esc(q.unit):'');
 }
@@ -3709,6 +3935,10 @@ def main():
                 faults.append("%s %s: %s" % (t, q["id"], x))
         print("%-32s %3d questions  bands %s" % (t, len(b["questions"]),
               sorted({q["band"] for q in b["questions"]})))
+    for t, c in CONVERSIONS.items():                   # typed answers: what was multiple choice and what it is now
+        print("typed answers   %-20s %3d multiple choice questions now typed: %s" % (t, c["from"], c["to"]))
+    for n in CONVERSION_NOTES:
+        print("typed answers   left or changed: " + n)
     for t, st in DIAGRAM_STATS.items():                # the diagram label check, over every diagram the run built
         print("diagram labels  %-20s %3d diagrams: line through a label %2d as first worded, %2d strict; labels overlapping %2d; "
               "still faulty after the labels are moved %d" % (t, st["diagrams"], st["as_worded"], st["strict"], st["overlap"], st["left"]))
@@ -3756,6 +3986,7 @@ def main():
                 bad.append("%s.json has no builder in gen-six-ps.py" % t)
         bad += coverage_faults()
         bad += diagram_selftest()
+        bad += conversion_selftest()
         for x in bad:
             print("FAIL  " + x)
         if bad:
