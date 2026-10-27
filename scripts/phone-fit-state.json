@@ -621,8 +621,103 @@
     "laptop": {}
   },
   "small-labels": {
-    "normal": {},
-    "aa": {},
-    "laptop": {}
+    "normal": {
+      "circle-theorem-spotter": [
+        "320x568"
+      ],
+      "complex-converter": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "coordinate-geometry-dash": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "correlation-or-coincidence": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "given-that": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "growth-and-decay": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "normal-navigator": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "trig-worms": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ]
+    },
+    "aa": {
+      "circle-theorem-spotter": [
+        "320x568"
+      ],
+      "complex-converter": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "coordinate-geometry-dash": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "correlation-or-coincidence": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "given-that": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "growth-and-decay": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "normal-navigator": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "trig-worms": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ]
+    },
+    "laptop": {
+      "complex-converter": [
+        "1280x720",
+        "1366x768"
+      ],
+      "coordinate-geometry-dash": [
+        "1280x720",
+        "1366x768"
+      ],
+      "given-that": [
+        "1280x720",
+        "1366x768"
+      ],
+      "growth-and-decay": [
+        "1280x720",
+        "1366x768"
+      ]
+    }
   }
 }
