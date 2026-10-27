@@ -1,0 +1,1727 @@
+{
+ "topic": "percentages-money",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "percentages-money-d69bf86a",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:1:0:101"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "In the January sales, a bicycle costing £200 has 10% off. How much is taken off the price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 2000
+   },
+   "worked": [
+    "10% of £200 is £20 (÷ 10).",
+    "So £20 is taken off the price."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-94b300eb",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:1:1:102"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "On Black Friday, a winter jacket costing £160 has 50% off. How much is taken off the price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 8000
+   },
+   "worked": [
+    "£160 ÷ 2 = £80 (50% is a half).",
+    "So £80 is taken off the price."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-fde2fe1b",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:1:2:103"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "In the January sales, a washing machine costing £300 has 25% off. How much is taken off the price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 7500
+   },
+   "worked": [
+    "£300 ÷ 4 = £75 (25% is a quarter).",
+    "So £75 is taken off the price."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-8c87752c",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:1:3:104"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "In the January sales, a pair of jeans costing £60 has 20% off. How much is taken off the price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1200
+   },
+   "worked": [
+    "10% of £60 is £6 (÷ 10).",
+    "20% is 2 lots of 10%: 2 × £6 = £12.",
+    "So £12 is taken off the price."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-8b4e80e4",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:1:4:105"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "In the summer sale, a kettle costing £20 has 5% off. How much is taken off the price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 100
+   },
+   "worked": [
+    "10% of £20 is £2 (÷ 10).",
+    "5% is half of that: £1.",
+    "So £1 is taken off the price."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-fad6d069",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:1:5:106"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "On Black Friday, a mattress costing £300 has 30% off. How much is taken off the price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 9000
+   },
+   "worked": [
+    "10% of £300 is £30 (÷ 10).",
+    "30% is 3 lots of 10%: 3 × £30 = £90.",
+    "So £90 is taken off the price."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-e401e589",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:1:6:107"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "On Black Friday, a pair of headphones costing £120 has 15% off. How much is taken off the price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1800
+   },
+   "worked": [
+    "10% of £120 is £12 (÷ 10).",
+    "5% is half of that: £6.",
+    "15% is £12 + £6 = £18.",
+    "So £18 is taken off the price."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-b92a085b",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:1:7:108"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "On Black Friday, a coat costing £80 has 75% off. How much is taken off the price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 6000
+   },
+   "worked": [
+    "25% is a quarter: £80 ÷ 4 = £20.",
+    "75% is 3 quarters: 3 × £20 = £60.",
+    "So £60 is taken off the price."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-36881925",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:1:8:109"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "In the January sales, a pair of boots costing £120 has 40% off. How much is taken off the price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 4800
+   },
+   "worked": [
+    "10% of £120 is £12 (÷ 10).",
+    "40% is 4 lots of 10%: 4 × £12 = £48.",
+    "So £48 is taken off the price."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-4ecf092c",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:1:9:110"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "In the January sales, a television costing £379 has 12% off. How much is taken off the price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 4548
+   },
+   "worked": [
+    "1% of £379 is £3.79 (÷ 100).",
+    "12% is 12 lots of 1%: 12 × £3.79 = £45.48.",
+    "So £45.48 is taken off the price."
+   ],
+   "slip": []
+  },
+  {
+   "id": "percentages-money-fca6d97b",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:1:10:111"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "In the January sales, a laptop costing £649 has 8% off. How much is taken off the price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 5192
+   },
+   "worked": [
+    "1% of £649 is £6.49 (÷ 100).",
+    "8% is 8 lots of 1%: 8 × £6.49 = £51.92.",
+    "So £51.92 is taken off the price."
+   ],
+   "slip": []
+  },
+  {
+   "id": "percentages-money-5a2760ad",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:1:11:112"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "In the January sales, a sofa costing £600 has 35% off. How much is taken off the price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 21000
+   },
+   "worked": [
+    "10% of £600 is £60 (÷ 10).",
+    "5% is half of that: £30.",
+    "35% is 3 × £60 + £30 = £210.",
+    "So £210 is taken off the price."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-ec64aa01",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:2:0:201"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "On Black Friday, a mattress costing £400 is reduced by 10%. What is the new price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 36000
+   },
+   "worked": [
+    "10% of £400 is £40 (÷ 10).",
+    "New price = £400 − £40 = £360."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 4000
+     },
+     "line": "£40 is the 10% itself. The question asks for the new price, so take it off: £400 − £40 = £360."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-f61fc812",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:2:1:202"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "In the January sales, a pair of headphones costing £40 is reduced by 20%. What is the new price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 3200
+   },
+   "worked": [
+    "10% of £40 is £4 (÷ 10).",
+    "20% is 2 lots of 10%: 2 × £4 = £8.",
+    "New price = £40 − £8 = £32."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 800
+     },
+     "line": "£8 is the 20% itself. The question asks for the new price, so take it off: £40 − £8 = £32."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-56ebb92f",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:2:2:203"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "In the summer sale, a coat costing £120 is reduced by 25%. What is the new price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 9000
+   },
+   "worked": [
+    "£120 ÷ 4 = £30 (25% is a quarter).",
+    "New price = £120 − £30 = £90."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 3000
+     },
+     "line": "£30 is the 25% itself. The question asks for the new price, so take it off: £120 − £30 = £90."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-d86ea436",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:2:3:204"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "On Black Friday, a pair of boots costing £80 is reduced by 30%. What is the new price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 5600
+   },
+   "worked": [
+    "10% of £80 is £8 (÷ 10).",
+    "30% is 3 lots of 10%: 3 × £8 = £24.",
+    "New price = £80 − £24 = £56."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 2400
+     },
+     "line": "£24 is the 30% itself. The question asks for the new price, so take it off: £80 − £24 = £56."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-87366f8a",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:2:4:205"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "In the January sales, a television costing £240 is reduced by 15%. What is the new price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 20400
+   },
+   "worked": [
+    "10% of £240 is £24 (÷ 10).",
+    "5% is half of that: £12.",
+    "15% is £24 + £12 = £36.",
+    "New price = £240 − £36 = £204."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 3600
+     },
+     "line": "£36 is the 15% itself. The question asks for the new price, so take it off: £240 − £36 = £204."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-72ae3836",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:2:5:206"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "In the January sales, a laptop costing £600 is reduced by 40%. What is the new price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 36000
+   },
+   "worked": [
+    "10% of £600 is £60 (÷ 10).",
+    "40% is 4 lots of 10%: 4 × £60 = £240.",
+    "New price = £600 − £240 = £360."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 24000
+     },
+     "line": "£240 is the 40% itself. The question asks for the new price, so take it off: £600 − £240 = £360."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-760e0456",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:2:6:207"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "In the January sales, a sofa costing £549 is reduced by 12%. What is the new price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 48312
+   },
+   "worked": [
+    "1% of £549 is £5.49 (÷ 100).",
+    "12% is 12 lots of 1%: 12 × £5.49 = £65.88.",
+    "New price = £549 − £65.88 = £483.12."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 6588
+     },
+     "line": "£65.88 is the 12% itself. The question asks for the new price, so take it off: £549 − £65.88 = £483.12."
+    }
+   ]
+  },
+  {
+   "id": "percentages-money-6247981e",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:2:7:208"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "From the first of the month, the price of a bicycle costing £240 goes up by 10%. What is the new price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 26400
+   },
+   "worked": [
+    "10% of £240 is £24 (÷ 10).",
+    "New price = £240 + £24 = £264."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 2400
+     },
+     "line": "£24 is the 10% itself. The question asks for the new price, so add it on: £240 + £24 = £264."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-970f2c5e",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:2:8:209"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "From the first of the month, the price of a winter jacket costing £60 goes up by 5%. What is the new price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 6300
+   },
+   "worked": [
+    "10% of £60 is £6 (÷ 10).",
+    "5% is half of that: £3.",
+    "New price = £60 + £3 = £63."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 300
+     },
+     "line": "£3 is the 5% itself. The question asks for the new price, so add it on: £60 + £3 = £63."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-fc246a0a",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:2:9:210"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "From the start of March, the price of a washing machine costing £500 goes up by 20%. What is the new price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 60000
+   },
+   "worked": [
+    "10% of £500 is £50 (÷ 10).",
+    "20% is 2 lots of 10%: 2 × £50 = £100.",
+    "New price = £500 + £100 = £600."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 10000
+     },
+     "line": "£100 is the 20% itself. The question asks for the new price, so add it on: £500 + £100 = £600."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-6c9886ca",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:2:10:211"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "After the new year, the price of a pair of jeans costing £20 goes up by 15%. What is the new price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 2300
+   },
+   "worked": [
+    "10% of £20 is £2 (÷ 10).",
+    "5% is half of that: £1.",
+    "15% is £2 + £1 = £3.",
+    "New price = £20 + £3 = £23."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 300
+     },
+     "line": "£3 is the 15% itself. The question asks for the new price, so add it on: £20 + £3 = £23."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-de688b4e",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:2:11:212"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "From the first of the month, the price of a kettle costing £29 goes up by 8%. What is the new price?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 3132
+   },
+   "worked": [
+    "1% of £29 is £0.29 (÷ 100).",
+    "8% is 8 lots of 1%: 8 × £0.29 = £2.32.",
+    "New price = £29 + £2.32 = £31.32."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 232
+     },
+     "line": "£2.32 is the 8% itself. The question asks for the new price, so add it on: £29 + £2.32 = £31.32."
+    }
+   ]
+  },
+  {
+   "id": "percentages-money-69013f64",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:3:0:301"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "Before the sale, a laptop cost £500. Its sale price is £450. What percentage was knocked off?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 10
+   },
+   "unit": "%",
+   "worked": [
+    "The price fell by £500 − £450 = £50.",
+    "1% of the original price £500 is £5 (÷ 100).",
+    "£50 ÷ £5 = 10, so the reduction is 10%."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-4be9b46c",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:3:1:302"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "Before the sale, a sofa cost £800. Its sale price is £640. What percentage was knocked off?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 20
+   },
+   "unit": "%",
+   "worked": [
+    "The price fell by £800 − £640 = £160.",
+    "1% of the original price £800 is £8 (÷ 100).",
+    "£160 ÷ £8 = 20, so the reduction is 20%."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 25
+     },
+     "line": "The change was divided by the new price, £640. A percentage change is a percentage of the original price, £800."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-c292b5a5",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:3:2:303"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "Before the sale, a bicycle cost £400. Its sale price is £300. What percentage was knocked off?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 25
+   },
+   "unit": "%",
+   "worked": [
+    "The price fell by £400 − £300 = £100.",
+    "1% of the original price £400 is £4 (÷ 100).",
+    "£100 ÷ £4 = 25, so the reduction is 25%."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-ff1ec1d8",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:3:3:304"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "Before the sale, a winter jacket cost £120. Its sale price is £84. What percentage was knocked off?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 30
+   },
+   "unit": "%",
+   "worked": [
+    "The price fell by £120 − £84 = £36.",
+    "1% of the original price £120 is £1.20 (÷ 100).",
+    "£36 ÷ £1.20 = 30, so the reduction is 30%."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-b9b7c452",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:3:4:305"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "Before the sale, a washing machine cost £400. Its sale price is £340. What percentage was knocked off?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 15
+   },
+   "unit": "%",
+   "worked": [
+    "The price fell by £400 − £340 = £60.",
+    "1% of the original price £400 is £4 (÷ 100).",
+    "£60 ÷ £4 = 15, so the reduction is 15%."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-a392736b",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:3:5:306"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "Before the sale, a pair of jeans cost £40. Its sale price is £24. What percentage was knocked off?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 40
+   },
+   "unit": "%",
+   "worked": [
+    "The price fell by £40 − £24 = £16.",
+    "1% of the original price £40 is £0.40 (÷ 100).",
+    "£16 ÷ £0.40 = 40, so the reduction is 40%."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-3da64486",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:3:6:307"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "Before the sale, a kettle cost £20. Its sale price is £17.60. What percentage was knocked off?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "unit": "%",
+   "worked": [
+    "The price fell by £20 − £17.60 = £2.40.",
+    "1% of the original price £20 is £0.20 (÷ 100).",
+    "£2.40 ÷ £0.20 = 12, so the reduction is 12%."
+   ],
+   "slip": []
+  },
+  {
+   "id": "percentages-money-0c0ac212",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:3:7:308"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The price of a mattress goes up from £600 to £660. What is the percentage increase?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 10
+   },
+   "unit": "%",
+   "worked": [
+    "The price rose by £660 − £600 = £60.",
+    "1% of the original price £600 is £6 (÷ 100).",
+    "£60 ÷ £6 = 10, so the increase is 10%."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-601d016d",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:3:8:309"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The price of a pair of headphones goes up from £40 to £48. What is the percentage increase?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 20
+   },
+   "unit": "%",
+   "worked": [
+    "The price rose by £48 − £40 = £8.",
+    "1% of the original price £40 is £0.40 (÷ 100).",
+    "£8 ÷ £0.40 = 20, so the increase is 20%."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-4c6fff66",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:3:9:310"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The price of a coat goes up from £160 to £200. What is the percentage increase?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 25
+   },
+   "unit": "%",
+   "worked": [
+    "The price rose by £200 − £160 = £40.",
+    "1% of the original price £160 is £1.60 (÷ 100).",
+    "£40 ÷ £1.60 = 25, so the increase is 25%."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 20
+     },
+     "line": "The change was divided by the new price, £200. A percentage change is a percentage of the original price, £160."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-5dfbe38b",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:3:10:311"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The price of a pair of boots goes up from £80 to £84. What is the percentage increase?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "unit": "%",
+   "worked": [
+    "The price rose by £84 − £80 = £4.",
+    "1% of the original price £80 is £0.80 (÷ 100).",
+    "£4 ÷ £0.80 = 5, so the increase is 5%."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-17af6961",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:3:11:312"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The price of a television goes up from £200 to £216. What is the percentage increase?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "unit": "%",
+   "worked": [
+    "The price rose by £216 − £200 = £16.",
+    "1% of the original price £200 is £2 (÷ 100).",
+    "£16 ÷ £2 = 8, so the increase is 8%."
+   ],
+   "slip": []
+  },
+  {
+   "id": "percentages-money-0310bb1a",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:4:0:401"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "In the January sales, a pair of jeans costs £32 after a reduction of 20%. What was the price before the reduction?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 4000
+   },
+   "worked": [
+    "£32 is 80% of the original price (100% − 20%).",
+    "1% is £32 ÷ 80 = £0.40.",
+    "100% is £0.40 × 100 = £40."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 2560
+     },
+     "line": "Taking 20% off £32 gives £25.60, which is not the original price. £32 is already 80% of the original, so work back to 100%."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-49cee612",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:4:1:402"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "In the January sales, a kettle costs £18 after a reduction of 10%. What was the price before the reduction?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 2000
+   },
+   "worked": [
+    "£18 is 90% of the original price (100% − 10%).",
+    "1% is £18 ÷ 90 = £0.20.",
+    "100% is £0.20 × 100 = £20."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 1620
+     },
+     "line": "Taking 10% off £18 gives £16.20, which is not the original price. £18 is already 90% of the original, so work back to 100%."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-619f4e05",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:4:2:403"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "In the summer sale, a mattress costs £210 after a reduction of 30%. What was the price before the reduction?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 30000
+   },
+   "worked": [
+    "£210 is 70% of the original price (100% − 30%).",
+    "1% is £210 ÷ 70 = £3.",
+    "100% is £3 × 100 = £300."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 14700
+     },
+     "line": "Taking 30% off £210 gives £147, which is not the original price. £210 is already 70% of the original, so work back to 100%."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-0ced9e0d",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:4:3:404"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "In the January sales, a pair of headphones costs £36 after a reduction of 40%. What was the price before the reduction?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 6000
+   },
+   "worked": [
+    "£36 is 60% of the original price (100% − 40%).",
+    "1% is £36 ÷ 60 = £0.60.",
+    "100% is £0.60 × 100 = £60."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 2160
+     },
+     "line": "Taking 40% off £36 gives £21.60, which is not the original price. £36 is already 60% of the original, so work back to 100%."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-637a68d8",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:4:4:405"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "In the summer sale, a coat costs £80 after a reduction of 50%. What was the price before the reduction?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 16000
+   },
+   "worked": [
+    "£80 is 50% of the original price (100% − 50%).",
+    "1% is £80 ÷ 50 = £1.60.",
+    "100% is £1.60 × 100 = £160."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 4000
+     },
+     "line": "Taking 50% off £80 gives £40, which is not the original price. £80 is already 50% of the original, so work back to 100%."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-7c5e43e5",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:4:5:406"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "In the summer sale, a pair of boots costs £30 after a reduction of 25%. What was the price before the reduction?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 4000
+   },
+   "worked": [
+    "£30 is 75% of the original price (100% − 25%).",
+    "1% is £30 ÷ 75 = £0.40.",
+    "100% is £0.40 × 100 = £40."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 2250
+     },
+     "line": "Taking 25% off £30 gives £22.50, which is not the original price. £30 is already 75% of the original, so work back to 100%."
+    }
+   ]
+  },
+  {
+   "id": "percentages-money-d3f78ee3",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:4:6:407"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "On Black Friday, a television costs £425 after a reduction of 15%. What was the price before the reduction?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 50000
+   },
+   "worked": [
+    "£425 is 85% of the original price (100% − 15%).",
+    "1% is £425 ÷ 85 = £5.",
+    "100% is £5 × 100 = £500."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 36125
+     },
+     "line": "Taking 15% off £425 gives £361.25, which is not the original price. £425 is already 85% of the original, so work back to 100%."
+    }
+   ]
+  },
+  {
+   "id": "percentages-money-0161e35b",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:4:7:408"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "In the summer sale, a laptop costs £440 after a reduction of 12%. What was the price before the reduction?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 50000
+   },
+   "worked": [
+    "£440 is 88% of the original price (100% − 12%).",
+    "1% is £440 ÷ 88 = £5.",
+    "100% is £5 × 100 = £500."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 38720
+     },
+     "line": "Taking 12% off £440 gives £387.20, which is not the original price. £440 is already 88% of the original, so work back to 100%."
+    }
+   ]
+  },
+  {
+   "id": "percentages-money-afe1e95d",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:4:8:409"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "After a rise of 20%, a sofa costs £600. What was the price before the rise?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 50000
+   },
+   "worked": [
+    "£600 is 120% of the original price (100% + 20%).",
+    "1% is £600 ÷ 120 = £5.",
+    "100% is £5 × 100 = £500."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 72000
+     },
+     "line": "Adding 20% to £600 gives £720, which is not the original price. £600 is already 120% of the original, so work back to 100%."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-e675a03e",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:4:9:410"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "After a rise of 10%, a bicycle costs £440. What was the price before the rise?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 40000
+   },
+   "worked": [
+    "£440 is 110% of the original price (100% + 10%).",
+    "1% is £440 ÷ 110 = £4.",
+    "100% is £4 × 100 = £400."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 48400
+     },
+     "line": "Adding 10% to £440 gives £484, which is not the original price. £440 is already 110% of the original, so work back to 100%."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-fd8d36dc",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:4:10:411"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "After a rise of 50%, a winter jacket costs £300. What was the price before the rise?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 20000
+   },
+   "worked": [
+    "£300 is 150% of the original price (100% + 50%).",
+    "1% is £300 ÷ 150 = £2.",
+    "100% is £2 × 100 = £200."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 45000
+     },
+     "line": "Adding 50% to £300 gives £450, which is not the original price. £300 is already 150% of the original, so work back to 100%."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "percentages-money-680a846b",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:4:11:412"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "After a rise of 25%, a washing machine costs £375. What was the price before the rise?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 30000
+   },
+   "worked": [
+    "£375 is 125% of the original price (100% + 25%).",
+    "1% is £375 ÷ 125 = £3.",
+    "100% is £3 × 100 = £300."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 46875
+     },
+     "line": "Adding 25% to £375 gives £468.75, which is not the original price. £375 is already 125% of the original, so work back to 100%."
+    }
+   ]
+  },
+  {
+   "id": "percentages-money-879997ff",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:5:0:501"
+   },
+   "band": 5,
+   "calc": true,
+   "stem": "£400 is put into a savings account paying 5% simple interest a year. How much interest is earned in 3 years?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 6000
+   },
+   "worked": [
+    "This is simple interest: the same amount is added every year.",
+    "Each year: 5% of £400 = £20.",
+    "After 3 years: 3 × £20 = £60 interest."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 6305
+     },
+     "line": "That treats the interest as compound, with each year's interest added before the next is worked out. The question says simple interest: the same £20 every year."
+    }
+   ]
+  },
+  {
+   "id": "percentages-money-eb516841",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:5:1:502"
+   },
+   "band": 5,
+   "calc": true,
+   "stem": "£4000 is put into a savings account paying 4% compound interest a year. How much is in the account after 2 years? Give your answer to the nearest penny.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 432640
+   },
+   "worked": [
+    "Compound interest: each year's interest is added, so the next year's is worked out on the new amount. The multiplier is 100% + 4% = 104% = 1.04.",
+    "Year 1: 4000 × 1.04 = 4160",
+    "Year 2: 4160 × 1.04 = 4326.4",
+    "As a power: 4000 × 1.04^2 = 4326.4, which is £4326.40 to the nearest penny."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 432000
+     },
+     "line": "That is simple interest: the same amount every year. Compound interest is worked out on the new amount each year, so use the multiplier 1.04 once for each year."
+    },
+    {
+     "answer": {
+      "pence": 832000
+     },
+     "line": "The multiplier was multiplied by the number of years. It has to be applied once for each year: 4000 × 1.04^2."
+    },
+    {
+     "answer": {
+      "pence": 784000
+     },
+     "line": "A 4% rise has the multiplier 1.04, not 1.4."
+    }
+   ]
+  },
+  {
+   "id": "percentages-money-e75dea63",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:5:2:503"
+   },
+   "band": 5,
+   "calc": true,
+   "stem": "A car costs £18000 new. Its value falls by 12% each year. What is it worth after 2 years? Give your answer to the nearest penny.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1393920
+   },
+   "worked": [
+    "Depreciation: the value falls by 12% of its value each year. The multiplier is 100% − 12% = 88% = 0.88.",
+    "Year 1: 18000 × 0.88 = 15840",
+    "Year 2: 15840 × 0.88 = 13939.2",
+    "As a power: 18000 × 0.88^2 = 13939.2, which is £13939.20 to the nearest penny."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 2257920
+     },
+     "line": "The value falls, so the multiplier is 100% − 12% = 0.88, not 1.12."
+    }
+   ]
+  },
+  {
+   "id": "percentages-money-8f2c5cec",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:5:3:504"
+   },
+   "band": 5,
+   "calc": true,
+   "stem": "£2500 is put into a savings account paying 8% compound interest a year. How much is in the account after 3 years? Give your answer to the nearest penny.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 314928
+   },
+   "worked": [
+    "Compound interest: each year's interest is added, so the next year's is worked out on the new amount. The multiplier is 100% + 8% = 108% = 1.08.",
+    "Year 1: 2500 × 1.08 = 2700",
+    "Year 2: 2700 × 1.08 = 2916",
+    "Year 3: 2916 × 1.08 = 3149.28",
+    "As a power: 2500 × 1.08^3 = 3149.28, which is £3149.28 to the nearest penny."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 310000
+     },
+     "line": "That is simple interest: the same amount every year. Compound interest is worked out on the new amount each year, so use the multiplier 1.08 once for each year."
+    },
+    {
+     "answer": {
+      "pence": 810000
+     },
+     "line": "The multiplier was multiplied by the number of years. It has to be applied once for each year: 2500 × 1.08^3."
+    },
+    {
+     "answer": {
+      "pence": 1458000
+     },
+     "line": "An 8% rise has the multiplier 1.08, not 1.8."
+    }
+   ]
+  },
+  {
+   "id": "percentages-money-3dada027",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:5:4:505"
+   },
+   "band": 5,
+   "calc": true,
+   "stem": "£2500 is put into a savings account paying 2% simple interest a year. How much is in the account after 4 years?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 270000
+   },
+   "worked": [
+    "This is simple interest: the same amount is added every year.",
+    "Each year: 2% of £2500 = £50.",
+    "After 4 years: 4 × £50 = £200 interest.",
+    "Total = £2500 + £200 = £2700."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 270608
+     },
+     "line": "That treats the interest as compound, with each year's interest added before the next is worked out. The question says simple interest: the same £50 every year."
+    }
+   ]
+  },
+  {
+   "id": "percentages-money-07922f66",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:5:5:506"
+   },
+   "band": 5,
+   "calc": true,
+   "stem": "A car costs £24000 new. Its value falls by 10% each year. What is it worth after 3 years? Give your answer to the nearest penny.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 1749600
+   },
+   "worked": [
+    "Depreciation: the value falls by 10% of its value each year. The multiplier is 100% − 10% = 90% = 0.9.",
+    "Year 1: 24000 × 0.9 = 21600",
+    "Year 2: 21600 × 0.9 = 19440",
+    "Year 3: 19440 × 0.9 = 17496",
+    "As a power: 24000 × 0.9^3 = 17496, which is £17496 to the nearest penny."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 3194400
+     },
+     "line": "The value falls, so the multiplier is 100% − 10% = 0.9, not 1.1."
+    },
+    {
+     "answer": {
+      "pence": 2400
+     },
+     "line": "A fall of 10% leaves 90%, so the multiplier is 0.9, not 0.1."
+    }
+   ]
+  },
+  {
+   "id": "percentages-money-397a21c9",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:5:6:507"
+   },
+   "band": 5,
+   "calc": true,
+   "stem": "£250 is put into a savings account paying 8% compound interest a year. How much interest is earned in 2 years? Give your answer to the nearest penny.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 4160
+   },
+   "worked": [
+    "Compound interest: each year's interest is added, so the next year's is worked out on the new amount. The multiplier is 100% + 8% = 108% = 1.08.",
+    "Year 1: 250 × 1.08 = 270",
+    "Year 2: 270 × 1.08 = 291.6",
+    "As a power: 250 × 1.08^2 = 291.6, which is £291.60 to the nearest penny.",
+    "Interest = £291.60 − £250 = £41.60."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 4000
+     },
+     "line": "That is simple interest: the same amount every year. Compound interest is worked out on the new amount each year, so use the multiplier 1.08 once for each year."
+    },
+    {
+     "answer": {
+      "pence": 29000
+     },
+     "line": "The multiplier was multiplied by the number of years. It has to be applied once for each year: 250 × 1.08^2."
+    },
+    {
+     "answer": {
+      "pence": 56000
+     },
+     "line": "An 8% rise has the multiplier 1.08, not 1.8."
+    }
+   ]
+  },
+  {
+   "id": "percentages-money-4df0662e",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:5:7:508"
+   },
+   "band": 5,
+   "calc": true,
+   "stem": "£250 is put into a savings account paying 8% compound interest a year. How much is in the account after 3 years? Give your answer to the nearest penny.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 31493
+   },
+   "worked": [
+    "Compound interest: each year's interest is added, so the next year's is worked out on the new amount. The multiplier is 100% + 8% = 108% = 1.08.",
+    "Year 1: 250 × 1.08 = 270",
+    "Year 2: 270 × 1.08 = 291.6",
+    "Year 3: 291.6 × 1.08 = 314.928",
+    "As a power: 250 × 1.08^3 = 314.928, which is £314.93 to the nearest penny."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 31000
+     },
+     "line": "That is simple interest: the same amount every year. Compound interest is worked out on the new amount each year, so use the multiplier 1.08 once for each year."
+    },
+    {
+     "answer": {
+      "pence": 81000
+     },
+     "line": "The multiplier was multiplied by the number of years. It has to be applied once for each year: 250 × 1.08^3."
+    },
+    {
+     "answer": {
+      "pence": 145800
+     },
+     "line": "An 8% rise has the multiplier 1.08, not 1.8."
+    }
+   ]
+  },
+  {
+   "id": "percentages-money-0415f1f0",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:5:8:509"
+   },
+   "band": 5,
+   "calc": true,
+   "stem": "£1000 is put into a savings account paying 2% simple interest a year. How much interest is earned in 5 years?",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 10000
+   },
+   "worked": [
+    "This is simple interest: the same amount is added every year.",
+    "Each year: 2% of £1000 = £20.",
+    "After 5 years: 5 × £20 = £100 interest."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 10408
+     },
+     "line": "That treats the interest as compound, with each year's interest added before the next is worked out. The question says simple interest: the same £20 every year."
+    }
+   ]
+  },
+  {
+   "id": "percentages-money-b3eb92f0",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:5:9:510"
+   },
+   "band": 5,
+   "calc": true,
+   "stem": "A car costs £8000 new. Its value falls by 10% each year. What is it worth after 2 years? Give your answer to the nearest penny.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 648000
+   },
+   "worked": [
+    "Depreciation: the value falls by 10% of its value each year. The multiplier is 100% − 10% = 90% = 0.9.",
+    "Year 1: 8000 × 0.9 = 7200",
+    "Year 2: 7200 × 0.9 = 6480",
+    "As a power: 8000 × 0.9^2 = 6480, which is £6480 to the nearest penny."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 968000
+     },
+     "line": "The value falls, so the multiplier is 100% − 10% = 0.9, not 1.1."
+    },
+    {
+     "answer": {
+      "pence": 8000
+     },
+     "line": "A fall of 10% leaves 90%, so the multiplier is 0.9, not 0.1."
+    }
+   ]
+  },
+  {
+   "id": "percentages-money-dc3bcd4f",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:5:10:511"
+   },
+   "band": 5,
+   "calc": true,
+   "stem": "£500 is put into a savings account paying 4% compound interest a year. How much is in the account after 2 years? Give your answer to the nearest penny.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 54080
+   },
+   "worked": [
+    "Compound interest: each year's interest is added, so the next year's is worked out on the new amount. The multiplier is 100% + 4% = 104% = 1.04.",
+    "Year 1: 500 × 1.04 = 520",
+    "Year 2: 520 × 1.04 = 540.8",
+    "As a power: 500 × 1.04^2 = 540.8, which is £540.80 to the nearest penny."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 54000
+     },
+     "line": "That is simple interest: the same amount every year. Compound interest is worked out on the new amount each year, so use the multiplier 1.04 once for each year."
+    },
+    {
+     "answer": {
+      "pence": 104000
+     },
+     "line": "The multiplier was multiplied by the number of years. It has to be applied once for each year: 500 × 1.04^2."
+    },
+    {
+     "answer": {
+      "pence": 98000
+     },
+     "line": "A 4% rise has the multiplier 1.04, not 1.4."
+    }
+   ]
+  },
+  {
+   "id": "percentages-money-5608e62f",
+   "topic": "percentages-money",
+   "source": {
+    "game": "percentages-money-generator",
+    "ref": "generator:MaffsPercentagesMoney.question:5:11:512"
+   },
+   "band": 5,
+   "calc": true,
+   "stem": "A car costs £12000 new. Its value falls by 25% each year. What is it worth after 3 years? Give your answer to the nearest penny.",
+   "diagram": null,
+   "format": "money",
+   "answer": {
+    "pence": 506250
+   },
+   "worked": [
+    "Depreciation: the value falls by 25% of its value each year. The multiplier is 100% − 25% = 75% = 0.75.",
+    "Year 1: 12000 × 0.75 = 9000",
+    "Year 2: 9000 × 0.75 = 6750",
+    "Year 3: 6750 × 0.75 = 5062.5",
+    "As a power: 12000 × 0.75^3 = 5062.5, which is £5062.50 to the nearest penny."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "pence": 2343750
+     },
+     "line": "The value falls, so the multiplier is 100% − 25% = 0.75, not 1.25."
+    }
+   ]
+  }
+ ]
+}
