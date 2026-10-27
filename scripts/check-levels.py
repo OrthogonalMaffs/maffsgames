@@ -81,6 +81,7 @@ take-a-walk
 squared-squirrel
 i-found-a-mark
 hc-factor
+y-so-steep
 index-laws integration-duel just-pythag-it-bruv like-terms-collector linear-equation-solver log-laws
 maths-court matrix-crunch modular-battle moments-master negative-number-line new-shapes normal-navigator
 partial-fractions-duel percentage-flip prime-factorisation prime-or-composite prisoners-dilemma
