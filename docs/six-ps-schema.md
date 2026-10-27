@@ -31,7 +31,8 @@ at two decimal places, and `MaffsAnswer`'s reading of a typed number replace wha
   would say it.
 - **diagram**: `null`, or a self-contained inline SVG string: no external references, colours via `currentColor`
   or theme tokens, a `viewBox`, labels as text.
-- **format**: one of `number`, `money`, `fraction`, `ratio`, `coordinates`, `choice`, `number_unit`.
+- **format**: one of `number`, `money`, `fraction`, `ratio`, `coordinates`, `choice`, `number_unit`, `pair`, `standard_form`
+  (the last two added by contract SIX-PS-PLAYER-FIXES, Jon, 27 Oct 2026).
 - **answer**: shape by format (below).
 - **accept**: by format (below). Absent means the format's default.
 - **unit**: `number` only, optional: a label shown after the box (e.g. `"cm²"`). Not marked.
@@ -61,6 +62,8 @@ By value, never by string.
 | `ratio` | `{"parts": [2, 3]}` (2 or 3 parts, order matters) | `"equivalent"` (default: same proportions) or `"simplest"` (same proportions AND no common factor). One box a part, each read by `MaffsAnswer.parse`. |
 | `coordinates` | `{"x": -2, "y": 5}` | Exact: each box by `MaffsAnswer.exact`. |
 | `choice` | `{"val": "b"}` | Marked by `dataset.val`. |
+| `pair` | `{"x": -1, "y": 1}` | Two labelled boxes, "x =" and "y =" (simultaneous equations). Exact: each box by `MaffsAnswer.exact`, both right. |
+| `standard_form` | `{"m": 4.5, "e": 4}`: the key is itself in standard form, `1 <= abs(m) < 10` and `e` a whole number | Two boxes, "[ ] × 10^[ ]". Right when the value is equal to the key's **and** the first number is at least 1 and under 10. The same value in another form (45 × 10^3, 0.45 × 10^5) is never marked: SR-3's format message ("Right value, but not in standard form: the first number must be at least 1 and less than 10.") and the student writes it again. A different value is wrong. A box that is empty, not a number, or an exponent that is not a whole number is unreadable. |
 | `number_unit` | `{"value": 40, "unit": "km/h"}`, `dp` as for `number` | Both must match (value by the `number` rule above). No unit picked: a prompt to pick one, not a mark. |
 
 **Equal but not in the form asked** (a `fraction` or `ratio` under `"simplest"` that has the right value but is not
@@ -83,6 +86,18 @@ its own code). Spaces round the answer are trimmed; a leading "£" is optional o
 2026, replacing the schema's "strip thousands commas; accept −"; the phone keypad types neither). An unreadable
 answer gets `MaffsAnswer.message('unreadable', ...)` ("Type just the number, e.g. 12.34", or its fraction wording)
 and is not marked.
+
+## Typed answers instead of multiple choice (contract SIX-PS-PLAYER-FIXES (h), Jon, 27 Oct 2026)
+
+A question whose answer a student can write is a typed question, not a choice: a guess on four options scores 25% and the exam asks for a
+written answer. `scripts/gen-six-ps.py` converts a game's multiple choice to a typed answer by one rule, after the topic's builder has run
+(`to_typed`; never by hand, and the source game is untouched): the id, stem, diagram, band and working stay; the options go; the key's value
+is the typed answer (an exact recompute checks the two are equal); a distractor that had a slip line becomes a slip matched by value, and one
+without is dropped. The topics: metric-units (`number`, the unit shown beside the box), averages (`number`), trigonometry (`number` with the `dp`
+the question states), fraction-operations (`fraction`, `equivalent` unless the question asks for simplest form), coordinates (`coordinates`),
+simultaneous (`pair`), standard-form (`standard_form`, and `number` where the question asks for an ordinary number). Multiple choice stays for
+algebra answers (Jon, 25 Oct 2026), probability words and statements, ordering, "can you tell" questions, column vectors, a mode with two
+values and "which of these is larger / equal" selections.
 
 ## Slips
 

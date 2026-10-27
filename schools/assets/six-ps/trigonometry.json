@@ -13,28 +13,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the adjacent = 7.7, hypotenuse = 8. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 150.4 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 94.0 188.2\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">7.7</text><text x=\"141.4\" y=\"163.6\" text-anchor=\"end\">8</text><text x=\"101.0\" y=\"213.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 16,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "46°"
-    },
-    {
-     "val": "b",
-     "label": "16°"
-    },
-    {
-     "val": "c",
-     "label": "44°"
-    },
-    {
-     "val": "d",
-     "label": "74°"
-    }
-   ],
    "worked": [
     "cos θ = 7.7/8",
     "θ = cos⁻¹(7.7/8) = 15.7° = 16° to the nearest degree"
@@ -42,23 +25,27 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "value": 74,
+      "dp": 0
      },
      "line": "Sin⁻¹ instead of cos⁻¹."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 44,
+      "dp": 0
      },
      "line": "Tan⁻¹ instead of cos⁻¹."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 46,
+      "dp": 0
      },
      "line": "Tan⁻¹ of the ratio upside down."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-725fe8a9",
@@ -71,28 +58,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the opposite = 2.1, adjacent = 7.7. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 150.4 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 94.0 188.2\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">7.7</text><text x=\"243.0\" y=\"178.2\" text-anchor=\"start\">2.1</text><text x=\"101.0\" y=\"213.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 15,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "74°"
-    },
-    {
-     "val": "b",
-     "label": "16°"
-    },
-    {
-     "val": "c",
-     "label": "15°"
-    },
-    {
-     "val": "d",
-     "label": "75°"
-    }
-   ],
    "worked": [
     "tan θ = 2.1/7.7",
     "θ = tan⁻¹(2.1/7.7) = 15.3° = 15° to the nearest degree"
@@ -100,23 +70,27 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "value": 75,
+      "dp": 0
      },
      "line": "Ratio upside down: tan⁻¹(A/O)."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 16,
+      "dp": 0
      },
      "line": "Sin⁻¹ instead of tan⁻¹."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 74,
+      "dp": 0
      },
      "line": "Cos⁻¹ instead of tan⁻¹."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-8a6ad2db",
@@ -129,28 +103,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the opposite = 2.3, hypotenuse = 9. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 150.4 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 94.0 188.2\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"243.0\" y=\"178.2\" text-anchor=\"start\">2.3</text><text x=\"141.4\" y=\"163.6\" text-anchor=\"end\">9</text><text x=\"101.0\" y=\"213.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "a"
+    "value": 15,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "15°"
-    },
-    {
-     "val": "b",
-     "label": "75°"
-    },
-    {
-     "val": "c",
-     "label": "14°"
-    },
-    {
-     "val": "d",
-     "label": "76°"
-    }
-   ],
    "worked": [
     "sin θ = 2.3/9",
     "θ = sin⁻¹(2.3/9) = 14.8° = 15° to the nearest degree"
@@ -158,23 +115,27 @@
    "slip": [
     {
      "answer": {
-      "val": "b"
+      "value": 75,
+      "dp": 0
      },
      "line": "Cos⁻¹ instead of sin⁻¹."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 14,
+      "dp": 0
      },
      "line": "Tan⁻¹ instead of sin⁻¹."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 76,
+      "dp": 0
      },
      "line": "Tan⁻¹ of the ratio upside down."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-0ff1104e",
@@ -187,28 +148,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the adjacent = 9.4, hypotenuse = 10. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 134.1 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 93.2 185.7\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">9.4</text><text x=\"140.6\" y=\"155.7\" text-anchor=\"end\">10</text><text x=\"101.0\" y=\"213.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 20,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "70°"
-    },
-    {
-     "val": "b",
-     "label": "43°"
-    },
-    {
-     "val": "c",
-     "label": "47°"
-    },
-    {
-     "val": "d",
-     "label": "20°"
-    }
-   ],
    "worked": [
     "cos θ = 9.4/10",
     "θ = cos⁻¹(9.4/10) = 19.9° = 20° to the nearest degree"
@@ -216,23 +160,27 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "value": 70,
+      "dp": 0
      },
      "line": "Sin⁻¹ instead of cos⁻¹."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 43,
+      "dp": 0
      },
      "line": "Tan⁻¹ instead of cos⁻¹."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 47,
+      "dp": 0
      },
      "line": "Tan⁻¹ of the ratio upside down."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-00b029dd",
@@ -245,28 +193,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the opposite = 5.1, adjacent = 14.1. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 134.1 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 93.2 185.7\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">14.1</text><text x=\"243.0\" y=\"170.1\" text-anchor=\"start\">5.1</text><text x=\"101.0\" y=\"213.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 20,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "70°"
-    },
-    {
-     "val": "b",
-     "label": "20°"
-    },
-    {
-     "val": "c",
-     "label": "21°"
-    },
-    {
-     "val": "d",
-     "label": "69°"
-    }
-   ],
    "worked": [
     "tan θ = 5.1/14.1",
     "θ = tan⁻¹(5.1/14.1) = 19.9° = 20° to the nearest degree"
@@ -274,23 +205,27 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "value": 70,
+      "dp": 0
      },
      "line": "Ratio upside down: tan⁻¹(A/O)."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 21,
+      "dp": 0
      },
      "line": "Sin⁻¹ instead of tan⁻¹."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 69,
+      "dp": 0
      },
      "line": "Cos⁻¹ instead of tan⁻¹."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-3bb15084",
@@ -303,28 +238,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the opposite = 6.8, hypotenuse = 20. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 134.1 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 93.2 185.7\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"243.0\" y=\"170.1\" text-anchor=\"start\">6.8</text><text x=\"140.6\" y=\"155.7\" text-anchor=\"end\">20</text><text x=\"101.0\" y=\"213.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 20,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "71°"
-    },
-    {
-     "val": "b",
-     "label": "19°"
-    },
-    {
-     "val": "c",
-     "label": "70°"
-    },
-    {
-     "val": "d",
-     "label": "20°"
-    }
-   ],
    "worked": [
     "sin θ = 6.8/20",
     "θ = sin⁻¹(6.8/20) = 19.9° = 20° to the nearest degree"
@@ -332,23 +250,27 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "value": 70,
+      "dp": 0
      },
      "line": "Cos⁻¹ instead of sin⁻¹."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 19,
+      "dp": 0
      },
      "line": "Tan⁻¹ instead of sin⁻¹."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 71,
+      "dp": 0
      },
      "line": "Tan⁻¹ of the ratio upside down."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-029eb951",
@@ -361,28 +283,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the adjacent = 10.9, hypotenuse = 12. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 116.7 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 92.2 183.3\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">10.9</text><text x=\"139.8\" y=\"147.3\" text-anchor=\"end\">12</text><text x=\"101.0\" y=\"213.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 25,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "48°"
-    },
-    {
-     "val": "b",
-     "label": "42°"
-    },
-    {
-     "val": "c",
-     "label": "65°"
-    },
-    {
-     "val": "d",
-     "label": "25°"
-    }
-   ],
    "worked": [
     "cos θ = 10.9/12",
     "θ = cos⁻¹(10.9/12) = 24.7° = 25° to the nearest degree"
@@ -390,23 +295,27 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "value": 65,
+      "dp": 0
      },
      "line": "Sin⁻¹ instead of cos⁻¹."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 42,
+      "dp": 0
      },
      "line": "Tan⁻¹ instead of cos⁻¹."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 48,
+      "dp": 0
      },
      "line": "Tan⁻¹ of the ratio upside down."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-e16e5d7b",
@@ -419,28 +328,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the opposite = 7.2, adjacent = 15.4. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 116.7 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 92.2 183.3\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">15.4</text><text x=\"243.0\" y=\"161.4\" text-anchor=\"start\">7.2</text><text x=\"101.0\" y=\"213.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 25,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "28°"
-    },
-    {
-     "val": "b",
-     "label": "65°"
-    },
-    {
-     "val": "c",
-     "label": "25°"
-    },
-    {
-     "val": "d",
-     "label": "62°"
-    }
-   ],
    "worked": [
     "tan θ = 7.2/15.4",
     "θ = tan⁻¹(7.2/15.4) = 25.1° = 25° to the nearest degree"
@@ -448,23 +340,27 @@
    "slip": [
     {
      "answer": {
-      "val": "b"
+      "value": 65,
+      "dp": 0
      },
      "line": "Ratio upside down: tan⁻¹(A/O)."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 28,
+      "dp": 0
      },
      "line": "Sin⁻¹ instead of tan⁻¹."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 62,
+      "dp": 0
      },
      "line": "Cos⁻¹ instead of tan⁻¹."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-f26e32af",
@@ -477,28 +373,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the opposite = 5, hypotenuse = 10. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 97.9 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 91.0 181.0\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"243.0\" y=\"151.9\" text-anchor=\"start\">5</text><text x=\"139.0\" y=\"138.3\" text-anchor=\"end\">10</text><text x=\"101.0\" y=\"213.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "a"
+    "value": 30,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "30°"
-    },
-    {
-     "val": "b",
-     "label": "63°"
-    },
-    {
-     "val": "c",
-     "label": "60°"
-    },
-    {
-     "val": "d",
-     "label": "27°"
-    }
-   ],
    "worked": [
     "sin θ = 5/10",
     "θ = sin⁻¹(5/10) = 30.0° = 30° to the nearest degree"
@@ -506,23 +385,27 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "value": 60,
+      "dp": 0
      },
      "line": "Cos⁻¹ instead of sin⁻¹."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 27,
+      "dp": 0
      },
      "line": "Tan⁻¹ instead of sin⁻¹."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 63,
+      "dp": 0
      },
      "line": "Tan⁻¹ of the ratio upside down."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-a5b666f0",
@@ -535,28 +418,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the adjacent = 12.1, hypotenuse = 14. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 97.9 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 91.0 181.0\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">12.1</text><text x=\"139.0\" y=\"138.3\" text-anchor=\"end\">14</text><text x=\"101.0\" y=\"213.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 30,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "49°"
-    },
-    {
-     "val": "b",
-     "label": "30°"
-    },
-    {
-     "val": "c",
-     "label": "60°"
-    },
-    {
-     "val": "d",
-     "label": "41°"
-    }
-   ],
    "worked": [
     "cos θ = 12.1/14",
     "θ = cos⁻¹(12.1/14) = 30.2° = 30° to the nearest degree"
@@ -564,23 +430,27 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "value": 60,
+      "dp": 0
      },
      "line": "Sin⁻¹ instead of cos⁻¹."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 41,
+      "dp": 0
      },
      "line": "Tan⁻¹ instead of cos⁻¹."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 49,
+      "dp": 0
      },
      "line": "Tan⁻¹ of the ratio upside down."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-d36309e0",
@@ -593,28 +463,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the opposite = 9.5, adjacent = 16.5. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 97.9 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 91.0 181.0\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">16.5</text><text x=\"243.0\" y=\"151.9\" text-anchor=\"start\">9.5</text><text x=\"101.0\" y=\"213.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 30,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "60°"
-    },
-    {
-     "val": "b",
-     "label": "55°"
-    },
-    {
-     "val": "c",
-     "label": "30°"
-    },
-    {
-     "val": "d",
-     "label": "35°"
-    }
-   ],
    "worked": [
     "tan θ = 9.5/16.5",
     "θ = tan⁻¹(9.5/16.5) = 29.9° = 30° to the nearest degree"
@@ -622,23 +475,27 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "value": 60,
+      "dp": 0
      },
      "line": "Ratio upside down: tan⁻¹(A/O)."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 35,
+      "dp": 0
      },
      "line": "Sin⁻¹ instead of tan⁻¹."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 55,
+      "dp": 0
      },
      "line": "Cos⁻¹ instead of tan⁻¹."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-af41a840",
@@ -651,28 +508,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the opposite = 8, hypotenuse = 14. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 77.0 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 89.6 178.8\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"243.0\" y=\"141.5\" text-anchor=\"start\">8</text><text x=\"138.3\" y=\"128.3\" text-anchor=\"end\">14</text><text x=\"109.0\" y=\"189.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 35,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "30°"
-    },
-    {
-     "val": "b",
-     "label": "60°"
-    },
-    {
-     "val": "c",
-     "label": "55°"
-    },
-    {
-     "val": "d",
-     "label": "35°"
-    }
-   ],
    "worked": [
     "sin θ = 8/14",
     "θ = sin⁻¹(8/14) = 34.8° = 35° to the nearest degree"
@@ -680,23 +520,27 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "value": 55,
+      "dp": 0
      },
      "line": "Cos⁻¹ instead of sin⁻¹."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 30,
+      "dp": 0
      },
      "line": "Tan⁻¹ instead of sin⁻¹."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 60,
+      "dp": 0
      },
      "line": "Tan⁻¹ of the ratio upside down."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-583e5c3b",
@@ -709,28 +553,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the adjacent = 13.1, hypotenuse = 16. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 77.0 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 89.6 178.8\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">13.1</text><text x=\"138.3\" y=\"128.3\" text-anchor=\"end\">16</text><text x=\"109.0\" y=\"189.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 35,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "51°"
-    },
-    {
-     "val": "b",
-     "label": "39°"
-    },
-    {
-     "val": "c",
-     "label": "55°"
-    },
-    {
-     "val": "d",
-     "label": "35°"
-    }
-   ],
    "worked": [
     "cos θ = 13.1/16",
     "θ = cos⁻¹(13.1/16) = 35.0° = 35° to the nearest degree"
@@ -738,23 +565,27 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "value": 55,
+      "dp": 0
      },
      "line": "Sin⁻¹ instead of cos⁻¹."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 39,
+      "dp": 0
      },
      "line": "Tan⁻¹ instead of cos⁻¹."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 51,
+      "dp": 0
      },
      "line": "Tan⁻¹ of the ratio upside down."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-3dc525da",
@@ -767,28 +598,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the opposite = 12, adjacent = 17.2. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 77.0 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 89.6 178.8\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">17.2</text><text x=\"243.0\" y=\"141.5\" text-anchor=\"start\">12</text><text x=\"109.0\" y=\"189.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 35,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "55°"
-    },
-    {
-     "val": "b",
-     "label": "35°"
-    },
-    {
-     "val": "c",
-     "label": "44°"
-    },
-    {
-     "val": "d",
-     "label": "46°"
-    }
-   ],
    "worked": [
     "tan θ = 12/17.2",
     "θ = tan⁻¹(12/17.2) = 34.9° = 35° to the nearest degree"
@@ -796,23 +610,27 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "value": 55,
+      "dp": 0
      },
      "line": "Ratio upside down: tan⁻¹(A/O)."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 44,
+      "dp": 0
      },
      "line": "Sin⁻¹ instead of tan⁻¹."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 46,
+      "dp": 0
      },
      "line": "Cos⁻¹ instead of tan⁻¹."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-5f375952",
@@ -825,28 +643,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the opposite = 12.2, hypotenuse = 19. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 53.4 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 88.0 176.7\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"243.0\" y=\"129.7\" text-anchor=\"start\">12.2</text><text x=\"137.6\" y=\"117.0\" text-anchor=\"end\">19</text><text x=\"109.0\" y=\"189.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 40,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "33°"
-    },
-    {
-     "val": "b",
-     "label": "50°"
-    },
-    {
-     "val": "c",
-     "label": "57°"
-    },
-    {
-     "val": "d",
-     "label": "40°"
-    }
-   ],
    "worked": [
     "sin θ = 12.2/19",
     "θ = sin⁻¹(12.2/19) = 39.9° = 40° to the nearest degree"
@@ -854,23 +655,27 @@
    "slip": [
     {
      "answer": {
-      "val": "b"
+      "value": 50,
+      "dp": 0
      },
      "line": "Cos⁻¹ instead of sin⁻¹."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 33,
+      "dp": 0
      },
      "line": "Tan⁻¹ instead of sin⁻¹."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 57,
+      "dp": 0
      },
      "line": "Tan⁻¹ of the ratio upside down."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-66cca8ad",
@@ -883,28 +688,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the adjacent = 14.6, hypotenuse = 19. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 53.4 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 88.0 176.7\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">14.6</text><text x=\"137.6\" y=\"117.0\" text-anchor=\"end\">19</text><text x=\"109.0\" y=\"189.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 40,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "50°"
-    },
-    {
-     "val": "b",
-     "label": "52°"
-    },
-    {
-     "val": "c",
-     "label": "38°"
-    },
-    {
-     "val": "d",
-     "label": "40°"
-    }
-   ],
    "worked": [
     "cos θ = 14.6/19",
     "θ = cos⁻¹(14.6/19) = 39.8° = 40° to the nearest degree"
@@ -912,23 +700,27 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "value": 50,
+      "dp": 0
      },
      "line": "Sin⁻¹ instead of cos⁻¹."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 38,
+      "dp": 0
      },
      "line": "Tan⁻¹ instead of cos⁻¹."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 52,
+      "dp": 0
      },
      "line": "Tan⁻¹ of the ratio upside down."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-fb19ee92",
@@ -941,28 +733,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the opposite = 6.1, adjacent = 5.1. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M78.7 196.0 L221.3 196.0 L221.3 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M209.3 196.0 L209.3 184.0 L221.3 184.0\" stroke-width=\"1.5\"/><path d=\"M108.7 196.0 A30 30 0 0 0 98.0 173.0\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">5.1</text><text x=\"229.3\" y=\"116.0\" text-anchor=\"start\">6.1</text><text x=\"122.7\" y=\"189.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 50,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "33°"
-    },
-    {
-     "val": "b",
-     "label": "40°"
-    },
-    {
-     "val": "c",
-     "label": "50°"
-    },
-    {
-     "val": "d",
-     "label": "57°"
-    }
-   ],
    "worked": [
     "tan θ = 6.1/5.1",
     "θ = tan⁻¹(6.1/5.1) = 50.1° = 50° to the nearest degree"
@@ -970,23 +745,27 @@
    "slip": [
     {
      "answer": {
-      "val": "b"
+      "value": 40,
+      "dp": 0
      },
      "line": "Ratio upside down: tan⁻¹(A/O)."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 57,
+      "dp": 0
      },
      "line": "Sin⁻¹(A/O) instead of tan⁻¹(O/A)."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 33,
+      "dp": 0
      },
      "line": "Cos⁻¹(A/O) instead of tan⁻¹(O/A)."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-1e786c1d",
@@ -999,28 +778,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the adjacent = 13.5, hypotenuse = 21. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M78.7 196.0 L221.3 196.0 L221.3 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M209.3 196.0 L209.3 184.0 L221.3 184.0\" stroke-width=\"1.5\"/><path d=\"M108.7 196.0 A30 30 0 0 0 98.0 173.0\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">13.5</text><text x=\"136.3\" y=\"104.6\" text-anchor=\"end\">21</text><text x=\"122.7\" y=\"189.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 50,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "57°"
-    },
-    {
-     "val": "b",
-     "label": "50°"
-    },
-    {
-     "val": "c",
-     "label": "40°"
-    },
-    {
-     "val": "d",
-     "label": "33°"
-    }
-   ],
    "worked": [
     "cos θ = 13.5/21",
     "θ = cos⁻¹(13.5/21) = 50.0° = 50° to the nearest degree"
@@ -1028,23 +790,27 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "value": 40,
+      "dp": 0
      },
      "line": "Sin⁻¹ instead of cos⁻¹."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 33,
+      "dp": 0
      },
      "line": "Tan⁻¹ instead of cos⁻¹."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 57,
+      "dp": 0
      },
      "line": "Tan⁻¹ of the ratio upside down."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-46cd34d0",
@@ -1057,28 +823,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the opposite = 7.4, hypotenuse = 9. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M90.5 196.0 L209.5 196.0 L209.5 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M197.5 196.0 L197.5 184.0 L209.5 184.0\" stroke-width=\"1.5\"/><path d=\"M120.5 196.0 A30 30 0 0 0 107.7 171.4\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"217.5\" y=\"116.0\" text-anchor=\"start\">7.4</text><text x=\"135.8\" y=\"105.3\" text-anchor=\"end\">9</text><text x=\"134.5\" y=\"189.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 55,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "35°"
-    },
-    {
-     "val": "b",
-     "label": "39°"
-    },
-    {
-     "val": "c",
-     "label": "51°"
-    },
-    {
-     "val": "d",
-     "label": "55°"
-    }
-   ],
    "worked": [
     "sin θ = 7.4/9",
     "θ = sin⁻¹(7.4/9) = 55.3° = 55° to the nearest degree"
@@ -1086,23 +835,27 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "value": 35,
+      "dp": 0
      },
      "line": "Cos⁻¹ instead of sin⁻¹."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 39,
+      "dp": 0
      },
      "line": "Tan⁻¹ instead of sin⁻¹."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 51,
+      "dp": 0
      },
      "line": "Tan⁻¹ of the ratio upside down."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-c8c4bf2c",
@@ -1115,28 +868,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the opposite = 7.4, adjacent = 5.2. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M90.5 196.0 L209.5 196.0 L209.5 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M197.5 196.0 L197.5 184.0 L209.5 184.0\" stroke-width=\"1.5\"/><path d=\"M120.5 196.0 A30 30 0 0 0 107.7 171.4\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">5.2</text><text x=\"217.5\" y=\"116.0\" text-anchor=\"start\">7.4</text><text x=\"134.5\" y=\"189.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 55,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "45°"
-    },
-    {
-     "val": "b",
-     "label": "54°"
-    },
-    {
-     "val": "c",
-     "label": "35°"
-    },
-    {
-     "val": "d",
-     "label": "55°"
-    }
-   ],
    "worked": [
     "tan θ = 7.4/5.2",
     "θ = tan⁻¹(7.4/5.2) = 54.9° = 55° to the nearest degree"
@@ -1144,23 +880,27 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "value": 35,
+      "dp": 0
      },
      "line": "Ratio upside down: tan⁻¹(A/O)."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 45,
+      "dp": 0
      },
      "line": "Sin⁻¹(A/O) instead of tan⁻¹(O/A)."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 54,
+      "dp": 0
      },
      "line": "Ratio rounded to 1 d.p. before tan⁻¹."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-676c553b",
@@ -1173,28 +913,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the adjacent = 4, hypotenuse = 8. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M100.9 196.0 L199.1 196.0 L199.1 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M187.1 196.0 L187.1 184.0 L199.1 184.0\" stroke-width=\"1.5\"/><path d=\"M130.9 196.0 A30 30 0 0 0 115.9 170.0\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">4</text><text x=\"135.3\" y=\"106.0\" text-anchor=\"end\">8</text><text x=\"144.9\" y=\"189.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 60,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "63°"
-    },
-    {
-     "val": "b",
-     "label": "27°"
-    },
-    {
-     "val": "c",
-     "label": "30°"
-    },
-    {
-     "val": "d",
-     "label": "60°"
-    }
-   ],
    "worked": [
     "cos θ = 4/8",
     "θ = cos⁻¹(4/8) = 60.0° = 60° to the nearest degree"
@@ -1202,23 +925,27 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "value": 30,
+      "dp": 0
      },
      "line": "Sin⁻¹ instead of cos⁻¹."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 27,
+      "dp": 0
      },
      "line": "Tan⁻¹ instead of cos⁻¹."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 63,
+      "dp": 0
      },
      "line": "Tan⁻¹ of the ratio upside down."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-f704b136",
@@ -1231,28 +958,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the opposite = 9.5, adjacent = 5.5. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M100.9 196.0 L199.1 196.0 L199.1 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M187.1 196.0 L187.1 184.0 L199.1 184.0\" stroke-width=\"1.5\"/><path d=\"M130.9 196.0 A30 30 0 0 0 115.9 170.0\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">5.5</text><text x=\"207.1\" y=\"116.0\" text-anchor=\"start\">9.5</text><text x=\"144.9\" y=\"189.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 60,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "35°"
-    },
-    {
-     "val": "b",
-     "label": "30°"
-    },
-    {
-     "val": "c",
-     "label": "55°"
-    },
-    {
-     "val": "d",
-     "label": "60°"
-    }
-   ],
    "worked": [
     "tan θ = 9.5/5.5",
     "θ = tan⁻¹(9.5/5.5) = 59.9° = 60° to the nearest degree"
@@ -1260,23 +970,27 @@
    "slip": [
     {
      "answer": {
-      "val": "b"
+      "value": 30,
+      "dp": 0
      },
      "line": "Ratio upside down: tan⁻¹(A/O)."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 35,
+      "dp": 0
      },
      "line": "Sin⁻¹(A/O) instead of tan⁻¹(O/A)."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 55,
+      "dp": 0
      },
      "line": "Cos⁻¹(A/O) instead of tan⁻¹(O/A)."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-0e74d376",
@@ -1289,28 +1003,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the opposite = 11.3, hypotenuse = 13. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M100.9 196.0 L199.1 196.0 L199.1 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M187.1 196.0 L187.1 184.0 L199.1 184.0\" stroke-width=\"1.5\"/><path d=\"M130.9 196.0 A30 30 0 0 0 115.9 170.0\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"207.1\" y=\"116.0\" text-anchor=\"start\">11.3</text><text x=\"135.3\" y=\"106.0\" text-anchor=\"end\">13</text><text x=\"144.9\" y=\"189.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 60,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "30°"
-    },
-    {
-     "val": "b",
-     "label": "41°"
-    },
-    {
-     "val": "c",
-     "label": "49°"
-    },
-    {
-     "val": "d",
-     "label": "60°"
-    }
-   ],
    "worked": [
     "sin θ = 11.3/13",
     "θ = sin⁻¹(11.3/13) = 60.4° = 60° to the nearest degree"
@@ -1318,23 +1015,27 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "value": 30,
+      "dp": 0
      },
      "line": "Cos⁻¹ instead of sin⁻¹."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 41,
+      "dp": 0
      },
      "line": "Tan⁻¹ instead of sin⁻¹."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 49,
+      "dp": 0
      },
      "line": "Tan⁻¹ of the ratio upside down."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-8601743f",
@@ -1347,28 +1048,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the adjacent = 4.2, hypotenuse = 10. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M110.4 196.0 L189.6 196.0 L189.6 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M177.6 196.0 L177.6 184.0 L189.6 184.0\" stroke-width=\"1.5\"/><path d=\"M140.4 196.0 A30 30 0 0 0 123.0 168.8\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">4.2</text><text x=\"134.9\" y=\"106.8\" text-anchor=\"end\">10</text><text x=\"154.4\" y=\"189.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 65,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "23°"
-    },
-    {
-     "val": "b",
-     "label": "25°"
-    },
-    {
-     "val": "c",
-     "label": "65°"
-    },
-    {
-     "val": "d",
-     "label": "67°"
-    }
-   ],
    "worked": [
     "cos θ = 4.2/10",
     "θ = cos⁻¹(4.2/10) = 65.2° = 65° to the nearest degree"
@@ -1376,23 +1060,27 @@
    "slip": [
     {
      "answer": {
-      "val": "b"
+      "value": 25,
+      "dp": 0
      },
      "line": "Sin⁻¹ instead of cos⁻¹."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 23,
+      "dp": 0
      },
      "line": "Tan⁻¹ instead of cos⁻¹."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 67,
+      "dp": 0
      },
      "line": "Tan⁻¹ of the ratio upside down."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-0fb0e587",
@@ -1405,28 +1093,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the opposite = 11.8, adjacent = 5.5. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M110.4 196.0 L189.6 196.0 L189.6 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M177.6 196.0 L177.6 184.0 L189.6 184.0\" stroke-width=\"1.5\"/><path d=\"M140.4 196.0 A30 30 0 0 0 123.0 168.8\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">5.5</text><text x=\"197.6\" y=\"116.0\" text-anchor=\"start\">11.8</text><text x=\"154.4\" y=\"189.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "a"
+    "value": 65,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "65°"
-    },
-    {
-     "val": "b",
-     "label": "25°"
-    },
-    {
-     "val": "c",
-     "label": "28°"
-    },
-    {
-     "val": "d",
-     "label": "62°"
-    }
-   ],
    "worked": [
     "tan θ = 11.8/5.5",
     "θ = tan⁻¹(11.8/5.5) = 65.0° = 65° to the nearest degree"
@@ -1434,23 +1105,27 @@
    "slip": [
     {
      "answer": {
-      "val": "b"
+      "value": 25,
+      "dp": 0
      },
      "line": "Ratio upside down: tan⁻¹(A/O)."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 28,
+      "dp": 0
      },
      "line": "Sin⁻¹(A/O) instead of tan⁻¹(O/A)."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 62,
+      "dp": 0
      },
      "line": "Cos⁻¹(A/O) instead of tan⁻¹(O/A)."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-073e9ebc",
@@ -1463,28 +1138,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the opposite = 16.3, hypotenuse = 18. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M110.4 196.0 L189.6 196.0 L189.6 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M177.6 196.0 L177.6 184.0 L189.6 184.0\" stroke-width=\"1.5\"/><path d=\"M140.4 196.0 A30 30 0 0 0 123.0 168.8\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"197.6\" y=\"116.0\" text-anchor=\"start\">16.3</text><text x=\"134.9\" y=\"106.8\" text-anchor=\"end\">18</text><text x=\"154.4\" y=\"189.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "a"
+    "value": 65,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "65°"
-    },
-    {
-     "val": "b",
-     "label": "25°"
-    },
-    {
-     "val": "c",
-     "label": "42°"
-    },
-    {
-     "val": "d",
-     "label": "48°"
-    }
-   ],
    "worked": [
     "sin θ = 16.3/18",
     "θ = sin⁻¹(16.3/18) = 64.9° = 65° to the nearest degree"
@@ -1492,23 +1150,27 @@
    "slip": [
     {
      "answer": {
-      "val": "b"
+      "value": 25,
+      "dp": 0
      },
      "line": "Cos⁻¹ instead of sin⁻¹."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 42,
+      "dp": 0
      },
      "line": "Tan⁻¹ instead of sin⁻¹."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 48,
+      "dp": 0
      },
      "line": "Tan⁻¹ of the ratio upside down."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-0193854a",
@@ -1521,28 +1183,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the adjacent = 4.1, hypotenuse = 12. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M119.1 196.0 L180.9 196.0 L180.9 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M168.9 196.0 L168.9 184.0 L180.9 184.0\" stroke-width=\"1.5\"/><path d=\"M149.1 196.0 A30 30 0 0 0 129.3 167.8\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">4.1</text><text x=\"134.6\" y=\"107.6\" text-anchor=\"end\">12</text><text x=\"159.1\" y=\"189\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 70,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "71°"
-    },
-    {
-     "val": "b",
-     "label": "70°"
-    },
-    {
-     "val": "c",
-     "label": "20°"
-    },
-    {
-     "val": "d",
-     "label": "19°"
-    }
-   ],
    "worked": [
     "cos θ = 4.1/12",
     "θ = cos⁻¹(4.1/12) = 70.0° = 70° to the nearest degree"
@@ -1550,23 +1195,27 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "value": 20,
+      "dp": 0
      },
      "line": "Sin⁻¹ instead of cos⁻¹."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 19,
+      "dp": 0
      },
      "line": "Tan⁻¹ instead of cos⁻¹."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 71,
+      "dp": 0
      },
      "line": "Tan⁻¹ of the ratio upside down."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-cf389095",
@@ -1579,28 +1228,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the opposite = 14.1, adjacent = 5.1. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M119.1 196.0 L180.9 196.0 L180.9 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M168.9 196.0 L168.9 184.0 L180.9 184.0\" stroke-width=\"1.5\"/><path d=\"M149.1 196.0 A30 30 0 0 0 129.3 167.8\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">5.1</text><text x=\"188.9\" y=\"116.0\" text-anchor=\"start\">14.1</text><text x=\"159.1\" y=\"189\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 70,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "20°"
-    },
-    {
-     "val": "b",
-     "label": "69°"
-    },
-    {
-     "val": "c",
-     "label": "70°"
-    },
-    {
-     "val": "d",
-     "label": "21°"
-    }
-   ],
    "worked": [
     "tan θ = 14.1/5.1",
     "θ = tan⁻¹(14.1/5.1) = 70.1° = 70° to the nearest degree"
@@ -1608,23 +1240,27 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "value": 20,
+      "dp": 0
      },
      "line": "Ratio upside down: tan⁻¹(A/O)."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 21,
+      "dp": 0
      },
      "line": "Sin⁻¹(A/O) instead of tan⁻¹(O/A)."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 69,
+      "dp": 0
      },
      "line": "Cos⁻¹(A/O) instead of tan⁻¹(O/A)."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-ca531b25",
@@ -1637,28 +1273,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the opposite = 20.7, hypotenuse = 22. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M119.1 196.0 L180.9 196.0 L180.9 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M168.9 196.0 L168.9 184.0 L180.9 184.0\" stroke-width=\"1.5\"/><path d=\"M149.1 196.0 A30 30 0 0 0 129.3 167.8\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"188.9\" y=\"116.0\" text-anchor=\"start\">20.7</text><text x=\"134.6\" y=\"107.6\" text-anchor=\"end\">22</text><text x=\"159.1\" y=\"189\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 70,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "20°"
-    },
-    {
-     "val": "b",
-     "label": "47°"
-    },
-    {
-     "val": "c",
-     "label": "43°"
-    },
-    {
-     "val": "d",
-     "label": "70°"
-    }
-   ],
    "worked": [
     "sin θ = 20.7/22",
     "θ = sin⁻¹(20.7/22) = 70.2° = 70° to the nearest degree"
@@ -1666,23 +1285,27 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "value": 20,
+      "dp": 0
      },
      "line": "Cos⁻¹ instead of sin⁻¹."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 43,
+      "dp": 0
      },
      "line": "Tan⁻¹ instead of sin⁻¹."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 47,
+      "dp": 0
      },
      "line": "Tan⁻¹ of the ratio upside down."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-58464df2",
@@ -1695,28 +1318,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, the opposite = 11.8, hypotenuse = 12. Find angle θ to the nearest degree.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M135.0 196.0 L165.0 196.0 L165.0 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M153.0 196.0 L153.0 184.0 L165.0 184.0\" stroke-width=\"1.5\"/><path d=\"M165.0 196.0 A30 30 0 0 0 140.2 166.5\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"173.0\" y=\"116.0\" text-anchor=\"start\">11.8</text><text x=\"134.2\" y=\"109.3\" text-anchor=\"end\">12</text><text x=\"179.0\" y=\"189.0\" text-anchor=\"start\">θ</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 80,
+    "dp": 0
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "45°"
-    },
-    {
-     "val": "b",
-     "label": "10°"
-    },
-    {
-     "val": "c",
-     "label": "80°"
-    },
-    {
-     "val": "d",
-     "label": "1.39°"
-    }
-   ],
    "worked": [
     "sin θ = 11.8/12",
     "θ = sin⁻¹(11.8/12) = 79.5° = 80° to the nearest degree"
@@ -1724,23 +1330,20 @@
    "slip": [
     {
      "answer": {
-      "val": "b"
+      "value": 10,
+      "dp": 0
      },
      "line": "Cos⁻¹ instead of sin⁻¹."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 45,
+      "dp": 0
      },
      "line": "Tan⁻¹ instead of sin⁻¹."
-    },
-    {
-     "answer": {
-      "val": "d"
-     },
-     "line": "Calculator in radians."
     }
-   ]
+   ],
+   "unit": "°"
   },
   {
    "id": "trigonometry-6d1a44ef",
@@ -1753,28 +1356,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 15°, hypotenuse = 9. Find the opposite side to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 150.4 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 94.0 188.2\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"243.0\" y=\"178.2\" text-anchor=\"start\">?</text><text x=\"141.4\" y=\"163.6\" text-anchor=\"end\">9</text><text x=\"101.0\" y=\"213.0\" text-anchor=\"start\">15°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 2.3,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "8.7"
-    },
-    {
-     "val": "b",
-     "label": "2.4"
-    },
-    {
-     "val": "c",
-     "label": "34.8"
-    },
-    {
-     "val": "d",
-     "label": "2.3"
-    }
-   ],
    "worked": [
     "sin 15° = O/9",
     "O = 9×sin(15°) = 2.3"
@@ -1782,19 +1368,22 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "value": 8.7,
+      "dp": 1
      },
      "line": "Cos instead of sin."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 2.4,
+      "dp": 1
      },
      "line": "Tan instead of sin."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 34.8,
+      "dp": 1
      },
      "line": "Divided by sin instead of multiplying."
     }
@@ -1811,28 +1400,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 15°, hypotenuse = 9. Find the adjacent side to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 150.4 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 94.0 188.2\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">?</text><text x=\"141.4\" y=\"163.6\" text-anchor=\"end\">9</text><text x=\"101.0\" y=\"213.0\" text-anchor=\"start\">15°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 8.7,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "9.3"
-    },
-    {
-     "val": "b",
-     "label": "2.4"
-    },
-    {
-     "val": "c",
-     "label": "8.7"
-    },
-    {
-     "val": "d",
-     "label": "2.3"
-    }
-   ],
    "worked": [
     "cos 15° = A/9",
     "A = 9×cos(15°) = 8.7"
@@ -1840,19 +1412,22 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "value": 2.3,
+      "dp": 1
      },
      "line": "Sin instead of cos."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 2.4,
+      "dp": 1
      },
      "line": "Tan instead of cos."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 9.3,
+      "dp": 1
      },
      "line": "Divided by cos instead of multiplying."
     }
@@ -1869,28 +1444,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 20°, hypotenuse = 14. Find the opposite side to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 134.1 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 93.2 185.7\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"243.0\" y=\"170.1\" text-anchor=\"start\">?</text><text x=\"140.6\" y=\"155.7\" text-anchor=\"end\">14</text><text x=\"101.0\" y=\"213.0\" text-anchor=\"start\">20°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 4.8,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "13.2"
-    },
-    {
-     "val": "b",
-     "label": "5.1"
-    },
-    {
-     "val": "c",
-     "label": "40.9"
-    },
-    {
-     "val": "d",
-     "label": "4.8"
-    }
-   ],
    "worked": [
     "sin 20° = O/14",
     "O = 14×sin(20°) = 4.8"
@@ -1898,19 +1456,22 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "value": 13.2,
+      "dp": 1
      },
      "line": "Cos instead of sin."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 5.1,
+      "dp": 1
      },
      "line": "Tan instead of sin."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 40.9,
+      "dp": 1
      },
      "line": "Divided by sin instead of multiplying."
     }
@@ -1927,28 +1488,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 20°, hypotenuse = 14. Find the adjacent side to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 134.1 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 93.2 185.7\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">?</text><text x=\"140.6\" y=\"155.7\" text-anchor=\"end\">14</text><text x=\"101.0\" y=\"213.0\" text-anchor=\"start\">20°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 13.2,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "14.9"
-    },
-    {
-     "val": "b",
-     "label": "4.8"
-    },
-    {
-     "val": "c",
-     "label": "13.2"
-    },
-    {
-     "val": "d",
-     "label": "5.1"
-    }
-   ],
    "worked": [
     "cos 20° = A/14",
     "A = 14×cos(20°) = 13.2"
@@ -1956,19 +1500,22 @@
    "slip": [
     {
      "answer": {
-      "val": "b"
+      "value": 4.8,
+      "dp": 1
      },
      "line": "Sin instead of cos."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 5.1,
+      "dp": 1
      },
      "line": "Tan instead of cos."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 14.9,
+      "dp": 1
      },
      "line": "Divided by cos instead of multiplying."
     }
@@ -1985,28 +1532,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 25°, hypotenuse = 19. Find the opposite side to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 116.7 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 92.2 183.3\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"243.0\" y=\"161.4\" text-anchor=\"start\">?</text><text x=\"139.8\" y=\"147.3\" text-anchor=\"end\">19</text><text x=\"101.0\" y=\"213.0\" text-anchor=\"start\">25°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 8.0,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "45.0"
-    },
-    {
-     "val": "b",
-     "label": "8.9"
-    },
-    {
-     "val": "c",
-     "label": "8.0"
-    },
-    {
-     "val": "d",
-     "label": "17.2"
-    }
-   ],
    "worked": [
     "sin 25° = O/19",
     "O = 19×sin(25°) = 8.0"
@@ -2014,19 +1544,22 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "value": 17.2,
+      "dp": 1
      },
      "line": "Cos instead of sin."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 8.9,
+      "dp": 1
      },
      "line": "Tan instead of sin."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 45.0,
+      "dp": 1
      },
      "line": "Divided by sin instead of multiplying."
     }
@@ -2043,28 +1576,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 25°, hypotenuse = 20. Find the adjacent side to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 116.7 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 92.2 183.3\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">?</text><text x=\"139.8\" y=\"147.3\" text-anchor=\"end\">20</text><text x=\"101.0\" y=\"213.0\" text-anchor=\"start\">25°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 18.1,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "22.1"
-    },
-    {
-     "val": "b",
-     "label": "9.3"
-    },
-    {
-     "val": "c",
-     "label": "8.5"
-    },
-    {
-     "val": "d",
-     "label": "18.1"
-    }
-   ],
    "worked": [
     "cos 25° = A/20",
     "A = 20×cos(25°) = 18.1"
@@ -2072,19 +1588,22 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "value": 8.5,
+      "dp": 1
      },
      "line": "Sin instead of cos."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 9.3,
+      "dp": 1
      },
      "line": "Tan instead of cos."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 22.1,
+      "dp": 1
      },
      "line": "Divided by cos instead of multiplying."
     }
@@ -2101,28 +1620,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 35°, hypotenuse = 9. Find the opposite side to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 77.0 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 89.6 178.8\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"243.0\" y=\"141.5\" text-anchor=\"start\">?</text><text x=\"138.3\" y=\"128.3\" text-anchor=\"end\">9</text><text x=\"109.0\" y=\"189.0\" text-anchor=\"start\">35°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 5.2,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "7.4"
-    },
-    {
-     "val": "b",
-     "label": "5.2"
-    },
-    {
-     "val": "c",
-     "label": "15.7"
-    },
-    {
-     "val": "d",
-     "label": "6.3"
-    }
-   ],
    "worked": [
     "sin 35° = O/9",
     "O = 9×sin(35°) = 5.2"
@@ -2130,19 +1632,22 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "value": 7.4,
+      "dp": 1
      },
      "line": "Cos instead of sin."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 6.3,
+      "dp": 1
      },
      "line": "Tan instead of sin."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 15.7,
+      "dp": 1
      },
      "line": "Divided by sin instead of multiplying."
     }
@@ -2159,28 +1664,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 35°, hypotenuse = 11. Find the adjacent side to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 77.0 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 89.6 178.8\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">?</text><text x=\"138.3\" y=\"128.3\" text-anchor=\"end\">11</text><text x=\"109.0\" y=\"189.0\" text-anchor=\"start\">35°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "a"
+    "value": 9.0,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "9.0"
-    },
-    {
-     "val": "b",
-     "label": "7.7"
-    },
-    {
-     "val": "c",
-     "label": "13.4"
-    },
-    {
-     "val": "d",
-     "label": "6.3"
-    }
-   ],
    "worked": [
     "cos 35° = A/11",
     "A = 11×cos(35°) = 9.0"
@@ -2188,19 +1676,22 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "value": 6.3,
+      "dp": 1
      },
      "line": "Sin instead of cos."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 7.7,
+      "dp": 1
      },
      "line": "Tan instead of cos."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 13.4,
+      "dp": 1
      },
      "line": "Divided by cos instead of multiplying."
     }
@@ -2217,28 +1708,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 40°, hypotenuse = 15. Find the opposite side to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 53.4 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 88.0 176.7\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"243.0\" y=\"129.7\" text-anchor=\"start\">?</text><text x=\"137.6\" y=\"117.0\" text-anchor=\"end\">15</text><text x=\"109.0\" y=\"189.0\" text-anchor=\"start\">40°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 9.6,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "12.6"
-    },
-    {
-     "val": "b",
-     "label": "23.3"
-    },
-    {
-     "val": "c",
-     "label": "9.6"
-    },
-    {
-     "val": "d",
-     "label": "11.5"
-    }
-   ],
    "worked": [
     "sin 40° = O/15",
     "O = 15×sin(40°) = 9.6"
@@ -2246,19 +1720,22 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "value": 11.5,
+      "dp": 1
      },
      "line": "Cos instead of sin."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 12.6,
+      "dp": 1
      },
      "line": "Tan instead of sin."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 23.3,
+      "dp": 1
      },
      "line": "Divided by sin instead of multiplying."
     }
@@ -2275,28 +1752,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 40°, hypotenuse = 17. Find the adjacent side to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 53.4 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 88.0 176.7\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">?</text><text x=\"137.6\" y=\"117.0\" text-anchor=\"end\">17</text><text x=\"109.0\" y=\"189.0\" text-anchor=\"start\">40°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "a"
+    "value": 13.0,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "13.0"
-    },
-    {
-     "val": "b",
-     "label": "22.2"
-    },
-    {
-     "val": "c",
-     "label": "14.3"
-    },
-    {
-     "val": "d",
-     "label": "10.9"
-    }
-   ],
    "worked": [
     "cos 40° = A/17",
     "A = 17×cos(40°) = 13.0"
@@ -2304,19 +1764,22 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "value": 10.9,
+      "dp": 1
      },
      "line": "Sin instead of cos."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 14.3,
+      "dp": 1
      },
      "line": "Tan instead of cos."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 22.2,
+      "dp": 1
      },
      "line": "Divided by cos instead of multiplying."
     }
@@ -2333,28 +1796,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 50°, hypotenuse = 20. Find the opposite side to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M78.7 196.0 L221.3 196.0 L221.3 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M209.3 196.0 L209.3 184.0 L221.3 184.0\" stroke-width=\"1.5\"/><path d=\"M108.7 196.0 A30 30 0 0 0 98.0 173.0\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"229.3\" y=\"116.0\" text-anchor=\"start\">?</text><text x=\"136.3\" y=\"104.6\" text-anchor=\"end\">20</text><text x=\"122.7\" y=\"189.0\" text-anchor=\"start\">50°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 15.3,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "26.1"
-    },
-    {
-     "val": "b",
-     "label": "23.8"
-    },
-    {
-     "val": "c",
-     "label": "12.9"
-    },
-    {
-     "val": "d",
-     "label": "15.3"
-    }
-   ],
    "worked": [
     "sin 50° = O/20",
     "O = 20×sin(50°) = 15.3"
@@ -2362,19 +1808,22 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "value": 12.9,
+      "dp": 1
      },
      "line": "Cos instead of sin."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 23.8,
+      "dp": 1
      },
      "line": "Tan instead of sin."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 26.1,
+      "dp": 1
      },
      "line": "Divided by sin instead of multiplying."
     }
@@ -2391,28 +1840,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 55°, hypotenuse = 8. Find the adjacent side to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M90.5 196.0 L209.5 196.0 L209.5 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M197.5 196.0 L197.5 184.0 L209.5 184.0\" stroke-width=\"1.5\"/><path d=\"M120.5 196.0 A30 30 0 0 0 107.7 171.4\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">?</text><text x=\"135.8\" y=\"105.3\" text-anchor=\"end\">8</text><text x=\"134.5\" y=\"189.0\" text-anchor=\"start\">55°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 4.6,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "11.4"
-    },
-    {
-     "val": "b",
-     "label": "4.6"
-    },
-    {
-     "val": "c",
-     "label": "6.6"
-    },
-    {
-     "val": "d",
-     "label": "13.9"
-    }
-   ],
    "worked": [
     "cos 55° = A/8",
     "A = 8×cos(55°) = 4.6"
@@ -2420,19 +1852,22 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "value": 6.6,
+      "dp": 1
      },
      "line": "Sin instead of cos."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 11.4,
+      "dp": 1
      },
      "line": "Tan instead of cos."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 13.9,
+      "dp": 1
      },
      "line": "Divided by cos instead of multiplying."
     }
@@ -2449,28 +1884,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 60°, hypotenuse = 10. Find the opposite side to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M100.9 196.0 L199.1 196.0 L199.1 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M187.1 196.0 L187.1 184.0 L199.1 184.0\" stroke-width=\"1.5\"/><path d=\"M130.9 196.0 A30 30 0 0 0 115.9 170.0\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"207.1\" y=\"116.0\" text-anchor=\"start\">?</text><text x=\"135.3\" y=\"106.0\" text-anchor=\"end\">10</text><text x=\"144.9\" y=\"189.0\" text-anchor=\"start\">60°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "a"
+    "value": 8.7,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "8.7"
-    },
-    {
-     "val": "b",
-     "label": "17.3"
-    },
-    {
-     "val": "c",
-     "label": "5.0"
-    },
-    {
-     "val": "d",
-     "label": "11.5"
-    }
-   ],
    "worked": [
     "sin 60° = O/10",
     "O = 10×sin(60°) = 8.7"
@@ -2478,19 +1896,22 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "value": 5.0,
+      "dp": 1
      },
      "line": "Cos instead of sin."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 17.3,
+      "dp": 1
      },
      "line": "Tan instead of sin."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 11.5,
+      "dp": 1
      },
      "line": "Divided by sin instead of multiplying."
     }
@@ -2507,28 +1928,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 60°, hypotenuse = 14. Find the adjacent side to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M100.9 196.0 L199.1 196.0 L199.1 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M187.1 196.0 L187.1 184.0 L199.1 184.0\" stroke-width=\"1.5\"/><path d=\"M130.9 196.0 A30 30 0 0 0 115.9 170.0\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">?</text><text x=\"135.3\" y=\"106.0\" text-anchor=\"end\">14</text><text x=\"144.9\" y=\"189.0\" text-anchor=\"start\">60°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 7.0,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "24.2"
-    },
-    {
-     "val": "b",
-     "label": "28.0"
-    },
-    {
-     "val": "c",
-     "label": "7.0"
-    },
-    {
-     "val": "d",
-     "label": "12.1"
-    }
-   ],
    "worked": [
     "cos 60° = A/14",
     "A = 14×cos(60°) = 7.0"
@@ -2536,19 +1940,22 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "value": 12.1,
+      "dp": 1
      },
      "line": "Sin instead of cos."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 24.2,
+      "dp": 1
      },
      "line": "Tan instead of cos."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 28.0,
+      "dp": 1
      },
      "line": "Divided by cos instead of multiplying."
     }
@@ -2565,28 +1972,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 65°, hypotenuse = 16. Find the opposite side to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M110.4 196.0 L189.6 196.0 L189.6 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M177.6 196.0 L177.6 184.0 L189.6 184.0\" stroke-width=\"1.5\"/><path d=\"M140.4 196.0 A30 30 0 0 0 123.0 168.8\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"197.6\" y=\"116.0\" text-anchor=\"start\">?</text><text x=\"134.9\" y=\"106.8\" text-anchor=\"end\">16</text><text x=\"150.4\" y=\"189\" text-anchor=\"start\">65°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "a"
+    "value": 14.5,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "14.5"
-    },
-    {
-     "val": "b",
-     "label": "17.7"
-    },
-    {
-     "val": "c",
-     "label": "6.8"
-    },
-    {
-     "val": "d",
-     "label": "34.3"
-    }
-   ],
    "worked": [
     "sin 65° = O/16",
     "O = 16×sin(65°) = 14.5"
@@ -2594,19 +1984,22 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "value": 6.8,
+      "dp": 1
      },
      "line": "Cos instead of sin."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 34.3,
+      "dp": 1
      },
      "line": "Tan instead of sin."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 17.7,
+      "dp": 1
      },
      "line": "Divided by sin instead of multiplying."
     }
@@ -2623,28 +2016,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 65°, hypotenuse = 20. Find the adjacent side to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M110.4 196.0 L189.6 196.0 L189.6 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M177.6 196.0 L177.6 184.0 L189.6 184.0\" stroke-width=\"1.5\"/><path d=\"M140.4 196.0 A30 30 0 0 0 123.0 168.8\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">?</text><text x=\"134.9\" y=\"106.8\" text-anchor=\"end\">20</text><text x=\"150.4\" y=\"189\" text-anchor=\"start\">65°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 8.5,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "18.1"
-    },
-    {
-     "val": "b",
-     "label": "42.9"
-    },
-    {
-     "val": "c",
-     "label": "8.5"
-    },
-    {
-     "val": "d",
-     "label": "47.3"
-    }
-   ],
    "worked": [
     "cos 65° = A/20",
     "A = 20×cos(65°) = 8.5"
@@ -2652,19 +2028,22 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "value": 18.1,
+      "dp": 1
      },
      "line": "Sin instead of cos."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 42.9,
+      "dp": 1
      },
      "line": "Tan instead of cos."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 47.3,
+      "dp": 1
      },
      "line": "Divided by cos instead of multiplying."
     }
@@ -2681,28 +2060,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 70°, hypotenuse = 21. Find the opposite side to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M119.1 196.0 L180.9 196.0 L180.9 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M168.9 196.0 L168.9 184.0 L180.9 184.0\" stroke-width=\"1.5\"/><path d=\"M149.1 196.0 A30 30 0 0 0 129.3 167.8\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"188.9\" y=\"116.0\" text-anchor=\"start\">?</text><text x=\"134.6\" y=\"107.6\" text-anchor=\"end\">21</text><text x=\"153.1\" y=\"179\" text-anchor=\"start\">70°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "a"
+    "value": 19.7,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "19.7"
-    },
-    {
-     "val": "b",
-     "label": "22.3"
-    },
-    {
-     "val": "c",
-     "label": "57.7"
-    },
-    {
-     "val": "d",
-     "label": "7.2"
-    }
-   ],
    "worked": [
     "sin 70° = O/21",
     "O = 21×sin(70°) = 19.7"
@@ -2710,19 +2072,22 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "value": 7.2,
+      "dp": 1
      },
      "line": "Cos instead of sin."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 57.7,
+      "dp": 1
      },
      "line": "Tan instead of sin."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 22.3,
+      "dp": 1
      },
      "line": "Divided by sin instead of multiplying."
     }
@@ -2739,28 +2104,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 75°, hypotenuse = 11. Find the adjacent side to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M127.2 196.0 L172.8 196.0 L172.8 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M160.8 196.0 L160.8 184.0 L172.8 184.0\" stroke-width=\"1.5\"/><path d=\"M157.2 196.0 A30 30 0 0 0 135.0 167.0\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">?</text><text x=\"134.3\" y=\"108.4\" text-anchor=\"end\">11</text><text x=\"175.2\" y=\"189\" text-anchor=\"start\">75°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 2.8,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "41.1"
-    },
-    {
-     "val": "b",
-     "label": "42.5"
-    },
-    {
-     "val": "c",
-     "label": "2.8"
-    },
-    {
-     "val": "d",
-     "label": "10.6"
-    }
-   ],
    "worked": [
     "cos 75° = A/11",
     "A = 11×cos(75°) = 2.8"
@@ -2768,19 +2116,22 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "value": 10.6,
+      "dp": 1
      },
      "line": "Sin instead of cos."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 41.1,
+      "dp": 1
      },
      "line": "Tan instead of cos."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 42.5,
+      "dp": 1
      },
      "line": "Divided by cos instead of multiplying."
     }
@@ -2797,28 +2148,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 80°, hypotenuse = 11. Find the opposite side to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M135.0 196.0 L165.0 196.0 L165.0 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M153.0 196.0 L153.0 184.0 L165.0 184.0\" stroke-width=\"1.5\"/><path d=\"M165.0 196.0 A30 30 0 0 0 140.2 166.5\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"173.0\" y=\"116.0\" text-anchor=\"start\">?</text><text x=\"134.2\" y=\"109.3\" text-anchor=\"end\">11</text><text x=\"179.0\" y=\"189.0\" text-anchor=\"start\">80°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 10.8,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "11.2"
-    },
-    {
-     "val": "b",
-     "label": "10.8"
-    },
-    {
-     "val": "c",
-     "label": "1.9"
-    },
-    {
-     "val": "d",
-     "label": "62.4"
-    }
-   ],
    "worked": [
     "sin 80° = O/11",
     "O = 11×sin(80°) = 10.8"
@@ -2826,19 +2160,22 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "value": 1.9,
+      "dp": 1
      },
      "line": "Cos instead of sin."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 62.4,
+      "dp": 1
      },
      "line": "Tan instead of sin."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 11.2,
+      "dp": 1
      },
      "line": "Divided by sin instead of multiplying."
     }
@@ -2855,28 +2192,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 80°, hypotenuse = 17. Find the adjacent side to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M135.0 196.0 L165.0 196.0 L165.0 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M153.0 196.0 L153.0 184.0 L165.0 184.0\" stroke-width=\"1.5\"/><path d=\"M165.0 196.0 A30 30 0 0 0 140.2 166.5\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"150.0\" y=\"218.0\" text-anchor=\"middle\">?</text><text x=\"134.2\" y=\"109.3\" text-anchor=\"end\">17</text><text x=\"179.0\" y=\"189.0\" text-anchor=\"start\">80°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 3.0,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "96.4"
-    },
-    {
-     "val": "b",
-     "label": "16.7"
-    },
-    {
-     "val": "c",
-     "label": "97.9"
-    },
-    {
-     "val": "d",
-     "label": "3.0"
-    }
-   ],
    "worked": [
     "cos 80° = A/17",
     "A = 17×cos(80°) = 3.0"
@@ -2884,19 +2204,22 @@
    "slip": [
     {
      "answer": {
-      "val": "b"
+      "value": 16.7,
+      "dp": 1
      },
      "line": "Sin instead of cos."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 96.4,
+      "dp": 1
      },
      "line": "Tan instead of cos."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 97.9,
+      "dp": 1
      },
      "line": "Divided by cos instead of multiplying."
     }
@@ -2913,28 +2236,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 15°, opposite = 2.1. Find the hypotenuse to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 150.4 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 94.0 188.2\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"243.0\" y=\"178.2\" text-anchor=\"start\">2.1</text><text x=\"141.4\" y=\"163.6\" text-anchor=\"end\">?</text><text x=\"101.0\" y=\"213.0\" text-anchor=\"start\">15°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 8.1,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "7.8"
-    },
-    {
-     "val": "b",
-     "label": "0.5"
-    },
-    {
-     "val": "c",
-     "label": "2.2"
-    },
-    {
-     "val": "d",
-     "label": "8.1"
-    }
-   ],
    "worked": [
     "sin 15° = 2.1/H",
     "H = 2.1/sin(15°) = 8.1"
@@ -2942,19 +2248,22 @@
    "slip": [
     {
      "answer": {
-      "val": "b"
+      "value": 0.5,
+      "dp": 1
      },
      "line": "Multiplied by sin instead of dividing."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 2.2,
+      "dp": 1
      },
      "line": "Cos instead of sin."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 7.8,
+      "dp": 1
      },
      "line": "Tan instead of sin."
     }
@@ -2971,28 +2280,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 20°, opposite = 4.4. Find the hypotenuse to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 134.1 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 93.2 185.7\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"243.0\" y=\"170.1\" text-anchor=\"start\">4.4</text><text x=\"140.6\" y=\"155.7\" text-anchor=\"end\">?</text><text x=\"101.0\" y=\"213.0\" text-anchor=\"start\">20°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 12.9,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "4.7"
-    },
-    {
-     "val": "b",
-     "label": "12.9"
-    },
-    {
-     "val": "c",
-     "label": "1.5"
-    },
-    {
-     "val": "d",
-     "label": "12.1"
-    }
-   ],
    "worked": [
     "sin 20° = 4.4/H",
     "H = 4.4/sin(20°) = 12.9"
@@ -3000,19 +2292,22 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "value": 1.5,
+      "dp": 1
      },
      "line": "Multiplied by sin instead of dividing."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 4.7,
+      "dp": 1
      },
      "line": "Cos instead of sin."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 12.1,
+      "dp": 1
      },
      "line": "Tan instead of sin."
     }
@@ -3029,28 +2324,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 25°, opposite = 7.6. Find the hypotenuse to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 116.7 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 92.2 183.3\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"243.0\" y=\"161.4\" text-anchor=\"start\">7.6</text><text x=\"139.8\" y=\"147.3\" text-anchor=\"end\">?</text><text x=\"101.0\" y=\"213.0\" text-anchor=\"start\">25°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 18.0,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "16.3"
-    },
-    {
-     "val": "b",
-     "label": "18.0"
-    },
-    {
-     "val": "c",
-     "label": "8.4"
-    },
-    {
-     "val": "d",
-     "label": "3.2"
-    }
-   ],
    "worked": [
     "sin 25° = 7.6/H",
     "H = 7.6/sin(25°) = 18.0"
@@ -3058,19 +2336,22 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "value": 3.2,
+      "dp": 1
      },
      "line": "Multiplied by sin instead of dividing."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 8.4,
+      "dp": 1
      },
      "line": "Cos instead of sin."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 16.3,
+      "dp": 1
      },
      "line": "Tan instead of sin."
     }
@@ -3087,28 +2368,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 35°, opposite = 5.2. Find the hypotenuse to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 77.0 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 89.6 178.8\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"243.0\" y=\"141.5\" text-anchor=\"start\">5.2</text><text x=\"138.3\" y=\"128.3\" text-anchor=\"end\">?</text><text x=\"109.0\" y=\"189.0\" text-anchor=\"start\">35°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 9.1,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "7.4"
-    },
-    {
-     "val": "b",
-     "label": "9.1"
-    },
-    {
-     "val": "c",
-     "label": "3.0"
-    },
-    {
-     "val": "d",
-     "label": "6.3"
-    }
-   ],
    "worked": [
     "sin 35° = 5.2/H",
     "H = 5.2/sin(35°) = 9.1"
@@ -3116,19 +2380,22 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "value": 3.0,
+      "dp": 1
      },
      "line": "Multiplied by sin instead of dividing."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 6.3,
+      "dp": 1
      },
      "line": "Cos instead of sin."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 7.4,
+      "dp": 1
      },
      "line": "Tan instead of sin."
     }
@@ -3145,28 +2412,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 40°, opposite = 9. Find the hypotenuse to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M65.0 196.0 L235.0 196.0 L235.0 53.4 Z\" stroke-linejoin=\"round\"/><path d=\"M223.0 196.0 L223.0 184.0 L235.0 184.0\" stroke-width=\"1.5\"/><path d=\"M95.0 196.0 A30 30 0 0 0 88.0 176.7\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"243.0\" y=\"129.7\" text-anchor=\"start\">9</text><text x=\"137.6\" y=\"117.0\" text-anchor=\"end\">?</text><text x=\"109.0\" y=\"189.0\" text-anchor=\"start\">40°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "a"
+    "value": 14.0,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "14.0"
-    },
-    {
-     "val": "b",
-     "label": "5.8"
-    },
-    {
-     "val": "c",
-     "label": "11.7"
-    },
-    {
-     "val": "d",
-     "label": "10.7"
-    }
-   ],
    "worked": [
     "sin 40° = 9/H",
     "H = 9/sin(40°) = 14.0"
@@ -3174,19 +2424,22 @@
    "slip": [
     {
      "answer": {
-      "val": "b"
+      "value": 5.8,
+      "dp": 1
      },
      "line": "Multiplied by sin instead of dividing."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 11.7,
+      "dp": 1
      },
      "line": "Cos instead of sin."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 10.7,
+      "dp": 1
      },
      "line": "Tan instead of sin."
     }
@@ -3203,28 +2456,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 50°, opposite = 15.3. Find the hypotenuse to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M78.7 196.0 L221.3 196.0 L221.3 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M209.3 196.0 L209.3 184.0 L221.3 184.0\" stroke-width=\"1.5\"/><path d=\"M108.7 196.0 A30 30 0 0 0 98.0 173.0\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"229.3\" y=\"116.0\" text-anchor=\"start\">15.3</text><text x=\"136.3\" y=\"104.6\" text-anchor=\"end\">?</text><text x=\"122.7\" y=\"189.0\" text-anchor=\"start\">50°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 20.0,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "12.8"
-    },
-    {
-     "val": "b",
-     "label": "20.0"
-    },
-    {
-     "val": "c",
-     "label": "11.7"
-    },
-    {
-     "val": "d",
-     "label": "23.8"
-    }
-   ],
    "worked": [
     "sin 50° = 15.3/H",
     "H = 15.3/sin(50°) = 20.0"
@@ -3232,19 +2468,22 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "value": 11.7,
+      "dp": 1
      },
      "line": "Multiplied by sin instead of dividing."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 23.8,
+      "dp": 1
      },
      "line": "Cos instead of sin."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 12.8,
+      "dp": 1
      },
      "line": "Tan instead of sin."
     }
@@ -3261,28 +2500,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 60°, opposite = 8.7. Find the hypotenuse to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M100.9 196.0 L199.1 196.0 L199.1 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M187.1 196.0 L187.1 184.0 L199.1 184.0\" stroke-width=\"1.5\"/><path d=\"M130.9 196.0 A30 30 0 0 0 115.9 170.0\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"207.1\" y=\"116.0\" text-anchor=\"start\">8.7</text><text x=\"135.3\" y=\"106.0\" text-anchor=\"end\">?</text><text x=\"144.9\" y=\"189.0\" text-anchor=\"start\">60°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 10.0,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "17.4"
-    },
-    {
-     "val": "b",
-     "label": "10.0"
-    },
-    {
-     "val": "c",
-     "label": "7.5"
-    },
-    {
-     "val": "d",
-     "label": "5.0"
-    }
-   ],
    "worked": [
     "sin 60° = 8.7/H",
     "H = 8.7/sin(60°) = 10.0"
@@ -3290,19 +2512,22 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "value": 7.5,
+      "dp": 1
      },
      "line": "Multiplied by sin instead of dividing."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 17.4,
+      "dp": 1
      },
      "line": "Cos instead of sin."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 5.0,
+      "dp": 1
      },
      "line": "Tan instead of sin."
     }
@@ -3319,28 +2544,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 65°, opposite = 13.6. Find the hypotenuse to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M110.4 196.0 L189.6 196.0 L189.6 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M177.6 196.0 L177.6 184.0 L189.6 184.0\" stroke-width=\"1.5\"/><path d=\"M140.4 196.0 A30 30 0 0 0 123.0 168.8\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"197.6\" y=\"116.0\" text-anchor=\"start\">13.6</text><text x=\"134.9\" y=\"106.8\" text-anchor=\"end\">?</text><text x=\"150.4\" y=\"189\" text-anchor=\"start\">65°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 15.0,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "32.2"
-    },
-    {
-     "val": "b",
-     "label": "12.3"
-    },
-    {
-     "val": "c",
-     "label": "15.0"
-    },
-    {
-     "val": "d",
-     "label": "6.3"
-    }
-   ],
    "worked": [
     "sin 65° = 13.6/H",
     "H = 13.6/sin(65°) = 15.0"
@@ -3348,19 +2556,22 @@
    "slip": [
     {
      "answer": {
-      "val": "b"
+      "value": 12.3,
+      "dp": 1
      },
      "line": "Multiplied by sin instead of dividing."
     },
     {
      "answer": {
-      "val": "a"
+      "value": 32.2,
+      "dp": 1
      },
      "line": "Cos instead of sin."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 6.3,
+      "dp": 1
      },
      "line": "Tan instead of sin."
     }
@@ -3377,28 +2588,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 70°, opposite = 19.7. Find the hypotenuse to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M119.1 196.0 L180.9 196.0 L180.9 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M168.9 196.0 L168.9 184.0 L180.9 184.0\" stroke-width=\"1.5\"/><path d=\"M149.1 196.0 A30 30 0 0 0 129.3 167.8\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"188.9\" y=\"116.0\" text-anchor=\"start\">19.7</text><text x=\"134.6\" y=\"107.6\" text-anchor=\"end\">?</text><text x=\"153.1\" y=\"179\" text-anchor=\"start\">70°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "a"
+    "value": 21.0,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "21.0"
-    },
-    {
-     "val": "b",
-     "label": "18.5"
-    },
-    {
-     "val": "c",
-     "label": "57.6"
-    },
-    {
-     "val": "d",
-     "label": "7.2"
-    }
-   ],
    "worked": [
     "sin 70° = 19.7/H",
     "H = 19.7/sin(70°) = 21.0"
@@ -3406,19 +2600,22 @@
    "slip": [
     {
      "answer": {
-      "val": "b"
+      "value": 18.5,
+      "dp": 1
      },
      "line": "Multiplied by sin instead of dividing."
     },
     {
      "answer": {
-      "val": "c"
+      "value": 57.6,
+      "dp": 1
      },
      "line": "Cos instead of sin."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 7.2,
+      "dp": 1
      },
      "line": "Tan instead of sin."
     }
@@ -3435,28 +2632,11 @@
    "calc": true,
    "stem": "In a right-angled triangle, angle θ = 80°, opposite = 10.8. Find the hypotenuse to 1 decimal place.",
    "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 230\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M135.0 196.0 L165.0 196.0 L165.0 26.0 Z\" stroke-linejoin=\"round\"/><path d=\"M153.0 196.0 L153.0 184.0 L165.0 184.0\" stroke-width=\"1.5\"/><path d=\"M165.0 196.0 A30 30 0 0 0 140.2 166.5\" stroke-width=\"1.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"15\"><text x=\"173.0\" y=\"116.0\" text-anchor=\"start\">10.8</text><text x=\"134.2\" y=\"109.3\" text-anchor=\"end\">?</text><text x=\"179.0\" y=\"189.0\" text-anchor=\"start\">80°</text></g></svg>",
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 11.0,
+    "dp": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "10.6"
-    },
-    {
-     "val": "b",
-     "label": "62.2"
-    },
-    {
-     "val": "c",
-     "label": "11.0"
-    },
-    {
-     "val": "d",
-     "label": "1.9"
-    }
-   ],
    "worked": [
     "sin 80° = 10.8/H",
     "H = 10.8/sin(80°) = 11.0"
@@ -3464,19 +2644,22 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "value": 10.6,
+      "dp": 1
      },
      "line": "Multiplied by sin instead of dividing."
     },
     {
      "answer": {
-      "val": "b"
+      "value": 62.2,
+      "dp": 1
      },
      "line": "Cos instead of sin."
     },
     {
      "answer": {
-      "val": "d"
+      "value": 1.9,
+      "dp": 1
      },
      "line": "Tan instead of sin."
     }

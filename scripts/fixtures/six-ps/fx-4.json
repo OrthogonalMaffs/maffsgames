@@ -133,40 +133,14 @@
    "band": 3,
    "calc": false,
    "diagram": null,
-   "format": "choice",
-   "stem": "Which expression is \\(3(x + 2)\\) expanded?",
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(3x + 2\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(3x + 6\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(x + 6\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(3x + 5\\)"
-    }
-   ],
+   "format": "pair",
+   "stem": "Solve \\(x + y = 1\\) and \\(x - y = 5\\).",
    "answer": {
-    "val": "b"
+    "x": 3,
+    "y": -2
    },
-   "worked": [
-    "Multiply both terms by 3."
-   ],
-   "slip": [
-    {
-     "answer": {
-      "val": "a"
-     },
-     "line": "3x + 2 multiplies only the first term."
-    }
-   ]
+   "worked": [],
+   "slip": []
   },
   {
    "id": "fixture-f4b58523",
@@ -178,28 +152,11 @@
    "band": 4,
    "calc": false,
    "diagram": null,
-   "format": "choice",
-   "stem": "Which is \\(\\frac{1}{4}\\) as a percentage?",
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(14\\%\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(4\\%\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(25\\%\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(40\\%\\)"
-    }
-   ],
+   "format": "standard_form",
+   "stem": "Write \\(45000\\) in standard form.",
    "answer": {
-    "val": "c"
+    "m": 4.5,
+    "e": 4
    },
    "worked": [],
    "slip": []

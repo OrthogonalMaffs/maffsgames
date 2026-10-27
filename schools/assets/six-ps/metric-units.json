@@ -13,33 +13,16 @@
    "calc": false,
    "stem": "Convert 2500 mm to m.",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 2.5
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "250 m"
-    },
-    {
-     "val": "b",
-     "label": "25 m"
-    },
-    {
-     "val": "c",
-     "label": "2.5 m"
-    },
-    {
-     "val": "d",
-     "label": "0.25 m"
-    }
-   ],
    "worked": [
     "1 m = 1000 mm.",
     "2500 ÷ 1000 = 2.5 m."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "m"
   },
   {
    "id": "metric-units-9db74712",
@@ -52,33 +35,16 @@
    "calc": false,
    "stem": "Convert 3.5 km to m.",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 3500
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "35 m"
-    },
-    {
-     "val": "b",
-     "label": "350 m"
-    },
-    {
-     "val": "c",
-     "label": "35000 m"
-    },
-    {
-     "val": "d",
-     "label": "3500 m"
-    }
-   ],
    "worked": [
     "1 km = 1000 m.",
     "3.5 × 1000 = 3500 m."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "m"
   },
   {
    "id": "metric-units-b2f34472",
@@ -91,33 +57,16 @@
    "calc": false,
    "stem": "Convert 450 cm to m.",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 4.5
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "45 m"
-    },
-    {
-     "val": "b",
-     "label": "0.45 m"
-    },
-    {
-     "val": "c",
-     "label": "0.045 m"
-    },
-    {
-     "val": "d",
-     "label": "4.5 m"
-    }
-   ],
    "worked": [
     "1 m = 100 cm.",
     "450 ÷ 100 = 4.5 m."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "m"
   },
   {
    "id": "metric-units-9b08ebd8",
@@ -130,33 +79,16 @@
    "calc": false,
    "stem": "Convert 0.75 m to mm.",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 750
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "7500 mm"
-    },
-    {
-     "val": "b",
-     "label": "75 mm"
-    },
-    {
-     "val": "c",
-     "label": "750 mm"
-    },
-    {
-     "val": "d",
-     "label": "7.5 mm"
-    }
-   ],
    "worked": [
     "1 m = 1000 mm.",
     "0.75 × 1000 = 750 mm."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "mm"
   },
   {
    "id": "metric-units-4f223446",
@@ -169,32 +101,15 @@
    "calc": false,
    "stem": "Convert 8200 m to km.",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 8.2
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "82 km"
-    },
-    {
-     "val": "b",
-     "label": "820 km"
-    },
-    {
-     "val": "c",
-     "label": "8.2 km"
-    },
-    {
-     "val": "d",
-     "label": "0.82 km"
-    }
-   ],
    "worked": [
     "÷ 1000."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "km"
   },
   {
    "id": "metric-units-41b90819",
@@ -207,33 +122,16 @@
    "calc": false,
    "stem": "Convert 15 cm to mm.",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 150
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "15 mm"
-    },
-    {
-     "val": "b",
-     "label": "1500 mm"
-    },
-    {
-     "val": "c",
-     "label": "150 mm"
-    },
-    {
-     "val": "d",
-     "label": "1.5 mm"
-    }
-   ],
    "worked": [
     "1 cm = 10 mm.",
     "15 × 10 = 150 mm."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "mm"
   },
   {
    "id": "metric-units-9a072805",
@@ -246,32 +144,15 @@
    "calc": false,
    "stem": "Convert 0.006 km to cm.",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "a"
+    "value": 600
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "600 cm"
-    },
-    {
-     "val": "b",
-     "label": "60 cm"
-    },
-    {
-     "val": "c",
-     "label": "6 cm"
-    },
-    {
-     "val": "d",
-     "label": "6000 cm"
-    }
-   ],
    "worked": [
     "0.006 km = 6 m = 600 cm."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "cm"
   },
   {
    "id": "metric-units-d421df65",
@@ -284,32 +165,15 @@
    "calc": false,
    "stem": "Convert 48 inches to cm (1 inch = 2.54 cm).",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 121.92
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "12.19 cm"
-    },
-    {
-     "val": "b",
-     "label": "48 cm"
-    },
-    {
-     "val": "c",
-     "label": "96 cm"
-    },
-    {
-     "val": "d",
-     "label": "121.92 cm"
-    }
-   ],
    "worked": [
     "48 × 2.54 = 121.92 cm."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "cm"
   },
   {
    "id": "metric-units-25e78635",
@@ -322,32 +186,15 @@
    "calc": false,
    "stem": "Convert 5 feet to metres (1 foot = 0.3048 m).",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 1.524
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "0.5 m"
-    },
-    {
-     "val": "b",
-     "label": "15.24 m"
-    },
-    {
-     "val": "c",
-     "label": "1.524 m"
-    },
-    {
-     "val": "d",
-     "label": "5.0 m"
-    }
-   ],
    "worked": [
     "5 × 0.3048 = 1.524 m."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "m"
   },
   {
    "id": "metric-units-1b1fdab1",
@@ -360,32 +207,15 @@
    "calc": false,
    "stem": "Convert 3.2 m to cm.",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 320
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "3200 cm"
-    },
-    {
-     "val": "b",
-     "label": "32 cm"
-    },
-    {
-     "val": "c",
-     "label": "320 cm"
-    },
-    {
-     "val": "d",
-     "label": "0.32 cm"
-    }
-   ],
    "worked": [
     "3.2 × 100 = 320 cm."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "cm"
   },
   {
    "id": "metric-units-95597b2c",
@@ -398,34 +228,17 @@
    "calc": false,
    "stem": "Convert 50000 cm² to m².",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "a"
+    "value": 5
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "5 m²"
-    },
-    {
-     "val": "b",
-     "label": "0.5 m²"
-    },
-    {
-     "val": "c",
-     "label": "50 m²"
-    },
-    {
-     "val": "d",
-     "label": "500 m²"
-    }
-   ],
    "worked": [
     "1 m = 100 cm.",
     "1 m² = 100² = 10,000 cm².",
     "50000 ÷ 10000 = 5 m²."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "m²"
   },
   {
    "id": "metric-units-8795a627",
@@ -438,33 +251,16 @@
    "calc": false,
    "stem": "Convert 3 m² to cm².",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 30000
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "300,000 cm²"
-    },
-    {
-     "val": "b",
-     "label": "300 cm²"
-    },
-    {
-     "val": "c",
-     "label": "30,000 cm²"
-    },
-    {
-     "val": "d",
-     "label": "3000 cm²"
-    }
-   ],
    "worked": [
     "1 m² = 10,000 cm².",
     "3 × 10,000 = 30,000 cm²."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "cm²"
   },
   {
    "id": "metric-units-e745742e",
@@ -477,32 +273,15 @@
    "calc": false,
    "stem": "Convert 250 cm² to m².",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 0.025
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "0.0025 m²"
-    },
-    {
-     "val": "b",
-     "label": "0.025 m²"
-    },
-    {
-     "val": "c",
-     "label": "0.25 m²"
-    },
-    {
-     "val": "d",
-     "label": "2.5 m²"
-    }
-   ],
    "worked": [
     "250 ÷ 10,000 = 0.025 m²."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "m²"
   },
   {
    "id": "metric-units-0b48af41",
@@ -515,32 +294,15 @@
    "calc": false,
    "stem": "Convert 4.5 m² to cm².",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 45000
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "450 cm²"
-    },
-    {
-     "val": "b",
-     "label": "45,000 cm²"
-    },
-    {
-     "val": "c",
-     "label": "4500 cm²"
-    },
-    {
-     "val": "d",
-     "label": "450,000 cm²"
-    }
-   ],
    "worked": [
     "4.5 × 10,000 = 45,000 cm²."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "cm²"
   },
   {
    "id": "metric-units-9805b252",
@@ -553,34 +315,17 @@
    "calc": false,
    "stem": "Convert 800 mm² to cm².",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 8
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "0.08 cm²"
-    },
-    {
-     "val": "b",
-     "label": "8 cm²"
-    },
-    {
-     "val": "c",
-     "label": "80 cm²"
-    },
-    {
-     "val": "d",
-     "label": "0.8 cm²"
-    }
-   ],
    "worked": [
     "1 cm = 10 mm.",
     "1 cm² = 100 mm².",
     "800 ÷ 100 = 8 cm²."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "cm²"
   },
   {
    "id": "metric-units-ca479231",
@@ -593,33 +338,16 @@
    "calc": false,
    "stem": "Convert 2 cm² to mm².",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "a"
+    "value": 200
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "200 mm²"
-    },
-    {
-     "val": "b",
-     "label": "2000 mm²"
-    },
-    {
-     "val": "c",
-     "label": "0.2 mm²"
-    },
-    {
-     "val": "d",
-     "label": "20 mm²"
-    }
-   ],
    "worked": [
     "1 cm² = 100 mm².",
     "2 × 100 = 200 mm²."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "mm²"
   },
   {
    "id": "metric-units-06b94078",
@@ -632,32 +360,15 @@
    "calc": false,
    "stem": "Convert 0.5 m² to cm².",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 5000
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "50,000 cm²"
-    },
-    {
-     "val": "b",
-     "label": "5000 cm²"
-    },
-    {
-     "val": "c",
-     "label": "500 cm²"
-    },
-    {
-     "val": "d",
-     "label": "50 cm²"
-    }
-   ],
    "worked": [
     "0.5 × 10,000 = 5000 cm²."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "cm²"
   },
   {
    "id": "metric-units-21fbdad5",
@@ -670,34 +381,17 @@
    "calc": false,
    "stem": "Convert 7.2 km² to m².",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 7200000
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "720,000 m²"
-    },
-    {
-     "val": "b",
-     "label": "7,200,000 m²"
-    },
-    {
-     "val": "c",
-     "label": "72,000 m²"
-    },
-    {
-     "val": "d",
-     "label": "7200 m²"
-    }
-   ],
    "worked": [
     "1 km = 1000 m.",
     "1 km² = 1,000,000 m².",
     "7.2 × 1,000,000 = 7,200,000 m²."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "m²"
   },
   {
    "id": "metric-units-fbfa8eea",
@@ -710,32 +404,15 @@
    "calc": false,
    "stem": "Convert 150,000 cm² to m².",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 15
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "1500 m²"
-    },
-    {
-     "val": "b",
-     "label": "15 m²"
-    },
-    {
-     "val": "c",
-     "label": "150 m²"
-    },
-    {
-     "val": "d",
-     "label": "1.5 m²"
-    }
-   ],
    "worked": [
     "150,000 ÷ 10,000 = 15 m²."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "m²"
   },
   {
    "id": "metric-units-42611ecb",
@@ -748,32 +425,15 @@
    "calc": false,
    "stem": "Convert 6000 mm² to cm².",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "a"
+    "value": 60
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "60 cm²"
-    },
-    {
-     "val": "b",
-     "label": "0.6 cm²"
-    },
-    {
-     "val": "c",
-     "label": "600 cm²"
-    },
-    {
-     "val": "d",
-     "label": "6 cm²"
-    }
-   ],
    "worked": [
     "6000 ÷ 100 = 60 cm²."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "cm²"
   },
   {
    "id": "metric-units-f67237be",
@@ -786,33 +446,16 @@
    "calc": false,
    "stem": "A rectangle is 2 m by 50 cm. Area in m²?",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 1
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "100 m²"
-    },
-    {
-     "val": "b",
-     "label": "1 m²"
-    },
-    {
-     "val": "c",
-     "label": "10 m²"
-    },
-    {
-     "val": "d",
-     "label": "0.1 m²"
-    }
-   ],
    "worked": [
     "Convert: 50 cm = 0.5 m.",
     "Area = 2 × 0.5 = 1 m²."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "m²"
   },
   {
    "id": "metric-units-0b038215",
@@ -825,33 +468,16 @@
    "calc": false,
    "stem": "A square has side 300 mm. Area in cm²?",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 900
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "9 cm²"
-    },
-    {
-     "val": "b",
-     "label": "900 cm²"
-    },
-    {
-     "val": "c",
-     "label": "90 cm²"
-    },
-    {
-     "val": "d",
-     "label": "9000 cm²"
-    }
-   ],
    "worked": [
     "300 mm = 30 cm.",
     "Area = 30² = 900 cm²."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "cm²"
   },
   {
    "id": "metric-units-c2e91997",
@@ -864,32 +490,15 @@
    "calc": false,
    "stem": "A hectare is a square 100 m by 100 m. Convert 1 hectare to m².",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 10000
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "100,000 m²"
-    },
-    {
-     "val": "b",
-     "label": "100 m²"
-    },
-    {
-     "val": "c",
-     "label": "10,000 m²"
-    },
-    {
-     "val": "d",
-     "label": "1000 m²"
-    }
-   ],
    "worked": [
     "100 m × 100 m = 10,000 m²."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "m²"
   },
   {
    "id": "metric-units-66e5c938",
@@ -902,33 +511,16 @@
    "calc": false,
    "stem": "A floor is 4.5 m by 3.2 m. Area in cm²?",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 144000
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "14,400 cm²"
-    },
-    {
-     "val": "b",
-     "label": "14.4 cm²"
-    },
-    {
-     "val": "c",
-     "label": "144,000 cm²"
-    },
-    {
-     "val": "d",
-     "label": "1,440 cm²"
-    }
-   ],
    "worked": [
     "Area = 4.5 × 3.2 = 14.4 m².",
     "14.4 × 10,000 = 144,000 cm²."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "cm²"
   },
   {
    "id": "metric-units-96ed8624",
@@ -941,33 +533,16 @@
    "calc": false,
    "stem": "Convert 0.08 m² to mm².",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 80000
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "800 mm²"
-    },
-    {
-     "val": "b",
-     "label": "8000 mm²"
-    },
-    {
-     "val": "c",
-     "label": "800,000 mm²"
-    },
-    {
-     "val": "d",
-     "label": "80,000 mm²"
-    }
-   ],
    "worked": [
     "1 m² = 1,000,000 mm² (1000²).",
     "0.08 × 1,000,000 = 80,000 mm²."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "mm²"
   },
   {
    "id": "metric-units-5e5bdbe6",
@@ -980,34 +555,17 @@
    "calc": false,
    "stem": "Convert 2,000,000 cm³ to m³.",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 2
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "200 m³"
-    },
-    {
-     "val": "b",
-     "label": "20 m³"
-    },
-    {
-     "val": "c",
-     "label": "2000 m³"
-    },
-    {
-     "val": "d",
-     "label": "2 m³"
-    }
-   ],
    "worked": [
     "1 m = 100 cm.",
     "1 m³ = 100³ = 1,000,000 cm³.",
     "2,000,000 ÷ 1,000,000 = 2 m³."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "m³"
   },
   {
    "id": "metric-units-0185260c",
@@ -1020,32 +578,15 @@
    "calc": false,
    "stem": "Convert 0.5 m³ to cm³.",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 500000
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "5000 cm³"
-    },
-    {
-     "val": "b",
-     "label": "50 cm³"
-    },
-    {
-     "val": "c",
-     "label": "50,000 cm³"
-    },
-    {
-     "val": "d",
-     "label": "500,000 cm³"
-    }
-   ],
    "worked": [
     "0.5 × 1,000,000 = 500,000 cm³."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "cm³"
   },
   {
    "id": "metric-units-dc9c1584",
@@ -1058,32 +599,15 @@
    "calc": false,
    "stem": "Convert 3500 cm³ to m³.",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 0.0035
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "0.035 m³"
-    },
-    {
-     "val": "b",
-     "label": "0.35 m³"
-    },
-    {
-     "val": "c",
-     "label": "0.0035 m³"
-    },
-    {
-     "val": "d",
-     "label": "3.5 m³"
-    }
-   ],
    "worked": [
     "3500 ÷ 1,000,000 = 0.0035 m³."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "m³"
   },
   {
    "id": "metric-units-762bffc5",
@@ -1096,34 +620,17 @@
    "calc": false,
    "stem": "Convert 5000 mm³ to cm³.",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 5
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "50 cm³"
-    },
-    {
-     "val": "b",
-     "label": "500 cm³"
-    },
-    {
-     "val": "c",
-     "label": "5 cm³"
-    },
-    {
-     "val": "d",
-     "label": "0.5 cm³"
-    }
-   ],
    "worked": [
     "1 cm = 10 mm.",
     "1 cm³ = 10³ = 1000 mm³.",
     "5000 ÷ 1000 = 5 cm³."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "cm³"
   },
   {
    "id": "metric-units-e3e20232",
@@ -1136,32 +643,15 @@
    "calc": false,
    "stem": "Convert 8 cm³ to mm³.",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 8000
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "80 mm³"
-    },
-    {
-     "val": "b",
-     "label": "8 mm³"
-    },
-    {
-     "val": "c",
-     "label": "800 mm³"
-    },
-    {
-     "val": "d",
-     "label": "8000 mm³"
-    }
-   ],
    "worked": [
     "8 × 1000 = 8000 mm³."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "mm³"
   },
   {
    "id": "metric-units-f50c40a8",
@@ -1174,33 +664,16 @@
    "calc": false,
    "stem": "Convert 1.5 litres to cm³.",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 1500
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "150 cm³"
-    },
-    {
-     "val": "b",
-     "label": "15 cm³"
-    },
-    {
-     "val": "c",
-     "label": "1500 cm³"
-    },
-    {
-     "val": "d",
-     "label": "15,000 cm³"
-    }
-   ],
    "worked": [
     "1 litre = 1000 cm³.",
     "1.5 × 1000 = 1500 cm³."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "cm³"
   },
   {
    "id": "metric-units-ef70f553",
@@ -1213,33 +686,16 @@
    "calc": false,
    "stem": "Convert 750 ml to cm³.",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 750
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "75 cm³"
-    },
-    {
-     "val": "b",
-     "label": "7.5 cm³"
-    },
-    {
-     "val": "c",
-     "label": "7500 cm³"
-    },
-    {
-     "val": "d",
-     "label": "750 cm³"
-    }
-   ],
    "worked": [
     "1 ml = 1 cm³.",
     "750 ml = 750 cm³."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "cm³"
   },
   {
    "id": "metric-units-540e4110",
@@ -1252,33 +708,16 @@
    "calc": false,
    "stem": "Convert 2.5 litres to m³.",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "a"
+    "value": 0.0025
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "0.0025 m³"
-    },
-    {
-     "val": "b",
-     "label": "2.5 m³"
-    },
-    {
-     "val": "c",
-     "label": "0.25 m³"
-    },
-    {
-     "val": "d",
-     "label": "0.025 m³"
-    }
-   ],
    "worked": [
     "2.5 litres = 2500 cm³.",
     "2500 ÷ 1,000,000 = 0.0025 m³."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "m³"
   },
   {
    "id": "metric-units-8b12b13d",
@@ -1291,33 +730,16 @@
    "calc": false,
    "stem": "Convert 0.1 m³ to litres.",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 100
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "1 litre"
-    },
-    {
-     "val": "b",
-     "label": "100 litres"
-    },
-    {
-     "val": "c",
-     "label": "10 litres"
-    },
-    {
-     "val": "d",
-     "label": "1000 litres"
-    }
-   ],
    "worked": [
     "1 m³ = 1000 litres.",
     "0.1 × 1000 = 100 litres."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "litres"
   },
   {
    "id": "metric-units-3388224c",
@@ -1330,32 +752,15 @@
    "calc": false,
    "stem": "Convert 45,000 cm³ to m³.",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "a"
+    "value": 0.045
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "0.045 m³"
-    },
-    {
-     "val": "b",
-     "label": "45 m³"
-    },
-    {
-     "val": "c",
-     "label": "0.45 m³"
-    },
-    {
-     "val": "d",
-     "label": "4.5 m³"
-    }
-   ],
    "worked": [
     "45,000 ÷ 1,000,000 = 0.045 m³."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "m³"
   },
   {
    "id": "metric-units-b3f2510f",
@@ -1368,33 +773,16 @@
    "calc": false,
    "stem": "Convert 3 m³ to litres.",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 3000
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "300 litres"
-    },
-    {
-     "val": "b",
-     "label": "3000 litres"
-    },
-    {
-     "val": "c",
-     "label": "30 litres"
-    },
-    {
-     "val": "d",
-     "label": "30,000 litres"
-    }
-   ],
    "worked": [
     "1 m³ = 1000 litres.",
     "3 × 1000 = 3000 litres."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "litres"
   },
   {
    "id": "metric-units-c2259fb2",
@@ -1407,33 +795,16 @@
    "calc": false,
    "stem": "A box is 50 cm × 30 cm × 20 cm. Volume in m³?",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 0.03
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "0.3 m³"
-    },
-    {
-     "val": "b",
-     "label": "30 m³"
-    },
-    {
-     "val": "c",
-     "label": "3 m³"
-    },
-    {
-     "val": "d",
-     "label": "0.03 m³"
-    }
-   ],
    "worked": [
     "Volume = 50 × 30 × 20 = 30,000 cm³.",
     "30,000 ÷ 1,000,000 = 0.03 m³."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "m³"
   },
   {
    "id": "metric-units-b6b12b6b",
@@ -1446,33 +817,16 @@
    "calc": false,
    "stem": "A cube has side 0.2 m. Volume in cm³?",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 8000
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "8 cm³"
-    },
-    {
-     "val": "b",
-     "label": "80 cm³"
-    },
-    {
-     "val": "c",
-     "label": "8000 cm³"
-    },
-    {
-     "val": "d",
-     "label": "800 cm³"
-    }
-   ],
    "worked": [
     "0.2 m = 20 cm.",
     "Volume = 20³ = 8000 cm³."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "cm³"
   },
   {
    "id": "metric-units-702924dd",
@@ -1485,32 +839,15 @@
    "calc": false,
    "stem": "Convert 250,000 mm³ to cm³.",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 250
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "2500 cm³"
-    },
-    {
-     "val": "b",
-     "label": "25 cm³"
-    },
-    {
-     "val": "c",
-     "label": "250 cm³"
-    },
-    {
-     "val": "d",
-     "label": "2.5 cm³"
-    }
-   ],
    "worked": [
     "250,000 ÷ 1000 = 250 cm³."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "cm³"
   },
   {
    "id": "metric-units-bfa9cad4",
@@ -1523,32 +860,15 @@
    "calc": false,
    "stem": "A tank holds 0.5 m³. How many litres?",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "a"
+    "value": 500
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "500 litres"
-    },
-    {
-     "val": "b",
-     "label": "5000 litres"
-    },
-    {
-     "val": "c",
-     "label": "5 litres"
-    },
-    {
-     "val": "d",
-     "label": "50 litres"
-    }
-   ],
    "worked": [
     "0.5 × 1000 = 500 litres."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "litres"
   },
   {
    "id": "metric-units-2cc7bf95",
@@ -1561,33 +881,16 @@
    "calc": false,
    "stem": "Rectangle: 2.5 m by 80 cm. Area in m²?",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "c"
+    "value": 2
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "200 m²"
-    },
-    {
-     "val": "b",
-     "label": "20 m²"
-    },
-    {
-     "val": "c",
-     "label": "2 m²"
-    },
-    {
-     "val": "d",
-     "label": "0.2 m²"
-    }
-   ],
    "worked": [
     "Convert: 80 cm = 0.8 m.",
     "Area = 2.5 × 0.8 = 2 m²."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "m²"
   },
   {
    "id": "metric-units-87baf032",
@@ -1600,35 +903,18 @@
    "calc": false,
    "stem": "Box: 1.5 m × 60 cm × 400 mm. Volume in m³?",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 0.36
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "0.036 m³"
-    },
-    {
-     "val": "b",
-     "label": "3.6 m³"
-    },
-    {
-     "val": "c",
-     "label": "36 m³"
-    },
-    {
-     "val": "d",
-     "label": "0.36 m³"
-    }
-   ],
    "worked": [
     "60 cm = 0.6 m.",
     "400 mm = 0.4 m.",
     "1.5 × 0.6 = 0.9.",
     "V = 0.9 × 0.4 = 0.36 m³."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "m³"
   },
   {
    "id": "metric-units-6a16421a",
@@ -1641,33 +927,16 @@
    "calc": false,
    "stem": "Circle: radius 50 cm. Area in m²? (use π ≈ 3.14).",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 0.785
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "7.85 m²"
-    },
-    {
-     "val": "b",
-     "label": "0.785 m²"
-    },
-    {
-     "val": "c",
-     "label": "0.0785 m²"
-    },
-    {
-     "val": "d",
-     "label": "78.5 m²"
-    }
-   ],
    "worked": [
     "50 cm = 0.5 m.",
     "A = π × 0.5² = 3.14 × 0.25 = 0.785 m²."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "m²"
   },
   {
    "id": "metric-units-4f32ecfd",
@@ -1680,34 +949,17 @@
    "calc": true,
    "stem": "Cylinder: radius 10 cm, height 0.5 m. Volume in cm³? Give your answer to 3 significant figures.",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "b"
+    "value": 15700
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "1570 cm³"
-    },
-    {
-     "val": "b",
-     "label": "15,700 cm³"
-    },
-    {
-     "val": "c",
-     "label": "157,000 cm³"
-    },
-    {
-     "val": "d",
-     "label": "157 cm³"
-    }
-   ],
    "worked": [
     "0.5 m = 50 cm.",
     "V = π × 10² × 50 = 5000π = 15,707.96... cm³.",
     "= 15,700 cm³ (3 s.f.)."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "cm³"
   },
   {
    "id": "metric-units-d974cd05",
@@ -1720,33 +972,16 @@
    "calc": false,
    "stem": "Room: 5 m × 4 m × 2.8 m. Volume in litres?",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "d"
+    "value": 56000
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "5600 litres"
-    },
-    {
-     "val": "b",
-     "label": "560 litres"
-    },
-    {
-     "val": "c",
-     "label": "560,000 litres"
-    },
-    {
-     "val": "d",
-     "label": "56,000 litres"
-    }
-   ],
    "worked": [
     "V = 5 × 4 × 2.8 = 56 m³.",
     "56 × 1000 = 56,000 litres."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "litres"
   },
   {
    "id": "metric-units-356c1b13",
@@ -1759,33 +994,16 @@
    "calc": false,
    "stem": "Pipe: diameter 20 mm, length 3 m. Volume in cm³? (π ≈ 3.14).",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "a"
+    "value": 942
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "942 cm³"
-    },
-    {
-     "val": "b",
-     "label": "9420 cm³"
-    },
-    {
-     "val": "c",
-     "label": "9.42 cm³"
-    },
-    {
-     "val": "d",
-     "label": "94.2 cm³"
-    }
-   ],
    "worked": [
     "Radius = 10 mm = 1 cm, length = 300 cm.",
     "V = π × 1² × 300 = 942 cm³."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "cm³"
   },
   {
    "id": "metric-units-5074fd59",
@@ -1798,33 +1016,16 @@
    "calc": false,
    "stem": "Sheet metal: 1.2 m × 800 mm. Area in cm²?",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "a"
+    "value": 9600
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "9600 cm²"
-    },
-    {
-     "val": "b",
-     "label": "96,000 cm²"
-    },
-    {
-     "val": "c",
-     "label": "960 cm²"
-    },
-    {
-     "val": "d",
-     "label": "96 cm²"
-    }
-   ],
    "worked": [
     "1.2 m = 120 cm, 800 mm = 80 cm.",
     "A = 120 × 80 = 9600 cm²."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "cm²"
   },
   {
    "id": "metric-units-fab4c063",
@@ -1837,33 +1038,16 @@
    "calc": false,
    "stem": "A swimming pool is 25 m × 10 m × 1.5 m. Volume in litres?",
    "diagram": null,
-   "format": "choice",
+   "format": "number",
    "answer": {
-    "val": "a"
+    "value": 375000
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "375,000 litres"
-    },
-    {
-     "val": "b",
-     "label": "3,750 litres"
-    },
-    {
-     "val": "c",
-     "label": "37,500 litres"
-    },
-    {
-     "val": "d",
-     "label": "3,750,000 litres"
-    }
-   ],
    "worked": [
     "V = 375 m³.",
     "375 × 1000 = 375,000 litres."
    ],
-   "slip": []
+   "slip": [],
+   "unit": "litres"
   }
  ]
 }
