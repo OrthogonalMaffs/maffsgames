@@ -21,12 +21,12 @@ DONE: 2026-10-27-build-y-so-steep.md   (merged: PR #574, squash f8083cc, 27 Oct 
 DONE: 2026-10-27-build-who-ate-all-the-pies.md   (merged: PR #580, squash bc5c883, 27 Oct 2026; main run 40558247107 green; waited for main to go green after #576, no override)
 DONE: 2026-10-27-build-its-on-sale.md   (merged: PR #579, squash 079ceaa, 27 Oct 2026; main run 40563459598 green)
 DONE: 2026-10-27-build-as-you-can-see.md   (merged: PR #587, squash 24f641e, 27 Oct 2026; main runs 40576210979 and 40576211649 green)
+DONE: 2026-10-27-build-found-a-mark-batch2.md   (merged: PR #585, squash 18454dc, 27 Oct 2026; main runs 40580295716 and 40580295599 green)
 
 ## Queue
 1. **found-a-mark**: MERGED (#569) + art swap MERGED (#573, aaef265, main run 40514401072 green). Report still owed to Jon: its "Decided for you" list and screenshots.
 2. **hc-factor**: MERGED (#571).
 3. **y-so-steep**: MERGED (#574). Unmerged side branch: the "/" key for MaffsKeypad on `claude/keypad-fraction-key` (799dbfd9, worktree `E:/jon/mg-keypad-slash`), NOT a PR. Home lane/Jon to rule on merging it; then set `FRACTIONS = true` in `games/y-so-steep/index.html` to bring in Stage 3 and the fractional items.
-Build queue empty (27 Oct 2026, after #574). Nothing uncontracted is started.
 
 ## Standing notes (Jon, 27 Oct 2026)
 - Roster numbers stay as they are (#102 found-a-mark, #103 hc-factor; next is #104). "The 100th" is the count of LISTED items on the portal, not a roster number. NEVER list anything: listing is the home lane's job and The 6 P's goes first.
@@ -98,8 +98,8 @@ Five stages on the percentages-money bank (schools/assets/percentages-money-gene
 - merge-pr.py refuses while main is red or its run is unfinished; use --wait 540. end-task.py needs a current worktree and a local branch equal to the PR head (reset a local merge-of-main first).
 - Plan job: its-on-sale passed with four `--part` ci-lines on 27 Oct, but the home lane says new --part lines fail the Plan job; use the shard interface when it is on main.
 
-## found-a-mark batch 2: state (27 Oct 2026, PR #585, PARKED)
-Five new types in the game's own bank (angles, mean from a frequency table, the ladder, coffee and tea, conditional probability from a two-way table). Built; local checks green (51 checks; verifier parts 1-5 pass; 14 new planted faults caught, 6 old still caught). PARKED: main's median CI setup is 107 s, so a new or renamed content ci-line counts 120 s + 107 s = 227 s against the 216 s fail line and the Plan job fails. Not overridden, not hand-split (Jon). Release: the cloud lane's step 1 (new lines warn, not fail) is merged, then merge main in and merge. Converting the verifier to shard work units is a follow-up after #578 lands.
+## found-a-mark batch 2: state (27 Oct 2026, PR #585, MERGED 18454dc)
+Five new types in the game's own bank (angles, mean from a frequency table, the ladder, coffee and tea, conditional probability from a two-way table). It was parked at the Plan job (new lines counted 120 s + 107 s setup), released after SHARD (#578) landed. Verifier converted to SHARD work units: one `# ci-shards` header, 32 units (engine, 10 sessions, 22 plants, all caught); no --part lines. Engine extended once for all types. Main green. Footer: if claude/footer-unpin lands, run scripts/apply-footer.py on games/i-found-a-mark/.
 
 ## Decided for you (found-a-mark batch 2; Jon's rulings marked)
 - **Five types per session, 15 method marks (Jon agrees).** A session is five different types always worth 15 method marks (five 3-mark types, or the ladder 2 + coffee or two-way 4 + three 3-mark types), so the leaderboard stays fair. The menu says "15 method marks".
@@ -129,4 +129,10 @@ Follow-ups: convert verify-as-you-can-see.py to # ci-shards; if claude/footer-un
 - Minimum registrations only (data/games.json unlisted entry and roster row); nothing listed.
 - Page title and description reworded to match what games.json generates (KS3/GCSE, description at most 155 characters).
 - `ACS.ui.preview(stage, slot, seed)` read-only test hook.
+
+## Lessons (SHARD / flakes, 27 Oct 2026)
+- Standing rule (Jon): any lane may re-run a failed main run once with `gh run rerun <id> --failed`; if it passes, log it in the shared lanes notes file under "Flakes for the cloud lane's step-4 audit"; if it fails again it is real, tell the home lane.
+- After SHARD (#578), a verifier with `--part` lines conflicts on merge with main's `# ci-shards` version: take main's and re-apply as work units. A new content line used to count 120 s + setup median; SHARD fixed the setup-time cause.
+
+Queue: possibly-maybe (contract 5, Jon's amendment: typed fractions via a numerator/denominator input) in progress on claude/build-possibly-maybe. Open follow-ups for others: as-you-can-see verifier to # ci-shards; footer apply on as-you-can-see and i-found-a-mark if claude/footer-unpin lands; keypad "/" key branch (claude/keypad-fraction-key) awaiting a ruling; shared Stage 6 board label and a shared tolerance helper for MaffsAnswer (candidates).
 
