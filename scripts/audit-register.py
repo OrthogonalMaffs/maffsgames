@@ -74,7 +74,9 @@ NOTICE_MARKER = '<!-- maffs-correction-notice -->'
 UNLISTED_NOT_BY_AUDIT = {'just-pythag-it-bruv': 'new, unlisted until Jon has played and approved it (todo START)',
                          'how-many-parts': 'new, unlisted until Jon has played and approved it (contract HOW-MANY-PARTS)',
                          'take-a-walk': 'new, unlisted until Jon has played and approved it (contract TAKE-A-WALK)',
-                         'squared-squirrel': 'new, unlisted until Jon has played and approved it (contract FOOTBALL-PITCHES)'}
+                         'squared-squirrel': 'new, unlisted until Jon has played and approved it (contract FOOTBALL-PITCHES)',
+                         'i-found-a-mark': 'new, unlisted until Jon has played and approved it (contract FOUND-A-MARK)',
+                         'hc-factor': 'new, unlisted until Jon has played and approved it (contract HC-FACTOR)'}
 
 # A verifier named for something other than its game, or one that covers only part of a game.
 VERIFIER_GAME = {'verify-six-sevens.py': 'six-sevens-bruv'}

@@ -51,7 +51,7 @@ CONTAINERS = {
     "proportion-blaster": "#menu", "quadratic-factoriser": "#startScreen", "scale-factor-scaling": "#menu",
     "screening-room": "#startScreen", "sequence-solver": "#menu", "seven-bridges": "#startScreen",
     "shape-shifter": "#startScreen", "simultaneous-solver": "#menu", "six-sevens-bruv": "#menu",
-    "split-it": "#menuScreen", "squared-squirrel": "#menu", "spot-the-error": "#startScreen", "spot-the-muppet": "#startScreen",
+    "i-found-a-mark": "#menu", "split-it": "#menuScreen", "hc-factor": "#menu", "squared-squirrel": "#menu", "spot-the-error": "#startScreen", "spot-the-muppet": "#startScreen",
     "standard-form-blitz": "#menu", "stat-attack": "#menuScreen", "surd-simplifier": "#menu",
     "suvat": "#startScreen", "take-a-walk": "#menu", "tax-theft": "#diffScreen",
     "terrible-advice": "#startScreen", "test-the-claim": "#menuScreen", "the-perfect-prank": "#scrBrief",
@@ -73,6 +73,7 @@ START_STEPS = {
     "six-sevens-bruv": ["#newGridBtn", ("#iniInput", "ABC"), "#iniCreate", "#startBtn"],
     "test-the-claim": [".mode-btn", "#tailPills .pill", "#sigPills .pill", "#startBtn"],
     "trig-worms": ["#startScreen .btn-primary"],
+    "hc-factor": ["#stageList .stage-btn"],     # contract HC-FACTOR, 27 Oct 2026: a round is chosen from the menu
 }
 
 
