@@ -97,3 +97,17 @@ Five stages on the percentages-money bank (schools/assets/percentages-money-gene
 - merge-pr.py refuses while main is red or its run is unfinished; use --wait 540. end-task.py needs a current worktree and a local branch equal to the PR head (reset a local merge-of-main first).
 - Plan job: its-on-sale passed with four `--part` ci-lines on 27 Oct, but the home lane says new --part lines fail the Plan job; use the shard interface when it is on main.
 
+## found-a-mark batch 2: state (27 Oct 2026, PR #585, PARKED)
+Five new types in the game's own bank (angles, mean from a frequency table, the ladder, coffee and tea, conditional probability from a two-way table). Built; local checks green (51 checks; verifier parts 1-5 pass; 14 new planted faults caught, 6 old still caught). PARKED: main's median CI setup is 107 s, so a new or renamed content ci-line counts 120 s + 107 s = 227 s against the 216 s fail line and the Plan job fails. Not overridden, not hand-split (Jon). Release: the cloud lane's step 1 (new lines warn, not fail) is merged, then merge main in and merge. Converting the verifier to shard work units is a follow-up after #578 lands.
+
+## Decided for you (found-a-mark batch 2; Jon's rulings marked)
+- **Five types per session, 15 method marks (Jon agrees).** A session is five different types always worth 15 method marks (five 3-mark types, or the ladder 2 + coffee or two-way 4 + three 3-mark types), so the leaderboard stays fair. The menu says "15 method marks".
+- **`?types=` preview (Jon agrees):** `?types=ladder,mean` plays those types in turn, submits no score and shows "not on the leaderboard".
+- Ladder (Jon: correction stands): the "foot under a third of the ladder" clause was unsatisfiable (only 7-24-25 qualified, 3 questions); dropped, foot is the shorter leg of every triple; 14 scalings x 2 variants = 28 questions.
+- Coffee and tea (Jon): "added when the signs match" stays as a distractor, with the feedback "That's true, but it doesn't get rid of a letter, so there's no mark for it yet."
+- Engine extended once, for all types: `answers` answer marks (marks = slots + answers); forms/distractors can carry `tex` and a `fact`; expressions accept `sqrt`; `options()` takes a cap. Batch 1 templates and marking unchanged.
+- Short screens: batch 2 questions show 4 to 6 options (never fewer than 4) so the last stays above the fold.
+- Mean table: consecutive values from 0 or 1; the x x f column fills in when step A is found. Two-way: context in the corner cell; "Give your answer as a fraction" dropped; totals-row first and last cells show a dash.
+- Extra distractors: x / f for the mean's step A; swapped coefficients for coffee and tea's first and second equations. Pens and pencils use p and q. No-KaTeX fallback shows the degree, angle and root signs.
+- CI lines: parts 4 (module self-test, 17 plants) and 5 (page self-test, 5 plants) are new.
+
