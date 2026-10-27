@@ -1136,6 +1136,14 @@
         inView();
         if (document.fonts && document.fonts.ready) document.fonts.ready.then(inView);
       });
+      // A font can arrive after fonts.ready (KaTeX's faces are requested as the working is drawn), so the two passes above can both
+      // run before the block grows: watch the block itself for a few seconds, and scroll again each time it changes size (main run
+      // 40529609805 failed on this after #576, the same fault as #566, on timing alone).
+      if (window.ResizeObserver) {
+        var watch = new ResizeObserver(inView);
+        watch.observe(fb);
+        setTimeout(function () { watch.disconnect(); }, 4000);
+      }
     } catch (e) { /* ignore */ }
   }
 
