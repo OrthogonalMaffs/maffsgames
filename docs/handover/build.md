@@ -16,10 +16,14 @@ Contracts are saved verbatim in `docs/handover/contracts/<date>-build-<slug>.md`
 ## Done
 DONE: 2026-10-27-build-found-a-mark.md   (merged: PR #569, squash 6c5cc59, 27 Oct 2026; held up by CI timing blocks, fixed by #570, then one real 320 x 568 fault on CI's real fonts, fixed)
 
+DONE: 2026-10-27-build-hc-factor.md   (merged: PR #571, squash f6eecad; main run 40510992524 green)
+DONE: 2026-10-27-build-y-so-steep.md   (merged: PR #574, squash f8083cc, 27 Oct 2026; main run 40518636405 green)
+
 ## Queue
-1. **found-a-mark** ("I Found a Mark"): MERGED (#569). Report still owed to Jon: its "Decided for you" list and the screenshots (375 x 667 and 1366 x 768 in the session scratchpad; re-make with `play.py` pattern: start stub server, `FAM.ui`).
-2. **hc-factor** ("The HC Factor"): BUILT, PR #571 (branch `claude/build-hc-factor`, worktree `E:/jon/mg-build-hc-factor`). Verifier passes all 3 parts; check-changed clean after the fixes below. CI: the PR budget job failed twice on Take a Walk part 4 (190 s vs the 189 s line limit; not ours; a re-run reuses the same measurements, only a new push re-measures). Then `python scripts/merge-pr.py 571` (unpiped), watch main, `python scripts/end-task.py claude/build-hc-factor`, then report with the screenshots.
-3. **y-so-steep** ("Y So Steep?"): contract `contracts/2026-10-27-build-y-so-steep.md`. Branch `claude/build-y-so-steep`, worktree `E:/jon/mg-build-y-so-steep`. NOT STARTED. Findings so far: `MaffsAnswer.fraction(raw)` already exists and is exact, but `MaffsKeypad` has NO "/" key (keys: digits, ".", optional minus). So item 4 applies: write the "/" key on MaffsKeypad's fraction variant (and MaffsAnswer use + test-answer-js.py / check-keypad.py cases) on its own UNMERGED branch, and ship the integer-gradient items first; fractional items (S3 and the fractions in Higher) on once that branch merges. Never a game-local parser.
+1. **found-a-mark**: MERGED (#569) + art swap MERGED (#573, aaef265, main run 40514401072 green). Report still owed to Jon: its "Decided for you" list and screenshots.
+2. **hc-factor**: MERGED (#571).
+3. **y-so-steep**: MERGED (#574). Unmerged side branch: the "/" key for MaffsKeypad on `claude/keypad-fraction-key` (799dbfd9, worktree `E:/jon/mg-keypad-slash`), NOT a PR. Home lane/Jon to rule on merging it; then set `FRACTIONS = true` in `games/y-so-steep/index.html` to bring in Stage 3 and the fractional items.
+Build queue empty (27 Oct 2026, after #574). Nothing uncontracted is started.
 
 ## Standing notes (Jon, 27 Oct 2026)
 - Roster numbers stay as they are (#102 found-a-mark, #103 hc-factor; next is #104). "The 100th" is the count of LISTED items on the portal, not a roster number. NEVER list anything: listing is the home lane's job and The 6 P's goes first.
@@ -39,3 +43,8 @@ Lessons that cost a round each (new-game checklist): the Theme check bans hex co
 - Unsigned boxes (no toggle) take 0 or more; a missing term is typed as 0.
 - Short phones (height under 620 px): Next sits under the one-line reason, the worked answer after it.
 - Rows: #103, Unlisted (3).
+
+## y-so-steep: state (27 Oct 2026)
+S1, S2, S4, S5, S6 shipped with whole-number items; S3 ("Rearrange it") and fractional items OFF. Generator `schools/assets/y-so-steep-gen.js` (whole-number and with-fractions banks, 48 items a stage; the 6 P's imports it later); verifier `scripts/verify-y-so-steep.py` (3 parts, about 22,000 probe answers marked both ways against an independent marker). Roster #104, Unlisted (4). Keypad: `MaffsKeypad.mount(..., {keys: {fraction: true}})` on the unmerged branch above; `MaffsAnswer.fraction()` already exists, so test-answer-js.py needed no new cases.
+Decided for you: light palette; fractions off until the keypad branch merges; Stage 6 has no board (stage-6 needs a label in firebase-leaderboard.js, shared; stages 1-5 use stage-1..stage-5, stage-3's declared but unused); Stage 5 has two steps (the gradient is given) and about 92% of its given points are off the y-intercept (minimum 75%); Stage 2's line comes from the figure data (no equation in its stem); marking by value through MaffsAnswer.fraction(), no game parser; extra slips on Stage 1 (m and c swapped; sign of c); a slip equal to the right answer is dropped; "run over rise" only fires once fractions are on; marks a question 1/1/1/3/2/3 (S1..S6).
+Lessons: merge-pr.py refuses while main's run is queued (other lanes push often): use `--wait 540`; end-task.py must be run from a CURRENT worktree (the primary checkout's scripts/ is stale), e.g. `python scripts/end-task.py <branch>` from any worktree.
