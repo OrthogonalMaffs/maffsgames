@@ -806,6 +806,10 @@
   function show(id) {
     ['intro', 'loading', 'play', 'between', 'results'].forEach(function (s) { $(s).hidden = s !== id; });
     // The title and strapline are for the start screen only; everywhere else they shrink to one slim line.
+    // No footer links during a run (Jon, 27 Oct 2026): the start and results screens show the site footer, every other screen removes it
+    // (display none: out of the tab order and not hit-testable), so no tap meant for Next can land on a link. The header's links stay.
+    var foot = document.querySelector('.site-footer');
+    if (foot) foot.style.display = (id === 'intro' || id === 'results') ? '' : 'none';
     $('mast').hidden = id !== 'intro';
     var slim = $('slim');
     slim.hidden = id === 'intro';

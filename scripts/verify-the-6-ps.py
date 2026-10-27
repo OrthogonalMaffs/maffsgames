@@ -1050,6 +1050,79 @@ def check_results_once(pw, base, html, data, out):
         b.close()
 
 
+def check_footer_states(pw, base, html, data, out):
+    """No footer links during a run (Jon, 27 Oct 2026): on the start and results screens every footer link is on the screen and
+    hit-testable; on a question, its feedback and between topics, none is in the tab order or hit-testable. The header's way out stays."""
+    probe = """() => {
+      const f = document.querySelector('.site-footer');
+      const links = f ? [...f.querySelectorAll('a')] : [];
+      const hit = links.filter(a => { const r = a.getBoundingClientRect(); if (!a.getClientRects().length || r.right <= 0 || r.left >= innerWidth) return false;
+        const e = document.elementFromPoint(Math.min(Math.max(r.left + r.width / 2, 0), innerWidth - 1), r.top + r.height / 2); return !!e && a.contains(e); }).length;
+      return { links: links.length, hit: hit, shown: !!f && getComputedStyle(f).display !== 'none',
+               back: !![...document.querySelectorAll('a[href="/"]')].filter(a => !a.closest('.site-footer') && a.getClientRects().length).length };
+    }"""
+    def tabbed(b):
+        b.page.evaluate("() => { document.activeElement && document.activeElement.blur(); window.scrollTo(0, 0); }")
+        seen = 0
+        for _ in range(60):
+            b.page.keyboard.press('Tab')
+            if b.page.evaluate("() => !!(document.activeElement && document.activeElement.closest('.site-footer'))"):
+                seen += 1
+        return seen
+
+    def want(b, tag, shown):
+        r = b.page.evaluate(probe)
+        if not r['links']:
+            out.append('footer states, %s: the page has no footer links at all' % tag)
+        elif shown and (not r['shown'] or r['hit'] < 1):
+            out.append('footer states, %s: the footer should be on the screen with its links hit-testable (shown %s, %d of %d hit)'
+                       % (tag, r['shown'], r['hit'], r['links']))
+        elif not shown:
+            if r['shown'] or r['hit']:
+                out.append('footer states, %s: footer links are on the page during a run (shown %s, %d hit-testable)' % (tag, r['shown'], r['hit']))
+            n = tabbed(b)
+            if n:
+                out.append('footer states, %s: %d footer link(s) took keyboard focus during a run' % (tag, n))
+            if not r['back']:
+                out.append('footer states, %s: no header way out (a link to /) while the footer is gone' % tag)
+        elif shown and tabbed(b) < 1:
+            out.append('footer states, %s: no footer link takes keyboard focus on this screen' % tag)
+
+    b = Browser(pw, base, html, size=(390, 844))
+    try:
+        b.open()
+        want(b, 'the start screen', True)
+        topic = data['covered'][0]['id']
+        others = [x['id'] for x in data['covered'] if x['id'] != topic][:5]
+        sess = {'v': 2, 'plan': [{'id': x} for x in others + [topic]], 'i': 5, 'results': {x: {'r': 4, 'n': 5} for x in others},
+                'cur': None, 'qn': 25, 'finishedSent': False, 'feedbackSent': False}
+        b.page.evaluate("s => localStorage.setItem('six-ps-session-v2', s)", json.dumps(dict(sess, at=int(time.time() * 1000))))
+        b.page.reload()
+        b.page.wait_for_function("() => !!window.SixPs && !!SixPs.data()", timeout=10000)
+        b.page.tap('#resumeBtn')
+        b.page.wait_for_selector('#play:not([hidden])', timeout=8000)
+        want(b, 'a question', False)
+        q = b.page.evaluate('() => SixPs.question()')
+        answer(b, q, real_value(q, wrong=True))
+        b.page.wait_for_selector('#qFb:not([hidden])', timeout=4000)
+        want(b, 'the feedback', False)
+        b.page.tap('#qNext button')
+        for n in range(PER_TOPIC - 1):
+            b.page.wait_for_selector('#play:not([hidden])', timeout=8000)
+            q = b.page.evaluate('() => SixPs.question()')
+            answer(b, q, real_value(q, wrong=False))
+            b.page.wait_for_selector('#qFb:not([hidden])', timeout=4000)
+            b.page.tap('#qNext button')
+        b.page.wait_for_selector('#between:not([hidden])', timeout=5000)
+        want(b, 'between topics', False)
+        b.page.tap('#nextTopicBtn')
+        b.page.wait_for_selector('#results:not([hidden])', timeout=5000)
+        want(b, 'the results screen', True)
+        out.extend('footer states: page error: %s' % e for e in b.errors)
+    finally:
+        b.close()
+
+
 def check_second_copy(pw, base, html, data, out):
     """A page whose script runs twice (a browser that re-runs scripts on resume) still behaves as one: Next topic moves on by one, and
     one answer sends one event."""
@@ -1203,6 +1276,7 @@ def run_unit(pw, base, html, data, out, unit):
                 lambda: check_resume_finish(pw, base, html, data, out))
     elif unit == 'results':
         guarded(out, 'the results screen drawn once', lambda: check_results_once(pw, base, html, data, out))
+        guarded(out, 'no footer during a run', lambda: check_footer_states(pw, base, html, data, out))
     elif unit == 'second':
         guarded(out, 'the page script run twice', lambda: check_second_copy(pw, base, html, data, out))
     elif unit.startswith(PHONE):
@@ -1257,6 +1331,12 @@ def guarded(out, what, f):
 # ---------------------------------------------------------------- plants
 # (what, [(old, new)], what it needs, a pattern its finding must match). Every old text occurs exactly once in the page.
 PLANTS = [
+    ('a footer that stays on the page during a run (Jon, 27 Oct)',
+     [("foot.style.display = (id === 'intro' || id === 'results') ? '' : 'none';", "foot.style.display = '';")],
+     ['results'], r'footer states, a question: footer links are on the page during a run'),
+    ('a footer that is also gone on the results screen',
+     [("foot.style.display = (id === 'intro' || id === 'results') ? '' : 'none';", "foot.style.display = (id === 'intro') ? '' : 'none';")],
+     ['results'], r'footer states, the results screen: the footer should be on the screen'),
     ('a results screen that draws its form twice (Jon, 27 Oct)',
      [("$('resultsBody').replaceChildren(list, nudge, form, againRow);", "$('resultsBody').replaceChildren(list, nudge, form, againRow, form.cloneNode(true));")],
      ['results'], r'results screen after the finish: (forms|send|legends) appears 2 times'),
