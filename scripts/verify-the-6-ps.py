@@ -969,9 +969,15 @@ def real_value(q, wrong=False):
     raise AssertionError(f)
 
 
-def phone_feedback_topic(pw, base, html, data, topic, out):
-    """One real bank on a 375 x 667 touch screen: one answer right and one wrong, each measured after Check."""
+def phone_feedback_topic(pw, base, html, data, topic, out, only=None):
+    """One real bank on a 375 x 667 touch screen: one answer right and one wrong, each measured after Check.
+    `only` serves five copies of that one question and answers it wrong at once, so what is measured is always the same."""
     bank = json.load(open(os.path.join(ROOT, 'schools', 'assets', 'six-ps', topic['id'] + '.json'), encoding='utf-8'))
+    if only is not None:
+        one = [x for x in bank['questions'] if x['id'] == only]
+        if len(one) != 1:
+            raise AssertionError('%s: the question %s is not in the bank' % (topic['id'], only))
+        bank['questions'] = [dict(one[0], id='%s-c%d' % (only, i)) for i in range(5)]
     b = Browser(pw, base, html, size=(375, 667))
     b.page.set_default_timeout(20000)      # a loaded machine runs many of these at once
     b.real[topic['id']] = bank
@@ -982,7 +988,7 @@ def phone_feedback_topic(pw, base, html, data, topic, out):
     try:
         b.open()
         b.page.tap('#resumeBtn')
-        for n, wrong in enumerate((False, True)):
+        for n, wrong in enumerate((True,) if only is not None else (False, True)):   # `only`: the wrong answer first, before the maths font is loaded
             b.page.wait_for_selector('#play:not([hidden])', timeout=8000)
             q = b.page.evaluate('() => SixPs.question()')
             answer(b, q, real_value(q, wrong))
@@ -1012,6 +1018,18 @@ def phone_feedback(pw, base, html, data, out):
     one answer right and one wrong, and nothing scrolls sideways. One topic's trouble is reported against it and the rest are still measured."""
     for topic in data['covered']:
         guarded(out, '375 x 667: %s' % topic['id'], lambda: phone_feedback_topic(pw, base, html, data, topic, out))
+
+
+# Working with three fractions is the tallest feedback a bank has: on 375 x 667 it ends 15 px below the screen unless the page scrolls
+# again once the maths font has arrived (main run 40479208314). Nine questions of this topic did; this one is measured every time.
+TALL = ('fraction-percentage-of-amount', 'fraction-percentage-of-amount-2c420fec')
+
+
+def check_tall(pw, base, html, data, out):
+    topic = [t for t in data['covered'] if t['id'] == TALL[0]]
+    if not topic:
+        raise AssertionError('%s is not a covered topic' % TALL[0])
+    phone_feedback_topic(pw, base, html, data, topic[0], out, only=TALL[1])
 
 
 def one_topic(pw, base, html, data, out, name):
@@ -1058,6 +1076,8 @@ def check(html, data, out, parts):
                 guarded(out, 'the page script run twice', lambda: check_second_copy(pw, base, html, data, out))
             if '3' in parts:
                 guarded(out, 'the verdict and Next on a 375 x 667 phone', lambda: phone_feedback(pw, base, html, data, out))
+            if '3' in parts or 'tall' in parts:
+                guarded(out, 'the tallest feedback on a 375 x 667 phone', lambda: check_tall(pw, base, html, data, out))
             if '2' in parts:
                 guarded(out, 'the session at 1280 px', lambda: play(pw, base, html, data, out, blocked=False))
             if '3' in parts:
@@ -1122,6 +1142,9 @@ PLANTS = [
     ('the page script run twice with no guard against it',
      [("  if (window.SixPs) {   // the page script ran twice in one window", "  if (false) {   // the page script ran twice in one window")],
      ['second'], r'page script run twice'),
+    ('the feedback not scrolled into view again once the maths font has arrived',
+     [("        inView();\n        if (document.fonts && document.fonts.ready) document.fonts.ready.then(inView);\n", "")],
+     ['tall'], r'Next is not on the screen'),
     ('a right value in the wrong form marked wrong (SR-3)',
      [("if (res.result !== 'correct' && res.result !== 'wrong') {", "if (res.result === 'unreadable' || res.result === 'nounit') {")],
      ['topic:fx-2'], r"\(format\) was marked"),
