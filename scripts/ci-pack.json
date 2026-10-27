@@ -191,7 +191,7 @@
  "over-budget": [],
  "shards": {
   "check-answer-lock.py": {
-   "how": "kept from the pack (8 needed)",
+   "how": "kept from the pack (7 needed)",
    "label": "Answer lock in play (canon 7.6.0: migrated games played in Chromium)",
    "parts": 8,
    "tier": "lock"
@@ -239,7 +239,7 @@
    "tier": "content"
   },
   "verify-i-found-a-mark.py": {
-   "how": "kept from the pack (3 needed)",
+   "how": "kept from the pack (2 needed)",
    "label": "I Found a Mark (every question of the nine types over 300 seeds each, recomputed in Python from its own parameters with exact fractions: every step and form value, every claim, every literal and dependency derivable, the distractors the contract lists, the two-way table fixed uniquely by its givens, the equations true at the real prices; the deal of five types worth 15 method marks; sessions played in the page at five sizes, the five batch 2 types at the four phone sizes and 1280 px: diagram and table text at least 12 px, a table that fills in as its steps are found, options and Next above the fold, a preview that submits nothing; the planted faults, each caught)",
    "parts": 3,
    "tier": "content"
