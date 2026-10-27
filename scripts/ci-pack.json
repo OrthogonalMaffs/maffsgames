@@ -6,7 +6,7 @@
   "Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points and message figures recomputed around 0/360; lives and end flows played in Chromium)": "15",
   "Better Value (every keyed figure and explanation figure recomputed, one true card in four, every card marked in Chromium)": "16",
   "Better Value claims (every item's declared measure computed from its inputs; the key's claim true, every distractor's false; every text figure in its claim; KNOWN)": "28",
-  "Better Value tax-and-NI rule of thumb (checked with uk_rates)": "24",
+  "Better Value tax-and-NI rule of thumb (checked with uk_rates)": "49",
   "Binomial Blaster (every key and option evaluated with SymPy, every item marked in Chromium)": "2",
   "Boolean Blitz (every key's truth table recomputed from its expression; an option right exactly when it has the key's truth table and no more literals; answer once; Chromium)": "20",
   "Burst mode, part 1 (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; &stage= presses button[data-stage])": "42",
@@ -188,7 +188,7 @@
   "Level resolver in play, part 1 (every migrated game loads at its default for constructor, __proto__ and nonsense, and at each declared level, with no page error)": "L1",
   "Level resolver in play, part 2 (migrated games, as part 1)": "L3",
   "Level resolver in play, part 3 (migrated games, as part 1)": "L4",
-  "Level resolver in play, part 4 (migrated games, as part 1)": "L3"
+  "Level resolver in play, part 4 (migrated games, as part 1)": "L5"
  },
  "over-budget": [],
  "split-candidates": []
