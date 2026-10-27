@@ -20,6 +20,7 @@ DONE: 2026-10-27-build-hc-factor.md   (merged: PR #571, squash f6eecad; main run
 DONE: 2026-10-27-build-y-so-steep.md   (merged: PR #574, squash f8083cc, 27 Oct 2026; main run 40518636405 green)
 DONE: 2026-10-27-build-who-ate-all-the-pies.md   (merged: PR #580, squash bc5c883, 27 Oct 2026; main run 40558247107 green; waited for main to go green after #576, no override)
 DONE: 2026-10-27-build-its-on-sale.md   (merged: PR #579, squash 079ceaa, 27 Oct 2026; main run 40563459598 green)
+DONE: 2026-10-27-build-as-you-can-see.md   (merged: PR #587, squash 24f641e, 27 Oct 2026; main runs 40576210979 and 40576211649 green)
 
 ## Queue
 1. **found-a-mark**: MERGED (#569) + art swap MERGED (#573, aaef265, main run 40514401072 green). Report still owed to Jon: its "Decided for you" list and screenshots.
@@ -110,4 +111,22 @@ Five new types in the game's own bank (angles, mean from a frequency table, the 
 - Mean table: consecutive values from 0 or 1; the x x f column fills in when step A is found. Two-way: context in the corner cell; "Give your answer as a fraction" dropped; totals-row first and last cells show a dash.
 - Extra distractors: x / f for the mean's step A; swapped coefficients for coffee and tea's first and second equations. Pens and pencils use p and q. No-KaTeX fallback shows the degree, angle and root signs.
 - CI lines: parts 4 (module self-test, 17 plants) and 5 (page self-test, 5 plants) are new.
+
+## as-you-can-see: state (27 Oct 2026, PR #587, 24f641e)
+Bank schools/assets/reading-charts-generator.js (60 questions, fixed seed 20261027, 12 a stage, answers computed from chart data, accepted interval per number answer); schools/assets/reading-charts-game.js; games/as-you-can-see/index.html; scripts/verify-as-you-can-see.py (recomputes every answer, reads every chart back from its SVG, every kind of question at 6 sizes, 11 plants caught; one ci-line, no --part, written in units so converting to # ci-shards is a header change). Five stages, boards stage-1..stage-5. Plan job passed on the PR; no override, no hand split. Roster #107, Unlisted (7).
+Candidate shared helper: value-with-tolerance match in MaffsAnswer (here an accepted interval stored in the bank question); a second graph-reading game would make it a class.
+Follow-ups: convert verify-as-you-can-see.py to # ci-shards; if claude/footer-unpin lands, run scripts/apply-footer.py on games/as-you-can-see/; wire the bank into The 6 P's (home lane; not done here, gen-six-ps.py is shared).
+
+## Decided for you (as-you-can-see)
+- Setting and tone neutral (school and cafe), no jokes: the contract leaves both to Jon.
+- Scale not stated in the stem; the worked answer teaches it, otherwise the wrong-gridline slip has no point.
+- Tolerance: half a minor gridline for readings, exact for counts, totals and differences; interval stored per bank question.
+- Slot 0 is the worked example; a session is 10 of slots 1-11, easiest first.
+- Stage 2 scales 2s, 5s, 10s with a number every 10. Stage 4 correlation bands: |r| >= 0.8 strong, 0.45-0.78 weak, below 0.25 none (verifier enforces).
+- "You can't tell" only in stages 3 and 4, right in some questions and a wrong option in others (stage 3: a time between measured points, an unmeasured value; stage 4: another group).
+- Stage 5: six flaws (truncated axis, uneven scale, pictures scaled both ways, 3D bars, missing labels, or fair); two of 12 slots are fair charts.
+- Levels ks3 and gcse, no picker; light theme; calculator optional.
+- Minimum registrations only (data/games.json unlisted entry and roster row); nothing listed.
+- Page title and description reworded to match what games.json generates (KS3/GCSE, description at most 155 characters).
+- `ACS.ui.preview(stage, slot, seed)` read-only test hook.
 
