@@ -903,43 +903,49 @@ def real_value(q, wrong=False):
     raise AssertionError(f)
 
 
+def phone_feedback_topic(pw, base, html, data, topic, out):
+    """One real bank on a 375 x 667 touch screen: one answer right and one wrong, each measured after Check."""
+    bank = json.load(open(os.path.join(ROOT, 'schools', 'assets', 'six-ps', topic['id'] + '.json'), encoding='utf-8'))
+    b = Browser(pw, base, html, size=(375, 667))
+    b.page.set_default_timeout(20000)      # a loaded machine runs many of these at once
+    b.real[topic['id']] = bank
+    others = [x['id'] for x in data['covered'] if x['id'] != topic['id']][:K - 1]
+    sess = {'v': 2, 'plan': [{'id': x} for x in [topic['id']] + others], 'i': 0, 'results': {}, 'cur': None, 'qn': 0,
+            'finishedSent': False, 'feedbackSent': False}
+    b.ctx.add_init_script("try { var s = %s; s.at = Date.now(); localStorage.setItem('six-ps-session-v2', JSON.stringify(s)); } catch (e) {}" % json.dumps(sess))
+    try:
+        b.open()
+        b.page.tap('#resumeBtn')
+        for n, wrong in enumerate((False, True)):
+            b.page.wait_for_selector('#play:not([hidden])', timeout=8000)
+            q = b.page.evaluate('() => SixPs.question()')
+            answer(b, q, real_value(q, wrong))
+            b.page.wait_for_selector('#qFb:not([hidden])', timeout=8000)
+            m = b.page.evaluate("""() => { const r = id => { const e = document.getElementById(id); return e && !e.hidden ? e.getBoundingClientRect() : null; };
+                const nb = document.querySelector('#qNext button'), nr = nb ? nb.getBoundingClientRect() : null, vr = r('qVerdict');
+                return { verdict: vr ? [Math.round(vr.top), Math.round(vr.bottom)] : null, next: nr ? [Math.round(nr.top), Math.round(nr.bottom)] : null,
+                         vh: innerHeight, sx: document.documentElement.scrollWidth - innerWidth, keys: !document.getElementById('qKeys').hidden }; }""")
+            what = '%s %s (%s, %s)' % (topic['id'], q['id'], q['format'], 'wrong' if wrong else 'right')
+            if m['keys']:
+                out.append('375 x 667: %s: the keypad is still showing after Check' % what)
+            if not m['verdict'] or m['verdict'][0] < 0 or m['verdict'][1] > m['vh']:
+                out.append('375 x 667: %s: the verdict is not on the screen (%s of %d px)' % (what, m['verdict'], m['vh']))
+            if not m['next'] or m['next'][1] > m['vh']:
+                out.append('375 x 667: %s: Next is not on the screen (%s of %d px)' % (what, m['next'], m['vh']))
+            if m['sx'] > 0:
+                out.append('375 x 667: %s: the page scrolls sideways by %d px' % (what, m['sx']))
+            if n == 0:
+                b.page.tap('#qNext button')
+        out.extend('375 x 667: %s: page error: %s' % (topic['id'], e) for e in b.errors)
+    finally:
+        b.close()
+
+
 def phone_feedback(pw, base, html, data, out):
     """On a 375 x 667 phone, on every real bank: after Check the keypad is gone and the verdict and Next are on the screen with no scroll,
-    one answer right and one wrong, and nothing scrolls sideways."""
+    one answer right and one wrong, and nothing scrolls sideways. One topic's trouble is reported against it and the rest are still measured."""
     for topic in data['covered']:
-        bank = json.load(open(os.path.join(ROOT, 'schools', 'assets', 'six-ps', topic['id'] + '.json'), encoding='utf-8'))
-        b = Browser(pw, base, html, size=(375, 667))
-        b.real[topic['id']] = bank
-        others = [x['id'] for x in data['covered'] if x['id'] != topic['id']][:K - 1]
-        sess = {'v': 2, 'plan': [{'id': x} for x in [topic['id']] + others], 'i': 0, 'results': {}, 'cur': None, 'qn': 0,
-                'finishedSent': False, 'feedbackSent': False}
-        b.ctx.add_init_script("try { var s = %s; s.at = Date.now(); localStorage.setItem('six-ps-session-v2', JSON.stringify(s)); } catch (e) {}" % json.dumps(sess))
-        try:
-            b.open()
-            b.page.tap('#resumeBtn')
-            for n, wrong in enumerate((False, True)):
-                b.page.wait_for_selector('#play:not([hidden])', timeout=8000)
-                q = b.page.evaluate('() => SixPs.question()')
-                answer(b, q, real_value(q, wrong))
-                b.page.wait_for_selector('#qFb:not([hidden])', timeout=4000)
-                m = b.page.evaluate("""() => { const r = id => { const e = document.getElementById(id); return e && !e.hidden ? e.getBoundingClientRect() : null; };
-                    const nb = document.querySelector('#qNext button'), nr = nb ? nb.getBoundingClientRect() : null, vr = r('qVerdict');
-                    return { verdict: vr ? [Math.round(vr.top), Math.round(vr.bottom)] : null, next: nr ? [Math.round(nr.top), Math.round(nr.bottom)] : null,
-                             vh: innerHeight, sx: document.documentElement.scrollWidth - innerWidth, keys: !document.getElementById('qKeys').hidden }; }""")
-                what = '%s %s (%s, %s)' % (topic['id'], q['id'], q['format'], 'wrong' if wrong else 'right')
-                if m['keys']:
-                    out.append('375 x 667: %s: the keypad is still showing after Check' % what)
-                if not m['verdict'] or m['verdict'][0] < 0 or m['verdict'][1] > m['vh']:
-                    out.append('375 x 667: %s: the verdict is not on the screen (%s of %d px)' % (what, m['verdict'], m['vh']))
-                if not m['next'] or m['next'][1] > m['vh']:
-                    out.append('375 x 667: %s: Next is not on the screen (%s of %d px)' % (what, m['next'], m['vh']))
-                if m['sx'] > 0:
-                    out.append('375 x 667: %s: the page scrolls sideways by %d px' % (what, m['sx']))
-                if n == 0:
-                    b.page.tap('#qNext button')
-            out.extend('375 x 667: %s: page error: %s' % (topic['id'], e) for e in b.errors)
-        finally:
-            b.close()
+        guarded(out, '375 x 667: %s' % topic['id'], lambda: phone_feedback_topic(pw, base, html, data, topic, out))
 
 
 def one_topic(pw, base, html, data, out, name):
