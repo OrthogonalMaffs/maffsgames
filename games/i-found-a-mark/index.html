@@ -74,6 +74,7 @@ a.back-link:hover{color:var(--text)}
 .slot.got{background:url(assets/coin.webp) center/contain no-repeat;border:0;color:var(--coin-ink);animation:drop .45s ease-out}
 .slot.help{background:transparent;border:3px dotted var(--coin);color:var(--coin);font-size:.62rem}
 .slot.ans{opacity:1;border-style:dotted}
+.slots.many{gap:.3rem}.slots.many .slot{width:28px;height:28px;font-size:.75rem}
 @keyframes drop{from{transform:translateY(-18px) scale(.5);opacity:0}60%{transform:translateY(3px) scale(1.08);opacity:1}to{transform:none}}
 
 .ask-line{display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;min-height:1.5em}
@@ -91,6 +92,21 @@ a.back-link:hover{color:var(--text)}
 .diagram svg{display:block;width:250px;max-width:100%;height:auto}
 .diagram .shape{fill:var(--accent-dim);stroke:var(--accent);stroke-width:2.5}
 .diagram text{font-family:var(--font-num);font-size:14px;font-weight:700;fill:var(--text)}
+.diagram .guide{stroke:var(--muted);stroke-width:1.5;fill:none}
+.diagram .arc{stroke:var(--text);stroke-width:1.5;fill:none}
+.diagram .wall{stroke:var(--muted);stroke-width:4;fill:none}
+.diagram .ground{stroke:var(--muted);stroke-width:3;fill:none}
+.diagram .tri{fill:var(--accent-dim);stroke:var(--accent);stroke-width:2.5}
+.diagram .ladder{stroke:var(--accent);stroke-width:4;stroke-linecap:round}
+.diagram text.q{fill:var(--accent)}
+/* The frequency table and the two-way table: 13 px text; a cell its step has not found shows a ? and fills in when the step is found. */
+.diagram .tbl{border-collapse:collapse;font-family:var(--font-num);font-size:13px;line-height:1.2;width:100%;max-width:300px}
+.diagram .tbl th,.diagram .tbl td{border:1px solid var(--border);padding:3px 5px;text-align:center}
+.diagram .tbl th{background:var(--surface-alt);font-weight:700}
+.diagram .tbl td.rowh{background:var(--surface-alt);font-weight:700;text-align:left}
+.diagram .tbl td.open{color:var(--accent);font-weight:700;background:var(--accent-dim)}
+.diagram .tbl td.new{font-weight:700;background:var(--accent-dim)}
+.diagram .tbl td.none{color:var(--muted)}
 
 .fb{border-radius:12px;padding:.7rem .8rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.55rem}
 .fb.wrong{border-color:var(--wrong)}
@@ -119,7 +135,7 @@ body.playing a.back-link{display:none}
   .qtext{font-size:.96rem}
   .hud{padding:.2rem .5rem}
 }
-@media (max-height:620px){.diagram svg{width:230px}.qtext{font-size:.94rem}.jar{min-height:44px;padding:.25rem .6rem}.slot{width:30px;height:30px}}
+@media (max-height:620px){.diagram .tbl td,.diagram .tbl th{padding:1px 4px}.diagram svg{width:230px}.qtext{font-size:.94rem}.jar{min-height:44px;padding:.25rem .6rem}.slot{width:30px;height:30px}}
 /* A short phone with the real fonts (CI's, where options wrap more): tighten the card so the last option and Next stay above the fold. */
 @media (max-height:620px){.qcard{gap:.3rem}.opts{gap:.3rem}.opts .btn{font-size:.88rem;padding:.3rem .6rem}.hud{padding:.1rem .5rem;margin-bottom:.3rem}.hud-label{display:none}.ask-line{min-height:1.2em}.ask-line h2{font-size:.88rem}}
 @media (max-height:580px){.qtext{font-size:.9rem;line-height:1.4}.jar{min-height:40px}.slot{width:28px;height:28px}.diagram svg{width:222px}.container{padding:.4rem}}
@@ -165,7 +181,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       <p>Here you never work anything out. Each question has steps a marker would credit. Tap the calculations you could write down, in any order that makes sense. Every step that earns a mark goes on the sofa.</p>
       <p>Be careful: some of the calculations are nearly right.</p>
       <button class="btn solid start-btn" id="startBtn">Start</button>
-      <p class="hud-label" style="text-align:center;margin-top:.5rem">5 questions · 3 method marks each</p>
+      <p class="hud-label" style="text-align:center;margin-top:.5rem">5 questions · 15 method marks</p>
       <div style="text-align:center;margin-top:.6rem"><button class="sound-btn" id="soundBtnMenu" type="button" aria-pressed="false">Sound off</button></div>
     </div>
     <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
@@ -227,7 +243,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (window.katex) {
       try { return katex.renderToString(t, { throwOnError: false }); } catch (e) { /* fall through */ }
     }
-    return esc(t.replace(/\\times/g, '×').replace(/\\div/g, '÷').replace(/\\text\{([^}]*)\}/g, '$1').replace(/\\%/g, '%').replace(/\^\{(\d+)\}/g, '^$1').replace(/\{,\}/g, ','));
+    return esc(t.replace(/\\times/g, '×').replace(/\\div/g, '÷').replace(/\\text\{([^}]*)\}/g, '$1').replace(/\\%/g, '%').replace(/\^\{(\d+)\}/g, '^$1').replace(/\{,\}/g, ',')
+      .replace(/\^\\circ/g, '°').replace(/\\angle\s*/g, '∠').replace(/\\sqrt\{([^}]*)\}/g, '√($1)'));
   }
   // A paragraph with TeX between § marks.
   function renderLine(line) {
@@ -237,11 +254,31 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 
   /* ---------- the session ---------- */
   function newSeed() { return Math.floor(Math.random() * 4294967296); }
-  // Five questions: each of the four types once, and one more of a random type; the order is random.
-  function buildSession(seed) {
-    var rng = M.makeRng(seed), types = M.TYPES.slice();
-    types.push(M.TYPES[Math.floor(rng() * M.TYPES.length)]);
-    for (var i = types.length - 1; i > 0; i--) { var j = Math.floor(rng() * (i + 1)); var t = types[i]; types[i] = types[j]; types[j] = t; }
+  // Five questions of five different types, dealt so that the method marks always add to 15 (the board is by marks, so every session
+  // has the same top score): five types with 3 method marks each, or the ladder (2) and a 4-mark type (coffee or twoway) with three of those.
+  // ?types=a,b,c is a preview for reviewing a type by playing it: those types in turn, and nothing goes to the leaderboard.
+  var PREVIEW = (function () {
+    try {
+      var m = /[?&]types=([a-z,]+)/.exec(location.search);
+      if (!m) return null;
+      var t = m[1].split(',').filter(function (x) { return M.TYPES.indexOf(x) >= 0; });
+      return t.length ? t : null;
+    } catch (e) { return null; }
+  })();
+  function shuffle(rng, arr) {
+    for (var i = arr.length - 1; i > 0; i--) { var j = Math.floor(rng() * (i + 1)); var t = arr[i]; arr[i] = arr[j]; arr[j] = t; }
+    return arr;
+  }
+  function dealTypes(rng) {
+    var threes = M.TYPES.filter(function (t) { return M.METHOD[t] === 3; }), types;
+    if (rng() < 0.4) types = ['ladder', rng() < 0.5 ? 'coffee' : 'twoway'].concat(shuffle(rng, threes.slice()).slice(0, 3));
+    else types = shuffle(rng, threes.slice()).slice(0, 5);
+    return shuffle(rng, types);
+  }
+  function buildSession(seed, only) {
+    var rng = M.makeRng(seed), types;
+    if (only && only.length) { types = []; for (var i = 0; i < QUESTIONS; i++) types.push(only[i % only.length]); }
+    else types = dealTypes(rng);
     return { seed: seed, questions: types.map(function (ty, k) { return M.question(ty, M.makeRng(seed * 31 + k * 977 + 7)); }) };
   }
 
@@ -289,10 +326,84 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       '<text x="' + (x0 + w + 6).toFixed(1) + '" y="' + (y0 + k + (h - k) / 2 + 5).toFixed(1) + '" text-anchor="start">' + lab.lowerRight + ' m</text></svg>';
   }
 
+  /* ---------- parallel lines: drawn to the angles ---------- */
+  function anglesSvg(d) {
+    var VW = 250, H = 70, top = 26, a = d.a * Math.PI / 180, b = d.b * Math.PI / 180;
+    var fx = -H / Math.tan(a), gx = H / Math.tan(b), left = Math.min(fx, 0) - 26, right = Math.max(gx, 0) + 26;
+    var ox = (VW - (right - left)) / 2 - left, y1 = top, y2 = top + H;
+    var X = function (v) { return (ox + v).toFixed(1); };
+    var arc = function (r, a0, a1, sweep) {
+      return 'M' + X(r * Math.cos(a0)) + ' ' + (y1 + r * Math.sin(a0)).toFixed(1) + ' A' + r + ' ' + r + ' 0 0 ' + sweep + ' ' + X(r * Math.cos(a1)) + ' ' + (y1 + r * Math.sin(a1)).toFixed(1);
+    };
+    var mid = (-40 / Math.tan(a) + 40 / Math.tan(b)) / 2;
+    var la = 'Parallel lines AB and CD. Angle AEF is ' + d.a + ' degrees and angle BEG is ' + d.b + ' degrees. Angle FEG is to be found.';
+    return '<svg viewBox="0 0 ' + VW + ' ' + (y2 + 22) + '" role="img" aria-label="' + la + '">' +
+      '<line class="guide" x1="' + X(left + 10) + '" y1="' + y1 + '" x2="' + X(right - 10) + '" y2="' + y1 + '"/>' +
+      '<line class="guide" x1="' + X(left + 10) + '" y1="' + y2 + '" x2="' + X(right - 10) + '" y2="' + y2 + '"/>' +
+      '<polygon class="tri" points="' + X(0) + ',' + y1 + ' ' + X(fx) + ',' + y2 + ' ' + X(gx) + ',' + y2 + '"/>' +
+      '<path class="arc" d="' + arc(22, Math.PI, Math.PI - a, 0) + '"/><path class="arc" d="' + arc(22, 0, b, 1) + '"/>' +
+      '<path class="arc" d="' + arc(13, Math.PI - a, b, 0) + '"/>' +
+      '<text x="' + X(-(17 / Math.tan(a)) - 7) + '" y="' + (y1 + 17) + '" text-anchor="end">' + d.a + '°</text>' +
+      '<text x="' + X(17 / Math.tan(b) + 7) + '" y="' + (y1 + 17) + '" text-anchor="start">' + d.b + '°</text>' +
+      '<text class="q" x="' + X(mid) + '" y="' + (y1 + 45) + '" text-anchor="middle">?</text>' +
+      '<text x="' + X(left + 2) + '" y="' + (y1 - 6) + '" text-anchor="middle">A</text><text x="' + X(right - 2) + '" y="' + (y1 - 6) + '" text-anchor="middle">B</text>' +
+      '<text x="' + X(left + 2) + '" y="' + (y2 + 16) + '" text-anchor="middle">C</text><text x="' + X(right - 2) + '" y="' + (y2 + 16) + '" text-anchor="middle">D</text>' +
+      '<text x="' + X(0) + '" y="' + (y1 - 8) + '" text-anchor="middle">E</text>' +
+      '<text x="' + X(fx) + '" y="' + (y2 + 16) + '" text-anchor="middle">F</text><text x="' + X(gx) + '" y="' + (y2 + 16) + '" text-anchor="middle">G</text></svg>';
+  }
+
+  /* ---------- the ladder against a wall ---------- */
+  function ladderSvg(d) {
+    var VW = 250, VH = 132, sc = Math.min(98 / d.h, 120 / d.d), wx = 70, gy = 112, fx = wx + d.d * sc, ty = gy - d.h * sc;
+    var t = function (v) { return Number(v.toFixed(1)); };
+    var lenLbl = d.variant === 'height' ? d.L + ' m' : '?', hLbl = d.variant === 'height' ? '?' : d.h + ' m';
+    var al = 'A ladder against a vertical wall. The foot is ' + d.d + ' metres from the wall. ' +
+      (d.variant === 'height' ? 'The ladder is ' + d.L + ' metres long. The height it reaches is to be found.' : 'It reaches ' + d.h + ' metres up the wall. The length of the ladder is to be found.');
+    return '<svg viewBox="0 0 ' + VW + ' ' + VH + '" role="img" aria-label="' + al + '">' +
+      '<line class="wall" x1="' + wx + '" y1="' + t(ty - 6) + '" x2="' + wx + '" y2="' + gy + '"/>' +
+      '<line class="ground" x1="' + (wx - 8) + '" y1="' + gy + '" x2="' + t(fx + 40) + '" y2="' + gy + '"/>' +
+      '<line class="ladder" x1="' + wx + '" y1="' + t(ty) + '" x2="' + t(fx) + '" y2="' + gy + '"/>' +
+      '<text x="' + (wx - 8) + '" y="' + t((ty + gy) / 2 + 5) + '" text-anchor="end"' + (hLbl === '?' ? ' class="q"' : '') + '>' + hLbl + '</text>' +
+      '<text x="' + t(wx + d.d * sc / 2) + '" y="' + (gy + 17) + '" text-anchor="middle">' + d.d + ' m</text>' +
+      '<text x="' + t(fx + 8) + '" y="' + t((ty + gy) / 2) + '" text-anchor="start"' + (lenLbl === '?' ? ' class="q"' : '') + '>' + lenLbl + '</text></svg>';
+  }
+
+  /* ---------- the two tables: a cell found by a step shows its value, the others show ? ---------- */
+  function tableHtml(d, justNew) {
+    var found = (S && S.found) || {};
+    function cell(c) {
+      if (c && typeof c === 'object') {
+        var ok = !!found[c.fill];
+        return '<td class="' + (ok ? (justNew === c.fill ? 'new' : '') : 'open') + '" data-fill="' + c.fill + '">' + (ok ? c.v : '?') + '</td>';
+      }
+      return c === '' ? '<td class="none">–</td>' : '<td>' + esc(c) + '</td>';
+    }
+    var head, rows;
+    if (d.kind === 'freq') {
+      head = '<tr><th>' + esc(d.head[0]) + '</th><th>' + esc(d.head[1]) + '</th><th>' + esc(d.head[2]) + '</th></tr>';
+      var got = !!found.A;
+      rows = d.xs.map(function (x, i) {
+        return '<tr><td>' + x + '</td><td>' + d.fs[i] + '</td><td class="' + (got ? (justNew === 'A' ? 'new' : '') : 'open') + '" data-fill="A">' + (got ? d.products[i] : '?') + '</td></tr>';
+      }).join('');
+    } else {
+      head = '<tr><th>' + esc(d.corner || '') + '</th>' + d.head.map(function (h) { return '<th>' + esc(h) + '</th>'; }).join('') + '</tr>';
+      rows = d.rows.map(function (r) { return '<tr><td class="rowh">' + esc(r.label) + '</td>' + r.cells.map(cell).join('') + '</tr>'; }).join('');
+    }
+    return '<table class="tbl">' + head + rows + '</table>';
+  }
+  function diagramHtml(q, justNew) {
+    var d = q.diagram;
+    if (!d) return '';
+    return ({ lshape: gardenSvg, angles: anglesSvg, ladder: ladderSvg, freq: tableHtml, twoway: tableHtml })[d.kind](d, justNew);
+  }
+  function drawDiagram(justNew) {
+    if (Q.diagram && (Q.diagram.kind === 'freq' || Q.diagram.kind === 'twoway')) $('diagram').innerHTML = diagramHtml(Q, justNew);
+  }
+
   /* ---------- play ---------- */
   function startGame() {
     MaffsLock.newSession();
-    session = buildSession(newSeed());
+    session = buildSession(newSeed(), PREVIEW);
     idx = 0; unaidedTotal = 0; helpTotal = 0; taps = 0; rightTaps = 0;
     show('game');
     ev('game_started', { game_slug: SLUG, level: level });
@@ -313,11 +424,11 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     $('qtext').innerHTML = Q.stem.map(function (l, i) {
       return '<p>' + renderLine(l) + (i === Q.stem.length - 1 ? ' <span class="marks-tag">[' + Q.marks + ' marks]</span>' : '') + '</p>'; }).join('');
     $('diagram').hidden = !Q.diagram;
-    $('diagram').innerHTML = Q.diagram ? gardenSvg(Q.diagram) : '';
+    $('diagram').innerHTML = diagramHtml(Q, null);
     msg('', '');
+    window.scrollTo(0, 0);                                  // before the options are fitted to the screen, which measures from the top
     drawSlots(false);
     renderOptions();
-    window.scrollTo(0, 0);
   }
   function msg(text, cls) { var m = $('msg'); m.textContent = text; m.className = 'msg' + (cls ? ' ' + cls : ''); }
 
@@ -331,16 +442,28 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       h += '<span class="slot' + (how === 'tap' ? ' got' : how === 'help' ? ' help' : '') + '" data-slot="' + sl.id + '" title="' + esc(sl.label) + '"' +
         (fresh && !reducedMotion() ? '' : ' style="animation:none"') + '>' + (how === 'help' ? 'help' : how ? '1' : '') + '</span>';
     });
-    h += '<span class="slot ans" title="The answer mark: the last one, and never asked for" aria-label="The answer mark, not asked for">A</span>';
+    for (var an = 0; an < Q.answers; an++) {
+      h += '<span class="slot ans" title="An answer mark: the last ones, and never asked for" aria-label="An answer mark, not asked for">A</span>';
+    }
+    $('slots').className = 'slots' + (Q.slots.length + Q.answers > 4 ? ' many' : '');
     $('slots').innerHTML = h;
     $('jarCount').textContent = got + ' of ' + Q.slots.length;
   }
 
+  // Up to six calculations. A batch 2 question (Q.fit) on a screen too short for six, with a diagram or a table above them, gets
+  // fewer, never below four, so the last stays above the fold (the footer bar takes the bottom 44 px). Batch 1 is as it was.
   function renderOptions() {
-    var opts = M.options(Q, S, Math.random);
-    $('opts').innerHTML = opts.map(function (o) {
-      return '<button class="btn" type="button" data-val="' + esc(o.id) + '">' + tex(o.tex) + '</button>';
-    }).join('');
+    var cap = 6;
+    for (;;) {
+      var opts = M.options(Q, S, Math.random, cap);
+      $('opts').innerHTML = opts.map(function (o) {
+        return '<button class="btn" type="button" data-val="' + esc(o.id) + '">' + tex(o.tex) + '</button>';
+      }).join('');
+      if (Q.fit) $('opts').classList.remove('maffs-two-up');      // measured one to a row: MaffsFold decides again for the new options
+      var b = $('opts').lastElementChild;
+      if (!Q.fit || !b || cap <= 4 || b.getBoundingClientRect().bottom <= window.innerHeight - 44 || !$('game').classList.contains('active')) break;
+      cap--;
+    }
     MaffsLock.fresh($('opts'));
     state = 'asking';
   }
@@ -366,6 +489,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       msg(st && !st.slot ? 'Good step: no mark of its own, but you need it.' : 'Also valid. That mark is already found.', 'note');
     }
     drawSlots(r.slots[0]);
+    drawDiagram(r.steps[0]);
     afterFind();
   }
   function afterFind() {
@@ -393,7 +517,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     var got = Q.slots.filter(function (sl) { return S.slots[sl.id]; }).length, total = Q.slots.length, left = '';
     var line;
     if (got === total) {
-      line = 'You found ' + total + " method marks. The last mark is for the answer, and you've already done the hard part.";
+      line = 'You found ' + total + ' method marks. ' + (Q.answers > 1 ? 'The last two are for the answers' : 'The last mark is for the answer') + ", and you've already done the hard part.";
     } else {
       line = 'You found ' + got + ' of the ' + total + ' method marks. On a real paper, every step you write down is a chance of one more.';
       var open = [];
@@ -418,6 +542,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     helpTotal++; $('hudHelp').textContent = helpTotal;
     msg('A step, with help: no mark counted', 'note');
     drawSlots(null);
+    drawDiagram(null);
     afterFind();
   }
   function bank() {
@@ -430,11 +555,11 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   // Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
   var finish = MaffsLock.finishOnce(function () {
     state = 'done';
-    var score = unaidedTotal, max = QUESTIONS * 3;
+    var score = unaidedTotal, max = session.questions.reduce(function (n, q) { return n + q.slots.length; }, 0);
     ev('game_completed', { game_slug: SLUG, level: level, score: score, questions_answered: taps, questions_correct: rightTaps });
-    if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, level, score, taps).catch(function () {});
-    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, level, score);
-    var pbKey = 'fam_best', prev = parseInt(lsGet(pbKey) || '0', 10) || 0, pb = score > prev;
+    if (!PREVIEW && window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, level, score, taps).catch(function () {});
+    if (!PREVIEW && window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, level, score);
+    var pbKey = 'fam_best', prev = parseInt(lsGet(pbKey) || '0', 10) || 0, pb = !PREVIEW && score > prev;
     if (pb) { ev('personal_best_set', { game_slug: SLUG, level: level, score: score, previous_best: prev }); lsSet(pbKey, String(score)); }
     $('resScore').textContent = score;
     $('resOf').textContent = 'unaided method marks, out of ' + max;
@@ -442,7 +567,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     for (var i = 0; i < max; i++) c += '<span class="slot' + (i < score ? ' got' : '') + '">' + (i < score ? '1' : '') + '</span>';
     $('resCoins').innerHTML = c;
     $('resStats').innerHTML = (helpTotal ? 'Found with help: <b>' + helpTotal + '</b> (not counted)<br>' : '') +
-      'Taps on a nearly-right calculation: <b>' + (taps - rightTaps) + '</b> (no penalty)' + (pb ? '<br>New personal best' : '');
+      'Taps on a nearly-right calculation: <b>' + (taps - rightTaps) + '</b> (no penalty)' + (pb ? '<br>New personal best' : '') +
+      (PREVIEW ? '<br>Preview of ' + PREVIEW.join(', ') + ': not on the leaderboard' : '');
     show('results');
   });
 

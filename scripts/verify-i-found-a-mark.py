@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
-# ci-line: I Found a Mark, part 1 (every question of the four types over 300 seeds each, recomputed in Python from its own parameters with exact fractions: every step and form value, every literal and dependency derivable, every distractor different from every step, the garden's three routes and four labels, at least 30 distinct questions a type, every form accepted in play) | --part 1
-# ci-line: I Found a Mark, part 2 (a session played in the page at 375, 320 and 1280 px with hints: a hinted mark is not in the score, the leaderboard or game_completed; options and Next above the fold; no sideways scroll; diagram text at least 12 px) | --part 2
-# ci-line: I Found a Mark, part 3 (fault-injection self-test: the six planted faults, each caught) | --part 3
+# ci-line: I Found a Mark, part 1 (every question of the nine types over 300 seeds each, recomputed in Python from its own parameters with exact fractions: every step and form value, every claim, every literal and dependency derivable, the distractors the contract lists, the two-way table fixed uniquely by its givens, the equations true at the real prices; the deal of five types worth 15 method marks) | --part 1
+# ci-line: I Found a Mark, part 2 (a normal session played in the page at 375, 320 and 1280 px with hints: a hinted mark is not in the score, the leaderboard or game_completed; options and Next above the fold; no sideways scroll) | --part 2
+# ci-line: I Found a Mark, part 3 (the five batch 2 types played in the page at 375, 360, 320, 390 and 1280 px, and the older types at 320 and 390: diagram and table text at least 12 px, a table that fills in as its steps are found, options and Next above the fold, a preview that submits nothing) | --part 3
+# ci-line: I Found a Mark, part 4 (fault-injection self-test, the module: the planted faults in the engine and the nine templates, each caught) | --part 4
+# ci-line: I Found a Mark, part 5 (fault-injection self-test, the page: the planted faults in the page played, each caught) | --part 5
 # ci-deps: games/i-found-a-mark/ schools/assets/found-a-mark-templates.js
-"""Independent verification for I Found a Mark (games/i-found-a-mark/), built 27 Oct 2026 (contract FOUND-A-MARK, Jon).
+"""Independent verification for I Found a Mark (games/i-found-a-mark/), built 27 Oct 2026 (contract FOUND-A-MARK, Jon);
+batch 2 (angles, mean, ladder, coffee, twoway) added the same day (contract FOUND-A-MARK-2).
 SR-30: checked from its first PR.
 
 WHY THIS READS THE LIVE MODULE
@@ -24,7 +27,13 @@ in Python, from each question's own `params` and the contract's words, never fro
              budget within 15% and never a tie; a < b coprime with a + b <= 12; the interest ranges, 1 in 4 simple, the
              stem saying which is asked; the L's sides, cut-out and price; all three routes to its area equal; the four
              diagram labels equal to the sides) and 3 method marks in 3 slots.
-  Variety    at least 30 distinct questions a type.
+  Batch 2    each new type's steps, claims and distractors derived here from its parameters: angles (the alternate angles, the
+             straight line, a diagram drawn to the angles); the mean (x times f, the total, the mean; to 1 d.p. only when not
+             exact); the ladder (Pythagoras, the contract's triples scaled, both variants); coffee and tea (equations true at the
+             real prices, every route, the eliminated equation with one letter, no distractor a true statement about the step);
+             the two-way table (fixed uniquely by its givens, every cell at least 3, totals 50-120, the table that fills in).
+  Deal       every session five different types worth 15 method marks; a ?types preview cycles its types and submits nothing.
+  Variety    at least 30 distinct questions a type (25 for the ladder).
   Play       in the module: from each question, every form of every step is accepted once its deps are found; random
              play finishes with 3 unaided marks; no option is offered with unmet deps or already found; a hint never
              scores. In the page: a session played with hints at 375, 320 and 1280 px.
@@ -45,9 +54,10 @@ import bank_common as bc  # noqa: E402
 SLUG = 'i-found-a-mark'
 GAME = os.path.join(ROOT, 'games', SLUG, 'index.html')
 MODULE = os.path.join(ROOT, 'schools', 'assets', 'found-a-mark-templates.js')
-TYPES = ['enough', 'ratio', 'interest', 'garden']
+TYPES = ['enough', 'ratio', 'interest', 'garden', 'angles', 'mean', 'ladder', 'coffee', 'twoway']
+NEW_TYPES = ['angles', 'mean', 'ladder', 'coffee', 'twoway']
 SEEDS = 300
-MIN_DISTINCT = 30
+MIN_DISTINCT = {'ladder': 25}                    # 30 for the rest; the ladder has 14 scalings of its four triples, in two variants
 SIZES = [(375, 667), (320, 568), (1280, 720)]
 
 
@@ -71,6 +81,10 @@ def evaluate(expr, vals):
             return v
         if k.startswith('@'):
             return vals[k[1:]]
+        if k == 'sqrt':
+            r = isqrt_fraction(atom())
+            assert r is not None, 'the square root is not exact'
+            return r
         v = Fraction(k)
         if peek() == '%':
             take()
@@ -223,16 +237,298 @@ def expected(q):
     return exp, nums, errs
 
 
+
+# ---------------------------------------------------------------- batch 2: the five new types, derived from params alone
+# Each derives, from the question's own parameters and the contract's words, (1) the value or the claim of every step, (2) the
+# numbers a form may use, (3) the distractors the contract lists (as a claim or a value), and compares them with the module's.
+SLOTS = {'enough': (3, 1), 'ratio': (3, 1), 'interest': (3, 1), 'garden': (3, 1),
+         'angles': (3, 1), 'mean': (3, 1), 'ladder': (2, 1), 'coffee': (4, 2), 'twoway': (4, 1)}
+TRIPLES = [(3, 4, 5), (5, 12, 13), (7, 24, 25), (8, 15, 17)]
+
+
+def plainnum(fr):
+    """A Fraction as the plain decimal the page writes (2.8, 10, 12.96)."""
+    fr = Fraction(fr)
+    if fr.denominator == 1:
+        return str(fr.numerator)
+    s = ('%.6f' % float(fr)).rstrip('0').rstrip('.')
+    return s
+
+
+def isqrt_fraction(fr):
+    import math as _m
+    n, d = fr.numerator, fr.denominator
+    rn, rd = _m.isqrt(n), _m.isqrt(d)
+    return Fraction(rn, rd) if rn * rn == n and rd * rd == d else None
+
+
+def eq_text(ca, cb, rhs, la, lb):
+    """An equation as the module writes it (this script's own formatter)."""
+    parts = []
+    for c, l in ((ca, la), (cb, lb)):
+        if c:
+            parts.append(l if c == 1 else '%d%s' % (c, l))
+    return ' + '.join(parts) + ' = %.2f' % (rhs / 100)
+
+
+def expected_new(q):
+    """-> (exp numeric values, claims (step id -> fact string), nums allowed in forms, errors, expected distractors, extra)
+    Expected distractors: list of (for-step, key) with key ('v', Fraction) or ('f', fact string); dropped the way the module drops
+    them (a numeric one equal to a numeric step's value; a claim equal to a step's claim)."""
+    p, ty, errs = q['params'], q['type'], []
+    exp, facts, nums, dist, extra = {}, {}, set(), [], {}
+    text = ' '.join(q['stem'])
+    if ty == 'angles':
+        a, b = p['a'], p['b']
+        x = 180 - a - b
+        if not (30 <= a <= 80 and 30 <= b <= 80 and 100 <= a + b <= 150 and a != b):
+            errs.append('angles %s, %s break 30-80, a + b in 100-150, a different from b' % (a, b))
+        exp = {'A': Fraction(a), 'B': Fraction(b), 'C': Fraction(x)}
+        facts = {'A': 'EFG=%d' % a, 'B': 'EGF=%d' % b, 'C': 'FEG=%d' % x}
+        nums = {Fraction(a), Fraction(b), Fraction(180)}
+        for fr, st, val in (('A', 'EFG', 180 - a), ('A', 'EFG', b), ('B', 'EGF', 180 - b), ('B', 'EGF', a),
+                            ('C', 'FEG', 360 - a - b), ('C', 'FEG', a + b), ('C', 'FEG', 90 - a)):
+            dist.append((fr, ('f', '%s=%d' % (st, val))))
+        dg = q.get('diagram') or {}
+        if (dg.get('kind'), dg.get('a'), dg.get('b'), dg.get('x')) != ('angles', a, b, x):
+            errs.append('the diagram is not drawn to the angles %s, %s, %s: %s' % (a, b, x, dg))
+        extra['angle_truth'] = {'EFG': a, 'EGF': b, 'FEG': x}
+    elif ty == 'mean':
+        xs, fs, total, sm = p['xs'], p['fs'], p['total'], p['sum']
+        rows = len(xs)
+        if rows not in (5, 6) or xs != list(range(xs[0], xs[0] + rows)) or xs[0] not in (0, 1):
+            errs.append('x values %s are not 5 or 6 consecutive values from 0 or 1' % xs)
+        if len(fs) != rows or not all(1 <= f <= 12 for f in fs) or not 15 <= sum(fs) <= 40 or sum(fs) != total:
+            errs.append('frequencies %s: each 1-12, total 15-40' % fs)
+        prods = [x * f for x, f in zip(xs, fs)]
+        if sm != sum(prods):
+            errs.append('the sum of x times f is %s, not %s' % (sum(prods), sm))
+        exact = (sum(prods) * 10) % total == 0
+        if p['exact'] != exact:
+            errs.append('exact flag %s, but the mean %s/%s is %s' % (p['exact'], sum(prods), total, 'exact' if exact else 'not exact'))
+        if exact == ('1 decimal place' in text):
+            errs.append('the stem %s "1 decimal place" for a mean that is %s' % ('has' if '1 decimal place' in text else 'lacks',
+                                                                                'exact' if exact else 'not exact'))
+        if str(total) not in text:
+            errs.append('the stem lacks the number of values, %d' % total)
+        exp = {'B': Fraction(sum(prods)), 'C': Fraction(sum(prods), total)}
+        facts = {'A': 'XF=' + ','.join(str(v) for v in prods)}
+        nums = {Fraction(v) for v in xs + fs + [total]}
+        sx = sum(xs)
+        dist = [('A', ('f', 'XF=' + ','.join(str(x + f) for x, f in zip(xs, fs)))),
+                ('A', ('f', 'XF=' + ','.join(plainnum(Fraction(x, f)) for x, f in zip(xs, fs)))),
+                ('B', ('v', Fraction(sum(fs)))), ('B', ('v', Fraction(sx))),
+                ('C', ('v', Fraction(sum(prods), rows))), ('C', ('v', Fraction(total, rows))), ('C', ('v', Fraction(sum(prods), sx)))]
+        dg = q.get('diagram') or {}
+        if (dg.get('kind'), dg.get('xs'), dg.get('fs'), dg.get('products')) != ('freq', xs, fs, prods):
+            errs.append('the frequency table is not the question: %s' % dg)
+    elif ty == 'ladder':
+        t, j, var = tuple(p['t']), p['j'], p['variant']
+        d, h, L = Fraction(t[0] * j, 10), Fraction(t[1] * j, 10), Fraction(t[2] * j, 10)
+        if t not in TRIPLES or t[0] ** 2 + t[1] ** 2 != t[2] ** 2:
+            errs.append('%s is not one of the contract\'s triples' % (t,))
+        if not (Fraction(3, 5) <= d <= 3 and 3 <= L <= 12):
+            errs.append('foot %s m or ladder %s m outside 0.6-3 and 3-12' % (d, L))
+        if (Fraction(str(p['d'])), Fraction(str(p['h'])), Fraction(str(p['L']))) != (d, h, L):
+            errs.append('params d, h, L differ from the triple scaled by %s tenths' % j)
+        if var not in ('height', 'length'):
+            errs.append('variant %s' % var)
+        if var == 'height':
+            exp = {'A': L * L - d * d, 'B': h}
+            nums = {L, d}
+            for need in (plainnum(L), plainnum(d)):
+                if need + ' m' not in text:
+                    errs.append('the stem lacks %s m' % need)
+            a_dist = [L * L + d * d, L - d, L * L - d]
+        else:
+            exp = {'A': d * d + h * h, 'B': L}
+            nums = {d, h}
+            for need in (plainnum(d), plainnum(h)):
+                if need + ' m' not in text:
+                    errs.append('the stem lacks %s m' % need)
+            a_dist = [h * h - d * d, d + h, d * d + h]
+        dist = [('A', ('v', v)) for v in a_dist] + [('B', ('v', exp['A'] / 2)), ('B', ('v', exp['A'] * exp['A']))]
+        dg = q.get('diagram') or {}
+        if (dg.get('kind'), dg.get('variant'), Fraction(str(dg.get('d'))), Fraction(str(dg.get('h'))), Fraction(str(dg.get('L')))) != ('ladder', var, d, h, L):
+            errs.append('the ladder diagram is not the question: %s' % dg)
+    elif ty == 'coffee':
+        p1, q1, p2, q2, cp, tp = p['p1'], p['q1'], p['p2'], p['q2'], p['cp'], p['tp']
+        la, lb = p['la'], p['lb']
+        if not all(1 <= v <= 5 for v in (p1, q1, p2, q2)) or p1 == p2 or q1 == q2 or p1 * q2 == p2 * q1:
+            errs.append('coefficients %s break 1-5, differing, not proportional' % [p1, q1, p2, q2])
+        if not (80 <= cp <= 350 and 80 <= tp <= 350 and cp % 10 == 0 and tp % 10 == 0 and cp != tp):
+            errs.append('prices %s, %s break 80-350p, to 10p, different' % (cp, tp))
+        E = [(p1, q1, p1 * cp + q1 * tp), (p2, q2, p2 * cp + q2 * tp)]
+        for e in E:
+            if '£%.2f' % (e[2] / 100) not in text:
+                errs.append('the stem lacks £%.2f' % (e[2] / 100))
+        facts = {'A': 'eq:%d,%d,%d' % E[0], 'B': 'eq:%d,%d,%d' % E[1]}
+        texes = {'A': eq_text(*E[0], la, lb), 'B': eq_text(*E[1], la, lb)}
+        dist = [('A', ('t', '%d%s%s = %.2f' % (p1 + q1, la, lb, E[0][2] / 100))),
+                ('A', ('t', '%s \\times %s = %.2f' % ('%d%s' % (p1, la) if p1 > 1 else la, '%d%s' % (q1, lb) if q1 > 1 else lb, E[0][2] / 100))),
+                ('A', ('e', (q1, p1, E[0][2]))), ('B', ('e', (1, 1, E[1][2]))), ('B', ('e', (q2, p2, E[1][2])))]
+        routes = []
+        for idx in (1, 0):
+            c1, c2 = E[0][idx], E[1][idx]
+            for m in range(2, 6):
+                if c1 * m == c2:
+                    routes.append((idx, 0, m))
+                elif c2 * m == c1:
+                    routes.append((idx, 1, m))
+        extra['routes'] = len(routes)
+        for idx, which, m in routes:
+            orig, other = E[which], E[1 - which]
+            S = tuple(m * v for v in orig)
+            o = 1 - idx
+            diff = S[o] - other[o]
+            big, small = (S, other) if diff > 0 else (other, S)
+            res = [0, 0, big[2] - small[2]]
+            res[o] = abs(diff)
+            added = tuple(S[i] + other[i] for i in range(3))
+            bad = [0, 0, S[2] + other[2]]
+            bad[o] = abs(diff)
+            cid, did = 'C%d' % idx, 'D%d' % idx
+            facts[cid] = 'eq:%d,%d,%d' % S
+            facts[did] = 'eq:%d,%d,%d' % tuple(res)
+            texes[cid], texes[did] = eq_text(*S, la, lb), eq_text(*res, la, lb)
+            dist += [(cid, ('e', (S[0], orig[1], S[2]))), (cid, ('e', (S[0], S[1], orig[2]))), (did, ('e', added)), (did, ('e', tuple(bad)))]
+            extra.setdefault('true', []).extend([S, tuple(res)])
+        extra['texes'] = texes
+        extra['prices'] = (cp, tp)
+        extra['equations'] = E
+        extra['letters'] = (la, lb)
+    elif ty == 'twoway':
+        a, b, N, B, G, S = p['a'], p['b'], p['N'], p['B'], p['G'], p['S']
+        cells = a + b
+        if len(a) != 3 or len(b) != 3 or min(cells) < 3 or not 50 <= N <= 120:
+            errs.append('table cells %s / total %s break every cell at least 3 and a total of 50-120' % (cells, N))
+        if N != sum(cells) or B != sum(a) or G != sum(b) or S != a[1] + b[1]:
+            errs.append('the totals are not those of the cells')
+        # The givens: N, B, G, the first two cells of row 1, the first cell of row 2 and the middle column's total. Solve them here.
+        bc = B - a[0] - a[1]
+        gb = S - a[1]
+        gc = G - b[0] - gb
+        if (bc, gb, gc) != (a[2], b[1], b[2]):
+            errs.append('the givens do not fix the table: they give %s, the table has %s' % ((bc, gb, gc), (a[2], b[1], b[2])))
+        if min(bc, gb, gc) < 3:
+            errs.append('a found cell is below 3: %s' % ((bc, gb, gc),))
+        exp = {'A': Fraction(bc), 'B': Fraction(gb), 'C': Fraction(gc), 'D': Fraction(gc, bc + gc)}
+        nums = {Fraction(v) for v in (N, B, G, S, a[0], a[1], b[0])}
+        dist = [('A', ('v', Fraction(B - a[0]))), ('A', ('v', Fraction(N - a[0] - a[1]))),
+                ('B', ('v', Fraction(S + a[1]))), ('B', ('v', Fraction(G - a[1]))),
+                ('C', ('v', Fraction(G - b[0]))), ('C', ('v', Fraction(N - b[0] - a[1]))),
+                ('D', ('v', Fraction(gc, N))), ('D', ('v', Fraction(gc, G))), ('D', ('v', Fraction(bc, bc + gc)))]
+        dg = q.get('diagram') or {}
+        want = [{'label': dg.get('rows', [{}, {}, {}])[0].get('label'), 'cells': [a[0], a[1], {'fill': 'A', 'v': bc}, B]},
+                {'label': dg.get('rows', [{}, {}, {}])[1].get('label'), 'cells': [b[0], {'fill': 'B', 'v': gb}, {'fill': 'C', 'v': gc}, G]},
+                {'label': 'Total', 'cells': ['', S, '', N]}]
+        if dg.get('kind') != 'twoway' or dg.get('rows') != want or len(dg.get('head', [])) != 4:
+            errs.append('the two-way table is not the question: %s' % dg)
+        if 'probability' not in text:
+            errs.append('the stem does not ask for a probability')
+    return exp, facts, nums, errs, dist, extra
+
+
+def distractor_key(d, vals):
+    if d.get('fact') is not None:
+        return ('f', d['fact'])
+    if d.get('expr') is None:
+        return ('t', d['tex'])
+    return ('v', evaluate(d['expr'], vals))
+
+
+def check_new_extras(q, extra, vals, errs):
+    """Checks that need the type's own structure: angle claims in their own text, equations true or false at the real prices."""
+    ty = q['type']
+    if ty == 'angles':
+        truth = extra['angle_truth']
+        env = {'A': Fraction(truth['EFG']), 'B': Fraction(truth['EGF'])}
+
+        def claim(tex):
+            m = re.match(r'\\angle (\w+) = (.*)$', tex)
+            if not m:
+                return None, None
+            rhs = m.group(2).replace('^\\circ', '').replace('\\angle EFG', '@A').replace('\\angle EGF', '@B')
+            return m.group(1), evaluate(rhs, env)
+        for st in q['steps']:
+            for f in st['forms']:
+                lab, val = claim(f['tex'])
+                if lab is None or val != truth[lab] or st.get('fact') != '%s=%d' % (lab, truth[lab]):
+                    errs.append('%s: the form %r does not claim the true %s' % (st['id'], f['tex'], 'angle'))
+        for d in q['distractors']:
+            lab, val = claim(d['tex'])
+            if lab is None:
+                errs.append('distractor %r is not an angle claim' % d['tex'])
+            elif val == truth[lab]:
+                errs.append('distractor %r states the true size of angle %s (a true statement offered as wrong)' % (d['tex'], lab))
+            elif d.get('fact') != '%s=%d' % (lab, val):
+                errs.append('distractor %r: its fact %r is not its own claim' % (d['tex'], d.get('fact')))
+        c = next(s for s in q['steps'] if s['id'] == 'C')
+        if len(c['forms']) != 2 or c['forms'][0]['deps'] != [] or sorted(c['forms'][1]['deps']) != ['A', 'B']:
+            errs.append('angle FEG must be valid at once (the straight line) and again after A and B (the triangle)')
+    if ty == 'coffee':
+        cp, tp = extra['prices']
+        la, lb = extra['letters']
+        texes = extra['texes']
+        step = {s['id']: s for s in q['steps']}
+        for sid, tx in texes.items():
+            if sid not in step or step[sid]['forms'][0]['tex'] != tx:
+                errs.append('%s: the equation is %r, this script writes %r' % (sid, step.get(sid, {'forms': [{'tex': None}]})['forms'][0]['tex'], tx))
+        for (ca, cb, rhs) in [tuple(int(v) for v in s['fact'][3:].split(',')) for s in q['steps']]:
+            if ca * cp + cb * tp != rhs:
+                errs.append('a step equation %s is not true at c=%s, t=%s' % ((ca, cb, rhs), cp, tp))
+        for sid in [s['id'] for s in q['steps'] if s['id'][0] == 'D']:
+            ca, cb, rhs = (int(v) for v in step[sid]['fact'][3:].split(','))
+            if (ca == 0) == (cb == 0):
+                errs.append('%s must have exactly one letter left' % sid)
+        for sid in [s['id'] for s in q['steps'] if s['id'][0] == 'C']:
+            ca, cb, rhs = (int(v) for v in step[sid]['fact'][3:].split(','))
+            e = extra['equations']
+            idx = int(sid[1])
+            if (ca, cb)[idx] not in (e[0][idx], e[1][idx]) or (ca, cb)[idx] == 0:
+                errs.append('%s does not match the coefficient of letter %d of the other equation' % (sid, idx))
+        for d in q['distractors']:
+            f = d.get('fact') or ''
+            if f.startswith('eq:'):
+                ca, cb, rhs = (int(v) for v in f[3:].split(','))
+                if ca * cp + cb * tp == rhs and not (d['for'][0] == 'D' and ca and cb):
+                    errs.append('distractor %r is a true equation that is not the step it is offered for' % d['tex'])
+                vec = (ca, cb, rhs)
+                if d['tex'] != eq_text(ca, cb, rhs, la, lb):
+                    errs.append('distractor %r is written %r, this script writes the equation %r' % (d['fact'], d['tex'], eq_text(ca, cb, rhs, la, lb)))
+
+def dkey(d, vals):
+    """A distractor as the thing it claims, comparable with expected_new's: a claim, an equation, a value or its own text."""
+    f = d.get('fact')
+    if f is not None:
+        if f.startswith('eq:'):
+            return ('e', tuple(int(v) for v in f[3:].split(',')))
+        if f.startswith('junk:'):
+            return ('t', d['tex'])
+        return ('f', f)
+    return ('v', evaluate(d['expr'], vals))
+
+
 def check_question(q):
     errs = []
-    exp, nums, e = expected(q)
+    ty = q['type']
+    edist, extra = None, {}
+    if ty in NEW_TYPES:
+        exp, facts, nums, e, edist, extra = expected_new(q)
+    else:
+        exp, nums, e = expected(q)
+        facts = {}
     errs += e
-    if q['marks'] != 4 or len(q['slots']) != 3:
-        errs.append('not 4 marks = 3 method + 1 answer')
+    slots_n, answers = SLOTS[ty]
+    if q['marks'] != slots_n + answers or len(q['slots']) != slots_n or q.get('answers') != answers:
+        errs.append('not %d marks = %d method + %d answer' % (slots_n + answers, slots_n, answers))
+    if ty in NEW_TYPES and not q.get('fit'):
+        errs.append('a batch 2 question must carry fit (the page trims its options on a short screen)')
     slot_ids = {s['id'] for s in q['slots']}
     ids = [s['id'] for s in q['steps']]
-    if set(ids) != set(exp):
-        errs.append('steps %s differ from the expected %s' % (sorted(ids), sorted(exp)))
+    want_ids = set(exp) | set(facts)
+    if set(ids) != want_ids:
+        errs.append('steps %s differ from the expected %s' % (sorted(ids), sorted(want_ids)))
     vals, ancestors, seen = {}, {}, []
     for st in q['steps']:
         sid = st['id']
@@ -241,28 +537,35 @@ def check_question(q):
         anc = set()
         form_vals = []
         for f in st['forms']:
-            try:
-                v = evaluate(f['expr'], vals)
-            except Exception as ex:  # noqa: BLE001
-                errs.append('%s: cannot evaluate %r (%s)' % (sid, f['expr'], ex))
-                continue
-            form_vals.append(v)
+            if f['expr'] is not None:
+                try:
+                    v = evaluate(f['expr'], vals)
+                except Exception as ex:  # noqa: BLE001
+                    errs.append('%s: cannot evaluate %r (%s)' % (sid, f['expr'], ex))
+                    continue
+                form_vals.append(v)
+            elif st.get('fact') is None:
+                errs.append('%s: a form with no calculation must say what it claims (a fact)' % sid)
             deps = set(f['deps'])
-            for r in refs(f['expr']):
-                if r not in deps:
-                    errs.append('%s: @%s is not among its deps' % (sid, r))
+            if f['expr'] is not None:
+                for r in refs(f['expr']):
+                    if r not in deps:
+                        errs.append('%s: @%s is not among its deps' % (sid, r))
             for d in deps:
                 if d not in seen:
                     errs.append('%s: dep %s is not an earlier step' % (sid, d))
                 anc |= {d} | ancestors.get(d, set())
-            allowed = set(nums) | {vals[a] for a in anc if a in vals}
-            for lit in literals(f['expr']):
-                if lit not in allowed:
-                    errs.append('%s: %s in %r is not a number of the question or a found result (a step offered before its inputs)'
-                                % (sid, lit, f['expr']))
+            if f['expr'] is not None:
+                allowed = set(nums) | {vals[a] for a in anc if a in vals}
+                if ty == 'ladder':
+                    allowed.add(Fraction(2))                      # the exponent
+                for lit in literals(f['expr']):
+                    if lit not in allowed:
+                        errs.append('%s: %s in %r is not a number of the question or a found result (a step offered before its inputs)'
+                                    % (sid, lit, f['expr']))
             for im in f['implies']:
                 other = next((s for s in q['steps'] if s['id'] == im), None)
-                if not other or im not in seen or not any(contiguous(g['expr'], f['expr']) for g in other['forms']):
+                if not other or im not in seen or not any(contiguous(g['expr'], f['expr']) for g in other['forms'] if g['expr'] and f['expr']):
                     errs.append('%s: implies %s, which its calculation does not show' % (sid, im))
         if form_vals:
             if any(v != form_vals[0] for v in form_vals):
@@ -270,39 +573,76 @@ def check_question(q):
             vals[sid] = form_vals[0]
             if sid in exp and form_vals[0] != exp[sid]:
                 errs.append('%s: value %s, recomputed from the question %s' % (sid, form_vals[0], exp[sid]))
-            if abs(float(form_vals[0]) - st['value']) > 1e-6 * max(1, abs(st['value'])):
+            if st['value'] is None or abs(float(form_vals[0]) - st['value']) > 1e-6 * max(1, abs(st['value'])):
                 errs.append('%s: the module says %s, this says %s' % (sid, st['value'], float(form_vals[0])))
+        elif st['value'] is not None:
+            errs.append('%s: a step with no calculation has a value' % sid)
+        if sid in facts and st.get('fact') != facts[sid]:
+            errs.append('%s: it claims %r, recomputed from the question %r' % (sid, st.get('fact'), facts[sid]))
         ancestors[sid] = anc
         seen.append(sid)
     tex_seen = set()
     for i, d in enumerate(q['distractors']):
-        try:
-            v = evaluate(d['expr'], vals)
-        except Exception as ex:  # noqa: BLE001
-            errs.append('distractor %d: cannot evaluate %r (%s)' % (i, d['expr'], ex))
-            continue
-        for sid, sv in vals.items():
-            if v == sv:
-                errs.append('distractor %r has the value of step %s (%s): a true statement offered as wrong' % (d['expr'], sid, sv))
+        v = None
+        if d['expr'] is not None:
+            try:
+                v = evaluate(d['expr'], vals)
+            except Exception as ex:  # noqa: BLE001
+                errs.append('distractor %d: cannot evaluate %r (%s)' % (i, d['expr'], ex))
+                continue
+            if d.get('fact') is None:
+                for sid, sv in vals.items():
+                    if v == sv:
+                        errs.append('distractor %r has the value of step %s (%s): a true statement offered as wrong' % (d['expr'], sid, sv))
+        elif d.get('fact') is None:
+            errs.append('distractor %r says neither a calculation nor what it claims' % d['tex'])
+        if d.get('fact') is not None:
+            for st in q['steps']:
+                if st.get('fact') == d['fact']:
+                    errs.append('distractor %r makes the claim of step %s (%s): a true statement offered as wrong' % (d['tex'], st['id'], d['fact']))
         if d['tex'] in tex_seen:
             errs.append('two distractors are the same calculation: %s' % d['tex'])
         tex_seen.add(d['tex'])
-        for r in refs(d['expr']):
-            if r not in d['deps']:
-                errs.append('distractor %r: @%s is not among its deps' % (d['expr'], r))
-        if d['for'] not in vals:
-            errs.append('distractor %r is for no step' % d['expr'])
+        if d['expr'] is not None:
+            for r in refs(d['expr']):
+                if r not in d['deps']:
+                    errs.append('distractor %r: @%s is not among its deps' % (d['expr'], r))
+        if d['for'] not in ids:
+            errs.append('distractor %r is for no step' % d['tex'])
         if not d['why'] or len(d['why']) > 200:
-            errs.append('distractor %r: its slip line is missing or long' % d['expr'])
+            errs.append('distractor %r: its slip line is missing or long' % d['tex'])
     for st in q['steps']:                      # a step's calculation is never also a distractor
         for f in st['forms']:
             if f['tex'] in tex_seen:
                 errs.append('%s: a form is also a distractor' % st['id'])
+    if edist is not None:
+        step_claims = set(facts.values())
+        num_vals = set(exp.values())
+        want = []
+        for fr, key in edist:
+            if key[0] == 'f' and key[1] in step_claims:
+                continue
+            if key[0] == 'e' and ('eq:%d,%d,%d' % key[1]) in step_claims:
+                continue
+            if key[0] == 'v' and key[1] in num_vals:
+                continue
+            want.append((fr, repr(key)))
+        got = []
+        for d in q['distractors']:
+            try:
+                got.append((d['for'], repr(dkey(d, vals))))
+            except Exception:  # noqa: BLE001
+                pass
+        if sorted(got) != sorted(want):
+            errs.append('the distractors are not the contract\'s: missing %s, extra %s' % (
+                sorted(set(want) - set(got))[:3], sorted(set(got) - set(want))[:3]))
+        if ty in ('angles', 'coffee'):
+            check_new_extras(q, extra, vals, errs)
     return errs
 
 
 # ---------------------------------------------------------------- the page and module under Playwright
-def open_page(pw, base, html, module, size):
+def open_page(pw, base, html, module, size, types=None):
     br = pw.chromium.launch()
     touch = size[0] <= 600
     ctx = br.new_context(viewport={'width': size[0], 'height': size[1]}, has_touch=touch, is_mobile=touch)
@@ -310,6 +650,7 @@ def open_page(pw, base, html, module, size):
     ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)
     page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
     ctx.route(lambda url: not url.startswith(base), lambda route: route.abort())
+    ctx.route(bc.is_font_cdn, bc.serve_real_font)                  # the pinned KaTeX and fonts, so the options are measured as a student sees them
     ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
         status=200, content_type='text/html; charset=utf-8', body=html))
     ctx.route(lambda url: url.split('?')[0].endswith('/found-a-mark-templates.js'), lambda route: route.fulfill(
@@ -317,7 +658,7 @@ def open_page(pw, base, html, module, size):
     page = ctx.new_page()
     errors = []
     page.on('pageerror', lambda e: errors.append(str(e)))
-    page.goto(base + '/games/%s/?cb=verify' % SLUG, wait_until='load', timeout=20000)
+    page.goto(base + '/games/%s/?cb=verify%s' % (SLUG, ('&types=' + ','.join(types)) if types else ''), wait_until='load', timeout=20000)
     page.wait_for_function('!!window.FAM && !!FAM.ui', timeout=10000)
     page.evaluate("""() => { window.__ev = []; window.__sub = [];
         window.mfg = (n, p) => { window.__ev.push([n, p]); };
@@ -337,25 +678,26 @@ GEN_JS = """(args) => {
 
 # In-module play. For each question: every form of every step is accepted once its deps are found (they are found by
 # the first form of each ancestor, in order); no option is ever offered with unmet deps or already found; random play
-# finishes with 3 unaided marks; a hint never scores; the options are at most 6.
+# finishes with every method mark unaided; a hint never scores; the options are at most 6, and at most the cap the page
+# asks for (never fewer than 4), always with a valid one among them.
 PLAY_JS = """(args) => {
   const M = MaffsFoundAMark, faults = [];
   const byId = (Q, id) => Q.steps.find(s => s.id === id);
   function closure(Q, ids) { const need = []; const add = id => { if (need.includes(id)) return; byId(Q, id).forms[0].deps.forEach(add); need.push(id); }; ids.forEach(add); return need; }
   for (const t of M.TYPES) for (let s = 1; s <= args.seeds; s++) {
-    const Q = M.question(t, M.makeRng(s * 7919 + 13)), tag = t + '#' + s;
+    const Q = M.question(t, M.makeRng(s * 7919 + 13)), tag = t + '#' + s, need = Q.slots.length;
     for (const st of Q.steps) st.forms.forEach((f, fi) => {
       const S = M.newState();
       closure(Q, f.deps).forEach(id => { const o = byId(Q, id); if (!S.found[id]) M.choose(Q, S, 's:' + id + ':0'); });
       const r = M.choose(Q, S, 's:' + st.id + ':' + fi);
-      if (r.kind !== 'mark' && r.kind !== 'step') faults.push(tag + ': form ' + st.id + ':' + fi + ' (' + f.expr + ') was not accepted once its inputs were found: ' + r.kind);
+      if (r.kind !== 'mark' && r.kind !== 'step') faults.push(tag + ': form ' + st.id + ':' + fi + ' (' + f.tex + ') was not accepted once its inputs were found: ' + r.kind);
     });
     for (let walk = 0; walk < 3; walk++) {
       const rng = M.makeRng(s * 31 + walk), S = M.newState();
       let guard = 0;
       while (!M.finished(Q, S) && guard++ < 40) {
-        const opts = M.options(Q, S, rng);
-        if (opts.length > 6) faults.push(tag + ': ' + opts.length + ' options on offer');
+        const cap = walk === 2 ? 4 : 6, opts = M.options(Q, S, rng, cap);
+        if (opts.length > cap) faults.push(tag + ': ' + opts.length + ' options on offer with a cap of ' + cap);
         for (const o of opts) {
           if (o.id[0] === 's') {
             const [, sid, fi] = o.id.split(':'), f = byId(Q, sid).forms[+fi];
@@ -369,14 +711,14 @@ PLAY_JS = """(args) => {
           }
         }
         const valid = opts.filter(o => o.id[0] === 's');
-        if (!valid.length) { faults.push(tag + ': nothing valid on offer before it finished'); break; }
+        if (!valid.length) { faults.push(tag + ': nothing valid on offer before it finished (cap ' + cap + ')'); break; }
         const wrongs = opts.filter(o => o.id[0] === 'd');
         if (wrongs.length && walk === 1) { const w = M.choose(Q, S, wrongs[0].id); if (w.kind !== 'wrong' || !w.why) faults.push(tag + ': a distractor was not marked wrong with its slip'); }
         const pick = valid[Math.floor(rng() * valid.length)];
         const r = M.choose(Q, S, pick.id);
         if (r.kind === 'wrong' || r.kind === 'ignored') faults.push(tag + ': a valid option was ' + r.kind);
       }
-      if (M.unaided(Q, S) !== 3) faults.push(tag + ': finished with ' + M.unaided(Q, S) + ' unaided marks, not 3');
+      if (M.unaided(Q, S) !== need) faults.push(tag + ': finished with ' + M.unaided(Q, S) + ' unaided marks, not ' + need);
     }
     const H = M.newState();
     let g = 0;
@@ -384,18 +726,22 @@ PLAY_JS = """(args) => {
     if (M.unaided(Q, H) !== 0) faults.push(tag + ': hints alone scored ' + M.unaided(Q, H) + ' unaided marks');
     const H2 = M.newState(), h1 = M.hint(Q, H2);
     if (h1 && h1.slot) {
-      const rest = M.options(Q, H2, M.makeRng(1)).filter(o => o.id[0] === 's');
       let marks = 0, gg = 0;
       while (!M.finished(Q, H2) && gg++ < 40) {
         const o = M.options(Q, H2, M.makeRng(gg)).filter(x => x.id[0] === 's')[0]; if (!o) break;
         marks += M.choose(Q, H2, o.id).slots.length;
       }
       if (M.unaided(Q, H2) !== marks) faults.push(tag + ': after one hint, unaided ' + M.unaided(Q, H2) + ' differs from the marks the taps earned (' + marks + ')');
-      if (marks > 2) faults.push(tag + ': a hinted mark was counted: ' + marks + ' marks tapped after one hint');
+      if (marks > need - 1) faults.push(tag + ': a hinted mark was counted: ' + marks + ' marks tapped after one hint');
     }
   }
   return faults.slice(0, 40);
 }"""
+
+DEAL_JS = """() => { const out = [];
+  for (let s = 1; s <= 300; s++) out.push(FAM.buildSession(s * 7919 + 13).questions.map(q => [q.type, q.slots.length]));
+  const only = FAM.buildSession(5, ['angles', 'mean']).questions.map(q => q.type);
+  return { sessions: out, only: only }; }"""
 
 
 def check_engine(page, out, seeds):
@@ -405,8 +751,9 @@ def check_engine(page, out, seeds):
         qs = data[ty]
         keys = {q['key'] for q in qs}
         info[ty] = len(keys)
-        if len(keys) < MIN_DISTINCT:
-            out.append('%s: only %d distinct questions in %d seeds (need %d)' % (ty, len(keys), seeds, MIN_DISTINCT))
+        need = MIN_DISTINCT.get(ty, 30)
+        if len(keys) < need:
+            out.append('%s: only %d distinct questions in %d seeds (need %d)' % (ty, len(keys), seeds, need))
         bad = 0
         for i, q in enumerate(qs):
             for e in check_question(q):
@@ -421,38 +768,77 @@ def check_engine(page, out, seeds):
     n = len(data['interest'])
     if not (0.15 * n <= kinds.get('simple', 0) <= 0.35 * n) or not kinds.get('depreciation'):
         out.append('interest kinds %s: about 1 in 4 should be simple, and depreciation must occur' % kinds)
+    # the variety inside each batch 2 type: every branch of a template is reached
+    routes = {}
+    for q in data['coffee']:
+        _, _, _, _, _, ex = expected_new(q)
+        routes[ex['routes']] = routes.get(ex['routes'], 0) + 1
+    if not routes.get(1) or not routes.get(2):
+        out.append('coffee: both the one-route and the two-route questions must occur: %s' % routes)
+    if {q['params']['variant'] for q in data['ladder']} != {'height', 'length'}:
+        out.append('ladder: both the height and the length variants must occur')
+    if {q['params']['exact'] for q in data['mean']} != {True, False}:
+        out.append('mean: an exact and a not-exact mean must both occur')
+    if len({q['params']['by'] for q in data['coffee']}) != 4 or len({q['params']['ctx'] for q in data['twoway']}) != 3 or len({q['params']['ctx'] for q in data['mean']}) != 5:
+        out.append('a context of coffee, twoway or mean never occurs')
     for f in page.evaluate(PLAY_JS, {'seeds': max(40, seeds // 3)}):
         out.append('play: ' + f)
+    # the deal: five different types, every session worth 15 method marks, every type dealt, a preview cycles its types
+    deal = page.evaluate(DEAL_JS)
+    seen = set()
+    for i, ss in enumerate(deal['sessions']):
+        tys = [t for t, _ in ss]
+        seen |= set(tys)
+        if len(ss) != 5 or len(set(tys)) != 5 or sum(m for _, m in ss) != 15:
+            out.append('session %d is %s: five different types and 15 method marks are needed' % (i + 1, ss))
+            break
+    if seen != set(TYPES):
+        out.append('the deal never served %s' % sorted(set(TYPES) - seen))
+    if deal['only'] != ['angles', 'mean', 'angles', 'mean', 'angles']:
+        out.append('a ?types preview did not cycle its types: %s' % deal['only'])
     return info
 
 
 # ---------------------------------------------------------------- the page played
-def play(page, size, out):
+def play(page, size, out, types=None):
+    """One session. types: the ?types preview being played (its questions in turn, nothing submitted), or None for a normal one."""
     w, h = size
     fold = h - 40
     page.evaluate("document.getElementById('startBtn').click()")
     expect_unaided = 0
     helps = 0
-    seen_types = set()
+    seen_types = []
+    max_marks = 0
     for qn in range(5):
         page.wait_for_function("FAM.ui.state() === 'asking'", timeout=8000)
         q = page.evaluate('FAM.ui.question()')
-        seen_types.add(q['type'])
+        seen_types.append(q['type'])
+        max_marks += len(q['slots'])
+        tag = '%dx%d %s' % (w, h, q['type'])
         page.wait_for_timeout(450)
         m = page.evaluate("""() => { const o = [...document.querySelectorAll('#opts button')].map(b => b.getBoundingClientRect());
             return { n: o.length, last: Math.max(...o.map(r => r.bottom)), sw: document.documentElement.scrollWidth, iw: innerWidth,
                      dup: new Set([...document.querySelectorAll('#opts button')].map(b => b.dataset.val)).size !== o.length }; }""")
         if m['last'] > fold + 0.5:
-            out.append('%dx%d %s: the last option ends at %d, below the fold (%d)' % (w, h, q['type'], m['last'], fold))
+            out.append('%s: the last option ends at %d, below the fold (%d)' % (tag, m['last'], fold))
         if m['sw'] > m['iw']:
-            out.append('%dx%d %s: sideways scroll (%d > %d)' % (w, h, q['type'], m['sw'], m['iw']))
-        if m['n'] > 6 or m['dup']:
-            out.append('%dx%d %s: %d options (duplicates: %s)' % (w, h, q['type'], m['n'], m['dup']))
-        if q['type'] == 'garden':
+            out.append('%s: sideways scroll (%d > %d)' % (tag, m['sw'], m['iw']))
+        if m['n'] > 6 or m['n'] < 3 or m['dup']:
+            out.append('%s: %d options (duplicates: %s)' % (tag, m['n'], m['dup']))
+        kind = (q.get('diagram') or {}).get('kind')
+        if kind in ('lshape', 'angles', 'ladder'):
             fs = page.evaluate("""() => [...document.querySelectorAll('#diagram text')].map(t => {
                 const k = t.ownerSVGElement.getScreenCTM().a; return parseFloat(getComputedStyle(t).fontSize) * k; })""")
             if not fs or min(fs) < 12:
-                out.append('%dx%d garden: diagram text %.1f px (needs 12 or more)' % (w, h, min(fs) if fs else 0))
+                out.append('%s: diagram text %.1f px (needs 12 or more)' % (tag, min(fs) if fs else 0))
+        if kind in ('freq', 'twoway'):
+            cells = page.evaluate("""() => ({ px: [...document.querySelectorAll('#diagram td, #diagram th')].map(c => parseFloat(getComputedStyle(c).fontSize)),
+                open: document.querySelectorAll('#diagram td.open').length, w: document.querySelector('#diagram table').getBoundingClientRect().width })""")
+            want_open = len(q['diagram']['xs']) if kind == 'freq' else 3
+            if not cells['px'] or min(cells['px']) < 12:
+                out.append('%s: table text %s px (needs 12 or more)' % (tag, min(cells['px']) if cells['px'] else 0))
+            if cells['open'] != want_open:
+                out.append('%s: %d cells show ? before any step is found, there should be %d' % (tag, cells['open'], want_open))
         # a wrong tap: a slip line, Next above the fold, no score change
         before = page.evaluate('FAM.ui.score()')
         if page.evaluate("!!FAM.ui.pick('wrong') && FAM.ui.pick('wrong').dataset.val[0] === 'd'"):
@@ -461,11 +847,11 @@ def play(page, size, out):
             r = page.evaluate("""() => { const n = document.querySelector('.maffs-next'), l = document.querySelector('.fb-line');
                 return { next: n ? n.getBoundingClientRect().bottom : null, line: l ? l.textContent : '' }; }""")
             if r['next'] is None or r['next'] > fold + 0.5:
-                out.append('%dx%d %s: Next after a wrong tap is %s, below the fold (%d)' % (w, h, q['type'], r['next'], fold))
+                out.append('%s: Next after a wrong tap is %s, below the fold (%d)' % (tag, r['next'], fold))
             if not r['line']:
-                out.append('%dx%d %s: a wrong tap named nothing' % (w, h, q['type']))
+                out.append('%s: a wrong tap named nothing' % tag)
             if page.evaluate('FAM.ui.score()') != before:
-                out.append('%dx%d %s: a wrong tap changed the score' % (w, h, q['type']))
+                out.append('%s: a wrong tap changed the score' % tag)
             page.evaluate("document.querySelector('.maffs-next').click()")
             page.wait_for_timeout(250)
         # a hint (once), then taps: the hinted mark is not counted
@@ -473,7 +859,6 @@ def play(page, size, out):
         page.wait_for_timeout(250)
         helps += 1
         st = page.evaluate('FAM.ui.found()')
-        helped_slots = [k for k, v in st['slots'].items() if v == 'help']
         tapped = 0
         g = 0
         while page.evaluate("FAM.ui.state()") == 'asking' and g < 30:
@@ -486,14 +871,43 @@ def play(page, size, out):
         expect_unaided += tapped
         hud = int(page.inner_text('#hudScore'))
         if hud != expect_unaided:
-            out.append('%dx%d %s: the marks found show %d, the taps earned %d (a hinted mark counted?)' % (w, h, q['type'], hud, expect_unaided))
+            out.append('%s: the marks found show %d, the taps earned %d (a hinted mark counted?)' % (tag, hud, expect_unaided))
+        # the end-of-question line, and a table that has filled in
+        line = page.evaluate("document.querySelector('.fb-line') ? document.querySelector('.fb-line').textContent : ''")
+        want_line = 'The last two are for the answers' if q['answers'] > 1 else 'The last mark is for the answer'
+        if want_line not in line and 'You found' in line and ' of the ' not in line:
+            out.append('%s: the end-of-question line is %r, it should say %r' % (tag, line, want_line))
+        if kind in ('freq', 'twoway'):
+            fill = page.evaluate("""() => ({ open: document.querySelectorAll('#diagram td.open').length,
+                got: [...document.querySelectorAll('#diagram td[data-fill]')].map(c => c.textContent) })""")
+            if fill['open']:
+                out.append('%s: %d cells still show ? after every step is found' % (tag, fill['open']))
+            elif kind == 'twoway':
+                want = [str(c['v']) for r in q['diagram']['rows'] for c in r['cells'] if isinstance(c, dict)]
+                if sorted(fill['got']) != sorted(want):
+                    out.append('%s: the table filled in with %s, the cells are %s' % (tag, fill['got'], want))
+            else:
+                if fill['got'] != [str(v) for v in q['diagram']['products']]:
+                    out.append('%s: the x times f column shows %s, not %s' % (tag, fill['got'], q['diagram']['products']))
         page.evaluate("document.getElementById('nextBtn').click()")
         page.wait_for_timeout(300)
     page.wait_for_function("document.getElementById('results').classList.contains('active')", timeout=8000)
     sub = page.evaluate('window.__sub')
     comp = [p for n, p in page.evaluate('window.__ev') if n == 'game_completed']
-    if len(sub) != 1 or sub[0][2] != expect_unaided or sub[0][1] != 'gcse':
-        out.append('%dx%d: the leaderboard got %s, the unaided marks were %d' % (w, h, sub, expect_unaided))
+    if types:
+        if sub:
+            out.append('%dx%d: a ?types preview submitted to the leaderboard: %s' % (w, h, sub))
+        if 'Preview' not in page.inner_text('#resStats'):
+            out.append('%dx%d: a preview does not say it is not on the leaderboard' % (w, h))
+        if seen_types != [types[i % len(types)] for i in range(5)]:
+            out.append('%dx%d: the preview of %s served %s' % (w, h, types, seen_types))
+    else:
+        if len(sub) != 1 or sub[0][2] != expect_unaided or sub[0][1] != 'gcse':
+            out.append('%dx%d: the leaderboard got %s, the unaided marks were %d' % (w, h, sub, expect_unaided))
+        if max_marks != 15 or len(set(seen_types)) != 5:
+            out.append('%dx%d: a session of %s is worth %d method marks (15 needed, five different types)' % (w, h, seen_types, max_marks))
+        if page.inner_text('#resOf') != 'unaided method marks, out of 15':
+            out.append('%dx%d: the results screen says %r' % (w, h, page.inner_text('#resOf')))
     if len(comp) != 1 or comp[0].get('score') != expect_unaided:
         out.append('%dx%d: game_completed says %s, the unaided marks were %d' % (w, h, comp, expect_unaided))
     if int(page.inner_text('#resScore')) != expect_unaided:
@@ -501,11 +915,10 @@ def play(page, size, out):
     answered = [p for n, p in page.evaluate('window.__ev') if n == 'question_answered']
     if any(set(p) - {'game_slug', 'level', 'question_index', 'correct'} for p in answered):
         out.append('question_answered carries a field outside the existing events')
-    if len(seen_types) < 4:
-        out.append('a session served only %s' % sorted(seen_types))
 
 
-def check(html, module, out, engine=True, sizes=(), seeds=SEEDS):
+def check(html, module, out, engine=True, sessions=(), seeds=SEEDS):
+    """sessions: [(size, types or None)], each one session played in the page."""
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
     info = {}
@@ -519,10 +932,10 @@ def check(html, module, out, engine=True, sizes=(), seeds=SEEDS):
                     out.append('the engine checks threw: %s' % str(e).splitlines()[0][:200])
                 out.extend('page error: ' + e for e in errs)
                 br.close()
-            for size in sizes:
-                br, page, errs = open_page(pw, base, html, module, size)
+            for size, types in sessions:
+                br, page, errs = open_page(pw, base, html, module, size, types)
                 try:
-                    play(page, size, out)
+                    play(page, size, out, types)
                 except Exception as e:  # noqa: BLE001
                     out.append('play at %dx%d threw: %s' % (size[0], size[1], str(e).splitlines()[0][:200]))
                 out.extend('page error at %dx%d: %s' % (size[0], size[1], e) for e in errs)
@@ -533,6 +946,7 @@ def check(html, module, out, engine=True, sizes=(), seeds=SEEDS):
 
 
 # Each plant: (what, file ('module' or 'page'), [(old, new)], kind ('engine' or 'play'), pattern its finding must match).
+# A 'play' plant is played as the one session in PLAY_PLANT_SESSIONS.
 PLANTS = [
     ('a distractor equal to a valid step (the filter off, a distractor with the discount\'s value)', 'module',
      [("if (clash || seen[dupKey]) return;", "if (seen[dupKey]) return;"),
@@ -554,13 +968,79 @@ PLANTS = [
     ('a garden label that is not its side', 'module',
      [("labels: { bottom: W, left: H, top: top, lowerRight: lr } },", "labels: { bottom: W, left: H, top: top, lowerRight: ch } },")], 'engine',
      r'diagram labels'),
+    # ---- batch 2
+    ('angles: the same size allowed for both given angles (a = b)', 'module',
+     [("while (a === b || a + b < 100 || a + b > 150);", "while (a + b < 100 || a + b > 150);")], 'engine',
+     r'angles .* break 30-80'),
+    ('angles: the straight-line route to angle FEG adds instead of subtracting', 'module',
+     [("{ expr: '180 - ' + a + ' - ' + b, tex: eq('FEG', '180^\\\\circ - ' + deg(a) + ' - ' + deg(b)) },",
+       "{ expr: '180 - ' + a + ' + ' + b, tex: eq('FEG', '180^\\\\circ - ' + deg(a) + ' - ' + deg(b)) },")], 'engine',
+     r'C: (value|its forms disagree)'),
+    ('angles: a distractor that states the true size of an angle', 'module',
+     [("{ expr: String(b), tex: eq('EFG', deg(b)), fact: 'EFG=' + b, 'for': 'A',",
+       "{ expr: String(a), tex: eq('EFG', deg(a)), fact: 'EFG=' + a, 'for': 'B',")], 'engine',
+     r'(true size of angle|makes the claim of step|distractors are not the contract)'),
+    ('mean: the mean divided by the number of rows, not the total frequency', 'module',
+     [("{ id: 'C', name: 'the mean', slot: 'mean', forms: [{ expr: '@B / ' + total }] }",
+       "{ id: 'C', name: 'the mean', slot: 'mean', forms: [{ expr: '@B / ' + rows }] }")], 'engine',
+     r'C: value .*recomputed from the question'),
+    ('mean: rounding asked for a mean that is exact (the flag wrong)', 'module',
+     [("var exact = (sum * 10) % total === 0;", "var exact = (sum * 10) % total === 0 || rows === 6;")], 'engine',
+     r'(exact flag|1 decimal place)'),
+    ('ladder: the foot allowed further than 3 m from the wall', 'module',
+     [("t[0] * j <= 30 && t[2] * j >= 30", "t[0] * j <= 60 && t[2] * j >= 30")], 'engine',
+     r'outside 0\.6-3'),
+    ('ladder: the squares added when the height is asked', 'module',
+     [("{ id: 'A', name: 'the difference of the squares', slot: 'sq', forms: [{ expr: L + ' ^ 2 - ' + d + ' ^ 2' }] },",
+       "{ id: 'A', name: 'the difference of the squares', slot: 'sq', forms: [{ expr: L + ' ^ 2 + ' + d + ' ^ 2' }] },")], 'engine',
+     r'A: value .*recomputed from the question'),
+    ('coffee: the eliminated equation adds the right-hand sides', 'module',
+     [("res = [0, 0, big[2] - small[2]];", "res = [0, 0, big[2] + small[2]];")], 'engine',
+     r'(not true at|recomputed from the question|its fact)'),
+    ('coffee: a distractor that is the matched equation itself', 'module',
+     [("dist.push({ tex: tx([S[0], S[1], orig[2]]), fact: fct([S[0], S[1], orig[2]]), 'for': cid,",
+       "dist.push({ tex: tx(S), fact: fct([S[0], S[1], orig[2]]), 'for': cid,")], 'engine',
+     r'(a form is also a distractor|two distractors are the same|distractors are not the contract)'),
+    ('twoway: girls by car forgets the girls by bus', 'module',
+     [("forms: [{ expr: G + ' - ' + b[0] + ' - @B', tex: lead('C', G + ' - ' + b[0] + ' - \\\\text{' + ctx.cells.B + '}') }] },",
+       "forms: [{ expr: G + ' - ' + b[0] + ' - ' + a[1], tex: lead('C', G + ' - ' + b[0] + ' - ' + a[1]) }] },")], 'engine',
+     r'C: value .*recomputed from the question'),
+    ('twoway: a cell of the table filled with the wrong number', 'module',
+     [("{ fill: 'C', v: G - b[0] - (S - a[1]) }", "{ fill: 'C', v: G - b[0] }")], 'engine',
+     r'two-way table is not the question'),
+    ('twoway: a table that shows its cells before they are found (the page)', 'page',
+     [("var ok = !!found[c.fill];", "var ok = true;")], 'play',
+     r'cells show \? before any step is found'),
+    ('the deal: 4-mark types dealt without the ladder (sessions not worth 15)', 'page',
+     [("return M.METHOD[t] === 3; })", "return M.METHOD[t] >= 3; })")], 'engine',
+     r'session \d+ is'),
+    ('a preview that submits to the leaderboard (the page)', 'page',
+     [("if (!PREVIEW && window.MaffsLeaderboard) MaffsLeaderboard.submitScore(", "if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(")], 'play',
+     r'preview submitted to the leaderboard'),
+    ('the answers line: "the last mark" said when two are for the answers (the page)', 'page',
+     [("(Q.answers > 1 ? 'The last two are for the answers' : 'The last mark is for the answer')", "'The last mark is for the answer'")], 'play',
+     r'end-of-question line'),
+    ('the option cap ignored: six options on a short phone (the module)', 'module',
+     [("cap = Math.max(4, Math.min(6, cap || 6));", "cap = 6;")], 'play',
+     r'below the fold'),
 ]
+NEW_FIVE = ['angles', 'mean', 'ladder', 'coffee', 'twoway']
+PLAY_PLANT_SESSIONS = {
+    'a hinted mark counted in the score (the page)': [((375, 667), None)],
+    'twoway: a table that shows its cells before they are found (the page)': [((375, 667), ['twoway'])],
+    'a preview that submits to the leaderboard (the page)': [((375, 667), ['ladder'])],
+    'the answers line: "the last mark" said when two are for the answers (the page)': [((375, 667), ['coffee'])],
+    'the option cap ignored: six options on a short phone (the module)': [((320, 568), ['twoway']), ((320, 568), ['angles'])],
+}
 
 
-def selftest(html, module, plants=None):
+def selftest(html, module, which=None, plants=None):
+    """which: 'engine' (the module plants) or 'play' (the page plants), or both."""
     ok = True
-    for what, which, edits, kind, want in (PLANTS if plants is None else plants):
-        src = module if which == 'module' else html
+    for what, src_file, edits, kind, want in (PLANTS if plants is None else plants):
+        if which and kind != which:
+            continue
+        src = module if src_file == 'module' else html
         bad = False
         for old, new in edits:
             if src.count(old) != 1:
@@ -572,17 +1052,25 @@ def selftest(html, module, plants=None):
             ok = False
             continue
         got = []
-        h2, m2 = (html, src) if which == 'module' else (src, module)
-        check(h2, m2, got, engine=kind == 'engine', sizes=[(375, 667)] if kind == 'play' else [], seeds=60)
+        h2, m2 = (html, src) if src_file == 'module' else (src, module)
+        sessions = PLAY_PLANT_SESSIONS.get(what, [((375, 667), None)]) if kind == 'play' else []
+        check(h2, m2, got, engine=kind == 'engine', sessions=sessions, seeds=60)
         hit = [g for g in got if re.search(want, g)]
         ok = ok and bool(hit)
         print('  self-test %-72s %s' % (what, ('caught: ' + hit[0][:100]) if hit else '*** MISSED ***' + (' (other: %s)' % got[0][:100] if got else '')))
     return ok
 
 
+# The sessions played in the page. A: a normal session at three sizes (the leaderboard, the marks, the deal); B: each batch 2 type
+# played at every size (a ?types preview, nothing submitted), and the batch 1 types at the two phone sizes.
+SESSIONS_A = [((375, 667), None), ((320, 568), None), ((1280, 720), None)]
+SESSIONS_B = [(s, NEW_FIVE) for s in [(375, 667), (360, 640), (320, 568), (390, 844), (1280, 720)]] + \
+             [((320, 568), ['enough', 'ratio', 'interest', 'garden', 'mean']), ((390, 844), ['enough', 'ratio', 'interest', 'garden', 'twoway'])]
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--part', choices=['1', '2', '3'], help='one of the three parts CI runs side by side (default: all)')
+    ap.add_argument('--part', choices=['1', '2', '3', '4', '5'], help='one of the five parts CI runs side by side (default: all)')
     ap.add_argument('--seeds', type=int, default=SEEDS)
     args = ap.parse_args()
     try:
@@ -593,14 +1081,20 @@ def main():
     module = open(MODULE, encoding='utf-8').read()
     part = args.part
     out = []
-    info = check(html, module, out, engine=part in (None, '1'), sizes=SIZES if part in (None, '2') else [], seeds=args.seeds)
+    sessions = (SESSIONS_A if part in (None, '2') else []) + (SESSIONS_B if part in (None, '3') else [])
+    info = check(html, module, out, engine=part in (None, '1'), sessions=sessions, seeds=args.seeds)
     if info:
         print('%s: distinct questions in %d seeds: %s' % (SLUG, args.seeds, info))
     if part in (None, '2'):
-        print('%s: a session played with hints at %s' % (SLUG, ', '.join('%dx%d' % s for s in SIZES)))
-    ok = True
+        print('%s: a session played with hints at %s' % (SLUG, ', '.join('%dx%d' % s for s, _ in SESSIONS_A)))
     if part in (None, '3'):
-        ok = selftest(html, module)
+        print('%s: the five batch 2 types played at %s, and the older types at 320x568 and 390x844' % (
+            SLUG, ', '.join(sorted({'%dx%d' % s for s, t in SESSIONS_B if t == NEW_FIVE}))))
+    ok = True
+    if part in (None, '4'):
+        ok = selftest(html, module, which='engine') and ok
+    if part in (None, '5'):
+        ok = selftest(html, module, which='play') and ok
     for f in out[:60]:
         print('FAIL  ' + f)
     if len(out) > 60:
