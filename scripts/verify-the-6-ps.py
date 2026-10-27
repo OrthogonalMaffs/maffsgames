@@ -584,7 +584,7 @@ def play_topic(b, m, topic, out, tag, narrow=False, stop_after=None, offset=0, r
         n = offset + len(asked) + 1
         asked.append(q['id'])
         head = p.inner_text('#qHead').strip()
-        want_head = 'Question %d of %d · Topic %d of %d' % (n, PER_TOPIC, m, K)
+        want_head = 'Question %d of %d' % (n, PER_TOPIC)      # the slim title line carries the topic count (Jon, 27 Oct 2026)
         if head != want_head:
             out.append('%s: header %r, expected %r' % (tag, head, want_head))
             if n > PER_TOPIC:
@@ -867,7 +867,7 @@ def no_bank(pw, base, html, data, out):
         sideways(p, 'the not-ready card', out)
         p.tap('#skipNotReadyBtn')
         p.wait_for_selector('#play:not([hidden])', timeout=5000)
-        if p.inner_text('#qHead').strip() != 'Question 1 of 5 · Topic 2 of 6':
+        if p.inner_text('#qHead').strip() != 'Question 1 of 5':
             out.append('%s: after Skip the header is %r' % (tag, p.inner_text('#qHead')))
         if p.evaluate('() => SixPs.session().results[SixPs.session().plan[0].id]') != {'skipped': True}:
             out.append('%s: the topic was not recorded as skipped' % tag)
