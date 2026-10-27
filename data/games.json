@@ -528,6 +528,11 @@
    "slug": "who-ate-all-the-pies",
    "search_phrase": "Pie Charts",
    "description": "Read pie charts, find amounts, draw them from a table, say when you can't tell, and work back to the total."
+  },
+  {
+   "slug": "as-you-can-see",
+   "search_phrase": "Reading Charts",
+   "description": "Read pictograms, bar charts, line graphs and scatter graphs, know what a graph cannot tell you, and spot the chart that is lying."
   }
  ],
  "pages": {
