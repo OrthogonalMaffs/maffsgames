@@ -1545,6 +1545,13 @@ scoped to its own class, so a page that uses none is unchanged; colours come fro
 - **The compact header** (phones, 600 px and narrower): `.maffs-compact-header` on the header bar (less padding top and bottom,
   tighter sides and gaps) and `.maffs-compact-bar` on a score bar or HUD (each label-and-value pair on one line). The same
   content, nothing hidden, no tap target smaller.
+- **The phone figure** (`.maffs-figure` on the figure itself: a canvas, an image, an SVG or a block): on screens 900 px tall
+  or less (every phone size the gate measures and both laptop sizes, R2) it is no taller than the game's `--maffs-figure-max`,
+  its measured cap. A canvas or image keeps its proportions (`object-fit: contain`), so nothing is stretched and every mark stays
+  where it was; a block's own contents keep their size. **Never below the label floor** (§7.6.1, Jon 27 Oct 2026): a cap that
+  would draw any text in the figure under 12 px is not set, and the game stays on the list with its reason. A figure drawn as a
+  padded card (`.maffs-figure-card`) gives up its padding above and below, to 10 px, on screens 600 px tall or less; nothing in
+  it is capped. A canvas that takes taps is never contained: the letterbox would move every tap's position.
 - **Applied** group by group (reference panels, four full-width options, figures), each game's before and after recorded in
   `docs/audits/fold-components-2026-10-27.md` and its entries taken off the lists in `scripts/phone-fit-state.json`.
 

@@ -98,16 +98,6 @@
         "375x667",
         "390x844"
       ],
-      "modular-battle": [
-        "320x568"
-      ],
-      "percentage-flip": [
-        "320x568",
-        "375x667"
-      ],
-      "prime-factorisation": [
-        "320x568"
-      ],
       "quadratic-factoriser": [
         "320x568",
         "375x667"
@@ -209,10 +199,6 @@
       "correlation-or-coincidence": [
         "375x667"
       ],
-      "curling-friction": [
-        "320x568",
-        "375x667"
-      ],
       "decimal-detective": [
         "320x568",
         "375x667"
@@ -262,13 +248,6 @@
       ],
       "negative-number-line": [
         "320x568"
-      ],
-      "percentage-flip": [
-        "320x568",
-        "375x667"
-      ],
-      "prime-factorisation": [
-        "375x667"
       ],
       "probability-paradox": [
         "320x568",
@@ -426,11 +405,6 @@
         "1280x720 next",
         "1280x720 option"
       ],
-      "percentage-flip": [
-        "1366x768 next",
-        "1280x720 next",
-        "1280x720 option"
-      ],
       "quadratic-factoriser": [
         "1280x720 option"
       ],
@@ -442,10 +416,6 @@
         "1280x720 option"
       ],
       "think-of-a-number": [
-        "1280x720 option"
-      ],
-      "trig-worms": [
-        "1366x768 option",
         "1280x720 option"
       ],
       "truth-buster": [

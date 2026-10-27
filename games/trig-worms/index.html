@@ -33,6 +33,10 @@
   /* Game canvas area */
   .canvas-wrap{width:100%;background:var(--white);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,0.1);position:relative;}
   canvas{display:block;width:100%;height:auto;}
+  /* The battlefield is the figure (schools/assets/fold.css, canon §7.5.7): on a short screen (a 1280 x 720 or 1366 x 768 laptop)
+     it is no taller than 265 px, so the options stay above the fold; its labels stay at 12 px or more (the floor, Jon 27 Oct
+     2026). A phone draws it shorter than 265 px already, so there nothing changes. */
+  #gameCanvas{--maffs-figure-max:265px;}
 
   /* Question panel */
   .q-panel{width:100%;background:var(--white);border-radius:14px;padding:16px 20px;box-shadow:0 4px 14px rgba(0,0,0,0.07);}
@@ -157,7 +161,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
   <div class="main-game" id="mainGame">
     <div class="level-bar" id="levelBar"></div>
     <div class="canvas-wrap">
-      <canvas id="gameCanvas" width="640" height="280"></canvas>
+      <canvas id="gameCanvas" class="maffs-figure" width="640" height="280"></canvas>
     </div>
     <div class="q-panel">
       <div class="q-type" id="qType">FIND THE ANGLE</div>

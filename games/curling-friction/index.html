@@ -45,7 +45,10 @@ body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);co
 .stone{position:absolute;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;transition:left 1.5s ease-out;z-index:2}
 .stone-a{background:radial-gradient(circle at 8px 8px,#ef4444,#991b1b);left:20px;box-shadow:0 0 8px rgba(239,68,68,.4)}
 .stone-b{background:radial-gradient(circle at 8px 8px,#fbbf24,#b45309);left:-30px;display:none;box-shadow:0 0 8px rgba(251,191,36,.4)}
-.sweep-indicator{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:.65rem;color:var(--sweep);font-weight:600;opacity:0;transition:opacity .3s}
+/* The rink is the figure (schools/assets/fold.css, canon §7.5.7): on a short screen it is 64 px tall, the house's height
+   inside its border, so nothing in it is resized. SWEEP! is figure text, so 12 px (the floor, Jon 27 Oct 2026), not .65rem. */
+.rink{--maffs-figure-max:64px}
+.sweep-indicator{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:.75rem;color:var(--sweep);font-weight:600;opacity:0;transition:opacity .3s}
 .sweep-indicator.active{opacity:1}
 
 .q-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1rem;text-align:center;min-height:130px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.6rem}
@@ -98,6 +101,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 {}
 -->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
+<link rel="stylesheet" href="/schools/assets/fold.css">
 </head>
 <body>
 <div class="container">
@@ -121,13 +125,13 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     <div class="maffs-start-note" data-maffs-start-note></div>
   </div>
   <div id="game" class="screen">
-    <div class="hud">
+    <div class="hud maffs-compact-bar">
       <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1/20</div></div>
       <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
       <div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="streak">0</div></div>
       <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div>
     </div>
-    <div class="rink">
+    <div class="rink maffs-figure">
       <div class="house"></div>
       <div class="stone stone-a" id="stoneA"></div>
       <div class="stone stone-b" id="stoneB"></div>
