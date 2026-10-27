@@ -1,11 +1,14 @@
 {
-  "note": "canon 7.6.1, Jon's rulings of 26 Oct 2026. Read by scripts/measure-phone-fit.py. Both lists may only shrink: take a game (or a size) off in the PR that fixes it; never add one. known-failures: per mode, each game with the sizes at which it fails the gate (reported, never failed). unmeasurable: per mode, each game the driver cannot measure, with the reason (they never read as passing). First recorded 26 Oct 2026 from the roster runs on branch claude/theme-distinctly-average-2. Re-recorded once, 26 Oct 2026, under contract PHONE-FIT-DRIVER (Jon: the lists may grow, and are to match the new measurements exactly, the start screen driven to the first question and every screen measured after its layout settles): the runs are in docs/audits/phone-fit-runs-2026-10-26/.",
+  "note": "canon 7.6.1, Jon's rulings of 26 Oct 2026. Read by scripts/measure-phone-fit.py. Per mode (normal, aa, laptop): known-failures, each game with the entries at which it fails the gate (phones: the size; laptop, ruling R2: the size and 'option' or 'next'), reported, never failed; sideways, each game with the sizes at which a measured screen scrolls sideways; unmeasurable, each game the driver cannot measure, with the reason (they never read as passing). Take a game (or an entry) off in the PR that fixes it. A list grows only when the measurement itself improves, with Jon's ruling, never because of a new fault. Recorded 26 Oct 2026 (branch claude/theme-distinctly-average-2), re-recorded the same day under PHONE-FIT-DRIVER (docs/audits/phone-fit-runs-2026-10-26/), and on 27 Oct 2026 under FOLD-COMPONENTS: the laptop and sideways lists added and the canvas games measured (docs/audits/fold-components-2026-10-27.md).",
   "known-failures": {
     "normal": {
       "52dle": [
         "320x568",
         "375x667",
         "390x844"
+      ],
+      "bearing-blitz": [
+        "320x568"
       ],
       "better-value": [
         "320x568",
@@ -137,6 +140,10 @@
         "375x667"
       ],
       "screening-room": [
+        "320x568",
+        "375x667"
+      ],
+      "shape-shifter": [
         "320x568",
         "375x667"
       ],
@@ -337,6 +344,9 @@
         "375x667",
         "390x844"
       ],
+      "shape-shifter": [
+        "375x667"
+      ],
       "spot-the-muppet": [
         "320x568",
         "375x667"
@@ -388,26 +398,328 @@
         "375x667",
         "390x844"
       ]
+    },
+    "laptop": {
+      "52dle": [
+        "1366x768 option",
+        "1280x720 option"
+      ],
+      "angle-ace": [
+        "1366x768 next",
+        "1280x720 next"
+      ],
+      "better-value": [
+        "1366x768 next",
+        "1280x720 next",
+        "1280x720 option"
+      ],
+      "boolean-blitz": [
+        "1280x720 next"
+      ],
+      "circle-theorem-spotter": [
+        "1366x768 next",
+        "1280x720 next",
+        "1280x720 option"
+      ],
+      "constructions-lab": [
+        "1366x768 option",
+        "1280x720 option"
+      ],
+      "coordinate-geometry-dash": [
+        "1366x768 next",
+        "1366x768 option",
+        "1280x720 next",
+        "1280x720 option"
+      ],
+      "core-maths-paper2a": [
+        "1366x768 option",
+        "1280x720 option"
+      ],
+      "core-maths-paper2b": [
+        "1280x720 next"
+      ],
+      "curling-friction": [
+        "1366x768 next",
+        "1280x720 next"
+      ],
+      "differentiation-duel": [
+        "1366x768 next",
+        "1366x768 option",
+        "1280x720 next",
+        "1280x720 option"
+      ],
+      "distinctly-average": [
+        "1366x768 next",
+        "1280x720 next"
+      ],
+      "equatle": [
+        "1366x768 option",
+        "1280x720 option"
+      ],
+      "estimation-golf": [
+        "1366x768 next",
+        "1280x720 next"
+      ],
+      "expected-damage": [
+        "1366x768 next",
+        "1280x720 next"
+      ],
+      "fermi-lab": [
+        "1366x768 next",
+        "1366x768 option",
+        "1280x720 next",
+        "1280x720 option"
+      ],
+      "formula-plug-in": [
+        "1366x768 next",
+        "1366x768 option",
+        "1280x720 next",
+        "1280x720 option"
+      ],
+      "four-quadrant-explorer": [
+        "1280x720 option"
+      ],
+      "given-that": [
+        "1366x768 next",
+        "1366x768 option",
+        "1280x720 next",
+        "1280x720 option"
+      ],
+      "gradient-hunter": [
+        "1280x720 option"
+      ],
+      "index-laws": [
+        "1366x768 next",
+        "1280x720 next"
+      ],
+      "integration-duel": [
+        "1366x768 next",
+        "1280x720 next",
+        "1280x720 option"
+      ],
+      "log-laws": [
+        "1366x768 next",
+        "1280x720 next",
+        "1280x720 option"
+      ],
+      "matrix-crunch": [
+        "1280x720 next"
+      ],
+      "new-shapes": [
+        "1366x768 next",
+        "1366x768 option",
+        "1280x720 next",
+        "1280x720 option"
+      ],
+      "normal-navigator": [
+        "1366x768 next",
+        "1280x720 next",
+        "1280x720 option"
+      ],
+      "percentage-flip": [
+        "1366x768 next",
+        "1280x720 next",
+        "1280x720 option"
+      ],
+      "quadratic-factoriser": [
+        "1280x720 option"
+      ],
+      "screening-room": [
+        "1280x720 next"
+      ],
+      "shape-shifter": [
+        "1366x768 option",
+        "1280x720 option"
+      ],
+      "suvat": [
+        "1280x720 option"
+      ],
+      "tax-theft": [
+        "1366x768 option",
+        "1280x720 option"
+      ],
+      "think-of-a-number": [
+        "1280x720 option"
+      ],
+      "trig-worms": [
+        "1366x768 option",
+        "1280x720 option"
+      ],
+      "truth-buster": [
+        "1280x720 next"
+      ],
+      "truth-will-set-you-free": [
+        "1366x768 option",
+        "1280x720 option"
+      ],
+      "wrong-on-the-internet": [
+        "1366x768 next",
+        "1366x768 option",
+        "1280x720 next",
+        "1280x720 option"
+      ]
     }
   },
   "unmeasurable": {
     "normal": {
-      "bearing-blitz": "started; no option group, input or submit; it shows a canvas, \"🎯 Fire Torpedo\"",
-      "four-quadrant-explorer": "started; no option group, input or submit; it shows \"Aa\", a canvas",
       "glorious-gantt": "the start screen does not lead to a question generically (its first option, then 'Start'); no declared start",
-      "gradient-hunter": "started; no option group, input or submit; it shows a canvas",
       "just-pythag-it-bruv": "started; no option group, input or submit; it shows a drawing, \"\"",
-      "shape-shifter": "started; no option group, input or submit; it shows \"Aa\", a canvas, \"Undo\"",
       "spot-the-error": "started; no option group, input or submit; it shows \"Aa\""
     },
     "aa": {
-      "bearing-blitz": "started; no option group, input or submit; it shows a canvas, \"🎯 Fire Torpedo\"",
-      "four-quadrant-explorer": "started; no option group, input or submit; it shows \"Aa\", a canvas",
       "glorious-gantt": "the start screen does not lead to a question generically (its first option, then 'Start'); no declared start",
-      "gradient-hunter": "started; no option group, input or submit; it shows a canvas",
       "just-pythag-it-bruv": "started; no option group, input or submit; it shows a drawing, \"\"",
-      "shape-shifter": "started; no option group, input or submit; it shows \"Aa\", a canvas, \"Undo\"",
+      "spot-the-error": "started; no option group, input or submit; it shows \"Aa\""
+    },
+    "laptop": {
+      "glorious-gantt": "the start screen does not lead to a question generically (its first option, then 'Start'); no declared start",
+      "just-pythag-it-bruv": "started; no option group, input or submit; it shows a drawing, \"\"",
       "spot-the-error": "started; no option group, input or submit; it shows \"Aa\""
     }
+  },
+  "sideways": {
+    "normal": {
+      "chart-interrogator": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "component-crusher": [
+        "320x568"
+      ],
+      "equation-builder": [
+        "320x568"
+      ],
+      "equatle": [
+        "320x568"
+      ],
+      "gradient-hunter": [
+        "320x568"
+      ],
+      "probability-pioneer": [
+        "320x568"
+      ],
+      "shape-shifter": [
+        "320x568"
+      ],
+      "tax-theft": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "trig-wars": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ]
+    },
+    "aa": {
+      "better-value": [
+        "320x568"
+      ],
+      "chart-interrogator": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "component-crusher": [
+        "320x568"
+      ],
+      "decimal-detective": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "differentiation-duel": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "equation-builder": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "equatle": [
+        "320x568"
+      ],
+      "factor-theorem": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "fermi-lab": [
+        "320x568"
+      ],
+      "formula-plug-in": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "gradient-hunter": [
+        "320x568"
+      ],
+      "integration-duel": [
+        "320x568"
+      ],
+      "maths-court": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "new-shapes": [
+        "320x568"
+      ],
+      "prime-or-composite": [
+        "320x568"
+      ],
+      "probability-pioneer": [
+        "320x568"
+      ],
+      "quadratic-factoriser": [
+        "320x568"
+      ],
+      "shape-shifter": [
+        "320x568"
+      ],
+      "spot-the-muppet": [
+        "320x568"
+      ],
+      "tax-theft": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "terrible-advice": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "think-of-a-number": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "trig-wars": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "truth-buster": [
+        "320x568",
+        "375x667"
+      ],
+      "word-problem-decoder": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ],
+      "wrong-on-the-internet": [
+        "320x568",
+        "375x667",
+        "390x844"
+      ]
+    },
+    "laptop": {}
   }
 }
