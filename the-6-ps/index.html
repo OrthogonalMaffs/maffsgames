@@ -200,6 +200,7 @@
 <p class="slim" id="slim" hidden></p>
 
 <p id="loadError" class="note" hidden>The topic list didn't load. Refresh the page to try again.</p>
+<p id="oops" class="note" hidden>Something went wrong on this page. Your place is saved. <button class="linkish" id="oopsBtn" type="button">Reload the page</button></p>
 
 <!-- Start screen -->
 <section id="intro">
@@ -328,6 +329,10 @@
  * reload. Questions seen are kept in localStorage only. */
 (function () {
   'use strict';
+  if (window.SixPs) {   // the page script ran twice in one window (a browser that re-runs scripts on resume): the second copy does nothing
+    try { console.warn('The 6 P\u2019s: the page script ran twice; the second copy stopped.'); } catch (e) { /* ignore */ }
+    return;
+  }
 
   var DATA_URL = '/schools/assets/exam-topics-ocr-foundation.json';
   var BANK_DIR = '/schools/assets/six-ps/';
@@ -749,6 +754,15 @@
     question: function () { return q; }
   };
 
+  // An error in this page's own script shows a note with a way out, never a page that silently does nothing.
+  function showOops(e) {
+    var own = !e || !e.filename || e.filename.split('#')[0].split('?')[0] === location.href.split('#')[0].split('?')[0];
+    if (own && $('oops')) $('oops').hidden = false;
+  }
+  window.addEventListener('error', showOops);
+  window.addEventListener('unhandledrejection', function () { showOops(null); });
+  $('oopsBtn').addEventListener('click', function () { location.reload(); });
+
   function rich(el, s) {
     if (window.MaffsText && MaffsText.hasMaths(s)) el.innerHTML = MaffsText.html(s);
     else el.textContent = s;
@@ -1067,7 +1081,24 @@
     store.setSession(session);
     event('question_answered', { game_slug: SLUG, level: LEVEL, question_index: session.qn, correct: right,
                                  filter_type: 'six_ps', filter_value: 'v1|topic=' + cur.id });
-    feedback(right, inp, last);
+    try { feedback(right, inp, last); } catch (err) {
+      try { console.error(err); } catch (e) { /* ignore */ }
+      plainFeedback(right, last);
+    }
+  }
+
+  // The least that still leaves the student somewhere to go: the verdict and Next, made with nothing that can fail.
+  function plainFeedback(right, last) {
+    var fb = $('qFb'), b = document.createElement('button');
+    fb.dataset.verdict = right ? 'right' : 'wrong';
+    $('qVerdict').textContent = right ? '\u2713 Correct' : '\u2717 Not quite';
+    $('qKeys').hidden = true;
+    $('qCheckRow').hidden = true;
+    fb.hidden = false;
+    $('qNext').textContent = '';
+    b.type = 'button'; b.className = 'btn'; b.id = 'nextBtn'; b.textContent = last ? 'Finish topic' : 'Next question';
+    b.addEventListener('click', advance);
+    $('qNext').appendChild(b);
   }
 
   function feedback(right, inp, last) {

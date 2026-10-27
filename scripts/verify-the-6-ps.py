@@ -51,6 +51,7 @@ import math
 import os
 import re
 import sys
+import time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -880,6 +881,71 @@ def check_chosen(pw, base, html, out):
         b.close()
 
 
+def check_resume_finish(pw, base, html, data, out):
+    """Jon's phone, 27 Oct: a refresh and Carry on in the middle of a session, then a topic of choice questions to its fifth answer. Each answer,
+    the fifth included, must show its verdict and Next, with no page error; the topic card then lists six and Next topic moves on by one."""
+    topic = 'powers-roots'               # a real bank of nothing but multiple choice
+    b = Browser(pw, base, html, size=(375, 667))
+    b.real[topic] = json.load(open(os.path.join(ROOT, 'schools', 'assets', 'six-ps', topic + '.json'), encoding='utf-8'))
+    try:
+        b.open()
+        others = [x['id'] for x in data['covered'] if x['id'] != topic][:5]
+        sess = {'v': 2, 'plan': [{'id': x} for x in [others[0], topic] + others[1:5]], 'i': 1, 'results': {others[0]: {'r': 4, 'n': 5}},
+                'cur': None, 'qn': 5, 'finishedSent': False, 'feedbackSent': False}
+        b.page.evaluate("s => localStorage.setItem('six-ps-session-v2', s)", json.dumps(dict(sess, at=int(time.time() * 1000))))
+        b.page.reload()
+        b.page.wait_for_function("() => !!window.SixPs && !!SixPs.data()", timeout=10000)
+        b.page.tap('#resumeBtn')
+        for n in range(PER_TOPIC):
+            b.page.wait_for_selector('#play:not([hidden])', timeout=8000)
+            q = b.page.evaluate('() => SixPs.question()')
+            answer(b, q, real_value(q, wrong=False))
+            try:
+                b.page.wait_for_selector('#qFb:not([hidden])', timeout=4000)
+            except Exception:
+                out.append('after a resume, question %d of 5 (%s) showed no feedback' % (n + 1, q['format']))
+                return
+            if not b.page.query_selector('#qNext button'):
+                out.append('after a resume, question %d of 5 showed no Next' % (n + 1))
+                return
+            b.page.tap('#qNext button')
+        b.page.wait_for_selector('#between:not([hidden])', timeout=5000)
+        rows = b.page.eval_on_selector_all('#planList li', 'e => e.length')
+        if rows != K:
+            out.append('after a resume and a finished topic "Your six" shows %d topics, not %d' % (rows, K))
+        b.page.tap('#nextTopicBtn')
+        if b.page.evaluate('() => SixPs.session().i') != 2:
+            out.append('Next topic after a resume did not move on by exactly one topic')
+        out.extend('resume and finish a topic: page error: %s' % e for e in b.errors)
+    finally:
+        b.close()
+
+
+def check_second_copy(pw, base, html, data, out):
+    """A page whose script runs twice (a browser that re-runs scripts on resume) still behaves as one: Next topic moves on by one, and
+    one answer sends one event."""
+    b = Browser(pw, base, html)
+    try:
+        b.open()
+        script = re.search(r'<script>\s*(/\* The 6 P.s \(contract.*?)</script>', html, re.S).group(1)
+        b.page.evaluate("src => { const s = document.createElement('script'); s.textContent = src; document.body.appendChild(s); }", script)
+        b.page.click('#startBtn')
+        starts = len([e for e in b.events if e[0] == 'game_started'])
+        if starts != 1:
+            out.append('with the page script run twice, one Start sent %d game_started events (each copy started its own session)' % starts)
+        t = session_topics(b.page, data)[0]
+        play_topic(b, 1, t, out, 'second copy')
+        b.page.click('#nextTopicBtn')
+        i = b.page.evaluate('() => SixPs.session().i')
+        if i != 1:
+            out.append('with the page script run twice, Next topic moved on %d topics, not 1' % i)
+        n = len([e for e in b.events if e[0] == 'question_answered'])
+        if n != PER_TOPIC:
+            out.append('with the page script run twice, %d answers sent %d events' % (PER_TOPIC, n))
+    finally:
+        b.close()
+
+
 def real_value(q, wrong=False):
     """A typed value for a real question: its own answer, or one that is wrong."""
     a, f = q['answer'], q['format']
@@ -985,6 +1051,11 @@ def check(html, data, out, parts):
                 guarded(out, 'the saved-session expiry', lambda: check_expiry(pw, base, html, data, out))
             if '2' in parts or 'chosen' in parts:
                 guarded(out, 'the chosen-unit colour', lambda: check_chosen(pw, base, html, out))
+            if '3' in parts or 'resume' in parts:
+                guarded(out, 'a refresh and Carry on, then a finished topic of choice questions',
+                        lambda: check_resume_finish(pw, base, html, data, out))
+            if '3' in parts or 'second' in parts:
+                guarded(out, 'the page script run twice', lambda: check_second_copy(pw, base, html, data, out))
             if '3' in parts:
                 guarded(out, 'the verdict and Next on a 375 x 667 phone', lambda: phone_feedback(pw, base, html, data, out))
             if '2' in parts:
@@ -1043,6 +1114,14 @@ PLANTS = [
     ('a session left five hours still offered',
      [("(now === undefined ? Date.now() : now) - s.at > SESSION_MAX_MS", "false")],
      ['expiry'], r'stale session offered'),
+    ('a feedback that throws on the fifth answer and no plain feedback to stand in',
+     [("    fb.dataset.verdict = right ? 'right' : 'wrong';\n    $('qVerdict').textContent = right ? '\\u2713 Correct' : '\\u2717 Not quite';\n    $('qKeys').hidden = true;                // the keypad has done its job",
+       "    if (last) throw new Error('planted');\n    fb.dataset.verdict = right ? 'right' : 'wrong';\n    $('qVerdict').textContent = right ? '\\u2713 Correct' : '\\u2717 Not quite';\n    $('qKeys').hidden = true;                // the keypad has done its job"),
+      ("      plainFeedback(right, last);\n    }\n  }", "    }\n  }")],
+     ['resume'], r'showed no feedback'),
+    ('the page script run twice with no guard against it',
+     [("  if (window.SixPs) {   // the page script ran twice in one window", "  if (false) {   // the page script ran twice in one window")],
+     ['second'], r'page script run twice'),
     ('a right value in the wrong form marked wrong (SR-3)',
      [("if (res.result !== 'correct' && res.result !== 'wrong') {", "if (res.result === 'unreadable' || res.result === 'nounit') {")],
      ['topic:fx-2'], r"\(format\) was marked"),
