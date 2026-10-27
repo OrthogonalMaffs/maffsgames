@@ -1810,6 +1810,17 @@ here in the same commit.
 
 - [ ] Matrix Crunch question bank expansion (35+18 → 50+50 to meet platform minimum)
 
+### 8.2.1 Bank-first topics (Jon's ruling, 26 Oct 2026; contract PIE-CHARTS-BANK)
+
+A bank built before its game is that topic's source. When the game is built, it imports the bank's generator; it never copies the
+questions. Banks drawn from an existing game keep the game as their source.
+
+How it is done: the generator is a seedable module under `schools/assets/` (for pie charts `pie-chart-generator.js`, `MaffsPieCharts`)
+that `scripts/gen-six-ps.py` runs to build the bank and that the game later loads; the bank is its output, and the generator's
+answers are checked by a separate code path in `gen-six-ps.py` (`pie_faults`, from the question's own data). A bank-first topic's row
+in `scripts/gen-exam-topics.py` has no game slug, so its `route` is `null` and The 6 P's leaves out "Want more practice?" for it; when
+the game exists the row gets its slug and level.
+
 ## 8.2b Leaderboard / Data Integrity — found 21 July 2026, not fixed
 
 - [ ] **higher-power mixed-scoring-mode leaderboard key.** Its two modes

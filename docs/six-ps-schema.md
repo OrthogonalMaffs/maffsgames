@@ -26,7 +26,12 @@ at two decimal places, and `MaffsAnswer`'s reading of a typed number replace wha
   `QUESTIONS.ks3[12]`) or `generator:<function>:<seed>`. Provenance, not a paper reference.
 - **band**: integer 1 to 5, the grade the question is pitched at. (The topic file's `"2-5"` ranges are per topic;
   each question gets one integer.)
-- **calc**: `true` or `false`. Shown as "Calculator" or "Non-calculator".
+- **calc**: `true`, `false` or `"optional"`. Shown as "Calculator", "Non-calculator" or "Calculator optional". `"optional"` (contract
+  PIE-CHARTS-BANK, Jon, 26 Oct 2026) is for a question either tool suits; it is the first value that is not a boolean, and the
+  player reads a boolean exactly as before.
+- **try_without** (optional): `true`, and only with `calc: "optional"`: the player adds "Try without a calculator" (Jon's wording)
+  under the tag. A bank sets it where every division the method makes is by a friendly divisor and gives a whole number, and leaves
+  it out otherwise; absent means no prompt.
 - **stem**: plain text; maths inside `\( ... \)`. No HTML. "Not drawn accurately" goes in the stem where the paper
   would say it.
 - **diagram**: `null`, or a self-contained inline SVG string: no external references, colours via `currentColor`
