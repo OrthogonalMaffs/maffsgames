@@ -51,6 +51,10 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only via `python scripts/merge-pr.py <n>`
 (needs a green Gate and main, §7.8.3); watch main's run after.
 
+## 2026-10-27 (cloud): SHARD (contract `docs/handover/contracts/2026-10-27-shard.md`). **IN PROGRESS: branch `claude/shard`, worktree `/home/user/wt-sh`.**
+
+- Setup cause fixed (28b610e): every container job fetched two DejaVu packages from Launchpad (5-7 s a job to 26 Oct, then up to 84 s); now from `scripts/fonts/dejavu/`. Interface, ci-groups.py and plants done (4ec63b3); canon §7.8.1 and CLAUDE.md (89b33b1). Migrating 11 hand-split verifiers plus Bearing Blitz (88% of the limit). #564 merged (61d82fc, main run 40487337743 green); remote `claude/jpib-split` not deleted: the proxy refuses branch deletion (403), for Jon or the home lane.
+
 ## 2026-10-27 (cloud): FOLD-COMPONENTS (contract `docs/handover/contracts/2026-10-27-fold-components.md`). **IN PROGRESS; checkpoint 27 Oct.**
 
 - **Lane exception, as granted (Jon, 27 Oct, this contract only):** "theme.css, canon §7.5/§7.6.1, _config.yml, the shared scripts, and per-game edits to listed games in the three groups. Claim each game before editing it, and record the exception in the handover." Canon outside §7.5/§7.6.1 stops and asks. Not ours (Jon): `site-footer.css` and `the-6-ps/` (The 6 P's footer fault went to the home lane). The home lane runs the pie-charts bank meanwhile (`gen-six-ps.py`, canon outside §7.5/§7.6).
@@ -65,7 +69,5 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 - **PR 6 (publishing):** by `_config.yml` and `check-publish-scope.py` only `docs/art/` is served under `docs/` and `scripts/`; the publish-scope check enforces it on every PR. This container cannot reach maffsgames.co.uk (proxy 403), so **Project Claude does PR 6's live 404 check** (Jon, 27 Oct). Exclusions to add, if any, after that check. Not started.
 - **Worktrees:** `/home/user/wt-fr` (#564), `/home/user/wt-fo` (PR 3), `/home/user/wt-fd` (PR 4), `/home/user/wt-js` (split). Scratch tools are not kept.
 
-## 2026-10-26 (cloud): PHONE-FIT-DRIVER (#560, squash 14ad000, main run 40418518431 green; full entry in `docs/history/handover-cloud-archive.md`; Jon's rulings on its two questions are FOLD-COMPONENTS' R1 and R4)
-
-Older entries (26 Oct and before; their full text in `docs/history/handover-cloud-archive.md`): BELOW-FOLD-AUDIT (#556), LOOK-REDS-2 (#554; the old `claude/theme-distinctly-average` stays untouched, Jon's ruling), TOP-SCORES (Jon to rule on log-laws, fermi-lab, screening-room), MAIN-WARN, PR-MEASURED, SIX-PS-PLAYER, SHAPE-SHIFTER-SPLIT, SHAPE-SHIFTER-DATA-MODE, THE-6-PS, SQS-LIST, SQS-SPACING, SQS-REAL-UNITS, FOOTBALL-PITCHES, TAKE-A-WALK-LIST, TAKE-A-WALK-FRAME, TAKE-A-WALK-RANGES, TAKE-A-WALK, CALC-BY-STAGE, HMP-LIST, HMP-FOUNDATION-STAGES, FDP-KEY-COLLIDE, K-PUNCTUATION-SCAN, COMIC-CAPER-BRIEFS, FDP-SPREAD, COMIC-CAPER-LOCKS, HMP-CHOCOLATE, ANSWER-LOCK-STATIC, LINE-LIMIT-SCOPE.
+Older entries (26 Oct and before; their full text in `docs/history/handover-cloud-archive.md`): PHONE-FIT-DRIVER (#560), BELOW-FOLD-AUDIT (#556), LOOK-REDS-2 (#554; the old `claude/theme-distinctly-average` stays untouched, Jon's ruling), TOP-SCORES (Jon to rule on log-laws, fermi-lab, screening-room), MAIN-WARN, PR-MEASURED, SIX-PS-PLAYER, SHAPE-SHIFTER-SPLIT, SHAPE-SHIFTER-DATA-MODE, THE-6-PS, SQS-LIST, SQS-SPACING, SQS-REAL-UNITS, FOOTBALL-PITCHES, TAKE-A-WALK-LIST, TAKE-A-WALK-FRAME, TAKE-A-WALK-RANGES, TAKE-A-WALK, CALC-BY-STAGE, HMP-LIST, HMP-FOUNDATION-STAGES, FDP-KEY-COLLIDE, K-PUNCTUATION-SCAN, COMIC-CAPER-BRIEFS, FDP-SPREAD, COMIC-CAPER-LOCKS, HMP-CHOCOLATE, ANSWER-LOCK-STATIC, LINE-LIMIT-SCOPE.
 
