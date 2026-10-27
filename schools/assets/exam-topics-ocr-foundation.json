@@ -693,13 +693,6 @@
    "planned": null
   },
   {
-   "id": "constructions",
-   "name": "Constructions",
-   "marks": 4.0,
-   "series": 6,
-   "planned": null
-  },
-  {
    "id": "2d-shapes",
    "name": "2D shapes",
    "marks": 3.8,
@@ -754,6 +747,15 @@
    "marks": 1.7,
    "series": 3,
    "planned": null
+  }
+ ],
+ "not_offered": [
+  {
+   "id": "constructions",
+   "name": "Constructions",
+   "marks": 4.0,
+   "series": 6,
+   "reason": "A drawing skill (compasses and ruler) that cannot be practised on a screen; Jon, 27 Oct 2026. It is practised on paper."
   }
  ]
 }

@@ -975,7 +975,8 @@
    ],
    "worked": [
     "Write each as an ordinary number: \\(4.5 \\times 10^6 = 4500000\\), \\(4.5 \\times 10^5 = 450000\\), \\(45 \\times 10^5 = 4500000\\).",
-    "\\(4.5 \\times 10^6\\) and \\(45 \\times 10^5\\) are both \\(4500000\\)."
+    "\\(4.5 \\times 10^6\\) and \\(45 \\times 10^5\\) are both \\(4500000\\).",
+    "The answer: \\(4.5 \\times 10^6 \\text{ and } 45 \\times 10^5\\)."
    ],
    "slip": []
   },
@@ -1014,7 +1015,8 @@
    ],
    "worked": [
     "Write each as an ordinary number: \\(6 \\times 10^{-2} = 0.06\\), \\(0.006 = 0.006\\), \\(6 \\times 10^{-3} = 0.006\\).",
-    "\\(0.006\\) and \\(6 \\times 10^{-3}\\) are both \\(0.006\\)."
+    "\\(0.006\\) and \\(6 \\times 10^{-3}\\) are both \\(0.006\\).",
+    "The answer: \\(0.006 \\text{ and } 6 \\times 10^{-3}\\)."
    ],
    "slip": []
   },

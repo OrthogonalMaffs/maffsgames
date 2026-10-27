@@ -148,7 +148,7 @@
     "Different signs, so add: \\(-16y = -48\\).",
     "\\(y = 3\\).",
     "Put \\(y = 3\\) into (1): \\(x - 12 \\times 3 = -27\\), so \\(x = 9\\).",
-    "Check in (2): \\(-9 - 4 \\times 3 = -21\\)."
+    "Check in (2): \\(-9 - 4 \\times 3 = -21\\). The answer: \\((9, 3)\\)."
    ],
    "slip": []
   },
@@ -973,7 +973,7 @@
     "Same sign, so subtract: \\(8x = 40\\).",
     "\\(x = 5\\).",
     "Put \\(x = 5\\) into (1): \\(5 \\times 5 + 6y = 19\\), so \\(y = -1\\).",
-    "Check in (2): \\(-5 + 2 \\times (-1) = -7\\)."
+    "Check in (2): \\(-5 + 2 \\times (-1) = -7\\). The answer: \\((5, -1)\\)."
    ],
    "slip": []
   },
