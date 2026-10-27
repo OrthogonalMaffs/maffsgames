@@ -95,3 +95,9 @@
   .maffs-figure.maffs-figure { max-height: var(--maffs-figure-max, none); }
   canvas.maffs-figure.maffs-figure, img.maffs-figure.maffs-figure, svg.maffs-figure.maffs-figure { object-fit: contain; }
 }
+/* A figure drawn as a padded card (.maffs-figure-card, on the card): on the shortest screens (600 px tall or less) its
+   padding above and below drops to 10 px, so a card whose contents are already small gives up empty space, not content.
+   Its contents keep their size; nothing is capped or clipped. */
+@media (max-height: 600px) {
+  .maffs-figure-card.maffs-figure-card { padding-top: 10px; padding-bottom: 10px; }
+}
