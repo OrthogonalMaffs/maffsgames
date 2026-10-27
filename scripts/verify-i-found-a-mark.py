@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: I Found a Mark, part 1 (every question of the nine types over 300 seeds each, recomputed in Python from its own parameters with exact fractions: every step and form value, every claim, every literal and dependency derivable, the distractors the contract lists, the two-way table fixed uniquely by its givens, the equations true at the real prices; the deal of five types worth 15 method marks) | --part 1
-# ci-line: I Found a Mark, part 2 (a normal session played in the page at 375, 320 and 1280 px with hints: a hinted mark is not in the score, the leaderboard or game_completed; options and Next above the fold; no sideways scroll) | --part 2
-# ci-line: I Found a Mark, part 3 (the five batch 2 types played in the page at 375, 360, 320, 390 and 1280 px, and the older types at 320 and 390: diagram and table text at least 12 px, a table that fills in as its steps are found, options and Next above the fold, a preview that submits nothing) | --part 3
-# ci-line: I Found a Mark, part 4 (fault-injection self-test, the module: the planted faults in the engine and the nine templates, each caught) | --part 4
-# ci-line: I Found a Mark, part 5 (fault-injection self-test, the page: the planted faults in the page played, each caught) | --part 5
+# ci-shards: I Found a Mark (every question of the nine types over 300 seeds each, recomputed in Python from its own parameters with exact fractions: every step and form value, every claim, every literal and dependency derivable, the distractors the contract lists, the two-way table fixed uniquely by its givens, the equations true at the real prices; the deal of five types worth 15 method marks; sessions played in the page at five sizes, the five batch 2 types at the four phone sizes and 1280 px: diagram and table text at least 12 px, a table that fills in as its steps are found, options and Next above the fold, a preview that submits nothing; the planted faults, each caught) | | 5
 # ci-deps: games/i-found-a-mark/ schools/assets/found-a-mark-templates.js
 """Independent verification for I Found a Mark (games/i-found-a-mark/), built 27 Oct 2026 (contract FOUND-A-MARK, Jon);
 batch 2 (angles, mean, ladder, coffee, twoway) added the same day (contract FOUND-A-MARK-2).
@@ -32,13 +28,17 @@ in Python, from each question's own `params` and the contract's words, never fro
              exact); the ladder (Pythagoras, the contract's triples scaled, both variants); coffee and tea (equations true at the
              real prices, every route, the eliminated equation with one letter, no distractor a true statement about the step);
              the two-way table (fixed uniquely by its givens, every cell at least 3, totals 50-120, the table that fills in).
-  Deal       every session five different types worth 15 method marks; a ?types preview cycles its types and submits nothing.
+  Work units (contract SHARD; CI runs a slice with --shard i/k, scripts/ci-groups.py chooses k): "engine" (every type over the
+seeds, the deal, on one 1280x800 page), "session WxH" (a normal session at one size), "preview <types> WxH" (a ?types preview of
+the batch 2 types or the older ones at one size) and "plant: <what>" (one per planted fault).
+Deal       every session five different types worth 15 method marks; a ?types preview cycles its types and submits nothing.
   Variety    at least 30 distinct questions a type (25 for the ladder).
   Play       in the module: from each question, every form of every step is accepted once its deps are found; random
              play finishes with 3 unaided marks; no option is offered with unmet deps or already found; a hint never
              scores. In the page: a session played with hints at 375, 320 and 1280 px.
 """
 import argparse
+import contextlib
 import json
 import math
 import os
@@ -926,29 +926,36 @@ def play(page, size, out, types=None):
         out.append('question_answered carries a field outside the existing events')
 
 
-def check(html, module, out, engine=True, sessions=(), seeds=SEEDS):
-    """sessions: [(size, types or None)], each one session played in the page."""
+def session_id(size, types):
+    return ('session %dx%d' % size) if not types else 'preview %s %dx%d' % ('new five' if types == NEW_FIVE else '+'.join(types), size[0], size[1])
+
+
+def check(html, module, out, engine=True, sessions=(), seeds=SEEDS, shard=None):
+    """sessions: [(size, types or None)], each one session played in the page. shard: time each piece as its work unit."""
     from playwright.sync_api import sync_playwright
+    unit = shard.unit if shard is not None else (lambda uid: contextlib.nullcontext())
     proc, base = bc.start_stub_server()
     info = {}
     try:
         with sync_playwright() as pw:
             if engine:
-                br, page, errs = open_page(pw, base, html, module, (1280, 800))
-                try:
-                    info.update(check_engine(page, out, seeds))
-                except Exception as e:  # noqa: BLE001
-                    out.append('the engine checks threw: %s' % str(e).splitlines()[0][:200])
-                out.extend('page error: ' + e for e in errs)
-                br.close()
+                with unit('engine'):
+                    br, page, errs = open_page(pw, base, html, module, (1280, 800))
+                    try:
+                        info.update(check_engine(page, out, seeds))
+                    except Exception as e:  # noqa: BLE001
+                        out.append('the engine checks threw: %s' % str(e).splitlines()[0][:200])
+                    out.extend('page error: ' + e for e in errs)
+                    br.close()
             for size, types in sessions:
-                br, page, errs = open_page(pw, base, html, module, size, types)
-                try:
-                    play(page, size, out, types)
-                except Exception as e:  # noqa: BLE001
-                    out.append('play at %dx%d threw: %s' % (size[0], size[1], str(e).splitlines()[0][:200]))
-                out.extend('page error at %dx%d: %s' % (size[0], size[1], e) for e in errs)
-                br.close()
+                with unit(session_id(size, types)):
+                    br, page, errs = open_page(pw, base, html, module, size, types)
+                    try:
+                        play(page, size, out, types)
+                    except Exception as e:  # noqa: BLE001
+                        out.append('play at %dx%d threw: %s' % (size[0], size[1], str(e).splitlines()[0][:200]))
+                    out.extend('page error at %dx%d: %s' % (size[0], size[1], e) for e in errs)
+                    br.close()
     finally:
         proc.terminate()
     return info
@@ -1047,67 +1054,61 @@ PLAY_PLANT_SESSIONS = {
 }
 
 
-def selftest(html, module, which=None, plants=None):
-    """which: 'engine' (the module plants) or 'play' (the page plants), or both."""
+# Each plant is a work unit of its own (contract SHARD), dealt into CI parts by its time.
+def selftest(html, module, plants=None, shard=None):
     ok = True
     for what, src_file, edits, kind, want in (PLANTS if plants is None else plants):
-        if which and kind != which:
-            continue
-        src = module if src_file == 'module' else html
-        bad = False
-        for old, new in edits:
-            if src.count(old) != 1:
-                bad = True
-                break
-            src = src.replace(old, new)
-        if bad:
-            print('  self-test %-72s *** CANNOT PLANT ***' % what)
-            ok = False
-            continue
-        got = []
-        h2, m2 = (html, src) if src_file == 'module' else (src, module)
-        sessions = PLAY_PLANT_SESSIONS.get(what, [((375, 667), None)]) if kind == 'play' else []
-        check(h2, m2, got, engine=kind == 'engine', sessions=sessions, seeds=60)
-        hit = [g for g in got if re.search(want, g)]
-        ok = ok and bool(hit)
-        print('  self-test %-72s %s' % (what, ('caught: ' + hit[0][:100]) if hit else '*** MISSED ***' + (' (other: %s)' % got[0][:100] if got else '')))
+        with (shard.unit('plant: ' + what) if shard is not None else contextlib.nullcontext()):
+            ok = plant_one(html, module, what, src_file, edits, kind, want) and ok
     return ok
+
+
+def plant_one(html, module, what, src_file, edits, kind, want):
+    src = module if src_file == 'module' else html
+    for old, new in edits:
+        if src.count(old) != 1:
+            print('  self-test %-72s *** CANNOT PLANT ***' % what)
+            return False
+        src = src.replace(old, new)
+    got = []
+    h2, m2 = (html, src) if src_file == 'module' else (src, module)
+    sessions = PLAY_PLANT_SESSIONS.get(what, [((375, 667), None)]) if kind == 'play' else []
+    check(h2, m2, got, engine=kind == 'engine', sessions=sessions, seeds=60)
+    hit = [g for g in got if re.search(want, g)]
+    print('  self-test %-72s %s' % (what, ('caught: ' + hit[0][:100]) if hit else '*** MISSED ***' + (' (other: %s)' % got[0][:100] if got else '')))
+    return bool(hit)
 
 
 # The sessions played in the page. A: a normal session at three sizes (the leaderboard, the marks, the deal); B: each batch 2 type
 # played at every size (a ?types preview, nothing submitted), and the batch 1 types at the two phone sizes.
-SESSIONS_A = [((375, 667), None), ((320, 568), None), ((1280, 720), None)]
-SESSIONS_B = [(s, NEW_FIVE) for s in [(375, 667), (360, 640), (320, 568), (390, 844), (1280, 720)]] + \
-             [((320, 568), ['enough', 'ratio', 'interest', 'garden', 'mean']), ((390, 844), ['enough', 'ratio', 'interest', 'garden', 'twoway'])]
+SESSIONS = [((375, 667), None), ((320, 568), None), ((1280, 720), None)] + \
+           [(sz, NEW_FIVE) for sz in [(375, 667), (360, 640), (320, 568), (390, 844), (1280, 720)]] + \
+           [((320, 568), ['enough', 'ratio', 'interest', 'garden', 'mean']), ((390, 844), ['enough', 'ratio', 'interest', 'garden', 'twoway'])]
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--part', choices=['1', '2', '3', '4', '5'], help='one of the five parts CI runs side by side (default: all)')
     ap.add_argument('--seeds', type=int, default=SEEDS)
+    bc.shard_args(ap)
     args = ap.parse_args()
+    shard = bc.Shard(__file__, args)
+    mine = shard.pick(['engine'] + [session_id(*x) for x in SESSIONS] + ['plant: ' + p[0] for p in PLANTS])
     try:
         sys.stdout.reconfigure(encoding='utf-8')
     except (AttributeError, ValueError):
         pass
     html = open(GAME, encoding='utf-8').read()
     module = open(MODULE, encoding='utf-8').read()
-    part = args.part
     out = []
-    sessions = (SESSIONS_A if part in (None, '2') else []) + (SESSIONS_B if part in (None, '3') else [])
-    info = check(html, module, out, engine=part in (None, '1'), sessions=sessions, seeds=args.seeds)
+    sessions = [x for x in SESSIONS if session_id(*x) in mine]
+    info = {}
+    if 'engine' in mine or sessions:
+        info = check(html, module, out, engine='engine' in mine, sessions=sessions, seeds=args.seeds, shard=shard)
     if info:
         print('%s: distinct questions in %d seeds: %s' % (SLUG, args.seeds, info))
-    if part in (None, '2'):
-        print('%s: a session played with hints at %s' % (SLUG, ', '.join('%dx%d' % s for s, _ in SESSIONS_A)))
-    if part in (None, '3'):
-        print('%s: the five batch 2 types played at %s, and the older types at 320x568 and 390x844' % (
-            SLUG, ', '.join(sorted({'%dx%d' % s for s, t in SESSIONS_B if t == NEW_FIVE}))))
-    ok = True
-    if part in (None, '4'):
-        ok = selftest(html, module, which='engine') and ok
-    if part in (None, '5'):
-        ok = selftest(html, module, which='play') and ok
+    if sessions:
+        print('%s: played %s' % (SLUG, ', '.join(session_id(*x) for x in sessions)))
+    ok = selftest(html, module, [p for p in PLANTS if 'plant: ' + p[0] in mine], shard)
     for f in out[:60]:
         print('FAIL  ' + f)
     if len(out) > 60:

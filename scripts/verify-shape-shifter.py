@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Shape Shifter, part 1 (every translation, reflection (in the axes, y = x, y = -x, x = k and y = k), rotation and enlargement image recomputed from its words; every rotation option classified; every vertex and every letter tapped on the real canvas in Chromium; each mode card's data-mode its own mode, a burst at random-mix starting Random Mix once, each card starting its mode once without a burst) | --part 1
-# ci-line: Shape Shifter, part 2 (fault-injection self-test: a quarter of the planted faults, each caught) | --part 2
-# ci-line: Shape Shifter, part 3 (fault-injection self-test: the next quarter of the planted faults, each caught) | --part 3
-# ci-line: Shape Shifter, part 4 (fault-injection self-test: the next quarter of the planted faults, each caught) | --part 4
-# ci-line: Shape Shifter, part 5 (fault-injection self-test: the last quarter of the planted faults, each caught) | --part 5
+# ci-shards: Shape Shifter (every translation, reflection (in the axes, y = x, y = -x, x = k and y = k), rotation and enlargement image recomputed from its words; every rotation option classified; every vertex and every letter tapped on the real canvas in Chromium; each mode card's data-mode its own mode, a burst at random-mix starting Random Mix once, each card starting its mode once without a burst; fault-injection self-test: every planted fault caught) | | 5
 """Shape Shifter: translate, reflect, rotate and enlarge a shape on a -5..5 grid; five modes.
 
 Banks, read from the page as served: TRANSLATION_QUESTIONS (15, tap the image's vertices), REFLECTION_QUESTIONS (15 typed
@@ -54,7 +50,11 @@ canvas background (WCAG 1.4.11), and the wrong-answer feedback names that colour
 Not asserted (open findings, left open): no 180 degree rotation ever built (t3-002), 15 items in translation and rotation (t3-004), the
 shared board and no keyboard path (t3-005).
 
-    python scripts/verify-shape-shifter.py [--no-selftest] [--against FILE]
+    python scripts/verify-shape-shifter.py [--no-selftest] [--against FILE] [--shard I/K] [--list-units]
+
+Work units (contract SHARD): "checks" (every check above, on one page), then one per planted fault ("plant: <fault>"),
+each a full play on its planted page. A full run skips the plants with --no-selftest or --against; a --shard run (CI)
+runs its slice of every unit, the plants included, as the hand-made parts 2-5 did.
 """
 import argparse
 import itertools
@@ -866,38 +866,38 @@ WORDING_JS_FN = '(function(){' + WORDING_JS + '})()'
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--no-selftest', action='store_true')
-    ap.add_argument('--part', choices=['1', '2', '3', '4', '5'],
-                    help='1 the checks, 2 to 5 a quarter of the plants each (CI runs the five side by side); default all')
     ap.add_argument('--against', help='serve this file as the game page')
+    bc.shard_args(ap)
     args = ap.parse_args()
     sys.stdout.reconfigure(encoding='utf-8')
+    # The units: the checks on one page, then each plant. CI's parts ran every plant whatever the flags (the old parts 2-5
+    # ignored --no-selftest and --against), so a --shard run keeps them; a full run drops them as before.
+    units = ['checks']
+    if args.shard is not None or not (args.no_selftest or args.against):
+        units += ['plant: ' + what for what, _, _ in PLANTS]
+    shard = bc.Shard(__file__, args)
+    mine = shard.pick(units)
     html = open(args.against or GAME, encoding='utf-8').read()
     fails = []
     hit = set()
-    if args.part in ('2', '3', '4', '5'):
-        ok = selftest(html, PLANTS[int(args.part) - 2::4])
-        if not ok:
-            print('FAIL  self-test: a planted fault was not caught')
-        print('PASS' if ok else 'FAILED')
-        return 0 if ok else 1
-    st = play(fails, html, hit)
-    for k in EXPECTED:
-        if k not in hit:
-            fails.append('expected failure %s (%s) no longer occurs: close the finding and remove it from EXPECTED' % (EXPECTED[k], k[0]))
-    print('%s: %d translation, %d reflection, %d rotation and %d enlargement items recomputed from their words; every vertex of '
-          'every translation, reflection and enlargement answer tapped at all 121 grid points, every rotation letter tapped over '
-          '%d deals, %d sessions dealt per mode, in Chromium' % (
-              SLUG, st.get('translation', 0), st.get('reflection', 0), st.get('rotation', 0), st.get('enlargement', 0),
-              ROT_DEALS, DEALS))
-    for k, v in sorted(EXPECTED.items()):
-        print('  expected failure left open: %s (%s item with shape %s)' % (v, k[0], list(k[1])))
-    print('  correct shape after an answer drawn in --green at both sites, %.2f:1 against the canvas; the feedback names it (t3-001)'
-          % contrast(re.search(r'--green:\s*(#[0-9a-fA-F]{6})', html).group(1),
-                     re.search(r'canvas\{[^}]*background:\s*(#[0-9a-fA-F]{6})', html).group(1)))
-    print('  not asserted (open): no 180 degree rotation built (t3-002), 15 items in translation and rotation (t3-004), board and keyboard (t3-005)')
-    ok = True
-    if not args.no_selftest and not args.against and args.part is None:
-        ok = selftest(html, PLANTS)
+    if 'checks' in mine:
+        with shard.unit('checks'):
+            st = play(fails, html, hit)
+            for k in EXPECTED:
+                if k not in hit:
+                    fails.append('expected failure %s (%s) no longer occurs: close the finding and remove it from EXPECTED' % (EXPECTED[k], k[0]))
+            print('%s: %d translation, %d reflection, %d rotation and %d enlargement items recomputed from their words; every vertex of '
+                  'every translation, reflection and enlargement answer tapped at all 121 grid points, every rotation letter tapped over '
+                  '%d deals, %d sessions dealt per mode, in Chromium' % (
+                      SLUG, st.get('translation', 0), st.get('reflection', 0), st.get('rotation', 0), st.get('enlargement', 0),
+                      ROT_DEALS, DEALS))
+            for k, v in sorted(EXPECTED.items()):
+                print('  expected failure left open: %s (%s item with shape %s)' % (v, k[0], list(k[1])))
+            print('  correct shape after an answer drawn in --green at both sites, %.2f:1 against the canvas; the feedback names it (t3-001)'
+                  % contrast(re.search(r'--green:\s*(#[0-9a-fA-F]{6})', html).group(1),
+                             re.search(r'canvas\{[^}]*background:\s*(#[0-9a-fA-F]{6})', html).group(1)))
+            print('  not asserted (open): no 180 degree rotation built (t3-002), 15 items in translation and rotation (t3-004), board and keyboard (t3-005)')
+    ok = selftest(html, [p for p in PLANTS if 'plant: ' + p[0] in mine], shard)
     for f in fails[:40]:
         print('FAIL  ' + f[:400])
     if not ok:
@@ -906,25 +906,27 @@ def main():
     return 1 if fails or not ok else 0
 
 
-# The plants in four CI lines (25 Oct 2026: one line of all fourteen took 205 s on main, over ci-groups' per-line limit; 26 Oct:
-# eighteen plants, each now playing 81 vertex items, took 226 s in each of two halves), every fourth one in each.
-def selftest(html, plants):
+# The plants are units of their own (contract SHARD), so ci-groups.py deals them into CI parts by their times (25 Oct 2026:
+# one line of all fourteen took 205 s on main, over ci-groups' per-line limit; 26 Oct: eighteen plants, each now playing 81
+# vertex items, took 226 s in each of two halves).
+def selftest(html, plants, shard):
     """Each plant's fault, made in a copy of the page, must be caught by a finding carrying its tag."""
     ok = True
     for what, tag, edits in plants:
-        bad = [o for o, n in edits if html.count(o) != 1]
-        if bad:
-            print('  self-test %-58s *** CANNOT PLANT (%r) ***' % (what, bad[0][:60]))
-            ok = False
-            continue
-        planted = html
-        for o, n in edits:
-            planted = planted.replace(o, n)
-        rep = []
-        play(rep, planted, set(), cards=tag == 'mode cards')
-        found = [f for f in rep if tag in f]
-        ok = ok and bool(found)
-        print('  self-test %-58s %s' % (what, ('caught: ' + found[0][:100]) if found else '*** MISSED ***'))
+        with shard.unit('plant: ' + what):
+            bad = [o for o, n in edits if html.count(o) != 1]
+            if bad:
+                print('  self-test %-58s *** CANNOT PLANT (%r) ***' % (what, bad[0][:60]))
+                ok = False
+                continue
+            planted = html
+            for o, n in edits:
+                planted = planted.replace(o, n)
+            rep = []
+            play(rep, planted, set(), cards=tag == 'mode cards')
+            found = [f for f in rep if tag in f]
+            ok = ok and bool(found)
+            print('  self-test %-58s %s' % (what, ('caught: ' + found[0][:100]) if found else '*** MISSED ***'))
     return ok
 
 
