@@ -627,7 +627,7 @@
       dist.push({ tex: tx([S[0], S[1], orig[2]]), fact: fct([S[0], S[1], orig[2]]), 'for': cid,
         why: 'The right-hand side must be multiplied by ' + m + ' too, or the equation is no longer true.' });
       dist.push({ tex: tx(added), fact: fct(added), 'for': did,
-        why: 'The ' + letter + ' terms have the same sign, so adding makes them bigger, not zero. Subtract the equations to remove the letter.' });
+        why: "That's true, but it doesn't get rid of a letter, so there's no mark for it yet." });
       dist.push({ tex: tx(bad), fact: fct(bad), 'for': did,
         why: 'The left-hand sides were subtracted but the right-hand sides were added. Do the same to both sides: subtract both.' });
     });

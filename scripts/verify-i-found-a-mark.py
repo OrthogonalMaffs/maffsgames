@@ -246,6 +246,10 @@ SLOTS = {'enough': (3, 1), 'ratio': (3, 1), 'interest': (3, 1), 'garden': (3, 1)
 TRIPLES = [(3, 4, 5), (5, 12, 13), (7, 24, 25), (8, 15, 17)]
 
 
+# Jon's wording (27 Oct) for the one distractor that is a true equation: adding the equations when the signs match.
+TRUE_WHY = "That's true, but it doesn't get rid of a letter, so there's no mark for it yet."
+
+
 def plainnum(fr):
     """A Fraction as the plain decimal the page writes (2.8, 10, 12.96)."""
     fr = Fraction(fr)
@@ -491,8 +495,13 @@ def check_new_extras(q, extra, vals, errs):
             f = d.get('fact') or ''
             if f.startswith('eq:'):
                 ca, cb, rhs = (int(v) for v in f[3:].split(','))
-                if ca * cp + cb * tp == rhs and not (d['for'][0] == 'D' and ca and cb):
+                is_true = ca * cp + cb * tp == rhs
+                if is_true and not (d['for'][0] == 'D' and ca and cb):
                     errs.append('distractor %r is a true equation that is not the step it is offered for' % d['tex'])
+                if is_true and d['why'] != TRUE_WHY:
+                    errs.append('the true distractor %r must say exactly %r, not %r' % (d['tex'], TRUE_WHY, d['why']))
+                if not is_true and d['why'].startswith("That's true"):
+                    errs.append('the false distractor %r says it is true' % d['tex'])
                 vec = (ca, cb, rhs)
                 if d['tex'] != eq_text(ca, cb, rhs, la, lb):
                     errs.append('distractor %r is written %r, this script writes the equation %r' % (d['fact'], d['tex'], eq_text(ca, cb, rhs, la, lb)))
@@ -997,6 +1006,10 @@ PLANTS = [
     ('coffee: the eliminated equation adds the right-hand sides', 'module',
      [("res = [0, 0, big[2] - small[2]];", "res = [0, 0, big[2] + small[2]];")], 'engine',
      r'(not true at|recomputed from the question|its fact)'),
+    ('coffee: the true distractor (adding the equations) given another feedback line', 'module',
+     [("""why: "That's true, but it doesn't get rid of a letter, so there's no mark for it yet." });""",
+       """why: 'Adding makes the numbers bigger, not zero. Subtract.' });""")], 'engine',
+     r'must say exactly'),
     ('coffee: a distractor that is the matched equation itself', 'module',
      [("dist.push({ tex: tx([S[0], S[1], orig[2]]), fact: fct([S[0], S[1], orig[2]]), 'for': cid,",
        "dist.push({ tex: tx(S), fact: fct([S[0], S[1], orig[2]]), 'for': cid,")], 'engine',
