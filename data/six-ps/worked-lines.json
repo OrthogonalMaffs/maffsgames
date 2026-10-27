@@ -317,22 +317,22 @@
    "STAGE1[0]": {
     "answer_label": "Certain",
     "worked": [
-     "Breathing today must happen.",
+     "The faces of a standard dice are 1 to 6, so every roll is less than 7.",
      "Something that must happen is certain."
     ]
    },
    "STAGE1[1]": {
     "answer_label": "Impossible",
     "worked": [
-     "The faces of a standard die are 1 to 6, so a 7 cannot happen.",
+     "The faces of a standard dice are 1 to 6, so a 7 cannot happen.",
      "Something that cannot happen is impossible."
     ]
    },
    "STAGE1[2]": {
     "answer_label": "Likely",
     "worked": [
-     "Rain somewhere in Britain in a week happens far more often than not.",
-     "It is not guaranteed, so it is likely, not certain."
+     "There are 52 cards and 13 are hearts, so 39 are not hearts.",
+     "39 out of 52 is more than half but not all of them, so it is likely."
     ]
    },
    "STAGE1[3]": {
@@ -366,22 +366,22 @@
    "STAGE1[7]": {
     "answer_label": "Unlikely",
     "worked": [
-     "One ticket has about a 1 in 45 million chance of winning.",
-     "It could happen, so it is not impossible, but it is very unlikely."
+     "Two fair coins give 4 equally likely outcomes: HH, HT, TH and TT. Two heads is 1 of them.",
+     "1 out of 4 is less than half, so it is unlikely."
     ]
    },
    "STAGE1[8]": {
-    "answer_label": "Even chance",
+    "answer_label": "Likely",
     "worked": [
-     "Boys and girls are born in very nearly equal numbers.",
-     "So it is about an even chance."
+     "The numbers greater than 2 are 3, 4, 5 and 6: 4 of the 6 faces.",
+     "4 out of 6 is more than half but not all, so it is likely."
     ]
    },
    "STAGE1[9]": {
     "answer_label": "Certain",
     "worked": [
-     "The sun rises every day.",
-     "So it is certain."
+     "No month has more than 31 days, so every month has fewer than 32.",
+     "Something that must happen is certain."
     ]
    }
   }

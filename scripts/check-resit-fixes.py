@@ -16,7 +16,7 @@ Full per-game verifiers follow in the audit's fix batches (docs/audit-resit-corr
                        options, none the object; the letters at least 0.8 units apart; tapping each
                        option's letter selects that option,
                        for every question in several letter orders (real clicks in Chromium)
-  probability-pioneer  "P(letter in MATHS also in GAMES)" keyed 3/5, recomputed from the words
+  probability-pioneer  "A letter is chosen at random from the word MATHS. Write down the probability that the letter is also in the word GAMES." keyed 3/5, recomputed from the words
   (estimation-engine's check, sqrt(e x 1000) = 52.137, retired 5 Oct 2026: the whole pool was replaced in its
   SR-12 rebuild, and scripts/verify-estimation-engine.py recomputes every key of the new bank)
   decimal-detective    Place It: the marker never starts on the answer; the reading equal to the
@@ -61,7 +61,7 @@ REVERT = {
          "      const validWrongs = wrongs.filter(w => shapeFits(w) && !shapesEqual(w, correct));")],
     "probability-pioneer": [
         ("games/probability-pioneer/index.html",
-         '{q:"P(letter in MATHS also in GAMES)", answer:"3/5",', '{q:"P(letter in MATHS also in GAMES)", answer:"2/5",')],
+         '{q:"A letter is chosen at random from the word MATHS. Write down the probability that the letter is also in the word GAMES.", answer:"3/5",', '{q:"A letter is chosen at random from the word MATHS. Write down the probability that the letter is also in the word GAMES.", answer:"2/5",')],
     "decimal-detective start": [
         ("games/decimal-detective/index.html",
          "until 5 Oct 2026.\n  markerPos = null;", "until 5 Oct 2026.\n  markerPos = 0.5;")],
@@ -94,7 +94,7 @@ def read(root, rel, patches):
 # ---------- static checks ----------
 def check_probability(root, patches):
     src = read(root, "games/probability-pioneer/index.html", patches)
-    m = re.search(r'\{q:"P\(letter in (\w+) also in (\w+)\)", answer:"(\d+)/(\d+)", options:\[([^\]]*)\][^}]*\}', src)
+    m = re.search(r'\{q:"A letter is chosen at random from the word (\w+)\. Write down the probability that the letter is also in the word (\w+)\.", answer:"(\d+)/(\d+)", options:\[([^\]]*)\][^}]*\}', src)
     if not m:
         return ["probability-pioneer: the MATHS/GAMES question is missing"]
     a, b = m.group(1), m.group(2)

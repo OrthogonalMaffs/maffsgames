@@ -290,9 +290,17 @@
     "value": -3
    },
    "worked": [
-    "Each term is \\(3\\) less than the one before, so the rule is take away \\(3\\)."
+    "Each term is \\(3\\) less than the one before.",
+    "The terms go down, so the common difference is negative: \\(-3\\)."
    ],
-   "slip": []
+   "slip": [
+    {
+     "answer": {
+      "value": 3
+     },
+     "line": "That is the size of the step. The terms are going down, so the common difference is \\(-3\\), not \\(3\\)."
+    }
+   ]
   },
   {
    "id": "sequences-561ebf58",
@@ -330,9 +338,17 @@
     "value": -12
    },
    "worked": [
-    "Each term is \\(12\\) less than the one before, so the rule is take away \\(12\\)."
+    "Each term is \\(12\\) less than the one before.",
+    "The terms go down, so the common difference is negative: \\(-12\\)."
    ],
-   "slip": []
+   "slip": [
+    {
+     "answer": {
+      "value": 12
+     },
+     "line": "That is the size of the step. The terms are going down, so the common difference is \\(-12\\), not \\(12\\)."
+    }
+   ]
   },
   {
    "id": "sequences-ed52af30",
