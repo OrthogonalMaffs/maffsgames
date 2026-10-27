@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Take a Walk, part 1 (every pool question's lengths and products inside its stage's range, its key recomputed from its drawn lengths, every missing length determined by the drawing and as many as its stage says, no named slip equal to its key, the worked steps ending on the key, sessions easiest first) | --part 1
-# ci-line: Take a Walk, part 2 (every pool question drawn by the game and read back: its labels the data's, every side drawn to one scale within 1 px; at 320 and 1280 px every side, line and label inside its picture, framed round the shape, every half arc half as deep as wide and bulging its own way) | --part 2
-# ci-line: Take a Walk, part 3 (every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, walk or cover, the find-it-first tap, the unit, the calculator in Stage 4 only, no sideways scroll) | --part 3
-# ci-line: Take a Walk, part 4 (fault-injection self-test: sixteen planted faults, each caught) | --part 4
+# ci-shards: Take a Walk (every pool question's lengths and products inside its stage's range, its key recomputed from its drawn lengths, every missing length determined by the drawing and as many as its stage says, no named slip equal to its key, the worked steps ending on the key, sessions easiest first; every pool question drawn by the game and read back: its labels the data's, every side drawn to one scale within 1 px; at 320 and 1280 px every side, line and label inside its picture, framed round the shape, every half arc half as deep as wide and bulging its own way; every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, walk or cover, the find-it-first tap, the unit, the calculator in Stage 4 only, no sideways scroll; fault-injection self-test: sixteen planted faults, each caught) | | 3
 # ci-deps: games/take-a-walk/
 """Independent verification for Take a Walk (games/take-a-walk/), built 23 Oct 2026 (contract TAKE-A-WALK, verbatim in
 docs/history/contracts/2026-10-23-take-a-walk.md; its calculator by stage, contract CALC-BY-STAGE). SR-30: checked from
@@ -41,8 +38,14 @@ the shapes' coordinates and the contract's words, never from the game's own func
              and is not marked; a wrong answer shows the picture, the line, the working and Next; the calculator is
              mounted and shown in Stage 4 only; no sideways scroll; one event of each kind, with the stage's mode, and
              one score to the stage's board; "Next: Stage N+1" on the results (none after 4).
+
+Work units (contract SHARD; CI runs a slice with --shard i/k): "engine" and "drawn" (on one 1280x800 page, shared when a
+run has both), "frame 320x568" and "frame 1280x800" (the frame checks, a page each), "play 1280x800" and "play 320x568"
+(each every stage in turn through Next stage), then one per planted fault ("plant: <fault>"). The static checks run
+once in any run that has one of the first six, as they did in each of the old parts 1-3.
 """
 import argparse
+import contextlib
 import math
 import os
 import re
@@ -882,33 +885,44 @@ def check_frame(page, out, size):
     return failing
 
 
-def check(html, out, engine=True, drawn=False, sizes=(), sessions=SESSIONS):
+def check(html, out, engine=True, drawn=False, sizes=(), sessions=SESSIONS, frames=None, shard=None):
+    """frames: the FRAME_SIZES to frame-check (default: all of them when drawn, none otherwise). shard: time each piece as
+    its work unit ("engine", "drawn", "frame WxH", "play WxH"); the self-test passes none."""
     from playwright.sync_api import sync_playwright
+    unit = shard.unit if shard is not None else (lambda uid: contextlib.nullcontext())
+    if frames is None:
+        frames = FRAME_SIZES if drawn else []
     static_checks(html, out)
     proc, base = bc.start_stub_server()
     info = {}
     try:
         with sync_playwright() as pw:
             if engine or drawn:
-                br, page, errs = open_page(pw, base, html, (1280, 800))
+                page = None
                 if engine:
-                    guarded(out, 'the engine checks', lambda: info.update(check_engine(page, out, sessions)))
+                    with unit('engine'):
+                        br, page, errs = open_page(pw, base, html, (1280, 800))
+                        guarded(out, 'the engine checks', lambda: info.update(check_engine(page, out, sessions)))
                 if drawn:
-                    guarded(out, 'the drawing checks', lambda: info.update({'drawn': check_drawn(page, out)}))
+                    with unit('drawn'):
+                        if page is None:
+                            br, page, errs = open_page(pw, base, html, (1280, 800))
+                        guarded(out, 'the drawing checks', lambda: info.update({'drawn': check_drawn(page, out)}))
                 out.extend('page error: ' + e for e in errs)
                 br.close()
-            if drawn:
-                for size in FRAME_SIZES:
+            for size in frames:
+                with unit('frame %dx%d' % size):
                     br, page, errs = open_page(pw, base, html, size)
                     guarded(out, 'the frame checks at %dpx' % size[0],
                             lambda: info.setdefault('framed', {}).update({size[0]: check_frame(page, out, size)}))
                     br.close()
             for size in sizes:
-                br, page, errs = open_page(pw, base, html, size)
-                guarded(out, 'play at %dx%d' % size, lambda: play(page, size, out))
-                out.extend('page error at %dx%d: %s' % (size[0], size[1], e) for e in errs)
-                info.setdefault('played', []).append('%dx%d' % size)
-                br.close()
+                with unit('play %dx%d' % size):
+                    br, page, errs = open_page(pw, base, html, size)
+                    guarded(out, 'play at %dx%d' % size, lambda: play(page, size, out))
+                    out.extend('page error at %dx%d: %s' % (size[0], size[1], e) for e in errs)
+                    info.setdefault('played', []).append('%dx%d' % size)
+                    br.close()
     finally:
         proc.terminate()
     return info
@@ -968,44 +982,50 @@ PLANTS = [
 ]
 
 
-def selftest(html):
+# Each plant is a work unit of its own (contract SHARD), dealt into CI parts by its time.
+def selftest(html, plants, shard):
     ok = True
-    for what, edits, kind, want in PLANTS:
-        planted = html
-        bad = False
-        for old, new in edits:
-            if planted.count(old) != 1:
-                bad = True
-                break
-            planted = planted.replace(old, new)
-        if bad:
-            print('  self-test %-62s *** CANNOT PLANT ***' % what)
-            ok = False
-            continue
-        got = []
-        check(planted, got, engine=kind == 'engine', drawn=kind == 'drawn', sizes=[(1280, 800)] if kind == 'play' else [], sessions=8)
-        hit = [g for g in got if re.search(want, g)]
-        ok = ok and bool(hit)
-        print('  self-test %-62s %s' % (what, ('caught: ' + hit[0][:110]) if hit else '*** MISSED ***' + (' (other findings: %s)' % got[0][:80] if got else '')))
+    for what, edits, kind, want in plants:
+        with shard.unit('plant: ' + what):
+            planted = html
+            bad = False
+            for old, new in edits:
+                if planted.count(old) != 1:
+                    bad = True
+                    break
+                planted = planted.replace(old, new)
+            if bad:
+                print('  self-test %-62s *** CANNOT PLANT ***' % what)
+                ok = False
+                continue
+            got = []
+            check(planted, got, engine=kind == 'engine', drawn=kind == 'drawn', sizes=[(1280, 800)] if kind == 'play' else [], sessions=8)
+            hit = [g for g in got if re.search(want, g)]
+            ok = ok and bool(hit)
+            print('  self-test %-62s %s' % (what, ('caught: ' + hit[0][:110]) if hit else '*** MISSED ***' + (' (other findings: %s)' % got[0][:80] if got else '')))
     return ok
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--part', choices=['1', '2', '3', '4'], help='one of the four parts CI runs side by side (default: all)')
     ap.add_argument('--sessions', type=int, default=SESSIONS)
+    bc.shard_args(ap)
     args = ap.parse_args()
+    shard = bc.Shard(__file__, args)
+    mine = shard.pick(['engine', 'drawn'] + ['frame %dx%d' % size for size in FRAME_SIZES] + ['play %dx%d' % size for size in SIZES]
+                      + ['plant: ' + p[0] for p in PLANTS])
     try:
         sys.stdout.reconfigure(encoding='utf-8')
     except (AttributeError, ValueError):
         pass
     html = open(GAME, encoding='utf-8').read()
-    part = args.part
     out = []
     info = {}
-    if part in (None, '1', '2', '3'):
-        info = check(html, out, engine=part in (None, '1'), drawn=part in (None, '2'),
-                     sizes=SIZES if part in (None, '3') else [], sessions=args.sessions)
+    frames = [size for size in FRAME_SIZES if 'frame %dx%d' % size in mine]
+    sizes = [size for size in SIZES if 'play %dx%d' % size in mine]
+    if 'engine' in mine or 'drawn' in mine or frames or sizes:
+        info = check(html, out, engine='engine' in mine, drawn='drawn' in mine, sizes=sizes, sessions=args.sessions,
+                     frames=frames, shard=shard)
     if 'pools' in info:
         print('%s: pools %s; %d sessions a stage' % (SLUG, info['pools'], args.sessions))
     if 'framed' in info:
@@ -1014,9 +1034,7 @@ def main():
         print('%s: %d questions drawn and read back' % (SLUG, info['drawn']))
     if 'played' in info:
         print('%s: every stage played at %s' % (SLUG, ', '.join(info['played'])))
-    ok = True
-    if part in (None, '4'):
-        ok = selftest(html)
+    ok = selftest(html, [p for p in PLANTS if 'plant: ' + p[0] in mine], shard)
     for f in out[:60]:
         print('FAIL  ' + f)
     if len(out) > 60:

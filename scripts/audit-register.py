@@ -79,6 +79,7 @@ UNLISTED_NOT_BY_AUDIT = {'just-pythag-it-bruv': 'new, unlisted until Jon has pla
                          'hc-factor': 'new, unlisted until Jon has played and approved it (contract HC-FACTOR)',
                          'y-so-steep': 'new, unlisted until Jon has played and approved it (contract Y-SO-STEEP)',
                          'who-ate-all-the-pies': 'new, unlisted until Jon has played and approved it (contract WHO-ATE-ALL-THE-PIES)',
+                         'its-on-sale': 'new, unlisted until Jon has played and approved it (contract ITS-ON-SALE)',
                          'as-you-can-see': 'new, unlisted until Jon has played and approved it (contract AS-YOU-CAN-SEE)'}
 
 # A verifier named for something other than its game, or one that covers only part of a game.

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Free Daily Pizza, part 1 (independent recomputation + daily seed + UI play + fault-injection self-test) | --require-katex --part 1
-# ci-line: Free Daily Pizza, part 2 (every item at three phone sizes + phone-fit fault-injection self-test) | --require-katex --part 2
+# ci-shards: Free Daily Pizza (independent recomputation + daily seed + UI play + every item at three phone sizes + fault-injection self-test, the phone-fit plants included) | --require-katex | 3
 """Independent verification for Free Daily Pizza (games/free-daily-pizza/), built 30 Sep 2026.
 
 WHAT IS READ FROM THE PAGE, AND WHAT IS NOT
@@ -76,6 +75,8 @@ written with a slash on screen; a single-stage practice run that submits to a bo
 USAGE
     python scripts/verify-free-daily-pizza.py [--require-katex] [--no-selftest] [--no-phone]
     python scripts/verify-free-daily-pizza.py --screens docs/screenshots   # also save PNGs
+    python scripts/verify-free-daily-pizza.py --list-units                 # the work units (see "work units" below)
+    python scripts/verify-free-daily-pizza.py --require-katex --shard 2/3  # CI: part 2 of 3 (scripts/ci-groups.py chooses 3)
 """
 import argparse
 import asyncio
@@ -1080,7 +1081,13 @@ async def skip_initials(page):
         pass
 
 
-async def ui_runs(browser, by_id, exp, out):
+UI_WHEN, UI_DAY = "2026-10-01T11:00:00Z", "2026-10-01"    # the simulated UK date of the daily and blocked runs
+
+
+# The UI is played in three blocks, each on its own fresh page or pages, one work unit each: practice (stages 1-4,
+# then mixed, on one page: order-dependent inside), the daily pizza (two loads), and the run with the SDK and KaTeX
+# blocked. Each returns its notes for the report.
+async def ui_practice(browser, by_id, exp, out):
     notes = []
     # 1. Practice, each stage, 20 questions, every other answer wrong, Firebase stubbed. A
     #    single-stage run ranks NOWHERE (Jon, 30 Sep 2026): it must never call submitScore, it keeps
@@ -1133,8 +1140,13 @@ async def ui_runs(browser, by_id, exp, out):
     finally:
         await ctx.close()
 
+    return notes
+
+
+async def ui_daily(browser, by_id, exp, out):
+    notes = []
     # 3. The daily pizza, twice, on one simulated UK date, with a target on the board.
-    when, day = "2026-10-01T11:00:00Z", "2026-10-01"
+    when, day = UI_WHEN, UI_DAY
     key = "leaderboards/free_daily_pizza_daily_2026_10_01"
     served = []
     for run in range(2):
@@ -1172,6 +1184,12 @@ async def ui_runs(browser, by_id, exp, out):
     notes.append("daily %s: two loads served the same 10, stages %s, target 640 shown, key %s"
                  % (day, "".join(str(by_id[i]["stage"]) for i in served[0]), key.split("/")[1]))
 
+    return notes
+
+
+async def ui_blocked(browser, by_id, exp, out):
+    notes = []
+    when, day = UI_WHEN, UI_DAY
     # 4. The Firebase SDK and the KaTeX CDN both blocked: no target, no error, the whole pizza
     #    plays, and every fraction is still stacked (the HTML fallback), never written 3/4.
     ctx, page, errors = await new_page(browser, firebase=False, when=when, katex=False)
@@ -1203,6 +1221,9 @@ async def ui_runs(browser, by_id, exp, out):
     return notes
 
 
+UI_BLOCKS = [("practice", ui_practice), ("daily", ui_daily), ("blocked", ui_blocked)]
+
+
 # ------------------------------------------------------------ phone
 
 VIEWPORTS = [(320, 568), (375, 667), (390, 844)]
@@ -1220,11 +1241,12 @@ MEASURE_JS = r"""
 """
 
 
-async def phone(browser, by_id, out, screens=None, patch_css=None):
-    """Measure every item in by_id at the three phone sizes. patch_css (the self-test's plant) is added to each page."""
+async def phone(browser, by_id, out, screens=None, patch_css=None, viewports=None):
+    """Measure every item in by_id at the three phone sizes (viewports: some of them; one work unit per size).
+    patch_css (the self-test's plant) is added to each page."""
     worst = {}
     shots = {"S1:conv:f>d:2/3", "S3:frac:3/5:45", "S4:p:15/60"}
-    for w, h in VIEWPORTS:
+    for w, h in viewports or VIEWPORTS:
         ctx, page, errors = await new_page(browser, viewport={"width": w, "height": h})
         worst[(w, h)] = 0
         try:
@@ -1317,52 +1339,49 @@ FAULTS = [
 ]
 
 
-async def selftest(browser, by_id):
-    lines, ok = [], True
-    for name, kind, patch in FAULTS:
-        ctx, page, _ = await new_page(browser)
-        found = []
-        try:
-            await page.evaluate(patch)
-            if kind in ("static", "sweep"):
-                found, _, _, _, _ = await collect_static(page, n_dates=40, sweep=500 if kind == "sweep" else 0)
-            elif kind == "stage":
-                await page.evaluate(SUBMITS_JS)
-                await start_practice(page, 1, 20)
-                await play(page, by_id, [], "fault", lambda i: False, 20, "stage-s1-q20", None)
-                await check_unranked(page, found, "stage 1 run", "stage-s1-q20")
-                subs = await page.evaluate("window.__submits")
-                if subs:
-                    found.append("a single-stage run called submitScore %r" % subs)
-            else:
-                await page.evaluate(EVENTS_JS)
-                # Fixed items, not a random session: each has fractions among its options and a
-                # picture to leak, so the fault is always on screen to be found.
-                await page.evaluate("FDP.ui.serve(['S1:conv:d>f:3/4', 'S1:conv:p>f:2/5', 'S2:simp:18/24'])")
-                for _ in range(3):
-                    await page.wait_for_function("FDP.ui.state() === 'asking'", timeout=8000)
-                    if await pics_now(page):
-                        found.append("a picture is on screen before answering")
-                    if await slash_on_screen(page):
-                        found.append("a fraction is written with a slash on screen")
-                    if found:
-                        break
-                    await page.locator("#options .opt").first.click()
-                    if await page.query_selector("#feedback .maffs-next"):
-                        await page.click("#feedback .maffs-next")
-        except Exception as e:
-            err = str(e).splitlines()[0][:100]
+async def selftest_fault(browser, by_id, name, kind, patch):
+    """One planted fault of FAULTS, in a fresh page (one work unit each): (caught, its report line)."""
+    ctx, page, _ = await new_page(browser)
+    found = []
+    try:
+        await page.evaluate(patch)
+        if kind in ("static", "sweep"):
+            found, _, _, _, _ = await collect_static(page, n_dates=40, sweep=500 if kind == "sweep" else 0)
+        elif kind == "stage":
+            await page.evaluate(SUBMITS_JS)
+            await start_practice(page, 1, 20)
+            await play(page, by_id, [], "fault", lambda i: False, 20, "stage-s1-q20", None)
+            await check_unranked(page, found, "stage 1 run", "stage-s1-q20")
+            subs = await page.evaluate("window.__submits")
+            if subs:
+                found.append("a single-stage run called submitScore %r" % subs)
         else:
-            err = None
-        finally:
-            await ctx.close()
-        caught = bool(found) and err is None     # an error while checking is not a catch
-        if err:
-            found = ["checker error: " + err]
-        ok = ok and caught
-        lines.append("  %-62s %s" % (name, ("CAUGHT (%d, e.g. %s)" % (len(found), found[0][:80])) if caught
-                                          else "*** MISSED *** " + (found[0] if found else "")))
-    return ok, lines
+            await page.evaluate(EVENTS_JS)
+            # Fixed items, not a random session: each has fractions among its options and a
+            # picture to leak, so the fault is always on screen to be found.
+            await page.evaluate("FDP.ui.serve(['S1:conv:d>f:3/4', 'S1:conv:p>f:2/5', 'S2:simp:18/24'])")
+            for _ in range(3):
+                await page.wait_for_function("FDP.ui.state() === 'asking'", timeout=8000)
+                if await pics_now(page):
+                    found.append("a picture is on screen before answering")
+                if await slash_on_screen(page):
+                    found.append("a fraction is written with a slash on screen")
+                if found:
+                    break
+                await page.locator("#options .opt").first.click()
+                if await page.query_selector("#feedback .maffs-next"):
+                    await page.click("#feedback .maffs-next")
+    except Exception as e:
+        err = str(e).splitlines()[0][:100]
+    else:
+        err = None
+    finally:
+        await ctx.close()
+    caught = bool(found) and err is None     # an error while checking is not a catch
+    if err:
+        found = ["checker error: " + err]
+    return caught, "  %-62s %s" % (name, ("CAUGHT (%d, e.g. %s)" % (len(found), found[0][:80])) if caught
+                                   else "*** MISSED *** " + (found[0] if found else ""))
 
 
 PHONE_FAULTS = [
@@ -1371,33 +1390,54 @@ PHONE_FAULTS = [
 ]
 
 
-async def phone_selftest(browser, by_id):
-    """Part 2's plants: each CSS fault is added to the page, three items are measured, and phone() must report it."""
-    lines, ok = [], True
+async def phone_fault(browser, by_id, name, css):
+    """One phone plant (one work unit each): the CSS fault is added to the page, three items are measured, and phone()
+    must report it. (caught, its report line)."""
     few = {k: by_id[k] for k in list(by_id)[:3]}
-    for name, css in PHONE_FAULTS:
-        found = []
-        await phone(browser, few, found, patch_css=css)
-        caught = bool(found)
-        ok = ok and caught
-        lines.append("  %-62s %s" % (name, ("CAUGHT (%d, e.g. %s)" % (len(found), found[0][:80])) if caught
-                                          else "*** MISSED ***"))
-    return ok, lines
+    found = []
+    await phone(browser, few, found, patch_css=css)
+    caught = bool(found)
+    return caught, "  %-62s %s" % (name, ("CAUGHT (%d, e.g. %s)" % (len(found), found[0][:80])) if caught
+                                   else "*** MISSED ***")
 
 
-# ------------------------------------------------------------ main
+# ------------------------------------------------------------ work units (CI runs a slice of them per part)
+#
+# Until 27 Oct 2026 CI ran this script as two hand-made parts (--part 1: everything but the phone check; --part 2: the
+# phone check and its plants, after reading and recomputing the bank again). Since contract SHARD (27 Oct 2026) the work
+# is a list of named units (units(), in the order of the full run) and CI runs the slice `--shard i/k` gives
+# (scripts/ci_shards.py deals the units by their recorded times; scripts/ci-groups.py chooses k): the bank, daily and
+# practice sets (the static recomputation, the FDP-SPREAD sweep, the again-vs-fresh daily check and the KaTeX check,
+# all on one page as before, so one unit), each UI block, each phone size, each planted fault, each phone plant.
+# The UI, the phone check, its plants and the stage plant need the bank recomputed (by_id, exp): the static unit gives
+# it; a process without that unit reads and recomputes the bank first (as part 2 did) and reports what it finds.
+# With no --shard, every unit runs, as before.
+STATIC = "bank, daily and practice sets"
+UNIT_UI = "ui: "
+UNIT_PHONE = "phone %dx%d"
+UNIT_FAULT = "self-test fault: "
+UNIT_PHONE_FAULT = "phone-fit fault: "
 
-async def phone_report(browser, by_id, args):
-    ph_out = []
-    worst = await phone(browser, by_id, ph_out, args.screens)
-    for f in ph_out:
-        fail(f)
-    print("Phone: %d items x 3 viewports; lowest Next bottom edge: %s" % (len(by_id), ", ".join(
-        "%dx%d %.0fpx (fold %d)" % (w, h, worst[(w, h)], h - FOOTER) for w, h in VIEWPORTS)))
+
+def units(no_phone=False, no_selftest=False):
+    """Every work unit, in the order the full run runs them."""
+    out = [STATIC] + [UNIT_UI + b for b, _ in UI_BLOCKS]
+    if not no_phone:
+        out += [UNIT_PHONE % vp for vp in VIEWPORTS]
+    if not no_selftest:
+        out += [UNIT_FAULT + name for name, _, _ in FAULTS]
+        if not no_phone:
+            out += [UNIT_PHONE_FAULT + name for name, _ in PHONE_FAULTS]
+    return out
 
 
-async def selftest_report(browser, by_id, fn, what):
-    ok, lines = await fn(browser, by_id)
+def needs_bank(uid):
+    """Whether a unit other than STATIC uses the recomputed bank: the UI, the phone check and its plants, a stage plant."""
+    kind = {UNIT_FAULT + name: k for name, k, _ in FAULTS}.get(uid)
+    return uid != STATIC and kind in (None, "stage")
+
+
+def selftest_report(ok, lines, what):
     print()
     print("Fault-injection self-test%s (patched into a fresh page; the file is never touched):" % what)
     for ln in lines:
@@ -1406,82 +1446,102 @@ async def selftest_report(browser, by_id, fn, what):
         fail("fault-injection self-test%s: at least one fault was not caught" % what)
 
 
-async def run_phone_part(browser, args):
-    """--part 2: the bank is read and recomputed as in part 1 (the phone check needs the recomputed right answers), then every
-    item is measured at the three phone sizes, then the phone plants are run. Part 1 holds everything else."""
-    ctx, page, errors = await new_page(browser)
-    data = await page.evaluate(COLLECT_JS)
-    found = []
-    by_id, _ = check_banks(data, found)
-    await ctx.close()
-    for f in found:
-        fail(f)
-    await phone_report(browser, by_id, args)
-    if not args.no_selftest:
-        await selftest_report(browser, by_id, phone_selftest, " (phone fit)")
-
-
-async def run_all(args):
+async def run_all(args, shard, todo):
     from playwright.async_api import async_playwright
     async with async_playwright() as pw:
         browser = await pw.chromium.launch()
-        if args.part == 2:
-            await run_phone_part(browser, args)
-            await browser.close()
-            return
-        ctx, page, errors = await new_page(browser)
-        found, data, by_id, exp, dates = await collect_static(page, sweep=SWEEP_SEEDS)
-        # A fresh page must serve the same pizzas (nothing carried over from a first load).
-        again = await page.evaluate("(ds) => ds.map(d => FDP.dailySet(d))", dates[:30])
-        kbad = await page.evaluate(KATEX_JS)
-        await ctx.close()
-        ctx2, page2, _ = await new_page(browser)
-        fresh = await page2.evaluate("(ds) => ds.map(d => FDP.dailySet(d))", dates[:30])
-        await ctx2.close()
-        if fresh != again:
-            found.append("daily: a fresh page load serves different pizzas for the same dates")
-        for f in found:
-            fail(f)
-        for e in errors:
-            fail("page error: " + e)
-        counts = {str(s): len(data["bank"][str(s)]) for s in (1, 2, 3, 4)}
-        nd = sum(len(it["distractors"]) for s in (1, 2, 3, 4) for it in data["bank"][str(s)])
-        npic = sum(len(v) for v in data["drawn"].values())
-        print("Items: S1 %(1)d, S2 %(2)d, S3 %(3)d, S4 %(4)d" % counts, "  distractors recomputed: %d   pictures counted: %d" % (nd, npic))
-        gone = slipped_ids(data["tables"])
-        print("Removed by the slip filter (FDP-KEY-COLLIDE): " + ", ".join(
-            "S%d %d of %d (%s)" % (s, len(gone[s]), counts[str(s)] + len(gone[s]), ", ".join(gone[s]) or "none")
-            for s in (1, 2, 3, 4)))
-        print("Practice sets swept (FDP-SPREAD): seeds 1-%d in each of %s; apart wherever possible; the first %d "
-              "recomputed in full (blocks no order could separate: %s)"
-              % (SWEEP_SEEDS, ", ".join(SWEEP_REPORT), SWEEP_EXACT, ", ".join("%s %d" % kv for kv in SWEEP_REPORT.items())))
-        print("Daily pizzas recomputed from the seed: %d dates (+ %d on a fresh page); UK date at %d instants"
-              % (len(dates), len(fresh), len(UK_DATES)))
-        if kbad is None:
-            if args.require_katex:
-                fail("KaTeX did not load (--require-katex)")
-            else:
-                print("SKIP: KaTeX did not load; TeX strings not parse-checked (CI runs --require-katex)")
-        else:
-            for b in kbad:
-                fail("KaTeX: " + b)
-            if not kbad:
-                print("KaTeX: every option, prompt, working and equation segment renders")
+        by_id = exp = None
+        if STATIC in todo:
+            with shard.unit(STATIC):
+                ctx, page, errors = await new_page(browser)
+                found, data, by_id, exp, dates = await collect_static(page, sweep=SWEEP_SEEDS)
+                # A fresh page must serve the same pizzas (nothing carried over from a first load).
+                again = await page.evaluate("(ds) => ds.map(d => FDP.dailySet(d))", dates[:30])
+                kbad = await page.evaluate(KATEX_JS)
+                await ctx.close()
+                ctx2, page2, _ = await new_page(browser)
+                fresh = await page2.evaluate("(ds) => ds.map(d => FDP.dailySet(d))", dates[:30])
+                await ctx2.close()
+                if fresh != again:
+                    found.append("daily: a fresh page load serves different pizzas for the same dates")
+                for f in found:
+                    fail(f)
+                for e in errors:
+                    fail("page error: " + e)
+                counts = {str(s): len(data["bank"][str(s)]) for s in (1, 2, 3, 4)}
+                nd = sum(len(it["distractors"]) for s in (1, 2, 3, 4) for it in data["bank"][str(s)])
+                npic = sum(len(v) for v in data["drawn"].values())
+                print("Items: S1 %(1)d, S2 %(2)d, S3 %(3)d, S4 %(4)d" % counts, "  distractors recomputed: %d   pictures counted: %d" % (nd, npic))
+                gone = slipped_ids(data["tables"])
+                print("Removed by the slip filter (FDP-KEY-COLLIDE): " + ", ".join(
+                    "S%d %d of %d (%s)" % (s, len(gone[s]), counts[str(s)] + len(gone[s]), ", ".join(gone[s]) or "none")
+                    for s in (1, 2, 3, 4)))
+                print("Practice sets swept (FDP-SPREAD): seeds 1-%d in each of %s; apart wherever possible; the first %d "
+                      "recomputed in full (blocks no order could separate: %s)"
+                      % (SWEEP_SEEDS, ", ".join(SWEEP_REPORT), SWEEP_EXACT, ", ".join("%s %d" % kv for kv in SWEEP_REPORT.items())))
+                print("Daily pizzas recomputed from the seed: %d dates (+ %d on a fresh page); UK date at %d instants"
+                      % (len(dates), len(fresh), len(UK_DATES)))
+                if kbad is None:
+                    if args.require_katex:
+                        fail("KaTeX did not load (--require-katex)")
+                    else:
+                        print("SKIP: KaTeX did not load; TeX strings not parse-checked (CI runs --require-katex)")
+                else:
+                    for b in kbad:
+                        fail("KaTeX: " + b)
+                    if not kbad:
+                        print("KaTeX: every option, prompt, working and equation segment renders")
+        elif any(needs_bank(u) for u in todo):
+            # The bank is read and recomputed as in the static unit (the UI, the phone check and the stage plant need the
+            # recomputed right answers), and what it finds is reported.
+            ctx, page, errors = await new_page(browser)
+            data = await page.evaluate(COLLECT_JS)
+            found = []
+            by_id, exp = check_banks(data, found)
+            await ctx.close()
+            for f in found:
+                fail(f)
 
-        ui_out = []
-        notes = await ui_runs(browser, by_id, exp, ui_out)
+        ui_out, notes = [], []
+        for b, fn in UI_BLOCKS:
+            if UNIT_UI + b in todo:
+                with shard.unit(UNIT_UI + b):
+                    notes += await fn(browser, by_id, exp, ui_out)
         for f in ui_out:
             fail(f)
         for n in notes:
             print("UI " + n)
 
-        if not args.no_phone and args.part is None:
-            await phone_report(browser, by_id, args)
+        vps = [vp for vp in VIEWPORTS if UNIT_PHONE % vp in todo]
+        if vps:
+            ph_out, worst = [], {}
+            for vp in vps:
+                with shard.unit(UNIT_PHONE % vp):
+                    worst.update(await phone(browser, by_id, ph_out, args.screens, viewports=[vp]))
+            for f in ph_out:
+                fail(f)
+            print("Phone: %d items x %d viewports; lowest Next bottom edge: %s" % (len(by_id), len(vps), ", ".join(
+                "%dx%d %.0fpx (fold %d)" % (w, h, worst[(w, h)], h - FOOTER) for w, h in vps)))
 
-        if not args.no_selftest:
-            await selftest_report(browser, by_id, selftest, "")
-            if args.part is None and not args.no_phone:
-                await selftest_report(browser, by_id, phone_selftest, " (phone fit)")
+        planted = [(name, kind, patch) for name, kind, patch in FAULTS if UNIT_FAULT + name in todo]
+        if planted:
+            ok, lines = True, []
+            for name, kind, patch in planted:
+                with shard.unit(UNIT_FAULT + name):
+                    caught, line = await selftest_fault(browser, by_id, name, kind, patch)
+                ok = ok and caught
+                lines.append(line)
+            selftest_report(ok, lines, "")
+
+        planted = [(name, css) for name, css in PHONE_FAULTS if UNIT_PHONE_FAULT + name in todo]
+        if planted:
+            ok, lines = True, []
+            for name, css in planted:
+                with shard.unit(UNIT_PHONE_FAULT + name):
+                    caught, line = await phone_fault(browser, by_id, name, css)
+                ok = ok and caught
+                lines.append(line)
+            selftest_report(ok, lines, " (phone fit)")
         await browser.close()
 
 
@@ -1490,9 +1550,11 @@ def main():
     ap.add_argument("--no-selftest", action="store_true")
     ap.add_argument("--no-phone", action="store_true", help="skip measuring every item at three phone sizes")
     ap.add_argument("--require-katex", action="store_true", help="fail if KaTeX cannot load (CI)")
-    ap.add_argument("--part", type=int, choices=(1, 2), help="CI split: 1 = everything but the phone check, 2 = the phone check and its plants (default: both)")
     ap.add_argument("--screens", help="save wrong-answer screenshots at the three phone sizes to this folder")
+    bc.shard_args(ap)
     args = ap.parse_args()
+    shard = bc.Shard(__file__, args)
+    todo = shard.pick(units(args.no_phone, args.no_selftest))
     global PORT
     try:
         server, base = bc.start_stub_server()
@@ -1501,7 +1563,7 @@ def main():
     else:
         PORT = urlsplit(base).port
         try:
-            asyncio.run(run_all(args))
+            asyncio.run(run_all(args, shard, todo))
         finally:
             server.terminate()
     print()

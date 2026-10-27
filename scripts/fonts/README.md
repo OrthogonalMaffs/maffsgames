@@ -14,6 +14,7 @@ Regenerate everything here with `python scripts/fonts/fetch-fonts.py`, then re-c
 | `google/gstatic/` | every font file those stylesheets name, by its `fonts.gstatic.com` path | `fonts.gstatic.com` | per family, below |
 | `google/manifest.json` | each css2 query string → its stylesheet file | | |
 | `licences/` | each family's licence text, from Google's fonts repository | `github.com/google/fonts` | |
+| `dejavu/` | **Not a web font.** Ubuntu 24.04's `fonts-dejavu-core` and `fonts-dejavu-mono` 2.37-8, the bare runner's fallback faces, checksum-pinned. CI's container jobs unpack them from here to pin `sans-serif` and `monospace` (the workflow's "Pin fallback fonts" step); until 27 Oct 2026 every job fetched them from Launchpad, and when that slowed (5-7 s a job to 15-84 s from 26 Oct) every job's setup did (contract SHARD) | `launchpad.net` (the Ubuntu archive as fallback) | Bitstream Vera licence; DejaVu changes public domain (`licences/dejavu-copyright.txt`) |
 
 Google families, as each font file's name table (ID 14) states, with the text in `licences/`:
 

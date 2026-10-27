@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 # ci-line: Shared level reader (schools/assets/level.js, MaffsLevel in Chromium: constructor, __proto__, toString, empty, mixed-case, unknown and valid keys; the leaderboard refuses an undeclared key; a property-lookup reader planted and caught) | --selftest && --run
-# ci-line: lock | Level resolver in play, part 1 (every migrated game loads at its default for constructor, __proto__ and nonsense, and at each declared level, with no page error) | --games --part 1/4
-# ci-line: lock | Level resolver in play, part 2 (migrated games, as part 1) | --games --part 2/4
-# ci-line: lock | Level resolver in play, part 3 (migrated games, as part 1) | --games --part 3/4
-# ci-line: lock | Level resolver in play, part 4 (migrated games, as part 1) | --games --part 4/4
+# ci-shards: lock | Level resolver in play (every migrated game loads at its default for constructor, __proto__ and nonsense, and at each declared level, with no page error) | --games | 2
 # ci-deps: schools/assets/level.js schools/assets/firebase-leaderboard.js scripts/check-levels.py games/
 """Browser test for MaffsLevel (contract LEVEL-RESOLVER, 12 Oct 2026; canon section 4.5).
 
     python scripts/test-level.py --run         # the cases below, in headless Chromium
     python scripts/test-level.py --selftest    # the same cases against a reader that looks the key up as a property:
                                                # it must FAIL (so the test bites)
+    python scripts/test-level.py --games [--shard I/K]   # every migrated game in play (CI: part I of K of them)
+    python scripts/test-level.py --games --list-units    # its work units: one per migrated game ("game: <slug>")
 
 Each case opens a fixture page that loads the real schools/assets/level.js and declares
 `{slug: 'fixture', levels: ['gcse', 'alevel'], fallback: 'gcse', boards: ['q20']}`, with the query string given:
@@ -24,6 +23,10 @@ was declared or absent, the URL is untouched.
 The leaderboard guard: with the real firebase-leaderboard.js and a fake Firebase SDK, submitScore() under an
 undeclared key warns and never reaches the SDK; under a declared level or board it does; and a page that
 declared nothing behaves as before (the SDK is reached).
+
+--games loads every game in check-levels.py's MIGRATED with each junk key and each declared level. Each game is one work
+unit (contract SHARD, 27 Oct 2026; scripts/ci_shards.py), "game: <slug>" in slug order, and CI runs the slice
+--shard i/k (scripts/ci-groups.py chooses k from the units' times; the "# ci-shards" header holds k until they are timed).
 """
 import argparse
 import importlib.util
@@ -37,6 +40,7 @@ LEVEL_JS = os.path.join(ROOT, 'schools', 'assets', 'level.js')
 LB_JS = os.path.join(ROOT, 'schools', 'assets', 'firebase-leaderboard.js')
 HOST = 'https://fixture.test'
 sys.path.insert(0, HERE)
+import ci_shards  # noqa: E402  (contract SHARD: the --games work units)
 JUNK = ['constructor', '__proto__', 'nonsense']
 
 DECL = r"{slug: 'fixture', levels: ['gcse', 'alevel'], fallback: 'gcse', boards: ['q20'], boardPatterns: ['^daily-\\d{4}-\\d{2}-\\d{2}$']}"
@@ -156,43 +160,47 @@ def migrated_games():
     return out
 
 
-def games(part):
-    """Each migrated game, loaded with each junk key and each declared level (CI shards by slug, as the answer lock does)."""
+def games(shard):
+    """Each migrated game, loaded with each junk key and each declared level: one work unit per game (contract SHARD),
+    and a --shard run loads its slice of them."""
+    decls = migrated_games()
+    slugs = [u[len('game: '):] for u in shard.pick(['game: %s' % s for s in sorted(decls)])]
+    print('Migrated games (part %s):' % (shard.spec or '1/1'))
+    fails = []
+    if not slugs:
+        return fails
     import bank_common as bc
     from playwright.sync_api import sync_playwright
-    decls = migrated_games()
-    i, n = (int(x) for x in part.split('/')) if part else (1, 1)
-    slugs = [s for k, s in enumerate(sorted(decls)) if k % n == i - 1]
-    fails = []
     proc, base = bc.start_stub_server()
     try:
         with sync_playwright() as p:
             browser = p.chromium.launch()
             for slug in slugs:
-                d = decls[slug]
-                problems = []
-                for key in JUNK + d['levels']:
-                    ctx = browser.new_context()
-                    ctx.route(lambda u: not u.startswith(base) and '/katex@' not in u, lambda r: r.abort())
-                    pg = ctx.new_page()
-                    errs = []
-                    pg.on('pageerror', lambda e: errs.append(str(e)[:140]))
-                    pg.goto(base + '/games/%s/?level=%s' % (slug, key), wait_until='load', timeout=30000)
-                    pg.wait_for_timeout(200)
-                    got = pg.evaluate("(function(){var d=window.MaffsLevel&&MaffsLevel.declared(%r);"
-                                      "return [d?d.fallback:null,new URLSearchParams(location.search).get('level')];})()" % slug)
-                    want = d['fallback'] if key in JUNK else key
-                    if errs:
-                        problems.append('?level=%s: page error %s' % (key, errs[0]))
-                    if got[0] is None:
-                        problems.append('?level=%s: MaffsLevel has no declaration for it' % key)
-                    if got[1] != want:
-                        problems.append('?level=%s: the URL ends with level=%s, wanted %s' % (key, got[1], want))
-                    ctx.close()
-                print('  %-28s %s' % (slug, 'ok' if not problems else 'FAIL'))
-                for pr in problems:
-                    print('      ' + pr)
-                fails += ['%s %s' % (slug, x) for x in problems]
+                with shard.unit('game: %s' % slug):
+                    d = decls[slug]
+                    problems = []
+                    for key in JUNK + d['levels']:
+                        ctx = browser.new_context()
+                        ctx.route(lambda u: not u.startswith(base) and '/katex@' not in u, lambda r: r.abort())
+                        pg = ctx.new_page()
+                        errs = []
+                        pg.on('pageerror', lambda e: errs.append(str(e)[:140]))
+                        pg.goto(base + '/games/%s/?level=%s' % (slug, key), wait_until='load', timeout=30000)
+                        pg.wait_for_timeout(200)
+                        got = pg.evaluate("(function(){var d=window.MaffsLevel&&MaffsLevel.declared(%r);"
+                                          "return [d?d.fallback:null,new URLSearchParams(location.search).get('level')];})()" % slug)
+                        want = d['fallback'] if key in JUNK else key
+                        if errs:
+                            problems.append('?level=%s: page error %s' % (key, errs[0]))
+                        if got[0] is None:
+                            problems.append('?level=%s: MaffsLevel has no declaration for it' % key)
+                        if got[1] != want:
+                            problems.append('?level=%s: the URL ends with level=%s, wanted %s' % (key, got[1], want))
+                        ctx.close()
+                    print('  %-28s %s' % (slug, 'ok' if not problems else 'FAIL'))
+                    for pr in problems:
+                        print('      ' + pr)
+                    fails += ['%s %s' % (slug, x) for x in problems]
             browser.close()
     finally:
         proc.terminate()
@@ -213,13 +221,12 @@ def main():
     ap.add_argument('--run', action='store_true')
     ap.add_argument('--selftest', action='store_true')
     ap.add_argument('--games', action='store_true')
-    ap.add_argument('--part', default='')
+    ci_shards.shard_args(ap)        # --games: --shard i/k loads part i of k of the games (CI); --list-units
     a = ap.parse_args()
     ok = True
     src = open(LEVEL_JS, encoding='utf-8').read()
-    if a.games:
-        print('Migrated games (part %s):' % (a.part or '1/1'))
-        fails = games(a.part)
+    if a.games or a.list_units:
+        fails = games(ci_shards.Shard(__file__, a))
         print('OK' if not fails else 'FAILED')
         return 0 if not fails else 1
     if a.run or not a.selftest:

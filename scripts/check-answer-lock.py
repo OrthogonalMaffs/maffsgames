@@ -1,11 +1,6 @@
 #!/usr/bin/env python3
 # ci-line: lock | Answer lock, static rules and self-test (canon 7.6.0: the static rules, NOT_YET and the cloud list once; no games played) | --selftest && --static
-# ci-line: lock | Answer lock in play, part 1 (canon 7.6.0: migrated games played in Chromium) | --part 1/6
-# ci-line: lock | Answer lock in play, part 2 (canon 7.6.0: migrated games played in Chromium) | --part 2/6
-# ci-line: lock | Answer lock in play, part 3 (canon 7.6.0: migrated games played in Chromium) | --part 3/6
-# ci-line: lock | Answer lock in play, part 4 (canon 7.6.0: migrated games played in Chromium) | --part 4/6
-# ci-line: lock | Answer lock in play, part 5 (canon 7.6.0: migrated games played in Chromium) | --part 5/6
-# ci-line: lock | Answer lock in play, part 6 (canon 7.6.0: migrated games played in Chromium) | --part 6/6
+# ci-shards: lock | Answer lock in play (canon 7.6.0: migrated games played in Chromium) | | 8
 # ci-deps: schools/assets/answer-lock.js schools/assets/next-control.js scripts/check-site.py
 """Does every game mark through MaffsLock (canon §7.6.0), so that no repeat marks twice or finishes twice?
 
@@ -58,12 +53,18 @@ the window closes. A two-option game declares the answer that differs from its k
     python scripts/check-answer-lock.py --not-yet          # play the NOT_YET games too (a report, never fails)
     python scripts/check-answer-lock.py --selftest         # a planted failing game off the cloud list is caught
     python scripts/check-answer-lock.py --seed 7           # another draw (default 1)
-    python scripts/check-answer-lock.py --part 1/6         # CI: every sixth migrated game (by slug); part 1 also
-                                                           # runs the static rules. Add a part (a "lock |"
-                                                           # ci-line; ci-groups.py packs it) when one passes 3 minutes.
+    python scripts/check-answer-lock.py --shard 2/7        # CI: part 2 of 7 of the games, played only: the static
+                                                           # rules, NOT_YET and the cloud list are the static line's
+    python scripts/check-answer-lock.py --list-units       # the work units: one per judged game ("game: <slug>")
+
+Work units (contract SHARD, 27 Oct 2026; scripts/ci_shards.py): each judged game is one unit, "game: <slug>", in roster
+order, and CI runs the slice --shard i/k (scripts/ci-groups.py chooses k from the units' times; the "# ci-shards" header
+holds k until a main run has timed them). Games play WORKERS at once, so each unit is timed around its own play and
+recorded at its wall time / WORKERS.
 """
 import argparse
 import asyncio
+import contextlib
 import importlib.util
 import os
 import re
@@ -73,6 +74,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 import bank_common as bc  # noqa: E402
+import ci_shards  # noqa: E402  (the work-unit ids' rules, for layout_errors)
 
 TIME_SCALE = 0.25
 WORKERS = 4
@@ -177,7 +179,7 @@ core-maths-paper2b core-maths-paper2c growth-and-decay normal-navigator log-laws
 characteristic-quest complex-converter
 eigenvalue-extractor matrix-crunch boolean-blitz
 eigenvalue-extractor matrix-crunch boolean-blitz
-unit-converter graph-sketcher how-many-parts take-a-walk squared-squirrel i-found-a-mark hc-factor y-so-steep who-ate-all-the-pies as-you-can-see
+unit-converter graph-sketcher how-many-parts take-a-walk squared-squirrel i-found-a-mark hc-factor y-so-steep who-ate-all-the-pies its-on-sale as-you-can-see
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
@@ -857,8 +859,16 @@ def diff(a, b):
                      if a[k] != b[k]) or 'nothing'
 
 
-async def play_all(games, against):
+def unit_id(slug):
+    """A judged game's work unit (contract SHARD): one game, played in full."""
+    return 'game: %s' % slug
+
+
+async def play_all(games, against, unit=None):
+    """{slug: [fault]} for the games, WORKERS at once in one Chromium. unit(slug), when given, is the context the game's
+    own play runs in (its work unit's timer: started once the game has a worker, so the wait for one is not counted)."""
     from playwright.async_api import async_playwright
+    unit = unit or (lambda slug: contextlib.nullcontext())
     proc, base = bc.start_stub_server()
     results = {}
     try:
@@ -868,11 +878,12 @@ async def play_all(games, against):
 
             async def one(slug, level):
                 async with sem:
-                    html = open(against, encoding='utf-8').read() if against else None
-                    try:
-                        results[slug] = await asyncio.wait_for(play(browser, base, slug, level, html), 300)
-                    except Exception as e:      # a crash is a failure, never a pass
-                        results[slug] = ['driver error: %s' % str(e)[:160]]
+                    with unit(slug):
+                        html = open(against, encoding='utf-8').read() if against else None
+                        try:
+                            results[slug] = await asyncio.wait_for(play(browser, base, slug, level, html), 300)
+                        except Exception as e:      # a crash is a failure, never a pass
+                            results[slug] = ['driver error: %s' % str(e)[:160]]
             await asyncio.gather(*(one(s, l) for s, l in games))
             await browser.close()
     finally:
@@ -922,39 +933,35 @@ def static_results(judged, page, remaining, only=None, against=None):
     return fails, reported
 
 
-def part_slice(to_play, i, n):
-    """Part i of n: every n-th game in slug order, starting at the i-th."""
-    return [g for k, g in enumerate(sorted(to_play)) if k % n == i - 1]
-
-
 CI_LINE = re.compile(r'^# ci-line:\s*lock\s*\|\s*([^|]+?)\s*\|\s*(.*)$', re.M)
+CI_SHARDS = re.compile(r'^# ci-shards:\s*lock\s*\|\s*([^|]+?)\s*\|\s*([^|]*?)\s*\|\s*(\d+)\s*$', re.M)
 
 
 def layout_errors(games):
-    """ANSWER-LOCK-STATIC (22 Oct 2026), from this file's own CI lines: each judged game is played by exactly one part;
-    the static report runs on exactly one line (the one without --part), and that line plays no game (--static)."""
+    """ANSWER-LOCK-STATIC (22 Oct 2026), from this file's own CI headers: the static report runs on exactly one line
+    (the ci-line), which runs the self-test and plays no game (--static); the games are played by the parts of the one
+    ci-shards header, which runs no self-test and plays every judged game (no --static, no --game), one unit each.
+    Which part plays which unit is ci_shards' deal, a partition by construction (contract SHARD, 27 Oct 2026)."""
     errs = []
-    lines = CI_LINE.findall(open(os.path.abspath(__file__), encoding='utf-8').read())
-    parts = [re.search(r'--part (\d+)/(\d+)', a) for _, a in lines]
-    ns = {int(m.group(2)) for m in parts if m}
-    if len(ns) != 1:
-        return ['the play lines disagree on n: %s' % sorted(ns)]
-    n = ns.pop()
-    if sorted(int(m.group(1)) for m in parts if m) != list(range(1, n + 1)):
-        errs.append('the play lines are not --part 1/%d .. %d/%d, each once' % (n, n, n))
-    static = [(lab, a) for (lab, a), m in zip(lines, parts) if not m]
+    text = open(os.path.abspath(__file__), encoding='utf-8').read()
+    static = CI_LINE.findall(text)
     if len(static) != 1:
-        errs.append('%d lines report the static rules (exactly one: the line without --part)' % len(static))
+        errs.append('%d lines report the static rules (exactly one: the ci-line; the games are the ci-shards parts)'
+                    % len(static))
     elif '--static' not in static[0][1] or '--selftest' not in static[0][1]:
         errs.append('the static line %r must run --selftest and --static (no games played)' % static[0][1])
-    if any(m and '--selftest' in a for (_, a), m in zip(lines, parts)):
+    shards = CI_SHARDS.findall(text)
+    if len(shards) != 1:
+        errs.append('%d lock ci-shards headers play the games (exactly one)' % len(shards))
+    elif '--selftest' in shards[0][1]:
         errs.append('a play line runs the self-test (it belongs to the static line)')
+    elif re.search(r'--static\b|--game\b', shards[0][1]):
+        errs.append('the play parts (%r) must play every judged game: no --static or --game' % shards[0][1])
     judged = [(s, l) for s, l in games if s not in NOT_YET]
-    played = [g for i in range(1, n + 1) for g in part_slice(judged, i, n)]
-    if sorted(played) != sorted(judged):
-        twice = sorted({g[0] for g in played if played.count(g) > 1})
-        missed = sorted({g[0] for g in judged} - {g[0] for g in played})
-        errs.append('the %d parts play %s twice and miss %s' % (n, twice or 'none', missed or 'none'))
+    units = [unit_id(s) for s, _ in judged]
+    bad = ci_shards.check_ids(units)
+    if bad or len(units) != len({s for s, _ in judged}):
+        errs.append('the play units are not one per judged game: %s' % ('; '.join(bad) or 'a game twice'))
     return errs
 
 
@@ -1057,7 +1064,7 @@ def main():
     ap.add_argument('--against', help='play this file as the (single) --game page')
     ap.add_argument('--not-yet', action='store_true', help='play the NOT_YET games too (reported only)')
     ap.add_argument('--static', action='store_true', help='static rules only, no browser')
-    ap.add_argument('--part', help='i/n: play only the i-th of n slices of the migrated games (CI)')
+    bc.shard_args(ap)       # --shard i/k: play only part i of k of the judged games (CI); --list-units
     ap.add_argument('--selftest', action='store_true', help='a planted failing game off the cloud list is caught')
     ap.add_argument('--seed', type=int, default=SEED, help="seeds every page's Math.random (default %d)" % SEED)
     ap.add_argument('-v', '--verbose', action='store_true')
@@ -1093,11 +1100,13 @@ def main():
     sf, reported = static_results(judged, page, remaining, args.game, args.against)
     fails += sf
     to_play = [(s, l) for s, l in judged if not args.game or s in args.game]
-    if args.part:
-        i, n = (int(x) for x in args.part.split('/'))
-        to_play = part_slice(to_play, i, n)
+    # One work unit per game (contract SHARD): a --shard run plays its slice of them.
+    shard = bc.Shard(__file__, args, concurrency=WORKERS)
+    mine = set(shard.pick([unit_id(s) for s, _ in to_play]))
+    if args.shard:
+        to_play = [(s, l) for s, l in to_play if unit_id(s) in mine]
         # A part plays games only (contract ANSWER-LOCK-STATIC, 22 Oct 2026): the static rules, NOT_YET and the cloud
-        # list are reported once, by the line run without --part ("Answer lock, static rules and self-test").
+        # list are reported once, by the line run without --shard ("Answer lock, static rules and self-test").
         fails, reported = [], []
     if args.not_yet:
         to_play += [(s, l) for s, l in games if s in NOT_YET - adopted and (not args.game or s in args.game)]
@@ -1111,7 +1120,9 @@ def main():
         print('  note: claimed by the cloud lane but listed, so judged as unclaimed (a process lock only, canon 7.8.2): %s'
               % ', '.join(sorted(claimed - remaining)))
     if not args.static and to_play:
-        results = asyncio.run(play_all(to_play, args.against))
+        # Each unit is timed around its own game's play; a NOT_YET game played with --not-yet is no unit.
+        results = asyncio.run(play_all(to_play, args.against, lambda s: (
+            shard.unit(unit_id(s)) if unit_id(s) in mine else contextlib.nullcontext())))
         for s, _ in to_play:
             res = results.get(s, ['not played'])
             hard = args.against or (s not in NOT_YET or s in adopted) and counts(s, remaining)
