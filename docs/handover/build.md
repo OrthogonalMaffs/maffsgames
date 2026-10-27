@@ -22,6 +22,7 @@ DONE: 2026-10-27-build-who-ate-all-the-pies.md   (merged: PR #580, squash bc5c88
 DONE: 2026-10-27-build-its-on-sale.md   (merged: PR #579, squash 079ceaa, 27 Oct 2026; main run 40563459598 green)
 DONE: 2026-10-27-build-as-you-can-see.md   (merged: PR #587, squash 24f641e, 27 Oct 2026; main runs 40576210979 and 40576211649 green)
 DONE: 2026-10-27-build-found-a-mark-batch2.md   (merged: PR #585, squash 18454dc, 27 Oct 2026; main runs 40580295716 and 40580295599 green)
+DONE: 2026-10-27-build-possibly-maybe.md   (merged: PR #594, squash 6512151, 27 Oct 2026; main runs 40596794906 and 40596796589 green)
 
 ## Queue
 1. **found-a-mark**: MERGED (#569) + art swap MERGED (#573, aaef265, main run 40514401072 green). Report still owed to Jon: its "Decided for you" list and screenshots.
@@ -134,5 +135,23 @@ Follow-ups: convert verify-as-you-can-see.py to # ci-shards; if claude/footer-un
 - Standing rule (Jon): any lane may re-run a failed main run once with `gh run rerun <id> --failed`; if it passes, log it in the shared lanes notes file under "Flakes for the cloud lane's step-4 audit"; if it fails again it is real, tell the home lane.
 - After SHARD (#578), a verifier with `--part` lines conflicts on merge with main's `# ci-shards` version: take main's and re-apply as work units. A new content line used to count 120 s + setup median; SHARD fixed the setup-time cause.
 
-Queue: possibly-maybe (contract 5, Jon's amendment: typed fractions via a numerator/denominator input) in progress on claude/build-possibly-maybe. Open follow-ups for others: as-you-can-see verifier to # ci-shards; footer apply on as-you-can-see and i-found-a-mark if claude/footer-unpin lands; keypad "/" key branch (claude/keypad-fraction-key) awaiting a ruling; shared Stage 6 board label and a shared tolerance helper for MaffsAnswer (candidates).
+Build queue empty (27 Oct 2026, after #594). Nothing uncontracted is started. Open follow-ups for others: as-you-can-see verifier to # ci-shards; footer apply (scripts/apply-footer.py) on as-you-can-see, i-found-a-mark and possibly-maybe if claude/footer-unpin lands; keypad "/" key branch (claude/keypad-fraction-key) awaiting a ruling; shared Stage 6 board label and a shared tolerance helper for MaffsAnswer (candidates); switch The 6 P's to the shared fraction input (see the lanes' notes file).
+
+## possibly-maybe: state (27 Oct 2026, PR #594, 6512151)
+Five stages on the probability bank (schools/assets/probability-generator.js, 60 questions, fixed seed 20261028, 12 a stage, answers computed; imported by schools/assets/probability-game.js). Stages: the scale; not and the missing one (x and 2x); listing outcomes (dice, spinners, coin and dice, menus); expected and relative frequency (is the dice fair, gambler's fallacy); tree diagrams (independent, no without-replacement). Worked example then 10 questions easiest first; boards stage-1..stage-5; roster #108, Unlisted (8). Fractions TYPED in two boxes (Jon's amendment) via the NEW shared file schools/assets/fraction-input.js (MaffsFractionInput), extracted from The 6 P's page, which is unchanged; matched by value, 2/4 = 1/2, lowest terms enforced only where asked (format result, never marked). Verifier scripts/verify-possibly-maybe.py: # ci-shards, 32 units, 13 planted faults caught, about 3m50s locally.
+Notes for next week (in the lanes' notes file): switch The 6 P's to the shared fraction input (it also has a whole-number box the shared file lacks); The 6 P's basic-probability questions are in its own JSON, not importable, so the new bank overlaps it.
+
+## Decided for you (possibly-maybe)
+- Light palette, levels ks3 and gcse, no picker.
+- Fractions in stems and keys are often not in lowest terms; typed answers accepted unsimplified unless the question says "in its simplest form" (only stage 1's decimal-to-fraction question does).
+- Tall grids (two dice) use smaller cells on phones under 700 px high; text stays 12 px.
+- The shared keypad's "." key shows for fractions and is ignored there; keypad not edited.
+- "You can't tell" is not a general option: right only in stage 4's "is the dice fair?" when the dice is thrown just 12 times. Fair rule: every face within 45% of expected; the verifier uses it independently.
+- Minimum registrations only; nothing listed. `PM.ui.preview(stage, slot, seed)` read-only test hook.
+- Not wired into gen-six-ps.py (shared); phone fit covered by the verifier, not measure-phone-fit.py.
+
+## Lessons (possibly-maybe)
+- A verifier "wrong answer" generator must be proven different from the key (14/22 = 7/11).
+- A plant caught only by a random session is flaky in CI: catch it with a deterministic view.
+- Playwright route handlers must take exactly one argument.
 
