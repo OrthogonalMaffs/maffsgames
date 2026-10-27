@@ -13,28 +13,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{2} + \\frac{1}{3}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "b"
+    "n": 5,
+    "d": 6
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{1}{3}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{5}{6}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{2}{5}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{1}{6}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
@@ -45,23 +28,29 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "n": 1,
+      "d": 3
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 2,
+      "d": 5
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 1,
+      "d": 6
      },
      "line": "You took away instead of adding."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-3adfd2b5",
@@ -74,28 +63,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{2} + \\frac{1}{5}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "c"
+    "n": 7,
+    "d": 10
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{2}{7}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{1}{5}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{7}{10}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{3}{10}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
@@ -106,23 +78,29 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "n": 2,
+      "d": 7
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 3,
+      "d": 10
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 1,
+      "d": 5
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-189a14a4",
@@ -135,28 +113,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{2} + \\frac{1}{7}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "d"
+    "n": 9,
+    "d": 14
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{5}{14}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{2}{9}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{1}{7}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{9}{14}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
@@ -167,23 +128,29 @@
    "slip": [
     {
      "answer": {
-      "val": "b"
+      "n": 2,
+      "d": 9
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 5,
+      "d": 14
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 1,
+      "d": 7
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-2c433d29",
@@ -196,28 +163,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{2} + \\frac{3}{7}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "b"
+    "n": 13,
+    "d": 14
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{4}{9}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{13}{14}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{1}{14}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{2}{7}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
@@ -228,23 +178,29 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "n": 4,
+      "d": 9
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 1,
+      "d": 14
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 2,
+      "d": 7
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-bc7ee4b3",
@@ -257,28 +213,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{2} + \\frac{2}{9}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "a"
+    "n": 13,
+    "d": 18
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{13}{18}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{5}{18}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{3}{11}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{1}{6}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
@@ -289,23 +228,29 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "n": 1,
+      "d": 6
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 5,
+      "d": 18
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 3,
+      "d": 11
      },
      "line": "You added the tops and the bottoms."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-9a5ad9a4",
@@ -318,28 +263,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{2} + \\frac{4}{9}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "a"
+    "n": 17,
+    "d": 18
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{17}{18}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{1}{18}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{5}{18}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{5}{11}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
@@ -350,23 +278,29 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "n": 5,
+      "d": 11
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 1,
+      "d": 18
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 5,
+      "d": 18
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-eb05362c",
@@ -379,28 +313,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{2} + \\frac{2}{11}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "d"
+    "n": 15,
+    "d": 22
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{3}{22}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{3}{13}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{7}{22}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{15}{22}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
@@ -411,23 +328,29 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "n": 7,
+      "d": 22
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 3,
+      "d": 13
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 3,
+      "d": 22
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-9a89b5e9",
@@ -440,28 +363,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{2} + \\frac{3}{11}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "a"
+    "n": 17,
+    "d": 22
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{17}{22}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{2}{11}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{5}{22}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{4}{13}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
@@ -472,23 +378,29 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "n": 4,
+      "d": 13
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 5,
+      "d": 22
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 2,
+      "d": 11
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-551812b5",
@@ -501,28 +413,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{2} + \\frac{5}{11}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "c"
+    "n": 21,
+    "d": 22
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{3}{11}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{1}{22}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{21}{22}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{6}{13}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{2}\\): cut a bar into 2, take 1.",
@@ -533,23 +428,29 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "n": 6,
+      "d": 13
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 3,
+      "d": 11
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 1,
+      "d": 22
      },
      "line": "You took away instead of adding."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-3c8a37dd",
@@ -562,28 +463,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{3} + \\frac{1}{2}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "c"
+    "n": 5,
+    "d": 6
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{2}{5}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{1}{6}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{5}{6}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{1}{3}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
@@ -594,23 +478,29 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "n": 1,
+      "d": 3
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 1,
+      "d": 6
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 2,
+      "d": 5
      },
      "line": "You added the tops and the bottoms."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-9406bf01",
@@ -623,28 +513,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{2}{3} + \\frac{1}{4}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "a"
+    "n": 11,
+    "d": 12
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{11}{12}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{1}{4}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{3}{7}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{5}{12}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{2}{3}\\): cut a bar into 3, take 2.",
@@ -655,23 +528,29 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "n": 5,
+      "d": 12
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 3,
+      "d": 7
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 1,
+      "d": 4
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-ea3461f1",
@@ -684,28 +563,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{3} + \\frac{2}{5}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "a"
+    "n": 11,
+    "d": 15
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{11}{15}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{1}{15}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{3}{8}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{1}{5}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
@@ -716,23 +578,29 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "n": 3,
+      "d": 8
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 1,
+      "d": 15
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 1,
+      "d": 5
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-1732dcb9",
@@ -745,28 +613,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{3} + \\frac{1}{7}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "d"
+    "n": 10,
+    "d": 21
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{4}{21}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{2}{21}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{1}{5}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{10}{21}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
@@ -777,23 +628,29 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "n": 1,
+      "d": 5
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 4,
+      "d": 21
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 2,
+      "d": 21
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-97db301b",
@@ -806,28 +663,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{3} + \\frac{2}{7}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "b"
+    "n": 13,
+    "d": 21
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{1}{21}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{13}{21}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{1}{7}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{3}{10}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
@@ -838,23 +678,29 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "n": 1,
+      "d": 21
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 3,
+      "d": 10
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 1,
+      "d": 7
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-86e49f3e",
@@ -867,28 +713,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{2}{3} + \\frac{1}{7}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "b"
+    "n": 17,
+    "d": 21
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{3}{10}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{17}{21}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{11}{21}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{1}{7}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{2}{3}\\): cut a bar into 3, take 2.",
@@ -899,23 +728,29 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "n": 11,
+      "d": 21
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 3,
+      "d": 10
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 1,
+      "d": 7
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-da5c1618",
@@ -928,28 +763,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{2}{3} + \\frac{2}{7}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "a"
+    "n": 20,
+    "d": 21
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{20}{21}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{4}{21}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{2}{5}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{8}{21}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{2}{3}\\): cut a bar into 3, take 2.",
@@ -960,23 +778,29 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "n": 8,
+      "d": 21
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 2,
+      "d": 5
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 4,
+      "d": 21
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-59e8fa20",
@@ -989,28 +813,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{3} + \\frac{3}{8}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "a"
+    "n": 17,
+    "d": 24
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{17}{24}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{1}{6}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{1}{24}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{4}{11}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
@@ -1021,23 +828,29 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "n": 4,
+      "d": 11
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 1,
+      "d": 24
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 1,
+      "d": 6
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-2b6cdeaf",
@@ -1050,28 +863,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{3} + \\frac{5}{8}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "d"
+    "n": 23,
+    "d": 24
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{7}{24}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{6}{11}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{1}{4}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{23}{24}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{3}\\): cut a bar into 3, take 1.",
@@ -1082,23 +878,29 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "n": 7,
+      "d": 24
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 1,
+      "d": 4
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 6,
+      "d": 11
      },
      "line": "You added the tops and the bottoms."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-9e7f7727",
@@ -1111,28 +913,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{4} + \\frac{1}{3}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "b"
+    "n": 7,
+    "d": 12
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{1}{12}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{7}{12}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{1}{6}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{2}{7}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{4}\\): cut a bar into 4, take 1.",
@@ -1143,23 +928,29 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "n": 2,
+      "d": 7
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 1,
+      "d": 12
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 1,
+      "d": 6
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-a0c324de",
@@ -1172,28 +963,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{3}{4} - \\frac{1}{3}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "b"
+    "n": 5,
+    "d": 12
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(2\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{5}{12}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{13}{12}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{1}{6}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{3}{4}\\): cut a bar into 4, take 3.",
@@ -1204,23 +978,29 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "n": 13,
+      "d": 12
      },
      "line": "You added instead of taking away."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 1,
+      "d": 6
      },
      "line": "You changed the bottom but not the top."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 2,
+      "d": 1
      },
      "line": "You took away the tops and the bottoms."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-8c288242",
@@ -1233,28 +1013,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{4} + \\frac{1}{5}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "c"
+    "n": 9,
+    "d": 20
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{2}{9}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{1}{20}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{9}{20}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{1}{10}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{4}\\): cut a bar into 4, take 1.",
@@ -1265,23 +1028,29 @@
    "slip": [
     {
      "answer": {
-      "val": "b"
+      "n": 1,
+      "d": 20
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 2,
+      "d": 9
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 1,
+      "d": 10
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-782957ee",
@@ -1294,28 +1063,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{4} + \\frac{3}{5}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "d"
+    "n": 17,
+    "d": 20
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{1}{5}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{4}{9}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{7}{20}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{17}{20}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{4}\\): cut a bar into 4, take 1.",
@@ -1326,23 +1078,29 @@
    "slip": [
     {
      "answer": {
-      "val": "b"
+      "n": 4,
+      "d": 9
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 1,
+      "d": 5
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 7,
+      "d": 20
      },
      "line": "You took away instead of adding."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-29aeb9de",
@@ -1355,28 +1113,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{5} + \\frac{1}{2}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "a"
+    "n": 7,
+    "d": 10
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{7}{10}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{1}{5}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{2}{7}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{3}{10}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{5}\\): cut a bar into 5, take 1.",
@@ -1387,23 +1128,29 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "n": 2,
+      "d": 7
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 1,
+      "d": 5
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 3,
+      "d": 10
      },
      "line": "You took away instead of adding."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-9cce914c",
@@ -1416,28 +1163,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{2}{5} + \\frac{1}{2}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "b"
+    "n": 9,
+    "d": 10
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{3}{10}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{9}{10}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{1}{10}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{3}{7}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{2}{5}\\): cut a bar into 5, take 2.",
@@ -1448,23 +1178,29 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "n": 1,
+      "d": 10
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 3,
+      "d": 7
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 3,
+      "d": 10
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-cf55784e",
@@ -1477,28 +1213,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{3}{5} - \\frac{1}{2}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "a"
+    "n": 1,
+    "d": 10
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{1}{10}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{11}{10}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{2}{3}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{1}{5}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{3}{5}\\): cut a bar into 5, take 3.",
@@ -1509,23 +1228,29 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "n": 1,
+      "d": 5
      },
      "line": "You changed the bottom but not the top."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 11,
+      "d": 10
      },
      "line": "You added instead of taking away."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 2,
+      "d": 3
      },
      "line": "You took away the tops and the bottoms."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-93fd0eb5",
@@ -1538,28 +1263,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{2}{5} + \\frac{1}{3}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "d"
+    "n": 11,
+    "d": 15
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{1}{15}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{3}{8}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{1}{5}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{11}{15}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{2}{5}\\): cut a bar into 5, take 2.",
@@ -1570,23 +1278,29 @@
    "slip": [
     {
      "answer": {
-      "val": "b"
+      "n": 3,
+      "d": 8
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 1,
+      "d": 15
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 1,
+      "d": 5
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-d55429a7",
@@ -1599,28 +1313,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{3}{5} - \\frac{1}{3}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "c"
+    "n": 4,
+    "d": 15
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(1\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{2}{15}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{4}{15}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{14}{15}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{3}{5}\\): cut a bar into 5, take 3.",
@@ -1631,23 +1328,29 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "n": 1,
+      "d": 1
      },
      "line": "You took away the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 14,
+      "d": 15
      },
      "line": "You added instead of taking away."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 2,
+      "d": 15
      },
      "line": "You changed the bottom but not the top."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-b5373eb6",
@@ -1660,28 +1363,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{4}{5} - \\frac{1}{3}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "d"
+    "n": 7,
+    "d": 15
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{3}{2}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{17}{15}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{1}{5}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{7}{15}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{4}{5}\\): cut a bar into 5, take 4.",
@@ -1692,23 +1378,29 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "n": 3,
+      "d": 2
      },
      "line": "You took away the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 17,
+      "d": 15
      },
      "line": "You added instead of taking away."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 1,
+      "d": 5
      },
      "line": "You changed the bottom but not the top."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-553e8c39",
@@ -1721,28 +1413,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{5} + \\frac{1}{4}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "b"
+    "n": 9,
+    "d": 20
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{2}{9}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{9}{20}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{1}{10}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{1}{20}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{5}\\): cut a bar into 5, take 1.",
@@ -1753,23 +1428,29 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "n": 1,
+      "d": 10
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 2,
+      "d": 9
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 1,
+      "d": 20
      },
      "line": "You took away instead of adding."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-b8835f44",
@@ -1782,28 +1463,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{2}{5} - \\frac{1}{4}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "a"
+    "n": 3,
+    "d": 20
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{3}{20}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{1}{20}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{13}{20}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(1\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{2}{5}\\): cut a bar into 5, take 2.",
@@ -1814,23 +1478,29 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "n": 13,
+      "d": 20
      },
      "line": "You added instead of taking away."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 1,
+      "d": 20
      },
      "line": "You changed the bottom but not the top."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 1,
+      "d": 1
      },
      "line": "You took away the tops and the bottoms."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-aa6cd9f4",
@@ -1843,28 +1513,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{3}{5} + \\frac{1}{4}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "c"
+    "n": 17,
+    "d": 20
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{4}{9}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{7}{20}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{17}{20}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{1}{5}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{3}{5}\\): cut a bar into 5, take 3.",
@@ -1875,23 +1528,29 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "n": 1,
+      "d": 5
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 4,
+      "d": 9
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 7,
+      "d": 20
      },
      "line": "You took away instead of adding."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-ee50b258",
@@ -1904,28 +1563,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{3}{5} - \\frac{1}{4}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "c"
+    "n": 7,
+    "d": 20
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{1}{10}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(2\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{7}{20}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{17}{20}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{3}{5}\\): cut a bar into 5, take 3.",
@@ -1936,23 +1578,29 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "n": 1,
+      "d": 10
      },
      "line": "You changed the bottom but not the top."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 17,
+      "d": 20
      },
      "line": "You added instead of taking away."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 2,
+      "d": 1
      },
      "line": "You took away the tops and the bottoms."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-04e4027d",
@@ -1965,28 +1613,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{4}{5} - \\frac{1}{4}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "d"
+    "n": 11,
+    "d": 20
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{21}{20}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{3}{20}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(3\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{11}{20}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{4}{5}\\): cut a bar into 5, take 4.",
@@ -1997,23 +1628,29 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "n": 3,
+      "d": 1
      },
      "line": "You took away the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 3,
+      "d": 20
      },
      "line": "You changed the bottom but not the top."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 21,
+      "d": 20
      },
      "line": "You added instead of taking away."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-2810bbb0",
@@ -2026,28 +1663,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{7} + \\frac{1}{2}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "d"
+    "n": 9,
+    "d": 14
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{2}{9}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{1}{7}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{5}{14}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{9}{14}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{7}\\): cut a bar into 7, take 1.",
@@ -2058,23 +1678,29 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "n": 5,
+      "d": 14
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 1,
+      "d": 7
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 2,
+      "d": 9
      },
      "line": "You added the tops and the bottoms."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-c7f7b67d",
@@ -2087,28 +1713,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{4}{7} - \\frac{1}{2}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "b"
+    "n": 1,
+    "d": 14
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{3}{5}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{1}{14}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{15}{14}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{3}{14}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{4}{7}\\): cut a bar into 7, take 4.",
@@ -2119,23 +1728,29 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "n": 3,
+      "d": 14
      },
      "line": "You changed the bottom but not the top."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 3,
+      "d": 5
      },
      "line": "You took away the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 15,
+      "d": 14
      },
      "line": "You added instead of taking away."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-92f66478",
@@ -2148,28 +1763,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{5}{7} - \\frac{1}{2}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "b"
+    "n": 3,
+    "d": 14
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{17}{14}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{3}{14}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{2}{7}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{4}{5}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{5}{7}\\): cut a bar into 7, take 5.",
@@ -2180,23 +1778,29 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "n": 17,
+      "d": 14
      },
      "line": "You added instead of taking away."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 4,
+      "d": 5
      },
      "line": "You took away the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 2,
+      "d": 7
      },
      "line": "You changed the bottom but not the top."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-387f1ab5",
@@ -2209,28 +1813,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{7} + \\frac{1}{3}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "d"
+    "n": 10,
+    "d": 21
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{4}{21}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{1}{5}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{2}{21}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{10}{21}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{7}\\): cut a bar into 7, take 1.",
@@ -2241,23 +1828,29 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "n": 4,
+      "d": 21
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 1,
+      "d": 5
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 2,
+      "d": 21
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-f4aa2431",
@@ -2270,28 +1863,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{7} + \\frac{2}{3}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "b"
+    "n": 17,
+    "d": 21
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{1}{7}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{17}{21}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{11}{21}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{3}{10}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{7}\\): cut a bar into 7, take 1.",
@@ -2302,23 +1878,29 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "n": 3,
+      "d": 10
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 11,
+      "d": 21
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 1,
+      "d": 7
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-dfd7507e",
@@ -2331,28 +1913,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{2}{7} + \\frac{2}{3}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "b"
+    "n": 20,
+    "d": 21
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{2}{5}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{20}{21}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{8}{21}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{4}{21}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{2}{7}\\): cut a bar into 7, take 2.",
@@ -2363,23 +1928,29 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "n": 8,
+      "d": 21
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 2,
+      "d": 5
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 4,
+      "d": 21
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-b7417f3c",
@@ -2392,28 +1963,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{3}{7} + \\frac{1}{3}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "d"
+    "n": 16,
+    "d": 21
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{2}{5}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{4}{21}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{2}{21}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{16}{21}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{3}{7}\\): cut a bar into 7, take 3.",
@@ -2424,23 +1978,29 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "n": 2,
+      "d": 21
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 2,
+      "d": 5
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 4,
+      "d": 21
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-a618b8de",
@@ -2453,28 +2013,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{4}{7} - \\frac{1}{3}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "b"
+    "n": 5,
+    "d": 21
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{3}{4}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{5}{21}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{1}{7}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{19}{21}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{4}{7}\\): cut a bar into 7, take 4.",
@@ -2485,23 +2028,29 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "n": 19,
+      "d": 21
      },
      "line": "You added instead of taking away."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 1,
+      "d": 7
      },
      "line": "You changed the bottom but not the top."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 3,
+      "d": 4
      },
      "line": "You took away the tops and the bottoms."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-6be3ce98",
@@ -2514,28 +2063,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{5}{7} - \\frac{1}{3}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "b"
+    "n": 8,
+    "d": 21
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(1\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{8}{21}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{22}{21}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{4}{21}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{5}{7}\\): cut a bar into 7, take 5.",
@@ -2546,23 +2078,29 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "n": 1,
+      "d": 1
      },
      "line": "You took away the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 4,
+      "d": 21
      },
      "line": "You changed the bottom but not the top."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 22,
+      "d": 21
      },
      "line": "You added instead of taking away."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-7db66c5a",
@@ -2575,28 +2113,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{5}{7} - \\frac{2}{3}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "d"
+    "n": 1,
+    "d": 21
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{29}{21}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{3}{4}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{1}{7}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{1}{21}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{5}{7}\\): cut a bar into 7, take 5.",
@@ -2607,23 +2128,29 @@
    "slip": [
     {
      "answer": {
-      "val": "b"
+      "n": 3,
+      "d": 4
      },
      "line": "You took away the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 1,
+      "d": 7
      },
      "line": "You changed the bottom but not the top."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 29,
+      "d": 21
      },
      "line": "You added instead of taking away."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-fb13395e",
@@ -2636,28 +2163,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{6}{7} - \\frac{1}{3}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "d"
+    "n": 11,
+    "d": 21
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{5}{4}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{5}{21}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{25}{21}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{11}{21}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{6}{7}\\): cut a bar into 7, take 6.",
@@ -2668,23 +2178,29 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "n": 25,
+      "d": 21
      },
      "line": "You added instead of taking away."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 5,
+      "d": 4
      },
      "line": "You took away the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 5,
+      "d": 21
      },
      "line": "You changed the bottom but not the top."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-84506cf2",
@@ -2697,28 +2213,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{8} + \\frac{2}{3}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "c"
+    "n": 19,
+    "d": 24
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{3}{11}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{13}{24}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{19}{24}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{1}{8}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{8}\\): cut a bar into 8, take 1.",
@@ -2729,23 +2228,29 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "n": 3,
+      "d": 11
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 13,
+      "d": 24
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 1,
+      "d": 8
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-e5585336",
@@ -2758,28 +2263,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{3}{8} + \\frac{1}{3}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "b"
+    "n": 17,
+    "d": 24
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{4}{11}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{17}{24}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{1}{24}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{1}{6}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{3}{8}\\): cut a bar into 8, take 3.",
@@ -2790,23 +2278,29 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "n": 4,
+      "d": 11
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 1,
+      "d": 6
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 1,
+      "d": 24
      },
      "line": "You took away instead of adding."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-8587c24b",
@@ -2819,28 +2313,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{3}{8} - \\frac{1}{3}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "b"
+    "n": 1,
+    "d": 24
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{1}{12}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{1}{24}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{2}{5}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{17}{24}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{3}{8}\\): cut a bar into 8, take 3.",
@@ -2851,23 +2328,29 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "n": 2,
+      "d": 5
      },
      "line": "You took away the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 17,
+      "d": 24
      },
      "line": "You added instead of taking away."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 1,
+      "d": 12
      },
      "line": "You changed the bottom but not the top."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-5bfc05bb",
@@ -2880,28 +2363,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{5}{8} - \\frac{1}{3}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "c"
+    "n": 7,
+    "d": 24
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{23}{24}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{4}{5}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{7}{24}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{1}{6}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{5}{8}\\): cut a bar into 8, take 5.",
@@ -2912,23 +2378,29 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "n": 1,
+      "d": 6
      },
      "line": "You changed the bottom but not the top."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 4,
+      "d": 5
      },
      "line": "You took away the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 23,
+      "d": 24
      },
      "line": "You added instead of taking away."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-7a96b37f",
@@ -2941,28 +2413,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{7}{8} - \\frac{1}{3}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "a"
+    "n": 13,
+    "d": 24
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{13}{24}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{6}{5}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{29}{24}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{1}{4}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{7}{8}\\): cut a bar into 8, take 7.",
@@ -2973,23 +2428,29 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "n": 29,
+      "d": 24
      },
      "line": "You added instead of taking away."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 1,
+      "d": 4
      },
      "line": "You changed the bottom but not the top."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 6,
+      "d": 5
      },
      "line": "You took away the tops and the bottoms."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-63ffd3e7",
@@ -3002,28 +2463,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{9} + \\frac{1}{2}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "a"
+    "n": 11,
+    "d": 18
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{11}{18}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{7}{18}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{1}{9}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{2}{11}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{9}\\): cut a bar into 9, take 1.",
@@ -3034,23 +2478,29 @@
    "slip": [
     {
      "answer": {
-      "val": "b"
+      "n": 7,
+      "d": 18
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 1,
+      "d": 9
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 2,
+      "d": 11
      },
      "line": "You added the tops and the bottoms."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-1cf1745b",
@@ -3063,28 +2513,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{2}{9} + \\frac{1}{2}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "d"
+    "n": 13,
+    "d": 18
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{5}{18}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{1}{6}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{3}{11}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{13}{18}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{2}{9}\\): cut a bar into 9, take 2.",
@@ -3095,23 +2528,29 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "n": 3,
+      "d": 11
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 5,
+      "d": 18
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 1,
+      "d": 6
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-fe3a1d93",
@@ -3124,28 +2563,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{5}{9} - \\frac{1}{2}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "c"
+    "n": 1,
+    "d": 18
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{19}{18}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{4}{7}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{1}{18}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{2}{9}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{5}{9}\\): cut a bar into 9, take 5.",
@@ -3156,23 +2578,29 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "n": 19,
+      "d": 18
      },
      "line": "You added instead of taking away."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 4,
+      "d": 7
      },
      "line": "You took away the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 2,
+      "d": 9
      },
      "line": "You changed the bottom but not the top."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-08fc53c1",
@@ -3185,28 +2613,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{7}{9} - \\frac{1}{2}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "d"
+    "n": 5,
+    "d": 18
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{1}{3}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{23}{18}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{6}{7}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{5}{18}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{7}{9}\\): cut a bar into 9, take 7.",
@@ -3217,23 +2628,29 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "n": 6,
+      "d": 7
      },
      "line": "You took away the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 1,
+      "d": 3
      },
      "line": "You changed the bottom but not the top."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 23,
+      "d": 18
      },
      "line": "You added instead of taking away."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-169379a8",
@@ -3246,28 +2663,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{1}{11} + \\frac{1}{2}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "a"
+    "n": 13,
+    "d": 22
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{13}{22}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{1}{11}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{9}{22}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{2}{13}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{1}{11}\\): cut a bar into 11, take 1.",
@@ -3278,23 +2678,29 @@
    "slip": [
     {
      "answer": {
-      "val": "c"
+      "n": 9,
+      "d": 22
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 1,
+      "d": 11
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 2,
+      "d": 13
      },
      "line": "You added the tops and the bottoms."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-28d5ae94",
@@ -3307,28 +2713,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{2}{11} + \\frac{1}{2}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "a"
+    "n": 15,
+    "d": 22
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{15}{22}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{3}{22}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{7}{22}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{3}{13}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{2}{11}\\): cut a bar into 11, take 2.",
@@ -3339,23 +2728,29 @@
    "slip": [
     {
      "answer": {
-      "val": "b"
+      "n": 3,
+      "d": 22
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 7,
+      "d": 22
      },
      "line": "You took away instead of adding."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 3,
+      "d": 13
      },
      "line": "You added the tops and the bottoms."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-280bcfa7",
@@ -3368,28 +2763,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{4}{11} + \\frac{1}{2}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "a"
+    "n": 19,
+    "d": 22
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{19}{22}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{3}{22}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{5}{13}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{5}{22}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{4}{11}\\): cut a bar into 11, take 4.",
@@ -3400,23 +2778,29 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "n": 5,
+      "d": 22
      },
      "line": "You multiplied the bottoms but added the tops as they were."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 5,
+      "d": 13
      },
      "line": "You added the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 3,
+      "d": 22
      },
      "line": "You took away instead of adding."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-14071ecf",
@@ -3429,28 +2813,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{6}{11} - \\frac{1}{2}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "c"
+    "n": 1,
+    "d": 22
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{5}{22}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{23}{22}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{1}{22}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{5}{9}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{6}{11}\\): cut a bar into 11, take 6.",
@@ -3461,23 +2828,29 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "n": 5,
+      "d": 22
      },
      "line": "You changed the bottom but not the top."
     },
     {
      "answer": {
-      "val": "b"
+      "n": 23,
+      "d": 22
      },
      "line": "You added instead of taking away."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 5,
+      "d": 9
      },
      "line": "You took away the tops and the bottoms."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-f7297b88",
@@ -3490,28 +2863,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{7}{11} - \\frac{1}{2}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "b"
+    "n": 3,
+    "d": 22
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{3}{11}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{3}{22}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{2}{3}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{25}{22}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{7}{11}\\): cut a bar into 11, take 7.",
@@ -3522,23 +2878,29 @@
    "slip": [
     {
      "answer": {
-      "val": "d"
+      "n": 25,
+      "d": 22
      },
      "line": "You added instead of taking away."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 2,
+      "d": 3
      },
      "line": "You took away the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 3,
+      "d": 11
      },
      "line": "You changed the bottom but not the top."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-0448b9c1",
@@ -3551,28 +2913,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{8}{11} - \\frac{1}{2}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "c"
+    "n": 5,
+    "d": 22
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{7}{22}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{27}{22}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{5}{22}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{7}{9}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{8}{11}\\): cut a bar into 11, take 8.",
@@ -3583,23 +2928,29 @@
    "slip": [
     {
      "answer": {
-      "val": "b"
+      "n": 27,
+      "d": 22
      },
      "line": "You added instead of taking away."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 7,
+      "d": 9
      },
      "line": "You took away the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "a"
+      "n": 7,
+      "d": 22
      },
      "line": "You changed the bottom but not the top."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   },
   {
    "id": "fraction-operations-cd456193",
@@ -3612,28 +2963,11 @@
    "calc": false,
    "stem": "Work out \\(\\frac{9}{11} - \\frac{1}{2}\\).",
    "diagram": null,
-   "format": "choice",
+   "format": "fraction",
    "answer": {
-    "val": "b"
+    "n": 7,
+    "d": 22
    },
-   "options": [
-    {
-     "val": "a",
-     "label": "\\(\\frac{29}{22}\\)"
-    },
-    {
-     "val": "b",
-     "label": "\\(\\frac{7}{22}\\)"
-    },
-    {
-     "val": "c",
-     "label": "\\(\\frac{8}{9}\\)"
-    },
-    {
-     "val": "d",
-     "label": "\\(\\frac{4}{11}\\)"
-    }
-   ],
    "worked": [
     "Each bar is one whole chocolate bar.",
     "\\(\\frac{9}{11}\\): cut a bar into 11, take 9.",
@@ -3644,23 +2978,29 @@
    "slip": [
     {
      "answer": {
-      "val": "a"
+      "n": 29,
+      "d": 22
      },
      "line": "You added instead of taking away."
     },
     {
      "answer": {
-      "val": "c"
+      "n": 8,
+      "d": 9
      },
      "line": "You took away the tops and the bottoms."
     },
     {
      "answer": {
-      "val": "d"
+      "n": 4,
+      "d": 11
      },
      "line": "You changed the bottom but not the top."
     }
-   ]
+   ],
+   "accept": {
+    "rule": "equivalent"
+   }
   }
  ]
 }
