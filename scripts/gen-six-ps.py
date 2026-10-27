@@ -4387,6 +4387,30 @@ def _metric_4f223446(q):
     return False
 
 
+def fix_fraction_bars(q):
+    """fraction-operations (item 8): the working speaks of chocolate bars the question does not show. 'Each bar is one whole chocolate
+    bar.' goes, and 'cut a bar into 3, take 1' becomes 'cut one whole into 3 equal pieces, take 1'."""
+    new = [re.sub(r"cut a bar into (\d+), take (\d+)\.", r"cut one whole into \1 equal pieces, take \2.", w)
+           for w in q["worked"] if w != "Each bar is one whole chocolate bar."]
+    changed = new != q["worked"]
+    q["worked"] = new
+    return changed
+
+
+def fix_quadratic_names(q):
+    """quadratics-factorise (item 8): slip lines name b and c, which the question never defines. They say what they mean instead."""
+    def say(t):
+        t = t.replace("multiply to \\(c\\)", "multiply to the number on its own")
+        t = t.replace("add to the opposite of \\(b\\)", "add to the opposite of the number in front of \\(x\\)")
+        t = t.replace("add to \\(b\\)", "add to the number in front of \\(x\\)")
+        return t
+    old = json.dumps([q["worked"], q["slip"]])
+    q["worked"] = [say(w) for w in q["worked"]]
+    for sl in q["slip"]:
+        sl["line"] = say(sl["line"])
+    return old != json.dumps([q["worked"], q["slip"]])
+
+
 ID_FIXES = {"powers-roots-7a198409": _powers_roots_7a198409, "area-594fb670": _area_594fb670, "metric-units-4f223446": _metric_4f223446}
 
 
@@ -4397,6 +4421,10 @@ def apply_review_fixes(tid, q):
     for qid, fn in ID_FIXES.items():
         if q["id"].startswith(qid):
             note(fn.__name__.strip("_").split("_")[0] + " " + qid.split("-")[-1], fn(q))
+    if tid == "fraction-operations":
+        note("working without the chocolate bars", fix_fraction_bars(q))
+    if tid == "quadratics-factorise":
+        note("slips name b and c", fix_quadratic_names(q))
     note("slips (c)", RULES.fix_slips(q))
     note("simplest form (b)", RULES.fix_simplest(q))
     note("common difference sign", RULES.fix_common_difference(q))
