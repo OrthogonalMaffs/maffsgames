@@ -1123,6 +1123,125 @@ def check_footer_states(pw, base, html, data, out):
         b.close()
 
 
+def calc_needs(lines):
+    """The calculator functions a question's working uses, read from its lines here (not from the page): labels of the shared
+    calculator's keys (MaffsCalc's aria-labels) that the student must press."""
+    t = ' '.join(lines)
+    need = set()
+    fns = {'sin': ('Sine', 'Inverse sine'), 'cos': ('Cosine', 'Inverse cosine'), 'tan': ('Tangent', 'Inverse tangent')}
+    for name, (plain, inverse) in fns.items():
+        for m in re.finditer(r'(?<![A-Za-z])%s(?![A-Za-z])(\^\{-1\}|\u207b\u00b9)?' % name, t):
+            need.add(inverse if m.group(1) else plain)
+    if '\u03c0' in t or re.search(r'\\pi(?![A-Za-z])', t):
+        need.add('Pi')
+    if '\u221a' in t or r'\sqrt' in t:
+        need.add('Square root')
+    if '\u00b2' in t or re.search(r'\^2(?![0-9])|\^\{2\}', t):
+        need.add('Squared')
+    if re.search(r'\^\{?(?!2(?![0-9]))[-0-9a-zA-Z]', t):
+        need.add('To the power')
+    if '(' in t:
+        need.update(('Open bracket', 'Close bracket'))
+    if re.search(r'\u00f7|\\div|/|\\frac', t):
+        need.add('Divide')
+    if '\u00d7' in t or r'\times' in t:
+        need.add('Times')
+    return need
+
+
+def check_calculator(pw, base, html, data, out):
+    """Every calculator question can be done with the calculator it is served (Jon, 27 Oct 2026: a trig question had no sin).
+    1. Each function the shared calculator must have works: sin 30 = 0.5, sin-1 0.5 = 30 (degrees), cos, tan, their inverses,
+       x squared, square root, powers, pi, brackets.
+    2. For every question marked calculator or optional in the six banks, every operation its working uses (read here) is a key
+       on the panel the page serves it (read from the shared calculator's own panel).
+    3. On a 320 x 568 phone, a trig question: the panel opens, every key is at least 44 px, nothing scrolls sideways, and
+       19 x sin 25 reads 8.029... from the keys."""
+    banks = {}
+    for t in data['covered']:
+        banks[t['id']] = json.load(open(os.path.join(ROOT, 'schools', 'assets', 'six-ps', t['id'] + '.json'), encoding='utf-8'))['questions']
+    calc_qs = [(tid, x) for tid, qs in banks.items() for x in qs if x.get('calc') in (True, 'optional')]
+    if len(calc_qs) < 100:
+        out.append('calculator: only %d calculator questions found in the banks (the check is blind)' % len(calc_qs))
+    b = Browser(pw, base, html, size=(390, 844))
+    try:
+        b.open()
+        cases = [('sin(30)', 0.5), ('asin(0.5)', 30), ('cos(60)', 0.5), ('acos(0.5)', 60), ('tan(45)', 1), ('atan(1)', 45),
+                 ('sin(90)', 1), ('19*sin(25)', 8.0299), ('7.7/8', 0.9625), ('acos(7.7/8)', 15.7405), ('9*sin(15)', 2.3294),
+                 ('sqrt(51)', 7.1414), ('5^2', 25), ('2^3', 8), ('pi*10^2*50', 15707.96), ('(3+4)*2', 14)]
+        for expr, want in cases:
+            got = b.page.evaluate("e => MaffsCalc.evaluate(e)", expr)
+            if got is None or abs(got - want) > max(1e-9, abs(want) * 5e-5):
+                out.append('calculator: %s gives %r, not %s' % (expr, got, want))
+        shown = b.page.evaluate("() => [MaffsCalc.format(MaffsCalc.evaluate('sin(30)')), MaffsCalc.format(MaffsCalc.evaluate('asin(0.5)'))]")
+        if shown != ['0.5', '30']:
+            out.append('calculator: sin 30 and sin-1 0.5 display %r, not [0.5, 30]' % shown)
+        keys = b.page.evaluate("""() => { const o = {};
+            [['basic', {}], ['scientific', { keys: 'scientific' }]].forEach(function (m) { const d = document.createElement('div'); document.body.appendChild(d);
+              MaffsCalc.mount(d, m[1]); o[m[0]] = [...d.querySelectorAll('.maffs-calc-key')].map(k => k.getAttribute('aria-label')).filter(Boolean); d.remove(); });
+            return o; }""")
+        modes = b.page.evaluate("qs => qs.map(q => SixPs.calcMode(q))", [x for _, x in calc_qs])
+        bad = 0
+        for (tid, x), mode in zip(calc_qs, modes):
+            if mode not in keys:
+                out.append('calculator: %s %s is marked calculator but the page serves it none (%r)' % (tid, x['id'], mode))
+                bad += 1
+                continue
+            lack = calc_needs(x['worked']) - set(keys[mode])
+            if lack:
+                bad += 1
+                if bad <= 20:
+                    out.append('calculator: %s %s is served the %s panel, which has no %s key (its working needs it)'
+                               % (tid, x['id'], mode, ', '.join(sorted(lack))))
+        for tid, qs in banks.items():
+            for x in qs:
+                if not x.get('calc') and b.page.evaluate("q => SixPs.calcMode(q)", x) is not None:
+                    out.append('calculator: %s %s is a non-calculator question served a calculator' % (tid, x['id']))
+                    break
+        out.extend('calculator: page error: %s' % e for e in b.errors)
+    finally:
+        b.close()
+    # The phone: a trig question, 320 x 568, served on its own.
+    pick = next(x for _, x in calc_qs if re.search(r'sin\(', ' '.join(x['worked'])) and x['format'] == 'number')
+    topic = [t for t in data['covered'] if any(x['id'] == pick['id'] for x in banks[t['id']])][0]
+    bank = json.load(open(os.path.join(ROOT, 'schools', 'assets', 'six-ps', topic['id'] + '.json'), encoding='utf-8'))
+    bank['questions'] = [dict(pick, id='%s-c%d' % (pick['id'], i)) for i in range(5)]
+    p = Browser(pw, base, html, size=(320, 568))
+    p.page.set_default_timeout(20000)
+    p.real[topic['id']] = bank
+    others = [x['id'] for x in data['covered'] if x['id'] != topic['id']][:K - 1]
+    sess = {'v': 2, 'plan': [{'id': x} for x in [topic['id']] + others], 'i': 0, 'results': {}, 'cur': None, 'qn': 0,
+            'finishedSent': False, 'feedbackSent': False}
+    p.ctx.add_init_script("try { var s = %s; s.at = Date.now(); localStorage.setItem('six-ps-session-v2', JSON.stringify(s)); } catch (e) {}" % json.dumps(sess))
+    try:
+        p.open()
+        p.page.tap('#resumeBtn')
+        p.page.wait_for_selector('#play:not([hidden])', timeout=8000)
+        p.page.wait_for_selector('#qCalcMount .maffs-calc-toggle', timeout=4000)
+        p.page.tap('#qCalcMount .maffs-calc-toggle')
+        p.page.wait_for_selector('#qCalcMount .maffs-calc-panel:not([hidden])', timeout=4000)
+        for k in ['1', '9', '\u00d7', 'sin', '2', '5', ')', '=']:
+            p.page.evaluate("""k => { const b = [...document.querySelectorAll('#qCalcMount .maffs-calc-key')].find(e => e.textContent === k);
+                if (!b) throw new Error('no key ' + k); b.click(); }""", k)
+        shown = p.page.evaluate("() => document.querySelector('#qCalcMount .maffs-calc-result').textContent")
+        if not shown.startswith('8.029'):
+            out.append('calculator at 320 x 568: 19 x sin(25) reads %r, not 8.029...' % shown)
+        m = p.page.evaluate("""() => ({ sx: document.documentElement.scrollWidth - innerWidth,
+            small: [...document.querySelectorAll('#qCalcMount .maffs-calc-key')].map(e => e.getBoundingClientRect())
+              .filter(r => r.width < 43.5 || r.height < 43.5).length,
+            keys: document.querySelectorAll('#qCalcMount .maffs-calc-key').length,
+            deg: !!document.querySelector('#qCalcMount .maffs-calc-mode') && document.querySelector('#qCalcMount .maffs-calc-mode').textContent })""")
+        if m['sx'] > 0:
+            out.append('calculator at 320 x 568: the page scrolls sideways by %d px with the scientific panel open' % m['sx'])
+        if m['small']:
+            out.append('calculator at 320 x 568: %d of %d keys are under 44 px' % (m['small'], m['keys']))
+        if m['deg'] != 'DEG':
+            out.append('calculator: the angle mode is %r, not DEG, when a trig question opens' % m['deg'])
+        out.extend('calculator at 320 x 568: page error: %s' % e for e in p.errors)
+    finally:
+        p.close()
+
+
 def check_second_copy(pw, base, html, data, out):
     """A page whose script runs twice (a browser that re-runs scripts on resume) still behaves as one: Next topic moves on by one, and
     one answer sends one event."""
@@ -1267,6 +1386,7 @@ def run_unit(pw, base, html, data, out, unit):
             b.close()
     elif unit == 'start':
         guarded(out, 'the start screen at 320 x 568', lambda: check_start_screen(pw, base, html, out))
+        guarded(out, 'the calculator on every calculator question', lambda: check_calculator(pw, base, html, data, out))
     elif unit == 'expiry':
         guarded(out, 'the saved-session expiry', lambda: check_expiry(pw, base, html, data, out))
     elif unit == 'chosen':
@@ -1331,6 +1451,15 @@ def guarded(out, what, f):
 # ---------------------------------------------------------------- plants
 # (what, [(old, new)], what it needs, a pattern its finding must match). Every old text occurs exactly once in the page.
 PLANTS = [
+    ('a trig question served the basic calculator (no sin key; Jon, 27 Oct)',
+     [("? 'scientific' : 'basic';", "? 'basic' : 'basic';")],
+     ['start'], r'calculator: .* has no (Sine|Cosine|Tangent|Inverse)'),
+    ('a calculator that is never mounted',
+     [("host.hidden = !(mode && window.MaffsCalc);", "host.hidden = true;")],
+     ['start'], r'the calculator on every calculator question stopped|marked calculator but the page serves it none'),
+    ('a non-calculator question served a calculator',
+     [("if (!qq || !qq.calc) return null;", "if (!qq) return null;")],
+     ['start'], r'non-calculator question served a calculator'),
     ('a footer that stays on the page during a run (Jon, 27 Oct)',
      [("foot.style.display = (id === 'intro' || id === 'results') ? '' : 'none';", "foot.style.display = '';")],
      ['results'], r'footer states, a question: footer links are on the page during a run'),
