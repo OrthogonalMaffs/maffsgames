@@ -617,6 +617,9 @@ jobs:
           region=$(curl -s -m 5 -H Metadata:true "${REGION_URL:-http://169.254.169.254/metadata/instance/compute/location?api-version=2021-02-01&format=text}" 2>/dev/null | tr 'A-Z' 'a-z' | tr -d '[:space:]' || true)
           [[ "$region" =~ ^[a-z0-9]{3,30}$ ]] || region=unknown
           timing="$RUNNER_TEMP/ci-timing/timing.txt"; mkdir -p "$(dirname "$timing")"; echo "$GROUP" > "$timing"; echo "region: $region" >> "$timing"
+          # SHARD: a sharded verifier (scripts/ci_shards.py) appends one "unit <script> :: <id>  (Ns)" line per work unit here,
+          # just before its line's "ok" entry; the timings job records the medians and ci-groups.py divides it from them.
+          export CI_UNIT_TIMING="$timing"
           { echo "### $GROUP"; echo; echo "Time budget: $(mmss $budget) (75% of ${TIMEOUT_MIN}m). Runner region: $region."; echo
             echo "| Check | Result | Duration | Group elapsed |"; echo "|---|---|---|---|"; } >> "$GITHUB_STEP_SUMMARY"
           failed=(); slow=""; slowtook=0; slowmed=""; slowgap=-999999

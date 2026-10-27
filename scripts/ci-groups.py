@@ -105,6 +105,25 @@ PR (--check, --check-measured) a group past 80% is a fault only where the change
 (group_faults(), as line_faults() scopes a single line; the base unreadable selects everything); otherwise, and on a
 run-all change, a warning naming it. Past 100% is a fault everywhere. SETUP_ONLY (exit 2) is unchanged.
 
+A LONG VERIFIER'S PARTS ARE CHOSEN HERE, FROM ITS UNITS' TIMES (contract SHARD, Jon 27 Oct 2026; canon §7.8.1). The packer
+moves lines and never splits one, and until SHARD each long verifier split its own work by hand, so a part that outgrew the
+per-line limit turned the first PR that ran it red: Shape Shifter on 26 Oct (a part grew), Just Pythag It, Bruv on 27 Oct
+(the setup median went from about 20 s to 46 s; the per-job font fetch, since removed). Now such a verifier declares
+
+    # ci-shards: [<tier> |] <label> | <args> | <parts until timed>
+
+lists its work as named units through scripts/ci_shards.py (bank_common re-exports it), and runs the slice --shard i/k
+gives it. expand() turns the header into k lines, "<label>, part i of k", each "python scripts/<it>.py <args> --shard i/k".
+k is chosen by choose_parts() from the verifier's unit medians (ci-timings.json "units", recorded from the "unit ..."
+lines ci_shards writes to the group's timing file) and its per-part overhead (the part's time less its units'; "overhead"):
+the fewest parts whose every estimate (overhead plus its units, dealt by ci_shards.deal) plus the median setup is at most
+SHARD_TARGET (75%) of the per-line limit. Until a main run has timed its units, k is the header's number. The pack keeps k
+(ci-pack.json "shards"), and a repack keeps the previous k while it still meets the target and is at most one more than
+needed, so the job names do not churn; a part that grows past the target is re-divided on the next repack, not warned
+about. A part line is estimated from its units (its own label's median is not used once units are timed), so a unit too
+long to share a part shows as a split candidate naming that unit. The deal is a partition by construction (ci_shards'
+self-test), so no verifier checks its own parts any more.
+
 Old headers ("# ci-line: B4 | ..."): a hand-made group id is still accepted and read as its tier only (L* is
 the lock tier, any other is content), so a branch made before CI-BALANCE still passes; the repo's own headers
 use the new form. Lines run in the order: scripts by file name, then each script's headers in file order. The
@@ -116,6 +135,8 @@ import argparse, json, os, re, sys, time
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRIPTS = os.path.join(ROOT, "scripts")
+sys.path.insert(0, SCRIPTS)
+import ci_shards  # noqa: E402  (stdlib only: how a verifier's units are dealt into parts, shared with the verifiers)
 WORKFLOW = os.path.join(ROOT, ".github", "workflows", "check-site.yml")
 PREFIX = "Content verifiers"
 TIMINGS = "scripts/ci-timings.json"     # each content line's seconds on a main full run (--record-timings)
@@ -148,6 +169,8 @@ SETUP = 25                         # seconds before a group's first line, when t
 HISTORY = 5                        # main runs kept in ci-timings.json; the estimates are their medians
 REGION_KEEP = 10                   # times kept per line per region in ci-timings-regions.json (REGION-HISTORY, 15 Oct 2026)
 REGION_RUNS = 20                   # run ids remembered there, so the same run recorded twice is counted once
+SHARD_TARGET = 0.75                # of the per-line limit (TARGET of the budget): a sharded verifier's parts fit it (SHARD)
+OVERHEAD = 10                      # seconds a part spends outside its units (start-up), until a run has recorded it
 # The hand-made group ids before CI-BALANCE: still accepted in a header, as their tier only.
 OLD_IDS = {"A", "B1", "B2", "B3", "B4", "B5", "C1", "C2", "C3", "C4", "D1", "D2", "E", "E2",
            "L1", "L2", "L3", "L4", "L5"}
@@ -171,6 +194,8 @@ def tier_of(field):
 LINE = re.compile(r"^# ci-line:(.*)$", re.M)
 DEPS = re.compile(r"^# ci-deps:(.*)$", re.M)
 HELD = re.compile(r"^# ci-held:(.*)$", re.M)
+SHARDS = re.compile(r"^# ci-shards:(.*)$", re.M)
+PART_LABEL = "%s, part %d of %d"
 
 
 def command(script, args):
@@ -183,9 +208,10 @@ def command(script, args):
 
 
 def parse(name, text):
-    """{'lines': [(tier field, label, cmd)], 'deps': [paths], 'held': reason or None, 'errors': [str]}.
-    The tier field is '' for a two-field line (content), else what the header wrote (a tier, or an old id)."""
-    out = {"lines": [], "deps": [], "held": None, "errors": []}
+    """{'lines': [(tier field, label, cmd)], 'shards': [(tier field, label, args, parts until timed)], 'deps': [paths],
+    'held': reason or None, 'errors': [str]}. The tier field is '' for a line with no tier (content), else what the header
+    wrote (a tier, or an old id)."""
+    out = {"lines": [], "shards": [], "deps": [], "held": None, "errors": []}
     for m in LINE.finditer(text):
         parts = [p.strip() for p in m.group(1).split("|")]
         if len(parts) == 2:
@@ -199,6 +225,19 @@ def parse(name, text):
             out["errors"].append("%s: a ci-line with no label: %r" % (name, m.group(0)))
             continue
         out["lines"].append((group, label, command(name, args)))
+    for m in SHARDS.finditer(text):
+        parts = [p.strip() for p in m.group(1).split("|")]
+        if len(parts) == 3:
+            parts = [""] + parts
+        if len(parts) != 4 or not parts[1] or not re.match(r"^[1-9]\d*$", parts[3]):
+            out["errors"].append("%s: a ci-shards header is '[<tier> |] <label> | <args> | <parts until timed>': %r"
+                                 % (name, m.group(0)))
+            continue
+        if "&&" in parts[2] or "--shard" in parts[2]:
+            out["errors"].append("%s: a ci-shards header's <args> are one run of the script, without '&&' or --shard "
+                                 "(each part adds --shard i/k): %r" % (name, m.group(0)))
+            continue
+        out["shards"].append((parts[0], parts[1], parts[2], int(parts[3])))
     for m in DEPS.finditer(text):
         out["deps"] += m.group(1).split()
     held = [m.group(1).strip() for m in HELD.finditer(text)]
@@ -217,7 +256,7 @@ def headers():
             continue
         with open(os.path.join(SCRIPTS, name), encoding="utf-8") as f:
             info = parse(name, f.read())
-        if info["lines"] or info["deps"] or info["held"] or info["errors"]:
+        if info["lines"] or info["shards"] or info["deps"] or info["held"] or info["errors"]:
             out[name] = info
     return out
 
@@ -230,17 +269,86 @@ def read_json(rel):
         return json.load(f)
 
 
-def all_lines(hdrs=None):
-    """[(tier, label, cmd)] in run order: scripts by file name, then header order. Unknown tiers are left out
-    (errors() reports them)."""
+def unit_medians(script, timings):
+    """{unit id: median seconds} for a sharded verifier, from the timings' "units" (empty until a main run times them)."""
+    return timings.get("units", {}).get(script, {})
+
+
+def part_estimates(script, k, timings):
+    """[seconds] for each of a sharded verifier's k parts: its per-part overhead plus the units ci_shards.deal() gives it.
+    Only the units the timings know are counted (a new unit is counted once a main run times it; --check-measured counts
+    it from the pull request's own run)."""
+    times = unit_medians(script, timings)
+    over = timings.get("overhead", {}).get(script, OVERHEAD)
+    return [over + sum(times[u] for u in p) for p in ci_shards.deal(sorted(times), k, times)]
+
+
+def shard_cap(tier, timings):
+    """The most a part may take, setup excluded: SHARD_TARGET of the per-line limit (TARGET of the budget), less the
+    median setup."""
+    return SHARD_TARGET * TARGET * budget(tier) - timings.get("setup", SETUP)
+
+
+def choose_parts(script, tier, start, timings, prev_k=None):
+    """(k, how): how many parts a sharded verifier runs in. Until a main run has timed its units, the header's number.
+    Then the fewest parts whose every estimate fits shard_cap(); if no number does (one unit is too long to share a
+    part), one part per unit, and the line check names the unit. The previous k (the pack's) is kept while it fits and
+    is at most one more than needed, so a time hovering at a boundary does not rename the lines on every repack."""
+    times = unit_medians(script, timings)
+    if not times:
+        return start, "not yet timed: the header's %d" % start
+    cap = shard_cap(tier, timings)
+    fits = lambda k: max(part_estimates(script, k, timings)) <= cap
+    need = next((k for k in range(1, len(times) + 1) if fits(k)), len(times))
+    if prev_k and need <= prev_k <= min(need + 1, len(times)) and fits(prev_k):
+        return prev_k, "kept from the pack (%d needed)" % need
+    return need, "chosen from %d timed unit(s)" % len(times)
+
+
+def expand(hdrs=None, timings=None, prev=None):
+    """(lines, est, timed, shards) for every declared line, in run order (scripts by file name, then each script's
+    ci-lines, then its parts); unknown tiers are left out (errors() reports them).
+    lines: [(tier, label, cmd)]; a ci-shards header gives k lines PART_LABEL % (label, i, k), each adding --shard i/k.
+    est: {label: seconds}: a ci-line's median (else its tier's default); a part's estimate from its units once they are
+    timed, else its own label's median, else the default. timed: the labels whose figure is a timing, not a default.
+    shards: {script: {"parts", "how", "tier", "label"}} for the pack."""
     hdrs = headers() if hdrs is None else hdrs
-    out = []
+    timings = read_json(TIMINGS) if timings is None else timings
+    prev = read_json(PACK) if prev is None else prev
+    secs = timings.get("lines", {})
+    lines, est, timed, shards = [], {}, set(), {}
     for name in sorted(hdrs):
         for field, label, cmd in hdrs[name]["lines"]:
             t = tier_of(field)
             if t:
-                out.append((t, label, cmd))
-    return out
+                lines.append((t, label, cmd))
+                est[label] = secs.get(label, TIERS[t][3])
+                if label in secs:
+                    timed.add(label)
+        for field, label, args, start in hdrs[name].get("shards", []):
+            t = tier_of(field)
+            if not t:
+                continue
+            prev_k = (prev.get("shards", {}).get(name) or {}).get("parts")
+            k, how = choose_parts(name, t, start, timings, prev_k)
+            shards[name] = {"parts": k, "how": how, "tier": t, "label": label}
+            pe = part_estimates(name, k, timings) if unit_medians(name, timings) else None
+            for i in range(1, k + 1):
+                l = PART_LABEL % (label, i, k)
+                lines.append((t, l, command(name, ("%s --shard %d/%d" % (args, i, k)).strip())))
+                if pe is not None:
+                    est[l] = int(round(pe[i - 1]))
+                    timed.add(l)
+                else:
+                    est[l] = secs.get(l, TIERS[t][3])
+                    if l in secs:
+                        timed.add(l)
+    return lines, est, timed, shards
+
+
+def all_lines(hdrs=None, timings=None, prev=None):
+    """[(tier, label, cmd)] in run order (expand())."""
+    return expand(hdrs, timings, prev)[0]
 
 
 def gid_key(gid):
@@ -248,7 +356,7 @@ def gid_key(gid):
     return (m.group(1), int(m.group(2))) if m else (gid, 0)
 
 
-def pack(lines=None, timings=None, prev=None):
+def pack(lines=None, timings=None, prev=None, est=None):
     """{tier: {group id: [labels]}}: each tier's lines dealt into groups estimated at most TARGET of the budget.
 
     Starts from prev (ci-pack.json: {tier: {label: id}}). A group over the target gives up lines until it is
@@ -266,7 +374,7 @@ def pack(lines=None, timings=None, prev=None):
         mine = [l for t, l, _ in lines if t == tier]
         if not mine:
             continue
-        est = {l: secs.get(l, default) for l in mine}
+        est_t = {l: est[l] if est is not None and l in est else secs.get(l, default) for l in mine}
         target = TARGET * budget(tier)
         old = prev.get(tier, {})
         groups, loose = {}, []
@@ -276,17 +384,17 @@ def pack(lines=None, timings=None, prev=None):
                 groups.setdefault(g, []).append(l)
             else:
                 loose.append(l)
-        total = lambda g: setup + sum(est[x] for x in groups[g])
+        total = lambda g: setup + sum(est_t[x] for x in groups[g])
         for g in sorted(groups, key=gid_key):
             while len(groups[g]) > 1 and total(g) > target:
                 over = total(g) - target
-                enough = [x for x in groups[g] if est[x] >= over]
-                x = (min(enough, key=lambda x: (est[x], x)) if enough
-                     else max(groups[g], key=lambda x: (est[x], x)))
+                enough = [x for x in groups[g] if est_t[x] >= over]
+                x = (min(enough, key=lambda x: (est_t[x], x)) if enough
+                     else max(groups[g], key=lambda x: (est_t[x], x)))
                 groups[g].remove(x)
                 loose.append(x)
-        for x in sorted(loose, key=lambda x: (-est[x], x)):
-            fit = [g for g in groups if total(g) + est[x] <= target]
+        for x in sorted(loose, key=lambda x: (-est_t[x], x)):
+            fit = [g for g in groups if total(g) + est_t[x] <= target]
             if fit:
                 g = max(fit, key=lambda g: (target - total(g), [-n for n in gid_key(g)[1:]]))
             else:
@@ -301,27 +409,40 @@ def pack(lines=None, timings=None, prev=None):
 
 
 def groups(hdrs=None, timings=None, prev=None):
-    """[{'id', 'tier', 'name', 'timeout', 'lines': [(label, cmd)]}] by tier, then id; lines in run order."""
-    lines = all_lines(hdrs)
+    """[{'id', 'tier', 'name', 'timeout', 'lines': [(label, cmd)], 'secs', 'timed', 'shards'}] by tier, then id; lines in
+    run order. 'secs' is each line's estimate and 'timed' the lines whose estimate is a timing (expand()); 'shards' is
+    expand()'s choice of parts, the same on every group, for the pack."""
+    timings = read_json(TIMINGS) if timings is None else timings
+    prev = read_json(PACK) if prev is None else prev
+    lines, est, timed, shards = expand(hdrs, timings, prev)
     order = {l: i for i, (_, l, _) in enumerate(lines)}
     cmd = {l: c for _, l, c in lines}
     out = []
-    for tier, gs in pack(lines, timings, prev).items():
+    for tier, gs in pack(lines, timings, prev, est).items():
         prefix, _, timeout, _ = TIERS[tier]
         for g, labels in gs.items():
+            mine = sorted(labels, key=order.get)
             out.append({"id": g, "tier": tier, "name": "%s %s" % (prefix, g), "timeout": timeout,
                         "job_timeout": timeout + PULL_ALLOWANCE,
-                        "lines": [(l, cmd[l]) for l in sorted(labels, key=order.get)]})
+                        "lines": [(l, cmd[l]) for l in mine], "secs": {l: est[l] for l in mine},
+                        "timed": sorted(l for l in mine if l in timed), "shards": shards})
     return out
+
+
+def line_secs(g, timings):
+    """{label: (seconds, timed)} for a group's lines: groups()' estimates, or, for a group built without them (a
+    self-test's hand-made group), each line's median, else its tier's default."""
+    if "secs" in g:
+        return {l: (g["secs"][l], l in g["timed"]) for l, _ in g["lines"]}
+    secs, default = timings.get("lines", {}), TIERS[g["tier"]][3]
+    return {l: (secs.get(l, default), l in secs) for l, _ in g["lines"]}
 
 
 def estimate(g, timings=None):
     """(estimated seconds, [labels with no timing]) for a group: setup plus its lines (no timing: the default)."""
     timings = read_json(TIMINGS) if timings is None else timings
-    secs = timings.get("lines", {})
-    default = TIERS[g["tier"]][3]
-    return (timings.get("setup", SETUP) + sum(secs.get(l, default) for l, _ in g["lines"]),
-            [l for l, _ in g["lines"] if l not in secs])
+    ls = line_secs(g, timings)
+    return (timings.get("setup", SETUP) + sum(t for t, _ in ls.values()), [l for l, _ in g["lines"] if not ls[l][1]])
 
 
 def script_of(cmd):
@@ -335,18 +456,28 @@ def split_candidates(gs=None, timings=None):
     TARGET of its group's budget (PER-LINE-LIMIT, 20 Oct 2026; LINE-LIMIT-SCOPE, 21 Oct 2026). The packer can move a line
     between groups but cannot split it, so a line this size is one slow setup from failing a group that nothing can
     repack: split its script. A line with no timing counts as its tier's default and is not judged here (the group check
-    and the NO TIMING flag cover it). By label, so the pack's list is stable."""
+    and the NO TIMING flag cover it). By label, so the pack's list is stable.
+    A sharded verifier's part (SHARD) is judged on its estimate from its units: choose_parts() has already divided the
+    verifier as far as its units allow, so a part still over the limit holds a unit too long to share a part, and the
+    candidate names that unit ("unit": {"id", "seconds"}): divide the unit, in the verifier."""
     timings = read_json(TIMINGS) if timings is None else timings
     gs = groups(timings=timings) if gs is None else gs
-    secs, setup = timings.get("lines", {}), timings.get("setup", SETUP)
+    setup = timings.get("setup", SETUP)
     out = []
     for g in gs:
         b = budget(g["tier"])
+        ls = line_secs(g, timings)
         for l, c in g["lines"]:
-            if l in secs and secs[l] + setup > TARGET * b:
-                out.append({"label": l, "median": secs[l], "setup": setup, "percent": int(100 * (secs[l] + setup) / b),
-                            "group": g["name"], "script": script_of(c), "budget": b,
-                            "measured": timings.get("measured", {}).get(l)})
+            sec, timed = ls[l]
+            if timed and sec + setup > TARGET * b:
+                cand = {"label": l, "median": sec, "setup": setup, "percent": int(100 * (sec + setup) / b),
+                        "group": g["name"], "script": script_of(c), "budget": b,
+                        "measured": timings.get("measured", {}).get(l)}
+                units = unit_medians(os.path.basename(cand["script"] or ""), timings) if "--shard " in c else {}
+                if units:
+                    big = max(sorted(units), key=lambda u: units[u])
+                    cand["unit"] = {"id": big, "seconds": units[big]}
+                out.append(cand)
     return sorted(out, key=lambda c: c["label"])
 
 
@@ -358,10 +489,15 @@ def source(m):
 
 
 def line_message(c):
+    if c.get("unit"):
+        how = ("Its verifier is already divided as far as its units allow: its longest unit, %r, takes %ss; divide that "
+               "unit in the verifier (scripts/ci_shards.py)." % (c["unit"]["id"], c["unit"]["seconds"]))
+    else:
+        how = "Divide its script into work units (# ci-shards, scripts/ci_shards.py)."
     return ("%s: line over the per-line limit: %s %ss %s + %ss setup = %ds, %d%% of its %ds budget; "
-            "the limit is %d%% (%ds). Split its script (--part, --shard)."
+            "the limit is %d%% (%ds). %s"
             % (c["group"], c["label"], c["median"], source(c.get("measured")), c["setup"], c["median"] + c["setup"],
-               c["percent"], c["budget"], TARGET * 100, TARGET * c["budget"]))
+               c["percent"], c["budget"], TARGET * 100, TARGET * c["budget"], how))
 
 
 def line_faults(gs=None, timings=None, selected=()):
@@ -385,23 +521,24 @@ def over_budget(gs=None, timings=None):
     `message` names the group, its estimate and its largest lines."""
     timings = read_json(TIMINGS) if timings is None else timings
     gs = groups(timings=timings) if gs is None else gs
-    secs, meas = timings.get("lines", {}), timings.get("measured", {})
+    meas = timings.get("measured", {})
     out = []
     for g in gs:
         est, _ = estimate(g, timings)
         b = budget(g["tier"])
         if est > FAIL * b:
             default = TIERS[g["tier"]][3]
-            big = sorted(g["lines"], key=lambda lc: -secs.get(lc[0], default))[:3]
+            ls = line_secs(g, timings)
+            big = sorted(g["lines"], key=lambda lc: -ls[lc[0]][0])[:3]
             msg = ("%s: estimated %ds, past %d%% of its %ds budget (%d%%). Largest: %s. A line this long "
-                   "cannot share a job: split its script (--part, --shard)."
+                   "cannot share a job: divide its script into work units (# ci-shards, scripts/ci_shards.py)."
                    % (g["name"], est, FAIL * 100, b, 100 * est / b,
-                      "; ".join("%s %ss%s" % (l, secs.get(l, "no timing, counted as %d" % default),
+                      "; ".join("%s %ss%s" % (l, ls[l][0] if ls[l][1] else "no timing, counted as %d" % default,
                                               " " + source(meas[l]) if l in meas else "")
                                 for l, _ in big)))
             out.append({"group": g["name"], "estimate": est, "percent": int(100 * est / b), "budget": b, "message": msg,
                         "scripts": sorted({script_of(c) for _, c in g["lines"]} - {None}),
-                        "lines": [{"label": l, "seconds": secs.get(l, default), "script": script_of(c)} for l, c in big]})
+                        "lines": [{"label": l, "seconds": ls[l][0], "script": script_of(c)} for l, c in big]})
     return sorted(out, key=lambda o: o["group"])
 
 
@@ -484,11 +621,13 @@ def pr_selection(env=None, deps=None):
 def pack_record(gs, timings=None):
     """ci-pack.json's content: {tier: {label: group id}}, "split-candidates" (LINE-LIMIT-SCOPE): each line over the
     per-line limit, as {label, median, setup, percent}, and "over-budget" (MAIN-WARN): each group past FAIL, as {group,
-    estimate, percent, lines: its largest, each {label, seconds, script}}, for the lane that splits them. pack() reads
-    only the tiers."""
+    estimate, percent, lines: its largest, each {label, seconds, script}}, for the lane that splits them; and "shards"
+    (SHARD): each sharded verifier's parts, {script: {parts, how, tier, label}}, which the next repack keeps while they
+    still fit (choose_parts()). pack() reads only the tiers."""
     rec = {}
     for g in gs:
         rec.setdefault(g["tier"], {}).update({l: g["id"] for l, _ in g["lines"]})
+    rec["shards"] = dict(sorted((gs[0].get("shards") or {}).items())) if gs else {}
     rec["split-candidates"] = [{k: c[k] for k in ("label", "median", "setup", "percent")}
                                for c in split_candidates(gs, timings)]
     rec["over-budget"] = [{k: o[k] for k in ("group", "estimate", "percent", "lines")} for o in over_budget(gs, timings)]
@@ -525,11 +664,18 @@ def errors(hdrs=None):
                             % (name, group, ", ".join(TIER_ORDER)))
             if "|" in label:
                 errs.append("%s: a label may not contain '|'" % name)
-        if info["held"] and info["lines"]:
-            errs.append("%s: declares both ci-held and ci-line" % name)
+        for group, label, _, _ in info.get("shards", []):
+            if tier_of(group) is None:
+                errs.append("%s: ci-shards names %r, which is not a tier (%s; or leave it out for content)"
+                            % (name, group, ", ".join(TIER_ORDER)))
+        if len(info.get("shards", [])) > 1:
+            errs.append("%s: declares %d ci-shards headers: one verifier, one list of units"
+                        % (name, len(info["shards"])))
+        if info["held"] and (info["lines"] or info.get("shards")):
+            errs.append("%s: declares both ci-held and ci-line or ci-shards" % name)
     seen = {}
     for name, info in sorted(hdrs.items()):
-        for _, label, _ in info["lines"]:
+        for label in [l for _, l, _ in info["lines"]] + [l for _, l, _, _ in info.get("shards", [])]:
             if label in seen:
                 errs.append("%s: label %r is also %s's: labels key the timings and the pack" % (name, label, seen[label]))
             seen.setdefault(label, name)
@@ -632,6 +778,27 @@ def read_run(run_id, from_dir=None):
         tot = re.findall(r"group total: (\d+)m(\d+)s of", text)
         return mine, (int(tot[-1][0]) * 60 + int(tot[-1][1]) - sum(t for _, t in mine)) if tot and mine else None
 
+    def parse_units(text):
+        """(units, overhead) from one timing file (SHARD): ci_shards' "unit" lines, each belonging to the next line's
+        "ok"/"FAILED" entry (a line's units are written while it runs). units {script: {unit id: seconds}}; overhead
+        {script: seconds}, a part's time less its units', the largest of the run's parts."""
+        units, over, pending = {}, {}, []
+        for row in text.splitlines():
+            u = ci_shards.UNIT_LINE.match(row)
+            if u:
+                pending.append((u.group(1), u.group(2), float(u.group(3))))
+                continue
+            m = re.search(r"(?:ok|FAILED)  (.+?)  \((\d+)s; group at", row)
+            if m:
+                spent = {}
+                for script, uid, t in pending:
+                    units.setdefault(script, {})[uid] = t
+                    spent[script] = spent.get(script, 0) + t
+                for script, t in spent.items():
+                    over[script] = max(over.get(script, 0), max(0, int(round(int(m.group(2)) - t))))
+                pending = []
+        return units, over
+
     def region_of(text):
         """The runner's Azure region: the 'region: x' line the group step saves in its timing file, or the 'Region: x'
         line the runner prints at the head of a job log; 'unknown' when neither is there."""
@@ -665,16 +832,24 @@ def read_run(run_id, from_dir=None):
         jobs = json.loads(gh("repos/{owner}/{repo}/actions/runs/%s/jobs?per_page=100" % run_id))["jobs"]
         texts = [gh("repos/{owner}/{repo}/actions/jobs/%s/logs" % j["id"]) for j in jobs
                  if j["name"].startswith(PREFIX) or j["name"].startswith(LOCK_PREFIX)]
-    secs, setups, regions = {}, [], {}
+    secs, setups, regions, units, over = {}, [], {}, {}, {}
     for text in texts:
         mine, setup = parse(text)
         secs.update(mine)
+        u, o = parse_units(text)
+        for script, d in u.items():
+            units.setdefault(script, {}).update(d)
+        for script, t in o.items():
+            over[script] = max(over.get(script, 0), t)
         regions.update({label: region_of(text) for label, _ in mine})
         if setup is not None:
             setups.append(setup)
     rec = {"run": int(run_id), "date": run["created_at"][:10], "branch": run["head_branch"],
            "event": run["event"], "setup": max(setups) if setups else SETUP, "lines": dict(sorted(secs.items())),
            "regions": dict(sorted(regions.items()))}
+    if units:
+        rec["units"] = {s: dict(sorted(d.items())) for s, d in sorted(units.items())}
+        rec["overhead"] = dict(sorted(over.items()))
     return rec
 
 
@@ -685,17 +860,35 @@ def median_int(xs):
     return int(xs[n // 2]) if n % 2 else int((xs[n // 2 - 1] + xs[n // 2] + 1) // 2)
 
 
+def median_tenths(xs):
+    """The median of a non-empty list of seconds, to a tenth (a unit's time: many take under a second)."""
+    xs = sorted(xs)
+    n = len(xs)
+    return round(xs[n // 2] if n % 2 else (xs[n // 2 - 1] + xs[n // 2]) / 2, 1)
+
+
 def medians(history):
     """The timings every reader sees, from a list of run records (oldest first): the newest run's id, date,
-    branch and event; the median setup; and each line's median over the runs that timed it."""
+    branch and event; the median setup; and each line's median over the runs that timed it. With sharded verifiers
+    (SHARD), also "units" ({script: {unit id: median}}, over the runs that timed each unit) and "overhead" ({script:
+    median}); a history with no unit times has neither key."""
     last = history[-1]
-    per = {}
+    per, units, over = {}, {}, {}
     for r in history:
         for label, sec in r.get("lines", {}).items():
             per.setdefault(label, []).append(sec)
-    return {"run": last["run"], "date": last["date"], "branch": last.get("branch", ""), "event": last.get("event", ""),
-            "setup": median_int([r.get("setup", SETUP) for r in history]),
-            "lines": {k: median_int(v) for k, v in sorted(per.items())}}
+        for script, d in r.get("units", {}).items():
+            for uid, sec in d.items():
+                units.setdefault(script, {}).setdefault(uid, []).append(sec)
+        for script, sec in r.get("overhead", {}).items():
+            over.setdefault(script, []).append(sec)
+    out = {"run": last["run"], "date": last["date"], "branch": last.get("branch", ""), "event": last.get("event", ""),
+           "setup": median_int([r.get("setup", SETUP) for r in history]),
+           "lines": {k: median_int(v) for k, v in sorted(per.items())}}
+    if units:
+        out["units"] = {s: {u: median_tenths(v) for u, v in sorted(d.items())} for s, d in sorted(units.items())}
+        out["overhead"] = {s: median_int(v) for s, v in sorted(over.items())}
+    return out
 
 
 def add_run(existing, rec, keep=HISTORY):
@@ -704,7 +897,8 @@ def add_run(existing, rec, keep=HISTORY):
     figures at the top level) counts as one run of history; the same run twice is counted once."""
     hist = existing.get("history")
     if hist is None:
-        hist = [{k: existing[k] for k in ("run", "date", "branch", "event", "setup", "lines") if k in existing}] \
+        hist = [{k: existing[k] for k in ("run", "date", "branch", "event", "setup", "lines", "units", "overhead")
+                 if k in existing}] \
             if existing.get("lines") else []
     hist = [r for r in hist if r.get("run") != rec["run"]] + [rec]
     hist = hist[-keep:]
@@ -805,8 +999,9 @@ def measured_timings(timings, rec, selected, hdrs=None):
     laid over. A line the change selects (`selected`: scripts, True for every line, () for none) takes the larger of its
     median and this run's time; a line with no median takes this run's time; every other line keeps its median. The
     setup is the committed median, never the run's. "measured" records {label: {"median", "run"}} for each line whose
-    figure this run set or confirmed, for the messages. Pure."""
-    script = {l: script_of(c) for _, l, c in all_lines(hdrs)}
+    figure this run set or confirmed, for the messages. A sharded verifier's units and overhead (SHARD) are laid over the
+    same way, by its script, so a pull request that grows a unit is judged on the parts the next repack would choose. Pure."""
+    script = {l: script_of(c) for _, l, c in all_lines(hdrs, timings)}
     secs, meas = dict(timings.get("lines", {})), {}
     for label, t in rec.get("lines", {}).items():
         med = timings.get("lines", {}).get(label)
@@ -817,7 +1012,23 @@ def measured_timings(timings, rec, selected, hdrs=None):
         else:
             continue
         meas[label] = {"median": med, "run": t}
-    return dict(timings, lines=secs, measured=meas)
+    out = dict(timings, lines=secs, measured=meas)
+    units = {s: dict(d) for s, d in timings.get("units", {}).items()}
+    over = dict(timings.get("overhead", {}))
+    for s, d in rec.get("units", {}).items():
+        sel = selected is True or "scripts/" + s in selected
+        for uid, t in d.items():
+            med = units.get(s, {}).get(uid)
+            if med is None:
+                units.setdefault(s, {})[uid] = t
+            elif sel:
+                units[s][uid] = max(med, t)
+        if s in rec.get("overhead", {}):
+            o, med = rec["overhead"][s], over.get(s)
+            over[s] = o if med is None else max(med, o) if sel else med
+    if units:
+        out["units"], out["overhead"] = units, over
+    return out
 
 
 def check_measured(run_id, from_dir, env=None, rec=None, timings=None, hdrs=None, prev=None, deps=None):
@@ -840,7 +1051,10 @@ def check_measured(run_id, from_dir, env=None, rec=None, timings=None, hdrs=None
     # The selection costs ci-deps.py's dependency map; it matters only when this run raised a median, or a line is over
     # the per-line limit.
     base = measured_timings(timings, rec, (), hdrs)
-    grew = any(t > meds[l] for l, t in rec["lines"].items() if l in meds)
+    umeds = timings.get("units", {})
+    grew = (any(t > meds[l] for l, t in rec["lines"].items() if l in meds)
+            or any(t > umeds.get(s, {}).get(u, t) or u not in umeds.get(s, {})
+                   for s, d in rec.get("units", {}).items() for u, t in d.items()))
     gb = groups(hdrs, base, prev)
     if grew or split_candidates(gb, base) or over_budget(gb, base):
         selected, how = pr_selection(env, deps)
@@ -1260,6 +1474,99 @@ def selftest():
     check("the same run twice is counted once", add_regions(reg, rr(12)) == reg)
     check("the file text is small and parses back to the same data",
           json.loads(dump_regions(reg)) == reg and len(dump_regions(reg)) < 2000)
+    # SHARD (27 Oct 2026): a verifier's parts are chosen here from its units' times.
+    check("ci_shards' own self-test (deal is a partition, stable and balanced; the unit line round-trips)",
+          ci_shards.selftest())
+    p = parse("verify-x.py", "# ci-shards: X (all) | --a | 3\n")
+    check("ci-shards: label, args, parts until timed", p["shards"] == [("", "X (all)", "--a", 3)] and not p["errors"])
+    p = parse("verify-x.py", "# ci-shards: lock | X | | 2\n")
+    check("ci-shards in the lock tier, no args", p["shards"] == [("lock", "X", "", 2)])
+    for bad, why in (("# ci-shards: X | --a\n", "no part count"), ("# ci-shards: X | --a && --b | 2\n", "'&&'"),
+                     ("# ci-shards: X | --shard 1/2 | 2\n", "its own --shard"), ("# ci-shards: X | --a | 0\n", "0 parts")):
+        check("ci-shards with %s is an error" % why, bool(parse("verify-x.py", bad)["errors"]))
+    check("two ci-shards headers in one verifier are an error",
+          bool(errors({"verify-x.py": parse("verify-x.py", "# ci-shards: X | | 2\n# ci-shards: Y | | 2\n")})))
+    check("ci-held and ci-shards together are an error",
+          bool(errors({"verify-x.py": parse("verify-x.py", "# ci-shards: X | | 2\n# ci-held: why\n")})))
+    sh = {"verify-x.py": parse("verify-x.py", "# ci-shards: X (all) | --a | 3\n")}
+    gs0 = groups(sh, {"lines": {}, "setup": 20}, {})
+    lines0 = [l for g in gs0 for l in g["lines"]]
+    check("untimed: the header's 3 parts, each '<label>, part i of 3' running --shard i/3",
+          sorted(lines0) == [("X (all), part %d of 3" % i, "python scripts/verify-x.py --a --shard %d/3" % i)
+                             for i in (1, 2, 3)])
+    cap = shard_cap("content", {"setup": 20})
+
+    def grown_case():
+        """PLANT (7): units that grow past the target are re-divided on the next repack (not kept at the old count)."""
+        before = {"lines": {}, "setup": 20, "units": {"verify-x.py": dict.fromkeys("abcd", 40.0)},
+                  "overhead": {"verify-x.py": 10}}
+        g1 = groups(sh, before, {})
+        k1 = g1[0]["shards"]["verify-x.py"]["parts"]
+        after = dict(before, units={"verify-x.py": dict.fromkeys("abcd", 70.0)})
+        g2 = groups(sh, after, pack_record(g1, before))
+        k2 = g2[0]["shards"]["verify-x.py"]["parts"]
+        ests = [g["secs"][l] for g in g2 for l, _ in g["lines"]]
+        return k1 == 2 and k2 == 4 and all(e <= cap for e in ests), (k1, k2, ests)
+    ok, got = grown_case()
+    check("units grown past the target: re-divided 2 -> 4 parts, every part within %ds (%r)" % (cap, got), ok)
+    real_choose = globals()["choose_parts"]
+    globals()["choose_parts"] = lambda script, tier, start, timings, prev_k=None: (prev_k or start, "planted")
+    try:
+        caught = not grown_case()[0]
+    finally:
+        globals()["choose_parts"] = real_choose
+    check("PLANT (7) the parts never re-divided once set (the hand split): caught", caught)
+    t4 = {"lines": {}, "setup": 20, "units": {"verify-x.py": dict.fromkeys("abcd", 40.0)}, "overhead": {"verify-x.py": 10}}
+    check("a previous count that still fits and is one more than needed is kept (no churn)",
+          choose_parts("verify-x.py", "content", 3, t4, 3)[0] == 3 and choose_parts("verify-x.py", "content", 3, t4, 4)[0] == 2
+          and choose_parts("verify-x.py", "content", 3, t4, 1)[0] == 2)
+
+    def big_unit_case():
+        """PLANT (8): a part still over the per-line limit after the repack (one unit too long to share a part) fails
+        --check where the change selects its verifier, naming the unit."""
+        tb = {"lines": {}, "setup": 20, "units": {"verify-x.py": {"big": 190.0, "small": 5.0}}, "overhead": {"verify-x.py": 10}}
+        gb = groups(sh, tb, {})
+        fs = budget_faults(gb, tb, {"scripts/verify-x.py"})
+        ws = line_faults(gb, tb, ())[1]
+        return (any("'big'" in f and "part 1 of 2" in f for f in fs)
+                and any("'big'" in w for w in ws) and not line_faults(gb, tb, ())[0]), fs
+    ok, got = big_unit_case()
+    check("a part over the limit after the repack: a fault where selected, naming the unit; a warning elsewhere (%r)" % got, ok)
+    real_units = globals()["unit_medians"]
+    globals()["unit_medians"] = lambda script, timings: {}
+    try:
+        caught = not big_unit_case()[0]
+    finally:
+        globals()["unit_medians"] = real_units
+    check("PLANT (8) parts judged without their units' times (a part over the limit goes unjudged): caught", caught)
+    with tempfile.TemporaryDirectory() as d:
+        with open(os.path.join(d, "timing.txt"), "w", encoding="utf-8") as f:
+            f.write("Content verifiers 1\nregion: eastus\nunit  verify-x.py :: a  (40.0s)\nunit  verify-x.py :: b  (30.5s)\n"
+                    "ok  X (all), part 1 of 2  (80s; group at 1m40s of 6m)\nunit  verify-x.py :: c  (12.0s)\n"
+                    "ok  X (all), part 2 of 2  (15s; group at 1m55s of 6m)\nok  Other  (5s; group at 2m00s of 6m)\n\n"
+                    "group total: 2m00s of 6m (budget 4m30s)\n")
+        rec = read_run(1, d)
+    check("a run's unit lines are recorded per verifier, with the part's overhead (its time less its units', the largest)",
+          rec["units"] == {"verify-x.py": {"a": 40.0, "b": 30.5, "c": 12.0}} and rec["overhead"] == {"verify-x.py": 10}
+          and rec["lines"]["X (all), part 1 of 2"] == 80 and rec["setup"] == 20)
+    h = add_run(add_run(add_run({}, dict(rec, run=1)), dict(rec, run=2, units={"verify-x.py": {"a": 50.0}})),
+                dict(rec, run=3, units={"verify-x.py": {"a": 60.0, "d": 1.0}}))
+    check("unit medians over the runs that timed each unit, to a tenth",
+          h["units"] == {"verify-x.py": {"a": 50.0, "b": 30.5, "c": 12.0, "d": 1.0}} and h["overhead"] == {"verify-x.py": 10})
+    check("a history with no unit times has no units key", "units" not in add_run({}, {"run": 1, "date": "d", "lines": {}}))
+    grown = {"lines": {}, "units": {"verify-x.py": {"a": 90.0, "e": 3.0}}, "overhead": {"verify-x.py": 25}}
+    mt = measured_timings(dict(t4, lines={}), grown, {"scripts/verify-x.py"}, sh)
+    mt0 = measured_timings(dict(t4, lines={}), grown, (), sh)
+    check("--check-measured: a selected verifier's grown unit and overhead are judged at this run's time; a new unit counts",
+          mt["units"]["verify-x.py"]["a"] == 90.0 and mt["units"]["verify-x.py"]["e"] == 3.0 and mt["overhead"]["verify-x.py"] == 25
+          and mt0["units"]["verify-x.py"]["a"] == 40.0 and mt0["units"]["verify-x.py"]["e"] == 3.0
+          and mt0["overhead"]["verify-x.py"] == 10)
+    check("the pack records each sharded verifier's parts",
+          pack_record(gs0, {"lines": {}, "setup": 20})["shards"]["verify-x.py"]["parts"] == 3)
+    with open(WORKFLOW, encoding="utf-8") as f:
+        wf = f.read()
+    check("the group step gives ci_shards its timing file (export %s=\"$timing\")" % ci_shards.ENV,
+          'export %s="$timing"' % ci_shards.ENV in wf)
     check("the repo's own headers parse", not errors())
     check("the repo's pack passes --check", not budget_faults())
     print("selftest: %s" % ("FAILED: " + ", ".join(fails) if fails else "PASS"))
