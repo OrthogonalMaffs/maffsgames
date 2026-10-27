@@ -1831,19 +1831,23 @@ its random draw served that question: #588). The rule, for every lane:
 - **A line with no recorded time is estimated and warned, never failed:** a new or renamed line, or a sharded verifier's
   part whose units no main run has timed. The 70% and 80% rules apply once its first main run records it. Past 100% of a
   group's budget, a time measured on the line's own pull-request run still fails: merged, it would refuse main's pack.
-- **Gate changes pass the worst-case test.** A pull request that touches the gate's own files (`.github/`, `scripts/ci-*`,
-  `scripts/ci_shards.py`, `scripts/merge-pr.py`, `scripts/check-context-size.py`, `scripts/check-changed.py`,
-  `requirements*`; ci-groups.py's `GATE_PREFIXES`) also passes the budget check on the selection a change to
-  `scripts/bank_common.py` makes, every verifier that imports it included (the Plan job's "Worst-case test"; required).
+- **Gate changes pass the worst-case test** (built, parked on `claude/gate-worst-case` by Jon's infrastructure freeze until
+  Mon 2 Nov 2026; until it merges, the lane making a gate change runs it by hand). A pull request that touches the gate's
+  own files (`.github/`, `scripts/ci-*`, `scripts/ci_shards.py`, `scripts/merge-pr.py`, `scripts/check-context-size.py`,
+  `scripts/check-changed.py`, `requirements*`) also passes the budget check on the selection a change to
+  `scripts/bank_common.py` makes, every verifier that imports it included.
 - **Gating checks are repeatable.** No random sampling in a gate: every item, or the worst case with a fixed seed. Every
   page measurement waits for the shared settle (`bank_common.wait_settled`). Random samples may appear in reports, never
-  in the gate.
+  in the gate. The conversion is step 4, from Mon 2 Nov (Jon's ruling, 27 Oct): the stub server injects a fixed default
+  seed for `Math.random` into every page it serves, each verifier keeps a fixed list of seeds, and a separate nightly,
+  non-gating sweep plays fresh seeds and reports any failing seed, which is then added to that verifier's list. Random
+  sampling lives only in that sweep. Take a Walk's `Date.now` seed is fixed with it.
 - **A failed main run may be re-run once, failed jobs only, by any lane.** A pass on the re-run is reported to the cloud lane
   as a flake and goes on the repeatability audit's list. Known: The 6 P's, Content verifiers 91 (tap timeout, 39b7c99, run
   40570027404, passed on its re-run): a deterministic driver bug that a random draw reached about one run in three (#588).
-- **A handover past 20 KB archives itself.** On a pull request it is a warning; after the merge, main's REGISTER job runs
-  `check-context-size.py --fix`, which moves the handover's oldest dated entries to that lane's `docs/history/` archive,
-  word for word, until it is 3 KB under the limit. CLAUDE.md and `docs/todo.md`, which have no entries to move, still fail.
+- **A handover past 20 KB will archive itself** (built, parked on `claude/gate-handover-archive` until Mon 2 Nov 2026):
+  a warning on a pull request, and after the merge main moves its oldest dated entries to that lane's `docs/history/`
+  archive, word for word. Until then the lane moves them by hand, as before.
 - **Only the cloud lane changes gate files;** another lane reports what it needs and waits.
 
 ## 7.9 Verifier conventions (Jon, 8 Oct 2026)
