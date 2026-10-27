@@ -1460,6 +1460,8 @@ rows per `game_slug` since 1 September (Europe/London; the counts restart each 1
 `{as_of, since, total, games}`. `.github/workflows/answer-counts.yml` fetches it three times a day (cron `40 5,11,17 * * *`, UTC; Jon, 24 Oct 2026: GitHub started no scheduled run on the first morning, so there are three slots, and a run with unchanged figures commits nothing), `scripts/fetch-answer-counts.py`
 validates it, and `schools/assets/answer-counts.json` is committed with `[skip ci]`; a failed run leaves the file as it was.
 
+**Every slug is counted; the total never falls (Jon, 27 Oct 2026).** The validator once rejected the whole file for a slug off the roster (`the-6-ps`, a page that sends events but is not in `games/`; every run from 10:56 UTC on 27 Oct failed). There is now no slug check: the file holds every slug the Sheet returns and the total is all rows. The rules left are whole numbers, total = sum of the per-slug counts, `as_of` today, and a new one: the total may not fall below the published file's total in the same school year (`since` equal), which fails the run with "the counts only grow, so rows have been lost". The selftest plants an unknown slug (counted) and a lower total (fails).
+
 `schools/assets/answer-count.js` fills the start-screen mount (7.5.4) with that game's count from 1,000, and the
 homepage's `[data-maffs-answer-total]` with the total from 10,000. It shows the daily file's figure at once.
 **A game page shows the daily file's figure only and never calls the live address** (Jon, 23 Oct 2026: both Apps Scripts
