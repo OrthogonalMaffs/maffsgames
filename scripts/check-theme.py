@@ -68,6 +68,7 @@ MIGRATED = [
     "hc-factor",  # built to the theme, 27 Oct 2026 (unlisted until Jon approves it)
     "y-so-steep",  # built to the theme, 27 Oct 2026 (unlisted until Jon approves it)
     "who-ate-all-the-pies",  # built to the theme, 27 Oct 2026 (unlisted until Jon approves it)
+    "its-on-sale",  # built to the theme, 27 Oct 2026 (unlisted until Jon approves it)
     "correlation-or-coincidence",  # rebuilt to the theme, 4 Oct 2026 (resit audit rebuild)
     "estimation-engine",  # rebuilt to the theme, 5 Oct 2026 (SR-12 rebuild)
     "factor-race",  # migrated 25 Oct 2026 (contract THEME-FR-DA)
