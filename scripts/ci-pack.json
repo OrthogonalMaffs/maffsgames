@@ -19,7 +19,7 @@
   "Component Crusher (every key from what the student is shown, diagrams measured from the canvas, marking through MaffsAnswer in Chromium)": "6",
   "Constructions Lab (no marking to check: every task's figure, labels and stated results verified by constructing all ten with the game's own compass and ruler in Chromium)": "12",
   "Context size (CLAUDE.md and both handovers at most 20 KB, docs/todo.md at most 150 KB; canon reported; contracts CTX and TODO-SLIM)": "14",
-  "Coordinate Geometry Dash (every key recomputed from its question; exactly one correct option, equations compared as curves; every option marked in Chromium)": "16",
+  "Coordinate Geometry Dash (every key recomputed from its question; exactly one correct option, equations compared as curves; every option marked in Chromium)": "6",
   "Core Maths Paper 1 (every key recomputed from its stem and charts; options distinct in value; every key marked in Chromium)": "16",
   "Core Maths Paper 1 tax, NI and student loan (recomputed with uk_rates)": "16",
   "Core Maths Paper 2A (independent recomputation + rendered page)": "18",
@@ -152,7 +152,7 @@
   "The 6 P's banks (every bank regenerated from its game's own questions and compared with the committed file; every answer recomputed from its stem; a topic is covered only by a bank of 30 or more)": "8",
   "The 6 P's, part 1 (the topic data file is the generator's output; no mark figure, AQA, Edexcel or \"in development\" in the page, no launch into a game; the four past-paper sites before Start; 10,000 sessions each way: six distinct covered topics in band order, frequencies in proportion to marks; every format marked by value through the page's own judge(), schema faults left out, five picked unseen first)": "17",
   "The 6 P's, part 2 (a full session at 1280 px with localStorage working, on fixture banks covering all nine formats: every format answered right and wrong, never-marked answers not marked, slips, working, five a topic and a topic card, results, nudge, practice links, tick-list and events; resumed mid-topic after a reload)": "42",
-  "The 6 P's, part 3 (the same session at 320 px on a touch screen, typed on the phone keypad, with localStorage blocked: no sideways scroll on any screen, resumed mid-topic from window.name; a topic with no bank offers Skip only)": "46",
+  "The 6 P's, part 3 (the same session at 320 px on a touch screen, typed on the phone keypad, with localStorage blocked: no sideways scroll on any screen, resumed mid-topic from window.name; a topic with no bank offers Skip only)": "4",
   "The 6 P's, part 4 (fault-injection self-test: the planted faults, each caught)": "8",
   "The Comic Caper (lock 1 and lock 3 briefs rendered exactly, inside their panel at 320, 390 and 1280 px; the old wording and an overflow planted and caught)": "36",
   "The Truth Will Set You Free (every truth table from its key, distractors not equivalent, scoring by correct cells, MaffsLock)": "18",
@@ -186,14 +186,8 @@
  "over-budget": [],
  "split-candidates": [
   {
-   "label": "Equation Builder, part 1 (half of every question's tile arrangements classified by SymPy; the whole-question checks; self-test)",
-   "median": 151,
-   "percent": 72,
-   "setup": 46
-  },
-  {
    "label": "Just Pythag It, Bruv, part 2 (fit at 390 and 412px; a quarter of the planted layout faults)",
-   "median": 145,
+   "median": 144,
    "percent": 70,
    "setup": 46
   }
