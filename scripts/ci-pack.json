@@ -17,7 +17,7 @@
   "Characteristic Quest (every 2x2 characteristic equation recomputed from its matrix in SymPy; every option classified; every worked line, trace, determinant and eigenvalue claim checked; every option pressed in Chromium)": "18",
   "Chart Interrogator (independent recomputation of every key and tolerance)": "16",
   "Circle Theorem Spotter (every calculation key re-solved, SymPy + arc wording vs figure; each tangent angle drawn on the side the theorem needs, in Chromium)": "35",
-  "Complex Converter (every key equal to its given number, the principal argument stated and keyed, no option a second form of the key; every option marked in Chromium)": "20",
+  "Complex Converter (every key equal to its given number, the principal argument stated and keyed, no option a second form of the key; every option marked in Chromium)": "1",
   "Component Crusher (every key from what the student is shown, diagrams measured from the canvas, marking through MaffsAnswer in Chromium)": "6",
   "Constructions Lab (no marking to check: every task's figure, labels and stated results verified by constructing all ten with the game's own compass and ruler in Chromium)": "12",
   "Context size (CLAUDE.md and both handovers at most 20 KB, docs/todo.md at most 150 KB; canon reported; contracts CTX and TODO-SLIM)": "14",
@@ -45,7 +45,7 @@
   "Escape-room credits (every credited room's start screen and teacher page show its room.js credit and the one invitation exactly once, linked to /feedback/; uncredited rooms show none; at 320, 390 and 1280 px no note leaves its container or truncates a title, on the room pages, the hub and the front page)": "27",
   "Escape-room dial scale (every live room's dials: ticks on their values, labelled majors with min and max, no overlap, drag sets the labelled value, no tick in the dead quarter; every lock's instrument on screen at 390x844; four planted faults caught)": "67",
   "Escape-room difficulty stars (every live room's start screen and teacher page show its hub card's rating, with the text equivalent; \"Suits a top set\" on 3-star teacher pages only; no sideways scroll at 320 px on the rooms, teacher pages, hub and front page)": "17",
-  "Escape-room keypad, up to N digits (engine.js maxDigits on a fixture lock: 5,4,Set opens, 5,4,0,0,Set is the named misconception, no empty slots; a fixed keypad unchanged; the old fixed-length rule planted and caught)": "6",
+  "Escape-room keypad, up to N digits (engine.js maxDigits on a fixture lock: 5,4,Set opens, 5,4,0,0,Set is the named misconception, no empty slots; a fixed keypad unchanged; the old fixed-length rule planted and caught)": "3",
   "Escape-room lock bank (every lock-bank-batch*.txt: each VERIFY has exactly one answer, none is a restatement; a multi-line NOTE stays out of VERIFY; bad entries planted and caught)": "11",
   "Escape-room set codes (every live room, every lock, every set forced through a saved state in Chromium: the lock screen shows its letter, and a fresh teacher page with no game gives, under that letter, the answer that opens the lock; no bare single-set answer without a live game; four faults planted and caught)": "46",
   "Estimation Engine (SR-12: every rounding and estimate recomputed; marked by exact match in Chromium; phone keypad fit)": "12",
@@ -191,7 +191,7 @@
  "over-budget": [],
  "shards": {
   "check-answer-lock.py": {
-   "how": "chosen from 104 timed unit(s)",
+   "how": "kept from the pack (8 needed)",
    "label": "Answer lock in play (canon 7.6.0: migrated games played in Chromium)",
    "parts": 8,
    "tier": "lock"
