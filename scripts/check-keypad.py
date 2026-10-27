@@ -14,6 +14,8 @@ answer boxes in a row (the shape of a "round each number" step), and checks:
             box below the fold brings the box and the keys into the window together.
   Minus     a mount with {keys: {minus: true}}: the minus key types "-" into an empty box only; a
             mount without it has no minus key.
+  Fraction  a mount with {keys: {fraction: true}}: the slash key types "/" once, after a digit, never first, and no point
+            after it; fifteen keys with the minus key, each at least 44px wide; a mount without it has no slash key.
   Mouse     at 1280x720 and 390x844 with no touch: no keys are drawn; the boxes are ordinary text
             inputs (not read-only, inputmode="decimal") that take focus and typing.
   Privacy   nothing leaves the page: no request, no analytics call, no storage.
@@ -92,7 +94,7 @@ def keypad_src(fault):
     return src
 
 
-async def open_page(browser, w, h, touch, n, fault=None, minus=False, spacer=0, keep=False):
+async def open_page(browser, w, h, touch, n, fault=None, minus=False, spacer=0, keep=False, frac=False):
     ctx = await browser.new_context(viewport={'width': w, 'height': h}, has_touch=touch, is_mobile=touch)
     reqs = []
 
@@ -109,15 +111,15 @@ async def open_page(browser, w, h, touch, n, fault=None, minus=False, spacer=0, 
     await page.add_script_tag(content=keypad_src(fault))
     if fault and fault[1] == 'js':
         await page.evaluate(fault[2])
-    await page.evaluate("""([minus, keep]) => { window.__mfg = []; window.mfg = function () { window.__mfg.push([...arguments]); };
+    await page.evaluate("""([minus, keep, frac]) => { window.__mfg = []; window.mfg = function () { window.__mfg.push([...arguments]); };
       window.gtag = function () { window.__mfg.push(['gtag', ...arguments]); };
       window.__store = 0; Storage.prototype.setItem = function () { window.__store++; };
       const ts = [...document.querySelectorAll('.row input')];
       window.__inp = ts.map(() => 0);
       ts.forEach((t, i) => t.addEventListener('input', () => window.__inp[i]++));
       window.__kp = MaffsKeypad.mount(document.getElementById('keypad'), { targets: ts,
-        keys: minus ? { minus: true } : undefined, keepInView: keep ? document.getElementById('row') : undefined }); }""",
-                        [minus, keep])
+        keys: minus || frac ? { minus: minus, fraction: frac } : undefined, keepInView: keep ? document.getElementById('row') : undefined }); }""",
+                        [minus, keep, frac])
     reqs.clear()
     return ctx, page, reqs
 
@@ -241,6 +243,34 @@ async def fold_check(browser, w, h):
     return out
 
 
+async def fraction_check(browser):
+    # The fraction variant ({keys: {fraction: true}}): "/" is never first, once only, after a digit; no point after it;
+    # 15 keys with a minus key too (the zero is one key wide so the slash has a place); a mount without it has none.
+    ctx, page, _ = await open_page(browser, 390, 844, True, 2, minus=True, frac=True)
+    out = []
+    await page.tap('#t0')
+    for k in ('/', '3', '/', '/', '.', '4'):
+        await page.tap(key_sel(k))
+    await page.tap('#t1')
+    for k in ('-', '/', '1', '/', '2', '.', '5'):
+        await page.tap(key_sel(k))
+    v = await page.evaluate("[...document.querySelectorAll('.row input')].map(t => t.value)")
+    if v != ['3/4', '-1/25']:
+        out.append('fraction key: boxes hold %r, expected ["3/4", "-1/25"] (never first, once, no point after it)' % v)
+    n = await page.evaluate("document.querySelectorAll('.maffs-keypad-key').length")
+    if n != 15:
+        out.append('fraction key: %d keys drawn, expected 15' % n)
+    w = await page.evaluate("[...document.querySelectorAll('.maffs-keypad-key')].map(b => Math.round(b.getBoundingClientRect().width))")
+    if min(w) < 44:
+        out.append('fraction key: a key is %dpx wide (needs 44 or more)' % min(w))
+    await ctx.close()
+    ctx, page, _ = await open_page(browser, 390, 844, True, 1, minus=True)
+    if await page.evaluate("!!document.querySelector('.maffs-keypad-key[data-act=\"frac\"]')"):
+        out.append('a mount without {keys: {fraction: true}} has a slash key')
+    await ctx.close()
+    return out
+
+
 async def minus_check(browser):
     ctx, page, _ = await open_page(browser, 390, 844, True, 2, minus=True)
     out = []
@@ -289,6 +319,7 @@ async def run(shots):
                 fails.extend(await touch_check(browser, w, h, n, shots=shots))
             fails.extend(await fold_check(browser, w, h))
         fails.extend(await minus_check(browser))
+        fails.extend(await fraction_check(browser))
         for w, h in MOUSE:
             fails.extend(await mouse_check(browser, w, h))
         for fault in FAULTS:
