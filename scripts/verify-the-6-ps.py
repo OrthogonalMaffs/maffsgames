@@ -50,6 +50,7 @@ import os
 import re
 import sys
 import time
+from decimal import Decimal
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -186,7 +187,16 @@ def as_input(q, v):
 
 
 def js_num(v):
-    return str(int(v)) if float(v) == int(v) else repr(float(v))
+    """A number as JavaScript's String(x) writes it, which is what the page shows and a student types: the shortest digits
+    that round-trip (Python's repr has the same digits), in full from 1e-6 up to 1e21 and in exponent form outside it.
+    Python's repr switches to exponent form below 1e-4, so 4e-05 (standard-form-dc6d94d5's 0.00004) was typed as "4e-05",
+    a key the phone keypad does not have (main run 40570027404, 27 Oct 2026)."""
+    x = float(v)
+    if x == int(x) and abs(x) < 1e21:
+        return str(int(x))
+    if 1e-6 <= abs(x) < 1e21:
+        return format(Decimal(repr(x)), 'f')
+    return re.sub(r'e([+-])0*(\d)', r'e\1\2', repr(x))
 
 
 def shown_answer(q):
