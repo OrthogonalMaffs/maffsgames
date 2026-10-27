@@ -14,11 +14,34 @@ import concurrent.futures as cf
 import importlib.util
 import json
 import os
+import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 SIZES = [(375, 667), (320, 568), (390, 844), (414, 896)]
+
+
+# Known failures (Jon's ruling, 27 Oct 2026): the wrong state's worked lines plus the figure are taller than 320 x 568, so Next
+# sits below the fold. The working is NOT shortened. Later fix (docs/todo.md): on short screens in the wrong state, shrink or
+# hide the figure. THE LIST ONLY SHRINKS: an entry that now passes is an error until it is deleted; a new failure is never added here.
+KNOWN_FAILURES = {
+    ((320, 568), qid): 'worked lines plus figure taller than 320x568'
+    for qid in (
+        'area-d85701bd', 'area-6c26afba', 'area-594fb670', 'area-33444923', 'area-441af232',
+        'basic-probability-1f4acc5e', 'basic-probability-0ff5b012', 'basic-probability-53127240',
+        'pie-charts-fd964a03', 'pie-charts-daabb7bf', 'pie-charts-2e2d27d7',
+        'percentages-money-4df0662e', 'percentages-money-397a21c9',
+        'simultaneous-3544cdff',
+    )
+}
+
+
+def finding_key(text, size):
+    """(size, question) of a finding line '320 x 568: area area-d85701bd-c4 (number, wrong): ...'. The -cN is which of the five served
+    copies failed (it varies from run to run), so the key is the question's own id; None if the line names no question."""
+    m = re.search(r'\d+ x \d+: \S+ (\S+?)(?:-c\d+)? \(', text)
+    return (size, m.group(1)) if m else None
 
 
 def load():
@@ -56,6 +79,11 @@ def worker(args):
     return len(jobs), out
 
 
+def full_run(a, size):
+    """Stale entries can only be judged when every question that could fail was run at that size."""
+    return not a.only and (a.all or size == (375, 667))
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--sizes', help='e.g. 375x667,320x568 (default: the four phone sizes)')
@@ -87,10 +115,16 @@ def main():
             for done, out in ex.map(worker, [(c, size) for c in chunks if c]):
                 n += done
                 found += out
-        print('%dx%d: %d questions in the wrong state, %d finding(s)' % (size[0], size[1], n, len(found)), flush=True)
-        for f in found[:60]:
+        new = [f for f in found if finding_key(f, size) not in KNOWN_FAILURES]
+        parked = {finding_key(f, size) for f in found} & set(KNOWN_FAILURES)
+        print('%dx%d: %d questions in the wrong state, %d finding(s), %d known (parked)' % (size[0], size[1], n, len(new), len(parked)), flush=True)
+        for f in new[:60]:
             print('  FAIL ' + f, flush=True)
-        bad += found
+        bad += new
+        if full_run(a, size):
+            for k in sorted(k for k in KNOWN_FAILURES if k[0] == size and k not in parked):
+                print('  STALE known failure (now passes; delete it from KNOWN_FAILURES): %s' % k[1], flush=True)
+                bad.append('stale known failure %s' % k[1])
     print('PASS' if not bad else 'FAILED: %d finding(s)' % len(bad))
     return 1 if bad else 0
 
