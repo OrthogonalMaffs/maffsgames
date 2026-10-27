@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ci-line: The 6 P's banks (every bank regenerated from its game's own questions and compared with the committed file; every answer recomputed from its stem; a topic is covered only by a bank of 30 or more) | --check
-# ci-deps: docs/six-ps-schema.md schools/assets/exam-topics-ocr-foundation.json scripts/gen-exam-topics.py scripts/bank_common.py schools/assets/pie-chart-generator.js
+# ci-deps: scripts/six_ps_rules.py docs/six-ps-schema.md schools/assets/exam-topics-ocr-foundation.json scripts/gen-exam-topics.py scripts/bank_common.py schools/assets/pie-chart-generator.js
 """The 6 P's question banks, built from the games' own questions (contract SIX-PS-BANKS, 25 Oct 2026).
 
     python scripts/gen-six-ps.py                       # build every bank in memory and report
@@ -42,6 +42,7 @@ from fractions import Fraction
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import bank_common as bc  # noqa: E402
+import six_ps_rules as RULES  # noqa: E402
 
 ROOT = bc.ROOT
 OUT_DIR = os.path.join(ROOT, "schools", "assets", "six-ps")
@@ -1025,9 +1026,12 @@ async def prob_questions(h, topic):
         words = prob_words(s["answer_label"], ref)
         assert len(set(words)) == 4
         opts, ans = choice("prob-" + ref, words[0], words[1:])
-        out.append(mk(topic, "probability-pioneer", ref, 1, False,
-                      "Which word best describes how likely this is? " + g["event"] + ".", "choice", ans, options=opts,
-                      worked=s["worked"]))
+        q = mk(topic, "probability-pioneer", ref, 1, False,
+               "Which word best describes how likely this is? " + g["event"] + ".", "choice", ans, options=opts,
+               worked=s["worked"])
+        n_, d_ = g["p"]
+        q["likelihood"] = {"n": n_, "d": d_}      # the probability the word comes from (rule g): the word must match its band
+        out.append(q)
     return out
 
 
@@ -1189,42 +1193,60 @@ def _is_square(n):
     return int(math.isqrt(n)) ** 2 == n
 
 
-def prob2_answer(inner):
-    """The probability a stage-2 'P(...)' names, worked out from the words, as (favourable, possible) outcomes,
-    not yet simplified."""
-    m = re.fullmatch(r"rolling a (\d) on a fair die", inner)
+def prob2_answer(stem):
+    """The probability a stage-2 question asks for, worked out from its own words (the exam's wording, never P(...) notation), as
+    (favourable, possible) outcomes, not yet simplified."""
+    m = re.fullmatch(r"A fair dice is rolled\. Write down the probability of rolling (.+)\.", stem)
     if m:
-        return (1 if 1 <= int(m.group(1)) <= 6 else 0, 6)
-    die = {"rolling less than 3 on a die": lambda n: n < 3, "rolling greater than 4 on a dice": lambda n: n > 4,
-           "odd on a die": lambda n: n % 2 == 1, "multiple of 3 on a die": lambda n: n % 3 == 0,
-           "prime on a die": _is_prime, "square number on a die": _is_square,
-           "rolling 1 or 2 on a fair die": lambda n: n in (1, 2)}
-    if inner in die:
-        return (sum(1 for n in range(1, 7) if die[inner](n)), 6)
-    if inner == "flipping tails on a fair coin":
+        t = m.group(1)
+        t = re.sub(r"^an? number (?=less|greater)", "", t)
+        t = re.sub(r"^an? (odd|even|prime|square) number$", r"\1", t)
+        t = re.sub(r"^a (\d+) or a (\d+)$", r"\1 or \2", t)
+        t = re.sub(r"^an? ", "", t)
+        ev = None
+        mm = re.fullmatch(r"(\d)", t)
+        if mm:
+            ev = lambda n, k=int(mm.group(1)): n == k
+        mm = re.fullmatch(r"(\d) or (\d)", t)
+        if mm:
+            ev = lambda n, a=int(mm.group(1)), b=int(mm.group(2)): n in (a, b)
+        mm = re.fullmatch(r"less than (\d)", t)
+        if mm:
+            ev = lambda n, k=int(mm.group(1)): n < k
+        mm = re.fullmatch(r"greater than (\d)", t)
+        if mm:
+            ev = lambda n, k=int(mm.group(1)): n > k
+        mm = re.fullmatch(r"multiple of (\d)", t)
+        if mm:
+            ev = lambda n, k=int(mm.group(1)): n % k == 0
+        ev = ev or {"odd": lambda n: n % 2 == 1, "even": lambda n: n % 2 == 0, "prime": _is_prime, "square": _is_square}.get(t)
+        if ev:
+            return (sum(1 for n in range(1, 7) if ev(n)), 6)
+    m = re.fullmatch(r"A fair coin is flipped\. Write down the probability of getting (heads|tails)\.", stem)
+    if m:
         return (1, 2)
-    if inner == "heads twice in a row with a fair coin":
+    if stem == "A fair coin is flipped twice. Write down the probability of getting heads both times.":
         return (1, 4)                                  # HH out of HH, HT, TH, TT
-    if inner == "heart from 52 cards":
-        return (13, 52)                       # one suit of four, thirteen cards
-    m = re.fullmatch(r"(?:picking )?(\w+) from ((?:\d+ \w+(?:, )?)+)", inner)
+    m = re.fullmatch(r"A bag contains (.+?)\. A counter is taken at random\. Write down the probability that the counter is (red|blue|green|yellow)\.", stem)
     if m:
-        counts = {c: int(n) for n, c in re.findall(r"(\d+) (\w+)", m.group(2))}
-        return (counts[m.group(1)], sum(counts.values()))
-    m = re.fullmatch(r"(vowel|consonant) from ([A-Z](?:, [A-Z])*)", inner)
+        counts = {c: int(n) for n, c in re.findall(r"(\d+) (red|blue|green|yellow) counters?", m.group(1))}
+        return (counts[m.group(2)], sum(counts.values()))
+    m = re.fullmatch(r"Five cards show the letters (.+?)\. A card is taken at random\. Write down the probability that the letter is a (vowel|consonant)\.", stem)
     if m:
-        letters = m.group(2).split(", ")
-        return (sum(1 for c in letters if (c in "AEIOU") == (m.group(1) == "vowel")), len(letters))
-    if inner == "picture card (J, Q or K) from a pack of 52":
-        return (len("JQK") * 4, 52)
-    m = re.fullmatch(r"even from (\d+)\u2013(\d+)", inner)
+        letters = re.findall(r"[A-Z]", m.group(1))
+        return (sum(1 for c in letters if (c in "AEIOU") == (m.group(2) == "vowel")), len(letters))
+    m = re.fullmatch(r"A card is taken at random from a pack of 52 playing cards\. Write down the probability that the card is a "
+                     r"(heart|picture card \(J, Q or K\))\.", stem)
     if m:
-        nums = range(int(m.group(1)), int(m.group(2)) + 1)
-        return (sum(1 for n in nums if n % 2 == 0), len(nums))
-    m = re.fullmatch(r"letter in ([A-Z]+) also in ([A-Z]+)", inner)
+        return (13, 52) if m.group(1) == "heart" else (len("JQK") * 4, 52)
+    m = re.fullmatch(r"A number is chosen at random from ((?:\d+, )*\d+)\. Write down the probability that the number is (even|odd)\.", stem)
+    if m:
+        nums = [int(x) for x in m.group(1).split(", ")]
+        return (sum(1 for n in nums if n % 2 == (0 if m.group(2) == "even" else 1)), len(nums))
+    m = re.fullmatch(r"A letter is chosen at random from the word ([A-Z]+)\. Write down the probability that the letter is also in the word ([A-Z]+)\.", stem)
     if m:
         return (len(set(m.group(1)) & set(m.group(2))), len(m.group(1)))
-    raise AssertionError("probability stage 2: no rule for %r" % inner)
+    raise AssertionError("probability stage 2: no rule for %r" % stem)
 
 
 async def prob2_questions(h, topic):
@@ -1232,11 +1254,10 @@ async def prob2_questions(h, topic):
     items = await pg.evaluate("() => STAGE2")
     out = []
     for i, g in enumerate(items):
-        inner = re.fullmatch(r"P\((.*)\)", g["q"]).group(1)
-        k, tot = prob2_answer(inner)
+        k, tot = prob2_answer(g["q"])
         n, d = (int(x) for x in g["answer"].split("/"))
         assert Fraction(n, d) == Fraction(k, tot) and math.gcd(n, d) == 1, ("probability stage 2", g["q"], g["answer"], k, tot)
-        stem = "Work out " + tex("P(\\text{%s})" % inner) + ". Give your answer as a fraction."
+        stem = g["q"] + " Give your answer as a fraction."
         # Project Claude's template (25 Oct): "There are k <outcome> out of n equally likely outcomes, so P = k/n", then
         # "= simplified" when it simplifies
         eq = "P = \\frac{%d}{%d}" % (k, tot) + (" = \\frac{%d}{%d}" % (n, d) if (k, tot) != (n, d) else "")
@@ -4305,13 +4326,99 @@ BUILDERS = {
 }
 
 
+# ───────────────────────────── the review fixes (SIX-PS-REVIEW-FIXES, 27 Oct 2026) ─────────────────────────────
+# An independent review found faults of eight kinds (scripts/six_ps_rules.py, rules a-h). Each class is fixed here, for every bank, after
+# the builders have run and before the diagram label check, and every bank is then held to the rules by --check. A source game is
+# never changed; a stored answer is never changed (the one distractor of powers-roots-7a198409 is the contract's single exception).
+REVIEW_FIXED = {}         # (topic, fix) -> questions changed, for the handover
+
+
+def right_angle_marked(svg):
+    """svg with a right-angle mark added at the square corner of a drawn triangle that has none (rule f)."""
+    if RULES.has_right_angle_mark(svg):
+        return svg
+    m = re.search(r'<path d="([^"]*)"', svg)
+    if not m:
+        return svg
+    pts = [(float(a), float(b)) for a, b in re.findall(r"[ML]\s*(-?[\d.]+)\s+(-?[\d.]+)", m.group(1))]
+    uniq = []
+    for p in pts:
+        if p not in uniq:
+            uniq.append(p)
+    if len(uniq) != 3:
+        return svg
+    for i, v in enumerate(uniq):
+        a, b = uniq[(i + 1) % 3], uniq[(i + 2) % 3]
+        u, w = (a[0] - v[0], a[1] - v[1]), (b[0] - v[0], b[1] - v[1])
+        lu, lw = math.hypot(*u), math.hypot(*w)
+        if lu and lw and abs(u[0] * w[0] + u[1] * w[1]) < 0.01 * lu * lw:
+            k = 11.0
+            p1 = (v[0] + k * u[0] / lu, v[1] + k * u[1] / lu)
+            p3 = (v[0] + k * w[0] / lw, v[1] + k * w[1] / lw)
+            p2 = (p1[0] + p3[0] - v[0], p1[1] + p3[1] - v[1])
+            mark = '<polyline points="%.1f,%.1f %.1f,%.1f %.1f,%.1f" stroke-width="1.5"/>' % (p1 + p2 + p3)
+            return svg.replace("<g fill=", mark + "<g fill=", 1)
+    return svg
+
+
+def _powers_roots_7a198409(q):
+    """(5^2)^3: option d, 25^3, equals the key 5^6. The genuine misconception 'multiplied the base by the first power' gives 10^3."""
+    for o in q["options"]:
+        if o["label"] == "\\(25^3\\)":
+            o["label"] = "\\(10^3\\)"
+            return True
+    return False
+
+
+def _area_594fb670(q):
+    """The 12 m label belongs on the dashed height line (x = 90), not out beside the slanted side."""
+    old = '<text x="114" y="86" text-anchor="start">12 m</text>'
+    if old in q["diagram"]:
+        q["diagram"] = q["diagram"].replace(old, '<text x="96" y="104" text-anchor="start">12 m</text>')
+        return True
+    return False
+
+
+def _metric_4f223446(q):
+    """'÷ 1000.' with no result: the line states the sum."""
+    if q["worked"] and q["worked"][-1].strip().endswith("1000."):
+        q["worked"] = ["Divide by 1000: \\(8200 \\div 1000 = 8.2\\)."]
+        return True
+    return False
+
+
+ID_FIXES = {"powers-roots-7a198409": _powers_roots_7a198409, "area-594fb670": _area_594fb670, "metric-units-4f223446": _metric_4f223446}
+
+
+def apply_review_fixes(tid, q):
+    def note(name, changed):
+        if changed:
+            REVIEW_FIXED[(tid, name)] = REVIEW_FIXED.get((tid, name), 0) + 1
+    for qid, fn in ID_FIXES.items():
+        if q["id"].startswith(qid):
+            note(fn.__name__.strip("_").split("_")[0] + " " + qid.split("-")[-1], fn(q))
+    note("slips (c)", RULES.fix_slips(q))
+    note("simplest form (b)", RULES.fix_simplest(q))
+    note("common difference sign", RULES.fix_common_difference(q))
+    if q.get("diagram") and tid == "area":
+        new = right_angle_marked(q["diagram"])
+        note("right angle marked (f)", new != q["diagram"])
+        q["diagram"] = new
+    if tid != "basic-probability":                       # its stems are rewritten at source (Probability Pioneer), not patched
+        before = json.dumps([q["stem"], [o["label"] for o in q.get("options") or []], q["worked"], q["slip"]], ensure_ascii=False)
+        RULES.fix_texts(q)
+        note("words out of the maths (h)", before != json.dumps([q["stem"], [o["label"] for o in q.get("options") or []], q["worked"], q["slip"]], ensure_ascii=False))
+    note("answer line (d)", RULES.fix_answer_line(q))
+    return q
+
+
 async def build_all(only):
     banks = {}
     async with Harness() as h:
         for tid, fn in BUILDERS.items():
             if only and tid not in only:
                 continue
-            qs = [to_typed(tid, q) for q in await fn(h)]
+            qs = [apply_review_fixes(tid, to_typed(tid, q)) for q in await fn(h)]
             ids = [q["id"] for q in qs]
             if len(set(ids)) != len(ids):
                 raise AssertionError("%s: duplicate ids" % tid)
@@ -4481,12 +4588,16 @@ def main():
         for q in b["questions"]:
             for x in validate(q):
                 faults.append("%s %s: %s" % (t, q["id"], x))
+            for rule, x in RULES.faults(q):
+                faults.append("%s %s: rule (%s) %s" % (t, q["id"], rule, x))
         print("%-32s %3d questions  bands %s" % (t, len(b["questions"]),
               sorted({q["band"] for q in b["questions"]})))
     for t, c in CONVERSIONS.items():                   # typed answers: what was multiple choice and what it is now
         print("typed answers   %-20s %3d multiple choice questions now typed: %s" % (t, c["from"], c["to"]))
     for n in CONVERSION_NOTES:
         print("typed answers   left or changed: " + n)
+    for (t, name), n in sorted(REVIEW_FIXED.items()):
+        print("review fixes    %-20s %-30s %3d questions" % (t, name, n))
     for t, st in DIAGRAM_STATS.items():                # the diagram label check, over every diagram the run built
         print("diagram labels  %-20s %3d diagrams: line through a label %2d as first worded, %2d strict; labels overlapping %2d; "
               "still faulty after the labels are moved %d" % (t, st["diagrams"], st["as_worded"], st["strict"], st["overlap"], st["left"]))
@@ -4535,6 +4646,7 @@ def main():
         bad += coverage_faults()
         bad += diagram_selftest()
         bad += conversion_selftest()
+        bad += ["rules selftest: " + name for name, ok in RULES.selftest() if not ok]
         for x in bad:
             print("FAIL  " + x)
         if bad:

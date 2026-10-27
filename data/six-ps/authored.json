@@ -1070,7 +1070,7 @@
    },
    "band": 3,
    "calc": false,
-   "stem": "A bill of £\\(b\\) is shared equally between 3 people. Write an expression for each person\\'s share, in pounds.",
+   "stem": "A bill of £\\(b\\) is shared equally between 3 people. Write an expression for each person's share, in pounds.",
    "diagram": null,
    "format": "choice",
    "answer": {
@@ -1710,7 +1710,7 @@
    },
    "band": 3,
    "calc": false,
-   "stem": "Priya is \\(p\\) years old. Her brother is 6 years younger than her. Write an expression for her brother\\'s age.",
+   "stem": "Priya is \\(p\\) years old. Her brother is 6 years younger than her. Write an expression for her brother's age.",
    "diagram": null,
    "format": "choice",
    "answer": {
@@ -1768,7 +1768,7 @@
    },
    "band": 4,
    "calc": false,
-   "stem": "Sam is \\(s\\) years old. His mother is three times as old as Sam. Write an expression for his mother\\'s age in 5 years\\' time.",
+   "stem": "Sam is \\(s\\) years old. His mother is three times as old as Sam. Write an expression for his mother's age in 5 years' time.",
    "diagram": null,
    "format": "choice",
    "answer": {
