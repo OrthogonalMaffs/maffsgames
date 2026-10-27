@@ -2,6 +2,7 @@
  "content": {
   "52-dle (every puzzle's number recomputed from its clue and hints; every guess marked exactly in Chromium)": "16",
   "Angle Ace (every diagram measured against its words and key; every option and reason marked in Chromium)": "6",
+  "As You Can See (the 60-question fixed-seed bank and 20 seeds of every slot recomputed from each question's own chart data and ask, never from the bank's or the game's code: pictogram rows, bar, dual and stacked heights, line readings, scatter correlation, line of best fit, outlier, every stage-5 flaw read off the chart; accepted intervals; slips outside them; the game's marking compared with an independent marker; every drawn chart read back from its SVG against its data; all five stages played in the page at 390 px and the first questions at 375, 360, 320, 1280 and 1366 px with a wide font; fault-injection self-test)": "29",
   "Background launcher (bg.py starts a command detached and records its PID in <worktree>/.claude/pids.json; the registry reads back and is gitignored)": "6",
   "Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points and message figures recomputed around 0/360; lives and end flows played in Chromium; fault-injection self-test: every planted fault caught), part 1 of 2": "12",
   "Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points and message figures recomputed around 0/360; lives and end flows played in Chromium; fault-injection self-test: every planted fault caught), part 2 of 2": "17",
@@ -205,7 +206,7 @@
    "tier": "lock"
   },
   "verify-bearing-blitz.py": {
-   "how": "kept from the pack (2 needed)",
+   "how": "kept from the pack (1 needed)",
    "label": "Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points and message figures recomputed around 0/360; lives and end flows played in Chromium; fault-injection self-test: every planted fault caught)",
    "parts": 2,
    "tier": "content"
