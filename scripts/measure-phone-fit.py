@@ -3,6 +3,7 @@
 
     python scripts/measure-phone-fit.py                 # every roster game -> docs/phone-fit-report.md
     python scripts/measure-phone-fit.py --aa            # the same in Aa (OpenDyslexic) mode
+    python scripts/measure-phone-fit.py --laptop        # 1366x768 and 1280x720, normal mode (ruling R2)
     python scripts/measure-phone-fit.py --only new-shapes
     python scripts/measure-phone-fit.py --workers 6
     python scripts/measure-phone-fit.py --selftest      # the classification, planted cases (no browser)
@@ -11,11 +12,15 @@ THE GATE (canon 7.6.1; Jon's rulings of 26 Oct 2026): in normal mode at every si
 390x844, the LAST answer option must end above the fold, so a student never chooses from three of four options
 without knowing it. In Aa mode at 320x568, the recorded exception (OpenDyslexic cannot fit a long GCSE prompt and
 its feedback on that screen), the options must START above the fold, and an overflow beyond that is WARN.
-Two lists in scripts/phone-fit-state.json may only shrink: "known-failures" (per mode, each game with the sizes at
-which it fails the gate: reported, never failed) and "unmeasurable" (per mode, the games this driver cannot measure,
-so they never read as passing). A gate failure not on the list, a listed entry that now passes or now measures, and
-an unmeasurable game not on its list each make the run exit 1. Every other overflow (Next below the fold, sideways
-scroll) is FAIL: reported, not a gate. Not run in CI yet (a later contract).
+--laptop (ruling R2): at 1366x768 and 1280x720, normal mode, the last answer option AND Next after a wrong answer
+end above the fold. In every mode the page must not scroll sideways, on the asking screen or after a wrong answer.
+A canvas question (no option group, input or submit) is measured by the canvas's own box and the buttons beside it.
+The lists in scripts/phone-fit-state.json, per mode ("normal", "aa", "laptop"), grow only when the measurement itself
+improves, with Jon's ruling, never because of a new fault: "known-failures" (each game with the entries at which it
+fails the gate: reported, never failed), "sideways" (each game with the sizes at which it scrolls sideways) and
+"unmeasurable" (the games this driver cannot measure, so they never read as passing). A failure not on its list, a
+listed entry that now passes or now measures, and an unmeasurable game not on its list each make the run exit 1. On a
+phone, Next below the fold is FAIL: reported, not a gate. Not run in CI yet (a later contract).
 
 For every game on the roster, at 320x568, 375x667 and 390x844, it loads the game
 (bare URL, so its default level), gets to the first question and records:
@@ -72,6 +77,7 @@ _spec.loader.exec_module(cs)
 
 ROOT = bc.ROOT
 SIZES = [(320, 568), (375, 667), (390, 844)]
+LAPTOP_SIZES = [(1366, 768), (1280, 720)]   # ruling R2 (Jon, 26 Oct 2026): judged with --laptop, normal mode
 KATEX_PREFIX = "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/"
 DEFAULT_OUT = os.path.join(ROOT, "docs", "phone-fit-report.md")
 
@@ -167,8 +173,23 @@ CORRECT_INIT = r"""
     clickables().forEach(function (el) {
       if (els.indexOf(el) === -1 && SUBMIT_RE.test(txt(el))) els.push(el);
     });
+    // A canvas question (contract FOLD-COMPONENTS, Jon 26 Oct 2026): the answer is a tap on the canvas, so with no
+    // option group, input or submit the canvas's own box is the answer area, with the controls next to it: every
+    // visible button that starts at or below the canvas's top (Fire, Undo, Check), never a link or the header's.
+    let canvas = false;
+    if (!els.length) {
+      const cv = [...document.querySelectorAll('canvas')].filter(function (el) { return vis(el) && !el.closest('.site-footer, header'); });
+      if (cv.length) {
+        canvas = true;
+        const t0 = Math.min.apply(null, cv.map(top));
+        cv.forEach(function (el) { els.push(el); });
+        clickables().forEach(function (el) {
+          if (el.tagName !== 'A' && els.indexOf(el) === -1 && top(el) >= t0) els.push(el);
+        });
+      }
+    }
     return {
-      n: els.length,
+      n: els.length, canvas: canvas,
       bottom: els.length ? Math.max.apply(null, els.map(bottom)) : null,
       top: els.length ? Math.min.apply(null, els.map(top)) : null,
       fold: fold(),
@@ -484,17 +505,26 @@ def size_key(r):
     return "%dx%d" % (r["w"], r["h"])
 
 
-def gate_sizes(rows, aa=False):
-    """The sizes at which a game fails THE GATE (canon 7.6.1, Jon's rulings of 26 Oct 2026). The LAST answer control
-    must end above the fold, in normal mode at every size and in Aa mode at 375x667 and 390x844. In Aa at 320x568, the
-    recorded exception, the controls must START above the fold. A size whose asking screen was not reached is not
-    judged here (UNMEASURABLE is the game-level case)."""
+def gate_sizes(rows, mode="normal"):
+    """The entries at which a game fails THE GATE (canon 7.6.1, Jon's rulings of 26 Oct 2026). Phones (modes "normal"
+    and "aa"): the LAST answer control must end above the fold, in normal mode at every size and in Aa mode at 375x667
+    and 390x844; in Aa at 320x568, the recorded exception, the controls must START above the fold; an entry is the
+    size, "320x568". Laptops (mode "laptop", ruling R2): at 1366x768 and 1280x720 the last answer control AND Next after
+    a wrong answer end above the fold; an entry is the size and the control, "1280x720 option" or "1280x720 next".
+    A size whose asking screen was not reached is not judged here (UNMEASURABLE is the game-level case)."""
     out = []
     for r in rows:
         a = r["ask"]
         if not a:
             continue
-        if aa and r["w"] == 320:
+        if mode == "laptop":
+            if a["bottom"] > a["fold"]:
+                out.append(size_key(r) + " option")
+            n = r["wrong"]
+            if n and n.get("found") and n["bottom"] > n["fold"]:
+                out.append(size_key(r) + " next")
+            continue
+        if mode == "aa" and r["w"] == 320:
             bad = a.get("top") is not None and a["top"] > a["fold"]
         else:
             bad = a["bottom"] > a["fold"]
@@ -503,69 +533,87 @@ def gate_sizes(rows, aa=False):
     return out
 
 
-def classify(rows, aa=False, known=(), unmeasurable_listed=False):
-    """One game's three sizes in one mode -> (status, severity, detail).
+def sideways_sizes(rows):
+    """The sizes at which the page scrolls sideways, on the asking screen or after a wrong answer (contract
+    FOLD-COMPONENTS, Jon 26 Oct 2026: a gate in every mode, with its own list). The start screen is report-only (R4)."""
+    return [size_key(r) for r in rows
+            if any(m and m["sw"] > m["vw"] for m in (r["ask"], r["wrong"]))]
 
-    THE GATE (gate_sizes). A failure at a size not on the game's known-failures entry (phone-fit-state.json) is
-    HARD_FAIL; a listed size that now passes is STALE (take it off: the list only shrinks); failures that are all
-    listed are KNOWN_FAIL, reported, never failed. A game the driver cannot measure must be on the unmeasurable list
-    (UNMEASURABLE), or it is UNMEASURABLE_NEW: it never reads as passing. HARD_FAIL, STALE and UNMEASURABLE_NEW make
-    the run exit 1. Beyond the gate, Next below the fold and sideways scroll are FAIL: reported, not a gate. In Aa at
-    320x568 an overflow that keeps the options starting above the fold is WARN (Aa at 320)."""
-    known = set(known or ())
+
+def classify(rows, mode="normal", known=(), unmeasurable_listed=False, sideways=()):
+    """One game's sizes in one mode -> (status, severity, detail).
+
+    THE GATE (gate_sizes) and SIDEWAYS SCROLL (sideways_sizes), each against its own list in phone-fit-state.json. A
+    failure not on the game's list is HARD_FAIL; a listed entry that now passes is STALE (take it off: the lists only
+    shrink, canon 7.6.1); failures that are all listed are KNOWN_FAIL, reported, never failed. A game the driver cannot
+    measure must be on the unmeasurable list (UNMEASURABLE), or it is UNMEASURABLE_NEW: it never reads as passing.
+    HARD_FAIL, STALE and UNMEASURABLE_NEW make the run exit 1. On a phone, Next below the fold is FAIL: reported, not a
+    gate (on a laptop it is the gate). In Aa at 320x568 an overflow that keeps the options starting above the fold is
+    WARN (Aa at 320)."""
+    known, sideways = set(known or ()), set(sideways or ())
+    aa = mode == "aa"
     asks = [r for r in rows if r["ask"]]
     wrongs = [r for r in rows if r["wrong"]]
     if not asks:
         why = rows[0]["note"] or "asking screen not reached"
-        if known:
-            return STALE, -10 ** 3, "unmeasurable, but on the known-failures list: take it off (the list only shrinks)"
+        if known or sideways:
+            return STALE, -10 ** 3, "unmeasurable, but on a known-failures list: take it off (the lists only shrink)"
         if unmeasurable_listed:
             return UNMEASURABLE, -10 ** 7, why
         return UNMEASURABLE_NEW, -10 ** 3, why + " (not on the unmeasurable list: it never reads as passing)"
     if unmeasurable_listed:
-        return STALE, -10 ** 3, "measured, but on the unmeasurable list: take it off (the list only shrinks)"
+        return STALE, -10 ** 3, "measured, but on the unmeasurable list: take it off (the lists only shrink)"
 
-    def edge(r):
+    by = {size_key(r): r for r in rows}
+    canvas = " (a canvas: its box and the controls beside it)" if any(r["ask"].get("canvas") for r in asks) else ""
+
+    def edge(k):
+        size, _, what = k.partition(" ")
+        r = by[size]
+        if what == "next":
+            return "%s (Next %d / %d)" % (size, r["wrong"]["bottom"], r["wrong"]["fold"])
         a = r["ask"]
         if aa and r["w"] == 320:
-            return "%s (options start %d / %d)" % (size_key(r), a["top"], a["fold"])
-        return "%s (last option %d / %d)" % (size_key(r), a["bottom"], a["fold"])
-    by = {size_key(r): r for r in asks}
-    gate = gate_sizes(rows, aa)
-    sev = max([by[k]["ask"]["bottom"] - by[k]["ask"]["fold"] for k in gate] + [0])
+            return "%s (options start %d / %d)" % (size, a["top"], a["fold"])
+        return "%s (last option %d / %d)" % (size, a["bottom"], a["fold"])
+
+    def over(k):
+        size, _, what = k.partition(" ")
+        m = by[size]["wrong"] if what == "next" else by[size]["ask"]
+        return m["bottom"] - m["fold"]
+    gate, side = gate_sizes(rows, mode), sideways_sizes(rows)
+    sev = max([over(k) for k in gate] + [0])
     new = [k for k in gate if k not in known]
-    if new:
-        return HARD_FAIL, sev, "below the fold, not on the known-failures list: " + ", ".join(edge(by[k]) for k in new)
+    new_side = [k for k in side if k not in sideways]
+    if new or new_side:
+        parts = (["below the fold, not on the known-failures list: " + ", ".join(edge(k) for k in new)] if new else []) + (
+            ["scrolls sideways, not on the sideways list: " + ", ".join(new_side)] if new_side else [])
+        return HARD_FAIL, sev, "; ".join(parts) + canvas
     stale = sorted(known - set(gate))
-    if stale:
-        return STALE, -10 ** 3, "on the known-failures list at %s but passes there: take it off (the list only shrinks)" % (
-            ", ".join(stale))
-    if gate:
-        return KNOWN_FAIL, sev, "known failure: " + ", ".join(edge(by[k]) for k in gate)
+    stale_side = sorted(sideways - set(side))
+    if stale or stale_side:
+        parts = (["on the known-failures list at %s but passes there" % ", ".join(stale)] if stale else []) + (
+            ["on the sideways list at %s but does not scroll sideways there" % ", ".join(stale_side)] if stale_side else [])
+        return STALE, -10 ** 3, "; ".join(parts) + ": take it off (the lists only shrink)"
+    if gate or side:
+        parts = (["known failure: " + ", ".join(edge(k) for k in gate)] if gate else []) + (
+            ["known sideways scroll: " + ", ".join(side)] if side else [])
+        return KNOWN_FAIL, sev, "; ".join(parts) + canvas
 
     scrolls = lambda r: aa and r["w"] == 320           # canon 7.6.1: Aa at 320 x 568 may scroll
     over_next = [r["wrong"]["bottom"] - r["wrong"]["fold"] for r in wrongs if r["wrong"]["found"] and not scrolls(r)]
     warn = [r for r in rows if scrolls(r) and ((r["ask"] and r["ask"]["bottom"] > r["ask"]["fold"]) or
             (r["wrong"] and r["wrong"]["found"] and r["wrong"]["bottom"] > r["wrong"]["fold"]))]
-    hscroll = any((r["ask"] and r["ask"]["sw"] > r["ask"]["vw"]) or
-                  (r["wrong"] and r["wrong"]["sw"] > r["wrong"]["vw"]) for r in rows)
-    fails = []
-    if any(o > 0 for o in over_next):
-        fails.append("Next below fold")
-    if hscroll:
-        fails.append("sideways scroll")
     worst = max(over_next + [-10 ** 6])
-    if fails:
-        # Ranked by how far past the fold the worst edge is; a game that only
-        # scrolls sideways ranks after every fold failure.
-        return "FAIL", max(worst, 0), "; ".join(fails)
+    if any(o > 0 for o in over_next):
+        return "FAIL", max(worst, 0), "Next below fold" + canvas
     if warn:
         return WARN_AA, -10 ** 4, "Aa at 320x568 scrolls; the options start above the fold"
     if len(wrongs) < len(rows):
-        return "PASS (asking only)", -10 ** 6, next((r["note"] for r in rows if r["note"]), "")
+        return "PASS (asking only)", -10 ** 6, (next((r["note"] for r in rows if r["note"]), "") + canvas).strip()
     if not over_next:
-        return "PASS (no Next)", -10 ** 5, "wrong answer shows no Next control"
-    return "PASS", worst, ""
+        return "PASS (no Next)", -10 ** 5, "wrong answer shows no Next control" + canvas
+    return "PASS", worst, canvas.strip()
 
 
 def cell(m, key="bottom"):
@@ -590,11 +638,11 @@ GATE_FAILS = (HARD_FAIL, STALE, UNMEASURABLE_NEW)
 STATE = os.path.join(HERE, "phone-fit-state.json")
 
 
-def load_state(aa):
+def load_state(mode):
+    """(known failures, unmeasurable games, sideways list) for one mode: "normal", "aa" or "laptop"."""
     with open(STATE, encoding="utf-8") as fh:
         st = json.load(fh)
-    mode = "aa" if aa else "normal"
-    return st["known-failures"][mode], set(st["unmeasurable"][mode])
+    return st["known-failures"][mode], set(st["unmeasurable"][mode]), st["sideways"][mode]
 
 # --aa: the stored preference every game's Aa toggle reads on load.
 AA_INIT = "try { localStorage.setItem('mfg_accessible', 'true'); } catch (e) {}"
@@ -603,20 +651,21 @@ AA_INIT = "try { localStorage.setItem('mfg_accessible', 'true'); } catch (e) {}"
 BELOW_REPORT = "BELOW FOLD (report)"
 
 
-def write_report(results, path, elapsed, aa=False, only=None, sizes=None, report=False):
+def write_report(results, path, elapsed, mode="normal", only=None, sizes=None, report=False):
     """report=True (--sizes, not the canon sizes): nothing is judged against the lists and nothing fails the run."""
     sizes = sizes or SIZES
-    known, unmeasurable = ({}, set()) if report else load_state(aa)
+    aa = mode == "aa"
+    known, unmeasurable, sideways = ({}, set(), {}) if report else load_state(mode)
     by = {}
     for r in results:
         by.setdefault(r["slug"], []).append(r)
     games = []
     # A list entry for a game no longer on the roster is stale too (a full run only).
-    for slug in sorted((set(known) | unmeasurable) - set(by)) if not only else []:
+    for slug in sorted((set(known) | unmeasurable | set(sideways)) - set(by)) if not only else []:
         games.append((STALE, -10 ** 3, slug, [], "on a phone-fit list but not measured (not on the roster): take it off"))
     for slug, rows in by.items():
         rows.sort(key=lambda r: r["w"])
-        st, sev, detail = classify(rows, aa, known.get(slug, ()), slug in unmeasurable)
+        st, sev, detail = classify(rows, mode, known.get(slug, ()), slug in unmeasurable, sideways.get(slug, ()))
         if report:
             st = {HARD_FAIL: BELOW_REPORT, UNMEASURABLE_NEW: UNMEASURABLE}.get(st, st)
         games.append((st, sev, slug, rows, detail))
@@ -630,14 +679,17 @@ def write_report(results, path, elapsed, aa=False, only=None, sizes=None, report
     lines = [
         "# Phone fit report",
         "",
-        "Generated by `scripts/measure-phone-fit.py` on %s (%d games, %.0f min). **A report, with one gate** (canon §7.6.1,"
-        " 26 Oct 2026): the last answer option ends above the fold (Aa at 320: the options start above it). A failure"
-        " not on `scripts/phone-fit-state.json`'s known-failures list (HARD FAIL), a listed entry that now passes"
+        "Generated by `scripts/measure-phone-fit.py` on %s (%d games, %.0f min). **A report, with two gates** (canon §7.6.1,"
+        " Jon's rulings of 26 Oct 2026): the last answer option ends above the fold (Aa at 320: the options start above it;"
+        " on a laptop, Next after a wrong answer too), and the page never scrolls sideways. A failure"
+        " not on its list in `scripts/phone-fit-state.json` (HARD FAIL), a listed entry that now passes"
         " (STALE) or an unmeasurable game not on its list makes the run exit 1; KNOWN FAIL is reported, never failed."
         % (datetime.date.today().isoformat(), len(games), elapsed / 60),
         "The standard is canon §7.6.1, the phone rule. Regenerate it with the same command; do not edit it by hand.",
         "",
     ] + (["**Aa (OpenDyslexic) mode on** (`--aa`).", ""] if aa else []) + (
+        ["**Laptop and projector sizes** (`--laptop`, ruling R2): the last answer option and Next both end above the fold.", ""]
+        if mode == "laptop" else []) + (
         ["**Report mode** (`--sizes`): measured at %s, judged against nothing; nothing here fails the run." %
          ", ".join("%d×%d" % sz for sz in sizes), ""] if report else []) + [
         "Each cell is `bottom edge / fold` in CSS pixels from the top of the page, ✓ above the fold, ✗ below it.",
@@ -728,8 +780,9 @@ async def run(args):
     if args.json:
         with open(args.json, "w", encoding="utf-8", newline='') as fh:
             json.dump(results, fh)
-    report = args.sizes != SIZES
-    games = write_report(results, args.out, time.time() - t0, args.aa, args.only, args.sizes, report)
+    report = args.sizes not in (SIZES, LAPTOP_SIZES)
+    mode = "laptop" if args.laptop else "aa" if args.aa else "normal"
+    games = write_report(results, args.out, time.time() - t0, mode, args.only, args.sizes, report)
     for st, sev, slug, rows, detail in games:
         print("  %-20s %-28s %s" % (st, slug, detail))
     print("wrote", args.out)
@@ -758,27 +811,27 @@ def selftest():
     fits = [row(320, 300, 400, 500), row(375, 300, 400, 500), row(390, 300, 400, 500)]
     gone = [none(320), none(375), none(390)]
     cases = [
-        # (name, rows, aa, known sizes, on the unmeasurable list, wanted status)
-        ("everything above the fold", fits, False, (), False, "PASS"),
-        ("options start below the fold at 375", [fits[0], row(375, 640, 700, 800), fits[2]], False, (), False, HARD_FAIL),
-        ("options start below the fold in Aa at 320", [row(320, 540, 600, 700), fits[1], fits[2]], True, (), False, HARD_FAIL),
-        ("normal 320: the last option below, the first above", [row(320, 500, 600, 400), fits[1], fits[2]], False, (), False, HARD_FAIL),
-        ("normal 390: the last option below, the first above", [fits[0], fits[1], row(390, 700, 820, 500)], False, (), False, HARD_FAIL),
-        ("Aa 375: the last option below, the first above", [fits[0], row(375, 600, 700, 500), fits[2]], True, (), False, HARD_FAIL),
-        ("Aa 320: the last option below, the first above", [row(320, 500, 600, 700), fits[1], fits[2]], True, (), False, WARN_AA),
-        ("Aa 320: Next below, options start above", [row(320, 300, 520, 700), fits[1], fits[2]], True, (), False, WARN_AA),
-        ("normal 320: last option below, listed", [row(320, 500, 600, 400), fits[1], fits[2]], False, ("320x568",), False, KNOWN_FAIL),
-        ("normal: listed at 320, fails at 320 and 375", [row(320, 500, 600, 400), row(375, 600, 700, 400), fits[2]], False,
+        # (name, rows, mode, known entries, on the unmeasurable list, wanted status)
+        ("everything above the fold", fits, "normal", (), False, "PASS"),
+        ("options start below the fold at 375", [fits[0], row(375, 640, 700, 800), fits[2]], "normal", (), False, HARD_FAIL),
+        ("options start below the fold in Aa at 320", [row(320, 540, 600, 700), fits[1], fits[2]], "aa", (), False, HARD_FAIL),
+        ("normal 320: the last option below, the first above", [row(320, 500, 600, 400), fits[1], fits[2]], "normal", (), False, HARD_FAIL),
+        ("normal 390: the last option below, the first above", [fits[0], fits[1], row(390, 700, 820, 500)], "normal", (), False, HARD_FAIL),
+        ("Aa 375: the last option below, the first above", [fits[0], row(375, 600, 700, 500), fits[2]], "aa", (), False, HARD_FAIL),
+        ("Aa 320: the last option below, the first above", [row(320, 500, 600, 700), fits[1], fits[2]], "aa", (), False, WARN_AA),
+        ("Aa 320: Next below, options start above", [row(320, 300, 520, 700), fits[1], fits[2]], "aa", (), False, WARN_AA),
+        ("normal 320: last option below, listed", [row(320, 500, 600, 400), fits[1], fits[2]], "normal", ("320x568",), False, KNOWN_FAIL),
+        ("normal: listed at 320, fails at 320 and 375", [row(320, 500, 600, 400), row(375, 600, 700, 400), fits[2]], "normal",
          ("320x568",), False, HARD_FAIL),
-        ("normal: listed at 320 and 375, fails at 320 only", [row(320, 500, 600, 400), fits[1], fits[2]], False,
+        ("normal: listed at 320 and 375, fails at 320 only", [row(320, 500, 600, 400), fits[1], fits[2]], "normal",
          ("320x568", "375x667"), False, STALE),
-        ("listed at 320 but passes", fits, False, ("320x568",), False, STALE),
-        ("unmeasurable, listed", gone, False, (), True, UNMEASURABLE),
-        ("unmeasurable, not listed", gone, True, (), False, UNMEASURABLE_NEW),
-        ("on the unmeasurable list but measured", fits, False, (), True, STALE),
-        ("normal 320: Next below the fold (reported)", [row(320, 300, 400, 700), fits[1], fits[2]], False, (), False, "FAIL"),
-        ("Aa 375: Next below the fold (reported)", [fits[0], row(375, 300, 400, 700), fits[2]], True, (), False, "FAIL"),
-        ("Aa 320 scrolling sideways", [row(320, 300, 400, 500, sw=360), fits[1], fits[2]], True, (), False, "FAIL"),
+        ("listed at 320 but passes", fits, "normal", ("320x568",), False, STALE),
+        ("unmeasurable, listed", gone, "normal", (), True, UNMEASURABLE),
+        ("unmeasurable, not listed", gone, "aa", (), False, UNMEASURABLE_NEW),
+        ("on the unmeasurable list but measured", fits, "normal", (), True, STALE),
+        ("normal 320: Next below the fold (reported)", [row(320, 300, 400, 700), fits[1], fits[2]], "normal", (), False, "FAIL"),
+        ("Aa 375: Next below the fold (reported)", [fits[0], row(375, 300, 400, 700), fits[2]], "aa", (), False, "FAIL"),
+        ("Aa 320 scrolling sideways, not listed", [row(320, 300, 400, 500, sw=360), fits[1], fits[2]], "aa", (), False, HARD_FAIL),
     ]
     # The start screen is measured for the report, never judged (Jon's correction, 26 Oct 2026).
     def with_start(rows, picker_bottom):
@@ -791,10 +844,48 @@ def selftest():
         return out
     cases += [
         ("start screen fits, question below the fold at 320", with_start([row(320, 500, 600, 400), fits[1], fits[2]], 300),
-         False, (), False, HARD_FAIL),
-        ("start screen below the fold, question fits (report only)", with_start(fits, 900), False, (), False, "PASS"),
+         "normal", (), False, HARD_FAIL),
+        ("start screen below the fold, question fits (report only)", with_start(fits, 900), "normal", (), False, "PASS"),
+    ]
+    # Sideways scroll, a gate with its own list (contract FOLD-COMPONENTS, Jon 26 Oct 2026). Planted: (name, rows, mode,
+    # known entries, unmeasurable listed, wanted status, sideways list).
+    side = [row(320, 300, 400, 500, sw=410), fits[1], fits[2]]
+    side_cases = [
+        ("normal 320 scrolls sideways, not listed", side, "normal", (), False, HARD_FAIL, ()),
+        ("normal 320 scrolls sideways, listed", side, "normal", (), False, KNOWN_FAIL, ("320x568",)),
+        ("listed as sideways at 320 but does not scroll", fits, "normal", (), False, STALE, ("320x568",)),
+        ("sideways listed, a new size scrolls too", [side[0], row(375, 300, 400, 500, sw=420), fits[2]], "normal", (), False,
+         HARD_FAIL, ("320x568",)),
+    ]
+    # The laptop rule, R2: the last option AND Next above the fold at 1366x768 and 1280x720.
+    def lap(w, bottom, nxt, found=True):
+        h = {1366: 768, 1280: 720}[w]
+        return {"w": w, "h": h, "note": "", "ask": {"top": 300, "bottom": bottom, "fold": h - 40, "sw": w, "vw": w},
+                "wrong": {"found": found, "bottom": nxt, "fold": h - 40, "sw": w, "vw": w}}
+    lfit = [lap(1366, 500, 600), lap(1280, 500, 600)]
+    lap_cases = [
+        ("laptop: everything above the fold", lfit, "laptop", (), False, "PASS", ()),
+        ("laptop 1280: the last option below the fold", [lfit[0], lap(1280, 700, 600)], "laptop", (), False, HARD_FAIL, ()),
+        ("laptop 1366: Next below the fold (the gate here)", [lap(1366, 500, 760), lfit[1]], "laptop", (), False, HARD_FAIL, ()),
+        ("laptop 1366: Next below, listed", [lap(1366, 500, 760), lfit[1]], "laptop", ("1366x768 next",), False, KNOWN_FAIL, ()),
+        ("laptop: Next listed at 1366 but fits", lfit, "laptop", ("1366x768 next",), False, STALE, ()),
+        ("laptop: no Next control is not judged", [lap(1366, 500, 0, found=False), lap(1280, 500, 0, found=False)], "laptop", (),
+         False, "PASS (no Next)", ()),
+    ]
+    # A canvas question measured by its box (classification; the page side is planted in Chromium below).
+    def cv(r):
+        r = dict(r); r["ask"] = dict(r["ask"], canvas=True); return r
+    canvas_cases = [
+        ("canvas: its box and controls above the fold", [cv(r) for r in fits], "normal", (), False, "PASS", ()),
+        ("canvas: its Fire button below the fold at 320", [cv(row(320, 200, 560, 400)), cv(fits[1]), cv(fits[2])], "normal", (),
+         False, HARD_FAIL, ()),
+        ("canvas: measured now, still on the unmeasurable list", [cv(r) for r in fits], "normal", (), True, STALE, ()),
     ]
     ok = True
+    for name, rows, mode, known, unl, want, sw in side_cases + lap_cases + canvas_cases:
+        got = classify(rows, mode, known, unl, sw)[0]
+        print("  %s  %-52s %s" % ("ok  " if got == want else "FAIL", name, got))
+        ok = ok and got == want
     for name, rows, aa, known, unl, want in cases:
         got = classify(rows, aa, known, unl)[0]
         print("  %s  %-52s %s" % ("ok  " if got == want else "FAIL", name, got))
@@ -820,13 +911,58 @@ def selftest():
     ok = ok and good and caught and still == (500, True) and ceiling == (5000, False)
     with open(STATE, encoding="utf-8") as fh:
         st = json.load(fh)
-    for mode in ("normal", "aa"):
+    phone = {"%dx%d" % s for s in SIZES}
+    laptop = {"%dx%d" % s for s in LAPTOP_SIZES}
+    allowed = {"normal": phone, "aa": phone, "laptop": {k + " " + c for k in laptop for c in ("option", "next")}}
+    for mode in ("normal", "aa", "laptop"):
         for slug, sizes in st["known-failures"][mode].items():
-            if not sizes or set(sizes) - {"%dx%d" % s for s in SIZES}:
-                print("  FAIL  phone-fit-state.json: %s/%s has no sizes or an unknown one" % (mode, slug))
+            if not sizes or set(sizes) - allowed[mode]:
+                print("  FAIL  phone-fit-state.json: known-failures %s/%s has no entries or an unknown one" % (mode, slug))
                 ok = False
+        for slug, sizes in st["sideways"][mode].items():
+            if not sizes or set(sizes) - (laptop if mode == "laptop" else phone):
+                print("  FAIL  phone-fit-state.json: sideways %s/%s has no sizes or an unknown one" % (mode, slug))
+                ok = False
+    ok = canvas_plant() and ok
     print("selftest: %s" % ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
+
+
+def canvas_plant():
+    """The page side of the canvas measurement, in Chromium on planted pages: a canvas question whose Fire button ends
+    below the fold is measured by the canvas and the button and fails; one that fits passes; a page with an option
+    group never falls back to the canvas. No per-game code: the same __pfAsking every game runs."""
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        print("  FAIL  canvas plant: Playwright is not installed")
+        return False
+    page_html = ("<!doctype html><html><head><meta name='viewport' content='width=device-width'></head>"
+                 "<body style='margin:0'><header style='height:60px'><a href='#'>Back</a></header>"
+                 "<canvas width='300' height='%d' style='display:block;width:300px;height:%dpx'></canvas>"
+                 "<button onclick='1'>Fire</button>%s</body></html>")
+    plants = [
+        ("canvas plant: Fire below the fold, measured and over", page_html % (520, 520, ""), lambda a: a["canvas"] and a["bottom"] > a["fold"]),
+        ("canvas plant: canvas and Fire fit", page_html % (300, 300, ""), lambda a: a["canvas"] and a["bottom"] <= a["fold"]),
+        ("canvas plant: an option group wins over the canvas", page_html % (300, 300,
+         "<div><button onclick='1'>12</button><button onclick='1'>15</button><button onclick='1'>18</button></div>"),
+         lambda a: not a["canvas"]),
+    ]
+    ok = True
+    with sync_playwright() as p:
+        b = p.chromium.launch()
+        for name, html, want in plants:
+            pg = b.new_page(viewport={"width": 320, "height": 568})
+            pg.set_content(html)
+            pg.evaluate(cs.TIER3_INIT)
+            pg.evaluate(CORRECT_INIT)
+            a = pg.evaluate("window.__pfAsking()")
+            good = bool(a["n"]) and want(a)
+            print("  %s  %-52s %s" % ("ok  " if good else "FAIL", name, "canvas=%s bottom %s / %s" % (a["canvas"], a["bottom"], a["fold"])))
+            ok = ok and good
+            pg.close()
+        b.close()
+    return ok
 
 
 def parse_sizes(text):
@@ -853,10 +989,16 @@ def main():
     ap.add_argument("--aa", action="store_true",
                     help="measure with Aa (OpenDyslexic) mode on; use with --out, the default report is normal mode")
     ap.add_argument("--chromium", help="launch this Chromium binary instead of Playwright's own")
+    ap.add_argument("--laptop", action="store_true",
+                    help="judge the laptop and projector sizes, 1366x768 and 1280x720, normal mode (ruling R2)")
     ap.add_argument("--sizes", type=parse_sizes, default=SIZES,
                     help="WxH,WxH,... (report mode: measured, judged against nothing, never exits 1), e.g. 1366x768,1280x720")
     ap.add_argument("--json", help="also write every raw measurement to this file")
     args = ap.parse_args()
+    if args.laptop:
+        if args.aa:
+            sys.exit("--laptop judges normal mode only (ruling R2); drop --aa")
+        args.sizes = LAPTOP_SIZES
     asyncio.run(run(args))
 
 
