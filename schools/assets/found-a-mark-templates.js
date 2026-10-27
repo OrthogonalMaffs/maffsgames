@@ -303,7 +303,7 @@
           { expr: dec(1 + r / 100), 'for': 'mult', why: dec(1 + r / 100) + ' is for a rise. The value falls by ' + r + '%, so ' + (100 - r) + '% is left: ' + m + '.' },
           { expr: rr, 'for': 'mult', why: rr + ' is the amount lost, not what is left. ' + (100 - r) + '% is left, so the multiplier is ' + m + '.' },
           { expr: P + ' * ' + r, 'for': 'mult', deps: [], why: 'That multiplies by ' + r + ', not by ' + r + '%. Per cent means out of 100.' },
-          { expr: P + ' / ' + r, 'for': 'year', why: 'Dividing by ' + r + ' is not finding ' + r + '%. Write ' + r + '% as ' + rr + ' and multiply.' },
+          { expr: P + ' / ' + r, 'for': 'change1', why: 'Dividing by ' + r + ' is not finding ' + r + '%. Write ' + r + '% as ' + rr + ' and multiply.' },
           { expr: P + ' * ' + rr + ' * ' + n, 'for': 'final', why: 'That takes the same amount off every year. A percentage fall is taken off the smaller value each time: use the multiplier as a power.' },
           { expr: P + ' * ' + m + ' * ' + n, 'for': 'final', deps: ['mult'], why: 'That multiplies by the years. Multiplying by ' + m + ' once a year is a power, ' + m + ' to the ' + n + '.' },
           { expr: P + ' * ' + dec(1 + r / 100) + ' ^ ' + n, 'for': 'final', why: 'That makes the value grow. It is falling, so the multiplier is below 1.' }
@@ -313,7 +313,7 @@
           { expr: dec(1 + r / 10), 'for': 'mult', why: dec(1 + r / 10) + ' treats ' + r + '% as ' + dec(r / 10) + '. ' + r + '% is ' + rr + ', so the multiplier is ' + m + '.' },
           { expr: rr, 'for': 'mult', why: rr + ' is just the interest. Adding it to 1 keeps the original amount: the multiplier is ' + m + '.' },
           { expr: P + ' * ' + r, 'for': 'mult', deps: [], why: 'That multiplies by ' + r + ', not by ' + r + '%. Per cent means out of 100.' },
-          { expr: P + ' * ' + r, 'for': 'year', why: 'That multiplies by ' + r + ', not by ' + r + '%. Per cent means out of 100.' },
+          { expr: P + ' * ' + r, 'for': 'change1', why: 'That multiplies by ' + r + ', not by ' + r + '%. Per cent means out of 100.' },
           { expr: P + ' * ' + rr + ' * ' + n, 'for': 'final', why: "That is simple interest: the same amount every year. Compound interest is worked out on the growing total, so use the multiplier as a power." },
           { expr: P + ' * ' + m + ' * ' + n, 'for': 'final', deps: ['mult'], why: 'That multiplies by the years. Multiplying by ' + m + ' once a year is a power, ' + m + ' to the ' + n + '.' },
           { expr: P + ' * ' + dec(1 + r / 10) + ' ^ ' + n, 'for': 'final', why: dec(1 + r / 10) + ' treats ' + r + '% as ' + dec(r / 10) + '. ' + r + '% is ' + rr + '.' }
