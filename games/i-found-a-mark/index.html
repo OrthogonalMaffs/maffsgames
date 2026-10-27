@@ -120,6 +120,9 @@ body.playing a.back-link{display:none}
   .hud{padding:.2rem .5rem}
 }
 @media (max-height:620px){.diagram svg{width:230px}.qtext{font-size:.94rem}.jar{min-height:44px;padding:.25rem .6rem}.slot{width:30px;height:30px}}
+/* A short phone with the real fonts (CI's, where options wrap more): tighten the card so the last option and Next stay above the fold. */
+@media (max-height:620px){.qcard{gap:.3rem}.opts{gap:.3rem}.opts .btn{font-size:.88rem;padding:.3rem .6rem}.hud{padding:.1rem .5rem;margin-bottom:.3rem}.hud-label{display:none}.ask-line{min-height:1.2em}.ask-line h2{font-size:.88rem}}
+@media (max-height:580px){.qtext{font-size:.9rem;line-height:1.4}.jar{min-height:40px}.slot{width:28px;height:28px}.diagram svg{width:222px}.container{padding:.4rem}}
 body.accessible{letter-spacing:.12em;word-spacing:.16em}
 body.accessible .hud-label,body.accessible .hud-val{letter-spacing:0}
 body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;max-width:65ch}
