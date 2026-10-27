@@ -84,6 +84,10 @@ jobs:
       - name: Content groups (packed from each verifier's ci-line headers and main's measured times)
         id: groups
         run: python scripts/ci-groups.py --selftest && python scripts/ci-groups.py --check && python scripts/ci-groups.py && python scripts/ci-groups.py --github-output "$GITHUB_OUTPUT"
+      # GATE-WARN-THEN-ENFORCE step 2 (Jon, 27 Oct 2026; canon 7.8.4): a pull request that touches the gate's own files
+      # (ci-groups.py's GATE_PREFIXES) also passes --check on the selection a change to scripts/bank_common.py makes.
+      - name: Worst-case test (a gate change is judged as a change to bank_common.py)
+        run: python scripts/ci-groups.py --worst-case
       - name: Select
         id: select
         env:

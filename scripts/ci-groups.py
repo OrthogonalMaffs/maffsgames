@@ -738,6 +738,54 @@ def base_warn_list(env=None):
         return None
 
 
+# The gate's own files (GATE-WARN-THEN-ENFORCE step 2, Jon 27 Oct 2026): a pull request that touches one also passes the
+# worst-case test. The limits live in ci-groups.py (70%, 80%, 100%), check-context-size.py (20 KB) and merge-pr.py (the main
+# rule); ci-deps.py is the selection; ci_shards.py divides the verifiers; the workflow runs them all.
+GATE_PREFIXES = (".github/", "scripts/ci-", "scripts/ci_shards.py", "scripts/merge-pr.py", "scripts/check-context-size.py",
+                 "scripts/check-changed.py", "requirements")
+WORST_CASE = "scripts/bank_common.py"      # the shared import nearly every verifier loads: the widest selective change
+
+
+def gate_paths(changed):
+    """The changed paths that are the gate's own files."""
+    return sorted(p for p in (c.replace("\\", "/").strip() for c in changed) if p.startswith(GATE_PREFIXES))
+
+
+def importers(hdrs=None):
+    """{'scripts/<name>.py'}: every script with a CI line that imports bank_common itself."""
+    hdrs = headers() if hdrs is None else hdrs
+    out = set()
+    for name, h in hdrs.items():
+        if not (h.get("lines") or h.get("shards")):
+            continue
+        try:
+            text = open(os.path.join(SCRIPTS, name), encoding="utf-8").read()
+        except OSError:
+            continue
+        if re.search(r"^\s*(import bank_common\b|from bank_common import)", text, re.M):
+            out.add("scripts/" + name)
+    return out
+
+
+def worst_case(changed, deps, gs=None, timings=None, listed=None, need=None):
+    """(applies, faults, how): the worst-case test (GATE-WARN-THEN-ENFORCE step 2). When `changed` touches a gate file, the
+    budget check runs again on the selection a change to scripts/bank_common.py makes, as Plan would judge that pull request:
+    every verifier that imports it (`need`, default importers()) must be selected, and the result must pass. A gate change
+    that would fail every shared-asset PR (the per-line limit of 27 Oct, which blocked #583) fails its own PR instead."""
+    gates = gate_paths(changed)
+    if not gates:
+        return False, [], "no gate file changed: the worst-case test does not apply"
+    run_all, reasons, picked = deps.select([WORST_CASE])
+    if run_all:
+        return True, ["a change to %s selects every verifier for a reason of its own (%s): the worst case cannot be judged "
+                      "on a real selection" % (WORST_CASE, "; ".join(reasons) or "run all")], "gate files: %s" % ", ".join(gates)
+    sel = set(picked)
+    need = importers() if need is None else set(need)
+    faults = ["%s imports bank_common but a change to %s does not select it" % (s, WORST_CASE) for s in sorted(need - sel)]
+    faults += budget_faults(gs, timings, sel, listed)
+    return True, faults, "gate files: %s; a change to %s selects %d verifier(s)" % (", ".join(gates), WORST_CASE, len(sel))
+
+
 def pr_selection(env=None, deps=None):
     """(selected, how) for --check: the scripts the change being checked selects, as CI's plan job selects them
     (scripts/ci-deps.py select() on the files changed since the base), or () for none. A change that selects every verifier
@@ -1665,6 +1713,32 @@ def selftest():
         kept = json.load(open(wpath, encoding="utf-8"))
     check("the timings job prunes the list: 'b' (inside the limit) removed, 'a' (over it) kept, the rest of the file kept",
           gone == ["b"] and kept == {"about": "x", "per-line": ["a"]})
+    # The worst-case test (GATE-WARN-THEN-ENFORCE step 2): a gate change is judged on bank_common.py's selection.
+    wsel = Deps([], (False, [], {"scripts/verify-x.py": [WORST_CASE], "scripts/verify-y.py": [WORST_CASE]}))
+    t150 = one(150)                                   # a 150 s line + 20 s setup = 170 s: inside the 189 s limit
+    g150 = groups(hs, t150, {})
+    ap_, fl, _ = worst_case(["games/x/index.html"], wsel, g150, t150, [])
+    check("worst case: a change with no gate file is not judged", not ap_ and not fl)
+    ap_, fl, how = worst_case([".github/workflows/check-site.yml"], wsel, g150, t150, [], need=X | Y)
+    check("worst case: a workflow change on today's timings passes (%s)" % how, ap_ and not fl)
+    old = globals()["TARGET"]
+    globals()["TARGET"] = 0.60                        # PLANT: a gate change lowering the per-line limit to 60% (162 s)
+    try:
+        ap_, fl, _ = worst_case(["scripts/ci-groups.py"], wsel, g150, t150, [], need=X | Y)
+    finally:
+        globals()["TARGET"] = old
+    check("PLANT a gate change that breaks on a full selection (the per-line limit at 60%%) fails its own PR: %s" % (fl[:1],),
+          ap_ and any("verify-x.py" in x and "per-line limit" in x for x in fl))
+    ap_, fl, _ = worst_case(["scripts/merge-pr.py"], wsel, g150, t150, [], need=X | Y | {"scripts/verify-z.py"})
+    check("PLANT an importer the bank_common selection misses: a fault naming it",
+          any("verify-z.py imports bank_common" in x for x in fl))
+    ap_, fl, _ = worst_case(["scripts/ci_shards.py"], Deps([], (True, ["CI itself"], {})), g150, t150, [])
+    check("PLANT bank_common.py selecting everything (no real selection): a fault", ap_ and len(fl) == 1)
+    check("gate files: the workflow, ci-groups, ci_shards, merge-pr, the context-size limit; not a game or a verifier",
+          gate_paths([".github/workflows/x.yml", "scripts/ci-groups.py", "scripts/ci_shards.py", "scripts/merge-pr.py",
+                      "scripts/check-context-size.py", "games/a/index.html", "scripts/verify-x.py", "scripts/bank_common.py"])
+          == [".github/workflows/x.yml", "scripts/check-context-size.py", "scripts/ci-groups.py", "scripts/ci_shards.py",
+              "scripts/merge-pr.py"])
     # REGION-HISTORY: the per-region record keeps 10 per line per region and leaves ci-timings.json alone.
     regs = ["eastus", "centralus", "westus"]
 
@@ -1810,6 +1884,8 @@ def main():
     ap.add_argument("--check-measured", action="store_true", help="the budget check on this PR run's measured times "
                     "(needs --run-id and --from-dir)")
     ap.add_argument("--run-id", metavar="ID", help="with --check-measured: this run's id")
+    ap.add_argument("--worst-case", action="store_true", help="a pull request touching the gate: the budget check on the "
+                    "selection a change to scripts/bank_common.py makes (GATE-WARN-THEN-ENFORCE step 2)")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
@@ -1823,6 +1899,22 @@ def main():
         return write_pack()
     if a.check_measured:
         return check_measured(a.run_id or "0", a.from_dir)
+    if a.worst_case:
+        base, why = pr_base()
+        if base is None:
+            print("worst-case: %s: nothing to judge (the test is for a pull request)" % why[1])
+            return 0
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("ci_deps", os.path.join(SCRIPTS, "ci-deps.py"))
+        deps = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(deps)
+        applies, faults, how = worst_case(deps.changed_since(base), deps)
+        print("worst-case: " + how)
+        for x in faults:
+            print("FAIL  " + x)
+        if applies:
+            print("worst-case: %s" % ("FAILED" if faults else "PASS"))
+        return 1 if faults else 0
     if a.check:
         timings = read_json(TIMINGS)
         gs = groups(timings=timings)
