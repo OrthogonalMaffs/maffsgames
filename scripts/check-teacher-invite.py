@@ -87,7 +87,7 @@ RESULTS = {
     "matrix-crunch": "results", "characteristic-quest": "results", "eigenvalue-extractor": "results",
     "eigenvector-engine": "results", "six-sevens-bruv": "results", "free-daily-pizza": "results",
     "just-pythag-it-bruv": "results", "estimation-engine": "results", "how-many-parts": "results", "take-a-walk": "results",
-    "squared-squirrel": "results",
+    "squared-squirrel": "results", "i-found-a-mark": "results",
 }
 
 START_SCREEN = {

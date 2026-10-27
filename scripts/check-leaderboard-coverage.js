@@ -160,7 +160,9 @@ const NOT_ON_HUB = {
   // Jon, 6 Oct 2026 (20:30): unlisted for the tranche 3-6 audits' faults (canon SR-20) until
   // each game's verifier merges and its register entries are fixed; the hub row is restored, and this
   // entry removed, in that PR.
-  'glorious-gantt': 'unlisted pending its tranche 4 audit fix; hub row restored at relisting'
+  'glorious-gantt': 'unlisted pending its tranche 4 audit fix; hub row restored at relisting',
+  // New (contract FOUND-A-MARK, 27 Oct 2026): merged unlisted for Jon to play; the hub row is added at listing.
+  'i-found-a-mark': 'new, unlisted until Jon has played and approved it; hub row added at listing'
 };
 
 // The levels a game submits under are read from its source: the level argument of
