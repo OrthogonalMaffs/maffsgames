@@ -1815,6 +1815,41 @@ finished red at 07:13:43Z. It is now enforced by one command both lanes use for 
   are each covered; with the red-main check removed, or the run-only `check_main()` planted, the selftest fails.
 - Branch protection on GitHub is Jon's and is not changed by this script.
 
+### 7.8.4 The gate: warn, then enforce (Jon, 27 Oct 2026, contract GATE-WARN-THEN-ENFORCE)
+
+Six stalls on 27 Oct 2026 had two causes. New gate rules failed from the day they came in, before existing code met them:
+the per-line 70% limit (#583 blocked on lines it did not touch), merge-pr.py's job paging (HTTP 502 refused every merge),
+the 20 KB handover limit (twice). And gating checks were not repeatable: a random draw, and measurements taken before the
+fonts settled (red mains after #566 and #576, and on 39b7c99, where The 6 P's phone check typed 0.00004 as "4e-05" whenever
+its random draw served that question: #588). The rule, for every lane:
+
+- **New limits and checks warn first.** A new limit or gating check starts as a warning, with a shrink-only warn list of
+  what fails it on main when it comes in, and fails only once main passes it. A listed item warns; an unlisted one fails; a
+  pull request may remove an entry, never add one, and one that edits the list leaves no entry that passes now. The lane that
+  adds a limit clears its warnings. The per-line limit's list is `scripts/ci-warn-list.json` (§7.8.1); main's timings job
+  removes each entry whose line passes now, in its timings commit.
+- **A line with no recorded time is estimated and warned, never failed:** a new or renamed line, or a sharded verifier's
+  part whose units no main run has timed. The 70% and 80% rules apply once its first main run records it. Past 100% of a
+  group's budget, a time measured on the line's own pull-request run still fails: merged, it would refuse main's pack.
+- **Gate changes pass the worst-case test** (built, parked on `claude/gate-worst-case` by Jon's infrastructure freeze until
+  Mon 2 Nov 2026; until it merges, the lane making a gate change runs it by hand). A pull request that touches the gate's
+  own files (`.github/`, `scripts/ci-*`, `scripts/ci_shards.py`, `scripts/merge-pr.py`, `scripts/check-context-size.py`,
+  `scripts/check-changed.py`, `requirements*`) also passes the budget check on the selection a change to
+  `scripts/bank_common.py` makes, every verifier that imports it included.
+- **Gating checks are repeatable.** No random sampling in a gate: every item, or the worst case with a fixed seed. Every
+  page measurement waits for the shared settle (`bank_common.wait_settled`). Random samples may appear in reports, never
+  in the gate. The conversion is step 4, from Mon 2 Nov (Jon's ruling, 27 Oct): the stub server injects a fixed default
+  seed for `Math.random` into every page it serves, each verifier keeps a fixed list of seeds, and a separate nightly,
+  non-gating sweep plays fresh seeds and reports any failing seed, which is then added to that verifier's list. Random
+  sampling lives only in that sweep. Take a Walk's `Date.now` seed is fixed with it.
+- **A failed main run may be re-run once, failed jobs only, by any lane.** A pass on the re-run is reported to the cloud lane
+  as a flake and goes on the repeatability audit's list. Known: The 6 P's, Content verifiers 91 (tap timeout, 39b7c99, run
+  40570027404, passed on its re-run): a deterministic driver bug that a random draw reached about one run in three (#588).
+- **A handover past 20 KB will archive itself** (built, parked on `claude/gate-handover-archive` until Mon 2 Nov 2026):
+  a warning on a pull request, and after the merge main moves its oldest dated entries to that lane's `docs/history/`
+  archive, word for word. Until then the lane moves them by hand, as before.
+- **Only the cloud lane changes gate files;** another lane reports what it needs and waits.
+
 ## 7.9 Verifier conventions (Jon, 8 Oct 2026)
 
 - **Read a mark from what the page shows, never from a wrapped `mfg`.** analytics.js can replace `window.mfg` after a
