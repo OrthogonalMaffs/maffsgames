@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- UNLISTED (contract WHO-ATE-ALL-THE-PIES, 27 Oct 2026): live at its URL for Jon to play; off the portal, the sitemap and the leaderboard hub until he lists it. -->
+<meta name="description" content="Read pie charts, find amounts, draw them from a table, say when you can't tell, and work back to the total. For GCSE. Free, no sign-up.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/who-ate-all-the-pies/">
+<meta property="og:title" content="Pie Charts Game – GCSE Maths | MaffsGames">
+<meta property="og:description" content="Read pie charts, find amounts, draw them from a table, say when you can't tell, and work back to the total. For GCSE. Free, no sign-up.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/who-ate-all-the-pies/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Pie Charts Game – GCSE Maths | MaffsGames</title>
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/answer-count.js" defer></script>
+<script src="/schools/assets/fold.js" defer></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<style>
+/* Theme: schools/assets/theme.css (canon §7.5), light row: the check derives the palette from the roster's levels and the
+   lowest tier served is GCSE. This game's own tokens: a pastry brown accent and five slice colours (each slice also has its own
+   pattern and a written label, so colour is never the only thing telling them apart). */
+:root{--accent:#9a4a12;--accent-dim:#fbebdb;--on-accent:#ffffff;--ink:#1a2744;
+  --p0:#d9822b;--p1:#4f8fb5;--p2:#7ba05b;--p3:#b5658a;--p4:#c9b037;--pattern:#1a2744;--stall:#7a2f1d;--stall-d:#5a2014;--awning:#f1dfc4}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:720px;width:100%;padding:1rem}
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.4rem 0}
+.header h1{font-size:1.9rem;font-weight:700;color:var(--accent);line-height:1.15}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem 0 .5rem}
+@media (max-width:420px){.header h1{font-size:1.5rem}}
+.screen{display:none}.screen.active{display:block}
+[hidden]{display:none!important}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.9rem auto;max-width:600px}
+.menu-info{color:var(--text);font-size:.95rem;line-height:1.65}
+.menu-info p+p{margin-top:.6rem}
+.btn{min-height:44px;padding:.6rem 1.2rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--accent-dim)}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.res-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
+
+/* The pie stall on the start screen: flat shapes. */
+.stall{display:block;width:100%;max-width:340px;height:auto;margin:.2rem auto .4rem}
+.stall .bg{fill:var(--awning)}.stall .awn{fill:var(--stall)}.stall .awn-d{fill:var(--stall-d)}.stall .counter{fill:var(--stall-d)}
+.stall .pie{fill:var(--p0);stroke:var(--stall-d);stroke-width:2}.stall .pie-b{fill:var(--p2);stroke:var(--stall-d);stroke-width:2}
+
+.stages{display:flex;flex-direction:column;gap:.5rem;margin-top:.8rem}
+.stage-btn{display:flex;align-items:center;gap:.7rem;width:100%;text-align:left;min-height:56px;padding:.45rem .8rem;border-radius:12px;border:1px solid var(--border);background:var(--surface-alt);color:var(--text);cursor:pointer;font:inherit}
+.stage-btn:hover:not(:disabled){border-color:var(--accent)}
+.stage-btn:disabled{opacity:.55;cursor:default}
+.stage-btn .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:700}
+.stage-btn .t{font-weight:700;font-size:.95rem;line-height:1.2}
+.stage-btn .d{display:block;font-weight:400;font-size:.8rem;color:var(--muted);line-height:1.3}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.3rem .8rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.5rem;gap:.3rem}
+.hud-item{text-align:center;min-width:48px}
+.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.hud-val{font-family:var(--font-num);font-size:.95rem;font-weight:700}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.8rem;display:flex;flex-direction:column;gap:.5rem}
+.qtext{font-size:1.02rem;line-height:1.5}
+.qtext .katex{font-size:1.08em}
+.glue{white-space:nowrap}
+.charts{display:flex;flex-direction:column;align-items:center;gap:.15rem}
+.charts svg{display:block;max-width:100%;height:auto}
+.charts .cap{font-family:var(--font-num);font-size:12.5px;font-weight:700;fill:var(--ink)}
+.charts .sl{stroke:var(--surface);stroke-width:1.5}
+.charts .pat{stroke:var(--pattern);stroke-width:1.4;fill:none;opacity:.55}
+.charts .s0{fill:var(--p0)}.charts .s1{fill:var(--p1)}.charts .s2{fill:var(--p2)}.charts .s3{fill:var(--p3)}.charts .s4{fill:var(--p4)}
+.charts text{font-family:var(--font-num);font-size:12.5px;font-weight:700;fill:var(--ink)}
+.charts text.val{paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
+.charts .gap{fill:none;stroke:var(--wrong);stroke-width:2;stroke-dasharray:5 4}
+.charts .over{fill:none;stroke:var(--wrong);stroke-width:3}
+.charts .rim{fill:none;stroke:var(--border);stroke-width:1.5}
+.charts text.warn{fill:var(--wrong)}
+.ask-line{display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;min-height:1.4em}
+.ask-line h2{font-size:.92rem;font-weight:700}
+.msg{font-size:.85rem;font-weight:700;color:var(--muted);text-align:right}
+
+.ans-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.5rem .6rem;font-family:var(--font-num);font-size:1.15rem;font-weight:700;padding:.2rem 0}
+.slash{font-size:1.8rem;font-weight:400;color:var(--muted)}
+.ans-row .btn{min-width:6.5rem}
+.nb input{width:80px;height:44px;text-align:center;font:inherit;font-size:1.1rem;border:2px solid var(--border);border-radius:9px;background:var(--surface-alt);color:var(--text)}
+.nb input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+.ptable{border-collapse:collapse;width:100%;font-size:12.5px;table-layout:fixed}
+.ptable th,.ptable td{padding:.15rem .1rem;text-align:center;vertical-align:middle;line-height:1.15}
+.ptable th.row{width:3.2rem;text-align:left;color:var(--muted);font-weight:700}
+.ptable td.nm{font-weight:700;color:var(--ink)}
+.ptable td.fq{font-family:var(--font-num);font-weight:700;font-size:1rem}
+.ptable input{width:100%;max-width:52px;height:42px;text-align:center;font:inherit;font-size:1rem;font-weight:700;border:2px solid var(--border);border-radius:8px;background:var(--surface-alt);color:var(--text)}
+.ptable input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+.ptable .sw{display:block;width:100%;height:5px;border-radius:3px;margin-bottom:.15rem}
+.ptable .sw.s0{background:var(--p0)}.ptable .sw.s1{background:var(--p1)}.ptable .sw.s2{background:var(--p2)}.ptable .sw.s3{background:var(--p3)}.ptable .sw.s4{background:var(--p4)}
+.sumline{font-family:var(--font-num);font-size:12.5px;font-weight:700;text-align:center;color:var(--muted)}
+.sumline.bad{color:var(--wrong)}
+.actions{display:flex;justify-content:center}
+.actions .btn{min-width:10rem}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:.45rem}
+.opts .btn{min-height:48px;text-align:center;line-height:1.25;font-weight:600;color:var(--text);border-color:var(--border);background:var(--surface-alt);padding:.35rem .5rem;font-size:.9rem}
+.opts .btn:hover{border-color:var(--accent)}
+.kp-holder{margin-top:.1rem}
+
+.fb{border-radius:12px;padding:.7rem .8rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.5rem}
+.fb.wrong{border-color:var(--wrong)}
+.fb.done{border-color:var(--correct)}
+.fb-line{font-size:.95rem;line-height:1.45;padding:.35rem .65rem;border-left:3px solid var(--hint);border-radius:0 8px 8px 0}
+.fb.done .fb-line{border-left-color:var(--correct)}
+.worked{margin:0;padding:0 0 0 1.25rem;font-size:.9rem;line-height:1.45;color:var(--text)}
+.worked li+li{margin-top:.2rem}
+.worked-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.fb-next{display:flex;justify-content:center}
+.feedback:empty{display:none}
+.example .tag{font-size:.74rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
+.example .steps{margin:.3rem 0 .2rem;padding-left:1.25rem;font-size:.95rem;line-height:1.5}
+.example .steps li+li{margin-top:.25rem}
+.example .step-row{display:flex;justify-content:center;margin-top:.4rem}
+.results{text-align:center;padding:1rem 0}
+.results h2{font-size:1.35rem;margin-bottom:.3rem}
+.final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.4rem 0 .1rem}
+.final-of{color:var(--muted);font-size:.9rem;margin-bottom:.5rem}
+.stats{color:var(--muted);line-height:1.9;font-size:.95rem;margin-bottom:.8rem}
+.stats b{color:var(--text)}
+
+/* Phone rule (canon §7.6.1): once a question is marked, the boxes and keys go and the feedback takes their place. */
+.qcard.fb-open #answer,.qcard.fb-open .ask-line,.qcard.fb-open #kpHolder{display:none}
+body.playing a.back-link{display:none}
+@media (max-width:420px){
+  .container{padding:.5rem}
+  .qcard{padding:.6rem .55rem;gap:.4rem}
+  .qtext{font-size:.96rem}
+  .hud{padding:.2rem .5rem}
+}
+@media (max-height:620px){.qtext{font-size:.92rem;line-height:1.4}.fb{padding:.5rem .6rem;gap:.35rem}.worked{font-size:.84rem}.hud-label{display:none}.hud{padding:.1rem .5rem;margin-bottom:.3rem}.qcard{gap:.3rem}.ans-row{padding:0}.ask-line{min-height:1.2em}.ask-line h2{display:none}}
+@media (max-height:680px){.qcard.fb-open.keyfig #figure{display:none}}
+@media (max-height:620px){.hud-val{font-size:.85rem}.hud{padding:0 .5rem}}
+@media (max-height:580px){.qtext{font-size:.88rem;line-height:1.35}.container{padding:.4rem}}
+@media (max-height:620px){.fb-next{order:1}.fb>.worked-h,.fb>.worked{order:2}}
+body.accessible{letter-spacing:.12em;word-spacing:.16em}
+body.accessible .hud-label,body.accessible .hud-val,body.accessible .ans-row,body.accessible .ptable{letter-spacing:0}
+body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;max-width:65ch}
+body.accessible .katex{letter-spacing:normal;word-spacing:normal}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'answer' types the boxes (or taps an option) with i = 0 the right answer, i >= 1 a wrong one (named, then Next).
+{
+  "start": "PIE.ui.start(1)",
+  "ready": "!!window.PIE && PIE.ui.state() === 'asking'",
+  "answer": [
+    "PIE.ui.answer(i === 0);"
+  ]
+}
+-->
+<script src="../../schools/assets/answer.js"></script>
+<!-- The phone keypad for typed answers (MaffsKeypad, canon §4.4): the calculator is optional here, so the keypad only. -->
+<script src="../../schools/assets/keypad.js"></script>
+<script src="../../schools/assets/pie-chart-generator.js"></script>
+<script src="../../schools/assets/pie-game.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Who Ate All the Pies?</h1><div class="sub">Pie charts, from the stall on matchday.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <svg class="stall" viewBox="0 0 340 110" role="img" aria-label="A pie stall with a striped awning and two pies on the counter">
+      <rect class="bg" x="0" y="0" width="340" height="110" rx="12"/>
+      <path class="awn" d="M40 8 H300 L322 44 H18 Z"/><path class="awn-d" d="M82 8 H128 L120 44 H62 Z M174 8 H220 L226 44 H168 Z M258 8 H300 L322 44 H284 Z"/>
+      <rect class="counter" x="40" y="74" width="260" height="30" rx="4"/>
+      <circle class="pie" cx="120" cy="66" r="18"/><circle class="pie-b" cx="210" cy="66" r="18"/>
+    </svg>
+    <div class="panel menu-info">
+      <p>A pie chart shows how a whole is shared out. The whole chart is <strong>360°</strong>, so a slice's angle over 360 is its fraction of the pies.</p>
+      <p>Each stage starts with a worked example, then ten questions. Type your answers in the boxes. A calculator is optional: some questions say you can try without one.</p>
+      <div class="stages" id="stageList"></div>
+      <p class="hud-label" style="text-align:center;margin-top:.7rem">Calculator optional · 10 questions a stage</p>
+    </div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+    <div class="maffs-start-note" data-maffs-start-note></div>
+  </div>
+
+  <div id="example" class="screen">
+    <div class="qcard example" id="exCard">
+      <div class="tag" id="exTag">Worked example</div>
+      <div class="qtext" id="exText"></div>
+      <div class="charts" id="exFigure"></div>
+      <ol class="steps" id="exSteps"></ol>
+      <div class="step-row"><button class="btn solid" id="exBtn" type="button">Show the first step</button></div>
+    </div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Stage</div><div class="hud-val" id="hudStage">1</div></div>
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/10</div></div>
+      <div class="hud-item"><div class="hud-label">Marks</div><div class="hud-val" id="hudScore">0</div></div>
+    </div>
+    <div class="qcard" id="qcard">
+      <div class="qtext" id="qtext"></div>
+      <div class="charts" id="figure"></div>
+      <div class="ask-line"><h2 id="instr">Type your answer</h2><div class="msg" id="msg" aria-live="polite"></div></div>
+      <div id="answer"></div>
+      <div class="kp-holder" id="kpHolder" hidden></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resTitle">Stage done</h2>
+      <div class="final-score" id="resScore">0</div>
+      <div class="final-of" id="resOf">marks</div>
+      <div class="stats" id="resStats"></div>
+      <div class="res-btns">
+        <button class="btn solid" id="nextStageBtn" type="button">Next: Stage 2</button>
+        <button class="btn" id="againBtn" type="button">Play this stage again</button>
+        <button class="btn" id="menuBtn" type="button">All stages</button>
+      </div>
+      <p id="teacherInvite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var G = window.MaffsPieGame, A = window.MaffsAnswer, SLUG = 'who-ate-all-the-pies', PER = G.PER_STAGE, LAST = 5, FOOTER_PX = 40;
+  // One level of content, GCSE (the lowest tier served); the stages are boards, not levels, each its own analytics mode.
+  var level = MaffsLevel.resolve({ slug: 'who-ate-all-the-pies', levels: ['gcse'], fallback: 'gcse',
+    boards: ['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5'] });
+  var $ = function (id) { return document.getElementById(id); };
+  function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function tex(t) {
+    if (window.katex) { try { return katex.renderToString(t, { throwOnError: false }); } catch (e) { /* fall through */ } }
+    return esc(t.replace(/\\times/g, '×').replace(/\\div/g, '÷').replace(/\\frac\{(\d+)\}\{(\d+)\}/g, '$1/$2').replace(/\^\\circ/g, '°').replace(/\\%/g, '%').replace(/\\[;,]/g, ' ').replace(/[{}]/g, ''));
+  }
+  // The bank writes its TeX between \( and \).
+  function renderLine(line) {
+    return String(line).split(/\\\(|\\\)/).map(function (part, i) { return i % 2 ? '<span class="glue">' + tex(part) + '</span>' : esc(part); }).join('');
+  }
+  function touch() { return !!(window.matchMedia && matchMedia('(pointer: coarse)').matches); }
+  function boardOf(n) { return 'stage-' + n; }
+  function short(name) { return name === 'cheese and onion' ? 'cheese & onion' : name; }
+  var PIE_ORDER = ['steak', 'chicken balti', 'cheese and onion', 'mince', 'vegetable'];
+  function colourOf(pie) { return PIE_ORDER.indexOf(pie); }
+
+  var stage = 1, session = [], qi = 0, Q = null, state = 'menu', kp = null, inputs = [], exQ = null, exAt = 0;
+  var marks = 0, answered = 0, rightCount = 0;
+
+  function show(id) {
+    ['menu', 'example', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    document.body.classList.toggle('playing', id === 'game' || id === 'example');
+    MaffsLock.screen($(id));
+  }
+
+  /* ---------- the menu ---------- */
+  (function () {
+    var h = '';
+    for (var n = 1; n <= LAST; n++) {
+      var S = G.STAGES[n];
+      h += '<button class="stage-btn" type="button" data-stage="' + n + '"><span class="n">' + n + '</span><span><span class="t">' + esc(S.name) +
+        '</span><span class="d">' + esc(S.blurb) + '</span></span></button>';
+    }
+    $('stageList').innerHTML = h;
+  })();
+
+  /* ---------- the pie, drawn from the data ---------- */
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(name, attrs, text) {
+    var e = document.createElementNS(NS, name);
+    for (var k in attrs) if (attrs.hasOwnProperty(k)) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function pt(cx, cy, r, deg) { var t = deg * Math.PI / 180; return [cx + r * Math.sin(t), cy - r * Math.cos(t)]; }
+  function slicePath(cx, cy, r, a0, a1) {
+    var p0 = pt(cx, cy, r, a0), p1 = pt(cx, cy, r, a1), large = (a1 - a0) > 180 ? 1 : 0;
+    return 'M' + cx + ' ' + cy + ' L' + p0[0].toFixed(2) + ' ' + p0[1].toFixed(2) + ' A' + r + ' ' + r + ' 0 ' + large + ' 1 ' + p1[0].toFixed(2) + ' ' + p1[1].toFixed(2) + ' Z';
+  }
+  var uid = 0;
+  // One chart: the pie on the left, a written key on the right (name, and the angle when the question gives it). Every slice also
+  // carries a pattern of its own, so colour is never the only thing telling the slices apart. chart = {title, total, sectors}.
+  // draw: true draws from typed angles and shows a gap, or an overlap, when they do not make 360.
+  function pieSvg(chart, W, r, draw) {
+    var n = chart.sectors.length, pad = 6, rowH = window.innerHeight < 620 ? 18 : 22, titleH = chart.title ? 20 : 0, H = Math.max(2 * r + 2 * pad, n * rowH + 8) + titleH;
+    var cx = r + pad + 2, cy = titleH + H / 2 - titleH / 2, id = 'p' + (++uid);
+    var svg = el('svg', { width: W, height: H, viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'data-w': W });
+    var defs = el('defs', {}), pats = [];
+    for (var i = 0; i < 5; i++) {
+      var p = el('pattern', { id: id + 'k' + i, width: 7, height: 7, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(' + (i * 36) + ')' });
+      if (i === 0) p.appendChild(el('rect', { class: 'pat', x: 0, y: 0, width: 0, height: 0 }));
+      else if (i === 1) p.appendChild(el('line', { class: 'pat', x1: 0, y1: 0, x2: 0, y2: 7 }));
+      else if (i === 2) p.appendChild(el('circle', { class: 'pat', cx: 3.5, cy: 3.5, r: 1 }));
+      else if (i === 3) { p.appendChild(el('line', { class: 'pat', x1: 0, y1: 0, x2: 0, y2: 7 })); p.appendChild(el('line', { class: 'pat', x1: 0, y1: 0, x2: 7, y2: 0 })); }
+      else p.appendChild(el('line', { class: 'pat', x1: 0, y1: 3.5, x2: 7, y2: 3.5 }));
+      defs.appendChild(p);
+    }
+    svg.appendChild(defs);
+    if (chart.title) svg.appendChild(el('text', { class: 'cap', x: 2, y: 14 }, chart.title + (chart.total ? ': ' + chart.total + ' pies' : '')));
+    var secs = chart.sectors, sum = 0, acc = 0, desc = [];
+    secs.forEach(function (s) { if (isFinite(s.angle)) sum += s.angle; });
+    if (draw) svg.appendChild(el('circle', { class: 'rim', cx: cx, cy: cy, r: r }));
+    secs.forEach(function (s) {
+      var ang = isFinite(s.angle) ? s.angle : 0;
+      if (!(ang > 0)) return;
+      var a0 = acc, a1 = Math.min(360, acc + ang);
+      acc += ang;
+      if (a1 - a0 <= 0) return;
+      var c = colourOf(s.pie), g = el('g', { 'data-pie': s.pie, 'data-angle': s.angle, 'data-a0': a0, 'data-a1': a1 });
+      if (a1 - a0 >= 359.99) {
+        g.appendChild(el('circle', { class: 'sl s' + c, cx: cx, cy: cy, r: r }));
+        g.appendChild(el('circle', { fill: 'url(#' + id + 'k' + c + ')', cx: cx, cy: cy, r: r }));
+      } else {
+        var d = slicePath(cx, cy, r, a0, a1);
+        g.appendChild(el('path', { class: 'sl s' + c, d: d }));
+        g.appendChild(el('path', { d: d, fill: 'url(#' + id + 'k' + c + ')' }));
+      }
+      if (s.shown !== false && (a1 - a0) >= 40 && r >= 40) {
+        var m = pt(cx, cy, r * 0.62, (a0 + a1) / 2);
+        g.appendChild(el('text', { class: 'val', x: m[0].toFixed(1), y: (m[1] + 4).toFixed(1), 'text-anchor': 'middle' }, a1 - a0 + '°'));
+      }
+      svg.appendChild(g);
+    });
+    var closed = Math.abs(sum - 360) < 1e-9;
+    svg.setAttribute('data-sum', sum); svg.setAttribute('data-closed', String(closed));
+    if (draw && sum > 0 && sum < 360) svg.appendChild(el('path', { class: 'gap', d: slicePath(cx, cy, r, sum, 360) }));
+    if (draw && sum > 360) svg.appendChild(el('circle', { class: 'over', cx: cx, cy: cy, r: r + 2 }));
+    // the key
+    var kx = 2 * r + 24, ky = titleH + Math.max(4, (H - titleH - n * rowH) / 2);
+    secs.forEach(function (s, i) {
+      var c = colourOf(s.pie), y = ky + i * rowH;
+      var g = el('g', { 'data-key': s.pie });
+      g.appendChild(el('rect', { class: 's' + c, x: kx, y: y + 1, width: 14, height: 14, rx: 3 }));
+      g.appendChild(el('rect', { x: kx, y: y + 1, width: 14, height: 14, rx: 3, fill: 'url(#' + id + 'k' + c + ')' }));
+      var label = short(s.pie) + (s.shown !== false && s.angle != null && !draw ? ' ' + s.angle + '°' : '');
+      g.appendChild(el('text', { x: kx + 20, y: y + 13 }, label));
+      svg.appendChild(g);
+    });
+    if (draw) {
+      var warn = sum === 360 ? 'The angles make 360°' : (sum < 360 ? 'Only ' + sum + '° so far: it does not close' : sum + '°: too much, it overlaps');
+      svg.appendChild(el('text', { class: sum === 360 ? '' : 'warn', x: kx, y: H - 4 }, warn));
+    }
+    svg.setAttribute('aria-label', (chart.title ? chart.title + '. ' : '') + 'Pie chart: ' + secs.map(function (s) { return s.pie + (s.shown !== false ? ' ' + s.angle + ' degrees' : ''); }).join(', '));
+    return svg;
+  }
+  function chartRadius(count) {
+    var tall = window.innerHeight >= 700;
+    if (count > 1) return touch() && window.innerHeight < 620 ? 30 : (touch() || !tall ? 36 : 44);
+    return touch() ? (window.innerHeight < 620 ? 30 : 52) : 64;
+  }
+  function drawFigure(into, q, typedAngles) {
+    var host = into; host.innerHTML = '';
+    var W = Math.min(host.parentNode.clientWidth - 24 || 280, 330);
+    var charts = q.charts;
+    if (q.type === 'angles') {
+      var T = q.sectors.map(function (s, i) { return { pie: s.pie, angle: typedAngles ? typedAngles[i] : s.angle, shown: false }; });
+      host.appendChild(pieSvg({ sectors: T }, W, chartRadius(1), true));
+      return;
+    }
+    charts.forEach(function (ch, i) {
+      var c = { title: charts.length > 1 ? ch.stand : '', total: charts.length > 1 ? ch.total : null, sectors: ch.sectors };
+      host.appendChild(pieSvg(c, W, chartRadius(charts.length), false));
+    });
+  }
+
+  /* ---------- the stage's worked example ---------- */
+  function stemFor(q) {
+    if (q.type === 'angles') return 'The table shows the pies sold in the ' + q.charts[0].stand + ' on matchday. ' + q.total + ' pies were sold in total. Work out the angle for each pie.';
+    return q.stem;
+  }
+  function allAngles(q) {
+    return 'So the angles are ' + q.sectors.map(function (s) { return s.pie + ' ' + s.angle + '°'; }).join(', ') + ', and they add to 360°.';
+  }
+  function workedLines(q) { var w = q.worked.slice(); if (q.type === 'angles') w.push(allAngles(q)); return w; }
+
+  function startStage(n, skipExample) {
+    MaffsLock.newSession();
+    stage = n;
+    ev('game_started', { game_slug: SLUG, level: level, mode: 'stage-' + n });
+    if (skipExample) { startQuestions(); return; }
+    exQ = G.example(n); exAt = 0;
+    show('example');
+    $('exTag').textContent = 'Stage ' + n + ': ' + G.STAGES[n].name + '. Worked example';
+    $('exText').innerHTML = '<p>' + renderLine(stemFor(exQ)) + '</p>';
+    drawFigure($('exFigure'), exQ, null);
+    $('exSteps').innerHTML = '';
+    $('exBtn').textContent = 'Show the first step';
+    $('exBtn').className = 'btn solid';
+    MaffsLock.fresh($('exCard'));
+  }
+  $('exBtn').addEventListener('click', function () {
+    var lines = workedLines(exQ);
+    if (!MaffsLock.lock($('exCard'))) return;
+    if (exAt >= lines.length) { startQuestions(); return; }
+    $('exSteps').insertAdjacentHTML('beforeend', '<li>' + renderLine(lines[exAt]) + '</li>');
+    exAt++;
+    $('exBtn').textContent = exAt >= lines.length ? 'Start the questions' : 'Show the next step';
+    MaffsLock.fresh($('exCard'));
+    var b = $('exBtn').getBoundingClientRect(), over = b.bottom - (window.innerHeight - FOOTER_PX);
+    if (over > 0) window.scrollBy(0, over);
+  });
+
+  /* ---------- play ---------- */
+  function startQuestions() {
+    session = G.session(stage, Math.floor(Math.random() * 4294967296), PER);
+    qi = 0; marks = 0; answered = 0; rightCount = 0;
+    show('game');
+    $('hudStage').textContent = stage;
+    nextQuestion();
+  }
+  function nextQuestion() {
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    $('feedback').innerHTML = '';
+    $('qcard').classList.remove('fb-open');
+    if (qi >= session.length) { finish(); return; }
+    Q = session[qi++]; state = 'asking';
+    $('hudQ').textContent = qi + '/' + PER;
+    $('hudScore').textContent = marks;
+    $('qtext').innerHTML = '<p>' + renderLine(stemFor(Q)) + '</p>';
+    var fig = $('figure');
+    // Stage 3 draws the chart from the student's own angles; on a phone with the keys open there is no room, so it is drawn when checked.
+    fig.hidden = false;
+    if (Q.type === 'angles') { if (touch() && window.innerHeight < 760) fig.hidden = true; else drawFigure(fig, Q, Q.sectors.map(function () { return NaN; })); }
+    else drawFigure(fig, Q, null);
+    $('instr').textContent = Q.type === 'choice' ? 'Choose one' : (Q.type === 'fraction' ? 'Type the fraction' : (Q.type === 'angles' ? 'Type each angle' : 'Type the number'));
+    $('msg').textContent = Q.friendly ? 'Try without a calculator' : 'Calculator optional';
+    buildAnswer();
+    MaffsLock.fresh($('answer'));
+    window.scrollTo(0, 0);
+  }
+
+  var CHECK = '<button class="btn solid" id="checkBtn" type="button" disabled>Check</button>';
+  function buildAnswer() {
+    var a = $('answer'), h = '';
+    $('kpHolder').innerHTML = ''; $('kpHolder').hidden = true; kp = null; inputs = [];
+    if (Q.type === 'choice') {
+      h = '<div class="opts" role="group" aria-label="Answers">' + Q.options.map(function (o, i) { return '<button class="btn" type="button" data-opt="' + i + '">' + esc(o) + '</button>'; }).join('') + '</div>';
+      a.innerHTML = h; return;
+    }
+    if (Q.type === 'fraction') {
+      h = '<div class="ans-row" role="group" aria-label="Your fraction"><span class="nb"><input type="text" inputmode="numeric" autocomplete="off" maxlength="4" aria-label="Top number" data-i="0"></span>' +
+        '<span class="slash" aria-hidden="true">/</span><span class="nb"><input type="text" inputmode="numeric" autocomplete="off" maxlength="4" aria-label="Bottom number" data-i="1"></span>' + CHECK + '</div>';
+    } else if (Q.type === 'number') {
+      h = '<div class="ans-row" role="group" aria-label="Your answer"><label class="nb"><input type="text" inputmode="decimal" autocomplete="off" maxlength="6" aria-label="Your answer" data-i="0"></label>' + CHECK + '</div>';
+    } else {
+      var n = Q.sectors.length;
+      h = '<table class="ptable" aria-label="The pies sold"><tr><th class="row"></th>' + Q.sectors.map(function (s) { return '<td class="nm"><span class="sw s' + colourOf(s.pie) + '"></span>' + esc(short(s.pie)) + '</td>'; }).join('') + '</tr>' +
+        '<tr><th class="row">Sold</th>' + Q.sectors.map(function (s) { return '<td class="fq">' + s.freq + '</td>'; }).join('') + '</tr>' +
+        '<tr><th class="row">Angle</th>' + Q.sectors.map(function (s, i) { return '<td><input type="text" inputmode="decimal" autocomplete="off" maxlength="6" aria-label="Angle for ' + esc(s.pie) + '" data-i="' + i + '"></td>'; }).join('') + '</tr></table>' +
+        '<div class="sumline" id="sumLine">Angles so far: 0° of 360°</div>';
+    }
+    if (Q.type === 'angles') h += '<div class="actions">' + CHECK + '</div>';
+    a.innerHTML = h;
+    inputs = Array.prototype.slice.call(a.querySelectorAll('input'));
+    var holder = $('kpHolder'), k = document.createElement('div');
+    holder.innerHTML = ''; holder.hidden = false; holder.appendChild(k);
+    kp = window.MaffsKeypad ? MaffsKeypad.mount(k, { targets: inputs, keys: {}, maxLength: 5, keepInView: a, foldInset: FOOTER_PX }) : null;
+    if (!(kp && kp.enabled && kp.enabled())) { holder.hidden = true; try { inputs[0].focus({ preventScroll: true }); } catch (e) {} }
+  }
+  // Digits only; a number or an angle may carry one decimal point (a slip such as dividing by 100 gives 37.5).
+  function cleanTyped(v, point) {
+    v = v.replace(point ? /[^0-9.]/g : /[^0-9]/g, '');
+    if (point) { var i = v.indexOf('.'); if (i >= 0) v = v.slice(0, i + 1) + v.slice(i + 1).replace(/\./g, ''); }
+    return v;
+  }
+  function raws() { return inputs.map(function (i) { return i.value.trim(); }); }
+  function typedAngles() { return raws().map(function (r) { var v = A.parse(r); return v == null ? NaN : v; }); }
+  function refresh() {
+    var b = $('checkBtn'); if (b) b.disabled = !raws().every(function (r) { return r !== ''; });
+    if (Q && Q.type === 'angles') {
+      var t = typedAngles(), sum = t.reduce(function (a, v) { return a + (isFinite(v) ? v : 0); }, 0), s = $('sumLine');
+      if (s) { s.textContent = 'Angles so far: ' + sum + '° of 360°'; s.classList.toggle('bad', sum > 360); }
+      if (!$('figure').hidden) drawFigure($('figure'), Q, t);
+    }
+  }
+
+  function mark(rawsIn) {
+    if (state !== 'asking') return;
+    var r = G.mark(Q, rawsIn);
+    if (r.kind === 'unreadable') { $('msg').textContent = r.why; return; }
+    if (!MaffsLock.lock($('answer'))) return;
+    var ok = r.kind === 'right';
+    answered++; if (ok) { rightCount++; marks++; }
+    $('hudScore').textContent = marks;
+    ev('question_answered', { game_slug: SLUG, level: level, mode: 'stage-' + stage, question_index: qi, correct: ok });
+    var fb = $('feedback'), last = qi >= PER;
+    $('qcard').classList.add('fb-open');
+    $('qcard').classList.toggle('keyfig', Q.type !== 'angles');
+    if (Q.type === 'angles') { $('figure').hidden = false; drawFigure($('figure'), Q, ok ? Q.key : typedAngles()); }
+    if (ok) {
+      state = 'done';
+      var wl = workedLines(Q);
+      fb.innerHTML = '<div class="fb done"><div class="fb-line">Yes. ' + renderLine(wl[wl.length - 1]) + '</div>' +
+        '<div class="fb-next"><button class="btn solid" id="nextBtn" type="button">' + (last ? 'See results →' : 'Next →') + '</button></div></div>';
+      MaffsLock.fresh(fb);
+      $('nextBtn').focus();
+    } else {
+      state = 'wrong';
+      fb.innerHTML = '<div class="fb wrong"><div class="fb-line" data-help="reason">' + renderLine(r.why) + '</div><div class="fb-next"></div>' +
+        '<div class="worked-h">How it goes</div><ol class="worked">' + workedLines(Q).map(function (l) { return '<li>' + renderLine(l) + '</li>'; }).join('') + '</ol></div>';
+      MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance });
+    }
+  }
+  function advance() {
+    if (state === 'moving') return;
+    state = 'moving';
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    nextQuestion();
+  }
+
+  var finish = MaffsLock.finishOnce(function () {
+    state = 'done';
+    var S = G.STAGES[stage], max = PER, board = boardOf(stage), score = marks;
+    ev('game_completed', { game_slug: SLUG, level: level, mode: 'stage-' + stage, score: score, questions_answered: answered, questions_correct: rightCount });
+    if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, board, score, answered).catch(function () {});
+    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, board, score);
+    var pbKey = 'pies_best_' + stage, prev = parseInt(lsGet(pbKey) || '0', 10) || 0, pb = score > prev;
+    if (pb) { ev('personal_best_set', { game_slug: SLUG, level: level, mode: 'stage-' + stage, score: score, previous_best: prev }); lsSet(pbKey, String(score)); }
+    $('kpHolder').innerHTML = ''; $('kpHolder').hidden = true;
+    $('resTitle').textContent = 'Stage ' + stage + ' done: ' + S.name;
+    $('resScore').textContent = score;
+    $('resOf').textContent = 'marks, out of ' + max;
+    $('resStats').innerHTML = '<b>' + rightCount + '</b> right out of <b>' + answered + '</b> answers' + (pb ? '<br>New personal best' : '') +
+      (stage === 3 ? '<br>Drawing a pie chart with a protractor is practised on paper.' : '');
+    $('nextStageBtn').hidden = stage >= LAST;
+    $('nextStageBtn').dataset.stage = stage + 1;
+    $('nextStageBtn').textContent = 'Next: Stage ' + (stage + 1);
+    show('results');
+  });
+
+  /* ---------- wiring ---------- */
+  $('stageList').addEventListener('click', function (e) { var b = e.target.closest('[data-stage]'); if (b) startStage(parseInt(b.dataset.stage, 10)); });
+  $('nextStageBtn').addEventListener('click', function () { startStage(parseInt($('nextStageBtn').dataset.stage, 10)); });
+  $('againBtn').addEventListener('click', function () { startStage(stage); });
+  $('menuBtn').addEventListener('click', function () { state = 'menu'; show('menu'); });
+  $('answer').addEventListener('click', function (e) {
+    var o = e.target.closest('[data-opt]');
+    if (o) { mark([o.dataset.opt]); return; }
+    if (e.target.closest('#checkBtn')) mark(raws());
+  });
+  $('answer').addEventListener('input', function (e) {
+    if (e.target.tagName === 'INPUT') { e.target.value = cleanTyped(e.target.value, Q.type !== 'fraction'); refresh(); }
+  });
+  $('answer').addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' || e.target.tagName !== 'INPUT') return;
+    var empty = inputs.filter(function (i) { return i.value === ''; })[0];
+    if (!empty) { e.preventDefault(); mark(raws()); } else { e.preventDefault(); empty.focus(); }
+  });
+  $('feedback').addEventListener('click', function (e) { if (e.target.closest('#nextBtn') && state === 'done') advance(); });
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(lsGet(KEY) === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); lsSet(KEY, String(on)); apply(on); });
+  })();
+
+  // Read-only views of live state, for scripts/verify-who-ate-all-the-pies.py and the lock hint above.
+  window.PIE = {
+    SLUG: SLUG,
+    ui: {
+      state: function () { return state; },
+      level: function () { return level; },
+      stage: function () { return stage; },
+      question: function () { return Q ? JSON.parse(JSON.stringify(Q)) : null; },
+      score: function () { return marks; },
+      start: function (n, example) { startStage(n, !example); },
+      // Answer the question on screen: the right answer, or a wrong one.
+      answer: function (right) {
+        if (Q.type === 'choice') {
+          var pick = right ? Q.key : (Q.key + 1) % Q.options.length;
+          var b = $('answer').querySelector('[data-opt="' + pick + '"]'); if (b) b.click(); return;
+        }
+        var vals = G.solution(Q).map(Number);
+        if (!right) vals[vals.length - 1] += (Q.type === 'fraction' ? 1 : 7);
+        inputs.forEach(function (inp, i) { inp.value = String(vals[i]); });
+        refresh();
+        $('checkBtn').click();
+      }
+    }
+  };
+})();
+</script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'who-ate-all-the-pies');</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>
