@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-# ci-line: Equation Builder, part 1 (half of every question's tile arrangements classified by SymPy; the whole-question checks; self-test) | --part-selftest && --part 1/2 && --selftest
-# ci-line: Equation Builder, part 2 (the other half of every question's tile arrangements, classified by SymPy) | --part-selftest && --part 2/2
+# ci-line: Equation Builder, part 1 (a third of every question's tile arrangements classified by SymPy; the whole-question checks; self-test) | --part-selftest && --part 1/3 && --selftest
+# ci-line: Equation Builder, part 2 (the second third of every question's tile arrangements, classified by SymPy) | --part-selftest && --part 2/3
+# ci-line: Equation Builder, part 3 (the last third of every question's tile arrangements, classified by SymPy) | --part-selftest && --part 3/3
 """Equation Builder: which tile arrangements are correct? Decided here, once, by SymPy (SR-13; audit 2026-10-04 F1-F8).
 
 The game marks a built answer correct only if its token sequence is in that question's ACCEPTED list. This
@@ -9,7 +10,7 @@ script computes every such list from the tiles, and fails if the bank's lists ev
     python scripts/verify-equation-builder.py              # the check (CI)
     python scripts/verify-equation-builder.py --report     # accepted-list sizes, distractor builds, unclassifiable
     python scripts/verify-equation-builder.py --selftest   # planted faults must fail
-    python scripts/verify-equation-builder.py --part 1/2   # CI job D1 (D2: --part 2/2)
+    python scripts/verify-equation-builder.py --part 1/3   # CI's first part (and 2/3, 3/3: CI_PARTS)
     python scripts/verify-equation-builder.py --part-selftest
 
 PARTS (7 Oct 2026, canon §7.8.1). One job took 5m23s on main, and one question (eb_ks3_012, 31,032 candidate
@@ -20,6 +21,8 @@ among the candidates; no accepted arrangement; the page's stored arrangements th
 a valid tile not among the tiles; eb_gcse_013's geometry; ids the bank does not have) runs in part 1 only.
 So the parts together fail on exactly what the whole run failed on; --part-selftest proves they cover every
 candidate of every question once, and that the workflow runs every part.
+Three parts since 27 Oct 2026 (two before): part 1 had reached 151 s, over the per-line limit with a 46 s setup median.
+A temporary hand split, by Jon's ruling of 27 Oct: contract SHARD replaces it (ci-groups.py chooses the parts).
 
 How (contract, 4 Oct 2026):
   a. every well-formed arrangement of the tiles, any length from the shortest that parses up to the slot count,
@@ -789,7 +792,10 @@ def ci_commands():
     return mod.ci_text()
 
 
-def part_selftest(n=2):
+CI_PARTS = 3      # the parts CI runs (--part i/3); a hand split until contract SHARD
+
+
+def part_selftest(n=CI_PARTS):
     """Every candidate of every question is in exactly one of the n parts; the workflow runs every part."""
     bad = []
     for q in load_bank():
@@ -823,7 +829,7 @@ def main():
     ap.add_argument('--report', action='store_true', help='print every accepted arrangement')
     ap.add_argument('--selftest', action='store_true')
     ap.add_argument('--only', nargs='*')
-    ap.add_argument('--part', help='i/n: classify only part i of n of every question\'s candidates (CI runs 1/2 and 2/2)')
+    ap.add_argument('--part', help='i/n: classify only part i of n of every question\'s candidates (CI runs 1/3, 2/3 and 3/3)')
     ap.add_argument('--part-selftest', action='store_true', help='prove the parts cover every candidate once')
     a = ap.parse_args()
     if a.part_selftest:

@@ -83,14 +83,15 @@ COVERED = [
     # Bank-first (Jon, 26 Oct 2026; contract PIE-CHARTS-BANK, canon 8.2.1): the bank comes before its game, so no route yet ("Who Ate
     # All the Pies?" is the planned game). The page leaves out "Want more practice?" for a topic whose route is null.
     ("pie-charts", "Pie charts", 4.0, 4, (2, 4), None, None, [], []),
+    # Bank-first (Jon, 27 Oct 2026; contract PERCENTAGES-MONEY-BANK): percentage change and reverse percentages (36 marks) and interest and
+    # depreciation (44 marks) of 1,800 over 18 papers; they were two coming-soon rows (6.0 and 7.3 a series). "It's on Sale!" is the planned game.
+    ("percentages-money", "Percentages, interest and depreciation", 13.3, 6, (3, 5), None, None, [], []),
 ]
 
 # id, name, avg marks per series, series appeared (of 6), planned game name (or None)
 COMING_SOON = [
     ("everyday-multi-step", "Everyday multi-step problems", 14.3, 6, None),
-    ("interest-depreciation", "Interest and depreciation", 7.3, 6, None),
     ("scatter-graphs", "Scatter graphs", 6.2, 6, None),
-    ("percentage-change", "Percentage change", 6.0, 6, None),
     ("volume-surface-area", "Volume and surface area", 5.5, 6, None),
     ("hcf-lcm", "HCF and LCM", 5.3, 6, None),
     ("expand-factorise", "Expanding and factorising", 5.3, 6, "The HC Factor"),
