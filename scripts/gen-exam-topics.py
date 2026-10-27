@@ -23,6 +23,9 @@ of its own (a figure on a page is a claim); scripts/verify-the-6-ps.py holds bot
   COVERED needs a bank (SIX-PS-BANKS (h), 25 Oct 2026): a topic below is covered only if
                schools/assets/six-ps/<topic-id>.json exists and holds at least MIN_BANK (30) questions; any other
                topic is written to coming_soon with its marks. Derived from the files, never from a manifest.
+  bank-first   a covered topic whose game is not built yet (pie-charts, Jon's ruling of 26 Oct 2026): its row has game slug None, its
+               route is null, and the page leaves out the "Want more practice?" link for it. When the game is built the row
+               gets its slug and level.
   COMING_SOON  a topic with no game that can run it as a burst yet ("in development"), shown on the page with its
                marks and offered in the results' tick-list. Never drawn into a session.
 
@@ -77,6 +80,9 @@ COVERED = [
     ("pythagoras", "Pythagoras' theorem", 2.3, 3, (4, 5), "just-pythag-it-bruv", "ks3", [], []),
     ("change-subject", "Changing the subject", 2.0, 5, (4, 5), "formula-unlocked", "gcse", [], []),
     ("coordinates", "Coordinates", 1.8, 5, (1, 2), "four-quadrant-explorer", "year6", [], []),
+    # Bank-first (Jon, 26 Oct 2026; contract PIE-CHARTS-BANK, canon 8.2.1): the bank comes before its game, so no route yet ("Who Ate
+    # All the Pies?" is the planned game). The page leaves out "Want more practice?" for a topic whose route is null.
+    ("pie-charts", "Pie charts", 4.0, 4, (2, 4), None, None, [], []),
 ]
 
 # id, name, avg marks per series, series appeared (of 6), planned game name (or None)
@@ -100,7 +106,6 @@ COMING_SOON = [
     ("scale-bearings", "Scale drawings and bearings", 4.5, 5, None),
     # Moved from COVERED (Jon, 25 Oct 2026): Constructions Lab reports no individual answers, so it cannot run as a burst.
     ("constructions", "Constructions", 4.0, 6, None),
-    ("pie-charts", "Pie charts", 4.0, 4, "Who Ate All the Pies?"),
     ("2d-shapes", "2D shapes", 3.8, 5, None),
     ("two-way-tables", "Two-way tables", 3.5, 3, None),   # moved from COVERED with venn (Jon, 25 Oct 2026)
     ("quadratic-graphs", "Quadratic graphs", 3.5, 5, None),
@@ -144,7 +149,7 @@ def build():
     coming = [{"id": tid, "name": name, "marks": marks, "series": series, "planned": planned}
               for tid, name, marks, series, planned in COMING_SOON]
     for tid, name, marks, series, band, slug, level, modes, stages in COVERED:
-        if slug not in names:
+        if slug is not None and slug not in names:
             errors.append("%s: game %s is not a numbered roster row" % (tid, slug))
         if bank_size(tid) < MIN_BANK:
             # Covered only by a bank (SIX-PS-BANKS (h), 25 Oct 2026): with fewer than MIN_BANK questions the topic is
@@ -155,7 +160,7 @@ def build():
             continue
         covered.append({
             "id": tid, "name": name, "marks": marks, "series": series, "band": list(band),
-            "route": {"slug": slug, "game": names.get(slug, ""), "level": level, "modes": modes, "stages": stages},
+            "route": None if slug is None else {"slug": slug, "game": names.get(slug, ""), "level": level, "modes": modes, "stages": stages},
         })
     ids = [t["id"] for t in covered] + [t["id"] for t in coming]
     dup = sorted({i for i in ids if ids.count(i) > 1})
@@ -169,7 +174,7 @@ def build():
         if not (1 <= t["series"] <= SERIES):
             errors.append("%s: series %r is not 1 to %d" % (t["id"], t["series"], SERIES))
     for t in covered:
-        if t["route"]["modes"] and t["route"]["stages"]:
+        if t["route"] and t["route"]["modes"] and t["route"]["stages"]:
             errors.append("%s: a route opens by mode or by stage, not both" % t["id"])
         lo, hi = t["band"]
         if not (1 <= lo <= hi <= 9):

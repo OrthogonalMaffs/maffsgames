@@ -106,6 +106,7 @@
   .qtopic { display: flex; flex-wrap: wrap; gap: 0.25rem 0.75rem; align-items: baseline; margin-bottom: 0.6rem; }
   .qtopic h3 { margin: 0; }
   .calc { font-size: 0.85rem; font-weight: 600; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 0.05rem 0.6rem; }
+  .calc-try { font-size: 0.85rem; color: var(--muted); margin: 0.15rem 0 0; }
   .stem { font-size: 1.1rem; line-height: 1.8; margin-bottom: 1rem; }
   .stem .katex, .opt .katex { font-size: 1.15em; }
   .worked .katex, .answer-line .katex, .slip .katex { font-size: 1.05em; }
@@ -245,6 +246,7 @@
   <div class="card">
     <p class="qhead" id="qHead"></p>
     <div class="qtopic"><h3 id="qTopic"></h3><span class="calc" id="qCalc"></span></div>
+    <p class="calc-try" id="qTry" hidden>Try without a calculator</p>
     <div class="stem" id="qStem"></div>
     <div class="diagram" id="qDiagram" hidden></div>
     <div id="qArea">
@@ -493,7 +495,8 @@
     if (FORMATS.indexOf(q.format) < 0) return 'unknown format';
     if (!isStr(q.stem) || !q.stem.trim()) return 'no stem';
     if (!isInt(q.band) || q.band < 1 || q.band > 5) return 'band is not 1 to 5';
-    if (typeof q.calc !== 'boolean') return 'calc is not true or false';
+    if (typeof q.calc !== 'boolean' && q.calc !== 'optional') return 'calc is not true, false or "optional"';
+    if (q.try_without !== undefined && !(q.try_without === true && q.calc === 'optional')) return 'try_without is not true with calc "optional"';
     if (q.diagram !== undefined && q.diagram !== null && !isStr(q.diagram)) return 'diagram is not an SVG string';
     if (!validAnswer(q.format, q.answer)) return 'answer is not a ' + q.format + ' answer';
     var acc = acceptOf(q);
@@ -1039,7 +1042,8 @@
     $('play').dataset.qid = q.id;
     $('qHead').textContent = 'Question ' + (cur.k + 1) + ' of ' + cur.qids.length + ' · Topic ' + (session.i + 1) + ' of ' + session.plan.length;
     $('qTopic').textContent = t.name;
-    $('qCalc').textContent = q.calc ? 'Calculator' : 'Non-calculator';
+    $('qCalc').textContent = q.calc === 'optional' ? 'Calculator optional' : q.calc ? 'Calculator' : 'Non-calculator';
+    $('qTry').hidden = !(q.calc === 'optional' && q.try_without === true);
     rich($('qStem'), q.stem);
     var d = $('qDiagram'), svg = q.diagram ? svgNode(q.diagram) : null;
     d.textContent = '';
@@ -1162,21 +1166,25 @@
       var x = session.results[p.id], t = byId[p.id];
       var score = x && !x.skipped ? x.r + ' of ' + x.n : 'skipped';
       var row = li(t.name + ': ' + score, marksText(t), x && !x.skipped ? 'done' : '');
+      if (t.route) {   // a bank-first topic has no game yet, so no link (canon 8.2.1)
       var more = document.createElement('span'); more.className = 'more';
       more.appendChild(document.createTextNode('Want more practice? '));
       var a = document.createElement('a'); a.href = practiceUrl(t); a.textContent = t.route.game;
       more.appendChild(a);
       row.appendChild(more);
+      }
       return row;
     }));
     var w = weakest(session, byId), nudge = $('nudge');
     nudge.textContent = '';
     if (w) {
-      nudge.appendChild(document.createTextNode('Next time: give ' + w.name + ' another go. '));
-      var a = document.createElement('a');
-      a.href = practiceUrl(w);
-      a.textContent = 'Practise it in ' + w.route.game;
-      nudge.appendChild(a);
+      nudge.appendChild(document.createTextNode('Next time: give ' + w.name + ' another go.' + (w.route ? ' ' : '')));
+      if (w.route) {
+        var a = document.createElement('a');
+        a.href = practiceUrl(w);
+        a.textContent = 'Practise it in ' + w.route.game;
+        nudge.appendChild(a);
+      }
       nudge.hidden = false;
     } else {
       nudge.hidden = true;

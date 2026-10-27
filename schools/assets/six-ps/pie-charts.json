@@ -1,0 +1,2083 @@
+{
+ "topic": "pie-charts",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "pie-charts-428a4db9",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:1:0:101"
+   },
+   "band": 2,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the home end on matchday. The mince sector is \\(180^\\circ\\). What fraction of the pies sold were mince? Give your answer in its simplest form.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 150.0 174.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"204.0\" y1=\"120.0\" x2=\"209.0\" y2=\"120.0\"/><path d=\"M150.0 120.0 L150.0 174.0 A54.0 54.0 0 0 1 99.3 138.5 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"119.0\" y1=\"164.2\" x2=\"116.2\" y2=\"168.3\"/><path d=\"M150.0 120.0 L99.3 138.5 A54.0 54.0 0 0 1 101.1 97.2 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"96.1\" y1=\"117.6\" x2=\"91.1\" y2=\"117.4\"/><path d=\"M150.0 120.0 L101.1 97.2 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.3\"/><line x1=\"121.0\" y1=\"74.5\" x2=\"118.3\" y2=\"70.2\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"215.0\" y=\"118.0\" text-anchor=\"start\">Mince</text><text x=\"215.0\" y=\"130.0\" text-anchor=\"start\">180°</text><text x=\"111.9\" y=\"183.6\" text-anchor=\"end\">Steak</text><text x=\"85.1\" y=\"121.3\" text-anchor=\"end\">Vegetable</text><text x=\"114.2\" y=\"52.9\" text-anchor=\"end\">Chicken</text><text x=\"114.2\" y=\"64.9\" text-anchor=\"end\">balti</text></g></svg>",
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 2
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "The whole pie chart is \\(360^\\circ\\).",
+    "The mince sector is \\(180^\\circ\\), so its fraction is \\(\\frac{180}{360}\\).",
+    "In its simplest form that is \\(\\frac{1}{2}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "n": 9,
+      "d": 5
+     },
+     "line": "A sector of \\(180^\\circ\\) is not \\(180\\%\\). The whole chart is \\(360^\\circ\\), not 100."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-6d72cbb2",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:1:1:102"
+   },
+   "band": 2,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the family stand on matchday. The cheese and onion sector is \\(90^\\circ\\). What fraction of the pies sold were cheese and onion? Give your answer in its simplest form.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 204.0 120.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"188.2\" y1=\"81.8\" x2=\"191.7\" y2=\"78.3\"/><path d=\"M150.0 120.0 L204.0 120.0 A54.0 54.0 0 0 1 111.8 158.2 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"170.7\" y1=\"169.9\" x2=\"172.6\" y2=\"174.5\"/><path d=\"M150.0 120.0 L111.8 158.2 A54.0 54.0 0 0 1 105.8 89.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"96.2\" y1=\"124.7\" x2=\"91.2\" y2=\"125.1\"/><path d=\"M150.0 120.0 L105.8 89.0 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.3\"/><line x1=\"125.1\" y1=\"72.1\" x2=\"122.8\" y2=\"67.7\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"196.5\" y=\"49.5\" text-anchor=\"start\">Cheese and</text><text x=\"196.5\" y=\"61.5\" text-anchor=\"start\">onion</text><text x=\"196.5\" y=\"73.5\" text-anchor=\"start\">90°</text><text x=\"176.1\" y=\"190.2\" text-anchor=\"start\">Vegetable</text><text x=\"85.2\" y=\"129.5\" text-anchor=\"end\">Mince</text><text x=\"118.9\" y=\"50.1\" text-anchor=\"end\">Chicken</text><text x=\"118.9\" y=\"62.1\" text-anchor=\"end\">balti</text></g></svg>",
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 4
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "The whole pie chart is \\(360^\\circ\\).",
+    "The cheese and onion sector is \\(90^\\circ\\), so its fraction is \\(\\frac{90}{360}\\).",
+    "In its simplest form that is \\(\\frac{1}{4}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "n": 9,
+      "d": 10
+     },
+     "line": "A sector of \\(90^\\circ\\) is not \\(90\\%\\). The whole chart is \\(360^\\circ\\), not 100."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-c3c0efb9",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:1:2:103"
+   },
+   "band": 2,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the away end on matchday. The vegetable sector is \\(120^\\circ\\). What fraction of the pies sold were vegetable? Give your answer in its simplest form.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 196.8 147.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"196.8\" y1=\"93.0\" x2=\"201.1\" y2=\"90.5\"/><path d=\"M150.0 120.0 L196.8 147.0 A54.0 54.0 0 1 1 123.0 73.2 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"111.8\" y1=\"158.2\" x2=\"108.3\" y2=\"161.7\"/><path d=\"M150.0 120.0 L123.0 73.2 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"136.0\" y1=\"67.8\" x2=\"134.7\" y2=\"63.0\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"206.6\" y=\"74.5\" text-anchor=\"start\">Vegetable</text><text x=\"206.6\" y=\"86.5\" text-anchor=\"start\">120°</text><text x=\"103.5\" y=\"176.5\" text-anchor=\"end\">Mince</text><text x=\"133.7\" y=\"45.1\" text-anchor=\"middle\">Cheese and</text><text x=\"133.7\" y=\"57.1\" text-anchor=\"middle\">onion</text></g></svg>",
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 3
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "The whole pie chart is \\(360^\\circ\\).",
+    "The vegetable sector is \\(120^\\circ\\), so its fraction is \\(\\frac{120}{360}\\).",
+    "In its simplest form that is \\(\\frac{1}{3}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "n": 6,
+      "d": 5
+     },
+     "line": "A sector of \\(120^\\circ\\) is not \\(120\\%\\). The whole chart is \\(360^\\circ\\), not 100."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-7e7925f4",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:1:3:104"
+   },
+   "band": 2,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the main stand on matchday. The vegetable sector is \\(60^\\circ\\). What fraction of the pies sold were vegetable? Give your answer in its simplest form.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 196.8 93.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"177.0\" y1=\"73.2\" x2=\"179.5\" y2=\"68.9\"/><path d=\"M150.0 120.0 L196.8 93.0 A54.0 54.0 0 0 1 191.4 154.7 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"203.8\" y1=\"124.7\" x2=\"208.8\" y2=\"125.1\"/><path d=\"M150.0 120.0 L191.4 154.7 A54.0 54.0 0 0 1 140.6 173.2 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"168.5\" y1=\"170.7\" x2=\"170.2\" y2=\"175.4\"/><path d=\"M150.0 120.0 L140.6 173.2 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.3\"/><line x1=\"96.2\" y1=\"115.3\" x2=\"91.2\" y2=\"114.9\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"183.5\" y=\"51.4\" text-anchor=\"start\">Vegetable</text><text x=\"183.5\" y=\"63.4\" text-anchor=\"start\">60°</text><text x=\"214.8\" y=\"129.5\" text-anchor=\"start\">Mince</text><text x=\"173.5\" y=\"191.2\" text-anchor=\"start\">Chicken</text><text x=\"173.5\" y=\"203.2\" text-anchor=\"start\">balti</text><text x=\"85.2\" y=\"112.5\" text-anchor=\"end\">Cheese and</text><text x=\"85.2\" y=\"124.5\" text-anchor=\"end\">onion</text></g></svg>",
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 6
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "The whole pie chart is \\(360^\\circ\\).",
+    "The vegetable sector is \\(60^\\circ\\), so its fraction is \\(\\frac{60}{360}\\).",
+    "In its simplest form that is \\(\\frac{1}{6}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "n": 3,
+      "d": 5
+     },
+     "line": "A sector of \\(60^\\circ\\) is not \\(60\\%\\). The whole chart is \\(360^\\circ\\), not 100."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-81ebb264",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:1:4:105"
+   },
+   "band": 2,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the home end on matchday. The chicken balti sector is \\(270^\\circ\\). What fraction of the pies sold were chicken balti? Give your answer in its simplest form.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 1 1 96.0 120.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"188.2\" y1=\"158.2\" x2=\"191.7\" y2=\"161.7\"/><path d=\"M150.0 120.0 L96.0 120.0 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"111.8\" y1=\"81.8\" x2=\"108.3\" y2=\"78.3\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"196.5\" y=\"176.5\" text-anchor=\"start\">Chicken</text><text x=\"196.5\" y=\"188.5\" text-anchor=\"start\">balti</text><text x=\"196.5\" y=\"200.5\" text-anchor=\"start\">270°</text><text x=\"103.5\" y=\"73.5\" text-anchor=\"end\">Steak</text></g></svg>",
+   "format": "fraction",
+   "answer": {
+    "n": 3,
+    "d": 4
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "The whole pie chart is \\(360^\\circ\\).",
+    "The chicken balti sector is \\(270^\\circ\\), so its fraction is \\(\\frac{270}{360}\\).",
+    "In its simplest form that is \\(\\frac{3}{4}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "n": 27,
+      "d": 10
+     },
+     "line": "A sector of \\(270^\\circ\\) is not \\(270\\%\\). The whole chart is \\(360^\\circ\\), not 100."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-fa5c71b9",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:1:5:106"
+   },
+   "band": 2,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the home end on matchday. The mince sector is \\(45^\\circ\\). What fraction of the pies sold were mince? Give your answer in its simplest form.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 188.2 81.8 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"170.7\" y1=\"70.1\" x2=\"172.6\" y2=\"65.5\"/><path d=\"M150.0 120.0 L188.2 81.8 A54.0 54.0 0 1 1 101.1 97.2 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"159.4\" y1=\"173.2\" x2=\"160.2\" y2=\"178.1\"/><path d=\"M150.0 120.0 L101.1 97.2 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"121.0\" y1=\"74.5\" x2=\"118.3\" y2=\"70.2\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"176.1\" y=\"47.8\" text-anchor=\"start\">Mince</text><text x=\"176.1\" y=\"59.8\" text-anchor=\"start\">45°</text><text x=\"160.9\" y=\"194.0\" text-anchor=\"middle\">Vegetable</text><text x=\"114.2\" y=\"52.9\" text-anchor=\"end\">Cheese and</text><text x=\"114.2\" y=\"64.9\" text-anchor=\"end\">onion</text></g></svg>",
+   "format": "fraction",
+   "answer": {
+    "n": 1,
+    "d": 8
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "The whole pie chart is \\(360^\\circ\\).",
+    "The mince sector is \\(45^\\circ\\), so its fraction is \\(\\frac{45}{360}\\).",
+    "In its simplest form that is \\(\\frac{1}{8}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "n": 9,
+      "d": 20
+     },
+     "line": "A sector of \\(45^\\circ\\) is not \\(45\\%\\). The whole chart is \\(360^\\circ\\), not 100."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-2a6e9a1c",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:1:6:107"
+   },
+   "band": 2,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the main stand on matchday. The chicken balti sector is \\(150^\\circ\\). What fraction of the pies sold were chicken balti? Give your answer in its simplest form.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 177.0 166.8 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"202.2\" y1=\"106.0\" x2=\"207.0\" y2=\"104.7\"/><path d=\"M150.0 120.0 L177.0 166.8 A54.0 54.0 0 0 1 145.3 173.8 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"161.7\" y1=\"172.7\" x2=\"162.8\" y2=\"177.6\"/><path d=\"M150.0 120.0 L145.3 173.8 A54.0 54.0 0 0 1 115.3 161.4 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"129.3\" y1=\"169.9\" x2=\"127.4\" y2=\"174.5\"/><path d=\"M150.0 120.0 L115.3 161.4 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.3\"/><line x1=\"99.3\" y1=\"101.5\" x2=\"94.6\" y2=\"99.8\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"212.9\" y=\"95.7\" text-anchor=\"start\">Chicken</text><text x=\"212.9\" y=\"107.7\" text-anchor=\"start\">balti</text><text x=\"212.9\" y=\"119.7\" text-anchor=\"start\">150°</text><text x=\"163.6\" y=\"193.5\" text-anchor=\"middle\">Cheese and</text><text x=\"163.6\" y=\"205.5\" text-anchor=\"middle\">onion</text><text x=\"123.9\" y=\"190.2\" text-anchor=\"end\">Mince</text><text x=\"88.8\" y=\"96.5\" text-anchor=\"end\">Steak</text></g></svg>",
+   "format": "fraction",
+   "answer": {
+    "n": 5,
+    "d": 12
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "The whole pie chart is \\(360^\\circ\\).",
+    "The chicken balti sector is \\(150^\\circ\\), so its fraction is \\(\\frac{150}{360}\\).",
+    "In its simplest form that is \\(\\frac{5}{12}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "n": 3,
+      "d": 2
+     },
+     "line": "A sector of \\(150^\\circ\\) is not \\(150\\%\\). The whole chart is \\(360^\\circ\\), not 100."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-c2db006a",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:1:7:108"
+   },
+   "band": 2,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the away end on matchday. The chicken balti sector is \\(240^\\circ\\). What fraction of the pies sold were chicken balti? Give your answer in its simplest form.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 1 1 103.2 147.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"196.8\" y1=\"147.0\" x2=\"201.1\" y2=\"149.5\"/><path d=\"M150.0 120.0 L103.2 147.0 A54.0 54.0 0 0 1 123.0 73.2 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"97.8\" y1=\"106.0\" x2=\"93.0\" y2=\"104.7\"/><path d=\"M150.0 120.0 L123.0 73.2 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"136.0\" y1=\"67.8\" x2=\"134.7\" y2=\"63.0\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"206.6\" y=\"163.5\" text-anchor=\"start\">Chicken</text><text x=\"206.6\" y=\"175.5\" text-anchor=\"start\">balti</text><text x=\"206.6\" y=\"187.5\" text-anchor=\"start\">240°</text><text x=\"87.1\" y=\"107.7\" text-anchor=\"end\">Mince</text><text x=\"133.7\" y=\"57.1\" text-anchor=\"middle\">Steak</text></g></svg>",
+   "format": "fraction",
+   "answer": {
+    "n": 2,
+    "d": 3
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "The whole pie chart is \\(360^\\circ\\).",
+    "The chicken balti sector is \\(240^\\circ\\), so its fraction is \\(\\frac{240}{360}\\).",
+    "In its simplest form that is \\(\\frac{2}{3}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "n": 12,
+      "d": 5
+     },
+     "line": "A sector of \\(240^\\circ\\) is not \\(240\\%\\). The whole chart is \\(360^\\circ\\), not 100."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-7cd2c0b7",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:1:8:109"
+   },
+   "band": 2,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the main stand on matchday. The vegetable sector is \\(60^\\circ\\). There is only one other sector, chicken balti. What fraction of the pies sold were chicken balti? Give your answer in its simplest form.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 196.8 93.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"177.0\" y1=\"73.2\" x2=\"179.5\" y2=\"68.9\"/><path d=\"M150.0 120.0 L196.8 93.0 A54.0 54.0 0 1 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"123.0\" y1=\"166.8\" x2=\"120.5\" y2=\"171.1\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"183.5\" y=\"51.4\" text-anchor=\"start\">Vegetable</text><text x=\"183.5\" y=\"63.4\" text-anchor=\"start\">60°</text><text x=\"116.5\" y=\"186.6\" text-anchor=\"end\">Chicken</text><text x=\"116.5\" y=\"198.6\" text-anchor=\"end\">balti</text></g></svg>",
+   "format": "fraction",
+   "answer": {
+    "n": 5,
+    "d": 6
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "The angles in a pie chart make \\(360^\\circ\\).",
+    "The chicken balti sector is \\(360 - 60 = 300\\) degrees.",
+    "Its fraction is \\(\\frac{300}{360}\\).",
+    "In its simplest form that is \\(\\frac{5}{6}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "n": 1,
+      "d": 6
+     },
+     "line": "The vegetable sector is \\(\\frac{1}{6}\\), not chicken balti. The two sectors make \\(360^\\circ\\), so chicken balti is the rest."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-bd80f5f9",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:1:9:110"
+   },
+   "band": 2,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the home end on matchday. The mince sector is \\(150^\\circ\\). There is only one other sector, chicken balti. What fraction of the pies sold were chicken balti? Give your answer in its simplest form.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 177.0 166.8 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"202.2\" y1=\"106.0\" x2=\"207.0\" y2=\"104.7\"/><path d=\"M150.0 120.0 L177.0 166.8 A54.0 54.0 0 1 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"97.8\" y1=\"134.0\" x2=\"93.0\" y2=\"135.3\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"212.9\" y=\"101.7\" text-anchor=\"start\">Mince</text><text x=\"212.9\" y=\"113.7\" text-anchor=\"start\">150°</text><text x=\"87.1\" y=\"134.3\" text-anchor=\"end\">Chicken</text><text x=\"87.1\" y=\"146.3\" text-anchor=\"end\">balti</text></g></svg>",
+   "format": "fraction",
+   "answer": {
+    "n": 7,
+    "d": 12
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "The angles in a pie chart make \\(360^\\circ\\).",
+    "The chicken balti sector is \\(360 - 150 = 210\\) degrees.",
+    "Its fraction is \\(\\frac{210}{360}\\).",
+    "In its simplest form that is \\(\\frac{7}{12}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "n": 5,
+      "d": 12
+     },
+     "line": "The mince sector is \\(\\frac{5}{12}\\), not chicken balti. The two sectors make \\(360^\\circ\\), so chicken balti is the rest."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-b0c0a3fd",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:1:10:111"
+   },
+   "band": 2,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the main stand on matchday. The vegetable sector is \\(100^\\circ\\). There is only one other sector, mince. What fraction of the pies sold were mince? Give your answer in its simplest form.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 203.2 129.4 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"191.4\" y1=\"85.3\" x2=\"195.2\" y2=\"82.1\"/><path d=\"M150.0 120.0 L203.2 129.4 A54.0 54.0 0 1 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"108.6\" y1=\"154.7\" x2=\"104.8\" y2=\"157.9\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"200.3\" y=\"65.5\" text-anchor=\"start\">Vegetable</text><text x=\"200.3\" y=\"77.5\" text-anchor=\"start\">100°</text><text x=\"99.7\" y=\"172.5\" text-anchor=\"end\">Mince</text></g></svg>",
+   "format": "fraction",
+   "answer": {
+    "n": 13,
+    "d": 18
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "The angles in a pie chart make \\(360^\\circ\\).",
+    "The mince sector is \\(360 - 100 = 260\\) degrees.",
+    "Its fraction is \\(\\frac{260}{360}\\).",
+    "In its simplest form that is \\(\\frac{13}{18}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "n": 5,
+      "d": 18
+     },
+     "line": "The vegetable sector is \\(\\frac{5}{18}\\), not mince. The two sectors make \\(360^\\circ\\), so mince is the rest."
+    }
+   ]
+  },
+  {
+   "id": "pie-charts-b1011a63",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:1:11:112"
+   },
+   "band": 2,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the family stand on matchday. The mince sector is \\(80^\\circ\\). There is only one other sector, chicken balti. What fraction of the pies sold were chicken balti? Give your answer in its simplest form.",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 203.2 110.6 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"184.7\" y1=\"78.6\" x2=\"187.9\" y2=\"74.8\"/><path d=\"M150.0 120.0 L203.2 110.6 A54.0 54.0 0 1 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"115.3\" y1=\"161.4\" x2=\"112.1\" y2=\"165.2\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"192.5\" y=\"57.7\" text-anchor=\"start\">Mince</text><text x=\"192.5\" y=\"69.7\" text-anchor=\"start\">80°</text><text x=\"107.5\" y=\"180.3\" text-anchor=\"end\">Chicken</text><text x=\"107.5\" y=\"192.3\" text-anchor=\"end\">balti</text></g></svg>",
+   "format": "fraction",
+   "answer": {
+    "n": 7,
+    "d": 9
+   },
+   "accept": {
+    "rule": "simplest"
+   },
+   "worked": [
+    "The angles in a pie chart make \\(360^\\circ\\).",
+    "The chicken balti sector is \\(360 - 80 = 280\\) degrees.",
+    "Its fraction is \\(\\frac{280}{360}\\).",
+    "In its simplest form that is \\(\\frac{7}{9}\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "n": 2,
+      "d": 9
+     },
+     "line": "The mince sector is \\(\\frac{2}{9}\\), not chicken balti. The two sectors make \\(360^\\circ\\), so chicken balti is the rest."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-b539d3aa",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:2:0:201"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the away end on matchday. 144 pies were sold in total. The cheese and onion sector is \\(90^\\circ\\). How many cheese and onion pies were sold?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 204.0 120.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"188.2\" y1=\"81.8\" x2=\"191.7\" y2=\"78.3\"/><path d=\"M150.0 120.0 L204.0 120.0 A54.0 54.0 0 0 1 202.2 134.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"203.5\" y1=\"127.0\" x2=\"208.5\" y2=\"127.7\"/><path d=\"M150.0 120.0 L202.2 134.0 A54.0 54.0 0 0 1 188.2 158.2 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"196.8\" y1=\"147.0\" x2=\"201.1\" y2=\"149.5\"/><path d=\"M150.0 120.0 L188.2 158.2 A54.0 54.0 0 1 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.3\"/><line x1=\"100.1\" y1=\"140.7\" x2=\"95.5\" y2=\"142.6\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"196.5\" y=\"49.5\" text-anchor=\"start\">Cheese and</text><text x=\"196.5\" y=\"61.5\" text-anchor=\"start\">onion</text><text x=\"196.5\" y=\"73.5\" text-anchor=\"start\">90°</text><text x=\"214.5\" y=\"132.2\" text-anchor=\"start\">Steak</text><text x=\"206.6\" y=\"163.5\" text-anchor=\"start\">Mince</text><text x=\"89.8\" y=\"156.1\" text-anchor=\"end\">Vegetable</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 36
+   },
+   "unit": "pies",
+   "worked": [
+    "The cheese and onion sector is \\(90^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{90}{360}\\) = \\(\\frac{1}{4}\\).",
+    "Find \\(\\frac{1}{4}\\) of 144 pies.",
+    "\\(144 \\div 4 = 36\\)"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 129.6
+     },
+     "line": "The \\(90^\\circ\\) was divided by 100, as if it were a percentage. The whole chart is \\(360^\\circ\\): divide by 360."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-e6ee1de4",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:2:1:202"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the home end on matchday. 100 pies were sold in total. The vegetable sector is \\(180^\\circ\\). How many vegetable pies were sold?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 150.0 174.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"204.0\" y1=\"120.0\" x2=\"209.0\" y2=\"120.0\"/><path d=\"M150.0 120.0 L150.0 174.0 A54.0 54.0 0 0 1 98.6 136.7 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"118.3\" y1=\"163.7\" x2=\"115.3\" y2=\"167.7\"/><path d=\"M150.0 120.0 L98.6 136.7 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"106.3\" y1=\"88.3\" x2=\"102.3\" y2=\"85.3\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"215.0\" y=\"118.0\" text-anchor=\"start\">Vegetable</text><text x=\"215.0\" y=\"130.0\" text-anchor=\"start\">180°</text><text x=\"111.0\" y=\"183.0\" text-anchor=\"end\">Cheese and</text><text x=\"111.0\" y=\"195.0\" text-anchor=\"end\">onion</text><text x=\"97.0\" y=\"81.0\" text-anchor=\"end\">Steak</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 50
+   },
+   "unit": "pies",
+   "worked": [
+    "The vegetable sector is \\(180^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{180}{360}\\) = \\(\\frac{1}{2}\\).",
+    "Find \\(\\frac{1}{2}\\) of 100 pies.",
+    "\\(100 \\div 2 = 50\\)"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 180
+     },
+     "line": "The \\(180^\\circ\\) was divided by 100, as if it were a percentage. The whole chart is \\(360^\\circ\\): divide by 360."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-44e44099",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:2:2:203"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the main stand on matchday. 144 pies were sold in total. The chicken balti sector is \\(120^\\circ\\). How many chicken balti pies were sold?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 196.8 147.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"196.8\" y1=\"93.0\" x2=\"201.1\" y2=\"90.5\"/><path d=\"M150.0 120.0 L196.8 147.0 A54.0 54.0 0 0 1 96.8 110.6 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"131.5\" y1=\"170.7\" x2=\"129.8\" y2=\"175.4\"/><path d=\"M150.0 120.0 L96.8 110.6 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"115.3\" y1=\"78.6\" x2=\"112.1\" y2=\"74.8\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"206.6\" y=\"62.5\" text-anchor=\"start\">Chicken</text><text x=\"206.6\" y=\"74.5\" text-anchor=\"start\">balti</text><text x=\"206.6\" y=\"86.5\" text-anchor=\"start\">120°</text><text x=\"126.5\" y=\"191.2\" text-anchor=\"end\">Steak</text><text x=\"107.5\" y=\"57.7\" text-anchor=\"end\">Cheese and</text><text x=\"107.5\" y=\"69.7\" text-anchor=\"end\">onion</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 48
+   },
+   "unit": "pies",
+   "worked": [
+    "The chicken balti sector is \\(120^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{120}{360}\\) = \\(\\frac{1}{3}\\).",
+    "Find \\(\\frac{1}{3}\\) of 144 pies.",
+    "\\(144 \\div 3 = 48\\)"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 172.8
+     },
+     "line": "The \\(120^\\circ\\) was divided by 100, as if it were a percentage. The whole chart is \\(360^\\circ\\): divide by 360."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-2b518758",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:2:3:204"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the family stand on matchday. 144 pies were sold in total. The cheese and onion sector is \\(60^\\circ\\). How many cheese and onion pies were sold?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 196.8 93.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"177.0\" y1=\"73.2\" x2=\"179.5\" y2=\"68.9\"/><path d=\"M150.0 120.0 L196.8 93.0 A54.0 54.0 0 0 1 177.0 166.8 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"202.2\" y1=\"134.0\" x2=\"207.0\" y2=\"135.3\"/><path d=\"M150.0 120.0 L177.0 166.8 A54.0 54.0 0 1 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"97.8\" y1=\"134.0\" x2=\"93.0\" y2=\"135.3\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"183.5\" y=\"39.4\" text-anchor=\"start\">Cheese and</text><text x=\"183.5\" y=\"51.4\" text-anchor=\"start\">onion</text><text x=\"183.5\" y=\"63.4\" text-anchor=\"start\">60°</text><text x=\"212.9\" y=\"140.3\" text-anchor=\"start\">Steak</text><text x=\"87.1\" y=\"140.3\" text-anchor=\"end\">Mince</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 24
+   },
+   "unit": "pies",
+   "worked": [
+    "The cheese and onion sector is \\(60^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{60}{360}\\) = \\(\\frac{1}{6}\\).",
+    "Find \\(\\frac{1}{6}\\) of 144 pies.",
+    "\\(144 \\div 6 = 24\\)"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 86.4
+     },
+     "line": "The \\(60^\\circ\\) was divided by 100, as if it were a percentage. The whole chart is \\(360^\\circ\\): divide by 360."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-b44e0721",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:2:4:205"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the away end on matchday. 216 pies were sold in total. The vegetable sector is \\(45^\\circ\\). How many vegetable pies were sold?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 188.2 81.8 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"170.7\" y1=\"70.1\" x2=\"172.6\" y2=\"65.5\"/><path d=\"M150.0 120.0 L188.2 81.8 A54.0 54.0 0 0 1 154.7 173.8 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"200.7\" y1=\"138.5\" x2=\"205.4\" y2=\"140.2\"/><path d=\"M150.0 120.0 L154.7 173.8 A54.0 54.0 0 0 1 136.0 172.2 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"145.3\" y1=\"173.8\" x2=\"144.9\" y2=\"178.8\"/><path d=\"M150.0 120.0 L136.0 172.2 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.3\"/><line x1=\"96.5\" y1=\"113.0\" x2=\"91.5\" y2=\"112.3\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"176.1\" y=\"47.8\" text-anchor=\"start\">Vegetable</text><text x=\"176.1\" y=\"59.8\" text-anchor=\"start\">45°</text><text x=\"211.2\" y=\"153.5\" text-anchor=\"start\">Chicken</text><text x=\"211.2\" y=\"165.5\" text-anchor=\"start\">balti</text><text x=\"144.5\" y=\"194.8\" text-anchor=\"middle\">Steak</text><text x=\"85.5\" y=\"115.8\" text-anchor=\"end\">Mince</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 27
+   },
+   "unit": "pies",
+   "worked": [
+    "The vegetable sector is \\(45^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{45}{360}\\) = \\(\\frac{1}{8}\\).",
+    "Find \\(\\frac{1}{8}\\) of 216 pies.",
+    "\\(216 \\div 8 = 27\\)"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 97.2
+     },
+     "line": "The \\(45^\\circ\\) was divided by 100, as if it were a percentage. The whole chart is \\(360^\\circ\\): divide by 360."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-06b4c1f7",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:2:5:206"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the family stand on matchday. 480 pies were sold in total. The vegetable sector is \\(30^\\circ\\). How many vegetable pies were sold?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 177.0 73.2 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"164.0\" y1=\"67.8\" x2=\"165.3\" y2=\"63.0\"/><path d=\"M150.0 120.0 L177.0 73.2 A54.0 54.0 0 1 1 109.9 156.1 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"192.0\" y1=\"154.0\" x2=\"195.9\" y2=\"157.1\"/><path d=\"M150.0 120.0 L109.9 156.1 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"100.7\" y1=\"98.0\" x2=\"96.1\" y2=\"96.0\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"166.3\" y=\"45.1\" text-anchor=\"middle\">Vegetable</text><text x=\"166.3\" y=\"57.1\" text-anchor=\"middle\">30°</text><text x=\"201.0\" y=\"171.6\" text-anchor=\"start\">Steak</text><text x=\"90.4\" y=\"80.4\" text-anchor=\"end\">Cheese and</text><text x=\"90.4\" y=\"92.4\" text-anchor=\"end\">onion</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 40
+   },
+   "unit": "pies",
+   "worked": [
+    "The vegetable sector is \\(30^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{30}{360}\\) = \\(\\frac{1}{12}\\).",
+    "Find \\(\\frac{1}{12}\\) of 480 pies.",
+    "\\(480 \\div 12 = 40\\)"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 144
+     },
+     "line": "The \\(30^\\circ\\) was divided by 100, as if it were a percentage. The whole chart is \\(360^\\circ\\): divide by 360."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-4c2abb31",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:2:6:207"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the home end on matchday. 400 pies were sold in total. The vegetable sector is \\(270^\\circ\\). How many vegetable pies were sold?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 1 1 96.0 120.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"188.2\" y1=\"158.2\" x2=\"191.7\" y2=\"161.7\"/><path d=\"M150.0 120.0 L96.0 120.0 A54.0 54.0 0 0 1 101.9 95.5 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"97.5\" y1=\"107.4\" x2=\"92.6\" y2=\"106.2\"/><path d=\"M150.0 120.0 L101.9 95.5 A54.0 54.0 0 0 1 111.8 81.8 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"106.3\" y1=\"88.3\" x2=\"102.3\" y2=\"85.3\"/><path d=\"M150.0 120.0 L111.8 81.8 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.3\"/><line x1=\"129.3\" y1=\"70.1\" x2=\"127.4\" y2=\"65.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"196.5\" y=\"176.5\" text-anchor=\"start\">Vegetable</text><text x=\"196.5\" y=\"188.5\" text-anchor=\"start\">270°</text><text x=\"86.7\" y=\"109.3\" text-anchor=\"end\">Mince</text><text x=\"97.0\" y=\"81.0\" text-anchor=\"end\">Steak</text><text x=\"123.9\" y=\"47.8\" text-anchor=\"end\">Cheese and</text><text x=\"123.9\" y=\"59.8\" text-anchor=\"end\">onion</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 300
+   },
+   "unit": "pies",
+   "worked": [
+    "The vegetable sector is \\(270^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{270}{360}\\) = \\(\\frac{3}{4}\\).",
+    "Find \\(\\frac{3}{4}\\) of 400 pies.",
+    "\\(400 \\div 4 = 100, \\quad 100 \\times 3 = 300\\)"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 1080
+     },
+     "line": "The \\(270^\\circ\\) was divided by 100, as if it were a percentage. The whole chart is \\(360^\\circ\\): divide by 360."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-2333c7b7",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:2:7:208"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the away end on matchday. 288 pies were sold in total. The mince sector is \\(150^\\circ\\). How many mince pies were sold?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 177.0 166.8 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"202.2\" y1=\"106.0\" x2=\"207.0\" y2=\"104.7\"/><path d=\"M150.0 120.0 L177.0 166.8 A54.0 54.0 0 0 1 115.3 161.4 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"145.3\" y1=\"173.8\" x2=\"144.9\" y2=\"178.8\"/><path d=\"M150.0 120.0 L115.3 161.4 A54.0 54.0 0 0 1 99.3 101.5 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"97.8\" y1=\"134.0\" x2=\"93.0\" y2=\"135.3\"/><path d=\"M150.0 120.0 L99.3 101.5 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.3\"/><line x1=\"119.0\" y1=\"75.8\" x2=\"116.2\" y2=\"71.7\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"212.9\" y=\"101.7\" text-anchor=\"start\">Mince</text><text x=\"212.9\" y=\"113.7\" text-anchor=\"start\">150°</text><text x=\"144.5\" y=\"194.8\" text-anchor=\"middle\">Vegetable</text><text x=\"87.1\" y=\"134.3\" text-anchor=\"end\">Chicken</text><text x=\"87.1\" y=\"146.3\" text-anchor=\"end\">balti</text><text x=\"111.9\" y=\"54.4\" text-anchor=\"end\">Cheese and</text><text x=\"111.9\" y=\"66.4\" text-anchor=\"end\">onion</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 120
+   },
+   "unit": "pies",
+   "worked": [
+    "The mince sector is \\(150^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{150}{360}\\) = \\(\\frac{5}{12}\\).",
+    "Find \\(\\frac{5}{12}\\) of 288 pies.",
+    "\\(288 \\div 12 = 24, \\quad 24 \\times 5 = 120\\)"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 432
+     },
+     "line": "The \\(150^\\circ\\) was divided by 100, as if it were a percentage. The whole chart is \\(360^\\circ\\): divide by 360."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-672ef207",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:2:8:209"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the home end on matchday. 400 pies were sold in total. The vegetable sector is \\(135^\\circ\\). How many vegetable pies were sold?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 188.2 158.2 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"199.9\" y1=\"99.3\" x2=\"204.5\" y2=\"97.4\"/><path d=\"M150.0 120.0 L188.2 158.2 A54.0 54.0 0 0 1 118.3 163.7 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"154.2\" y1=\"173.8\" x2=\"154.6\" y2=\"178.8\"/><path d=\"M150.0 120.0 L118.3 163.7 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"98.6\" y1=\"103.3\" x2=\"93.9\" y2=\"101.8\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"210.2\" y=\"81.9\" text-anchor=\"start\">Vegetable</text><text x=\"210.2\" y=\"93.9\" text-anchor=\"start\">135°</text><text x=\"154.9\" y=\"194.8\" text-anchor=\"middle\">Chicken</text><text x=\"154.9\" y=\"206.8\" text-anchor=\"middle\">balti</text><text x=\"88.1\" y=\"86.5\" text-anchor=\"end\">Cheese and</text><text x=\"88.1\" y=\"98.5\" text-anchor=\"end\">onion</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 150
+   },
+   "unit": "pies",
+   "worked": [
+    "The vegetable sector is \\(135^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{135}{360}\\) = \\(\\frac{3}{8}\\).",
+    "Find \\(\\frac{3}{8}\\) of 400 pies.",
+    "\\(400 \\div 8 = 50, \\quad 50 \\times 3 = 150\\)"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 540
+     },
+     "line": "The \\(135^\\circ\\) was divided by 100, as if it were a percentage. The whole chart is \\(360^\\circ\\): divide by 360."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-74f2ba98",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:2:9:210"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the main stand on matchday. 60 pies were sold in total. The chicken balti sector is \\(210^\\circ\\). How many chicken balti pies were sold?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 1 1 123.0 166.8 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"202.2\" y1=\"134.0\" x2=\"207.0\" y2=\"135.3\"/><path d=\"M150.0 120.0 L123.0 166.8 A54.0 54.0 0 0 1 113.9 79.9 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"96.3\" y1=\"125.6\" x2=\"91.3\" y2=\"126.2\"/><path d=\"M150.0 120.0 L113.9 79.9 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"130.6\" y1=\"69.6\" x2=\"128.9\" y2=\"64.9\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"212.9\" y=\"128.3\" text-anchor=\"start\">Chicken</text><text x=\"212.9\" y=\"140.3\" text-anchor=\"start\">balti</text><text x=\"212.9\" y=\"152.3\" text-anchor=\"start\">210°</text><text x=\"85.3\" y=\"124.6\" text-anchor=\"end\">Cheese and</text><text x=\"85.3\" y=\"136.6\" text-anchor=\"end\">onion</text><text x=\"125.4\" y=\"59.2\" text-anchor=\"end\">Mince</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 35
+   },
+   "unit": "pies",
+   "worked": [
+    "The chicken balti sector is \\(210^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{210}{360}\\) = \\(\\frac{7}{12}\\).",
+    "Find \\(\\frac{7}{12}\\) of 60 pies.",
+    "\\(60 \\div 12 = 5, \\quad 5 \\times 7 = 35\\)"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 126
+     },
+     "line": "The \\(210^\\circ\\) was divided by 100, as if it were a percentage. The whole chart is \\(360^\\circ\\): divide by 360."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-42b160d5",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:2:10:211"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the home end on matchday. 216 pies were sold in total. The chicken balti sector is \\(105^\\circ\\). How many chicken balti pies were sold?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 202.2 134.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"192.8\" y1=\"87.1\" x2=\"196.8\" y2=\"84.1\"/><path d=\"M150.0 120.0 L202.2 134.0 A54.0 54.0 0 0 1 97.8 134.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"150.0\" y1=\"174.0\" x2=\"150.0\" y2=\"179.0\"/><path d=\"M150.0 120.0 L97.8 134.0 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"107.2\" y1=\"87.1\" x2=\"103.2\" y2=\"84.1\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"202.0\" y=\"55.6\" text-anchor=\"start\">Chicken</text><text x=\"202.0\" y=\"67.6\" text-anchor=\"start\">balti</text><text x=\"202.0\" y=\"79.6\" text-anchor=\"start\">105°</text><text x=\"150.0\" y=\"195.0\" text-anchor=\"middle\">Vegetable</text><text x=\"98.0\" y=\"67.6\" text-anchor=\"end\">Cheese and</text><text x=\"98.0\" y=\"79.6\" text-anchor=\"end\">onion</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 63
+   },
+   "unit": "pies",
+   "worked": [
+    "The chicken balti sector is \\(105^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{105}{360}\\) = \\(\\frac{7}{24}\\).",
+    "Find \\(\\frac{7}{24}\\) of 216 pies.",
+    "\\(216 \\div 24 = 9, \\quad 9 \\times 7 = 63\\)"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 226.8
+     },
+     "line": "The \\(105^\\circ\\) was divided by 100, as if it were a percentage. The whole chart is \\(360^\\circ\\): divide by 360."
+    }
+   ]
+  },
+  {
+   "id": "pie-charts-52e5532f",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:2:11:212"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the away end on matchday. 216 pies were sold in total. The vegetable sector is \\(35^\\circ\\). How many vegetable pies were sold?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 181.0 75.8 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"166.2\" y1=\"68.5\" x2=\"167.7\" y2=\"63.7\"/><path d=\"M150.0 120.0 L181.0 75.8 A54.0 54.0 0 0 1 202.2 106.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"194.2\" y1=\"89.0\" x2=\"198.3\" y2=\"86.2\"/><path d=\"M150.0 120.0 L202.2 106.0 A54.0 54.0 0 0 1 103.2 147.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"170.7\" y1=\"169.9\" x2=\"172.6\" y2=\"174.5\"/><path d=\"M150.0 120.0 L103.2 147.0 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.3\"/><line x1=\"103.2\" y1=\"93.0\" x2=\"98.9\" y2=\"90.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"170.9\" y=\"45.9\" text-anchor=\"start\">Vegetable</text><text x=\"170.9\" y=\"57.9\" text-anchor=\"start\">35°</text><text x=\"203.6\" y=\"69.9\" text-anchor=\"start\">Chicken</text><text x=\"203.6\" y=\"81.9\" text-anchor=\"start\">balti</text><text x=\"176.1\" y=\"190.2\" text-anchor=\"start\">Cheese and</text><text x=\"176.1\" y=\"202.2\" text-anchor=\"start\">onion</text><text x=\"93.4\" y=\"86.5\" text-anchor=\"end\">Steak</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 21
+   },
+   "unit": "pies",
+   "worked": [
+    "The vegetable sector is \\(35^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{35}{360}\\) = \\(\\frac{7}{72}\\).",
+    "Find \\(\\frac{7}{72}\\) of 216 pies.",
+    "\\(216 \\div 72 = 3, \\quad 3 \\times 7 = 21\\)"
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 75.6
+     },
+     "line": "The \\(35^\\circ\\) was divided by 100, as if it were a percentage. The whole chart is \\(360^\\circ\\): divide by 360."
+    }
+   ]
+  },
+  {
+   "id": "pie-charts-f8d8fe72",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:3:0:301"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The table shows the pies sold in the away end on matchday. Chicken balti 22, Cheese and onion 8, Vegetable 6. 36 pies were sold in total. A pie chart is drawn from the table. What angle should the cheese and onion sector be?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 80
+   },
+   "unit": "°",
+   "worked": [
+    "There are 36 pies in total, and the whole chart is \\(360^\\circ\\).",
+    "Each pie is worth \\(360 \\div 36 = 10\\) degrees.",
+    "The cheese and onion sector is \\(8 \\times 10 = 80\\) degrees."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 2880
+     },
+     "line": "The 8 was multiplied by 360 but not divided by the total of 36 pies."
+    }
+   ]
+  },
+  {
+   "id": "pie-charts-1e054f42",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:3:1:302"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The table shows the pies sold in the main stand on matchday. Steak 5, Vegetable 24, Chicken balti 3, Cheese and onion 23, Mince 5. 60 pies were sold in total. A pie chart is drawn from the table. What angle should the vegetable sector be?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 144
+   },
+   "unit": "°",
+   "worked": [
+    "There are 60 pies in total, and the whole chart is \\(360^\\circ\\).",
+    "Each pie is worth \\(360 \\div 60 = 6\\) degrees.",
+    "The vegetable sector is \\(24 \\times 6 = 144\\) degrees."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 40
+     },
+     "line": "That is the percentage of the pies, \\(24 \\div 60 \\times 100\\), not the angle. The angle is out of \\(360^\\circ\\)."
+    },
+    {
+     "answer": {
+      "value": 8640
+     },
+     "line": "The 24 was multiplied by 360 but not divided by the total of 60 pies."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-ef054034",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:3:2:303"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The table shows the pies sold in the main stand on matchday. Mince 7, Steak 7, Chicken balti 5, Vegetable 4, Cheese and onion 17. 40 pies were sold in total. A pie chart is drawn from the table. What angle should the cheese and onion sector be?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 153
+   },
+   "unit": "°",
+   "worked": [
+    "There are 40 pies in total, and the whole chart is \\(360^\\circ\\).",
+    "Each pie is worth \\(360 \\div 40 = 9\\) degrees.",
+    "The cheese and onion sector is \\(17 \\times 9 = 153\\) degrees."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 42.5
+     },
+     "line": "That is the percentage of the pies, \\(17 \\div 40 \\times 100\\), not the angle. The angle is out of \\(360^\\circ\\)."
+    },
+    {
+     "answer": {
+      "value": 6120
+     },
+     "line": "The 17 was multiplied by 360 but not divided by the total of 40 pies."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-df366e11",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:3:3:304"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The table shows the pies sold in the away end on matchday. Vegetable 41, Mince 5, Steak 6, Cheese and onion 20. 72 pies were sold in total. A pie chart is drawn from the table. What angle should the mince sector be?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 25
+   },
+   "unit": "°",
+   "worked": [
+    "There are 72 pies in total, and the whole chart is \\(360^\\circ\\).",
+    "Each pie is worth \\(360 \\div 72 = 5\\) degrees.",
+    "The mince sector is \\(5 \\times 5 = 25\\) degrees."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 1800
+     },
+     "line": "The 5 was multiplied by 360 but not divided by the total of 72 pies."
+    }
+   ]
+  },
+  {
+   "id": "pie-charts-abc4c242",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:3:4:305"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The table shows the pies sold in the family stand on matchday. Cheese and onion 27, Mince 6, Chicken balti 12, Vegetable 45. 90 pies were sold in total. A pie chart is drawn from the table. What angle should the chicken balti sector be?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 48
+   },
+   "unit": "°",
+   "worked": [
+    "There are 90 pies in total, and the whole chart is \\(360^\\circ\\).",
+    "Each pie is worth \\(360 \\div 90 = 4\\) degrees.",
+    "The chicken balti sector is \\(12 \\times 4 = 48\\) degrees."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 4320
+     },
+     "line": "The 12 was multiplied by 360 but not divided by the total of 90 pies."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-88c87488",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:3:5:306"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The table shows the pies sold in the family stand on matchday. Mince 21, Vegetable 8, Cheese and onion 91. 120 pies were sold in total. A pie chart is drawn from the table. What angle should the vegetable sector be?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 24
+   },
+   "unit": "°",
+   "worked": [
+    "There are 120 pies in total, and the whole chart is \\(360^\\circ\\).",
+    "Each pie is worth \\(360 \\div 120 = 3\\) degrees.",
+    "The vegetable sector is \\(8 \\times 3 = 24\\) degrees."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 2880
+     },
+     "line": "The 8 was multiplied by 360 but not divided by the total of 120 pies."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-b14afc09",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:3:6:307"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The table shows the pies sold in the home end on matchday. Chicken balti 11, Cheese and onion 2, Steak 4, Mince 3, Vegetable 4. 24 pies were sold in total. A pie chart is drawn from the table. What angle should the vegetable sector be?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 60
+   },
+   "unit": "°",
+   "worked": [
+    "There are 24 pies in total, and the whole chart is \\(360^\\circ\\).",
+    "Each pie is worth \\(360 \\div 24 = 15\\) degrees.",
+    "The vegetable sector is \\(4 \\times 15 = 60\\) degrees."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 1440
+     },
+     "line": "The 4 was multiplied by 360 but not divided by the total of 24 pies."
+    }
+   ]
+  },
+  {
+   "id": "pie-charts-ff7ace16",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:3:7:308"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The table shows the pies sold in the main stand on matchday. Cheese and onion 6, Mince 17, Steak 4, Chicken balti 9, Vegetable 9. 45 pies were sold in total. A pie chart is drawn from the table. What angle should the mince sector be?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 136
+   },
+   "unit": "°",
+   "worked": [
+    "There are 45 pies in total, and the whole chart is \\(360^\\circ\\).",
+    "Each pie is worth \\(360 \\div 45 = 8\\) degrees.",
+    "The mince sector is \\(17 \\times 8 = 136\\) degrees."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 6120
+     },
+     "line": "The 17 was multiplied by 360 but not divided by the total of 45 pies."
+    }
+   ]
+  },
+  {
+   "id": "pie-charts-7ed3d218",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:3:8:309"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The table shows the pies sold in the home end on matchday. Vegetable 22, Steak 4, Cheese and onion 10, Mince 4, Chicken balti 8. 48 pies were sold in total. A pie chart is drawn from the table. What angle should the cheese and onion sector be?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 75
+   },
+   "unit": "°",
+   "worked": [
+    "There are 48 pies in total, and the whole chart is \\(360^\\circ\\).",
+    "Each pie is worth \\(360 \\div 48 = 7.5\\) degrees.",
+    "The cheese and onion sector is \\(10 \\times 7.5 = 75\\) degrees."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 3600
+     },
+     "line": "The 10 was multiplied by 360 but not divided by the total of 48 pies."
+    }
+   ]
+  },
+  {
+   "id": "pie-charts-d829d92d",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:3:9:310"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The table shows the pies sold in the main stand on matchday. Chicken balti 4, Mince 50, Steak 26. 80 pies were sold in total. A pie chart is drawn from the table. What angle should the mince sector be?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 225
+   },
+   "unit": "°",
+   "worked": [
+    "There are 80 pies in total, and the whole chart is \\(360^\\circ\\).",
+    "Each pie is worth \\(360 \\div 80 = 4.5\\) degrees.",
+    "The mince sector is \\(50 \\times 4.5 = 225\\) degrees."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 62.5
+     },
+     "line": "That is the percentage of the pies, \\(50 \\div 80 \\times 100\\), not the angle. The angle is out of \\(360^\\circ\\)."
+    },
+    {
+     "answer": {
+      "value": 18000
+     },
+     "line": "The 50 was multiplied by 360 but not divided by the total of 80 pies."
+    }
+   ]
+  },
+  {
+   "id": "pie-charts-0f583c05",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:3:10:311"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The table shows the pies sold in the family stand on matchday. Mince 10, Vegetable 5, Cheese and onion 25, Chicken balti 30, Steak 30. 100 pies were sold in total. A pie chart is drawn from the table. What angle should the chicken balti sector be?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 108
+   },
+   "unit": "°",
+   "worked": [
+    "There are 100 pies in total, and the whole chart is \\(360^\\circ\\).",
+    "Each pie is worth \\(360 \\div 100 = 3.6\\) degrees.",
+    "The chicken balti sector is \\(30 \\times 3.6 = 108\\) degrees."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 30
+     },
+     "line": "That is the percentage of the pies, \\(30 \\div 100 \\times 100\\), not the angle. The angle is out of \\(360^\\circ\\)."
+    },
+    {
+     "answer": {
+      "value": 10800
+     },
+     "line": "The 30 was multiplied by 360 but not divided by the total of 100 pies."
+    }
+   ]
+  },
+  {
+   "id": "pie-charts-0a53ac9b",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:3:11:312"
+   },
+   "band": 3,
+   "calc": "optional",
+   "stem": "The table shows the pies sold in the home end on matchday. Cheese and onion 85, Steak 50, Mince 15. 150 pies were sold in total. A pie chart is drawn from the table. What angle should the steak sector be?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 120
+   },
+   "unit": "°",
+   "worked": [
+    "There are 150 pies in total, and the whole chart is \\(360^\\circ\\).",
+    "Each pie is worth \\(360 \\div 150 = 2.4\\) degrees.",
+    "The steak sector is \\(50 \\times 2.4 = 120\\) degrees."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 18000
+     },
+     "line": "The 50 was multiplied by 360 but not divided by the total of 150 pies."
+    }
+   ]
+  },
+  {
+   "id": "pie-charts-2e2d27d7",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:4:0:401"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie charts show the pies sold in the main stand and the home end on matchday. The vegetable sector is \\(120^\\circ\\) in the main stand and \\(90^\\circ\\) in the home end. Can you tell which stand sold more vegetable pies?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 472\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 196.8 147.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"196.8\" y1=\"93.0\" x2=\"201.1\" y2=\"90.5\"/><path d=\"M150.0 120.0 L196.8 147.0 A54.0 54.0 0 1 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"103.2\" y1=\"147.0\" x2=\"98.9\" y2=\"149.5\"/><path d=\"M150.0 356.0 L150.0 302.0 A54.0 54.0 0 0 1 204.0 356.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"188.2\" y1=\"317.8\" x2=\"191.7\" y2=\"314.3\"/><path d=\"M150.0 356.0 L204.0 356.0 A54.0 54.0 0 1 1 150.0 302.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"111.8\" y1=\"394.2\" x2=\"108.3\" y2=\"397.7\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"150.0\" y=\"36.0\" text-anchor=\"middle\" font-weight=\"bold\">Main stand</text><text x=\"206.6\" y=\"74.5\" text-anchor=\"start\">Vegetable</text><text x=\"206.6\" y=\"86.5\" text-anchor=\"start\">120°</text><text x=\"93.4\" y=\"163.5\" text-anchor=\"end\">Mince</text><text x=\"93.4\" y=\"175.5\" text-anchor=\"end\">240°</text><text x=\"150.0\" y=\"272.0\" text-anchor=\"middle\" font-weight=\"bold\">Home end</text><text x=\"196.5\" y=\"297.5\" text-anchor=\"start\">Vegetable</text><text x=\"196.5\" y=\"309.5\" text-anchor=\"start\">90°</text><text x=\"103.5\" y=\"412.5\" text-anchor=\"end\">Chicken</text><text x=\"103.5\" y=\"424.5\" text-anchor=\"end\">balti</text><text x=\"103.5\" y=\"436.5\" text-anchor=\"end\">270°</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Yes, it's the main stand"
+    },
+    {
+     "val": "b",
+     "label": "They sold the same number"
+    },
+    {
+     "val": "c",
+     "label": "You can't tell"
+    },
+    {
+     "val": "d",
+     "label": "Yes, it's the home end"
+    }
+   ],
+   "worked": [
+    "The sectors are fractions of two different totals.",
+    "The chart for the main stand and the chart for the home end do not say how many pies were sold.",
+    "A bigger angle on one chart does not mean more pies than a smaller angle on the other.",
+    "So you can't tell."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The sectors were compared as if the two charts had the same total. They are different charts, and no totals are given."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-af2bf81a",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:4:1:402"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie charts show the pies sold in the main stand and the home end on matchday. The vegetable sector is \\(60^\\circ\\) in the main stand and \\(90^\\circ\\) in the home end. Can you tell which stand sold more vegetable pies?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 472\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 196.8 93.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"177.0\" y1=\"73.2\" x2=\"179.5\" y2=\"68.9\"/><path d=\"M150.0 120.0 L196.8 93.0 A54.0 54.0 0 0 1 203.2 129.4 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"203.2\" y1=\"110.6\" x2=\"208.1\" y2=\"109.8\"/><path d=\"M150.0 120.0 L203.2 129.4 A54.0 54.0 0 1 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"108.6\" y1=\"154.7\" x2=\"104.8\" y2=\"157.9\"/><path d=\"M150.0 356.0 L150.0 302.0 A54.0 54.0 0 0 1 204.0 356.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"188.2\" y1=\"317.8\" x2=\"191.7\" y2=\"314.3\"/><path d=\"M150.0 356.0 L204.0 356.0 A54.0 54.0 0 1 1 150.0 302.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"111.8\" y1=\"394.2\" x2=\"108.3\" y2=\"397.7\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"150.0\" y=\"36.0\" text-anchor=\"middle\" font-weight=\"bold\">Main stand</text><text x=\"183.5\" y=\"51.4\" text-anchor=\"start\">Vegetable</text><text x=\"183.5\" y=\"63.4\" text-anchor=\"start\">60°</text><text x=\"214.0\" y=\"107.1\" text-anchor=\"start\">Steak</text><text x=\"214.0\" y=\"119.1\" text-anchor=\"start\">40°</text><text x=\"99.7\" y=\"172.5\" text-anchor=\"end\">Chicken</text><text x=\"99.7\" y=\"184.5\" text-anchor=\"end\">balti</text><text x=\"99.7\" y=\"196.5\" text-anchor=\"end\">260°</text><text x=\"150.0\" y=\"272.0\" text-anchor=\"middle\" font-weight=\"bold\">Home end</text><text x=\"196.5\" y=\"297.5\" text-anchor=\"start\">Vegetable</text><text x=\"196.5\" y=\"309.5\" text-anchor=\"start\">90°</text><text x=\"103.5\" y=\"412.5\" text-anchor=\"end\">Cheese and</text><text x=\"103.5\" y=\"424.5\" text-anchor=\"end\">onion</text><text x=\"103.5\" y=\"436.5\" text-anchor=\"end\">270°</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Yes, it's the main stand"
+    },
+    {
+     "val": "b",
+     "label": "Yes, it's the home end"
+    },
+    {
+     "val": "c",
+     "label": "They sold the same number"
+    },
+    {
+     "val": "d",
+     "label": "You can't tell"
+    }
+   ],
+   "worked": [
+    "The sectors are fractions of two different totals.",
+    "The chart for the main stand and the chart for the home end do not say how many pies were sold.",
+    "A bigger angle on one chart does not mean more pies than a smaller angle on the other.",
+    "So you can't tell."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "The sectors were compared as if the two charts had the same total. They are different charts, and no totals are given."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-daabb7bf",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:4:2:403"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie charts show the pies sold in the main stand and the family stand on matchday. The steak sector is \\(180^\\circ\\) in the main stand and \\(45^\\circ\\) in the family stand. Can you tell which stand sold more steak pies?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 472\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 150.0 174.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"204.0\" y1=\"120.0\" x2=\"209.0\" y2=\"120.0\"/><path d=\"M150.0 120.0 L150.0 174.0 A54.0 54.0 0 0 1 96.0 120.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"111.8\" y1=\"158.2\" x2=\"108.3\" y2=\"161.7\"/><path d=\"M150.0 120.0 L96.0 120.0 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"111.8\" y1=\"81.8\" x2=\"108.3\" y2=\"78.3\"/><path d=\"M150.0 356.0 L150.0 302.0 A54.0 54.0 0 0 1 188.2 317.8 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"170.7\" y1=\"306.1\" x2=\"172.6\" y2=\"301.5\"/><path d=\"M150.0 356.0 L188.2 317.8 A54.0 54.0 0 1 1 150.0 302.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"129.3\" y1=\"405.9\" x2=\"127.4\" y2=\"410.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"150.0\" y=\"36.0\" text-anchor=\"middle\" font-weight=\"bold\">Main stand</text><text x=\"215.0\" y=\"118.0\" text-anchor=\"start\">Steak</text><text x=\"215.0\" y=\"130.0\" text-anchor=\"start\">180°</text><text x=\"103.5\" y=\"176.5\" text-anchor=\"end\">Vegetable</text><text x=\"103.5\" y=\"188.5\" text-anchor=\"end\">90°</text><text x=\"103.5\" y=\"61.5\" text-anchor=\"end\">Mince</text><text x=\"103.5\" y=\"73.5\" text-anchor=\"end\">90°</text><text x=\"150.0\" y=\"272.0\" text-anchor=\"middle\" font-weight=\"bold\">Family stand</text><text x=\"176.1\" y=\"283.8\" text-anchor=\"start\">Steak</text><text x=\"176.1\" y=\"295.8\" text-anchor=\"start\">45°</text><text x=\"123.9\" y=\"426.2\" text-anchor=\"end\">Vegetable</text><text x=\"123.9\" y=\"438.2\" text-anchor=\"end\">315°</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Yes, it's the main stand"
+    },
+    {
+     "val": "b",
+     "label": "They sold the same number"
+    },
+    {
+     "val": "c",
+     "label": "Yes, it's the family stand"
+    },
+    {
+     "val": "d",
+     "label": "You can't tell"
+    }
+   ],
+   "worked": [
+    "The sectors are fractions of two different totals.",
+    "The chart for the main stand and the chart for the family stand do not say how many pies were sold.",
+    "A bigger angle on one chart does not mean more pies than a smaller angle on the other.",
+    "So you can't tell."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The sectors were compared as if the two charts had the same total. They are different charts, and no totals are given."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-a4005863",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:4:3:404"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie charts show the pies sold in the main stand and the home end on matchday. The steak sector is \\(90^\\circ\\) in the main stand and \\(90^\\circ\\) in the home end. Can you tell which stand sold more steak pies?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 472\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 204.0 120.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"188.2\" y1=\"81.8\" x2=\"191.7\" y2=\"78.3\"/><path d=\"M150.0 120.0 L204.0 120.0 A54.0 54.0 0 1 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"111.8\" y1=\"158.2\" x2=\"108.3\" y2=\"161.7\"/><path d=\"M150.0 356.0 L150.0 302.0 A54.0 54.0 0 0 1 204.0 356.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"188.2\" y1=\"317.8\" x2=\"191.7\" y2=\"314.3\"/><path d=\"M150.0 356.0 L204.0 356.0 A54.0 54.0 0 1 1 150.0 302.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"111.8\" y1=\"394.2\" x2=\"108.3\" y2=\"397.7\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"150.0\" y=\"36.0\" text-anchor=\"middle\" font-weight=\"bold\">Main stand</text><text x=\"196.5\" y=\"61.5\" text-anchor=\"start\">Steak</text><text x=\"196.5\" y=\"73.5\" text-anchor=\"start\">90°</text><text x=\"103.5\" y=\"176.5\" text-anchor=\"end\">Cheese and</text><text x=\"103.5\" y=\"188.5\" text-anchor=\"end\">onion</text><text x=\"103.5\" y=\"200.5\" text-anchor=\"end\">270°</text><text x=\"150.0\" y=\"272.0\" text-anchor=\"middle\" font-weight=\"bold\">Home end</text><text x=\"196.5\" y=\"297.5\" text-anchor=\"start\">Steak</text><text x=\"196.5\" y=\"309.5\" text-anchor=\"start\">90°</text><text x=\"103.5\" y=\"412.5\" text-anchor=\"end\">Vegetable</text><text x=\"103.5\" y=\"424.5\" text-anchor=\"end\">270°</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Yes, it's the home end"
+    },
+    {
+     "val": "b",
+     "label": "They sold the same number"
+    },
+    {
+     "val": "c",
+     "label": "Yes, it's the main stand"
+    },
+    {
+     "val": "d",
+     "label": "You can't tell"
+    }
+   ],
+   "worked": [
+    "The sectors are fractions of two different totals.",
+    "The chart for the main stand and the chart for the home end do not say how many pies were sold.",
+    "A bigger angle on one chart does not mean more pies than a smaller angle on the other.",
+    "So you can't tell."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "b"
+     },
+     "line": "The sectors were compared as if the two charts had the same total. They are different charts, and no totals are given."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-0de280ad",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:4:4:405"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie charts show the pies sold in the family stand and the away end on matchday. The cheese and onion sector is \\(150^\\circ\\) in the family stand and \\(100^\\circ\\) in the away end. Can you tell which stand sold more cheese and onion pies?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 472\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 177.0 166.8 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"202.2\" y1=\"106.0\" x2=\"207.0\" y2=\"104.7\"/><path d=\"M150.0 120.0 L177.0 166.8 A54.0 54.0 0 1 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"97.8\" y1=\"134.0\" x2=\"93.0\" y2=\"135.3\"/><path d=\"M150.0 356.0 L150.0 302.0 A54.0 54.0 0 0 1 203.2 365.4 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"191.4\" y1=\"321.3\" x2=\"195.2\" y2=\"318.1\"/><path d=\"M150.0 356.0 L203.2 365.4 A54.0 54.0 0 1 1 150.0 302.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"108.6\" y1=\"390.7\" x2=\"104.8\" y2=\"393.9\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"150.0\" y=\"36.0\" text-anchor=\"middle\" font-weight=\"bold\">Family stand</text><text x=\"212.9\" y=\"95.7\" text-anchor=\"start\">Cheese and</text><text x=\"212.9\" y=\"107.7\" text-anchor=\"start\">onion</text><text x=\"212.9\" y=\"119.7\" text-anchor=\"start\">150°</text><text x=\"87.1\" y=\"128.3\" text-anchor=\"end\">Chicken</text><text x=\"87.1\" y=\"140.3\" text-anchor=\"end\">balti</text><text x=\"87.1\" y=\"152.3\" text-anchor=\"end\">210°</text><text x=\"150.0\" y=\"272.0\" text-anchor=\"middle\" font-weight=\"bold\">Away end</text><text x=\"200.3\" y=\"289.5\" text-anchor=\"start\">Cheese and</text><text x=\"200.3\" y=\"301.5\" text-anchor=\"start\">onion</text><text x=\"200.3\" y=\"313.5\" text-anchor=\"start\">100°</text><text x=\"99.7\" y=\"408.5\" text-anchor=\"end\">Mince</text><text x=\"99.7\" y=\"420.5\" text-anchor=\"end\">260°</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Yes, it's the away end"
+    },
+    {
+     "val": "b",
+     "label": "You can't tell"
+    },
+    {
+     "val": "c",
+     "label": "Yes, it's the family stand"
+    },
+    {
+     "val": "d",
+     "label": "They sold the same number"
+    }
+   ],
+   "worked": [
+    "The sectors are fractions of two different totals.",
+    "The chart for the family stand and the chart for the away end do not say how many pies were sold.",
+    "A bigger angle on one chart does not mean more pies than a smaller angle on the other.",
+    "So you can't tell."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "c"
+     },
+     "line": "The sectors were compared as if the two charts had the same total. They are different charts, and no totals are given."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-fd964a03",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:4:5:406"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie charts show the pies sold in the family stand and the away end on matchday. The family stand sold 400 pies and the away end sold 240 pies. The mince sector is \\(90^\\circ\\) in the family stand and \\(120^\\circ\\) in the away end. Can you tell which stand sold more mince pies?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 472\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 204.0 120.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"188.2\" y1=\"81.8\" x2=\"191.7\" y2=\"78.3\"/><path d=\"M150.0 120.0 L204.0 120.0 A54.0 54.0 0 1 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"111.8\" y1=\"158.2\" x2=\"108.3\" y2=\"161.7\"/><path d=\"M150.0 356.0 L150.0 302.0 A54.0 54.0 0 0 1 196.8 383.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"196.8\" y1=\"329.0\" x2=\"201.1\" y2=\"326.5\"/><path d=\"M150.0 356.0 L196.8 383.0 A54.0 54.0 0 0 1 106.3 387.7 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"152.8\" y1=\"409.9\" x2=\"153.1\" y2=\"414.9\"/><path d=\"M150.0 356.0 L106.3 387.7 A54.0 54.0 0 0 1 150.0 302.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"101.9\" y1=\"331.5\" x2=\"97.4\" y2=\"329.2\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"150.0\" y=\"36.0\" text-anchor=\"middle\" font-weight=\"bold\">Family stand</text><text x=\"196.5\" y=\"61.5\" text-anchor=\"start\">Mince</text><text x=\"196.5\" y=\"73.5\" text-anchor=\"start\">90°</text><text x=\"103.5\" y=\"176.5\" text-anchor=\"end\">Chicken</text><text x=\"103.5\" y=\"188.5\" text-anchor=\"end\">balti</text><text x=\"103.5\" y=\"200.5\" text-anchor=\"end\">270°</text><text x=\"150.0\" y=\"272.0\" text-anchor=\"middle\" font-weight=\"bold\">Away end</text><text x=\"206.6\" y=\"310.5\" text-anchor=\"start\">Mince</text><text x=\"206.6\" y=\"322.5\" text-anchor=\"start\">120°</text><text x=\"153.3\" y=\"430.9\" text-anchor=\"middle\">Vegetable</text><text x=\"153.3\" y=\"442.9\" text-anchor=\"middle\">114°</text><text x=\"91.9\" y=\"301.4\" text-anchor=\"end\">Cheese and</text><text x=\"91.9\" y=\"313.4\" text-anchor=\"end\">onion</text><text x=\"91.9\" y=\"325.4\" text-anchor=\"end\">126°</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Yes, it's the away end"
+    },
+    {
+     "val": "b",
+     "label": "Yes, it's the family stand"
+    },
+    {
+     "val": "c",
+     "label": "You can't tell"
+    },
+    {
+     "val": "d",
+     "label": "They sold the same number"
+    }
+   ],
+   "worked": [
+    "Both totals are given, so the numbers can be worked out.",
+    "The family stand: \\(400 \\times \\frac{90}{360} = 100\\).",
+    "The away end: \\(240 \\times \\frac{120}{360} = 80\\).",
+    "The family stand sold more, so you can tell."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "a"
+     },
+     "line": "The bigger sector was chosen, but the two charts have different totals. Work out the numbers of pies first."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-7582ca48",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:4:6:407"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie charts show the pies sold in the family stand and the home end on matchday. The family stand sold 360 pies and the home end sold 120 pies. The chicken balti sector is \\(45^\\circ\\) in the family stand and \\(150^\\circ\\) in the home end. Can you tell which stand sold more chicken balti pies?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 472\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 188.2 81.8 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"170.7\" y1=\"70.1\" x2=\"172.6\" y2=\"65.5\"/><path d=\"M150.0 120.0 L188.2 81.8 A54.0 54.0 0 1 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"129.3\" y1=\"169.9\" x2=\"127.4\" y2=\"174.5\"/><path d=\"M150.0 356.0 L150.0 302.0 A54.0 54.0 0 0 1 177.0 402.8 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"202.2\" y1=\"342.0\" x2=\"207.0\" y2=\"340.7\"/><path d=\"M150.0 356.0 L177.0 402.8 A54.0 54.0 0 0 1 100.7 378.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"133.3\" y1=\"407.4\" x2=\"131.8\" y2=\"412.1\"/><path d=\"M150.0 356.0 L100.7 378.0 A54.0 54.0 0 0 1 150.0 302.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"104.7\" y1=\"326.6\" x2=\"100.5\" y2=\"323.9\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"150\" y=\"22\" text-anchor=\"middle\" font-weight=\"bold\">Family stand</text><text x=\"176.1\" y=\"35.8\" text-anchor=\"start\">Chicken</text><text x=\"176.1\" y=\"47.8\" text-anchor=\"start\">balti</text><text x=\"176.1\" y=\"59.8\" text-anchor=\"start\">45°</text><text x=\"123.9\" y=\"190.2\" text-anchor=\"end\">Cheese and</text><text x=\"123.9\" y=\"202.2\" text-anchor=\"end\">onion</text><text x=\"123.9\" y=\"214.2\" text-anchor=\"end\">315°</text><text x=\"150.0\" y=\"272.0\" text-anchor=\"middle\" font-weight=\"bold\">Home end</text><text x=\"212.9\" y=\"331.7\" text-anchor=\"start\">Chicken</text><text x=\"212.9\" y=\"343.7\" text-anchor=\"start\">balti</text><text x=\"212.9\" y=\"355.7\" text-anchor=\"start\">150°</text><text x=\"128.5\" y=\"427.9\" text-anchor=\"end\">Cheese and</text><text x=\"128.5\" y=\"439.9\" text-anchor=\"end\">onion</text><text x=\"128.5\" y=\"451.9\" text-anchor=\"end\">96°</text><text x=\"95.2\" y=\"307.7\" text-anchor=\"end\">Vegetable</text><text x=\"95.2\" y=\"319.7\" text-anchor=\"end\">114°</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "They sold the same number"
+    },
+    {
+     "val": "b",
+     "label": "You can't tell"
+    },
+    {
+     "val": "c",
+     "label": "Yes, it's the family stand"
+    },
+    {
+     "val": "d",
+     "label": "Yes, it's the home end"
+    }
+   ],
+   "worked": [
+    "Both totals are given, so the numbers can be worked out.",
+    "The family stand: \\(360 \\times \\frac{45}{360} = 45\\).",
+    "The home end: \\(120 \\times \\frac{150}{360} = 50\\).",
+    "The home end sold more, so you can tell."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-438661fa",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:4:7:408"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie charts show the pies sold in the away end and the main stand on matchday. The away end sold 240 pies and the main stand sold 120 pies. The cheese and onion sector is \\(90^\\circ\\) in the away end and \\(180^\\circ\\) in the main stand. Can you tell which stand sold more cheese and onion pies?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 472\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 204.0 120.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"188.2\" y1=\"81.8\" x2=\"191.7\" y2=\"78.3\"/><path d=\"M150.0 120.0 L204.0 120.0 A54.0 54.0 0 1 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"111.8\" y1=\"158.2\" x2=\"108.3\" y2=\"161.7\"/><path d=\"M150.0 356.0 L150.0 302.0 A54.0 54.0 0 0 1 150.0 410.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"204.0\" y1=\"356.0\" x2=\"209.0\" y2=\"356.0\"/><path d=\"M150.0 356.0 L150.0 410.0 A54.0 54.0 0 0 1 150.0 302.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"96.0\" y1=\"356.0\" x2=\"91.0\" y2=\"356.0\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"150.0\" y=\"36.0\" text-anchor=\"middle\" font-weight=\"bold\">Away end</text><text x=\"196.5\" y=\"49.5\" text-anchor=\"start\">Cheese and</text><text x=\"196.5\" y=\"61.5\" text-anchor=\"start\">onion</text><text x=\"196.5\" y=\"73.5\" text-anchor=\"start\">90°</text><text x=\"103.5\" y=\"176.5\" text-anchor=\"end\">Steak</text><text x=\"103.5\" y=\"188.5\" text-anchor=\"end\">270°</text><text x=\"150.0\" y=\"272.0\" text-anchor=\"middle\" font-weight=\"bold\">Main stand</text><text x=\"215.0\" y=\"348.0\" text-anchor=\"start\">Cheese and</text><text x=\"215.0\" y=\"360.0\" text-anchor=\"start\">onion</text><text x=\"215.0\" y=\"372.0\" text-anchor=\"start\">180°</text><text x=\"85.0\" y=\"354.0\" text-anchor=\"end\">Steak</text><text x=\"85.0\" y=\"366.0\" text-anchor=\"end\">180°</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "You can't tell"
+    },
+    {
+     "val": "b",
+     "label": "They sold the same number"
+    },
+    {
+     "val": "c",
+     "label": "Yes, it's the away end"
+    },
+    {
+     "val": "d",
+     "label": "Yes, it's the main stand"
+    }
+   ],
+   "worked": [
+    "Both totals are given, so the numbers can be worked out.",
+    "The away end: \\(240 \\times \\frac{90}{360} = 60\\).",
+    "The main stand: \\(120 \\times \\frac{180}{360} = 60\\).",
+    "The two numbers are equal, so they sold the same number."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "val": "d"
+     },
+     "line": "The bigger sector was chosen, but the two charts have different totals. Work out the numbers of pies first."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-4a9b2e9b",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:4:8:409"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie charts show the pies sold in the home end and the main stand on matchday. Each stand sold 180 pies. The cheese and onion sector is \\(120^\\circ\\) in the home end and \\(90^\\circ\\) in the main stand. Can you tell which stand sold more cheese and onion pies?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 472\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 196.8 147.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"196.8\" y1=\"93.0\" x2=\"201.1\" y2=\"90.5\"/><path d=\"M150.0 120.0 L196.8 147.0 A54.0 54.0 0 0 1 102.3 94.6 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"123.8\" y1=\"167.2\" x2=\"121.4\" y2=\"171.6\"/><path d=\"M150.0 120.0 L102.3 94.6 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"122.2\" y1=\"73.7\" x2=\"119.6\" y2=\"69.4\"/><path d=\"M150.0 356.0 L150.0 302.0 A54.0 54.0 0 0 1 204.0 356.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"188.2\" y1=\"317.8\" x2=\"191.7\" y2=\"314.3\"/><path d=\"M150.0 356.0 L204.0 356.0 A54.0 54.0 0 1 1 150.0 302.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"111.8\" y1=\"394.2\" x2=\"108.3\" y2=\"397.7\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"150.0\" y=\"36.0\" text-anchor=\"middle\" font-weight=\"bold\">Home end</text><text x=\"206.6\" y=\"62.5\" text-anchor=\"start\">Cheese and</text><text x=\"206.6\" y=\"74.5\" text-anchor=\"start\">onion</text><text x=\"206.6\" y=\"86.5\" text-anchor=\"start\">120°</text><text x=\"117.5\" y=\"187.1\" text-anchor=\"end\">Vegetable</text><text x=\"117.5\" y=\"199.1\" text-anchor=\"end\">178°</text><text x=\"115.6\" y=\"52.0\" text-anchor=\"end\">Steak</text><text x=\"115.6\" y=\"64.0\" text-anchor=\"end\">62°</text><text x=\"150.0\" y=\"272.0\" text-anchor=\"middle\" font-weight=\"bold\">Main stand</text><text x=\"196.5\" y=\"285.5\" text-anchor=\"start\">Cheese and</text><text x=\"196.5\" y=\"297.5\" text-anchor=\"start\">onion</text><text x=\"196.5\" y=\"309.5\" text-anchor=\"start\">90°</text><text x=\"103.5\" y=\"412.5\" text-anchor=\"end\">Steak</text><text x=\"103.5\" y=\"424.5\" text-anchor=\"end\">270°</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "They sold the same number"
+    },
+    {
+     "val": "b",
+     "label": "You can't tell"
+    },
+    {
+     "val": "c",
+     "label": "Yes, it's the home end"
+    },
+    {
+     "val": "d",
+     "label": "Yes, it's the main stand"
+    }
+   ],
+   "worked": [
+    "Both stands sold 180 pies, so the totals are the same.",
+    "With the same total, the bigger angle is the bigger share.",
+    "The \\(120^\\circ\\) sector is bigger than the \\(90^\\circ\\) sector.",
+    "The home end sold more, so you can tell."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-4f3572d0",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:4:9:410"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie charts show the pies sold in the away end and the family stand on matchday. Each stand sold 180 pies. The chicken balti sector is \\(60^\\circ\\) in the away end and \\(100^\\circ\\) in the family stand. Can you tell which stand sold more chicken balti pies?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 472\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 196.8 93.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"177.0\" y1=\"73.2\" x2=\"179.5\" y2=\"68.9\"/><path d=\"M150.0 120.0 L196.8 93.0 A54.0 54.0 0 1 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"123.0\" y1=\"166.8\" x2=\"120.5\" y2=\"171.1\"/><path d=\"M150.0 356.0 L150.0 302.0 A54.0 54.0 0 0 1 203.2 365.4 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"191.4\" y1=\"321.3\" x2=\"195.2\" y2=\"318.1\"/><path d=\"M150.0 356.0 L203.2 365.4 A54.0 54.0 0 1 1 105.2 325.8 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"129.8\" y1=\"406.1\" x2=\"127.9\" y2=\"410.7\"/><path d=\"M150.0 356.0 L105.2 325.8 A54.0 54.0 0 0 1 150.0 302.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"124.6\" y1=\"308.3\" x2=\"122.3\" y2=\"303.9\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"150.0\" y=\"36.0\" text-anchor=\"middle\" font-weight=\"bold\">Away end</text><text x=\"183.5\" y=\"39.4\" text-anchor=\"start\">Chicken</text><text x=\"183.5\" y=\"51.4\" text-anchor=\"start\">balti</text><text x=\"183.5\" y=\"63.4\" text-anchor=\"start\">60°</text><text x=\"116.5\" y=\"186.6\" text-anchor=\"end\">Steak</text><text x=\"116.5\" y=\"198.6\" text-anchor=\"end\">300°</text><text x=\"150.0\" y=\"272.0\" text-anchor=\"middle\" font-weight=\"bold\">Family stand</text><text x=\"200.3\" y=\"289.5\" text-anchor=\"start\">Chicken</text><text x=\"200.3\" y=\"301.5\" text-anchor=\"start\">balti</text><text x=\"200.3\" y=\"313.5\" text-anchor=\"start\">100°</text><text x=\"124.4\" y=\"426.4\" text-anchor=\"end\">Vegetable</text><text x=\"124.4\" y=\"438.4\" text-anchor=\"end\">204°</text><text x=\"118.4\" y=\"286.4\" text-anchor=\"end\">Mince</text><text x=\"118.4\" y=\"298.4\" text-anchor=\"end\">56°</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "Yes, it's the family stand"
+    },
+    {
+     "val": "b",
+     "label": "Yes, it's the away end"
+    },
+    {
+     "val": "c",
+     "label": "You can't tell"
+    },
+    {
+     "val": "d",
+     "label": "They sold the same number"
+    }
+   ],
+   "worked": [
+    "Both stands sold 180 pies, so the totals are the same.",
+    "With the same total, the bigger angle is the bigger share.",
+    "The \\(100^\\circ\\) sector is bigger than the \\(60^\\circ\\) sector.",
+    "The family stand sold more, so you can tell."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-3d9b337b",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:4:10:411"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the main stand on matchday. Can you tell whether more mince pies or more chicken balti pies were sold?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 177.0 166.8 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"202.2\" y1=\"106.0\" x2=\"207.0\" y2=\"104.7\"/><path d=\"M150.0 120.0 L177.0 166.8 A54.0 54.0 0 0 1 103.2 147.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"136.0\" y1=\"172.2\" x2=\"134.7\" y2=\"177.0\"/><path d=\"M150.0 120.0 L103.2 147.0 A54.0 54.0 0 0 1 111.8 81.8 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"96.5\" y1=\"113.0\" x2=\"91.5\" y2=\"112.3\"/><path d=\"M150.0 120.0 L111.8 81.8 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.3\"/><line x1=\"129.3\" y1=\"70.1\" x2=\"127.4\" y2=\"65.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"212.9\" y=\"101.7\" text-anchor=\"start\">Mince</text><text x=\"212.9\" y=\"113.7\" text-anchor=\"start\">150°</text><text x=\"133.7\" y=\"192.9\" text-anchor=\"middle\">Chicken</text><text x=\"133.7\" y=\"204.9\" text-anchor=\"middle\">balti</text><text x=\"133.7\" y=\"216.9\" text-anchor=\"middle\">90°</text><text x=\"85.5\" y=\"109.8\" text-anchor=\"end\">Steak</text><text x=\"85.5\" y=\"121.8\" text-anchor=\"end\">75°</text><text x=\"123.9\" y=\"35.8\" text-anchor=\"end\">Cheese and</text><text x=\"123.9\" y=\"47.8\" text-anchor=\"end\">onion</text><text x=\"123.9\" y=\"59.8\" text-anchor=\"end\">45°</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "They sold the same number"
+    },
+    {
+     "val": "b",
+     "label": "Yes, it's chicken balti"
+    },
+    {
+     "val": "c",
+     "label": "You can't tell"
+    },
+    {
+     "val": "d",
+     "label": "Yes, it's mince"
+    }
+   ],
+   "worked": [
+    "Both sectors are on the same chart, so they are parts of the same total.",
+    "The mince sector is \\(150^\\circ\\) and the chicken balti sector is \\(90^\\circ\\).",
+    "The bigger angle is the bigger share of the same total.",
+    "More mince pies were sold, so you can tell."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-b4024313",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:4:11:412"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the home end on matchday. Can you tell whether more chicken balti pies or more mince pies were sold?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 177.0 73.2 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"164.0\" y1=\"67.8\" x2=\"165.3\" y2=\"63.0\"/><path d=\"M150.0 120.0 L177.0 73.2 A54.0 54.0 0 0 1 191.4 154.7 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"203.2\" y1=\"110.6\" x2=\"208.1\" y2=\"109.8\"/><path d=\"M150.0 120.0 L191.4 154.7 A54.0 54.0 0 0 1 97.8 106.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"125.1\" y1=\"167.9\" x2=\"122.8\" y2=\"172.3\"/><path d=\"M150.0 120.0 L97.8 106.0 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.3\"/><line x1=\"117.1\" y1=\"77.2\" x2=\"114.1\" y2=\"73.2\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"166.3\" y=\"33.1\" text-anchor=\"middle\">Chicken</text><text x=\"166.3\" y=\"45.1\" text-anchor=\"middle\">balti</text><text x=\"166.3\" y=\"57.1\" text-anchor=\"middle\">30°</text><text x=\"214.0\" y=\"107.1\" text-anchor=\"start\">Mince</text><text x=\"214.0\" y=\"119.1\" text-anchor=\"start\">100°</text><text x=\"118.9\" y=\"187.9\" text-anchor=\"end\">Steak</text><text x=\"118.9\" y=\"199.9\" text-anchor=\"end\">155°</text><text x=\"109.6\" y=\"44.0\" text-anchor=\"end\">Cheese and</text><text x=\"109.6\" y=\"56.0\" text-anchor=\"end\">onion</text><text x=\"109.6\" y=\"68.0\" text-anchor=\"end\">75°</text></g></svg>",
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "They sold the same number"
+    },
+    {
+     "val": "b",
+     "label": "You can't tell"
+    },
+    {
+     "val": "c",
+     "label": "Yes, it's mince"
+    },
+    {
+     "val": "d",
+     "label": "Yes, it's chicken balti"
+    }
+   ],
+   "worked": [
+    "Both sectors are on the same chart, so they are parts of the same total.",
+    "The chicken balti sector is \\(30^\\circ\\) and the mince sector is \\(100^\\circ\\).",
+    "The bigger angle is the bigger share of the same total.",
+    "More mince pies were sold, so you can tell."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-67bd7294",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:5:0:501"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the main stand on matchday. The steak sector is \\(90^\\circ\\) and 20 steak pies were sold. How many pies were sold in total?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 204.0 120.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"188.2\" y1=\"81.8\" x2=\"191.7\" y2=\"78.3\"/><path d=\"M150.0 120.0 L204.0 120.0 A54.0 54.0 0 0 1 111.8 158.2 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"170.7\" y1=\"169.9\" x2=\"172.6\" y2=\"174.5\"/><path d=\"M150.0 120.0 L111.8 158.2 A54.0 54.0 0 0 1 136.0 67.8 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"97.8\" y1=\"106.0\" x2=\"93.0\" y2=\"104.7\"/><path d=\"M150.0 120.0 L136.0 67.8 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.3\"/><line x1=\"143.0\" y1=\"66.5\" x2=\"142.3\" y2=\"61.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"196.5\" y=\"61.5\" text-anchor=\"start\">Steak</text><text x=\"196.5\" y=\"73.5\" text-anchor=\"start\">90°</text><text x=\"176.1\" y=\"190.2\" text-anchor=\"start\">Chicken</text><text x=\"176.1\" y=\"202.2\" text-anchor=\"start\">balti</text><text x=\"87.1\" y=\"101.7\" text-anchor=\"end\">Cheese and</text><text x=\"87.1\" y=\"113.7\" text-anchor=\"end\">onion</text><text x=\"141.8\" y=\"55.5\" text-anchor=\"middle\">Vegetable</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 80
+   },
+   "unit": "pies",
+   "worked": [
+    "The steak sector is \\(90^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{1}{4}\\) of the pies.",
+    "20 pies are \\(\\frac{1}{4}\\) of the total.",
+    "The total is \\(20 \\times 4 = 80\\) pies."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-6289f3c8",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:5:1:502"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the away end on matchday. The vegetable sector is \\(60^\\circ\\) and 15 vegetable pies were sold. How many pies were sold in total?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 196.8 93.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"177.0\" y1=\"73.2\" x2=\"179.5\" y2=\"68.9\"/><path d=\"M150.0 120.0 L196.8 93.0 A54.0 54.0 0 0 1 140.6 173.2 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"194.2\" y1=\"151.0\" x2=\"198.3\" y2=\"153.8\"/><path d=\"M150.0 120.0 L140.6 173.2 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"96.2\" y1=\"115.3\" x2=\"91.2\" y2=\"114.9\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"183.5\" y=\"51.4\" text-anchor=\"start\">Vegetable</text><text x=\"183.5\" y=\"63.4\" text-anchor=\"start\">60°</text><text x=\"203.6\" y=\"168.1\" text-anchor=\"start\">Mince</text><text x=\"85.2\" y=\"112.5\" text-anchor=\"end\">Chicken</text><text x=\"85.2\" y=\"124.5\" text-anchor=\"end\">balti</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 90
+   },
+   "unit": "pies",
+   "worked": [
+    "The vegetable sector is \\(60^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{1}{6}\\) of the pies.",
+    "15 pies are \\(\\frac{1}{6}\\) of the total.",
+    "The total is \\(15 \\times 6 = 90\\) pies."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 25
+     },
+     "line": "The \\(60^\\circ\\) was used as if it were a percentage, so the total was found out of 100. The whole chart is \\(360^\\circ\\)."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-2d4edb72",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:5:2:503"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the home end on matchday. The mince sector is \\(120^\\circ\\) and 45 mince pies were sold. How many pies were sold in total?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 196.8 147.0 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"196.8\" y1=\"93.0\" x2=\"201.1\" y2=\"90.5\"/><path d=\"M150.0 120.0 L196.8 147.0 A54.0 54.0 0 0 1 145.3 173.8 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"174.9\" y1=\"167.9\" x2=\"177.2\" y2=\"172.3\"/><path d=\"M150.0 120.0 L145.3 173.8 A54.0 54.0 0 0 1 108.6 154.7 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"125.1\" y1=\"167.9\" x2=\"122.8\" y2=\"172.3\"/><path d=\"M150.0 120.0 L108.6 154.7 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.3\"/><line x1=\"101.1\" y1=\"97.2\" x2=\"96.5\" y2=\"95.1\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"206.6\" y=\"74.5\" text-anchor=\"start\">Mince</text><text x=\"206.6\" y=\"86.5\" text-anchor=\"start\">120°</text><text x=\"181.1\" y=\"187.9\" text-anchor=\"start\">Cheese and</text><text x=\"181.1\" y=\"199.9\" text-anchor=\"start\">onion</text><text x=\"118.9\" y=\"187.9\" text-anchor=\"end\">Chicken</text><text x=\"118.9\" y=\"199.9\" text-anchor=\"end\">balti</text><text x=\"90.9\" y=\"91.4\" text-anchor=\"end\">Steak</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 135
+   },
+   "unit": "pies",
+   "worked": [
+    "The mince sector is \\(120^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{1}{3}\\) of the pies.",
+    "45 pies are \\(\\frac{1}{3}\\) of the total.",
+    "The total is \\(45 \\times 3 = 135\\) pies."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 37.5
+     },
+     "line": "The \\(120^\\circ\\) was used as if it were a percentage, so the total was found out of 100. The whole chart is \\(360^\\circ\\)."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-4584f42f",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:5:3:504"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the main stand on matchday. The vegetable sector is \\(45^\\circ\\) and 12 vegetable pies were sold. How many pies were sold in total?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 188.2 81.8 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"170.7\" y1=\"70.1\" x2=\"172.6\" y2=\"65.5\"/><path d=\"M150.0 120.0 L188.2 81.8 A54.0 54.0 0 0 1 154.7 173.8 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"200.7\" y1=\"138.5\" x2=\"205.4\" y2=\"140.2\"/><path d=\"M150.0 120.0 L154.7 173.8 A54.0 54.0 0 0 1 119.0 164.2 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"136.0\" y1=\"172.2\" x2=\"134.7\" y2=\"177.0\"/><path d=\"M150.0 120.0 L119.0 164.2 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.3\"/><line x1=\"98.5\" y1=\"103.8\" x2=\"93.7\" y2=\"102.3\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"176.1\" y=\"47.8\" text-anchor=\"start\">Vegetable</text><text x=\"176.1\" y=\"59.8\" text-anchor=\"start\">45°</text><text x=\"211.2\" y=\"153.5\" text-anchor=\"start\">Mince</text><text x=\"133.7\" y=\"192.9\" text-anchor=\"middle\">Cheese and</text><text x=\"133.7\" y=\"204.9\" text-anchor=\"middle\">onion</text><text x=\"87.9\" y=\"87.1\" text-anchor=\"end\">Chicken</text><text x=\"87.9\" y=\"99.1\" text-anchor=\"end\">balti</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 96
+   },
+   "unit": "pies",
+   "worked": [
+    "The vegetable sector is \\(45^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{1}{8}\\) of the pies.",
+    "12 pies are \\(\\frac{1}{8}\\) of the total.",
+    "The total is \\(12 \\times 8 = 96\\) pies."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-db5f6973",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:5:4:505"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the home end on matchday. The vegetable sector is \\(30^\\circ\\) and 7 vegetable pies were sold. How many pies were sold in total?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 177.0 73.2 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"164.0\" y1=\"67.8\" x2=\"165.3\" y2=\"63.0\"/><path d=\"M150.0 120.0 L177.0 73.2 A54.0 54.0 0 0 1 198.9 97.2 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"189.8\" y1=\"83.5\" x2=\"193.5\" y2=\"80.1\"/><path d=\"M150.0 120.0 L198.9 97.2 A54.0 54.0 0 1 1 111.8 81.8 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"140.6\" y1=\"173.2\" x2=\"139.8\" y2=\"178.1\"/><path d=\"M150.0 120.0 L111.8 81.8 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.3\"/><line x1=\"129.3\" y1=\"70.1\" x2=\"127.4\" y2=\"65.5\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"166.3\" y=\"45.1\" text-anchor=\"middle\">Vegetable</text><text x=\"166.3\" y=\"57.1\" text-anchor=\"middle\">30°</text><text x=\"198.4\" y=\"63.4\" text-anchor=\"start\">Cheese and</text><text x=\"198.4\" y=\"75.4\" text-anchor=\"start\">onion</text><text x=\"139.1\" y=\"194.0\" text-anchor=\"middle\">Steak</text><text x=\"123.9\" y=\"59.8\" text-anchor=\"end\">Mince</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 84
+   },
+   "unit": "pies",
+   "worked": [
+    "The vegetable sector is \\(30^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{1}{12}\\) of the pies.",
+    "7 pies are \\(\\frac{1}{12}\\) of the total.",
+    "The total is \\(7 \\times 12 = 84\\) pies."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-994920c9",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:5:5:506"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the home end on matchday. The vegetable sector is \\(72^\\circ\\) and 18 vegetable pies were sold. How many pies were sold in total?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 201.4 103.3 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"181.7\" y1=\"76.3\" x2=\"184.7\" y2=\"72.3\"/><path d=\"M150.0 120.0 L201.4 103.3 A54.0 54.0 0 0 1 190.8 155.4 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"202.9\" y1=\"130.8\" x2=\"207.8\" y2=\"131.8\"/><path d=\"M150.0 120.0 L190.8 155.4 A54.0 54.0 0 1 1 132.4 68.9 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"105.2\" y1=\"150.2\" x2=\"101.1\" y2=\"153.0\"/><path d=\"M150.0 120.0 L132.4 68.9 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.3\"/><line x1=\"141.1\" y1=\"66.7\" x2=\"140.3\" y2=\"61.8\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"189.0\" y=\"55.0\" text-anchor=\"start\">Vegetable</text><text x=\"189.0\" y=\"67.0\" text-anchor=\"start\">72°</text><text x=\"213.7\" y=\"130.6\" text-anchor=\"start\">Cheese and</text><text x=\"213.7\" y=\"142.6\" text-anchor=\"start\">onion</text><text x=\"95.8\" y=\"167.2\" text-anchor=\"end\">Steak</text><text x=\"139.6\" y=\"55.9\" text-anchor=\"middle\">Mince</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 90
+   },
+   "unit": "pies",
+   "worked": [
+    "The vegetable sector is \\(72^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{1}{5}\\) of the pies.",
+    "18 pies are \\(\\frac{1}{5}\\) of the total.",
+    "The total is \\(18 \\times 5 = 90\\) pies."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 25
+     },
+     "line": "The \\(72^\\circ\\) was used as if it were a percentage, so the total was found out of 100. The whole chart is \\(360^\\circ\\)."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-c43e98a3",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:5:6:507"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the main stand on matchday. The steak sector is \\(150^\\circ\\) and 25 steak pies were sold. How many pies were sold in total?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 177.0 166.8 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"202.2\" y1=\"106.0\" x2=\"207.0\" y2=\"104.7\"/><path d=\"M150.0 120.0 L177.0 166.8 A54.0 54.0 0 0 1 150.0 174.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"164.0\" y1=\"172.2\" x2=\"165.3\" y2=\"177.0\"/><path d=\"M150.0 120.0 L150.0 174.0 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"96.0\" y1=\"120.0\" x2=\"91.0\" y2=\"120.0\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"212.9\" y=\"101.7\" text-anchor=\"start\">Steak</text><text x=\"212.9\" y=\"113.7\" text-anchor=\"start\">150°</text><text x=\"166.3\" y=\"192.9\" text-anchor=\"middle\">Chicken</text><text x=\"166.3\" y=\"204.9\" text-anchor=\"middle\">balti</text><text x=\"85.0\" y=\"124.0\" text-anchor=\"end\">Mince</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 60
+   },
+   "unit": "pies",
+   "worked": [
+    "The steak sector is \\(150^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{5}{12}\\) of the pies.",
+    "25 pies are \\(\\frac{5}{12}\\) of the total.",
+    "One part is \\(25 \\div 5 = 5\\), so the total is \\(5 \\times 12 = 60\\) pies."
+   ],
+   "slip": [],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-2083b730",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:5:7:508"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the family stand on matchday. The chicken balti sector is \\(135^\\circ\\) and 27 chicken balti pies were sold. How many pies were sold in total?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 188.2 158.2 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"199.9\" y1=\"99.3\" x2=\"204.5\" y2=\"97.4\"/><path d=\"M150.0 120.0 L188.2 158.2 A54.0 54.0 0 0 1 159.4 173.2 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"174.9\" y1=\"167.9\" x2=\"177.2\" y2=\"172.3\"/><path d=\"M150.0 120.0 L159.4 173.2 A54.0 54.0 0 0 1 127.2 71.1 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"98.5\" y1=\"136.2\" x2=\"93.7\" y2=\"137.7\"/><path d=\"M150.0 120.0 L127.2 71.1 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.3\"/><line x1=\"138.3\" y1=\"67.3\" x2=\"137.2\" y2=\"62.4\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"210.2\" y=\"69.9\" text-anchor=\"start\">Chicken</text><text x=\"210.2\" y=\"81.9\" text-anchor=\"start\">balti</text><text x=\"210.2\" y=\"93.9\" text-anchor=\"start\">135°</text><text x=\"181.1\" y=\"187.9\" text-anchor=\"start\">Cheese and</text><text x=\"181.1\" y=\"199.9\" text-anchor=\"start\">onion</text><text x=\"87.9\" y=\"150.9\" text-anchor=\"end\">Vegetable</text><text x=\"136.4\" y=\"56.5\" text-anchor=\"middle\">Steak</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 72
+   },
+   "unit": "pies",
+   "worked": [
+    "The chicken balti sector is \\(135^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{3}{8}\\) of the pies.",
+    "27 pies are \\(\\frac{3}{8}\\) of the total.",
+    "One part is \\(27 \\div 3 = 9\\), so the total is \\(9 \\times 8 = 72\\) pies."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 20
+     },
+     "line": "The \\(135^\\circ\\) was used as if it were a percentage, so the total was found out of 100. The whole chart is \\(360^\\circ\\)."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-604b7277",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:5:8:509"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the home end on matchday. The cheese and onion sector is \\(40^\\circ\\) and 6 cheese and onion pies were sold. How many pies were sold in total?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 184.7 78.6 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"168.5\" y1=\"69.3\" x2=\"170.2\" y2=\"64.6\"/><path d=\"M150.0 120.0 L184.7 78.6 A54.0 54.0 0 0 1 196.8 93.0 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"191.4\" y1=\"85.3\" x2=\"195.2\" y2=\"82.1\"/><path d=\"M150.0 120.0 L196.8 93.0 A54.0 54.0 0 1 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"123.0\" y1=\"166.8\" x2=\"120.5\" y2=\"171.1\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"173.5\" y=\"34.8\" text-anchor=\"start\">Cheese and</text><text x=\"173.5\" y=\"46.8\" text-anchor=\"start\">onion</text><text x=\"173.5\" y=\"58.8\" text-anchor=\"start\">40°</text><text x=\"200.3\" y=\"77.5\" text-anchor=\"start\">Steak</text><text x=\"116.5\" y=\"186.6\" text-anchor=\"end\">Vegetable</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 54
+   },
+   "unit": "pies",
+   "worked": [
+    "The cheese and onion sector is \\(40^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{1}{9}\\) of the pies.",
+    "6 pies are \\(\\frac{1}{9}\\) of the total.",
+    "The total is \\(6 \\times 9 = 54\\) pies."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 15
+     },
+     "line": "The \\(40^\\circ\\) was used as if it were a percentage, so the total was found out of 100. The whole chart is \\(360^\\circ\\)."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-f8fa4d7a",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:5:9:510"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the home end on matchday. The chicken balti sector is \\(80^\\circ\\) and 16 chicken balti pies were sold. How many pies were sold in total?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 203.2 110.6 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"184.7\" y1=\"78.6\" x2=\"187.9\" y2=\"74.8\"/><path d=\"M150.0 120.0 L203.2 110.6 A54.0 54.0 0 0 1 200.7 138.5 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"203.8\" y1=\"124.7\" x2=\"208.8\" y2=\"125.1\"/><path d=\"M150.0 120.0 L200.7 138.5 A54.0 54.0 0 0 1 127.2 168.9 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"170.7\" y1=\"169.9\" x2=\"172.6\" y2=\"174.5\"/><path d=\"M150.0 120.0 L127.2 168.9 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.3\"/><line x1=\"97.3\" y1=\"108.3\" x2=\"92.4\" y2=\"107.2\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"192.5\" y=\"45.7\" text-anchor=\"start\">Chicken</text><text x=\"192.5\" y=\"57.7\" text-anchor=\"start\">balti</text><text x=\"192.5\" y=\"69.7\" text-anchor=\"start\">80°</text><text x=\"214.8\" y=\"129.5\" text-anchor=\"start\">Vegetable</text><text x=\"176.1\" y=\"190.2\" text-anchor=\"start\">Cheese and</text><text x=\"176.1\" y=\"202.2\" text-anchor=\"start\">onion</text><text x=\"86.5\" y=\"110.4\" text-anchor=\"end\">Mince</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 72
+   },
+   "unit": "pies",
+   "worked": [
+    "The chicken balti sector is \\(80^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{2}{9}\\) of the pies.",
+    "16 pies are \\(\\frac{2}{9}\\) of the total.",
+    "One part is \\(16 \\div 2 = 8\\), so the total is \\(8 \\times 9 = 72\\) pies."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 20
+     },
+     "line": "The \\(80^\\circ\\) was used as if it were a percentage, so the total was found out of 100. The whole chart is \\(360^\\circ\\)."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-12b97163",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:5:10:511"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the away end on matchday. The chicken balti sector is \\(36^\\circ\\) and 9 chicken balti pies were sold. How many pies were sold in total?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 181.7 76.3 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"166.7\" y1=\"68.6\" x2=\"168.2\" y2=\"63.9\"/><path d=\"M150.0 120.0 L181.7 76.3 A54.0 54.0 0 0 1 200.7 138.5 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"201.6\" y1=\"104.2\" x2=\"206.4\" y2=\"102.8\"/><path d=\"M150.0 120.0 L200.7 138.5 A54.0 54.0 0 0 1 151.9 174.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"181.7\" y1=\"163.7\" x2=\"184.7\" y2=\"167.7\"/><path d=\"M150.0 120.0 L151.9 174.0 A54.0 54.0 0 1 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.3\"/><line x1=\"96.0\" y1=\"120.9\" x2=\"91.0\" y2=\"121.0\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"171.5\" y=\"34.1\" text-anchor=\"start\">Chicken</text><text x=\"171.5\" y=\"46.1\" text-anchor=\"start\">balti</text><text x=\"171.5\" y=\"58.1\" text-anchor=\"start\">36°</text><text x=\"212.2\" y=\"105.6\" text-anchor=\"start\">Mince</text><text x=\"189.0\" y=\"183.0\" text-anchor=\"start\">Cheese and</text><text x=\"189.0\" y=\"195.0\" text-anchor=\"start\">onion</text><text x=\"85.0\" y=\"125.1\" text-anchor=\"end\">Vegetable</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 90
+   },
+   "unit": "pies",
+   "worked": [
+    "The chicken balti sector is \\(36^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{1}{10}\\) of the pies.",
+    "9 pies are \\(\\frac{1}{10}\\) of the total.",
+    "The total is \\(9 \\times 10 = 90\\) pies."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 25
+     },
+     "line": "The \\(36^\\circ\\) was used as if it were a percentage, so the total was found out of 100. The whole chart is \\(360^\\circ\\)."
+    }
+   ],
+   "try_without": true
+  },
+  {
+   "id": "pie-charts-8bd76835",
+   "topic": "pie-charts",
+   "source": {
+    "game": "pie-chart-generator",
+    "ref": "generator:MaffsPieCharts.question:5:11:512"
+   },
+   "band": 4,
+   "calc": "optional",
+   "stem": "The pie chart shows the pies sold in the main stand on matchday. The cheese and onion sector is \\(100^\\circ\\) and 20 cheese and onion pies were sold. How many pies were sold in total?",
+   "diagram": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 236\" role=\"img\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M150.0 120.0 L150.0 66.0 A54.0 54.0 0 0 1 203.2 129.4 Z\" fill=\"currentColor\" fill-opacity=\"0.06\"/><line x1=\"191.4\" y1=\"85.3\" x2=\"195.2\" y2=\"82.1\"/><path d=\"M150.0 120.0 L203.2 129.4 A54.0 54.0 0 1 1 127.2 71.1 Z\" fill=\"currentColor\" fill-opacity=\"0.2\"/><line x1=\"117.1\" y1=\"162.8\" x2=\"114.1\" y2=\"166.8\"/><path d=\"M150.0 120.0 L127.2 71.1 A54.0 54.0 0 0 1 150.0 66.0 Z\" fill=\"currentColor\" fill-opacity=\"0.12\"/><line x1=\"138.3\" y1=\"67.3\" x2=\"137.2\" y2=\"62.4\"/><g fill=\"currentColor\" stroke=\"none\" font-family=\"sans-serif\" font-size=\"11\"><text x=\"200.3\" y=\"53.5\" text-anchor=\"start\">Cheese and</text><text x=\"200.3\" y=\"65.5\" text-anchor=\"start\">onion</text><text x=\"200.3\" y=\"77.5\" text-anchor=\"start\">100°</text><text x=\"109.6\" y=\"182.0\" text-anchor=\"end\">Vegetable</text><text x=\"136.4\" y=\"56.5\" text-anchor=\"middle\">Mince</text></g></svg>",
+   "format": "number",
+   "answer": {
+    "value": 72
+   },
+   "unit": "pies",
+   "worked": [
+    "The cheese and onion sector is \\(100^\\circ\\) of \\(360^\\circ\\), which is \\(\\frac{5}{18}\\) of the pies.",
+    "20 pies are \\(\\frac{5}{18}\\) of the total.",
+    "One part is \\(20 \\div 5 = 4\\), so the total is \\(4 \\times 18 = 72\\) pies."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 20
+     },
+     "line": "The \\(100^\\circ\\) was used as if it were a percentage, so the total was found out of 100. The whole chart is \\(360^\\circ\\)."
+    }
+   ]
+  }
+ ]
+}

@@ -306,6 +306,8 @@ def check_routes(data, out):
     """Each topic's "Want more practice?" game exists and declares the level its link opens."""
     for t in data['covered']:
         r = t['route']
+        if r is None:       # a bank-first topic: no game yet (canon 8.2.1), so no link to check
+            continue
         levels = declared_levels(r['slug'])
         if levels is None:
             out.append('%s: no game at games/%s/' % (t['id'], r['slug']))
@@ -347,7 +349,7 @@ class Browser:
     other site aborted, and the topic banks served from the fixtures: the first topic asked for gets queue[0], and so
     on; None is a 404. A topic keeps its fixture across reloads."""
 
-    def __init__(self, pw, base, html, size=(1280, 800), blocked=False, queue=None):
+    def __init__(self, pw, base, html, size=(1280, 800), blocked=False, queue=None, served=None):
         self.br = pw.chromium.launch()
         touch = size[0] <= 600
         self.ctx = self.br.new_context(viewport={'width': size[0], 'height': size[1]}, has_touch=touch, is_mobile=touch)
@@ -358,6 +360,7 @@ class Browser:
         self.queue = list(SESSION_FIXTURES if queue is None else queue)
         self.assigned = {}
         self.real = {}           # topic id -> a real bank served in place of a fixture
+        self.served = served     # the topic data file served in place of the real one (a test of a topic the real file lacks)
         self.unmarked = 0        # never-marked answers typed (format, unreadable, no unit)
         self.formats = set()     # (format, right or wrong) marked
         self.ctx.expose_function('__mfgRecord', lambda n, p: self.events.append((n, json.loads(p))))
@@ -377,6 +380,8 @@ class Browser:
                 return route.abort()
             if page_url.search(url):
                 return route.fulfill(status=200, content_type='text/html; charset=utf-8', body=html)
+            if self.served is not None and url.endswith('/exam-topics-ocr-foundation.json'):
+                return route.fulfill(status=200, content_type='application/json', body=json.dumps(self.served))
             m = bank_url.search(url)
             if m:
                 return self.serve_bank(route, m.group(1))
@@ -596,8 +601,13 @@ def play_topic(b, m, topic, out, tag, narrow=False, stop_after=None, offset=0, r
             if not d['shown'] or d['bad'] or d['ran']:
                 out.append('%s: %s: the diagram %s' % (tag, ref, d))
         calc = p.inner_text('#qCalc').strip()
-        if calc != ('Calculator' if q['calc'] else 'Non-calculator'):
+        want_calc = 'Calculator optional' if q['calc'] == 'optional' else 'Calculator' if q['calc'] else 'Non-calculator'
+        if calc != want_calc:
             out.append('%s: %s: calculator tag %r' % (tag, ref, calc))
+        try_shown = p.is_visible('#qTry')
+        want_try = q['calc'] == 'optional' and q.get('try_without') is True
+        if try_shown != want_try or (try_shown and p.inner_text('#qTry').strip() != 'Try without a calculator'):
+            out.append('%s: %s: the "Try without a calculator" prompt is %s, expected %s' % (tag, ref, 'shown' if try_shown else 'not shown', want_try))
         if narrow:
             sideways(p, '%s (%s)' % (ref, q['format']), out)
             if q['format'] != 'choice' and not p.query_selector('#qKeys .maffs-keypad-key'):
@@ -677,15 +687,44 @@ def play_topic(b, m, topic, out, tag, narrow=False, stop_after=None, offset=0, r
     return right
 
 
+def bank_first_data(data):
+    """The topic data cut to one bank-first topic (route null) and K more, all of equal weight, so that a session of K draws it six
+    times in seven (the page draws in proportion to marks, and needs more topics than a session holds); None if the real file has
+    no such topic."""
+    if not any(t['route'] is None for t in data['covered']):
+        return None
+    forged = json.loads(json.dumps(data))
+    keep = [t for t in forged['covered'] if t['route'] is None][:1]
+    keep += [t for t in forged['covered'] if t['route'] is not None][:K]
+    for t in keep:
+        t['marks'] = 4.0
+    forged['covered'] = keep
+    return forged
+
+
+def play_bank_first(pw, base, html, data, out):
+    """A full session that has the bank-first topic in it (a fresh page until the draw includes it), checked as any other."""
+    forged = bank_first_data(data)
+    if forged is None:
+        return
+    need = forged['covered'][0]['id']
+    for _ in range(25):
+        got = []
+        if play(pw, base, html, forged, got, blocked=False, served=forged, need=need) is not False:
+            out.extend(got)
+            return
+    out.append('a session never drew the bank-first topic %s in 25 tries' % need)
+
+
 def session_topics(p, data):
     names = {t['id']: t for t in data['covered']}
     return [names.get(x['id']) for x in p.evaluate('() => SixPs.session().plan')]
 
 
-def play(pw, base, html, data, out, blocked, narrow=False):
+def play(pw, base, html, data, out, blocked, narrow=False, served=None, need=None):
     """A full session on the six fixture banks, to the results, resumed once mid-topic after a reload."""
     tag = '%s, %s' % ('320 px keypad' if narrow else '1280 px', 'storage blocked' if blocked else 'storage working')
-    b = Browser(pw, base, html, size=(320, 700) if narrow else (1280, 800), blocked=blocked)
+    b = Browser(pw, base, html, size=(320, 700) if narrow else (1280, 800), blocked=blocked, served=served)
     p = b.page
     tap = p.tap if b.touch else p.click
     try:
@@ -706,6 +745,8 @@ def play(pw, base, html, data, out, blocked, narrow=False):
             out.append('%s: the source line shows %r' % (tag, p.inner_text('#sourceLine')))
         tap('#startBtn')
         topics = session_topics(p, data)
+        if need and need not in [t['id'] for t in topics if t]:
+            return False                 # the draw left the topic out: the caller starts again
         if None in topics or len({t['id'] for t in topics}) != K:
             out.append('%s: the session is not six distinct covered topics: %s' % (tag, topics))
             return
@@ -742,20 +783,26 @@ def play(pw, base, html, data, out, blocked, narrow=False):
         if len(rows) != K:
             out.append('%s: the results list %d topics, not %d' % (tag, len(rows), K))
         links = p.evaluate("() => Array.from(document.querySelectorAll('#resultList li .more a')).map(a => [a.getAttribute('href'), a.textContent])")
+        k_link = 0
         for k, t in enumerate(topics):
             row = rows[k] if k < len(rows) else ''
             want = '%s: %d of %d' % (t['name'], scores[k], PER_TOPIC)
+            if t['route'] is None:      # a bank-first topic: its row has no practice link
+                if want not in row or marks_text(t) not in row or 'Want more practice?' in row:
+                    out.append('%s: results row %d (no game yet) is %r' % (tag, k + 1, row))
+                continue
             if want not in row or marks_text(t) not in row or 'Want more practice? ' + t['route']['game'] not in row:
                 out.append('%s: results row %d is %r' % (tag, k + 1, row))
             href = '/games/%s/?level=%s' % (t['route']['slug'], t['route']['level'])
-            if k >= len(links) or links[k] != [href, t['route']['game']]:
-                out.append('%s: row %d practice link %s, expected %s' % (tag, k + 1, links[k] if k < len(links) else None, href))
+            if k_link >= len(links) or links[k_link] != [href, t['route']['game']]:
+                out.append('%s: row %d practice link %s, expected %s' % (tag, k + 1, links[k_link] if k_link < len(links) else None, href))
+            k_link += 1
         played = [(t, s) for t, s in zip(topics, scores) if s < PER_TOPIC]
         if played:
             low = min(s for t, s in played)
             weakest = max((t for t, s in played if s == low), key=lambda t: t['marks'])
             nudge = p.inner_text('#nudge').strip()
-            if weakest['name'] not in nudge or weakest['route']['game'] not in nudge:
+            if weakest['name'] not in nudge or (weakest['route'] and weakest['route']['game'] not in nudge)                     or (weakest['route'] is None and 'Practise it' in nudge):
                 out.append('%s: the nudge %r does not name the weakest topic, %s' % (tag, nudge, weakest['name']))
         ticks = p.evaluate("() => Array.from(document.querySelectorAll('#tickList input')).map(b => b.value)")
         if ticks != [t['id'] for t in data['coming_soon']] + ['other']:
@@ -1080,6 +1127,7 @@ def check(html, data, out, parts):
                 guarded(out, 'the tallest feedback on a 375 x 667 phone', lambda: check_tall(pw, base, html, data, out))
             if '2' in parts:
                 guarded(out, 'the session at 1280 px', lambda: play(pw, base, html, data, out, blocked=False))
+                guarded(out, 'the session with a bank-first topic (no game yet)', lambda: play_bank_first(pw, base, html, data, out))
             if '3' in parts:
                 guarded(out, 'the session at 320 px', lambda: play(pw, base, html, data, out, blocked=True, narrow=True))
                 guarded(out, 'the topic with no bank', lambda: no_bank(pw, base, html, data, out))
@@ -1145,6 +1193,13 @@ PLANTS = [
     ('the feedback not scrolled into view again once the maths font has arrived',
      [("        inView();\n        if (document.fonts && document.fonts.ready) document.fonts.ready.then(inView);\n", "")],
      ['tall'], r'Next is not on the screen'),
+    ('a calculator-optional question labelled "Calculator"',
+     [("$('qCalc').textContent = q.calc === 'optional' ? 'Calculator optional' : q.calc ? 'Calculator' : 'Non-calculator';",
+       "$('qCalc').textContent = q.calc ? 'Calculator' : 'Non-calculator';")],
+     ['topic:fx-6'], r"calculator tag 'Calculator'"),
+    ('the "Try without a calculator" prompt shown on every question',
+     [("$('qTry').hidden = !(q.calc === 'optional' && q.try_without === true);", "$('qTry').hidden = false;")],
+     ['topic:fx-6'], r'prompt is shown, expected False'),
     ('a right value in the wrong form marked wrong (SR-3)',
      [("if (res.result !== 'correct' && res.result !== 'wrong') {", "if (res.result === 'unreadable' || res.result === 'nounit') {")],
      ['topic:fx-2'], r"\(format\) was marked"),

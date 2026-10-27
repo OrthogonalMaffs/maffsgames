@@ -10,7 +10,8 @@
     "ref": "fx-6[0]"
    },
    "band": 1,
-   "calc": false,
+   "calc": "optional",
+   "try_without": true,
    "diagram": null,
    "format": "number",
    "stem": "Work out \\(7 \\times 8\\).",
@@ -28,7 +29,7 @@
     "ref": "fx-6[1]"
    },
    "band": 1,
-   "calc": false,
+   "calc": "optional",
    "diagram": null,
    "format": "number",
    "stem": "Work out \\(81 \\div 9\\).",
