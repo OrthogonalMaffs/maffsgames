@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # ci-line: Just Pythag It, Bruv, part 1 (fit at 320px; a quarter of the planted layout faults) | --part-selftest && --part 1
-# ci-line: Just Pythag It, Bruv, part 2 (fit at 390 and 412px; a quarter of the planted layout faults) | --part-selftest && --part 2
+# ci-line: Just Pythag It, Bruv, part 2 (fit at 390px; a quarter of the planted layout faults) | --part-selftest && --part 2
 # ci-line: Just Pythag It, Bruv, part 3 (fit at 375px and the three desktop sizes; a quarter of the planted layout faults) | --part-selftest && --part 3
 # ci-line: Just Pythag It, Bruv, part 4 (every key and triangle recomputed over 300 sessions, named errors, a quarter of the layout faults) | --part-selftest && --part 4
-# ci-line: Just Pythag It, Bruv, part 5 (WebKit, play-through, fault-injection self-test) | --part-selftest && --part 5
+# ci-line: Just Pythag It, Bruv, part 5 (fit at 412px; WebKit, play-through, fault-injection self-test) | --part-selftest && --part 5
 """Independent verification for Just Pythag It, Bruv (games/just-pythag-it-bruv/), built 4 Oct 2026.
 
 WHY THIS READS THE LIVE PAGE
@@ -1708,13 +1708,16 @@ async def selftest(browser):
 # pass at 320 in part 1, at 390 and 412 in part 2, at 375 and the three desktop sizes in part 3; the
 # planted layout faults dealt in turn across parts 1-4 in list order; the sessions and the named
 # errors in part 4; WebKit, the play-through and the fault-injection self-test in part 5 (local seconds,
-# 20 Oct 2026: part 4 about 78, part 5 about 59). Every part first reads the page's scale
+# 20 Oct 2026: part 4 about 78, part 5 about 59). On 27 Oct 2026 the fit pass at 412 moved from part 2 to part 5:
+# part 2 had reached 145 s on main (median of five runs) + 46 s setup, 70% of its group's budget, the per-line limit,
+# and failed every PR that selected it (contract FOLD-COMPONENTS: a theme.css change selects it); part 5 was 57 s.
+# Every part first reads the page's scale
 # and compact heights, which the checks are held to. With no --part, every task runs, as before.
 # --part-selftest proves that the parts together are exactly the unsplit task list, nothing twice,
 # and that the workflow runs every part.
 PARTS = ("1", "2", "3", "4", "5")
 DEAL_PARTS = PARTS[:4]          # the layout faults are dealt across these, as before the fifth part
-FIT_PART = {(320, 568): "1", (375, 667): "3", (390, 844): "2", (412, 915): "2",
+FIT_PART = {(320, 568): "1", (375, 667): "3", (390, 844): "2", (412, 915): "5",
             (1280, 720): "3", (1366, 768): "3", (1920, 1080): "3"}
 
 
