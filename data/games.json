@@ -508,6 +508,11 @@
    "slug": "squared-squirrel",
    "search_phrase": "Compound Measures",
    "description": "Speed, density, pressure and unit price: read the unit and you know the calculation, because km/h means km ÷ h."
+  },
+  {
+   "slug": "hc-factor",
+   "search_phrase": "Expanding and Factorising",
+   "description": "Expand brackets and factorise, from one bracket to x² + bx + c with the sign grid, typing the answer into bracket-shaped boxes."
   }
  ],
  "pages": {
