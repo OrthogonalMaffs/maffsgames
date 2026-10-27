@@ -18,6 +18,8 @@ DONE: 2026-10-27-build-found-a-mark.md   (merged: PR #569, squash 6c5cc59, 27 Oc
 
 DONE: 2026-10-27-build-hc-factor.md   (merged: PR #571, squash f6eecad; main run 40510992524 green)
 DONE: 2026-10-27-build-y-so-steep.md   (merged: PR #574, squash f8083cc, 27 Oct 2026; main run 40518636405 green)
+DONE: 2026-10-27-build-who-ate-all-the-pies.md   (merged: PR #580, squash bc5c883, 27 Oct 2026; main run 40558247107 green; waited for main to go green after #576, no override)
+DONE: 2026-10-27-build-its-on-sale.md   (merged: PR #579, squash 079ceaa, 27 Oct 2026; main run 40563459598 green)
 
 ## Queue
 1. **found-a-mark**: MERGED (#569) + art swap MERGED (#573, aaef265, main run 40514401072 green). Report still owed to Jon: its "Decided for you" list and screenshots.
@@ -67,3 +69,31 @@ Jon's sofa and coin illustrations replace the code-drawn ones in `games/i-found-
 - Phone fit: short phones (under 620 px high, and again under 580) tighten the card, the options and the HUD; found when CI's real fonts made the garden question's options wrap more than they do locally (it failed at 320 x 568 on CI, not locally).
 - Shared-file lines added (the minimum a new unlisted game folder needs, as #509): roster row #102 + Unlisted line, data/games.json entry, audit-register, check-answer-lock, check-leaderboard-coverage (NOT_ON_HUB), check-levels, check-start-mount, check-teacher-invite, check-theme, findings yml. Nothing listed.
 - Screenshots: 375 x 667 and 1366 x 768, one per question type, in the earlier session's scratchpad (re-make by playing a session with the stub server).
+
+## who-ate-all-the-pies: state (27 Oct 2026, PR #580, bc5c883)
+Five stages on the pie-charts bank (schools/assets/pie-game.js imports it; no question copied). Worked example, then 10 questions easiest first. Boards stage-1..stage-5 (stage-5 label already exists). Roster #105, Unlisted (5). Verifier scripts/verify-who-ate-all-the-pies.py, 4 parts, 7 planted faults each caught; no bank answer was wrong. The bank has no "You can't tell" items in stages 2 and 5, so the game has none there; all are in stage 4. One screenshot per stage at 375 x 667 was made in the fork's scratchpad.
+
+## Decided for you (who-ate-all-the-pies)
+- Palette: light (GCSE/KS3 roster levels).
+- "You can't tell" only appears where the bank supplies it (stage 4).
+- Merge waited for main to go green (home lane's #581 fixed the red run); no override was used.
+
+## its-on-sale: state (27 Oct 2026, PR #579, 079ceaa)
+Five stages on the percentages-money bank (schools/assets/percentages-money-generator.js, imported, never copied); worked example (slot 0, fixed seed, logs nothing) then 10 questions (slots 1-11 minus one at random, easiest first; a repeated wording is drawn again); answer typed onto a price tag (GBP box to 2 d.p., % box in stage 3); marking by value via MaffsAnswer; bank slips as feedback; format answers never marked. Calculator "by stage": optional 1-4 with a "Try without a calculator" note on friendly items, required in 5. Boards stage-1..stage-5. Roster #106, Unlisted (6). Verifier scripts/verify-its-on-sale.py, 4 parts (3-39 s): params recomputed with Fractions, about 16,700 typed answers marked both ways, six sizes played, seven planted faults caught.
+
+## Decided for you (its-on-sale)
+- Palette: light, because GCSE is light.
+- Stage 5 has a leaderboard: stage-5 already exists in firebase-leaderboard.js (Squared Squirrel's), verified, not assumed.
+- Question selection: worked example is slot 0 with a fixed seed; the 10 questions are slots 1-11 minus one at random, in the bank's order.
+- A session redraws a repeated wording (stage 5 slot pairs share a shape).
+- Calculator badge and stage list are static HTML because the calculator check reads the page source.
+- Unit boxes: GBP for money, % for percentage change, plain numbers via the keypad.
+- Roster: held #105 briefly while #580 looked late, then moved to #106.
+
+## Lessons (pies, sale; 27 Oct 2026)
+- The calculator check reads page SOURCE: a "by stage" game's calc badge must be static HTML.
+- Two bank slots of one shape can collide on wording; redraw repeated stems.
+- The format-answer test needs a key whose pence are a multiple of 10.
+- merge-pr.py refuses while main is red or its run is unfinished; use --wait 540. end-task.py needs a current worktree and a local branch equal to the PR head (reset a local merge-of-main first).
+- Plan job: its-on-sale passed with four `--part` ci-lines on 27 Oct, but the home lane says new --part lines fail the Plan job; use the shard interface when it is on main.
+
