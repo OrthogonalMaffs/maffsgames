@@ -1403,6 +1403,8 @@ not, so none is lost off the left edge; a CSS-only shading cue sits on whichever
 every link is a 40px-high tap target; below 480px the Support link reads "☕ Support". **The bar
 stays exactly 40px**: every game's phone fit (§7.6.1) measures its fold as the viewport minus it.
 
+**No footer links during a run (Jon's ruling, 27 Oct 2026).** Footer links sit where the thumb lands mid-game: pinned, beside Next (Jon mis-tapped Spec Map); in the flow, they rise into the spot the finger just left when the page shortens (the answer-lock double-tap on Next, planted A/B on proportion-blaster: with the footer in flow its second tap navigated away). The fix is state-based, not a timing guard (a 700 ms inert window was rejected). **Shipped for The 6 P's only:** it shows the footer on the start and results screens and removes it (display none: out of the tab order, not hit-testable) on a question, its feedback and between topics, driven by its own `show()`; the header links stay as the way out; `verify-the-6-ps.py` checks every state, with two plants. **Every other playable page keeps the pinned footer.** **Deferred to after the infrastructure freeze (Mon 2 Nov): the site-wide state-based fix** (a shared script that removes the footer while a run is in progress, for every page under games/, escape-rooms/ and the-6-ps/, and a check). The in-flow variant (`site-footer--flow`) was tried and dropped.
+
 **Never hand-copy the footer or its CSS into a page.** It was copied by hand into 125 pages until
 October 2026; the copies drifted into four link sets, and all of them shared one defect (on a phone
 the links ran off both edges and could not be reached). To change it, edit `CANONICAL` or the
