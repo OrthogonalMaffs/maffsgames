@@ -57,10 +57,7 @@
   // Scroll so that keep (the answer row) and the keys are in the window together, keep's top first.
   function together(keep, keys, foldInset) {
     if (!keep || !keys) return;
-    var r1 = keep.getBoundingClientRect(), r2 = keys.getBoundingClientRect();
-    var fold = window.innerHeight - (foldInset || 0);
-    var dy = Math.min(r2.bottom - fold + 8, r1.top - 8);
-    if (r2.bottom > fold && dy > 0) window.scrollBy(0, dy);
+    if (window.MaffsScroll) MaffsScroll.reveal(keys, { keep: keep, inset: foldInset || 0 });   // scroll.js: again once fonts load
   }
 
   function mount(el, opts) {

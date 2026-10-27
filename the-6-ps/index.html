@@ -183,6 +183,7 @@
 <script src="/schools/assets/answer.js"></script>
 <script src="/schools/assets/answer-lock.js"></script>
 <script src="/schools/assets/next-control.js"></script>
+<script src="/schools/assets/scroll.js"></script>
 <script src="/schools/assets/keypad.js"></script>
 </head>
 <body>
@@ -1141,15 +1142,8 @@
       MaffsNext.wrong({ mount: $('qNext'), onAdvance: advance, fallbackMs: NO_FALLBACK, label: label });
     }
     // The verdict, and Next with it where it fits, are in view without a scroll of the student's own.
-    // Again once the layout settles: working with fractions grows when the maths font arrives, after the first scroll (main run 40479208314).
-    function inView() { try { fb.scrollIntoView({ block: 'nearest' }); } catch (e) { /* ignore */ } }
-    inView();
-    try {
-      requestAnimationFrame(function () {
-        inView();
-        if (document.fonts && document.fonts.ready) document.fonts.ready.then(inView);
-      });
-    } catch (e) { /* ignore */ }
+    // MaffsScroll scrolls again once the layout settles: working with fractions grows when the maths font arrives (#566, main run 40479208314).
+    MaffsScroll.reveal(fb, { inset: 0, up: true });
   }
 
   function advance() {

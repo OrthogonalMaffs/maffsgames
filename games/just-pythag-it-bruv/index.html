@@ -197,6 +197,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
 <!-- Calculator required (roster, canon §4.4): the shared on-screen calculator. scripts/check-calculator.py
      keeps this include, the badge and the roster field in step. Its answer mode types through the shared
      phone keypad (MaffsKeypad), loaded first. -->
+<script src="../../schools/assets/scroll.js"></script>
 <script src="../../schools/assets/keypad.js"></script>
 <script src="../../schools/assets/calculator.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
@@ -1154,11 +1155,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
   var FOOTER_PX = 40;
   function feedbackInView() {
     if (calc && calc.isDocked()) return;
-    var r = $('feedback').getBoundingClientRect(), fold = window.innerHeight - FOOTER_PX;
-    if (!r.height || (r.top >= 0 && r.bottom <= fold)) return;
-    var dy = r.top < 0 ? r.top - 8 : Math.min(r.top - 8, r.bottom - fold + 8);
-    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    window.scrollTo({ top: window.scrollY + dy, behavior: still ? 'auto' : 'smooth' });
+    MaffsScroll.reveal($('feedback'), { inset: FOOTER_PX, up: true, smooth: true });   // glides once, then settles as fonts arrive
   }
 
   function showFeedback(ok, raw, help) {
