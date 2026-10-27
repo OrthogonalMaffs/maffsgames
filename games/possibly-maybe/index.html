@@ -578,7 +578,10 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
           var pick = right ? Q.key : (Q.key + 1) % Q.options.length;
           var b = $('answer').querySelector('[data-opt="' + pick + '"]'); if (b) b.click(); return;
         }
-        if (Q.type === 'fraction') { this.type(right ? Q.key.num + '/' + Q.key.den : (Q.key.num + 7) + '/' + (Q.key.den + 11)); return; }
+        if (Q.type === 'fraction') {
+          var n = Q.key.num, d = Q.key.den, off = [[7, 11], [3, 5], [1, 13], [2, 9]].filter(function (o) { return (n + o[0]) * d !== n * (d + o[1]); })[0];
+          this.type(right ? n + '/' + d : (n + off[0]) + '/' + (d + off[1])); return;
+        }
         this.type(right ? Q.key : String(parseFloat(Q.key) + 7.5));
       }
     }

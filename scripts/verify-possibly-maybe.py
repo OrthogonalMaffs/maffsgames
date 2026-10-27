@@ -657,6 +657,18 @@ def fit_all(base, size, out, seeds=(1,), sources=None):
                                 out.append('%s %s: no "simplify it fully" message for an unsimplified fraction' % (where, tag))
                         page.evaluate('PM.ui.answer(false)')
                         page.wait_for_timeout(50)
+                        # the same question again, answered right: marked right, one mark, Next above the fold
+                        page.evaluate('PM.ui.preview(%d, %d, %d)' % (st, slot, seed))
+                        page.wait_for_function("PM.ui.state() === 'asking'", timeout=8000)
+                        page.evaluate('PM.ui.answer(true)')
+                        page.wait_for_timeout(50)
+                        if page.evaluate('PM.ui.state()') != 'done' or int(page.inner_text('#hudScore')) != 1:
+                            out.append('%s %s (%s): the right answer was not marked right (state %s, marks %s)' % (
+                                where, tag, q['kind'], page.evaluate('PM.ui.state()'), page.inner_text('#hudScore')))
+                        page.evaluate('PM.ui.preview(%d, %d, %d)' % (st, slot, seed))
+                        page.wait_for_function("PM.ui.state() === 'asking'", timeout=8000)
+                        page.evaluate('PM.ui.answer(false)')
+                        page.wait_for_timeout(50)
                         nb = page.evaluate("() => { const n = document.querySelector('.maffs-next, #nextBtn'); return n ? n.getBoundingClientRect().bottom : null; }")
                         if nb is None or nb > fold + 0.5:
                             out.append('%s %s (%s): after a wrong answer Next is %s, below the fold (%d)' % (where, tag, q['kind'], nb, fold))
@@ -739,7 +751,9 @@ def play_stage(page, st, size, out, n, full):
                 good = '%d/%d' % (key['num'], key['den'])
                 if not q['simplest'] and qn % 2 == 1:
                     good = '%d/%d' % (2 * key['num'], 2 * key['den'])        # an equivalent fraction is equal
-                bad = '%d/%d' % (key['num'] + 7, key['den'] + 11)
+                n0, d0 = key['num'], key['den']
+                o = [x for x in [(7, 11), (3, 5), (1, 13), (2, 9)] if (n0 + x[0]) * d0 != n0 * (d0 + x[1])][0]
+                bad = '%d/%d' % (n0 + o[0], d0 + o[1])
                 if kind == 'slip' and q['slips']:
                     bad, note = '%d/%d' % (q['slips'][0]['num'], q['slips'][0]['den']), q['slips'][0]['line']
                 elif kind == 'slip':
@@ -751,13 +765,15 @@ def play_stage(page, st, size, out, n, full):
                     bad, note = q['slips'][0]['key'], q['slips'][0]['line']
                 elif kind == 'slip':
                     kind = 'wrong'
-            page.evaluate('PM.ui.type(%s)' % json.dumps(good if kind == 'right' else bad))
+            typed = good if kind == 'right' else bad
+            page.evaluate('PM.ui.type(%s)' % json.dumps(typed))
         page.wait_for_timeout(120)
         ok = kind == 'right'
         if ok:
             expect += 1
         if int(page.inner_text('#hudScore')) != expect:
-            out.append('%s q%d: marks show %s, expected %d (a wrong answer scored, or a right one did not)' % (where, qn, page.inner_text('#hudScore'), expect))
+            out.append('%s q%d (%s %s, typed %s): marks show %s, expected %d (a wrong answer scored, or a right one did not)' % (
+                where, qn, q['kind'], json.dumps(q['key']), locals().get('typed', pick if q['type'] == 'choice' else '?'), page.inner_text('#hudScore'), expect))
         fb = page.evaluate("""() => { const n = document.querySelector('.maffs-next, #nextBtn'), l = document.querySelector('.fb-line');
             return { next: n ? n.getBoundingClientRect().bottom : null, line: l ? l.textContent : '', done: !!document.querySelector('.fb.done') }; }""")
         if fb['next'] is None or fb['next'] > fold + 0.5:
@@ -857,7 +873,7 @@ PLANTS = [
     ('a wrong answer counted as a mark (the page)', 'page',
      [("answered++; if (ok) { rightCount++; marks++; }", "answered++; marks++; if (ok) { rightCount++; }")], 'play', r'(marks show|the leaderboard got|game_completed says)'),
     ('the numerator and denominator swapped (the shared input)', 'fraction-input.js',
-     [("return n === '' && d === '' ? '' : n + '/' + d;", "return n === '' && d === '' ? '' : d + '/' + n;")], 'play', r'(marks show|feedback says)'),
+     [("return n === '' && d === '' ? '' : n + '/' + d;", "return n === '' && d === '' ? '' : d + '/' + n;")], 'view', r'right answer was not marked right'),
     ('a lowest-terms question marked on 2/4 (the page counts a format answer)', 'page',
      [("if (r.kind === 'unreadable' || r.kind === 'format') {", "if (r.kind === 'unreadable') {")], 'view', r'unsimplified fraction was marked'),
 ]
