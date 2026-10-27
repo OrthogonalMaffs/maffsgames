@@ -7,14 +7,20 @@
    asked to work anything out: every step is a calculation SHOWN in terms of the question's numbers or a named earlier result,
    and the template computes its value (kept for the verifier, never shown).
 
-   Four types, each 4 marks = 3 method marks + 1 answer mark (the answer mark is never asked for):
-     enough    "Is it enough?"       items, a percentage off, a budget
-     ratio     ratio with a twist    shared in a ratio, the difference between two shares given
-     interest  compound / simple     compound growth, depreciation, or (1 in 4) simple interest
-     garden    L-shaped garden       a drawn L, four sides labelled, turf at a price per m2
+   Nine types. Each has method marks (its slots) and answer marks (never asked for; marks = slots + answers):
+     enough    "Is it enough?"       items, a percentage off, a budget                                   3 + 1
+     ratio     ratio with a twist    shared in a ratio, the difference between two shares given           3 + 1
+     interest  compound / simple     compound growth, depreciation, or (1 in 4) simple interest           3 + 1
+     garden    L-shaped garden       a drawn L, four sides labelled, turf at a price per m2               3 + 1
+   Batch 2 (contract FOUND-A-MARK-2, Jon, 27 Oct 2026):
+     angles    parallel lines        two given angles, the third by a straight line or the triangle       3 + 1
+     mean      frequency table       x times f for each row, their total, the total divided by the sum of f 3 + 1
+     ladder    Pythagoras            the squares, then the square root (height, or length of the ladder)   2 + 1
+     coffee    simultaneous          two equations, a matched equation, the equation with one letter       4 + 2
+     twoway    conditional prob.     a two-way table that fills in, then a probability                    4 + 1
 
    A question is
-     { type, calc, marks: 4, stem: [paragraph with TeX between § marks], diagram: null | {...}, params, numbers,
+     { type, calc, marks, answers, stem: [paragraph with TeX between § marks], diagram: null | {...}, params, numbers,
        slots: [{ id, label }],                 the 3 method marks; a slot is earned by the first of its steps found
        steps: [{ id, name, slot|null, value, forms: [{ expr, tex, deps, implies }] }],
        distractors: [{ expr, tex, value, deps, for, why }] }
@@ -23,11 +29,21 @@
    steps whose work the form shows inline, found at the same time ("60 / ( 5 - 3 )" shows 5 - 3). A literal number in an expr is
    a number of the question (numbers) or the value of one of the form's ancestors. A distractor is offered once its deps are
    found and the step it is `for` is on offer; its value never equals a step's value (the template drops any that would), and
-   `why` names the slip in one line. A step with slot null is a step on the way: accepted, no mark of its own. */
+   `why` names the slip in one line. A step with slot null is a step on the way: accepted, no mark of its own.
+
+   Batch 2 extends this engine once, for every type (nothing per type): (1) a question has `answers` answer marks (default 1) and
+   marks = slots + answers; (2) a form or distractor may carry its own `tex` and no `expr`, for a statement that is not a number
+   (an equation, "x times f for each row"); a step or distractor may carry a `fact`, a string naming WHAT is claimed and its value
+   ("EFG=52"), and a distractor then clashes only with a step of the same fact (angle EGF = 31 is not angle EFG = 31); (3) `sqrt`
+   in an expression: "sqrt @A" or "sqrt ( ... )". A step valid at once and also by a later route is two forms of one step with
+   different deps; two routes whose second part differs (a different matched equation, so a different eliminated one) are two
+   steps in one slot. */
 (function (root) {
   'use strict';
 
-  var TYPES = ['enough', 'ratio', 'interest', 'garden'];
+  var TYPES = ['enough', 'ratio', 'interest', 'garden', 'angles', 'mean', 'ladder', 'coffee', 'twoway'];
+  // Method marks (slots) a type carries: a session of five is dealt so that these always add to 15.
+  var METHOD = { enough: 3, ratio: 3, interest: 3, garden: 3, angles: 3, mean: 3, ladder: 2, coffee: 4, twoway: 4 };
 
   /* ---------- helpers ---------- */
   function rint(rng, a, b) { return a + Math.floor(rng() * (b - a + 1)); }
@@ -63,6 +79,7 @@
         if (!(k.slice(1) in vals)) throw new Error('unknown result ' + k);
         return vals[k.slice(1)];
       }
+      if (k === 'sqrt') return Math.sqrt(atom());
       var x = parseFloat(k);
       if (isNaN(x)) throw new Error('bad token ' + k);
       if (t[i] === '%') { i++; x = x / 100; }
@@ -87,19 +104,29 @@
     return expr.split(' ').filter(function (k) { return k.charAt(0) === '@'; }).map(function (k) { return k.slice(1); });
   }
   // The calculation as KaTeX. A named result is its name in words; thousands get a thin comma.
-  function texOf(expr, names) {
-    var t = expr.split(' '), out = '';
+  function texOf(expr, names) { return texTokens(expr.split(' '), names).replace(/^\s+|\s+$/g, '').replace(/\s{2,}/g, ' '); }
+  function texTokens(t, names) {
+    var out = '';
     for (var i = 0; i < t.length; i++) {
       var k = t[i];
       if (k === '*') out += ' \\times ';
       else if (k === '/') out += ' \\div ';
       else if (k === '^') { out += '^{' + t[++i] + '}'; }
       else if (k === '%') out += '\\%';
+      else if (k === 'sqrt') {
+        var j = i + 1, inner;
+        if (t[j] === '(') {
+          var depth = 0, e = j;
+          for (; e < t.length; e++) { if (t[e] === '(') depth++; else if (t[e] === ')') { depth--; if (!depth) break; } }
+          inner = t.slice(j + 1, e); i = e;
+        } else { inner = [t[j]]; i = j; }
+        out += '\\sqrt{' + texTokens(inner, names) + '}';
+      }
       else if (k.charAt(0) === '@') out += '\\text{' + names[k.slice(1)] + '}';
       else if (/^\d{4,}$/.test(k)) out += k.replace(/\B(?=(\d{3})+(?!\d))/g, '{,}');
       else out += k;
     }
-    return out.replace(/^\s+|\s+$/g, '').replace(/\s{2,}/g, ' ');
+    return out;
   }
 
   /* ---------- assembling a question ---------- */
@@ -110,30 +137,38 @@
     var steps = spec.steps.map(function (s) {
       var forms = s.forms.map(function (f) {
         var deps = (f.deps || []).slice();
-        refsOf(f.expr).forEach(function (r) { if (deps.indexOf(r) < 0) deps.push(r); });
+        if (f.expr) refsOf(f.expr).forEach(function (r) { if (deps.indexOf(r) < 0) deps.push(r); });
         deps.forEach(function (d) { if (!known[d]) throw new Error(s.id + ' needs ' + d + ' before it exists'); });
-        return { expr: f.expr, tex: texOf(f.expr, names), deps: deps, implies: (f.implies || []).slice() };
+        return { expr: f.expr || null, tex: f.tex || texOf(f.expr, names), deps: deps, implies: (f.implies || []).slice() };
       });
-      var v = evalExpr(forms[0].expr, vals);
+      var v = forms[0].expr ? evalExpr(forms[0].expr, vals) : null;
       vals[s.id] = v; known[s.id] = true;
-      return { id: s.id, name: s.name, slot: s.slot || null, value: v, forms: forms };
+      var st = { id: s.id, name: s.name, slot: s.slot || null, value: v, forms: forms };
+      if (s.fact !== undefined) st.fact = s.fact;
+      return st;
     });
-    // A distractor never equals a step's value (a true statement is never a wrong option: SR-16): the candidates are filtered.
-    var stepVals = steps.map(function (s) { return s.value; });
+    // A distractor never equals a step's value (a true statement is never a wrong option, SR-16): the candidates are filtered.
+    // One that names what it claims (a fact, "EFG=31") clashes only with a step making the same claim.
+    var stepVals = steps.map(function (s) { return s.value; }).filter(function (x) { return x !== null; });
     var seen = {};
     var distractors = [];
     spec.distractors.forEach(function (d) {
       var deps = (d.deps || []).slice();
-      refsOf(d.expr).forEach(function (r) { if (deps.indexOf(r) < 0) deps.push(r); });
-      var v = evalExpr(d.expr, vals);
-      var clash = stepVals.some(function (x) { return Math.abs(x - v) < 1e-7 * Math.max(1, Math.abs(x)); });
-      var dupKey = texOf(d.expr, names);
+      if (d.expr) refsOf(d.expr).forEach(function (r) { if (deps.indexOf(r) < 0) deps.push(r); });
+      var v = d.expr ? evalExpr(d.expr, vals) : null;
+      var clash = d.fact !== undefined
+        ? steps.some(function (s) { return s.fact === d.fact; })
+        : (v !== null && stepVals.some(function (x) { return Math.abs(x - v) < 1e-7 * Math.max(1, Math.abs(x)); }));
+      var dupKey = d.tex || texOf(d.expr, names);
       if (clash || seen[dupKey]) return;
       seen[dupKey] = true;
-      distractors.push({ expr: d.expr, tex: dupKey, value: v, deps: deps, 'for': d['for'], why: d.why });
+      var o = { expr: d.expr || null, tex: dupKey, value: v, deps: deps, 'for': d['for'], why: d.why };
+      if (d.fact !== undefined) o.fact = d.fact;
+      distractors.push(o);
     });
+    var answers = spec.answers || 1;
     return {
-      type: spec.type, calc: !!spec.calc, marks: 4, stem: spec.stem, diagram: spec.diagram || null,
+      type: spec.type, calc: !!spec.calc, marks: spec.slots.length + answers, answers: answers, fit: !!spec.fit, stem: spec.stem, diagram: spec.diagram || null,
       params: spec.params, numbers: spec.numbers, slots: spec.slots, steps: steps, distractors: distractors
     };
   }
@@ -376,9 +411,293 @@
     });
   }
 
+  /* ====================================================================================================================
+     BATCH 2 (contract FOUND-A-MARK-2, Jon, 27 Oct 2026): five more types, built on the same steps / slots / distractors.
+     ==================================================================================================================== */
+  function deg(n) { return n + '^\\circ'; }
+  function plain(n) { return String(Math.round(n * 1e6) / 1e6); }
+
+  /* ---------- type 5: angles in parallel lines (value only) ---------- */
+  function qAngles(rng) {
+    var a, b;
+    do { a = rint(rng, 30, 80); b = rint(rng, 30, 80); } while (a === b || a + b < 100 || a + b > 150);   // a = b would make "= b" a true claim twice over
+    var x = 180 - a - b;
+    function eq(l, rhs) { return '\\angle ' + l + ' = ' + rhs; }
+    var steps = [
+      { id: 'A', name: 'angle EFG', slot: 'efg', fact: 'EFG=' + a, forms: [{ expr: String(a), tex: eq('EFG', deg(a)) }] },
+      { id: 'B', name: 'angle EGF', slot: 'egf', fact: 'EGF=' + b, forms: [{ expr: String(b), tex: eq('EGF', deg(b)) }] },
+      { id: 'C', name: 'angle FEG', slot: 'feg', fact: 'FEG=' + x, forms: [
+        { expr: '180 - ' + a + ' - ' + b, tex: eq('FEG', '180^\\circ - ' + deg(a) + ' - ' + deg(b)) },          // the straight line AEB: valid at once
+        { expr: '180 - @A - @B', tex: eq('FEG', '180^\\circ - \\angle EFG - \\angle EGF'), deps: ['A', 'B'] }] }    // or the triangle, once both are found
+    ];
+    var dist = [
+      { expr: '180 - ' + a, tex: eq('EFG', '180^\\circ - ' + deg(a)), fact: 'EFG=' + (180 - a), 'for': 'A',
+        why: 'That is the co-interior angle, 180° less ' + a + '°. Angle EFG and angle AEF are alternate angles, so equal: ' + a + '°.' },
+      { expr: String(b), tex: eq('EFG', deg(b)), fact: 'EFG=' + b, 'for': 'A',
+        why: b + '° is angle BEG, a different angle. Angle EFG is alternate to angle AEF, so it is ' + a + '°.' },
+      { expr: '180 - ' + b, tex: eq('EGF', '180^\\circ - ' + deg(b)), fact: 'EGF=' + (180 - b), 'for': 'B',
+        why: 'That is the co-interior angle, 180° less ' + b + '°. Angle EGF and angle BEG are alternate angles, so equal: ' + b + '°.' },
+      { expr: String(a), tex: eq('EGF', deg(a)), fact: 'EGF=' + a, 'for': 'B',
+        why: a + '° is angle AEF, a different angle. Angle EGF is alternate to angle BEG, so it is ' + b + '°.' },
+      { expr: '360 - ' + a + ' - ' + b, tex: eq('FEG', '360^\\circ - ' + deg(a) + ' - ' + deg(b)), fact: 'FEG=' + (360 - a - b), 'for': 'C',
+        why: 'Angles on a straight line, and angles in a triangle, add to 180°, not 360°.' },
+      { expr: a + ' + ' + b, tex: eq('FEG', deg(a) + ' + ' + deg(b)), fact: 'FEG=' + (a + b), 'for': 'C',
+        why: 'That adds the two angles you are given. Angle FEG is what is left of the straight line: take them away from 180°.' },
+      { expr: '90 - ' + a, tex: eq('FEG', '90^\\circ - ' + deg(a)), fact: 'FEG=' + (90 - a), 'for': 'C',
+        why: 'There is no right angle here. Angles on the straight line AEB add to 180°.' }
+    ];
+    return build({
+      type: 'angles', calc: false, fit: true,
+      stem: ['AB is parallel to CD.', 'Work out the size of angle FEG.'],
+      diagram: { kind: 'angles', a: a, b: b, x: x },
+      params: { a: a, b: b }, numbers: [a, b, 180],
+      slots: [{ id: 'efg', label: 'angle EFG' }, { id: 'egf', label: 'angle EGF' }, { id: 'feg', label: 'angle FEG' }],
+      steps: steps, distractors: dist
+    });
+  }
+
+  /* ---------- type 6: the mean from a frequency table ---------- */
+  var MEAN_CTX = [
+    { key: 'goals', head: 'Goals', say: function (n) { return 'The table shows the goals a team scored in ' + n + ' matches.'; }, ask: 'Work out the mean number of goals in a match.' },
+    { key: 'siblings', head: 'Siblings', say: function (n) { return 'The table shows the brothers and sisters of ' + n + ' students.'; }, ask: 'Work out the mean number of brothers and sisters.' },
+    { key: 'pets', head: 'Pets', say: function (n) { return 'The table shows the pets owned by ' + n + ' students.'; }, ask: 'Work out the mean number of pets.' },
+    { key: 'books', head: 'Books', say: function (n) { return 'The table shows the books ' + n + ' students read last month.'; }, ask: 'Work out the mean number of books.' },
+    { key: 'phones', head: 'Phones', say: function (n) { return 'The table shows the phones in each of ' + n + ' homes.'; }, ask: 'Work out the mean number of phones in a home.' }
+  ];
+
+  function qMean(rng) {
+    var ctx = pick(rng, MEAN_CTX), lo = pick(rng, [0, 1]), rows = pick(rng, [5, 6]), xs = [], fs, total, tries = 0, i;
+    for (i = 0; i < rows; i++) xs.push(lo + i);
+    do {
+      fs = xs.map(function () { return rint(rng, 1, 12); });
+      total = fs.reduce(function (s, f) { return s + f; }, 0);
+      tries++;
+    } while ((total < 15 || total > 40 || fs.every(function (f) { return f === fs[0]; })) && tries < 1000);
+    var prods = xs.map(function (x, k) { return x * fs[k]; }), sum = prods.reduce(function (s, p) { return s + p; }, 0);
+    var sx = xs.reduce(function (s, x) { return s + x; }, 0);
+    var exact = (sum * 10) % total === 0;                         // a mean that is already 1 decimal place or fewer needs no rounding
+    var join = function (arr) { return arr.join(' + '); };
+    var steps = [
+      { id: 'A', name: 'each x times f', slot: 'xf', fact: 'XF=' + prods.join(','), forms: [{ tex: 'x \\times f \\text{ for each row}' }] },
+      { id: 'B', name: 'the total of x times f', slot: 'sum', forms: [{ expr: xs.map(function (x, k) { return x + ' * ' + fs[k]; }).join(' + '), deps: ['A'] }] },
+      { id: 'C', name: 'the mean', slot: 'mean', forms: [{ expr: '@B / ' + total }] }
+    ];
+    var dist = [
+      { tex: 'x + f \\text{ for each row}', fact: 'XF=' + xs.map(function (x, k) { return x + fs[k]; }).join(','), 'for': 'A',
+        why: 'That adds x and f. A row says x happened f times, so multiply x by f.' },
+      { tex: 'x \\div f \\text{ for each row}', fact: 'XF=' + xs.map(function (x, k) { return plain(x / fs[k]); }).join(','), 'for': 'A',
+        why: 'That divides x by f. A row says x happened f times, so multiply.' },
+      { expr: join(fs), 'for': 'B', deps: ['A'],
+        why: 'That adds up the frequencies, which only counts how many values there are. We need the total of x times f.' },
+      { expr: join(xs), 'for': 'B', deps: ['A'],
+        why: 'That adds up the values of x and ignores how many times each one happens.' },
+      { expr: '@B / ' + rows, 'for': 'C',
+        why: 'That divides by the number of rows. Divide by how many values there are altogether: the total of the frequencies.' },
+      { expr: total + ' / ' + rows, 'for': 'C', deps: ['B'],
+        why: 'That divides the total frequency by the number of rows. The mean is the total of x times f, shared out.' },
+      { expr: '@B / ' + sx, 'for': 'C',
+        why: 'That divides by the total of the x values. Divide by the total of the frequencies.' }
+    ];
+    var nums = xs.concat(fs, [total]);
+    return build({
+      type: 'mean', calc: true, fit: true,
+      stem: [ctx.say(total), ctx.ask + (exact ? '' : ' Give your answer to 1 decimal place.')],
+      diagram: { kind: 'freq', head: [ctx.head, 'Frequency', 'x × f'], xs: xs, fs: fs, products: prods },
+      params: { ctx: ctx.key, xs: xs, fs: fs, total: total, sum: sum, exact: exact },
+      numbers: nums,
+      slots: [{ id: 'xf', label: 'x times f for each row' }, { id: 'sum', label: 'the total of x times f' }, { id: 'mean', label: 'the mean' }],
+      steps: steps, distractors: dist
+    });
+  }
+
+  /* ---------- type 7: the ladder (Pythagoras) ---------- */
+  var TRIPLES = [[3, 4, 5], [5, 12, 13], [7, 24, 25], [8, 15, 17]];
+  // Scaled by j tenths: the foot 0.6 to 3 m and the ladder 3 to 12 m. (The contract's "foot under a third of the ladder" leaves
+  // only 7-24-25, so it is not applied: the foot is the shorter leg, which is the realistic way round for every triple.)
+  var LADDERS = (function () {
+    var out = [];
+    TRIPLES.forEach(function (t) {
+      for (var j = 1; j <= 80; j++) if (t[0] * j >= 6 && t[0] * j <= 30 && t[2] * j >= 30 && t[2] * j <= 120) out.push({ t: t, j: j });
+    });
+    return out;
+  })();
+
+  function qLadder(rng) {
+    var c = pick(rng, LADDERS), t = c.t, j = c.j, variant = pick(rng, ['height', 'length']);
+    var d = dec(t[0] * j / 10), h = dec(t[1] * j / 10), L = dec(t[2] * j / 10), steps, dist, stem, nums;
+    if (variant === 'height') {
+      stem = ['A ladder is ' + L + ' m long. It leans against a vertical wall. The foot of the ladder is ' + d + ' m from the wall.',
+              'Work out how high up the wall the ladder reaches.'];
+      steps = [
+        { id: 'A', name: 'the difference of the squares', slot: 'sq', forms: [{ expr: L + ' ^ 2 - ' + d + ' ^ 2' }] },
+        { id: 'B', name: 'the height up the wall', slot: 'root', forms: [{ expr: 'sqrt @A' }] }
+      ];
+      dist = [
+        { expr: L + ' ^ 2 + ' + d + ' ^ 2', 'for': 'A',
+          why: 'That adds the squares. The ladder is the longest side, so its square is the biggest: to find a shorter side, subtract.' },
+        { expr: L + ' - ' + d, 'for': 'A', why: 'That takes the lengths away without squaring them. Pythagoras works with the squares.' },
+        { expr: L + ' ^ 2 - ' + d, 'for': 'A', why: 'Only the ladder is squared here. Square both lengths before you subtract.' }
+      ];
+      nums = [L, d];
+    } else {
+      stem = ['A ladder leans against a vertical wall. Its foot is ' + d + ' m from the wall and it reaches ' + h + ' m up the wall.',
+              'Work out the length of the ladder.'];
+      steps = [
+        { id: 'A', name: 'the sum of the squares', slot: 'sq', forms: [{ expr: d + ' ^ 2 + ' + h + ' ^ 2' }] },
+        { id: 'B', name: 'the length of the ladder', slot: 'root', forms: [{ expr: 'sqrt @A' }] }
+      ];
+      dist = [
+        { expr: h + ' ^ 2 - ' + d + ' ^ 2', 'for': 'A',
+          why: 'That subtracts. The ladder is the longest side, so add the squares of the other two.' },
+        { expr: d + ' + ' + h, 'for': 'A', why: 'That adds the lengths without squaring them. Pythagoras works with the squares.' },
+        { expr: d + ' ^ 2 + ' + h, 'for': 'A', why: 'Only the foot is squared here. Square both lengths before you add.' }
+      ];
+      nums = [d, h];
+    }
+    dist.push({ expr: '@A / 2', 'for': 'B', why: 'That halves it. To undo a square, take the square root.' });
+    dist.push({ expr: '@A ^ 2', 'for': 'B', why: 'That squares it again. To undo a square, take the square root.' });
+    return build({
+      type: 'ladder', calc: true, fit: true, stem: stem,
+      diagram: { kind: 'ladder', variant: variant, d: t[0] * j / 10, h: t[1] * j / 10, L: t[2] * j / 10 },
+      params: { variant: variant, t: t, j: j, d: t[0] * j / 10, h: t[1] * j / 10, L: t[2] * j / 10 }, numbers: nums,
+      slots: [{ id: 'sq', label: variant === 'height' ? 'the squares, subtracted' : 'the squares, added' }, { id: 'root', label: 'the square root' }],
+      steps: steps, distractors: dist
+    });
+  }
+
+  /* ---------- type 8: coffee and tea (simultaneous equations) ---------- */
+  var BUYS = [
+    { a: ['coffee', 'coffees'], b: ['tea', 'teas'], la: 'c', lb: 't' },
+    { a: ['burger', 'burgers'], b: ['portion of fries', 'portions of fries'], la: 'b', lb: 'f' },
+    { a: ['adult ticket', 'adult tickets'], b: ['child ticket', 'child tickets'], la: 'a', lb: 'c' },
+    { a: ['pen', 'pens'], b: ['pencil', 'pencils'], la: 'p', lb: 'q' }
+  ];
+  function term(c, l) { return c === 1 ? l : c + l; }
+  function eqTex(ca, cb, R, la, lb) {                                     // coefficients of the two letters (0 = absent) and the right-hand side in pence
+    var left = [];
+    if (ca) left.push(term(ca, la));
+    if (cb) left.push(term(cb, lb));
+    return left.join(' + ') + ' = ' + (R / 100).toFixed(2);
+  }
+  function qCoffee(rng) {
+    var by = pick(rng, BUYS), la = by.la, lb = by.lb, p1, q1, p2, q2, cp, tp, routes, guard = 0;
+    do {
+      p1 = rint(rng, 1, 5); q1 = rint(rng, 1, 5); p2 = rint(rng, 1, 5); q2 = rint(rng, 1, 5);
+      routes = [];
+      [1, 0].forEach(function (idx) {                                      // match the coefficient of letter idx with one whole-number multiplier
+        var e1 = idx ? q1 : p1, e2 = idx ? q2 : p2;
+        if (e2 % e1 === 0 && e2 / e1 >= 2) routes.push({ idx: idx, scale: 0, m: e2 / e1 });
+        else if (e1 % e2 === 0 && e1 / e2 >= 2) routes.push({ idx: idx, scale: 1, m: e1 / e2 });
+      });
+      guard++;
+    } while ((p1 === p2 || q1 === q2 || p1 * q2 === p2 * q1 || !routes.length) && guard < 1000);
+    do { cp = 10 * rint(rng, 8, 35); tp = 10 * rint(rng, 8, 35); } while (cp === tp);
+    var E = [[p1, q1, p1 * cp + q1 * tp], [p2, q2, p2 * cp + q2 * tp]];
+    var words = function (n, nm) { return n + ' ' + (n === 1 ? nm[0] : nm[1]); };
+    var money = function (R) { return '£' + (R / 100).toFixed(2); };
+    var tx = function (e) { return eqTex(e[0], e[1], e[2], la, lb); };
+    var fct = function (e) { return 'eq:' + e.join(','); };
+    var steps = [
+      { id: 'A', name: 'the first equation', slot: 'e1', fact: fct(E[0]), forms: [{ tex: tx(E[0]) }] },
+      { id: 'B', name: 'the second equation', slot: 'e2', fact: fct(E[1]), forms: [{ tex: tx(E[1]) }] }
+    ];
+    var dist = [
+      { tex: (p1 + q1) + la + lb + ' = ' + (E[0][2] / 100).toFixed(2), fact: 'junk:A1', 'for': 'A',
+        why: 'The ' + by.a[1] + ' and the ' + by.b[1] + ' have different prices, so they cannot be added into one lump. Give each its own letter.' },
+      { tex: term(p1, la) + ' \\times ' + term(q1, lb) + ' = ' + (E[0][2] / 100).toFixed(2), fact: 'junk:A2', 'for': 'A',
+        why: 'Multiplying the two amounts is not right. The total is the cost of one kind plus the cost of the other: add.' },
+      { tex: tx([q1, p1, E[0][2]]), fact: fct([q1, p1, E[0][2]]), 'for': 'A',
+        why: 'The numbers are the wrong way round: ' + p1 + ' goes with ' + la + ' and ' + q1 + ' goes with ' + lb + '.' },
+      { tex: tx([1, 1, E[1][2]]), fact: fct([1, 1, E[1][2]]), 'for': 'B',
+        why: 'That leaves out how many of each were bought. Put each number in front of its letter.' },
+      { tex: tx([q2, p2, E[1][2]]), fact: fct([q2, p2, E[1][2]]), 'for': 'B',
+        why: 'The numbers are the wrong way round: ' + p2 + ' goes with ' + la + ' and ' + q2 + ' goes with ' + lb + '.' }
+    ];
+    routes.forEach(function (r) {
+      var orig = E[r.scale], other = E[1 - r.scale], m = r.m, letter = r.idx ? lb : la;
+      var S = [orig[0] * m, orig[1] * m, orig[2] * m], o = 1 - r.idx, diff = S[o] - other[o];
+      var big = diff > 0 ? S : other, small = diff > 0 ? other : S, res = [0, 0, big[2] - small[2]];
+      res[o] = Math.abs(diff);
+      var cid = 'C' + r.idx, did = 'D' + r.idx, added = [S[0] + other[0], S[1] + other[1], S[2] + other[2]], bad = [0, 0, S[2] + other[2]];
+      bad[o] = Math.abs(diff);
+      steps.push({ id: cid, name: 'an equation with matching ' + letter + ' terms', slot: 'match', fact: fct(S), forms: [{ tex: tx(S), deps: ['A', 'B'] }] });
+      steps.push({ id: did, name: 'the equation with one letter', slot: 'elim', fact: fct(res), forms: [{ tex: tx(res), deps: [cid] }] });
+      dist.push({ tex: tx([S[0], orig[1], S[2]]), fact: fct([S[0], orig[1], S[2]]), 'for': cid,
+        why: 'Everything in the equation must be multiplied by ' + m + ', not just one term.' });
+      dist.push({ tex: tx([S[0], S[1], orig[2]]), fact: fct([S[0], S[1], orig[2]]), 'for': cid,
+        why: 'The right-hand side must be multiplied by ' + m + ' too, or the equation is no longer true.' });
+      dist.push({ tex: tx(added), fact: fct(added), 'for': did,
+        why: "That's true, but it doesn't get rid of a letter, so there's no mark for it yet." });
+      dist.push({ tex: tx(bad), fact: fct(bad), 'for': did,
+        why: 'The left-hand sides were subtracted but the right-hand sides were added. Do the same to both sides: subtract both.' });
+    });
+    return build({
+      type: 'coffee', calc: true, fit: true, answers: 2,
+      stem: [words(p1, by.a) + ' and ' + words(q1, by.b) + ' cost ' + money(E[0][2]) + '. ' + words(p2, by.a) + ' and ' + words(q2, by.b) + ' cost ' + money(E[1][2]) + '.',
+             'Let ' + la + ' be the cost of one ' + by.a[0] + ' and ' + lb + ' the cost of one ' + by.b[0] + ', in pounds. Work out both costs.'],
+      params: { by: by.a[0], p1: p1, q1: q1, p2: p2, q2: q2, cp: cp, tp: tp, la: la, lb: lb },
+      numbers: [], slots: [{ id: 'e1', label: 'the first equation' }, { id: 'e2', label: 'the second equation' },
+                           { id: 'match', label: 'matching one letter' }, { id: 'elim', label: 'removing a letter' }],
+      steps: steps, distractors: dist
+    });
+  }
+
+  /* ---------- type 9: conditional probability from a two-way table ---------- */
+  var TWOWAY = [
+    { rows: ['Boys', 'Girls'], cols: ['Walk', 'Bus', 'Car'], corner: 'Travel',
+      ask: 'A student who comes by car is chosen at random. Work out the probability that this student is a girl.',
+      cells: { A: 'boys by car', B: 'girls by bus', C: 'girls by car' } },
+    { rows: ['Year 10', 'Year 11'], cols: ['Packed', 'Dinner', 'Home'], corner: 'Lunch',
+      ask: 'A student who goes home for lunch is chosen at random. Work out the probability that this student is in Year 11.',
+      cells: { A: 'Year 10 going home', B: 'Year 11 with dinner', C: 'Year 11 going home' } },
+    { rows: ['Art', 'Music'], cols: ['Football', 'Tennis', 'Gym'], corner: 'Sport',
+      ask: 'A student who chose gym is picked at random. Work out the probability that this student is on the Music course.',
+      cells: { A: 'Art students in gym', B: 'Music students in tennis', C: 'Music students in gym' } }
+  ];
+  function qTwoWay(rng) {
+    var ctx = pick(rng, TWOWAY), a = [], b = [], N, tries = 0, k;
+    do {
+      a = []; b = [];
+      for (k = 0; k < 3; k++) { a.push(rint(rng, 3, 25)); b.push(rint(rng, 3, 25)); }
+      N = a[0] + a[1] + a[2] + b[0] + b[1] + b[2];
+      tries++;
+    } while ((N < 50 || N > 120) && tries < 1000);
+    var B = a[0] + a[1] + a[2], G = b[0] + b[1] + b[2], S = a[1] + b[1];       // the row totals and the bus total are given
+    var lead = function (cell, e) { return '\\text{' + ctx.cells[cell] + '} = ' + e; };
+    var steps = [
+      { id: 'A', name: ctx.cells.A, slot: 'c1', forms: [{ expr: B + ' - ' + a[0] + ' - ' + a[1], tex: lead('A', B + ' - ' + a[0] + ' - ' + a[1]) }] },
+      { id: 'B', name: ctx.cells.B, slot: 'c2', forms: [{ expr: S + ' - ' + a[1], tex: lead('B', S + ' - ' + a[1]) }] },
+      { id: 'C', name: ctx.cells.C, slot: 'c3', forms: [{ expr: G + ' - ' + b[0] + ' - @B', tex: lead('C', G + ' - ' + b[0] + ' - \\text{' + ctx.cells.B + '}') }] },
+      { id: 'D', name: 'the probability', slot: 'prob', forms: [{ expr: '@C / ( @A + @C )' }] }
+    ];
+    var dist = [
+      { expr: B + ' - ' + a[0], tex: lead('A', B + ' - ' + a[0]), 'for': 'A', why: 'That only takes off the first column. The middle column is not in the last one either.' },
+      { expr: N + ' - ' + a[0] + ' - ' + a[1], tex: lead('A', N + ' - ' + a[0] + ' - ' + a[1]), 'for': 'A', why: 'That starts from everyone. This cell is in one row, so start from that row total, ' + B + '.' },
+      { expr: S + ' + ' + a[1], tex: lead('B', S + ' + ' + a[1]), 'for': 'B', why: 'The ' + a[1] + ' is part of the ' + S + ', so take it away. Adding it makes more than the column total.' },
+      { expr: G + ' - ' + a[1], tex: lead('B', G + ' - ' + a[1]), 'for': 'B', why: 'The ' + a[1] + ' is in the other row. Use the column total, ' + S + ', then take away what the first row has.' },
+      { expr: G + ' - ' + b[0], tex: lead('C', G + ' - ' + b[0]), 'for': 'C', deps: ['B'], why: 'That leaves out the middle cell of this row. Take that away too, to leave the last cell.' },
+      { expr: N + ' - ' + b[0] + ' - ' + a[1], tex: lead('C', N + ' - ' + b[0] + ' - ' + a[1]), 'for': 'C', deps: ['B'], why: 'That starts from everyone. This cell is in one row, so start from that row total, ' + G + '.' },
+      { expr: '@C / ' + N, 'for': 'D', why: 'That divides by everyone. We are told which column the student is in, so divide by that column only.' },
+      { expr: '@C / ' + G, 'for': 'D', why: 'That divides by one row. The condition is the column, not a row.' },
+      { expr: '@A / ( @A + @C )', 'for': 'D', why: 'That finds the probability for the other row. Put the cell you want on the top.' }
+    ];
+    return build({
+      type: 'twoway', calc: false, fit: true,
+      stem: [ctx.ask],
+      diagram: { kind: 'twoway', corner: ctx.corner, head: ctx.cols.concat(['Total']), rows: [
+        { label: ctx.rows[0], cells: [a[0], a[1], { fill: 'A', v: B - a[0] - a[1] }, B] },
+        { label: ctx.rows[1], cells: [b[0], { fill: 'B', v: S - a[1] }, { fill: 'C', v: G - b[0] - (S - a[1]) }, G] },
+        { label: 'Total', cells: ['', S, '', N] }] },
+      params: { ctx: ctx.rows[0] + '/' + ctx.cols[0], a: a, b: b, N: N, B: B, G: G, S: S },
+      numbers: [N, B, G, S, a[0], a[1], b[0]],
+      slots: [{ id: 'c1', label: ctx.cells.A }, { id: 'c2', label: ctx.cells.B }, { id: 'c3', label: ctx.cells.C }, { id: 'prob', label: 'the probability' }],
+      steps: steps, distractors: dist
+    });
+  }
+
   function question(type, rng) {
     rng = rng || Math.random;
-    var q = ({ enough: qEnough, ratio: qRatio, interest: qInterest, garden: qGarden })[type](rng);
+    var q = ({ enough: qEnough, ratio: qRatio, interest: qInterest, garden: qGarden, angles: qAngles, mean: qMean, ladder: qLadder, coffee: qCoffee, twoway: qTwoWay })[type](rng);
     q.key = JSON.stringify(q.params);
     return q;
   }
@@ -392,7 +711,7 @@
 
   // The calculations on offer: every form of an unfound step whose deps are found (at most two forms a step), then
   // distractors for the steps on offer. Option ids are 's:<step>:<form>' and 'd:<n>'.
-  function options(Q, S, rng) {
+  function options(Q, S, rng, cap) {
     rng = rng || Math.random;
     var valid = [], onOffer = {}, extra = [];
     Q.steps.forEach(function (st) {
@@ -408,9 +727,11 @@
     });
     valid = shuffled(rng, valid);
     // Six on offer at most (three rows of two on a phone: canon 7.6.1); a valid step left out shows once another is found.
-    var cap = 6;
-    var v = valid.slice(0, 4);
-    shuffled(rng, extra).forEach(function (o) { if (v.length < 4) v.push(o); });
+    // The page lowers the cap (never below 4) on a screen too short for six.
+    cap = Math.max(4, Math.min(6, cap || 6));
+    var vmax = Math.min(4, cap - 2);
+    var v = valid.slice(0, vmax);
+    shuffled(rng, extra).forEach(function (o) { if (v.length < vmax) v.push(o); });
     var cands = [];
     Q.distractors.forEach(function (d, di) {
       var id = 'd:' + di;
@@ -470,7 +791,7 @@
   function unaided(Q, S) { return Q.slots.filter(function (s) { return S.slots[s.id] === 'tap'; }).length; }
 
   root.MaffsFoundAMark = {
-    TYPES: TYPES, question: question, makeRng: makeRng, evalExpr: evalExpr, texOf: texOf,
+    TYPES: TYPES, METHOD: METHOD, question: question, makeRng: makeRng, evalExpr: evalExpr, texOf: texOf,
     newState: newState, options: options, choose: choose, hint: hint, finished: finished, unaided: unaided
   };
 })(typeof window !== 'undefined' ? window : this);
