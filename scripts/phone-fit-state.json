@@ -15,9 +15,6 @@
         "375x667",
         "390x844"
       ],
-      "boolean-blitz": [
-        "320x568"
-      ],
       "chart-interrogator": [
         "320x568",
         "375x667"
@@ -103,10 +100,6 @@
       ],
       "modular-battle": [
         "320x568"
-      ],
-      "partial-fractions-duel": [
-        "320x568",
-        "375x667"
       ],
       "percentage-flip": [
         "320x568",
@@ -269,9 +262,6 @@
       ],
       "negative-number-line": [
         "320x568"
-      ],
-      "partial-fractions-duel": [
-        "375x667"
       ],
       "percentage-flip": [
         "320x568",
