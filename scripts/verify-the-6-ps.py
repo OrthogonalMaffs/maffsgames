@@ -258,10 +258,10 @@ EMOJI = re.compile('[\U0001F000-\U0001FAFF☀-➿⭐⭕️]|&#(9[0-9]{3}|1[0-9]{
 
 
 def static_checks(html, data, out):
-    if '<meta name="robots" content="noindex">' not in html:
-        out.append('the page is not noindex (it is unlisted until Jon has played it)')
-    if '<!-- UNLISTED' not in html:
-        out.append('the page has no UNLISTED comment')
+    if re.search(r'<meta name="robots"[^>]*noindex', html):
+        out.append('the page is noindex, but it is listed (launch contract SIX-PS-LAUNCH, 27 Oct 2026)')
+    if '<!-- UNLISTED' in html:
+        out.append('the page still carries its UNLISTED comment')
     if not re.search(r'<script src="/schools/assets/analytics\.js"></script>', html):
         out.append('the page does not load analytics.js')
     if '<html lang="en-GB" data-theme="light">' not in html or 'href="/schools/assets/theme.css"' not in html:
