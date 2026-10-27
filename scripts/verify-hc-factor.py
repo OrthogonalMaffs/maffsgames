@@ -589,6 +589,8 @@ def play_stage(page, st, size, out):
                 kind = 'wrong'
             elif qn == 3 and step['kind'] == 'boxes' and step['form'] == 'brackets':
                 kind = 'swap'
+            if kind == 'partial' and step['canon'][0] == 1:
+                kind = 'wrong'                   # nothing to take out in part: no partial factorisation exists
             ok = kind in ('right', 'swap')
             note = None
             if step['kind'] == 'signs':

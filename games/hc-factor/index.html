@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- UNLISTED (contract HC-FACTOR, 27 Oct 2026): live at its URL for Jon to play; off the portal, the sitemap and the leaderboard hub until he lists it. -->
-<meta name="description" content="Expanding and factorising, from one bracket to x² + bx + c with the sign grid, typed into bracket-shaped boxes. For GCSE. Free, no sign-up.">
+<meta name="description" content="Expand brackets and factorise, from one bracket to x² + bx + c with the sign grid, typing the answer into bracket-shaped boxes. For GCSE. Free, no sign-up.">
 <link rel="canonical" href="https://maffsgames.co.uk/games/hc-factor/">
 <meta property="og:title" content="Expanding and Factorising Game – GCSE Maths | MaffsGames">
-<meta property="og:description" content="Expanding and factorising, from one bracket to x² + bx + c with the sign grid, typed into bracket-shaped boxes. For GCSE. Free, no sign-up.">
+<meta property="og:description" content="Expand brackets and factorise, from one bracket to x² + bx + c with the sign grid, typing the answer into bracket-shaped boxes. For GCSE. Free, no sign-up.">
 <meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
 <meta property="og:url" content="https://maffsgames.co.uk/games/hc-factor/">
 <meta property="og:type" content="website">
@@ -26,7 +26,7 @@
    lowest tier served is GCSE. The talent show is this game's own tokens: a dark stage inside the light page. */
 :root{--accent:#7a2a8c;--accent-dim:#f3e8f7;--on-accent:#ffffff;
   --stage:#1d1433;--stage-edge:#0f0a1d;--curtain:#9b1c3f;--curtain-d:#6e1230;--spot:#ffe8a3;--floor:#2c2147;
-  --card:#e9e4f3;--card-ink:#3a3150;--yes:#e2a812;--yes-edge:#8a6200;--yes-ink:#2f2000}
+  --card:#e9e4f3;--card-ink:#3a3150;--judge:#2a1f45;--judge-edge:#5b4b82;--judge-ink:#a99cc9;--yes:#e2a812;--yes-edge:#8a6200;--yes-ink:#2f2000}
 *{margin:0;padding:0;box-sizing:border-box}
 body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
 .container{max-width:720px;width:100%;padding:1rem}
@@ -72,7 +72,7 @@ a.back-link:hover{color:var(--text)}
 
 /* The panel: three judges' cards, lit gold for a right answer. */
 .judges{display:flex;gap:.45rem;justify-content:center;background:var(--stage);border-radius:12px;padding:.4rem .6rem;border-bottom:4px solid var(--stage-edge)}
-.judge{flex:1 1 0;max-width:6.5rem;height:30px;border-radius:7px;border:2px solid #5b4b82;background:#2a1f45;color:#a99cc9;display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-size:.72rem;font-weight:700;letter-spacing:.06em}
+.judge{flex:1 1 0;max-width:6.5rem;height:30px;border-radius:7px;border:2px solid var(--judge-edge);background:var(--judge);color:var(--judge-ink);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-size:.72rem;font-weight:700;letter-spacing:.06em}
 .judge.lit{background:var(--yes);border-color:var(--yes-edge);color:var(--yes-ink);box-shadow:0 0 12px 2px rgba(255,232,163,.55);animation:flip .4s ease-out both}
 @keyframes flip{from{transform:rotateX(90deg);opacity:0}to{transform:none;opacity:1}}
 
@@ -351,7 +351,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       state = 'done';
       var line = step.kind === 'signs' ? step.rule : Q.worked.lines[Q.worked.lines.length - 1];
       fb.innerHTML = '<div class="fb done"><div class="fb-line">Yes. ' + renderLine(line) + '</div>' +
-        '<div class="fb-next"><button class="btn solid" id="nextBtn" type="button">' + (last && qi >= PER_ROUND ? 'See the result →' : 'Next →') + '</button></div></div>';
+        '<div class="fb-next"><button class="btn solid" id="nextBtn" type="button">' + (last && qi >= PER_ROUND ? 'See results →' : 'Next →') + '</button></div></div>';
       MaffsLock.fresh(fb);
       $('nextBtn').focus();
     } else {

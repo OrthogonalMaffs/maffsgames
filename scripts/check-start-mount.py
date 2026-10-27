@@ -73,6 +73,7 @@ START_STEPS = {
     "six-sevens-bruv": ["#newGridBtn", ("#iniInput", "ABC"), "#iniCreate", "#startBtn"],
     "test-the-claim": [".mode-btn", "#tailPills .pill", "#sigPills .pill", "#startBtn"],
     "trig-worms": ["#startScreen .btn-primary"],
+    "hc-factor": ["#stageList .stage-btn"],     # contract HC-FACTOR, 27 Oct 2026: a round is chosen from the menu
 }
 
 
