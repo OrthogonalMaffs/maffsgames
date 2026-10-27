@@ -21,12 +21,12 @@
   "Context size (CLAUDE.md and both handovers at most 20 KB, docs/todo.md at most 150 KB; canon reported; contracts CTX and TODO-SLIM)": "14",
   "Coordinate Geometry Dash (every key recomputed from its question; exactly one correct option, equations compared as curves; every option marked in Chromium)": "6",
   "Core Maths Paper 1 (every key recomputed from its stem and charts; options distinct in value; every key marked in Chromium)": "13",
-  "Core Maths Paper 1 tax, NI and student loan (recomputed with uk_rates)": "16",
+  "Core Maths Paper 1 tax, NI and student loan (recomputed with uk_rates)": "23",
   "Core Maths Paper 2A (independent recomputation + rendered page)": "6",
   "Core Maths Paper 2B (Q28's policy recomputed from its table, no wrong option picking the same policy; every option marked in Chromium)": "11",
   "Core Maths Paper 2C (every option marked against its key or accepted set; Jon's rulings on Q12 and Q35; a double-tap on Next answers nothing; Chromium)": "24",
   "Correlation or Coincidence (bank, graphs' r, labels before the answer, phone fit)": "71",
-  "Curling Friction (every numerical key recomputed exactly from its own context, every option checked, every item marked in Chromium)": "33",
+  "Curling Friction (every numerical key recomputed exactly from its own context, every option checked, every item marked in Chromium)": "74",
   "Decimal Detective (Line-Up and Round Up keys recomputed, Place It start state, every answer marked in Chromium)": "36",
   "Differentiation Duel (every key and option differentiated again with SymPy, explanations checked, every option marked in Chromium)": "29",
   "Dimension Checker (every key and option checked by dimension algebra, worked steps recomputed, every item marked in Chromium)": "51",
@@ -49,7 +49,7 @@
   "Estimation Engine (SR-12: every rounding and estimate recomputed; marked by exact match in Chromium; phone keypad fit)": "12",
   "Estimation Golf (every key recomputed from its question, exactly, at its own precision; every key scores a Hole in One in Chromium)": "16",
   "Expectation Station (every table, E(X) and explanation figure exact; all 480 Stage 3 cards reviewed against the distribution; Stage 1 has exactly one completion; every stage played in Chromium)": "7",
-  "Expected Damage (every E(X) recomputed exactly, no ties, shown probabilities read back)": "36",
+  "Expected Damage (every E(X) recomputed exactly, no ties, shown probabilities read back)": "23",
   "Factor Race (every pair's key and factor counts recomputed, the KS3 pair table rebuilt and compared, every pair answered both ways in Chromium)": "51",
   "Factor Theorem (every key from its item's polynomial; ACCEPTED lists = page; every form marked in Chromium; answer buttons; A-Level only; no Practice submit)": "55",
   "Fermi Lab (every chain multiplies to its key, Brilliant in Chromium; every stored figure sourced and green at its step)": "16",
@@ -57,7 +57,7 @@
   "Football Pitches per Squared Squirrel, part 2 (every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, Stage 1's retry keeps the mark, the no-unit \"squirrels\" message loud, spaced from the unit buttons, marking nothing and cleared by picking a unit, the wrong unit marks nothing, named slips, the calculator in Stages 4-5 only, no sideways scroll)": "41",
   "Football Pitches per Squared Squirrel, part 3 (fault-injection self-test: six of the twelve planted faults, each caught)": "40",
   "Football Pitches per Squared Squirrel, part 4 (fault-injection self-test: the other six planted faults, each caught)": "61",
-  "Force Resolver (every key recomputed with SymPy, options distinct in value, every option clicked in Chromium)": "70",
+  "Force Resolver (every key recomputed with SymPy, options distinct in value, every option clicked in Chromium)": "74",
   "Formula Forge (every rearrangement checked in SymPy: the key solves its formula, no wrong option does or equals it, every worked line holds; every option pressed in Chromium)": "7",
   "Formula Plug-In (every formula, substitution and step of the working recomputed; every item answered right and wrong in Chromium)": "35",
   "Formula Unlocked (every rearrangement checked in SymPy: the key satisfies its formula, no wrong option equals it or another; every option marked in Chromium)": "14",
@@ -75,7 +75,7 @@
   "Growth and Decay (keys recomputed from each printed model; no Estimate without a method; percentage contexts stay in 0-100)": "57",
   "Higher Power Pairs (two cards match exactly when they are worth the same; played in Chromium)": "7",
   "How Many Parts?, part 1 (pools and Foundation's five, keys, every stage's own errors and options, every question's bar and worked steps recomputed, the palette, sessions easiest first, every Foundation stage and Advanced played at 320, 390 and 1280px)": "58",
-  "How Many Parts?, part 2 (every question, worked example and wrong-answer screen drawn by the game and read back step by step: no bar before answering, each step's bar as recomputed)": "23",
+  "How Many Parts?, part 2 (every question, worked example and wrong-answer screen drawn by the game and read back step by step: no bar before answering, each step's bar as recomputed)": "73",
   "How Many Parts?, part 3 (every wrong-answer screen and worked example at 320x568, normal and Aa: the reason and Next above the fold, brackets kept with their maths; typed questions' boxes and keypad in the window)": "48",
   "How Many Parts?, part 4 (every wrong-answer screen and worked example at 375x667, normal and Aa: the reason and Next above the fold, brackets kept with their maths)": "31",
   "How Many Parts?, part 5 (every wrong-answer screen and worked example at 390x844, normal and Aa: the reason and Next above the fold, brackets kept with their maths)": "66",
@@ -87,6 +87,10 @@
   "I Found a Mark, part 3 (fault-injection self-test: the six planted faults, each caught)": "46",
   "Index Laws (all 45 keys recomputed symbolically from the question's TeX; every option classified; every explanation's arithmetic recomputed; every option pressed in Chromium)": "43",
   "Integration Duel (every key and option checked with SymPy, explanations checked, every option marked in Chromium)": "14",
+  "It's on Sale!, part 1 (every question of the five stages over 40 seeds a slot recomputed from its own params with exact fractions, never from the module's code: answer, every named slip, the numbers in the stem, the worked lines; sessions of 10 slots easiest first with the example never among them; the game's marking against an independent marker on thousands of typed answers: format, unreadable, slip, wrong, right)": "2",
+  "It's on Sale!, part 2 (every stage played in the page at 390 px, a full stage each, and at 375 px, the first questions: worked example, typed answers on the tag with the keypad open, a format answer never marked, a named slip, the calculator note and badge by stage, the Stage 5 calculator open; answer box, Check and Next above the fold; no sideways scroll; one submission a stage)": "73",
+  "It's on Sale!, part 3 (every stage played at 360, 320, 1280 and 1366 px, the first questions: the same checks, the short phones and the two laptop sizes)": "72",
+  "It's on Sale!, part 4 (fault-injection self-test: the planted faults, each caught, including a wrong new price, a reverse percentage worked the wrong way round and a format answer marked right)": "72",
   "Just Pythag It, Bruv, part 1 (fit at 320px; a quarter of the planted layout faults)": "22",
   "Just Pythag It, Bruv, part 2 (fit at 390px; a quarter of the planted layout faults)": "56",
   "Just Pythag It, Bruv, part 3 (fit at 375px and the three desktop sizes; a quarter of the planted layout faults)": "21",
@@ -126,7 +130,7 @@
   "Screening Room (every count, band and key from the stated rates; every figure from the data; all 70 items marked in Chromium)": "60",
   "Sequence Solver (every key recomputed from its own terms or formula, exactly; options distinct in value; every option marked in Chromium)": "16",
   "Seven Bridges (every puzzle's answer recomputed from its edges, no edge drawn through a vertex it does not join, the solution animation stops at Next; Chromium)": "11",
-  "Shape Shifter, part 1 (every translation, reflection (in the axes, y = x, y = -x, x = k and y = k), rotation and enlargement image recomputed from its words; every rotation option classified; every vertex and every letter tapped on the real canvas in Chromium; each mode card's data-mode its own mode, a burst at random-mix starting Random Mix once, each card starting its mode once without a burst)": "2",
+  "Shape Shifter, part 1 (every translation, reflection (in the axes, y = x, y = -x, x = k and y = k), rotation and enlargement image recomputed from its words; every rotation option classified; every vertex and every letter tapped on the real canvas in Chromium; each mode card's data-mode its own mode, a burst at random-mix starting Random Mix once, each card starting its mode once without a burst)": "74",
   "Shape Shifter, part 2 (fault-injection self-test: a quarter of the planted faults, each caught)": "53",
   "Shape Shifter, part 3 (fault-injection self-test: the next quarter of the planted faults, each caught)": "45",
   "Shape Shifter, part 4 (fault-injection self-test: the next quarter of the planted faults, each caught)": "59",
@@ -199,25 +203,25 @@
  },
  "over-budget": [
   {
-   "estimate": 228,
+   "estimate": 223,
    "group": "Content verifiers 1",
    "lines": [
     {
      "label": "Free Daily Pizza, part 1 (independent recomputation + daily seed + UI play + fault-injection self-test)",
      "script": "scripts/verify-free-daily-pizza.py",
-     "seconds": 121
+     "seconds": 116
     }
    ],
-   "percent": 84
+   "percent": 82
   },
   {
-   "estimate": 231,
+   "estimate": 230,
    "group": "Content verifiers 15",
    "lines": [
     {
      "label": "Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points and message figures recomputed around 0/360; lives and end flows played in Chromium)",
      "script": "scripts/verify-bearing-blitz.py",
-     "seconds": 124
+     "seconds": 123
     }
    ],
    "percent": 85
@@ -247,25 +251,25 @@
    "percent": 83
   },
   {
-   "estimate": 233,
+   "estimate": 227,
    "group": "Content verifiers 37",
    "lines": [
     {
      "label": "How Many Parts?, part 8 (fault-injection self-test: seven planted faults in play, the worked example, the brackets and the typed fit, each caught)",
      "script": "scripts/verify-how-many-parts.py",
-     "seconds": 126
+     "seconds": 120
     }
    ],
-   "percent": 86
+   "percent": 84
   },
   {
-   "estimate": 234,
+   "estimate": 233,
    "group": "Content verifiers 39",
    "lines": [
     {
      "label": "Take a Walk, part 4 (fault-injection self-test: sixteen planted faults, each caught)",
      "script": "scripts/verify-take-a-walk.py",
-     "seconds": 127
+     "seconds": 126
     }
    ],
    "percent": 86
@@ -295,28 +299,28 @@
    "percent": 81
   },
   {
-   "estimate": 220,
+   "estimate": 219,
    "group": "Content verifiers 52",
    "lines": [
     {
      "label": "The HC Factor, part 2 (all six stages played in the page at 375, 360, 320, 1280 and 1366 px: typed answers, both bracket orders, a named slip, a partial factorisation, the sign grid marked on its own; answer boxes and Next above the fold; no sideways scroll; one board submission a round, none for round 6)",
      "script": "scripts/verify-hc-factor.py",
-     "seconds": 113
+     "seconds": 112
     }
    ],
    "percent": 81
   },
   {
-   "estimate": 237,
+   "estimate": 238,
    "group": "Content verifiers 53",
    "lines": [
     {
      "label": "Shape Shifter, part 2 (fault-injection self-test: a quarter of the planted faults, each caught)",
      "script": "scripts/verify-shape-shifter.py",
-     "seconds": 130
+     "seconds": 131
     }
    ],
-   "percent": 87
+   "percent": 88
   },
   {
    "estimate": 217,
@@ -329,6 +333,18 @@
     }
    ],
    "percent": 80
+  },
+  {
+   "estimate": 228,
+   "group": "Content verifiers 57",
+   "lines": [
+    {
+     "label": "Growth and Decay (keys recomputed from each printed model; no Estimate without a method; percentage contexts stay in 0-100)",
+     "script": "scripts/verify-growth-and-decay.py",
+     "seconds": 121
+    }
+   ],
+   "percent": 84
   }
  ],
  "split-candidates": [
@@ -340,13 +356,13 @@
   },
   {
    "label": "Answer lock in play, part 6 (canon 7.6.0: migrated games played in Chromium)",
-   "median": 218,
+   "median": 217,
    "percent": 72,
    "setup": 107
   },
   {
    "label": "Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points and message figures recomputed around 0/360; lives and end flows played in Chromium)",
-   "median": 124,
+   "median": 123,
    "percent": 85,
    "setup": 107
   },
@@ -382,20 +398,20 @@
   },
   {
    "label": "Free Daily Pizza, part 1 (independent recomputation + daily seed + UI play + fault-injection self-test)",
+   "median": 116,
+   "percent": 82,
+   "setup": 107
+  },
+  {
+   "label": "Growth and Decay (keys recomputed from each printed model; no Estimate without a method; percentage contexts stay in 0-100)",
    "median": 121,
    "percent": 84,
    "setup": 107
   },
   {
-   "label": "Growth and Decay (keys recomputed from each printed model; no Estimate without a method; percentage contexts stay in 0-100)",
-   "median": 97,
-   "percent": 75,
-   "setup": 107
-  },
-  {
    "label": "How Many Parts?, part 1 (pools and Foundation's five, keys, every stage's own errors and options, every question's bar and worked steps recomputed, the palette, sessions easiest first, every Foundation stage and Advanced played at 320, 390 and 1280px)",
-   "median": 94,
-   "percent": 74,
+   "median": 96,
+   "percent": 75,
    "setup": 107
   },
   {
@@ -406,8 +422,8 @@
   },
   {
    "label": "How Many Parts?, part 8 (fault-injection self-test: seven planted faults in play, the worked example, the brackets and the typed fit, each caught)",
-   "median": 126,
-   "percent": 86,
+   "median": 120,
+   "percent": 84,
    "setup": 107
   },
   {
@@ -430,20 +446,20 @@
   },
   {
    "label": "Just Pythag It, Bruv, part 5 (fit at 412px; WebKit, play-through, fault-injection self-test)",
-   "median": 101,
-   "percent": 77,
+   "median": 99,
+   "percent": 76,
    "setup": 107
   },
   {
    "label": "Screening Room (every count, band and key from the stated rates; every figure from the data; all 70 items marked in Chromium)",
-   "median": 89,
+   "median": 90,
    "percent": 72,
    "setup": 107
   },
   {
    "label": "Shape Shifter, part 2 (fault-injection self-test: a quarter of the planted faults, each caught)",
-   "median": 130,
-   "percent": 87,
+   "median": 131,
+   "percent": 88,
    "setup": 107
   },
   {
@@ -460,13 +476,13 @@
   },
   {
    "label": "Take a Walk, part 4 (fault-injection self-test: sixteen planted faults, each caught)",
-   "median": 127,
+   "median": 126,
    "percent": 86,
    "setup": 107
   },
   {
    "label": "The HC Factor, part 2 (all six stages played in the page at 375, 360, 320, 1280 and 1366 px: typed answers, both bracket orders, a named slip, a partial factorisation, the sign grid marked on its own; answer boxes and Next above the fold; no sideways scroll; one board submission a round, none for round 6)",
-   "median": 113,
+   "median": 112,
    "percent": 81,
    "setup": 107
   }
