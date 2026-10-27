@@ -265,8 +265,12 @@ CORRECT_INIT = r"""
       take(parseFloat(s.fontSize) * (m ? Math.sqrt(Math.abs(m.a * m.d - m.b * m.c)) : 1), el.textContent.trim());
     });
     document.querySelectorAll('canvas').forEach(function (c) {
-      if (out(c) || !vis(c) || !c.__pfText || !c.__pfText.length || !c.width) return;
-      const k = c.getBoundingClientRect().width / c.width;
+      if (out(c) || !vis(c) || !c.__pfText || !c.__pfText.length || !c.width || !c.height) return;
+      // The bitmap's scale on screen: its content box over its size, the smaller way, so a canvas held to a lower height
+      // (max-height with object-fit: contain, the figure component) is measured at the size it is drawn, not its width's.
+      const cs = getComputedStyle(c), px = function (v) { return parseFloat(v) || 0; };
+      const w = c.clientWidth - px(cs.paddingLeft) - px(cs.paddingRight), h = c.clientHeight - px(cs.paddingTop) - px(cs.paddingBottom);
+      const k = Math.min(w / c.width, h / c.height);
       c.__pfText.forEach(function (t) { take(t.px * k, t.t); });
     });
     document.querySelectorAll('.maffs-figure, .maffs-figure-card').forEach(function (fig) {
@@ -1117,6 +1121,9 @@ def label_plant():
         ("label plant: an SVG label shrunk by its viewBox (14 x 300/600)", head +
          "<svg viewBox='0 0 600 200' style='width:300px'><text x='10' y='40' font-size='14'>A</text></svg></body></html>", 7.0),
         ("label plant: a canvas label at 24 px, the canvas at half size", head + canvas + "</body></html>", 12.0),
+        ("label plant: the canvas held to half its height by max-height (object-fit: contain)", head +
+         canvas.replace("style='width:300px;height:100px'", "style='width:300px;max-height:50px;object-fit:contain'")
+         + "</body></html>", 6.0),
         ("label plant: a .maffs-figure block's 11 px text", head +
          "<div class='maffs-figure'><span style='font-size:11px'>10 cm</span></div></body></html>", 11.0),
         ("label plant: header text only (not a figure)", head + "<p>Question</p></body></html>", None),
