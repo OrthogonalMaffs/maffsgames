@@ -151,23 +151,15 @@
     display: none;
   }
 
-  /* ── Rules reference panel ── */
-  .rules-ref {
-    width: 100%;
-    background: var(--white);
-    border-radius: 12px;
-    padding: 16px 20px;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .ref-title {
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 12px;
+  /* ── The reference card (schools/assets/fold.css, canon §7.6.2): collapsed below the options while asking; after a
+     wrong answer (Next shown) it opens where the open card still leaves Next above the fold, and stays collapsed
+     elsewhere. ── */
+  .question-box .maffs-ref { --ref-bg: var(--bg); --ref-edge: var(--border); }
+  .question-box .maffs-ref-fits { display: none; }
+  .question-box .maffs-ref-phone { display: block; }
+  @media (min-width: 601px) and (min-height: 960px) {   /* measured: Next at 855 with the card open, +40 footer, +60 for a longer explanation */
+    .question-box:has(.maffs-next) .maffs-ref-fits { display: block; }
+    .question-box:has(.maffs-next) .maffs-ref-phone { display: none; }
   }
 
   .rules-grid {
@@ -525,10 +517,12 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 <script src="../../schools/assets/mathtext.js"></script>
 <script src="../../schools/assets/options.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
+<link rel="stylesheet" href="/schools/assets/fold.css">
+<script src="/schools/assets/fold.js" defer></script>
 </head>
 <body>
 
-<div class="header">
+<div class="header maffs-compact-header">
   <a href="../../" class="back">&larr; Back</a>
   <div class="header-divider"></div>
   <div class="header-title">Differentiation Duel</div>
@@ -538,7 +532,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 
 <div class="game-area">
 
-  <div class="scorebar">
+  <div class="scorebar maffs-compact-bar">
     <div class="score-item">
       <div class="score-label">Score</div>
       <div class="score-val" id="score">0</div>
@@ -565,17 +559,23 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 
   <!-- Main game -->
   <div class="main-game" id="mainGame">
-    <div class="rules-ref">
-      <div class="ref-title">Quick Reference</div>
-      <div class="rules-grid" id="rulesGrid"></div>
-    </div>
     <div class="question-box">
       <div><span class="rule-badge" id="ruleBadge">Power Rule</span></div>
       <div class="q-label" id="qLabel">Find dy/dx when y =</div>
       <div class="q-text" id="qText"></div>
-      <div class="choices" id="choices"></div>
+      <div class="choices maffs-options" id="choices"></div>
       <div class="feedback" id="feedback"></div>
       <div class="explanation" id="explanation"></div>
+      <!-- The reference card (canon §7.6.2, §7.5.7): collapsed below the options while asking; after a wrong answer,
+           between the working and Next, open where it fits (.maffs-ref-fits) and collapsed elsewhere (.maffs-ref-phone). -->
+      <details class="maffs-ref maffs-ref-phone">
+        <summary><span class="maffs-ref-show">Quick Reference</span><span class="maffs-ref-title">Quick Reference</span></summary>
+        <div class="maffs-ref-body"><div class="rules-grid"></div></div>
+      </details>
+      <details class="maffs-ref maffs-ref-fits" open>
+        <summary><span class="maffs-ref-show">Quick Reference</span><span class="maffs-ref-title">Quick Reference</span></summary>
+        <div class="maffs-ref-body"><div class="rules-grid"></div></div>
+      </details>
     </div>
   </div>
 
@@ -634,9 +634,9 @@ document.getElementById('howTo').innerHTML = RULES.map(r =>
 ).join('');
 
 // Render quick reference grid
-document.getElementById('rulesGrid').innerHTML = RULES.map(r =>
+document.querySelectorAll('.rules-grid').forEach(g => g.innerHTML = RULES.map(r =>
   `<div class="rule-chip">${tex(r.latex)}</div>`
-).join('');
+).join(''));
 
 // ─── QUESTIONS ──────────────────────────────────────────────────────
 const TOTAL = 14, BASE = 100, T_K = 0.6;

@@ -1521,6 +1521,31 @@ it at the end of a full run. A game that does not report `question_answered` can
 counting is never added to a game. **Privacy:** no change; the return link carries a topic id and a score, and nothing is
 stored or sent. Tested by `scripts/check-burst.py` (each adopted game played for five answers in Chromium; four plants).
 
+### 7.5.7 The fold components: shared layout that keeps the answer controls above the fold (Jon, 26-27 Oct 2026; contract FOLD-COMPONENTS)
+The phone rule (§7.6.1) and the laptop rule (R2) are met by shared components, never a per-game patch: one stylesheet,
+`schools/assets/fold.css`, which `theme.css` imports (as it does `calculator.css`), so every game on the theme has them, and
+which a game not yet on the theme links alone, **after** its own `<style>`, adopting only the components it needs by class.
+Linking the whole theme would change such a game's fonts and page colours, which this contract may not do. Every rule is
+scoped to its own class, so a page that uses none is unchanged; colours come from the page's tokens, with neutral fallbacks.
+
+- **The reference card** (`.maffs-ref`, §7.6.2), moved here from `theme.css` unchanged in behaviour. A game's help or reference
+  panel that sat open above the question becomes the card, collapsed below the options while asking. Its collapsed label is the
+  panel's own existing title (Index Laws' "Quick Reference", SUVAT's "— THE 5 SUVAT EQUATIONS —"), so no wording changes and a
+  title that states something the question relies on (Log Laws' "log means log₁₀", SR-17) stays on screen. After a wrong
+  answer it opens where it fits: the open copy shows only when the question box holds Next (`:has(.maffs-next)`) and the
+  screen is at least 601 px wide and at least the game's measured height (Next with the card open, plus the 40 px footer,
+  plus 60 px for a longer explanation than the one measured); elsewhere it stays collapsed.
+- **Options two to a row** (`.maffs-options` on the option box, with `schools/assets/fold.js`; ruling R3): two to a row only
+  when every option fits on one line without wrapping at that width, with tap targets at least 44 px; otherwise one to a row.
+  `fold.js` decides by measuring the rendered options (each held to one line while measured; one that is wider than its half of
+  the row would have wrapped), never by counting characters, and decides again only when the options are replaced, the fonts
+  finish loading or the box's width changes: never while a student reads the feedback.
+- **The compact header** (phones, 600 px and narrower): `.maffs-compact-header` on the header bar (less padding top and bottom,
+  tighter sides and gaps) and `.maffs-compact-bar` on a score bar or HUD (each label-and-value pair on one line). The same
+  content, nothing hidden, no tap target smaller.
+- **Applied** group by group (reference panels, four full-width options, figures), each game's before and after recorded in
+  `docs/audits/fold-components-2026-10-27.md` and its entries taken off the lists in `scripts/phone-fit-state.json`.
+
 ## 7.7 What the site publishes — SITE and INTERNAL
 
 GitHub Pages builds `main` with Jekyll and publishes every tracked file except dot-paths

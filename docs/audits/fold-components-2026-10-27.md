@@ -62,3 +62,49 @@ first within a group. Group A has none; group D has three (`percentage-flip`, `p
   top are the answer area (one rule in the shared page script, no per-game code). `bearing-blitz`, `four-quadrant-explorer`,
   `gradient-hunter` and `shape-shifter` leave the unmeasurable list (14 -> 7 -> 3: `glorious-gantt`, `just-pythag-it-bruv`,
   `spot-the-error`); `bearing-blitz` (normal 320) and `shape-shifter` (normal 320 and 375, Aa 375) join known failures.
+
+## PR 2: group A, reference panels
+
+**The components (canon §7.5.7):** `schools/assets/fold.css` holds the reference card (`.maffs-ref`, moved from `theme.css`
+unchanged in behaviour, with neutral fallbacks for a page without the theme's tokens), options two to a row (`.maffs-options`,
+decided by `schools/assets/fold.js` by measuring the rendered options, ruling R3) and the compact header
+(`.maffs-compact-header`, `.maffs-compact-bar`, phones only). `theme.css` imports it; the seven games below link it alone,
+after their own `<style>`. Each panel's collapsed label is its own existing title, so no wording changed; Log Laws' title
+keeps "log means log₁₀" on its play screen (SR-17; `verify-log-laws.py` now reads the collapsed card's label). After a wrong
+answer the card opens where it fits: screens at least 601 px wide and at least the measured height (Next with the card open,
++40 px footer, +60 px for a longer explanation than the one measured): index-laws 860, differentiation-duel 960,
+integration-duel 890, log-laws 900. Measured on one question per game (the gate's sample), not every item.
+
+Each game claimed on `cloud-remaining` in a commit of its own before it was edited; all released in this PR.
+
+| Game | Lowest tier | Components | Before (normal; Aa; laptop) | After (normal; Aa; laptop) | Sideways after (normal; Aa) |
+|---|---|---|---|---|---|
+| `index-laws` | GCSE | card, two-up | 320, 375, 390; 320, 375, 390; 1366 next, 1280 next | passes everywhere | –; – |
+| `trig-worms` | GCSE | card, compact header | 320, 375; 320, 375; 1366 option, 1280 option | –; –; 1366 option (729 / 728), 1280 option (729 / 680) | –; – |
+| `tax-theft` | Core | card | 320, 375, 390; 320, 375, 390; 1366 option, 1280 option | passes the gate everywhere | 320, 375, 390; 320, 375, 390 |
+| `differentiation-duel` | A-Level | card, two-up, compact header | 320, 375, 390; 320, 375, 390; all four | passes everywhere | –; 320 (was 320, 375, 390) |
+| `log-laws` | A-Level | card, two-up | 320, 375, 390; 320, 375, 390; 1366 next, 1280 next, 1280 option | passes everywhere | –; – |
+| `integration-duel` | A-Level | card, two-up, compact header | 320, 375, 390; 320, 375, 390; 1366 next, 1280 next, 1280 option | passes everywhere | –; – (was Aa 320) |
+| `suvat` | A-Level | card, compact header | 320, 375; 320, 375, 390; 1280 option | 320 (588 / 528); 320, 375; – | –; – |
+| `constructions-lab` | KS3 | none (below) | 320, 375; 320, 375, 390; 1366 option, 1280 option | unchanged | –; – |
+
+**Known failures:** normal 48 -> 42, Aa 48 -> 42, laptop 37 -> 31. Six games come off the known-failures lists in every mode
+(index-laws, differentiation-duel, integration-duel, log-laws, tax-theft, and trig-worms on phones). Sideways, Aa: 26 -> 25.
+
+**Not fixed by the group's component (3; the STOP IF threshold is more than 3), with the measured reason:**
+- `constructions-lab`: its panel is the task itself, not a reference: the construction's name and the steps to follow, above
+  a 700 x 600 drawing canvas whose tool buttons are the answer controls. Collapsing it hides the question, or needs a new label
+  the game has never shown. Not claimed, not edited.
+- `trig-worms` (laptop only): with the card collapsed and the compact header it fits every phone size; at 1366 x 768 and
+  1280 x 720 its canvas (318 px tall at desktop width) keeps the last option 1 px and 49 px below the fold. The cause is a
+  figure, group D's: the figure component is the fix to try in the group D PR.
+- `suvat` (normal 320, Aa 320 and 375): with the equations panel collapsed and the compact header, what remains above the
+  options is the question itself, the scenario box with its known-value chips (about 290 px).
+- **Sideways (not this group's cause):** `tax-theft` scrolls sideways on every phone in both modes because its layout grid's
+  track and its £ answer row are wider than a phone, not because of the panel; `differentiation-duel` in Aa at 320 because
+  its title, level badge and Aa toggle do not fit on one line (canon §7.6.1 keeps the title and toggle on one line). Both
+  stay on the sideways list.
+- **Next after a wrong answer at 320 x 568** (reported, not gated on a phone) is still below the fold in the four duel games
+  (index-laws 655, differentiation-duel 625, integration-duel 610, log-laws 631, against 528).
+- Log Laws at 320 x 568: the collapsed card, which carries "log means log₁₀", sits just below the fold on the asking screen;
+  before, the open panel was at the top.

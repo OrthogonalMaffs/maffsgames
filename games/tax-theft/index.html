@@ -196,7 +196,9 @@ body {
   color: var(--accent);
 }
 
-/* THRESHOLD TABLES */
+/* THRESHOLD TABLES (inside the reference card, schools/assets/fold.css) */
+.tax-card { --ref-bg: var(--surface-alt); --ref-edge: var(--border); }
+.tax-card .threshold-tables { margin-top: 4px; }
 .threshold-tables {
   display: flex;
   flex-direction: column;
@@ -628,6 +630,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 }
 -->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
+<link rel="stylesheet" href="/schools/assets/fold.css">
 </head>
 <body>
 
@@ -673,22 +676,6 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
         <div class="diff-indicator">Difficulty: <span id="diffLabel"></span></div>
       </div>
 
-      <div class="threshold-tables">
-        <div class="threshold-table">
-          <h4>Income Tax 2025/26</h4>
-          <table id="taxTable"></table>
-        </div>
-        <div class="threshold-table">
-          <h4>National Insurance 2025/26 (Class 1 Employee)</h4>
-          <table>
-            <tr><th>Band</th><th>Annual</th><th>Rate</th></tr>
-            <tr><td>Below primary threshold</td><td>Up to &pound;12,570</td><td>0%</td></tr>
-            <tr><td>Standard rate</td><td>&pound;12,571 &ndash; &pound;50,270</td><td>8%</td></tr>
-            <tr><td>Above upper earnings limit</td><td>Over &pound;50,270</td><td>2%</td></tr>
-          </table>
-        </div>
-      </div>
-
       <div id="completedSteps" class="completed-steps"></div>
 
       <div class="step-area" id="stepArea">
@@ -705,6 +692,29 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
         </div>
         <div class="feedback" id="feedback"></div>
       </div>
+
+      <!-- The tax and NI tables as a reference card (canon §7.6.2, §7.5.7): collapsed below the step's answer box, so
+           they never push it down the screen; the student opens them when needed, and they stay open across steps. -->
+      <details class="maffs-ref tax-card">
+        <summary><span class="maffs-ref-show">Income Tax 2025/26 &middot; National Insurance 2025/26</span><span class="maffs-ref-title">Income Tax 2025/26 &middot; National Insurance 2025/26</span></summary>
+        <div class="maffs-ref-body">
+          <div class="threshold-tables">
+            <div class="threshold-table">
+              <h4>Income Tax 2025/26</h4>
+              <table id="taxTable"></table>
+            </div>
+            <div class="threshold-table">
+              <h4>National Insurance 2025/26 (Class 1 Employee)</h4>
+              <table>
+                <tr><th>Band</th><th>Annual</th><th>Rate</th></tr>
+                <tr><td>Below primary threshold</td><td>Up to &pound;12,570</td><td>0%</td></tr>
+                <tr><td>Standard rate</td><td>&pound;12,571 &ndash; &pound;50,270</td><td>8%</td></tr>
+                <tr><td>Above upper earnings limit</td><td>Over &pound;50,270</td><td>2%</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </details>
     </div>
 
     <!-- RIGHT PANEL -->

@@ -42,6 +42,15 @@
 
   /* SOH CAH TOA reference */
   .trig-ref{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:8px 0;}
+  /* The play screen's SOH CAH TOA is a reference card (schools/assets/fold.css, canon §7.6.2): collapsed below the
+     options while asking; after a wrong answer (Next shown) open where it still leaves Next above the fold. */
+  .q-panel .maffs-ref { --ref-bg: var(--white); --ref-edge: var(--border); }
+  .q-panel .maffs-ref-fits { display: none; }
+  .q-panel .maffs-ref-phone { display: block; }
+  @media (min-width: 601px) and (min-height: 9999px) {
+    .q-panel:has(.maffs-next) .maffs-ref-fits { display: block; }
+    .q-panel:has(.maffs-next) .maffs-ref-phone { display: none; }
+  }
   .trig-chip{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;padding:6px 10px;border-radius:8px;border:2px solid;text-align:center;}
   .trig-chip.soh{border-color:var(--pink);color:var(--pink);background:rgba(236,72,153,0.08);}
   .trig-chip.cah{border-color:#3b82f6;color:#3b82f6;background:rgba(59,130,246,0.08);}
@@ -110,15 +119,16 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 }
 -->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
+<link rel="stylesheet" href="/schools/assets/fold.css">
 </head>
 <body>
-<div class="header">
+<div class="header maffs-compact-header">
   <a href="../../" class="back">← Back</a>
   <div class="title">Trig Worms</div>
   <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
 </div>
 <div class="game-area">
-  <div class="scorebar">
+  <div class="scorebar maffs-compact-bar">
     <div class="score-item"><div class="score-label">Score</div><div class="score-val" id="score">0</div></div>
     <div class="score-item"><div class="score-label">Level</div><div class="score-val" id="level">1</div></div>
     <div class="score-item"><div class="score-label">Best</div><div class="score-val" id="best">0</div></div>
@@ -149,11 +159,6 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     <div class="canvas-wrap">
       <canvas id="gameCanvas" width="640" height="280"></canvas>
     </div>
-    <div class="trig-ref">
-      <div class="trig-chip soh">SOH: sin=O/H</div>
-      <div class="trig-chip cah">CAH: cos=A/H</div>
-      <div class="trig-chip toa">TOA: tan=O/A</div>
-    </div>
     <div class="q-panel">
       <div class="q-type" id="qType">FIND THE ANGLE</div>
       <div class="q-text" id="qText">Loading...</div>
@@ -161,6 +166,24 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
       <div class="choices-grid" id="choices"></div>
       <div class="feedback" id="feedback"></div>
       <div class="exp-text" id="expText"></div>
+      <!-- The reference card (canon §7.6.2, §7.5.7): collapsed below the options while asking; after a wrong answer,
+           between the working and Next, open where it fits (.maffs-ref-fits) and collapsed elsewhere (.maffs-ref-phone). -->
+      <details class="maffs-ref maffs-ref-phone">
+        <summary><span class="maffs-ref-show">SOH CAH TOA</span><span class="maffs-ref-title">SOH CAH TOA</span></summary>
+        <div class="maffs-ref-body"><div class="trig-ref">
+          <div class="trig-chip soh">SOH: sin=O/H</div>
+          <div class="trig-chip cah">CAH: cos=A/H</div>
+          <div class="trig-chip toa">TOA: tan=O/A</div>
+        </div></div>
+      </details>
+      <details class="maffs-ref maffs-ref-fits" open>
+        <summary><span class="maffs-ref-show">SOH CAH TOA</span><span class="maffs-ref-title">SOH CAH TOA</span></summary>
+        <div class="maffs-ref-body"><div class="trig-ref">
+          <div class="trig-chip soh">SOH: sin=O/H</div>
+          <div class="trig-chip cah">CAH: cos=A/H</div>
+          <div class="trig-chip toa">TOA: tan=O/A</div>
+        </div></div>
+      </details>
     </div>
   </div>
 

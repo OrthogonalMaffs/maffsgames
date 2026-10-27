@@ -62,11 +62,6 @@
       "decimal-detective": [
         "320x568"
       ],
-      "differentiation-duel": [
-        "320x568",
-        "375x667",
-        "390x844"
-      ],
       "equation-builder": [
         "320x568"
       ],
@@ -100,21 +95,6 @@
       ],
       "higher-power": [
         "320x568"
-      ],
-      "index-laws": [
-        "320x568",
-        "375x667",
-        "390x844"
-      ],
-      "integration-duel": [
-        "320x568",
-        "375x667",
-        "390x844"
-      ],
-      "log-laws": [
-        "320x568",
-        "375x667",
-        "390x844"
       ],
       "maths-court": [
         "320x568",
@@ -155,13 +135,7 @@
         "320x568"
       ],
       "suvat": [
-        "320x568",
-        "375x667"
-      ],
-      "tax-theft": [
-        "320x568",
-        "375x667",
-        "390x844"
+        "320x568"
       ],
       "terrible-advice": [
         "320x568",
@@ -172,10 +146,6 @@
         "375x667"
       ],
       "think-of-a-number": [
-        "320x568",
-        "375x667"
-      ],
-      "trig-worms": [
         "320x568",
         "375x667"
       ],
@@ -254,11 +224,6 @@
         "320x568",
         "375x667"
       ],
-      "differentiation-duel": [
-        "320x568",
-        "375x667",
-        "390x844"
-      ],
       "equation-builder": [
         "320x568",
         "375x667"
@@ -294,21 +259,6 @@
       "higher-power": [
         "320x568",
         "375x667"
-      ],
-      "index-laws": [
-        "320x568",
-        "375x667",
-        "390x844"
-      ],
-      "integration-duel": [
-        "320x568",
-        "375x667",
-        "390x844"
-      ],
-      "log-laws": [
-        "320x568",
-        "375x667",
-        "390x844"
       ],
       "maths-court": [
         "375x667",
@@ -357,13 +307,7 @@
       ],
       "suvat": [
         "320x568",
-        "375x667",
-        "390x844"
-      ],
-      "tax-theft": [
-        "320x568",
-        "375x667",
-        "390x844"
+        "375x667"
       ],
       "terrible-advice": [
         "320x568",
@@ -378,10 +322,6 @@
         "320x568",
         "375x667",
         "390x844"
-      ],
-      "trig-worms": [
-        "320x568",
-        "375x667"
       ],
       "truth-will-set-you-free": [
         "320x568",
@@ -442,12 +382,6 @@
         "1366x768 next",
         "1280x720 next"
       ],
-      "differentiation-duel": [
-        "1366x768 next",
-        "1366x768 option",
-        "1280x720 next",
-        "1280x720 option"
-      ],
       "distinctly-average": [
         "1366x768 next",
         "1280x720 next"
@@ -488,20 +422,6 @@
       "gradient-hunter": [
         "1280x720 option"
       ],
-      "index-laws": [
-        "1366x768 next",
-        "1280x720 next"
-      ],
-      "integration-duel": [
-        "1366x768 next",
-        "1280x720 next",
-        "1280x720 option"
-      ],
-      "log-laws": [
-        "1366x768 next",
-        "1280x720 next",
-        "1280x720 option"
-      ],
       "matrix-crunch": [
         "1280x720 next"
       ],
@@ -528,13 +448,6 @@
         "1280x720 next"
       ],
       "shape-shifter": [
-        "1366x768 option",
-        "1280x720 option"
-      ],
-      "suvat": [
-        "1280x720 option"
-      ],
-      "tax-theft": [
         "1366x768 option",
         "1280x720 option"
       ],
@@ -631,9 +544,7 @@
         "390x844"
       ],
       "differentiation-duel": [
-        "320x568",
-        "375x667",
-        "390x844"
+        "320x568"
       ],
       "equation-builder": [
         "320x568",
@@ -657,9 +568,6 @@
         "390x844"
       ],
       "gradient-hunter": [
-        "320x568"
-      ],
-      "integration-duel": [
         "320x568"
       ],
       "maths-court": [

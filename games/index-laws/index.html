@@ -140,23 +140,15 @@
     letter-spacing: -0.02em;
   }
 
-  /* ── Law reference panel ── */
-  .law-ref {
-    width: 100%;
-    background: var(--white);
-    border-radius: 12px;
-    padding: 16px 20px;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .law-ref-title {
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 12px;
+  /* ── The reference card (schools/assets/fold.css, canon §7.6.2): collapsed below the options while asking; after a
+     wrong answer (Next shown) it opens where the open card still leaves Next above the fold, and stays collapsed
+     elsewhere. ── */
+  .question-box .maffs-ref { --ref-bg: var(--bg); --ref-edge: var(--border); }
+  .question-box .maffs-ref-fits { display: none; }
+  .question-box .maffs-ref-phone { display: block; }
+  @media (min-width: 601px) and (min-height: 860px) {   /* measured: Next at 757 with the card open, +40 footer, +60 for a longer explanation */
+    .question-box:has(.maffs-next) .maffs-ref-fits { display: block; }
+    .question-box:has(.maffs-next) .maffs-ref-phone { display: none; }
   }
 
   .laws-grid {
@@ -513,6 +505,8 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 }
 -->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
+<link rel="stylesheet" href="/schools/assets/fold.css">
+<script src="/schools/assets/fold.js" defer></script>
 </head>
 <body>
 
@@ -545,18 +539,23 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
   <!-- Main game -->
   <div class="main-game" id="mainGame">
 
-    <div class="law-ref">
-      <div class="law-ref-title">Quick Reference</div>
-      <div class="laws-grid" id="lawsGrid"></div>
-    </div>
-
     <div class="question-box">
       <div class="q-rule-label" id="ruleLabel">Multiply Rule</div>
       <div class="q-text" id="qText"></div>
       <div class="q-sub" id="qSub">Select the correct simplified form</div>
-      <div class="choices" id="choices"></div>
+      <div class="choices maffs-options" id="choices"></div>
       <div class="feedback" id="feedback"></div>
       <div class="explanation" id="explanation"></div>
+      <!-- The reference card (canon §7.6.2, §7.5.7): collapsed below the options while asking; after a wrong answer,
+           between the working and Next, open where it fits (.maffs-ref-fits) and collapsed elsewhere (.maffs-ref-phone). -->
+      <details class="maffs-ref maffs-ref-phone">
+        <summary><span class="maffs-ref-show">Quick Reference</span><span class="maffs-ref-title">Quick Reference</span></summary>
+        <div class="maffs-ref-body"><div class="laws-grid"></div></div>
+      </details>
+      <details class="maffs-ref maffs-ref-fits" open>
+        <summary><span class="maffs-ref-show">Quick Reference</span><span class="maffs-ref-title">Quick Reference</span></summary>
+        <div class="maffs-ref-body"><div class="laws-grid"></div></div>
+      </details>
     </div>
   </div>
 
@@ -602,10 +601,10 @@ document.getElementById('howTo').innerHTML = LAWS.map(l =>
   `<div class="law-list-item">${tex(l.latex)} <span class="law-note">(${l.note})</span></div>`
 ).join('');
 
-// Render quick reference grid
-document.getElementById('lawsGrid').innerHTML = LAWS.map(l =>
+// Render quick reference grid (both copies of the reference card)
+document.querySelectorAll('.laws-grid').forEach(g => g.innerHTML = LAWS.map(l =>
   `<div class="law-chip">${tex(l.latex)}</div>`
-).join('');
+).join(''));
 
 // ─── QUESTIONS ──────────────────────────────────────────────────────
 const TOTAL = 12;

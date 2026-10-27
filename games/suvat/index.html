@@ -39,8 +39,7 @@
   .score-label{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;}
   .score-val{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--navy);margin-top:4px;}
 
-  .suvat-ref{width:100%;background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px;box-shadow:0 4px 14px rgba(0,0,0,0.07);}
-  .ref-title{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:10px;text-align:center;letter-spacing:2px;}
+  .suvat-card{--ref-bg:var(--white);--ref-edge:var(--border);}
   .suvat-eqs{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;}
   /* Equations are KaTeX-rendered — no font-family, KaTeX supplies its own maths face */
   .eq-chip{background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 8px;color:var(--navy);border:2px solid rgba(239,68,68,0.2);text-align:center;font-size:15px;line-height:1.4;}
@@ -154,15 +153,16 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
      last step of a projectile question can be negative (ALEVEL[34]: v_y = -0.32) and a phone's decimal pad (iOS) has none. -->
 <script src="../../schools/assets/keypad.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
+<link rel="stylesheet" href="/schools/assets/fold.css">
 </head>
 <body>
-<div class="header">
+<div class="header maffs-compact-header">
   <a href="../../" class="back">← Back</a>
   <div class="title">SUVAT Selector</div>
   <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
 </div>
 <div class="game-area">
-  <div class="scorebar">
+  <div class="scorebar maffs-compact-bar">
     <div class="score-item"><div class="score-label">Score</div><div class="score-val" id="score">0</div></div>
     <div class="score-item" style="display:none"><div class="score-label">Time</div><div class="score-val" id="timer">0s</div></div>
     <div class="score-item"><div class="score-label">Q</div><div class="score-val" id="qcount">0/8</div></div>
@@ -185,18 +185,6 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
   </div>
 
   <div class="main-game" id="mainGame">
-    <div class="suvat-ref">
-      <div class="ref-title">— THE 5 SUVAT EQUATIONS —</div>
-      <!-- Text content is the plain-string fallback if KaTeX fails to load; renderEq() replaces it. -->
-      <div class="suvat-eqs" id="suvatEqs">
-        <div class="eq-chip" data-eq="v = u + at">v = u + at</div>
-        <div class="eq-chip" data-eq="s = ut + ½at²">s = ut + ½at²</div>
-        <div class="eq-chip" data-eq="v² = u² + 2as">v² = u² + 2as</div>
-        <div class="eq-chip" data-eq="s = ½(u+v)t">s = ½(u+v)t</div>
-        <div class="eq-chip" style="grid-column:1/-1" data-eq="s = vt − ½at²">s = vt − ½at²</div>
-      </div>
-    </div>
-
     <div class="vars-box">
       <div class="vars-title" id="phaseTitle">— PHASE 1: PICK THE EQUATION —</div>
       <div class="scenario" id="scenario"></div>
@@ -242,6 +230,22 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
       <div class="feedback" id="fb2"></div>
       <div class="explanation" id="exp2"></div>
     </div>
+
+    <!-- The reference card (canon §7.6.2, §7.5.7): the five equations, collapsed below every phase's options. One card
+         serves all three phases, whose Next controls mount inside their own boxes, so in the feedback it sits below Next
+         and stays collapsed. Text content is the plain-string fallback if KaTeX fails to load; renderEq() replaces it. -->
+    <details class="maffs-ref suvat-card">
+      <summary><span class="maffs-ref-show">— THE 5 SUVAT EQUATIONS —</span><span class="maffs-ref-title">— THE 5 SUVAT EQUATIONS —</span></summary>
+      <div class="maffs-ref-body">
+          <div class="suvat-eqs">
+            <div class="eq-chip" data-eq="v = u + at">v = u + at</div>
+            <div class="eq-chip" data-eq="s = ut + ½at²">s = ut + ½at²</div>
+            <div class="eq-chip" data-eq="v² = u² + 2as">v² = u² + 2as</div>
+            <div class="eq-chip" data-eq="s = ½(u+v)t">s = ½(u+v)t</div>
+            <div class="eq-chip" style="grid-column:1/-1" data-eq="s = vt − ½at²">s = vt − ½at²</div>
+          </div>
+      </div>
+    </details>
   </div>
 
   <div class="game-over" id="gameOver">
@@ -589,7 +593,7 @@ function setEq(el, id){
 
 /* Render the static five-equation reference panel once KaTeX is available. */
 function renderRefPanel(){
-  var chips = document.querySelectorAll('#suvatEqs .eq-chip');
+  var chips = document.querySelectorAll('.suvat-eqs .eq-chip');
   Array.prototype.forEach.call(chips, function(c){ setEq(c, c.dataset.eq); });
 }
 window.addEventListener('DOMContentLoaded', renderRefPanel);

@@ -41,7 +41,7 @@ And for the Laws bank (QUESTIONS, read from the same page; contract LOG-NOTATION
   10 Oct (1/3 log 27 keyed 1, with log 3 offered as wrong) and QUESTIONS[24]'s old 2 log x.
   - the Laws view states the base (SR-17; SWEEP-1, log-laws-s1-001): when any Laws question, option
     or explanation uses a bare \\log (four keys rely on base 10), both the Laws start screen
-    (#lawsOpts) and the Laws Quick Reference title (#mainGame .law-ref-title) say "log means log" with the subscript 10,
+    (#lawsOpts) and the Laws Quick Reference title (#mainGame .maffs-ref-phone .maffs-ref-show, the collapsed card's label while asking) say "log means log" with the subscript 10,
     read from the rendered page. The old markup of each, which did not, is planted and must be caught.
 
 And for the Solve REASONS texts (SWEEP-1, log-laws-s1-003):
@@ -162,7 +162,7 @@ async def fetch(katex_dir):
         view = await page.evaluate(
             "() => { const t = e => e ? e.textContent.replace(/\\s+/g, ' ').trim() : null;"
             " return { start: t(document.getElementById('lawsOpts')),"
-            " ref: t(document.querySelector('#mainGame .law-ref-title')) }; }")
+            " ref: t(document.querySelector('#mainGame .maffs-ref-phone .maffs-ref-show')) }; }")
         if data is not None:
             data["laws_view"] = view
         katex_bad = await page.evaluate(KATEX_JS)
@@ -527,7 +527,7 @@ def check_laws_base(laws, view):
         return []
     out = []
     for key, where in (("start", "the Laws start screen (#lawsOpts)"),
-                       ("ref", "the Laws Quick Reference title (#mainGame .law-ref-title)")):
+                       ("ref", "the Laws Quick Reference title (#mainGame .maffs-ref-phone .maffs-ref-show, the collapsed card's label while asking)")):
         txt = (view or {}).get(key)
         if txt is None:
             out.append("%s is missing from the page" % where)
@@ -545,7 +545,7 @@ def laws_base_plants(view):
     return [("the Laws start screen without the base (before SWEEP-1)", old_start,
              "the Laws start screen (#lawsOpts) does not state the base"),
             ("the Laws Quick Reference title without the base (before SWEEP-1)", old_ref,
-             "the Laws Quick Reference title (#mainGame .law-ref-title) does not state the base")]
+             "the Laws Quick Reference title (#mainGame .maffs-ref-phone .maffs-ref-show, the collapsed card's label while asking) does not state the base")]
 
 
 # A reason that claims the move returns to the item's first line.

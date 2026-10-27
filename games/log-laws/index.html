@@ -154,22 +154,15 @@
   }
 
   /* ── Law reference panel ── */
-  .law-ref {
-    width: 100%;
-    background: var(--white);
-    border-radius: 12px;
-    padding: 16px 20px;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .law-ref-title {
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 12px;
+  /* The reference card (schools/assets/fold.css, canon §7.6.2): collapsed below the options while asking; after a
+     wrong answer (Next shown) it opens where the open card still leaves Next above the fold, and stays collapsed
+     elsewhere. One pair in each mode's question box. */
+  .question-box .maffs-ref { --ref-bg: var(--bg); --ref-edge: var(--border); }
+  .question-box .maffs-ref-fits { display: none; }
+  .question-box .maffs-ref-phone { display: block; }
+  @media (min-width: 601px) and (min-height: 900px) {   /* measured: Next at 801 with the card open (Laws), +40 footer, +60 for a longer explanation */
+    .question-box:has(.maffs-next) .maffs-ref-fits { display: block; }
+    .question-box:has(.maffs-next) .maffs-ref-phone { display: none; }
   }
 
   .laws-grid {
@@ -605,6 +598,8 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 <script src="../../schools/assets/session-length.js"></script>
 <script src="../../schools/assets/mathtext.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
+<link rel="stylesheet" href="/schools/assets/fold.css">
+<script src="/schools/assets/fold.js" defer></script>
 </head>
 <body>
 
@@ -663,16 +658,22 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
   <!-- Main game -->
   <div class="main-game" id="mainGame">
     <div class="timer-text" id="timerDisplay">0s</div>
-    <div class="law-ref">
-      <div class="law-ref-title">Quick Reference &middot; log means log&#8321;&#8320;</div>
-      <div class="laws-grid" id="refGrid"></div>
-    </div>
     <div class="question-box">
       <div class="q-rule-label" id="ruleLabel">Product Rule</div>
       <div class="q-text" id="qText"></div>
-      <div class="choices" id="choices"></div>
+      <div class="choices maffs-options" id="choices"></div>
       <div class="feedback" id="feedback"></div>
       <div class="explanation" id="explanation"></div>
+      <!-- The reference card (canon §7.6.2, §7.5.7): collapsed below the options while asking; after a wrong answer,
+           between the working and Next, open where it fits (.maffs-ref-fits) and collapsed elsewhere (.maffs-ref-phone). -->
+      <details class="maffs-ref maffs-ref-phone">
+        <summary><span class="maffs-ref-show">Quick Reference &middot; log means log&#8321;&#8320;</span><span class="maffs-ref-title">Quick Reference &middot; log means log&#8321;&#8320;</span></summary>
+        <div class="maffs-ref-body"><div class="laws-grid ref-grid"></div></div>
+      </details>
+      <details class="maffs-ref maffs-ref-fits" open>
+        <summary><span class="maffs-ref-show">Quick Reference &middot; log means log&#8321;&#8320;</span><span class="maffs-ref-title">Quick Reference &middot; log means log&#8321;&#8320;</span></summary>
+        <div class="maffs-ref-body"><div class="laws-grid ref-grid"></div></div>
+      </details>
     </div>
   </div>
 
@@ -690,10 +691,6 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 
   <!-- Solve mode -->
   <div class="solve-game" id="solveGame">
-    <div class="law-ref">
-      <div class="law-ref-title">Quick Reference &middot; log means log&#8321;&#8320;</div>
-      <div class="laws-grid" id="solveRefGrid"></div>
-    </div>
     <div class="question-box solve-box" id="solveBox">
       <div class="solve-head">
         <span class="q-rule-label" id="solveStageLabel"></span>
@@ -717,6 +714,14 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
         <div class="choose-grid" id="solveChooseGrid"></div>
       </div>
       <div class="solve-msg" id="solveMsg" role="status" aria-live="polite"></div>
+      <details class="maffs-ref maffs-ref-phone">
+        <summary><span class="maffs-ref-show">Quick Reference &middot; log means log&#8321;&#8320;</span><span class="maffs-ref-title">Quick Reference &middot; log means log&#8321;&#8320;</span></summary>
+        <div class="maffs-ref-body"><div class="laws-grid solve-ref-grid"></div></div>
+      </details>
+      <details class="maffs-ref maffs-ref-fits" open>
+        <summary><span class="maffs-ref-show">Quick Reference &middot; log means log&#8321;&#8320;</span><span class="maffs-ref-title">Quick Reference &middot; log means log&#8321;&#8320;</span></summary>
+        <div class="maffs-ref-body"><div class="laws-grid solve-ref-grid"></div></div>
+      </details>
     </div>
   </div>
 
@@ -977,13 +982,12 @@ function buildRefPanels() {
     startList.appendChild(div);
   });
 
-  const refGrid = document.getElementById('refGrid');
-  LAWS.forEach(law => {
+  document.querySelectorAll('.ref-grid').forEach(refGrid => LAWS.forEach(law => {
     const div = document.createElement('div');
     div.className = 'law-chip';
     div.innerHTML = K(law);
     refGrid.appendChild(div);
-  });
+  }));
 }
 
 // ── Game state ────────────────────────────────────────────────────────────
@@ -1718,7 +1722,7 @@ waitForKaTeX(buildRefPanels);
   function applySkip() {
     const i = LAWS.findIndex(l => l.indexOf('\\log_a b') === 0);
     const hide = mode === 'laws' && $('skipCob').checked;
-    [$('startLaws'), $('refGrid')].forEach(p => { if (p.children[i]) p.children[i].hidden = hide; });
+    [$('startLaws'), ...document.querySelectorAll('.ref-grid')].forEach(p => { if (p.children[i]) p.children[i].hidden = hide; });
   }
   function setMode(m) {
     mode = m;
@@ -1761,7 +1765,7 @@ waitForKaTeX(buildRefPanels);
   }
   function renderStatic() {
     $('solveLawList').innerHTML = SOLVE_LAWS.map(l => '<div class="law-list-item">' + K(l) + '</div>').join('');
-    $('solveRefGrid').innerHTML = SOLVE_LAWS.map(l => '<div class="law-chip">' + K(l) + '</div>').join('');
+    document.querySelectorAll('.solve-ref-grid').forEach(g => g.innerHTML = SOLVE_LAWS.map(l => '<div class="law-chip">' + K(l) + '</div>').join(''));
     $('solveMoves').innerHTML = '';
     MOVES.forEach(m => {
       const b = document.createElement('button');
