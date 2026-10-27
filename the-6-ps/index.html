@@ -1137,7 +1137,15 @@
       MaffsNext.wrong({ mount: $('qNext'), onAdvance: advance, fallbackMs: NO_FALLBACK, label: label });
     }
     // The verdict, and Next with it where it fits, are in view without a scroll of the student's own.
-    try { fb.scrollIntoView({ block: 'nearest' }); } catch (e) { /* ignore */ }
+    // Again once the layout settles: working with fractions grows when the maths font arrives, after the first scroll (main run 40479208314).
+    function inView() { try { fb.scrollIntoView({ block: 'nearest' }); } catch (e) { /* ignore */ } }
+    inView();
+    try {
+      requestAnimationFrame(function () {
+        inView();
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(inView);
+      });
+    } catch (e) { /* ignore */ }
   }
 
   function advance() {
