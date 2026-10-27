@@ -39,7 +39,8 @@
   .card-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(0,0,0,0.12);}
   .card-front{background:linear-gradient(135deg,var(--pink),#c24b84);color:white;}
   .card-back{background:linear-gradient(135deg,#6c63ff,#4a42d4);transform:rotateY(180deg);color:white;}
-  .card-front .hint{font-family:'Press Start 2P',monospace;font-size:10px;opacity:0.7;margin-bottom:16px;}
+  /* 12 px, not 10: the 12 px floor for any text in a figure (Jon, 27 Oct 2026); the card is the figure (fold.css). */
+  .card-front .hint{font-family:'Press Start 2P',monospace;font-size:12px;opacity:0.7;margin-bottom:16px;}
   .card-front .question{font-family:'Press Start 2P',monospace;font-size:clamp(12px,4vw,20px);text-align:center;line-height:1.6;padding:0 16px;}
   .card-back .answer{font-family:'Press Start 2P',monospace;font-size:clamp(28px,10vw,52px);margin-bottom:8px;}
   .card-back .workings{font-size:13px;opacity:0.85;text-align:center;padding:0 16px;line-height:1.5;}
