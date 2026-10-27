@@ -72,14 +72,26 @@
 
 /* The compact header (phones only): the same content in less height, with tighter sides.
    .maffs-compact-header goes on the page's header bar, .maffs-compact-bar on a score bar or HUD whose children are
-   label-and-value pairs: each pair goes onto one line. Nothing is hidden and no tap target shrinks (canon §7.6.1). */
+   label-and-value pairs: each pair goes onto one line, and
+   the pairs wrap onto a second line rather than run off the screen. Nothing is hidden and no tap target shrinks (canon §7.6.1). */
 @media (max-width: 600px) {
   .maffs-compact-header.maffs-compact-header { padding-top: 6px; padding-bottom: 6px; min-height: 0; }
   /* Tighter sides and gaps too, so a title, level badge and Aa toggle that just overflow the bar fit on it. */
   .maffs-compact-header.maffs-compact-header { padding-left: 12px; padding-right: 12px; column-gap: 8px; }
-  .maffs-compact-bar.maffs-compact-bar { padding-top: 6px; padding-bottom: 6px; min-height: 0; }
+  .maffs-compact-bar.maffs-compact-bar { padding-top: 6px; padding-bottom: 6px; min-height: 0; flex-wrap: wrap; row-gap: 2px; }
   .maffs-compact-bar.maffs-compact-bar > * {
     display: flex; flex-direction: row; align-items: baseline; justify-content: center; gap: 6px;
   }
   .maffs-compact-bar.maffs-compact-bar > * > * { margin-top: 0; margin-bottom: 0; }
+}
+
+/* The phone figure: a figure above the options shrinks to fit on a short screen, so the options stay above the fold
+   (canon §7.6.1: "shrink a picture without changing what it says"). .maffs-figure goes on the figure itself, a canvas, an
+   image, an SVG or a block; the game sets --maffs-figure-max, its measured cap. A canvas or image keeps its proportions
+   (object-fit: contain), so nothing is stretched and every mark stays where it was; a block's own contents keep their size.
+   Short screens are 900 px tall or less: every phone size the gate measures and both laptop sizes (ruling R2). Each game's
+   smallest label is measured before and after and recorded, so a figure is never shrunk past legible. */
+@media (max-height: 900px) {
+  .maffs-figure.maffs-figure { max-height: var(--maffs-figure-max, none); }
+  canvas.maffs-figure.maffs-figure, img.maffs-figure.maffs-figure, svg.maffs-figure.maffs-figure { object-fit: contain; }
 }

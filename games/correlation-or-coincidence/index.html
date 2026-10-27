@@ -71,6 +71,9 @@ a.back-link:hover{color:var(--text)}
 .axis-title .dir{color:var(--accent);font-family:var(--font-num)}
 .axis-x{text-align:right}
 .plot svg{width:100%;height:auto;display:block;max-height:230px}
+/* On a short screen (900px tall or less) the graph is the shared phone figure (schools/assets/fold.css, canon §7.5.7):
+   its cap is --maffs-figure-max, set here by screen height, and in Aa mode a little lower. */
+.plot{--maffs-figure-max:230px}
 .plot .grid{stroke:var(--plot-grid);stroke-width:1}
 .plot .axis{stroke:var(--plot-axis);stroke-width:1.5}
 .plot .tick{font-family:var(--font-num);font-size:11px;fill:var(--muted)}
@@ -111,11 +114,12 @@ a.back-link:hover{color:var(--text)}
   .qcard.fb-open .fig,.qcard.fb-open .invented{order:10}
 }
 @media (max-height:700px){
-  .plot svg{max-height:170px}
+  .plot{--maffs-figure-max:170px}
+  body.accessible .plot{--maffs-figure-max:130px}
   .qcard{gap:.4rem}
 }
 @media (max-height:600px){
-  .plot svg{max-height:120px}
+  .plot,body.accessible .plot{--maffs-figure-max:120px}
   .prompt{font-size:.93rem;line-height:1.4}
   .hud{padding:.3rem .6rem;margin-bottom:.4rem}
   .choice{min-height:44px;padding:.4rem .6rem}
@@ -185,7 +189,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb{line-height:2;max-
   </div>
 
   <div id="game" class="screen">
-    <div class="hud">
+    <div class="hud maffs-compact-bar">
       <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1/10</div></div>
       <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
       <div class="hud-item"><div class="hud-label">Correct</div><div class="hud-val" id="correctCount">0</div></div>
@@ -522,7 +526,7 @@ const QUESTIONS = [
     // Points sit 6px inside the axes, so none is drawn on an axis line.
     var px = function (x) { return L + 6 + (x - xlo) / (xhi - xlo) * (W - L - R - 12); };
     var py = function (y) { return H - B - 6 - (y - ylo) / (yhi - ylo) * (H - T - B - 12); };
-    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Scatter graph of ' + esc(q.y[0]) + ' against ' + esc(q.x[0]) + '">';
+    var s = '<svg class="maffs-figure" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Scatter graph of ' + esc(q.y[0]) + ' against ' + esc(q.x[0]) + '">';
     for (var g = 1; g <= 3; g++) {
       var gy = T + (H - T - B) * g / 4, gx = L + (W - L - R) * g / 4;
       s += '<line class="grid" x1="' + L + '" y1="' + gy + '" x2="' + (W - R) + '" y2="' + gy + '"/>';
