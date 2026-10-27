@@ -144,6 +144,7 @@ TIMINGS = "scripts/ci-timings.json"     # each content line's seconds on a main 
 REGIONS = "scripts/ci-timings-regions.json"   # per line, per runner region, the last REGION_KEEP times (--record-regions)
 
 PACK = "scripts/ci-pack.json"           # each line's group (--write-pack, after each main full run)
+WARN_LIST = "scripts/ci-warn-list.json"   # the per-line limit's shrink-only warn list (GATE-WARN-THEN-ENFORCE)
 LOCK_PREFIX = "Answer lock"
 
 # The tiers. Each tier's groups share one timeout; the workflow warns about a group past 75% of it (its budget).
@@ -508,18 +509,60 @@ def line_message(c):
                c["percent"], c["budget"], TARGET * 100, TARGET * c["budget"], how))
 
 
-def line_faults(gs=None, timings=None, selected=()):
+def base_label(label):
+    """A line's label as the warn list names it: a sharded verifier's part ("X, part 2 of 3") is its verifier's label."""
+    m = re.match(r"^(.*), part \d+ of \d+$", label)
+    return m.group(1) if m else label
+
+
+def read_warn_list(path=None):
+    """The warn list's labels (base_label()s), in file order; [] when there is no list."""
+    try:
+        with open(os.path.join(ROOT, path or WARN_LIST), encoding="utf-8") as f:
+            return list(json.load(f).get("per-line", []))
+    except (OSError, ValueError):
+        return []
+
+
+def unrecorded(gs):
+    """{label}: the lines whose figure is an estimate, not a main run's time (a new or renamed line, or a sharded part
+    whose units no main run has timed): groups()' 'timed' marks the rest."""
+    return {l for g in gs for l, _ in g["lines"] if l not in set(g.get("timed", ()))} if gs and "timed" in gs[0] else set()
+
+
+def line_faults(gs=None, timings=None, selected=(), listed=None, fresh=None):
     """(faults, warnings) for the split candidates (LINE-LIMIT-SCOPE). `selected` is the set of scripts the change being
     checked selects (ci-deps.py's names), True to judge every line strictly, or () for none (main, the timings job): a
     candidate whose script is selected is a fault, any other a warning, so runner noise on an unchanged line never fails
-    main or a PR that does not touch it."""
+    main or a PR that does not touch it.
+    WARN-THEN-ENFORCE (Jon, 27 Oct 2026): a candidate on the warn list (`listed`, base labels; default the committed
+    scripts/ci-warn-list.json) is a warning wherever it is selected, and a line with no time recorded by a main run
+    (`fresh`, labels; default every line whose figure is an estimate) is estimated and warned, never failed: the limit
+    applies once a main run has recorded it."""
+    timings = read_json(TIMINGS) if timings is None else timings
+    gs = groups(timings=timings) if gs is None else gs
+    listed = set(read_warn_list() if listed is None else listed)
+    fresh = unrecorded(gs) if fresh is None else set(fresh)
     faults, warns = [], []
     for c in split_candidates(gs, timings):
-        if selected is True or c["script"] in selected:
+        if base_label(c["label"]) in listed:
+            warns.append("on the warn list (%s, shrink-only: a warning, not a failure, until the line is divided): %s"
+                         % (WARN_LIST, line_message(c)))
+        elif c["label"] in fresh:
+            warns.append("no time recorded by a main run (a warning, never a failure, until its first main run records "
+                         "it): %s" % line_message(c))
+        elif selected is True or c["script"] in selected:
             faults.append(line_message(c) + " This change selects its verifier (%s)." % c["script"])
         else:
             warns.append("split candidate (a warning, not a failure: nothing checked here selects %s): %s"
                          % (c["script"], line_message(c)))
+    for g in gs:
+        ls = line_secs(g, timings)
+        for l, c in g["lines"]:
+            if l in fresh and not ls[l][1]:
+                warns.append("no time recorded by a main run: %s (%s) is estimated at %ds, the tier's default; the "
+                             "per-line and group limits apply once its first main run records it"
+                             % (l, script_of(c) or "?", ls[l][0]))
     return faults, warns
 
 
@@ -550,31 +593,104 @@ def over_budget(gs=None, timings=None):
     return sorted(out, key=lambda o: o["group"])
 
 
-def group_faults(gs=None, timings=None, selected=()):
+def group_faults(gs=None, timings=None, selected=(), listed=None, fresh=None):
     """(faults, warnings) for the groups past FAIL (MAIN-WARN, Jon's ruling 25 Oct 2026, scoping the group rule as
     LINE-LIMIT-SCOPE scoped the line rule). A group past HARD (100%) of its budget is a fault everywhere, main included.
     Between FAIL and HARD it is a fault only where the change selects a script with a line in it (`selected` True, the
-    base unreadable, counts as every script); otherwise, on main and on a run-all change, a warning naming it."""
+    base unreadable, counts as every script); otherwise, on main and on a run-all change, a warning naming it.
+    WARN-THEN-ENFORCE (Jon, 27 Oct 2026): an estimate never makes a group a fault. Past HARD, the group is a fault only if
+    its timed lines alone pass HARD: a main run's median, or this pull request's own measured time (--check-measured),
+    since a measured time past HARD would refuse main's pack and turn main red after the merge (#526's shape); a line
+    with no time at all (the tier's default) is left out. Between FAIL and HARD, the lines no main run has timed
+    (`fresh`) and the lines on the warn list (`listed`) are left out: the group is a fault only if its other lines pass
+    FAIL."""
+    timings = read_json(TIMINGS) if timings is None else timings
+    gs = groups(timings=timings) if gs is None else gs
+    listed = set(read_warn_list() if listed is None else listed)
+    fresh = unrecorded(gs) if fresh is None else set(fresh)
+    by_name = {g["name"]: g for g in gs}
+    setup = timings.get("setup", SETUP)
     faults, warns = [], []
     for o in over_budget(gs, timings):
+        ls = line_secs(by_name[o["group"]], timings)
+        recorded = setup + sum(t for l, (t, timed) in ls.items() if timed)
+        firm = setup + sum(t for l, (t, timed) in ls.items() if timed and l not in fresh and base_label(l) not in listed)
         if o["estimate"] > HARD * o["budget"]:
-            faults.append(o["message"] + " It is past %d%% of its budget: a fault everywhere, main included." % (HARD * 100))
+            if recorded > HARD * o["budget"]:
+                faults.append(o["message"] + " It is past %d%% of its budget: a fault everywhere, main included." % (HARD * 100))
+            else:
+                warns.append("over budget (a warning, never a failure: only lines with no time yet put it past %d%%; "
+                             "its timed lines come to %ds): %s" % (HARD * 100, recorded, o["message"]))
         elif selected is True or set(o["scripts"]) & set(selected):
             hit = o["scripts"] if selected is True else sorted(set(o["scripts"]) & set(selected))
-            faults.append(o["message"] + " This change selects its verifier%s (%s)." % ("s" if len(hit) > 1 else "", ", ".join(hit)))
+            if firm > FAIL * o["budget"]:
+                faults.append(o["message"] + " This change selects its verifier%s (%s)." % ("s" if len(hit) > 1 else "", ", ".join(hit)))
+            else:
+                warns.append("over budget (a warning, not a failure: without its warn-listed lines and the lines no main "
+                             "run has timed it comes to %ds, inside %d%%): %s" % (firm, FAIL * 100, o["message"]))
         else:
             warns.append("over budget (a warning, not a failure: nothing checked here selects %s): %s"
                          % (", ".join(o["scripts"]), o["message"]))
     return faults, warns
 
 
-def budget_faults(gs=None, timings=None, selected=()):
+def budget_faults(gs=None, timings=None, selected=(), listed=None, fresh=None):
     """[fault]: every split candidate the change selects (line_faults), and every group past FAIL that it selects or
     that is past HARD (group_faults). With nothing selected (main) only a group past HARD is a fault: it is what refuses
-    a pack on main."""
+    a pack on main. `listed` and `fresh` as line_faults()."""
     timings = read_json(TIMINGS) if timings is None else timings
     gs = groups(timings=timings) if gs is None else gs
-    return line_faults(gs, timings, selected)[0] + group_faults(gs, timings, selected)[0]
+    return (line_faults(gs, timings, selected, listed, fresh)[0]
+            + group_faults(gs, timings, selected, listed, fresh)[0])
+
+
+def stale_entries(gs=None, timings=None, listed=None):
+    """[(label, why)]: warn-list entries that no longer hold a line over the per-line limit: no line has that label, or
+    every line of it has a recorded time and none is a split candidate. An entry whose line has no recorded time yet is
+    kept: it cannot be judged until a main run times it."""
+    timings = read_json(TIMINGS) if timings is None else timings
+    gs = groups(timings=timings) if gs is None else gs
+    listed = read_warn_list() if listed is None else listed
+    fresh = unrecorded(gs)
+    over = {base_label(c["label"]) for c in split_candidates(gs, timings)}
+    out = []
+    for b in listed:
+        mine = [l for g in gs for l, _ in g["lines"] if base_label(l) == b]
+        if not mine:
+            out.append((b, "no line has this label now"))
+        elif b not in over and not any(l in fresh for l in mine):
+            out.append((b, "every line of it is inside the per-line limit now"))
+    return out
+
+
+def write_warn_list(gs, timings, listed=None, path=None):
+    """The timings job's pruning (shrink-only): rewrite the warn list without its stale entries. Returns the entries
+    removed. Never adds one."""
+    listed = read_warn_list(path) if listed is None else listed
+    gone = {b for b, _ in stale_entries(gs, timings, listed)}
+    if gone:
+        full = os.path.join(ROOT, path or WARN_LIST)
+        with open(full, encoding="utf-8") as f:
+            data = json.load(f)
+        data["per-line"] = [b for b in data.get("per-line", []) if b not in gone]
+        with open(full, "w", encoding="utf-8", newline="\n") as f:
+            json.dump(data, f, indent=1, ensure_ascii=False)
+            f.write("\n")
+    return sorted(gone)
+
+
+def warn_list_faults(base_list, listed, gs=None, timings=None):
+    """[fault] for a pull request that edits the warn list (`base_list`: the list at the PR's base; `listed`: this
+    branch's). Shrink-only: an entry the base did not have is a fault; and a PR that edits the list leaves no stale
+    entry in it (the known-failures pattern). A PR that does not edit the list is never judged here: main's timings job
+    removes stale entries itself (write_warn_list()), so a list that falls behind the timings blocks no lane."""
+    if base_list is None or list(base_list) == list(listed):
+        return []
+    out = ["%s gains %r: the warn list is shrink-only (an entry is never added; divide the line instead)" % (WARN_LIST, b)
+           for b in listed if b not in base_list]
+    out += ["%s keeps %r, which passes now (%s): remove it" % (WARN_LIST, b, why)
+            for b, why in stale_entries(gs, timings, listed)]
+    return out
 
 
 def warn(msgs, title="split candidate"):
@@ -584,6 +700,42 @@ def warn(msgs, title="split candidate"):
         print("WARN  " + x)
         if os.environ.get("GITHUB_ACTIONS") == "true":
             print("::warning title=%s::%s" % (title, x))
+
+
+def pr_base(env=None):
+    """(base sha, None) for the change being checked, or (None, (selected, how)): pr_selection()'s answer when there is
+    no base to compare with (not a pull request: (); the base unreadable: True)."""
+    env = os.environ if env is None else env
+    import subprocess
+    if env.get("GITHUB_ACTIONS") == "true":
+        event = env.get("GITHUB_EVENT_NAME", "")
+        if event != "pull_request":
+            return None, ((), "a %s run, not a pull request: no line is selected" % (event or "non-PR"))
+        try:
+            with open(env["GITHUB_EVENT_PATH"], encoding="utf-8") as f:
+                return json.load(f)["pull_request"]["base"]["sha"], None
+        except (KeyError, OSError, ValueError, TypeError):
+            return None, (True, "the pull request's base could not be read from the event: every line counts as selected")
+    r = subprocess.run(["git", "merge-base", "origin/main", "HEAD"], cwd=ROOT, capture_output=True, text=True)
+    if r.returncode:
+        return None, (True, "no merge base with origin/main: every line counts as selected")
+    return r.stdout.strip(), None
+
+
+def base_warn_list(env=None):
+    """The warn list at the change's base (pr_base()), or None when there is no base, or the base has no list (the PR
+    that brings the list in)."""
+    import subprocess
+    base, _ = pr_base(env)
+    if base is None:
+        return None
+    r = subprocess.run(["git", "show", "%s:%s" % (base, WARN_LIST)], cwd=ROOT, capture_output=True, text=True)
+    if r.returncode:
+        return None
+    try:
+        return list(json.loads(r.stdout).get("per-line", []))
+    except ValueError:
+        return None
 
 
 def pr_selection(env=None, deps=None):
@@ -596,22 +748,10 @@ def pr_selection(env=None, deps=None):
     interface is unchanged. Locally: the merge base with origin/main. If the base cannot be read, every line counts as
     selected: a check that cannot tell fails strictly rather than passes. `deps` is ci-deps.py's module (loaded here when
     None; the self-test passes a stand-in, because its dependency map takes about a minute to build)."""
-    env = os.environ if env is None else env
-    import importlib.util, subprocess
-    if env.get("GITHUB_ACTIONS") == "true":
-        event = env.get("GITHUB_EVENT_NAME", "")
-        if event != "pull_request":
-            return (), "a %s run, not a pull request: no line is selected" % (event or "non-PR")
-        try:
-            with open(env["GITHUB_EVENT_PATH"], encoding="utf-8") as f:
-                base = json.load(f)["pull_request"]["base"]["sha"]
-        except (KeyError, OSError, ValueError, TypeError):
-            return True, "the pull request's base could not be read from the event: every line counts as selected"
-    else:
-        r = subprocess.run(["git", "merge-base", "origin/main", "HEAD"], cwd=ROOT, capture_output=True, text=True)
-        if r.returncode:
-            return True, "no merge base with origin/main: every line counts as selected"
-        base = r.stdout.strip()
+    import importlib.util
+    base, how = pr_base(env)
+    if base is None:
+        return how
     if deps is None:
         spec = importlib.util.spec_from_file_location("ci_deps", os.path.join(SCRIPTS, "ci-deps.py"))
         deps = importlib.util.module_from_spec(spec)
@@ -956,6 +1096,10 @@ def commit(timings, gs, faults, writers=None, calm=None, prev_setup=0):
         return 1
     wt(timings)
     wp(gs, timings)
+    wl = writers[2] if writers and len(writers) > 2 else (None if writers else write_warn_list)
+    if wl is not None:
+        for b in wl(gs, timings) or []:
+            print("record-and-pack: %s: removed %r, which passes the per-line limit now (shrink-only)" % (WARN_LIST, b))
     return 0
 
 
@@ -1071,6 +1215,7 @@ def check_measured(run_id, from_dir, env=None, rec=None, timings=None, hdrs=None
     print("selection: " + how)
     mt = measured_timings(timings, rec, selected, hdrs)
     gs = groups(hdrs, mt, prev)
+    fresh = unrecorded(groups(hdrs, timings, prev))      # no main run has timed these: warned, never failed
     for label, m in sorted(mt["measured"].items()):
         print("measured  %s: this run %ss, main median %s: judged at %ss" % (
             label, m["run"], "none" if m["median"] is None else "%ss" % m["median"], mt["lines"][label]))
@@ -1080,9 +1225,9 @@ def check_measured(run_id, from_dir, env=None, rec=None, timings=None, hdrs=None
         print("%-22s %2d line(s)  estimated %4ds of %4ds budget (%3d%%)%s" % (
             g["name"], len(g["lines"]), est, b, 100 * est / b,
             "" if not missing else "  NO TIMING (counted as %ds each): %s" % (TIERS[g["tier"]][3], "; ".join(missing))))
-    faults = budget_faults(gs, mt, selected)
-    warn(line_faults(gs, mt, selected)[1])
-    warn(group_faults(gs, mt, selected)[1], "over budget")
+    faults = budget_faults(gs, mt, selected, fresh=fresh)
+    warn(line_faults(gs, mt, selected, fresh=fresh)[1])
+    warn(group_faults(gs, mt, selected, fresh=fresh)[1], "over budget")
     for x in faults:
         print("FAIL  " + x)
     print("check-measured: %s (run %s: %d line(s) timed, %d judged on this run's time; setup %ds, main's median; timings "
@@ -1408,7 +1553,9 @@ def selftest():
         with contextlib.redirect_stdout(io.StringIO()) as o2:
             rc2 = check_measured("1", None, env, rec=run({"a": 90, "b": 55}), timings=t, hdrs=hs, prev={},
                                  deps=Deps(["scripts/verify-x.py"], (False, [], {"scripts/verify-x.py": []})))
-    check("end to end, #526's shape on a pull request run: exit 1, the line named", rc1 == 1 and "a2 205s" in o1.getvalue())
+    check("end to end, #526's shape on a pull request run (WARN-THEN-ENFORCE, Jon 27 Oct: a line no main run has timed is "
+          "warned, never failed): exit 0, the line named in a warning",
+          rc1 == 0 and "a2 205s" in o1.getvalue() and "no time recorded by a main run" in o1.getvalue())
     check("end to end, a run at or under its medians: exit 0", rc2 == 0 and "check-measured: PASS" in o2.getvalue())
     # MAIN-WARN (Jon, 25 Oct 2026): a group between 80% and 100% of its budget is a warning on main, recorded in the pack, and a
     # fault only on a PR that selects one of its scripts; past 100% it fails everywhere. #526's shape: Shape Shifter, one line,
@@ -1455,6 +1602,69 @@ def selftest():
           and bool(budget_faults(g82, t82, True)))
     check("a pack with no group past 80% carries an empty over-budget list",
           pack_record(groups(hs, t, {}), t)["over-budget"] == [])
+    # WARN-THEN-ENFORCE (Jon, 27 Oct 2026). Setup 20 s, budget 270 s: per-line limit 189 s, a group fails past 216 s.
+    # Line a is verify-x.py's; b to e are verify-y.py's.
+    fl, wn = line_faults(g170, ft, X, listed=["a"])
+    check("PLANT (w1) a listed 170 s line the PR selects: a warning naming the warn list, no fault",
+          not fl and len(wn) == 1 and "on the warn list" in wn[0] and "a 170s" in wn[0])
+    fl, wn = line_faults(g170, ft, X, listed=["b"])
+    check("PLANT (w2) an unlisted 170 s line the PR selects still fails while another line is listed", len(fl) == 1)
+    hsh = {"verify-x.py": parse("verify-x.py", "# ci-shards: A | | 2\n"),
+           "verify-y.py": parse("verify-y.py", "".join("# ci-line: %s | \n" % x for x in "bcde"))}
+    tsh = T(dict(t["lines"], **{"A, part 1 of 2": 170, "A, part 2 of 2": 30}))
+    gsh = groups(hsh, tsh, {})
+    fl, wn = line_faults(gsh, tsh, X, listed=["A"])
+    check("PLANT (w3) a sharded verifier is listed by its own label: its part over the limit warns",
+          not fl and any("on the warn list" in w and "A, part 1 of 2" in w for w in wn)
+          and len(line_faults(gsh, tsh, X, listed=[])[0]) == 1)
+    g82l = groups(hss, t82, {})
+    check("PLANT (w4) a group at 82% that the PR selects, its long line listed: a warning, no fault",
+          not group_faults(g82l, t82, {SS}, listed=["Shape Shifter"])[0]
+          and any("warn-listed" in w for w in group_faults(g82l, t82, {SS}, listed=["Shape Shifter"])[1])
+          and group_faults(g82l, t82, {SS}, listed=[])[0])
+    hnew = {"verify-x.py": parse("verify-x.py", "# ci-line: brand new | \n"),
+            "verify-y.py": parse("verify-y.py", "".join("# ci-line: %s | \n" % x for x in "bcde"))}
+    tnew = T(dict(t["lines"]))
+    gnew = groups(hnew, tnew, {})
+    fl, wn = line_faults(gnew, tnew, X)
+    check("PLANT (w5) a new line with no recorded time, selected: estimated and warned, never a fault (%s)" % (wn[:1],),
+          not budget_faults(gnew, tnew, X) and any("no time recorded by a main run" in w and "brand new" in w for w in wn))
+    t400 = T(dict(t["lines"], b=150))
+    hn2 = {"verify-x.py": parse("verify-x.py", "# ci-line: n1 | \n# ci-line: n2 | \n"),
+           "verify-y.py": parse("verify-y.py", "# ci-line: b | \n")}
+    gn2 = [{"id": "1", "tier": "content", "name": "Content verifiers 1", "lines": [("n1", "python scripts/verify-x.py"),
+            ("n2", "python scripts/verify-x.py"), ("b", "python scripts/verify-y.py")],
+            "secs": {"n1": 120, "n2": 120, "b": 150}, "timed": ["b"]}]
+    check("PLANT (w6) a group past 100% only on two unrecorded lines (120 + 120 + 150 + 20 s): a warning everywhere",
+          not group_faults(gn2, t400, True)[0] and group_faults(gn2, t400, True)[1])
+    gn3 = [dict(gn2[0], secs={"n1": 120, "n2": 120, "b": 280}, timed=["b"])]
+    check("PLANT (w7) the same group with a recorded line alone past 100%: a fault everywhere",
+          bool(group_faults(gn3, t400, ())[0]))
+    mt9 = measured_timings(t, run({"a2": 205}), X, hr)
+    g9 = groups(hr, mt9, {})
+    f9 = unrecorded(groups(hr, t, {}))
+    check("PLANT (w8) a new line measured at 205 s on its own PR run (#526's shape, 84%): a warning, never a failure",
+          "a2" in f9 and not budget_faults(g9, mt9, X, fresh=f9))
+    mt10 = measured_timings(t, run({"a2": 300}), X, hr)
+    check("PLANT (w9) a new line measured at 300 s (past 100%: it would refuse main's pack after the merge): a fault",
+          bool(budget_faults(groups(hr, mt10, {}), mt10, X, fresh=f9)))
+    check("stale: a listed line inside the limit now, and a label no line has, are stale; a listed line over it is not",
+          sorted(b for b, _ in stale_entries(g170, ft, ["a", "b", "gone"])) == ["b", "gone"])
+    check("stale: a listed line no main run has timed is kept (it cannot be judged yet)",
+          stale_entries(gnew, tnew, ["brand new"]) == [])
+    check("shrink-only: a PR that adds an entry is a fault; one that removes an entry, or leaves the list alone, is not",
+          warn_list_faults(["a"], ["a", "b"], g170, ft) and not warn_list_faults(["a", "b"], ["a"], g170, ft)
+          and not warn_list_faults(["a", "b"], ["a", "b"], g170, ft) and not warn_list_faults(None, ["a"], g170, ft))
+    check("a PR that edits the list and leaves a stale entry in it: a fault (the known-failures pattern)",
+          any("passes now" in x for x in warn_list_faults(["a", "b", "c"], ["a", "b"], g170, ft)))
+    with tempfile.TemporaryDirectory() as td:
+        wpath = os.path.join(td, "w.json")
+        with open(wpath, "w", encoding="utf-8", newline="\n") as f:
+            json.dump({"about": "x", "per-line": ["a", "b"]}, f)
+        gone = write_warn_list(g170, ft, path=wpath)
+        kept = json.load(open(wpath, encoding="utf-8"))
+    check("the timings job prunes the list: 'b' (inside the limit) removed, 'a' (over it) kept, the rest of the file kept",
+          gone == ["b"] and kept == {"about": "x", "per-line": ["a"]})
     # REGION-HISTORY: the per-region record keeps 10 per line per region and leaves ci-timings.json alone.
     regs = ["eastus", "centralus", "westus"]
 
@@ -1627,9 +1837,12 @@ def main():
         selected, how = (pr_selection() if split_candidates(gs, timings) or over_budget(gs, timings)
                          else ((), "no line is over the per-line limit and no group past %d%%" % (FAIL * 100)))
         print("selection: " + how)
-        faults = budget_faults(gs, timings, selected)
-        warn(line_faults(gs, timings, selected)[1])
-        warn(group_faults(gs, timings, selected)[1], "over budget")
+        listed = read_warn_list()
+        faults = budget_faults(gs, timings, selected, listed) + warn_list_faults(base_warn_list(), listed, gs, timings)
+        warn(line_faults(gs, timings, selected, listed)[1])
+        warn(group_faults(gs, timings, selected, listed)[1], "over budget")
+        warn(["%s: %r passes now (%s); main's timings job removes it" % (WARN_LIST, b, why)
+              for b, why in stale_entries(gs, timings, listed)], "warn list")
         for x in faults:
             print("FAIL  " + x)
         print("check: %s (pack to %d%% of each budget; a line past %d%% or a group past %d%% fails only where it is selected; "
