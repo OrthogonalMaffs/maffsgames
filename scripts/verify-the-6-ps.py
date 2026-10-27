@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: The 6 P's, part 1 (the topic data file is the generator's output; no mark figure, AQA, Edexcel or "in development" in the page, no launch into a game; the four past-paper sites before Start; 10,000 sessions each way: six distinct covered topics in band order, frequencies in proportion to marks; every format marked by value through the page's own judge(), schema faults left out, five picked unseen first) | --part 1
-# ci-line: The 6 P's, part 2 (a full session at 1280 px with localStorage working, on fixture banks covering all nine formats: every format answered right and wrong, never-marked answers not marked, slips, working, five a topic and a topic card, results, nudge, practice links, tick-list and events; resumed mid-topic after a reload) | --part 2
-# ci-line: The 6 P's, part 3 (the same session at 320 px on a touch screen, typed on the phone keypad, with localStorage blocked: no sideways scroll on any screen, resumed mid-topic from window.name; a topic with no bank offers Skip only) | --part 3
-# ci-line: The 6 P's, part 4 (fault-injection self-test: the planted faults, each caught) | --part 4
+# ci-shards: The 6 P's (the topic data file is the generator's output; no mark figure, AQA, Edexcel or "in development" in the page, no launch into a game; the four past-paper sites before Start; 10,000 sessions each way: six distinct covered topics in band order, frequencies in proportion to marks; every format marked by value through the page's own judge(), schema faults left out, five picked unseen first; a full session at 1280 px with localStorage working, on fixture banks covering all nine formats: every format answered right and wrong, never-marked answers not marked, slips, working, five a topic and a topic card, results, nudge, practice links, tick-list and events; resumed mid-topic after a reload; the same session at 320 px on a touch screen, typed on the phone keypad, with localStorage blocked: no sideways scroll on any screen, resumed mid-topic from window.name; every real bank's verdict and Next on a 375 x 667 phone; a topic with no bank offers Skip only; fault-injection self-test: the planted faults, each caught) |  | 2
 # ci-deps: the-6-ps/ schools/assets/exam-topics-ocr-foundation.json scripts/gen-exam-topics.py scripts/fixtures/six-ps/
 """Independent verification for The 6 P's (/the-6-ps/): built 24 Oct 2026 (contract THE-6-PS), its question player
 25 Oct 2026 (contract SIX-PS-PLAYER, Jon's ruling: self-contained, no hand-off into games).
@@ -25,26 +22,27 @@ WHAT IS CHECKED, AND AGAINST WHAT
              (the Unicode minus, a thousands comma), a range's band, a slip matched by the question's own rule, a
              choice by its dataset.val. Schema faults (an unknown format, three options, a range reaching half way to
              a slip) are left out. Five are picked unseen first, then the longest seen, through the page's own store.
-  Session    (parts 2 and 3) a full session through the page on the fixture banks: each question's scripted answers
-             typed (part 3 on the phone keypad), the never-marked ones (format, unreadable, no unit) showing the
+  Session    (at 1280 px and at 320 px) a full session through the page on the fixture banks: each question's scripted
+             answers typed (at 320 px on the phone keypad), the never-marked ones (format, unreadable, no unit) showing the
              shared message with nothing marked or sent; each marked one showing right or wrong at once, the slip line
              and the working on a wrong one, the working one tap away on a right one; the header "Question n of 5 ·
              Topic m of 6"; after the fifth answer the topic card ("<topic>: r of 5", its weight) and never a sixth
              question; the results (scores, weights, "Want more practice? <game>" linking the game at its level), the
              nudge, the tick-list and its one event; question_answered (correct, and the topic id packed in
              filter_type/filter_value, Jon's ruling of 25 Oct), one game_started and one game_completed. Resumed
-             mid-topic after a reload, from localStorage (part 2) and from window.name (part 3, storage blocked).
+             mid-topic after a reload, from localStorage (1280 px) and from window.name (320 px, storage blocked).
              Diagrams: drawn, with their script, handler and external image removed.
-  Phone      (part 3) 320 px: no sideways scroll on the start screen, any question, a topic card or the results.
-  No bank    (part 3) a drawn topic whose bank does not load says its questions aren't ready, with Skip only.
+  Phone      320 px: no sideways scroll on the start screen, any question, a topic card or the results.
+  No bank    a drawn topic whose bank does not load says its questions aren't ready, with Skip only.
 
-    python scripts/verify-the-6-ps.py              # every part
-    python scripts/verify-the-6-ps.py --part 1     # data, static, draws and marking
-    python scripts/verify-the-6-ps.py --part 2     # a session at 1280 px, storage working
-    python scripts/verify-the-6-ps.py --part 3     # a session at 320 px on the keypad, storage blocked
-    python scripts/verify-the-6-ps.py --part 4     # the plants
+    python scripts/verify-the-6-ps.py                  # every unit
+    python scripts/verify-the-6-ps.py --list-units     # the units: the data and routes, the static checks, the draws,
+                                                       # the marking, each browser check (each real bank's 375 x 667
+                                                       # feedback its own), each session, each plant
+    python scripts/verify-the-6-ps.py --shard 2/3      # part 2 of 3 of the units (CI; scripts/ci-groups.py chooses 3)
 """
 import argparse
+import contextlib
 import importlib.util
 import json
 import math
@@ -1060,11 +1058,10 @@ def phone_feedback_topic(pw, base, html, data, topic, out, only=None):
         b.close()
 
 
-def phone_feedback(pw, base, html, data, out):
-    """On a 375 x 667 phone, on every real bank: after Check the keypad is gone and the verdict and Next are on the screen with no scroll,
-    one answer right and one wrong, and nothing scrolls sideways. One topic's trouble is reported against it and the rest are still measured."""
-    for topic in data['covered']:
-        guarded(out, '375 x 667: %s' % topic['id'], lambda: phone_feedback_topic(pw, base, html, data, topic, out))
+# On a 375 x 667 phone, on every real bank (each its own unit, PHONE + topic id): after Check the keypad is gone and the verdict and
+# Next are on the screen with no scroll, one answer right and one wrong, and nothing scrolls sideways. One topic's trouble is reported
+# against it and the rest are still measured.
+PHONE = 'phone feedback: '
 
 
 # Working with three fractions is the tallest feedback a bank has: on 375 x 667 it ends 15 px below the screen unless the page scrolls
@@ -1092,48 +1089,74 @@ def one_topic(pw, base, html, data, out, name):
         b.close()
 
 
-def check(html, data, out, parts):
+def page_units(data):
+    """The page's units (contract SHARD), in the order of the full run; check() runs those it is given, in this order."""
+    return (['static', 'engine', 'marking', 'start', 'expiry', 'chosen', 'resume', 'second']
+            + [PHONE + t['id'] for t in data['covered']] + ['tall', 'play 1280', 'play bank-first', 'play 320', 'no bank'])
+
+
+def run_unit(pw, base, html, data, out, unit):
+    """One browser unit of page_units(), or 'topic:<fixture>' (one topic to its card, the plants' short flow)."""
+    if unit in ('engine', 'marking'):
+        b = Browser(pw, base, html)
+        try:
+            b.open()
+            if unit == 'engine':
+                guarded(out, 'the draws', lambda: check_engine(b, data, out))
+            else:
+                guarded(out, 'the marking checks', lambda: check_marking(b, out))
+            out.extend('page error: ' + e for e in b.errors)
+        finally:
+            b.close()
+    elif unit == 'start':
+        guarded(out, 'the start screen at 320 x 568', lambda: check_start_screen(pw, base, html, out))
+    elif unit == 'expiry':
+        guarded(out, 'the saved-session expiry', lambda: check_expiry(pw, base, html, data, out))
+    elif unit == 'chosen':
+        guarded(out, 'the chosen-unit colour', lambda: check_chosen(pw, base, html, out))
+    elif unit == 'resume':
+        guarded(out, 'a refresh and Carry on, then a finished topic of choice questions',
+                lambda: check_resume_finish(pw, base, html, data, out))
+    elif unit == 'second':
+        guarded(out, 'the page script run twice', lambda: check_second_copy(pw, base, html, data, out))
+    elif unit.startswith(PHONE):
+        topic = [t for t in data['covered'] if t['id'] == unit[len(PHONE):]][0]
+        guarded(out, '375 x 667: %s' % topic['id'], lambda: phone_feedback_topic(pw, base, html, data, topic, out))
+    elif unit == 'tall':
+        guarded(out, 'the tallest feedback on a 375 x 667 phone', lambda: check_tall(pw, base, html, data, out))
+    elif unit == 'play 1280':
+        guarded(out, 'the session at 1280 px', lambda: play(pw, base, html, data, out, blocked=False))
+    elif unit == 'play bank-first':
+        guarded(out, 'the session with a bank-first topic (no game yet)', lambda: play_bank_first(pw, base, html, data, out))
+    elif unit == 'play 320':
+        guarded(out, 'the session at 320 px', lambda: play(pw, base, html, data, out, blocked=True, narrow=True))
+    elif unit == 'no bank':
+        guarded(out, 'the topic with no bank', lambda: no_bank(pw, base, html, data, out))
+    elif unit.startswith('topic:'):
+        guarded(out, 'one topic', lambda: one_topic(pw, base, html, data, out, unit[6:]))
+    else:
+        raise ValueError('no unit %r' % unit)
+
+
+def check(html, data, out, parts, shard=None):
+    """The units named in `parts` (page_units() order, then any 'topic:<fixture>'), each timed as its unit by `shard`."""
     from playwright.sync_api import sync_playwright
-    if '1' in parts:
-        static_checks(html, data, out)
+    units = [u for u in page_units(data) if u in parts] + [u for u in parts if u.startswith('topic:')]
+
+    def timed(u):
+        return shard.unit(u) if shard else contextlib.nullcontext()
+    if 'static' in units:
+        with timed('static'):
+            static_checks(html, data, out)
+    units = [u for u in units if u != 'static']
+    if not units:
+        return
     proc, base = bc.start_stub_server()
     try:
         with sync_playwright() as pw:
-            if '1' in parts or 'engine' in parts or 'marking' in parts:
-                b = Browser(pw, base, html)
-                try:
-                    b.open()
-                    if '1' in parts or 'engine' in parts:
-                        guarded(out, 'the draws', lambda: check_engine(b, data, out))
-                    if '1' in parts or 'marking' in parts:
-                        guarded(out, 'the marking checks', lambda: check_marking(b, out))
-                    out.extend('page error: ' + e for e in b.errors)
-                finally:
-                    b.close()
-            if '2' in parts or 'start' in parts:
-                guarded(out, 'the start screen at 320 x 568', lambda: check_start_screen(pw, base, html, out))
-            if '2' in parts or 'expiry' in parts:
-                guarded(out, 'the saved-session expiry', lambda: check_expiry(pw, base, html, data, out))
-            if '2' in parts or 'chosen' in parts:
-                guarded(out, 'the chosen-unit colour', lambda: check_chosen(pw, base, html, out))
-            if '3' in parts or 'resume' in parts:
-                guarded(out, 'a refresh and Carry on, then a finished topic of choice questions',
-                        lambda: check_resume_finish(pw, base, html, data, out))
-            if '3' in parts or 'second' in parts:
-                guarded(out, 'the page script run twice', lambda: check_second_copy(pw, base, html, data, out))
-            if '3' in parts:
-                guarded(out, 'the verdict and Next on a 375 x 667 phone', lambda: phone_feedback(pw, base, html, data, out))
-            if '3' in parts or 'tall' in parts:
-                guarded(out, 'the tallest feedback on a 375 x 667 phone', lambda: check_tall(pw, base, html, data, out))
-            if '2' in parts:
-                guarded(out, 'the session at 1280 px', lambda: play(pw, base, html, data, out, blocked=False))
-                guarded(out, 'the session with a bank-first topic (no game yet)', lambda: play_bank_first(pw, base, html, data, out))
-            if '3' in parts:
-                guarded(out, 'the session at 320 px', lambda: play(pw, base, html, data, out, blocked=True, narrow=True))
-                guarded(out, 'the topic with no bank', lambda: no_bank(pw, base, html, data, out))
-            for part in parts:
-                if part.startswith('topic:'):
-                    guarded(out, 'one topic', lambda: one_topic(pw, base, html, data, out, part[6:]))
+            for u in units:
+                with timed(u):
+                    run_unit(pw, base, html, data, out, u)
     finally:
         proc.terminate()
 
@@ -1171,7 +1194,7 @@ PLANTS = [
      ['static'], r'"in development" appears'),
     ('a list drawn twice appends to itself ("Your six" doubled after a resume)',
      [("    el.textContent = '';\n    el.appendChild(frag);", "    el.appendChild(frag);")],
-     ['2'], r'"Your six" shows'),
+     ['start', 'expiry', 'chosen', 'play 1280', 'play bank-first'], r'"Your six" shows'),
     ('a unit chosen but not checked drawn green',
      [("border-color: var(--navy); background: #e8ecf5; box-shadow: inset 0 0 0 1px var(--navy); }   /* chosen, not checked: navy */",
        "border-color: var(--correct); background: #e8ecf5; box-shadow: inset 0 0 0 1px var(--correct); }")],
@@ -1209,43 +1232,57 @@ PLANTS = [
 ]
 
 
-def selftest(html, data):
+def plant_id(what):
+    return 'plant: ' + what
+
+
+DATA_PLANT = plant_id('a figure in the data file edited by hand')
+
+
+def selftest(html, data, names, shard=None):
+    """The plants named in `names` (plant_id), each its own unit."""
+    def timed(u):
+        return shard.unit(u) if shard else contextlib.nullcontext()
     ok = True
     for what, edits, needs, want in PLANTS:
-        planted = html
-        for old, new in edits:
-            if planted.count(old) != 1:
-                print('FAIL  plant %r: its text occurs %d times in the page' % (what, planted.count(old)))
-                ok = False
-                break
-            planted = planted.replace(old, new)
-        else:
+        if plant_id(what) not in names:
+            continue
+        with timed(plant_id(what)):
+            planted = html
+            for old, new in edits:
+                if planted.count(old) != 1:
+                    print('FAIL  plant %r: its text occurs %d times in the page' % (what, planted.count(old)))
+                    ok = False
+                    break
+                planted = planted.replace(old, new)
+            else:
+                got = []
+                if needs == ['static']:
+                    static_checks(planted, data, got)
+                else:
+                    check(planted, data, got, needs)
+                if any(re.search(want, g) for g in got):
+                    print('ok    plant caught: %s' % what)
+                else:
+                    print('FAIL  plant NOT caught: %s (findings: %s)' % (what, got[:3]))
+                    ok = False
+    if DATA_PLANT in names:
+        with timed(DATA_PLANT):
+            forged = json.loads(json.dumps(data))
+            forged['covered'][0]['marks'] += 1
             got = []
-            if needs == ['static']:
-                static_checks(planted, data, got)
+            check_data(forged, got)
+            if any('not what scripts/gen-exam-topics.py generates' in g for g in got):
+                print('ok    plant caught: a figure in the data file edited by hand')
             else:
-                check(planted, data, got, needs)
-            if any(re.search(want, g) for g in got):
-                print('ok    plant caught: %s' % what)
-            else:
-                print('FAIL  plant NOT caught: %s (findings: %s)' % (what, got[:3]))
+                print('FAIL  plant NOT caught: a figure in the data file edited by hand')
                 ok = False
-    forged = json.loads(json.dumps(data))
-    forged['covered'][0]['marks'] += 1
-    got = []
-    check_data(forged, got)
-    if any('not what scripts/gen-exam-topics.py generates' in g for g in got):
-        print('ok    plant caught: a figure in the data file edited by hand')
-    else:
-        print('FAIL  plant NOT caught: a figure in the data file edited by hand')
-        ok = False
     return ok
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--part', choices=['1', '2', '3', '4'],
-                    help='1 data, static, draws and marking; 2 a session at 1280 px; 3 a session at 320 px; 4 the plants')
+    bc.shard_args(ap)
     args = ap.parse_args()
     try:
         sys.stdout.reconfigure(encoding='utf-8')
@@ -1254,20 +1291,24 @@ def main():
     with open(PAGE, encoding='utf-8') as f:
         html = f.read()
     data = load_data()
+    # Every unit, in the order of the full run: the data and routes, the page's units, then the plants.
+    plants = [plant_id(p[0]) for p in PLANTS] + [DATA_PLANT]
+    shard = bc.Shard(__file__, args)
+    mine = shard.pick(['data and routes'] + page_units(data) + plants)
     out = []
     ok = True
-    parts = [args.part] if args.part else ['1', '2', '3', '4']
-    if '1' in parts:
-        check_data(data, out)
-        check_routes(data, out)
+    if 'data and routes' in mine:
+        with shard.unit('data and routes'):
+            check_data(data, out)
+            check_routes(data, out)
         W = sum(t['marks'] for t in data['covered'])
         print('the-6-ps: %d covered topics (%.1f marks a series), %d coming soon; %d sessions drawn each way; '
               '%d fixture questions' % (len(data['covered']), W, len(data['coming_soon']), DRAWS, len(by_ref())))
-    run = [p for p in parts if p in ('1', '2', '3')]
+    run = [u for u in mine if u in page_units(data)]
     if run:
-        check(html, data, out, run)
-    if '4' in parts:
-        ok = selftest(html, data) and ok
+        check(html, data, out, run, shard)
+    if any(u in plants for u in mine):
+        ok = selftest(html, data, mine, shard) and ok
     for f in out[:60]:
         print('FAIL  ' + f)
     if len(out) > 60:

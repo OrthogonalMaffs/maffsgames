@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Football Pitches per Squared Squirrel, part 1 (Stage 1 the fixed ramp in order; every pool question's key recomputed from its data by units and dimensions, its unit the quantity asked, its named slips recomputed and none equal to the key, Stages 2-3 friendly whole numbers, at least 40 a stage, sessions easiest first; no nonsense unit or squirrel in any question, option, hint or worked line; no formula-triangle wording or drawing) | --part 1
-# ci-line: Football Pitches per Squared Squirrel, part 2 (every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, Stage 1's retry keeps the mark, the no-unit "squirrels" message loud, spaced from the unit buttons, marking nothing and cleared by picking a unit, the wrong unit marks nothing, named slips, the calculator in Stages 4-5 only, no sideways scroll) | --part 2
-# ci-line: Football Pitches per Squared Squirrel, part 3 (fault-injection self-test: six of the twelve planted faults, each caught) | --part 3
-# ci-line: Football Pitches per Squared Squirrel, part 4 (fault-injection self-test: the other six planted faults, each caught) | --part 4
+# ci-shards: Football Pitches per Squared Squirrel (Stage 1 the fixed ramp in order; every pool question's key recomputed from its data by units and dimensions, its unit the quantity asked, its named slips recomputed and none equal to the key, Stages 2-3 friendly whole numbers, at least 40 a stage, sessions easiest first; no nonsense unit or squirrel in any question, option, hint or worked line; no formula-triangle wording or drawing; every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, Stage 1's retry keeps the mark, the no-unit "squirrels" message loud, spaced from the unit buttons, marking nothing and cleared by picking a unit, the wrong unit marks nothing, named slips, the calculator in Stages 4-5 only, no sideways scroll; fault-injection self-test: twelve planted faults, each caught) | | 4
 # ci-deps: games/squared-squirrel/
 """Independent verification for Football Pitches per Squared Squirrel (games/squared-squirrel/), built 23 Oct 2026
 (contract FOOTBALL-PITCHES, Jon). SR-30: checked from its first PR.
@@ -36,8 +33,14 @@ question's data and the contract's words, never from the game's own functions:
              screen's premise and the no-unit message, which must be loud (the accent, bold, body size, the unit
              buttons outlined) and clear as soon as a unit is picked.
   Play       every stage end to end at 1280x800 and 320x568, read from the page (canon 7.9).
+
+Work units (contract SHARD; CI runs a slice with --shard i/k): "engine" (Ramp to Sessions, read on one 1280x800 page),
+"play 1280x800" and "play 320x568" (each every stage in turn through Next stage), then one per planted fault ("plant:
+<fault>"). The static checks run once in any run that has the engine or a play unit, as they did in each of the old parts
+1 and 2.
 """
 import argparse
+import contextlib
 import json
 import math
 import os
@@ -728,24 +731,28 @@ def guarded(out, what, f):
         out.append('%s threw: %s' % (what, str(e).splitlines()[0][:200]))
 
 
-def check(html, out, engine=True, sizes=(), sessions=SESSIONS):
+def check(html, out, engine=True, sizes=(), sessions=SESSIONS, shard=None):
+    """shard: time the engine and each size as its work unit ("engine", "play WxH"); the self-test passes none."""
     from playwright.sync_api import sync_playwright
+    unit = shard.unit if shard is not None else (lambda uid: contextlib.nullcontext())
     static_checks(html, out)
     proc, base = bc.start_stub_server()
     info = {}
     try:
         with sync_playwright() as pw:
             if engine:
-                br, page, errs = open_page(pw, base, html, (1280, 800))
-                guarded(out, 'the engine checks', lambda: info.update(check_engine(page, out, sessions)))
-                out.extend('page error: ' + e for e in errs)
-                br.close()
+                with unit('engine'):
+                    br, page, errs = open_page(pw, base, html, (1280, 800))
+                    guarded(out, 'the engine checks', lambda: info.update(check_engine(page, out, sessions)))
+                    out.extend('page error: ' + e for e in errs)
+                    br.close()
             for size in sizes:
-                br, page, errs = open_page(pw, base, html, size)
-                guarded(out, 'play at %dx%d' % size, lambda: play(page, size, out))
-                out.extend('page error at %dx%d: %s' % (size[0], size[1], e) for e in errs)
-                info.setdefault('played', []).append('%dx%d' % size)
-                br.close()
+                with unit('play %dx%d' % size):
+                    br, page, errs = open_page(pw, base, html, size)
+                    guarded(out, 'play at %dx%d' % size, lambda: play(page, size, out))
+                    out.extend('page error at %dx%d: %s' % (size[0], size[1], e) for e in errs)
+                    info.setdefault('played', []).append('%dx%d' % size)
+                    br.close()
     finally:
         proc.terminate()
     return info
@@ -800,61 +807,56 @@ PLANTS = [
 ]
 
 
-# The plants in two CI lines (24 Oct 2026: one line of all twelve took 212 s, over ci-groups' per-line limit), balanced by
-# kind: the slow ones that play the game alternate between part 3 and part 4, and so do the quick ones.
-def plants_for(part):
-    heavy = [p for p in PLANTS if p[2] == 'play']
-    light = [p for p in PLANTS if p[2] != 'play']
-    return heavy[0::2] + light[1::2] if part == '3' else heavy[1::2] + light[0::2]
-
-
-def selftest(html, plants=None):
+# Each plant is a work unit of its own (contract SHARD), dealt into CI parts by its time (24 Oct 2026: one line of all
+# twelve took 212 s, over ci-groups' per-line limit).
+def selftest(html, plants, shard):
     ok = True
-    for what, edits, kind, want in (PLANTS if plants is None else plants):
-        planted = html
-        bad = False
-        for old, new in edits:
-            if planted.count(old) != 1:
-                bad = True
-                break
-            planted = planted.replace(old, new)
-        if bad:
-            print('  self-test %-58s *** CANNOT PLANT ***' % what)
-            ok = False
-            continue
-        got = []
-        if kind == 'static':
-            static_checks(planted, got)
-        else:
-            check(planted, got, engine=kind == 'engine', sizes=[(1280, 800)] if kind == 'play' else [], sessions=6)
-        hit = [g for g in got if re.search(want, g)]
-        ok = ok and bool(hit)
-        print('  self-test %-58s %s' % (what, ('caught: ' + hit[0][:110]) if hit else '*** MISSED ***' + (' (other findings: %s)' % got[0][:100] if got else '')))
+    for what, edits, kind, want in plants:
+        with shard.unit('plant: ' + what):
+            planted = html
+            bad = False
+            for old, new in edits:
+                if planted.count(old) != 1:
+                    bad = True
+                    break
+                planted = planted.replace(old, new)
+            if bad:
+                print('  self-test %-58s *** CANNOT PLANT ***' % what)
+                ok = False
+                continue
+            got = []
+            if kind == 'static':
+                static_checks(planted, got)
+            else:
+                check(planted, got, engine=kind == 'engine', sizes=[(1280, 800)] if kind == 'play' else [], sessions=6)
+            hit = [g for g in got if re.search(want, g)]
+            ok = ok and bool(hit)
+            print('  self-test %-58s %s' % (what, ('caught: ' + hit[0][:110]) if hit else '*** MISSED ***' + (' (other findings: %s)' % got[0][:100] if got else '')))
     return ok
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--part', choices=['1', '2', '3', '4'], help='one of the four parts CI runs side by side (default: all)')
     ap.add_argument('--sessions', type=int, default=SESSIONS)
+    bc.shard_args(ap)
     args = ap.parse_args()
+    shard = bc.Shard(__file__, args)
+    mine = shard.pick(['engine'] + ['play %dx%d' % size for size in SIZES] + ['plant: ' + p[0] for p in PLANTS])
     try:
         sys.stdout.reconfigure(encoding='utf-8')
     except (AttributeError, ValueError):
         pass
     html = open(GAME, encoding='utf-8').read()
-    part = args.part
     out = []
     info = {}
-    if part in (None, '1', '2'):
-        info = check(html, out, engine=part in (None, '1'), sizes=SIZES if part in (None, '2') else [], sessions=args.sessions)
+    sizes = [size for size in SIZES if 'play %dx%d' % size in mine]
+    if 'engine' in mine or sizes:
+        info = check(html, out, engine='engine' in mine, sizes=sizes, sessions=args.sessions, shard=shard)
     if 'pools' in info:
         print('%s: pools %s (Stage 1 the fixed ramp of 10); %d sessions a stage' % (SLUG, info['pools'], args.sessions))
     if 'played' in info:
         print('%s: every stage played at %s' % (SLUG, ', '.join(info['played'])))
-    ok = True
-    if part in (None, '3', '4'):
-        ok = selftest(html, None if part is None else plants_for(part))
+    ok = selftest(html, [p for p in PLANTS if 'plant: ' + p[0] in mine], shard)
     for f in out[:60]:
         print('FAIL  ' + f)
     if len(out) > 60:

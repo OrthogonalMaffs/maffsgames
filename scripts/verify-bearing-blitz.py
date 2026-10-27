@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points and message figures recomputed around 0/360; lives and end flows played in Chromium) |
+# ci-shards: Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points and message figures recomputed around 0/360; lives and end flows played in Chromium; fault-injection self-test: every planted fault caught) | | 2
 """Bearing Blitz: a target bearing is shown ("045°"); the student drags the needle by eye and fires; within ±5° is a hit.
 
 Generated, not banked: `generateBearings()` gives 16 fixed bearings (0, 30, 45, 60, 90, ... 330) and 8 drawn from 0..359, shuffled;
@@ -21,7 +21,12 @@ Checks, independent of the game's code (bearings measured clockwise from North, 
     with "All Ships Sunk!" and the score added up here.
 No analytics or leaderboard request leaves the stub server (every other request is aborted).
 
-    python scripts/verify-bearing-blitz.py [--no-selftest] [--against FILE]
+    python scripts/verify-bearing-blitz.py [--no-selftest] [--against FILE] [--shard I/K] [--list-units]
+
+Work units (contract SHARD): "base run" (every check above, in order on one page: the needle section leaves the canvas the
+North marker is read from, and page errors are counted over the whole session, so it is one unit), then one per planted
+fault ("plant: <fault>"), each a full play on its planted page. --no-selftest or --against drops the plant units, as it
+dropped the self-test before; CI runs its slice --shard i/k of every unit.
 """
 import argparse
 import math
@@ -253,16 +258,27 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--no-selftest', action='store_true')
     ap.add_argument('--against', help='serve this file as the game page')
+    bc.shard_args(ap)
     args = ap.parse_args()
     sys.stdout.reconfigure(encoding='utf-8')
+    # The units: the base run on the real page, then each plant (dropped by --no-selftest or --against, as before).
+    units = ['base run']
+    if not args.no_selftest and not args.against:
+        units += ['plant: ' + what for what, _, _ in PLANTS]
+    shard = bc.Shard(__file__, args)
+    mine = shard.pick(units)
     html = open(args.against or GAME, encoding='utf-8').read()
     fails = []
-    st = play(fails, html)
-    print('%s: all 360 bearings pressed on the compass and read back with the needle drawn; %d shots marked over %d targets at -10..+10 '
-          'degrees; sessions and both end flows played in Chromium' % (SLUG, st.get('shots', 0), len(TARGETS)))
+    if 'base run' in mine:
+        with shard.unit('base run'):
+            st = play(fails, html)
+            print('%s: all 360 bearings pressed on the compass and read back with the needle drawn; %d shots marked over %d targets at -10..+10 '
+                  'degrees; sessions and both end flows played in Chromium' % (SLUG, st.get('shots', 0), len(TARGETS)))
     ok = True
-    if not args.no_selftest and not args.against:
-        for what, tag, edits in PLANTS:
+    for what, tag, edits in PLANTS:
+        if 'plant: ' + what not in mine:
+            continue
+        with shard.unit('plant: ' + what):
             bad = [o for o, n in edits if html.count(o) != 1]
             if bad:
                 print('  self-test %-58s *** CANNOT PLANT (%r) ***' % (what, bad[0][:60]))
