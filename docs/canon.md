@@ -1859,6 +1859,12 @@ answers are checked by a separate code path in `gen-six-ps.py` (`pie_faults`, fr
 in `scripts/gen-exam-topics.py` has no game slug, so its `route` is `null` and The 6 P's leaves out "Want more practice?" for it; when
 the game exists the row gets its slug and level.
 
+The second bank-first topic is `percentages-money` (contract PERCENTAGES-MONEY-BANK, Jon, 27 Oct 2026; generator
+`schools/assets/percentages-money-generator.js`, `MaffsPercentagesMoney`, checked by `pm_faults` in `gen-six-ps.py`; the game is planned as
+"It's on Sale!"). It replaces the coming-soon rows percentage-change and interest-depreciation with one covered row (13.3 marks a series).
+All its money is integer pence; stages 1-4 are calculator optional and worked from 10%, 5% or 1%; stage 5 is a calculator stage worked with
+the multiplier and always says "to the nearest penny", and no answer is a half-penny.
+
 ## 8.2b Leaderboard / Data Integrity — found 21 July 2026, not fixed
 
 - [ ] **higher-power mixed-scoring-mode leaderboard key.** Its two modes

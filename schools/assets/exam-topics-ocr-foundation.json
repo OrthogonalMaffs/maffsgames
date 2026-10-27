@@ -587,6 +587,17 @@
     4
    ],
    "route": null
+  },
+  {
+   "id": "percentages-money",
+   "name": "Percentages, interest and depreciation",
+   "marks": 13.3,
+   "series": 6,
+   "band": [
+    3,
+    5
+   ],
+   "route": null
   }
  ],
  "coming_soon": [
@@ -598,23 +609,9 @@
    "planned": null
   },
   {
-   "id": "interest-depreciation",
-   "name": "Interest and depreciation",
-   "marks": 7.3,
-   "series": 6,
-   "planned": null
-  },
-  {
    "id": "scatter-graphs",
    "name": "Scatter graphs",
    "marks": 6.2,
-   "series": 6,
-   "planned": null
-  },
-  {
-   "id": "percentage-change",
-   "name": "Percentage change",
-   "marks": 6.0,
    "series": 6,
    "planned": null
   },

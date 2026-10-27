@@ -4017,6 +4017,254 @@ async def topic_pie_charts(h):
     return [pie_question(q) for q in qs]
 
 
+# ───────────────────────────── percentages and money (contract PERCENTAGES-MONEY-BANK, Jon, 27 Oct 2026): the second bank-first topic ─────
+# The questions come from schools/assets/percentages-money-generator.js (MaffsPercentagesMoney), the file the game "It's on Sale!" will
+# load when it is built (canon 8.2.1). Every answer and slip is recomputed here from the question's own params by pm_expected(), exactly
+# (Fractions, never floats), a separate code path from the generator's integer arithmetic.
+PM_JS = os.path.join(ROOT, "schools", "assets", "percentages-money-generator.js")
+PM_SOURCE = "percentages-money-generator"
+
+
+def pm_round(x):
+    """The nearest penny, halves up, from an exact Fraction."""
+    return math.floor(x + Fraction(1, 2))
+
+
+def pm_steps(p, B):
+    """The amounts and the multipliers or divisors the method for 'p% of B' (pence) uses, worked out here from the rule table:
+    50, 25, 75 by halves and quarters; a multiple of 10 by 10%; a multiple of 5 by 10% and its half; anything else by 1%."""
+    F = Fraction
+    x = F(B) * p / 100
+    if p == 50:
+        return [F(B) / 2], [2]
+    if p == 25:
+        return [F(B) / 4], [4]
+    if p == 75:
+        return [F(B) / 4, x], [4, 3]
+    if p % 10 == 0:
+        return ([F(B) / 10] + ([x] if p > 10 else [])), [10] + ([p // 10] if p > 10 else [])
+    if p % 5 == 0:
+        k = (p - 5) // 10
+        return [F(B) / 10, F(B) / 20] + ([x] if k > 0 else []), [10, 2] + ([k] if k > 0 else [])
+    return [F(B) / 100, x], [100, p]
+
+
+def pm_friendly_run(steps, mults):
+    return all(s.denominator == 1 and s % 5 == 0 for s in steps) and all(m <= 12 or m % 10 == 0 for m in mults)
+
+
+def pm_expected(q):
+    """What the question's params say, worked out here and not by the generator: {'answer': Fraction (pence, or a percentage),
+    'slips': {kind: Fraction}, 'friendly': bool, 'steps': [Fraction] (the amounts a student works with, which must be whole pence)}."""
+    F = Fraction
+    P_, st = q["params"], q["stage"]
+    slips = {}
+    if st == 1:
+        steps, mults = pm_steps(P_["pct"], P_["base"])
+        return {"answer": F(P_["base"]) * P_["pct"] / 100, "slips": slips, "friendly": pm_friendly_run(steps, mults), "steps": steps}
+    if st == 2:
+        steps, mults = pm_steps(P_["pct"], P_["base"])
+        x = F(P_["base"]) * P_["pct"] / 100
+        new = P_["base"] - x if P_["dir"] == "dec" else P_["base"] + x
+        slips["only_percentage"] = x
+        return {"answer": new, "slips": slips, "friendly": pm_friendly_run(steps + [new], mults), "steps": steps + [new]}
+    if st == 3:
+        o, n = F(P_["old"]), F(P_["new"])
+        c = abs(n - o)
+        if (n < o) != (P_["dir"] == "dec"):
+            raise AssertionError("direction does not match old and new")
+        one = o / 100
+        over = 100 * c / n
+        if (over * 100).denominator == 1:                      # a value a student can type exactly: the only case the generator may offer
+            slips["over_new"] = over
+        p = 100 * c / o
+        return {"answer": p, "slips": slips, "friendly": one % 10 == 0 and one.denominator == 1 and c % 5 == 0 and p % 5 == 0,
+                "steps": [c, one], "optional_slips": ["over_new"]}
+    if st == 4:
+        k = 100 - P_["pct"] if P_["dir"] == "dec" else 100 + P_["pct"]
+        one = F(P_["newp"]) / k
+        wrong = F(P_["newp"]) * k / 100
+        slips["off_sale_price"] = wrong
+        return {"answer": one * 100, "slips": slips, "friendly": (k <= 12 or k % 10 == 0) and one.denominator == 1 and one % 5 == 0,
+                "steps": [one, one * 100], "optional_slips": ["off_sale_price"]}
+    # stage 5
+    P, r, y, kind, qty = P_["principal"], P_["rate"], P_["years"], P_["kind"], P_["qty"]
+    comp = lambda m: pm_round(F(P) * F(m, 100) ** y)
+    lose = P if qty == "interest" else 0
+    if kind == "simple":
+        interest = F(P) * r * y / 100
+        ans = interest if qty == "interest" else P + interest
+        slips["compound_for_simple"] = comp(100 + r) - lose
+    elif kind == "compound":
+        ans = comp(100 + r) - lose
+        slips["simple_for_compound"] = pm_round(F(P) + F(P) * r * y / 100) - lose
+        slips["times_years"] = pm_round(F(P) * (100 + r) * y / 100) - lose
+        if r < 10:
+            slips["multiplier_digit"] = comp(100 + r * 10) - lose
+    else:
+        ans = comp(100 - r)
+        slips["depreciation_added"] = comp(100 + r)
+        if r % 10 == 0:
+            slips["multiplier_digit"] = comp(r)
+    return {"answer": ans, "slips": slips, "friendly": False, "steps": []}
+
+
+def pm_faults(q):
+    """Everything wrong with one generated question, from its own params: [] when it is sound."""
+    F = Fraction
+    f = []
+    exp = pm_expected(q)
+    a, ex = q["answer"], exp["answer"]
+    if a["type"] == "money":
+        if ex.denominator != 1 or a["pence"] != ex:
+            f.append("money answer %s pence, recomputed %s" % (a["pence"], ex))
+    else:
+        if ex.denominator != 1 or a["value"] != ex:
+            f.append("percentage answer %s, recomputed %s" % (a["value"], ex))
+    P_ = q["params"]
+    if q["stage"] <= 4:
+        bad = [s for s in exp["steps"] if F(s).denominator != 1]
+        if bad:
+            f.append("a step of the working is not whole pence: %s" % bad)
+        base = P_.get("base", P_.get("old", 0))
+        if q["stage"] != 4 and base % 100 != 0:
+            f.append("the amount is not a whole number of pounds")
+        if q["calc"] != "optional":
+            f.append("stages 1-4 are calculator optional")
+    else:
+        if P_["kind"] != "simple":
+            m = 100 + P_["rate"] if P_["kind"] == "compound" else 100 - P_["rate"]
+            n = F(P_["principal"]) * F(m, 100) ** P_["years"]
+            if (n - math.floor(n)) == F(1, 2):
+                f.append("the answer is a half-penny: the rounding would decide it")
+            if "nearest penny" not in q["stem"]:
+                f.append("the stem does not say 'to the nearest penny'")
+        if P_["kind"] == "simple" and "simple interest" not in q["stem"]:
+            f.append("a simple interest question that does not say so")
+        if P_["kind"] == "compound" and "compound interest" not in q["stem"]:
+            f.append("a compound interest question that does not say so")
+        if q["calc"] != "calculator":
+            f.append("stage 5 is a calculator stage")
+    got = {s["kind"]: s for s in q["slips"]}
+    for kind, sl in got.items():
+        want = exp["slips"].get(kind)
+        if want is None:
+            f.append("slip %s cannot be recomputed from the data" % kind)
+            continue
+        have = sl["answer"].get("pence", sl["answer"].get("value"))
+        if abs(float(have) - float(want)) > 1e-9:
+            f.append("slip %s is %s, recomputed %s" % (kind, have, want))
+        if F(have) == ex or F(want) == ex:
+            f.append("slip %s equals the key" % kind)
+    for kind, want in exp["slips"].items():       # a slip is offered wherever its value is a distinct, exact answer
+        if kind in got or F(want) == ex:
+            continue
+        if kind == "off_sale_price" and F(want) % 100 != 0:
+            continue
+        f.append("slip %s is missing" % kind)
+    if not 2 <= len(q["worked"]) <= 5:
+        f.append("%d worked lines" % len(q["worked"]))
+    if q["friendly"] != exp["friendly"]:
+        f.append("friendly is %s, recomputed %s" % (q["friendly"], exp["friendly"]))
+    need = []                                      # the numbers the question asks about are in its words
+    if q["stage"] in (1, 2, 4):
+        need.append("%d%%" % P_["pct"])
+    if q["stage"] in (1, 2):
+        need.append(P_["base"])
+    if q["stage"] == 3:
+        need += [P_["old"], P_["new"]]
+    if q["stage"] == 4:
+        need.append(P_["newp"])
+    if q["stage"] == 5:
+        need += [P_["principal"], "%d%%" % P_["rate"], "%d years" % P_["years"]]
+    for n in need:
+        t = n if isinstance(n, str) else "£%s" % (("%d" % (n // 100)) if n % 100 == 0 else "%.2f" % (n / 100))
+        if t not in q["stem"]:
+            f.append("the stem does not say %s" % t)
+    return f
+
+
+def pm_selftest(sample):
+    """pm_faults on planted faults: a clean question passes, each fault is caught. [] if all hold."""
+    import copy
+    pick = lambda st, kind=None: next(q for q in sample if q["stage"] == st and (kind is None or q["kind"] == kind))
+    base = {"s1": pick(1), "s2": pick(2, "dec"), "s3": pick(3, "dec"), "s4": pick(4, "dec"), "simple": pick(5, "simple"),
+            "compound": pick(5, "compound"), "dep": pick(5, "depreciation")}
+    out = []
+    for k, q in base.items():
+        if pm_faults(q):
+            out.append("pm check: a clean %s question was flagged: %s" % (k, pm_faults(q)[:2]))
+
+    def plant(name, key, edit):
+        q = copy.deepcopy(base[key])
+        edit(q)
+        if not pm_faults(q):
+            out.append("pm check: planted fault not caught: " + name)
+    plant("a percentage of an amount off by 1p", "s1", lambda q: q["answer"].update(pence=q["answer"]["pence"] + 1))
+    plant("only the percentage given as the new price", "s2", lambda q: q["answer"].update(pence=q["slips"][0]["answer"]["pence"]))
+    plant("a percentage change out by one", "s3", lambda q: q["answer"].update(value=q["answer"]["value"] + 1))
+    plant("a reverse percentage taken off the sale price", "s4", lambda q: q["answer"].update(pence=q["params"]["newp"] * 8 // 10))
+    plant("compound worked as simple", "compound", lambda q: q["answer"].update(
+        pence=round(q["params"]["principal"] * (1 + q["params"]["rate"] * q["params"]["years"] / 100))))
+    plant("depreciation added instead of taken off", "dep", lambda q: q["answer"].update(
+        pence=round(q["params"]["principal"] * (1 + q["params"]["rate"] / 100) ** q["params"]["years"])))
+    plant("a simple interest answer a penny out", "simple", lambda q: q["answer"].update(pence=q["answer"]["pence"] + 1))
+    plant("a slip that is the key", "s2", lambda q: q["slips"].append({"kind": "only_percentage", "answer": {"pence": q["answer"]["pence"]}, "line": "x"}))
+    plant("a stage 5 question marked calculator optional", "compound", lambda q: q.update(calc="optional"))
+    plant("friendly wrongly true", "compound", lambda q: q.update(friendly=True))
+    return out
+
+
+async def pm_generate(h):
+    """The generator's questions, 12 a stage, run in the browser, each slot from its own fixed seed."""
+    pg = await h.browser.new_page()
+    await pg.goto("about:blank")
+    await pg.add_script_tag(content=open(PM_JS, encoding="utf-8").read())
+    js = ("() => { %s const out = []; for (const st of MaffsPercentagesMoney.STAGES) for (let sl = 0; sl < MaffsPercentagesMoney.SLOTS; sl++) "
+          "{ const seed = st * 100 + sl + 1; const q = MaffsPercentagesMoney.question(st, sl, mul(seed)); q.seed = seed; out.push(q); } "
+          "return out; }") % MULBERRY
+    data = await pg.evaluate(js)
+    await pg.close()
+    return data
+
+
+def pm_question(q):
+    """One generated question as a schema-1 bank question."""
+    a = q["answer"]
+    if a["type"] == "money":
+        fmt, ans, unit = "money", {"pence": a["pence"]}, None
+    else:
+        fmt, ans, unit = "number", {"value": a["value"]}, "%"
+    slips = [{"answer": ({"pence": s["answer"]["pence"]} if fmt == "money" else {"value": s["answer"]["value"]}), "line": s["line"]}
+             for s in q["slips"]]
+    ref = "generator:MaffsPercentagesMoney.question:%d:%d:%d" % (q["stage"], q["slot"], q["seed"])
+    z = mk("percentages-money", PM_SOURCE, ref, q["band"], True if q["calc"] == "calculator" else "optional", q["stem"], fmt, ans, unit=unit,
+           worked=q["worked"], slip=slips)
+    if q["friendly"]:
+        z["try_without"] = True
+    return z
+
+
+async def topic_percentages_money(h):
+    """A high-street shop, a savings account and a car dealer: 12 questions in each of five stages (percentage of an amount, increase or
+    decrease, percentage change, reverse percentages, interest and depreciation), generated by percentages-money-generator.js and each
+    recomputed by pm_faults() from its own params."""
+    qs = await pm_generate(h)
+    bad = ["stage %d slot %d: %s" % (q["stage"], q["slot"], x) for q in qs for x in pm_faults(q)]
+    bad += pm_selftest(qs)
+    if len({json.dumps([q["stem"], q["answer"]], sort_keys=True) for q in qs}) != len(qs):
+        bad.append("the generator made two questions alike")
+    for st in range(1, 6):
+        if sum(1 for q in qs if q["stage"] == st) < 12:
+            bad.append("stage %d has fewer than 12 questions" % st)
+    simple = sum(1 for q in qs if q["stage"] == 5 and q["kind"] == "simple")
+    if not 2 <= simple <= 4:
+        bad.append("%d of 12 stage 5 questions are simple interest (about 1 in 4)" % simple)
+    if bad:
+        raise AssertionError("percentages-money: " + "; ".join(bad[:8]))
+    return [pm_question(q) for q in qs]
+
+
 # ───────────────────────────── the registry ─────────────────────────────
 # topic id -> (builder, rule notes). Topics not here have no bank yet (coming soon).
 BUILDERS = {
@@ -4053,6 +4301,7 @@ BUILDERS = {
     "pythagoras": topic_pythagoras,
     "coordinates": topic_coordinates,
     "pie-charts": topic_pie_charts,
+    "percentages-money": topic_percentages_money,
 }
 
 
