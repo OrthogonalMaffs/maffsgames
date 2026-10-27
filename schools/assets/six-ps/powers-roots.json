@@ -36,7 +36,8 @@
     }
    ],
    "worked": [
-    "Add the powers: 3+4=7"
+    "Add the powers: 3+4=7",
+    "The answer: \\(x^7\\)."
    ],
    "slip": []
   },
@@ -74,7 +75,8 @@
     }
    ],
    "worked": [
-    "Multiply coefficients, add powers: 2×3=6, 2+5=7"
+    "Multiply coefficients, add powers: 2×3=6, 2+5=7",
+    "The answer: \\(6x^7\\)."
    ],
    "slip": []
   },
@@ -112,7 +114,8 @@
     }
    ],
    "worked": [
-    "Add the powers: -2+5=3"
+    "Add the powers: -2+5=3",
+    "The answer: \\(a^3\\)."
    ],
    "slip": []
   },
@@ -150,7 +153,8 @@
     }
    ],
    "worked": [
-    "Add the powers: 6+(-1)=5"
+    "Add the powers: 6+(-1)=5",
+    "The answer: \\(a^5\\)."
    ],
    "slip": []
   },
@@ -188,7 +192,8 @@
     }
    ],
    "worked": [
-    "Multiply coefficients: 5×2=10, add powers: 3+(-1)=2"
+    "Multiply coefficients: 5×2=10, add powers: 3+(-1)=2",
+    "The answer: \\(10x^2\\)."
    ],
    "slip": []
   },
@@ -226,7 +231,8 @@
     }
    ],
    "worked": [
-    "Same base, add powers: 4+2=6"
+    "Same base, add powers: 4+2=6",
+    "The answer: \\(3^6\\)."
    ],
    "slip": []
   },
@@ -264,7 +270,8 @@
     }
    ],
    "worked": [
-    "Subtract the powers: 8-3=5"
+    "Subtract the powers: 8-3=5",
+    "The answer: \\(x^5\\)."
    ],
    "slip": []
   },
@@ -302,7 +309,8 @@
     }
    ],
    "worked": [
-    "Divide coefficients, subtract powers: 6÷2=3, 7-2=5"
+    "Divide coefficients, subtract powers: 6÷2=3, 7-2=5",
+    "The answer: \\(3x^5\\)."
    ],
    "slip": []
   },
@@ -340,7 +348,8 @@
     }
    ],
    "worked": [
-    "Subtract the powers: 3-7=-4"
+    "Subtract the powers: 3-7=-4",
+    "The answer: \\(x^{-4}\\)."
    ],
    "slip": []
   },
@@ -416,7 +425,8 @@
     }
    ],
    "worked": [
-    "Divide coefficients: 12÷4=3, subtract powers: 9-3=6"
+    "Divide coefficients: 12÷4=3, subtract powers: 9-3=6",
+    "The answer: \\(3x^6\\)."
    ],
    "slip": []
   },
@@ -454,7 +464,8 @@
     }
    ],
    "worked": [
-    "Same base, subtract powers: 7-3=4"
+    "Same base, subtract powers: 7-3=4",
+    "The answer: \\(2^4\\)."
    ],
    "slip": []
   },
@@ -492,7 +503,8 @@
     }
    ],
    "worked": [
-    "Subtract powers: 6-(-3)=9"
+    "Subtract powers: 6-(-3)=9",
+    "The answer: \\(x^9\\)."
    ],
    "slip": []
   },
@@ -530,7 +542,8 @@
     }
    ],
    "worked": [
-    "Divide coefficients: 20÷5=4, subtract powers: 4-1=3"
+    "Divide coefficients: 20÷5=4, subtract powers: 4-1=3",
+    "The answer: \\(4a^3\\)."
    ],
    "slip": []
   },
@@ -568,7 +581,8 @@
     }
    ],
    "worked": [
-    "Multiply the powers: 3×4=12"
+    "Multiply the powers: 3×4=12",
+    "The answer: \\(x^{12}\\)."
    ],
    "slip": []
   },
@@ -606,7 +620,8 @@
     }
    ],
    "worked": [
-    "Cube the coefficient: 2³=8, multiply powers: 2×3=6"
+    "Cube the coefficient: 2³=8, multiply powers: 2×3=6",
+    "The answer: \\(8x^6\\)."
    ],
    "slip": []
   },
@@ -644,7 +659,8 @@
     }
    ],
    "worked": [
-    "Multiply the powers: 5×2=10"
+    "Multiply the powers: 5×2=10",
+    "The answer: \\(a^{10}\\)."
    ],
    "slip": []
   },
@@ -682,7 +698,8 @@
     }
    ],
    "worked": [
-    "Multiply the powers: -2×3=-6"
+    "Multiply the powers: -2×3=-6",
+    "The answer: \\(x^{-6}\\)."
    ],
    "slip": []
   },
@@ -720,7 +737,8 @@
     }
    ],
    "worked": [
-    "Square the coefficient: 3²=9, multiply powers: 4×2=8"
+    "Square the coefficient: 3²=9, multiply powers: 4×2=8",
+    "The answer: \\(9a^8\\)."
    ],
    "slip": []
   },
@@ -754,11 +772,12 @@
     },
     {
      "val": "d",
-     "label": "\\(25^3\\)"
+     "label": "\\(10^3\\)"
     }
    ],
    "worked": [
-    "Multiply the powers: 2×3=6"
+    "Multiply the powers: 2×3=6",
+    "The answer: \\(5^6\\)."
    ],
    "slip": []
   },
@@ -910,7 +929,8 @@
     }
    ],
    "worked": [
-    "a⁰=1, so multiplying by a⁰ changes nothing"
+    "a⁰=1, so multiplying by a⁰ changes nothing",
+    "The answer: \\(10a^3\\)."
    ],
    "slip": []
   },
@@ -948,7 +968,8 @@
     }
    ],
    "worked": [
-    "Negative power = reciprocal"
+    "Negative power = reciprocal",
+    "The answer: \\(\\dfrac{1}{x^3}\\)."
    ],
    "slip": []
   },
@@ -1062,7 +1083,8 @@
     }
    ],
    "worked": [
-    "1/xⁿ = x⁻ⁿ"
+    "1/xⁿ = x⁻ⁿ",
+    "The answer: \\(x^{-5}\\)."
    ],
    "slip": []
   },
@@ -1138,7 +1160,8 @@
     }
    ],
    "worked": [
-    "(2x)²=4x², so (2x)⁻²=1/(4x²)"
+    "(2x)²=4x², so (2x)⁻²=1/(4x²)",
+    "The answer: \\(\\dfrac{1}{4x^2}\\)."
    ],
    "slip": []
   },
@@ -1214,7 +1237,8 @@
     }
    ],
    "worked": [
-    "x⁻¹=1/x, and the 4 stays as coefficient"
+    "x⁻¹=1/x, and the 4 stays as coefficient",
+    "The answer: \\(\\dfrac{4}{x}\\)."
    ],
    "slip": []
   }

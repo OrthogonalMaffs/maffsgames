@@ -108,3 +108,20 @@ values and "which of these is larger / equal" selections.
 
 After a wrong answer, compare it with each slip's `answer` by the same rule that marks the question; on a match show
 that slip's `line`, then the worked solution.
+
+## `likelihood`: the probability a word comes from (contract SIX-PS-REVIEW-FIXES, Jon, 27 Oct 2026)
+
+A "which word best describes how likely this is" question stores `likelihood: {n, d}`, the probability its answer word comes from, and the
+word must match that probability's band: 0 impossible, below 1/2 unlikely, 1/2 even chance, above 1/2 likely, 1 certain. Every such event is
+one whose probability can be calculated (dice, coins, cards, months and days of the week), never weather, sport, season, place or opinion.
+The field is read by `scripts/six_ps_rules.py` (rule g); the page ignores it.
+
+## The review rules (`scripts/six_ps_rules.py`, run over every bank by `gen-six-ps.py --check`)
+
+An independent review of 1,805 questions (27 Oct 2026) found every stored answer correct and eight kinds of fault around them. Each is a rule,
+with a planted case that must be caught: (a) no choice has two options of equal value; (b) an accept rule "simplest" says "simplest form" in the
+stem; (c) a slip is stored at the full-precision value of its misconception (a question that states a rounding stores it to that rounding);
+(d) the last worked line states the stored answer; (e) no raw backslash or escape outside maths; (f) a diagram whose working uses a right angle
+marks it (or the stem says it); (g) the likelihood rule above; (h) words are never typeset inside KaTeX: maths only, so a `\text{}` holds a unit or
+a single label, and `P( )` holds a short event (`P(red)`), never a situation. The mechanical cases are fixed for every bank by
+`apply_review_fixes` in `gen-six-ps.py`, after the builders run; nothing is edited by hand.

@@ -26,7 +26,7 @@
    "slip": [
     {
      "answer": {
-      "value": 14.0
+      "value": 13.92838827718412
      },
      "line": "You added instead of subtracting."
     }
@@ -75,7 +75,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): 10 cm, given. You're finding a shorter side, so subtract.",
     "\\(x^2 = 10^2 - 7^2 = 100 - 49 = 51\\).",
-    "\\(x = \\sqrt{51} = 7.141\\ldots = 7.1\\text{ cm (1 d.p.)}\\)."
+    "\\(x = \\sqrt{51} = 7.141\\ldots = 7.1\\) cm (1 d.p.)."
    ],
    "slip": [
     {
@@ -106,7 +106,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): x, the side you're finding. So add.",
     "\\(x^2 = 20^2 + 17^2 = 400 + 289 = 689\\).",
-    "\\(x = \\sqrt{689} = 26.248\\ldots = 26.2\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{689} = 26.248\\ldots = 26.2\\) m (1 d.p.)."
    ],
    "slip": []
   },
@@ -130,7 +130,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): 5.4 m, given. You're finding a shorter side, so subtract.",
     "\\(x^2 = 5.4^2 - 5.0^2 = 29.16 - 25 = 4.16\\).",
-    "\\(x = \\sqrt{4.16} = 2.039\\ldots = 2.0\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{4.16} = 2.039\\ldots = 2.0\\) m (1 d.p.)."
    ],
    "slip": [
     {
@@ -161,7 +161,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): x, the side you're finding. So add.",
     "\\(x^2 = 105^2 + 80^2 = 11025 + 6400 = 17425\\).",
-    "\\(x = \\sqrt{17425} = 132.003\\ldots = 132.0\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{17425} = 132.003\\ldots = 132.0\\) m (1 d.p.)."
    ],
    "slip": []
   },
@@ -212,7 +212,7 @@
    "slip": [
     {
      "answer": {
-      "value": 26.0
+      "value": 25.612496949731394
      },
      "line": "You added instead of subtracting."
     }
@@ -265,7 +265,7 @@
    "slip": [
     {
      "answer": {
-      "value": 64.0
+      "value": 64.03124237432849
      },
      "line": "You added instead of subtracting."
     }
@@ -314,7 +314,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): 6.0 m, given. You're finding a shorter side, so subtract.",
     "\\(x^2 = 6.0^2 - 1.2^2 = 36 - 1.44 = 34.56\\).",
-    "\\(x = \\sqrt{34.56} = 5.878\\ldots = 5.9\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{34.56} = 5.878\\ldots = 5.9\\) m (1 d.p.)."
    ],
    "slip": [
     {
@@ -349,7 +349,7 @@
    "slip": [
     {
      "answer": {
-      "value": 45.0
+      "value": 44.82186966202994
      },
      "line": "You added instead of subtracting."
     }
@@ -375,7 +375,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): x, the side you're finding. So add.",
     "\\(x^2 = 1.3^2 + 6.0^2 = 1.69 + 36 = 37.69\\).",
-    "\\(x = \\sqrt{37.69} = 6.139\\ldots = 6.1\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{37.69} = 6.139\\ldots = 6.1\\) m (1 d.p.)."
    ],
    "slip": []
   },
@@ -426,7 +426,7 @@
    "slip": [
     {
      "answer": {
-      "value": 32.0
+      "value": 32.01562118716424
      },
      "line": "You added instead of subtracting."
     }
@@ -452,7 +452,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): x, the side you're finding. So add.",
     "\\(x^2 = 10^2 + 19^2 = 100 + 361 = 461\\).",
-    "\\(x = \\sqrt{461} = 21.470\\ldots = 21.5\\text{ cm (1 d.p.)}\\)."
+    "\\(x = \\sqrt{461} = 21.470\\ldots = 21.5\\) cm (1 d.p.)."
    ],
    "slip": []
   },
@@ -476,7 +476,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): 19 cm, given. You're finding a shorter side, so subtract.",
     "\\(x^2 = 19^2 - 3^2 = 361 - 9 = 352\\).",
-    "\\(x = \\sqrt{352} = 18.761\\ldots = 18.8\\text{ cm (1 d.p.)}\\)."
+    "\\(x = \\sqrt{352} = 18.761\\ldots = 18.8\\) cm (1 d.p.)."
    ],
    "slip": [
     {
@@ -530,7 +530,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): 3.3 m, given. You're finding a shorter side, so subtract.",
     "\\(x^2 = 3.3^2 - 3.0^2 = 10.89 - 9 = 1.89\\).",
-    "\\(x = \\sqrt{1.89} = 1.374\\ldots = 1.4\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{1.89} = 1.374\\ldots = 1.4\\) m (1 d.p.)."
    ],
    "slip": [
     {
@@ -565,7 +565,7 @@
    "slip": [
     {
      "answer": {
-      "value": 26.0
+      "value": 25.612496949731394
      },
      "line": "You added instead of subtracting."
     }
@@ -618,7 +618,7 @@
    "slip": [
     {
      "answer": {
-      "value": 51.0
+      "value": 51.22499389946279
      },
      "line": "You added instead of subtracting."
     }
@@ -644,7 +644,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): x, the side you're finding. So add.",
     "\\(x^2 = 340^2 + 20^2 = 115600 + 400 = 116000\\).",
-    "\\(x = \\sqrt{116000} = 340.587\\ldots = 340.6\\text{ cm (1 d.p.)}\\)."
+    "\\(x = \\sqrt{116000} = 340.587\\ldots = 340.6\\) cm (1 d.p.)."
    ],
    "slip": []
   },
@@ -691,7 +691,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): x, the side you're finding. So add.",
     "\\(x^2 = 20^2 + 8^2 = 400 + 64 = 464\\).",
-    "\\(x = \\sqrt{464} = 21.540\\ldots = 21.5\\text{ mm (1 d.p.)}\\)."
+    "\\(x = \\sqrt{464} = 21.540\\ldots = 21.5\\) mm (1 d.p.)."
    ],
    "slip": []
   },
@@ -715,7 +715,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): 3.6 m, given. You're finding a shorter side, so subtract.",
     "\\(x^2 = 3.6^2 - 3.1^2 = 12.96 - 9.61 = 3.35\\).",
-    "\\(x = \\sqrt{3.35} = 1.830\\ldots = 1.8\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{3.35} = 1.830\\ldots = 1.8\\) m (1 d.p.)."
    ],
    "slip": [
     {
@@ -746,7 +746,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): 9 mm, given. You're finding a shorter side, so subtract.",
     "\\(x^2 = 9^2 - 7^2 = 81 - 49 = 32\\).",
-    "\\(x = \\sqrt{32} = 5.656\\ldots = 5.7\\text{ mm (1 d.p.)}\\)."
+    "\\(x = \\sqrt{32} = 5.656\\ldots = 5.7\\) mm (1 d.p.)."
    ],
    "slip": [
     {
@@ -781,7 +781,7 @@
    "slip": [
     {
      "answer": {
-      "value": 23.0
+      "value": 22.67156809750927
      },
      "line": "You added instead of subtracting."
     }
@@ -830,7 +830,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): 3.6 m, given. You're finding a shorter side, so subtract.",
     "\\(x^2 = 3.6^2 - 2.5^2 = 12.96 - 6.25 = 6.71\\).",
-    "\\(x = \\sqrt{6.71} = 2.590\\ldots = 2.6\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{6.71} = 2.590\\ldots = 2.6\\) m (1 d.p.)."
    ],
    "slip": [
     {
@@ -861,7 +861,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): x, the side you're finding. So add.",
     "\\(x^2 = 4.2^2 + 2.6^2 = 17.64 + 6.76 = 24.4\\).",
-    "\\(x = \\sqrt{24.4} = 4.939\\ldots = 4.9\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{24.4} = 4.939\\ldots = 4.9\\) m (1 d.p.)."
    ],
    "slip": []
   },
@@ -885,7 +885,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): x, the side you're finding. So add.",
     "\\(x^2 = 16^2 + 19^2 = 256 + 361 = 617\\).",
-    "\\(x = \\sqrt{617} = 24.839\\ldots = 24.8\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{617} = 24.839\\ldots = 24.8\\) m (1 d.p.)."
    ],
    "slip": []
   },
@@ -913,7 +913,7 @@
    "slip": [
     {
      "answer": {
-      "value": 18.0
+      "value": 17.69180601295413
      },
      "line": "You added instead of subtracting."
     }
@@ -939,7 +939,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): 24 m, given. You're finding a shorter side, so subtract.",
     "\\(x^2 = 24^2 - 20^2 = 576 - 400 = 176\\).",
-    "\\(x = \\sqrt{176} = 13.266\\ldots = 13.3\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{176} = 13.266\\ldots = 13.3\\) m (1 d.p.)."
    ],
    "slip": [
     {
@@ -993,7 +993,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): 170 m, given. You're finding a shorter side, so subtract.",
     "\\(x^2 = 170^2 - 125^2 = 28900 - 15625 = 13275\\).",
-    "\\(x = \\sqrt{13275} = 115.217\\ldots = 115.2\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{13275} = 115.217\\ldots = 115.2\\) m (1 d.p.)."
    ],
    "slip": [
     {
@@ -1024,7 +1024,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): x, the side you're finding. So add.",
     "\\(x^2 = 150^2 + 140^2 = 22500 + 19600 = 42100\\).",
-    "\\(x = \\sqrt{42100} = 205.182\\ldots = 205.2\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{42100} = 205.182\\ldots = 205.2\\) m (1 d.p.)."
    ],
    "slip": []
   },
@@ -1048,7 +1048,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): x, the side you're finding. So add.",
     "\\(x^2 = 3^2 + 8^2 = 9 + 64 = 73\\).",
-    "\\(x = \\sqrt{73} = 8.544\\ldots = 8.5\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{73} = 8.544\\ldots = 8.5\\) m (1 d.p.)."
    ],
    "slip": []
   },
@@ -1072,7 +1072,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): 23 mm, given. You're finding a shorter side, so subtract.",
     "\\(x^2 = 23^2 - 10^2 = 529 - 100 = 429\\).",
-    "\\(x = \\sqrt{429} = 20.712\\ldots = 20.7\\text{ mm (1 d.p.)}\\)."
+    "\\(x = \\sqrt{429} = 20.712\\ldots = 20.7\\) mm (1 d.p.)."
    ],
    "slip": [
     {
@@ -1107,7 +1107,7 @@
    "slip": [
     {
      "answer": {
-      "value": 13.0
+      "value": 12.806248474865697
      },
      "line": "You added instead of subtracting."
     }
@@ -1133,7 +1133,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): 160 m, given. You're finding a shorter side, so subtract.",
     "\\(x^2 = 160^2 - 135^2 = 25600 - 18225 = 7375\\).",
-    "\\(x = \\sqrt{7375} = 85.877\\ldots = 85.9\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{7375} = 85.877\\ldots = 85.9\\) m (1 d.p.)."
    ],
    "slip": [
     {
@@ -1164,7 +1164,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): x, the side you're finding. So add.",
     "\\(x^2 = 14^2 + 19^2 = 196 + 361 = 557\\).",
-    "\\(x = \\sqrt{557} = 23.600\\ldots = 23.6\\text{ mm (1 d.p.)}\\)."
+    "\\(x = \\sqrt{557} = 23.600\\ldots = 23.6\\) mm (1 d.p.)."
    ],
    "slip": []
   },
@@ -1188,7 +1188,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): 19 mm, given. You're finding a shorter side, so subtract.",
     "\\(x^2 = 19^2 - 7^2 = 361 - 49 = 312\\).",
-    "\\(x = \\sqrt{312} = 17.663\\ldots = 17.7\\text{ mm (1 d.p.)}\\)."
+    "\\(x = \\sqrt{312} = 17.663\\ldots = 17.7\\) mm (1 d.p.)."
    ],
    "slip": [
     {
@@ -1219,7 +1219,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): x, the side you're finding. So add.",
     "\\(x^2 = 3.2^2 + 2.7^2 = 10.24 + 7.29 = 17.53\\).",
-    "\\(x = \\sqrt{17.53} = 4.186\\ldots = 4.2\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{17.53} = 4.186\\ldots = 4.2\\) m (1 d.p.)."
    ],
    "slip": []
   },
@@ -1243,7 +1243,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): 110 m, given. You're finding a shorter side, so subtract.",
     "\\(x^2 = 110^2 - 100^2 = 12100 - 10000 = 2100\\).",
-    "\\(x = \\sqrt{2100} = 45.825\\ldots = 45.8\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{2100} = 45.825\\ldots = 45.8\\) m (1 d.p.)."
    ],
    "slip": [
     {
@@ -1274,7 +1274,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): x, the side you're finding. So add.",
     "\\(x^2 = 7^2 + 17^2 = 49 + 289 = 338\\).",
-    "\\(x = \\sqrt{338} = 18.384\\ldots = 18.4\\text{ cm (1 d.p.)}\\)."
+    "\\(x = \\sqrt{338} = 18.384\\ldots = 18.4\\) cm (1 d.p.)."
    ],
    "slip": []
   },
@@ -1298,7 +1298,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): 21 m, given. You're finding a shorter side, so subtract.",
     "\\(x^2 = 21^2 - 4^2 = 441 - 16 = 425\\).",
-    "\\(x = \\sqrt{425} = 20.615\\ldots = 20.6\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{425} = 20.615\\ldots = 20.6\\) m (1 d.p.)."
    ],
    "slip": [
     {
@@ -1329,7 +1329,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): x, the side you're finding. So add.",
     "\\(x^2 = 1.5^2 + 5.0^2 = 2.25 + 25 = 27.25\\).",
-    "\\(x = \\sqrt{27.25} = 5.220\\ldots = 5.2\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{27.25} = 5.220\\ldots = 5.2\\) m (1 d.p.)."
    ],
    "slip": []
   },
@@ -1353,7 +1353,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): 5.5 m, given. You're finding a shorter side, so subtract.",
     "\\(x^2 = 5.5^2 - 1.1^2 = 30.25 - 1.21 = 29.04\\).",
-    "\\(x = \\sqrt{29.04} = 5.388\\ldots = 5.4\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{29.04} = 5.388\\ldots = 5.4\\) m (1 d.p.)."
    ],
    "slip": [
     {
@@ -1384,7 +1384,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): x, the side you're finding. So add.",
     "\\(x^2 = 11^2 + 9^2 = 121 + 81 = 202\\).",
-    "\\(x = \\sqrt{202} = 14.212\\ldots = 14.2\\text{ mm (1 d.p.)}\\)."
+    "\\(x = \\sqrt{202} = 14.212\\ldots = 14.2\\) mm (1 d.p.)."
    ],
    "slip": []
   },
@@ -1408,7 +1408,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): 12 m, given. You're finding a shorter side, so subtract.",
     "\\(x^2 = 12^2 - 4^2 = 144 - 16 = 128\\).",
-    "\\(x = \\sqrt{128} = 11.313\\ldots = 11.3\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{128} = 11.313\\ldots = 11.3\\) m (1 d.p.)."
    ],
    "slip": [
     {
@@ -1439,7 +1439,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): x, the side you're finding. So add.",
     "\\(x^2 = 130^2 + 85^2 = 16900 + 7225 = 24125\\).",
-    "\\(x = \\sqrt{24125} = 155.322\\ldots = 155.3\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{24125} = 155.322\\ldots = 155.3\\) m (1 d.p.)."
    ],
    "slip": []
   },
@@ -1463,7 +1463,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): 6 m, given. You're finding a shorter side, so subtract.",
     "\\(x^2 = 6^2 - 3^2 = 36 - 9 = 27\\).",
-    "\\(x = \\sqrt{27} = 5.196\\ldots = 5.2\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{27} = 5.196\\ldots = 5.2\\) m (1 d.p.)."
    ],
    "slip": [
     {
@@ -1494,7 +1494,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): 6.5 m, given. You're finding a shorter side, so subtract.",
     "\\(x^2 = 6.5^2 - 1.5^2 = 42.25 - 2.25 = 40\\).",
-    "\\(x = \\sqrt{40} = 6.324\\ldots = 6.3\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{40} = 6.324\\ldots = 6.3\\) m (1 d.p.)."
    ],
    "slip": [
     {
@@ -1525,7 +1525,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): x, the side you're finding. So add.",
     "\\(x^2 = 10^2 + 10^2 = 100 + 100 = 200\\).",
-    "\\(x = \\sqrt{200} = 14.142\\ldots = 14.1\\text{ cm (1 d.p.)}\\)."
+    "\\(x = \\sqrt{200} = 14.142\\ldots = 14.1\\) cm (1 d.p.)."
    ],
    "slip": []
   },
@@ -1549,7 +1549,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): x, the side you're finding. So add.",
     "\\(x^2 = 1.6^2 + 3.5^2 = 2.56 + 12.25 = 14.81\\).",
-    "\\(x = \\sqrt{14.81} = 3.848\\ldots = 3.8\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{14.81} = 3.848\\ldots = 3.8\\) m (1 d.p.)."
    ],
    "slip": []
   },
@@ -1573,7 +1573,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): 22 mm, given. You're finding a shorter side, so subtract.",
     "\\(x^2 = 22^2 - 4^2 = 484 - 16 = 468\\).",
-    "\\(x = \\sqrt{468} = 21.633\\ldots = 21.6\\text{ mm (1 d.p.)}\\)."
+    "\\(x = \\sqrt{468} = 21.633\\ldots = 21.6\\) mm (1 d.p.)."
    ],
    "slip": [
     {
@@ -1604,7 +1604,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): x, the side you're finding. So add.",
     "\\(x^2 = 3.3^2 + 1.4^2 = 10.89 + 1.96 = 12.85\\).",
-    "\\(x = \\sqrt{12.85} = 3.584\\ldots = 3.6\\text{ m (1 d.p.)}\\)."
+    "\\(x = \\sqrt{12.85} = 3.584\\ldots = 3.6\\) m (1 d.p.)."
    ],
    "slip": []
   },
@@ -1628,7 +1628,7 @@
    "worked": [
     "Hypotenuse (opposite the right angle): x, the side you're finding. So add.",
     "\\(x^2 = 13^2 + 17^2 = 169 + 289 = 458\\).",
-    "\\(x = \\sqrt{458} = 21.400\\ldots = 21.4\\text{ mm (1 d.p.)}\\)."
+    "\\(x = \\sqrt{458} = 21.400\\ldots = 21.4\\) mm (1 d.p.)."
    ],
    "slip": []
   }

@@ -44,13 +44,13 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -96,19 +96,19 @@
      "answer": {
       "val": "d"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "a"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -154,19 +154,19 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -212,19 +212,19 @@
      "answer": {
       "val": "b"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "a"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -270,19 +270,19 @@
      "answer": {
       "val": "b"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "a"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -328,19 +328,19 @@
      "answer": {
       "val": "c"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "a"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -386,19 +386,19 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -444,19 +444,19 @@
      "answer": {
       "val": "d"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "a"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -502,19 +502,19 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -560,19 +560,19 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -618,19 +618,19 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -676,13 +676,13 @@
      "answer": {
       "val": "b"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -728,19 +728,19 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -786,19 +786,19 @@
      "answer": {
       "val": "d"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "a"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -844,13 +844,13 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -896,13 +896,13 @@
      "answer": {
       "val": "b"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -948,19 +948,19 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -1006,19 +1006,19 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -1064,19 +1064,19 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -1122,19 +1122,19 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -1180,19 +1180,19 @@
      "answer": {
       "val": "b"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "a"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -1238,19 +1238,19 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -1296,19 +1296,19 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -1354,19 +1354,19 @@
      "answer": {
       "val": "b"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "a"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -1412,19 +1412,19 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -1470,19 +1470,19 @@
      "answer": {
       "val": "b"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -1528,19 +1528,19 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -1586,19 +1586,19 @@
      "answer": {
       "val": "d"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -1644,19 +1644,19 @@
      "answer": {
       "val": "c"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "a"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -1702,19 +1702,19 @@
      "answer": {
       "val": "c"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "a"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -1760,19 +1760,19 @@
      "answer": {
       "val": "b"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "a"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -1818,19 +1818,19 @@
      "answer": {
       "val": "b"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "a"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -1876,13 +1876,13 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -1928,19 +1928,19 @@
      "answer": {
       "val": "d"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "a"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -1986,19 +1986,19 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -2044,19 +2044,19 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -2102,19 +2102,19 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -2160,19 +2160,19 @@
      "answer": {
       "val": "c"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "a"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -2218,19 +2218,19 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -2276,19 +2276,19 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -2334,19 +2334,19 @@
      "answer": {
       "val": "d"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -2392,19 +2392,19 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -2450,19 +2450,19 @@
      "answer": {
       "val": "c"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "a"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -2508,13 +2508,13 @@
      "answer": {
       "val": "a"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -2560,19 +2560,19 @@
      "answer": {
       "val": "d"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "a"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -2618,19 +2618,19 @@
      "answer": {
       "val": "c"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "a"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -2676,13 +2676,13 @@
      "answer": {
       "val": "d"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "a"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -2728,13 +2728,13 @@
      "answer": {
       "val": "d"
      },
-     "line": "Those numbers multiply to \\(c\\) but add to the opposite of \\(b\\): check the sign of the \\(x\\) term."
+     "line": "Those numbers multiply to the number on its own but add to the opposite of the number in front of \\(x\\): check the sign of the \\(x\\) term."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "Check both rules: the numbers must multiply to \\(c\\) AND add to \\(b\\)."
+     "line": "Check both rules: the numbers must multiply to the number on its own AND add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -2780,13 +2780,13 @@
      "answer": {
       "val": "b"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -2832,13 +2832,13 @@
      "answer": {
       "val": "b"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "a"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -2884,13 +2884,13 @@
      "answer": {
       "val": "b"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -2936,13 +2936,13 @@
      "answer": {
       "val": "a"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -2988,13 +2988,13 @@
      "answer": {
       "val": "c"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "a"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -3040,13 +3040,13 @@
      "answer": {
       "val": "d"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -3092,13 +3092,13 @@
      "answer": {
       "val": "c"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "b"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -3144,13 +3144,13 @@
      "answer": {
       "val": "c"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "a"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -3196,13 +3196,13 @@
      "answer": {
       "val": "c"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "d"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -3248,13 +3248,13 @@
      "answer": {
       "val": "b"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -3300,13 +3300,13 @@
      "answer": {
       "val": "a"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     }
    ]
   },
@@ -3352,13 +3352,13 @@
      "answer": {
       "val": "b"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     },
     {
      "answer": {
       "val": "c"
      },
-     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to \\(c\\) and add to \\(b\\)."
+     "line": "\\((x + p)(x + p)\\) expands to \\(x^2 + 2px + p^2\\): you need two numbers that multiply to the number on its own and add to the number in front of \\(x\\)."
     }
    ]
   }

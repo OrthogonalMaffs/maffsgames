@@ -321,7 +321,7 @@ def about(marks):
 
 
 def marks_text(t):
-    return "worth about %d marks a series on OCR’s Foundation papers" % about(t['marks'])
+    return "worth about %d marks across the three Foundation papers" % about(t['marks'])
 
 
 # ---------------------------------------------------------------- browser
@@ -584,7 +584,7 @@ def play_topic(b, m, topic, out, tag, narrow=False, stop_after=None, offset=0, r
         n = offset + len(asked) + 1
         asked.append(q['id'])
         head = p.inner_text('#qHead').strip()
-        want_head = 'Question %d of %d · Topic %d of %d' % (n, PER_TOPIC, m, K)
+        want_head = 'Question %d of %d' % (n, PER_TOPIC)      # the slim title line carries the topic count (Jon, 27 Oct 2026)
         if head != want_head:
             out.append('%s: header %r, expected %r' % (tag, head, want_head))
             if n > PER_TOPIC:
@@ -867,7 +867,7 @@ def no_bank(pw, base, html, data, out):
         sideways(p, 'the not-ready card', out)
         p.tap('#skipNotReadyBtn')
         p.wait_for_selector('#play:not([hidden])', timeout=5000)
-        if p.inner_text('#qHead').strip() != 'Question 1 of 5 · Topic 2 of 6':
+        if p.inner_text('#qHead').strip() != 'Question 1 of 5':
             out.append('%s: after Skip the header is %r' % (tag, p.inner_text('#qHead')))
         if p.evaluate('() => SixPs.session().results[SixPs.session().plan[0].id]') != {'skipped': True}:
             out.append('%s: the topic was not recorded as skipped' % tag)
@@ -964,6 +964,80 @@ def check_resume_finish(pw, base, html, data, out):
         if b.page.evaluate('() => SixPs.session().i') != 2:
             out.append('Next topic after a resume did not move on by exactly one topic')
         out.extend('resume and finish a topic: page error: %s' % e for e in b.errors)
+    finally:
+        b.close()
+
+
+def check_results_once(pw, base, html, data, out):
+    """Jon's phone, 27 Oct: the results screen showed the tick list from Quadratic graphs on, and Send, twice. Everything on the screen is
+    drawn once: one list of topics, one form, one legend, one tick list with every topic once, one Send, one Another six, and the page
+    text holds each topic's row and tick once. Looked at after the finish, after the page is restored from the back-forward cache, after
+    the page script runs a second time, and after Send."""
+    topic = 'powers-roots'
+    b = Browser(pw, base, html, size=(375, 667))
+    b.real[topic] = json.load(open(os.path.join(ROOT, 'schools', 'assets', 'six-ps', topic + '.json'), encoding='utf-8'))
+    COUNT = """() => {
+      const vis = e => !!(e.offsetParent || e.getClientRects().length);
+      const text = sel => [...document.querySelectorAll(sel)].filter(vis).map(e => e.textContent.trim());
+      const dup = a => a.filter((x, i) => a.indexOf(x) !== i);
+      return {
+        lists: [...document.querySelectorAll('#results ul')].filter(vis).length,
+        forms: [...document.querySelectorAll('#results form')].filter(vis).length,
+        legends: text('#results legend').length,
+        send: text('#results button').filter(t => t === 'Send').length,
+        again: text('#results button').filter(t => t === 'Another six').length,
+        ticks: text('#tickList label'), rows: text('#resultList > li'),
+        heads: text('#results h2').length, ids: ['resultList', 'tickList', 'feedbackForm', 'sendBtn', 'againBtn', 'nudge', 'thanks']
+          .filter(i => document.querySelectorAll('[id=' + i + ']').length > 1)
+      };
+    }"""
+    def look(tag, sent=False):
+        c = b.page.evaluate(COUNT)
+        for k, want in (('lists', 1), ('forms', 1), ('legends', 1), ('send', 0 if sent else 1), ('again', 1), ('heads', 1)):
+            if c[k] != want:
+                out.append('results screen %s: %s appears %d times, not %d' % (tag, k, c[k], want))
+        if len(c['ticks']) != len(set(c['ticks'])):
+            out.append('results screen %s: the tick list repeats %s' % (tag, sorted({t for t in c['ticks'] if c['ticks'].count(t) > 1})[:3]))
+        if len(c['rows']) != len(set(c['rows'])) or len(c['rows']) != K:
+            out.append('results screen %s: %d topic rows, %d different (want %d)' % (tag, len(c['rows']), len(set(c['rows'])), K))
+        if c['ids']:
+            out.append('results screen %s: ids used twice: %s' % (tag, c['ids']))
+    try:
+        b.open()
+        others = [x['id'] for x in data['covered'] if x['id'] != topic][:5]
+        sess = {'v': 2, 'plan': [{'id': x} for x in others + [topic]], 'i': 5, 'results': {x: {'r': 4, 'n': 5} for x in others},
+                'cur': None, 'qn': 25, 'finishedSent': False, 'feedbackSent': False}
+        b.page.evaluate("s => localStorage.setItem('six-ps-session-v2', s)", json.dumps(dict(sess, at=int(time.time() * 1000))))
+        b.page.reload()
+        b.page.wait_for_function("() => !!window.SixPs && !!SixPs.data()", timeout=10000)
+        b.page.tap('#resumeBtn')
+        for n in range(PER_TOPIC):
+            b.page.wait_for_selector('#play:not([hidden])', timeout=8000)
+            q = b.page.evaluate('() => SixPs.question()')
+            answer(b, q, real_value(q, wrong=False))
+            b.page.wait_for_selector('#qFb:not([hidden])', timeout=4000)
+            b.page.tap('#qNext button')
+        b.page.wait_for_selector('#between:not([hidden])', timeout=5000)
+        b.page.tap('#nextTopicBtn')
+        b.page.wait_for_selector('#results:not([hidden])', timeout=5000)
+        look('after the finish')
+        script = re.search(r'<script>\s*(/\* The 6 P.s \(contract.*?)</script>', html, re.S).group(1)
+        b.page.evaluate("src => { const s = document.createElement('script'); s.textContent = src; document.body.appendChild(s); }", script)
+        b.page.wait_for_timeout(300)
+        look('after the page script ran a second time')
+        b.page.tap('#tickList input')
+        b.page.tap('#sendBtn')
+        b.page.wait_for_timeout(300)
+        look('after Send', sent=True)
+        # the page restored from the back-forward cache starts again from the saved session: the results come back drawn once
+        b.page.evaluate("() => window.dispatchEvent(new PageTransitionEvent('pageshow', {persisted: true}))")
+        b.page.wait_for_timeout(300)
+        b.page.reload()
+        b.page.wait_for_function("() => !!window.SixPs && !!SixPs.data()", timeout=10000)
+        if b.page.evaluate("() => document.querySelectorAll('#results form').length") > 1:
+            out.append('results screen after a reload: the page holds %d feedback forms'
+                       % b.page.evaluate("() => document.querySelectorAll('#results form').length"))
+        out.extend('results screen: page error: %s' % e for e in b.errors)
     finally:
         b.close()
 
@@ -1119,6 +1193,8 @@ def check(html, data, out, parts):
             if '3' in parts or 'resume' in parts:
                 guarded(out, 'a refresh and Carry on, then a finished topic of choice questions',
                         lambda: check_resume_finish(pw, base, html, data, out))
+            if '3' in parts or 'results' in parts:
+                guarded(out, 'the results screen drawn once', lambda: check_results_once(pw, base, html, data, out))
             if '3' in parts or 'second' in parts:
                 guarded(out, 'the page script run twice', lambda: check_second_copy(pw, base, html, data, out))
             if '3' in parts:
@@ -1148,6 +1224,12 @@ def guarded(out, what, f):
 # ---------------------------------------------------------------- plants
 # (what, [(old, new)], what it needs, a pattern its finding must match). Every old text occurs exactly once in the page.
 PLANTS = [
+    ('a results screen that draws its form twice (Jon, 27 Oct)',
+     [("$('resultsBody').replaceChildren(list, nudge, form, againRow);", "$('resultsBody').replaceChildren(list, nudge, form, againRow, form.cloneNode(true));")],
+     ['results'], r'results screen after the finish: (forms|send|legends) appears 2 times'),
+    ('a results screen whose tick list repeats a topic',
+     [("    fill(ticks, data.coming_soon.map(function (t) { return [t.id, t.name]; })", "    fill(ticks, data.coming_soon.concat(data.coming_soon.slice(-2)).map(function (t) { return [t.id, t.name]; })")],
+     ['results'], r'results screen after the finish: the tick list repeats'),
     ('a sixth question shown (a topic of six)',
      [('var PER_TOPIC = 5;', 'var PER_TOPIC = 6;')],
      ['topic:fx-seen'], r'Question 6 of 6|asked 6 questions'),

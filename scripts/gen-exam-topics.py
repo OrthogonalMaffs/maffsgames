@@ -26,6 +26,8 @@ of its own (a figure on a page is a claim); scripts/verify-the-6-ps.py holds bot
   bank-first   a covered topic whose game is not built yet (pie-charts, Jon's ruling of 26 Oct 2026): its row has game slug None, its
                route is null, and the page leaves out the "Want more practice?" link for it. When the game is built the row
                gets its slug and level.
+  NOT_OFFERED  a topic the platform will not offer (Constructions, Jon, 27 Oct 2026): in neither list, never on the page; kept in
+               the file under "not_offered" so a regeneration cannot bring it back as coming soon.
   COMING_SOON  a topic with no game that can run it as a burst yet ("in development"), shown on the page with its
                marks and offered in the results' tick-list. Never drawn into a session.
 
@@ -105,8 +107,6 @@ COMING_SOON = [
     ("similarity-congruence", "Similarity and congruence", 4.7, 6, None),
     ("listing-outcomes", "Listing outcomes", 4.5, 6, None),
     ("scale-bearings", "Scale drawings and bearings", 4.5, 5, None),
-    # Moved from COVERED (Jon, 25 Oct 2026): Constructions Lab reports no individual answers, so it cannot run as a burst.
-    ("constructions", "Constructions", 4.0, 6, None),
     ("2d-shapes", "2D shapes", 3.8, 5, None),
     ("two-way-tables", "Two-way tables", 3.5, 3, None),   # moved from COVERED with venn (Jon, 25 Oct 2026)
     ("quadratic-graphs", "Quadratic graphs", 3.5, 5, None),
@@ -115,6 +115,16 @@ COMING_SOON = [
     ("bounds", "Bounds", 2.8, 5, None),
     ("inequalities", "Inequalities", 2.5, 5, None),
     ("enlargement", "Enlargement", 1.7, 3, None),
+]
+
+
+# NOT_OFFERED: a topic the platform will not offer, so it is neither covered nor coming soon: the page lists it nowhere (not under
+# "Coming soon", not in the "Was a topic missing?" tick-list) and no session draws it. It stays in the data file, under "not_offered",
+# with its marks, so the audit's 300 marks a series still add up and a regeneration cannot bring it back as coming soon.
+#   id, name, avg marks per series, series appeared (of 6), why
+NOT_OFFERED = [
+    ("constructions", "Constructions", 4.0, 6,
+     "A drawing skill (compasses and ruler) that cannot be practised on a screen; Jon, 27 Oct 2026. It is practised on paper."),
 ]
 
 
@@ -163,11 +173,13 @@ def build():
             "id": tid, "name": name, "marks": marks, "series": series, "band": list(band),
             "route": None if slug is None else {"slug": slug, "game": names.get(slug, ""), "level": level, "modes": modes, "stages": stages},
         })
-    ids = [t["id"] for t in covered] + [t["id"] for t in coming]
+    not_offered = [{"id": tid, "name": name, "marks": marks, "series": series, "reason": why}
+                   for tid, name, marks, series, why in NOT_OFFERED]
+    ids = [t["id"] for t in covered] + [t["id"] for t in coming] + [t["id"] for t in not_offered]
     dup = sorted({i for i in ids if ids.count(i) > 1})
     if dup:
         errors.append("duplicate topic ids: %s" % ", ".join(dup))
-    for t in covered + coming:
+    for t in covered + coming + not_offered:
         if not re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*", t["id"]):
             errors.append("%s: an id is lower case, digits and hyphens" % t["id"])
         if not (0 < t["marks"] <= MARKS_PER_SERIES) or round(t["marks"] * 10) != t["marks"] * 10:
@@ -184,7 +196,7 @@ def build():
         "_generated": "by scripts/gen-exam-topics.py from its table; never edit by hand",
         "board": "OCR", "tier": "Foundation", "source": SOURCE,
         "papers": PAPERS, "series": SERIES, "marks_per_series": MARKS_PER_SERIES,
-        "covered": covered, "coming_soon": coming,
+        "covered": covered, "coming_soon": coming, "not_offered": not_offered,
     }
     return data, errors
 
@@ -228,8 +240,9 @@ def main():
         sys.stdout.write(dump(data))
     cov = sum(t["marks"] for t in data["covered"])
     soon = sum(t["marks"] for t in data["coming_soon"])
-    print("covered %d topics, %.1f marks a series; coming soon %d, %.1f" % (
-        len(data["covered"]), cov, len(data["coming_soon"]), soon), file=sys.stderr)
+    off = sum(t["marks"] for t in data["not_offered"])
+    print("covered %d topics, %.1f marks a series; coming soon %d, %.1f; not offered %d, %.1f" % (
+        len(data["covered"]), cov, len(data["coming_soon"]), soon, len(data["not_offered"]), off), file=sys.stderr)
     return 0
 
 
