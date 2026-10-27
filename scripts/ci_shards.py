@@ -154,7 +154,7 @@ class Shard:
         self.times[uid] = secs
         path = self.out or os.environ.get(ENV)
         if path:
-            with open(path, "a", encoding="utf-8") as f:
+            with open(path, "a", encoding="utf-8", newline="") as f:
                 f.write("unit  %s :: %s  (%ss)\n" % (self.script, uid, secs))
 
 

@@ -1552,7 +1552,7 @@ def selftest():
         globals()["unit_medians"] = real_units
     check("PLANT (8) parts judged without their units' times (a part over the limit goes unjudged): caught", caught)
     with tempfile.TemporaryDirectory() as d:
-        with open(os.path.join(d, "timing.txt"), "w", encoding="utf-8") as f:
+        with open(os.path.join(d, "timing.txt"), "w", encoding="utf-8", newline="") as f:
             f.write("Content verifiers 1\nregion: eastus\nunit  verify-x.py :: a  (40.0s)\nunit  verify-x.py :: b  (30.5s)\n"
                     "ok  X (all), part 1 of 2  (80s; group at 1m40s of 6m)\nunit  verify-x.py :: c  (12.0s)\n"
                     "ok  X (all), part 2 of 2  (15s; group at 1m55s of 6m)\nok  Other  (5s; group at 2m00s of 6m)\n\n"
