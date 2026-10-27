@@ -3,13 +3,27 @@
 Lane rules: new, fully specified games only; new files only; games stay unlisted; branches `claude/build-<slug>`; worktrees `E:/jon/mg-build-<slug>`.
 Contracts are saved verbatim in `docs/handover/contracts/<date>-build-<slug>.md`.
 
+## Standing rules (Jon, 27 Oct 2026; apply to every contract unless it says otherwise)
+1. **Never sit idle.** Several contracts: save each verbatim to `docs/handover/contracts/<date>-build-<slug>.md`, work in order. A real STOP IF parks the contract: commit and push the branch, record the stop here with the exact question for Jon, start the next. While CI runs on one job, start the next in its own worktree. Main red from another lane: keep building, only the merge waits.
+2. **Decide the small things and say so** (wording and copy: plain, adult, listed for Jon; layout inside theme.css and shared components; names and structure; example numbers; counts above the minimum), each as one line under "Decided for you" in the report. Real stops: a mathematically wrong answer that can't be resolved; a shared-file change; a design question with no reasonable default; any new data collection.
+3. **Worktree `E:/jon/mg-build-<slug>`** (cloud: any worktree), never the main checkout.
+4. **Context loss:** commit and push at each milestone; keep this file current enough for a fresh session. At about 60% context, checkpoint and say so.
+5. **One short report per job:** what merged (PR, commit, main run); "Decided for you"; screenshots; anything parked with its question. End with "Ready for /clear".
+6. Queue finished: write "Build queue empty" here and stop. Start nothing uncontracted.
+7. **Subagents for large reads** (CI logs, full measurement runs, long files): only conclusions enter the main context.
+8. **Done marker:** when a contract's job is merged (or parked with its question recorded), add a line `DONE: <contract file name>` under "Done" below; `E:/jon/tools/run-build-queue.ps1` skips contracts with such a line.
+
+## Done
+(none yet)
+
 ## Queue
 1. **found-a-mark** ("I Found a Mark") — contract `contracts/2026-10-27-build-found-a-mark.md`. IN PROGRESS. Worktree `E:/jon/mg-build-found-a-mark`, branch `claude/build-found-a-mark`.
 
 2. **hc-factor** ("The HC Factor") — contract `contracts/2026-10-27-build-hc-factor.md`. QUEUED (received 27 Oct, mid-build of #1). Branch `claude/build-hc-factor`, worktree `E:/jon/mg-build-hc-factor` (create from origin/main when starting). Not started.
+3. **y-so-steep** ("Y So Steep?") — contract `contracts/2026-10-27-build-y-so-steep.md`. QUEUED. Branch `claude/build-y-so-steep`, worktree `E:/jon/mg-build-y-so-steep`. Item 4 (fraction entry) may need an UNMERGED shared-asset branch; see the contract.
 
 ## found-a-mark: state (27 Oct 2026)
-Milestones: module pushed (fbbd7e6e); game page `games/i-found-a-mark/index.html` written and plays end to end at 375x667; fold fix for the garden question (last option 654px vs 627px fold) in progress; then verifier, shared-file lines, CI, merge.
+Milestones: module, game page (fits 320x568, 375x667, 1280x720) and verifier (3 parts, 6 plants, all caught) pushed. Shared-file registrations (roster, games.json, 7 check lists, findings yml) added; `check-changed.py` run in background; next: push, PR, `merge-pr.py`, watch main, screenshots 375x667 + 1366x768.
 Done: read CLAUDE.md, canon §0/§7/§8.2.1; surveyed the last unlisted-game PR (#509) for the minimum shared-file lines a new game folder needs.
 
 Design (so a fresh session can carry on):

@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- UNLISTED (contract FOUND-A-MARK, 27 Oct 2026): live at its URL for Jon to play; off the portal, the sitemap and the leaderboard hub until he lists it. -->
-<meta name="description" content="Break the big exam questions into steps and bank the method marks. You never work out the answer: you choose the calculations a marker gives marks for. For GCSE. Free, no sign-up.">
+<meta name="description" content="Break big exam questions into steps and bank the method marks: choose the calculations a marker credits, never the answer. For GCSE. Free, no sign-up.">
 <link rel="canonical" href="https://maffsgames.co.uk/games/i-found-a-mark/">
 <meta property="og:title" content="Method Marks Game – GCSE Maths | MaffsGames">
-<meta property="og:description" content="Break the big exam questions into steps and bank the method marks. You never work out the answer: you choose the calculations a marker gives marks for. For GCSE. Free, no sign-up.">
+<meta property="og:description" content="Break big exam questions into steps and bank the method marks: choose the calculations a marker credits, never the answer. For GCSE. Free, no sign-up.">
 <meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
 <meta property="og:url" content="https://maffsgames.co.uk/games/i-found-a-mark/">
 <meta property="og:type" content="website">
@@ -16,7 +16,6 @@
 <title>Method Marks Game – GCSE Maths | MaffsGames</title>
 <link rel="stylesheet" href="/schools/assets/theme.css">
 <script src="../../schools/assets/analytics.js"></script>
-<script src="../../schools/assets/burst.js" defer></script>
 <script src="../../schools/assets/answer-count.js" defer></script>
 <script src="/schools/assets/fold.js" defer></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
@@ -406,7 +405,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     }
     var last = idx >= QUESTIONS;
     $('feedback').innerHTML = '<div class="fb done"><div class="fb-line">' + esc(line) + '</div>' + left +
-      '<div class="fb-next"><button class="btn solid" id="nextBtn" type="button">' + (last ? 'See your marks →' : 'Next question →') + '</button></div></div>';
+      '<div class="fb-next"><button class="btn solid" id="nextBtn" type="button">' + (last ? 'See results →' : 'Next question →') + '</button></div></div>';
     $('qcard').classList.add('fb-open');
     MaffsLock.fresh($('feedback'));
     $('nextBtn').focus();

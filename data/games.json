@@ -508,6 +508,11 @@
    "slug": "squared-squirrel",
    "search_phrase": "Compound Measures",
    "description": "Speed, density, pressure and unit price: read the unit and you know the calculation, because km/h means km ÷ h."
+  },
+  {
+   "slug": "i-found-a-mark",
+   "search_phrase": "Method Marks",
+   "description": "Break big exam questions into steps and bank the method marks: choose the calculations a marker credits, never the answer."
   }
  ],
  "pages": {
