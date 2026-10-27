@@ -29,13 +29,14 @@
   "Curling Friction (every numerical key recomputed exactly from its own context, every option checked, every item marked in Chromium)": "33",
   "Decimal Detective (Line-Up and Round Up keys recomputed, Place It start state, every answer marked in Chromium)": "36",
   "Differentiation Duel (every key and option differentiated again with SymPy, explanations checked, every option marked in Chromium)": "29",
-  "Dimension Checker (every key and option checked by dimension algebra, worked steps recomputed, every item marked in Chromium)": "26",
+  "Dimension Checker (every key and option checked by dimension algebra, worked steps recomputed, every item marked in Chromium)": "51",
   "Distinctly Average (independent recomputation)": "16",
   "Eigenvalue Extractor (every characteristic equation solved in SymPy; every option read as its list of eigenvalues and classified; every worked line and check sum recomputed; every option pressed in Chromium)": "14",
   "Eigenvector Engine (every key an eigenvector, no option a multiple of one or of another; working recomputed; every option clicked)": "11",
   "End-of-task helper (end-task.py: a squash-merged branch is removed; an unmerged branch, an extra local commit and a dirty worktree each refuse; gh stubbed)": "31",
-  "Equation Builder, part 1 (half of every question's tile arrangements classified by SymPy; the whole-question checks; self-test)": "19",
-  "Equation Builder, part 2 (the other half of every question's tile arrangements, classified by SymPy)": "49",
+  "Equation Builder, part 1 (a third of every question's tile arrangements classified by SymPy; the whole-question checks; self-test)": "19",
+  "Equation Builder, part 2 (the second third of every question's tile arrangements, classified by SymPy)": "49",
+  "Equation Builder, part 3 (the last third of every question's tile arrangements, classified by SymPy)": "51",
   "Equatle (every bank equation recomputed exactly; every valid 8-character equation accepted; the colour rule, hard mode and the daily pick checked against independent versions; played in Chromium)": "30",
   "Escape rooms (every set of every live room re-checked by escape_set_checks.py: one solution, answer and misconception settable and different, answer not in its clue, off the end of the travel, broken sets planted; every lock against the audited bank and variants.json; tokens; VALID draws; maxDigits answers settable; difficulty stars from lock grades matched on every hub and front-page card and the star key, three faults planted)": "27",
   "Escape-room art (engine.js: a room with no art field requests no picture, in a fixture room; every live room's scene, win and fail pictures load as before; the old always-request engine planted and caught)": "33",
@@ -100,7 +101,7 @@
   "Moments Master (every key recomputed with SymPy, options distinct in value, every option clicked in Chromium)": "29",
   "Negative Number Line (keys recomputed, every placement marked by real taps, every target reached on three phones)": "6",
   "New Shapes (every formula, key, substitution and working step recomputed; the figure's labels checked against the item; every item answered right and wrong in Chromium)": "33",
-  "Normal Navigator (independent recomputation + rendered labels)": "16",
+  "Normal Navigator (independent recomputation + rendered labels)": "51",
   "Parent guides (every stated figure recomputed from the page)": "16",
   "Partial Fractions Duel (every key solved from its own stem with SymPy, every option checked and clicked)": "11",
   "Percentage Flip (every key and every figure in the working recomputed; typed answers marked right and wrong in Chromium, both ways round)": "6",
@@ -184,12 +185,5 @@
   "Level resolver in play, part 4 (migrated games, as part 1)": "L3"
  },
  "over-budget": [],
- "split-candidates": [
-  {
-   "label": "Equation Builder, part 1 (half of every question's tile arrangements classified by SymPy; the whole-question checks; self-test)",
-   "median": 137,
-   "percent": 71,
-   "setup": 56
-  }
- ]
+ "split-candidates": []
 }
