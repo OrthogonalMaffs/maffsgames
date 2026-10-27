@@ -1642,8 +1642,8 @@ at 5m17s of 6m; each fix was another hand-made group (B5, E2), which only bought
   (`scripts/ci-timings.json`) plus the job's setup, so that **every group is estimated at most 70% of its
   budget** (the budget is 75% of the timeout: where the workflow warns about a group, TIMING-GATE). Content groups have a 6-minute
   timeout: packed to 3m09s, failed past 3m36s, so every content job stays inside 4 minutes. Answer-lock parts
-  are one `check-answer-lock.py --part i/n` line each, too long to share a job, on a 10-minute timeout; add a part
-  when one passes 70%.
+  are one line each, too long to share a job, on a 10-minute timeout; since SHARD (below) their number is chosen
+  from their games' times.
 - **A line with no recorded time counts as its tier's default** (content 120 s, lock 300 s) and is flagged
   (`ci-groups.py --check` lists it) until a main run times it.
 - **The timings are the median of the last 5 main runs, and the timings job commits only a pack that passes
@@ -1658,7 +1658,7 @@ at 5m17s of 6m; each fix was another hand-made group (B5, E2), which only bought
   not churn.
 - **CI fails, on every PR, when any group is estimated past 80% of its budget** (`ci-groups.py --check` in the
   plan job), naming the group and its largest lines. Packing keeps every group under 70%, so only a single line
-  too long for any group can fail it: split its script (`--part`, `--shard`).
+  too long for any group can fail it: divide its script into work units (`# ci-shards`, below).
 - **A line past 70% of its group's budget is a split candidate: it fails only the PR that selects it, and a slower
   setup alone is a warning, not a failure** (LINE-LIMIT-SCOPE, Jon's ruling 21 Oct 2026, which replaces PER-LINE-LIMIT's
   wording of 20 Oct that `--check` fails any such line on every PR and that the timings job refuses a pack holding one;
@@ -1710,6 +1710,20 @@ at 5m17s of 6m; each fix was another hand-made group (B5, E2), which only bought
   run-all change warns (Jon, 21 Oct). **Why:** runner speed differs by about 25% between regions; #526's Shape Shifter,
   unchanged, took 163 s on its PR and 205 s on main (Content verifiers 34 at 82%), the timings job refused the pack and
   main went red, blocking every merge, while the group's timeout (6 minutes) was far off (PR-MEASURED's replay).
+- **A long verifier's parts are chosen by `ci-groups.py` from its work units' times, never by hand** (SHARD, Jon's
+  contract 27 Oct 2026). The verifier declares `# ci-shards: [<tier> |] <label> | <args> | <parts until timed>`, lists
+  its work as named units and runs the slice `--shard i/k` gives it (`scripts/ci_shards.py`, re-exported by
+  `bank_common`: `bc.Shard`, `bc.shard_args`); each unit's time goes to the group's timing file and the timings job
+  keeps the medians (`ci-timings.json` `units`, and each verifier's per-part `overhead`). On every repack `ci-groups.py`
+  takes the fewest parts whose every estimate (overhead plus its units, dealt largest first to the lightest part) plus the
+  median setup is at most 75% of the per-line limit, keeping the previous number while it fits and is at most one more
+  than needed (`ci-pack.json` `shards`); the lines are "<label>, part i of k". A part that grows past that is re-divided
+  on the next repack; a part still over the limit holds a unit too long to share one, and the split candidate names it.
+  The deal is a partition by construction (its self-test), so no verifier checks its own parts. **Why:** the packer
+  moves lines and never splits one, and each verifier split itself by hand, so the first PR to run a grown part went
+  red: Shape Shifter on 26 Oct (a part grew), Just Pythag It, Bruv on 27 Oct (the setup median went from about 20 s to
+  46 s). The setup rise was every container job fetching two pinned DejaVu font packages from Launchpad (5-7 s a job
+  until 26 Oct, then up to 84 s); they are now unpacked from `scripts/fonts/dejavu/`, checksum-pinned.
 - **After every full run on main the "CI timings and pack" job** records that run's times and repacks, and
   commits both files if they changed (`[skip ci]`, as the register job does).
 - "70%" and "80%" are of the budget, not the timeout (Jon's own wording, 9 Oct: "kept to 70% of the budget,
@@ -1719,9 +1733,8 @@ at 5m17s of 6m; each fix was another hand-made group (B5, E2), which only bought
 **Rules that keep it fast.** What blocks and what warns (contract TIMING-GATE, 14 Oct 2026, from `docs/handover/ci-timing-diagnosis.md`, 160 runs): BLOCKING is the packing judged on recorded medians (a group estimated past 80% of its budget fails `ci-groups.py --check` on every PR and in the main timings job) and each job's hard timeout (`job_timeout`: 16 minutes for a content group, 20 for an answer-lock part, 18 to 20 for the site-wide jobs) against a hang. WARNING, never failing, is a group past 75% of its timeout on one run's clock (the job summary and an annotation name the group, the slowest line against its recorded median and its time) and the persistence report in the main timings job (`scripts/timing-gate.py`: a verifier whose last 3 main runs are each over 20% and 15 s above the median of the 5 before). Why: the per-run clock failed 2 of 160 runs, both a single-line stall on unchanged code (Equation Builder 260 s against 136 s; Spot the Muppet 290 s against 94 s) and it never saw the one real regression (Probability Paradox 161 s to 210 s, caught by the median on the third slow main run); a gate that fails at random gets ignored. Before this contract: every job failed at 75% of its timeout ("time budget: … split it"). A container job's hang guard is `job_timeout` (the group's `timeout` plus a 10-minute pull allowance, `PULL_ALLOWANCE` in `ci-groups.py`, because GitHub counts the image pull inside `timeout-minutes`), and the group's budget is still 75% of `timeout`, from its own clock, which starts once the container is up (CONTAINER-PULL-TIMEOUT, 12 Oct 2026: on main run 802, Content verifiers 33 spent 379 s initialising against its 360 s timeout and was cancelled before its first step). **No **Timings vary by runner region** (CI-RUNNER-REGION, 15 Oct 2026; `docs/handover/ci-slowdown-401.md`: Equatle 46 to 64 s in Azure centralus, 69 to 79 s in every other region, 17 main runs, no overlap). Each group job reads its region from the Azure instance metadata service (`http://169.254.169.254/metadata/instance/compute/location`, the name the runner prints at the head of its log; "unknown" if the service does not answer) and saves it as a `region:` line in its timing file. `ci-timings.json` records it per run, per line, under `history[].regions` (a record from before it reads as "unknown"); `lines`, the medians, the packer and `--check` never read it. The 75% warning names the region its slowest line ran in, and the persistence report lists the region of each flagged run. **Per-region record** (REGION-HISTORY, 15 Oct 2026): the 5-run history cannot reach 10 runs per region (8 regions appeared in one run), so the main timings job also keeps `scripts/ci-timings-regions.json`, written by `ci-groups.py --record-regions` straight after `ci-timings.json` is settled and committed in the same commit: for each timed line, per region, the **last 10 recorded times** (oldest first; older ones roll off per line per region; a line with no region sits under "unknown"; the last 20 run ids are remembered so a rerun is counted once). A failure writing it is a warning and leaves the file as it was; `ci-timings.json`, its history length, the medians, the packer and `--check` neither read nor depend on it (self-test: 12 runs across 3 regions, 10 kept per region, `ci-timings.json` byte-identical with and without the step). **Not yet done:** comparing a time only with times from the same region, left until there are about 10 runs per region group; until then the flagging rule and its thresholds are region-blind, so a region switch can still read as a rise, and the region shown is how to tell.
 "Content verifiers" job may run past 4 minutes** (Jon, 7 Oct 2026): the packer keeps every content group under it (below; each job's summary lists every check's duration;
 `check-verifier-coverage.py` reports any content group estimated past 4 minutes from the main run recorded in
-`scripts/ci-timings.json`). Since CI-BALANCE the packer cuts the lists of lines; a single line too long for any
-group is split by an option on its script (`--shard`, `--part`) with a self-test proving the parts are the
-whole.
+`scripts/ci-timings.json`). Since CI-BALANCE the packer cuts the lists of lines; since SHARD (27 Oct 2026) a
+verifier too long for one line lists its work units and `ci-groups.py` chooses its parts (above).
 
 ### 7.8.2 Two lanes: home and cloud (7 Oct 2026)
 
