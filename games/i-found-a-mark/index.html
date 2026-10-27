@@ -23,9 +23,9 @@
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <style>
 /* Theme: schools/assets/theme.css (canon §7.5), light row (the lowest tier served is GCSE Foundation). This game's own accent:
-   a warm brown. The living room is tokens, not colours: a sofa, a wall, and a coin that was down the back of it. */
+   a warm brown. The sofa and the coin are Jon's illustrations (assets/sofa.webp, assets/coin.webp); the marks bar takes the sofa's green. */
 :root{--accent:#8a4b12;--accent-dim:#f6ead9;--on-accent:#ffffff;
-  --coin:#e0a82e;--coin-edge:#9a6b0a;--coin-ink:#4a3000;--sofa:#6b4a3a;--sofa-edge:#4e3428;--on-sofa:#ffffff;--wall:#f3ece1;--rug:#e6d7c3;--lamp:#f2d9a0}
+  --coin:#e0a82e;--coin-ink:#4a3000;--sofa:#3f5953;--sofa-edge:#2c3f3a;--on-sofa:#ffffff}
 *{margin:0;padding:0;box-sizing:border-box}
 body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
 .container{max-width:720px;width:100%;padding:1rem}
@@ -50,10 +50,10 @@ a.back-link:hover{color:var(--text)}
 .sound-btn{min-height:44px;padding:0 .8rem;border-radius:10px;border:1px solid var(--border);background:var(--surface-alt);color:var(--text);font-size:.82rem;font-weight:600;cursor:pointer}
 .sound-btn[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
 
-/* The living room on the start screen: flat shapes, no outlines, nothing cartoon. */
-.room{display:block;width:100%;max-width:340px;height:auto;margin:.2rem auto .4rem}
-.room .wall{fill:var(--wall)}.room .rug{fill:var(--rug)}.room .sofa{fill:var(--sofa)}.room .sofa-d{fill:var(--sofa-edge)}
-.room .lamp{fill:var(--lamp)}.room .coin{fill:var(--coin);stroke:var(--coin-edge);stroke-width:2}.room .leg{stroke:var(--sofa-edge);stroke-width:3}
+/* The sofa on the start screen, with the coin in the gap between the cushions. */
+.room{position:relative;width:100%;max-width:340px;margin:.2rem auto .4rem;border-radius:12px;overflow:hidden;line-height:0}
+.room .sofa-img{display:block;width:100%;height:auto}
+.room .gap-coin{position:absolute;left:44.8%;top:66%;width:6.5%;height:auto;transform:translate(-50%,-50%)}
 
 .hud{display:flex;justify-content:space-between;align-items:center;padding:.3rem .8rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.5rem;gap:.3rem}
 .hud-item{text-align:center;min-width:48px}
@@ -71,7 +71,7 @@ a.back-link:hover{color:var(--text)}
 .jar-label small{display:block;font-weight:500;opacity:1;font-size:.7rem}
 .slots{display:flex;gap:.45rem;flex:none}
 .slot{width:34px;height:34px;border-radius:50%;border:2px dashed var(--on-sofa);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:700;font-size:.85rem;color:var(--on-sofa)}
-.slot.got{background:var(--coin);border:3px solid var(--coin-edge);color:var(--coin-ink);animation:drop .45s ease-out}
+.slot.got{background:url(assets/coin.webp) center/contain no-repeat;border:0;color:var(--coin-ink);animation:drop .45s ease-out}
 .slot.help{background:transparent;border:3px dotted var(--coin);color:var(--coin);font-size:.62rem}
 .slot.ans{opacity:1;border-style:dotted}
 @keyframes drop{from{transform:translateY(-18px) scale(.5);opacity:0}60%{transform:translateY(3px) scale(1.08);opacity:1}to{transform:none}}
@@ -156,15 +156,10 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   <a href="../../" class="back-link">← Back to Games</a>
   <div id="menu" class="screen active">
     <div class="header"><h1>I Found a Mark</h1><div class="sub">You don't need the answer. You need the next step.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
-    <svg class="room" viewBox="0 0 340 120" role="img" aria-label="A living room: a sofa, a lamp, and a coin in the gap between the cushions">
-      <rect class="wall" x="0" y="0" width="340" height="120" rx="12"/>
-      <ellipse class="rug" cx="170" cy="108" rx="140" ry="10"/>
-      <rect class="lamp" x="276" y="26" width="30" height="24" rx="6"/><line class="leg" x1="291" y1="50" x2="291" y2="100"/>
-      <rect class="sofa-d" x="52" y="46" width="206" height="52" rx="14"/>
-      <rect class="sofa" x="62" y="58" width="92" height="30" rx="8"/><rect class="sofa" x="160" y="58" width="92" height="30" rx="8"/>
-      <rect class="sofa" x="40" y="62" width="26" height="40" rx="9"/><rect class="sofa" x="248" y="62" width="26" height="40" rx="9"/>
-      <circle class="coin" cx="157" cy="66" r="9"/>
-    </svg>
+    <div class="room">
+      <img class="sofa-img" src="assets/sofa.webp" width="1600" height="873" alt="A green sofa with a gap between the cushions">
+      <img class="gap-coin" src="assets/coin.webp" width="512" height="512" alt="A gold coin">
+    </div>
     <div class="panel menu-info">
       <p>A 4-mark question is not all or nothing. A marker gives you marks for the <strong>method</strong>: the calculations on the way, even if the arithmetic goes wrong or you never reach the answer.</p>
       <p>Here you never work anything out. Each question has steps a marker would credit. Tap the calculations you could write down, in any order that makes sense. Every step that earns a mark goes on the sofa.</p>
