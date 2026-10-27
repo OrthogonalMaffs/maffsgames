@@ -14,13 +14,19 @@ Contracts are saved verbatim in `docs/handover/contracts/<date>-build-<slug>.md`
 8. **Done marker:** when a contract's job is merged (or parked with its question recorded), add a line `DONE: <contract file name>` under "Done" below; `E:/jon/tools/run-build-queue.ps1` skips contracts with such a line.
 
 ## Done
-(none yet)
+DONE: 2026-10-27-build-found-a-mark.md   (PARKED at the merge, see "Parked" below; everything else is built)
 
 ## Queue
 1. **found-a-mark** ("I Found a Mark") — contract `contracts/2026-10-27-build-found-a-mark.md`. IN PROGRESS. Worktree `E:/jon/mg-build-found-a-mark`, branch `claude/build-found-a-mark`.
 
 2. **hc-factor** ("The HC Factor") — contract `contracts/2026-10-27-build-hc-factor.md`. QUEUED (received 27 Oct, mid-build of #1). Branch `claude/build-hc-factor`, worktree `E:/jon/mg-build-hc-factor` (create from origin/main when starting). Not started.
 3. **y-so-steep** ("Y So Steep?") — contract `contracts/2026-10-27-build-y-so-steep.md`. QUEUED. Branch `claude/build-y-so-steep`, worktree `E:/jon/mg-build-y-so-steep`. Item 4 (fraction entry) may need an UNMERGED shared-asset branch; see the contract.
+
+## Parked
+**found-a-mark, PR #569 (head 32af744d): the CI Plan job fails, so the Gate is red; not merged.**
+The change edits the site-wide check lists a new game folder needs, so it "selects 136 verifiers (CI itself)", and the Plan job's per-line rule then fails on a line that is not mine: `Content verifiers 19: Equation Builder, part 1: 137s (median) + 56s setup = 193s, 71% of its 270s budget; the limit is 70% (189s)` (timings from main run 40494866923). Every other check in the PR passed locally (check-changed.py: only three failures, all mine, all fixed: burst.js not adopted, meta description length, the last button's wording).
+**Question for Jon / home lane:** split or speed up Equation Builder part 1 (home lane's CI), or tell me to wait for the next main timings pack and re-run the PR; I will not touch ci-groups or the Equation Builder verifier (shared). To resume: re-run the PR's CI, then `python scripts/merge-pr.py 569` (unpiped), watch main, run `python scripts/end-task.py claude/build-found-a-mark`, then report with the screenshots.
+Screenshots (375x667 and 1366x768, every question type) are in the session scratchpad `shots/` folder: garden_*, interest_*, ratio_*, enough_*; re-make with the play script if lost.
 
 ## found-a-mark: state (27 Oct 2026)
 Milestones: module, game page (fits 320x568, 375x667, 1280x720) and verifier (3 parts, 6 plants, all caught) pushed. Shared-file registrations (roster, games.json, 7 check lists, findings yml) added; `check-changed.py` run in background; next: push, PR, `merge-pr.py`, watch main, screenshots 375x667 + 1366x768.
