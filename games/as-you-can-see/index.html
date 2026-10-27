@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- UNLISTED (contract AS-YOU-CAN-SEE, 27 Oct 2026): live at its URL for Jon to play; off the portal, the sitemap and the leaderboard hub until he lists it. -->
+<meta name="description" content="Read pictograms, bar charts, line and scatter graphs, and spot the chart that is lying. For KS3 and GCSE. Free, no sign-up.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/as-you-can-see/">
+<meta property="og:title" content="Reading Charts Game – KS3/GCSE Maths | MaffsGames">
+<meta property="og:description" content="Read pictograms, bar charts, line and scatter graphs, and spot the chart that is lying. For KS3 and GCSE. Free, no sign-up.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/as-you-can-see/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Reading Charts Game – KS3/GCSE Maths | MaffsGames</title>
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/answer-count.js" defer></script>
+<script src="/schools/assets/fold.js" defer></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<style>
+/* Theme: schools/assets/theme.css (canon §7.5), light row: the check derives the palette from the roster's levels and the lowest
+   tier served is KS3. This game's own tokens: a teal accent and three series colours (each series also has its own pattern and a
+   written label in the key, so colour is never the only thing telling them apart). */
+:root{--accent:#0b6666;--accent-dim:#dcf1ef;--on-accent:#ffffff;--ink:#1a2744;
+  --c0:#2f6fb0;--c1:#c8661a;--c2:#4a8a4a;--pattern:#1a2744;--grid:#cbd5e1;--grid-major:#94a3b8;--lie:#b91c1c}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:720px;width:100%;padding:1rem}
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.4rem 0}
+.header h1{font-size:1.9rem;font-weight:700;color:var(--accent);line-height:1.15}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem 0 .5rem}
+@media (max-width:420px){.header h1{font-size:1.5rem}}
+.screen{display:none}.screen.active{display:block}
+[hidden]{display:none!important}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.9rem auto;max-width:600px}
+.menu-info{color:var(--text);font-size:.95rem;line-height:1.65}
+.menu-info p+p{margin-top:.6rem}
+.btn{min-height:44px;padding:.6rem 1.2rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--accent-dim)}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.res-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
+
+.logo{display:block;width:100%;max-width:300px;height:auto;margin:.2rem auto .4rem}
+.logo .bg{fill:var(--accent-dim)}.logo .ax{stroke:var(--ink);stroke-width:2;fill:none}.logo .b0{fill:var(--c0)}.logo .b1{fill:var(--c1)}.logo .b2{fill:var(--c2)}
+.logo .lens{fill:none;stroke:var(--ink);stroke-width:4}.logo .handle{stroke:var(--ink);stroke-width:6;stroke-linecap:round}
+
+.stages{display:flex;flex-direction:column;gap:.5rem;margin-top:.8rem}
+.stage-btn{display:flex;align-items:center;gap:.7rem;width:100%;text-align:left;min-height:56px;padding:.45rem .8rem;border-radius:12px;border:1px solid var(--border);background:var(--surface-alt);color:var(--text);cursor:pointer;font:inherit}
+.stage-btn:hover:not(:disabled){border-color:var(--accent)}
+.stage-btn:disabled{opacity:.55;cursor:default}
+.stage-btn .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:700}
+.stage-btn .t{font-weight:700;font-size:.95rem;line-height:1.2}
+.stage-btn .d{display:block;font-weight:400;font-size:.8rem;color:var(--muted);line-height:1.3}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.3rem .8rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.5rem;gap:.3rem}
+.hud-item{text-align:center;min-width:48px}
+.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.hud-val{font-family:var(--font-num);font-size:.95rem;font-weight:700}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.8rem;display:flex;flex-direction:column;gap:.5rem}
+.qtext{font-size:1.02rem;line-height:1.5}
+.glue{white-space:nowrap}
+.charts{display:flex;flex-direction:column;align-items:center;gap:.15rem}
+.charts svg{display:block;max-width:100%;height:auto}
+.charts text{font-family:var(--font-num);font-size:12px;fill:var(--ink)}
+.charts text.b{font-weight:700}
+.charts text.tag{font-weight:700;paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
+.charts .gm{stroke:var(--grid);stroke-width:1}
+.charts .gM{stroke:var(--grid-major);stroke-width:1}
+.charts .axis{stroke:var(--ink);stroke-width:1.5;fill:none}
+.charts .bar{stroke:var(--ink);stroke-width:1}
+.charts .s0{fill:var(--c0)}.charts .s1{fill:var(--c1)}.charts .s2{fill:var(--c2)}
+.charts .pat{stroke:var(--pattern);stroke-width:1.3;fill:none;opacity:.6}
+.charts .ln{fill:none;stroke:var(--c0);stroke-width:2.2;stroke-linejoin:round}
+.charts .dot{fill:var(--c0);stroke:var(--surface);stroke-width:1}
+.charts .fit{stroke:var(--c1);stroke-width:2;fill:none}
+.charts .fit-x{stroke:var(--c1);stroke-width:2;fill:none;stroke-dasharray:4 4}
+.charts .pt{fill:var(--c0);stroke:var(--ink);stroke-width:.8}
+.charts .sym{fill:var(--c0);stroke:var(--ink);stroke-width:1}
+.charts .ink{fill:var(--ink)}
+.ask-line{display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;min-height:1.4em}
+.ask-line h2{font-size:.92rem;font-weight:700}
+.msg{font-size:.85rem;font-weight:700;color:var(--muted);text-align:right}
+
+.ans-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.5rem .6rem;font-family:var(--font-num);font-size:1.15rem;font-weight:700;padding:.2rem 0}
+.ans-row .btn{min-width:6.5rem}
+.nb input{width:96px;height:44px;text-align:center;font:inherit;font-size:1.1rem;border:2px solid var(--border);border-radius:9px;background:var(--surface-alt);color:var(--text)}
+.nb input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:.45rem}
+.opts.one{grid-template-columns:1fr}
+.opts .btn{min-height:46px;text-align:center;line-height:1.25;font-weight:600;color:var(--text);border-color:var(--border);background:var(--surface-alt);padding:.3rem .5rem;font-size:.9rem}
+.opts .btn:hover{border-color:var(--accent)}
+.kp-holder{margin-top:.1rem}
+
+.fb{border-radius:12px;padding:.7rem .8rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.5rem}
+.fb.wrong{border-color:var(--wrong)}
+.fb.done{border-color:var(--correct)}
+.fb-line{font-size:.95rem;line-height:1.45;padding:.35rem .65rem;border-left:3px solid var(--hint);border-radius:0 8px 8px 0}
+.fb.done .fb-line{border-left-color:var(--correct)}
+.worked{margin:0;padding:0 0 0 1.25rem;font-size:.9rem;line-height:1.45;color:var(--text)}
+.worked li+li{margin-top:.2rem}
+.worked-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.fb-next{display:flex;justify-content:center}
+.feedback:empty{display:none}
+.example .tag{font-size:.74rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
+.example .steps{margin:.3rem 0 .2rem;padding-left:1.25rem;font-size:.95rem;line-height:1.5}
+.example .steps li+li{margin-top:.25rem}
+.example .step-row{display:flex;justify-content:center;margin-top:.4rem}
+.results{text-align:center;padding:1rem 0}
+.results h2{font-size:1.35rem;margin-bottom:.3rem}
+.final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.4rem 0 .1rem}
+.final-of{color:var(--muted);font-size:.9rem;margin-bottom:.5rem}
+.stats{color:var(--muted);line-height:1.9;font-size:.95rem;margin-bottom:.8rem}
+.stats b{color:var(--text)}
+
+/* Phone rule (canon §7.6.1): once a question is marked, the boxes and keys go and the feedback takes their place. */
+.qcard.fb-open #answer,.qcard.fb-open .ask-line,.qcard.fb-open #kpHolder{display:none}
+body.playing a.back-link{display:none}
+@media (max-width:420px){
+  .container{padding:.5rem}
+  .qcard{padding:.6rem .55rem;gap:.4rem}
+  .qtext{font-size:.96rem}
+  .hud{padding:.2rem .5rem}
+}
+@media (max-height:700px){.qtext{font-size:.9rem;line-height:1.35}.fb{padding:.5rem .6rem;gap:.35rem}.worked{font-size:.84rem}.hud-label{display:none}.hud{padding:.1rem .5rem;margin-bottom:.3rem}.qcard{gap:.3rem}.ans-row{padding:0}.ask-line{min-height:1.2em}.ask-line h2{display:none}.container{padding:.4rem}}
+@media (max-height:680px){.qcard.fb-open.keyfig #figure{display:none}}
+@media (max-height:620px){.qtext{font-size:.86rem;line-height:1.3}.hud-val{font-size:.85rem}.hud{padding:0 .5rem}.msg,.ask-line{display:none}.opts .btn{min-height:42px;padding:.2rem .4rem;font-size:.86rem}}
+@media (max-height:620px){.fb-next{order:1}.fb>.worked-h,.fb>.worked{order:2}}
+body.accessible{letter-spacing:.12em;word-spacing:.16em}
+body.accessible .hud-label,body.accessible .hud-val,body.accessible .ans-row,body.accessible .charts{letter-spacing:0}
+body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;max-width:65ch}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'answer' types the box (or taps an option) with i = 0 the right answer, i >= 1 a wrong one (named, then Next).
+{
+  "start": "ACS.ui.start(1)",
+  "ready": "!!window.ACS && ACS.ui.state() === 'asking'",
+  "answer": [
+    "ACS.ui.answer(i === 0);"
+  ]
+}
+-->
+<script src="../../schools/assets/answer.js"></script>
+<!-- The phone keypad for typed answers (MaffsKeypad, canon §4.4): no calculator in this game, so the keypad only. -->
+<script src="../../schools/assets/keypad.js"></script>
+<script src="../../schools/assets/reading-charts-generator.js"></script>
+<script src="../../schools/assets/reading-charts-game.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>As You Can See</h1><div class="sub">Reading charts and graphs.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <svg class="logo" viewBox="0 0 300 100" role="img" aria-label="A small bar chart seen through a magnifying glass">
+      <rect class="bg" x="0" y="0" width="300" height="100" rx="12"/>
+      <path class="ax" d="M60 14 V84 H220"/>
+      <rect class="b0" x="74" y="48" width="22" height="36"/><rect class="b1" x="104" y="28" width="22" height="56"/><rect class="b2" x="134" y="58" width="22" height="26"/><rect class="b0" x="164" y="38" width="22" height="46"/>
+      <circle class="lens" cx="206" cy="42" r="24"/><line class="handle" x1="224" y1="60" x2="246" y2="82"/>
+    </svg>
+    <div class="panel menu-info">
+      <p>Charts are everywhere. Each stage starts with a worked example, then ten questions. Read the scale and the key carefully, and watch for what a chart cannot tell you.</p>
+      <p>Type your answer in the box, or choose an option. No calculator needed. For a reading from a graph, a value within half a gridline counts.</p>
+      <div class="stages" id="stageList"></div>
+      <p class="hud-label" style="text-align:center;margin-top:.7rem">No calculator · 10 questions a stage</p>
+    </div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+    <div class="maffs-start-note" data-maffs-start-note></div>
+  </div>
+
+  <div id="example" class="screen">
+    <div class="qcard example" id="exCard">
+      <div class="tag" id="exTag">Worked example</div>
+      <div class="qtext" id="exText"></div>
+      <div class="charts" id="exFigure"></div>
+      <ol class="steps" id="exSteps"></ol>
+      <div class="step-row"><button class="btn solid" id="exBtn" type="button">Show the first step</button></div>
+    </div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Stage</div><div class="hud-val" id="hudStage">1</div></div>
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/10</div></div>
+      <div class="hud-item"><div class="hud-label">Marks</div><div class="hud-val" id="hudScore">0</div></div>
+    </div>
+    <div class="qcard" id="qcard">
+      <div class="qtext" id="qtext"></div>
+      <div class="charts" id="figure"></div>
+      <div class="ask-line"><h2 id="instr">Type your answer</h2><div class="msg" id="msg" aria-live="polite"></div></div>
+      <div id="answer"></div>
+      <div class="kp-holder" id="kpHolder" hidden></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resTitle">Stage done</h2>
+      <div class="final-score" id="resScore">0</div>
+      <div class="final-of" id="resOf">marks</div>
+      <div class="stats" id="resStats"></div>
+      <div class="res-btns">
+        <button class="btn solid" id="nextStageBtn" type="button">Next: Stage 2</button>
+        <button class="btn" id="againBtn" type="button">Play this stage again</button>
+        <button class="btn" id="menuBtn" type="button">All stages</button>
+      </div>
+      <p id="teacherInvite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var G = window.MaffsChartsGame, A = window.MaffsAnswer, SLUG = 'as-you-can-see', PER = G.PER_STAGE, LAST = 5, FOOTER_PX = 40;
+  // One level of content (keys ks3 and gcse, no picker); the stages are boards, not levels, each its own analytics mode.
+  var level = MaffsLevel.resolve({ slug: 'as-you-can-see', levels: ['ks3', 'gcse'], fallback: 'ks3',
+    boards: ['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5'] });
+  var $ = function (id) { return document.getElementById(id); };
+  function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function touch() { return !!(window.matchMedia && matchMedia('(pointer: coarse)').matches); }
+  function boardOf(n) { return 'stage-' + n; }
+
+  var stage = 1, session = [], qi = 0, Q = null, state = 'menu', kp = null, inputs = [], exQ = null, exAt = 0;
+  var marks = 0, answered = 0, rightCount = 0;
+
+  function show(id) {
+    ['menu', 'example', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    document.body.classList.toggle('playing', id === 'game' || id === 'example');
+    MaffsLock.screen($(id));
+  }
+
+  /* ---------- the menu ---------- */
+  (function () {
+    var h = '';
+    for (var n = 1; n <= LAST; n++) {
+      var S = G.STAGES[n];
+      h += '<button class="stage-btn" type="button" data-stage="' + n + '"><span class="n">' + n + '</span><span><span class="t">' + esc(S.name) +
+        '</span><span class="d">' + esc(S.blurb) + '</span></span></button>';
+    }
+    $('stageList').innerHTML = h;
+  })();
+
+  /* ---------- the charts, drawn from the data ---------- */
+  var NS = 'http://www.w3.org/2000/svg', uid = 0;
+  function el(name, attrs, text) {
+    var e = document.createElementNS(NS, name);
+    for (var k in attrs) if (attrs.hasOwnProperty(k)) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function tw(s) { return String(s).length * 7.4; }                 // a safe width of 12 px text, even in a wide font
+  function f1(n) { return (Math.round(n * 10) / 10).toFixed(1); }
+  function dims() {
+    var h = window.innerHeight;
+    return { plotH: h < 560 ? 84 : (h < 620 ? 96 : (h < 700 ? 112 : (h < 780 ? 132 : 168))), sym: h < 620 ? 16 : 22, rowGap: h < 620 ? 3 : 5 };
+  }
+  function lines(text, maxW) {                                       // wrap a label at its spaces so it fits maxW
+    if (tw(text) <= maxW) return [text];
+    var parts = String(text).split(' '), out = [], cur = '';
+    parts.forEach(function (p) { var t = cur ? cur + ' ' + p : p; if (cur && tw(t) > maxW) { out.push(cur); cur = p; } else cur = t; });
+    if (cur) out.push(cur);
+    return out;
+  }
+  function patterns(svg, id) {
+    var defs = el('defs', {});
+    var p1 = el('pattern', { id: id + 'p1', width: 6, height: 6, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' });
+    p1.appendChild(el('line', { class: 'pat', x1: 0, y1: 0, x2: 0, y2: 6 }));
+    var p2 = el('pattern', { id: id + 'p2', width: 6, height: 6, patternUnits: 'userSpaceOnUse' });
+    p2.appendChild(el('circle', { class: 'pat', cx: 3, cy: 3, r: 1 }));
+    defs.appendChild(p1); defs.appendChild(p2);
+    svg.appendChild(defs);
+  }
+  // A series' fill: its colour, with its own pattern over the top for series 1 and 2 (so colour is never the only thing).
+  function fillRect(g, id, i, x, y, w, h) {
+    g.appendChild(el('rect', { class: 'bar s' + i, x: x.toFixed(1), y: y.toFixed(1), width: w.toFixed(1), height: Math.max(0, h).toFixed(1) }));
+    if (i > 0) g.appendChild(el('rect', { x: x.toFixed(1), y: y.toFixed(1), width: w.toFixed(1), height: Math.max(0, h).toFixed(1), fill: 'url(#' + id + 'p' + i + ')' }));
+  }
+  function legend(svg, id, names, y0) {
+    var x = 2, y = y0;
+    names.forEach(function (nm, i) {
+      var w = 14 + 6 + tw(nm) + 12;
+      if (x + w > svg.__W && x > 2) { x = 2; y += 16; }
+      var g = el('g', { 'data-key': nm });
+      fillRect(g, id, i, x, y, 12, 12);
+      g.appendChild(el('text', { x: x + 18, y: y + 11 }, nm));
+      svg.appendChild(g);
+      x += w;
+    });
+    return y + 16;
+  }
+
+  // The up axis of a bank chart: gridlines every minor, a number every major.
+  function gridY(svg, plot, max, minor, major, labelFn) {
+    for (var v = 0; v <= max + 1e-9; v += minor) {
+      var y = plot.bot - v / max * plot.h, isM = v % major === 0;
+      svg.appendChild(el('line', { class: isM ? 'gM' : 'gm', x1: plot.left, x2: plot.right, y1: y.toFixed(1), y2: y.toFixed(1), 'data-ax': 'y', 'data-gv': v }));
+      if (isM) svg.appendChild(el('text', { x: plot.left - 4, y: (y + 4).toFixed(1), 'text-anchor': 'end' }, labelFn ? labelFn(v) : v));
+    }
+    svg.appendChild(el('line', { class: 'axis', x1: plot.left, x2: plot.left, y1: plot.top, y2: plot.bot }));
+    svg.appendChild(el('line', { class: 'axis', x1: plot.left, x2: plot.right, y1: plot.bot, y2: plot.bot }));
+  }
+  // The labels under a row of categories: wrapped at spaces, staggered onto a second row when they would touch.
+  function catLabels(svg, labels, xs, sp, yBase) {
+    var wrapped = labels.map(function (l) { return lines(l, sp - 3); });
+    var tooWide = wrapped.some(function (ls) { return ls.some(function (l) { return tw(l) > sp - 2; }); });
+    var maxLines = Math.max.apply(null, wrapped.map(function (l) { return l.length; }));
+    labels.forEach(function (l, i) {
+      var off = tooWide && i % 2 ? 14 : 0;
+      wrapped[i].forEach(function (t, k) { svg.appendChild(el('text', { x: xs[i].toFixed(1), y: yBase + off + 12 + 14 * k, 'text-anchor': 'middle', 'data-cat': l }, t)); });
+    });
+    return yBase + 14 * maxLines + (tooWide ? 14 : 0) + 4;
+  }
+
+  function barLike(ch, W) {                                          // bar | dual | composite
+    var d = dims(), id = 'c' + (++uid), left = 36, right = W - 6, top = 26, series = ch.type === 'bar' ? [] : ch.series;
+    var svg = el('svg', { role: 'img', 'data-w': W }); svg.__W = W;
+    svg.appendChild(el('text', { x: 2, y: 12, class: 'b' }, ch.yLabel));
+    patterns(svg, id);
+    if (series.length) top = legend(svg, id, series, 18) + 10;
+    var plot = { left: left, right: right, top: top, bot: top + d.plotH, h: d.plotH };
+    gridY(svg, plot, ch.max, ch.minor, ch.major);
+    var n = ch.cats.length, sp = (right - left) / n, xs = [], g = el('g', {});
+    ch.cats.forEach(function (c, i) {
+      var cx = left + sp * (i + 0.5); xs.push(cx);
+      var cg = el('g', { 'data-cat': c.label });
+      if (ch.type === 'bar') {
+        var w = Math.min(sp * 0.62, 40); fillRect(cg, id, 0, cx - w / 2, plot.bot - c.value / ch.max * plot.h, w, c.value / ch.max * plot.h);
+        cg.firstChild.setAttribute('data-v', c.value);
+      } else if (ch.type === 'dual') {
+        var bw = Math.min(sp * 0.34, 22);
+        c.values.forEach(function (v, k) {
+          var x0 = cx + (k === 0 ? -bw : 0), h = v / ch.max * plot.h;
+          fillRect(cg, id, k, x0, plot.bot - h, bw, h); cg.lastChild.setAttribute('data-v', v); if (k > 0) cg.childNodes[cg.childNodes.length - 2].setAttribute('data-v', v);
+        });
+      } else {
+        var sw = Math.min(sp * 0.5, 36), acc = 0;
+        c.values.forEach(function (v, k) {
+          var h = v / ch.max * plot.h, y = plot.bot - (acc + v) / ch.max * plot.h;
+          fillRect(cg, id, k, cx - sw / 2, y, sw, h); acc += v;
+          var rects = cg.querySelectorAll('rect.bar'); rects[rects.length - 1].setAttribute('data-v', v);
+        });
+      }
+      g.appendChild(cg);
+    });
+    svg.appendChild(g);
+    var H = catLabels(svg, ch.cats.map(function (c) { return c.label; }), xs, sp, plot.bot + 2);
+    svg.setAttribute('width', W); svg.setAttribute('height', Math.ceil(H)); svg.setAttribute('viewBox', '0 0 ' + W + ' ' + Math.ceil(H));
+    svg.setAttribute('aria-label', 'Bar chart: ' + ch.title);
+    return svg;
+  }
+
+  function lineGraph(ch, W) {
+    var d = dims(), left = 36, right = W - 12, top = 26;
+    var svg = el('svg', { role: 'img', 'data-w': W }); svg.__W = W;
+    svg.appendChild(el('text', { x: 2, y: 12, class: 'b' }, ch.yLabel));
+    var plot = { left: left, right: right, top: top, bot: top + d.plotH, h: d.plotH };
+    gridY(svg, plot, ch.max, ch.minor, ch.major);
+    var n = ch.points.length, sp = (right - left) / n, xs = ch.points.map(function (p, i) { return left + sp * (i + 0.5); });
+    svg.appendChild(el('polyline', { class: 'ln', points: ch.points.map(function (p, i) { return xs[i].toFixed(1) + ',' + (plot.bot - p.value / ch.max * plot.h).toFixed(1); }).join(' ') }));
+    ch.points.forEach(function (p, i) {
+      svg.appendChild(el('circle', { class: 'dot', cx: xs[i].toFixed(1), cy: (plot.bot - p.value / ch.max * plot.h).toFixed(1), r: 4, 'data-pt': p.label, 'data-v': p.value }));
+      svg.appendChild(el('line', { class: 'gM', x1: xs[i].toFixed(1), x2: xs[i].toFixed(1), y1: plot.bot, y2: plot.bot + 4 }));
+    });
+    var H = catLabels(svg, ch.points.map(function (p) { return p.label; }), xs, sp, plot.bot + 4);
+    H += 14; svg.appendChild(el('text', { x: ((left + right) / 2).toFixed(1), y: H - 2, 'text-anchor': 'middle', class: 'b' }, ch.xLabel)); H += 4;
+    svg.setAttribute('width', W); svg.setAttribute('height', Math.ceil(H)); svg.setAttribute('viewBox', '0 0 ' + W + ' ' + Math.ceil(H));
+    svg.setAttribute('aria-label', 'Line graph: ' + ch.title);
+    return svg;
+  }
+
+  function scatter(ch, W) {
+    var d = dims(), left = 36, right = W - 10, top = 26, ph = d.plotH + (window.innerHeight < 620 ? -8 : 10);
+    var svg = el('svg', { role: 'img', 'data-w': W }); svg.__W = W;
+    svg.appendChild(el('text', { x: 2, y: 12, class: 'b' }, ch.yLabel));
+    var plot = { left: left, right: right, top: top, bot: top + ph, h: ph, w: right - left };
+    var X = function (x) { return left + x / ch.xMax * plot.w; }, Y = function (y) { return plot.bot - y / ch.yMax * ph; };
+    var v;
+    for (v = 0; v <= ch.yMax + 1e-9; v += ch.yMinor) {
+      var maj = v % ch.yMajor === 0, yy = Y(v);
+      svg.appendChild(el('line', { class: maj ? 'gM' : 'gm', x1: left, x2: right, y1: yy.toFixed(1), y2: yy.toFixed(1), 'data-ax': 'y', 'data-gv': v }));
+      if (maj) svg.appendChild(el('text', { x: left - 4, y: (yy + 4).toFixed(1), 'text-anchor': 'end' }, v));
+    }
+    for (v = 0; v <= ch.xMax + 1e-9; v += ch.xMinor) {
+      var majx = v % ch.xMajor === 0, xx = X(v);
+      svg.appendChild(el('line', { class: majx ? 'gM' : 'gm', x1: xx.toFixed(1), x2: xx.toFixed(1), y1: top, y2: plot.bot, 'data-ax': 'x', 'data-gv': v }));
+      if (majx) svg.appendChild(el('text', { x: xx.toFixed(1), y: plot.bot + 14, 'text-anchor': 'middle' }, v));
+    }
+    svg.appendChild(el('line', { class: 'axis', x1: left, x2: left, y1: top, y2: plot.bot }));
+    svg.appendChild(el('line', { class: 'axis', x1: left, x2: right, y1: plot.bot, y2: plot.bot }));
+    if (ch.line) {
+      var lo = ch.points.reduce(function (m, p) { return Math.min(m, p.x); }, 1e9), hi = ch.dataMax;
+      var Yc = function (x) { return Math.max(0, Math.min(ch.yMax, ch.line.c + ch.line.m * x)); };
+      svg.appendChild(el('line', { class: 'fit', 'data-fit': 1, x1: X(lo).toFixed(1), y1: Y(ch.line.c + ch.line.m * lo).toFixed(1), x2: X(hi).toFixed(1), y2: Y(ch.line.c + ch.line.m * hi).toFixed(1) }));
+      if (hi < ch.xMax) {                                          // the line carried on past the data, dashed
+        var xe = ch.xMax, ye = ch.line.c + ch.line.m * xe;
+        if (ye < 0 || ye > ch.yMax) { xe = ch.line.m > 0 ? (ch.yMax - ch.line.c) / ch.line.m : -ch.line.c / ch.line.m; ye = ch.line.c + ch.line.m * xe; }
+        svg.appendChild(el('line', { class: 'fit-x', x1: X(hi).toFixed(1), y1: Y(ch.line.c + ch.line.m * hi).toFixed(1), x2: X(xe).toFixed(1), y2: Y(ye).toFixed(1) }));
+      }
+    }
+    ch.points.forEach(function (p) {
+      svg.appendChild(el('circle', { class: 'pt', cx: X(p.x).toFixed(1), cy: Y(p.y).toFixed(1), r: 3.6, 'data-x': p.x, 'data-y': p.y }));
+      if (p.tag) svg.appendChild(el('text', { class: 'tag', x: (X(p.x) + 6).toFixed(1), y: (Y(p.y) - 5).toFixed(1), 'data-tag': p.tag }, p.tag));
+    });
+    var H = plot.bot + 14 + 16;
+    svg.appendChild(el('text', { x: ((left + right) / 2).toFixed(1), y: H - 3, 'text-anchor': 'middle', class: 'b' }, ch.xLabel)); H += 3;
+    svg.setAttribute('width', W); svg.setAttribute('height', Math.ceil(H)); svg.setAttribute('viewBox', '0 0 ' + W + ' ' + Math.ceil(H));
+    svg.setAttribute('aria-label', 'Scatter graph: ' + ch.title);
+    return svg;
+  }
+
+  var SHAPES = { circle: 'M0 -1 A1 1 0 1 1 0 1 A1 1 0 1 1 0 -1 Z', square: 'M-0.9 -0.9 H0.9 V0.9 H-0.9 Z', triangle: 'M0 -1 L1 0.9 H-1 Z', diamond: 'M0 -1 L1 0 L0 1 L-1 0 Z',
+    star: 'M0 -1 L0.29 -0.4 L0.95 -0.31 L0.47 0.15 L0.59 0.81 L0 0.5 L-0.59 0.81 L-0.47 0.15 L-0.95 -0.31 L-0.29 -0.4 Z' };
+  function symbol(svg, id, shape, cx, cy, r, quarters, tag) {      // quarters: 4 whole, 2 half (left half), 1 quarter (left quarter)
+    var g = el('g', { 'data-q': quarters, 'data-row': tag });
+    var cp = id + 'c' + (++uid);
+    if (quarters < 4) {
+      var cl = el('clipPath', { id: cp });
+      cl.appendChild(el('rect', { x: (cx - r).toFixed(1), y: (cy - r - 1).toFixed(1), width: (2 * r * quarters / 4).toFixed(1), height: 2 * r + 2 }));
+      g.appendChild(cl);
+    }
+    var p = el('path', { class: 'sym', d: SHAPES[shape], transform: 'translate(' + cx.toFixed(1) + ',' + cy.toFixed(1) + ') scale(' + r + ')', 'vector-effect': 'non-scaling-stroke' });
+    if (quarters < 4) p.setAttribute('clip-path', 'url(#' + cp + ')');
+    g.appendChild(p);
+    svg.appendChild(g);
+  }
+  function pictogram(ch, W) {
+    var d = dims(), id = 'c' + (++uid), r = d.sym / 2, rowH = d.sym + d.rowGap, lw = Math.min(82, Math.max.apply(null, ch.rows.map(function (x) { return tw(x.label); })) + 6);
+    var svg = el('svg', { role: 'img', 'data-w': W }); svg.__W = W;
+    var y = 2;
+    ch.rows.forEach(function (row) {
+      var cy = y + rowH / 2;
+      svg.appendChild(el('text', { x: 2, y: (cy + 4).toFixed(1), 'data-cat': row.label }, row.label));
+      var whole = Math.floor(row.q / 4), part = row.q % 4, x = lw + 4 + r;
+      for (var k = 0; k < whole; k++) { symbol(svg, id, ch.shape, x, cy, r, 4, row.label); x += 2 * r + 3; }
+      if (part) symbol(svg, id, ch.shape, x, cy, r, part, row.label);
+      y += rowH;
+    });
+    y += 4;
+    svg.appendChild(el('line', { class: 'gm', x1: 2, x2: W - 2, y1: y, y2: y }));
+    y += 4;
+    symbol(svg, id, ch.shape, 2 + r, y + r + 1, r, 4, 'key');
+    svg.appendChild(el('text', { class: 'b', x: 2 + 2 * r + 8, y: (y + r + 5).toFixed(1), 'data-key-text': 1 }, 'Key: = ' + (ch.keyHidden ? '?' : ch.per + ' ' + ch.what)));
+    y += 2 * r + 8;
+    svg.setAttribute('width', W); svg.setAttribute('height', Math.ceil(y)); svg.setAttribute('viewBox', '0 0 ' + W + ' ' + Math.ceil(y));
+    svg.setAttribute('aria-label', 'Pictogram: ' + ch.title);
+    return svg;
+  }
+
+  // "Is this chart lying?": drawn from the chart's own flags. The up axis runs through the ticks at equal distances (so uneven
+  // numbers make an uneven scale), and a value is placed between its two ticks.
+  function lying(ch, W) {
+    var d = dims(), left = 40, right = W - 10, top = ch.title ? 44 : 14, svg = el('svg', { role: 'img', 'data-w': W }); svg.__W = W;
+    var ph = d.plotH;
+    if (ch.title) { svg.appendChild(el('text', { x: 2, y: 13, class: 'b' }, ch.title)); }
+    if (ch.yLabel) svg.appendChild(el('text', { x: 2, y: 29 }, ch.yLabel));
+    var bot = top + ph, T = ch.ticks, n = T.length;
+    function Yv(v) {
+      var i = 0; while (i < n - 2 && v > T[i + 1]) i++;
+      var f = (v - T[i]) / (T[i + 1] - T[i]);
+      return bot - (i + f) / (n - 1) * ph;
+    }
+    if (ch.form === 'pics') {
+      var base = Math.min(ph * 0.45, (right - left) / 4), h0 = base, cxs = [left + (right - left) * 0.28, left + (right - left) * 0.72];
+      var ratio = ch.items[1].value / ch.items[0].value;
+      ch.items.forEach(function (it, i) {
+        var k = i === 0 ? 1 : ratio, w = h0 * k * (ch.areaScaled ? 1 : 1), hh = h0 * k;
+        if (!ch.areaScaled) { hh = h0 * k; w = h0; }
+        var y1 = bot - hh;
+        svg.appendChild(el('rect', { class: 'bar s' + i, x: (cxs[i] - w / 2).toFixed(1), y: y1.toFixed(1), width: w.toFixed(1), height: hh.toFixed(1), rx: 4, 'data-pic': it.label, 'data-w': w.toFixed(1), 'data-h': hh.toFixed(1) }));
+        svg.appendChild(el('text', { x: cxs[i].toFixed(1), y: bot + 14, 'text-anchor': 'middle' }, ch.labelled ? it.label : ''));
+        svg.appendChild(el('text', { x: cxs[i].toFixed(1), y: bot + 28, 'text-anchor': 'middle', class: 'b' }, ch.labelled ? String(it.value) : ''));
+      });
+      svg.appendChild(el('line', { class: 'axis', x1: left - 10, x2: right, y1: bot, y2: bot }));
+      var Hp = bot + 34;
+      svg.setAttribute('width', W); svg.setAttribute('height', Hp); svg.setAttribute('viewBox', '0 0 ' + W + ' ' + Hp);
+      return svg;
+    }
+    T.forEach(function (t, i) {
+      var y = bot - i / (n - 1) * ph;
+      svg.appendChild(el('line', { class: 'gM', x1: left, x2: right, y1: y.toFixed(1), y2: y.toFixed(1), 'data-ax': 'y', 'data-gv': t }));
+      svg.appendChild(el('text', { x: left - 4, y: (y + 4).toFixed(1), 'text-anchor': 'end', 'data-tick': t }, t));
+    });
+    svg.appendChild(el('line', { class: 'axis', x1: left, x2: left, y1: top, y2: bot }));
+    svg.appendChild(el('line', { class: 'axis', x1: left, x2: right, y1: bot, y2: bot }));
+    var m = ch.items.length, sp = (right - left) / m, xs = ch.items.map(function (it, i) { return left + sp * (i + 0.5); });
+    if (ch.form === 'bar') {
+      ch.items.forEach(function (it, i) {
+        var w = Math.min(sp * 0.5, 54), y1 = Yv(it.value), x0 = xs[i] - w / 2;
+        if (ch.threeD) {
+          var dx = 12, dy = 9;
+          svg.appendChild(el('path', { class: 'bar s' + (i % 2), d: 'M' + (x0).toFixed(1) + ' ' + bot + ' V' + y1.toFixed(1) + ' H' + (x0 + w).toFixed(1) + ' V' + bot + ' Z' }));
+          svg.appendChild(el('path', { class: 'bar s' + (i % 2), style: 'opacity:.75', d: 'M' + (x0).toFixed(1) + ' ' + y1.toFixed(1) + ' l' + dx + ' -' + dy + ' h' + w + ' l-' + dx + ' ' + dy + ' Z' }));
+          svg.appendChild(el('path', { class: 'bar s' + (i % 2), style: 'opacity:.55', d: 'M' + (x0 + w).toFixed(1) + ' ' + y1.toFixed(1) + ' l' + dx + ' -' + dy + ' V' + (bot - dy) + ' l-' + dx + ' ' + dy + ' Z' }));
+        } else fillRect(svg, 'c0', i % 2 ? 0 : 0, x0, y1, w, bot - y1);
+        svg.lastChild.setAttribute('data-v', it.value);
+      });
+    } else {
+      svg.appendChild(el('polyline', { class: 'ln', points: ch.items.map(function (it, i) { return xs[i].toFixed(1) + ',' + Yv(it.value).toFixed(1); }).join(' ') }));
+      ch.items.forEach(function (it, i) { svg.appendChild(el('circle', { class: 'dot', cx: xs[i].toFixed(1), cy: Yv(it.value).toFixed(1), r: 4, 'data-v': it.value })); });
+    }
+    var yb = bot + 14;
+    if (ch.labelled) ch.items.forEach(function (it, i) { svg.appendChild(el('text', { x: xs[i].toFixed(1), y: yb, 'text-anchor': 'middle' }, it.label)); });
+    var H = bot + 20;
+    svg.setAttribute('width', W); svg.setAttribute('height', Math.ceil(H)); svg.setAttribute('viewBox', '0 0 ' + W + ' ' + Math.ceil(H));
+    svg.setAttribute('aria-label', ch.title ? 'Chart: ' + ch.title : 'A chart with no title or labels');
+    return svg;
+  }
+
+  function drawFigure(into, q) {
+    into.innerHTML = '';
+    var W = Math.min((into.parentNode.clientWidth || 304) - 24, 340), ch = q.chart, f;
+    if (ch.type === 'pictogram') f = pictogram(ch, W);
+    else if (ch.type === 'line') f = lineGraph(ch, W);
+    else if (ch.type === 'scatter') f = scatter(ch, W);
+    else if (ch.type === 'lying') f = lying(ch, W);
+    else f = barLike(ch, W);
+    into.appendChild(f);
+  }
+
+  /* ---------- the stage's worked example ---------- */
+  function workedLines(q) { return q.worked.slice(); }
+  function renderLine(t) { return esc(t); }
+
+  function startStage(n, skipExample) {
+    MaffsLock.newSession();
+    stage = n;
+    ev('game_started', { game_slug: SLUG, level: level, mode: 'stage-' + n });
+    if (skipExample) { startQuestions(); return; }
+    exQ = G.example(n); exAt = 0;
+    show('example');
+    $('exTag').textContent = 'Stage ' + n + ': ' + G.STAGES[n].name + '. Worked example';
+    $('exText').innerHTML = '<p>' + renderLine(exQ.stem) + '</p>';
+    drawFigure($('exFigure'), exQ);
+    $('exSteps').innerHTML = '';
+    $('exBtn').textContent = 'Show the first step';
+    $('exBtn').className = 'btn solid';
+    MaffsLock.fresh($('exCard'));
+  }
+  $('exBtn').addEventListener('click', function () {
+    var lines = workedLines(exQ);
+    if (!MaffsLock.lock($('exCard'))) return;
+    if (exAt >= lines.length) { startQuestions(); return; }
+    $('exSteps').insertAdjacentHTML('beforeend', '<li>' + renderLine(lines[exAt]) + '</li>');
+    exAt++;
+    $('exBtn').textContent = exAt >= lines.length ? 'Start the questions' : 'Show the next step';
+    MaffsLock.fresh($('exCard'));
+    var b = $('exBtn').getBoundingClientRect(), over = b.bottom - (window.innerHeight - FOOTER_PX);
+    if (over > 0) window.scrollBy(0, over);
+  });
+
+  /* ---------- play ---------- */
+  function startQuestions() {
+    session = G.session(stage, Math.floor(Math.random() * 4294967296), PER);
+    qi = 0; marks = 0; answered = 0; rightCount = 0;
+    show('game');
+    $('hudStage').textContent = stage;
+    nextQuestion();
+  }
+  function nextQuestion() {
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    $('feedback').innerHTML = '';
+    $('qcard').classList.remove('fb-open');
+    if (qi >= session.length) { finish(); return; }
+    Q = session[qi++]; state = 'asking';
+    $('hudQ').textContent = qi + '/' + PER;
+    $('hudScore').textContent = marks;
+    $('qtext').innerHTML = '<p>' + renderLine(Q.stem) + '</p>';
+    $('figure').hidden = false;
+    drawFigure($('figure'), Q);
+    $('instr').textContent = Q.type === 'choice' ? 'Choose one' : 'Type the number';
+    $('msg').textContent = Q.type === 'choice' ? '' : (Q.tol > 0 ? 'Within half a gridline is fine' : 'No calculator');
+    buildAnswer();
+    MaffsLock.fresh($('answer'));
+    window.scrollTo(0, 0);
+  }
+
+  var CHECK = '<button class="btn solid" id="checkBtn" type="button" disabled>Check</button>';
+  function buildAnswer() {
+    var a = $('answer'), h = '';
+    $('kpHolder').innerHTML = ''; $('kpHolder').hidden = true; kp = null; inputs = [];
+    if (Q.type === 'choice') {
+      var long = Q.options.some(function (o) { return o.length > 20; });
+      h = '<div class="opts' + (long ? ' one' : '') + '" role="group" aria-label="Answers">' + Q.options.map(function (o, i) { return '<button class="btn" type="button" data-opt="' + i + '">' + esc(o) + '</button>'; }).join('') + '</div>';
+      a.innerHTML = h; return;
+    }
+    h = '<div class="ans-row" role="group" aria-label="Your answer"><label class="nb"><input type="text" inputmode="decimal" autocomplete="off" maxlength="6" aria-label="Your answer" data-i="0"></label>' + CHECK + '</div>';
+    a.innerHTML = h;
+    inputs = Array.prototype.slice.call(a.querySelectorAll('input'));
+    var holder = $('kpHolder'), k = document.createElement('div');
+    holder.innerHTML = ''; holder.hidden = false; holder.appendChild(k);
+    kp = window.MaffsKeypad ? MaffsKeypad.mount(k, { targets: inputs, keys: {}, maxLength: 5, keepInView: a, foldInset: FOOTER_PX }) : null;
+    if (!(kp && kp.enabled && kp.enabled())) { holder.hidden = true; try { inputs[0].focus({ preventScroll: true }); } catch (e) {} }
+  }
+  // Digits and one decimal point.
+  function cleanTyped(v) {
+    v = v.replace(/[^0-9.]/g, '');
+    var i = v.indexOf('.'); if (i >= 0) v = v.slice(0, i + 1) + v.slice(i + 1).replace(/\./g, '');
+    return v;
+  }
+  function raws() { return inputs.map(function (i) { return i.value.trim(); }); }
+  function refresh() { var b = $('checkBtn'); if (b) b.disabled = !raws().every(function (r) { return r !== ''; }); }
+
+  function mark(rawsIn) {
+    if (state !== 'asking') return;
+    var r = G.mark(Q, rawsIn);
+    if (r.kind === 'unreadable') { $('msg').textContent = r.why; return; }
+    if (!MaffsLock.lock($('answer'))) return;
+    var ok = r.kind === 'right';
+    answered++; if (ok) { rightCount++; marks++; }
+    $('hudScore').textContent = marks;
+    ev('question_answered', { game_slug: SLUG, level: level, mode: 'stage-' + stage, question_index: qi, correct: ok });
+    var fb = $('feedback'), last = qi >= PER;
+    $('qcard').classList.add('fb-open');
+    $('qcard').classList.add('keyfig');
+    if (ok) {
+      state = 'done';
+      var wl = workedLines(Q);
+      fb.innerHTML = '<div class="fb done"><div class="fb-line">Yes. ' + renderLine(wl[wl.length - 1]) + '</div>' +
+        '<div class="fb-next"><button class="btn solid" id="nextBtn" type="button">' + (last ? 'See results →' : 'Next →') + '</button></div></div>';
+      MaffsLock.fresh(fb);
+      $('nextBtn').focus();
+    } else {
+      state = 'wrong';
+      fb.innerHTML = '<div class="fb wrong"><div class="fb-line" data-help="reason">' + renderLine(r.why) + '</div><div class="fb-next"></div>' +
+        '<div class="worked-h">How it goes</div><ol class="worked">' + workedLines(Q).map(function (l) { return '<li>' + renderLine(l) + '</li>'; }).join('') + '</ol></div>';
+      MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance });
+    }
+  }
+  function advance() {
+    if (state === 'moving') return;
+    state = 'moving';
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    nextQuestion();
+  }
+
+  var finish = MaffsLock.finishOnce(function () {
+    state = 'done';
+    var S = G.STAGES[stage], max = PER, board = boardOf(stage), score = marks;
+    ev('game_completed', { game_slug: SLUG, level: level, mode: 'stage-' + stage, score: score, questions_answered: answered, questions_correct: rightCount });
+    if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, board, score, answered).catch(function () {});
+    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, board, score);
+    var pbKey = 'acs_best_' + stage, prev = parseInt(lsGet(pbKey) || '0', 10) || 0, pb = score > prev;
+    if (pb) { ev('personal_best_set', { game_slug: SLUG, level: level, mode: 'stage-' + stage, score: score, previous_best: prev }); lsSet(pbKey, String(score)); }
+    $('kpHolder').innerHTML = ''; $('kpHolder').hidden = true;
+    $('resTitle').textContent = 'Stage ' + stage + ' done: ' + S.name;
+    $('resScore').textContent = score;
+    $('resOf').textContent = 'marks, out of ' + max;
+    $('resStats').innerHTML = '<b>' + rightCount + '</b> right out of <b>' + answered + '</b> answers' + (pb ? '<br>New personal best' : '');
+    $('nextStageBtn').hidden = stage >= LAST;
+    $('nextStageBtn').dataset.stage = stage + 1;
+    $('nextStageBtn').textContent = 'Next: Stage ' + (stage + 1);
+    show('results');
+  });
+
+  /* ---------- wiring ---------- */
+  $('stageList').addEventListener('click', function (e) { var b = e.target.closest('[data-stage]'); if (b) startStage(parseInt(b.dataset.stage, 10)); });
+  $('nextStageBtn').addEventListener('click', function () { startStage(parseInt($('nextStageBtn').dataset.stage, 10)); });
+  $('againBtn').addEventListener('click', function () { startStage(stage); });
+  $('menuBtn').addEventListener('click', function () { state = 'menu'; show('menu'); });
+  $('answer').addEventListener('click', function (e) {
+    var o = e.target.closest('[data-opt]');
+    if (o) { mark([o.dataset.opt]); return; }
+    if (e.target.closest('#checkBtn')) mark(raws());
+  });
+  $('answer').addEventListener('input', function (e) {
+    if (e.target.tagName === 'INPUT') { e.target.value = cleanTyped(e.target.value); refresh(); }
+  });
+  $('answer').addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' || e.target.tagName !== 'INPUT') return;
+    e.preventDefault();
+    if (inputs[0] && inputs[0].value !== '') mark(raws());
+  });
+  $('feedback').addEventListener('click', function (e) { if (e.target.closest('#nextBtn') && state === 'done') advance(); });
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(lsGet(KEY) === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); lsSet(KEY, String(on)); apply(on); });
+  })();
+
+  // Read-only views of live state, for scripts/verify-as-you-can-see.py and the lock hint above.
+  window.ACS = {
+    SLUG: SLUG,
+    ui: {
+      state: function () { return state; },
+      level: function () { return level; },
+      stage: function () { return stage; },
+      question: function () { return Q ? JSON.parse(JSON.stringify(Q)) : null; },
+      score: function () { return marks; },
+      start: function (n, example) { startStage(n, !example); },
+      // One bank question on screen by itself (stage, slot, seed), so a verifier can see every kind of question at every size.
+      preview: function (n, slot, seed) {
+        MaffsLock.newSession(); stage = n; marks = 0; answered = 0; rightCount = 0; qi = 0;
+        session = [G.adapt(window.MaffsReadingCharts.question(n, slot, G.makeRng(seed || 1)))];
+        show('game'); $('hudStage').textContent = n; nextQuestion();
+      },
+      // Answer the question on screen: the right answer, or a wrong one.
+      answer: function (right) {
+        if (Q.type === 'choice') {
+          var pick = right ? Q.key : (Q.key + 1) % Q.options.length;
+          var b = $('answer').querySelector('[data-opt="' + pick + '"]'); if (b) b.click(); return;
+        }
+        var v = Q.key + (right ? 0 : Math.max(7, Q.tol * 4 + 3));
+        inputs[0].value = String(v);
+        refresh();
+        $('checkBtn').click();
+      }
+    }
+  };
+})();
+</script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'as-you-can-see');</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

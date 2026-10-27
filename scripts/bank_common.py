@@ -25,6 +25,9 @@ import sys
 import time
 import urllib.request
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from ci_shards import Shard, shard_args  # noqa: E402,F401  (contract SHARD: a long verifier's work units, bc.Shard)
+
 MIN_PYTHON = (3, 10)      # scripts/ need 3.10: Path.write_text(newline=) (TEXT-WRITES, 14 Oct 2026)
 
 

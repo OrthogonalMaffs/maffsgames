@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: The 6 P's, part 1 (the topic data file is the generator's output; no mark figure, AQA, Edexcel or "in development" in the page, no launch into a game; the four past-paper sites before Start; 10,000 sessions each way: six distinct covered topics in band order, frequencies in proportion to marks; every format marked by value through the page's own judge(), schema faults left out, five picked unseen first) | --part 1
-# ci-line: The 6 P's, part 2 (a full session at 1280 px with localStorage working, on fixture banks covering all nine formats: every format answered right and wrong, never-marked answers not marked, slips, working, five a topic and a topic card, results, nudge, practice links, tick-list and events; resumed mid-topic after a reload) | --part 2
-# ci-line: The 6 P's, part 3 (the same session at 320 px on a touch screen, typed on the phone keypad, with localStorage blocked: no sideways scroll on any screen, resumed mid-topic from window.name; a topic with no bank offers Skip only) | --part 3
-# ci-line: The 6 P's, part 4 (fault-injection self-test: the planted faults, each caught) | --part 4
+# ci-shards: The 6 P's (the topic data file is the generator's output; no mark figure, AQA, Edexcel or "in development" in the page, no launch into a game; the four past-paper sites before Start; 10,000 sessions each way: six distinct covered topics in band order, frequencies in proportion to marks; every format marked by value through the page's own judge(), schema faults left out, five picked unseen first; a full session at 1280 px with localStorage working, on fixture banks covering all nine formats: every format answered right and wrong, never-marked answers not marked, slips, working, five a topic and a topic card, results, nudge, practice links, tick-list and events; resumed mid-topic after a reload; the same session at 320 px on a touch screen, typed on the phone keypad, with localStorage blocked: no sideways scroll on any screen, resumed mid-topic from window.name; every real bank's verdict and Next on a 375 x 667 phone; a topic with no bank offers Skip only; fault-injection self-test: the planted faults, each caught) |  | 2
 # ci-deps: the-6-ps/ schools/assets/exam-topics-ocr-foundation.json scripts/gen-exam-topics.py scripts/fixtures/six-ps/
 """Independent verification for The 6 P's (/the-6-ps/): built 24 Oct 2026 (contract THE-6-PS), its question player
 25 Oct 2026 (contract SIX-PS-PLAYER, Jon's ruling: self-contained, no hand-off into games).
@@ -25,26 +22,27 @@ WHAT IS CHECKED, AND AGAINST WHAT
              (the Unicode minus, a thousands comma), a range's band, a slip matched by the question's own rule, a
              choice by its dataset.val. Schema faults (an unknown format, three options, a range reaching half way to
              a slip) are left out. Five are picked unseen first, then the longest seen, through the page's own store.
-  Session    (parts 2 and 3) a full session through the page on the fixture banks: each question's scripted answers
-             typed (part 3 on the phone keypad), the never-marked ones (format, unreadable, no unit) showing the
+  Session    (at 1280 px and at 320 px) a full session through the page on the fixture banks: each question's scripted
+             answers typed (at 320 px on the phone keypad), the never-marked ones (format, unreadable, no unit) showing the
              shared message with nothing marked or sent; each marked one showing right or wrong at once, the slip line
              and the working on a wrong one, the working one tap away on a right one; the header "Question n of 5 ·
              Topic m of 6"; after the fifth answer the topic card ("<topic>: r of 5", its weight) and never a sixth
              question; the results (scores, weights, "Want more practice? <game>" linking the game at its level), the
              nudge, the tick-list and its one event; question_answered (correct, and the topic id packed in
              filter_type/filter_value, Jon's ruling of 25 Oct), one game_started and one game_completed. Resumed
-             mid-topic after a reload, from localStorage (part 2) and from window.name (part 3, storage blocked).
+             mid-topic after a reload, from localStorage (1280 px) and from window.name (320 px, storage blocked).
              Diagrams: drawn, with their script, handler and external image removed.
-  Phone      (part 3) 320 px: no sideways scroll on the start screen, any question, a topic card or the results.
-  No bank    (part 3) a drawn topic whose bank does not load says its questions aren't ready, with Skip only.
+  Phone      320 px: no sideways scroll on the start screen, any question, a topic card or the results.
+  No bank    a drawn topic whose bank does not load says its questions aren't ready, with Skip only.
 
-    python scripts/verify-the-6-ps.py              # every part
-    python scripts/verify-the-6-ps.py --part 1     # data, static, draws and marking
-    python scripts/verify-the-6-ps.py --part 2     # a session at 1280 px, storage working
-    python scripts/verify-the-6-ps.py --part 3     # a session at 320 px on the keypad, storage blocked
-    python scripts/verify-the-6-ps.py --part 4     # the plants
+    python scripts/verify-the-6-ps.py                  # every unit
+    python scripts/verify-the-6-ps.py --list-units     # the units: the data and routes, the static checks, the draws,
+                                                       # the marking, each browser check (each real bank's 375 x 667
+                                                       # feedback its own), each session, each plant
+    python scripts/verify-the-6-ps.py --shard 2/3      # part 2 of 3 of the units (CI; scripts/ci-groups.py chooses 3)
 """
 import argparse
+import contextlib
 import importlib.util
 import json
 import math
@@ -52,6 +50,7 @@ import os
 import re
 import sys
 import time
+from decimal import Decimal
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -188,7 +187,16 @@ def as_input(q, v):
 
 
 def js_num(v):
-    return str(int(v)) if float(v) == int(v) else repr(float(v))
+    """A number as JavaScript's String(x) writes it, which is what the page shows and a student types: the shortest digits
+    that round-trip (Python's repr has the same digits), in full from 1e-6 up to 1e21 and in exponent form outside it.
+    Python's repr switches to exponent form below 1e-4, so 4e-05 (standard-form-dc6d94d5's 0.00004) was typed as "4e-05",
+    a key the phone keypad does not have (main run 40570027404, 27 Oct 2026)."""
+    x = float(v)
+    if x == int(x) and abs(x) < 1e21:
+        return str(int(x))
+    if 1e-6 <= abs(x) < 1e21:
+        return format(Decimal(repr(x)), 'f')
+    return re.sub(r'e([+-])0*(\d)', r'e\1\2', repr(x))
 
 
 def shown_answer(q):
@@ -250,10 +258,10 @@ EMOJI = re.compile('[\U0001F000-\U0001FAFF☀-➿⭐⭕️]|&#(9[0-9]{3}|1[0-9]{
 
 
 def static_checks(html, data, out):
-    if '<meta name="robots" content="noindex">' not in html:
-        out.append('the page is not noindex (it is unlisted until Jon has played it)')
-    if '<!-- UNLISTED' not in html:
-        out.append('the page has no UNLISTED comment')
+    if re.search(r'<meta name="robots"[^>]*noindex', html):
+        out.append('the page is noindex, but it is listed (launch contract SIX-PS-LAUNCH, 27 Oct 2026)')
+    if '<!-- UNLISTED' in html:
+        out.append('the page still carries its UNLISTED comment')
     if not re.search(r'<script src="/schools/assets/analytics\.js"></script>', html):
         out.append('the page does not load analytics.js')
     if '<html lang="en-GB" data-theme="light">' not in html or 'href="/schools/assets/theme.css"' not in html:
@@ -1042,6 +1050,198 @@ def check_results_once(pw, base, html, data, out):
         b.close()
 
 
+def check_footer_states(pw, base, html, data, out):
+    """No footer links during a run (Jon, 27 Oct 2026): on the start and results screens every footer link is on the screen and
+    hit-testable; on a question, its feedback and between topics, none is in the tab order or hit-testable. The header's way out stays."""
+    probe = """() => {
+      const f = document.querySelector('.site-footer');
+      const links = f ? [...f.querySelectorAll('a')] : [];
+      const hit = links.filter(a => { const r = a.getBoundingClientRect(); if (!a.getClientRects().length || r.right <= 0 || r.left >= innerWidth) return false;
+        const e = document.elementFromPoint(Math.min(Math.max(r.left + r.width / 2, 0), innerWidth - 1), r.top + r.height / 2); return !!e && a.contains(e); }).length;
+      return { links: links.length, hit: hit, shown: !!f && getComputedStyle(f).display !== 'none',
+               back: !![...document.querySelectorAll('a[href="/"]')].filter(a => !a.closest('.site-footer') && a.getClientRects().length).length };
+    }"""
+    def tabbed(b):
+        b.page.evaluate("() => { document.activeElement && document.activeElement.blur(); window.scrollTo(0, 0); }")
+        seen = 0
+        for _ in range(60):
+            b.page.keyboard.press('Tab')
+            if b.page.evaluate("() => !!(document.activeElement && document.activeElement.closest('.site-footer'))"):
+                seen += 1
+        return seen
+
+    def want(b, tag, shown):
+        r = b.page.evaluate(probe)
+        if not r['links']:
+            out.append('footer states, %s: the page has no footer links at all' % tag)
+        elif shown and (not r['shown'] or r['hit'] < 1):
+            out.append('footer states, %s: the footer should be on the screen with its links hit-testable (shown %s, %d of %d hit)'
+                       % (tag, r['shown'], r['hit'], r['links']))
+        elif not shown:
+            if r['shown'] or r['hit']:
+                out.append('footer states, %s: footer links are on the page during a run (shown %s, %d hit-testable)' % (tag, r['shown'], r['hit']))
+            n = tabbed(b)
+            if n:
+                out.append('footer states, %s: %d footer link(s) took keyboard focus during a run' % (tag, n))
+            if not r['back']:
+                out.append('footer states, %s: no header way out (a link to /) while the footer is gone' % tag)
+        elif shown and tabbed(b) < 1:
+            out.append('footer states, %s: no footer link takes keyboard focus on this screen' % tag)
+
+    b = Browser(pw, base, html, size=(390, 844))
+    try:
+        b.open()
+        want(b, 'the start screen', True)
+        topic = data['covered'][0]['id']
+        others = [x['id'] for x in data['covered'] if x['id'] != topic][:5]
+        sess = {'v': 2, 'plan': [{'id': x} for x in others + [topic]], 'i': 5, 'results': {x: {'r': 4, 'n': 5} for x in others},
+                'cur': None, 'qn': 25, 'finishedSent': False, 'feedbackSent': False}
+        b.page.evaluate("s => localStorage.setItem('six-ps-session-v2', s)", json.dumps(dict(sess, at=int(time.time() * 1000))))
+        b.page.reload()
+        b.page.wait_for_function("() => !!window.SixPs && !!SixPs.data()", timeout=10000)
+        b.page.tap('#resumeBtn')
+        b.page.wait_for_selector('#play:not([hidden])', timeout=8000)
+        want(b, 'a question', False)
+        q = b.page.evaluate('() => SixPs.question()')
+        answer(b, q, real_value(q, wrong=True))
+        b.page.wait_for_selector('#qFb:not([hidden])', timeout=4000)
+        want(b, 'the feedback', False)
+        b.page.tap('#qNext button')
+        for n in range(PER_TOPIC - 1):
+            b.page.wait_for_selector('#play:not([hidden])', timeout=8000)
+            q = b.page.evaluate('() => SixPs.question()')
+            answer(b, q, real_value(q, wrong=False))
+            b.page.wait_for_selector('#qFb:not([hidden])', timeout=4000)
+            b.page.tap('#qNext button')
+        b.page.wait_for_selector('#between:not([hidden])', timeout=5000)
+        want(b, 'between topics', False)
+        b.page.tap('#nextTopicBtn')
+        b.page.wait_for_selector('#results:not([hidden])', timeout=5000)
+        want(b, 'the results screen', True)
+        out.extend('footer states: page error: %s' % e for e in b.errors)
+    finally:
+        b.close()
+
+
+def calc_needs(lines):
+    """The calculator functions a question's working uses, read from its lines here (not from the page): labels of the shared
+    calculator's keys (MaffsCalc's aria-labels) that the student must press."""
+    t = ' '.join(lines)
+    need = set()
+    fns = {'sin': ('Sine', 'Inverse sine'), 'cos': ('Cosine', 'Inverse cosine'), 'tan': ('Tangent', 'Inverse tangent')}
+    for name, (plain, inverse) in fns.items():
+        for m in re.finditer(r'(?<![A-Za-z])%s(?![A-Za-z])(\^\{-1\}|\u207b\u00b9)?' % name, t):
+            need.add(inverse if m.group(1) else plain)
+    if '\u03c0' in t or re.search(r'\\pi(?![A-Za-z])', t):
+        need.add('Pi')
+    if '\u221a' in t or r'\sqrt' in t:
+        need.add('Square root')
+    if '\u00b2' in t or re.search(r'\^2(?![0-9])|\^\{2\}', t):
+        need.add('Squared')
+    if re.search(r'\^\{?(?!2(?![0-9]))[-0-9a-zA-Z]', t):
+        need.add('To the power')
+    if '(' in t:
+        need.update(('Open bracket', 'Close bracket'))
+    if re.search(r'\u00f7|\\div|/|\\frac', t):
+        need.add('Divide')
+    if '\u00d7' in t or r'\times' in t:
+        need.add('Times')
+    return need
+
+
+def check_calculator(pw, base, html, data, out):
+    """Every calculator question can be done with the calculator it is served (Jon, 27 Oct 2026: a trig question had no sin).
+    1. Each function the shared calculator must have works: sin 30 = 0.5, sin-1 0.5 = 30 (degrees), cos, tan, their inverses,
+       x squared, square root, powers, pi, brackets.
+    2. For every question marked calculator or optional in the six banks, every operation its working uses (read here) is a key
+       on the panel the page serves it (read from the shared calculator's own panel).
+    3. On a 320 x 568 phone, a trig question: the panel opens, every key is at least 44 px, nothing scrolls sideways, and
+       19 x sin 25 reads 8.029... from the keys."""
+    banks = {}
+    for t in data['covered']:
+        banks[t['id']] = json.load(open(os.path.join(ROOT, 'schools', 'assets', 'six-ps', t['id'] + '.json'), encoding='utf-8'))['questions']
+    calc_qs = [(tid, x) for tid, qs in banks.items() for x in qs if x.get('calc') in (True, 'optional')]
+    if len(calc_qs) < 100:
+        out.append('calculator: only %d calculator questions found in the banks (the check is blind)' % len(calc_qs))
+    b = Browser(pw, base, html, size=(390, 844))
+    try:
+        b.open()
+        cases = [('sin(30)', 0.5), ('asin(0.5)', 30), ('cos(60)', 0.5), ('acos(0.5)', 60), ('tan(45)', 1), ('atan(1)', 45),
+                 ('sin(90)', 1), ('19*sin(25)', 8.0299), ('7.7/8', 0.9625), ('acos(7.7/8)', 15.7405), ('9*sin(15)', 2.3294),
+                 ('sqrt(51)', 7.1414), ('5^2', 25), ('2^3', 8), ('pi*10^2*50', 15707.96), ('(3+4)*2', 14)]
+        for expr, want in cases:
+            got = b.page.evaluate("e => MaffsCalc.evaluate(e)", expr)
+            if got is None or abs(got - want) > max(1e-9, abs(want) * 5e-5):
+                out.append('calculator: %s gives %r, not %s' % (expr, got, want))
+        shown = b.page.evaluate("() => [MaffsCalc.format(MaffsCalc.evaluate('sin(30)')), MaffsCalc.format(MaffsCalc.evaluate('asin(0.5)'))]")
+        if shown != ['0.5', '30']:
+            out.append('calculator: sin 30 and sin-1 0.5 display %r, not [0.5, 30]' % shown)
+        keys = b.page.evaluate("""() => { const o = {};
+            [['basic', {}], ['scientific', { keys: 'scientific' }]].forEach(function (m) { const d = document.createElement('div'); document.body.appendChild(d);
+              MaffsCalc.mount(d, m[1]); o[m[0]] = [...d.querySelectorAll('.maffs-calc-key')].map(k => k.getAttribute('aria-label')).filter(Boolean); d.remove(); });
+            return o; }""")
+        modes = b.page.evaluate("qs => qs.map(q => SixPs.calcMode(q))", [x for _, x in calc_qs])
+        bad = 0
+        for (tid, x), mode in zip(calc_qs, modes):
+            if mode not in keys:
+                out.append('calculator: %s %s is marked calculator but the page serves it none (%r)' % (tid, x['id'], mode))
+                bad += 1
+                continue
+            lack = calc_needs(x['worked']) - set(keys[mode])
+            if lack:
+                bad += 1
+                if bad <= 20:
+                    out.append('calculator: %s %s is served the %s panel, which has no %s key (its working needs it)'
+                               % (tid, x['id'], mode, ', '.join(sorted(lack))))
+        for tid, qs in banks.items():
+            for x in qs:
+                if not x.get('calc') and b.page.evaluate("q => SixPs.calcMode(q)", x) is not None:
+                    out.append('calculator: %s %s is a non-calculator question served a calculator' % (tid, x['id']))
+                    break
+        out.extend('calculator: page error: %s' % e for e in b.errors)
+    finally:
+        b.close()
+    # The phone: a trig question, 320 x 568, served on its own.
+    pick = next(x for _, x in calc_qs if re.search(r'sin\(', ' '.join(x['worked'])) and x['format'] == 'number')
+    topic = [t for t in data['covered'] if any(x['id'] == pick['id'] for x in banks[t['id']])][0]
+    bank = json.load(open(os.path.join(ROOT, 'schools', 'assets', 'six-ps', topic['id'] + '.json'), encoding='utf-8'))
+    bank['questions'] = [dict(pick, id='%s-c%d' % (pick['id'], i)) for i in range(5)]
+    p = Browser(pw, base, html, size=(320, 568))
+    p.page.set_default_timeout(20000)
+    p.real[topic['id']] = bank
+    others = [x['id'] for x in data['covered'] if x['id'] != topic['id']][:K - 1]
+    sess = {'v': 2, 'plan': [{'id': x} for x in [topic['id']] + others], 'i': 0, 'results': {}, 'cur': None, 'qn': 0,
+            'finishedSent': False, 'feedbackSent': False}
+    p.ctx.add_init_script("try { var s = %s; s.at = Date.now(); localStorage.setItem('six-ps-session-v2', JSON.stringify(s)); } catch (e) {}" % json.dumps(sess))
+    try:
+        p.open()
+        p.page.tap('#resumeBtn')
+        p.page.wait_for_selector('#play:not([hidden])', timeout=8000)
+        p.page.wait_for_selector('#qCalcMount .maffs-calc-toggle', timeout=4000)
+        p.page.tap('#qCalcMount .maffs-calc-toggle')
+        p.page.wait_for_selector('#qCalcMount .maffs-calc-panel:not([hidden])', timeout=4000)
+        for k in ['1', '9', '\u00d7', 'sin', '2', '5', ')', '=']:
+            p.page.evaluate("""k => { const b = [...document.querySelectorAll('#qCalcMount .maffs-calc-key')].find(e => e.textContent === k);
+                if (!b) throw new Error('no key ' + k); b.click(); }""", k)
+        shown = p.page.evaluate("() => document.querySelector('#qCalcMount .maffs-calc-result').textContent")
+        if not shown.startswith('8.029'):
+            out.append('calculator at 320 x 568: 19 x sin(25) reads %r, not 8.029...' % shown)
+        m = p.page.evaluate("""() => ({ sx: document.documentElement.scrollWidth - innerWidth,
+            small: [...document.querySelectorAll('#qCalcMount .maffs-calc-key')].map(e => e.getBoundingClientRect())
+              .filter(r => r.width < 43.5 || r.height < 43.5).length,
+            keys: document.querySelectorAll('#qCalcMount .maffs-calc-key').length,
+            deg: !!document.querySelector('#qCalcMount .maffs-calc-mode') && document.querySelector('#qCalcMount .maffs-calc-mode').textContent })""")
+        if m['sx'] > 0:
+            out.append('calculator at 320 x 568: the page scrolls sideways by %d px with the scientific panel open' % m['sx'])
+        if m['small']:
+            out.append('calculator at 320 x 568: %d of %d keys are under 44 px' % (m['small'], m['keys']))
+        if m['deg'] != 'DEG':
+            out.append('calculator: the angle mode is %r, not DEG, when a trig question opens' % m['deg'])
+        out.extend('calculator at 320 x 568: page error: %s' % e for e in p.errors)
+    finally:
+        p.close()
+
+
 def check_second_copy(pw, base, html, data, out):
     """A page whose script runs twice (a browser that re-runs scripts on resume) still behaves as one: Next topic moves on by one, and
     one answer sends one event."""
@@ -1138,11 +1338,10 @@ def phone_feedback_topic(pw, base, html, data, topic, out, only=None, size=(375,
         b.close()
 
 
-def phone_feedback(pw, base, html, data, out):
-    """On a 375 x 667 phone, on every real bank: after Check the keypad is gone and the verdict and Next are on the screen with no scroll,
-    one answer right and one wrong, and nothing scrolls sideways. One topic's trouble is reported against it and the rest are still measured."""
-    for topic in data['covered']:
-        guarded(out, '375 x 667: %s' % topic['id'], lambda: phone_feedback_topic(pw, base, html, data, topic, out))
+# On a 375 x 667 phone, on every real bank (each its own unit, PHONE + topic id): after Check the keypad is gone and the verdict and
+# Next are on the screen with no scroll, one answer right and one wrong, and nothing scrolls sideways. One topic's trouble is reported
+# against it and the rest are still measured.
+PHONE = 'phone feedback: '
 
 
 # Working with three fractions is the tallest feedback a bank has: on 375 x 667 it ends 15 px below the screen unless the page scrolls
@@ -1170,50 +1369,78 @@ def one_topic(pw, base, html, data, out, name):
         b.close()
 
 
-def check(html, data, out, parts):
+def page_units(data):
+    """The page's units (contract SHARD), in the order of the full run; check() runs those it is given, in this order."""
+    return (['static', 'engine', 'marking', 'start', 'expiry', 'chosen', 'resume', 'results', 'second']
+            + [PHONE + t['id'] for t in data['covered']] + ['tall', 'play 1280', 'play bank-first', 'play 320', 'no bank'])
+
+
+def run_unit(pw, base, html, data, out, unit):
+    """One browser unit of page_units(), or 'topic:<fixture>' (one topic to its card, the plants' short flow)."""
+    if unit in ('engine', 'marking'):
+        b = Browser(pw, base, html)
+        try:
+            b.open()
+            if unit == 'engine':
+                guarded(out, 'the draws', lambda: check_engine(b, data, out))
+            else:
+                guarded(out, 'the marking checks', lambda: check_marking(b, out))
+            out.extend('page error: ' + e for e in b.errors)
+        finally:
+            b.close()
+    elif unit == 'start':
+        guarded(out, 'the start screen at 320 x 568', lambda: check_start_screen(pw, base, html, out))
+        guarded(out, 'the calculator on every calculator question', lambda: check_calculator(pw, base, html, data, out))
+    elif unit == 'expiry':
+        guarded(out, 'the saved-session expiry', lambda: check_expiry(pw, base, html, data, out))
+    elif unit == 'chosen':
+        guarded(out, 'the chosen-unit colour', lambda: check_chosen(pw, base, html, out))
+    elif unit == 'resume':
+        guarded(out, 'a refresh and Carry on, then a finished topic of choice questions',
+                lambda: check_resume_finish(pw, base, html, data, out))
+    elif unit == 'results':
+        guarded(out, 'the results screen drawn once', lambda: check_results_once(pw, base, html, data, out))
+        guarded(out, 'no footer during a run', lambda: check_footer_states(pw, base, html, data, out))
+    elif unit == 'second':
+        guarded(out, 'the page script run twice', lambda: check_second_copy(pw, base, html, data, out))
+    elif unit.startswith(PHONE):
+        topic = [t for t in data['covered'] if t['id'] == unit[len(PHONE):]][0]
+        guarded(out, '375 x 667: %s' % topic['id'], lambda: phone_feedback_topic(pw, base, html, data, topic, out))
+    elif unit == 'tall':
+        guarded(out, 'the tallest feedback on a 375 x 667 phone', lambda: check_tall(pw, base, html, data, out))
+    elif unit == 'play 1280':
+        guarded(out, 'the session at 1280 px', lambda: play(pw, base, html, data, out, blocked=False))
+    elif unit == 'play bank-first':
+        guarded(out, 'the session with a bank-first topic (no game yet)', lambda: play_bank_first(pw, base, html, data, out))
+    elif unit == 'play 320':
+        guarded(out, 'the session at 320 px', lambda: play(pw, base, html, data, out, blocked=True, narrow=True))
+    elif unit == 'no bank':
+        guarded(out, 'the topic with no bank', lambda: no_bank(pw, base, html, data, out))
+    elif unit.startswith('topic:'):
+        guarded(out, 'one topic', lambda: one_topic(pw, base, html, data, out, unit[6:]))
+    else:
+        raise ValueError('no unit %r' % unit)
+
+
+def check(html, data, out, parts, shard=None):
+    """The units named in `parts` (page_units() order, then any 'topic:<fixture>'), each timed as its unit by `shard`."""
     from playwright.sync_api import sync_playwright
-    if '1' in parts:
-        static_checks(html, data, out)
+    units = [u for u in page_units(data) if u in parts] + [u for u in parts if u.startswith('topic:')]
+
+    def timed(u):
+        return shard.unit(u) if shard else contextlib.nullcontext()
+    if 'static' in units:
+        with timed('static'):
+            static_checks(html, data, out)
+    units = [u for u in units if u != 'static']
+    if not units:
+        return
     proc, base = bc.start_stub_server()
     try:
         with sync_playwright() as pw:
-            if '1' in parts or 'engine' in parts or 'marking' in parts:
-                b = Browser(pw, base, html)
-                try:
-                    b.open()
-                    if '1' in parts or 'engine' in parts:
-                        guarded(out, 'the draws', lambda: check_engine(b, data, out))
-                    if '1' in parts or 'marking' in parts:
-                        guarded(out, 'the marking checks', lambda: check_marking(b, out))
-                    out.extend('page error: ' + e for e in b.errors)
-                finally:
-                    b.close()
-            if '2' in parts or 'start' in parts:
-                guarded(out, 'the start screen at 320 x 568', lambda: check_start_screen(pw, base, html, out))
-            if '2' in parts or 'expiry' in parts:
-                guarded(out, 'the saved-session expiry', lambda: check_expiry(pw, base, html, data, out))
-            if '2' in parts or 'chosen' in parts:
-                guarded(out, 'the chosen-unit colour', lambda: check_chosen(pw, base, html, out))
-            if '3' in parts or 'resume' in parts:
-                guarded(out, 'a refresh and Carry on, then a finished topic of choice questions',
-                        lambda: check_resume_finish(pw, base, html, data, out))
-            if '3' in parts or 'results' in parts:
-                guarded(out, 'the results screen drawn once', lambda: check_results_once(pw, base, html, data, out))
-            if '3' in parts or 'second' in parts:
-                guarded(out, 'the page script run twice', lambda: check_second_copy(pw, base, html, data, out))
-            if '3' in parts:
-                guarded(out, 'the verdict and Next on a 375 x 667 phone', lambda: phone_feedback(pw, base, html, data, out))
-            if '3' in parts or 'tall' in parts:
-                guarded(out, 'the tallest feedback on a 375 x 667 phone', lambda: check_tall(pw, base, html, data, out))
-            if '2' in parts:
-                guarded(out, 'the session at 1280 px', lambda: play(pw, base, html, data, out, blocked=False))
-                guarded(out, 'the session with a bank-first topic (no game yet)', lambda: play_bank_first(pw, base, html, data, out))
-            if '3' in parts:
-                guarded(out, 'the session at 320 px', lambda: play(pw, base, html, data, out, blocked=True, narrow=True))
-                guarded(out, 'the topic with no bank', lambda: no_bank(pw, base, html, data, out))
-            for part in parts:
-                if part.startswith('topic:'):
-                    guarded(out, 'one topic', lambda: one_topic(pw, base, html, data, out, part[6:]))
+            for u in units:
+                with timed(u):
+                    run_unit(pw, base, html, data, out, u)
     finally:
         proc.terminate()
 
@@ -1228,6 +1455,21 @@ def guarded(out, what, f):
 # ---------------------------------------------------------------- plants
 # (what, [(old, new)], what it needs, a pattern its finding must match). Every old text occurs exactly once in the page.
 PLANTS = [
+    ('a trig question served the basic calculator (no sin key; Jon, 27 Oct)',
+     [("? 'scientific' : 'basic';", "? 'basic' : 'basic';")],
+     ['start'], r'calculator: .* has no (Sine|Cosine|Tangent|Inverse)'),
+    ('a calculator that is never mounted',
+     [("host.hidden = !(mode && window.MaffsCalc);", "host.hidden = true;")],
+     ['start'], r'the calculator on every calculator question stopped|marked calculator but the page serves it none'),
+    ('a non-calculator question served a calculator',
+     [("if (!qq || !qq.calc) return null;", "if (!qq) return null;")],
+     ['start'], r'non-calculator question served a calculator'),
+    ('a footer that stays on the page during a run (Jon, 27 Oct)',
+     [("foot.style.display = (id === 'intro' || id === 'results') ? '' : 'none';", "foot.style.display = '';")],
+     ['results'], r'footer states, a question: footer links are on the page during a run'),
+    ('a footer that is also gone on the results screen',
+     [("foot.style.display = (id === 'intro' || id === 'results') ? '' : 'none';", "foot.style.display = (id === 'intro') ? '' : 'none';")],
+     ['results'], r'footer states, the results screen: the footer should be on the screen'),
     ('a results screen that draws its form twice (Jon, 27 Oct)',
      [("$('resultsBody').replaceChildren(list, nudge, form, againRow);", "$('resultsBody').replaceChildren(list, nudge, form, againRow, form.cloneNode(true));")],
      ['results'], r'results screen after the finish: (forms|send|legends) appears 2 times'),
@@ -1257,7 +1499,7 @@ PLANTS = [
      ['static'], r'"in development" appears'),
     ('a list drawn twice appends to itself ("Your six" doubled after a resume)',
      [("    el.textContent = '';\n    el.appendChild(frag);", "    el.appendChild(frag);")],
-     ['2'], r'"Your six" shows'),
+     ['start', 'expiry', 'chosen', 'play 1280', 'play bank-first'], r'"Your six" shows'),
     ('a unit chosen but not checked drawn green',
      [("border-color: var(--navy); background: #e8ecf5; box-shadow: inset 0 0 0 1px var(--navy); }   /* chosen, not checked: navy */",
        "border-color: var(--correct); background: #e8ecf5; box-shadow: inset 0 0 0 1px var(--correct); }")],
@@ -1296,43 +1538,57 @@ PLANTS = [
 ]
 
 
-def selftest(html, data):
+def plant_id(what):
+    return 'plant: ' + what
+
+
+DATA_PLANT = plant_id('a figure in the data file edited by hand')
+
+
+def selftest(html, data, names, shard=None):
+    """The plants named in `names` (plant_id), each its own unit."""
+    def timed(u):
+        return shard.unit(u) if shard else contextlib.nullcontext()
     ok = True
     for what, edits, needs, want in PLANTS:
-        planted = html
-        for old, new in edits:
-            if planted.count(old) != 1:
-                print('FAIL  plant %r: its text occurs %d times in the page' % (what, planted.count(old)))
-                ok = False
-                break
-            planted = planted.replace(old, new)
-        else:
+        if plant_id(what) not in names:
+            continue
+        with timed(plant_id(what)):
+            planted = html
+            for old, new in edits:
+                if planted.count(old) != 1:
+                    print('FAIL  plant %r: its text occurs %d times in the page' % (what, planted.count(old)))
+                    ok = False
+                    break
+                planted = planted.replace(old, new)
+            else:
+                got = []
+                if needs == ['static']:
+                    static_checks(planted, data, got)
+                else:
+                    check(planted, data, got, needs)
+                if any(re.search(want, g) for g in got):
+                    print('ok    plant caught: %s' % what)
+                else:
+                    print('FAIL  plant NOT caught: %s (findings: %s)' % (what, got[:3]))
+                    ok = False
+    if DATA_PLANT in names:
+        with timed(DATA_PLANT):
+            forged = json.loads(json.dumps(data))
+            forged['covered'][0]['marks'] += 1
             got = []
-            if needs == ['static']:
-                static_checks(planted, data, got)
+            check_data(forged, got)
+            if any('not what scripts/gen-exam-topics.py generates' in g for g in got):
+                print('ok    plant caught: a figure in the data file edited by hand')
             else:
-                check(planted, data, got, needs)
-            if any(re.search(want, g) for g in got):
-                print('ok    plant caught: %s' % what)
-            else:
-                print('FAIL  plant NOT caught: %s (findings: %s)' % (what, got[:3]))
+                print('FAIL  plant NOT caught: a figure in the data file edited by hand')
                 ok = False
-    forged = json.loads(json.dumps(data))
-    forged['covered'][0]['marks'] += 1
-    got = []
-    check_data(forged, got)
-    if any('not what scripts/gen-exam-topics.py generates' in g for g in got):
-        print('ok    plant caught: a figure in the data file edited by hand')
-    else:
-        print('FAIL  plant NOT caught: a figure in the data file edited by hand')
-        ok = False
     return ok
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--part', choices=['1', '2', '3', '4'],
-                    help='1 data, static, draws and marking; 2 a session at 1280 px; 3 a session at 320 px; 4 the plants')
+    bc.shard_args(ap)
     args = ap.parse_args()
     try:
         sys.stdout.reconfigure(encoding='utf-8')
@@ -1341,20 +1597,24 @@ def main():
     with open(PAGE, encoding='utf-8') as f:
         html = f.read()
     data = load_data()
+    # Every unit, in the order of the full run: the data and routes, the page's units, then the plants.
+    plants = [plant_id(p[0]) for p in PLANTS] + [DATA_PLANT]
+    shard = bc.Shard(__file__, args)
+    mine = shard.pick(['data and routes'] + page_units(data) + plants)
     out = []
     ok = True
-    parts = [args.part] if args.part else ['1', '2', '3', '4']
-    if '1' in parts:
-        check_data(data, out)
-        check_routes(data, out)
+    if 'data and routes' in mine:
+        with shard.unit('data and routes'):
+            check_data(data, out)
+            check_routes(data, out)
         W = sum(t['marks'] for t in data['covered'])
         print('the-6-ps: %d covered topics (%.1f marks a series), %d coming soon; %d sessions drawn each way; '
               '%d fixture questions' % (len(data['covered']), W, len(data['coming_soon']), DRAWS, len(by_ref())))
-    run = [p for p in parts if p in ('1', '2', '3')]
+    run = [u for u in mine if u in page_units(data)]
     if run:
-        check(html, data, out, run)
-    if '4' in parts:
-        ok = selftest(html, data) and ok
+        check(html, data, out, run, shard)
+    if any(u in plants for u in mine):
+        ok = selftest(html, data, mine, shard) and ok
     for f in out[:60]:
         print('FAIL  ' + f)
     if len(out) > 60:

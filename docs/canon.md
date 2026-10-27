@@ -19,7 +19,7 @@ Last updated: 3 October 2026
 | GA4 Measurement ID | G-992JLHLP2D |
 | Sheets Endpoint | Google Apps Script (see docs/apps-script-endpoint.js) |
 | Contact | contact@maffsgames.co.uk |
-| Total games | **99 live on the portal** (24 Oct 2026: `squared-squirrel` listed on Jon's approval; 23 Oct 2026, contract TAKE-A-WALK-LIST: `take-a-walk` listed on Jon's approval; contract HMP-LIST: `how-many-parts` listed on Jon's approval; 9 Oct 2026, contract DOCS-9OCT: `factor-theorem` relisted under SR-21, A-Level only; contract RELIST-SR: `screening-room` relisted under SR-21; 8 Oct, contract RELIST-3: `just-pythag-it-bruv` listed on Jon's approval, `expectation-station` and `truth-buster` relisted under SR-21), plus **1 roster game live but unlisted** pending its audit fixes (`glorious-gantt`; canon SR-20 and SR-21, the roster's "Unlisted" section). `regression-rumble` is **withdrawn** behind a `noindex` holding page pending its data rebuild (todo §1.26). Per-game detail in `.claude/rules/game-roster.md` (97 numbered rows, plus a Withdrawn section). `games/` holds **99 directories** — the extras are `regression-rumble` (withdrawn, a holding page) and `the-perfect-prank`, the unlisted escape-room prototype, deliberately not on the portal and not in the roster. Because the roster is where `scripts/check-site.py` reads each game's levels, that game is only ever loaded bare; it is recorded under `roster_exceptions` in `scripts/checker-allowlist.json` so the gap is declared rather than silent |
+| Total games | **99 games live on the portal, and a hundredth listed item: The 6 P's** (27 Oct 2026, contract SIX-PS-LAUNCH, Jon: `/the-6-ps/` is a page, not a game under `games/`, so it has no roster row; it is listed through `data/games.json` "pages", the portal's GCSE section, the sitemap, a pinned featured card on /essentials/ (`schools/assets/featured.js`, data `schools/assets/featured-items.json`: a second featured item is a data entry), /updates/, and a homepage-only "100 games" sash that ends itself on 10 Nov 2026 (`schools/assets/launch-sash.js`, `scripts/check-launch-sash.py`)). The 99 games: (24 Oct 2026: `squared-squirrel` listed on Jon's approval; 23 Oct 2026, contract TAKE-A-WALK-LIST: `take-a-walk` listed on Jon's approval; contract HMP-LIST: `how-many-parts` listed on Jon's approval; 9 Oct 2026, contract DOCS-9OCT: `factor-theorem` relisted under SR-21, A-Level only; contract RELIST-SR: `screening-room` relisted under SR-21; 8 Oct, contract RELIST-3: `just-pythag-it-bruv` listed on Jon's approval, `expectation-station` and `truth-buster` relisted under SR-21), plus **1 roster game live but unlisted** pending its audit fixes (`glorious-gantt`; canon SR-20 and SR-21, the roster's "Unlisted" section). `regression-rumble` is **withdrawn** behind a `noindex` holding page pending its data rebuild (todo §1.26). Per-game detail in `.claude/rules/game-roster.md` (97 numbered rows, plus a Withdrawn section). `games/` holds **99 directories** — the extras are `regression-rumble` (withdrawn, a holding page) and `the-perfect-prank`, the unlisted escape-room prototype, deliberately not on the portal and not in the roster. Because the roster is where `scripts/check-site.py` reads each game's levels, that game is only ever loaded bare; it is recorded under `roster_exceptions` in `scripts/checker-allowlist.json` so the gap is declared rather than silent |
 | Escape rooms | **8 live at `/escape-rooms/`**, indexed, in the sitemap and led from the front page. Not counted in the 99. **Two more are built but withdrawn** (`it-vengeance`, `car-trap`) behind `noindex` holding pages at their own URLs until each one's voice rewrite is done. Teacher pages stay `noindex` deliberately — they hold every answer. Full detail in **§11**; the live work is `docs/escape-room-voice-rewrite.md` |
 | Parent guides | **20 at `/parents/`**, plus the hub: 21 indexed URLs, in the sitemap and linked from the portal footer. Ported from MathsWins on 28 Sep 2026 and corrected again on 29 Sep against Jon's approved wording; the findings are in `docs/audit-parent-guides.md` and the fix-by-fix record is in `docs/migrate-parent-guides.md`. `averages` links Distinctly Average at `?level=ks3`. The section has one template: `parents/guide.css` and `parents/guide.js`, portal theme, adult register (the game theme, §7.5, does not apply -- the reader is the parent). **GCSE tier badge:** one component in `parents/guide.js` (its `TIERS` table, built from bold parts of `data/dfe-gcse-parts.json`) on exactly four guides and their hub cards; partly-Higher guides mark each Higher section in the body. `scripts/verify-parent-guides.py` reads every checked value back from the pages. **`scripts/check-site.py` does not discover these pages**: `build_page_list()` globs `games/` and `escape-rooms/` and otherwise walks a hard-coded list of root pages |
 
@@ -1403,6 +1403,8 @@ not, so none is lost off the left edge; a CSS-only shading cue sits on whichever
 every link is a 40px-high tap target; below 480px the Support link reads "☕ Support". **The bar
 stays exactly 40px**: every game's phone fit (§7.6.1) measures its fold as the viewport minus it.
 
+**No footer links during a run (Jon's ruling, 27 Oct 2026).** Footer links sit where the thumb lands mid-game: pinned, beside Next (Jon mis-tapped Spec Map); in the flow, they rise into the spot the finger just left when the page shortens (the answer-lock double-tap on Next, planted A/B on proportion-blaster: with the footer in flow its second tap navigated away). The fix is state-based, not a timing guard (a 700 ms inert window was rejected). **Shipped for The 6 P's only:** it shows the footer on the start and results screens and removes it (display none: out of the tab order, not hit-testable) on a question, its feedback and between topics, driven by its own `show()`; the header links stay as the way out; `verify-the-6-ps.py` checks every state, with two plants. **Every other playable page keeps the pinned footer.** **Deferred to after the infrastructure freeze (Mon 2 Nov): the site-wide state-based fix** (a shared script that removes the footer while a run is in progress, for every page under games/, escape-rooms/ and the-6-ps/, and a check). The in-flow variant (`site-footer--flow`) was tried and dropped.
+
 **Never hand-copy the footer or its CSS into a page.** It was copied by hand into 125 pages until
 October 2026; the copies drifted into four link sets, and all of them shared one defect (on a phone
 the links ran off both edges and could not be reached). To change it, edit `CANONICAL` or the
@@ -1644,8 +1646,8 @@ at 5m17s of 6m; each fix was another hand-made group (B5, E2), which only bought
   (`scripts/ci-timings.json`) plus the job's setup, so that **every group is estimated at most 70% of its
   budget** (the budget is 75% of the timeout: where the workflow warns about a group, TIMING-GATE). Content groups have a 6-minute
   timeout: packed to 3m09s, failed past 3m36s, so every content job stays inside 4 minutes. Answer-lock parts
-  are one `check-answer-lock.py --part i/n` line each, too long to share a job, on a 10-minute timeout; add a part
-  when one passes 70%.
+  are one line each, too long to share a job, on a 10-minute timeout; since SHARD (below) their number is chosen
+  from their games' times.
 - **A line with no recorded time counts as its tier's default** (content 120 s, lock 300 s) and is flagged
   (`ci-groups.py --check` lists it) until a main run times it.
 - **The timings are the median of the last 5 main runs, and the timings job commits only a pack that passes
@@ -1660,7 +1662,7 @@ at 5m17s of 6m; each fix was another hand-made group (B5, E2), which only bought
   not churn.
 - **CI fails, on every PR, when any group is estimated past 80% of its budget** (`ci-groups.py --check` in the
   plan job), naming the group and its largest lines. Packing keeps every group under 70%, so only a single line
-  too long for any group can fail it: split its script (`--part`, `--shard`).
+  too long for any group can fail it: divide its script into work units (`# ci-shards`, below).
 - **A line past 70% of its group's budget is a split candidate: it fails only the PR that selects it, and a slower
   setup alone is a warning, not a failure** (LINE-LIMIT-SCOPE, Jon's ruling 21 Oct 2026, which replaces PER-LINE-LIMIT's
   wording of 20 Oct that `--check` fails any such line on every PR and that the timings job refuses a pack holding one;
@@ -1712,6 +1714,21 @@ at 5m17s of 6m; each fix was another hand-made group (B5, E2), which only bought
   run-all change warns (Jon, 21 Oct). **Why:** runner speed differs by about 25% between regions; #526's Shape Shifter,
   unchanged, took 163 s on its PR and 205 s on main (Content verifiers 34 at 82%), the timings job refused the pack and
   main went red, blocking every merge, while the group's timeout (6 minutes) was far off (PR-MEASURED's replay).
+- **A long verifier's parts are chosen by `ci-groups.py` from its work units' times, never by hand** (SHARD, Jon's
+  contract 27 Oct 2026). The verifier declares `# ci-shards: [<tier> |] <label> | <args> | <parts until timed>`, lists
+  its work as named units and runs the slice `--shard i/k` gives it (`scripts/ci_shards.py`, re-exported by
+  `bank_common`: `bc.Shard`, `bc.shard_args`); each unit's time goes to the group's timing file and the timings job
+  keeps the medians (`ci-timings.json` `units`, and each verifier's per-part `overhead`). On every repack `ci-groups.py`
+  takes the fewest parts whose every estimate (overhead plus its units, dealt largest first to the lightest part) plus the
+  median setup is at most 75% of the per-line limit, keeping the previous number while it fits and is at most one more
+  than needed (`ci-pack.json` `shards`); the lines are "<label>, part i of k". A part that grows past that is re-divided
+  on the next repack; a part still over the limit holds a unit too long to share one, and the split candidate names it.
+  The deal is a partition by construction (its self-test), so no verifier checks its own parts. A `# ci-line` that
+  passes `--part` is refused by `ci-groups.py` (two new verifiers arrived hand-split on 27 Oct, after the migration). **Why:** the packer
+  moves lines and never splits one, and each verifier split itself by hand, so the first PR to run a grown part went
+  red: Shape Shifter on 26 Oct (a part grew), Just Pythag It, Bruv on 27 Oct (the setup median went from about 20 s to
+  46 s). The setup rise was every container job fetching two pinned DejaVu font packages from Launchpad (5-7 s a job
+  until 26 Oct, then up to 84 s); they are now unpacked from `scripts/fonts/dejavu/`, checksum-pinned.
 - **After every full run on main the "CI timings and pack" job** records that run's times and repacks, and
   commits both files if they changed (`[skip ci]`, as the register job does).
 - "70%" and "80%" are of the budget, not the timeout (Jon's own wording, 9 Oct: "kept to 70% of the budget,
@@ -1721,9 +1738,8 @@ at 5m17s of 6m; each fix was another hand-made group (B5, E2), which only bought
 **Rules that keep it fast.** What blocks and what warns (contract TIMING-GATE, 14 Oct 2026, from `docs/handover/ci-timing-diagnosis.md`, 160 runs): BLOCKING is the packing judged on recorded medians (a group estimated past 80% of its budget fails `ci-groups.py --check` on every PR and in the main timings job) and each job's hard timeout (`job_timeout`: 16 minutes for a content group, 20 for an answer-lock part, 18 to 20 for the site-wide jobs) against a hang. WARNING, never failing, is a group past 75% of its timeout on one run's clock (the job summary and an annotation name the group, the slowest line against its recorded median and its time) and the persistence report in the main timings job (`scripts/timing-gate.py`: a verifier whose last 3 main runs are each over 20% and 15 s above the median of the 5 before). Why: the per-run clock failed 2 of 160 runs, both a single-line stall on unchanged code (Equation Builder 260 s against 136 s; Spot the Muppet 290 s against 94 s) and it never saw the one real regression (Probability Paradox 161 s to 210 s, caught by the median on the third slow main run); a gate that fails at random gets ignored. Before this contract: every job failed at 75% of its timeout ("time budget: … split it"). A container job's hang guard is `job_timeout` (the group's `timeout` plus a 10-minute pull allowance, `PULL_ALLOWANCE` in `ci-groups.py`, because GitHub counts the image pull inside `timeout-minutes`), and the group's budget is still 75% of `timeout`, from its own clock, which starts once the container is up (CONTAINER-PULL-TIMEOUT, 12 Oct 2026: on main run 802, Content verifiers 33 spent 379 s initialising against its 360 s timeout and was cancelled before its first step). **No **Timings vary by runner region** (CI-RUNNER-REGION, 15 Oct 2026; `docs/handover/ci-slowdown-401.md`: Equatle 46 to 64 s in Azure centralus, 69 to 79 s in every other region, 17 main runs, no overlap). Each group job reads its region from the Azure instance metadata service (`http://169.254.169.254/metadata/instance/compute/location`, the name the runner prints at the head of its log; "unknown" if the service does not answer) and saves it as a `region:` line in its timing file. `ci-timings.json` records it per run, per line, under `history[].regions` (a record from before it reads as "unknown"); `lines`, the medians, the packer and `--check` never read it. The 75% warning names the region its slowest line ran in, and the persistence report lists the region of each flagged run. **Per-region record** (REGION-HISTORY, 15 Oct 2026): the 5-run history cannot reach 10 runs per region (8 regions appeared in one run), so the main timings job also keeps `scripts/ci-timings-regions.json`, written by `ci-groups.py --record-regions` straight after `ci-timings.json` is settled and committed in the same commit: for each timed line, per region, the **last 10 recorded times** (oldest first; older ones roll off per line per region; a line with no region sits under "unknown"; the last 20 run ids are remembered so a rerun is counted once). A failure writing it is a warning and leaves the file as it was; `ci-timings.json`, its history length, the medians, the packer and `--check` neither read nor depend on it (self-test: 12 runs across 3 regions, 10 kept per region, `ci-timings.json` byte-identical with and without the step). **Not yet done:** comparing a time only with times from the same region, left until there are about 10 runs per region group; until then the flagging rule and its thresholds are region-blind, so a region switch can still read as a rise, and the region shown is how to tell.
 "Content verifiers" job may run past 4 minutes** (Jon, 7 Oct 2026): the packer keeps every content group under it (below; each job's summary lists every check's duration;
 `check-verifier-coverage.py` reports any content group estimated past 4 minutes from the main run recorded in
-`scripts/ci-timings.json`). Since CI-BALANCE the packer cuts the lists of lines; a single line too long for any
-group is split by an option on its script (`--shard`, `--part`) with a self-test proving the parts are the
-whole.
+`scripts/ci-timings.json`). Since CI-BALANCE the packer cuts the lists of lines; since SHARD (27 Oct 2026) a
+verifier too long for one line lists its work units and `ci-groups.py` chooses its parts (above).
 
 ### 7.8.2 Two lanes: home and cloud (7 Oct 2026)
 
@@ -1800,6 +1816,41 @@ finished red at 07:13:43Z. It is now enforced by one command both lanes use for 
   refuses even with `--override`; the override comment is written; jobs still open, failed, empty, unreadable or over two pages
   are each covered; with the red-main check removed, or the run-only `check_main()` planted, the selftest fails.
 - Branch protection on GitHub is Jon's and is not changed by this script.
+
+### 7.8.4 The gate: warn, then enforce (Jon, 27 Oct 2026, contract GATE-WARN-THEN-ENFORCE)
+
+Six stalls on 27 Oct 2026 had two causes. New gate rules failed from the day they came in, before existing code met them:
+the per-line 70% limit (#583 blocked on lines it did not touch), merge-pr.py's job paging (HTTP 502 refused every merge),
+the 20 KB handover limit (twice). And gating checks were not repeatable: a random draw, and measurements taken before the
+fonts settled (red mains after #566 and #576, and on 39b7c99, where The 6 P's phone check typed 0.00004 as "4e-05" whenever
+its random draw served that question: #588). The rule, for every lane:
+
+- **New limits and checks warn first.** A new limit or gating check starts as a warning, with a shrink-only warn list of
+  what fails it on main when it comes in, and fails only once main passes it. A listed item warns; an unlisted one fails; a
+  pull request may remove an entry, never add one, and one that edits the list leaves no entry that passes now. The lane that
+  adds a limit clears its warnings. The per-line limit's list is `scripts/ci-warn-list.json` (§7.8.1); main's timings job
+  removes each entry whose line passes now, in its timings commit.
+- **A line with no recorded time is estimated and warned, never failed:** a new or renamed line, or a sharded verifier's
+  part whose units no main run has timed. The 70% and 80% rules apply once its first main run records it. Past 100% of a
+  group's budget, a time measured on the line's own pull-request run still fails: merged, it would refuse main's pack.
+- **Gate changes pass the worst-case test** (built, parked on `claude/gate-worst-case` by Jon's infrastructure freeze until
+  Mon 2 Nov 2026; until it merges, the lane making a gate change runs it by hand). A pull request that touches the gate's
+  own files (`.github/`, `scripts/ci-*`, `scripts/ci_shards.py`, `scripts/merge-pr.py`, `scripts/check-context-size.py`,
+  `scripts/check-changed.py`, `requirements*`) also passes the budget check on the selection a change to
+  `scripts/bank_common.py` makes, every verifier that imports it included.
+- **Gating checks are repeatable.** No random sampling in a gate: every item, or the worst case with a fixed seed. Every
+  page measurement waits for the shared settle (`bank_common.wait_settled`). Random samples may appear in reports, never
+  in the gate. The conversion is step 4, from Mon 2 Nov (Jon's ruling, 27 Oct): the stub server injects a fixed default
+  seed for `Math.random` into every page it serves, each verifier keeps a fixed list of seeds, and a separate nightly,
+  non-gating sweep plays fresh seeds and reports any failing seed, which is then added to that verifier's list. Random
+  sampling lives only in that sweep. Take a Walk's `Date.now` seed is fixed with it.
+- **A failed main run may be re-run once, failed jobs only, by any lane.** A pass on the re-run is reported to the cloud lane
+  as a flake and goes on the repeatability audit's list. Known: The 6 P's, Content verifiers 91 (tap timeout, 39b7c99, run
+  40570027404, passed on its re-run): a deterministic driver bug that a random draw reached about one run in three (#588).
+- **A handover past 20 KB will archive itself** (built, parked on `claude/gate-handover-archive` until Mon 2 Nov 2026):
+  a warning on a pull request, and after the merge main moves its oldest dated entries to that lane's `docs/history/`
+  archive, word for word. Until then the lane moves them by hand, as before.
+- **Only the cloud lane changes gate files;** another lane reports what it needs and waits.
 
 ## 7.9 Verifier conventions (Jon, 8 Oct 2026)
 

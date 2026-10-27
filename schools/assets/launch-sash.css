@@ -1,0 +1,46 @@
+/* The "100 games" sash (schools/assets/launch-sash.js). Navy and teal; no motion beyond a fade that reduced-motion turns off. */
+.launch-sash { --sash-navy: #1a2744; --sash-teal: #0f766e; }
+.launch-sash-link {
+  display: block;
+  box-sizing: border-box;
+  color: #fff;
+  background: var(--sash-teal);
+  font-family: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  white-space: nowrap;
+}
+.launch-sash-link:hover { background: #115e59; }
+.launch-sash-link:focus-visible { outline: 3px solid #fff; outline-offset: -6px; box-shadow: 0 0 0 3px var(--sash-navy); }
+
+/* Phones: a slim strip across the top, in the page's flow. */
+.launch-sash { position: relative; z-index: 5; }
+.launch-sash-link { min-height: 32px; padding: 0.3rem 1rem; font-size: 0.85rem; line-height: 1.5; border-bottom: 2px solid var(--sash-navy); }
+/* The strip takes the header's top padding as its own space, so little moves: net push is the strip's height less 16px. */
+@media (max-width: 899.98px) { .launch-sash + .header { padding-top: 8px; } }
+
+/* Wide screens: a diagonal corner sash across the top right. */
+@media (min-width: 900px) {
+  .launch-sash { position: absolute; top: 0; right: 0; width: 200px; height: 200px; overflow: hidden; pointer-events: none; z-index: 900; }
+  .launch-sash-link {
+    position: absolute;
+    top: 50px;
+    right: -64px;
+    width: 270px;
+    min-height: 0;
+    padding: 0.35rem 0;
+    font-size: 0.78rem;
+    transform: rotate(45deg);
+    transform-origin: center;
+    pointer-events: auto;
+    border: 0;
+    border-top: 2px solid var(--sash-navy);
+    border-bottom: 2px solid var(--sash-navy);
+    box-shadow: 0 3px 10px rgba(15, 23, 42, 0.3);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .launch-sash-link { animation: launch-sash-in 0.5s ease both; }
+}
+@keyframes launch-sash-in { from { opacity: 0; } to { opacity: 1; } }

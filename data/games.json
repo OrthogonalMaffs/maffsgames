@@ -505,6 +505,11 @@
    "description": "Find the equation of a straight line: read it, spot it on a grid, use points, then parallel and perpendicular."
   },
   {
+   "slug": "its-on-sale",
+   "search_phrase": "Percentages and Money",
+   "description": "Work out sale prices, price rises, percentage change, reverse percentages and interest, typing each answer onto a price tag."
+  },
+  {
    "slug": "take-a-walk",
    "search_phrase": "Perimeter and Area",
    "description": "Perimeter and area on sports pitches: walk round the edge, or cover the grass. Rectangles, compound shapes and circles."
@@ -528,12 +533,26 @@
    "slug": "who-ate-all-the-pies",
    "search_phrase": "Pie Charts",
    "description": "Read pie charts, find amounts, draw them from a table, say when you can't tell, and work back to the total."
+  },
+  {
+   "slug": "as-you-can-see",
+   "search_phrase": "Reading Charts",
+   "description": "Read pictograms, bar charts, line and scatter graphs, and spot the chart that is lying."
+  },
+  {
+   "slug": "possibly-maybe",
+   "search_phrase": "Probability",
+   "description": "Probability from the scale to tree diagrams: not, outcomes, expected frequency and trees."
   }
  ],
  "pages": {
   "essentials/index.html": {
    "title": "Essentials: GCSE Foundation Maths Games | MaffsGames",
    "description": "Maths games for GCSE Foundation students aiming for grade 4: number, algebra, ratio, geometry, probability and statistics. Free, no sign-up."
+  },
+  "the-6-ps/index.html": {
+   "title": "The 6 P's: Free GCSE Foundation Maths Revision | MaffsGames",
+   "description": "Free GCSE Foundation maths revision: six topics, five questions each, picked from the topics that carry the most marks. No sign-up."
   }
  }
 }
