@@ -48,12 +48,13 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 **Standing authorisation (Jon, 10 Oct):** the cloud lane merges any PR of its own once its Gate is green and main's last full run is green, without asking each time; it still watches main's run after each merge. The 10 Oct queue (RIGHTFUL-KING, LIBRARY-JAM, FONT-FIT) is DONE and moved to `docs/history/handover-cloud-archive.md`, with Jon's rulings for the two room builds and FONT-FIT's known problems.
 **Holds and self-scheduled tasks (Jon, 16 Oct 2026):** a hold the cloud lane states on a PR is released only by Jon. Stating a hold cancels, or rewrites to report-only, any pending task this lane scheduled for that PR. A task this lane schedules for itself carries no authority beyond the standing rules at the time it fires, and its report names it as the lane's own follow-up, not a request. Self-scheduled tasks may read CI status and report; they never merge, push or edit while a hold stands. (Contract GS-L4-5-ENDPOINT; canon §7.8 records it via the home lane.)
 
+**STOP IF defaults (Jon, 27 Oct, every contract):** `docs/handover/contracts/2026-10-27-standing-stop-rules.md`; report each under "Decided for you".
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only via `python scripts/merge-pr.py <n>`
 (needs a green Gate and main, §7.8.3); watch main's run after.
 
 ## 2026-10-27 (cloud): SHARD (contract `docs/handover/contracts/2026-10-27-shard.md`). **IN PROGRESS: branch `claude/shard`, worktree `/home/user/wt-sh`.**
 
-- Setup cause fixed (28b610e): every container job fetched two DejaVu packages from Launchpad (5-7 s a job to 26 Oct, then up to 84 s); now from `scripts/fonts/dejavu/`. Interface, ci-groups.py and plants done (4ec63b3); canon §7.8.1 and CLAUDE.md (89b33b1). Migrating 11 hand-split verifiers plus Bearing Blitz (88% of the limit). #564 merged (61d82fc, main run 40487337743 green); remote `claude/jpib-split` not deleted: the proxy refuses branch deletion (403), for Jon or the home lane.
+- Setup cause fixed (28b610e): every container job fetched two DejaVu packages from Launchpad (5-7 s a job to 26 Oct, then up to 84 s); now from `scripts/fonts/dejavu/`. Interface, ci-groups.py and plants done (4ec63b3); canon §7.8.1 and CLAUDE.md (89b33b1). Migrating 11 hand-split verifiers + Bearing Blitz (88%). #564 merged (61d82fc, main run 40487337743 green); remote `claude/jpib-split` not deleted: proxy 403; for Jon or the home lane.
 
 ## 2026-10-27 (cloud): FOLD-COMPONENTS (contract `docs/handover/contracts/2026-10-27-fold-components.md`). **IN PROGRESS; checkpoint 27 Oct.**
 
