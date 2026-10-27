@@ -1,0 +1,85 @@
+/* The fold components: shared layout that keeps a question's answer controls above the fold (canon §7.5.7 and §7.6.1;
+   contract FOLD-COMPONENTS, Jon's rulings of 26 Oct 2026).
+
+   Their own file, as calculator.css is: theme.css imports it, so every game on the theme has them, and a game that has
+   not moved to the theme links this file alone (plus fold.js for options two to a row) and adopts only the components
+   it needs, by class, without taking the theme's fonts or colours. Every rule is scoped to its own class, so a page
+   that uses none of them is unchanged. Colours come from the page's own tokens where it has them (--accent, --border,
+   --muted, --surface-alt, --hint), with neutral fallbacks for a page that does not.
+
+   This file is linked AFTER the page's own <style>, so its rules win over the page's at equal specificity; the
+   doubled classes below win over a page's two-class selectors too. */
+
+/* The reference card: the house pattern for a help or reference panel (canon §7.6.2, Jon's ruling of 26 Oct 2026).
+   A rule or method a student may want while answering, such as Distinctly Average's "Finding the median".
+   On the asking screen it is collapsed to one 44px "Show the rule" button BELOW the options, so it never pushes them
+   down the screen; after a wrong answer it is inside the feedback, between the working and Next, where the student
+   who needs it reads it before moving on (canon §7.6.1: the hint never moves below Next).
+   One native <details>, so it needs no script and opens from the keyboard:
+     <details class="maffs-ref" [open]>
+       <summary><span class="maffs-ref-show">Show the rule</span><span class="maffs-ref-title">Finding the median</span></summary>
+       <div class="maffs-ref-body">...</div>
+     </details>
+   Closed, the summary reads its -show text; open, its -title. A game may tint the open card with two non-base
+   tokens, --ref-bg and --ref-edge; everything else is set here. A page without the theme's tokens gets neutral
+   fallbacks, and sets --ref-bg and --ref-edge to match its own colours.
+   In the feedback, open where it fits and collapsed on a phone where it would push Next below the fold (Jon's
+   ruling, 26 Oct 2026): CSS cannot open a <details>, so the feedback carries two copies, .maffs-ref-fits (open) and
+   .maffs-ref-phone (collapsed), and exactly one shows. By default the open copy; the game's own media query, on
+   viewport height within a width band (its card's height depends on the width), from its measured heights, swaps
+   them. The hidden copy is display:none, so a screen reader reads one card.
+   .maffs-ref-row holds the feedback's copies and the Next mount, in that order: collapsed, the card sits beside Next on
+   one line (no height of its own on a phone); open, it takes the full width above Next. */
+.maffs-ref { width: 100%; margin-top: 10px; }
+.maffs-ref > summary {
+  list-style: none; cursor: pointer; min-height: 44px; box-sizing: border-box;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600;
+}
+.maffs-ref > summary::-webkit-details-marker { display: none; }
+.maffs-ref > summary:focus-visible { outline: 2px solid var(--accent, var(--text, currentColor)); outline-offset: 2px; }
+.maffs-ref:not([open]) > summary {
+  width: fit-content; margin: 0 auto; padding: 7px 16px;
+  border: 1px solid var(--border, rgba(127, 127, 127, 0.35)); border-radius: 100px; color: var(--muted, currentColor);
+}
+.maffs-ref:not([open]) > summary:hover { border-color: var(--accent, var(--text, currentColor)); color: var(--accent, var(--text, currentColor)); }
+.maffs-ref[open] {
+  background: var(--ref-bg, var(--surface-alt, transparent)); border: 2px dashed var(--ref-edge, var(--border, rgba(127, 127, 127, 0.35)));
+  border-radius: 14px; padding: 0 16px 12px;
+}
+.maffs-ref[open] > summary {
+  justify-content: flex-start; font-weight: 700; color: var(--hint, currentColor);
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.maffs-ref:not([open]) .maffs-ref-title, .maffs-ref[open] .maffs-ref-show { display: none; }
+.maffs-ref-phone { display: none; }
+.maffs-ref-row { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: center; column-gap: 10px; width: 100%; }
+.maffs-ref-row > .maffs-ref[open] { flex: 0 0 100%; }
+.maffs-ref-row > .maffs-ref:not([open]) { width: auto; margin: 11px 0 2px; }
+.maffs-ref-row > :not(.maffs-ref) { flex: 0 1 auto; width: auto; }
+
+
+/* Options two to a row (ruling R3, Jon 26 Oct 2026): only when EVERY option fits on one line without wrapping at that
+   width, with tap targets at least 44px tall; otherwise one to a row. fold.js decides by measuring the rendered
+   options and sets .maffs-two-up on the box; .maffs-measuring holds each option to one line while it measures. A box
+   without .maffs-two-up keeps the page's own layout. */
+.maffs-options.maffs-two-up {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: auto;
+  flex-direction: unset; flex-wrap: unset; align-items: stretch;
+}
+.maffs-options.maffs-two-up > * { min-height: 44px; width: auto; max-width: none; margin-left: 0; margin-right: 0; }
+.maffs-options.maffs-measuring > *, .maffs-options.maffs-measuring > * * { white-space: nowrap; }
+
+/* The compact header (phones only): the same content in less height, with tighter sides.
+   .maffs-compact-header goes on the page's header bar, .maffs-compact-bar on a score bar or HUD whose children are
+   label-and-value pairs: each pair goes onto one line. Nothing is hidden and no tap target shrinks (canon §7.6.1). */
+@media (max-width: 600px) {
+  .maffs-compact-header.maffs-compact-header { padding-top: 6px; padding-bottom: 6px; min-height: 0; }
+  /* Tighter sides and gaps too, so a title, level badge and Aa toggle that just overflow the bar fit on it. */
+  .maffs-compact-header.maffs-compact-header { padding-left: 12px; padding-right: 12px; column-gap: 8px; }
+  .maffs-compact-bar.maffs-compact-bar { padding-top: 6px; padding-bottom: 6px; min-height: 0; }
+  .maffs-compact-bar.maffs-compact-bar > * {
+    display: flex; flex-direction: row; align-items: baseline; justify-content: center; gap: 6px;
+  }
+  .maffs-compact-bar.maffs-compact-bar > * > * { margin-top: 0; margin-bottom: 0; }
+}
