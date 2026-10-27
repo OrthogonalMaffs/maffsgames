@@ -175,7 +175,10 @@
   "Weekly facts \"Monty Hall\" (both Monty Hall cards show their summary and expanded text exactly, with the button and Share, at 320, 390 and 1280 px, with no overflow)": "47",
   "Weekly facts (every figure pinned by its words and recomputed or sourced; rotation has no literal modulus)": "25",
   "Word Problem Decoder (one category scheme, SR-18: every phrase marked right under exactly the topics that fit it, played in Chromium; answer once)": "12",
-  "Wrong on the Internet (every convention a key needs stated in its post; Jon's rulings on the wheel and independence; every option marked in Chromium)": "12"
+  "Wrong on the Internet (every convention a key needs stated in its post; Jon's rulings on the wheel and independence; every option marked in Chromium)": "12",
+  "Y So Steep, part 1 (every item of the six stages, whole-number and with-fractions banks, recomputed from its own printed stem with exact fractions: every m, c and step key; the contract's bank rules: 45 or more distinct items a stage, 40% or more falling lines, grid lines through two lattice points, 75% or more of Stage 5's points off the y-axis, fractions only when switched on; the module's marking against an independent marker on thousands of probe answers)": "7",
+  "Y So Steep, part 2 (every stage played in the page: one full round at 390 px on the touch keypad, then the first questions at 375, 360, 320, 1280 and 1366 px; keypad, question and Next above the fold; no sideways scroll; each grid line drawn from its data, grid text at least 12 px; named slips named; one board entry a round, none for stage 6; stage 3 and fractions off)": "49",
+  "Y So Steep, part 3 (fault-injection self-test: planted faults, each caught, including a wrong c, a line drawn off its data and a positive-only bank)": "33"
  },
  "lock": {
   "Answer lock in play, part 1 (canon 7.6.0: migrated games played in Chromium)": "L1",
