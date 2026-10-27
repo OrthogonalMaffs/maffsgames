@@ -196,6 +196,7 @@ DEPS = re.compile(r"^# ci-deps:(.*)$", re.M)
 HELD = re.compile(r"^# ci-held:(.*)$", re.M)
 SHARDS = re.compile(r"^# ci-shards:(.*)$", re.M)
 PART_LABEL = "%s, part %d of %d"
+HAND_PART = re.compile(r"(?:^|\s)--part(?:[\s=]|$)")       # a hand split's flag (before SHARD); --part-selftest is not one
 
 
 def command(script, args):
@@ -223,6 +224,13 @@ def parse(name, text):
         group, label, args = parts
         if not label:
             out["errors"].append("%s: a ci-line with no label: %r" % (name, m.group(0)))
+            continue
+        if HAND_PART.search(args):
+            # Two verifiers added on 27 Oct 2026, after SHARD's migration began, still split by hand: refused here so the
+            # bug class (a hand-made part outgrowing the per-line limit) cannot come back through a new verifier.
+            out["errors"].append("%s: a ci-line splits its script by hand (--part): declare its work units instead "
+                                 "(# ci-shards, scripts/ci_shards.py), and ci-groups.py chooses the parts: %r"
+                                 % (name, m.group(0)))
             continue
         out["lines"].append((group, label, command(name, args)))
     for m in SHARDS.finditer(text):
@@ -1141,9 +1149,9 @@ def selftest():
 
     p = parse("verify-x.py", "#!/usr/bin/env python3\n# ci-line: B4 | X (all) | \n")
     check("plain line", p["lines"] == [("B4", "X (all)", "python scripts/verify-x.py")])
-    p = parse("verify-x.py", "# ci-line: C1 | X, part 1 | --part-selftest && --part 1\n")
+    p = parse("verify-x.py", "# ci-line: C1 | X | --selftest && --level 1\n")
     check("&& runs the script twice",
-          p["lines"] == [("C1", "X, part 1", "python scripts/verify-x.py --part-selftest && python scripts/verify-x.py --part 1")])
+          p["lines"] == [("C1", "X", "python scripts/verify-x.py --selftest && python scripts/verify-x.py --level 1")])
     p = parse("verify-x.py", "# ci-line: E | X | && --selftest\n")
     check("empty first part", p["lines"] == [("E", "X", "python scripts/verify-x.py && python scripts/verify-x.py --selftest")])
     p = parse("verify-x.py", "x = 1  # ci-line: B4 | X | \n    # ci-line: B4 | Y | \n")
@@ -1484,6 +1492,10 @@ def selftest():
     for bad, why in (("# ci-shards: X | --a\n", "no part count"), ("# ci-shards: X | --a && --b | 2\n", "'&&'"),
                      ("# ci-shards: X | --shard 1/2 | 2\n", "its own --shard"), ("# ci-shards: X | --a | 0\n", "0 parts")):
         check("ci-shards with %s is an error" % why, bool(parse("verify-x.py", bad)["errors"]))
+    for bad in ("# ci-line: X, part 1 | --part 1\n", "# ci-line: X | --part=2/3\n", "# ci-line: X | --a && --part 3\n"):
+        check("PLANT a hand split (%s) is an error: caught" % bad.split("|")[1].strip(), bool(parse("verify-x.py", bad)["errors"]))
+    check("a ci-line with --part-selftest is not a hand split",
+          not parse("verify-x.py", "# ci-line: X | --part-selftest\n")["errors"])
     check("two ci-shards headers in one verifier are an error",
           bool(errors({"verify-x.py": parse("verify-x.py", "# ci-shards: X | | 2\n# ci-shards: Y | | 2\n")})))
     check("ci-held and ci-shards together are an error",

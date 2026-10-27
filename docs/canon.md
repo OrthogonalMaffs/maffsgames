@@ -1719,7 +1719,8 @@ at 5m17s of 6m; each fix was another hand-made group (B5, E2), which only bought
   median setup is at most 75% of the per-line limit, keeping the previous number while it fits and is at most one more
   than needed (`ci-pack.json` `shards`); the lines are "<label>, part i of k". A part that grows past that is re-divided
   on the next repack; a part still over the limit holds a unit too long to share one, and the split candidate names it.
-  The deal is a partition by construction (its self-test), so no verifier checks its own parts. **Why:** the packer
+  The deal is a partition by construction (its self-test), so no verifier checks its own parts. A `# ci-line` that
+  passes `--part` is refused by `ci-groups.py` (two new verifiers arrived hand-split on 27 Oct, after the migration). **Why:** the packer
   moves lines and never splits one, and each verifier split itself by hand, so the first PR to run a grown part went
   red: Shape Shifter on 26 Oct (a part grew), Just Pythag It, Bruv on 27 Oct (the setup median went from about 20 s to
   46 s). The setup rise was every container job fetching two pinned DejaVu font packages from Launchpad (5-7 s a job
