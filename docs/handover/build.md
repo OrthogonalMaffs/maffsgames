@@ -6,7 +6,10 @@ Contracts are saved verbatim in `docs/handover/contracts/<date>-build-<slug>.md`
 ## Queue
 1. **found-a-mark** ("I Found a Mark") — contract `contracts/2026-10-27-build-found-a-mark.md`. IN PROGRESS. Worktree `E:/jon/mg-build-found-a-mark`, branch `claude/build-found-a-mark`.
 
+2. **hc-factor** ("The HC Factor") — contract `contracts/2026-10-27-build-hc-factor.md`. QUEUED (received 27 Oct, mid-build of #1). Branch `claude/build-hc-factor`, worktree `E:/jon/mg-build-hc-factor` (create from origin/main when starting). Not started.
+
 ## found-a-mark: state (27 Oct 2026)
+Milestones: module pushed (fbbd7e6e); game page `games/i-found-a-mark/index.html` written and plays end to end at 375x667; fold fix for the garden question (last option 654px vs 627px fold) in progress; then verifier, shared-file lines, CI, merge.
 Done: read CLAUDE.md, canon §0/§7/§8.2.1; surveyed the last unlisted-game PR (#509) for the minimum shared-file lines a new game folder needs.
 
 Design (so a fresh session can carry on):

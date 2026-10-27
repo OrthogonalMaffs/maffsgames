@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- UNLISTED (contract FOUND-A-MARK, 27 Oct 2026): live at its URL for Jon to play; off the portal, the sitemap and the leaderboard hub until he lists it. -->
+<meta name="description" content="Break the big exam questions into steps and bank the method marks. You never work out the answer: you choose the calculations a marker gives marks for. For GCSE. Free, no sign-up.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/i-found-a-mark/">
+<meta property="og:title" content="Method Marks Game – GCSE Maths | MaffsGames">
+<meta property="og:description" content="Break the big exam questions into steps and bank the method marks. You never work out the answer: you choose the calculations a marker gives marks for. For GCSE. Free, no sign-up.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/i-found-a-mark/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Method Marks Game – GCSE Maths | MaffsGames</title>
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/burst.js" defer></script>
+<script src="../../schools/assets/answer-count.js" defer></script>
+<script src="/schools/assets/fold.js" defer></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<style>
+/* Theme: schools/assets/theme.css (canon §7.5), light row (the lowest tier served is GCSE Foundation). This game's own accent:
+   a warm brown. The living room is tokens, not colours: a sofa, a wall, and a coin that was down the back of it. */
+:root{--accent:#8a4b12;--accent-dim:#f6ead9;--on-accent:#ffffff;
+  --coin:#e0a82e;--coin-edge:#9a6b0a;--coin-ink:#4a3000;--sofa:#6b4a3a;--sofa-edge:#4e3428;--on-sofa:#ffffff;--wall:#f3ece1;--rug:#e6d7c3;--lamp:#f2d9a0}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:720px;width:100%;padding:1rem}
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.4rem 0 .4rem}
+.header h1{font-size:1.9rem;font-weight:700;color:var(--accent);line-height:1.15}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem 0 .5rem}
+@media (max-width:420px){.header h1{font-size:1.5rem}}
+.screen{display:none}.screen.active{display:block}
+[hidden]{display:none!important}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.9rem auto;max-width:600px}
+.menu-info{color:var(--text);font-size:.95rem;line-height:1.65}
+.menu-info p+p{margin-top:.6rem}
+.btn{min-height:44px;padding:.6rem 1.2rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--accent-dim)}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.start-btn{display:block;margin:1rem auto .3rem;padding:.75rem 2.6rem;font-size:1.05rem}
+.res-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
+.sound-btn{min-height:44px;padding:0 .8rem;border-radius:10px;border:1px solid var(--border);background:var(--surface-alt);color:var(--text);font-size:.82rem;font-weight:600;cursor:pointer}
+.sound-btn[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+
+/* The living room on the start screen: flat shapes, no outlines, nothing cartoon. */
+.room{display:block;width:100%;max-width:340px;height:auto;margin:.2rem auto .4rem}
+.room .wall{fill:var(--wall)}.room .rug{fill:var(--rug)}.room .sofa{fill:var(--sofa)}.room .sofa-d{fill:var(--sofa-edge)}
+.room .lamp{fill:var(--lamp)}.room .coin{fill:var(--coin);stroke:var(--coin-edge);stroke-width:2}.room .leg{stroke:var(--sofa-edge);stroke-width:3}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.3rem .8rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.5rem;gap:.3rem}
+.hud-item{text-align:center;min-width:48px}
+.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.hud-val{font-family:var(--font-num);font-size:.95rem;font-weight:700}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.9rem;display:flex;flex-direction:column;gap:.55rem}
+.marks-tag{font-family:var(--font-num);font-size:.85em;font-weight:700;color:var(--accent);white-space:nowrap}
+.qtext{font-size:1.02rem;line-height:1.5}
+.qtext p+p{margin-top:.3rem}
+.glue{white-space:nowrap}
+
+/* The marks found: coins on the sofa. Found with help is a hollow coin and does not count. */
+.jar{display:flex;align-items:center;gap:.6rem;background:var(--sofa);color:var(--on-sofa);border-radius:12px;padding:.35rem .7rem;min-height:48px;border-bottom:4px solid var(--sofa-edge)}
+.jar-label{font-size:.74rem;font-weight:700;line-height:1.15;flex:1 1 auto}
+.jar-label small{display:block;font-weight:500;opacity:1;font-size:.7rem}
+.slots{display:flex;gap:.45rem;flex:none}
+.slot{width:34px;height:34px;border-radius:50%;border:2px dashed var(--on-sofa);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:700;font-size:.85rem;color:var(--on-sofa)}
+.slot.got{background:var(--coin);border:3px solid var(--coin-edge);color:var(--coin-ink);animation:drop .45s ease-out}
+.slot.help{background:transparent;border:3px dotted var(--coin);color:var(--coin);font-size:.62rem}
+.slot.ans{opacity:1;border-style:dotted}
+@keyframes drop{from{transform:translateY(-18px) scale(.5);opacity:0}60%{transform:translateY(3px) scale(1.08);opacity:1}to{transform:none}}
+
+.ask-line{display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;min-height:1.5em}
+.ask-line h2{font-size:.95rem;font-weight:700}
+.msg{font-size:.9rem;font-weight:700;color:var(--correct);text-align:right;min-height:1.3em}
+.msg.note{color:var(--muted);font-weight:600}
+.opts{display:flex;flex-direction:column;gap:.45rem}
+.opts .btn{text-align:left;line-height:1.3;font-weight:500;color:var(--text);border-color:var(--border);background:var(--surface-alt);padding:.4rem .7rem}
+.opts .btn:hover{border-color:var(--accent)}
+.opts .btn .katex{font-size:1.05em}
+.opts .btn.ruled{opacity:.5}
+.actions{display:flex;gap:.5rem;flex-wrap:wrap}
+.actions .btn{flex:1 1 9rem;font-size:.85rem;padding:.4rem .6rem}
+.diagram{display:flex;justify-content:center}
+.diagram svg{display:block;width:250px;max-width:100%;height:auto}
+.diagram .shape{fill:var(--accent-dim);stroke:var(--accent);stroke-width:2.5}
+.diagram text{font-family:var(--font-num);font-size:14px;font-weight:700;fill:var(--text)}
+
+.fb{border-radius:12px;padding:.7rem .8rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.55rem}
+.fb.wrong{border-color:var(--wrong)}
+.fb.done{border-color:var(--correct)}
+.fb-line{font-size:.95rem;line-height:1.45;padding:.35rem .65rem;border-left:3px solid var(--hint);border-radius:0 8px 8px 0}
+.fb.done .fb-line{border-left-color:var(--correct)}
+.fb-left{font-size:.85rem;color:var(--muted)}
+.fb-left ul{list-style:none;margin-top:.2rem;display:flex;flex-direction:column;gap:.15rem}
+.fb-next{display:flex;justify-content:center}
+.feedback:empty{display:none}
+.results{text-align:center;padding:1rem 0}
+.results h2{font-size:1.35rem;margin-bottom:.3rem}
+.final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.4rem 0 .1rem}
+.final-of{color:var(--muted);font-size:.9rem;margin-bottom:.5rem}
+.res-coins{display:flex;flex-wrap:wrap;justify-content:center;gap:.3rem;max-width:21rem;margin:.4rem auto .7rem}
+.res-coins .slot{width:26px;height:26px;border-width:2px;font-size:.7rem;animation:none}
+.stats{color:var(--muted);line-height:1.9;font-size:.95rem;margin-bottom:.8rem}
+.stats b{color:var(--text)}
+
+/* Phone rule (canon §7.6.1): after a wrong tap, or when a question is done, the controls go and the feedback takes their place. */
+.qcard.fb-open .opts,.qcard.fb-open .actions,.qcard.fb-open .ask-line{display:none}
+body.playing a.back-link{display:none}
+@media (max-width:420px){
+  .container{padding:.5rem}
+  .qcard{padding:.65rem .6rem;gap:.45rem}
+  .qtext{font-size:.96rem}
+  .hud{padding:.2rem .5rem}
+}
+@media (max-height:620px){.diagram svg{width:230px}.qtext{font-size:.94rem}.jar{min-height:44px;padding:.25rem .6rem}.slot{width:30px;height:30px}}
+body.accessible{letter-spacing:.12em;word-spacing:.16em}
+body.accessible .hud-label,body.accessible .hud-val{letter-spacing:0}
+body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;max-width:65ch}
+body.accessible .katex{letter-spacing:normal;word-spacing:normal}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'answer' taps a calculation: i = 0 a valid one (the question moves on), i >= 1 a wrong one (named, then Next). 'ready' is the game's own state.
+{
+  "start": "document.getElementById('startBtn').click()",
+  "ready": "!!window.FAM && !!FAM.ui && FAM.ui.state() === 'asking'",
+  "answer": [
+    "const b = FAM.ui.pick(i === 0 ? 'valid' : 'wrong');",
+    "if (b) b.click();"
+  ]
+}
+-->
+<script src="../../schools/assets/found-a-mark-templates.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>I Found a Mark</h1><div class="sub">You don't need the answer. You need the next step.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <svg class="room" viewBox="0 0 340 120" role="img" aria-label="A living room: a sofa, a lamp, and a coin in the gap between the cushions">
+      <rect class="wall" x="0" y="0" width="340" height="120" rx="12"/>
+      <ellipse class="rug" cx="170" cy="108" rx="140" ry="10"/>
+      <rect class="lamp" x="276" y="26" width="30" height="24" rx="6"/><line class="leg" x1="291" y1="50" x2="291" y2="100"/>
+      <rect class="sofa-d" x="52" y="46" width="206" height="52" rx="14"/>
+      <rect class="sofa" x="62" y="58" width="92" height="30" rx="8"/><rect class="sofa" x="160" y="58" width="92" height="30" rx="8"/>
+      <rect class="sofa" x="40" y="62" width="26" height="40" rx="9"/><rect class="sofa" x="248" y="62" width="26" height="40" rx="9"/>
+      <circle class="coin" cx="157" cy="66" r="9"/>
+    </svg>
+    <div class="panel menu-info">
+      <p>A 4-mark question is not all or nothing. A marker gives you marks for the <strong>method</strong>: the calculations on the way, even if the arithmetic goes wrong or you never reach the answer.</p>
+      <p>Here you never work anything out. Each question has steps a marker would credit. Tap the calculations you could write down, in any order that makes sense. Every step that earns a mark goes on the sofa.</p>
+      <p>Be careful: some of the calculations are nearly right.</p>
+      <button class="btn solid start-btn" id="startBtn">Start</button>
+      <p class="hud-label" style="text-align:center;margin-top:.5rem">5 questions · 3 method marks each</p>
+      <div style="text-align:center;margin-top:.6rem"><button class="sound-btn" id="soundBtnMenu" type="button" aria-pressed="false">Sound off</button></div>
+    </div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+    <div class="maffs-start-note" data-maffs-start-note></div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/5</div></div>
+      <div class="hud-item"><div class="hud-label">Marks found</div><div class="hud-val" id="hudScore">0</div></div>
+      <div class="hud-item"><div class="hud-label">With help</div><div class="hud-val" id="hudHelp">0</div></div>
+    </div>
+    <div class="qcard" id="qcard">
+      <div class="qtext" id="qtext"></div>
+      <div class="diagram" id="diagram" hidden></div>
+      <div class="jar" id="jar" role="group" aria-label="Marks found">
+        <div class="jar-label">Marks found<small id="jarCount">0 of 3</small></div>
+        <div class="slots" id="slots"></div>
+      </div>
+      <div class="ask-line"><h2>What could you write down?</h2><div class="msg" id="msg" aria-live="polite"></div></div>
+      <div class="opts maffs-options" id="opts" role="group" aria-label="Calculations"></div>
+      <div class="actions" id="actions">
+        <button class="btn" id="hintBtn" type="button">Show me a step</button>
+        <button class="btn" id="bankBtn" type="button">Bank it and move on</button>
+      </div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results">
+      <h2>Marks found</h2>
+      <div class="final-score" id="resScore">0</div>
+      <div class="final-of" id="resOf">unaided method marks, out of 15</div>
+      <div class="res-coins" id="resCoins"></div>
+      <div class="stats" id="resStats"></div>
+      <div class="res-btns">
+        <button class="btn solid" id="againBtn" type="button">Play again</button>
+      </div>
+      <p id="teacherInvite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var M = window.MaffsFoundAMark, SLUG = 'i-found-a-mark', QUESTIONS = 5;
+  // One level of content, GCSE Foundation (the roster lists GCSE): one board, by unaided method marks in a session.
+  var level = MaffsLevel.resolve({ slug: 'i-found-a-mark', levels: ['gcse'], fallback: 'gcse' });
+  var $ = function (id) { return document.getElementById(id); };
+  function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  // KaTeX when the CDN loaded; otherwise the calculation as readable text.
+  function tex(t) {
+    if (window.katex) {
+      try { return katex.renderToString(t, { throwOnError: false }); } catch (e) { /* fall through */ }
+    }
+    return esc(t.replace(/\\times/g, '×').replace(/\\div/g, '÷').replace(/\\text\{([^}]*)\}/g, '$1').replace(/\\%/g, '%').replace(/\^\{(\d+)\}/g, '^$1').replace(/\{,\}/g, ','));
+  }
+  // A paragraph with TeX between § marks.
+  function renderLine(line) {
+    var p = line.split('§');
+    return p.map(function (part, i) { return i % 2 ? '<span class="glue">' + tex(part) + '</span>' : esc(part); }).join('');
+  }
+
+  /* ---------- the session ---------- */
+  function newSeed() { return Math.floor(Math.random() * 4294967296); }
+  // Five questions: each of the four types once, and one more of a random type; the order is random.
+  function buildSession(seed) {
+    var rng = M.makeRng(seed), types = M.TYPES.slice();
+    types.push(M.TYPES[Math.floor(rng() * M.TYPES.length)]);
+    for (var i = types.length - 1; i > 0; i--) { var j = Math.floor(rng() * (i + 1)); var t = types[i]; types[i] = types[j]; types[j] = t; }
+    return { seed: seed, questions: types.map(function (ty, k) { return M.question(ty, M.makeRng(seed * 31 + k * 977 + 7)); }) };
+  }
+
+  var session = null, Q = null, S = null, idx = 0, state = 'menu';
+  var unaidedTotal = 0, helpTotal = 0, taps = 0, rightTaps = 0, soundOn = false, audio = null;
+
+  function show(id) {
+    ['menu', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    document.body.classList.toggle('playing', id === 'game');
+    MaffsLock.screen($(id));
+  }
+  function reducedMotion() { return window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches; }
+
+  // A small clink, only when the student has switched sound on.
+  function clink() {
+    if (!soundOn) return;
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      audio = audio || new AC();
+      var o = audio.createOscillator(), g = audio.createGain(), t = audio.currentTime;
+      o.type = 'sine'; o.frequency.setValueAtTime(1568, t); o.frequency.exponentialRampToValueAtTime(1175, t + 0.18);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.06, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+      o.connect(g); g.connect(audio.destination); o.start(t); o.stop(t + 0.25);
+    } catch (e) { /* sound is a nicety */ }
+  }
+  function setSound(on) {
+    soundOn = on; lsSet('fam_sound', on ? '1' : '0');
+    var b = $('soundBtnMenu'); b.textContent = on ? 'Sound on' : 'Sound off'; b.setAttribute('aria-pressed', String(on));
+  }
+
+  /* ---------- the L-shaped garden ---------- */
+  function gardenSvg(d) {
+    var VW = 250, VH = 124, L = 32, R = 38, T = 20, B = 24;
+    var s = Math.min((VW - L - R) / d.W, (VH - T - B) / d.H), w = d.W * s, h = d.H * s, c = (d.W - d.cw) * s, k = d.ch * s;
+    var x0 = L + (VW - L - R - w) / 2, y0 = T;
+    var pts = [[0, 0], [c, 0], [c, k], [w, k], [w, h], [0, h]].map(function (p) { return (x0 + p[0]).toFixed(1) + ',' + (y0 + p[1]).toFixed(1); }).join(' ');
+    var lab = d.labels;
+    return '<svg viewBox="0 0 ' + VW + ' ' + VH + '" role="img" aria-label="An L-shaped garden. Bottom ' + lab.bottom + ' metres, left ' + lab.left +
+      ' metres, top ' + lab.top + ' metres, lower right ' + lab.lowerRight + ' metres.">' +
+      '<polygon class="shape" points="' + pts + '"/>' +
+      '<text x="' + (x0 + c / 2).toFixed(1) + '" y="' + (y0 - 6) + '" text-anchor="middle">' + lab.top + ' m</text>' +
+      '<text x="' + (x0 - 6).toFixed(1) + '" y="' + (y0 + h / 2 + 5).toFixed(1) + '" text-anchor="end">' + lab.left + ' m</text>' +
+      '<text x="' + (x0 + w / 2).toFixed(1) + '" y="' + (y0 + h + 17).toFixed(1) + '" text-anchor="middle">' + lab.bottom + ' m</text>' +
+      '<text x="' + (x0 + w + 6).toFixed(1) + '" y="' + (y0 + k + (h - k) / 2 + 5).toFixed(1) + '" text-anchor="start">' + lab.lowerRight + ' m</text></svg>';
+  }
+
+  /* ---------- play ---------- */
+  function startGame() {
+    MaffsLock.newSession();
+    session = buildSession(newSeed());
+    idx = 0; unaidedTotal = 0; helpTotal = 0; taps = 0; rightTaps = 0;
+    show('game');
+    ev('game_started', { game_slug: SLUG, level: level });
+    nextQuestion();
+  }
+  function nextQuestion() {
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    $('feedback').innerHTML = '';
+    $('qcard').classList.remove('fb-open');
+    if (idx >= session.questions.length) { finish(); return; }
+    ask(session.questions[idx++]);
+  }
+  function ask(q) {
+    Q = q; S = M.newState(); state = 'asking';
+    $('hudQ').textContent = idx + '/' + QUESTIONS;
+    $('hudScore').textContent = unaidedTotal;
+    $('hudHelp').textContent = helpTotal;
+    $('qtext').innerHTML = Q.stem.map(function (l, i) {
+      return '<p>' + renderLine(l) + (i === Q.stem.length - 1 ? ' <span class="marks-tag">[' + Q.marks + ' marks]</span>' : '') + '</p>'; }).join('');
+    $('diagram').hidden = !Q.diagram;
+    $('diagram').innerHTML = Q.diagram ? gardenSvg(Q.diagram) : '';
+    msg('', '');
+    drawSlots(false);
+    renderOptions();
+    window.scrollTo(0, 0);
+  }
+  function msg(text, cls) { var m = $('msg'); m.textContent = text; m.className = 'msg' + (cls ? ' ' + cls : ''); }
+
+  // The coins: one slot for each method mark, then one dotted slot for the answer mark, which is never asked for.
+  function drawSlots(animateNew) {
+    var got = 0, h = '';
+    Q.slots.forEach(function (sl) {
+      var how = S.slots[sl.id];
+      if (how) got++;
+      var fresh = animateNew && sl.id === animateNew;
+      h += '<span class="slot' + (how === 'tap' ? ' got' : how === 'help' ? ' help' : '') + '" data-slot="' + sl.id + '" title="' + esc(sl.label) + '"' +
+        (fresh && !reducedMotion() ? '' : ' style="animation:none"') + '>' + (how === 'help' ? 'help' : how ? '1' : '') + '</span>';
+    });
+    h += '<span class="slot ans" title="The answer mark: the last one, and never asked for" aria-label="The answer mark, not asked for">A</span>';
+    $('slots').innerHTML = h;
+    $('jarCount').textContent = got + ' of ' + Q.slots.length;
+  }
+
+  function renderOptions() {
+    var opts = M.options(Q, S, Math.random);
+    $('opts').innerHTML = opts.map(function (o) {
+      return '<button class="btn" type="button" data-val="' + esc(o.id) + '">' + tex(o.tex) + '</button>';
+    }).join('');
+    MaffsLock.fresh($('opts'));
+    state = 'asking';
+  }
+
+  function onPick(btn) {
+    if (state !== 'asking') return;
+    if (!MaffsLock.lock($('opts'))) return;
+    var val = btn.dataset.val, r = M.choose(Q, S, val);
+    if (r.kind === 'ignored') { renderOptions(); return; }
+    taps++;
+    var ok = r.kind !== 'wrong';
+    if (ok) rightTaps++;
+    ev('question_answered', { game_slug: SLUG, level: level, question_index: idx, correct: ok });
+    if (!ok) { wrong(r.why); return; }
+    var earned = r.slots.length;
+    if (earned) {
+      unaidedTotal += earned; $('hudScore').textContent = unaidedTotal;
+      msg(earned > 1 ? 'Oooh, ' + earned + ' marks.' : 'Oooh, a mark.', '');
+      clink();
+    } else {
+      var st = null;
+      Q.steps.forEach(function (x) { if (x.id === r.steps[0]) st = x; });
+      msg(st && !st.slot ? 'Good step: no mark of its own, but you need it.' : 'Also valid. That mark is already found.', 'note');
+    }
+    drawSlots(r.slots[0]);
+    afterFind();
+  }
+  function afterFind() {
+    if (M.finished(Q, S)) { done(false); return; }
+    renderOptions();
+  }
+
+  // A wrong tap: the slip named in one line, no penalty, Next brings the calculations back with that one ruled out.
+  function wrong(why) {
+    state = 'wrong';
+    msg('', '');
+    $('feedback').innerHTML = '<div class="fb wrong"><div class="fb-line" data-help="reason">' + esc(why) + '</div><div class="fb-next"></div></div>';
+    $('qcard').classList.add('fb-open');
+    MaffsNext.wrong({ mount: $('feedback').querySelector('.fb-next'), onAdvance: function () {
+      MaffsNext.clear($('feedback'));
+      $('feedback').innerHTML = '';
+      $('qcard').classList.remove('fb-open');
+      renderOptions();
+    } });
+  }
+
+  // The question is over: all three method marks found, or banked early.
+  function done(banked) {
+    state = 'done';
+    var got = Q.slots.filter(function (sl) { return S.slots[sl.id]; }).length, total = Q.slots.length, left = '';
+    var line;
+    if (got === total) {
+      line = 'You found ' + total + " method marks. The last mark is for the answer, and you've already done the hard part.";
+    } else {
+      line = 'You found ' + got + ' of the ' + total + ' method marks. On a real paper, every step you write down is a chance of one more.';
+      var open = [];
+      Q.steps.forEach(function (st) { if (st.slot && !S.slots[st.slot] && !S.found[st.id] && open.every(function (o) { return o.slot !== st.slot; })) open.push(st); });
+      if (open.length) left = '<div class="fb-left">Still in the working:<ul>' + open.map(function (st) {
+        return '<li>' + esc(st.name.charAt(0).toUpperCase() + st.name.slice(1)) + ': ' + tex(st.forms[0].tex) + '</li>'; }).join('') + '</ul></div>';
+    }
+    var last = idx >= QUESTIONS;
+    $('feedback').innerHTML = '<div class="fb done"><div class="fb-line">' + esc(line) + '</div>' + left +
+      '<div class="fb-next"><button class="btn solid" id="nextBtn" type="button">' + (last ? 'See your marks →' : 'Next question →') + '</button></div></div>';
+    $('qcard').classList.add('fb-open');
+    MaffsLock.fresh($('feedback'));
+    $('nextBtn').focus();
+  }
+
+  function hint() {
+    if (state !== 'asking') return;
+    if (!MaffsLock.lock($('actions'))) return;
+    var h = M.hint(Q, S);
+    MaffsLock.fresh($('actions'));
+    if (!h) return;
+    helpTotal++; $('hudHelp').textContent = helpTotal;
+    msg('A step, with help: no mark counted', 'note');
+    drawSlots(null);
+    afterFind();
+  }
+  function bank() {
+    if (state !== 'asking') return;
+    if (!MaffsLock.lock($('actions'))) return;
+    MaffsLock.fresh($('actions'));
+    done(true);
+  }
+
+  // Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+  var finish = MaffsLock.finishOnce(function () {
+    state = 'done';
+    var score = unaidedTotal, max = QUESTIONS * 3;
+    ev('game_completed', { game_slug: SLUG, level: level, score: score, questions_answered: taps, questions_correct: rightTaps });
+    if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, level, score, taps).catch(function () {});
+    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, level, score);
+    var pbKey = 'fam_best', prev = parseInt(lsGet(pbKey) || '0', 10) || 0, pb = score > prev;
+    if (pb) { ev('personal_best_set', { game_slug: SLUG, level: level, score: score, previous_best: prev }); lsSet(pbKey, String(score)); }
+    $('resScore').textContent = score;
+    $('resOf').textContent = 'unaided method marks, out of ' + max;
+    var c = '';
+    for (var i = 0; i < max; i++) c += '<span class="slot' + (i < score ? ' got' : '') + '">' + (i < score ? '1' : '') + '</span>';
+    $('resCoins').innerHTML = c;
+    $('resStats').innerHTML = (helpTotal ? 'Found with help: <b>' + helpTotal + '</b> (not counted)<br>' : '') +
+      'Taps on a nearly-right calculation: <b>' + (taps - rightTaps) + '</b> (no penalty)' + (pb ? '<br>New personal best' : '');
+    show('results');
+  });
+
+  /* ---------- wiring ---------- */
+  $('startBtn').addEventListener('click', startGame);
+  $('againBtn').addEventListener('click', function () { state = 'menu'; show('menu'); });
+  $('opts').addEventListener('click', function (e) { var b = e.target.closest('[data-val]'); if (b) onPick(b); });
+  $('hintBtn').addEventListener('click', hint);
+  $('bankBtn').addEventListener('click', bank);
+  $('feedback').addEventListener('click', function (e) {
+    if (e.target.closest('#nextBtn') && state === 'done') { state = 'moving'; nextQuestion(); }
+  });
+  $('soundBtnMenu').addEventListener('click', function () { setSound(!soundOn); });
+  setSound(false);
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(lsGet(KEY) === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); lsSet(KEY, String(on)); apply(on); });
+  })();
+
+  // Read-only views of live state, for scripts/verify-i-found-a-mark.py and the lock hint above.
+  window.FAM = {
+    SLUG: SLUG, buildSession: buildSession,
+    ui: {
+      state: function () { return state; },
+      level: function () { return level; },
+      question: function () { return Q ? JSON.parse(JSON.stringify(Q)) : null; },
+      found: function () { return S ? JSON.parse(JSON.stringify({ found: S.found, slots: S.slots })) : null; },
+      score: function () { return unaidedTotal; },
+      help: function () { return helpTotal; },
+      // A tappable option of a kind: 'valid' (s:...) or 'wrong' (d:...), falling back to the other when none is on offer.
+      pick: function (kind) {
+        var all = Array.prototype.slice.call($('opts').querySelectorAll('[data-val]'));
+        var want = all.filter(function (b) { return b.dataset.val.charAt(0) === (kind === 'wrong' ? 'd' : 's'); });
+        return (want.length ? want : all)[0] || null;
+      }
+    }
+  };
+})();
+</script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'i-found-a-mark');</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

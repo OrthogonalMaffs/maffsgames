@@ -407,16 +407,17 @@
       });
     });
     valid = shuffled(rng, valid);
-    var cap = 8, room = cap - 2;
-    var v = valid.slice(0, 5);
-    shuffled(rng, extra).forEach(function (o) { if (v.length < Math.min(room, 5)) v.push(o); });
+    // Six on offer at most (three rows of two on a phone: canon 7.6.1); a valid step left out shows once another is found.
+    var cap = 6;
+    var v = valid.slice(0, 4);
+    shuffled(rng, extra).forEach(function (o) { if (v.length < 4) v.push(o); });
     var cands = [];
     Q.distractors.forEach(function (d, di) {
       var id = 'd:' + di;
       if (S.struck[id] || !onOffer[d['for']] || !depsMet(S, d.deps)) return;
       cands.push({ id: id, tex: d.tex, step: null });
     });
-    var nd = Math.min(cands.length, Math.max(2, Math.min(4, cap - v.length)));
+    var nd = Math.min(cands.length, Math.max(2, cap - v.length));
     return shuffled(rng, v.concat(shuffled(rng, cands).slice(0, nd)));
   }
 
