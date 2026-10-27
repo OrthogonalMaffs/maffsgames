@@ -259,7 +259,7 @@
    "tier": "content"
   },
   "verify-possibly-maybe.py": {
-   "how": "chosen from 25 timed unit(s)",
+   "how": "kept from the pack (2 needed)",
    "label": "Possibly, Maybe (the 60-question fixed-seed bank and 20 seeds of every slot recomputed from each question's own data and ask, never from the bank's or the game's code: counts of sectors and counters, listed outcomes by enumeration, products, complements, expected numbers, relative frequencies, the fair-dice rule, every tree probability by exact fractions; fractions typed in two boxes marked by value against an independent marker on probe answers; every picture read back from its SVG; the page played at six sizes; planted faults each caught)",
    "parts": 2,
    "tier": "content"
@@ -283,7 +283,7 @@
    "tier": "content"
   },
   "verify-the-6-ps.py": {
-   "how": "kept from the pack (1 needed)",
+   "how": "kept from the pack (2 needed)",
    "label": "The 6 P's (the topic data file is the generator's output; no mark figure, AQA, Edexcel or \"in development\" in the page, no launch into a game; the four past-paper sites before Start; 10,000 sessions each way: six distinct covered topics in band order, frequencies in proportion to marks; every format marked by value through the page's own judge(), schema faults left out, five picked unseen first; a full session at 1280 px with localStorage working, on fixture banks covering all nine formats: every format answered right and wrong, never-marked answers not marked, slips, working, five a topic and a topic card, results, nudge, practice links, tick-list and events; resumed mid-topic after a reload; the same session at 320 px on a touch screen, typed on the phone keypad, with localStorage blocked: no sideways scroll on any screen, resumed mid-topic from window.name; every real bank's verdict and Next on a 375 x 667 phone; a topic with no bank offers Skip only; fault-injection self-test: the planted faults, each caught)",
    "parts": 2,
    "tier": "content"
