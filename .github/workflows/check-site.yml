@@ -240,24 +240,26 @@ jobs:
             # warns and commits nothing (exit status 2; PER-LINE-LIMIT, canon 7.8.1). Only the group rule (past 100%
             # since MAIN-WARN; a group past 80% is a warning listed under over-budget in ci-pack.json) refuses a pack: a line over the per-line limit is a split candidate, printed as a warning and listed in
             # ci-pack.json, and the pack commits (LINE-LIMIT-SCOPE, Jon's ruling 21 Oct 2026).
+            # The same commit removes from scripts/ci-warn-list.json every entry whose line passes the per-line limit now
+            # (shrink-only; GATE-WARN-THEN-ENFORCE, Jon 27 Oct 2026): the list never falls behind the timings.
             rc=0
             python scripts/ci-groups.py --record-and-pack "$RUN_ID" --from-dir "$TIMING_DIR" > "$RUNNER_TEMP/pack.txt" 2>&1 || rc=$?
             if [ "$rc" -eq 2 ]; then
               cat "$RUNNER_TEMP/pack.txt" | tee -a "$GITHUB_STEP_SUMMARY"
-              git checkout -q -- scripts/ci-timings.json scripts/ci-pack.json
+              git checkout -q -- scripts/ci-timings.json scripts/ci-pack.json scripts/ci-warn-list.json
               echo "::warning::this run's slower setup alone refused the pack (it passes at the previous median setup); nothing was committed, and this is not a failure"
               exit 0
             fi
             if [ "$rc" -ne 0 ]; then
               cat "$RUNNER_TEMP/pack.txt" | tee -a "$GITHUB_STEP_SUMMARY"
-              git checkout -q -- scripts/ci-timings.json scripts/ci-pack.json
+              git checkout -q -- scripts/ci-timings.json scripts/ci-pack.json scripts/ci-warn-list.json
               echo "::error::the pack for this run's timings fails ci-groups.py --check; nothing was committed"
               exit 1
             fi
             cat "$RUNNER_TEMP/pack.txt" | tee -a "$GITHUB_STEP_SUMMARY"
             if ! python scripts/ci-groups.py --check > "$RUNNER_TEMP/check.txt" 2>&1; then
               cat "$RUNNER_TEMP/check.txt" | tee -a "$GITHUB_STEP_SUMMARY"
-              git checkout -q -- scripts/ci-timings.json scripts/ci-pack.json
+              git checkout -q -- scripts/ci-timings.json scripts/ci-pack.json scripts/ci-warn-list.json
               echo "::error::ci-groups.py --check fails on the new pack; nothing was committed"
               exit 1
             fi
@@ -271,11 +273,11 @@ jobs:
             else
               cat "$RUNNER_TEMP/regions.txt" | tee -a "$GITHUB_STEP_SUMMARY"
             fi
-            if git diff --quiet -- scripts/ci-timings.json scripts/ci-pack.json scripts/ci-timings-regions.json; then
+            if git diff --quiet -- scripts/ci-timings.json scripts/ci-pack.json scripts/ci-timings-regions.json scripts/ci-warn-list.json; then
               echo "timings and pack unchanged at $(git rev-parse --short HEAD)" | tee -a "$GITHUB_STEP_SUMMARY"
               exit 0
             fi
-            git add scripts/ci-timings.json scripts/ci-pack.json scripts/ci-timings-regions.json
+            git add scripts/ci-timings.json scripts/ci-pack.json scripts/ci-timings-regions.json scripts/ci-warn-list.json
             git commit -q -m "Record CI timings and repack (run $RUN_ID) [skip ci]"
             if git push -q origin HEAD:main; then
               echo "timings and pack committed: $(git rev-parse --short HEAD)" | tee -a "$GITHUB_STEP_SUMMARY"
