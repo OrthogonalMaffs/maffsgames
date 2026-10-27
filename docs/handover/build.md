@@ -14,31 +14,28 @@ Contracts are saved verbatim in `docs/handover/contracts/<date>-build-<slug>.md`
 8. **Done marker:** when a contract's job is merged (or parked with its question recorded), add a line `DONE: <contract file name>` under "Done" below; `E:/jon/tools/run-build-queue.ps1` skips contracts with such a line.
 
 ## Done
-DONE: 2026-10-27-build-found-a-mark.md   (PARKED at the merge, see "Parked" below; everything else is built)
+DONE: 2026-10-27-build-found-a-mark.md   (merged: PR #569, squash 6c5cc59, 27 Oct 2026; held up by CI timing blocks, fixed by #570, then one real 320 x 568 fault on CI's real fonts, fixed)
 
 ## Queue
-1. **found-a-mark** ("I Found a Mark") — contract `contracts/2026-10-27-build-found-a-mark.md`. IN PROGRESS. Worktree `E:/jon/mg-build-found-a-mark`, branch `claude/build-found-a-mark`.
+1. **found-a-mark** ("I Found a Mark"): MERGED (#569). Report still owed to Jon: its "Decided for you" list and the screenshots (375 x 667 and 1366 x 768 in the session scratchpad; re-make with `play.py` pattern: start stub server, `FAM.ui`).
+2. **hc-factor** ("The HC Factor"): BUILT, PR #571 (branch `claude/build-hc-factor`, worktree `E:/jon/mg-build-hc-factor`). Verifier passes all 3 parts; check-changed clean after the fixes below. CI: the PR budget job failed twice on Take a Walk part 4 (190 s vs the 189 s line limit; not ours; a re-run reuses the same measurements, only a new push re-measures). Then `python scripts/merge-pr.py 571` (unpiped), watch main, `python scripts/end-task.py claude/build-hc-factor`, then report with the screenshots.
+3. **y-so-steep** ("Y So Steep?"): contract `contracts/2026-10-27-build-y-so-steep.md`. Branch `claude/build-y-so-steep`, worktree `E:/jon/mg-build-y-so-steep`. NOT STARTED. Findings so far: `MaffsAnswer.fraction(raw)` already exists and is exact, but `MaffsKeypad` has NO "/" key (keys: digits, ".", optional minus). So item 4 applies: write the "/" key on MaffsKeypad's fraction variant (and MaffsAnswer use + test-answer-js.py / check-keypad.py cases) on its own UNMERGED branch, and ship the integer-gradient items first; fractional items (S3 and the fractions in Higher) on once that branch merges. Never a game-local parser.
 
-2. **hc-factor** ("The HC Factor") — contract `contracts/2026-10-27-build-hc-factor.md`. QUEUED (received 27 Oct, mid-build of #1). Branch `claude/build-hc-factor`, worktree `E:/jon/mg-build-hc-factor` (create from origin/main when starting). Not started.
-3. **y-so-steep** ("Y So Steep?") — contract `contracts/2026-10-27-build-y-so-steep.md`. QUEUED. Branch `claude/build-y-so-steep`, worktree `E:/jon/mg-build-y-so-steep`. Item 4 (fraction entry) may need an UNMERGED shared-asset branch; see the contract.
+## Standing notes (Jon, 27 Oct 2026)
+- Roster numbers stay as they are (#102 found-a-mark, #103 hc-factor; next is #104). "The 100th" is the count of LISTED items on the portal, not a roster number. NEVER list anything: listing is the home lane's job and The 6 P's goes first.
+- Roster rows for unlisted games go in the Unlisted section, numbered above #101.
 
-## Parked
-**found-a-mark, PR #569 (head 32af744d): the CI Plan job fails, so the Gate is red; not merged.**
-The change edits the site-wide check lists a new game folder needs, so it "selects 136 verifiers (CI itself)", and the Plan job's per-line rule then fails on a line that is not mine: `Content verifiers 19: Equation Builder, part 1: 137s (median) + 56s setup = 193s, 71% of its 270s budget; the limit is 70% (189s)` (timings from main run 40494866923). Every other check in the PR passed locally (check-changed.py: only three failures, all mine, all fixed: burst.js not adopted, meta description length, the last button's wording).
-**Question for Jon / home lane:** split or speed up Equation Builder part 1 (home lane's CI), or tell me to wait for the next main timings pack and re-run the PR; I will not touch ci-groups or the Equation Builder verifier (shared). To resume: re-run the PR's CI, then `python scripts/merge-pr.py 569` (unpiped), watch main, run `python scripts/end-task.py claude/build-found-a-mark`, then report with the screenshots.
-Screenshots (375x667 and 1366x768, every question type) are in the session scratchpad `shots/` folder: garden_*, interest_*, ratio_*, enough_*; re-make with the play script if lost.
+## hc-factor: state (27 Oct 2026)
+Design: `schools/assets/hc-factor-gen.js` (`MaffsHCFactor`: bank(stage) 40 a stage, session(stage, seed), mark(step, vals)); polynomial [c2,c1,c0]; box answers marked by value; Stage 3 `canon` vector gives the 'format' (not fully factorised) verdict; sign grid is its own step (marks: S1-S5 one a question, S6 two).
+Verifier `scripts/verify-hc-factor.py` parses the printed stem with its own polynomial parser; part 2 plays all six stages at 375, 360, 320, 1280, 1366.
+Lessons that cost a round each (new-game checklist): the Theme check bans hex colours outside :root (use tokens); Search titles needs the page meta description = data/games.json text; the lock check finds Next by its text ("See results →", not "See the result →"); check-start-mount needs a START_STEPS entry when the menu has no Start button; CI has real fonts so options wrap more than locally: test short phones with a wide font (inject `body{font-family:Verdana,"DejaVu Sans"}`); a PR that edits the site-wide check lists selects ~136 verifiers, so ANY near-limit verifier line (70% of 270 s) blocks it: check `PR budget` job text.
 
-## found-a-mark: state (27 Oct 2026)
-Milestones: module, game page (fits 320x568, 375x667, 1280x720) and verifier (3 parts, 6 plants, all caught) pushed. Shared-file registrations (roster, games.json, 7 check lists, findings yml) added; `check-changed.py` run in background; next: push, PR, `merge-pr.py`, watch main, screenshots 375x667 + 1366x768.
-Done: read CLAUDE.md, canon §0/§7/§8.2.1; surveyed the last unlisted-game PR (#509) for the minimum shared-file lines a new game folder needs.
-
-Design (so a fresh session can carry on):
-- Module `schools/assets/found-a-mark-templates.js` (`MaffsFoundAMark`, pure data, seedable rng). Each calculation is an `expr` string of space-separated tokens (numbers, `+ - * / ^ ( )`, `@stepId` refs); tex is derived from the expr; the verifier re-evaluates the same strings with Fractions in Python and re-derives each question from its `params`.
-- Marks are slots; a step carries a `slot`; a slot completes when `need` of its steps are found. A step may have several `forms` (alternative expressions, each with its own deps). Distractors carry `deps` (their refs), a `for` step and a `why`.
-- Wrong tap shows the one-line `why` plus MaffsNext (3 s floor), then the options come back with that one struck out. Hinted steps never score.
-
-Shared-file lines a new game needs (the #509 pattern; each marked unlisted, to be reported): `.claude/rules/game-roster.md` (Unlisted + row), `data/games.json`? (only at listing, #509 added it; check), `scripts/audit-register.py` UNLISTED_NOT_BY_AUDIT, `scripts/check-answer-lock.py` MIGRATED, `scripts/check-leaderboard-coverage.js` NOT_ON_HUB, `scripts/check-levels.py`, `scripts/check-start-mount.py` CONTAINERS, `scripts/check-teacher-invite.py` RESULTS, `scripts/check-theme.py` MIGRATED, plus `docs/audits/findings/<slug>.yml`.
-Leaderboard: a new board key needs a label in `schools/assets/firebase-leaderboard.js` (shared). If that can't be avoided, leave the board off and report.
-
-## Decided for you
-(filled in at the report)
+## Decided for you (hc-factor; found-a-mark's list is in its PR #569)
+- Palette: LIGHT row, not dark: check-theme derives it from the roster levels (GCSE = light). The stage is dark panels inside it.
+- "Round" in the UI for the contract's "stage"; "You're through to the next round!" when at least half the marks, never a block.
+- Round 6 has no leaderboard (stage-6 needs a label in firebase-leaderboard.js, shared); rounds 1-5 use stage-1..stage-5.
+- Round 6: 2 marks a question (signs, then numbers).
+- Extra named slips: S3 divided the x term but not the number; S6 add to b but multiply to -c; S2 kx(x+a) lost the k on the second term.
+- Unsigned boxes (no toggle) take 0 or more; a missing term is typed as 0.
+- Short phones (height under 620 px): Next sits under the one-line reason, the worked answer after it.
+- Rows: #103, Unlisted (3).
