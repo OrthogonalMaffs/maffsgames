@@ -13,11 +13,14 @@ THE GATE (canon 7.6.1; Jon's rulings of 26 Oct 2026): in normal mode at every si
 without knowing it. In Aa mode at 320x568, the recorded exception (OpenDyslexic cannot fit a long GCSE prompt and
 its feedback on that screen), the options must START above the fold, and an overflow beyond that is WARN.
 --laptop (ruling R2): at 1366x768 and 1280x720, normal mode, the last answer option AND Next after a wrong answer
-end above the fold. In every mode the page must not scroll sideways, on the asking screen or after a wrong answer.
+end above the fold. In every mode the page must not scroll sideways, on the asking screen or after a wrong answer, and
+no text in a figure (an SVG, a canvas, a .maffs-figure block) may be drawn under 12 px (Jon, 27 Oct 2026, the label
+floor: a figure that cannot fit with 12 px labels is listed with its reason, never shrunk further).
 A canvas question (no option group, input or submit) is measured by the canvas's own box and the buttons beside it.
 The lists in scripts/phone-fit-state.json, per mode ("normal", "aa", "laptop"), grow only when the measurement itself
 improves, with Jon's ruling, never because of a new fault: "known-failures" (each game with the entries at which it
-fails the gate: reported, never failed), "sideways" (each game with the sizes at which it scrolls sideways) and
+fails the gate: reported, never failed), "sideways" (each game with the sizes at which it scrolls sideways),
+"small-labels" (each game with the sizes at which a figure's text is under 12 px) and
 "unmeasurable" (the games this driver cannot measure, so they never read as passing). A failure not on its list, a
 listed entry that now passes or now measures, and an unmeasurable game not on its list each make the run exit 1. On a
 phone, Next below the fold is FAIL: reported, not a gate. Not run in CI yet (a later contract).
@@ -66,6 +69,7 @@ import os
 import random
 import sys
 import time
+import urllib.parse
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -133,6 +137,51 @@ CORRECT_INIT = r"""
     });
   } catch (err) {}
 
+  // Figure text, for the label floor (Jon, 27 Oct 2026: 12 px minimum for any text in a figure, in every mode). Canvas
+  // text cannot be read back from the bitmap, so every fillText and strokeText records its font size times the
+  // context's scale; a clearRect or fillRect over the whole canvas, or a new width or height, starts a fresh picture.
+  (function () {
+    const P = window.CanvasRenderingContext2D && CanvasRenderingContext2D.prototype;
+    if (!P) return;
+    function fontPx(font) {
+      const m = /(\d+(?:\.\d+)?)(px|pt)\b/.exec(font || '');
+      return m ? parseFloat(m[1]) * (m[2] === 'pt' ? 4 / 3 : 1) : null;
+    }
+    function scale(ctx) {
+      try { const t = ctx.getTransform(); return Math.sqrt(Math.abs(t.a * t.d - t.b * t.c)); } catch (e) { return 1; }
+    }
+    ['fillText', 'strokeText'].forEach(function (name) {
+      const o = P[name];
+      P[name] = function (text) {
+        try {
+          const t = String(text).trim(), f = fontPx(this.font), c = this.canvas;
+          if (t && f && c) {
+            (c.__pfText = c.__pfText || []).push({ px: f * scale(this), t: t.slice(0, 24) });
+            if (c.__pfText.length > 600) c.__pfText.shift();
+          }
+        } catch (e) {}
+        return o.apply(this, arguments);
+      };
+    });
+    ['clearRect', 'fillRect'].forEach(function (name) {
+      const o = P[name];
+      P[name] = function (x, y, w, h) {
+        try {
+          const c = this.canvas, t = this.getTransform();
+          const x0 = t.a * x + t.e, y0 = t.d * y + t.f, x1 = t.a * (x + w) + t.e, y1 = t.d * (y + h) + t.f;
+          if (c && !t.b && !t.c && Math.min(x0, x1) <= 0 && Math.min(y0, y1) <= 0 && Math.max(x0, x1) >= c.width - 1 && Math.max(y0, y1) >= c.height - 1) c.__pfText = [];
+        } catch (e) {}
+        return o.apply(this, arguments);
+      };
+    });
+    ['width', 'height'].forEach(function (k) {
+      const d = Object.getOwnPropertyDescriptor(HTMLCanvasElement.prototype, k);
+      if (!d || !d.set) return;
+      Object.defineProperty(HTMLCanvasElement.prototype, k, { configurable: true, enumerable: d.enumerable,
+        get: d.get, set: function (v) { this.__pfText = []; return d.set.call(this, v); } });
+    });
+  })();
+
   window.__pfLastAnswer = function () {
     const ev = (window.__mfgEvents || []).filter(function (r) { return r.e === 'question_answered'; });
     return ev.length ? { n: ev.length, c: ev[ev.length - 1].c } : { n: 0, c: null };
@@ -192,9 +241,42 @@ CORRECT_INIT = r"""
       n: els.length, canvas: canvas,
       bottom: els.length ? Math.max.apply(null, els.map(bottom)) : null,
       top: els.length ? Math.min.apply(null, els.map(top)) : null,
-      fold: fold(),
+      fold: fold(), label: window.__pfLabels(),
       sw: document.documentElement.scrollWidth, vw: window.innerWidth
     };
+  };
+
+  // The smallest text on screen in a figure (an SVG, a canvas, or a block marked .maffs-figure / .maffs-figure-card), in
+  // CSS pixels as drawn: an SVG label's font size times its on-screen scale, a canvas label's recorded size times the
+  // canvas's CSS scale, a figure block's computed font size. The header and the site footer are not figures.
+  window.__pfLabels = function () {
+    let best = null;
+    function take(px, what) {
+      if (px > 0 && (best === null || px < best.px)) best = { px: Math.round(px * 10) / 10, what: what.replace(/\s+/g, ' ').slice(0, 24) };
+    }
+    function out(el) { return el.closest('.site-footer, header'); }
+    function ownText(el) { return [...el.childNodes].some(function (n) { return n.nodeType === 3 && n.textContent.trim(); }); }
+    document.querySelectorAll('svg text, svg tspan').forEach(function (el) {
+      if (out(el) || !ownText(el)) return;
+      const r = el.getBoundingClientRect(), s = getComputedStyle(el);
+      if (r.width < 1 || r.height < 1 || s.visibility === 'hidden' || s.display === 'none' || s.opacity === '0') return;
+      if (el.ownerSVGElement && !vis(el.ownerSVGElement)) return;
+      const m = el.getScreenCTM();
+      take(parseFloat(s.fontSize) * (m ? Math.sqrt(Math.abs(m.a * m.d - m.b * m.c)) : 1), el.textContent.trim());
+    });
+    document.querySelectorAll('canvas').forEach(function (c) {
+      if (out(c) || !vis(c) || !c.__pfText || !c.__pfText.length || !c.width) return;
+      const k = c.getBoundingClientRect().width / c.width;
+      c.__pfText.forEach(function (t) { take(t.px * k, t.t); });
+    });
+    document.querySelectorAll('.maffs-figure, .maffs-figure-card').forEach(function (fig) {
+      if (out(fig) || !vis(fig) || fig.tagName === 'CANVAS' || fig.closest('svg')) return;
+      [fig].concat([...fig.querySelectorAll('*')]).forEach(function (el) {
+        if (el.closest('svg') || el.tagName === 'CANVAS' || !vis(el) || !ownText(el)) return;
+        take(parseFloat(getComputedStyle(el).fontSize), el.textContent.trim());
+      });
+    });
+    return best;
   };
 
   // tier 3's __mfgClickSubmit skips the option group, because a submit inside a
@@ -250,7 +332,7 @@ CORRECT_INIT = r"""
     }
     return {
       found: !!el, bottom: el ? bottom(el) : null, fold: fold(),
-      label: el ? (el.textContent || '').trim().slice(0, 30) : '',
+      label: el ? (el.textContent || '').trim().slice(0, 30) : '', text: window.__pfLabels(),
       sw: document.documentElement.scrollWidth, vw: window.innerWidth
     };
   };
@@ -540,7 +622,25 @@ def sideways_sizes(rows):
             if any(m and m["sw"] > m["vw"] for m in (r["ask"], r["wrong"]))]
 
 
-def classify(rows, mode="normal", known=(), unmeasurable_listed=False, sideways=()):
+LABEL_FLOOR = 12.0   # px: the smallest text allowed in a figure, every mode, Aa included (Jon, 27 Oct 2026)
+
+
+def small_text(rows):
+    """{size: (px, text)}: the sizes at which a figure's smallest text, on the asking screen or after a wrong answer, is
+    under LABEL_FLOOR (Jon's ruling with contract SHARD, 27 Oct 2026: "12 px minimum for any text in a figure, in every
+    mode, Aa included. A figure that can't fit with 12 px labels goes on the known-failures list with its reason; it
+    isn't shrunk further. Add it as a check in the gate"). A gate in every mode, with its own list."""
+    out = {}
+    for r in rows:
+        got = [t for t in ((r["ask"] or {}).get("text"), (r["wrong"] or {}).get("text")) if t]
+        if got:
+            t = min(got, key=lambda t: t["px"])
+            if t["px"] < LABEL_FLOOR - 0.05:
+                out[size_key(r)] = (t["px"], t["what"])
+    return out
+
+
+def classify(rows, mode="normal", known=(), unmeasurable_listed=False, sideways=(), small=()):
     """One game's sizes in one mode -> (status, severity, detail).
 
     THE GATE (gate_sizes) and SIDEWAYS SCROLL (sideways_sizes), each against its own list in phone-fit-state.json. A
@@ -549,14 +649,14 @@ def classify(rows, mode="normal", known=(), unmeasurable_listed=False, sideways=
     measure must be on the unmeasurable list (UNMEASURABLE), or it is UNMEASURABLE_NEW: it never reads as passing.
     HARD_FAIL, STALE and UNMEASURABLE_NEW make the run exit 1. On a phone, Next below the fold is FAIL: reported, not a
     gate (on a laptop it is the gate). In Aa at 320x568 an overflow that keeps the options starting above the fold is
-    WARN (Aa at 320)."""
-    known, sideways = set(known or ()), set(sideways or ())
+    WARN (Aa at 320). FIGURE TEXT (small_text) under 12 px is a third gate, against the small-labels list."""
+    known, sideways, small = set(known or ()), set(sideways or ()), set(small or ())
     aa = mode == "aa"
     asks = [r for r in rows if r["ask"]]
     wrongs = [r for r in rows if r["wrong"]]
     if not asks:
         why = rows[0]["note"] or "asking screen not reached"
-        if known or sideways:
+        if known or sideways or small:
             return STALE, -10 ** 3, "unmeasurable, but on a known-failures list: take it off (the lists only shrink)"
         if unmeasurable_listed:
             return UNMEASURABLE, -10 ** 7, why
@@ -581,23 +681,30 @@ def classify(rows, mode="normal", known=(), unmeasurable_listed=False, sideways=
         size, _, what = k.partition(" ")
         m = by[size]["wrong"] if what == "next" else by[size]["ask"]
         return m["bottom"] - m["fold"]
-    gate, side = gate_sizes(rows, mode), sideways_sizes(rows)
+    gate, side, tiny = gate_sizes(rows, mode), sideways_sizes(rows), small_text(rows)
+    tiny_s = lambda ks: ", ".join("%s (%.1f px: '%s')" % (k, tiny[k][0], tiny[k][1]) for k in ks)
     sev = max([over(k) for k in gate] + [0])
     new = [k for k in gate if k not in known]
     new_side = [k for k in side if k not in sideways]
-    if new or new_side:
+    new_tiny = sorted(k for k in tiny if k not in small)
+    if new or new_side or new_tiny:
         parts = (["below the fold, not on the known-failures list: " + ", ".join(edge(k) for k in new)] if new else []) + (
-            ["scrolls sideways, not on the sideways list: " + ", ".join(new_side)] if new_side else [])
+            ["scrolls sideways, not on the sideways list: " + ", ".join(new_side)] if new_side else []) + (
+            ["figure text under %d px, not on the small-labels list: %s" % (LABEL_FLOOR, tiny_s(new_tiny))] if new_tiny else [])
         return HARD_FAIL, sev, "; ".join(parts) + canvas
     stale = sorted(known - set(gate))
     stale_side = sorted(sideways - set(side))
-    if stale or stale_side:
+    stale_tiny = sorted(small - set(tiny))
+    if stale or stale_side or stale_tiny:
         parts = (["on the known-failures list at %s but passes there" % ", ".join(stale)] if stale else []) + (
-            ["on the sideways list at %s but does not scroll sideways there" % ", ".join(stale_side)] if stale_side else [])
+            ["on the sideways list at %s but does not scroll sideways there" % ", ".join(stale_side)] if stale_side else []) + (
+            ["on the small-labels list at %s but its figure text is %d px or more there" % (", ".join(stale_tiny), LABEL_FLOOR)]
+            if stale_tiny else [])
         return STALE, -10 ** 3, "; ".join(parts) + ": take it off (the lists only shrink)"
-    if gate or side:
+    if gate or side or tiny:
         parts = (["known failure: " + ", ".join(edge(k) for k in gate)] if gate else []) + (
-            ["known sideways scroll: " + ", ".join(side)] if side else [])
+            ["known sideways scroll: " + ", ".join(side)] if side else []) + (
+            ["known small figure text: " + tiny_s(sorted(tiny))] if tiny else [])
         return KNOWN_FAIL, sev, "; ".join(parts) + canvas
 
     scrolls = lambda r: aa and r["w"] == 320           # canon 7.6.1: Aa at 320 x 568 may scroll
@@ -639,10 +746,10 @@ STATE = os.path.join(HERE, "phone-fit-state.json")
 
 
 def load_state(mode):
-    """(known failures, unmeasurable games, sideways list) for one mode: "normal", "aa" or "laptop"."""
+    """(known failures, unmeasurable games, sideways list, small-labels list) for one mode: "normal", "aa" or "laptop"."""
     with open(STATE, encoding="utf-8") as fh:
         st = json.load(fh)
-    return st["known-failures"][mode], set(st["unmeasurable"][mode]), st["sideways"][mode]
+    return st["known-failures"][mode], set(st["unmeasurable"][mode]), st["sideways"][mode], st["small-labels"][mode]
 
 # --aa: the stored preference every game's Aa toggle reads on load.
 AA_INIT = "try { localStorage.setItem('mfg_accessible', 'true'); } catch (e) {}"
@@ -655,17 +762,17 @@ def write_report(results, path, elapsed, mode="normal", only=None, sizes=None, r
     """report=True (--sizes, not the canon sizes): nothing is judged against the lists and nothing fails the run."""
     sizes = sizes or SIZES
     aa = mode == "aa"
-    known, unmeasurable, sideways = ({}, set(), {}) if report else load_state(mode)
+    known, unmeasurable, sideways, small = ({}, set(), {}, {}) if report else load_state(mode)
     by = {}
     for r in results:
         by.setdefault(r["slug"], []).append(r)
     games = []
     # A list entry for a game no longer on the roster is stale too (a full run only).
-    for slug in sorted((set(known) | unmeasurable | set(sideways)) - set(by)) if not only else []:
+    for slug in sorted((set(known) | unmeasurable | set(sideways) | set(small)) - set(by)) if not only else []:
         games.append((STALE, -10 ** 3, slug, [], "on a phone-fit list but not measured (not on the roster): take it off"))
     for slug, rows in by.items():
         rows.sort(key=lambda r: r["w"])
-        st, sev, detail = classify(rows, mode, known.get(slug, ()), slug in unmeasurable, sideways.get(slug, ()))
+        st, sev, detail = classify(rows, mode, known.get(slug, ()), slug in unmeasurable, sideways.get(slug, ()), small.get(slug, ()))
         if report:
             st = {HARD_FAIL: BELOW_REPORT, UNMEASURABLE_NEW: UNMEASURABLE}.get(st, st)
         games.append((st, sev, slug, rows, detail))
@@ -679,12 +786,13 @@ def write_report(results, path, elapsed, mode="normal", only=None, sizes=None, r
     lines = [
         "# Phone fit report",
         "",
-        "Generated by `scripts/measure-phone-fit.py` on %s (%d games, %.0f min). **A report, with two gates** (canon §7.6.1,"
+        "Generated by `scripts/measure-phone-fit.py` on %s (%d games, %.0f min). **A report, with its gates** (canon §7.6.1,"
         " Jon's rulings of 26 Oct 2026): the last answer option ends above the fold (Aa at 320: the options start above it;"
-        " on a laptop, Next after a wrong answer too), and the page never scrolls sideways. A failure"
+        " on a laptop, Next after a wrong answer too), the page never scrolls sideways, and no text in a figure is under"
+        " %d px. A failure"
         " not on its list in `scripts/phone-fit-state.json` (HARD FAIL), a listed entry that now passes"
         " (STALE) or an unmeasurable game not on its list makes the run exit 1; KNOWN FAIL is reported, never failed."
-        % (datetime.date.today().isoformat(), len(games), elapsed / 60),
+        % (datetime.date.today().isoformat(), len(games), elapsed / 60, LABEL_FLOOR),
         "The standard is canon §7.6.1, the phone rule. Regenerate it with the same command; do not edit it by hand.",
         "",
     ] + (["**Aa (OpenDyslexic) mode on** (`--aa`).", ""] if aa else []) + (
@@ -711,7 +819,7 @@ def write_report(results, path, elapsed, mode="normal", only=None, sizes=None, r
         lines.append("| %s | %d |" % (k, counts[k]))
     szs = ["%d×%d" % sz for sz in sizes]
     lines += ["", "| Game | Status | " + " | ".join("Asking " + z for z in szs) + " | " + " | ".join("Wrong " + z for z in szs)
-              + " | Sideways at %d | Notes |" % sizes[0][0], "|---|---|" + "---|" * (2 * len(szs)) + "---|---|"]
+              + " | Sideways at %d | Smallest figure text | Notes |" % sizes[0][0], "|---|---|" + "---|" * (2 * len(szs)) + "---|---|---|"]
     for st, sev, slug, rows, detail in games:
         side = "–"
         for r in rows:
@@ -720,8 +828,12 @@ def write_report(results, path, elapsed, mode="normal", only=None, sizes=None, r
             ms = [m for m in (r["ask"], r["wrong"]) if m]
             if ms:
                 side = "**yes**" if any(m["sw"] > m["vw"] for m in ms) else "no"
+        texts = [(t["px"], size_key(r)) for r in rows for t in ((r["ask"] or {}).get("text"), (r["wrong"] or {}).get("text")) if t]
+        least = min(texts) if texts else None
+        small_cell = "–" if not least else ("%s%.1f px at %s" % ("**" if least[0] < LABEL_FLOOR - 0.05 else "", least[0], least[1])
+                                            + ("**" if least[0] < LABEL_FLOOR - 0.05 else ""))
         cells = (["`%s`" % slug, st] + ([cell(r["ask"]) for r in rows] or ["–"] * len(szs))
-                 + ([cell(r["wrong"]) for r in rows] or ["–"] * len(szs)) + [side, detail.replace("|", "/")])
+                 + ([cell(r["wrong"]) for r in rows] or ["–"] * len(szs)) + [side, small_cell, detail.replace("|", "/")])
         lines.append("| " + " | ".join(cells) + " |")
 
     # The start screen, measured and reported, never judged (Jon's correction to PHONE-FIT-DRIVER, 26 Oct 2026: a
@@ -881,9 +993,29 @@ def selftest():
          False, HARD_FAIL, ()),
         ("canvas: measured now, still on the unmeasurable list", [cv(r) for r in fits], "normal", (), True, STALE, ()),
     ]
+    # The label floor (Jon, 27 Oct 2026): figure text under 12 px, on the asking screen or after a wrong answer, a gate
+    # in every mode with its own list. Planted: (name, rows, mode, wanted status, small-labels list).
+    def txt(r, ask=None, wrong=None):
+        r = dict(r)
+        r["ask"] = dict(r["ask"], text={"px": ask, "what": "A"} if ask else None)
+        r["wrong"] = dict(r["wrong"], text={"px": wrong, "what": "B"} if wrong else None)
+        return r
+    label_cases = [
+        ("figure text 12 px everywhere", [txt(r, 12.0, 14.0) for r in fits], "normal", "PASS", ()),
+        ("figure text 11.2 px at 320, not listed", [txt(fits[0], 11.2), txt(fits[1], 13), fits[2]], "aa", HARD_FAIL, ()),
+        ("figure text 9 px after a wrong answer at 375, not listed", [fits[0], txt(fits[1], 13, 9), fits[2]], "normal", HARD_FAIL, ()),
+        ("figure text 7 px at 320, listed", [txt(fits[0], 7.2), fits[1], fits[2]], "aa", KNOWN_FAIL, ("320x568",)),
+        ("on the small-labels list at 320 but 12 px there", [txt(fits[0], 12.0), fits[1], fits[2]], "normal", STALE, ("320x568",)),
+        ("laptop: figure text 10 px at 1280", [lfit[0], txt(lfit[1], 10)], "laptop", HARD_FAIL, ()),
+        ("no figure text is not judged", fits, "normal", "PASS", ()),
+    ]
     ok = True
     for name, rows, mode, known, unl, want, sw in side_cases + lap_cases + canvas_cases:
         got = classify(rows, mode, known, unl, sw)[0]
+        print("  %s  %-52s %s" % ("ok  " if got == want else "FAIL", name, got))
+        ok = ok and got == want
+    for name, rows, mode, want, small in label_cases:
+        got = classify(rows, mode, (), False, (), small)[0]
         print("  %s  %-52s %s" % ("ok  " if got == want else "FAIL", name, got))
         ok = ok and got == want
     for name, rows, aa, known, unl, want in cases:
@@ -919,11 +1051,13 @@ def selftest():
             if not sizes or set(sizes) - allowed[mode]:
                 print("  FAIL  phone-fit-state.json: known-failures %s/%s has no entries or an unknown one" % (mode, slug))
                 ok = False
-        for slug, sizes in st["sideways"][mode].items():
-            if not sizes or set(sizes) - (laptop if mode == "laptop" else phone):
-                print("  FAIL  phone-fit-state.json: sideways %s/%s has no sizes or an unknown one" % (mode, slug))
-                ok = False
+        for key in ("sideways", "small-labels"):
+            for slug, sizes in st[key][mode].items():
+                if not sizes or set(sizes) - (laptop if mode == "laptop" else phone):
+                    print("  FAIL  phone-fit-state.json: %s %s/%s has no sizes or an unknown one" % (key, mode, slug))
+                    ok = False
     ok = canvas_plant() and ok
+    ok = label_plant() and ok
     print("selftest: %s" % ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
 
@@ -959,6 +1093,45 @@ def canvas_plant():
             a = pg.evaluate("window.__pfAsking()")
             good = bool(a["n"]) and want(a)
             print("  %s  %-52s %s" % ("ok  " if good else "FAIL", name, "canvas=%s bottom %s / %s" % (a["canvas"], a["bottom"], a["fold"])))
+            ok = ok and good
+            pg.close()
+        b.close()
+    return ok
+
+
+def label_plant():
+    """The page side of the label floor, in Chromium on planted pages: an SVG label drawn small by its viewBox, a canvas
+    label drawn at 24 px on a canvas shown at half its width, a .maffs-figure block's text, and text in the header (not a
+    figure) are each measured as drawn; nothing per game."""
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        print("  FAIL  label plant: Playwright is not installed")
+        return False
+    head = ("<!doctype html><html><head><meta name='viewport' content='width=device-width'></head><body style='margin:0'>"
+            "<header style='font-size:9px'><svg width='40' height='20'><text x='0' y='15' font-size='9'>logo</text></svg></header>")
+    canvas = ("<canvas id='c' width='600' height='200' style='width:300px;height:100px'></canvas><script>"
+              "var x=document.getElementById('c').getContext('2d');x.font='bold 30px sans-serif';x.fillText('old',0,40);"
+              "x.clearRect(0,0,600,200);x.font='24px sans-serif';x.fillText('y = 3',10,40);</script>")
+    plants = [
+        ("label plant: an SVG label shrunk by its viewBox (14 x 300/600)", head +
+         "<svg viewBox='0 0 600 200' style='width:300px'><text x='10' y='40' font-size='14'>A</text></svg></body></html>", 7.0),
+        ("label plant: a canvas label at 24 px, the canvas at half size", head + canvas + "</body></html>", 12.0),
+        ("label plant: a .maffs-figure block's 11 px text", head +
+         "<div class='maffs-figure'><span style='font-size:11px'>10 cm</span></div></body></html>", 11.0),
+        ("label plant: header text only (not a figure)", head + "<p>Question</p></body></html>", None),
+    ]
+    ok = True
+    with sync_playwright() as p:
+        b = p.chromium.launch()
+        for name, html, want in plants:
+            pg = b.new_page(viewport={"width": 320, "height": 568})
+            pg.add_init_script(CORRECT_INIT)                 # before the page's own script draws, as on a game page
+            pg.goto("data:text/html;charset=utf-8," + urllib.parse.quote(html))
+            got = pg.evaluate("window.__pfLabels()")
+            px = got["px"] if got else None
+            good = (px is None) if want is None else (px is not None and abs(px - want) < 0.3)
+            print("  %s  %-52s %s" % ("ok  " if good else "FAIL", name, "%s px" % px if got else "no figure text"))
             ok = ok and good
             pg.close()
         b.close()

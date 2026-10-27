@@ -1,5 +1,5 @@
 {
-  "note": "canon 7.6.1, Jon's rulings of 26 Oct 2026. Read by scripts/measure-phone-fit.py. Per mode (normal, aa, laptop): known-failures, each game with the entries at which it fails the gate (phones: the size; laptop, ruling R2: the size and 'option' or 'next'), reported, never failed; sideways, each game with the sizes at which a measured screen scrolls sideways; unmeasurable, each game the driver cannot measure, with the reason (they never read as passing). Take a game (or an entry) off in the PR that fixes it. A list grows only when the measurement itself improves, with Jon's ruling, never because of a new fault. Recorded 26 Oct 2026 (branch claude/theme-distinctly-average-2), re-recorded the same day under PHONE-FIT-DRIVER (docs/audits/phone-fit-runs-2026-10-26/), and on 27 Oct 2026 under FOLD-COMPONENTS: the laptop and sideways lists added and the canvas games measured (docs/audits/fold-components-2026-10-27.md).",
+  "note": "canon 7.6.1, Jon's rulings of 26 Oct 2026. Read by scripts/measure-phone-fit.py. Per mode (normal, aa, laptop): known-failures, each game with the entries at which it fails the gate (phones: the size; laptop, ruling R2: the size and 'option' or 'next'), reported, never failed; sideways, each game with the sizes at which a measured screen scrolls sideways; unmeasurable, each game the driver cannot measure, with the reason (they never read as passing); small-labels, each game with the sizes at which a figure's text is under 12 px (Jon, 27 Oct 2026, the label floor). Take a game (or an entry) off in the PR that fixes it. A list grows only when the measurement itself improves, with Jon's ruling, never because of a new fault. Recorded 26 Oct 2026 (branch claude/theme-distinctly-average-2), re-recorded the same day under PHONE-FIT-DRIVER (docs/audits/phone-fit-runs-2026-10-26/), and on 27 Oct 2026 under FOLD-COMPONENTS: the laptop and sideways lists added and the canvas games measured (docs/audits/fold-components-2026-10-27.md).",
   "known-failures": {
     "normal": {
       "52dle": [
@@ -618,6 +618,11 @@
         "390x844"
       ]
     },
+    "laptop": {}
+  },
+  "small-labels": {
+    "normal": {},
+    "aa": {},
     "laptop": {}
   }
 }
