@@ -12,7 +12,10 @@
  *   MaffsKeypad.mount(el, {targets, keys, maxLength, keepInView, foldInset})
  *       el          where the keys are drawn (shown on touch screens only)
  *       targets     one or more <input> elements, in order; the first is active to begin with
- *       keys        {minus: true} adds a minus key (off by default): it types "-" into an empty target
+ *       keys        {minus: true} adds a minus key (off by default): it types "-" into an empty target.
+ *                   {fraction: true} adds a "/" key (off by default, the fraction variant): it types "/" once, into a
+ *                   target that already holds a digit and no point, never first; no point is typed after it. Read the
+ *                   answer with MaffsAnswer.fraction(); a game never parses it itself.
  *       maxLength   the most characters a target takes (default 12)
  *       keepInView  an element (say the answer row) to keep in the window with the keys when a target
  *                   is tapped; foldInset is the height of anything fixed at the window's foot (a footer)
@@ -37,7 +40,7 @@
   var KEYS = [
     ['7', 'in', '7'], ['8', 'in', '8'], ['9', 'in', '9'], ['DEL', 'del', '', 'Delete', 'op'], ['C', 'clear', '', 'Clear', 'op'],
     ['4', 'in', '4'], ['5', 'in', '5'], ['6', 'in', '6'], ['.', 'in', '.', 'Decimal point'], ['−', 'minus', '-', 'Minus', 'op'],
-    ['1', 'in', '1'], ['2', 'in', '2'], ['3', 'in', '3'], ['0', 'in', '0', null, 'wide']
+    ['1', 'in', '1'], ['2', 'in', '2'], ['3', 'in', '3'], ['0', 'in', '0', null, 'wide'], ['/', 'frac', '/', 'Fraction slash', 'op']
   ];
 
   // Type one key into an input: digits and the point up to the length limit, DEL, C, and a minus into
@@ -47,7 +50,8 @@
     if (act === 'clear') v = '';
     else if (act === 'del') v = v.slice(0, -1);
     else if (act === 'minus') { if (v !== '') return false; v = '-'; }
-    else if (act === 'in' && /^[0-9.]$/.test(val) && v.length < max) v += val;
+    else if (act === 'frac') { if (!/\d/.test(v) || v.indexOf('/') !== -1 || v.indexOf('.') !== -1 || v.length >= max) return false; v += '/'; }
+    else if (act === 'in' && /^[0-9.]$/.test(val) && v.length < max && !(val === '.' && v.indexOf('/') !== -1)) v += val;
     else return false;
     t.value = v;
     t.dispatchEvent(new Event('input', { bubbles: true }));
@@ -88,11 +92,13 @@
 
     var panel = null;
     if (el) {
-      var minus = !!(opts.keys && opts.keys.minus);
+      var minus = !!(opts.keys && opts.keys.minus), frac = !!(opts.keys && opts.keys.fraction);
       var h = '<div class="maffs-keypad-panel" role="group" aria-label="Keypad"><div class="maffs-keypad-keys">';
       KEYS.forEach(function (k) {
         if (k[1] === 'minus' && !minus) return;
+        if (k[1] === 'frac' && !frac) return;
         var cls = (k[4] ? ' ' + k[4] : '') + (k[0] === '.' && !minus ? ' wide' : '');
+        if (k[0] === '0' && frac) cls = '';          // the slash takes the fifth place, so the zero is one key wide
         h += '<button type="button" class="maffs-keypad-key' + cls + '" data-act="' + k[1] + '" data-val="' + k[2] + '"' +
           (k[3] ? ' aria-label="' + k[3] + '"' : '') + '>' + k[0] + '</button>';
       });
