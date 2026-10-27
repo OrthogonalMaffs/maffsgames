@@ -4371,12 +4371,13 @@ def _powers_roots_7a198409(q):
 
 
 def _area_594fb670(q):
-    """The 12 m label belongs on the dashed height line (x = 90), not out beside the slanted side."""
-    old = '<text x="114" y="86" text-anchor="start">12 m</text>'
-    if old in q["diagram"]:
-        q["diagram"] = q["diagram"].replace(old, '<text x="96" y="104" text-anchor="start">12 m</text>')
-        return True
-    return False
+    """The 12 m label belongs on the dashed height line (x = 90), beside its lower half where the triangle is wide enough to hold it,
+    not out beside the slanted side."""
+    m = re.search(r'<text [^>]*>12 m</text>', q["diagram"])
+    if not m or 'x="96"' in m.group(0):
+        return False
+    q["diagram"] = q["diagram"].replace(m.group(0), '<text x="96" y="146" text-anchor="start">12 m</text>')
+    return True
 
 
 def _metric_4f223446(q):
