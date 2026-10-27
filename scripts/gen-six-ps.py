@@ -3933,8 +3933,8 @@ def pie_selftest(sample, friendly_set):
     """pie_faults on planted faults: a clean question passes, each fault is caught. [] if all hold."""
     import copy
     base = {k: next(q for q in sample if q["stage"] == st and q["kind"] == kd) for k, (st, kd) in {
-        "frac": (1, "direct"), "amount": (2, "direct"), "cant": (2, "cant"), "draw": (3, "draw"),
-        "two": (4, "two"), "total": (5, "total")}.items()}
+        "frac": (1, "direct"), "amount": (2, "direct"), "cant": (4, "two"), "draw": (3, "draw"),
+        "two": (4, "totals"), "total": (5, "total")}.items()}
     out = []
     for k, q in base.items():
         if pie_faults(q, friendly_set):
@@ -3949,7 +3949,7 @@ def pie_selftest(sample, friendly_set):
     plant("an amount found by dividing by 100", "amount",
           lambda q: q["answer"].update(value=q["charts"][0]["total"] * q["charts"][0]["sectors"][0]["angle"] / 100))
     plant("angles that do not make 360", "amount", lambda q: q["charts"][0]["sectors"][0].update(angle=q["charts"][0]["sectors"][0]["angle"] + 5))
-    plant("a number given for a missing total", "cant", lambda q: q["answer"].update(correct=(q["answer"]["correct"] + 1) % 4))
+    plant("a stand called bigger where the totals are missing", "cant", lambda q: q["answer"].update(correct=(q["answer"]["correct"] + 1) % 4))
     plant("a wrong angle", "draw", lambda q: q["answer"].update(value=q["answer"]["value"] + 1))
     plant("the wrong stand called bigger", "two", lambda q: q["answer"].update(correct=(q["answer"]["correct"] + 1) % 4))
     plant("a slip equal to the key", "total",

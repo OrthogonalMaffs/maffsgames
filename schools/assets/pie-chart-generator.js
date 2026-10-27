@@ -10,10 +10,10 @@
    Five stages, 12 slots each (the slot fixes what the question is about, rng only chooses the stand, the pies and the
    amounts the slot leaves open, so the 12 are always 12 different questions):
      1 read it        the fraction of the whole a sector shows
-     2 find the amount  angle / 360 x total (and "you can't tell" where the total is missing)
+     2 find the amount  angle / 360 x total, the total given
      3 draw it        from a frequency table, the angle of one named sector
      4 can you tell?  two charts, or one: "Yes, it's ..." or "You can't tell"
-     5 work backwards one sector's angle and frequency given: the total, another sector, or "you can't tell"
+     5 work backwards one sector's angle and frequency given: the total
    Every angle is a whole number of degrees and the angles of a chart make 360; every amount is a whole number.
    `friendly` is true when every division the method makes is by a friendly divisor (FRIENDLY) and gives a whole number:
    those questions can be tried without a calculator.
@@ -123,8 +123,10 @@
   }
 
   // ---------------------------------------------------------------- stage 2: find the amount
+  // Jon's spec: stage 2 is "find an amount given the total". The 'cant' kind below is kept for the game that loads this file;
+  // "you can't tell" belongs to stage 4, so the bank's slots are all 'direct'.
   var S2 = [[90, 'direct'], [180, 'direct'], [120, 'direct'], [60, 'direct'], [45, 'direct'], [30, 'direct'],
-            [270, 'direct'], [150, 'direct'], [105, 'direct'], [35, 'direct'], [90, 'cant'], [60, 'cant']];
+            [270, 'direct'], [150, 'direct'], [135, 'direct'], [210, 'direct'], [105, 'direct'], [35, 'direct']];
   var TOTALS = [60, 72, 80, 96, 100, 120, 144, 150, 160, 180, 200, 216, 240, 288, 300, 360, 400, 480, 600];
 
   function stage2(slot, rng) {
@@ -276,9 +278,10 @@
   }
 
   // ---------------------------------------------------------------- stage 5: work backwards
+  // Jon's spec: stage 5 is "work backwards from one sector's angle and frequency to the total". The 'other' and 'cant' kinds
+  // below are kept for the game that loads this file; the bank's slots are all 'total'.
   var S5 = [['total', 90, 20], ['total', 60, 15], ['total', 120, 45], ['total', 45, 12], ['total', 30, 7], ['total', 72, 18],
-            ['other', 60, 10, 150], ['other', 90, 18, 120], ['other', 45, 9, 135], ['other', 120, 40, 30],
-            ['cant', 90, 60, 30], ['cant', 120, 40, 10]];
+            ['total', 150, 25], ['total', 135, 27], ['total', 40, 6], ['total', 80, 16], ['total', 36, 9], ['total', 100, 20]];
 
   function stage5(slot, rng) {
     var s = S5[slot], kind = s[0], a = s[1], stand = pick(rng, STANDS), pie = pick(rng, PIES);
