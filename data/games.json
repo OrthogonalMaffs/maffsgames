@@ -528,6 +528,11 @@
    "slug": "hc-factor",
    "search_phrase": "Expanding and Factorising",
    "description": "Expand brackets and factorise, from one bracket to x² + bx + c with the sign grid, typing the answer into bracket-shaped boxes."
+  },
+  {
+   "slug": "who-ate-all-the-pies",
+   "search_phrase": "Pie Charts",
+   "description": "Read pie charts, find amounts, draw them from a table, say when you can't tell, and work back to the total."
   }
  ],
  "pages": {
