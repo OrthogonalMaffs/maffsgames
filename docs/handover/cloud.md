@@ -54,7 +54,7 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 ## 2026-10-27 (cloud): SHARD (contract `docs/handover/contracts/2026-10-27-shard.md`). **IN PROGRESS: branch `claude/shard`, worktree `/home/user/wt-sh`.**
 
 - Done: setup cause fixed (28b610e: the per-job DejaVu fetch from Launchpad, 5-7 s to up to 84 s a job from 26 Oct; now `scripts/fonts/dejavu/`); interface, ci-groups.py, plants 7-8 (4ec63b3); canon §7.8.1, CLAUDE.md (89b33b1). #564 merged (61d82fc, main 40487337743 green); remote `claude/jpib-split` not deleted (proxy 403; Jon or home lane).
-- **Checkpoint (27 Oct, 11:00):** five agents migrating 12 verifiers (11 hand-split + Bearing Blitz, 88%), testing against `/home/user/wt-ref` (origin/main); logs: scratchpad `agents/a1..a5`. Their edits are snapshotted in a WIP commit, NOT yet validated. **Next:** review each agent's report and diff, selftests, check-changed, PR, merge on green, record before/after part times here, stop.
+- **Checkpoint (11:00):** five agents migrating 12 verifiers (11 hand-split + Bearing Blitz, 88%), testing against `/home/user/wt-ref` (origin/main); logs: scratchpad `agents/a1..a5`. Their edits are snapshotted in a WIP commit, NOT yet validated. **Next:** review each agent's report and diff, selftests, check-changed, PR, merge on green, record before/after part times here, stop.
 
 ## 2026-10-27 (cloud): FOLD-COMPONENTS (contract `docs/handover/contracts/2026-10-27-fold-components.md`). **IN PROGRESS; checkpoint 27 Oct.**
 
