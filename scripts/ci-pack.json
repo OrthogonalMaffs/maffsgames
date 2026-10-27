@@ -24,7 +24,7 @@
   "Coordinate Geometry Dash (every key recomputed from its question; exactly one correct option, equations compared as curves; every option marked in Chromium)": "6",
   "Core Maths Paper 1 (every key recomputed from its stem and charts; options distinct in value; every key marked in Chromium)": "13",
   "Core Maths Paper 1 tax, NI and student loan (recomputed with uk_rates)": "23",
-  "Core Maths Paper 2A (independent recomputation + rendered page)": "6",
+  "Core Maths Paper 2A (independent recomputation + rendered page)": "7",
   "Core Maths Paper 2B (Q28's policy recomputed from its table, no wrong option picking the same policy; every option marked in Chromium)": "11",
   "Core Maths Paper 2C (every option marked against its key or accepted set; Jon's rulings on Q12 and Q35; a double-tap on Next answers nothing; Chromium)": "24",
   "Correlation or Coincidence (bank, graphs' r, labels before the answer, phone fit)": "71",
@@ -109,6 +109,8 @@
   "Parent guides (every stated figure recomputed from the page)": "16",
   "Partial Fractions Duel (every key solved from its own stem with SymPy, every option checked and clicked)": "11",
   "Percentage Flip (every key and every figure in the working recomputed; typed answers marked right and wrong in Chromium, both ways round)": "6",
+  "Possibly, Maybe (the 60-question fixed-seed bank and 20 seeds of every slot recomputed from each question's own data and ask, never from the bank's or the game's code: counts of sectors and counters, listed outcomes by enumeration, products, complements, expected numbers, relative frequencies, the fair-dice rule, every tree probability by exact fractions; fractions typed in two boxes marked by value against an independent marker on probe answers; every picture read back from its SVG; the page played at six sizes; planted faults each caught), part 1 of 2": "19",
+  "Possibly, Maybe (the 60-question fixed-seed bank and 20 seeds of every slot recomputed from each question's own data and ask, never from the bank's or the game's code: counts of sectors and counters, listed outcomes by enumeration, products, complements, expected numbers, relative frequencies, the fair-dice rule, every tree probability by exact fractions; fractions typed in two boxes marked by value against an independent marker on probe answers; every picture read back from its SVG; the page played at six sizes; planted faults each caught), part 2 of 2": "21",
   "Prime Sprint (every target factorised independently, every prime tap judged against a model in Chromium, the feedback and working recomputed)": "35",
   "Prime or Composite (every key, hint and explanation recomputed; every number marked both ways in Chromium)": "31",
   "Prisoner's Dilemma (no answers to mark: the payoffs, every opponent's play against its stated strategy, every score, count and stated figure recomputed; games and a tournament played in Chromium)": "42",
@@ -254,6 +256,12 @@
    "how": "kept from the pack (5 needed)",
    "label": "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test)",
    "parts": 5,
+   "tier": "content"
+  },
+  "verify-possibly-maybe.py": {
+   "how": "chosen from 25 timed unit(s)",
+   "label": "Possibly, Maybe (the 60-question fixed-seed bank and 20 seeds of every slot recomputed from each question's own data and ask, never from the bank's or the game's code: counts of sectors and counters, listed outcomes by enumeration, products, complements, expected numbers, relative frequencies, the fair-dice rule, every tree probability by exact fractions; fractions typed in two boxes marked by value against an independent marker on probe answers; every picture read back from its SVG; the page played at six sizes; planted faults each caught)",
+   "parts": 2,
    "tier": "content"
   },
   "verify-shape-shifter.py": {
