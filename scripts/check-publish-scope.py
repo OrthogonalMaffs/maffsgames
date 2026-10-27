@@ -11,6 +11,11 @@ would be published silently. This check closes that gap (canon §7.7):
 
 A new top-level path fails rule 1 until it is classified: add it to SITE here, or to _config.yml's
 exclude list. Stdlib only, about a second. `--selftest` runs the injected faults.
+
+Two listings for the live check after a change to the exclude list (contract FOLD-COMPONENTS item 6, 27 Oct 2026):
+`--served [PREFIX ...]` counts what Jekyll publishes under each prefix (default docs/ and scripts/), by folder and file
+type; `--live-urls` prints, for every exclude pattern and every folder under docs/, one excluded file as its live URL,
+each of which must return 404 (a Markdown file twice: Pages renders a .md without front matter as .html too).
 """
 import fnmatch
 import os
@@ -133,7 +138,45 @@ def selftest():
         if not check(*args):
             raise SystemExit(f"selftest: fault not caught: {name}")
     assert excluded("docs/sub/a.md", ["docs/*.md"])  # * crosses / as in Jekyll
+    assert served(files, pats, ["docs/", "scripts/"]) == {("docs/art", ".webp"): 1}, served(files, pats, ["docs/", "scripts/"])
+    urls = [u for _, u in live_urls(files, pats)]
+    assert urls == [LIVE + "docs/todo.md", LIVE + "docs/todo.html", LIVE + "scripts/s.py"], urls
+    assert not any(u.endswith("docs/art/x.webp") for u in urls), "a published file listed as one that must 404"
     print(f"selftest: clean case passes, {len(faults)} injected faults each FAIL")
+
+
+LIVE = "https://maffsgames.co.uk/"
+
+
+def served(files, patterns, prefixes):
+    """{(folder, extension): count} of the published files under the prefixes."""
+    out = {}
+    for f in files:
+        if any(f.startswith(p) for p in prefixes) and not special(f) and not excluded(f, patterns):
+            k = (os.path.dirname(f), os.path.splitext(f)[1] or "(none)")
+            out[k] = out.get(k, 0) + 1
+    return out
+
+
+def live_urls(files, patterns):
+    """[(why, url)]: one excluded file for each exclude pattern and each folder under docs/, as the live URLs that must
+    404; a Markdown file also as the .html Pages would render it to."""
+    hidden = sorted(f for f in files if excluded(f, patterns) and not special(f))
+    picks = []
+    for pat in patterns:
+        hit = next((f for f in hidden if fnmatch.fnmatchcase(f, pat) or f.startswith(pat)), None)
+        if hit:
+            picks.append(("exclude %s" % pat, hit))
+    for d in sorted({os.path.dirname(f) for f in hidden if f.startswith("docs/") and f.count("/") >= 2}):
+        hit = next(f for f in hidden if os.path.dirname(f) == d)
+        picks.append(("folder %s/" % d, hit))
+    out, seen = [], set()
+    for why, f in picks:
+        for path in [f] + ([f[:-3] + ".html"] if f.endswith(".md") else []):
+            if path not in seen:
+                seen.add(path)
+                out.append((why, LIVE + path))
+    return out
 
 
 def main():
@@ -148,6 +191,17 @@ def main():
         patterns = read_excludes(fh.read())
     if not patterns:
         raise SystemExit("_config.yml has no exclude list")
+    if "--served" in sys.argv:
+        prefixes = [a for a in sys.argv[sys.argv.index("--served") + 1:] if not a.startswith("--")] or ["docs/", "scripts/"]
+        got = served(files, patterns, prefixes)
+        for (folder, ext), n in sorted(got.items()):
+            print("%5d  %s/*%s" % (n, folder, ext))
+        print("published under %s: %d file(s)" % (", ".join(prefixes), sum(got.values())))
+        return
+    if "--live-urls" in sys.argv:
+        for why, url in live_urls(files, patterns):
+            print("%-44s %s" % (why, url))
+        return
 
     def read(p):
         with open(os.path.join(ROOT, p), encoding="utf-8", errors="replace") as fh:

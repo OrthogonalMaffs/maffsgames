@@ -5,6 +5,9 @@
 # and no SITE file may link to or fetch an excluded one. A new top-level folder therefore
 # fails CI until it is classified in both places.
 #
+# docs/: only docs/art/ is SITE. The four internal folders are excluded whole (FOLD-COMPONENTS item 6, 27 Oct 2026), so a
+# run's data or a new file type in them is never published; until then they were covered by file type alone.
+#
 # Format: one plain "  - path" per line (the CI check reads it without a YAML library).
 # A path excludes itself and everything under it; * matches across folders.
 exclude:
@@ -23,5 +26,7 @@ exclude:
   - docs/screens
   - docs/screenshots
   - docs/sources
-  - docs/audits/findings
-  - docs/audits/phone-fit-runs-2026-10-26
+  - docs/audits
+  - docs/handover
+  - docs/history
+  - docs/escape-room-drafts
