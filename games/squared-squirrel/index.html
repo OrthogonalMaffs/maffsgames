@@ -1053,7 +1053,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
         (last ? 'Start the questions' : 'Show the next step') + '</button></div>';
       wrap.querySelector('#stepBtn').addEventListener('click', function () { if (last) nextQuestion(); else { at++; draw(); } });
       MaffsLock.fresh(wrap);   // a double-tap reveals one step, never two
-      MaffsScroll.reveal(wrap.querySelector('#stepBtn'), { inset: FOOTER_PX });
+      MaffsScroll.reveal(wrap.querySelector('#stepBtn'), {});
     }
     draw();
   }

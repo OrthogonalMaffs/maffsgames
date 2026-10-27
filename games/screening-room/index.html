@@ -1015,7 +1015,7 @@ function showCalcResult(isCorrect, q) {
   } else {
     MaffsNext.wrong({ mount: document.getElementById('nextWrap'), onAdvance: nextQuestion, label: 'Next Question' });
   }
-  MaffsScroll.reveal(result, { inset: 0, up: true });
+  MaffsScroll.reveal(result, { up: true });
 
   mfg('question_answered', { game_slug: 'screening-room', level: currentLevel, question_index: qIdx + 1, correct: isCorrect, phase: 3 });
 }

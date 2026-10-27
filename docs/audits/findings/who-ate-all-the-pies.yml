@@ -1,0 +1,11 @@
+# Findings register for who-ate-all-the-pies (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# New build (contract WHO-ATE-ALL-THE-PIES, 27 Oct 2026; SR-30: checked from its first PR by scripts/verify-who-ate-all-the-pies.py).
+# Not yet audited: tranche says so, head is main when the file was made, served is empty. A fix PR sets status: fixed
+# and pr: <n> on the entries it closes.
+game: who-ate-all-the-pies
+audited:
+  tranche: none (not yet audited)
+  head: 285a42a
+  date: 2026-10-27
+  served: {}
+findings: []

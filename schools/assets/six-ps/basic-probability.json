@@ -11,7 +11,7 @@
    },
    "band": 1,
    "calc": false,
-   "stem": "Which word best describes how likely this is? You will breathe today.",
+   "stem": "Which word best describes how likely this is? You will roll a number less than 7 on a standard dice.",
    "diagram": null,
    "format": "choice",
    "answer": {
@@ -36,10 +36,14 @@
     }
    ],
    "worked": [
-    "Breathing today must happen.",
+    "The faces of a standard dice are 1 to 6, so every roll is less than 7.",
     "Something that must happen is certain."
    ],
-   "slip": []
+   "slip": [],
+   "likelihood": {
+    "n": 6,
+    "d": 6
+   }
   },
   {
    "id": "basic-probability-f1241cb8",
@@ -50,7 +54,7 @@
    },
    "band": 1,
    "calc": false,
-   "stem": "Which word best describes how likely this is? You will roll a 7 on a standard die.",
+   "stem": "Which word best describes how likely this is? You will roll a 7 on a standard dice.",
    "diagram": null,
    "format": "choice",
    "answer": {
@@ -75,10 +79,14 @@
     }
    ],
    "worked": [
-    "The faces of a standard die are 1 to 6, so a 7 cannot happen.",
+    "The faces of a standard dice are 1 to 6, so a 7 cannot happen.",
     "Something that cannot happen is impossible."
    ],
-   "slip": []
+   "slip": [],
+   "likelihood": {
+    "n": 0,
+    "d": 6
+   }
   },
   {
    "id": "basic-probability-bad59e87",
@@ -89,7 +97,7 @@
    },
    "band": 1,
    "calc": false,
-   "stem": "Which word best describes how likely this is? It will rain somewhere in Britain this week.",
+   "stem": "Which word best describes how likely this is? You pick a card that is not a heart from a standard pack.",
    "diagram": null,
    "format": "choice",
    "answer": {
@@ -114,10 +122,14 @@
     }
    ],
    "worked": [
-    "Rain somewhere in Britain in a week happens far more often than not.",
-    "It is not guaranteed, so it is likely, not certain."
+    "There are 52 cards and 13 are hearts, so 39 are not hearts.",
+    "39 out of 52 is more than half but not all of them, so it is likely."
    ],
-   "slip": []
+   "slip": [],
+   "likelihood": {
+    "n": 39,
+    "d": 52
+   }
   },
   {
    "id": "basic-probability-1c28ca42",
@@ -156,7 +168,11 @@
     "A fair coin has 2 equally likely outcomes, and heads is 1 of them.",
     "1 out of 2 is an even chance."
    ],
-   "slip": []
+   "slip": [],
+   "likelihood": {
+    "n": 1,
+    "d": 2
+   }
   },
   {
    "id": "basic-probability-727f520f",
@@ -195,7 +211,11 @@
     "January, June and July start with J: 3 of the 12 months.",
     "3 out of 12 is less than half, so it is unlikely."
    ],
-   "slip": []
+   "slip": [],
+   "likelihood": {
+    "n": 3,
+    "d": 12
+   }
   },
   {
    "id": "basic-probability-b08363e4",
@@ -234,7 +254,11 @@
     "Half the cards in a standard pack are red: 26 of 52.",
     "Half is an even chance."
    ],
-   "slip": []
+   "slip": [],
+   "likelihood": {
+    "n": 26,
+    "d": 52
+   }
   },
   {
    "id": "basic-probability-288750b4",
@@ -245,7 +269,7 @@
    },
    "band": 1,
    "calc": false,
-   "stem": "Which word best describes how likely this is? You roll an even number on a die.",
+   "stem": "Which word best describes how likely this is? You roll an even number on a dice.",
    "diagram": null,
    "format": "choice",
    "answer": {
@@ -273,7 +297,11 @@
     "2, 4 and 6 are even: 3 of the 6 faces.",
     "3 out of 6 is a half, an even chance."
    ],
-   "slip": []
+   "slip": [],
+   "likelihood": {
+    "n": 3,
+    "d": 6
+   }
   },
   {
    "id": "basic-probability-9f9a57cb",
@@ -284,7 +312,7 @@
    },
    "band": 1,
    "calc": false,
-   "stem": "Which word best describes how likely this is? You win the lottery with one ticket.",
+   "stem": "Which word best describes how likely this is? You flip two fair coins and get two heads.",
    "diagram": null,
    "format": "choice",
    "answer": {
@@ -309,10 +337,14 @@
     }
    ],
    "worked": [
-    "One ticket has about a 1 in 45 million chance of winning.",
-    "It could happen, so it is not impossible, but it is very unlikely."
+    "Two fair coins give 4 equally likely outcomes: HH, HT, TH and TT. Two heads is 1 of them.",
+    "1 out of 4 is less than half, so it is unlikely."
    ],
-   "slip": []
+   "slip": [],
+   "likelihood": {
+    "n": 1,
+    "d": 4
+   }
   },
   {
    "id": "basic-probability-b9fd78c2",
@@ -323,7 +355,7 @@
    },
    "band": 1,
    "calc": false,
-   "stem": "Which word best describes how likely this is? A baby born today is a boy.",
+   "stem": "Which word best describes how likely this is? You roll a number greater than 2 on a dice.",
    "diagram": null,
    "format": "choice",
    "answer": {
@@ -332,26 +364,30 @@
    "options": [
     {
      "val": "a",
-     "label": "Likely"
+     "label": "Certain"
     },
     {
      "val": "b",
-     "label": "Impossible"
+     "label": "Unlikely"
     },
     {
      "val": "c",
-     "label": "Even chance"
+     "label": "Likely"
     },
     {
      "val": "d",
-     "label": "Unlikely"
+     "label": "Even chance"
     }
    ],
    "worked": [
-    "Boys and girls are born in very nearly equal numbers.",
-    "So it is about an even chance."
+    "The numbers greater than 2 are 3, 4, 5 and 6: 4 of the 6 faces.",
+    "4 out of 6 is more than half but not all, so it is likely."
    ],
-   "slip": []
+   "slip": [],
+   "likelihood": {
+    "n": 4,
+    "d": 6
+   }
   },
   {
    "id": "basic-probability-06e5bad9",
@@ -362,7 +398,7 @@
    },
    "band": 1,
    "calc": false,
-   "stem": "Which word best describes how likely this is? The sun will rise tomorrow.",
+   "stem": "Which word best describes how likely this is? A randomly chosen month has fewer than 32 days.",
    "diagram": null,
    "format": "choice",
    "answer": {
@@ -387,10 +423,14 @@
     }
    ],
    "worked": [
-    "The sun rises every day.",
-    "So it is certain."
+    "No month has more than 31 days, so every month has fewer than 32.",
+    "Something that must happen is certain."
    ],
-   "slip": []
+   "slip": [],
+   "likelihood": {
+    "n": 12,
+    "d": 12
+   }
   },
   {
    "id": "basic-probability-c5da667b",
@@ -401,7 +441,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{rolling a 6 on a fair die})\\). Give your answer as a fraction.",
+   "stem": "A fair dice is rolled. Write down the probability of rolling a 6. Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -425,7 +465,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{picking red from 3 red, 7 blue})\\). Give your answer as a fraction.",
+   "stem": "A bag contains 3 red counters and 7 blue counters. A counter is taken at random. Write down the probability that the counter is red. Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -449,7 +489,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{flipping tails on a fair coin})\\). Give your answer as a fraction.",
+   "stem": "A fair coin is flipped. Write down the probability of getting tails. Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -473,7 +513,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{vowel from A, B, C, D, E})\\). Give your answer as a fraction.",
+   "stem": "Five cards show the letters A, B, C, D and E. A card is taken at random. Write down the probability that the letter is a vowel. Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -497,7 +537,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{rolling less than 3 on a die})\\). Give your answer as a fraction.",
+   "stem": "A fair dice is rolled. Write down the probability of rolling a number less than 3. Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -521,7 +561,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{blue from 4 red, 6 blue})\\). Give your answer as a fraction.",
+   "stem": "A bag contains 4 red counters and 6 blue counters. A counter is taken at random. Write down the probability that the counter is blue. Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -545,7 +585,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{odd on a die})\\). Give your answer as a fraction.",
+   "stem": "A fair dice is rolled. Write down the probability of rolling an odd number. Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -569,7 +609,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{heart from 52 cards})\\). Give your answer as a fraction.",
+   "stem": "A card is taken at random from a pack of 52 playing cards. Write down the probability that the card is a heart. Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -593,7 +633,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{rolling greater than 4 on a dice})\\). Give your answer as a fraction.",
+   "stem": "A fair dice is rolled. Write down the probability of rolling a number greater than 4. Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -617,7 +657,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{green from 5 red, 3 green, 2 yellow})\\). Give your answer as a fraction.",
+   "stem": "A bag contains 5 red counters, 3 green counters and 2 yellow counters. A counter is taken at random. Write down the probability that the counter is green. Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -641,7 +681,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{multiple of 3 on a die})\\). Give your answer as a fraction.",
+   "stem": "A fair dice is rolled. Write down the probability of rolling a multiple of 3. Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -665,7 +705,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{consonant from M, A, T, H, S})\\). Give your answer as a fraction.",
+   "stem": "Five cards show the letters M, A, T, H and S. A card is taken at random. Write down the probability that the letter is a consonant. Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -689,7 +729,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{heads twice in a row with a fair coin})\\). Give your answer as a fraction.",
+   "stem": "A fair coin is flipped twice. Write down the probability of getting heads both times. Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -713,7 +753,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{rolling 1 or 2 on a fair die})\\). Give your answer as a fraction.",
+   "stem": "A fair dice is rolled. Write down the probability of rolling a 1 or a 2. Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -737,7 +777,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{picture card (J, Q or K) from a pack of 52})\\). Give your answer as a fraction.",
+   "stem": "A card is taken at random from a pack of 52 playing cards. Write down the probability that the card is a picture card (J, Q or K). Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -761,7 +801,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{prime on a die})\\). Give your answer as a fraction.",
+   "stem": "A fair dice is rolled. Write down the probability of rolling a prime number. Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -785,7 +825,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{yellow from 8 red, 2 yellow})\\). Give your answer as a fraction.",
+   "stem": "A bag contains 8 red counters and 2 yellow counters. A counter is taken at random. Write down the probability that the counter is yellow. Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -809,7 +849,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{square number on a die})\\). Give your answer as a fraction.",
+   "stem": "A fair dice is rolled. Write down the probability of rolling a square number. Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -833,7 +873,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{even from 1–8})\\). Give your answer as a fraction.",
+   "stem": "A number is chosen at random from 1, 2, 3, 4, 5, 6, 7, 8. Write down the probability that the number is even. Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -857,7 +897,7 @@
    },
    "band": 2,
    "calc": false,
-   "stem": "Work out \\(P(\\text{letter in MATHS also in GAMES})\\). Give your answer as a fraction.",
+   "stem": "A letter is chosen at random from the word MATHS. Write down the probability that the letter is also in the word GAMES. Give your answer as a fraction.",
    "diagram": null,
    "format": "fraction",
    "answer": {
@@ -890,7 +930,7 @@
    "options": [
     {
      "val": "a",
-     "label": "P(rolling 7 on a standard die) = 7/6"
+     "label": "The probability of rolling a 7 on an ordinary dice is 7/6"
     },
     {
      "val": "b",
@@ -902,12 +942,13 @@
     },
     {
      "val": "d",
-     "label": "You can have P(event) = 1.5"
+     "label": "A probability can be 1.5"
     }
    ],
    "worked": [
     "Probability ranges from 0 (impossible) to 1 (certain).",
-    "It can never be negative or greater than 1."
+    "It can never be negative or greater than 1.",
+    "The answer: P(event) is always between 0 and 1 inclusive."
    ],
    "slip": [
     {
@@ -926,7 +967,7 @@
      "answer": {
       "val": "a"
      },
-     "line": "A standard die only has numbers 1–6. Rolling a 7 is impossible, so P = 0. Also, 7/6 is greater than 1, which is impossible for any probability."
+     "line": "A standard dice only has numbers 1–6. Rolling a 7 is impossible, so P = 0. Also, 7/6 is greater than 1, which is impossible for any probability."
     }
    ]
   },
@@ -952,7 +993,7 @@
     },
     {
      "val": "b",
-     "label": "You can have P(event) = 1.5"
+     "label": "A probability can be 1.5"
     },
     {
      "val": "c",
@@ -965,7 +1006,8 @@
    ],
    "worked": [
     "The probability of an event not happening is 1 minus the probability of it happening.",
-    "1 − 0.3 = 0.7."
+    "1 − 0.3 = 0.7.",
+    "The answer: If P(A) = 0.3, then P(not A) = 0.7."
    ],
    "slip": [
     {
@@ -1010,11 +1052,11 @@
     },
     {
      "val": "b",
-     "label": "P(impossible event) = 0"
+     "label": "The probability of an impossible event is 0"
     },
     {
      "val": "c",
-     "label": "P(rolling 7 on a standard die) = 7/6"
+     "label": "The probability of rolling a 7 on an ordinary dice is 7/6"
     },
     {
      "val": "d",
@@ -1022,14 +1064,15 @@
     }
    ],
    "worked": [
-    "If something cannot happen, its probability is exactly 0."
+    "If something cannot happen, its probability is exactly 0.",
+    "The answer: The probability of an impossible event is 0."
    ],
    "slip": [
     {
      "answer": {
       "val": "c"
      },
-     "line": "A standard die only has numbers 1–6. Rolling a 7 is impossible, so P = 0. Also, 7/6 is greater than 1, which is impossible for any probability."
+     "line": "A standard dice only has numbers 1–6. Rolling a 7 is impossible, so P = 0. Also, 7/6 is greater than 1, which is impossible for any probability."
     },
     {
      "answer": {
@@ -1063,7 +1106,7 @@
    "options": [
     {
      "val": "a",
-     "label": "P(certain event) = 1"
+     "label": "The probability of a certain event is 1"
     },
     {
      "val": "b",
@@ -1075,11 +1118,12 @@
     },
     {
      "val": "d",
-     "label": "P(rolling 7 on a standard die) = 7/6"
+     "label": "The probability of rolling a 7 on an ordinary dice is 7/6"
     }
    ],
    "worked": [
-    "If something is guaranteed to happen, its probability is exactly 1."
+    "If something is guaranteed to happen, its probability is exactly 1.",
+    "The answer: The probability of a certain event is 1."
    ],
    "slip": [
     {
@@ -1092,7 +1136,7 @@
      "answer": {
       "val": "d"
      },
-     "line": "A standard die only has numbers 1–6. Rolling a 7 is impossible, so P = 0. Also, 7/6 is greater than 1, which is impossible for any probability."
+     "line": "A standard dice only has numbers 1–6. Rolling a 7 is impossible, so P = 0. Also, 7/6 is greater than 1, which is impossible for any probability."
     },
     {
      "answer": {
@@ -1124,7 +1168,7 @@
     },
     {
      "val": "b",
-     "label": "You can have P(event) = 1.5"
+     "label": "A probability can be 1.5"
     },
     {
      "val": "c",
@@ -1137,7 +1181,8 @@
    ],
    "worked": [
     "An event either happens or it doesn't.",
-    "These two probabilities must always add up to 1."
+    "These two probabilities must always add up to 1.",
+    "The answer: P(A) + P(not A) always equals 1."
    ],
    "slip": [
     {
@@ -1178,11 +1223,11 @@
    "options": [
     {
      "val": "a",
-     "label": "P(rolling 7 on a standard die) = 7/6"
+     "label": "The probability of rolling a 7 on an ordinary dice is 7/6"
     },
     {
      "val": "b",
-     "label": "You can have P(event) = 1.5"
+     "label": "A probability can be 1.5"
     },
     {
      "val": "c",
@@ -1195,14 +1240,15 @@
    ],
    "worked": [
     "This is called the Law of Large Numbers.",
-    "With more trials, the experimental probability tends to get closer to the theoretical probability."
+    "With more trials, the experimental probability tends to get closer to the theoretical probability.",
+    "The answer: The more times you repeat an experiment, the closer the results tend to get to the theoretical probability."
    ],
    "slip": [
     {
      "answer": {
       "val": "a"
      },
-     "line": "A standard die only has numbers 1–6. Rolling a 7 is impossible, so P = 0. Also, 7/6 is greater than 1, which is impossible for any probability."
+     "line": "A standard dice only has numbers 1–6. Rolling a 7 is impossible, so P = 0. Also, 7/6 is greater than 1, which is impossible for any probability."
     },
     {
      "answer": {
@@ -1240,11 +1286,11 @@
     },
     {
      "val": "b",
-     "label": "A fair six-sided die gives each number probability exactly 1/6"
+     "label": "A fair six-sided dice gives each number probability exactly 1/6"
     },
     {
      "val": "c",
-     "label": "You can have P(event) = 1.5"
+     "label": "A probability can be 1.5"
     },
     {
      "val": "d",
@@ -1252,7 +1298,8 @@
     }
    ],
    "worked": [
-    "A fair die has 6 equally likely outcomes, so each has probability 1/6."
+    "A fair dice has 6 equally likely outcomes, so each has probability 1/6.",
+    "The answer: A fair six-sided dice gives each number probability exactly 1/6."
    ],
    "slip": [
     {
@@ -1305,12 +1352,13 @@
     },
     {
      "val": "d",
-     "label": "You can have P(event) = 1.5"
+     "label": "A probability can be 1.5"
     }
    ],
    "worked": [
     "For example, the probability of flipping heads can be written as 1/2, 0.5, or 50%.",
-    "All three representations are valid."
+    "All three representations are valid.",
+    "The answer: Probability can be written as a fraction, decimal or percentage."
    ],
    "slip": [
     {
@@ -1351,7 +1399,7 @@
    "options": [
     {
      "val": "a",
-     "label": "You can have P(event) = 1.5"
+     "label": "A probability can be 1.5"
     },
     {
      "val": "b",
@@ -1359,7 +1407,7 @@
     },
     {
      "val": "c",
-     "label": "P(rolling 7 on a standard die) = 7/6"
+     "label": "The probability of rolling a 7 on an ordinary dice is 7/6"
     },
     {
      "val": "d",
@@ -1367,14 +1415,15 @@
     }
    ],
    "worked": [
-    "If two events have the same probability, they are by definition equally likely to occur."
+    "If two events have the same probability, they are by definition equally likely to occur.",
+    "The answer: Two events with the same probability are equally likely."
    ],
    "slip": [
     {
      "answer": {
       "val": "c"
      },
-     "line": "A standard die only has numbers 1–6. Rolling a 7 is impossible, so P = 0. Also, 7/6 is greater than 1, which is impossible for any probability."
+     "line": "A standard dice only has numbers 1–6. Rolling a 7 is impossible, so P = 0. Also, 7/6 is greater than 1, which is impossible for any probability."
     },
     {
      "answer": {

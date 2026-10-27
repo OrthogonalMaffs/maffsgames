@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- UNLISTED (contract HC-FACTOR, 27 Oct 2026): live at its URL for Jon to play; off the portal, the sitemap and the leaderboard hub until he lists it. -->
+<meta name="description" content="Expand brackets and factorise, from one bracket to x² + bx + c with the sign grid, typing the answer into bracket-shaped boxes. For GCSE. Free, no sign-up.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/hc-factor/">
+<meta property="og:title" content="Expanding and Factorising Game – GCSE Maths | MaffsGames">
+<meta property="og:description" content="Expand brackets and factorise, from one bracket to x² + bx + c with the sign grid, typing the answer into bracket-shaped boxes. For GCSE. Free, no sign-up.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/hc-factor/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Expanding and Factorising Game – GCSE Maths | MaffsGames</title>
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/answer-count.js" defer></script>
+<script src="/schools/assets/fold.js" defer></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<style>
+/* Theme: schools/assets/theme.css (canon §7.5), light row: the check derives the palette from the roster's levels and the
+   lowest tier served is GCSE. The talent show is this game's own tokens: a dark stage inside the light page. */
+:root{--accent:#7a2a8c;--accent-dim:#f3e8f7;--on-accent:#ffffff;
+  --stage:#1d1433;--stage-edge:#0f0a1d;--curtain:#9b1c3f;--curtain-d:#6e1230;--spot:#ffe8a3;--floor:#2c2147;
+  --card:#e9e4f3;--card-ink:#3a3150;--judge:#2a1f45;--judge-edge:#5b4b82;--judge-ink:#a99cc9;--yes:#e2a812;--yes-edge:#8a6200;--yes-ink:#2f2000}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:720px;width:100%;padding:1rem}
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.4rem 0}
+.header h1{font-size:1.9rem;font-weight:700;color:var(--accent);line-height:1.15}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem 0 .5rem}
+@media (max-width:420px){.header h1{font-size:1.5rem}}
+.screen{display:none}.screen.active{display:block}
+[hidden]{display:none!important}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.9rem auto;max-width:600px}
+.menu-info{color:var(--text);font-size:.95rem;line-height:1.65}
+.menu-info p+p{margin-top:.6rem}
+.btn{min-height:44px;padding:.6rem 1.2rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--accent-dim)}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.res-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
+
+/* The stage on the start screen: flat shapes, nothing cartoon. */
+.stage-art{display:block;width:100%;max-width:340px;height:auto;margin:.2rem auto .4rem}
+.stage-art .back{fill:var(--stage)}.stage-art .cur{fill:var(--curtain)}.stage-art .cur-d{fill:var(--curtain-d)}
+.stage-art .beam{fill:var(--spot);opacity:.22}.stage-art .floor{fill:var(--floor)}
+.stage-art .desk{fill:var(--stage-edge)}.stage-art .card{fill:var(--yes)}.stage-art .card-d{fill:var(--card)}
+
+.stages{display:flex;flex-direction:column;gap:.5rem;margin-top:.8rem}
+.stage-btn{display:flex;align-items:center;gap:.7rem;width:100%;text-align:left;min-height:56px;padding:.45rem .8rem;border-radius:12px;border:1px solid var(--border);background:var(--surface-alt);color:var(--text);cursor:pointer;font:inherit}
+.stage-btn:hover{border-color:var(--accent)}
+.stage-btn .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--stage);color:var(--spot);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:700}
+.stage-btn .t{font-weight:700;font-size:.95rem;line-height:1.2}
+.stage-btn .d{display:block;font-weight:400;font-size:.8rem;color:var(--muted);line-height:1.3}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.3rem .8rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.5rem;gap:.3rem}
+.hud-item{text-align:center;min-width:48px}
+.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.hud-val{font-family:var(--font-num);font-size:.95rem;font-weight:700}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.8rem;display:flex;flex-direction:column;gap:.5rem}
+.qtext{font-size:1.05rem;line-height:1.5}
+.qtext .katex{font-size:1.15em}
+.glue{white-space:nowrap}
+
+/* The panel: three judges' cards, lit gold for a right answer. */
+.judges{display:flex;gap:.45rem;justify-content:center;background:var(--stage);border-radius:12px;padding:.4rem .6rem;border-bottom:4px solid var(--stage-edge)}
+.judge{flex:1 1 0;max-width:6.5rem;height:30px;border-radius:7px;border:2px solid var(--judge-edge);background:var(--judge);color:var(--judge-ink);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-size:.72rem;font-weight:700;letter-spacing:.06em}
+.judge.lit{background:var(--yes);border-color:var(--yes-edge);color:var(--yes-ink);box-shadow:0 0 12px 2px rgba(255,232,163,.55);animation:flip .4s ease-out both}
+@keyframes flip{from{transform:rotateX(90deg);opacity:0}to{transform:none;opacity:1}}
+
+.ask-line{display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;min-height:1.4em}
+.ask-line h2{font-size:.92rem;font-weight:700}
+.msg{font-size:.85rem;font-weight:700;color:var(--muted);text-align:right}
+
+/* The bracket-shaped answer: literals and typed-number boxes, each box with a plus/minus toggle where a sign is needed. */
+.ans-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.25rem;font-family:var(--font-num);font-size:1.25rem;font-weight:700;padding:.2rem 0}
+.lit{white-space:pre}
+.nb{display:inline-flex;align-items:center;gap:.2rem}
+.nb input{width:46px;height:46px;text-align:center;font:inherit;font-size:1.15rem;border:2px solid var(--border);border-radius:9px;background:var(--surface-alt);color:var(--text)}
+.nb input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+.sgn{width:44px;height:46px;border-radius:9px;border:2px solid var(--accent);background:var(--accent-dim);color:var(--accent);font:inherit;font-size:1.2rem;font-weight:700;cursor:pointer}
+.sgn[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
+@media (max-width:360px){.ans-row{font-size:1.05rem;gap:.15rem}.nb input{width:40px}.sgn{width:40px}}
+.sign-opts{display:flex;flex-direction:column;gap:.45rem}
+.sign-opts .btn{display:flex;align-items:baseline;justify-content:space-between;gap:.6rem;text-align:left;font-weight:500;color:var(--text);border-color:var(--border);background:var(--surface-alt);padding:.3rem .8rem}
+.sign-opts .btn:hover{border-color:var(--accent)}
+.sign-opts .br{font-family:var(--font-num);font-size:1.1rem;font-weight:700;white-space:pre}
+.sign-opts .nm{font-size:.82rem;color:var(--muted)}
+.actions{display:flex;justify-content:center}
+.actions .btn{min-width:10rem}
+
+.fb{border-radius:12px;padding:.7rem .8rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.5rem}
+.fb.wrong{border-color:var(--wrong)}
+.fb.done{border-color:var(--correct)}
+.fb-line{font-size:.95rem;line-height:1.45;padding:.35rem .65rem;border-left:3px solid var(--hint);border-radius:0 8px 8px 0}
+.fb.done .fb-line{border-left-color:var(--correct)}
+.worked{margin:0;padding:0 0 0 1.25rem;font-size:.9rem;line-height:1.45;color:var(--text)}
+.worked li+li{margin-top:.2rem}
+.worked-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+table.grid{border-collapse:collapse;margin:.1rem auto;font-size:.9rem}
+table.grid th,table.grid td{border:1px solid var(--border);padding:.2rem .6rem;text-align:center;min-width:2.8rem}
+table.grid th{background:var(--surface);color:var(--muted)}
+.fb-next{display:flex;justify-content:center}
+.feedback:empty{display:none}
+.results{text-align:center;padding:1rem 0}
+.results h2{font-size:1.35rem;margin-bottom:.3rem}
+.final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.4rem 0 .1rem}
+.final-of{color:var(--muted);font-size:.9rem;margin-bottom:.5rem}
+.res-judges{max-width:20rem;margin:.4rem auto .7rem}
+.stats{color:var(--muted);line-height:1.9;font-size:.95rem;margin-bottom:.8rem}
+.stats b{color:var(--text)}
+
+/* Phone rule (canon §7.6.1): after a step is marked, the controls go and the feedback takes their place. */
+.qcard.fb-open #answer,.qcard.fb-open .ask-line{display:none}
+body.playing a.back-link{display:none}
+@media (max-width:420px){
+  .container{padding:.5rem}
+  .qcard{padding:.6rem .55rem;gap:.4rem}
+  .qtext{font-size:.98rem}
+  .hud{padding:.2rem .5rem}
+}
+/* A short phone: Next sits under the one-line reason and the worked answer follows it, so Next stays above the fold. */
+@media (max-height:620px){.fb-next{order:1}.fb>.worked-h,.fb>table.grid,.fb>.worked{order:2}}
+@media (max-height:620px){.judge{height:26px}.qtext{font-size:.94rem}.fb{padding:.5rem .6rem;gap:.35rem}.worked{font-size:.84rem}}
+body.accessible{letter-spacing:.12em;word-spacing:.16em}
+body.accessible .hud-label,body.accessible .hud-val,body.accessible .ans-row{letter-spacing:0}
+body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;max-width:65ch}
+body.accessible .katex{letter-spacing:normal;word-spacing:normal}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'answer' fills the boxes (or taps a sign option) with i = 0 the right answer, i >= 1 a wrong one (named, then Next).
+{
+  "start": "HCF.ui.start(1)",
+  "ready": "!!window.HCF && HCF.ui.state() === 'asking'",
+  "answer": [
+    "HCF.ui.answer(i === 0);"
+  ]
+}
+-->
+<script src="../../schools/assets/hc-factor-gen.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>The HC Factor</h1><div class="sub">Six rounds. Get through to the next one.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <svg class="stage-art" viewBox="0 0 340 120" role="img" aria-label="A stage with red curtains and two spotlights, and a desk with three judges' cards">
+      <rect class="back" x="0" y="0" width="340" height="120" rx="12"/>
+      <polygon class="beam" points="92,0 118,0 150,92 70,92"/><polygon class="beam" points="222,0 248,0 270,92 190,92"/>
+      <ellipse class="floor" cx="170" cy="88" rx="132" ry="12"/>
+      <path class="cur" d="M0 0 H62 C54 30 66 60 50 96 H0 Z"/><path class="cur-d" d="M30 0 H62 C54 30 66 60 50 96 H36 C48 60 36 30 30 0 Z"/>
+      <path class="cur" d="M340 0 H278 C286 30 274 60 290 96 H340 Z"/><path class="cur-d" d="M310 0 H278 C286 30 274 60 290 96 H304 C292 60 304 30 310 0 Z"/>
+      <rect class="desk" x="86" y="96" width="168" height="18" rx="4"/>
+      <rect class="card" x="100" y="86" width="40" height="22" rx="4"/><rect class="card" x="150" y="86" width="40" height="22" rx="4"/><rect class="card-d" x="200" y="86" width="40" height="22" rx="4"/>
+    </svg>
+    <div class="panel menu-info">
+      <p>Expanding and factorising, one round at a time. Type each answer into the brackets: the boxes are laid out the way the answer is written. The panel of three judges lights up a <strong>yes</strong> for every right answer.</p>
+      <p>Start at Round 1, or go straight to the one you need. From Round 5 the signs get their own mark: that is the sign grid.</p>
+      <div class="stages" id="stageList"></div>
+      <p class="hud-label" style="text-align:center;margin-top:.7rem">6 questions a round</p>
+    </div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+    <div class="maffs-start-note" data-maffs-start-note></div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Round</div><div class="hud-val" id="hudStage">1</div></div>
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/6</div></div>
+      <div class="hud-item"><div class="hud-label">Marks</div><div class="hud-val" id="hudScore">0</div></div>
+    </div>
+    <div class="qcard" id="qcard">
+      <div class="judges" id="judges" role="img" aria-label="The panel of three judges"><div class="judge">JUDGE</div><div class="judge">JUDGE</div><div class="judge">JUDGE</div></div>
+      <div class="qtext" id="qtext"></div>
+      <div class="ask-line"><h2 id="instr">Type your answer</h2><div class="msg" id="msg" aria-live="polite"></div></div>
+      <div id="answer"></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resTitle">Round done</h2>
+      <div class="final-score" id="resScore">0</div>
+      <div class="final-of" id="resOf">marks out of 6</div>
+      <div class="judges res-judges" id="resJudges" aria-hidden="true"><div class="judge">JUDGE</div><div class="judge">JUDGE</div><div class="judge">JUDGE</div></div>
+      <div class="stats" id="resStats"></div>
+      <div class="res-btns">
+        <button class="btn solid" id="nextRoundBtn" type="button">Next round</button>
+        <button class="btn" id="againBtn" type="button">Play this round again</button>
+        <button class="btn" id="menuBtn" type="button">All rounds</button>
+      </div>
+      <p id="teacherInvite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var M = window.MaffsHCFactor, SLUG = 'hc-factor', PER_ROUND = 6, LAST = 6, MINUS = '−';
+  // One level of content, GCSE (the lowest tier served); the rounds are boards, not levels, each its own analytics mode.
+  // Round 6 has no board: its key would need a label in firebase-leaderboard.js (a shared file), so it keeps a personal best only.
+  var level = MaffsLevel.resolve({ slug: 'hc-factor', levels: ['gcse'], fallback: 'gcse',
+    boards: ['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5'] });
+  var $ = function (id) { return document.getElementById(id); };
+  function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function tex(t) {
+    if (window.katex) {
+      try { return katex.renderToString(t, { throwOnError: false }); } catch (e) { /* fall through */ }
+    }
+    return esc(t.replace(/\\times/g, '×').replace(/\\div/g, '÷').replace(/\\;/g, ' ').replace(/\^2/g, '²'));
+  }
+  // A line with TeX between § marks.
+  function renderLine(line) {
+    var p = line.split('§');
+    return p.map(function (part, i) { return i % 2 ? '<span class="glue">' + tex(part) + '</span>' : esc(part); }).join('');
+  }
+  function reducedMotion() { return window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches; }
+
+  var stage = 1, session = [], qi = 0, si = 0, Q = null, step = null, state = 'menu';
+  var marks = 0, answered = 0, rightCount = 0;
+
+  function show(id) {
+    ['menu', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    document.body.classList.toggle('playing', id === 'game');
+    MaffsLock.screen($(id));
+  }
+  function boardOf(n) { return n <= 5 ? 'stage-' + n : null; }
+
+  /* ---------- the menu ---------- */
+  (function () {
+    var h = '';
+    for (var n = 1; n <= LAST; n++) {
+      var S = M.STAGES[n];
+      h += '<button class="stage-btn" type="button" data-stage="' + n + '"><span class="n">' + n + '</span><span><span class="t">' + esc(S.name) +
+        '</span><span class="d">' + esc(S.blurb) + '</span></span></button>';
+    }
+    $('stageList').innerHTML = h;
+  })();
+
+  /* ---------- the judges ---------- */
+  function judges(el, lit) {
+    var cards = el.querySelectorAll('.judge');
+    for (var i = 0; i < cards.length; i++) {
+      cards[i].classList.toggle('lit', lit);
+      cards[i].textContent = lit ? 'YES' : 'JUDGE';
+      cards[i].style.animationDelay = lit && !reducedMotion() ? (i * 0.12) + 's' : '0s';
+    }
+  }
+
+  /* ---------- play ---------- */
+  function startStage(n) {
+    MaffsLock.newSession();
+    stage = n;
+    session = M.session(n, Math.floor(Math.random() * 4294967296), PER_ROUND);
+    qi = 0; marks = 0; answered = 0; rightCount = 0;
+    show('game');
+    $('hudStage').textContent = n;
+    ev('game_started', { game_slug: SLUG, level: level, mode: 'stage-' + n });
+    nextQuestion();
+  }
+  function nextQuestion() {
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    $('feedback').innerHTML = '';
+    $('qcard').classList.remove('fb-open');
+    if (qi >= session.length) { finish(); return; }
+    Q = session[qi++]; si = 0;
+    $('hudQ').textContent = qi + '/' + PER_ROUND;
+    $('hudScore').textContent = marks;
+    $('qtext').innerHTML = '<p>' + renderLine(Q.stem) + '</p>';
+    askStep();
+  }
+  function askStep() {
+    step = Q.steps[si]; state = 'asking';
+    $('feedback').innerHTML = '';
+    $('qcard').classList.remove('fb-open');
+    $('instr').textContent = step.kind === 'signs' ? 'Choose the signs' : 'Type your answer';
+    $('msg').textContent = Q.steps.length > 1 ? 'Part ' + (si + 1) + ' of ' + Q.steps.length : '';
+    judges($('judges'), false);
+    if (step.kind === 'signs') buildSigns(); else buildBoxes();
+    MaffsLock.fresh($('answer'));
+    window.scrollTo(0, 0);
+  }
+
+  function buildSigns() {
+    var br = ['(x + □)(x + □)', '(x ' + MINUS + ' □)(x ' + MINUS + ' □)', '(x + □)(x ' + MINUS + ' □)'];
+    $('answer').innerHTML = '<div class="sign-opts" role="group" aria-label="Signs for the brackets">' + step.options.map(function (o, i) {
+      return '<button class="btn" type="button" data-opt="' + i + '"><span class="br">' + br[i] + '</span><span class="nm">' + esc(o) + '</span></button>';
+    }).join('') + '</div>';
+  }
+  function buildBoxes() {
+    var n = 0, h = '<div class="ans-row" role="group" aria-label="Your answer">';
+    step.layout.forEach(function (tk) {
+      if (tk.lit) { h += '<span class="lit">' + esc(tk.lit) + '</span>'; return; }
+      n++;
+      h += '<span class="nb">' + (tk.sign ? '<button class="sgn" type="button" aria-pressed="false" aria-label="Sign of number ' + n + ': plus" data-n="' + n + '">+</button>' : '') +
+        '<input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" aria-label="Number ' + n + '" data-n="' + n + '"></span>';
+    });
+    h += '</div><div class="actions"><button class="btn solid" id="checkBtn" type="button" disabled>Check</button></div>';
+    $('answer').innerHTML = h;
+    if (window.matchMedia && matchMedia('(pointer:fine)').matches) { var f = $('answer').querySelector('input'); if (f) f.focus(); }
+  }
+  function boxValues() {
+    var out = [], ok = true;
+    var rows = $('answer').querySelectorAll('.nb');
+    for (var i = 0; i < rows.length; i++) {
+      var inp = rows[i].querySelector('input'), sg = rows[i].querySelector('.sgn');
+      if (inp.value === '') { ok = false; out.push(null); continue; }
+      var v = parseInt(inp.value, 10);
+      out.push(sg && sg.getAttribute('aria-pressed') === 'true' ? -v : v);
+    }
+    return ok ? out : null;
+  }
+  function refreshCheck() { var b = $('checkBtn'); if (b) b.disabled = !boxValues(); }
+
+  // One step marked: the judges, one line of feedback, the worked answer on a miss, then Next.
+  function mark(input) {
+    if (state !== 'asking') return;
+    if (!MaffsLock.lock($('answer'))) return;
+    var r = M.mark(step, input), ok = r.kind === 'right';
+    answered++; if (ok) { rightCount++; marks++; }
+    $('hudScore').textContent = marks;
+    ev('question_answered', { game_slug: SLUG, level: level, mode: 'stage-' + stage, question_index: qi, correct: ok });
+    judges($('judges'), ok);
+    var last = si + 1 >= Q.steps.length;
+    $('qcard').classList.add('fb-open');
+    var fb = $('feedback');
+    if (ok) {
+      state = 'done';
+      var line = step.kind === 'signs' ? step.rule : Q.worked.lines[Q.worked.lines.length - 1];
+      fb.innerHTML = '<div class="fb done"><div class="fb-line">Yes. ' + renderLine(line) + '</div>' +
+        '<div class="fb-next"><button class="btn solid" id="nextBtn" type="button">' + (last && qi >= PER_ROUND ? 'See results →' : 'Next →') + '</button></div></div>';
+      MaffsLock.fresh(fb);
+      $('nextBtn').focus();
+    } else {
+      state = 'wrong';
+      var worked = step.kind === 'signs' && !last ? '' : workedHtml();
+      fb.innerHTML = '<div class="fb wrong"><div class="fb-line" data-help="reason">' + renderLine(r.why || step.generic || '') + '</div>' + worked + '<div class="fb-next"></div></div>';
+      MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance });
+    }
+  }
+  function workedHtml() {
+    var g = Q.worked.grid, h = '<div class="worked-h">How it goes</div>';
+    if (g) {
+      h += '<table class="grid" aria-label="The grid"><tr><th>×</th>' + g.cols.map(function (c) { return '<th>' + tex(c) + '</th>'; }).join('') + '</tr>' +
+        g.rows.map(function (r, i) { return '<tr><th>' + tex(r) + '</th>' + g.cells[i].map(function (c) { return '<td>' + tex(c) + '</td>'; }).join('') + '</tr>'; }).join('') + '</table>';
+    }
+    return h + '<ol class="worked">' + Q.worked.lines.map(function (l) { return '<li>' + renderLine(l) + '</li>'; }).join('') + '</ol>';
+  }
+  function advance() {
+    if (state === 'moving') return;
+    state = 'moving';
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    if (si + 1 < Q.steps.length) { si++; askStep(); } else nextQuestion();
+  }
+
+  // Once per round (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+  var finish = MaffsLock.finishOnce(function () {
+    state = 'done';
+    var S = M.STAGES[stage], max = PER_ROUND * S.marks, board = boardOf(stage), score = marks;
+    ev('game_completed', { game_slug: SLUG, level: level, mode: 'stage-' + stage, score: score, questions_answered: answered, questions_correct: rightCount });
+    if (board && window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, board, score, answered).catch(function () {});
+    if (board && window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, board, score);
+    var pbKey = 'hcf_best_' + stage, prev = parseInt(lsGet(pbKey) || '0', 10) || 0, pb = score > prev;
+    if (pb) { ev('personal_best_set', { game_slug: SLUG, level: level, mode: 'stage-' + stage, score: score, previous_best: prev }); lsSet(pbKey, String(score)); }
+    var through = score * 2 >= max;
+    $('resTitle').textContent = stage < LAST ? (through ? "You're through to the next round!" : 'Not quite through this time') : 'That is the final round done';
+    $('resScore').textContent = score;
+    $('resOf').textContent = 'marks, out of ' + max + ' · Round ' + stage + ': ' + S.name;
+    judges($('resJudges'), through);
+    $('resStats').innerHTML = '<b>' + rightCount + '</b> right out of <b>' + answered + '</b> answers' + (pb ? '<br>New personal best' : '') +
+      (through || stage >= LAST ? '' : '<br>The worked answers are there to learn from. Have another go, or move on.') +
+      (board ? '' : '<br>This round has no leaderboard yet.');
+    $('nextRoundBtn').hidden = stage >= LAST;
+    $('nextRoundBtn').textContent = 'Round ' + (stage + 1);
+    show('results');
+  });
+
+  /* ---------- wiring ---------- */
+  $('stageList').addEventListener('click', function (e) { var b = e.target.closest('[data-stage]'); if (b) startStage(parseInt(b.dataset.stage, 10)); });
+  $('nextRoundBtn').addEventListener('click', function () { startStage(Math.min(stage + 1, LAST)); });
+  $('againBtn').addEventListener('click', function () { startStage(stage); });
+  $('menuBtn').addEventListener('click', function () { state = 'menu'; show('menu'); });
+  $('answer').addEventListener('click', function (e) {
+    var o = e.target.closest('[data-opt]');
+    if (o) { mark(parseInt(o.dataset.opt, 10)); return; }
+    var s = e.target.closest('.sgn');
+    if (s) {
+      var neg = s.getAttribute('aria-pressed') !== 'true';
+      s.setAttribute('aria-pressed', String(neg)); s.textContent = neg ? MINUS : '+';
+      s.setAttribute('aria-label', 'Sign of number ' + s.dataset.n + ': ' + (neg ? 'minus' : 'plus'));
+      return;
+    }
+    if (e.target.closest('#checkBtn')) { var v = boxValues(); if (v) mark(v); }
+  });
+  $('answer').addEventListener('input', function (e) {
+    if (e.target.tagName === 'INPUT') { e.target.value = e.target.value.replace(/\D/g, '').slice(0, 2); refreshCheck(); }
+  });
+  $('answer').addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' || e.target.tagName !== 'INPUT') return;
+    var v = boxValues();
+    if (v) { e.preventDefault(); mark(v); return; }
+    var inputs = Array.prototype.slice.call($('answer').querySelectorAll('input')), nx = inputs.filter(function (i) { return i.value === ''; })[0];
+    if (nx) { e.preventDefault(); nx.focus(); }
+  });
+  $('feedback').addEventListener('click', function (e) { if (e.target.closest('#nextBtn') && state === 'done') advance(); });
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(lsGet(KEY) === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); lsSet(KEY, String(on)); apply(on); });
+  })();
+
+  // Read-only views of live state, for scripts/verify-hc-factor.py and the lock hint above.
+  window.HCF = {
+    SLUG: SLUG,
+    ui: {
+      state: function () { return state; },
+      level: function () { return level; },
+      stage: function () { return stage; },
+      question: function () { return Q ? JSON.parse(JSON.stringify(Q)) : null; },
+      stepIndex: function () { return si; },
+      score: function () { return marks; },
+      start: function (n) { startStage(n); },
+      // Answer the step on screen: the right answer, or a wrong one (every number one more, or the next sign option).
+      answer: function (right) {
+        if (step.kind === 'signs') {
+          var pick = right ? step.correct : (step.correct + 1) % 3;
+          var b = $('answer').querySelector('[data-opt="' + pick + '"]'); if (b) b.click(); return;
+        }
+        var vals = step.sol.slice(), ins = $('answer').querySelectorAll('.nb');
+        if (!right) vals[vals.length - 1] += 7;
+        for (var i = 0; i < ins.length; i++) {
+          var sg = ins[i].querySelector('.sgn'), inp = ins[i].querySelector('input');
+          if (sg && (vals[i] < 0) !== (sg.getAttribute('aria-pressed') === 'true')) sg.click();
+          inp.value = String(Math.abs(vals[i]));
+        }
+        refreshCheck();
+        $('checkBtn').click();
+      }
+    }
+  };
+})();
+</script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'hc-factor');</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

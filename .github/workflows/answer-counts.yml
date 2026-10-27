@@ -1,7 +1,7 @@
 # The daily answer counts (contract ANSWER-COUNTS, 23 Oct 2026; canon 7.5.5).
 #
 # Three times a day (05:40, 11:40 and 17:40 UTC), fetch the figures from the counts Apps Script (docs/apps-script-counts.md), validate
-# them (scripts/fetch-answer-counts.py: schema, roster slugs, whole numbers, total = sum, as_of today) and commit
+# them (scripts/fetch-answer-counts.py: schema, whole numbers, total = sum and never below the published file's, as_of today; every slug counted) and commit
 # schools/assets/answer-counts.json to main as the workflow's GITHUB_TOKEN with "[skip ci]" (a push by GITHUB_TOKEN starts no
 # workflow anyway, so the full check-site run is not started by it). If main moves between the fetch and the push the
 # job fetches main and tries again.

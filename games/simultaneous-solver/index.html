@@ -891,7 +891,7 @@ var EqTiles = (function () {
   // ending 1-7px above it stayed there).
   // MaffsScroll.reveal does it, and again once the fonts arrive (a first visit draws before KaTeX's and the text faces,
   // which grow the block a few px). clear: 8 keeps FONT-FIT's rule that a control ending 1-7px above the fold is moved too.
-  function fitInView(top, bottom) { MaffsScroll.reveal(bottom, { keep: top, inset: FOOTER_PX, up: true, clear: 8 }); }
+  function fitInView(top, bottom) { MaffsScroll.reveal(bottom, { keep: top, up: true, clear: 8 }); }
   function stepInView() {
     fitInView($('step'), function () {
       var kpEl = $('kpHolder').querySelector('.maffs-keypad-panel');

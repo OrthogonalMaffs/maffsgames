@@ -1504,7 +1504,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       MaffsLock.fresh(wrap);   // a double-tap reveals one step, never two
       if (!at && !done) return;
       var keep = b || document.querySelector('#feedback .fb-next button');
-      if (keep) MaffsScroll.reveal(keep, { inset: FOOTER_PX });
+      if (keep) MaffsScroll.reveal(keep, {});
     }
     draw();
   }

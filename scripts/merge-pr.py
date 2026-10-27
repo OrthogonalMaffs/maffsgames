@@ -77,11 +77,14 @@ def main_runs(api):
     return sorted(runs, key=lambda r: r["created_at"], reverse=True)
 
 
+JOBS_PER_PAGE = 50   # GitHub answered 502 at 100 a page for a re-run main run of 71 jobs, every time (27 Oct 2026); 50 read it
+
+
 def run_jobs(api, run_id):
     """Every job of the run's latest attempt, all pages. Raises Refused if the call fails."""
     jobs, page, total = [], 1, None
-    while page <= 20:
-        d = api("GET", "%s/actions/runs/%s/jobs?per_page=100&page=%d" % (R, run_id, page))
+    while page <= 40:
+        d = api("GET", "%s/actions/runs/%s/jobs?per_page=%d&page=%d" % (R, run_id, JOBS_PER_PAGE, page))
         got = d.get("jobs", [])
         jobs += got
         total = d.get("total_count", len(jobs)) if total is None else total
@@ -200,8 +203,10 @@ JOBS_RED = JOBS_OK + [_job("Content verifiers 4", concl="failure")]
 
 
 class Fake:
-    def __init__(self, pr=PR_OPEN, gate=GATE_OK, runs=GREEN, script=None, jobs=None, jobs_script=None, jobs_error=False):
+    def __init__(self, pr=PR_OPEN, gate=GATE_OK, runs=GREEN, script=None, jobs=None, jobs_script=None, jobs_error=False,
+                 max_per_page=None):
         self.pr, self.gate, self.runs, self.calls = pr, gate, runs, []
+        self.max_per_page = max_per_page   # GitHub's 502 for a page too large (27 Oct 2026)
         self.script = script or []   # successive run lists, for the wait case
         # jobs: a list of pages (each a list of jobs); jobs_script: successive such lists, one per poll
         self.jobs = jobs if jobs is not None else [JOBS_OK]
@@ -214,6 +219,9 @@ class Fake:
         if method == "GET" and "/actions/runs/" in path and "/jobs" in path:
             if self.jobs_error:
                 raise Refused("gh api GET %s failed: HTTP 403" % path)
+            per = int(path.split("per_page=", 1)[1].split("&", 1)[0])
+            if self.max_per_page and per > self.max_per_page:
+                raise Refused("gh api GET %s failed: gh: Server Error (HTTP 502)" % path)
             page = int(path.rsplit("page=", 1)[1])
             if self.jobs_script and page == 1:
                 self.jobs = self.jobs_script.pop(0) if len(self.jobs_script) > 1 else self.jobs_script[0]
@@ -372,6 +380,11 @@ def cases(main_check=check_main):
     err = _try(f, main_check=main_check)
     jobs_calls = [c for c in f.calls if "/jobs" in c[1]]
     case("(v) two pages, all green, merges having read both pages", err is None and len(f.merged()) == 1 and len(jobs_calls) >= 2, err or "")
+
+    f = Fake(jobs=[JOBS_OK], max_per_page=50)
+    err = _try(f, main_check=main_check)
+    case("(v) jobs read 50 a page: a main run GitHub cannot list 100 a page (502, 27 Oct 2026) is read and merges",
+         err is None and len(f.merged()) == 1, err or "")
 
     f = Fake(jobs=[JOBS_OPEN])
     err = _try(f, main_check=main_check, override="Jon, 22 Oct 2026: job record stuck")

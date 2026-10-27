@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- UNLISTED (contract Y-SO-STEEP, 27 Oct 2026): live at its URL for Jon to play; off the portal, the sitemap and the leaderboard hub until he lists it. -->
+<meta name="description" content="Find the equation of a straight line: read it, spot it on a grid, use points, then parallel and perpendicular. For GCSE. Free, no sign-up.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/y-so-steep/">
+<meta property="og:title" content="Equation of a Straight Line Game – GCSE Maths | MaffsGames">
+<meta property="og:description" content="Find the equation of a straight line: read it, spot it on a grid, use points, then parallel and perpendicular. For GCSE. Free, no sign-up.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/y-so-steep/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Equation of a Straight Line Game – GCSE Maths | MaffsGames</title>
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/answer-count.js" defer></script>
+<script src="/schools/assets/fold.js" defer></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<style>
+/* Theme: schools/assets/theme.css (canon §7.5), light row: the check derives the palette from the roster's levels and the
+   lowest tier served is GCSE. This game's own tokens: a teal accent and the hill and grid colours. */
+:root{--accent:#0b6b6b;--accent-dim:#e0f2f1;--on-accent:#ffffff;--hill:#2f7d4f;--hill-d:#1f5a37;--sky:#e3f1f8;
+  --gridline:#d4dde6;--axis:#44546a;--ink:#1a2744;--rise:#b45309;--pt:#0b6b6b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:720px;width:100%;padding:1rem}
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.4rem 0}
+.header h1{font-size:1.9rem;font-weight:700;color:var(--accent);line-height:1.15}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem 0 .5rem}
+@media (max-width:420px){.header h1{font-size:1.5rem}}
+.screen{display:none}.screen.active{display:block}
+[hidden]{display:none!important}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.9rem auto;max-width:600px}
+.menu-info{color:var(--text);font-size:.95rem;line-height:1.65}
+.menu-info p+p{margin-top:.6rem}
+.btn{min-height:44px;padding:.6rem 1.2rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--accent-dim)}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.res-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
+
+.hill{display:block;width:100%;max-width:340px;height:auto;margin:.2rem auto .4rem}
+.hill .sky{fill:var(--sky)}.hill .h{fill:var(--hill)}.hill .hd{fill:var(--hill-d)}.hill .path{stroke:var(--rise);stroke-width:4;stroke-dasharray:2 7;stroke-linecap:round;fill:none}
+
+.mode-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:.9rem 0 .3rem}
+.stages{display:flex;flex-direction:column;gap:.5rem}
+.stage-btn{display:flex;align-items:center;gap:.7rem;width:100%;text-align:left;min-height:56px;padding:.45rem .8rem;border-radius:12px;border:1px solid var(--border);background:var(--surface-alt);color:var(--text);cursor:pointer;font:inherit}
+.stage-btn:hover:not(:disabled){border-color:var(--accent)}
+.stage-btn:disabled{opacity:.55;cursor:default}
+.stage-btn .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:700}
+.stage-btn .t{font-weight:700;font-size:.95rem;line-height:1.2}
+.stage-btn .d{display:block;font-weight:400;font-size:.8rem;color:var(--muted);line-height:1.3}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.3rem .8rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.5rem;gap:.3rem}
+.hud-item{text-align:center;min-width:48px}
+.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.hud-val{font-family:var(--font-num);font-size:.95rem;font-weight:700}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.8rem;display:flex;flex-direction:column;gap:.5rem}
+.qtext{font-size:1.05rem;line-height:1.5}
+.qtext .katex{font-size:1.1em}
+.glue{white-space:nowrap}
+.figure{display:flex;justify-content:center}
+.figure svg{display:block;max-width:100%;height:auto}
+.figure .gl{stroke:var(--gridline);stroke-width:1}
+.figure .ax{stroke:var(--axis);stroke-width:1.8}
+.figure .ln{stroke:var(--accent);stroke-width:3;stroke-linecap:round}
+.figure .dot{fill:var(--pt)}
+.figure .tri{fill:none;stroke:var(--rise);stroke-width:2.5;stroke-dasharray:5 4}
+.figure .cdot{fill:var(--rise)}
+.figure text{font-family:var(--font-num);font-size:12.5px;font-weight:700;fill:var(--ink)}
+.figure text.note{fill:var(--rise)}
+.ask-line{display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;min-height:1.4em}
+.ask-line h2{font-size:.92rem;font-weight:700}
+.msg{font-size:.85rem;font-weight:700;color:var(--muted);text-align:right}
+
+.ans-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.5rem .9rem;font-family:var(--font-num);font-size:1.15rem;font-weight:700;padding:.2rem 0}
+.nb{display:inline-flex;align-items:center;gap:.35rem;position:relative}
+.nb input{width:92px;height:46px;text-align:center;font:inherit;font-size:1.1rem;border:2px solid var(--border);border-radius:9px;background:var(--surface-alt);color:var(--text)}
+.nb input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+.actions{display:flex;justify-content:center}
+.actions .btn{min-width:10rem}
+.kp-holder{margin-top:.1rem}
+
+.fb{border-radius:12px;padding:.7rem .8rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.5rem}
+.fb.wrong{border-color:var(--wrong)}
+.fb.done{border-color:var(--correct)}
+.fb-line{font-size:.95rem;line-height:1.45;padding:.35rem .65rem;border-left:3px solid var(--hint);border-radius:0 8px 8px 0}
+.fb.done .fb-line{border-left-color:var(--correct)}
+.worked{margin:0;padding:0 0 0 1.25rem;font-size:.9rem;line-height:1.45;color:var(--text)}
+.worked li+li{margin-top:.2rem}
+.worked-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.fb-next{display:flex;justify-content:center}
+.feedback:empty{display:none}
+.results{text-align:center;padding:1rem 0}
+.results h2{font-size:1.35rem;margin-bottom:.3rem}
+.final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.4rem 0 .1rem}
+.final-of{color:var(--muted);font-size:.9rem;margin-bottom:.5rem}
+.stats{color:var(--muted);line-height:1.9;font-size:.95rem;margin-bottom:.8rem}
+.stats b{color:var(--text)}
+
+/* Phone rule (canon §7.6.1): once a step is marked, the boxes and keys go and the feedback takes their place. */
+.qcard.fb-open #answer,.qcard.fb-open .ask-line,.qcard.fb-open #kpHolder{display:none}
+body.playing a.back-link{display:none}
+@media (max-width:420px){
+  .container{padding:.5rem}
+  .qcard{padding:.6rem .55rem;gap:.4rem}
+  .qtext{font-size:.98rem}
+  .hud{padding:.2rem .5rem}
+}
+@media (max-height:620px){.qtext{font-size:.92rem}.fb{padding:.5rem .6rem;gap:.35rem}.worked{font-size:.84rem}.hud-label{display:none}.hud{padding:.1rem .5rem;margin-bottom:.3rem}.qcard{gap:.3rem}.ans-row{padding:0}}
+@media (max-height:620px){.qcard.solo .ask-line{display:none}}
+@media (max-height:620px){.fb-next{order:1}.fb>.worked-h,.fb>.worked{order:2}}
+body.accessible{letter-spacing:.12em;word-spacing:.16em}
+body.accessible .hud-label,body.accessible .hud-val,body.accessible .ans-row{letter-spacing:0}
+body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;max-width:65ch}
+body.accessible .katex{letter-spacing:normal;word-spacing:normal}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'answer' types the step's boxes with i = 0 the right answer, i >= 1 a wrong one (named, then Next).
+{
+  "start": "YS.ui.start(1)",
+  "ready": "!!window.YS && YS.ui.state() === 'asking'",
+  "answer": [
+    "YS.ui.answer(i === 0);"
+  ]
+}
+-->
+<script src="../../schools/assets/answer.js"></script>
+<!-- The phone keypad for typed answers (MaffsKeypad, canon §4.4): a non-calculator game, so the keypad only. -->
+<script src="../../schools/assets/scroll.js"></script>
+<script src="../../schools/assets/keypad.js"></script>
+<script src="../../schools/assets/y-so-steep-gen.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Y So Steep?</h1><div class="sub">The equation of a straight line, one step at a time.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <svg class="hill" viewBox="0 0 340 110" role="img" aria-label="A hill with a dotted path climbing it in a straight line">
+      <rect class="sky" x="0" y="0" width="340" height="110" rx="12"/>
+      <polygon class="hd" points="0,110 0,86 120,60 200,92 270,40 340,70 340,110"/>
+      <polygon class="h" points="0,110 0,100 90,84 190,100 280,64 340,88 340,110"/>
+      <line class="path" x1="28" y1="96" x2="312" y2="30"/>
+    </svg>
+    <div class="panel menu-info">
+      <p>Every straight line is <strong>y = mx + c</strong>. <em>m</em> says how steep it is, and <em>c</em> says where it crosses the y-axis. Each round is six questions. Type m and c into the two boxes.</p>
+      <p>The longer questions are split into steps: the gradient, then c, then the whole equation. Each step is its own mark.</p>
+      <div class="mode-h">Foundation</div>
+      <div class="stages" id="stageListF"></div>
+      <div class="mode-h">Higher</div>
+      <div class="stages" id="stageListH"></div>
+    </div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+    <div class="maffs-start-note" data-maffs-start-note></div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Stage</div><div class="hud-val" id="hudStage">1</div></div>
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/6</div></div>
+      <div class="hud-item"><div class="hud-label">Marks</div><div class="hud-val" id="hudScore">0</div></div>
+    </div>
+    <div class="qcard" id="qcard">
+      <div class="qtext" id="qtext"></div>
+      <div class="figure" id="figure" hidden></div>
+      <div class="ask-line"><h2 id="instr">Type m and c</h2><div class="msg" id="msg" aria-live="polite"></div></div>
+      <div id="answer"></div>
+      <div class="kp-holder" id="kpHolder" hidden></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resTitle">Stage done</h2>
+      <div class="final-score" id="resScore">0</div>
+      <div class="final-of" id="resOf">marks</div>
+      <div class="stats" id="resStats"></div>
+      <div class="res-btns">
+        <button class="btn solid" id="nextStageBtn" type="button">Next stage</button>
+        <button class="btn" id="againBtn" type="button">Play this stage again</button>
+        <button class="btn" id="menuBtn" type="button">All stages</button>
+      </div>
+      <p id="teacherInvite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var M = window.MaffsYSoSteep, A = window.MaffsAnswer, SLUG = 'y-so-steep', PER_ROUND = 6, FOOTER_PX = 40, LAST = 6, NS = 'http://www.w3.org/2000/svg';
+  // Fraction entry: MaffsAnswer.fraction() reads a/b exactly, but MaffsKeypad has no "/" key yet (the fraction variant is on
+  // its own unmerged branch, claude/keypad-fraction-key). Until it merges, only whole-number gradients and intercepts are
+  // offered and Stage 3 (rearrange it, with fractions) is off. Set true when the key is on main.
+  var FRACTIONS = false;
+  // One level of content, GCSE; the stages are boards, not levels. Stage 6 has no board (its key needs a label in a shared file).
+  var level = MaffsLevel.resolve({ slug: 'y-so-steep', levels: ['gcse'], fallback: 'gcse',
+    boards: ['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5'] });
+  var $ = function (id) { return document.getElementById(id); };
+  function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function tex(t) {
+    if (window.katex) {
+      try { return katex.renderToString(t, { throwOnError: false }); } catch (e) { /* fall through */ }
+    }
+    return esc(t.replace(/\\times/g, '×').replace(/\\frac\{(-?\d+)\}\{(\d+)\}/g, '$1/$2'));
+  }
+  function renderLine(line) {
+    return line.split('§').map(function (part, i) { return i % 2 ? '<span class="glue">' + tex(part) + '</span>' : esc(part); }).join('');
+  }
+  function mode(n) { return M.STAGES[n].mode + '-s' + n; }
+  function boardOf(n) { return n <= 5 ? 'stage-' + n : null; }
+  function touch() { return !!(window.matchMedia && matchMedia('(pointer: coarse)').matches); }
+
+  var stage = 1, session = [], qi = 0, si = 0, Q = null, step = null, state = 'menu', kp = null, inputs = [];
+  var marks = 0, answered = 0, rightCount = 0;
+
+  function show(id) {
+    ['menu', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    document.body.classList.toggle('playing', id === 'game');
+    MaffsLock.screen($(id));
+  }
+
+  /* ---------- the menu ---------- */
+  (function () {
+    var f = '', h = '';
+    for (var n = 1; n <= LAST; n++) {
+      var S = M.STAGES[n], off = S.needsFractions && !FRACTIONS;
+      var b = '<button class="stage-btn" type="button" data-stage="' + n + '"' + (off ? ' disabled' : '') + '><span class="n">' + n + '</span><span><span class="t">' + esc(S.name) +
+        '</span><span class="d">' + esc(off ? 'Coming soon: it needs fractions.' : S.blurb) + '</span></span></button>';
+      if (S.mode === 'foundation') f += b; else h += b;
+    }
+    $('stageListF').innerHTML = f; $('stageListH').innerHTML = h;
+  })();
+
+  /* ---------- the grid ---------- */
+  function el(name, attrs, text) {
+    var e = document.createElementNS(NS, name);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (text !== undefined) e.textContent = text;
+    return e;
+  }
+  // The line is drawn from its own data (m, c): the two ends at x = -range and x = range, clipped to the grid.
+  function gridSvg(fig, size, help) {
+    var R = fig.range, L = 26, T = 8, Rr = 8, B = 20, u = (size - L - Rr) / (2 * R), ub = (size - T - B) / (2 * R);
+    var U = Math.min(u, ub), W = L + 2 * R * U + Rr, H = T + 2 * R * U + B;
+    function X(x) { return L + (x + R) * U; }
+    function Y(y) { return T + (R - y) * U; }
+    var svg = el('svg', { viewBox: '0 0 ' + W.toFixed(1) + ' ' + H.toFixed(1), width: W.toFixed(1), height: H.toFixed(1), role: 'img',
+      'aria-label': 'A grid from -' + R + ' to ' + R + ' with a straight line drawn on it' });
+    var clip = el('clipPath', { id: 'gclip' }); clip.appendChild(el('rect', { x: X(-R), y: Y(R), width: 2 * R * U, height: 2 * R * U })); svg.appendChild(clip);
+    var i, step = U >= 17 ? 1 : 2;
+    for (i = -R; i <= R; i++) svg.appendChild(el('line', { class: i === 0 ? 'ax' : 'gl', x1: X(i), y1: Y(-R), x2: X(i), y2: Y(R) }));
+    for (i = -R; i <= R; i++) svg.appendChild(el('line', { class: i === 0 ? 'ax' : 'gl', x1: X(-R), y1: Y(i), x2: X(R), y2: Y(i) }));
+    for (i = -R; i <= R; i++) {
+      if (i === 0 || i % step) continue;
+      svg.appendChild(el('text', { x: X(i), y: Y(-R) + 14, 'text-anchor': 'middle', 'data-axis': 'x' }, String(i)));
+      svg.appendChild(el('text', { x: X(-R) - 4, y: Y(i) + 4, 'text-anchor': 'end', 'data-axis': 'y' }, String(i)));
+    }
+    var g = el('g', { 'clip-path': 'url(#gclip)' });
+    g.appendChild(el('line', { class: 'ln', 'data-line': '1', x1: X(-R), y1: Y(fig.m * -R + fig.c), x2: X(R), y2: Y(fig.m * R + fig.c) }));
+    svg.appendChild(g);
+    fig.pts.forEach(function (p) { svg.appendChild(el('circle', { class: 'dot', 'data-pt': p[0] + ',' + p[1], cx: X(p[0]), cy: Y(p[1]), r: 4.2 })); });
+    if (help) {          // a wrong answer: the rise and run triangle between two lattice points, and the intercept marked
+      var a = fig.pts[0], b = fig.pts[1];
+      svg.appendChild(el('polygon', { class: 'tri', points: [X(a[0]), Y(a[1]), X(b[0]), Y(a[1]), X(b[0]), Y(b[1])].join(',') }));
+      svg.appendChild(el('text', { class: 'note', x: (X(a[0]) + X(b[0])) / 2, y: Y(a[1]) + (fig.m > 0 ? 15 : -6), 'text-anchor': 'middle' }, 'run ' + (b[0] - a[0])));
+      svg.appendChild(el('text', { class: 'note', x: X(b[0]) + 5, y: (Y(a[1]) + Y(b[1])) / 2 + 4 }, 'rise ' + (b[1] - a[1])));
+      svg.appendChild(el('circle', { class: 'cdot', 'data-c': '1', cx: X(0), cy: Y(fig.c), r: 5.5 }));
+      svg.appendChild(el('text', { class: 'note', x: X(0) + 8, y: Y(fig.c) - 6 }, 'c = ' + fig.c));
+    }
+    return svg;
+  }
+  function drawFigure(help) {
+    var f = $('figure');
+    f.hidden = !Q.figure;
+    f.innerHTML = '';
+    if (!Q.figure) return;
+    // On a phone the grid shrinks so that the question, the boxes and the keys fit one screen (never below 140 px).
+    var size = touch() ? Math.max(140, Math.min(270, window.innerHeight - 480)) : 270;
+    var cardW = $('qcard').clientWidth - 28;
+    f.appendChild(gridSvg(Q.figure, Math.max(140, Math.min(size, cardW)), help));
+  }
+
+  /* ---------- play ---------- */
+  function startStage(n) {
+    MaffsLock.newSession();
+    stage = n;
+    session = M.session(n, Math.floor(Math.random() * 4294967296), FRACTIONS, PER_ROUND);
+    qi = 0; marks = 0; answered = 0; rightCount = 0;
+    show('game');
+    $('hudStage').textContent = n;
+    ev('game_started', { game_slug: SLUG, level: level, mode: mode(n) });
+    nextQuestion();
+  }
+  function nextQuestion() {
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    $('feedback').innerHTML = '';
+    $('qcard').classList.remove('fb-open');
+    if (qi >= session.length) { finish(); return; }
+    Q = session[qi++]; si = 0;
+    $('qcard').classList.toggle('solo', Q.steps.length === 1);
+    $('hudQ').textContent = qi + '/' + PER_ROUND;
+    $('hudScore').textContent = marks;
+    $('qtext').innerHTML = '<p>' + renderLine(Q.stem) + '</p>';
+    drawFigure(false);
+    askStep();
+  }
+  function askStep() {
+    step = Q.steps[si]; state = 'asking';
+    $('feedback').innerHTML = '';
+    $('qcard').classList.remove('fb-open');
+    $('instr').textContent = step.instr;
+    $('msg').textContent = Q.steps.length > 1 ? 'Step ' + (si + 1) + ' of ' + Q.steps.length : '';
+    buildBoxes();
+    MaffsLock.fresh($('answer'));
+    window.scrollTo(0, 0);
+  }
+  function buildBoxes() {
+    var h = '<div class="ans-row" role="group" aria-label="Your answer">';
+    step.labels.forEach(function (l, i) {
+      h += '<label class="nb">' + esc(l) + ' = <input type="text" inputmode="decimal" autocomplete="off" maxlength="7" aria-label="' + esc(l) + '" data-i="' + i + '"></label>';
+    });
+    h += '</div><div class="actions"><button class="btn solid" id="checkBtn" type="button" disabled>Check</button></div>';
+    $('answer').innerHTML = h;
+    inputs = Array.prototype.slice.call($('answer').querySelectorAll('input'));
+    var holder = $('kpHolder'), k = document.createElement('div');
+    holder.innerHTML = ''; holder.hidden = false; holder.appendChild(k);
+    kp = window.MaffsKeypad ? MaffsKeypad.mount(k, { targets: inputs, keys: { minus: true, fraction: FRACTIONS }, maxLength: 7, keepInView: $('answer'), foldInset: FOOTER_PX }) : null;
+    if (!(kp && kp.enabled && kp.enabled())) { holder.hidden = true; try { inputs[0].focus({ preventScroll: true }); } catch (e) {} }
+  }
+  function raws() { return inputs.map(function (i) { return i.value.trim(); }); }
+  function readable() { return raws().every(function (r) { return r !== '' && A.fraction(r); }); }
+  function refreshCheck() { var b = $('checkBtn'); if (b) b.disabled = !raws().every(function (r) { return r !== ''; }); }
+
+  function mark() {
+    if (state !== 'asking') return;
+    if (!readable()) { $('msg').textContent = A.message('unreadable'); return; }
+    if (!MaffsLock.lock($('answer'))) return;
+    var r = M.mark(Q, si, raws()), ok = r.kind === 'right';
+    answered++; if (ok) { rightCount++; marks++; }
+    $('hudScore').textContent = marks;
+    ev('question_answered', { game_slug: SLUG, level: level, mode: mode(stage), question_index: qi, correct: ok });
+    var last = si + 1 >= Q.steps.length, fb = $('feedback');
+    $('qcard').classList.add('fb-open');
+    if (ok) {
+      state = 'done';
+      fb.innerHTML = '<div class="fb done"><div class="fb-line">Yes. ' + renderLine(doneLine()) + '</div>' +
+        '<div class="fb-next"><button class="btn solid" id="nextBtn" type="button">' + (last && qi >= PER_ROUND ? 'See results →' : 'Next →') + '</button></div></div>';
+      MaffsLock.fresh(fb);
+      $('nextBtn').focus();
+    } else {
+      state = 'wrong';
+      if (Q.figure) drawFigure(true);
+      var half = r.ok.length > 1 && r.ok[0] !== r.ok[1] ? (r.ok[0] ? ' Your m is right: check c.' : ' Your c is right: check m.') : '';
+      fb.innerHTML = '<div class="fb wrong"><div class="fb-line" data-help="reason">' + renderLine(r.why || step.generic) + esc(half) + '</div><div class="fb-next"></div>' + workedHtml() + '</div>';
+      MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance });
+    }
+  }
+  // The neatest working for a right step: the matching worked line (stage 5 has no gradient step, so its first step is the second line).
+  function doneLine() {
+    var w = Q.worked, n = Q.steps.length;
+    if (n === 1) return w[w.length - 1];
+    return w[Q.steps.length === 2 ? si + 1 : si];
+  }
+  function workedHtml() {
+    return '<div class="worked-h">How it goes</div><ol class="worked">' + Q.worked.map(function (l) { return '<li>' + renderLine(l) + '</li>'; }).join('') + '</ol>';
+  }
+  function advance() {
+    if (state === 'moving') return;
+    state = 'moving';
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    if (si + 1 < Q.steps.length) { si++; askStep(); } else nextQuestion();
+  }
+
+  var finish = MaffsLock.finishOnce(function () {
+    state = 'done';
+    var S = M.STAGES[stage], max = PER_ROUND * S.marks, board = boardOf(stage), score = marks;
+    ev('game_completed', { game_slug: SLUG, level: level, mode: mode(stage), score: score, questions_answered: answered, questions_correct: rightCount });
+    if (board && window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, board, score, answered).catch(function () {});
+    if (board && window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, board, score);
+    var pbKey = 'yss_best_' + stage, prev = parseInt(lsGet(pbKey) || '0', 10) || 0, pb = score > prev;
+    if (pb) { ev('personal_best_set', { game_slug: SLUG, level: level, mode: mode(stage), score: score, previous_best: prev }); lsSet(pbKey, String(score)); }
+    $('kpHolder').innerHTML = ''; $('kpHolder').hidden = true;
+    $('resTitle').textContent = 'Stage ' + stage + ' done: ' + S.name;
+    $('resScore').textContent = score;
+    $('resOf').textContent = 'marks, out of ' + max;
+    $('resStats').innerHTML = '<b>' + rightCount + '</b> right out of <b>' + answered + '</b> answers' + (pb ? '<br>New personal best' : '') + (board ? '' : '<br>This stage has no leaderboard yet.');
+    var nx = stage + 1;
+    while (nx <= LAST && M.STAGES[nx].needsFractions && !FRACTIONS) nx++;
+    $('nextStageBtn').hidden = nx > LAST;
+    $('nextStageBtn').dataset.stage = nx;
+    $('nextStageBtn').textContent = 'Stage ' + nx;
+    show('results');
+  });
+
+  /* ---------- wiring ---------- */
+  function pick(e) { var b = e.target.closest('[data-stage]'); if (b && !b.disabled) startStage(parseInt(b.dataset.stage, 10)); }
+  $('stageListF').addEventListener('click', pick);
+  $('stageListH').addEventListener('click', pick);
+  $('nextStageBtn').addEventListener('click', function () { startStage(parseInt($('nextStageBtn').dataset.stage, 10)); });
+  $('againBtn').addEventListener('click', function () { startStage(stage); });
+  $('menuBtn').addEventListener('click', function () { state = 'menu'; show('menu'); });
+  $('answer').addEventListener('click', function (e) { if (e.target.closest('#checkBtn')) mark(); });
+  $('answer').addEventListener('input', refreshCheck);
+  $('answer').addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' || e.target.tagName !== 'INPUT') return;
+    e.preventDefault();
+    var empty = inputs.filter(function (i) { return i.value === ''; })[0];
+    if (empty) empty.focus(); else mark();
+  });
+  $('feedback').addEventListener('click', function (e) { if (e.target.closest('#nextBtn') && state === 'done') advance(); });
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(lsGet(KEY) === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); lsSet(KEY, String(on)); apply(on); });
+  })();
+
+  // Read-only views of live state, for scripts/verify-y-so-steep.py and the lock hint above.
+  window.YS = {
+    SLUG: SLUG,
+    ui: {
+      state: function () { return state; },
+      level: function () { return level; },
+      stage: function () { return stage; },
+      question: function () { return Q ? JSON.parse(JSON.stringify(Q)) : null; },
+      stepIndex: function () { return si; },
+      score: function () { return marks; },
+      fractions: function () { return FRACTIONS; },
+      start: function (n) { startStage(n); },
+      // Type the step on screen: the right answer, or a wrong one (the last box a long way off).
+      answer: function (right) {
+        for (var i = 0; i < inputs.length; i++) {
+          var key = M.fstr(step.keys[i]);
+          inputs[i].value = right || i < inputs.length - 1 ? key : String(Math.round(step.keys[i][0] / step.keys[i][1]) + 7);
+        }
+        refreshCheck();
+        $('checkBtn').click();
+      }
+    }
+  };
+})();
+</script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'y-so-steep');</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

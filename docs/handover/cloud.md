@@ -51,6 +51,8 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only via `python scripts/merge-pr.py <n>`
 (needs a green Gate and main, §7.8.3); watch main's run after.
 
+## 2026-10-27 (cloud): EB-SPLIT (Jon, 27 Oct: Equation Builder part 1 at 151 s + 46 s setup, over the per-line limit, blocked every new-game PR). **TEMPORARY hand split, 2 -> 3 parts** (`--part i/3`; part 1 keeps the whole-question checks and the self-test); contract SHARD replaces it (branch `claude/shard`: ci-groups.py chooses the parts). Local: part 1 141 s (with the self-test), parts 2-3 126 s each, on a loaded container.
+
 ## 2026-10-27 (cloud): FOLD-COMPONENTS (contract `docs/handover/contracts/2026-10-27-fold-components.md`). **IN PROGRESS; checkpoint 27 Oct.**
 
 - **Lane exception, as granted (Jon, 27 Oct, this contract only):** "theme.css, canon §7.5/§7.6.1, _config.yml, the shared scripts, and per-game edits to listed games in the three groups. Claim each game before editing it, and record the exception in the handover." Canon outside §7.5/§7.6.1 stops and asks. Not ours (Jon): `site-footer.css` and `the-6-ps/` (The 6 P's footer fault went to the home lane). The home lane runs the pie-charts bank meanwhile (`gen-six-ps.py`, canon outside §7.5/§7.6).

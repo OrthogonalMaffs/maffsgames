@@ -82,7 +82,7 @@ def check_static(root, slugs=None):
     data = root / "schools" / "assets" / "answer-counts.json"
     if slugs is None:
         try:
-            for x in f.validate(json.loads(data.read_text(encoding="utf-8")), f.slugs(root), require_today=False):
+            for x in f.validate(json.loads(data.read_text(encoding="utf-8")), require_today=False):
                 fails.append("schools/assets/answer-counts.json: " + x)
         except Exception as exc:
             fails.append("schools/assets/answer-counts.json: %s" % exc)
@@ -709,8 +709,7 @@ def selftest():
 def check_static_data(root):
     f = _load("fetch_counts", "fetch-answer-counts.py")
     try:
-        return ["schools/assets/answer-counts.json: " + x for x in f.validate(json.loads((root / "schools" / "assets" / "answer-counts.json").read_text(encoding="utf-8")),
-                                                                    f.slugs(root), require_today=False)]
+        return ["schools/assets/answer-counts.json: " + x for x in f.validate(json.loads((root / "schools" / "assets" / "answer-counts.json").read_text(encoding="utf-8")), require_today=False)]
     except Exception as exc:
         return ["schools/assets/answer-counts.json: %s" % exc]
 

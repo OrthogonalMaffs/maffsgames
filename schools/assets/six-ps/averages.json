@@ -38,7 +38,7 @@
      "answer": {
       "value": 2.5
      },
-     "line": "You multiplied the mean by the wrong number of values."
+     "line": "You divided the total by 4 instead of 5, the number of values."
     }
    ]
   },
@@ -78,7 +78,7 @@
      "answer": {
       "value": 7.2
      },
-     "line": "You multiplied the mean by the wrong number of values."
+     "line": "You divided the total by 5 instead of 6, the number of values."
     }
    ]
   },
@@ -118,7 +118,7 @@
      "answer": {
       "value": 20.4
      },
-     "line": "You multiplied the mean by the wrong number of values."
+     "line": "You divided the total by 5 instead of 6, the number of values."
     }
    ]
   },
@@ -156,9 +156,9 @@
     },
     {
      "answer": {
-      "value": 15.2
+      "value": 15.166666666666666
      },
-     "line": "You multiplied the mean by the wrong number of values."
+     "line": "You divided the total by 6 instead of 7, the number of values."
     }
    ]
   },
@@ -196,9 +196,9 @@
     },
     {
      "answer": {
-      "value": 13.7
+      "value": 13.714285714285714
      },
-     "line": "You multiplied the mean by the wrong number of values."
+     "line": "You divided the total by 7 instead of 8, the number of values."
     }
    ]
   },
@@ -236,9 +236,9 @@
     },
     {
      "answer": {
-      "value": 7.9
+      "value": 7.875
      },
-     "line": "You multiplied the mean by the wrong number of values."
+     "line": "You divided the total by 8 instead of 9, the number of values."
     }
    ]
   },
@@ -278,7 +278,7 @@
      "answer": {
       "value": 18
      },
-     "line": "You multiplied the mean by the wrong number of values."
+     "line": "You divided the total by 8 instead of 9, the number of values."
     }
    ]
   },
@@ -316,9 +316,9 @@
     },
     {
      "answer": {
-      "value": 11.1
+      "value": 11.11111111111111
      },
-     "line": "You multiplied the mean by the wrong number of values."
+     "line": "You divided the total by 9 instead of 10, the number of values."
     }
    ]
   },
@@ -356,9 +356,9 @@
     },
     {
      "answer": {
-      "value": 18.9
+      "value": 18.88888888888889
      },
-     "line": "You multiplied the mean by the wrong number of values."
+     "line": "You divided the total by 9 instead of 10, the number of values."
     }
    ]
   },
@@ -398,7 +398,7 @@
      "answer": {
       "value": 11
      },
-     "line": "You multiplied the mean by the wrong number of values."
+     "line": "You divided the total by 10 instead of 11, the number of values."
     }
    ]
   },
@@ -724,7 +724,7 @@
     },
     {
      "answer": {
-      "value": 8.4
+      "value": 8.428571428571429
      },
      "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
     }
@@ -765,7 +765,7 @@
     },
     {
      "answer": {
-      "value": 10.1
+      "value": 10.142857142857142
      },
      "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
     }
@@ -806,7 +806,7 @@
     },
     {
      "answer": {
-      "value": 14.4
+      "value": 14.428571428571429
      },
      "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
     }
@@ -1093,7 +1093,7 @@
     },
     {
      "answer": {
-      "value": 6.3
+      "value": 6.25
      },
      "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
     }
@@ -1134,7 +1134,7 @@
     },
     {
      "answer": {
-      "value": 8.8
+      "value": 8.75
      },
      "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
     }
@@ -1175,7 +1175,7 @@
     },
     {
      "answer": {
-      "value": 11.3
+      "value": 11.25
      },
      "line": "That is the mean (the total shared out equally) — the median is the middle value once the data is sorted."
     }
@@ -2316,7 +2316,7 @@
     },
     {
      "answer": {
-      "value": 9.2
+      "value": 9.166666666666666
      },
      "line": "That is the mean of the data — the range measures the spread (largest minus smallest), not the average."
     }
@@ -2356,7 +2356,7 @@
     },
     {
      "answer": {
-      "value": 4.9
+      "value": 4.857142857142857
      },
      "line": "That is the mean of the data — the range measures the spread (largest minus smallest), not the average."
     }
@@ -2396,7 +2396,7 @@
     },
     {
      "answer": {
-      "value": 15.4
+      "value": 15.428571428571429
      },
      "line": "That is the mean of the data — the range measures the spread (largest minus smallest), not the average."
     }
@@ -2436,7 +2436,7 @@
     },
     {
      "answer": {
-      "value": 9.3
+      "value": 9.25
      },
      "line": "That is the mean of the data — the range measures the spread (largest minus smallest), not the average."
     }
@@ -2476,7 +2476,7 @@
     },
     {
      "answer": {
-      "value": 9.8
+      "value": 9.777777777777779
      },
      "line": "That is the mean of the data — the range measures the spread (largest minus smallest), not the average."
     }
@@ -2516,7 +2516,7 @@
     },
     {
      "answer": {
-      "value": 14.4
+      "value": 14.444444444444445
      },
      "line": "That is the mean of the data — the range measures the spread (largest minus smallest), not the average."
     }

@@ -19,7 +19,7 @@
    },
    "worked": [
     "\\(x + 7 = 12\\)",
-    "\\(\\text{Subtract } 7 \\text{ from both sides}\\)",
+    "Subtract \\(7\\) from both sides",
     "\\(x = 5\\)"
    ],
    "slip": []
@@ -41,7 +41,7 @@
    },
    "worked": [
     "\\(x + 9 = 4\\)",
-    "\\(\\text{Subtract } 9 \\text{ from both sides}\\)",
+    "Subtract \\(9\\) from both sides",
     "\\(x = -5\\)"
    ],
    "slip": []
@@ -63,7 +63,7 @@
    },
    "worked": [
     "\\(x + 15 = 8\\)",
-    "\\(\\text{Subtract } 15 \\text{ from both sides}\\)",
+    "Subtract \\(15\\) from both sides",
     "\\(x = -7\\)"
    ],
    "slip": []
@@ -85,7 +85,7 @@
    },
    "worked": [
     "\\(x + 6 = 31\\)",
-    "\\(\\text{Subtract } 6 \\text{ from both sides}\\)",
+    "Subtract \\(6\\) from both sides",
     "\\(x = 25\\)"
    ],
    "slip": []
@@ -107,7 +107,7 @@
    },
    "worked": [
     "\\(x + 24 = 11\\)",
-    "\\(\\text{Subtract } 24 \\text{ from both sides}\\)",
+    "Subtract \\(24\\) from both sides",
     "\\(x = -13\\)"
    ],
    "slip": []
@@ -129,7 +129,7 @@
    },
    "worked": [
     "\\(x + 13 = 13\\)",
-    "\\(\\text{Subtract } 13 \\text{ from both sides}\\)",
+    "Subtract \\(13\\) from both sides",
     "\\(x = 0\\)"
    ],
    "slip": []
@@ -151,7 +151,7 @@
    },
    "worked": [
     "\\(x + 8 = 3\\)",
-    "\\(\\text{Subtract } 8 \\text{ from both sides}\\)",
+    "Subtract \\(8\\) from both sides",
     "\\(x = -5\\)"
    ],
    "slip": []
@@ -173,7 +173,7 @@
    },
    "worked": [
     "\\(x + 19 = 40\\)",
-    "\\(\\text{Subtract } 19 \\text{ from both sides}\\)",
+    "Subtract \\(19\\) from both sides",
     "\\(x = 21\\)"
    ],
    "slip": []
@@ -195,7 +195,7 @@
    },
    "worked": [
     "\\(x - 9 = 4\\)",
-    "\\(\\text{Add } 9 \\text{ to both sides}\\)",
+    "Add \\(9\\) to both sides",
     "\\(x = 13\\)"
    ],
    "slip": []
@@ -217,7 +217,7 @@
    },
    "worked": [
     "\\(x - 5 = 12\\)",
-    "\\(\\text{Add } 5 \\text{ to both sides}\\)",
+    "Add \\(5\\) to both sides",
     "\\(x = 17\\)"
    ],
    "slip": []
@@ -239,7 +239,7 @@
    },
    "worked": [
     "\\(x - 14 = 6\\)",
-    "\\(\\text{Add } 14 \\text{ to both sides}\\)",
+    "Add \\(14\\) to both sides",
     "\\(x = 20\\)"
    ],
    "slip": []
@@ -261,7 +261,7 @@
    },
    "worked": [
     "\\(x - 3 = 20\\)",
-    "\\(\\text{Add } 3 \\text{ to both sides}\\)",
+    "Add \\(3\\) to both sides",
     "\\(x = 23\\)"
    ],
    "slip": []
@@ -283,7 +283,7 @@
    },
    "worked": [
     "\\(x - 11 = 2\\)",
-    "\\(\\text{Add } 11 \\text{ to both sides}\\)",
+    "Add \\(11\\) to both sides",
     "\\(x = 13\\)"
    ],
    "slip": []
@@ -305,7 +305,7 @@
    },
    "worked": [
     "\\(x - 17 = 17\\)",
-    "\\(\\text{Add } 17 \\text{ to both sides}\\)",
+    "Add \\(17\\) to both sides",
     "\\(x = 34\\)"
    ],
    "slip": []
@@ -327,7 +327,7 @@
    },
    "worked": [
     "\\(x - 6 = 25\\)",
-    "\\(\\text{Add } 6 \\text{ to both sides}\\)",
+    "Add \\(6\\) to both sides",
     "\\(x = 31\\)"
    ],
    "slip": []
@@ -349,7 +349,7 @@
    },
    "worked": [
     "\\(12 + x = 30\\)",
-    "\\(\\text{Subtract } 12 \\text{ from both sides}\\)",
+    "Subtract \\(12\\) from both sides",
     "\\(x = 18\\)"
    ],
    "slip": []
@@ -371,7 +371,7 @@
    },
    "worked": [
     "\\(5 + x = 2\\)",
-    "\\(\\text{Subtract } 5 \\text{ from both sides}\\)",
+    "Subtract \\(5\\) from both sides",
     "\\(x = -3\\)"
    ],
    "slip": []
@@ -393,7 +393,7 @@
    },
    "worked": [
     "\\(21 + x = 9\\)",
-    "\\(\\text{Subtract } 21 \\text{ from both sides}\\)",
+    "Subtract \\(21\\) from both sides",
     "\\(x = -12\\)"
    ],
    "slip": []
@@ -415,7 +415,7 @@
    },
    "worked": [
     "\\(8 + x = 41\\)",
-    "\\(\\text{Subtract } 8 \\text{ from both sides}\\)",
+    "Subtract \\(8\\) from both sides",
     "\\(x = 33\\)"
    ],
    "slip": []
@@ -437,7 +437,7 @@
    },
    "worked": [
     "\\(6x = 42\\)",
-    "\\(\\text{Divide both sides by } 6\\)",
+    "Divide both sides by \\(6\\)",
     "\\(x = 7\\)"
    ],
    "slip": []
@@ -459,7 +459,7 @@
    },
    "worked": [
     "\\(9x = 54\\)",
-    "\\(\\text{Divide both sides by } 9\\)",
+    "Divide both sides by \\(9\\)",
     "\\(x = 6\\)"
    ],
    "slip": []
@@ -481,7 +481,7 @@
    },
    "worked": [
     "\\(7x = 91\\)",
-    "\\(\\text{Divide both sides by } 7\\)",
+    "Divide both sides by \\(7\\)",
     "\\(x = 13\\)"
    ],
    "slip": []
@@ -503,7 +503,7 @@
    },
    "worked": [
     "\\(11x = 88\\)",
-    "\\(\\text{Divide both sides by } 11\\)",
+    "Divide both sides by \\(11\\)",
     "\\(x = 8\\)"
    ],
    "slip": []
@@ -525,7 +525,7 @@
    },
    "worked": [
     "\\(4x = 100\\)",
-    "\\(\\text{Divide both sides by } 4\\)",
+    "Divide both sides by \\(4\\)",
     "\\(x = 25\\)"
    ],
    "slip": []
@@ -547,7 +547,7 @@
    },
    "worked": [
     "\\(3x = 51\\)",
-    "\\(\\text{Divide both sides by } 3\\)",
+    "Divide both sides by \\(3\\)",
     "\\(x = 17\\)"
    ],
    "slip": []
@@ -569,7 +569,7 @@
    },
    "worked": [
     "\\(\\frac{x}{4} = 9\\)",
-    "\\(\\text{Multiply both sides by } 4\\)",
+    "Multiply both sides by \\(4\\)",
     "\\(x = 36\\)"
    ],
    "slip": []
@@ -591,7 +591,7 @@
    },
    "worked": [
     "\\(\\frac{x}{7} = 3\\)",
-    "\\(\\text{Multiply both sides by } 7\\)",
+    "Multiply both sides by \\(7\\)",
     "\\(x = 21\\)"
    ],
    "slip": []
@@ -613,7 +613,7 @@
    },
    "worked": [
     "\\(\\frac{x}{5} = 12\\)",
-    "\\(\\text{Multiply both sides by } 5\\)",
+    "Multiply both sides by \\(5\\)",
     "\\(x = 60\\)"
    ],
    "slip": []
@@ -635,7 +635,7 @@
    },
    "worked": [
     "\\(\\frac{x}{6} = 7\\)",
-    "\\(\\text{Multiply both sides by } 6\\)",
+    "Multiply both sides by \\(6\\)",
     "\\(x = 42\\)"
    ],
    "slip": []
@@ -657,7 +657,7 @@
    },
    "worked": [
     "\\(\\frac{x}{9} = 4\\)",
-    "\\(\\text{Multiply both sides by } 9\\)",
+    "Multiply both sides by \\(9\\)",
     "\\(x = 36\\)"
    ],
    "slip": []
@@ -679,7 +679,7 @@
    },
    "worked": [
     "\\(\\frac{x}{2} = 17\\)",
-    "\\(\\text{Multiply both sides by } 2\\)",
+    "Multiply both sides by \\(2\\)",
     "\\(x = 34\\)"
    ],
    "slip": []
@@ -701,7 +701,7 @@
    },
    "worked": [
     "\\(-4x = 20\\)",
-    "\\(\\text{Divide both sides by } -4\\)",
+    "Divide both sides by \\(-4\\)",
     "\\(x = -5\\)"
    ],
    "slip": []
@@ -723,7 +723,7 @@
    },
    "worked": [
     "\\(5x = -35\\)",
-    "\\(\\text{Divide both sides by } 5\\)",
+    "Divide both sides by \\(5\\)",
     "\\(x = -7\\)"
    ],
    "slip": []
@@ -745,7 +745,7 @@
    },
    "worked": [
     "\\(-3x = -27\\)",
-    "\\(\\text{Divide both sides by } -3\\)",
+    "Divide both sides by \\(-3\\)",
     "\\(x = 9\\)"
    ],
    "slip": []
@@ -767,7 +767,7 @@
    },
    "worked": [
     "\\(-7x = 42\\)",
-    "\\(\\text{Divide both sides by } -7\\)",
+    "Divide both sides by \\(-7\\)",
     "\\(x = -6\\)"
    ],
    "slip": []
@@ -789,7 +789,7 @@
    },
    "worked": [
     "\\(8x = -56\\)",
-    "\\(\\text{Divide both sides by } 8\\)",
+    "Divide both sides by \\(8\\)",
     "\\(x = -7\\)"
    ],
    "slip": []
@@ -811,7 +811,7 @@
    },
    "worked": [
     "\\(\\frac{x}{3} = -6\\)",
-    "\\(\\text{Multiply both sides by } 3\\)",
+    "Multiply both sides by \\(3\\)",
     "\\(x = -18\\)"
    ],
    "slip": []
@@ -833,7 +833,7 @@
    },
    "worked": [
     "\\(\\frac{x}{5} = -4\\)",
-    "\\(\\text{Multiply both sides by } 5\\)",
+    "Multiply both sides by \\(5\\)",
     "\\(x = -20\\)"
    ],
    "slip": []
@@ -855,7 +855,7 @@
    },
    "worked": [
     "\\(\\frac{x}{2} = -13\\)",
-    "\\(\\text{Multiply both sides by } 2\\)",
+    "Multiply both sides by \\(2\\)",
     "\\(x = -26\\)"
    ],
    "slip": []
@@ -877,7 +877,7 @@
    },
    "worked": [
     "\\(-\\frac{x}{3} = 5\\)",
-    "\\(\\text{Multiply both sides by } -3\\)",
+    "Multiply both sides by \\(-3\\)",
     "\\(x = -15\\)"
    ],
    "slip": []
@@ -899,7 +899,7 @@
    },
    "worked": [
     "\\(-\\frac{x}{4} = -2\\)",
-    "\\(\\text{Multiply both sides by } -4\\)",
+    "Multiply both sides by \\(-4\\)",
     "\\(x = 8\\)"
    ],
    "slip": []
@@ -925,7 +925,7 @@
    },
    "worked": [
     "\\(8x = 12\\)",
-    "\\(\\text{Divide both sides by } 8\\)",
+    "Divide both sides by \\(8\\)",
     "\\(x = \\frac{3}{2}\\)"
    ],
    "slip": []
@@ -951,7 +951,7 @@
    },
    "worked": [
     "\\(10x = -4\\)",
-    "\\(\\text{Divide both sides by } 10\\)",
+    "Divide both sides by \\(10\\)",
     "\\(x = -\\frac{2}{5}\\)"
    ],
    "slip": []
@@ -977,7 +977,7 @@
    },
    "worked": [
     "\\(6x = 15\\)",
-    "\\(\\text{Divide both sides by } 6\\)",
+    "Divide both sides by \\(6\\)",
     "\\(x = \\frac{5}{2}\\)"
    ],
    "slip": []
@@ -1003,7 +1003,7 @@
    },
    "worked": [
     "\\(4x = 10\\)",
-    "\\(\\text{Divide both sides by } 4\\)",
+    "Divide both sides by \\(4\\)",
     "\\(x = \\frac{5}{2}\\)"
    ],
    "slip": []
@@ -1029,7 +1029,7 @@
    },
    "worked": [
     "\\(9x = -6\\)",
-    "\\(\\text{Divide both sides by } 9\\)",
+    "Divide both sides by \\(9\\)",
     "\\(x = -\\frac{2}{3}\\)"
    ],
    "slip": []
@@ -1051,7 +1051,7 @@
    },
    "worked": [
     "\\(\\frac{2}{3}x = 8\\)",
-    "\\(\\text{Multiply both sides by } \\frac{3}{2}\\)",
+    "Multiply both sides by \\(\\frac{3}{2}\\)",
     "\\(x = 12\\)"
    ],
    "slip": []
@@ -1073,7 +1073,7 @@
    },
    "worked": [
     "\\(\\frac{3}{5}x = 9\\)",
-    "\\(\\text{Multiply both sides by } \\frac{5}{3}\\)",
+    "Multiply both sides by \\(\\frac{5}{3}\\)",
     "\\(x = 15\\)"
    ],
    "slip": []
@@ -1095,7 +1095,7 @@
    },
    "worked": [
     "\\(\\frac{4}{7}x = 12\\)",
-    "\\(\\text{Multiply both sides by } \\frac{7}{4}\\)",
+    "Multiply both sides by \\(\\frac{7}{4}\\)",
     "\\(x = 21\\)"
    ],
    "slip": []
@@ -1117,7 +1117,7 @@
    },
    "worked": [
     "\\(\\frac{5}{2}x = 15\\)",
-    "\\(\\text{Multiply both sides by } \\frac{2}{5}\\)",
+    "Multiply both sides by \\(\\frac{2}{5}\\)",
     "\\(x = 6\\)"
    ],
    "slip": []
@@ -1139,7 +1139,7 @@
    },
    "worked": [
     "\\(\\frac{2}{9}x = 6\\)",
-    "\\(\\text{Multiply both sides by } \\frac{9}{2}\\)",
+    "Multiply both sides by \\(\\frac{9}{2}\\)",
     "\\(x = 27\\)"
    ],
    "slip": []
@@ -1161,7 +1161,7 @@
    },
    "worked": [
     "\\(12 = x + 7\\)",
-    "\\(\\text{Subtract } 7 \\text{ from both sides}\\)",
+    "Subtract \\(7\\) from both sides",
     "\\(5 = x\\)",
     "\\(x = 5\\)"
    ],
@@ -1184,7 +1184,7 @@
    },
    "worked": [
     "\\(19 = x + 4\\)",
-    "\\(\\text{Subtract } 4 \\text{ from both sides}\\)",
+    "Subtract \\(4\\) from both sides",
     "\\(15 = x\\)",
     "\\(x = 15\\)"
    ],
@@ -1207,7 +1207,7 @@
    },
    "worked": [
     "\\(5 = x + 13\\)",
-    "\\(\\text{Subtract } 13 \\text{ from both sides}\\)",
+    "Subtract \\(13\\) from both sides",
     "\\(-8 = x\\)",
     "\\(x = -8\\)"
    ],
@@ -1230,7 +1230,7 @@
    },
    "worked": [
     "\\(-2 = x + 9\\)",
-    "\\(\\text{Subtract } 9 \\text{ from both sides}\\)",
+    "Subtract \\(9\\) from both sides",
     "\\(-11 = x\\)",
     "\\(x = -11\\)"
    ],
@@ -1253,9 +1253,9 @@
    },
    "worked": [
     "\\(3x + 7 = 22\\)",
-    "\\(\\text{Subtract } 7 \\text{ from both sides}\\)",
+    "Subtract \\(7\\) from both sides",
     "\\(3x = 15\\)",
-    "\\(\\text{Divide both sides by } 3\\)",
+    "Divide both sides by \\(3\\)",
     "\\(x = 5\\)"
    ],
    "slip": []
@@ -1277,9 +1277,9 @@
    },
    "worked": [
     "\\(5x - 4 = 31\\)",
-    "\\(\\text{Add } 4 \\text{ to both sides}\\)",
+    "Add \\(4\\) to both sides",
     "\\(5x = 35\\)",
-    "\\(\\text{Divide both sides by } 5\\)",
+    "Divide both sides by \\(5\\)",
     "\\(x = 7\\)"
    ],
    "slip": []
@@ -1301,9 +1301,9 @@
    },
    "worked": [
     "\\(2x + 9 = 25\\)",
-    "\\(\\text{Subtract } 9 \\text{ from both sides}\\)",
+    "Subtract \\(9\\) from both sides",
     "\\(2x = 16\\)",
-    "\\(\\text{Divide both sides by } 2\\)",
+    "Divide both sides by \\(2\\)",
     "\\(x = 8\\)"
    ],
    "slip": []
@@ -1325,9 +1325,9 @@
    },
    "worked": [
     "\\(7x - 12 = 30\\)",
-    "\\(\\text{Add } 12 \\text{ to both sides}\\)",
+    "Add \\(12\\) to both sides",
     "\\(7x = 42\\)",
-    "\\(\\text{Divide both sides by } 7\\)",
+    "Divide both sides by \\(7\\)",
     "\\(x = 6\\)"
    ],
    "slip": []
@@ -1349,9 +1349,9 @@
    },
    "worked": [
     "\\(4x + 11 = 39\\)",
-    "\\(\\text{Subtract } 11 \\text{ from both sides}\\)",
+    "Subtract \\(11\\) from both sides",
     "\\(4x = 28\\)",
-    "\\(\\text{Divide both sides by } 4\\)",
+    "Divide both sides by \\(4\\)",
     "\\(x = 7\\)"
    ],
    "slip": []
@@ -1373,9 +1373,9 @@
    },
    "worked": [
     "\\(6x - 5 = 37\\)",
-    "\\(\\text{Add } 5 \\text{ to both sides}\\)",
+    "Add \\(5\\) to both sides",
     "\\(6x = 42\\)",
-    "\\(\\text{Divide both sides by } 6\\)",
+    "Divide both sides by \\(6\\)",
     "\\(x = 7\\)"
    ],
    "slip": []
@@ -1397,9 +1397,9 @@
    },
    "worked": [
     "\\(8x + 3 = 59\\)",
-    "\\(\\text{Subtract } 3 \\text{ from both sides}\\)",
+    "Subtract \\(3\\) from both sides",
     "\\(8x = 56\\)",
-    "\\(\\text{Divide both sides by } 8\\)",
+    "Divide both sides by \\(8\\)",
     "\\(x = 7\\)"
    ],
    "slip": []
@@ -1421,9 +1421,9 @@
    },
    "worked": [
     "\\(9x - 7 = 65\\)",
-    "\\(\\text{Add } 7 \\text{ to both sides}\\)",
+    "Add \\(7\\) to both sides",
     "\\(9x = 72\\)",
-    "\\(\\text{Divide both sides by } 9\\)",
+    "Divide both sides by \\(9\\)",
     "\\(x = 8\\)"
    ],
    "slip": []
@@ -1445,9 +1445,9 @@
    },
    "worked": [
     "\\(5x + 13 = 48\\)",
-    "\\(\\text{Subtract } 13 \\text{ from both sides}\\)",
+    "Subtract \\(13\\) from both sides",
     "\\(5x = 35\\)",
-    "\\(\\text{Divide both sides by } 5\\)",
+    "Divide both sides by \\(5\\)",
     "\\(x = 7\\)"
    ],
    "slip": []
@@ -1469,9 +1469,9 @@
    },
    "worked": [
     "\\(3x - 8 = 16\\)",
-    "\\(\\text{Add } 8 \\text{ to both sides}\\)",
+    "Add \\(8\\) to both sides",
     "\\(3x = 24\\)",
-    "\\(\\text{Divide both sides by } 3\\)",
+    "Divide both sides by \\(3\\)",
     "\\(x = 8\\)"
    ],
    "slip": []
@@ -1493,9 +1493,9 @@
    },
    "worked": [
     "\\(12x + 5 = 41\\)",
-    "\\(\\text{Subtract } 5 \\text{ from both sides}\\)",
+    "Subtract \\(5\\) from both sides",
     "\\(12x = 36\\)",
-    "\\(\\text{Divide both sides by } 12\\)",
+    "Divide both sides by \\(12\\)",
     "\\(x = 3\\)"
    ],
    "slip": []
@@ -1517,9 +1517,9 @@
    },
    "worked": [
     "\\(7x + 6 = 62\\)",
-    "\\(\\text{Subtract } 6 \\text{ from both sides}\\)",
+    "Subtract \\(6\\) from both sides",
     "\\(7x = 56\\)",
-    "\\(\\text{Divide both sides by } 7\\)",
+    "Divide both sides by \\(7\\)",
     "\\(x = 8\\)"
    ],
    "slip": []
@@ -1541,9 +1541,9 @@
    },
    "worked": [
     "\\(\\frac{x}{2} + 5 = 11\\)",
-    "\\(\\text{Subtract } 5 \\text{ from both sides}\\)",
+    "Subtract \\(5\\) from both sides",
     "\\(\\frac{x}{2} = 6\\)",
-    "\\(\\text{Multiply both sides by } 2\\)",
+    "Multiply both sides by \\(2\\)",
     "\\(x = 12\\)"
    ],
    "slip": []
@@ -1565,9 +1565,9 @@
    },
    "worked": [
     "\\(\\frac{x}{3} - 4 = 2\\)",
-    "\\(\\text{Add } 4 \\text{ to both sides}\\)",
+    "Add \\(4\\) to both sides",
     "\\(\\frac{x}{3} = 6\\)",
-    "\\(\\text{Multiply both sides by } 3\\)",
+    "Multiply both sides by \\(3\\)",
     "\\(x = 18\\)"
    ],
    "slip": []
@@ -1589,9 +1589,9 @@
    },
    "worked": [
     "\\(\\frac{x}{5} + 7 = 12\\)",
-    "\\(\\text{Subtract } 7 \\text{ from both sides}\\)",
+    "Subtract \\(7\\) from both sides",
     "\\(\\frac{x}{5} = 5\\)",
-    "\\(\\text{Multiply both sides by } 5\\)",
+    "Multiply both sides by \\(5\\)",
     "\\(x = 25\\)"
    ],
    "slip": []
@@ -1613,9 +1613,9 @@
    },
    "worked": [
     "\\(\\frac{x}{4} - 9 = 1\\)",
-    "\\(\\text{Add } 9 \\text{ to both sides}\\)",
+    "Add \\(9\\) to both sides",
     "\\(\\frac{x}{4} = 10\\)",
-    "\\(\\text{Multiply both sides by } 4\\)",
+    "Multiply both sides by \\(4\\)",
     "\\(x = 40\\)"
    ],
    "slip": []
@@ -1637,9 +1637,9 @@
    },
    "worked": [
     "\\(\\frac{x}{6} + 3 = 8\\)",
-    "\\(\\text{Subtract } 3 \\text{ from both sides}\\)",
+    "Subtract \\(3\\) from both sides",
     "\\(\\frac{x}{6} = 5\\)",
-    "\\(\\text{Multiply both sides by } 6\\)",
+    "Multiply both sides by \\(6\\)",
     "\\(x = 30\\)"
    ],
    "slip": []
@@ -1661,9 +1661,9 @@
    },
    "worked": [
     "\\(\\frac{x}{7} - 2 = 5\\)",
-    "\\(\\text{Add } 2 \\text{ to both sides}\\)",
+    "Add \\(2\\) to both sides",
     "\\(\\frac{x}{7} = 7\\)",
-    "\\(\\text{Multiply both sides by } 7\\)",
+    "Multiply both sides by \\(7\\)",
     "\\(x = 49\\)"
    ],
    "slip": []
@@ -1685,9 +1685,9 @@
    },
    "worked": [
     "\\(2(x + 3) = 16\\)",
-    "\\(\\text{Divide both sides by } 2\\)",
+    "Divide both sides by \\(2\\)",
     "\\(x + 3 = 8\\)",
-    "\\(\\text{Subtract } 3 \\text{ from both sides}\\)",
+    "Subtract \\(3\\) from both sides",
     "\\(x = 5\\)"
    ],
    "slip": []
@@ -1709,9 +1709,9 @@
    },
    "worked": [
     "\\(5(x - 2) = 35\\)",
-    "\\(\\text{Divide both sides by } 5\\)",
+    "Divide both sides by \\(5\\)",
     "\\(x - 2 = 7\\)",
-    "\\(\\text{Add } 2 \\text{ to both sides}\\)",
+    "Add \\(2\\) to both sides",
     "\\(x = 9\\)"
    ],
    "slip": []
@@ -1733,9 +1733,9 @@
    },
    "worked": [
     "\\(3(x + 4) = 27\\)",
-    "\\(\\text{Divide both sides by } 3\\)",
+    "Divide both sides by \\(3\\)",
     "\\(x + 4 = 9\\)",
-    "\\(\\text{Subtract } 4 \\text{ from both sides}\\)",
+    "Subtract \\(4\\) from both sides",
     "\\(x = 5\\)"
    ],
    "slip": []
@@ -1757,9 +1757,9 @@
    },
    "worked": [
     "\\(4(x - 5) = 28\\)",
-    "\\(\\text{Divide both sides by } 4\\)",
+    "Divide both sides by \\(4\\)",
     "\\(x - 5 = 7\\)",
-    "\\(\\text{Add } 5 \\text{ to both sides}\\)",
+    "Add \\(5\\) to both sides",
     "\\(x = 12\\)"
    ],
    "slip": []
@@ -1781,9 +1781,9 @@
    },
    "worked": [
     "\\(6(x + 2) = 42\\)",
-    "\\(\\text{Divide both sides by } 6\\)",
+    "Divide both sides by \\(6\\)",
     "\\(x + 2 = 7\\)",
-    "\\(\\text{Subtract } 2 \\text{ from both sides}\\)",
+    "Subtract \\(2\\) from both sides",
     "\\(x = 5\\)"
    ],
    "slip": []
@@ -1805,9 +1805,9 @@
    },
    "worked": [
     "\\(7(x - 3) = 49\\)",
-    "\\(\\text{Divide both sides by } 7\\)",
+    "Divide both sides by \\(7\\)",
     "\\(x - 3 = 7\\)",
-    "\\(\\text{Add } 3 \\text{ to both sides}\\)",
+    "Add \\(3\\) to both sides",
     "\\(x = 10\\)"
    ],
    "slip": []
@@ -1829,9 +1829,9 @@
    },
    "worked": [
     "\\(2(x + 9) = 30\\)",
-    "\\(\\text{Divide both sides by } 2\\)",
+    "Divide both sides by \\(2\\)",
     "\\(x + 9 = 15\\)",
-    "\\(\\text{Subtract } 9 \\text{ from both sides}\\)",
+    "Subtract \\(9\\) from both sides",
     "\\(x = 6\\)"
    ],
    "slip": []
@@ -1853,9 +1853,9 @@
    },
    "worked": [
     "\\(3(x - 6) = 15\\)",
-    "\\(\\text{Divide both sides by } 3\\)",
+    "Divide both sides by \\(3\\)",
     "\\(x - 6 = 5\\)",
-    "\\(\\text{Add } 6 \\text{ to both sides}\\)",
+    "Add \\(6\\) to both sides",
     "\\(x = 11\\)"
    ],
    "slip": []
@@ -1877,9 +1877,9 @@
    },
    "worked": [
     "\\(\\frac{x + 4}{3} = 5\\)",
-    "\\(\\text{Multiply both sides by } 3\\)",
+    "Multiply both sides by \\(3\\)",
     "\\(x + 4 = 15\\)",
-    "\\(\\text{Subtract } 4 \\text{ from both sides}\\)",
+    "Subtract \\(4\\) from both sides",
     "\\(x = 11\\)"
    ],
    "slip": []
@@ -1901,9 +1901,9 @@
    },
    "worked": [
     "\\(\\frac{x - 6}{2} = 7\\)",
-    "\\(\\text{Multiply both sides by } 2\\)",
+    "Multiply both sides by \\(2\\)",
     "\\(x - 6 = 14\\)",
-    "\\(\\text{Add } 6 \\text{ to both sides}\\)",
+    "Add \\(6\\) to both sides",
     "\\(x = 20\\)"
    ],
    "slip": []
@@ -1925,9 +1925,9 @@
    },
    "worked": [
     "\\(\\frac{x + 3}{5} = 4\\)",
-    "\\(\\text{Multiply both sides by } 5\\)",
+    "Multiply both sides by \\(5\\)",
     "\\(x + 3 = 20\\)",
-    "\\(\\text{Subtract } 3 \\text{ from both sides}\\)",
+    "Subtract \\(3\\) from both sides",
     "\\(x = 17\\)"
    ],
    "slip": []
@@ -1949,9 +1949,9 @@
    },
    "worked": [
     "\\(\\frac{x - 7}{4} = 2\\)",
-    "\\(\\text{Multiply both sides by } 4\\)",
+    "Multiply both sides by \\(4\\)",
     "\\(x - 7 = 8\\)",
-    "\\(\\text{Add } 7 \\text{ to both sides}\\)",
+    "Add \\(7\\) to both sides",
     "\\(x = 15\\)"
    ],
    "slip": []
@@ -1973,9 +1973,9 @@
    },
    "worked": [
     "\\(\\frac{x + 5}{6} = 3\\)",
-    "\\(\\text{Multiply both sides by } 6\\)",
+    "Multiply both sides by \\(6\\)",
     "\\(x + 5 = 18\\)",
-    "\\(\\text{Subtract } 5 \\text{ from both sides}\\)",
+    "Subtract \\(5\\) from both sides",
     "\\(x = 13\\)"
    ],
    "slip": []
@@ -1997,9 +1997,9 @@
    },
    "worked": [
     "\\(\\frac{x - 2}{3} = 9\\)",
-    "\\(\\text{Multiply both sides by } 3\\)",
+    "Multiply both sides by \\(3\\)",
     "\\(x - 2 = 27\\)",
-    "\\(\\text{Add } 2 \\text{ to both sides}\\)",
+    "Add \\(2\\) to both sides",
     "\\(x = 29\\)"
    ],
    "slip": []
@@ -2021,9 +2021,9 @@
    },
    "worked": [
     "\\(7 + 3x = 22\\)",
-    "\\(\\text{Subtract } 7 \\text{ from both sides}\\)",
+    "Subtract \\(7\\) from both sides",
     "\\(3x = 15\\)",
-    "\\(\\text{Divide both sides by } 3\\)",
+    "Divide both sides by \\(3\\)",
     "\\(x = 5\\)"
    ],
    "slip": []
@@ -2045,9 +2045,9 @@
    },
    "worked": [
     "\\(5 + 4x = 29\\)",
-    "\\(\\text{Subtract } 5 \\text{ from both sides}\\)",
+    "Subtract \\(5\\) from both sides",
     "\\(4x = 24\\)",
-    "\\(\\text{Divide both sides by } 4\\)",
+    "Divide both sides by \\(4\\)",
     "\\(x = 6\\)"
    ],
    "slip": []
@@ -2069,9 +2069,9 @@
    },
    "worked": [
     "\\(11 + 6x = 47\\)",
-    "\\(\\text{Subtract } 11 \\text{ from both sides}\\)",
+    "Subtract \\(11\\) from both sides",
     "\\(6x = 36\\)",
-    "\\(\\text{Divide both sides by } 6\\)",
+    "Divide both sides by \\(6\\)",
     "\\(x = 6\\)"
    ],
    "slip": []
@@ -2093,9 +2093,9 @@
    },
    "worked": [
     "\\(9 + 2x = 25\\)",
-    "\\(\\text{Subtract } 9 \\text{ from both sides}\\)",
+    "Subtract \\(9\\) from both sides",
     "\\(2x = 16\\)",
-    "\\(\\text{Divide both sides by } 2\\)",
+    "Divide both sides by \\(2\\)",
     "\\(x = 8\\)"
    ],
    "slip": []
@@ -2117,9 +2117,9 @@
    },
    "worked": [
     "\\(13 + 5x = 38\\)",
-    "\\(\\text{Subtract } 13 \\text{ from both sides}\\)",
+    "Subtract \\(13\\) from both sides",
     "\\(5x = 25\\)",
-    "\\(\\text{Divide both sides by } 5\\)",
+    "Divide both sides by \\(5\\)",
     "\\(x = 5\\)"
    ],
    "slip": []
@@ -2141,9 +2141,9 @@
    },
    "worked": [
     "\\(4 + 8x = 60\\)",
-    "\\(\\text{Subtract } 4 \\text{ from both sides}\\)",
+    "Subtract \\(4\\) from both sides",
     "\\(8x = 56\\)",
-    "\\(\\text{Divide both sides by } 8\\)",
+    "Divide both sides by \\(8\\)",
     "\\(x = 7\\)"
    ],
    "slip": []
@@ -2165,9 +2165,9 @@
    },
    "worked": [
     "\\(6 + 7x = 55\\)",
-    "\\(\\text{Subtract } 6 \\text{ from both sides}\\)",
+    "Subtract \\(6\\) from both sides",
     "\\(7x = 49\\)",
-    "\\(\\text{Divide both sides by } 7\\)",
+    "Divide both sides by \\(7\\)",
     "\\(x = 7\\)"
    ],
    "slip": []
@@ -2189,9 +2189,9 @@
    },
    "worked": [
     "\\(22 = 3x + 7\\)",
-    "\\(\\text{Subtract } 7 \\text{ from both sides}\\)",
+    "Subtract \\(7\\) from both sides",
     "\\(15 = 3x\\)",
-    "\\(\\text{Divide both sides by } 3\\)",
+    "Divide both sides by \\(3\\)",
     "\\(x = 5\\)"
    ],
    "slip": []
@@ -2213,9 +2213,9 @@
    },
    "worked": [
     "\\(31 = 5x - 4\\)",
-    "\\(\\text{Add } 4 \\text{ to both sides}\\)",
+    "Add \\(4\\) to both sides",
     "\\(35 = 5x\\)",
-    "\\(\\text{Divide both sides by } 5\\)",
+    "Divide both sides by \\(5\\)",
     "\\(x = 7\\)"
    ],
    "slip": []
@@ -2237,9 +2237,9 @@
    },
    "worked": [
     "\\(19 = 2x + 9\\)",
-    "\\(\\text{Subtract } 9 \\text{ from both sides}\\)",
+    "Subtract \\(9\\) from both sides",
     "\\(10 = 2x\\)",
-    "\\(\\text{Divide both sides by } 2\\)",
+    "Divide both sides by \\(2\\)",
     "\\(x = 5\\)"
    ],
    "slip": []
@@ -2261,9 +2261,9 @@
    },
    "worked": [
     "\\(43 = 6x - 5\\)",
-    "\\(\\text{Add } 5 \\text{ to both sides}\\)",
+    "Add \\(5\\) to both sides",
     "\\(48 = 6x\\)",
-    "\\(\\text{Divide both sides by } 6\\)",
+    "Divide both sides by \\(6\\)",
     "\\(x = 8\\)"
    ],
    "slip": []
@@ -2285,9 +2285,9 @@
    },
    "worked": [
     "\\(37 = 4x + 13\\)",
-    "\\(\\text{Subtract } 13 \\text{ from both sides}\\)",
+    "Subtract \\(13\\) from both sides",
     "\\(24 = 4x\\)",
-    "\\(\\text{Divide both sides by } 4\\)",
+    "Divide both sides by \\(4\\)",
     "\\(x = 6\\)"
    ],
    "slip": []
@@ -2309,9 +2309,9 @@
    },
    "worked": [
     "\\(58 = 9x + 4\\)",
-    "\\(\\text{Subtract } 4 \\text{ from both sides}\\)",
+    "Subtract \\(4\\) from both sides",
     "\\(54 = 9x\\)",
-    "\\(\\text{Divide both sides by } 9\\)",
+    "Divide both sides by \\(9\\)",
     "\\(x = 6\\)"
    ],
    "slip": []
@@ -2333,9 +2333,9 @@
    },
    "worked": [
     "\\(3x + 14 = 5\\)",
-    "\\(\\text{Subtract } 14 \\text{ from both sides}\\)",
+    "Subtract \\(14\\) from both sides",
     "\\(3x = -9\\)",
-    "\\(\\text{Divide both sides by } 3\\)",
+    "Divide both sides by \\(3\\)",
     "\\(x = -3\\)"
    ],
    "slip": []
@@ -2357,9 +2357,9 @@
    },
    "worked": [
     "\\(2x - 7 = -19\\)",
-    "\\(\\text{Add } 7 \\text{ to both sides}\\)",
+    "Add \\(7\\) to both sides",
     "\\(2x = -12\\)",
-    "\\(\\text{Divide both sides by } 2\\)",
+    "Divide both sides by \\(2\\)",
     "\\(x = -6\\)"
    ],
    "slip": []
@@ -2381,9 +2381,9 @@
    },
    "worked": [
     "\\(6x + 25 = 7\\)",
-    "\\(\\text{Subtract } 25 \\text{ from both sides}\\)",
+    "Subtract \\(25\\) from both sides",
     "\\(6x = -18\\)",
-    "\\(\\text{Divide both sides by } 6\\)",
+    "Divide both sides by \\(6\\)",
     "\\(x = -3\\)"
    ],
    "slip": []
@@ -2405,9 +2405,9 @@
    },
    "worked": [
     "\\(4x + 9 = -11\\)",
-    "\\(\\text{Subtract } 9 \\text{ from both sides}\\)",
+    "Subtract \\(9\\) from both sides",
     "\\(4x = -20\\)",
-    "\\(\\text{Divide both sides by } 4\\)",
+    "Divide both sides by \\(4\\)",
     "\\(x = -5\\)"
    ],
    "slip": []
@@ -2429,9 +2429,9 @@
    },
    "worked": [
     "\\(5x + 18 = 3\\)",
-    "\\(\\text{Subtract } 18 \\text{ from both sides}\\)",
+    "Subtract \\(18\\) from both sides",
     "\\(5x = -15\\)",
-    "\\(\\text{Divide both sides by } 5\\)",
+    "Divide both sides by \\(5\\)",
     "\\(x = -3\\)"
    ],
    "slip": []
@@ -2453,9 +2453,9 @@
    },
    "worked": [
     "\\(8x + 30 = 6\\)",
-    "\\(\\text{Subtract } 30 \\text{ from both sides}\\)",
+    "Subtract \\(30\\) from both sides",
     "\\(8x = -24\\)",
-    "\\(\\text{Divide both sides by } 8\\)",
+    "Divide both sides by \\(8\\)",
     "\\(x = -3\\)"
    ],
    "slip": []
@@ -2477,9 +2477,9 @@
    },
    "worked": [
     "\\(5 - 2x = 13\\)",
-    "\\(\\text{Subtract } 5 \\text{ from both sides}\\)",
+    "Subtract \\(5\\) from both sides",
     "\\(-2x = 8\\)",
-    "\\(\\text{Divide both sides by } -2\\)",
+    "Divide both sides by \\(-2\\)",
     "\\(x = -4\\)"
    ],
    "slip": []
@@ -2501,9 +2501,9 @@
    },
    "worked": [
     "\\(10 - 3x = 1\\)",
-    "\\(\\text{Subtract } 10 \\text{ from both sides}\\)",
+    "Subtract \\(10\\) from both sides",
     "\\(-3x = -9\\)",
-    "\\(\\text{Divide both sides by } -3\\)",
+    "Divide both sides by \\(-3\\)",
     "\\(x = 3\\)"
    ],
    "slip": []
@@ -2525,9 +2525,9 @@
    },
    "worked": [
     "\\(8 - 4x = 24\\)",
-    "\\(\\text{Subtract } 8 \\text{ from both sides}\\)",
+    "Subtract \\(8\\) from both sides",
     "\\(-4x = 16\\)",
-    "\\(\\text{Divide both sides by } -4\\)",
+    "Divide both sides by \\(-4\\)",
     "\\(x = -4\\)"
    ],
    "slip": []
@@ -2549,9 +2549,9 @@
    },
    "worked": [
     "\\(7 - 5x = 32\\)",
-    "\\(\\text{Subtract } 7 \\text{ from both sides}\\)",
+    "Subtract \\(7\\) from both sides",
     "\\(-5x = 25\\)",
-    "\\(\\text{Divide both sides by } -5\\)",
+    "Divide both sides by \\(-5\\)",
     "\\(x = -5\\)"
    ],
    "slip": []
@@ -2573,9 +2573,9 @@
    },
    "worked": [
     "\\(12 - 2x = 20\\)",
-    "\\(\\text{Subtract } 12 \\text{ from both sides}\\)",
+    "Subtract \\(12\\) from both sides",
     "\\(-2x = 8\\)",
-    "\\(\\text{Divide both sides by } -2\\)",
+    "Divide both sides by \\(-2\\)",
     "\\(x = -4\\)"
    ],
    "slip": []
@@ -2597,9 +2597,9 @@
    },
    "worked": [
     "\\(-4x + 9 = 33\\)",
-    "\\(\\text{Subtract } 9 \\text{ from both sides}\\)",
+    "Subtract \\(9\\) from both sides",
     "\\(-4x = 24\\)",
-    "\\(\\text{Divide both sides by } -4\\)",
+    "Divide both sides by \\(-4\\)",
     "\\(x = -6\\)"
    ],
    "slip": []
@@ -2621,9 +2621,9 @@
    },
    "worked": [
     "\\(-3x + 5 = 20\\)",
-    "\\(\\text{Subtract } 5 \\text{ from both sides}\\)",
+    "Subtract \\(5\\) from both sides",
     "\\(-3x = 15\\)",
-    "\\(\\text{Divide both sides by } -3\\)",
+    "Divide both sides by \\(-3\\)",
     "\\(x = -5\\)"
    ],
    "slip": []
@@ -2645,9 +2645,9 @@
    },
    "worked": [
     "\\(-6x + 11 = 47\\)",
-    "\\(\\text{Subtract } 11 \\text{ from both sides}\\)",
+    "Subtract \\(11\\) from both sides",
     "\\(-6x = 36\\)",
-    "\\(\\text{Divide both sides by } -6\\)",
+    "Divide both sides by \\(-6\\)",
     "\\(x = -6\\)"
    ],
    "slip": []
@@ -2669,9 +2669,9 @@
    },
    "worked": [
     "\\(-x + 6 = 10\\)",
-    "\\(\\text{Subtract } 6 \\text{ from both sides}\\)",
+    "Subtract \\(6\\) from both sides",
     "\\(-x = 4\\)",
-    "\\(\\text{Multiply both sides by } -1\\)",
+    "Multiply both sides by \\(-1\\)",
     "\\(x = -4\\)"
    ],
    "slip": []
@@ -2693,9 +2693,9 @@
    },
    "worked": [
     "\\(-x + 9 = 15\\)",
-    "\\(\\text{Subtract } 9 \\text{ from both sides}\\)",
+    "Subtract \\(9\\) from both sides",
     "\\(-x = 6\\)",
-    "\\(\\text{Multiply both sides by } -1\\)",
+    "Multiply both sides by \\(-1\\)",
     "\\(x = -6\\)"
    ],
    "slip": []
@@ -2717,9 +2717,9 @@
    },
    "worked": [
     "\\(-x + 4 = 11\\)",
-    "\\(\\text{Subtract } 4 \\text{ from both sides}\\)",
+    "Subtract \\(4\\) from both sides",
     "\\(-x = 7\\)",
-    "\\(\\text{Multiply both sides by } -1\\)",
+    "Multiply both sides by \\(-1\\)",
     "\\(x = -7\\)"
    ],
    "slip": []
@@ -2741,9 +2741,9 @@
    },
    "worked": [
     "\\(-x + 12 = 20\\)",
-    "\\(\\text{Subtract } 12 \\text{ from both sides}\\)",
+    "Subtract \\(12\\) from both sides",
     "\\(-x = 8\\)",
-    "\\(\\text{Multiply both sides by } -1\\)",
+    "Multiply both sides by \\(-1\\)",
     "\\(x = -8\\)"
    ],
    "slip": []
@@ -2765,9 +2765,9 @@
    },
    "worked": [
     "\\(\\frac{x}{4} + 9 = 5\\)",
-    "\\(\\text{Subtract } 9 \\text{ from both sides}\\)",
+    "Subtract \\(9\\) from both sides",
     "\\(\\frac{x}{4} = -4\\)",
-    "\\(\\text{Multiply both sides by } 4\\)",
+    "Multiply both sides by \\(4\\)",
     "\\(x = -16\\)"
    ],
    "slip": []
@@ -2789,9 +2789,9 @@
    },
    "worked": [
     "\\(\\frac{x}{3} + 8 = 2\\)",
-    "\\(\\text{Subtract } 8 \\text{ from both sides}\\)",
+    "Subtract \\(8\\) from both sides",
     "\\(\\frac{x}{3} = -6\\)",
-    "\\(\\text{Multiply both sides by } 3\\)",
+    "Multiply both sides by \\(3\\)",
     "\\(x = -18\\)"
    ],
    "slip": []
@@ -2813,9 +2813,9 @@
    },
    "worked": [
     "\\(\\frac{x}{5} + 6 = 1\\)",
-    "\\(\\text{Subtract } 6 \\text{ from both sides}\\)",
+    "Subtract \\(6\\) from both sides",
     "\\(\\frac{x}{5} = -5\\)",
-    "\\(\\text{Multiply both sides by } 5\\)",
+    "Multiply both sides by \\(5\\)",
     "\\(x = -25\\)"
    ],
    "slip": []
@@ -2837,9 +2837,9 @@
    },
    "worked": [
     "\\(3(x + 8) = 9\\)",
-    "\\(\\text{Divide both sides by } 3\\)",
+    "Divide both sides by \\(3\\)",
     "\\(x + 8 = 3\\)",
-    "\\(\\text{Subtract } 8 \\text{ from both sides}\\)",
+    "Subtract \\(8\\) from both sides",
     "\\(x = -5\\)"
    ],
    "slip": []
@@ -2861,9 +2861,9 @@
    },
    "worked": [
     "\\(2(x - 5) = -24\\)",
-    "\\(\\text{Divide both sides by } 2\\)",
+    "Divide both sides by \\(2\\)",
     "\\(x - 5 = -12\\)",
-    "\\(\\text{Add } 5 \\text{ to both sides}\\)",
+    "Add \\(5\\) to both sides",
     "\\(x = -7\\)"
    ],
    "slip": []
@@ -2885,9 +2885,9 @@
    },
    "worked": [
     "\\(4(x + 7) = 12\\)",
-    "\\(\\text{Divide both sides by } 4\\)",
+    "Divide both sides by \\(4\\)",
     "\\(x + 7 = 3\\)",
-    "\\(\\text{Subtract } 7 \\text{ from both sides}\\)",
+    "Subtract \\(7\\) from both sides",
     "\\(x = -4\\)"
    ],
    "slip": []
@@ -2909,9 +2909,9 @@
    },
    "worked": [
     "\\(5(x - 3) = -20\\)",
-    "\\(\\text{Divide both sides by } 5\\)",
+    "Divide both sides by \\(5\\)",
     "\\(x - 3 = -4\\)",
-    "\\(\\text{Add } 3 \\text{ to both sides}\\)",
+    "Add \\(3\\) to both sides",
     "\\(x = -1\\)"
    ],
    "slip": []
@@ -2937,9 +2937,9 @@
    },
    "worked": [
     "\\(2x + 1 = 8\\)",
-    "\\(\\text{Subtract } 1 \\text{ from both sides}\\)",
+    "Subtract \\(1\\) from both sides",
     "\\(2x = 7\\)",
-    "\\(\\text{Divide both sides by } 2\\)",
+    "Divide both sides by \\(2\\)",
     "\\(x = \\frac{7}{2}\\)"
    ],
    "slip": []
@@ -2965,9 +2965,9 @@
    },
    "worked": [
     "\\(4x - 3 = 7\\)",
-    "\\(\\text{Add } 3 \\text{ to both sides}\\)",
+    "Add \\(3\\) to both sides",
     "\\(4x = 10\\)",
-    "\\(\\text{Divide both sides by } 4\\)",
+    "Divide both sides by \\(4\\)",
     "\\(x = \\frac{5}{2}\\)"
    ],
    "slip": []
@@ -2993,9 +2993,9 @@
    },
    "worked": [
     "\\(6x + 5 = 12\\)",
-    "\\(\\text{Subtract } 5 \\text{ from both sides}\\)",
+    "Subtract \\(5\\) from both sides",
     "\\(6x = 7\\)",
-    "\\(\\text{Divide both sides by } 6\\)",
+    "Divide both sides by \\(6\\)",
     "\\(x = \\frac{7}{6}\\)"
    ],
    "slip": []
@@ -3021,9 +3021,9 @@
    },
    "worked": [
     "\\(3x + 2 = 6\\)",
-    "\\(\\text{Subtract } 2 \\text{ from both sides}\\)",
+    "Subtract \\(2\\) from both sides",
     "\\(3x = 4\\)",
-    "\\(\\text{Divide both sides by } 3\\)",
+    "Divide both sides by \\(3\\)",
     "\\(x = \\frac{4}{3}\\)"
    ],
    "slip": []
@@ -3049,9 +3049,9 @@
    },
    "worked": [
     "\\(8x - 1 = 3\\)",
-    "\\(\\text{Add } 1 \\text{ to both sides}\\)",
+    "Add \\(1\\) to both sides",
     "\\(8x = 4\\)",
-    "\\(\\text{Divide both sides by } 8\\)",
+    "Divide both sides by \\(8\\)",
     "\\(x = \\frac{1}{2}\\)"
    ],
    "slip": []
@@ -3077,9 +3077,9 @@
    },
    "worked": [
     "\\(10x + 7 = 13\\)",
-    "\\(\\text{Subtract } 7 \\text{ from both sides}\\)",
+    "Subtract \\(7\\) from both sides",
     "\\(10x = 6\\)",
-    "\\(\\text{Divide both sides by } 10\\)",
+    "Divide both sides by \\(10\\)",
     "\\(x = \\frac{3}{5}\\)"
    ],
    "slip": []
@@ -3105,9 +3105,9 @@
    },
    "worked": [
     "\\(9x + 4 = 10\\)",
-    "\\(\\text{Subtract } 4 \\text{ from both sides}\\)",
+    "Subtract \\(4\\) from both sides",
     "\\(9x = 6\\)",
-    "\\(\\text{Divide both sides by } 9\\)",
+    "Divide both sides by \\(9\\)",
     "\\(x = \\frac{2}{3}\\)"
    ],
    "slip": []
@@ -3133,9 +3133,9 @@
    },
    "worked": [
     "\\(4x + 5 = 8\\)",
-    "\\(\\text{Subtract } 5 \\text{ from both sides}\\)",
+    "Subtract \\(5\\) from both sides",
     "\\(4x = 3\\)",
-    "\\(\\text{Divide both sides by } 4\\)",
+    "Divide both sides by \\(4\\)",
     "\\(x = \\frac{3}{4}\\)"
    ],
    "slip": []
@@ -3161,9 +3161,9 @@
    },
    "worked": [
     "\\(6x - 7 = 2\\)",
-    "\\(\\text{Add } 7 \\text{ to both sides}\\)",
+    "Add \\(7\\) to both sides",
     "\\(6x = 9\\)",
-    "\\(\\text{Divide both sides by } 6\\)",
+    "Divide both sides by \\(6\\)",
     "\\(x = \\frac{3}{2}\\)"
    ],
    "slip": []
@@ -3189,9 +3189,9 @@
    },
    "worked": [
     "\\(8x + 3 = 10\\)",
-    "\\(\\text{Subtract } 3 \\text{ from both sides}\\)",
+    "Subtract \\(3\\) from both sides",
     "\\(8x = 7\\)",
-    "\\(\\text{Divide both sides by } 8\\)",
+    "Divide both sides by \\(8\\)",
     "\\(x = \\frac{7}{8}\\)"
    ],
    "slip": []
@@ -3213,9 +3213,9 @@
    },
    "worked": [
     "\\(\\frac{2}{3}x + 4 = 10\\)",
-    "\\(\\text{Subtract } 4 \\text{ from both sides}\\)",
+    "Subtract \\(4\\) from both sides",
     "\\(\\frac{2}{3}x = 6\\)",
-    "\\(\\text{Multiply both sides by } \\frac{3}{2}\\)",
+    "Multiply both sides by \\(\\frac{3}{2}\\)",
     "\\(x = 9\\)"
    ],
    "slip": []
@@ -3237,9 +3237,9 @@
    },
    "worked": [
     "\\(\\frac{3}{4}x - 2 = 7\\)",
-    "\\(\\text{Add } 2 \\text{ to both sides}\\)",
+    "Add \\(2\\) to both sides",
     "\\(\\frac{3}{4}x = 9\\)",
-    "\\(\\text{Multiply both sides by } \\frac{4}{3}\\)",
+    "Multiply both sides by \\(\\frac{4}{3}\\)",
     "\\(x = 12\\)"
    ],
    "slip": []
@@ -3261,9 +3261,9 @@
    },
    "worked": [
     "\\(\\frac{2}{5}x - 3 = 5\\)",
-    "\\(\\text{Add } 3 \\text{ to both sides}\\)",
+    "Add \\(3\\) to both sides",
     "\\(\\frac{2}{5}x = 8\\)",
-    "\\(\\text{Multiply both sides by } \\frac{5}{2}\\)",
+    "Multiply both sides by \\(\\frac{5}{2}\\)",
     "\\(x = 20\\)"
    ],
    "slip": []
@@ -3285,9 +3285,9 @@
    },
    "worked": [
     "\\(\\frac{5}{6}x + 4 = 14\\)",
-    "\\(\\text{Subtract } 4 \\text{ from both sides}\\)",
+    "Subtract \\(4\\) from both sides",
     "\\(\\frac{5}{6}x = 10\\)",
-    "\\(\\text{Multiply both sides by } \\frac{6}{5}\\)",
+    "Multiply both sides by \\(\\frac{6}{5}\\)",
     "\\(x = 12\\)"
    ],
    "slip": []
@@ -3309,9 +3309,9 @@
    },
    "worked": [
     "\\(\\frac{3}{8}x - 1 = 5\\)",
-    "\\(\\text{Add } 1 \\text{ to both sides}\\)",
+    "Add \\(1\\) to both sides",
     "\\(\\frac{3}{8}x = 6\\)",
-    "\\(\\text{Multiply both sides by } \\frac{8}{3}\\)",
+    "Multiply both sides by \\(\\frac{8}{3}\\)",
     "\\(x = 16\\)"
    ],
    "slip": []
@@ -3333,9 +3333,9 @@
    },
    "worked": [
     "\\(\\frac{4}{5}x + 6 = 18\\)",
-    "\\(\\text{Subtract } 6 \\text{ from both sides}\\)",
+    "Subtract \\(6\\) from both sides",
     "\\(\\frac{4}{5}x = 12\\)",
-    "\\(\\text{Multiply both sides by } \\frac{5}{4}\\)",
+    "Multiply both sides by \\(\\frac{5}{4}\\)",
     "\\(x = 15\\)"
    ],
    "slip": []

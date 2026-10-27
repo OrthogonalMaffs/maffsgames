@@ -485,7 +485,7 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
   function nextInView() {
     var nx = $('feedback').querySelector('.maffs-next');
     if (!nx) return;
-    MaffsScroll.reveal(nx, { keep: $('feedback'), inset: FOOTER_PX });
+    MaffsScroll.reveal(nx, { keep: $('feedback') });
   }
 
   function check() {

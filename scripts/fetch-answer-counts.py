@@ -58,12 +58,6 @@ def stale_faults(obj, now_utc=None, hours=FRESH_HOURS):
     return []
 
 
-def slugs(root=BASE):
-    s = {p.name for p in (root / "games").iterdir() if p.is_dir()}
-    s |= {"escape-" + p.name for p in (root / "escape-rooms").iterdir() if p.is_dir() and (p / "room.js").exists()}
-    return s
-
-
 def _last_sunday(year, month):
     d = dt.date(year, month, 31)
     return d - dt.timedelta(days=(d.weekday() + 1) % 7)
@@ -86,8 +80,10 @@ def is_whole(v):
     return isinstance(v, int) and not isinstance(v, bool) and v >= 0
 
 
-def validate(obj, allowed, now_utc=None, require_today=True):
-    """The faults in a payload (empty list = valid)."""
+def validate(obj, now_utc=None, require_today=True, prev=None):
+    """The faults in a payload (empty list = valid). Every slug the Sheet returns is counted, known or not (Jon, 27 Oct 2026: a
+    slug check rejected the whole file when The 6 P's started sending events); `prev` is the file already published, and the
+    total may not fall below its total within the same school year (the counts only grow; a fall means rows were lost)."""
     now_utc = now_utc or dt.datetime.now(dt.timezone.utc)
     if not isinstance(obj, dict):
         return ["the payload is not an object"]
@@ -111,9 +107,9 @@ def validate(obj, allowed, now_utc=None, require_today=True):
     if not isinstance(games, dict):
         f.append("games is not an object")
         games = {}
-    bad = sorted(k for k in games if not isinstance(k, str) or k not in allowed)
-    if bad:
-        f.append("slugs not on the roster: %s" % ", ".join(map(str, bad)))
+    badkey = sorted(str(k) for k in games if not isinstance(k, str) or not k)
+    if badkey:
+        f.append("game keys that are not non-empty text: %s" % ", ".join(badkey))
     nonwhole = sorted(k for k, v in games.items() if not is_whole(v))
     if nonwhole:
         f.append("counts that are not whole numbers >= 0: %s" % ", ".join("%s=%r" % (k, games[k]) for k in nonwhole))
@@ -122,6 +118,9 @@ def validate(obj, allowed, now_utc=None, require_today=True):
         f.append("total %r is not a whole number >= 0" % (total,))
     elif not nonwhole and total != sum(games.values()):
         f.append("total %d is not the sum of the games (%d)" % (total, sum(games.values())))
+    if is_whole(total) and isinstance(prev, dict) and prev.get("since") == since and is_whole(prev.get("total")) and total < prev["total"]:
+        f.append("total %d is below the published file's total %d (as_of %s): the counts only grow, so rows have been lost and the file is not replaced"
+                 % (total, prev["total"], prev.get("as_of")))
     return f
 
 
@@ -144,7 +143,6 @@ def write(obj, path=OUT):
 
 
 def selftest():
-    allowed = {"a", "b", "escape-x"}
     now = dt.datetime(2026, 10, 23, 5, 30, tzinfo=dt.timezone.utc)
     good = {"as_of": "2026-10-23T06:30:12+01:00", "since": "2026-09-01", "total": 5, "games": {"a": 2, "b": 3}}
 
@@ -166,13 +164,15 @@ def selftest():
         ("string count", with_(games={"a": "2", "b": 3}), "not whole"),
         ("boolean count", with_(games={"a": True, "b": 3}, total=4), "not whole"),
         ("negative count", with_(games={"a": -1, "b": 6}), "not whole"),
-        ("slug off the roster", with_(games={"a": 2, "zzz": 3}), "not on the roster"),
+        ("unknown slug is counted, not rejected", with_(games={"a": 2, "zzz": 3}), None),
+        ("empty slug", with_(games={"a": 2, "": 3}), "not non-empty text"),
+        ("unknown slug but total not the sum", with_(games={"a": 2, "zzz": 3}, total=4), "not the sum"),
         ("total not the sum", with_(total=6), "not the sum"),
         ("total a string", with_(total="5"), "total"),
     ]
     bad = []
     for name, obj, want in cases:
-        got = validate(obj, allowed, now)
+        got = validate(obj, now)
         ok = (not got) if want is None else any(want in g for g in got)
         print("  %s  %-38s %s" % ("PASS" if ok else "FAIL", name, got[0] if got else "(valid)"))
         if not ok:
@@ -209,7 +209,7 @@ def selftest():
         ("as_of with no offset", with_(as_of="2026-10-26T11:31:31"), t26, "ISO time"),
     ]
     for name, obj, at, want in forms:
-        got = validate(obj, allowed, at)
+        got = validate(obj, at)
         ok = (not got) if want is None else any(want in g for g in got)
         print("  %s  %-58s %s" % ("PASS" if ok else "FAIL", name, got[0] if got else "(valid)"))
         if not ok:
@@ -231,7 +231,22 @@ def selftest():
         print("  %s  %-58s %s" % ("PASS" if ok else "FAIL", name, got[0] if got else "(fresh)"))
         if not ok:
             bad.append(name)
-    print("selftest: %s (%d cases)" % ("FAILED: " + ", ".join(bad) if bad else "PASS", len(cases) + len(edge) + 1 + len(forms) + len(fresh_cases)))
+    # The total never falls (same school year): a lower total than the published file fails; equal, higher, a new year and no file pass.
+    prevf = with_(total=10, games={"a": 4, "b": 6}, as_of="2026-10-22T06:30:12+01:00")
+    low = with_(total=9, games={"a": 4, "b": 5})
+    for name, obj, pv, want in [
+        ("total lower than the previous file's", low, prevf, "below the published file"),
+        ("total equal to the previous file's", with_(total=10, games={"a": 4, "b": 6}), prevf, None),
+        ("total higher than the previous file's", with_(total=11, games={"a": 4, "b": 7}), prevf, None),
+        ("lower total in a new school year (since differs)", low, dict(prevf, since="2025-09-01"), None),
+        ("no previous file", low, None, None),
+    ]:
+        got = validate(obj, now, prev=pv)
+        ok = (not got) if want is None else any(want in g for g in got)
+        print("  %s  %-58s %s" % ("PASS" if ok else "FAIL", name, got[0][:90] if got else "(valid)"))
+        if not ok:
+            bad.append(name)
+    print("selftest: %s (%d cases)" % ("FAILED: " + ", ".join(bad) if bad else "PASS", len(cases) + len(edge) + 1 + len(forms) + len(fresh_cases) + 5))
     return 1 if bad else 0
 
 
@@ -243,10 +258,9 @@ def main():
     a = ap.parse_args()
     if a.selftest:
         return selftest()
-    allowed = slugs()
     if a.check:
         obj = json.loads(OUT.read_text(encoding="utf-8"))
-        faults = validate(obj, allowed, require_today=False)
+        faults = validate(obj, require_today=False)
         # The weekly site check (a scheduled run) holds the file to 24 hours; a push or a PR must not go red because the daily
         # job is behind, so it does not (the daily watch in scheduled-watch.yml is what raises that).
         if a.fresh or os.environ.get("GITHUB_EVENT_NAME") == "schedule":
@@ -257,7 +271,11 @@ def main():
             "FAIL" if faults else "PASS", obj.get("total"), len(obj.get("games", {})), obj.get("as_of")))
         return 1 if faults else 0
     obj = fetch()
-    faults = validate(obj, allowed)
+    try:
+        prev = json.loads(OUT.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        prev = None
+    faults = validate(obj, prev=prev)
     if faults:
         for f in faults:
             print("FAIL", f)
