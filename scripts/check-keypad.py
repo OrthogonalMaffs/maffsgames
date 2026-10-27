@@ -21,7 +21,8 @@ answer boxes in a row (the shape of a "round each number" step), and checks:
   Privacy   nothing leaves the page: no request, no analytics call, no storage.
   Faults    six planted faults must each fail: a key leaking to the wrong box, a tap focusing a box,
             no mark on the active box, the length limit ignored, keys drawn with a mouse, phone keys
-            under 48px.
+            under 48px. Four more, in the minus and fraction keys, must each fail Minus or Fraction: a minus
+            after a digit, a slash first, a point after the slash, a slash key drawn without {fraction: true}.
 
     python scripts/check-keypad.py               # the checks and the planted faults
     python scripts/check-keypad.py --shots DIR   # also save screenshots (4 boxes, each width)
@@ -77,6 +78,13 @@ FAULTS = [
     ("the length limit ignored", 'src', 'v.length < max', 'true'),
     ("keys drawn with a mouse", 'js', "MaffsKeypad.CONFIG.query = 'all';"),
     ("phone keys under 48px", 'css', '.maffs-keypad-key{min-height:40px!important}'),
+]
+# Planted in the minus and fraction variants; each must fail minus_check or fraction_check.
+KEY_FAULTS = [
+    ("a minus typed after a digit", 'src', "if (v !== '') return false; v = '-';", "v += '-';"),
+    ("a slash typed first", 'src', "if (!/\\d/.test(v) || v.indexOf('/')", "if (v.indexOf('/')"),
+    ("a point typed after the slash", 'src', "!(val === '.' && v.indexOf('/') !== -1)", "true"),
+    ("a slash key without {fraction: true}", 'src', "if (k[1] === 'frac' && !frac) return;", ""),
 ]
 
 
@@ -243,10 +251,10 @@ async def fold_check(browser, w, h):
     return out
 
 
-async def fraction_check(browser):
+async def fraction_check(browser, fault=None):
     # The fraction variant ({keys: {fraction: true}}): "/" is never first, once only, after a digit; no point after it;
     # 15 keys with a minus key too (the zero is one key wide so the slash has a place); a mount without it has none.
-    ctx, page, _ = await open_page(browser, 390, 844, True, 2, minus=True, frac=True)
+    ctx, page, _ = await open_page(browser, 390, 844, True, 2, fault, minus=True, frac=True)
     out = []
     await page.tap('#t0')
     for k in ('/', '3', '/', '/', '.', '4'):
@@ -264,15 +272,15 @@ async def fraction_check(browser):
     if min(w) < 44:
         out.append('fraction key: a key is %dpx wide (needs 44 or more)' % min(w))
     await ctx.close()
-    ctx, page, _ = await open_page(browser, 390, 844, True, 1, minus=True)
+    ctx, page, _ = await open_page(browser, 390, 844, True, 1, fault, minus=True)
     if await page.evaluate("!!document.querySelector('.maffs-keypad-key[data-act=\"frac\"]')"):
         out.append('a mount without {keys: {fraction: true}} has a slash key')
     await ctx.close()
     return out
 
 
-async def minus_check(browser):
-    ctx, page, _ = await open_page(browser, 390, 844, True, 2, minus=True)
+async def minus_check(browser, fault=None):
+    ctx, page, _ = await open_page(browser, 390, 844, True, 2, fault, minus=True)
     out = []
     await page.tap('#t0')
     await page.tap(key_sel('-'))
@@ -330,6 +338,11 @@ async def run(shots):
             print('  fault %-34s %s' % (fault[0], ('caught (%s)' % caught[0][:80]) if caught else '*** MISSED ***'))
             if not caught:
                 fails.append('planted fault not caught: ' + fault[0])
+        for fault in KEY_FAULTS:
+            caught = (await minus_check(browser, fault)) + (await fraction_check(browser, fault))
+            print('  fault %-34s %s' % (fault[0], ('caught (%s)' % caught[0][:80]) if caught else '*** MISSED ***'))
+            if not caught:
+                fails.append('planted fault not caught: ' + fault[0])
         await browser.close()
     return fails
 
@@ -352,9 +365,9 @@ def main():
         return 1
     print('PASS: MaffsKeypad on touch phones at %s with %s boxes (read-only, inputmode none, never focused, '
           'one box marked, keys to the active box only, DEL and C on it alone, 12-character limit, keys 48px, '
-          'no sideways scroll, box and keys in view together); the minus key; ordinary inputs with a mouse; '
+          'no sideways scroll, box and keys in view together); the minus and fraction keys; ordinary inputs with a mouse; '
           'nothing sent; %d planted faults caught'
-          % ('/'.join(str(w) for w, _ in TOUCH), '/'.join(str(n) for n in COUNTS), len(FAULTS)))
+          % ('/'.join(str(w) for w, _ in TOUCH), '/'.join(str(n) for n in COUNTS), len(FAULTS) + len(KEY_FAULTS)))
     return 0
 
 
