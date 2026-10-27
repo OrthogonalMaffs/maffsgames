@@ -1237,18 +1237,33 @@ the obvious candidate; all three load the shared `schools/assets/opendyslexic.cs
 - **Feedback screen.** After a wrong answer, Next is above the fold at all three sizes in both modes, with
   Aa at 320 × 568 the recorded exception. This is the paragraph "When the asking screen may scroll" above,
   restated for Aa.
-- **How it is checked.** `scripts/measure-phone-fit.py` (and `--aa`) measures every roster game's first
-  question at its default level at the three sizes. The gate's asking-screen rule fails the run (exit 1); Next
-  below the fold and sideways scroll are reported, not gated, because a generic driver sees one question and a
-  game's own all-items measurement is the proof (Distinctly Average's: every item, every wrong option, three
-  sizes, both modes). The script is not yet in CI; that is a later contract.
-- **Two lists that only shrink** (the `check-theme.py` and answer-lock pattern), in
-  `scripts/phone-fit-state.json`, per mode. **`known-failures`**: each game already failing the gate, with
-  the sizes at which it fails; reported, never failed. **`unmeasurable`**: the games the driver cannot
-  measure (it cannot reach their asking screen), so they never read as passing. A gate failure that
-  is not on the list, a listed size that now passes, a listed unmeasurable game that now measures, and an
-  unmeasurable game not on its list each fail the run. A game comes off a list in the PR that fixes it; a
-  game is never added. **First recorded 26 Oct 2026:** 45 roster games on `known-failures` (44 live, and
+- **Jon's rulings of 26 Oct 2026 (contract FOLD-COMPONENTS).** **R1:** the 1 Oct exception ("When the asking screen
+  may scroll", above) stays literal: it covers only a question itself taller than the screen (`better-value`,
+  `truth-will-set-you-free`, `wrong-on-the-internet`); the other games once grouped with them are layout failures and
+  stay on the list for a later contract. **R2, the laptop and projector rule:** at 1366 × 768 and 1280 × 720 the last
+  answer option and Next after a wrong answer end above the fold. **R3:** two options to a row only when every option fits
+  on one line without wrapping at that width, with tap targets at least 44 px; otherwise one to a row (§7.5.7). **R4:** no
+  start-screen rule yet; the start screen is measured and reported, never judged.
+- **The label floor (Jon, 27 Oct 2026):** no text in a figure (an SVG, a canvas, a `.maffs-figure` block) is drawn under
+  12 px, in every mode, Aa included. A figure that cannot fit with 12 px labels goes on the list with its reason; it is
+  never shrunk further.
+- **How it is checked.** `scripts/measure-phone-fit.py` measures every roster game's first question at its default level:
+  at the three phone sizes in normal mode and with `--aa`, and at the two laptop sizes with `--laptop` (R2). Four gates fail
+  the run (exit 1): the asking-screen rule above (on a laptop, Next too); the page scrolling sideways, on the asking screen
+  or after a wrong answer, at any measured size; figure text under 12 px; and a game it cannot measure that is not listed.
+  A canvas question (no option group, input or submit) is measured by the canvas's own box and the buttons that start at or
+  below its top, one rule for every game. On a phone, Next below the fold is reported, not gated, because a generic driver
+  sees one question and a game's own all-items measurement is the proof (Distinctly Average's: every item, every wrong
+  option, three sizes, both modes). The script is not yet in CI; that is a later contract.
+- **The lists** (the `check-theme.py` and answer-lock pattern), in `scripts/phone-fit-state.json`, per mode (`normal`,
+  `aa`, `laptop`). **`known-failures`**: each game already failing the asking-screen gate, with the sizes (on a laptop, the
+  size and `option` or `next`) at which it fails; reported, never failed. **`sideways`**: each game with the sizes at which
+  it scrolls sideways. **`small-labels`**: each game with the sizes at which a figure's text is under 12 px.
+  **`unmeasurable`**: the games the driver cannot measure (it cannot reach their asking screen), so they never read as
+  passing. A failure that is not on its list, a listed entry that now passes, a listed unmeasurable game that now measures,
+  and an unmeasurable game not on its list each fail the run. A game comes off a list in the PR that fixes it. **A list may
+  grow only when the measurement itself improves, with Jon's ruling, never because of a new fault** (Jon, 26 Oct 2026; the
+  laptop, sideways and small-labels lists were seeded that way, each from fresh runs). **First recorded 26 Oct 2026:** 45 roster games on `known-failures` (44 live, and
   `glorious-gantt`, unlisted; 39 in normal mode, 44 in Aa) and 14 on `unmeasurable`, in both modes; the
   per-game sizes are in the file and in `docs/audits/phone-fit-gate-2026-10-26.md`. A game that took the
   1 Oct exception for a question taller than the screen (todo §3.9) and fails the gate is on the list:
@@ -1257,7 +1272,8 @@ the obvious candidate; all three load the shared `schools/assets/opendyslexic.cs
 ### 7.6.2 The reference card — the house pattern for help and reference panels (26 Oct 2026, Jon's ruling)
 
 A rule, method or reference a student may want while answering (Distinctly Average's "Finding the median")
-is a **reference card**: the shared `.maffs-ref` in `schools/assets/theme.css`, one native `<details>`, so it
+is a **reference card**: the shared `.maffs-ref` in `schools/assets/fold.css` (which `theme.css` imports; a game not on
+the theme links it alone, §7.5.7), one native `<details>`, so it
 needs no script, opens from the keyboard and is read once by a screen reader. A help panel that sits open
 above a question pushes the options down the screen, which is the likeliest shared cause of the games on the
 known-failures list (§7.6.1).
@@ -1272,7 +1288,7 @@ known-failures list (§7.6.1).
   item; no script decides. `.maffs-ref-row` holds the copies and the Next mount: collapsed, the card sits
   beside Next on one line and costs no height; opened by the student, it takes the full width above Next.
 - **A game tints it** with two non-base tokens, `--ref-bg` and `--ref-edge`, and styles only its content;
-  everything else is in `theme.css`. Every rule is scoped to `.maffs-ref`, so a page without one is unchanged.
+  everything else is in `fold.css`. Every rule is scoped to `.maffs-ref`, so a page without one is unchanged.
 - **Not a fading scaffold.** "Scaffolds fade" (§12) withdraws an open aid once the student can work without
   it. A reference card is never open on the asking screen, so it has nothing to fade: Distinctly Average's
   open-until-two-right streak was removed when its card moved onto this pattern.
