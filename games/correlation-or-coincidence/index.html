@@ -72,7 +72,8 @@ a.back-link:hover{color:var(--text)}
 .axis-x{text-align:right}
 .plot svg{width:100%;height:auto;display:block;max-height:230px}
 /* On a short screen (900px tall or less) the graph is the shared phone figure (schools/assets/fold.css, canon §7.5.7):
-   its cap is --maffs-figure-max, set here by screen height, and in Aa mode a little lower. */
+   its cap is --maffs-figure-max, set here by screen height, the game's own caps unchanged; never lower, since its axis
+   numbers are already under the 12 px figure-text floor on phones (Jon, 27 Oct 2026). */
 .plot{--maffs-figure-max:230px}
 .plot .grid{stroke:var(--plot-grid);stroke-width:1}
 .plot .axis{stroke:var(--plot-axis);stroke-width:1.5}
@@ -115,11 +116,10 @@ a.back-link:hover{color:var(--text)}
 }
 @media (max-height:700px){
   .plot{--maffs-figure-max:170px}
-  body.accessible .plot{--maffs-figure-max:130px}
   .qcard{gap:.4rem}
 }
 @media (max-height:600px){
-  .plot,body.accessible .plot{--maffs-figure-max:120px}
+  .plot{--maffs-figure-max:120px}
   .prompt{font-size:.93rem;line-height:1.4}
   .hud{padding:.3rem .6rem;margin-bottom:.4rem}
   .choice{min-height:44px;padding:.4rem .6rem}
