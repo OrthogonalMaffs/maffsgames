@@ -182,7 +182,7 @@ Jon never amends contracts: PC sends complete pastes.
 - **Archives** (history only, never loaded by default): `docs/history/claude-md-archive.md` (this file's dated
   handovers and state sections to 7 Oct 2026, and the reference sections canon already holds),
   `docs/history/handover-home-archive.md`, `docs/history/handover-cloud-archive.md`.
-- **Size limit:** `scripts/check-context-size.py` fails CI if this file or either handover passes 20 KB.
+- **Size limit:** `scripts/check-context-size.py` fails CI if this file passes 20 KB; a handover past 20 KB is a warning, and main's REGISTER job moves its oldest entries to `docs/history/` (`--fix`, canon §7.8.4).
 
 ## Task Contract
 

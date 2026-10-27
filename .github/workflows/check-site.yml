@@ -192,6 +192,29 @@ jobs:
           done
           echo "::error::could not push the regenerated REGISTER.md after 3 attempts"
           exit 1
+      # GATE-WARN-THEN-ENFORCE step 5 (Jon, 27 Oct 2026; canon 7.8.4): a handover past 20 KB is a warning on a pull request,
+      # and here, after the merge, its oldest entries move to that lane's docs/history/ archive, word for word.
+      - name: Archive handover entries past 20 KB and commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3; do
+            git fetch -q origin main && git reset -q --hard origin/main
+            python scripts/check-context-size.py --fix | tee -a "$GITHUB_STEP_SUMMARY"
+            if git diff --quiet -- docs/handover/ docs/history/; then
+              exit 0
+            fi
+            git add docs/handover/home.md docs/handover/cloud.md docs/history/handover-home-archive.md docs/history/handover-cloud-archive.md
+            git commit -q -m "Archive handover entries past 20 KB [skip ci]"
+            if git push -q origin HEAD:main; then
+              echo "handover entries archived: $(git rev-parse --short HEAD)" | tee -a "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            echo "main moved during attempt $attempt; fetching again"
+            sleep 5
+          done
+          echo "::error::could not push the archived handover entries after 3 attempts"
+          exit 1
 
   # The content groups are packed from each line's measured time (contract CI-BALANCE, 9 Oct 2026; canon
   # §7.8.1). After every full run on main, once the Gate has passed, this job records that run's times
