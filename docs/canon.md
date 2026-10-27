@@ -1268,6 +1268,9 @@ the obvious candidate; all three load the shared `schools/assets/opendyslexic.cs
   per-game sizes are in the file and in `docs/audits/phone-fit-gate-2026-10-26.md`. A game that took the
   1 Oct exception for a question taller than the screen (todo §3.9) and fails the gate is on the list:
   Better Value is.
+  **After contract FOLD-COMPONENTS (27 Oct 2026; per game in `docs/audits/fold-components-2026-10-27.md`):** `known-failures`
+  normal 37, Aa 38, laptop 29 (52 games on at least one); `sideways` normal 9, Aa 25, laptop 0; `small-labels` normal 8, Aa 8,
+  laptop 4; `unmeasurable` 3 in every mode (`glorious-gantt`, `just-pythag-it-bruv`, `spot-the-error`).
 
 ### 7.6.2 The reference card — the house pattern for help and reference panels (26 Oct 2026, Jon's ruling)
 
