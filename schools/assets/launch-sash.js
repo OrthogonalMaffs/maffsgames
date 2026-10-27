@@ -5,6 +5,7 @@
  * file ships without END, or if any page but the homepage loads it.
  *
  * Wide screens: a diagonal corner sash. Phones: a slim strip across the top (a corner sash would cover the header).
+ * No analytics labels (data-mfg-*): a time-limited element must not be one the portal's click test counts, or that test fails the day it ends.
  * It is an ordinary link: keyboard focus, a visible focus ring, text contrast above 4.5:1.
  */
 (function () {
@@ -22,11 +23,9 @@
     var wrap = document.createElement('div');
     wrap.id = 'launchSash';
     wrap.className = 'launch-sash';
-    wrap.setAttribute('data-mfg-section', 'launch-sash');
     var a = document.createElement('a');
     a.href = HREF;
     a.className = 'launch-sash-link';
-    a.setAttribute('data-mfg-item', 'meet-the-6-ps');
     a.textContent = TEXT;
     wrap.appendChild(a);
     document.body.insertBefore(wrap, document.body.firstChild);
