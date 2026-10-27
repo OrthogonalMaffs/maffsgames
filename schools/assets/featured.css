@@ -1,0 +1,58 @@
+/* The pinned, featured card (schools/assets/featured.js; launch contract SIX-PS-LAUNCH). Navy and teal, as the portal's
+   escape-rooms band is a dark rounded band with a flag, a heading and a lede. */
+:root {
+  --feat-navy: #1a2744;
+  --feat-navy-deep: #0f172a;
+  --feat-teal: #0f766e;
+  --feat-teal-light: #5eead4;
+  --feat-text: #e2e8f0;
+}
+[data-featured] { margin: 0 0 1.5rem; }
+[data-featured] > a:not(.featured-card) { display: inline-block; min-height: 44px; padding: 0.6rem 0; font-weight: 700; color: var(--feat-navy); }
+.featured-card {
+  display: block;
+  padding: 1.4rem 1.5rem 1.3rem;
+  border-radius: 16px;
+  color: var(--feat-text);
+  text-decoration: none;
+  background: linear-gradient(135deg, var(--feat-navy-deep) 0%, var(--feat-navy) 100%);
+  border: 1px solid rgba(94, 234, 212, 0.35);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+}
+.featured-card:hover { border-color: var(--feat-teal-light); }
+.featured-card:focus-visible { outline: 3px solid var(--feat-teal-light); outline-offset: 3px; }
+.featured-flag {
+  display: inline-block;
+  margin-bottom: 0.7rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  background: var(--feat-teal-light);
+  color: var(--feat-navy-deep);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.featured-title { display: block; margin-bottom: 0.4rem; color: #fff; font-size: 1.7rem; font-weight: 800; line-height: 1.15; letter-spacing: -0.02em; }
+.featured-lede { display: block; max-width: 62ch; margin-bottom: 0.9rem; font-size: 1rem; line-height: 1.6; color: #cbd5e1; }
+.featured-facts { display: flex; flex-wrap: wrap; gap: 0.4rem 0.5rem; margin-bottom: 1rem; }
+.featured-fact { padding: 0.15rem 0.65rem; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.22); font-size: 0.85rem; color: var(--feat-text); }
+.featured-cta {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.5rem 1.2rem;
+  border-radius: 10px;
+  background: var(--feat-teal);
+  color: #fff;
+  font-weight: 700;
+}
+.featured-card:hover .featured-cta { background: #115e59; }
+@media (max-width: 480px) {
+  .featured-card { padding: 1.1rem 1rem 1rem; }
+  .featured-title { font-size: 1.45rem; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .featured-on .featured-card { animation: featured-in 0.35s ease both; }
+}
+@keyframes featured-in { from { opacity: 0; } to { opacity: 1; } }
