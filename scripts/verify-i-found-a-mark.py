@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: I Found a Mark, part 1 (every question of the four types over 300 seeds each, recomputed in Python from its own parameters with exact fractions: every step and form value, every literal and dependency derivable, every distractor different from every step, the garden's three routes and four labels, at least 30 distinct questions a type, every form accepted in play) | --part 1
-# ci-line: I Found a Mark, part 2 (a session played in the page at 375, 320 and 1280 px with hints: a hinted mark is not in the score, the leaderboard or game_completed; options and Next above the fold; no sideways scroll; diagram text at least 12 px) | --part 2
-# ci-line: I Found a Mark, part 3 (fault-injection self-test: the six planted faults, each caught) | --part 3
+# ci-shards: I Found a Mark (every question of the four types over 300 seeds each, recomputed in Python from its own parameters with exact fractions: every step and form value, every literal and dependency derivable, every distractor different from every step, the garden's three routes and four labels, at least 30 distinct questions a type, every form accepted in play; a session played in the page at 375, 320 and 1280 px with hints: a hinted mark is not in the score, the leaderboard or game_completed; options and Next above the fold; no sideways scroll; diagram text at least 12 px; fault-injection self-test: the six planted faults, each caught) | | 2
 # ci-deps: games/i-found-a-mark/ schools/assets/found-a-mark-templates.js
 """Independent verification for I Found a Mark (games/i-found-a-mark/), built 27 Oct 2026 (contract FOUND-A-MARK, Jon).
 SR-30: checked from its first PR.
@@ -28,8 +26,13 @@ in Python, from each question's own `params` and the contract's words, never fro
   Play       in the module: from each question, every form of every step is accepted once its deps are found; random
              play finishes with 3 unaided marks; no option is offered with unmet deps or already found; a hint never
              scores. In the page: a session played with hints at 375, 320 and 1280 px.
+
+Work units (contract SHARD; CI runs a slice with --shard i/k, scripts/ci-groups.py chooses k): "engine" (every type over the
+seeds, on one 1280x800 page), "play WxH" (a session at one size) and "plant: <what>" (one per planted fault). Until 27 Oct
+2026 CI ran three hand-made parts (--part 1, 2, 3: the engine, the three sizes, the plants).
 """
 import argparse
+import contextlib
 import json
 import math
 import os
@@ -505,28 +508,32 @@ def play(page, size, out):
         out.append('a session served only %s' % sorted(seen_types))
 
 
-def check(html, module, out, engine=True, sizes=(), seeds=SEEDS):
+def check(html, module, out, engine=True, sizes=(), seeds=SEEDS, shard=None):
+    """shard: time each piece as its work unit ("engine", "play WxH"); the self-test passes none."""
     from playwright.sync_api import sync_playwright
+    unit = shard.unit if shard is not None else (lambda uid: contextlib.nullcontext())
     proc, base = bc.start_stub_server()
     info = {}
     try:
         with sync_playwright() as pw:
             if engine:
-                br, page, errs = open_page(pw, base, html, module, (1280, 800))
-                try:
-                    info.update(check_engine(page, out, seeds))
-                except Exception as e:  # noqa: BLE001
-                    out.append('the engine checks threw: %s' % str(e).splitlines()[0][:200])
-                out.extend('page error: ' + e for e in errs)
-                br.close()
+                with unit('engine'):
+                    br, page, errs = open_page(pw, base, html, module, (1280, 800))
+                    try:
+                        info.update(check_engine(page, out, seeds))
+                    except Exception as e:  # noqa: BLE001
+                        out.append('the engine checks threw: %s' % str(e).splitlines()[0][:200])
+                    out.extend('page error: ' + e for e in errs)
+                    br.close()
             for size in sizes:
-                br, page, errs = open_page(pw, base, html, module, size)
-                try:
-                    play(page, size, out)
-                except Exception as e:  # noqa: BLE001
-                    out.append('play at %dx%d threw: %s' % (size[0], size[1], str(e).splitlines()[0][:200]))
-                out.extend('page error at %dx%d: %s' % (size[0], size[1], e) for e in errs)
-                br.close()
+                with unit('play %dx%d' % size):
+                    br, page, errs = open_page(pw, base, html, module, size)
+                    try:
+                        play(page, size, out)
+                    except Exception as e:  # noqa: BLE001
+                        out.append('play at %dx%d threw: %s' % (size[0], size[1], str(e).splitlines()[0][:200]))
+                    out.extend('page error at %dx%d: %s' % (size[0], size[1], e) for e in errs)
+                    br.close()
     finally:
         proc.terminate()
     return info
@@ -557,50 +564,53 @@ PLANTS = [
 ]
 
 
-def selftest(html, module, plants=None):
+# Each plant is a work unit of its own (contract SHARD), dealt into CI parts by its time.
+def selftest(html, module, plants=None, shard=None):
     ok = True
     for what, which, edits, kind, want in (PLANTS if plants is None else plants):
-        src = module if which == 'module' else html
-        bad = False
-        for old, new in edits:
-            if src.count(old) != 1:
-                bad = True
-                break
-            src = src.replace(old, new)
-        if bad:
-            print('  self-test %-72s *** CANNOT PLANT ***' % what)
-            ok = False
-            continue
-        got = []
-        h2, m2 = (html, src) if which == 'module' else (src, module)
-        check(h2, m2, got, engine=kind == 'engine', sizes=[(375, 667)] if kind == 'play' else [], seeds=60)
-        hit = [g for g in got if re.search(want, g)]
-        ok = ok and bool(hit)
-        print('  self-test %-72s %s' % (what, ('caught: ' + hit[0][:100]) if hit else '*** MISSED ***' + (' (other: %s)' % got[0][:100] if got else '')))
+        with (shard.unit('plant: ' + what) if shard is not None else contextlib.nullcontext()):
+            ok = plant_one(html, module, what, which, edits, kind, want) and ok
     return ok
+
+
+def plant_one(html, module, what, which, edits, kind, want):
+    src = module if which == 'module' else html
+    for old, new in edits:
+        if src.count(old) != 1:
+            print('  self-test %-72s *** CANNOT PLANT ***' % what)
+            return False
+        src = src.replace(old, new)
+    got = []
+    h2, m2 = (html, src) if which == 'module' else (src, module)
+    check(h2, m2, got, engine=kind == 'engine', sizes=[(375, 667)] if kind == 'play' else [], seeds=60)
+    hit = [g for g in got if re.search(want, g)]
+    print('  self-test %-72s %s' % (what, ('caught: ' + hit[0][:100]) if hit else '*** MISSED ***' + (' (other: %s)' % got[0][:100] if got else '')))
+    return bool(hit)
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--part', choices=['1', '2', '3'], help='one of the three parts CI runs side by side (default: all)')
     ap.add_argument('--seeds', type=int, default=SEEDS)
+    bc.shard_args(ap)
     args = ap.parse_args()
+    shard = bc.Shard(__file__, args)
+    mine = shard.pick(['engine'] + ['play %dx%d' % size for size in SIZES] + ['plant: ' + p[0] for p in PLANTS])
     try:
         sys.stdout.reconfigure(encoding='utf-8')
     except (AttributeError, ValueError):
         pass
     html = open(GAME, encoding='utf-8').read()
     module = open(MODULE, encoding='utf-8').read()
-    part = args.part
     out = []
-    info = check(html, module, out, engine=part in (None, '1'), sizes=SIZES if part in (None, '2') else [], seeds=args.seeds)
+    sizes = [size for size in SIZES if 'play %dx%d' % size in mine]
+    info = {}
+    if 'engine' in mine or sizes:
+        info = check(html, module, out, engine='engine' in mine, sizes=sizes, seeds=args.seeds, shard=shard)
     if info:
         print('%s: distinct questions in %d seeds: %s' % (SLUG, args.seeds, info))
-    if part in (None, '2'):
-        print('%s: a session played with hints at %s' % (SLUG, ', '.join('%dx%d' % s for s in SIZES)))
-    ok = True
-    if part in (None, '3'):
-        ok = selftest(html, module)
+    if sizes:
+        print('%s: a session played with hints at %s' % (SLUG, ', '.join('%dx%d' % s for s in sizes)))
+    ok = selftest(html, module, [p for p in PLANTS if 'plant: ' + p[0] in mine], shard)
     for f in out[:60]:
         print('FAIL  ' + f)
     if len(out) > 60:

@@ -58,20 +58,21 @@ def main():
     for job, _, cmd in cg.static_checks():
         for s in re.findall(r'python3? scripts/([A-Za-z0-9_.-]+\.py)', cmd):
             static.setdefault(s, job)
-    declared = {name for name, info in hdrs.items() if info['lines']}
+    declared = {name for name, info in hdrs.items() if info['lines'] or info.get('shards')}
     held = {name: info['held'] for name, info in hdrs.items() if info['held']}
     present = sorted(n for n in os.listdir(os.path.join(ROOT, 'scripts')) if PATTERN.match(n))
 
     problems = list(cg.errors(hdrs))
     for name in present:
         if name in declared:
-            print('ok      %s  (%s)' % (name, ', '.join(cg.tier_of(g) or g for g, _, _ in hdrs[name]['lines'])))
+            print('ok      %s  (%s)' % (name, ', '.join([cg.tier_of(g) or g for g, _, _ in hdrs[name]['lines']]
+                                              + ['%s, in parts' % (cg.tier_of(g) or g) for g, _, _, _ in hdrs[name].get('shards', [])])))
         elif name in held:
             print('held    %s: %s' % (name, held[name]))
         elif name.startswith('test-') and name in static:
             print('ok      %s  (workflow: %s)' % (name, static[name]))
         elif name.startswith('verify-'):
-            problems.append('%s declares no CI line: add "# ci-line: <label> | <args>" to its own file, '
+            problems.append('%s declares no CI line: add "# ci-line: <label> | <args>" (or "# ci-shards") to its own file, '
                             'or "# ci-held: <reason>"' % name)
         else:
             problems.append('%s is not run by CI: add a ci-line header, or list it in a site-wide job' % name)

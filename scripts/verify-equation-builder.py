@@ -1,28 +1,33 @@
 #!/usr/bin/env python3
-# ci-line: Equation Builder, part 1 (a third of every question's tile arrangements classified by SymPy; the whole-question checks; self-test) | --part-selftest && --part 1/3 && --selftest
-# ci-line: Equation Builder, part 2 (the second third of every question's tile arrangements, classified by SymPy) | --part-selftest && --part 2/3
-# ci-line: Equation Builder, part 3 (the last third of every question's tile arrangements, classified by SymPy) | --part-selftest && --part 3/3
+# ci-shards: Equation Builder (every question's tile arrangements classified by SymPy, in twelve slices; the whole-question checks; the tile order in Chromium; self-test) | | 3
 """Equation Builder: which tile arrangements are correct? Decided here, once, by SymPy (SR-13; audit 2026-10-04 F1-F8).
 
 The game marks a built answer correct only if its token sequence is in that question's ACCEPTED list. This
 script computes every such list from the tiles, and fails if the bank's lists ever differ from it.
 
-    python scripts/verify-equation-builder.py              # the check (CI)
+    python scripts/verify-equation-builder.py              # the whole check, in one pass, and the tile order
     python scripts/verify-equation-builder.py --report     # accepted-list sizes, distractor builds, unclassifiable
     python scripts/verify-equation-builder.py --selftest   # planted faults must fail
-    python scripts/verify-equation-builder.py --part 1/3   # CI's first part (and 2/3, 3/3: CI_PARTS)
-    python scripts/verify-equation-builder.py --part-selftest
+    python scripts/verify-equation-builder.py --shard 2/3  # CI: part 2 of 3 of the work units (scripts/ci-groups.py chooses 3)
+    python scripts/verify-equation-builder.py --list-units
 
-PARTS (7 Oct 2026, canon §7.8.1). One job took 5m23s on main, and one question (eb_ks3_012, 31,032 candidate
-arrangements) is 60% of it, so CI splits by candidate, not by question: part i of n classifies candidate k of
-every question when k mod n = i - 1 (the candidates in their own sorted order), and checks that slice against
-the page's ACCEPTED list cut to the same candidates. A check that is about a question as a whole (the key is
-among the candidates; no accepted arrangement; the page's stored arrangements that are not candidates at all;
-a valid tile not among the tiles; eb_gcse_013's geometry; ids the bank does not have) runs in part 1 only.
-So the parts together fail on exactly what the whole run failed on; --part-selftest proves they cover every
-candidate of every question once, and that the workflow runs every part.
-Three parts since 27 Oct 2026 (two before): part 1 had reached 151 s, over the per-line limit with a 46 s setup median.
-A temporary hand split, by Jon's ruling of 27 Oct: contract SHARD replaces it (ci-groups.py chooses the parts).
+SLICES (7 Oct 2026, canon §7.8.1). One job took 5m23s on main, and one question (eb_ks3_012, 31,032 candidate
+arrangements) is 60% of it, so the work is divided by candidate, not by question: slice i of n classifies
+candidate k of every question when k mod n = i - 1 (the candidates in their own sorted order), and checks that
+slice against the page's ACCEPTED list cut to the same candidates. A check that is about a question as a whole
+(the key is among the candidates; no accepted arrangement; the page's stored arrangements that are not
+candidates at all; a valid tile not among the tiles; the stems; eb_gcse_013's geometry; ids the bank does not
+have; the fixed SPECIAL questions) runs with slice 1 only. So the slices together fail on exactly what the whole
+run fails on (every candidate of every question is in exactly one slice: k mod n has one value), and the
+self-test plants faults that the whole run and two slices together must both catch.
+
+WORK UNITS (contract SHARD, 27 Oct 2026). Until then CI ran two hand-made parts (--part 1/2 and 2/2, each proved by
+a --part-selftest that read the CI commands). Now the work is SLICES candidate slices as units ("slice 1 of 12 and
+the whole-question checks", "slice 2 of 12", ...), "tile order" (the Chromium check below) and one unit per
+self-test case ("selftest: <case>"), and CI runs its share --shard i/k (scripts/ci_shards.py deals them). A run with
+no --shard is the whole check in one pass (check() with no slice) and the tile order, as before: it does not run
+the self-test, which CI ran as a line of its own and --selftest runs alone. --only and --report work with or
+without --shard (--only skips the tile order, as before); --selftest takes no --shard.
 
 How (contract, 4 Oct 2026):
   a. every well-formed arrangement of the tiles, any length from the shortest that parses up to the slot count,
@@ -42,11 +47,11 @@ side by side never multiply implicitly: "3" then "m" is not "3m".
 The question's own words decide the kind first (Jon, 13 Oct 2026, SWEEP-1; SR-25): the last sentence that says
 "write" asks for an expression (the key has no "="), a formula (the key is "X = ..." with X one tile) or an
 equation (any rearrangement is accepted, SR-13 decision 5, as eb_gcse_007 always was). The check fails a key
-whose form disagrees with what its question asks for. Then, in Chromium (part 1): the tile bank is shuffled for
-each question and never starts with the tiles a blank needs in the key's order (orderTiles), and the page lays
-the bank out in that order.
+whose form disagrees with what its question asks for. Then, in Chromium (the "tile order" unit): the tile bank
+is shuffled for each question and never starts with the tiles a blank needs in the key's order (orderTiles), and
+the page lays the bank out in that order.
 """
-import argparse, itertools, json, pathlib, random, re, sys
+import argparse, contextlib, functools, itertools, json, pathlib, random, re, sys
 from fractions import Fraction
 
 import sympy as sp
@@ -55,6 +60,9 @@ from sympy.parsing.sympy_parser import (parse_expr, standard_transformations, ra
 
 BASE = pathlib.Path(__file__).resolve().parent.parent
 PAGE = BASE / "games" / "equation-builder" / "index.html"
+sys.path.insert(0, str(BASE / 'scripts'))
+import ci_shards  # noqa: E402  (stdlib only: the work units and --shard, contract SHARD)
+SLICES = 12          # candidate slices, each a work unit (see SLICES and WORK UNITS in the docstring)
 
 OPS = {'+': '+', '−': '-', '×': '*', '÷': '/'}
 EQ = '='
@@ -487,8 +495,8 @@ def extra_tiles(q, seq):
 
 
 def accepted_for(q, part=None):
-    """(sorted accepted arrangements, candidate count). With part (i, n): only the candidates in that
-    part's slice are classified, and the accepted ones among them come back."""
+    """(sorted accepted arrangements, candidate count). With part (i, n): only the candidates in slice i
+    of n are classified, and the accepted ones among them come back."""
     sp_rule = SPECIAL.get(q['id'], {})
     if 'fixed' in sp_rule:
         fixed = sorted(fixed_variants(q, sp_rule['fixed']))
@@ -499,18 +507,11 @@ def accepted_for(q, part=None):
 
 
 def in_part(cands, part):
-    """The candidates part (i, n) classifies: every n-th, from the (i-1)-th. part None: all of them."""
+    """The candidates slice (i, n) classifies: every n-th, from the (i-1)-th. part None: all of them."""
     if part is None:
         return list(cands)
     i, n = part
     return [c for k, c in enumerate(cands) if k % n == i - 1]
-
-
-def parse_part(text):
-    m = re.match(r'^(\d+)/(\d+)$', text or '')
-    if not m or not 1 <= int(m.group(1)) <= int(m.group(2)):
-        raise ValueError('--part wants i/n with 1 <= i <= n, got %r' % text)
-    return int(m.group(1)), int(m.group(2))
 
 
 def tile_kind(t):
@@ -559,7 +560,7 @@ def gcse_013_geometry(q):
 
 
 def check(page=PAGE, only=None, verbose=False, part=None):
-    """part (i, n): see PARTS in the docstring. part None is the whole check, as before."""
+    """part (i, n): slice i of n, see SLICES in the docstring. part None is the whole check, as before."""
     fails, report = [], []
     whole = part is None or part[0] == 1          # the question-as-a-whole checks run here
     src = page.read_text(encoding='utf-8')
@@ -706,121 +707,108 @@ def write(page=PAGE):
 
 
 # ------------------------------------------------------------------ self-test
-def selftest():
+# The planted cases (name, plant, only, should_fail): the whole check and the slices together must both fail on each.
+CHECK_CASES = [
+    ('clean copy passes', None, ['eb_ks3_001', 'eb_gcse_010'], False),
+    ('a wrong key (ks3_001 keyed C = 2.50m + 3m)',
+     lambda s: s.replace("slots:['C','=','2.50m','+','3']", "slots:['C','=','2.50m','+','3m']", 1), ['eb_ks3_001'], True),
+    ('a missing accepted arrangement (ks3_001 loses C = 3 + 2.50m)',
+     lambda s: s.replace('["C","=","3","+","2.50m"],', '', 1) if '["C","=","3","+","2.50m"],' in s
+                else s.replace(',["C","=","3","+","2.50m"]', '', 1), ['eb_ks3_001'], True),
+    ('an expression asked, a formula keyed (ks3_002\'s old wording, SR-25)',
+     lambda s: s.replace('Write a formula for the total mass T kg', 'Write an expression for the total mass T kg', 1),
+     ['eb_ks3_002'], True),
+    ('a bare key back to a formula (l4_015 keyed log(8×4 ÷ 2) = log(16))',
+     lambda s: s.replace("slots:['log(16)']", "slots:['log(8\\u00d74','\\u00f7','2)','=','log(16)']", 1),
+     ['eb_l4_015'], True),
+    ('an "equation for X" item that rejects a rearrangement (gcse_019 loses Q3 − IQR = Q1)',
+     lambda s: s.replace('["Q3","−","IQR","=","Q1"],', '', 1) if '["Q3","−","IQR","=","Q1"],' in s
+                else s.replace(',["Q3","−","IQR","=","Q1"]', '', 1), ['eb_gcse_019'], True),
+    ('the partial-fractions stem back to "Express ... in partial fractions" (l4_010, R1)',
+     lambda s: s.replace('Write the form of the partial fractions of (3x + 1)/((x + 1)(x \\u2212 2)).', 'Express (3x + 1)/((x + 1)(x \\u2212 2)) in partial fractions.', 1),
+     ['eb_l4_010'], True),
+    ('the area stem back to "Evaluate the area" (l4_021, R1)',
+     lambda s: s.replace('Write the definite integral for the area under y = 2x between x = 1 and x = 4.', 'Evaluate the area under y = 2x between x = 1 and x = 4. Write the definite integral expression.', 1),
+     ['eb_l4_021'], True),
+    ('a distractor that builds an equal value (gcse_010 gets 5/9 and 4/10 back)',
+     lambda s: s.replace("'5/10','\\u00f7','3/9'", "'5/9','\\u00f7','4/10'", 1)
+                .replace("'\\u2212','5/10'", "'\\u2212','5/9'"), ['eb_gcse_010'], True),
+]
+# The tile-order cases (name, plant): the clean copy passes, each plant fails.
+ORDER_CASES = [
+    ('tile order: clean copy passes', None),
+    ('tile order: the bank laid out in bank order again', lambda s: s.replace('  tileOrder.forEach(t=>{', '  currentQ.tiles.forEach(t=>{', 1)),
+    ('tile order: no guard against the key coming first', lambda s: s.replace(
+        "  if(need.every((s,i)=>t[i]===s)){const j=t.findIndex(x=>x!==t[0]);if(j>0)[t[0],t[j]]=[t[j],t[0]];}\n", '', 1)),
+]
+
+
+def check_case(name, plant, only, should_fail):
+    """One planted case against the check; None if it behaved, else the self-test's entry for it."""
     import shutil, tempfile
-    cases = [
-        ('clean copy passes', None, ['eb_ks3_001', 'eb_gcse_010'], False),
-        ('a wrong key (ks3_001 keyed C = 2.50m + 3m)',
-         lambda s: s.replace("slots:['C','=','2.50m','+','3']", "slots:['C','=','2.50m','+','3m']", 1), ['eb_ks3_001'], True),
-        ('a missing accepted arrangement (ks3_001 loses C = 3 + 2.50m)',
-         lambda s: s.replace('["C","=","3","+","2.50m"],', '', 1) if '["C","=","3","+","2.50m"],' in s
-                    else s.replace(',["C","=","3","+","2.50m"]', '', 1), ['eb_ks3_001'], True),
-        ('an expression asked, a formula keyed (ks3_002\'s old wording, SR-25)',
-         lambda s: s.replace('Write a formula for the total mass T kg', 'Write an expression for the total mass T kg', 1),
-         ['eb_ks3_002'], True),
-        ('a bare key back to a formula (l4_015 keyed log(8×4 ÷ 2) = log(16))',
-         lambda s: s.replace("slots:['log(16)']", "slots:['log(8\\u00d74','\\u00f7','2)','=','log(16)']", 1),
-         ['eb_l4_015'], True),
-        ('an "equation for X" item that rejects a rearrangement (gcse_019 loses Q3 − IQR = Q1)',
-         lambda s: s.replace('["Q3","−","IQR","=","Q1"],', '', 1) if '["Q3","−","IQR","=","Q1"],' in s
-                    else s.replace(',["Q3","−","IQR","=","Q1"]', '', 1), ['eb_gcse_019'], True),
-        ('the partial-fractions stem back to "Express ... in partial fractions" (l4_010, R1)',
-         lambda s: s.replace('Write the form of the partial fractions of (3x + 1)/((x + 1)(x \\u2212 2)).', 'Express (3x + 1)/((x + 1)(x \\u2212 2)) in partial fractions.', 1),
-         ['eb_l4_010'], True),
-        ('the area stem back to "Evaluate the area" (l4_021, R1)',
-         lambda s: s.replace('Write the definite integral for the area under y = 2x between x = 1 and x = 4.', 'Evaluate the area under y = 2x between x = 1 and x = 4. Write the definite integral expression.', 1),
-         ['eb_l4_021'], True),
-        ('a distractor that builds an equal value (gcse_010 gets 5/9 and 4/10 back)',
-         lambda s: s.replace("'5/10','\\u00f7','3/9'", "'5/9','\\u00f7','4/10'", 1)
-                    .replace("'\\u2212','5/10'", "'\\u2212','5/9'"), ['eb_gcse_010'], True),
-    ]
+    d = pathlib.Path(tempfile.mkdtemp(prefix='eb-'))
+    try:
+        page = d / 'index.html'
+        src = PAGE.read_text(encoding='utf-8')
+        if plant:
+            new = plant(src)
+            if new == src:
+                return name + ' (the plant changed nothing)'
+            src = new
+        page.write_text(src, encoding='utf-8', newline='')
+        fails, _, _ = check(page, only=set(only))
+        # the slices together (two of them) must fail exactly when the whole run does
+        parted = [f for i in (1, 2) for f in check(page, only=set(only), part=(i, 2))[0]]
+    finally:
+        shutil.rmtree(d, ignore_errors=True)
+    ok = bool(fails) == should_fail and bool(parted) == should_fail
+    print('  %s  %-66s %s%s' % ('PASS' if ok else 'FAIL', name, fails[0][:110] if fails else '(no failures)',
+                               '' if bool(parted) == bool(fails) else '  [the parts disagree]'))
+    return None if ok else name
+
+
+def order_case(name, plant):
+    """One tile-order case in Chromium; None if it behaved, else the self-test's entry for it."""
+    import shutil, tempfile
+    d = pathlib.Path(tempfile.mkdtemp(prefix='eb-'))
+    try:
+        page = d / 'index.html'
+        src = PAGE.read_text(encoding='utf-8')
+        if plant:
+            new = plant(src)
+            if new == src:
+                return name + ' (the plant changed nothing)'
+            src = new
+        page.write_text(src, encoding='utf-8', newline='')
+        fails = tile_order_fails(page)
+    finally:
+        shutil.rmtree(d, ignore_errors=True)
+    ok = bool(fails) == bool(plant)
+    print('  %s  %-66s %s' % ('PASS' if ok else 'FAIL', name, fails[0][:110] if fails else '(no failures)'))
+    return None if ok else name
+
+
+# Every self-test case, in order, each a work unit ("selftest: <name>").
+SELFTEST = ([(c[0], functools.partial(check_case, *c)) for c in CHECK_CASES]
+            + [(c[0], functools.partial(order_case, *c)) for c in ORDER_CASES])
+
+
+def selftest(names=None, shard=None):
+    """The self-test cases (all, or those named), each timed as its unit when shard is given."""
     bad = []
-    for name, plant, only, should_fail in cases:
-        d = pathlib.Path(tempfile.mkdtemp(prefix='eb-'))
-        try:
-            page = d / 'index.html'
-            src = PAGE.read_text(encoding='utf-8')
-            if plant:
-                new = plant(src)
-                if new == src:
-                    bad.append(name + ' (the plant changed nothing)'); continue
-                src = new
-            page.write_text(src, encoding='utf-8', newline='')
-            fails, _, _ = check(page, only=set(only))
-            # the two CI parts together must fail exactly when the whole run does
-            parted = [f for i in (1, 2) for f in check(page, only=set(only), part=(i, 2))[0]]
-        finally:
-            shutil.rmtree(d, ignore_errors=True)
-        ok = bool(fails) == should_fail and bool(parted) == should_fail
-        print('  %s  %-66s %s%s' % ('PASS' if ok else 'FAIL', name, fails[0][:110] if fails else '(no failures)',
-                                   '' if bool(parted) == bool(fails) else '  [the parts disagree]'))
-        if not ok:
-            bad.append(name)
-    order_cases = [
-        ('tile order: the bank laid out in bank order again', lambda s: s.replace('  tileOrder.forEach(t=>{', '  currentQ.tiles.forEach(t=>{', 1)),
-        ('tile order: no guard against the key coming first', lambda s: s.replace(
-            "  if(need.every((s,i)=>t[i]===s)){const j=t.findIndex(x=>x!==t[0]);if(j>0)[t[0],t[j]]=[t[j],t[0]];}\n", '', 1)),
-    ]
-    for name, plant in [('tile order: clean copy passes', None)] + order_cases:
-        d = pathlib.Path(tempfile.mkdtemp(prefix='eb-'))
-        try:
-            page = d / 'index.html'
-            src = PAGE.read_text(encoding='utf-8')
-            if plant:
-                new = plant(src)
-                if new == src:
-                    bad.append(name + ' (the plant changed nothing)'); continue
-                src = new
-            page.write_text(src, encoding='utf-8', newline='')
-            fails = tile_order_fails(page)
-        finally:
-            shutil.rmtree(d, ignore_errors=True)
-        ok = bool(fails) == bool(plant)
-        print('  %s  %-66s %s' % ('PASS' if ok else 'FAIL', name, fails[0][:110] if fails else '(no failures)'))
-        if not ok:
-            bad.append(name)
+    for name, run in SELFTEST:
+        if names is not None and name not in names:
+            continue
+        with shard.unit('selftest: ' + name) if shard else contextlib.nullcontext():
+            b = run()
+        if b:
+            bad.append(b)
     print('selftest: %s' % ('FAILED: ' + ', '.join(bad) if bad else 'PASS'))
     return 1 if bad else 0
 
 
-def ci_commands():
-    """Every command CI runs: the workflow's static lines and every script's ci-line header (scripts/ci-groups.py)."""
-    import importlib.util
-    spec = importlib.util.spec_from_file_location("ci_groups", BASE / "scripts" / "ci-groups.py")
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod.ci_text()
-
-
-CI_PARTS = 3      # the parts CI runs (--part i/3); a hand split until contract SHARD
-
-
-def part_selftest(n=CI_PARTS):
-    """Every candidate of every question is in exactly one of the n parts; the workflow runs every part."""
-    bad = []
-    for q in load_bank():
-        if 'fixed' in SPECIAL.get(q['id'], {}):
-            continue
-        cands = candidates(q)
-        parts = [in_part(cands, (i, n)) for i in range(1, n + 1)]
-        flat = [c for p_ in parts for c in p_]
-        if sorted(flat) != sorted(cands):
-            bad.append('%s: the parts are not its candidate list' % q['id'])
-    # planted: drop one candidate, double one; each must be noticed by the comparison above
-    cands = candidates(load_bank()[0])
-    if sorted(cands[1:]) == sorted(cands) or sorted(cands + cands[:1]) == sorted(cands):
-        bad.append('self-test: a dropped or doubled candidate was not noticed')
-    runs = re.findall(r'python scripts/verify-equation-builder\.py\b([^\n|&]*)', ci_commands())
-    got = sorted(m.group(1) for m in (re.search(r'--part (\d+/\d+)', r) for r in runs) if m)
-    want = sorted('%d/%d' % (i, n) for i in range(1, n + 1))
-    if got != want:
-        bad.append('the workflow runs parts %s, not %s' % (got, want))
-    if [r for r in runs if '--part' not in r and '--selftest' not in r]:
-        bad.append('the workflow also runs the unsplit check')
-    for b in bad:
-        print('FAIL', b)
-    print('part self-test (%d parts, workflow %s): %s' % (n, ', '.join(got) or 'none', 'FAILED' if bad else 'PASS'))
-    return 1 if bad else 0
+def slice_unit(j):
+    return 'slice %d of %d%s' % (j, SLICES, ' and the whole-question checks' if j == 1 else '')
 
 
 def main():
@@ -829,34 +817,56 @@ def main():
     ap.add_argument('--report', action='store_true', help='print every accepted arrangement')
     ap.add_argument('--selftest', action='store_true')
     ap.add_argument('--only', nargs='*')
-    ap.add_argument('--part', help='i/n: classify only part i of n of every question\'s candidates (CI runs 1/3, 2/3 and 3/3)')
-    ap.add_argument('--part-selftest', action='store_true', help='prove the parts cover every candidate once')
+    ci_shards.shard_args(ap)
     a = ap.parse_args()
-    if a.part_selftest:
-        return part_selftest()
+    if a.selftest and a.shard:
+        ap.error('--selftest takes no --shard: the self-test cases are units of every --shard run')
+    # The units, in order (WORK UNITS in the docstring): the slices, the tile order, the self-test cases.
+    shard = ci_shards.Shard(__file__, a)
+    mine = shard.pick([slice_unit(j) for j in range(1, SLICES + 1)] + ['tile order']
+                      + ['selftest: ' + name for name, _ in SELFTEST])
     if a.selftest:
         return selftest()
-    try:
-        part = parse_part(a.part) if a.part else None
-    except ValueError as exc:
-        ap.error(str(exc))
     if a.write:
         acc = write()
         print('wrote ACCEPTED for %d questions (%d arrangements)' % (len(acc), sum(len(v) for v in acc.values())))
     only = None
     if a.only:
         only = {q['id'] for q in load_bank() if any(o in q['id'] for o in a.only)}
-    fails, report, _ = check(only=only, verbose=a.report, part=part)
-    if not only and (part is None or part[0] == 1):
-        fails += tile_order_fails()
+    st, what = 0, ''
+    if a.shard is None:
+        fails, report, _ = check(only=only, verbose=a.report)
+        if not only:
+            fails += tile_order_fails()
+    else:
+        fails, merged, ran = [], {}, []
+        for j in range(1, SLICES + 1):
+            if slice_unit(j) not in mine:
+                continue
+            ran.append(j)
+            with shard.unit(slice_unit(j)):
+                f, rep, _ = check(only=only, verbose=a.report, part=(j, SLICES))
+            fails += f
+            for qid, n, k, why in rep:            # one report line per question: the slices' counts added up
+                m = merged.setdefault(qid, [None, 0, why])
+                m[0] = n if m[0] is None else m[0] + (n or 0)
+                m[1] += k
+        report = [(qid, n, k, why) for qid, (n, k, why) in merged.items()]
+        if 'tile order' in mine and not only:
+            with shard.unit('tile order'):
+                fails += tile_order_fails()
+        what = ' (--shard %s: slices %s of %d)' % (a.shard, ', '.join(map(str, ran)) or 'none', SLICES)
     for qid, n, k, why in report:
         print('%-12s accepted=%-3d of %s arrangements%s' % (qid, k, n if n is not None else 'fixed',
                                                            ('  [special: %s]' % why) if why else ''))
+    if a.shard is not None:
+        names = [name for name, _ in SELFTEST if 'selftest: ' + name in mine]
+        if names:
+            st = selftest(names, shard)
     for f in fails:
         print('FAIL', f)
-    print('equation-builder accepted lists%s: %s (%d questions)' % (' (part %d/%d)' % part if part else '',
-                                                                 'FAIL' if fails else 'PASS', len(report)))
-    return 1 if fails else 0
+    print('equation-builder accepted lists%s: %s (%d questions)' % (what, 'FAIL' if fails or st else 'PASS', len(report)))
+    return 1 if fails or st else 0
 
 
 if __name__ == '__main__':

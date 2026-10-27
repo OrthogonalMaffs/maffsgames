@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Y So Steep, part 1 (every item of the six stages, whole-number and with-fractions banks, recomputed from its own printed stem with exact fractions: every m, c and step key; the contract's bank rules: 45 or more distinct items a stage, 40% or more falling lines, grid lines through two lattice points, 75% or more of Stage 5's points off the y-axis, fractions only when switched on; the module's marking against an independent marker on thousands of probe answers) | --part 1
-# ci-line: Y So Steep, part 2 (every stage played in the page: one full round at 390 px on the touch keypad, then the first questions at 375, 360, 320, 1280 and 1366 px; keypad, question and Next above the fold; no sideways scroll; each grid line drawn from its data, grid text at least 12 px; named slips named; one board entry a round, none for stage 6; stage 3 and fractions off) | --part 2
-# ci-line: Y So Steep, part 3 (fault-injection self-test: planted faults, each caught, including a wrong c, a line drawn off its data and a positive-only bank) | --part 3
+# ci-shards: Y So Steep (every item of the six stages, whole-number and with-fractions banks, recomputed from its own printed stem with exact fractions: every m, c and step key; the contract's bank rules: 45 or more distinct items a stage, 40% or more falling lines, grid lines through two lattice points, 75% or more of Stage 5's points off the y-axis, fractions only when switched on; the module's marking against an independent marker on thousands of probe answers; every stage played in the page: one full round at 390 px on the touch keypad, then the first questions at 375, 360, 320, 1280 and 1366 px; keypad, question and Next above the fold; no sideways scroll; each grid line drawn from its data, grid text at least 12 px; named slips named; one board entry a round, none for stage 6; stage 3 and fractions off; fault-injection self-test: planted faults, each caught, including a wrong c, a line drawn off its data and a positive-only bank) | | 3
 # ci-deps: games/y-so-steep/ schools/assets/y-so-steep-gen.js
 """Independent verification for Y So Steep? (games/y-so-steep/), built 27 Oct 2026 (contract Y-SO-STEEP, Jon).
 SR-30: checked from its first PR.
@@ -25,8 +23,13 @@ with a reader of its own and exact Fractions, never from the module's parameters
   Page      one full round of every stage at 390 px on the touch keypad (a key tap really types), the first questions at the
             other sizes; keypad, question and Next above the fold; no sideways scroll; grid text 12 px or more; a mark only
             for a right step; one submission a round (none for stage 6); stage 3 and fraction entry off.
+
+Work units (contract SHARD; CI runs a slice with --shard i/k, scripts/ci-groups.py chooses k): "engine" (the banks and the
+marking, on one 1280x800 page), "play WxH" (one size of FULL_PLAN) and "plant: <what>" (one per planted fault). It was
+merged on 27 Oct 2026 with three hand-made parts (--part 1, 2, 3), which ci-groups.py refuses since SHARD.
 """
 import argparse
+import contextlib
 import os
 import random
 import re
@@ -531,31 +534,35 @@ def play_stage(page, st, size, out, full):
             break
 
 
-def check_pages(base, html, module, plan, out):
+def check_pages(base, html, module, plan, out, unit=None):
     from playwright.sync_api import sync_playwright
+    unit = unit or (lambda uid: contextlib.nullcontext())
     with sync_playwright() as pw:
         for size, full, stages in plan:
-            br, page, errs = open_page(pw, base, html, module, size)
-            try:
-                dis = page.evaluate("[...document.querySelectorAll('[data-stage]')].filter(b => b.disabled).map(b => +b.dataset.stage)")
-                if dis != [3] or page.evaluate('YS.ui.fractions()'):
-                    out.append('%dx%d: stage 3 should be the only stage off, and fraction entry off (disabled: %s)' % (size[0], size[1], dis))
-                for st in stages:
-                    play_stage(page, st, size, out, full)
-                    page.evaluate("document.getElementById('menuBtn') && document.getElementById('menuBtn').click()")
-            except Exception as e:  # noqa: BLE001
-                out.append('play at %dx%d threw: %s' % (size[0], size[1], str(e).splitlines()[0][:220]))
-            out.extend('page error at %dx%d: %s' % (size[0], size[1], e) for e in errs)
-            br.close()
+            with unit('play %dx%d' % size):
+                br, page, errs = open_page(pw, base, html, module, size)
+                try:
+                    dis = page.evaluate("[...document.querySelectorAll('[data-stage]')].filter(b => b.disabled).map(b => +b.dataset.stage)")
+                    if dis != [3] or page.evaluate('YS.ui.fractions()'):
+                        out.append('%dx%d: stage 3 should be the only stage off, and fraction entry off (disabled: %s)' % (size[0], size[1], dis))
+                    for st in stages:
+                        play_stage(page, st, size, out, full)
+                        page.evaluate("document.getElementById('menuBtn') && document.getElementById('menuBtn').click()")
+                except Exception as e:  # noqa: BLE001
+                    out.append('play at %dx%d threw: %s' % (size[0], size[1], str(e).splitlines()[0][:220]))
+                out.extend('page error at %dx%d: %s' % (size[0], size[1], e) for e in errs)
+                br.close()
 
 
-def check(html, module, out, engine=True, plan=(), ):
+def check(html, module, out, engine=True, plan=(), shard=None):
+    """shard: time each piece as its work unit ("engine", "play WxH"); the self-test passes none."""
     from playwright.sync_api import sync_playwright
+    unit = shard.unit if shard is not None else (lambda uid: contextlib.nullcontext())
     proc, base = bc.start_stub_server()
     info = {}
     try:
         if engine:
-            with sync_playwright() as pw:
+            with unit('engine'), sync_playwright() as pw:
                 br, page, errs = open_page(pw, base, html, module, (1280, 800))
                 try:
                     info.update(check_engine(page, out))
@@ -564,7 +571,7 @@ def check(html, module, out, engine=True, plan=(), ):
                 out.extend('page error: ' + e for e in errs)
                 br.close()
         if plan:
-            check_pages(base, html, module, plan, out)
+            check_pages(base, html, module, plan, out, unit)
     finally:
         proc.terminate()
     return info
@@ -598,50 +605,53 @@ PLANTS = [
 ]
 
 
-def selftest(html, module, plants=None):
+# Each plant is a work unit of its own (contract SHARD), dealt into CI parts by its time.
+def selftest(html, module, plants=None, shard=None):
     ok = True
     for what, which, edits, kind, want in (PLANTS if plants is None else plants):
-        src = module if which == 'module' else html
-        bad = False
-        for old, new in edits:
-            if src.count(old) != 1:
-                bad = True
-                break
-            src = src.replace(old, new)
-        if bad:
-            print('  self-test %-72s *** CANNOT PLANT ***' % what)
-            ok = False
-            continue
-        got = []
-        h2, m2 = (html, src) if which == 'module' else (src, module)
-        check(h2, m2, got, engine=kind == 'engine', plan=PLANT_PLAN if kind == 'play' else [])
-        hit = [g for g in got if re.search(want, g)]
-        ok = ok and bool(hit)
-        print('  self-test %-72s %s' % (what, ('caught: ' + hit[0][:90]) if hit else '*** MISSED ***' + (' (other: %s)' % got[0][:90] if got else '')))
+        with (shard.unit('plant: ' + what) if shard is not None else contextlib.nullcontext()):
+            ok = plant_one(html, module, what, which, edits, kind, want) and ok
     return ok
+
+
+def plant_one(html, module, what, which, edits, kind, want):
+    src = module if which == 'module' else html
+    for old, new in edits:
+        if src.count(old) != 1:
+            print('  self-test %-72s *** CANNOT PLANT ***' % what)
+            return False
+        src = src.replace(old, new)
+    got = []
+    h2, m2 = (html, src) if which == 'module' else (src, module)
+    check(h2, m2, got, engine=kind == 'engine', plan=PLANT_PLAN if kind == 'play' else [])
+    hit = [g for g in got if re.search(want, g)]
+    print('  self-test %-72s %s' % (what, ('caught: ' + hit[0][:90]) if hit else '*** MISSED ***' + (' (other: %s)' % got[0][:90] if got else '')))
+    return bool(hit)
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--part', choices=['1', '2', '3'], help='one of the three parts CI runs side by side (default: all)')
+    bc.shard_args(ap)
     args = ap.parse_args()
+    shard = bc.Shard(__file__, args)
+    mine = shard.pick(['engine'] + ['play %dx%d' % p[0] for p in FULL_PLAN] + ['plant: ' + p[0] for p in PLANTS])
     try:
         sys.stdout.reconfigure(encoding='utf-8')
     except (AttributeError, ValueError):
         pass
     html = open(GAME, encoding='utf-8').read()
     module = open(MODULE, encoding='utf-8').read()
-    part = args.part
     out = []
-    info = check(html, module, out, engine=part in (None, '1'), plan=FULL_PLAN if part in (None, '2') else [])
+    plan = [p for p in FULL_PLAN if 'play %dx%d' % p[0] in mine]
+    info = {}
+    if 'engine' in mine or plan:
+        info = check(html, module, out, engine='engine' in mine, plan=plan, shard=shard)
     if info:
         print('%s: distinct items (i whole numbers, f with fractions): %s' % (SLUG, {k: v for k, v in info.items() if not k.startswith('probes')}))
         print('%s: probe answers marked both ways: %s' % (SLUG, sum(v for k, v in info.items() if k.startswith('probes'))))
-    if part in (None, '2'):
-        print('%s: stages %s played at %s' % (SLUG, SHIPPED, ', '.join('%dx%d' % s[0] for s in FULL_PLAN)))
-    ok = True
-    if part in (None, '3'):
-        ok = selftest(html, module)
+    if plan:
+        print('%s: stages %s played at %s' % (SLUG, SHIPPED, ', '.join('%dx%d' % s[0] for s in plan)))
+    ok = selftest(html, module, [p for p in PLANTS if 'plant: ' + p[0] in mine], shard)
     for f in out[:60]:
         print('FAIL  ' + f)
     if len(out) > 60:

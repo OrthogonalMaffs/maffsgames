@@ -1,12 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: How Many Parts?, part 1 (pools and Foundation's five, keys, every stage's own errors and options, every question's bar and worked steps recomputed, the palette, sessions easiest first, every Foundation stage and Advanced played at 320, 390 and 1280px) | --part 1
-# ci-line: How Many Parts?, part 2 (every question, worked example and wrong-answer screen drawn by the game and read back step by step: no bar before answering, each step's bar as recomputed) | --part 2
-# ci-line: How Many Parts?, part 3 (every wrong-answer screen and worked example at 320x568, normal and Aa: the reason and Next above the fold, brackets kept with their maths; typed questions' boxes and keypad in the window) | --part 3
-# ci-line: How Many Parts?, part 4 (every wrong-answer screen and worked example at 375x667, normal and Aa: the reason and Next above the fold, brackets kept with their maths) | --part 4
-# ci-line: How Many Parts?, part 5 (every wrong-answer screen and worked example at 390x844, normal and Aa: the reason and Next above the fold, brackets kept with their maths) | --part 5
-# ci-line: How Many Parts?, part 6 (every wrong-answer screen and worked example at 1280x800, normal and Aa: the reason and Next above the fold, brackets kept with their maths) | --part 6
-# ci-line: How Many Parts?, part 7 (fault-injection self-test: eleven planted faults in the engine, the stages, the order, the steps, the bar and the palette, each caught) | --part 7
-# ci-line: How Many Parts?, part 8 (fault-injection self-test: seven planted faults in play, the worked example, the brackets and the typed fit, each caught) | --part 8
+# ci-shards: How Many Parts? (pools and Foundation's five, keys, every stage's own errors and options, every question's bar and worked steps recomputed, the palette, sessions easiest first, every Foundation stage and Advanced played at 320, 390 and 1280px; every question, worked example and wrong-answer screen drawn by the game and read back step by step; every wrong-answer screen and worked example at 320x568, 375x667, 390x844 and 1280x800, normal and Aa: the reason and Next above the fold, brackets kept with their maths, typed questions' boxes and keypad in the window at 320x568; fault-injection self-test: eighteen planted faults, each caught) |  | 10
 # ci-deps: games/how-many-parts/
 """Independent verification for How Many Parts? (games/how-many-parts/), built 20 Oct 2026 (contract HOW-MANY-PARTS),
 rebuilt for its redesign, 21 Oct 2026 (contract HMP-CHOCOLATE and Jon's rulings of that day), and again for
@@ -60,7 +53,7 @@ WHAT IT ASSERTS
   Palette    every element of every screen drawn (start, each stage's worked example step by step, its question and its
              wrong answer): no purple, and every colour one of the theme's (schools/assets/theme.css, light row) or the
              game's own tokens.
-  Drawn      every pool entry drawn by the game (part 2): its question screen has NO chocolate figure; its worked
+  Drawn      every pool entry drawn by the game (its own unit): its question screen has NO chocolate figure; its worked
              example and its wrong-answer screen are stepped through by the step button, and at every step exactly one
              figure, read back square by square from the SVG, is that step's recomputed model, with that many steps
              listed; the worked example ends on "Start the questions", the wrong answer's steps on no button. Every
@@ -85,20 +78,25 @@ WHAT IT ASSERTS
              no "(" at the end of a line or ")" at the start of one in the line or the steps (k-punctuation scan, 22
              Oct 2026). Every worked example stepped through at each size: after each tap its button inside the
              window. At 320x568 every typed question: the answer boxes, Check and the keypad in the window together.
-  Self-test  eighteen faults planted into a copy of the page; each must FAIL (part 7 the eleven in the engine, part 8
-             the seven in play and on the phone).
+  Self-test  eighteen faults planted into a copy of the page; each must FAIL (eleven in the engine, seven in play and
+             on the phone), each its own unit.
 
 EASE (contract HMP-FOUNDATION-STAGES, item 2; the page states it at H.ease): [kind, parts, simplify], compared in
 order. kind: 0, but 1 for a fraction times a fraction (after times a whole number). parts: the parts the answer is
 counted in before simplifying (adding and taking away: the lowest common denominator; times a whole number: the
 bottom; times a fraction: the product of the bottoms). simplify: 0 when that answer needs no simplifying, else 1.
 
-    python scripts/verify-how-many-parts.py [--part 1-8] [--no-selftest] [--seeds N] [--sessions N] [--shots DIR]
-    (CI runs the eight parts side by side; no --part runs all eight; --shots DIR saves the start screen and, per
-    stage, its worked example step by step, a question and a wrong answer at 390px for Jon, and checks nothing)
+    python scripts/verify-how-many-parts.py [--shard I/K] [--list-units] [--no-selftest] [--seeds N] [--sessions N]
+                                            [--shots DIR]
+    The work is named units (contract SHARD; scripts/ci_shards.py): the drawn screens; the engine, sessions and palette
+    (one page); each level played at each size; each phone size, normal and Aa; each planted fault. CI runs them in
+    parts side by side, --shard I/K, scripts/ci-groups.py choosing K; no --shard runs every unit. --shots DIR saves the
+    start screen and, per stage, its worked example step by step, a question and a wrong answer at 390px for Jon, and
+    checks nothing.
 """
 import argparse
 import colorsys
+import contextlib
 import json
 import os
 import re
@@ -1656,7 +1654,6 @@ def play(page, level, size, out):
 # Phone fit (canon 7.6.1), normal and Aa
 
 PHONES = [(320, 568), (375, 667), (390, 844), (1280, 800)]
-PART_SIZES = {'3': [(320, 568)], '4': [(375, 667)], '5': [(390, 844)], '6': [(1280, 800)]}
 FOOTER = 40   # the fixed site footer (canon 7.6.1: measure against the viewport less it)
 
 # Brackets (k-punctuation scan, 22 Oct 2026): in an element, every "(" shares a line with what follows it and every
@@ -1859,49 +1856,74 @@ def guarded(out, what, f):
         out.append('%s threw: %s' % (what, str(e).splitlines()[0][:200]))
 
 
+def work(html, seeds=3, sessions=60, sizes=SIZES, engine=True, plays=True, drawn=False, phones=PHONES,
+         aa_modes=(False, True), levels=('ks3', 'gcse'), phone_stages=BUILT):
+    """check()'s work as named units (contract SHARD), [(unit id, run)] in the order it runs; each run(pw, base, out,
+    info) opens its own page. The engine, sessions and palette share one page, at the first size."""
+    units = []
+
+    def on_page(size, aa, what):
+        def run(pw, base, out, info):
+            br, page, errors = open_page(pw, base, html, size, aa)
+            try:
+                what(page, out, info)
+                if errors:
+                    out.append('page errors at %dx%d: %s' % (size[0], size[1], '; '.join(errors[:3])))
+            finally:
+                br.close()
+        return run
+
+    def do_drawn(page, out, info):
+        guarded(out, 'the drawn screens', lambda: info.update(drawn=check_drawn(page, out, 8)))
+
+    def do_engine(page, out, info):
+        guarded(out, 'the engine', lambda: info.update(zip(('pools', 'questions', 'steps', 'three'), check_engine(page, out, seeds))))
+        guarded(out, 'the sessions', lambda: check_sessions(page, out, sessions))
+        guarded(out, 'the palette', lambda: check_palette(page, html, out))
+        prepare(page, reload=True)
+
+    def do_play(lv, size):
+        def what(page, out, info):
+            guarded(out, 'play %s %dx%d' % (lv, size[0], size[1]), lambda: info.setdefault('played', []).append(
+                '%s %dx%d: %s' % (lv, size[0], size[1], ', '.join(play(page, lv, size, out)))))
+            prepare(page, reload=True)
+        return what
+
+    def do_phone(size, aa):
+        def what(page, out, info):
+            guarded(out, 'the phone fit at %dx%d' % size, lambda: info.setdefault('phone', []).append(
+                '%dx%d%s: %s' % (size[0], size[1], ' Aa' if aa else '', check_phone(page, size, out, aa, phone_stages))))
+        return what
+
+    if drawn:
+        units.append(('drawn', on_page((320, 568), False, do_drawn)))
+    if engine and sizes:
+        units.append(('engine, sessions and palette', on_page(sizes[0], False, do_engine)))
+    if plays:
+        for size in sizes:
+            for lv in levels:
+                units.append(('play %s %dx%d' % (lv, size[0], size[1]), on_page(size, False, do_play(lv, size))))
+    for size in phones:
+        for aa in aa_modes:
+            units.append(('phone fit %dx%d%s' % (size[0], size[1], ' Aa' if aa else ''), on_page(size, aa, do_phone(size, aa))))
+    return units
+
+
 def check(html, out, seeds=3, sessions=60, sizes=SIZES, engine=True, plays=True, drawn=False, phones=PHONES,
-          aa_modes=(False, True), levels=('ks3', 'gcse'), phone_stages=BUILT):
+          aa_modes=(False, True), levels=('ks3', 'gcse'), phone_stages=BUILT, only=None, shard=None):
+    """The checks work() lists (only those named in `only`, when given), each timed as its unit by `shard`."""
     from playwright.sync_api import sync_playwright
     static_checks(html, out)
+    units = work(html, seeds, sessions, sizes, engine, plays, drawn, phones, aa_modes, levels, phone_stages)
+    if only is not None:
+        units = [u for u in units if u[0] in only]
     proc, base = bc.start_stub_server()
     info = {}
     try:
         with sync_playwright() as pw:
-            if drawn:
-                br, page, errors = open_page(pw, base, html, (320, 568))
-                try:
-                    guarded(out, 'the drawn screens', lambda: info.update(drawn=check_drawn(page, out, 8)))
-                    if errors:
-                        out.append('page errors at 320x568: %s' % '; '.join(errors[:3]))
-                finally:
-                    br.close()
-            for n, size in enumerate(sizes):
-                br, page, errors = open_page(pw, base, html, size)
-                try:
-                    if engine and n == 0:
-                        guarded(out, 'the engine', lambda: info.update(zip(('pools', 'questions', 'steps', 'three'), check_engine(page, out, seeds))))
-                        guarded(out, 'the sessions', lambda: check_sessions(page, out, sessions))
-                        guarded(out, 'the palette', lambda: check_palette(page, html, out))
-                        prepare(page, reload=True)
-                    if plays:
-                        for lv in levels:
-                            guarded(out, 'play %s %dx%d' % (lv, size[0], size[1]), lambda: info.setdefault('played', []).append(
-                                '%s %dx%d: %s' % (lv, size[0], size[1], ', '.join(play(page, lv, size, out)))))
-                            prepare(page, reload=True)
-                    if errors:
-                        out.append('page errors at %dx%d: %s' % (size[0], size[1], '; '.join(errors[:3])))
-                finally:
-                    br.close()
-            for size in phones:
-                for aa in aa_modes:
-                    br, page, errors = open_page(pw, base, html, size, aa)
-                    try:
-                        guarded(out, 'the phone fit at %dx%d' % size, lambda: info.setdefault('phone', []).append(
-                            '%dx%d%s: %s' % (size[0], size[1], ' Aa' if aa else '', check_phone(page, size, out, aa, phone_stages))))
-                        if errors:
-                            out.append('page errors at %dx%d: %s' % (size[0], size[1], '; '.join(errors[:3])))
-                    finally:
-                        br.close()
+            for uid, run in units:
+                with (shard.unit(uid) if shard else contextlib.nullcontext()):
+                    run(pw, base, out, info)
     finally:
         proc.terminate()
         proc.wait()
@@ -1987,22 +2009,28 @@ PLANTS = [
 ]
 
 
-def selftest(html, kinds=('engine', 'play', 'fit')):
+def plant_id(what):
+    return 'plant: ' + what
+
+
+def selftest(html, names, shard=None):
+    """The plants named in `names` (plant_id), each its own unit."""
     ok = True
     for what, old, new, kind in PLANTS:
-        if kind not in kinds:
+        if plant_id(what) not in names:
             continue
-        if html.count(old) != 1:
-            print('  self-test %-60s *** CANNOT PLANT ***' % what)
-            ok = False
-            continue
-        got = []
-        check(html.replace(old, new), got, seeds=1, sessions=4, sizes=[(390, 844)] if kind != 'fit' else [],
-              engine=kind == 'engine', plays=kind == 'play', phones=[(320, 568)] if kind == 'fit' else [],
-              aa_modes=(False,), levels=('ks3',), phone_stages=['a'])   # a plant need only be shown caught: stage a, normal
-        got = [g for g in got if not g.startswith('the page')]
-        ok = ok and bool(got)
-        print('  self-test %-60s %s' % (what, ('caught: ' + got[0][:110]) if got else '*** MISSED ***'))
+        with (shard.unit(plant_id(what)) if shard else contextlib.nullcontext()):
+            if html.count(old) != 1:
+                print('  self-test %-60s *** CANNOT PLANT ***' % what)
+                ok = False
+                continue
+            got = []
+            check(html.replace(old, new), got, seeds=1, sessions=4, sizes=[(390, 844)] if kind != 'fit' else [],
+                  engine=kind == 'engine', plays=kind == 'play', phones=[(320, 568)] if kind == 'fit' else [],
+                  aa_modes=(False,), levels=('ks3',), phone_stages=['a'])   # a plant need only be shown caught: stage a, normal
+            got = [g for g in got if not g.startswith('the page')]
+            ok = ok and bool(got)
+            print('  self-test %-60s %s' % (what, ('caught: ' + got[0][:110]) if got else '*** MISSED ***'))
     return ok
 
 
@@ -2011,33 +2039,40 @@ def main():
     ap.add_argument('--no-selftest', action='store_true')
     ap.add_argument('--seeds', type=int, default=3, help='seeds per pool entry in the multiple-choice stages (default 3)')
     ap.add_argument('--sessions', type=int, default=60, help='seeds per Foundation stage and for Advanced (default 60)')
-    ap.add_argument('--part', choices=['1', '2', '3', '4', '5', '6', '7', '8'], help='one of the eight parts CI runs side by side (default: all)')
     ap.add_argument('--shots', metavar='DIR', help='save the start screen and every sample\'s screens at 390px; check nothing')
+    bc.shard_args(ap)
     args = ap.parse_args()
     html = open(GAME, encoding='utf-8').read()
     if args.shots:
         shots(html, args.shots)
         return 0
+    # Every unit, in the order of the full run: the drawn screens, the engine, the plays, the phones, then the plants.
+    checks = [u for u, _ in work(html, drawn=True)]
+    plants = [] if args.no_selftest else [plant_id(p[0]) for p in PLANTS]
+    shard = bc.Shard(__file__, args)
+    mine = shard.pick(checks + plants)
     out = []
-    one = args.part in (None, '1')
-    two = args.part in (None, '2')
-    phones = PART_SIZES[args.part] if args.part in PART_SIZES else PHONES if args.part is None else []
-    selftests = args.part in (None, '7', '8') and not args.no_selftest
-    info = check(html, out, seeds=args.seeds, sessions=args.sessions, sizes=SIZES if one else [], engine=one, plays=one,
-                 drawn=two, phones=phones) if (one or two or phones) else {}
+    ran = [u for u in mine if u in checks]
+    one = 'engine, sessions and palette' in ran
+    played = any(u.startswith('play ') for u in ran)
+    two = 'drawn' in ran
+    phones = any(u.startswith('phone fit ') for u in ran)
+    info = check(html, out, seeds=args.seeds, sessions=args.sessions, drawn=True, only=ran, shard=shard) if ran else {}
     if one:
         print('%s: pools %s (after the filter; stage1-stage5 are Foundation\'s); %d questions checked, %d with their steps; '
               '%d sessions per Foundation stage and for Advanced; played %s'
               % (SLUG, info.get('pools'), info.get('questions', 0), info.get('steps', 0), args.sessions, '; '.join(info.get('played', []))))
         print('three-option questions (fewer than three listed errors apply), of each pool: %s'
               % ', '.join('stage %s %d of %d (%.1f%%)' % (st, n, tot, 100.0 * n / tot) for st, (n, tot) in info.get('three', {}).items()))
+    elif played:   # a part with plays but not the engine
+        print('%s: played %s' % (SLUG, '; '.join(info.get('played', []))))
     if two:
         print('%s: %d screens drawn and read back step by step' % (SLUG, info.get('drawn', 0)))
     if phones:
         print('%s: measured %s' % (SLUG, '; '.join(info.get('phone', []))))
     ok = True
-    if selftests:
-        ok = selftest(html, {'7': ('engine',), '8': ('play', 'fit')}.get(args.part, ('engine', 'play', 'fit')))
+    if any(u in plants for u in mine):
+        ok = selftest(html, mine, shard)
     for f in out[:int(os.environ.get("HMP_SHOW", "60"))]:
         print('FAIL  ' + f)
     if len(out) > int(os.environ.get("HMP_SHOW", "60")):
