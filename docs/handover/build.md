@@ -55,3 +55,15 @@ Jon's sofa and coin illustrations replace the code-drawn ones in `games/i-found-
 - `assets/sofa.webp`: 1600x873, q80, 71,140 bytes. The source (2752 px) was ABOVE 1600 px wide, so it was downscaled, then cropped 10 px top and bottom to the house frame (never stretched).
 - `assets/coin.webp`: 512x512 with alpha, q80, 15,214 bytes. Paper and grey drop shadow removed by growing the border-connected light-grey region (the closed ink outline stops it), shrinking the subject 1 px with a 0.8 px soft edge, premultiplied resize; checked on dark (#182033), light (#f8fafc) and green surfaces: no halo; the ink glint at the top left kept. Total added 86 KB. No Gemini sparkle in either bottom-right corner.
 - Page: the start-screen SVG is now the sofa image with the coin image over the cushion gap (both eager, both visible there); `.slot.got` (found-mark coins in game and on results) uses the coin as its background, same size and drop animation. The marks bar stays CSS, retinted to the sofa green (#3f5953). Old drawing CSS and the unused tokens (--wall, --rug, --lamp, --coin-edge) deleted.
+
+## Decided for you (found-a-mark; PR #569, art #573)
+- Palette: LIGHT row with a warm-brown accent: check-theme derives it from the roster levels and GCSE is light. (Art swap: the marks bar takes the sofa's green.)
+- One level (key `gcse`), one board: unaided method marks in a session. A step shown with help ("Show me a step") is never counted: not in the HUD, the leaderboard, game_completed or the personal best.
+- Session: 5 questions, the four types (is it enough, ratio with a twist, interest and depreciation, the L-shaped garden) once each plus one more of a random type, in random order; every question is 3 method marks, with a dotted 4th "A" slot for the answer mark that is never asked for.
+- Marking: any valid calculation scores once its inputs are found (a form may have alternatives); a wrong tap shows the one-line slip plus MaffsNext (3 s floor), then the options return with that one struck out; no penalty.
+- "Bank it and move on" ends a question early and lists the steps still in the working.
+- Sound is a small clink, OFF by default, switched on from the menu.
+- Wording is plain and adult (no jokes; they are Jon's to add); the feedback line after a full question says the last mark is for the answer.
+- Phone fit: short phones (under 620 px high, and again under 580) tighten the card, the options and the HUD; found when CI's real fonts made the garden question's options wrap more than they do locally (it failed at 320 x 568 on CI, not locally).
+- Shared-file lines added (the minimum a new unlisted game folder needs, as #509): roster row #102 + Unlisted line, data/games.json entry, audit-register, check-answer-lock, check-leaderboard-coverage (NOT_ON_HUB), check-levels, check-start-mount, check-teacher-invite, check-theme, findings yml. Nothing listed.
+- Screenshots: 375 x 667 and 1366 x 768, one per question type, in the earlier session's scratchpad (re-make by playing a session with the stub server).
