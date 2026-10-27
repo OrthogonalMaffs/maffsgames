@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ci-line: The 6 P's banks (every bank regenerated from its game's own questions and compared with the committed file; every answer recomputed from its stem; a topic is covered only by a bank of 30 or more) | --check
-# ci-deps: docs/six-ps-schema.md schools/assets/exam-topics-ocr-foundation.json scripts/gen-exam-topics.py scripts/bank_common.py
+# ci-deps: docs/six-ps-schema.md schools/assets/exam-topics-ocr-foundation.json scripts/gen-exam-topics.py scripts/bank_common.py schools/assets/pie-chart-generator.js
 """The 6 P's question banks, built from the games' own questions (contract SIX-PS-BANKS, 25 Oct 2026).
 
     python scripts/gen-six-ps.py                       # build every bank in memory and report
@@ -185,8 +185,10 @@ def validate(q):
         f.append("format %r" % q["format"])
     if not (isinstance(q["band"], int) and 1 <= q["band"] <= 5):
         f.append("band %r" % q["band"])
-    if not isinstance(q["calc"], bool):
-        f.append("calc")
+    if not (isinstance(q["calc"], bool) or q["calc"] == "optional"):
+        f.append("calc is true, false or \"optional\"")
+    if "try_without" in q and not (q["try_without"] is True and q["calc"] == "optional"):
+        f.append("try_without is true, and only with calc optional")
     if re.search(r"<[a-zA-Z/]", q["stem"]) or "$" in q["stem"]:
         f.append("stem has HTML or $")
     if (q["format"] in ("number", "number_unit") and "dp" not in q["answer"]
@@ -3719,6 +3721,302 @@ def to_typed(topic, q):
     return z
 
 
+# ───────────────────────────── pie charts (contract PIE-CHARTS-BANK, Jon, 26 Oct 2026): the first bank-first topic ─────────────────────────────
+# The questions come from schools/assets/pie-chart-generator.js (MaffsPieCharts), the file the game "Who Ate All the Pies?"
+# will load when it is built (canon 8.2.1): the bank is its output, never a copy. Here the pie is drawn, and every answer, slip and
+# "you can't tell" is recomputed from the question's own data by pie_expected(), a separate code path from the generator's.
+PIE_JS = os.path.join(ROOT, "schools", "assets", "pie-chart-generator.js")
+PIE_CANT = "You can't tell"
+PIE_SOURCE = "pie-chart-generator"          # the bank-first source: the module, until the game exists
+PIE_UNIT = {"amount": "pies", "total": "pies", "angle": "°"}
+PIE_FILL = (0.06, 0.2, 0.12, 0.3, 0.16)      # sector shades (opacity): neighbours differ, and every sector is named too
+
+
+def pie_wrap(name):
+    """A sector's name over at most two short lines: 'Cheese and' / 'onion'."""
+    lines, cur = [], ""
+    for w in name.split():
+        if cur and len(cur) + 1 + len(w) > 10:
+            lines.append(cur)
+            cur = w
+        else:
+            cur = (cur + " " + w).strip()
+    lines.append(cur)
+    lines[0] = lines[0][:1].upper() + lines[0][1:]
+    return lines
+
+
+def pie_block(title, sectors, cx, cy, r, out_text, out_shapes):
+    """One pie at (cx, cy): its sectors clockwise from the top, a short tick and a label (name, then the angle where shown) outside each."""
+    f = lambda v: "%.1f" % v
+    if title:
+        out_text.append((title, cx, cy - r - 30, "middle", True))
+    start = 0.0
+    for i, s in enumerate(sectors):
+        a0, a1 = math.radians(start), math.radians(start + s["angle"])
+        x0, y0, x1, y1 = cx + r * math.sin(a0), cy - r * math.cos(a0), cx + r * math.sin(a1), cy - r * math.cos(a1)
+        large = 1 if s["angle"] > 180 else 0
+        out_shapes.append('<path d="M%s %s L%s %s A%s %s 0 %d 1 %s %s Z" fill="currentColor" fill-opacity="%s"/>' %
+                          (f(cx), f(cy), f(x0), f(y0), f(r), f(r), large, f(x1), f(y1), PIE_FILL[i % len(PIE_FILL)]))
+        mid = math.radians(start + s["angle"] / 2)
+        sx, sy = math.sin(mid), -math.cos(mid)
+        out_shapes.append('<line x1="%s" y1="%s" x2="%s" y2="%s"/>' % (f(cx + r * sx), f(cy + r * sy), f(cx + (r + 5) * sx), f(cy + (r + 5) * sy)))
+        lines = pie_wrap(s["pie"]) + (["%d°" % s["angle"]] if s.get("shown") else [])
+        px, py = cx + (r + 9) * sx, cy + (r + 9) * sy
+        anchor = "start" if sx > 0.3 else "end" if sx < -0.3 else "middle"
+        h = 12 * len(lines)
+        top = py - h if sy < -0.3 else py - h / 2 if abs(sy) <= 0.3 else py + 2
+        for j, t in enumerate(lines):
+            out_text.append((t, px + (2 if anchor == "start" else -2 if anchor == "end" else 0), top + 10 + 12 * j, anchor, False))
+        start += s["angle"]
+
+
+def pie_svg(charts):
+    """One chart, or two one above the other (a phone is narrow), every sector named; the angle is on the sectors the question shows."""
+    n = len(charts)
+    shapes, texts = [], []
+    for k, ch in enumerate(charts):
+        title = ch["stand"][:1].upper() + ch["stand"][1:] if n > 1 else None
+        pie_block(title, ch["sectors"], 150, 120 + 236 * k, 54, texts, shapes)
+    body = "".join('<text x="%.1f" y="%.1f" text-anchor="%s"%s>%s</text>' %
+                   (x, y, a, ' font-weight="bold"' if bold else "", html.escape(t)) for t, x, y, a, bold in texts)
+    return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 %d" role="img" fill="none" stroke="currentColor" stroke-width="1.5">%s'
+            '<g fill="currentColor" stroke="none" font-family="sans-serif" font-size="11">%s</g></svg>' % (236 * n, "".join(shapes), body))
+
+
+def pie_expected(q):
+    """What the question's data says, worked out here and not by the generator: {'answer': ..., 'slips': {kind: ...}}. A fraction is
+    (n, d) in lowest terms, a number a Fraction, a choice the text of the right option; a choice slip is the text of its option."""
+    F = Fraction
+    ch, ask = q["charts"], q["ask"]
+    t, st = ask["type"], q["stage"]
+    sec = lambda c, pie: next(s for s in ch[c]["sectors"] if s["pie"] == pie)
+    slips = {}
+    if t == "fraction":
+        a = sec(0, ask["pie"])["angle"]
+        fr = F(a, 360)
+        ans = (fr.numerator, fr.denominator)
+        shown = next(s for s in ch[0]["sectors"] if s.get("shown"))
+        v = F(a, 100) if shown["pie"] == ask["pie"] else F(shown["angle"], 360)
+        slips["percent" if shown["pie"] == ask["pie"] else "not360"] = (v.numerator, v.denominator)
+    elif t == "amount" and st == 2:
+        a = sec(0, ask["pie"])["angle"]
+        ans = F(ch[0]["total"]) * a / 360
+        slips["percent"] = F(ch[0]["total"]) * a / 100
+    elif t == "amount":                                           # stage 5: another sector, in proportion
+        ans = F(ask["knownFreq"]) * sec(0, ask["pie"])["angle"] / sec(0, ask["known"])["angle"]
+    elif t == "angle":
+        s = sec(0, ask["pie"])
+        T = ch[0]["total"]
+        assert sum(x["freq"] for x in ch[0]["sectors"]) == T, "frequencies must make the total"
+        ans = F(s["freq"]) * 360 / T
+        slips["percent"] = F(s["freq"]) * 100 / T
+        slips["times360"] = F(s["freq"]) * 360
+    elif t == "total":
+        a = sec(0, ask["pie"])["angle"]
+        ans = F(ask["freq"]) * 360 / a
+        slips["percent"] = F(ask["freq"]) * 100 / a
+    elif t == "cantell" and st == 2:
+        assert ch[0]["total"] is None                             # the chart gives no total
+        ans = PIE_CANT
+        slips["number_no_total"] = "%d pies" % sec(0, ask["pie"])["angle"]
+    elif t == "cantell":                                          # stage 5: another chart's numbers cannot be used
+        assert ch[0]["total"] is None and ch[1]["total"] is None
+        a = sec(0, ask["pie"])["angle"]
+        ans = PIE_CANT
+        slips["compare_totals"] = "%s pies" % (F(ask["knownFreq"]) * a / ask["knownAngle"])
+        slips["number_no_total"] = "%d pies" % a
+    elif t == "compare" and len(ch) == 1:                         # one chart: the bigger angle is the bigger share
+        p1, p2 = ask["pies"]
+        a1, a2 = sec(0, p1)["angle"], sec(0, p2)["angle"]
+        ans = "They sold the same number" if a1 == a2 else "Yes, it's " + (p1 if a1 > a2 else p2)
+    else:                                                         # two charts, one pie
+        sa, sb = ask["stands"]
+        a1, a2 = ch[0]["sectors"][0]["angle"], ch[1]["sectors"][0]["angle"]
+        t1, t2 = ch[0]["total"], ch[1]["total"]
+        guess = "They sold the same number" if a1 == a2 else "Yes, it's the " + (sa if a1 > a2 else sb)
+        if t1 is None or t2 is None:
+            ans = PIE_CANT
+            slips["compare_totals"] = guess
+        else:
+            n1, n2 = F(t1) * a1 / 360, F(t2) * a2 / 360
+            ans = "They sold the same number" if n1 == n2 else "Yes, it's the " + (sa if n1 > n2 else sb)
+            bigger = PIE_CANT if a1 == a2 else guess
+            if t1 != t2 and bigger != ans:
+                slips["compare_totals"] = bigger
+    return {"answer": ans, "slips": slips}
+
+
+def pie_friendly(q, friendly_set):
+    """True when every division the method makes is by a friendly divisor and gives a whole number (recomputed here)."""
+    F = Fraction
+    ch, ask, st = q["charts"], q["ask"], q["stage"]
+    ok = lambda d: d in friendly_set
+    t = ask["type"]
+    angle = lambda c, pie: next(s for s in ch[c]["sectors"] if s["pie"] == pie)["angle"]
+    if t == "fraction":
+        return ok(F(angle(0, ask["pie"]), 360).denominator)
+    if t == "amount" and st == 2:
+        fr = F(angle(0, ask["pie"]), 360)
+        return ok(fr.denominator) and ch[0]["total"] % fr.denominator == 0
+    if t == "angle":
+        T = ch[0]["total"]
+        return 360 % T == 0 and ok(T)
+    if t == "total":
+        fr = F(angle(0, ask["pie"]), 360)
+        return ok(fr.denominator) and ask["freq"] % fr.numerator == 0
+    if t == "amount":
+        a, b = angle(0, ask["known"]), angle(0, ask["pie"])
+        g = math.gcd(a, b)
+        return ok(a // g) and ask["knownFreq"] % (a // g) == 0
+    if t == "compare" and len(ch) == 2 and ch[0]["total"] is not None and ch[1]["total"] is not None and ch[0]["total"] != ch[1]["total"]:
+        return all(ok(F(c["sectors"][0]["angle"], 360).denominator) and c["total"] % F(c["sectors"][0]["angle"], 360).denominator == 0 for c in ch)
+    return True
+
+
+def pie_faults(q, friendly_set):
+    """Every fault in one generated pie question, by the independent recompute. [] when it holds."""
+    f = []
+    F = Fraction
+    for c in q["charts"]:
+        angles = [s["angle"] for s in c["sectors"]]
+        if sum(angles) != 360 or any(not isinstance(a, int) or a < 15 for a in angles):
+            f.append("angles %s are not whole numbers of 15 degrees or more that make 360" % angles)
+        if len({s["pie"] for s in c["sectors"]}) != len(c["sectors"]):
+            f.append("a pie is named twice in one chart")
+        if c["total"] is not None and any((F(c["total"]) * a / 360).denominator != 1 for a in angles):
+            f.append("a sector's amount is not a whole number (total %s, angles %s)" % (c["total"], angles))
+    exp = pie_expected(q)
+    a, ex = q["answer"], exp["answer"]
+    if a["type"] == "fraction":
+        if (a["n"], a["d"]) != ex or math.gcd(a["n"], a["d"]) != 1:
+            f.append("fraction answer %s/%s, recomputed %s" % (a["n"], a["d"], ex))
+    elif a["type"] == "number":
+        if F(a["value"]) != ex or ex.denominator != 1:
+            f.append("number answer %s, recomputed %s" % (a["value"], ex))
+    else:
+        if a["options"][a["correct"]] != ex:
+            f.append("the right option is %r, recomputed %r" % (a["options"][a["correct"]], ex))
+        if len(set(a["options"])) != 4:
+            f.append("the options are not four different ones")
+    for sl in q["slips"]:
+        want = exp["slips"].get(sl["kind"])
+        got = sl["answer"]
+        if want is None:
+            f.append("slip %s cannot be recomputed from the data" % sl["kind"])
+        elif isinstance(want, tuple):
+            if (got["n"], got["d"]) != want:
+                f.append("slip %s is %s/%s, recomputed %s" % (sl["kind"], got["n"], got["d"], want))
+        elif isinstance(want, str):
+            if got.get("option") != want or got.get("option") not in a.get("options", []):
+                f.append("slip %s is %r, recomputed %r" % (sl["kind"], got.get("option"), want))
+            if want == ex:
+                f.append("slip %s is the key" % sl["kind"])
+        else:
+            if abs(float(got["value"]) - float(want)) > 1e-9:
+                f.append("slip %s is %s, recomputed %s" % (sl["kind"], got["value"], want))
+            if want == ex:
+                f.append("slip %s equals the key" % sl["kind"])
+    if not 3 <= len(q["worked"]) <= 5:
+        f.append("%d worked lines" % len(q["worked"]))
+    if pie_friendly(q, friendly_set) != q["friendly"]:
+        f.append("friendly is %s, recomputed %s" % (q["friendly"], pie_friendly(q, friendly_set)))
+    if q["stage"] != 3 and q["kind"] != "one":       # the angle of the pie asked about, and each total, are also in the words
+        asked = {q["ask"].get("pie"), q["ask"].get("known")}
+        for n in [str(s["angle"]) for c in q["charts"] for s in c["sectors"] if s.get("shown") and s["pie"] in asked] +                  [str(c["total"]) for c in q["charts"] if c["total"] is not None]:
+            if n not in q["stem"]:
+                f.append("the stem does not say %s" % n)
+    return f
+
+
+def pie_selftest(sample, friendly_set):
+    """pie_faults on planted faults: a clean question passes, each fault is caught. [] if all hold."""
+    import copy
+    base = {k: next(q for q in sample if q["stage"] == st and q["kind"] == kd) for k, (st, kd) in {
+        "frac": (1, "direct"), "amount": (2, "direct"), "cant": (4, "two"), "draw": (3, "draw"),
+        "two": (4, "totals"), "total": (5, "total")}.items()}
+    out = []
+    for k, q in base.items():
+        if pie_faults(q, friendly_set):
+            out.append("pie check: a clean %s question was flagged: %s" % (k, pie_faults(q, friendly_set)[:2]))
+
+    def plant(name, key, edit):
+        q = copy.deepcopy(base[key])
+        edit(q)
+        if not pie_faults(q, friendly_set):
+            out.append("pie check: planted fault not caught: " + name)
+    plant("a wrong fraction", "frac", lambda q: q["answer"].update(n=q["answer"]["n"] + 1))
+    plant("an amount found by dividing by 100", "amount",
+          lambda q: q["answer"].update(value=q["charts"][0]["total"] * q["charts"][0]["sectors"][0]["angle"] / 100))
+    plant("angles that do not make 360", "amount", lambda q: q["charts"][0]["sectors"][0].update(angle=q["charts"][0]["sectors"][0]["angle"] + 5))
+    plant("a stand called bigger where the totals are missing", "cant", lambda q: q["answer"].update(correct=(q["answer"]["correct"] + 1) % 4))
+    plant("a wrong angle", "draw", lambda q: q["answer"].update(value=q["answer"]["value"] + 1))
+    plant("the wrong stand called bigger", "two", lambda q: q["answer"].update(correct=(q["answer"]["correct"] + 1) % 4))
+    plant("a slip equal to the key", "total",
+          lambda q: q["slips"].append({"kind": "percent", "answer": {"type": "number", "value": q["answer"]["value"]}, "line": "x"}))
+    return out
+
+
+async def pie_generate(h):
+    """The generator's questions, 12 a stage, run in the browser, each slot from its own fixed seed; and its friendly divisors."""
+    pg = await h.browser.new_page()
+    await pg.goto("about:blank")
+    await pg.add_script_tag(content=open(PIE_JS, encoding="utf-8").read())
+    js = ("() => { %s const out = []; for (const st of MaffsPieCharts.STAGES) for (let sl = 0; sl < MaffsPieCharts.SLOTS; sl++) "
+          "{ const seed = st * 100 + sl + 1; const q = MaffsPieCharts.question(st, sl, mul(seed)); q.seed = seed; out.push(q); } "
+          "return { questions: out, friendly: MaffsPieCharts.FRIENDLY }; }") % MULBERRY
+    data = await pg.evaluate(js)
+    await pg.close()
+    return data["questions"], set(data["friendly"])
+
+
+def pie_question(q):
+    """One generated question as a schema-1 bank question."""
+    a = q["answer"]
+    opts = None
+    if a["type"] == "fraction":
+        fmt, ans, accept, unit = "fraction", {"n": a["n"], "d": a["d"]}, {"rule": "simplest"}, None
+    elif a["type"] == "number":
+        fmt, ans, accept, unit = "number", {"value": a["value"]}, None, PIE_UNIT[q["ask"]["type"]]
+    else:
+        fmt, accept, unit = "choice", None, None
+        opts = [{"val": "abcd"[k], "label": l} for k, l in enumerate(a["options"])]
+        ans = {"val": "abcd"[a["correct"]]}
+    slips = []
+    for s in q["slips"]:
+        sa = s["answer"]
+        if fmt == "choice":
+            slips.append({"answer": {"val": "abcd"[a["options"].index(sa["option"])]}, "line": s["line"]})
+        elif fmt == "fraction":
+            slips.append({"answer": {"n": sa["n"], "d": sa["d"]}, "line": s["line"]})
+        else:
+            slips.append({"answer": {"value": sa["value"]}, "line": s["line"]})
+    ref = "generator:MaffsPieCharts.question:%d:%d:%d" % (q["stage"], q["slot"], q["seed"])
+    z = mk("pie-charts", PIE_SOURCE, ref, q["band"], "optional", q["stem"], fmt, ans, accept=accept, unit=unit, options=opts,
+           worked=q["worked"], slip=slips)
+    if q["friendly"]:
+        z["try_without"] = True
+    z["diagram"] = pie_svg(q["charts"]) if q["stage"] != 3 else None
+    return z
+
+
+async def topic_pie_charts(h):
+    """Matchday pie sales at a sports stadium: 12 questions in each of five stages (read it, find the amount, draw it, can you tell?,
+    work backwards), generated by pie-chart-generator.js and each recomputed by pie_faults() from its own data. Stage 3 gives the
+    frequency table in the stem and asks one angle, so it has no picture; the other stages draw the chart, every sector named."""
+    qs, friendly = await pie_generate(h)
+    bad = ["stage %d slot %d: %s" % (q["stage"], q["slot"], x) for q in qs for x in pie_faults(q, friendly)]
+    bad += pie_selftest(qs, friendly)
+    if len({json.dumps([q["stem"], q["answer"]], sort_keys=True) for q in qs}) != len(qs):
+        bad.append("the generator made two questions alike")
+    for st in range(1, 6):
+        if sum(1 for q in qs if q["stage"] == st) < 10:
+            bad.append("stage %d has fewer than 10 questions" % st)
+    if bad:
+        raise AssertionError("pie-charts: " + "; ".join(bad[:8]))
+    return [pie_question(q) for q in qs]
+
+
 # ───────────────────────────── the registry ─────────────────────────────
 # topic id -> (builder, rule notes). Topics not here have no bank yet (coming soon).
 BUILDERS = {
@@ -3754,6 +4052,7 @@ BUILDERS = {
     "metric-units": topic_metric_units,
     "pythagoras": topic_pythagoras,
     "coordinates": topic_coordinates,
+    "pie-charts": topic_pie_charts,
 }
 
 
@@ -3889,12 +4188,12 @@ function show(t){
   var b=BANKS[t],h='';
   b.questions.forEach(function(q){
     var rule=q.accept?' ('+esc(q.accept.rule)+')':'';
-    h+='<div class="card"><div class="meta"><span>'+esc(q.id)+'</span><span>band '+q.band+'</span><span>'+(q.calc?'calculator':'non-calculator')+'</span><span>'+esc(q.format)+rule+'</span></div>'
+    h+='<div class="card"><div class="meta"><span>'+esc(q.id)+'</span><span>band '+q.band+'</span><span>'+(q.calc==='optional'?'calculator optional'+(q.try_without?', try without':''):q.calc?'calculator':'non-calculator')+'</span><span>'+esc(q.format)+rule+'</span></div>'
       +'<div class="stem">'+rich(q.stem)+'</div>'+(q.diagram?'<div class="fig">'+q.diagram+'</div>':'');
     if(q.format==='choice'){h+='<ul class="opts">'+q.options.map(function(o){return '<li'+(o.val===q.answer.val?' class="right"':'')+'>'+o.val+') '+rich(o.label)+'</li>'}).join('')+'</ul>';}
     else{h+='<div class="ans">Answer: <b>'+ansText(q)+'</b>'+(q.units?' <span class="slip">(unit buttons: '+q.units.map(esc).join(', ')+')</span>':'')+'</div>';}
     h+=q.worked.length?'<ol>'+q.worked.map(function(w){return '<li>'+rich(w)+'</li>'}).join('')+'</ol>':'<div class="none">No worked solution in the game</div>';
-    q.slip.forEach(function(s){h+='<div class="slip">If the answer is <b>'+(q.format==='number_unit'?s.answer.value+' '+esc(s.answer.unit):q.format==='fraction'?s.answer.n+'/'+s.answer.d:s.answer.value!==undefined?s.answer.value:JSON.stringify(s.answer))+'</b>: '+rich(s.line)+'</div>'});
+    q.slip.forEach(function(s){h+='<div class="slip">If the answer is <b>'+(q.format==='number_unit'?s.answer.value+' '+esc(s.answer.unit):q.format==='fraction'?s.answer.n+'/'+s.answer.d:q.format==='choice'?rich((q.options.filter(function(o){return o.val===s.answer.val})[0]||{label:s.answer.val}).label):s.answer.value!==undefined?s.answer.value:JSON.stringify(s.answer))+'</b>: '+rich(s.line)+'</div>'});
     h+='<div class="meta" style="margin:6px 0 0">source: '+esc(q.source.game)+' '+esc(q.source.ref)+'</div></div>';
   });
   document.getElementById('main').innerHTML=h;

@@ -576,6 +576,17 @@
     "modes": [],
     "stages": []
    }
+  },
+  {
+   "id": "pie-charts",
+   "name": "Pie charts",
+   "marks": 4.0,
+   "series": 4,
+   "band": [
+    2,
+    4
+   ],
+   "route": null
   }
  ],
  "coming_soon": [
@@ -690,13 +701,6 @@
    "marks": 4.0,
    "series": 6,
    "planned": null
-  },
-  {
-   "id": "pie-charts",
-   "name": "Pie charts",
-   "marks": 4.0,
-   "series": 4,
-   "planned": "Who Ate All the Pies?"
   },
   {
    "id": "2d-shapes",
