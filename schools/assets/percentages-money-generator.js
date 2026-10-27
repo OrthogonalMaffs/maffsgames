@@ -1,0 +1,270 @@
+/* The percentages-and-money question generator (contract PERCENTAGES-MONEY-BANK, Jon, 27 Oct 2026): a high-street shop through the
+   year, a bank for savings, a car dealer for depreciation.
+
+   A bank-first source, like pie-chart-generator.js (canon 8.2.1): the bank is generated from this file by scripts/gen-six-ps.py, and the
+   game "It's on Sale!", when it is built, loads this same file. It never copies the questions.
+
+   Pure data, no DOM: MaffsPercentagesMoney.question(stage, slot, rng) returns one question as plain data. rng returns a number from 0 up
+   to 1 (Math.random by default), so a seed makes a question reproducible. The slot fixes what the question is about; rng chooses the
+   item, the occasion and the numbers the slot leaves open. All money is whole pence, as integers (no floating point is used for money).
+
+   Five stages, 12 slots each:
+     1 percentage of an amount         "How much is taken off?"                           money
+     2 increase or decrease            "What is the new price?"                           money
+     3 percentage change               "What percentage was knocked off?"                 number, unit %
+     4 reverse percentages             "£60 after 20% off: what was it before?"           money
+     5 interest and depreciation       simple (3), compound (5), depreciation (4)         money, to the nearest penny
+   Stages 1-4 are worked by finding 10%, 5% or 1% first and building up (the amount is always a whole number of pounds, so every step
+   is whole pence); they are calculator optional. Stage 5 is worked with the multiplier, year by year and then as a power; a calculator.
+
+   A question is { stage, slot, kind, params, ask, answer, stem, worked, slips, friendly, calc } where
+     params   everything the answer is recomputed from: S1 {pct, base}; S2 {dir, pct, base}; S3 {dir, old, new}; S4 {dir, pct, newp};
+              S5 {kind, principal, rate, years, qty} (money in pence)
+     answer   { type: 'money', pence } | { type: 'percent', value }
+     slips    [{ kind, answer: { pence } | { value }, line }]
+     friendly true when every amount in the working is a multiple of 5p and every multiplier or divisor is 12 or under or a multiple of ten
+*/
+(function (root) {
+  'use strict';
+
+  var SLOTS = 12;
+  // each item with prices (whole pounds) that suit it; the item for a slot is fixed, so a stage never repeats one
+  var ITEMS = [['coat', [40, 60, 80, 120, 160, 45, 47]], ['pair of boots', [40, 60, 80, 120, 65, 95, 69]],
+               ['television', [200, 240, 300, 400, 500, 450, 379]], ['laptop', [300, 400, 500, 600, 800, 450, 649]],
+               ['sofa', [300, 400, 500, 600, 800, 350, 549]], ['bicycle', [150, 200, 240, 300, 400, 175, 289]],
+               ['winter jacket', [60, 80, 120, 160, 200, 85, 89]], ['washing machine', [250, 300, 400, 500, 450, 350, 429]],
+               ['pair of jeans', [20, 30, 40, 50, 60, 45, 39]], ['kettle', [20, 30, 40, 50, 25, 35, 29]],
+               ['mattress', [200, 300, 400, 500, 600, 350, 449]], ['pair of headphones', [40, 60, 80, 120, 150, 85, 79]]];
+  var SALES = ['In the summer sale', 'On Black Friday', 'In the January sales'];
+  var RISES = ['From the start of March', 'After the new year', 'From the first of the month'];
+
+  function rint(rng, a, b) { return a + Math.floor(rng() * (b - a + 1)); }
+  function pick(rng, arr) { return arr[Math.floor(rng() * arr.length)]; }
+  function shuffled(rng, arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(rng() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+    return a;
+  }
+  // value n / 10^e as a plain decimal string, trailing zeros removed
+  function dec(n, e) {
+    var neg = n < 0; n = Math.abs(n);
+    var s = String(n);
+    while (s.length <= e) s = '0' + s;
+    var out = e ? s.slice(0, s.length - e) + '.' + s.slice(s.length - e) : s;
+    if (e) out = out.replace(/0+$/, '').replace(/\.$/, '');
+    return (neg ? '-' : '') + out;
+  }
+  function money(p) { return '£' + (p % 100 === 0 ? String(p / 100) : (p / 100).toFixed(2)); }
+  function plain(p) { return p % 100 === 0 ? String(p / 100) : (p / 100).toFixed(2); }
+  // the item for a slot and one of its prices: a round one (a multiple of £20) or, when `round` is false, one that is not a multiple of £5
+  function itemFor(stage, slot, rng, round) {
+    var it = ITEMS[(slot + stage * 5) % ITEMS.length], list = it[1].filter(function (b) { return round ? b % 20 === 0 : b % 5 !== 0; });
+    if (!list.length) list = it[1];
+    return { item: it[0], price: pick(rng, list) * 100 };
+  }
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+  function an(n) { return /^(8|11|18|80)/.test(String(n)) ? 'an' : 'a'; }
+  function a(item) { return /^[aeiou]/.test(item) ? 'an ' + item : 'a ' + item; }
+  // the nearest penny, halves up: n / d (d > 0)
+  function roundDiv(n, d) { return Math.floor((2 * n + d) / (2 * d)); }
+  function isTie(n, d) { return (2 * n) % (2 * d) === d; }
+  function friendlyMult(m) { return m <= 12 || m % 10 === 0; }
+
+  // ---- the method for "p% of B" (B a whole number of pounds, in pence): lines, every amount used, every multiplier or divisor used
+  function pctMethod(p, B) {
+    var x = B * p / 100, lines, steps, mults;
+    if (p === 50) { lines = [money(B) + ' ÷ 2 = ' + money(x) + ' (50% is a half).']; steps = [x]; mults = [2]; }
+    else if (p === 25) { lines = [money(B) + ' ÷ 4 = ' + money(x) + ' (25% is a quarter).']; steps = [x]; mults = [4]; }
+    else if (p === 75) {
+      var q = B / 4;
+      lines = ['25% is a quarter: ' + money(B) + ' ÷ 4 = ' + money(q) + '.', '75% is 3 quarters: 3 × ' + money(q) + ' = ' + money(x) + '.'];
+      steps = [q, x]; mults = [4, 3];
+    } else if (p % 10 === 0) {
+      var t = B / 10, k = p / 10;
+      lines = ['10% of ' + money(B) + ' is ' + money(t) + ' (÷ 10).'];
+      steps = [t]; mults = [10];
+      if (k > 1) { lines.push(p + '% is ' + k + ' lots of 10%: ' + k + ' × ' + money(t) + ' = ' + money(x) + '.'); steps.push(x); mults.push(k); }
+    } else if (p % 5 === 0) {
+      var t2 = B / 10, h = t2 / 2, n10 = (p - 5) / 10;
+      lines = ['10% of ' + money(B) + ' is ' + money(t2) + ' (÷ 10).', '5% is half of that: ' + money(h) + '.'];
+      steps = [t2, h]; mults = [10, 2];
+      if (n10 > 0) {
+        lines.push(p + '% is ' + (n10 > 1 ? n10 + ' × ' + money(t2) : money(t2)) + ' + ' + money(h) + ' = ' + money(x) + '.');
+        steps.push(x); mults.push(n10);
+      }
+    } else {
+      var o = B / 100;
+      lines = ['1% of ' + money(B) + ' is ' + money(o) + ' (÷ 100).', p + '% is ' + p + ' lots of 1%: ' + p + ' × ' + money(o) + ' = ' + money(x) + '.'];
+      steps = [o, x]; mults = [100, p];
+    }
+    return { x: x, lines: lines, steps: steps, mults: mults };
+  }
+  function friendlyOf(steps, mults) {
+    return steps.every(function (s) { return s % 5 === 0; }) && mults.every(friendlyMult);
+  }
+
+  // ---------------------------------------------------------------- stage 1: percentage of an amount
+  var S1 = [10, 50, 25, 20, 5, 30, 15, 75, 40, 12, 8, 35];
+
+  function stage1(slot, rng) {
+    var p = S1[slot], it = itemFor(1, slot, rng, p % 5 === 0), item = it.item, B = it.price;
+    var m = pctMethod(p, B), occ = pick(rng, SALES);
+    var stem = occ + ', ' + a(item) + ' costing ' + money(B) + ' has ' + p + '% off. How much is taken off the price?';
+    return { kind: 'pct_of', params: { pct: p, base: B }, ask: { type: 'money', what: 'taken off' }, answer: { type: 'money', pence: m.x },
+      stem: stem, worked: m.lines.concat(['So ' + money(m.x) + ' is taken off the price.']), slips: [], friendly: friendlyOf(m.steps, m.mults) };
+  }
+
+  // ---------------------------------------------------------------- stage 2: increase or decrease, the new price
+  var S2 = [['dec', 10], ['dec', 20], ['dec', 25], ['dec', 30], ['dec', 15], ['dec', 40], ['dec', 12],
+            ['inc', 10], ['inc', 5], ['inc', 20], ['inc', 15], ['inc', 8]];
+
+  function stage2(slot, rng) {
+    var dir = S2[slot][0], p = S2[slot][1], it = itemFor(2, slot, rng, p % 5 === 0), item = it.item, B = it.price;
+    var m = pctMethod(p, B), dec_ = dir === 'dec';
+    var N = dec_ ? B - m.x : B + m.x;
+    var stem = dec_
+      ? pick(rng, SALES) + ', ' + a(item) + ' costing ' + money(B) + ' is reduced by ' + p + '%. What is the new price?'
+      : pick(rng, RISES) + ', the price of ' + a(item) + ' costing ' + money(B) + ' goes up by ' + p + '%. What is the new price?';
+    var worked = m.lines.concat([dec_ ? 'New price = ' + money(B) + ' − ' + money(m.x) + ' = ' + money(N) + '.'
+                                      : 'New price = ' + money(B) + ' + ' + money(m.x) + ' = ' + money(N) + '.']);
+    var slips = [{ kind: 'only_percentage', answer: { pence: m.x },
+      line: money(m.x) + ' is the ' + p + '% itself. The question asks for the new price, so ' + (dec_ ? 'take it off' : 'add it on') + ': ' +
+        money(B) + (dec_ ? ' − ' : ' + ') + money(m.x) + ' = ' + money(N) + '.' }];
+    return { kind: dir, params: { dir: dir, pct: p, base: B }, ask: { type: 'money', what: 'new price' }, answer: { type: 'money', pence: N },
+      stem: stem, worked: worked, slips: slips, friendly: friendlyOf(m.steps.concat([N]), m.mults) };
+  }
+
+  // ---------------------------------------------------------------- stage 3: percentage change
+  var S3 = [['dec', 10], ['dec', 20], ['dec', 25], ['dec', 30], ['dec', 15], ['dec', 40], ['dec', 12],
+            ['inc', 10], ['inc', 20], ['inc', 25], ['inc', 5], ['inc', 8]];
+
+  function stage3(slot, rng) {
+    var dir = S3[slot][0], p = S3[slot][1], it = itemFor(3, slot, rng, true), item = it.item;
+    var O = it.price, c = O * p / 100, dec_ = dir === 'dec', N = dec_ ? O - c : O + c, o = O / 100;
+    var stem = dec_
+      ? 'Before the sale, ' + a(item) + ' cost ' + money(O) + '. Its sale price is ' + money(N) + '. What percentage was knocked off?'
+      : 'The price of ' + a(item) + ' goes up from ' + money(O) + ' to ' + money(N) + '. What is the percentage increase?';
+    var worked = [
+      'The price ' + (dec_ ? 'fell' : 'rose') + ' by ' + (dec_ ? money(O) + ' − ' + money(N) : money(N) + ' − ' + money(O)) + ' = ' + money(c) + '.',
+      '1% of the original price ' + money(O) + ' is ' + money(o) + ' (÷ 100).',
+      money(c) + ' ÷ ' + money(o) + ' = ' + p + ', so the ' + (dec_ ? 'reduction' : 'increase') + ' is ' + p + '%.'];
+    var slips = [], over = 100 * c / N;       // the change divided by the new price: a slip only where it is a value a student can type exactly
+    if (Math.abs(over * 100 - Math.round(over * 100)) < 1e-9 && Math.round(over * 100) !== p * 100) {
+      slips.push({ kind: 'over_new', answer: { value: Math.round(over * 100) / 100 },
+        line: 'The change was divided by the new price, ' + money(N) + '. A percentage change is a percentage of the original price, ' + money(O) + '.' });
+    }
+    var steps = [c, o], mults = [100, p];
+    return { kind: dir, params: { dir: dir, old: O, new: N }, ask: { type: 'percent', what: dec_ ? 'knocked off' : 'increase' },
+      answer: { type: 'percent', value: p }, stem: stem, worked: worked, slips: slips,
+      friendly: o % 10 === 0 && friendlyOf(steps, [100]) && p % 5 === 0 };
+  }
+
+  // ---------------------------------------------------------------- stage 4: reverse percentages
+  var S4 = [['dec', 20], ['dec', 10], ['dec', 30], ['dec', 40], ['dec', 50], ['dec', 25], ['dec', 15], ['dec', 12],
+            ['inc', 20], ['inc', 10], ['inc', 50], ['inc', 25]];
+
+  function stage4(slot, rng) {
+    var dir = S4[slot][0], p = S4[slot][1], it = itemFor(4, slot, rng, true), item = it.item;
+    var O = it.price, dec_ = dir === 'dec', k = dec_ ? 100 - p : 100 + p, N = O / 100 * k, o = O / 100;
+    var stem = dec_
+      ? pick(rng, SALES) + ', ' + a(item) + ' costs ' + money(N) + ' after a reduction of ' + p + '%. What was the price before the reduction?'
+      : 'After a rise of ' + p + '%, ' + a(item) + ' costs ' + money(N) + '. What was the price before the rise?';
+    var worked = [
+      money(N) + ' is ' + k + '% of the original price' + (dec_ ? ' (100% − ' + p + '%).' : ' (100% + ' + p + '%).'),
+      '1% is ' + money(N) + ' ÷ ' + k + ' = ' + money(o) + '.',
+      '100% is ' + money(o) + ' × 100 = ' + money(O) + '.'];
+    var slips = [], wrong = dec_ ? N * (100 - p) : N * (100 + p);      // the percentage taken off (or added to) the new price, times 100
+    if (wrong % 100 === 0 && wrong / 100 !== O) {
+      slips.push({ kind: 'off_sale_price', answer: { pence: wrong / 100 },
+        line: (dec_ ? 'Taking ' + p + '% off ' : 'Adding ' + p + '% to ') + money(N) + ' gives ' + money(wrong / 100) + ', which is not the original price. ' +
+          money(N) + ' is already ' + k + '% of the original, so work back to 100%.' });
+    }
+    return { kind: dir, params: { dir: dir, pct: p, newp: N }, ask: { type: 'money', what: 'original price' }, answer: { type: 'money', pence: O },
+      stem: stem, worked: worked, slips: slips, friendly: friendlyMult(k) && o % 5 === 0 };
+  }
+
+  // ---------------------------------------------------------------- stage 5: simple interest, compound interest, depreciation
+  // [kind, what is asked, years]
+  var S5 = [['simple', 'interest', 3], ['compound', 'total', 2], ['depreciation', 'value', 2], ['compound', 'total', 3],
+            ['simple', 'total', 4], ['depreciation', 'value', 3], ['compound', 'interest', 2], ['compound', 'total', 3],
+            ['simple', 'interest', 5], ['depreciation', 'value', 2], ['compound', 'total', 2], ['depreciation', 'value', 3]];
+  var SAVE = [200, 250, 400, 500, 600, 800, 1000, 1200, 1500, 2000, 2500, 4000];
+  var CAR = [6000, 7500, 8000, 9500, 12000, 14000, 15000, 18000, 20000, 24000];
+  var R_SIMPLE = [2, 3, 4, 5], R_COMP = [2, 3, 4, 5, 6, 8], R_DEP = [10, 12, 15, 20, 25];
+
+  // multiplier m = 100 + r (or 100 - r); the amount after y years, in pence, as the exact fraction P * m^y / 100^y
+  function after(P, m, y) { var n = P, d = 1, i; for (i = 0; i < y; i++) { n *= m; d *= 100; } return [n, d]; }
+
+  function stage5(slot, rng) {
+    var kind = S5[slot][0], qty = S5[slot][1], y = S5[slot][2], r, P, f, tries = 0;
+    do {
+      r = pick(rng, kind === 'simple' ? R_SIMPLE : kind === 'compound' ? R_COMP : R_DEP);
+      P = (kind === 'depreciation' ? pick(rng, CAR) : pick(rng, SAVE)) * 100;
+      f = after(P, kind === 'depreciation' ? 100 - r : 100 + r, y);
+    } while (kind !== 'simple' && isTie(f[0], f[1]) && ++tries < 100);       // never a half-penny: the rounding must not decide the answer
+    var worked = [], key, slips = [], stem, mult = kind === 'depreciation' ? 100 - r : 100 + r;
+    var P_ = plain(P), i, line;
+    if (kind === 'simple') {
+      var each = P * r / 100, I = each * y, T = P + I;
+      key = qty === 'interest' ? I : T;
+      stem = money(P) + ' is put into a savings account paying ' + r + '% simple interest a year. ' +
+        (qty === 'interest' ? 'How much interest is earned in ' + y + ' years?' : 'How much is in the account after ' + y + ' years?');
+      worked = ['This is simple interest: the same amount is added every year.', 'Each year: ' + r + '% of ' + money(P) + ' = ' + money(each) + '.',
+                'After ' + y + ' years: ' + y + ' × ' + money(each) + ' = ' + money(I) + ' interest.'];
+      if (qty === 'total') worked.push('Total = ' + money(P) + ' + ' + money(I) + ' = ' + money(T) + '.');
+      var c = after(P, mult, y), cv = roundDiv(c[0], c[1]);
+      var wrong = qty === 'interest' ? cv - P : cv;
+      if (wrong !== key) slips.push({ kind: 'compound_for_simple', answer: { pence: wrong },
+        line: 'That treats the interest as compound, with each year\'s interest added before the next is worked out. The question says simple interest: the same ' + money(each) + ' every year.' });
+    } else {
+      var mt = dec(mult, 2), ys = [];
+      key = roundDiv(f[0], f[1]);
+      // year-by-year lines: previous amount (pounds) x multiplier = this amount (pounds)
+      ys = [];
+      for (i = 1; i <= y; i++) {
+        var prev = i === 1 ? dec(P, 2) : dec(after(P, mult, i - 1)[0], 2 * (i - 1) + 2), cur = dec(after(P, mult, i)[0], 2 * i + 2);
+        ys.push('Year ' + i + ': ' + prev + ' × ' + mt + ' = ' + cur);
+      }
+      var exact = dec(f[0], 2 * y + 2);
+      var pow = (kind === 'compound' ? 'Compound interest: each year\'s interest is added, so the next year\'s is worked out on the new amount. ' : 'Depreciation: the value falls by ' + r + '% of its value each year. ') +
+        'The multiplier is ' + (kind === 'compound' ? '100% + ' + r + '% = ' : '100% − ' + r + '% = ') + mult + '% = ' + mt + '.';
+      var last = 'As a power: ' + dec(P, 2) + ' × ' + mt + '^' + y + ' = ' + exact + ', which is ' + money(key) + ' to the nearest penny.';
+      worked = [pow].concat(ys, [last]);
+      if (qty === 'interest') { worked.push('Interest = ' + money(key) + ' − ' + money(P) + ' = ' + money(key - P) + '.'); key = key - P; }
+      if (worked.length > 5) worked = [pow, ys.join('; ') + '.'].concat(worked.slice(2 + ys.length));
+      stem = kind === 'compound'
+        ? money(P) + ' is put into a savings account paying ' + r + '% compound interest a year. ' +
+          (qty === 'interest' ? 'How much interest is earned in ' + y + ' years?' : 'How much is in the account after ' + y + ' years?') + ' Give your answer to the nearest penny.'
+        : 'A car costs ' + money(P) + ' new. Its value falls by ' + r + '% each year. What is it worth after ' + y + ' years? Give your answer to the nearest penny.';
+      var q = qty === 'interest' ? P : 0;
+      function add(kindName, pence, text) { if (pence - q !== key) slips.push({ kind: kindName, answer: { pence: pence - q }, line: text }); }
+      if (kind === 'compound') {
+        add('simple_for_compound', roundDiv(P * 100 + P * r * y, 100),
+            'That is simple interest: the same amount every year. Compound interest is worked out on the new amount each year, so use the multiplier ' + mt + ' once for each year.');
+        add('times_years', roundDiv(P * mult * y, 100),
+            'The multiplier was multiplied by the number of years. It has to be applied once for each year: ' + dec(P, 2) + ' × ' + mt + '^' + y + '.');
+        if (r < 10) { var m2 = 100 + r * 10, w2 = after(P, m2, y);
+          add('multiplier_digit', roundDiv(w2[0], w2[1]), cap(an(r)) + ' ' + r + '% rise has the multiplier ' + mt + ', not ' + dec(m2, 2) + '.'); }
+      } else {
+        var u = after(P, 100 + r, y);
+        add('depreciation_added', roundDiv(u[0], u[1]), 'The value falls, so the multiplier is 100% − ' + r + '% = ' + mt + ', not ' + dec(100 + r, 2) + '.');
+        if (r % 10 === 0) { var m3 = r, w3 = after(P, m3, y);
+          add('multiplier_digit', roundDiv(w3[0], w3[1]), 'A fall of ' + r + '% leaves ' + mult + '%, so the multiplier is ' + mt + ', not ' + dec(m3, 2) + '.'); }
+      }
+    }
+    return { kind: kind, params: { kind: kind, principal: P, rate: r, years: y, qty: qty }, ask: { type: 'money', what: qty },
+      answer: { type: 'money', pence: key }, stem: stem, worked: worked, slips: slips, friendly: false };
+  }
+
+  var STAGE_FN = { 1: stage1, 2: stage2, 3: stage3, 4: stage4, 5: stage5 };
+  var BANDS = { 1: 3, 2: 3, 3: 4, 4: 4, 5: 5 };
+
+  function question(stage, slot, rng) {
+    rng = rng || Math.random;
+    var q = STAGE_FN[stage](slot, rng);
+    q.stage = stage; q.slot = slot; q.band = BANDS[stage]; q.calc = stage === 5 ? 'calculator' : 'optional';
+    return q;
+  }
+
+  root.MaffsPercentagesMoney = { STAGES: [1, 2, 3, 4, 5], SLOTS: SLOTS, BANDS: BANDS, question: question };
+})(typeof window !== 'undefined' ? window : this);
