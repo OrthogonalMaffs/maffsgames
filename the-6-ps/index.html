@@ -288,20 +288,7 @@
 <!-- Results -->
 <section id="results" hidden>
   <h2>How it went</h2>
-  <ul class="topics" id="resultList"></ul>
-  <p class="note" id="nudge" hidden></p>
-
-  <form id="feedbackForm" class="card">
-    <fieldset class="ticks">
-      <legend>Was a topic missing?</legend>
-      <p class="muted">Tick any you'd like to practise here.</p>
-      <div id="tickList"></div>
-    </fieldset>
-    <div class="actions"><button class="btn" id="sendBtn" type="submit" disabled>Send</button></div>
-    <p id="thanks" hidden>Thank you. That tells us what to build next.</p>
-  </form>
-
-  <div class="actions"><button class="btn" id="againBtn" type="button">Another six</button></div>
+  <div id="resultsBody"></div>
 </section>
 
 </main>
@@ -451,7 +438,7 @@
   }
 
   function marksText(t) {
-    return 'worth about ' + Math.max(1, Math.round(t.marks)) + ' marks a series on OCR’s Foundation papers';
+    return 'worth about ' + Math.max(1, Math.round(t.marks)) + ' marks across the three Foundation papers';
   }
 
   /* ------------------------------------------------------------ the schema (docs/six-ps-schema.md) */
@@ -1040,7 +1027,7 @@
     var cur = session.cur, t = byId[cur.id];
     q = have[cur.qids[cur.k]];
     $('play').dataset.qid = q.id;
-    $('qHead').textContent = 'Question ' + (cur.k + 1) + ' of ' + cur.qids.length + ' · Topic ' + (session.i + 1) + ' of ' + session.plan.length;
+    $('qHead').textContent = 'Question ' + (cur.k + 1) + ' of ' + cur.qids.length;
     $('qTopic').textContent = t.name;
     $('qCalc').textContent = q.calc === 'optional' ? 'Calculator optional' : q.calc ? 'Calculator' : 'Non-calculator';
     $('qTry').hidden = !(q.calc === 'optional' && q.try_without === true);
@@ -1161,8 +1148,35 @@
     showQuestion(have);
   }
 
+  // Everything on the results screen is drawn here, into one container that is emptied first: the list, the nudge, the form and its
+  // Send button, and Another six. Until 27 Oct 2026 only the two lists were redrawn (#562's "every render clears then draws"), and the
+  // legend, the Send button and the rest were static markup that no render touched, so a stale or repeated copy of them was never
+  // cleared (Jon saw the tick list from Quadratic graphs on, and Send, twice). Nothing here is static any more.
+  function el(tag, attrs, text) {
+    var e = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (k) { if (k === 'hidden') e.hidden = !!attrs[k]; else e.setAttribute(k, attrs[k]); });
+    if (text !== undefined) e.textContent = text;
+    return e;
+  }
+
   function renderResults() {
-    fill($('resultList'), session.plan.map(function (p) {
+    var list = el('ul', { 'class': 'topics', id: 'resultList' });
+    var nudge = el('p', { 'class': 'note', id: 'nudge', hidden: true });
+    var ticks = el('div', { id: 'tickList' });
+    var form = el('form', { id: 'feedbackForm', 'class': 'card' });
+    var fieldset = el('fieldset', { 'class': 'ticks' });
+    fieldset.appendChild(el('legend', {}, 'Was a topic missing?'));
+    fieldset.appendChild(el('p', { 'class': 'muted' }, "Tick any you'd like to practise here."));
+    fieldset.appendChild(ticks);
+    var send = el('button', { 'class': 'btn', id: 'sendBtn', type: 'submit' }, 'Send');
+    var sendRow = el('div', { 'class': 'actions' });
+    sendRow.appendChild(send);
+    var thanks = el('p', { id: 'thanks', hidden: true }, 'Thank you. That tells us what to build next.');
+    form.appendChild(fieldset); form.appendChild(sendRow); form.appendChild(thanks);
+    var againRow = el('div', { 'class': 'actions' });
+    againRow.appendChild(el('button', { 'class': 'btn', id: 'againBtn', type: 'button' }, 'Another six'));
+    $('resultsBody').replaceChildren(list, nudge, form, againRow);
+    fill(list, session.plan.map(function (p) {
       var x = session.results[p.id], t = byId[p.id];
       var score = x && !x.skipped ? x.r + ' of ' + x.n : 'skipped';
       var row = li(t.name + ': ' + score, marksText(t), x && !x.skipped ? 'done' : '');
@@ -1175,7 +1189,7 @@
       }
       return row;
     }));
-    var w = weakest(session, byId), nudge = $('nudge');
+    var w = weakest(session, byId);
     nudge.textContent = '';
     if (w) {
       nudge.appendChild(document.createTextNode('Next time: give ' + w.name + ' another go.' + (w.route ? ' ' : '')));
@@ -1189,7 +1203,6 @@
     } else {
       nudge.hidden = true;
     }
-    var ticks = $('tickList');
     fill(ticks, data.coming_soon.map(function (t) { return [t.id, t.name]; }).concat([['other', 'Something else']]).map(function (o) {
       var lab = document.createElement('label');
       var box = document.createElement('input');
@@ -1199,10 +1212,10 @@
       return lab;
     }));
     var sent = !!session.feedbackSent;
-    $('thanks').hidden = !sent;
+    thanks.hidden = !sent;
     Array.prototype.forEach.call(ticks.querySelectorAll('input'), function (b) { b.disabled = sent; });
-    $('sendBtn').disabled = true;
-    $('sendBtn').hidden = sent;
+    send.disabled = true;
+    send.hidden = sent;
     if (!session.finishedSent) {
       var tot = totals(session);
       event('game_completed', { game_slug: SLUG, level: LEVEL, score: tot.right, questions_answered: tot.total,
@@ -1246,7 +1259,7 @@
   $('startBtn').addEventListener('click', start);
   $('resumeBtn').addEventListener('click', function () { if (session) render(); });
   $('restartBtn').addEventListener('click', start);
-  $('againBtn').addEventListener('click', start);
+  $('results').addEventListener('click', function (e) { if (e.target && e.target.id === 'againBtn') start(); });
   $('checkBtn').addEventListener('click', function () { submit(); });
   $('showWorkBtn').addEventListener('click', function () { $('qWorked').hidden = false; $('showWorkBtn').hidden = true; });
   $('nextTopicBtn').addEventListener('click', function () {
@@ -1259,10 +1272,11 @@
   function skipNow() { if (skip(session)) { q = null; store.setSession(session); render(); } }
   $('skipBtn').addEventListener('click', skipNow);
   $('skipNotReadyBtn').addEventListener('click', skipNow);
-  $('tickList').addEventListener('change', function () {
-    $('sendBtn').disabled = !$('tickList').querySelector('input:checked');
+  $('results').addEventListener('change', function () {
+    var box = $('tickList'), btn = $('sendBtn');
+    if (box && btn) btn.disabled = !box.querySelector('input:checked');
   });
-  $('feedbackForm').addEventListener('submit', function (e) {
+  $('results').addEventListener('submit', function (e) {
     e.preventDefault();
     if (!session || session.feedbackSent) return;
     var ids = Array.prototype.map.call($('tickList').querySelectorAll('input:checked'), function (b) { return b.value; });

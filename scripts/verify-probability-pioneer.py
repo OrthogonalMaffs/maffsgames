@@ -43,26 +43,23 @@ import bank_common as bc  # noqa: E402
 
 SLUG = 'probability-pioneer'
 COUNTS = {'STAGE1': 10, 'STAGE2': 20, 'STAGE3': 15}
-ASSUMPTIONS = ('Unless a question says otherwise, every die has six faces and is fair, every coin is fair, '
+ASSUMPTIONS = ('Unless a question says otherwise, every dice has six faces and is fair, every coin is fair, '
                'and every pick is made at random.')
 
 # ---------------------------------------------------------------------------------------------
 # Stage 1: reviewed keys (event -> (scale value, reason)). Change one only with Jon's ruling.
 # ---------------------------------------------------------------------------------------------
 STAGE1_KEYS = {
-    "You will breathe today": (1, "certain for anyone reading it"),
-    "You will roll a 7 on a standard die": (0, "a standard die shows 1 to 6"),
-    "It will rain somewhere in Britain this week": (0.75, "very likely but not certain; certain means it "
-                                                         "must happen (audit F4, Jon 4 Oct 2026)"),
-    "You will flip heads on a fair coin": (0.5, "1/2"),
-    "A randomly chosen month starts with J": (0.25, "January, June, July: 3/12 = 1/4"),
-    "You pick a red card from a standard pack": (0.5, "26/52"),
-    "You roll an even number on a die": (0.5, "3/6"),
-    "You win the lottery with one ticket": (0.25, "possible, about 1 in 45 million: the scale's nearest "
-                                                  "point below even is Unlikely (audit F3, Jon 4 Oct 2026)"),
-    "A baby born today is a boy": (0.5, "conventional at this level; the real figure is about 0.51 "
-                                        "(audit F7, left as a judgement call)"),
-    "The sun will rise tomorrow": (1, "certain"),
+    "You will roll a number less than 7 on a standard dice": (1, "all six faces are below 7: 6/6", (6, 6)),
+    "You will roll a 7 on a standard dice": (0, "a standard dice shows 1 to 6: 0/6", (0, 6)),
+    "You pick a card that is not a heart from a standard pack": (0.75, "52 - 13 = 39 cards: 39/52 = 3/4", (39, 52)),
+    "You will flip heads on a fair coin": (0.5, "1/2", (1, 2)),
+    "A randomly chosen month starts with J": (0.25, "January, June, July: 3/12 = 1/4", (3, 12)),
+    "You pick a red card from a standard pack": (0.5, "26/52", (26, 52)),
+    "You roll an even number on a dice": (0.5, "3/6", (3, 6)),
+    "You flip two fair coins and get two heads": (0.25, "HH is 1 of HH, HT, TH, TT: 1/4", (1, 4)),
+    "You roll a number greater than 2 on a dice": (0.75, "3, 4, 5 and 6: 4/6 = 2/3, more than a half, less than 1", (4, 6)),
+    "A randomly chosen month has fewer than 32 days": (1, "no month has more than 31 days: 12/12", (12, 12)),
 }
 
 # ---------------------------------------------------------------------------------------------
@@ -72,9 +69,9 @@ STAGE3_KEYS = {
     "P(event) is always between 0 and 1 inclusive": (True, "definition"),
     "If P(A) = 0.3, then P(not A) = 0.7": (True, "P(not A) = 1 - P(A)"),
     "Flipping heads 5 times makes tails more likely next": (False, "independent flips; gambler's fallacy"),
-    "P(impossible event) = 0": (True, "definition"),
-    "P(certain event) = 1": (True, "definition"),
-    "You can have P(event) = 1.5": (False, "a probability never exceeds 1"),
+    "The probability of an impossible event is 0": (True, "definition"),
+    "The probability of a certain event is 1": (True, "definition"),
+    "A probability can be 1.5": (False, "a probability never exceeds 1"),
     "On a fair dice, rolling a 1 and rolling a 2 are equally likely, so each has probability 0.5.": (
         False, "equally likely outcomes share the probability among all six faces, 1/6 each "
                "(audit F2, Jon 4 Oct 2026; reworded PHRASING-FIX-2, Jon 15 Oct 2026)"),
@@ -82,8 +79,8 @@ STAGE3_KEYS = {
     "A probability of 0.9 means the event will definitely happen": (False, "only 1 is certain"),
     "The more times you repeat an experiment, the closer the results tend to get to the theoretical probability": (
         True, "law of large numbers, stated as a tendency, not a guarantee (audit F8)"),
-    "A fair six-sided die gives each number probability exactly 1/6": (True, "six equally likely outcomes"),
-    "P(rolling 7 on a standard die) = 7/6": (False, "impossible, so 0; and 7/6 > 1"),
+    "A fair six-sided dice gives each number probability exactly 1/6": (True, "six equally likely outcomes"),
+    "The probability of rolling a 7 on an ordinary dice is 7/6": (False, "impossible, so 0; and 7/6 > 1"),
     "Probability can be written as a fraction, decimal or percentage": (True, "1/2, 0.5, 50%"),
     "If P(rain) = 0.4, it will rain on exactly 4 out of every 10 days": (False, "a long-run proportion, "
                                                                            "not a guarantee for any 10 days"),
@@ -147,50 +144,52 @@ def bag(text):
     return out
 
 
+def die_phrase(text):
+    """'a number less than 3' -> 'less than 3', 'an odd number' -> 'odd', 'a 1 or a 2' -> '1 or 2'."""
+    t = text.strip()
+    t = re.sub(r'^an? number (?=less|greater)', '', t)
+    t = re.sub(r'^an? (odd|even|prime) number$', r'\1', t)
+    t = re.sub(r'^a (square number)$', r'\1', t)
+    t = re.sub(r'^a (\d+) or a (\d+)$', r'\1 or \2', t)
+    return t
+
+
 def stage2_value(stem):
-    """The exact probability a Stage 2 stem asks for, or None if no reader understands it."""
-    m = re.fullmatch(r'P\((.*)\)', stem)
-    if not m:
-        return None
-    s = m.group(1)
-    # dice: "rolling X", "X on a die", "rolling X on a (fair) die/dice"
-    m = re.fullmatch(r'(?:rolling )?(.+?)(?: on a (?:fair )?(?:die|dice))?', s)
-    if m and (s.startswith('rolling ') or re.search(r' on a (?:fair )?(?:die|dice)$', s)):
-        ev = die_event(m.group(1))
-        if ev:
-            return prob(DIE, ev)
-    # a fair coin
-    if s == 'flipping tails on a fair coin':
-        return prob('HT', lambda x: x == 'T')
-    if s == 'flipping heads on a fair coin':
-        return prob('HT', lambda x: x == 'H')
-    if s == 'heads twice in a row with a fair coin':
+    """The exact probability a Stage 2 stem asks for, or None if no reader understands it. The stems are the exam's wording (a
+    sentence of context, how the thing is chosen, then 'Write down the probability that/of ...'), never P(...) notation."""
+    s = stem.strip()
+    m = re.fullmatch(r'A fair dice is rolled\. Write down the probability of rolling (.+)\.', s)
+    if m:
+        ev = die_event(die_phrase(m.group(1)))
+        return prob(DIE, ev) if ev else None
+    m = re.fullmatch(r'A fair coin is flipped\. Write down the probability of getting (heads|tails)\.', s)
+    if m:
+        return prob('HT', lambda x, w=m.group(1)[0].upper(): x == w)
+    if s == 'A fair coin is flipped twice. Write down the probability of getting heads both times.':
         return prob([a + b for a in 'HT' for b in 'HT'], lambda x: x == 'HH')
-    # a bag of counters: "red from 3 red, 7 blue", "picking red from ...", "green from 5R, 3G, 2Y"
-    m = re.fullmatch(r'(?:picking )?(red|blue|green|yellow) from (.+)', s)
+    m = re.fullmatch(r'A bag contains (.+?)\. A counter is taken at random\. Write down the probability that the counter is (red|blue|green|yellow)\.', s)
     if m:
-        b = bag(m.group(2))
-        if b:
-            return prob(b, lambda x, c=COLOURS[m.group(1)]: x == c)
-    # letters: "vowel from A, B, C, D, E", "consonant from M, A, T, H, S"
-    m = re.fullmatch(r'(vowel|consonant) from ((?:[A-Z], )*[A-Z])', s)
+        colours = []
+        for n, w in re.findall(r'(\d+) (red|blue|green|yellow) counters?', m.group(1)):
+            colours += [COLOURS[w]] * int(n)
+        if colours:
+            return prob(colours, lambda x, c=COLOURS[m.group(2)]: x == c)
+    m = re.fullmatch(r'Five cards show the letters (.+?)\. A card is taken at random\. Write down the probability that the letter is a (vowel|consonant)\.', s)
     if m:
-        letters = m.group(2).split(', ')
-        want = m.group(1) == 'vowel'
+        letters = re.findall(r'[A-Z]', m.group(1))
+        want = m.group(2) == 'vowel'
         return prob(letters, lambda x: (x in VOWELS) == want)
-    # cards: "heart from 52 cards", "face card from 52"
-    m = re.fullmatch(r'(heart|diamond|club|spade|picture card \(J, Q or K\)) from (?:a pack of )?52(?: cards)?', s)
+    m = re.fullmatch(r'A card is taken at random from a pack of 52 playing cards\. Write down the probability that the card is a '
+                     r'(heart|diamond|club|spade|picture card \(J, Q or K\))\.', s)
     if m:
         if m.group(1).startswith('picture card'):
             return prob(DECK, lambda c: c[0] in 'JQK')
         return prob(DECK, lambda c, suit=m.group(1) + 's': c[1] == suit)
-    # a whole number from a range: "even from 1–8"
-    m = re.fullmatch(r'(even|odd) from (\d+)–(\d+)', s)
+    m = re.fullmatch(r'A number is chosen at random from ((?:\d+, )*\d+)\. Write down the probability that the number is (even|odd)\.', s)
     if m:
-        want = 0 if m.group(1) == 'even' else 1
-        return prob(range(int(m.group(2)), int(m.group(3)) + 1), lambda x: x % 2 == want)
-    # a letter of one word that is also in another: "letter in MATHS also in GAMES"
-    m = re.fullmatch(r'letter in ([A-Z]+) also in ([A-Z]+)', s)
+        want = 0 if m.group(2) == 'even' else 1
+        return prob([int(x) for x in m.group(1).split(', ')], lambda x: x % 2 == want)
+    m = re.fullmatch(r'A letter is chosen at random from the word ([A-Z]+)\. Write down the probability that the letter is also in the word ([A-Z]+)\.', s)
     if m:
         return prob(m.group(1), lambda x, other=m.group(2): x in other)
     return None
@@ -230,6 +229,16 @@ def check_bank(rep, bank, scale, verbose=False):
             rep.fail('Stage 2 Q%d' % i, 'wording', '%r uses a bare colour letter or "face card"' % stem)
         if re.search(r'rolling|flipping|heads|tails', stem) and not re.search(r'\b(die|dice|coin)\b', stem):
             rep.fail('Stage 2 Q%d' % i, 'wording', '%r does not say what is rolled or flipped (SR-17)' % stem)
+    for where_, text_ in ([('Stage 1 Q%d' % i, x.get('event', '') + ' ' + x.get('label', '')) for i, x in enumerate(bank.get('STAGE1', []), 1)]
+                          + [('Stage 2 Q%d' % i, x.get('q', '')) for i, x in enumerate(bank.get('STAGE2', []), 1)]
+                          + [('Stage 3 Q%d' % i, x.get('statement', '') + ' ' + x.get('explanation', '')) for i, x in enumerate(bank.get('STAGE3', []), 1)]):
+        if re.search(r'\bdie\b', text_):
+            rep.fail(where_, 'wording', '%r says "die": it is "dice", for one or many (Jon, 27 Oct 2026)' % text_[:60])
+        for ev_ in re.findall(r'P\(([^()]*)\)', text_):
+            if len(re.findall(r'[A-Za-z]{2,}', ev_)) >= 2:
+                rep.fail(where_, 'wording', 'P(%s) holds a situation: write it as a sentence, keep P( ) for short events like P(red)' % ev_)
+        if where_.startswith('Stage 2') and 'P(' in text_:
+            rep.fail(where_, 'wording', '%r uses P( ): a Stage 2 question is worded as the exam words it' % text_[:60])
     for i, q in enumerate(bank.get('STAGE3', []), 1):
         if re.search(r'rolling heads|rolling tails', q.get('statement', ''), re.I):
             rep.fail('Stage 3 Q%d' % i, 'wording', '%r: a coin is flipped, not rolled' % q['statement'])
@@ -243,7 +252,17 @@ def check_bank(rep, bank, scale, verbose=False):
         if ev not in STAGE1_KEYS:
             rep.fail(where, 'unreviewed', '%r is not in STAGE1_KEYS: review it and pin its key' % ev)
             continue
-        want, why = STAGE1_KEYS[ev]
+        want, why, pn = STAGE1_KEYS[ev]
+        if q.get('p') != list(pn):
+            rep.fail(where, 'probability', '%r stores p = %r, reviewed probability %r (%s)' % (ev, q.get('p'), list(pn), why))
+        elif not (isinstance(q['p'][0], int) and isinstance(q['p'][1], int) and q['p'][1] > 0 and 0 <= q['p'][0] <= q['p'][1]):
+            rep.fail(where, 'probability', 'p = %r is not [favourable, possible]' % (q['p'],))
+        else:
+            pf = F(q['p'][0], q['p'][1])
+            band = 'impossible' if pf == 0 else 'certain' if pf == 1 else 'even chance' if pf == F(1, 2) else 'unlikely' if pf < F(1, 2) else 'likely'
+            point = (scale.get(q.get('answer')) or '').lower()
+            if band != point:
+                rep.fail(where, 'band', '%r: probability %s is %s, but the keyed point is %r' % (ev, pf, band, point))
         if q.get('answer') != want:
             rep.fail(where, 'key', '%r keyed %s (%s), reviewed key %s (%s): %s'
                      % (ev, q.get('answer'), scale.get(q.get('answer'), '?'), want, scale.get(want, '?'), why))
@@ -411,11 +430,11 @@ def selftest(bank, scale):
         return next(q for q in items if text in q[field])
 
     def wrong_key(b):
-        find(b['STAGE2'], 'q', 'MATHS also in GAMES')['answer'] = '2/5'      # the audit's F1
+        find(b['STAGE2'], 'q', 'word MATHS')['answer'] = '2/5'      # the audit's F1
     expect('wrong Stage 2 key (MATHS/GAMES 2/5)', wrong_key)
 
     def value_equal(b):
-        q = find(b['STAGE2'], 'q', 'heads twice in a row')                     # the audit's F6
+        q = find(b['STAGE2'], 'q', 'flipped twice')                     # the audit's F6
         q['options'] = ['1/4', '1/2', '1/8', '2/4']
     expect('value-equal distractors (1/2, 2/4)', value_equal)
 
@@ -424,7 +443,7 @@ def selftest(bank, scale):
     expect('changed Stage 3 key (0.5 statement True)', flipped)
 
     def second_point(b):
-        q = find(b['STAGE1'], 'event', 'lottery')                              # the audit's F3
+        q = find(b['STAGE1'], 'event', 'two fair coins')                              # the audit's F3
         q.update(answer=0, accept=0.25, label='Impossible', acceptLabel='Unlikely')
     expect('Stage 1 lottery keyed Impossible', second_point)
 
@@ -433,12 +452,31 @@ def selftest(bank, scale):
     expect('assumptions line removed (SR-17)', no_assumptions)
 
     def face_card(b):
-        find(b['STAGE2'], 'q', 'picture card')['q'] = 'P(face card from 52)'
+        find(b['STAGE2'], 'q', 'picture card')['q'] = 'A card is taken at random from a pack of 52 playing cards. Write down the probability that the card is a face card.'
     expect('"face card" back in Stage 2', face_card)
 
     def unnamed_coin(b):
-        find(b['STAGE2'], 'q', 'flipping tails')['q'] = 'P(flipping tails)'
+        find(b['STAGE2'], 'q', 'getting tails')['q'] = 'Write down the probability of getting tails.'
     expect('coin question with no coin named', unnamed_coin)
+    def band_wrong(b):
+        find(b['STAGE1'], 'event', 'not a heart')['p'] = [13, 52]                  # rule (g): the word must follow the number
+    expect('Stage 1 probability outside its band', band_wrong)
+
+    def no_p(b):
+        del find(b['STAGE1'], 'event', 'month starts with J')['p']
+    expect('Stage 1 item with no stored probability', no_p)
+
+    def opinion_event(b):
+        find(b['STAGE1'], 'event', 'two fair coins')['event'] = 'It will rain somewhere in Britain this week'
+    expect('Stage 1 event that is an opinion', opinion_event)
+
+    def long_p(b):
+        find(b['STAGE3'], 'statement', 'impossible event')['statement'] = 'P(rolling 7 on a standard dice) = 7/6'
+    expect('P( ) holding a situation, "die" kept', long_p)
+
+    def die_back(b):
+        find(b['STAGE2'], 'q', 'less than 3')['q'] = 'A fair die is rolled. Write down the probability of rolling a number less than 3.'
+    expect('"die" back in Stage 2', die_back)
     return ok, lines
 
 

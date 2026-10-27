@@ -398,7 +398,7 @@
     },
     {
      "answer": {
-      "value": 1,
+      "value": 0.5,
       "unit": "m/s"
      },
      "line": "You divided the wrong way round. m/s means m ÷ s: divide."
@@ -549,7 +549,7 @@
     },
     {
      "answer": {
-      "value": 1,
+      "value": 0.5,
       "unit": "g/cm³"
      },
      "line": "You divided the wrong way round. g/cm³ means g ÷ cm³: divide."
@@ -1182,7 +1182,7 @@
     },
     {
      "answer": {
-      "value": 1,
+      "value": 0.5,
       "unit": "h"
      },
      "line": "You divided the wrong way round. 20 km/h means 20 km for each hour. Count the lots of 20 km: divide."
@@ -1290,7 +1290,7 @@
    "slip": [
     {
      "answer": {
-      "value": 23,
+      "value": 23.333333333333332,
       "unit": "km"
      },
      "line": "You divided. 70 km/h means 70 km for each hour. Multiply."
@@ -1398,7 +1398,7 @@
    "slip": [
     {
      "answer": {
-      "value": 13,
+      "value": 13.333333333333334,
       "unit": "miles"
      },
      "line": "You divided. 40 mph means 40 miles for each hour. Multiply."
@@ -1434,7 +1434,7 @@
    "slip": [
     {
      "answer": {
-      "value": 13,
+      "value": 12.5,
       "unit": "miles"
      },
      "line": "You divided. 50 mph means 50 miles for each hour. Multiply."
@@ -1662,7 +1662,7 @@
    "slip": [
     {
      "answer": {
-      "value": 1,
+      "value": 0.5,
       "unit": "g"
      },
      "line": "You divided. 2 g/cm³ means 2 g for each cm³. Multiply."
@@ -1734,7 +1734,7 @@
    "slip": [
     {
      "answer": {
-      "value": 1,
+      "value": 0.6666666666666666,
       "unit": "g"
      },
      "line": "You divided. 4 g/cm³ means 4 g for each cm³. Multiply."
@@ -1806,7 +1806,7 @@
    "slip": [
     {
      "answer": {
-      "value": 1,
+      "value": 1.4,
       "unit": "g"
      },
      "line": "You divided. 7 g/cm³ means 7 g for each cm³. Multiply."
@@ -1885,7 +1885,7 @@
     },
     {
      "answer": {
-      "value": 1,
+      "value": 0.5,
       "unit": "m²"
      },
      "line": "You divided the wrong way round. 20 N/m² means 20 N for each m². Count the lots of 20 N: divide."
@@ -1921,7 +1921,7 @@
    "slip": [
     {
      "answer": {
-      "value": 13,
+      "value": 12.5,
       "unit": "N"
      },
      "line": "You divided. 50 N/m² means 50 N for each m². Multiply."

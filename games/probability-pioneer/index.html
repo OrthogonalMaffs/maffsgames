@@ -203,7 +203,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <div class="screen active" id="startScreen">
   <div class="start-title">Probability Pioneer</div>
   <div class="start-sub">Probability is one of the most useful topics in maths — and in real life. It's used in medicine, insurance, sport, games, and weather forecasting. Let's start at the beginning.</div>
-  <div class="start-sub">Unless a question says otherwise, every die has six faces and is fair, every coin is fair, and every pick is made at random.</div>
+  <div class="start-sub">Unless a question says otherwise, every dice has six faces and is fair, every coin is fair, and every pick is made at random.</div>
   <div class="stage-preview">
     <h3>Stage 1 — The Scale</h3>
     <p>Place events on a probability scale from 0 (impossible) to 1 (certain). 10 questions.</p>
@@ -319,54 +319,54 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 //  QUESTION BANKS
 // ============================================================
 const STAGE1 = [
-  {event:"You will breathe today", answer:1, label:"Certain"},
-  {event:"You will roll a 7 on a standard die", answer:0, label:"Impossible"},
-  {event:"It will rain somewhere in Britain this week", answer:0.75, label:"Likely: very likely, but not certain. Certain means it must happen"},
-  {event:"You will flip heads on a fair coin", answer:0.5, label:"Even Chance"},
-  {event:"A randomly chosen month starts with J", answer:0.25, label:"Unlikely"},
-  {event:"You pick a red card from a standard pack", answer:0.5, label:"Even Chance"},
-  {event:"You roll an even number on a die", answer:0.5, label:"Even Chance"},
-  {event:"You win the lottery with one ticket", answer:0.25, label:"Unlikely: about 1 in 45 million, but possible"},
-  {event:"A baby born today is a boy", answer:0.5, label:"Even Chance"},
-  {event:"The sun will rise tomorrow", answer:1, label:"Certain"}
+  {event:"You will roll a number less than 7 on a standard dice", p:[6,6], answer:1, label:"Certain"},
+  {event:"You will roll a 7 on a standard dice", p:[0,6], answer:0, label:"Impossible"},
+  {event:"You pick a card that is not a heart from a standard pack", p:[39,52], answer:0.75, label:"Likely: 39 of the 52 cards are not hearts, more than half but not all"},
+  {event:"You will flip heads on a fair coin", p:[1,2], answer:0.5, label:"Even Chance"},
+  {event:"A randomly chosen month starts with J", p:[3,12], answer:0.25, label:"Unlikely"},
+  {event:"You pick a red card from a standard pack", p:[26,52], answer:0.5, label:"Even Chance"},
+  {event:"You roll an even number on a dice", p:[3,6], answer:0.5, label:"Even Chance"},
+  {event:"You flip two fair coins and get two heads", p:[1,4], answer:0.25, label:"Unlikely: 1 of the 4 equally likely outcomes"},
+  {event:"You roll a number greater than 2 on a dice", p:[4,6], answer:0.75, label:"Likely: 4 of the 6 faces, more than half but not all"},
+  {event:"A randomly chosen month has fewer than 32 days", p:[12,12], answer:1, label:"Certain"}
 ];
 
 const STAGE2 = [
-  {q:"P(rolling a 6 on a fair die)", answer:"1/6", options:["1/6","1/3","1/2","6"]},
-  {q:"P(picking red from 3 red, 7 blue)", answer:"3/10", options:["3/10","7/10","3/7","1/3"]},
-  {q:"P(flipping tails on a fair coin)", answer:"1/2", options:["1/2","1/4","1","0"]},
-  {q:"P(vowel from A, B, C, D, E)", answer:"2/5", options:["2/5","3/5","1/5","2/3"]},
-  {q:"P(rolling less than 3 on a die)", answer:"1/3", options:["1/3","2/3","1/6","1/2"]},
-  {q:"P(blue from 4 red, 6 blue)", answer:"3/5", options:["3/5","2/5","4/6","1/2"]},
-  {q:"P(odd on a die)", answer:"1/2", options:["1/2","1/3","3","1/6"]},
-  {q:"P(heart from 52 cards)", answer:"1/4", options:["1/4","1/52","1/13","1/3"]},
-  {q:"P(rolling greater than 4 on a dice)", answer:"1/3", options:["1/3","2/3","1/2","1/6"]},
-  {q:"P(green from 5 red, 3 green, 2 yellow)", answer:"3/10", options:["3/10","1/3","3/8","7/10"]},
-  {q:"P(multiple of 3 on a die)", answer:"1/3", options:["1/3","2/3","1/2","1/6"]},
-  {q:"P(consonant from M, A, T, H, S)", answer:"4/5", options:["4/5","1/5","3/5","2/5"]},
-  {q:"P(heads twice in a row with a fair coin)", answer:"1/4", options:["1/4","1/2","1/8","1/3"]},
-  {q:"P(rolling 1 or 2 on a fair die)", answer:"1/3", options:["1/3","1/36","1/6","2/3"]},
-  {q:"P(picture card (J, Q or K) from a pack of 52)", answer:"3/13", options:["3/13","3/52","1/4","4/52"]},
-  {q:"P(prime on a die)", answer:"1/2", options:["1/2","1/3","2/3","1/6"]},
-  {q:"P(yellow from 8 red, 2 yellow)", answer:"1/5", options:["1/5","1/2","8/10","2/8"]},
-  {q:"P(square number on a die)", answer:"1/3", options:["1/3","2/3","1/6","1/2"]},
-  {q:"P(even from 1\u20138)", answer:"1/2", options:["1/2","4/7","3/8","5/8"]},
-  {q:"P(letter in MATHS also in GAMES)", answer:"3/5", options:["2/5","3/5","1/5","4/5"], why:"M, A and S are in both, so 3 of 5."}
+  {q:"A fair dice is rolled. Write down the probability of rolling a 6.", answer:"1/6", options:["1/6","1/3","1/2","6"]},
+  {q:"A bag contains 3 red counters and 7 blue counters. A counter is taken at random. Write down the probability that the counter is red.", answer:"3/10", options:["3/10","7/10","3/7","1/3"]},
+  {q:"A fair coin is flipped. Write down the probability of getting tails.", answer:"1/2", options:["1/2","1/4","1","0"]},
+  {q:"Five cards show the letters A, B, C, D and E. A card is taken at random. Write down the probability that the letter is a vowel.", answer:"2/5", options:["2/5","3/5","1/5","2/3"]},
+  {q:"A fair dice is rolled. Write down the probability of rolling a number less than 3.", answer:"1/3", options:["1/3","2/3","1/6","1/2"]},
+  {q:"A bag contains 4 red counters and 6 blue counters. A counter is taken at random. Write down the probability that the counter is blue.", answer:"3/5", options:["3/5","2/5","4/6","1/2"]},
+  {q:"A fair dice is rolled. Write down the probability of rolling an odd number.", answer:"1/2", options:["1/2","1/3","3","1/6"]},
+  {q:"A card is taken at random from a pack of 52 playing cards. Write down the probability that the card is a heart.", answer:"1/4", options:["1/4","1/52","1/13","1/3"]},
+  {q:"A fair dice is rolled. Write down the probability of rolling a number greater than 4.", answer:"1/3", options:["1/3","2/3","1/2","1/6"]},
+  {q:"A bag contains 5 red counters, 3 green counters and 2 yellow counters. A counter is taken at random. Write down the probability that the counter is green.", answer:"3/10", options:["3/10","1/3","3/8","7/10"]},
+  {q:"A fair dice is rolled. Write down the probability of rolling a multiple of 3.", answer:"1/3", options:["1/3","2/3","1/2","1/6"]},
+  {q:"Five cards show the letters M, A, T, H and S. A card is taken at random. Write down the probability that the letter is a consonant.", answer:"4/5", options:["4/5","1/5","3/5","2/5"]},
+  {q:"A fair coin is flipped twice. Write down the probability of getting heads both times.", answer:"1/4", options:["1/4","1/2","1/8","1/3"]},
+  {q:"A fair dice is rolled. Write down the probability of rolling a 1 or a 2.", answer:"1/3", options:["1/3","1/36","1/6","2/3"]},
+  {q:"A card is taken at random from a pack of 52 playing cards. Write down the probability that the card is a picture card (J, Q or K).", answer:"3/13", options:["3/13","3/52","1/4","4/52"]},
+  {q:"A fair dice is rolled. Write down the probability of rolling a prime number.", answer:"1/2", options:["1/2","1/3","2/3","1/6"]},
+  {q:"A bag contains 8 red counters and 2 yellow counters. A counter is taken at random. Write down the probability that the counter is yellow.", answer:"1/5", options:["1/5","1/2","8/10","2/8"]},
+  {q:"A fair dice is rolled. Write down the probability of rolling a square number.", answer:"1/3", options:["1/3","2/3","1/6","1/2"]},
+  {q:"A number is chosen at random from 1, 2, 3, 4, 5, 6, 7, 8. Write down the probability that the number is even.", answer:"1/2", options:["1/2","4/7","3/8","5/8"]},
+  {q:"A letter is chosen at random from the word MATHS. Write down the probability that the letter is also in the word GAMES.", answer:"3/5", options:["2/5","3/5","1/5","4/5"], why:"M, A and S are in both, so 3 of 5."}
 ];
 
 const STAGE3 = [
   {statement:"P(event) is always between 0 and 1 inclusive", answer:true, explanation:"Correct. Probability ranges from 0 (impossible) to 1 (certain). It can never be negative or greater than 1."},
   {statement:"If P(A) = 0.3, then P(not A) = 0.7", answer:true, explanation:"Correct. The probability of an event not happening is 1 minus the probability of it happening. 1 \u2212 0.3 = 0.7."},
   {statement:"Flipping heads 5 times makes tails more likely next", answer:false, explanation:"This is the gambler's fallacy. Each coin flip is independent \u2014 the coin has no memory. The probability of tails is still 0.5 no matter what happened before."},
-  {statement:"P(impossible event) = 0", answer:true, explanation:"Correct. If something cannot happen, its probability is exactly 0."},
-  {statement:"P(certain event) = 1", answer:true, explanation:"Correct. If something is guaranteed to happen, its probability is exactly 1."},
-  {statement:"You can have P(event) = 1.5", answer:false, explanation:"Probability can never exceed 1. The maximum probability is 1 (certain) and the minimum is 0 (impossible)."},
+  {statement:"The probability of an impossible event is 0", answer:true, explanation:"Correct. If something cannot happen, its probability is exactly 0."},
+  {statement:"The probability of a certain event is 1", answer:true, explanation:"Correct. If something is guaranteed to happen, its probability is exactly 1."},
+  {statement:"A probability can be 1.5", answer:false, explanation:"Probability can never exceed 1. The maximum probability is 1 (certain) and the minimum is 0 (impossible)."},
   {statement:"On a fair dice, rolling a 1 and rolling a 2 are equally likely, so each has probability 0.5.", answer:false, explanation:"Equally likely outcomes share the probability equally among all the outcomes. A dice has six, so each is 1/6."},
   {statement:"P(A) + P(not A) always equals 1", answer:true, explanation:"Correct. An event either happens or it doesn't. These two probabilities must always add up to 1."},
   {statement:"A probability of 0.9 means the event will definitely happen", answer:false, explanation:"0.9 means the event is very likely, but not certain. Only a probability of 1 means it will definitely happen. There is still a 0.1 (10%) chance it won't."},
   {statement:"The more times you repeat an experiment, the closer the results tend to get to the theoretical probability", answer:true, explanation:"Correct. This is called the Law of Large Numbers. With more trials, the experimental probability tends to get closer to the theoretical probability."},
-  {statement:"A fair six-sided die gives each number probability exactly 1/6", answer:true, explanation:"Correct. A fair die has 6 equally likely outcomes, so each has probability 1/6."},
-  {statement:"P(rolling 7 on a standard die) = 7/6", answer:false, explanation:"A standard die only has numbers 1\u20136. Rolling a 7 is impossible, so P = 0. Also, 7/6 is greater than 1, which is impossible for any probability."},
+  {statement:"A fair six-sided dice gives each number probability exactly 1/6", answer:true, explanation:"Correct. A fair dice has 6 equally likely outcomes, so each has probability 1/6."},
+  {statement:"The probability of rolling a 7 on an ordinary dice is 7/6", answer:false, explanation:"A standard dice only has numbers 1\u20136. Rolling a 7 is impossible, so P = 0. Also, 7/6 is greater than 1, which is impossible for any probability."},
   {statement:"Probability can be written as a fraction, decimal or percentage", answer:true, explanation:"Correct. For example, the probability of flipping heads can be written as 1/2, 0.5, or 50%. All three representations are valid."},
   {statement:"If P(rain) = 0.4, it will rain on exactly 4 out of every 10 days", answer:false, explanation:"P(rain) = 0.4 means that over a very large number of days, about 40% will have rain. But in any specific set of 10 days, it could rain on 0, 1, 2, ... or even all 10 days."},
   {statement:"Two events with the same probability are equally likely", answer:true, explanation:"Correct. If two events have the same probability, they are by definition equally likely to occur."}

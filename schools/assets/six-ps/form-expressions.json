@@ -211,7 +211,8 @@
    ],
    "worked": [
     "Ellie: \\(e\\). Her brother: \\(e - 4\\). Their mum: \\(3e\\).",
-    "Add them: \\(S = e + (e - 4) + 3e = 5e - 4\\)."
+    "Add them: \\(S = e + (e - 4) + 3e = 5e - 4\\).",
+    "The answer: \\(S = 5e - 4\\)."
    ],
    "slip": [
     {
@@ -709,7 +710,7 @@
    },
    "band": 3,
    "calc": false,
-   "stem": "A bill of £\\(b\\) is shared equally between 3 people. Write an expression for each person\\'s share, in pounds.",
+   "stem": "A bill of £\\(b\\) is shared equally between 3 people. Write an expression for each person's share, in pounds.",
    "diagram": null,
    "format": "choice",
    "answer": {
@@ -1349,7 +1350,7 @@
    },
    "band": 3,
    "calc": false,
-   "stem": "Priya is \\(p\\) years old. Her brother is 6 years younger than her. Write an expression for her brother\\'s age.",
+   "stem": "Priya is \\(p\\) years old. Her brother is 6 years younger than her. Write an expression for her brother's age.",
    "diagram": null,
    "format": "choice",
    "answer": {
@@ -1407,7 +1408,7 @@
    },
    "band": 4,
    "calc": false,
-   "stem": "Sam is \\(s\\) years old. His mother is three times as old as Sam. Write an expression for his mother\\'s age in 5 years\\' time.",
+   "stem": "Sam is \\(s\\) years old. His mother is three times as old as Sam. Write an expression for his mother's age in 5 years' time.",
    "diagram": null,
    "format": "choice",
    "answer": {
