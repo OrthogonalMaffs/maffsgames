@@ -1,5 +1,7 @@
 # Handover: home lane
 
+**SIX-PS-CALCULATOR (27 Oct, Jon's phone check; branch `claude/six-ps-calc`, worktree E:/jon/mg-calc):** The 6 P's served NO calculator at all (only the label); it now mounts the shared MaffsCalc (schools/assets/calculator.js, which already had a scientific mode: sin/cos/tan + inverses in DEG, x^y, pi, x^2, sqrt, brackets) on every calculator / optional question: scientific when the working uses a trig function, pi or a power other than 2, else basic; hidden once the answer is in. NO shared file changed (check-calculator.py gained a PLAYERS rule for the-6-ps). Check `check_calculator` in verify-the-6-ps.py (start unit): function cases, all 223 calculator questions' working vs the served keys, 320x568 UI (19 x sin 25 = 8.029; keys >= 44px), 3 plants.
+
 **FOOTER (27 Oct, Jon's ruling "no footer links during a run"; branch `claude/footer-unpin`, worktree E:/jon/mg-footer):** The 6 P's removes the footer on questions/feedback/between topics and shows it on start and results (`show()`); check + 2 plants in `verify-the-6-ps.py` (results unit); every other page stays pinned; canon 7.5.2 records it. The in-flow footer was tried and dropped (it fails answer-lock's double-tap; backup of that work: local branch `footer-flow-backup`, not pushed). **Site-wide state-based fix waits for the freeze to end (Mon 2 Nov): in `E:\jon\lanes
 otes.md`.** Queue: #583 (settle + sweep, parked until the launch), then the scroll PR (`claude/scroll-reveal`, local merge commit, unpushed; its inset auto-detects the footer so it works with pinned).
 

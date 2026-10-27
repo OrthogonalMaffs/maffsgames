@@ -184,6 +184,7 @@
 <script src="/schools/assets/answer-lock.js"></script>
 <script src="/schools/assets/next-control.js"></script>
 <script src="/schools/assets/keypad.js"></script>
+<script src="/schools/assets/calculator.js"></script>
 </head>
 <body>
 
@@ -255,6 +256,7 @@
       <div class="opts" id="qOpts" hidden></div>
       <div class="actions" id="qCheckRow"><button class="btn" id="checkBtn" type="button">Check</button></div>
     </div>
+    <div id="qCalcMount" hidden></div>
     <p class="msg" id="qMsg" role="status" aria-live="polite"></p>
     <div class="fb" id="qFb" hidden>
       <p class="verdict" id="qVerdict"></p>
@@ -741,7 +743,8 @@
     makeStore: makeStore, problem: problem, valid: valid, SESSION_MAX_MS: SESSION_MAX_MS, judge: judge, slipFor: slipFor, answerText: answerText, pickFive: pickFive,
     data: function () { return data; },
     session: function () { return session; },
-    question: function () { return q; }
+    question: function () { return q; },
+    calcMode: calcMode
   };
 
   // An error in this page's own script shows a note with a way out, never a page that silently does nothing.
@@ -1027,6 +1030,27 @@
     return { value: get('value') };
   }
 
+  // The on-screen calculator (the shared MaffsCalc) for every question marked "Calculator" or "Calculator optional" (Jon, 27 Oct 2026: a
+  // trig question had a calculator with no sin). Scientific keys (sin, cos, tan and their inverses in degrees, x^y, pi) when the working
+  // uses any of them; the basic panel (brackets, x^2, square root, the four rules) otherwise. scripts/verify-the-6-ps.py holds this to the
+  // working of every calculator question, from its own reading of the lines.
+  function calcMode(qq) {
+    if (!qq || !qq.calc) return null;
+    var w = (qq.worked || []).concat([qq.stem || '']).join(' ');
+    // sin, cos, tan (also \sin ...), pi, a power other than 2 (10^3, x^{n})
+    return /\b(sin|cos|tan)\b|\\(sin|cos|tan)\b|\u03c0|\\pi\b|\^\{?(?!2\b)[-0-9a-z]/i.test(w) ? 'scientific' : 'basic';
+  }
+
+  function mountCalc() {
+    var host = $('qCalcMount'), mode = calcMode(q);
+    host.textContent = '';
+    host.hidden = !(mode && window.MaffsCalc);
+    if (host.hidden) return;
+    var el = document.createElement('div');
+    host.appendChild(el);
+    MaffsCalc.mount(el, mode === 'scientific' ? { keys: 'scientific' } : {});
+  }
+
   function showQuestion(have) {
     var cur = session.cur, t = byId[cur.id];
     q = have[cur.qids[cur.k]];
@@ -1047,6 +1071,7 @@
     if (window.MaffsNext) MaffsNext.clear($('qNext'));   // and its timers
     $('qNext').textContent = '';
     inputs = buildInputs();
+    mountCalc();
     $('qKeys').textContent = '';
     keypad = null;
     if (inputs.length && window.MaffsKeypad) {
@@ -1088,6 +1113,7 @@
     fb.dataset.verdict = right ? 'right' : 'wrong';
     $('qVerdict').textContent = right ? '\u2713 Correct' : '\u2717 Not quite';
     $('qKeys').hidden = true;
+    $('qCalcMount').hidden = true;
     $('qCheckRow').hidden = true;
     fb.hidden = false;
     $('qNext').textContent = '';
@@ -1101,6 +1127,7 @@
     fb.dataset.verdict = right ? 'right' : 'wrong';
     $('qVerdict').textContent = right ? '\u2713 Correct' : '\u2717 Not quite';
     $('qKeys').hidden = true;                // the keypad has done its job: the verdict takes its place
+    $('qCalcMount').hidden = true;           // and so has the calculator
     $('qCheckRow').hidden = true;
     (inputs || []).forEach(function (b) { b.classList.remove('maffs-keypad-selected'); b.classList.add(right ? 'right' : 'wrong'); b.readOnly = true; });
     var slip = right ? null : slipFor(q, inp);

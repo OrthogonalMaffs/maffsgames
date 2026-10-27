@@ -22,7 +22,7 @@ Fails on:
     MaffsCalc with keys: 'scientific'; either badge on a game whose value is the other one;
   - a game that includes calculator.js, or shows a "required" badge, when its roster field is
     anything else (the calculator never appears on a game that does not need it);
-  - any other published page (not a roster game) that includes calculator.js;
+  - any other published page (not a roster game, and not a PLAYER below) that includes calculator.js;
   - a page that includes calculator.js without schools/assets/keypad.js (MaffsKeypad, the phone
     keypad its answer mode composes). keypad.js itself may load on any page, whatever the roster says:
     it is the keypad for typed answers, with no calculator in it;
@@ -53,6 +53,10 @@ ROSTER = ".claude/rules/game-roster.md"
 VALUES = {"required", "scientific", "not allowed", "optional", "untagged", "by stage"}
 STAGE_VALUES = {"required", "scientific", "not allowed", "optional"}   # a `by stage` map's values
 CALC_VALUES = {"required", "scientific"}            # the two values that load the on-screen calculator
+# Question players that are not roster games (Jon, 27 Oct 2026): The 6 P's marks each question calculator / optional / not, so the
+# page loads the shared calculator and mounts it per question. A player must load keypad.js too and must mount MaffsCalc.
+PLAYERS = {"the-6-ps/index.html"}
+MOUNT = re.compile(r"MaffsCalc\.mount\(")
 INCLUDE = re.compile(r'<script\b[^>]*\bsrc="[^"]*schools/assets/calculator\.js"', re.I)
 # The phone keypad (MaffsKeypad) may load on any page; the calculator composes it, so every page that
 # loads calculator.js loads keypad.js too.
@@ -130,7 +134,14 @@ def check(root):
             continue
         if page.resolve() in games:
             continue
-        if INCLUDE.search(page.read_text(encoding="utf-8", errors="replace")):
+        text = page.read_text(encoding="utf-8", errors="replace")
+        if rel.as_posix() in PLAYERS:
+            if INCLUDE.search(text) and not KEYPAD.search(text):
+                fails.append("%s: a question player loads calculator.js without keypad.js" % rel.as_posix())
+            if not INCLUDE.search(text) or not MOUNT.search(text):
+                fails.append("%s: a question player must load calculator.js and mount MaffsCalc" % rel.as_posix())
+            continue
+        if INCLUDE.search(text):
             fails.append("%s: loads the on-screen calculator but is not a roster game" % rel.as_posix())
     return fails
 
@@ -276,6 +287,18 @@ def selftest():
         ("a stage map on a whole-game-tagged page",
          lambda d: edit(d / "games" / r / "index.html", lambda s: s.replace(
              "</body>", '<script type="application/json" id="maffs-calc-stages">{"stage-1": "required"}</script></body>', 1)), True),
+        ("the 6 P's player with the calculator, the mount and the keypad",
+         lambda d: (d / "the-6-ps").mkdir() or (d / "the-6-ps" / "index.html").write_text(
+             '<script src="/schools/assets/keypad.js"></script><script src="/schools/assets/calculator.js"></script>'
+             '<script>MaffsCalc.mount(el, {});</script>', encoding="utf-8", newline=''), False),
+        ("the 6 P's player with the calculator but no keypad.js",
+         lambda d: (d / "the-6-ps").mkdir() or (d / "the-6-ps" / "index.html").write_text(
+             '<script src="/schools/assets/calculator.js"></script><script>MaffsCalc.mount(el, {});</script>',
+             encoding="utf-8", newline=''), True),
+        ("the 6 P's player that never mounts it",
+         lambda d: (d / "the-6-ps").mkdir() or (d / "the-6-ps" / "index.html").write_text(
+             '<script src="/schools/assets/keypad.js"></script><script src="/schools/assets/calculator.js"></script>',
+             encoding="utf-8", newline=''), True),
         ("a non-game page loads it",
          lambda d: (d / "about").mkdir() or (d / "about" / "index.html").write_text(
              '<script src="/schools/assets/calculator.js"></script>', encoding="utf-8", newline=''), True),
