@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: How Many Parts? (pools and Foundation's five, keys, every stage's own errors and options, every question's bar and worked steps recomputed, the palette, sessions easiest first, every Foundation stage and Advanced played at 320, 390 and 1280px; every question, worked example and wrong-answer screen drawn by the game and read back step by step; every wrong-answer screen and worked example at 320x568, 375x667, 390x844 and 1280x800, normal and Aa: the reason and Next above the fold, brackets kept with their maths, typed questions' boxes and keypad in the window at 320x568; fault-injection self-test: eighteen planted faults, each caught) |  | 6
+# ci-shards: How Many Parts? (pools and Foundation's five, keys, every stage's own errors and options, every question's bar and worked steps recomputed, the palette, sessions easiest first, every Foundation stage and Advanced played at 320, 390 and 1280px; every question, worked example and wrong-answer screen drawn by the game and read back step by step; every wrong-answer screen and worked example at 320x568, 375x667, 390x844 and 1280x800, normal and Aa: the reason and Next above the fold, brackets kept with their maths, typed questions' boxes and keypad in the window at 320x568; fault-injection self-test: eighteen planted faults, each caught) |  | 10
 # ci-deps: games/how-many-parts/
 """Independent verification for How Many Parts? (games/how-many-parts/), built 20 Oct 2026 (contract HOW-MANY-PARTS),
 rebuilt for its redesign, 21 Oct 2026 (contract HMP-CHOCOLATE and Jon's rulings of that day), and again for
@@ -2053,7 +2053,8 @@ def main():
     mine = shard.pick(checks + plants)
     out = []
     ran = [u for u in mine if u in checks]
-    one = any(u == 'engine, sessions and palette' or u.startswith('play ') for u in ran)
+    one = 'engine, sessions and palette' in ran
+    played = any(u.startswith('play ') for u in ran)
     two = 'drawn' in ran
     phones = any(u.startswith('phone fit ') for u in ran)
     info = check(html, out, seeds=args.seeds, sessions=args.sessions, drawn=True, only=ran, shard=shard) if ran else {}
@@ -2063,6 +2064,8 @@ def main():
               % (SLUG, info.get('pools'), info.get('questions', 0), info.get('steps', 0), args.sessions, '; '.join(info.get('played', []))))
         print('three-option questions (fewer than three listed errors apply), of each pool: %s'
               % ', '.join('stage %s %d of %d (%.1f%%)' % (st, n, tot, 100.0 * n / tot) for st, (n, tot) in info.get('three', {}).items()))
+    elif played:   # a part with plays but not the engine
+        print('%s: played %s' % (SLUG, '; '.join(info.get('played', []))))
     if two:
         print('%s: %d screens drawn and read back step by step' % (SLUG, info.get('drawn', 0)))
     if phones:

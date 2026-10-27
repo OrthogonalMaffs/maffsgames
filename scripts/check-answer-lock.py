@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ci-line: lock | Answer lock, static rules and self-test (canon 7.6.0: the static rules, NOT_YET and the cloud list once; no games played) | --selftest && --static
-# ci-shards: lock | Answer lock in play (canon 7.6.0: migrated games played in Chromium) | | 7
+# ci-shards: lock | Answer lock in play (canon 7.6.0: migrated games played in Chromium) | | 8
 # ci-deps: schools/assets/answer-lock.js schools/assets/next-control.js scripts/check-site.py
 """Does every game mark through MaffsLock (canon §7.6.0), so that no repeat marks twice or finishes twice?
 

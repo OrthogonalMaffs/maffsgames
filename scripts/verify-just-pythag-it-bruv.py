@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test) |  | 6
+# ci-shards: Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test) |  | 8
 """Independent verification for Just Pythag It, Bruv (games/just-pythag-it-bruv/), built 4 Oct 2026.
 
 WHY THIS READS THE LIVE PAGE
