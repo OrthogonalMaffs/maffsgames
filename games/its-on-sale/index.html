@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- UNLISTED (contract ITS-ON-SALE, 27 Oct 2026): live at its URL for Jon to play; off the portal, the sitemap and the leaderboard hub until he lists it. -->
+<meta name="description" content="Work out sale prices, price rises, percentage change, reverse percentages and interest, typing each answer onto a price tag. For GCSE. Free, no sign-up.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/its-on-sale/">
+<meta property="og:title" content="Percentages and Money Game – GCSE Maths | MaffsGames">
+<meta property="og:description" content="Work out sale prices, price rises, percentage change, reverse percentages and interest, typing each answer onto a price tag. For GCSE. Free, no sign-up.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/its-on-sale/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Percentages and Money Game – GCSE Maths | MaffsGames</title>
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/answer-count.js" defer></script>
+<script src="/schools/assets/fold.js" defer></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+/* Theme: schools/assets/theme.css (canon §7.5), light row: the check derives the palette from the roster's levels and the
+   lowest tier served is GCSE. The shop is this game's own tokens: an awning, a shelf and a paper price tag. */
+:root{--accent:#b3261e;--accent-dim:#fbe9e7;--on-accent:#ffffff;--awning-a:#b3261e;--awning-b:#f7f1e6;--shelf:#8a5a2b;--shelf-edge:#5e3b17;
+  --tag:#fff7d6;--tag-edge:#c9a227;--tag-ink:#3b2f00;--string:#9a7b1c}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:720px;width:100%;padding:1rem}
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.4rem 0}
+.header h1{font-size:1.9rem;font-weight:700;color:var(--accent);line-height:1.15}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem 0 .5rem}
+@media (max-width:420px){.header h1{font-size:1.5rem}}
+.screen{display:none}.screen.active{display:block}
+[hidden]{display:none!important}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.9rem auto;max-width:600px}
+.menu-info{color:var(--text);font-size:.95rem;line-height:1.65}
+.menu-info p+p{margin-top:.6rem}
+.btn{min-height:44px;padding:.6rem 1.2rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--accent-dim)}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.res-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
+
+/* The shop front: an awning over a shelf. Flat shapes, nothing cartoon. */
+.awning{height:30px;border-radius:10px 10px 0 0;background:repeating-linear-gradient(90deg,var(--awning-a) 0 24px,var(--awning-b) 24px 48px);border-bottom:4px solid var(--shelf-edge)}
+.shelf{height:12px;background:var(--shelf);border-radius:0 0 6px 6px;border-bottom:3px solid var(--shelf-edge)}
+.menu-shop{max-width:340px;margin:.3rem auto .5rem}
+
+.stages{display:flex;flex-direction:column;gap:.5rem;margin-top:.8rem}
+.stage-btn{display:flex;align-items:center;gap:.7rem;width:100%;text-align:left;min-height:56px;padding:.45rem .8rem;border-radius:12px;border:1px solid var(--border);background:var(--surface-alt);color:var(--text);cursor:pointer;font:inherit}
+.stage-btn:hover{border-color:var(--accent)}
+.stage-btn .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:700}
+.stage-btn .t{font-weight:700;font-size:.95rem;line-height:1.2}
+.stage-btn .d{display:block;font-weight:400;font-size:.8rem;color:var(--muted);line-height:1.3}
+.stage-btn .calc-badge{margin-top:.2rem}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.3rem .8rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.5rem;gap:.3rem}
+.hud-item{text-align:center;min-width:48px}
+.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.hud-val{font-family:var(--font-num);font-size:.95rem;font-weight:700}
+.badge-row{min-height:0;text-align:center}
+.badge-row .calc-badge:empty{display:none}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.8rem;display:flex;flex-direction:column;gap:.5rem}
+.stage-label{font-size:.78rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
+.qtext{font-size:1.05rem;line-height:1.5}
+.try-note{font-size:.82rem;font-weight:700;color:var(--correct)}
+
+/* The price tag the answer is typed onto: a hole, a string, the box. */
+.tag{position:relative;display:flex;align-items:center;justify-content:center;gap:.5rem;margin:.2rem auto;padding:.55rem .9rem .55rem 2.2rem;background:var(--tag);border:2px solid var(--tag-edge);border-radius:6px 16px 16px 6px;color:var(--tag-ink);max-width:100%}
+.tag::before{content:"";position:absolute;left:.7rem;top:50%;width:.8rem;height:.8rem;margin-top:-.4rem;border-radius:50%;background:var(--surface);border:2px solid var(--tag-edge)}
+.tag .unit{font-family:var(--font-num);font-size:1.3rem;font-weight:700}
+.aw{display:inline-flex;position:relative}
+.tag input{width:7.2rem;min-height:46px;padding:.3rem .5rem;text-align:center;font-family:var(--font-num);font-size:1.25rem;font-weight:700;border:2px solid var(--tag-edge);border-radius:8px;background:var(--surface);color:var(--text)}
+.tag input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+.ans-row{display:flex;gap:.6rem;align-items:center;justify-content:center;flex-wrap:nowrap}
+.ans-row .btn{flex:none;white-space:nowrap}
+.msg{min-height:1.2em;text-align:center;font-size:.9rem;color:var(--hint);font-weight:600}
+.qcard.calc-compact .msg:empty{display:none}
+.qcard.calc-compact{gap:.4rem}
+
+.fb{border-radius:12px;padding:.7rem .8rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.5rem}
+.fb.wrong{border-color:var(--wrong)}
+.fb.done{border-color:var(--correct)}
+.fb-line{font-size:.95rem;line-height:1.45;padding:.35rem .65rem;border-left:3px solid var(--hint);border-radius:0 8px 8px 0}
+.fb.done .fb-line{border-left-color:var(--correct)}
+.worked{margin:0;padding:0 0 0 1.25rem;font-size:.9rem;line-height:1.45}
+.worked li+li{margin-top:.2rem}
+.worked-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.fb-next{display:flex;justify-content:center}
+.feedback:empty{display:none}
+
+.ex-card{display:flex;flex-direction:column;gap:.6rem}
+.ex-steps{margin:0;padding:0 0 0 1.25rem;font-size:.98rem;line-height:1.5}
+.ex-steps li+li{margin-top:.3rem}
+.ex-row{display:flex;justify-content:center;gap:.6rem;flex-wrap:wrap}
+
+.results{text-align:center;padding:1rem 0}
+.results h2{font-size:1.35rem;margin-bottom:.3rem}
+.final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.4rem 0 .1rem}
+.final-of{color:var(--muted);font-size:.9rem;margin-bottom:.5rem}
+.stats{color:var(--muted);line-height:1.9;font-size:.95rem;margin-bottom:.8rem}
+.stats b{color:var(--text)}
+
+/* Phone rule (canon §7.6.1): once an answer is marked the controls go and the feedback takes their place. */
+.qcard.fb-open #ansBlock,.qcard.fb-open .try-note,.qcard.fb-open .maffs-calc-toggle,.qcard.fb-open .maffs-calc:not(.docked){display:none}
+body.playing a.back-link{display:none}
+@media (max-width:420px){
+  .container{padding:.5rem}
+  .qcard{padding:.6rem .55rem;gap:.4rem}
+  .qtext{font-size:.98rem}
+  .hud{padding:.2rem .5rem}
+}
+@media (max-height:620px){.qtext{font-size:.92rem;line-height:1.4}.fb{padding:.5rem .6rem;gap:.35rem}.worked{font-size:.84rem}.hud{margin-bottom:.3rem}.hud-label{display:none}.fb-next{order:1}.fb>.worked-h,.fb>.worked{order:2}}
+body.accessible{letter-spacing:.12em;word-spacing:.16em}
+body.accessible .hud-label,body.accessible .hud-val,body.accessible .tag{letter-spacing:0}
+body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;max-width:65ch}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'start' goes straight to the first question (skipping the worked example); 'answer' types the right amount onto the tag with i = 0, a wrong one with i >= 1 (named or not, then Next).
+{
+  "start": "IOS.ui.start(1, true)",
+  "ready": "!!window.IOS && IOS.ui.state() === 'asking'",
+  "answer": [
+    "IOS.ui.answer(i === 0);"
+  ]
+}
+-->
+<script src="../../schools/assets/answer.js"></script>
+<!-- The calculator, stage by stage (canon §4.4, `by stage`): optional in Stages 1-4 (the student's own, no badge, the on-screen
+     one is not offered), required in Stage 5 (the on-screen calculator, with the keypad it composes). -->
+<script type="application/json" id="maffs-calc-stages">{"stage-1": "optional", "stage-2": "optional", "stage-3": "optional", "stage-4": "optional", "stage-5": "required"}</script>
+<script src="../../schools/assets/keypad.js"></script>
+<script src="../../schools/assets/calculator.js"></script>
+<script src="../../schools/assets/percentages-money-generator.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>It's on Sale!</h1><div class="sub">Price tags through the year. Type the answer onto the tag.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="menu-shop" role="img" aria-label="A shop front with a striped awning over a shelf"><div class="awning"></div><div class="shelf"></div></div>
+    <div class="panel menu-info">
+      <p>A high street shop through the year: the summer sale, Black Friday, the January sales and the price rises. Each question is a price tag. Type the amount onto it, in pounds and pence, or a percentage where the tag has a % sign.</p>
+      <p>Play the stages in order, or go straight to the one you need. Each starts with a worked example, then 10 questions.</p>
+      <div class="stages" id="stageList">
+        <button class="stage-btn" type="button" data-stage="1"><span class="n">1</span><span><span class="t">Percentage of an amount</span><span class="d">How much is taken off the price?</span></span></button>
+        <button class="stage-btn" type="button" data-stage="2"><span class="n">2</span><span><span class="t">Increase and decrease</span><span class="d">The new price after a sale or a rise.</span></span></button>
+        <button class="stage-btn" type="button" data-stage="3"><span class="n">3</span><span><span class="t">Percentage change</span><span class="d">What percentage was knocked off, or added on?</span></span></button>
+        <button class="stage-btn" type="button" data-stage="4"><span class="n">4</span><span><span class="t">Reverse percentages</span><span class="d">The price before the sale or the rise.</span></span></button>
+        <button class="stage-btn" type="button" data-stage="5"><span class="n">5</span><span><span class="t">Interest and depreciation</span><span class="d">The bank counter and the car dealer, year by year.</span><span class="calc-badge" data-calc="required" data-stage="stage-5">Calculator required</span></span></button>
+      </div>
+      <p class="hud-label" style="text-align:center;margin-top:.7rem">10 questions a stage</p>
+    </div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+    <div class="maffs-start-note" data-maffs-start-note></div>
+  </div>
+
+  <div id="example" class="screen">
+    <div class="panel ex-card">
+      <div class="stage-label" id="exLabel"></div>
+      <div class="qtext" id="exStem"></div>
+      <ol class="ex-steps" id="exSteps"></ol>
+      <div class="ex-row"><button class="btn solid" id="exNext" type="button">Show the next step</button></div>
+    </div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Stage</div><div class="hud-val" id="hudStage">1</div></div>
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/10</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
+    </div>
+    <div class="badge-row"><span class="calc-badge" id="calcBadge"></span></div>
+    <div class="qcard" id="qcard">
+      <div class="stage-label" id="stageLabel"></div>
+      <div class="qtext" id="qtext"></div>
+      <div class="try-note" id="tryNote" hidden>Try without a calculator.</div>
+      <div id="ansBlock">
+        <form class="ans-row" id="ansForm" autocomplete="off">
+          <div class="tag" id="tag">
+            <span class="unit" id="unitPre">£</span>
+            <span class="aw" id="wrapA"><input id="ans" type="text" inputmode="decimal" aria-label="Your answer" autocomplete="off"></span>
+            <span class="aw" id="wrapC" hidden><input id="ansc" type="text" inputmode="decimal" aria-label="Your answer" autocomplete="off"></span>
+            <span class="unit" id="unitPost" hidden>%</span>
+          </div>
+          <button class="btn solid" type="submit" id="checkBtn">Check</button>
+        </form>
+        <div id="kpHolder"></div>
+        <div id="calcWrap" hidden><div id="calc"></div></div>
+      </div>
+      <div class="msg" id="msg" aria-live="polite"></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resTitle">Stage done</h2>
+      <div class="final-score" id="resScore">0</div>
+      <div class="final-of" id="resOf">out of 10</div>
+      <div class="stats" id="resStats"></div>
+      <div class="res-btns">
+        <button class="btn solid" id="nextStageBtn" type="button">Next: Stage 2</button>
+        <button class="btn" id="againBtn" type="button">Play this stage again</button>
+        <button class="btn" id="menuBtn" type="button">All stages</button>
+      </div>
+      <p id="teacherInvite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var G = window.MaffsPercentagesMoney, SLUG = 'its-on-sale', PER = 10, LAST = 5, FOOTER_PX = 40;
+  // One level of content, GCSE (the lowest tier served); the stages are boards, not levels, each its own analytics mode.
+  var level = MaffsLevel.resolve({ slug: 'its-on-sale', levels: ['gcse'], fallback: 'gcse',
+    boards: ['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5'] });
+  var $ = function (id) { return document.getElementById(id); };
+  function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function money(p) { return '£' + (p % 100 === 0 ? String(p / 100) : (p / 100).toFixed(2)); }
+
+  // The stages, as the bank defines them. calc is what the page's maffs-calc-stages map says (canon §4.4).
+  var STAGES = {
+    1: { name: 'Percentage of an amount', blurb: 'How much is taken off the price?', calc: 'optional' },
+    2: { name: 'Increase and decrease', blurb: 'The new price after a sale or a rise.', calc: 'optional' },
+    3: { name: 'Percentage change', blurb: 'What percentage was knocked off, or added on?', calc: 'optional' },
+    4: { name: 'Reverse percentages', blurb: 'The price before the sale or the rise.', calc: 'optional' },
+    5: { name: 'Interest and depreciation', blurb: 'The bank counter and the car dealer, year by year.', calc: 'required' }
+  };
+
+  // ---------- the session: the bank's questions, never copies ----------
+  function makeRng(seed) {
+    var s = seed >>> 0;
+    return function () {
+      s = (s + 0x6D2B79F5) >>> 0;
+      var t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  // The worked example is slot 0 (the easiest) with a fixed seed. The questions are slots 1 to 11 with one left out at random:
+  // 10 questions in the bank's own order, easiest first, and the example never among them.
+  function example(stage) { return G.question(stage, 0, makeRng(7000 + stage)); }
+  function session(stage, seed) {
+    var rng = makeRng(seed), slots = [], i;
+    for (i = 1; i < G.SLOTS; i++) slots.push(i);
+    slots.splice(Math.floor(rng() * slots.length), 1);
+    // A slot's numbers are the bank's own random choice; two slots of one shape (Stage 5 has pairs) can land on the same wording, so a
+    // question whose wording is already in the session is drawn again.
+    var seen = {};
+    return slots.map(function (sl, k) {
+      var q, t = 0;
+      do { q = G.question(stage, sl, makeRng(seed * 31 + k * 977 + stage + t * 7919)); } while (seen[q.stem] && ++t < 50);
+      seen[q.stem] = true;
+      return q;
+    });
+  }
+
+  // ---------- marking: by value through MaffsAnswer ----------
+  function judge(q, key, raw) {
+    return q.answer.type === 'money' ? MaffsAnswer.money(raw, key.pence / 100) : MaffsAnswer.exact(raw, key.value);
+  }
+  function mark(q, raw) {
+    var r = judge(q, q.answer, raw);
+    if (r === 'correct') return { kind: 'right' };
+    if (r === 'format') return { kind: 'format', msg: MaffsAnswer.message('format', raw, { currency: '£' }) };
+    if (r === 'unreadable') return { kind: 'unreadable', msg: q.answer.type === 'money' ? 'Type the amount in pounds and pence, e.g. 12.50' : MaffsAnswer.message('unreadable') };
+    for (var i = 0; i < q.slips.length; i++) {
+      if (judge(q, q.slips[i].answer, raw) === 'correct') return { kind: 'slip', why: q.slips[i].line };
+    }
+    return { kind: 'wrong' };
+  }
+  function answerText(q) { return q.answer.type === 'money' ? money(q.answer.pence) : q.answer.value + '%'; }
+  function typed(q) { return q.answer.type === 'money' ? (q.answer.pence % 100 === 0 ? String(q.answer.pence / 100) : (q.answer.pence / 100).toFixed(2)) : String(q.answer.value); }
+
+  var stage = 1, Q = null, qs = [], qi = 0, state = 'menu', score = 0, marked = 0, rightCount = 0, kp = null, calc = null, exStep = 0, exQ = null;
+
+  function show(id) {
+    ['menu', 'example', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    document.body.classList.toggle('playing', id !== 'menu');
+    MaffsLock.screen($(id));
+  }
+
+  /* ---------- the worked example ---------- */
+  function startExample(n) {
+    stage = n; exQ = example(n); exStep = 0;
+    $('exLabel').textContent = 'Stage ' + n + ' · ' + STAGES[n].name + ' · worked example';
+    $('exStem').textContent = exQ.stem;
+    $('exSteps').innerHTML = '';
+    drawExample();
+    show('example');
+  }
+  function drawExample() {
+    var lines = exQ.worked, last = exStep >= lines.length - 1;
+    $('exSteps').innerHTML = lines.slice(0, exStep + 1).map(function (l) { return '<li>' + esc(l) + '</li>'; }).join('');
+    $('exNext').textContent = last ? 'Start the questions' : 'Show the next step';
+    MaffsLock.fresh($('example'));
+  }
+
+  /* ---------- play ---------- */
+  function stageBadge() {
+    var src = document.querySelector('.calc-badge[data-stage="stage-' + stage + '"]'), b = $('calcBadge');
+    if (src) { b.setAttribute('data-calc', src.getAttribute('data-calc')); b.textContent = src.textContent; }
+    else { b.removeAttribute('data-calc'); b.textContent = ''; }
+  }
+  function startStage(n, skipExample) {
+    MaffsLock.newSession();
+    stage = n;
+    qs = session(n, Math.floor(Math.random() * 4294967296));
+    qi = 0; score = 0; marked = 0; rightCount = 0;
+    stageBadge();
+    show('game');
+    $('hudStage').textContent = n;
+    ev('game_started', { game_slug: SLUG, level: level, mode: 'stage-' + n });
+    nextQuestion();
+  }
+  function beginFromExample() { startStage(stage); }
+
+  function nextQuestion() {
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    $('feedback').innerHTML = '';
+    $('qcard').classList.remove('fb-open');
+    if (qi >= qs.length) { finish(); return; }
+    Q = qs[qi++];
+    $('hudQ').textContent = qi + '/' + PER;
+    $('hudScore').textContent = score;
+    $('stageLabel').textContent = 'Stage ' + stage + ' · ' + (Q.ask.what.charAt(0).toUpperCase() + Q.ask.what.slice(1));
+    $('qtext').textContent = Q.stem;
+    $('tryNote').hidden = !(Q.calc === 'optional' && Q.friendly);
+    askAnswer();
+  }
+  function box() { return STAGES[stage].calc === 'required' ? $('ansc') : $('ans'); }
+  function askAnswer() {
+    var on = STAGES[stage].calc === 'required', input = box();
+    $('wrapA').hidden = on; $('wrapC').hidden = !on;      // the wrapper, so the keypad's own cue goes with its box
+    $('calcWrap').hidden = !on;
+    $('unitPre').hidden = Q.answer.type !== 'money';
+    $('unitPost').hidden = Q.answer.type !== 'percent';
+    input.value = ''; $('msg').textContent = '';
+    if (on) {
+      if (!calc && window.MaffsCalc) calc = MaffsCalc.mount($('calc'), { dock: $('qcard'), answer: $('ansc'), keepInView: $('ansForm'), foldInset: FOOTER_PX });
+      $('kpHolder').innerHTML = ''; kp = null;
+      if (calc) calc.clear();
+    } else {
+      var holder = $('kpHolder'), el = document.createElement('div');
+      holder.innerHTML = ''; holder.appendChild(el);
+      kp = window.MaffsKeypad ? MaffsKeypad.mount(el, { targets: [input], keepInView: $('ansForm'), foldInset: FOOTER_PX }) : null;
+    }
+    MaffsLock.fresh($('ansBlock'));
+    state = 'asking';
+    if (!(kp && kp.enabled && kp.enabled()) && !(calc && calc.answerMode && calc.answerMode())) {
+      try { input.focus({ preventScroll: true }); } catch (e) {}
+    }
+  }
+
+  function submit() {
+    if (state !== 'asking') return;
+    var raw = box().value, r = mark(Q, raw);
+    if (r.kind === 'format' || r.kind === 'unreadable') { $('msg').textContent = r.msg; return; }   // never marked
+    if (!MaffsLock.lock($('ansBlock'))) return;
+    var ok = r.kind === 'right';
+    marked++; if (ok) { rightCount++; score++; }
+    $('hudScore').textContent = score;
+    ev('question_answered', { game_slug: SLUG, level: level, mode: 'stage-' + stage, question_index: qi, correct: ok });
+    $('qcard').classList.add('fb-open');
+    var fb = $('feedback');
+    if (ok) {
+      state = 'done';
+      fb.innerHTML = '<div class="fb done"><div class="fb-line">Yes. ' + esc(Q.worked[Q.worked.length - 1]) + '</div>' +
+        '<div class="fb-next"><button class="btn solid" id="nextBtn" type="button">' + (qi >= PER ? 'See results →' : 'Next →') + '</button></div></div>';
+      MaffsLock.fresh(fb);
+      $('nextBtn').focus();
+    } else {
+      state = 'wrong';
+      var first = r.kind === 'slip' ? r.why : 'Not quite. The answer is ' + answerText(Q) + '.';
+      fb.innerHTML = '<div class="fb wrong"><div class="fb-line" data-help="reason">' + esc(first) + '</div><div class="fb-next"></div>' +
+        '<div class="worked-h">How it goes</div><ol class="worked">' + Q.worked.map(function (l) { return '<li>' + esc(l) + '</li>'; }).join('') + '</ol></div>';
+      MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance });
+    }
+  }
+  function advance() {
+    if (state === 'moving') return;
+    state = 'moving';
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    nextQuestion();
+  }
+
+  // Once per stage (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+  var finish = MaffsLock.finishOnce(function () {
+    state = 'done';
+    var board = 'stage-' + stage;
+    ev('game_completed', { game_slug: SLUG, level: level, mode: board, score: score, questions_answered: marked, questions_correct: rightCount });
+    if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, board, score, marked).catch(function () {});
+    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, board, score);
+    var pbKey = 'ios_best_' + stage, prev = parseInt(lsGet(pbKey) || '0', 10) || 0, pb = score > prev;
+    if (pb) { ev('personal_best_set', { game_slug: SLUG, level: level, mode: board, score: score, previous_best: prev }); lsSet(pbKey, String(score)); }
+    $('resTitle').textContent = 'Stage ' + stage + ' done';
+    $('resScore').textContent = score;
+    $('resOf').textContent = 'out of ' + PER + ' · ' + STAGES[stage].name;
+    $('resStats').innerHTML = '<b>' + rightCount + '</b> right out of <b>' + marked + '</b> answers' + (pb ? '<br>New personal best' : '');
+    $('nextStageBtn').hidden = stage >= LAST;
+    $('nextStageBtn').textContent = 'Next: Stage ' + (stage + 1);
+    show('results');
+  });
+
+  /* ---------- wiring ---------- */
+  $('stageList').addEventListener('click', function (e) { var b = e.target.closest('[data-stage]'); if (b) startExample(parseInt(b.dataset.stage, 10)); });
+  $('exNext').addEventListener('click', function () {
+    if (exStep >= exQ.worked.length - 1) beginFromExample(); else { exStep++; drawExample(); }
+  });
+  $('ansForm').addEventListener('submit', function (e) { e.preventDefault(); submit(); });
+  $('nextStageBtn').addEventListener('click', function () { startExample(Math.min(stage + 1, LAST)); });
+  $('againBtn').addEventListener('click', function () { startExample(stage); });
+  $('menuBtn').addEventListener('click', function () { state = 'menu'; show('menu'); });
+  $('feedback').addEventListener('click', function (e) { if (e.target.closest('#nextBtn') && state === 'done') advance(); });
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(lsGet(KEY) === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); lsSet(KEY, String(on)); apply(on); });
+  })();
+
+  // Read-only views of live state, for scripts/verify-its-on-sale.py and the lock hint above.
+  window.IOS = {
+    SLUG: SLUG, STAGES: STAGES, mark: mark, session: session, example: example,
+    ui: {
+      state: function () { return state; },
+      level: function () { return level; },
+      stage: function () { return stage; },
+      question: function () { return Q ? JSON.parse(JSON.stringify(Q)) : null; },
+      score: function () { return score; },
+      calcMounted: function () { return !!calc; },
+      start: function (n, skipExample) { if (skipExample) startStage(n); else startExample(n); },
+      // Type an answer onto the tag and check it: the right one, or a wrong one (the right amount plus 7 pence, or 7 per cent).
+      answer: function (right) {
+        var v = Q.answer.type === 'money' ? (right ? typed(Q) : ((Q.answer.pence + 7) / 100).toFixed(2)) : (right ? String(Q.answer.value) : String(Q.answer.value + 7));
+        box().value = v;
+        $('checkBtn').click();
+      }
+    }
+  };
+})();
+</script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'its-on-sale');</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>
