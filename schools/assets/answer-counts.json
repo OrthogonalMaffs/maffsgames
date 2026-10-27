@@ -1,5 +1,5 @@
 {
- "as_of": "2026-10-27T13:54:16Z",
+ "as_of": "2026-10-27T16:51:35Z",
  "games": {
   "52dle": 11,
   "angle-ace": 5,
@@ -51,7 +51,7 @@
   "growth-and-decay": 24,
   "higher-power": 80,
   "how-many-parts": 27,
-  "i-found-a-mark": 12,
+  "i-found-a-mark": 20,
   "index-laws": 411,
   "integration-duel": 29,
   "just-pythag-it-bruv": 43,
@@ -100,5 +100,5 @@
   "wrong-on-the-internet": 12
  },
  "since": "2026-09-01",
- "total": 17330
+ "total": 17338
 }
