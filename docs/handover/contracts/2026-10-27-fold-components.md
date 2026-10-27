@@ -42,3 +42,12 @@ Asked which lane runs it, Jon chose "This session, lane exception": the cloud la
 Jon's message:
 
 > Lane exception granted for this contract only, as you described: theme.css, canon §7.5/§7.6.1, _config.yml, the shared scripts, and per-game edits to listed games in the three groups. Claim each game before editing it, and record the exception in the handover. The home lane will run the pie-charts bank meanwhile, which edits gen-six-ps.py and adds the bank-first rule to canon outside §7.5 and §7.6. If you need canon outside those sections, stop and ask.
+
+## Rulings (Jon, 27 Oct 2026), verbatim
+
+> * The lane exception now also covers canon §7.6.2. In PR 5, correct where it says the reference card lives.
+> * The three group-A remainders stay on the lists with their reasons: constructions-lab (its panel is the task), trig-worms on laptops (its canvas), and suvat at 320 and in Aa (its question box).
+
+With them (same message): get #564 green and merged, then delete claude/jpib-split; find why the "Record CI timings and repack" job did not balance
+Just Pythag It, Bruv, part 2 before it outgrew its limit, and fix it where the parts are allotted, reporting before changing the repack; then PR 3 to PR 6,
+each merged on green with the handover updated; stop after PR 6 for Project Claude's live 404 check.
