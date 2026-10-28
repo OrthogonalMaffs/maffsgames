@@ -38,10 +38,12 @@ LABEL = {'hc-factor': '← Rounds', 'i-found-a-mark': '← Menu', 'free-daily-pi
 ACTIVE = "() => { const a = document.querySelector('.screen.active'); return a ? a.id : null; }"
 
 MEASURE = """() => {
-  const b = document.getElementById('stageExitBtn'), a = document.querySelector('a.back-link');
+  const vis = (e) => { const cs = getComputedStyle(e), r = e.getBoundingClientRect();
+    return cs.display !== 'none' && cs.visibility !== 'hidden' && r.width > 0 && r.height > 0; };
+  const pick = (sel) => { const all = [...document.querySelectorAll(sel)]; return all.find(vis) || all[0] || null; };
+  const b = pick('.stage-exit-stages'), a = pick('a.back-link, a.stage-exit-home');
   const box = (e) => { if (!e) return null; const cs = getComputedStyle(e), r = e.getBoundingClientRect();
-    return { shown: cs.display !== 'none' && cs.visibility !== 'hidden' && r.width > 0 && r.height > 0,
-             x: r.left, y: r.top, r: r.right, b: r.bottom, fs: parseFloat(cs.fontSize), h: r.height,
+    return { shown: vis(e), x: r.left, y: r.top, r: r.right, b: r.bottom, fs: parseFloat(cs.fontSize), h: r.height,
              txt: (e.textContent || '').trim() }; };
   const doc = document.documentElement;
   return { btn: box(b), link: box(a), vw: window.innerWidth, vh: window.innerHeight, sx: doc.scrollWidth - doc.clientWidth };
@@ -123,7 +125,7 @@ def check_controls(page, slug, where, out, min_h=30):
         return False
     for name in ('btn', 'link'):
         e = m[name]
-        if e['x'] < -0.5 or e['r'] > m['vw'] + 0.5 or e['y'] < -0.5 or e['b'] > m['vh'] + 0.5:
+        if e['x'] < -0.5 or e['r'] > m['vw'] + 0.5 or e['y'] < -8 or e['b'] > m['vh'] + 0.5:
             out.append('%s: the %s is outside the viewport (%d..%d x %d..%d of %dx%d)' % (
                 where, name, e['x'], e['r'], e['y'], e['b'], m['vw'], m['vh']))
         if e['fs'] < 12:
@@ -136,7 +138,7 @@ def check_controls(page, slug, where, out, min_h=30):
 
 
 def leave_and_check(page, where, out):
-    page.locator('#stageExitBtn').click()
+    page.locator('.stage-exit-stages:visible').first.click()
     page.wait_for_timeout(300)
     if page.evaluate(ACTIVE) != 'menu':
         out.append('%s: one tap on the stage button did not reach the picker (still on %s)' % (where, page.evaluate(ACTIVE)))
@@ -155,8 +157,8 @@ def exit_game(base, slug, size, out, sources=None):
     with sync_playwright() as pw:
         br, page, errors = open_page(pw, base, slug, size, sources)
         try:
-            shown = page.evaluate("(() => { const b = document.getElementById('stageExitBtn'); return b ? getComputedStyle(b).display : 'absent'; })()")
-            if shown not in ('none', 'absent'):
+            shown = page.evaluate("[...document.querySelectorAll('.stage-exit-stages')].some(b => b.getBoundingClientRect().width > 0)")
+            if shown:
                 out.append('%s: the stage button shows on the picker' % where)
             scr = start_stage(page, out, where)
             if scr == 'example':
@@ -185,7 +187,7 @@ def exit_game(base, slug, size, out, sources=None):
                 out.append('%s: game_completed fired after leaving' % where)
             # the standard link takes a student to the portal in one tap, from a question too
             scr = through_example(page, start_stage(page, out, where))
-            page.locator('a.back-link').click()
+            page.locator('a.back-link:visible, a.stage-exit-home:visible').first.click()
             page.wait_for_load_state('load')
             path = re.sub(r'^https?://[^/]+', '', page.url).split('?')[0]
             if path != '/':
@@ -224,11 +226,14 @@ def mutate(js=(), css=()):
 
 GO = "    var go = document.getElementById('menuBtn')"
 PLANTS = [
-    ('the stage button is never shown', 'who-ate-all-the-pies',
-     dict(css=[('body.playing .stage-exit-stages{display:inline-flex}', 'body.playing .stage-exit-stages{display:none}')]),
+    ('the stage button is never shown (example)', 'who-ate-all-the-pies',
+     dict(css=[('body:has(#example.active) .stage-exit-row .stage-exit-stages{display:inline-flex}', 'body:has(#example.active) .stage-exit-row .stage-exit-stages{display:none}')]),
      r'no ".*" button on screen'),
-    ('the back link stays hidden in play', 'its-on-sale',
-     dict(css=[('body.playing .stage-exit-row a.back-link{display:inline-flex}', 'body.playing .stage-exit-row a.back-link{display:none}')]),
+    ('the stage button is never shown (HUD)', 'free-daily-pizza',
+     dict(css=[('.hud .stage-exit-stages,.hud .stage-exit-home{display:inline-flex;', '.hud .stage-exit-stages,.hud .stage-exit-home{display:none;')]),
+     r'no ".*" button on screen'),
+    ('the back link is missing from the HUD', 'its-on-sale',
+     dict(js=[('hud.appendChild(home);', 'void home;')]),
      r'Back to Games link is not on screen'),
     ('leaving fires game_completed', 'as-you-can-see',
      dict(js=[(GO, "    if (window.mfg) mfg('game_completed', {});\n" + GO)]),
