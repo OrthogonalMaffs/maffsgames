@@ -13,7 +13,11 @@
  *   type     'number' (one box) | 'choice' (buttons)
  *   key      what is right: the value | the option index;  tol: the accepted half-width (number)
  *   slips    [{kind, value | option, line}]
+ *   why      the bank's one-line working (the last two worked lines): shown after a right answer and marked in the working under a slip
  *   bank     the bank's question itself, untouched (for the verifier)
+ * texify(text) turns each run of plain arithmetic in a string (4 x 5 = 20, 30 - 20 = 10, 18 / 4 = 4.5, with the school signs) into a KaTeX
+ * expression between the page's markers (canon 7.1.1); the bank's strings are not rewritten, the page converts as it renders. There are
+ * no fractions in this bank.
  * mark(q, raws) takes the raw strings typed (a choice: the option index as a string) and returns
  *   { kind: 'right' | 'slip' | 'wrong' | 'unreadable', why, ok: [bool a box] }.
  */
@@ -41,7 +45,7 @@
   // The bank's question as a game question.
   function adapt(b) {
     var S = STAGES[b.stage], a = b.answer;
-    var q = { stage: b.stage, slot: b.slot, kind: b.kind, type: a.type, stem: b.stem, worked: b.worked, chart: b.chart, ask: b.ask,
+    var q = { stage: b.stage, slot: b.slot, kind: b.kind, type: a.type, stem: b.stem, worked: b.worked, why: b.why, chart: b.chart, ask: b.ask,
       generic: S.generic, bank: b, slips: [] };
     if (a.type === 'number') {
       q.key = a.value; q.tol = a.tol;
@@ -63,6 +67,14 @@
     return slots.map(function (slot) { return adapt(Bank.question(stage, slot, makeRng(seed * 31 + slot * 7 + stage))); });
   }
   function example(stage) { return adapt(Bank.question(stage, 0, makeRng(1000 + stage))); }
+
+  // A run of plain arithmetic: numbers (a minus sign allowed before one) joined by x, /, minus, plus or equals, with the school signs.
+  var PLAIN_SUM = /−?\d+(?:\.\d+)?(?:\s*[×÷−+=]\s*−?\d+(?:\.\d+)?)+/g;
+  function texify(text) {
+    return String(text == null ? '' : text).replace(PLAIN_SUM, function (m) {
+      return '\\(' + m.replace(/×/g, '\\times ').replace(/÷/g, '\\div ').replace(/−/g, '-') + '\\)';
+    });
+  }
 
   // What a right answer types, for tests and for the answer helper.
   function solution(q) { return [String(q.key)]; }
@@ -88,5 +100,5 @@
   }
 
   root.MaffsChartsGame = { STAGES: STAGES, PER_STAGE: PER_STAGE, SLOTS: SLOTS, session: session, example: example, adapt: adapt, mark: mark,
-    solution: solution, makeRng: makeRng };
+    solution: solution, makeRng: makeRng, texify: texify };
 })(typeof window !== 'undefined' ? window : globalThis);
