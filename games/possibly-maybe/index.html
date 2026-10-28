@@ -153,6 +153,7 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
 -->
 <script src="../../schools/assets/answer.js"></script>
 <!-- The phone keypad for typed answers (MaffsKeypad, canon §4.4): no calculator in this game, so the keypad only. Fractions are typed in two boxes (MaffsFractionInput). -->
+<script src="../../schools/assets/scroll.js"></script>
 <script src="../../schools/assets/keypad.js"></script>
 <script src="../../schools/assets/fraction-input.js"></script>
 <script src="../../schools/assets/probability-generator.js"></script>
@@ -405,8 +406,7 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
     exAt++;
     $('exBtn').textContent = exAt >= lines.length ? 'Start the questions' : 'Show the next step';
     MaffsLock.fresh($('exCard'));
-    var b = $('exBtn').getBoundingClientRect(), over = b.bottom - (window.innerHeight - FOOTER_PX);
-    if (over > 0) window.scrollBy(0, over);
+    MaffsScroll.reveal($('exBtn'));
   });
 
   /* ---------- play ---------- */

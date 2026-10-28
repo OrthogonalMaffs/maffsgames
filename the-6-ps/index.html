@@ -189,6 +189,7 @@
 <script src="/schools/assets/answer.js"></script>
 <script src="/schools/assets/answer-lock.js"></script>
 <script src="/schools/assets/next-control.js"></script>
+<script src="/schools/assets/scroll.js"></script>
 <script src="/schools/assets/keypad.js"></script>
 <script src="/schools/assets/calculator.js"></script>
 </head>
@@ -1165,23 +1166,8 @@
       MaffsNext.wrong({ mount: $('qNext'), onAdvance: advance, fallbackMs: NO_FALLBACK, label: label });
     }
     // The verdict, and Next with it where it fits, are in view without a scroll of the student's own.
-    // Again once the layout settles: working with fractions grows when the maths font arrives, after the first scroll (main run 40479208314).
-    function inView() { try { fb.scrollIntoView({ block: 'nearest' }); } catch (e) { /* ignore */ } }
-    inView();
-    try {
-      requestAnimationFrame(function () {
-        inView();
-        if (document.fonts && document.fonts.ready) document.fonts.ready.then(inView);
-      });
-      // A font can arrive after fonts.ready (KaTeX's faces are requested as the working is drawn), so the two passes above can both
-      // run before the block grows: watch the block itself for a few seconds, and scroll again each time it changes size (main run
-      // 40529609805 failed on this after #576, the same fault as #566, on timing alone).
-      if (window.ResizeObserver) {
-        var watch = new ResizeObserver(inView);
-        watch.observe(fb);
-        setTimeout(function () { watch.disconnect(); }, 4000);
-      }
-    } catch (e) { /* ignore */ }
+    // MaffsScroll scrolls again once the layout settles: working with fractions grows when the maths font arrives (#566, main run 40479208314).
+    MaffsScroll.reveal(fb, { up: true });
   }
 
   function advance() {

@@ -246,6 +246,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 <script src="../../schools/assets/answer.js"></script>
 <!-- The phone keypad for typed answers (MaffsKeypad, canon §4.4): a non-calculator game, so the keypad
      only, never the calculator (roster Calculator field: not allowed). -->
+<script src="../../schools/assets/scroll.js"></script>
 <script src="../../schools/assets/keypad.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
@@ -1503,8 +1504,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       MaffsLock.fresh(wrap);   // a double-tap reveals one step, never two
       if (!at && !done) return;
       var keep = b || document.querySelector('#feedback .fb-next button');
-      var over = keep ? keep.getBoundingClientRect().bottom - (window.innerHeight - FOOTER_PX) : 0;
-      if (over > 0) window.scrollBy(0, over);
+      if (keep) MaffsScroll.reveal(keep, {});
     }
     draw();
   }

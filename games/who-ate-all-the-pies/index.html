@@ -169,6 +169,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 -->
 <script src="../../schools/assets/answer.js"></script>
 <!-- The phone keypad for typed answers (MaffsKeypad, canon §4.4): the calculator is optional here, so the keypad only. -->
+<script src="../../schools/assets/scroll.js"></script>
 <script src="../../schools/assets/keypad.js"></script>
 <script src="../../schools/assets/pie-chart-generator.js"></script>
 <script src="../../schools/assets/pie-game.js"></script>
@@ -415,8 +416,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     exAt++;
     $('exBtn').textContent = exAt >= lines.length ? 'Start the questions' : 'Show the next step';
     MaffsLock.fresh($('exCard'));
-    var b = $('exBtn').getBoundingClientRect(), over = b.bottom - (window.innerHeight - FOOTER_PX);
-    if (over > 0) window.scrollBy(0, over);
+    MaffsScroll.reveal($('exBtn'));
   });
 
   /* ---------- play ---------- */

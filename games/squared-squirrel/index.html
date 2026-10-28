@@ -162,6 +162,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 -->
 <script src="../../schools/assets/answer.js"></script>
 <!-- The phone keypad for typed answers (MaffsKeypad), Stages 1-3; in Stages 4-5 the scientific calculator types it. -->
+<script src="../../schools/assets/scroll.js"></script>
 <script src="../../schools/assets/keypad.js"></script>
 <script src="../../schools/assets/calculator.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
@@ -1052,8 +1053,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
         (last ? 'Start the questions' : 'Show the next step') + '</button></div>';
       wrap.querySelector('#stepBtn').addEventListener('click', function () { if (last) nextQuestion(); else { at++; draw(); } });
       MaffsLock.fresh(wrap);   // a double-tap reveals one step, never two
-      var b = wrap.querySelector('#stepBtn'), over = b.getBoundingClientRect().bottom - (window.innerHeight - FOOTER_PX);
-      if (over > 0) window.scrollBy(0, over);
+      MaffsScroll.reveal(wrap.querySelector('#stepBtn'), {});
     }
     draw();
   }

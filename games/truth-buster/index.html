@@ -139,6 +139,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
+<script src="../../schools/assets/scroll.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Two options: it presses the one that differs from the key, so every attempt is wrong.
 {
@@ -488,11 +489,7 @@ function placeReveal() {
   const screen = document.getElementById('gameScreen');
   screen.classList.add('revealed');
   if (!window.matchMedia('(max-width: 600px)').matches) return;
-  const fold = window.innerHeight - 40;
-  const next = document.getElementById('nextBtn').getBoundingClientRect();
-  const top = document.getElementById('revealPanel').getBoundingClientRect().top;
-  const by = Math.min(next.bottom + 8 - fold, top - 8);
-  if (by > 0) window.scrollBy({ top: by, behavior: 'instant' });
+  MaffsScroll.reveal(document.getElementById('nextBtn'), { keep: document.getElementById('revealPanel') });
 }
 
 // Next moves on once: MaffsLock locks it at the first press, so a second Enter during the tier transition is dropped.

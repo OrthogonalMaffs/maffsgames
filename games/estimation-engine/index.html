@@ -158,6 +158,7 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
 <script src="../../schools/assets/answer.js"></script>
 <!-- The phone keypad for typed answers (MaffsKeypad, canon §4.4): a non-calculator game, so the keypad
      only, never the calculator (roster Calculator field: not allowed). -->
+<script src="../../schools/assets/scroll.js"></script>
 <script src="../../schools/assets/keypad.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
@@ -484,9 +485,7 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
   function nextInView() {
     var nx = $('feedback').querySelector('.maffs-next');
     if (!nx) return;
-    var r = nx.getBoundingClientRect(), top = $('feedback').getBoundingClientRect().top, fold = window.innerHeight - FOOTER_PX;
-    var dy = Math.min(r.bottom - fold + 8, top - 8);
-    if (r.bottom > fold && dy > 0) window.scrollBy(0, dy);
+    MaffsScroll.reveal(nx, { keep: $('feedback') });
   }
 
   function check() {

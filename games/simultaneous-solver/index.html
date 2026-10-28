@@ -200,6 +200,7 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
 <script src="../../schools/assets/answer.js"></script>
 <!-- The phone keypad for typed answers (MaffsKeypad, canon §4.4): a non-calculator game, so the keypad
      only, never the calculator (roster Calculator field: not allowed). -->
+<script src="../../schools/assets/scroll.js"></script>
 <script src="../../schools/assets/keypad.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
@@ -888,35 +889,23 @@ var EqTiles = (function () {
   // Scroll the least that puts `bottom` at least 8px above the fold (the footer's top), never taking `top` above 8px
   // from the top of the window (FONT-FIT, 10 Oct 2026: it scrolled only once bottom was past the fold, so a control
   // ending 1-7px above it stayed there).
-  function fitInView(top, bottom) {
-    var fold = window.innerHeight - FOOTER_PX, dy = Math.min(bottom - (fold - 8), top - 8);
-    if (dy > 0) window.scrollBy(0, Math.ceil(dy));   // whole pixels up: a fraction scrolled short leaves 7.x px
-    else if (top < 0) window.scrollBy(0, top - 8);
-  }
-  // A first visit draws before KaTeX's and the text faces arrive, and they grow the block a few px when they do: the
-  // view in force is fitted again once, when the fonts are ready, if nothing has moved on since.
-  var lastView = null;
-  function inView(fn) {
-    lastView = fn; fn();
-    if (document.fonts && document.fonts.status !== 'loaded') document.fonts.ready.then(function () { if (lastView === fn) fn(); });
-  }
+  // MaffsScroll.reveal does it, and again once the fonts arrive (a first visit draws before KaTeX's and the text faces,
+  // which grow the block a few px). clear: 8 keeps FONT-FIT's rule that a control ending 1-7px above the fold is moved too.
+  function fitInView(top, bottom) { MaffsScroll.reveal(bottom, { keep: top, up: true, clear: 8 }); }
   function stepInView() {
-    inView(function () {
+    fitInView($('step'), function () {
       var kpEl = $('kpHolder').querySelector('.maffs-keypad-panel');
-      var last = kpEl && kpEl.offsetParent !== null ? kpEl : ($('checkRow').hidden ? $('stepBody') : $('checkRow'));
-      fitInView($('step').getBoundingClientRect().top, last.getBoundingClientRect().bottom);
+      return kpEl && kpEl.offsetParent !== null ? kpEl : ($('checkRow').hidden ? $('stepBody') : $('checkRow'));
     });
   }
   function nextInView(box) {
     box = box || $('feedback');
     var nx = box.querySelector('.maffs-next');
     if (!nx) return;
-    inView(function () { fitInView(box.getBoundingClientRect().top, nx.getBoundingClientRect().bottom); });
+    fitInView(box, nx);
   }
   // Stage 5: the problem's words at the top, the lines, the tiles and Check above the fold.
-  function formInView() {
-    inView(function () { fitInView($('formText').getBoundingClientRect().top, $('formCheckRow').getBoundingClientRect().bottom); });
-  }
+  function formInView() { fitInView($('formText'), $('formCheckRow')); }
 
   function startGame(items) {
     if (level === 'alevel') { startMC(items); return; }
