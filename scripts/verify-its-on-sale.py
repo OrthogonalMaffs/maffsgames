@@ -108,20 +108,27 @@ def expected(q):
 
 
 def friendly_expected(q, ans):
-    """The bank header's rule, recomputed here from the params (CALC-OPTIONAL, 28 Oct 2026): the hint shows only where every step is
-    one easy mental step, that is a percentage of 10, 25 or 50 and a whole number of pounds in every amount of the working. Stages 4
-    and 5 are never friendly."""
+    """The bank header's rule, recomputed here from the params (FRIENDLY-LOOSEN, 28 Oct 2026): the "Try it with pen and paper" hint shows
+    where every step is a standard Foundation non-calculator method, on a round amount (a multiple of GBP 5): stages 1-3 a percentage that is a
+    multiple of 5 (built from 10% and 5%), stage 4 a multiple of 10 (10% of the original, times 10); never stage 5."""
     st, p = q['stage'], q['params']
-    if st == 1:
-        pct, amounts = p['pct'], [p['base'], Fraction(p['base'] * p['pct'], 100)]
-    elif st == 2:
-        x = Fraction(p['base'] * p['pct'], 100)
-        pct, amounts = p['pct'], [p['base'], x, p['base'] - x if p['dir'] == 'dec' else p['base'] + x]
-    elif st == 3:
-        pct, amounts = ans['value'], [p['old'], abs(p['new'] - p['old']), p['new']]
-    else:
-        return False
-    return pct in (10, 25, 50) and all(Fraction(a) % 100 == 0 for a in amounts)
+    if st in (1, 2):
+        return p['pct'] % 5 == 0 and Fraction(p['base']) % 500 == 0
+    if st == 3:
+        return Fraction(ans['value']) % 5 == 0 and Fraction(p['old']) % 500 == 0
+    if st == 4:
+        return p['pct'] % 10 == 0 and Fraction(ans['money']) % 500 == 0
+    return False
+
+
+def check_friendly_cases(out):
+    """The contract's two cases through the recompute itself: 15% of GBP 120 has the hint, 12% of GBP 379 does not."""
+    if not friendly_expected({'stage': 1, 'params': {'pct': 15, 'base': 12000}}, {'money': Fraction(1800)}):
+        out.append('the recompute says 15%% of GBP 120 is not friendly')
+    if friendly_expected({'stage': 1, 'params': {'pct': 12, 'base': 37900}}, {'money': Fraction(4548)}):
+        out.append('the recompute says 12%% of GBP 379 is friendly')
+    if not friendly_expected({'stage': 1, 'params': {'pct': 20, 'base': 6000}}, {'money': Fraction(1200)}):
+        out.append('the recompute says 20%% off GBP 60 is not friendly')
 
 
 def val(a):                              # an expected answer: {'money': pence} or {'value': percent}
@@ -302,6 +309,7 @@ def open_page(pw, base, html, module, size):
 def check_engine(page, out):
     data = page.evaluate(GEN_JS, {'seeds': SEEDS})
     info = {}
+    check_friendly_cases(out)
     rng = random.Random(11)
     qs = data['qs']
     stems = {}
@@ -406,7 +414,7 @@ def play_stage(page, st, size, out, nq):
         if info['sw'] > info['iw'] or info['right'] > info['iw'] + 0.5:
             out.append('%s q%d: sideways scroll or a control off the screen' % (where, qn))
         if bool(info['note']) != bool(q['friendly'] and q['calc'] == 'optional'):
-            out.append('%s q%d: the "try without a calculator" note shows %s for friendly=%s' % (where, qn, info['note'], q['friendly']))
+            out.append('%s q%d: the "try it with pen and paper" note shows %s for friendly=%s' % (where, qn, info['note'], q['friendly']))
         if st != 5 and (not info['tog'] or info['togOpen']):
             out.append('%s q%d: the calculator toggle is %s in an optional stage' % (where, qn, 'open' if info['togOpen'] else 'not on the screen'))
         if st == 5 and info['tog']:
@@ -559,8 +567,10 @@ PLANTS = [
      [("for (i = 1; i < G.SLOTS; i++) slots.push(i);", "for (i = 0; i < G.SLOTS; i++) slots.push(i);")], 'engine', r'session slots'),
     ('a wrong answer scoring (the page)', 'page',
      [("marked++; if (ok) { rightCount++; score++; }", "marked++; score++; if (ok) { rightCount++; }")], 'play', r'(score shows|the leaderboard got|game_completed says)'),
-    ('the friendly rule loosened (20% counted as an easy step)', 'module',
-     [("var EASY_PCT = [10, 25, 50];", "var EASY_PCT = [10, 20, 25, 50];")], 'engine', r'friendly is'),
+    ('the friendly rule too strict (15% no longer built from 10% and 5%)', 'module',
+     [("return pct % step === 0 && base % 500 === 0;", "return [10, 25, 50].indexOf(pct) >= 0 && base % 500 === 0;")], 'engine', r'friendly is'),
+    ('the friendly rule too loose (12% of an awkward amount counted)', 'module',
+     [("return pct % step === 0 && base % 500 === 0;", "return pct % 1 === 0;")], 'engine', r'friendly is'),
     ('no calculator offered in an optional stage (the toggle hidden)', 'page',
      [("$('calcOptWrap').hidden = on;", "$('calcOptWrap').hidden = true;")], 'play', r'toggle'),
     ('the calculator note on every item (not only the friendly ones)', 'page',

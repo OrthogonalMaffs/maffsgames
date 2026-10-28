@@ -15,14 +15,16 @@
      4 can you tell?  two charts, or one: "Yes, it's ..." or "You can't tell"
      5 work backwards one sector's angle and frequency given: the total
    Every angle is a whole number of degrees and the angles of a chart make 360; every amount is a whole number.
-   `friendly` (CALC-OPTIONAL, Jon, 28 Oct 2026) is NOT a calculator switch: the calculator is there behind its toggle in every
-   stage of a calculator-optional game. It only decides whether the "Try without a calculator" hint shows on that question, and it
-   is true ONLY where every step is one easy mental step:
+   `friendly` (CALC-OPTIONAL, Jon, 28 Oct 2026; loosened by FRIENDLY-LOOSEN the same day) is NOT a calculator switch: the calculator is
+   there behind its toggle in every stage of a calculator-optional game. It only decides whether the "Try it with pen and paper" hint
+   (HINT, the one place the wording is written for the games) shows on that question. True where every step is a standard Foundation
+   non-calculator method with a few lines of working:
      - the question needs no arithmetic at all (stage 4 "can you tell?", "you can't tell"), or
-     - every sector it uses is a half, a third or a quarter of the pie (180, 120 or 90 degrees: easyFrac()) and every division
-       the method makes is exact (the total or the frequency divides by the denominator), or
-     - for a table-to-angle question (stage 3), the total divides 360 cleanly (360 % total === 0).
-   Anything else is not friendly: 210/360 = 7/12 needs several steps of simplifying, so it has no hint.
+     - a sector is read as a fraction of the circle: its angle divides 360 (90 is a quarter, 60 is a sixth), or the fraction of 360
+       simplifies by a common factor that splits into two numbers of 12 or under (210/360: 30 = 5 x 6, so 7/12); and where an amount is
+       found or a total worked back, every division is exact and the fraction's denominator splits the same way (splits2());
+     - a table to angles (stage 3): the total divides 360 cleanly (360 % total === 0).
+   NOT friendly: a step needing long division or multiplication of awkward numbers, or a decimal that does not end.
    It is computed here from the question's own sectors and totals; The 6 P's reads this field (scripts/gen-six-ps.py writes
    try_without from it), and scripts/verify-who-ate-all-the-pies.py recomputes it through a separate path.
 
@@ -56,9 +58,14 @@
   function deg(n) { return n + '°'; }
   function degTex(n) { return tex(n + '^\\circ'); }
   function fracTex(n, d) { return tex('\\frac{' + n + '}{' + d + '}'); }
-  // The friendly rule (header): a half, a third or a quarter of the pie, that is a sector of 180, 120 or 90 degrees.
-  function easyAngle(a) { return a === 180 || a === 120 || a === 90; }
-  function easyFrac(f) { return f.n === 1 && (f.d === 2 || f.d === 3 || f.d === 4); }
+  // The hint's wording, written once for every game on this bank (FRIENDLY-LOOSEN).
+  var HINT = 'Try it with pen and paper';
+  // The friendly rule (header). splits2: a number of 12 or under, or two such numbers multiplied (a chain of at most two short divisions).
+  function splits2(x) { if (x <= 12) return true; for (var a = 2; a <= 12; a++) if (x % a === 0 && x / a <= 12) return true; return false; }
+  // a sector's angle read as a fraction: it divides 360, or simplifies by a common factor that splits
+  function readsEasily(angle) { return 360 % angle === 0 || splits2(gcd(angle, 360)); }
+  // ... and, to find an amount or work back to a total, its denominator splits too
+  function frFriendly(angle) { return readsEasily(angle) && splits2(frac(angle).d); }
   function clean(v) { return Math.abs(v * 100 - Math.round(v * 100)) < 1e-9; }   // a value a student can type exactly
 
   // k parts (each a positive multiple of step, at least minU steps) that make `sum`.
@@ -130,7 +137,7 @@
         line: 'A sector of ' + degTex(a) + ' is not ' + tex(a + '\\%') + '. The whole chart is ' + degTex(360) + ', not 100.' });
     }
     return { kind: kind, charts: [chart], ask: { type: 'fraction', pie: ask }, answer: { type: 'fraction', n: f.n, d: f.d },
-      stem: stem, worked: worked, slips: slips, friendly: easyFrac(f) };
+      stem: stem, worked: worked, slips: slips, friendly: readsEasily(angle) };
   }
 
   // ---------------------------------------------------------------- stage 2: find the amount
@@ -173,7 +180,7 @@
     return { kind: 'direct', charts: [chart2], ask: { type: 'amount', pie: pie },
       answer: { type: 'number', value: amount },
       stem: intro(stand) + ' ' + total + ' pies were sold in total. The ' + pie + ' sector is ' + degTex(a) + '. How many ' + pie + ' pies were sold?',
-      worked: worked, slips: slips, friendly: easyFrac(f) };
+      worked: worked, slips: slips, friendly: frFriendly(a) && total % f.d === 0 };
   }
 
   // ---------------------------------------------------------------- stage 3: draw it
@@ -272,7 +279,7 @@
       var bigger = aA === aB ? CANT : (aA > aB ? "Yes, it's the " + sa : "Yes, it's the " + sb);
       if (bigger !== key) slips.push({ kind: 'compare_totals', answer: { type: 'choice', option: bigger },
         line: 'The bigger sector was chosen, but the two charts have different totals. Work out the numbers of pies first.' });
-      friendly = easyFrac(frac(aA)) && tA % frac(aA).d === 0 && easyFrac(frac(aB)) && tB % frac(aB).d === 0;
+      friendly = frFriendly(aA) && tA % frac(aA).d === 0 && frFriendly(aB) && tB % frac(aB).d === 0;
     } else {   // same total stated
       var t = tA, nA2 = t * aA / 360, nB2 = t * aB / 360;
       key = nA2 > nB2 ? "Yes, it's the " + sa : "Yes, it's the " + sb;
@@ -328,7 +335,7 @@
         line: 'The ' + degTex(a) + ' was used as if it were a percentage, so the total was found out of 100. The whole chart is ' + degTex(360) + '.' });
       return { kind: 'total', charts: [chart], ask: { type: 'total', pie: pie, freq: fq }, answer: { type: 'number', value: total },
         stem: intro(stand) + ' The ' + pie + ' sector is ' + degTex(a) + ' and ' + fq + ' ' + pie + ' pies were sold. How many pies were sold in total?',
-        worked: worked, slips: slips, friendly: easyFrac(f) && fq % f.n === 0 };
+        worked: worked, slips: slips, friendly: frFriendly(a) && fq % f.n === 0 };
     }
     var fq2 = s[2], b = s[3], ans = fq2 * b / a, rest = 360 - a - b;       // another sector
     var pies2 = shuffled(rng, PIES).slice(0, 3), sec = [{ pie: pies2[0], angle: a, shown: true }, { pie: pies2[1], angle: b, shown: true }];
@@ -341,7 +348,7 @@
       worked: ['The pies are shared in proportion to the angles.',
         ra === 1 ? degTex(a) + ' is ' + fq2 + ' pies.' : degTex(a) + ' is ' + fq2 + ' pies, so each ' + degTex(g) + ' is ' + tex(fq2 + ' \\div ' + ra + ' = ' + (fq2 / ra)) + ' pies.',
         'The ' + pies2[1] + ' sector is ' + degTex(b) + ', which is ' + tex(rb + ' \\times ' + g + '^\\circ') + ', so it is ' + tex(rb + ' \\times ' + (fq2 / ra) + ' = ' + ans) + ' pies.'],
-      slips: [], friendly: easyAngle(a) && easyAngle(b) && fq2 % ra === 0 };
+      slips: [], friendly: fq2 % ra === 0 && splits2(ra) && splits2(rb) };
   }
 
   var STAGE_FN = { 1: stage1, 2: stage2, 3: stage3, 4: stage4, 5: stage5 };
@@ -358,5 +365,5 @@
     return q;
   }
 
-  root.MaffsPieCharts = { STANDS: STANDS, PIES: PIES, SLOTS: SLOTS, STAGES: [1, 2, 3, 4, 5], BANDS: BANDS, CANT: CANT, question: question };
+  root.MaffsPieCharts = { STANDS: STANDS, PIES: PIES, HINT: HINT, SLOTS: SLOTS, STAGES: [1, 2, 3, 4, 5], BANDS: BANDS, CANT: CANT, question: question };
 })(typeof window !== 'undefined' ? window : globalThis);

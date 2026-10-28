@@ -146,7 +146,7 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
 <script src="../../schools/assets/answer.js"></script>
 <!-- The calculator, stage by stage (canon §4.4, `by stage`): optional in Stages 1-4 (the shared calculator behind its "Calculator"
      toggle, closed; "Calculator optional"; CALC-OPTIONAL, Jon, 28 Oct 2026), required in Stage 5 (the on-screen calculator open
-     with the keypad it composes). The "Try without a calculator" hint shows on friendly questions only (the bank's rule). -->
+     with the keypad it composes). The "Try it with pen and paper" hint (its wording is the bank's HINT) shows on friendly questions only (the bank's rule). -->
 <script type="application/json" id="maffs-calc-stages">{"stage-1": "optional", "stage-2": "optional", "stage-3": "optional", "stage-4": "optional", "stage-5": "required"}</script>
 <script src="../../schools/assets/scroll.js"></script>
 <script src="../../schools/assets/keypad.js"></script>
@@ -198,7 +198,7 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
     <div class="qcard" id="qcard">
       <div class="stage-label" id="stageLabel"></div>
       <div class="qtext" id="qtext"></div>
-      <div class="try-note" id="tryNote" hidden>Try without a calculator.</div>
+      <div class="try-note" id="tryNote" hidden></div>
       <div id="ansBlock">
         <form class="ans-row" id="ansForm" autocomplete="off">
           <div class="tag" id="tag">
@@ -362,6 +362,7 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
     $('hudScore').textContent = score;
     $('stageLabel').textContent = 'Stage ' + stage + ' · ' + (Q.ask.what.charAt(0).toUpperCase() + Q.ask.what.slice(1));
     $('qtext').innerHTML = renderLine(Q.stem);
+    $('tryNote').textContent = G.HINT;       // the wording is the bank's, written once
     $('tryNote').hidden = !(Q.calc === 'optional' && Q.friendly);
     askAnswer();
   }

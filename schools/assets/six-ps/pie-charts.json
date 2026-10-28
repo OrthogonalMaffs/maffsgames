@@ -139,7 +139,8 @@
      },
      "line": "A sector of \\(60^\\circ\\) is not \\(60\\%\\). The whole chart is \\(360^\\circ\\), not 100."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-81ebb264",
@@ -173,7 +174,8 @@
      },
      "line": "A sector of \\(270^\\circ\\) is not \\(270\\%\\). The whole chart is \\(360^\\circ\\), not 100."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-fa5c71b9",
@@ -207,7 +209,8 @@
      },
      "line": "A sector of \\(45^\\circ\\) is not \\(45\\%\\). The whole chart is \\(360^\\circ\\), not 100."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-2a6e9a1c",
@@ -241,7 +244,8 @@
      },
      "line": "A sector of \\(150^\\circ\\) is not \\(150\\%\\). The whole chart is \\(360^\\circ\\), not 100."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-c2db006a",
@@ -275,7 +279,8 @@
      },
      "line": "A sector of \\(240^\\circ\\) is not \\(240\\%\\). The whole chart is \\(360^\\circ\\), not 100."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-7cd2c0b7",
@@ -310,7 +315,8 @@
      },
      "line": "The vegetable sector is \\(\\frac{1}{6}\\), not chicken balti. The two sectors make \\(360^\\circ\\), so chicken balti is the rest."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-bd80f5f9",
@@ -345,7 +351,8 @@
      },
      "line": "The mince sector is \\(\\frac{5}{12}\\), not chicken balti. The two sectors make \\(360^\\circ\\), so chicken balti is the rest."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-b0c0a3fd",
@@ -380,7 +387,8 @@
      },
      "line": "The vegetable sector is \\(\\frac{5}{18}\\), not mince. The two sectors make \\(360^\\circ\\), so mince is the rest."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-b1011a63",
@@ -415,7 +423,8 @@
      },
      "line": "The mince sector is \\(\\frac{2}{9}\\), not chicken balti. The two sectors make \\(360^\\circ\\), so chicken balti is the rest."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-b539d3aa",
@@ -538,7 +547,8 @@
      },
      "line": "The \\(60^\\circ\\) was divided by 100, as if it were a percentage. The whole chart is \\(360^\\circ\\): divide by 360."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-b44e0721",
@@ -568,7 +578,8 @@
      },
      "line": "The \\(45^\\circ\\) was divided by 100, as if it were a percentage. The whole chart is \\(360^\\circ\\): divide by 360."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-06b4c1f7",
@@ -598,7 +609,8 @@
      },
      "line": "The \\(30^\\circ\\) was divided by 100, as if it were a percentage. The whole chart is \\(360^\\circ\\): divide by 360."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-4c2abb31",
@@ -628,7 +640,8 @@
      },
      "line": "The \\(270^\\circ\\) was divided by 100, as if it were a percentage. The whole chart is \\(360^\\circ\\): divide by 360."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-2333c7b7",
@@ -658,7 +671,8 @@
      },
      "line": "The \\(150^\\circ\\) was divided by 100, as if it were a percentage. The whole chart is \\(360^\\circ\\): divide by 360."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-672ef207",
@@ -688,7 +702,8 @@
      },
      "line": "The \\(135^\\circ\\) was divided by 100, as if it were a percentage. The whole chart is \\(360^\\circ\\): divide by 360."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-74f2ba98",
@@ -718,7 +733,8 @@
      },
      "line": "The \\(210^\\circ\\) was divided by 100, as if it were a percentage. The whole chart is \\(360^\\circ\\): divide by 360."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-42b160d5",
@@ -748,7 +764,8 @@
      },
      "line": "The \\(105^\\circ\\) was divided by 100, as if it were a percentage. The whole chart is \\(360^\\circ\\): divide by 360."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-52e5532f",
@@ -778,7 +795,8 @@
      },
      "line": "The \\(35^\\circ\\) was divided by 100, as if it were a percentage. The whole chart is \\(360^\\circ\\): divide by 360."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-f8d8fe72",
@@ -1507,7 +1525,8 @@
     "The home end sold more, so you can tell.",
     "The answer: Yes, it's the home end."
    ],
-   "slip": []
+   "slip": [],
+   "try_without": true
   },
   {
    "id": "pie-charts-438661fa",
@@ -1782,7 +1801,8 @@
      },
      "line": "The \\(60^\\circ\\) was used as if it were a percentage, so the total was found out of 100. The whole chart is \\(360^\\circ\\)."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-2d4edb72",
@@ -1836,7 +1856,8 @@
     "12 pies are \\(\\frac{1}{8}\\) of the total.",
     "The total is \\(12 \\times 8 = 96\\) pies."
    ],
-   "slip": []
+   "slip": [],
+   "try_without": true
   },
   {
    "id": "pie-charts-db5f6973",
@@ -1859,7 +1880,8 @@
     "7 pies are \\(\\frac{1}{12}\\) of the total.",
     "The total is \\(7 \\times 12 = 84\\) pies."
    ],
-   "slip": []
+   "slip": [],
+   "try_without": true
   },
   {
    "id": "pie-charts-994920c9",
@@ -1889,7 +1911,8 @@
      },
      "line": "The \\(72^\\circ\\) was used as if it were a percentage, so the total was found out of 100. The whole chart is \\(360^\\circ\\)."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-c43e98a3",
@@ -1912,7 +1935,8 @@
     "25 pies are \\(\\frac{5}{12}\\) of the total.",
     "One part is \\(25 \\div 5 = 5\\), so the total is \\(5 \\times 12 = 60\\) pies."
    ],
-   "slip": []
+   "slip": [],
+   "try_without": true
   },
   {
    "id": "pie-charts-2083b730",
@@ -1942,7 +1966,8 @@
      },
      "line": "The \\(135^\\circ\\) was used as if it were a percentage, so the total was found out of 100. The whole chart is \\(360^\\circ\\)."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-604b7277",
@@ -1972,7 +1997,8 @@
      },
      "line": "The \\(40^\\circ\\) was used as if it were a percentage, so the total was found out of 100. The whole chart is \\(360^\\circ\\)."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-f8fa4d7a",
@@ -2002,7 +2028,8 @@
      },
      "line": "The \\(80^\\circ\\) was used as if it were a percentage, so the total was found out of 100. The whole chart is \\(360^\\circ\\)."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-12b97163",
@@ -2032,7 +2059,8 @@
      },
      "line": "The \\(36^\\circ\\) was used as if it were a percentage, so the total was found out of 100. The whole chart is \\(360^\\circ\\)."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-8bd76835",
@@ -2062,7 +2090,8 @@
      },
      "line": "The \\(100^\\circ\\) was used as if it were a percentage, so the total was found out of 100. The whole chart is \\(360^\\circ\\)."
     }
-   ]
+   ],
+   "try_without": true
   }
  ]
 }
