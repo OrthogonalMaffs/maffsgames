@@ -817,3 +817,10 @@ Jon has not yet fixed. Spec references are DfE subject-content parts (`docs/resi
   every page's snippet, or a saved hostname filter.
 
 ---
+
+## Post-freeze (after Mon 2 Nov 2026): stage exit on Who Ate All the Pies?
+STAGE-EXIT (28 Oct 2026, build lane) gave seven stage games a "Stages" button and the standard "Back to Games" link on every question and worked example, through the new shared `schools/assets/stage-exit.js` and `.css`. **Who Ate All the Pies? is deferred** (Jon, option 4): it keeps its `body.playing a.back-link{display:none}` rule and carries no stage-exit stylesheet or script, and `scripts/verify-stage-exit.py` exempts it by name (`EXEMPT`).
+- **Root cause:** the shared HUD row has no phone-width space allocation for controls. The shell puts both controls in the HUD row so they cost no height, and the phone-fit rules leave about zero spare height at 320x568. Pies' HUD also holds the calculator toggle (127 px): at 320 px the stage items (114 px) + toggle + "Stages" button already fill the 296 px row, so the link wraps the HUD and costs about 22 px. Pies then ends its answer controls at 551 px against a 528 px fold at 320x568 (603-605 against 600 at 360x640). Main's Pies passes; the shell on Pies does not.
+- **To do after the freeze:** give the HUD row an explicit phone-width budget (items, calculator toggle, exit controls), for example a narrower or icon form of the calculator toggle on phones (calc-flag's area, `calculator.js`) or a defined second HUD line with its height taken from the page's own spare; then add the shell to Pies and remove it from `EXEMPT`. Do not loosen any fold rule or phone-fit threshold.
+- **Check on the same task:** The 6 P's question view has a `Back to games` link in its page header; whether it stays visible during a question has not been checked (report only, not touched).
+

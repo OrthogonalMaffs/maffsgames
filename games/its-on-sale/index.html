@@ -112,7 +112,6 @@ a.back-link:hover{color:var(--text)}
 
 /* Phone rule (canon §7.6.1): once an answer is marked the controls go and the feedback takes their place. */
 .qcard.fb-open #ansBlock,.qcard.fb-open .try-note,.qcard.fb-open .maffs-calc-toggle,.qcard.fb-open .maffs-calc:not(.docked){display:none}
-body.playing a.back-link{display:none}
 @media (max-width:420px){
   .container{padding:.5rem}
   .qcard{padding:.6rem .55rem;gap:.4rem}
@@ -134,6 +133,7 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/stage-exit.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'start' goes straight to the first question (skipping the worked example); 'answer' types the right amount onto the tag with i = 0, a wrong one with i >= 1 (named or not, then Next).
 {
   "start": "IOS.ui.start(1, true)",
@@ -152,6 +152,7 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
 <script src="../../schools/assets/keypad.js"></script>
 <script src="../../schools/assets/calculator.js"></script>
 <script src="../../schools/assets/percentages-money-generator.js"></script>
+<link rel="stylesheet" href="../../schools/assets/stage-exit.css">
 <!-- The bank's plain working (£400 − £40 = £360) as KaTeX when it is drawn (canon 7.1.1); the bank's strings stay as written. -->
 <script src="../../schools/assets/percentages-money-tex.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">

@@ -120,7 +120,6 @@ table.grid th{background:var(--surface);color:var(--muted)}
 
 /* Phone rule (canon §7.6.1): after a step is marked, the controls go and the feedback takes their place. */
 .qcard.fb-open #answer,.qcard.fb-open .ask-line{display:none}
-body.playing a.back-link{display:none}
 @media (max-width:420px){
   .container{padding:.5rem}
   .qcard{padding:.6rem .55rem;gap:.4rem}
@@ -145,6 +144,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/stage-exit.js" data-label="← Rounds"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'answer' fills the boxes (or taps a sign option) with i = 0 the right answer, i >= 1 a wrong one (named, then Next).
 {
   "start": "HCF.ui.start(1)",
@@ -155,6 +155,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 }
 -->
 <script src="../../schools/assets/hc-factor-gen.js"></script>
+<link rel="stylesheet" href="../../schools/assets/stage-exit.css">
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
