@@ -325,7 +325,7 @@ def planted(base, srcs, plant, out_unused=None):
     name, which, old, new, kind = plant
     s = dict(srcs)
     if old not in s[which]:
-        return ['plant %r: the text to change is not in %s (the plant is stale)' % (name, which)]
+        raise RuntimeError('plant %r: the text to change is not in %s (the plant is stale)' % (name, which))
     s[which] = s[which].replace(old, new, 1)
     found = []
     if kind == 'pure':

@@ -121,6 +121,7 @@ a.back-link:hover{color:var(--text)}
 .fb.done .fb-line{border-left-color:var(--correct)}
 .worked{margin:0;padding:0 0 0 1.25rem;font-size:.9rem;line-height:1.45;color:var(--text)}
 .worked li+li{margin-top:.2rem}
+.worked li.why{font-weight:600}
 .worked-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 .fb-next{display:flex;justify-content:center}
 .feedback:empty{display:none}
@@ -529,15 +530,15 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (Q.type === 'angles') { $('figure').hidden = false; drawFigure($('figure'), Q, ok ? Q.key : typedAngles()); }
     if (ok) {
       state = 'done';
-      var wl = workedLines(Q);
-      fb.innerHTML = '<div class="fb done"><div class="fb-line">Yes. ' + renderLine(wl[wl.length - 1]) + '</div>' +
+      // "Yes." then the bank's one-line working (the why); the angles question also gets the whole set of angles it found.
+      fb.innerHTML = '<div class="fb done"><div class="fb-line">Yes. ' + renderLine(Q.why + (Q.type === 'angles' ? ' ' + allAngles(Q) : '')) + '</div>' +
         '<div class="fb-next"><button class="btn solid" id="nextBtn" type="button">' + (last ? 'See results →' : 'Next →') + '</button></div></div>';
       MaffsLock.fresh(fb);
       $('nextBtn').focus();
     } else {
       state = 'wrong';
       fb.innerHTML = '<div class="fb wrong"><div class="fb-line" data-help="reason">' + renderLine(r.why) + '</div><div class="fb-next"></div>' +
-        '<div class="worked-h">How it goes</div><ol class="worked">' + workedLines(Q).map(function (l) { return '<li>' + renderLine(l) + '</li>'; }).join('') + '</ol></div>';
+        '<div class="worked-h">How it goes</div><ol class="worked">' + workedLines(Q).map(function (l, i) { return '<li' + (i >= Q.worked.length - 2 && i < Q.worked.length ? ' class="why"' : '') + '>' + renderLine(l) + '</li>'; }).join('') + '</ol></div>';
       MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance });
     }
   }
@@ -604,6 +605,12 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       question: function () { return Q ? JSON.parse(JSON.stringify(Q)) : null; },
       score: function () { return marks; },
       start: function (n, example) { startStage(n, !example); },
+      // One bank question on screen by itself (stage, slot, seed), so a verifier can see every kind of question.
+      preview: function (n, slot, seed) {
+        MaffsLock.newSession(); stage = n; marks = 0; answered = 0; rightCount = 0; qi = 0;
+        session = [G.adapt(window.MaffsPieCharts.question(n, slot, G.makeRng(seed || 1)))];
+        show('game'); $('hudStage').textContent = n; nextQuestion();
+      },
       // Answer the question on screen: the right answer, or a wrong one.
       answer: function (right) {
         if (Q.type === 'choice') {
