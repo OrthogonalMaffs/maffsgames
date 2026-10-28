@@ -9,6 +9,9 @@ body:has(#game.active) .stage-exit-row{display:none}
 .stage-exit-stages:hover,.stage-exit-home:hover{color:var(--text)}
 body:has(#example.active) .stage-exit-row .stage-exit-stages{display:inline-flex}
 .hud .stage-exit-stages,.hud .stage-exit-home{display:inline-flex;align-items:center;min-height:44px;margin:-12px 0;padding:0;color:var(--muted);font-size:.82rem;text-decoration:none;white-space:nowrap}
+@media (max-width:420px){
+  #game .hud{padding-top:.05rem;padding-bottom:.05rem}
+}
 @media (max-width:360px){
   .hud .stage-exit-stages,.hud .stage-exit-home{font-size:.75rem}
   #game .hud{gap:.1rem}
