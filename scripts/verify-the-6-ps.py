@@ -614,8 +614,8 @@ def play_topic(b, m, topic, out, tag, narrow=False, stop_after=None, offset=0, r
             out.append('%s: %s: calculator tag %r' % (tag, ref, calc))
         try_shown = p.is_visible('#qTry')
         want_try = q['calc'] == 'optional' and q.get('try_without') is True
-        if try_shown != want_try or (try_shown and p.inner_text('#qTry').strip() != 'Try without a calculator'):
-            out.append('%s: %s: the "Try without a calculator" prompt is %s, expected %s' % (tag, ref, 'shown' if try_shown else 'not shown', want_try))
+        if try_shown != want_try or (try_shown and p.inner_text('#qTry').strip() != 'Try it with pen and paper'):
+            out.append('%s: %s: the "Try it with pen and paper" prompt is %s, expected %s' % (tag, ref, 'shown' if try_shown else 'not shown', want_try))
         if narrow:
             sideways(p, '%s (%s)' % (ref, q['format']), out)
             if q['format'] != 'choice' and not p.query_selector('#qKeys .maffs-keypad-key'):
@@ -1525,7 +1525,7 @@ PLANTS = [
      [("$('qCalc').textContent = q.calc === 'optional' ? 'Calculator optional' : q.calc ? 'Calculator' : 'Non-calculator';",
        "$('qCalc').textContent = q.calc ? 'Calculator' : 'Non-calculator';")],
      ['topic:fx-6'], r"calculator tag 'Calculator'"),
-    ('the "Try without a calculator" prompt shown on every question',
+    ('the "Try it with pen and paper" prompt shown on every question',
      [("$('qTry').hidden = !(q.calc === 'optional' && q.try_without === true);", "$('qTry').hidden = false;")],
      ['topic:fx-6'], r'prompt is shown, expected False'),
     ('a right value in the wrong form marked wrong (SR-3)',
