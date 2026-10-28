@@ -23,6 +23,7 @@ DONE: 2026-10-27-build-its-on-sale.md   (merged: PR #579, squash 079ceaa, 27 Oct
 DONE: 2026-10-27-build-as-you-can-see.md   (merged: PR #587, squash 24f641e, 27 Oct 2026; main runs 40576210979 and 40576211649 green)
 DONE: 2026-10-27-build-found-a-mark-batch2.md   (merged: PR #585, squash 18454dc, 27 Oct 2026; main runs 40580295716 and 40580295599 green)
 DONE: 2026-10-27-build-possibly-maybe.md   (merged: PR #594, squash 6512151, 27 Oct 2026; main runs 40596794906 and 40596796589 green)
+DONE: 2026-10-28-build-pictogram-drawing.md   (merged: PR #599, squash 96489d2, 28 Oct 2026; main runs 40711007380 and 40711006678 green)
 
 ## Queue
 1. **found-a-mark**: MERGED (#569) + art swap MERGED (#573, aaef265, main run 40514401072 green). Report still owed to Jon: its "Decided for you" list and screenshots.
@@ -135,7 +136,12 @@ Follow-ups: convert verify-as-you-can-see.py to # ci-shards; if claude/footer-un
 - Standing rule (Jon): any lane may re-run a failed main run once with `gh run rerun <id> --failed`; if it passes, log it in the shared lanes notes file under "Flakes for the cloud lane's step-4 audit"; if it fails again it is real, tell the home lane.
 - After SHARD (#578), a verifier with `--part` lines conflicts on merge with main's `# ci-shards` version: take main's and re-apply as work units. A new content line used to count 120 s + setup median; SHARD fixed the setup-time cause.
 
-Build queue empty (27 Oct 2026, after #594). Nothing uncontracted is started. Open follow-ups for others: as-you-can-see verifier to # ci-shards; footer apply (scripts/apply-footer.py) on as-you-can-see, i-found-a-mark and possibly-maybe if claude/footer-unpin lands; keypad "/" key branch (claude/keypad-fraction-key) awaiting a ruling; shared Stage 6 board label and a shared tolerance helper for MaffsAnswer (candidates); switch The 6 P's to the shared fraction input (see the lanes' notes file).
+## Open contracts (28 Oct 2026; queue NOT empty)
+- stage-exit (contract 7): STOPPED at phase 1, awaiting Jon: no shared shell (four inline copies); cause is `body.playing a.back-link{display:none}` in 8 games (pies, sale, as-you-can-see, possibly-maybe, hc-factor, y-so-steep, i-found-a-mark, free-daily-pizza); proposal: new schools/assets/stage-exit.js + .css, one script and link per page. Local branch claude/build-stage-exit (contract commit 03d8d4da, not pushed).
+- calc-flag (contract 8): STOPPED at phase 1, awaiting Jon: mounting the calculator needs a `check-calculator.py` change (as #595 did) and, in It's on Sale!, a canon 4.4 reading; the contract's friendly rule would flip about 53% of Sale's items. Local branch claude/build-calc-flag (10980010, not pushed).
+- feedback-teaches (contract 9): in progress; collision-free part first, then the why lines on the pie, money and reading-charts banks after calc-flag.
+
+Earlier queue finished 27 Oct 2026 (to #594); not empty now, see Open contracts above. Open follow-ups for others: as-you-can-see verifier to # ci-shards; footer apply (scripts/apply-footer.py) on as-you-can-see, i-found-a-mark and possibly-maybe if claude/footer-unpin lands; keypad "/" key branch (claude/keypad-fraction-key) awaiting a ruling; shared Stage 6 board label and a shared tolerance helper for MaffsAnswer (candidates); switch The 6 P's to the shared fraction input (see the lanes' notes file).
 
 ## possibly-maybe: state (27 Oct 2026, PR #594, 6512151)
 Five stages on the probability bank (schools/assets/probability-generator.js, 60 questions, fixed seed 20261028, 12 a stage, answers computed; imported by schools/assets/probability-game.js). Stages: the scale; not and the missing one (x and 2x); listing outcomes (dice, spinners, coin and dice, menus); expected and relative frequency (is the dice fair, gambler's fallacy); tree diagrams (independent, no without-replacement). Worked example then 10 questions easiest first; boards stage-1..stage-5; roster #108, Unlisted (8). Fractions TYPED in two boxes (Jon's amendment) via the NEW shared file schools/assets/fraction-input.js (MaffsFractionInput), extracted from The 6 P's page, which is unchanged; matched by value, 2/4 = 1/2, lowest terms enforced only where asked (format result, never marked). Verifier scripts/verify-possibly-maybe.py: # ci-shards, 32 units, 13 planted faults caught, about 3m50s locally.
@@ -154,4 +160,19 @@ Notes for next week (in the lanes' notes file): switch The 6 P's to the shared f
 - A verifier "wrong answer" generator must be proven different from the key (14/22 = 7/11).
 - A plant caught only by a random session is flaky in CI: catch it with a deterministic view.
 - Playwright route handlers must take exactly one argument.
+
+## pictogram-drawing: state (28 Oct 2026, PR #599, 96489d2)
+Cause: in games/as-you-can-see/index.html `symbol()`, the clip-path sat on the translated and scaled path, so the cut rectangle landed off the symbol and half and quarter symbols were in the DOM with the right data but never painted. The contract named reading-charts-generator.js; the renderer is in the page. Fixed with a clipped wrapper group (`data-cut`). Worked-step counts agree in number (`sym()` in the generator); key text reads "= 4 lunches". New scripts/verify-chart-drawings.py (# ci-shards, 14 units) hit-tests what is painted for pictograms, bars, line and scatter points, pie slices, spinner wedges and counters, plus a symbol-count wording check; 10 planted faults caught including the original bug. No mismatches in the pie-chart or probability banks. verify-as-you-can-see.py updated for the new key text.
+
+## Decided for you (pictogram-drawing)
+- Renderer fixed in the page (a drawing function, no layout change), not in the generator.
+- New verifier file; the older verifier stays a plain ci-line.
+- Pie angles measured at 85% of the radius, tolerance from the stroke width (about 3-4 degrees); stage 3 pies measured after a right answer (drawn from typed angles).
+- Stem wording left alone.
+
+## Lessons (pictogram-drawing)
+- A verifier that reads attributes and path geometry cannot see a drawing that is in the DOM but not painted: hit-test with elementFromPoint over a grid inside isPointInFill.
+- A clip-path is read in the user space of the element carrying it: never put it on an element with its own transform.
+- Pie boundaries have stroke width: tolerance from the stroke; sample at 0.85 r (labels sit at 0.62 r; spinner letters up to 0.72 r).
+- Probability grids, tables and trees are covered by their own verifier's read-back only (no visibility test).
 
