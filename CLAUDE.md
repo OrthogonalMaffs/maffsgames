@@ -150,6 +150,7 @@ Three things that cost time on 21/09, local or live:
 - Firebase Realtime Database for leaderboard
 - GA4 + Google Sheets dual analytics via `mfg()` wrapper
 - GA4 country tabs and the 'GA4 summary' tab (weekly figures + 3 charts) are Apps Script, NOT GitHub Actions: `docs/apps-script-ga4-country.js` + `docs/apps-script-ga4-summary.js`, one 06:00 trigger (setup `docs/ga4-country-setup.md`; tests `scripts/test-ga4-country.py`, `scripts/test-ga4-summary.py`). No repo workflow writes the Sheet and there are no repo secrets.
+- answer-counts slots (05:40/11:40/17:40 UTC) start 2-6 h LATE and some are skipped (13 runs, 24-28 Oct): GitHub throttling, not the minute. Accepted (Jon, 28 Oct); do not chase. Fetch retries 1/5/15 min.
 - `scripts/` require Python >= 3.10 (`write_text` `newline=`); CI pins 3.12 and `scripts/check-python-version.py` holds it
 
 ## Background processes: start them with `scripts/bg.py` (Jon, 14 Oct 2026, contract BG-LAUNCHER)
