@@ -125,6 +125,7 @@ from urllib.parse import urlsplit
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
 import bank_common as bc  # noqa: E402  (start_stub_server: checked start, free port)
+import plant_common as pc  # noqa: E402
 
 SLUG = "just-pythag-it-bruv"
 LEVEL = "ks3"
@@ -1214,7 +1215,7 @@ async def apply_patch(page, patch):
     if kind == "style":
         await page.add_style_tag(content=code)
     else:
-        await page.evaluate(code)
+        await pc.apply_js(page, "(layout fault)", code)      # a patch that cannot apply is a StalePlant, never a catch
 
 
 async def phone_fit(browser, out, sizes=None, only=None, patch=None, report=True, stats=None):
@@ -1799,13 +1800,22 @@ async def run_all(args, shard, todo):
             print("Layout faults (a short run at the size each concerns, each patched into a fresh page):")
             for name, sizes, patch in faults:
                 with shard.unit(UNIT_LAYOUT + name):
-                    found = []
+                    found, err = [], None
                     try:
                         await phone_fit(browser, found, sizes=sizes, only=UI_FAULT_ONLY, patch=patch, report=False)
-                    except Exception as exc:          # a fault that breaks the page outright is caught too
-                        found.append("the run broke: %s" % str(exc).splitlines()[0])
-                    print("  %-48s %s" % (name, ("CAUGHT (%d failures, e.g. %s)" % (len(found), found[0][:90])) if found else "*** MISSED ***"))
-                    if not found:
+                    except pc.StalePlant as exc:      # the plant did not apply: a failure of the run, never a catch
+                        print("  %-48s *** STALE PLANT: %s ***" % (name, exc.why))
+                        fail("STALE PLANT: %s: %s" % (name, exc.why))
+                        continue
+                    except Exception as exc:          # an error while checking is not a catch (plant_common.is_caught)
+                        err = str(exc).splitlines()[0]
+                    if pc.is_caught(found, err):
+                        print("  %-48s CAUGHT (%d failures, e.g. %s)" % (name, len(found), found[0][:90]))
+                    elif err:
+                        print("  %-48s *** CHECK ERRORED: %s ***" % (name, err))
+                        fail("layout fault check errored (not a catch): %s: %s" % (name, err))
+                    else:
+                        print("  %-48s *** MISSED ***" % name)
                         fail("layout fault not caught: " + name)
 
         planted = [(name, patch) for name, patch in FAULTS if UNIT_FAULT + name in todo]

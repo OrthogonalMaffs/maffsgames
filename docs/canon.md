@@ -1872,6 +1872,12 @@ its random draw served that question: #588). The rule, for every lane:
   7 Oct 2026, by reading the feedback icon's class, which `showFeedback()` sets synchronously). First written in a
   CLAUDE.md handover; contract CTX.
 - Verifiers recompute explanation and hint figures, not just keys (§0.3, "Also recorded with SR-16 to SR-20").
+- **Planted faults go through `scripts/plant_common.py` (STALE-PLANTS, Jon, 28 Oct 2026).** A plant whose target is missing, repeated or unchanged
+  (`apply_plant`, `apply_re_plant`, `apply_js`) raises `StalePlant` and fails the run as `STALE PLANT: <name>`; a catch needs findings AND no
+  error (`is_caught`); a plant is never skipped because its room, game or id is not live (that fails too). Four verifiers counted a plant that
+  never applied, or a check that errored, as CAUGHT (correlation-or-coincidence, just-pythag-it-bruv UI faults, test-ga4-summary, the
+  escape-rooms rating plants when rugby-mud was not live). Every NEW verifier with planted faults uses plant_common; the older ones migrate
+  when next edited (list: `docs/handover/stale-plants.md`). Tested by `scripts/test-plant-common.py`.
 
 ---
 
