@@ -15,6 +15,8 @@
 <link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
 <title>Percentages and Money Game – GCSE Maths | MaffsGames</title>
 <link rel="stylesheet" href="/schools/assets/theme.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script src="../../schools/assets/analytics.js"></script>
 <script src="../../schools/assets/answer-count.js" defer></script>
 <script src="/schools/assets/fold.js" defer></script>
@@ -89,6 +91,9 @@ a.back-link:hover{color:var(--text)}
 .fb.done .fb-line{border-left-color:var(--correct)}
 .worked{margin:0;padding:0 0 0 1.25rem;font-size:.9rem;line-height:1.45}
 .worked li+li{margin-top:.2rem}
+.worked li.why{font-weight:600}
+.glue{white-space:nowrap}
+.qtext .katex,.fb .katex{font-size:1.05em}
 .worked-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 .fb-next{display:flex;justify-content:center}
 .feedback:empty{display:none}
@@ -139,14 +144,17 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
 }
 -->
 <script src="../../schools/assets/answer.js"></script>
-<!-- The calculator, stage by stage (canon §4.4, `by stage`): optional in Stages 1-4 (the student's own, no badge, the on-screen
-     one is not offered), required in Stage 5 (the on-screen calculator, with the keypad it composes). -->
+<!-- The calculator, stage by stage (canon §4.4, `by stage`): optional in Stages 1-4 (the shared calculator behind its "Calculator"
+     toggle, closed; "Calculator optional"; CALC-OPTIONAL, Jon, 28 Oct 2026), required in Stage 5 (the on-screen calculator open
+     with the keypad it composes). The "Try without a calculator" hint shows on friendly questions only (the bank's rule). -->
 <script type="application/json" id="maffs-calc-stages">{"stage-1": "optional", "stage-2": "optional", "stage-3": "optional", "stage-4": "optional", "stage-5": "required"}</script>
 <script src="../../schools/assets/scroll.js"></script>
 <script src="../../schools/assets/keypad.js"></script>
 <script src="../../schools/assets/calculator.js"></script>
 <script src="../../schools/assets/percentages-money-generator.js"></script>
 <link rel="stylesheet" href="../../schools/assets/stage-exit.css">
+<!-- The bank's plain working (£400 − £40 = £360) as KaTeX when it is drawn (canon 7.1.1); the bank's strings stay as written. -->
+<script src="../../schools/assets/percentages-money-tex.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -159,10 +167,10 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
       <p>A high street shop through the year: the summer sale, Black Friday, the January sales and the price rises. Each question is a price tag. Type the amount onto it, in pounds and pence, or a percentage where the tag has a % sign.</p>
       <p>Play the stages in order, or go straight to the one you need. Each starts with a worked example, then 10 questions.</p>
       <div class="stages" id="stageList">
-        <button class="stage-btn" type="button" data-stage="1"><span class="n">1</span><span><span class="t">Percentage of an amount</span><span class="d">How much is taken off the price?</span></span></button>
-        <button class="stage-btn" type="button" data-stage="2"><span class="n">2</span><span><span class="t">Increase and decrease</span><span class="d">The new price after a sale or a rise.</span></span></button>
-        <button class="stage-btn" type="button" data-stage="3"><span class="n">3</span><span><span class="t">Percentage change</span><span class="d">What percentage was knocked off, or added on?</span></span></button>
-        <button class="stage-btn" type="button" data-stage="4"><span class="n">4</span><span><span class="t">Reverse percentages</span><span class="d">The price before the sale or the rise.</span></span></button>
+        <button class="stage-btn" type="button" data-stage="1"><span class="n">1</span><span><span class="t">Percentage of an amount</span><span class="d">How much is taken off the price?</span><span class="calc-badge" data-calc="optional" data-stage="stage-1">Calculator optional</span></span></button>
+        <button class="stage-btn" type="button" data-stage="2"><span class="n">2</span><span><span class="t">Increase and decrease</span><span class="d">The new price after a sale or a rise.</span><span class="calc-badge" data-calc="optional" data-stage="stage-2">Calculator optional</span></span></button>
+        <button class="stage-btn" type="button" data-stage="3"><span class="n">3</span><span><span class="t">Percentage change</span><span class="d">What percentage was knocked off, or added on?</span><span class="calc-badge" data-calc="optional" data-stage="stage-3">Calculator optional</span></span></button>
+        <button class="stage-btn" type="button" data-stage="4"><span class="n">4</span><span><span class="t">Reverse percentages</span><span class="d">The price before the sale or the rise.</span><span class="calc-badge" data-calc="optional" data-stage="stage-4">Calculator optional</span></span></button>
         <button class="stage-btn" type="button" data-stage="5"><span class="n">5</span><span><span class="t">Interest and depreciation</span><span class="d">The bank counter and the car dealer, year by year.</span><span class="calc-badge" data-calc="required" data-stage="stage-5">Calculator required</span></span></button>
       </div>
       <p class="hud-label" style="text-align:center;margin-top:.7rem">10 questions a stage</p>
@@ -201,6 +209,7 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
           </div>
           <button class="btn solid" type="submit" id="checkBtn">Check</button>
         </form>
+        <div id="calcOptWrap" hidden><div id="calcOpt"></div></div>
         <div id="kpHolder"></div>
         <div id="calcWrap" hidden><div id="calc"></div></div>
       </div>
@@ -237,6 +246,14 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
   function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function tex(t) {
+    if (window.katex) { try { return katex.renderToString(t, { throwOnError: false }); } catch (e) { /* fall through */ } }
+    return esc(t.replace(/\\pounds ?/g, '£').replace(/\\times ?/g, '×').replace(/\\div ?/g, '÷').replace(/\\%/g, '%'));
+  }
+  // The bank's plain working becomes KaTeX as it is drawn (MaffsPercentagesMoneyTex); the bank's strings are not rewritten.
+  function renderLine(line) {
+    return MaffsPercentagesMoneyTex.texify(line).split(/\\\(|\\\)/).map(function (part, i) { return i % 2 ? '<span class="glue">' + tex(part) + '</span>' : esc(part); }).join('');
+  }
   function money(p) { return '£' + (p % 100 === 0 ? String(p / 100) : (p / 100).toFixed(2)); }
 
   // The stages, as the bank defines them. calc is what the page's maffs-calc-stages map says (canon §4.4).
@@ -292,7 +309,7 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
   function answerText(q) { return q.answer.type === 'money' ? money(q.answer.pence) : q.answer.value + '%'; }
   function typed(q) { return q.answer.type === 'money' ? (q.answer.pence % 100 === 0 ? String(q.answer.pence / 100) : (q.answer.pence / 100).toFixed(2)) : String(q.answer.value); }
 
-  var stage = 1, Q = null, qs = [], qi = 0, state = 'menu', score = 0, marked = 0, rightCount = 0, kp = null, calc = null, exStep = 0, exQ = null;
+  var stage = 1, Q = null, qs = [], qi = 0, state = 'menu', score = 0, marked = 0, rightCount = 0, kp = null, calc = null, calcOpt = null, exStep = 0, exQ = null;
 
   function show(id) {
     ['menu', 'example', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
@@ -304,14 +321,14 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
   function startExample(n) {
     stage = n; exQ = example(n); exStep = 0;
     $('exLabel').textContent = 'Stage ' + n + ' · ' + STAGES[n].name + ' · worked example';
-    $('exStem').textContent = exQ.stem;
+    $('exStem').innerHTML = renderLine(exQ.stem);
     $('exSteps').innerHTML = '';
     drawExample();
     show('example');
   }
   function drawExample() {
     var lines = exQ.worked, last = exStep >= lines.length - 1;
-    $('exSteps').innerHTML = lines.slice(0, exStep + 1).map(function (l) { return '<li>' + esc(l) + '</li>'; }).join('');
+    $('exSteps').innerHTML = lines.slice(0, exStep + 1).map(function (l) { return '<li>' + renderLine(l) + '</li>'; }).join('');
     $('exNext').textContent = last ? 'Start the questions' : 'Show the next step';
     MaffsLock.fresh($('example'));
   }
@@ -344,7 +361,7 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
     $('hudQ').textContent = qi + '/' + PER;
     $('hudScore').textContent = score;
     $('stageLabel').textContent = 'Stage ' + stage + ' · ' + (Q.ask.what.charAt(0).toUpperCase() + Q.ask.what.slice(1));
-    $('qtext').textContent = Q.stem;
+    $('qtext').innerHTML = renderLine(Q.stem);
     $('tryNote').hidden = !(Q.calc === 'optional' && Q.friendly);
     askAnswer();
   }
@@ -353,6 +370,11 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
     var on = STAGES[stage].calc === 'required', input = box();
     $('wrapA').hidden = on; $('wrapC').hidden = !on;      // the wrapper, so the keypad's own cue goes with its box
     $('calcWrap').hidden = !on;
+    $('calcOptWrap').hidden = on;          // stages 1-4: the calculator is there behind its toggle, closed (CALC-OPTIONAL)
+    if (!on && window.MaffsCalc) {
+      if (!calcOpt) calcOpt = MaffsCalc.mount($('calcOpt'), { dock: $('qcard') });
+      calcOpt.close(); calcOpt.clear();
+    }
     $('unitPre').hidden = Q.answer.type !== 'money';
     $('unitPost').hidden = Q.answer.type !== 'percent';
     input.value = ''; $('msg').textContent = '';
@@ -385,15 +407,15 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
     var fb = $('feedback');
     if (ok) {
       state = 'done';
-      fb.innerHTML = '<div class="fb done"><div class="fb-line">Yes. ' + esc(Q.worked[Q.worked.length - 1]) + '</div>' +
+      fb.innerHTML = '<div class="fb done"><div class="fb-line">Yes. ' + renderLine(Q.why) + '</div>' +
         '<div class="fb-next"><button class="btn solid" id="nextBtn" type="button">' + (qi >= PER ? 'See results →' : 'Next →') + '</button></div></div>';
       MaffsLock.fresh(fb);
       $('nextBtn').focus();
     } else {
       state = 'wrong';
       var first = r.kind === 'slip' ? r.why : 'Not quite. The answer is ' + answerText(Q) + '.';
-      fb.innerHTML = '<div class="fb wrong"><div class="fb-line" data-help="reason">' + esc(first) + '</div><div class="fb-next"></div>' +
-        '<div class="worked-h">How it goes</div><ol class="worked">' + Q.worked.map(function (l) { return '<li>' + esc(l) + '</li>'; }).join('') + '</ol></div>';
+      fb.innerHTML = '<div class="fb wrong"><div class="fb-line" data-help="reason">' + renderLine(first) + '</div><div class="fb-next"></div>' +
+        '<div class="worked-h">How it goes</div><ol class="worked">' + Q.worked.map(function (l, i, all) { return '<li' + (i >= all.length - 2 ? ' class="why"' : '') + '>' + renderLine(l) + '</li>'; }).join('') + '</ol></div>';
       MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance });
     }
   }
@@ -449,7 +471,13 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
       question: function () { return Q ? JSON.parse(JSON.stringify(Q)) : null; },
       score: function () { return score; },
       calcMounted: function () { return !!calc; },
+      calcOptionalMounted: function () { return !!calcOpt; },
       start: function (n, skipExample) { if (skipExample) startStage(n); else startExample(n); },
+      // One bank question on screen by itself (stage, slot, seed), so a verifier can see every kind of question.
+      preview: function (n, slot, seed) {
+        MaffsLock.newSession(); stage = n; qs = [G.question(n, slot, makeRng(seed || 1))]; qi = 0; score = 0; marked = 0; rightCount = 0;
+        stageBadge(); show('game'); $('hudStage').textContent = n; nextQuestion();
+      },
       // Type an answer onto the tag and check it: the right one, or a wrong one (the right amount plus 7 pence, or 7 per cent).
       answer: function (right) {
         var v = Q.answer.type === 'money' ? (right ? typed(Q) : ((Q.answer.pence + 7) / 100).toFixed(2)) : (right ? String(Q.answer.value) : String(Q.answer.value + 7));

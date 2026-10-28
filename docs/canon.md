@@ -483,19 +483,28 @@ exam has a non-calculator paper and calculator papers.
 | `required` | The questions need a calculator (Pythagoras to 1 d.p.) | "Calculator required" |
 | `scientific` | The questions need a scientific calculator (powers beyond ², ln/log, eˣ, trig, π); the on-screen calculator shows its scientific keys (contract SCI-CALC, 9 Oct 2026) | "Scientific calculator required" |
 | `not allowed` | Practice for a non-calculator paper; the numbers are chosen to be done by hand | "Non-calculator" (Jon, 6 Oct 2026) |
-| `optional` | Either works | worded when the first game is tagged |
+| `optional` | Either works; the shared calculator is there behind its "Calculator" toggle, closed, for a student without one (CALC-OPTIONAL, Jon, 28 Oct 2026) | "Calculator optional" |
 | `untagged` | Not yet decided. Every game starts here and is tagged in its own PR | nothing |
 | `by stage` | A staged game whose stages differ (contract CALC-BY-STAGE, Jon, 23 Oct 2026): each stage has one of the four values above it, `untagged` excepted | each stage's badge on its choice; the header shows the badge of the stage being played |
 
 **`by stage`: the map, the badges, the check (CALC-BY-STAGE, 23 Oct 2026).** A game tagged `by stage` declares
 its stages once in its page, keyed by its stage (mode) keys: `<script type="application/json" id="maffs-calc-stages">{"stage-1": "not allowed", …, "stage-4": "scientific"}</script>`,
 each value `required`, `scientific`, `not allowed` or `optional`. Each stage's choice on the start screen carries that stage's badge,
-the usual markup and wording with `data-stage="<key>"` added (an `optional` stage shows none until that value is worded), and
+the usual markup and wording with `data-stage="<key>"` added (an `optional` stage shows "Calculator optional"), and
 the header shows the badge of the stage being played, filled in at run time. `scripts/check-calculator.py` enforces, statically: the
 map is there and valid, and only on a `by stage` game; one badge per badged stage, of its value; no other full badge on the page;
-calculator.js and keypad.js when any stage is `required` or `scientific`, a `keys: 'scientific'` mount when any stage is `scientific`,
+calculator.js and keypad.js when any stage is `required`, `scientific` or `optional`, a `keys: 'scientific'` mount when any stage is `scientific`,
 and no calculator.js when no stage needs one. That the calculator mounts in its stages only, and the header follows the stage, is
 checked by the game's own verifier in play. Whole-game values are checked exactly as before. First planned user: `take-a-walk` (in its own PR).
+
+**`optional` loads the calculator (CALC-OPTIONAL, Jon, 28 Oct 2026).** A game or stage tagged `optional` loads calculator.js and keypad.js
+like `required`, shows `<span class="calc-badge" data-calc="optional">Calculator optional</span>` (start screen, and the header of the
+stage being played), and mounts the shared calculator behind its "Calculator" toggle, closed; the student's own calculator is still
+welcome. The tag is per game or per stage, never per question: there is no per-question calculator field. A bank's `friendly` boolean
+only decides whether the "Try without a calculator" hint shows on that question, and is true only where every step is one easy mental
+step (sectors of 90, 180 or 120 degrees; 10%, 25% or 50% of an amount; totals that divide 360 cleanly). The game's own verifier checks
+in play that the toggle is there on every question of an `optional` stage and the hint only on friendly ones. A game that offers no
+calculator at all (for example a chart-reading or probability game with no arithmetic worth a calculator) is `not allowed`.
 
 **One badge, one style.** The start screen shows `<span class="calc-badge" data-calc="…">…</span>`,
 styled once in `schools/assets/theme.css` (`.calc-badge`; `data-calc="required"` takes `--hint`,

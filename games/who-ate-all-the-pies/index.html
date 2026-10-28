@@ -82,6 +82,12 @@ a.back-link:hover{color:var(--text)}
 .charts .rim{fill:none;stroke:var(--border);stroke-width:1.5}
 .charts text.warn{fill:var(--wrong)}
 .ask-line{display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;min-height:1.4em}
+.hud{flex-wrap:wrap}
+.calc-holder{margin-left:auto;width:auto}
+.calc-holder .maffs-calc{width:auto}
+.calc-holder:has(.maffs-calc-toggle.open){flex-basis:100%}
+@media (max-height:700px){.badge-row{display:none}}
+@media (max-height:620px){.calc-holder .maffs-calc-toggle{min-height:32px;padding:.05rem .7rem;font-size:.85rem}.hud-item{min-width:40px}.hud{margin-bottom:.1rem}.qcard{gap:.15rem}}
 .ask-line h2{font-size:.92rem;font-weight:700}
 .msg{font-size:.85rem;font-weight:700;color:var(--muted);text-align:right}
 
@@ -115,6 +121,7 @@ a.back-link:hover{color:var(--text)}
 .fb.done .fb-line{border-left-color:var(--correct)}
 .worked{margin:0;padding:0 0 0 1.25rem;font-size:.9rem;line-height:1.45;color:var(--text)}
 .worked li+li{margin-top:.2rem}
+.worked li.why{font-weight:600}
 .worked-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 .fb-next{display:flex;justify-content:center}
 .feedback:empty{display:none}
@@ -131,6 +138,8 @@ a.back-link:hover{color:var(--text)}
 
 /* Phone rule (canon §7.6.1): once a question is marked, the boxes and keys go and the feedback takes their place. */
 .qcard.fb-open #answer,.qcard.fb-open .ask-line,.qcard.fb-open #kpHolder{display:none}
+.hud:has(+ .badge-row) .calc-holder{display:block}
+.badge-row{text-align:center;min-height:0}
 @media (max-width:420px){
   .container{padding:.5rem}
   .qcard{padding:.6rem .55rem;gap:.4rem}
@@ -168,9 +177,11 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 }
 -->
 <script src="../../schools/assets/answer.js"></script>
-<!-- The phone keypad for typed answers (MaffsKeypad, canon §4.4): the calculator is optional here, so the keypad only. -->
+<!-- The phone keypad for typed answers (MaffsKeypad, canon §4.4), and the shared calculator behind its "Calculator" toggle, closed: the
+     calculator is optional here (CALC-OPTIONAL, Jon, 28 Oct 2026). The "Try without a calculator" hint shows on friendly questions only. -->
 <script src="../../schools/assets/scroll.js"></script>
 <script src="../../schools/assets/keypad.js"></script>
+<script src="../../schools/assets/calculator.js"></script>
 <script src="../../schools/assets/pie-chart-generator.js"></script>
 <script src="../../schools/assets/pie-game.js"></script>
 <link rel="stylesheet" href="../../schools/assets/stage-exit.css">
@@ -191,7 +202,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       <p>A pie chart shows how a whole is shared out. The whole chart is <strong>360°</strong>, so a slice's angle over 360 is its fraction of the pies.</p>
       <p>Each stage starts with a worked example, then ten questions. Type your answers in the boxes. A calculator is optional: some questions say you can try without one.</p>
       <div class="stages" id="stageList"></div>
-      <p class="hud-label" style="text-align:center;margin-top:.7rem">Calculator optional · 10 questions a stage</p>
+      <p class="hud-label" style="text-align:center;margin-top:.7rem"><span class="calc-badge" data-calc="optional">Calculator optional</span> · 10 questions a stage</p>
     </div>
     <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
     <div class="maffs-start-note" data-maffs-start-note></div>
@@ -212,7 +223,9 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       <div class="hud-item"><div class="hud-label">Stage</div><div class="hud-val" id="hudStage">1</div></div>
       <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/10</div></div>
       <div class="hud-item"><div class="hud-label">Marks</div><div class="hud-val" id="hudScore">0</div></div>
+      <div class="calc-holder" id="calcHolder"></div>
     </div>
+    <div class="badge-row"><span class="calc-badge" data-calc="optional">Calculator optional</span></div>
     <div class="qcard" id="qcard">
       <div class="qtext" id="qtext"></div>
       <div class="charts" id="figure"></div>
@@ -443,10 +456,19 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (Q.type === 'angles') { if (touch() && window.innerHeight < 760) fig.hidden = true; else drawFigure(fig, Q, Q.sectors.map(function () { return NaN; })); }
     else drawFigure(fig, Q, null);
     $('instr').textContent = Q.type === 'choice' ? 'Choose one' : (Q.type === 'fraction' ? 'Type the fraction' : (Q.type === 'angles' ? 'Type each angle' : 'Type the number'));
-    $('msg').textContent = Q.friendly ? 'Try without a calculator' : 'Calculator optional';
+    $('msg').textContent = Q.friendly ? 'Try without a calculator' : '';
+    mountCalc();
     buildAnswer();
     MaffsLock.fresh($('answer'));
     window.scrollTo(0, 0);
+  }
+
+  // The shared calculator behind its "Calculator" toggle, closed, on every question (CALC-OPTIONAL).
+  var calc = null;
+  function mountCalc() {
+    if (!window.MaffsCalc) return;
+    if (!calc) calc = MaffsCalc.mount($('calcHolder'), { dock: $('qcard') });
+    calc.close(); calc.clear();
   }
 
   var CHECK = '<button class="btn solid" id="checkBtn" type="button" disabled>Check</button>';
@@ -509,15 +531,15 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (Q.type === 'angles') { $('figure').hidden = false; drawFigure($('figure'), Q, ok ? Q.key : typedAngles()); }
     if (ok) {
       state = 'done';
-      var wl = workedLines(Q);
-      fb.innerHTML = '<div class="fb done"><div class="fb-line">Yes. ' + renderLine(wl[wl.length - 1]) + '</div>' +
+      // "Yes." then the bank's one-line working (the why); the angles question also gets the whole set of angles it found.
+      fb.innerHTML = '<div class="fb done"><div class="fb-line">Yes. ' + renderLine(Q.why + (Q.type === 'angles' ? ' ' + allAngles(Q) : '')) + '</div>' +
         '<div class="fb-next"><button class="btn solid" id="nextBtn" type="button">' + (last ? 'See results →' : 'Next →') + '</button></div></div>';
       MaffsLock.fresh(fb);
       $('nextBtn').focus();
     } else {
       state = 'wrong';
       fb.innerHTML = '<div class="fb wrong"><div class="fb-line" data-help="reason">' + renderLine(r.why) + '</div><div class="fb-next"></div>' +
-        '<div class="worked-h">How it goes</div><ol class="worked">' + workedLines(Q).map(function (l) { return '<li>' + renderLine(l) + '</li>'; }).join('') + '</ol></div>';
+        '<div class="worked-h">How it goes</div><ol class="worked">' + workedLines(Q).map(function (l, i) { return '<li' + (i >= Q.worked.length - 2 && i < Q.worked.length ? ' class="why"' : '') + '>' + renderLine(l) + '</li>'; }).join('') + '</ol></div>';
       MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance });
     }
   }
@@ -584,6 +606,12 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       question: function () { return Q ? JSON.parse(JSON.stringify(Q)) : null; },
       score: function () { return marks; },
       start: function (n, example) { startStage(n, !example); },
+      // One bank question on screen by itself (stage, slot, seed), so a verifier can see every kind of question.
+      preview: function (n, slot, seed) {
+        MaffsLock.newSession(); stage = n; marks = 0; answered = 0; rightCount = 0; qi = 0;
+        session = [G.adapt(window.MaffsPieCharts.question(n, slot, G.makeRng(seed || 1)))];
+        show('game'); $('hudStage').textContent = n; nextQuestion();
+      },
       // Answer the question on screen: the right answer, or a wrong one.
       answer: function (right) {
         if (Q.type === 'choice') {

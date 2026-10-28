@@ -106,6 +106,8 @@ a.back-link:hover{color:var(--text)}
 .fb.done .fb-line{border-left-color:var(--correct)}
 .worked{margin:0;padding:0 0 0 1.25rem;font-size:.9rem;line-height:1.45;color:var(--text)}
 .worked li+li{margin-top:.2rem}
+.worked li.why{font-weight:600}
+.qtext .katex,.fb .katex,.opts .katex{font-size:1.05em}
 .worked-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 .fb-next{display:flex;justify-content:center}
 .feedback:empty{display:none}
@@ -543,7 +545,14 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
 
   /* ---------- the stage's worked example ---------- */
   function workedLines(q) { return q.worked.slice(); }
-  function renderLine(t) { return esc(t); }
+  function tex(t) {
+    if (window.katex) { try { return katex.renderToString(t, { throwOnError: false }); } catch (e) { /* fall through */ } }
+    return esc(t.replace(/\\times ?/g, '×').replace(/\\div ?/g, '÷'));
+  }
+  // The bank's plain arithmetic (4 × 5 = 20) becomes KaTeX as it is drawn (G.texify); the bank's strings are not rewritten.
+  function renderLine(line) {
+    return G.texify(line).split(/\\\(|\\\)/).map(function (part, i) { return i % 2 ? '<span class="glue">' + tex(part) + '</span>' : esc(part); }).join('');
+  }
 
   function startStage(n, skipExample) {
     MaffsLock.newSession();
@@ -637,15 +646,15 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
     $('qcard').classList.add('keyfig');
     if (ok) {
       state = 'done';
-      var wl = workedLines(Q);
-      fb.innerHTML = '<div class="fb done"><div class="fb-line">Yes. ' + renderLine(wl[wl.length - 1]) + '</div>' +
+      // "Yes." then the bank's one-line working (the why), so a right answer teaches too.
+      fb.innerHTML = '<div class="fb done"><div class="fb-line">Yes. ' + renderLine(Q.why) + '</div>' +
         '<div class="fb-next"><button class="btn solid" id="nextBtn" type="button">' + (last ? 'See results →' : 'Next →') + '</button></div></div>';
       MaffsLock.fresh(fb);
       $('nextBtn').focus();
     } else {
       state = 'wrong';
       fb.innerHTML = '<div class="fb wrong"><div class="fb-line" data-help="reason">' + renderLine(r.why) + '</div><div class="fb-next"></div>' +
-        '<div class="worked-h">How it goes</div><ol class="worked">' + workedLines(Q).map(function (l) { return '<li>' + renderLine(l) + '</li>'; }).join('') + '</ol></div>';
+        '<div class="worked-h">How it goes</div><ol class="worked">' + workedLines(Q).map(function (l, i, all) { return '<li' + (i >= all.length - 2 ? ' class="why"' : '') + '>' + renderLine(l) + '</li>'; }).join('') + '</ol></div>';
       MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance });
     }
   }

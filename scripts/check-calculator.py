@@ -10,6 +10,10 @@ on-screen calculator, schools/assets/calculator.js (MaffsCalc), because many res
 own a scientific calculator. The roster is not served, so a page cannot read it at run time: each
 game includes the script itself, and this check keeps the three in step, either way.
 
+An `optional` game (CALC-OPTIONAL, Jon, 28 Oct 2026) is the same as `required` in what it loads and shows, with its own badge:
+it loads calculator.js and keypad.js, shows <span class="calc-badge" data-calc="optional">Calculator optional</span> on its start
+screen, and offers the calculator behind a toggle (the game's own verifier checks that in play).
+
 A `scientific` game (contract SCI-CALC, 9 Oct 2026) needs the scientific keys (xʸ, ln, log, eˣ, trig,
 π): it loads the same two scripts, shows "Scientific calculator required" and mounts the calculator with
 {keys: 'scientific'}.
@@ -32,11 +36,11 @@ A `by stage` game (contract CALC-BY-STAGE, Jon, 23 Oct 2026) is a staged game wh
 <script type="application/json" id="maffs-calc-stages">{"stage-1": "not allowed", ..., "stage-4": "scientific"}</script>
 once in its page, keyed by its stage (mode) keys, each value required / scientific / not allowed / optional. Each
 stage's choice on the start screen carries that stage's badge, the usual markup with data-stage="<key>" added
-(an `optional` stage shows none: its wording is decided when the first game is tagged optional). Fails on:
+(an `optional` stage shows "Calculator optional"; CALC-OPTIONAL, Jon, 28 Oct 2026). Fails on:
   - `by stage` with no map, a map that is not a JSON object of strings, or a value outside those four;
   - a map on a game whose roster value is not `by stage`;
   - a badged stage without exactly one badge of its value's markup and wording, a badge naming no stage in the
-    map, an `optional` stage with a badge, or a full badge with no data-stage (the header's badge, of the
+    map, an `optional` stage without its "Calculator optional" badge, or a full badge with no data-stage (the header's badge, of the
     stage being played, is filled in at run time and is empty in the source);
   - a map with a required or scientific stage on a page without calculator.js (and keypad.js, as above); a map
     with a scientific stage that never mounts MaffsCalc with keys: 'scientific'; calculator.js on a map with
@@ -52,7 +56,7 @@ BASE = pathlib.Path(__file__).resolve().parent.parent
 ROSTER = ".claude/rules/game-roster.md"
 VALUES = {"required", "scientific", "not allowed", "optional", "untagged", "by stage"}
 STAGE_VALUES = {"required", "scientific", "not allowed", "optional"}   # a `by stage` map's values
-CALC_VALUES = {"required", "scientific"}            # the two values that load the on-screen calculator
+CALC_VALUES = {"required", "scientific", "optional"}   # the values that load the on-screen calculator (CALC-OPTIONAL, 28 Oct 2026)
 # Question players that are not roster games (Jon, 27 Oct 2026): The 6 P's marks each question calculator / optional / not, so the
 # page loads the shared calculator and mounts it per question. A player must load keypad.js too and must mount MaffsCalc.
 PLAYERS = {"the-6-ps/index.html"}
@@ -62,6 +66,7 @@ INCLUDE = re.compile(r'<script\b[^>]*\bsrc="[^"]*schools/assets/calculator\.js"'
 # loads calculator.js loads keypad.js too.
 KEYPAD = re.compile(r'<script\b[^>]*\bsrc="[^"]*schools/assets/keypad\.js"', re.I)
 BADGE = re.compile(r'<span class="calc-badge" data-calc="required"[^>]*>Calculator required</span>')
+OPT_BADGE = re.compile(r'<span class="calc-badge" data-calc="optional"[^>]*>Calculator optional</span>')
 SCI_BADGE = re.compile(r'<span class="calc-badge" data-calc="scientific"[^>]*>Scientific calculator required</span>')
 SCI_MOUNT = re.compile(r"""keys\s*:\s*['"]scientific['"]""")
 STAGE_MAP = re.compile(r'<script type="application/json" id="maffs-calc-stages">(.*?)</script>', re.S)
@@ -70,6 +75,7 @@ ANY_BADGE = re.compile(r'<span class="calc-badge"([^>]*)>([^<]+)</span>')
 # The markup and wording of each value that shows a badge (canon §4.4).
 BADGE_FOR = {"required": ("required", "Calculator required"),
              "scientific": ("scientific", "Scientific calculator required"),
+             "optional": ("optional", "Calculator optional"),
              "not allowed": ("not-allowed", "Non-calculator")}
 # A game row: | 12 | Name | `slug` | ... | calculator |   (a withdrawn game is numbered "—")
 ROW = re.compile("^\\|\\s*(?:\\d+|—)\\s*\\|[^|]*\\|\\s*`([a-z0-9-]+)`\\s*\\|.*\\|\\s*([^|]*?)\\s*\\|\\s*$")
@@ -104,6 +110,7 @@ def check(root):
             fails.extend(by_stage(slug, val, src, m))
             continue
         inc, badge, sbadge = bool(INCLUDE.search(src)), bool(BADGE.search(src)), bool(SCI_BADGE.search(src))
+        obadge = bool(OPT_BADGE.search(src))
         if inc and not KEYPAD.search(src):
             fails.append("%s: loads the on-screen calculator without schools/assets/keypad.js, which its answer "
                          "mode needs" % slug)
@@ -112,20 +119,25 @@ def check(root):
         if val == "required":
             if not badge:
                 fails.append("%s: roster says required, but the start screen has no 'Calculator required' badge" % slug)
-            if sbadge:
-                fails.append("%s: shows 'Scientific calculator required', but its roster field is 'required'" % slug)
+            if sbadge or obadge:
+                fails.append("%s: shows another calculator badge, but its roster field is 'required'" % slug)
         elif val == "scientific":
             if not sbadge:
                 fails.append("%s: roster says scientific, but the start screen has no 'Scientific calculator required' "
                              "badge" % slug)
-            if badge:
-                fails.append("%s: shows 'Calculator required', but its roster field is 'scientific'" % slug)
+            if badge or obadge:
+                fails.append("%s: shows another calculator badge, but its roster field is 'scientific'" % slug)
             if not SCI_MOUNT.search(src):
                 fails.append("%s: roster says scientific, but the page never mounts MaffsCalc with keys: 'scientific'" % slug)
+        elif val == "optional":
+            if not obadge:
+                fails.append("%s: roster says optional, but the start screen has no 'Calculator optional' badge" % slug)
+            if badge or sbadge:
+                fails.append("%s: shows a required badge, but its roster field is 'optional'" % slug)
         else:
             if inc:
                 fails.append("%s: loads the on-screen calculator, but its roster field is %r" % (slug, val))
-            if badge or sbadge:
+            if badge or sbadge or obadge:
                 fails.append("%s: shows a calculator badge, but its roster field is %r" % (slug, val))
     games = {(root / "games" / s / "index.html").resolve() for s in tags}
     for page in root.rglob("*.html"):
@@ -177,10 +189,7 @@ def by_stage(slug, val, src, m):
         fails.append("%s: a badge names stage %r, which is not in the stage map" % (slug, k))
     for k, v in sorted(stages.items()):
         got = found.get(k, [])
-        if v == "optional":
-            if got:
-                fails.append("%s: stage %r is optional, which shows no badge, but has %s" % (slug, k, got))
-        elif got != [BADGE_FOR[v]]:
+        if got != [BADGE_FOR[v]]:
             fails.append("%s: stage %r is %r, so it needs one badge data-calc=%r reading %r; it has %s"
                          % (slug, k, v, BADGE_FOR[v][0], BADGE_FOR[v][1], got or "none"))
     values = set(stages.values())
@@ -202,7 +211,7 @@ def selftest():
     """Each breach planted in a scratch copy of the relevant files must fail; the clean copy must pass."""
     tags = roster(BASE)
     req = [s for s, v in tags.items() if v == "required"]
-    other = [s for s, v in tags.items() if v != "required" and (BASE / "games" / s / "index.html").exists()]
+    other = [s for s, v in tags.items() if v not in ("required", "optional") and (BASE / "games" / s / "index.html").exists()]
     if not req or not other:
         return ["self-test: needs one required and one other game in the roster"], 0
     r, o = req[0], other[0]
@@ -287,6 +296,26 @@ def selftest():
         ("a stage map on a whole-game-tagged page",
          lambda d: edit(d / "games" / r / "index.html", lambda s: s.replace(
              "</body>", '<script type="application/json" id="maffs-calc-stages">{"stage-1": "required"}</script></body>', 1)), True),
+        ("optional stage fixture: the clean badge passes",
+         lambda d: edit(fpage(d), lambda s: s.replace('"stage-1": "not allowed"', '"stage-1": "optional"', 1).replace(
+             'data-calc="not-allowed" data-stage="stage-1">Non-calculator',
+             'data-calc="optional" data-stage="stage-1">Calculator optional', 1)), False),
+        ("an optional stage carrying the non-calculator badge",
+         lambda d: edit(fpage(d), lambda s: s.replace('"stage-1": "not allowed"', '"stage-1": "optional"', 1)), True),
+        ("an optional-only map with no calculator.js",
+         lambda d: edit(fpage(d), lambda s: INCLUDE.sub("<script data-x", s.replace('"stage-4": "scientific"', '"stage-4": "optional"', 1).replace(
+             'data-calc="scientific" data-stage="stage-4">Scientific calculator required',
+             'data-calc="optional" data-stage="stage-4">Calculator optional', 1))), True),
+        ("an optional roster game retagged from a required one keeps the wrong badge",
+         lambda d: edit(d / ROSTER, retag(r, "required", "optional")), True),
+        ("a required game retagged optional with its badge and the calculator passes",
+         lambda d: (edit(d / ROSTER, retag(r, "required", "optional")),
+                    edit(d / "games" / r / "index.html", lambda s: BADGE.sub(
+                        '<span class="calc-badge" data-calc="optional">Calculator optional</span>', s))), False),
+        ("an optional game without the include",
+         lambda d: (edit(d / ROSTER, retag(r, "required", "optional")),
+                    edit(d / "games" / r / "index.html", lambda s: INCLUDE.sub("<script data-x", BADGE.sub(
+                        '<span class="calc-badge" data-calc="optional">Calculator optional</span>', s)))), True),
         ("the 6 P's player with the calculator, the mount and the keypad",
          lambda d: (d / "the-6-ps").mkdir() or (d / "the-6-ps" / "index.html").write_text(
              '<script src="/schools/assets/keypad.js"></script><script src="/schools/assets/calculator.js"></script>'
