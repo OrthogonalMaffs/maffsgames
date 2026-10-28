@@ -10,6 +10,10 @@
 # judges check-site.yml only) and a failure here fails only this job: the file on main stays as it was, and the site
 # hides any figure whose source is more than 7 days old.
 #
+# Retry (Jon, 28 Oct 2026): the fetch is retried three times, after 1, 5 and 15 minutes, on a network error, an HTTP error or a reply that is
+# not JSON. A reply that parses but fails validation is not retried. Either way a failure writes nothing, fails the run, and GitHub e-mails the
+# account that last edited the cron line (Vector52F, Jon's). Slots start 2 to 6 hours late; that is accepted (see CLAUDE.md), no second schedule.
+#
 # Three slots, not one (Jon, 24 Oct 2026): GitHub starts scheduled runs late and may drop one, and the first 05:40 run
 # did not start at all. A run whose figures match the file commits nothing, so extra runs cost nothing but a log line.
 name: answer-counts
@@ -30,7 +34,7 @@ jobs:
   counts:
     name: Fetch and commit the answer counts
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 35           # one fetch retried after 1, 5 and 15 minutes (scripts/fetch-answer-counts.py) is up to ~25 minutes
     steps:
       - uses: actions/checkout@v4
         with:
