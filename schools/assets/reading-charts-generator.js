@@ -123,6 +123,7 @@
   function symbols(r) { return Math.ceil(r.q / 4); }          // symbols counted as the picture shows them
   function wholes(r) { return Math.floor(r.q / 4); }
   function partOf(r) { return r.q % 4; }
+  function sym(n, whole) { return n + ' ' + (whole ? 'whole ' : '') + (n === 1 ? 'symbol' : 'symbols'); }   // counts agree in number: 1 symbol, 2 symbols
   function pickRowWith(rng, ch, part) {                       // a row whose part symbol is `part` quarters (0: none)
     var ok = [];
     ch.rows.forEach(function (r, i) { if (partOf(r) === part) ok.push(i); });
@@ -137,8 +138,8 @@
       per = pick(rng, slot === 0 ? cleanPer : [3, 4, 20]);
       ch = picChart(rng, per, 'whole'); i = rint(rng, 0, 4); r = ch.rows[i]; v = val(ch, i);
       stem = 'The pictogram shows the ' + lower(ch.title) + '. ' + keyLine(ch) + ' How many ' + ch.what + ' are shown for ' + r.label + '?';
-      w = ['The key says each symbol stands for ' + ch.per + ' ' + ch.what + '.', r.label + ' has ' + wholes(r) + ' symbols.',
-        wholes(r) + ' symbols, each ' + ch.per + ': ' + wholes(r) + ' × ' + ch.per + ' = ' + v + '.'];
+      w = ['The key says each symbol stands for ' + ch.per + ' ' + ch.what + '.', r.label + ' has ' + sym(wholes(r)) + '.',
+        sym(wholes(r)) + ', each ' + ch.per + ': ' + wholes(r) + ' × ' + ch.per + ' = ' + v + '.'];
       return finish(1, slot, 'pic-read', ch, stem, { op: 'read', row: r.label }, num(v), w,
         [slipN('key-ignored', symbols(r), 'You counted the symbols (' + symbols(r) + ') but not what each one stands for. Each symbol is ' + ch.per + ' ' + ch.what + ', so multiply.')]);
     }
@@ -146,7 +147,7 @@
       per = pick(rng, halfPer); ch = picChart(rng, per, 'half'); i = pickRowWith(rng, ch, 2); r = ch.rows[i]; v = val(ch, i);
       stem = 'The pictogram shows the ' + lower(ch.title) + '. ' + keyLine(ch) + ' How many ' + ch.what + ' are shown for ' + r.label + '?';
       w = ['One whole symbol stands for ' + per + ' ' + ch.what + ', so a half symbol stands for ' + (per / 2) + '.',
-        r.label + ' has ' + wholes(r) + ' whole symbols and one half symbol.',
+        r.label + ' has ' + sym(wholes(r), true) + ' and one half symbol.',
         wholes(r) + ' × ' + per + ' + ' + (per / 2) + ' = ' + v + '.'];
       return finish(1, slot, 'pic-half', ch, stem, { op: 'read', row: r.label }, num(v), w, [
         slipN('half-as-whole', symbols(r) * per, 'You counted the half symbol as a whole one. A half symbol is half of ' + per + ', which is ' + (per / 2) + '.'),
@@ -175,7 +176,7 @@
       r = ch.rows[i]; v = val(ch, i);
       stem = 'The pictogram shows the ' + lower(ch.title) + '. ' + keyLine(ch) + ' How many ' + ch.what + ' are shown for ' + r.label + '?';
       w = ['One whole symbol stands for ' + per + ' ' + ch.what + ', so a quarter symbol stands for ' + (per / 4) + '.',
-        r.label + ' has ' + wholes(r) + ' whole symbols and one quarter symbol.', wholes(r) + ' × ' + per + ' + ' + (per / 4) + ' = ' + v + '.'];
+        r.label + ' has ' + sym(wholes(r), true) + ' and one quarter symbol.', wholes(r) + ' × ' + per + ' + ' + (per / 4) + ' = ' + v + '.'];
       return finish(1, slot, 'pic-quarter', ch, stem, { op: 'read', row: r.label }, num(v), w, [
         slipN('quarter-as-whole', symbols(r) * per, 'You counted the quarter symbol as a whole one. A quarter symbol is a quarter of ' + per + ', which is ' + (per / 4) + '.'),
         slipN('quarter-as-half', wholes(r) * per + per / 2, 'A quarter symbol is only a quarter of ' + per + ' (' + (per / 4) + '), not a half.'),
@@ -186,7 +187,7 @@
       var n = rint(rng, 2, 7), half = rng() < 0.5; v = n * per + (half ? per / 2 : 0);
       stem = 'The pictogram shows the ' + lower(ch.title) + '. ' + keyLine(ch) + ' A new row has ' + v + ' ' + ch.what + '. How many symbols would show it? (A half symbol counts as 0.5.)';
       var syms = v / per;
-      w = ['Each symbol stands for ' + per + ' ' + ch.what + '.', 'Divide: ' + v + ' ÷ ' + per + ' = ' + syms + ' symbols.'];
+      w = ['Each symbol stands for ' + per + ' ' + ch.what + '.', 'Divide: ' + v + ' ÷ ' + per + ' = ' + sym(syms) + '.'];
       return finish(1, slot, 'pic-draw', ch, stem, { op: 'draw', value: v }, num(syms), w, [
         slipN('key-ignored', v, 'You typed the number of ' + ch.what + ', not the number of symbols. Divide by what one symbol stands for (' + per + ').'),
         slipN('times-key', v * per, 'To find how many symbols you divide by the key, you do not multiply.')]);
@@ -213,7 +214,7 @@
       per = pick(rng, [2, 3, 4, 5, 10]); ch = picChart(rng, per, 'whole'); ch.keyHidden = true;
       i = rint(rng, 0, 4); ch.rows[i].q = 4 * rint(rng, 2, 5); r = ch.rows[i]; v = val(ch, i);
       stem = 'The pictogram shows the ' + lower(ch.title) + '. The key is missing. The row for ' + r.label + ' has ' + wholes(r) + ' symbols and shows ' + v + ' ' + ch.what + '. How many ' + ch.what + ' does one symbol stand for?';
-      w = [r.label + ' has ' + wholes(r) + ' symbols for ' + v + ' ' + ch.what + '.', 'One symbol is ' + v + ' ÷ ' + wholes(r) + ' = ' + per + '.'];
+      w = [r.label + ' has ' + sym(wholes(r)) + ' for ' + v + ' ' + ch.what + '.', 'One symbol is ' + v + ' ÷ ' + wholes(r) + ' = ' + per + '.'];
       return finish(1, slot, 'pic-find-key', ch, stem, { op: 'findkey', row: r.label, value: v }, num(per), w, [
         slipN('key-ignored', v, 'That is the number of ' + ch.what + ' on the whole row. One symbol stands for ' + v + ' ÷ ' + wholes(r) + '.'),
         slipN('times-key', v * wholes(r), 'To find one symbol you divide the total by the number of symbols.')]);
@@ -223,7 +224,7 @@
       i = rint(rng, 0, 4); ch.rows[i].q = 4 * 2 * rint(rng, 1, 3); r = ch.rows[i]; v = val(ch, i);
       var per2 = per * 2;
       stem = 'The pictogram shows the ' + lower(ch.title) + '. ' + keyLine(ch) + ' The key is changed so that one symbol stands for ' + per2 + ' ' + ch.what + '. How many symbols would ' + r.label + ' need now?';
-      w = [r.label + ' has ' + v + ' ' + ch.what + ' (' + wholes(r) + ' symbols × ' + per + ').', 'With one symbol standing for ' + per2 + ': ' + v + ' ÷ ' + per2 + ' = ' + (v / per2) + ' symbols.'];
+      w = [r.label + ' has ' + v + ' ' + ch.what + ' (' + sym(wholes(r)) + ' × ' + per + ').', 'With one symbol standing for ' + per2 + ': ' + v + ' ÷ ' + per2 + ' = ' + sym(v / per2) + '.'];
       return finish(1, slot, 'pic-new-key', ch, stem, { op: 'newkey', row: r.label, newPer: per2 }, num(v / per2), w, [
         slipN('key-ignored', wholes(r), 'That is how many symbols it needs with the old key. The new key is bigger, so fewer symbols are needed.'),
         slipN('times-key', v * per2, 'You divide ' + v + ' by the new key (' + per2 + '), you do not multiply.')]);
