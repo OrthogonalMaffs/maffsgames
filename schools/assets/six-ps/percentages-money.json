@@ -88,8 +88,7 @@
     "20% is 2 lots of 10%: 2 × £6 = £12.",
     "So £12 is taken off the price."
    ],
-   "slip": [],
-   "try_without": true
+   "slip": []
   },
   {
    "id": "percentages-money-8b4e80e4",
@@ -111,8 +110,7 @@
     "5% is half of that: £1.",
     "So £1 is taken off the price."
    ],
-   "slip": [],
-   "try_without": true
+   "slip": []
   },
   {
    "id": "percentages-money-fad6d069",
@@ -134,8 +132,7 @@
     "30% is 3 lots of 10%: 3 × £30 = £90.",
     "So £90 is taken off the price."
    ],
-   "slip": [],
-   "try_without": true
+   "slip": []
   },
   {
    "id": "percentages-money-e401e589",
@@ -158,8 +155,7 @@
     "15% is £12 + £6 = £18.",
     "So £18 is taken off the price."
    ],
-   "slip": [],
-   "try_without": true
+   "slip": []
   },
   {
    "id": "percentages-money-b92a085b",
@@ -181,8 +177,7 @@
     "75% is 3 quarters: 3 × £20 = £60.",
     "So £60 is taken off the price."
    ],
-   "slip": [],
-   "try_without": true
+   "slip": []
   },
   {
    "id": "percentages-money-36881925",
@@ -204,8 +199,7 @@
     "40% is 4 lots of 10%: 4 × £12 = £48.",
     "So £48 is taken off the price."
    ],
-   "slip": [],
-   "try_without": true
+   "slip": []
   },
   {
    "id": "percentages-money-4ecf092c",
@@ -272,8 +266,7 @@
     "35% is 3 × £60 + £30 = £210.",
     "So £210 is taken off the price."
    ],
-   "slip": [],
-   "try_without": true
+   "slip": []
   },
   {
    "id": "percentages-money-ec64aa01",
@@ -331,8 +324,7 @@
      },
      "line": "£8 is the 20% itself. The question asks for the new price, so take it off: £40 − £8 = £32."
     }
-   ],
-   "try_without": true
+   ]
   },
   {
    "id": "percentages-money-56ebb92f",
@@ -390,8 +382,7 @@
      },
      "line": "£24 is the 30% itself. The question asks for the new price, so take it off: £80 − £24 = £56."
     }
-   ],
-   "try_without": true
+   ]
   },
   {
    "id": "percentages-money-87366f8a",
@@ -421,8 +412,7 @@
      },
      "line": "£36 is the 15% itself. The question asks for the new price, so take it off: £240 − £36 = £204."
     }
-   ],
-   "try_without": true
+   ]
   },
   {
    "id": "percentages-money-72ae3836",
@@ -451,8 +441,7 @@
      },
      "line": "£240 is the 40% itself. The question asks for the new price, so take it off: £600 − £240 = £360."
     }
-   ],
-   "try_without": true
+   ]
   },
   {
    "id": "percentages-money-760e0456",
@@ -539,8 +528,7 @@
      },
      "line": "£3 is the 5% itself. The question asks for the new price, so add it on: £60 + £3 = £63."
     }
-   ],
-   "try_without": true
+   ]
   },
   {
    "id": "percentages-money-fc246a0a",
@@ -569,8 +557,7 @@
      },
      "line": "£100 is the 20% itself. The question asks for the new price, so add it on: £500 + £100 = £600."
     }
-   ],
-   "try_without": true
+   ]
   },
   {
    "id": "percentages-money-6c9886ca",
@@ -600,8 +587,7 @@
      },
      "line": "£3 is the 15% itself. The question asks for the new price, so add it on: £20 + £3 = £23."
     }
-   ],
-   "try_without": true
+   ]
   },
   {
    "id": "percentages-money-de688b4e",
@@ -684,8 +670,7 @@
      },
      "line": "The change was divided by the new price, £640. A percentage change is a percentage of the original price, £800."
     }
-   ],
-   "try_without": true
+   ]
   },
   {
    "id": "percentages-money-c292b5a5",
@@ -732,8 +717,7 @@
     "1% of the original price £120 is £1.20 (÷ 100).",
     "£36 ÷ £1.20 = 30, so the reduction is 30%."
    ],
-   "slip": [],
-   "try_without": true
+   "slip": []
   },
   {
    "id": "percentages-money-b9b7c452",
@@ -756,8 +740,7 @@
     "1% of the original price £400 is £4 (÷ 100).",
     "£60 ÷ £4 = 15, so the reduction is 15%."
    ],
-   "slip": [],
-   "try_without": true
+   "slip": []
   },
   {
    "id": "percentages-money-a392736b",
@@ -780,8 +763,7 @@
     "1% of the original price £40 is £0.40 (÷ 100).",
     "£16 ÷ £0.40 = 40, so the reduction is 40%."
    ],
-   "slip": [],
-   "try_without": true
+   "slip": []
   },
   {
    "id": "percentages-money-3da64486",
@@ -851,8 +833,7 @@
     "1% of the original price £40 is £0.40 (÷ 100).",
     "£8 ÷ £0.40 = 20, so the increase is 20%."
    ],
-   "slip": [],
-   "try_without": true
+   "slip": []
   },
   {
    "id": "percentages-money-4c6fff66",
@@ -906,8 +887,7 @@
     "1% of the original price £80 is £0.80 (÷ 100).",
     "£4 ÷ £0.80 = 5, so the increase is 5%."
    ],
-   "slip": [],
-   "try_without": true
+   "slip": []
   },
   {
    "id": "percentages-money-17af6961",
@@ -959,8 +939,7 @@
      },
      "line": "Taking 20% off £32 gives £25.60, which is not the original price. £32 is already 80% of the original, so work back to 100%."
     }
-   ],
-   "try_without": true
+   ]
   },
   {
    "id": "percentages-money-49cee612",
@@ -989,8 +968,7 @@
      },
      "line": "Taking 10% off £18 gives £16.20, which is not the original price. £18 is already 90% of the original, so work back to 100%."
     }
-   ],
-   "try_without": true
+   ]
   },
   {
    "id": "percentages-money-619f4e05",
@@ -1019,8 +997,7 @@
      },
      "line": "Taking 30% off £210 gives £147, which is not the original price. £210 is already 70% of the original, so work back to 100%."
     }
-   ],
-   "try_without": true
+   ]
   },
   {
    "id": "percentages-money-0ced9e0d",
@@ -1049,8 +1026,7 @@
      },
      "line": "Taking 40% off £36 gives £21.60, which is not the original price. £36 is already 60% of the original, so work back to 100%."
     }
-   ],
-   "try_without": true
+   ]
   },
   {
    "id": "percentages-money-637a68d8",
@@ -1079,8 +1055,7 @@
      },
      "line": "Taking 50% off £80 gives £40, which is not the original price. £80 is already 50% of the original, so work back to 100%."
     }
-   ],
-   "try_without": true
+   ]
   },
   {
    "id": "percentages-money-7c5e43e5",
@@ -1196,8 +1171,7 @@
      },
      "line": "Adding 20% to £600 gives £720, which is not the original price. £600 is already 120% of the original, so work back to 100%."
     }
-   ],
-   "try_without": true
+   ]
   },
   {
    "id": "percentages-money-e675a03e",
@@ -1226,8 +1200,7 @@
      },
      "line": "Adding 10% to £440 gives £484, which is not the original price. £440 is already 110% of the original, so work back to 100%."
     }
-   ],
-   "try_without": true
+   ]
   },
   {
    "id": "percentages-money-fd8d36dc",
@@ -1256,8 +1229,7 @@
      },
      "line": "Adding 50% to £300 gives £450, which is not the original price. £300 is already 150% of the original, so work back to 100%."
     }
-   ],
-   "try_without": true
+   ]
   },
   {
    "id": "percentages-money-680a846b",
