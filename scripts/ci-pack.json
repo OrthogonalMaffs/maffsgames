@@ -235,7 +235,7 @@
    "tier": "content"
   },
   "verify-feedback-teaches-charts.py": {
-   "how": "chosen from 12 timed unit(s)",
+   "how": "kept from the pack (1 needed)",
    "label": "Feedback that teaches, As You Can See (every reading-charts question has a one-line why equal to the last two worked lines, recomputed here from the worked lines; every run of plain arithmetic in a feedback or question string becomes KaTeX and nothing else is touched, against an independent converter on thousands of strings and on time, week, decimal and bare-number probes; the page played at four phone sizes with a wide font and real KaTeX: no plain arithmetic anywhere on screen, a right answer shows Yes then the why, a named slip shows the why marked in the working, Next above the fold; the planted faults, each caught)",
    "parts": 1,
    "tier": "content"
@@ -313,7 +313,7 @@
    "tier": "content"
   },
   "verify-who-ate-all-the-pies.py": {
-   "how": "kept from the pack (1 needed)",
+   "how": "kept from the pack (2 needed)",
    "label": "Who Ate All the Pies? (every question of the five stages over 20 seeds a slot, recomputed from its own printed numbers with exact fractions, never from the bank's or the game's code: fractions, amounts, every table angle, can-you-tell verdicts, totals; slips different from the answer; sectors make 360; the game's marking compared with an independent marker on thousands of probe answers; sessions of ten, easiest first; all five stages played in the page at 390 px, worked example then ten questions with the keypad open: every drawn slice read back from its path against the data, labels and key text at least 12 px, a wrong table angle visibly leaves the circle open, one board submission a stage; the first three questions of every stage at 375, 360, 320, 1280 and 1366 px, with a wide font: answer boxes, keys and Next above the fold, no sideways scroll; fault-injection self-test: the planted faults, each caught)",
    "parts": 2,
    "tier": "content"
