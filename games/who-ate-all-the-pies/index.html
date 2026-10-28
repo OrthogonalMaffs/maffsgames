@@ -178,7 +178,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 -->
 <script src="../../schools/assets/answer.js"></script>
 <!-- The phone keypad for typed answers (MaffsKeypad, canon §4.4), and the shared calculator behind its "Calculator" toggle, closed: the
-     calculator is optional here (CALC-OPTIONAL, Jon, 28 Oct 2026). The "Try without a calculator" hint shows on friendly questions only. -->
+     calculator is optional here (CALC-OPTIONAL, Jon, 28 Oct 2026). The "Try it with pen and paper" hint (its wording is the bank's HINT) shows on friendly questions only. -->
 <script src="../../schools/assets/scroll.js"></script>
 <script src="../../schools/assets/keypad.js"></script>
 <script src="../../schools/assets/calculator.js"></script>
@@ -199,7 +199,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     </svg>
     <div class="panel menu-info">
       <p>A pie chart shows how a whole is shared out. The whole chart is <strong>360°</strong>, so a slice's angle over 360 is its fraction of the pies.</p>
-      <p>Each stage starts with a worked example, then ten questions. Type your answers in the boxes. A calculator is optional: some questions say you can try without one.</p>
+      <p>Each stage starts with a worked example, then ten questions. Type your answers in the boxes. A calculator is optional, behind the Calculator button: some questions say to try it with pen and paper.</p>
       <div class="stages" id="stageList"></div>
       <p class="hud-label" style="text-align:center;margin-top:.7rem"><span class="calc-badge" data-calc="optional">Calculator optional</span> · 10 questions a stage</p>
     </div>
@@ -455,7 +455,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (Q.type === 'angles') { if (touch() && window.innerHeight < 760) fig.hidden = true; else drawFigure(fig, Q, Q.sectors.map(function () { return NaN; })); }
     else drawFigure(fig, Q, null);
     $('instr').textContent = Q.type === 'choice' ? 'Choose one' : (Q.type === 'fraction' ? 'Type the fraction' : (Q.type === 'angles' ? 'Type each angle' : 'Type the number'));
-    $('msg').textContent = Q.friendly ? 'Try without a calculator' : '';
+    $('msg').textContent = Q.friendly ? MaffsPieCharts.HINT : '';
     mountCalc();
     buildAnswer();
     MaffsLock.fresh($('answer'));

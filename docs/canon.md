@@ -501,8 +501,12 @@ checked by the game's own verifier in play. Whole-game values are checked exactl
 like `required`, shows `<span class="calc-badge" data-calc="optional">Calculator optional</span>` (start screen, and the header of the
 stage being played), and mounts the shared calculator behind its "Calculator" toggle, closed; the student's own calculator is still
 welcome. The tag is per game or per stage, never per question: there is no per-question calculator field. A bank's `friendly` boolean
-only decides whether the "Try without a calculator" hint shows on that question, and is true only where every step is one easy mental
-step (sectors of 90, 180 or 120 degrees; 10%, 25% or 50% of an amount; totals that divide 360 cleanly). The game's own verifier checks
+only decides whether the "Try it with pen and paper" hint (Jon, 28 Oct 2026; it was "Try without a calculator", which implied mental
+maths) shows on that question, and is true where every step is a standard Foundation non-calculator method with a few lines of working:
+percentages built from 10%, 5% and 1% of round amounts that make whole pence, a sector read as a fraction of 360 that simplifies by
+common factors of 12 or under, increases and decreases built the same way. Not friendly: long multiplication or division of awkward
+numbers (12% of £379) or a decimal that does not end. Each bank writes its rule in its header and its wording once, as `HINT`; the games
+read it from the bank. The game's own verifier checks
 in play that the toggle is there on every question of an `optional` stage and the hint only on friendly ones. A game that offers no
 calculator at all (for example a chart-reading or probability game with no arithmetic worth a calculator) is `not allowed`.
 
