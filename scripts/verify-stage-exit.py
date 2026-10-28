@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-# ci-shards: Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all eight games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught) | | 4
-# ci-deps: schools/assets/stage-exit.js schools/assets/stage-exit.css games/who-ate-all-the-pies/ games/its-on-sale/ games/as-you-can-see/ games/possibly-maybe/ games/hc-factor/ games/y-so-steep/ games/i-found-a-mark/ games/free-daily-pizza/
+# ci-shards: Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all seven games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught) | | 4
+# ci-deps: schools/assets/stage-exit.js schools/assets/stage-exit.css games/its-on-sale/ games/as-you-can-see/ games/possibly-maybe/ games/hc-factor/ games/y-so-steep/ games/i-found-a-mark/ games/free-daily-pizza/
 """Verification for the shared stage-exit shell (contract STAGE-EXIT, Jon, 28 Oct 2026).
 
 The stage games hid "Back to Games" while a question was on screen and had no way back to the stage picker,
 so the only ways out were ten questions or the browser's Back button. schools/assets/stage-exit.{js,css} give every
 one of them a "Stages" button next to the standard back link while a stage or worked example is on screen.
 
-For each of the eight games this opens the page, starts a stage and, on the worked example (where the game has one)
+For each of the seven games (Who Ate All the Pies? is exempt, see EXEMPT) this opens the page, starts a stage and, on the worked example (where the game has one)
 and on a question, asserts:
   - the stage button and the Back to Games link are both on screen, inside the viewport, text at least 12 px;
   - one tap on the button reaches the stage picker (#menu active, body not playing), and no game_completed event,
@@ -29,7 +29,11 @@ import bank_common as bc  # noqa: E402
 from playwright.sync_api import sync_playwright  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-GAMES = ['who-ate-all-the-pies', 'its-on-sale', 'as-you-can-see', 'possibly-maybe',
+# Who Ate All the Pies? is exempt BY NAME (Jon, 28 Oct 2026): its HUD holds the calculator toggle, so the shared HUD
+# controls do not fit at 320 and 360 px without breaking the phone-fit rules, and no fold rule is loosened. It keeps its
+# hide rule and carries no stage-exit stylesheet or script. Revisit after the 2 Nov shared-infra freeze (docs/todo.md).
+EXEMPT = ['who-ate-all-the-pies']
+GAMES = ['its-on-sale', 'as-you-can-see', 'possibly-maybe',
          'hc-factor', 'y-so-steep', 'i-found-a-mark', 'free-daily-pizza']
 SIZES = [(320, 568), (360, 640), (375, 667), (390, 844), (1280, 720)]
 ASSETS = {'stage-exit.js': os.path.join(ROOT, 'schools', 'assets', 'stage-exit.js'),
@@ -226,7 +230,7 @@ def mutate(js=(), css=()):
 
 GO = "    var go = document.getElementById('menuBtn')"
 PLANTS = [
-    ('the stage button is never shown (example)', 'who-ate-all-the-pies',
+    ('the stage button is never shown (example)', 'possibly-maybe',
      dict(css=[('body:has(#example.active) .stage-exit-row .stage-exit-stages{display:inline-flex}', 'body:has(#example.active) .stage-exit-row .stage-exit-stages{display:none}')]),
      r'no ".*" button on screen'),
     ('the stage button is never shown (HUD)', 'free-daily-pizza',
@@ -280,7 +284,7 @@ def main():
     except (AttributeError, ValueError):
         pass
     shard = bc.Shard(__file__, args)
-    units = ['exit ' + g for g in GAMES] + ['fit %dx%d' % s for s in SIZES] + ['plant: ' + p[0] for p in PLANTS]
+    units = ['exempt'] + ['exit ' + g for g in GAMES] + ['fit %dx%d' % s for s in SIZES] + ['plant: ' + p[0] for p in PLANTS]
     if args.list_units:
         print('\n'.join(units))
         return 0
@@ -288,6 +292,12 @@ def main():
     out = []
     ok = True
     proc, base = bc.start_stub_server()
+    if 'exempt' in mine:
+        with shard.unit('exempt'):
+            for g in EXEMPT:
+                src = read(os.path.join(ROOT, 'games', g, 'index.html'))
+                if 'stage-exit' in src:
+                    out.append('%s: is exempt by name but carries the stage-exit shell; take it out of EXEMPT' % g)
     try:
         for g in GAMES:
             if 'exit ' + g in mine:
@@ -298,7 +308,7 @@ def main():
             if 'fit %dx%d' % s in mine:
                 with shard.unit('fit %dx%d' % s):
                     fit_size(base, s, out)
-                print('stage-exit: both controls in view on all eight games at %dx%d' % s)
+                print('stage-exit: both controls in view on all seven games at %dx%d' % s)
     finally:
         proc.terminate()
     for p in PLANTS:
