@@ -105,6 +105,37 @@ def expected(q):
     return 'choice', 'They sold the same number' if a1 == a2 else "Yes, it's " + (p1 if a1 > a2 else p2)
 
 
+def easy_angle(a):
+    """A sector that is a half, a third or a quarter of the pie (180, 120, 90 degrees)."""
+    f = Fraction(a, 360)
+    return f.numerator == 1 and f.denominator in (2, 3, 4)
+
+
+def friendly_expected(q):
+    """The bank header's rule, recomputed here from the chart data and the question (CALC-OPTIONAL, 28 Oct 2026): the hint shows only
+    where every step is one easy mental step: no arithmetic at all, or every sector used is a half, a third or a quarter of the pie and
+    every division is exact, or (a table to angles) a total that divides 360."""
+    ch, ask, st = q['charts'], q['ask'], q['stage']
+    angle = lambda c, pie: next(s for s in ch[c]['sectors'] if s['pie'] == pie)['angle']
+    t = ask['type']
+    if t == 'fraction':
+        return easy_angle(angle(0, ask['pie']))
+    if t == 'angle':
+        return 360 % ch[0]['total'] == 0
+    if t == 'total':
+        a = angle(0, ask['pie'])
+        return easy_angle(a) and ask['freq'] % Fraction(a, 360).numerator == 0
+    if t == 'amount' and 'known' in ask:
+        a, b = angle(0, ask['known']), angle(0, ask['pie'])
+        return easy_angle(a) and easy_angle(b) and ask['knownFreq'] % (a // math.gcd(a, b)) == 0
+    if t == 'amount':
+        a = angle(0, ask['pie'])
+        return easy_angle(a) and ch[0]['total'] % Fraction(a, 360).denominator == 0
+    if t == 'compare' and len(ch) == 2 and ch[0]['total'] is not None and ch[1]['total'] is not None and ch[0]['total'] != ch[1]['total']:
+        return all(easy_angle(angle(i, ask['pie'])) and ch[i]['total'] % Fraction(angle(i, ask['pie']), 360).denominator == 0 for i in (0, 1))
+    return True                                          # reasoning, "you can't tell": no arithmetic
+
+
 def check_question(q):
     errs = []
     tag = 's%d slot %d' % (q['stage'], q['slot'])
@@ -158,6 +189,11 @@ def check_question(q):
                 errs.append('%s: a slip names the right option or none' % tag)
     if not q['worked'] or any(not w for w in q['worked']):
         errs.append('%s: no worked answer' % tag)
+    try:
+        if bool(q['friendly']) != friendly_expected(q):
+            errs.append('%s: friendly is %s, recomputed %s' % (tag, q['friendly'], friendly_expected(q)))
+    except Exception as e:  # noqa: BLE001
+        errs.append('%s: could not recompute friendly: %s' % (tag, e))
     return errs
 
 
@@ -397,12 +433,31 @@ def play_stage(page, st, size, out, n, full):
         page.wait_for_function("PIE.ui.state() === 'asking'", timeout=8000)
         q = page.evaluate('PIE.ui.question()')
         page.wait_for_timeout(120)
-        m = page.evaluate("""() => { const r = [...document.querySelectorAll('#answer input, #answer button, #kpHolder button')].filter(x => x.offsetParent).map(x => x.getBoundingClientRect());
-            return { last: r.length ? Math.max(...r.map(x => x.bottom)) : 0, sw: document.documentElement.scrollWidth, iw: innerWidth, right: r.length ? Math.max(...r.map(x => x.right)) : 0 }; }""")
+        m = page.evaluate("""() => { const r = [...document.querySelectorAll('#answer input, #answer button, #kpHolder button, #calcHolder .maffs-calc-toggle')].filter(x => x.offsetParent).map(x => x.getBoundingClientRect());
+            const tg = document.querySelector('#calcHolder .maffs-calc-toggle'), mg = document.getElementById('msg');
+            return { tog: !!(tg && tg.offsetParent), togOpen: !!document.querySelector('#calcHolder .maffs-calc-toggle.open'),
+                     badge: (document.querySelector('.badge-row .calc-badge') || {}).textContent, msg: mg.textContent.trim(),
+                     last: r.length ? Math.max(...r.map(x => x.bottom)) : 0, sw: document.documentElement.scrollWidth, iw: innerWidth, right: r.length ? Math.max(...r.map(x => x.right)) : 0 }; }""")
         if m['last'] > fold + 0.5:
             out.append('%s q%d: answer controls end at %d, below the fold (%d)' % (where, qn, m['last'], fold))
         if m['sw'] > m['iw'] or m['right'] > m['iw'] + 0.5:
             out.append('%s q%d: sideways scroll or a control off the screen (%d > %d)' % (where, qn, max(m['sw'], m['right']), m['iw']))
+        if not m['tog'] or m['togOpen']:
+            out.append('%s q%d: the calculator toggle is %s' % (where, qn, 'open' if m['togOpen'] else 'not on the screen'))
+        if m['badge'] != 'Calculator optional':
+            out.append('%s q%d: the header badge reads %r' % (where, qn, m['badge']))
+        if (m['msg'] == 'Try without a calculator') != bool(q['friendly']) or (m['msg'] not in ('', 'Try without a calculator')):
+            out.append('%s q%d: the hint reads %r for friendly=%s' % (where, qn, m['msg'], q['friendly']))
+        if qn == 0 and m['tog']:                         # the toggle opens a working calculator: 12 x 379 / 100 = 45.48
+            page.evaluate("document.querySelector('#calcHolder .maffs-calc-toggle').click()")
+            page.wait_for_timeout(200)
+            res = page.evaluate("""() => { const k = t => [...document.querySelectorAll('#calcHolder .maffs-calc-key')].find(x => x.textContent.trim() === t);
+                for (const t of ['1','2','\u00d7','3','7','9','\u00f7','1','0','0','=']) { const b = k(t); if (!b) return 'no key ' + t; b.click(); }
+                return document.querySelector('#calcHolder .maffs-calc-result').textContent.trim(); }""")
+            if res != '45.48':
+                out.append('%s: the calculator gave %r for 12 x 379 / 100, not 45.48' % (where, res))
+            page.evaluate("document.querySelector('#calcHolder .maffs-calc-toggle').click()")
+            page.wait_for_timeout(150)
         check_svgs(page.evaluate(SVG_JS), q, out, '%s q%d' % (where, qn))
         kind = 'right'
         if qn == 1:
@@ -538,6 +593,14 @@ def check(html, module, out, engine=True, big=False, small=(), quick=False, shar
 
 # Each plant: (what, file, [(old, new)], kind, pattern its finding must match).
 PLANTS = [
+    ('the friendly flag wrong (every question marked friendly, as 210/360 once was)', 'module',
+     [("friendly: b.friendly,", "friendly: true,")], 'engine', r'friendly is'),
+    ('no calculator offered (the toggle never mounted)', 'page',
+     [("if (!calc) calc = MaffsCalc.mount($('calcHolder'), { dock: $('qcard') });", "if (!calc) calc = { close: function () {}, clear: function () {} };")],
+     'play', r'toggle'),
+    ('the hint on every question (not only the friendly ones)', 'page',
+     [("$('msg').textContent = Q.friendly ? 'Try without a calculator' : '';", "$('msg').textContent = 'Try without a calculator';")],
+     'play', r'hint reads'),
     ('a wrong amount (stage 2 and 5 key one too many)', 'module',
      [("      q.key = b.answer.value;\n      q.slips = b.slips.map(function (s) { return { kind: s.kind, value: s.answer.value, line: s.line }; });",
        "      q.key = b.answer.value + 1;\n      q.slips = b.slips.map(function (s) { return { kind: s.kind, value: s.answer.value, line: s.line }; });")], 'engine',
