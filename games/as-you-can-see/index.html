@@ -441,8 +441,9 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
       g.appendChild(cl);
     }
     var p = el('path', { class: 'sym', d: SHAPES[shape], transform: 'translate(' + cx.toFixed(1) + ',' + cy.toFixed(1) + ') scale(' + r + ')', 'vector-effect': 'non-scaling-stroke' });
-    if (quarters < 4) p.setAttribute('clip-path', 'url(#' + cp + ')');
-    g.appendChild(p);
+    // The clip is on a wrapper, not on the transformed path: a clip-path is read in the user space of the element that carries it,
+    // so on the path (translate + scale) the cut rectangle landed far off the symbol and a half or quarter symbol vanished.
+    if (quarters < 4) { var w = el('g', { 'clip-path': 'url(#' + cp + ')', 'data-cut': 1 }); w.appendChild(p); g.appendChild(w); } else g.appendChild(p);
     svg.appendChild(g);
   }
   function pictogram(ch, W) {
@@ -461,7 +462,7 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
     svg.appendChild(el('line', { class: 'gm', x1: 2, x2: W - 2, y1: y, y2: y }));
     y += 4;
     symbol(svg, id, ch.shape, 2 + r, y + r + 1, r, 4, 'key');
-    svg.appendChild(el('text', { class: 'b', x: 2 + 2 * r + 8, y: (y + r + 5).toFixed(1), 'data-key-text': 1 }, 'Key: = ' + (ch.keyHidden ? '?' : ch.per + ' ' + ch.what)));
+    svg.appendChild(el('text', { class: 'b', x: 2 + 2 * r + 8, y: (y + r + 5).toFixed(1), 'data-key-text': 1 }, '= ' + (ch.keyHidden ? '?' : ch.per + ' ' + ch.what)));
     y += 2 * r + 8;
     svg.setAttribute('width', W); svg.setAttribute('height', Math.ceil(y)); svg.setAttribute('viewBox', '0 0 ' + W + ' ' + Math.ceil(y));
     svg.setAttribute('aria-label', 'Pictogram: ' + ch.title);

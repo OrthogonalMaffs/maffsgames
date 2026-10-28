@@ -15,6 +15,13 @@
  *   key     what is right: {num, den} | the string | the option index
  *   slips   [{kind, num, den | key | option, line}]
  *   bank    the bank's question itself, untouched (for the verifier)
+ * Feedback that teaches (contract FEEDBACK-TEACHES, 28 Oct 2026): a question also carries
+ *   why     the bank's one-line working (the last two worked lines), shown after a right answer and under a named slip
+ *   labels  what each choice button says. For a compare question (the bank's 'order': three events with a probability each) the
+ *           values go on the buttons ("Event A: 2/5") and askText keeps only the ask ("Which event is the most likely?"); the bank's
+ *           stem and options are untouched (slips are matched on the bank's option text).
+ * texify(text) turns every plain n/d in text into a KaTeX fraction between the page's markers, the form the page renders with KaTeX (canon 7.1.1); the bank's
+ * strings are not rewritten, the page converts as it renders.
  * mark(q, raws) takes the raw strings typed (a fraction: "n/d" as MaffsFractionInput.raw() gives it; a choice: the option index
  * as a string) and returns { kind: 'right' | 'slip' | 'wrong' | 'format' | 'unreadable', why }.
  */
@@ -42,7 +49,7 @@
   // The bank's question as a game question.
   function adapt(b) {
     var S = STAGES[b.stage], a = b.answer;
-    var q = { stage: b.stage, slot: b.slot, kind: b.kind, type: a.type, stem: b.stem, worked: b.worked, chart: b.chart, ask: b.ask,
+    var q = { stage: b.stage, slot: b.slot, kind: b.kind, type: a.type, stem: b.stem, worked: b.worked, why: b.why, chart: b.chart, ask: b.ask,
       generic: S.generic, bank: b, slips: [] };
     if (a.type === 'fraction') {
       q.key = { num: a.num, den: a.den }; q.simplest = !!a.simplest;
@@ -52,6 +59,9 @@
       q.slips = b.slips.map(function (s) { return { kind: s.kind, key: s.answer.key, line: s.line }; });
     } else {
       q.key = a.correct; q.options = a.options.slice();
+      q.labels = a.options.slice(); q.askText = b.stem;
+      var cmp = b.ask && b.ask.op === 'order' && b.ask.values && b.ask.values.length === a.options.length ? /(Which [^?]*\?)\s*$/.exec(b.stem) : null;
+      if (cmp) { q.labels = a.options.map(function (o, i) { return o + ': ' + b.ask.values[i]; }); q.askText = cmp[1]; q.compare = true; }
       q.slips = b.slips.map(function (s) { return { kind: s.kind, option: s.answer.option, line: s.line }; });
     }
     return q;
@@ -67,6 +77,13 @@
     return slots.map(function (slot) { return adapt(Bank.question(stage, slot, makeRng(seed * 31 + slot * 7 + stage))); });
   }
   function example(stage) { return adapt(Bank.question(stage, 0, makeRng(1000 + stage))); }
+
+  // Every plain n/d in a feedback or question string as KaTeX between the page markers: "P = 5/15" becomes P = then a KaTeX 5 over 15. Not a date-like
+  // 1/2/3, a decimal such as 0.5/2, a name such as and/or (no digits), or text that is already TeX.
+  var PLAIN_FRAC = /(^|[^\w.\/\\{}])(\d+)\/(\d+)(?![\w\/])/g;
+  function texify(text) {
+    return String(text == null ? '' : text).replace(PLAIN_FRAC, function (m, pre, n, d) { return pre + '\\(\\frac{' + n + '}{' + d + '}\\)'; });
+  }
 
   // What a right answer types, for tests and for the answer helper.
   function solution(q) {
@@ -112,5 +129,5 @@
   }
 
   root.MaffsProbabilityGame = { STAGES: STAGES, PER_STAGE: PER_STAGE, SLOTS: SLOTS, session: session, example: example, adapt: adapt,
-    mark: mark, solution: solution, makeRng: makeRng };
+    mark: mark, solution: solution, makeRng: makeRng, texify: texify };
 })(typeof window !== 'undefined' ? window : globalThis);
