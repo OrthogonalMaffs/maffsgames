@@ -1290,8 +1290,10 @@ def real_value(q, wrong=False):
     raise AssertionError(f)
 
 
-def phone_feedback_topic(pw, base, html, data, topic, out, only=None):
-    """One real bank on a 375 x 667 touch screen: one answer right and one wrong, each measured after Check.
+def phone_feedback_topic(pw, base, html, data, topic, out, only=None, size=(375, 667)):
+    """One real bank on a touch screen (375 x 667 unless `size` says otherwise): one answer right and one wrong, each measured after Check
+    AND after the page has settled: the maths font has arrived and two frames have been drawn (main run 40529609805: measured the instant the
+    verdict appeared, the check read the page between the font's arrival and the page's own scroll, and failed on timing alone).
     `only` serves five copies of that one question and answers it wrong at once, so what is measured is always the same."""
     bank = json.load(open(os.path.join(ROOT, 'schools', 'assets', 'six-ps', topic['id'] + '.json'), encoding='utf-8'))
     if only is not None:
@@ -1299,7 +1301,8 @@ def phone_feedback_topic(pw, base, html, data, topic, out, only=None):
         if len(one) != 1:
             raise AssertionError('%s: the question %s is not in the bank' % (topic['id'], only))
         bank['questions'] = [dict(one[0], id='%s-c%d' % (only, i)) for i in range(5)]
-    b = Browser(pw, base, html, size=(375, 667))
+    where = '%d x %d' % size
+    b = Browser(pw, base, html, size=size)
     b.page.set_default_timeout(20000)      # a loaded machine runs many of these at once
     b.real[topic['id']] = bank
     others = [x['id'] for x in data['covered'] if x['id'] != topic['id']][:K - 1]
@@ -1314,22 +1317,23 @@ def phone_feedback_topic(pw, base, html, data, topic, out, only=None):
             q = b.page.evaluate('() => SixPs.question()')
             answer(b, q, real_value(q, wrong))
             b.page.wait_for_selector('#qFb:not([hidden])', timeout=8000)
+            bc.wait_settled(b.page)      # the maths font has arrived and the layout has stopped moving (bank_common.settle_js)
             m = b.page.evaluate("""() => { const r = id => { const e = document.getElementById(id); return e && !e.hidden ? e.getBoundingClientRect() : null; };
                 const nb = document.querySelector('#qNext button'), nr = nb ? nb.getBoundingClientRect() : null, vr = r('qVerdict');
                 return { verdict: vr ? [Math.round(vr.top), Math.round(vr.bottom)] : null, next: nr ? [Math.round(nr.top), Math.round(nr.bottom)] : null,
                          vh: innerHeight, sx: document.documentElement.scrollWidth - innerWidth, keys: !document.getElementById('qKeys').hidden }; }""")
             what = '%s %s (%s, %s)' % (topic['id'], q['id'], q['format'], 'wrong' if wrong else 'right')
             if m['keys']:
-                out.append('375 x 667: %s: the keypad is still showing after Check' % what)
+                out.append('%s: %s: the keypad is still showing after Check' % (where, what))
             if not m['verdict'] or m['verdict'][0] < 0 or m['verdict'][1] > m['vh']:
-                out.append('375 x 667: %s: the verdict is not on the screen (%s of %d px)' % (what, m['verdict'], m['vh']))
+                out.append('%s: %s: the verdict is not on the screen (%s of %d px)' % (where, what, m['verdict'], m['vh']))
             if not m['next'] or m['next'][1] > m['vh']:
-                out.append('375 x 667: %s: Next is not on the screen (%s of %d px)' % (what, m['next'], m['vh']))
+                out.append('%s: %s: Next is not on the screen (%s of %d px)' % (where, what, m['next'], m['vh']))
             if m['sx'] > 0:
-                out.append('375 x 667: %s: the page scrolls sideways by %d px' % (what, m['sx']))
+                out.append('%s: %s: the page scrolls sideways by %d px' % (where, what, m['sx']))
             if n == 0:
                 b.page.tap('#qNext button')
-        out.extend('375 x 667: %s: page error: %s' % (topic['id'], e) for e in b.errors)
+        out.extend('%s: %s: page error: %s' % (where, topic['id'], e) for e in b.errors)
     finally:
         b.close()
 

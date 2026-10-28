@@ -227,6 +227,25 @@ NO_LOCK_FRESH_INIT = """(() => {
 
 
 # ---------------------------------------------------------------------------------------------------------------
+# Settle before you measure (Jon, 27 Oct 2026; two red mains, #566 and run 40529609805, came from reading a page the instant its feedback
+# appeared, while a late font was still about to grow it). ONE function does the waiting, and every verifier uses it:
+# wait_settled(page) for a sync Playwright page, settle_js() for the JS an async driver (measure-phone-fit.py, the cloud lane's) evaluates.
+# It waits for document.fonts.ready, then two animation frames and a quiet period, and repeats while a font is still loading, so a face
+# requested after fonts.ready (KaTeX asks for its faces as the working is drawn) is waited for too. Bounded: at most 20 rounds.
+def settle_js(quiet_ms=300):
+    return ("() => { const frames = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));"
+            " const quiet = () => new Promise(r => setTimeout(r, %d));"
+            " return (async () => { for (let i = 0; i < 20; i++) {"
+            " if (document.fonts) await document.fonts.ready; await frames(); await quiet();"
+            " if (!document.fonts || document.fonts.status !== 'loading') break; } })(); }" % int(quiet_ms))
+
+
+def wait_settled(page, quiet_ms=300):
+    """Block until the page's fonts have arrived and its layout has stopped moving (sync Playwright page)."""
+    page.evaluate(settle_js(quiet_ms))
+
+
+# ---------------------------------------------------------------------------------------------------------------
 # The fonts students see (contract FONT-FIT, 10 Oct 2026). Pages load KaTeX 0.16.9 from cdn.jsdelivr.net and their
 # text faces (Outfit, JetBrains Mono, and a few others) from Google Fonts. A check that blocks those measures in the
 # runner's fallback font, which no student sees. These copies are pinned in scripts/fonts/ (fetch-fonts.py, licences
