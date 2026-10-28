@@ -1,0 +1,12 @@
+/* MaffsStageExit: the way out of a stage game mid-play (STAGE-EXIT, 28 Oct 2026).
+   The page's "← Back to Games" link stays in the header on every screen, and while a stage or worked
+   example is on screen a "← Stages" button sits beside it. Both are 44px targets (36px on short phones). */
+.stage-exit-row{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin:.1rem 0}
+.stage-exit-row a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:0}
+body.playing .stage-exit-row a.back-link{display:inline-flex}
+.stage-exit-stages{display:none;align-items:center;min-height:44px;padding:0;background:none;border:0;color:var(--muted);font:inherit;font-size:.82rem;cursor:pointer}
+.stage-exit-stages:hover{color:var(--text)}
+body.playing .stage-exit-stages{display:inline-flex}
+@media (max-height:620px){
+  .stage-exit-row a.back-link,.stage-exit-stages{min-height:36px}
+}
