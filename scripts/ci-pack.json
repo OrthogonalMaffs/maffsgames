@@ -234,7 +234,7 @@
    "tier": "content"
   },
   "verify-feedback-teaches.py": {
-   "how": "chosen from 16 timed unit(s)",
+   "how": "kept from the pack (1 needed)",
    "label": "Feedback that teaches, Possibly Maybe (every probability question has a one-line why equal to the last two worked lines, recomputed here from the worked lines; every plain n/d in a feedback or question string becomes KaTeX and nothing else is touched, against an independent converter on thousands of strings and dated, decimal and TeX probes; the fraction echo against exact fractions on a grid of typed answers; the page played at four phone sizes with a wide font and real KaTeX: no plain-text fraction anywhere on screen, a right answer shows Yes, the echo where the form differs, then the why, a named slip shows the why marked in the working, compare questions carry their values on the buttons and keep only the ask, Next above the fold; the planted faults, each caught)",
    "parts": 1,
    "tier": "content"
