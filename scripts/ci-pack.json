@@ -55,6 +55,7 @@
   "Expected Damage (every E(X) recomputed exactly, no ties, shown probabilities read back)": "23",
   "Factor Race (every pair's key and factor counts recomputed, the KS3 pair table rebuilt and compared, every pair answered both ways in Chromium)": "51",
   "Factor Theorem (every key from its item's polynomial; ACCEPTED lists = page; every form marked in Chromium; answer buttons; A-Level only; no Practice submit)": "55",
+  "Feedback that teaches, Possibly Maybe (every probability question has a one-line why equal to the last two worked lines, recomputed here from the worked lines; every plain n/d in a feedback or question string becomes KaTeX and nothing else is touched, against an independent converter on thousands of strings and dated, decimal and TeX probes; the fraction echo against exact fractions on a grid of typed answers; the page played at four phone sizes with a wide font and real KaTeX: no plain-text fraction anywhere on screen, a right answer shows Yes, the echo where the form differs, then the why, a named slip shows the why marked in the working, compare questions carry their values on the buttons and keep only the ask, Next above the fold; the planted faults, each caught), part 1 of 1": "36",
   "Fermi Lab (every chain multiplies to its key, Brilliant in Chromium; every stored figure sourced and green at its step)": "65",
   "Football Pitches per Squared Squirrel (Stage 1 the fixed ramp in order; every pool question's key recomputed from its data by units and dimensions, its unit the quantity asked, its named slips recomputed and none equal to the key, Stages 2-3 friendly whole numbers, at least 40 a stage, sessions easiest first; no nonsense unit or squirrel in any question, option, hint or worked line; no formula-triangle wording or drawing; every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, Stage 1's retry keeps the mark, the no-unit \"squirrels\" message loud, spaced from the unit buttons, marking nothing and cleared by picking a unit, the wrong unit marks nothing, named slips, the calculator in Stages 4-5 only, no sideways scroll; fault-injection self-test: twelve planted faults, each caught), part 1 of 4": "70",
   "Football Pitches per Squared Squirrel (Stage 1 the fixed ramp in order; every pool question's key recomputed from its data by units and dimensions, its unit the quantity asked, its named slips recomputed and none equal to the key, Stages 2-3 friendly whole numbers, at least 40 a stage, sessions easiest first; no nonsense unit or squirrel in any question, option, hint or worked line; no formula-triangle wording or drawing; every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, Stage 1's retry keeps the mark, the no-unit \"squirrels\" message loud, spaced from the unit buttons, marking nothing and cleared by picking a unit, the wrong unit marks nothing, named slips, the calculator in Stages 4-5 only, no sideways scroll; fault-injection self-test: twelve planted faults, each caught), part 2 of 4": "65",
@@ -71,7 +72,7 @@
   "GA4 country Apps Script (mocked API and Sheet: replace-by-date is idempotent, other dates untouched, events tab never referenced; planted faults caught)": "31",
   "GA4 loads on the live host only (analytics.js in Chromium: on the stub server and on a local host no request reaches Google's analytics hosts and no gtag is defined; on the live host one gtag.js load and one page_view with the old config; two faults planted)": "35",
   "Game analytics (an escape room won with a search and a tab switch: 3 lock question_answered, 1 game_completed, 0 game_abandoned, to GA4 and the Sheet; a room left mid-game: 1 abandon; an ordinary game with a tab switch: 0 abandons, 1 completion; three old faults planted and caught)": "68",
-  "Given That (every table, Venn and tree consistent with its totals; all 180 keys recomputed; free entry marked by MaffsAnswer: the exact fraction, or a decimal to 3 s.f., in Chromium)": "5",
+  "Given That (every table, Venn and tree consistent with its totals; all 180 keys recomputed; free entry marked by MaffsAnswer: the exact fraction, or a decimal to 3 s.f., in Chromium)": "60",
   "Gradient Hunter (every chord gradient exact from its own points; stated tangents are the drawn curve's; one true interpretation; the typed gradient marked, clicking scores nothing; answer once and Next once, played in Chromium)": "9",
   "Graph Sketcher (keys recomputed from each printed equation)": "27",
   "Graph Transformer (BFS reachability + par verification; every Show-steps caption and 1/x equation checked)": "2",
@@ -203,7 +204,7 @@
    "tier": "lock"
   },
   "check-burst.py": {
-   "how": "kept from the pack (3 needed)",
+   "how": "kept from the pack (2 needed)",
    "label": "Burst mode (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; &stage= presses button[data-stage]; fault-injection self-test: the stage, four-answer bar, without-?burst, score-submission and miscounted-score planted faults, each caught)",
    "parts": 3,
    "tier": "content"
@@ -221,7 +222,7 @@
    "tier": "content"
   },
   "verify-chart-drawings.py": {
-   "how": "chosen from 14 timed unit(s)",
+   "how": "kept from the pack (1 needed)",
    "label": "Chart drawings (every chart the reading-charts, pie-chart and probability banks draw is read back FROM THE SCREEN, by hit-testing what is really painted, and compared with its data: pictogram symbols whole, half and quarter by their visible width; bar and segment lengths, line and scatter points through the numbers on the axes; pie slices by the angle each one really covers; spinner wedges and counters visible; the pictogram key and the symbol counts in the worked steps; fault-injection self-test)",
    "parts": 1,
    "tier": "content"
@@ -230,6 +231,12 @@
    "how": "kept from the pack (3 needed)",
    "label": "Equation Builder (every question's tile arrangements classified by SymPy, in twelve slices; the whole-question checks; the tile order in Chromium; self-test)",
    "parts": 3,
+   "tier": "content"
+  },
+  "verify-feedback-teaches.py": {
+   "how": "chosen from 16 timed unit(s)",
+   "label": "Feedback that teaches, Possibly Maybe (every probability question has a one-line why equal to the last two worked lines, recomputed here from the worked lines; every plain n/d in a feedback or question string becomes KaTeX and nothing else is touched, against an independent converter on thousands of strings and dated, decimal and TeX probes; the fraction echo against exact fractions on a grid of typed answers; the page played at four phone sizes with a wide font and real KaTeX: no plain-text fraction anywhere on screen, a right answer shows Yes, the echo where the form differs, then the why, a named slip shows the why marked in the working, compare questions carry their values on the buttons and keep only the ask, Next above the fold; the planted faults, each caught)",
+   "parts": 1,
    "tier": "content"
   },
   "verify-free-daily-pizza.py": {
@@ -281,7 +288,7 @@
    "tier": "content"
   },
   "verify-squared-squirrel.py": {
-   "how": "kept from the pack (4 needed)",
+   "how": "kept from the pack (3 needed)",
    "label": "Football Pitches per Squared Squirrel (Stage 1 the fixed ramp in order; every pool question's key recomputed from its data by units and dimensions, its unit the quantity asked, its named slips recomputed and none equal to the key, Stages 2-3 friendly whole numbers, at least 40 a stage, sessions easiest first; no nonsense unit or squirrel in any question, option, hint or worked line; no formula-triangle wording or drawing; every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, Stage 1's retry keeps the mark, the no-unit \"squirrels\" message loud, spaced from the unit buttons, marking nothing and cleared by picking a unit, the wrong unit marks nothing, named slips, the calculator in Stages 4-5 only, no sideways scroll; fault-injection self-test: twelve planted faults, each caught)",
    "parts": 4,
    "tier": "content"
