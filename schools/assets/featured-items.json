@@ -1,0 +1,15 @@
+{
+  "_comment": "Featured items (launch contract SIX-PS-LAUNCH, Jon, 27 Oct 2026). One component, schools/assets/featured.js, draws every item whose pages list the page that asks for it. A second featured item is a new entry here, never new markup. Pinned order is the order of this list.",
+  "items": [
+    {
+      "id": "the-6-ps",
+      "pages": ["essentials"],
+      "flag": "The 100th on MaffsGames",
+      "title": "The 6 P\u2019s",
+      "lede": "Six GCSE Foundation topics, five questions each, chosen from the topics that carry the most marks. Worked answers when you slip. Made for the November exams, and for anyone who wants a grade 4.",
+      "facts": ["Six topics a go", "Five questions each", "Worked answers", "Free, no sign-up"],
+      "href": "/the-6-ps/",
+      "cta": "Start The 6 P\u2019s"
+    }
+  ]
+}

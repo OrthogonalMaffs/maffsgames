@@ -1,7 +1,7 @@
 # MaffsGames — CLAUDE.md
 
 ## Project Overview
-Free curriculum-aligned maths games for UK schools. 99 games and thirteen escape rooms live (Regression Rumble withdrawn 30 Sep 2026 pending a data rebuild). Separate from MathsWins (mathswins.co.uk).
+Free curriculum-aligned maths games for UK schools. 99 games, The 6 P's (listed 27 Oct 2026 as the 100th item on the portal) and thirteen escape rooms live (Regression Rumble withdrawn 30 Sep 2026 pending a data rebuild). Separate from MathsWins (mathswins.co.uk).
 
 - **Repo:** https://github.com/OrthogonalMaffs/maffsgames
 - **Live site:** maffsgames.co.uk (GitHub Pages)
@@ -67,6 +67,7 @@ job stays green), and the main timings job reports, never fails on, a verifier w
 code, and never saw the one real regression (the median did). Each job's summary lists every verifier's duration.
 **A PR is also judged on its own measured times (PR-MEASURED, 25 Oct 2026):** the "PR budget (measured times)" job fails a PR whose
 grown or renamed verifier would push its group past the budget, so a verifier's CI time needs no timing by hand before merging (canon §7.8.1).
+**A long verifier is never split by hand (SHARD, 27 Oct 2026):** it declares `# ci-shards`, lists its work units through `bc.Shard`, and `ci-groups.py` chooses its parts from the units' recorded times (canon §7.8.1).
 CI timings are the median of the last 5 main runs, and the timings job commits only a pack that passes `ci-groups.py --check`
 (CI-TIMINGS-MEDIAN, 12 Oct 2026): run 785's one slow group recorded a 125 s setup against 18-28 s before it, and the
 single-run pack it produced turned `--check` red on main and on every PR.
@@ -92,6 +93,7 @@ Two sessions may run side by side. They stay out of each other's files:
 - **No PR edits `docs/audits/REGISTER.md`:** CI regenerates and commits it on main after every merge (canon §0.4).
   **A per-game fix PR does not edit `docs/todo.md`:** the register records the fix.
 - **Neither lane merges while main's last full run is red, and every merge goes through `python scripts/merge-pr.py <number>`** (canon §7.8.3): it refuses unless the PR's Gate is green on its head and main's last full run is green (every job of it finished and none failed; a run or job in progress is not green), then squash-merges. Never `gh pr merge`, the merge button or a raw API call. Only Jon's ruling lifts the main rule, with `--override "<ruling and date>"`, which is written to the PR.
+- **The gate warns, then enforces (canon §7.8.4, Jon 27 Oct 2026):** a new limit or check starts as a warning with a shrink-only warn list and fails only once main passes it; a line no main run has timed is warned, never failed; gating checks are repeatable (no random sampling; page measurements wait for `bank_common.wait_settled`; conversion from Mon 2 Nov). The worst-case test for gate changes and the handover auto-archive are built and parked until then. **Any lane may re-run a failed main run once, failed jobs only;** a pass on re-run is reported to the cloud lane as a flake. **Only the cloud lane changes gate files** (the workflow, `scripts/ci-*`, `ci_shards.py`, `merge-pr.py`, `check-context-size.py`, `check-changed.py`); other lanes report and wait.
 - **Run `merge-pr.py` unpiped and check its exit status before any following step.** Never filter its output or chain cleanup with `;` (25 Oct 2026: a `| grep MERGED` hid a REFUSED line).
 - **Scripts call GitHub through `gh api` REST endpoints only; GraphQL-backed `gh` subcommands (`gh pr view`, `gh pr list`, `gh pr checks`, `gh pr status`, `gh issue view` and the like) fail in Claude Code sessions.**
 - **Before the first push of every PR: `python scripts/check-changed.py`** (one PR on 7 Oct 2026 cost three runs).

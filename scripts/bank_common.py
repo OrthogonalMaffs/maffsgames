@@ -25,6 +25,9 @@ import sys
 import time
 import urllib.request
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from ci_shards import Shard, shard_args  # noqa: E402,F401  (contract SHARD: a long verifier's work units, bc.Shard)
+
 MIN_PYTHON = (3, 10)      # scripts/ need 3.10: Path.write_text(newline=) (TEXT-WRITES, 14 Oct 2026)
 
 
@@ -221,6 +224,25 @@ NO_LOCK_FRESH_INIT = """(() => {
     set(v) { if (v && typeof v === 'object') v.FRESH_MS = 0; api = v; },
   });
 })();"""
+
+
+# ---------------------------------------------------------------------------------------------------------------
+# Settle before you measure (Jon, 27 Oct 2026; two red mains, #566 and run 40529609805, came from reading a page the instant its feedback
+# appeared, while a late font was still about to grow it). ONE function does the waiting, and every verifier uses it:
+# wait_settled(page) for a sync Playwright page, settle_js() for the JS an async driver (measure-phone-fit.py, the cloud lane's) evaluates.
+# It waits for document.fonts.ready, then two animation frames and a quiet period, and repeats while a font is still loading, so a face
+# requested after fonts.ready (KaTeX asks for its faces as the working is drawn) is waited for too. Bounded: at most 20 rounds.
+def settle_js(quiet_ms=300):
+    return ("() => { const frames = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));"
+            " const quiet = () => new Promise(r => setTimeout(r, %d));"
+            " return (async () => { for (let i = 0; i < 20; i++) {"
+            " if (document.fonts) await document.fonts.ready; await frames(); await quiet();"
+            " if (!document.fonts || document.fonts.status !== 'loading') break; } })(); }" % int(quiet_ms))
+
+
+def wait_settled(page, quiet_ms=300):
+    """Block until the page's fonts have arrived and its layout has stopped moving (sync Playwright page)."""
+    page.evaluate(settle_js(quiet_ms))
 
 
 # ---------------------------------------------------------------------------------------------------------------

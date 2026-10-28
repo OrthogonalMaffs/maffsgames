@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: It's on Sale!, part 1 (every question of the five stages over 40 seeds a slot recomputed from its own params with exact fractions, never from the module's code: answer, every named slip, the numbers in the stem, the worked lines; sessions of 10 slots easiest first with the example never among them; the game's marking against an independent marker on thousands of typed answers: format, unreadable, slip, wrong, right) | --part 1
-# ci-line: It's on Sale!, part 2 (every stage played in the page at 390 px, a full stage each, and at 375 px, the first questions: worked example, typed answers on the tag with the keypad open, a format answer never marked, a named slip, the calculator note and badge by stage, the Stage 5 calculator open; answer box, Check and Next above the fold; no sideways scroll; one submission a stage) | --part 2
-# ci-line: It's on Sale!, part 3 (every stage played at 360, 320, 1280 and 1366 px, the first questions: the same checks, the short phones and the two laptop sizes) | --part 3
-# ci-line: It's on Sale!, part 4 (fault-injection self-test: the planted faults, each caught, including a wrong new price, a reverse percentage worked the wrong way round and a format answer marked right) | --part 4
+# ci-shards: It's on Sale! (every question of the five stages over 40 seeds a slot recomputed from its own params with exact fractions, never from the module's code: answer, every named slip, the numbers in the stem, the worked lines; sessions of 10 slots easiest first with the example never among them; the game's marking against an independent marker on thousands of typed answers: format, unreadable, slip, wrong, right; every stage played in the page at 390 px, a full stage each, and at 375 px, the first questions: worked example, typed answers on the tag with the keypad open, a format answer never marked, a named slip, the calculator note and badge by stage, the Stage 5 calculator open; answer box, Check and Next above the fold; no sideways scroll; one submission a stage; every stage played at 360, 320, 1280 and 1366 px, the first questions: the same checks, the short phones and the two laptop sizes; fault-injection self-test: the planted faults, each caught, including a wrong new price, a reverse percentage worked the wrong way round and a format answer marked right) | | 4
 # ci-deps: games/its-on-sale/ schools/assets/percentages-money-generator.js
 """Independent verification for It's on Sale! (games/its-on-sale/), built 27 Oct 2026 (contract ITS-ON-SALE, Jon).
 SR-30: checked from its first PR.
@@ -26,8 +23,14 @@ Python, from each question's own `params` and with exact fractions, never from t
             marked), unreadable (never marked), slip (named) or wrong.
   Page      every stage played; the answer box, Check and the keypad (or, in stage 5, the open calculator) above the fold at
             five phone and laptop sizes; no sideways scroll; a format answer never marked; one board submission a stage.
+
+Work units (contract SHARD; CI runs a slice with --shard i/k, scripts/ci-groups.py chooses k): "engine" (the bank and the
+marking, on one 1280x800 page), "full 390x844" (every stage played through at 390 px), "first WxH" (the first questions of
+every stage at one of the other five sizes) and "plant: <what>" (one per planted fault). It was merged on 27 Oct 2026 with
+four hand-made parts (--part 1..4), which ci-groups.py refuses since SHARD.
 """
 import argparse
+import contextlib
 import math
 import os
 import random
@@ -45,8 +48,7 @@ GAME = os.path.join(ROOT, 'games', SLUG, 'index.html')
 MODULE = os.path.join(ROOT, 'schools', 'assets', 'percentages-money-generator.js')
 GEN_SRC = 'percentages-money-generator.js'
 SEEDS = 40
-SIZE_PARTS = {'2': [(390, 844), (375, 667)], '3': [(360, 640), (320, 568), (1280, 720), (1366, 768)]}
-SIZES = SIZE_PARTS['2'] + SIZE_PARTS['3']
+SIZES = [(390, 844), (375, 667), (360, 640), (320, 568), (1280, 720), (1366, 768)]
 FULL = {(390, 844)}                    # the sizes at which a whole stage is played; the others play the first questions
 BOARD = {n: 'stage-%d' % n for n in range(1, 6)}
 
@@ -463,27 +465,35 @@ def play_stage(page, st, size, out, nq):
         page.evaluate("document.getElementById('menuBtn').click()")
 
 
-def check_pages(base, html, module, sizes, out, stages=range(1, 6)):
+def size_unit(size):
+    return '%s %dx%d' % ('full' if size in FULL else 'first', size[0], size[1])
+
+
+def check_pages(base, html, module, sizes, out, stages=range(1, 6), unit=None):
     from playwright.sync_api import sync_playwright
+    unit = unit or (lambda uid: contextlib.nullcontext())
     with sync_playwright() as pw:
         for size in sizes:
-            br, page, errs = open_page(pw, base, html, module, size)
-            try:
-                for st in stages:
-                    play_stage(page, st, size, out, 10 if size in FULL else 3)
-            except Exception as e:  # noqa: BLE001
-                out.append('play at %dx%d threw: %s' % (size[0], size[1], str(e).splitlines()[0][:220]))
-            out.extend('page error at %dx%d: %s' % (size[0], size[1], e) for e in errs if 'production host' not in e)
-            br.close()
+            with unit(size_unit(size)):
+                br, page, errs = open_page(pw, base, html, module, size)
+                try:
+                    for st in stages:
+                        play_stage(page, st, size, out, 10 if size in FULL else 3)
+                except Exception as e:  # noqa: BLE001
+                    out.append('play at %dx%d threw: %s' % (size[0], size[1], str(e).splitlines()[0][:220]))
+                out.extend('page error at %dx%d: %s' % (size[0], size[1], e) for e in errs if 'production host' not in e)
+                br.close()
 
 
-def check(html, module, out, engine=True, sizes=(), stages=range(1, 6)):
+def check(html, module, out, engine=True, sizes=(), stages=range(1, 6), shard=None):
+    """shard: time each piece as its work unit ("engine", "full 390x844", "first WxH"); the self-test passes none."""
     from playwright.sync_api import sync_playwright
+    unit = shard.unit if shard is not None else (lambda uid: contextlib.nullcontext())
     proc, base = bc.start_stub_server()
     info = {}
     try:
         if engine:
-            with sync_playwright() as pw:
+            with unit('engine'), sync_playwright() as pw:
                 br, page, errs = open_page(pw, base, html, module, (1280, 800))
                 try:
                     info.update(check_engine(page, out))
@@ -492,7 +502,7 @@ def check(html, module, out, engine=True, sizes=(), stages=range(1, 6)):
                 out.extend('page error: ' + e for e in errs)
                 br.close()
         if sizes:
-            check_pages(base, html, module, sizes, out, stages)
+            check_pages(base, html, module, sizes, out, stages, unit=unit)
     finally:
         proc.terminate()
     return info
@@ -517,50 +527,53 @@ PLANTS = [
 ]
 
 
-def selftest(html, module, plants=None):
+# Each plant is a work unit of its own (contract SHARD), dealt into CI parts by its time.
+def selftest(html, module, plants=None, shard=None):
     ok = True
     for what, which, edits, kind, want in (PLANTS if plants is None else plants):
-        src = module if which == 'module' else html
-        bad = False
-        for old, new in edits:
-            if src.count(old) != 1:
-                bad = True
-                break
-            src = src.replace(old, new)
-        if bad:
-            print('  self-test %-84s *** CANNOT PLANT ***' % what)
-            ok = False
-            continue
-        got = []
-        h2, m2 = (html, src) if which == 'module' else (src, module)
-        check(h2, m2, got, engine=kind == 'engine', sizes=[(390, 844)] if kind == 'play' else [], stages=(1, 3))
-        hit = [g for g in got if re.search(want, g)]
-        ok = ok and bool(hit)
-        print('  self-test %-84s %s' % (what, ('caught: ' + hit[0][:80]) if hit else '*** MISSED ***' + (' (other: %s)' % got[0][:80] if got else '')))
+        with (shard.unit('plant: ' + what) if shard is not None else contextlib.nullcontext()):
+            ok = plant_one(html, module, what, which, edits, kind, want) and ok
     return ok
+
+
+def plant_one(html, module, what, which, edits, kind, want):
+    src = module if which == 'module' else html
+    for old, new in edits:
+        if src.count(old) != 1:
+            print('  self-test %-84s *** CANNOT PLANT ***' % what)
+            return False
+        src = src.replace(old, new)
+    got = []
+    h2, m2 = (html, src) if which == 'module' else (src, module)
+    check(h2, m2, got, engine=kind == 'engine', sizes=[(390, 844)] if kind == 'play' else [], stages=(1, 3))
+    hit = [g for g in got if re.search(want, g)]
+    print('  self-test %-84s %s' % (what, ('caught: ' + hit[0][:80]) if hit else '*** MISSED ***' + (' (other: %s)' % got[0][:80] if got else '')))
+    return bool(hit)
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--part', choices=['1', '2', '3', '4'], help='one of the three parts CI runs side by side (default: all)')
+    bc.shard_args(ap)
     args = ap.parse_args()
+    shard = bc.Shard(__file__, args)
+    mine = shard.pick(['engine'] + [size_unit(size) for size in SIZES] + ['plant: ' + p[0] for p in PLANTS])
     try:
         sys.stdout.reconfigure(encoding='utf-8')
     except (AttributeError, ValueError):
         pass
     html = open(GAME, encoding='utf-8').read()
     module = open(MODULE, encoding='utf-8').read()
-    part = args.part
     out = []
-    info = check(html, module, out, engine=part in (None, '1'), sizes=SIZES if part is None else SIZE_PARTS.get(part, []))
+    sizes = [size for size in SIZES if size_unit(size) in mine]
+    info = {}
+    if 'engine' in mine or sizes:
+        info = check(html, module, out, engine='engine' in mine, sizes=sizes, shard=shard)
     if info:
         print('%s: distinct questions a stage over %d seeds a slot: %s; probe answers marked both ways: %s' % (
             SLUG, SEEDS, {k: v for k, v in info.items() if isinstance(k, int)}, info.get('probes')))
-    if part in (None, '2', '3'):
-        print('%s: every stage played at %s' % (SLUG, ', '.join('%dx%d' % s for s in (SIZES if part is None else SIZE_PARTS[part]))))
-    ok = True
-    if part in (None, '4'):
-        ok = selftest(html, module)
+    if sizes:
+        print('%s: every stage played at %s' % (SLUG, ', '.join('%dx%d' % s for s in sizes)))
+    ok = selftest(html, module, [p for p in PLANTS if 'plant: ' + p[0] in mine], shard)
     for f in out[:60]:
         print('FAIL  ' + f)
     if len(out) > 60:

@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-# ci-line: Burst mode, part 1 (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; &stage= presses button[data-stage]) | --part 1
-# ci-line: Burst mode, part 2 (fault-injection self-test: the stage, four-answer bar and without-?burst planted faults, each caught) | --part 2
-# ci-line: Burst mode, part 3 (fault-injection self-test: the score-submission and miscounted-score planted faults, each caught) | --part 3
+# ci-shards: Burst mode (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; &stage= presses button[data-stage]; fault-injection self-test: the stage, four-answer bar, without-?burst, score-submission and miscounted-score planted faults, each caught) | | 3
 # ci-deps: schools/assets/burst.js schools/assets/firebase-leaderboard.js schools/assets/score-history.js scripts/check-answer-lock.py
 """Browser check for burst mode (contract BURST, 24 Oct 2026; canon 7.5.6; schools/assets/burst.js).
 
     python scripts/check-burst.py                    # every adopted game, then the plants
     python scripts/check-burst.py --no-plants
     python scripts/check-burst.py --game split-it    # one game
+    python scripts/check-burst.py --shard 2/3        # CI: part 2 of 3 of the work units (below)
+    python scripts/check-burst.py --list-units       # the work units
 
 A burst is a short run launched from The 6 P's: /games/<slug>/?burst=5&from=six-ps&topic=<id>[&level=][&mode=].
 
@@ -25,9 +25,16 @@ A burst is a short run launched from The 6 P's: /games/<slug>/?burst=5&from=six-
 
   plants    the bar after four answers; a score submitted in a burst; the right count miscounted; burst.js active
             without ?burst: each must FAIL
+
+Work units (contract SHARD, 27 Oct 2026; scripts/ci_shards.py), in run order: "static"; one per adopted game,
+"game: <slug>" (discover, play, nothing, without), WORKERS at once in one Chromium as before, each timed around its own
+work and recorded at its wall time / WORKERS; "control" (nothing written's control: split-it without ?burst at the level
+its own discover finds); "stage cases" (every &stage= case, in one Chromium); one per plant, "plant: <name>", each in its
+own server and Chromium. CI runs the slice --shard i/k (scripts/ci-groups.py chooses k from the units' times).
 """
 import argparse
 import asyncio
+import contextlib
 import importlib.util
 import json
 import os
@@ -321,8 +328,12 @@ async def untouched(browser, base, slug, lv, plant_routes):
     return f
 
 
-async def run(games, routes, phases=("play", "nothing", "without"), control=True):
+async def run(games, routes, phases=("play", "nothing", "without"), control=True, unit=None):
+    """(fails, listing) for the games, WORKERS at once in one Chromium, then (with control and the nothing phase) the
+    control. unit(id), when given, is the context each work unit runs in: "game: <slug>" around the game's own work,
+    once it has a worker, and "control"."""
     from playwright.async_api import async_playwright
+    unit = unit or (lambda uid: contextlib.nullcontext())
     proc, base = bc.start_stub_server()
     fails, listing = [], {}
     try:
@@ -332,22 +343,30 @@ async def run(games, routes, phases=("play", "nothing", "without"), control=True
 
             async def one(slug):
                 async with sem:
-                    try:
-                        lv, mode, modes = await discover(browser, base, slug)
-                        listing[slug] = (lv, mode, modes)
-                        out = []
-                        if "play" in phases:
-                            out += await asyncio.wait_for(play_burst(browser, base, slug, lv, mode, routes), 240)
-                        if "nothing" in phases:
-                            out += await nothing_written(browser, base, slug, lv, routes)
-                        if "without" in phases:
-                            out += await untouched(browser, base, slug, lv, routes)
-                        return out
-                    except Exception as e:
-                        return ["%s: driver error: %s" % (slug, str(e).splitlines()[0][:140])]
+                    with unit("game: %s" % slug):
+                        try:
+                            lv, mode, modes = await discover(browser, base, slug)
+                            listing[slug] = (lv, mode, modes)
+                            out = []
+                            if "play" in phases:
+                                out += await asyncio.wait_for(play_burst(browser, base, slug, lv, mode, routes), 240)
+                            if "nothing" in phases:
+                                out += await nothing_written(browser, base, slug, lv, routes)
+                            if "without" in phases:
+                                out += await untouched(browser, base, slug, lv, routes)
+                            return out
+                        except Exception as e:
+                            return ["%s: driver error: %s" % (slug, str(e).splitlines()[0][:140])]
             res = await asyncio.gather(*(one(s) for s in games))
-            if control and "nothing" in phases and "split-it" in games:
-                fails += await nothing_written(browser, base, "split-it", listing.get("split-it", (None,))[0], routes, control=True)
+            if control and "nothing" in phases:
+                # The control is its own unit (contract SHARD): split-it at the level its own discover finds, the level
+                # split-it's game unit is played at (None if discover fails, as when that game's unit failed before).
+                with unit("control"):
+                    try:
+                        lv = (await discover(browser, base, "split-it"))[0]
+                    except Exception:
+                        lv = None
+                    fails += await nothing_written(browser, base, "split-it", lv, routes, control=True)
             await browser.close()
     finally:
         proc.terminate()
@@ -467,52 +486,63 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--no-plants", action="store_true")
     ap.add_argument("--game", nargs="*")
-    ap.add_argument("--part", choices=["1", "2", "3"],
-                    help="1 the checks, 2 and 3 a share of the plants each (CI runs the three side by side); default all")
+    bc.shard_args(ap)       # --shard i/k: part i of k of the work units (CI); --list-units
     a = ap.parse_args()
-    AL.CHECK_SITE = AL.load_check_site()
-    if a.part in ("2", "3"):
-        return plant_part(a.part)
     games = a.game or ADOPTED
-    stat = static_faults(None)
+    every = [] if a.no_plants else plants()
+    # The work units (contract SHARD), in the order of the full run: the static check, each game, the control (when
+    # split-it is played), the &stage= cases, then the plants.
+    units = (["static"] + ["game: %s" % g for g in games] + (["control"] if "split-it" in games else [])
+             + ["stage cases"] + ["plant: %s" % p[0] for p in every])
+    shard = bc.Shard(__file__, a)
+    par = bc.Shard(__file__, a, concurrency=WORKERS)      # the game units' timer: WORKERS of them run at once
+    mine = shard.pick(units)
+    AL.CHECK_SITE = AL.load_check_site()
+    played = [g for g in games if "game: %s" % g in mine]
+    control = "control" in mine
     print("Burst mode (BURST): %d adopted games; not adopted: %s" % (len(ADOPTED), ", ".join("%s (%s)" % kv for kv in NOT_ADOPTED.items())))
-    print("  %s  burst.js loaded once, after analytics.js, in exactly the adopted games%s" % ("FAIL" if stat else "ok  ", (": " + "; ".join(stat)) if stat else ""))
-    fails, listing = asyncio.run(run(games, []))
-    sf = asyncio.run(run_stage([]))
-    print("  %s  &stage= presses button[data-stage] (%d cases: free-daily-pizza 1, 2, 3 and mixed, simultaneous-solver stage4, how-many-parts ?mode= unchanged, no match warns once)%s"
-          % ("FAIL" if sf else "ok  ", len(STAGE_CASES), (":\n    " + "\n    ".join(sf)) if sf else ""))
+    stat = []
+    if "static" in mine:
+        with shard.unit("static"):
+            stat = static_faults(None)
+        print("  %s  burst.js loaded once, after analytics.js, in exactly the adopted games%s" % ("FAIL" if stat else "ok  ", (": " + "; ".join(stat)) if stat else ""))
+    fails = []
+    if played or control:
+        fails, listing = asyncio.run(run(played, [], control=control,
+                                         unit=lambda uid: (par if uid.startswith("game: ") else shard).unit(uid)))
+    sf = []
+    if "stage cases" in mine:
+        with shard.unit("stage cases"):
+            sf = asyncio.run(run_stage([]))
+        print("  %s  &stage= presses button[data-stage] (%d cases: free-daily-pizza 1, 2, 3 and mixed, simultaneous-solver stage4, how-many-parts ?mode= unchanged, no match warns once)%s"
+              % ("FAIL" if sf else "ok  ", len(STAGE_CASES), (":\n    " + "\n    ".join(sf)) if sf else ""))
     fails = fails + sf
-    print("  %s  a %d-answer burst, nothing written, nothing changed without ?burst (%d games)%s"
-          % ("FAIL" if fails else "ok  ", BURST, len(games), (":\n    " + "\n    ".join(fails[:40])) if fails else ""))
-    for s, why in NO_MODE.items():
-        print("  note  %s cannot be opened at a stage by ?mode=: %s" % (s, why))
+    if played or control:
+        print("  %s  a %d-answer burst, nothing written, nothing changed without ?burst (%d games)%s"
+              % ("FAIL" if fails else "ok  ", BURST, len(played), (":\n    " + "\n    ".join(fails[:40])) if fails else ""))
+        for s, why in NO_MODE.items():
+            print("  note  %s cannot be opened at a stage by ?mode=: %s" % (s, why))
     ok = not stat and not fails
-    if not a.no_plants and a.part is None:
-        ok = run_plants(plants()) and ok
+    chosen = [p for p in every if "plant: %s" % p[0] in mine]
+    if chosen:
+        ok = run_plants(chosen, shard) and ok
     print("PASS" if ok else "FAIL")
     return 0 if ok else 1
 
 
-# The plants in two CI lines (25 Oct 2026: one line of the checks and all five plants took 220 s on main, 88% of its group's
-# budget): the five split three and two, the two that play five answers (the bar after four, the miscount) in different parts.
-def run_plants(chosen):
+# Each plant is its own work unit (contract SHARD), in its own server and Chromium (25 Oct 2026: one line of the checks and
+# all five plants took 220 s on main, 88% of its group's budget, so the plants are dealt between the parts).
+def run_plants(chosen, shard):
     ok = True
     for name, routes, subset, phases in chosen:
-        if phases == ("stage",):
-            pf = asyncio.run(run_stage(routes))
-        else:
-            pf, _ = asyncio.run(run(subset, routes, phases, control=False))
+        with shard.unit("plant: %s" % name):
+            if phases == ("stage",):
+                pf = asyncio.run(run_stage(routes))
+            else:
+                pf, _ = asyncio.run(run(subset, routes, phases, control=False))
         print("plant (%s): %s" % (name, ("CAUGHT: " + "; ".join(pf[:2])) if pf else "MISSED"))
         ok = ok and bool(pf)
     return ok
-
-
-def plant_part(part):
-    every = plants()
-    pick = (0, 1, 4) if part == "2" else (2, 3)       # stage, bar after four, without ?burst | submit, miscount
-    ok = run_plants([every[i] for i in pick])
-    print("PASS" if ok else "FAIL")
-    return 0 if ok else 1
 
 
 if __name__ == "__main__":

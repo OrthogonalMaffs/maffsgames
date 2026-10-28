@@ -1,5 +1,5 @@
 {
- "as_of": "2026-10-27T16:51:35Z",
+ "as_of": "2026-10-27T21:28:54Z",
  "games": {
   "52dle": 11,
   "angle-ace": 5,
@@ -42,7 +42,7 @@
   "fermi-lab": 9,
   "force-resolver": 4,
   "formula-forge": 69,
-  "formula-plug-in": 106,
+  "formula-plug-in": 107,
   "four-quadrant-explorer": 264,
   "fraction-equivalence": 138,
   "free-daily-pizza": 318,
@@ -55,13 +55,13 @@
   "index-laws": 411,
   "integration-duel": 29,
   "just-pythag-it-bruv": 43,
-  "like-terms-collector": 1836,
-  "linear-equation-solver": 143,
+  "like-terms-collector": 1860,
+  "linear-equation-solver": 144,
   "log-laws": 16,
   "maths-court": 77,
   "matrix-crunch": 10,
   "modular-battle": 3,
-  "negative-number-line": 687,
+  "negative-number-line": 690,
   "new-shapes": 7,
   "normal-navigator": 2,
   "percentage-flip": 110,
@@ -83,7 +83,7 @@
   "spot-the-error": 13,
   "spot-the-muppet": 39,
   "squared-squirrel": 38,
-  "standard-form-blitz": 43,
+  "standard-form-blitz": 52,
   "surd-simplifier": 237,
   "suvat": 19,
   "take-a-walk": 13,
@@ -92,7 +92,7 @@
   "test-the-claim": 1,
   "the-6-ps": 45,
   "think-of-a-number": 128,
-  "trig-identity-duel": 3,
+  "trig-identity-duel": 5,
   "trig-wars": 270,
   "truth-buster": 43,
   "unit-converter": 526,
@@ -100,5 +100,5 @@
   "wrong-on-the-internet": 12
  },
  "since": "2026-09-01",
- "total": 17338
+ "total": 17378
 }

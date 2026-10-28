@@ -4,7 +4,7 @@
 Test-only: no page loads these. The checks serve them in place of the CDNs (bank_common.real_fonts_route), so
 every phone-fit measurement is taken in the fonts a phone draws, not in the runner's fallback font.
 
-    python scripts/fonts/fetch-fonts.py          # (re)writes scripts/fonts/katex/, google/ and SHA256SUMS
+    python scripts/fonts/fetch-fonts.py          # (re)writes scripts/fonts/katex/, google/, dejavu/ and SHA256SUMS
 
   katex/   KaTeX 0.16.9 (the version every page loads from cdn.jsdelivr.net), from the npm registry's tarball:
            dist/katex.min.css, katex.min.js, contrib/auto-render.min.js, every fonts/*.woff2, and its LICENSE.
@@ -12,6 +12,10 @@ every phone-fit measurement is taken in the fonts a phone draws, not in the runn
            repo's .html, .js and .css), fetched with headless Chromium's user agent so Google returns exactly the
            woff2 @font-face rules Chromium gets; and every font file those stylesheets name, by its fonts.gstatic.com
            path. google/manifest.json maps each css2 query string to its stylesheet file.
+  dejavu/  Ubuntu 24.04's DejaVu fallback faces, fonts-dejavu-core and fonts-dejavu-mono 2.37-8 (the packages the bare
+           runner has), checksum-pinned. Not a web font: CI's container jobs unpack them to pin the generic families
+           (the workflow's "Pin fallback fonts" step), from here, so no job fetches them from Launchpad (contract SHARD,
+           27 Oct 2026: that fetch, on every job, was what made job setup slow).
 """
 import hashlib, io, json, os, re, tarfile, urllib.request
 
@@ -45,6 +49,34 @@ def katex():
             write(os.path.join("katex", m.name[len("package/"):]), tar.extractfile(m).read())
             n += 1
     return n
+
+
+# The two packages the workflow's "Pin fallback fonts" step unpacks, with their pinned SHA256 (Ubuntu 24.04, 2.37-8).
+DEJAVU = (("fonts-dejavu-core_2.37-8_all.deb", "40049660c194f3b8a2541fc7369efebb10e9f94bdac836a2f38fafedd10fa73a"),
+          ("fonts-dejavu-mono_2.37-8_all.deb", "8a599d6553307db7ecb795d2f0e5a301e03234afc75c7358b0ba43466454c89a"))
+DEJAVU_FROM = ("https://launchpad.net/ubuntu/+archive/primary/+files/",
+               "http://archive.ubuntu.com/ubuntu/pool/main/f/fonts-dejavu/")
+
+
+def dejavu():
+    """The DejaVu packages, each from the first source whose bytes match its pinned SHA256, and their copyright file."""
+    for name, sha in DEJAVU:
+        for base in DEJAVU_FROM:
+            try:
+                data = get(base + name)
+            except OSError:
+                continue
+            if hashlib.sha256(data).hexdigest() == sha:
+                write(os.path.join("dejavu", name), data)
+                break
+        else:
+            raise SystemExit("dejavu: no source gave %s with SHA256 %s" % (name, sha))
+    import subprocess, tempfile
+    with tempfile.TemporaryDirectory() as t:
+        subprocess.run(["dpkg-deb", "-x", os.path.join(HERE, "dejavu", DEJAVU[0][0]), t], check=True)
+        write(os.path.join("licences", "dejavu-copyright.txt"),
+              open(os.path.join(t, "usr", "share", "doc", "fonts-dejavu-core", "copyright"), "rb").read())
+    return len(DEJAVU)
 
 
 def site_css2_urls():
@@ -114,5 +146,6 @@ def sums():
 if __name__ == "__main__":
     print("katex: %d files" % katex())
     print("google: %d stylesheets, %d font files" % google())
+    print("dejavu: %d packages" % dejavu())
     print("licences: %d files" % licences())
     print("SHA256SUMS: %d files" % sums())
