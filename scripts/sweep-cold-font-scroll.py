@@ -199,7 +199,7 @@ async def main_async(a):
                 print("    e.g. next %s verdict %s fold %s (%s)" % (b["next"], b["verdict"], b["fold"], b["label"]), flush=True)
         await browser.close()
     if a.json:
-        json.dump(rows, open(a.json, "w"), indent=1)
+        json.dump(rows, open(a.json, "w", newline=""), indent=1)
     return 1 if any(r["fails"] for r in rows) else 0
 
 

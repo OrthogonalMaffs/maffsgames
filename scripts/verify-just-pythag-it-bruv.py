@@ -1594,7 +1594,7 @@ UI_FAULT_ONLY = "(q, i) => i % 12 === 0 || q.context === 'roof'"
 DESK, PHONE, SMALL = [(1366, 768)], [(390, 844)], [(320, 568)]
 UI_FAULTS = [
     ("phone: no glide to the feedback", SMALL,
-     ("script", "window.scrollTo = function (a, b) { if (a === 0 && b === 0 && typeof a === 'number') document.documentElement.scrollTop = 0; };")),
+     ("script", "window.scrollTo = function (a, b) { if (a === 0 && b === 0 && typeof a === 'number') document.documentElement.scrollTop = 0; }; window.scrollBy = function () {};")),
     ("desktop: the page scrolls to the feedback", DESK, ("script", "JPIB.ui.calc().isDocked = function () { return false; };")),
     ("desktop: the feedback pushed below the fold", DESK,
      ("style", "@media (max-height:800px){.qcard.fb-open .fig-wrap{order:0!important}.qcard.fb-open .prompt{display:block!important}}"
