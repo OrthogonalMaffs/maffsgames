@@ -22,13 +22,17 @@
               S5 {kind, principal, rate, years, qty} (money in pence)
      answer   { type: 'money', pence } | { type: 'percent', value }
      slips    [{ kind, answer: { pence } | { value }, line }]
-     friendly the "Try without a calculator" hint shows on this question and on no other (CALC-OPTIONAL, Jon, 28 Oct 2026; it is not a
-              calculator switch: the calculator is there behind its toggle in every stage that is calculator optional). True ONLY where every
-              step is one easy mental step: the percentage is 10, 25 or 50 (a tenth, a quarter, a half), and every amount in the working
-              (the amount found, the new price, the old price) is a whole number of pounds. So 10%, 25% or 50% of a whole-pound amount
-              (stages 1 and 2), and a change that is exactly 10%, 25% or 50% of a whole-pound price (stage 3). Never true in stage 4
-              (working back to 100% divides by 80, 120 and so on) or stage 5. It is computed here, from the question's own parameters,
-              by friendlyOf(); scripts/verify-its-on-sale.py recomputes it through a separate path.
+     friendly the "Try it with pen and paper" hint shows on this question and on no other (CALC-OPTIONAL, Jon, 28 Oct 2026; loosened by
+              FRIENDLY-LOOSEN the same day). It is not a calculator switch: the calculator is there behind its toggle in every stage that is
+              calculator optional. True where every step is a standard Foundation non-calculator method with a few lines of working, on a
+              round amount (a multiple of £5, so every step is whole pence):
+                stages 1 and 2   the percentage is a multiple of 5, built from 10% and 5% ("10% is a tenth, 5% is half of that, 15% is both")
+                stage 3          the same, for the percentage change
+                stage 4          the percentage is a multiple of 10, so the reverse working is 10% of the original, times 10
+              NOT friendly: a percentage built from 1% (12%, 8%: 12 lots of an awkward 1%, as 12% of £379 is), an amount that is not round, and
+              all of stage 5 (powers and years: a calculator). So 15% of £120 and 20% off £60 have the hint; 12% of £379 does not.
+              It is computed here, from the question's own parameters, by friendlyOf() (the hint's wording is HINT below, the one place it
+              is written for the games); scripts/verify-its-on-sale.py recomputes it through a separate path.
 */
 (function (root) {
   'use strict';
@@ -74,8 +78,8 @@
   // the nearest penny, halves up: n / d (d > 0)
   function roundDiv(n, d) { return Math.floor((2 * n + d) / (2 * d)); }
   function isTie(n, d) { return (2 * n) % (2 * d) === d; }
-  // The friendly rule (header): a tenth, a quarter or a half, and no pence in the working.
-  var EASY_PCT = [10, 25, 50];
+  // The hint's wording, written once for every game on this bank (FRIENDLY-LOOSEN).
+  var HINT = 'Try it with pen and paper';
 
   // ---- the method for "p% of B" (B a whole number of pounds, in pence): lines, every amount used, every multiplier or divisor used
   function pctMethod(p, B) {
@@ -106,8 +110,10 @@
     }
     return { x: x, lines: lines, steps: steps, mults: mults };
   }
-  function friendlyOf(pct, amounts) {
-    return EASY_PCT.indexOf(pct) >= 0 && amounts.every(function (x) { return x % 100 === 0; });
+  // The friendly rule (header). step is the multiple the percentage must be (5: built from 10% and 5%; 10 for the reverse working),
+  // base the round amount the percentage is of, in pence (a multiple of £5).
+  function friendlyOf(step, pct, base) {
+    return pct % step === 0 && base % 500 === 0;
   }
 
   // ---------------------------------------------------------------- stage 1: percentage of an amount
@@ -118,7 +124,7 @@
     var m = pctMethod(p, B), occ = pick(rng, SALES);
     var stem = occ + ', ' + a(item) + ' costing ' + money(B) + ' has ' + p + '% off. How much is taken off the price?';
     return { kind: 'pct_of', params: { pct: p, base: B }, ask: { type: 'money', what: 'taken off' }, answer: { type: 'money', pence: m.x },
-      stem: stem, worked: m.lines.concat(['So ' + money(m.x) + ' is taken off the price.']), slips: [], friendly: friendlyOf(p, m.steps.concat([B])) };
+      stem: stem, worked: m.lines.concat(['So ' + money(m.x) + ' is taken off the price.']), slips: [], friendly: friendlyOf(5, p, B) };
   }
 
   // ---------------------------------------------------------------- stage 2: increase or decrease, the new price
@@ -138,7 +144,7 @@
       line: money(m.x) + ' is the ' + p + '% itself. The question asks for the new price, so ' + (dec_ ? 'take it off' : 'add it on') + ': ' +
         money(B) + (dec_ ? ' − ' : ' + ') + money(m.x) + ' = ' + money(N) + '.' }];
     return { kind: dir, params: { dir: dir, pct: p, base: B }, ask: { type: 'money', what: 'new price' }, answer: { type: 'money', pence: N },
-      stem: stem, worked: worked, slips: slips, friendly: friendlyOf(p, m.steps.concat([B, N])) };
+      stem: stem, worked: worked, slips: slips, friendly: friendlyOf(5, p, B) };
   }
 
   // ---------------------------------------------------------------- stage 3: percentage change
@@ -162,7 +168,7 @@
     }
     return { kind: dir, params: { dir: dir, old: O, new: N }, ask: { type: 'percent', what: dec_ ? 'knocked off' : 'increase' },
       answer: { type: 'percent', value: p }, stem: stem, worked: worked, slips: slips,
-      friendly: friendlyOf(p, [c, O, N]) };
+      friendly: friendlyOf(5, p, O) };
   }
 
   // ---------------------------------------------------------------- stage 4: reverse percentages
@@ -186,7 +192,7 @@
           money(N) + ' is already ' + k + '% of the original, so work back to 100%.' });
     }
     return { kind: dir, params: { dir: dir, pct: p, newp: N }, ask: { type: 'money', what: 'original price' }, answer: { type: 'money', pence: O },
-      stem: stem, worked: worked, slips: slips, friendly: false };
+      stem: stem, worked: worked, slips: slips, friendly: friendlyOf(10, p, O) };
   }
 
   // ---------------------------------------------------------------- stage 5: simple interest, compound interest, depreciation
@@ -272,5 +278,5 @@
     return q;
   }
 
-  root.MaffsPercentagesMoney = { STAGES: [1, 2, 3, 4, 5], SLOTS: SLOTS, BANDS: BANDS, question: question };
+  root.MaffsPercentagesMoney = { STAGES: [1, 2, 3, 4, 5], SLOTS: SLOTS, BANDS: BANDS, HINT: HINT, question: question };
 })(typeof window !== 'undefined' ? window : this);
