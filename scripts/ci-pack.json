@@ -4,9 +4,7 @@
   "Angle Ace (every diagram measured against its words and key; every option and reason marked in Chromium)": "5",
   "As You Can See (the 60-question fixed-seed bank and 20 seeds of every slot recomputed from each question's own chart data and ask, never from the bank's or the game's code: pictogram rows, bar, dual and stacked heights, line readings, scatter correlation, line of best fit, outlier, every stage-5 flaw read off the chart; accepted intervals; slips outside them; the game's marking compared with an independent marker; every drawn chart read back from its SVG against its data; all five stages played in the page at 390 px and the first questions at 375, 360, 320, 1280 and 1366 px with a wide font; fault-injection self-test)": "29",
   "Background launcher (bg.py starts a command detached and records its PID in <worktree>/.claude/pids.json; the registry reads back and is gitignored)": "6",
-  "Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points and message figures recomputed around 0/360; lives and end flows played in Chromium; fault-injection self-test: every planted fault caught), part 1 of 3": "20",
-  "Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points and message figures recomputed around 0/360; lives and end flows played in Chromium; fault-injection self-test: every planted fault caught), part 2 of 3": "77",
-  "Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points and message figures recomputed around 0/360; lives and end flows played in Chromium; fault-injection self-test: every planted fault caught), part 3 of 3": "1",
+  "Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points and message figures recomputed around 0/360; lives and end flows played in Chromium; fault-injection self-test: every planted fault caught), part 1 of 1": "20",
   "Better Value (every keyed figure and explanation figure recomputed, one true card in four, every card marked in Chromium)": "16",
   "Better Value claims (every item's declared measure computed from its inputs; the key's claim true, every distractor's false; every text figure in its claim; KNOWN)": "28",
   "Better Value tax-and-NI rule of thumb (checked with uk_rates)": "49",
@@ -210,13 +208,13 @@
  "over-budget": [],
  "shards": {
   "check-answer-lock.py": {
-   "how": "chosen from 105 timed unit(s)",
+   "how": "kept from the pack (7 needed)",
    "label": "Answer lock in play (canon 7.6.0: migrated games played in Chromium)",
    "parts": 8,
    "tier": "lock"
   },
   "check-burst.py": {
-   "how": "chosen from 39 timed unit(s)",
+   "how": "kept from the pack (3 needed)",
    "label": "Burst mode (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; &stage= presses button[data-stage]; fault-injection self-test: the stage, four-answer bar, without-?burst, score-submission and miscounted-score planted faults, each caught)",
    "parts": 4,
    "tier": "content"
@@ -228,9 +226,9 @@
    "tier": "lock"
   },
   "verify-bearing-blitz.py": {
-   "how": "kept from the pack (2 needed)",
+   "how": "chosen from 13 timed unit(s)",
    "label": "Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points and message figures recomputed around 0/360; lives and end flows played in Chromium; fault-injection self-test: every planted fault caught)",
-   "parts": 3,
+   "parts": 1,
    "tier": "content"
   },
   "verify-card-filter.py": {
@@ -246,7 +244,7 @@
    "tier": "content"
   },
   "verify-equation-builder.py": {
-   "how": "chosen from 25 timed unit(s)",
+   "how": "kept from the pack (3 needed)",
    "label": "Equation Builder (every question's tile arrangements classified by SymPy, in twelve slices; the whole-question checks; the tile order in Chromium; self-test)",
    "parts": 3,
    "tier": "content"
@@ -270,7 +268,7 @@
    "tier": "content"
   },
   "verify-free-daily-pizza.py": {
-   "how": "chosen from 26 timed unit(s)",
+   "how": "kept from the pack (2 needed)",
    "label": "Free Daily Pizza (independent recomputation + daily seed + UI play + every item at three phone sizes + fault-injection self-test, the phone-fit plants included)",
    "parts": 2,
    "tier": "content"
@@ -282,13 +280,13 @@
    "tier": "content"
   },
   "verify-how-many-parts.py": {
-   "how": "chosen from 34 timed unit(s)",
+   "how": "kept from the pack (5 needed)",
    "label": "How Many Parts? (pools and Foundation's five, keys, every stage's own errors and options, every question's bar and worked steps recomputed, the palette, sessions easiest first, every Foundation stage and Advanced played at 320, 390 and 1280px; every question, worked example and wrong-answer screen drawn by the game and read back step by step; every wrong-answer screen and worked example at 320x568, 375x667, 390x844 and 1280x800, normal and Aa: the reason and Next above the fold, brackets kept with their maths, typed questions' boxes and keypad in the window at 320x568; fault-injection self-test: eighteen planted faults, each caught)",
    "parts": 6,
    "tier": "content"
   },
   "verify-i-found-a-mark.py": {
-   "how": "chosen from 34 timed unit(s)",
+   "how": "kept from the pack (2 needed)",
    "label": "I Found a Mark (every question of the nine types over 300 seeds each, recomputed in Python from its own parameters with exact fractions: every step and form value, every claim, every literal and dependency derivable, the distractors the contract lists, the two-way table fixed uniquely by its givens, the equations true at the real prices; the deal of five types worth 15 method marks; sessions played in the page at five sizes, the five batch 2 types at the four phone sizes and 1280 px: diagram and table text at least 12 px, a table that fills in as its steps are found, options and Next above the fold, a preview that submits nothing; the planted faults, each caught)",
    "parts": 3,
    "tier": "content"
@@ -300,55 +298,55 @@
    "tier": "content"
   },
   "verify-just-pythag-it-bruv.py": {
-   "how": "chosen from 50 timed unit(s)",
+   "how": "kept from the pack (3 needed)",
    "label": "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test)",
    "parts": 3,
    "tier": "content"
   },
   "verify-possibly-maybe.py": {
-   "how": "chosen from 25 timed unit(s)",
+   "how": "kept from the pack (2 needed)",
    "label": "Possibly, Maybe (the 60-question fixed-seed bank and 20 seeds of every slot recomputed from each question's own data and ask, never from the bank's or the game's code: counts of sectors and counters, listed outcomes by enumeration, products, complements, expected numbers, relative frequencies, the fair-dice rule, every tree probability by exact fractions; fractions typed in two boxes marked by value against an independent marker on probe answers; every picture read back from its SVG; the page played at six sizes; planted faults each caught)",
    "parts": 2,
    "tier": "content"
   },
   "verify-shape-shifter.py": {
-   "how": "chosen from 19 timed unit(s)",
+   "how": "kept from the pack (4 needed)",
    "label": "Shape Shifter (every translation, reflection (in the axes, y = x, y = -x, x = k and y = k), rotation and enlargement image recomputed from its words; every rotation option classified; every vertex and every letter tapped on the real canvas in Chromium; each mode card's data-mode its own mode, a burst at random-mix starting Random Mix once, each card starting its mode once without a burst; fault-injection self-test: every planted fault caught)",
    "parts": 5,
    "tier": "content"
   },
   "verify-squared-squirrel.py": {
-   "how": "chosen from 15 timed unit(s)",
+   "how": "kept from the pack (3 needed)",
    "label": "Football Pitches per Squared Squirrel (Stage 1 the fixed ramp in order; every pool question's key recomputed from its data by units and dimensions, its unit the quantity asked, its named slips recomputed and none equal to the key, Stages 2-3 friendly whole numbers, at least 40 a stage, sessions easiest first; no nonsense unit or squirrel in any question, option, hint or worked line; no formula-triangle wording or drawing; every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, Stage 1's retry keeps the mark, the no-unit \"squirrels\" message loud, spaced from the unit buttons, marking nothing and cleared by picking a unit, the wrong unit marks nothing, named slips, the calculator in Stages 4-5 only, no sideways scroll; fault-injection self-test: twelve planted faults, each caught)",
    "parts": 4,
    "tier": "content"
   },
   "verify-stage-exit.py": {
-   "how": "chosen from 21 timed unit(s)",
+   "how": "kept from the pack (1 needed)",
    "label": "Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all seven games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught)",
    "parts": 1,
    "tier": "content"
   },
   "verify-take-a-walk.py": {
-   "how": "chosen from 22 timed unit(s)",
+   "how": "kept from the pack (2 needed)",
    "label": "Take a Walk (every pool question's lengths and products inside its stage's range, its key recomputed from its drawn lengths, every missing length determined by the drawing and as many as its stage says, no named slip equal to its key, the worked steps ending on the key, sessions easiest first; every pool question drawn by the game and read back: its labels the data's, every side drawn to one scale within 1 px; at 320 and 1280 px every side, line and label inside its picture, framed round the shape, every half arc half as deep as wide and bulging its own way; every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, walk or cover, the find-it-first tap, the unit, the calculator in Stage 4 only, no sideways scroll; fault-injection self-test: sixteen planted faults, each caught)",
    "parts": 2,
    "tier": "content"
   },
   "verify-the-6-ps.py": {
-   "how": "chosen from 74 timed unit(s)",
+   "how": "kept from the pack (2 needed)",
    "label": "The 6 P's (the topic data file is the generator's output; no mark figure, AQA, Edexcel or \"in development\" in the page, no launch into a game; the four past-paper sites before Start; 10,000 sessions each way: six distinct covered topics in band order, frequencies in proportion to marks; every format marked by value through the page's own judge(), schema faults left out, five picked unseen first; a full session at 1280 px with localStorage working, on fixture banks covering all nine formats: every format answered right and wrong, never-marked answers not marked, slips, working, five a topic and a topic card, results, nudge, practice links, tick-list and events; resumed mid-topic after a reload; the same session at 320 px on a touch screen, typed on the phone keypad, with localStorage blocked: no sideways scroll on any screen, resumed mid-topic from window.name; every real bank's verdict and Next on a 375 x 667 phone; a topic with no bank offers Skip only; fault-injection self-test: the planted faults, each caught)",
    "parts": 2,
    "tier": "content"
   },
   "verify-who-ate-all-the-pies.py": {
-   "how": "chosen from 18 timed unit(s)",
+   "how": "kept from the pack (2 needed)",
    "label": "Who Ate All the Pies? (every question of the five stages over 20 seeds a slot, recomputed from its own printed numbers with exact fractions, never from the bank's or the game's code: fractions, amounts, every table angle, can-you-tell verdicts, totals; slips different from the answer; sectors make 360; the game's marking compared with an independent marker on thousands of probe answers; sessions of ten, easiest first; all five stages played in the page at 390 px, worked example then ten questions with the keypad open: every drawn slice read back from its path against the data, labels and key text at least 12 px, a wrong table angle visibly leaves the circle open, one board submission a stage; the first three questions of every stage at 375, 360, 320, 1280 and 1366 px, with a wide font: answer boxes, keys and Next above the fold, no sideways scroll; fault-injection self-test: the planted faults, each caught)",
    "parts": 2,
    "tier": "content"
   },
   "verify-y-so-steep.py": {
-   "how": "chosen from 13 timed unit(s)",
+   "how": "kept from the pack (1 needed)",
    "label": "Y So Steep (every item of the six stages, whole-number and with-fractions banks, recomputed from its own printed stem with exact fractions: every m, c and step key; the contract's bank rules: 45 or more distinct items a stage, 40% or more falling lines, grid lines through two lattice points, 75% or more of Stage 5's points off the y-axis, fractions only when switched on; the module's marking against an independent marker on thousands of probe answers; every stage played in the page: one full round at 390 px on the touch keypad, then the first questions at 375, 360, 320, 1280 and 1366 px; keypad, question and Next above the fold; no sideways scroll; each grid line drawn from its data, grid text at least 12 px; named slips named; one board entry a round, none for stage 6; stage 3 and fractions off; fault-injection self-test: planted faults, each caught, including a wrong c, a line drawn off its data and a positive-only bank)",
    "parts": 1,
    "tier": "content"
