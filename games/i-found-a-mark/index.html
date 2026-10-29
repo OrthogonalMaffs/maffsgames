@@ -128,7 +128,6 @@ a.back-link:hover{color:var(--text)}
 
 /* Phone rule (canon §7.6.1): after a wrong tap, or when a question is done, the controls go and the feedback takes their place. */
 .qcard.fb-open .opts,.qcard.fb-open .actions,.qcard.fb-open .ask-line{display:none}
-body.playing a.back-link{display:none}
 @media (max-width:420px){
   .container{padding:.5rem}
   .qcard{padding:.65rem .6rem;gap:.45rem}
@@ -154,6 +153,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/stage-exit.js" data-label="← Menu"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'answer' taps a calculation: i = 0 a valid one (the question moves on), i >= 1 a wrong one (named, then Next). 'ready' is the game's own state.
 {
   "start": "document.getElementById('startBtn').click()",
@@ -165,6 +165,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 }
 -->
 <script src="../../schools/assets/found-a-mark-templates.js"></script>
+<link rel="stylesheet" href="../../schools/assets/stage-exit.css">
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>

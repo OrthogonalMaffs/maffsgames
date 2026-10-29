@@ -49,6 +49,7 @@
   "Escape-room keypad, up to N digits (engine.js maxDigits on a fixture lock: 5,4,Set opens, 5,4,0,0,Set is the named misconception, no empty slots; a fixed keypad unchanged; the old fixed-length rule planted and caught)": "3",
   "Escape-room lock bank (every lock-bank-batch*.txt: each VERIFY has exactly one answer, none is a restatement; a multi-line NOTE stays out of VERIFY; bad entries planted and caught)": "11",
   "Escape-room set codes (every live room, every lock, every set forced through a saved state in Chromium: the lock screen shows its letter, and a fresh teacher page with no game gives, under that letter, the answer that opens the lock; no bare single-set answer without a live game; four faults planted and caught)": "46",
+  "Essentials filter (the shared card filter on /essentials/, played in Chromium: every card's data-topic is its section and any data-calc is a valid value, each topic chip shows its section alone, search across sections, the empty message, the URL read on load and written on change, filter_applied and game_card_clicked events in the portal's v1 format with page=essentials, no calculator chip, the sticky bar at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught), part 1 of 1": "65",
   "Estimation Engine (SR-12: every rounding and estimate recomputed; marked by exact match in Chromium; phone keypad fit)": "12",
   "Estimation Golf (every key recomputed from its question, exactly, at its own precision; every key scores a Hole in One in Chromium)": "16",
   "Expectation Station (every table, E(X) and explanation figure exact; all 480 Stage 3 cards reviewed against the distribution; Stage 1 has exactly one completion; every stage played in Chromium)": "7",
@@ -116,6 +117,7 @@
   "Parent guides (every stated figure recomputed from the page)": "16",
   "Partial Fractions Duel (every key solved from its own stem with SymPy, every option checked and clicked)": "11",
   "Percentage Flip (every key and every figure in the working recomputed; typed answers marked right and wrong in Chromium, both ways round)": "6",
+  "Planted-fault helper (scripts/plant_common.py: a plant whose target is missing, repeated or unchanged is a STALE PLANT, an error is never a catch)": "2",
   "Possibly, Maybe (the 60-question fixed-seed bank and 20 seeds of every slot recomputed from each question's own data and ask, never from the bank's or the game's code: counts of sectors and counters, listed outcomes by enumeration, products, complements, expected numbers, relative frequencies, the fair-dice rule, every tree probability by exact fractions; fractions typed in two boxes marked by value against an independent marker on probe answers; every picture read back from its SVG; the page played at six sizes; planted faults each caught), part 1 of 2": "19",
   "Possibly, Maybe (the 60-question fixed-seed bank and 20 seeds of every slot recomputed from each question's own data and ask, never from the bank's or the game's code: counts of sectors and counters, listed outcomes by enumeration, products, complements, expected numbers, relative frequencies, the fair-dice rule, every tree probability by exact fractions; fractions typed in two boxes marked by value against an independent marker on probe answers; every picture read back from its SVG; the page played at six sizes; planted faults each caught), part 2 of 2": "21",
   "Prime Sprint (every target factorised independently, every prime tap judged against a model in Chromium, the feedback and working recomputed)": "35",
@@ -154,6 +156,7 @@
   "Split It (every generator's keys recomputed + marking at the stated precision)": "49",
   "Spot the Error (every item's steps, key, explanation and misread phrase checked against a reviewed table; all 110 played in Chromium)": "18",
   "Spot the Muppet (every equation in the advice and the keys recomputed; every key recomputed from its own givens; no distractor ends on the key's value (SR-16); answer once and Next once, played in Chromium)": "28",
+  "Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all seven games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught), part 1 of 1": "37",
   "Standard Form Blitz (all 100 keys recomputed exactly from the question's own TeX; every option classified; every option pressed in Chromium)": "70",
   "Stat Attack (keys recomputed from each question's table)": "27",
   "Surd Simplifier (every key recomputed from its stem with SymPy, in simplest form; every option marked in Chromium)": "70",
@@ -220,9 +223,15 @@
    "tier": "lock"
   },
   "verify-bearing-blitz.py": {
-   "how": "kept from the pack (1 needed)",
+   "how": "kept from the pack (2 needed)",
    "label": "Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points and message figures recomputed around 0/360; lives and end flows played in Chromium; fault-injection self-test: every planted fault caught)",
    "parts": 2,
+   "tier": "content"
+  },
+  "verify-card-filter.py": {
+   "how": "kept from the pack (1 needed)",
+   "label": "Essentials filter (the shared card filter on /essentials/, played in Chromium: every card's data-topic is its section and any data-calc is a valid value, each topic chip shows its section alone, search across sections, the empty message, the URL read on load and written on change, filter_applied and game_card_clicked events in the portal's v1 format with page=essentials, no calculator chip, the sticky bar at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught)",
+   "parts": 1,
    "tier": "content"
   },
   "verify-chart-drawings.py": {
@@ -304,9 +313,15 @@
    "tier": "content"
   },
   "verify-squared-squirrel.py": {
-   "how": "kept from the pack (3 needed)",
+   "how": "kept from the pack (4 needed)",
    "label": "Football Pitches per Squared Squirrel (Stage 1 the fixed ramp in order; every pool question's key recomputed from its data by units and dimensions, its unit the quantity asked, its named slips recomputed and none equal to the key, Stages 2-3 friendly whole numbers, at least 40 a stage, sessions easiest first; no nonsense unit or squirrel in any question, option, hint or worked line; no formula-triangle wording or drawing; every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, Stage 1's retry keeps the mark, the no-unit \"squirrels\" message loud, spaced from the unit buttons, marking nothing and cleared by picking a unit, the wrong unit marks nothing, named slips, the calculator in Stages 4-5 only, no sideways scroll; fault-injection self-test: twelve planted faults, each caught)",
    "parts": 4,
+   "tier": "content"
+  },
+  "verify-stage-exit.py": {
+   "how": "kept from the pack (1 needed)",
+   "label": "Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all seven games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught)",
+   "parts": 1,
    "tier": "content"
   },
   "verify-take-a-walk.py": {

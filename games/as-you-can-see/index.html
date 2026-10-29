@@ -124,7 +124,6 @@ a.back-link:hover{color:var(--text)}
 
 /* Phone rule (canon §7.6.1): once a question is marked, the boxes and keys go and the feedback takes their place. */
 .qcard.fb-open #answer,.qcard.fb-open .ask-line,.qcard.fb-open #kpHolder{display:none}
-body.playing a.back-link{display:none}
 @media (max-width:420px){
   .container{padding:.5rem}
   .qcard{padding:.6rem .55rem;gap:.4rem}
@@ -149,6 +148,7 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/stage-exit.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'answer' types the box (or taps an option) with i = 0 the right answer, i >= 1 a wrong one (named, then Next).
 {
   "start": "ACS.ui.start(1)",
@@ -164,6 +164,7 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
 <script src="../../schools/assets/keypad.js"></script>
 <script src="../../schools/assets/reading-charts-generator.js"></script>
 <script src="../../schools/assets/reading-charts-game.js"></script>
+<link rel="stylesheet" href="../../schools/assets/stage-exit.css">
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
