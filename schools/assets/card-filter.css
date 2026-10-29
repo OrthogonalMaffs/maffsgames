@@ -1,0 +1,82 @@
+/* MaffsCardFilter's bar (schools/assets/card-filter.js; contract ESSENTIALS-FILTER). Navy and teal, as /essentials/. */
+:root {
+  --cf-navy: #1a2744;
+  --cf-teal: #0d9488;
+  --cf-teal-dark: #0f766e;
+  --cf-border: #cbd5e1;
+  --cf-bg: #ffffff;
+  --cf-muted: #526077;
+  --cf-bar-h: 100px;
+}
+html { scroll-padding-top: var(--cf-bar-h); }   /* focus and anchors land under the sticky bar, not behind it */
+[data-card-filter] { display: contents; }   /* the bar sticks within the page's main column, not within its own wrapper */
+.cf-hidden { display: none !important; }
+.cf-bar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  margin: 0 -1.25rem 1.25rem;
+  padding: 0.5rem 1.25rem;
+  background: var(--cf-bg);
+  border-bottom: 1px solid var(--cf-border);
+}
+.cf-chips {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding: 2px 0;
+}
+.cf-chips::-webkit-scrollbar { display: none; }
+.cf-chip {
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 1px solid var(--cf-border);
+  border-radius: 22px;
+  background: transparent;
+  color: var(--cf-muted);
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+.cf-chip:hover { border-color: var(--cf-teal); color: var(--cf-teal-dark); }
+.cf-chip.cf-on { background: var(--cf-teal-dark); border-color: var(--cf-teal-dark); color: #fff; }
+.cf-chip:focus-visible, .cf-search:focus-visible, .cf-clear:focus-visible { outline: 3px solid var(--cf-teal); outline-offset: 2px; }
+.cf-searchline { display: flex; align-items: center; gap: 0.75rem; margin-top: 0.4rem; }
+.cf-search {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 0.9rem;
+  border: 1px solid var(--cf-border);
+  border-radius: 10px;
+  background: var(--cf-bg);
+  color: inherit;
+  font: inherit;
+  font-size: 1rem;
+}
+.cf-count { flex: 0 0 auto; color: var(--cf-muted); font-size: 0.9rem; }
+.cf-empty { padding: 1.5rem 0; text-align: center; }
+.cf-empty[hidden] { display: none; }
+.cf-empty-msg { margin-bottom: 0.75rem; color: var(--cf-muted); }
+.cf-clear {
+  min-height: 44px;
+  padding: 0 1.25rem;
+  border: 1px solid var(--cf-teal-dark);
+  border-radius: 22px;
+  background: transparent;
+  color: var(--cf-teal-dark);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+@media (max-width: 480px) {
+  .cf-bar { margin: 0 -1rem 1rem; padding: 0.25rem 1rem; }
+  .cf-chips { padding: 0; }
+  .cf-searchline { margin-top: 0.25rem; }
+  .cf-count { display: none; }
+}
