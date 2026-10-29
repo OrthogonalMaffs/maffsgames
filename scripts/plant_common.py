@@ -1,3 +1,4 @@
+# ci-line: Planted-fault helper (scripts/plant_common.py: a plant whose target is missing, repeated or unchanged is a STALE PLANT, an error is never a catch) | --selftest
 """Planted-fault helpers shared by the verifiers (contract STALE-PLANTS, 28 Oct 2026).
 
 A verifier proves its checks still work by planting a fault and requiring the check to catch it. Two shapes let a plant
@@ -75,3 +76,13 @@ def apply_js_sync(page, name, code):
 def is_caught(found, err=None):
     """True only if the check found something AND did not error while looking. An error is never a catch."""
     return bool(found) and err is None
+
+
+if __name__ == "__main__":
+    import os
+    import runpy
+    import sys
+    if "--selftest" not in sys.argv:
+        sys.exit("usage: python scripts/plant_common.py --selftest")
+    # The tests live in test-plant-common.py; this entry point makes CI treat the helper as a library with a self-test.
+    runpy.run_path(os.path.join(os.path.dirname(os.path.abspath(__file__)), "test-plant-common.py"), run_name="__main__")

@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-# ci-line: Planted-fault helper (scripts/plant_common.py: a plant whose target is missing, repeated or unchanged is a STALE PLANT, an error is never a catch) |
 """Tests for scripts/plant_common.py (contract STALE-PLANTS, 28 Oct 2026). No browser.
 
-    python scripts/test-plant-common.py
+    python scripts/test-plant-common.py       (CI runs it as: python scripts/plant_common.py --selftest)
 """
 import asyncio
 import os
