@@ -29,10 +29,10 @@
   "Burst mode (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; &stage= presses button[data-stage]; fault-injection self-test: the stage, four-answer bar, without-?burst, score-submission and miscounted-score planted faults, each caught), part 22 of 39": "80",
   "Burst mode (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; &stage= presses button[data-stage]; fault-injection self-test: the stage, four-answer bar, without-?burst, score-submission and miscounted-score planted faults, each caught), part 23 of 39": "15",
   "Burst mode (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; &stage= presses button[data-stage]; fault-injection self-test: the stage, four-answer bar, without-?burst, score-submission and miscounted-score planted faults, each caught), part 24 of 39": "22",
-  "Burst mode (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; &stage= presses button[data-stage]; fault-injection self-test: the stage, four-answer bar, without-?burst, score-submission and miscounted-score planted faults, each caught), part 25 of 39": "57",
+  "Burst mode (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; &stage= presses button[data-stage]; fault-injection self-test: the stage, four-answer bar, without-?burst, score-submission and miscounted-score planted faults, each caught), part 25 of 39": "10",
   "Burst mode (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; &stage= presses button[data-stage]; fault-injection self-test: the stage, four-answer bar, without-?burst, score-submission and miscounted-score planted faults, each caught), part 26 of 39": "69",
   "Burst mode (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; &stage= presses button[data-stage]; fault-injection self-test: the stage, four-answer bar, without-?burst, score-submission and miscounted-score planted faults, each caught), part 27 of 39": "77",
-  "Burst mode (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; &stage= presses button[data-stage]; fault-injection self-test: the stage, four-answer bar, without-?burst, score-submission and miscounted-score planted faults, each caught), part 28 of 39": "76",
+  "Burst mode (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; &stage= presses button[data-stage]; fault-injection self-test: the stage, four-answer bar, without-?burst, score-submission and miscounted-score planted faults, each caught), part 28 of 39": "65",
   "Burst mode (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; &stage= presses button[data-stage]; fault-injection self-test: the stage, four-answer bar, without-?burst, score-submission and miscounted-score planted faults, each caught), part 29 of 39": "36",
   "Burst mode (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; &stage= presses button[data-stage]; fault-injection self-test: the stage, four-answer bar, without-?burst, score-submission and miscounted-score planted faults, each caught), part 3 of 39": "71",
   "Burst mode (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; &stage= presses button[data-stage]; fault-injection self-test: the stage, four-answer bar, without-?burst, score-submission and miscounted-score planted faults, each caught), part 30 of 39": "75",
@@ -61,7 +61,7 @@
   "Constructions Lab (no marking to check: every task's figure, labels and stated results verified by constructing all ten with the game's own compass and ruler in Chromium)": "12",
   "Context size (CLAUDE.md and both handovers at most 20 KB, docs/todo.md at most 150 KB; canon reported; contracts CTX and TODO-SLIM)": "14",
   "Coordinate Geometry Dash (every key recomputed from its question; exactly one correct option, equations compared as curves; every option marked in Chromium)": "6",
-  "Core Maths Paper 1 (every key recomputed from its stem and charts; options distinct in value; every key marked in Chromium)": "13",
+  "Core Maths Paper 1 (every key recomputed from its stem and charts; options distinct in value; every key marked in Chromium)": "7",
   "Core Maths Paper 1 tax, NI and student loan (recomputed with uk_rates)": "23",
   "Core Maths Paper 2A (independent recomputation + rendered page)": "7",
   "Core Maths Paper 2B (Q28's policy recomputed from its table, no wrong option picking the same policy; every option marked in Chromium)": "65",
@@ -71,7 +71,7 @@
   "Decimal Detective (Line-Up and Round Up keys recomputed, Place It start state, every answer marked in Chromium)": "57",
   "Differentiation Duel (every key and option differentiated again with SymPy, explanations checked, every option marked in Chromium)": "36",
   "Dimension Checker (every key and option checked by dimension algebra, worked steps recomputed, every item marked in Chromium)": "51",
-  "Distinctly Average (independent recomputation)": "16",
+  "Distinctly Average (independent recomputation)": "7",
   "Eigenvalue Extractor (every characteristic equation solved in SymPy; every option read as its list of eigenvalues and classified; every worked line and check sum recomputed; every option pressed in Chromium)": "32",
   "Eigenvector Engine (every key an eigenvector, no option a multiple of one or of another; working recomputed; every option clicked)": "11",
   "End-of-task helper (end-task.py: a squash-merged branch is removed; an unmerged branch, an extra local commit and a dirty worktree each refuse; gh stubbed)": "31",
@@ -97,7 +97,7 @@
   "Estimation Engine (SR-12: every rounding and estimate recomputed; marked by exact match in Chromium; phone keypad fit)": "12",
   "Estimation Golf (every key recomputed from its question, exactly, at its own precision; every key scores a Hole in One in Chromium)": "16",
   "Expectation Station (every table, E(X) and explanation figure exact; all 480 Stage 3 cards reviewed against the distribution; Stage 1 has exactly one completion; every stage played in Chromium)": "7",
-  "Expected Damage (every E(X) recomputed exactly, no ties, shown probabilities read back)": "23",
+  "Expected Damage (every E(X) recomputed exactly, no ties, shown probabilities read back)": "7",
   "Factor Race (every pair's key and factor counts recomputed, the KS3 pair table rebuilt and compared, every pair answered both ways in Chromium)": "51",
   "Factor Theorem (every key from its item's polynomial; ACCEPTED lists = page; every form marked in Chromium; answer buttons; A-Level only; no Practice submit)": "21",
   "Feedback that teaches, As You Can See (every reading-charts question has a one-line why equal to the last two worked lines, recomputed here from the worked lines; every run of plain arithmetic in a feedback or question string becomes KaTeX and nothing else is touched, against an independent converter on thousands of strings and on time, week, decimal and bare-number probes; the page played at four phone sizes with a wide font and real KaTeX: no plain arithmetic anywhere on screen, a right answer shows Yes then the why, a named slip shows the why marked in the working, Next above the fold; the planted faults, each caught), part 1 of 1": "55",
@@ -177,18 +177,14 @@
   "It's on Sale! (every question of the five stages over 40 seeds a slot recomputed from its own params with exact fractions, never from the module's code: answer, every named slip, the numbers in the stem, the worked lines; sessions of 10 slots easiest first with the example never among them; the game's marking against an independent marker on thousands of typed answers: format, unreadable, slip, wrong, right; every stage played in the page at 390 px, a full stage each, and at 375 px, the first questions: worked example, typed answers on the tag with the keypad open, a format answer never marked, a named slip, the calculator note and badge by stage, the Stage 5 calculator open; answer box, Check and Next above the fold; no sideways scroll; one submission a stage; every stage played at 360, 320, 1280 and 1366 px, the first questions: the same checks, the short phones and the two laptop sizes; fault-injection self-test: the planted faults, each caught, including a wrong new price, a reverse percentage worked the wrong way round and a format answer marked right), part 1 of 3": "53",
   "It's on Sale! (every question of the five stages over 40 seeds a slot recomputed from its own params with exact fractions, never from the module's code: answer, every named slip, the numbers in the stem, the worked lines; sessions of 10 slots easiest first with the example never among them; the game's marking against an independent marker on thousands of typed answers: format, unreadable, slip, wrong, right; every stage played in the page at 390 px, a full stage each, and at 375 px, the first questions: worked example, typed answers on the tag with the keypad open, a format answer never marked, a named slip, the calculator note and badge by stage, the Stage 5 calculator open; answer box, Check and Next above the fold; no sideways scroll; one submission a stage; every stage played at 360, 320, 1280 and 1366 px, the first questions: the same checks, the short phones and the two laptop sizes; fault-injection self-test: the planted faults, each caught, including a wrong new price, a reverse percentage worked the wrong way round and a format answer marked right), part 2 of 3": "54",
   "It's on Sale! (every question of the five stages over 40 seeds a slot recomputed from its own params with exact fractions, never from the module's code: answer, every named slip, the numbers in the stem, the worked lines; sessions of 10 slots easiest first with the example never among them; the game's marking against an independent marker on thousands of typed answers: format, unreadable, slip, wrong, right; every stage played in the page at 390 px, a full stage each, and at 375 px, the first questions: worked example, typed answers on the tag with the keypad open, a format answer never marked, a named slip, the calculator note and badge by stage, the Stage 5 calculator open; answer box, Check and Next above the fold; no sideways scroll; one submission a stage; every stage played at 360, 320, 1280 and 1366 px, the first questions: the same checks, the short phones and the two laptop sizes; fault-injection self-test: the planted faults, each caught, including a wrong new price, a reverse percentage worked the wrong way round and a format answer marked right), part 3 of 3": "59",
-  "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 1 of 12": "49",
-  "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 10 of 12": "74",
-  "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 11 of 12": "48",
-  "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 12 of 12": "6",
-  "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 2 of 12": "54",
-  "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 3 of 12": "56",
-  "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 4 of 12": "10",
-  "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 5 of 12": "27",
-  "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 6 of 12": "34",
-  "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 7 of 12": "65",
-  "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 8 of 12": "7",
-  "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 9 of 12": "37",
+  "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 1 of 8": "74",
+  "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 2 of 8": "49",
+  "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 3 of 8": "56",
+  "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 4 of 8": "37",
+  "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 5 of 8": "54",
+  "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 6 of 8": "48",
+  "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 7 of 8": "34",
+  "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 8 of 8": "6",
   "Launch sash (schools/assets/launch-sash.js carries an end date and hides itself after it; homepage only; planted faults caught)": "57",
   "Level logged (every mfg event carries the level the game resolved through MaffsLevel, never a string literal; 'all' only where the declaration lists it in boards; one plant)": "35",
   "Level resolver (MaffsLevel declarations equal the roster; every internal ?level= link and portal card names a level its game serves; no migrated game reads ?level itself; three planted faults)": "35",
@@ -270,7 +266,7 @@
   "Tax Theft (every key recomputed from HMRC 2025/26 + money-answer format check)": "16",
   "Terrible Advice (every equation in the advice and the keys recomputed; every key recomputed from its own givens; no distractor ends on the key's value (SR-16); answer once and Next once, played in Chromium)": "13",
   "Test the Claim (independent recomputation of every key)": "16",
-  "Text writes (every text-mode write in scripts/ passes newline='', so Windows cannot turn LF into CRLF)": "4",
+  "Text writes (every text-mode write in scripts/ passes newline='', so Windows cannot turn LF into CRLF)": "7",
   "The 6 P's (the topic data file is the generator's output; no mark figure, AQA, Edexcel or \"in development\" in the page, no launch into a game; the four past-paper sites before Start; 10,000 sessions each way: six distinct covered topics in band order, frequencies in proportion to marks; every format marked by value through the page's own judge(), schema faults left out, five picked unseen first; a full session at 1280 px with localStorage working, on fixture banks covering all nine formats: every format answered right and wrong, never-marked answers not marked, slips, working, five a topic and a topic card, results, nudge, practice links, tick-list and events; resumed mid-topic after a reload; the same session at 320 px on a touch screen, typed on the phone keypad, with localStorage blocked: no sideways scroll on any screen, resumed mid-topic from window.name; every real bank's verdict and Next on a 375 x 667 phone; a topic with no bank offers Skip only; fault-injection self-test: the planted faults, each caught), part 1 of 4": "73",
   "The 6 P's (the topic data file is the generator's output; no mark figure, AQA, Edexcel or \"in development\" in the page, no launch into a game; the four past-paper sites before Start; 10,000 sessions each way: six distinct covered topics in band order, frequencies in proportion to marks; every format marked by value through the page's own judge(), schema faults left out, five picked unseen first; a full session at 1280 px with localStorage working, on fixture banks covering all nine formats: every format answered right and wrong, never-marked answers not marked, slips, working, five a topic and a topic card, results, nudge, practice links, tick-list and events; resumed mid-topic after a reload; the same session at 320 px on a touch screen, typed on the phone keypad, with localStorage blocked: no sideways scroll on any screen, resumed mid-topic from window.name; every real bank's verdict and Next on a 375 x 667 phone; a topic with no bank offers Skip only; fault-injection self-test: the planted faults, each caught), part 2 of 4": "73",
   "The 6 P's (the topic data file is the generator's output; no mark figure, AQA, Edexcel or \"in development\" in the page, no launch into a game; the four past-paper sites before Start; 10,000 sessions each way: six distinct covered topics in band order, frequencies in proportion to marks; every format marked by value through the page's own judge(), schema faults left out, five picked unseen first; a full session at 1280 px with localStorage working, on fixture banks covering all nine formats: every format answered right and wrong, never-marked answers not marked, slips, working, five a topic and a topic card, results, nudge, practice links, tick-list and events; resumed mid-topic after a reload; the same session at 320 px on a touch screen, typed on the phone keypad, with localStorage blocked: no sideways scroll on any screen, resumed mid-topic from window.name; every real bank's verdict and Next on a 375 x 667 phone; a topic with no bank offers Skip only; fault-injection self-test: the planted faults, each caught), part 3 of 4": "75",
@@ -336,7 +332,7 @@
  ],
  "shards": {
   "check-answer-lock.py": {
-   "how": "chosen from 105 timed unit(s)",
+   "how": "kept from the pack (13 needed)",
    "label": "Answer lock in play (canon 7.6.0: migrated games played in Chromium)",
    "parts": 13,
    "tier": "lock"
@@ -348,13 +344,13 @@
    "tier": "content"
   },
   "test-level.py": {
-   "how": "chosen from 108 timed unit(s)",
+   "how": "kept from the pack (2 needed)",
    "label": "Level resolver in play (every migrated game loads at its default for constructor, __proto__ and nonsense, and at each declared level, with no page error)",
    "parts": 2,
    "tier": "lock"
   },
   "verify-bearing-blitz.py": {
-   "how": "chosen from 13 timed unit(s)",
+   "how": "kept from the pack (3 needed)",
    "label": "Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points and message figures recomputed around 0/360; lives and end flows played in Chromium; fault-injection self-test: every planted fault caught)",
    "parts": 3,
    "tier": "content"
@@ -366,13 +362,13 @@
    "tier": "content"
   },
   "verify-chart-drawings.py": {
-   "how": "chosen from 14 timed unit(s)",
+   "how": "kept from the pack (2 needed)",
    "label": "Chart drawings (every chart the reading-charts, pie-chart and probability banks draw is read back FROM THE SCREEN, by hit-testing what is really painted, and compared with its data: pictogram symbols whole, half and quarter by their visible width; bar and segment lengths, line and scatter points through the numbers on the axes; pie slices by the angle each one really covers; spinner wedges and counters visible; the pictogram key and the symbol counts in the worked steps; fault-injection self-test)",
    "parts": 2,
    "tier": "content"
   },
   "verify-equation-builder.py": {
-   "how": "chosen from 25 timed unit(s)",
+   "how": "kept from the pack (8 needed)",
    "label": "Equation Builder (every question's tile arrangements classified by SymPy, in twelve slices; the whole-question checks; the tile order in Chromium; self-test)",
    "parts": 9,
    "tier": "content"
@@ -402,25 +398,25 @@
    "tier": "content"
   },
   "verify-hc-factor.py": {
-   "how": "chosen from 12 timed unit(s)",
+   "how": "kept from the pack (3 needed)",
    "label": "The HC Factor (every question of the six stages recomputed from its own printed expression by polynomial multiplication, never from the module's parameters: expansions, factorisations fully factorised, sign-grid answers against b and c, every slip different from the answer; 40 distinct questions a stage; the module's marking compared with an independent marker on thousands of probe answers; all six stages played in the page at 375, 360, 320, 1280 and 1366 px: typed answers, both bracket orders, a named slip, a partial factorisation, the sign grid marked on its own; answer boxes and Next above the fold; no sideways scroll; one board submission a round, none for round 6; fault-injection self-test: planted faults, each caught, including a wrong middle term, a sign-grid answer contradicting c, and a partial factorisation accepted in Stage 3)",
    "parts": 3,
    "tier": "content"
   },
   "verify-how-many-parts.py": {
-   "how": "chosen from 34 timed unit(s)",
+   "how": "kept from the pack (13 needed)",
    "label": "How Many Parts? (pools and Foundation's five, keys, every stage's own errors and options, every question's bar and worked steps recomputed, the palette, sessions easiest first, every Foundation stage and Advanced played at 320, 390 and 1280px; every question, worked example and wrong-answer screen drawn by the game and read back step by step; every wrong-answer screen and worked example at 320x568, 375x667, 390x844 and 1280x800, normal and Aa: the reason and Next above the fold, brackets kept with their maths, typed questions' boxes and keypad in the window at 320x568; fault-injection self-test: eighteen planted faults, each caught)",
    "parts": 13,
    "tier": "content"
   },
   "verify-i-found-a-mark.py": {
-   "how": "chosen from 34 timed unit(s)",
+   "how": "kept from the pack (6 needed)",
    "label": "I Found a Mark (every question of the nine types over 300 seeds each, recomputed in Python from its own parameters with exact fractions: every step and form value, every claim, every literal and dependency derivable, the distractors the contract lists, the two-way table fixed uniquely by its givens, the equations true at the real prices; the deal of five types worth 15 method marks; sessions played in the page at five sizes, the five batch 2 types at the four phone sizes and 1280 px: diagram and table text at least 12 px, a table that fills in as its steps are found, options and Next above the fold, a preview that submits nothing; the planted faults, each caught)",
    "parts": 6,
    "tier": "content"
   },
   "verify-its-on-sale.py": {
-   "how": "chosen from 17 timed unit(s)",
+   "how": "kept from the pack (3 needed)",
    "label": "It's on Sale! (every question of the five stages over 40 seeds a slot recomputed from its own params with exact fractions, never from the module's code: answer, every named slip, the numbers in the stem, the worked lines; sessions of 10 slots easiest first with the example never among them; the game's marking against an independent marker on thousands of typed answers: format, unreadable, slip, wrong, right; every stage played in the page at 390 px, a full stage each, and at 375 px, the first questions: worked example, typed answers on the tag with the keypad open, a format answer never marked, a named slip, the calculator note and badge by stage, the Stage 5 calculator open; answer box, Check and Next above the fold; no sideways scroll; one submission a stage; every stage played at 360, 320, 1280 and 1366 px, the first questions: the same checks, the short phones and the two laptop sizes; fault-injection self-test: the planted faults, each caught, including a wrong new price, a reverse percentage worked the wrong way round and a format answer marked right)",
    "parts": 3,
    "tier": "content"
@@ -428,53 +424,53 @@
   "verify-just-pythag-it-bruv.py": {
    "how": "chosen from 50 timed unit(s)",
    "label": "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test)",
-   "parts": 12,
+   "parts": 8,
    "tier": "content"
   },
   "verify-possibly-maybe.py": {
-   "how": "chosen from 25 timed unit(s)",
+   "how": "kept from the pack (5 needed)",
    "label": "Possibly, Maybe (the 60-question fixed-seed bank and 20 seeds of every slot recomputed from each question's own data and ask, never from the bank's or the game's code: counts of sectors and counters, listed outcomes by enumeration, products, complements, expected numbers, relative frequencies, the fair-dice rule, every tree probability by exact fractions; fractions typed in two boxes marked by value against an independent marker on probe answers; every picture read back from its SVG; the page played at six sizes; planted faults each caught)",
    "parts": 5,
    "tier": "content"
   },
   "verify-shape-shifter.py": {
-   "how": "chosen from 19 timed unit(s)",
+   "how": "kept from the pack (13 needed)",
    "label": "Shape Shifter (every translation, reflection (in the axes, y = x, y = -x, x = k and y = k), rotation and enlargement image recomputed from its words; every rotation option classified; every vertex and every letter tapped on the real canvas in Chromium; each mode card's data-mode its own mode, a burst at random-mix starting Random Mix once, each card starting its mode once without a burst; fault-injection self-test: every planted fault caught)",
    "parts": 13,
    "tier": "content"
   },
   "verify-squared-squirrel.py": {
-   "how": "chosen from 15 timed unit(s)",
+   "how": "kept from the pack (7 needed)",
    "label": "Football Pitches per Squared Squirrel (Stage 1 the fixed ramp in order; every pool question's key recomputed from its data by units and dimensions, its unit the quantity asked, its named slips recomputed and none equal to the key, Stages 2-3 friendly whole numbers, at least 40 a stage, sessions easiest first; no nonsense unit or squirrel in any question, option, hint or worked line; no formula-triangle wording or drawing; every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, Stage 1's retry keeps the mark, the no-unit \"squirrels\" message loud, spaced from the unit buttons, marking nothing and cleared by picking a unit, the wrong unit marks nothing, named slips, the calculator in Stages 4-5 only, no sideways scroll; fault-injection self-test: twelve planted faults, each caught)",
    "parts": 7,
    "tier": "content"
   },
   "verify-stage-exit.py": {
-   "how": "chosen from 21 timed unit(s)",
+   "how": "kept from the pack (3 needed)",
    "label": "Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all seven games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught)",
    "parts": 3,
    "tier": "content"
   },
   "verify-take-a-walk.py": {
-   "how": "chosen from 22 timed unit(s)",
+   "how": "kept from the pack (5 needed)",
    "label": "Take a Walk (every pool question's lengths and products inside its stage's range, its key recomputed from its drawn lengths, every missing length determined by the drawing and as many as its stage says, no named slip equal to its key, the worked steps ending on the key, sessions easiest first; every pool question drawn by the game and read back: its labels the data's, every side drawn to one scale within 1 px; at 320 and 1280 px every side, line and label inside its picture, framed round the shape, every half arc half as deep as wide and bulging its own way; every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, walk or cover, the find-it-first tap, the unit, the calculator in Stage 4 only, no sideways scroll; fault-injection self-test: sixteen planted faults, each caught)",
    "parts": 5,
    "tier": "content"
   },
   "verify-the-6-ps.py": {
-   "how": "chosen from 74 timed unit(s)",
+   "how": "kept from the pack (4 needed)",
    "label": "The 6 P's (the topic data file is the generator's output; no mark figure, AQA, Edexcel or \"in development\" in the page, no launch into a game; the four past-paper sites before Start; 10,000 sessions each way: six distinct covered topics in band order, frequencies in proportion to marks; every format marked by value through the page's own judge(), schema faults left out, five picked unseen first; a full session at 1280 px with localStorage working, on fixture banks covering all nine formats: every format answered right and wrong, never-marked answers not marked, slips, working, five a topic and a topic card, results, nudge, practice links, tick-list and events; resumed mid-topic after a reload; the same session at 320 px on a touch screen, typed on the phone keypad, with localStorage blocked: no sideways scroll on any screen, resumed mid-topic from window.name; every real bank's verdict and Next on a 375 x 667 phone; a topic with no bank offers Skip only; fault-injection self-test: the planted faults, each caught)",
    "parts": 4,
    "tier": "content"
   },
   "verify-who-ate-all-the-pies.py": {
-   "how": "chosen from 18 timed unit(s)",
+   "how": "kept from the pack (4 needed)",
    "label": "Who Ate All the Pies? (every question of the five stages over 20 seeds a slot, recomputed from its own printed numbers with exact fractions, never from the bank's or the game's code: fractions, amounts, every table angle, can-you-tell verdicts, totals; slips different from the answer; sectors make 360; the game's marking compared with an independent marker on thousands of probe answers; sessions of ten, easiest first; all five stages played in the page at 390 px, worked example then ten questions with the keypad open: every drawn slice read back from its path against the data, labels and key text at least 12 px, a wrong table angle visibly leaves the circle open, one board submission a stage; the first three questions of every stage at 375, 360, 320, 1280 and 1366 px, with a wide font: answer boxes, keys and Next above the fold, no sideways scroll; fault-injection self-test: the planted faults, each caught)",
    "parts": 4,
    "tier": "content"
   },
   "verify-y-so-steep.py": {
-   "how": "chosen from 13 timed unit(s)",
+   "how": "kept from the pack (3 needed)",
    "label": "Y So Steep (every item of the six stages, whole-number and with-fractions banks, recomputed from its own printed stem with exact fractions: every m, c and step key; the contract's bank rules: 45 or more distinct items a stage, 40% or more falling lines, grid lines through two lattice points, 75% or more of Stage 5's points off the y-axis, fractions only when switched on; the module's marking against an independent marker on thousands of probe answers; every stage played in the page: one full round at 390 px on the touch keypad, then the first questions at 375, 360, 320, 1280 and 1366 px; keypad, question and Next above the fold; no sideways scroll; each grid line drawn from its data, grid text at least 12 px; named slips named; one board entry a round, none for stage 6; stage 3 and fractions off; fault-injection self-test: planted faults, each caught, including a wrong c, a line drawn off its data and a positive-only bank)",
    "parts": 3,
    "tier": "content"
@@ -482,15 +478,15 @@
  },
  "split-candidates": [
   {
-   "label": "Factor Theorem (every key from its item's polynomial; ACCEPTED lists = page; every form marked in Chromium; answer buttons; A-Level only; no Practice submit)",
-   "median": 110,
-   "percent": 75,
-   "setup": 95
-  },
-  {
    "label": "Growth and Decay (keys recomputed from each printed model; no Estimate without a method; percentage contexts stay in 0-100)",
    "median": 131,
    "percent": 83,
+   "setup": 95
+  },
+  {
+   "label": "Screening Room (every count, band and key from the stated rates; every figure from the data; all 70 items marked in Chromium)",
+   "median": 97,
+   "percent": 71,
    "setup": 95
   }
  ]
