@@ -20,6 +20,7 @@
 <script src="../../schools/assets/analytics.js"></script>
 <script src="../../schools/assets/answer-count.js" defer></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<link rel="stylesheet" href="../../schools/assets/calculator.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -29,6 +30,7 @@
   --correct:#22c55e;--correct-dim:rgba(34,197,94,.12);
   --wrong:#f43f5e;--wrong-dim:rgba(244,63,94,.12);
   --text:#e4e8f0;--muted:#687890;--hint:#94a3b8;
+  --surface-alt:var(--surface2);--on-accent:#000;--font-text:'Outfit',sans-serif;--font-num:'JetBrains Mono',monospace;
   --col-x:#14b8a6;--col-fx:#f59e0b;--col-x2:#a78bfa;--col-fx2:#f472b6;
 }
 body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
@@ -154,6 +156,8 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/keypad.js"></script>
+<script src="../../schools/assets/calculator.js"></script>
 <script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
@@ -206,6 +210,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
     The SD calculation is built step-by-step: midpoints, fx, x², fx², variance, then the final answer.
     Watch your working columns appear in the table as you go.
   </div>
+  <div class="calc-row" style="text-align:center;margin:.6rem 0"><span class="calc-badge" data-calc="scientific">Scientific calculator required</span></div>
   <div class="level-grid">
     <button class="level-btn" data-level="gcse" onclick="selectLevel(this)">
       GCSE<span class="level-sub">Exam scores, heights, distances</span>
@@ -244,6 +249,9 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
   <div id="scenarioContext" class="scenario-context"></div>
   <div class="table-wrap"><table class="freq-table" id="freqTable"></table></div>
   <div id="qArea" class="q-area"></div>
+  <div class="calc-host" id="calc"></div>
+  <script>if(window.MaffsCalc)MaffsCalc.mount(document.getElementById('calc'),{dock:document.getElementById('qArea'),keys:'scientific'});</script>
+
 </div>
 
 <!-- RESULTS -->

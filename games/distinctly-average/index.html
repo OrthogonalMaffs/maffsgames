@@ -238,6 +238,8 @@ body.accessible .q-prompt { font-size: 1.1em; }
 <script src="../../schools/assets/answer-count.js" defer></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/keypad.js"></script>
+<script src="../../schools/assets/calculator.js"></script>
 <script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
@@ -278,6 +280,8 @@ body.accessible .q-prompt { font-size: 1.1em; }
     <div class="start-title">Distinctly Average</div>
     <div class="start-desc" id="startDesc">Mean, median, mode and range — spot which one a question is really asking for.</div>
 
+    <div class="calc-row" style="text-align:center;margin:.6rem 0"><span class="calc-badge" data-calc="optional">Calculator optional</span></div>
+
     <div class="picker-label">Level</div>
     <div class="level-select" id="levelSelect"></div>
 
@@ -296,6 +300,9 @@ body.accessible .q-prompt { font-size: 1.1em; }
       <div id="qData"></div>
       <div class="options-grid" id="optionsGrid"></div>
       <div id="scaffoldArea"></div>
+      <div class="calc-host" id="calc"></div>
+      <script>if(window.MaffsCalc)MaffsCalc.mount(document.getElementById('calc'),{dock:document.getElementById('mainGame')});</script>
+
       <div class="feedback" id="feedback"></div>
       <div class="explain-box" id="explainBox"></div>
       <div class="maffs-ref-row" id="refRow"><div class="next-mount" id="nextMount"></div></div>

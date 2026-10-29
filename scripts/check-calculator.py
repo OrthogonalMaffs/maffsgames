@@ -211,7 +211,10 @@ def selftest():
     """Each breach planted in a scratch copy of the relevant files must fail; the clean copy must pass."""
     tags = roster(BASE)
     req = [s for s, v in tags.items() if v == "required"]
-    other = [s for s, v in tags.items() if v not in ("required", "optional") and (BASE / "games" / s / "index.html").exists()]
+    # An untagged game first: the "value outside the four" case below retags it from `untagged`, so it must still be one
+    # (ESSENTIALS-FILTER tagged the first roster rows, 29 Oct 2026); any other non-calculator game is the fallback.
+    live = [s for s, v in tags.items() if v not in ("required", "optional") and (BASE / "games" / s / "index.html").exists()]
+    other = [s for s in live if tags[s] == "untagged"] or live
     if not req or not other:
         return ["self-test: needs one required and one other game in the roster"], 0
     r, o = req[0], other[0]

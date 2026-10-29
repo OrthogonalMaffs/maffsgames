@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<link rel="stylesheet" href="../../schools/assets/calculator.css">
 <style>
 :root{
 --bg:#0f1117;--surface:#1a1d27;--surface-alt:#1e2235;--border:#2a2f45;
@@ -27,6 +28,7 @@
 --green:#22c55e;--green-dim:rgba(34,197,94,0.12);
 --red:#ef4444;--red-dim:rgba(239,68,68,0.12);
 --amber:#f59e0b;--purple:#8b5cf6;--orange:#f97316;
+ --wrong:var(--red);--accent:var(--teal);--hint:#94a3b8;--on-accent:#fff;--font-text:'Outfit',sans-serif;--font-num:'JetBrains Mono',monospace;
 --navy:#1a2744;
 }
 *{margin:0;padding:0;box-sizing:border-box}
@@ -290,6 +292,8 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/keypad.js"></script>
+<script src="../../schools/assets/calculator.js"></script>
 <script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
@@ -328,6 +332,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <div class="screen active" id="startScreen">
   <div class="start-title">Expected Damage</div>
   <div class="start-sub">A calculator trolley is rolling down the track. Muppets — oblivious phone-zombies — are in the way.<br>Choose which track to send the trolley down. Maximise total Muppets hit.<br>Calculate, don't guess.<br>If a track's chances add up to less than 100%, the rest is an escape: nobody is hit.</div>
+  <div class="calc-row" style="text-align:center;margin:.6rem 0"><span class="calc-badge" data-calc="optional">Calculator optional</span></div>
 
   <div class="level-preview" id="lvlPreviewKs3" style="border-left-color:var(--green)">
     <h3 style="color:var(--green)">Foundation</h3>
@@ -386,7 +391,9 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
   </div>
 
   <!-- Option cards -->
-  <div class="options-row" id="optionsRow">
+  <div class="calc-host" id="calc" style="order:9"></div>
+  <script>if(window.MaffsCalc)MaffsCalc.mount(document.getElementById('calc'),{dock:document.getElementById('gameScreen')});</script>
+<div class="options-row" id="optionsRow">
     <div class="option-card" id="optionA" onclick="selectOption('A')">
       <div class="option-label">Track A</div>
       <div class="option-description" id="descA"></div>
