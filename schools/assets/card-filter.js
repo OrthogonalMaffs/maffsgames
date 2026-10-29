@@ -170,7 +170,8 @@
       for (var i = 0; i < sections.length; i++) if (!sections[i].classList.contains('cf-hidden')) { first = sections[i]; break; }
       var target = first || empty;
       var y = target.getBoundingClientRect().top + window.pageYOffset - bar.offsetHeight - 8;
-      if (Math.abs(window.pageYOffset - y) > 4) window.scrollTo(0, Math.max(0, y));
+      // window.scroll, not scrollTo: this places filter results under the bar; it is not feedback or Next (MaffsScroll's job).
+      if (Math.abs(window.pageYOffset - y) > 4) window.scroll(0, Math.max(0, y));
     }
 
     // ── events ──
@@ -221,7 +222,7 @@
     var filtered = cfg.groups.some(function (g) { return state[g.param] !== 'all'; }) || state.q.trim();
     ready = true;
     // A link that opens the page pre-filtered lands on the bar, so the results are what the reader sees.
-    if (filtered) setTimeout(function () { bar.scrollIntoView(); }, 0);
+    if (filtered) setTimeout(function () { window.scroll(0, Math.max(0, bar.getBoundingClientRect().top + window.pageYOffset)); }, 0);
     API.getState = getState;
     return API;
   };
