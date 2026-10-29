@@ -117,6 +117,7 @@
   "Parent guides (every stated figure recomputed from the page)": "16",
   "Partial Fractions Duel (every key solved from its own stem with SymPy, every option checked and clicked)": "11",
   "Percentage Flip (every key and every figure in the working recomputed; typed answers marked right and wrong in Chromium, both ways round)": "6",
+  "Planted-fault helper (scripts/plant_common.py: a plant whose target is missing, repeated or unchanged is a STALE PLANT, an error is never a catch)": "2",
   "Possibly, Maybe (the 60-question fixed-seed bank and 20 seeds of every slot recomputed from each question's own data and ask, never from the bank's or the game's code: counts of sectors and counters, listed outcomes by enumeration, products, complements, expected numbers, relative frequencies, the fair-dice rule, every tree probability by exact fractions; fractions typed in two boxes marked by value against an independent marker on probe answers; every picture read back from its SVG; the page played at six sizes; planted faults each caught), part 1 of 2": "19",
   "Possibly, Maybe (the 60-question fixed-seed bank and 20 seeds of every slot recomputed from each question's own data and ask, never from the bank's or the game's code: counts of sectors and counters, listed outcomes by enumeration, products, complements, expected numbers, relative frequencies, the fair-dice rule, every tree probability by exact fractions; fractions typed in two boxes marked by value against an independent marker on probe answers; every picture read back from its SVG; the page played at six sizes; planted faults each caught), part 2 of 2": "21",
   "Prime Sprint (every target factorised independently, every prime tap judged against a model in Chromium, the feedback and working recomputed)": "35",
@@ -222,13 +223,13 @@
    "tier": "lock"
   },
   "verify-bearing-blitz.py": {
-   "how": "kept from the pack (1 needed)",
+   "how": "kept from the pack (2 needed)",
    "label": "Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points and message figures recomputed around 0/360; lives and end flows played in Chromium; fault-injection self-test: every planted fault caught)",
    "parts": 2,
    "tier": "content"
   },
   "verify-card-filter.py": {
-   "how": "chosen from 24 timed unit(s)",
+   "how": "kept from the pack (1 needed)",
    "label": "Essentials filter (the shared card filter on /essentials/, played in Chromium: every card's data-topic is its section and any data-calc is a valid value, each topic chip shows its section alone, search across sections, the empty message, the URL read on load and written on change, filter_applied and game_card_clicked events in the portal's v1 format with page=essentials, no calculator chip, the sticky bar at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught)",
    "parts": 1,
    "tier": "content"
@@ -312,7 +313,7 @@
    "tier": "content"
   },
   "verify-squared-squirrel.py": {
-   "how": "kept from the pack (3 needed)",
+   "how": "kept from the pack (4 needed)",
    "label": "Football Pitches per Squared Squirrel (Stage 1 the fixed ramp in order; every pool question's key recomputed from its data by units and dimensions, its unit the quantity asked, its named slips recomputed and none equal to the key, Stages 2-3 friendly whole numbers, at least 40 a stage, sessions easiest first; no nonsense unit or squirrel in any question, option, hint or worked line; no formula-triangle wording or drawing; every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, Stage 1's retry keeps the mark, the no-unit \"squirrels\" message loud, spaced from the unit buttons, marking nothing and cleared by picking a unit, the wrong unit marks nothing, named slips, the calculator in Stages 4-5 only, no sideways scroll; fault-injection self-test: twelve planted faults, each caught)",
    "parts": 4,
    "tier": "content"
