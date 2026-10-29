@@ -66,7 +66,8 @@ jobs:
   plan:
     name: Plan (which content verifiers this change needs)
     runs-on: ubuntu-24.04          # pinned: see the coverage job
-    timeout-minutes: 5
+    # 10 until ci-deps.py builds the map once per job (deferred, after 2 Nov); then back to 5. Jon's freeze exception, 29 Oct 2026.
+    timeout-minutes: 10
     outputs:
       run_all: ${{ steps.select.outputs.run_all }}
       selected: ${{ steps.select.outputs.selected }}
@@ -107,11 +108,16 @@ jobs:
     steps:
       - name: Every job passed
         env:
-          RESULTS: ${{ toJSON(needs) }}
+          # The results only. toJSON(needs) also carried every job's outputs, and the Plan job's "groups" output (126 KB after the 29 Oct repack)
+          # took this variable past Linux's 128 KiB limit for one: "Argument list too long", the Gate failing with every job green.
+          # needs.*.result is every job named in `needs` above, including one added later (Jon, freeze exception, 29 Oct 2026).
+          RESULTS: ${{ toJSON(needs.*.result) }}
         run: |
-          echo "$RESULTS" | jq -r 'to_entries[] | "\(.key): \(.value.result)"'
-          bad=$(echo "$RESULTS" | jq -r '[to_entries[] | select(.value.result != "success")] | length')
-          if [ "$bad" != "0" ]; then echo "::error::$bad job(s) did not pass"; exit 1; fi
+          echo "$RESULTS" | jq -c .
+          n=$(echo "$RESULTS" | jq 'length')
+          bad=$(echo "$RESULTS" | jq '[.[] | select(. != "success")] | length')
+          if [ "$n" = "0" ]; then echo "::error::the Gate saw no job results"; exit 1; fi
+          if [ "$bad" != "0" ]; then echo "::error::$bad of $n job(s) did not pass"; exit 1; fi
 
   # The plan job's budget check (ci-groups.py --check) runs before any verifier and knows only main's medians, so a
   # line a PR grew or renamed passed its PR and turned main red after merge (#515, #525/#527, #526). This job reads the
