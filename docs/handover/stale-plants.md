@@ -4,7 +4,7 @@
 and `apply_re_plant` raise `StalePlant` if the target is absent, repeated (unless `allow_multiple`) or unchanged; `apply_js(page, name, code)` turns
 any error while applying an in-page patch into a `StalePlant`; `is_caught(found, err)` is true only with findings and NO error. A `StalePlant`
 fails the run as `STALE PLANT: <name>: <why>`. A plant is never skipped because its target is not live: that fails too. Tested by
-`scripts/test-plant-common.py`. bank_common.py was not touched (frozen); the helper imports only the standard library.
+`scripts/plant_common_tests.py`. bank_common.py was not touched (frozen); the helper imports only the standard library.
 
 **Moved onto it (this PR).**
 - `verify-correlation-or-coincidence.py`: the fault loop. Before: an exception while patching or checking printed "the page broke", counted as

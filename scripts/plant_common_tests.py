@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Tests for scripts/plant_common.py (contract STALE-PLANTS, 28 Oct 2026). No browser.
 
-    python scripts/test-plant-common.py       (CI runs it as: python scripts/plant_common.py --selftest)
+    python scripts/plant_common_tests.py       (CI runs it as: python scripts/plant_common.py --selftest)
 """
 import asyncio
 import os

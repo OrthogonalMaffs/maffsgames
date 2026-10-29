@@ -1877,7 +1877,7 @@ its random draw served that question: #588). The rule, for every lane:
   error (`is_caught`); a plant is never skipped because its room, game or id is not live (that fails too). Four verifiers counted a plant that
   never applied, or a check that errored, as CAUGHT (correlation-or-coincidence, just-pythag-it-bruv UI faults, test-ga4-summary, the
   escape-rooms rating plants when rugby-mud was not live). Every NEW verifier with planted faults uses plant_common; the older ones migrate
-  when next edited (list: `docs/handover/stale-plants.md`). Tested by `scripts/test-plant-common.py`.
+  when next edited (list: `docs/handover/stale-plants.md`). Tested by `scripts/plant_common_tests.py`.
 
 ---
 

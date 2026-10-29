@@ -84,5 +84,5 @@ if __name__ == "__main__":
     import sys
     if "--selftest" not in sys.argv:
         sys.exit("usage: python scripts/plant_common.py --selftest")
-    # The tests live in test-plant-common.py; this entry point makes CI treat the helper as a library with a self-test.
-    runpy.run_path(os.path.join(os.path.dirname(os.path.abspath(__file__)), "test-plant-common.py"), run_name="__main__")
+    # The tests live in plant_common_tests.py; this entry point makes CI treat the helper as a library with a self-test.
+    runpy.run_path(os.path.join(os.path.dirname(os.path.abspath(__file__)), "plant_common_tests.py"), run_name="__main__")
