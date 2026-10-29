@@ -21,7 +21,12 @@ name: answer-counts
 on:
   schedule:
     - cron: "40 5,11,17 * * *"    # 05:40, 11:40 and 17:40 UTC (06:40, 12:40, 18:40 in summer)
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      planted_failure:
+        description: "Test the alert: fetch from a dead address so the run fails (nothing is written; the file on main is unchanged)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -51,7 +56,9 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           for attempt in 1 2 3; do
             git fetch -q origin main && git reset -q --hard origin/main
-            python scripts/fetch-answer-counts.py | tee -a "$GITHUB_STEP_SUMMARY"
+            PLANT=""
+            if [ "${{ inputs.planted_failure }}" = "true" ]; then PLANT="--url http://127.0.0.1:9/ --pauses 5,5,5"; fi
+            python scripts/fetch-answer-counts.py $PLANT | tee -a "$GITHUB_STEP_SUMMARY"
             if git diff --quiet -- schools/assets/answer-counts.json; then
               echo "answer-counts.json unchanged at $(git rev-parse --short HEAD)" | tee -a "$GITHUB_STEP_SUMMARY"
               exit 0
