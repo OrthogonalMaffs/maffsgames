@@ -28,7 +28,7 @@ DONE: 2026-10-28-build-calc-flag.md   (merged: PR #603, squash 356529c, 28 Oct 2
 DONE: 2026-10-28-build-feedback-teaches.md   (merged in three parts: #600 8c3e722, #602 1fdc20e main runs 40720476561 and 40720477747, #604 ed24ff6 main runs 40735921237 and 40735922595; part 1 main runs 40713063586 and 40713061487; all green)
 DONE: 2026-10-28-build-friendly-loosen.md   (merged: PR #606, squash 66ea1ff, 28 Oct 2026; main runs 40741437285 and 40741437725 green)
 DONE: 2026-10-28-build-stage-exit.md   (merged: PR #608, squash ed9b737, 28 Oct 2026; main runs 40784995918 and 40784996276 green; Who Ate All the Pies? DEFERRED)
-DONE: 2026-10-28-build-essentials-filter.md   (merged in three parts: PHASE A PR #611, squash 51e5c1b, 29 Oct 2026, main runs 40804757443 and 40804756870 green; PHASE B part 1 PR #612, squash 7230c8c, main run 40817370804 green; PHASE B part 2 (chips) PR #614, squash <SHA-614-PLACEHOLDER>, main runs <RUNS-614-PLACEHOLDER>)
+DONE: 2026-10-28-build-essentials-filter.md   (merged in three parts: PHASE A PR #611, squash 51e5c1b, 29 Oct 2026, main runs 40804757443 and 40804756870 green; PHASE B part 1 PR #612, squash 7230c8c, main run 40817370804 green; PHASE B part 2 (chips) PR #614, squash bb7e494, main runs 40915807977 and 40915807743 green)
 
 ## Queue
 1. **found-a-mark**: MERGED (#569) + art swap MERGED (#573, aaef265, main run 40514401072 green). Report still owed to Jon: its "Decided for you" list and screenshots.
