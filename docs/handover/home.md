@@ -1,6 +1,6 @@
 # Handover: home lane
 
-**PLAN-TIMEOUT (29 Oct):** Plan job 5 to 10 min by the home lane, Jon's exception; revert with PLAN-MAP-ONCE (todo).
+**PLAN-TIMEOUT + GATE (29 Oct, Jon's freeze exception):** Plan job 5 to 10 min (revert with PLAN-MAP-ONCE, todo); Gate reads `needs.*.result` only: `toJSON(needs)` carried the Plan job's 126 KB `groups` output past Linux's 128 KiB per-variable limit.
 
 **SETTLE + SWEEP (#583) and SCROLL (27-28 Oct):** shared `bank_common.wait_settled`; `sweep-six-ps-wrong.py` with its shrink-only `KNOWN_FAILURES` (the 14 at 320x568: working not shortened; figure fix in docs/todo.md). `MaffsScroll.reveal` (schools/assets/scroll.js) is the one scroll for feedback/Next/keys: re-reveals after late fonts (ResizeObserver), measures the footer itself; guard `check-scroll-reveal.py`; `sweep-cold-font-scroll.py` is a by-hand report (drives 3 of 10 games; decimal-detective and screening-room flag the same on main).
 
