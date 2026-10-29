@@ -311,7 +311,7 @@
    "tier": "content"
   },
   "verify-stage-exit.py": {
-   "how": "chosen from 21 timed unit(s)",
+   "how": "kept from the pack (1 needed)",
    "label": "Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all seven games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught)",
    "parts": 1,
    "tier": "content"

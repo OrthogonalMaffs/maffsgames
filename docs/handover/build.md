@@ -24,6 +24,10 @@ DONE: 2026-10-27-build-as-you-can-see.md   (merged: PR #587, squash 24f641e, 27 
 DONE: 2026-10-27-build-found-a-mark-batch2.md   (merged: PR #585, squash 18454dc, 27 Oct 2026; main runs 40580295716 and 40580295599 green)
 DONE: 2026-10-27-build-possibly-maybe.md   (merged: PR #594, squash 6512151, 27 Oct 2026; main runs 40596794906 and 40596796589 green)
 DONE: 2026-10-28-build-pictogram-drawing.md   (merged: PR #599, squash 96489d2, 28 Oct 2026; main runs 40711007380 and 40711006678 green)
+DONE: 2026-10-28-build-calc-flag.md   (merged: PR #603, squash 356529c, 28 Oct 2026; main runs 40729110379 and 40729109349 green)
+DONE: 2026-10-28-build-feedback-teaches.md   (merged in three parts: #600 8c3e722, #602 1fdc20e main runs 40720476561 and 40720477747, #604 ed24ff6 main runs 40735921237 and 40735922595; part 1 main runs 40713063586 and 40713061487; all green)
+DONE: 2026-10-28-build-friendly-loosen.md   (merged: PR #606, squash 66ea1ff, 28 Oct 2026; main runs 40741437285 and 40741437725 green)
+DONE: 2026-10-28-build-stage-exit.md   (merged: PR #608, squash ed9b737, 28 Oct 2026; main runs 40784995918 and 40784996276 green; Who Ate All the Pies? DEFERRED)
 
 ## Queue
 1. **found-a-mark**: MERGED (#569) + art swap MERGED (#573, aaef265, main run 40514401072 green). Report still owed to Jon: its "Decided for you" list and screenshots.
@@ -137,9 +141,8 @@ Follow-ups: convert verify-as-you-can-see.py to # ci-shards; if claude/footer-un
 - After SHARD (#578), a verifier with `--part` lines conflicts on merge with main's `# ci-shards` version: take main's and re-apply as work units. A new content line used to count 120 s + setup median; SHARD fixed the setup-time cause.
 
 ## Open contracts (28 Oct 2026; queue NOT empty)
-- stage-exit (contract 7): STOPPED at phase 1, awaiting Jon: no shared shell (four inline copies); cause is `body.playing a.back-link{display:none}` in 8 games (pies, sale, as-you-can-see, possibly-maybe, hc-factor, y-so-steep, i-found-a-mark, free-daily-pizza); proposal: new schools/assets/stage-exit.js + .css, one script and link per page. Local branch claude/build-stage-exit (contract commit 03d8d4da, not pushed).
-- calc-flag (contract 8): STOPPED at phase 1, awaiting Jon: mounting the calculator needs a `check-calculator.py` change (as #595 did) and, in It's on Sale!, a canon 4.4 reading; the contract's friendly rule would flip about 53% of Sale's items. Local branch claude/build-calc-flag (10980010, not pushed).
-- feedback-teaches (contract 9): in progress; collision-free part first, then the why lines on the pie, money and reading-charts banks after calc-flag.
+- essentials-filter (contract 10): PARKED at its first STOP IF, awaiting Jon. Branch claude/build-essentials-filter (47afc5a2, contract file only, pushed, no PR). 28 of 36 Essentials games have roster Calculator `untagged` (limit five); only 8 are tagged (2 not allowed, 2 required, 2 scientific, 2 by stage). Question for Jon: tag the 28 first, or build with untagged cards shown under All only and the CI check failing on a missing or wrong data-calc? Not a stop: the Sheet has no `page` column, so page=essentials goes in filter_value ("v1|page=essentials;...") and as a GA4 parameter; endpoint unchanged. Calc-flag is merged. Sticky-bar fold test at 375x667 not run yet.
+- stage-exit follow-up: add the shell to Who Ate All the Pies? after the 2 Nov shared-infra freeze (docs/todo.md has the root cause: the shared HUD row has no phone-width space allocation). The 6 P's page header has "Back to games"; not checked in play.
 
 Earlier queue finished 27 Oct 2026 (to #594); not empty now, see Open contracts above. Open follow-ups for others: as-you-can-see verifier to # ci-shards; footer apply (scripts/apply-footer.py) on as-you-can-see, i-found-a-mark and possibly-maybe if claude/footer-unpin lands; keypad "/" key branch (claude/keypad-fraction-key) awaiting a ruling; shared Stage 6 board label and a shared tolerance helper for MaffsAnswer (candidates); switch The 6 P's to the shared fraction input (see the lanes' notes file).
 
@@ -176,3 +179,16 @@ Cause: in games/as-you-can-see/index.html `symbol()`, the clip-path sat on the t
 - Pie boundaries have stroke width: tolerance from the stroke; sample at 0.85 r (labels sit at 0.62 r; spinner letters up to 0.72 r).
 - Probability grids, tables and trees are covered by their own verifier's read-back only (no visibility test).
 
+## stage-exit: state (28 Oct 2026, PR #608, ed9b737)
+Seven stage games (its-on-sale, as-you-can-see, possibly-maybe, hc-factor, y-so-steep, i-found-a-mark, free-daily-pizza) now have a "Stages" button ("Rounds" in hc-factor, "Menu" in i-found-a-mark and free-daily-pizza) and the standard "Back to Games" link on every question and worked example, from NEW shared files schools/assets/stage-exit.js and .css (new files only; each page got one stylesheet link and one script tag; the `body.playing a.back-link{display:none}` rule was removed). On a question the controls sit at the two ends of the game's HUD row (no added height); on the worked example they share one header row. The button clicks the page's own "All stages" button: no game_completed, no board submission, no score; a pending Next control is cleared first.
+Who Ate All the Pies? is exactly as on main (hide rule kept, no stylesheet or script), exempt BY NAME in scripts/verify-stage-exit.py (Jon, option 4, "revisit after the 2 Nov shared-infra freeze"); the verifier fails if Pies ever carries the shell. Root cause is in docs/todo.md: Pies' HUD holds the calculator toggle (127 px) and at 320 and 360 px the toggle plus stage items plus exit controls overflow (answer controls end at 551 vs a 528 fold at 320x568). No fold rule or threshold was loosened.
+Verifier scripts/verify-stage-exit.py: # ci-shards, 21 units (exempt check, 7 games exited to the picker and the portal, 5 fit sizes, 7 plants), all plants caught.
+Lessons: the exit control must cost no layout height (use an existing row); Playwright route handlers receive (route, request), so use a factory; a new shell touching a page row must be re-run against every game's own phone-fit verifier; check-changed took about two hours and was reaped once for memory, rerun with --workers 2.
+
+## calc-flag, feedback-teaches, friendly-loosen (28 Oct 2026)
+- calc-flag (#603): per-stage tag kept; `optional` loads the shared calculator behind a closed toggle with a "Calculator optional" badge; check-calculator.py and canon 4.4 updated; `friendly` is hint-only; gen-six-ps.py unfrozen for that change only; As You Can See and Possibly, Maybe retagged `not allowed` (Jon, 28 Oct).
+- feedback-teaches (#600, #602, #604): why lines on the pie, money and reading-charts banks, with verify-feedback-teaches*.py (planted faults raise if the plant does not apply); coffee/tea distractor feedback exactly "That's true, but it doesn't get rid of a letter, so there's no mark for it yet."
+- friendly-loosen (#606): Jon accepted 56 of 60 (pie-charts) and 38 of 60 (percentages-money); hint "Try it with pen and paper" as a constant per bank. "Consolidate hint wording" for The 6 P's is logged in lanes/notes.md.
+
+## Stale-plant audit (28 Oct 2026; report only, owners unclear)
+Verifiers that can count a stale plant (target missing or unchanged) as caught: verify-correlation-or-coincidence.py:396-405, verify-just-pythag-it-bruv.py:1799-1808, test-ga4-summary.py:444, check-escape-rooms.py:494-532. Model to copy: verify-free-daily-pizza.py:1343-1385 (raises if the plant does not apply). Not fixed by the build lane.
