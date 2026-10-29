@@ -193,14 +193,12 @@
   "Y So Steep (every item of the six stages, whole-number and with-fractions banks, recomputed from its own printed stem with exact fractions: every m, c and step key; the contract's bank rules: 45 or more distinct items a stage, 40% or more falling lines, grid lines through two lattice points, 75% or more of Stage 5's points off the y-axis, fractions only when switched on; the module's marking against an independent marker on thousands of probe answers; every stage played in the page: one full round at 390 px on the touch keypad, then the first questions at 375, 360, 320, 1280 and 1366 px; keypad, question and Next above the fold; no sideways scroll; each grid line drawn from its data, grid text at least 12 px; named slips named; one board entry a round, none for stage 6; stage 3 and fractions off; fault-injection self-test: planted faults, each caught, including a wrong c, a line drawn off its data and a positive-only bank), part 1 of 1": "58"
  },
  "lock": {
-  "Answer lock in play (canon 7.6.0: migrated games played in Chromium), part 1 of 8": "L4",
-  "Answer lock in play (canon 7.6.0: migrated games played in Chromium), part 2 of 8": "L5",
-  "Answer lock in play (canon 7.6.0: migrated games played in Chromium), part 3 of 8": "L6",
-  "Answer lock in play (canon 7.6.0: migrated games played in Chromium), part 4 of 8": "L8",
-  "Answer lock in play (canon 7.6.0: migrated games played in Chromium), part 5 of 8": "L7",
-  "Answer lock in play (canon 7.6.0: migrated games played in Chromium), part 6 of 8": "L1",
-  "Answer lock in play (canon 7.6.0: migrated games played in Chromium), part 7 of 8": "L2",
-  "Answer lock in play (canon 7.6.0: migrated games played in Chromium), part 8 of 8": "L3",
+  "Answer lock in play (canon 7.6.0: migrated games played in Chromium), part 1 of 6": "L7",
+  "Answer lock in play (canon 7.6.0: migrated games played in Chromium), part 2 of 6": "L4",
+  "Answer lock in play (canon 7.6.0: migrated games played in Chromium), part 3 of 6": "L5",
+  "Answer lock in play (canon 7.6.0: migrated games played in Chromium), part 4 of 6": "L1",
+  "Answer lock in play (canon 7.6.0: migrated games played in Chromium), part 5 of 6": "L2",
+  "Answer lock in play (canon 7.6.0: migrated games played in Chromium), part 6 of 6": "L3",
   "Answer lock, static rules and self-test (canon 7.6.0: the static rules, NOT_YET and the cloud list once; no games played)": "L7",
   "Level resolver in play (every migrated game loads at its default for constructor, __proto__ and nonsense, and at each declared level, with no page error), part 1 of 2": "L14",
   "Level resolver in play (every migrated game loads at its default for constructor, __proto__ and nonsense, and at each declared level, with no page error), part 2 of 2": "L14"
@@ -208,9 +206,9 @@
  "over-budget": [],
  "shards": {
   "check-answer-lock.py": {
-   "how": "kept from the pack (7 needed)",
+   "how": "chosen from 105 timed unit(s)",
    "label": "Answer lock in play (canon 7.6.0: migrated games played in Chromium)",
-   "parts": 8,
+   "parts": 6,
    "tier": "lock"
   },
   "check-burst.py": {
