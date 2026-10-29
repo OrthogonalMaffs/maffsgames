@@ -8,6 +8,7 @@
      sections: 'section.topic',               // each group of cards; hidden when none of its cards shows
      groups: [{ param: 'topic', attr: 'data-topic', label: 'Topic',
                 options: [{ key: 'number', label: 'Number' }, ...] }],   // chip rows; 'all' is added first
+                // an option may carry values: [...] to accept several attribute values (data-calc both counts as either)
      search: true                             // a box over the card text
    });
 
@@ -16,7 +17,7 @@
    A card whose attribute is missing is shown under All only. Events (the portal's shapes, mfg() in analytics.js):
    filter_applied, and game_card_clicked carrying the state. The Sheet keeps a fixed column list and drops unknown
    keys, so page and the whole state ride in filter_value ("v1|page=essentials;topic=..;su=..;sl=..;q=..;n=..").
-   A second group (for example a calculator row) is one more entry in `groups`. */
+   A second group (the calculator row on Essentials) is one more entry in `groups`. */
 (function () {
   'use strict';
 
@@ -63,7 +64,9 @@
       for (var i = 0; i < cfg.groups.length; i++) {
         var g = cfg.groups[i];
         if (state[g.param] === 'all') continue;
-        if (card.getAttribute(g.attr) !== state[g.param]) return false;
+        var opt = g.options.filter(function (o) { return o.key === state[g.param]; })[0];
+        var accepts = (opt && opt.values) || [state[g.param]];   // an option may accept several attribute values
+        if (accepts.indexOf(card.getAttribute(g.attr)) === -1) return false;
       }
       var q = state.q.trim().toLowerCase();
       return !q || q.split(/\s+/).every(function (w) { return textOf(card).indexOf(w) !== -1; });
