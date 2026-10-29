@@ -1,5 +1,5 @@
 {
- "as_of": "2026-10-29T11:43:44Z",
+ "as_of": "2026-10-29T21:59:59Z",
  "games": {
   "52dle": 11,
   "angle-ace": 5,
@@ -17,6 +17,7 @@
   "core-maths-paper2c": 4,
   "correlation-or-coincidence": 153,
   "decimal-detective": 135,
+  "differentiation-duel": 9,
   "distinctly-average": 80,
   "eigenvector-engine": 21,
   "equation-builder": 4,
@@ -43,7 +44,7 @@
   "fermi-lab": 15,
   "force-resolver": 4,
   "formula-forge": 69,
-  "formula-plug-in": 330,
+  "formula-plug-in": 335,
   "four-quadrant-explorer": 264,
   "fraction-equivalence": 161,
   "free-daily-pizza": 318,
@@ -66,7 +67,7 @@
   "negative-number-line": 695,
   "new-shapes": 7,
   "normal-navigator": 2,
-  "percentage-flip": 110,
+  "percentage-flip": 112,
   "possibly-maybe": 10,
   "prime-factorisation": 43,
   "prime-or-composite": 542,
@@ -77,7 +78,7 @@
   "proportion-blaster": 2,
   "quadratic-factoriser": 96,
   "screening-room": 4,
-  "sequence-solver": 194,
+  "sequence-solver": 214,
   "seven-bridges": 310,
   "shape-shifter": 5,
   "simultaneous-solver": 59,
@@ -104,5 +105,5 @@
   "wrong-on-the-internet": 12
  },
  "since": "2026-09-01",
- "total": 18167
+ "total": 18203
 }
