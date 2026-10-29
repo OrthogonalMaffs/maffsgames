@@ -488,7 +488,21 @@
     overflow:hidden;
     height:36px;
     position:relative;
+    display:flex;
+    align-items:stretch;
   }
+  /* The scores run in a track beside the pause/play button (WCAG 2.2.2); the button is never inside the part that is rebuilt on each update. */
+  .score-ticker-track{flex:1 1 auto;min-width:0;position:relative;overflow:hidden;height:100%;}
+  .ticker-toggle{
+    flex:none;width:36px;height:36px;padding:0;border:0;border-right:1px solid rgba(255,255,255,0.15);
+    background:var(--navy-light);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:1;
+  }
+  .ticker-toggle:hover{background:rgba(255,255,255,0.12);}
+  .ticker-toggle:focus-visible{outline:2px solid #fff;outline-offset:-4px;}
+  .ticker-toggle svg{width:14px;height:14px;fill:currentColor;display:block;}
+  .ticker-toggle .ic-play{display:none;}
+  .ticker-toggle[aria-pressed="true"] .ic-pause{display:none;}
+  .ticker-toggle[aria-pressed="true"] .ic-play{display:block;}
   .score-ticker-inner{
     display:flex;
     align-items:center;
@@ -517,7 +531,19 @@
   .score-ticker-item.weekly-best .hs-badge{color:#38bdf8;}
   .score-ticker-item .best-target{color:rgba(255,255,255,0.35);font-size:11px;}
   .score-ticker-sep{color:rgba(255,255,255,0.2);padding:0 4px;flex-shrink:0;}
-  .score-ticker:hover .score-ticker-inner{animation-play-state:paused;}
+  /* Paused: by the button (.tp-user, stays until the button is pressed again), while the pointer is over the scores, or while a keyboard-focused
+     element in the scores has focus (.tp-focus). Hovering or focusing the button itself never holds the scores still, or Play could not be seen working. */
+  .score-ticker-track:hover .score-ticker-inner,
+  .score-ticker.tp-user .score-ticker-inner,
+  .score-ticker.tp-focus .score-ticker-inner{animation-play-state:paused !important;}   /* !important: buildTicker() sets `animation` inline, and its shorthand resets the play state to running */
+  .ticker-dup{display:contents;}
+  /* Reduced motion: nothing moves. One set of scores, no button (there is nothing to pause), read by scrolling the track sideways. */
+  @media (prefers-reduced-motion: reduce){
+    .score-ticker-inner{animation:none !important;transform:none !important;}
+    .ticker-dup,.ticker-toggle{display:none;}
+    .score-ticker-track{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;}
+    .score-ticker-track::-webkit-scrollbar{display:none;}
+  }
   .score-ticker-empty{
     display:flex;align-items:center;justify-content:center;
     height:100%;font-size:12px;color:rgba(255,255,255,0.5);
@@ -750,7 +776,13 @@
 </div>
 
 <div class="score-ticker" id="scoreTicker">
-  <div class="score-ticker-empty">Loading recent scores...</div>
+  <button type="button" class="ticker-toggle" id="tickerToggle" aria-pressed="false" aria-label="Pause scores">
+    <svg class="ic-pause" viewBox="0 0 14 14" aria-hidden="true" focusable="false"><rect x="2" y="1" width="3.5" height="12"/><rect x="8.5" y="1" width="3.5" height="12"/></svg>
+    <svg class="ic-play" viewBox="0 0 14 14" aria-hidden="true" focusable="false"><path d="M3 1 L13 7 L3 13 Z"/></svg>
+  </button>
+  <div class="score-ticker-track" id="scoreTickerTrack">
+    <div class="score-ticker-empty">Loading recent scores...</div>
+  </div>
 </div>
 
 <div class="filter-bar">
@@ -3982,7 +4014,7 @@ loadFact();
   }
 
   function buildTicker(scores) {
-    var ticker = document.getElementById('scoreTicker');
+    var ticker = document.getElementById('scoreTickerTrack');   // the scores only: the pause button beside it is never rebuilt
     if (!scores.length) {
       ticker.innerHTML = '<div class="score-ticker-empty">No recent scores yet</div>';
       return;
@@ -4005,7 +4037,9 @@ loadFact();
     var repeats = Math.max(2, Math.ceil((vpWidth * 2) / setWidth) + 1);
 
     var html = '<div class="score-ticker-inner">';
-    for (var r = 0; r < repeats; r++) html += oneSet;
+    // The first set is the content; the repeats only make the loop seamless, so they are hidden from screen readers and from reduced motion.
+    html += oneSet;
+    for (var r = 1; r < repeats; r++) html += '<span class="ticker-dup" aria-hidden="true">' + oneSet + '</span>';
     html += '</div>';
     ticker.innerHTML = html;
 
@@ -4067,6 +4101,21 @@ loadFact();
 
   var live = window.MaffsLeaderboard && MaffsLeaderboard.watchRecent(20, annotateAndRender);
   if (!live) document.getElementById('scoreTicker').style.display = 'none';
+
+  // Pause and play (WCAG 2.2.2). The button's state is its own and persists until it is pressed again; hover and keyboard focus in the
+  // scores add a pause in CSS (.score-ticker-track:hover) and here (.tp-focus), never undoing the button's.
+  (function () {
+    var box = document.getElementById('scoreTicker'), btn = document.getElementById('tickerToggle'), track = document.getElementById('scoreTickerTrack');
+    if (!box || !btn || !track) return;
+    btn.addEventListener('click', function () {
+      var paused = btn.getAttribute('aria-pressed') !== 'true';
+      btn.setAttribute('aria-pressed', String(paused));
+      btn.setAttribute('aria-label', paused ? 'Play scores' : 'Pause scores');
+      box.classList.toggle('tp-user', paused);
+    });
+    track.addEventListener('focusin', function (e) { if (!e.target.matches || e.target.matches(':focus-visible')) box.classList.add('tp-focus'); });
+    track.addEventListener('focusout', function () { box.classList.remove('tp-focus'); });
+  })();
 })();
 </script>
 </body>
