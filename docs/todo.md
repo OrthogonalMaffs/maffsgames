@@ -827,3 +827,6 @@ STAGE-EXIT (28 Oct 2026, build lane) gave seven stage games a "Stages" button an
 - **To do after the freeze:** give the HUD row an explicit phone-width budget (items, calculator toggle, exit controls), for example a narrower or icon form of the calculator toggle on phones (calc-flag's area, `calculator.js`) or a defined second HUD line with its height taken from the page's own spare; then add the shell to Pies and remove it from `EXEMPT`. Do not loosen any fold rule or phone-fit threshold.
 - **Check on the same task:** The 6 P's question view has a `Back to games` link in its page header; whether it stays visible during a question has not been checked (report only, not touched).
 
+
+## Post-freeze (after 2 Nov 2026): split the exam-guidance label from the on-screen calculator
+Jon, 29 Oct 2026: the roster Calculator tag is exam guidance ("likely" a calculator or non-calculator paper), not enforcement. Today it also decides whether a game loads the calculator (`check-calculator.py`, canon 4.4). **To do:** make the calculator a separate per-game setting, on in every game except where the arithmetic is the skill (Six Sevens, Bruv, Estimation Golf, Factor Race; **Jon to confirm the list**). Badge wording ("Calculator required") is fixed by that check; "likely" on badges means changing the check and every badge together.
