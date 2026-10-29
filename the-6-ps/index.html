@@ -121,10 +121,23 @@
   .opt { line-height: 1.7; }
   .worked li, .slip, .answer-line { line-height: 1.8; }
   .nb { white-space: nowrap; }   /* an equation in plain text never breaks inside itself */
-  .diagram { margin: 0.5rem 0 1rem; color: var(--text); }
+  .diagram { margin: 0.4rem 0 0.6rem; color: var(--text); }
   .diagram svg { display: block; max-width: 100%; height: auto; max-height: 320px; margin: 0 auto; }
-  .area { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; margin: 1.1rem 0 0.5rem; }
-  .boxes { display: inline-flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; font-family: var(--font-num); font-size: 1.15rem; }
+  .diagram svg text { font-family: var(--font-text); }   /* chart labels in Outfit like the rest of the page (the banks say sans-serif) */
+  /* One left edge for the question text, the answer controls and Check; only the chart is centred. The answer row holds the controls on the
+     left and the shared calculator's toggle directly to their right, vertically centred; its panel (a rail of full width) opens beneath the
+     row, above Check. The shared calculator.js and calculator.css are untouched: the page makes its mount transparent (display: contents)
+     so the toggle and the rail become items of this row. */
+  .answer-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; margin: 0.9rem 0 0; }
+  .answer-ctl { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+  .answer-ctl > .area { margin: 0; }
+  .answer-ctl > .units, .answer-ctl > .opts { margin: 0; }
+  .answer-ctl > .opts { align-self: stretch; }
+  #qCalcMount, #qCalcMount > .maffs-calc { display: contents; }
+  #qCalcMount .maffs-calc-toggle { flex: none; width: auto; margin: 0; }
+  #qCalcMount .maffs-calc-rail { flex: 0 0 100%; order: 3; justify-content: flex-start; }
+  .area { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+  .boxes { display: inline-flex; flex-wrap: nowrap; gap: 0.35rem; align-items: center; font-family: var(--font-num); font-size: 1.15rem; }
   .ans-in {
     font: inherit; font-family: var(--font-num); font-size: 1.15rem; width: 7.5rem; min-height: 44px;
     padding: 0.4rem 0.6rem; border: 2px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text);
@@ -134,9 +147,9 @@
   .ans-in.maffs-keypad-selected { border-color: var(--navy); outline-color: var(--navy); }   /* chosen, not checked: navy */
   .ans-in.right { border-color: var(--correct); background: var(--tint); outline: 0; }
   .ans-in.wrong { border-color: var(--wrong); outline: 0; }
-  /* The shared keypad's "typing here" tag sits wholly above its box, with room reserved for it. */
-  .maffs-keypad-cue-answer { transform: translateY(-85%); }
-  .boxes { padding-top: 0.5rem; }
+  /* The shared keypad's "typing here" tag is hidden on this page (Jon, 29 Oct 2026): it is aria-hidden, so it serves no assistive technology,
+     and the chosen box already has the navy border. The keypad is untouched. */
+  .maffs-keypad-cue { display: none !important; }
   .lab { font-weight: 700; color: var(--navy); }
   .ans-in.pow { width: 3.6rem; text-align: center; }
   .times { display: inline-flex; align-items: center; gap: 0.3rem; }
@@ -175,6 +188,10 @@
   details.about > summary { cursor: pointer; color: var(--accent-dim); font-weight: 700; font-size: 1.1rem; padding: 0.6rem 0; min-height: 44px; }
   .worked.single { list-style: none; margin-left: 0; }
   .next { margin-top: 0.5rem; }
+  #qCheckRow { margin: 0.75rem 0 0; }               /* Check: its own row beneath the answer row, 12px below it */
+  #qMsg { min-height: 0; margin: 0; }               /* the status line takes no height until it has something to say */
+  #qMsg:not(:empty) { margin: 0.35rem 0 0; }
+  #qKeys { margin-top: 0.75rem; }                   /* the keypad, 12px under Check */
   [hidden] { display: none !important; }
   @media (max-width: 480px) {
     h1 { font-size: 1.8rem; }
@@ -182,6 +199,22 @@
     .container { padding: 1rem 1rem 3.5rem; }   /* clear of the fixed 40 px footer */
     .nav { padding: 0.85rem 1rem; }
     .card { padding: 1rem; }
+    /* Question card, phone: a little less air above and inside it, so the question, the answer row and Check reach as high as the fold allows
+       (the fold rule itself is untouched). */
+    .container { padding-top: 0.6rem; }
+    .slim { margin-bottom: 0.35rem; }
+    .card { margin: 0.5rem 0; }
+    .qhead { margin-bottom: 0; }
+    .qtopic { margin-bottom: 0.3rem; }
+    .card h3 { font-size: 1.1rem; margin-bottom: 0; }
+    .stem { font-size: 1.05rem; line-height: 1.65; margin-bottom: 0.4rem; }
+    .calc-try { margin: 0; }
+    /* Narrow phones: the answer boxes and the calculator toggle are sized so the toggle still sits to the right of the boxes at 320 px. */
+    .ans-in { width: 6.25rem; padding: 0.4rem 0.5rem; }
+    .ans-in.short { width: 3.5rem; padding: 0.4rem 0.25rem; }
+    .ans-in.pow { width: 3rem; padding: 0.4rem 0.25rem; }
+    .boxes { gap: 0.25rem; }
+    #qCalcMount .maffs-calc-toggle { padding: 0.45rem 0.7rem; font-size: 0.9rem; }
   }
 </style>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
@@ -258,12 +291,16 @@
     <div class="stem" id="qStem"></div>
     <div class="diagram" id="qDiagram" hidden></div>
     <div id="qArea">
-      <div class="area" id="qInputs"></div>
-      <div class="units" id="qUnits" hidden></div>
-      <div class="opts" id="qOpts" hidden></div>
+      <div class="answer-row">
+        <div class="answer-ctl">
+          <div class="area" id="qInputs"></div>
+          <div class="units" id="qUnits" hidden></div>
+          <div class="opts" id="qOpts" hidden></div>
+        </div>
+        <div id="qCalcMount" hidden></div>
+      </div>
       <div class="actions" id="qCheckRow"><button class="btn" id="checkBtn" type="button">Check</button></div>
     </div>
-    <div id="qCalcMount" hidden></div>
     <p class="msg" id="qMsg" role="status" aria-live="polite"></p>
     <div class="fb" id="qFb" hidden>
       <p class="verdict" id="qVerdict"></p>
@@ -685,6 +722,23 @@
     } catch (e) { return null; }
   }
 
+  // A chart's own whitespace: the banks draw each chart in a roomy viewBox. Crop it to the drawing plus CHART_PAD on every side (12 px, never
+  // more than 24), so the chart does not push Check down the phone screen. Needs the svg laid out (not hidden); anything odd leaves it as drawn.
+  var CHART_PAD = 12;
+  function tighten(svg) {
+    try {
+      var bb = svg.getBBox();
+      if (!(bb.width > 0 && bb.height > 0)) return;
+      var vb = svg.viewBox && svg.viewBox.baseVal, p = CHART_PAD + 1;      // +1: strokes sit half outside the box
+      var x = bb.x - p, y = bb.y - p, w = bb.width + 2 * p, h = bb.height + 2 * p;
+      if (vb && vb.width) {                                                 // never grow the chart's frame, only crop it
+        var x2 = Math.max(x, vb.x), y2 = Math.max(y, vb.y);
+        w = Math.min(x + w, vb.x + vb.width) - x2; h = Math.min(y + h, vb.y + vb.height) - y2; x = x2; y = y2;
+      }
+      svg.setAttribute('viewBox', [x, y, w, h].map(function (n) { return Math.round(n * 10) / 10; }).join(' '));
+    } catch (e) { /* leave the chart as drawn */ }
+  }
+
   // Storage: localStorage, else window.name for the session (never thrown, never required).
   function makeStore() {
     var ls = null;
@@ -956,7 +1010,7 @@
       case 'fraction': {
         if (q.answer.w !== undefined) add(box('whole', 'Whole number', 'short'));
         var f = document.createElement('span'); f.className = 'frac';
-        var top = box('num', 'Top of the fraction (numerator)', 'short'), bot = box('den', 'Bottom of the fraction (denominator)', 'short');
+        var top = box('num', 'numerator', 'short'), bot = box('den', 'denominator', 'short');
         var bar = document.createElement('span'); bar.className = 'bar';
         f.appendChild(top); f.appendChild(bar); f.appendChild(bot);
         boxes.push(top, bot);
@@ -1071,6 +1125,7 @@
     d.textContent = '';
     if (svg) d.appendChild(svg);
     d.hidden = !svg;
+    if (svg) { tighten(svg); if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { tighten(svg); }); }
     $('qMsg').textContent = '';
     $('qFb').hidden = true;
     $('qKeys').hidden = false;

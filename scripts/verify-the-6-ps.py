@@ -1346,7 +1346,127 @@ PHONE = 'phone feedback: '
 
 # Working with three fractions is the tallest feedback a bank has: on 375 x 667 it ends 15 px below the screen unless the page scrolls
 # again once the maths font has arrived (main run 40479208314). Nine questions of this topic did; this one is measured every time.
-TALL = ('fraction-percentage-of-amount', 'fraction-percentage-of-amount-2c420fec')
+TALL = ('pie-charts', 'pie-charts-fd964a03')   # was fraction-percentage-of-amount-2c420fec until the card's phone spacing (SIX-PS-CARD, 29 Oct) made that one fit without the scroll; this one still ends 327 px below a 667 px screen with no scroll
+
+
+# ---------------------------------------------------------------- the question card's layout (contract SIX-PS-CARD, Jon, 29 Oct 2026)
+# On the real banks, at 1440 x 900, 768 x 1024, 360 x 640 and 320 x 568 (each size its own unit): one left alignment axis for the question
+# text, the answer controls and Check (only the chart is centred); the calculator toggle, where a question has one, directly to the right of the
+# answer controls and centred on them; Check on its own row at most 16 px under the answer row; on a phone the keypad at most 16 px under
+# Check; nothing wider than the card; no "typing here" tag; the fraction boxes equal and one bar the full width, labelled "numerator" and
+# "denominator". On a phone: Check wholly above the fold (the viewport less the 40 px footer) and, at 360 x 640, the first keypad row too.
+# QUESTIONS WITH A CHART are held to everything except the fold: a pie chart is as tall as it is wide, and its stem, chart, answer row and Check
+# cannot share a 568 px screen (444 of the 1805 questions have a chart; STOP IF raised to Jon, 29 Oct 2026). When he rules, drop CHART_FOLD_EXEMPT.
+CARD = 'card layout: '
+CARD_SIZES = [(1440, 900), (768, 1024), (360, 640), (320, 568)]
+CHART_FOLD_EXEMPT = True
+
+CARD_JS = r"""() => {
+  const q = s => document.querySelector(s);
+  const vis = el => el && !el.hidden && el.getClientRects().length > 0;
+  const R = el => { if (!vis(el)) return null; const b = el.getBoundingClientRect(); return { l: Math.round(b.left), t: Math.round(b.top + scrollY), r: Math.round(b.right), b: Math.round(b.bottom + scrollY) }; };
+  const parts = [...document.querySelectorAll('#qInputs .boxes, #qOpts, #qUnits')].filter(vis).map(R);
+  const ctl = parts.length ? { l: Math.min(...parts.map(x => x.l)), t: Math.min(...parts.map(x => x.t)), r: Math.max(...parts.map(x => x.r)), b: Math.max(...parts.map(x => x.b)) } : null;
+  const fr = q('#qInputs .frac'), bar = q('#qInputs .frac .bar');
+  return {
+    fold: innerHeight - 40, sideways: document.documentElement.scrollWidth > innerWidth,
+    card: R(q('#play .card')), stem: R(q('#qStem')), ctl: ctl, toggle: R(q('#qCalcMount .maffs-calc-toggle')), check: R(q('#checkBtn')),
+    keypad: R(q('#qKeys .maffs-keypad-panel')), firstKey: R(q('#qKeys .maffs-keypad-key')) || R(q('#qKeys button')),
+    cue: [...document.querySelectorAll('.maffs-keypad-cue')].some(e => getComputedStyle(e).display !== 'none'),
+    labels: [...document.querySelectorAll('#qInputs .frac input')].map(e => e.getAttribute('aria-label')),
+    fracW: fr && bar ? [Math.round(fr.getBoundingClientRect().width), Math.round(bar.getBoundingClientRect().width)] : null,
+    boxW: [...document.querySelectorAll('#qInputs .frac input')].map(e => Math.round(e.getBoundingClientRect().width)),
+    toggleLabel: vis(q('#qCalcMount .maffs-calc-toggle')),
+  };
+}"""
+
+
+def card_sample():
+    """A fixed spread of real questions: the first two (by id) of every format x calculator x chart combination."""
+    seen, picked = {}, []
+    for fn in sorted(os.listdir(os.path.join(ROOT, 'schools', 'assets', 'six-ps'))):
+        if not fn.endswith('.json'):
+            continue
+        bank = json.load(open(os.path.join(ROOT, 'schools', 'assets', 'six-ps', fn), encoding='utf-8'))
+        for x in sorted(bank['questions'], key=lambda z: z['id']):
+            key = (x['format'], bool(x.get('calc')), bool(x.get('diagram')))
+            if seen.get(key, 0) < 2:
+                seen[key] = seen.get(key, 0) + 1
+                picked.append((bank['topic'], x))
+    return picked
+
+
+def card_findings(m, q, size):
+    """The layout rules against one measured question (card_js); a list of plain findings."""
+    f, w, h = [], size[0], size[1]
+    phone = w <= 480
+    if m['sideways']:
+        f.append('the page scrolls sideways')
+    ax = m['stem']['l']
+    c, ck, tg, kp = m['ctl'], m['check'], m['toggle'], m['keypad']
+    if c and abs(c['l'] - ax) > 1:
+        f.append('the answer controls start at %d px, the text at %d px (one left axis)' % (c['l'], ax))
+    if ck and abs(ck['l'] - ax) > 1:
+        f.append('Check starts at %d px, the text at %d px (one left axis)' % (ck['l'], ax))
+    if c and c['r'] > m['card']['r'] + 1:
+        f.append('the answer controls run past the card')
+    if q.get('calc'):
+        if not tg:
+            f.append('a calculator question with no calculator toggle')
+        elif c:
+            if tg['l'] < c['r'] - 1 or tg['t'] > c['b'] - 4:
+                f.append('the calculator toggle is not directly right of the answer controls (toggle %s, controls %s)' % (tg, c))
+            elif abs((tg['t'] + tg['b']) / 2.0 - (c['t'] + c['b']) / 2.0) > 6:
+                f.append('the calculator toggle is not centred on the answer controls')
+            if tg['r'] > m['card']['r'] + 1:
+                f.append('the calculator toggle runs past the card')
+    elif tg:
+        f.append('a non-calculator question shows a calculator toggle')
+    if ck and c and ck['t'] - c['b'] > 16:
+        f.append('Check is %d px under the answer row (at most 16)' % (ck['t'] - c['b']))
+    if phone and ck and kp and kp['t'] - ck['b'] > 16:
+        f.append('the keypad is %d px under Check (at most 16)' % (kp['t'] - ck['b']))
+    if m['cue']:
+        f.append('the keypad\'s "typing here" tag is showing')
+    if q['format'] == 'fraction':
+        if m['labels'] != ['numerator', 'denominator'] and m['labels'] != ['Whole number', 'numerator', 'denominator'][-len(m['labels']):]:
+            f.append('the fraction boxes are labelled %s, not "numerator" and "denominator"' % m['labels'])
+        if len(set(m['boxW'])) != 1:
+            f.append('the numerator and denominator boxes are not the same width %s' % m['boxW'])
+        if m['fracW'] and m['fracW'][0] != m['fracW'][1]:
+            f.append('the fraction bar is %d px, not the fraction\'s full width %d px' % (m['fracW'][1], m['fracW'][0]))
+    if phone and not (q.get('diagram') and CHART_FOLD_EXEMPT):
+        if ck and ck['b'] > m['fold']:
+            f.append('Check ends at %d px, below the fold at %d px' % (ck['b'], m['fold']))
+        if h == 640 and m['firstKey'] and m['firstKey']['b'] > m['fold']:
+            f.append('the first keypad row ends at %d px, below the fold at %d px' % (m['firstKey']['b'], m['fold']))
+        if h == 640 and c and c['b'] > m['fold']:
+            f.append('the answer controls end at %d px, below the fold at %d px' % (c['b'], m['fold']))
+    return f
+
+
+def check_card_layout(pw, base, html, data, out, size):
+    where = '%d x %d' % size
+    b = Browser(pw, base, html, size=size)
+    b.page.set_default_timeout(20000)
+    try:
+        for topic, x in card_sample():
+            bank = json.load(open(os.path.join(ROOT, 'schools', 'assets', 'six-ps', topic + '.json'), encoding='utf-8'))
+            bank['questions'] = [dict(x, id='%s-c%d' % (x['id'], i)) for i in range(5)]
+            b.real = {topic: bank}
+            others = [t['id'] for t in data['covered'] if t['id'] != topic][:K - 1]
+            sess = {'v': 2, 'plan': [{'id': t} for t in [topic] + others], 'i': 0, 'results': {}, 'cur': None, 'qn': 0,
+                    'finishedSent': False, 'feedbackSent': False}
+            b.page.add_init_script("try { var s = %s; s.at = Date.now(); localStorage.setItem('six-ps-session-v2', JSON.stringify(s)); } catch (e) {}" % json.dumps(sess))
+            b.open()
+            b.page.click('#resumeBtn')
+            b.page.wait_for_selector('#play:not([hidden]) #qStem', timeout=8000)
+            bc.wait_settled(b.page)
+            m = b.page.evaluate(CARD_JS)
+            out.extend('%s: %s (%s): %s' % (where, x['id'], x['format'], g) for g in card_findings(m, x, size))
+        out.extend('%s: page error: %s' % (where, e) for e in b.errors)
+    finally:
+        b.close()
 
 
 def check_tall(pw, base, html, data, out):
@@ -1372,7 +1492,8 @@ def one_topic(pw, base, html, data, out, name):
 def page_units(data):
     """The page's units (contract SHARD), in the order of the full run; check() runs those it is given, in this order."""
     return (['static', 'engine', 'marking', 'start', 'expiry', 'chosen', 'resume', 'results', 'second']
-            + [PHONE + t['id'] for t in data['covered']] + ['tall', 'play 1280', 'play bank-first', 'play 320', 'no bank'])
+            + [PHONE + t['id'] for t in data['covered']] + ['tall'] + [CARD + '%dx%d' % z for z in CARD_SIZES]
+            + ['play 1280', 'play bank-first', 'play 320', 'no bank'])
 
 
 def run_unit(pw, base, html, data, out, unit):
@@ -1406,6 +1527,9 @@ def run_unit(pw, base, html, data, out, unit):
     elif unit.startswith(PHONE):
         topic = [t for t in data['covered'] if t['id'] == unit[len(PHONE):]][0]
         guarded(out, '375 x 667: %s' % topic['id'], lambda: phone_feedback_topic(pw, base, html, data, topic, out))
+    elif unit.startswith(CARD):
+        size = [z for z in CARD_SIZES if CARD + '%dx%d' % z == unit][0]
+        guarded(out, 'the question card at %d x %d' % size, lambda: check_card_layout(pw, base, html, data, out, size))
     elif unit == 'tall':
         guarded(out, 'the tallest feedback on a 375 x 667 phone', lambda: check_tall(pw, base, html, data, out))
     elif unit == 'play 1280':
@@ -1531,6 +1655,24 @@ PLANTS = [
     ('a right value in the wrong form marked wrong (SR-3)',
      [("if (res.result !== 'correct' && res.result !== 'wrong') {", "if (res.result === 'unreadable' || res.result === 'nounit') {")],
      ['topic:fx-2'], r"\(format\) was marked"),
+    ('Check pushed to the right edge (one left axis broken)',
+     [("  #qCheckRow { margin: 0.75rem 0 0; }", "  #qCheckRow { margin: 0.75rem 0 0; justify-content: flex-end; }")],
+     [CARD + '1440x900'], r'Check starts at \d+ px, the text at \d+ px'),
+    ('the calculator toggle pushed below the answer controls',
+     [("  .answer-ctl { flex: 1 1 0; min-width: 0;", "  .answer-ctl { flex: 1 1 100%; min-width: 0;")],
+     [CARD + '768x1024'], r'calculator toggle is not directly right'),
+    ('the keypad tag "typing here" showing',
+     [("  .maffs-keypad-cue { display: none !important; }", "  .maffs-keypad-cue-x { display: none !important; }")],
+     [CARD + '360x640'], r'"typing here" tag is showing'),
+    ('a fraction bar shorter than the fraction',
+     [("  .frac .bar { width: 100%;", "  .frac .bar { width: 30%;")],
+     [CARD + '1440x900'], r'fraction bar is \d+ px, not the fraction'),
+    ('the keypad far below Check',
+     [("  #qKeys { margin-top: 0.75rem; }", "  #qKeys { margin-top: 3rem; }")],
+     [CARD + '360x640'], r'keypad is \d+ px under Check'),
+    ('Check pushed below the fold on a phone',
+     [("    .container { padding-top: 0.6rem; }", "    .container { padding-top: 12rem; }")],
+     [CARD + '320x568'], r'below the fold at 528 px'),
     ('money at 1 d.p. accepted (SR-2)',
      [("r = MaffsAnswer.money(inp.value, ans.pence / 100);", "r = MaffsAnswer.exact(String(inp.value).replace(/^£/, ''), ans.pence / 100);")],
      ['marking'], r"fx-1\[3\] typed '3\.5' gave 'correct', expected 'format'"),
