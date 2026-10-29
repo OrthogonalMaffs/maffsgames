@@ -226,7 +226,7 @@
    "tier": "lock"
   },
   "verify-bearing-blitz.py": {
-   "how": "chosen from 13 timed unit(s)",
+   "how": "kept from the pack (1 needed)",
    "label": "Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points and message figures recomputed around 0/360; lives and end flows played in Chromium; fault-injection self-test: every planted fault caught)",
    "parts": 1,
    "tier": "content"
