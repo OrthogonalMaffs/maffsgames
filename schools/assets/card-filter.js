@@ -169,10 +169,17 @@
     function sizeBar() { document.documentElement.style.setProperty('--cf-bar-h', bar.offsetHeight + 'px'); }
     function showResults() {
       sizeBar();
-      var first = null;
-      for (var i = 0; i < sections.length; i++) if (!sections[i].classList.contains('cf-hidden')) { first = sections[i]; break; }
-      var target = first || empty;
-      var y = target.getBoundingClientRect().top + window.pageYOffset - bar.offsetHeight - 8;
+      var first = null, card = null;
+      for (var i = 0; i < sections.length && !first; i++) if (!sections[i].classList.contains('cf-hidden')) first = sections[i];
+      for (var j = 0; j < cards.length && !card; j++) if (!cards[j].classList.contains('cf-hidden')) card = cards[j];
+      var target = first || empty, barH = bar.offsetHeight;
+      // The section's heading under the bar when it and the first card both fit; otherwise the first card itself, so its
+      // Play target is whole on screen (a section with a note and a long card does not fit a short phone).
+      if (card && first) {
+        var fit = card.getBoundingClientRect().bottom - first.getBoundingClientRect().top + barH + 8 <= window.innerHeight;
+        if (!fit) target = card;
+      }
+      var y = target.getBoundingClientRect().top + window.pageYOffset - barH - 8;
       // window.scroll, not scrollTo: this places filter results under the bar; it is not feedback or Next (MaffsScroll's job).
       if (Math.abs(window.pageYOffset - y) > 4) window.scroll(0, Math.max(0, y));
     }

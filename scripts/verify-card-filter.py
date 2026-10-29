@@ -146,6 +146,8 @@ def open_page(pw, base, size, query='', sources=None):
     errors = []
     page.on('pageerror', lambda e: errors.append(str(e)))
     page.goto(base + '/essentials/' + query, wait_until='load', timeout=20000)
+    # CI has real fonts, which wrap more than the stub's: a wide face makes the cards and the chip rows as tall as they get.
+    page.add_style_tag(content='body, button, input { font-family: Verdana, "DejaVu Sans", sans-serif !important; }')
     page.wait_for_selector('.cf-bar', timeout=5000)
     return br, page, errors
 
