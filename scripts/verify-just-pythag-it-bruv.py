@@ -125,6 +125,7 @@ from urllib.parse import urlsplit
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
 import bank_common as bc  # noqa: E402  (start_stub_server: checked start, free port)
+import plant_common as pc  # noqa: E402
 
 SLUG = "just-pythag-it-bruv"
 LEVEL = "ks3"
@@ -1214,7 +1215,7 @@ async def apply_patch(page, patch):
     if kind == "style":
         await page.add_style_tag(content=code)
     else:
-        await page.evaluate(code)
+        await pc.apply_js(page, "(layout fault)", code)      # a patch that cannot apply is a StalePlant, never a catch
 
 
 async def phone_fit(browser, out, sizes=None, only=None, patch=None, report=True, stats=None):
@@ -1228,6 +1229,7 @@ async def phone_fit(browser, out, sizes=None, only=None, patch=None, report=True
     worst, tapworst, calcworst, checkworst, fbworst, compactworst = (
         stats.setdefault(k, {}) for k in ("worst", "tap", "calc", "check", "fb", "compact"))
     measured, glided, switched = 0, set(), set()
+    n0 = len(out)       # findings before this call; a PLANTED run stops at its first new one (STALE-PLANTS, Jon, 28 Oct 2026)
     for (w, h) in sizes:
         ctx, page, errors = await new_page(browser, (w, h), touch=w < DESKTOP_MIN_W)
         try:
@@ -1324,6 +1326,8 @@ async def phone_fit(browser, out, sizes=None, only=None, patch=None, report=True
                     # Desktops: docked right of the card, level with its top, never over it; the card does not move;
                     # the answer box is an ordinary input (no answer target).
                     await page.evaluate("JPIB.ui.calc().close()")
+                    if patch and len(out) > n0:
+                        break       # planted run: the fault is measured; the steps that follow would only time out on the broken page
                     if not await page.evaluate("document.activeElement === document.getElementById('answer')"):
                         out.append("%s: on a desktop the answer box is not focused when the question opens" % where)
                     closed = await page.evaluate(CALC_JS)
@@ -1413,6 +1417,8 @@ async def phone_fit(browser, out, sizes=None, only=None, patch=None, report=True
                         if a["rowTopV"] < -0.5 or a["panelBottomV"] > fold + 0.5:
                             out.append("%s: after the tap the answer row and keypad are not in view together (y=%.0f..%.0f, fold %d)"
                                        % (where, a["rowTopV"], a["panelBottomV"], fold))
+                    if patch and len(out) > n0:
+                        break       # planted run: stop at the first measured finding (see n0)
                     if (w, h) not in switched:
                         # switching: the display takes the keys, the operators come back, the answer is untouched
                         switched.add((w, h))
@@ -1420,6 +1426,8 @@ async def phone_fit(browser, out, sizes=None, only=None, patch=None, report=True
                         b = await page.evaluate(ANSWER_JS)
                         if b["target"] != "calc" or b["disabled"] or not b["screenSel"] or b["selected"]:
                             out.append("%s: tapping the calculator display did not select it (target %r, disabled %r)" % (where, b["target"], b["disabled"]))
+                        if patch and len(out) > n0:
+                            break
                         await page.tap('.maffs-calc-key[data-val="7"]')
                         await page.tap('.maffs-calc-key[data-val="×"]')
                         await page.tap('.maffs-calc-key[data-val="6"]')
@@ -1437,6 +1445,8 @@ async def phone_fit(browser, out, sizes=None, only=None, patch=None, report=True
                         out.append("%s: typing %r on the keypad put %r in the answer box" % (where, raw, typed))
                     if not calc_open:
                         await page.tap(".maffs-calc-close")
+                if patch and len(out) > n0:
+                    break           # planted run: stop at the first measured finding (see n0), before Check is pressed on a broken page
                 # Check, with the calculator open on even questions and closed on odd ones. Right answers too:
                 # "Spotted it?" (round 1 triples) and, every fifth question, the quick tick.
                 if not desk and calc_open and i % 3 != 2:
@@ -1799,13 +1809,22 @@ async def run_all(args, shard, todo):
             print("Layout faults (a short run at the size each concerns, each patched into a fresh page):")
             for name, sizes, patch in faults:
                 with shard.unit(UNIT_LAYOUT + name):
-                    found = []
+                    found, err = [], None
                     try:
                         await phone_fit(browser, found, sizes=sizes, only=UI_FAULT_ONLY, patch=patch, report=False)
-                    except Exception as exc:          # a fault that breaks the page outright is caught too
-                        found.append("the run broke: %s" % str(exc).splitlines()[0])
-                    print("  %-48s %s" % (name, ("CAUGHT (%d failures, e.g. %s)" % (len(found), found[0][:90])) if found else "*** MISSED ***"))
-                    if not found:
+                    except pc.StalePlant as exc:      # the plant did not apply: a failure of the run, never a catch
+                        print("  %-48s *** STALE PLANT: %s ***" % (name, exc.why))
+                        fail("STALE PLANT: %s: %s" % (name, exc.why))
+                        continue
+                    except Exception as exc:          # an error while checking is not a catch (plant_common.is_caught)
+                        err = str(exc).splitlines()[0]
+                    if pc.is_caught(found, err):
+                        print("  %-48s CAUGHT (%d failures, e.g. %s)" % (name, len(found), found[0][:90]))
+                    elif err:      # a timeout or any error: the page failed to answer, which says nothing about the fault
+                        print("  %-48s *** VERIFIER FAILURE (not a catch): %s ***" % (name, err))
+                        fail("VERIFIER FAILURE: layout fault '%s' could not be checked (%s); a timeout is never a catch, so this is not a pass" % (name, err))
+                    else:
+                        print("  %-48s *** MISSED ***" % name)
                         fail("layout fault not caught: " + name)
 
         planted = [(name, patch) for name, patch in FAULTS if UNIT_FAULT + name in todo]

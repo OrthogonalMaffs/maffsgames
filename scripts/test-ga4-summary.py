@@ -32,6 +32,9 @@ import sys
 import tempfile
 from datetime import date, timedelta
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import plant_common as pc
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SUMMARY = os.path.join(ROOT, "docs", "apps-script-ga4-summary.js")
 COUNTRY = os.path.join(ROOT, "docs", "apps-script-ga4-country.js")
@@ -436,14 +439,19 @@ def main():
              "first and current weeks marked partial, complete weeks not"),
         ]
         for label, old, new, check in plants:
-            if summary_src.count(old) != 1:
+            try:
+                planted = pc.apply_plant(summary_src, old, new, name=label)
+            except pc.StalePlant as exc:
                 fails += 1
-                print("FAIL  plant '%s': the line to change is not in the script exactly once" % label)
+                print("FAIL  %s" % exc)
                 continue
-            R2, err = run_harness(node, summary_src.replace(old, new), work, "plant", fx)
-            caught = bool(err) or bool(checks(R2, daily, events)[check])
-            if caught:
+            R2, err = run_harness(node, planted, work, "plant", fx)
+            found = checks(R2, daily, events)[check] if err is None else []
+            if pc.is_caught(found, err):          # a harness crash is not a catch
                 print("PASS  plant caught: %s" % label)
+            elif err:
+                fails += 1
+                print("FAIL  plant '%s': the harness crashed (not a catch): %s" % (label, err.splitlines()[0][:120]))
             else:
                 fails += 1
                 print("FAIL  plant NOT caught: %s" % label)
