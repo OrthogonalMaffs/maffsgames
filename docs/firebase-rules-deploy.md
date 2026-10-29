@@ -27,10 +27,7 @@ shape `submitScore()` writes.
 `orderByChild('timestamp').limitToLast(20)` is served by the database, not by downloading
 the whole feed.
 
-**The live rules today could not be read from here** (that needs the console). What is
-known from their behaviour: single boards and `recent_scores` read anonymously, the root
-does not, and anonymous writes and deletes succeed. Step 1 below saves them before they
-are replaced.
+**Before the 30 Sep 2026 deployment, the live rules could not be read from here** (that needs the console). What was known from their behaviour then: single boards and `recent_scores` read anonymously, the root did not, and anonymous writes and deletes succeeded. Step 1 below saved them before they were replaced.
 
 ## What changed in the site (same PR)
 
