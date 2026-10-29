@@ -1,0 +1,30 @@
+# Handover: The 6 P's question card layout (SIX-PS-CARD, Jon, 29 Oct 2026; home lane)
+
+**State: built and verified locally on `claude/six-ps-card`; NOT pushed.** STOP IF raised (below): Jon's ruling needed before it can meet its success condition. Page files only: `the-6-ps/index.html`, `scripts/verify-the-6-ps.py`; no shared file touched (`calculator.js`, `calculator.css`, `keypad.js`, `theme.css` as they were).
+
+## Done
+- **One left axis**: the question text, the answer controls and Check start at the same x (only the chart is centred).
+- **Answer row**: the controls on the left, the shared calculator's toggle directly to their right and centred on them; its panel opens beneath the row, above Check. No edit to `calculator.js`: the page makes its mount transparent (`display: contents`) so the shared toggle and rail become items of the page's flex row. Same markup for fraction, single box, boxes with symbols, units and multiple choice.
+- **Check**: its own row, left-aligned, 12 px under the answer row; the keypad 12 px under Check (all four gaps at most 16 px). The status line takes no height until it has text.
+- **Order**: left as inputs, Check, keypad. (The contract asked for inputs, keypad, Check unless phone-fit passes with the current order; with the keypad under Check, Check stays above the fold, so the order was kept.)
+- **Phone spacing** tightened (container, card, stem line-height 1.65, headings), box widths and toggle padding reduced under 480 px so the toggle still sits right of the boxes at 320.
+- **Fraction input** (page-local): equal-width boxes, one bar the full width, aria-labels exactly "numerator" and "denominator" (marking reads the boxes by `data-part`, unchanged).
+- **Charts**: labels in Outfit (page CSS; the banks say `sans-serif`); each chart's own whitespace cropped to 12 px per side (never over 24; `tighten()` in the page).
+- **"typing here" tag**: hidden by page CSS. It is `aria-hidden` (serves no assistive technology) and the chosen box already has the navy border.
+- **Verifier**: `verify-the-6-ps.py` has four new units, `card layout: 1440x900 / 768x1024 / 360x640 / 320x568`, over a fixed spread of real questions (two of every format x calculator x chart combination, 40 or so), plus six planted faults (Check right-aligned; toggle below the controls; the tag showing; a short fraction bar; the keypad far below Check; Check below the fold). Its "tall feedback" unit now uses `pie-charts-fd964a03`: the old question (`fraction-percentage-of-amount-2c420fec`) fits without the scroll helper after the spacing change, so the plant that removes the helper stopped being catchable on it.
+
+## Measured: all 1805 questions at 360x640 and 320x568 (scan, not CI)
+- Alignment, toggle position and centring, 16 px gaps, nothing past the card, no sideways scroll: **0 failures**, both sizes.
+- **Check above the fold**: 360x640: all 1361 questions without a chart pass; 344 of the 444 chart questions fail. 320x568: 1799 pass; 407 of the 444 chart questions fail plus **6 without a chart** (e.g. `basic-probability-e2c2d18c` 543 against 528; `pie-charts-1e054f42`/`-ef054034`/`-abc4c242`/`-b14afc09`/`-ff7ace16` 538 against 528).
+- **First keypad row above the fold at 360x640**: 0 of the 1361 without a chart fail; 403 of the chart questions fail.
+- **Inputs above the fold at 360x640**: 3 without a chart (`form-expressions-0a18641b`, `form-expressions-ccf61403`, `vectors-d37cafe1`).
+- Before this change the same check failed far more often (the toggle sat between Check and the keypad). Screenshots, fraction and non-fraction at 360 x 640, before and after: `docs/handover/img/six-ps-card-{before,after}-{fraction,number_calc}-360.png`.
+
+## STOP IF raised: needs Jon
+1. **Chart questions cannot meet the fold at 320x568 (and mostly not at 360x640).** 444 of 1805 questions carry a chart; a pie chart is as tall as it is wide (220 px at 360 wide), so stem, chart, answer row and Check cannot share a 528 px screen (the stem alone is 130-160 px). Without loosening the fold rule there is no fix on the page. Options: (a) chart questions are exempt from the fold rule (what the verifier does today, flag `CHART_FOLD_EXEMPT`); (b) a Check fixed to the bottom of the screen on phones (a new pattern, probably a shared-fold change); (c) charts drawn much smaller (unreadable labels). The verifier currently exempts them.
+2. **Item 8 (the "Grab a pen and paper for this one. In the exam, your working earns marks too." note, driven by one bank flag per question)** needs a new field in all 34 bank files and a change to `scripts/gen-six-ps.py`, a shared file (STOP IF: a shared file edit). Not started. Today's `try_without` flag (94 questions, only with calculator "optional") still drives "Try it with pen and paper". If Jon rules, a candidate rule is "multi-step = the worked answer has two or more lines": 1627 of 1805 questions (1533 not now flagged, 94 now flagged), one-step 178. The per-question list Jon asked for is a 1805-line table: to be generated from the banks once the rule and the place of the flag are ruled.
+3. The 6 non-chart questions at 320x568 and 3 inputs at 360x640 above need another few pixels (heading and stem spacing); not done so the layout is not tightened further than the ruling in 1 may make unnecessary.
+
+## Reports (no change made)
+- **Keypad covers every answer**: negative values occur only in formats whose keypad has the minus key (number 52, coordinates 101, fraction 2, pair 51, standard form 10); money and ratio answers are never negative; the point key is always there (174 decimal values). No question needs a key the keypad lacks. The keypad's minus key shows "−" and types "-"; the glyph fix is the post-freeze keypad.js change.
+- **"120°" via KaTeX and canon 7.1.1**: a degree sign is a unit symbol, not an expression, so it is within the scope that may stay plain Unicode ("bare unit symbols"); KaTeX is allowed but not required for it. Today a stem like "30°" is rendered through KaTeX (maths font), which looks different from the Outfit text beside it.
