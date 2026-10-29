@@ -1373,6 +1373,7 @@ function renderQuestionBody(item) {
     grid.appendChild(btn);
   });
   MaffsLock.fresh(grid);   // a new question: a double-click on Start or Next cannot answer it
+  if (document.getElementById('calc')) MaffsLock.fresh(document.getElementById('calc'));   // the calculator toggle too (canon 7.6.0)
 }
 
 function explainHTML(item) {
