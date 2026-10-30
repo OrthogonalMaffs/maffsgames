@@ -1,5 +1,5 @@
 {
- "as_of": "2026-10-29T21:59:59Z",
+ "as_of": "2026-10-30T11:36:20Z",
  "games": {
   "52dle": 11,
   "angle-ace": 5,
@@ -51,6 +51,7 @@
   "given-that": 53,
   "graph-transformer": 47,
   "growth-and-decay": 24,
+  "hc-factor": 1,
   "higher-power": 80,
   "how-many-parts": 27,
   "i-found-a-mark": 26,
@@ -102,8 +103,9 @@
   "unit-converter": 527,
   "who-ate-all-the-pies": 11,
   "word-problem-decoder": 29,
-  "wrong-on-the-internet": 12
+  "wrong-on-the-internet": 12,
+  "y-so-steep": 13
  },
  "since": "2026-09-01",
- "total": 18203
+ "total": 18217
 }
