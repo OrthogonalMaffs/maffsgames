@@ -15,6 +15,7 @@ Free curriculum-aligned maths games for UK schools. 101 games, The 6 P's (listed
   under **Task Contract** at the end of this file.
 
 ## Before stopping for a decision: the Standing rulings (canon §0.3)
+Windows: see AGENTS.md ENCODING.
 
 Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, apply it and list
 "SR-n applied: …" in the PR description. Stop only for what no ruling covers, or for an item on

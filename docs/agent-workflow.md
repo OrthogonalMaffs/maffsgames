@@ -184,6 +184,7 @@ same branch is fixed and re-reviewed.
 | Requirement ambiguous | Implementer | Stop; one question, with the options it sees | Jon or Project Claude answers in writing |
 | A check fails **before** any change | Implementer | Stop; report it as pre-existing (main's run state, the failing check) | Main is green, or Jon's ruling with `--override` |
 | A check fails **after** the change | Implementer | Fix within scope; if the fix needs a file outside EXACT CHANGE, stop | Fixed, or contract widened |
+| Non-ASCII becomes `?` after an edit (PowerShell's legacy code page) | Implementer | Stop; follow AGENTS.md's ENCODING rule: apply_patch edits, `python -X utf8`, verify UTF-8 file bytes | Original text restored and UTF-8 verification passes |
 | Main's last full run is red | Implementer | Do not merge (`merge-pr.py` refuses anyway); one re-run of failed jobs is allowed (lane plan rule 4) | Main green |
 | Tool or access missing (`gh`, network, notes file) | Implementer | Stop; say exactly what failed | Jon fixes access |
 | Unexpected changes in the worktree | Implementer | Stop; list them (`git status --porcelain`, no contents); touch nothing | Owner identified |
