@@ -230,6 +230,7 @@ only there. **Never pull or merge into the primary worktree or into an existing 
 origin/main" included: that is what the fetch and the new worktree do. **Why:** on 11 Oct 2026 a session ran
 `git pull origin main` in the primary worktree, which was sitting on an old task branch, and fast-forwarded
 that branch to main; undoing it needed Jon.
+Windows: see AGENTS.md ENCODING.
 
 ### End of task: remove the task's worktree (WORKTREE-CLEANUP, 11 Oct 2026)
 
