@@ -2873,3 +2873,44 @@ on both levels, and a formula worked solution are on file (not committed to the 
       with two lessons from Trig Worms (dedupe against each other, not just the correct answer;
       enumerate a generator's range endpoints rather than trusting a comment).
 
+
+
+## Moved from todo.md, 29 Oct 2026 (contract CTX)
+
+- ~~Parent guides migration (queue item 9).~~ **Resolved, overtaken during this same session:**
+  built and merged as PR #9 (`b4772cb`), 20 of 20 guides live at `/parents/`. See queue item 9 and
+  this file's START block for the full record — this §6 entry was written before that merge landed
+  and is stale now.
+
+- ~~Equations game (inverse operations, RAG rating): red move applies-and-recovers or reverts;
+  portal level; name.~~ **RULED 29 Sep 2026 (Jon): drop this item — superseded.** `linear-
+  equation-solver` already fills this gap; no separate equations game is needed.
+
+- ~~Equation Builder read-only overlap report, before the equations game is built.~~ **Dropped 29
+  Sep 2026** alongside the equations game item above — no longer has anything to report ahead of.
+
+- ~~Search-term sanitising: leave disagreeing, or strip both?~~ **RULED 29 Sep 2026 (Jon): leave
+  disagreeing.** Checked the actual mechanism first: `search_query` goes to GA4 raw as its own
+  field (no risk); `filter_value` packs the whole portal state into one Sheets column using `;=|`
+  as its own delimiters, so `q=` strips those three characters before packing or the packing itself
+  breaks. The two only disagree if a student's search text contains `;`, `=` or `|` — rare on a
+  maths-game search box. Not worth losing GA4's raw text for that. No code change.
+
+- **Rugby Mud, checked 29 Sep 2026 — no bug, answered.** Escape-room `dial`-type instruments (e.g.
+  the fabric-cutter/tap-timer locks) *are* draggable — `escape-rooms/assets/engine.js`'s
+  `wireDial()` repaints the dial on every `pointermove` while dragging (`:568`). But
+  `question_answered` only fires from the lock-submit handlers (`:618`/`:628`), never from `paint()`
+  itself, so dragging the needle around does **not** spam `question_answered` — it fires once per
+  submitted attempt, same as every other lock type. Nothing to fix.
+
+- ~~Portal: "Correlation or Coincidence" two card titles?~~ **FIXED 29 Sep 2026.** The second card
+  (`index.html:2618`, the Core Maths section) read "Correlation or Coincidence" without the "?";
+  the canonical title, matching the game's own `<title>` and `<h1>`, has the "?"
+  (`games/correlation-or-coincidence/index.html:16`/`:101`). One-word text fix, no other card
+  touched.
+
+- Chart Interrogator §1.7/§1.8 keying rules — **1.8 (histogram H2) RULED 29 Sep 2026 (Jon): key on
+  modal class**, not a raw % threshold — "most common range" is true iff the interval is the modal
+  class (highest frequency density). **HELD 1 Oct 2026 (Jon):** under that definition H2's 170–180 is not modal (165–170 is), so the ruling changes no key; re-filed in §1.8 as a wording fix. **DONE 1 Oct 2026 (PR 41):** reworded as a modal-class question, keyed on frequency density; see §1.8.
+
+| 1.33 | ~~**`games/sequence-solver/index-original.html` is a stale, publicly served copy of Sequence Solver.** 531 lines, added 14 Mar 2026 (`757837d`), last touched 25 Mar 2026: the original single-mode "next term" game (a `SEQUENCES` array of term lists, a device-local `seq_lb` leaderboard), not the tiered rebuild. Checked 2 Oct 2026: **it does not serve `alevel[23]`** (it has no level banks at all; §1.29's fix is not missing from it, there is nothing for it to be missing from) but its own content has never been through any bank check; **it sends no game events** (no `mfg()`, no `analytics.js`, no `game_slug`, no Firebase), only GA4's automatic `page_view` under its own path, with the same `<title>` as the real game; **it is not in `sitemap.xml`** and is linked from nowhere in the repo, but it has no `noindex` and no canonical, so whether Google holds it is unknown (not checkable from a cloud session: Search Console, Jon). Exempt in `check-footer.py` with this row as its reason, untouched by the footer PR. **Proposed fix (Jon to confirm):** replace it with a redirect stub to `/games/sequence-solver/` (git history keeps the original).~~ **FIXED, PR 58, 2 Oct 2026:** replaced by a redirect stub to `/games/sequence-solver/` in the `/schools/` stubs' shape (meta refresh, canonical, link fallback); the original is in git history at `757837d`. Not indexed (Search Console, Jon, 2 Oct). Now a redirect-stub exemption in `check-footer.py`, and in `check-canonical-links.py`'s `REDIRECTS`, so a link to it fails CI. A search of `games/` found no other served copy of a game. Tier 1 cannot load it (§4 item 12). | — fixed |
