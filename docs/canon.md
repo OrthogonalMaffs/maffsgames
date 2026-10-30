@@ -1427,12 +1427,17 @@ time needs `padding-bottom: 40px` (or equivalent) so the bar covers nothing.
 
 ### 7.5.3 Name the maths, never the student (Jon, 7 Oct 2026; contracts ESSENTIALS and ESSENTIALS-WORDING, 8 Oct)
 
-**Student surfaces describe the topic and level only; only teacher surfaces may say resit or post-16.** A link
+**Student surfaces describe the maths, its difficulty and learning goals, never students by attainment or ability; only teacher surfaces may say resit or post-16.** A link
 posted in Google Classroom or Teams shows its page's description and og/twitter tags to the whole class. Until
 8 Oct 2026 the two rooms built for a resit class opened "A GCSE resit escape room on...", and the portal's
 cards said "for a GCSE resit class". Until the same evening /essentials/ was a teacher surface and /updates/ was
 never scanned, so both still said "resit" ("resit page", "resit students", a link to /resit/).
 **Jon, 8 Oct 2026: the section is "Essentials" everywhere public; no public page labels a student as a resitter.**
+
+**Jon, 30 Oct 2026:** attainment and ability labels on students (for example, "students working at grades 1–3",
+"low-ability learners" or "bottom sets") are prohibited. Grade bands describing a room's or game's difficulty or
+level are permitted, including KS3 escape-room metadata ("A 15-minute maths escape room for grades 1 to 3.").
+Learning goals such as "working towards grade 4" and "aiming for grade 4" are permitted.
 
 - **Student surfaces:** every game and escape-room page, including its description, og and twitter tags; the
   portal and /escape-rooms/ cards; /essentials/ and its metadata; /updates/. They say, e.g., "A GCSE escape
@@ -1440,12 +1445,13 @@ never scanned, so both still said "resit" ("resit page", "resit students", a lin
 - **Teacher surfaces:** each room's teacher.html, and the teacher and parent guides, only. They may say resit
   or post-16.
 - **Checked by `scripts/check-student-labels.py`** (CI, site-wide checks): "resit", "retake" or "post-16" in a
-  student surface's visible text, script strings or description/og/twitter tags fails. Code comments and docs
+  student surface's visible text, shown attributes, script strings or description/og/twitter tags fails; the same
+  channels reject attainment and ability labels on students. Code comments and docs
   are exempt. A page whose label is maths content rather than a label on the player is in its `KNOWN`, with
   the reason: reported, never failed, and stale once the label is gone (given-that's tree-diagram question
   about students re-sitting, 8 Oct 2026, awaiting Jon's view).
 - **/essentials/** (until 8 Oct 2026 /resit/, which now redirects there, as /schools/spec-map/ does) is headed
-  "Essentials", with the teacher line "GCSE Foundation maths for students working at grades 1–3, in school or
+  "Essentials", with the teacher line "GCSE Foundation maths for students working towards grade 4, in school or
   college."
 - **A site fact is never hand-typed beside its data.** The homepage title and description carry no game or
   room count (each was stale within a week: "96 games" while the portal listed 91); the range reads "KS3 to

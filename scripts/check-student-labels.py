@@ -37,6 +37,13 @@ from html.parser import HTMLParser
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 LABEL = re.compile(r'\b(re-?sits?|re-?takes?|post-?16)\b', re.I)
+ATTAINMENT = re.compile(
+    r'working at (a )?grades? \d'
+    r'|(students|pupils|learners) (at|on|working at) (a )?grades? \d'
+    r'|for (students|pupils|learners) (at|on|working at) grades? \d'
+    r'|\b(low|lower|less)[- ](ability|attaining|attainers?|able)\b'
+    r'|\bweak(er)? (students|pupils|learners)\b'
+    r'|\b(bottom|lower) sets?\b', re.I)
 PORTALS = ['index.html', 'escape-rooms/index.html', 'op/index.html', 'essentials/index.html', 'updates/index.html',
            'the-6-ps/index.html']
 SURFACES = ['games/**/index.html', 'escape-rooms/*/index.html']
@@ -122,9 +129,10 @@ def faults_in(path, html):
     p.close()
     out = []
     for where, text in p.found:
-        for m in LABEL.finditer(text):
-            s = text[max(0, m.start() - 50):m.end() + 50].replace('\n', ' ').strip()
-            out.append('%s: "%s" in %s: ...%s...' % (path, m.group(0), where, s))
+        for pattern in (LABEL, ATTAINMENT):
+            for m in pattern.finditer(text):
+                s = text[max(0, m.start() - 50):m.end() + 50].replace('\n', ' ').strip()
+                out.append('%s: "%s" in %s: ...%s...' % (path, m.group(0), where, s))
     return out
 
 
@@ -181,6 +189,44 @@ def selftest():
             errs.append('planted a label on %s: NOT caught' % page)
         else:
             print('  self-test: planted a label on %s: caught (%s)' % (page, faults_in(page, planted)[0][:110]))
+    # Test every pinned variant in every channel, including all shown attributes and meta families.
+    channels = [
+        ('visible text', '<p>%s</p>'),
+        *[(attr, '<img ' + attr + '="%s">') for attr in SHOWN_ATTRS],
+        ('script string', '<script>var label = "%s";</script>'),
+        ('description', '<meta name="description" content="%s">'),
+        ('og', '<meta property="og:description" content="%s">'),
+        ('twitter', '<meta name="twitter:description" content="%s">'),
+    ]
+    rejected = ['working at ' + article + grade + ' 2'
+                for article in ('', 'a ') for grade in ('grade', 'grades')]
+    rejected += [prefix + person + ' ' + at + ' ' + article + grade + ' 2'
+                 for prefix in ('', 'for ') for person in ('students', 'pupils', 'learners')
+                 for at in ('at', 'on', 'working at') for article in ('', 'a ')
+                 for grade in ('grade', 'grades')]
+    rejected += [low + sep + ability for low in ('low', 'lower', 'less') for sep in ('-', ' ')
+                 for ability in ('ability', 'attaining', 'attainer', 'attainers', 'able')]
+    rejected += [weak + ' ' + person for weak in ('weak', 'weaker')
+                 for person in ('students', 'pupils', 'learners')]
+    rejected += [position + ' ' + group for position in ('bottom', 'lower') for group in ('set', 'sets')]
+    permitted = [
+        '★ Warm-up · grades 1–3', 'Difficulty: 1 of 3, Warm-up, grades 1–3',
+        'Warm-up (grades 1 to 3)', 'A 15-minute maths escape room for grades 1 to 3.',
+        'working towards grade 4', 'aiming for grade 4', 'GCSE Foundation', 'Starter',
+        'you might struggle to find it', 'a student struggling in Year 7',
+    ]
+    for channel, template in channels:
+        for text in rejected:
+            for variant in (text, text.upper()):
+                if not faults_in(room, template % variant):
+                    errs.append('attainment plant in %s: NOT caught: %s' % (channel, variant))
+        for text in permitted:
+            if faults_in(room, template % text):
+                errs.append('permitted wording in %s was flagged: %s' % (channel, text))
+        print('  self-test: %s: %d attainment plants and %d permitted cases checked' %
+              (channel, len(rejected) * 2, len(permitted)))
+    if faults_in(room, '<span class="sr-only">Difficulty: 1 of 3, Warm-up, grades 1–3</span>'):
+        errs.append('permitted sr-only difficulty was flagged')
     pages = surfaces(ROOT)
     for must in ('index.html', room, 'escape-rooms/index.html', 'essentials/index.html', 'updates/index.html'):
         if must not in pages:
