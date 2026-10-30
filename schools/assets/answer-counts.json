@@ -1,5 +1,5 @@
 {
- "as_of": "2026-10-30T17:10:36Z",
+ "as_of": "2026-10-30T21:41:59Z",
  "games": {
   "52dle": 11,
   "angle-ace": 5,
@@ -84,7 +84,7 @@
   "shape-shifter": 5,
   "simultaneous-solver": 59,
   "six-sevens-bruv": 4013,
-  "split-it": 277,
+  "split-it": 278,
   "spot-the-error": 13,
   "spot-the-muppet": 39,
   "squared-squirrel": 38,
@@ -107,5 +107,5 @@
   "y-so-steep": 13
  },
  "since": "2026-09-01",
- "total": 18219
+ "total": 18220
 }
