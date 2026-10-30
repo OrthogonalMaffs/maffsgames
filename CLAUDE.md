@@ -15,7 +15,6 @@ Free curriculum-aligned maths games for UK schools. 101 games, The 6 P's (listed
   under **Task Contract** at the end of this file.
 
 ## Before stopping for a decision: the Standing rulings (canon §0.3)
-Windows: see AGENTS.md ENCODING.
 
 Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, apply it and list
 "SR-n applied: …" in the PR description. Stop only for what no ruling covers, or for an item on
@@ -231,6 +230,7 @@ only there. **Never pull or merge into the primary worktree or into an existing 
 origin/main" included: that is what the fetch and the new worktree do. **Why:** on 11 Oct 2026 a session ran
 `git pull origin main` in the primary worktree, which was sitting on an old task branch, and fast-forwarded
 that branch to main; undoing it needed Jon.
+Windows: see AGENTS.md ENCODING.
 
 ### End of task: remove the task's worktree (WORKTREE-CLEANUP, 11 Oct 2026)
 
