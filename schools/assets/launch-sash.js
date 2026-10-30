@@ -1,4 +1,4 @@
-/* The "100 games" sash (launch contract SIX-PS-LAUNCH, Jon, 27 Oct 2026). Homepage only, for two weeks.
+/* The "Our 100th: The 6 P’s →" sash (launch contract SIX-PS-LAUNCH, Jon, 27 Oct 2026). Homepage only, for two weeks.
  *
  * A figure on a page is a claim, and a claim with a date in it goes stale: this one carries its own end date and removes itself
  * from that day, whatever anyone remembers to do (the same rule as the answer counts). scripts/check-launch-sash.py fails if this
@@ -13,7 +13,7 @@
   'use strict';
   var END = '2026-11-10T00:00:00Z';   // hidden from this instant on
   var HREF = '/the-6-ps/';
-  var TEXT = '100 games \u00b7 Meet The 6 P\u2019s \u2192';
+  var TEXT = 'Our 100th: The 6 P\u2019s \u2192';
 
   var ends = Date.parse(END);
   if (!(ends > 0) || Date.now() >= ends) return;

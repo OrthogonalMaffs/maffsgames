@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: Essentials filter (the shared card filter on /essentials/, played in Chromium: every card's data-topic is its section and its data-calc is the roster's Calculator field read separately, each topic chip shows its section alone, the likely-calculator chips, search across sections, the empty message, the URL read on load and written on change, filter_applied and game_card_clicked events in the portal's v1 format with page=essentials, the sticky bar at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught) | | 3
+# ci-shards: Essentials filter (the shared card filter on /essentials/, played in Chromium: every card's data-topic is its section (including Exam technique) and its data-calc is the roster's Calculator field read separately with the named CALC_ACROSS_PAPERS exception, each topic chip shows its section alone, the likely-calculator chips, search across sections, the empty message, the URL read on load and written on change, filter_applied and game_card_clicked events in the portal's v1 format with page=essentials, the sticky bar at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught) | | 3
 # ci-deps: schools/assets/card-filter.js schools/assets/card-filter.css essentials/index.html
 """Verification for the shared card filter (contract ESSENTIALS-FILTER, Jon, 29 Oct 2026; topic chips and search, then the calculator chips).
 
@@ -8,10 +8,11 @@ trusting the module:
   - static: every card sits in a section, carries data-topic equal to that section's id, and carries data-calc equal to
     what the roster's Calculator field says (not allowed = non-calc; required or scientific = calc; optional = both; by stage =
     both unless every stage has one value), computed here from the roster and the game's stage map, not read from the page;
-    an untagged roster game or a card without data-calc fails (a guide to the likely paper, not enforcement);
+    CALC_ACROSS_PAPERS names the untagged exam-technique game that applies on every paper (both); an exception with a real tag fails;
+    every other untagged roster game or a card without data-calc fails (a guide to the likely paper, not enforcement);
   - the calculator chips ("Likely non-calculator" shows non-calc and both, "Likely calculator" shows calc and both) agree
     with that mapping alone and combined with a topic;
-  - each topic chip shows its section's cards alone, hides the other sections, and the count is the cards counted here;
+  - each topic chip, including Exam technique, shows its section's cards alone, hides the other sections, and the count is the cards counted here;
   - search narrows across sections, a word nothing matches shows the empty message and Clear filters brings every card back;
   - the URL: ?topic=&q= opens the page filtered, a change rewrites the URL without adding a history entry, an unknown
     topic or calc value is ignored;
@@ -19,7 +20,7 @@ trusting the module:
     "v1|page=essentials;topic=..;su=..;sl=..;q=..;n=..", page=essentials; game_card_clicked carries the same state;
     nothing fires on load;
   - phone: chips and search 44 px tall, chip rows scroll sideways inside themselves, no sideways page scroll, the sticky bar
-    at most 22% of the screen, and after a chip tap from a scrolled page the first card's whole box is on screen below the bar
+    at most 27% of the screen, and after a chip tap from a scrolled page the first card's whole box is on screen below the bar
     with its centre hit-testing to the card (the bar never covers a Play target).
 Planted faults, each caught: a card with no data-topic, the wrong data-topic, no data-calc, the wrong data-calc, data-calc="maybe",
 a module that never rewrites the URL, one that leaves empty sections showing, one that never shows the empty message,
@@ -39,20 +40,27 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGE = os.path.join(ROOT, 'essentials', 'index.html')
 JS = os.path.join(ROOT, 'schools', 'assets', 'card-filter.js')
 CSS = os.path.join(ROOT, 'schools', 'assets', 'card-filter.css')
-TOPICS = ['number', 'algebra', 'ratio', 'geometry', 'probability', 'statistics']
+TOPICS = ['number', 'algebra', 'ratio', 'geometry', 'probability', 'statistics', 'technique']
 CALC_VALUES = {'non-calc', 'calc', 'both'}
 ROSTER = os.path.join(ROOT, '.claude', 'rules', 'game-roster.md')
 ROW = re.compile(r'^\|\s*(?:\d+|\u2014)\s*\|[^|]*\|\s*`([a-z0-9-]+)`\s*\|.*\|\s*([^|]*?)\s*\|\s*$')
 STAGES = re.compile(r'<script type="application/json" id="maffs-calc-stages">(.*?)</script>', re.S)
 
 
-def expected_calc(slug, field=None):
+CALC_ACROSS_PAPERS = {'i-found-a-mark': "exam technique (AO3): applies on every paper; roster Calculator field stays untagged (Jon, 30 Oct 2026)"}
+
+
+def expected_calc(slug, field=None, exceptions=CALC_ACROSS_PAPERS):
     """What the card's data-calc must be, from the roster's Calculator field (own reader, not the page)."""
     if field is None:
         for line in read(ROSTER).splitlines():
             m = ROW.match(line)
             if m and m.group(1) == slug:
                 field = m.group(2)
+    if slug in exceptions:
+        if field != 'untagged':
+            raise ValueError('%s: in CALC_ACROSS_PAPERS but the roster tags it %s: remove the exception' % (slug, field))
+        return 'both'
     if field == 'not allowed':
         return 'non-calc'
     if field in ('required', 'scientific'):
@@ -91,7 +99,7 @@ ALL_SLUGS = [s for s, _ in CARDS]
 TOPIC_OF = dict(CARDS)
 
 
-def static_check(src):
+def static_check(src, exceptions=CALC_ACROSS_PAPERS):
     """Failure strings for the page source."""
     out = []
     secs = re.findall(r'<section class="topic" id="([a-z]+)">(.*?)</section>', src, re.S)
@@ -110,7 +118,11 @@ def static_check(src):
             elif t.group(1) != sid:
                 out.append('%s: data-topic %r does not match its section %r' % (name, t.group(1), sid))
             c = re.search(r'\bdata-calc="([^"]*)"', attrs)
-            want = expected_calc(name)
+            try:
+                want = expected_calc(name, exceptions=exceptions)
+            except ValueError as e:
+                out.append(str(e))
+                want = None
             if want is None:
                 out.append('%s: the roster Calculator field is untagged (or the game is not in the roster)' % name)
             if not c:
@@ -120,7 +132,7 @@ def static_check(src):
             elif want and c.group(1) != want:
                 out.append('%s: data-calc %r, but the roster says %r' % (name, c.group(1), want))
     if total != len(re.findall(r'<a class="card"', src)):
-        out.append('a card sits outside the six sections')
+        out.append('a card sits outside the topic sections')
     if total < 30:
         out.append('only %d cards found; the page changed shape and this check is blind' % total)
     return out
@@ -180,13 +192,18 @@ def check_behaviour(base, out, sources=None, only=None):
                     out.append('load: %d of %d cards shown with no filter' % (c0['shown'], c0['total']))
                 if page.evaluate('window.__ev.length'):
                     out.append('load: an event fired on load: %s' % page.evaluate('window.__ev'))
-                if page.locator('.cf-chip').count() != 10:
-                    out.append('load: %d chips, expected All plus six topics and All plus two calculator chips' % page.locator('.cf-chip').count())
+                expected = 1 + len(TOPICS) + 1 + 2
+                if page.locator('.cf-chip').count() != expected:
+                    out.append('load: %d chips, expected All plus %d topics and All plus two calculator chips (%d)' % (page.locator('.cf-chip').count(), len(TOPICS), expected))
                 labels = page.locator('.cf-chip[data-cf-group="calc"]').all_inner_texts()
                 if labels != ['All', 'Likely non-calculator', 'Likely calculator']:
                     out.append('load: the calculator chips read %s (guidance, so "Likely ...")' % labels)
             if want('topics'):
                 for t in TOPICS:
+                    n = page.locator('.cf-chip[data-cf-group="topic"][data-cf-key="%s"]' % t).count()
+                    if n != 1:
+                        out.append('topic %s: %d chips with data-cf-key=%r (expected exactly 1)' % (t, n, t))
+                        continue
                     chip(page, t)
                     c = page.evaluate(COUNTS)
                     expect = page.evaluate("t => document.querySelectorAll('section#' + t + ' a.card').length", t)
@@ -197,7 +214,7 @@ def check_behaviour(base, out, sources=None, only=None):
                         out.append('topic %s: count says %r' % (t, c['count']))
                 chip(page, 'all')
                 c = page.evaluate(COUNTS)
-                if c['shown'] != c['total'] or len(c['secs']) != 6:
+                if c['shown'] != c['total'] or len(c['secs']) != len(TOPICS):
                     out.append('All: %d of %d cards, %d sections' % (c['shown'], c['total'], len(c['secs'])))
             if want('calc'):
                 for key in ('non-calculator', 'calculator'):
@@ -429,6 +446,11 @@ PLANTS = [
     ('the bar is not sticky', ('fit',), lambda: mutate_css('position: sticky;', 'position: static;'), r'not stuck to the top'),
     ('the bar wrapper clips the sticky bar', ('fit',), lambda: mutate_css('[data-card-filter] { display: contents; }', '[data-card-filter] { display: block; }'), r'not stuck to the top'),
     ('an event fires on load', ('load',), lambda: mutate_js('    ready = true;', "    ready = true; report('load');"), r'load: an event fired'),
+    ('the exception removed', 'static', lambda: (read(PAGE), {}), r'i-found-a-mark: the roster Calculator field is untagged'),
+    ('the exception given the wrong value', 'static', lambda: mutate_page('data-topic="technique" data-calc="both"', 'data-topic="technique" data-calc="calc"'), r'i-found-a-mark: data-calc .calc., but'),
+    ('the exception overriding a real tag', 'static', lambda: (read(PAGE), dict(CALC_ACROSS_PAPERS, **{'distinctly-average': 'planted'})), r'distinctly-average: in CALC_ACROSS_PAPERS but the roster tags it'),
+    ('the technique card in the wrong section', 'static', lambda: mutate_page('data-topic="technique"', 'data-topic="number"'), r'does not match its section'),
+    ('the technique chip missing', ('topics',), lambda: {'page': mutate_page("{ key: 'technique', label: 'Exam technique' }", '')}, r"topic technique: 0 chips with data-cf-key='technique'"),
 ]
 
 
@@ -436,7 +458,8 @@ def run_plant(base, p):
     what, kind, make, want = p
     out = []
     if kind == 'static':
-        out = static_check(make())
+        made = make()
+        out = static_check(*made) if isinstance(made, tuple) else static_check(made)
     elif kind == ('fit',):
         check_fit(base, (375, 667), out, sources=make())
     else:

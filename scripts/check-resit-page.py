@@ -45,6 +45,9 @@ PAGE = "essentials/index.html"
 # contract TAKE-A-WALK-LIST): Geometry and measures, after just-pythag-it-bruv; it picks a stage, never a level, so "One level".
 # squared-squirrel added 24 Oct 2026 (Jon approved it after playing it; Jon's listing contract of 24 Oct): Ratio, proportion and
 # percentages, after percentage-flip; it too picks a stage, never a level, so "One level".
+# who-ate-all-the-pies added 30 Oct 2026 (Jon approved it after playing it; contract LIST-TWO): Statistics, S2, one level.
+# i-found-a-mark added 30 Oct 2026 (same): its own section, Exam technique, because its primary mapping is assessment
+# objective AO3, not a topic; it covers a growing range of GCSE topics; also pinned as a featured card.
 SUITE = [
     ("number", "Number", ["six-sevens-bruv", "free-daily-pizza", "how-many-parts", "negative-number-line",
         "decimal-detective", "think-of-a-number", "factor-race", "prime-factorisation",
@@ -56,7 +59,8 @@ SUITE = [
     ("geometry", "Geometry and measures", ["new-shapes", "angle-ace", "shape-shifter", "just-pythag-it-bruv", "take-a-walk"]),
     ("probability", "Probability", ["probability-pioneer", "expected-damage", "given-that"]),
     ("statistics", "Statistics", ["distinctly-average", "stat-attack", "chart-interrogator",
-        "correlation-or-coincidence"]),
+        "correlation-or-coincidence", "who-ate-all-the-pies"]),
+    ("technique", "Exam technique", ["i-found-a-mark"]),
 ]
 # Jon, 3 Oct 2026: never on the page. prime-or-composite runs to 9,973 (todo: needs a
 # Foundation-range option to join); bearings are out as a topic.
@@ -100,6 +104,8 @@ def spec_module(root):
 
 
 def expected_spec(refs):
+    if refs and all(r.startswith("GCSE Assessment Objectives: ") for r in refs):
+        return "GCSE assessment objective" + ("s" if len(refs) > 1 else "") + ": " + ", ".join(r.split(": ", 1)[1] for r in refs)
     gcse = [r.split(": ", 1)[1] for r in refs if r.startswith("GCSE Mathematics: ")]
     if gcse:
         return "GCSE spec: " + ", ".join(gcse)
@@ -241,6 +247,13 @@ def selftest(page, portal, refs, game_src):
                                                '/games/estimation-golf/?level=year6" data-mfg-item="estimation-golf" data-slug="estimation-golf" data-kind="choose" data-label="Starter" data-key="year6"').replace("Choose: Foundation</span>\n</a>\n<a class=\"card\" href=\"/games/unit-converter", "Choose: Starter</span>\n</a>\n<a class=\"card\" href=\"/games/unit-converter"),
         "a section renamed": page.replace("<h2>Probability</h2>", "<h2>Chance</h2>"),
     }
+    faults.update({
+        "an AO card written as a topic": page.replace("GCSE assessment objective: AO3", "GCSE spec: AO3", 1),
+        "an AO card with the old fallback wording": page.replace("GCSE assessment objective: AO3", "Spec map: GCSE Assessment Objectives AO3 (no GCSE reference on the map)", 1),
+        "a new card removed": re.sub(r'<a class="card" href="/games/who-ate-all-the-pies/.*?</a>', "", page, count=1, flags=re.S),
+        "the technique section renamed": page.replace("<h2>Exam technique</h2>", "<h2>Exam skills</h2>", 1),
+        "a topic game given the AO wording": page.replace("GCSE spec: S2", "GCSE assessment objective: S2", 1),
+    })
     for slug in WITHDRAWN:   # while any game is withdrawn, adding one back must fail
         faults["a withdrawn game added back (%s)" % slug] = page.replace("</main>", '<a href="/games/%s/">x</a></main>' % slug)
     for slug in UNLISTED:    # while any game is unlisted, adding one back must fail
