@@ -1,5 +1,5 @@
 {
- "as_of": "2026-10-30T11:36:20Z",
+ "as_of": "2026-10-30T17:10:36Z",
  "games": {
   "52dle": 11,
   "angle-ace": 5,
@@ -51,7 +51,7 @@
   "given-that": 53,
   "graph-transformer": 47,
   "growth-and-decay": 24,
-  "hc-factor": 1,
+  "hc-factor": 3,
   "higher-power": 80,
   "how-many-parts": 27,
   "i-found-a-mark": 26,
@@ -107,5 +107,5 @@
   "y-so-steep": 13
  },
  "since": "2026-09-01",
- "total": 18217
+ "total": 18219
 }
