@@ -1,7 +1,7 @@
 # MaffsGames — CLAUDE.md
 
 ## Project Overview
-Free curriculum-aligned maths games for UK schools. 99 games, The 6 P's (listed 27 Oct 2026 as the 100th item on the portal) and thirteen escape rooms live (Regression Rumble withdrawn 30 Sep 2026 pending a data rebuild). Separate from MathsWins (mathswins.co.uk).
+Free curriculum-aligned maths games for UK schools. 101 games, The 6 P's (listed 27 Oct 2026 as the 100th item on the portal) and thirteen escape rooms live (Regression Rumble withdrawn 30 Sep 2026 pending a data rebuild). Separate from MathsWins (mathswins.co.uk).
 
 - **Repo:** https://github.com/OrthogonalMaffs/maffsgames
 - **Live site:** maffsgames.co.uk (GitHub Pages)
@@ -108,7 +108,7 @@ Two sessions may run side by side. They stay out of each other's files:
   reported-not-failed exemption holds only for games in the roster's Unlisted section, so no time bound is needed.
 
 ## Reference Files
-- Full game roster (99 games, plus 1 withdrawn): see `.claude/rules/game-roster.md`
+- Full game roster (101 games, plus 1 withdrawn): see `.claude/rules/game-roster.md`
 - Help/instructions audit: see `.claude/rules/help-audit.md`
 - Timer policy (countdown/hidden/none): see `.claude/rules/timer-policy.md`
 - Analytics events & dual logging: see `.claude/rules/analytics.md`

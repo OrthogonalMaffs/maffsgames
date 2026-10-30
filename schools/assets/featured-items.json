@@ -10,6 +10,22 @@
       "facts": ["Six topics a go", "Five questions each", "Worked answers", "Free, no sign-up"],
       "href": "/the-6-ps/",
       "cta": "Start The 6 P\u2019s"
+    },
+    {
+      "id": "i-found-a-mark",
+      "pages": [
+        "essentials"
+      ],
+      "flag": "New · Exam technique",
+      "title": "I Found a Mark",
+      "lede": "Big exam questions, broken into the steps a marker gives credit for. Bank the method marks, even when the final answer goes wrong.",
+      "facts": [
+        "Real 4-mark questions",
+        "Method marks, not just answers",
+        "Free, no sign-up"
+      ],
+      "href": "/games/i-found-a-mark/",
+      "cta": "Start banking marks"
     }
   ]
 }
