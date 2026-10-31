@@ -1,5 +1,5 @@
 {
- "as_of": "2026-10-31T16:19:00Z",
+ "as_of": "2026-10-31T20:39:54Z",
  "games": {
   "52dle": 11,
   "angle-ace": 5,
@@ -37,7 +37,7 @@
   "escape-roll-for-initiative": 1,
   "escape-rugby-mud": 210,
   "estimation-engine": 37,
-  "estimation-golf": 309,
+  "estimation-golf": 312,
   "expected-damage": 10,
   "factor-race": 1569,
   "factor-theorem": 3,
@@ -79,14 +79,14 @@
   "proportion-blaster": 2,
   "quadratic-factoriser": 96,
   "screening-room": 4,
-  "sequence-solver": 214,
+  "sequence-solver": 223,
   "seven-bridges": 310,
   "shape-shifter": 5,
   "simultaneous-solver": 59,
   "six-sevens-bruv": 4013,
   "split-it": 288,
   "spot-the-error": 13,
-  "spot-the-muppet": 39,
+  "spot-the-muppet": 40,
   "squared-squirrel": 38,
   "standard-form-blitz": 296,
   "surd-simplifier": 237,
@@ -107,5 +107,5 @@
   "y-so-steep": 13
  },
  "since": "2026-09-01",
- "total": 18230
+ "total": 18243
 }
