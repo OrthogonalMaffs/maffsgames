@@ -26,7 +26,7 @@ exceptions are the Codex-specific rules listed under "Codex overrides" below.** 
 - Edit files with apply_patch. Never pipe an edit script to Python, or pass file text as command-line
   arguments, from PowerShell. Run Python as `python -X utf8`. After any edit touching non-ASCII text, verify
   the changed lines by reading the file as UTF-8 in Python, never by eye in console output. (ENCODING, 30 Oct 2026: "–" became "?".)
-- Start: `git fetch`, then `git worktree add -b codex/<task> <path> origin/main`. Work only there.
+- Start: run `python -X utf8 <current-copy>/start-task.py <task> --agent codex` with escalation (Git safety §2). Work only in the printed path.
   Never pull or merge into the primary checkout or an existing branch.
 - Before the first edit, `git status --porcelain` in your worktree is empty. If not, stop.
 - Before the first push: `python scripts/check-changed.py`.

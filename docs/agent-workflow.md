@@ -212,7 +212,7 @@ of 29 Oct), Tier: Small, Lane: home.
 **Jon** pastes it into Codex, started in the home lane's slot.
 
 **Codex** reads `AGENTS.md`, then `CLAUDE.md`, canon §0 and §11.1, `docs/handover/home.md`, the notes file.
-`git fetch`; `git worktree add -b codex/docs-reconcile ..\mg-docs-reconcile origin/main`. It checks the contract:
+`python -X utf8 <current-copy>/start-task.py docs-reconcile --agent codex` (Git safety §2). It checks the contract:
 §11.1 agrees with the page's 13 cards (STOP IF does not fire). It edits the two canon places, the Firebase
 paragraph with the exact text given, adds the deferred item, runs `python scripts/check-changed.py` (docs-only:
 no verifiers selected; site-wide fast checks pass), pushes, opens PR #6xx with the contract and report.
@@ -233,7 +233,7 @@ the given text exactly; no other canon section changed. Report matches diff. **A
 
 ## Git safety
 
-**Interim, until the launcher and git wrapper exist (Jon, 30 Oct 2026):** Jon creates each Codex worktree from a normal terminal; Codex's git add, commit and push run on approval prompts that Jon checks name the task's worktree; Jon runs end-task.py outside Codex (from a temporary copy of origin/main's script) after closing Codex, because the sandbox cannot write git metadata and a running Codex session locks its folder.
+**Startup (START-TASK, Jon, 1 Nov 2026):** Codex runs `start-task.py` with escalation as its first mutating command, on one approval prompt naming the script and task; the script checks and creates the worktree. Codex's git add, commit and push run on approval prompts that Jon checks name the task's worktree; Jon runs end-task.py outside Codex (from a temporary copy of origin/main's script) after closing Codex, because the sandbox cannot write git metadata and a running Codex session locks its folder.
 
 The rules here already exist in `CLAUDE.md`; this section explains how they fit together and what changes for
 Codex. Where `CLAUDE.md` and this section differ, `CLAUDE.md` wins and this section is fixed.
@@ -248,14 +248,24 @@ Codex. Where `CLAUDE.md` and this section differ, `CLAUDE.md` wins and this sect
 
 ## 2. Start of task
 
-From the primary (shell-neutral; these work in PowerShell, Git Bash and WSL):
+From the primary or one of its worktrees, run the current `scripts/start-task.py`:
 
 ```
-git -C E:\jon\maffsgames-new-clone fetch
-git -C E:\jon\maffsgames-new-clone worktree add -b codex/<task> E:\jon\mg-<task> origin/main
+python -X utf8 <current-copy>/start-task.py <task> --agent codex
 ```
 
-Then work only inside `E:\jon\mg-<task>`. Never `pull` or `merge` into the primary or an existing branch: on
+Use `--agent claude` for Claude Code. `<current-copy>` means the script from fresh `origin/main`, using a
+temporary copy if the deliberately old primary has no script; do not pull into the primary to obtain it.
+Codex runs this command with escalation, on one approval prompt naming `start-task.py` and `<task>`.
+The script resolves the primary from the common Git directory and accepts only `E:\jon\maffsgames-new-clone`;
+it validates the task, fetches origin, refuses an existing local/remote branch or target folder, and requires
+main's latest full `check-site` run and all its jobs to be green. Only then does it create the worktree from
+`origin/main`, verify a clean status and matching HEAD, and print the path and launch line. A refusal names
+the reason. Fetch refreshes origin refs; the script never edits an existing working tree or local branch,
+and never removes, resets, stashes or cleans anything. If creation/verification fails, it reports and leaves
+the state for inspection; cleanup requires its own separate authorisation.
+
+Then work only inside the printed `E:\jon\mg-<task>` path. Never `pull` or `merge` into the primary or an existing branch: on
 11 Oct 2026 that fast-forwarded the wrong branch (`CLAUDE.md`, ESCAPE-SET-CHECKS).
 
 **The tree is not yours.** Before the first edit, `git status --porcelain` in the worktree must be empty. If it
@@ -337,18 +347,14 @@ is dirty with changes nobody can explain, stop and ask.
 
 ## 8. What changes for Codex (pilot check 3)
 
-Codex's `workspace-write` sandbox limits writes to the folder it starts in. Two consequences, **both untested**:
+**Chosen: option 1, implementer's first approved command (START-TASK, 1 Nov 2026).** Run `start-task.py` as
+Git safety §2 specifies. Codex creates its own worktree on one escalation approval, then works only there;
+subsequent sessions use the printed launch line. Commits and pushes still need their own approval when the
+sandbox requires it. Creation needs escalation because it writes both the sibling folder and the primary's
+`.git\worktrees`; commits write the primary's objects and refs too.
 
-- **Creating a worktree** writes a sibling folder and the primary's `.git\worktrees\` — both outside a worktree.
-- **Committing from a linked worktree** writes objects and refs into the primary's `.git` — outside the worktree.
-
-Options, to choose from the pilot's evidence:
-
-1. Jon (or the implementer's first approved command) creates the worktree; Codex starts **inside** it; commits and
-   pushes run with approval (`--ask-for-approval on-request`). Most contained; more prompts.
-2. Codex starts in `E:\jon` with `workspace-write`, so every worktree and the primary are inside its workspace.
-   Fewer prompts; the sandbox no longer protects other lanes' worktrees — the instructions do.
-3. Add the primary's `.git` as an extra writable root, if the installed Codex supports it. To be verified in the
-   docs for the installed version before relying on it.
+**Why:** the checked script confines creation to a new task branch/folder and refuses unsafe starts, while
+`workspace-write` continues to protect other lanes. No broad `E:\jon` workspace or writable-root expansion
+is needed. Cleanup keeps its separate authorisation and the interim cleanup procedure above is unchanged.
 
 **Not an option:** `danger-full-access` as routine.

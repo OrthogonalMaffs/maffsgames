@@ -203,8 +203,8 @@ is always the wrong answer. If it is not, say why the bug is local and fix it lo
 
 ### Start of task: a new worktree from origin/main (ESCAPE-SET-CHECKS, 11 Oct 2026)
 
-Every task starts with `git fetch`, then `git worktree add -b claude/<task> <path> origin/main`, and works
-only there. **Never pull or merge into the primary worktree or into an existing branch**, a contract's "pull
+Run `python -X utf8 <current-copy>/start-task.py <task> --agent claude` (workflow Git safety §2); work only there.
+**Never pull or merge into the primary worktree or into an existing branch**, a contract's "pull
 origin/main" included: that is what the fetch and the new worktree do.
 Reason and reference: canon §12, Start of task: a new worktree from origin/main (ESCAPE-SET-CHECKS, 11 Oct 2026) (CONTEXT-SLIM).
 
