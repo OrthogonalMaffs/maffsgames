@@ -97,10 +97,15 @@ Two sessions may run side by side. They stay out of each other's files:
   reported-not-failed exemption holds only for games in the roster's Unlisted section, so no time bound is needed.
 
 ## Reference Files
-Reason and reference: canon §12, Reference Files (CONTEXT-SLIM).
+- Full game roster (101 games, plus 1 withdrawn): see `.claude/rules/game-roster.md`
+- Help/instructions audit: see `.claude/rules/help-audit.md`
+- Timer policy (countdown/hidden/none): see `.claude/rules/timer-policy.md`
+- Analytics events & dual logging: see `.claude/rules/analytics.md`
+- Running to-do list: docs/todo.md
 
 ### Improvement ideas — two lists, deliberately separate
-- Nothing in it is scheduled.
+- `docs/idea-backlog-2026-08.md` — **Gemini's suggestions**, logged unagreed, each with a
+  cross-ref against the roster and the Dashboard. Nothing in it is scheduled.
 - `docs/jon-playtest-2026-08.md` — **Jon's own play-testing.** First-hand and much stronger
   evidence than the above. He samples games through the day; new findings go here, not in the
   Gemini file. Where they touch the same game, the entry says which supersedes which.
@@ -130,8 +135,7 @@ Reason and reference: canon §12, Tech Stack (CONTEXT-SLIM).
 - `scripts/` require Python >= 3.10 (`write_text` `newline=`); CI pins 3.12 and `scripts/check-python-version.py` holds it
 
 ## Background processes: start them with `scripts/bg.py` (Jon, 14 Oct 2026, contract BG-LAUNCHER)
-Reason and reference: canon §12, Background processes: start them with `scripts/bg.py` (Jon, 14 Oct 2026, contract BG-LAUNCHER) (CONTEXT-SLIM).
-Start every such process through `python scripts/bg.py -- <command>`, never a raw `&` or `nohup` shell: it records the PID in `<worktree>/.claude/pids.json` (gitignored), and `scripts/end-task.py` stops what was registered, with its children, before it removes the worktree, then reports (without killing) any unregistered process whose command line holds the worktree path. **Not covered:** the harness's own background shells (the Bash tool's `run_in_background`); stop those with the harness (`/tasks`).
+A server or a long-running loop a session starts in the background outlives the session (orphans from four days were found on 14 Oct) and can make worktree removal fail with "Permission denied". Start every such process through `python scripts/bg.py -- <command>`, never a raw `&` or `nohup` shell: it records the PID in `<worktree>/.claude/pids.json` (gitignored), and `scripts/end-task.py` stops what was registered, with its children, before it removes the worktree, then reports (without killing) any unregistered process whose command line holds the worktree path. **Not covered:** the harness's own background shells (the Bash tool's `run_in_background`); stop those with the harness (`/tasks`).
 
 ## Session practice (Jon, 8 Oct 2026, contract CTX)
 
@@ -142,8 +146,8 @@ Start every such process through `python scripts/bg.py -- <command>`, never a ra
 
 ## Escape rooms: no art field, no request (Jon, 10 Oct 2026, contract ART-PENDING)
 
-Reason and reference: canon §12, Escape rooms: no art field, no request (Jon, 10 Oct 2026, contract ART-PENDING) (CONTEXT-SLIM).
-Add `art` with the pictures, never before. Never relax the 404
+A room built before its pictures has no top-level `art:` in its `room.js`, so the engine requests no scene, fail
+or win picture (no 404 for check-site's tier 1). Add `art` with the pictures, never before. Never relax the 404
 rule or allowlist a missing picture. Detail: `docs/escape-room-voice-rewrite.md` §6.
 
 ## Contracts arrive whole (Jon, 8 Oct 2026, contract CTX)
@@ -152,10 +156,14 @@ Jon never amends contracts: PC sends complete pastes.
 
 ## Where things live (read on demand, not every session)
 
+- **Canon** `docs/canon.md`: the rules. §0.3 standing rulings, §0.4 findings register, §7 technical reference
+  (§7.6 Next and MaffsLock, §7.8 CI and the two lanes), §11 escape rooms, **§12 engineering reference** (moved
+  from this file: `check-site.py` tiers 1-4, no rejection sampling, `MaffsOptions.build()`, generator ranges,
+  scaffolds, accessibility, tiered banks, level colours, the Firebase leaderboard).
+- **Handovers** `docs/handover/home.md`, `docs/handover/cloud.md`: current state and the last three entries.
+- **Register** `docs/audits/findings/<slug>.yml` (one per game); `docs/audits/REGISTER.md` is generated.
+- **Roster** `.claude/rules/game-roster.md`. **To-do** `docs/todo.md`.
 Reason and reference: canon §12, Where things live (read on demand, not every session) (CONTEXT-SLIM).
-- **Archives** (history only, never loaded by default): `docs/history/claude-md-archive.md` (this file's dated
-  handovers and state sections to 7 Oct 2026, and the reference sections canon already holds),
-  `docs/history/handover-home-archive.md`, `docs/history/handover-cloud-archive.md`.
 - **Size limit:** `scripts/check-context-size.py` fails CI if this file or either handover passes 20 KB.
 
 ## Task Contract
