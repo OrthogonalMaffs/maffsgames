@@ -85,6 +85,14 @@ canvas{display:block;width:100%;height:auto}
 .success-msg.show{display:block;animation:fadeIn .3s}
 .success-msg h3{color:var(--primary);font-size:1rem;margin-bottom:.3rem}
 .success-msg p{font-size:.82rem;color:var(--muted)}
+.explanation-step{text-align:left;margin-top:.6rem;font-size:.82rem;line-height:1.4}
+.explanation-step strong{display:block;color:var(--text)}
+.explanation-step .katex{font-size:1em}
+@media(max-width:600px){
+  .success-msg.show{position:fixed;z-index:30;left:4px;right:4px;top:4px;padding:.5rem;background:var(--surface);max-height:calc(100dvh - 48px);overflow:auto}
+  .success-msg .explanation-step{font-size:.75rem;line-height:1.2;margin-top:.35rem}
+  .success-msg .next-btn{min-height:44px}
+}
 .success-msg .next-btn{display:inline-block;margin-top:.5rem;padding:.4rem 1.2rem;border:none;border-radius:8px;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
@@ -169,7 +177,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
     </div>
     <div class="success-msg" id="successMsg">
       <h3 id="successTitle">Matched!</h3>
-      <p id="successText"></p>
+      <div id="successText"></div>
       <button class="next-btn" id="matchNext" onclick="nextFromMatch()">Next Puzzle →</button>
       <div id="skipNext"></div>
     </div>
@@ -216,58 +224,58 @@ function generatePuzzles(){
   const p=[];
   if(level==='gcse'){
     // GCSE: translations and reflections only
-    p.push({base:'x²',target:{a:1,b:1,h:3,k:0},par:1,desc:'Translate right 3'});
-    p.push({base:'x²',target:{a:1,b:1,h:-2,k:0},par:1,desc:'Translate left 2'});
-    p.push({base:'x²',target:{a:1,b:1,h:0,k:4},par:1,desc:'Translate up 4'});
-    p.push({base:'x²',target:{a:1,b:1,h:0,k:-3},par:1,desc:'Translate down 3'});
-    p.push({base:'x²',target:{a:1,b:1,h:2,k:3},par:2,desc:'Translate right 2, up 3'});
-    p.push({base:'x²',target:{a:1,b:1,h:-1,k:-2},par:2,desc:'Translate left 1, down 2'});
-    p.push({base:'x²',target:{a:-1,b:1,h:0,k:0},par:1,desc:'Reflect in x-axis'});
-    p.push({base:'x²',target:{a:-1,b:1,h:2,k:0},par:2,desc:'Reflect in x-axis, translate right 2'});
-    p.push({base:'x²',target:{a:-1,b:1,h:0,k:3},par:2,desc:'Reflect in x-axis, translate up 3'});
-    p.push({base:'x³',target:{a:1,b:1,h:2,k:0},par:1,desc:'Translate right 2'});
-    p.push({base:'x³',target:{a:-1,b:1,h:0,k:0},par:1,desc:'Reflect in x-axis'});
-    p.push({base:'x³',target:{a:1,b:-1,h:0,k:0},par:1,desc:'Reflect in y-axis'});
-    p.push({base:'x³',target:{a:1,b:1,h:-1,k:2},par:2,desc:'Translate left 1, up 2'});
-    p.push({base:'sin x',target:{a:1,b:1,h:0,k:2},par:1,desc:'Translate up 2'});
-    p.push({base:'sin x',target:{a:-1,b:1,h:0,k:0},par:1,desc:'Reflect in x-axis'});
-    p.push({base:'1/x',target:{a:1,b:1,h:2,k:0},par:1,desc:'Translate right 2'});
-    p.push({base:'1/x',target:{a:1,b:1,h:0,k:1},par:1,desc:'Translate up 1'});
-    p.push({base:'1/x',target:{a:1,b:1,h:-1,k:2},par:2,desc:'Translate left 1, up 2'});
-    p.push({base:'√x',target:{a:1,b:1,h:0,k:-1},par:1,desc:'Translate down 1'});
-    p.push({base:'√x',target:{a:-1,b:1,h:0,k:0},par:1,desc:'Reflect in x-axis'});
-    p.push({base:'x²',target:{a:-1,b:1,h:3,k:2},par:3,desc:'Reflect, right 3, up 2'});
-    p.push({base:'sin x',target:{a:1,b:1,h:1,k:-1},par:2,desc:'Translate right 1, down 1'});
-    p.push({base:'x²',target:{a:1,b:1,h:-3,k:4},par:2,desc:'Left 3, up 4'});
-    p.push({base:'x³',target:{a:-1,b:1,h:1,k:-2},par:3,desc:'Reflect, right 1, down 2'});
-    p.push({base:'eˣ',target:{a:1,b:1,h:0,k:-1},par:1,desc:'Translate down 1'});
+    p.push({base:'x²',target:{a:1,b:1,h:3,k:0},par:1});
+    p.push({base:'x²',target:{a:1,b:1,h:-2,k:0},par:1});
+    p.push({base:'x²',target:{a:1,b:1,h:0,k:4},par:1});
+    p.push({base:'x²',target:{a:1,b:1,h:0,k:-3},par:1});
+    p.push({base:'x²',target:{a:1,b:1,h:2,k:3},par:2});
+    p.push({base:'x²',target:{a:1,b:1,h:-1,k:-2},par:2});
+    p.push({base:'x²',target:{a:-1,b:1,h:0,k:0},par:1});
+    p.push({base:'x²',target:{a:-1,b:1,h:2,k:0},par:2});
+    p.push({base:'x²',target:{a:-1,b:1,h:0,k:3},par:2});
+    p.push({base:'x³',target:{a:1,b:1,h:2,k:0},par:1});
+    p.push({base:'x³',target:{a:-1,b:1,h:0,k:0},par:1});
+    p.push({base:'x³',target:{a:1,b:-1,h:0,k:0},par:1});
+    p.push({base:'x³',target:{a:1,b:1,h:-1,k:2},par:2});
+    p.push({base:'sin x',target:{a:1,b:1,h:0,k:2},par:1});
+    p.push({base:'sin x',target:{a:-1,b:1,h:0,k:0},par:1});
+    p.push({base:'1/x',target:{a:1,b:1,h:2,k:0},par:1});
+    p.push({base:'1/x',target:{a:1,b:1,h:0,k:1},par:1});
+    p.push({base:'1/x',target:{a:1,b:1,h:-1,k:2},par:2});
+    p.push({base:'√x',target:{a:1,b:1,h:0,k:-1},par:1});
+    p.push({base:'√x',target:{a:-1,b:1,h:0,k:0},par:1});
+    p.push({base:'x²',target:{a:-1,b:1,h:3,k:2},par:3});
+    p.push({base:'sin x',target:{a:1,b:1,h:1,k:-1},par:2});
+    p.push({base:'x²',target:{a:1,b:1,h:-3,k:4},par:2});
+    p.push({base:'x³',target:{a:-1,b:1,h:1,k:-2},par:3});
+    p.push({base:'eˣ',target:{a:1,b:1,h:0,k:-1},par:1});
   } else {
     // A-Level: all transforms including stretches
-    p.push({base:'x²',target:{a:2,b:1,h:0,k:0},par:1,desc:'Stretch ×2 in y'});
-    p.push({base:'x²',target:{a:1,b:2,h:0,k:0},par:1,desc:'Stretch ×½ in x'});
-    p.push({base:'x²',target:{a:1,b:0.5,h:0,k:0},par:1,desc:'Stretch ×2 in x'});
-    p.push({base:'x²',target:{a:2,b:1,h:1,k:0},par:2,desc:'Stretch ×2 in y, right 1'});
-    p.push({base:'x²',target:{a:1,b:1,h:2,k:3},par:2,desc:'Right 2, up 3'});
-    p.push({base:'x²',target:{a:-1,b:1,h:0,k:4},par:2,desc:'Reflect x, up 4'});
-    p.push({base:'x²',target:{a:2,b:1,h:-1,k:2},par:3,desc:'Stretch ×2 y, left 1, up 2'});
-    p.push({base:'sin x',target:{a:2,b:1,h:0,k:0},par:1,desc:'Stretch ×2 in y'});
-    p.push({base:'sin x',target:{a:1,b:2,h:0,k:0},par:1,desc:'Stretch ×½ in x (double freq)'});
-    p.push({base:'sin x',target:{a:1,b:0.5,h:0,k:0},par:1,desc:'Stretch ×2 in x (half freq)'});
-    p.push({base:'sin x',target:{a:2,b:1,h:0,k:1},par:2,desc:'Stretch ×2 y, up 1'});
-    p.push({base:'sin x',target:{a:-1,b:2,h:0,k:0},par:2,desc:'Reflect x, double freq'});
-    p.push({base:'x³',target:{a:0.5,b:1,h:0,k:0},par:1,desc:'Stretch ×½ in y'});
-    p.push({base:'x³',target:{a:1,b:1,h:1,k:-1},par:2,desc:'Right 1, down 1'});
-    p.push({base:'x³',target:{a:-1,b:1,h:2,k:0},par:2,desc:'Reflect x, right 2'});
-    p.push({base:'eˣ',target:{a:1,b:1,h:0,k:-1},par:1,desc:'Down 1 (asymptote y=−1)'});
-    p.push({base:'eˣ',target:{a:2,b:1,h:0,k:0},par:1,desc:'Stretch ×2 in y'});
-    p.push({base:'eˣ',target:{a:1,b:-1,h:0,k:0},par:1,desc:'Reflect in y (decay curve)'});
-    p.push({base:'eˣ',target:{a:-1,b:1,h:0,k:2},par:2,desc:'Reflect x, up 2'});
-    p.push({base:'1/x',target:{a:2,b:1,h:0,k:0},par:1,desc:'Stretch ×2 in y'});
-    p.push({base:'1/x',target:{a:1,b:1,h:1,k:1},par:2,desc:'Right 1, up 1'});
-    p.push({base:'√x',target:{a:2,b:1,h:0,k:0},par:1,desc:'Stretch ×2 in y'});
-    p.push({base:'√x',target:{a:1,b:1,h:-2,k:1},par:2,desc:'Left 2, up 1'});
-    p.push({base:'x²',target:{a:-2,b:1,h:1,k:3},par:4,desc:'Stretch ×2 y, reflect, right 1, up 3'});
-    p.push({base:'sin x',target:{a:2,b:2,h:0,k:-1},par:3,desc:'Amp 2, freq 2, down 1'});
+    p.push({base:'x²',target:{a:2,b:1,h:0,k:0},par:1});
+    p.push({base:'x²',target:{a:1,b:2,h:0,k:0},par:1});
+    p.push({base:'x²',target:{a:1,b:0.5,h:0,k:0},par:1});
+    p.push({base:'x²',target:{a:2,b:1,h:1,k:0},par:2});
+    p.push({base:'x²',target:{a:1,b:1,h:2,k:3},par:2});
+    p.push({base:'x²',target:{a:-1,b:1,h:0,k:4},par:2});
+    p.push({base:'x²',target:{a:2,b:1,h:-1,k:2},par:3});
+    p.push({base:'sin x',target:{a:2,b:1,h:0,k:0},par:1});
+    p.push({base:'sin x',target:{a:1,b:2,h:0,k:0},par:1});
+    p.push({base:'sin x',target:{a:1,b:0.5,h:0,k:0},par:1});
+    p.push({base:'sin x',target:{a:2,b:1,h:0,k:1},par:2});
+    p.push({base:'sin x',target:{a:-1,b:2,h:0,k:0},par:2});
+    p.push({base:'x³',target:{a:0.5,b:1,h:0,k:0},par:1});
+    p.push({base:'x³',target:{a:1,b:1,h:1,k:-1},par:2});
+    p.push({base:'x³',target:{a:-1,b:1,h:2,k:0},par:2});
+    p.push({base:'eˣ',target:{a:1,b:1,h:0,k:-1},par:1});
+    p.push({base:'eˣ',target:{a:2,b:1,h:0,k:0},par:1});
+    p.push({base:'eˣ',target:{a:1,b:-1,h:0,k:0},par:1});
+    p.push({base:'eˣ',target:{a:-1,b:1,h:0,k:2},par:2});
+    p.push({base:'1/x',target:{a:2,b:1,h:0,k:0},par:1});
+    p.push({base:'1/x',target:{a:1,b:1,h:1,k:1},par:2});
+    p.push({base:'√x',target:{a:2,b:1,h:0,k:0},par:1});
+    p.push({base:'√x',target:{a:1,b:1,h:-2,k:1},par:2});
+    p.push({base:'x²',target:{a:-2,b:1,h:1,k:3},par:4});
+    p.push({base:'sin x',target:{a:2,b:2,h:0,k:-1},par:3});
   }
   return p;
 }
@@ -286,46 +294,80 @@ function yToCanvas(y){return H-(y-YMIN)/(YMAX-YMIN)*H}
 // Steps that change nothing are skipped.
 let ghostSteps=[],ghostIndex=-1;
 
-function buildGhostSteps(t){
+function buildGhostSteps(t,base=currentPuzzle.base){
   const steps=[];
   let cur={a:1,b:1,h:0,k:0};
   const push=(next,title,what,why)=>{
-    steps.push({state:{...next},title:title,what:what,why:why});
+    // Track one simple point through the same coordinate transformations.
+    const seed=base==='eˣ'?[0,1]:base==='1/x'?[1,1]:[0,0];
+    const point=st=>[(seed[0]/st.b)+st.h,st.a*seed[1]+st.k];
+    const label=base==='x²'?'Vertex':base==='x³'?'Origin point':base==='sin x'?'Zero crossing':base==='√x'?'Endpoint':'Reference point';
+    const coords=st=>'('+point(st).map(fmt).join(', ')+')';
+    steps.push({state:{...next},before:{...cur},title:title,what:what,why:why,
+      from:buildEquation(base,cur),to:buildEquation(base,next),
+      checkpoint:label+': '+coords(cur)+' → '+coords(next)+'.'});
     cur={...next};
   };
   // A factor of -1 is a reflection, not a stretch by a factor of 1 (graph-transformer-s1-001).
   if(Math.abs(t.b-1)>1e-9){
     const m=Math.abs(t.b);
     if(Math.abs(m-1)<1e-9)
-      push({...cur,b:t.b},'Reflection','Reflect in the y-axis',
+      push({...cur,b:t.b},'Reflection','Reflection in the y-axis',
         'The \u2212 sits inside the bracket: f(\u2212x) takes each point at x to \u2212x, so the curve flips across the y-axis.');
     else
       push({...cur,b:t.b},'Horizontal stretch',
-        (m>1?'Squash':'Stretch')+' horizontally by a factor of '+fmt(1/m)+(t.b<0?', and reflect in the y-axis':''),
+        'Stretch, scale factor '+fmt(1/m)+', parallel to the x-axis'+(t.b<0?'; Reflection in the y-axis':''),
         'The '+fmt(t.b)+' sits inside the bracket, so it does the opposite of what it looks like \u2014 f('+fmt(t.b)+'x) scales x by '+fmt(1/m)+(t.b<0?' and flips it across the y-axis':'')+'.');
   }
   if(Math.abs(t.h)>1e-9){
     push({...cur,h:t.h},'Horizontal shift',
-      'Move '+(t.h>0?'right':'left')+' '+fmt(Math.abs(t.h)),
+      'Translation by vector ('+fmt(t.h)+', 0)',
       t.h>0?'f(x \u2212 '+fmt(t.h)+') moves the curve RIGHT, not left. Subtracting inside the bracket shifts the positive way.'
            :'f(x + '+fmt(-t.h)+') moves the curve LEFT. Adding inside the bracket shifts the negative way.');
   }
   if(Math.abs(t.a-1)>1e-9){
     const m=Math.abs(t.a);
     if(Math.abs(m-1)<1e-9)
-      push({...cur,a:t.a},'Reflection','Reflect in the x-axis',
+      push({...cur,a:t.a},'Reflection','Reflection in the x-axis',
         'The \u2212 is outside the function: every y-value is multiplied by \u22121, so the curve flips across the x-axis.');
     else
       push({...cur,a:t.a},'Vertical stretch',
-        (m>1?'Stretch':'Squash')+' vertically by a factor of '+fmt(m)+(t.a<0?', and reflect in the x-axis':''),
+        'Stretch, scale factor '+fmt(m)+', parallel to the y-axis'+(t.a<0?'; Reflection in the x-axis':''),
         'This one is outside the function, so it behaves as you would expect \u2014 every y-value is multiplied by '+fmt(t.a)+'.');
   }
   if(Math.abs(t.k)>1e-9){
     push({...cur,k:t.k},'Vertical shift',
-      'Move '+(t.k>0?'up':'down')+' '+fmt(Math.abs(t.k)),
+      'Translation by vector (0, '+fmt(t.k)+')',
       'Also outside the function, so it also behaves normally \u2014 '+(t.k>0?'+ '+fmt(t.k)+' raises':'\u2212 '+fmt(-t.k)+' lowers')+' every point by '+fmt(Math.abs(t.k))+'.');
   }
   return steps;
+}
+
+// One derived explanation supplies the two result panels and Show steps.
+function renderStepName(el,step){
+  const match=step.what.match(/^Translation by vector \(([^,]+), ([^)]+)\)$/);
+  if(!match){el.textContent=step.what;return}
+  el.textContent='Translation by vector ';
+  const vector=document.createElement('span');
+  el.appendChild(vector);
+  if(window.katex)katex.render('\\begin{pmatrix}'+match[1]+'\\\\'+match[2]+'\\end{pmatrix}',vector,{throwOnError:true});
+  else vector.textContent='('+match[1]+', '+match[2]+')';
+}
+
+function renderExplanation(lead,points){
+  const el=document.getElementById('successText');
+  el.replaceChildren();
+  const intro=document.createElement('div');intro.textContent=lead;el.appendChild(intro);
+  if(points!==undefined){const line=document.createElement('div');line.textContent='+'+points+' points';el.appendChild(line)}
+  buildGhostSteps(currentPuzzle.target).forEach((step,i)=>{
+    const block=document.createElement('section');block.className='explanation-step';
+    const name=document.createElement('strong');renderStepName(name,step);block.appendChild(name);
+    const eq=document.createElement('div');eq.id='explanation-eq-'+i;block.appendChild(eq);
+    const reason=document.createElement('div');reason.textContent=step.why;block.appendChild(reason);
+    const point=document.createElement('div');point.textContent=step.checkpoint;block.appendChild(point);
+    el.appendChild(block);
+    renderEq(eq.id,step.from+' \\longrightarrow '+step.to);
+  });
 }
 
 function fmt(n){
@@ -356,12 +398,13 @@ function stepThrough(){
     btn.textContent=ghostIndex+1<ghostSteps.length?'\u25c6 Next step':'\u25c6 Hide steps';
   }
   showCaption('Step '+(ghostIndex+1)+' of '+ghostSteps.length+' \u2014 '+s.title,s.what,s.why);
+  renderStepName(document.getElementById('stepCaption').querySelector('.step-what'),s);
   drawGraph();
 }
 
 function showCaption(n,what,why){
   const el=document.getElementById('stepCaption');
-  el.innerHTML='<span class="step-n">'+n+'</span><br>'+what+
+  el.innerHTML='<span class="step-n">'+n+'</span><br><span class="step-what">'+what+'</span>'+
     (why?'<br><span class="step-why">'+why+'</span>':'');
   el.classList.add('show');
 }
@@ -479,6 +522,7 @@ function renderEq(id,latex){
     try{katex.render(latex,el,{throwOnError:false,displayMode:false});return}catch(e){}
   }
   el.textContent=latex
+    .replace(/\\longrightarrow/g,'→')
     .replace(/\\tfrac\{1\}\{2\}/g,'\u00bd')
     .replace(/\\dfrac\{([^}]*)\}\{([^}]*)\}/g,'$1/$2')
     .replace(/\\sqrt\{([^}]*)\}/g,'\u221a($1)')
@@ -658,7 +702,7 @@ function gtBfsCheck(lvl,puzzlesOverride){
       }
       frontier=next;
     }
-    return{base:p.base,target:{...p.target},par:p.par,desc:p.desc,
+    return{base:p.base,target:{...p.target},par:p.par,label:buildGhostSteps(p.target,p.base).map(s=>s.what).join('; '),
       reachable:minMoves!==null,minMoves:minMoves,boundedAt:MAX_MOVES};
   });
   level=savedLevel;state=savedState;
@@ -762,7 +806,7 @@ function checkMatch(){
 
     document.getElementById('matchNext').style.display='';
     document.getElementById('successTitle').textContent='✓ Matched!';
-    document.getElementById('successText').innerHTML=rating+'<br>'+currentPuzzle.desc+'<br>+'+pts+' points';
+    renderExplanation(rating,pts);
     document.getElementById('successMsg').className='success-msg show';
     // Disable transforms
     document.querySelectorAll('.t-btn').forEach(b=>b.classList.add('disabled'));
@@ -790,7 +834,7 @@ function skipPuzzle(){
   mfg('question_answered',{game_slug:'graph-transformer',level:level,correct:false,question_index:pIdx+1});
   document.querySelectorAll('.t-btn').forEach(b=>b.classList.add('disabled'));
   document.getElementById('successTitle').textContent='Skipped';
-  document.getElementById('successText').textContent='The target was: '+currentPuzzle.desc+'.';
+  renderExplanation('The target was:');
   document.getElementById('matchNext').style.display='none';
   document.getElementById('successMsg').className='success-msg show';
   MaffsNext.wrong({mount:document.getElementById('skipNext'),label:'Next Puzzle →',onAdvance:nextPuzzle});
