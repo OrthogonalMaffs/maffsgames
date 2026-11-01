@@ -2930,3 +2930,76 @@ const QUESTIONS = { ks3: [...], gcse: [...], alevel: [...], further: [...], leve
   old *"Global leaderboard coming soon"* copy in place — 78 games told students the leaderboard
   did not exist while submitting their scores to it. Fixed 2026-08-26. When rolling a feature out
   site-wide, grep for the placeholder copy it is meant to replace.
+
+## Project Overview (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+Free curriculum-aligned maths games for UK schools. 101 games, The 6 P's (listed 27 Oct 2026 as the 100th item on the portal) and thirteen escape rooms live (Regression Rumble withdrawn 30 Sep 2026 pending a data rebuild). Separate from MathsWins (mathswins.co.uk).
+
+- **Repo:** https://github.com/OrthogonalMaffs/maffsgames
+- **Live site:** maffsgames.co.uk (GitHub Pages)
+- **maffsgames.com:** bought 24 Sep 2026, 301-redirects to maffsgames.co.uk at the Cloudflare edge
+  and serves nothing of its own. See `docs/domain-maffsgames-com.md` — including why the .co.uk stays
+  canonical, and the two IONOS prompts to ignore
+- **Contact:** contact@maffsgames.co.uk
+- **BMC:** buymeacoffee.com/maffsgames
+
+## Before pushing: `python scripts/check-changed.py`, not the full local suite (canon §7.8, 4 Oct 2026) (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+**Why:** the repo is public, so CI minutes are free, and the
+full local run was a slower second copy of CI with known Windows-only false failures (todo §4 item 18).
+
+Measured (serial ->
+two queues): docs-only 353 -> 167 s; one game 1565 -> 1375 s; shared asset (#232's files) 4198 -> 2907 s.
+The last line printed is the PR line "checks deferred to CI: ..." (tiers 1-2, tier 4 banks, leaderboard
+coverage). `--files a b` plans for given paths; `--workers 1` runs the light queue serially too.
+
+## After merging: watch main's full run (Jon, 5 Oct 2026) (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+**Why:** a PR runs only the verifiers its changes select, so a
+group that has outgrown its timeout passes on every PR and fails only on main. Group B was cancelled at
+its 12-minute limit on every main run from #68 to #71, and it was seen only when a PR touched every game.
+
+**Why:** the per-run clock failed twice in 160 runs, both single-line stalls on unchanged
+code, and never saw the one real regression (the median did). Each job's summary lists every verifier's duration.
+
+## Local render testing — ALWAYS use the stub server (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+Every page loads `schools/assets/analytics.js`, which posts to the live Apps Script endpoint and
+into the production Events sheet.
+
+The script swaps analytics.js for a no-op and leaves every other byte untouched.
+
+Three things that cost time on 21/09, local or live:
+
+Chrome will happily
+  replay the previous build and hand you a clean pass that means nothing. It can fake a green as
+  easily as a red, locally and on Pages.
+
+**The automation tab reports `document.hidden`**, so timers throttle to ~1.5/sec and any
+  poll-based test driver stalls.
+
+## Tech Stack (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+- KaTeX via CDN for math rendering
+- GitHub Pages hosting
+- Firebase Realtime Database for leaderboard
+- GA4 + Google Sheets dual analytics via `mfg()` wrapper
+- GA4 country tabs and the 'GA4 summary' tab (weekly figures + 3 charts) are Apps Script, NOT GitHub Actions: `docs/apps-script-ga4-country.js` + `docs/apps-script-ga4-summary.js`, one 06:00 trigger (setup `docs/ga4-country-setup.md`; tests `scripts/test-ga4-country.py`, `scripts/test-ga4-summary.py`). No repo workflow writes the Sheet and there are no repo secrets.
+
+## Where things live (read on demand, not every session) (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+- **Archives** (history only, never loaded by default): `docs/history/claude-md-archive.md` (this file's dated
+  handovers and state sections to 7 Oct 2026, and the reference sections canon already holds),
+  `docs/history/handover-home-archive.md`, `docs/history/handover-cloud-archive.md`.
+
+## Start of task: a new worktree from origin/main (ESCAPE-SET-CHECKS, 11 Oct 2026) (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+**Why:** on 11 Oct 2026 a session ran
+`git pull origin main` in the primary worktree, which was sitting on an old task branch, and fast-forwarded
+that branch to main; undoing it needed Jon.
+
+## End of task: remove the task's worktree (WORKTREE-CLEANUP, 11 Oct 2026) (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+Remote branches are deleted by GitHub on merge (repo setting, 12 Oct 2026).
+
+**Why:** worktrees were made per task and never removed; 35 had built up by 11 Oct 2026.
