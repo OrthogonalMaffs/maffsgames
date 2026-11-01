@@ -1,5 +1,5 @@
 {
- "as_of": "2026-10-31T20:39:54Z",
+ "as_of": "2026-11-01T12:00:40Z",
  "games": {
   "52dle": 11,
   "angle-ace": 5,
@@ -22,10 +22,10 @@
   "eigenvector-engine": 21,
   "equation-builder": 4,
   "equatle": 22,
-  "escape-big-school-begins": 68,
+  "escape-big-school-begins": 76,
   "escape-canteen-hack": 162,
   "escape-car-trap": 106,
-  "escape-comic-caper": 318,
+  "escape-comic-caper": 326,
   "escape-hamster-heist": 677,
   "escape-heatwave-mutiny": 181,
   "escape-it-vengeance": 23,
@@ -39,7 +39,7 @@
   "estimation-engine": 37,
   "estimation-golf": 312,
   "expected-damage": 10,
-  "factor-race": 1569,
+  "factor-race": 1583,
   "factor-theorem": 3,
   "fermi-lab": 15,
   "force-resolver": 4,
@@ -79,7 +79,7 @@
   "proportion-blaster": 2,
   "quadratic-factoriser": 96,
   "screening-room": 4,
-  "sequence-solver": 223,
+  "sequence-solver": 249,
   "seven-bridges": 310,
   "shape-shifter": 5,
   "simultaneous-solver": 59,
@@ -98,7 +98,7 @@
   "the-6-ps": 61,
   "think-of-a-number": 128,
   "trig-identity-duel": 5,
-  "trig-wars": 279,
+  "trig-wars": 287,
   "truth-buster": 43,
   "unit-converter": 527,
   "who-ate-all-the-pies": 11,
@@ -107,5 +107,5 @@
   "y-so-steep": 13
  },
  "since": "2026-09-01",
- "total": 18243
+ "total": 18307
 }
