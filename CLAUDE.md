@@ -1,15 +1,7 @@
 # MaffsGames — CLAUDE.md
 
 ## Project Overview
-Free curriculum-aligned maths games for UK schools. 101 games, The 6 P's (listed 27 Oct 2026 as the 100th item on the portal) and thirteen escape rooms live (Regression Rumble withdrawn 30 Sep 2026 pending a data rebuild). Separate from MathsWins (mathswins.co.uk).
-
-- **Repo:** https://github.com/OrthogonalMaffs/maffsgames
-- **Live site:** maffsgames.co.uk (GitHub Pages)
-- **maffsgames.com:** bought 24 Sep 2026, 301-redirects to maffsgames.co.uk at the Cloudflare edge
-  and serves nothing of its own. See `docs/domain-maffsgames-com.md` — including why the .co.uk stays
-  canonical, and the two IONOS prompts to ignore
-- **Contact:** contact@maffsgames.co.uk
-- **BMC:** buymeacoffee.com/maffsgames
+Reason and reference: canon §12, Project Overview (CONTEXT-SLIM).
 - **Project brief:** `.claude/rules/project-claude.md` — the mission, the audience, the division of
   labour and the platform principles. Loaded at the start of every session; read it with the note
   under **Task Contract** at the end of this file.
@@ -32,18 +24,16 @@ contracts. A session cannot measure its own context; Jon can, and clears when ne
 
 This replaces "full local suite before every push", including in contracts that still say it. It runs
 the content verifiers `scripts/ci-deps.py` selects for the branch's changes, plus the fast site-wide
-checks; then push and let CI run the rest. **Why:** the repo is public, so CI minutes are free, and the
-full local run was a slower second copy of CI with known Windows-only false failures (todo §4 item 18).
+checks; then push and let CI run the rest.
+Reason and reference: canon §12, Before pushing: `python scripts/check-changed.py`, not the full local suite (canon §7.8, 4 Oct 2026) (CONTEXT-SLIM).
+
 **One exception (SR-27, canon §0.3):** a PR that only adds or edits `scripts/verify-<slug>.py`, that game's findings file and the lane's handover runs the five checks SR-27 names instead.
 **Safety net:** every PR runs every site-wide check; every merge to main, a weekly schedule and a manual
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 **Two queues (PREPUSH-SCOPE, 10 Oct 2026):** heavy checks (CI time >= 60 s, or a browser check that runs its
 own work concurrently, e.g. the answer-lock parts) one at a time; light checks six at once beside them. Six
-answer-lock parts side by side all failed (UNPLAYABLE), so never run heavy ones together. Measured (serial ->
-two queues): docs-only 353 -> 167 s; one game 1565 -> 1375 s; shared asset (#232's files) 4198 -> 2907 s.
-The last line printed is the PR line "checks deferred to CI: ..." (tiers 1-2, tier 4 banks, leaderboard
-coverage). `--files a b` plans for given paths; `--workers 1` runs the light queue serially too.
+answer-lock parts side by side all failed (UNPLAYABLE), so never run heavy ones together.
 **Heavy checks reached only through a shared file (e.g. `schools/assets/*`) are deferred to CI** and listed with the file
 that reached them (CHECK-CHANGED-DEFER, 23 Oct 2026): nothing is skipped, the Gate still requires them, and `--all-heavy` runs them here.
 **Byte-compared files need a `.gitattributes` line (GITATTR-BYTES, 10 Oct 2026):** Windows checks text out as
@@ -54,17 +44,16 @@ CRLF (core.autocrlf), so a check that hashes or sizes a tracked file must have i
 
 The session that merges a PR waits for the full `check-site` run that the merge starts on `main`, and
 reports its result (green, red or cancelled, naming the job and the check). **A red or cancelled main run
-is fixed before any new work starts.** **Why:** a PR runs only the verifiers its changes select, so a
-group that has outgrown its timeout passes on every PR and fails only on main. Group B was cancelled at
-its 12-minute limit on every main run from #68 to #71, and it was seen only when a PR touched every game.
+is fixed before any new work starts.**
+Reason and reference: canon §12, After merging: watch main's full run (Jon, 5 Oct 2026) (CONTEXT-SLIM).
+
 **What blocks and what warns (TIMING-GATE, 14 Oct 2026; `docs/handover/ci-timing-diagnosis.md`):** a group
 estimated past 80% of its budget from the median of the last 5 main runs fails a PR that selects one of its lines, and past
 100% fails everywhere, the main timings job included (MAIN-WARN, 25 Oct 2026: on main 80-100% is a warning, listed under
 `over-budget` in ci-pack.json), and each job has a hard timeout against a hang. A group that passes 75% of its timeout on
 one run's clock only **warns** (job summary and annotation naming the slowest line against its recorded median; the
 job stays green), and the main timings job reports, never fails on, a verifier whose last 3 runs are each 20% and
-15 s over the 5 before. **Why:** the per-run clock failed twice in 160 runs, both single-line stalls on unchanged
-code, and never saw the one real regression (the median did). Each job's summary lists every verifier's duration.
+15 s over the 5 before.
 **A PR is also judged on its own measured times (PR-MEASURED, 25 Oct 2026):** the "PR budget (measured times)" job fails a PR whose
 grown or renamed verifier would push its group past the budget, so a verifier's CI time needs no timing by hand before merging (canon §7.8.1).
 **A long verifier is never split by hand (SHARD, 27 Oct 2026):** it declares `# ci-shards`, lists its work units through `bc.Shard`, and `ci-groups.py` chooses its parts from the units' recorded times (canon §7.8.1).
@@ -108,15 +97,10 @@ Two sessions may run side by side. They stay out of each other's files:
   reported-not-failed exemption holds only for games in the roster's Unlisted section, so no time bound is needed.
 
 ## Reference Files
-- Full game roster (101 games, plus 1 withdrawn): see `.claude/rules/game-roster.md`
-- Help/instructions audit: see `.claude/rules/help-audit.md`
-- Timer policy (countdown/hidden/none): see `.claude/rules/timer-policy.md`
-- Analytics events & dual logging: see `.claude/rules/analytics.md`
-- Running to-do list: docs/todo.md
+Reason and reference: canon §12, Reference Files (CONTEXT-SLIM).
 
 ### Improvement ideas — two lists, deliberately separate
-- `docs/idea-backlog-2026-08.md` — **Gemini's suggestions**, logged unagreed, each with a
-  cross-ref against the roster and the Dashboard. Nothing in it is scheduled.
+- Nothing in it is scheduled.
 - `docs/jon-playtest-2026-08.md` — **Jon's own play-testing.** First-hand and much stronger
   evidence than the above. He samples games through the day; new findings go here, not in the
   Gemini file. Where they touch the same game, the entry says which supersedes which.
@@ -125,19 +109,14 @@ Two sessions may run side by side. They stay out of each other's files:
 ```
 python scripts/serve-stubbed.py        # http://127.0.0.1:8765/
 ```
-Every page loads `schools/assets/analytics.js`, which posts to the live Apps Script endpoint and
-into the production Events sheet. **Never open a real page against the live endpoint to check a
+Reason and reference: canon §12, Local render testing — ALWAYS use the stub server (CONTEXT-SLIM).
+**Never open a real page against the live endpoint to check a
 layout** — it writes junk rows into the data Jon makes decisions from (happened once, 2026-08-26).
-The script swaps analytics.js for a no-op and leaves every other byte untouched. Node is not
+Node is not
 installed on the Windows machine; Python is the way to serve this repo there.
 
-Three things that cost time on 21/09, local or live:
-
-- **Always cache-bust** — `?cb=<random>` on every page load and live fetch. Chrome will happily
-  replay the previous build and hand you a clean pass that means nothing. It can fake a green as
-  easily as a red, locally and on Pages.
-- **The automation tab reports `document.hidden`**, so timers throttle to ~1.5/sec and any
-  poll-based test driver stalls. To play a game end to end, capture the game's own `setTimeout`
+- **Always cache-bust** — `?cb=<random>` on every page load and live fetch.
+- To play a game end to end, capture the game's own `setTimeout`
   callbacks and drain them synchronously — every callback still runs, in order, without the waits.
   Test-only; never commit it.
 - **`serve-stubbed.py` stubs `window.fetch` site-wide**, so an in-page `fetch` fails with
@@ -145,17 +124,14 @@ Three things that cost time on 21/09, local or live:
 
 ## Tech Stack
 - Single-file HTML games — no build step, no framework
-- KaTeX via CDN for math rendering
-- GitHub Pages hosting
-- Firebase Realtime Database for leaderboard
-- GA4 + Google Sheets dual analytics via `mfg()` wrapper
-- GA4 country tabs and the 'GA4 summary' tab (weekly figures + 3 charts) are Apps Script, NOT GitHub Actions: `docs/apps-script-ga4-country.js` + `docs/apps-script-ga4-summary.js`, one 06:00 trigger (setup `docs/ga4-country-setup.md`; tests `scripts/test-ga4-country.py`, `scripts/test-ga4-summary.py`). No repo workflow writes the Sheet and there are no repo secrets.
+Reason and reference: canon §12, Tech Stack (CONTEXT-SLIM).
 - answer-counts slots (05:40/11:40/17:40 UTC) start 2-6 h LATE and some are skipped (13 runs, 24-28 Oct): GitHub throttling, not the minute. Accepted (Jon, 28 Oct); do not chase. Fetch retries 1/5/15 min.
 - Planted-fault verifiers use `scripts/plant_common.py` (canon 7.9); the 53 older ones migrate when next edited: `docs/handover/stale-plants.md`.
 - `scripts/` require Python >= 3.10 (`write_text` `newline=`); CI pins 3.12 and `scripts/check-python-version.py` holds it
 
 ## Background processes: start them with `scripts/bg.py` (Jon, 14 Oct 2026, contract BG-LAUNCHER)
-A server or a long-running loop a session starts in the background outlives the session (orphans from four days were found on 14 Oct) and can make worktree removal fail with "Permission denied". Start every such process through `python scripts/bg.py -- <command>`, never a raw `&` or `nohup` shell: it records the PID in `<worktree>/.claude/pids.json` (gitignored), and `scripts/end-task.py` stops what was registered, with its children, before it removes the worktree, then reports (without killing) any unregistered process whose command line holds the worktree path. **Not covered:** the harness's own background shells (the Bash tool's `run_in_background`); stop those with the harness (`/tasks`).
+Reason and reference: canon §12, Background processes: start them with `scripts/bg.py` (Jon, 14 Oct 2026, contract BG-LAUNCHER) (CONTEXT-SLIM).
+Start every such process through `python scripts/bg.py -- <command>`, never a raw `&` or `nohup` shell: it records the PID in `<worktree>/.claude/pids.json` (gitignored), and `scripts/end-task.py` stops what was registered, with its children, before it removes the worktree, then reports (without killing) any unregistered process whose command line holds the worktree path. **Not covered:** the harness's own background shells (the Bash tool's `run_in_background`); stop those with the harness (`/tasks`).
 
 ## Session practice (Jon, 8 Oct 2026, contract CTX)
 
@@ -166,8 +142,8 @@ A server or a long-running loop a session starts in the background outlives the 
 
 ## Escape rooms: no art field, no request (Jon, 10 Oct 2026, contract ART-PENDING)
 
-A room built before its pictures has no top-level `art:` in its `room.js`, so the engine requests no scene, fail
-or win picture (no 404 for check-site's tier 1). Add `art` with the pictures, never before. Never relax the 404
+Reason and reference: canon §12, Escape rooms: no art field, no request (Jon, 10 Oct 2026, contract ART-PENDING) (CONTEXT-SLIM).
+Add `art` with the pictures, never before. Never relax the 404
 rule or allowlist a missing picture. Detail: `docs/escape-room-voice-rewrite.md` §6.
 
 ## Contracts arrive whole (Jon, 8 Oct 2026, contract CTX)
@@ -176,13 +152,7 @@ Jon never amends contracts: PC sends complete pastes.
 
 ## Where things live (read on demand, not every session)
 
-- **Canon** `docs/canon.md`: the rules. §0.3 standing rulings, §0.4 findings register, §7 technical reference
-  (§7.6 Next and MaffsLock, §7.8 CI and the two lanes), §11 escape rooms, **§12 engineering reference** (moved
-  from this file: `check-site.py` tiers 1-4, no rejection sampling, `MaffsOptions.build()`, generator ranges,
-  scaffolds, accessibility, tiered banks, level colours, the Firebase leaderboard).
-- **Handovers** `docs/handover/home.md`, `docs/handover/cloud.md`: current state and the last three entries.
-- **Register** `docs/audits/findings/<slug>.yml` (one per game); `docs/audits/REGISTER.md` is generated.
-- **Roster** `.claude/rules/game-roster.md`. **To-do** `docs/todo.md`.
+Reason and reference: canon §12, Where things live (read on demand, not every session) (CONTEXT-SLIM).
 - **Archives** (history only, never loaded by default): `docs/history/claude-md-archive.md` (this file's dated
   handovers and state sections to 7 Oct 2026, and the reference sections canon already holds),
   `docs/history/handover-home-archive.md`, `docs/history/handover-cloud-archive.md`.
@@ -227,11 +197,12 @@ is always the wrong answer. If it is not, say why the bug is local and fix it lo
 
 Every task starts with `git fetch`, then `git worktree add -b claude/<task> <path> origin/main`, and works
 only there. **Never pull or merge into the primary worktree or into an existing branch**, a contract's "pull
-origin/main" included: that is what the fetch and the new worktree do. **Why:** on 11 Oct 2026 a session ran
-`git pull origin main` in the primary worktree, which was sitting on an old task branch, and fast-forwarded
-that branch to main; undoing it needed Jon.
+origin/main" included: that is what the fetch and the new worktree do.
+Reason and reference: canon §12, Start of task: a new worktree from origin/main (ESCAPE-SET-CHECKS, 11 Oct 2026) (CONTEXT-SLIM).
+
 Windows: see AGENTS.md ENCODING.
 
 ### End of task: remove the task's worktree (WORKTREE-CLEANUP, 11 Oct 2026)
 
-After the PR merges on green and main's run is reported (above), run `python scripts/end-task.py <branch>` from the primary checkout. It removes the task's worktree and local branch only if the PR is MERGED, the local tip is the PR's head and the worktree is clean; otherwise it refuses and names why, so leave it and name it in the handover. **Never delete a branch by hand** (this repo squash-merges, so `git branch -d` cannot tell a merged branch from an unmerged one). Remote branches are deleted by GitHub on merge (repo setting, 12 Oct 2026). **Why:** worktrees were made per task and never removed; 35 had built up by 11 Oct 2026.
+After the PR merges on green and main's run is reported (above), run `python scripts/end-task.py <branch>` from the primary checkout. It removes the task's worktree and local branch only if the PR is MERGED, the local tip is the PR's head and the worktree is clean; otherwise it refuses and names why, so leave it and name it in the handover. **Never delete a branch by hand** (this repo squash-merges, so `git branch -d` cannot tell a merged branch from an unmerged one).
+Reason and reference: canon §12, End of task: remove the task's worktree (WORKTREE-CLEANUP, 11 Oct 2026) (CONTEXT-SLIM).

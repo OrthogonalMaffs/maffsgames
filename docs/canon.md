@@ -2930,3 +2930,122 @@ const QUESTIONS = { ks3: [...], gcse: [...], alevel: [...], further: [...], leve
   old *"Global leaderboard coming soon"* copy in place — 78 games told students the leaderboard
   did not exist while submitting their scores to it. Fixed 2026-08-26. When rolling a feature out
   site-wide, grep for the placeholder copy it is meant to replace.
+
+## Project Overview (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+Free curriculum-aligned maths games for UK schools. 101 games, The 6 P's (listed 27 Oct 2026 as the 100th item on the portal) and thirteen escape rooms live (Regression Rumble withdrawn 30 Sep 2026 pending a data rebuild). Separate from MathsWins (mathswins.co.uk).
+
+- **Repo:** https://github.com/OrthogonalMaffs/maffsgames
+- **Live site:** maffsgames.co.uk (GitHub Pages)
+- **maffsgames.com:** bought 24 Sep 2026, 301-redirects to maffsgames.co.uk at the Cloudflare edge
+  and serves nothing of its own. See `docs/domain-maffsgames-com.md` — including why the .co.uk stays
+  canonical, and the two IONOS prompts to ignore
+- **Contact:** contact@maffsgames.co.uk
+- **BMC:** buymeacoffee.com/maffsgames
+
+
+## Before pushing: `python scripts/check-changed.py`, not the full local suite (canon §7.8, 4 Oct 2026) (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+**Why:** the repo is public, so CI minutes are free, and the
+full local run was a slower second copy of CI with known Windows-only false failures (todo §4 item 18).
+
+## Before pushing: `python scripts/check-changed.py`, not the full local suite (canon §7.8, 4 Oct 2026) (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+Measured (serial ->
+two queues): docs-only 353 -> 167 s; one game 1565 -> 1375 s; shared asset (#232's files) 4198 -> 2907 s.
+The last line printed is the PR line "checks deferred to CI: ..." (tiers 1-2, tier 4 banks, leaderboard
+coverage). `--files a b` plans for given paths; `--workers 1` runs the light queue serially too.
+
+## After merging: watch main's full run (Jon, 5 Oct 2026) (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+**Why:** a PR runs only the verifiers its changes select, so a
+group that has outgrown its timeout passes on every PR and fails only on main. Group B was cancelled at
+its 12-minute limit on every main run from #68 to #71, and it was seen only when a PR touched every game.
+
+## After merging: watch main's full run (Jon, 5 Oct 2026) (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+**Why:** the per-run clock failed twice in 160 runs, both single-line stalls on unchanged
+code, and never saw the one real regression (the median did). Each job's summary lists every verifier's duration.
+
+## Reference Files (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+- Full game roster (101 games, plus 1 withdrawn): see `.claude/rules/game-roster.md`
+- Help/instructions audit: see `.claude/rules/help-audit.md`
+- Timer policy (countdown/hidden/none): see `.claude/rules/timer-policy.md`
+- Analytics events & dual logging: see `.claude/rules/analytics.md`
+- Running to-do list: docs/todo.md
+
+
+## Reference Files (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+- `docs/idea-backlog-2026-08.md` — **Gemini's suggestions**, logged unagreed, each with a
+  cross-ref against the roster and the Dashboard.
+
+## Local render testing — ALWAYS use the stub server (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+Every page loads `schools/assets/analytics.js`, which posts to the live Apps Script endpoint and
+into the production Events sheet.
+
+## Local render testing — ALWAYS use the stub server (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+The script swaps analytics.js for a no-op and leaves every other byte untouched.
+
+## Local render testing — ALWAYS use the stub server (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+Three things that cost time on 21/09, local or live:
+
+
+
+## Local render testing — ALWAYS use the stub server (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+Chrome will happily
+  replay the previous build and hand you a clean pass that means nothing. It can fake a green as
+  easily as a red, locally and on Pages.
+
+## Local render testing — ALWAYS use the stub server (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+**The automation tab reports `document.hidden`**, so timers throttle to ~1.5/sec and any
+  poll-based test driver stalls.
+
+## Tech Stack (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+- KaTeX via CDN for math rendering
+- GitHub Pages hosting
+- Firebase Realtime Database for leaderboard
+- GA4 + Google Sheets dual analytics via `mfg()` wrapper
+- GA4 country tabs and the 'GA4 summary' tab (weekly figures + 3 charts) are Apps Script, NOT GitHub Actions: `docs/apps-script-ga4-country.js` + `docs/apps-script-ga4-summary.js`, one 06:00 trigger (setup `docs/ga4-country-setup.md`; tests `scripts/test-ga4-country.py`, `scripts/test-ga4-summary.py`). No repo workflow writes the Sheet and there are no repo secrets.
+
+
+## Background processes: start them with `scripts/bg.py` (Jon, 14 Oct 2026, contract BG-LAUNCHER) (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+A server or a long-running loop a session starts in the background outlives the session (orphans from four days were found on 14 Oct) and can make worktree removal fail with "Permission denied".
+
+## Escape rooms: no art field, no request (Jon, 10 Oct 2026, contract ART-PENDING) (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+A room built before its pictures has no top-level `art:` in its `room.js`, so the engine requests no scene, fail
+or win picture (no 404 for check-site's tier 1).
+
+## Where things live (read on demand, not every session) (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+- **Canon** `docs/canon.md`: the rules. §0.3 standing rulings, §0.4 findings register, §7 technical reference
+  (§7.6 Next and MaffsLock, §7.8 CI and the two lanes), §11 escape rooms, **§12 engineering reference** (moved
+  from this file: `check-site.py` tiers 1-4, no rejection sampling, `MaffsOptions.build()`, generator ranges,
+  scaffolds, accessibility, tiered banks, level colours, the Firebase leaderboard).
+- **Handovers** `docs/handover/home.md`, `docs/handover/cloud.md`: current state and the last three entries.
+- **Register** `docs/audits/findings/<slug>.yml` (one per game); `docs/audits/REGISTER.md` is generated.
+- **Roster** `.claude/rules/game-roster.md`. **To-do** `docs/todo.md`.
+
+
+## Start of task: a new worktree from origin/main (ESCAPE-SET-CHECKS, 11 Oct 2026) (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+**Why:** on 11 Oct 2026 a session ran
+`git pull origin main` in the primary worktree, which was sitting on an old task branch, and fast-forwarded
+that branch to main; undoing it needed Jon.
+
+## End of task: remove the task's worktree (WORKTREE-CLEANUP, 11 Oct 2026) (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+Remote branches are deleted by GitHub on merge (repo setting, 12 Oct 2026).
+
+## End of task: remove the task's worktree (WORKTREE-CLEANUP, 11 Oct 2026) (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+**Why:** worktrees were made per task and never removed; 35 had built up by 11 Oct 2026.
