@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# ci-line: Start-of-task helper (start-task.py: checked primary, names, branches, folder and green full main run; refusal leaves tasks alone; temporary repo and REST fixtures) | --selftest
 """Create one new task worktree. Python stdlib only; no cleanup or rollback.
 
     python -X utf8 scripts/start-task.py <task> --agent codex|claude
