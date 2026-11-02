@@ -2583,6 +2583,182 @@ all — ask for JPGs.**
 
 # 12. Engineering reference (moved from CLAUDE.md, 8 Oct 2026, contract CTX)
 
+## RULEBOOK rationale and retired procedures (2 Nov 2026)
+
+The operational home is AGENTS.md; topic-specific instructions live under docs/rules/ and are selected by its trigger table. This reference records why and what changed, rather than giving alternative operational instructions.
+
+### Why consolidate and limit startup files
+
+AGENTS.md, CLAUDE.md and the workflow each held copies of mechanics, allowing them to drift. CLAUDE.md grew from 12,246 to 20,480 bytes between 8 and 30 Oct, about 350 bytes per day, much of it explanation and incident history. The 300-byte entry rule keeps loaded instructions focused; reasons and history belong here in the same PR. An area rule moves only when a reader can unambiguously determine its trigger. Generic safety, background launch, check output, contract scope and cross-lane ownership remain loaded because any task can need them.
+
+Changing agents should not produce a second branch, discarded work or a new prefix. The takeover rule records the identity and exact git state needed to check a handover before reusing its worktree. The task Record line gives Jon comparable observations for Codex and Claude Code without estimating usage or adding a tracking system. Wall time ends at review hand-off or STOP, excluding merge time.
+
+The previous home handover used bold entry starts; the archiver recognises only level-two headings. Converting those opening lines allows oldest-entry archiving while retaining their order and text outside headings. Both lanes now use one dated format.
+
+### WSL retirement and current environment
+
+The old Windows paths, sandbox approvals, launcher/wrapper arrangements, folder locks and local timing exception do not describe distro maffs. The task now runs in WSL with its active venv and authorised git writes; lane notes live at /home/maffs/lanes/notes.md. Git identity was set with Jon's authorisation during GT-EXPLAIN. The current cleanup script can run from a temporary copy, avoiding an outdated primary checkout and keeping cleanup outside the worktree being removed.
+
+The context checker on main measures AGENTS.md as well as CLAUDE.md and both handovers, warning above 18 * 1024 bytes and failing above 20 * 1024. A handover that can be archived warns instead; main's job runs --fix and moves oldest level-two sections until 17 * 1024 bytes, preserving the newest. A handover with too much unmovable text still fails. Todo's separate cap is 150 * 1024, without the 18 KiB band; canon is reported, uncapped.
+
+### Rulings applied
+
+Corrections arrive as numbered amendments to an in-flight contract (Jon, 30 Oct), superseding the former complete-pastes-only sentence. Jon's 2 Nov bounded-fix ruling replaces both the one-pass prohibition and the workflow's unlimited within-scope fix wording: understood failures caused by this change may be fixed within the contract, with a stop after a second unsuccessful fix. Other unexpected events still stop.
+
+Jon's 2 Nov answer-lock clarification preserves the existing meaning: exempt() in scripts/check-answer-lock.py computes the intersection of claims and roster-Unlisted games. Cloud handover wording lacks the Unlisted qualification; RULEBOOK leaves that protected file for cloud to correct.
+
+### Existing explanations relocated from loaded files
+
+Heavy local checks once ran together and six answer-lock parts failed UNPLAYABLE; the two-queue rule avoids that contention. Shared-file-only heavy selections remain checked in CI, with their selecting files reported. A previous missing pre-push run cost three CI runs on 7 Oct.
+
+An unfiltered merge-helper exit status matters: on 25 Oct piping through grep MERGED hid a REFUSED line. Background servers outlived sessions for four days before the 14 Oct process registry; the registry lets cleanup stop registered processes and their children, reporting unregistered worktree processes without killing them. Harness-owned background sessions still use their own controls.
+
+The first WSL commit attempt lacked identity; Jon supplied Vector52F and the GitHub noreply email and authorised global configuration for this dedicated user. Initial WSL GitHub writes returned 403 despite account permissions; retry succeeded without changing credentials. Permissions alone do not prove token write scope.
+
+Answer-counts observations from 13 runs on 24–28 Oct showed slots 2–6 hours late and some skipped; Jon accepted GitHub throttling on 28 Oct. The accepted operational rule is in docs/rules/scripts.md.
+
+Claude Code's documented relative @path import resolves from the importing file; @AGENTS.md outside code spans imports the shared rulebook. Confirmed 2 Nov 2026 at https://code.claude.com/docs/en/memory#import-additional-files. Claude Code's cloud-side load test follows merge.
+
+### Retired Windows text (verbatim history, not current instructions)
+
+The following source passages are retained exactly as historical evidence. The workflow's former Git safety appendix includes proposed fixes and options that were never current WSL rules.
+
+**Byte-compared files need a `.gitattributes` line (GITATTR-BYTES, 10 Oct 2026):** Windows checks text out as
+CRLF (core.autocrlf), so a check that hashes or sizes a tracked file must have its path pinned there
+(`-text` or `eol=lf`), or it fails only on Windows. Covered: `scripts/fonts/**`, CLAUDE.md, both handovers, todo.md.
+
+Node is not
+installed on the Windows machine; Python is the way to serve this repo there.
+
+## Git safety
+
+**Interim, until the launcher and git wrapper exist (Jon, 30 Oct 2026):** Jon creates each Codex worktree from a normal terminal; Codex's git add, commit and push run on approval prompts that Jon checks name the task's worktree; Jon runs end-task.py outside Codex (from a temporary copy of origin/main's script) after closing Codex, because the sandbox cannot write git metadata and a running Codex session locks its folder.
+
+The rules here already exist in `CLAUDE.md`; this section explains how they fit together and what changes for
+Codex. Where `CLAUDE.md` and this section differ, `CLAUDE.md` wins and this section is fixed.
+
+## 1. The layout (from the checkout audit, 29 Oct 2026)
+
+- **One primary checkout:** `E:\jon\maffsgames-new-clone`. Every lane uses it. Nobody works in it directly.
+- **One worktree per task**, a sibling folder (`E:\jon\mg-<task>`), on a branch made from `origin/main`.
+- **Not part of the layout:** `E:\jon\maffsgames` (clone of the archived private repo) and `E:\jon\maffsgames-c1`
+  (not a repo: runbook, patches, `old-pages.json`). No agent works in either. Jon decides their fate once they are
+  confirmed to hold nothing unique.
+
+## 2. Start of task
+
+From the primary (shell-neutral; these work in PowerShell, Git Bash and WSL):
+
+```
+git -C E:\jon\maffsgames-new-clone fetch
+git -C E:\jon\maffsgames-new-clone worktree add -b codex/<task> E:\jon\mg-<task> origin/main
+```
+
+Then work only inside `E:\jon\mg-<task>`. Never `pull` or `merge` into the primary or an existing branch: on
+11 Oct 2026 that fast-forwarded the wrong branch (`CLAUDE.md`, ESCAPE-SET-CHECKS).
+
+**The tree is not yours.** Before the first edit, `git status --porcelain` in the worktree must be empty. If it
+is not, something else wrote there: stop.
+
+## 3. During the task
+
+- Edit only files EXACT CHANGE names. A file outside it is a STOP IF, even if the change looks harmless.
+- Background processes only through `python scripts/bg.py -- <command>`. Orphaned servers have blocked worktree
+  removal before (`CLAUDE.md`, 14 Oct).
+- Before pushing: `python scripts/check-changed.py`.
+- Never: `git reset --hard`, `git clean`, `git stash` in a worktree you did not create, `git push --force`,
+  `git branch -D`, `gh pr merge`, the merge button, a raw API merge, `--override` without Jon's ruling in writing.
+
+## 4. End of task
+
+```
+python scripts/merge-pr.py <pr-number>        # from the worktree; refuses unless Gate and main are green
+python scripts/end-task.py <branch>            # from the primary; removes worktree and local branch only if safe
+```
+
+`end-task.py` refuses (and deletes nothing) if the PR is not merged, the local tip is not the PR's head, or the
+worktree is dirty. **A refusal is reported in the handover with its reason, never worked around by hand.**
+
+## 5. Known gaps (to fix after the freeze, Mon 2 Nov)
+
+The 29 Oct audit found 20 worktrees: 10 idle on merged branches, 5 detached, plus 5 empty folders that are no
+longer repos. That is one shared step failing, not twenty separate mistakes.
+
+**Root cause found (cleanup run, 29 Oct):** `CLAUDE.md` says to run `end-task.py` "from the primary checkout", but
+the primary is never updated (by rule: no pulls into it) and sits on `main` at `a5ee5c2f`, 11 Oct — the day
+before `end-task.py` was written. The documented command has never existed where the rule says to run it. Proposed
+fix: run the current script from `origin/main` without touching the primary, e.g.
+`git -C E:\jon\maffsgames-new-clone show origin/main:scripts/end-task.py > %TEMP%\end-task.py`, then
+`python %TEMP%\end-task.py <branch>` with the primary as working directory (the script is already designed to run
+from a temporary copy). Same pattern for any script "run from the primary".
+
+| Gap | Evidence | Fix at |
+|---|---|---|
+| `end-task.py` absent from the primary | Primary at `a5ee5c2f` (11 Oct); script dates from 12 Oct | `CLAUDE.md` rule: run from `origin/main` via a temporary copy |
+| Orphan processes lock worktree folders | 29 Oct, Resource Monitor: a bash + python pair held each of mg-footer, mg-launch, mg-scroll and mg-tall. All came from one Claude Code session (27 Oct 19:27 to 28 Oct 00:24), started with a raw `&` or `nohup`, not through `bg.py`. The build lane's live worktree had `nohup.exe` running on 29 Oct. | Enforce at the tool level: block a raw `&` or `nohup` in agent shell commands unless the command goes through `bg.py`. A written rule alone has demonstrably failed. |
+| `end-task.py` cannot see those processes | The server's command line was `scripts/serve-stubbed.py 8772`, with no worktree path in it. Only its working folder pointed at the worktree. | `end-task.py`: find processes by their working folder, not just their command line |
+| Local servers that bypass the stubs | Two of the orphans were plain `python -m http.server`, not `serve-stubbed.py` | Check whether local plays from a plain server reach the real Sheets or Firebase backends. If they do, block it and assess the data. |
+| Branch left behind when the folder cannot be deleted | mg-footer, mg-launch, mg-scroll: git emptied and unregistered the worktree, then "Permission denied" on the folder; branch not deleted | `end-task.py`: once git has unregistered the worktree, still delete the branch; report the folder as held |
+| Worktrees left after merge | 10 idle on merged branches | Cause from the "Cleanup run 29 Oct" refusal reasons, then the shared layer: `end-task.py` or where it is called |
+| Detached worktrees cannot be removed by `end-task.py` (it works by branch name) | 5 detached | `end-task.py`: a mode for a detached worktree whose HEAD is on `origin/main` or on a merged PR's head |
+| Empty folders after removal | 5 empty, unregistered | Likely Windows file locks (`CLAUDE.md` line 158); `end-task.py` to report a folder it could not delete |
+
+**This is a prerequisite for Codex.** A third agent on a broken cleanup step multiplies the folders.
+
+## 6. Parallel work
+
+- **Two lanes at a time** (lane plan rule 1). Codex takes a lane's slot; it does not add one.
+- **Shared files: one lane, nothing else running** (the deferred shared-file list). A Shared-tier contract says so
+  in its STOP IF.
+- **Cross-lane facts go in `E:\jon\lanes\notes.md`** — "fetch main", merges others need, flakes. Read before each
+  item.
+- **What worktrees do not isolate:** the Firebase database, the Google Sheets endpoint, GA4, local ports used by
+  stub servers, and GitHub Actions minutes. CI stubs the first three; local test servers must use the stubs
+  (`serve-stubbed.py`). Two lanes starting stub servers on the same port collide: use `bg.py`, which records the
+  PID, and let the server pick a free port where the script supports it.
+
+## 7. Recovery
+
+**Interrupted task** (terminal closed, session lost):
+
+```
+git -C E:\jon\mg-<task> status --porcelain
+git -C E:\jon\mg-<task> log --oneline origin/main..HEAD
+gh api "repos/OrthogonalMaffs/maffsgames/pulls?state=all&head=OrthogonalMaffs:<branch>"
+```
+
+Write what these show into the lane handover before doing anything else. Then: if the PR merged, finish with
+`end-task.py`; if open and green, resume at merge; if no PR, resume at check-changed and push; if the worktree
+is dirty with changes nobody can explain, stop and ask.
+
+**Reverting a merged change:** a new branch from `origin/main`, `git revert <merge-sha>`, a PR, the Gate,
+`merge-pr.py`. Never rewrite `main`.
+
+## 8. What changes for Codex (pilot check 3)
+
+Codex's `workspace-write` sandbox limits writes to the folder it starts in. Two consequences, **both untested**:
+
+- **Creating a worktree** writes a sibling folder and the primary's `.git\worktrees\` — both outside a worktree.
+- **Committing from a linked worktree** writes objects and refs into the primary's `.git` — outside the worktree.
+
+Options, to choose from the pilot's evidence:
+
+1. Jon (or the implementer's first approved command) creates the worktree; Codex starts **inside** it; commits and
+   pushes run with approval (`--ask-for-approval on-request`). Most contained; more prompts.
+2. Codex starts in `E:\jon` with `workspace-write`, so every worktree and the primary are inside its workspace.
+   Fewer prompts; the sandbox no longer protects other lanes' worktrees — the instructions do.
+3. Add the primary's `.git` as an extra writable root, if the installed Codex supports it. To be verified in the
+   docs for the installed version before relying on it.
+
+**Not an option:** `danger-full-access` as routine.
+
+
+### Retired Windows timing exception (verbatim handover evidence)
+
+**ENCODING (30 Oct 2026, Shared, home, Codex):** branch `codex/encoding-rule`. Exact rule added once in AGENTS.md, with pointers from CLAUDE.md and the workflow failure table; no scripts, profiles or config changed. UTF-8 exact-insertion and four-file scope checks PASS; context size PASS (CLAUDE.md exactly 20,480 bytes). Complete `python -X utf8 scripts/check-changed.py`: 40/41 passed in 308 s, exit 1; only failure was Windows timing selftest (three assertions, then missing temporary ci-timing/timing.txt); seven standard checks deferred to CI. Project Claude's standing ruling (30 Oct 20:30) applies: no timing-gate input changed, proceed to PR; Linux CI Gate is the authority, stop on any CI timing failure. Awaiting Gate and Shared review; no merge or cleanup authorised. Optional PYTHONUTF8=1 proposed for Jon only, not applied.
+
+
+
 These sections were in `CLAUDE.md`, which loads into every session, and existed nowhere else. They moved here
 verbatim (contract CTX: a rule that exists nowhere else moves into canon, listed in its PR). Their own words
 still say "this file", "above" or "below" where they meant CLAUDE.md.
