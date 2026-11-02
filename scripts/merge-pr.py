@@ -20,6 +20,14 @@ The guard, from the GitHub REST API through `gh api` (the credentials the lanes 
       red; no jobs at all, or a jobs call that fails, is a refusal. A run still going counts as NOT green; nothing
       assumes it.
 
+  (b') the run judged is main's newest MERGE's own (GATE-FIX, Jon 2 Nov 2026): the newest commit on main that is not a
+      bot skip-marker commit (github-actions[bot]'s REGISTER, timings and answer-counts commits) must have its own
+      check-site run (push or manual), completed and green as above. A merge with no run is NOT green: #631's squash
+      message carried a skip marker, GitHub started no run on main, and the guard went on judging the run before it.
+  (c) the squash message it builds has GitHub's skip markers disarmed (GATE-FIX): the PR's title and body become the
+      commit's title and message, and a body that quotes "[skip ci]" (#631's did) would stop main's run. Each bracketed
+      marker keeps its words in round brackets; "skip-checks: true" loses its colon.
+
 --override "<ruling>" waives (b) and only (b): it writes the ruling, with the run and any unfinished or red jobs it
 overrode, as a comment on the
 PR first, then merges. An empty ruling is refused. (a) is never waived. The merge is a squash pinned to the head
@@ -28,6 +36,7 @@ commit that (a) judged, so a later push cannot ride in on an earlier green. GitH
 """
 import argparse
 import json
+import re
 import subprocess
 import sys
 import time
@@ -37,6 +46,21 @@ WORKFLOW = "check-site.yml"
 MAIN_EVENTS = ("push", "workflow_dispatch")
 POLL_S = 30
 JOB_OK = ("success", "skipped", "neutral")
+BOT = "github-actions[bot]"
+# GitHub's skip markers (docs: "Skipping workflow runs"), matched loosely: case and inner spacing ignored.
+SKIP_BRACKETS = re.compile(r"\[\s*(skip\s+ci|ci\s+skip|no\s+ci|skip\s+actions|actions\s+skip)\s*\]", re.I)
+SKIP_CHECKS = re.compile(r"(skip-checks)\s*:\s*(true)", re.I)
+
+
+def has_skip_marker(text):
+    return bool(SKIP_BRACKETS.search(text or "") or SKIP_CHECKS.search(text or ""))
+
+
+def disarm(text):
+    """The text with every GitHub skip marker made inert, its words kept: "[skip ci]" -> "(skip ci)",
+    "skip-checks: true" -> "skip-checks true"."""
+    text = SKIP_BRACKETS.sub(lambda m: "(%s)" % m.group(1), text or "")
+    return SKIP_CHECKS.sub(lambda m: "%s %s" % (m.group(1), m.group(2)), text)
 
 
 class Refused(Exception):
@@ -99,8 +123,24 @@ def _named(jobs):
     return ", ".join(names[:5]) + (" and %d more" % (len(names) - 5) if len(names) > 5 else "")
 
 
-def check_main(api):
-    """(b) -> (ok, why, run). Never guesses: an unfinished run or job, or no run at all, is not green."""
+def newest_merge(api, runs=None):
+    """(sha, why): the newest commit on main that is not a bot skip-marker commit, or (None, why) if none can be read."""
+    try:
+        commits = api("GET", "%s/commits?sha=main&per_page=50" % R)
+    except Refused as e:
+        return None, "main's commits could not be read (%s)" % e
+    for c in commits if isinstance(commits, list) else []:
+        login = (c.get("author") or {}).get("login") or ""
+        name = ((c.get("commit") or {}).get("author") or {}).get("name") or ""
+        if BOT in (login, name) and has_skip_marker((c.get("commit") or {}).get("message")):
+            continue
+        return c["sha"], None
+    return None, "no commit on main in the last 50 that is not a bot skip-marker commit"
+
+
+def check_main(api, merge_of=newest_merge):
+    """(b) -> (ok, why, run). Never guesses: an unfinished run or job, or no run at all, is not green; nor is a merge
+    with no run of its own (b')."""
     runs = main_runs(api)
     if not runs:
         return False, "no check-site run on main (push or manual) in the last 50 runs", None
@@ -108,7 +148,14 @@ def check_main(api):
     if going:
         r = going[0]
         return False, "main's run %s (%s, %s) is %s, not finished" % (r["id"], r["event"], r["head_sha"][:7], r["status"]), r
-    r = runs[0]
+    sha, why = merge_of(api, runs)
+    if sha is None:
+        return False, why, None
+    own = [r for r in runs if r["head_sha"] == sha]
+    if not own:
+        return False, ("main's newest merge %s has no check-site run of its own (push or manual): not green. A skip marker "
+                       "in its message stops the push run; start one by hand (workflow_dispatch on main)" % sha[:7]), runs[0]
+    r = own[0]
     if r["conclusion"] != "success":
         return False, "main's last full run %s (%s, %s, finished %s) is %s" % (
             r["id"], r["event"], r["head_sha"][:7], r["updated_at"], r["conclusion"]), r
@@ -130,7 +177,7 @@ def check_main(api):
         r["id"], len(jobs), r["head_sha"][:7], r["updated_at"]), r
 
 
-def guard(api, number, override=None, wait=0, main_check=check_main, sleep=time.sleep, log=print):
+def guard(api, number, override=None, wait=0, main_check=check_main, sleep=time.sleep, log=print, clean=disarm):
     """Merge or raise Refused. Returns (merge_response, judged_run)."""
     if override is not None and not override.strip():
         raise Refused("--override needs Jon's ruling and its date as text")
@@ -158,7 +205,7 @@ def guard(api, number, override=None, wait=0, main_check=check_main, sleep=time.
             body="Merge guard override (scripts/merge-pr.py), main's rule waived on this ruling:\n\n> %s\n\nWhat it overrode: %s.\n"
                  "The Gate was green on head %s." % (override.strip(), why, pr["head"]["sha"][:7]))
     res = api("PUT", "%s/pulls/%d/merge" % (R, number), merge_method="squash", sha=pr["head"]["sha"],
-              commit_title="%s (#%d)" % (pr["title"], number), commit_message=pr.get("body") or "")
+              commit_title=clean("%s (#%d)" % (pr["title"], number)), commit_message=clean(pr.get("body") or ""))
     if not res.get("merged"):
         raise Refused("GitHub did not merge #%d: %s" % (number, res.get("message")))
     return res, run
@@ -196,6 +243,20 @@ def _job(name, status="completed", concl="success"):
     return {"name": name, "status": status, "conclusion": concl}
 
 
+def _commit(sha, msg, who="Vector52F"):
+    return {"sha": sha, "author": {"login": who}, "commit": {"author": {"name": who}, "message": msg}}
+
+
+# main's commits, newest first: the merge the GREEN runs were for ("a" * 40)
+COMMITS = [_commit("a" * 40, "Handover: MATHTEXT-NOWRAP and CTS-SEVEN done (#473)")]
+BOT_ON_TOP = [_commit("c" * 40, "Record CI timings and repack (run 41428467865) [skip ci]", BOT),
+              _commit("d" * 40, "Record the answer counts [skip ci]", BOT)] + COMMITS
+# 2 Nov 2026: #631's merge (34bac35) carried "[skip ci]" from its body; no run started; the newest run was the merge before
+UNRUN_MERGE = [_commit("b" * 40, "GATE-WARN-THEN-ENFORCE step 5 ... (#631)\n\n... commits what moved ([skip ci]) ...")] + BOT_ON_TOP
+PERSON_MARKED = [_commit("e" * 40, "Quick fix [skip ci]")] + COMMITS
+MARKED_PR = dict(PR_OPEN, title="Gate [skip ci] notes",
+                 body="It commits [skip ci]; also [CI Skip], [ no  ci ], [skip actions], [Actions Skip].\n\nskip-checks: true")
+
 JOBS_OK = [_job("Plan"), _job("Tier 1 (page load) shard 1/4"), _job("Content verifiers 1"), _job(GATE)]
 JOBS_SKIPPED = JOBS_OK + [_job("Answer locks 3", concl="skipped"), _job("Leaderboard", concl="neutral")]
 JOBS_OPEN = JOBS_OK + [_job("Content verifiers 10", "in_progress", None), _job("Tier 4 layer A", "queued", None)]
@@ -204,8 +265,10 @@ JOBS_RED = JOBS_OK + [_job("Content verifiers 4", concl="failure")]
 
 class Fake:
     def __init__(self, pr=PR_OPEN, gate=GATE_OK, runs=GREEN, script=None, jobs=None, jobs_script=None, jobs_error=False,
-                 max_per_page=None):
+                 max_per_page=None, commits=None, commits_error=False):
         self.pr, self.gate, self.runs, self.calls = pr, gate, runs, []
+        self.commits = COMMITS if commits is None else commits   # main's commits, newest first (GATE-FIX b')
+        self.commits_error = commits_error
         self.max_per_page = max_per_page   # GitHub's 502 for a page too large (27 Oct 2026)
         self.script = script or []   # successive run lists, for the wait case
         # jobs: a list of pages (each a list of jobs); jobs_script: successive such lists, one per poll
@@ -227,6 +290,10 @@ class Fake:
                 self.jobs = self.jobs_script.pop(0) if len(self.jobs_script) > 1 else self.jobs_script[0]
             pages = self.jobs
             return {"total_count": sum(len(x) for x in pages), "jobs": pages[page - 1] if page <= len(pages) else []}
+        if method == "GET" and "/commits?sha=main" in path:
+            if self.commits_error:
+                raise Refused("gh api GET %s failed: HTTP 502" % path)
+            return self.commits
         if method == "GET" and "/actions/workflows/" in path:
             runs = self.script.pop(0) if len(self.script) > 1 else (self.script[0] if self.script else self.runs)
             return {"workflow_runs": runs}
@@ -245,7 +312,7 @@ class Fake:
         return [c for c in self.calls if c[0] == "POST"]
 
 
-def _try(fake, **kw):
+def _try_one(fake, **kw):
     try:
         guard(fake, 473, sleep=lambda s: None, log=lambda *a: None, **kw)
         return None
@@ -253,9 +320,12 @@ def _try(fake, **kw):
         return str(e)
 
 
-def cases(main_check=check_main):
+def cases(main_check=check_main, clean=disarm):
     """-> list of (name, ok, detail). Every case states what must and must not happen."""
     out = []
+
+    def _try(fake, **kw):
+        return _try_one(fake, clean=clean, **kw)
 
     def case(name, ok, detail=""):
         out.append((name, bool(ok), detail))
@@ -395,6 +465,36 @@ def cases(main_check=check_main):
     f = Fake(jobs=[JOBS_OPEN], gate=GATE_RED)
     err = _try(f, main_check=main_check, override="Jon, 22 Oct 2026: x")
     case("--override never waives a red Gate (open jobs)", err and "Gate" in err and not f.merged() and not f.comments(), err or "MERGED")
+    # ---- GATE-FIX (Jon, 2 Nov 2026) ----
+    f = Fake(commits=UNRUN_MERGE)
+    err = _try(f, main_check=main_check)
+    case("(b') a merge with no run of its own refuses, though the run before it is green (#631, 34bac35)",
+         err and "no check-site run of its own" in err and "bbbbbbb" in err and not f.merged(), err or "MERGED")
+
+    f = Fake(commits=BOT_ON_TOP)
+    err = _try(f, main_check=main_check)
+    case("(b') bot skip-marker commits on top of a green merge: the merge's run is judged, and it merges",
+         err is None and len(f.merged()) == 1, err or "")
+
+    f = Fake(commits=PERSON_MARKED)
+    err = _try(f, main_check=main_check)
+    case("(b') a person's commit with a skip marker is not passed over as a bot commit: no run, refused",
+         err and "eeeeeee" in err and not f.merged(), err or "MERGED")
+
+    f = Fake(commits_error=True)
+    err = _try(f, main_check=main_check)
+    case("(b') main's commits unreadable refuses (never assumed green)", err and "could not be read" in err and not f.merged(),
+         err or "MERGED")
+
+    f = Fake(pr=MARKED_PR)
+    err = _try(f, main_check=main_check)
+    m = f.merged()
+    put = m[0][2] if m else {}
+    case("(a) every skip marker in the PR's title and body is disarmed in the squash title and message, its words kept",
+         err is None and len(m) == 1 and not has_skip_marker(put.get("commit_title")) and not has_skip_marker(put.get("commit_message"))
+         and "(skip ci)" in put.get("commit_message", "") and "(CI Skip)" in put.get("commit_message", "")
+         and "skip-checks true" in put.get("commit_message", "") and put.get("commit_title", "").endswith("(#473)"),
+         err or repr(put.get("commit_message")))
     return out
 
 
@@ -434,6 +534,17 @@ def selftest():
         print("  %s  planting the run-only check_main() fails %d of %d %s cases" % (
             "PASS" if caught else "FAIL", len(caught), len(total), tag))
         bad += not caught
+    # GATE-FIX: the old judge (the newest run, whatever commit it ran on) must fail the unrun-merge case, and a builder
+    # that copies the body as it is must fail the disarm case
+    old_b = [n for n, ok, _ in cases(main_check=lambda api: check_main(api, merge_of=lambda a, runs: (runs[0]["head_sha"], None)))
+             if not ok]
+    caught = [n for n in old_b if n.startswith("(b') a merge with no run")]
+    print("  %s  planting the newest-run judge (no merge check) fails the unrun-merge case" % ("PASS" if caught else "FAIL"))
+    bad += not caught
+    old_a = [n for n, ok, _ in cases(clean=lambda t: t) if not ok]
+    caught = [n for n in old_a if n.startswith("(a)")]
+    print("  %s  planting a squash message copied as it is fails the disarm case" % ("PASS" if caught else "FAIL"))
+    bad += not caught
     print("%s" % ("selftest FAILED" if bad else "selftest passed"))
     return 1 if bad else 0
 
