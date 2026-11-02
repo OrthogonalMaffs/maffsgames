@@ -1747,7 +1747,7 @@ def selftest():
     stub = lambda b: (calls.append(b), (True, [], "stub selection"))[1]
     with tempfile.TemporaryDirectory() as td:
         ev = os.path.join(td, "event.json")
-        with open(ev, "w", encoding="utf-8") as f:
+        with open(ev, "w", encoding="utf-8", newline="") as f:
             json.dump({"pull_request": {"base": {"sha": "f" * 40}}}, f)
         pr_env = {"GITHUB_ACTIONS": "true", "GITHUB_EVENT_NAME": "pull_request"}
         out = io.StringIO()
