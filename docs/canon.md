@@ -1869,6 +1869,8 @@ its random draw served that question: #588). The rule, for every lane:
 - **A handover past 20 KB will archive itself** (built, parked on `claude/gate-handover-archive` until Mon 2 Nov 2026):
   a warning on a pull request, and after the merge main moves its oldest dated entries to that lane's `docs/history/`
   archive, word for word. Until then the lane moves them by hand, as before.
+- **The context-size check warns before it fails** (Jon, 2 Nov 2026, contract GATE-RESUME): `check-context-size.py` warns
+  on any file held to 20 KB (CLAUDE.md, AGENTS.md, both handovers) once it passes 18 KB, and passes it; past 20 KB it fails.
 - **Only the cloud lane changes gate files;** another lane reports what it needs and waits.
 
 ## 7.9 Verifier conventions (Jon, 8 Oct 2026)

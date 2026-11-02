@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Context size (CLAUDE.md and both handovers at most 20 KB, docs/todo.md at most 150 KB; canon reported; contracts CTX and TODO-SLIM) | --selftest && --check
+# ci-line: Context size (CLAUDE.md, AGENTS.md and both handovers at most 20 KB, a warning past 18 KB; docs/todo.md at most 150 KB; canon reported; contracts CTX, TODO-SLIM and GATE-RESUME) | --selftest && --check
 """What every Claude Code session loads before it starts work stays small (contract CTX, 8 Oct 2026).
 
 CLAUDE.md loads into every session in both lanes, and each lane reads its handover first. On 8 Oct 2026 they
@@ -22,13 +22,19 @@ TARGET bytes (HEADROOM under the limit, so a normal entry fits). Main's "Regener
 --fix after every merge and commits what it moved. A handover still over the limit with nothing to move (its preamble
 alone) still fails, and so do CLAUDE.md and docs/todo.md: they have no entries to archive.
 
+A WARNING BAND BELOW THE LIMIT (contract GATE-RESUME step 3, Jon 2 Nov 2026; canon 7.8.4): a file held to LIMIT that is
+over WARN (18 KB) and at or under LIMIT prints a warning (a GitHub ::warning annotation in CI) and passes, so the cap is
+planned for instead of met mid-task (ENCODING, 30 Oct). Over the limit still fails. The band is for the 20 KB files only:
+docs/todo.md has its own cap (TODO_LIMIT) and no band. AGENTS.md, loaded by every Codex task, is held to LIMIT too.
+
 DEFERRED: a file whose trim the contract itself put off. It is reported, not failed, and it fails once it is
 under the limit while still listed, so the exemption cannot outlive the trim.
 
   python scripts/check-context-size.py --check      the repo
   python scripts/check-context-size.py --fix        archive the oldest handover entries past the limit (step 5)
   python scripts/check-context-size.py --selftest   planted files in a scratch folder: a 25 KB CLAUDE.md fails,
-                                                    a todo.md over its cap fails
+                                                    a todo.md over its cap fails, 18.5 KB warns and passes,
+                                                    17 KB is silent, an AGENTS.md over the limit fails
 """
 import argparse
 import datetime
@@ -39,8 +45,9 @@ import tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LIMIT = 20 * 1024
+WARN = 18 * 1024                 # GATE-RESUME step 3: a LIMIT file past this warns and passes; past LIMIT it fails
 TODO_LIMIT = 150 * 1024          # TODO-SLIM: 145 KB after the slim (10 Oct 2026); lower it as items close
-FILES = ["CLAUDE.md", "docs/handover/home.md", "docs/handover/cloud.md", "docs/todo.md"]
+FILES = ["CLAUDE.md", "AGENTS.md", "docs/handover/home.md", "docs/handover/cloud.md", "docs/todo.md"]
 LIMITS = {"docs/todo.md": TODO_LIMIT}
 REPORTED = ["docs/canon.md"]     # size printed, never failed
 DEFERRED = {}
@@ -93,8 +100,19 @@ def archive(root, handover, archive_path, today=None, target=None):
     return k
 
 
-def check(root, deferred):
-    """[fault] for the files under root; prints one line per file."""
+def warn(f, n, limit, warnings):
+    """Print the warning-band line for `f` (and a GitHub annotation in CI), and record it in `warnings`."""
+    print("  WARN      %-24s %7d bytes (limit %d): past the %d-byte warning band; plan its trim" % (f, n, limit, WARN))
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        print("::warning title=Context size::%s is %d bytes, past the %d-byte warning band (limit %d): plan its trim "
+              "before it fails" % (f, n, WARN, limit))
+    if warnings is not None:
+        warnings.append(f)
+
+
+def check(root, deferred, warnings=None):
+    """[fault] for the files under root; prints one line per file. A LIMIT file in the warning band (over WARN, at or
+    under LIMIT) is appended to `warnings`, if given, and passes."""
     faults = []
     for f in FILES:
         p = os.path.join(root, f)
@@ -114,6 +132,9 @@ def check(root, deferred):
         if over and f in HANDOVERS and movable(open(p, encoding="utf-8", newline="").read())[1]:
             print("  WARN      %-24s %7d bytes (limit %d): --fix archives its oldest entries (main does it after the "
                   "merge)" % (f, n, limit))
+            continue
+        if not over and limit == LIMIT and n > WARN:
+            warn(f, n, limit, warnings)
             continue
         print("  %s  %-24s %7d bytes (limit %d)" % ("FAIL    " if over else "ok      ", f, n, limit))
         if over:
@@ -155,6 +176,25 @@ def selftest():
              {"docs/handover/cloud.md": "test"}, False)
         case("a deferred file under the limit fails (the exemption is stale)", {"docs/handover/cloud.md": 9000},
              {"docs/handover/cloud.md": "test"}, True)
+        # GATE-RESUME step 3: the warning band (WARN, 18 KB) below the limit, and AGENTS.md held to LIMIT.
+        def band(name, sizes, want_fail, want_warn):
+            plant(sizes)
+            print(" %s:" % name)
+            warned = []
+            got = bool(check(tmp, {}, warned))
+            ok = got == want_fail and warned == want_warn
+            print("  %s  %s (warned: %s)" % ("caught" if want_fail and ok else "passed" if ok else "WRONG ", name, warned))
+            if not ok:
+                fails.append(name)
+
+        band("an 18.5 KB CLAUDE.md warns and passes", {"CLAUDE.md": int(18.5 * 1024)}, False, ["CLAUDE.md"])
+        band("an 18.5 KB handover warns and passes", {"docs/handover/home.md": int(18.5 * 1024)}, False,
+             ["docs/handover/home.md"])
+        band("a CLAUDE.md of LIMIT + 1 bytes fails", {"CLAUDE.md": LIMIT + 1}, True, [])
+        band("a 17 KB CLAUDE.md is silent (no warning, no fault)", {"CLAUDE.md": 17 * 1024}, False, [])
+        band("an AGENTS.md over LIMIT fails", {"AGENTS.md": LIMIT + 1}, True, [])
+        band("an 18.5 KB AGENTS.md warns and passes", {"AGENTS.md": int(18.5 * 1024)}, False, ["AGENTS.md"])
+        band("a docs/todo.md under its own cap is silent (no band on its cap)", {"docs/todo.md": TODO_LIMIT - 1024}, False, [])
         # Step 5: a handover with entries archives itself; one with nothing to move still fails.
         entry = lambda d, n: "## %s (cloud): entry\n\n%s\n\n" % (d, "y" * n)
         text = "# Handover: cloud lane\n\npreamble\n\n" + "".join(entry("2026-10-%02d" % d, 4000) for d in range(27, 20, -1))
