@@ -1,10 +1,16 @@
 # Handover: home lane
 
+**Queue (cross-lane facts; never archived)**
+
+- RULEBOOK: home/Codex, codex/rulebook, /home/maffs/mg-rulebook, PR #635; Shared, REQUEST CHANGES received from Project Claude (Amendment 1). Same branch; stop at Gate green for re-review and Jon's “merge”. Two lanes are explicitly authorised for this task.
+- Cloud: GATE-FIX owns scripts/merge-pr.py, scripts/ci-groups.py, docs/handover/cloud.md and possibly canon §7.8. Home leaves those files alone; if both branches touch canon, the later PR merges main in.
+- GATE-RESUME #630–#632 and root-image removal #633 are merged. Until GATE-FIX merges, keep GitHub CI-skip markers out of PR descriptions because the current helper copies the description into the squash message.
+
 ## 2026-11-02 (home): RULEBOOK (Shared; Codex)
 
 Agent: Codex. Worktree: /home/maffs/mg-rulebook. Branch: codex/rulebook. Last commit before this record update: 8e4fcf21c784b0b3c85c32976a836b9ecaeb02a8. PR #635: https://github.com/OrthogonalMaffs/maffsgames/pull/635 . Next: verify this record commit's Gate, then wait for Project Claude review and Jon's explicit “merge”.
 
-AGENTS.md is the common WSL rulebook; CLAUDE.md imports it with the documented @AGENTS.md form. Local testing, scripts/CI, game claims and room-art rules have explicit topic triggers. Seven previous home entries now use dated level-two headings; text outside those opening lines is unchanged. Windows procedures are historical material in canon §12. WSL lane notes were created at /home/maffs/lanes/notes.md with Jon's cross-lane facts.
+AGENTS.md is the common WSL rulebook; CLAUDE.md imports it with the documented @AGENTS.md form. Local testing, scripts/CI, game claims and room-art rules have explicit topic triggers. Seven previous home entries now use dated level-two headings; text outside those opening lines is unchanged. Windows procedures are historical material in canon §12. Amendment 1 moves cross-lane facts into this handover's Queue preamble and deletes the temporary machine-local notes file; platform-principle bullets are copied verbatim from the unchanged planner brief into AGENTS.md. Task-specific concurrency text is removed from that rulebook.
 
 Rulings: understood failures caused by this change get at most two within-scope fixes; all other unexpected events stop. Answer-lock exempt() requires both a claim and roster-Unlisted status. Cloud handover's missing Unlisted qualification is flagged for cloud; that file remains untouched. Lane notes were waived for startup and replaced in WSL. No merge or cleanup authorised yet.
 

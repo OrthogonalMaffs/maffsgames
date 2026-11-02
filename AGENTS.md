@@ -4,12 +4,24 @@ This is the single home for agent-neutral mechanics. Codex loads it directly; Cl
 
 ## Before every task
 
-- Read the workflow, canon §0 and contract-named sections, both lane handovers and `/home/maffs/lanes/notes.md`; notes are read before each item. Your handover gives current work, the other gives conflicts. Missing access: stop and report.
+- Read the workflow, canon §0 and contract-named sections, and both lane handovers, including their Queues. Your handover gives current work, the other gives conflicts. Missing access: stop and report.
 - Require TASK, ROOT CAUSE, CLASS CHECK, EXACT CHANGE, DO NOT TOUCH, SUCCESS CONDITION, STOP IF, lane and tier. Before editing, state the root cause in one sentence and check the contract against code. Missing fields or a contradiction: stop.
 - CLASS CHECK precedes EXACT CHANGE: repeated bug shapes, shared infrastructure or missing safety on multiple call paths require an architectural fix. Otherwise explain why the defect is local. Reference: canon §12, RULEBOOK.
 - Apply canon §0.3 standing rulings before asking for decisions; list applied SR numbers in the PR. Contract STOP IF and “Still stops for Jon” remain binding.
 - Change only EXACT CHANGE: no unrelated refactoring, renaming, reformatting or tidying. No new collection, dependencies or changes to canon §0 principles. Unsafe work or access: stop and report.
 - Codex skips the planner's `.claude/rules/project-claude.md`. Claude Code's role clarification is in CLAUDE.md. Read saved contracts only when starting their item, never the contracts directory at session start.
+
+## Platform principles (bind every task)
+
+- Free forever. No subscription, no freemium, no ads.
+- No sign-up required. Zero friction for students.
+- **No personal data collected.** Anonymous gameplay events go to GA4 (cookieless) and a Google Sheets backend, all disclosed on the privacy page. No new collection without Jon's approval.
+- Curriculum aligned. Every game maps to the AQA, Edexcel, OCR or BTEC spec.
+- Single-file HTML games. No build step, no external runtime dependencies beyond KaTeX via CDN.
+- Minimum **40–50 questions per game.** Twenty is a starter activity, not a class resource.
+- Mathematical notation via **KaTeX** for expressions (scope in canon §7.1.1). No ASCII approximations.
+- Answer matching via **`dataset.val`** always. Never compare rendered HTML strings.
+- **The maths must be right.** A struggling student is the least able to spot a wrong answer. Correctness outranks new features.
 
 ## WSL and git
 
@@ -51,9 +63,9 @@ python -X utf8 /tmp/maffs-end-task.py <branch>
 ## Lane ownership
 
 - At most two implementers run, one per lane; an agent occupies a slot. Home owns shared code/assets, canon and docs, including batched relisting; cloud owns per-game fixes and their findings. Edit only your lane's handover. Contract exceptions must be explicit. See canon §7.8.2.
-- Shared-file work requires one lane with nothing else running unless Jon explicitly allows concurrency in the contract or its amendments. This task's two-lane exception is in the lane notes (Jon, 2 Nov). History: canon §12, RULEBOOK.
+- Shared-file work requires one lane with nothing else running unless Jon explicitly allows concurrency in the contract or its amendments. History: canon §12, RULEBOOK.
 - Gate files belong to cloud: workflow, `scripts/ci-*`, ci_shards.py, merge-pr.py, check-context-size.py and check-changed.py. Other lanes report proposed changes and wait. Before game/listing work read `docs/rules/games.md` for claims and register restrictions.
-- Cross-lane facts go in `/home/maffs/lanes/notes.md`: merge dependencies, active files and flakes. Before local tests read `docs/rules/local-testing.md` for shared backends, stubs and port isolation.
+- Put cross-lane facts (merge dependencies, files in use, flakes) in the writing lane's handover Queue, before its first `## ` entry; the archive never moves that preamble. Both handovers are read before every task. Rationale: canon §12, RULEBOOK.
 
 ## Contracts and handovers
 

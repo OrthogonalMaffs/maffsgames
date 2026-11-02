@@ -13,7 +13,7 @@ Task mechanics, WSL setup and recovery have one home: AGENTS.md. This document c
 Lane slots and ownership are defined in AGENTS.md.
 
 **Neither agent sees the other's conversation.** Everything that crosses between them is written down: the
-contract (in the PR body), the report (in the PR body), the handover file, the notes file, and the diff itself.
+contract (in the PR body), the report (in the PR body), both handovers, and the diff itself.
 Project Claude reviews what is on GitHub, never a summary alone.
 
 
@@ -31,7 +31,7 @@ Shared work waits because one fault can affect many games and existing checks ca
 
 ## 3. Lifecycle and evidence
 
-Jon sets priorities through Project Claude, who investigates main, handovers and lane notes, answers CLASS CHECK and supplies the contract. The implementer follows AGENTS.md, produces the scoped change and opens a PR containing the contract and report below.
+Jon sets priorities through Project Claude, who investigates main and handover Queues, answers CLASS CHECK and supplies the contract. The implementer follows AGENTS.md, produces the scoped change and opens a PR containing the contract and report below.
 
 For Shared work, write “Ready for architect review” when the Gate is green. Jon relays the PR for Project Claude to review the actual GitHub diff. Findings follow §4; approval is recorded in the handover. Visible work is accepted after Jon plays it.
 

@@ -2598,7 +2598,11 @@ The previous home handover used bold entry starts; the archiver recognises only 
 
 ### WSL retirement and current environment
 
-The old Windows paths, sandbox approvals, launcher/wrapper arrangements, folder locks and local timing exception do not describe distro maffs. The task now runs in WSL with its active venv and authorised git writes; lane notes live at /home/maffs/lanes/notes.md. Git identity was set with Jon's authorisation during GT-EXPLAIN. The current cleanup script can run from a temporary copy, avoiding an outdated primary checkout and keeping cleanup outside the worktree being removed.
+The old Windows paths, sandbox approvals, launcher/wrapper arrangements, folder locks and local timing exception do not describe distro maffs. The task now runs in WSL with its active venv and authorised git writes. Git identity was set with Jon's authorisation during GT-EXPLAIN. The current cleanup script can run from a temporary copy, avoiding an outdated primary checkout and keeping cleanup outside the worktree being removed.
+
+Amendment 1 (Project Claude review, Jon, 2 Nov) replaces machine-local coordination with cross-lane facts in the writing lane's handover Queue. Cloud cannot read WSL's filesystem, whereas both agents already read both tracked handovers. The Queue is the preamble before the first level-two entry, outside the archiver's movable sections. The temporary WSL notes file was deleted; no active instruction depends on it.
+
+The same review found that skipping the planner's brief left Codex without its platform principles; canon §0 gives mission and priorities but not that list. AGENTS.md now includes those bullets verbatim so every implementing agent loads them. The planner's source is unchanged. Task-specific concurrency state stays in the handover Queue rather than the rulebook.
 
 The context checker on main measures AGENTS.md as well as CLAUDE.md and both handovers, warning above 18 * 1024 bytes and failing above 20 * 1024. A handover that can be archived warns instead; main's job runs --fix and moves oldest level-two sections until 17 * 1024 bytes, preserving the newest. A handover with too much unmovable text still fails. Todo's separate cap is 150 * 1024, without the 18 KiB band; canon is reported, uncapped.
 
