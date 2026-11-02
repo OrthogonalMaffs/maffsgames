@@ -67,13 +67,13 @@ The handover entry names the agent, worktree path, branch, last commit and next 
 
 ### Task record
 
-Every finished task's handover entry ends with one line of this form, substituting values:
+End each finished entry:
 
 ```text
 Record: agent <Codex|Claude Code>; wall <h:mm from contract received to hand-off for review, or to a STOP>; review cycles <n>; amendments <n>; usage <figure as the agent reports it, or "n/a">.
 ```
 
-Hand-off is Gate green or a STOP report; exclude merge time. Usage requires a reliable report from the agent's own interface; never estimate it. No other process. Rationale: canon §12, RULEBOOK.
+Gate green/STOP; no usage estimates. Canon §12.
 
 ### What may enter an always-loaded file
 

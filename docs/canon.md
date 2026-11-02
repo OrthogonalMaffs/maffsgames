@@ -1763,12 +1763,12 @@ verifier too long for one line lists its work units and `ci-groups.py` chooses i
 ### 7.8.2 Two lanes: home and cloud (7 Oct 2026)
 
 Two sessions may work at once, one per lane. Each lane keeps its own handover: `docs/handover/home.md` and
-`docs/handover/cloud.md`; a session edits only its own. CLAUDE.md's opening block is a fixed pointer to both
+`docs/handover/cloud.md`; a session edits only its own. AGENTS.md's startup list is a fixed pointer to both
 and is not edited by fix PRs.
 
 - **Home lane:** shared code, shared assets, CI and canon (contract F's shared fixes, then contract C), and
   every docs PR: `docs/todo.md`, relisting fixed games (batched), the roster's listed section.
-- **Branches (Jon, 12 Oct 2026):** GitHub deletes a merged PR's head branch automatically (repo setting), so lanes never delete remote branches; a branch merged before 12 Oct that is still on GitHub is history, not a task. A lane removes its own local branch and worktree with `scripts/end-task.py <branch>` (CLAUDE.md, "End of task").
+- **Branches (Jon, 12 Oct 2026):** GitHub deletes a merged PR's head branch automatically (repo setting), so lanes never delete remote branches; a branch merged before 12 Oct that is still on GitHub is history, not a task. A lane removes its own local branch and worktree with `scripts/end-task.py <branch>` (AGENTS.md, "Checks, merge and cleanup").
 - **Cloud lane:** per-game fixes in games that are currently unlisted (and listed games it has claimed: below), one game per PR, each with its
   verifier, closing its register entries in its own `docs/audits/findings/<slug>.yml`. It never edits
   `schools/assets/`, the shared modules in `scripts/`, the workflow, canon, the roster's listed section or
@@ -1809,8 +1809,7 @@ and is not edited by fix PRs.
   contract is saved verbatim as `docs/handover/contracts/<yyyy-mm-dd>-<name>.md`, in its claim commit or its PR's
   first commit; the lane's handover queue holds a one-line pointer to it, never the text; when the work merges the
   file moves to `docs/history/contracts/`. The folder is read only when starting the item it names, never at
-  session start: CLAUDE.md names the two handover files, and `scripts/check-context-size.py` measures only those
-  and CLAUDE.md.
+  session start: AGENTS.md names the handover files and the current context-size policy.
 
 ### 7.8.3 Merging: one command, one guard (Jon, 21 Oct 2026)
 
@@ -2592,6 +2591,8 @@ The operational home is AGENTS.md; topic-specific instructions live under docs/r
 AGENTS.md, CLAUDE.md and the workflow each held copies of mechanics, allowing them to drift. CLAUDE.md grew from 12,246 to 20,480 bytes between 8 and 30 Oct, about 350 bytes per day, much of it explanation and incident history. The 300-byte entry rule keeps loaded instructions focused; reasons and history belong here in the same PR. An area rule moves only when a reader can unambiguously determine its trigger. Generic safety, background launch, check output, contract scope and cross-lane ownership remain loaded because any task can need them.
 
 Changing agents should not produce a second branch, discarded work or a new prefix. The takeover rule records the identity and exact git state needed to check a handover before reusing its worktree. The task Record line gives Jon comparable observations for Codex and Claude Code without estimating usage or adding a tracking system. Wall time ends at review hand-off or STOP, excluding merge time.
+
+For the Task record, hand-off is the stop at Gate green for review or the STOP IF report; merge time is excluded. Usage is recorded only when the agent's own interface reports it reliably, otherwise n/a; it is never estimated. The single line is the entire process.
 
 The previous home handover used bold entry starts; the archiver recognises only level-two headings. Converting those opening lines allows oldest-entry archiving while retaining their order and text outside headings. Both lanes now use one dated format.
 
