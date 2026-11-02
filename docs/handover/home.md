@@ -8,13 +8,13 @@
 
 ## 2026-11-02 (home): LOOK-STAGE
 
-Agent: Codex. Worktree: /home/maffs/mg-look-stage. Branch: codex/look-stage. Base: b5c9eaa6. Next: complete local checks, commit/push and open Shared review PR; stop at green Gate. No merge authorised.
+Agent: Codex. Worktree: /home/maffs/mg-look-stage. Branch: codex/look-stage. Implementation commit: 5e5a9e44; base: b5c9eaa6. Next: push and open Shared review PR; stop at green Gate. No merge authorised.
 
 Shared listing gap fixed in the roster Description and a new CI-header-registered checker; no existing columns or listing states changed. All 100 eligible listed games record Jon's retrospective approval; Pies alone warns. Shrink-only JSON list rejects additions, restoration after removal and stale entries. Canon §7.8 records the listing/art rule; §12 explains the pipeline failure. No game files, Gate files or answer-lock state changed. SR-21 applied (listing state retained); SR-27 does not exempt this shared check from check-changed.py.
 
-Initial local run exposed a sign-off word-boundary bug and an incorrect expected warning in one selftest; one within-scope fix corrected both. Re-run: 7/7 selftests pass; 101 listed games, 1 warning, 0 failures. CI packing check passes; new line uses the standard untimed warning. Full check-changed pending.
+Initial local run exposed a sign-off word-boundary bug and an incorrect expected warning in one selftest; one within-scope fix corrected both. Re-run: 7/7 selftests pass; 101 listed games, 1 warning, 0 failures. CI packing check passes; new line uses the standard untimed warning. Full check-changed: 152/152 passed in 515s (5 heavy serial, 147 light); standard seven checks and indirect heavy roster dependencies deferred to CI. Completion summary retained in `.claude/bg-1793654249945.log`; detached launcher's child exit status was not retained. UTF-8 characters and exact row preservation after removing the 100 new approval suffixes checked. An ad hoc import probe initially omitted scripts/ from sys.path; corrected probe passes, no repository change.
 
-Record: agent Codex; wall pending; review cycles 0; amendments 0; usage n/a.
+Record: agent Codex; wall pending Gate; review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-02 (home): RULEBOOK (Shared; Codex)
 
