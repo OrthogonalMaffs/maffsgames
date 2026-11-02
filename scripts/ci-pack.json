@@ -22,7 +22,7 @@
   "Complex Converter (every key equal to its given number, the principal argument stated and keyed, no option a second form of the key; every option marked in Chromium)": "1",
   "Component Crusher (every key from what the student is shown, diagrams measured from the canvas, marking through MaffsAnswer in Chromium)": "6",
   "Constructions Lab (no marking to check: every task's figure, labels and stated results verified by constructing all ten with the game's own compass and ruler in Chromium)": "12",
-  "Context size (CLAUDE.md and both handovers at most 20 KB, docs/todo.md at most 150 KB; canon reported; contracts CTX and TODO-SLIM)": "14",
+  "Context size (CLAUDE.md, AGENTS.md and both handovers at most 20 KB, a warning past 18 KB; docs/todo.md at most 150 KB; canon reported; contracts CTX, TODO-SLIM and GATE-RESUME)": "70",
   "Coordinate Geometry Dash (every key recomputed from its question; exactly one correct option, equations compared as curves; every option marked in Chromium)": "6",
   "Core Maths Paper 1 (every key recomputed from its stem and charts; options distinct in value; every key marked in Chromium)": "7",
   "Core Maths Paper 1 tax, NI and student loan (recomputed with uk_rates)": "23",
