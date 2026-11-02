@@ -55,7 +55,8 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 
 - **Step 1 (GWTE step 2), `claude/gate-worst-case`, worktree `/home/user/wt-gwc`:** origin/main merged in (1363331b). The stacked step-1 commit 840f32c5 is identical to the merged #590; the one conflict (ci-groups.py) was alignment only, resolved to the branch side, byte-identical to 778d926a. Workflow = main (with #618) + the one worst-case Plan step. Worst-case test by hand: `--selftest` PASS (plants: limit at 60%, a missed importer, select-everything); `--worst-case` PASS (bank_common.py selects 141 verifiers).
 - **Next:** step 2 (GWTE step 5) `claude/gate-handover-archive` only after step 1 merges: drop 33308fa5 (the checkpoint handover commit), merge main. Step 3 `claude/context-warn` after that.
-- **Found, not fixed (out of scope):** `scripts/check-banks.py:25` has an invalid escape `\(`; ci-deps.py's `ast.parse` prints a SyntaxWarning for it (Python 3.12+) whenever a selection is made. Harmless; a one-character fix for whoever next edits that file.
+- **Decided for you (Jon's ruling, 2 Nov):** step 5 drops e34a15e's CLAUDE.md "Size limit" edit and changes only its own script and workflow files; CLAUDE.md stays as on main. The archiving sentence and step 3's 18 KB warning band go to the home lane's RULEBOOK contract, which rewrites CLAUDE.md next.
+- **Found, not fixed (Jon, 2 Nov: home-lane queue, not this contract):** `scripts/check-banks.py:25` has an invalid escape `\(`; ci-deps.py's `ast.parse` prints a SyntaxWarning for it (Python 3.12+) whenever a selection is made. Harmless.
 
 ## 2026-10-27 (cloud): GATE-WARN-THEN-ENFORCE (contract `docs/handover/contracts/2026-10-27-gate-warn-then-enforce.md`, Jon's three additions). **Steps 1 and 3 merge this week; infrastructure FREEZE until Mon 2 Nov (Jon, 20:14).**
 
