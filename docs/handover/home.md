@@ -2,8 +2,25 @@
 
 **Queue (cross-lane facts; never archived)**
 
+- LOOK-STAGE: home/Codex, codex/look-stage, /home/maffs/mg-look-stage, PR #638; contract `docs/handover/contracts/2026-11-02-look-stage.md`. Concurrent PIES-LOOK/ESSENTIALS-ART authorised by Jon; roster, canon and registration reserved here. Pies remains warned until Jon's explicit look sign-off, irrespective of its artwork merge. Shared: stop at green Gate for Project Claude review and Jon's “merge”.
 - RULEBOOK: home/Codex, codex/rulebook, /home/maffs/mg-rulebook, PR #635; Shared. Amendment 1 findings addressed on the same branch; stop at Gate green for re-review and Jon's “merge”. Two lanes are explicitly authorised for this task.
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
+
+## 2026-11-02 (home): LOOK-STAGE
+
+Agent: Codex. Worktree: /home/maffs/mg-look-stage. Branch: codex/look-stage. Last commit before this report: 8e2cf3ff; implementation: 5e5a9e44; base: b5c9eaa6. PR #638: https://github.com/OrthogonalMaffs/maffsgames/pull/638 . Current-head Gate and review state are tracked in the PR report. Next: stop at green Gate for Project Claude Shared review and Jon's explicit “merge”. No merge authorised.
+
+Shared listing gap fixed in the roster Description and a new CI-header-registered checker; no existing columns or listing states changed. All 100 eligible listed games record Jon's retrospective approval; Pies alone warns. Shrink-only JSON list rejects additions, restoration after removal and stale entries. Canon §7.8 records the listing/art rule; §12 explains the pipeline failure. No game files, Gate files or answer-lock state changed. SR-21 applied (listing state retained); SR-27 does not exempt this shared check from check-changed.py.
+
+Initial local run exposed a sign-off word-boundary bug and an incorrect expected warning in one selftest; one within-scope fix corrected both. Re-run: 7/7 selftests pass; 101 listed games, 1 warning, 0 failures. CI packing check passes; new line uses the standard untimed warning. Full check-changed: 152/152 passed in 515s (5 heavy serial, 147 light); standard seven checks and indirect heavy roster dependencies deferred to CI. Completion summary retained in `.claude/bg-1793654249945.log`; detached launcher's child exit status was not retained. UTF-8 characters and exact row preservation after removing the 100 new approval suffixes checked. An ad hoc import probe initially omitted scripts/ from sys.path; corrected probe passes, no repository change.
+
+CI run 41528624872: the new check's seven plants passed, but content job 37 failed because its shallow checkout lacked the event's base commit. Within-scope fix fetches that exact base only when absent. Added a real shallow-clone selftest with a local file remote; the missing base is fetched and its older warning list read correctly. Direct selftest 8/8 and roster check (101 listed, one warning, zero failures) pass. Correction-file check-changed run: 41/42 pass in 251s, exit 1; Text writes alone caught three new fixture writes without newline=''. First fix for that check adds newline='' to all three; Text writes selftest/check and look selftest/check pass. Subsequent local run and CI are recorded in the PR report. No check has failed after two fixes for that check. No Gate file changes needed.
+
+After newline correction, check-changed.py --files scripts/check-look-signoff.py docs/handover/home.md passes 42/42 in 251s, captured exit 0 (log `.claude/bg-1793655775463.log`); seven standard CI deferrals. Original complete run remains 152/152. No game files or Gate files changed during corrections.
+
+First review hand-off: PR opened 2 Nov at 21:27 UTC; wall measured from contract/startup at 21:15 UTC.
+
+Record: agent Codex; wall 0:12; review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-02 (home): RULEBOOK (Shared; Codex)
 
