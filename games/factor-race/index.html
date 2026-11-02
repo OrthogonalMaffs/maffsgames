@@ -117,6 +117,8 @@ body.accessible .score-val,body.accessible .num-big,body.accessible .go-score{le
 }
 .correct::after{content:' \2713';font-size:.85em;opacity:.8}
 .incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+/* Jon's start-screen illustration (assets/start.webp, contract ESSENTIALS-ART): the card's width and corners. */
+.start-art{display:block;width:100%;max-width:100%;height:auto;margin:.4rem auto .7rem;border-radius:14px}
 </style>
 <!-- Google Analytics -->
 <script src="../../schools/assets/analytics.js"></script>
@@ -158,6 +160,7 @@ driver did, so the tap-through still meets right and wrong answers. -->
 
   <!-- Start screen -->
   <div class="start-screen" id="startScreen">
+    <img class="start-art" src="assets/start.webp" width="1600" height="873" alt="Two racing cars numbered 24 and 12 passing a scoreboard with 8 lights for 24 and 6 for 12">
     <div class="start-title">Factor Race</div>
     <div class="start-desc">Two numbers appear. Tap the one with <strong>more factors</strong>.</div>
     <div class="how-to">

@@ -23,7 +23,7 @@
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <style>
 /* Theme: schools/assets/theme.css (canon §7.5), light row (the lowest tier served is GCSE Foundation). This game's own accent:
-   a warm brown. The sofa and the coin are Jon's illustrations (assets/sofa.webp, assets/coin.webp); the marks bar takes the sofa's green. */
+   a warm brown. The living-room scene and the coin are Jon's illustrations (assets/scene.webp, assets/coin.webp); the marks bar takes the sofa's green. */
 :root{--accent:#8a4b12;--accent-dim:#f6ead9;--on-accent:#ffffff;
   --coin:#e0a82e;--coin-ink:#4a3000;--sofa:#3f5953;--sofa-edge:#2c3f3a;--on-sofa:#ffffff}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -50,10 +50,9 @@ a.back-link:hover{color:var(--text)}
 .sound-btn{min-height:44px;padding:0 .8rem;border-radius:10px;border:1px solid var(--border);background:var(--surface-alt);color:var(--text);font-size:.82rem;font-weight:600;cursor:pointer}
 .sound-btn[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
 
-/* The sofa on the start screen, with the coin in the gap between the cushions. */
+/* The living room on the start screen; the scene draws its own coin (contract ESSENTIALS-ART). */
 .room{position:relative;width:100%;max-width:340px;margin:.2rem auto .4rem;border-radius:12px;overflow:hidden;line-height:0}
 .room .sofa-img{display:block;width:100%;height:auto}
-.room .gap-coin{position:absolute;left:44.8%;top:66%;width:6.5%;height:auto;transform:translate(-50%,-50%)}
 
 .hud{display:flex;justify-content:space-between;align-items:center;padding:.3rem .8rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.5rem;gap:.3rem}
 .hud-item{text-align:center;min-width:48px}
@@ -174,8 +173,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   <div id="menu" class="screen active">
     <div class="header"><h1>I Found a Mark</h1><div class="sub">You don't need the answer. You need the next step.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
     <div class="room">
-      <img class="sofa-img" src="assets/sofa.webp" width="1600" height="873" alt="A green sofa with a gap between the cushions">
-      <img class="gap-coin" src="assets/coin.webp" width="512" height="512" alt="A gold coin">
+      <img class="sofa-img" src="assets/scene.webp" width="1600" height="873" alt="A living room with a green sofa and a gold coin on the floor beneath it">
     </div>
     <div class="panel menu-info">
       <p>A 4-mark question is not all or nothing. A marker gives you marks for the <strong>method</strong>: the calculations on the way, even if the arithmetic goes wrong or you never reach the answer.</p>

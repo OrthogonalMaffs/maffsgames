@@ -96,6 +96,8 @@ a.back-link{display:inline-block;margin:.6rem 0;color:var(--muted);text-decorati
 .play-again{padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
 body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
 .timer-display,.hud-timer,.timer,.time-display{display:none !important}
+/* Jon's start-screen illustration (assets/start.webp, contract ESSENTIALS-ART): the card's width and corners. */
+.start-art{display:block;width:100%;max-width:520px;height:auto;margin:.4rem auto .7rem;border-radius:8px}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
@@ -126,6 +128,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
   <a href="../../" class="back-link">← Back to Games</a>
   <div id="menu" class="screen active">
     <div class="header"><h1>Formula Forge</h1><div class="sub">Rearrange. Isolate. Master the subject change.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <img class="start-art" src="assets/start.webp" width="1600" height="873" alt="A blacksmith's forge with maths symbols hanging on the wall above an anvil">
     <div class="level-row">
       <button class="level-btn active" data-level="gcse" onclick="setLevel('gcse')">GCSE</button>
       <button class="level-btn" data-level="alevel" onclick="setLevel('alevel')">A-Level</button>
