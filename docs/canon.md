@@ -1590,6 +1590,8 @@ public web pages on maffsgames.co.uk.
 
 ## 7.8 CI: what runs when (Jon, 4 Oct 2026)
 
+A game is listed only after Jon signs off its look; the roster records it; `check-look-signoff.py` enforces it. Game illustrations follow §11.6 and live in `games/<slug>/assets/`.
+
 **Why it changed.** The repository is public, so GitHub Actions minutes are free; the cost of a check is
 the wall-clock time a PR waits. Every PR used to run every content verifier (Just Pythag It, Bruv alone is
 about 9 minutes) whatever it touched, and the full suite was run again locally on Windows first. The cost
@@ -2581,6 +2583,17 @@ all — ask for JPGs.**
 ---
 
 # 12. Engineering reference (moved from CLAUDE.md, 8 Oct 2026, contract CTX)
+
+## LOOK-STAGE: approval before listing (Jon, 2 Nov 2026)
+
+Six games built from the same template on 27 Oct had placeholder artwork. Who Ate All the Pies? was
+listed on 30 Oct because the pipeline checked correctness and play-testing but had no visual approval
+stage. Approval now lives in each roster Description, preserving the existing columns and their readers.
+`scripts/check-look-signoff.py` requires it in every listed section. Jon retrospectively approved all
+games listed before 2 Nov except Pies by commissioning LOOK-STAGE; they record “pre-2 Nov, grandfathered”.
+Pies alone starts on `scripts/look-signoff-warn.json` until Jon signs off its PIES-LOOK artwork. The list
+only shrinks: additions (including restoration after removal) fail, and approved or unlisted entries must
+be removed. New listings without approval fail. This applies §7.8.4 without blocking existing listings.
 
 ## RULEBOOK rationale and retired procedures (2 Nov 2026)
 
