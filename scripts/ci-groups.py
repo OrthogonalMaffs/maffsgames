@@ -1739,6 +1739,27 @@ def selftest():
                       "scripts/check-context-size.py", "games/a/index.html", "scripts/verify-x.py", "scripts/bank_common.py"])
           == [".github/workflows/x.yml", "scripts/check-context-size.py", "scripts/ci-groups.py", "scripts/ci_shards.py",
               "scripts/merge-pr.py"])
+    # GATE-FIX (c), Jon 2 Nov 2026: a pull request whose base cannot be read fails the worst-case test; it used to pass
+    # with "nothing to judge". Output captured so the planted FAIL line does not read as a self-test failure.
+    import contextlib
+    import io
+    calls = []
+    stub = lambda b: (calls.append(b), (True, [], "stub selection"))[1]
+    with tempfile.TemporaryDirectory() as td:
+        ev = os.path.join(td, "event.json")
+        with open(ev, "w", encoding="utf-8") as f:
+            json.dump({"pull_request": {"base": {"sha": "f" * 40}}}, f)
+        pr_env = {"GITHUB_ACTIONS": "true", "GITHUB_EVENT_NAME": "pull_request"}
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            rc_bad = run_worst_case(dict(pr_env, GITHUB_EVENT_PATH=os.path.join(td, "missing.json")), judge=stub)
+            rc_push = run_worst_case({"GITHUB_ACTIONS": "true", "GITHUB_EVENT_NAME": "push"}, judge=stub)
+            rc_ok = run_worst_case(dict(pr_env, GITHUB_EVENT_PATH=ev), judge=stub)
+    check("PLANT a pull request whose base cannot be read (its event file missing): the worst-case test fails, not "
+          "'nothing to judge' (exit %d)" % rc_bad, rc_bad == 1 and "cannot be judged" in out.getvalue())
+    check("worst case: a push run is not a pull request: nothing to judge, exit 0", rc_push == 0)
+    check("worst case: a pull request with a readable base is judged on that base (exit %d)" % rc_ok,
+          rc_ok == 0 and calls == ["f" * 40])
     # REGION-HISTORY: the per-region record keeps 10 per line per region and leaves ci-timings.json alone.
     regs = ["eastus", "centralus", "westus"]
 
@@ -1869,6 +1890,32 @@ def selftest():
     return 1 if fails else 0
 
 
+def run_worst_case(env=None, judge=None):
+    """--worst-case (GATE-WARN-THEN-ENFORCE step 2): the exit status. Not a pull request: nothing to judge, 0. A pull
+    request whose base cannot be read: 1, never a pass (GATE-FIX, Jon 2 Nov 2026: inconclusive is not green, as in
+    merge-pr.py; it passed with "nothing to judge" until then). `judge` (tests only) replaces the ci-deps.py selection."""
+    base, why = pr_base(env)
+    if base is None:
+        if why[0] is True:
+            print("FAIL  worst-case: %s: the test cannot be judged, so it fails (an unreadable base is not a pass)" % why[1])
+            return 1
+        print("worst-case: %s: nothing to judge (the test is for a pull request)" % why[1])
+        return 0
+    if judge is None:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("ci_deps", os.path.join(SCRIPTS, "ci-deps.py"))
+        deps = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(deps)
+        judge = lambda b: worst_case(deps.changed_since(b), deps)
+    applies, faults, how = judge(base)
+    print("worst-case: " + how)
+    for x in faults:
+        print("FAIL  " + x)
+    if applies:
+        print("worst-case: %s" % ("FAILED" if faults else "PASS"))
+    return 1 if faults else 0
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--json", action="store_true")
@@ -1900,21 +1947,7 @@ def main():
     if a.check_measured:
         return check_measured(a.run_id or "0", a.from_dir)
     if a.worst_case:
-        base, why = pr_base()
-        if base is None:
-            print("worst-case: %s: nothing to judge (the test is for a pull request)" % why[1])
-            return 0
-        import importlib.util
-        spec = importlib.util.spec_from_file_location("ci_deps", os.path.join(SCRIPTS, "ci-deps.py"))
-        deps = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(deps)
-        applies, faults, how = worst_case(deps.changed_since(base), deps)
-        print("worst-case: " + how)
-        for x in faults:
-            print("FAIL  " + x)
-        if applies:
-            print("worst-case: %s" % ("FAILED" if faults else "PASS"))
-        return 1 if faults else 0
+        return run_worst_case()
     if a.check:
         timings = read_json(TIMINGS)
         gs = groups(timings=timings)
