@@ -37,7 +37,9 @@ under the limit while still listed, so the exemption cannot outlive the trim.
                                                     17 KB is silent, an AGENTS.md over the limit fails
 """
 import argparse
+import contextlib
 import datetime
+import io
 import os
 import shutil
 import sys
@@ -100,19 +102,20 @@ def archive(root, handover, archive_path, today=None, target=None):
     return k
 
 
-def warn(f, n, limit, warnings):
-    """Print the warning-band line for `f` (and a GitHub annotation in CI), and record it in `warnings`."""
+def warn(f, n, limit, warnings, annotate):
+    """Print the warning-band line for `f`, and record it in `warnings`. With `annotate` (the repo's own check, never the
+    self-test's planted files) it is also a GitHub annotation in CI."""
     print("  WARN      %-24s %7d bytes (limit %d): past the %d-byte warning band; plan its trim" % (f, n, limit, WARN))
-    if os.environ.get("GITHUB_ACTIONS") == "true":
+    if annotate and os.environ.get("GITHUB_ACTIONS") == "true":
         print("::warning title=Context size::%s is %d bytes, past the %d-byte warning band (limit %d): plan its trim "
               "before it fails" % (f, n, WARN, limit))
     if warnings is not None:
         warnings.append(f)
 
 
-def check(root, deferred, warnings=None):
+def check(root, deferred, warnings=None, annotate=False):
     """[fault] for the files under root; prints one line per file. A LIMIT file in the warning band (over WARN, at or
-    under LIMIT) is appended to `warnings`, if given, and passes."""
+    under LIMIT) is appended to `warnings`, if given, and passes; `annotate` (main() only) makes it a CI annotation."""
     faults = []
     for f in FILES:
         p = os.path.join(root, f)
@@ -134,7 +137,7 @@ def check(root, deferred, warnings=None):
                   "merge)" % (f, n, limit))
             continue
         if not over and limit == LIMIT and n > WARN:
-            warn(f, n, limit, warnings)
+            warn(f, n, limit, warnings, annotate)
             continue
         print("  %s  %-24s %7d bytes (limit %d)" % ("FAIL    " if over else "ok      ", f, n, limit))
         if over:
@@ -195,6 +198,24 @@ def selftest():
         band("an AGENTS.md over LIMIT fails", {"AGENTS.md": LIMIT + 1}, True, [])
         band("an 18.5 KB AGENTS.md warns and passes", {"AGENTS.md": int(18.5 * 1024)}, False, ["AGENTS.md"])
         band("a docs/todo.md under its own cap is silent (no band on its cap)", {"docs/todo.md": TODO_LIMIT - 1024}, False, [])
+        # The self-test's planted files never become CI annotations (a 20 KB "AGENTS.md" warning on every run, #632).
+        plant({"AGENTS.md": int(18.5 * 1024)})
+        old_env, buf = os.environ.get("GITHUB_ACTIONS"), io.StringIO()
+        os.environ["GITHUB_ACTIONS"] = "true"
+        try:
+            with contextlib.redirect_stdout(buf):
+                check(tmp, {}, [])
+                check(tmp, {}, [], annotate=True)
+        finally:
+            if old_env is None:
+                os.environ.pop("GITHUB_ACTIONS", None)
+            else:
+                os.environ["GITHUB_ACTIONS"] = old_env
+        quiet = buf.getvalue().count("::warning") == 1
+        print("  %s  in CI a planted file is not annotated; the repo's own check (annotate=True) is, once" % (
+            "passed" if quiet else "WRONG "))
+        if not quiet:
+            fails.append("annotations from planted files")
         # Step 5: a handover with entries archives itself; one with nothing to move still fails.
         entry = lambda d, n: "## %s (cloud): entry\n\n%s\n\n" % (d, "y" * n)
         text = "# Handover: cloud lane\n\npreamble\n\n" + "".join(entry("2026-10-%02d" % d, 4000) for d in range(27, 20, -1))
@@ -252,7 +273,7 @@ def main():
                 print("%s: %d bytes, within the limit; nothing moved" % (h, n))
         return 0
     print("Context size (contracts CTX, TODO-SLIM): at most %d bytes each, docs/todo.md at most %d" % (LIMIT, TODO_LIMIT))
-    faults = check(ROOT, DEFERRED)
+    faults = check(ROOT, DEFERRED, annotate=True)
     for f in faults:
         print("FAIL: " + f)
     print("FAILED" if faults else "PASS")
