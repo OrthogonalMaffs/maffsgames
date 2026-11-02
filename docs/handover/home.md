@@ -2,8 +2,19 @@
 
 **Queue (cross-lane facts; never archived)**
 
+- LOOK-STAGE: home/Codex, codex/look-stage, /home/maffs/mg-look-stage; contract `docs/handover/contracts/2026-11-02-look-stage.md`. Concurrent PIES-LOOK/ESSENTIALS-ART authorised by Jon; roster, canon and registration reserved here. Pies remains warned until Jon's explicit look sign-off, irrespective of its artwork merge. Shared: stop at green Gate for Project Claude review and Jon's “merge”.
 - RULEBOOK: home/Codex, codex/rulebook, /home/maffs/mg-rulebook, PR #635; Shared. Amendment 1 findings addressed on the same branch; stop at Gate green for re-review and Jon's “merge”. Two lanes are explicitly authorised for this task.
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
+
+## 2026-11-02 (home): LOOK-STAGE
+
+Agent: Codex. Worktree: /home/maffs/mg-look-stage. Branch: codex/look-stage. Base: b5c9eaa6. Next: complete local checks, commit/push and open Shared review PR; stop at green Gate. No merge authorised.
+
+Shared listing gap fixed in the roster Description and a new CI-header-registered checker; no existing columns or listing states changed. All 100 eligible listed games record Jon's retrospective approval; Pies alone warns. Shrink-only JSON list rejects additions, restoration after removal and stale entries. Canon §7.8 records the listing/art rule; §12 explains the pipeline failure. No game files, Gate files or answer-lock state changed. SR-21 applied (listing state retained); SR-27 does not exempt this shared check from check-changed.py.
+
+Initial local run exposed a sign-off word-boundary bug and an incorrect expected warning in one selftest; one within-scope fix corrected both. Re-run: 7/7 selftests pass; 101 listed games, 1 warning, 0 failures. CI packing check passes; new line uses the standard untimed warning. Full check-changed pending.
+
+Record: agent Codex; wall pending; review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-02 (home): RULEBOOK (Shared; Codex)
 
