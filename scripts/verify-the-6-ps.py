@@ -258,10 +258,10 @@ EMOJI = re.compile('[\U0001F000-\U0001FAFF☀-➿⭐⭕️]|&#(9[0-9]{3}|1[0-9]{
 
 
 def static_checks(html, data, out):
-    if '<meta name="robots" content="noindex">' not in html:
-        out.append('the page is not noindex (it is unlisted until Jon has played it)')
-    if '<!-- UNLISTED' not in html:
-        out.append('the page has no UNLISTED comment')
+    if re.search(r'<meta name="robots"[^>]*noindex', html):
+        out.append('the page is noindex, but it is listed (launch contract SIX-PS-LAUNCH, 27 Oct 2026)')
+    if '<!-- UNLISTED' in html:
+        out.append('the page still carries its UNLISTED comment')
     if not re.search(r'<script src="/schools/assets/analytics\.js"></script>', html):
         out.append('the page does not load analytics.js')
     if '<html lang="en-GB" data-theme="light">' not in html or 'href="/schools/assets/theme.css"' not in html:
@@ -614,8 +614,8 @@ def play_topic(b, m, topic, out, tag, narrow=False, stop_after=None, offset=0, r
             out.append('%s: %s: calculator tag %r' % (tag, ref, calc))
         try_shown = p.is_visible('#qTry')
         want_try = q['calc'] == 'optional' and q.get('try_without') is True
-        if try_shown != want_try or (try_shown and p.inner_text('#qTry').strip() != 'Try without a calculator'):
-            out.append('%s: %s: the "Try without a calculator" prompt is %s, expected %s' % (tag, ref, 'shown' if try_shown else 'not shown', want_try))
+        if try_shown != want_try or (try_shown and p.inner_text('#qTry').strip() != 'Try it with pen and paper'):
+            out.append('%s: %s: the "Try it with pen and paper" prompt is %s, expected %s' % (tag, ref, 'shown' if try_shown else 'not shown', want_try))
         if narrow:
             sideways(p, '%s (%s)' % (ref, q['format']), out)
             if q['format'] != 'choice' and not p.query_selector('#qKeys .maffs-keypad-key'):
@@ -1050,6 +1050,198 @@ def check_results_once(pw, base, html, data, out):
         b.close()
 
 
+def check_footer_states(pw, base, html, data, out):
+    """No footer links during a run (Jon, 27 Oct 2026): on the start and results screens every footer link is on the screen and
+    hit-testable; on a question, its feedback and between topics, none is in the tab order or hit-testable. The header's way out stays."""
+    probe = """() => {
+      const f = document.querySelector('.site-footer');
+      const links = f ? [...f.querySelectorAll('a')] : [];
+      const hit = links.filter(a => { const r = a.getBoundingClientRect(); if (!a.getClientRects().length || r.right <= 0 || r.left >= innerWidth) return false;
+        const e = document.elementFromPoint(Math.min(Math.max(r.left + r.width / 2, 0), innerWidth - 1), r.top + r.height / 2); return !!e && a.contains(e); }).length;
+      return { links: links.length, hit: hit, shown: !!f && getComputedStyle(f).display !== 'none',
+               back: !![...document.querySelectorAll('a[href="/"]')].filter(a => !a.closest('.site-footer') && a.getClientRects().length).length };
+    }"""
+    def tabbed(b):
+        b.page.evaluate("() => { document.activeElement && document.activeElement.blur(); window.scrollTo(0, 0); }")
+        seen = 0
+        for _ in range(60):
+            b.page.keyboard.press('Tab')
+            if b.page.evaluate("() => !!(document.activeElement && document.activeElement.closest('.site-footer'))"):
+                seen += 1
+        return seen
+
+    def want(b, tag, shown):
+        r = b.page.evaluate(probe)
+        if not r['links']:
+            out.append('footer states, %s: the page has no footer links at all' % tag)
+        elif shown and (not r['shown'] or r['hit'] < 1):
+            out.append('footer states, %s: the footer should be on the screen with its links hit-testable (shown %s, %d of %d hit)'
+                       % (tag, r['shown'], r['hit'], r['links']))
+        elif not shown:
+            if r['shown'] or r['hit']:
+                out.append('footer states, %s: footer links are on the page during a run (shown %s, %d hit-testable)' % (tag, r['shown'], r['hit']))
+            n = tabbed(b)
+            if n:
+                out.append('footer states, %s: %d footer link(s) took keyboard focus during a run' % (tag, n))
+            if not r['back']:
+                out.append('footer states, %s: no header way out (a link to /) while the footer is gone' % tag)
+        elif shown and tabbed(b) < 1:
+            out.append('footer states, %s: no footer link takes keyboard focus on this screen' % tag)
+
+    b = Browser(pw, base, html, size=(390, 844))
+    try:
+        b.open()
+        want(b, 'the start screen', True)
+        topic = data['covered'][0]['id']
+        others = [x['id'] for x in data['covered'] if x['id'] != topic][:5]
+        sess = {'v': 2, 'plan': [{'id': x} for x in others + [topic]], 'i': 5, 'results': {x: {'r': 4, 'n': 5} for x in others},
+                'cur': None, 'qn': 25, 'finishedSent': False, 'feedbackSent': False}
+        b.page.evaluate("s => localStorage.setItem('six-ps-session-v2', s)", json.dumps(dict(sess, at=int(time.time() * 1000))))
+        b.page.reload()
+        b.page.wait_for_function("() => !!window.SixPs && !!SixPs.data()", timeout=10000)
+        b.page.tap('#resumeBtn')
+        b.page.wait_for_selector('#play:not([hidden])', timeout=8000)
+        want(b, 'a question', False)
+        q = b.page.evaluate('() => SixPs.question()')
+        answer(b, q, real_value(q, wrong=True))
+        b.page.wait_for_selector('#qFb:not([hidden])', timeout=4000)
+        want(b, 'the feedback', False)
+        b.page.tap('#qNext button')
+        for n in range(PER_TOPIC - 1):
+            b.page.wait_for_selector('#play:not([hidden])', timeout=8000)
+            q = b.page.evaluate('() => SixPs.question()')
+            answer(b, q, real_value(q, wrong=False))
+            b.page.wait_for_selector('#qFb:not([hidden])', timeout=4000)
+            b.page.tap('#qNext button')
+        b.page.wait_for_selector('#between:not([hidden])', timeout=5000)
+        want(b, 'between topics', False)
+        b.page.tap('#nextTopicBtn')
+        b.page.wait_for_selector('#results:not([hidden])', timeout=5000)
+        want(b, 'the results screen', True)
+        out.extend('footer states: page error: %s' % e for e in b.errors)
+    finally:
+        b.close()
+
+
+def calc_needs(lines):
+    """The calculator functions a question's working uses, read from its lines here (not from the page): labels of the shared
+    calculator's keys (MaffsCalc's aria-labels) that the student must press."""
+    t = ' '.join(lines)
+    need = set()
+    fns = {'sin': ('Sine', 'Inverse sine'), 'cos': ('Cosine', 'Inverse cosine'), 'tan': ('Tangent', 'Inverse tangent')}
+    for name, (plain, inverse) in fns.items():
+        for m in re.finditer(r'(?<![A-Za-z])%s(?![A-Za-z])(\^\{-1\}|\u207b\u00b9)?' % name, t):
+            need.add(inverse if m.group(1) else plain)
+    if '\u03c0' in t or re.search(r'\\pi(?![A-Za-z])', t):
+        need.add('Pi')
+    if '\u221a' in t or r'\sqrt' in t:
+        need.add('Square root')
+    if '\u00b2' in t or re.search(r'\^2(?![0-9])|\^\{2\}', t):
+        need.add('Squared')
+    if re.search(r'\^\{?(?!2(?![0-9]))[-0-9a-zA-Z]', t):
+        need.add('To the power')
+    if '(' in t:
+        need.update(('Open bracket', 'Close bracket'))
+    if re.search(r'\u00f7|\\div|/|\\frac', t):
+        need.add('Divide')
+    if '\u00d7' in t or r'\times' in t:
+        need.add('Times')
+    return need
+
+
+def check_calculator(pw, base, html, data, out):
+    """Every calculator question can be done with the calculator it is served (Jon, 27 Oct 2026: a trig question had no sin).
+    1. Each function the shared calculator must have works: sin 30 = 0.5, sin-1 0.5 = 30 (degrees), cos, tan, their inverses,
+       x squared, square root, powers, pi, brackets.
+    2. For every question marked calculator or optional in the six banks, every operation its working uses (read here) is a key
+       on the panel the page serves it (read from the shared calculator's own panel).
+    3. On a 320 x 568 phone, a trig question: the panel opens, every key is at least 44 px, nothing scrolls sideways, and
+       19 x sin 25 reads 8.029... from the keys."""
+    banks = {}
+    for t in data['covered']:
+        banks[t['id']] = json.load(open(os.path.join(ROOT, 'schools', 'assets', 'six-ps', t['id'] + '.json'), encoding='utf-8'))['questions']
+    calc_qs = [(tid, x) for tid, qs in banks.items() for x in qs if x.get('calc') in (True, 'optional')]
+    if len(calc_qs) < 100:
+        out.append('calculator: only %d calculator questions found in the banks (the check is blind)' % len(calc_qs))
+    b = Browser(pw, base, html, size=(390, 844))
+    try:
+        b.open()
+        cases = [('sin(30)', 0.5), ('asin(0.5)', 30), ('cos(60)', 0.5), ('acos(0.5)', 60), ('tan(45)', 1), ('atan(1)', 45),
+                 ('sin(90)', 1), ('19*sin(25)', 8.0299), ('7.7/8', 0.9625), ('acos(7.7/8)', 15.7405), ('9*sin(15)', 2.3294),
+                 ('sqrt(51)', 7.1414), ('5^2', 25), ('2^3', 8), ('pi*10^2*50', 15707.96), ('(3+4)*2', 14)]
+        for expr, want in cases:
+            got = b.page.evaluate("e => MaffsCalc.evaluate(e)", expr)
+            if got is None or abs(got - want) > max(1e-9, abs(want) * 5e-5):
+                out.append('calculator: %s gives %r, not %s' % (expr, got, want))
+        shown = b.page.evaluate("() => [MaffsCalc.format(MaffsCalc.evaluate('sin(30)')), MaffsCalc.format(MaffsCalc.evaluate('asin(0.5)'))]")
+        if shown != ['0.5', '30']:
+            out.append('calculator: sin 30 and sin-1 0.5 display %r, not [0.5, 30]' % shown)
+        keys = b.page.evaluate("""() => { const o = {};
+            [['basic', {}], ['scientific', { keys: 'scientific' }]].forEach(function (m) { const d = document.createElement('div'); document.body.appendChild(d);
+              MaffsCalc.mount(d, m[1]); o[m[0]] = [...d.querySelectorAll('.maffs-calc-key')].map(k => k.getAttribute('aria-label')).filter(Boolean); d.remove(); });
+            return o; }""")
+        modes = b.page.evaluate("qs => qs.map(q => SixPs.calcMode(q))", [x for _, x in calc_qs])
+        bad = 0
+        for (tid, x), mode in zip(calc_qs, modes):
+            if mode not in keys:
+                out.append('calculator: %s %s is marked calculator but the page serves it none (%r)' % (tid, x['id'], mode))
+                bad += 1
+                continue
+            lack = calc_needs(x['worked']) - set(keys[mode])
+            if lack:
+                bad += 1
+                if bad <= 20:
+                    out.append('calculator: %s %s is served the %s panel, which has no %s key (its working needs it)'
+                               % (tid, x['id'], mode, ', '.join(sorted(lack))))
+        for tid, qs in banks.items():
+            for x in qs:
+                if not x.get('calc') and b.page.evaluate("q => SixPs.calcMode(q)", x) is not None:
+                    out.append('calculator: %s %s is a non-calculator question served a calculator' % (tid, x['id']))
+                    break
+        out.extend('calculator: page error: %s' % e for e in b.errors)
+    finally:
+        b.close()
+    # The phone: a trig question, 320 x 568, served on its own.
+    pick = next(x for _, x in calc_qs if re.search(r'sin\(', ' '.join(x['worked'])) and x['format'] == 'number')
+    topic = [t for t in data['covered'] if any(x['id'] == pick['id'] for x in banks[t['id']])][0]
+    bank = json.load(open(os.path.join(ROOT, 'schools', 'assets', 'six-ps', topic['id'] + '.json'), encoding='utf-8'))
+    bank['questions'] = [dict(pick, id='%s-c%d' % (pick['id'], i)) for i in range(5)]
+    p = Browser(pw, base, html, size=(320, 568))
+    p.page.set_default_timeout(20000)
+    p.real[topic['id']] = bank
+    others = [x['id'] for x in data['covered'] if x['id'] != topic['id']][:K - 1]
+    sess = {'v': 2, 'plan': [{'id': x} for x in [topic['id']] + others], 'i': 0, 'results': {}, 'cur': None, 'qn': 0,
+            'finishedSent': False, 'feedbackSent': False}
+    p.ctx.add_init_script("try { var s = %s; s.at = Date.now(); localStorage.setItem('six-ps-session-v2', JSON.stringify(s)); } catch (e) {}" % json.dumps(sess))
+    try:
+        p.open()
+        p.page.tap('#resumeBtn')
+        p.page.wait_for_selector('#play:not([hidden])', timeout=8000)
+        p.page.wait_for_selector('#qCalcMount .maffs-calc-toggle', timeout=4000)
+        p.page.tap('#qCalcMount .maffs-calc-toggle')
+        p.page.wait_for_selector('#qCalcMount .maffs-calc-panel:not([hidden])', timeout=4000)
+        for k in ['1', '9', '\u00d7', 'sin', '2', '5', ')', '=']:
+            p.page.evaluate("""k => { const b = [...document.querySelectorAll('#qCalcMount .maffs-calc-key')].find(e => e.textContent === k);
+                if (!b) throw new Error('no key ' + k); b.click(); }""", k)
+        shown = p.page.evaluate("() => document.querySelector('#qCalcMount .maffs-calc-result').textContent")
+        if not shown.startswith('8.029'):
+            out.append('calculator at 320 x 568: 19 x sin(25) reads %r, not 8.029...' % shown)
+        m = p.page.evaluate("""() => ({ sx: document.documentElement.scrollWidth - innerWidth,
+            small: [...document.querySelectorAll('#qCalcMount .maffs-calc-key')].map(e => e.getBoundingClientRect())
+              .filter(r => r.width < 43.5 || r.height < 43.5).length,
+            keys: document.querySelectorAll('#qCalcMount .maffs-calc-key').length,
+            deg: !!document.querySelector('#qCalcMount .maffs-calc-mode') && document.querySelector('#qCalcMount .maffs-calc-mode').textContent })""")
+        if m['sx'] > 0:
+            out.append('calculator at 320 x 568: the page scrolls sideways by %d px with the scientific panel open' % m['sx'])
+        if m['small']:
+            out.append('calculator at 320 x 568: %d of %d keys are under 44 px' % (m['small'], m['keys']))
+        if m['deg'] != 'DEG':
+            out.append('calculator: the angle mode is %r, not DEG, when a trig question opens' % m['deg'])
+        out.extend('calculator at 320 x 568: page error: %s' % e for e in p.errors)
+    finally:
+        p.close()
+
+
 def check_second_copy(pw, base, html, data, out):
     """A page whose script runs twice (a browser that re-runs scripts on resume) still behaves as one: Next topic moves on by one, and
     one answer sends one event."""
@@ -1098,8 +1290,10 @@ def real_value(q, wrong=False):
     raise AssertionError(f)
 
 
-def phone_feedback_topic(pw, base, html, data, topic, out, only=None):
-    """One real bank on a 375 x 667 touch screen: one answer right and one wrong, each measured after Check.
+def phone_feedback_topic(pw, base, html, data, topic, out, only=None, size=(375, 667)):
+    """One real bank on a touch screen (375 x 667 unless `size` says otherwise): one answer right and one wrong, each measured after Check
+    AND after the page has settled: the maths font has arrived and two frames have been drawn (main run 40529609805: measured the instant the
+    verdict appeared, the check read the page between the font's arrival and the page's own scroll, and failed on timing alone).
     `only` serves five copies of that one question and answers it wrong at once, so what is measured is always the same."""
     bank = json.load(open(os.path.join(ROOT, 'schools', 'assets', 'six-ps', topic['id'] + '.json'), encoding='utf-8'))
     if only is not None:
@@ -1107,7 +1301,8 @@ def phone_feedback_topic(pw, base, html, data, topic, out, only=None):
         if len(one) != 1:
             raise AssertionError('%s: the question %s is not in the bank' % (topic['id'], only))
         bank['questions'] = [dict(one[0], id='%s-c%d' % (only, i)) for i in range(5)]
-    b = Browser(pw, base, html, size=(375, 667))
+    where = '%d x %d' % size
+    b = Browser(pw, base, html, size=size)
     b.page.set_default_timeout(20000)      # a loaded machine runs many of these at once
     b.real[topic['id']] = bank
     others = [x['id'] for x in data['covered'] if x['id'] != topic['id']][:K - 1]
@@ -1122,22 +1317,23 @@ def phone_feedback_topic(pw, base, html, data, topic, out, only=None):
             q = b.page.evaluate('() => SixPs.question()')
             answer(b, q, real_value(q, wrong))
             b.page.wait_for_selector('#qFb:not([hidden])', timeout=8000)
+            bc.wait_settled(b.page)      # the maths font has arrived and the layout has stopped moving (bank_common.settle_js)
             m = b.page.evaluate("""() => { const r = id => { const e = document.getElementById(id); return e && !e.hidden ? e.getBoundingClientRect() : null; };
                 const nb = document.querySelector('#qNext button'), nr = nb ? nb.getBoundingClientRect() : null, vr = r('qVerdict');
                 return { verdict: vr ? [Math.round(vr.top), Math.round(vr.bottom)] : null, next: nr ? [Math.round(nr.top), Math.round(nr.bottom)] : null,
                          vh: innerHeight, sx: document.documentElement.scrollWidth - innerWidth, keys: !document.getElementById('qKeys').hidden }; }""")
             what = '%s %s (%s, %s)' % (topic['id'], q['id'], q['format'], 'wrong' if wrong else 'right')
             if m['keys']:
-                out.append('375 x 667: %s: the keypad is still showing after Check' % what)
+                out.append('%s: %s: the keypad is still showing after Check' % (where, what))
             if not m['verdict'] or m['verdict'][0] < 0 or m['verdict'][1] > m['vh']:
-                out.append('375 x 667: %s: the verdict is not on the screen (%s of %d px)' % (what, m['verdict'], m['vh']))
+                out.append('%s: %s: the verdict is not on the screen (%s of %d px)' % (where, what, m['verdict'], m['vh']))
             if not m['next'] or m['next'][1] > m['vh']:
-                out.append('375 x 667: %s: Next is not on the screen (%s of %d px)' % (what, m['next'], m['vh']))
+                out.append('%s: %s: Next is not on the screen (%s of %d px)' % (where, what, m['next'], m['vh']))
             if m['sx'] > 0:
-                out.append('375 x 667: %s: the page scrolls sideways by %d px' % (what, m['sx']))
+                out.append('%s: %s: the page scrolls sideways by %d px' % (where, what, m['sx']))
             if n == 0:
                 b.page.tap('#qNext button')
-        out.extend('375 x 667: %s: page error: %s' % (topic['id'], e) for e in b.errors)
+        out.extend('%s: %s: page error: %s' % (where, topic['id'], e) for e in b.errors)
     finally:
         b.close()
 
@@ -1194,6 +1390,7 @@ def run_unit(pw, base, html, data, out, unit):
             b.close()
     elif unit == 'start':
         guarded(out, 'the start screen at 320 x 568', lambda: check_start_screen(pw, base, html, out))
+        guarded(out, 'the calculator on every calculator question', lambda: check_calculator(pw, base, html, data, out))
     elif unit == 'expiry':
         guarded(out, 'the saved-session expiry', lambda: check_expiry(pw, base, html, data, out))
     elif unit == 'chosen':
@@ -1203,6 +1400,7 @@ def run_unit(pw, base, html, data, out, unit):
                 lambda: check_resume_finish(pw, base, html, data, out))
     elif unit == 'results':
         guarded(out, 'the results screen drawn once', lambda: check_results_once(pw, base, html, data, out))
+        guarded(out, 'no footer during a run', lambda: check_footer_states(pw, base, html, data, out))
     elif unit == 'second':
         guarded(out, 'the page script run twice', lambda: check_second_copy(pw, base, html, data, out))
     elif unit.startswith(PHONE):
@@ -1257,6 +1455,21 @@ def guarded(out, what, f):
 # ---------------------------------------------------------------- plants
 # (what, [(old, new)], what it needs, a pattern its finding must match). Every old text occurs exactly once in the page.
 PLANTS = [
+    ('a trig question served the basic calculator (no sin key; Jon, 27 Oct)',
+     [("? 'scientific' : 'basic';", "? 'basic' : 'basic';")],
+     ['start'], r'calculator: .* has no (Sine|Cosine|Tangent|Inverse)'),
+    ('a calculator that is never mounted',
+     [("host.hidden = !(mode && window.MaffsCalc);", "host.hidden = true;")],
+     ['start'], r'the calculator on every calculator question stopped|marked calculator but the page serves it none'),
+    ('a non-calculator question served a calculator',
+     [("if (!qq || !qq.calc) return null;", "if (!qq) return null;")],
+     ['start'], r'non-calculator question served a calculator'),
+    ('a footer that stays on the page during a run (Jon, 27 Oct)',
+     [("foot.style.display = (id === 'intro' || id === 'results') ? '' : 'none';", "foot.style.display = '';")],
+     ['results'], r'footer states, a question: footer links are on the page during a run'),
+    ('a footer that is also gone on the results screen',
+     [("foot.style.display = (id === 'intro' || id === 'results') ? '' : 'none';", "foot.style.display = (id === 'intro') ? '' : 'none';")],
+     ['results'], r'footer states, the results screen: the footer should be on the screen'),
     ('a results screen that draws its form twice (Jon, 27 Oct)',
      [("$('resultsBody').replaceChildren(list, nudge, form, againRow);", "$('resultsBody').replaceChildren(list, nudge, form, againRow, form.cloneNode(true));")],
      ['results'], r'results screen after the finish: (forms|send|legends) appears 2 times'),
@@ -1305,15 +1518,14 @@ PLANTS = [
     ('the page script run twice with no guard against it',
      [("  if (window.SixPs) {   // the page script ran twice in one window", "  if (false) {   // the page script ran twice in one window")],
      ['second'], r'page script run twice'),
-    ('the feedback not scrolled into view again once the maths font has arrived',
-     [("        inView();\n        if (document.fonts && document.fonts.ready) document.fonts.ready.then(inView);\n", ""),
-      ("      if (window.ResizeObserver) {\n        var watch = new ResizeObserver(inView);", "      if (false) {\n        var watch = new ResizeObserver(inView);")],
+    ('the feedback not scrolled into view (the helper never called)',
+     [("    MaffsScroll.reveal(fb, { up: true });", "")],
      ['tall'], r'Next is not on the screen'),
     ('a calculator-optional question labelled "Calculator"',
      [("$('qCalc').textContent = q.calc === 'optional' ? 'Calculator optional' : q.calc ? 'Calculator' : 'Non-calculator';",
        "$('qCalc').textContent = q.calc ? 'Calculator' : 'Non-calculator';")],
      ['topic:fx-6'], r"calculator tag 'Calculator'"),
-    ('the "Try without a calculator" prompt shown on every question',
+    ('the "Try it with pen and paper" prompt shown on every question',
      [("$('qTry').hidden = !(q.calc === 'optional' && q.try_without === true);", "$('qTry').hidden = false;")],
      ['topic:fx-6'], r'prompt is shown, expected False'),
     ('a right value in the wrong form marked wrong (SR-3)',

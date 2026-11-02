@@ -1,0 +1,5 @@
+{
+ "about": "The per-line limit's warn list (GATE-WARN-THEN-ENFORCE, Jon 27 Oct 2026; canon 7.8.1): the lines over the per-line limit (70% of a group's budget, 189 s with setup) on main when the limit's warn-then-enforce rule came in, by label (a sharded verifier by its own label). A listed line over the limit is a warning, never a failure. Shrink-only: a pull request may remove an entry, never add one; main's timings job removes each entry whose line passes the limit now. An entry leaves when its verifier is divided into work units (scripts/ci_shards.py).",
+ "seeded-from": "main 39b7c99, timings of run 40567866126",
+ "per-line": []
+}

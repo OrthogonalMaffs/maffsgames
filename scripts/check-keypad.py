@@ -31,6 +31,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KEYPAD_JS = os.path.join(ROOT, 'schools', 'assets', 'keypad.js')
+SCROLL_JS = os.path.join(ROOT, 'schools', 'assets', 'scroll.js')   # keypad.js scrolls through MaffsScroll.reveal
 THEME_CSS = os.path.join(ROOT, 'schools', 'assets', 'theme.css')
 # theme.css imports calculator.css (the calculator and keypad styles, SCI-CALC); the tests drop @import
 # lines (no network), so they add it themselves.
@@ -106,6 +107,7 @@ async def open_page(browser, w, h, touch, n, fault=None, minus=False, spacer=0, 
     await page.add_style_tag(content=theme_css())
     if fault and fault[1] == 'css':
         await page.add_style_tag(content=fault[2])
+    await page.add_script_tag(content=open(SCROLL_JS, encoding='utf-8').read())
     await page.add_script_tag(content=keypad_src(fault))
     if fault and fault[1] == 'js':
         await page.evaluate(fault[2])

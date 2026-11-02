@@ -668,9 +668,11 @@ def check_svgs(svgs, q, out, where):
             if rows != want:
                 out.append('%s: pictogram rows drawn %s, the data is %s' % (where, rows, want))
             if not ch['keyHidden']:
-                kt = [x['s'] for x in s['texts'] if x['s'].startswith('Key:')]
-                if not kt or ('= %s ' % ch['per']) not in kt[0]:
-                    out.append('%s: the key text %s does not say %s' % (where, kt, ch['per']))
+                kt = [x['s'] for x in s['texts'] if x['s'].startswith('= ')]
+                if not kt or kt[0] != '= %s %s' % (ch['per'], ch['what']):
+                    out.append('%s: the key text %s does not say = %s %s' % (where, kt, ch['per'], ch['what']))
+                if any(x['s'].startswith('Key:') for x in s['texts']):
+                    out.append('%s: a stray "Key:" is on the chart' % where)
     return
 
 

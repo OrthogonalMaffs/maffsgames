@@ -131,6 +131,9 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/scroll.js"></script>
+<script src="../../schools/assets/keypad.js"></script>
+<script src="../../schools/assets/calculator.js"></script>
 <script src="../../schools/assets/answer.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
@@ -167,6 +170,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <div id="menuScreen" class="screen active">
   <div class="menu-title">SPLIT IT</div>
   <div class="menu-sub">Six ratio skills. Pick your mode and level.</div>
+  <div class="calc-row" style="text-align:center;margin:.6rem 0"><span class="calc-badge" data-calc="optional">Calculator optional</span></div>
   <div class="mode-grid">
     <div class="mode-card" onclick="pickMode('simplify')"><div class="mc-icon">✂️</div><div class="mc-name">Simplify</div><div class="mc-desc">Write the ratio in its simplest form</div></div>
     <div class="mode-card" onclick="pickMode('equivalent')"><div class="mc-icon">⚖️</div><div class="mc-name">Equivalent</div><div class="mc-desc">Find the missing value</div></div>
@@ -194,7 +198,9 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="hudTimer">0s</div></div>
   </div>
   <div class="q-card" id="qCard"></div>
-  <div id="fbArea"></div>
+  <div class="calc-host" id="calc"></div>
+  <script>if(window.MaffsCalc)MaffsCalc.mount(document.getElementById('calc'),{dock:document.getElementById('qCard')});</script>
+<div id="fbArea"></div>
 </div>
 
 <!-- RESULTS -->

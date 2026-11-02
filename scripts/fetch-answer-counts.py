@@ -25,6 +25,7 @@ KEYS = {"as_of", "since", "total", "games"}
 # The offset is Z (zero, written by the Apps Script's "XXX" pattern while London is on GMT: ISO 8601 and RFC 3339 both allow it)
 # or +hh:mm / -hh:mm. Until 26 Oct 2026 only the second was accepted, and every run since the clocks went back failed on it.
 AS_OF = re.compile(r"^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)(Z|[+-]\d\d:\d\d)$")
+RETRY_PAUSES_S = (60, 300, 900)   # the pauses before the 2nd, 3rd and 4th attempt (Jon, 28 Oct 2026); the workflow's timeout allows them
 FRESH_HOURS = 24           # the daily file's as_of must be younger than this when the scheduled site check looks (canon 7.5.5)
 
 
@@ -124,22 +125,72 @@ def validate(obj, now_utc=None, require_today=True, prev=None):
     return f
 
 
-def fetch(url=ENDPOINT, tries=3):
+def fetch(url=ENDPOINT, pauses=RETRY_PAUSES_S):
+    """One attempt, then one more after each pause (1, 5 and 15 minutes). Only the FETCH is retried: a network error, an HTTP error
+    or a reply that is not JSON (a Google server error page). A reply that parses but fails validate() is not retried: it is
+    not a temporary fault, and it fails the run at once."""
     last = None
-    for i in range(tries):
+    for i in range(len(pauses) + 1):
         try:
             with urllib.request.urlopen(url, timeout=60) as r:
                 return json.loads(r.read().decode("utf-8"))
-        except Exception as exc:                                # network, HTTP, bad JSON: try again
+        except Exception as exc:
             last = exc
-            time.sleep(5 * (i + 1))
-    raise RuntimeError("could not fetch the counts: %s" % last)
+            if i < len(pauses):
+                print("fetch attempt %d of %d failed (%s); trying again in %d s" % (i + 1, len(pauses) + 1, exc, pauses[i]), flush=True)
+                time.sleep(pauses[i])
+    raise RuntimeError("could not fetch the counts after %d attempts: %s" % (len(pauses) + 1, last))
 
 
 def write(obj, path=OUT):
     body = json.dumps(obj, indent=1, sort_keys=True, ensure_ascii=True) + "\n"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(body, encoding="utf-8", newline="\n")
+
+
+def retry_selftest():
+    """The retry: attempts and pauses, success after failures, exhaustion, and the planted failing address."""
+    import io, subprocess, tempfile, unittest.mock as mock
+
+    class Reply:
+        def __init__(self, body): self.body = body
+        def __enter__(self): return self
+        def __exit__(self, *a): return False
+        def read(self): return self.body
+
+    def run(seq):
+        """seq: what each attempt does (an Exception to raise, or bytes to return). Returns (result or error text, sleeps, attempts)."""
+        sleeps, calls = [], []
+
+        def fake_open(url, timeout=0):
+            calls.append(url)
+            x = seq[len(calls) - 1]
+            if isinstance(x, Exception):
+                raise x
+            return Reply(x)
+        with mock.patch("urllib.request.urlopen", fake_open), mock.patch("time.sleep", sleeps.append), mock.patch("builtins.print"):
+            try:
+                return fetch("http://x/"), sleeps, len(calls)
+            except RuntimeError as exc:
+                return str(exc), sleeps, len(calls)
+    err = OSError("HTTP Error 500: Internal Server Error")
+    out = []
+    r, sl, n = run([b'{"a": 1}'])
+    out.append(("fetch: a good first reply is used with no pause", r == {"a": 1} and sl == [] and n == 1))
+    r, sl, n = run([err, b"<html>Google server error</html>", b'{"a": 2}'])
+    out.append(("fetch: an HTTP error and a non-JSON page are retried after 1 then 5 minutes", r == {"a": 2} and sl == [60, 300] and n == 3))
+    r, sl, n = run([err, err, err, b'{"a": 3}'])
+    out.append(("fetch: succeeds on the 4th attempt after pauses of 1, 5 and 15 minutes", r == {"a": 3} and sl == [60, 300, 900] and n == 4))
+    r, sl, n = run([err, err, err, err])
+    out.append(("fetch: four failures raise, with exactly 4 attempts and no pause after the last", isinstance(r, str) and "after 4 attempts" in r and sl == [60, 300, 900] and n == 4))
+    # the planted failing address, through main(): retries, fails, the counts file is byte for byte unchanged
+    before = OUT.read_bytes() if OUT.exists() else None
+    p = subprocess.run([sys.executable, str(pathlib.Path(__file__).resolve()), "--url", "http://127.0.0.1:9/", "--pauses", "0,0,0"],
+                       capture_output=True, text=True)
+    after = OUT.read_bytes() if OUT.exists() else None
+    out.append(("planted failing address: 3 retries, exit 1, counts file unchanged",
+                p.returncode == 1 and p.stdout.count("fetch attempt") == 3 and "NOT written" in p.stdout and before == after))
+    return out
 
 
 def selftest():
@@ -246,7 +297,12 @@ def selftest():
         print("  %s  %-58s %s" % ("PASS" if ok else "FAIL", name, got[0][:90] if got else "(valid)"))
         if not ok:
             bad.append(name)
-    print("selftest: %s (%d cases)" % ("FAILED: " + ", ".join(bad) if bad else "PASS", len(cases) + len(edge) + 1 + len(forms) + len(fresh_cases) + 5))
+    retry_cases = retry_selftest()
+    for name, ok in retry_cases:
+        print("  %s  %s" % ("PASS" if ok else "FAIL", name))
+        if not ok:
+            bad.append(name)
+    print("selftest: %s (%d cases)" % ("FAILED: " + ", ".join(bad) if bad else "PASS", len(cases) + len(edge) + 1 + len(forms) + len(fresh_cases) + 5 + len(retry_cases)))
     return 1 if bad else 0
 
 
@@ -254,6 +310,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--check", action="store_true", help="validate schools/assets/answer-counts.json as committed (as_of may be older)")
+    ap.add_argument("--url", default=ENDPOINT, help="fetch from this address instead (for the planted-failure test only)")
+    ap.add_argument("--pauses", default=None, help="comma-separated seconds between attempts, instead of 60,300,900 (for the planted-failure test only)")
     ap.add_argument("--fresh", action="store_true", help="with --check: also fail when as_of is over 24 hours old (always on in a scheduled run)")
     a = ap.parse_args()
     if a.selftest:
@@ -270,7 +328,12 @@ def main():
         print("answer counts file: %s (total %s over %d games, as_of %s)" % (
             "FAIL" if faults else "PASS", obj.get("total"), len(obj.get("games", {})), obj.get("as_of")))
         return 1 if faults else 0
-    obj = fetch()
+    try:
+        obj = fetch(a.url, tuple(int(x) for x in a.pauses.split(",")) if a.pauses else RETRY_PAUSES_S)
+    except RuntimeError as exc:
+        print("FAIL", exc)
+        print("answer counts: NOT written (the file on main is unchanged)")
+        return 1
     try:
         prev = json.loads(OUT.read_text(encoding="utf-8"))
     except (OSError, ValueError):

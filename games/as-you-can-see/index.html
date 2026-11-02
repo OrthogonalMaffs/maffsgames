@@ -106,6 +106,8 @@ a.back-link:hover{color:var(--text)}
 .fb.done .fb-line{border-left-color:var(--correct)}
 .worked{margin:0;padding:0 0 0 1.25rem;font-size:.9rem;line-height:1.45;color:var(--text)}
 .worked li+li{margin-top:.2rem}
+.worked li.why{font-weight:600}
+.qtext .katex,.fb .katex,.opts .katex{font-size:1.05em}
 .worked-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 .fb-next{display:flex;justify-content:center}
 .feedback:empty{display:none}
@@ -122,7 +124,6 @@ a.back-link:hover{color:var(--text)}
 
 /* Phone rule (canon §7.6.1): once a question is marked, the boxes and keys go and the feedback takes their place. */
 .qcard.fb-open #answer,.qcard.fb-open .ask-line,.qcard.fb-open #kpHolder{display:none}
-body.playing a.back-link{display:none}
 @media (max-width:420px){
   .container{padding:.5rem}
   .qcard{padding:.6rem .55rem;gap:.4rem}
@@ -147,6 +148,7 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/stage-exit.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'answer' types the box (or taps an option) with i = 0 the right answer, i >= 1 a wrong one (named, then Next).
 {
   "start": "ACS.ui.start(1)",
@@ -158,9 +160,11 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
 -->
 <script src="../../schools/assets/answer.js"></script>
 <!-- The phone keypad for typed answers (MaffsKeypad, canon §4.4): no calculator in this game, so the keypad only. -->
+<script src="../../schools/assets/scroll.js"></script>
 <script src="../../schools/assets/keypad.js"></script>
 <script src="../../schools/assets/reading-charts-generator.js"></script>
 <script src="../../schools/assets/reading-charts-game.js"></script>
+<link rel="stylesheet" href="../../schools/assets/stage-exit.css">
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -440,8 +444,9 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
       g.appendChild(cl);
     }
     var p = el('path', { class: 'sym', d: SHAPES[shape], transform: 'translate(' + cx.toFixed(1) + ',' + cy.toFixed(1) + ') scale(' + r + ')', 'vector-effect': 'non-scaling-stroke' });
-    if (quarters < 4) p.setAttribute('clip-path', 'url(#' + cp + ')');
-    g.appendChild(p);
+    // The clip is on a wrapper, not on the transformed path: a clip-path is read in the user space of the element that carries it,
+    // so on the path (translate + scale) the cut rectangle landed far off the symbol and a half or quarter symbol vanished.
+    if (quarters < 4) { var w = el('g', { 'clip-path': 'url(#' + cp + ')', 'data-cut': 1 }); w.appendChild(p); g.appendChild(w); } else g.appendChild(p);
     svg.appendChild(g);
   }
   function pictogram(ch, W) {
@@ -460,7 +465,7 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
     svg.appendChild(el('line', { class: 'gm', x1: 2, x2: W - 2, y1: y, y2: y }));
     y += 4;
     symbol(svg, id, ch.shape, 2 + r, y + r + 1, r, 4, 'key');
-    svg.appendChild(el('text', { class: 'b', x: 2 + 2 * r + 8, y: (y + r + 5).toFixed(1), 'data-key-text': 1 }, 'Key: = ' + (ch.keyHidden ? '?' : ch.per + ' ' + ch.what)));
+    svg.appendChild(el('text', { class: 'b', x: 2 + 2 * r + 8, y: (y + r + 5).toFixed(1), 'data-key-text': 1 }, '= ' + (ch.keyHidden ? '?' : ch.per + ' ' + ch.what)));
     y += 2 * r + 8;
     svg.setAttribute('width', W); svg.setAttribute('height', Math.ceil(y)); svg.setAttribute('viewBox', '0 0 ' + W + ' ' + Math.ceil(y));
     svg.setAttribute('aria-label', 'Pictogram: ' + ch.title);
@@ -540,7 +545,14 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
 
   /* ---------- the stage's worked example ---------- */
   function workedLines(q) { return q.worked.slice(); }
-  function renderLine(t) { return esc(t); }
+  function tex(t) {
+    if (window.katex) { try { return katex.renderToString(t, { throwOnError: false }); } catch (e) { /* fall through */ } }
+    return esc(t.replace(/\\times ?/g, '×').replace(/\\div ?/g, '÷'));
+  }
+  // The bank's plain arithmetic (4 × 5 = 20) becomes KaTeX as it is drawn (G.texify); the bank's strings are not rewritten.
+  function renderLine(line) {
+    return G.texify(line).split(/\\\(|\\\)/).map(function (part, i) { return i % 2 ? '<span class="glue">' + tex(part) + '</span>' : esc(part); }).join('');
+  }
 
   function startStage(n, skipExample) {
     MaffsLock.newSession();
@@ -565,8 +577,7 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
     exAt++;
     $('exBtn').textContent = exAt >= lines.length ? 'Start the questions' : 'Show the next step';
     MaffsLock.fresh($('exCard'));
-    var b = $('exBtn').getBoundingClientRect(), over = b.bottom - (window.innerHeight - FOOTER_PX);
-    if (over > 0) window.scrollBy(0, over);
+    MaffsScroll.reveal($('exBtn'));
   });
 
   /* ---------- play ---------- */
@@ -635,15 +646,15 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
     $('qcard').classList.add('keyfig');
     if (ok) {
       state = 'done';
-      var wl = workedLines(Q);
-      fb.innerHTML = '<div class="fb done"><div class="fb-line">Yes. ' + renderLine(wl[wl.length - 1]) + '</div>' +
+      // "Yes." then the bank's one-line working (the why), so a right answer teaches too.
+      fb.innerHTML = '<div class="fb done"><div class="fb-line">Yes. ' + renderLine(Q.why) + '</div>' +
         '<div class="fb-next"><button class="btn solid" id="nextBtn" type="button">' + (last ? 'See results →' : 'Next →') + '</button></div></div>';
       MaffsLock.fresh(fb);
       $('nextBtn').focus();
     } else {
       state = 'wrong';
       fb.innerHTML = '<div class="fb wrong"><div class="fb-line" data-help="reason">' + renderLine(r.why) + '</div><div class="fb-next"></div>' +
-        '<div class="worked-h">How it goes</div><ol class="worked">' + workedLines(Q).map(function (l) { return '<li>' + renderLine(l) + '</li>'; }).join('') + '</ol></div>';
+        '<div class="worked-h">How it goes</div><ol class="worked">' + workedLines(Q).map(function (l, i, all) { return '<li' + (i >= all.length - 2 ? ' class="why"' : '') + '>' + renderLine(l) + '</li>'; }).join('') + '</ol></div>';
       MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance });
     }
   }

@@ -15,7 +15,7 @@
  *       keys        {minus: true} adds a minus key (off by default): it types "-" into an empty target
  *       maxLength   the most characters a target takes (default 12)
  *       keepInView  an element (say the answer row) to keep in the window with the keys when a target
- *                   is tapped; foldInset is the height of anything fixed at the window's foot (a footer)
+ *                   is tapped. foldInset is no longer used: MaffsScroll measures the site footer itself (pinned: its height; in the flow: 0)
  *     Returns a handle: active(), target(), select(i), type(act, val), press(label), apply(), together().
  *     Each typed key fires an "input" event on its target, as typing would.
  *
@@ -57,10 +57,7 @@
   // Scroll so that keep (the answer row) and the keys are in the window together, keep's top first.
   function together(keep, keys, foldInset) {
     if (!keep || !keys) return;
-    var r1 = keep.getBoundingClientRect(), r2 = keys.getBoundingClientRect();
-    var fold = window.innerHeight - (foldInset || 0);
-    var dy = Math.min(r2.bottom - fold + 8, r1.top - 8);
-    if (r2.bottom > fold && dy > 0) window.scrollBy(0, dy);
+    if (window.MaffsScroll) MaffsScroll.reveal(keys, { keep: keep });   // scroll.js: again once fonts load
   }
 
   function mount(el, opts) {

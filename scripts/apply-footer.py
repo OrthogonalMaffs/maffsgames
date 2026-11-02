@@ -47,7 +47,7 @@ LEGACY = {
     ],
 }
 
-SITE_FOOTER = re.compile(r'<footer class="site-footer"[^>]*>.*?</footer>', re.S)
+SITE_FOOTER = re.compile(r'<footer class="site-footer[^"]*"[^>]*>.*?</footer>', re.S)
 STYLE = re.compile(r'(<style\b[^>]*>)(.*?)(</style>)', re.S | re.I)
 RULE = re.compile(r'\.site-footer\b[^{}]*\{[^{}]*\}')
 MARK = "\x00"

@@ -22,9 +22,10 @@
 <script src="../../schools/assets/burst.js" defer></script>
 <script src="../../schools/assets/answer-count.js" defer></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<link rel="stylesheet" href="../../schools/assets/calculator.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#070b18;--surface:#101828;--border:#1e2d45;--primary:#22c55e;--accent:#60a5fa;--wrong:#f43f5e;--text:#edf2f7;--muted:#7a8ba6}
+:root{--bg:#070b18;--surface:#101828;--border:#1e2d45;--primary:#22c55e;--accent:#60a5fa;--wrong:#f43f5e;--text:#edf2f7;--muted:#7a8ba6;--surface-alt:#162036;--hint:#94a3b8;--on-accent:#000;--font-text:'Outfit',sans-serif;--font-num:'JetBrains Mono',monospace;}
 body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
 .container{max-width:760px;width:100%;padding:1rem}
 .header{text-align:center;padding:1.5rem 0 1rem}
@@ -79,6 +80,9 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/mathtext.js"></script>
+<script src="../../schools/assets/scroll.js"></script>
+<script src="../../schools/assets/keypad.js"></script>
+<script src="../../schools/assets/calculator.js"></script>
 <script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
@@ -100,6 +104,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
   <a href="../../" class="back-link">← Back to Games</a>
   <div id="menu" class="screen active">
     <div class="header"><h1>Sequence Solver</h1><div class="sub">Spot the pattern. Find the rule. What comes next?</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="calc-row" style="text-align:center;margin:.6rem 0"><span class="calc-badge" data-calc="optional">Calculator optional</span></div>
     <div class="level-select">
       <button class="level-btn active" data-level="ks3">Foundation</button>
       <button class="level-btn" data-level="gcse">GCSE</button>
@@ -128,7 +133,9 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
       <div class="prompt" id="prompt"></div>
     </div>
     <div class="options" id="options"></div>
-    <div id="nextMount"></div>
+    <div class="calc-host" id="calc"></div>
+    <script>if(window.MaffsCalc)MaffsCalc.mount(document.getElementById('calc'),{dock:document.querySelector('#game .q-card')});</script>
+<div id="nextMount"></div>
   </div>
   <div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button>
   <p id="teacherInvite"></p></div></div>

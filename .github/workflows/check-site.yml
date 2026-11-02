@@ -66,7 +66,8 @@ jobs:
   plan:
     name: Plan (which content verifiers this change needs)
     runs-on: ubuntu-24.04          # pinned: see the coverage job
-    timeout-minutes: 5
+    # 10 until ci-deps.py builds the map once per job (deferred, after 2 Nov); then back to 5. Jon's freeze exception, 29 Oct 2026.
+    timeout-minutes: 10
     outputs:
       run_all: ${{ steps.select.outputs.run_all }}
       selected: ${{ steps.select.outputs.selected }}
@@ -84,6 +85,10 @@ jobs:
       - name: Content groups (packed from each verifier's ci-line headers and main's measured times)
         id: groups
         run: python scripts/ci-groups.py --selftest && python scripts/ci-groups.py --check && python scripts/ci-groups.py && python scripts/ci-groups.py --github-output "$GITHUB_OUTPUT"
+      # GATE-WARN-THEN-ENFORCE step 2 (Jon, 27 Oct 2026; canon 7.8.4): a pull request that touches the gate's own files
+      # (ci-groups.py's GATE_PREFIXES) also passes --check on the selection a change to scripts/bank_common.py makes.
+      - name: Worst-case test (a gate change is judged as a change to bank_common.py)
+        run: python scripts/ci-groups.py --worst-case
       - name: Select
         id: select
         env:
@@ -107,11 +112,16 @@ jobs:
     steps:
       - name: Every job passed
         env:
-          RESULTS: ${{ toJSON(needs) }}
+          # The results only. toJSON(needs) also carried every job's outputs, and the Plan job's "groups" output (126 KB after the 29 Oct repack)
+          # took this variable past Linux's 128 KiB limit for one: "Argument list too long", the Gate failing with every job green.
+          # needs.*.result is every job named in `needs` above, including one added later (Jon, freeze exception, 29 Oct 2026).
+          RESULTS: ${{ toJSON(needs.*.result) }}
         run: |
-          echo "$RESULTS" | jq -r 'to_entries[] | "\(.key): \(.value.result)"'
-          bad=$(echo "$RESULTS" | jq -r '[to_entries[] | select(.value.result != "success")] | length')
-          if [ "$bad" != "0" ]; then echo "::error::$bad job(s) did not pass"; exit 1; fi
+          echo "$RESULTS" | jq -c .
+          n=$(echo "$RESULTS" | jq 'length')
+          bad=$(echo "$RESULTS" | jq '[.[] | select(. != "success")] | length')
+          if [ "$n" = "0" ]; then echo "::error::the Gate saw no job results"; exit 1; fi
+          if [ "$bad" != "0" ]; then echo "::error::$bad of $n job(s) did not pass"; exit 1; fi
 
   # The plan job's budget check (ci-groups.py --check) runs before any verifier and knows only main's medians, so a
   # line a PR grew or renamed passed its PR and turned main red after merge (#515, #525/#527, #526). This job reads the
@@ -263,24 +273,26 @@ jobs:
             # warns and commits nothing (exit status 2; PER-LINE-LIMIT, canon 7.8.1). Only the group rule (past 100%
             # since MAIN-WARN; a group past 80% is a warning listed under over-budget in ci-pack.json) refuses a pack: a line over the per-line limit is a split candidate, printed as a warning and listed in
             # ci-pack.json, and the pack commits (LINE-LIMIT-SCOPE, Jon's ruling 21 Oct 2026).
+            # The same commit removes from scripts/ci-warn-list.json every entry whose line passes the per-line limit now
+            # (shrink-only; GATE-WARN-THEN-ENFORCE, Jon 27 Oct 2026): the list never falls behind the timings.
             rc=0
             python scripts/ci-groups.py --record-and-pack "$RUN_ID" --from-dir "$TIMING_DIR" > "$RUNNER_TEMP/pack.txt" 2>&1 || rc=$?
             if [ "$rc" -eq 2 ]; then
               cat "$RUNNER_TEMP/pack.txt" | tee -a "$GITHUB_STEP_SUMMARY"
-              git checkout -q -- scripts/ci-timings.json scripts/ci-pack.json
+              git checkout -q -- scripts/ci-timings.json scripts/ci-pack.json scripts/ci-warn-list.json
               echo "::warning::this run's slower setup alone refused the pack (it passes at the previous median setup); nothing was committed, and this is not a failure"
               exit 0
             fi
             if [ "$rc" -ne 0 ]; then
               cat "$RUNNER_TEMP/pack.txt" | tee -a "$GITHUB_STEP_SUMMARY"
-              git checkout -q -- scripts/ci-timings.json scripts/ci-pack.json
+              git checkout -q -- scripts/ci-timings.json scripts/ci-pack.json scripts/ci-warn-list.json
               echo "::error::the pack for this run's timings fails ci-groups.py --check; nothing was committed"
               exit 1
             fi
             cat "$RUNNER_TEMP/pack.txt" | tee -a "$GITHUB_STEP_SUMMARY"
             if ! python scripts/ci-groups.py --check > "$RUNNER_TEMP/check.txt" 2>&1; then
               cat "$RUNNER_TEMP/check.txt" | tee -a "$GITHUB_STEP_SUMMARY"
-              git checkout -q -- scripts/ci-timings.json scripts/ci-pack.json
+              git checkout -q -- scripts/ci-timings.json scripts/ci-pack.json scripts/ci-warn-list.json
               echo "::error::ci-groups.py --check fails on the new pack; nothing was committed"
               exit 1
             fi
@@ -294,11 +306,11 @@ jobs:
             else
               cat "$RUNNER_TEMP/regions.txt" | tee -a "$GITHUB_STEP_SUMMARY"
             fi
-            if git diff --quiet -- scripts/ci-timings.json scripts/ci-pack.json scripts/ci-timings-regions.json; then
+            if git diff --quiet -- scripts/ci-timings.json scripts/ci-pack.json scripts/ci-timings-regions.json scripts/ci-warn-list.json; then
               echo "timings and pack unchanged at $(git rev-parse --short HEAD)" | tee -a "$GITHUB_STEP_SUMMARY"
               exit 0
             fi
-            git add scripts/ci-timings.json scripts/ci-pack.json scripts/ci-timings-regions.json
+            git add scripts/ci-timings.json scripts/ci-pack.json scripts/ci-timings-regions.json scripts/ci-warn-list.json
             git commit -q -m "Record CI timings and repack (run $RUN_ID) [skip ci]"
             if git push -q origin HEAD:main; then
               echo "timings and pack committed: $(git rev-parse --short HEAD)" | tee -a "$GITHUB_STEP_SUMMARY"

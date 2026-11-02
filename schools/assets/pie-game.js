@@ -48,7 +48,7 @@
 
   // The bank's question as a game question.
   function adapt(b) {
-    var S = STAGES[b.stage], q = { stage: b.stage, slot: b.slot, kind: b.kind, type: S.type, stem: b.stem, worked: b.worked,
+    var S = STAGES[b.stage], q = { stage: b.stage, slot: b.slot, kind: b.kind, type: S.type, stem: b.stem, worked: b.worked, why: b.why,
       charts: b.charts, ask: b.ask, friendly: b.friendly, setting: b.setting, bank: b, generic: S.generic, slips: [] };
     if (S.type === 'fraction') {
       q.key = { n: b.answer.n, d: b.answer.d };

@@ -173,6 +173,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/scroll.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
 {
@@ -915,9 +916,7 @@ function checkPlaceit(data) {
 
   // Canon 7.6.1: the reason and Next sit above the fold. On a short phone they can end under the fixed
   // 40px footer, so bring Next up (the feedback is above it, and fits with it on any phone).
-  const next = document.getElementById('nextBtn').getBoundingClientRect();
-  const fold = window.innerHeight - 40;
-  if (next.bottom > fold) window.scrollBy(0, next.bottom - fold + 8);
+  MaffsScroll.reveal(document.getElementById('nextBtn'));
 }
 
 function recordAnswer(type, isCorrect, note) {

@@ -107,6 +107,30 @@ def expected(q):
     return {'money': ans}, [(k, v) for k, v in slips if v['money'] != ans]
 
 
+def friendly_expected(q, ans):
+    """The bank header's rule, recomputed here from the params (FRIENDLY-LOOSEN, 28 Oct 2026): the "Try it with pen and paper" hint shows
+    where every step is a standard Foundation non-calculator method, on a round amount (a multiple of GBP 5): stages 1-3 a percentage that is a
+    multiple of 5 (built from 10% and 5%), stage 4 a multiple of 10 (10% of the original, times 10); never stage 5."""
+    st, p = q['stage'], q['params']
+    if st in (1, 2):
+        return p['pct'] % 5 == 0 and Fraction(p['base']) % 500 == 0
+    if st == 3:
+        return Fraction(ans['value']) % 5 == 0 and Fraction(p['old']) % 500 == 0
+    if st == 4:
+        return p['pct'] % 10 == 0 and Fraction(ans['money']) % 500 == 0
+    return False
+
+
+def check_friendly_cases(out):
+    """The contract's two cases through the recompute itself: 15% of GBP 120 has the hint, 12% of GBP 379 does not."""
+    if not friendly_expected({'stage': 1, 'params': {'pct': 15, 'base': 12000}}, {'money': Fraction(1800)}):
+        out.append('the recompute says 15%% of GBP 120 is not friendly')
+    if friendly_expected({'stage': 1, 'params': {'pct': 12, 'base': 37900}}, {'money': Fraction(4548)}):
+        out.append('the recompute says 12%% of GBP 379 is friendly')
+    if not friendly_expected({'stage': 1, 'params': {'pct': 20, 'base': 6000}}, {'money': Fraction(1200)}):
+        out.append('the recompute says 20%% off GBP 60 is not friendly')
+
+
 def val(a):                              # an expected answer: {'money': pence} or {'value': percent}
     return a.get('money') if 'money' in a else a.get('value')
 
@@ -183,6 +207,8 @@ def check_question(q):
         errs.append('%s: calc field %r' % (tag, q['calc']))
     if st == 5 and q['friendly']:
         errs.append('%s: a stage 5 question marked friendly' % tag)
+    if q['friendly'] != friendly_expected(q, ans):
+        errs.append('%s: friendly is %s, recomputed %s' % (tag, q['friendly'], friendly_expected(q, ans)))
     return errs
 
 
@@ -283,6 +309,7 @@ def open_page(pw, base, html, module, size):
 def check_engine(page, out):
     data = page.evaluate(GEN_JS, {'seeds': SEEDS})
     info = {}
+    check_friendly_cases(out)
     rng = random.Random(11)
     qs = data['qs']
     stems = {}
@@ -363,10 +390,13 @@ def play_stage(page, st, size, out, nq):
         out.append('%s: the worked example took %d presses for %d lines' % (where, steps, len(ex['worked'])))
     page.wait_for_function("IOS.ui.state() === 'asking'", timeout=8000)
     badge = page.evaluate("document.getElementById('calcBadge').textContent.trim()")
-    if (st == 5 and badge != 'Calculator required') or (st != 5 and badge):
-        out.append('%s: the header badge reads %r' % (where, badge))
+    want_badge = 'Calculator required' if st == 5 else 'Calculator optional'
+    if badge != want_badge:
+        out.append('%s: the header badge reads %r, not %r' % (where, badge, want_badge))
     if st == 5 and not page.evaluate('IOS.ui.calcMounted()'):
         out.append('%s: no calculator in stage 5' % where)
+    if st != 5 and not page.evaluate('IOS.ui.calcOptionalMounted()'):
+        out.append('%s: no calculator behind a toggle in an optional stage' % where)
     expect = 0
     marked = 0
     for qn in range(nq):
@@ -374,16 +404,21 @@ def play_stage(page, st, size, out, nq):
         page.wait_for_timeout(120)
         q = page.evaluate('IOS.ui.question()')
         info = page.evaluate("""() => { const vis = x => x && x.offsetParent;
-            const els = [...document.querySelectorAll('#ansForm button, #ansForm input, #kpHolder button, .maffs-keypad button, #calcWrap button')].filter(vis).map(x => x.getBoundingClientRect());
+            const els = [...document.querySelectorAll('#ansForm button, #ansForm input, #kpHolder button, .maffs-keypad button, #calcWrap button, #calcOpt .maffs-calc-toggle')].filter(vis).map(x => x.getBoundingClientRect());
             const note = document.getElementById('tryNote');
             return { last: Math.max(...els.map(x => x.bottom)), sw: document.documentElement.scrollWidth, iw: innerWidth, right: Math.max(...els.map(x => x.right)),
-                     note: vis(note), pre: vis(document.getElementById('unitPre')), post: vis(document.getElementById('unitPost')) }; }""")
+                     note: vis(note), tog: vis(document.querySelector('#calcOpt .maffs-calc-toggle')), togOpen: !!document.querySelector('#calcOpt .maffs-calc-toggle.open'),
+                     pre: vis(document.getElementById('unitPre')), post: vis(document.getElementById('unitPost')) }; }""")
         if info['last'] > fold + 0.5:
             out.append('%s q%d: the answer box, Check or the keys end at %d, below the fold (%d)' % (where, qn, info['last'], fold))
         if info['sw'] > info['iw'] or info['right'] > info['iw'] + 0.5:
             out.append('%s q%d: sideways scroll or a control off the screen' % (where, qn))
         if bool(info['note']) != bool(q['friendly'] and q['calc'] == 'optional'):
-            out.append('%s q%d: the "try without a calculator" note shows %s for friendly=%s' % (where, qn, info['note'], q['friendly']))
+            out.append('%s q%d: the "try it with pen and paper" note shows %s for friendly=%s' % (where, qn, info['note'], q['friendly']))
+        if st != 5 and (not info['tog'] or info['togOpen']):
+            out.append('%s q%d: the calculator toggle is %s in an optional stage' % (where, qn, 'open' if info['togOpen'] else 'not on the screen'))
+        if st == 5 and info['tog']:
+            out.append('%s q%d: the optional calculator shows in the required stage' % (where, qn))
         if bool(info['pre']) != (q['answer']['type'] == 'money') or bool(info['post']) != (q['answer']['type'] == 'percent'):
             out.append('%s q%d: the tag shows the wrong unit (£ %s, %% %s)' % (where, qn, info['pre'], info['post']))
         if st == 5 and qn == 0:                 # the calculator open: it and the answer box still above the fold
@@ -396,6 +431,16 @@ def play_stage(page, st, size, out, nq):
                     out.append('%s: with the calculator open the keys end at %d, below the fold (%d)' % (where, m, fold))
                 page.evaluate("document.querySelector('.maffs-calc-toggle').click()")
                 page.wait_for_timeout(150)
+        if st != 5 and qn == 0 and info['tog']:      # the toggle opens a working calculator: 12 x 379 / 100 = 45.48
+            page.evaluate("document.querySelector('#calcOpt .maffs-calc-toggle').click()")
+            page.wait_for_timeout(200)
+            res = page.evaluate("""() => { const k = t => [...document.querySelectorAll('#calcOpt .maffs-calc-key')].find(x => x.textContent.trim() === t);
+                for (const t of ['1','2','×','3','7','9','÷','1','0','0','=']) { const b = k(t); if (!b) return 'no key ' + t; b.click(); }
+                return document.querySelector('#calcOpt .maffs-calc-result').textContent.trim(); }""")
+            if res != '45.48':
+                out.append('%s: the optional-stage calculator gave %r for 12 x 379 / 100, not 45.48' % (where, res))
+            page.evaluate("document.querySelector('#calcOpt .maffs-calc-toggle').click()")
+            page.wait_for_timeout(150)
         kind = 'right'
         if qn == 1:
             kind = 'format' if (q['answer']['type'] == 'money' and q['answer']['pence'] % 100 != 0 and q['answer']['pence'] % 10 == 0) else 'slip'
@@ -522,6 +567,12 @@ PLANTS = [
      [("for (i = 1; i < G.SLOTS; i++) slots.push(i);", "for (i = 0; i < G.SLOTS; i++) slots.push(i);")], 'engine', r'session slots'),
     ('a wrong answer scoring (the page)', 'page',
      [("marked++; if (ok) { rightCount++; score++; }", "marked++; score++; if (ok) { rightCount++; }")], 'play', r'(score shows|the leaderboard got|game_completed says)'),
+    ('the friendly rule too strict (15% no longer built from 10% and 5%)', 'module',
+     [("return pct % step === 0 && base % 500 === 0;", "return [10, 25, 50].indexOf(pct) >= 0 && base % 500 === 0;")], 'engine', r'friendly is'),
+    ('the friendly rule too loose (12% of an awkward amount counted)', 'module',
+     [("return pct % step === 0 && base % 500 === 0;", "return pct % 1 === 0;")], 'engine', r'friendly is'),
+    ('no calculator offered in an optional stage (the toggle hidden)', 'page',
+     [("$('calcOptWrap').hidden = on;", "$('calcOptWrap').hidden = true;")], 'play', r'toggle'),
     ('the calculator note on every item (not only the friendly ones)', 'page',
      [("$('tryNote').hidden = !(Q.calc === 'optional' && Q.friendly);", "$('tryNote').hidden = !(Q.calc === 'optional');")], 'play', r'note shows'),
 ]

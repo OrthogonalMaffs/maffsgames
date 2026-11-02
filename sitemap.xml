@@ -5,6 +5,7 @@
   <url><loc>https://maffsgames.co.uk/leaderboards/</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://maffsgames.co.uk/updates/</loc><lastmod>2026-10-01</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://maffsgames.co.uk/essentials/</loc><lastmod>2026-10-08</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://maffsgames.co.uk/the-6-ps/</loc><lastmod>2026-10-27</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
 
   <!-- Schools Portal -->
   <url><loc>https://maffsgames.co.uk/about/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
@@ -67,6 +68,8 @@
   <url><loc>https://maffsgames.co.uk/games/just-pythag-it-bruv/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://maffsgames.co.uk/games/how-many-parts/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://maffsgames.co.uk/games/take-a-walk/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://maffsgames.co.uk/games/i-found-a-mark/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://maffsgames.co.uk/games/who-ate-all-the-pies/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://maffsgames.co.uk/games/squared-squirrel/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://maffsgames.co.uk/games/log-laws/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://maffsgames.co.uk/games/maths-court/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>

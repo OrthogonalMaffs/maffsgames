@@ -77,6 +77,42 @@ script fetches the **last three complete days** and replaces those days' rows ou
 never duplicates anything, and no older day is ever changed. (`ga4CountryBackfill` can be re-run at any
 time on the same terms: it replaces 1 Sep to yesterday.)
 
+## The GA4 summary tab (weekly figures and three charts)
+
+`docs/apps-script-ga4-summary.js` adds a third tab, **GA4 summary**, built from the two tabs above. It reads
+them and writes only its own tab. Nothing is collected, no new service or trigger is needed, and nothing
+else in the project changes.
+
+**Steps (once).**
+
+1. In the same Apps Script project, click **+** next to **Files**, choose **Script**, name it
+   `ga4-summary`, delete the empty function, paste the whole of `docs/apps-script-ga4-summary.js`, **Save**.
+2. Replace the `ga4-country` file's contents with the repo's current `docs/apps-script-ga4-country.js`
+   (it gained one call at the end of `ga4CountryDaily` and `ga4CountryBackfill`), **Save**. Keep the
+   `AnalyticsData` service.
+3. Choose `ga4SummaryRebuild` and click **Run**. The first run may ask for permission to see and edit your
+   spreadsheets: allow it (the same as the country script).
+4. Open the **GA4 summary** tab. From then on the 06:00 `ga4CountryDaily` trigger refreshes the GA4 tabs and
+   then rebuilds this tab, so there is nothing more to schedule. Running `ga4SummaryRebuild` by hand is safe
+   at any time.
+
+**What it shows.**
+
+- **Columns A to G, one row per week (Monday start), oldest first, from w/c 31 Aug 2026:** questions
+  answered, `game_started`, `game_completed`, engaged sessions in the United Kingdom, engaged sessions
+  everywhere else, and a **Status** of `partial` for a week that is not yet over (and for w/c 31 Aug, which
+  starts mid-week because the GA4 pull begins on 1 Sep). At most 52 weeks: after that the oldest drops off.
+- **Columns I to L, top ten countries by engaged sessions over the last 28 complete days,** with sessions
+  and the engaged share. The share is the quick bot test: Singapore 2%, China 13%, US 24% and UK 62% on 28 Oct.
+- **Three charts under the top-ten table:** questions answered per week (line), engaged sessions UK vs rest
+  of world (line), top ten countries (bar). They are made once, on the first run. Later runs change the
+  numbers only. If you delete a chart by hand, the next run makes it again. Do not drag the tab's tables:
+  the charts point at fixed cells (A1:G53 and I1:L11).
+
+**If it fails.** A failure in the summary does not affect the GA4 tabs: they are refreshed first. The error
+email names the problem. `"GA4 country daily" is missing or empty` means run `ga4CountryBackfill` first; a
+heading error means the GA4 tab was edited.
+
 ## How to read it
 
 **"Users" are GA4's estimate, not a head count.** The site runs GA4 cookieless (`storage: 'none'`,
