@@ -131,16 +131,16 @@ def selftest():
         origin.mkdir()
         git('init', '-q', '-b', 'main')
         (origin / WARN).parent.mkdir()
-        (origin / WARN).write_text('["who-ate-all-the-pies"]\n', encoding='utf-8')
+        (origin / WARN).write_text('["who-ate-all-the-pies"]\n', encoding='utf-8', newline='')
         git('add', WARN)
         git('commit', '-qm', 'initial warning')
         base = git('rev-parse', 'HEAD')
-        (origin / WARN).write_text('[]\n', encoding='utf-8')
+        (origin / WARN).write_text('[]\n', encoding='utf-8', newline='')
         git('commit', '-qam', 'remove warning')
         git('clone', '-q', '--depth=1', origin.as_uri(), str(clone), cwd=root)
         absent = subprocess.run(['git', 'cat-file', '-e', base], cwd=clone, capture_output=True).returncode != 0
         event = root / 'event.json'
-        event.write_text(json.dumps({'pull_request': {'base': {'sha': base}}}), encoding='utf-8')
+        event.write_text(json.dumps({'pull_request': {'base': {'sha': base}}}), encoding='utf-8', newline='')
         old = base_warn(clone, {'GITHUB_EVENT_NAME': 'pull_request', 'GITHUB_EVENT_PATH': str(event)})
         errors, _, _ = analyse(pending, ['who-ate-all-the-pies'], base_warn(
             clone, {'GITHUB_EVENT_NAME': 'pull_request', 'GITHUB_EVENT_PATH': str(event)}))
