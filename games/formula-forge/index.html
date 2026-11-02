@@ -98,6 +98,8 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 .timer-display,.hud-timer,.timer,.time-display{display:none !important}
 /* Jon's start-screen illustration (assets/start.webp, contract ESSENTIALS-ART): the card's width and corners. */
 .start-art{display:block;width:100%;max-width:520px;height:auto;margin:.4rem auto .7rem;border-radius:8px}
+/* Short screens (600 px tall or less): the picture capped at 120 px, cropped from the centre (Jon, 2 Nov 2026). */
+@media (max-height:600px){.start-art{max-height:120px;object-fit:cover;object-position:center}}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>

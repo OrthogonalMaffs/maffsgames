@@ -53,6 +53,9 @@ a.back-link:hover{color:var(--text)}
 /* The living room on the start screen; the scene draws its own coin (contract ESSENTIALS-ART). */
 .room{position:relative;width:100%;max-width:340px;margin:.2rem auto .4rem;border-radius:12px;overflow:hidden;line-height:0}
 .room .sofa-img{display:block;width:100%;height:auto}
+/* Short screens (600 px tall or less): the picture capped at 120 px (Jon, 2 Nov 2026), cropped 65% of the way down so the coin
+   under the sofa stays in (a centred crop cuts it off). */
+@media (max-height:600px){.room .sofa-img{max-height:120px;object-fit:cover;object-position:center 65%}}
 
 .hud{display:flex;justify-content:space-between;align-items:center;padding:.3rem .8rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.5rem;gap:.3rem}
 .hud-item{text-align:center;min-width:48px}
