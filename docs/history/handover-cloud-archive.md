@@ -4,6 +4,14 @@ History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover
 and the last three entries; older entries move here, newest first, unchanged.
 
 
+## Moved 2026-11-02 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
+
+## 2026-10-27 (cloud): GATE-WARN-THEN-ENFORCE (contract `docs/handover/contracts/2026-10-27-gate-warn-then-enforce.md`, Jon's three additions). **Steps 1 and 3 merge this week; infrastructure FREEZE until Mon 2 Nov (Jon, 20:14).**
+
+- **Merged 27 Oct:** #578 SHARD (39b7c99, 19:31; main red on The 6 P's, green on Jon's re-run). #588 (bff47e7, main green): The 6 P's driver typed 0.00004 as "4e-05" (`js_num` was Python's repr), reached when a random draw served that question (~1 run in 3); 0 of 1,805 bank questions fail now. Step 1 (#590, `claude/gate-warn-list`): `scripts/ci-warn-list.json`, seeded EMPTY (setup median 48 s: no line over the limit), and unrecorded lines warned. Step 3 (`claude/gate-canon`): canon 7.8.4, the CLAUDE.md lane line.
+- **Parked until Mon 2 Nov (built, pushed, not merged):** step 2 `claude/gate-worst-case` (778d926, stacked on step 1: rebase onto main once #590 is in; `ci-groups.py --worst-case` + Plan step). Step 5 `claude/gate-handover-archive` (e34a15e + a checkpoint handover commit to drop: `check-context-size.py --fix`, main's REGISTER job archives). Merge order then: 2, 5.
+- **Decided for you:** stale warn-list entries are pruned by main's timings job (a fault only in a PR that edits the list); a PR-measured new line past 100% still fails (merged, it refuses main's pack); GitHub refused this session a re-run of 40570027404 (403).
+
 ## Moved 27 Oct 2026 (night) from the cloud handover by hand (history, unchanged)
 
 ## 2026-10-27 (cloud): SHARD (contract `docs/handover/contracts/2026-10-27-shard.md`). **DONE: #578 merged 39b7c99.**
