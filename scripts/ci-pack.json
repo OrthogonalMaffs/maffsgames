@@ -106,6 +106,7 @@
   "Like Terms Collector (all 45 keys recomputed, SymPy; typed answers marked as exact whole numbers in Chromium at 390px)": "34",
   "Linear Equation Solver (every move's class re-derived with SymPy, every option clicked in Chromium)": "17",
   "Log Laws Solve (layers C + D, SymPy) and the Laws bank's keys and options (two faults planted)": "47",
+  "Look sign-off (listed games require Jon's approval; shrink-only warnings; planted faults)": "13",
   "Maths Court (independent recomputation + rendered page)": "69",
   "Matrix Crunch (one answer per question, an option or the singular flag: Enter and Tab+Enter never mark again; both levels; Chromium)": "10",
   "Merge guard (scripts/merge-pr.py: green Gate and green main or no merge; override only for main; recorded API fixtures)": "4",
