@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: Who Ate All the Pies? (every question of the five stages over 20 seeds a slot, recomputed from its own printed numbers with exact fractions, never from the bank's or the game's code: fractions, amounts, every table angle, can-you-tell verdicts, totals; slips different from the answer; sectors make 360; the game's marking compared with an independent marker on thousands of probe answers; sessions of ten, easiest first; all five stages played in the page at 390 px, worked example then ten questions with the keypad open: every drawn slice read back from its path against the data, labels and key text at least 12 px, a wrong table angle visibly leaves the circle open, one board submission a stage; the first three questions of every stage at 375, 360, 320, 1280 and 1366 px, with a wide font: answer boxes, keys and Next above the fold, no sideways scroll; fault-injection self-test: the planted faults, each caught) | | 4
+# ci-shards: Who Ate All the Pies? (every question of the five stages over 20 seeds a slot, recomputed from its own printed numbers with exact fractions, never from the bank's or the game's code: fractions, amounts, every table angle, can-you-tell verdicts, totals; slips different from the answer; sectors make 360; the game's marking compared with an independent marker on thousands of probe answers; sessions of ten, easiest first; all five stages played in the page at 390 px, worked example then ten questions with the keypad open: every drawn slice read back from its path against the data, labels and key text at least 12 px, a wrong table angle visibly leaves the circle open, one board submission a stage; the first three questions of every stage at 375, 360, 320, 1280 and 1366 px, with a wide font: answer boxes, keys and Next above the fold, no sideways scroll; the look at every size: the stall picture on the start screen and no SVG stall, the redcurrant accent, the first stage button above the fold; fault-injection self-test: the planted faults, each caught) | | 4
 # ci-deps: games/who-ate-all-the-pies/ schools/assets/pie-game.js schools/assets/pie-chart-generator.js
 """Independent verification for Who Ate All the Pies? (games/who-ate-all-the-pies/), built 27 Oct 2026 (contract WHO-ATE-ALL-THE-PIES).
 SR-30: checked from its first PR.
@@ -22,6 +22,8 @@ arithmetic, and compares:
            naming it; text is at least 12 px; a stage 3 chart drawn from typed angles that do not make 360 is flagged open.
   Page     one worked example then ten questions a stage; boxes, keys and Next above the fold at the sizes; no sideways scroll;
            a mark only for a right answer; one board submission a stage.
+  Look     (contract PIES-LOOK, 2 Nov 2026) at 390x844 and every SMALL size: the start screen shows assets/stall.webp, loaded at
+           1600x873, and no SVG stall; --accent is #742a3d; the picture and the first stage button end above the fold.
 
 Work units (contract SHARD; CI runs a slice with --shard i/k, scripts/ci-groups.py chooses k): "engine" (the bank and the
 marking, on one 1280x800 page), "full 390x844" (every stage played through at 390 px), "first WxH" (the first questions of
@@ -41,6 +43,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 import bank_common as bc  # noqa: E402
+import plant_common as plc  # noqa: E402
 
 SLUG = 'who-ate-all-the-pies'
 GAME = os.path.join(ROOT, 'games', SLUG, 'index.html')
@@ -49,6 +52,8 @@ BANKJS = os.path.join(ROOT, 'schools', 'assets', 'pie-chart-generator.js')
 SEEDS = 20
 CANT = "You can't tell"
 BIG = (390, 844)
+ACCENT = '#742a3d'   # redcurrant (contract PIES-LOOK)
+STALL = 'assets/stall.webp'
 SMALL = [(375, 667), (360, 640), (320, 568), (1280, 720), (1366, 768)]
 
 
@@ -570,7 +575,42 @@ def play_stage(page, st, size, out, n, full):
     return expect
 
 
-def check_pages(base, html, module, sizes, out, n, full, font=False, unit=None):
+LOOK_JS = """() => {
+  const m = document.getElementById('menu'), img = m.querySelector('.stall-art img'), first = m.querySelector('.stage-btn');
+  const box = e => { const b = e.getBoundingClientRect(); return [b.top, b.bottom]; };
+  return { active: m.classList.contains('active'), src: img ? img.getAttribute('src') : null,
+           loaded: img ? [img.complete, img.naturalWidth, img.naturalHeight] : null, img: img ? box(img) : null,
+           svgs: m.querySelectorAll('svg.stall, .header ~ svg, :scope > svg').length,
+           accent: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim().toLowerCase(),
+           first: first ? box(first) : null, h: innerHeight };
+}"""
+
+
+def check_look(page, size, out):
+    """The start screen's look (contract PIES-LOOK): the stall picture, no SVG stall, the accent, and the first stage button
+    (the start control) above the fold. Called on a freshly opened page, before any stage starts."""
+    where = 'look at %dx%d' % size
+    page.wait_for_function("(() => { const i = document.querySelector('#menu .stall-art img'); return !i || i.complete; })()", timeout=10000)
+    bc.wait_settled(page)
+    m = page.evaluate(LOOK_JS)
+    fold = m['h'] - 40
+    if not m['active']:
+        out.append('%s: the start screen is not showing' % where)
+    if m['src'] != STALL:
+        out.append('%s: the start screen\'s picture is %r, not %s' % (where, m['src'], STALL))
+    elif m['loaded'] != [True, 1600, 873]:
+        out.append('%s: %s did not load at 1600x873 (complete, width, height: %s)' % (where, STALL, m['loaded']))
+    if m['svgs']:
+        out.append('%s: an SVG stall is on the start screen (%d)' % (where, m['svgs']))
+    if m['accent'] != ACCENT:
+        out.append('%s: --accent is %r, not %s' % (where, m['accent'], ACCENT))
+    if m['img'] and m['img'][1] > fold + 0.5:
+        out.append('%s: the stall picture ends at %d, below the fold (%d)' % (where, m['img'][1], fold))
+    if m['first'] is None or m['first'][1] > fold + 0.5:
+        out.append('%s: the first stage button ends at %s, below the fold (%d)' % (where, m['first'] and int(m['first'][1]), fold))
+
+
+def check_pages(base, html, module, sizes, out, n, full, font=False, unit=None, look_only=False):
     from playwright.sync_api import sync_playwright
     unit = unit or (lambda uid: contextlib.nullcontext())
     with sync_playwright() as pw:
@@ -579,6 +619,14 @@ def check_pages(base, html, module, sizes, out, n, full, font=False, unit=None):
                 br, page, errs = open_page(pw, base, html, module, size)
                 if font:
                     page.add_style_tag(content='body,button,input{font-family:Verdana,"DejaVu Sans",sans-serif!important}')
+                try:
+                    check_look(page, size, out)
+                except Exception as e:  # noqa: BLE001
+                    out.append('the look at %dx%d threw: %s' % (size[0], size[1], str(e).splitlines()[0][:220]))
+                if look_only:
+                    out.extend('page error at %dx%d: %s' % (size[0], size[1], e) for e in errs)
+                    br.close()
+                    continue
                 try:
                     for st in range(1, 6):
                         play_stage(page, st, size, out, n, full)
@@ -590,7 +638,7 @@ def check_pages(base, html, module, sizes, out, n, full, font=False, unit=None):
                 br.close()
 
 
-def check(html, module, out, engine=True, big=False, small=(), quick=False, shard=None):
+def check(html, module, out, engine=True, big=False, small=(), quick=False, shard=None, look=False):
     """shard: time each piece as its work unit ("engine", "full 390x844", "first WxH"); the self-test passes none."""
     from playwright.sync_api import sync_playwright
     unit = shard.unit if shard is not None else (lambda uid: contextlib.nullcontext())
@@ -610,6 +658,8 @@ def check(html, module, out, engine=True, big=False, small=(), quick=False, shar
             check_pages(base, html, module, [BIG], out, 3 if quick else 10, True, unit=unit)
         if small:
             check_pages(base, html, module, small, out, 3, False, font=True, unit=unit)
+        if look:
+            check_pages(base, html, module, [(320, 568)], out, 0, False, look_only=True)
     finally:
         proc.terminate()
     return info
@@ -646,6 +696,13 @@ PLANTS = [
     ('a wrong answer counted as a mark (the page)', 'page',
      [("answered++; if (ok) { rightCount++; marks++; }", "answered++; marks++; if (ok) { rightCount++; }")], 'play',
      r'(marks show|the leaderboard got|game_completed says)'),
+    ("the SVG stall restored (the template's placeholder in place of the picture)", 'page',
+     [('<div class="stall-art"><img src="assets/stall.webp" width="1600" height="873" alt="A matchday pie stall outside a football ground at dusk, with pies on the counter and a red and white scarf"></div>',
+       '<svg class="stall" viewBox="0 0 340 110" role="img" aria-label="A pie stall with a striped awning and two pies on the counter">'
+       '<rect x="0" y="0" width="340" height="110" rx="12" fill="#f1dfc4"/><rect x="40" y="74" width="260" height="30" rx="4" fill="#5a2014"/></svg>')],
+     'look', r'(SVG stall|picture is)'),
+    ("the accent changed to --wrong's value", 'page',
+     [('--accent:#742a3d;', '--accent:#b91c1c;')], 'look', r'--accent is'),
     ('chart text under 12 px', 'page',
      [(".charts text{font-family:var(--font-num);font-size:12.5px;", ".charts text{font-family:var(--font-num);font-size:10px;")], 'play',
      r'chart text .* px'),
@@ -664,13 +721,14 @@ def selftest(html, module, plants=None, shard=None):
 def plant_one(html, module, what, which, edits, kind, want):
     src = module if which == 'module' else html
     for old, new in edits:
-        if src.count(old) != 1:
-            print('  self-test %-72s *** CANNOT PLANT ***' % what)
+        try:
+            src = plc.apply_plant(src, old, new, name=what)
+        except plc.StalePlant as e:
+            print('  self-test %-72s *** %s ***' % (what, e))
             return False
-        src = src.replace(old, new)
     got = []
     h2, m2 = (html, src) if which == 'module' else (src, module)
-    check(h2, m2, got, engine=kind == 'engine', big=kind == 'play', quick=True)
+    check(h2, m2, got, engine=kind == 'engine', big=kind == 'play', quick=True, look=kind == 'look')
     hit = [g for g in got if re.search(want, g)]
     print('  self-test %-72s %s' % (what, ('caught: ' + hit[0][:90]) if hit else '*** MISSED ***' + (' (other: %s)' % got[0][:90] if got else '')))
     return bool(hit)
