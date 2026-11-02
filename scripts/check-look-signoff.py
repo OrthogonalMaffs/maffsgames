@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 import re
 import subprocess
+import tempfile
 
 import plant_common as pc
 
@@ -71,19 +72,27 @@ def analyse(roster, listed_warn, base_warn):
     return errors, warnings, len(listed)
 
 
-def base_warn():
+def base_warn(root=ROOT, env=None):
     """Read the PR base; fail closed on missing git/event data. Bootstrap once."""
-    if os.environ.get('GITHUB_EVENT_NAME') == 'pull_request':
-        event = json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_text(encoding='utf-8'))
+    env = os.environ if env is None else env
+    if env.get('GITHUB_EVENT_NAME') == 'pull_request':
+        event = json.loads(Path(env['GITHUB_EVENT_PATH']).read_text(encoding='utf-8'))
         base = event['pull_request']['base']['sha']
     else:
-        base = subprocess.run(['git', 'merge-base', 'origin/main', 'HEAD'], cwd=ROOT,
+        base = subprocess.run(['git', 'merge-base', 'origin/main', 'HEAD'], cwd=root,
                               capture_output=True, text=True, check=True).stdout.strip()
-    files = subprocess.run(['git', 'ls-tree', '--name-only', base, '--', WARN], cwd=ROOT,
+    # Content jobs have a shallow checkout. Fetch the event's exact base, never
+    # substitute today's main or silently bootstrap when the object is missing.
+    present = subprocess.run(['git', 'cat-file', '-e', f'{base}^{{commit}}'], cwd=root,
+                             capture_output=True)
+    if present.returncode:
+        subprocess.run(['git', 'fetch', '--no-tags', '--depth=1', 'origin', base], cwd=root,
+                       capture_output=True, text=True, check=True)
+    files = subprocess.run(['git', 'ls-tree', '--name-only', base, '--', WARN], cwd=root,
                            capture_output=True, text=True, check=True).stdout.strip()
     if not files:
         return INITIAL_WARN
-    source = subprocess.run(['git', 'show', f'{base}:{WARN}'], cwd=ROOT,
+    source = subprocess.run(['git', 'show', f'{base}:{WARN}'], cwd=root,
                             capture_output=True, text=True, encoding='utf-8', check=True).stdout
     return json.loads(source)
 
@@ -110,7 +119,35 @@ def selftest():
         ok = ok and bool(warnings) == want_warning
         print(f'{"PASS" if ok else "FAIL"}: {name}')
         failed += not ok
-    print(f'Look sign-off selftest: {len(cases) - failed}/{len(cases)} passed')
+    with tempfile.TemporaryDirectory(prefix='look-signoff-') as temp:
+        root = Path(temp)
+        origin, clone = root / 'origin', root / 'clone'
+
+        def git(*args, cwd=origin):
+            return subprocess.run(['git', '-c', 'user.name=Look selftest', '-c',
+                                   'user.email=look-selftest@example.invalid', *args], cwd=cwd,
+                                  capture_output=True, text=True, check=True).stdout.strip()
+
+        origin.mkdir()
+        git('init', '-q', '-b', 'main')
+        (origin / WARN).parent.mkdir()
+        (origin / WARN).write_text('["who-ate-all-the-pies"]\n', encoding='utf-8')
+        git('add', WARN)
+        git('commit', '-qm', 'initial warning')
+        base = git('rev-parse', 'HEAD')
+        (origin / WARN).write_text('[]\n', encoding='utf-8')
+        git('commit', '-qam', 'remove warning')
+        git('clone', '-q', '--depth=1', origin.as_uri(), str(clone), cwd=root)
+        absent = subprocess.run(['git', 'cat-file', '-e', base], cwd=clone, capture_output=True).returncode != 0
+        event = root / 'event.json'
+        event.write_text(json.dumps({'pull_request': {'base': {'sha': base}}}), encoding='utf-8')
+        old = base_warn(clone, {'GITHUB_EVENT_NAME': 'pull_request', 'GITHUB_EVENT_PATH': str(event)})
+        errors, _, _ = analyse(pending, ['who-ate-all-the-pies'], base_warn(
+            clone, {'GITHUB_EVENT_NAME': 'pull_request', 'GITHUB_EVENT_PATH': str(event)}))
+        ok = absent and old == ['who-ate-all-the-pies'] and not errors
+        print(f'{"PASS" if ok else "FAIL"}: shallow checkout fetches exact PR base warn list')
+        failed += not ok
+    print(f'Look sign-off selftest: {len(cases) + 1 - failed}/{len(cases) + 1} passed')
     return bool(failed)
 
 

@@ -8,11 +8,13 @@
 
 ## 2026-11-02 (home): LOOK-STAGE
 
-Agent: Codex. Worktree: /home/maffs/mg-look-stage. Branch: codex/look-stage. Last commit before this report: e5a7f7d0; implementation: 5e5a9e44; base: b5c9eaa6. PR #638: https://github.com/OrthogonalMaffs/maffsgames/pull/638 . Current-head Gate and review state are tracked in the PR report. Next: stop at green Gate for Project Claude Shared review and Jon's explicit “merge”. No merge authorised.
+Agent: Codex. Worktree: /home/maffs/mg-look-stage. Branch: codex/look-stage. Last commit before this report: 8963492a; implementation: 5e5a9e44; base: b5c9eaa6. PR #638: https://github.com/OrthogonalMaffs/maffsgames/pull/638 . Current-head Gate and review state are tracked in the PR report. Next: stop at green Gate for Project Claude Shared review and Jon's explicit “merge”. No merge authorised.
 
 Shared listing gap fixed in the roster Description and a new CI-header-registered checker; no existing columns or listing states changed. All 100 eligible listed games record Jon's retrospective approval; Pies alone warns. Shrink-only JSON list rejects additions, restoration after removal and stale entries. Canon §7.8 records the listing/art rule; §12 explains the pipeline failure. No game files, Gate files or answer-lock state changed. SR-21 applied (listing state retained); SR-27 does not exempt this shared check from check-changed.py.
 
 Initial local run exposed a sign-off word-boundary bug and an incorrect expected warning in one selftest; one within-scope fix corrected both. Re-run: 7/7 selftests pass; 101 listed games, 1 warning, 0 failures. CI packing check passes; new line uses the standard untimed warning. Full check-changed: 152/152 passed in 515s (5 heavy serial, 147 light); standard seven checks and indirect heavy roster dependencies deferred to CI. Completion summary retained in `.claude/bg-1793654249945.log`; detached launcher's child exit status was not retained. UTF-8 characters and exact row preservation after removing the 100 new approval suffixes checked. An ad hoc import probe initially omitted scripts/ from sys.path; corrected probe passes, no repository change.
+
+CI run 41528624872: the new check's seven plants passed, but content job 37 failed because its shallow checkout lacked the event's base commit. Second within-scope fix fetches that exact base only when absent. Added a real shallow-clone selftest with a local file remote; the missing base is fetched and its older warning list read correctly. Final direct selftest 8/8 and roster check (101 listed, one warning, zero failures) pass; subsequent CI is authoritative for the revised checker. Stop if this same check still fails after this second fix. No Gate file changes needed.
 
 First review hand-off: PR opened 2 Nov at 21:27 UTC; wall measured from contract/startup at 21:15 UTC.
 
