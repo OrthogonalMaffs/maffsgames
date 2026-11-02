@@ -1,5 +1,5 @@
 {
- "as_of": "2026-11-01T21:22:01Z",
+ "as_of": "2026-11-02T13:49:20Z",
  "games": {
   "52dle": 11,
   "angle-ace": 5,
@@ -9,7 +9,7 @@
   "binomial-blaster": 3,
   "boolean-blitz": 5,
   "chart-interrogator": 11,
-  "circle-theorem-spotter": 115,
+  "circle-theorem-spotter": 116,
   "complex-converter": 2,
   "component-crusher": 1,
   "coordinate-geometry-dash": 4,
@@ -69,7 +69,7 @@
   "negative-number-line": 705,
   "new-shapes": 7,
   "normal-navigator": 2,
-  "percentage-flip": 112,
+  "percentage-flip": 119,
   "possibly-maybe": 10,
   "prime-factorisation": 51,
   "prime-or-composite": 542,
@@ -86,7 +86,7 @@
   "simultaneous-solver": 59,
   "six-sevens-bruv": 4013,
   "split-it": 288,
-  "spot-the-error": 13,
+  "spot-the-error": 15,
   "spot-the-muppet": 40,
   "squared-squirrel": 38,
   "standard-form-blitz": 296,
@@ -108,5 +108,5 @@
   "y-so-steep": 13
  },
  "since": "2026-09-01",
- "total": 18374
+ "total": 18384
 }
