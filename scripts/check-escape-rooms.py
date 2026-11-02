@@ -73,6 +73,7 @@ not by this exit code.
 import itertools, json, re, pathlib, sys
 
 from escape_set_checks import NO_CHECK, check, covered
+import plant_common as pc
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")   # the stars, on a cp1252 Windows console
 
@@ -486,50 +487,79 @@ def swap_cards(html, a, b, pat=r'<a class="esc-card" href="escape-rooms/%s/".*?<
     return (html[:x.start()] + y.group(0) + html[x.end():y.start()] + x.group(0) + html[y.end():])
 
 
-if "rugby-mud" in live:
-    hub_card = re.search(r'<a class="room-card" href="rugby-mud/".*?</a>', pages["hub"], re.S).group(0)
-    one_star = re.sub(r'data-stars="\d"><span aria-hidden="true">[^<]*</span><span class="sr-only">[^<]*</span>',
-                      'data-stars="1"><span aria-hidden="true">★ Warm-up &middot; grades 1–3</span>'
-                      '<span class="sr-only">Difficulty: 1 of 3, Warm-up, grades 1–3</span>', hub_card, count=1)
-    plants = {
-        "Rugby Mud's hub card says ★": (room_js, dict(pages, hub=pages["hub"].replace(hub_card, one_star)), "rugby-mud's card says"),
-        "a lock's grade removed": (dict(room_js, **{"rugby-mud": re.sub(r"\n      grade: \d+,", "", room_js["rugby-mud"], count=1)}),
-                                   pages, "with no grade"),
-    }
-    key_mismatch = check_star_key(dict(pages, hub=pages["hub"].replace(
-        "Core, grades 4–5</span>", "Core, grades 4–6</span>", 1)))
-    if not any("the star key says" in g for g in key_mismatch):
-        problems.append(f"planted fault NOT caught: the hub's star key saying grades 4–6 "
-                        f"(the star-key check found {key_mismatch or 'nothing'})")
-    # STARTER-LABEL: a label chip on an unlabelled room's card, and a star chip on a labelled room's card.
-    label_chip = ('<span class="chip" data-label="starter"><span aria-hidden="true">Starter</span>'
-                  '<span class="sr-only">Level: Starter</span></span>')
-    star_chip = re.search(r'<span class="chip" data-stars="\d">.*?</span></span>', hub_card, re.S).group(0)
-    plants["a label chip on Rugby Mud's card, which has no label"] = (
-        room_js, dict(pages, hub=pages["hub"].replace(hub_card, hub_card.replace(star_chip, label_chip))),
-        "shows a label chip, but the room has no label")
-    plants["a star chip on the card of a labelled room"] = (
-        dict(room_js, **{"rugby-mud": room_js["rugby-mud"].replace("\n  level:", "\n  label: 'Starter',\n  level:", 1)}),
-        pages, "carries data-stars")
-    # STARTER-FIRST: a Starter room's card after a starred room's card, and a label with no rank.
-    starters = [s for s in live if room_label(room_js[s]) == "Starter"]
-    if starters:
-        st = starters[0]
-        first_star = next(s for s in re.findall(CARD["hub"][0], pages["hub"]) if s in live and s != st
-                          and room_label(room_js[s]) is None)
-        plants["a Starter card placed after a starred card on the hub"] = (
-            room_js, dict(pages, hub=swap_cards(pages["hub"], st, first_star, HUB_CARD)),
-            "hub: cards are not in rating order")
-    plants["a label other than Starter, which has no rank"] = (
-        dict(room_js, **{"rugby-mud": room_js["rugby-mud"].replace("\n  level:", "\n  label: 'Beginner',\n  level:", 1)}),
-        pages, "needs a ruling")
-    for what, (rj, pg, expect) in plants.items():
-        got = check_ratings(rj, live, pg, rating_js)
-        if not any(expect in g for g in got):
-            problems.append(f"planted fault NOT caught: {what} (the rating check found {got or 'nothing'})")
-    plant_line = "planted faults caught: " + "; ".join(plants) + "; the hub's star key saying grades 4–6"
+def plant_target():
+    """A live room the rating plants can be built from: no label, a lock with a `grade: N` line, a hub card whose stars are not
+    already one (so the one-star plant changes something). Any live room will do; None if there is none."""
+    for slug in sorted(live):
+        if room_label(room_js[slug]) is not None or not re.search(r"\n      grade: \d+,", room_js[slug]):
+            continue
+        m = re.search(HUB_CARD % slug, pages["hub"], re.S)
+        if m and 'data-stars="1"' not in m.group(0) and re.search(r'data-stars="\d"><span aria-hidden="true">[^<]*</span><span class="sr-only">[^<]*</span>', m.group(0)):
+            return slug
+    return None
+
+
+PT = plant_target()
+if PT is None:
+    # Not a skip: plants that never ran must not read as a pass (contract STALE-PLANTS, plant_common.py).
+    problems.append("STALE PLANT: the rating plants have no live room to be built from (need one with no label, a graded lock and a "
+                    "hub card that is not already one star); live rooms: " + (", ".join(sorted(live)) or "none"))
+    plant_line = "planted faults: NOT RUN (no live room to build them from)"
 else:
-    plant_line = "planted faults: skipped (rugby-mud is not live)"
+    try:
+        hub_card = re.search(HUB_CARD % PT, pages["hub"], re.S).group(0)
+        one_star = pc.apply_re_plant(hub_card, r'data-stars="\d"><span aria-hidden="true">[^<]*</span><span class="sr-only">[^<]*</span>',
+                                     'data-stars="1"><span aria-hidden="true">★ Warm-up &middot; grades 1–3</span>'
+                                     '<span class="sr-only">Difficulty: 1 of 3, Warm-up, grades 1–3</span>', name=f"{PT}'s hub card says ★")
+        plants = {
+            f"{PT}'s hub card says ★": (room_js, dict(pages, hub=pc.apply_plant(pages["hub"], hub_card, one_star, name=f"{PT}'s hub card says ★")),
+                                        f"{PT}'s card says"),
+            "a lock's grade removed": (dict(room_js, **{PT: pc.apply_re_plant(room_js[PT], r"\n      grade: \d+,", "", name="a lock's grade removed")}),
+                                       pages, "with no grade"),
+        }
+        star_key = re.search(r"<p [^>]*data-star-key[^>]*>.*?</p>", pages["hub"], re.S)
+        if star_key is None:
+            raise pc.StalePlant("the hub's star key saying grades 4–6", "the hub has no data-star-key line")
+        key_name = "the hub's star key saying grades 4–6"
+        key_mismatch = check_star_key(dict(pages, hub=pc.apply_plant(pages["hub"], star_key.group(0), pc.apply_plant(
+            star_key.group(0), "Core, grades 4–5</span>", "Core, grades 4–6</span>", name=key_name), name=key_name)))
+        if not any("the star key says" in g for g in key_mismatch):
+            problems.append(f"planted fault NOT caught: the hub's star key saying grades 4–6 "
+                            f"(the star-key check found {key_mismatch or 'nothing'})")
+        # STARTER-LABEL: a label chip on an unlabelled room's card, and a star chip on a labelled room's card.
+        label_chip = ('<span class="chip" data-label="starter"><span aria-hidden="true">Starter</span>'
+                      '<span class="sr-only">Level: Starter</span></span>')
+        star_chip = re.search(r'<span class="chip" data-stars="\d">.*?</span></span>', hub_card, re.S).group(0)
+        name = f"a label chip on {PT}'s card, which has no label"
+        plants[name] = (room_js, dict(pages, hub=pc.apply_plant(pages["hub"], hub_card, pc.apply_plant(hub_card, star_chip, label_chip, name=name), name=name)),
+                        "shows a label chip, but the room has no label")
+        name = "a star chip on the card of a labelled room"
+        plants[name] = (dict(room_js, **{PT: pc.apply_plant(room_js[PT], "\n  level:", "\n  label: 'Starter',\n  level:", name=name)}),
+                        pages, "carries data-stars")
+        # STARTER-FIRST: a Starter room's card after a starred room's card, and a label with no rank.
+        starters = [s for s in live if room_label(room_js[s]) == "Starter"]
+        starter_line = ""
+        if starters:
+            st = starters[0]
+            first_star = next(s for s in re.findall(CARD["hub"][0], pages["hub"]) if s in live and s != st
+                              and room_label(room_js[s]) is None)
+            plants["a Starter card placed after a starred card on the hub"] = (
+                room_js, dict(pages, hub=swap_cards(pages["hub"], st, first_star, HUB_CARD)),
+                "hub: cards are not in rating order")
+        else:
+            starter_line = " (the Starter-order plant needs a Starter room, and none is live)"
+        name = "a label other than Starter, which has no rank"
+        plants[name] = (dict(room_js, **{PT: pc.apply_plant(room_js[PT], "\n  level:", "\n  label: 'Beginner',\n  level:", name=name)}),
+                        pages, "needs a ruling")
+        for what, (rj, pg, expect) in plants.items():
+            got = check_ratings(rj, live, pg, rating_js)
+            if not any(expect in g for g in got):
+                problems.append(f"planted fault NOT caught: {what} (the rating check found {got or 'nothing'})")
+        plant_line = (f"planted faults caught (built from {PT}): " + "; ".join(plants)
+                      + "; the hub's star key saying grades 4–6" + starter_line)
+    except pc.StalePlant as exc:
+        problems.append(str(exc))
+        plant_line = "planted faults: STALE PLANT (see above)"
 
 
 # Credit faults (ROOM-CREDIT v2): each must be caught, or the credit rule has stopped working.

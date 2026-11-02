@@ -9,6 +9,7 @@
 # A path excludes itself and everything under it; * matches across folders.
 exclude:
   - CLAUDE.md
+  - AGENTS.md
   - package.json
   - package-lock.json
   - requirements-ci.txt

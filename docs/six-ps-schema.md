@@ -29,9 +29,9 @@ at two decimal places, and `MaffsAnswer`'s reading of a typed number replace wha
 - **calc**: `true`, `false` or `"optional"`. Shown as "Calculator", "Non-calculator" or "Calculator optional". `"optional"` (contract
   PIE-CHARTS-BANK, Jon, 26 Oct 2026) is for a question either tool suits; it is the first value that is not a boolean, and the
   player reads a boolean exactly as before.
-- **try_without** (optional): `true`, and only with `calc: "optional"`: the player adds "Try without a calculator" (Jon's wording)
-  under the tag. A bank sets it where every division the method makes is by a friendly divisor and gives a whole number, and leaves
-  it out otherwise; absent means no prompt.
+- **try_without** (optional): `true`, and only with `calc: "optional"`: the player adds "Try it with pen and paper" (Jon's wording,
+  28 Oct 2026; it was "Try without a calculator") under the tag. A bank sets it where every step is a standard Foundation non-calculator
+  method with a few lines of working (the rule is in each bank's header), and leaves it out otherwise; absent means no prompt.
 - **stem**: plain text; maths inside `\( ... \)`. No HTML. "Not drawn accurately" goes in the stem where the paper
   would say it.
 - **diagram**: `null`, or a self-contained inline SVG string: no external references, colours via `currentColor`

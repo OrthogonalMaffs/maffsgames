@@ -66,12 +66,20 @@ const GA4C_TABLES = [
 function ga4CountryDaily() {
   var today = ga4cDateKey_(ga4cNow_());
   ga4cRefresh_(ga4cDateRange_(ga4cAddDays_(today, -GA4C_SETTLE_DAYS), ga4cAddDays_(today, -1)));
+  ga4cSummary_();
+}
+
+// After the tabs are refreshed: rebuild the 'GA4 summary' tab, when docs/apps-script-ga4-summary.js is in the project.
+// The refresh has already finished, so a failure here cannot undo or change it.
+function ga4cSummary_() {
+  if (typeof ga4SummaryRebuild === 'function') ga4SummaryRebuild();
 }
 
 // Once, after installing: 1 Sep 2026 to yesterday, replaced. Safe to run again at any time.
 function ga4CountryBackfill() {
   var today = ga4cDateKey_(ga4cNow_());
   ga4cRefresh_(ga4cDateRange_(GA4C_BACKFILL_START, ga4cAddDays_(today, -1)));
+  ga4cSummary_();
 }
 
 // Before anything else: proves GA4C_PROPERTY is the property that holds the maffsgames.co.uk stream.

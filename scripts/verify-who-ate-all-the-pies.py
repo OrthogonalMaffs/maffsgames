@@ -105,6 +105,60 @@ def expected(q):
     return 'choice', 'They sold the same number' if a1 == a2 else "Yes, it's " + (p1 if a1 > a2 else p2)
 
 
+def splits2(x):
+    """A number of 12 or under, or two such numbers multiplied (a chain of at most two short divisions)."""
+    return x <= 12 or any(x % a == 0 and x // a <= 12 for a in range(2, 13))
+
+
+def reads_easily(a):
+    """A sector read as a fraction of 360: its angle divides 360, or the fraction simplifies by a common factor that splits."""
+    return 360 % a == 0 or splits2(math.gcd(a, 360))
+
+
+def fr_friendly(a):
+    return reads_easily(a) and splits2(Fraction(a, 360).denominator)
+
+
+def friendly_expected(q):
+    """The bank header's rule, recomputed here from the chart data and the question (FRIENDLY-LOOSEN, 28 Oct 2026): the "Try it with
+    pen and paper" hint shows where every step is a standard Foundation non-calculator method: no arithmetic at all, or a sector read as a
+    fraction of 360 (it divides 360, or simplifies by a common factor of 12 or under, twice at most) with every division exact, or (a
+    table to angles) a total that divides 360."""
+    ch, ask, st = q['charts'], q['ask'], q['stage']
+    angle = lambda c, pie: next(s for s in ch[c]['sectors'] if s['pie'] == pie)['angle']
+    t = ask['type']
+    if t == 'fraction':
+        return reads_easily(angle(0, ask['pie']))
+    if t == 'angle':
+        return 360 % ch[0]['total'] == 0
+    if t == 'total':
+        a = angle(0, ask['pie'])
+        return fr_friendly(a) and ask['freq'] % Fraction(a, 360).numerator == 0
+    if t == 'amount' and 'known' in ask:
+        a, b = angle(0, ask['known']), angle(0, ask['pie'])
+        ra, rb = a // math.gcd(a, b), b // math.gcd(a, b)
+        return ask['knownFreq'] % ra == 0 and splits2(ra) and splits2(rb)
+    if t == 'amount':
+        a = angle(0, ask['pie'])
+        return fr_friendly(a) and ch[0]['total'] % Fraction(a, 360).denominator == 0
+    if t == 'compare' and len(ch) == 2 and ch[0]['total'] is not None and ch[1]['total'] is not None and ch[0]['total'] != ch[1]['total']:
+        return all(fr_friendly(angle(i, ask['pie'])) and ch[i]['total'] % Fraction(angle(i, ask['pie']), 360).denominator == 0 for i in (0, 1))
+    return True                                          # reasoning, "you can't tell": no arithmetic
+
+
+def check_friendly_cases(out):
+    """The contract's cases through the recompute: 60 degrees (1/6) and 210/360 (7/12) have the hint; a table whose total (100) does not
+    divide 360 does not."""
+    sec = lambda angs: [{'pie': 'p%d' % i, 'angle': a} for i, a in enumerate(angs)]
+    for a in (60, 210):
+        q = {'stage': 1, 'ask': {'type': 'fraction', 'pie': 'p0'}, 'charts': [{'total': None, 'sectors': sec([a, 360 - a])}]}
+        if not friendly_expected(q):
+            out.append('the recompute says a %d degree sector read as a fraction is not friendly' % a)
+    q = {'stage': 3, 'ask': {'type': 'angle'}, 'charts': [{'total': 100, 'sectors': sec([360])}]}
+    if friendly_expected(q):
+        out.append('the recompute says a table with a total of 100 is friendly')
+
+
 def check_question(q):
     errs = []
     tag = 's%d slot %d' % (q['stage'], q['slot'])
@@ -158,6 +212,11 @@ def check_question(q):
                 errs.append('%s: a slip names the right option or none' % tag)
     if not q['worked'] or any(not w for w in q['worked']):
         errs.append('%s: no worked answer' % tag)
+    try:
+        if bool(q['friendly']) != friendly_expected(q):
+            errs.append('%s: friendly is %s, recomputed %s' % (tag, q['friendly'], friendly_expected(q)))
+    except Exception as e:  # noqa: BLE001
+        errs.append('%s: could not recompute friendly: %s' % (tag, e))
     return errs
 
 
@@ -271,6 +330,7 @@ def open_page(pw, base, html, module, size):
 
 
 def check_engine(page, out):
+    check_friendly_cases(out)
     data = page.evaluate(GEN_JS, {'seeds': SEEDS})
     qs = data['qs']
     page.evaluate('(qs) => { window.__qs = qs; }', qs)
@@ -397,12 +457,31 @@ def play_stage(page, st, size, out, n, full):
         page.wait_for_function("PIE.ui.state() === 'asking'", timeout=8000)
         q = page.evaluate('PIE.ui.question()')
         page.wait_for_timeout(120)
-        m = page.evaluate("""() => { const r = [...document.querySelectorAll('#answer input, #answer button, #kpHolder button')].filter(x => x.offsetParent).map(x => x.getBoundingClientRect());
-            return { last: r.length ? Math.max(...r.map(x => x.bottom)) : 0, sw: document.documentElement.scrollWidth, iw: innerWidth, right: r.length ? Math.max(...r.map(x => x.right)) : 0 }; }""")
+        m = page.evaluate("""() => { const r = [...document.querySelectorAll('#answer input, #answer button, #kpHolder button, #calcHolder .maffs-calc-toggle')].filter(x => x.offsetParent).map(x => x.getBoundingClientRect());
+            const tg = document.querySelector('#calcHolder .maffs-calc-toggle'), mg = document.getElementById('msg');
+            return { tog: !!(tg && tg.offsetParent), togOpen: !!document.querySelector('#calcHolder .maffs-calc-toggle.open'),
+                     badge: (document.querySelector('.badge-row .calc-badge') || {}).textContent, msg: mg.textContent.trim(),
+                     last: r.length ? Math.max(...r.map(x => x.bottom)) : 0, sw: document.documentElement.scrollWidth, iw: innerWidth, right: r.length ? Math.max(...r.map(x => x.right)) : 0 }; }""")
         if m['last'] > fold + 0.5:
             out.append('%s q%d: answer controls end at %d, below the fold (%d)' % (where, qn, m['last'], fold))
         if m['sw'] > m['iw'] or m['right'] > m['iw'] + 0.5:
             out.append('%s q%d: sideways scroll or a control off the screen (%d > %d)' % (where, qn, max(m['sw'], m['right']), m['iw']))
+        if not m['tog'] or m['togOpen']:
+            out.append('%s q%d: the calculator toggle is %s' % (where, qn, 'open' if m['togOpen'] else 'not on the screen'))
+        if m['badge'] != 'Calculator optional':
+            out.append('%s q%d: the header badge reads %r' % (where, qn, m['badge']))
+        if (m['msg'] == 'Try it with pen and paper') != bool(q['friendly']) or (m['msg'] not in ('', 'Try it with pen and paper')):
+            out.append('%s q%d: the hint reads %r for friendly=%s' % (where, qn, m['msg'], q['friendly']))
+        if qn == 0 and m['tog']:                         # the toggle opens a working calculator: 12 x 379 / 100 = 45.48
+            page.evaluate("document.querySelector('#calcHolder .maffs-calc-toggle').click()")
+            page.wait_for_timeout(200)
+            res = page.evaluate("""() => { const k = t => [...document.querySelectorAll('#calcHolder .maffs-calc-key')].find(x => x.textContent.trim() === t);
+                for (const t of ['1','2','\u00d7','3','7','9','\u00f7','1','0','0','=']) { const b = k(t); if (!b) return 'no key ' + t; b.click(); }
+                return document.querySelector('#calcHolder .maffs-calc-result').textContent.trim(); }""")
+            if res != '45.48':
+                out.append('%s: the calculator gave %r for 12 x 379 / 100, not 45.48' % (where, res))
+            page.evaluate("document.querySelector('#calcHolder .maffs-calc-toggle').click()")
+            page.wait_for_timeout(150)
         check_svgs(page.evaluate(SVG_JS), q, out, '%s q%d' % (where, qn))
         kind = 'right'
         if qn == 1:
@@ -538,6 +617,16 @@ def check(html, module, out, engine=True, big=False, small=(), quick=False, shar
 
 # Each plant: (what, file, [(old, new)], kind, pattern its finding must match).
 PLANTS = [
+    ('the friendly flag wrong (every question marked friendly, as 210/360 once was)', 'module',
+     [("friendly: b.friendly,", "friendly: true,")], 'engine', r'friendly is'),
+    ('the friendly flag never set (60 degrees = 1/6 and 210/360 lose the hint)', 'module',
+     [("friendly: b.friendly,", "friendly: false,")], 'engine', r'friendly is'),
+    ('no calculator offered (the toggle never mounted)', 'page',
+     [("if (!calc) calc = MaffsCalc.mount($('calcHolder'), { dock: $('qcard') });", "if (!calc) calc = { close: function () {}, clear: function () {} };")],
+     'play', r'toggle'),
+    ('the hint on the wrong questions (shown where the bank says not friendly)', 'page',
+     [("$('msg').textContent = Q.friendly ? MaffsPieCharts.HINT : '';", "$('msg').textContent = !Q.friendly ? MaffsPieCharts.HINT : '';")],
+     'play', r'hint reads'),
     ('a wrong amount (stage 2 and 5 key one too many)', 'module',
      [("      q.key = b.answer.value;\n      q.slips = b.slips.map(function (s) { return { kind: s.kind, value: s.answer.value, line: s.line }; });",
        "      q.key = b.answer.value + 1;\n      q.slips = b.slips.map(function (s) { return { kind: s.kind, value: s.answer.value, line: s.line }; });")], 'engine',

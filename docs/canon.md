@@ -2,7 +2,7 @@
 
 *Source of truth for platform facts. Update here first — except the per-game roster, which lives in `.claude/rules/game-roster.md`. See below.*
 
-Last updated: 3 October 2026
+Each section carries its own date; git log is the record.
 
 > **Repository history.** This repository started fresh on 2 Oct 2026. Any commit hash or PR number
 > from before then, here or in `CLAUDE.md` and `docs/todo.md`, refers to
@@ -19,8 +19,8 @@ Last updated: 3 October 2026
 | GA4 Measurement ID | G-992JLHLP2D |
 | Sheets Endpoint | Google Apps Script (see docs/apps-script-endpoint.js) |
 | Contact | contact@maffsgames.co.uk |
-| Total games | **99 live on the portal** (24 Oct 2026: `squared-squirrel` listed on Jon's approval; 23 Oct 2026, contract TAKE-A-WALK-LIST: `take-a-walk` listed on Jon's approval; contract HMP-LIST: `how-many-parts` listed on Jon's approval; 9 Oct 2026, contract DOCS-9OCT: `factor-theorem` relisted under SR-21, A-Level only; contract RELIST-SR: `screening-room` relisted under SR-21; 8 Oct, contract RELIST-3: `just-pythag-it-bruv` listed on Jon's approval, `expectation-station` and `truth-buster` relisted under SR-21), plus **1 roster game live but unlisted** pending its audit fixes (`glorious-gantt`; canon SR-20 and SR-21, the roster's "Unlisted" section). `regression-rumble` is **withdrawn** behind a `noindex` holding page pending its data rebuild (todo §1.26). Per-game detail in `.claude/rules/game-roster.md` (97 numbered rows, plus a Withdrawn section). `games/` holds **99 directories** — the extras are `regression-rumble` (withdrawn, a holding page) and `the-perfect-prank`, the unlisted escape-room prototype, deliberately not on the portal and not in the roster. Because the roster is where `scripts/check-site.py` reads each game's levels, that game is only ever loaded bare; it is recorded under `roster_exceptions` in `scripts/checker-allowlist.json` so the gap is declared rather than silent |
-| Escape rooms | **8 live at `/escape-rooms/`**, indexed, in the sitemap and led from the front page. Not counted in the 99. **Two more are built but withdrawn** (`it-vengeance`, `car-trap`) behind `noindex` holding pages at their own URLs until each one's voice rewrite is done. Teacher pages stay `noindex` deliberately — they hold every answer. Full detail in **§11**; the live work is `docs/escape-room-voice-rewrite.md` |
+| Total games | **101 games live on the portal, and a hundredth listed item: The 6 P's** (27 Oct 2026, contract SIX-PS-LAUNCH, Jon: `/the-6-ps/` is a page, not a game under `games/`, so it has no roster row; it is listed through `data/games.json` "pages", the portal's GCSE section, the sitemap, a pinned featured card on /essentials/ (`schools/assets/featured.js`, data `schools/assets/featured-items.json`: a second featured item is a data entry), /updates/, and a homepage-only "100 games" sash that ends itself on 10 Nov 2026 (`schools/assets/launch-sash.js`, `scripts/check-launch-sash.py`)). The 101 games: (30 Oct 2026: i-found-a-mark and who-ate-all-the-pies listed on Jon's approval; 24 Oct 2026: `squared-squirrel` listed on Jon's approval; 23 Oct 2026, contract TAKE-A-WALK-LIST: `take-a-walk` listed on Jon's approval; contract HMP-LIST: `how-many-parts` listed on Jon's approval; 9 Oct 2026, contract DOCS-9OCT: `factor-theorem` relisted under SR-21, A-Level only; contract RELIST-SR: `screening-room` relisted under SR-21; 8 Oct, contract RELIST-3: `just-pythag-it-bruv` listed on Jon's approval, `expectation-station` and `truth-buster` relisted under SR-21), plus **1 roster game live but unlisted** pending its audit fixes (`glorious-gantt`; canon SR-20 and SR-21, the roster's "Unlisted" section). `regression-rumble` is **withdrawn** behind a `noindex` holding page pending its data rebuild (todo §1.26). Per-game detail in `.claude/rules/game-roster.md` (97 numbered rows, plus a Withdrawn section). `games/` holds **99 directories** — the extras are `regression-rumble` (withdrawn, a holding page) and `the-perfect-prank`, the unlisted escape-room prototype, deliberately not on the portal and not in the roster. Because the roster is where `scripts/check-site.py` reads each game's levels, that game is only ever loaded bare; it is recorded under `roster_exceptions` in `scripts/checker-allowlist.json` so the gap is declared rather than silent |
+| Escape rooms | Live at `/escape-rooms/`, indexed, in the sitemap and led from the front page. Not counted in the games total. Which rooms are live or withdrawn is §11.1, the only list. Teacher pages stay `noindex` deliberately — they hold every answer. |
 | Parent guides | **20 at `/parents/`**, plus the hub: 21 indexed URLs, in the sitemap and linked from the portal footer. Ported from MathsWins on 28 Sep 2026 and corrected again on 29 Sep against Jon's approved wording; the findings are in `docs/audit-parent-guides.md` and the fix-by-fix record is in `docs/migrate-parent-guides.md`. `averages` links Distinctly Average at `?level=ks3`. The section has one template: `parents/guide.css` and `parents/guide.js`, portal theme, adult register (the game theme, §7.5, does not apply -- the reader is the parent). **GCSE tier badge:** one component in `parents/guide.js` (its `TIERS` table, built from bold parts of `data/dfe-gcse-parts.json`) on exactly four guides and their hub cards; partly-Higher guides mark each Higher section in the body. `scripts/verify-parent-guides.py` reads every checked value back from the pages. **`scripts/check-site.py` does not discover these pages**: `build_page_list()` globs `games/` and `escape-rooms/` and otherwise walks a hard-coded list of root pages |
 
 ---
@@ -483,19 +483,32 @@ exam has a non-calculator paper and calculator papers.
 | `required` | The questions need a calculator (Pythagoras to 1 d.p.) | "Calculator required" |
 | `scientific` | The questions need a scientific calculator (powers beyond ², ln/log, eˣ, trig, π); the on-screen calculator shows its scientific keys (contract SCI-CALC, 9 Oct 2026) | "Scientific calculator required" |
 | `not allowed` | Practice for a non-calculator paper; the numbers are chosen to be done by hand | "Non-calculator" (Jon, 6 Oct 2026) |
-| `optional` | Either works | worded when the first game is tagged |
+| `optional` | Either works; the shared calculator is there behind its "Calculator" toggle, closed, for a student without one (CALC-OPTIONAL, Jon, 28 Oct 2026) | "Calculator optional" |
 | `untagged` | Not yet decided. Every game starts here and is tagged in its own PR | nothing |
 | `by stage` | A staged game whose stages differ (contract CALC-BY-STAGE, Jon, 23 Oct 2026): each stage has one of the four values above it, `untagged` excepted | each stage's badge on its choice; the header shows the badge of the stage being played |
 
 **`by stage`: the map, the badges, the check (CALC-BY-STAGE, 23 Oct 2026).** A game tagged `by stage` declares
 its stages once in its page, keyed by its stage (mode) keys: `<script type="application/json" id="maffs-calc-stages">{"stage-1": "not allowed", …, "stage-4": "scientific"}</script>`,
 each value `required`, `scientific`, `not allowed` or `optional`. Each stage's choice on the start screen carries that stage's badge,
-the usual markup and wording with `data-stage="<key>"` added (an `optional` stage shows none until that value is worded), and
+the usual markup and wording with `data-stage="<key>"` added (an `optional` stage shows "Calculator optional"), and
 the header shows the badge of the stage being played, filled in at run time. `scripts/check-calculator.py` enforces, statically: the
 map is there and valid, and only on a `by stage` game; one badge per badged stage, of its value; no other full badge on the page;
-calculator.js and keypad.js when any stage is `required` or `scientific`, a `keys: 'scientific'` mount when any stage is `scientific`,
+calculator.js and keypad.js when any stage is `required`, `scientific` or `optional`, a `keys: 'scientific'` mount when any stage is `scientific`,
 and no calculator.js when no stage needs one. That the calculator mounts in its stages only, and the header follows the stage, is
 checked by the game's own verifier in play. Whole-game values are checked exactly as before. First planned user: `take-a-walk` (in its own PR).
+
+**`optional` loads the calculator (CALC-OPTIONAL, Jon, 28 Oct 2026).** A game or stage tagged `optional` loads calculator.js and keypad.js
+like `required`, shows `<span class="calc-badge" data-calc="optional">Calculator optional</span>` (start screen, and the header of the
+stage being played), and mounts the shared calculator behind its "Calculator" toggle, closed; the student's own calculator is still
+welcome. The tag is per game or per stage, never per question: there is no per-question calculator field. A bank's `friendly` boolean
+only decides whether the "Try it with pen and paper" hint (Jon, 28 Oct 2026; it was "Try without a calculator", which implied mental
+maths) shows on that question, and is true where every step is a standard Foundation non-calculator method with a few lines of working:
+percentages built from 10%, 5% and 1% of round amounts that make whole pence, a sector read as a fraction of 360 that simplifies by
+common factors of 12 or under, increases and decreases built the same way. Not friendly: long multiplication or division of awkward
+numbers (12% of £379) or a decimal that does not end. Each bank writes its rule in its header and its wording once, as `HINT`; the games
+read it from the bank. The game's own verifier checks
+in play that the toggle is there on every question of an `optional` stage and the hint only on friendly ones. A game that offers no
+calculator at all (for example a chart-reading or probability game with no arithmetic worth a calculator) is `not allowed`.
 
 **One badge, one style.** The start screen shows `<span class="calc-badge" data-calc="…">…</span>`,
 styled once in `schools/assets/theme.css` (`.calc-badge`; `data-calc="required"` takes `--hint`,
@@ -1403,6 +1416,8 @@ not, so none is lost off the left edge; a CSS-only shading cue sits on whichever
 every link is a 40px-high tap target; below 480px the Support link reads "☕ Support". **The bar
 stays exactly 40px**: every game's phone fit (§7.6.1) measures its fold as the viewport minus it.
 
+**No footer links during a run (Jon's ruling, 27 Oct 2026).** Footer links sit where the thumb lands mid-game: pinned, beside Next (Jon mis-tapped Spec Map); in the flow, they rise into the spot the finger just left when the page shortens (the answer-lock double-tap on Next, planted A/B on proportion-blaster: with the footer in flow its second tap navigated away). The fix is state-based, not a timing guard (a 700 ms inert window was rejected). **Shipped for The 6 P's only:** it shows the footer on the start and results screens and removes it (display none: out of the tab order, not hit-testable) on a question, its feedback and between topics, driven by its own `show()`; the header links stay as the way out; `verify-the-6-ps.py` checks every state, with two plants. **Every other playable page keeps the pinned footer.** **Deferred to after the infrastructure freeze (Mon 2 Nov): the site-wide state-based fix** (a shared script that removes the footer while a run is in progress, for every page under games/, escape-rooms/ and the-6-ps/, and a check). The in-flow variant (`site-footer--flow`) was tried and dropped.
+
 **Never hand-copy the footer or its CSS into a page.** It was copied by hand into 125 pages until
 October 2026; the copies drifted into four link sets, and all of them shared one defect (on a phone
 the links ran off both edges and could not be reached). To change it, edit `CANONICAL` or the
@@ -1412,12 +1427,17 @@ time needs `padding-bottom: 40px` (or equivalent) so the bar covers nothing.
 
 ### 7.5.3 Name the maths, never the student (Jon, 7 Oct 2026; contracts ESSENTIALS and ESSENTIALS-WORDING, 8 Oct)
 
-**Student surfaces describe the topic and level only; only teacher surfaces may say resit or post-16.** A link
+**Student surfaces describe the maths, its difficulty and learning goals, never students by attainment or ability; only teacher surfaces may say resit or post-16.** A link
 posted in Google Classroom or Teams shows its page's description and og/twitter tags to the whole class. Until
 8 Oct 2026 the two rooms built for a resit class opened "A GCSE resit escape room on...", and the portal's
 cards said "for a GCSE resit class". Until the same evening /essentials/ was a teacher surface and /updates/ was
 never scanned, so both still said "resit" ("resit page", "resit students", a link to /resit/).
 **Jon, 8 Oct 2026: the section is "Essentials" everywhere public; no public page labels a student as a resitter.**
+
+**Jon, 30 Oct 2026:** attainment and ability labels on students (for example, "students working at grades 1–3",
+"low-ability learners" or "bottom sets") are prohibited. Grade bands describing a room's or game's difficulty or
+level are permitted, including KS3 escape-room metadata ("A 15-minute maths escape room for grades 1 to 3.").
+Learning goals such as "working towards grade 4" and "aiming for grade 4" are permitted.
 
 - **Student surfaces:** every game and escape-room page, including its description, og and twitter tags; the
   portal and /escape-rooms/ cards; /essentials/ and its metadata; /updates/. They say, e.g., "A GCSE escape
@@ -1425,12 +1445,13 @@ never scanned, so both still said "resit" ("resit page", "resit students", a lin
 - **Teacher surfaces:** each room's teacher.html, and the teacher and parent guides, only. They may say resit
   or post-16.
 - **Checked by `scripts/check-student-labels.py`** (CI, site-wide checks): "resit", "retake" or "post-16" in a
-  student surface's visible text, script strings or description/og/twitter tags fails. Code comments and docs
+  student surface's visible text, shown attributes, script strings or description/og/twitter tags fails; the same
+  channels reject attainment and ability labels on students. Code comments and docs
   are exempt. A page whose label is maths content rather than a label on the player is in its `KNOWN`, with
   the reason: reported, never failed, and stale once the label is gone (given-that's tree-diagram question
   about students re-sitting, 8 Oct 2026, awaiting Jon's view).
 - **/essentials/** (until 8 Oct 2026 /resit/, which now redirects there, as /schools/spec-map/ does) is headed
-  "Essentials", with the teacher line "GCSE Foundation maths for students working at grades 1–3, in school or
+  "Essentials", with the teacher line "GCSE Foundation maths for students working towards grade 4, in school or
   college."
 - **A site fact is never hand-typed beside its data.** The homepage title and description carry no game or
   room count (each was stale within a week: "96 games" while the portal listed 91); the range reads "KS3 to
@@ -1815,6 +1836,41 @@ finished red at 07:13:43Z. It is now enforced by one command both lanes use for 
   are each covered; with the red-main check removed, or the run-only `check_main()` planted, the selftest fails.
 - Branch protection on GitHub is Jon's and is not changed by this script.
 
+### 7.8.4 The gate: warn, then enforce (Jon, 27 Oct 2026, contract GATE-WARN-THEN-ENFORCE)
+
+Six stalls on 27 Oct 2026 had two causes. New gate rules failed from the day they came in, before existing code met them:
+the per-line 70% limit (#583 blocked on lines it did not touch), merge-pr.py's job paging (HTTP 502 refused every merge),
+the 20 KB handover limit (twice). And gating checks were not repeatable: a random draw, and measurements taken before the
+fonts settled (red mains after #566 and #576, and on 39b7c99, where The 6 P's phone check typed 0.00004 as "4e-05" whenever
+its random draw served that question: #588). The rule, for every lane:
+
+- **New limits and checks warn first.** A new limit or gating check starts as a warning, with a shrink-only warn list of
+  what fails it on main when it comes in, and fails only once main passes it. A listed item warns; an unlisted one fails; a
+  pull request may remove an entry, never add one, and one that edits the list leaves no entry that passes now. The lane that
+  adds a limit clears its warnings. The per-line limit's list is `scripts/ci-warn-list.json` (§7.8.1); main's timings job
+  removes each entry whose line passes now, in its timings commit.
+- **A line with no recorded time is estimated and warned, never failed:** a new or renamed line, or a sharded verifier's
+  part whose units no main run has timed. The 70% and 80% rules apply once its first main run records it. Past 100% of a
+  group's budget, a time measured on the line's own pull-request run still fails: merged, it would refuse main's pack.
+- **Gate changes pass the worst-case test** (built, parked on `claude/gate-worst-case` by Jon's infrastructure freeze until
+  Mon 2 Nov 2026; until it merges, the lane making a gate change runs it by hand). A pull request that touches the gate's
+  own files (`.github/`, `scripts/ci-*`, `scripts/ci_shards.py`, `scripts/merge-pr.py`, `scripts/check-context-size.py`,
+  `scripts/check-changed.py`, `requirements*`) also passes the budget check on the selection a change to
+  `scripts/bank_common.py` makes, every verifier that imports it included.
+- **Gating checks are repeatable.** No random sampling in a gate: every item, or the worst case with a fixed seed. Every
+  page measurement waits for the shared settle (`bank_common.wait_settled`). Random samples may appear in reports, never
+  in the gate. The conversion is step 4, from Mon 2 Nov (Jon's ruling, 27 Oct): the stub server injects a fixed default
+  seed for `Math.random` into every page it serves, each verifier keeps a fixed list of seeds, and a separate nightly,
+  non-gating sweep plays fresh seeds and reports any failing seed, which is then added to that verifier's list. Random
+  sampling lives only in that sweep. Take a Walk's `Date.now` seed is fixed with it.
+- **A failed main run may be re-run once, failed jobs only, by any lane.** A pass on the re-run is reported to the cloud lane
+  as a flake and goes on the repeatability audit's list. Known: The 6 P's, Content verifiers 91 (tap timeout, 39b7c99, run
+  40570027404, passed on its re-run): a deterministic driver bug that a random draw reached about one run in three (#588).
+- **A handover past 20 KB will archive itself** (built, parked on `claude/gate-handover-archive` until Mon 2 Nov 2026):
+  a warning on a pull request, and after the merge main moves its oldest dated entries to that lane's `docs/history/`
+  archive, word for word. Until then the lane moves them by hand, as before.
+- **Only the cloud lane changes gate files;** another lane reports what it needs and waits.
+
 ## 7.9 Verifier conventions (Jon, 8 Oct 2026)
 
 - **Read a mark from what the page shows, never from a wrapped `mfg`.** analytics.js can replace `window.mfg` after a
@@ -1822,6 +1878,12 @@ finished red at 07:13:43Z. It is now enforced by one command both lanes use for 
   7 Oct 2026, by reading the feedback icon's class, which `showFeedback()` sets synchronously). First written in a
   CLAUDE.md handover; contract CTX.
 - Verifiers recompute explanation and hint figures, not just keys (§0.3, "Also recorded with SR-16 to SR-20").
+- **Planted faults go through `scripts/plant_common.py` (STALE-PLANTS, Jon, 28 Oct 2026).** A plant whose target is missing, repeated or unchanged
+  (`apply_plant`, `apply_re_plant`, `apply_js`) raises `StalePlant` and fails the run as `STALE PLANT: <name>`; a catch needs findings AND no
+  error (`is_caught`); a plant is never skipped because its room, game or id is not live (that fails too). Four verifiers counted a plant that
+  never applied, or a check that errored, as CAUGHT (correlation-or-coincidence, just-pythag-it-bruv UI faults, test-ga4-summary, the
+  escape-rooms rating plants when rugby-mud was not live). Every NEW verifier with planted faults uses plant_common; the older ones migrate
+  when next edited (list: `docs/handover/stale-plants.md`). Tested by `scripts/plant_common_tests.py`.
 
 ---
 
@@ -2868,3 +2930,76 @@ const QUESTIONS = { ks3: [...], gcse: [...], alevel: [...], further: [...], leve
   old *"Global leaderboard coming soon"* copy in place — 78 games told students the leaderboard
   did not exist while submitting their scores to it. Fixed 2026-08-26. When rolling a feature out
   site-wide, grep for the placeholder copy it is meant to replace.
+
+## Project Overview (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+Free curriculum-aligned maths games for UK schools. 101 games, The 6 P's (listed 27 Oct 2026 as the 100th item on the portal) and thirteen escape rooms live (Regression Rumble withdrawn 30 Sep 2026 pending a data rebuild). Separate from MathsWins (mathswins.co.uk).
+
+- **Repo:** https://github.com/OrthogonalMaffs/maffsgames
+- **Live site:** maffsgames.co.uk (GitHub Pages)
+- **maffsgames.com:** bought 24 Sep 2026, 301-redirects to maffsgames.co.uk at the Cloudflare edge
+  and serves nothing of its own. See `docs/domain-maffsgames-com.md` — including why the .co.uk stays
+  canonical, and the two IONOS prompts to ignore
+- **Contact:** contact@maffsgames.co.uk
+- **BMC:** buymeacoffee.com/maffsgames
+
+## Before pushing: `python scripts/check-changed.py`, not the full local suite (canon §7.8, 4 Oct 2026) (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+**Why:** the repo is public, so CI minutes are free, and the
+full local run was a slower second copy of CI with known Windows-only false failures (todo §4 item 18).
+
+Measured (serial ->
+two queues): docs-only 353 -> 167 s; one game 1565 -> 1375 s; shared asset (#232's files) 4198 -> 2907 s.
+The last line printed is the PR line "checks deferred to CI: ..." (tiers 1-2, tier 4 banks, leaderboard
+coverage). `--files a b` plans for given paths; `--workers 1` runs the light queue serially too.
+
+## After merging: watch main's full run (Jon, 5 Oct 2026) (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+**Why:** a PR runs only the verifiers its changes select, so a
+group that has outgrown its timeout passes on every PR and fails only on main. Group B was cancelled at
+its 12-minute limit on every main run from #68 to #71, and it was seen only when a PR touched every game.
+
+**Why:** the per-run clock failed twice in 160 runs, both single-line stalls on unchanged
+code, and never saw the one real regression (the median did). Each job's summary lists every verifier's duration.
+
+## Local render testing — ALWAYS use the stub server (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+Every page loads `schools/assets/analytics.js`, which posts to the live Apps Script endpoint and
+into the production Events sheet.
+
+The script swaps analytics.js for a no-op and leaves every other byte untouched.
+
+Three things that cost time on 21/09, local or live:
+
+Chrome will happily
+  replay the previous build and hand you a clean pass that means nothing. It can fake a green as
+  easily as a red, locally and on Pages.
+
+**The automation tab reports `document.hidden`**, so timers throttle to ~1.5/sec and any
+  poll-based test driver stalls.
+
+## Tech Stack (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+- KaTeX via CDN for math rendering
+- GitHub Pages hosting
+- Firebase Realtime Database for leaderboard
+- GA4 + Google Sheets dual analytics via `mfg()` wrapper
+- GA4 country tabs and the 'GA4 summary' tab (weekly figures + 3 charts) are Apps Script, NOT GitHub Actions: `docs/apps-script-ga4-country.js` + `docs/apps-script-ga4-summary.js`, one 06:00 trigger (setup `docs/ga4-country-setup.md`; tests `scripts/test-ga4-country.py`, `scripts/test-ga4-summary.py`). No repo workflow writes the Sheet and there are no repo secrets.
+
+## Where things live (read on demand, not every session) (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+- **Archives** (history only, never loaded by default): `docs/history/claude-md-archive.md` (this file's dated
+  handovers and state sections to 7 Oct 2026, and the reference sections canon already holds),
+  `docs/history/handover-home-archive.md`, `docs/history/handover-cloud-archive.md`.
+
+## Start of task: a new worktree from origin/main (ESCAPE-SET-CHECKS, 11 Oct 2026) (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+**Why:** on 11 Oct 2026 a session ran
+`git pull origin main` in the primary worktree, which was sitting on an old task branch, and fast-forwarded
+that branch to main; undoing it needed Jon.
+
+## End of task: remove the task's worktree (WORKTREE-CLEANUP, 11 Oct 2026) (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
+
+Remote branches are deleted by GitHub on merge (repo setting, 12 Oct 2026).
+
+**Why:** worktrees were made per task and never removed; 35 had built up by 11 Oct 2026.

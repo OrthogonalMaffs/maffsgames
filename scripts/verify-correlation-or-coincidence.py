@@ -36,6 +36,7 @@ from urllib.parse import urlsplit
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import bank_common as bc  # noqa: E402
+import plant_common as pc  # noqa: E402
 
 SLUG = "correlation-or-coincidence"
 PAGE = "/games/%s/" % SLUG
@@ -393,20 +394,27 @@ async def selftest(browser, by_id):
     lines, ok = [], True
     for name, patch in FAULTS:
         ctx, page, _ = await new_page(browser)
+        found, err = [], None
         try:
             try:
-                await page.evaluate(patch)
+                await pc.apply_js(page, name, patch)          # a patch that cannot apply is a STALE PLANT, never a catch
+            except pc.StalePlant as exc:
+                ok = False
+                lines.append("  %-52s *** %s ***" % (name, exc))
+                continue
+            try:
                 found, bank, _ = await collect(page)
                 if not found:
                     play, _ = await play_all(page, {q["id"]: q for q in bank})
                     found = play
-            except Exception as exc:          # a fault that breaks the page is reported, so caught
-                found = ["the page broke: %s" % str(exc).splitlines()[0]]
+            except Exception as exc:          # an error while checking is not a catch (plant_common.is_caught)
+                err = str(exc).splitlines()[0]
         finally:
             await ctx.close()
-        caught = bool(found)
+        caught = pc.is_caught(found, err)
         ok = ok and caught
-        lines.append("  %-52s %s" % (name, ("CAUGHT (%d, e.g. %s)" % (len(found), found[0][:80])) if caught else "*** MISSED ***"))
+        lines.append("  %-52s %s" % (name, ("CAUGHT (%d, e.g. %s)" % (len(found), found[0][:80])) if caught
+                                     else ("*** CHECK ERRORED: %s ***" % err) if err else "*** MISSED ***"))
     return ok, lines
 
 

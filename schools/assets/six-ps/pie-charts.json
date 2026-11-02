@@ -387,7 +387,8 @@
      },
      "line": "The vegetable sector is \\(\\frac{5}{18}\\), not mince. The two sectors make \\(360^\\circ\\), so mince is the rest."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-b1011a63",
@@ -763,7 +764,8 @@
      },
      "line": "The \\(105^\\circ\\) was divided by 100, as if it were a percentage. The whole chart is \\(360^\\circ\\): divide by 360."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-52e5532f",
@@ -793,7 +795,8 @@
      },
      "line": "The \\(35^\\circ\\) was divided by 100, as if it were a percentage. The whole chart is \\(360^\\circ\\): divide by 360."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-f8d8fe72",
@@ -823,7 +826,8 @@
      },
      "line": "The 8 was multiplied by 360 but not divided by the total of 36 pies."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-1e054f42",
@@ -927,7 +931,8 @@
      },
      "line": "The 5 was multiplied by 360 but not divided by the total of 72 pies."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-abc4c242",
@@ -1019,7 +1024,8 @@
      },
      "line": "The 4 was multiplied by 360 but not divided by the total of 24 pies."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-ff7ace16",
@@ -1049,7 +1055,8 @@
      },
      "line": "The 17 was multiplied by 360 but not divided by the total of 45 pies."
     }
-   ]
+   ],
+   "try_without": true
   },
   {
    "id": "pie-charts-7ed3d218",
@@ -2083,7 +2090,8 @@
      },
      "line": "The \\(100^\\circ\\) was used as if it were a percentage, so the total was found out of 100. The whole chart is \\(360^\\circ\\)."
     }
-   ]
+   ],
+   "try_without": true
   }
  ]
 }
