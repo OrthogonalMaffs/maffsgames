@@ -65,7 +65,8 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 - **Decided for you (standing STOP IF rules, layout):** the first stage button (the start control; there is no single Start button) was ALREADY below the fold at 320x568 on main (bottom 618.5, fold 528). The stage list now sits above the two intro paragraphs: bottom 455.5 at 320x568, 468.7 at 375x667, 476.9 at 390x844. "Full card width" is used (max 600 px); the sofa precedent caps at 340 px.
 - **Decided for you:** item 5's premise is wrong: wrong answers carry the reason in words and a worked "How it goes", but no ✗ anywhere; none added (wording). Results picture alt="" (decorative repeat). #742a3d vs --wrong is 1.52:1 (distinct by hue, not lightness).
 - Verifier: `check_look` at 390x844 and every SMALL size; two plants (SVG stall, accent = --wrong); the plant loop now applies through `plant_common.apply_plant`.
-- **NEXT, queued (Jon, 2 Nov): ESSENTIALS-ART** (`docs/handover/contracts/2026-11-02-essentials-art.md`), on `art/essentials-batch-1`. Starts only after PIES-LOOK merges (one claim open at a time; its exception is one PR, not parallel claims). Pre-checked: all eight sources at the recorded sizes. `art-inbox/factor-race.jpg` is the REJECTED art (wrong maths), not the source: use main's `games/factor-race/Gemini_...jpg` (checked: 8 lights for 24, 6 for 12).
+- PIES-LOOK merged #637 (b5c9eaa), main green (41525186638).
+- **ESSENTIALS-ART** (`docs/handover/contracts/2026-11-02-essentials-art.md`), `art/essentials-batch-1` (`/home/user/wt-art`): 8 claimed, 8 WebPs committed (f999c297), not wired. **STOPPED, asked Jon:** with the image, Start is below the fold at 320x568 in every game (5 were below before it); Estimation Golf has no start screen.
 
 ## 2026-11-02 (cloud): GATE-RESUME (contract `docs/handover/contracts/2026-11-02-gate-resume.md`). Each PR stops at a green Gate for Project Claude's review and Jon's "merge" (overrides merge-on-green).
 
