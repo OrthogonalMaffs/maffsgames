@@ -49,3 +49,13 @@ line live; Gate green; Shared review by Project Claude; stop for Jon's "merge"; 
 STOP IF
 Any game sends student-typed text where question_text would go; the hash collides within one game's banks; the
 endpoint change would alter existing columns; the privacy page wording needs more than the one line.
+
+## Amendment 1 (Jon, 3 Nov 2026, verbatim)
+
+Asked because the contract's privacy line would contradict the same page (the portal logs search-box text; leaderboard
+initials are typed and stored):
+
+```
+Ruling (Jon, 3 Nov), QUESTION-ID Amendment 1: the privacy line reads exactly "Which question was asked, as an
+anonymous code. Answers a student types are never sent." The STOP IF on that line is resolved; carry on.
+```

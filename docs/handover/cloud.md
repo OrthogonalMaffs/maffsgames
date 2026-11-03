@@ -63,6 +63,14 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 **Every PR:** no `check-changed.py` in the cloud (AGENTS.md, CLOUD-LEAN); merge only via `python scripts/merge-pr.py <n>
 --watch --wait 3600` (needs a green Gate and main, §7.8.3) and report its last line.
 
+## 2026-11-03 (cloud): QUESTION-ID (`docs/handover/contracts/2026-11-03-question-id.md`, Shared, Amendment 1; stops at a green Gate for Project Claude's review and Jon's "merge")
+
+- Agent: Claude Code. Primary checkout `/home/user/maffsgames`, branch `claude/nice-babbage-15fc7o` (from main 11afde3; first commit 6c6731a closes SEQ-SOLVER-REREAD).
+- Built: `analytics.js` turns `question_text` into `question_id` = `h` + FNV-1a hex and never sends the text (GA4 and the Sheet); endpoint column R `question_id` after `seq`, version `2026-11-03-a`; Sequence Solver passes its item's text; `scripts/decode-question-ids.py` (154 ids, 0 collisions); `scripts/check-question-id.py` (ci-line, warn list of the other 108 sites; selftest 12/12; check plays a round in Chromium, every id decodes to the question shown); canon §1.3, §12; privacy line (Amendment 1).
+- **Amendment 1 (Jon, 3 Nov):** the contract's privacy line would have contradicted the page (search-box text, initials); it reads "Which question was asked, as an anonymous code. Answers a student types are never sent."
+- **Jon's two steps after the merge:** (1) redeploy the Apps Script endpoint (`docs/apps-script-redeploy.md`; `/exec` should report `2026-11-03-a`; R1 then reads `question_id`, written by the first post); (2) register `question_id` in GA4 as an event-scoped custom dimension (Admin, Custom definitions).
+- **State:** PR to open; Gate pending.
+
 ## 2026-11-03 (cloud): SEQ-SOLVER-REREAD (`docs/history/contracts/2026-11-03-seq-solver-reread.md`, Shared; stops at a green Gate for Project Claude's review and Jon's "merge")
 
 - Agent: Claude Code. Primary checkout `/home/user/maffsgames`, branch `claude/nice-babbage-15fc7o` (from main 39d6f7c; first commit 1d737a6 closes DASH-MINUS).
