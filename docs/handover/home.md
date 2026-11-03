@@ -2,6 +2,8 @@
 
 **Queue (cross-lane facts; never archived)**
 
+- UPDATES-NOVEMBER: home/Codex, codex/updates-november, /home/maffs/mg-updates-november; contract docs/handover/contracts/2026-11-03-updates-november.md (Amendment 1). Claims updates/index.html, index.html and AGENTS.md; Small, merge on green.
+
 - NEW-AND-UPDATED: home/Codex claims index.html on codex/new-and-updated, /home/maffs/mg-new-and-updated, PR #648; contract docs/handover/contracts/2026-11-03-new-and-updated.md. Full checks 56/56, exit 0. Shared: green Gate then Project Claude review and Jon's merge. Fresh base ffcd9a9b includes DASH-MINUS #646; verifier Amendment 1 applied.
 
 - TODO-TRIM: home/Codex, codex/todo-trim, /home/maffs/mg-todo-trim, PR #645; contract and Jon's 3 Nov HTTP-503 retry ruling in the PR. Small, merge on green. NEW-AND-UPDATED is next; no saved contract found at this head.
@@ -11,6 +13,12 @@
 - LOOK-STAGE: home/Codex, codex/look-stage, /home/maffs/mg-look-stage, PR #638; contract `docs/handover/contracts/2026-11-02-look-stage.md`. Concurrent PIES-LOOK/ESSENTIALS-ART authorised by Jon; roster, canon and registration reserved here. Pies remains warned until Jon's explicit look sign-off, irrespective of its artwork merge. Shared: stop at green Gate for Project Claude review and Jon's “merge”.
 - RULEBOOK: home/Codex, codex/rulebook, /home/maffs/mg-rulebook, PR #635; Shared. Amendment 1 findings addressed on the same branch; stop at Gate green for re-review and Jon's “merge”. Two lanes are explicitly authorised for this task.
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
+
+## 2026-11-03 (home): UPDATES-NOVEMBER
+
+Agent: Codex. Worktree: /home/maffs/mg-updates-november. Branch: codex/updates-november. Base: 9e17ddfc. Next: checks, PR, guarded merge and main watch. November uses Jon's approved wording and existing markup; The 6 P's gains its 27 Oct New badge; AGENTS.md requires dated updates in visible-change PRs, with rationale in canon §12. No checker or game changes. Initial STOP for missing dash exception mechanism resolved by Amendment 1: updates/ is outside that check's scope. Open PRs #518 and #424 touch home.md only. No SR decision needed; SR-27 does not apply. Contract and amendment saved verbatim.
+
+Record: agent Codex; wall n/a; review cycles 0; amendments 1; usage n/a.
 
 ## 2026-11-03 (home): NEW-AND-UPDATED
 
