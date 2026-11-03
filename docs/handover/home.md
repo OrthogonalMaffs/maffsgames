@@ -12,6 +12,14 @@
 - RULEBOOK: home/Codex, codex/rulebook, /home/maffs/mg-rulebook, PR #635; Shared. Amendment 1 findings addressed on the same branch; stop at Gate green for re-review and Jon's “merge”. Two lanes are explicitly authorised for this task.
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-03 (home): NEW-AND-UPDATED
+
+Agent: Codex. Worktree: /home/maffs/mg-new-and-updated. Branch: codex/new-and-updated. Base ffcd9a9b includes DASH-MINUS #646; claim commit 75dcee63. Next: full check-changed.py, push and PR, stop at green Gate for Project Claude review and Jon's merge.
+
+Implemented: cmpNew derives its cards from applyBadges(), one per slug, newest first with New then title ties, cap 12; evergreen heading/note and new-and-updated analytics label. Badge dates/rules, level cards, filter and compact behaviour unchanged. New ci-line verifier reads level-card metadata independently and stubs the clock only in routed copies. Section-click test also fixes its test clock so generated cards remain testable after the current badges expire.
+
+Targeted checks: new verifier passes on 3 Nov (14 live, 12 displayed), 13 Nov (13 live) and 2030 (none, whole section hidden). All three required plants CAUGHT. Phones 320x568, 375x667, 390x844 pass compact controls, live/filtered counts and overflow checks using pinned real fonts. Section clicks pass for all 20 labelled elements; copied cards still fire game_card_clicked alone. First verifier run read the CSS-uppercased heading via inner_text; corrected to text_content, then all pass. UTF-8 characters verified. No answer-bearing change; no SR decision needed; SR-27 exemption does not apply.
+
 ## 2026-11-03 (home): TODO-TRIM
 
 Agent: Codex. Worktree: /home/maffs/mg-todo-trim. Branch: codex/todo-trim. Last implementation commit: 359cb347. PR #645: https://github.com/OrthogonalMaffs/maffsgames/pull/645 . Checked locally; Gate and measured-budget check passed on 359cb347. Next: this handover head's Gate, then retry the guarded merge with --watch --wait 3600. Final merge/main/cleanup results are tracked in the PR report.

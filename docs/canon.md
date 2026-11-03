@@ -265,7 +265,7 @@ opening (read in the capture phase, before the page flips it), as `fact_expanded
 `preventDefault` or delays a link; `mfg()` posts with `keepalive`. Never label anything inside a
 `.game-card`: one click would then fire both events. Sheet columns (the endpoint keeps a fixed list):
 `item` → `game_slug`, `section` → `filter_type`, and `v1|pos=<position>;action=<action>` →
-`filter_value`. Labels on the portal: `escape-rooms` (13 items), `parent-guides` (1), `new-2026-27`
+`filter_value`. Labels on the portal: `escape-rooms` (13 items), `parent-guides` (1), `new-and-updated`
 (its "Show them" toggle), `essentials-link` (the homepage badge, item `open-essentials`).
 `scripts/test-section-clicks.py` (CI) clicks every labelled element and checks the payload, and that game
 cards and `fact_expanded` are unchanged.
@@ -393,6 +393,8 @@ than by quietly restoring this form: whatever replaces it needs a sender, a sche
 actually keep, and a processor disclosed only once it is genuinely in use.
 
 ## 3.4 New & updated badges (Jon, 8 Oct 2026)
+
+The "New and updated" section is built from the live badges, newest first, capped at 12 games (Jon, 3 Nov 2026).
 
 **NEW** = a genuinely new game, first added to the portal in the window (27 Sep 2026, unchanged).
 
@@ -2592,6 +2594,14 @@ all — ask for JPGs.**
 ---
 
 # 12. Engineering reference (moved from CLAUDE.md, 8 Oct 2026, contract CTX)
+
+## NEW-AND-UPDATED (Jon, 3 Nov 2026)
+
+The homepage's hand-placed "New for 2026/27" list drifted from the dated badge metadata: its 18 cards
+omitted later releases and its note aged. Building "New and updated" in applyBadges() removes that second
+source: the same date window selects one copy of each game's first card, newest first, with New before
+Updated and title A-Z for ties. Jon capped the section at 12; no live badges hides it. The filter and phone
+compact controls retain their behaviour. The section-click label changes from new-2026-27 to new-and-updated.
 
 ## LOOK-STAGE: approval before listing (Jon, 2 Nov 2026)
 
