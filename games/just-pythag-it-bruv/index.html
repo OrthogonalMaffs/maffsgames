@@ -168,6 +168,10 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
 .a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;transition:background .15s}
 .a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+/* Jon's start-screen illustration (assets/start.webp, contract ESSENTIALS-ART): the card's width and corners. */
+.start-art{display:block;width:100%;max-width:600px;height:auto;margin:.4rem auto .7rem;border-radius:14px}
+/* Short screens (600 px tall or less): the picture capped at 120 px, cropped from the centre (Jon, 2 Nov 2026). */
+@media (max-height:600px){.start-art{max-height:120px;object-fit:cover;object-position:center}}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
@@ -207,6 +211,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
   <a href="../../" class="back-link">← Back to Games</a>
   <div id="menu" class="screen active">
     <div class="header"><h1>Just Pythag It, Bruv</h1><div class="sub">Pythagoras' theorem. Find the hypotenuse, or find a shorter side.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <img class="start-art" src="assets/start.webp" width="1600" height="873" alt="A building site with scaffolding, a ladder against a wall and set squares on a workbench">
     <div class="badges">
       <span class="level-tag" id="levelTag">Foundation</span>
       <span class="calc-badge" data-calc="required" id="calcBadge">Calculator required</span>
