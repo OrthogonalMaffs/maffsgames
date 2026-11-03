@@ -6,6 +6,51 @@ and the last three entries; older entries move here, newest first, unchanged.
 
 ## Moved 2026-11-03 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
 
+## 2026-11-03 (cloud): RULE-QUOTE (Jon's chat request, no saved contract): quote "Changing agent mid-task" from the loaded instructions, before reading any file
+
+- Agent: Claude Code. Branch `claude/quirky-hypatia-sivu18`, primary checkout `/home/user/maffsgames`. The answer, word for word:
+
+> ### Changing agent mid-task
+>
+> The handover entry names the agent, worktree path, branch, last commit and next step. The taking-over agent checks `git status --porcelain` and `git log origin/main..HEAD` against the handover, then uses the same worktree and branch, retaining its original prefix. See canon §12.
+
+- Found: PIES-EXIT's entry below still says "PR #642 open"; #642 is merged on main (2a635bd). Not edited here.
+
+Record: agent Claude Code; wall 0:04; review cycles 0; amendments 0; usage n/a.
+
+## 2026-11-03 (cloud): PIES-EXIT (`docs/history/contracts/2026-11-03-pies-exit.md`, Shared; stops at a green Gate for Project Claude's review and Jon's "merge")
+
+- Agent: Claude Code. Worktree `/home/user/wt-pe`, branch `claude/youthful-bardeen-c1nupo` (recreated from main after #641). Claim 66596c04, released in the PR.
+- Shared: `MaffsCalc.mount(el, {toggle: 'icon'})`, opt-in: at 600 px wide or less the toggle is a 44x44 calculator icon (inline SVG), the word kept as its hidden accessible name; wider, the full toggle. Unopted pages get the old markup character for character (the self-test asserts it at six sizes; three plants caught).
+- Pies: opts in, loses its `body.playing` hide rule, carries stage-exit.js/.css as the seven do; its HUD row has a phone budget (exit controls 12 px, tighter gaps and side padding, label letter-spacing 0 under 420 px; the icon's 44 px target overflows the row on screens 620 px tall or less, drawn borderless there). One row at every size, wide font included; HUD 34 px at 320x568 (main 34), 48 at 360-390 (main 52), 56 at 1280 (same).
+- `verify-stage-exit.py`: Pies in GAMES, EXEMPT empty, a plant re-adding the hide rule. The 6 P's (report only): "Back to games" visible on a question at all five sizes, 13.6 px, but its box is 21.75 px tall (under 44).
+- Lane: this contract names `schools/assets/calculator.*` and `docs/todo.md` in EXACT CHANGE, so the cloud lane edits them for it only (no open PR touches them).
+- **State: MERGED #642 (2a635bd); main green (41615387944, 84/84).**
+
+## 2026-11-03 (cloud): PIES-CHART-SHRINK (`docs/history/contracts/2026-11-03-pies-chart-shrink.md`): MERGED #641 (1e23652); main green (41604977044, 84/84); worktree removed by end-task.py
+
+- Agent: Claude Code. Worktree `/home/user/wt-pc`, branch `claude/youthful-bardeen-c1nupo` (recreated from main after #640). Claim 0d3e158a.
+- Pies' single chart radius 42 (was 52) on touch screens 620-700 px tall. Long Stage 1 question at 360x640, wide font: 600.3 -> 580.3 (fold 600). Labels 12.5 px; every slice keeps its pattern and key row.
+- FRACTION-STACK merged #640 (6d34d56); main green (41600962670, 84/84).
+
+Record: agent Claude Code; wall 0:25; review cycles 0; amendments 0; usage n/a.
+
+## 2026-11-03 (cloud): FRACTION-STACK (contract `docs/history/contracts/2026-11-03-fraction-stack.md`, Shared; stops at a green Gate for Project Claude's review and Jon's "merge")
+
+- Agent: Claude Code. Worktree `/home/user/wt-fs`, branch `claude/youthful-bardeen-c1nupo` (the session's branch, recreated from origin/main). Claim dd416ee6, released in the PR.
+- Pies types its fraction in MaffsFractionInput; verifier asserts the stacked input, plant caught. New `check-fraction-input.py`, warn list the-6-ps and how-many-parts (mixed numbers). Canon 7.6.1 line, reason in 12. Next: Gate green, then stop.
+- **Jon's ruling (3 Nov, STOP IF 3):** fraction-input.js compacts from 700 px (was 620); Pies tightened at 700 px. Possibly Maybe no worse (81 fraction questions). Pies Stage 1 slot 8, 360x640 wide font: 600.3 vs fold 600, inside the verifier's 0.5 px tolerance only; reported.
+- ESSENTIALS-ART merged #639 (f521dd3); main green (41591576589, 84/84).
+
+Record: agent Claude Code; wall 0:35; review cycles 0; amendments 1; usage n/a.
+
+## 2026-11-02 (cloud): GATE-RESUME and GATE-FIX: DONE (contracts `docs/history/contracts/2026-11-02-gate-resume.md`, `-gate-fix.md`).
+
+- Steps 1-3: their entry is in `docs/history/handover-cloud-archive.md` (moved 3 Nov). Carried from #636, closed unmerged (CLOUD-LEAN).
+- **GATE-FIX: DONE.** #634 (16c4053): (a) merge-pr.py disarms skip markers in the squash title and message; (b) the guard judges main's newest merge (not a bot skip-marker commit) and refuses one with no run of its own; (c) `--worst-case` fails on an unreadable pull-request base. Plants for each; each old behaviour caught. Its first Gate failed Text writes (a self-test write without `newline=''`), fixed (68e83382). Main green (41517864008, 84/84).
+
+## Moved 2026-11-03 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
+
 ## 2026-11-02 (cloud): PIES-LOOK (contract `docs/handover/contracts/2026-11-02-pies-look.md`, Small; stops at a green Gate for Project Claude's review and Jon's "merge")
 
 - Branch `art/pies-stall` (worktree `/home/user/wt-pies`), main merged in; claim 16b51e8b; look 32f54512 (stall.webp 1600x873, 239,552 bytes; PNG removed; --accent #742a3d, --accent-dim #f6e9ec; awning stripe under the header; scarf progress under the HUD; results picture 180 px).
