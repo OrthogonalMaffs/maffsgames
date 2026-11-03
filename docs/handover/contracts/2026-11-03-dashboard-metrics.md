@@ -13,7 +13,7 @@ Before starting, three facts found on receipt (3 Nov; recorded with the earlier 
   external service" on the redeploy. Put that in Jon's redeploy step.
 - Jon redeployed the endpoint after QUESTION-ID (#649) and said "we have a newer version which will help us". If the
   live script differs from docs/apps-script-endpoint.js, get the live code from Jon BEFORE editing the file, or this
-  contract's redeploy would overwrite his changes. Asked on 3 Nov; not yet answered.
+  contract's redeploy would overwrite his changes. Asked on 3 Nov; answered by Amendment 1 below (the live code matches the file).
 
 ## Contract (verbatim)
 
@@ -75,3 +75,11 @@ redeploy step (new version of the existing deployment; /exec reports the new ver
 STOP IF
 A game's question_answered is neither an answer nor a shot (list it for Jon); the live games.json cannot be fetched
 from Apps Script at all; the change would alter doPost or the Sheet's columns.
+
+## Amendment 1 (Jon, 3 Nov 2026, verbatim)
+
+Ruling (Jon, 3 Nov): the live endpoint matches docs/apps-script-endpoint.js. On 3 Nov at 15:45 Jon replaced Code.gs
+with the repo file in full for QUESTION-ID's redeploy, and /exec reports 2026-11-03-a. The earlier question about a
+newer deployed version is superseded. DASHBOARD-METRICS may edit the repo file as its contract says; Jon will grant the
+"connect to an external service" permission at redeploy. The older queue items in the cloud handover stay parked:
+do not start any of them.

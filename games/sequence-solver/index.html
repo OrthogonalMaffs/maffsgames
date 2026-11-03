@@ -49,6 +49,23 @@ body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);co
 .opt-btn.correct{border-color:var(--primary);background:rgba(34,197,94,.1);animation:pop .3s}
 .opt-btn.wrong{border-color:var(--wrong);background:rgba(244,63,94,.1);animation:shake .3s}
 .opt-btn.reveal{border-color:var(--primary);opacity:.7}.opt-btn.disabled{pointer-events:none;opacity:.5}
+/* Worked solution on a wrong answer (SEQ-SOLVER-WORKED): the house "How it goes" list, under the options, before Next */
+.worked-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.6rem .8rem;margin:-.4rem 0 .8rem;text-align:left}
+.worked-box[hidden]{display:none}
+.worked-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem}
+.worked{margin:0;padding:0 0 0 1.25rem;font-size:.9rem;line-height:1.45;color:var(--text)}
+.worked li+li{margin-top:.2rem}
+/* The phone rule (canon 7.6.1) on a wrong answer: the reason and Next above the fold. Hide what cannot be used (the
+   calculator; the two options neither picked nor right, so your pick and the answer stay side by side) and compact
+   the HUD and the question card. Feedback only: the asking screen is unchanged. */
+@media (max-width:600px),(max-height:740px){
+  #game.fb-open .hud{padding:.25rem 1rem;margin-bottom:.3rem}#game.fb-open .hud-label{display:none}#game.fb-open .progress{margin-bottom:.5rem}
+  #game.fb-open .q-card{min-height:0;padding:.5rem .7rem;margin-bottom:.4rem}#game.fb-open .q-card .katex{font-size:1.05em!important}
+  #game.fb-open .opt-btn.disabled:not(.correct):not(.wrong){display:none}
+  #game.fb-open .options{margin-bottom:.6rem}#game.fb-open .opt-btn{padding:.55rem .6rem;min-height:44px}
+  #game.fb-open .calc-host{display:none}
+  #game.fb-open .worked{font-size:.86rem;line-height:1.4}#game.fb-open .worked-box{padding:.5rem .7rem}
+}
 @keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
 .timer-wrap{height:4px;background:var(--border);border-radius:2px;margin-bottom:1rem;overflow:hidden}
@@ -132,6 +149,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
       <div class="prompt" id="prompt"></div>
     </div>
     <div class="options" id="options"></div>
+    <div class="worked-box" id="worked" hidden></div>
     <div class="calc-host" id="calc"></div>
     <script>if(window.MaffsCalc)MaffsCalc.mount(document.getElementById('calc'),{dock:document.querySelector('#game .q-card')});</script>
 <div id="nextMount"></div>
@@ -143,180 +161,180 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 const QUESTIONS={
 ks3:[
   // Next term — arithmetic (Q1-18)
-  {seq:'2, 4, 6, 8, __',ask:'Find the next term',correct:'10',d:['12','9','11']},
-  {seq:'5, 10, 15, 20, __',ask:'Find the next term',correct:'25',d:['30','22','24']},
-  {seq:'3, 7, 11, 15, __',ask:'Find the next term',correct:'19',d:['17','20','21']},
-  {seq:'1, 4, 7, 10, __',ask:'Find the next term',correct:'13',d:['12','14','11']},
-  {seq:'100, 95, 90, 85, __',ask:'Find the next term',correct:'80',d:['75','82','84']},
-  {seq:'50, 43, 36, 29, __',ask:'Find the next term',correct:'22',d:['21','23','15']},
-  {seq:'2, 5, 8, 11, __',ask:'Find the next term',correct:'14',d:['13','15','12']},
-  {seq:'-3, -1, 1, 3, __',ask:'Find the next term',correct:'5',d:['4','6','7']},
-  {seq:'10, 7, 4, 1, __',ask:'Find the next term',correct:'-2',d:['-1','0','-3']},
-  {seq:'0.5, 1, 1.5, 2, __',ask:'Find the next term',correct:'2.5',d:['3','2.2','2.8']},
-  {seq:'-10, -6, -2, 2, __',ask:'Find the next term',correct:'6',d:['4','8','3']},
-  {seq:'1, 3, 5, 7, 9, __',ask:'Find the next term',correct:'11',d:['10','12','13']},
+  {seq:'2, 4, 6, 8, __',ask:'Find the next term',correct:'10',d:['12','9','11'],worked:['The terms go up by 2 each time.','So the next term is \\(8 + 2 = 10\\).']},
+  {seq:'5, 10, 15, 20, __',ask:'Find the next term',correct:'25',d:['30','22','24'],worked:['The terms go up by 5 each time.','So the next term is \\(20 + 5 = 25\\).']},
+  {seq:'3, 7, 11, 15, __',ask:'Find the next term',correct:'19',d:['17','20','21'],worked:['The terms go up by 4 each time.','So the next term is \\(15 + 4 = 19\\).']},
+  {seq:'1, 4, 7, 10, __',ask:'Find the next term',correct:'13',d:['12','14','11'],worked:['The terms go up by 3 each time.','So the next term is \\(10 + 3 = 13\\).']},
+  {seq:'100, 95, 90, 85, __',ask:'Find the next term',correct:'80',d:['75','82','84'],worked:['The terms go down by 5 each time.','So the next term is \\(85 - 5 = 80\\).']},
+  {seq:'50, 43, 36, 29, __',ask:'Find the next term',correct:'22',d:['21','23','15'],worked:['The terms go down by 7 each time.','So the next term is \\(29 - 7 = 22\\).']},
+  {seq:'2, 5, 8, 11, __',ask:'Find the next term',correct:'14',d:['13','15','12'],worked:['The terms go up by 3 each time.','So the next term is \\(11 + 3 = 14\\).']},
+  {seq:'-3, -1, 1, 3, __',ask:'Find the next term',correct:'5',d:['4','6','7'],worked:['The terms go up by 2 each time.','So the next term is \\(3 + 2 = 5\\).']},
+  {seq:'10, 7, 4, 1, __',ask:'Find the next term',correct:'-2',d:['-1','0','-3'],worked:['The terms go down by 3 each time.','So the next term is \\(1 - 3 = -2\\).']},
+  {seq:'0.5, 1, 1.5, 2, __',ask:'Find the next term',correct:'2.5',d:['3','2.2','2.8'],worked:['The terms go up by 0.5 each time.','So the next term is \\(2 + 0.5 = 2.5\\).']},
+  {seq:'-10, -6, -2, 2, __',ask:'Find the next term',correct:'6',d:['4','8','3'],worked:['The terms go up by 4 each time.','So the next term is \\(2 + 4 = 6\\).']},
+  {seq:'1, 3, 5, 7, 9, __',ask:'Find the next term',correct:'11',d:['10','12','13'],worked:['The terms go up by 2 each time.','So the next term is \\(9 + 2 = 11\\).']},
   // Common difference (Q13-18)
-  {seq:'4, 9, 14, 19, 24',ask:'What is the common difference?',correct:'5',d:['4','6','9']},
-  {seq:'20, 17, 14, 11, 8',ask:'What is the common difference?',correct:'-3',d:['3','-4','-2']},
-  {seq:'1, 4, 7, 10, 13',ask:'What is the common difference?',correct:'3',d:['4','2','1']},
-  {seq:'100, 88, 76, 64',ask:'What is the common difference?',correct:'-12',d:['12','-10','-14']},
-  {seq:'0.2, 0.5, 0.8, 1.1',ask:'What is the common difference?',correct:'0.3',d:['0.2','0.5','0.1']},
-  {seq:'-7, -3, 1, 5, 9',ask:'What is the common difference?',correct:'4',d:['3','-4','5']},
+  {seq:'4, 9, 14, 19, 24',ask:'What is the common difference?',correct:'5',d:['4','6','9'],worked:['Take a term away from the next one: \\(9 - 4 = 5\\).','The terms go up by 5 each time, so the common difference is \\(5\\).']},
+  {seq:'20, 17, 14, 11, 8',ask:'What is the common difference?',correct:'-3',d:['3','-4','-2'],worked:['Take a term away from the next one: \\(17 - 20 = (-3)\\).','The terms go down by 3 each time, so the common difference is \\(-3\\).']},
+  {seq:'1, 4, 7, 10, 13',ask:'What is the common difference?',correct:'3',d:['4','2','1'],worked:['Take a term away from the next one: \\(4 - 1 = 3\\).','The terms go up by 3 each time, so the common difference is \\(3\\).']},
+  {seq:'100, 88, 76, 64',ask:'What is the common difference?',correct:'-12',d:['12','-10','-14'],worked:['Take a term away from the next one: \\(88 - 100 = (-12)\\).','The terms go down by 12 each time, so the common difference is \\(-12\\).']},
+  {seq:'0.2, 0.5, 0.8, 1.1',ask:'What is the common difference?',correct:'0.3',d:['0.2','0.5','0.1'],worked:['Take a term away from the next one: \\(0.5 - 0.2 = 0.3\\).','The terms go up by 0.3 each time, so the common difference is \\(0.3\\).']},
+  {seq:'-7, -3, 1, 5, 9',ask:'What is the common difference?',correct:'4',d:['3','-4','5'],worked:['Take a term away from the next one: \\(-3 - (-7) = 4\\).','The terms go up by 4 each time, so the common difference is \\(4\\).']},
   // Find a specific term (Q19-28)
-  {seq:'3, 6, 9, 12, ...',q:'',ask:'Find the 10th term',correct:'30',d:['27','33','36']},
-  {seq:'5, 8, 11, 14, ...',q:'',ask:'Find the 8th term',correct:'26',d:['23','29','24']},
-  {seq:'2, 7, 12, 17, ...',q:'',ask:'Find the 20th term',correct:'97',d:['100','92','102']},
-  {seq:'1, 4, 7, 10, ...',q:'',ask:'Find the 50th term',correct:'148',d:['150','147','151']},
-  {seq:'10, 8, 6, 4, ...',q:'',ask:'Find the 15th term',correct:'-18',d:['-16','-20','-14']},
-  {seq:'100, 93, 86, 79, ...',q:'',ask:'Find the 12th term',correct:'23',d:['30','16','21']},
-  {seq:'0, 3, 6, 9, ...',q:'',ask:'Find the 100th term',correct:'297',d:['300','303','294']},
-  {seq:'-5, -2, 1, 4, ...',q:'',ask:'Find the 7th term',correct:'13',d:['10','16','12']},
-  {seq:'1, 5, 9, 13, ...',q:'',ask:'Which term equals 41?',correct:'11th',d:['10th','12th','9th']},
-  {seq:'3, 8, 13, 18, ...',q:'',ask:'Which term equals 53?',correct:'11th',d:['10th','12th','9th']},
+  {seq:'3, 6, 9, 12, ...',q:'',ask:'Find the 10th term',correct:'30',d:['27','33','36'],worked:['The terms go up by 3 each time, starting at 3.','The 10th term is 9 steps after the 1st: \\(3 + 9 \\times 3 = 30\\).']},
+  {seq:'5, 8, 11, 14, ...',q:'',ask:'Find the 8th term',correct:'26',d:['23','29','24'],worked:['The terms go up by 3 each time, starting at 5.','The 8th term is 7 steps after the 1st: \\(5 + 7 \\times 3 = 26\\).']},
+  {seq:'2, 7, 12, 17, ...',q:'',ask:'Find the 20th term',correct:'97',d:['100','92','102'],worked:['The terms go up by 5 each time, starting at 2.','The 20th term is 19 steps after the 1st: \\(2 + 19 \\times 5 = 97\\).']},
+  {seq:'1, 4, 7, 10, ...',q:'',ask:'Find the 50th term',correct:'148',d:['150','147','151'],worked:['The terms go up by 3 each time, starting at 1.','The 50th term is 49 steps after the 1st: \\(1 + 49 \\times 3 = 148\\).']},
+  {seq:'10, 8, 6, 4, ...',q:'',ask:'Find the 15th term',correct:'-18',d:['-16','-20','-14'],worked:['The terms go down by 2 each time, starting at 10.','The 15th term is 14 steps after the 1st: \\(10 - 14 \\times 2 = -18\\).']},
+  {seq:'100, 93, 86, 79, ...',q:'',ask:'Find the 12th term',correct:'23',d:['30','16','21'],worked:['The terms go down by 7 each time, starting at 100.','The 12th term is 11 steps after the 1st: \\(100 - 11 \\times 7 = 23\\).']},
+  {seq:'0, 3, 6, 9, ...',q:'',ask:'Find the 100th term',correct:'297',d:['300','303','294'],worked:['The terms go up by 3 each time, starting at 0.','The 100th term is 99 steps after the 1st: \\(0 + 99 \\times 3 = 297\\).']},
+  {seq:'-5, -2, 1, 4, ...',q:'',ask:'Find the 7th term',correct:'13',d:['10','16','12'],worked:['The terms go up by 3 each time, starting at -5.','The 7th term is 6 steps after the 1st: \\(-5 + 6 \\times 3 = 13\\).']},
+  {seq:'1, 5, 9, 13, ...',q:'',ask:'Which term equals 41?',correct:'11th',d:['10th','12th','9th'],worked:['The terms go up by 4 each time, starting at 1.','41 is \\(41 - 1 = 40\\) more than the 1st term: \\(40 \\div 4 = 10\\) steps.','10 steps after the 1st term is the 11th term.']},
+  {seq:'3, 8, 13, 18, ...',q:'',ask:'Which term equals 53?',correct:'11th',d:['10th','12th','9th'],worked:['The terms go up by 5 each time, starting at 3.','53 is \\(53 - 3 = 50\\) more than the 1st term: \\(50 \\div 5 = 10\\) steps.','10 steps after the 1st term is the 11th term.']},
   // Geometric — next term (Q29-38)
-  {seq:'2, 4, 8, 16, __',ask:'Find the next term',correct:'32',d:['24','20','64']},
-  {seq:'3, 9, 27, 81, __',ask:'Find the next term',correct:'243',d:['162','108','729']},
-  {seq:'1, 5, 25, 125, __',ask:'Find the next term',correct:'625',d:['250','500','1000']},
-  {seq:'64, 32, 16, 8, __',ask:'Find the next term',correct:'4',d:['2','6','0']},
-  {seq:'1000, 100, 10, 1, __',ask:'Find the next term',correct:'0.1',d:['0','0.01','-1']},
-  {seq:'2, 6, 18, 54, __',ask:'Find the next term',correct:'162',d:['108','72','216']},
-  {seq:'1, -2, 4, -8, __',ask:'Find the next term',correct:'16',d:['-16','10','-10']},
-  {seq:'5, 10, 20, 40, __',ask:'Find the next term',correct:'80',d:['60','50','160']},
-  {seq:'81, 27, 9, 3, __',ask:'Find the next term',correct:'1',d:['0','\\dfrac{1}{3}','-3']},
-  {seq:'7, 14, 28, 56, __',ask:'Find the next term',correct:'112',d:['84','98','224']},
+  {seq:'2, 4, 8, 16, __',ask:'Find the next term',correct:'32',d:['24','20','64'],worked:['Each term is the one before multiplied by 2 each time.','So the next term is \\(16 \\times 2 = 32\\).']},
+  {seq:'3, 9, 27, 81, __',ask:'Find the next term',correct:'243',d:['162','108','729'],worked:['Each term is the one before multiplied by 3 each time.','So the next term is \\(81 \\times 3 = 243\\).']},
+  {seq:'1, 5, 25, 125, __',ask:'Find the next term',correct:'625',d:['250','500','1000'],worked:['Each term is the one before multiplied by 5 each time.','So the next term is \\(125 \\times 5 = 625\\).']},
+  {seq:'64, 32, 16, 8, __',ask:'Find the next term',correct:'4',d:['2','6','0'],worked:['Each term is the one before divided by 2 each time.','So the next term is \\(8 \\div 2 = 4\\).']},
+  {seq:'1000, 100, 10, 1, __',ask:'Find the next term',correct:'0.1',d:['0','0.01','-1'],worked:['Each term is the one before divided by 10 each time.','So the next term is \\(1 \\div 10 = 0.1\\).']},
+  {seq:'2, 6, 18, 54, __',ask:'Find the next term',correct:'162',d:['108','72','216'],worked:['Each term is the one before multiplied by 3 each time.','So the next term is \\(54 \\times 3 = 162\\).']},
+  {seq:'1, -2, 4, -8, __',ask:'Find the next term',correct:'16',d:['-16','10','-10'],worked:['Each term is the one before multiplied by \\(-2\\) each time, so the sign flips.','So the next term is \\(-8 \\times (-2) = 16\\).']},
+  {seq:'5, 10, 20, 40, __',ask:'Find the next term',correct:'80',d:['60','50','160'],worked:['Each term is the one before multiplied by 2 each time.','So the next term is \\(40 \\times 2 = 80\\).']},
+  {seq:'81, 27, 9, 3, __',ask:'Find the next term',correct:'1',d:['0','\\dfrac{1}{3}','-3'],worked:['Each term is the one before divided by 3 each time.','So the next term is \\(3 \\div 3 = 1\\).']},
+  {seq:'7, 14, 28, 56, __',ask:'Find the next term',correct:'112',d:['84','98','224'],worked:['Each term is the one before multiplied by 2 each time.','So the next term is \\(56 \\times 2 = 112\\).']},
   // Identify type (Q39-44)
-  {seq:'3, 6, 9, 12, 15',ask:'What type of sequence?',correct:'Arithmetic',d:['Geometric','Quadratic','Fibonacci']},
-  {seq:'2, 6, 18, 54',ask:'What type of sequence?',correct:'Geometric',d:['Arithmetic','Quadratic','Fibonacci']},
-  {seq:'1, 1, 2, 3, 5, 8',ask:'What type of sequence?',correct:'Fibonacci',d:['Arithmetic','Geometric','Quadratic']},
-  {seq:'1, 4, 9, 16, 25',ask:'What type of sequence?',correct:'Square numbers',d:['Arithmetic','Geometric','Triangular']},
-  {seq:'1, 3, 6, 10, 15',ask:'What type of sequence?',correct:'Triangular numbers',d:['Arithmetic','Square numbers','Fibonacci']},
-  {seq:'1, 8, 27, 64, 125',ask:'What type of sequence?',correct:'Cube numbers',d:['Square numbers','Geometric','Powers of 2']},
+  {seq:'3, 6, 9, 12, 15',ask:'What type of sequence?',correct:'Arithmetic',d:['Geometric','Quadratic','Fibonacci'],worked:['The terms go up by 3 each time: the same amount is added every time.','Adding the same amount each time makes it Arithmetic.']},
+  {seq:'2, 6, 18, 54',ask:'What type of sequence?',correct:'Geometric',d:['Arithmetic','Quadratic','Fibonacci'],worked:['Each term is the one before multiplied by 3 each time.','Multiplying by the same number each time makes it Geometric.']},
+  {seq:'1, 1, 2, 3, 5, 8',ask:'What type of sequence?',correct:'Fibonacci',d:['Arithmetic','Geometric','Quadratic'],worked:['Each term is the two before it added together: \\(2 + 3 = 5\\) and \\(3 + 5 = 8\\).','That rule makes it the Fibonacci sequence.']},
+  {seq:'1, 4, 9, 16, 25',ask:'What type of sequence?',correct:'Square numbers',d:['Arithmetic','Geometric','Triangular'],worked:['\\(1 \\times 1 = 1\\), \\(2 \\times 2 = 4\\), \\(3 \\times 3 = 9\\), \\(4 \\times 4 = 16\\), \\(5 \\times 5 = 25\\).','Each term is a number times itself, so these are the Square numbers.']},
+  {seq:'1, 3, 6, 10, 15',ask:'What type of sequence?',correct:'Triangular numbers',d:['Arithmetic','Square numbers','Fibonacci'],worked:['The gaps grow by one each time: 2, 3, 4, 5.','These are the dots in growing triangles: the Triangular numbers.']},
+  {seq:'1, 8, 27, 64, 125',ask:'What type of sequence?',correct:'Cube numbers',d:['Square numbers','Geometric','Powers of 2'],worked:['\\(1^3 = 1\\), \\(2^3 = 8\\), \\(3^3 = 27\\), \\(4^3 = 64\\), \\(5^3 = 125\\).','Each term is a number times itself three times, so these are the Cube numbers.']},
   // Pattern spotting (Q45-50)
-  {seq:'2, 3, 5, 7, 11, 13, __',ask:'Find the next term',correct:'17',d:['15','19','14']},
-  {seq:'1, 1, 2, 3, 5, 8, 13, __',ask:'Find the next term',correct:'21',d:['18','20','26']},
-  {seq:'1, 4, 9, 16, 25, __',ask:'Find the next term',correct:'36',d:['30','35','49']},
-  {seq:'1, 3, 6, 10, 15, __',ask:'Find the next term',correct:'21',d:['18','20','25']},
-  {seq:'2, 6, 12, 20, 30, __',ask:'Find the next term',correct:'42',d:['40','36','44']},
-  {seq:'0, 1, 1, 2, 3, 5, 8, 13, 21, __',ask:'Find the next term',correct:'34',d:['29','32','42']},
+  {seq:'2, 3, 5, 7, 11, 13, __',ask:'Find the next term',correct:'17',d:['15','19','14'],worked:['These are the prime numbers: each has exactly two factors, 1 and itself.','14, 15 and 16 are not prime, so the next term is 17.']},
+  {seq:'1, 1, 2, 3, 5, 8, 13, __',ask:'Find the next term',correct:'21',d:['18','20','26'],worked:['Each term is the two before it added together.','So the next term is \\(8 + 13 = 21\\).']},
+  {seq:'1, 4, 9, 16, 25, __',ask:'Find the next term',correct:'36',d:['30','35','49'],worked:['These are the square numbers: \\(5 \\times 5 = 25\\).','So the next term is \\(6 \\times 6 = 36\\).']},
+  {seq:'1, 3, 6, 10, 15, __',ask:'Find the next term',correct:'21',d:['18','20','25'],worked:['The gaps grow by one each time: 2, 3, 4, 5.','So the next gap is 6, and the next term is \\(15 + 6 = 21\\).']},
+  {seq:'2, 6, 12, 20, 30, __',ask:'Find the next term',correct:'42',d:['40','36','44'],worked:['The gaps are 4, 6, 8, 10: each gap is 2 more than the one before.','So the next gap is 12, and the next term is \\(30 + 12 = 42\\).']},
+  {seq:'0, 1, 1, 2, 3, 5, 8, 13, 21, __',ask:'Find the next term',correct:'34',d:['29','32','42'],worked:['Each term is the two before it added together.','So the next term is \\(13 + 21 = 34\\).']},
 ],
 gcse:[
   // nth term — linear (Q1-15)
-  {seq:'3, 5, 7, 9, ...',q:'',ask:'Find the nth term',correct:'\\(2n + 1\\)',d:['\\(n + 2\\)','\\(3n\\)','\\(2n - 1\\)']},
-  {seq:'4, 7, 10, 13, ...',q:'',ask:'Find the nth term',correct:'\\(3n + 1\\)',d:['\\(n + 3\\)','\\(3n - 1\\)','\\(4n\\)']},
-  {seq:'5, 9, 13, 17, ...',q:'',ask:'Find the nth term',correct:'\\(4n + 1\\)',d:['\\(4n - 1\\)','\\(5n\\)','\\(n + 4\\)']},
-  {seq:'2, 7, 12, 17, ...',q:'',ask:'Find the nth term',correct:'\\(5n - 3\\)',d:['\\(5n + 3\\)','\\(5n - 2\\)','\\(5n\\)']},
-  {seq:'1, 5, 9, 13, ...',q:'',ask:'Find the nth term',correct:'\\(4n - 3\\)',d:['\\(4n + 3\\)','\\(4n - 1\\)','\\(3n - 2\\)']},
-  {seq:'6, 11, 16, 21, ...',q:'',ask:'Find the nth term',correct:'\\(5n + 1\\)',d:['\\(5n - 1\\)','\\(6n\\)','\\(5n + 6\\)']},
-  {seq:'10, 7, 4, 1, ...',q:'',ask:'Find the nth term',correct:'\\(13 - 3n\\)',d:['\\(-3n + 10\\)','\\(3n + 7\\)','\\(-3n + 7\\)']},
-  {seq:'20, 18, 16, 14, ...',q:'',ask:'Find the nth term',correct:'\\(22 - 2n\\)',d:['\\(20 - 2n\\)','\\(18 - 2n\\)','\\(2n + 20\\)']},
-  {seq:'0, 3, 6, 9, ...',q:'',ask:'Find the nth term',correct:'\\(3n - 3\\)',d:['\\(3n\\)','\\(3n + 3\\)','\\(n + 3\\)']},
-  {seq:'-1, 2, 5, 8, ...',q:'',ask:'Find the nth term',correct:'\\(3n - 4\\)',d:['\\(3n - 1\\)','\\(3n + 1\\)','\\(-n + 3\\)']},
-  {seq:'7, 12, 17, 22, ...',q:'T_n = 5n + 2',ask:'Find the 40th term',correct:'202',d:['200','207','197']},
-  {seq:'\\(T_n = 4n - 1\\)',q:'',ask:'Is 83 a term in this sequence?',correct:'Yes (\\(n = 21\\))',d:['No','Yes (\\(n = 20\\))','Yes (\\(n = 22\\))']},
-  {seq:'\\(T_n = 3n + 7\\)',q:'',ask:'Is 50 a term in this sequence?',correct:'No',d:['Yes (\\(n = 14\\))','Yes (\\(n = 15\\))','Yes (\\(n = 13\\))']},
-  {seq:'\\(T_n = 6n - 5\\)',q:'',ask:'Find the first term above 100',correct:'103 (\\(n = 18\\))',d:['101 (\\(n = 17\\))','97 (\\(n = 17\\))','109 (\\(n = 19\\))']},
-  {seq:'\\(T_n = 2n + 3\\)',q:'',ask:'Which term equals 25?',correct:'\\(n = 11\\)',d:['\\(n = 10\\)','\\(n = 12\\)','\\(n = 13\\)']},
+  {seq:'3, 5, 7, 9, ...',q:'',ask:'Find the nth term',correct:'\\(2n + 1\\)',d:['\\(n + 2\\)','\\(3n\\)','\\(2n - 1\\)'],worked:['The terms go up by 2 each time, so the nth term starts \\(2n\\).','When \\(n = 1\\), \\(2n = 2\\), but the first term is 3: add 1.','So the nth term is \\(2n + 1\\).']},
+  {seq:'4, 7, 10, 13, ...',q:'',ask:'Find the nth term',correct:'\\(3n + 1\\)',d:['\\(n + 3\\)','\\(3n - 1\\)','\\(4n\\)'],worked:['The terms go up by 3 each time, so the nth term starts \\(3n\\).','When \\(n = 1\\), \\(3n = 3\\), but the first term is 4: add 1.','So the nth term is \\(3n + 1\\).']},
+  {seq:'5, 9, 13, 17, ...',q:'',ask:'Find the nth term',correct:'\\(4n + 1\\)',d:['\\(4n - 1\\)','\\(5n\\)','\\(n + 4\\)'],worked:['The terms go up by 4 each time, so the nth term starts \\(4n\\).','When \\(n = 1\\), \\(4n = 4\\), but the first term is 5: add 1.','So the nth term is \\(4n + 1\\).']},
+  {seq:'2, 7, 12, 17, ...',q:'',ask:'Find the nth term',correct:'\\(5n - 3\\)',d:['\\(5n + 3\\)','\\(5n - 2\\)','\\(5n\\)'],worked:['The terms go up by 5 each time, so the nth term starts \\(5n\\).','When \\(n = 1\\), \\(5n = 5\\), but the first term is 2: take away 3.','So the nth term is \\(5n - 3\\).']},
+  {seq:'1, 5, 9, 13, ...',q:'',ask:'Find the nth term',correct:'\\(4n - 3\\)',d:['\\(4n + 3\\)','\\(4n - 1\\)','\\(3n - 2\\)'],worked:['The terms go up by 4 each time, so the nth term starts \\(4n\\).','When \\(n = 1\\), \\(4n = 4\\), but the first term is 1: take away 3.','So the nth term is \\(4n - 3\\).']},
+  {seq:'6, 11, 16, 21, ...',q:'',ask:'Find the nth term',correct:'\\(5n + 1\\)',d:['\\(5n - 1\\)','\\(6n\\)','\\(5n + 6\\)'],worked:['The terms go up by 5 each time, so the nth term starts \\(5n\\).','When \\(n = 1\\), \\(5n = 5\\), but the first term is 6: add 1.','So the nth term is \\(5n + 1\\).']},
+  {seq:'10, 7, 4, 1, ...',q:'',ask:'Find the nth term',correct:'\\(13 - 3n\\)',d:['\\(-3n + 10\\)','\\(3n + 7\\)','\\(-3n + 7\\)'],worked:['The terms go down by 3 each time, so the nth term starts \\(-3n\\).','When \\(n = 1\\), \\(-3n = -3\\), but the first term is 10: add 13.','So the nth term is \\(13 - 3n\\).']},
+  {seq:'20, 18, 16, 14, ...',q:'',ask:'Find the nth term',correct:'\\(22 - 2n\\)',d:['\\(20 - 2n\\)','\\(18 - 2n\\)','\\(2n + 20\\)'],worked:['The terms go down by 2 each time, so the nth term starts \\(-2n\\).','When \\(n = 1\\), \\(-2n = -2\\), but the first term is 20: add 22.','So the nth term is \\(22 - 2n\\).']},
+  {seq:'0, 3, 6, 9, ...',q:'',ask:'Find the nth term',correct:'\\(3n - 3\\)',d:['\\(3n\\)','\\(3n + 3\\)','\\(n + 3\\)'],worked:['The terms go up by 3 each time, so the nth term starts \\(3n\\).','When \\(n = 1\\), \\(3n = 3\\), but the first term is 0: take away 3.','So the nth term is \\(3n - 3\\).']},
+  {seq:'-1, 2, 5, 8, ...',q:'',ask:'Find the nth term',correct:'\\(3n - 4\\)',d:['\\(3n - 1\\)','\\(3n + 1\\)','\\(-n + 3\\)'],worked:['The terms go up by 3 each time, so the nth term starts \\(3n\\).','When \\(n = 1\\), \\(3n = 3\\), but the first term is -1: take away 4.','So the nth term is \\(3n - 4\\).']},
+  {seq:'7, 12, 17, 22, ...',q:'T_n = 5n + 2',ask:'Find the 40th term',correct:'202',d:['200','207','197'],worked:['Substitute \\(n = 40\\) into \\(T_n = 5n + 2\\).','\\(5 \\times 40 + 2 = 200 + 2 = 202\\)']},
+  {seq:'\\(T_n = 4n - 1\\)',q:'',ask:'Is 83 a term in this sequence?',correct:'Yes (\\(n = 21\\))',d:['No','Yes (\\(n = 20\\))','Yes (\\(n = 22\\))'],worked:['Solve \\(4n - 1 = 83\\): \\(4n = 84\\), so \\(n = 84 \\div 4 = 21\\).','21 is a whole number, so Yes (\\(n = 21\\)).']},
+  {seq:'\\(T_n = 3n + 7\\)',q:'',ask:'Is 50 a term in this sequence?',correct:'No',d:['Yes (\\(n = 14\\))','Yes (\\(n = 15\\))','Yes (\\(n = 13\\))'],worked:['Solve \\(3n + 7 = 50\\): \\(3n = 43\\), so \\(n = \\dfrac{43}{3}\\).','\\(\\dfrac{43}{3}\\) is not a whole number, so the answer is No.']},
+  {seq:'\\(T_n = 6n - 5\\)',q:'',ask:'Find the first term above 100',correct:'103 (\\(n = 18\\))',d:['101 (\\(n = 17\\))','97 (\\(n = 17\\))','109 (\\(n = 19\\))'],worked:['Solve \\(6n - 5 > 100\\): \\(6n > 105\\), so \\(n > 17.5\\).','So \\(n = 18\\): \\(6 \\times 18 - 5 = 103\\).','So the answer is 103 (\\(n = 18\\)).']},
+  {seq:'\\(T_n = 2n + 3\\)',q:'',ask:'Which term equals 25?',correct:'\\(n = 11\\)',d:['\\(n = 10\\)','\\(n = 12\\)','\\(n = 13\\)'],worked:['Solve \\(2n + 3 = 25\\): \\(2n = 22\\), so \\(n = 22 \\div 2 = 11\\).','So 25 is the 11th term: \\(n = 11\\).']},
   // nth term — quadratic (Q16-30)
-  {seq:'2, 5, 10, 17, 26, ...',ask:'What are the second differences?',correct:'2',d:['3','1','5']},
-  {seq:'1, 4, 9, 16, 25',q:'',ask:'Find the nth term',correct:'n^2',d:['\\(2n\\)','n^2 + 1','\\(n(n+1)\\)']},
-  {seq:'3, 6, 11, 18, 27',q:'',ask:'Find the nth term',correct:'n^2 + 2',d:['n^2 + 3','n^2 - 1','2n^2']},
-  {seq:'0, 3, 8, 15, 24',q:'',ask:'Find the nth term',correct:'n^2 - 1',d:['n^2','n^2 + 1','n^2 - 2']},
-  {seq:'2, 8, 18, 32, 50',q:'',ask:'Find the nth term',correct:'2n^2',d:['n^2 + n','\\(4n\\)','n^2 + 2']},
-  {seq:'4, 7, 12, 19, 28',q:'',ask:'Find the nth term',correct:'n^2 + 3',d:['n^2 + 2','n^2 + 4','2n^2 - 1']},
-  {seq:'-1, 2, 7, 14, 23',q:'',ask:'Find the nth term',correct:'n^2 - 2',d:['n^2 - 1','n^2 - 3','n^2']},
-  {seq:'5, 8, 13, 20, 29',q:'',ask:'Find the nth term',correct:'n^2 + 4',d:['n^2 + 5','n^2 + 3','2n^2']},
-  {seq:'2, 6, 12, 20, 30',q:'',ask:'Find the nth term',correct:'n^2 + n',d:['\\(4n - 2\\)','2n^2','n^2 + 2n']},
-  {seq:'3, 8, 15, 24, 35',q:'',ask:'Find the nth term',correct:'n^2 + 2n',d:['n^2 + n + 1','\\(5n - 2\\)','2n^2 + 1']},
-  {seq:'0, 6, 16, 30, 48',q:'',ask:'Second differences',correct:'4',d:['2','6','8']},
-  {seq:'\\(T_n = n^2 + 3n\\)',q:'',ask:'Find the 10th term',correct:'130',d:['103','113','133']},
-  {seq:'\\(T_n = 2n^2 - 1\\)',q:'',ask:'Find the 5th term',correct:'49',d:['50','39','51']},
-  {seq:'\\(T_n = n^2 - n + 1\\)',q:'',ask:'Find the 8th term',correct:'57',d:['56','58','65']},
-  {seq:'\\(T_n = n^2 + 1\\)',q:'',ask:'Is 50 a term?',correct:'Yes (\\(n = 7\\))',d:['No','Yes (\\(n = 8\\))','Yes (\\(n = 6\\))']},
+  {seq:'2, 5, 10, 17, 26, ...',ask:'What are the second differences?',correct:'2',d:['3','1','5'],worked:['First differences: 3, 5, 7, 9.','Second differences: \\(5 - 3 = 2\\), \\(7 - 5 = 2\\), \\(9 - 7 = 2\\).','The second differences are all 2.']},
+  {seq:'1, 4, 9, 16, 25',q:'',ask:'Find the nth term',correct:'n^2',d:['\\(2n\\)','n^2 + 1','\\(n(n+1)\\)'],worked:['The second differences are 2, so the nth term starts \\(n^2\\) (half of 2).','Take \\(n^2\\) away from each term: 1, 4, 9, 16, 25 leaves 0 every time.','So the nth term is \\(n^2\\).']},
+  {seq:'3, 6, 11, 18, 27',q:'',ask:'Find the nth term',correct:'n^2 + 2',d:['n^2 + 3','n^2 - 1','2n^2'],worked:['The second differences are 2, so the nth term starts \\(n^2\\) (half of 2).','Take \\(n^2\\) away from each term: \\(3 - 1 = 2\\), \\(6 - 4 = 2\\), \\(11 - 9 = 2\\).','So the nth term is \\(n^2 + 2\\).']},
+  {seq:'0, 3, 8, 15, 24',q:'',ask:'Find the nth term',correct:'n^2 - 1',d:['n^2','n^2 + 1','n^2 - 2'],worked:['The second differences are 2, so the nth term starts \\(n^2\\) (half of 2).','Take \\(n^2\\) away from each term: \\(0 - 1 = -1\\), \\(3 - 4 = -1\\), \\(8 - 9 = -1\\).','So the nth term is \\(n^2 - 1\\).']},
+  {seq:'2, 8, 18, 32, 50',q:'',ask:'Find the nth term',correct:'2n^2',d:['n^2 + n','\\(4n\\)','n^2 + 2'],worked:['The second differences are 4, so the nth term starts \\(2n^2\\) (half of 4).','Take \\(2n^2\\) away from each term: \\(2 - 2 = 0\\), \\(8 - 8 = 0\\), \\(18 - 18 = 0\\).','So the nth term is \\(2n^2\\).']},
+  {seq:'4, 7, 12, 19, 28',q:'',ask:'Find the nth term',correct:'n^2 + 3',d:['n^2 + 2','n^2 + 4','2n^2 - 1'],worked:['The second differences are 2, so the nth term starts \\(n^2\\) (half of 2).','Take \\(n^2\\) away from each term: \\(4 - 1 = 3\\), \\(7 - 4 = 3\\), \\(12 - 9 = 3\\).','So the nth term is \\(n^2 + 3\\).']},
+  {seq:'-1, 2, 7, 14, 23',q:'',ask:'Find the nth term',correct:'n^2 - 2',d:['n^2 - 1','n^2 - 3','n^2'],worked:['The second differences are 2, so the nth term starts \\(n^2\\) (half of 2).','Take \\(n^2\\) away from each term: \\(-1 - 1 = -2\\), \\(2 - 4 = -2\\), \\(7 - 9 = -2\\).','So the nth term is \\(n^2 - 2\\).']},
+  {seq:'5, 8, 13, 20, 29',q:'',ask:'Find the nth term',correct:'n^2 + 4',d:['n^2 + 5','n^2 + 3','2n^2'],worked:['The second differences are 2, so the nth term starts \\(n^2\\) (half of 2).','Take \\(n^2\\) away from each term: \\(5 - 1 = 4\\), \\(8 - 4 = 4\\), \\(13 - 9 = 4\\).','So the nth term is \\(n^2 + 4\\).']},
+  {seq:'2, 6, 12, 20, 30',q:'',ask:'Find the nth term',correct:'n^2 + n',d:['\\(4n - 2\\)','2n^2','n^2 + 2n'],worked:['The second differences are 2, so the nth term starts \\(n^2\\) (half of 2).','Take \\(n^2\\) away from each term: \\(2 - 1 = 1\\), \\(6 - 4 = 2\\), \\(12 - 9 = 3\\) leaves \\(n\\).','So the nth term is \\(n^2 + n\\).']},
+  {seq:'3, 8, 15, 24, 35',q:'',ask:'Find the nth term',correct:'n^2 + 2n',d:['n^2 + n + 1','\\(5n - 2\\)','2n^2 + 1'],worked:['The second differences are 2, so the nth term starts \\(n^2\\) (half of 2).','Take \\(n^2\\) away from each term: \\(3 - 1 = 2\\), \\(8 - 4 = 4\\), \\(15 - 9 = 6\\) leaves \\(2n\\).','So the nth term is \\(n^2 + 2n\\).']},
+  {seq:'0, 6, 16, 30, 48',q:'',ask:'Second differences',correct:'4',d:['2','6','8'],worked:['First differences: 6, 10, 14, 18.','Second differences: \\(10 - 6 = 4\\), \\(14 - 10 = 4\\), \\(18 - 14 = 4\\).','The second differences are all 4.']},
+  {seq:'\\(T_n = n^2 + 3n\\)',q:'',ask:'Find the 10th term',correct:'130',d:['103','113','133'],worked:['Substitute \\(n = 10\\) into \\(T_n = n^2 + 3n\\).','\\(10^2 + 3 \\times 10 = 100 + 30 = 130\\)']},
+  {seq:'\\(T_n = 2n^2 - 1\\)',q:'',ask:'Find the 5th term',correct:'49',d:['50','39','51'],worked:['Substitute \\(n = 5\\) into \\(T_n = 2n^2 - 1\\).','\\(2 \\times 5^2 - 1 = 2 \\times 25 - 1 = 49\\)']},
+  {seq:'\\(T_n = n^2 - n + 1\\)',q:'',ask:'Find the 8th term',correct:'57',d:['56','58','65'],worked:['Substitute \\(n = 8\\) into \\(T_n = n^2 - n + 1\\).','\\(8^2 - 8 + 1 = 64 - 8 + 1 = 57\\)']},
+  {seq:'\\(T_n = n^2 + 1\\)',q:'',ask:'Is 50 a term?',correct:'Yes (\\(n = 7\\))',d:['No','Yes (\\(n = 8\\))','Yes (\\(n = 6\\))'],worked:['Solve \\(n^2 + 1 = 50\\): \\(n^2 = 49\\), so \\(n = 7\\).','7 is a whole number, so Yes (\\(n = 7\\)).']},
   // Geometric sequences (Q31-42)
-  {seq:'3, 6, 12, 24, ...',ask:'What is the common ratio?',correct:'2',d:['3','4','6']},
-  {seq:'5, 15, 45, 135, ...',ask:'What is the common ratio?',correct:'3',d:['5','10','15']},
-  {seq:'64, 16, 4, 1, ...',ask:'What is the common ratio?',correct:'\\dfrac{1}{4}',d:['4','\\dfrac{1}{2}','-4']},
-  {seq:'2, 10, 50, 250, ...',ask:'Find the next term',correct:'1250',d:['500','750','2500']},
-  {seq:'\\(T_n = 3 \\times 2^{n-1}\\)',q:'',ask:'Find the 6th term',correct:'96',d:['64','48','192']},
-  {seq:'\\(T_n = 5 \\times 3^{n-1}\\)',q:'',ask:'Find the 4th term',correct:'135',d:['45','405','60']},
-  {seq:'\\(a = 4, r = 3\\)',q:'T_n = ar^{n-1}',ask:'Find the 5th term',correct:'324',d:['108','972','243']},
-  {seq:'\\(a = 100, r = 0.5\\)',q:'T_n = ar^{n-1}',ask:'Find the 5th term',correct:'6.25',d:['12.5','3.125','25']},
+  {seq:'3, 6, 12, 24, ...',ask:'What is the common ratio?',correct:'2',d:['3','4','6'],worked:['Divide a term by the one before: \\(6 \\div 3 = 2\\).','Each term is multiplied by \\(2\\), so the common ratio is \\(2\\).']},
+  {seq:'5, 15, 45, 135, ...',ask:'What is the common ratio?',correct:'3',d:['5','10','15'],worked:['Divide a term by the one before: \\(15 \\div 5 = 3\\).','Each term is multiplied by \\(3\\), so the common ratio is \\(3\\).']},
+  {seq:'64, 16, 4, 1, ...',ask:'What is the common ratio?',correct:'\\dfrac{1}{4}',d:['4','\\dfrac{1}{2}','-4'],worked:['Divide a term by the one before: \\(16 \\div 64 = \\dfrac{1}{4}\\).','Each term is multiplied by \\(\\dfrac{1}{4}\\), so the common ratio is \\(\\dfrac{1}{4}\\).']},
+  {seq:'2, 10, 50, 250, ...',ask:'Find the next term',correct:'1250',d:['500','750','2500'],worked:['Each term is the one before multiplied by 5 each time: \\(10 \\div 2 = 5\\).','So the next term is \\(250 \\times 5 = 1250\\).']},
+  {seq:'\\(T_n = 3 \\times 2^{n-1}\\)',q:'',ask:'Find the 6th term',correct:'96',d:['64','48','192'],worked:['Substitute \\(n = 6\\) into \\(T_n = 3 \\times 2^{n-1}\\).','\\(3 \\times 2^{6-1} = 3 \\times 2^5 = 3 \\times 32 = 96\\)']},
+  {seq:'\\(T_n = 5 \\times 3^{n-1}\\)',q:'',ask:'Find the 4th term',correct:'135',d:['45','405','60'],worked:['Substitute \\(n = 4\\) into \\(T_n = 5 \\times 3^{n-1}\\).','\\(5 \\times 3^{4-1} = 5 \\times 3^3 = 5 \\times 27 = 135\\)']},
+  {seq:'\\(a = 4, r = 3\\)',q:'T_n = ar^{n-1}',ask:'Find the 5th term',correct:'324',d:['108','972','243'],worked:['Substitute \\(a = 4\\), \\(r = 3\\) and \\(n = 5\\) into \\(T_n = ar^{n-1}\\).','\\(4 \\times 3^{5-1} = 4 \\times 3^4 = 4 \\times 81 = 324\\)']},
+  {seq:'\\(a = 100, r = 0.5\\)',q:'T_n = ar^{n-1}',ask:'Find the 5th term',correct:'6.25',d:['12.5','3.125','25'],worked:['Substitute \\(a = 100\\), \\(r = 0.5\\) and \\(n = 5\\) into \\(T_n = ar^{n-1}\\).','\\(100 \\times 0.5^{5-1} = 100 \\times 0.0625 = 6.25\\)']},
   // Recognise and generate (Q43-50)
-  {seq:'\\(T_n = 2n + 5\\)',q:'',ask:'Generate the first 4 terms',correct:'7, 9, 11, 13',d:['5, 7, 9, 11','2, 5, 7, 9','7, 12, 17, 22']},
-  {seq:'\\(T_n = n^2 + 1\\)',q:'',ask:'Generate the first 4 terms',correct:'2, 5, 10, 17',d:['1, 4, 9, 16','3, 5, 10, 17','2, 4, 8, 16']},
-  {seq:'\\(T_n = 3 \\times 2^n\\)',q:'',ask:'Generate the first 4 terms',correct:'6, 12, 24, 48',d:['3, 6, 12, 24','6, 9, 12, 15','2, 6, 18, 54']},
-  {seq:'\\(T_n = 100 - 4n\\)',q:'',ask:'Generate the first 4 terms',correct:'96, 92, 88, 84',d:['100, 96, 92, 88','96, 84, 72, 60','94, 88, 82, 76']},
-  {seq:'The first term is 5, the common difference is -3.',q:'',ask:'Find the 10th term',correct:'-22',d:['-25','-19','-20']},
-  {seq:'\\(T_n = (-1)^n \\times n\\)',q:'',ask:'Generate the first 4 terms',correct:'-1, 2, -3, 4',d:['1, -2, 3, -4','-1, -2, -3, -4','1, 2, 3, 4']},
-  {seq:'3, __, 12, __, 21',ask:'If arithmetic, fill the gaps',correct:'3, 7.5, 12, 16.5, 21',d:['3, 6, 12, 18, 21','3, 8, 12, 17, 21','3, 7, 12, 17, 21']},
+  {seq:'\\(T_n = 2n + 5\\)',q:'',ask:'Generate the first 4 terms',correct:'7, 9, 11, 13',d:['5, 7, 9, 11','2, 5, 7, 9','7, 12, 17, 22'],worked:['Substitute \\(n = 1, 2, 3, 4\\).','\\(2 \\times 1 + 5 = 7\\), \\(2 \\times 2 + 5 = 9\\), \\(2 \\times 3 + 5 = 11\\), \\(2 \\times 4 + 5 = 13\\).','So the first 4 terms are 7, 9, 11, 13.']},
+  {seq:'\\(T_n = n^2 + 1\\)',q:'',ask:'Generate the first 4 terms',correct:'2, 5, 10, 17',d:['1, 4, 9, 16','3, 5, 10, 17','2, 4, 8, 16'],worked:['Substitute \\(n = 1, 2, 3, 4\\).','\\(1^2 + 1 = 2\\), \\(2^2 + 1 = 5\\), \\(3^2 + 1 = 10\\), \\(4^2 + 1 = 17\\).','So the first 4 terms are 2, 5, 10, 17.']},
+  {seq:'\\(T_n = 3 \\times 2^n\\)',q:'',ask:'Generate the first 4 terms',correct:'6, 12, 24, 48',d:['3, 6, 12, 24','6, 9, 12, 15','2, 6, 18, 54'],worked:['Substitute \\(n = 1, 2, 3, 4\\).','\\(3 \\times 2^1 = 6\\), \\(3 \\times 2^2 = 12\\), \\(3 \\times 2^3 = 24\\), \\(3 \\times 2^4 = 48\\).','So the first 4 terms are 6, 12, 24, 48.']},
+  {seq:'\\(T_n = 100 - 4n\\)',q:'',ask:'Generate the first 4 terms',correct:'96, 92, 88, 84',d:['100, 96, 92, 88','96, 84, 72, 60','94, 88, 82, 76'],worked:['Substitute \\(n = 1, 2, 3, 4\\).','\\(100 - 4 \\times 1 = 96\\), \\(100 - 4 \\times 2 = 92\\), \\(100 - 4 \\times 3 = 88\\), \\(100 - 4 \\times 4 = 84\\).','So the first 4 terms are 96, 92, 88, 84.']},
+  {seq:'The first term is 5, the common difference is -3.',q:'',ask:'Find the 10th term',correct:'-22',d:['-25','-19','-20'],worked:['From the 1st term to the 10th term is 9 steps of \\(-3\\).','\\(5 + 9 \\times (-3) = 5 - 27 = -22\\)']},
+  {seq:'\\(T_n = (-1)^n \\times n\\)',q:'',ask:'Generate the first 4 terms',correct:'-1, 2, -3, 4',d:['1, -2, 3, -4','-1, -2, -3, -4','1, 2, 3, 4'],worked:['Substitute \\(n = 1, 2, 3, 4\\).','\\((-1)^1 \\times 1 = -1\\), \\((-1)^2 \\times 2 = 2\\), \\((-1)^3 \\times 3 = -3\\), \\((-1)^4 \\times 4 = 4\\).','So the first 4 terms are -1, 2, -3, 4.']},
+  {seq:'3, __, 12, __, 21',ask:'If arithmetic, fill the gaps',correct:'3, 7.5, 12, 16.5, 21',d:['3, 6, 12, 18, 21','3, 8, 12, 17, 21','3, 7, 12, 17, 21'],worked:['From 3 to 12 is two steps: \\(12 - 3 = 9\\), so each step is \\(9 \\div 2 = 4.5\\).','\\(3 + 4.5 = 7.5\\) and \\(12 + 4.5 = 16.5\\).','So the sequence is 3, 7.5, 12, 16.5, 21.']},
 ],
 alevel:[
   // AP formulae (Q1-12)
-  {seq:'',q:'S_n = \\dfrac{n}{2}(2a + (n-1)d)',ask:'Find \\(S_{10}\\) when \\(a = 3, d = 4\\)',correct:'210',d:['200','220','195']},
-  {seq:'',q:'S_n = \\dfrac{n}{2}(a + l)',ask:'Sum of first 20 terms if \\(a = 5, l = 62\\)',correct:'670',d:['640','700','635']},
-  {seq:'',q:'a = 2, d = 3',ask:'Find \\(S_{20}\\)',correct:'610',d:['620','600','590']},
-  {seq:'',q:'a = 10, d = -2',ask:'Find \\(S_{15}\\)',correct:'-60',d:['-30','-90','60']},
-  {seq:'',q:'S_{10} = 200, a = 2',ask:'Find \\(d\\)',correct:'4',d:['3','5','\\dfrac{196}{9}']},
-  {seq:'',q:'\\text{AP: } 5 + 8 + 11 + \\cdots',ask:'Find \\(S_{30}\\)',correct:'1455',d:['1305','1500','1350']},
-  {seq:'',q:'a = 1, d = 1',ask:'Find \\(S_{100}\\) (sum of first 100 natural numbers)',correct:'5050',d:['5000','5100','10000']},
-  {seq:'',q:'\\text{AP with } a = 7, d = 5',ask:'Which term first exceeds 100?',correct:'\\(n = 20\\)',d:['\\(n = 19\\)','\\(n = 21\\)','\\(n = 18\\)']},
-  {seq:'',q:'u_n = a + (n-1)d. \\; u_5 = 17, \\; u_{12} = 38.',ask:'Find \\(d\\)',correct:'3',d:['4','2','5']},
-  {seq:'',q:'u_5 = 17, d = 3',ask:'Find \\(a\\)',correct:'5',d:['2','8','14']},
-  {seq:'',q:'\\text{AP: first term } a, \\text{ last term } l, \\; n \\text{ terms}',ask:'Which formula gives the sum?',correct:'S_n = \\dfrac{n}{2}(a + l)',d:['S_n = \\dfrac{n}{2}(2a + nd)','\\(S_n = n(a + l)\\)','S_n = \\dfrac{n}{2}(a + d)']},
-  {seq:'',q:'\\text{Sum of integers from 1 to } n',ask:'Formula',correct:'\\dfrac{n(n+1)}{2}',d:['\\dfrac{n^2}{2}','\\(n(n+1)\\)','\\dfrac{n(n-1)}{2}']},
+  {seq:'',q:'S_n = \\dfrac{n}{2}(2a + (n-1)d)',ask:'Find \\(S_{10}\\) when \\(a = 3, d = 4\\)',correct:'210',d:['200','220','195'],worked:['Substitute \\(n = 10\\), \\(a = 3\\) and \\(d = 4\\).','\\(S_{10} = \\dfrac{10}{2}(2 \\times 3 + 9 \\times 4) = 5(6 + 36) = 5 \\times 42 = 210\\)']},
+  {seq:'',q:'S_n = \\dfrac{n}{2}(a + l)',ask:'Sum of first 20 terms if \\(a = 5, l = 62\\)',correct:'670',d:['640','700','635'],worked:['Substitute \\(n = 20\\), \\(a = 5\\) and \\(l = 62\\).','\\(S_{20} = \\dfrac{20}{2}(5 + 62) = 10 \\times 67 = 670\\)']},
+  {seq:'',q:'a = 2, d = 3',ask:'Find \\(S_{20}\\)',correct:'610',d:['620','600','590'],worked:['Use \\(S_n = \\dfrac{n}{2}(2a + (n-1)d)\\) with \\(n = 20\\).','\\(S_{20} = \\dfrac{20}{2}(2 \\times 2 + 19 \\times 3) = 10(4 + 57) = 10 \\times 61 = 610\\)']},
+  {seq:'',q:'a = 10, d = -2',ask:'Find \\(S_{15}\\)',correct:'-60',d:['-30','-90','60'],worked:['Use \\(S_n = \\dfrac{n}{2}(2a + (n-1)d)\\) with \\(n = 15\\).','\\(S_{15} = \\dfrac{15}{2}(2 \\times 10 + 14 \\times (-2)) = \\dfrac{15}{2}(20 - 28) = \\dfrac{15}{2} \\times (-8) = -60\\)']},
+  {seq:'',q:'S_{10} = 200, a = 2',ask:'Find \\(d\\)',correct:'4',d:['3','5','\\dfrac{196}{9}'],worked:['\\(200 = \\dfrac{10}{2}(2 \\times 2 + 9d) = 5(4 + 9d)\\)','So \\(4 + 9d = 200 \\div 5 = 40\\), and \\(9d = 36\\).','\\(d = 36 \\div 9 = 4\\)']},
+  {seq:'',q:'\\text{AP: } 5 + 8 + 11 + \\cdots',ask:'Find \\(S_{30}\\)',correct:'1455',d:['1305','1500','1350'],worked:['The first term is \\(a = 5\\) and the difference is \\(d = 3\\).','\\(S_{30} = \\dfrac{30}{2}(2 \\times 5 + 29 \\times 3) = 15(10 + 87) = 15 \\times 97 = 1455\\)']},
+  {seq:'',q:'a = 1, d = 1',ask:'Find \\(S_{100}\\) (sum of first 100 natural numbers)',correct:'5050',d:['5000','5100','10000'],worked:['Use \\(S_n = \\dfrac{n}{2}(2a + (n-1)d)\\) with \\(n = 100\\).','\\(S_{100} = \\dfrac{100}{2}(2 \\times 1 + 99 \\times 1) = 50 \\times 101 = 5050\\)']},
+  {seq:'',q:'\\text{AP with } a = 7, d = 5',ask:'Which term first exceeds 100?',correct:'\\(n = 20\\)',d:['\\(n = 19\\)','\\(n = 21\\)','\\(n = 18\\)'],worked:['\\(u_n = 7 + 5(n-1) > 100\\), so \\(5(n-1) > 93\\) and \\(n - 1 > 18.6\\).','\\(u_{19} = 7 + 18 \\times 5 = 97\\) and \\(u_{20} = 7 + 19 \\times 5 = 102\\).','So the first term over 100 is \\(n = 20\\).']},
+  {seq:'',q:'u_n = a + (n-1)d. \\; u_5 = 17, \\; u_{12} = 38.',ask:'Find \\(d\\)',correct:'3',d:['4','2','5'],worked:['From \\(u_5\\) to \\(u_{12}\\) is 7 steps of \\(d\\).','\\(7d = 38 - 17 = 21\\)','So \\(d = 21 \\div 7 = 3\\).']},
+  {seq:'',q:'u_5 = 17, d = 3',ask:'Find \\(a\\)',correct:'5',d:['2','8','14'],worked:['\\(u_5 = a + 4d\\), so \\(17 = a + 4 \\times 3\\).','\\(a = 17 - 12 = 5\\)']},
+  {seq:'',q:'\\text{AP: first term } a, \\text{ last term } l, \\; n \\text{ terms}',ask:'Which formula gives the sum?',correct:'S_n = \\dfrac{n}{2}(a + l)',d:['S_n = \\dfrac{n}{2}(2a + nd)','\\(S_n = n(a + l)\\)','S_n = \\dfrac{n}{2}(a + d)'],worked:['The mean of the first and last terms is \\(\\dfrac{a + l}{2}\\), and there are \\(n\\) terms.','The sum is \\(n\\) times the mean: \\(S_n = \\dfrac{n}{2}(a + l)\\).']},
+  {seq:'',q:'\\text{Sum of integers from 1 to } n',ask:'Formula',correct:'\\dfrac{n(n+1)}{2}',d:['\\dfrac{n^2}{2}','\\(n(n+1)\\)','\\dfrac{n(n-1)}{2}'],worked:['Pair the first and last terms, and so on: each pair adds to \\(n + 1\\).','There are \\(\\dfrac{n}{2}\\) pairs, so the sum is \\(\\dfrac{n(n+1)}{2}\\).']},
   // GP formulae (Q13-24)
-  {seq:'',q:'S_n = \\dfrac{a(1 - r^n)}{1 - r}',ask:'Find \\(S_5\\) when \\(a = 3, r = 2\\)',correct:'93',d:['96','90','63']},
-  {seq:'',q:'a = 1, r = 3',ask:'Find \\(S_6\\)',correct:'364',d:['363','365','729']},
-  {seq:'',q:'a = 100, r = 0.5',ask:'Find \\(S_8\\) (2 d.p.)',correct:'199.22',d:['200','198.44','199.61']},
-  {seq:'',q:'a = 4, r = -2',ask:'Find \\(S_6\\)',correct:'-84',d:['84','-80','252']},
-  {seq:'',q:'a = 10, r = \\dfrac{1}{2}',ask:'Find \\(S_4\\)',correct:'18.75',d:['15','20','17.5']},
-  {seq:'',q:'\\text{GP: } 2 + 6 + 18 + 54 + \\cdots',ask:'Find \\(S_8\\)',correct:'6560',d:['6561','6562','3280']},
-  {seq:'',q:'u_n = ar^{n-1}. \\; u_1 = 5, \\; u_4 = 40.',ask:'Find \\(r\\)',correct:'2',d:['3','4','8']},
-  {seq:'',q:'u_3 = 12, \\; u_6 = 96',ask:'Find \\(r\\)',correct:'2',d:['3','4','8']},
-  {seq:'',q:'u_3 = 12, r = 2',ask:'Find \\(a\\)',correct:'3',d:['6','1.5','24']},
-  {seq:'',q:'\\text{GP with } a = 5, r = 3',ask:'Which term first exceeds 1000?',correct:'\\(n = 6\\)',d:['\\(n = 5\\)','\\(n = 7\\)','\\(n = 8\\)']},
-  {seq:'',q:'a = 8, r = \\dfrac{1}{4}',ask:'Find the 4th term',correct:'\\dfrac{1}{8}',d:['\\dfrac{1}{2}','\\dfrac{1}{4}','\\dfrac{1}{16}']},
-  {seq:'',q:'\\text{Sum of GP}',ask:'Which formula when \\(|r| < 1\\)?',correct:'S_n = \\dfrac{a(1-r^n)}{1-r}',d:['S_n = \\dfrac{a(1-r^{n-1})}{1-r}','S_n = \\dfrac{a}{1-r}','S_n = ar^n']},
+  {seq:'',q:'S_n = \\dfrac{a(1 - r^n)}{1 - r}',ask:'Find \\(S_5\\) when \\(a = 3, r = 2\\)',correct:'93',d:['96','90','63'],worked:['Substitute \\(a = 3\\), \\(r = 2\\) and \\(n = 5\\).','\\(S_5 = \\dfrac{3(1 - 2^5)}{1 - 2} = \\dfrac{3(1 - 32)}{-1} = \\dfrac{3 \\times (-31)}{-1} = 93\\)']},
+  {seq:'',q:'a = 1, r = 3',ask:'Find \\(S_6\\)',correct:'364',d:['363','365','729'],worked:['Use \\(S_n = \\dfrac{a(1 - r^n)}{1 - r}\\) with \\(n = 6\\).','\\(S_6 = \\dfrac{1(1 - 3^6)}{1 - 3} = \\dfrac{1 - 729}{-2} = \\dfrac{-728}{-2} = 364\\)']},
+  {seq:'',q:'a = 100, r = 0.5',ask:'Find \\(S_8\\) (2 d.p.)',correct:'199.22',d:['200','198.44','199.61'],worked:['Use \\(S_n = \\dfrac{a(1 - r^n)}{1 - r}\\) with \\(n = 8\\).','\\(S_8 = \\dfrac{100(1 - 0.5^8)}{1 - 0.5} = 200(1 - 0.00390625) = 199.21875\\)','To 2 d.p. that is 199.22.']},
+  {seq:'',q:'a = 4, r = -2',ask:'Find \\(S_6\\)',correct:'-84',d:['84','-80','252'],worked:['Use \\(S_n = \\dfrac{a(1 - r^n)}{1 - r}\\) with \\(n = 6\\).','\\(S_6 = \\dfrac{4(1 - (-2)^6)}{1 - (-2)} = \\dfrac{4(1 - 64)}{3} = \\dfrac{4 \\times (-63)}{3} = -84\\)']},
+  {seq:'',q:'a = 10, r = \\dfrac{1}{2}',ask:'Find \\(S_4\\)',correct:'18.75',d:['15','20','17.5'],worked:['Use \\(S_n = \\dfrac{a(1 - r^n)}{1 - r}\\) with \\(r = \\dfrac{1}{2} = 0.5\\) and \\(n = 4\\).','\\(S_4 = \\dfrac{10(1 - 0.5^4)}{1 - 0.5} = 20 \\times 0.9375 = 18.75\\)']},
+  {seq:'',q:'\\text{GP: } 2 + 6 + 18 + 54 + \\cdots',ask:'Find \\(S_8\\)',correct:'6560',d:['6561','6562','3280'],worked:['The first term is \\(a = 2\\) and the ratio is \\(r = 6 \\div 2 = 3\\).','\\(S_8 = \\dfrac{2(1 - 3^8)}{1 - 3} = \\dfrac{2(1 - 6561)}{-2} = 6560\\)']},
+  {seq:'',q:'u_n = ar^{n-1}. \\; u_1 = 5, \\; u_4 = 40.',ask:'Find \\(r\\)',correct:'2',d:['3','4','8'],worked:['\\(u_4 = ar^3\\), so \\(40 = 5r^3\\).','\\(r^3 = 40 \\div 5 = 8\\), and since \\(2^3 = 8\\), \\(r = 2\\).']},
+  {seq:'',q:'u_3 = 12, \\; u_6 = 96',ask:'Find \\(r\\)',correct:'2',d:['3','4','8'],worked:['From \\(u_3\\) to \\(u_6\\) is 3 steps, so \\(r^3 = 96 \\div 12 = 8\\).','Since \\(2^3 = 8\\), \\(r = 2\\).']},
+  {seq:'',q:'u_3 = 12, r = 2',ask:'Find \\(a\\)',correct:'3',d:['6','1.5','24'],worked:['\\(u_3 = ar^2\\), so \\(12 = a \\times 2^2 = 4a\\).','\\(a = 12 \\div 4 = 3\\)']},
+  {seq:'',q:'\\text{GP with } a = 5, r = 3',ask:'Which term first exceeds 1000?',correct:'\\(n = 6\\)',d:['\\(n = 5\\)','\\(n = 7\\)','\\(n = 8\\)'],worked:['\\(u_n = 5 \\times 3^{n-1}\\)','\\(u_5 = 5 \\times 3^4 = 405\\) and \\(u_6 = 5 \\times 3^5 = 1215\\).','So the first term over 1000 is \\(n = 6\\).']},
+  {seq:'',q:'a = 8, r = \\dfrac{1}{4}',ask:'Find the 4th term',correct:'\\dfrac{1}{8}',d:['\\dfrac{1}{2}','\\dfrac{1}{4}','\\dfrac{1}{16}'],worked:['Use \\(u_n = ar^{n-1}\\) with \\(n = 4\\).','\\(u_4 = 8 \\times (\\dfrac{1}{4})^3 = 8 \\times \\dfrac{1}{64} = \\dfrac{1}{8}\\)']},
+  {seq:'',q:'\\text{Sum of GP}',ask:'Which formula when \\(|r| < 1\\)?',correct:'S_n = \\dfrac{a(1-r^n)}{1-r}',d:['S_n = \\dfrac{a(1-r^{n-1})}{1-r}','S_n = \\dfrac{a}{1-r}','S_n = ar^n'],worked:['\\(\\dfrac{a}{1-r}\\) is \\(S_\\infty\\), the sum to infinity, not \\(S_n\\).','For any \\(r\\) except 1, \\(S_n = \\dfrac{a(1-r^n)}{1-r}\\).']},
   // Sum to infinity (Q25-34)
-  {seq:'',q:'S_\\infty = \\dfrac{a}{1-r}, \\; |r| < 1',ask:'Find \\(S_\\infty\\) when \\(a = 10, r = 0.5\\)',correct:'20',d:['10','15','40']},
-  {seq:'',q:'a = 6, r = \\dfrac{1}{3}',ask:'Find \\(S_\\infty\\)',correct:'9',d:['18','6','12']},
-  {seq:'',q:'a = 100, r = 0.1',ask:'Find \\(S_\\infty\\)',correct:'\\dfrac{1000}{9}',d:['1000','110','\\dfrac{100}{9}']},
-  {seq:'',q:'a = 4, r = -\\dfrac{1}{2}',ask:'Find \\(S_\\infty\\)',correct:'\\dfrac{8}{3}',d:['8','2','\\dfrac{4}{3}']},
-  {seq:'',q:'a = 1, r = \\dfrac{2}{3}',ask:'Find \\(S_\\infty\\)',correct:'3',d:['\\dfrac{3}{2}','\\dfrac{2}{3}','\\infty']},
-  {seq:'',q:'S_\\infty = 12, \\; a = 4',ask:'Find \\(r\\)',correct:'\\dfrac{2}{3}',d:['\\dfrac{1}{3}','3','\\dfrac{1}{2}']},
-  {seq:'',q:'S_\\infty = 20, \\; r = 0.5',ask:'Find \\(a\\)',correct:'10',d:['5','40','15']},
-  {seq:'',q:'a = 5, r = 0.9',ask:'Does the sum converge?',correct:'Yes, \\(|r| < 1\\)',d:['No, \\(r > 0\\)','No, \\(r\\) is too large','Only if \\(n > 100\\)']},
-  {seq:'',q:'a = 3, r = 1.1',ask:'Does the sum converge?',correct:'No, \\(|r| \\geq 1\\)',d:['Yes','Yes, \\(r\\) is close to 1','Only for large \\(n\\)']},
-  {seq:'',q:'a = 2, r = -0.8',ask:'Does the sum converge?',correct:'Yes, \\(|r| < 1\\)',d:['No, \\(r\\) is negative','No','Only if \\(r > 0\\)']},
+  {seq:'',q:'S_\\infty = \\dfrac{a}{1-r}, \\; |r| < 1',ask:'Find \\(S_\\infty\\) when \\(a = 10, r = 0.5\\)',correct:'20',d:['10','15','40'],worked:['\\(|r| < 1\\), so the sum to infinity is \\(\\dfrac{a}{1-r}\\).','\\(S_\\infty = \\dfrac{10}{1 - 0.5} = \\dfrac{10}{0.5} = 20\\)']},
+  {seq:'',q:'a = 6, r = \\dfrac{1}{3}',ask:'Find \\(S_\\infty\\)',correct:'9',d:['18','6','12'],worked:['\\(|r| < 1\\), so the sum to infinity is \\(\\dfrac{a}{1-r}\\).','\\(S_\\infty = \\dfrac{6}{1 - \\dfrac{1}{3}} = \\dfrac{6}{\\dfrac{2}{3}} = 9\\)']},
+  {seq:'',q:'a = 100, r = 0.1',ask:'Find \\(S_\\infty\\)',correct:'\\dfrac{1000}{9}',d:['1000','110','\\dfrac{100}{9}'],worked:['\\(|r| < 1\\), so the sum to infinity is \\(\\dfrac{a}{1-r}\\).','\\(S_\\infty = \\dfrac{100}{1 - 0.1} = \\dfrac{100}{0.9} = \\dfrac{1000}{9}\\)']},
+  {seq:'',q:'a = 4, r = -\\dfrac{1}{2}',ask:'Find \\(S_\\infty\\)',correct:'\\dfrac{8}{3}',d:['8','2','\\dfrac{4}{3}'],worked:['\\(|r| < 1\\), so the sum to infinity is \\(\\dfrac{a}{1-r}\\).','\\(S_\\infty = \\dfrac{4}{1 - (-\\dfrac{1}{2})} = \\dfrac{4}{\\dfrac{3}{2}} = \\dfrac{8}{3}\\)']},
+  {seq:'',q:'a = 1, r = \\dfrac{2}{3}',ask:'Find \\(S_\\infty\\)',correct:'3',d:['\\dfrac{3}{2}','\\dfrac{2}{3}','\\infty'],worked:['\\(|r| < 1\\), so the sum to infinity is \\(\\dfrac{a}{1-r}\\).','\\(S_\\infty = \\dfrac{1}{1 - \\dfrac{2}{3}} = \\dfrac{1}{\\dfrac{1}{3}} = 3\\)']},
+  {seq:'',q:'S_\\infty = 12, \\; a = 4',ask:'Find \\(r\\)',correct:'\\dfrac{2}{3}',d:['\\dfrac{1}{3}','3','\\dfrac{1}{2}'],worked:['\\(12 = \\dfrac{4}{1 - r}\\), so \\(1 - r = \\dfrac{4}{12} = \\dfrac{1}{3}\\).','So \\(r = 1 - \\dfrac{1}{3} = \\dfrac{2}{3}\\).']},
+  {seq:'',q:'S_\\infty = 20, \\; r = 0.5',ask:'Find \\(a\\)',correct:'10',d:['5','40','15'],worked:['\\(20 = \\dfrac{a}{1 - 0.5}\\), so \\(a = 20 \\times (1 - 0.5) = 20 \\times 0.5 = 10\\).']},
+  {seq:'',q:'a = 5, r = 0.9',ask:'Does the sum converge?',correct:'Yes, \\(|r| < 1\\)',d:['No, \\(r > 0\\)','No, \\(r\\) is too large','Only if \\(n > 100\\)'],worked:['A geometric series converges only when \\(|r| < 1\\).','Here \\(|r| = 0.9\\), which is less than 1, so Yes, \\(|r| < 1\\).']},
+  {seq:'',q:'a = 3, r = 1.1',ask:'Does the sum converge?',correct:'No, \\(|r| \\geq 1\\)',d:['Yes','Yes, \\(r\\) is close to 1','Only for large \\(n\\)'],worked:['A geometric series converges only when \\(|r| < 1\\).','Here \\(|r| = 1.1\\), which is not less than 1, so No, \\(|r| \\geq 1\\).']},
+  {seq:'',q:'a = 2, r = -0.8',ask:'Does the sum converge?',correct:'Yes, \\(|r| < 1\\)',d:['No, \\(r\\) is negative','No','Only if \\(r > 0\\)'],worked:['A geometric series converges only when \\(|r| < 1\\); the sign of \\(r\\) does not matter.','Here \\(|r| = 0.8\\), which is less than 1, so Yes, \\(|r| < 1\\).']},
   // Sigma notation (Q35-44)
-  {seq:'',q:'\\displaystyle\\sum_{r=1}^{5} r',ask:'Evaluate',correct:'15',d:['10','20','5']},
-  {seq:'',q:'\\displaystyle\\sum_{r=1}^{4} r^2',ask:'Evaluate',correct:'30',d:['16','10','20']},
-  {seq:'',q:'\\displaystyle\\sum_{r=1}^{5} 2r',ask:'Evaluate',correct:'30',d:['20','10','25']},
-  {seq:'',q:'\\displaystyle\\sum_{r=1}^{4} (3r + 1)',ask:'Evaluate',correct:'34',d:['30','28','40']},
-  {seq:'',q:'\\displaystyle\\sum_{r=0}^{3} 2^r',ask:'Evaluate',correct:'15',d:['8','16','14']},
-  {seq:'',q:'\\displaystyle\\sum_{r=1}^{100} 1',ask:'Evaluate',correct:'100',d:['1','0','99']},
-  {seq:'',q:'\\displaystyle\\sum_{r=1}^{n} r = ',ask:'Formula',correct:'\\dfrac{n(n+1)}{2}',d:['\\dfrac{n^2}{2}','\\(n(n+1)\\)','\\dfrac{n(n-1)}{2}']},
-  {seq:'',q:'\\displaystyle\\sum_{r=1}^{10} (2r - 1)',ask:'Evaluate (sum of first 10 odd numbers)',correct:'100',d:['90','110','81']},
-  {seq:'',q:'\\displaystyle\\sum_{r=1}^{\\infty} \\left(\\dfrac{1}{2}\\right)^r',ask:'Evaluate',correct:'1',d:['2','\\dfrac{1}{2}','\\infty']},
-  {seq:'',q:'\\displaystyle\\sum_{r=1}^{\\infty} 3 \\left(\\dfrac{1}{4}\\right)^r',ask:'Evaluate',correct:'1',d:['3','\\dfrac{3}{4}','4']},
+  {seq:'',q:'\\displaystyle\\sum_{r=1}^{5} r',ask:'Evaluate',correct:'15',d:['10','20','5'],worked:['Put \\(r = 1, 2, 3, 4, 5\\) and add.','\\(1 + 2 + 3 + 4 + 5 = 15\\)']},
+  {seq:'',q:'\\displaystyle\\sum_{r=1}^{4} r^2',ask:'Evaluate',correct:'30',d:['16','10','20'],worked:['Put \\(r = 1, 2, 3, 4\\) and add the squares.','\\(1^2 + 2^2 + 3^2 + 4^2 = 1 + 4 + 9 + 16 = 30\\)']},
+  {seq:'',q:'\\displaystyle\\sum_{r=1}^{5} 2r',ask:'Evaluate',correct:'30',d:['20','10','25'],worked:['Put \\(r = 1, 2, 3, 4, 5\\) into \\(2r\\) and add.','\\(2 + 4 + 6 + 8 + 10 = 30\\)']},
+  {seq:'',q:'\\displaystyle\\sum_{r=1}^{4} (3r + 1)',ask:'Evaluate',correct:'34',d:['30','28','40'],worked:['Put \\(r = 1, 2, 3, 4\\) into \\(3r + 1\\) and add.','\\(4 + 7 + 10 + 13 = 34\\)']},
+  {seq:'',q:'\\displaystyle\\sum_{r=0}^{3} 2^r',ask:'Evaluate',correct:'15',d:['8','16','14'],worked:['Put \\(r = 0, 1, 2, 3\\) into \\(2^r\\) and add.','\\(2^0 + 2^1 + 2^2 + 2^3 = 1 + 2 + 4 + 8 = 15\\)']},
+  {seq:'',q:'\\displaystyle\\sum_{r=1}^{100} 1',ask:'Evaluate',correct:'100',d:['1','0','99'],worked:['There are 100 terms, and each one is 1.','\\(100 \\times 1 = 100\\)']},
+  {seq:'',q:'\\displaystyle\\sum_{r=1}^{n} r = ',ask:'Formula',correct:'\\dfrac{n(n+1)}{2}',d:['\\dfrac{n^2}{2}','\\(n(n+1)\\)','\\dfrac{n(n-1)}{2}'],worked:['Pair the first and last terms, and so on: each pair adds to \\(n + 1\\).','There are \\(\\dfrac{n}{2}\\) pairs, so the sum is \\(\\dfrac{n(n+1)}{2}\\).']},
+  {seq:'',q:'\\displaystyle\\sum_{r=1}^{10} (2r - 1)',ask:'Evaluate (sum of first 10 odd numbers)',correct:'100',d:['90','110','81'],worked:['The terms are 1, 3, 5, up to \\(2 \\times 10 - 1 = 19\\): an AP with 10 terms.','\\(S_{10} = \\dfrac{10}{2}(1 + 19) = 5 \\times 20 = 100\\)']},
+  {seq:'',q:'\\displaystyle\\sum_{r=1}^{\\infty} \\left(\\dfrac{1}{2}\\right)^r',ask:'Evaluate',correct:'1',d:['2','\\dfrac{1}{2}','\\infty'],worked:['A geometric series with first term \\(\\dfrac{1}{2}\\) and \\(r = \\dfrac{1}{2}\\).','\\(S_\\infty = \\dfrac{a}{1-r} = \\dfrac{0.5}{1 - 0.5} = 1\\)']},
+  {seq:'',q:'\\displaystyle\\sum_{r=1}^{\\infty} 3 \\left(\\dfrac{1}{4}\\right)^r',ask:'Evaluate',correct:'1',d:['3','\\dfrac{3}{4}','4'],worked:['A geometric series with first term \\(3 \\times \\dfrac{1}{4} = \\dfrac{3}{4}\\) and \\(r = \\dfrac{1}{4}\\).','\\(S_\\infty = \\dfrac{a}{1-r} = \\dfrac{0.75}{1 - 0.25} = 1\\)']},
   // Recurrence relations and mixed (Q45-55)
-  {seq:'',q:'u_{n+1} = u_n + 3, \\; u_1 = 5',ask:'Find \\(u_4\\)',correct:'14',d:['17','11','20']},
-  {seq:'',q:'u_{n+1} = 2u_n, \\; u_1 = 3',ask:'Find \\(u_5\\)',correct:'48',d:['24','96','30']},
-  {seq:'',q:'u_{n+1} = u_n + n, \\; u_1 = 1',ask:'Find \\(u_4\\)',correct:'7',d:['6','10','4']},
-  {seq:'',q:'u_{n+1} = u_n^2 - 1, \\; u_1 = 2',ask:'Find \\(u_3\\)',correct:'8',d:['3','15','7']},
-  {seq:'',q:'\\text{AP with } S_n = \\dfrac{n}{2}(2a + (n-1)d)',ask:'Prove \\(S_n\\) for \\(a = 1, d = 1\\) gives \\(\\dfrac{n(n+1)}{2}\\)',correct:'Substitute: \\(\\dfrac{n}{2}(2 + n - 1) = \\dfrac{n(n+1)}{2}\\)',d:['Cannot be proved','Only true for even \\(n\\)','Requires induction']},
-  {seq:'',q:'0.\\dot{9} = \\displaystyle\\sum_{r=1}^{\\infty} 9 \\times 10^{-r}',ask:'What does this sum equal?',correct:'1',d:['10','\\dfrac{9}{10}','\\infty']},
-  {seq:'',q:'a = 12, \\; S_\\infty = 36',ask:'Find \\(r\\)',correct:'\\dfrac{2}{3}',d:['\\dfrac{1}{3}','3','\\dfrac{1}{2}']},
-  {seq:'',q:'\\text{GP: } a + ar + ar^2 + \\cdots = \\dfrac{a}{1-r}',ask:'This requires',correct:'\\(|r| < 1\\)',d:['\\(r < 1\\)','\\(r > 0\\)','r \\neq 1']},
-  {seq:'',q:'\\displaystyle\\sum_{r=1}^{20} (3r - 2)',ask:'Evaluate',correct:'590',d:['600','570','610']},
-  {seq:'',q:'\\text{An AP has } S_{10} = 120 \\text{ and } S_{20} = 440',ask:'Find \\(S_{30}\\)',correct:'960',d:['880','1000','660']},
+  {seq:'',q:'u_{n+1} = u_n + 3, \\; u_1 = 5',ask:'Find \\(u_4\\)',correct:'14',d:['17','11','20'],worked:['Add 3 each time, starting from \\(u_1 = 5\\).','\\(u_2 = 5 + 3 = 8\\), \\(u_3 = 8 + 3 = 11\\).','\\(u_4 = 11 + 3 = 14\\)']},
+  {seq:'',q:'u_{n+1} = 2u_n, \\; u_1 = 3',ask:'Find \\(u_5\\)',correct:'48',d:['24','96','30'],worked:['Double each time, starting from \\(u_1 = 3\\).','\\(u_2 = 2 \\times 3 = 6\\), \\(u_3 = 2 \\times 6 = 12\\), \\(u_4 = 2 \\times 12 = 24\\).','\\(u_5 = 2 \\times 24 = 48\\)']},
+  {seq:'',q:'u_{n+1} = u_n + n, \\; u_1 = 1',ask:'Find \\(u_4\\)',correct:'7',d:['6','10','4'],worked:['\\(u_2 = u_1 + 1 = 1 + 1 = 2\\)','\\(u_3 = u_2 + 2 = 2 + 2 = 4\\)','\\(u_4 = u_3 + 3 = 4 + 3 = 7\\)']},
+  {seq:'',q:'u_{n+1} = u_n^2 - 1, \\; u_1 = 2',ask:'Find \\(u_3\\)',correct:'8',d:['3','15','7'],worked:['\\(u_2 = 2^2 - 1 = 3\\)','\\(u_3 = 3^2 - 1 = 8\\)']},
+  {seq:'',q:'\\text{AP with } S_n = \\dfrac{n}{2}(2a + (n-1)d)',ask:'Prove \\(S_n\\) for \\(a = 1, d = 1\\) gives \\(\\dfrac{n(n+1)}{2}\\)',correct:'Substitute: \\(\\dfrac{n}{2}(2 + n - 1) = \\dfrac{n(n+1)}{2}\\)',d:['Cannot be proved','Only true for even \\(n\\)','Requires induction'],worked:['Put \\(a = 1\\), \\(d = 1\\): \\(2a + (n-1)d = n + 1\\).','Substitute: \\(\\dfrac{n}{2}(2 + n - 1) = \\dfrac{n(n+1)}{2}\\).']},
+  {seq:'',q:'0.\\dot{9} = \\displaystyle\\sum_{r=1}^{\\infty} 9 \\times 10^{-r}',ask:'What does this sum equal?',correct:'1',d:['10','\\dfrac{9}{10}','\\infty'],worked:['\\(0.9 + 0.09 + 0.009 + \\cdots\\) is geometric with first term 0.9 and \\(r = 0.1\\).','\\(S_\\infty = \\dfrac{0.9}{1 - 0.1} = 1\\), so \\(0.\\dot{9}\\) is exactly 1.']},
+  {seq:'',q:'a = 12, \\; S_\\infty = 36',ask:'Find \\(r\\)',correct:'\\dfrac{2}{3}',d:['\\dfrac{1}{3}','3','\\dfrac{1}{2}'],worked:['\\(36 = \\dfrac{12}{1 - r}\\), so \\(1 - r = \\dfrac{12}{36} = \\dfrac{1}{3}\\).','So \\(r = 1 - \\dfrac{1}{3} = \\dfrac{2}{3}\\).']},
+  {seq:'',q:'\\text{GP: } a + ar + ar^2 + \\cdots = \\dfrac{a}{1-r}',ask:'This requires',correct:'\\(|r| < 1\\)',d:['\\(r < 1\\)','\\(r > 0\\)','r \\neq 1'],worked:['\\(r^n\\) shrinks towards 0 only when \\(|r| < 1\\).','Then \\(S_n\\) approaches \\(\\dfrac{a}{1-r}\\), so this requires \\(|r| < 1\\).']},
+  {seq:'',q:'\\displaystyle\\sum_{r=1}^{20} (3r - 2)',ask:'Evaluate',correct:'590',d:['600','570','610'],worked:['An AP: first term \\(3 \\times 1 - 2 = 1\\), last term \\(3 \\times 20 - 2 = 58\\), and 20 terms.','\\(S_{20} = \\dfrac{20}{2}(1 + 58) = 10 \\times 59 = 590\\)']},
+  {seq:'',q:'\\text{An AP has } S_{10} = 120 \\text{ and } S_{20} = 440',ask:'Find \\(S_{30}\\)',correct:'960',d:['880','1000','660'],worked:['From \\(S_{10}\\): \\(2a + 9d = 24\\). From \\(S_{20}\\): \\(2a + 19d = 44\\).','Subtract: \\(10d = 20\\), so \\(d = 2\\) and \\(a = 3\\).','\\(S_{30} = 15(2 \\times 3 + 29 \\times 2) = 15 \\times 64 = 960\\)']},
   // Geometric, moved from GCSE unchanged (SEQ-SOLVER-FIXES, Jon, 3 Nov 2026; sequence-solver-rr-002): a negative
   // ratio, or the ratio from terms that are not next to each other, is beyond GCSE A24 (r a rational number > 0)
-  {seq:'1, -3, 9, -27, ...',ask:'What is the common ratio?',correct:'-3',d:['3','-9','9']},
-  {seq:'\\(a = 2, r = -2\\)',q:'T_n = ar^{n-1}',ask:'Find the 6th term',correct:'-64',d:['64','-32','32']},
-  {seq:'The 3rd term is 12, the 6th term is 96.',q:'',ask:'Find the common ratio',correct:'2',d:['3','4','8']},
-  {seq:'The 2nd term is 6, the 5th term is 162.',q:'',ask:'Find the common ratio',correct:'3',d:['6','27','9']},
-  {seq:'1, __, __, 64',ask:'If geometric, fill the gaps',correct:'1, 4, 16, 64',d:['1, 8, 32, 64','1, 21, 43, 64','1, 16, 32, 64']},
+  {seq:'1, -3, 9, -27, ...',ask:'What is the common ratio?',correct:'-3',d:['3','-9','9'],worked:['Divide a term by the one before: \\(-3 \\div 1 = -3\\), and \\(9 \\div (-3) = -3\\).','Each term is multiplied by \\(-3\\), so the common ratio is \\(-3\\).']},
+  {seq:'\\(a = 2, r = -2\\)',q:'T_n = ar^{n-1}',ask:'Find the 6th term',correct:'-64',d:['64','-32','32'],worked:['Substitute \\(a = 2\\), \\(r = -2\\) and \\(n = 6\\) into \\(T_n = ar^{n-1}\\).','\\(2 \\times (-2)^{6-1} = 2 \\times (-32) = -64\\)']},
+  {seq:'The 3rd term is 12, the 6th term is 96.',q:'',ask:'Find the common ratio',correct:'2',d:['3','4','8'],worked:['From the 3rd term to the 6th is 3 steps, so \\(r^3 = 96 \\div 12 = 8\\).','Since \\(2^3 = 8\\), the common ratio is 2.']},
+  {seq:'The 2nd term is 6, the 5th term is 162.',q:'',ask:'Find the common ratio',correct:'3',d:['6','27','9'],worked:['From the 2nd term to the 5th is 3 steps, so \\(r^3 = 162 \\div 6 = 27\\).','Since \\(3^3 = 27\\), the common ratio is 3.']},
+  {seq:'1, __, __, 64',ask:'If geometric, fill the gaps',correct:'1, 4, 16, 64',d:['1, 8, 32, 64','1, 21, 43, 64','1, 16, 32, 64'],worked:['From 1 to 64 is 3 steps, so \\(r^3 = 64 \\div 1 = 64\\); since \\(4^3 = 64\\), the ratio is 4.','\\(1 \\times 4 = 4\\) and \\(4 \\times 4 = 16\\).','So the sequence is 1, 4, 16, 64.']},
 ]
 };
 
@@ -350,6 +368,7 @@ function showQ(){
     if(MaffsText.hasMaths(v)){b.innerHTML='<span>'+MaffsText.html(v)+'</span>'}else if(v.includes('\\')||v.includes('^')||v.includes('{')){rk(b,v)}else{b.textContent=v}   // the span keeps mixed prose and maths one inline box: bare in the flex button, each run would be a flex item and lose its spaces
     b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});
   MaffsNext.clear(document.getElementById('nextMount'));
+  const wEl=document.getElementById('worked');wEl.hidden=true;wEl.innerHTML='';document.getElementById('game').classList.remove('fb-open');
   MaffsLock.fresh(oEl);   // a new question: a double-click on Start cannot answer it
   qStartTime=Date.now();   // silent: nothing on screen reads it until the results
 }
@@ -363,8 +382,10 @@ function handle(btn,q){
   mfg('question_answered',{game_slug:'sequence-solver',level:level,correct:ok,question_index:qIdx+1,question_text:[q.seq,q.q,q.ask].filter(Boolean).join(' | ')});   // which question, from the bank (QUESTION-ID): analytics.js sends only its hash
   document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;
   // canon 7.6: a right answer moves on briskly; a wrong one leaves the right answer shown until Next.
-  if(ok)MaffsLock.timer(adv,1000);else MaffsNext.wrong({mount:document.getElementById('nextMount'),onAdvance:adv});
+  if(ok)MaffsLock.timer(adv,1000);else{showWorked(q);MaffsNext.wrong({mount:document.getElementById('nextMount'),onAdvance:adv})}
 }
+// A wrong answer: the right option is marked, then its worked solution, then Next (canon 7.6: something worth reading).
+function showWorked(q){const w=document.getElementById('worked');w.innerHTML='<div class="worked-h">How it goes</div><ol class="worked">'+q.worked.map(l=>'<li>'+MaffsText.html(l)+'</li>').join('')+'</ol>';w.hidden=false;document.getElementById('game').classList.add('fb-open')}
 function pip(c){const ps=document.querySelectorAll('.pip');if(ps[qIdx]){ps[qIdx].classList.remove('current');ps[qIdx].classList.add(c)}}
 function adv(){qIdx++;if(qIdx>=totalQ){end();return}document.querySelectorAll('.pip')[qIdx]?.classList.add('current');showQ()}
 // Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
