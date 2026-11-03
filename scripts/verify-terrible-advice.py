@@ -396,7 +396,7 @@ PLANTS = [
     (TAG + 's1-002', 's1-002: core_004 title back to the clown joke (R6)',
      "Savings Maximisation Guru, PennyWise Financial'", "Savings Maximisation Guru, PennyWise Financial (No Relation to the Clown)'"),
     (TAG + 's1-006', 's1-006: gcse_007 12.5 twice (R1)',
-     "Victor is wrong " + D + " x = 625", "Victor is wrong " + D + " x = \\u221a25 = 12.5"),
+     "Victor is wrong: x = 625", "Victor is wrong: x = \\u221a25 = 12.5"),   # DASH-MINUS: the set reads with a colon
     (TAG + 's1-001', 's1-001: gcse_006 add 5 to the last digit (R3)',
      "just put a 5 after the last digit", "just add 5 to the last digit"),
     (TAG + 's1-008', 's1-008: core_004 key a rounded 2.653 as exact (R4)',
