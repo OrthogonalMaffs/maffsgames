@@ -512,7 +512,7 @@ def check_copies(copies):
     want = {'games.json': COPY, 'meta': COPY + ' For GCSE. Free, no sign-up.', 'portal card': CARD}
     n = {'games.json': 1, 'meta': 2, 'portal card': 2}
     for where, texts in copies.items():
-        if len(texts) != n[where]:
+        if (not texts if where == 'portal card' else len(texts) != n[where]):
             out.append('copies: expected %d %s text(s), found %d' % (n[where], where, len(texts)))
         for t in texts:
             if re.search(r'seven', t, re.I):

@@ -12,7 +12,7 @@ been posted to the Sheet, so it checks the payload as it would land in the colum
      section, item and position, in game_slug / filter_type / filter_value;
   2. each toggle fires one toggle-open when it opens, and nothing when it closes;
   3. no click is held up: the listener never calls preventDefault;
-  4. a game card (including one inside the labelled New for 2026/27 section) still
+  4. a game card (including one inside the labelled New and updated section) still
      fires game_card_clicked and never section_clicked;
   5. the Misunderstood Maths card still fires fact_expanded and never section_clicked.
 
@@ -80,7 +80,13 @@ async def main():
             f = os.path.join(ROOT, path.lstrip("/").replace("/", os.sep))
             if os.path.isfile(f):
                 ctype = mimetypes.guess_type(f)[0] or "application/octet-stream"
-                await r.fulfill(status=200, body=open(f, "rb").read(), content_type=ctype)
+                body = open(f, "rb").read()
+                if path == "/index.html":
+                    # Keep the generated badge section populated even after its
+                    # current dates expire. Only the test's routed copy changes.
+                    body = body.replace(b"function mfgToday() { return new Date(); }",
+                                        b"function mfgToday() { return new Date('2026-11-03T12:00:00'); }")
+                await r.fulfill(status=200, body=body, content_type=ctype)
             else:
                 await r.fulfill(status=404, body=b"")
         elif urlsplit(url).netloc == "script.google.com":
@@ -96,7 +102,7 @@ async def main():
         await ctx.route("**/*", route)
         await ctx.add_init_script(INIT)
         page = await ctx.new_page()
-        await page.goto(ORIGIN + "/", wait_until="load")
+        await page.goto(ORIGIN + "/?cb=section-clicks", wait_until="load")
         await page.wait_for_timeout(500)
 
         async def click(selector):
@@ -142,8 +148,8 @@ async def main():
         print("unchanged events")
         check("game card (in a level section)", await click('.games-grid:not([data-cmp-hide]) a.game-card'),
               "game_card_clicked")
-        check("game card (inside new-2026-27)", await click('[data-mfg-section="new-2026-27"] a.game-card'),
-              "game_card_clicked", {"section": "New for 2026/27"})
+        check("game card (inside new-and-updated)", await click('[data-mfg-section="new-and-updated"] a.game-card'),
+              "game_card_clicked", {"section": "New and updated"})
         check("Misunderstood Maths: Read more", await click('#factToggle'), "fact_expanded")
 
         labelled = await page.evaluate("document.querySelectorAll('[data-mfg-item]').length")
