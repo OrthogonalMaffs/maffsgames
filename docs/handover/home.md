@@ -16,7 +16,9 @@
 
 ## 2026-11-03 (home): UPDATES-NOVEMBER
 
-Agent: Codex. Worktree: /home/maffs/mg-updates-november. Branch: codex/updates-november. Base: 9e17ddfc. Next: checks, PR, guarded merge and main watch. November uses Jon's approved wording and existing markup; The 6 P's gains its 27 Oct New badge; AGENTS.md requires dated updates in visible-change PRs, with rationale in canon §12. No checker or game changes. Initial STOP for missing dash exception mechanism resolved by Amendment 1: updates/ is outside that check's scope. Open PRs #518 and #424 touch home.md only. No SR decision needed; SR-27 does not apply. Contract and amendment saved verbatim.
+Agent: Codex. Worktree: /home/maffs/mg-updates-november. Branch: codex/updates-november. Base: 9e17ddfc; implementation f1d26d4f. Checked locally. Next: PR, guarded merge and main watch. November uses Jon's approved wording and existing markup; The 6 P's gains its 27 Oct New badge; AGENTS.md requires dated updates in visible-change PRs, with rationale in canon §12. No checker or game changes. Initial STOP for missing dash exception mechanism resolved by Amendment 1: updates/ is outside that check's scope. Open PRs #518 and #424 touch home.md only. No SR decision needed; SR-27 does not apply. Contract and amendment saved verbatim.
+
+Full check-changed.py: 56/56 passed in 638s (12 heavy serial, 44 light), summary "All selected checks passed. Push, and CI runs the rest." Log .claude/bg-1793721466846.log; detached launcher did not retain the exit status. Seven standard CI deferrals: four page-load shards (first also hang scan), bank extraction, ledger lint and leaderboard coverage. Dash-minus selftest 31/31; check 0 hits across 134 files, exit 0. New-and-updated passes in the full run; independent metadata assertion confirms I Found a Mark, Pies, The 6 P's first to third. November game links and UTF-8 punctuation verified; October and earlier byte-identical; git diff --check clean. No answer-bearing change.
 
 Record: agent Codex; wall n/a; review cycles 0; amendments 1; usage n/a.
 
