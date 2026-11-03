@@ -2600,6 +2600,15 @@ be removed. New listings without approval fail. This applies §7.8.4 without blo
 
 ## RULEBOOK rationale and retired procedures (2 Nov 2026)
 
+### PIES-SIGNOFF-AND-PRIMARY-FF (Jon, 3 Nov 2026)
+
+Agents load AGENTS.md from the primary checkout before creating a task worktree. Forbidding pulls into
+the primary left that checkout at its clone date: Codex loaded Saturday's rules on 1 and 2 Nov and stopped
+twice on the retired lane-notes file. The cloud lane encountered the same stale-rulebook class on 3 Nov
+when /clear retained its original clone (CLOUD-LEAN). The primary remains unedited, but is fast-forwarded
+before every agent session with `git -C ~/maffsgames pull --ff-only`; a non-fast-forward stops. Task work
+still belongs in a new worktree, and existing task branches are never pulled or merged into.
+
 The operational home is AGENTS.md; topic-specific instructions live under docs/rules/ and are selected by its trigger table. This reference records why and what changed, rather than giving alternative operational instructions.
 
 ### Why consolidate and limit startup files

@@ -2,9 +2,21 @@
 
 **Queue (cross-lane facts; never archived)**
 
+- PIES-SIGNOFF-AND-PRIMARY-FF: home/Codex, codex/pies-signoff, /home/maffs/mg-pies-signoff; contract `docs/handover/contracts/2026-11-03-pies-signoff-and-primary-ff.md`. Small, merge on green; TODO-TRIM starts after completion.
+
 - LOOK-STAGE: home/Codex, codex/look-stage, /home/maffs/mg-look-stage, PR #638; contract `docs/handover/contracts/2026-11-02-look-stage.md`. Concurrent PIES-LOOK/ESSENTIALS-ART authorised by Jon; roster, canon and registration reserved here. Pies remains warned until Jon's explicit look sign-off, irrespective of its artwork merge. Shared: stop at green Gate for Project Claude review and Jon's “merge”.
 - RULEBOOK: home/Codex, codex/rulebook, /home/maffs/mg-rulebook, PR #635; Shared. Amendment 1 findings addressed on the same branch; stop at Gate green for re-review and Jon's “merge”. Two lanes are explicitly authorised for this task.
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
+
+## 2026-11-03 (home): PIES-SIGNOFF-AND-PRIMARY-FF
+
+Agent: Codex. Worktree: /home/maffs/mg-pies-signoff. Branch: codex/pies-signoff. Base: 560b6b17. Next: check-changed.py, PR, guarded merge and main watch; Small, no review hold.
+
+Recorded Jon's 3 Nov look approval for Pies and emptied the warning list. Primary fast-forward is the first startup command; AGENTS.md's short rule points to canon §12 for the stale-rulebook history. Other roster rows, game files and CLOUD-LEAN rules unchanged.
+
+Slip: relative roster patch landed in primary; stopped, then Jon's 3 Nov recovery moved only that sign-off to this worktree, passed the checker and restored a clean primary.
+
+Look sign-off check: 101 listed games, 0 warnings, 0 failures. Context-size check passed before this entry. No answer-bearing change. No SR decision needed; SR-27 exception does not apply. Contract STOP IF conditions not hit. Review cycles 0; recovery ruling 1. Record follows at review hand-off or STOP.
 
 ## 2026-11-02 (home): LOOK-STAGE
 
