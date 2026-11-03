@@ -188,7 +188,7 @@ Use `mfg()` not `gtag('event',...)`. The wrapper sends to both GA4 and Sheets.
 | --- | --- | --- |
 | `game_started` | First question presented | game_slug, level, mode (if applicable) |
 | `mode_selected` | Mode chosen (multi-mode games only) | game_slug, mode |
-| `question_answered` | Every answer submission | game_slug, level, question_index (1-based), correct |
+| `question_answered` | Every answer submission | game_slug, level, question_index (1-based), correct; question_id for a game moved onto it (below, from 3 Nov 2026) |
 | `game_completed` | Results screen reached | game_slug, level, score, questions_answered, questions_correct |
 | `personal_best_set` | New PB recorded in localStorage | game_slug, level, score, previous_best |
 | `game_abandoned` | The page is left (pagehide) after `game_started` with no `game_completed`; once per game (automatic via analytics.js). **Since 11 Oct 2026; before then it fired whenever the page was hidden** | game_slug, level, question_index |
@@ -208,6 +208,25 @@ Use `mfg()` not `gtag('event',...)`. The wrapper sends to both GA4 and Sheets.
 - An escape room sends `question_answered` for lock attempts only, numbered 1 to 3; searching the room
   sends nothing (until 11 Oct 2026 each first search was a correct answer at question_index 0)
 - Do not add additional data collection without explicit approval from Jon
+
+**Which question: `question_id` (Jon, 3 Nov 2026, contract QUESTION-ID; Jon approved the field that day).**
+`question_index` is the position in a shuffled round, not the question, so no game's hard questions could be found from
+the data. A game now names the question with one of two fields on `question_answered`, read by `analytics.js`:
+`question_id`, the game's own stable id, sent as it is (cut to 40 characters); or `question_text`, the prompt as shown,
+from the game's own bank, which `analytics.js` turns into `question_id` = `h` + the 8-hex-digit FNV-1a hash of the
+normalised text (NFC, each run of whitespace to one space, trimmed, UTF-8). **The text itself is never sent, and nothing a
+student types is ever passed as `question_text`.** With neither field the event is unchanged.
+- **The Sheet:** column R, `question_id`, after `seq` (`docs/apps-script-endpoint.js`, version `2026-11-03-a`). Live once Jon
+  redeploys the endpoint (`docs/apps-script-redeploy.md`; the first post writes the header); rows before that have it blank.
+- **GA4:** sent as an event parameter on `question_answered`. **Jon registers it as an event-scoped custom dimension**
+  (Admin, Custom definitions, parameter `question_id`); until then GA4 receives it but does not report it, and GA4 reports
+  only from the day it is registered.
+- **Reading it:** `python -X utf8 scripts/decode-question-ids.py <slug>` prints each id beside its question, for a game
+  whose bank is static (Sequence Solver first).
+- **Moving games onto it, warn first (§7.8.4):** `scripts/check-question-id.py` (CI) fails a site whose `question_answered`
+  names no question unless it is on `scripts/question-id-warn.json` (shrink-only; seeded with all 108 other sites), fails a
+  `question_text` that reads a typed `.value`, holds each decodable game's page to its recipe and its ids to no collision,
+  and proves in Chromium that the text reaches neither GA4 nor the Sheet. Reason: §12, QUESTION-ID.
 
 ### Portal events (root `index.html` only — not games)
 
@@ -3274,3 +3293,25 @@ Nothing checked for it.
 - **Verifiers read the punctuation too.** Three verifiers found an option's verdict by its dash (Core Maths 2B's SR-31
   lead, the muppet games' "is correct —"); with colons they would have gone quietly blind, not failed. They read both
   separators now, and eleven quoted options were synced to their new text.
+
+## QUESTION-ID: hard questions by question, not by position (Jon, 3 Nov 2026)
+
+The reason for §1.3's `question_id`. Sequence Solver is the hardest game on the Sheet in both logging eras, and its
+re-read (SEQ-SOLVER-REREAD, #647) found every question answerable as keyed, so the question became which questions
+students fail. The Sheet could not say: `question_answered` carried `question_index`, a position in a shuffled round, so
+the Dashboard's "Hardest Questions" table ranked positions, and no game's difficult questions could be found from the
+data. The privacy page already gave the purpose ("which questions students find difficult").
+
+- **One shared layer, not 109 call sites.** Every game sends `question_answered` its own way, so the rule lives in
+  `analytics.js`, which every event already passes, and the games move onto it one by one, warn first. The hash is
+  computed there, not in each game, so no game can send the text by mistake.
+- **A hash, not the text.** The text is the game's own, never typed, but a hash keeps the payload small and the rule simple
+  to check: the text never leaves the page. The decoder rebuilds the text from the bank and hashes it the same way;
+  the check compares the two functions in Chromium on every Sequence Solver question and on awkward strings (accents in
+  both Unicode forms, a no-break space, an emoji), so they cannot drift apart. FNV-1a's 32 bits make a collision inside
+  one game's few hundred questions unlikely, not impossible: the check fails on one, with a real colliding pair planted.
+- **Appended, never inserted.** `question_id` is the Sheet's last column, so no existing column moves (the column-order
+  rule, `docs/apps-script-redeploy.md`).
+- **Privacy wording (Amendment 1, Jon, 3 Nov 2026).** The contract's line, "Nothing a student types is ever sent", would
+  have contradicted the same page: the portal logs search-box text and leaderboard initials are typed. The line reads
+  "Which question was asked, as an anonymous code. Answers a student types are never sent."

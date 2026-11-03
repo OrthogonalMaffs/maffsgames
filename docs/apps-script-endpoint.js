@@ -27,7 +27,13 @@ const EXPECTED_HEADERS = [
   //               arrival time, and events race, so client_ts + seq is the only
   //               reliable ordering. Prefer it for any per-question analysis.
   //   seq       — per-page-load monotonic counter, breaks same-millisecond ties.
-  'client_ts', 'seq'
+  'client_ts', 'seq',
+  // Appended 2026-11-03 (contract QUESTION-ID) — also at the end, for the same reason. Rows written before
+  // the redeploy have it blank.
+  //   question_id — which question a question_answered event was about: the game's own id, or "h" + the
+  //                 8-hex FNV-1a hash of the prompt's text (analytics.js; the text itself is never sent).
+  //                 scripts/decode-question-ids.py <slug> maps an id back to its question.
+  'question_id'
 ];
 
 // ============================================================
@@ -46,7 +52,8 @@ function doPost(e) {
       cellValue(data.attempts), cellValue(data.score), cellValue(data.questions_answered),
       cellValue(data.questions_correct), cellValue(data.previous_score),
       cellValue(data.difficulty), cellValue(data.filter_type), cellValue(data.filter_value),
-      cellValue(data.client_ts), cellValue(data.seq)
+      cellValue(data.client_ts), cellValue(data.seq),
+      cellValue(data.question_id)
     ]);
 
     var rowCount = sheet.getLastRow();
@@ -63,7 +70,7 @@ function doPost(e) {
 // Bump SCRIPT_VERSION whenever this file is redeployed. Hitting the /exec URL
 // in a browser then tells you which code is actually live — without it there is
 // no way to confirm a deploy landed, or which of several projects serves the URL.
-const SCRIPT_VERSION = '2026-10-10-a';
+const SCRIPT_VERSION = '2026-11-03-a';
 
 function doGet(e) {
   return jsonResponse({

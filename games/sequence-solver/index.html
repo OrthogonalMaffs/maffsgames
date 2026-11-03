@@ -365,7 +365,7 @@ function handle(btn,q){
   document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.correct)b.classList.add('correct')});
   if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));streak++;correctCount++;if(streak>bestStreak)bestStreak=streak;pip('done')}
   else{btn.classList.add('wrong');streak=0;pip('fail')}
-  mfg('question_answered',{game_slug:'sequence-solver',level:level,correct:ok,question_index:qIdx+1});
+  mfg('question_answered',{game_slug:'sequence-solver',level:level,correct:ok,question_index:qIdx+1,question_text:[q.seq,q.q,q.ask].filter(Boolean).join(' | ')});   // which question, from the bank (QUESTION-ID): analytics.js sends only its hash
   document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;
   // canon 7.6: a right answer moves on briskly; a wrong one leaves the right answer shown until Next.
   if(ok)MaffsLock.timer(adv,1000);else MaffsNext.wrong({mount:document.getElementById('nextMount'),onAdvance:adv});
