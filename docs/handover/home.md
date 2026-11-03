@@ -2,7 +2,7 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- UPDATES-NOVEMBER: home/Codex, codex/updates-november, /home/maffs/mg-updates-november; contract docs/handover/contracts/2026-11-03-updates-november.md (Amendment 1). Claims updates/index.html, index.html and AGENTS.md; Small, merge on green.
+- UPDATES-NOVEMBER: home/Codex, codex/updates-november, /home/maffs/mg-updates-november, PR #651; contract docs/handover/contracts/2026-11-03-updates-november.md (Amendment 1). Small, merge on green; final merge/main/cleanup results in PR report.
 
 - NEW-AND-UPDATED: home/Codex claims index.html on codex/new-and-updated, /home/maffs/mg-new-and-updated, PR #648; contract docs/handover/contracts/2026-11-03-new-and-updated.md. Full checks 56/56, exit 0. Shared: green Gate then Project Claude review and Jon's merge. Fresh base ffcd9a9b includes DASH-MINUS #646; verifier Amendment 1 applied.
 
