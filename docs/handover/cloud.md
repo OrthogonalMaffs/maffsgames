@@ -63,6 +63,14 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 **Every PR:** no `check-changed.py` in the cloud (AGENTS.md, CLOUD-LEAN); merge only via `python scripts/merge-pr.py <n>
 --watch --wait 3600` (needs a green Gate and main, §7.8.3) and report its last line.
 
+## 2026-11-03 (cloud): SEQ-SOLVER-REREAD (`docs/handover/contracts/2026-11-03-seq-solver-reread.md`, Shared; stops at a green Gate for Project Claude's review and Jon's "merge")
+
+- Agent: Claude Code. Primary checkout `/home/user/maffsgames`, branch `claude/nice-babbage-15fc7o` (from main 39d6f7c; first commit 1d737a6 closes DASH-MINUS).
+- Read: all 154 items (ks3 50, gcse 50, alevel 54), each rendered at 375x667 with the pinned KaTeX and screenshotted; a full 20-question round played at 375x667 (Next shown on every wrong answer, results reached, 20 events). `verify-sequence-solver.py`: PASS, 6/6 plants caught.
+- No item is keyed wrong, none has a second correct option, none lacks the information to reach its key: nothing CRITICAL, so no SR-30 fix and no game or verifier change.
+- Recorded `sequence-solver-rr-001`..`-007` (2 MEDIUM, 5 LOW, all open). **For Jon:** rr-002 (five GCSE geometric items beyond GCSE A24: negative ratio, ratio from non-adjacent terms) is one shape across items, so reported as a class (STOP IF), not fixed; rr-001 (visible Time that feeds the score, against Hidden Count-Up) is timer and scoring code, DO NOT TOUCH. r-003 (MEDIUM, JC) stays open.
+- **State:** pushed; PR to open, Gate pending. Next: QUESTION-ID, after this merges (both touch `games/sequence-solver/`).
+
 ## 2026-11-03 (cloud): DASH-MINUS (`docs/history/contracts/2026-11-03-dash-minus.md`, Shared; stops at a green Gate for Project Claude's review and Jon's "merge")
 
 - Agent: Claude Code. Primary checkout `/home/user/maffsgames`, branch `claude/quirky-hypatia-sivu18` (from main 560b6b1; first commit 5e30fb2 closes CLOUD-LEAN).
