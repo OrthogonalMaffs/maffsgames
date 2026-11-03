@@ -10,13 +10,15 @@
 
 ## 2026-11-03 (home): PIES-SIGNOFF-AND-PRIMARY-FF
 
-Agent: Codex. Worktree: /home/maffs/mg-pies-signoff. Branch: codex/pies-signoff. Base: 560b6b17. Next: check-changed.py, PR, guarded merge and main watch; Small, no review hold.
+Agent: Codex. Worktree: /home/maffs/mg-pies-signoff. Branch: codex/pies-signoff. Base: 560b6b17. Implementation: 494f7055; check report: c104cd86. PR #644: https://github.com/OrthogonalMaffs/maffsgames/pull/644 . Checked locally; next: green Gate, guarded merge and main watch; Small, no review hold. Final merge/main/cleanup results are in the PR report.
 
 Recorded Jon's 3 Nov look approval for Pies and emptied the warning list. Primary fast-forward is the first startup command; AGENTS.md's short rule points to canon §12 for the stale-rulebook history. Other roster rows, game files and CLOUD-LEAN rules unchanged.
 
 Slip: relative roster patch landed in primary; stopped, then Jon's 3 Nov recovery moved only that sign-off to this worktree, passed the checker and restored a clean primary.
 
-Look sign-off check: 101 listed games, 0 warnings, 0 failures. Context-size check passed. Full check-changed.py: 149/149 in 478s, exit 0 (5 heavy serial, 144 light); 71 indirect heavy roster checks and seven standard checks deferred to CI. Log: .claude/bg-1793708922180.log. Implementation: 494f7055. No answer-bearing change. No SR decision needed; SR-27 exception does not apply. Contract STOP IF conditions not hit. Review cycles 0; recovery ruling 1. Record follows at Gate green.
+Look sign-off check: 101 listed games, 0 warnings, 0 failures. Context-size check passed. Full check-changed.py: 149/149 in 478s, exit 0 (5 heavy serial, 144 light); 71 indirect heavy roster checks and seven standard checks deferred to CI. Log: .claude/bg-1793708922180.log. No answer-bearing change. No SR decision needed; SR-27 exception does not apply. Contract STOP IF conditions not hit.
+
+Record: agent Codex; wall n/a (contract-receipt timestamp unavailable; no estimate); review cycles 0; amendments 1; usage n/a.
 
 ## 2026-11-02 (home): LOOK-STAGE
 
