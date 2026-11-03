@@ -20,6 +20,10 @@
 
 Agent: Codex. Worktree: /home/maffs/mg-calc-dock-wide. Branch: codex/calc-dock-wide. Base: 264e011f (UPDATES-NOVEMBER #651 merged). Next: before measurements, shared dock fix, outside-card regression and old-rule plant, after measurements, checks and PR. Identity correct; clean worktree before first edit; open PR #652 is authorised cloud work and does not touch calculator.js/css (#518/#424 home.md only). Root cause confirmed: percentage left assumes the card contains the mount; sibling mounts use a wider containing block. No SR decision needed. Awaiting Jon's wording for the now-required updates line. No game or Gate files will change.
 
+Implemented: dock() measures the rail at left zero in its actual containing block, then places it at the host right plus D.gap; the closed rail's hidden state is restored synchronously. Room test, panel width, sticky CSS, resizing debounce and non-docked branch unchanged. New sibling-mount fixture has a positioned ancestor with a border, tests 1280/1920/2560 through resize, and restores the old percentage-left statement through plant_common; plant CAUGHT. Existing cases unchanged. No game or CSS changes.
+
+Targeted calculator test PASS, exit 0 (65 basic expressions, 27 scientific, 16 key sequences, Chromium/WebKit phone behaviour, toggle forms, existing five dock plants and new old-rule plant). Before/after audit: all 14 mounts on 13 pages at 1920 and 2560 (28 rows each), calculator open in play, pinned real fonts and stub server. Every after gap is 12px, panel inside viewport, scroll 0; card right and docked state unchanged. The scratch audit needed startup corrections for Pythagoras' hypotenuse step, Split It's mode and stage worked examples; no game changes. Sequence Solver screenshots captured before/after. Full check-changed running; awaiting approved updates wording.
+
 Record: agent Codex; wall n/a; review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-03 (home): UPDATES-NOVEMBER

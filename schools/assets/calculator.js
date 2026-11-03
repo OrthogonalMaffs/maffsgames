@@ -363,7 +363,16 @@
       var on = !!host && room >= D.min;
       el.classList.toggle('docked', on);
       rail.style.width = on ? Math.min(D.max, Math.floor(room)) + 'px' : '';
-      rail.style.left = on ? 'calc(100% + ' + D.gap + 'px)' : '';
+      rail.style.left = '';
+      if (on) {
+        // The mount may be outside the card. Measure zero in the rail's actual containing block,
+        // including its border/scroll offset, even when the calculator is currently closed.
+        var hidden = rail.hidden;
+        rail.hidden = false;
+        rail.style.left = '0px';
+        rail.style.left = (host.getBoundingClientRect().right + D.gap - rail.getBoundingClientRect().left) + 'px';
+        rail.hidden = hidden;
+      }
       return on;
     }
     function compact() {
