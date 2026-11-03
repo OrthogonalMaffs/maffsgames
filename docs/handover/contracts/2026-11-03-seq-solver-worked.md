@@ -4,6 +4,12 @@ Saved verbatim on receipt (canon §7.8.2, CONTRACTS-FOLDER), with SEQ-SOLVER-FIX
 hand-off of 3 Nov 2026, 16:05 (the hand-off note is in `2026-11-03-seq-solver-fixes.md`). Starts after
 SEQ-SOLVER-FIXES merges.
 
+**Earlier wording (superseded):** #650 (main b18b064, 3 Nov) stored an earlier text of this contract from the archived
+session. The text below is Jon's 16:05 hand-off, which replaces it; the earlier text stays in git history at b18b064.
+
+Jon, 3 Nov (recorded with the earlier wording): "This one next, although context may become an issue before you get
+to this."
+
 ## Contract (verbatim)
 
 CONTRACT: SEQ-SOLVER-WORKED

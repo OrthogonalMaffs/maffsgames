@@ -5,6 +5,12 @@ starting only after the previous one merges: 1 SEQ-SOLVER-FIXES, 2 SEQ-SOLVER-WO
 (`docs/handover/contracts/2026-11-03-seq-solver-worked.md`), 3 DASHBOARD-METRICS
 (`docs/handover/contracts/2026-11-03-dashboard-metrics.md`). Each is Shared tier.
 
+**Earlier wording (superseded):** #650 (main b18b064, 3 Nov) stored an earlier text of this contract from the archived
+session. The text below is Jon's 16:05 hand-off, which replaces it; the earlier text stays in git history at b18b064.
+
+In it STOP IF 2 was hit (most Hidden Count-Up games still time the score; new leaderboard key?); Jon's 16:05 text
+rules option (a), the policy text, with the same leaderboard key, and asks for the drift table in the PR.
+
 ## Hand-off note (verbatim)
 
 FRESH CLOUD SESSION — HANDOVER (Jon, 3 Nov 2026, 16:05)
