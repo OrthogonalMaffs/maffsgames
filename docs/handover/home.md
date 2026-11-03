@@ -2,7 +2,9 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- UPDATES-NOVEMBER: home/Codex, codex/updates-november, /home/maffs/mg-updates-november, PR #651; contract docs/history/contracts/2026-11-03-updates-november.md (Amendment 1), archived for merge. Small, merge on green; final merge/main/cleanup results in PR report.
+- CALC-DOCK-WIDE: home/Codex, codex/calc-dock-wide, /home/maffs/mg-calc-dock-wide, draft PR #653; contract docs/handover/contracts/2026-11-03-calc-dock-wide.md. Claims calculator.js and test-calculator-js.py; Shared, stop at Gate green for review and Jon's merge. Awaiting Jon's updates wording. Jon explicitly permits concurrency with SEQ-SOLVER-FIXES, SEQ-SOLVER-WORKED and DASHBOARD-METRICS.
+
+- UPDATES-NOVEMBER: DONE #651, 264e011f; main run 41674541301 GREEN, guarded merge exit 0; end-task.py removed branch/worktree, exit 0. Contract docs/history/contracts/2026-11-03-updates-november.md; final report in PR.
 
 - NEW-AND-UPDATED: home/Codex claims index.html on codex/new-and-updated, /home/maffs/mg-new-and-updated, PR #648; contract docs/handover/contracts/2026-11-03-new-and-updated.md. Full checks 56/56, exit 0. Shared: green Gate then Project Claude review and Jon's merge. Fresh base ffcd9a9b includes DASH-MINUS #646; verifier Amendment 1 applied.
 
@@ -14,7 +16,27 @@
 - RULEBOOK: home/Codex, codex/rulebook, /home/maffs/mg-rulebook, PR #635; Shared. Amendment 1 findings addressed on the same branch; stop at Gate green for re-review and Jon's “merge”. Two lanes are explicitly authorised for this task.
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-03 (home): CALC-DOCK-WIDE
+
+Agent: Codex. Worktree: /home/maffs/mg-calc-dock-wide. Branch: codex/calc-dock-wide. Base: 264e011f (UPDATES-NOVEMBER #651 merged). Next: before measurements, shared dock fix, outside-card regression and old-rule plant, after measurements, checks and PR. Identity correct; clean worktree before first edit; open PR #652 is authorised cloud work and does not touch calculator.js/css (#518/#424 home.md only). Root cause confirmed: percentage left assumes the card contains the mount; sibling mounts use a wider containing block. No SR decision needed. Awaiting Jon's wording for the now-required updates line. No game or Gate files will change.
+
+Implemented: dock() measures the rail at left zero in its actual containing block, then places it at the host right plus D.gap; the closed rail's hidden state is restored synchronously. Room test, panel width, sticky CSS, resizing debounce and non-docked branch unchanged. New sibling-mount fixture has a positioned ancestor with a border, tests 1280/1920/2560 through resize, and restores the old percentage-left statement through plant_common; plant CAUGHT. Existing cases unchanged. No game or CSS changes.
+
+Targeted calculator test PASS, exit 0 (65 basic expressions, 27 scientific, 16 key sequences, Chromium/WebKit phone behaviour, toggle forms, existing five dock plants and new old-rule plant). Before/after audit: all 14 mounts on 13 pages at 1920 and 2560 (28 rows each), calculator open in play, pinned real fonts and stub server. Every after gap is 12px, panel inside viewport, scroll 0; card right and docked state unchanged. The scratch audit needed startup corrections for Pythagoras' hypotenuse step, Split It's mode and stage worked examples; no game changes. Sequence Solver screenshots captured before/after. Full check-changed running; awaiting approved updates wording.
+
+Full corrected check-changed.py: 76/76 passed in 369s, exit 0, 6 heavy serial and 70 light; log .claude/bg-1793723836837.log. Twenty-one indirect heavy checks selected through calculator.js deferred to CI: Pythagoras 3, The 6 P's 2, Take a Walk 2, Burst 4, Squared Squirrel 3 (parts 1,3,4), Pies 2, Formula Unlocked, Growth and Decay, Unit Converter, level resolver in play 2. Seven standard deferrals: four page-load shards (first also hang scan), bank extraction, ledger lint, leaderboard coverage. Initial run caught screenshot files in an unexcluded folder; moved only those requested artifacts to existing excluded docs/screenshots/calc-dock-wide. Publish-scope selftest/check passes after this one fix; superseded full run stopped through end-task.py's registry. No publishing rule or Gate file changed. git diff --check and UTF-8 reads pass. Next: draft PR with table/screenshots; Jon's updates wording; Gate green, then Shared review hold. No merge authority yet.
+
+Resumed 3 Nov by Codex in the same clean worktree at 69712350; branch history matches this entry. Jon supplied the exact November New entry, relayed Project Claude's approval and explicitly said merge when Gate is green. Added the wording newest first. Contract amendment 1 records this instruction. Next: push, ready for review, guarded merge/main watch, end-task; stop without starting PACKS-CANON. Final merge/main/cleanup results will be recorded in the PR report.
+
+STOP, 3 Nov: approved updates entry pushed at e900a6a8; PR marked ready using the GitHub connector. GitHub REST reports mergeable=false, mergeable_state=dirty against current main; no check runs on the new head. Guarded merge watcher launched through bg.py, then stopped through end-task.py's registry on discovering the conflict. No merge or cleanup. Next: Jon's ruling on resolving the conflict; retain this worktree/branch. PACKS-CANON not started.
+
+Jon's conflict-resolution Amendment 1, 3 Nov, supersedes the STOP: merge origin/main without rebase or force push; preserve all updates and handovers, stop for any other conflict. Merged origin/main af8e7372; only updates/index.html conflicted. Kept the calculator line first on 3 Nov, followed by every main entry in its original order; handovers merged without conflict. No implementation changes. Next: push, Gate, authorised guarded merge/main watch and cleanup; stop. Final lifecycle results in the PR report.
+
+Record: agent Codex; wall n/a; review cycles 1; amendments 2; usage n/a.
+
 ## 2026-11-03 (home): UPDATES-NOVEMBER
+
+Final state: MERGED and live #651, squash 264e011f. Guard last line: `main 264e011 run 41674541301: GREEN`, exit 0. Pages deployment passed. end-task.py exit 0 removed codex/updates-november and /home/maffs/mg-updates-november; registered processes already gone. PR report updated; architect review remains after merge (Small). Previous checkpoint below is retained as the local-check record.
 
 Agent: Codex. Worktree: /home/maffs/mg-updates-november. Branch: codex/updates-november. Base: 9e17ddfc; implementation f1d26d4f. Checked locally. Next: PR, guarded merge and main watch. November uses Jon's approved wording and existing markup; The 6 P's gains its 27 Oct New badge; AGENTS.md requires dated updates in visible-change PRs, with rationale in canon §12. No checker or game changes. Initial STOP for missing dash exception mechanism resolved by Amendment 1: updates/ is outside that check's scope. Open PRs #518 and #424 touch home.md only. No SR decision needed; SR-27 does not apply. Contract and amendment saved verbatim.
 
