@@ -161,7 +161,7 @@ Crawlers still reach GA4 from the live host; filtering them is a separate decisi
 | Spreadsheet name | MaffsGames Events |
 | Location | Jon's Google Drive (Jon, owner) |
 | Apps Script code | docs/apps-script-endpoint.js |
-| Dashboard tab | Auto-rebuilds daily with 5 charts |
+| Dashboard tab | Auto-rebuilds daily: 4 charts and the tables in §1.4 |
 | Daily email report | 7am UK time to Jon (owner) |
 | Row limit protection | Auto-deletes oldest 10% at 9M rows |
 
@@ -300,9 +300,12 @@ after that date is the redirect stub (a hop, not a visit).
 
 1. **Top Games** — bar chart, 7-day, sorted by starts
 2. **Level Split** — pie chart, KS3/GCSE/A-Level/Core/L4/Further
-3. **Accuracy by Game** — bar chart, sorted lowest first (hardest games)
-4. **Hardest Questions** — table, top 15 lowest accuracy (min 5 attempts)
-5. **Daily Activity** — line chart, 30-day trend
+3. **Accuracy by Game** — bar chart, question games only, at least 30 marked answers, sorted lowest first; overall accuracy from question games only
+4. **Hardest Questions** — table, question games only, by game + level + `question_id` (decode with `scripts/decode-question-ids.py`), at least 10 attempts; rows without a `question_id` left out, and the heading counts the games that send one
+5. **Escape Rooms** — table, per room: started, escaped (`game_completed`), escape rate, attempts per lock opened (marked answers ÷ correct answers), lowest escape rate first
+6. **Daily Activity** — line chart, 30-day trend
+
+The daily email carries the same answer sections for yesterday. **Each kind of game by its own measure** (contract DASHBOARD-METRICS, Jon, 3 Nov 2026; reason in §12): a game's kind is its optional `"answer_kind"` in `data/games.json`, `"question"` (the default) or `"shot"` (`correct` means an attempt hit, not that an answer was right: Trig Wars and Bearing Blitz); an escape room is any slug starting `escape-`. Shot games are named on one line and left out of accuracy. The script reads games.json from `https://raw.githubusercontent.com/OrthogonalMaffs/maffsgames/main/data/games.json` once per run (Jon, Amendment 2: `data/` stays unpublished, §7.7); if that fails, every game counts as a question game and the email and Dashboard say so in one line. A blank `correct` written before 2026-09-29 20:00 UTC counts as wrong (the falsy bug stored wrong answers blank); after it a blank is not marked (Prisoner's Dilemma sends `correct: null`). Tested by `scripts/test-apps-script-report.py` (CI).
 
 ---
 
@@ -2613,6 +2616,10 @@ all — ask for JPGs.**
 ---
 
 # 12. Engineering reference (moved from CLAUDE.md, 8 Oct 2026, contract CTX)
+
+## DASHBOARD-METRICS (Jon, 3 Nov 2026)
+
+The reason for §1.4's measures. The dashboard ranked every game by accuracy (minimum 5 answers) and named its hardest questions by round position. An escape room logs `correct` once per lock opened and every wrong try, so a room that is escaped scored about 25-35%; Trig Wars logs a hit as correct. Both filled the bottom of the accuracy table with nothing wrong (Project Claude checked Rugby Mud's and The Rightful King's answers). Round position names no question, because games shuffle; `question_id` does (QUESTION-ID, #649). Five answers let one student top the table, so the minimum is 30 (10 attempts for a question). The fix sits at the class, not the row: each game's kind is in its one metadata record, never a list of slugs in the script. `data/` is not published (§7.7), so Jon chose to read games.json from GitHub rather than publish it (Amendment 2). Wrong answers before 29 Sep 2026 ~20:00 UTC were stored blank by the old `x || ''`, so any figure that ignores blanks would read 100% for that era.
 
 ## UPDATES-NOVEMBER (Jon, 3 Nov 2026)
 

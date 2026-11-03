@@ -83,3 +83,10 @@ with the repo file in full for QUESTION-ID's redeploy, and /exec reports 2026-11
 newer deployed version is superseded. DASHBOARD-METRICS may edit the repo file as its contract says; Jon will grant the
 "connect to an external service" permission at redeploy. The older queue items in the cloud handover stay parked:
 do not start any of them.
+
+## Amendment 2 (Jon, 3 Nov 2026, verbatim)
+
+Ruling (Jon, 3 Nov), DASHBOARD-METRICS Amendment 2: option (b). Fetch
+https://raw.githubusercontent.com/OrthogonalMaffs/maffsgames/main/data/games.json (UrlFetchApp, cached for the run).
+Do not publish data/ or change the site's publish rules. The failed-fetch fallback stays as written (every game
+treated as "question", one line saying so). Proceed.

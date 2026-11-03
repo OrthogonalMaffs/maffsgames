@@ -70,7 +70,7 @@ function doPost(e) {
 // Bump SCRIPT_VERSION whenever this file is redeployed. Hitting the /exec URL
 // in a browser then tells you which code is actually live — without it there is
 // no way to confirm a deploy landed, or which of several projects serves the URL.
-const SCRIPT_VERSION = '2026-11-03-a';
+const SCRIPT_VERSION = '2026-11-03-b';
 
 function doGet(e) {
   return jsonResponse({
@@ -79,6 +79,151 @@ function doGet(e) {
     sheet: SHEET_NAME,
     version: SCRIPT_VERSION
   });
+}
+
+// ============================================================
+//  WHAT A ROW MEANS — the report's model (contract DASHBOARD-METRICS, Jon, 3 Nov 2026)
+// ============================================================
+// Each kind of game is measured by what its question_answered means:
+//   question — correct says whether an answer was right: accuracy, and hardest questions by question_id;
+//   shot     — correct says whether an attempt hit (Trig Wars): left out of accuracy, named on one line;
+//   room     — an escape room logs correct once per lock opened and every wrong try: escapes, and attempts per lock.
+// A game's kind lives in its one metadata record, data/games.json ("answer_kind", "question" when absent), read from
+// GitHub at report time (Jon, Amendment 2: data/ is not published on the site). A room is any slug starting
+// "escape-". Never a list of slugs in this file.
+const GAMES_JSON_URL = 'https://raw.githubusercontent.com/OrthogonalMaffs/maffsgames/main/data/games.json';
+const RPT_MIN_GAME_ANSWERS = 30;      // accuracy by game: one student's session cannot fill the table
+const RPT_MIN_QUESTION_ATTEMPTS = 10; // hardest questions
+// Before this instant a wrong answer was stored blank (cellValue's falsy bug, fixed 29 Sep 2026 about 20:00 UTC), so
+// a blank `correct` from then counts as wrong. After it, a blank means the item has no right answer (Prisoner's
+// Dilemma sends correct: null) and the row is not marked.
+const RPT_BLANK_WAS_WRONG_UNTIL = new Date('2026-09-29T20:00:00Z');
+var rptKindsCache = null;
+
+// games.json, fetched once per run. If the fetch fails, every game is treated as a question game and the report
+// says so in one line (Jon's contract): the report still goes out.
+function rptLoadKinds() {
+  if (rptKindsCache) return rptKindsCache;
+  var kinds = {}, ok = false;
+  try {
+    var res = UrlFetchApp.fetch(GAMES_JSON_URL, {muteHttpExceptions: true});
+    if (res.getResponseCode() === 200) {
+      JSON.parse(res.getContentText()).games.forEach(function(g) {
+        kinds[g.slug] = g.answer_kind === 'shot' ? 'shot' : 'question';
+      });
+      ok = true;
+    }
+  } catch (err) {
+    console.error('games.json could not be read: ' + err);
+  }
+  rptKindsCache = {ok: ok, kinds: ok ? kinds : {}};
+  return rptKindsCache;
+}
+
+function rptKind(slug, kinds) {
+  if (String(slug).indexOf('escape-') === 0) return 'room';
+  return kinds.kinds[slug] === 'shot' ? 'shot' : 'question';
+}
+
+// true, false, or null when the row cannot be marked (see RPT_BLANK_WAS_WRONG_UNTIL).
+function rptMarked(x, col) {
+  var c = String(x[col['correct']]);
+  if (c === 'true') return true;
+  if (c === 'false') return false;
+  if (c === '' && new Date(x[col['timestamp']]) < RPT_BLANK_WAS_WRONG_UNTIL) return false;
+  return null;
+}
+
+// Everything the email and the Dashboard say about answers, from one set of rows.
+function rptBuild(rows, col, kinds) {
+  var games = {}, qs = {}, rooms = {}, shots = {}, idGames = {}, overall = {total: 0, correct: 0};
+  rows.forEach(function(x) {
+    var ev = x[col['event']], slug = String(x[col['game_slug']]), kind = rptKind(slug, kinds);
+    if (kind === 'room') {
+      var rm = rooms[slug] || (rooms[slug] = {slug: slug, starts: 0, escaped: 0, marked: 0, correct: 0});
+      if (ev === 'game_started') rm.starts++;
+      else if (ev === 'game_completed') rm.escaped++;
+      else if (ev === 'question_answered') {
+        var rk = rptMarked(x, col);
+        if (rk !== null) { rm.marked++; if (rk) rm.correct++; }
+      }
+      return;
+    }
+    if (ev !== 'question_answered') return;
+    if (kind === 'shot') { shots[slug] = true; return; }
+    var m = rptMarked(x, col);
+    if (m === null) return;
+    var g = games[slug] || (games[slug] = {slug: slug, total: 0, correct: 0});
+    g.total++; overall.total++;
+    if (m) { g.correct++; overall.correct++; }
+    var qid = col['question_id'] === undefined ? '' : String(x[col['question_id']]);
+    if (!qid) return;
+    idGames[slug] = true;
+    var level = String(x[col['level']]), key = slug + '|' + level + '|' + qid;
+    var q = qs[key] || (qs[key] = {slug: slug, level: level, qid: qid, total: 0, correct: 0});
+    q.total++;
+    if (m) q.correct++;
+  });
+  var lowest = function(a, b) { return a.correct / a.total - b.correct / b.total; };
+  var roomList = Object.keys(rooms).map(function(k) { return rooms[k]; });
+  roomList.forEach(function(r) {
+    r.rate = r.starts > 0 ? r.escaped / r.starts : null;
+    r.perLock = r.correct > 0 ? r.marked / r.correct : null;
+  });
+  roomList.sort(function(a, b) {
+    return (a.rate === null ? 2 : a.rate) - (b.rate === null ? 2 : b.rate) || (a.slug < b.slug ? -1 : 1);
+  });
+  return {
+    kindsOk: kinds.ok,
+    overall: overall,
+    games: Object.keys(games).map(function(k) { return games[k]; })
+      .filter(function(g) { return g.total >= RPT_MIN_GAME_ANSWERS; }).sort(lowest).slice(0, 15),
+    hardest: Object.keys(qs).map(function(k) { return qs[k]; })
+      .filter(function(q) { return q.total >= RPT_MIN_QUESTION_ATTEMPTS; }).sort(lowest).slice(0, 15),
+    idGames: Object.keys(idGames).length,
+    rooms: roomList,
+    shots: Object.keys(shots).sort()
+  };
+}
+
+function rptPct(n, d) { return d > 0 ? Math.round(100 * n / d) + '%' : 'n/a'; }
+
+// The report's lines, shared by the email and the Dashboard so the two always say the same thing.
+function rptKindsLine(rep) {
+  return rep.kindsOk ? '' : 'games.json could not be read, so every game is counted as a question game today.';
+}
+function rptShotsLine(rep) {
+  return rep.shots.length ? 'Left out of accuracy (a correct answer there is a hit, not a right answer): ' + rep.shots.join(', ') + '.' : '';
+}
+function rptHardestHeading(rep, window) {
+  return 'Hardest Questions — ' + window + ' (question games, by question_id, min ' + RPT_MIN_QUESTION_ATTEMPTS +
+    ' attempts; ' + rep.idGames + (rep.idGames === 1 ? ' game sends' : ' games send') + ' question_id so far)';
+}
+
+// The email's answer sections.
+function rptEmailText(rep) {
+  var t = '';
+  if (rptKindsLine(rep)) t += rptKindsLine(rep) + '\n\n';
+  t += 'ACCURACY BY GAME (question games, min ' + RPT_MIN_GAME_ANSWERS + ' marked answers, lowest first)\n';
+  if (!rep.games.length) t += '  None reached ' + RPT_MIN_GAME_ANSWERS + ' answers.\n';
+  rep.games.forEach(function(g, i) {
+    t += '  ' + (i + 1) + '. ' + g.slug + ' — ' + rptPct(g.correct, g.total) + ' correct (' + g.total + ' answers)\n';
+  });
+  t += '\n' + rptHardestHeading(rep, 'yesterday').toUpperCase() + '\n';
+  if (!rep.hardest.length) t += '  None reached ' + RPT_MIN_QUESTION_ATTEMPTS + ' attempts.\n';
+  rep.hardest.forEach(function(q, i) {
+    t += '  ' + (i + 1) + '. ' + q.slug + ' · ' + q.level + ' · ' + q.qid + ' — ' + rptPct(q.correct, q.total) +
+      ' correct (' + q.total + ' attempts)\n';
+  });
+  if (rep.hardest.length) t += '  Decode an id: python scripts/decode-question-ids.py <game> --id <id>\n';
+  t += '\nESCAPE ROOMS (lowest escape rate first)\n';
+  if (!rep.rooms.length) t += '  None played.\n';
+  rep.rooms.forEach(function(r, i) {
+    t += '  ' + (i + 1) + '. ' + r.slug + ' — ' + r.starts + ' started, ' + r.escaped + ' escaped (' + rptPct(r.escaped, r.starts) +
+      '), ' + (r.perLock === null ? 'no lock opened' : r.perLock.toFixed(1) + ' attempts per lock opened') + '\n';
+  });
+  if (rptShotsLine(rep)) t += '\n' + rptShotsLine(rep) + '\n';
+  return t;
 }
 
 // ============================================================
@@ -107,31 +252,20 @@ function sendDailyReport() {
   // run first, which meant a flaky chart operation killed the daily report
   // before MailApp was ever reached — the report is the point, the charts are
   // decoration. See safeRebuildDashboard.
-  if (yesterdayRows.length === 0) { safeRebuildDashboard(weekRows, monthRows, col); return; }
+  var kinds = rptLoadKinds();
+  if (yesterdayRows.length === 0) { safeRebuildDashboard(weekRows, monthRows, col, kinds); return; }
 
   var starts = yesterdayRows.filter(function(r) { return r[col['event']] === 'game_started'; });
   var completions = yesterdayRows.filter(function(r) { return r[col['event']] === 'game_completed'; });
   var abandons = yesterdayRows.filter(function(r) { return r[col['event']] === 'game_abandoned'; });
   var answers = yesterdayRows.filter(function(r) { return r[col['event']] === 'question_answered'; });
   var pbs = yesterdayRows.filter(function(r) { return r[col['event']] === 'personal_best_set'; });
-  var correctAnswers = answers.filter(function(r) { return String(r[col['correct']]) === 'true'; });
-  var overallAccuracy = answers.length > 0 ? Math.round(100 * correctAnswers.length / answers.length) : 0;
+  var rep = rptBuild(yesterdayRows, col, kinds);
 
   var gameCounts = {}; var compCounts = {};
   starts.forEach(function(r) { var s = r[col['game_slug']]; gameCounts[s] = (gameCounts[s]||0)+1; });
   completions.forEach(function(r) { var s = r[col['game_slug']]; compCounts[s] = (compCounts[s]||0)+1; });
   var topGames = Object.keys(gameCounts).sort(function(a,b){return gameCounts[b]-gameCounts[a];}).slice(0,10);
-
-  var qStats = {};
-  answers.forEach(function(r) {
-    var key = r[col['game_slug']] + ' | Q' + r[col['question_index']];
-    if (!qStats[key]) qStats[key] = {total:0, correct:0};
-    qStats[key].total++;
-    if (String(r[col['correct']]) === 'true') qStats[key].correct++;
-  });
-  var hardest = Object.keys(qStats).filter(function(k){return qStats[k].total>=5;})
-    .map(function(k){return{key:k,acc:Math.round(100*qStats[k].correct/qStats[k].total),n:qStats[k].total};})
-    .sort(function(a,b){return a.acc-b.acc;}).slice(0,10);
 
   var levelCounts = {};
   starts.forEach(function(r) { var lv = r[col['level']]||'unknown'; levelCounts[lv]=(levelCounts[lv]||0)+1; });
@@ -150,7 +284,7 @@ function sendDailyReport() {
   body += '  Games abandoned:    ' + abandons.length + '\n';
   body += '  Completion rate:    ' + (starts.length>0?Math.round(100*completions.length/starts.length):0) + '%\n';
   body += '  Questions answered: ' + answers.length + '\n';
-  body += '  Overall accuracy:   ' + overallAccuracy + '%\n';
+  body += '  Overall accuracy:   ' + rptPct(rep.overall.correct, rep.overall.total) + ' (question games, ' + rep.overall.total + ' marked answers)\n';
   body += '  Personal bests:     ' + pbs.length + '\n\n';
   body += 'TOP GAMES (by starts)\n';
   topGames.forEach(function(slug, i) {
@@ -160,16 +294,13 @@ function sendDailyReport() {
   });
   body += '\nLEVEL BREAKDOWN\n';
   Object.keys(levelCounts).sort().forEach(function(lv) { body += '  '+lv+': '+levelCounts[lv]+' starts\n'; });
-  if (hardest.length > 0) {
-    body += '\nHARDEST QUESTIONS (lowest accuracy, min 5 attempts)\n';
-    hardest.forEach(function(q,i) { body += '  '+(i+1)+'. '+q.key+' — '+q.acc+'% correct ('+q.n+' attempts)\n'; });
-  }
+  body += '\n' + rptEmailText(rep);
   body += '\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
   body += 'Dashboard: open "MaffsGames Events" in Drive → Dashboard tab\n';
 
   MailApp.sendEmail(REPORT_EMAIL, subject, body);
 
-  safeRebuildDashboard(weekRows, monthRows, col);
+  safeRebuildDashboard(weekRows, monthRows, col, kinds);
 }
 
 // Chart operations (removeChart / newChart / insertChart) sporadically fail with
@@ -181,9 +312,9 @@ function sendDailyReport() {
 // and rebuilt from scratch on every run, so a failed or half-built dashboard
 // repairs itself within 24 hours. The daily email does not — it happens once and
 // is gone. Never let the decoration take down the report.
-function safeRebuildDashboard(weekRows, monthRows, col) {
+function safeRebuildDashboard(weekRows, monthRows, col, kinds) {
   try {
-    rebuildDashboard(weekRows, monthRows, col);
+    rebuildDashboard(weekRows, monthRows, col, kinds);
   } catch (err) {
     console.error('rebuildDashboard failed (dashboard will rebuild on the next run): ' + err);
   }
@@ -192,7 +323,7 @@ function safeRebuildDashboard(weekRows, monthRows, col) {
 // ============================================================
 //  DASHBOARD — auto-rebuilds with charts
 // ============================================================
-function rebuildDashboard(weekRows, monthRows, col) {
+function rebuildDashboard(weekRows, monthRows, col, kinds) {
   var ss = SpreadsheetApp.open(DriveApp.getFilesByName(SHEET_NAME).next());
   var dash = ss.getSheetByName(DASH_NAME);
   if (dash) {
@@ -209,6 +340,11 @@ function rebuildDashboard(weekRows, monthRows, col) {
   dash.getRange(r, 1).setValue('MaffsGames Dashboard').setFontSize(16).setFontWeight('bold');
   dash.getRange(r, 3).setValue('Last updated: ' + Utilities.formatDate(new Date(), TIMEZONE, 'dd MMM yyyy HH:mm'));
   r += 2;
+  var rep = rptBuild(weekRows, col, kinds || rptLoadKinds());
+  [rptKindsLine(rep), rptShotsLine(rep)].forEach(function(line) {
+    if (line) { dash.getRange(r, 1).setValue(line).setFontStyle('italic'); r++; }
+  });
+  if (rptKindsLine(rep) || rptShotsLine(rep)) r++;
 
   // ══════════════════════════════════════
   //  TABLE 1: Top Games (7 days)
@@ -283,43 +419,29 @@ function rebuildDashboard(weekRows, monthRows, col) {
   }
 
   // ══════════════════════════════════════
-  //  TABLE 3: Accuracy by Game (7 days)
+  //  TABLE 3: Accuracy by Game (7 days) — question games only
   // ══════════════════════════════════════
-  // Tables 3 and 4 count only answers that can be right or wrong (see isMarked).
-  var weekAnswers = weekRows.filter(function(x){return x[col['event']]==='question_answered' && isMarked(x, col);});
-  var accByGame = {};
-  weekAnswers.forEach(function(x) {
-    var s = x[col['game_slug']];
-    if (!accByGame[s]) accByGame[s] = {total:0, correct:0};
-    accByGame[s].total++;
-    if (String(x[col['correct']]) === 'true') accByGame[s].correct++;
-  });
-  var accSlugs = Object.keys(accByGame).filter(function(k){return accByGame[k].total>=5;})
-    .sort(function(a,b){
-      return (accByGame[a].correct/accByGame[a].total) - (accByGame[b].correct/accByGame[b].total);
-    }).slice(0, 15);
-
   var t3Start = r;
-  dash.getRange(r, 1).setValue('Accuracy by Game — Last 7 Days (min 5 answers)').setFontWeight('bold').setFontSize(11);
+  dash.getRange(r, 1).setValue('Accuracy by Game — Last 7 Days (question games, min ' + RPT_MIN_GAME_ANSWERS + ' marked answers; overall ' +
+    rptPct(rep.overall.correct, rep.overall.total) + ' of ' + rep.overall.total + ')').setFontWeight('bold').setFontSize(11);
   r++;
   dash.getRange(r, 1, 1, 4).setValues([['Game', 'Answers', 'Correct', 'Accuracy %']]).setFontWeight('bold').setBackground('#f0f0f0');
   r++;
-  accSlugs.forEach(function(slug) {
-    var d = accByGame[slug];
-    dash.getRange(r, 1, 1, 4).setValues([[slug, d.total, d.correct, d.correct/d.total]]);
+  rep.games.forEach(function(g) {
+    dash.getRange(r, 1, 1, 4).setValues([[g.slug, g.total, g.correct, g.correct/g.total]]);
     r++;
   });
-  formatPercentColumn(dash, t3Start+2, accSlugs.length);
+  formatPercentColumn(dash, t3Start+2, rep.games.length);
   r++;
 
   // Chart 3: Accuracy bar chart
-  if (accSlugs.length > 0) {
+  if (rep.games.length > 0) {
     // Built from the table data (cols 1 and 4); col 4 holds fractions, so the axis runs 0 to 1
 
     var chart3 = dash.newChart()
       .setChartType(Charts.ChartType.BAR)
-      .addRange(dash.getRange(t3Start+1, 1, accSlugs.length+1, 1))
-      .addRange(dash.getRange(t3Start+1, 4, accSlugs.length+1, 1))
+      .addRange(dash.getRange(t3Start+1, 1, rep.games.length+1, 1))
+      .addRange(dash.getRange(t3Start+1, 4, rep.games.length+1, 1))
       .setPosition(t3Start, 6, 0, 0)
       .setOption('title', 'Accuracy by Game (sorted lowest first)')
       .setOption('legend', {position: 'none'})
@@ -332,30 +454,35 @@ function rebuildDashboard(weekRows, monthRows, col) {
   }
 
   // ══════════════════════════════════════
-  //  TABLE 4: Hardest Questions (7 days)
+  //  TABLE 4: Hardest Questions (7 days) — named by question_id, not round position
   // ══════════════════════════════════════
-  var qStats = {};
-  weekAnswers.forEach(function(x) {
-    var key = x[col['game_slug']] + ' Q' + x[col['question_index']];
-    if (!qStats[key]) qStats[key] = {total:0, correct:0, game:x[col['game_slug']], qi:x[col['question_index']]};
-    qStats[key].total++;
-    if (String(x[col['correct']]) === 'true') qStats[key].correct++;
-  });
-  var hardest = Object.keys(qStats).filter(function(k){return qStats[k].total>=5;})
-    .sort(function(a,b){return (qStats[a].correct/qStats[a].total)-(qStats[b].correct/qStats[b].total);})
-    .slice(0, 15);
-
   var t4Start = r;
-  dash.getRange(r, 1).setValue('Hardest Questions — Last 7 Days (min 5 attempts)').setFontWeight('bold').setFontSize(11);
+  dash.getRange(r, 1).setValue(rptHardestHeading(rep, 'Last 7 Days')).setFontWeight('bold').setFontSize(11);
   r++;
-  dash.getRange(r, 1, 1, 4).setValues([['Game + Question', 'Attempts', 'Correct', 'Accuracy %']]).setFontWeight('bold').setBackground('#f0f0f0');
+  dash.getRange(r, 1, 1, 6).setValues([['Game', 'Level', 'Question id', 'Attempts', 'Correct', 'Accuracy %']]).setFontWeight('bold').setBackground('#f0f0f0');
   r++;
-  hardest.forEach(function(key) {
-    var d = qStats[key];
-    dash.getRange(r, 1, 1, 4).setValues([[key, d.total, d.correct, d.correct/d.total]]);
+  rep.hardest.forEach(function(q) {
+    dash.getRange(r, 1, 1, 6).setValues([[q.slug, q.level, q.qid, q.total, q.correct, q.correct/q.total]]);
     r++;
   });
-  formatPercentColumn(dash, t4Start+2, hardest.length);
+  if (rep.hardest.length > 0) dash.getRange(t4Start+2, 6, rep.hardest.length, 1).setNumberFormat('0%');
+  dash.getRange(r, 1).setValue('Decode an id: python scripts/decode-question-ids.py <game> --id <id>').setFontStyle('italic');
+  r += 2;
+
+  // ══════════════════════════════════════
+  //  TABLE 4b: Escape Rooms (7 days) — escapes, not accuracy
+  // ══════════════════════════════════════
+  var t4bStart = r;
+  dash.getRange(r, 1).setValue('Escape Rooms — Last 7 Days (lowest escape rate first)').setFontWeight('bold').setFontSize(11);
+  r++;
+  dash.getRange(r, 1, 1, 5).setValues([['Room', 'Started', 'Escaped', 'Escape %', 'Attempts per lock']]).setFontWeight('bold').setBackground('#f0f0f0');
+  r++;
+  rep.rooms.forEach(function(rm) {
+    dash.getRange(r, 1, 1, 5).setValues([[rm.slug, rm.starts, rm.escaped, rm.rate === null ? '' : rm.rate,
+      rm.perLock === null ? '' : Math.round(rm.perLock * 10) / 10]]);
+    r++;
+  });
+  formatPercentColumn(dash, t4bStart+2, rep.rooms.length);
   r += 2;
 
   // ══════════════════════════════════════
@@ -404,16 +531,6 @@ function rebuildDashboard(weekRows, monthRows, col) {
   dash.setTabColor('#0ea5e9');
 }
 
-// A question_answered row counts towards accuracy only when its `correct` cell
-// is true or false. A blank means the item has no right answer (prisoners-dilemma
-// sends correct: null), so counting it as wrong would put that game at the top
-// of both accuracy tables. String() matches the tables' own count of correct
-// answers (a TRUE cell reads back as the boolean true).
-function isMarked(x, col) {
-  var c = String(x[col['correct']]);
-  return c === 'true' || c === 'false';
-}
-
 // Percentages are written as fractions (0.17) and shown as 17% by the cell
 // format, so a chart reading the column gets numbers from 0 to 1.
 function formatPercentColumn(dash, firstRow, n) {
@@ -456,7 +573,7 @@ function testDashboard() {
   var allRows = data.slice(1);
   var weekRows = allRows.filter(function(r) { return new Date(r[col['timestamp']]) >= weekAgo; });
   var monthRows = allRows.filter(function(r) { return new Date(r[col['timestamp']]) >= monthAgo; });
-  rebuildDashboard(weekRows, monthRows, col);
+  rebuildDashboard(weekRows, monthRows, col, rptLoadKinds());
 }
 
 // ============================================================
