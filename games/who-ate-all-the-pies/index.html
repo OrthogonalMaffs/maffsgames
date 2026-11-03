@@ -157,6 +157,9 @@ body.playing a.back-link{display:none}
   .qtext{font-size:.96rem}
   .hud{padding:.2rem .5rem}
 }
+/* 700 px tall or less: room for the stacked fraction input (FRACTION-STACK, Jon's ruling 3 Nov 2026: the input itself compacts
+   from 700 px); the 620 px rules below still win on the smallest phones. */
+@media (max-height:700px){.hud{margin-bottom:.3rem}.qcard{gap:.25rem;padding:.5rem}.ans-row{padding:0}.qtext{font-size:.92rem;line-height:1.4}}
 @media (max-height:620px){.qtext{font-size:.92rem;line-height:1.4}.fb{padding:.5rem .6rem;gap:.35rem}.worked{font-size:.84rem}.hud-label{display:none}.hud{padding:.1rem .5rem;margin-bottom:.3rem}.qcard{gap:.3rem}.ans-row{padding:0}.ask-line{min-height:1.2em}.ask-line h2{display:none}}
 @media (max-height:680px){.qcard.fb-open.keyfig #figure{display:none}}
 @media (max-height:620px){.hud-val{font-size:.85rem}.hud{padding:0 .5rem}}
