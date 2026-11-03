@@ -2,7 +2,7 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- NEW-AND-UPDATED: home/Codex claims index.html on codex/new-and-updated, /home/maffs/mg-new-and-updated; contract docs/handover/contracts/2026-11-03-new-and-updated.md. Shared; stop at green Gate for Project Claude review and Jon's merge. Amendment 1 satisfied: fresh base ffcd9a9b includes DASH-MINUS #646; no concurrency exception.
+- NEW-AND-UPDATED: STOP, home/Codex claims index.html on codex/new-and-updated, /home/maffs/mg-new-and-updated; contract docs/handover/contracts/2026-11-03-new-and-updated.md. Circle Theorem Spotter verifier hard-codes two static portal cards; removing the hand card leaves one. Needs an amendment for scripts/verify-circle-theorem-spotter.py. Amendment 1 satisfied: fresh base ffcd9a9b includes DASH-MINUS #646.
 
 - TODO-TRIM: home/Codex, codex/todo-trim, /home/maffs/mg-todo-trim, PR #645; contract and Jon's 3 Nov HTTP-503 retry ruling in the PR. Small, merge on green. NEW-AND-UPDATED is next; no saved contract found at this head.
 
@@ -14,11 +14,15 @@
 
 ## 2026-11-03 (home): NEW-AND-UPDATED
 
-Agent: Codex. Worktree: /home/maffs/mg-new-and-updated. Branch: codex/new-and-updated. Base ffcd9a9b includes DASH-MINUS #646; claim commit 75dcee63. Next: full check-changed.py, push and PR, stop at green Gate for Project Claude review and Jon's merge.
+Agent: Codex. Worktree: /home/maffs/mg-new-and-updated. Branch: codex/new-and-updated. Base ffcd9a9b includes DASH-MINUS #646; claim commit 75dcee63; implementation 6ae4421e. STOP before first push/PR: needs an amendment for the Circle Theorem Spotter verifier below. Once resumed: finish full check-changed.py, push and PR, stop at green Gate for Project Claude review and Jon's merge.
 
 Implemented: cmpNew derives its cards from applyBadges(), one per slug, newest first with New then title ties, cap 12; evergreen heading/note and new-and-updated analytics label. Badge dates/rules, level cards, filter and compact behaviour unchanged. New ci-line verifier reads level-card metadata independently and stubs the clock only in routed copies. Section-click test also fixes its test clock so generated cards remain testable after the current badges expire.
 
 Targeted checks: new verifier passes on 3 Nov (14 live, 12 displayed), 13 Nov (13 live) and 2030 (none, whole section hidden). All three required plants CAUGHT. Phones 320x568, 375x667, 390x844 pass compact controls, live/filtered counts and overflow checks using pinned real fonts. Section clicks pass for all 20 labelled elements; copied cards still fire game_card_clicked alone. First verifier run read the CSS-uppercased heading via inner_text; corrected to text_content, then all pass. UTF-8 characters verified. No answer-bearing change; no SR decision needed; SR-27 exemption does not apply.
+
+Full check-changed.py selected 56 checks (12 serial heavy, 44 light), seven standard CI deferrals. At STOP: 44 passed, one failed, 11 unfinished. The failing Circle Theorem Spotter verifier's check_copies() at line 513 hard-codes portal card count 2; the removed hand card leaves its canonical GCSE card alone. Game and level card are unchanged. This is understood but its fix is outside EXACT CHANGE; no verifier/game/Gate file changed. Registered runner PID 320924 stopped through end-task.py's stop_registered(), so the overall check has no final exit status. Log .claude/bg-1793715256421.log retained; new verifier and section clicks both passed within this run too. Branch remains local; no push, PR, merge or cleanup.
+
+Record: agent Codex; wall n/a (initial contract-receipt timestamp unavailable); review cycles 0; amendments 1; usage n/a.
 
 ## 2026-11-03 (home): TODO-TRIM
 
