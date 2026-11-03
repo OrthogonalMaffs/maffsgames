@@ -70,8 +70,9 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 - **STOP IF 2** (206 hits in 31 files, 1 Nov sweep 84): Jon's Amendment 1, all in this PR; claims fe98c43.
 - Fixed: 206 hits (191 colons, 15 rephrased) and 74 dashes in the same answer sets (one rephrased), so a key never stands out by punctuation; check now 0 hits in 134 files. Verifiers: 11 quotes synced, two plant targets, and five verdict readers (2A, 2B, Dimension Checker, both muppet games) read a colon as well as a dash.
 - Then: Modular Battle's expected label, Terrible Advice's s1-006 plant, Truth Buster's two pins (re-reviewed). Local: every selected check passes but four that fail identically on an untouched HEAD export (KaTeX CDN): `gen-six-ps --check`, `test-exam-vocab`, Graph Transformer, Component Crusher. Claims released in the PR.
+- **State (hand-off, 13:55):** PR #646, Gate green on 8352c76 (run 41646143726, 83 passed, 2 main-only skipped), "Ready for architect review" posted. The tier-4 ledger moved with Terrible Advice's two edited items (8352c76). This session is closed (rule b). **Next session:** subscribe to #646; on Project Claude's review fix findings on this branch; on Jon's "merge", `merge-pr.py 646 --watch --wait 3600`, report its last line; then this entry to MERGED and the contract and table to `docs/history/contracts/`.
 
-Record: agent Claude Code; wall 1:03 (to the push for review; the Gate decides hand-off); review cycles 0; amendments 1; usage n/a.
+Record: agent Claude Code; wall 1:29; review cycles 0; amendments 1; usage n/a.
 
 ## 2026-11-03 (cloud): CLOUD-LEAN (`docs/history/contracts/2026-11-03-cloud-lean.md`, Shared; stops at a green Gate for Project Claude's review and Jon's "merge")
 
