@@ -57,3 +57,10 @@ Amendment 1 (Jon, 3 Nov 2026):
 No concurrency exception (Jon, 3 Nov): #646 is merging now. Wait until git log origin/main shows DASH-MINUS
 (#646) merged, pull, then start NEW-AND-UPDATED from a fresh worktree on that main. If it has not merged within
 an hour, stop and report.
+
+Amendment 1 (Jon, 3 Nov), NEW-AND-UPDATED: DO NOT TOUCH lifted for one line in
+scripts/verify-circle-theorem-spotter.py check_copies(): the portal card count changes from exactly 2 to at least 1
+(every card found must still read CARD exactly, and none may say "seven"). Reason in the PR: the second card was the
+hand-placed copy in #cmpNew, which this contract removes; the section's cards are now built at load, so no static
+count is stable. Its plants must still be caught. No other change to that verifier. Then finish the full checks, open
+the PR, and stop at Gate green for review as the contract says.

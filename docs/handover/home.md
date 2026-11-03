@@ -2,7 +2,7 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- NEW-AND-UPDATED: STOP, home/Codex claims index.html on codex/new-and-updated, /home/maffs/mg-new-and-updated; contract docs/handover/contracts/2026-11-03-new-and-updated.md. Circle Theorem Spotter verifier hard-codes two static portal cards; removing the hand card leaves one. Needs an amendment for scripts/verify-circle-theorem-spotter.py. Amendment 1 satisfied: fresh base ffcd9a9b includes DASH-MINUS #646.
+- NEW-AND-UPDATED: home/Codex claims index.html on codex/new-and-updated, /home/maffs/mg-new-and-updated; contract docs/handover/contracts/2026-11-03-new-and-updated.md. Jon's 3 Nov verifier Amendment 1 authorises one count-condition line; resumed for full checks, PR and green Gate review hold. Fresh base ffcd9a9b includes DASH-MINUS #646, satisfying the earlier wait ruling.
 
 - TODO-TRIM: home/Codex, codex/todo-trim, /home/maffs/mg-todo-trim, PR #645; contract and Jon's 3 Nov HTTP-503 retry ruling in the PR. Small, merge on green. NEW-AND-UPDATED is next; no saved contract found at this head.
 
@@ -14,7 +14,7 @@
 
 ## 2026-11-03 (home): NEW-AND-UPDATED
 
-Agent: Codex. Worktree: /home/maffs/mg-new-and-updated. Branch: codex/new-and-updated. Base ffcd9a9b includes DASH-MINUS #646; claim commit 75dcee63; implementation 6ae4421e. STOP before first push/PR: needs an amendment for the Circle Theorem Spotter verifier below. Once resumed: finish full check-changed.py, push and PR, stop at green Gate for Project Claude review and Jon's merge.
+Agent: Codex. Worktree: /home/maffs/mg-new-and-updated. Branch: codex/new-and-updated. Base ffcd9a9b includes DASH-MINUS #646; claim commit 75dcee63; implementation 6ae4421e; previous STOP record a21f0f3c. Resumed under Jon's 3 Nov verifier Amendment 1: one count-condition line now accepts at least one portal card; all exact-copy/seven checks unchanged. Next: full check-changed.py, push and PR, stop at green Gate for Project Claude review and Jon's merge.
 
 Implemented: cmpNew derives its cards from applyBadges(), one per slug, newest first with New then title ties, cap 12; evergreen heading/note and new-and-updated analytics label. Badge dates/rules, level cards, filter and compact behaviour unchanged. New ci-line verifier reads level-card metadata independently and stubs the clock only in routed copies. Section-click test also fixes its test clock so generated cards remain testable after the current badges expire.
 
