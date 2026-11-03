@@ -73,24 +73,3 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 
 Record: agent Claude Code; wall 0:19; review cycles 0; amendments 0; usage n/a.
 
-## 2026-11-03 (cloud): DASH-MINUS (`docs/history/contracts/2026-11-03-dash-minus.md`, Shared; stops at a green Gate for Project Claude's review and Jon's "merge")
-
-- Agent: Claude Code. Primary checkout `/home/user/maffsgames`, branch `claude/quirky-hypatia-sivu18` (from main 560b6b1; first commit 5e30fb2 closes CLOUD-LEAN).
-- Built: `scripts/check-dash-minus.py` (selftest 31/31: every pattern planted and caught; range, comments, the words a/A/I and "A-Level" pass). Canon §7.1 rule, §12 reason.
-- **STOP IF 2** (206 hits in 31 files, 1 Nov sweep 84): Jon's Amendment 1, all in this PR; claims fe98c43.
-- Fixed: 206 hits (191 colons, 15 rephrased) and 74 dashes in the same answer sets (one rephrased), so a key never stands out by punctuation; check now 0 hits in 134 files. Verifiers: 11 quotes synced, two plant targets, and five verdict readers (2A, 2B, Dimension Checker, both muppet games) read a colon as well as a dash.
-- Then: Modular Battle's expected label, Terrible Advice's s1-006 plant, Truth Buster's two pins (re-reviewed). Local: every selected check passes but four that fail identically on an untouched HEAD export (KaTeX CDN): `gen-six-ps --check`, `test-exam-vocab`, Graph Transformer, Component Crusher. Claims released in the PR.
-- **State:** MERGED #646 (ffcd9a9); main green (run 41650932238, 84/84). Contract and table moved to `docs/history/contracts/`.
-
-Record: agent Claude Code; wall 1:29; review cycles 0; amendments 1; usage n/a.
-
-## 2026-11-03 (cloud): CLOUD-LEAN (`docs/history/contracts/2026-11-03-cloud-lean.md`, Shared; stops at a green Gate for Project Claude's review and Jon's "merge")
-
-- Agent: Claude Code. Primary checkout `/home/user/maffsgames`, branch `claude/quirky-hypatia-sivu18` (session branch, from main ccb5f9e). Step 0: RULE-QUOTE committed first (a61e0ff).
-- Built: `merge-pr.py --watch-main [<sha>]` and `--watch` (reuse `main_runs`/`run_jobs`/`JOB_OK`; guard unchanged); selftest PASS, four outcomes, plant CAUGHT; live `--watch-main 2a635bd` GREEN. AGENTS.md lines (a)-(c) and the after-merge rule (largest 284 bytes); canon §12 CLOUD-LEAN; this file's setup note and Every-PR line; PIES-EXIT closed.
-- **STOP IF 1, Amendment 1 (Jon, 3 Nov):** it meant the old session's 3 Nov note (0909d491), superseded by RULE-QUOTE, not #636. #636 (stale, conflicting) closed unmerged; what main lacked from it carried over here: GATE-FIX done, GATE-RESUME/GATE-FIX contracts to history, the answer-lock line, two live pointers.
-- **Amendment 2 (Jon, 3 Nov):** bare `--watch-main` defaults to `newest_merge()` (live: 2a635bd under the bot's ccb5f9e, GREEN); selftest 65/65, bot-head case added, head-literal plant CAUGHT. Lane exception, this PR: one line each in canon §7.8.2 and §7.8.3.
-- **State:** MERGED #643 (87bcb99); main green (41631202204, 84/84).
-
-Record: agent Claude Code; wall 0:36; review cycles 0; amendments 2; usage n/a.
-
