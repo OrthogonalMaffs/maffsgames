@@ -2,6 +2,8 @@
 
 **Queue (cross-lane facts; never archived)**
 
+- CALC-DOCK-WIDE: home/Codex, codex/calc-dock-wide, /home/maffs/mg-calc-dock-wide; contract docs/handover/contracts/2026-11-03-calc-dock-wide.md. Claims calculator.js and test-calculator-js.py; Shared, stop at Gate green for review and Jon's merge. Jon explicitly permits concurrency with SEQ-SOLVER-FIXES, SEQ-SOLVER-WORKED and DASHBOARD-METRICS.
+
 - UPDATES-NOVEMBER: home/Codex, codex/updates-november, /home/maffs/mg-updates-november, PR #651; contract docs/history/contracts/2026-11-03-updates-november.md (Amendment 1), archived for merge. Small, merge on green; final merge/main/cleanup results in PR report.
 
 - NEW-AND-UPDATED: home/Codex claims index.html on codex/new-and-updated, /home/maffs/mg-new-and-updated, PR #648; contract docs/handover/contracts/2026-11-03-new-and-updated.md. Full checks 56/56, exit 0. Shared: green Gate then Project Claude review and Jon's merge. Fresh base ffcd9a9b includes DASH-MINUS #646; verifier Amendment 1 applied.
@@ -13,6 +15,12 @@
 - LOOK-STAGE: home/Codex, codex/look-stage, /home/maffs/mg-look-stage, PR #638; contract `docs/handover/contracts/2026-11-02-look-stage.md`. Concurrent PIES-LOOK/ESSENTIALS-ART authorised by Jon; roster, canon and registration reserved here. Pies remains warned until Jon's explicit look sign-off, irrespective of its artwork merge. Shared: stop at green Gate for Project Claude review and Jon's “merge”.
 - RULEBOOK: home/Codex, codex/rulebook, /home/maffs/mg-rulebook, PR #635; Shared. Amendment 1 findings addressed on the same branch; stop at Gate green for re-review and Jon's “merge”. Two lanes are explicitly authorised for this task.
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
+
+## 2026-11-03 (home): CALC-DOCK-WIDE
+
+Agent: Codex. Worktree: /home/maffs/mg-calc-dock-wide. Branch: codex/calc-dock-wide. Base: 264e011f (UPDATES-NOVEMBER #651 merged). Next: before measurements, shared dock fix, outside-card regression and old-rule plant, after measurements, checks and PR. Identity correct; clean worktree before first edit; open PR #652 is authorised cloud work and does not touch calculator.js/css (#518/#424 home.md only). Root cause confirmed: percentage left assumes the card contains the mount; sibling mounts use a wider containing block. No SR decision needed. Awaiting Jon's wording for the now-required updates line. No game or Gate files will change.
+
+Record: agent Codex; wall n/a; review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-03 (home): UPDATES-NOVEMBER
 
