@@ -76,7 +76,7 @@ Record: agent Claude Code; wall n/a (STOP before work; received 16:05, started a
 
 - Agent: Claude Code. Primary checkout `/home/user/maffsgames`, branch `claude/stoic-galileo-xvzt45` (from main 03acf76; first commits ff2c555 DASHBOARD Amendment 1, 0e2b471 closes SEQ-SOLVER-FIXES).
 - Built: a `worked` field (1 to 3 steps) on all 154 items, question text untouched (ids unchanged); shown under the options on a wrong answer, before Next, in the house "How it goes" list. Phone rule during that feedback: calculator and the two unpicked distractors hidden, HUD and card compacted. Verifier: every worked line checked against its own item (251 equalities, 81 difference and ratio claims, every key), the panel order in Chromium, Next above the fold on all 462 wrong answers at 320, 375, 390 (and Aa 375, 390); 15/15 plants.
-- **State:** MERGED #654 (af8e737) on Jon's "merge" (Gate green on 097b053, run 41716406405); main: run 41722042176 in progress when this was written (merge-pr.py watching). Contract moved to `docs/history/contracts/`. Survey for Jon (PR body): of 100 other listed games, 63 explain a wrong answer, 24 do not, 11 partly, 2 n/a.
+- **State:** MERGED #654 (af8e737) on Jon's "merge" (Gate green on 097b053, run 41716406405); main green: `main af8e737 run 41722042176: GREEN`. Contract moved to `docs/history/contracts/`. Survey for Jon (PR body): of 100 other listed games, 63 explain a wrong answer, 24 do not, 11 partly, 2 n/a.
 
 Record: agent Claude Code; wall 4:58 (received 16:05; queued behind SEQ-SOLVER-FIXES until 20:05; handed off 21:03); review cycles 0; amendments 0; usage n/a.
 
