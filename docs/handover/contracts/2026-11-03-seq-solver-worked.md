@@ -1,7 +1,14 @@
-# SEQ-SOLVER-WORKED (received 3 Nov 2026, cloud lane, Claude Code)
+# SEQ-SOLVER-WORKED (received 3 Nov 2026, 16:05, cloud lane, Claude Code)
 
-Saved verbatim on receipt (canon §7.8.2, CONTRACTS-FOLDER). Jon, 3 Nov: "This one next, although context may become an
-issue before you get to this." Starts after SEQ-SOLVER-FIXES merges; DASHBOARD-METRICS starts after this merges.
+Saved verbatim on receipt (canon §7.8.2, CONTRACTS-FOLDER), with SEQ-SOLVER-FIXES and DASHBOARD-METRICS in Jon's
+hand-off of 3 Nov 2026, 16:05 (the hand-off note is in `2026-11-03-seq-solver-fixes.md`). Starts after
+SEQ-SOLVER-FIXES merges.
+
+**Earlier wording (superseded):** #650 (main b18b064, 3 Nov) stored an earlier text of this contract from the archived
+session. The text below is Jon's 16:05 hand-off, which replaces it; the earlier text stays in git history at b18b064.
+
+Jon, 3 Nov (recorded with the earlier wording): "This one next, although context may become an issue before you get
+to this."
 
 ## Contract (verbatim)
 
@@ -29,7 +36,7 @@ listed games lack a wrong-answer explanation, for Jon, without changing them.
 EXACT CHANGE
 1. Each question in QUESTIONS (ks3, gcse, alevel, as left by SEQ-SOLVER-FIXES) gains a `worked` field: 1 to 3 short
    steps at the level's language (KS3 plain words; KaTeX for expressions per canon §7.1.1), ending in the keyed
-   answer. No dash before a number (canon §7.1).
+   answer. No dash before a number (canon §7.1). Do not change any question's text: question_id is a hash of it.
 2. On a wrong answer the worked solution shows under the options, after the right option is marked, before Next
    (MaffsNext.wrong unchanged). A right answer is unchanged.
 3. verify-sequence-solver.py: every question has a worked solution; its last step states the keyed answer; every

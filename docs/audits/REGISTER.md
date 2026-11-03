@@ -25,9 +25,9 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
 | HIGH | 7 | 230 | 0 | 237 |
-| MEDIUM | 166 | 331 | 5 | 502 |
-| LOW | 101 | 242 | 1 | 344 |
-| **All** | 275 | 837 | 6 | 1118 |
+| MEDIUM | 164 | 333 | 5 | 502 |
+| LOW | 100 | 243 | 1 | 344 |
+| **All** | 272 | 840 | 6 | 1118 |
 
 ### By class
 
@@ -53,7 +53,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | 8 | 3 | 11 |
 | NEW:marking-tolerance | 0 | 11 |
 | NEW:raw-tex-on-screen | 0 | 11 |
-| NEW:timer-policy | 1 | 10 |
+| NEW:timer-policy | 0 | 10 |
 | NEW:degenerate-item | 7 | 9 |
 | NEW:equal-value-options | 0 | 9 |
 | NEW:hand-typed explanation figure | 4 | 8 |
@@ -62,7 +62,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | NEW:phone-layout | 4 | 7 |
 | NEW:wrong-explanation | 0 | 7 |
 | NEW:ill-posed wording | 1 | 6 |
-| NEW:level-content-mismatch | 4 | 6 |
+| NEW:level-content-mismatch | 3 | 6 |
 | 11 | 0 | 5 |
 | NEW:board-mixes-session-lengths | 5 | 5 |
 | NEW:marking-by-structure | 0 | 5 |
@@ -70,7 +70,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | NEW:cosmetic | 2 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
 | 9 | 1 | 3 |
-| NEW:docs | 3 | 3 |
+| NEW:docs | 2 | 3 |
 | NEW:exact-order sorter marking | 0 | 3 |
 | NEW:input-cannot-type-answer | 0 | 3 |
 | NEW:key-ask mismatch | 0 | 3 |
@@ -219,7 +219,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | `quadratic-factoriser` | yes | verify-quadratic-factoriser.py | 1 | 1 | 1 | 4 | 1 | 6 | 0 |
 | `scale-factor-scaling` | yes | verify-scale-factor-scaling.py | 0 | 1 | 4 | 3 | 1 | 7 | 0 |
 | `screening-room` | yes | verify-screening-room.py | 1 | 4 | 14 | 8 | 2 | 24 | 1 |
-| `sequence-solver` | yes | verify-sequence-solver.py | 0 | 1 | 6 | 8 | 8 | 7 | 0 |
+| `sequence-solver` | yes | verify-sequence-solver.py | 0 | 1 | 6 | 8 | 5 | 10 | 0 |
 | `seven-bridges` | yes | verify-seven-bridges.py | 0 | 2 | 7 | 4 | 7 | 6 | 0 |
 | `shape-shifter` | yes | verify-shape-shifter.py | 2 | 1 | 5 | 3 | 3 | 8 | 0 |
 | `simultaneous-solver` | yes | verify-simultaneous-solver.py | 0 | 0 | 1 | 2 | 1 | 2 | 0 |

@@ -30,7 +30,9 @@ Resumed 3 Nov by Codex in the same clean worktree at 69712350; branch history ma
 
 STOP, 3 Nov: approved updates entry pushed at e900a6a8; PR marked ready using the GitHub connector. GitHub REST reports mergeable=false, mergeable_state=dirty against current main; no check runs on the new head. Guarded merge watcher launched through bg.py, then stopped through end-task.py's registry on discovering the conflict. No merge or cleanup. Next: Jon's ruling on resolving the conflict; retain this worktree/branch. PACKS-CANON not started.
 
-Record: agent Codex; wall n/a; review cycles 1; amendments 1; usage n/a.
+Jon's conflict-resolution Amendment 1, 3 Nov, supersedes the STOP: merge origin/main without rebase or force push; preserve all updates and handovers, stop for any other conflict. Merged origin/main af8e7372; only updates/index.html conflicted. Kept the calculator line first on 3 Nov, followed by every main entry in its original order; handovers merged without conflict. No implementation changes. Next: push, Gate, authorised guarded merge/main watch and cleanup; stop. Final lifecycle results in the PR report.
+
+Record: agent Codex; wall n/a; review cycles 1; amendments 2; usage n/a.
 
 ## 2026-11-03 (home): UPDATES-NOVEMBER
 
