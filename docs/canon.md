@@ -2614,6 +2614,10 @@ all — ask for JPGs.**
 
 # 12. Engineering reference (moved from CLAUDE.md, 8 Oct 2026, contract CTX)
 
+## UPDATES-NOVEMBER (Jon, 3 Nov 2026)
+
+/updates/ ended at October although eight user-visible changes went live on 1–3 November. Entries depended on someone remembering after merge. Every PR that changes what a student or teacher sees now adds its own dated line in plain words in the same PR; internal work needs no entry. AGENTS.md carries the cross-lane rule. November uses Jon's approved wording. Its quoted dash example documents the fault; check-dash-minus.py excludes updates/, so Amendment 1 confirms no exception or checker change is needed.
+
 ## NEW-AND-UPDATED (Jon, 3 Nov 2026)
 
 The homepage's hand-placed "New for 2026/27" list drifted from the dated badge metadata: its 18 cards

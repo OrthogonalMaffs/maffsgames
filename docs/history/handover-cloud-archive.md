@@ -6,6 +6,28 @@ and the last three entries; older entries move here, newest first, unchanged.
 
 ## Moved 2026-11-03 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
 
+## 2026-11-03 (cloud): QUESTION-ID (`docs/history/contracts/2026-11-03-question-id.md`, Shared, Amendment 1; stops at a green Gate for Project Claude's review and Jon's "merge")
+
+- Agent: Claude Code. Primary checkout `/home/user/maffsgames`, branch `claude/nice-babbage-15fc7o` (from main 11afde3; first commit 6c6731a closes SEQ-SOLVER-REREAD).
+- Built: `analytics.js` turns `question_text` into `question_id` = `h` + FNV-1a hex and never sends the text (GA4 and the Sheet); endpoint column R `question_id` after `seq`, version `2026-11-03-a`; Sequence Solver passes its item's text; `scripts/decode-question-ids.py` (154 ids, 0 collisions); `scripts/check-question-id.py` (ci-line, warn list of the other 108 sites; selftest 12/12; check plays a round in Chromium, every id decodes to the question shown); canon §1.3, §12; privacy line (Amendment 1).
+- **Amendment 1 (Jon, 3 Nov):** the contract's privacy line would have contradicted the page (search-box text, initials); it reads "Which question was asked, as an anonymous code. Answers a student types are never sent."
+- **Jon's two steps after the merge:** (1) redeploy the Apps Script endpoint (`docs/apps-script-redeploy.md`; `/exec` should report `2026-11-03-a`; R1 then reads `question_id`, written by the first post); (2) register `question_id` in GA4 as an event-scoped custom dimension (Admin, Custom definitions).
+- **State:** MERGED #649 (7da27a8) on Jon's "merge"; main green (run 41660574114, 84/84). CI ran the new check: selftest 12/12, `--check` 0 failures. Jon redeployed the endpoint the same day.
+
+Record: agent Claude Code; wall 0:43 (received about 14:12, queued behind SEQ-SOLVER-REREAD until 14:36); review cycles 0; amendments 1; usage n/a.
+
+## 2026-11-03 (cloud): SEQ-SOLVER-REREAD (`docs/history/contracts/2026-11-03-seq-solver-reread.md`, Shared; stops at a green Gate for Project Claude's review and Jon's "merge")
+
+- Agent: Claude Code. Primary checkout `/home/user/maffsgames`, branch `claude/nice-babbage-15fc7o` (from main 39d6f7c; first commit 1d737a6 closes DASH-MINUS).
+- Read: all 154 items (ks3 50, gcse 50, alevel 54), each rendered at 375x667 with the pinned KaTeX and screenshotted; a full 20-question round played at 375x667 (Next shown on every wrong answer, results reached, 20 events). `verify-sequence-solver.py`: PASS, 6/6 plants caught.
+- No item is keyed wrong, none has a second correct option, none lacks the information to reach its key: nothing CRITICAL, so no SR-30 fix and no game or verifier change.
+- Recorded `sequence-solver-rr-001`..`-007` (2 MEDIUM, 5 LOW, all open). **For Jon:** rr-002 (five GCSE geometric items beyond GCSE A24: negative ratio, ratio from non-adjacent terms) is one shape across items, so reported as a class (STOP IF), not fixed; rr-001 (visible Time that feeds the score, against Hidden Count-Up) is timer and scoring code, DO NOT TOUCH. r-003 (MEDIUM, JC) stays open.
+- **State:** MERGED #647 (11afde3) on Jon's "merge"; main green (run 41655363833, 84/84). Contract moved to `docs/history/contracts/`.
+
+Record: agent Claude Code; wall 0:19; review cycles 0; amendments 0; usage n/a.
+
+## Moved 2026-11-03 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
+
 ## 2026-11-03 (cloud): DASH-MINUS (`docs/history/contracts/2026-11-03-dash-minus.md`, Shared; stops at a green Gate for Project Claude's review and Jon's "merge")
 
 - Agent: Claude Code. Primary checkout `/home/user/maffsgames`, branch `claude/quirky-hypatia-sivu18` (from main 560b6b1; first commit 5e30fb2 closes CLOUD-LEAN).
