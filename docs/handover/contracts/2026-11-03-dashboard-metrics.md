@@ -1,9 +1,13 @@
-# DASHBOARD-METRICS (received 3 Nov 2026, cloud lane, Claude Code)
+# DASHBOARD-METRICS (received 3 Nov 2026, 16:05, cloud lane, Claude Code)
 
-Saved verbatim on receipt (canon §7.8.2, CONTRACTS-FOLDER). Its START names SEQ-SOLVER-WORKED, which arrived after
-it; order (Jon, 3 Nov): SEQ-SOLVER-FIXES, SEQ-SOLVER-WORKED, then this.
+Saved verbatim on receipt (canon §7.8.2, CONTRACTS-FOLDER), with SEQ-SOLVER-FIXES and SEQ-SOLVER-WORKED in Jon's
+hand-off of 3 Nov 2026, 16:05 (the hand-off note is in `2026-11-03-seq-solver-fixes.md`). Starts after
+SEQ-SOLVER-WORKED merges.
 
-Before starting, three facts found on receipt (3 Nov):
+**Earlier wording (superseded):** #650 (main b18b064, 3 Nov) stored an earlier text of this contract from the archived
+session. The text below is Jon's 16:05 hand-off, which replaces it; the earlier text stays in git history at b18b064.
+
+Before starting, three facts found on receipt (3 Nov; recorded with the earlier wording, kept here verbatim):
 - Every room's slug starts "escape-" (all 14 room.js files) and the engine logs that slug, so the prefix holds.
 - docs/apps-script-endpoint.js does not use UrlFetchApp yet: adding it makes Google ask Jon to grant "connect to an
   external service" on the redeploy. Put that in Jon's redeploy step.

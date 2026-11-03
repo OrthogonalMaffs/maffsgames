@@ -145,10 +145,11 @@ findings:
     Same shape as surd-simplifier and the six other timer-policy entries R7 fixed; R7 covers the display, and the score
     multiplier needs Jon (surd-simplifier''s note). Not fixed here: contract SEQ-SOLVER-REREAD puts the timer and
     scoring code under DO NOT TOUCH. Also: showQ() starts a new requestAnimationFrame loop each question and never
-    stops the last, so by question 20 twenty loops write the same number every frame.'
+    stops the last, so by question 20 twenty loops write the same number every frame. Fixed (SEQ-SOLVER-FIXES, Jon, 3 Nov 2026, option (a)): no HUD Time and no requestAnimationFrame loop; a right answer scores BASE whatever the time; the total answering time is on the results screen only. The verifier plays a round on a stubbed clock.'
   evidence: '<div class="hud-label">Time</div><div class="hud-val" id="timer">0</div>; the CSS hides .timer and
     .timer-display, not #timer. Seen at 375x667 on all 154 items (SEQ-SOLVER-REREAD, 3 Nov 2026)'
-  status: open
+  status: fixed
+  pr: 652
 - id: sequence-solver-rr-002
   severity: MEDIUM
   jc: true
@@ -163,11 +164,12 @@ findings:
     5th 162) and gcse[49] (1, __, __, 64, geometric). Every key is right and each can be reached by trying small
     ratios, so none is unanswerable; but they are A-level skills served under the GCSE label to the platform''s
     grade 1-3 audience. One shape across five items, so reported as a class for Jon (contract STOP IF); the level a
-    question belongs to is Jon''s call (canon §0.3, "Still stops for Jon").'
+    question belongs to is Jon''s call (canon §0.3, "Still stops for Jon"). Fixed (SEQ-SOLVER-FIXES, Jon, 3 Nov 2026): the five moved unchanged to the A-level bank (alevel[54..58]); the verifier fails a GCSE item with a ratio of 0 or less, a ratio from non-adjacent terms or a geometric gap fill.'
   evidence: 'gcse[33] key -3, options 3, -9, 9; gcse[39] key -64 (T_n = ar^{n-1}); gcse[40] key 2; gcse[41] key 3;
     gcse[49] key 1, 4, 16, 64. Keys recomputed by scripts/verify-sequence-solver.py (PASS). SEQ-SOLVER-REREAD, 3 Nov
     2026'
-  status: open
+  status: fixed
+  pr: 652
 - id: sequence-solver-rr-003
   severity: LOW
   jc: true
@@ -226,7 +228,8 @@ findings:
   where: .claude/rules/game-roster.md (Sequence Solver row, KS3 #1)
   summary: 'The roster row says "A-Level (55q)"; the A-level bank holds 54, as the verifier''s COUNTS says. The
     source''s section comments ("Q45-55" on the last ten items) are where 55 comes from. The roster is the home lane''s
-    file; recorded here, not changed.'
+    file; recorded here, not changed. Fixed (SEQ-SOLVER-FIXES): the roster row gives the counts after the move, GCSE 45 and A-Level 59.'
   evidence: 'QUESTIONS.alevel.length === 54 in Chromium; roster row "KS3 (50q), GCSE (50q), A-Level (55q)"
     (SEQ-SOLVER-REREAD, 3 Nov 2026)'
-  status: open
+  status: fixed
+  pr: 652
