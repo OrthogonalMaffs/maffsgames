@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Sequence Solver (every key recomputed from its own terms or formula, exactly; options distinct in value; every option marked in Chromium; no visible clock, score independent of time) |
+# ci-line: Sequence Solver (every key recomputed from its own terms or formula, exactly; options distinct in value; every option marked in Chromium; no visible clock, score independent of time; every worked solution checked, Next above the fold) |
 """Sequence Solver: every key recomputed from the sequence or formula in its own question; every option clicked.
 
 The game (154 multiple-choice items: ks3 50, gcse 45, alevel 59) covers next terms, common differences and
@@ -23,9 +23,16 @@ items since SEQ-SOLVER-FIXES (Jon, 3 Nov 2026; sequence-solver-rr-002), each sti
 The clock follows the Hidden Count-Up policy (timer-policy.md; Jon, 3 Nov 2026, rr-001), checked in Chromium on a
 stubbed Date.now: the game screen does not change as time passes and has no Time label; every right answer scores
 the same however long it took (1 s or 90 s); the results screen shows the total answering time.
+Every item carries a worked solution (SEQ-SOLVER-WORKED, Jon, 3 Nov 2026), 1 to 3 steps, shown on a wrong answer under
+the options and before Next. check_worked() reads it against the item, not the game's code: each "a = b = c" in its
+maths is one value; the last step states the key (and a numeric key is its last number); a difference ("go up by"),
+ratio ("multiplied by", "divided by", "common ratio is"), second difference or list of differences it states is
+recomputed from the item's own terms. In Chromium a wrong answer shows the right option, then the worked solution, then
+Next; a right answer shows none. The phone rule (canon 7.6.1) is measured on every wrong answer to every item.
 A self-test plants r-001 back (0.999... beside 1), the B11 pair, gcse[44]'s old untyped ask ('Fill in the gaps'),
-a negative ratio at GCSE, the HUD clock, a time multiplier in the score and a results line without the time; each
-must FAIL naming its item.
+a negative ratio at GCSE, the HUD clock, a time multiplier in the score, a results line without the time, a missing
+worked field, a last step that contradicts the key, a wrong difference, the worked solution not shown, and the phone
+layout undone; each must FAIL naming its item.
 
     python scripts/verify-sequence-solver.py [--no-selftest] [--against FILE]
 """
@@ -541,6 +548,106 @@ def check_item(fails, w, q, target):
                 fails.append('%s: options %s and %s are equal in value (SR-4)' % (w, opts[i], opts[k]))
 
 
+# ---------------------------------------------------------------- worked solutions (SEQ-SOLVER-WORKED, Jon, 3 Nov 2026)
+# A wrong answer shows the item's `worked` lines (1 to 3) under the options, before Next. Each line is checked against the
+# item itself, never against the game's code: every "a = b = c" in its maths evaluates to one value; the last line states
+# the key; and a difference, ratio or list of differences it states is recomputed from the item's own terms.
+MATHSEG = re.compile(r'\\\((.*?)\\\)')
+NUM = r'(-?\d+(?:\.\d+)?)'
+
+
+def numeric(part):
+    """One side of an '=' as an exact value, or None when it is not a single number (a letter, a list, an ellipsis)."""
+    t = part.strip()
+    bare = re.sub(r'\\(?:dfrac|frac|times|div|left|right)', '', t)
+    if not t or re.search(r'[A-Za-z]|,|\.\.\.|\\cdots', bare):
+        return None
+    return expr(t.replace('\\div', '/').replace('\\left', '').replace('\\right', ''))
+
+
+def first_diffs(ts):
+    return [b - a for a, b in zip(ts, ts[1:])]
+
+
+def shown_terms(q):
+    """The item's terms when its sequence line is a list of numbers (a trailing gap dropped), else None."""
+    try:
+        ts = terms(untex(q['seq']))
+    except (ValueError, ZeroDivisionError):
+        return None
+    while ts and ts[-1] is None:
+        ts.pop()
+    return ts if len(ts) >= 3 and None not in ts else None
+
+
+def check_worked(fails, w, q):
+    lines = q.get('worked')
+    if not isinstance(lines, list) or not 1 <= len(lines) <= 3 or not all(isinstance(x, str) and x.strip() for x in lines):
+        fails.append('%s: no worked solution of 1 to 3 steps (worked = %r)' % (w, lines))
+        return
+    for line in lines:
+        if re.search('[–—]', line):
+            fails.append('%s: a dash in the worked step "%s" (canon 7.1: no dash before a number)' % (w, line))
+        for seg in MATHSEG.findall(line):
+            if re.search(r'[<>]|\\geq|\\leq|\\neq', seg):
+                continue
+            vals = []
+            for part in seg.split('='):
+                try:
+                    v = numeric(part)
+                except ValueError as e:
+                    fails.append('%s: cannot read "%s" in the worked step "%s" (%s)' % (w, part.strip(), line, e))
+                    continue
+                if v is not None:
+                    vals.append((part.strip(), v))
+            for p_, v in vals[1:]:
+                if sp.simplify(v - vals[0][1]) != 0:
+                    fails.append('%s: worked step "%s": %s is not %s' % (w, line, p_, vals[0][0]))
+    norm = lambda x: re.sub(r'\s+', '', untex(x)).lower().rstrip('.')
+    last, key = lines[-1], q['correct']
+    if norm(key) not in norm(last):
+        fails.append('%s: the last worked step "%s" does not state the key %s' % (w, last, key))
+    elif re.fullmatch(NUM, key):
+        nums = re.findall(r'(?<![\d.])' + NUM, untex(last))
+        if not nums or F(nums[-1]) != F(key):
+            fails.append('%s: the last worked step "%s" ends on %s, not the key %s' % (w, last, nums[-1] if nums else 'no number', key))
+    ts = shown_terms(q)
+    text = untex(' '.join(lines))
+    if ts is None:
+        return
+    for m in re.finditer(r'go (up|down) by ' + NUM.replace('-?', ''), text):
+        said = F(m.group(2)) * (1 if m.group(1) == 'up' else -1)
+        try:
+            d = ap(ts)[1]
+        except ValueError:
+            fails.append('%s: the worked solution says the terms go %s by %s, but %s is not arithmetic' % (w, m.group(1), m.group(2), q['seq']))
+            continue
+        if said != d:
+            fails.append('%s: the worked solution says the terms go %s by %s; the difference of %s is %s' % (w, m.group(1), m.group(2), q['seq'], d))
+    for m in re.finditer(r'common difference is ' + NUM, text):
+        if F(m.group(1)) != ap(ts)[1]:
+            fails.append('%s: the worked solution says the common difference is %s; it is %s' % (w, m.group(1), ap(ts)[1]))
+    for m in re.finditer(r'(?:common ratio is|multiplied by|divided by) (-?\\dfrac\{\d+\}\{\d+\}|-?\d+(?:\.\d+)?)', text):
+        said = number(m.group(1))
+        if m.group(0).startswith('divided'):
+            said = 1 / said
+        try:
+            r = sp.Rational(gp(ts)[1])
+        except ValueError:
+            fails.append('%s: the worked solution states a ratio, but %s is not geometric' % (w, q['seq']))
+            continue
+        if said != r:
+            fails.append('%s: the worked solution says "%s"; the ratio of %s is %s' % (w, m.group(0), q['seq'], r))
+    for m in re.finditer(r'second differences are (?:all )?' + NUM, text, re.I):
+        d2 = set(first_diffs(first_diffs(ts)))
+        if d2 != {F(m.group(1))}:
+            fails.append('%s: the worked solution says the second differences are %s; they are %s' % (w, m.group(1), sorted(d2)))
+    for m in re.finditer(r'(?:First differences:|gaps are|gaps grow by one each time:) (-?\d+(?:, -?\d+)+)', text):
+        said = [F(x) for x in m.group(1).split(', ')]
+        if said != first_diffs(ts)[:len(said)]:
+            fails.append('%s: the worked solution lists the differences %s; they are %s' % (w, m.group(1), ', '.join(map(str, first_diffs(ts)))))
+
+
 def check_bank(fails, bank):
     counts = {lv: len(bank.get(lv, [])) for lv in COUNTS}
     if counts != COUNTS:
@@ -571,6 +678,7 @@ def check_bank(fails, bank):
                 fails.append('%s: %s' % (w, e))
                 continue
             check_item(fails, w, q, target)
+            check_worked(fails, w, q)
 
 
 SWEEP_JS = r"""() => {
@@ -598,6 +706,19 @@ SWEEP_JS = r"""() => {
       btn.click();
       const right = btn.classList.contains('correct');
       if (right !== (pick === q.correct)) out.push([lv, i, pick, right ? 'marked right' : 'marked wrong']);
+      // SEQ-SOLVER-WORKED: a wrong answer shows the right option, then the worked solution, then Next; a right one shows none
+      const wk = document.getElementById('worked'), nx = document.querySelector('#nextMount button');
+      if (pick === q.correct) {
+        if (!wk.hidden) out.push([lv, i, pick, 'a worked solution shown on a right answer']);
+      } else if (wk.hidden || wk.querySelectorAll('li').length !== (q.worked || []).length) {
+        out.push([lv, i, pick, 'no worked solution on screen after a wrong answer']);
+      } else {
+        const key = document.querySelector('#options .opt-btn.correct').getBoundingClientRect(), wb = wk.getBoundingClientRect();
+        if (!nx) out.push([lv, i, pick, 'no Next after a wrong answer']);
+        else if (!(key.bottom <= wb.top + 1 && wb.bottom <= nx.getBoundingClientRect().top + 1))
+          out.push([lv, i, pick, 'the order on screen is not: the right option, the worked solution, Next']);
+        if (/\\/.test(vis(wk))) out.push([lv, i, pick, 'raw TeX in the worked solution: ' + vis(wk)]);
+      }
     }
   });
   return out;
@@ -644,6 +765,35 @@ TIME_JS = r"""async () => {
 }"""
 
 
+# The phone rule (canon 7.6.1), measured on every wrong answer to every item (each wrong option leaves a different pair
+# on screen): Next ends above the fold (the viewport less the 40px fixed footer), with no sideways scroll, at 320 x 568,
+# 375 x 667 and 390 x 844, and in Aa mode at 375 x 667 and 390 x 844. Aa at 320 x 568 is canon's recorded exception:
+# reported, not failed. Transitions are switched off so the settled layout is what is measured.
+FIT_SIZES = [(False, 320, 568), (False, 375, 667), (False, 390, 844), (True, 375, 667), (True, 390, 844), (True, 320, 568)]
+FIT_JS = r"""(aa) => {
+  window.setTimeout = () => 0;
+  const st = document.createElement('style'); st.textContent = '*{transition:none!important;animation:none!important}';
+  document.head.appendChild(st);
+  document.body.classList.toggle('accessible', aa);
+  show('game');
+  const out = [], fold = innerHeight - 40, W = document.documentElement.clientWidth;
+  for (const lv of ['ks3', 'gcse', 'alevel']) QUESTIONS[lv].forEach((q, i) => {
+    for (const pick of q.d) {
+      questions = [q]; qIdx = 0; totalQ = 1; level = lv;
+      document.getElementById('progress').innerHTML = '<div class="pip current"></div>';
+      showQ(); scrollTo(0, 0);
+      [...document.querySelectorAll('#options .opt-btn')].find(b => b.dataset.val === pick).click();
+      const nx = document.querySelector('#nextMount button');
+      const bottom = nx ? Math.round(nx.getBoundingClientRect().bottom) : 1e6;
+      if (bottom > fold || document.documentElement.scrollWidth > W)
+        out.push([lv, i, pick, bottom - Math.round(fold), document.documentElement.scrollWidth > W]);
+    }
+  });
+  return out;
+}"""
+NOTES = []
+
+
 def context(browser, base, html, lock_fresh):
     ctx = browser.new_context(viewport={'width': 390, 'height': 844})
     if lock_fresh:
@@ -664,7 +814,7 @@ def context(browser, base, html, lock_fresh):
     return page, errors
 
 
-def play(fails, html):
+def play(fails, html, fit=True):
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
     try:
@@ -677,6 +827,21 @@ def play(fails, html):
             page, errors2 = context(browser, base, html, True)
             for tag, what in page.evaluate(TIME_JS):
                 fails.append('%s: %s (Hidden Count-Up, sequence-solver-rr-001)' % (tag, what))
+            for aa, wd, ht in (FIT_SIZES if fit else []):
+                page, more = context(browser, base, html, True)
+                errors2 += more
+                page.set_viewport_size({'width': wd, 'height': ht})
+                over = page.evaluate(FIT_JS, aa)
+                where = '%s at %d x %d' % ('Aa' if aa else 'normal mode', wd, ht)
+                if aa and wd == 320:
+                    NOTES.append('fit, %s (canon 7.6.1, the recorded exception): Next below the fold on %d of 462 wrong answers, worst %dpx'
+                                 % (where, len(over), max([o[3] for o in over] or [0])))
+                    continue
+                for lv, i, pick, by, side in over[:5]:
+                    fails.append('fit: %s[%d], wrong option %s, %s: %s (the phone rule, canon 7.6.1)'
+                                 % (lv, i, pick, where, 'sideways scroll' if side and by <= 0 else 'Next %dpx below the fold' % by))
+                if len(over) > 5:
+                    fails.append('fit: %s: %d more wrong answers over the fold' % (where, len(over) - 5))
             browser.close()
             if errors or errors2:
                 fails.append('page errors: %s' % '; '.join((errors + errors2)[:3]))
@@ -686,9 +851,9 @@ def play(fails, html):
         proc.wait()
 
 
-def run(html):
+def run(html, fit=True):
     fails = []
-    bank = play(fails, html)
+    bank = play(fails, html, fit)
     if bank is not None:
         check_bank(fails, bank)
     return fails, sum(len(bank[k]) for k in COUNTS) if bank else 0
@@ -705,8 +870,8 @@ PLANTS = [
     ('alevel[32]', 'R8: a prose key set in maths mode', [("correct:'No, \\\\(|r| \\\\geq 1\\\\)'", "correct:'No, |r| \\\\geq 1'")]),
     ('alevel[55]', 'R2: a/r item without the formula line', [("{seq:'\\\\(a = 2, r = -2\\\\)',q:'T_n = ar^{n-1}',", "{seq:'\\\\(a = 2, r = -2\\\\)',q:'',")]),
     ('gcse[44]', 'SR-17: fill the gaps, type unstated', [("ask:'If arithmetic, fill the gaps'", "ask:'Fill in the gaps'")]),
-    ('gcse[30]', 'rr-002: a negative ratio back at GCSE', [("{seq:'3, 6, 12, 24, ...',ask:'What is the common ratio?',correct:'2',d:['3','4','6']}",
-     "{seq:'1, -3, 9, -27, ...',ask:'What is the common ratio?',correct:'-3',d:['3','-9','9']}")]),
+    ('gcse[30]', 'rr-002: a negative ratio back at GCSE', [("{seq:'3, 6, 12, 24, ...',ask:'What is the common ratio?',correct:'2',d:['3','4','6']",
+     "{seq:'1, -3, 9, -27, ...',ask:'What is the common ratio?',correct:'-3',d:['3','-9','9']")]),
     ('clock', 'rr-001: the HUD clock back', [
      ('<div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="streak">0</div></div>',
       '<div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="streak">0</div></div>' + HUD_CLOCK),
@@ -715,6 +880,13 @@ PLANTS = [
     ('score', 'rr-001: time back in the score', [("score+=BASE;",
      "score+=Math.max(1,Math.round(BASE/(1+0.15*Math.log(1+(Date.now()-qStartTime)/1000))));")]),
     ('results', 'rr-001: no time on the results screen', [(" · Time: ${_m>0?_m+'m '+_s+'s':_s+'s'}`;", "`;")]),
+    # SEQ-SOLVER-WORKED
+    ('ks3[0]', 'WORKED: a missing worked field', [(",worked:['The terms go up by 2 each time.','So the next term is \\\\(8 + 2 = 10\\\\).']}", "}")]),
+    ('ks3[1]', 'WORKED: last step contradicts the key', [("So the next term is \\\\(20 + 5 = 25\\\\).", "So the next term is \\\\(20 + 6 = 26\\\\).")]),
+    ('ks3[2]', 'WORKED: a wrong difference', [("'The terms go up by 4 each time.','So the next term is \\\\(15 + 4 = 19\\\\).'",
+                                              "'The terms go up by 3 each time.','So the next term is \\\\(15 + 4 = 19\\\\).'")]),
+    ('ks3[0]', 'WORKED: not shown on a wrong answer', [("else{showWorked(q);MaffsNext.wrong(", "else{MaffsNext.wrong(")]),
+    ('fit', 'WORKED: the phone rule undone', [("  #game.fb-open .opt-btn.disabled:not(.correct):not(.wrong){display:none}\n", "")], True),
 ]
 
 
@@ -726,10 +898,13 @@ def main():
     sys.stdout.reconfigure(encoding='utf-8')
     html = open(args.against or GAME, encoding='utf-8').read()
     fails, count = run(html)
-    print('%s: %d items, every key recomputed, every option read and clicked in Chromium' % (SLUG, count))
+    print('%s: %d items, every key recomputed, every option read and clicked in Chromium; every worked solution checked; '
+          'every wrong answer measured at three phone sizes' % (SLUG, count))
+    for n_ in NOTES[:1]:
+        print('  note: ' + n_)
     ok = True
     if not args.no_selftest and not args.against:
-        for tag, what, swaps in PLANTS:
+        for tag, what, swaps, *fit in PLANTS:
             bad = [old for old, _ in swaps if html.count(old) != 1]
             if bad:
                 print('  self-test %-38s *** CANNOT PLANT (%d) ***' % (what, html.count(bad[0])))
@@ -738,7 +913,7 @@ def main():
             planted = html
             for old, new in swaps:
                 planted = planted.replace(old, new)
-            rep, _ = run(planted)
+            rep, _ = run(planted, fit=bool(fit))   # the phone measurement runs only for the plant that needs it
             hit = [f for f in rep if f.startswith(tag)]
             ok = ok and bool(hit)
             print('  self-test %-38s %s' % (what, ('caught: ' + hit[0][:100]) if hit else '*** MISSED ***'))

@@ -63,6 +63,14 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 **Every PR:** no `check-changed.py` in the cloud (AGENTS.md, CLOUD-LEAN); merge only via `python scripts/merge-pr.py <n>
 --watch --wait 3600` (needs a green Gate and main, §7.8.3) and report its last line.
 
+## 2026-11-03 (cloud): SEQ-SOLVER-WORKED (`docs/handover/contracts/2026-11-03-seq-solver-worked.md`, Shared; stops at a green Gate for Project Claude's review and Jon's "merge")
+
+- Agent: Claude Code. Primary checkout `/home/user/maffsgames`, branch `claude/stoic-galileo-xvzt45` (from main 03acf76; first commits ff2c555 DASHBOARD Amendment 1, 0e2b471 closes SEQ-SOLVER-FIXES).
+- Built: a `worked` field (1 to 3 steps) on all 154 items, question text untouched (ids unchanged); shown under the options on a wrong answer, before Next, in the house "How it goes" list. Phone rule during that feedback: calculator and the two unpicked distractors hidden, HUD and card compacted. Verifier: every worked line checked against its own item (251 equalities, 81 difference and ratio claims, every key), the panel order in Chromium, Next above the fold on all 462 wrong answers at 320, 375, 390 (and Aa 375, 390); 15/15 plants.
+- **State:** PR pending, Gate pending. On "merge": `merge-pr.py <n> --watch --wait 3600`, entry to MERGED, contract to `docs/history/contracts/`, then DASHBOARD-METRICS.
+
+Record: agent Claude Code; wall pending; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-03 (cloud): SEQ-SOLVER-FIXES (`docs/history/contracts/2026-11-03-seq-solver-fixes.md`, Shared)
 
 - Agent: Claude Code. Primary checkout `/home/user/maffsgames`, branch `claude/stoic-galileo-xvzt45` (from main 9e17ddf; main b18b064, #650, merged in).
