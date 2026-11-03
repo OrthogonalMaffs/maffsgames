@@ -810,6 +810,12 @@ closed them had shipped. The four, and what closed them, are in §8.1.
     (juxtaposition AND, + OR, overline/′/¬ NOT), so AB + BC = B(A + C).
   Its first run flagged 42 new pairs in 9 games: 28 already in the findings register (each ledger entry
   carries its `register` id), 14 filed as `<slug>-f0-NNN`. All are ledgered as known; a new one fails CI.
+- **No dash before a number, a variable or a minus sign** (Jon, 3 Nov 2026, contract DASH-MINUS): "never put a dash
+  directly before a number, a variable or a minus sign in text students read; use a colon or rephrase." An em dash, or
+  an en dash with a space before it, reads as a minus there ("Victor is wrong — x = 625" reads as −x = 625); "£" counts
+  as a number, and so does a value filled in at run time. An unspaced en dash between two numbers is a range and stays
+  ("1–3"). Where a hit is one option of an answer set, every option's separator changes with it, so the key never stands
+  out by its punctuation. `scripts/check-dash-minus.py` (CI) fails one in any student-facing file. Reason: §12, DASH-MINUS.
 
 ### 7.1.1 Scope of the KaTeX rule — expressions, not unit symbols
 
@@ -3239,3 +3245,23 @@ every cloud session had to re-learn it.
   jobs>`, `NOT FINISHED after <n>s` or `NO RUN FOUND`, and exit 0 only for green. The guard is not changed by it. Its
   selftest covers all four outcomes, and a watch planted to trust the run's own status (green while a job still runs) is
   caught.
+
+## DASH-MINUS: a dash before a number reads as a minus (Jon, 3 Nov 2026)
+
+The reason for §7.1's "No dash before a number, a variable or a minus sign". An answer option in Terrible Advice read
+"Victor is wrong — x = 625", which a student reads as "−x = 625". The struggling student, the platform's first reader, is
+the one least able to tell a dash from a minus sign, and a sign error is exactly the slip these games teach against.
+Nothing checked for it.
+
+- **Why 206, not 84.** A sweep on 1 Nov counted 84 in 24 games: a dash before a digit or a variable. The check counts what
+  the rule says: "£" before a number (68 of Better Value's 79 were "better value — £74"), an opening bracket, a value filled
+  in at run time (`${…}` in a template, `{{…}}` in a room), and every spelling of the dash (146 of the 206 were `—`
+  escapes in a script string). The words "a", "A" and "I" are words, not variables, when a word or an apostrophe follows
+  ("— a census would be better", "— I am"), and so is a letter hyphened into a word ("– A-Level"); "— a·b" and "— I²" are
+  variables (Jon approved both calls, 3 Nov). Code comments are not student-facing and are not read.
+- **Answer sets change together.** 125 dashes sat in the same answer sets as hits but before a word ("Yes — both are
+  force" beside the key "No — [M L T⁻²] ≠ [M L T⁻¹]"). Changing only the hit would have made the key the one option with a
+  colon, a tell. Every option of a set with a hit changed with it (74 of those dashes); sets with no hit were left alone.
+- **Verifiers read the punctuation too.** Three verifiers found an option's verdict by its dash (Core Maths 2B's SR-31
+  lead, the muppet games' "is correct —"); with colons they would have gone quietly blind, not failed. They read both
+  separators now, and eleven quoted options were synced to their new text.

@@ -997,7 +997,7 @@ function fire(p){
       if(rem===0){
         over=true;
         finishGame(p);
-        setTurnBar(`⚔  PLAYER ${p} WINS — ${p===1?'ALPHA':'OMEGA'} BATTALION VICTORIOUS  ⚔`);
+        setTurnBar(`⚔  PLAYER ${p} WINS: ${p===1?'ALPHA':'OMEGA'} BATTALION VICTORIOUS  ⚔`);
       } else {
         MaffsLock.timer(()=>{ clearMsgs(); nextTurn(); },1400);
       }

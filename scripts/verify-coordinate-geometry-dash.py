@@ -186,7 +186,7 @@ L = [
     ('Circle: (x−2)² + (y−2)² = 8. Line: y = x', text({2: '2', 1: '1 (tangent)', 0: '0'}[
         crossings(circle((2, 2), 8), Y - X)])),
     ('Circle: (x−3)² + (y−3)² = 9. Line: y = 9',
-     text('No — line is above the circle' if crossings(circle((3, 3), 9), Y - 9) == 0 and 9 > 3 + 3 else '?')),
+     text('No: line is above the circle' if crossings(circle((3, 3), 9), Y - 9) == 0 and 9 > 3 + 3 else '?')),
     ('parametrically: x = t, y = t²', ('eq', para(lambda t: t, lambda t: t ** 2))),
     ('x = 2cos t, y = 2sin t', ('eq', X ** 2 + Y ** 2 - 4)),                  # cos^2 + sin^2 = 1
     ('x = t + 1, y = t² − 2', ('eq', para(lambda t: t + 1, lambda t: t ** 2 - 2))),

@@ -317,7 +317,7 @@ function buildGhostSteps(t,base=currentPuzzle.base){
     else
       push({...cur,b:t.b},'Horizontal stretch',
         'Stretch, scale factor '+fmt(1/m)+', parallel to the x-axis'+(t.b<0?'; Reflection in the y-axis':''),
-        'The '+fmt(t.b)+' sits inside the bracket, so it does the opposite of what it looks like \u2014 f('+fmt(t.b)+'x) scales x by '+fmt(1/m)+(t.b<0?' and flips it across the y-axis':'')+'.');
+        'The '+fmt(t.b)+' sits inside the bracket, so it does the opposite of what it looks like: f('+fmt(t.b)+'x) scales x by '+fmt(1/m)+(t.b<0?' and flips it across the y-axis':'')+'.');
   }
   if(Math.abs(t.h)>1e-9){
     push({...cur,h:t.h},'Horizontal shift',

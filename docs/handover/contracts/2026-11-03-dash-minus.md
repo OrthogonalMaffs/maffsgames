@@ -43,3 +43,18 @@ review; stop for Jon's "merge"; Record line.
 STOP IF
 A hit cannot be fixed without changing what a question says (list it for Jon); more than 150 hits (report the count by
 file before fixing).
+
+## Amendment 1 (Jon, 3 Nov 2026, chat, verbatim)
+
+Rulings (Jon, 3 Nov), recorded in the contract file as Amendment 1:
+1. Scope: all 206 in this one PR. "£" was meant: "better value — £74" is a dash before a number. Text only, a colon
+   or a rephrase each, every touched game's verifier run, the before/after table in the PR grouped by file.
+2. Both judgement calls approved: article "a"/"A"/"I" and "A-Level" count as words as you set them; runtime values
+   (${...}) count, and 52dle's "— ${puzzle.cat}" is judged when fixing.
+3. Claims: one claim commit naming every listed game the sweep touches, released in the PR. It locks them against
+   home-lane batches; the home lane's queue today (roster sign-off, todo, index.html, next-control.js, the-6-ps)
+   touches none of them.
+4. games/the-perfect-prank/: fix it. It is live and linked from the escape-rooms hub (an earlier 40-minute room),
+   and is kept out of the roster on purpose (docs/todo.md), so students read it.
+5. glorious-gantt: fix it with the rest.
+Then carry on to the contract's end: Gate green, Shared review, stop for Jon's "merge".

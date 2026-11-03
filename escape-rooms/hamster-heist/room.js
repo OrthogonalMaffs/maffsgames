@@ -103,8 +103,8 @@ window.ROOM = {
       clue: '&ldquo;The hopper drops its catch when it is told <b>the smallest volume it could possibly be ' +
             'holding</b>. Not what is in it. The least it could be.&rdquo;' },
     { id: 'jotter', name: 'The cage log', where: 'a ruled jotter, kept up for twenty years and never once read',
-      clue: 'Warming, plotted, and it comes out straight: <b>{{grad.t1}} minutes &mdash; {{grad.T1}} degrees. ' +
-            '{{grad.t2}} minutes &mdash; {{grad.T2}} degrees.</b>' },
+      clue: 'Warming, plotted, and it comes out straight: <b>{{grad.t1}} minutes, {{grad.T1}} degrees. ' +
+            '{{grad.t2}} minutes, {{grad.T2}} degrees.</b>' },
     { id: 'manual', name: 'Heat lamp manual', where: 'being used to prop up a bench leg',
       clue: '&ldquo;The lamp holds the last catch until it is set to the <b>warming rate it should expect, in ' +
             'degrees per minute</b>. Get it wrong and it simply goes on holding.&rdquo;' },
@@ -163,7 +163,7 @@ window.ROOM = {
           "miss": 3
         }
       ],
-      missTitle: '{{rpm.miss}} is right &mdash; {{rpm.miss}} per <i>second</i>.',
+      missTitle: '{{rpm.miss}} is right: {{rpm.miss}} per <i>second</i>.',
       missSays: '{{rpm.miss}} turns a second is exactly the right piece of work. But the dial is marked RPM: ' +
                 'revolutions per <b>minute</b>. One step left, and it is a &times;60.',
       hints: [

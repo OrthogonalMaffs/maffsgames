@@ -963,7 +963,7 @@ function showModal(won, sc, secs) {
   m.classList.remove('hidden');
   document.getElementById('modal-result').textContent = won ? 'Correct!' : 'Hard Luck.';
   document.getElementById('modal-result').className = 'modal-result ' + (won ? 'win' : 'lose');
-  document.getElementById('modal-answer').innerHTML = `The answer was <span>${puzzle.a}</span> \u2014 ${puzzle.cat}`;
+  document.getElementById('modal-answer').innerHTML = `The answer was <span>${puzzle.a}</span>: ${puzzle.cat}`;
   document.getElementById('share-grid').textContent = buildShareGrid();
 
   const guesses = state.guesses.length;

@@ -243,7 +243,7 @@ ctx:"A = (1, 2) and B = (4, 6)",q:"Find the distance AB",opts:["5","7","√7","2
 {draw:q=>{setView(-6,6,-6,6);drawGrid();drawPoint(-3,1);drawPoint(1,4);drawSegment(-3,1,1,4,'#06b6d4',1.5,[4,4])},
 ctx:"A = (−3, 1) and B = (1, 4)",q:"Distance AB?",opts:["5","7","√5","25"],correct:"5",steps:["d = √((1−(−3))² + (4−1)²)","= √(16 + 9) = √25 = 5"]},
 {draw:q=>{setView(-2,10,-2,8);drawGrid();drawPoint(0,0);drawPoint(5,5);drawSegment(0,0,5,5,'#06b6d4',1.5,[4,4])},
-ctx:"A = (0, 0) and B = (5, 5)",q:"Distance AB?",opts:["5√2","10","5","50"],correct:"5√2",steps:["d = √(25 + 25) = √50 = 5√2","Note: 5√2 and √50 are the same — 5√2 is the simplified form"]},
+ctx:"A = (0, 0) and B = (5, 5)",q:"Distance AB?",opts:["5√2","10","5","50"],correct:"5√2",steps:["d = √(25 + 25) = √50 = 5√2","Note: 5√2 and √50 are the same, and 5√2 is the simplified form"]},
 // MORE EQUATIONS
 {draw:q=>{setView(-6,8,-4,8);drawGrid();drawLine(0.5,2,'#3b82f6')},
 ctx:"Which line is shown?",q:"The line passes through (0, 2) and (4, 4)",opts:["y = ½x + 2","y = 2x + 2","y = ½x + 4","y = x + 2"],correct:"y = ½x + 2",steps:["m = (4−2)/(4−0) = 2/4 = ½","y-intercept = 2","y = ½x + 2"]},
@@ -287,7 +287,7 @@ ctx:"x² + y² = 25. Find the tangent at (3, 4).",q:"Equation of the tangent?",o
 {draw:q=>{setView(-4,10,-4,8);drawGrid();drawCircle(2,2,Math.sqrt(8));drawLine(1,0,'#f97316',1.5)},
 ctx:"Circle: (x−2)² + (y−2)² = 8. Line: y = x",q:"How many intersection points?",opts:["2","1 (tangent)","0","Cannot determine"],correct:"2",steps:["Substitute y = x: (x−2)² + (x−2)² = 8","2(x−2)² = 8 → (x−2)² = 4","x − 2 = ±2 → x = 0 or x = 4","Two intersections: (0,0) and (4,4)"]},
 {draw:q=>{setView(-4,10,-4,10);drawGrid();drawCircle(3,3,3);drawLine(0,9,'#f97316',1.5)},
-ctx:"Circle: (x−3)² + (y−3)² = 9. Line: y = 9",q:"Does the line intersect the circle?",opts:["No — line is above the circle","Yes — 2 points","Yes — tangent","Passes through centre"],correct:"No — line is above the circle",steps:["Centre (3,3), radius 3","Highest point of circle: y = 3 + 3 = 6","Line y = 9 is above the circle","No intersection"]},
+ctx:"Circle: (x−3)² + (y−3)² = 9. Line: y = 9",q:"Does the line intersect the circle?",opts:["No: line is above the circle","Yes: 2 points","Yes: tangent","Passes through centre"],correct:"No: line is above the circle",steps:["Centre (3,3), radius 3","Highest point of circle: y = 3 + 3 = 6","Line y = 9 is above the circle","No intersection"]},
 // PARAMETRIC
 {draw:q=>{setView(-4,8,-2,10);drawGrid();drawParaCurve(t=>t,t=>t*t,-3,3)},
 ctx:"A curve is defined parametrically: x = t, y = t²",q:"What is the Cartesian equation?",opts:["y = x²","y = 2x","x = y²","y = √x"],correct:"y = x²",steps:["x = t → t = x","Substitute into y = t²:","y = x²"]},

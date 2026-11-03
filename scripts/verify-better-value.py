@@ -75,7 +75,7 @@ REVIEW = dict([
     r('bv_gcse_009', [38 + F('4.99') + 3], [F('45.99') - 45], 'shop is cheaper overall', 'lt'),
     r('bv_gcse_010', [10 + 100 * F('0.20')], [100 * F('0.20')], 'unlimited plan is cheaper', 'lt'),
     r('bv_gcse_011', [25 + F('3.50')], [F('3.50') - 2], 'shop is cheaper', 'lt'),
-    r('bv_gcse_012', [F(200, 40), F(10 * (5 + 8), 40)], [F(40, 4), 5 + 8, 10 * 13], 'Cars are cheaper — £3.25', 'lt'),
+    r('bv_gcse_012', [F(200, 40), F(10 * (5 + 8), 40)], [F(40, 4), 5 + 8, 10 * 13], 'Cars are cheaper: £3.25', 'lt'),
     r('bv_gcse_013', [20 + F('4.99')], [26 - (20 + F('4.99'))], 'deal store is cheaper overall', 'lt'),
     r('bv_gcse_014', [F(3, 2), F('6.50') / 5], [], 'Bag B is better value', 'lt'),
     r('bv_gcse_015', [F('3.60') / 12, F(5, 20)], [], 'Pack B is better value', 'lt'),
@@ -378,7 +378,7 @@ def play(fails, html):
 PLANTS = [
     ('bv_core_036', 'r-003: £518 keyed', "total \\u00a3584 vs", "total \\u00a3518 vs"),
     ('bv_core_037', 'r-004: premium keyed the better ROI',
-     "Premium flyers are better value \\u2014 \\u00a3860 vs \\u00a3620 profit",
+     "Premium flyers are better value: \\u00a3860 vs \\u00a3620 profit",
      "Premium flyers give better return on investment \\u2014 net profit \\u00a3860 vs \\u00a3620 for standard"),
     ('bv_core_037', 'r-004: the profit criterion not stated', " She wants the most profit from this one print run.", ""),
     ('bv_core_049', 'r-005: 8.8 hours', "above approximately 8.5 hours per week", "above approximately 8.8 hours per week"),

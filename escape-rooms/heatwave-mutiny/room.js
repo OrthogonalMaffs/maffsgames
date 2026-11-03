@@ -382,7 +382,7 @@ window.ROOM = {
         }
       ],
       missTitle: '{{freq.miss}} Hz. Still jamming.',
-      missSays: 'The inequality is solved correctly — {{freq.miss}} really is inside it. But it was never going to ' +
+      missSays: 'The inequality is solved correctly: {{freq.miss}} really is inside it. But it was never going to ' +
                 'pick out one frequency on its own: {{freq.band}} all satisfy it. Taking the largest one and stopping ' +
                 'there ignores the condition doing the other half of the work, and the disruptor carries on.',
       hints: [

@@ -1133,7 +1133,7 @@ function renderHowTo() {
   if (currentLevel === 'formula') {
     mount.innerHTML = [
       tex('x = \\dfrac{-b \\pm \\sqrt{b^2-4ac}}{2a}'),
-      mx('Round each root to 2 decimal places — \\(1.2378\\) is entered as \\(1.24\\).'),
+      mx('Round each root to 2 decimal places: \\(1.2378\\) is entered as \\(1.24\\).'),
       mx('If \\(b^2-4ac\\) is negative, press "No real solutions" instead.')
     ].map(s => `<p>${s}</p>`).join('');
     return;
@@ -1457,7 +1457,7 @@ function hfStep4Html(narrate, split) {
   const { a, c } = currentQ;
   const line = `${a === 1 ? '' : a}x^2${hfLaterTerm(split.m, 'x')}${hfLaterTerm(split.n, 'x')}${hfLaterTerm(c, '')}`;
   const note = narrate
-    ? `<div class="hf-note">${mx(`Either order is fine — \\(${split.m}x\\) then \\(${split.n}x\\), or the other way round.`)}</div>`
+    ? `<div class="hf-note">${mx(`Either order is fine: \\(${split.m}x\\) then \\(${split.n}x\\), or the other way round.`)}</div>`
     : `<div class="hf-step-prompt">Split the middle term.</div>`;
   return note + `<div class="hf-step-prompt">${tex(line)}</div>` +
     `<button class="hf-choice-btn hf-continue-btn" onclick="hfStep4Continue()">Continue</button>`;

@@ -199,7 +199,7 @@ def check_bank(fails, opens, bank):
             if qid in FALSE_RULES and FALSE_RULES[qid][0] in text:
                 fails.append('%s %s: the %s states a false rule ("...%s")' % (FALSE_RULES[qid][1], qid, where, FALSE_RULES[qid][0]))
         for o in opts:
-            if not o['correct'] and re.search(r' is correct \u2014', o['text']):
+            if not o['correct'] and re.search(r' is correct (?:\u2014|:)', o['text']):
                 adv = stm.numbers(q['advice'])
                 for g in stm.numbers(o['text']):
                     if not any(stm.same(a, g[0]) and a[1] == g[1] for a in adv):

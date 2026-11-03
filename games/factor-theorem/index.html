@@ -1176,7 +1176,7 @@ function renderPractice() {
       const right = markOptions(group, q.finalAnswer);
       const qScore = finish(right);
       feedback.className = 'feedback-msg ' + (right ? 'correct-msg' : 'wrong-msg');
-      feedback.textContent = right ? (qScore === 3 ? 'Correct — full marks' : `Correct — ${qScore}/3`) : 'Not this line: the one that proves it is ticked';
+      feedback.textContent = right ? (qScore === 3 ? 'Correct — full marks' : `Correct: ${qScore}/3`) : 'Not this line: the one that proves it is ticked';
       if (q.explain) showExplain(group, q.explain);
       if (!right) waitAfterWrong();
       return;
@@ -1201,7 +1201,7 @@ function renderPractice() {
     if (allCorrect) {
       const qScore = finish(true);
       feedback.className = 'feedback-msg correct-msg';
-      feedback.textContent = qScore === 3 ? 'Correct — full marks' : `Correct — ${qScore}/3`;
+      feedback.textContent = qScore === 3 ? 'Correct — full marks' : `Correct: ${qScore}/3`;
     } else if (!hasScaffold || attempts >= 3) {
       // A typed answer gets one attempt; a scaffold, three. Then the answers are shown.
       finish(false);

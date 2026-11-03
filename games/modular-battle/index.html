@@ -132,7 +132,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
       <p>The dot grid shows the groups visually</p>
       <p>Red dots = the remainder!</p>
     </div>
-    <button class="btn btn-primary" onclick="startGame()">START — 60 SECONDS</button>
+    <button class="btn btn-primary" onclick="startGame()">START: 60 SECONDS</button>
     <div class="maffs-start-note" data-maffs-start-note></div>
   </div>
 
@@ -256,8 +256,8 @@ function renderDots(a, b) {
   }
 
   label.textContent = remainder > 0
-    ? `${a} dots in groups of ${b} — ${groups} full ${groups === 1 ? 'group' : 'groups'}, and what is left over:`
-    : `${a} dots in groups of ${b} — ${groups} full ${groups === 1 ? 'group' : 'groups'}, nothing left over:`;
+    ? `${a} dots in groups of ${b} make ${groups} full ${groups === 1 ? 'group' : 'groups'}, and what is left over:`
+    : `${a} dots in groups of ${b} make ${groups} full ${groups === 1 ? 'group' : 'groups'}, nothing left over:`;
 }
 
 function loadQuestion() {

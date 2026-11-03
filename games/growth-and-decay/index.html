@@ -313,7 +313,7 @@ core: [
      wrong:['The savings increase by £1.06 each year','The savings decrease by 6% each year','The savings multiply by 0.06 each year']},
    sq3:{prompt:'Confirm the initial deposit when t = 0.',answer:1200,unit:'£'},
    sq4:null},
-  {id:'CM9',modelLatex:'N = k \\times e^{-0.693t}',context:'Radioactive decay — N = mass (g), t = days. Half-life is 1 day since e^(−0.693) ≈ 0.5.',
+  {id:'CM9',modelLatex:'N = k \\times e^{-0.693t}',context:'Radioactive decay: N = mass (g), t = days. Half-life is 1 day since e^(−0.693) ≈ 0.5.',
    growth:false,graphFn:(x)=>80*Math.exp(-0.693*x),graphXMax:8,graphYLabel:'N (g)',graphXLabel:'t',
    sq_order:[3,1,2],
    sq1:{prompt:'Use the model to calculate the mass when t = 3 and k = 80. Give your answer to 3 significant figures.',answer:10,sf:3,unit:'g'},
@@ -969,7 +969,7 @@ const calc=window.MaffsCalc?MaffsCalc.mount($('calc'),{keys:'scientific'}):null;
     'So '+k('A = 500')+'.<br><br>'+
     'If instead we know '+k('P = 200 \\times b^t')+' and '+k('P = 350')+' when '+k('t = 4')+':'+
     K('350 = 200 \\times b^4 \\quad\\Rightarrow\\quad b^4 = 1.75 \\quad\\Rightarrow\\quad b = 1.75^{0.25} \\approx 1.150')+
-    'So the base is approximately <b>1.150</b> — a 15% growth rate per unit time.';
+    'So the base is approximately <b>1.150</b>: a 15% growth rate per unit time.';
 })();
 
 (function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();

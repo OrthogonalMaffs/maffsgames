@@ -203,7 +203,7 @@ def check_bank(fails, bank):
             says_yes = o.startswith('Yes') or o.startswith('Neither')
             if says_yes and homog and (d is None or d == lhs):
                 fails.append('%s: the wrong option %r is also right (SR-16)' % (w, o))
-            verdict = lambda x: x.split(' ')[0].rstrip(',')
+            verdict = lambda x: x.split(' ')[0].rstrip(',:')   # 'Yes:' since DASH-MINUS (3 Nov 2026), 'Yes' before
             if verdict(o) in ('Yes', 'No') and verdict(o) == verdict(q['c']):
                 fails.append('%s: the wrong option %r gives the key\'s verdict (SR-31)' % (w, o))
         if re.search(r'\bP\s*=', q['p']) and 'power' not in text.lower():
@@ -279,12 +279,12 @@ def play(fails, html):
 PLANTS = [
     ('hud:', 's1-004: the HUD Time back', '<div class="hud-item"><div class="hud-label">Score</div>',
      '<div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div><div class="hud-item"><div class="hud-label">Score</div>'),
-    ('item 1 ', 's1-003: [MLT⁻²] unspaced', "c:'No — [M L T⁻²] ≠ [M L T⁻¹]'", "c:'No — [MLT⁻²] ≠ [MLT⁻¹]'"),
+    ('item 1 ', 's1-003: [MLT⁻²] unspaced', "c:'No: [M L T⁻²] ≠ [M L T⁻¹]'", "c:'No — [MLT⁻²] ≠ [MLT⁻¹]'"),
     ('item 18 ', 's1-006: the stem unlike the others', "p:'Is P = F²v dimensionally homogeneous?'", "p:'In P = F²v, is this homogeneous?'"),
     ('item 4 ', 't5-001: s = ut + at² keyed No', "c:'Yes — all terms are [L]',d:['No — it should be ½at², so the dimensions do not match'",
      "c:'No — it should be ½at², so the dimensions do not match',d:['Yes — all terms are [L]'"),
     ('item 25 ', "t5-002: Stokes' law without mu's dimensions", "ctx:'Viscosity μ has dimensions [M L⁻¹ T⁻¹].',", ''),
-    ('item 2 ', "s1-001: 'Yes - [M L T^-2]' beside a Yes key", "'No — E is [M L T⁻²]'", "'Yes — both sides are [M L T⁻²]'"),
+    ('item 2 ', "s1-001: 'Yes - [M L T^-2]' beside a Yes key", "'No: E is [M L T⁻²]'", "'Yes — both sides are [M L T⁻²]'"),
     ('item 3 ', 's1-002: P = Fv with P undefined', "{p:'Is P = Fv dimensionally homogeneous?',ctx:'P is power.',",
      "{p:'Is P = Fv dimensionally homogeneous?',"),
     ('item 5 ', "t5-004: P = I²R without R's dimensions",

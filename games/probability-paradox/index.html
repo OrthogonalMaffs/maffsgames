@@ -215,7 +215,7 @@ q:"Is this possible?",
 opts:["Yes — it's Simpson's Paradox","No — A must be better overall","Only if sample sizes are equal","Only for binary outcomes"],
 correct:"Yes — it's Simpson's Paradox",
 sim:{type:'simpson',labels:['Paradox occurs','No paradox'],expected:[1.0,0.0],fixed:true,head:'Checking the hospitals\' figures...',note:'No chance involved: these figures give the paradox every time'},
-steps:["Hospital A: mild 19/20 = 95%, severe 60/200 = 30%","Hospital B: mild 180/200 = 90%, severe 5/20 = 25%","A is better in BOTH groups","Overall: A 79/220 = 36%, B 185/220 = 84% — B is better overall","A treats mostly severe cases (low recovery); B treats mostly mild ones. The mix, not the quality of care, drives the overall rate"],
+steps:["Hospital A: mild 19/20 = 95%, severe 60/200 = 30%","Hospital B: mild 180/200 = 90%, severe 5/20 = 25%","A is better in BOTH groups","Overall: A 79/220 = 36%, B 185/220 = 84%, so B is better overall","A treats mostly severe cases (low recovery); B treats mostly mild ones. The mix, not the quality of care, drives the overall rate"],
 misconception:"Aggregated data can reverse trends visible in subgroups. Always check for lurking variables when comparing rates."},
 
 {scenario:"<strong>The Inspection Paradox.</strong> Buses arrive at random, independently of each other, at an average rate of one every 10 minutes (a Poisson process): there is no timetable. You arrive at the bus stop at a random time.",
@@ -258,7 +258,7 @@ steps:["P(A|B) = P(A ∩ B) / P(B)","= 0.2 / 0.5 = 0.4"]},
 
 {scenario:"P(A) = 0.4, P(B) = 0.5, P(A ∩ B) = 0.2",
 q:"Are A and B independent?",
-opts:["Yes — P(A∩B) = P(A)P(B)","No — P(A∩B) ≠ P(A)P(B)","Cannot determine","Only if mutually exclusive"],correct:"Yes — P(A∩B) = P(A)P(B)",
+opts:["Yes: P(A∩B) = P(A)P(B)","No: P(A∩B) ≠ P(A)P(B)","Cannot determine","Only if mutually exclusive"],correct:"Yes: P(A∩B) = P(A)P(B)",
 steps:["P(A) × P(B) = 0.4 × 0.5 = 0.2","P(A ∩ B) = 0.2","Since P(A∩B) = P(A)P(B), they are independent"],
 misconception:"Independent ≠ mutually exclusive. Independent means knowing one happened doesn't change the probability of the other."},
 
@@ -334,7 +334,7 @@ misconception:"P(Disease|Positive) depends on BOTH the test accuracy AND how com
 
 {scenario:"John says: 'I flipped a coin 10 times and got 7 heads. The coin must be biased.'",
 q:"Is John's reasoning valid?",
-opts:["No — 7/10 is within normal variation","Yes — 7/10 proves bias","Yes — a fair coin would give exactly 5 heads","Depends on the coin"],correct:"No — 7/10 is within normal variation",
+opts:["No: 7/10 is within normal variation","Yes: 7/10 proves bias","Yes: a fair coin would give exactly 5 heads","Depends on the coin"],correct:"No: 7/10 is within normal variation",
 explain:"P(7+ heads in 10 flips of fair coin) ≈ 0.17. That's not unusual enough to conclude bias. We'd need a significance test with more data."},
 
 {scenario:"'Every famous band I know of kept going when things got hard. So if a band never gives up, it will become famous.'",
@@ -349,13 +349,13 @@ explain:"The 'hot hand fallacy' was declared a fallacy in 1985 by Gilovich, Vall
 
 {scenario:"'90% of entrepreneurs who succeeded worked more than 60 hours a week. Therefore working 60+ hours increases your chance of success.'",
 q:"What's wrong with this reasoning?",
-opts:["Confusion of inverse — P(A|B) ≠ P(B|A)","Nothing — it's valid","Gambler's fallacy","Anchoring"],correct:"Confusion of inverse — P(A|B) ≠ P(B|A)",
+opts:["Confusion of inverse: P(A|B) ≠ P(B|A)","Nothing: it's valid","Gambler's fallacy","Anchoring"],correct:"Confusion of inverse: P(A|B) ≠ P(B|A)",
 explain:"P(60+ hours | success) = 0.9 does NOT mean P(success | 60+ hours) is high. Maybe 90% of FAILED entrepreneurs also worked 60+ hours. We need P(success | hours) not P(hours | success).",
 misconception:"This is the prosecutor's fallacy / confusion of the inverse. P(A|B) ≠ P(B|A). Extremely common in media and business advice."},
 
 {scenario:"A news article reports: 'People who eat chocolate daily are 30% less likely to develop heart disease.'",
 q:"Can we conclude chocolate prevents heart disease?",
-opts:["No — correlation ≠ causation","Yes — 30% is significant","Only if it's dark chocolate","Depends on sample size"],correct:"No — correlation ≠ causation",
+opts:["No: correlation ≠ causation","Yes: 30% is significant","Only if it's dark chocolate","Depends on sample size"],correct:"No: correlation ≠ causation",
 explain:"Confounding variables: people who eat chocolate daily may be wealthier, less stressed, or have other lifestyle differences. An observational study cannot establish causation."},
 
 {scenario:"'My horoscope said I'd have a good day, and I did! Astrology works.'",

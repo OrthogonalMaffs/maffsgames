@@ -48,9 +48,10 @@ def check_bank(fails, bank):
     if len(bank) != COUNT:
         fails.append('bank: %d questions, expected %d' % (len(bank), COUNT))
     # SR-31 (Jon, 13 Oct 2026; t2-001's ruling extended): no wrong option gives the key's verdict or choice, the
-    # words before its dash ("Yes", "No", "A", "B"), whatever reason follows.
+    # words before its dash ("Yes", "No", "A", "B"), whatever reason follows. Since DASH-MINUS (3 Nov 2026) an option set
+    # may separate verdict and reason with a colon instead ("B: £1,500 is more ..."), so both are read.
     for i, q in enumerate(bank):
-        lead = lambda o: o.split(' — ', 1)[0].strip() if ' — ' in o else None  # noqa: E731
+        lead = lambda o: re.split(r' — |: ', o, maxsplit=1)[0].strip() if re.search(r' — |: ', o) else None  # noqa: E731
         k = lead(q['options'][q['correct']])
         for j, o in enumerate(q['options']):
             if k and j != q['correct'] and lead(o) == k:
@@ -138,9 +139,9 @@ def esc(x):
 PLANTS = [
     ('Q28 (t2-001)', 't2-001: option D "Data breach - larger potential loss"',
      "'Neither — both premiums cost more than the expected loss']", "'Data breach — larger potential loss']"),
-    ('Q33 (SR-31)', "s1-001: Q33's old D (the key's verdict, a wrong EV)", "'B — £1,500 is more than A’s EV of £1,400']",
+    ('Q33 (SR-31)', "s1-001: Q33's old D (the key's verdict, a wrong EV)", "'B: £1,500 is more than A’s EV of £1,400']",
      "'A — EV = £4,000']"),
-    ('Q24 (SR-31)', "s1-001: Q24's old D (the key's verdict)", "'Yes — 4.2 rounds to 4, so 4 is the most likely value']",
+    ('Q24 (SR-31)', "s1-001: Q24's old D (the key's verdict)", "'Yes: 4.2 rounds to 4, so 4 is the most likely value']",
      "'No — the most likely value is the median, not the mean']"),
     ('Q16 precision', 's1-003: Q16 without its precision', ' Give your answer to 4 decimal places.', ''),
     ('Q29 assumption', 's1-004: Q29 without its assumption', ' Assume the defences prevent all flood damage.', ''),
