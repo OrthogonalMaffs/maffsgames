@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: Who Ate All the Pies? (every question of the five stages over 20 seeds a slot, recomputed from its own printed numbers with exact fractions, never from the bank's or the game's code: fractions, amounts, every table angle, can-you-tell verdicts, totals; slips different from the answer; sectors make 360; the game's marking compared with an independent marker on thousands of probe answers; sessions of ten, easiest first; all five stages played in the page at 390 px, worked example then ten questions with the keypad open: every drawn slice read back from its path against the data, labels and key text at least 12 px, a wrong table angle visibly leaves the circle open, one board submission a stage; the first three questions of every stage at 375, 360, 320, 1280 and 1366 px, with a wide font: answer boxes, keys and Next above the fold, no sideways scroll; the look at every size: the stall picture on the start screen and no SVG stall, the redcurrant accent, the first stage button above the fold; fault-injection self-test: the planted faults, each caught) | | 4
+# ci-shards: Who Ate All the Pies? (every question of the five stages over 20 seeds a slot, recomputed from its own printed numbers with exact fractions, never from the bank's or the game's code: fractions, amounts, every table angle, can-you-tell verdicts, totals; slips different from the answer; sectors make 360; the game's marking compared with an independent marker on thousands of probe answers; sessions of ten, easiest first; all five stages played in the page at 390 px, worked example then ten questions with the keypad open: every drawn slice read back from its path against the data, labels and key text at least 12 px, a wrong table angle visibly leaves the circle open, one board submission a stage; the first three questions of every stage at 375, 360, 320, 1280 and 1366 px, with a wide font: answer boxes, keys and Next above the fold, no sideways scroll; a fraction answer is the shared stacked input (MaffsFractionInput), numerator over the bar over denominator; the look at every size: the stall picture on the start screen and no SVG stall, the redcurrant accent, the first stage button above the fold; fault-injection self-test: the planted faults, each caught) | | 4
 # ci-deps: games/who-ate-all-the-pies/ schools/assets/pie-game.js schools/assets/pie-chart-generator.js
 """Independent verification for Who Ate All the Pies? (games/who-ate-all-the-pies/), built 27 Oct 2026 (contract WHO-ATE-ALL-THE-PIES).
 SR-30: checked from its first PR.
@@ -21,7 +21,9 @@ arithmetic, and compares:
   Chart    the drawn slices, read back from each SVG path, match the data in degrees and make 360; every slice has a written key
            naming it; text is at least 12 px; a stage 3 chart drawn from typed angles that do not make 360 is flagged open.
   Page     one worked example then ten questions a stage; boxes, keys and Next above the fold at the sizes; no sideways scroll;
-           a mark only for a right answer; one board submission a stage.
+           a mark only for a right answer; one board submission a stage; a fraction is typed in the shared stacked input
+           (MaffsFractionInput: its two boxes the only inputs, numerator over the bar over denominator, no "/" of the page's own;
+           contract FRACTION-STACK, 3 Nov 2026).
   Look     (contract PIES-LOOK, 2 Nov 2026) at 390x844 and every SMALL size: the start screen shows assets/stall.webp, loaded at
            1600x873, and no SVG stall; --accent is #742a3d; the picture and the first stage button end above the fold.
 
@@ -475,6 +477,10 @@ def play_stage(page, st, size, out, n, full):
             out.append('%s q%d: the calculator toggle is %s' % (where, qn, 'open' if m['togOpen'] else 'not on the screen'))
         if m['badge'] != 'Calculator optional':
             out.append('%s q%d: the header badge reads %r' % (where, qn, m['badge']))
+        if q['type'] == 'fraction':
+            fr = page.evaluate(STACK_JS)
+            if not (fr['shared'] and fr['n'] == 2 and fr['all'] == 2 and fr['bar'] and fr['stacked'] and not fr['sep'] and fr['label'] == 'Your answer as a fraction'):
+                out.append('%s q%d: the fraction answer is not the shared stacked input (MaffsFractionInput): %s' % (where, qn, fr))
         if (m['msg'] == 'Try it with pen and paper') != bool(q['friendly']) or (m['msg'] not in ('', 'Try it with pen and paper')):
             out.append('%s q%d: the hint reads %r for friendly=%s' % (where, qn, m['msg'], q['friendly']))
         if qn == 0 and m['tog']:                         # the toggle opens a working calculator: 12 x 379 / 100 = 45.48
@@ -586,6 +592,15 @@ LOOK_JS = """() => {
 }"""
 
 
+# A typed fraction is the shared stacked input (contract FRACTION-STACK, canon 7.6.1): its two boxes, numerator over the bar over
+# denominator, are the only inputs, and no separator ("/") of the game's own sits beside them.
+STACK_JS = r"""() => { const a = document.getElementById('answer'), w = a.querySelector('.mfi'), ins = w ? [...w.querySelectorAll('.mfi-in')] : [],
+  bar = w && w.querySelector('.mfi-bar'), r = e => e.getBoundingClientRect();
+  const sep = [...a.querySelectorAll('span, div, b, i')].filter(e => !e.closest('.mfi') && /^\s*[\/⁄÷]\s*$/.test(e.textContent)).length;
+  return { shared: !!w, n: ins.length, all: a.querySelectorAll('input').length, bar: !!bar, sep: sep, label: w ? w.getAttribute('aria-label') : null,
+           stacked: ins.length === 2 && !!bar && r(ins[0]).bottom <= r(bar).top + 0.5 && r(bar).bottom <= r(ins[1]).top + 0.5 }; }"""
+
+
 def check_look(page, size, out):
     """The start screen's look (contract PIES-LOOK): the stall picture, no SVG stall, the accent, and the first stage button
     (the start control) above the fold. Called on a freshly opened page, before any stage starts."""
@@ -665,6 +680,13 @@ def check(html, module, out, engine=True, big=False, small=(), quick=False, shar
     return info
 
 
+# The page's fraction answer (contract FRACTION-STACK) and, for the plant, the hand-built side-by-side boxes it replaced.
+SHARED_FRACTION = """h = '<div class="ans-row" role="group" aria-label="Your answer"><span id="fracHost"></span>' + CHECK + '</div>';"""
+MOUNT_FRACTION = "if (Q.type === 'fraction') { fi = MaffsFractionInput.mount($('fracHost'), { label: 'Your answer as a fraction' }); inputs = fi.inputs.slice(); }\n    else "
+SIDE_BY_SIDE = ("""h = '<div class="ans-row" role="group" aria-label="Your fraction"><span class="nb"><input type="text" inputmode="numeric" autocomplete="off" maxlength="4" aria-label="Top number" data-i="0"></span>' +\n"""
+                """        '<span class="slash" aria-hidden="true">/</span><span class="nb"><input type="text" inputmode="numeric" autocomplete="off" maxlength="4" aria-label="Bottom number" data-i="1"></span>' + CHECK + '</div>';""")
+
+
 # Each plant: (what, file, [(old, new)], kind, pattern its finding must match).
 PLANTS = [
     ('the friendly flag wrong (every question marked friendly, as 210/360 once was)', 'module',
@@ -703,6 +725,8 @@ PLANTS = [
      'look', r'(SVG stall|picture is)'),
     ("the accent changed to --wrong's value", 'page',
      [('--accent:#742a3d;', '--accent:#b91c1c;')], 'look', r'--accent is'),
+    ('the side-by-side fraction boxes restored (two boxes with a "/" between, not the shared stacked input)', 'page',
+     [(SHARED_FRACTION, SIDE_BY_SIDE), (MOUNT_FRACTION, '')], 'play', r'not the shared stacked input'),
     ('chart text under 12 px', 'page',
      [(".charts text{font-family:var(--font-num);font-size:12.5px;", ".charts text{font-family:var(--font-num);font-size:10px;")], 'play',
      r'chart text .* px'),
