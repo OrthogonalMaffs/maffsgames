@@ -2,7 +2,7 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- CALC-DOCK-WIDE: home/Codex, codex/calc-dock-wide, /home/maffs/mg-calc-dock-wide; contract docs/handover/contracts/2026-11-03-calc-dock-wide.md. Claims calculator.js and test-calculator-js.py; Shared, stop at Gate green for review and Jon's merge. Jon explicitly permits concurrency with SEQ-SOLVER-FIXES, SEQ-SOLVER-WORKED and DASHBOARD-METRICS.
+- CALC-DOCK-WIDE: home/Codex, codex/calc-dock-wide, /home/maffs/mg-calc-dock-wide, draft PR #653; contract docs/handover/contracts/2026-11-03-calc-dock-wide.md. Claims calculator.js and test-calculator-js.py; Shared, stop at Gate green for review and Jon's merge. Awaiting Jon's updates wording. Jon explicitly permits concurrency with SEQ-SOLVER-FIXES, SEQ-SOLVER-WORKED and DASHBOARD-METRICS.
 
 - UPDATES-NOVEMBER: DONE #651, 264e011f; main run 41674541301 GREEN, guarded merge exit 0; end-task.py removed branch/worktree, exit 0. Contract docs/history/contracts/2026-11-03-updates-november.md; final report in PR.
 
