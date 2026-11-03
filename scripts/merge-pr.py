@@ -5,6 +5,8 @@
     python scripts/merge-pr.py <number>                      # merge if the guard passes, else refuse (exit 1)
     python scripts/merge-pr.py <number> --wait 600           # while a check is still running, poll up to 600 s, then refuse
     python scripts/merge-pr.py <number> --override "<Jon's ruling and date>"
+    python scripts/merge-pr.py <number> --watch --wait 3600  # merge, then watch main's run on the squash commit
+    python scripts/merge-pr.py --watch-main [<sha>] [--wait <s>]   # watch main's run on <sha> (default: main's newest merge)
     python scripts/merge-pr.py --selftest                    # recorded API fixtures; no network
 
 The guard, from the GitHub REST API through `gh api` (the credentials the lanes already use):
@@ -33,6 +35,20 @@ overrode, as a comment on the
 PR first, then merges. An empty ruling is refused. (a) is never waived. The merge is a squash pinned to the head
 commit that (a) judged, so a later push cannot ride in on an earlier green. GitHub deletes the head branch itself
 (canon §7.8.2). On success it prints main's head and the run it judged. end-task.py runs after, unchanged.
+
+The watch (CLOUD-LEAN, Jon, 3 Nov 2026) is additive and changes nothing above. --watch-main [<sha>] waits up to --wait
+seconds for main's check-site run (push or manual) on that commit to finish, read and judged as (b) reads and judges a
+run, and prints ONE line, exit 0 for GREEN and 1 for anything else. With no <sha> it watches main's newest merge as
+(b') picks it (newest_merge(): the bot's skip-marker commits have no run and are passed over):
+
+    main <sha7> run <id>: GREEN
+    main <sha7> run <id>: RED: <failed job names>
+    main <sha7>: NOT FINISHED after <n>s
+    main <sha7>: NO RUN FOUND
+
+A run or job still going, or one that cannot be read yet, is NOT FINISHED, never green; a red run is never waited out; a
+commit with no run is waited for (a new merge's run takes seconds to register), then NO RUN FOUND. A merge given --watch
+runs the same watch on its squash commit, prints its line last and exits with its status.
 """
 import argparse
 import json
@@ -212,6 +228,91 @@ def guard(api, number, override=None, wait=0, main_check=check_main, sleep=time.
 
 
 # ---------------------------------------------------------------------------------------------------------------
+# The watch (CLOUD-LEAN, Jon, 3 Nov 2026): main's run on one commit, after a merge, in one line. It reads through (b)'s
+# own reader, main_runs() and run_jobs(), and judges by JOB_OK; the guard above is not changed by it.
+
+def watch_state(api, sha):
+    """-> (state, run, detail): "green", "red", "going" (unfinished, or not readable yet) or "none" (main has no check-site
+    run, push or manual, on this commit). Green as (b) means it: the run completed success, and its latest attempt has at
+    least one job, every one finished, each in JOB_OK. A failed job, or a run that completed anything but success, is red."""
+    try:
+        own = [r for r in main_runs(api) if r["head_sha"].startswith(sha)]
+    except Refused as e:
+        return "going", None, "main's runs could not be read (%s)" % e
+    if not own:
+        return "none", None, "no check-site run on main for this commit yet"
+    r = own[0]
+    if r["status"] != "completed":
+        return "going", r, "run %s is %s" % (r["id"], r["status"])
+    try:
+        jobs = run_jobs(api, r["id"])
+    except Refused as e:
+        if r["conclusion"] != "success":
+            return "red", r, "run %s (its jobs could not be read)" % r["conclusion"]
+        return "going", r, "run %s's jobs could not be read (%s)" % (r["id"], e)
+    failed = [j["name"] for j in jobs if j["status"] == "completed" and j["conclusion"] not in JOB_OK]
+    if failed:
+        return "red", r, ", ".join(failed[:8]) + (" and %d more" % (len(failed) - 8) if len(failed) > 8 else "")
+    if r["conclusion"] != "success":
+        return "red", r, "run %s" % r["conclusion"]
+    open_ = [j for j in jobs if j["status"] != "completed"]
+    if not jobs or open_:
+        return "going", r, ("run %s lists no jobs yet" % r["id"]) if not jobs else (
+            "run %s: %d of %d jobs not finished: %s" % (r["id"], len(open_), len(jobs), _named(open_)))
+    return "green", r, "%d jobs, all finished, none failed" % len(jobs)
+
+
+def watch_main(api, sha, wait=0, state=watch_state, sleep=time.sleep, clock=time.time, log=None):
+    """-> (exit code, the one line). Polls every POLL_S while the run is missing or unfinished, up to `wait` seconds."""
+    start = clock()
+    while True:
+        st, r, detail = state(api, sha)
+        if st == "green":
+            return 0, "main %s run %s: GREEN" % (sha[:7], r["id"])
+        if st == "red":
+            return 1, "main %s run %s: RED: %s" % (sha[:7], r["id"], detail)
+        elapsed = clock() - start
+        if elapsed >= wait:
+            if st == "none":
+                return 1, "main %s: NO RUN FOUND" % sha[:7]
+            return 1, "main %s: NOT FINISHED after %ds" % (sha[:7], int(round(elapsed)))
+        if log:
+            log("waiting: main %s: %s" % (sha[:7], detail))
+        sleep(min(POLL_S, wait - elapsed))
+
+
+def merge_and_report(api, number, override=None, wait=0, watch=False, out=print, note=None, sleep=time.sleep,
+                     clock=time.time, state=watch_state):
+    """The merge command: guard() unchanged, then its report; with `watch`, the watch on the squash commit last."""
+    try:
+        res, run = guard(api, number, override, wait)
+    except Refused as e:
+        out("REFUSED #%d: %s" % (number, e))
+        return 1
+    head = api("GET", "%s/git/ref/heads/main" % R)["object"]["sha"]
+    judged = ("run %s (%s)" % (run["id"], run["html_url"] if "html_url" in run else run["conclusion"])) if run else "waived by --override"
+    out("MERGED #%d (squash, %s). main head %s. Judged: %s." % (number, res.get("sha", "")[:7], head[:7], judged))
+    if not watch:
+        out("Now wait for main's run on that commit and report it (CLAUDE.md), then end-task.py.")
+        return 0
+    code, line = watch_main(api, res.get("sha") or head, wait, state=state, sleep=sleep, clock=clock, log=note)
+    out(line)
+    return code
+
+
+def watch_cmd(api, sha="", wait=0, pick=newest_merge, **kw):
+    """--watch-main -> (exit code, line, to_stderr). With no sha, the commit is main's newest merge as (b') picks it,
+    newest_merge(): the bot's skip-marker commits (timings, register, answer counts) have no run and are passed over
+    (Amendment 2, Jon 3 Nov 2026). If main's commits cannot be read, exit 2 and say why on stderr."""
+    if not sha:
+        sha, why = pick(api)
+        if sha is None:
+            return 2, "--watch-main: %s" % why, True
+    code, line = watch_main(api, sha, wait, **kw)
+    return code, line, False
+
+
+# ---------------------------------------------------------------------------------------------------------------
 # Selftest: recorded API shapes (run ids, times and conclusions are 21 Oct 2026's: #473 merged at 07:28:30Z while
 # main's newest finished run, 39559284220, was a failure).
 
@@ -303,6 +404,8 @@ class Fake:
             return {"id": 1}
         if method == "PUT" and path.endswith("/merge"):
             return {"merged": True, "sha": "m" * 40}
+        if method == "GET" and path.endswith("/git/ref/heads/main"):
+            return {"object": {"sha": "m" * 40}}
         raise AssertionError("unexpected call %s %s" % (method, path))
 
     def merged(self):
@@ -498,6 +601,159 @@ def cases(main_check=check_main, clean=disarm):
     return out
 
 
+# ---- the watch (CLOUD-LEAN): main's run on one commit. W is the watched commit; GREEN's runs are on another (a * 40). ----
+W = "f" * 40
+SQUASH = "m" * 40   # Fake's merge answers with this squash commit
+
+
+def _wrun(status, concl, sha=W, event="push", branch="main"):
+    return _run(41615387944, event, status, concl, "2026-11-03T09:40:00Z", branch, sha)
+
+
+W_GREEN = [_wrun("completed", "success")] + GREEN
+W_GOING = [_wrun("in_progress", None)] + GREEN
+W_RED = [_wrun("completed", "failure")] + GREEN
+W_CANCELLED = [_wrun("completed", "cancelled")] + GREEN
+W_NONE = GREEN                                                                   # main has runs, none on W
+W_PR_ONLY = [_wrun("completed", "success", event="pull_request", branch="claude/x")] + GREEN   # not main's run
+M_GREEN = [_wrun("completed", "success", sha=SQUASH)] + GREEN
+M_RED = [_wrun("completed", "failure", sha=SQUASH)] + GREEN
+
+
+class Clock:
+    """A clock that moves only when the code under test sleeps, so a 3600 s wait takes no time."""
+    def __init__(self):
+        self.t, self.slept = 0.0, 0
+
+    def __call__(self):
+        return self.t
+
+    def sleep(self, s):
+        self.t += s
+        self.slept += 1
+
+
+def head_literally(api):
+    """The planted default (the spec before Amendment 2): main's head as it is, a bot skip-marker commit included.
+    Errors are handled as newest_merge() handles them, so only the choice of commit differs."""
+    try:
+        commits = api("GET", "%s/commits?sha=main&per_page=50" % R)
+    except Refused as e:
+        return None, "main's commits could not be read (%s)" % e
+    return commits[0]["sha"], None
+
+
+def watch_cases(state=watch_state, pick=newest_merge):
+    """-> list of (name, ok, detail): the four outcomes, the waits, the default commit, and merge --watch."""
+    out = []
+
+    def case(name, ok, detail=""):
+        out.append((name, bool(ok), detail))
+
+    def watch(fake, wait=0, sha=W):
+        c = Clock()
+        code, line = watch_main(fake, sha, wait, state=state, sleep=c.sleep, clock=c)
+        return code, line, c
+
+    code, line, _ = watch(Fake(runs=W_GREEN, jobs=[JOBS_SKIPPED]))
+    case("[watch] GREEN: run completed success, every job finished in success/skipped/neutral, exit 0",
+         code == 0 and line == "main fffffff run 41615387944: GREEN", "%s %s" % (code, line))
+
+    code, line, c = watch(Fake(script=[W_NONE, W_GOING, W_GREEN]), wait=3600)
+    case("[watch] GREEN after waiting: no run registered yet, then running, then green (a fresh squash commit)",
+         code == 0 and line.endswith(": GREEN") and c.slept == 2, "%s %s slept %d" % (code, line, c.slept))
+
+    code, line, c = watch(Fake(runs=W_RED, jobs=[JOBS_RED]), wait=3600)
+    case("[watch] RED names the failed job, exit 1, and a red run is not waited out",
+         code == 1 and line == "main fffffff run 41615387944: RED: Content verifiers 4" and c.slept == 0,
+         "%s %s slept %d" % (code, line, c.slept))
+
+    code, line, _ = watch(Fake(runs=W_GREEN, jobs=[JOBS_RED]))
+    case("[watch] RED: a run reading success with a failed job is red, not green",
+         code == 1 and line.endswith("RED: Content verifiers 4"), "%s %s" % (code, line))
+
+    code, line, _ = watch(Fake(runs=W_CANCELLED, jobs=[JOBS_OK + [_job("Content verifiers 7", concl="cancelled")]]))
+    case("[watch] RED: a cancelled run names its cancelled job", code == 1 and line.endswith("RED: Content verifiers 7"),
+         "%s %s" % (code, line))
+
+    code, line, _ = watch(Fake(runs=W_CANCELLED, jobs=[JOBS_OK]))
+    case("[watch] RED: a run that ended cancelled with no failed job listed still reads red",
+         code == 1 and line.endswith("RED: run cancelled"), "%s %s" % (code, line))
+
+    code, line, _ = watch(Fake(runs=W_GOING))
+    case("[watch] NOT FINISHED: run in progress, --wait 0, exit 1",
+         code == 1 and line == "main fffffff: NOT FINISHED after 0s", "%s %s" % (code, line))
+
+    code, line, c = watch(Fake(runs=W_GREEN, jobs=[JOBS_OPEN]), wait=120)
+    case("[watch] NOT FINISHED: run reads success while jobs still run; waits the full --wait, never green",
+         code == 1 and line == "main fffffff: NOT FINISHED after 120s" and c.slept == 4, "%s %s slept %d" % (code, line, c.slept))
+
+    code, line, _ = watch(Fake(runs=W_GREEN, jobs_error=True))
+    case("[watch] NOT FINISHED: jobs unreadable on a success run (never assumed green)",
+         code == 1 and "NOT FINISHED" in line, "%s %s" % (code, line))
+
+    code, line, _ = watch(Fake(runs=W_GREEN, jobs=[[]]))
+    case("[watch] NOT FINISHED: a success run that lists no jobs", code == 1 and "NOT FINISHED" in line, "%s %s" % (code, line))
+
+    code, line, _ = watch(Fake(runs=W_NONE))
+    case("[watch] NO RUN FOUND: main has runs, none on this commit, exit 1",
+         code == 1 and line == "main fffffff: NO RUN FOUND", "%s %s" % (code, line))
+
+    code, line, c = watch(Fake(runs=W_PR_ONLY), wait=60)
+    case("[watch] NO RUN FOUND: a pull-request run on the commit is not main's run (after waiting --wait)",
+         code == 1 and line == "main fffffff: NO RUN FOUND" and c.slept == 2, "%s %s slept %d" % (code, line, c.slept))
+
+    code, line, _ = watch(Fake(runs=W_GREEN, jobs=[JOBS_OK]), sha="fffffff")
+    case("[watch] a short sha (7) is matched", code == 0 and line.endswith(": GREEN"), "%s %s" % (code, line))
+
+    # ---- the default commit (Amendment 2, Jon 3 Nov 2026): main's newest merge, as (b') picks it ----
+    def default(fake, wait=0):
+        c = Clock()
+        return watch_cmd(fake, "", wait, pick=pick, state=state, sleep=c.sleep, clock=c)
+
+    code, line, err = default(Fake(commits=BOT_ON_TOP, runs=GREEN, jobs=[JOBS_OK]))
+    case("[watch] default: a head that is a [skip ci] bot commit still reports the merge's run",
+         code == 0 and not err and line == "main aaaaaaa run 39559008796: GREEN", "%s %s" % (code, line))
+
+    code, line, err = default(Fake(commits=COMMITS, runs=GREEN, jobs=[JOBS_OK]))
+    case("[watch] default: a head that is the merge itself reports its run",
+         code == 0 and not err and line == "main aaaaaaa run 39559008796: GREEN", "%s %s" % (code, line))
+
+    code, line, err = default(Fake(commits=UNRUN_MERGE, runs=GREEN, jobs=[JOBS_OK]))
+    case("[watch] default: a merge with no run of its own is NO RUN FOUND, never the run before it (#631)",
+         code == 1 and line == "main bbbbbbb: NO RUN FOUND", "%s %s" % (code, line))
+
+    code, line, err = default(Fake(commits_error=True, runs=GREEN))
+    case("[watch] default: main's commits unreadable exits 2, said on stderr (never a guess)",
+         code == 2 and err and "could not be read" in line, "%s %s %s" % (code, err, line))
+
+    for runs, want, label in ((M_GREEN, 0, "GREEN"), (M_RED, 1, "RED: Content verifiers 4")):
+        # the guard reads main's green run's jobs first, then the watch reads the squash run's
+        f, lines, c = Fake(runs=runs, jobs_script=[[JOBS_OK], [JOBS_RED] if want else [JOBS_OK]]), [], Clock()
+        code = merge_and_report(f, 473, wait=600, watch=True, out=lines.append, sleep=c.sleep, clock=c, state=state)
+        case("[watch] merge --watch: merged once, then the squash commit's run, %s, is the last line (exit %d)" % (label, want),
+             code == want and len(f.merged()) == 1 and lines[0].startswith("MERGED #473")
+             and lines[-1] == "main mmmmmmm run 41615387944: %s" % label, "%s %s" % (code, lines))
+
+    f, lines = Fake(runs=M_GREEN), []
+    code = merge_and_report(f, 473, out=lines.append)
+    case("[watch] merge without --watch prints as before and watches nothing",
+         code == 0 and len(lines) == 2 and lines[1].startswith("Now wait for main's run"), "%s %s" % (code, lines))
+    return out
+
+
+def watch_state_run_only(api, sha):
+    """The planted fault: trusts the run's own status and conclusion and never reads its jobs, so a run that reads
+    completed success while a job still runs is called green."""
+    own = [r for r in main_runs(api) if r["head_sha"].startswith(sha)]
+    if not own:
+        return "none", None, "no run"
+    r = own[0]
+    if r["status"] != "completed":
+        return "going", r, r["status"]
+    return ("green", r, "run success") if r["conclusion"] == "success" else ("red", r, "run %s" % r["conclusion"])
+
+
 def check_main_run_only(api):
     """The check_main() before 22 Oct 2026, kept as the planted fault: the run's own status and conclusion, no jobs."""
     runs = main_runs(api)
@@ -545,6 +801,20 @@ def selftest():
     caught = [n for n in old_a if n.startswith("(a)")]
     print("  %s  planting a squash message copied as it is fails the disarm case" % ("PASS" if caught else "FAIL"))
     bad += not caught
+    # CLOUD-LEAN: the watch's four outcomes, and a watch that reports green while a job still runs must be CAUGHT
+    for name, ok, detail in watch_cases():
+        print("  %s  %s%s" % ("PASS" if ok else "FAIL", name, "" if ok else "   -> " + detail))
+        bad += not ok
+    planted = [n for n, ok, _ in watch_cases(state=watch_state_run_only) if not ok]
+    caught = [n for n in planted if "while jobs still run" in n]
+    print("  %s  planted fault (a watch that trusts the run's own status, green while a job still runs): %s (%d case(s) fail)" % (
+        "PASS" if caught else "FAIL", "CAUGHT" if caught else "NOT CAUGHT", len(planted)))
+    bad += not caught
+    planted = [n for n, ok, _ in watch_cases(pick=head_literally) if not ok]
+    caught = [n for n in planted if "[skip ci] bot commit" in n]
+    print("  %s  planted fault (a default that takes main's head as it is, a bot skip-marker commit): %s" % (
+        "PASS" if caught else "FAIL", "CAUGHT" if caught else "NOT CAUGHT"))
+    bad += not caught
     print("%s" % ("selftest FAILED" if bad else "selftest passed"))
     return 1 if bad else 0
 
@@ -554,22 +824,27 @@ def main():
     ap.add_argument("number", nargs="?", type=int)
     ap.add_argument("--override", help="Jon's ruling and its date; waives the main-is-green rule only")
     ap.add_argument("--wait", type=int, default=0, help="seconds to poll while a check is unfinished (default 0: refuse)")
+    ap.add_argument("--watch", action="store_true", help="after a merge, watch main's run on the squash commit (up to --wait)")
+    ap.add_argument("--watch-main", nargs="?", const="", metavar="SHA",
+                    help="watch main's run on SHA (default: main's newest merge, bot skip-marker commits passed over); "
+                         "one line, exit 0 only if GREEN")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
+    note = lambda m: print(m, file=sys.stderr)   # progress to stderr: stdout carries the one line
+    if a.watch_main is not None:
+        if a.number or a.override is not None or a.watch:
+            ap.error("--watch-main takes no PR number, --override or --watch")
+        sha = a.watch_main.strip().lower()
+        if sha and not re.fullmatch(r"[0-9a-f]{7,40}", sha):
+            ap.error("--watch-main takes a commit sha (7 to 40 hex digits)")
+        code, line, to_stderr = watch_cmd(gh_api, sha, a.wait, log=note)
+        print(line, file=sys.stderr if to_stderr else sys.stdout)
+        return code
     if not a.number:
         ap.error("a PR number is required")
-    try:
-        res, run = guard(gh_api, a.number, a.override, a.wait)
-    except Refused as e:
-        print("REFUSED #%d: %s" % (a.number, e))
-        return 1
-    head = gh_api("GET", "%s/git/ref/heads/main" % R)["object"]["sha"]
-    judged = ("run %s (%s)" % (run["id"], run["html_url"] if "html_url" in run else run["conclusion"])) if run else "waived by --override"
-    print("MERGED #%d (squash, %s). main head %s. Judged: %s." % (a.number, res.get("sha", "")[:7], head[:7], judged))
-    print("Now wait for main's run on that commit and report it (CLAUDE.md), then end-task.py.")
-    return 0
+    return merge_and_report(gh_api, a.number, a.override, a.wait, a.watch, note=note)
 
 
 if __name__ == "__main__":
