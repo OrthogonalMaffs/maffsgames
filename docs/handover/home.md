@@ -4,7 +4,7 @@
 
 - CALC-DOCK-WIDE: home/Codex, codex/calc-dock-wide, /home/maffs/mg-calc-dock-wide; contract docs/handover/contracts/2026-11-03-calc-dock-wide.md. Claims calculator.js and test-calculator-js.py; Shared, stop at Gate green for review and Jon's merge. Jon explicitly permits concurrency with SEQ-SOLVER-FIXES, SEQ-SOLVER-WORKED and DASHBOARD-METRICS.
 
-- UPDATES-NOVEMBER: home/Codex, codex/updates-november, /home/maffs/mg-updates-november, PR #651; contract docs/history/contracts/2026-11-03-updates-november.md (Amendment 1), archived for merge. Small, merge on green; final merge/main/cleanup results in PR report.
+- UPDATES-NOVEMBER: DONE #651, 264e011f; main run 41674541301 GREEN, guarded merge exit 0; end-task.py removed branch/worktree, exit 0. Contract docs/history/contracts/2026-11-03-updates-november.md; final report in PR.
 
 - NEW-AND-UPDATED: home/Codex claims index.html on codex/new-and-updated, /home/maffs/mg-new-and-updated, PR #648; contract docs/handover/contracts/2026-11-03-new-and-updated.md. Full checks 56/56, exit 0. Shared: green Gate then Project Claude review and Jon's merge. Fresh base ffcd9a9b includes DASH-MINUS #646; verifier Amendment 1 applied.
 
@@ -24,9 +24,13 @@ Implemented: dock() measures the rail at left zero in its actual containing bloc
 
 Targeted calculator test PASS, exit 0 (65 basic expressions, 27 scientific, 16 key sequences, Chromium/WebKit phone behaviour, toggle forms, existing five dock plants and new old-rule plant). Before/after audit: all 14 mounts on 13 pages at 1920 and 2560 (28 rows each), calculator open in play, pinned real fonts and stub server. Every after gap is 12px, panel inside viewport, scroll 0; card right and docked state unchanged. The scratch audit needed startup corrections for Pythagoras' hypotenuse step, Split It's mode and stage worked examples; no game changes. Sequence Solver screenshots captured before/after. Full check-changed running; awaiting approved updates wording.
 
+Full corrected check-changed.py: 76/76 passed in 369s, exit 0, 6 heavy serial and 70 light; log .claude/bg-1793723836837.log. Twenty-one indirect heavy checks selected through calculator.js deferred to CI: Pythagoras 3, The 6 P's 2, Take a Walk 2, Burst 4, Squared Squirrel 3 (parts 1,3,4), Pies 2, Formula Unlocked, Growth and Decay, Unit Converter, level resolver in play 2. Seven standard deferrals: four page-load shards (first also hang scan), bank extraction, ledger lint, leaderboard coverage. Initial run caught screenshot files in an unexcluded folder; moved only those requested artifacts to existing excluded docs/screenshots/calc-dock-wide. Publish-scope selftest/check passes after this one fix; superseded full run stopped through end-task.py's registry. No publishing rule or Gate file changed. git diff --check and UTF-8 reads pass. Next: draft PR with table/screenshots; Jon's updates wording; Gate green, then Shared review hold. No merge authority yet.
+
 Record: agent Codex; wall n/a; review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-03 (home): UPDATES-NOVEMBER
+
+Final state: MERGED and live #651, squash 264e011f. Guard last line: `main 264e011 run 41674541301: GREEN`, exit 0. Pages deployment passed. end-task.py exit 0 removed codex/updates-november and /home/maffs/mg-updates-november; registered processes already gone. PR report updated; architect review remains after merge (Small). Previous checkpoint below is retained as the local-check record.
 
 Agent: Codex. Worktree: /home/maffs/mg-updates-november. Branch: codex/updates-november. Base: 9e17ddfc; implementation f1d26d4f. Checked locally. Next: PR, guarded merge and main watch. November uses Jon's approved wording and existing markup; The 6 P's gains its 27 Oct New badge; AGENTS.md requires dated updates in visible-change PRs, with rationale in canon §12. No checker or game changes. Initial STOP for missing dash exception mechanism resolved by Amendment 1: updates/ is outside that check's scope. Open PRs #518 and #424 touch home.md only. No SR decision needed; SR-27 does not apply. Contract and amendment saved verbatim.
 
