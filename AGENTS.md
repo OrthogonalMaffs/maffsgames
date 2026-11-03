@@ -27,9 +27,11 @@ This is the single home for agent-neutral mechanics. Codex loads it directly; Cl
 
 - Use WSL distro `maffs`, primary `/home/maffs/maffsgames`, venv `/home/maffs/.venvs/maffs`; no sandbox, never sudo. Confirm identity `Vector52F <262527784+Vector52F@users.noreply.github.com>`; report a missing/different identity before committing.
 - The identity check is WSL-only; the cloud lane commits as `Claude <noreply@anthropic.com>` (the squash merge lands on main as Vector52F). Reason: canon §12, CLOUD-LEAN.
-- Start each new task with these commands, substituting its task name; use `codex/` for Codex, `claude/` for Claude Code. Work only in that new worktree. Never pull or merge into the primary checkout or an existing task branch.
+- The primary checkout is never edited; before starting an agent session, fast-forward it: git -C ~/maffsgames pull --ff-only (stop if it is not a fast-forward). Reason: canon §12, PIES-SIGNOFF-AND-PRIMARY-FF.
+- Start each new task with these commands, substituting its task name; use `codex/` for Codex, `claude/` for Claude Code. Work only in that new worktree. Never pull or merge into an existing task branch.
 
 ```sh
+git -C ~/maffsgames pull --ff-only
 git -C ~/maffsgames fetch origin
 git -C ~/maffsgames worktree add -b codex/<task> ~/mg-<task> origin/main
 ```
