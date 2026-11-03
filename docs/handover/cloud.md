@@ -68,29 +68,3 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 
 Record: agent Claude Code; wall 0:35; review cycles 0; amendments 1; usage n/a.
 
-## 2026-11-02 (cloud): PIES-LOOK (contract `docs/handover/contracts/2026-11-02-pies-look.md`, Small; stops at a green Gate for Project Claude's review and Jon's "merge")
-
-- Branch `art/pies-stall` (worktree `/home/user/wt-pies`), main merged in; claim 16b51e8b; look 32f54512 (stall.webp 1600x873, 239,552 bytes; PNG removed; --accent #742a3d, --accent-dim #f6e9ec; awning stripe under the header; scarf progress under the HUD; results picture 180 px).
-- **Decided for you (standing STOP IF rules, layout):** the first stage button (the start control; there is no single Start button) was ALREADY below the fold at 320x568 on main (bottom 618.5, fold 528). The stage list now sits above the two intro paragraphs: bottom 455.5 at 320x568, 468.7 at 375x667, 476.9 at 390x844. "Full card width" is used (max 600 px); the sofa precedent caps at 340 px.
-- **Decided for you:** item 5's premise is wrong: wrong answers carry the reason in words and a worked "How it goes", but no ✗ anywhere; none added (wording). Results picture alt="" (decorative repeat). #742a3d vs --wrong is 1.52:1 (distinct by hue, not lightness).
-- Verifier: `check_look` at 390x844 and every SMALL size; two plants (SVG stall, accent = --wrong); the plant loop now applies through `plant_common.apply_plant`.
-- PIES-LOOK merged #637 (b5c9eaa), main green (41525186638).
-- **ESSENTIALS-ART** (`docs/handover/contracts/2026-11-02-essentials-art.md`), `art/essentials-batch-1` (`/home/user/wt-art`): 7 wired (1252b1b3); claims released; sources removed. **Jon, 2 Nov:** image in, start-screen fold not gated (5 Starts were below at 320x568 before it); Estimation Golf (no start screen) WebP left unwired.
-
-## 2026-11-02 (cloud): GATE-RESUME (contract `docs/handover/contracts/2026-11-02-gate-resume.md`). Each PR stops at a green Gate for Project Claude's review and Jon's "merge" (overrides merge-on-green).
-
-- **Step 1 (GWTE step 2): DONE.** #630 (795a14bc); main green (41428467865).
-- **Step 2 (GWTE step 5): DONE.** #631 (34bac350): 33308fa5 dropped, CLAUDE.md as on main (ruling below), script byte-identical to e34a15e. **Its push run never started:** the PR body quoted `[skip ci]`, merge-pr.py copies the body into the squash message, GitHub skipped check-site. Jon: manual run 41438100318 on main; step 3 pushed only once it is green. The archive, register and timings jobs run on the next push.
-- **Step 3: DONE.** #632 (60f752e): the 18 KB band, AGENTS.md at 20 KB, canon 7.8.4 (the band; the stale "parked" notes corrected). A defect in its first Gate log (planted files annotated in CI) fixed before review (498e0177). Main green (41474229711).
-- **Main red, fixed (Jon, 2 Nov, Small):** 0c4beb1d put 11 images at the root (Publish scope red, run 41474840740). Ten moved byte-identical to `art/essentials-batch-1` `art-inbox/` (statuses in its commit message; no PR); pies_stall.png already on `art/pies-stall`. #633 (4c66d25) removed them, merged with Jon's override.
-- **GATE-FIX** (contract `docs/handover/contracts/2026-11-02-gate-fix.md`), `claude/gate-fix`, worktree `/home/user/wt-gf`: (a) merge-pr.py disarms skip markers in the squash title and message; (b) the guard judges main's newest merge (newest commit not a bot skip-marker commit) and refuses one with no run of its own; (c) `--worst-case` fails on a pull request whose base cannot be read. Each with a self-test plant, and each old behaviour planted and caught. **Until it merges, check every PR description for a skip marker before merging (Jon, 2 Nov).**
-- **Decided for you (Jon, 2 Nov):** step 5 drops e34a15e's CLAUDE.md "Size limit" edit; that sentence and the 18 KB band go to the home lane's RULEBOOK. The band skips `docs/todo.md` (its own cap): **todo.md is 150,545 bytes, 98% of its 153,600 cap.**
-- **Decided for you (Jon, 2 Nov, standing until CLOUD-LEAN merges):** no `check-changed.py` before a cloud push. Before a push: the worst-case test where §7.8.4 needs it by hand, and the `--selftest` of each script changed; the Gate is the check. Unchanged: `merge-pr.py` on a green Gate, Shared-tier review, Jon's "merge".
-- **Home-lane queue (Jon, 2 Nov):** `scripts/check-banks.py:25` has an invalid escape `\(` (ci-deps.py's `ast.parse` warns on Python 3.12+). Harmless.
-
-## 2026-10-27 (cloud): GATE-WARN-THEN-ENFORCE (contract `docs/handover/contracts/2026-10-27-gate-warn-then-enforce.md`, Jon's three additions). **Steps 1 and 3 merge this week; infrastructure FREEZE until Mon 2 Nov (Jon, 20:14).**
-
-- **Merged 27 Oct:** #578 SHARD (39b7c99, 19:31; main red on The 6 P's, green on Jon's re-run). #588 (bff47e7, main green): The 6 P's driver typed 0.00004 as "4e-05" (`js_num` was Python's repr), reached when a random draw served that question (~1 run in 3); 0 of 1,805 bank questions fail now. Step 1 (#590, `claude/gate-warn-list`): `scripts/ci-warn-list.json`, seeded EMPTY (setup median 48 s: no line over the limit), and unrecorded lines warned. Step 3 (`claude/gate-canon`): canon 7.8.4, the CLAUDE.md lane line.
-- **Parked until Mon 2 Nov (built, pushed, not merged):** step 2 `claude/gate-worst-case` (778d926, stacked on step 1: rebase onto main once #590 is in; `ci-groups.py --worst-case` + Plan step). Step 5 `claude/gate-handover-archive` (e34a15e + a checkpoint handover commit to drop: `check-context-size.py --fix`, main's REGISTER job archives). Merge order then: 2, 5.
-- **Decided for you:** stale warn-list entries are pruned by main's timings job (a fault only in a PR that edits the list); a PR-measured new line past 100% still fails (merged, it refuses main's pack); GitHub refused this session a re-run of 40570027404 (403).
-
