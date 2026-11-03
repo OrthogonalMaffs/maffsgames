@@ -6,6 +6,24 @@ and the last three entries; older entries move here, newest first, unchanged.
 
 ## Moved 2026-11-03 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
 
+## 2026-11-03 (cloud): SEQ-SOLVER-FIXES (`docs/history/contracts/2026-11-03-seq-solver-fixes.md`, Shared)
+
+- Agent: Claude Code. Primary checkout `/home/user/maffsgames`, branch `claude/stoic-galileo-xvzt45` (from main 9e17ddf; main b18b064, #650, merged in).
+- Jon's 16:05 hand-off is a later text than #650's: option (a), the policy text, same leaderboard key, drift table in the PR. The contract files keep it, with #650's receipt notes.
+- Built: the five A24 items to A-level (gcse 45, alevel 59); no HUD clock, a right answer scores BASE, total time on results; "GCSE Higher" button and start line (key gcse). Verifier: A24 guard, Chromium clock check, 10/10 plants. rr-001, rr-002, rr-007 fixed.
+- For Jon (PR): hub/ticker still label the board "GCSE" (shared label map); level buttons wrap to two rows at 375/390 px; drift: of 38 other Hidden Count-Up games, 20 show a clock, 22 time the score (not 17/28).
+- **State:** MERGED #652 (03acf76) on Jon's "merge" (Gate green on 8e733a0, run 41682018378, after main and #651's /updates/ line were merged in); main green: `main 03acf76 run 41709317933: GREEN`. Contract moved to `docs/history/contracts/`.
+
+Record: agent Claude Code; wall 0:30 (received 16:05, Gate green and handed off 16:35); review cycles 0; amendments 0; usage n/a.
+
+## 2026-11-03 (cloud): Contracts stored for a fresh session (SEQ-SOLVER-FIXES, SEQ-SOLVER-WORKED, DASHBOARD-METRICS)
+
+- Jon, 3 Nov: store the three contracts and start them in a fresh session (a new cloud session, never /clear). Saved verbatim in `docs/handover/contracts/`; order in the Queue above. Nothing of the three is built yet.
+- **SEQ-SOLVER-FIXES, STOP IF 1, not hit:** the established route for a new board key is a `LEVEL_NAMES` entry in `schools/assets/firebase-leaderboard.js` (named by `levelLabel()`), plus the game's levels in the hub registry `leaderboards/index.html` GAMES (`check-leaderboard-coverage.js` holds all three together); `'higher':'GCSE Higher'` already exists there. SR-23 (7 Oct) accepted timer-change scores as incomparable without new keys; the contract asks for new keys, so note the tension in the PR.
+- **SEQ-SOLVER-FIXES, STOP IF 2, HIT; ask Jon before (2):** most of the 39 Hidden Count-Up games score with time, against the policy's "no score multiplier": a `T_K` time multiplier (`BASE/(1 + T_K·ln(1+s))`) in differentiation-duel, integration-duel, suvat, log-laws, surd-simplifier, proportion-blaster, standard-form-blitz, binomial-blaster, partial-fractions-duel, circle-theorem-spotter, curling-friction, force-resolver, moments-master, matrix-crunch, proof-builder, coordinate-geometry-dash, angle-ace, formula-unlocked, prime-factorisation (declared once, use to confirm), characteristic-quest, dimension-checker, scale-factor-scaling, formula-forge, test-the-claim, stat-attack, growth-and-decay, split-it; complex-converter its own `1/(1 + 0.05·ln(1+elapsed))`. A visible HUD Time remains in 17 of them. No time in the score (by this grep): quadratic-factoriser, trig-identity-duel, simultaneous-solver, chart-interrogator, estimation-golf, bearing-blitz, regression-rumble, graph-sketcher, glorious-gantt, component-crusher. So "score as the other Hidden Count-Up games score" has two answers. The question for Jon: Sequence Solver drops time from the score (the policy text; new keys), or keeps the multiplier like most of the list and only hides the clock? (1) and (3) can go ahead meanwhile.
+
+## Moved 2026-11-03 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
+
 ## 2026-11-03 (cloud): QUESTION-ID (`docs/history/contracts/2026-11-03-question-id.md`, Shared, Amendment 1; stops at a green Gate for Project Claude's review and Jon's "merge")
 
 - Agent: Claude Code. Primary checkout `/home/user/maffsgames`, branch `claude/nice-babbage-15fc7o` (from main 11afde3; first commit 6c6731a closes SEQ-SOLVER-REREAD).

@@ -23,6 +23,9 @@ Runs the real file in Chromium, with theme.css for its styles, and checks:
             scrolled 600px it stays in view (sticky). At 1240px and 390px it does not dock: it opens in
             the flow under its toggle. Five planted faults (no dock, not sticky, over the column, docking
             below the breakpoint, never docking) must each fail.
+            A sibling mount outside the card at 1280, 1920 and 2560px has exactly the configured gap,
+            remains inside the viewport without sideways scroll, and follows resize. The old percentage-left
+            rule is planted and must fail this case.
   Scientific (contract SCI-CALC, 9 Oct 2026) the engine's ^ (right-associative, tighter than a minus on its
             left), ln, log, e^, trig and its inverses in DEG and RAD, π and e, each exact to 10 s.f., and the
             errors (ln 0, log of a negative, sin⁻¹ 2, tan 90 in DEG); two planted engine faults (a
@@ -52,6 +55,7 @@ Runs the real file in Chromium, with theme.css for its styles, and checks:
 import asyncio
 import os
 import sys
+import plant_common as pc
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CALC_JS = os.path.join(ROOT, 'schools', 'assets', 'calculator.js')
@@ -200,6 +204,41 @@ async def dock_check(browser, css, w, h, want, fault=None):
     m3 = await page.evaluate(DOCK_JS)
     if m3['open'] or any(abs(a - b) > 0.5 for a, b in zip(before['card'], m3['card'])):
         out.append('%s: closing did not close the panel, or moved the card' % at)
+    await ctx.close()
+    return out
+
+
+OUTSIDE_DOCK_PAGE = DOCK_PAGE.replace('.container{', '.container{position:relative;border:3px solid transparent;').replace(
+    '<div id="calc"></div></div></div>', '</div><div id="calc"></div></div>')
+OUTSIDE_DOCK_FAULT = ('old percentage left',
+                      "rail.style.left = (host.getBoundingClientRect().right + D.gap - rail.getBoundingClientRect().left) + 'px';",
+                      "rail.style.left = 'calc(100% + ' + D.gap + 'px)';")
+
+
+async def outside_dock_check(browser, css, fault=None):
+    """A positioned ancestor contains the rail while its dock card is a sibling of the mount."""
+    out = []
+    ctx = await browser.new_context(viewport={'width': 1280, 'height': 720})
+    await ctx.route('**/*', lambda r: r.abort())
+    page = await ctx.new_page()
+    await page.set_content(OUTSIDE_DOCK_PAGE)
+    await page.add_style_tag(content=css)
+    await page.add_script_tag(path=KEYPAD_JS)
+    script = open(CALC_JS, encoding='utf-8').read()
+    if fault:
+        script = pc.apply_plant(script, fault[1], fault[2], name=fault[0])
+    await page.add_script_tag(content=script)
+    await page.evaluate("window.__calc = MaffsCalc.mount(document.getElementById('calc'), {dock: document.getElementById('card')}); __calc.open()")
+    for w, h in [(1280, 720), (1920, 1080), (2560, 1440)]:
+        await page.set_viewport_size({'width': w, 'height': h})
+        await page.wait_for_timeout(150)   # the component's existing 100ms resize debounce
+        m = await page.evaluate(DOCK_JS)
+        gap = await page.evaluate('MaffsCalc.DOCK.gap')
+        at = 'outside card %dx%d' % (w, h)
+        if not m['docked'] or abs(m['panel'][0] - m['card'][2] - gap) > 1:
+            out.append('%s: panel left %.1f, expected card right %.1f + gap %s' % (at, m['panel'][0], m['card'][2], gap))
+        if m['panel'][2] > m['cw'] or m['sw'] > m['cw']:
+            out.append('%s: panel right %.1f, page width %s, viewport %s' % (at, m['panel'][2], m['sw'], m['cw']))
     await ctx.close()
     return out
 
@@ -548,6 +587,11 @@ async def run():
         css = ''.join(l for l in open(THEME_CSS, encoding='utf-8').read().splitlines(True) if not l.startswith('@import')) + open(CALC_CSS, encoding='utf-8').read()
         for w, h, want in DOCK_SIZES:
             fails.extend(await dock_check(browser, css, w, h, want))
+        fails.extend(await outside_dock_check(browser, css))
+        caught = await outside_dock_check(browser, css, OUTSIDE_DOCK_FAULT)
+        print('  fault %-40s %s' % (OUTSIDE_DOCK_FAULT[0], ('caught (%s)' % caught[0][:70]) if caught else '*** MISSED ***'))
+        if not caught:
+            fails.append('planted fault not caught: ' + OUTSIDE_DOCK_FAULT[0])
         # The answer target: Chromium and WebKit, touch phones and mouse
         from playwright.async_api import async_playwright as _ap   # noqa: F401 (same session)
         engines = [browser]
@@ -632,6 +676,7 @@ def main():
           'basic panel unchanged, scientific panel fits 320/390/412px; '
           '%d key sequences; keyboard, toggle, privacy; keys >= 44px at 320/375/390px; docked beside a 720px '
           'column at 1280/1366/1920 (sticky, never over it), in the flow at 1240 and 390; %d planted dock faults caught; '
+          'sibling mount at 1280/1920/2560 (exact gap, viewport fit, no sideways scroll, resize), old percentage-left plant caught; '
           'answer target on touch phones in Chromium and WebKit (read-only, inputmode none, never focused, '
           'operators disabled, display switching, 48px keys), unchanged with a mouse; %d planted answer faults caught; '
           'the toggle unchanged without {toggle}, a 44x44 icon named "Calculator" at phone widths with {toggle: \'icon\'}, '
