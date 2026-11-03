@@ -2,11 +2,23 @@
 
 **Queue (cross-lane facts; never archived)**
 
+- TODO-TRIM: home/Codex, codex/todo-trim, /home/maffs/mg-todo-trim, PR #645; contract and Jon's 3 Nov HTTP-503 retry ruling in the PR. Small, merge on green. NEW-AND-UPDATED is next; no saved contract found at this head.
+
 - PIES-SIGNOFF-AND-PRIMARY-FF: home/Codex, codex/pies-signoff, /home/maffs/mg-pies-signoff; contract `docs/handover/contracts/2026-11-03-pies-signoff-and-primary-ff.md`. Small, merge on green; TODO-TRIM starts after completion.
 
 - LOOK-STAGE: home/Codex, codex/look-stage, /home/maffs/mg-look-stage, PR #638; contract `docs/handover/contracts/2026-11-02-look-stage.md`. Concurrent PIES-LOOK/ESSENTIALS-ART authorised by Jon; roster, canon and registration reserved here. Pies remains warned until Jon's explicit look sign-off, irrespective of its artwork merge. Shared: stop at green Gate for Project Claude review and Jon's “merge”.
 - RULEBOOK: home/Codex, codex/rulebook, /home/maffs/mg-rulebook, PR #635; Shared. Amendment 1 findings addressed on the same branch; stop at Gate green for re-review and Jon's “merge”. Two lanes are explicitly authorised for this task.
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
+
+## 2026-11-03 (home): TODO-TRIM
+
+Agent: Codex. Worktree: /home/maffs/mg-todo-trim. Branch: codex/todo-trim. Last implementation commit: 359cb347. PR #645: https://github.com/OrthogonalMaffs/maffsgames/pull/645 . Checked locally; Gate and measured-budget check passed on 359cb347. Next: this handover head's Gate, then retry the guarded merge with --watch --wait 3600. Final merge/main/cleanup results are tracked in the PR report.
+
+Moved 40 clearly finished blocks (32,248 bytes) verbatim into docs/history/todo-archive.md under 2026-11-03; todo.md is 118,818 bytes. Verification proves every removed block archived and all retained lines, including START and open items, byte-identical. Mixed-status entries stay intact; judgement calls and reproducible proof are in the PR. Current item formats need consistent boundaries and terminal status before safe automatic archiving. No automation changed. Full check-changed.py: 41/41 in 251s, exit 0; seven standard CI deferrals. Context-size and UTF-8 checks passed. No answer-bearing change; no SR decision needed.
+
+503/retry: first merge helper refused on GitHub HTTP 503, exit 1; Jon's 3 Nov ruling authorises retry after the full Gate, then only if another 503 a five-minute wait and one final attempt. This handover update is explicitly authorised by that ruling; retry outcome goes in the PR report.
+
+Record: agent Codex; wall n/a (contract-receipt timestamp unavailable; no estimate); review cycles 0; amendments 1; usage n/a.
 
 ## 2026-11-03 (home): PIES-SIGNOFF-AND-PRIMARY-FF
 
