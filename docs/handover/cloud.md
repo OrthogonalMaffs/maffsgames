@@ -59,6 +59,18 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only via `python scripts/merge-pr.py <n>`
 (needs a green Gate and main, §7.8.3); watch main's run after.
 
+## 2026-11-03 (cloud): RULE-QUOTE (Jon's chat request, no saved contract): quote "Changing agent mid-task" from the loaded instructions, before reading any file
+
+- Agent: Claude Code. Branch `claude/quirky-hypatia-sivu18`, primary checkout `/home/user/maffsgames`. The answer, word for word:
+
+> ### Changing agent mid-task
+>
+> The handover entry names the agent, worktree path, branch, last commit and next step. The taking-over agent checks `git status --porcelain` and `git log origin/main..HEAD` against the handover, then uses the same worktree and branch, retaining its original prefix. See canon §12.
+
+- Found: PIES-EXIT's entry below still says "PR #642 open"; #642 is merged on main (2a635bd). Not edited here.
+
+Record: agent Claude Code; wall 0:04; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-03 (cloud): PIES-EXIT (`docs/handover/contracts/2026-11-03-pies-exit.md`, Shared; stops at a green Gate for Project Claude's review and Jon's "merge")
 
 - Agent: Claude Code. Worktree `/home/user/wt-pe`, branch `claude/youthful-bardeen-c1nupo` (recreated from main after #641). Claim 66596c04, released in the PR.
