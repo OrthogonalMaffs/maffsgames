@@ -390,7 +390,9 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   function chartRadius(count) {
     var tall = window.innerHeight >= 700;
     if (count > 1) return touch() && window.innerHeight < 620 ? 30 : (touch() || !tall ? 36 : 44);
-    return touch() ? (window.innerHeight < 620 ? 30 : 52) : 64;
+    // 620-700 px tall: 42, so a long Stage 1 question's controls clear the fold by 16 px at 360x640 with the keypad open, and every
+    // slice of 40 degrees or more keeps its angle label (drawn from r >= 40) (PIES-CHART-SHRINK, Jon 3 Nov 2026).
+    return touch() ? (window.innerHeight < 620 ? 30 : (window.innerHeight <= 700 ? 42 : 52)) : 64;
   }
   function drawFigure(into, q, typedAngles) {
     var host = into; host.innerHTML = '';
