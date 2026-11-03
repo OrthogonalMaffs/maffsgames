@@ -28,6 +28,8 @@ Full corrected check-changed.py: 76/76 passed in 369s, exit 0, 6 heavy serial an
 
 Resumed 3 Nov by Codex in the same clean worktree at 69712350; branch history matches this entry. Jon supplied the exact November New entry, relayed Project Claude's approval and explicitly said merge when Gate is green. Added the wording newest first. Contract amendment 1 records this instruction. Next: push, ready for review, guarded merge/main watch, end-task; stop without starting PACKS-CANON. Final merge/main/cleanup results will be recorded in the PR report.
 
+STOP, 3 Nov: approved updates entry pushed at e900a6a8; PR marked ready using the GitHub connector. GitHub REST reports mergeable=false, mergeable_state=dirty against current main; no check runs on the new head. Guarded merge watcher launched through bg.py, then stopped through end-task.py's registry on discovering the conflict. No merge or cleanup. Next: Jon's ruling on resolving the conflict; retain this worktree/branch. PACKS-CANON not started.
+
 Record: agent Codex; wall n/a; review cycles 1; amendments 1; usage n/a.
 
 ## 2026-11-03 (home): UPDATES-NOVEMBER
