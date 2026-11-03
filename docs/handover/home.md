@@ -2,6 +2,8 @@
 
 **Queue (cross-lane facts; never archived)**
 
+- NEW-AND-UPDATED: home/Codex claims index.html on codex/new-and-updated, /home/maffs/mg-new-and-updated; contract docs/handover/contracts/2026-11-03-new-and-updated.md. Shared; stop at green Gate for Project Claude review and Jon's merge. Amendment 1 satisfied: fresh base ffcd9a9b includes DASH-MINUS #646; no concurrency exception.
+
 - TODO-TRIM: home/Codex, codex/todo-trim, /home/maffs/mg-todo-trim, PR #645; contract and Jon's 3 Nov HTTP-503 retry ruling in the PR. Small, merge on green. NEW-AND-UPDATED is next; no saved contract found at this head.
 
 - PIES-SIGNOFF-AND-PRIMARY-FF: home/Codex, codex/pies-signoff, /home/maffs/mg-pies-signoff; contract `docs/handover/contracts/2026-11-03-pies-signoff-and-primary-ff.md`. Small, merge on green; TODO-TRIM starts after completion.
