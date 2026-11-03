@@ -134,6 +134,7 @@
   "Python minimum (scripts/ require Python 3.10 or later: CI pins an explicit version, the shared-module guard fires below 3.10)": "28",
   "Quadratic Factoriser (every pooled item recomputed, SymPy; every Higher item's six guided steps played in Chromium, each split, factor and line recomputed; Formula roots on the keypad with a minus key)": "3",
   "Quadratic Factoriser self-test (the old split and eight other faults planted in the guided steps and the keypad; each must fail)": "5",
+  "Question id (question_answered names its question: analytics.js hashes question_text to question_id and never sends the text, GA4 and the Sheet alike; Sequence Solver's ids decode with no collision; shrink-only warn list; planted faults)": "70",
   "Real fonts for the phone checks (scripts/fonts/ pinned and complete; the phone pass measures in them, the old font-blocking planted and caught)": "17",
   "Resit fixes of 4 Oct 2026 (five games' fixed faults, each fails on the old code)": "12",
   "SUVAT Selector (every key from the data both ways, at its stated precision; marking through MaffsAnswer in Chromium)": "4",
