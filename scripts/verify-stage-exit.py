@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-# ci-shards: Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all seven games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught) | | 4
-# ci-deps: schools/assets/stage-exit.js schools/assets/stage-exit.css games/its-on-sale/ games/as-you-can-see/ games/possibly-maybe/ games/hc-factor/ games/y-so-steep/ games/i-found-a-mark/ games/free-daily-pizza/
+# ci-shards: Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all eight games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught) | | 4
+# ci-deps: schools/assets/stage-exit.js schools/assets/stage-exit.css schools/assets/calculator.js schools/assets/calculator.css games/its-on-sale/ games/as-you-can-see/ games/possibly-maybe/ games/hc-factor/ games/y-so-steep/ games/i-found-a-mark/ games/free-daily-pizza/ games/who-ate-all-the-pies/
 """Verification for the shared stage-exit shell (contract STAGE-EXIT, Jon, 28 Oct 2026).
 
 The stage games hid "Back to Games" while a question was on screen and had no way back to the stage picker,
 so the only ways out were ten questions or the browser's Back button. schools/assets/stage-exit.{js,css} give every
 one of them a "Stages" button next to the standard back link while a stage or worked example is on screen.
 
-For each of the seven games (Who Ate All the Pies? is exempt, see EXEMPT) this opens the page, starts a stage and, on the worked example (where the game has one)
+For each of the eight games this opens the page, starts a stage and, on the worked example (where the game has one)
 and on a question, asserts:
   - the stage button and the Back to Games link are both on screen, inside the viewport, text at least 12 px;
   - one tap on the button reaches the stage picker (#menu active, body not playing), and no game_completed event,
@@ -17,7 +17,9 @@ and on a question, asserts:
 And at five sizes: both controls inside the viewport, no sideways scroll.
 
 Planted faults (each must be caught): button never shown, back link hidden in play, leave fires game_completed,
-leave submits to a board, leave leaves the Next control running, leave does nothing, a page that lost the script tag.
+leave submits to a board, leave leaves the Next control running, leave does nothing, a page that lost the script tag,
+Who Ate All the Pies? hiding its back link in play again (PIES-EXIT, 3 Nov 2026: its HUD row now has a phone budget,
+the calculator toggle an icon at phone widths, so it carries the shell like the rest).
 """
 import argparse
 import os
@@ -29,12 +31,9 @@ import bank_common as bc  # noqa: E402
 from playwright.sync_api import sync_playwright  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# Who Ate All the Pies? is exempt BY NAME (Jon, 28 Oct 2026): its HUD holds the calculator toggle, so the shared HUD
-# controls do not fit at 320 and 360 px without breaking the phone-fit rules, and no fold rule is loosened. It keeps its
-# hide rule and carries no stage-exit stylesheet or script. Revisit after the 2 Nov shared-infra freeze (docs/todo.md).
-EXEMPT = ['who-ate-all-the-pies']
+EXEMPT = []
 GAMES = ['its-on-sale', 'as-you-can-see', 'possibly-maybe',
-         'hc-factor', 'y-so-steep', 'i-found-a-mark', 'free-daily-pizza']
+         'hc-factor', 'y-so-steep', 'i-found-a-mark', 'free-daily-pizza', 'who-ate-all-the-pies']
 SIZES = [(320, 568), (360, 640), (375, 667), (390, 844), (1280, 720)]
 ASSETS = {'stage-exit.js': os.path.join(ROOT, 'schools', 'assets', 'stage-exit.js'),
           'stage-exit.css': os.path.join(ROOT, 'schools', 'assets', 'stage-exit.css')}
@@ -252,13 +251,22 @@ PLANTS = [
      dict(js=[('if (go) go.click();', 'void go;')]),
      r'did not reach the picker'),
     ('a page that lost the script tag', 'i-found-a-mark', 'NOSCRIPT', r'no ".*" button on screen'),
+    ('Pies hides its back link in play again', 'who-ate-all-the-pies',
+     ('PAGE', [('.badge-row{text-align:center;min-height:0}\n', '.badge-row{text-align:center;min-height:0}\nbody.playing a.back-link{display:none}\n')]),
+     r'Back to Games link is not on screen'),
 ]
 
 
 def run_plant(p):
     what, slug, edit, want = p
     out = []
-    if edit == 'NOSCRIPT':
+    if isinstance(edit, tuple) and edit[0] == 'PAGE':
+        page_src = read(os.path.join(ROOT, 'games', slug, 'index.html'))
+        for old, new in edit[1]:
+            assert page_src.count(old) == 1, (slug, old)
+            page_src = page_src.replace(old, new)
+        srcs = {'page': page_src}
+    elif edit == 'NOSCRIPT':
         page_src = read(os.path.join(ROOT, 'games', slug, 'index.html'))
         tag = re.search(r'\n?<script src="\.\./\.\./schools/assets/stage-exit\.js"[^>]*></script>', page_src)
         assert tag, slug
@@ -308,7 +316,7 @@ def main():
             if 'fit %dx%d' % s in mine:
                 with shard.unit('fit %dx%d' % s):
                     fit_size(base, s, out)
-                print('stage-exit: both controls in view on all seven games at %dx%d' % s)
+                print('stage-exit: both controls in view on all %d games at %dx%d' % ((len(GAMES),) + s))
     finally:
         proc.terminate()
     for p in PLANTS:

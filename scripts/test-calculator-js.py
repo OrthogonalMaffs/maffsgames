@@ -39,6 +39,13 @@ Runs the real file in Chromium, with theme.css for its styles, and checks:
             44px wide at least. With a mouse (1280x720, and 390px) nothing changes: the answer box is an
             ordinary input. Eight planted faults (Chromium) must each fail. WebKit cannot show a system
             keyboard either: what it confirms is the attributes and the focus behaviour, not the keyboard.
+  Toggle    (PIES-EXIT, 3 Nov 2026) both forms of the Calculator toggle. mount() without {toggle} gives the
+  forms     markup it always had, character for character, at every size. mount(el, {toggle: 'icon'}) at phone
+            widths (a touch phone at 320 and 390px, a mouse at 390 and 600px) is a 44x44 button showing a
+            calculator icon, the word hidden but still its accessible name ("Calculator"), opening and closing
+            the panel with aria-expanded following; at 601px and on a 1280x720 laptop it is the full toggle,
+            the word and no icon, the same size as an unopted toggle beside it. No sideways scroll. Three planted
+            faults (never shrinks, loses its name, the icon above phone widths) must each fail.
 
     python scripts/test-calculator-js.py
 """
@@ -303,6 +310,85 @@ async def _answer_check(browser, css, w, h, touch, fault, at):
     return out
 
 
+# The toggle's two forms (PIES-EXIT, 3 Nov 2026). #calc is mounted with {toggle: 'icon'}, #full without, side by side.
+TOGGLE_HTML = ('<button type="button" class="maffs-calc-toggle" aria-expanded="false" aria-controls="%s">'
+               'Calculator</button>')
+TOGGLE_PAGE = PAGE.replace('<div id="calc"></div>', '<div id="calc"></div><div id="full"></div>')
+TOGGLE_JS = """() => { const t = document.querySelector('#calc .maffs-calc-toggle'), r = t.getBoundingClientRect(),
+  s = t.querySelector('svg'), tx = t.querySelector('.maffs-calc-toggle-text'), sr = s ? s.getBoundingClientRect() : null,
+  f = document.querySelector('#full .maffs-calc-toggle'), fr = f.getBoundingClientRect(), doc = document.documentElement;
+  return { w: r.width, h: r.height, icon: !!sr && sr.width > 0, word: !!tx && tx.getBoundingClientRect().width > 2,
+    fullW: fr.width, fullH: fr.height, fullHtml: f.outerHTML, fullId: f.getAttribute('aria-controls'),
+    sx: doc.scrollWidth - doc.clientWidth, exp: t.getAttribute('aria-expanded'), open: __calc.isOpen() }; }"""
+# (width, height, touch, the icon form expected)
+TOGGLE_SIZES = [(320, 568, True, True), (390, 844, True, True), (390, 844, False, True), (600, 900, False, True),
+                (601, 900, False, False), (1280, 720, False, False)]
+TOGGLE_FAULTS = [
+    ("the icon form never shrinks", "STYLE:.maffs-calc-toggle.maffs-calc-toggle-icon{width:auto!important;padding:.45rem 1.1rem!important}"),
+    ("the icon form loses its name", "STYLE:.maffs-calc-toggle-text{display:none!important}"),
+    ("the icon form above phone widths", "STYLE:@media (min-width:601px){.maffs-calc-toggle.maffs-calc-toggle-icon{width:44px!important;padding:0!important}.maffs-calc-toggle-icon .maffs-calc-icon{display:block!important}}"),
+]
+
+
+async def toggle_check(browser, css, w, h, touch, want_icon, fault=None):
+    """Failures for the two toggle forms at one size (with a fault patched in, if given)."""
+    at = 'toggle %dx%d %s' % (w, h, 'touch' if touch else 'mouse')
+    ctx = await browser.new_context(viewport={'width': w, 'height': h}, has_touch=touch, is_mobile=touch)
+    try:
+        await ctx.route('**/*', lambda r: r.abort())
+        page = await ctx.new_page()
+        page.set_default_timeout(5000)
+        await page.set_content(TOGGLE_PAGE)
+        await page.add_style_tag(content=css)
+        await page.add_script_tag(path=KEYPAD_JS)
+        await page.add_script_tag(path=CALC_JS)
+        if fault:
+            await page.add_style_tag(content=fault[1][6:])
+        await page.evaluate("""() => { window.__calc = MaffsCalc.mount(document.getElementById('calc'), {toggle: 'icon'});
+            MaffsCalc.mount(document.getElementById('full')); }""")
+        return await _toggle_check(page, w, want_icon, touch, at)
+    except Exception as exc:              # a step that cannot happen is a failure too
+        return ['%s: broke: %s' % (at, str(exc).splitlines()[0])]
+    finally:
+        await ctx.close()
+
+
+async def _toggle_check(page, w, want_icon, touch, at):
+    out = []
+    m = await page.evaluate(TOGGLE_JS)
+    if m['fullHtml'] != TOGGLE_HTML % m['fullId']:
+        out.append('%s: without {toggle} the toggle changed: %s' % (at, m['fullHtml'][:160]))
+    # the name holds the word (the full toggle's ::after arrow joins it, "Calculator ▾", as it always has)
+    named = await page.locator('#calc').get_by_role('button', name='Calculator').count()
+    if named != 1:
+        out.append('%s: the toggle is not a button named "Calculator" (%d found)' % (at, named))
+    if want_icon:
+        if abs(m['w'] - 44) > 0.5 or abs(m['h'] - 44) > 0.5:
+            out.append('%s: the icon toggle is %.1f x %.1f px, not 44 x 44' % (at, m['w'], m['h']))
+        if not m['icon'] or m['word']:
+            out.append('%s: the icon toggle shows %s' % (at, 'the word' if m['word'] else 'no icon'))
+    else:
+        if m['icon'] or not m['word']:
+            out.append('%s: above phone widths the toggle shows %s' % (at, 'the icon' if m['icon'] else 'no word'))
+        if abs(m['w'] - m['fullW']) > 0.5 or abs(m['h'] - m['fullH']) > 0.5:
+            out.append('%s: above phone widths the toggle is %.1f x %.1f px, the full one %.1f x %.1f'
+                       % (at, m['w'], m['h'], m['fullW'], m['fullH']))
+    if m['sx'] > 0:
+        out.append('%s: the page scrolls sideways by %d px' % (at, m['sx']))
+    if touch:
+        await page.tap('#calc .maffs-calc-toggle')
+    else:
+        await page.click('#calc .maffs-calc-toggle')
+    m = await page.evaluate(TOGGLE_JS)
+    if not m['open'] or m['exp'] != 'true':
+        out.append('%s: the toggle did not open the panel (open %s, aria-expanded %r)' % (at, m['open'], m['exp']))
+    await page.evaluate('__calc.close()')
+    m = await page.evaluate(TOGGLE_JS)
+    if m['open'] or m['exp'] != 'false':
+        out.append('%s: closing did not close it (open %s, aria-expanded %r)' % (at, m['open'], m['exp']))
+    return out
+
+
 async def run():
     from playwright.async_api import async_playwright
     fails = []
@@ -447,6 +533,17 @@ async def run():
             if m['overflow']:
                 fails.append('%dpx: %d key labels overflow their key' % (w, m['overflow']))
             await ctx.close()
+        # The toggle's two forms, and each planted fault must fail somewhere
+        tcss = ''.join(l for l in open(THEME_CSS, encoding='utf-8').read().splitlines(True) if not l.startswith('@import')) + open(CALC_CSS, encoding='utf-8').read()
+        for w, h, touch, want in TOGGLE_SIZES:
+            fails.extend(await toggle_check(browser, tcss, w, h, touch, want))
+        for fault in TOGGLE_FAULTS:
+            caught = []
+            for w, h, touch, want in TOGGLE_SIZES:
+                caught.extend(await toggle_check(browser, tcss, w, h, touch, want, fault))
+            print('  fault %-40s %s' % (fault[0], ('caught (%s)' % caught[0][:70]) if caught else '*** MISSED ***'))
+            if not caught:
+                fails.append('planted fault not caught: ' + fault[0])
         # The wide-screen dock, and each planted fault must fail somewhere
         css = ''.join(l for l in open(THEME_CSS, encoding='utf-8').read().splitlines(True) if not l.startswith('@import')) + open(CALC_CSS, encoding='utf-8').read()
         for w, h, want in DOCK_SIZES:
@@ -536,8 +633,10 @@ def main():
           '%d key sequences; keyboard, toggle, privacy; keys >= 44px at 320/375/390px; docked beside a 720px '
           'column at 1280/1366/1920 (sticky, never over it), in the flow at 1240 and 390; %d planted dock faults caught; '
           'answer target on touch phones in Chromium and WebKit (read-only, inputmode none, never focused, '
-          'operators disabled, display switching, 48px keys), unchanged with a mouse; %d planted answer faults caught'
-          % (len(CASES), len(SCI_CASES), len(SCI_PLANTS), len(SEQS), len(DOCK_FAULTS), len(ANSWER_FAULTS)))
+          'operators disabled, display switching, 48px keys), unchanged with a mouse; %d planted answer faults caught; '
+          'the toggle unchanged without {toggle}, a 44x44 icon named "Calculator" at phone widths with {toggle: \'icon\'}, '
+          'the full toggle above them; %d planted toggle faults caught'
+          % (len(CASES), len(SCI_CASES), len(SCI_PLANTS), len(SEQS), len(DOCK_FAULTS), len(ANSWER_FAULTS), len(TOGGLE_FAULTS)))
     return 0
 
 

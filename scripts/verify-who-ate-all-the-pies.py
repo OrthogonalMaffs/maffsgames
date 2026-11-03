@@ -694,7 +694,7 @@ PLANTS = [
     ('the friendly flag never set (60 degrees = 1/6 and 210/360 lose the hint)', 'module',
      [("friendly: b.friendly,", "friendly: false,")], 'engine', r'friendly is'),
     ('no calculator offered (the toggle never mounted)', 'page',
-     [("if (!calc) calc = MaffsCalc.mount($('calcHolder'), { dock: $('qcard') });", "if (!calc) calc = { close: function () {}, clear: function () {} };")],
+     [("if (!calc) calc = MaffsCalc.mount($('calcHolder'), { dock: $('qcard'), toggle: 'icon' });", "if (!calc) calc = { close: function () {}, clear: function () {} };")],
      'play', r'toggle'),
     ('the hint on the wrong questions (shown where the bank says not friendly)', 'page',
      [("$('msg').textContent = Q.friendly ? MaffsPieCharts.HINT : '';", "$('msg').textContent = !Q.friendly ? MaffsPieCharts.HINT : '';")],

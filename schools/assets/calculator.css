@@ -45,6 +45,23 @@
 }
 .maffs-calc-toggle::after { content: " \25be"; }
 .maffs-calc-toggle.open::after { content: " \25b4"; }
+/* The icon form, opt-in (mount(el, {toggle: 'icon'}); PIES-EXIT, 3 Nov 2026): at phone widths the toggle is a 44x44
+   calculator icon, for a HUD row with no room for the word; the word stays as its hidden accessible name. Wider, it
+   is the full toggle above. Pages that do not opt in have neither class, so nothing here reaches them. */
+.maffs-calc-icon { display: none; }
+@media (max-width: 600px) {
+  .maffs-calc-toggle.maffs-calc-toggle-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 44px; min-width: 44px; height: 44px; min-height: 44px; padding: 0;
+  }
+  .maffs-calc-toggle-icon .maffs-calc-icon { display: block; flex: none; }
+  .maffs-calc-toggle-icon .maffs-calc-toggle-text {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;
+    clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0;
+  }
+  .maffs-calc-toggle.maffs-calc-toggle-icon::after { content: none; }
+  .maffs-calc-toggle.maffs-calc-toggle-icon.open { background: var(--accent, var(--text)); color: var(--on-accent, var(--surface)); }
+}
 .maffs-calc-panel {
   width: 100%;
   max-width: 340px;

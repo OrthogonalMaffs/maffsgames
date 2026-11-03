@@ -16,6 +16,12 @@
  *                             dock element (the game's question card) holds the panel, it docks there
  *                             instead: beside the card, level with its top, sticky while the page
  *                             scrolls, out of the page flow so the game column never moves (canon §4.4).
+ *   MaffsCalc.mount(el, {toggle: 'icon'})
+ *                             opt-in (PIES-EXIT, 3 Nov 2026): at phone widths (600px or less) the toggle is a
+ *                             44x44 calculator icon, for a page whose HUD row has no room for the word. Same
+ *                             button, same behaviour and state; its accessible name stays "Calculator" (the word
+ *                             is hidden visually, never removed). Wider than that it is the full toggle. A page
+ *                             that does not opt in gets the same markup as before, character for character.
  *
  * Grammar (calculator conventions: -3² = -9; √ opens a bracket, like a Casio; missing closing
  * brackets are closed on =, extra ones are an error; a number, bracket or √ straight after a value
@@ -231,6 +237,14 @@
   };
   var OPERATORS = ['+', MINUS, MUL, DIV, SQ];
   var uid = 0;
+  // The icon form of the toggle ({toggle: 'icon'}): a calculator outline, its display and six keys. Decoration
+  // only: the button's name comes from its hidden "Calculator" text.
+  var ICON = '<svg class="maffs-calc-icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">' +
+    '<rect x="5" y="2.5" width="14" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/>' +
+    '<rect x="8" y="5.5" width="8" height="3.5" rx=".75" fill="currentColor"/>' +
+    '<circle cx="9" cy="12.5" r="1.15" fill="currentColor"/><circle cx="12" cy="12.5" r="1.15" fill="currentColor"/>' +
+    '<circle cx="15" cy="12.5" r="1.15" fill="currentColor"/><circle cx="9" cy="17" r="1.15" fill="currentColor"/>' +
+    '<circle cx="12" cy="17" r="1.15" fill="currentColor"/><circle cx="15" cy="17" r="1.15" fill="currentColor"/></svg>';
   // The wide-screen dock. min is the narrowest panel whose five columns of keys stay 44px
   // (5 x 44 + 4 gaps of 6 + 2 x 8 padding + 2 x 1 border); the panel docks only when the room right of
   // the card, less the gap and an edge margin, is at least that. The breakpoint follows from the
@@ -249,11 +263,13 @@
   function mount(el, opts) {
     opts = opts || {};
     var id = 'maffsCalc' + (++uid);
-    var sci = opts.keys === 'scientific', mode = 'deg';
+    var sci = opts.keys === 'scientific', mode = 'deg', icon = opts.toggle === 'icon';
     el.classList.add('maffs-calc');
     if (sci) el.classList.add('scientific');
-    var h = '<button type="button" class="maffs-calc-toggle" aria-expanded="false" aria-controls="' + id + '">' +
-      'Calculator</button><div class="maffs-calc-rail" hidden>' +
+    var h = '<button type="button" class="maffs-calc-toggle' + (icon ? ' maffs-calc-toggle-icon' : '') +
+      '" aria-expanded="false" aria-controls="' + id + '">' +
+      (icon ? ICON + '<span class="maffs-calc-toggle-text">Calculator</span>' : 'Calculator') +
+      '</button><div class="maffs-calc-rail" hidden>' +
       '<div class="maffs-calc-panel" id="' + id + '" role="group" aria-label="Calculator" tabindex="-1" hidden>' +
       '<div class="maffs-calc-screen"><button type="button" class="maffs-calc-close" aria-label="Close the calculator">' +
       '\u00d7</button><div class="maffs-calc-lines"><div class="maffs-calc-expr" aria-hidden="true">&nbsp;</div>' +
