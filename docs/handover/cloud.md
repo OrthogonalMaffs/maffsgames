@@ -69,9 +69,9 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 - Jon's 16:05 hand-off is a later text than #650's: option (a), the policy text, same leaderboard key, drift table in the PR. The contract files keep it, with #650's receipt notes.
 - Built: the five A24 items to A-level (gcse 45, alevel 59); no HUD clock, a right answer scores BASE, total time on results; "GCSE Higher" button and start line (key gcse). Verifier: A24 guard, Chromium clock check, 10/10 plants. rr-001, rr-002, rr-007 fixed.
 - For Jon (PR): hub/ticker still label the board "GCSE" (shared label map); level buttons wrap to two rows at 375/390 px; drift: of 38 other Hidden Count-Up games, 20 show a clock, 22 time the score (not 17/28).
-- **State:** PR #652, Gate pending. On "merge": `merge-pr.py 652 --watch --wait 3600`, entry to MERGED, contract to `docs/history/contracts/`, then SEQ-SOLVER-WORKED on this branch reset to main.
+- **State:** PR #652; Gate green on 75c341b (run 41672992023); then main merged in (#651's new rule: a dated /updates/ line, added, wording for Jon), Gate re-running. On "merge": `merge-pr.py 652 --watch --wait 3600`, entry to MERGED, contract to `docs/history/contracts/`, then SEQ-SOLVER-WORKED on this branch reset to main.
 
-Record: agent Claude Code; wall pending; review cycles 0; amendments 0; usage n/a.
+Record: agent Claude Code; wall 0:30 (received 16:05, Gate green and handed off 16:35); review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-03 (cloud): Contracts stored for a fresh session (SEQ-SOLVER-FIXES, SEQ-SOLVER-WORKED, DASHBOARD-METRICS)
 
