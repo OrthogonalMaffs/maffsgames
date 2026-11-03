@@ -1,0 +1,6 @@
+{
+  "pages": {
+    "games/how-many-parts/index.html": "Stage 6 types mixed numbers: needs a whole-number box, which MaffsFractionInput does not have yet (FRACTION-STACK follow-up).",
+    "the-6-ps/index.html": "Fraction answers can be mixed numbers: needs a whole-number box, which MaffsFractionInput does not have yet (FRACTION-STACK follow-up)."
+  }
+}
