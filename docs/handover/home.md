@@ -2,7 +2,7 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- NEW-AND-UPDATED: home/Codex claims index.html on codex/new-and-updated, /home/maffs/mg-new-and-updated; contract docs/handover/contracts/2026-11-03-new-and-updated.md. Jon's 3 Nov verifier Amendment 1 authorises one count-condition line; resumed for full checks, PR and green Gate review hold. Fresh base ffcd9a9b includes DASH-MINUS #646, satisfying the earlier wait ruling.
+- NEW-AND-UPDATED: home/Codex claims index.html on codex/new-and-updated, /home/maffs/mg-new-and-updated, PR #648; contract docs/handover/contracts/2026-11-03-new-and-updated.md. Full checks 56/56, exit 0. Shared: green Gate then Project Claude review and Jon's merge. Fresh base ffcd9a9b includes DASH-MINUS #646; verifier Amendment 1 applied.
 
 - TODO-TRIM: home/Codex, codex/todo-trim, /home/maffs/mg-todo-trim, PR #645; contract and Jon's 3 Nov HTTP-503 retry ruling in the PR. Small, merge on green. NEW-AND-UPDATED is next; no saved contract found at this head.
 
@@ -14,7 +14,7 @@
 
 ## 2026-11-03 (home): NEW-AND-UPDATED
 
-Agent: Codex. Worktree: /home/maffs/mg-new-and-updated. Branch: codex/new-and-updated. Base ffcd9a9b includes DASH-MINUS #646; claim commit 75dcee63; implementation 6ae4421e; amendment b995f2d9; previous STOP record a21f0f3c. Checked locally. Next: push and PR, stop at green Gate for Project Claude review and Jon's merge.
+Agent: Codex. Worktree: /home/maffs/mg-new-and-updated. Branch: codex/new-and-updated. Base ffcd9a9b includes DASH-MINUS #646; claim commit 75dcee63; implementation 6ae4421e; amendment b995f2d9; checks e205418b; previous STOP record a21f0f3c. PR #648: https://github.com/OrthogonalMaffs/maffsgames/pull/648 . Checked locally and pushed. Next: this handover head's Gate, then stop for Project Claude review and Jon's merge. Current-head Gate and review hand-off are tracked in the PR report. No merge or cleanup authorised.
 
 Implemented: cmpNew derives its cards from applyBadges(), one per slug, newest first with New then title ties, cap 12; evergreen heading/note and new-and-updated analytics label. Badge dates/rules, level cards, filter and compact behaviour unchanged. New ci-line verifier reads level-card metadata independently and stubs the clock only in routed copies. Section-click test also fixes its test clock so generated cards remain testable after the current badges expire.
 
