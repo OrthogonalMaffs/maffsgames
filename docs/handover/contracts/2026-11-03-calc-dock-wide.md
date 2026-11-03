@@ -51,3 +51,14 @@ STOP IF
 The fix changes when the calculator docks, or its layout at any width where it does not dock; any page's verifier
 fails after the change for a reason other than the dock position (report it); an open PR touches calculator.js or
 calculator.css.
+
+## Amendment 1 — Jon, 3 Nov 2026
+
+Fresh Codex session (Jon, 3 Nov). Read docs/handover/home.md first. Finish CALC-DOCK-WIDE, PR #653 (draft):
+1. Add this line to updates/index.html under November's "New", newest first, in the page's existing markup:
+   3 Nov 2026: "The calculator stops wandering off." On big screens, opening the calculator in some games (Sequence
+   Solver among them) sent it off the edge of the screen, like a cat that's seen a cucumber. It now sits right beside
+   the question, where it belongs.
+2. Push, mark the PR ready for review. Project Claude has approved #653 (3 Nov); Jon says "merge": when the Gate is
+   green, merge with python -X utf8 scripts/merge-pr.py 653 --watch --wait 3600, report its last line, run end-task,
+   record the handover. Then stop: do not start PACKS-CANON in this session.

@@ -26,7 +26,9 @@ Targeted calculator test PASS, exit 0 (65 basic expressions, 27 scientific, 16 k
 
 Full corrected check-changed.py: 76/76 passed in 369s, exit 0, 6 heavy serial and 70 light; log .claude/bg-1793723836837.log. Twenty-one indirect heavy checks selected through calculator.js deferred to CI: Pythagoras 3, The 6 P's 2, Take a Walk 2, Burst 4, Squared Squirrel 3 (parts 1,3,4), Pies 2, Formula Unlocked, Growth and Decay, Unit Converter, level resolver in play 2. Seven standard deferrals: four page-load shards (first also hang scan), bank extraction, ledger lint, leaderboard coverage. Initial run caught screenshot files in an unexcluded folder; moved only those requested artifacts to existing excluded docs/screenshots/calc-dock-wide. Publish-scope selftest/check passes after this one fix; superseded full run stopped through end-task.py's registry. No publishing rule or Gate file changed. git diff --check and UTF-8 reads pass. Next: draft PR with table/screenshots; Jon's updates wording; Gate green, then Shared review hold. No merge authority yet.
 
-Record: agent Codex; wall n/a; review cycles 0; amendments 0; usage n/a.
+Resumed 3 Nov by Codex in the same clean worktree at 69712350; branch history matches this entry. Jon supplied the exact November New entry, relayed Project Claude's approval and explicitly said merge when Gate is green. Added the wording newest first. Contract amendment 1 records this instruction. Next: push, ready for review, guarded merge/main watch, end-task; stop without starting PACKS-CANON. Final merge/main/cleanup results will be recorded in the PR report.
+
+Record: agent Codex; wall n/a; review cycles 1; amendments 1; usage n/a.
 
 ## 2026-11-03 (home): UPDATES-NOVEMBER
 
