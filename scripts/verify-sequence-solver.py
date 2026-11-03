@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-# ci-line: Sequence Solver (every key recomputed from its own terms or formula, exactly; options distinct in value; every option marked in Chromium) |
+# ci-line: Sequence Solver (every key recomputed from its own terms or formula, exactly; options distinct in value; every option marked in Chromium; no visible clock, score independent of time) |
 """Sequence Solver: every key recomputed from the sequence or formula in its own question; every option clicked.
 
-The game (154 multiple-choice items: ks3 50, gcse 50, alevel 54) covers next terms, common differences and
+The game (154 multiple-choice items: ks3 50, gcse 45, alevel 59) covers next terms, common differences and
 ratios, nth terms, geometric terms, series, sums to infinity, sigma notation and recurrences. Its bank was keyed by
 hand with no verifier; the resit audit of 4 Oct 2026 found alevel[49] (0.9 recurring as a sum, "What does this
 sum equal?") offering "0.999..." beside the key 1 and marking it wrong: the same number, and the question's own
@@ -17,8 +17,15 @@ the few whose answer is a formula or a sentence are a reviewed verdict, pinned t
   and distinct in value (SR-4); and in Chromium (390x844) every option is clicked through handle(): the key
   marked right, the others wrong.
 A fill-the-gaps ask must name the sequence type its key assumes (SR-17, sequence-solver-s1-001).
-A self-test plants r-001 back (0.999... beside 1), the B11 pair and gcse[48]'s old untyped ask ('Fill in the
-gaps'); each must FAIL naming its item.
+GCSE geometric items stay within A24 ("simple geometric progressions", r a rational number > 0): no negative or
+zero ratio, and no ratio found from terms that are not next to each other. The five that went beyond it are A-level
+items since SEQ-SOLVER-FIXES (Jon, 3 Nov 2026; sequence-solver-rr-002), each still keyed from its own terms.
+The clock follows the Hidden Count-Up policy (timer-policy.md; Jon, 3 Nov 2026, rr-001), checked in Chromium on a
+stubbed Date.now: the game screen does not change as time passes and has no Time label; every right answer scores
+the same however long it took (1 s or 90 s); the results screen shows the total answering time.
+A self-test plants r-001 back (0.999... beside 1), the B11 pair, gcse[44]'s old untyped ask ('Fill in the gaps'),
+a negative ratio at GCSE, the HUD clock, a time multiplier in the score and a results line without the time; each
+must FAIL naming its item.
 
     python scripts/verify-sequence-solver.py [--no-selftest] [--against FILE]
 """
@@ -37,7 +44,7 @@ import bank_common as bc  # noqa: E402
 
 SLUG = 'sequence-solver'
 GAME = os.path.join(os.path.dirname(HERE), 'games', SLUG, 'index.html')
-COUNTS = {'ks3': 50, 'gcse': 50, 'alevel': 54}
+COUNTS = {'ks3': 50, 'gcse': 45, 'alevel': 59}
 n = sp.Symbol('n', positive=True, integer=True)
 INF = sp.oo
 
@@ -318,8 +325,30 @@ def FILL(q):
 
 KS3 = [NEXT] * 12 + [DIFF] * 6 + [KTH] * 8 + [WHICH] * 2 + [NEXT] * 10 + [TYPE] * 6 + [NEXT] * 6
 GCSE = ([NTH] * 10 + [TN_K, IS_TERM, IS_TERM, FIRST_ABOVE, WHICH_N, SECOND] + [NTH] * 9 + [SECOND, TN_K, TN_K, TN_K, IS_TERM]
-        + [RATIO] * 4 + [NEXT, TN_K, TN_K, GP_TERM, GP_TERM, GP_TERM, RATIO_TWO, RATIO_TWO]
-        + [GEN, GEN, GEN, GEN, AP_FIRST_D, GEN, FILL, FILL])
+        + [RATIO] * 3 + [NEXT, TN_K, TN_K, GP_TERM, GP_TERM]
+        + [GEN, GEN, GEN, GEN, AP_FIRST_D, GEN, FILL])
+# alevel[54:59]: the five geometric items moved from GCSE (SEQ-SOLVER-FIXES, rr-002), keyed from their own terms
+ALEVEL_MOVED = [RATIO, GP_TERM, RATIO_TWO, RATIO_TWO, FILL]
+
+
+def a24(fn, q):
+    """Why a GCSE item goes beyond A24's simple geometric progressions (r rational and > 0), or None."""
+    r = None
+    if fn is RATIO:
+        r = gp(terms(q['seq']))[1]
+    elif fn is GP_TERM:
+        r = F(re.search(r'r = (-?[\d.]+)', q['seq']).group(1))
+    elif fn is NEXT:
+        ts = [t for t in terms(q['seq']) if t is not None]
+        if 'geometric' in next_terms(ts) and ts[0] != 0:
+            r = gp(ts)[1]
+    elif fn is RATIO_TWO:
+        return 'the common ratio from two terms that are not next to each other (an A-level method)'
+    elif fn is FILL and 'geometric' in q['ask']:
+        return 'a geometric gap fill needs the ratio from terms that are not next to each other (an A-level method)'
+    if r is not None and r <= 0:
+        return 'a common ratio of %s (A24 needs r > 0)' % r
+    return None
 
 
 def S_ap(a, d, k):
@@ -525,7 +554,9 @@ def check_bank(fails, bank):
             if re.fullmatch(r'a = -?[\d.]+, r = -?[\d.]+', untex(q['seq'])) and 'ar^{n-1}' not in q.get('q', ''):
                 fails.append('%s: an a/r item without the T_n = ar^{n-1} line leaves the type to the letter r (R2, sequence-solver-s1-004)' % w)
             try:
-                if lv == 'alevel':
+                if lv == 'alevel' and i >= len(ALEVEL):
+                    target = ALEVEL_MOVED[i - len(ALEVEL)](q)
+                elif lv == 'alevel':
                     words, target = ALEVEL[i]
                     text = (q.get('q', '') + '|' + q['ask']).replace('\\(', '').replace('\\)', '')   # MaffsText delimiters
                     for part in words.split('|'):
@@ -533,6 +564,9 @@ def check_bank(fails, bank):
                             raise ValueError('the item must say "%s" for its answer to hold' % part)
                 else:
                     target = plans[lv][i](q)
+                    why = a24(plans[lv][i], q) if lv == 'gcse' else None
+                    if why:
+                        fails.append('%s: beyond GCSE A24, %s; it belongs at A-level (sequence-solver-rr-002)' % (w, why))
             except (ValueError, AttributeError, IndexError) as e:
                 fails.append('%s: %s' % (w, e))
                 continue
@@ -570,33 +604,82 @@ SWEEP_JS = r"""() => {
 }"""
 
 
+# The clock (timer-policy.md, Hidden Count-Up; Jon, 3 Nov 2026, SEQ-SOLVER-FIXES, sequence-solver-rr-001). Date.now is
+# stubbed so the run is exact: a full 20-question GCSE round, every answer right, alternately 1 s and 90 s.
+TIME_JS = r"""async () => {
+  const out = [];
+  let T = 1.7e12; Date.now = () => T;
+  window.setTimeout = () => 0; window.setInterval = () => 0;   // adv() is called here, never by a timer
+  const frames = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+  const seen = el => el.innerText;
+  level = 'gcse';
+  startGame();
+  const game = document.getElementById('game');
+  await frames();
+  const before = seen(game);
+  T += 7000; await frames();
+  if (seen(game) !== before) out.push(['clock', 'the game screen changes as time passes (a visible clock)']);
+  for (const el of game.querySelectorAll('*')) {
+    if (el.offsetParent !== null && /^\s*time\s*$/i.test(el.textContent)) out.push(['clock', 'a "' + el.textContent.trim() + '" label on the game screen']);
+  }
+  const gains = [];
+  for (let i = 0; i < totalQ; i++) {
+    T += i % 2 ? 90000 : 1000;
+    const q = questions[qIdx], was = score;
+    const btn = [...document.querySelectorAll('#options .opt-btn')].find(b => b.dataset.val === q.correct);
+    if (!btn) { out.push(['score', 'question ' + (i + 1) + ': the key is not on screen']); return out; }
+    btn.click();
+    gains.push(score - was);
+    if (/time/i.test(seen(game))) out.push(['clock', 'question ' + (i + 1) + ': the game screen mentions time: ' + seen(game).replace(/\s+/g, ' ').slice(0, 80)]);
+    adv();
+  }
+  if (new Set(gains).size !== 1 || gains[0] <= 0)
+    out.push(['score', 'a right answer scores ' + gains[0] + ' after 1 s and ' + gains[1] + ' after 90 s (the score must not use time)']);
+  const res = document.getElementById('results');
+  if (!res.classList.contains('active')) out.push(['results', 'the results screen is not shown after ' + totalQ + ' answers']);
+  const total = 7 + 10 * 1 + 10 * 90;   // the 7 s probe above is question 1's answering time too: 917 s
+  const want = Math.floor(total / 60) + 'm ' + total % 60 + 's';
+  if (!res.innerText.includes(want)) out.push(['results', 'the results screen does not show the total time ' + want + ': ' + res.innerText.replace(/\s+/g, ' ').slice(0, 120)]);
+  return out;
+}"""
+
+
+def context(browser, base, html, lock_fresh):
+    ctx = browser.new_context(viewport={'width': 390, 'height': 844})
+    if lock_fresh:
+        ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)   # the sweep clicks as soon as showQ() renders
+    page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
+    ctx.route(lambda url: not url.startswith(base), lambda route: route.abort())
+    # KaTeX comes from the pinned local copy, never the CDN (the verifier needs no outside host)
+    ctx.route(lambda url: url.startswith(bc.KATEX_CDN), lambda route: (
+        route.fulfill(**bc.real_font_response(route.request.url)) if bc.real_font_response(route.request.url)
+        else route.abort()))
+    ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
+        status=200, content_type='text/html; charset=utf-8', body=html))
+    page = ctx.new_page()
+    errors = []
+    page.on('pageerror', lambda e: errors.append(str(e)))
+    page.goto(base + '/games/%s/?cb=verify' % SLUG, wait_until='load', timeout=20000)
+    page.wait_for_function('typeof QUESTIONS !== "undefined" && typeof katex !== "undefined"', timeout=15000)
+    return page, errors
+
+
 def play(fails, html):
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
     try:
         with sync_playwright() as pw:
             browser = pw.chromium.launch()
-            ctx = browser.new_context(viewport={'width': 390, 'height': 844})
-            ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)   # the sweep clicks as soon as showQ() renders
-            page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
-            ctx.route(lambda url: not url.startswith(base), lambda route: route.abort())
-            # KaTeX comes from the pinned local copy, never the CDN (the verifier needs no outside host)
-            ctx.route(lambda url: url.startswith(bc.KATEX_CDN), lambda route: (
-                route.fulfill(**bc.real_font_response(route.request.url)) if bc.real_font_response(route.request.url)
-                else route.abort()))
-            ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
-                status=200, content_type='text/html; charset=utf-8', body=html))
-            page = ctx.new_page()
-            errors = []
-            page.on('pageerror', lambda e: errors.append(str(e)))
-            page.goto(base + '/games/%s/?cb=verify' % SLUG, wait_until='load', timeout=20000)
-            page.wait_for_function('typeof QUESTIONS !== "undefined" && typeof katex !== "undefined"', timeout=15000)
+            page, errors = context(browser, base, html, True)
             bank = page.evaluate('() => QUESTIONS')
             for lv, i, pick, what in page.evaluate(SWEEP_JS):
                 fails.append('%s[%d]%s in Chromium: option %s %s' % (lv, i, ' (%s)' % AUDIT[(lv, i)] if (lv, i) in AUDIT else '', pick, what))
+            page, errors2 = context(browser, base, html, True)
+            for tag, what in page.evaluate(TIME_JS):
+                fails.append('%s: %s (Hidden Count-Up, sequence-solver-rr-001)' % (tag, what))
             browser.close()
-            if errors:
-                fails.append('page errors: %s' % '; '.join(errors[:3]))
+            if errors or errors2:
+                fails.append('page errors: %s' % '; '.join((errors + errors2)[:3]))
             return bank
     finally:
         proc.terminate()
@@ -611,16 +694,27 @@ def run(html):
     return fails, sum(len(bank[k]) for k in COUNTS) if bank else 0
 
 
+HUD_CLOCK = '<div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div>'
 PLANTS = [
-    ('alevel[49]', 'r-001: 0.999... beside the key 1', "correct:'1',d:['10','\\\\dfrac{9}{10}','\\\\infty']",
-     "correct:'1',d:['0.999...','\\\\dfrac{9}{10}','\\\\infty']"),
-    ('gcse[6]', 'B11: 10 - 3n beside -3n + 10', "d:['\\\\(-3n + 10\\\\)','\\\\(3n + 7\\\\)','\\\\(-3n + 7\\\\)']",
-     "d:['\\\\(-3n + 10\\\\)','\\\\(10 - 3n\\\\)','\\\\(-3n + 7\\\\)']"),
-    ('alevel[48]', 'R8: raw TeX in the prompt', "ask:'Prove \\\\(S_n\\\\) for \\\\(a = 1, d = 1\\\\) gives \\\\(\\\\dfrac{n(n+1)}{2}\\\\)'",
-     "ask:'Prove S_n for a = 1, d = 1 gives \\\\dfrac{n(n+1)}{2}'"),
-    ('alevel[32]', 'R8: a prose key set in maths mode', "correct:'No, \\\\(|r| \\\\geq 1\\\\)'", "correct:'No, |r| \\\\geq 1'"),
-    ('gcse[39]', 'R2: a/r item without the formula line', "{seq:'\\\\(a = 2, r = -2\\\\)',q:'T_n = ar^{n-1}',", "{seq:'\\\\(a = 2, r = -2\\\\)',q:'',"),
-    ('gcse[48]', 'SR-17: fill the gaps, type unstated', "ask:'If arithmetic, fill the gaps'", "ask:'Fill in the gaps'"),
+    ('alevel[49]', 'r-001: 0.999... beside the key 1', [("correct:'1',d:['10','\\\\dfrac{9}{10}','\\\\infty']",
+     "correct:'1',d:['0.999...','\\\\dfrac{9}{10}','\\\\infty']")]),
+    ('gcse[6]', 'B11: 10 - 3n beside -3n + 10', [("d:['\\\\(-3n + 10\\\\)','\\\\(3n + 7\\\\)','\\\\(-3n + 7\\\\)']",
+     "d:['\\\\(-3n + 10\\\\)','\\\\(10 - 3n\\\\)','\\\\(-3n + 7\\\\)']")]),
+    ('alevel[48]', 'R8: raw TeX in the prompt', [("ask:'Prove \\\\(S_n\\\\) for \\\\(a = 1, d = 1\\\\) gives \\\\(\\\\dfrac{n(n+1)}{2}\\\\)'",
+     "ask:'Prove S_n for a = 1, d = 1 gives \\\\dfrac{n(n+1)}{2}'")]),
+    ('alevel[32]', 'R8: a prose key set in maths mode', [("correct:'No, \\\\(|r| \\\\geq 1\\\\)'", "correct:'No, |r| \\\\geq 1'")]),
+    ('alevel[55]', 'R2: a/r item without the formula line', [("{seq:'\\\\(a = 2, r = -2\\\\)',q:'T_n = ar^{n-1}',", "{seq:'\\\\(a = 2, r = -2\\\\)',q:'',")]),
+    ('gcse[44]', 'SR-17: fill the gaps, type unstated', [("ask:'If arithmetic, fill the gaps'", "ask:'Fill in the gaps'")]),
+    ('gcse[30]', 'rr-002: a negative ratio back at GCSE', [("{seq:'3, 6, 12, 24, ...',ask:'What is the common ratio?',correct:'2',d:['3','4','6']}",
+     "{seq:'1, -3, 9, -27, ...',ask:'What is the common ratio?',correct:'-3',d:['3','-9','9']}")]),
+    ('clock', 'rr-001: the HUD clock back', [
+     ('<div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="streak">0</div></div>',
+      '<div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="streak">0</div></div>' + HUD_CLOCK),
+     ("  qStartTime=Date.now();   // silent: nothing on screen reads it until the results\n",
+      "  qStartTime=Date.now();const el=document.getElementById('timer');const tick=()=>{el.textContent=Math.floor((Date.now()-qStartTime)/1000);requestAnimationFrame(tick)};requestAnimationFrame(tick);\n")]),
+    ('score', 'rr-001: time back in the score', [("score+=BASE;",
+     "score+=Math.max(1,Math.round(BASE/(1+0.15*Math.log(1+(Date.now()-qStartTime)/1000))));")]),
+    ('results', 'rr-001: no time on the results screen', [(" · Time: ${_m>0?_m+'m '+_s+'s':_s+'s'}`;", "`;")]),
 ]
 
 
@@ -635,12 +729,16 @@ def main():
     print('%s: %d items, every key recomputed, every option read and clicked in Chromium' % (SLUG, count))
     ok = True
     if not args.no_selftest and not args.against:
-        for tag, what, old, new in PLANTS:
-            if html.count(old) != 1:
-                print('  self-test %-38s *** CANNOT PLANT (%d) ***' % (what, html.count(old)))
+        for tag, what, swaps in PLANTS:
+            bad = [old for old, _ in swaps if html.count(old) != 1]
+            if bad:
+                print('  self-test %-38s *** CANNOT PLANT (%d) ***' % (what, html.count(bad[0])))
                 ok = False
                 continue
-            rep, _ = run(html.replace(old, new))
+            planted = html
+            for old, new in swaps:
+                planted = planted.replace(old, new)
+            rep, _ = run(planted)
             hit = [f for f in rep if f.startswith(tag)]
             ok = ok and bool(hit)
             print('  self-test %-38s %s' % (what, ('caught: ' + hit[0][:100]) if hit else '*** MISSED ***'))

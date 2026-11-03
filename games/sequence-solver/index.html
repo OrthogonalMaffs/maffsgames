@@ -107,12 +107,12 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
     <div class="calc-row" style="text-align:center;margin:.6rem 0"><span class="calc-badge" data-calc="optional">Calculator optional</span></div>
     <div class="level-select">
       <button class="level-btn active" data-level="ks3">Foundation</button>
-      <button class="level-btn" data-level="gcse">GCSE</button>
+      <button class="level-btn" data-level="gcse">GCSE Higher</button>
       <button class="level-btn" data-level="alevel">A-Level</button>
     </div>
     <p style="text-align:center;color:var(--muted);font-size:.82rem;margin:.8rem 0;line-height:1.5">
       <strong>Foundation:</strong> Arithmetic sequences, find the next term, term-to-term rules<br>
-      <strong>GCSE:</strong> nth term (linear + quadratic), geometric sequences<br>
+      <strong>GCSE Higher:</strong> nth term (linear + quadratic), geometric sequences<br>
       <strong>A-Level:</strong> AP/GP formulae, sigma notation, sum to infinity, convergence
     </p>
   <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
@@ -124,7 +124,6 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
       <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1/20</div></div>
       <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
       <div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="streak">0</div></div>
-      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div>
     </div>
     <div class="progress" id="progress"></div>
     <div class="q-card">
@@ -237,15 +236,11 @@ gcse:[
   {seq:'3, 6, 12, 24, ...',ask:'What is the common ratio?',correct:'2',d:['3','4','6']},
   {seq:'5, 15, 45, 135, ...',ask:'What is the common ratio?',correct:'3',d:['5','10','15']},
   {seq:'64, 16, 4, 1, ...',ask:'What is the common ratio?',correct:'\\dfrac{1}{4}',d:['4','\\dfrac{1}{2}','-4']},
-  {seq:'1, -3, 9, -27, ...',ask:'What is the common ratio?',correct:'-3',d:['3','-9','9']},
   {seq:'2, 10, 50, 250, ...',ask:'Find the next term',correct:'1250',d:['500','750','2500']},
   {seq:'\\(T_n = 3 \\times 2^{n-1}\\)',q:'',ask:'Find the 6th term',correct:'96',d:['64','48','192']},
   {seq:'\\(T_n = 5 \\times 3^{n-1}\\)',q:'',ask:'Find the 4th term',correct:'135',d:['45','405','60']},
   {seq:'\\(a = 4, r = 3\\)',q:'T_n = ar^{n-1}',ask:'Find the 5th term',correct:'324',d:['108','972','243']},
   {seq:'\\(a = 100, r = 0.5\\)',q:'T_n = ar^{n-1}',ask:'Find the 5th term',correct:'6.25',d:['12.5','3.125','25']},
-  {seq:'\\(a = 2, r = -2\\)',q:'T_n = ar^{n-1}',ask:'Find the 6th term',correct:'-64',d:['64','-32','32']},
-  {seq:'The 3rd term is 12, the 6th term is 96.',q:'',ask:'Find the common ratio',correct:'2',d:['3','4','8']},
-  {seq:'The 2nd term is 6, the 5th term is 162.',q:'',ask:'Find the common ratio',correct:'3',d:['6','27','9']},
   // Recognise and generate (Q43-50)
   {seq:'\\(T_n = 2n + 5\\)',q:'',ask:'Generate the first 4 terms',correct:'7, 9, 11, 13',d:['5, 7, 9, 11','2, 5, 7, 9','7, 12, 17, 22']},
   {seq:'\\(T_n = n^2 + 1\\)',q:'',ask:'Generate the first 4 terms',correct:'2, 5, 10, 17',d:['1, 4, 9, 16','3, 5, 10, 17','2, 4, 8, 16']},
@@ -254,7 +249,6 @@ gcse:[
   {seq:'The first term is 5, the common difference is -3.',q:'',ask:'Find the 10th term',correct:'-22',d:['-25','-19','-20']},
   {seq:'\\(T_n = (-1)^n \\times n\\)',q:'',ask:'Generate the first 4 terms',correct:'-1, 2, -3, 4',d:['1, -2, 3, -4','-1, -2, -3, -4','1, 2, 3, 4']},
   {seq:'3, __, 12, __, 21',ask:'If arithmetic, fill the gaps',correct:'3, 7.5, 12, 16.5, 21',d:['3, 6, 12, 18, 21','3, 8, 12, 17, 21','3, 7, 12, 17, 21']},
-  {seq:'1, __, __, 64',ask:'If geometric, fill the gaps',correct:'1, 4, 16, 64',d:['1, 8, 32, 64','1, 21, 43, 64','1, 16, 32, 64']},
 ],
 alevel:[
   // AP formulae (Q1-12)
@@ -316,18 +310,27 @@ alevel:[
   {seq:'',q:'\\text{GP: } a + ar + ar^2 + \\cdots = \\dfrac{a}{1-r}',ask:'This requires',correct:'\\(|r| < 1\\)',d:['\\(r < 1\\)','\\(r > 0\\)','r \\neq 1']},
   {seq:'',q:'\\displaystyle\\sum_{r=1}^{20} (3r - 2)',ask:'Evaluate',correct:'590',d:['600','570','610']},
   {seq:'',q:'\\text{An AP has } S_{10} = 120 \\text{ and } S_{20} = 440',ask:'Find \\(S_{30}\\)',correct:'960',d:['880','1000','660']},
+  // Geometric, moved from GCSE unchanged (SEQ-SOLVER-FIXES, Jon, 3 Nov 2026; sequence-solver-rr-002): a negative
+  // ratio, or the ratio from terms that are not next to each other, is beyond GCSE A24 (r a rational number > 0)
+  {seq:'1, -3, 9, -27, ...',ask:'What is the common ratio?',correct:'-3',d:['3','-9','9']},
+  {seq:'\\(a = 2, r = -2\\)',q:'T_n = ar^{n-1}',ask:'Find the 6th term',correct:'-64',d:['64','-32','32']},
+  {seq:'The 3rd term is 12, the 6th term is 96.',q:'',ask:'Find the common ratio',correct:'2',d:['3','4','8']},
+  {seq:'The 2nd term is 6, the 5th term is 162.',q:'',ask:'Find the common ratio',correct:'3',d:['6','27','9']},
+  {seq:'1, __, __, 64',ask:'If geometric, fill the gaps',correct:'1, 4, 16, 64',d:['1, 8, 32, 64','1, 21, 43, 64','1, 16, 32, 64']},
 ]
 };
 
-let level='ks3',questions=[],qIdx=0,score=0,streak=0,bestStreak=0,correctCount=0,totalQ=20,qStartTime=0;
-const BASE=100,T_K=0.15;
+let level='ks3',questions=[],qIdx=0,score=0,streak=0,bestStreak=0,correctCount=0,totalQ=20,qStartTime=0,totalSecs=0;
+// Hidden Count-Up (timer-policy.md; Jon, 3 Nov 2026, SEQ-SOLVER-FIXES): the clock runs silently, the score never uses it,
+// and the total answering time is shown on the results screen only.
+const BASE=100;
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false})}
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');MaffsLock.screen(document.getElementById(id))}
 document.querySelectorAll('.level-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.level-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');level=b.dataset.level})});
 {const lv=MaffsLevel.resolve({slug:'sequence-solver',levels:['ks3','gcse','alevel'],fallback:'ks3'});if(lv!==level&&QUESTIONS[lv]){level=lv;document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}}
 
-function startGame(){MaffsLock.newSession();questions=shuffle([...QUESTIONS[level]]).slice(0,totalQ);qIdx=0;score=0;streak=0;bestStreak=0;correctCount=0;document.getElementById('score').textContent='0';document.getElementById('streak').textContent='0';const pr=document.getElementById('progress');pr.innerHTML='';for(let i=0;i<totalQ;i++){const d=document.createElement('div');d.className='pip'+(i===0?' current':'');pr.appendChild(d)}mfg('game_started',{game_slug:'sequence-solver',level:level});window._ggAbandoned=true;if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'sequence-solver',level:level,questions_answered:qIdx})});}show('game');showQ()}
+function startGame(){MaffsLock.newSession();questions=shuffle([...QUESTIONS[level]]).slice(0,totalQ);qIdx=0;score=0;totalSecs=0;streak=0;bestStreak=0;correctCount=0;document.getElementById('score').textContent='0';document.getElementById('streak').textContent='0';const pr=document.getElementById('progress');pr.innerHTML='';for(let i=0;i<totalQ;i++){const d=document.createElement('div');d.className='pip'+(i===0?' current':'');pr.appendChild(d)}mfg('game_started',{game_slug:'sequence-solver',level:level});window._ggAbandoned=true;if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'sequence-solver',level:level,questions_answered:qIdx})});}show('game');showQ()}
 
 function showQ(){
   const q=questions[qIdx];
@@ -348,22 +351,14 @@ function showQ(){
     b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});
   MaffsNext.clear(document.getElementById('nextMount'));
   MaffsLock.fresh(oEl);   // a new question: a double-click on Start cannot answer it
-  // Count-up timer
-  qStartTime=Date.now();
-  updateTimer();
-}
-
-function updateTimer(){
-  const el=document.getElementById('timer');
-  const tick=()=>{const s=Math.floor((Date.now()-qStartTime)/1000);el.textContent=s;requestAnimationFrame(tick)};
-  requestAnimationFrame(tick);
+  qStartTime=Date.now();   // silent: nothing on screen reads it until the results
 }
 
 function handle(btn,q){
   if(!MaffsLock.lock(document.getElementById('options')))return;   // one answer per question (canon 7.6.0)
-  const s=(Date.now()-qStartTime)/1000;const ok=btn.dataset.val===q.correct;
+  totalSecs+=(Date.now()-qStartTime)/1000;const ok=btn.dataset.val===q.correct;
   document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.correct)b.classList.add('correct')});
-  if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));streak++;correctCount++;if(streak>bestStreak)bestStreak=streak;pip('done')}
+  if(ok){btn.classList.add('correct');score+=BASE;streak++;correctCount++;if(streak>bestStreak)bestStreak=streak;pip('done')}
   else{btn.classList.add('wrong');streak=0;pip('fail')}
   mfg('question_answered',{game_slug:'sequence-solver',level:level,correct:ok,question_index:qIdx+1,question_text:[q.seq,q.q,q.ask].filter(Boolean).join(' | ')});   // which question, from the bank (QUESTION-ID): analytics.js sends only its hash
   document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;
@@ -374,7 +369,7 @@ function pip(c){const ps=document.querySelectorAll('.pip');if(ps[qIdx]){ps[qIdx]
 function adv(){qIdx++;if(qIdx>=totalQ){end();return}document.querySelectorAll('.pip')[qIdx]?.classList.add('current');showQ()}
 // Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
 function end(){finishGame()}
-const finishGame=MaffsLock.finishOnce(function(){const pct=Math.round(correctCount/totalQ*100);let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;document.getElementById('statsLine').textContent=`${correctCount}/${totalQ} correct (${pct}%) · Best streak: ${bestStreak}`;window._ggAbandoned=false;mfg('game_completed',{game_slug:'sequence-solver',level:level,score:score,questions_answered:totalQ,accuracy:pct});
+const finishGame=MaffsLock.finishOnce(function(){const pct=Math.round(correctCount/totalQ*100);let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;const _t=Math.round(totalSecs),_m=Math.floor(_t/60),_s=_t%60;document.getElementById('statsLine').textContent=`${correctCount}/${totalQ} correct (${pct}%) · Best streak: ${bestStreak} · Time: ${_m>0?_m+'m '+_s+'s':_s+'s'}`;window._ggAbandoned=false;mfg('game_completed',{game_slug:'sequence-solver',level:level,score:score,questions_answered:totalQ,accuracy:pct});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('sequence-solver',level,score,totalQ).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('sequence-solver',level,score);}}var _pbKey='sequence-solver_best_'+level;var _pbOld=parseInt(localStorage.getItem(_pbKey)||'0');if(score>_pbOld){mfg('personal_best_set',{game_slug:'sequence-solver',level:level,score:score,previous_best:_pbOld});localStorage.setItem(_pbKey,score);}show('results')});
 function showMenu(){show('menu')}
 (function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();

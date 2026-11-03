@@ -18,7 +18,7 @@ session, generated"; a game with a fixed bank gives its bank size. A count that 
 ## KS3 Games (35)
 | # | Game | Slug | Levels | Topics | Description | Calculator |
 |---|------|------|--------|--------|-------------|---|
-| 1 | Sequence Solver | `sequence-solver` | KS3, GCSE, A-Level | Algebra | Tiered rebuild. KS3 (50q), GCSE (50q), A-Level (55q) — nth term, geometric, sigma, recurrence Look signed off by Jon, pre-2 Nov, grandfathered. | optional |
+| 1 | Sequence Solver | `sequence-solver` | KS3, GCSE, A-Level | Algebra | Tiered rebuild. KS3 (50q), GCSE (45q), A-Level (59q) — nth term, geometric, sigma, recurrence Look signed off by Jon, pre-2 Nov, grandfathered. | optional |
 | 2 | Estimation Golf | `estimation-golf` | Year 6, KS3, GCSE, A-Level, L4 | Number, Statistics | Proximity scoring — accuracy determines ball distance. 9-hole par-based rounds Look signed off by Jon, pre-2 Nov, grandfathered. | not allowed |
 | 4 | Factor Race | `factor-race` | Year 6, KS3 | Number | Two-card comparison — tap the one with more factors Look signed off by Jon, pre-2 Nov, grandfathered. | not allowed |
 | 5 | Prime Sprint | `prime-factorisation` | Year 6, KS3, GCSE | Number | Multiply-up from 1 to build prime factorisation. 3 lives, product hidden after Q3 Look signed off by Jon, pre-2 Nov, grandfathered. | not allowed |
