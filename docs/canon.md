@@ -1226,6 +1226,7 @@ and confirm the on-screen order. Free Daily Pizza, whose pictures also sit behin
 built to this rule and measured on all 518 items at all three sizes by `scripts/verify-free-daily-pizza.py`
 (30 Sep 2026). There the stage label hides during the feedback and pictures shrink, but a fraction is
 never shrunk: Jon's ruling, every fraction on screen stacked and big enough to read, never 1/3.
+Typed fractions use MaffsFractionInput (schools/assets/fraction-input.js); check-fraction-input.py enforces it.
 
 **Known gap (30 Sep 2026): the Aa (OpenDyslexic) mode.** Its wider spacing and double line height
 make the hint much taller, so in Six Sevens Next still lands below the fold at 320 × 568 and
@@ -3197,3 +3198,14 @@ that branch to main; undoing it needed Jon.
 Remote branches are deleted by GitHub on merge (repo setting, 12 Oct 2026).
 
 **Why:** worktrees were made per task and never removed; 35 had built up by 11 Oct 2026.
+
+## Typed fractions: one stacked input (contract FRACTION-STACK, 3 Nov 2026)
+
+The reason for §7.6.1's line "Typed fractions use MaffsFractionInput". Jon's ruling (every fraction on screen stacked, never 1/3)
+covered what a game shows, but nothing covered what a student types: the shared stacked input, `MaffsFractionInput`
+(`schools/assets/fraction-input.js`), existed from 27 Oct (contract POSSIBLY-MAYBE) and no rule required it, so Who Ate All the
+Pies? shipped its own side-by-side boxes with a "/" between them, a typed 1/3. The fix is at the shared layer: games type a
+fraction in `MaffsFractionInput` (Pies moved on 3 Nov), and `scripts/check-fraction-input.py` fails a page under `games/` or
+`the-6-ps/` that builds fraction boxes of its own. It warns first (§7.8.4) through the shrink-only `scripts/fraction-input-warn.json`,
+seeded with the two pages that need a whole-number box for mixed numbers, which the shared input does not have yet: The 6 P's and
+How Many Parts?. The follow-up gives it that box and moves both.
