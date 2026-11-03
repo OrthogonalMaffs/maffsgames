@@ -116,6 +116,10 @@ Then play any game for a few questions and check the **MaffsGames Events** sheet
 - New rows appear
 - Columns **P (`client_ts`)** and **Q (`seq`)** are populated
 - Columns A–O are unchanged and still aligned
+- From `2026-11-03-a` (QUESTION-ID): cell **R1** reads `question_id` (the first post after the deploy writes it:
+  `ensureHeaders` rewrites row 1 whenever it differs from `EXPECTED_HEADERS`, so there is nothing to type), and a
+  `question_answered` row from Sequence Solver has `h` + 8 hex digits in column **R**. Other games leave R blank
+  until they are moved onto it.
 
 ---
 
@@ -161,6 +165,11 @@ column in the middle silently misaligns every historical row.
 
 `client_ts` and `seq` were appended on 2026-08-26 for exactly this reason. Rows written before
 that date have both blank; treat blank `client_ts` as "fall back to the `timestamp` column".
+
+`question_id` was appended on 2026-11-03 (contract QUESTION-ID) as column R, after `seq`, the same way. Rows
+written before the redeploy have it blank. It names the question a `question_answered` row was about: a game's own
+id, or `h` + the 8-hex FNV-1a hash of the question's text (`schools/assets/analytics.js`; the text itself is never
+sent). `python -X utf8 scripts/decode-question-ids.py <slug>` prints each id beside its question.
 
 ---
 

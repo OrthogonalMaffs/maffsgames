@@ -46,6 +46,40 @@
     (document.head || document.documentElement).appendChild(_gtagScript);
   }
 
+  // ── WHICH QUESTION (QUESTION-ID, Jon, 3 Nov 2026; canon §1.3) ──
+  // question_index is a position in a shuffled round, not a question, so the data could not name a hard question.
+  // A game may now say which question it asked, in one of two ways:
+  //   question_id    its own stable id; sent as it is, cut to 40 characters
+  //   question_text  the prompt as shown, from the game's own bank (never anything a student typed); sent as
+  //                  question_id = "h" + the 8-hex-digit FNV-1a hash of its normalised text. The text is never sent.
+  // Neither given: the event is unchanged. scripts/decode-question-ids.py turns an id back into its question;
+  // it repeats questionHash() below exactly (NFC, whitespace runs to one space, trimmed, UTF-8, FNV-1a 32-bit).
+  function questionHash(text) {
+    var s = String(text);
+    if (s.normalize) s = s.normalize('NFC');
+    s = s.replace(/[ \t\n\r\f\v\u00a0]+/g, ' ').replace(/^ | $/g, '');
+    var bytes;
+    try { bytes = unescape(encodeURIComponent(s)); } catch (e) { return ''; }   // UTF-8; a lone surrogate sends no id
+    var h = 0x811c9dc5;
+    for (var i = 0; i < bytes.length; i++) {
+      h ^= bytes.charCodeAt(i);
+      h = Math.imul(h, 0x01000193);
+    }
+    return 'h' + ('0000000' + (h >>> 0).toString(16)).slice(-8);
+  }
+
+  // A copy of params with question_text removed and question_id set (or left out if no id can be made).
+  function withQuestionId(params) {
+    var out = {};
+    for (var k in params) {
+      if (Object.prototype.hasOwnProperty.call(params, k) && k !== 'question_text' && k !== 'question_id') out[k] = params[k];
+    }
+    var id = params.question_id != null ? String(params.question_id).slice(0, 40) : questionHash(params.question_text);
+    if (id) out.question_id = id;
+    return out;
+  }
+  window.mfgQuestionHash = questionHash;   // read by scripts/check-question-id.py, which compares it with the decoder's
+
   // ── MAIN FUNCTION ──
   window.mfg = function(eventName, params) {
     params = params || {};
@@ -92,6 +126,9 @@
         ? 'level_selected'
         : 'game_restarted';
     }
+
+    // Which question: before both sends, so GA4 and the Sheet get the same question_id and neither gets the text.
+    if (params.question_id != null || params.question_text != null) params = withQuestionId(params);
 
     // Send to GA4 (if gtag exists)
     if (typeof gtag === 'function') {
