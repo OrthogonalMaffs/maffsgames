@@ -73,6 +73,8 @@ python -X utf8 /tmp/maffs-end-task.py <branch>
 
 ## Contracts and handovers
 
+- A PR that changes what a student or teacher sees adds its dated line to /updates/ in the same PR, in plain words; internal work does not.
+
 - Corrections arrive as numbered amendments to the in-flight contract (Jon, 30 Oct 2026). Save contracts verbatim in `docs/handover/contracts/` with a queue pointer; move to `docs/history/contracts/` on completion. Include contract, amendments and report in the PR. See workflow §3.4.
 - Commit and push at milestones; keep the branch handover current with done, next and discoveries. Context percentage never stops a task: only Jon can measure it and clear the session. Archives are history, not startup reading. Rationale: canon §12, RULEBOOK.
 - A fresh context is a new cloud session, never /clear: /clear keeps the session's original clone, so it reloads the rules of the day it started. Reason: canon §12, CLOUD-LEAN.
