@@ -6,7 +6,7 @@
     python scripts/merge-pr.py <number> --wait 600           # while a check is still running, poll up to 600 s, then refuse
     python scripts/merge-pr.py <number> --override "<Jon's ruling and date>"
     python scripts/merge-pr.py <number> --watch --wait 3600  # merge, then watch main's run on the squash commit
-    python scripts/merge-pr.py --watch-main [<sha>] [--wait <s>]   # watch main's run on <sha> (default: origin/main's head)
+    python scripts/merge-pr.py --watch-main [<sha>] [--wait <s>]   # watch main's run on <sha> (default: main's newest merge)
     python scripts/merge-pr.py --selftest                    # recorded API fixtures; no network
 
 The guard, from the GitHub REST API through `gh api` (the credentials the lanes already use):
@@ -38,7 +38,8 @@ commit that (a) judged, so a later push cannot ride in on an earlier green. GitH
 
 The watch (CLOUD-LEAN, Jon, 3 Nov 2026) is additive and changes nothing above. --watch-main [<sha>] waits up to --wait
 seconds for main's check-site run (push or manual) on that commit to finish, read and judged as (b) reads and judges a
-run, and prints ONE line, exit 0 for GREEN and 1 for anything else:
+run, and prints ONE line, exit 0 for GREEN and 1 for anything else. With no <sha> it watches main's newest merge as
+(b') picks it (newest_merge(): the bot's skip-marker commits have no run and are passed over):
 
     main <sha7> run <id>: GREEN
     main <sha7> run <id>: RED: <failed job names>
@@ -299,13 +300,16 @@ def merge_and_report(api, number, override=None, wait=0, watch=False, out=print,
     return code
 
 
-def origin_main_head():
-    """origin/main's head after a fetch. Raises Refused if git cannot say."""
-    for cmd in (["git", "fetch", "--quiet", "origin", "main"], ["git", "rev-parse", "origin/main"]):
-        p = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8")
-        if p.returncode != 0:
-            raise Refused("%s failed: %s" % (" ".join(cmd), (p.stderr or p.stdout).strip()[:300]))
-    return p.stdout.strip()
+def watch_cmd(api, sha="", wait=0, pick=newest_merge, **kw):
+    """--watch-main -> (exit code, line, to_stderr). With no sha, the commit is main's newest merge as (b') picks it,
+    newest_merge(): the bot's skip-marker commits (timings, register, answer counts) have no run and are passed over
+    (Amendment 2, Jon 3 Nov 2026). If main's commits cannot be read, exit 2 and say why on stderr."""
+    if not sha:
+        sha, why = pick(api)
+        if sha is None:
+            return 2, "--watch-main: %s" % why, True
+    code, line = watch_main(api, sha, wait, **kw)
+    return code, line, False
 
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -629,8 +633,18 @@ class Clock:
         self.slept += 1
 
 
-def watch_cases(state=watch_state):
-    """-> list of (name, ok, detail): the four outcomes, the waits, and merge --watch."""
+def head_literally(api):
+    """The planted default (the spec before Amendment 2): main's head as it is, a bot skip-marker commit included.
+    Errors are handled as newest_merge() handles them, so only the choice of commit differs."""
+    try:
+        commits = api("GET", "%s/commits?sha=main&per_page=50" % R)
+    except Refused as e:
+        return None, "main's commits could not be read (%s)" % e
+    return commits[0]["sha"], None
+
+
+def watch_cases(state=watch_state, pick=newest_merge):
+    """-> list of (name, ok, detail): the four outcomes, the waits, the default commit, and merge --watch."""
     out = []
 
     def case(name, ok, detail=""):
@@ -691,6 +705,27 @@ def watch_cases(state=watch_state):
 
     code, line, _ = watch(Fake(runs=W_GREEN, jobs=[JOBS_OK]), sha="fffffff")
     case("[watch] a short sha (7) is matched", code == 0 and line.endswith(": GREEN"), "%s %s" % (code, line))
+
+    # ---- the default commit (Amendment 2, Jon 3 Nov 2026): main's newest merge, as (b') picks it ----
+    def default(fake, wait=0):
+        c = Clock()
+        return watch_cmd(fake, "", wait, pick=pick, state=state, sleep=c.sleep, clock=c)
+
+    code, line, err = default(Fake(commits=BOT_ON_TOP, runs=GREEN, jobs=[JOBS_OK]))
+    case("[watch] default: a head that is a [skip ci] bot commit still reports the merge's run",
+         code == 0 and not err and line == "main aaaaaaa run 39559008796: GREEN", "%s %s" % (code, line))
+
+    code, line, err = default(Fake(commits=COMMITS, runs=GREEN, jobs=[JOBS_OK]))
+    case("[watch] default: a head that is the merge itself reports its run",
+         code == 0 and not err and line == "main aaaaaaa run 39559008796: GREEN", "%s %s" % (code, line))
+
+    code, line, err = default(Fake(commits=UNRUN_MERGE, runs=GREEN, jobs=[JOBS_OK]))
+    case("[watch] default: a merge with no run of its own is NO RUN FOUND, never the run before it (#631)",
+         code == 1 and line == "main bbbbbbb: NO RUN FOUND", "%s %s" % (code, line))
+
+    code, line, err = default(Fake(commits_error=True, runs=GREEN))
+    case("[watch] default: main's commits unreadable exits 2, said on stderr (never a guess)",
+         code == 2 and err and "could not be read" in line, "%s %s %s" % (code, err, line))
 
     for runs, want, label in ((M_GREEN, 0, "GREEN"), (M_RED, 1, "RED: Content verifiers 4")):
         # the guard reads main's green run's jobs first, then the watch reads the squash run's
@@ -775,6 +810,11 @@ def selftest():
     print("  %s  planted fault (a watch that trusts the run's own status, green while a job still runs): %s (%d case(s) fail)" % (
         "PASS" if caught else "FAIL", "CAUGHT" if caught else "NOT CAUGHT", len(planted)))
     bad += not caught
+    planted = [n for n, ok, _ in watch_cases(pick=head_literally) if not ok]
+    caught = [n for n in planted if "[skip ci] bot commit" in n]
+    print("  %s  planted fault (a default that takes main's head as it is, a bot skip-marker commit): %s" % (
+        "PASS" if caught else "FAIL", "CAUGHT" if caught else "NOT CAUGHT"))
+    bad += not caught
     print("%s" % ("selftest FAILED" if bad else "selftest passed"))
     return 1 if bad else 0
 
@@ -786,7 +826,8 @@ def main():
     ap.add_argument("--wait", type=int, default=0, help="seconds to poll while a check is unfinished (default 0: refuse)")
     ap.add_argument("--watch", action="store_true", help="after a merge, watch main's run on the squash commit (up to --wait)")
     ap.add_argument("--watch-main", nargs="?", const="", metavar="SHA",
-                    help="watch main's run on SHA (default: origin/main's head after a fetch); one line, exit 0 only if GREEN")
+                    help="watch main's run on SHA (default: main's newest merge, bot skip-marker commits passed over); "
+                         "one line, exit 0 only if GREEN")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
@@ -798,14 +839,8 @@ def main():
         sha = a.watch_main.strip().lower()
         if sha and not re.fullmatch(r"[0-9a-f]{7,40}", sha):
             ap.error("--watch-main takes a commit sha (7 to 40 hex digits)")
-        if not sha:
-            try:
-                sha = origin_main_head()
-            except Refused as e:
-                print("--watch-main: %s" % e, file=sys.stderr)
-                return 2
-        code, line = watch_main(gh_api, sha, a.wait, log=note)
-        print(line)
+        code, line, to_stderr = watch_cmd(gh_api, sha, a.wait, log=note)
+        print(line, file=sys.stderr if to_stderr else sys.stdout)
         return code
     if not a.number:
         ap.error("a PR number is required")

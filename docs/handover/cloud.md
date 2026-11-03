@@ -67,9 +67,10 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 - Agent: Claude Code. Primary checkout `/home/user/maffsgames`, branch `claude/quirky-hypatia-sivu18` (session branch, from main ccb5f9e). Step 0: RULE-QUOTE committed first (a61e0ff).
 - Built: `merge-pr.py --watch-main [<sha>]` and `--watch` (reuse `main_runs`/`run_jobs`/`JOB_OK`; guard unchanged); selftest PASS, four outcomes, plant CAUGHT; live `--watch-main 2a635bd` GREEN. AGENTS.md lines (a)-(c) and the after-merge rule (largest 284 bytes); canon §12 CLOUD-LEAN; this file's setup note and Every-PR line; PIES-EXIT closed.
 - **STOP IF 1, Amendment 1 (Jon, 3 Nov):** it meant the old session's 3 Nov note (0909d491), superseded by RULE-QUOTE, not #636. #636 (stale, conflicting) closed unmerged; what main lacked from it carried over here: GATE-FIX done, GATE-RESUME/GATE-FIX contracts to history, the answer-lock line, two live pointers.
-- Open: bare `--watch-main` defaults to origin/main's head as specified, which is often the bot's `[skip ci]` timings commit (ccb5f9e now): NO RUN FOUND. `newest_merge()` would skip it; Jon/Project Claude to say. Canon §7.8.2's check-changed line (outside §12) not edited.
+- **Amendment 2 (Jon, 3 Nov):** bare `--watch-main` defaults to `newest_merge()` (live: 2a635bd under the bot's ccb5f9e, GREEN); selftest 65/65, bot-head case added, head-literal plant CAUGHT. Lane exception, this PR: one line each in canon §7.8.2 and §7.8.3.
+- **State:** PR #643, subscribed; fix CI failures that are clearly ours, then stop at a green Gate for Project Claude's review and Jon's "merge".
 
-Record: agent Claude Code; wall 0:08 (to STOP IF 1); review cycles 0; amendments 0; usage n/a.
+Record: agent Claude Code; wall 0:22 (to the push for review; the Gate decides hand-off); review cycles 0; amendments 2; usage n/a.
 
 ## 2026-11-03 (cloud): RULE-QUOTE (Jon's chat request, no saved contract): quote "Changing agent mid-task" from the loaded instructions, before reading any file
 

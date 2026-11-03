@@ -80,3 +80,14 @@ session's note from this morning, not #636.
 what main still lacks from it (GATE-FIX done, #634; GATE-RESUME steps 1-3 done; its contracts moved to
 docs/history/), word for word where it still holds, then close #636 unmerged with a comment naming your PR.
 The old session's 3 Nov note (0909d491) is superseded by your RULE-QUOTE entry: do not wait for it.
+
+## Amendment 2 (Jon, 3 Nov 2026, chat, verbatim)
+
+Rulings (Jon, 3 Nov), recorded in the contract file as Amendment 2:
+1. --watch-main's default becomes newest_merge() (reuse it; no new commit-picking logic). Update the selftest
+   fixtures to match, and add a case: a head that is a [skip ci] bot commit still reports the merge's run.
+2. Lane exception, this PR only: canon §7.8.2 gets one line saying the home lane runs check-changed.py before the
+   first push and the cloud lane follows AGENTS.md (no local suite); §7.8.3 gets one line describing --watch.
+   No other canon edits.
+3. Yes, watch #643: fix CI failures that are clearly yours, then stop at green for Project Claude's review and
+   Jon's "merge".

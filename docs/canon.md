@@ -1806,6 +1806,7 @@ and is not edited by fix PRs.
   groups with packing from measured times (§7.8.1), and `scripts/ci-groups.py` is home-lane CI work again.
 - **Before the first push of every PR:** `python scripts/check-changed.py` (one PR on 7 Oct 2026 cost three
   runs without it).
+- **Which lane runs it (CLOUD-LEAN, Jon 3 Nov 2026):** the home lane runs `check-changed.py` before the first push; the cloud lane follows AGENTS.md, no local suite (reasons in §12).
 - **Relisting a fixed game** is a home-lane docs PR, batched with others.
 - **Contracts are kept verbatim, outside the start-up load** (Jon, 8 Oct 2026, contract CONTRACTS-FOLDER; after a
   `/clear` wiped the cloud lane's only copy of three contracts, and the repo held summaries only). On receipt, each
@@ -1831,6 +1832,7 @@ finished red at 07:13:43Z. It is now enforced by one command both lanes use for 
   run is never waited out.
 - On success it squash-merges, pinned to the head commit (a) judged, and prints main's head and the run it judged. The merging
   session then waits for main's run on that commit and reports it (above); `end-task.py` runs after, unchanged.
+- `--watch` (CLOUD-LEAN, 3 Nov 2026) then watches main's run on the squash commit, up to `--wait`, as (b) reads and judges it, and prints one line last: `GREEN`, `RED: <failed jobs>`, `NOT FINISHED after <n>s` or `NO RUN FOUND`, exit 0 only for green; `--watch-main [<sha>]` (default: the newest merge, (b')) watches without merging.
 - `--override "<Jon's ruling and date>"` waives (b) only, writes the ruling and the run it overrode as a PR comment before
   merging, and still requires (a). An empty ruling is refused. Only Jon's ruling is a reason to use it.
 - `--selftest` replays recorded API shapes: green and green merges; red, cancelled, in-progress or absent main refuses; red Gate
