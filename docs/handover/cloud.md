@@ -66,6 +66,7 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 - Pies: opts in, loses its `body.playing` hide rule, carries stage-exit.js/.css as the seven do; its HUD row has a phone budget (exit controls 12 px, tighter gaps and side padding, label letter-spacing 0 under 420 px; the icon's 44 px target overflows the row on screens 620 px tall or less, drawn borderless there). One row at every size, wide font included; HUD 34 px at 320x568 (main 34), 48 at 360-390 (main 52), 56 at 1280 (same).
 - `verify-stage-exit.py`: Pies in GAMES, EXEMPT empty, a plant re-adding the hide rule. The 6 P's (report only): "Back to games" visible on a question at all five sizes, 13.6 px, but its box is 21.75 px tall (under 44).
 - Lane: this contract names `schools/assets/calculator.*` and `docs/todo.md` in EXACT CHANGE, so the cloud lane edits them for it only (no open PR touches them).
+- **State: PR #642 open (48026b10 + the todo commit); Gate pending. Stop at green for Project Claude and Jon's "merge". Then Jon wants a fresh context start.**
 
 ## 2026-11-03 (cloud): PIES-CHART-SHRINK (`docs/history/contracts/2026-11-03-pies-chart-shrink.md`): MERGED #641 (1e23652); main green (41604977044, 84/84); worktree removed by end-task.py
 
