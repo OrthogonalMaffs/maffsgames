@@ -69,7 +69,9 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 - Built: `analytics.js` turns `question_text` into `question_id` = `h` + FNV-1a hex and never sends the text (GA4 and the Sheet); endpoint column R `question_id` after `seq`, version `2026-11-03-a`; Sequence Solver passes its item's text; `scripts/decode-question-ids.py` (154 ids, 0 collisions); `scripts/check-question-id.py` (ci-line, warn list of the other 108 sites; selftest 12/12; check plays a round in Chromium, every id decodes to the question shown); canon §1.3, §12; privacy line (Amendment 1).
 - **Amendment 1 (Jon, 3 Nov):** the contract's privacy line would have contradicted the page (search-box text, initials); it reads "Which question was asked, as an anonymous code. Answers a student types are never sent."
 - **Jon's two steps after the merge:** (1) redeploy the Apps Script endpoint (`docs/apps-script-redeploy.md`; `/exec` should report `2026-11-03-a`; R1 then reads `question_id`, written by the first post); (2) register `question_id` in GA4 as an event-scoped custom dimension (Admin, Custom definitions).
-- **State:** PR to open; Gate pending.
+- **State (hand-off, 14:55 UTC):** PR #649, Gate pending; stops at a green Gate for Project Claude's review and Jon's "merge". On "merge": `merge-pr.py 649 --watch --wait 3600`, then this entry to MERGED and the contract to `docs/history/contracts/`.
+
+Record: agent Claude Code; wall 0:43 (received about 14:12, queued behind SEQ-SOLVER-REREAD until 14:36); review cycles 0; amendments 1; usage n/a.
 
 ## 2026-11-03 (cloud): SEQ-SOLVER-REREAD (`docs/history/contracts/2026-11-03-seq-solver-reread.md`, Shared; stops at a green Gate for Project Claude's review and Jon's "merge")
 
