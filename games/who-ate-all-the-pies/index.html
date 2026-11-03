@@ -103,7 +103,6 @@ a.back-link:hover{color:var(--text)}
 .msg{font-size:.85rem;font-weight:700;color:var(--muted);text-align:right}
 
 .ans-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.5rem .6rem;font-family:var(--font-num);font-size:1.15rem;font-weight:700;padding:.2rem 0}
-.slash{font-size:1.8rem;font-weight:400;color:var(--muted)}
 .ans-row .btn{min-width:6.5rem}
 .nb input{width:80px;height:44px;text-align:center;font:inherit;font-size:1.1rem;border:2px solid var(--border);border-radius:9px;background:var(--surface-alt);color:var(--text)}
 .nb input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
@@ -158,6 +157,9 @@ body.playing a.back-link{display:none}
   .qtext{font-size:.96rem}
   .hud{padding:.2rem .5rem}
 }
+/* 700 px tall or less: room for the stacked fraction input (FRACTION-STACK, Jon's ruling 3 Nov 2026: the input itself compacts
+   from 700 px); the 620 px rules below still win on the smallest phones. */
+@media (max-height:700px){.hud{margin-bottom:.3rem}.qcard{gap:.25rem;padding:.5rem}.ans-row{padding:0}.qtext{font-size:.92rem;line-height:1.4}}
 @media (max-height:620px){.qtext{font-size:.92rem;line-height:1.4}.fb{padding:.5rem .6rem;gap:.35rem}.worked{font-size:.84rem}.hud-label{display:none}.hud{padding:.1rem .5rem;margin-bottom:.3rem}.qcard{gap:.3rem}.ans-row{padding:0}.ask-line{min-height:1.2em}.ask-line h2{display:none}}
 @media (max-height:680px){.qcard.fb-open.keyfig #figure{display:none}}
 @media (max-height:620px){.hud-val{font-size:.85rem}.hud{padding:0 .5rem}}
@@ -192,6 +194,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
      calculator is optional here (CALC-OPTIONAL, Jon, 28 Oct 2026). The "Try it with pen and paper" hint (its wording is the bank's HINT) shows on friendly questions only. -->
 <script src="../../schools/assets/scroll.js"></script>
 <script src="../../schools/assets/keypad.js"></script>
+<!-- A fraction answer is typed stacked, numerator over denominator, in the shared MaffsFractionInput (canon §7.6.1; contract FRACTION-STACK). -->
+<script src="../../schools/assets/fraction-input.js"></script>
 <script src="../../schools/assets/calculator.js"></script>
 <script src="../../schools/assets/pie-chart-generator.js"></script>
 <script src="../../schools/assets/pie-game.js"></script>
@@ -284,7 +288,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   var PIE_ORDER = ['steak', 'chicken balti', 'cheese and onion', 'mince', 'vegetable'];
   function colourOf(pie) { return PIE_ORDER.indexOf(pie); }
 
-  var stage = 1, session = [], qi = 0, Q = null, state = 'menu', kp = null, inputs = [], exQ = null, exAt = 0;
+  var stage = 1, session = [], qi = 0, Q = null, state = 'menu', kp = null, inputs = [], fi = null, exQ = null, exAt = 0;
   var marks = 0, answered = 0, rightCount = 0;
 
   function show(id) {
@@ -481,14 +485,13 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   var CHECK = '<button class="btn solid" id="checkBtn" type="button" disabled>Check</button>';
   function buildAnswer() {
     var a = $('answer'), h = '';
-    $('kpHolder').innerHTML = ''; $('kpHolder').hidden = true; kp = null; inputs = [];
+    $('kpHolder').innerHTML = ''; $('kpHolder').hidden = true; kp = null; inputs = []; fi = null;
     if (Q.type === 'choice') {
       h = '<div class="opts" role="group" aria-label="Answers">' + Q.options.map(function (o, i) { return '<button class="btn" type="button" data-opt="' + i + '">' + esc(o) + '</button>'; }).join('') + '</div>';
       a.innerHTML = h; return;
     }
     if (Q.type === 'fraction') {
-      h = '<div class="ans-row" role="group" aria-label="Your fraction"><span class="nb"><input type="text" inputmode="numeric" autocomplete="off" maxlength="4" aria-label="Top number" data-i="0"></span>' +
-        '<span class="slash" aria-hidden="true">/</span><span class="nb"><input type="text" inputmode="numeric" autocomplete="off" maxlength="4" aria-label="Bottom number" data-i="1"></span>' + CHECK + '</div>';
+      h = '<div class="ans-row" role="group" aria-label="Your answer"><span id="fracHost"></span>' + CHECK + '</div>';
     } else if (Q.type === 'number') {
       h = '<div class="ans-row" role="group" aria-label="Your answer"><label class="nb"><input type="text" inputmode="decimal" autocomplete="off" maxlength="6" aria-label="Your answer" data-i="0"></label>' + CHECK + '</div>';
     } else {
@@ -500,7 +503,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     }
     if (Q.type === 'angles') h += '<div class="actions">' + CHECK + '</div>';
     a.innerHTML = h;
-    inputs = Array.prototype.slice.call(a.querySelectorAll('input'));
+    if (Q.type === 'fraction') { fi = MaffsFractionInput.mount($('fracHost'), { label: 'Your answer as a fraction' }); inputs = fi.inputs.slice(); }
+    else inputs = Array.prototype.slice.call(a.querySelectorAll('input'));
     var holder = $('kpHolder'), k = document.createElement('div');
     holder.innerHTML = ''; holder.hidden = false; holder.appendChild(k);
     kp = window.MaffsKeypad ? MaffsKeypad.mount(k, { targets: inputs, keys: {}, maxLength: 5, keepInView: a, foldInset: FOOTER_PX }) : null;
@@ -512,7 +516,11 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (point) { var i = v.indexOf('.'); if (i >= 0) v = v.slice(0, i + 1) + v.slice(i + 1).replace(/\./g, ''); }
     return v;
   }
-  function raws() { return inputs.map(function (i) { return i.value.trim(); }); }
+  // A fraction is read from the shared input as it reports it ("3/8"), split into the top and bottom MaffsPieGame.mark() takes.
+  function raws() {
+    if (fi) { var r = fi.raw(), k = r.indexOf('/'); return k < 0 ? ['', ''] : [r.slice(0, k), r.slice(k + 1)]; }
+    return inputs.map(function (i) { return i.value.trim(); });
+  }
   function typedAngles() { return raws().map(function (r) { var v = A.parse(r); return v == null ? NaN : v; }); }
   function refresh() {
     var b = $('checkBtn'); if (b) b.disabled = !raws().every(function (r) { return r !== ''; });
@@ -588,10 +596,11 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (e.target.closest('#checkBtn')) mark(raws());
   });
   $('answer').addEventListener('input', function (e) {
-    if (e.target.tagName === 'INPUT') { e.target.value = cleanTyped(e.target.value, Q.type !== 'fraction'); refresh(); }
+    if (e.target.tagName === 'INPUT') { if (!fi) e.target.value = cleanTyped(e.target.value, true); refresh(); }
   });
+  $('answer').addEventListener('fraction-submit', function () { if (fi && fi.filled()) mark(raws()); });
   $('answer').addEventListener('keydown', function (e) {
-    if (e.key !== 'Enter' || e.target.tagName !== 'INPUT') return;
+    if (e.key !== 'Enter' || e.target.tagName !== 'INPUT' || fi) return;
     var empty = inputs.filter(function (i) { return i.value === ''; })[0];
     if (!empty) { e.preventDefault(); mark(raws()); } else { e.preventDefault(); empty.focus(); }
   });

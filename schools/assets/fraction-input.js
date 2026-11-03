@@ -28,7 +28,7 @@
     '.mfi-bar{width:100%;height:2px;background:var(--text)}',
     '.mfi.right .mfi-in{border-color:var(--correct)}',
     '.mfi.wrong .mfi-in{border-color:var(--wrong)}',
-    '@media (max-height:620px){.mfi-in{height:40px;width:3.8rem}.mfi{gap:.1rem}}'
+    '@media (max-height:700px){.mfi-in{height:40px;width:3.8rem}.mfi{gap:.1rem}}'
   ].join('\n');
 
   function ensureCss() {
