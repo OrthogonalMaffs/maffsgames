@@ -1116,7 +1116,7 @@ function checkExtrapIQ(){
   const relOk=!!iq.either||(rel==='no')===(!iq.reliable);   // iq.either: the context fixes the rate, so "Reliable" is as defensible (Part 2 #14)
   if(valOk&&relOk){
     G.correctIQs++;G.score+=15;$('hudScore').textContent=G.score;
-    fb.innerHTML=`<div class="feedback correct">Correct! ${iq.answer} — ${iq.either?'either answer is accepted: '+iq.eitherNote:iq.reliable?'reliable':'unreliable: '+iq.reason}</div>`;_trackIQ(true);
+    fb.innerHTML=`<div class="feedback correct">Correct! ${iq.answer} (${iq.either?'either answer is accepted: '+iq.eitherNote:iq.reliable?'reliable':'unreliable: '+iq.reason})</div>`;_trackIQ(true);
   } else {
     G.qPenalties++;
     fb.innerHTML=`<div class="feedback wrong">Answer: ${iq.answer}. ${iq.reliable?'Reliable':'Unreliable — '+iq.reason}</div>`;_trackIQ(false);

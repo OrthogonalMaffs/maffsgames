@@ -347,7 +347,7 @@ const LOCKS=[
   hints:[
     "The bin tells you what to set. The whiteboard tells you what that is.",
     "Angles on a straight line add to 180&deg;. So x = 180 &minus; 40 &minus; 35 = 105&deg;. Now find a time where the hands sit 105&deg; apart.",
-    "Careful: at half past, the hour hand is <i>halfway</i> between the 2 and the 3, not still on the 2. That makes the hands three and a half hours apart on the face \u2014 3.5 &times; 30 = 105&deg;. <b>Set it to 2:30.</b>"
+    "Careful: at half past, the hour hand is <i>halfway</i> between the 2 and the 3, not still on the 2. That makes the hands three and a half hours apart on the face: 3.5 &times; 30 = 105&deg;. <b>Set it to 2:30.</b>"
   ]},
  {id:'padlock', name:'Your padlock', kind:'code', digits:4, answer:'1729',
   brief:"Your own padlock, and the equation you will leave on the board. Two numbers in it are blank until you find them.",
@@ -418,7 +418,7 @@ function pickLock(i){
 }
 function lockBody(l){
   if(l.kind==='code') return `<div class="instrument">
-    <div class="instrument-label">${l.name} &mdash; ${l.digits} digits</div>
+    <div class="instrument-label">${l.name}: ${l.digits} digits</div>
     <div class="code-display" id="codeDisp">${'&mdash;'.repeat(l.digits)}</div>
     <div class="keypad">
       ${[1,2,3,4,5,6,7,8,9].map(n=>`<button onclick="key(${n})">${n}</button>`).join('')}

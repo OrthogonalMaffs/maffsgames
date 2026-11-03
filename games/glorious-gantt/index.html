@@ -250,7 +250,7 @@ core_a:[
      {type:'mcq',prompt:'Which activities can run simultaneously during days 5–9?',correct:'C, D, and B',wrong:['Only C','E and F','G and H']},
      {type:'mcq',prompt:'Activity D has a float of 6 days. What does this mean?',correct:'Activity D can be delayed by up to 6 days without delaying the project',wrong:['Activity D takes 6 days','Activity D must start on day 6','Activity D is on the critical path']},
      {type:'read',prompt:'What is the minimum project duration?',answer:23},
-     {type:'mcq',prompt:'If activity F is delayed by 2 days, what happens to project completion?',correct:'No change — F has 3 days of float',wrong:['Project delayed by 2 days','Project delayed by 5 days','Project completes earlier']}
+     {type:'mcq',prompt:'If activity F is delayed by 2 days, what happens to project completion?',correct:'No change: F has 3 days of float',wrong:['Project delayed by 2 days','Project delayed by 5 days','Project completes earlier']}
    ]},
   {id:'CM_A2',title:'Launching a school magazine',
    activities:[
@@ -540,7 +540,7 @@ core_b:[
    projectDur:11,
    ganttQs:[
      {type:'read',prompt:'What is the minimum project duration?',answer:11},
-     {type:'mcq',prompt:'Is there a dual critical path?',correct:'Yes — A→E→F→G also takes 11 days',wrong:['No, only one path exists','The critical path goes through C','There are three critical paths']}
+     {type:'mcq',prompt:'Is there a dual critical path?',correct:'Yes: A→E→F→G also takes 11 days',wrong:['No, only one path exists','The critical path goes through C','There are three critical paths']}
    ]},
   {id:'CM_B2',title:'Planning a school trip',
    activities:[
@@ -767,7 +767,7 @@ level4_b:[
    projectDur:16,
    ganttQs:[
      {type:'read',prompt:'What is the minimum project duration?',answer:16},
-     {type:'mcq',prompt:'If material testing takes 7 days, what happens?',correct:'No change — D has 3 days of float',wrong:['Project delayed by 2 days','NDT must be delayed','Inspection fails']}
+     {type:'mcq',prompt:'If material testing takes 7 days, what happens?',correct:'No change: D has 3 days of float',wrong:['Project delayed by 2 days','NDT must be delayed','Inspection fails']}
    ]}
 ]
 };
@@ -1217,7 +1217,7 @@ function checkGQ_mcq(idx,correct){
 function finishScenario(q){
   $('stepBox').innerHTML=`<div style="text-align:center;padding:.5rem">
     <div style="font-size:.78rem;color:var(--correct);font-weight:700;text-transform:uppercase;margin-bottom:.3rem">Scenario Complete</div>
-    <div style="font-size:.82rem;color:var(--muted);margin-bottom:.5rem">Critical path: ${q.criticalPath.join(' → ')} — ${q.projectDur} days</div>
+    <div style="font-size:.82rem;color:var(--muted);margin-bottom:.5rem">Critical path: ${q.criticalPath.join(' → ')} (${q.projectDur} days)</div>
     <button class="next-btn" onclick="nextScenario()">${G.qIdx<G.questions.length-1?'Next Scenario →':'See Results'}</button></div>`;
 }
 function nextScenario(){G.qIdx++;if(G.qIdx>=G.questions.length)endGame();else loadScenario();}

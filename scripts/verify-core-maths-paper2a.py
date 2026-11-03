@@ -143,7 +143,7 @@ def _specs():
                  true=ci(135, 20, 100, 1.96)),
         21: dict(has=['(42.1, 47.9)'], kind='exact', true=(42.1 + 47.9) / 2),
         22: dict(has=['sample of 64', 'mean of 200', 'standard deviation 16', '(196.08, 203.92)'], kind='text',
-                 true='No — the population mean is fixed',
+                 true='No: the population mean is fixed',
                  why='a confidence level is a property of the method, not of one interval',
                  extra=[('the stem\'s interval is 200 +/- 1.96 x 16/8',
                          all(abs(a - b) <= 0.005 for a, b in zip(ci(200, 16, 64, 1.96), (196.08, 203.92))))]),
@@ -157,7 +157,7 @@ def _specs():
                  extra=[('widths scale as 1/sqrt(n)', (118 - 102) / (114 - 106) == math.sqrt(100 / 25)),
                         ('same centre', (102 + 118) / 2 == (106 + 114) / 2)]),
         25: dict(has=['sample of 49', 'mean lifetime of 987', 'known to be 35', '1,000 hours'], kind='text',
-                 true='Challenges — the CI is (977.2, 996.8)', why='987 +/- 1.96 x 35/7 = (977.2, 996.8), all below 1000',
+                 true='Challenges: the CI is (977.2, 996.8)', why='987 +/- 1.96 x 35/7 = (977.2, 996.8), all below 1000',
                  extra=[('the CI is (977.2, 996.8)',
                          tuple(round(v, 1) for v in ci(987, 35, 49, 1.96)) == (977.2, 996.8)),
                         ('1000 lies above the interval', ci(987, 35, 49, 1.96)[1] < 1000)]),
@@ -220,8 +220,9 @@ class Report:
 
 
 def sr31_lead(o):
-    """The verdict or choice an option opens with, the words before its dash ("Yes", "No", "A")."""
-    m = re.match(r'^(.{1,30}?)\s+[—–]\s+', o)
+    """The verdict or choice an option opens with, the words before its dash ("Yes", "No", "A"), or before its colon
+    since DASH-MINUS (3 Nov 2026), when an answer set separates verdict and reason with a colon."""
+    m = re.match(r'^(.{1,30}?)(?:\s+[—–]\s+|:\s+)', o)
     return m.group(1).strip() if m else None
 
 

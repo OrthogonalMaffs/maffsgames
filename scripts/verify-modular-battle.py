@@ -12,7 +12,7 @@ Checks, independent of the game's code (Python's divmod):
   Options: min(4, b) buttons (b - 1 wrong remainders exist, at most 3 are shown), all different, each a whole number from 0 to
     b - 1 (a remainder that could happen), exactly one equal to a mod b (SR-4/SR-16).
   Dot grid, while the scaffold shows: floor(a / b) groups of b dots, then one group of a mod b red dots (none when it divides),
-    and the label "a dots in groups of b - q full groups, and what is left over:" (or "nothing left over:").
+    and the label "a dots in groups of b make q full groups, and what is left over:" (or "nothing left over:").
   Feedback, through the game's own buttons (each option pressed): the key reads "CORRECT! a÷b=q rR" (+10); any other reads
     "WRONG! a÷b=q remainder R" with the key's button shown correct, no score, and the Next control.
   Scaffold: shown at the start; withdrawn after 2 right; back after 2 wrong in a row; withdrawn again after 2 more right.
@@ -104,8 +104,8 @@ SCAFFOLD_JS = r"""([plan, pairs]) => {
 def expected_label(a, b):
     q, r = divmod(a, b)
     g = 'group' if q == 1 else 'groups'    # modular-battle-s1-001 (R1): "1 full group"
-    return ('%d dots in groups of %d — %d full %s, and what is left over:' % (a, b, q, g) if r
-            else '%d dots in groups of %d — %d full %s, nothing left over:' % (a, b, q, g))
+    return ('%d dots in groups of %d make %d full %s, and what is left over:' % (a, b, q, g) if r
+            else '%d dots in groups of %d make %d full %s, nothing left over:' % (a, b, q, g))
 
 
 def check_one(fails, a, b, info, k):

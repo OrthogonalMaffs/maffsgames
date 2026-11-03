@@ -219,7 +219,7 @@ var QUESTIONS = [
   {
     section:'3.4',ao:'AO3',
     stem:'An insurance manager calculates expected annual claims:\n\nP(minor claim) = 0.12, average cost = \u00a3800\nP(major claim) = 0.03, average cost = \u00a38,500\nP(no claim) = 0.85\n\nThe manager writes: 0.12 \u00d7 800 + 0.03 \u00d7 8500 = \u00a3351.\n\nIs this calculation correct?',
-    options:['No \u2014 must include the no-claim term','Yes \u2014 0.85 \u00d7 0 = 0 changes nothing; \u00a3351 is correct','No \u2014 the probabilities don\u2019t sum to 1','No \u2014 should multiply all probabilities together'],
+    options:['No: must include the no-claim term','Yes: 0.85 \u00d7 0 = 0 changes nothing; \u00a3351 is correct','No: the probabilities don\u2019t sum to 1','No: should multiply all probabilities together'],
     correct:1,
     working:'E = 0.12 \u00d7 800 + 0.03 \u00d7 8500 + 0.85 \u00d7 0 = 96 + 255 + 0 = \u00a3351. The no-claim term adds zero, so the manager\u2019s shortcut is valid.'
   },
@@ -345,7 +345,7 @@ var QUESTIONS = [
   {
     section:'3.9',ao:'AO3',
     stem:'A vendor considers selling hot drinks or cold drinks.\n\nHot drinks: cold day (P = 0.4) revenue \u00a380, warm day (P = 0.6) revenue \u00a330.\nCold drinks: cold day revenue \u00a320, warm day revenue \u00a370.\n\nWhich option has the higher expected revenue?',
-    options:['Hot drinks \u2014 E = \u00a350','Cold drinks \u2014 E = \u00a350','Both have E = \u00a350 \u2014 they are equal','Cold drinks \u2014 E = \u00a354'],
+    options:['Hot drinks: E = \u00a350','Cold drinks: E = \u00a350','Both have E = \u00a350: they are equal','Cold drinks: E = \u00a354'],
     correct:2,
     working:'E(hot) = 0.4 \u00d7 80 + 0.6 \u00d7 30 = 32 + 18 = \u00a350. E(cold) = 0.4 \u00d7 20 + 0.6 \u00d7 70 = 8 + 42 = \u00a350. Equal.'
   },
@@ -366,7 +366,7 @@ var QUESTIONS = [
   {
     section:'3.9',ao:'AO3',
     stem:'A probability distribution has E(X) = 4.2.\n\nA student says: \u201cThe most likely value is 4 or 5.\u201d\n\nIs the student correct?',
-    options:['Yes \u2014 expected value equals the most likely value','No \u2014 E(X) is a long-run average and need not equal any value that X actually takes','Yes \u2014 E(X) lies between 4 and 5 so one of them must be most likely','Yes \u2014 4.2 rounds to 4, so 4 is the most likely value'],
+    options:['Yes: expected value equals the most likely value','No: E(X) is a long-run average and need not equal any value that X actually takes','Yes: E(X) lies between 4 and 5 so one of them must be most likely','Yes: 4.2 rounds to 4, so 4 is the most likely value'],
     correct:1,
     working:'E(X) is the long-run average (mean) of the distribution. It does not tell us which individual value has the highest probability. The mode (most likely value) could be any value in the distribution.'
   },
@@ -381,7 +381,7 @@ var QUESTIONS = [
   {
     section:'3.10',ao:'AO1',
     stem:'The expected annual cost of an event is \u00a3200. An insurance policy covering the event costs \u00a3250 per year.\n\nBased purely on expected value, should you buy the insurance?',
-    options:['Yes','No \u2014 the insurance costs more than the expected loss','Yes \u2014 a 4% probability is too high to ignore','Cannot be determined'],
+    options:['Yes','No: the insurance costs more than the expected loss','Yes: a 4% probability is too high to ignore','Cannot be determined'],
     correct:1,
     working:'On expected value alone, the premium (\u00a3250) exceeds the expected loss (\u00a3200), so the insurance is not worth buying.'
   },
@@ -432,7 +432,7 @@ var QUESTIONS = [
   {
     section:'3.10',ao:'AO3',
     stem:'Option A: 70% chance of gaining \u00a34,000, 30% chance of losing \u00a32,000.\nOption B: a guaranteed \u00a31,500.\n\nWhich option has the higher expected value?',
-    options:['A \u2014 EV = \u00a32,200','B \u2014 it is safer','Both are equal','B \u2014 \u00a31,500 is more than A\u2019s EV of \u00a31,400'],
+    options:['A: EV = \u00a32,200','B: it is safer','Both are equal','B: \u00a31,500 is more than A\u2019s EV of \u00a31,400'],
     correct:0,
     working:'E(A) = 0.7 \u00d7 4,000 + 0.3 \u00d7 (\u22122,000) = 2,800 \u2212 600 = \u00a32,200. E(B) = \u00a31,500. Option A has the higher EV.'
   },
@@ -446,7 +446,7 @@ var QUESTIONS = [
   {
     section:'3.10',ao:'AO3',
     stem:'Travel insurance costs \u00a345. The policy covers:\n\nTrip cancellation: P = 0.06, cost = \u00a3400\nMedical emergency: P = 0.02, cost = \u00a31,200\n\nIs the insurance good value based on expected cost?',
-    options:['No \u2014 \u00a348 barely exceeds the premium','Yes \u2014 the expected loss of \u00a348 exceeds the \u00a345 premium','No \u2014 expected loss is only \u00a324','No \u2014 the chance of claiming is only 8%, so it is not worth it'],
+    options:['No: \u00a348 barely exceeds the premium','Yes: the expected loss of \u00a348 exceeds the \u00a345 premium','No: expected loss is only \u00a324','No: the chance of claiming is only 8%, so it is not worth it'],
     correct:1,
     working:'E(loss) = 0.06 \u00d7 400 + 0.02 \u00d7 1,200 = 24 + 24 = \u00a348. Since \u00a348 > \u00a345, the insurance is actuarially good value.'
   },

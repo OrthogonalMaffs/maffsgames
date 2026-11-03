@@ -123,8 +123,8 @@ window.ROOM = {
             'ten-degree steps.' },
     { id: 'clipboard', name: 'P.E. teacher’s clipboard', where: 'on a hook behind the door',
       clue: 'Scrawled on the back: &ldquo;Codes I have already used, so I stop repeating myself. ' +
-            'Day {{seq.d1}} &mdash; <b>{{seq.c1}}</b>. Day {{seq.d2}} &mdash; <b>{{seq.c2}}</b>. ' +
-            'Day {{seq.d3}} &mdash; <b>{{seq.c3}}</b>.&rdquo;' },
+            'Day {{seq.d1}}: <b>{{seq.c1}}</b>. Day {{seq.d2}}: <b>{{seq.c2}}</b>. ' +
+            'Day {{seq.d3}}: <b>{{seq.c3}}</b>.&rdquo;' },
     { id: 'calendar', name: 'Wall calendar', where: 'above the kit shelves, one date ringed in biro',
       clue: 'Today is ringed, and the ring is labelled in the teacher’s handwriting: <b>day {{seq.dT}} of term</b>.' },
     { id: 'card', name: 'Laminated card', where: 'in the bottom of a kit bag',
@@ -132,7 +132,7 @@ window.ROOM = {
             'Folded flat, the arena holds <b>{{psi.V1}} cubic metres at {{psi.P1}} psi</b>. Too much pressure ' +
             'splits the seams.&rdquo;' },
     { id: 'arena', name: 'The folded arena', where: 'a vast nylon block in the corner',
-      clue: 'A sewn-in label, half under the straps: <b>INFLATABLE DODGEBALL ARENA — {{psi.V2}} cubic metres ' +
+      clue: 'A sewn-in label, half under the straps: <b>INFLATABLE DODGEBALL ARENA, {{psi.V2}} cubic metres ' +
             'fully open.</b>' },
     { id: 'bibs', name: 'Bag of bibs', where: 'by the door', clue: null,
       flavour: 'Forty bibs, none of which have been washed this term. You put them back down immediately.' },

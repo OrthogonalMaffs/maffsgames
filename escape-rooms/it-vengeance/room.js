@@ -44,7 +44,7 @@ window.ROOM = {
       clue: '&ldquo;The horse must be set to <b>the height she actually reaches at the top of her flight</b>. ' +
             'Anywhere else and she comes down on the frame. This is not negotiable.&rdquo;' },
     { id: 'plan', name: 'Floor plan', where: 'screwed to the wall by the honours board',
-      clue: 'TUMBLING FLOOR — <b>{{mat.W}} m by {{mat.L}} m</b>. Sprung. Do not drag equipment across it.' },
+      clue: 'TUMBLING FLOOR: <b>{{mat.W}} m by {{mat.L}} m</b>. Sprung. Do not drag equipment across it.' },
     { id: 'deploy', name: 'Deployment manual', where: 'in the mat store',
       clue: '&ldquo;Mats deploy from the wall as <b>identical squares</b> of whatever size you dial in. No gaps, no ' +
             'overlaps, nothing cut. Dial the <b>largest size that works</b> — anything smaller wastes deployment ' +
@@ -203,7 +203,7 @@ window.ROOM = {
         }
       ],
       missTitle: '{{vault.mTxt}} is <i>when</i>, not <i>how high</i>.',
-      missSays: '&minus;b&frasl;2a = {{vault.mTxt}} is the time at which she reaches the top — {{vault.mTxt}} ' +
+      missSays: '&minus;b&frasl;2a = {{vault.mTxt}} is the time at which she reaches the top: {{vault.mTxt}} ' +
                 'seconds. The height only appears when that t is substituted back into the equation. You are one ' +
                 'step from it.',
       hints: [
@@ -338,7 +338,7 @@ window.ROOM = {
         'Work in tenths of a metre and the floor is {{mat.w10}} by {{mat.l10}}. You want the largest number that ' +
         'divides both — the highest common factor.',
         'The highest common factor of {{mat.w10}} and {{mat.l10}} is {{mat.answer}} &times; 10 tenths, so the mat is ' +
-        '<b>{{mat.aTxt}} m</b> — {{mat.across}} along the {{mat.W}} m side and {{mat.along}} along the {{mat.L}} m side.'
+        '<b>{{mat.aTxt}} m</b>: {{mat.across}} along the {{mat.W}} m side and {{mat.along}} along the {{mat.L}} m side.'
       ],
       solve: 'In tenths, HCF({{mat.w10}}, {{mat.l10}}) gives the largest square mat: <b>{{mat.aTxt}} m</b> ' +
              '({{mat.across}} by {{mat.along}} of them).',

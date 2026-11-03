@@ -484,7 +484,7 @@ def check_bank(fails, opens, bank):
                              % (tag + ' ' if tag else '', qid, word, q['advice']))
         # a muppet's "is correct — V" repeats the advice's own V
         for o in opts:
-            if not o['correct'] and re.search(r' is correct \u2014', o['text']):
+            if not o['correct'] and re.search(r' is correct (?:\u2014|:)', o['text']):
                 adv = numbers(q['advice'])
                 for g in numbers(o['text']):
                     if not any(same(a, g[0]) and a[1] == g[1] for a in adv):
@@ -765,7 +765,7 @@ PLANTS = [
     (TAG + 's1-002', 's1-002: core_004 title back to the clown joke (R6)',
      "title:'Savings Maximisation Guru',", "title:'Savings Maximisation Guru (No Relation to the Clown)',"),
     (TAG + 's1-006', 's1-006: gcse_007 12.5 twice (R1)',
-     "Victor is wrong \\u2014 x = 625", "Victor is wrong \\u2014 x = \\u221a25 = 12.5"),
+     "Victor is wrong: x = 625", "Victor is wrong: x = \\u221a25 = 12.5"),
     (TAG + 's1-001', 's1-001: gcse_006 add 5 to the last digit (R3)',
      "put a 5 after the last digit", "add 5 to the last digit"),
     (TAG + 's1-008', 's1-008: core_004 key a rounded 2.653 as exact (R4)',

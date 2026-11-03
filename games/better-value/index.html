@@ -324,9 +324,9 @@ scenario:'A student needs car insurance. She gets two quotes for annual cover. S
 optionA:{label:'Insurer A',details:[{key:'Payment',value:'Annual'},{key:'Total cost',value:'\u00a3820'}]},
 optionB:{label:'Insurer B',details:[{key:'Payment',value:'Monthly'},{key:'Monthly cost',value:'\u00a374'},{key:'Admin fee',value:'\u00a30'}]},
 conclusions:[
-{text:'Insurer A is better value \u2014 total cost \u00a3820 vs \u00a3888 per year for Insurer B',correct:true,claim:{winner:'A',figures:[{option:'A',value:820},{option:'B',value:888}]}},
-{text:'Insurer B is better value \u2014 \u00a374 per month is less than \u00a3820 for Insurer A',correct:false,claim:{winner:'B',figures:[{option:'B',value:74,of:'amount:monthly cost'},{option:'A',value:820}]}},
-{text:'They cost the same \u2014 \u00a3820 is roughly 12 \u00d7 \u00a374',correct:false,claim:{winner:'equal',figures:[{option:'A',value:820},{option:null,value:12,of:'given'},{option:'B',value:74,of:'amount:monthly cost'}]}},
+{text:'Insurer A is better value: total cost \u00a3820 vs \u00a3888 per year for Insurer B',correct:true,claim:{winner:'A',figures:[{option:'A',value:820},{option:'B',value:888}]}},
+{text:'Insurer B is better value: \u00a374 per month is less than \u00a3820 for Insurer A',correct:false,claim:{winner:'B',figures:[{option:'B',value:74,of:'amount:monthly cost'},{option:'A',value:820}]}},
+{text:'They cost the same: \u00a3820 is roughly 12 \u00d7 \u00a374',correct:false,claim:{winner:'equal',figures:[{option:'A',value:820},{option:null,value:12,of:'given'},{option:'B',value:74,of:'amount:monthly cost'}]}},
 {text:'Insurer B is better because you can cancel monthly',correct:false,claim:{winner:'B',figures:[]}}
 ],
 explanation:'Insurer A: \u00a3820. Insurer B: 12 \u00d7 \u00a374 = \u00a3888. Paying monthly costs \u00a368 more.'},
@@ -350,8 +350,8 @@ scenario:'A couple wants to visit a theme park. They plan to go twice this year.
 optionA:{label:'Day Tickets',details:[{key:'Price',value:'\u00a345 per person per visit'}]},
 optionB:{label:'Annual Pass',details:[{key:'Price',value:'\u00a375 per person'}]},
 conclusions:[
-{text:'Two day tickets are better value for two visits \u2014 \u00a390 vs \u00a375 for the annual pass',correct:false,claim:{winner:'A',figures:[{option:'A',value:90},{option:'B',value:75}]}},
-{text:'The annual pass is better value for two visits \u2014 \u00a375 vs \u00a390 for two day tickets',correct:true,claim:{winner:'B',figures:[{option:'B',value:75},{option:'A',value:90}]}},
+{text:'Two day tickets are better value for two visits: \u00a390 vs \u00a375 for the annual pass',correct:false,claim:{winner:'A',figures:[{option:'A',value:90},{option:'B',value:75}]}},
+{text:'The annual pass is better value for two visits: \u00a375 vs \u00a390 for two day tickets',correct:true,claim:{winner:'B',figures:[{option:'B',value:75},{option:'A',value:90}]}},
 {text:'The annual pass is only worth it for three or more visits in the year',correct:false,claim:{winner:'A',figures:[]}},
 {text:'They cost the same for two visits',correct:false,claim:{winner:'equal',figures:[]}}
 ],
@@ -363,8 +363,8 @@ scenario:'A business is choosing between two photocopier lease options over 3 ye
 optionA:{label:'Lease A',details:[{key:'Monthly cost',value:'\u00a3120'},{key:'Copies included',value:'All inclusive'}]},
 optionB:{label:'Lease B',details:[{key:'Monthly cost',value:'\u00a385'},{key:'Per copy charge',value:'\u00a30.02'}]},
 conclusions:[
-{text:'Lease A is better value \u2014 3-year cost \u00a34,320 vs \u00a34,500 for Lease B',correct:true,claim:{winner:'A',figures:[{option:null,value:3,of:'given'},{option:'A',value:4320},{option:'B',value:4500}]}},
-{text:'Lease B is better value \u2014 \u00a385/month is much cheaper than \u00a3120/month',correct:false,claim:{winner:'B',figures:[{option:'B',value:85,of:'amount:monthly cost'},{option:'A',value:120,of:'amount:monthly cost'}]}},
+{text:'Lease A is better value: 3-year cost \u00a34,320 vs \u00a34,500 for Lease B',correct:true,claim:{winner:'A',figures:[{option:null,value:3,of:'given'},{option:'A',value:4320},{option:'B',value:4500}]}},
+{text:'Lease B is better value: \u00a385/month is much cheaper than \u00a3120/month',correct:false,claim:{winner:'B',figures:[{option:'B',value:85,of:'amount:monthly cost'},{option:'A',value:120,of:'amount:monthly cost'}]}},
 {text:'They cost the same over 3 years',correct:false,claim:{winner:'equal',figures:[{option:null,value:3,of:'given'}]}},
 {text:'Lease B is better if the business makes fewer than 2,500 copies a month',correct:false,claim:{winner:'B',figures:[{option:null,value:2500,of:'premise'}],at:{copies:2000}}}
 ],
@@ -403,8 +403,8 @@ scenario:'A phone contract advertises \u201c\u00a325/month \u2014 the cheapest o
 optionA:{label:'Phone Contract',details:[{key:'Monthly',value:'\u00a325'},{key:'Upfront',value:'\u00a330'},{key:'Term',value:'24 months'}]},
 optionB:{label:'SIM-Only + Handset',details:[{key:'Monthly',value:'\u00a312'},{key:'Handset',value:'\u00a3280'},{key:'Term',value:'24 months'}]},
 conclusions:[
-{text:'The contract is better value \u2014 \u00a325 a month vs \u00a312 a month plus \u00a3280 for the phone',correct:false,claim:{winner:'A',figures:[{option:'A',value:25,of:'amount:monthly'},{option:'B',value:12,of:'amount:monthly'},{option:'B',value:280,of:'amount:handset'}]}},
-{text:'The SIM-only deal is better value \u2014 total cost \u00a3568 vs \u00a3630 for the contract',correct:true,claim:{winner:'B',figures:[{option:'B',value:568},{option:'A',value:630}]}},
+{text:'The contract is better value: \u00a325 a month vs \u00a312 a month plus \u00a3280 for the phone',correct:false,claim:{winner:'A',figures:[{option:'A',value:25,of:'amount:monthly'},{option:'B',value:12,of:'amount:monthly'},{option:'B',value:280,of:'amount:handset'}]}},
+{text:'The SIM-only deal is better value: total cost \u00a3568 vs \u00a3630 for the contract',correct:true,claim:{winner:'B',figures:[{option:'B',value:568},{option:'A',value:630}]}},
 {text:'They cost the same over 24 months',correct:false,claim:{winner:'equal',figures:[{option:null,value:24,of:'given'}]}},
 {text:'The contract is better because you get the phone included',correct:false,claim:{winner:'A',figures:[]}}
 ],
@@ -417,9 +417,9 @@ optionA:{label:'BNPL Store',details:[{key:'Price',value:'\u00a3599'},{key:'Payme
 optionB:{label:'Rival Store',details:[{key:'Price',value:'\u00a3549'},{key:'Payment',value:'Cash'}]},
 conclusions:[
 {text:'The BNPL store is free for 12 months so it is better value',correct:false,claim:{winner:'A',figures:[{option:null,value:12,of:'given'}]}},
-{text:'The rival store is better value if you can pay cash \u2014 \u00a3549 vs \u00a3599',correct:true,claim:{winner:'B',figures:[{option:'B',value:549},{option:'A',value:599,of:'amount:price'}]}},
+{text:'The rival store is better value if you can pay cash: \u00a3549 vs \u00a3599',correct:true,claim:{winner:'B',figures:[{option:'B',value:549},{option:'A',value:599,of:'amount:price'}]}},
 {text:'The BNPL store is better because you keep your money for longer, interest-free',correct:false,claim:{winner:'A',figures:[]}},
-{text:'They cost the same \u2014 both are around \u00a3600',correct:false,claim:{winner:'equal',figures:[{option:'A',value:600},{option:'B',value:600}]}}
+{text:'They cost the same: both are around \u00a3600',correct:false,claim:{winner:'equal',figures:[{option:'A',value:600},{option:'B',value:600}]}}
 ],
 explanation:'Buy now pay later often seems free but the full price is still \u00a3599. Keeping her \u00a3549 in savings for the year earns \u00a3549 \u00d7 3% = \u00a316.47, so BNPL costs her \u00a3599 \u2212 \u00a316.47 = \u00a3582.53 net, against \u00a3549 cash: the rival store is still \u00a333.53 cheaper. BNPL would win only if her savings earned more than \u00a350 \u00f7 \u00a3549 = 9.1% a year. The danger of BNPL is forgetting to pay within the interest-free period.'},
 
@@ -455,7 +455,7 @@ scenario:'Two supermarkets sell the same brand of orange juice. Supermarket A: 2
 optionA:{label:'Supermarket A',details:[{key:'Offer',value:'2 for \u00a32.50'},{key:'Price per bottle',value:'\u00a31.25'}]},
 optionB:{label:'Supermarket B',details:[{key:'Offer',value:'Buy 3 get 1 free'},{key:'Single price',value:'\u00a31.40 each'}]},
 conclusions:[
-{text:'Supermarket A is better value per bottle if you only need 2 \u2014 \u00a31.25 each vs \u00a31.40 each',correct:true,claim:{winner:'A',figures:[{option:'A',value:1.25},{option:'B',value:1.4},{option:null,value:2,of:'given'}]}},
+{text:'Supermarket A is better value per bottle if you only need 2: \u00a31.25 each vs \u00a31.40 each',correct:true,claim:{winner:'A',figures:[{option:'A',value:1.25},{option:'B',value:1.4},{option:null,value:2,of:'given'}]}},
 {text:'Supermarket B is always better value per bottle, because you get a free bottle',correct:false,claim:{winner:'B',figures:[]}},
 {text:'They cost the same per bottle',correct:false,claim:{winner:'equal',figures:[]}},
 {text:'Supermarket B is cheaper if you buy exactly 2 bottles, because of the free one',correct:false,claim:{winner:'B',figures:[{option:null,value:2,of:'given'}]}}
@@ -481,8 +481,8 @@ scenario:'A landlord gets two quotes to repaint a flat. Decorator A: \u00a3800 a
 optionA:{label:'Decorator A',details:[{key:'Quote',value:'\u00a3800'},{key:'Includes',value:'All materials'}]},
 optionB:{label:'Decorator B',details:[{key:'Labour',value:'\u00a3600'},{key:'Materials',value:'\u00a3280 (at cost)'}]},
 conclusions:[
-{text:'Decorator B was better value \u2014 \u00a3600 for labour vs \u00a3800 all-inclusive from Decorator A',correct:false,claim:{winner:'B',figures:[{option:'B',value:600,of:'amount:labour'},{option:'A',value:800}]}},
-{text:'Decorator A was better value \u2014 \u00a3800 vs \u00a3880 for Decorator B including materials',correct:true,claim:{winner:'A',figures:[{option:'A',value:800},{option:'B',value:880}]}},
+{text:'Decorator B was better value: \u00a3600 for labour vs \u00a3800 all-inclusive from Decorator A',correct:false,claim:{winner:'B',figures:[{option:'B',value:600,of:'amount:labour'},{option:'A',value:800}]}},
+{text:'Decorator A was better value: \u00a3800 vs \u00a3880 for Decorator B including materials',correct:true,claim:{winner:'A',figures:[{option:'A',value:800},{option:'B',value:880}]}},
 {text:'They cost the same once materials are added',correct:false,claim:{winner:'equal',figures:[]}},
 {text:'Decorator B is always better value, because its labour charge is \u00a3200 cheaper',correct:false,claim:{winner:'B',figures:[{option:null,value:200,of:'premise'}]}}
 ],
@@ -495,8 +495,8 @@ scenario:'A supermarket sells washing powder in two sizes. Small: 1.2 kg for \u0
 optionA:{label:'Small Box',details:[{key:'Weight',value:'1.2 kg'},{key:'Price',value:'\u00a33.60'}]},
 optionB:{label:'Large Box',details:[{key:'Weight',value:'2.5 kg'},{key:'Price',value:'\u00a36.75'}]},
 conclusions:[
-{text:'The small box is better value \u2014 \u00a33.00/kg vs \u00a32.70/kg for the large box',correct:false,claim:{winner:'A',figures:[{option:'A',value:3.0},{option:'B',value:2.7}]}},
-{text:'The large box is better value \u2014 \u00a32.70/kg vs \u00a33.00/kg for the small box',correct:true,claim:{winner:'B',figures:[{option:'B',value:2.7},{option:'A',value:3.0}]}},
+{text:'The small box is better value: \u00a33.00/kg vs \u00a32.70/kg for the large box',correct:false,claim:{winner:'A',figures:[{option:'A',value:3.0},{option:'B',value:2.7}]}},
+{text:'The large box is better value: \u00a32.70/kg vs \u00a33.00/kg for the small box',correct:true,claim:{winner:'B',figures:[{option:'B',value:2.7},{option:'A',value:3.0}]}},
 {text:'They cost the same per kg',correct:false,claim:{winner:'equal',figures:[]}},
 {text:'The small box is better because you waste less',correct:false,claim:{winner:'A',figures:[]}}
 ],
@@ -508,8 +508,8 @@ scenario:'Petrol costs \u00a31.52 per litre at Garage A. Garage B sells petrol a
 optionA:{label:'Garage A',details:[{key:'Price',value:'\u00a31.52 per litre'}]},
 optionB:{label:'Garage B',details:[{key:'Price',value:'\u00a36.84 per gallon'},{key:'Conversion',value:'1 gal = 4.55 L'}]},
 conclusions:[
-{text:'Garage A is cheaper \u2014 \u00a31.52/litre vs \u00a36.84 a gallon at Garage B',correct:false,claim:{winner:'A',figures:[{option:'A',value:1.52},{option:'B',value:6.84,of:'amount:price'}]}},
-{text:'Garage B is cheaper \u2014 \u00a31.50/litre vs \u00a31.52/litre at Garage A',correct:true,claim:{winner:'B',figures:[{option:'B',value:1.5},{option:'A',value:1.52}]}},
+{text:'Garage A is cheaper: \u00a31.52/litre vs \u00a36.84 a gallon at Garage B',correct:false,claim:{winner:'A',figures:[{option:'A',value:1.52},{option:'B',value:6.84,of:'amount:price'}]}},
+{text:'Garage B is cheaper: \u00a31.50/litre vs \u00a31.52/litre at Garage A',correct:true,claim:{winner:'B',figures:[{option:'B',value:1.5},{option:'A',value:1.52}]}},
 {text:'They cost the same per litre',correct:false,claim:{winner:'equal',figures:[]}},
 {text:'Garage A is cheaper because litres are the standard unit',correct:false,claim:{winner:'A',figures:[]}}
 ],
@@ -521,10 +521,10 @@ scenario:'A freelancer is offered two contracts. Contract A: \u00a3320 per day, 
 optionA:{label:'Contract A',details:[{key:'Day rate',value:'\u00a3320'},{key:'Days/week',value:'3'}]},
 optionB:{label:'Contract B',details:[{key:'Total fee',value:'\u00a318,000'},{key:'Duration',value:'12 weeks \u00d7 5 days'}]},
 conclusions:[
-{text:'Contract B has the better day rate \u2014 \u00a318,000 \u00f7 12 = \u00a31,500/day',correct:false,claim:{winner:'B',figures:[{option:'B',value:18000,of:'amount:total fee'},{option:null,value:12,of:'given'},{option:'B',value:1500}]}},
-{text:'Contract A has the better day rate \u2014 \u00a3320/day vs \u00a3300/day for Contract B',correct:true,claim:{winner:'A',figures:[{option:'A',value:320},{option:'B',value:300}]}},
+{text:'Contract B has the better day rate: \u00a318,000 \u00f7 12 = \u00a31,500/day',correct:false,claim:{winner:'B',figures:[{option:'B',value:18000,of:'amount:total fee'},{option:null,value:12,of:'given'},{option:'B',value:1500}]}},
+{text:'Contract A has the better day rate: \u00a3320/day vs \u00a3300/day for Contract B',correct:true,claim:{winner:'A',figures:[{option:'A',value:320},{option:'B',value:300}]}},
 {text:'They pay the same daily rate',correct:false,claim:{winner:'equal',figures:[]}},
-{text:'Contract B has the better day rate \u2014 \u00a318,000 \u00f7 36 = \u00a3500/day',correct:false,claim:{winner:'B',figures:[{option:'B',value:18000,of:'amount:total fee'},{option:null,value:36,of:'premise'},{option:'B',value:500}]}}
+{text:'Contract B has the better day rate: \u00a318,000 \u00f7 36 = \u00a3500/day',correct:false,claim:{winner:'B',figures:[{option:'B',value:18000,of:'amount:total fee'},{option:null,value:36,of:'premise'},{option:'B',value:500}]}}
 ],
 explanation:'Contract A: \u00a3320/day. Contract B: \u00a318,000 \u00f7 (12 \u00d7 5) = \u00a318,000 \u00f7 60 = \u00a3300/day. Contract A pays \u00a320/day more. Contract B does pay more in total (\u00a318,000 vs \u00a311,520 over 12 weeks), but only because it is 60 days of work against 36. The day rate tells you which pays better for your time.'},
 
@@ -534,8 +534,8 @@ scenario:'Two juice cartons: Brand A is 750ml for \u00a31.89. Brand B is 1.25 li
 optionA:{label:'Brand A',details:[{key:'Volume',value:'750 ml'},{key:'Price',value:'\u00a31.89'}]},
 optionB:{label:'Brand B',details:[{key:'Volume',value:'1.25 litres'},{key:'Price',value:'\u00a32.99'}]},
 conclusions:[
-{text:'Brand A is better value \u2014 \u00a32.52/litre vs \u00a32.39/litre for Brand B',correct:false,claim:{winner:'A',figures:[{option:'A',value:2.52},{option:'B',value:2.39}]}},
-{text:'Brand B is better value \u2014 \u00a32.39/litre vs \u00a32.52/litre for Brand A',correct:true,claim:{winner:'B',figures:[{option:'B',value:2.39},{option:'A',value:2.52}]}},
+{text:'Brand A is better value: \u00a32.52/litre vs \u00a32.39/litre for Brand B',correct:false,claim:{winner:'A',figures:[{option:'A',value:2.52},{option:'B',value:2.39}]}},
+{text:'Brand B is better value: \u00a32.39/litre vs \u00a32.52/litre for Brand A',correct:true,claim:{winner:'B',figures:[{option:'B',value:2.39},{option:'A',value:2.52}]}},
 {text:'They cost the same per litre',correct:false,claim:{winner:'equal',figures:[]}},
 {text:'Brand A is cheaper per litre because the carton costs less',correct:false,claim:{winner:'A',figures:[]}}
 ],
@@ -547,8 +547,8 @@ scenario:'A charity collects donations. In January they received \u00a34,200 fro
 optionA:{label:'January',details:[{key:'Total donations',value:'\u00a34,200'},{key:'Number of donors',value:'350'}]},
 optionB:{label:'February',details:[{key:'Total donations',value:'\u00a35,100'},{key:'Number of donors',value:'510'}]},
 conclusions:[
-{text:'January had better average giving \u2014 \u00a312 per donor vs \u00a310 per donor in February',correct:true,claim:{winner:'A',figures:[{option:'A',value:12},{option:'B',value:10}]}},
-{text:'February had better giving \u2014 \u00a35,100 is more than \u00a34,200',correct:false,claim:{winner:'B',figures:[{option:'B',value:5100,of:'total'},{option:'A',value:4200,of:'total'}]}},
+{text:'January had better average giving: \u00a312 per donor vs \u00a310 per donor in February',correct:true,claim:{winner:'A',figures:[{option:'A',value:12},{option:'B',value:10}]}},
+{text:'February had better giving: \u00a35,100 is more than \u00a34,200',correct:false,claim:{winner:'B',figures:[{option:'B',value:5100,of:'total'},{option:'A',value:4200,of:'total'}]}},
 {text:'February had better average giving, because more donors means more given per person',correct:false,claim:{winner:'B',figures:[]}},
 {text:'They had the same average donation',correct:false,claim:{winner:'equal',figures:[]}}
 ],
@@ -560,10 +560,10 @@ scenario:'A driver records fuel economy. Car A: travels 420 miles on 50 litres. 
 optionA:{label:'Car A',details:[{key:'Distance',value:'420 miles'},{key:'Fuel used',value:'50 litres'}]},
 optionB:{label:'Car B',details:[{key:'Distance',value:'350 miles'},{key:'Fuel used',value:'40 litres'}]},
 conclusions:[
-{text:'Car A is more fuel efficient \u2014 420 miles is further than 350 miles',correct:false,claim:{winner:'A',figures:[{option:'A',value:420,of:'total'},{option:'B',value:350,of:'total'}]}},
-{text:'Car B is more fuel efficient \u2014 8.75 miles per litre vs 8.4 miles per litre for Car A',correct:true,claim:{winner:'B',figures:[{option:'B',value:8.75},{option:'A',value:8.4}]}},
+{text:'Car A is more fuel efficient: 420 miles is further than 350 miles',correct:false,claim:{winner:'A',figures:[{option:'A',value:420,of:'total'},{option:'B',value:350,of:'total'}]}},
+{text:'Car B is more fuel efficient: 8.75 miles per litre vs 8.4 miles per litre for Car A',correct:true,claim:{winner:'B',figures:[{option:'B',value:8.75},{option:'A',value:8.4}]}},
 {text:'They have the same fuel efficiency',correct:false,claim:{winner:'equal',figures:[]}},
-{text:'Car A is more fuel efficient \u2014 8.4 miles per litre vs 8.75 miles per litre for Car B',correct:false,claim:{winner:'A',figures:[{option:'A',value:8.4},{option:'B',value:8.75}]}}
+{text:'Car A is more fuel efficient: 8.4 miles per litre vs 8.75 miles per litre for Car B',correct:false,claim:{winner:'A',figures:[{option:'A',value:8.4},{option:'B',value:8.75}]}}
 ],
 explanation:'Car A: 420 \u00f7 50 = 8.4 miles/litre. Car B: 350 \u00f7 40 = 8.75 miles/litre. Car B is more efficient \u2014 the question tests whether students calculate correctly rather than assume the larger number wins.'},
 
@@ -573,9 +573,9 @@ scenario:'Two builders quote for a job. Builder A: \u00a3240 for 8 hours work. B
 optionA:{label:'Builder A',details:[{key:'Quote',value:'\u00a3240'},{key:'Hours',value:'8'}]},
 optionB:{label:'Builder B',details:[{key:'Quote',value:'\u00a3175'},{key:'Hours',value:'6'}]},
 conclusions:[
-{text:'Builder A is cheaper per hour \u2014 \u00a330/hour vs \u00a329.17/hour',correct:false,claim:{winner:'B',figures:[{option:'A',value:30},{option:'B',value:29.17}]}},
-{text:'Builder B charges more per hour \u2014 \u00a329.17/hour vs \u00a330/hour for Builder A',correct:false,claim:{winner:'B',figures:[{option:'B',value:29.17},{option:'A',value:30}]}},
-{text:'Builder A charges more per hour \u2014 \u00a330/hour vs \u00a329.17/hour for Builder B',correct:true,claim:{winner:'A',figures:[{option:'A',value:30},{option:'B',value:29.17}]}},
+{text:'Builder A is cheaper per hour: \u00a330/hour vs \u00a329.17/hour',correct:false,claim:{winner:'B',figures:[{option:'A',value:30},{option:'B',value:29.17}]}},
+{text:'Builder B charges more per hour: \u00a329.17/hour vs \u00a330/hour for Builder A',correct:false,claim:{winner:'B',figures:[{option:'B',value:29.17},{option:'A',value:30}]}},
+{text:'Builder A charges more per hour: \u00a330/hour vs \u00a329.17/hour for Builder B',correct:true,claim:{winner:'A',figures:[{option:'A',value:30},{option:'B',value:29.17}]}},
 {text:'They charge the same hourly rate',correct:false,claim:{winner:'equal',figures:[]}}
 ],
 explanation:'Builder A: \u00a3240 \u00f7 8 = \u00a330/hour. Builder B: \u00a3175 \u00f7 6 = \u00a329.17/hour. Builder A is marginally more expensive per hour.'},
@@ -657,7 +657,7 @@ conclusions:[
 {text:'The electric car never pays for itself',correct:false,claim:{winner:'B',figures:[],threshold:{value:null}}},
 {text:'The electric car becomes better value only after approximately 8.5 years \u2014 in year 9',correct:false,claim:{winner:'A',figures:[{option:null,value:9,of:'first'}],threshold:{value:8.5,from:'above',discrete:false}}}
 ],
-explanation:'Payback: \u00a35,000 \u00f7 \u00a31,200 = 4.17 years. After 5 years, the electric car has saved \u00a36,000 \u2014 \u00a31,000 more than the price premium.'},
+explanation:'Payback: \u00a35,000 \u00f7 \u00a31,200 = 4.17 years. After 5 years, the electric car has saved \u00a36,000, which is \u00a31,000 more than the price premium.'},
 
 {id:'bv_core_030',level:'core',type:'breakeven',
 criterion:'How many pages must you print for the home printer to become better value?',measure:'crossover',inputs:{unit:'pages',A:{fixed:120,per_unit:0.09},B:{fixed:0,per_unit:0.12}},
@@ -680,9 +680,9 @@ scenario:'A customer is choosing between two broadband deals. A broadband provid
 optionA:{label:'Advertised Deal',details:[{key:'Broadband',value:'\u00a318/month'},{key:'Line rental',value:'\u00a310/month'},{key:'Installation',value:'\u00a360'},{key:'Contract',value:'18 months'}]},
 optionB:{label:'Rival Deal',details:[{key:'Monthly cost',value:'\u00a332 (all-in)'},{key:'Installation',value:'\u00a30'},{key:'Contract',value:'12 months'}]},
 conclusions:[
-{text:'The advertised deal is cheaper \u2014 \u00a318/month beats \u00a332/month',correct:false,claim:{winner:'A',figures:[{option:'A',value:18},{option:'B',value:32}]}},
-{text:'The rival deal is better value \u2014 \u00a332 a month vs \u00a3564 \u00f7 12 = \u00a347 a month on the advertised deal',correct:false,claim:{winner:'B',figures:[{option:'B',value:32},{option:'A',value:564,of:'total'},{option:null,value:12,of:'given'},{option:'A',value:47}]}},
-{text:'Per month the advertised deal is cheaper, at \u00a331.33 vs \u00a332 \u2014 but it locks you in for 6 extra months',correct:true,claim:{winner:'A',figures:[{option:'A',value:31.33},{option:'B',value:32},{option:null,value:6,of:'premise'}]}},
+{text:'The advertised deal is cheaper: \u00a318/month beats \u00a332/month',correct:false,claim:{winner:'A',figures:[{option:'A',value:18},{option:'B',value:32}]}},
+{text:'The rival deal is better value: \u00a332 a month vs \u00a3564 \u00f7 12 = \u00a347 a month on the advertised deal',correct:false,claim:{winner:'B',figures:[{option:'B',value:32},{option:'A',value:564,of:'total'},{option:null,value:12,of:'given'},{option:'A',value:47}]}},
+{text:'Per month the advertised deal is cheaper, at \u00a331.33 vs \u00a332, but it locks you in for 6 extra months',correct:true,claim:{winner:'A',figures:[{option:'A',value:31.33},{option:'B',value:32},{option:null,value:6,of:'premise'}]}},
 {text:'They cost the same per month once you add line rental',correct:false,claim:{winner:'equal',figures:[]}}
 ],
 explanation:'Advertised: (18 \u00d7 \u00a328) + \u00a360 = \u00a3504 + \u00a360 = \u00a3564, i.e. \u00a331.33/month. Rival: 12 \u00d7 \u00a332 = \u00a3384, i.e. \u00a332/month. She stays for the whole contract, so the cost per month decides it: the advertised deal is 67p a month cheaper, though it commits her for 18 months. Comparing \u00a3384 with \u00a3564 compares 12 months with 18. The headline \u00a318 is misleading \u2014 the true cost is \u00a331.33/month.'},
@@ -694,8 +694,8 @@ optionA:{label:'0% Finance Deal',details:[{key:'Sofa price',value:'\u00a31,200'}
 optionB:{label:'Cash Purchase',details:[{key:'Sofa price',value:'\u00a31,050'},{key:'Other costs',value:'\u00a30'}]},
 conclusions:[
 {text:'The 0% deal is genuinely interest-free, so it must be the better deal overall',correct:false,claim:{winner:'A',figures:[{option:null,value:0,of:'given'}]}},
-{text:'The cash purchase is better value \u2014 \u00a31,050 vs \u00a31,560.64 for the finance deal',correct:true,claim:{winner:'B',figures:[{option:'B',value:1050},{option:'A',value:1560.64}]}},
-{text:'The 0% deal costs \u00a31,345 \u2014 only \u00a3295 more than cash',correct:false,claim:{winner:'B',figures:[{option:null,value:0,of:'given'},{option:'A',value:1345},{option:null,value:295,of:'difference'}]}},
+{text:'The cash purchase is better value: \u00a31,050 vs \u00a31,560.64 for the finance deal',correct:true,claim:{winner:'B',figures:[{option:'B',value:1050},{option:'A',value:1560.64}]}},
+{text:'The 0% deal costs \u00a31,345: only \u00a3295 more than cash',correct:false,claim:{winner:'B',figures:[{option:null,value:0,of:'given'},{option:'A',value:1345},{option:null,value:295,of:'difference'}]}},
 {text:'They cost the same because 0% means no extra charges',correct:false,claim:{winner:'equal',figures:[{option:null,value:0,of:'given'}]}}
 ],
 explanation:'Finance deal: \u00a31,200 + \u00a3145 + (36 \u00d7 \u00a35.99) = \u00a31,200 + \u00a3145 + \u00a3215.64 = \u00a31,560.64. Cash: \u00a31,050. The \u201c0% interest\u201d hides \u00a3510.64 in extra costs.'},
@@ -719,7 +719,7 @@ scenario:'An online retailer offers \u201cfree next-day delivery\u201d on a \u00
 optionA:{label:'\u201cFree Delivery\u201d Site',details:[{key:'Bag price',value:'\u00a389.99'},{key:'Delivery',value:'Free next-day'}]},
 optionB:{label:'Rival Site',details:[{key:'Bag price',value:'\u00a374.99'},{key:'Standard delivery',value:'\u00a34.99'},{key:'Next-day delivery',value:'\u00a39.99'}]},
 conclusions:[
-{text:'The rival site is better value even with next-day delivery \u2014 \u00a384.98 vs \u00a389.99',correct:true,claim:{winner:'B',figures:[{option:'B',value:84.98},{option:'A',value:89.99}]}},
+{text:'The rival site is better value even with next-day delivery: \u00a384.98 vs \u00a389.99',correct:true,claim:{winner:'B',figures:[{option:'B',value:84.98},{option:'A',value:89.99}]}},
 {text:'The free delivery site is better value, because its next-day delivery is free',correct:false,claim:{winner:'A',figures:[]}},
 {text:'They cost the same with next-day delivery',correct:false,claim:{winner:'equal',figures:[]}},
 {text:'The rival site is only cheaper with standard delivery',correct:false,claim:{winner:'A',figures:[]}}
@@ -758,8 +758,8 @@ scenario:'A small business needs 10,000 flyers printed. Printer A charges \u00a3
 optionA:{label:'Standard Flyers',details:[{key:'Cost',value:'\u00a3180'},{key:'Expected sales',value:'\u00a3800'}]},
 optionB:{label:'Premium Flyers',details:[{key:'Cost',value:'\u00a3260'},{key:'Expected sales',value:'\u00a31,120 (40% more)'}]},
 conclusions:[
-{text:'Standard flyers are better value \u2014 \u00a380 cheaper to print, so \u00a380 more profit',correct:false,claim:{winner:'A',figures:[{option:null,value:80,of:'difference'}]}},
-{text:'Premium flyers are better value \u2014 \u00a3860 vs \u00a3620 profit',correct:true,claim:{winner:'B',figures:[{option:'B',value:860},{option:'A',value:620}]}},
+{text:'Standard flyers are better value: \u00a380 cheaper to print, so \u00a380 more profit',correct:false,claim:{winner:'A',figures:[{option:null,value:80,of:'difference'}]}},
+{text:'Premium flyers are better value: \u00a3860 vs \u00a3620 profit',correct:true,claim:{winner:'B',figures:[{option:'B',value:860},{option:'A',value:620}]}},
 {text:'Standard flyers have the same ROI as premium, so neither is better value',correct:false,claim:{winner:'equal',figures:[],measure:'roi'}},
 {text:'Premium flyers are only worth it if the response rate doubles, not rises 40%',correct:false,claim:{winner:'A',figures:[{option:null,value:40,of:'given'}]}}
 ],
@@ -771,10 +771,10 @@ scenario:'A household can install loft insulation for \u00a3450. This reduces he
 optionA:{label:'Loft Insulation',details:[{key:'Cost',value:'\u00a3450'},{key:'Annual saving',value:'\u00a368'}]},
 optionB:{label:'Cavity Wall',details:[{key:'Cost',value:'\u00a31,200'},{key:'Annual saving',value:'\u00a3195'}]},
 conclusions:[
-{text:'Cavity wall insulation has the shorter payback \u2014 6.15 years vs 6.62 years for loft insulation',correct:true,claim:{winner:'B',figures:[{option:'B',value:6.15},{option:'A',value:6.62}]}},
+{text:'Cavity wall insulation has the shorter payback: 6.15 years vs 6.62 years for loft insulation',correct:true,claim:{winner:'B',figures:[{option:'B',value:6.15},{option:'A',value:6.62}]}},
 {text:'Loft insulation has the shorter payback, because it costs \u00a3750 less to install',correct:false,claim:{winner:'A',figures:[{option:null,value:750,of:'premise'}]}},
 {text:'They have the same payback period',correct:false,claim:{winner:'equal',figures:[]}},
-{text:'Loft insulation has the shorter payback \u2014 about 4 years vs 6.15 years for cavity wall',correct:false,claim:{winner:'A',figures:[{option:'A',value:4},{option:'B',value:6.15}]}}
+{text:'Loft insulation has the shorter payback: about 4 years vs 6.15 years for cavity wall',correct:false,claim:{winner:'A',figures:[{option:'A',value:4},{option:'B',value:6.15}]}}
 ],
 explanation:'Loft: \u00a3450 \u00f7 \u00a368 = 6.62 years. Cavity wall: \u00a31,200 \u00f7 \u00a3195 = 6.15 years. Despite costing more, cavity wall pays back slightly faster and saves far more over 25 years (\u00a34,875 vs \u00a31,700 total savings).'},
 
@@ -810,8 +810,8 @@ scenario:'A tradesperson needs a van. Option A: buy a 3-year-old van for \u00a31
 optionA:{label:'Buy Used Van',details:[{key:'Purchase',value:'\u00a312,000'},{key:'Repairs',value:'\u00a3800/year'},{key:'Insurance',value:'\u00a31,200/year'}]},
 optionB:{label:'Lease New Van',details:[{key:'Monthly lease',value:'\u00a3350 (inc. maintenance)'},{key:'Insurance',value:'\u00a3900/year'}]},
 conclusions:[
-{text:'Buying is cheaper \u2014 3-year cost \u00a318,000 vs \u00a315,300 for leasing',correct:false,claim:{winner:'A',figures:[{option:null,value:3,of:'given'},{option:'A',value:18000},{option:'B',value:15300}]}},
-{text:'Leasing is better value over 3 years \u2014 \u00a315,300 vs \u00a318,000 for buying',correct:true,claim:{winner:'B',figures:[{option:null,value:3,of:'given'},{option:'B',value:15300},{option:'A',value:18000}]}},
+{text:'Buying is cheaper: 3-year cost \u00a318,000 vs \u00a315,300 for leasing',correct:false,claim:{winner:'A',figures:[{option:null,value:3,of:'given'},{option:'A',value:18000},{option:'B',value:15300}]}},
+{text:'Leasing is better value over 3 years: \u00a315,300 vs \u00a318,000 for buying',correct:true,claim:{winner:'B',figures:[{option:null,value:3,of:'given'},{option:'B',value:15300},{option:'A',value:18000}]}},
 {text:'Buying is better value because you own the van at the end of 3 years',correct:false,claim:{winner:'A',figures:[{option:null,value:3,of:'given'}]}},
 {text:'They cost the same over 3 years',correct:false,claim:{winner:'equal',figures:[{option:null,value:3,of:'given'}]}}
 ],
@@ -823,9 +823,9 @@ scenario:'A student has \u00a3500 in savings earning 3% AER. She wants to buy a 
 optionA:{label:'Pay Cash Now',details:[{key:'Cost',value:'\u00a3500'},{key:'Interest earned',value:'\u00a30'}]},
 optionB:{label:'0% Credit Card',details:[{key:'Cost',value:'\u00a3500 (paid month 12)'},{key:'Interest earned',value:'\u00a315 on savings'}]},
 conclusions:[
-{text:'Paying cash is better value \u2014 it\'s simpler and the laptop costs \u00a3500 either way',correct:false,claim:{winner:'A',figures:[{option:'A',value:500,of:'amount:price'},{option:'B',value:500,of:'amount:price'}]}},
-{text:'The 0% credit card is better value \u2014 she earns \u00a315 interest while the laptop costs the same',correct:true,claim:{winner:'B',figures:[{option:null,value:0,of:'given'},{option:'B',value:15,of:'term:interest earned'}]}},
-{text:'The credit card is worse value \u2014 3% on \u00a3500 adds \u00a315, so it costs \u00a3515',correct:false,claim:{winner:'A',figures:[{option:null,value:3,of:'given'},{option:'B',value:500,of:'amount:price'},{option:'B',value:15,of:'term:interest earned'},{option:'B',value:515}]}},
+{text:'Paying cash is better value: it\'s simpler and the laptop costs \u00a3500 either way',correct:false,claim:{winner:'A',figures:[{option:'A',value:500,of:'amount:price'},{option:'B',value:500,of:'amount:price'}]}},
+{text:'The 0% credit card is better value: she earns \u00a315 interest while the laptop costs the same',correct:true,claim:{winner:'B',figures:[{option:null,value:0,of:'given'},{option:'B',value:15,of:'term:interest earned'}]}},
+{text:'The credit card is worse value: 3% on \u00a3500 adds \u00a315, so it costs \u00a3515',correct:false,claim:{winner:'A',figures:[{option:null,value:3,of:'given'},{option:'B',value:500,of:'amount:price'},{option:'B',value:15,of:'term:interest earned'},{option:'B',value:515}]}},
 {text:'They cost exactly the same either way',correct:false,claim:{winner:'equal',figures:[]}}
 ],
 explanation:'Cash: laptop costs \u00a3500, savings drop to \u00a30. Credit card: laptop costs \u00a3500 paid in month 12, meanwhile \u00a3500 \u00d7 3% = \u00a315 interest earned. Net cost with credit card: \u00a3500 \u2212 \u00a315 = \u00a3485, against \u00a3500 cash. The card charges 0%, so the 3% is interest she earns, not a charge. This is opportunity cost reasoning \u2014 what your money could earn elsewhere.'},
@@ -849,9 +849,9 @@ scenario:'A subscription box advertises \u201c\u00a3250 of products for just \u0
 optionA:{label:'Subscription Box',details:[{key:'Monthly',value:'\u00a329.99'},{key:'Advertised value',value:'\u00a3250/box'},{key:'Usable value',value:'\u00a380/box'}]},
 optionB:{label:'Buy What You Need',details:[{key:'Monthly spend',value:'\u00a380 (only items you want)'}]},
 conclusions:[
-{text:'The subscription box saves her \u00a3220.01 a month \u2014 \u00a3250 of products for \u00a329.99',correct:false,claim:{winner:'A',figures:[{option:null,value:220.01,of:'difference'},{option:null,value:250,of:'given'},{option:'A',value:29.99}]}},
-{text:'Buying what you need is better value \u2014 you spend \u00a380 on things you actually use vs paying \u00a329.99 for \u00a380 of usable products plus \u00a3170 of waste',correct:false,claim:{winner:'B',figures:[{option:'B',value:80},{option:'A',value:29.99},{option:null,value:80,of:'given'},{option:null,value:170,of:'premise'}]}},
-{text:'The subscription box is better value \u2014 \u00a329.99 vs \u00a380 a month for the things she uses',correct:true,claim:{winner:'A',figures:[{option:'A',value:29.99},{option:'B',value:80}]}},
+{text:'The subscription box saves her \u00a3220.01 a month: \u00a3250 of products for \u00a329.99',correct:false,claim:{winner:'A',figures:[{option:null,value:220.01,of:'difference'},{option:null,value:250,of:'given'},{option:'A',value:29.99}]}},
+{text:'Buying what you need is better value: you spend \u00a380 on things you actually use vs paying \u00a329.99 for \u00a380 of usable products plus \u00a3170 of waste',correct:false,claim:{winner:'B',figures:[{option:'B',value:80},{option:'A',value:29.99},{option:null,value:80,of:'given'},{option:null,value:170,of:'premise'}]}},
+{text:'The subscription box is better value: \u00a329.99 vs \u00a380 a month for the things she uses',correct:true,claim:{winner:'A',figures:[{option:'A',value:29.99},{option:'B',value:80}]}},
 {text:'The subscription is worthless because you don\u2019t use most of the products',correct:false,claim:{winner:'B',figures:[]}}
 ],
 explanation:'The headline \u00a3250 is the full shop price of everything in the box, not what she would buy. The things she uses are worth \u00a380 a month: buying them herself costs \u00a380, the box \u00a329.99, so the box saves her \u00a380 \u2212 \u00a329.99 = \u00a350.01 a month (\u00a3359.88 a year). Advertised value is not personal value.'},
@@ -889,8 +889,8 @@ optionA:{label:'Cleaner A',details:[{key:'Per clean',value:'\u00a310'},{key:'Fre
 optionB:{label:'Cleaner B',details:[{key:'Per clean',value:'\u00a315'},{key:'Frequency',value:'Every 6 weeks'},{key:'Cleans/year',value:'9'},{key:'Clean for',value:'All year'}]},
 conclusions:[
 {text:'Cleaner A is better value because each clean costs less',correct:false,claim:{winner:'A',figures:[]}},
-{text:'Cleaner B is better value \u2014 \u00a32.60 vs \u00a33.33 per clean week',correct:true,claim:{winner:'B',figures:[{option:'B',value:2.60},{option:'A',value:3.33}]}},
-{text:'Cleaner A is the better value overall \u2014 it saves \u00a350 a year',correct:false,claim:{winner:'A',figures:[{option:null,value:50,of:'difference'}],measure:'total_cost'}},
+{text:'Cleaner B is better value: \u00a32.60 vs \u00a33.33 per clean week',correct:true,claim:{winner:'B',figures:[{option:'B',value:2.60},{option:'A',value:3.33}]}},
+{text:'Cleaner A is the better value overall: it saves \u00a350 a year',correct:false,claim:{winner:'A',figures:[{option:null,value:50,of:'difference'}],measure:'total_cost'}},
 {text:'They cost the same per year once the extra visits are counted',correct:false,claim:{winner:'equal',figures:[],measure:'total_cost'}}
 ],
 explanation:'Cleaner A: 13 \u00d7 \u00a310 = \u00a3130 a year, for 13 \u00d7 3 = 39 clean weeks: \u00a3130 \u00f7 39 = \u00a33.33 a clean week. Cleaner B: 9 \u00d7 \u00a315 = \u00a3135 a year, and the windows are clean all 52 weeks: \u00a3135 \u00f7 52 = \u00a32.60 a clean week. Cleaner B costs \u00a35 more a year but gives 13 more clean weeks, so it is better value for what the homeowner wants.'},
@@ -901,8 +901,8 @@ scenario:'A driver is choosing car insurance. A comparison site shows: Insurer A
 optionA:{label:'Insurer A',details:[{key:'Premium',value:'\u00a3480/year'},{key:'Cover',value:'Comprehensive'},{key:'Excess',value:'\u00a3250'},{key:'Courtesy car',value:'Yes'}]},
 optionB:{label:'Insurer B',details:[{key:'Premium',value:'\u00a3340/year'},{key:'Cover',value:'TPFT'},{key:'Excess',value:'\u00a3500'},{key:'Courtesy car',value:'No'}]},
 conclusions:[
-{text:'Insurer B is better value \u2014 it\'s \u00a3140 cheaper per year for the same car',correct:false,claim:{winner:'B',figures:[{option:null,value:140,of:'premise'}]}},
-{text:'Insurer A is better value this year \u2014 \u00a3730 vs \u00a31,540',correct:true,claim:{winner:'A',figures:[{option:'A',value:730},{option:'B',value:1540}]}},
+{text:'Insurer B is better value: it\'s \u00a3140 cheaper per year for the same car',correct:false,claim:{winner:'B',figures:[{option:null,value:140,of:'premise'}]}},
+{text:'Insurer A is better value this year: \u00a3730 vs \u00a31,540',correct:true,claim:{winner:'A',figures:[{option:'A',value:730},{option:'B',value:1540}]}},
 {text:'They offer the same level of protection, so the cheaper one wins',correct:false,claim:{winner:'equal',figures:[]}},
 {text:'Insurer B is better because you save money every month',correct:false,claim:{winner:'B',figures:[]}}
 ],
@@ -927,10 +927,10 @@ scenario:'A student can buy lunch at university or meal-prep at home. Buying: av
 optionA:{label:'Buy Lunch',details:[{key:'Per meal',value:'\u00a35.50'},{key:'Weekly cost',value:'\u00a327.50'}]},
 optionB:{label:'Meal Prep',details:[{key:'Weekly ingredients',value:'\u00a325'},{key:'Containers',value:'\u00a340 one-off'},{key:'Prep time',value:'45 min/week'},{key:'Opportunity cost',value:'\u00a311.44/hour'}]},
 conclusions:[
-{text:'Meal prep is clearly cheaper \u2014 \u00a3790 vs \u00a3825 for buying, because the time spent prepping costs nothing',correct:false,claim:{winner:'B',figures:[{option:'B',value:790},{option:'A',value:825}]}},
-{text:'Buying lunch is better value \u2014 \u00a3825 vs \u00a31,047.40 once her prep time is counted',correct:true,claim:{winner:'A',figures:[{option:'A',value:825},{option:'B',value:1047.40}]}},
+{text:'Meal prep is clearly cheaper: \u00a3790 vs \u00a3825 for buying, because the time spent prepping costs nothing',correct:false,claim:{winner:'B',figures:[{option:'B',value:790},{option:'A',value:825}]}},
+{text:'Buying lunch is better value: \u00a3825 vs \u00a31,047.40 once her prep time is counted',correct:true,claim:{winner:'A',figures:[{option:'A',value:825},{option:'B',value:1047.40}]}},
 {text:'Meal prep saves over \u00a3200 per year',correct:false,claim:{winner:'B',figures:[{option:null,value:200,of:'difference'}]}},
-{text:'Buying lunch saves her \u00a3257.40 \u2014 the value of her prep time',correct:false,claim:{winner:'A',figures:[{option:null,value:257.40,of:'difference'}]}}
+{text:'Buying lunch saves her \u00a3257.40: the value of her prep time',correct:false,claim:{winner:'A',figures:[{option:null,value:257.40,of:'difference'}]}}
 ],
 explanation:'Buying: 30 \u00d7 \u00a327.50 = \u00a3825. Meal prep: \u00a340 + (30 \u00d7 \u00a325) = \u00a3790 in direct costs. She would work those 45 minutes instead, so her prep time costs 30 \u00d7 0.75 hours \u00d7 \u00a311.44 = \u00a3257.40. Meal prep including time: \u00a3790 + \u00a3257.40 = \u00a31,047.40. Buying is better value by \u00a31,047.40 \u2212 \u00a3825 = \u00a3222.40: the \u00a3257.40 of time, less the \u00a335 that meal prep saves directly.'}
 ],
@@ -943,8 +943,8 @@ scenario:'Two pizza deals for a school party. Pizza Palace: \u00a38 per pizza. S
 optionA:{label:'Pizza Palace',details:[{key:'Price',value:'\u00a38 per pizza'}]},
 optionB:{label:'Slice House',details:[{key:'Deal',value:'3 for \u00a321'}]},
 conclusions:[
-{text:'Pizza Palace is cheaper \u2014 \u00a372 vs \u00a363',correct:false,claim:{winner:'A',figures:[{option:'A',value:72},{option:'B',value:63}]}},
-{text:'Slice House is cheaper \u2014 \u00a363 vs \u00a372 for Pizza Palace',correct:true,claim:{winner:'B',figures:[{option:'B',value:63},{option:'A',value:72}]}},
+{text:'Pizza Palace is cheaper: \u00a372 vs \u00a363',correct:false,claim:{winner:'A',figures:[{option:'A',value:72},{option:'B',value:63}]}},
+{text:'Slice House is cheaper: \u00a363 vs \u00a372 for Pizza Palace',correct:true,claim:{winner:'B',figures:[{option:'B',value:63},{option:'A',value:72}]}},
 {text:'They cost the same for 9 pizzas',correct:false,claim:{winner:'equal',figures:[{option:null,value:9,of:'given'}]}},
 {text:'Pizza Palace is cheaper because individual pricing is better',correct:false,claim:{winner:'A',figures:[]}}
 ],
@@ -956,8 +956,8 @@ scenario:'Sam wants a music streaming subscription for a year. Sam wants a year 
 optionA:{label:'Plan A',details:[{key:'Monthly cost',value:'\u00a35.99'}]},
 optionB:{label:'Plan B',details:[{key:'Annual cost',value:'\u00a359.99'}]},
 conclusions:[
-{text:'Plan A is cheaper \u2014 \u00a35.99 per month sounds less',correct:false,claim:{winner:'A',figures:[{option:'A',value:5.99,of:'amount:monthly cost'}]}},
-{text:'Plan B is cheaper \u2014 \u00a359.99 vs \u00a371.88 for Plan A',correct:true,claim:{winner:'B',figures:[{option:'B',value:59.99},{option:'A',value:71.88}]}},
+{text:'Plan A is cheaper: \u00a35.99 per month sounds less',correct:false,claim:{winner:'A',figures:[{option:'A',value:5.99,of:'amount:monthly cost'}]}},
+{text:'Plan B is cheaper: \u00a359.99 vs \u00a371.88 for Plan A',correct:true,claim:{winner:'B',figures:[{option:'B',value:59.99},{option:'A',value:71.88}]}},
 {text:'They cost the same over a year',correct:false,claim:{winner:'equal',figures:[]}},
 {text:'Plan A is better because you can cancel anytime',correct:false,claim:{winner:'A',figures:[]}}
 ],
@@ -969,9 +969,9 @@ scenario:'Two shops sell the same pack of coloured pencils. The buyer wants the 
 optionA:{label:'Shop A',details:[{key:'Pack price',value:'\u00a34.50'},{key:'Delivery',value:'\u00a32.00'}]},
 optionB:{label:'Shop B',details:[{key:'Pack price',value:'\u00a35.80'},{key:'Delivery',value:'Free'}]},
 conclusions:[
-{text:'Shop A is cheaper delivered \u2014 \u00a34.50 vs \u00a35.80',correct:false,claim:{winner:'A',figures:[{option:'A',value:4.5},{option:'B',value:5.8}]}},
-{text:'Shop A is cheaper overall \u2014 \u00a36.50 vs \u00a35.80 for Shop B',correct:false,claim:{winner:'A',figures:[{option:'A',value:6.5},{option:'B',value:5.8}]}},
-{text:'Shop B is cheaper overall \u2014 \u00a35.80 vs \u00a36.50 for Shop A',correct:true,claim:{winner:'B',figures:[{option:'B',value:5.8},{option:'A',value:6.5}]}},
+{text:'Shop A is cheaper delivered: \u00a34.50 vs \u00a35.80',correct:false,claim:{winner:'A',figures:[{option:'A',value:4.5},{option:'B',value:5.8}]}},
+{text:'Shop A is cheaper overall: \u00a36.50 vs \u00a35.80 for Shop B',correct:false,claim:{winner:'A',figures:[{option:'A',value:6.5},{option:'B',value:5.8}]}},
+{text:'Shop B is cheaper overall: \u00a35.80 vs \u00a36.50 for Shop A',correct:true,claim:{winner:'B',figures:[{option:'B',value:5.8},{option:'A',value:6.5}]}},
 {text:'They cost the same once delivery is added',correct:false,claim:{winner:'equal',figures:[]}}
 ],
 explanation:'Shop A: \u00a34.50 + \u00a32.00 = \u00a36.50. Shop B: \u00a35.80 + \u00a30 = \u00a35.80. Shop B is cheaper.'},
@@ -982,8 +982,8 @@ scenario:'A family is choosing between two holiday parks for a 5-night stay. The
 optionA:{label:'Park A',details:[{key:'Per night',value:'\u00a380'},{key:'Booking fee',value:'\u00a30'}]},
 optionB:{label:'Park B',details:[{key:'Per night',value:'\u00a370'},{key:'Booking fee',value:'\u00a340'}]},
 conclusions:[
-{text:'Park A is cheaper \u2014 \u00a3400 vs \u00a3390',correct:false,claim:{winner:'A',figures:[{option:'A',value:400},{option:'B',value:390}]}},
-{text:'Park B is cheaper \u2014 \u00a3390 vs \u00a3400 for Park A',correct:true,claim:{winner:'B',figures:[{option:'B',value:390},{option:'A',value:400}]}},
+{text:'Park A is cheaper: \u00a3400 vs \u00a3390',correct:false,claim:{winner:'A',figures:[{option:'A',value:400},{option:'B',value:390}]}},
+{text:'Park B is cheaper: \u00a3390 vs \u00a3400 for Park A',correct:true,claim:{winner:'B',figures:[{option:'B',value:390},{option:'A',value:400}]}},
 {text:'They cost the same for 5 nights',correct:false,claim:{winner:'equal',figures:[{option:null,value:5,of:'given'}]}},
 {text:'Park A is better because there is no booking fee',correct:false,claim:{winner:'A',figures:[]}}
 ],
@@ -995,8 +995,8 @@ scenario:'Ella buys a sandwich every school day (5 days a week). She compares bu
 optionA:{label:'Canteen',details:[{key:'Per sandwich',value:'\u00a32.50'}]},
 optionB:{label:'Homemade',details:[{key:'Weekly ingredients',value:'\u00a36.00'}]},
 conclusions:[
-{text:'The canteen is cheaper \u2014 \u00a32.50 per sandwich vs \u00a36 per week for homemade',correct:false,claim:{winner:'A',figures:[{option:'A',value:2.5,of:'amount:per sandwich'},{option:'B',value:6}]}},
-{text:'Homemade is cheaper \u2014 \u00a36 per week vs \u00a312.50 per week for the canteen',correct:true,claim:{winner:'B',figures:[{option:'B',value:6},{option:'A',value:12.5}]}},
+{text:'The canteen is cheaper: \u00a32.50 per sandwich vs \u00a36 per week for homemade',correct:false,claim:{winner:'A',figures:[{option:'A',value:2.5,of:'amount:per sandwich'},{option:'B',value:6}]}},
+{text:'Homemade is cheaper: \u00a36 per week vs \u00a312.50 per week for the canteen',correct:true,claim:{winner:'B',figures:[{option:'B',value:6},{option:'A',value:12.5}]}},
 {text:'They cost the same per week',correct:false,claim:{winner:'equal',figures:[]}},
 {text:'The canteen saves \u00a36.50 per week',correct:false,claim:{winner:'A',figures:[{option:null,value:6.5,of:'difference'}]}}
 ],
@@ -1008,8 +1008,8 @@ scenario:'Two taxi companies quote for a trip from school to the train station. 
 optionA:{label:'Quick Cabs',details:[{key:'Fixed fare',value:'\u00a312'}]},
 optionB:{label:'City Taxis',details:[{key:'Base fare',value:'\u00a33'},{key:'Per mile',value:'\u00a32'},{key:'Distance',value:'5 miles'}]},
 conclusions:[
-{text:'Quick Cabs is cheaper \u2014 \u00a312 vs \u00a313 for City Taxis',correct:true,claim:{winner:'A',figures:[{option:'A',value:12},{option:'B',value:13}]}},
-{text:'City Taxis is cheaper \u2014 its \u00a33 base fare is lower than \u00a312',correct:false,claim:{winner:'B',figures:[{option:'B',value:3,of:'amount:base fare'},{option:'A',value:12}]}},
+{text:'Quick Cabs is cheaper: \u00a312 vs \u00a313 for City Taxis',correct:true,claim:{winner:'A',figures:[{option:'A',value:12},{option:'B',value:13}]}},
+{text:'City Taxis is cheaper: its \u00a33 base fare is lower than \u00a312',correct:false,claim:{winner:'B',figures:[{option:'B',value:3,of:'amount:base fare'},{option:'A',value:12}]}},
 {text:'They cost the same',correct:false,claim:{winner:'equal',figures:[]}},
 {text:'City Taxis is cheaper at \u00a310',correct:false,claim:{winner:'B',figures:[{option:'B',value:10}]}}
 ],
@@ -1021,10 +1021,10 @@ scenario:'A student needs a calculator for GCSE exams. Two shops have the same m
 optionA:{label:'Online Store',details:[{key:'Price',value:'\u00a318.50'},{key:'Delivery',value:'\u00a33.99'}]},
 optionB:{label:'High Street Shop',details:[{key:'Price',value:'\u00a323.00'},{key:'Delivery',value:'N/A (collect)'}]},
 conclusions:[
-{text:'The online store is cheaper \u2014 \u00a322.49 vs \u00a323.00',correct:true,claim:{winner:'A',figures:[{option:'A',value:22.49},{option:'B',value:23.0}]}},
+{text:'The online store is cheaper: \u00a322.49 vs \u00a323.00',correct:true,claim:{winner:'A',figures:[{option:'A',value:22.49},{option:'B',value:23.0}]}},
 {text:'The high street shop is cheaper because there is no delivery',correct:false,claim:{winner:'B',figures:[]}},
 {text:'They cost the same',correct:false,claim:{winner:'equal',figures:[]}},
-{text:'The online store costs less \u2014 \u00a318.50 vs \u00a323.00 at the high street shop',correct:false,claim:{winner:'A',figures:[{option:'A',value:18.5},{option:'B',value:23.0}]}}
+{text:'The online store costs less: \u00a318.50 vs \u00a323.00 at the high street shop',correct:false,claim:{winner:'A',figures:[{option:'A',value:18.5},{option:'B',value:23.0}]}}
 ],
 explanation:'Online: \u00a318.50 + \u00a33.99 = \u00a322.49. High street: \u00a323.00. The online store is 51p cheaper.'},
 
@@ -1034,8 +1034,8 @@ scenario:'Two cinemas show the same film. A group of 4 friends want to go. The f
 optionA:{label:'Cineworld',details:[{key:'Adult ticket',value:'\u00a311 each'}]},
 optionB:{label:'Vue',details:[{key:'Group deal',value:'\u00a340 for up to 4'}]},
 conclusions:[
-{text:'Cineworld is cheaper \u2014 \u00a344 vs \u00a340 for Vue',correct:false,claim:{winner:'A',figures:[{option:'A',value:44},{option:'B',value:40}]}},
-{text:'Vue is cheaper \u2014 \u00a340 vs \u00a344 for Cineworld',correct:true,claim:{winner:'B',figures:[{option:'B',value:40},{option:'A',value:44}]}},
+{text:'Cineworld is cheaper: \u00a344 vs \u00a340 for Vue',correct:false,claim:{winner:'A',figures:[{option:'A',value:44},{option:'B',value:40}]}},
+{text:'Vue is cheaper: \u00a340 vs \u00a344 for Cineworld',correct:true,claim:{winner:'B',figures:[{option:'B',value:40},{option:'A',value:44}]}},
 {text:'They cost the same for 4 people',correct:false,claim:{winner:'equal',figures:[{option:null,value:4,of:'given'}]}},
 {text:'Cineworld is cheaper per person',correct:false,claim:{winner:'A',figures:[]}}
 ],
@@ -1048,8 +1048,8 @@ scenario:'A new game costs \u00a345 from the shop. An online marketplace has it 
 optionA:{label:'Shop',details:[{key:'Game price',value:'\u00a345'},{key:'Includes',value:'Protective case'}]},
 optionB:{label:'Online',details:[{key:'Game price',value:'\u00a338'},{key:'Delivery',value:'\u00a34.99'},{key:'Case',value:'\u00a33'}]},
 conclusions:[
-{text:'The online deal is cheaper overall \u2014 \u00a338 vs \u00a345 for the shop',correct:false,claim:{winner:'B',figures:[{option:'B',value:38},{option:'A',value:45}]}},
-{text:'The shop is cheaper overall \u2014 \u00a345 vs \u00a345.99 for online',correct:true,claim:{winner:'A',figures:[{option:'A',value:45},{option:'B',value:45.99}]}},
+{text:'The online deal is cheaper overall: \u00a338 vs \u00a345 for the shop',correct:false,claim:{winner:'B',figures:[{option:'B',value:38},{option:'A',value:45}]}},
+{text:'The shop is cheaper overall: \u00a345 vs \u00a345.99 for online',correct:true,claim:{winner:'A',figures:[{option:'A',value:45},{option:'B',value:45.99}]}},
 {text:'They cost the same',correct:false,claim:{winner:'equal',figures:[]}},
 {text:'Online saves \u00a37',correct:false,claim:{winner:'B',figures:[{option:null,value:7,of:'difference'}]}}
 ],
@@ -1061,8 +1061,8 @@ scenario:'A mobile top-up deal offers 500 minutes for \u00a310. But calls to non
 optionA:{label:'Top-Up Deal',details:[{key:'Cost',value:'\u00a310'},{key:'Minutes',value:'500'},{key:'Non-network',value:'20p/min extra'}]},
 optionB:{label:'Unlimited Plan',details:[{key:'Cost',value:'\u00a315'},{key:'Minutes',value:'Unlimited'}]},
 conclusions:[
-{text:'The top-up deal is cheaper \u2014 just \u00a310 vs \u00a315 for the unlimited plan',correct:false,claim:{winner:'A',figures:[{option:'A',value:10,of:'amount:cost'},{option:'B',value:15}]}},
-{text:'The unlimited plan is cheaper \u2014 \u00a315 vs \u00a330 for the top-up deal',correct:true,claim:{winner:'B',figures:[{option:'B',value:15},{option:'A',value:30}]}},
+{text:'The top-up deal is cheaper: just \u00a310 vs \u00a315 for the unlimited plan',correct:false,claim:{winner:'A',figures:[{option:'A',value:10,of:'amount:cost'},{option:'B',value:15}]}},
+{text:'The unlimited plan is cheaper: \u00a315 vs \u00a330 for the top-up deal',correct:true,claim:{winner:'B',figures:[{option:'B',value:15},{option:'A',value:30}]}},
 {text:'They cost the same',correct:false,claim:{winner:'equal',figures:[]}},
 {text:'The top-up deal costs \u00a312 in total',correct:false,claim:{winner:'A',figures:[{option:'A',value:12}]}}
 ],
@@ -1074,8 +1074,8 @@ scenario:'A \u201cfree delivery\u201d website sells a hoodie for \u00a325 but ch
 optionA:{label:'Website',details:[{key:'Hoodie',value:'\u00a325'},{key:'Service fee',value:'\u00a33.50'},{key:'Delivery',value:'Free'}]},
 optionB:{label:'Shop',details:[{key:'Hoodie',value:'\u00a327'},{key:'Extra fees',value:'None'}]},
 conclusions:[
-{text:'The website is cheaper in total \u2014 \u00a325 vs \u00a327 for the shop, with free delivery',correct:false,claim:{winner:'A',figures:[{option:'A',value:25},{option:'B',value:27}]}},
-{text:'The shop is cheaper \u2014 \u00a327 vs \u00a328.50 for the website',correct:true,claim:{winner:'B',figures:[{option:'B',value:27},{option:'A',value:28.5}]}},
+{text:'The website is cheaper in total: \u00a325 vs \u00a327 for the shop, with free delivery',correct:false,claim:{winner:'A',figures:[{option:'A',value:25},{option:'B',value:27}]}},
+{text:'The shop is cheaper: \u00a327 vs \u00a328.50 for the website',correct:true,claim:{winner:'B',figures:[{option:'B',value:27},{option:'A',value:28.5}]}},
 {text:'They cost the same',correct:false,claim:{winner:'equal',figures:[]}},
 {text:'The website saves \u00a32',correct:false,claim:{winner:'A',figures:[{option:null,value:2,of:'difference'}]}}
 ],
@@ -1087,9 +1087,9 @@ scenario:'School trip option A: coach hire \u00a3200 shared between 40 students.
 optionA:{label:'Coach',details:[{key:'Hire cost',value:'\u00a3200'},{key:'Students',value:'40'}]},
 optionB:{label:'Cars',details:[{key:'Petrol per car',value:'\u00a35'},{key:'Students per car',value:'4'},{key:'Parking per car',value:'\u00a38'}]},
 conclusions:[
-{text:'Cars are cheaper \u2014 \u00a35 per car vs \u00a3200 for a coach',correct:false,claim:{winner:'B',figures:[{option:'B',value:5},{option:'A',value:200}]}},
-{text:'The coach is cheaper \u2014 \u00a35 per student vs \u00a33.25 per student for the cars',correct:false,claim:{winner:'A',figures:[{option:'A',value:5},{option:'B',value:3.25}]}},
-{text:'Cars are cheaper \u2014 \u00a33.25 per student vs \u00a35 per student for the coach',correct:true,claim:{winner:'B',figures:[{option:'B',value:3.25},{option:'A',value:5}]}},
+{text:'Cars are cheaper: \u00a35 per car vs \u00a3200 for a coach',correct:false,claim:{winner:'B',figures:[{option:'B',value:5},{option:'A',value:200}]}},
+{text:'The coach is cheaper: \u00a35 per student vs \u00a33.25 per student for the cars',correct:false,claim:{winner:'A',figures:[{option:'A',value:5},{option:'B',value:3.25}]}},
+{text:'Cars are cheaper: \u00a33.25 per student vs \u00a35 per student for the coach',correct:true,claim:{winner:'B',figures:[{option:'B',value:3.25},{option:'A',value:5}]}},
 {text:'They cost the same per student',correct:false,claim:{winner:'equal',figures:[]}}
 ],
 explanation:'Coach: \u00a3200 \u00f7 40 = \u00a35 per student. Cars: 40 \u00f7 4 = 10 cars needed. Total: 10 \u00d7 (\u00a35 + \u00a38) = 10 \u00d7 \u00a313 = \u00a3130. Per student: \u00a3130 \u00f7 40 = \u00a33.25.'},
@@ -1101,7 +1101,7 @@ optionA:{label:'Deal Store',details:[{key:'Headphones',value:'\u00a320'},{key:'W
 optionB:{label:'Other Store',details:[{key:'Headphones',value:'\u00a326'},{key:'Warranty',value:'Included'}]},
 conclusions:[
 {text:'The deal store is cheaper at \u00a320',correct:false,claim:{winner:'A',figures:[{option:'A',value:20}]}},
-{text:'The deal store is cheaper overall \u2014 \u00a324.99 vs \u00a326',correct:true,claim:{winner:'A',figures:[{option:'A',value:24.99},{option:'B',value:26}]}},
+{text:'The deal store is cheaper overall: \u00a324.99 vs \u00a326',correct:true,claim:{winner:'A',figures:[{option:'A',value:24.99},{option:'B',value:26}]}},
 {text:'The other store is cheaper, as its \u00a326 includes the warranty',correct:false,claim:{winner:'B',figures:[{option:'B',value:26}]}},
 {text:'They cost the same',correct:false,claim:{winner:'equal',figures:[]}}
 ],
@@ -1114,8 +1114,8 @@ scenario:'Two bags of rice at the supermarket. Bag A: 2 kg for \u00a33.00. Bag B
 optionA:{label:'Bag A',details:[{key:'Weight',value:'2 kg'},{key:'Price',value:'\u00a33.00'}]},
 optionB:{label:'Bag B',details:[{key:'Weight',value:'5 kg'},{key:'Price',value:'\u00a36.50'}]},
 conclusions:[
-{text:'Bag A is better value \u2014 \u00a31.50/kg vs \u00a31.30/kg for Bag B',correct:false,claim:{winner:'A',figures:[{option:'A',value:1.5},{option:'B',value:1.3}]}},
-{text:'Bag B is better value \u2014 \u00a31.30/kg vs \u00a31.50/kg for Bag A',correct:true,claim:{winner:'B',figures:[{option:'B',value:1.3},{option:'A',value:1.5}]}},
+{text:'Bag A is better value: \u00a31.50/kg vs \u00a31.30/kg for Bag B',correct:false,claim:{winner:'A',figures:[{option:'A',value:1.5},{option:'B',value:1.3}]}},
+{text:'Bag B is better value: \u00a31.30/kg vs \u00a31.50/kg for Bag A',correct:true,claim:{winner:'B',figures:[{option:'B',value:1.3},{option:'A',value:1.5}]}},
 {text:'They cost the same per kg',correct:false,claim:{winner:'equal',figures:[]}},
 {text:'Bag A is better because it costs less overall',correct:false,claim:{winner:'A',figures:[]}}
 ],
@@ -1127,8 +1127,8 @@ scenario:'Two packs of felt-tip pens. Pack A: 12 pens for \u00a33.60. Pack B: 20
 optionA:{label:'Pack A',details:[{key:'Pens',value:'12'},{key:'Price',value:'\u00a33.60'}]},
 optionB:{label:'Pack B',details:[{key:'Pens',value:'20'},{key:'Price',value:'\u00a35.00'}]},
 conclusions:[
-{text:'Pack A is better value \u2014 30p per pen vs 25p per pen for Pack B',correct:false,claim:{winner:'A',figures:[{option:'A',value:30},{option:'B',value:25}]}},
-{text:'Pack B is better value \u2014 25p per pen vs 30p per pen for Pack A',correct:true,claim:{winner:'B',figures:[{option:'B',value:25},{option:'A',value:30}]}},
+{text:'Pack A is better value: 30p per pen vs 25p per pen for Pack B',correct:false,claim:{winner:'A',figures:[{option:'A',value:30},{option:'B',value:25}]}},
+{text:'Pack B is better value: 25p per pen vs 30p per pen for Pack A',correct:true,claim:{winner:'B',figures:[{option:'B',value:25},{option:'A',value:30}]}},
 {text:'They cost the same per pen',correct:false,claim:{winner:'equal',figures:[]}},
 {text:'Pack A is better because it costs less',correct:false,claim:{winner:'A',figures:[]}}
 ],
@@ -1140,7 +1140,7 @@ scenario:'Two part-time jobs for a student. Job A pays \u00a354 for a 6-hour shi
 optionA:{label:'Job A',details:[{key:'Pay',value:'\u00a354'},{key:'Hours',value:'6'}]},
 optionB:{label:'Job B',details:[{key:'Pay',value:'\u00a380'},{key:'Hours',value:'9'}]},
 conclusions:[
-{text:'Job A pays better per hour \u2014 \u00a39/hour vs \u00a38.89/hour for Job B',correct:true,claim:{winner:'A',figures:[{option:'A',value:9},{option:'B',value:8.89}]}},
+{text:'Job A pays better per hour: \u00a39/hour vs \u00a38.89/hour for Job B',correct:true,claim:{winner:'A',figures:[{option:'A',value:9},{option:'B',value:8.89}]}},
 {text:'Job B pays better per hour, because \u00a380 is more than \u00a354 for Job A',correct:false,claim:{winner:'B',figures:[{option:'B',value:80,of:'total'},{option:'A',value:54,of:'total'}]}},
 {text:'They pay the same hourly rate',correct:false,claim:{winner:'equal',figures:[]}},
 {text:'Job B pays \u00a310/hour',correct:false,claim:{winner:'B',figures:[{option:'B',value:10}]}}
@@ -1153,8 +1153,8 @@ scenario:'Two bottles of shampoo. Bottle A: 300 ml for \u00a32.40. Bottle B: 500
 optionA:{label:'Bottle A',details:[{key:'Volume',value:'300 ml'},{key:'Price',value:'\u00a32.40'}]},
 optionB:{label:'Bottle B',details:[{key:'Volume',value:'500 ml'},{key:'Price',value:'\u00a33.50'}]},
 conclusions:[
-{text:'Bottle A is cheaper per ml \u2014 0.8p/ml vs 0.7p/ml for Bottle B',correct:false,claim:{winner:'A',figures:[{option:'A',value:0.8},{option:'B',value:0.7}]}},
-{text:'Bottle B is better value \u2014 0.7p/ml vs 0.8p/ml for Bottle A',correct:true,claim:{winner:'B',figures:[{option:'B',value:0.7},{option:'A',value:0.8}]}},
+{text:'Bottle A is cheaper per ml: 0.8p/ml vs 0.7p/ml for Bottle B',correct:false,claim:{winner:'A',figures:[{option:'A',value:0.8},{option:'B',value:0.7}]}},
+{text:'Bottle B is better value: 0.7p/ml vs 0.8p/ml for Bottle A',correct:true,claim:{winner:'B',figures:[{option:'B',value:0.7},{option:'A',value:0.8}]}},
 {text:'They cost the same per ml',correct:false,claim:{winner:'equal',figures:[]}},
 {text:'Bottle A is better because it costs less in total',correct:false,claim:{winner:'A',figures:[]}}
 ],
@@ -1166,8 +1166,8 @@ scenario:'Two car parks near school. Car Park A charges \u00a36 for 4 hours. Car
 optionA:{label:'Car Park A',details:[{key:'Cost',value:'\u00a36'},{key:'Hours',value:'4'}]},
 optionB:{label:'Car Park B',details:[{key:'Cost',value:'\u00a38'},{key:'Hours',value:'6'}]},
 conclusions:[
-{text:'Car Park A is cheaper per hour \u2014 \u00a31.50/hour vs \u00a31.33/hour for Car Park B',correct:false,claim:{winner:'A',figures:[{option:'A',value:1.5},{option:'B',value:1.33}]}},
-{text:'Car Park B is cheaper per hour \u2014 \u00a31.33/hour vs \u00a31.50/hour for Car Park A',correct:true,claim:{winner:'B',figures:[{option:'B',value:1.33},{option:'A',value:1.5}]}},
+{text:'Car Park A is cheaper per hour: \u00a31.50/hour vs \u00a31.33/hour for Car Park B',correct:false,claim:{winner:'A',figures:[{option:'A',value:1.5},{option:'B',value:1.33}]}},
+{text:'Car Park B is cheaper per hour: \u00a31.33/hour vs \u00a31.50/hour for Car Park A',correct:true,claim:{winner:'B',figures:[{option:'B',value:1.33},{option:'A',value:1.5}]}},
 {text:'They cost the same per hour',correct:false,claim:{winner:'equal',figures:[]}},
 {text:'Car Park A is better because it costs less overall',correct:false,claim:{winner:'A',figures:[]}}
 ],
