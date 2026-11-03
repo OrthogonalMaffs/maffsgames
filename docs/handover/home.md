@@ -14,7 +14,7 @@
 
 ## 2026-11-03 (home): NEW-AND-UPDATED
 
-Agent: Codex. Worktree: /home/maffs/mg-new-and-updated. Branch: codex/new-and-updated. Base ffcd9a9b includes DASH-MINUS #646; claim commit 75dcee63; implementation 6ae4421e; previous STOP record a21f0f3c. Resumed under Jon's 3 Nov verifier Amendment 1: one count-condition line now accepts at least one portal card; all exact-copy/seven checks unchanged. Next: full check-changed.py, push and PR, stop at green Gate for Project Claude review and Jon's merge.
+Agent: Codex. Worktree: /home/maffs/mg-new-and-updated. Branch: codex/new-and-updated. Base ffcd9a9b includes DASH-MINUS #646; claim commit 75dcee63; implementation 6ae4421e; amendment b995f2d9; previous STOP record a21f0f3c. Checked locally. Next: push and PR, stop at green Gate for Project Claude review and Jon's merge.
 
 Implemented: cmpNew derives its cards from applyBadges(), one per slug, newest first with New then title ties, cap 12; evergreen heading/note and new-and-updated analytics label. Badge dates/rules, level cards, filter and compact behaviour unchanged. New ci-line verifier reads level-card metadata independently and stubs the clock only in routed copies. Section-click test also fixes its test clock so generated cards remain testable after the current badges expire.
 
@@ -22,7 +22,11 @@ Targeted checks: new verifier passes on 3 Nov (14 live, 12 displayed), 13 Nov (1
 
 Full check-changed.py selected 56 checks (12 serial heavy, 44 light), seven standard CI deferrals. At STOP: 44 passed, one failed, 11 unfinished. The failing Circle Theorem Spotter verifier's check_copies() at line 513 hard-codes portal card count 2; the removed hand card leaves its canonical GCSE card alone. Game and level card are unchanged. This is understood but its fix is outside EXACT CHANGE; no verifier/game/Gate file changed. Registered runner PID 320924 stopped through end-task.py's stop_registered(), so the overall check has no final exit status. Log .claude/bg-1793715256421.log retained; new verifier and section clicks both passed within this run too. Branch remains local; no push, PR, merge or cleanup.
 
-Record: agent Codex; wall n/a (initial contract-receipt timestamp unavailable); review cycles 0; amendments 1; usage n/a.
+Resumed under Jon's 3 Nov verifier Amendment 1 (saved verbatim beside the earlier wait ruling): only check_copies()'s condition changes to require at least one portal card. Reason: the second card was the removed hand copy; load-built cards have no stable static count. Every card must still match CARD and none may say seven. Direct verifier PASS: 55 questions, 44 calculation questions independently solved, 10 tangent figures, all 15 plants caught. Ad hoc probes: zero cards rejected; one and three exact copies accepted; wrong second copy and seven rejected. One-line-only diff confirmed.
+
+Complete check-changed.py after amendment: 56/56 passed in 631s, exit 0, 12 heavy serial and 44 light; seven standard CI deferrals listed above. Summary: "All selected checks passed. Push, and CI runs the rest." Log .claude/bg-1793716436188.log, including CHECK_CHANGED_EXIT_STATUS=0. No Gate files changed; original badge/filter/compact implementation and level cards byte-identical to base outside the scoped builder.
+
+Record: agent Codex; wall n/a (initial contract-receipt timestamp unavailable); review cycles 0; amendments 2 (wait ruling and verifier Amendment 1); usage n/a.
 
 ## 2026-11-03 (home): TODO-TRIM
 
