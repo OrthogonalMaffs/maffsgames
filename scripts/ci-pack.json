@@ -31,6 +31,7 @@
   "Core Maths Paper 2C (every option marked against its key or accepted set; Jon's rulings on Q12 and Q35; a double-tap on Next answers nothing; Chromium)": "24",
   "Correlation or Coincidence (bank, graphs' r, labels before the answer, phone fit)": "71",
   "Curling Friction (every numerical key recomputed exactly from its own context, every option checked, every item marked in Chromium)": "74",
+  "Dash before a number (no em dash or spaced en dash directly before a number, a variable or a minus sign in student-facing text; planted faults)": "30",
   "Decimal Detective (Line-Up and Round Up keys recomputed, Place It start state, every answer marked in Chromium)": "57",
   "Differentiation Duel (every key and option differentiated again with SymPy, explanations checked, every option marked in Chromium)": "36",
   "Dimension Checker (every key and option checked by dimension algebra, worked steps recomputed, every item marked in Chromium)": "51",
