@@ -16,7 +16,7 @@ Recorded Jon's 3 Nov look approval for Pies and emptied the warning list. Primar
 
 Slip: relative roster patch landed in primary; stopped, then Jon's 3 Nov recovery moved only that sign-off to this worktree, passed the checker and restored a clean primary.
 
-Look sign-off check: 101 listed games, 0 warnings, 0 failures. Context-size check passed before this entry. No answer-bearing change. No SR decision needed; SR-27 exception does not apply. Contract STOP IF conditions not hit. Review cycles 0; recovery ruling 1. Record follows at review hand-off or STOP.
+Look sign-off check: 101 listed games, 0 warnings, 0 failures. Context-size check passed. Full check-changed.py: 149/149 in 478s, exit 0 (5 heavy serial, 144 light); 71 indirect heavy roster checks and seven standard checks deferred to CI. Log: .claude/bg-1793708922180.log. Implementation: 494f7055. No answer-bearing change. No SR decision needed; SR-27 exception does not apply. Contract STOP IF conditions not hit. Review cycles 0; recovery ruling 1. Record follows at Gate green.
 
 ## 2026-11-02 (home): LOOK-STAGE
 
