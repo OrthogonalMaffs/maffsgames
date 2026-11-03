@@ -3209,3 +3209,31 @@ fraction in `MaffsFractionInput` (Pies moved on 3 Nov), and `scripts/check-fract
 `the-6-ps/` that builds fraction boxes of its own. It warns first (§7.8.4) through the shrink-only `scripts/fraction-input-warn.json`,
 seeded with the two pages that need a whole-number box for mixed numbers, which the shared input does not have yet: The 6 P's and
 How Many Parts?. The follow-up gives it that box and moves both.
+
+## CLOUD-LEAN: the cloud lane's rules, and main's run in one line (Jon, 2 and 3 Nov 2026)
+
+The reasons for AGENTS.md's CLOUD-LEAN lines. Each was a ruling or a lesson that lived only in a handover or a chat, so
+every cloud session had to re-learn it.
+
+- **No local suite in the cloud.** "Run check-changed.py before pushing" was set for the home machine (§7.8, 4 Oct 2026),
+  where it saves CI runs. In the cloud container it takes about 70 minutes (two hours and unfinished on 2 Nov, when a
+  change selected all 229 checks) and always reports the same 25 known failures (the KaTeX CDN is blocked, WebKit is
+  missing) before CI runs the same checks without them. CI minutes are free (the repository is public), so the local run
+  was a slower, noisier copy of the Gate. Jon ruled it out for the cloud lane on 2 Nov; it stood as a handover note until
+  this contract. What remains by hand: the worst-case test where §7.8.4 needs it, and the selftest of any script the
+  change touches. The home lane keeps check-changed.py, and SR-27 still describes the home lane's verifier-only case.
+- **A fresh context is a new session.** `/clear` empties the conversation but keeps the session's container and the clone
+  it started with. On 3 Nov a session cleared with `/clear` reloaded Sunday 1 Nov's rules from its original checkout
+  (0925c2fb, before RULEBOOK merged) and failed the load test; a new session, cloned that day, passed it. So when Jon asks
+  for a fresh context, the cloud lane starts a new session from the handover.
+- **The identity check is WSL-only.** AGENTS.md's check for `Vector52F` was written for the WSL machine (§12, "WSL
+  retirement", GT-EXPLAIN), but cloud sessions load the same file. Cloud sessions commit as `Claude
+  <noreply@anthropic.com>` and always have (Jon, 3 Nov); the squash merge `merge-pr.py` makes lands on main as Vector52F
+  (for example 2a635bd, #642), so main's history carries Jon's identity either way.
+- **Main's run after a merge, in one line.** The rule "wait for main's full run and report it" (§12, "After merging", 5 Oct
+  2026) had no tool: every agent polled GitHub and read the job results itself, in every lane, after every merge.
+  `merge-pr.py` already held the reader and the definitions of finished and green (§7.8.3, (b)), so the watch reuses them
+  instead of being a second copy: `--watch-main [<sha>]` and `--watch` after a merge print one line, `GREEN`, `RED: <failed
+  jobs>`, `NOT FINISHED after <n>s` or `NO RUN FOUND`, and exit 0 only for green. The guard is not changed by it. Its
+  selftest covers all four outcomes, and a watch planted to trust the run's own status (green while a job still runs) is
+  caught.

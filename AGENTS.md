@@ -26,6 +26,7 @@ This is the single home for agent-neutral mechanics. Codex loads it directly; Cl
 ## WSL and git
 
 - Use WSL distro `maffs`, primary `/home/maffs/maffsgames`, venv `/home/maffs/.venvs/maffs`; no sandbox, never sudo. Confirm identity `Vector52F <262527784+Vector52F@users.noreply.github.com>`; report a missing/different identity before committing.
+- The identity check is WSL-only; the cloud lane commits as `Claude <noreply@anthropic.com>` (the squash merge lands on main as Vector52F). Reason: canon §12, CLOUD-LEAN.
 - Start each new task with these commands, substituting its task name; use `codex/` for Codex, `claude/` for Claude Code. Work only in that new worktree. Never pull or merge into the primary checkout or an existing task branch.
 
 ```sh
@@ -45,11 +46,12 @@ git -C ~/maffsgames worktree add -b codex/<task> ~/mg-<task> origin/main
 
 ## Checks, merge and cleanup
 
-- Before the first push, run `python -X utf8 scripts/check-changed.py`; SR-27's verifier-only exception applies. Report selected checks and CI deferrals. Cloud's temporary exception is in its handover. Queue details: `docs/rules/scripts.md`.
+- Before the first push, run `python -X utf8 scripts/check-changed.py`; SR-27's verifier-only exception applies. Report selected checks and CI deferrals. The cloud lane's rule is the next line. Queue details: `docs/rules/scripts.md`.
+- The cloud lane does not run check-changed.py. Before its first push it runs only the worst-case test where canon §7.8.4 requires it by hand, and the selftest of any script it changed; the PR's Gate is the check. The home lane keeps check-changed.py. Reason: canon §12, CLOUD-LEAN.
 - A check failing after your change may be fixed when its cause is understood and the fix stays in EXACT CHANGE's files. Stop if the same check still fails after your second fix, or its cause is unclear. Any other unexpected event: stop and report. Jon, 2 Nov; canon §12.
 - Merge only with `python -X utf8 scripts/merge-pr.py <number>`, unpiped; check its exit status before proceeding. No other merge route. It requires green Gate on the PR head and green main; an override needs Jon's written dated ruling. Detail: canon §7.8.3.
 - Shared tier stops at Gate green for Project Claude review and waits for Jon's “merge”. Small/Medium merge on green unless a contract or hold says otherwise. Definitions and review handling: `docs/agent-workflow.md`.
-- The merging agent waits for main's full `check-site` run and reports its result, naming failed/cancelled jobs and checks. Resolve red/cancelled main before new work. Either lane may rerun failed jobs once; report a rerun pass to cloud as a flake. Reference: canon §12.
+- The merging agent merges with `python -X utf8 scripts/merge-pr.py <n> --watch --wait 3600` and reports its last line. Resolve red/cancelled main before new work. Either lane may rerun failed jobs once; report a rerun pass to cloud as a flake. Reference: canon §12.
 - After merge and the main-run report, cleanup is authorised: run a temporary copy of origin/main's end-task script from the primary with the branch argument. It requires a merged PR, matching local/PR tips and a clean worktree. Report refusals without bypassing them. See canon §12.
 
 ```sh
@@ -71,6 +73,7 @@ python -X utf8 /tmp/maffs-end-task.py <branch>
 
 - Corrections arrive as numbered amendments to the in-flight contract (Jon, 30 Oct 2026). Save contracts verbatim in `docs/handover/contracts/` with a queue pointer; move to `docs/history/contracts/` on completion. Include contract, amendments and report in the PR. See workflow §3.4.
 - Commit and push at milestones; keep the branch handover current with done, next and discoveries. Context percentage never stops a task: only Jon can measure it and clear the session. Archives are history, not startup reading. Rationale: canon §12, RULEBOOK.
+- A fresh context is a new cloud session, never /clear: /clear keeps the session's original clone, so it reloads the rules of the day it started. Reason: canon §12, CLOUD-LEAN.
 - Handover entry format: every entry starts `## <yyyy-mm-dd> (<lane>): <TASK> ...`, newest first, so check-context-size.py can archive it. “Done” means merged and live, with review state separate. Archived bodies stay unchanged. Reason: canon §12, RULEBOOK.
 
 ### Changing agent mid-task
