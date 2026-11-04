@@ -6,7 +6,7 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
-- FRACTION-WHOLE: home/Codex, codex/fraction-whole, /home/maffs/mg-fraction-whole; contract docs/handover/contracts/2026-11-04-fraction-whole.md. Claims fraction-input.js and the-6-ps; checked locally. #660 created updates/cloud.md conflicts; awaiting Jon's branch-merge exception. Shared review hold.
+- FRACTION-WHOLE: home/Codex, codex/fraction-whole, /home/maffs/mg-fraction-whole, draft PR #662; contract docs/handover/contracts/2026-11-04-fraction-whole.md. Claims fraction-input.js and the-6-ps; checked locally. #660 created updates/cloud.md conflicts; awaiting Jon's branch-merge exception. Shared review hold.
 
 ## 2026-11-04 (home): FRACTION-WHOLE
 
@@ -25,6 +25,8 @@ Jon supplied the updates wording; added newest under November New in the existin
 Local checks complete: verify-possibly-maybe.py PASS (1,200 questions, 4,713 marking probes, 13 plants), verify-who-ate-all-the-pies.py PASS (1,442 probes, 14 plants), both unchanged, exit 0 each. Full check-changed.py 65/65 in 1078s, exit 0; 15 heavy serial, 50 light. Summary: "All selected checks passed. Push, and CI runs the rest." Log .claude/bg-1793814327449.log captures each command's exit and overall exit 0. CI deferrals: Stage exit, Level resolver in play parts 1/2 selected indirectly through fraction-input.js; seven standard deferrals (four page-load shards, first includes hang scan; bank extraction; ledger lint; leaderboard coverage). No checker weakened.
 
 STOP pending rulebook exception: cloud #660 merged while checks ran. git fetch plus read-only git merge-tree --write-tree --name-only HEAD origin/main (4f2b817a) confirms conflicts only in updates/index.html and docs/handover/cloud.md. Worktree is clean; no merge started. Asked Jon for an explicit exception to AGENTS.md's ban on merging into an existing task branch: preserve all updates and main's cloud handover, reapply only HOW-MANY-PARTS-FRACTION Queue clause. No answer yet. Next: push a draft with complete evidence, retain branch/worktree; after Jon's ruling resolve only those files, Gate, Shared review and Jon's merge. Final PR state tracked in its report. No merge or cleanup authorised.
+
+Pushed and opened draft PR #662: https://github.com/OrthogonalMaffs/maffsgames/pull/662 . Contract and signed Amendment 1 included verbatim; full report and phone table in body. Last commit before this pointer: 9a9f110f; implementation f7f157b5, updates a0b324c4. Stop pending the requested branch-merge exception; no Gate result can be obtained while conflicted. Retain /home/maffs/mg-fraction-whole and codex/fraction-whole. Final context-size check passes with home.md well below the warning band; no merge/cleanup.
 
 Record: agent Codex; wall n/a; review cycles 0; amendments 2 (pre-step extension and signed Amendment 1); usage n/a.
 
