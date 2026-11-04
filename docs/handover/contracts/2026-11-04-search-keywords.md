@@ -92,3 +92,17 @@ browser checks.
 - Baseline on the portal's visible card text: with the every-word rule alone, 7 of the 8 named queries already find
   their game; "nth term" is the one that needs keywords today. The dropped-keywords plant therefore drops
   sequence-solver's.
+
+## Amendment 1 (Project Claude, for Jon, 4 Nov 2026, verbatim)
+
+Rulings on #657 (Project Claude, for Jon, 4 Nov):
+1. verify-new-and-updated.py: yes, change it in this PR. Same bug class as the contract (a second copy of the
+   match rule), so better still: if the script already drives Chromium, have it call window.MaffsSearch.match in
+   the page instead of restating the rule, so the rule lives in one place. If it does not, use your rewrite.
+2. Keyword review: approved as drafted. No changes.
+3. Keep "resit" on Linear Equation Solver: resit lecturers teach exactly that content.
+4. The 6 P's on its pages record, the "No games match" fix in its own commit, and leaving out "year 6"/"ks2": all accepted.
+5. "pies" finding "pieces" and "angle" finding "triangle": accepted. Showing an extra result costs a teacher less than missing one.
+6. Spec-map mismatches and the possibly short banks: not in this PR. Copy both lists into docs/handover/cloud.md
+   under "For Project Claude to triage" and leave them.
+Then finish to a green Gate; Jon will say "merge".

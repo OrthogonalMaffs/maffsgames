@@ -117,10 +117,19 @@ def check_page(page, cards, today):
             ('all', 'statistics', '', True), ('all', 'all', 'pies', True),
             ('all', 'all', 'no-such-game-xyz', True)]:
         live_slugs = {c['slug'] for c in want}
-        selected = {c['slug'] for c in cards
+        # Whether a card matches the search is asked of the page's own MaffsSearch.match (the one search rule,
+        # schools/assets/search.js; contract SEARCH-KEYWORDS, Amendment 1), never restated here. It is asked card by
+        # card, the page's level cards aligned with the source cards read above, so level, topic and fresh still have
+        # to hold for the same copy of a game.
+        dom = page.evaluate("q => [...document.querySelectorAll('.game-card')].filter(c => !c.closest('#cmpNew'))"
+                            ".map(c => [c.getAttribute('href'), !q || window.MaffsSearch.match(c, q)])", search)
+        if [h for h, _ in dom] != [c['href'] for c in cards]:
+            fails.append('the page\'s level cards differ from the source cards (%d on the page, %d read)' % (len(dom), len(cards)))
+            continue
+        selected = {c['slug'] for c, (_, hit) in zip(cards, dom)
                     if (level == 'all' or level in c.get('data-levels', ''))
                     and (topic == 'all' or topic in c.get('data-topics', ''))
-                    and (not search or search in c['text'])
+                    and hit
                     and (not fresh or c['slug'] in live_slugs)}
         observed = page.evaluate("""s => {
             activeLevel=s.level; activeTopic=s.topic; freshOnly=s.fresh;
