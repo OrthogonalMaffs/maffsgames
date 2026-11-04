@@ -109,3 +109,21 @@ teacher score sheet.
 Record this amendment verbatim in the saved contract and the PR body.
 
 (No Amendment 2 reached the cloud session; Amendment 3 is recorded as received.)
+
+AMENDMENT 5 to PACK-GENERATOR (Jon, 4 Nov): a final code. Applies to every pack.
+- After the room's locks, each set has a final step, "The final padlock": use each of the set's lock answers exactly
+  once, with + - x and / only, NO brackets (normal order of operations applies), to make the set's target number.
+- Target per set, chosen by the generator from that set's answers: a whole number from 10 to 999; reachable by
+  exactly one expression (counting a+b and b+a, a*b and b*a, as the same); prefer targets whose expression uses
+  x or /; never one that is just the sum of the answers. Option --target 67: use 67 for every set if every set can
+  reach it under these rules, otherwise fail the build with the sets that cannot. Default: per-set targets.
+- Student pages: the target and the rules on the locks page, with a working box and an answer line for the
+  expression. Score sheet: a "Final" tick column before finishing time; a team finishes when the final padlock is
+  ticked. Answer key: each set's target and its one expression, worked with the order of operations shown; note
+  that the teacher accepts any expression that evaluates to the target under these rules.
+- Independent verification: recompute each target from its expression by a separate evaluator, and re-search all
+  expressions to confirm exactly one hits the target. Selftest: a planted target with two expressions, and one with
+  none, are each caught.
+Record this amendment verbatim in the saved contract and the PR body.
+
+(No Amendment 4 reached the cloud session; Amendment 5 is recorded as received.)

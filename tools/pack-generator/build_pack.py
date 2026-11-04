@@ -3,6 +3,7 @@
 
     python -X utf8 tools/pack-generator/build_pack.py kiln-disaster              # -> dist-packs/kiln-disaster-pack.pdf
     python -X utf8 tools/pack-generator/build_pack.py kiln-disaster --sets 7 --seed 1
+    python -X utf8 tools/pack-generator/build_pack.py kiln-disaster --target 67   # one final-padlock target for all
     python -X utf8 tools/pack-generator/build_pack.py --selftest                 # planted faults; builds no PDF
 
 Room-agnostic. Everything about a room comes from three places, none of them typed here:
@@ -51,6 +52,7 @@ sys.path.insert(0, str(SCRIPTS))
 sys.path.insert(0, str(HERE))
 
 import lockcheck                # noqa: E402  the independent recomputation, keyed by lock id
+import final as finalpad        # noqa: E402  the final padlock's targets (Amendment 5)
 import plant_common as pc       # noqa: E402
 
 MIN_PT = 11                     # no printed label smaller than this (contract STOP IF)
@@ -269,6 +271,38 @@ def choose(checker, valid, locks, n, seed):
     return [make_set(chr(ord("A") + i), p, locks) for i, p in enumerate(chosen)]
 
 
+def answers_of(checker, locks, s):
+    """The set's lock answers as numbers, in lock order: the final padlock's numbers. A lock with several accepted
+    answers cannot take part, so it stops the build."""
+    out = []
+    for l, v in zip(locks, s["vars"]):
+        a = v["answer"]
+        if isinstance(a, list) or isinstance(a, bool) or not isinstance(a, (int, float)):
+            raise BuildError("%s: the final padlock needs one number per lock, and this answer is %r" % (l["id"], a))
+        out.append(int(a) if float(a).is_integer() else a)
+    return tuple(out)
+
+
+def add_finals(checker, locks, sets, seed, target=None):
+    """Give every set its final padlock (Amendment 5), or BuildError naming the sets that have none."""
+    bad = []
+    for s in sets:
+        f, why = finalpad.choose(answers_of(checker, locks, s), seed, s["letter"], target)
+        if f is None:
+            bad.append("set %s (answers %s): %s" % (s["letter"], list(answers_of(checker, locks, s)), why))
+        s["final"] = f
+    if bad:
+        raise BuildError("the final padlock cannot be set:\n  " + "\n  ".join(bad))
+
+
+def verify_finals(checker, locks, sets):
+    """lockcheck's own evaluator and search on every set's printed target and expression."""
+    out = []
+    for s in sets:
+        out += lockcheck.final_problems(s["letter"], answers_of(checker, locks, s), s["final"])
+    return out
+
+
 def check_sets(checker, room_js, locks, sets):
     """Problems with a choice of sets: a joint draw that is not VALID, or a lock whose answer repeats across sets."""
     clues = checker.clue_strings(room_js)
@@ -352,6 +386,13 @@ table.score td.set { text-align: center; font-size: 15pt; font-weight: 800; }
 .box.big { width: 6mm; height: 6mm; }
 td.boxes { text-align: center; white-space: nowrap; }
 .rule { font-size: 9.5pt; margin-top: 2.5mm; }
+.final { border-top: 1.4pt solid #000; padding-top: 2.5mm; }
+.final h2 { margin-top: 0; }
+.final .target { font-size: 13pt; margin: 1.5mm 0; }
+.final .target b { font-size: 22pt; font-weight: 800; border: 1.6pt solid #000; padding: 0 3mm; margin-left: 2mm; }
+.final .work { height: 30mm; }
+.answerline { margin-top: 3mm; font-size: 12pt; font-weight: 600; }
+.answerline span { display: inline-block; width: 110mm; border-bottom: 0.8pt solid #000; }
 .goal { font-weight: 700; margin: 2mm 0 3mm; }
 .main { flex: 1 1 auto; height: 0; overflow: hidden; margin-bottom: 15mm; }
 .foot { position: absolute; left: 12mm; right: 12mm; bottom: 5mm; border-top: 0.4pt solid #000; padding-top: 1.2mm;
@@ -395,7 +436,7 @@ blockquote { margin: 0 0 2mm; padding: 2mm 4mm; border-left: 2pt solid #000; }
 .lock { margin-bottom: 4mm; }
 .lock h2 { margin-top: 0; }
 .lock .opens { font-size: 9.5pt; }
-.work { height: 58mm; border: 0.8pt solid #000; margin-top: 1.5mm;
+.work { height: 34mm; border: 0.8pt solid #000; margin-top: 1.5mm;
         background-image: linear-gradient(#bbb 0.3pt, transparent 0.3pt), linear-gradient(90deg, #bbb 0.3pt, transparent 0.3pt);
         background-size: 5mm 5mm; }
 table { border-collapse: collapse; width: 100%; font-size: 10pt; }
@@ -516,18 +557,21 @@ SCORE_ROWS = 8            # rows a score-sheet page holds; more sets flow onto a
 
 def score_sheet(locks, sets):
     """The score sheet's tables (Amendment 3), one per page: a row per set, its letter printed; a column group per lock
-    (Opened: one tick box; Wrong answers: WRONG_BOXES boxes); then finishing time, penalty and total time."""
+    (Opened: one tick box; Wrong answers: WRONG_BOXES boxes); the final padlock's tick (Amendment 5); then finishing
+    time, penalty and total time."""
     groups = "".join("<th colspan='2' data-lock='%s'>Lock %d<br><span class='wrong'>%s</span></th>" % (l["id"], i + 1, l["name"])
                      for i, l in enumerate(locks))
     subs = "".join("<th>Opened</th><th>Wrong answers</th>" for _ in locks)
-    cols = ("<colgroup><col style='width:auto'><col style='width:12mm'>%s<col style='width:22mm'><col style='width:20mm'>"
-            "<col style='width:20mm'></colgroup>" % "".join("<col style='width:15mm'><col style='width:%dmm'>"
+    cols = ("<colgroup><col style='width:auto'><col style='width:12mm'>%s<col style='width:16mm'><col style='width:22mm'>"
+            "<col style='width:20mm'><col style='width:20mm'></colgroup>" % "".join("<col style='width:15mm'><col style='width:%dmm'>"
                                                             % (WRONG_BOXES * 5.4 + 3) for _ in locks))
-    head = ("<tr><th rowspan='2'>Team name</th><th rowspan='2'>Set</th>%s<th rowspan='2'>Finishing time</th>"
+    head = ("<tr><th rowspan='2'>Team name</th><th rowspan='2'>Set</th>%s<th rowspan='2' data-final='1'>Final padlock</th>"
+            "<th rowspan='2'>Finishing time</th>"
             "<th rowspan='2'>Penalty (minutes)</th><th rowspan='2'>Total time</th></tr><tr>%s</tr>" % (groups, subs))
     tables = []
     for k in range(0, len(sets), SCORE_ROWS):
-        rows = "".join("<tr class='row' data-set='%s'><td></td><td class='set'>%s</td>%s<td></td><td></td><td></td></tr>"
+        rows = "".join("<tr class='row' data-set='%s'><td></td><td class='set'>%s</td>%s"
+                       "<td class='boxes'><span class='box big' data-box='final'></span></td><td></td><td></td><td></td></tr>"
                        % (s["letter"], s["letter"], "".join(
                            "<td class='boxes'><span class='box big' data-lock='%s' data-box='opened'></span></td>"
                            "<td class='boxes'>%s</td>" % (l["id"], "".join(
@@ -546,8 +590,12 @@ def check_score_sheet(tables, locks, sets):
         for lid in [l["id"] for l in locks]:
             if t.count("<th colspan='2' data-lock='%s'>" % lid) != 1:
                 out.append("lock %s does not have one column group" % lid)
+        if t.count("data-final='1'>Final padlock</th>") != 1:
+            out.append("the score sheet has no Final padlock column")
         for letter, row in re.findall(r"<tr class='row' data-set='([A-Z])'>(.*?)</tr>", t, re.S):
             seen.append(letter)
+            if row.count("data-box='final'") != 1:
+                out.append("set %s: %d Final padlock boxes" % (letter, row.count("data-box='final'")))
             for l in locks:
                 o = row.count("data-lock='%s' data-box='opened'" % l["id"])
                 w = row.count("data-lock='%s' data-box='wrong'" % l["id"])
@@ -602,9 +650,13 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
         i + 1, l["name"], esc(m.get("topic", "")), (" (about %d min)" % m["minutes"]) if m.get("minutes") else "")
         for i, (l, m) in enumerate(zip(locks, meta)))
     has_tokens = any("{{" in (room.get(k) or "") for k in ("hook", "brief", "stakes"))
+    step_values = [int(x.rsplit("= ", 1)[1]) for st in sets for x in st["final"]["steps"]]
+    final_reach = ("<p>The final padlock goes further than the locks: in this pack its targets run to %d and its "
+                   "working reaches %d.</p>" % (max(st["final"]["target"] for st in sets), max(step_values)))
     script = ("<blockquote><p>%s</p><p>%s</p><p>%s</p><p>Every team has a different set, so your numbers are not "
-              "your neighbours&rsquo;. Bring each answer to me as soon as you have it. Every wrong answer adds a "
-              "minute to your time. Lowest total time wins.</p></blockquote>" % (fill_a(room["hook"]),
+              "your neighbours&rsquo;. Open the locks, then the final padlock on your locks page. Bring each answer to "
+              "me as soon as you have it. Every wrong answer adds a minute to your time. Lowest total time wins."
+              "</p></blockquote>" % (fill_a(room["hook"]),
                                                                                 fill_a(room["brief"]),
                                                                                 fill_a(room["stakes"])))
     if has_tokens:
@@ -624,14 +676,18 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
         "<p>Use one timer for the whole class, counting up, and start it when every team has its set. A team brings "
         "each lock&rsquo;s answer to you as they go; check it against their set&rsquo;s row in the answer key. "
         "<b>Right:</b> tick that lock&rsquo;s Opened box on the score sheet. <b>Wrong:</b> check one of that "
-        "lock&rsquo;s wrong-answer boxes and say &ldquo;not yet&rdquo;, with no explanation.</p>"
-        "<p>When a team&rsquo;s last lock is ticked, write the time on the timer as its finishing time. "
+        "lock&rsquo;s wrong-answer boxes and say &ldquo;not yet&rdquo;, with no explanation. <b>Final padlock:</b> the "
+        "team brings an expression; accept any that uses each of its answers once, with + &minus; &times; &divide; and "
+        "no brackets, and makes its set&rsquo;s target (the key shows the only one, up to order). Tick Final, or say "
+        "&ldquo;not yet&rdquo;.</p>"
+        "<p>When a team&rsquo;s final padlock is ticked, write the time on the timer as its finishing time. "
         "<b>Total time = finishing time + 1 minute per wrong answer. Lowest total time wins</b> (the certificate is "
         "at the back). The key also gives each lock&rsquo;s common wrong answer and the misconception behind it, for "
         "the debrief.</p>"
         "<h2>Timing</h2><p>How long to run it is your choice. The online room gives %d minutes%s.</p>"
         "<p class='online'><b>Play this room free online: %s</b></p>"
-        % (len(sets), letters[0], letters[-1], topics, ("<p>%s</p>" % first_note.group(1)) if first_note else "",
+        % (len(sets), letters[0], letters[-1], topics,
+           (("<p>%s</p>" % first_note.group(1)) if first_note else "") + final_reach,
            script, room.get("minutes", 15),
            ("; the locks&rsquo; own times add up to about %d minutes" % bank_minutes) if bank_minutes else "",
            esc(url)))
@@ -642,7 +698,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
     tables = score_sheet(locks, sets)
     for k, t in enumerate(tables):
         rule = ("<p class='rule'>Right: tick Opened. Wrong: check one box and say &ldquo;not yet&rdquo;. Finishing time: "
-                "the timer when the last lock is ticked. Penalty: 1 minute per checked box. "
+                "the timer when the final padlock is ticked. Penalty: 1 minute per checked box. "
                 "<b>Total time = finishing time + penalty. Lowest total time wins.</b></p>")
         pages.append(page("score", t + rule, "%s: score sheet" % title,
                           "One timer for the whole class, counting up" + (", page %d of %d" % (k + 1, len(tables))
@@ -650,21 +706,31 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
 
     # b. answer key: the table, then the worked solutions
     head = "".join("<th>%s<br><span class='wrong'>%s</span></th>" % (l["name"], esc(m.get("topic", "")))
-                   for l, m in zip(locks, meta))
-    rows = "".join("<tr><th>Set %s</th>%s</tr>" % (s["letter"], "".join(
+                   for l, m in zip(locks, meta)) + "<th>Final padlock<br><span class='wrong'>target: its one expression</span></th>"
+    rows = "".join("<tr><th style='white-space:nowrap'>Set %s</th>%s<td class='n'>%s <span class='wrong'>= %s</span></td></tr>" % (s["letter"], "".join(
         "<td class='n'>%s <span class='wrong'>(common wrong answer %s)</span></td>"
         % (js_string(v["answer"]), js_string(v["miss"]) if v.get("miss") is not None else "none")
-        for v in s["vars"])) for s in sets)
+        for v in s["vars"]), s["final"]["target"], s["final"]["expr"]) for s in sets)
     legend = "".join("<li><b>%s:</b> %s %s</li>" % (l["name"], l.get("missTitle", ""), l.get("missSays", ""))
                      for l in locks)
-    pages.append(page("key", "<table><tr><th></th>%s</tr>%s</table><h2>The common wrong answers</h2><ul>%s</ul>"
-                      % (head, rows, legend), "%s: answer key" % title, "Check each answer against its set's row"))
+    final_note = ("<h2>The final padlock</h2><p>Accept any expression that uses each of the set&rsquo;s answers "
+                  "exactly once, with + &minus; &times; &divide; only and no brackets, and makes the set&rsquo;s target "
+                  "under the order of operations (&times; and &divide; before + and &minus;). For each set the expression "
+                  "above is the only one, up to the order of its parts; the worked solutions show its working.</p>")
+    pages.append(page("key", "<table><tr><th></th>%s</tr>%s</table><h2>The common wrong answers</h2><ul>%s</ul>%s"
+                      % (head, rows, legend, final_note), "%s: answer key" % title, "Check each answer against its set's row"))
     sols = ""
     for s in sets:
         f = filler(locks, s)
-        sols += "<div class='solution'><b class='set'>Set %s</b><br>%s</div>" % (
-            s["letter"], "<br>".join("<b>%s:</b> %s" % (l["name"], f(l["solve"])) for l in locks))
-    pages.append(page("solutions", sols, "%s: worked solutions" % title, "One line per lock, for each set"))
+        fin = s["final"]
+        md = [x for x in fin["steps"] if "\u00d7" in x or "\u00f7" in x]
+        pm = [x for x in fin["steps"] if x not in md]
+        work = ("&times; and &divide; first: %s; then + and &minus;: %s" % ("; ".join(md), "; ".join(pm)) if md
+                else "+ and &minus; from left to right: %s" % "; ".join(pm))
+        sols += "<div class='solution'><b class='set'>Set %s</b><br>%s<br><b>Final padlock:</b> %s = %s. %s.</div>" % (
+            s["letter"], "<br>".join("<b>%s:</b> %s" % (l["name"], f(l["solve"])) for l in locks),
+            fin["expr"], fin["target"], work)
+    pages.append(page("solutions", sols, "%s: worked solutions" % title, "One line per lock and the final padlock, for each set"))
 
     # c. per set: cover, evidence (two pages of four), locks
     for s in sets:
@@ -707,7 +773,12 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
                      "<div class='work'></div></div>"
                      % (i + 1, l["name"], f(l["brief"]), esc(text_of((l.get("instrument") or {}).get("label", ""))))
                      for i, l in enumerate(locks))
-        pages.append(page("locks", lk, title, "The locks: working space", set_letter=L))
+        lk += ("<div class='final' data-final-set='%s'><h2>The final padlock</h2><p>Use each of your %d lock answers "
+               "exactly once, with +, &minus;, &times; and &divide; only and no brackets, to make the target. "
+               "&times; and &divide; come before + and &minus;.</p><div class='target'>Target:<b>%s</b></div>"
+               "<div class='work'></div><div class='answerline'>Your expression: <span></span> = %s</div></div>"
+               % (L, len(locks), s["final"]["target"], s["final"]["target"]))
+        pages.append(page("locks", lk, title, "The locks and the final padlock: working space", set_letter=L))
 
     # d. hint cards (one page for all sets unless a hint uses a set's figures) and the certificate
     hint_sets = sets if any("{{" in h for l in locks for h in l.get("hints", [])) else [None]
@@ -749,7 +820,7 @@ def ignored_by_git(path):
 
 # ---- the build -----------------------------------------------------------------------------------------------------
 
-def prepare(slug, n, seed, page):
+def prepare(slug, n, seed, page, target=None):
     checker = load_checker()
     cfg = load_config(slug)
     room, teach, room_js = read_room(page, slug)
@@ -758,10 +829,11 @@ def prepare(slug, n, seed, page):
     seed = cfg.get("seed", 1) if seed is None else seed
     valid, total = valid_picks(checker, room_js, locks)
     sets = choose(checker, valid, locks, n, seed)
+    add_finals(checker, locks, sets, seed, target)
     return checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed
 
 
-def build(slug, n, seed):
+def build(slug, n, seed, target=None):
     from playwright.sync_api import sync_playwright
     out = OUT_DIR / ("%s-pack.pdf" % slug)
     if not ignored_by_git(out):
@@ -772,7 +844,7 @@ def build(slug, n, seed):
         try:
             ctx = offline_context(browser)
             pg = ctx.new_page()
-            checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed = prepare(slug, n, seed, pg)
+            checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed = prepare(slug, n, seed, pg, target)
             print("%s: %d of %d joint draws VALID; %d sets chosen (seed %s):" % (slug, len(valid), total, n, seed))
             for s in sets:
                 print("  Set %s  variants %s  answers %s" % (s["letter"], list(s["pick"]),
@@ -783,6 +855,14 @@ def build(slug, n, seed):
                 raise BuildError("the chosen sets fail:\n  " + "\n  ".join(problems + vp))
             print("every joint draw VALID; every lock's answers distinct across the %d sets" % n)
             print("verification: %d values recomputed independently (%d answers), all agree" % (checked, answers))
+            fp = verify_finals(checker, locks, sets)
+            if fp:
+                raise BuildError("the final padlock fails its independent check:\n  " + "\n  ".join(fp))
+            print("final padlock (%s): every target re-evaluated from its expression and re-searched, exactly one "
+                  "expression each:" % ("--target %s" % target if target is not None else "per-set targets"))
+            for s in sets:
+                print("  Set %s  %s = %s%s" % (s["letter"], s["final"]["expr"], s["final"]["target"],
+                                               "" if s["final"]["mul_div"] else "  (no target with x or / in this set)"))
             built = datetime.date.today().isoformat()
             url = room_url(slug)
             if not LOGO.is_file():
@@ -851,7 +931,7 @@ def selftest():
             for slug in rooms:
                 checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed = prepare(slug, None, None, pg)
                 probs = (check_sets(checker, room_js, locks, sets) + verify_sets(locks, sets)[0]
-                         + check_score_sheet(score_sheet(locks, sets), locks, sets))
+                         + check_score_sheet(score_sheet(locks, sets), locks, sets) + verify_finals(checker, locks, sets))
                 print("%s: %d sets chosen from %d VALID draws; %s" % (slug, n, len(valid), "OK" if not probs else probs))
                 failures += probs
                 first = first or (checker, room_js, locks, sets, valid)
@@ -895,11 +975,36 @@ def selftest():
         tables[0] = pc.apply_plant(tables[0], row.group(0), "", name="a missing score-sheet row")
         return [x for x in check_score_sheet(tables, locks, sets) if "0 rows for set C" in x]
 
+    def plant_two_expressions():
+        # No Kiln set has a target two expressions reach, so the plant searches small whole numbers, in a fixed
+        # order, for three answers that do, and gives set A that target with one of its expressions.
+        for nums in itertools.combinations(range(2, 40), len(locks)):
+            for v, fs in sorted(finalpad.forms(nums).items()):
+                if v.denominator == 1 and finalpad.LOW <= v <= finalpad.HIGH and len(fs) > 1 and v != sum(nums) \
+                        and int(v) not in nums:
+                    w = finalpad.writing(sorted(fs)[0])
+                    if not w:
+                        continue
+                    planted = {"target": int(v), "expr": finalpad.show(w[0])}
+                    return [x for x in lockcheck.final_problems("A", nums, planted) if "expressions reach" in x]
+        raise pc.StalePlant("a target two expressions reach", "no small answers give one")
+
+    def plant_no_expression():
+        nums = answers_of(checker, locks, sets[0])
+        reach = finalpad.forms(nums)
+        t = next((t for t in range(finalpad.LOW, finalpad.HIGH + 1) if t not in reach), None)
+        if t is None:
+            raise pc.StalePlant("a target no expression reaches", "every target from 10 to 999 is reachable")
+        planted = dict(sets[0]["final"], target=t)
+        return [x for x in lockcheck.final_problems("A", nums, planted) if "0 expressions reach" in x]
+
     plants = (("a duplicate answer across sets", plant_duplicate),
               ("an invalid joint draw", plant_invalid),
               ("a wrong recomputed answer", plant_wrong_answer),
               ("a printed URL with no room page", plant_bad_url),
-              ("a missing score-sheet row", plant_missing_row))
+              ("a missing score-sheet row", plant_missing_row),
+              ("a final target two expressions reach", plant_two_expressions),
+              ("a final target no expression reaches", plant_no_expression))
     for name, fn in plants:
         found, err = [], None
         try:
@@ -928,6 +1033,7 @@ def main():
     ap.add_argument("room", nargs="?", help="the room's slug, e.g. kiln-disaster")
     ap.add_argument("--sets", type=int, help="how many sets (default: the room's config)")
     ap.add_argument("--seed", type=int, help="the selection seed (default: the room's config)")
+    ap.add_argument("--target", type=int, help="one final-padlock target for every set (default: one per set)")
     ap.add_argument("--selftest", action="store_true", help="planted faults; builds no PDF")
     a = ap.parse_args()
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -938,7 +1044,7 @@ def main():
             ap.error("name a room, e.g. kiln-disaster")
         if a.sets is not None and not 1 <= a.sets <= 26:
             ap.error("--sets is 1 to 26 (one letter a set)")
-        build(a.room, a.sets, a.seed)
+        build(a.room, a.sets, a.seed, a.target)
         return 0
     except BuildError as e:
         print("BUILD FAILED: %s" % e)

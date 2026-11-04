@@ -15,7 +15,8 @@ python -X utf8 tools/pack-generator/build_pack.py kiln-disaster
 ```
 
 It writes `dist-packs/kiln-disaster-pack.pdf` (34 pages, about 8 MB) and prints what it checked. The same command
-with the same seed gives the same sets every time; `--seed 2` gives a different choice, `--sets 5` fewer sets. Any
+with the same seed gives the same sets every time; `--seed 2` gives a different choice, `--sets 5` fewer sets,
+`--target 67` one final-padlock target for every set (the build fails, naming each set and why, if any cannot make it). Any
 failed check prints `BUILD FAILED` with the reason, and no PDF is written.
 
 Print it **at 100% (actual size), A4, double-sided off**. It is designed to print in black and white.
@@ -28,11 +29,17 @@ Print it **at 100% (actual size), A4, double-sided off**. It is designed to prin
    wrong-answer boxes; finishing time, penalty and total time. Checking is per lock as teams go (Amendment 3): right
    ticks Opened, wrong checks a box and gets "not yet"; total time = finishing time + 1 minute per wrong answer.
 3. **Answer key and worked solutions (pages 3-4):** every answer, common wrong answer and worked line was recomputed
-   by a separate method before the PDF was made, so a mismatch would have stopped the build. Spot-check one set
+   by a separate method before the PDF was made, so a mismatch would have stopped the build. The key also gives each
+   set's final-padlock target and its one expression; the worked solutions show its working.
+   **The final padlock (Amendment 5):** each set's lock answers, each once, with + - x / and no brackets, make the
+   set's target (10 to 999, exactly one expression up to the order of its parts, never the plain sum, never one of the
+   answers, worked in whole steps). Targets using x or / are preferred; a set with none gets an + and - target, which
+   the build prints. Its numbers go past the locks' (the teacher notes say how far). Spot-check one set
    against its cover and evidence pages anyway: that is what a teacher will do.
 4. **Each set (cover, evidence pages 1-2, locks page):** the set letter is in the top-right box of every page; the
    figures printed on each object (asset tag, cable label, installation sheet, calibration log, instruction card)
-   read clearly; the three red herrings (helpdesk ticket, emergency stop, firing screen) carry no number.
+   read clearly; the three red herrings (helpdesk ticket, emergency stop, firing screen) carry no number; the locks
+   page ends with the final padlock's target, its rules, a working box and the expression line.
 5. **The look of the labels on the art:** each label is fitted to its box at 11 pt or larger. If one sits badly on
    its picture, its box is `label_box` in `rooms/kiln-disaster/config.json` (in the image's own pixels).
 6. **Hint cards and certificate (last two pages).**
@@ -65,12 +72,13 @@ Then, in order, any failure stopping the build:
    shows its set letter, no red herring shows a digit, no `{{token}}` is left unfilled, every footer carries the
    logo and name under 12 mm high, and the one URL printed (on the covers and teacher notes) resolves to the room's
    own live page in this repo (host from `CNAME`), and the score sheet has exactly one row per set and one column
-   group per lock. The PDF's page count must equal the pages built.
+   group per lock, with its Final padlock column. Every final target is re-evaluated from its printed expression and
+   all expressions are re-searched, by `lockcheck.py`'s own evaluator. The PDF's page count must equal the pages built.
 
 `python -X utf8 tools/pack-generator/build_pack.py --selftest` (in CI as `scripts/test-pack-generator.py`) checks
-every room with a config and plants five faults, each of which must be caught: a duplicate answer across sets, an
-invalid joint draw, a wrong recomputed answer, a printed URL with no room page, a missing score-sheet row. It builds
-no PDF.
+every room with a config and plants seven faults, each of which must be caught: a duplicate answer across sets, an
+invalid joint draw, a wrong recomputed answer, a printed URL with no room page, a missing score-sheet row, a final
+target two expressions reach and one no expression reaches. It builds no PDF.
 
 ## Adding a room
 
