@@ -25,6 +25,10 @@ The rules (Jon, 5 Oct 2026):
   - og:title and twitter:title carry the title; og:description and twitter:description carry the
     description. Twitter tags are held wherever a page has them; og: tags are required.
   - /essentials/'s title and description are stated in games.json's "pages" and held the same way.
+  - Search keywords (contract SEARCH-KEYWORDS, Jon, 4 Nov 2026): every game has "keywords", at least 4, each lower
+    case, trimmed, 2-40 characters, none twice. Every card on the portal (a.game-card) and /essentials/ (a.card)
+    carries data-keywords="kw1 | kw2 | ..." from the record its link resolves to: the game's, or for a page that is not
+    a game (The 6 P's) its "pages" record's keywords. For on-site search only (schools/assets/search.js), never SEO.
 
 It fails when:
   - games.json's slugs differ from the roster's numbered rows (a withdrawn game, numbered "—", is
@@ -33,10 +37,12 @@ It fails when:
     or description says "Year 6" or "Starter";
   - a page's <title>, meta description, og:/twitter: copies differ from what games.json generates,
     a required tag is missing or doubled, or its canonical link is not its own URL exactly once;
+  - a game's keywords break a rule above; a card's data-keywords are missing, doubled or differ from games.json; a
+    card links to a slug with no games.json record (listed, never given invented keywords), or to a record with none;
   - a PENDING game's page already matches (stale: remove it from PENDING in the PR that applies it),
     or a PENDING slug is not a roster game.
 
-To change a title or description: edit data/games.json, run scripts/apply-meta.py, then this.
+To change a title, description or keywords: edit data/games.json, run scripts/apply-meta.py, then this.
 Never hand-edit a game's title. Stdlib only; under a second, plus a self-test on every run.
 """
 import argparse, html, json, pathlib, re, shutil, sys, tempfile
@@ -164,6 +170,11 @@ def expected(root):
             "slug": slug, "title": title_for(phrase, words),
             "description": description_for(practises, words),
             "canonical": SITE + "games/%s/" % slug}
+    for g in games:
+        errors += keyword_errors("games.json: %s" % g.get("slug"), g.get("keywords"))
+    for path, page in sorted(data.get("pages", {}).items()):
+        if "keywords" in page:
+            errors += keyword_errors("games.json: pages %s" % path, page["keywords"])
     for path, page in sorted(data.get("pages", {}).items()):
         out[path] = {"slug": None, "title": page["title"], "description": page["description"],
                      "canonical": SITE + path[:-len("index.html")]}
@@ -265,6 +276,132 @@ def page_errors(text, values):
 
 
 # ---------------------------------------------------------------------------
+# Search keywords on the cards (contract SEARCH-KEYWORDS, Jon, 4 Nov 2026)
+# ---------------------------------------------------------------------------
+# Each page's cards, by the class every card carries. A game appears in several portal sections: every copy is held.
+CARD_PAGES = {"index.html": "game-card", "essentials/index.html": "card"}
+KW_MIN, KW_CHARS, KW_SEP = 4, (2, 40), " | "
+OPEN_A = re.compile(r"<a\b[^>]*>", re.I)
+CLASS = re.compile(r'\bclass="([^"]*)"')
+DATA_KW = re.compile(r'\s+data-keywords="([^"]*)"')
+
+
+def keyword_errors(where, kws):
+    if kws is None:
+        return ["%s has no keywords" % where]
+    if not isinstance(kws, list) or not all(isinstance(k, str) for k in kws):
+        return ["%s: keywords must be a list of strings" % where]
+    errs, seen = [], set()
+    if len(kws) < KW_MIN:
+        errs.append("%s has %d keywords (fewer than %d)" % (where, len(kws), KW_MIN))
+    for k in kws:
+        if k != k.strip():
+            errs.append("%s: keyword %r is not trimmed" % (where, k))
+        if k != k.lower():
+            errs.append("%s: keyword %r is not lower case" % (where, k))
+        if not KW_CHARS[0] <= len(k.strip()) <= KW_CHARS[1]:
+            errs.append("%s: keyword %r is not %d-%d characters" % (where, k, KW_CHARS[0], KW_CHARS[1]))
+        if "|" in k:
+            errs.append("%s: keyword %r contains the separator |" % (where, k))
+        if k in seen:
+            errs.append("%s: duplicate keyword %r" % (where, k))
+        seen.add(k)
+    return errs
+
+
+def card_records(data):
+    """({link target: data-keywords value}, {every link target games.json has a record for}).
+    A game is "games/<slug>/"; a "pages" record is its folder ("the-6-ps/")."""
+    kw, known = {}, set()
+    for g in data.get("games", []):
+        t = "games/%s/" % g.get("slug")
+        known.add(t)
+        if isinstance(g.get("keywords"), list):
+            kw[t] = KW_SEP.join(g["keywords"])
+    for path, page in data.get("pages", {}).items():
+        t = path[:-len("index.html")]
+        known.add(t)
+        if isinstance(page.get("keywords"), list):
+            kw[t] = KW_SEP.join(page["keywords"])
+    return kw, known
+
+
+def card_target(href):
+    """The site path a card links to: no origin, query, fragment or leading slash ("games/split-it/", "the-6-ps/")."""
+    h = re.sub(r"^https?://maffsgames\.co\.uk", "", html.unescape(href))
+    h = re.sub(r"^(?:\./|/)+", "", re.split(r"[?#]", h)[0])
+    if h.endswith("index.html"):
+        h = h[:-len("index.html")]
+    return h if not h or h.endswith("/") else h + "/"
+
+
+def cards(text, cls):
+    """[(match of the opening tag, href)] for every <a> whose class list holds cls."""
+    out = []
+    for m in OPEN_A.finditer(text):
+        c = CLASS.search(m.group(0))
+        if c and cls in c.group(1).split():
+            h = HREF.search(m.group(0))
+            out.append((m, h.group(1) if h else ""))
+    return out
+
+
+def card_errors(path, text, cls, kw, known):
+    found = cards(text, cls)
+    errs = []
+    n = sum(1 for c in CLASS.findall(text) if cls in c.split())
+    if n != len(found):
+        errs.append("%s: %d elements have class %s, but %d are <a> cards this check can read" % (path, n, cls, len(found)))
+    if not found:
+        errs.append("%s: no %s cards found; the page changed shape and this check is blind" % (path, cls))
+    for m, href in found:
+        t = card_target(href)
+        vals = DATA_KW.findall(m.group(0))
+        if t not in known:
+            errs.append("%s: a card links to %s, which has no games.json record" % (path, href))
+        elif t not in kw:
+            errs.append("%s: a card links to %s, whose games.json record has no keywords" % (path, href))
+        elif not vals:
+            errs.append("%s: the card for %s has no data-keywords" % (path, t))
+        elif len(vals) > 1:
+            errs.append("%s: the card for %s has %d data-keywords" % (path, t, len(vals)))
+        elif html.unescape(vals[0]) != kw[t]:
+            errs.append("%s: the card for %s: data-keywords differ from games.json" % (path, t))
+    return errs
+
+
+def render_cards(text, cls, kw):
+    """The page with data-keywords set on every card from games.json; nothing else changes. Raises when a card links
+    to a target with no keywords (a person decides; keywords are never invented)."""
+    missing = sorted({href for _, href in cards(text, cls) if card_target(href) not in kw})
+    if missing:
+        raise ValueError("cards link to %s, with no games.json keywords" % ", ".join(missing))
+
+    def one(m):
+        tag = m.group(0)
+        c = CLASS.search(tag)
+        if not (c and cls in c.group(1).split()):
+            return tag
+        h = HREF.search(tag)
+        tag = DATA_KW.sub("", tag)
+        return tag[:-1] + ' data-keywords="%s">' % _esc(kw[card_target(h.group(1) if h else "")], True)
+    return OPEN_A.sub(one, text)
+
+
+def write_cards(root):
+    """Set data-keywords on every card page from games.json (apply-meta.py and the self-test). {path: new text}."""
+    kw, _ = card_records(load(root))
+    out = {}
+    for path, cls in CARD_PAGES.items():
+        p = root / path
+        old = p.read_text(encoding="utf-8")
+        new = render_cards(old, cls, kw)
+        if new != old:
+            out[path] = new
+    return out
+
+
+# ---------------------------------------------------------------------------
 # The check
 # ---------------------------------------------------------------------------
 
@@ -285,11 +422,18 @@ def check(root):
                 errors.append("%s: PENDING but already matches games.json (stale: remove it from PENDING)" % path)
             continue
         errors += ["%s: %s" % (path, e) for e in errs]
+    kw, known = card_records(load(root))
+    for path, cls in CARD_PAGES.items():
+        p = root / path
+        if not p.exists():
+            errors.append("%s: no such page" % path)
+            continue
+        errors += card_errors(path, p.read_text(encoding="utf-8"), cls, kw, known)
     return errors, reports
 
 
 def apply_all(root):
-    """Write every non-PENDING page from games.json (the self-test's copy of apply-meta.py)."""
+    """Write every non-PENDING page, and every card page's data-keywords, from games.json (the self-test's copy of apply-meta.py)."""
     exp, errors = expected(root)
     if errors:
         raise ValueError("; ".join(errors))
@@ -298,13 +442,15 @@ def apply_all(root):
             continue
         p = root / path
         p.write_text(render(p.read_text(encoding="utf-8"), values), encoding="utf-8", newline='')
+    for path, text in write_cards(root).items():
+        (root / path).write_text(text, encoding="utf-8", newline='')
 
 
 def selftest():
     """Copy what the check reads, write every page from games.json, then plant faults."""
     tmp = pathlib.Path(tempfile.mkdtemp(prefix="check-meta-"))
     try:
-        for rel in [ROSTER, DATA]:
+        for rel in [ROSTER, DATA] + list(CARD_PAGES):
             (tmp / rel).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy(BASE / rel, tmp / rel)
         exp, _ = expected(BASE)
@@ -313,7 +459,7 @@ def selftest():
             shutil.copy(BASE / path, tmp / path)
         pristine = {p: (tmp / p).read_text(encoding="utf-8") for p in list(exp) + [DATA]}
         apply_all(tmp)
-        applied = {p: (tmp / p).read_text(encoding="utf-8") for p in exp}
+        applied = {p: (tmp / p).read_text(encoding="utf-8") for p in set(exp) | set(CARD_PAGES)}
         errs, _ = check(tmp)
         if errs:
             return ["baseline after apply is not clean: %s" % errs[:3]]
@@ -329,6 +475,7 @@ def selftest():
             (tmp / DATA).write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8", newline='')
 
         game = "games/split-it/index.html"
+        kw0_slug = json.loads(pristine[DATA])["games"][0]["slug"]
         faults = [
             ("hand-edited title", lambda: edit(game, lambda t: re.sub(r"<title>.*?</title>", "<title>Split It — MaffsGames</title>", t, 1)),
              "games/split-it/index.html: title is"),
@@ -348,6 +495,29 @@ def selftest():
              "canonical is"),
             ("PHRASE NEEDED left in", lambda: data(lambda d: d["games"][0].update(search_phrase=PHRASE_NEEDED)),
              "no search_phrase"),
+            # search keywords (SEARCH-KEYWORDS): the rules on games.json, then the cards
+            ("a game with no keywords", lambda: data(lambda d: d["games"][0].pop("keywords")),
+             "%s has no keywords" % kw0_slug),
+            ("three keywords", lambda: data(lambda d: d["games"][0].update(keywords=d["games"][0]["keywords"][:3])),
+             "fewer than 4"),
+            ("an upper-case keyword", lambda: data(lambda d: d["games"][0].update(keywords=["Ratio"] + d["games"][0]["keywords"])),
+             "is not lower case"),
+            ("an untrimmed keyword", lambda: data(lambda d: d["games"][0].update(keywords=["ratio "] + d["games"][0]["keywords"])),
+             "is not trimmed"),
+            ("a keyword twice", lambda: data(lambda d: d["games"][0]["keywords"].append(d["games"][0]["keywords"][0])),
+             "duplicate keyword"),
+            ("a one-character keyword", lambda: data(lambda d: d["games"][0]["keywords"].append("x")),
+             "is not 2-40 characters"),
+            ("a 41-character keyword", lambda: data(lambda d: d["games"][0]["keywords"].append("x" * 41)),
+             "is not 2-40 characters"),
+            ("a card's data-keywords edited", lambda: edit("index.html", lambda t: t.replace('data-keywords="', 'data-keywords="x ', 1)),
+             "data-keywords differ from games.json"),
+            ("a card with no data-keywords", lambda: edit("essentials/index.html", lambda t: DATA_KW.sub("", t, count=1)),
+             "has no data-keywords"),
+            ("a card linking to a slug with no record", lambda: edit("index.html", lambda t: t.replace('href="games/split-it/', 'href="games/no-such-game/', 1)),
+             "games/no-such-game/?level=ks3, which has no games.json record"),
+            ("a page record a card links to, without keywords", lambda: data(lambda d: d["pages"]["the-6-ps/index.html"].pop("keywords")),
+             "the-6-ps/, whose games.json record has no keywords"),
         ]
         if pend:
             faults.append(("stale PENDING entry", lambda: (tmp / ("games/%s/index.html" % pend)).write_text(

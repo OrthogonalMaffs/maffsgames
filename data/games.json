@@ -12,539 +12,1853 @@
   {
    "slug": "sequence-solver",
    "search_phrase": "Sequences and nth Term",
-   "description": "Find the nth term of arithmetic and geometric sequences, then sigma notation and recurrence."
+   "description": "Find the nth term of arithmetic and geometric sequences, then sigma notation and recurrence.",
+   "keywords": [
+    "nth term",
+    "sequence",
+    "arithmetic sequence",
+    "geometric sequence",
+    "quadratic sequence",
+    "term-to-term",
+    "common difference",
+    "fibonacci",
+    "sigma notation",
+    "sum to infinity",
+    "arithmetic series",
+    "geometric series",
+    "recurrence relation",
+    "ks3",
+    "gcse",
+    "a level"
+   ]
   },
   {
    "slug": "estimation-golf",
    "search_phrase": "Estimation and Rounding",
-   "description": "Estimate answers by rounding: the closer you get, the further the ball goes."
+   "description": "Estimate answers by rounding: the closer you get, the further the ball goes.",
+   "keywords": [
+    "estimation",
+    "estimate",
+    "approximation",
+    "rounding",
+    "mental maths"
+   ]
   },
   {
    "slug": "estimation-engine",
    "search_phrase": "Estimating by Rounding",
-   "description": "Round each number to 1 significant figure, then work out the estimate and see how far it is from the exact answer."
+   "description": "Round each number to 1 significant figure, then work out the estimate and see how far it is from the exact answer.",
+   "keywords": [
+    "estimation",
+    "estimate",
+    "rounding",
+    "significant figures",
+    "1 significant figure",
+    "approximation",
+    "estimating calculations",
+    "foundation",
+    "gcse"
+   ]
   },
   {
    "slug": "factor-race",
    "search_phrase": "Finding Factors",
-   "description": "Two numbers, one tap: pick the one with more factors. Fast factor recall."
+   "description": "Two numbers, one tap: pick the one with more factors. Fast factor recall.",
+   "keywords": [
+    "factor",
+    "finding factors",
+    "factors of a number",
+    "number of factors",
+    "ks3"
+   ]
   },
   {
    "slug": "prime-factorisation",
    "search_phrase": "Prime Factorisation",
-   "description": "Build a number's prime factorisation by multiplying up from 1, one prime at a time."
+   "description": "Build a number's prime factorisation by multiplying up from 1, one prime at a time.",
+   "keywords": [
+    "prime factorisation",
+    "prime factor",
+    "product of prime factors",
+    "product of primes",
+    "prime number",
+    "ks3",
+    "gcse"
+   ]
   },
   {
    "slug": "prime-or-composite",
    "search_phrase": "Prime Numbers",
-   "description": "Sort numbers as prime or composite against the clock."
+   "description": "Sort numbers as prime or composite against the clock.",
+   "keywords": [
+    "prime",
+    "prime number",
+    "composite number",
+    "divisibility",
+    "factor",
+    "ks3",
+    "gcse"
+   ]
   },
   {
    "slug": "percentage-flip",
    "search_phrase": "Percentages of Amounts",
-   "description": "Find percentages of amounts, from 50% of 80 to harder percentages, in a quick card-flip game."
+   "description": "Find percentages of amounts, from 50% of 80 to harder percentages, in a quick card-flip game.",
+   "keywords": [
+    "percentage",
+    "percentage of an amount",
+    "finding percentages",
+    "non-calculator percentages",
+    "percent",
+    "ks3",
+    "gcse"
+   ]
   },
   {
    "slug": "fraction-equivalence",
    "search_phrase": "Equivalent Fractions",
-   "description": "Decide whether two fractions are equivalent, at speed, by cross-multiplying or simplifying."
+   "description": "Decide whether two fractions are equivalent, at speed, by cross-multiplying or simplifying.",
+   "keywords": [
+    "equivalent fraction",
+    "fraction",
+    "simplifying fractions",
+    "cross multiplication",
+    "comparing fractions",
+    "ks3",
+    "gcse"
+   ]
   },
   {
    "slug": "equatle",
    "search_phrase": "Equation Wordle",
-   "description": "Deduce a hidden equation from colour-coded clues, Wordle style. Number sense and reasoning."
+   "description": "Deduce a hidden equation from colour-coded clues, Wordle style. Number sense and reasoning.",
+   "keywords": [
+    "order of operations",
+    "bodmas",
+    "bidmas",
+    "mental arithmetic",
+    "arithmetic",
+    "four operations",
+    "number puzzle",
+    "reasoning",
+    "ks3",
+    "gcse"
+   ]
   },
   {
    "slug": "52dle",
    "search_phrase": "Daily Number Puzzle",
-   "description": "A daily number deduction puzzle: use the maths clues to find the hidden number."
+   "description": "A daily number deduction puzzle: use the maths clues to find the hidden number.",
+   "keywords": [
+    "number puzzle",
+    "daily puzzle",
+    "prime number",
+    "square number",
+    "fibonacci",
+    "mathematical constant",
+    "number properties",
+    "reasoning",
+    "ks3",
+    "gcse"
+   ]
   },
   {
    "slug": "constructions-lab",
    "search_phrase": "Constructions and Loci",
-   "description": "Bisect angles and lines, draw perpendiculars and loci, with a virtual compass and ruler."
+   "description": "Bisect angles and lines, draw perpendiculars and loci, with a virtual compass and ruler.",
+   "keywords": [
+    "construction",
+    "constructions and loci",
+    "locus",
+    "loci",
+    "perpendicular bisector",
+    "angle bisector",
+    "compass construction",
+    "ruler and compass",
+    "equilateral triangle",
+    "perpendicular from a point",
+    "ks3",
+    "gcse"
+   ]
   },
   {
    "slug": "split-it",
    "search_phrase": "Ratio",
-   "description": "Simplify ratios, find equivalents, share amounts in a ratio, scale recipes and use the unitary method."
+   "description": "Simplify ratios, find equivalents, share amounts in a ratio, scale recipes and use the unitary method.",
+   "keywords": [
+    "ratio",
+    "simplifying ratio",
+    "equivalent ratio",
+    "sharing in a ratio",
+    "dividing in a ratio",
+    "ratio and fraction",
+    "unitary method",
+    "scaling a recipe",
+    "direct proportion",
+    "ks3",
+    "gcse"
+   ]
   },
   {
    "slug": "word-problem-decoder",
    "search_phrase": "Word Problems",
-   "description": "Read a word problem and identify the maths it needs: the step before any calculation."
+   "description": "Read a word problem and identify the maths it needs: the step before any calculation.",
+   "keywords": [
+    "word problem",
+    "worded problem",
+    "problem solving",
+    "choosing a method",
+    "identifying the topic",
+    "mixed topic",
+    "ks3",
+    "gcse"
+   ]
   },
   {
    "slug": "equation-builder",
    "search_phrase": "Forming Equations",
-   "description": "Turn a word problem into an equation or formula by building it from tiles."
+   "description": "Turn a word problem into an equation or formula by building it from tiles.",
+   "keywords": [
+    "forming equations",
+    "forming expressions",
+    "writing a formula",
+    "word problem",
+    "worded problem",
+    "algebra",
+    "ks3",
+    "gcse",
+    "btec"
+   ]
   },
   {
    "slug": "spot-the-error",
    "search_phrase": "Errors in Word Problems",
-   "description": "Find the error in a worked word problem, then the misreading that caused it."
+   "description": "Find the error in a worked word problem, then the misreading that caused it.",
+   "keywords": [
+    "spot the error",
+    "error analysis",
+    "find the mistake",
+    "common mistake",
+    "misconception",
+    "word problem",
+    "checking working",
+    "mixed topic",
+    "ks3",
+    "gcse",
+    "btec"
+   ]
   },
   {
    "slug": "gradient-hunter",
    "search_phrase": "Gradient and Rate of Change",
-   "description": "Find the gradient of real-world graphs and say what the rate of change means."
+   "description": "Find the gradient of real-world graphs and say what the rate of change means.",
+   "keywords": [
+    "gradient",
+    "rate of change",
+    "average rate of change",
+    "gradient of a chord",
+    "chord",
+    "real-life graph",
+    "interpreting gradient",
+    "core maths",
+    "gcse",
+    "a level"
+   ]
   },
   {
    "slug": "truth-buster",
    "search_phrase": "Always, Sometimes or Never True",
-   "description": "Is it always true? Decide whether mathematical statements always hold, then see why."
+   "description": "Is it always true? Decide whether mathematical statements always hold, then see why.",
+   "keywords": [
+    "always sometimes never",
+    "always true",
+    "true or false",
+    "counterexample",
+    "mathematical reasoning",
+    "misconception",
+    "mathematical statement",
+    "ks3",
+    "gcse",
+    "a level"
+   ]
   },
   {
    "slug": "spot-the-muppet",
    "search_phrase": "Maths Misconceptions",
-   "description": "Spot who has the maths wrong and pick the right answer: misconceptions in number, algebra and statistics."
+   "description": "Spot who has the maths wrong and pick the right answer: misconceptions in number, algebra and statistics.",
+   "keywords": [
+    "misconception",
+    "common mistake",
+    "spot the mistake",
+    "error analysis",
+    "mathematical reasoning",
+    "mixed topic",
+    "ks3",
+    "gcse",
+    "core maths"
+   ]
   },
   {
    "slug": "terrible-advice",
    "search_phrase": "Financial Maths Mistakes",
-   "description": "Spot the maths mistakes in bad money advice: percentages, ratios and interest."
+   "description": "Spot the maths mistakes in bad money advice: percentages, ratios and interest.",
+   "keywords": [
+    "misconception",
+    "common mistake",
+    "spot the mistake",
+    "error analysis",
+    "mathematical reasoning",
+    "mixed topic",
+    "ks3",
+    "gcse",
+    "core maths"
+   ]
   },
   {
    "slug": "wrong-on-the-internet",
    "search_phrase": "Spot the Mistake",
-   "description": "Find the maths mistake in social media posts, polls and comment threads."
+   "description": "Find the maths mistake in social media posts, polls and comment threads.",
+   "keywords": [
+    "misconception",
+    "common mistake",
+    "spot the mistake",
+    "error analysis",
+    "mathematical reasoning",
+    "mixed topic",
+    "ks3",
+    "gcse",
+    "core maths"
+   ]
   },
   {
    "slug": "maths-court",
    "search_phrase": "Mathematical Reasoning",
-   "description": "Three arguments, one correct: rule on maths disputes by finding the argument that holds up."
+   "description": "Three arguments, one correct: rule on maths disputes by finding the argument that holds up.",
+   "keywords": [
+    "mathematical reasoning",
+    "reasoning",
+    "misconception",
+    "common mistake",
+    "comparing methods",
+    "evaluating arguments",
+    "mixed topic",
+    "ks3",
+    "gcse",
+    "core maths"
+   ]
   },
   {
    "slug": "expected-damage",
    "search_phrase": "Expected Value",
-   "description": "Use probability and expected value to choose the best option, not a guess."
+   "description": "Use probability and expected value to choose the best option, not a guess.",
+   "keywords": [
+    "expected value",
+    "expectation",
+    "probability",
+    "risk",
+    "decision making",
+    "comparing outcomes",
+    "ks3",
+    "gcse",
+    "core maths"
+   ]
   },
   {
    "slug": "negative-number-line",
    "search_phrase": "Negative Numbers",
-   "description": "Place, order and calculate with negative numbers on a number line from −10 to 10."
+   "description": "Place, order and calculate with negative numbers on a number line from −10 to 10.",
+   "keywords": [
+    "negative number",
+    "number line",
+    "directed number",
+    "ordering negative numbers",
+    "ordering numbers",
+    "calculating across zero",
+    "integer"
+   ]
   },
   {
    "slug": "think-of-a-number",
    "search_phrase": "Inverse Operations",
-   "description": "Solve 'I think of a number' puzzles by undoing each step with inverse operations."
+   "description": "Solve 'I think of a number' puzzles by undoing each step with inverse operations.",
+   "keywords": [
+    "inverse operation",
+    "think of a number",
+    "working backwards",
+    "reverse operations",
+    "solving equations",
+    "number puzzle"
+   ]
   },
   {
    "slug": "formula-plug-in",
    "search_phrase": "Substitution into Formulae",
-   "description": "Substitute values into formulae and work out the answer, from simple rules to area and speed."
+   "description": "Substitute values into formulae and work out the answer, from simple rules to area and speed.",
+   "keywords": [
+    "substitution",
+    "substituting into a formula",
+    "formula",
+    "area of a rectangle",
+    "area of a triangle",
+    "perimeter",
+    "volume of a cuboid",
+    "speed distance time",
+    "mean"
+   ]
   },
   {
    "slug": "decimal-detective",
    "search_phrase": "Ordering and Rounding Decimals",
-   "description": "Order decimals, round them and place them on a number line."
+   "description": "Order decimals, round them and place them on a number line.",
+   "keywords": [
+    "decimal",
+    "ordering decimals",
+    "rounding decimals",
+    "decimal place",
+    "rounding to the nearest whole number",
+    "number line",
+    "place value"
+   ]
   },
   {
    "slug": "four-quadrant-explorer",
    "search_phrase": "Four Quadrant Coordinates",
-   "description": "Plot points and read coordinates in all four quadrants, and complete shapes on the grid."
+   "description": "Plot points and read coordinates in all four quadrants, and complete shapes on the grid.",
+   "keywords": [
+    "coordinate",
+    "four quadrants",
+    "coordinate grid",
+    "plotting points",
+    "reading coordinates",
+    "negative coordinates",
+    "x and y axis"
+   ]
   },
   {
    "slug": "like-terms-collector",
    "search_phrase": "Collecting Like Terms",
-   "description": "Simplify expressions by collecting like terms, from fruit to letters to full algebra."
+   "description": "Simplify expressions by collecting like terms, from fruit to letters to full algebra.",
+   "keywords": [
+    "collecting like terms",
+    "like terms",
+    "simplifying expressions",
+    "simplify",
+    "algebraic expression",
+    "simplifying algebra"
+   ]
   },
   {
    "slug": "probability-pioneer",
    "search_phrase": "Simple Probability",
-   "description": "Place events on the probability scale, calculate simple probabilities and test true-or-false claims."
+   "description": "Place events on the probability scale, calculate simple probabilities and test true-or-false claims.",
+   "keywords": [
+    "probability",
+    "probability scale",
+    "simple probability",
+    "theoretical probability",
+    "equally likely outcomes",
+    "impossible likely certain",
+    "chance",
+    "probability of an event not happening"
+   ]
   },
   {
    "slug": "shape-shifter",
    "search_phrase": "Transformations",
-   "description": "Translate, reflect and rotate shapes on a coordinate grid."
+   "description": "Translate, reflect and rotate shapes on a coordinate grid.",
+   "keywords": [
+    "transformation",
+    "translation",
+    "reflection",
+    "rotation",
+    "enlargement",
+    "mirror line",
+    "centre of rotation",
+    "centre of enlargement",
+    "scale factor"
+   ]
   },
   {
    "slug": "new-shapes",
    "search_phrase": "Area and Volume",
-   "description": "Area of parallelograms and trapezia, and volume of prisms."
+   "description": "Area of parallelograms and trapezia, and volume of prisms.",
+   "keywords": [
+    "area of a parallelogram",
+    "area of a trapezium",
+    "volume of a prism",
+    "area",
+    "volume",
+    "parallelogram",
+    "trapezium",
+    "prism",
+    "area formula"
+   ]
   },
   {
    "slug": "higher-power",
    "search_phrase": "Comparing Powers and Roots",
-   "description": "Compare powers, roots and famous constants: which is higher? Then match expressions to their values."
+   "description": "Compare powers, roots and famous constants: which is higher? Then match expressions to their values.",
+   "keywords": [
+    "power",
+    "root",
+    "square root",
+    "factorial",
+    "mathematical constants",
+    "pi",
+    "comparing numbers",
+    "estimating powers and roots",
+    "number sense",
+    "ks3",
+    "gcse",
+    "a level"
+   ]
   },
   {
    "slug": "prisoners-dilemma",
    "search_phrase": "Prisoner's Dilemma",
-   "description": "Play the iterated prisoner's dilemma against computer opponents and weigh up the payoffs."
+   "description": "Play the iterated prisoner's dilemma against computer opponents and weigh up the payoffs.",
+   "keywords": [
+    "game theory",
+    "payoff matrix",
+    "prisoner's dilemma",
+    "nash equilibrium",
+    "strategy",
+    "cooperation",
+    "decision making"
+   ]
   },
   {
    "slug": "seven-bridges",
    "search_phrase": "Graph Theory: Euler Paths",
-   "description": "Euler's bridges puzzle: trace routes, spot impossible graphs and find the rule for Euler paths."
+   "description": "Euler's bridges puzzle: trace routes, spot impossible graphs and find the rule for Euler paths.",
+   "keywords": [
+    "graph theory",
+    "euler path",
+    "eulerian path",
+    "eulerian circuit",
+    "semi-eulerian",
+    "network",
+    "traversable network",
+    "vertex degree",
+    "odd vertices",
+    "decision maths"
+   ]
   },
   {
    "slug": "distinctly-average",
    "search_phrase": "Mean, Median, Mode and Range",
-   "description": "Find the mean, median, mode and range of data sets, then frequency tables and missing values."
+   "description": "Find the mean, median, mode and range of data sets, then frequency tables and missing values.",
+   "keywords": [
+    "average",
+    "mean",
+    "median",
+    "mode",
+    "range",
+    "frequency table",
+    "mean from a frequency table",
+    "outlier",
+    "comparing data sets",
+    "missing value",
+    "bimodal",
+    "foundation",
+    "ks3",
+    "gcse"
+   ]
   },
   {
    "slug": "index-laws",
    "search_phrase": "Laws of Indices",
-   "description": "Apply the laws of indices: multiplying, dividing, powers of powers, zero, negative and fractional indices."
+   "description": "Apply the laws of indices: multiplying, dividing, powers of powers, zero, negative and fractional indices.",
+   "keywords": [
+    "laws of indices",
+    "index laws",
+    "indices",
+    "power",
+    "negative indices",
+    "fractional indices",
+    "zero index",
+    "power of a power",
+    "exponent",
+    "higher",
+    "gcse",
+    "a level"
+   ]
   },
   {
    "slug": "quadratic-factoriser",
    "search_phrase": "Factorising Quadratics",
-   "description": "Factorise quadratics with a = 1, then a > 1 by the AC method, then solve with the quadratic formula."
+   "description": "Factorise quadratics with a = 1, then a > 1 by the AC method, then solve with the quadratic formula.",
+   "keywords": [
+    "factorising quadratics",
+    "quadratic",
+    "quadratic expression",
+    "double brackets",
+    "difference of two squares",
+    "ac method",
+    "quadratic formula",
+    "solving quadratics",
+    "discriminant",
+    "higher",
+    "gcse"
+   ]
   },
   {
    "slug": "trig-wars",
    "search_phrase": "Trigonometry and Projectiles",
    "description": "Set the angle and power of a shot and watch the trigonometry resolve it into horizontal and vertical parts.",
-   "answer_kind": "shot"
+   "answer_kind": "shot",
+   "keywords": [
+    "projectile",
+    "projectile motion",
+    "resolving velocity",
+    "horizontal and vertical components",
+    "trajectory",
+    "sine and cosine",
+    "trigonometry",
+    "angle of projection",
+    "mechanics"
+   ]
   },
   {
    "slug": "trig-worms",
    "search_phrase": "SOH CAH TOA",
-   "description": "Use SOH CAH TOA to find the side or angle that aims the cannon."
+   "description": "Use SOH CAH TOA to find the side or angle that aims the cannon.",
+   "keywords": [
+    "soh cah toa",
+    "trigonometry",
+    "right-angled triangle",
+    "trigonometric ratios",
+    "sine cosine tangent",
+    "missing side",
+    "missing angle",
+    "inverse trigonometry",
+    "hypotenuse"
+   ]
   },
   {
    "slug": "modular-battle",
    "search_phrase": "Modular Arithmetic",
-   "description": "Find remainders against the clock, with dot pictures while you need them."
+   "description": "Find remainders against the clock, with dot pictures while you need them.",
+   "keywords": [
+    "modular arithmetic",
+    "remainder",
+    "division with remainder",
+    "mod",
+    "division"
+   ]
   },
   {
    "slug": "surd-simplifier",
    "search_phrase": "Simplifying Surds",
-   "description": "Simplify surds and rationalise denominators."
+   "description": "Simplify surds and rationalise denominators.",
+   "keywords": [
+    "surd",
+    "simplifying surds",
+    "rationalising the denominator",
+    "adding surds",
+    "expanding brackets with surds",
+    "recurring decimal",
+    "recurring decimal to fraction",
+    "higher",
+    "gcse",
+    "a level"
+   ]
   },
   {
    "slug": "proportion-blaster",
    "search_phrase": "Direct and Inverse Proportion",
-   "description": "Direct and inverse proportion problems, and sharing in a ratio."
+   "description": "Direct and inverse proportion problems, and sharing in a ratio.",
+   "keywords": [
+    "direct proportion",
+    "inverse proportion",
+    "proportion",
+    "constant of proportionality",
+    "ratio",
+    "sharing in a ratio",
+    "three-part ratio",
+    "proportional to x squared",
+    "higher",
+    "gcse",
+    "a level"
+   ]
   },
   {
    "slug": "trig-identity-duel",
    "search_phrase": "Sine and Cosine Rules",
-   "description": "Exact trig values, the sine rule and the cosine rule."
+   "description": "Exact trig values, the sine rule and the cosine rule.",
+   "keywords": [
+    "exact trig values",
+    "sine rule",
+    "cosine rule",
+    "area of a triangle",
+    "trigonometry",
+    "trig identities",
+    "double angle formulae",
+    "compound angle formulae",
+    "radians",
+    "trig equation",
+    "higher",
+    "a level"
+   ]
   },
   {
    "slug": "standard-form-blitz",
    "search_phrase": "Standard Form",
-   "description": "Convert to and from standard form, then multiply and divide numbers in standard form."
+   "description": "Convert to and from standard form, then multiply and divide numbers in standard form.",
+   "keywords": [
+    "standard form",
+    "standard index form",
+    "scientific notation",
+    "multiplying in standard form",
+    "dividing in standard form",
+    "adding in standard form",
+    "ordinary number",
+    "ordering standard form",
+    "powers of 10",
+    "gcse"
+   ]
   },
   {
    "slug": "simultaneous-solver",
    "search_phrase": "Simultaneous Equations",
-   "description": "Elimination one step at a time: scale, add or subtract, solve, substitute. A-Level adds line-and-curve pairs."
+   "description": "Elimination one step at a time: scale, add or subtract, solve, substitute. A-Level adds line-and-curve pairs.",
+   "keywords": [
+    "simultaneous equation",
+    "solving simultaneous equations",
+    "elimination method",
+    "linear simultaneous equations",
+    "substitution",
+    "simultaneous equation word problems",
+    "forming equations",
+    "line and curve",
+    "foundation",
+    "gcse",
+    "a level"
+   ]
   },
   {
    "slug": "circle-theorem-spotter",
    "search_phrase": "Circle Theorems",
-   "description": "Spot and apply the circle theorems, with a diagram on every question."
+   "description": "Spot and apply the circle theorems, with a diagram on every question.",
+   "keywords": [
+    "circle theorem",
+    "angle at the centre",
+    "angle in a semicircle",
+    "cyclic quadrilateral",
+    "angles in the same segment",
+    "alternate segment theorem",
+    "tangent and radius",
+    "tangents from a point",
+    "perpendicular bisector of a chord",
+    "higher",
+    "gcse"
+   ]
   },
   {
    "slug": "probability-paradox",
    "search_phrase": "Probability Misconceptions",
-   "description": "Probability paradoxes, conditional probability and common fallacies, in three modes."
+   "description": "Probability paradoxes, conditional probability and common fallacies, in three modes.",
+   "keywords": [
+    "conditional probability",
+    "probability misconceptions",
+    "venn diagram",
+    "tree diagram",
+    "independent events",
+    "mutually exclusive events",
+    "bayes theorem",
+    "false positive",
+    "gambler's fallacy",
+    "monty hall problem",
+    "base rate",
+    "core maths",
+    "gcse"
+   ]
   },
   {
    "slug": "angle-ace",
    "search_phrase": "Angle Facts",
-   "description": "Find missing angles, then name the angle fact that gives each one."
+   "description": "Find missing angles, then name the angle fact that gives each one.",
+   "keywords": [
+    "angle fact",
+    "missing angle",
+    "angles in parallel lines",
+    "alternate angle",
+    "corresponding angle",
+    "co-interior angle",
+    "vertically opposite angle",
+    "angles on a straight line",
+    "angles at a point",
+    "angles in a triangle",
+    "geometric reason",
+    "gcse"
+   ]
   },
   {
    "slug": "coordinate-geometry-dash",
    "search_phrase": "Coordinate Geometry",
-   "description": "Midpoints, gradients, lengths and equations of lines and circles on a plotted grid."
+   "description": "Midpoints, gradients, lengths and equations of lines and circles on a plotted grid.",
+   "keywords": [
+    "coordinate geometry",
+    "midpoint",
+    "gradient",
+    "distance between two points",
+    "equation of a straight line",
+    "perpendicular lines",
+    "intersection of lines",
+    "equation of a circle",
+    "tangent to a circle",
+    "parametric equation",
+    "gcse",
+    "a level"
+   ]
   },
   {
    "slug": "graph-transformer",
    "search_phrase": "Graph Transformations",
-   "description": "Translate, reflect and stretch a curve to match the target graph in as few moves as possible."
+   "description": "Translate, reflect and stretch a curve to match the target graph in as few moves as possible.",
+   "keywords": [
+    "graph transformation",
+    "transforming graphs",
+    "translating graphs",
+    "reflecting graphs",
+    "stretching graphs",
+    "transformation of functions",
+    "higher",
+    "gcse",
+    "a level"
+   ]
   },
   {
    "slug": "formula-unlocked",
    "search_phrase": "Changing the Subject",
-   "description": "Change the subject of a formula, step by step, with hints when you need them."
+   "description": "Change the subject of a formula, step by step, with hints when you need them.",
+   "keywords": [
+    "changing the subject",
+    "rearranging formulae",
+    "make the subject",
+    "rearranging equations",
+    "formulae",
+    "subject appears twice",
+    "higher",
+    "gcse",
+    "a level"
+   ]
   },
   {
    "slug": "bearing-blitz",
    "search_phrase": "Three-Figure Bearings",
    "description": "Estimate and set three-figure bearings, then fire at the target.",
-   "answer_kind": "shot"
+   "answer_kind": "shot",
+   "keywords": [
+    "bearing",
+    "three-figure bearing",
+    "estimating bearings",
+    "estimating angles",
+    "compass",
+    "angle",
+    "gcse"
+   ]
   },
   {
    "slug": "scale-factor-scaling",
    "search_phrase": "Area and Volume Scale Factors",
-   "description": "Length, area and volume scale factors: k, k squared and k cubed."
+   "description": "Length, area and volume scale factors: k, k squared and k cubed.",
+   "keywords": [
+    "scale factor",
+    "area scale factor",
+    "volume scale factor",
+    "length scale factor",
+    "similar shape",
+    "similar solid",
+    "similarity",
+    "area and volume of similar shapes",
+    "higher",
+    "gcse"
+   ]
   },
   {
    "slug": "unit-converter",
    "search_phrase": "Area and Volume Unit Conversions",
-   "description": "Convert between units of length, area and volume, including cm² to m² and cm³ to litres."
+   "description": "Convert between units of length, area and volume, including cm² to m² and cm³ to litres.",
+   "keywords": [
+    "unit conversion",
+    "converting units",
+    "metric units",
+    "metric conversion",
+    "length conversion",
+    "area conversion",
+    "volume conversion",
+    "litre",
+    "capacity",
+    "engineering unit",
+    "gcse"
+   ]
   },
   {
    "slug": "formula-forge",
    "search_phrase": "Rearranging Formulae",
-   "description": "Rearrange formulae through four progressive stages, with step-by-step feedback."
+   "description": "Rearrange formulae through four progressive stages, with step-by-step feedback.",
+   "keywords": [
+    "rearranging formulae",
+    "changing the subject",
+    "subject of a formula",
+    "rearrange formula",
+    "transposing formulae",
+    "inverse operation",
+    "literal equations",
+    "gcse",
+    "higher"
+   ]
   },
   {
    "slug": "correlation-or-coincidence",
    "search_phrase": "Correlation and Causation",
-   "description": "Does one variable cause the other, does something else cause both, or is it coincidence?"
+   "description": "Does one variable cause the other, does something else cause both, or is it coincidence?",
+   "keywords": [
+    "correlation",
+    "causation",
+    "correlation and causation",
+    "correlation does not imply causation",
+    "scatter graph",
+    "scatter diagram",
+    "lurking variable",
+    "confounding variable",
+    "spurious correlation",
+    "positive correlation",
+    "negative correlation",
+    "gcse"
+   ]
   },
   {
    "slug": "chart-interrogator",
    "search_phrase": "Interpreting Statistical Diagrams",
-   "description": "Read stem and leaf, box plots, cumulative frequency and histograms, then compare data sets."
+   "description": "Read stem and leaf, box plots, cumulative frequency and histograms, then compare data sets.",
+   "keywords": [
+    "stem and leaf",
+    "back to back stem and leaf",
+    "box plot",
+    "cumulative frequency",
+    "histogram",
+    "frequency density",
+    "median",
+    "quartile",
+    "interquartile range",
+    "comparing distributions",
+    "statistical diagram",
+    "gcse",
+    "a level",
+    "core maths"
+   ]
   },
   {
    "slug": "component-crusher",
    "search_phrase": "Vectors",
-   "description": "Column vectors, magnitude, addition, scalar product and vector equations of lines."
+   "description": "Column vectors, magnitude, addition, scalar product and vector equations of lines.",
+   "keywords": [
+    "vector",
+    "column vector",
+    "magnitude of a vector",
+    "vector addition",
+    "scalar product",
+    "dot product",
+    "angle between vectors",
+    "resultant vector",
+    "position vector",
+    "parallel vector",
+    "collinear",
+    "3d vector",
+    "vector equation of a line",
+    "gcse",
+    "a level"
+   ]
   },
   {
    "slug": "expectation-station",
    "search_phrase": "Expectation and E(X)",
-   "description": "Set up a probability table, calculate E(X), then say what it means in context."
+   "description": "Set up a probability table, calculate E(X), then say what it means in context.",
+   "keywords": [
+    "expected value",
+    "expectation",
+    "probability distribution",
+    "discrete random variable",
+    "probability table",
+    "interpreting expected value",
+    "expected profit",
+    "core maths",
+    "a level"
+   ]
   },
   {
    "slug": "better-value",
    "search_phrase": "Value for Money",
-   "description": "Compare phone contracts, energy tariffs and loans to decide which is better value."
+   "description": "Compare phone contracts, energy tariffs and loans to decide which is better value.",
+   "keywords": [
+    "best buy",
+    "value for money",
+    "unit price",
+    "unit pricing",
+    "break-even",
+    "cost-benefit analysis",
+    "comparing costs",
+    "tariff",
+    "financial maths",
+    "personal finance",
+    "core maths",
+    "gcse"
+   ]
   },
   {
    "slug": "given-that",
    "search_phrase": "Conditional Probability",
-   "description": "Conditional probability from two-way tables, Venn diagrams and frequency trees."
+   "description": "Conditional probability from two-way tables, Venn diagrams and frequency trees.",
+   "keywords": [
+    "conditional probability",
+    "given that",
+    "two-way table",
+    "venn diagram",
+    "frequency tree",
+    "reduced sample space",
+    "independent event",
+    "probability",
+    "gcse",
+    "a level",
+    "core maths"
+   ]
   },
   {
    "slug": "screening-room",
    "search_phrase": "False Positives and Base Rates",
-   "description": "Why a 99% accurate test can still be wrong most of the time: base rates with icon arrays."
+   "description": "Why a 99% accurate test can still be wrong most of the time: base rates with icon arrays.",
+   "keywords": [
+    "false positive",
+    "base rate",
+    "conditional probability",
+    "bayes theorem",
+    "natural frequency",
+    "sensitivity",
+    "specificity",
+    "medical screening",
+    "icon array",
+    "core maths",
+    "a level"
+   ]
   },
   {
    "slug": "linear-equation-solver",
    "search_phrase": "Solving Linear Equations",
-   "description": "Solve one- and two-step linear equations by choosing the inverse operation at each step."
+   "description": "Solve one- and two-step linear equations by choosing the inverse operation at each step.",
+   "keywords": [
+    "linear equation",
+    "solving equations",
+    "one-step equation",
+    "two-step equation",
+    "inverse operation",
+    "equations with brackets",
+    "equations with fractions",
+    "balance method",
+    "foundation",
+    "resit",
+    "gcse"
+   ]
   },
   {
    "slug": "core-maths-paper1",
    "search_phrase": "Paper 1 Exam Practice",
-   "description": "Exam-style questions for AQA Core Maths Paper 1: analysis of data and personal finance."
+   "description": "Exam-style questions for AQA Core Maths Paper 1: analysis of data and personal finance.",
+   "keywords": [
+    "core maths",
+    "exam practice",
+    "mathematical studies",
+    "analysis of data",
+    "personal finance",
+    "sampling",
+    "box plot",
+    "standard deviation",
+    "simple interest",
+    "compound interest",
+    "income tax",
+    "national insurance",
+    "exchange rate",
+    "inflation"
+   ]
   },
   {
    "slug": "core-maths-paper2a",
    "search_phrase": "Paper 2A Exam Practice",
-   "description": "Exam-style questions for AQA Core Maths Paper 2A: critical analysis, normal distribution, estimation, correlation."
+   "description": "Exam-style questions for AQA Core Maths Paper 2A: critical analysis, normal distribution, estimation, correlation.",
+   "keywords": [
+    "core maths",
+    "exam practice",
+    "mathematical studies",
+    "critical analysis",
+    "normal distribution",
+    "confidence interval",
+    "correlation",
+    "regression line",
+    "pmcc",
+    "scatter diagram"
+   ]
   },
   {
    "slug": "core-maths-paper2b",
    "search_phrase": "Paper 2B Exam Practice",
-   "description": "Exam-style questions for AQA Core Maths Paper 2B: critical analysis, expectation, cost-benefit and risk."
+   "description": "Exam-style questions for AQA Core Maths Paper 2B: critical analysis, expectation, cost-benefit and risk.",
+   "keywords": [
+    "core maths",
+    "exam practice",
+    "mathematical studies",
+    "critical analysis",
+    "expected value",
+    "expectation",
+    "probability",
+    "conditional probability",
+    "cost-benefit analysis",
+    "risk",
+    "insurance"
+   ]
   },
   {
    "slug": "core-maths-paper2c",
    "search_phrase": "Paper 2C Exam Practice",
-   "description": "Exam-style questions for AQA Core Maths Paper 2C: graphs, rates of change and exponential models."
+   "description": "Exam-style questions for AQA Core Maths Paper 2C: graphs, rates of change and exponential models.",
+   "keywords": [
+    "core maths",
+    "exam practice",
+    "mathematical studies",
+    "graphs of functions",
+    "intersection of graphs",
+    "rates of change",
+    "gradient",
+    "distance-time graph",
+    "velocity-time graph",
+    "area under a graph",
+    "exponential function",
+    "exponential model"
+   ]
   },
   {
    "slug": "tax-theft",
    "search_phrase": "Tax and National Insurance",
-   "description": "Work out income tax, National Insurance and take-home pay from a payslip, step by step."
+   "description": "Work out income tax, National Insurance and take-home pay from a payslip, step by step.",
+   "keywords": [
+    "income tax",
+    "national insurance",
+    "take-home pay",
+    "payslip",
+    "personal allowance",
+    "tax band",
+    "taxable income",
+    "higher rate tax",
+    "net pay",
+    "personal finance",
+    "core maths"
+   ]
   },
   {
    "slug": "stat-attack",
    "search_phrase": "Grouped Frequency Tables",
-   "description": "Modal class, median class, estimated mean and standard deviation from grouped frequency tables."
+   "description": "Modal class, median class, estimated mean and standard deviation from grouped frequency tables.",
+   "keywords": [
+    "grouped frequency table",
+    "grouped data",
+    "estimated mean",
+    "mean from a frequency table",
+    "modal class",
+    "median class",
+    "standard deviation",
+    "variance",
+    "midpoint",
+    "gcse",
+    "core maths"
+   ]
   },
   {
    "slug": "growth-and-decay",
    "search_phrase": "Exponential Growth and Decay",
-   "description": "Exponential models: substitute, interpret the parameters, find constants and solve with logarithms."
+   "description": "Exponential models: substitute, interpret the parameters, find constants and solve with logarithms.",
+   "keywords": [
+    "exponential growth",
+    "exponential decay",
+    "exponential model",
+    "exponential function",
+    "natural logarithm",
+    "half-life",
+    "modelling",
+    "core maths",
+    "a level"
+   ]
   },
   {
    "slug": "graph-sketcher",
    "search_phrase": "Sketching Graphs",
-   "description": "Tables of values, sketching and reading quadratic, cubic, exponential, reciprocal and trig graphs."
+   "description": "Tables of values, sketching and reading quadratic, cubic, exponential, reciprocal and trig graphs.",
+   "keywords": [
+    "graph sketching",
+    "sketching graphs",
+    "table of values",
+    "quadratic graph",
+    "cubic graph",
+    "reciprocal graph",
+    "exponential graph",
+    "trigonometric graph",
+    "turning point",
+    "root",
+    "interpreting graphs",
+    "real-life graph",
+    "core maths",
+    "a level"
+   ]
   },
   {
    "slug": "glorious-gantt",
    "search_phrase": "Critical Path and Gantt Charts",
-   "description": "Critical path analysis: early and late times, the critical path, floats and Gantt charts."
+   "description": "Critical path analysis: early and late times, the critical path, floats and Gantt charts.",
+   "keywords": [
+    "critical path analysis",
+    "critical path",
+    "gantt chart",
+    "activity network",
+    "float",
+    "early and late times",
+    "project planning",
+    "decision maths",
+    "core maths"
+   ]
   },
   {
    "slug": "test-the-claim",
    "search_phrase": "Hypothesis Testing",
-   "description": "Six-step hypothesis tests for binomial, Poisson, normal and correlation."
+   "description": "Six-step hypothesis tests for binomial, Poisson, normal and correlation.",
+   "keywords": [
+    "hypothesis testing",
+    "hypothesis test",
+    "critical region",
+    "critical value",
+    "significance level",
+    "one-tailed test",
+    "two-tailed test",
+    "p-value",
+    "binomial hypothesis test",
+    "poisson hypothesis test",
+    "normal distribution",
+    "pmcc",
+    "a level"
+   ]
   },
   {
    "slug": "differentiation-duel",
    "search_phrase": "Differentiation",
-   "description": "Differentiate polynomials, trig and exponentials, with the chain, product and quotient rules."
+   "description": "Differentiate polynomials, trig and exponentials, with the chain, product and quotient rules.",
+   "keywords": [
+    "differentiation",
+    "derivative",
+    "power rule",
+    "chain rule",
+    "product rule",
+    "quotient rule",
+    "implicit differentiation",
+    "parametric differentiation",
+    "differentiating trig",
+    "differentiating exponentials",
+    "calculus",
+    "a level"
+   ]
   },
   {
    "slug": "integration-duel",
    "search_phrase": "Integration",
-   "description": "Integrate polynomials, trig and exponentials, and integrate by parts."
+   "description": "Integrate polynomials, trig and exponentials, and integrate by parts.",
+   "keywords": [
+    "integration",
+    "integral",
+    "integration by parts",
+    "integration by substitution",
+    "reverse chain rule",
+    "definite integral",
+    "area under a curve",
+    "integrating trig",
+    "partial fractions",
+    "calculus",
+    "a level"
+   ]
   },
   {
    "slug": "suvat",
    "search_phrase": "SUVAT Equations",
-   "description": "Pick the right SUVAT equation, then use it to find the answer."
+   "description": "Pick the right SUVAT equation, then use it to find the answer.",
+   "keywords": [
+    "suvat",
+    "suvat equations",
+    "equations of motion",
+    "constant acceleration",
+    "kinematics",
+    "projectile",
+    "projectile motion",
+    "motion under gravity",
+    "mechanics",
+    "a level"
+   ]
   },
   {
    "slug": "curling-friction",
    "search_phrase": "Friction Problems",
-   "description": "Friction, Newton's laws, SUVAT and momentum, in a curling setting."
+   "description": "Friction, Newton's laws, SUVAT and momentum, in a curling setting.",
+   "keywords": [
+    "friction",
+    "coefficient of friction",
+    "momentum",
+    "conservation of momentum",
+    "collision",
+    "impulse",
+    "newton's second law",
+    "work done",
+    "kinetic energy",
+    "deceleration",
+    "mechanics",
+    "a level"
+   ]
   },
   {
    "slug": "force-resolver",
    "search_phrase": "Resolving Forces",
-   "description": "Resolve forces on inclined planes, pulleys and connected particles."
+   "description": "Resolve forces on inclined planes, pulleys and connected particles.",
+   "keywords": [
+    "resolving forces",
+    "components of a force",
+    "resultant force",
+    "inclined plane",
+    "equilibrium",
+    "pulley",
+    "connected particles",
+    "tension",
+    "friction",
+    "coefficient of friction",
+    "mechanics",
+    "a level"
+   ]
   },
   {
    "slug": "moments-master",
    "search_phrase": "Moments",
-   "description": "Moments, beams, reactions at supports and tilting problems."
+   "description": "Moments, beams, reactions at supports and tilting problems.",
+   "keywords": [
+    "moment",
+    "principle of moments",
+    "turning effect",
+    "equilibrium",
+    "beam",
+    "reaction force",
+    "pivot",
+    "uniform rod",
+    "non-uniform rod",
+    "centre of mass",
+    "tilting",
+    "rigid body",
+    "mechanics",
+    "a level"
+   ]
   },
   {
    "slug": "log-laws",
    "search_phrase": "Laws of Logarithms",
-   "description": "Practise the laws of logarithms, then use them to solve exponential equations step by step."
+   "description": "Practise the laws of logarithms, then use them to solve exponential equations step by step.",
+   "keywords": [
+    "laws of logarithms",
+    "logarithm",
+    "log rules",
+    "product rule",
+    "quotient rule",
+    "power rule",
+    "change of base",
+    "natural logarithm",
+    "solving exponential equations",
+    "exponential equation",
+    "a level"
+   ]
   },
   {
    "slug": "binomial-blaster",
    "search_phrase": "Binomial Expansion",
-   "description": "Binomial expansion, Pascal's triangle and nCr."
+   "description": "Binomial expansion, Pascal's triangle and nCr.",
+   "keywords": [
+    "binomial expansion",
+    "binomial theorem",
+    "pascal's triangle",
+    "ncr",
+    "binomial coefficient",
+    "coefficient of x",
+    "range of validity",
+    "binomial approximation",
+    "negative index",
+    "fractional index",
+    "a level"
+   ]
   },
   {
    "slug": "partial-fractions-duel",
    "search_phrase": "Partial Fractions",
-   "description": "Split into partial fractions: distinct linear, repeated and improper."
+   "description": "Split into partial fractions: distinct linear, repeated and improper.",
+   "keywords": [
+    "partial fraction",
+    "algebraic fractions",
+    "decomposition",
+    "distinct linear factors",
+    "repeated factor",
+    "improper fraction",
+    "algebraic long division",
+    "comparing coefficients",
+    "a level",
+    "btec"
+   ]
   },
   {
    "slug": "proof-builder",
    "search_phrase": "Mathematical Proof",
-   "description": "Find counterexamples, order the steps of a proof and build proofs by induction."
+   "description": "Find counterexamples, order the steps of a proof and build proofs by induction.",
+   "keywords": [
+    "proof",
+    "mathematical proof",
+    "counterexample",
+    "disproof by counterexample",
+    "proof by contradiction",
+    "proof by induction",
+    "proof by deduction",
+    "algebraic proof",
+    "odd and even numbers",
+    "irrational",
+    "a level",
+    "further maths"
+   ]
   },
   {
    "slug": "normal-navigator",
    "search_phrase": "Normal Distribution",
-   "description": "Z-scores, shaded regions and normal probabilities."
+   "description": "Z-scores, shaded regions and normal probabilities.",
+   "keywords": [
+    "normal distribution",
+    "z-score",
+    "standardising",
+    "standard normal distribution",
+    "inverse normal",
+    "bell curve",
+    "normal approximation",
+    "continuity correction",
+    "standard deviation",
+    "a level",
+    "core maths",
+    "btec"
+   ]
   },
   {
    "slug": "fermi-lab",
    "search_phrase": "Fermi Estimation",
-   "description": "Break a big estimation question into smaller steps and estimate each one."
+   "description": "Break a big estimation question into smaller steps and estimate each one.",
+   "keywords": [
+    "fermi estimation",
+    "fermi problem",
+    "estimation",
+    "estimating",
+    "modelling",
+    "problem solving",
+    "assumption",
+    "core maths",
+    "ks3",
+    "gcse"
+   ]
   },
   {
    "slug": "dimension-checker",
    "search_phrase": "Dimensional Analysis",
-   "description": "Check whether physics equations are dimensionally consistent using M, L and T."
+   "description": "Check whether physics equations are dimensionally consistent using M, L and T.",
+   "keywords": [
+    "dimensional analysis",
+    "dimension",
+    "dimensional homogeneity",
+    "dimensionally consistent",
+    "mlt",
+    "si unit",
+    "dimensionless",
+    "mechanics",
+    "engineering",
+    "btec"
+   ]
   },
   {
    "slug": "factor-theorem",
    "search_phrase": "Factor and Remainder Theorem",
-   "description": "Learn the factor theorem, the remainder theorem and algebraic division, then practise."
+   "description": "Learn the factor theorem, the remainder theorem and algebraic division, then practise.",
+   "keywords": [
+    "factor theorem",
+    "remainder theorem",
+    "algebraic division",
+    "algebraic long division",
+    "polynomial division",
+    "polynomial",
+    "cubic",
+    "factorising cubics",
+    "roots of a polynomial",
+    "a level"
+   ]
   },
   {
    "slug": "boolean-blitz",
    "search_phrase": "Boolean Algebra",
-   "description": "Simplify Boolean expressions with the logic laws, with full step-by-step working."
+   "description": "Simplify Boolean expressions with the logic laws, with full step-by-step working.",
+   "keywords": [
+    "boolean algebra",
+    "boolean simplification",
+    "logic simplification",
+    "logic laws",
+    "de morgan's law",
+    "absorption law",
+    "distributive law",
+    "complement law",
+    "exclusive or",
+    "digital logic",
+    "btec"
+   ]
   },
   {
    "slug": "truth-will-set-you-free",
    "search_phrase": "Truth Tables",
-   "description": "Build truth tables from engineering scenarios and match them to Boolean expressions."
+   "description": "Build truth tables from engineering scenarios and match them to Boolean expressions.",
+   "keywords": [
+    "truth table",
+    "boolean algebra",
+    "boolean expression",
+    "boolean logic",
+    "logic",
+    "exclusive or",
+    "engineering",
+    "btec"
+   ]
   },
   {
    "slug": "complex-converter",
    "search_phrase": "Complex Numbers",
-   "description": "Convert complex numbers between Cartesian, polar and exponential form."
+   "description": "Convert complex numbers between Cartesian, polar and exponential form.",
+   "keywords": [
+    "complex number",
+    "argand diagram",
+    "polar form",
+    "exponential form",
+    "cartesian form",
+    "rectangular form",
+    "modulus",
+    "argument",
+    "modulus-argument form",
+    "phasor",
+    "further maths",
+    "btec"
+   ]
   },
   {
    "slug": "matrix-crunch",
    "search_phrase": "Matrices",
-   "description": "Determinants, inverse matrices and solving equations with Cramer's rule."
+   "description": "Determinants, inverse matrices and solving equations with Cramer's rule.",
+   "keywords": [
+    "matrices",
+    "matrix",
+    "determinant",
+    "inverse matrix",
+    "singular matrix",
+    "cramer's rule",
+    "simultaneous equations",
+    "area scale factor",
+    "further maths",
+    "btec"
+   ]
   },
   {
    "slug": "characteristic-quest",
    "search_phrase": "Characteristic Equations",
-   "description": "Find the characteristic equation of a matrix: eigenvectors, part 1."
+   "description": "Find the characteristic equation of a matrix: eigenvectors, part 1.",
+   "keywords": [
+    "characteristic equation",
+    "eigenvalue",
+    "matrices",
+    "matrix",
+    "determinant",
+    "trace",
+    "linear algebra",
+    "further maths",
+    "btec"
+   ]
   },
   {
    "slug": "eigenvalue-extractor",
    "search_phrase": "Eigenvalues",
-   "description": "Solve the characteristic equation to find eigenvalues: eigenvectors, part 2."
+   "description": "Solve the characteristic equation to find eigenvalues: eigenvectors, part 2.",
+   "keywords": [
+    "eigenvalue",
+    "characteristic equation",
+    "repeated eigenvalue",
+    "complex eigenvalue",
+    "matrices",
+    "matrix",
+    "linear algebra",
+    "further maths",
+    "btec"
+   ]
   },
   {
    "slug": "eigenvector-engine",
    "search_phrase": "Eigenvectors",
-   "description": "Find the eigenvector for each eigenvalue: eigenvectors, part 3."
+   "description": "Find the eigenvector for each eigenvalue: eigenvectors, part 3.",
+   "keywords": [
+    "eigenvector",
+    "eigenvalue",
+    "matrices",
+    "matrix",
+    "linear algebra",
+    "further maths",
+    "btec"
+   ]
   },
   {
    "slug": "six-sevens-bruv",
    "search_phrase": "Times Tables",
-   "description": "Times tables to 12 by 12, typed not chosen; each fact you know lights up your own grid."
+   "description": "Times tables to 12 by 12, typed not chosen; each fact you know lights up your own grid.",
+   "keywords": [
+    "times tables",
+    "multiplication",
+    "multiplication facts",
+    "multiplication grid",
+    "number facts",
+    "mental maths",
+    "resit",
+    "ks3"
+   ]
   },
   {
    "slug": "free-daily-pizza",
    "search_phrase": "Fractions, Decimals and Percentages",
-   "description": "Convert between fractions, decimals and percentages, and find fractions and percentages of amounts."
+   "description": "Convert between fractions, decimals and percentages, and find fractions and percentages of amounts.",
+   "keywords": [
+    "fractions decimals percentages",
+    "fdp",
+    "converting fractions",
+    "fraction to decimal",
+    "fraction to percentage",
+    "recurring decimal",
+    "simplifying fractions",
+    "percentage of an amount",
+    "fraction of an amount",
+    "one quantity as a percentage",
+    "resit",
+    "ks3"
+   ]
   },
   {
    "slug": "just-pythag-it-bruv",
    "search_phrase": "Pythagoras' Theorem",
-   "description": "Use Pythagoras' theorem with a calculator to find the hypotenuse or a shorter side, from simple triangles to ladders and ramps."
+   "description": "Use Pythagoras' theorem with a calculator to find the hypotenuse or a shorter side, from simple triangles to ladders and ramps.",
+   "keywords": [
+    "pythagoras",
+    "pythagoras' theorem",
+    "hypotenuse",
+    "right-angled triangle",
+    "shorter side",
+    "missing side",
+    "pythagorean triple",
+    "resit",
+    "ks3",
+    "foundation"
+   ]
   },
   {
    "slug": "how-many-parts",
    "search_phrase": "Fraction Operations",
-   "description": "Add, take away, multiply and divide fractions and mixed numbers, with a bar model: the denominator says how many parts."
+   "description": "Add, take away, multiply and divide fractions and mixed numbers, with a bar model: the denominator says how many parts.",
+   "keywords": [
+    "fraction",
+    "adding fractions",
+    "subtracting fractions",
+    "multiplying fractions",
+    "dividing fractions",
+    "mixed number",
+    "improper fraction",
+    "common denominator",
+    "lowest common denominator",
+    "simplest form",
+    "bar model",
+    "resit",
+    "ks3",
+    "foundation"
+   ]
   },
   {
    "slug": "y-so-steep",
    "search_phrase": "Equation of a Straight Line",
-   "description": "Find the equation of a straight line: read it, spot it on a grid, use points, then parallel and perpendicular."
+   "description": "Find the equation of a straight line: read it, spot it on a grid, use points, then parallel and perpendicular.",
+   "keywords": [
+    "straight line graph",
+    "equation of a straight line",
+    "gradient",
+    "y-intercept",
+    "linear graph",
+    "gradient from two points",
+    "parallel line",
+    "perpendicular line",
+    "negative reciprocal",
+    "gcse",
+    "foundation",
+    "higher"
+   ]
   },
   {
    "slug": "its-on-sale",
    "search_phrase": "Percentages and Money",
-   "description": "Work out sale prices, price rises, percentage change, reverse percentages and interest, typing each answer onto a price tag."
+   "description": "Work out sale prices, price rises, percentage change, reverse percentages and interest, typing each answer onto a price tag.",
+   "keywords": [
+    "percentage",
+    "percentage of an amount",
+    "percentage increase",
+    "percentage decrease",
+    "percentage change",
+    "reverse percentage",
+    "original price",
+    "multiplier",
+    "simple interest",
+    "compound interest",
+    "depreciation",
+    "gcse"
+   ]
   },
   {
    "slug": "take-a-walk",
    "search_phrase": "Perimeter and Area",
-   "description": "Perimeter and area on sports pitches: walk round the edge, or cover the grass. Rectangles, compound shapes and circles."
+   "description": "Perimeter and area on sports pitches: walk round the edge, or cover the grass. Rectangles, compound shapes and circles.",
+   "keywords": [
+    "perimeter",
+    "area",
+    "circle",
+    "area of a circle",
+    "circumference",
+    "semicircle",
+    "compound shape",
+    "rectangle",
+    "triangle",
+    "parallelogram",
+    "missing length",
+    "resit",
+    "ks3"
+   ]
   },
   {
    "slug": "squared-squirrel",
    "search_phrase": "Compound Measures",
-   "description": "Speed, density, pressure and unit price: read the unit and you know the calculation, because km/h means km ÷ h."
+   "description": "Speed, density, pressure and unit price: read the unit and you know the calculation, because km/h means km ÷ h.",
+   "keywords": [
+    "compound measure",
+    "compound unit",
+    "speed distance time",
+    "speed",
+    "density",
+    "pressure",
+    "unit price",
+    "rate",
+    "better value",
+    "units of speed",
+    "resit",
+    "ks3"
+   ]
   },
   {
    "slug": "i-found-a-mark",
    "search_phrase": "Method Marks",
-   "description": "Break big exam questions into steps and bank the method marks: choose the calculations a marker credits, never the answer."
+   "description": "Break big exam questions into steps and bank the method marks: choose the calculations a marker credits, never the answer.",
+   "keywords": [
+    "exam technique",
+    "method marks",
+    "exam questions",
+    "problem solving",
+    "multi-step problem",
+    "ratio",
+    "compound interest",
+    "angles in parallel lines",
+    "mean from a frequency table",
+    "pythagoras",
+    "simultaneous equations",
+    "two-way table",
+    "resit",
+    "gcse"
+   ]
   },
   {
    "slug": "hc-factor",
    "search_phrase": "Expanding and Factorising",
-   "description": "Expand brackets and factorise, from one bracket to x² + bx + c with the sign grid, typing the answer into bracket-shaped boxes."
+   "description": "Expand brackets and factorise, from one bracket to x² + bx + c with the sign grid, typing the answer into bracket-shaped boxes.",
+   "keywords": [
+    "expanding brackets",
+    "single brackets",
+    "double brackets",
+    "factorising",
+    "factorise fully",
+    "highest common factor",
+    "hcf",
+    "factorising quadratics",
+    "quadratic",
+    "grid method",
+    "algebra",
+    "gcse"
+   ]
   },
   {
    "slug": "who-ate-all-the-pies",
    "search_phrase": "Pie Charts",
-   "description": "Read pie charts, find amounts, draw them from a table, say when you can't tell, and work back to the total."
+   "description": "Read pie charts, find amounts, draw them from a table, say when you can't tell, and work back to the total.",
+   "keywords": [
+    "pie chart",
+    "drawing pie charts",
+    "interpreting pie charts",
+    "sector",
+    "angle",
+    "frequency table",
+    "comparing pie charts",
+    "data handling",
+    "resit",
+    "gcse"
+   ]
   },
   {
    "slug": "as-you-can-see",
    "search_phrase": "Reading Charts",
-   "description": "Read pictograms, bar charts, line and scatter graphs, and spot the chart that is lying."
+   "description": "Read pictograms, bar charts, line and scatter graphs, and spot the chart that is lying.",
+   "keywords": [
+    "reading charts",
+    "pictogram",
+    "bar chart",
+    "dual bar chart",
+    "composite bar chart",
+    "line graph",
+    "time series",
+    "scatter graph",
+    "correlation",
+    "line of best fit",
+    "outlier",
+    "misleading graph",
+    "ks3",
+    "gcse"
+   ]
   },
   {
    "slug": "possibly-maybe",
    "search_phrase": "Probability",
-   "description": "Probability from the scale to tree diagrams: not, outcomes, expected frequency and trees."
+   "description": "Probability from the scale to tree diagrams: not, outcomes, expected frequency and trees.",
+   "keywords": [
+    "probability",
+    "probability scale",
+    "sample space",
+    "listing outcomes",
+    "relative frequency",
+    "expected frequency",
+    "tree diagram",
+    "independent events",
+    "fair dice",
+    "ks3",
+    "foundation"
+   ]
   }
  ],
  "pages": {
@@ -554,7 +1868,16 @@
   },
   "the-6-ps/index.html": {
    "title": "The 6 P's: Free GCSE Foundation Maths Revision | MaffsGames",
-   "description": "Free GCSE Foundation maths revision: six topics, five questions each, picked from the topics that carry the most marks. No sign-up."
+   "description": "Free GCSE Foundation maths revision: six topics, five questions each, picked from the topics that carry the most marks. No sign-up.",
+   "keywords": [
+    "gcse revision",
+    "exam revision",
+    "exam practice",
+    "foundation",
+    "mixed topic",
+    "resit",
+    "grade 4"
+   ]
   }
  }
 }

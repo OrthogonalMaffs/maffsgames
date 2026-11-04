@@ -238,8 +238,10 @@ def check_behaviour(base, out, sources=None, only=None):
                 page.locator('.cf-search').fill('angle')
                 page.wait_for_timeout(100)
                 c = page.evaluate(COUNTS)
-                names = page.evaluate("[...document.querySelectorAll('a.card')].filter(c => c.getClientRects().length).map(c => c.textContent.toLowerCase())")
-                if not (0 < c['shown'] < c['total']) or any('angle' not in n for n in names):
+                # Every card shown must be one the one search rule matches: asked of the page's MaffsSearch.match
+                # (schools/assets/search.js), never restated here (SEARCH-KEYWORDS, Amendment 1).
+                stray = page.evaluate("[...document.querySelectorAll('a.card')].filter(c => c.getClientRects().length && !window.MaffsSearch.match(c, 'angle')).length")
+                if not (0 < c['shown'] < c['total']) or stray:
                     out.append('search "angle": %d cards, %s' % (c['shown'], c['topics']))
                 page.locator('.cf-search').fill('percent')
                 page.wait_for_timeout(100)

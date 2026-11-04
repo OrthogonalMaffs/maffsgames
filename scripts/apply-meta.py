@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Write every game page's and /essentials/'s search title and description from data/games.json.
+"""Write every game page's and /essentials/'s search title and description, and every card's search keywords, from data/games.json.
 
     python scripts/apply-meta.py            # write
     python scripts/apply-meta.py --dry-run  # report what would change
@@ -7,11 +7,14 @@
 Idempotent: a second run changes nothing. The rules, the expected values and the head rewriter
 all come from scripts/check-meta.py, which holds every page to them in CI. For each page this
 sets <title>, <meta name="description">, og:title and og:description, and twitter:title and
-twitter:description where the page has them. Nothing else in the file changes.
+twitter:description where the page has them. On the portal (index.html) and /essentials/ it sets
+data-keywords on every game card from games.json's keywords (contract SEARCH-KEYWORDS, 4 Nov 2026), for
+on-site search only. Nothing else in the file changes.
 
 Games in check-meta.py's PENDING are skipped. It refuses (exit 1, nothing written) when
 games.json breaks a rule (a slug, a length, a duplicate title) or a page has a head tag in a
-shape it cannot read: those need a person, not a regex.
+shape it cannot read, or a card links to something with no keywords in games.json: those need a person,
+not a regex (keywords are never invented).
 """
 import argparse, importlib.util, pathlib, sys
 
@@ -42,6 +45,17 @@ def main():
             print("REFUSED: %s: %s" % (path, e))
             return 1
         if new != old:
+            writes[p] = new
+    kw, _ = cm.card_records(cm.load(BASE))
+    for path, cls in cm.CARD_PAGES.items():
+        p = BASE / path
+        old = writes.get(p) or p.read_text(encoding="utf-8")
+        try:
+            new = cm.render_cards(old, cls, kw)
+        except ValueError as e:
+            print("REFUSED: %s: %s" % (path, e))
+            return 1
+        if new != p.read_text(encoding="utf-8"):
             writes[p] = new
     for p, new in writes.items():
         print("%s %s" % ("would write" if a.dry_run else "wrote   ", p.relative_to(BASE)))
