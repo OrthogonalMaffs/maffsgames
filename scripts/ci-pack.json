@@ -74,6 +74,7 @@
   "Four Quadrant Explorer (every plot target, point reading and fourth corner recomputed; every grid cell tapped on the real canvas in Chromium)": "20",
   "Fraction Snap (every pair's key and cross-multiplication recomputed, the generator drawn 20000 times, every pair marked both ways in Chromium)": "4",
   "Fraction input (a typed fraction is the shared stacked MaffsFractionInput, never a page's own boxes; shrink-only warn list; planted faults)": "68",
+  "Fraction input modes (default unchanged, whole and signed modes, keyboard/keypad, layout and planted faults)": "30",
   "Free Daily Pizza (independent recomputation + daily seed + UI play + every item at three phone sizes + fault-injection self-test, the phone-fit plants included), part 1 of 2": "27",
   "Free Daily Pizza (independent recomputation + daily seed + UI play + every item at three phone sizes + fault-injection self-test, the phone-fit plants included), part 2 of 2": "51",
   "GA4 country Apps Script (mocked API and Sheet: replace-by-date is idempotent, other dates untouched, events tab never referenced; planted faults caught)": "31",
