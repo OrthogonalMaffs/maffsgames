@@ -44,6 +44,7 @@ start-up load). When the work merges, move the file to `docs/history/`.
 - (2 Nov: each branch above is on origin at its commit; the `wt-*` worktrees went with an earlier container.)
 - **Queued, Low (Jon, 2 Nov, after GATE-FIX):** merge-pr.py counts "the newest merge has no run of its own" as red even under `--wait`, so in the seconds before GitHub registers a new merge's run it refuses ("start one by hand") instead of waiting. Fix: count it as unfinished for a short grace period (about 5 minutes after the commit), with a plant.
 - **Home-lane queue (Jon, 2 Nov):** `scripts/check-banks.py:25` has an invalid escape `\(` (ci-deps.py's `ast.parse` warns on Python 3.12+). Harmless.
+- **For the home lane (ROOM-ESCAPED, 4 Nov):** canon §1.4 item 5 says rooms "escaped (`game_completed`)"; from endpoint `2026-11-04-a` an escape is a `game_completed` with `questions_correct` = `questions_answered` > 0, any other is "timed out" (its own column).
 - **For the rulebook queue (Jon, 3 Nov; no change now):** end-task.py always refuses in cloud sessions, which work in the primary checkout ("is checked out in the primary checkout", after #643); cloud cleanup is nothing to do (the container ends, GitHub deletes the merged branch).
 
 SWEEP-1-RULINGS (13 Oct, contract and Jon's two documents verbatim in `docs/handover/contracts/2026-10-13-sweep-1-rulings-2.md`): Jon approved the triage in full (20:35): standing rules R1-R9 (SR-33, below), 18 Part 2 rulings, Part 3 deferrals; R10 is the home lane's (contract LEVEL-LOGGED). Order: step 0 record, step 1 split bundled entries, step 2 R4 money check, step 3 per-game fixes (Year 6, KS3, Essentials at GCSE, other GCSE, Core, A-Level, L4), step 4 proportion-blaster-003 class count.
@@ -62,6 +63,16 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 **STOP IF defaults (Jon, 27 Oct, every contract):** `docs/handover/contracts/2026-10-27-standing-stop-rules.md`; report each under "Decided for you".
 **Every PR:** no `check-changed.py` in the cloud (AGENTS.md, CLOUD-LEAN); merge only via `python scripts/merge-pr.py <n>
 --watch --wait 3600` (needs a green Gate and main, §7.8.3) and report its last line.
+
+## 2026-11-04 (cloud): ROOM-ESCAPED (`docs/handover/contracts/2026-11-04-room-escaped.md`, Shared; stops at a green Gate for Project Claude's review and Jon's "merge")
+
+- Agent: Claude Code. Primary checkout `/home/user/maffsgames`, branch `claude/sleepy-shannon-itnz0v` (from main 921f7fb; claim ee2c446).
+- Built: `rptEscaped()` in the endpoint: a room `game_completed` is an escape only when `questions_correct` = `questions_answered` > 0 (both numbers); any other is "timed out", counted per room and shown in the email line and a Dashboard column. `SCRIPT_VERSION` `2026-11-04-a`; redeploy note (no new permission). Test: a 3/3 win, a 1/3 and a 0/3 timeout give 1 escaped, 2 timed out; new plant (every completion an escape) CAUGHT; 29 checks, 5 plants.
+- STOP IF 1 checked from code, not the Sheet (the Drive connector cannot return a 1.1 MB sheet into a session): the engine has sent both fields as numbers since at least 15 Oct and is unchanged since 24 Oct. STOP IF 2 clear. Details in the contract file.
+- **Jon's redeploy step after the merge:** new version of the existing deployment; `/exec` reports `2026-11-04-a`.
+- **State:** PR pending, Gate pending.
+
+Record: agent Claude Code; wall pending; review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-03 (cloud): DASHBOARD-METRICS (`docs/handover/contracts/2026-11-03-dashboard-metrics.md`, Shared, Amendments 1 and 2; stops at a green Gate for Project Claude's review and Jon's "merge")
 

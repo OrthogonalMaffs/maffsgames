@@ -16,13 +16,16 @@ Utilities, Charts) with a fixed clock, and drives the real functions on fixture 
   - b. hardest questions: question games only, keyed game + level + question_id, at least 10 attempts, no row without
     a question_id, and the heading counts the games that send one;
   - c. rooms: started, escaped, escape rate, attempts per lock opened (marked / correct), lowest escape rate first;
+    a room's game_completed is an escape only when every lock opened (questions_correct = questions_answered > 0):
+    a win (3/3), a timeout (1/3) and a timeout with no lock open (0/3) are 1 escaped, 2 timed out (ROOM-ESCAPED);
   - d. shot games: one line naming them, never in accuracy;
   - e. a blank `correct` before 2026-09-29T20:00Z counts as wrong; after it, it is not marked;
   - games.json is fetched once per run; a failed fetch counts every game as a question game and says so in one line
     of the email and of the Dashboard; the real data/games.json uses only "question" and "shot";
   - end to end: sendDailyReport sends one email and builds the Dashboard from the same model (--sample prints both).
 Then planted faults, each a small change to the script that must make a check fail: a room counted in accuracy, a row
-with no question_id in hardest questions, a minimum below 30, a pre-29-Sep blank ignored instead of counted wrong.
+with no question_id in hardest questions, a minimum below 30, a pre-29-Sep blank ignored instead of counted wrong, every
+room game_completed counted as escaped.
 
     python scripts/test-apps-script-report.py [--sample]
 """
@@ -54,6 +57,7 @@ HARNESS = r"""
     const r = HEAD.map(() => ''); r[0] = ts; r[1] = event; r[2] = slug; r[3] = level;
     r[6] = correct === undefined ? '' : correct; r[17] = qid || ''; return r;
   };
+  const completed = (slug, answered, correct) => { const r = row(Y, 'game_completed', slug, 'all'); r[9] = answered; r[10] = correct; return r; };
   const Y = '2026-11-03T10:00:00.000Z', OLD = '2026-09-28T10:00:00.000Z';
   const rows = [];
   const answers = (slug, n, right, qid, ts, level) => { for (let i = 0; i < n; i++) rows.push(row(ts || Y, 'question_answered', slug, level || 'gcse', i < right, typeof qid === 'function' ? qid(i) : qid)); };
@@ -69,8 +73,10 @@ HARNESS = r"""
   // a shot game: hits, not answers
   answers('trig-wars', 40, 4);
   // escape rooms
-  ['game_started', 'game_started', 'game_started', 'game_started', 'game_completed', 'game_completed']
-    .forEach(e => rows.push(row(Y, e, 'escape-alpha', 'all')));
+  ['game_started', 'game_started', 'game_started', 'game_started'].forEach(e => rows.push(row(Y, e, 'escape-alpha', 'all')));
+  rows.push(completed('escape-alpha', 3, 3));             // escaped: every lock open
+  rows.push(completed('escape-alpha', 3, 1));             // the clock ran out with one lock open
+  rows.push(completed('escape-alpha', 3, 0));             // the clock ran out with none open
   answers('escape-alpha', 36, 9, 'h0000000a', Y, 'all');  // 36 tries, 9 locks opened: 4.0 a lock
   ['game_started', 'game_started'].forEach(e => rows.push(row(Y, e, 'escape-beta', 'all')));
   answers('escape-beta', 5, 1, '', Y, 'all');
@@ -153,9 +159,12 @@ HARNESS = r"""
     ok('b. no hardest row without a question_id', rep.hardest.every(q => q.qid), JSON.stringify(rep.hardest));
     ok('b. a room\'s question_id never reaches hardest questions', !rep.hardest.some(q => q.slug.indexOf('escape-') === 0));
     ok('b. the count of games sending question_id', rep.idGames === 1, rep.idGames);
-    const ra = rep.rooms.map(r => [r.slug, r.starts, r.escaped, r.rate, r.perLock]);
-    ok('c. rooms: started, escaped, rate, attempts per lock, lowest escape rate first',
-      JSON.stringify(ra) === JSON.stringify([['escape-beta', 2, 0, 0, 5], ['escape-alpha', 4, 2, 0.5, 4]]), JSON.stringify(ra));
+    const ra = rep.rooms.map(r => [r.slug, r.starts, r.escaped, r.timedOut, r.rate, r.perLock]);
+    ok('c. rooms: started, escaped, timed out, rate, attempts per lock, lowest escape rate first',
+      JSON.stringify(ra) === JSON.stringify([['escape-beta', 2, 0, 0, 0, 5], ['escape-alpha', 4, 1, 2, 0.25, 4]]), JSON.stringify(ra));
+    const ea = rep.rooms.find(r => r.slug === 'escape-alpha') || {};
+    ok('c. a win (3/3) is escaped; a timeout (1/3) and a timeout with no lock open (0/3) are timed out',
+      ea.escaped === 1 && ea.timedOut === 2, JSON.stringify(ea));
     ok('d. shot games named', JSON.stringify(rep.shots) === '["trig-wars"]', rep.shots);
     const d = rep.games.find(g => g.slug === 'delta-q') || {};
     ok('e. a blank before 29 Sep 20:00 UTC is a wrong answer; after it, not marked', d.total === 41 && d.correct === 10, JSON.stringify(d));
@@ -167,12 +176,12 @@ HARNESS = r"""
     ok('one email sent', env.mails.length === 1, env.mails.length);
     ok('the email: overall accuracy from question games', /Overall accuracy: +42% \(question games, 135 marked answers\)/.test(mail.body), mail.body.match(/Overall accuracy.*/));
     ok('the email: accuracy, hardest, rooms and the shot line', ['ACCURACY BY GAME', 'HARDEST QUESTIONS', 'ESCAPE ROOMS', 'alpha-q · gcse · h00000001 — 25% correct (12 attempts)',
-      'escape-alpha — 4 started, 2 escaped (50%), 4.0 attempts per lock opened', 'Left out of accuracy (a correct answer there is a hit, not a right answer): trig-wars.'].every(t => mail.body.indexOf(t) >= 0), mail.body);
+      'escape-alpha — 4 started, 1 escaped (25%), 2 timed out, 4.0 attempts per lock opened', 'Left out of accuracy (a correct answer there is a hit, not a right answer): trig-wars.'].every(t => mail.body.indexOf(t) >= 0), mail.body);
     ok('the email has no fetch-failure line when games.json is read', mail.body.indexOf('could not be read') < 0);
     const dt = dash ? dashText(dash) : '';
     ok('the Dashboard: question-game accuracy, hardest by question_id, rooms, the shot line',
       dt.indexOf('Accuracy by Game — Last 7 Days (question games, min 30') >= 0 && dt.indexOf('alpha-q | gcse | h00000001 | 12 | 3') >= 0 &&
-      dt.indexOf('escape-alpha | 4 | 2') >= 0 && dt.indexOf('Left out of accuracy') >= 0 && dt.indexOf('1 game sends question_id so far') >= 0, dt);
+      dt.indexOf('Room | Started | Escaped | Escape % | Timed out | Attempts per lock') >= 0 && dt.indexOf('escape-alpha | 4 | 1 | 25% | 2 | 4') >= 0 && dt.indexOf('Left out of accuracy') >= 0 && dt.indexOf('1 game sends question_id so far') >= 0, dt);
     out.push(['__sample_email', true, mail.body]); out.push(['__sample_dash', true, dt]);
 
     // ---- games.json unreadable: every game a question game, one line saying so
@@ -203,6 +212,8 @@ PLANTS = [
     ("a minimum below 30", "const RPT_MIN_GAME_ANSWERS = 30;", "const RPT_MIN_GAME_ANSWERS = 20;"),
     ("a pre-29-Sep blank ignored, not counted wrong",
      "  if (c === '' && new Date(x[col['timestamp']]) < RPT_BLANK_WAS_WRONG_UNTIL) return false;\n", ""),
+    ("every room game_completed counted as escaped",
+     "{ if (rptEscaped(x, col)) rm.escaped++; else rm.timedOut++; }", "rm.escaped++;"),
 ]
 
 
