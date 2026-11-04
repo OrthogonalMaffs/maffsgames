@@ -63,6 +63,12 @@ start-up load). When the work merges, move the file to `docs/history/`.
 **Every PR:** no `check-changed.py` in the cloud (AGENTS.md, CLOUD-LEAN); merge only via `python scripts/merge-pr.py <n>
 --watch --wait 3600` (needs a green Gate and main, §7.8.3) and report its last line.
 
+## 2026-11-04 (cloud): LOOK-REFRESH-1 (`docs/handover/contracts/2026-11-04-look-refresh-1.md`, Small per game; standing rule: next game after each merge)
+
+- Agent: Claude Code; primary checkout, branch `claude/eager-johnson-f7xuyn`. Pre-step b8fd508 (PACK-GENERATOR closed out).
+- **1 prime-factorisation (Prime Sprint):** on theme.css, light; Outfit/JetBrains Mono; teal accent `#0f766e` (5.47:1 on white); no Press Start 2P, Nunito, emoji (tree, hearts: now three dots, same `.heart`/`.lost` classes) or hex outside `:root`; capitals dropped (Start game, Play again, Complete!, Game over, Top scores); life-bonus line "3 lives x 50" (was a heart emoji). MIGRATED in check-theme.py. Phone fit: options 605 -> 370 / 528 at 320x568 (all six primes on one row on phones), Aa 375x667 630 -> 404 / 627; both known-failure entries taken off `scripts/phone-fit-state.json` (the tool requires it). Start button above the fold at every size in normal mode; Aa 375 657 / 627 (was 1110), not a gate. Verifier PASS (4273 taps); answer lock PASS. /updates/ line. Before/after: `docs/screenshots/look-refresh-2026-11/`.
+- **Next:** percentage-flip, then fraction-equivalence, then the contact sheet (step 2).
+
 ## 2026-11-04 (cloud): PACK-GENERATOR (`docs/history/contracts/2026-11-04-pack-generator.md`, Shared, Amendments 1-11; stops at a green Gate for Project Claude's review and Jon's "merge")
 
 - Agent: Claude Code; primary checkout, branch `claude/great-feynman-vs4fpp`. Pre-step a9e175f; generator 562c5a2; PR #659.
