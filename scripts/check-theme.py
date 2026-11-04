@@ -78,10 +78,11 @@ MIGRATED = [
     "simultaneous-solver",  # rebuilt to the theme, 6 Oct 2026 (staged elimination; the keypad and the calculator badge live in theme.css)
     "prime-factorisation",  # migrated 4 Nov 2026 (contract LOOK-REFRESH-1)
     "percentage-flip",  # migrated 4 Nov 2026 (contract LOOK-REFRESH-1)
+    "fraction-equivalence",  # migrated 4 Nov 2026 (contract LOOK-REFRESH-1)
 ]
 NOT_YET = [
     "sequence-solver", "estimation-golf",
-    "prime-or-composite", "fraction-equivalence", "equatle", "52dle",
+    "prime-or-composite", "equatle", "52dle",
     "constructions-lab", "word-problem-decoder", "equation-builder", "spot-the-error",
     "gradient-hunter", "truth-buster", "spot-the-muppet", "terrible-advice",
     "wrong-on-the-internet", "maths-court", "expected-damage", "negative-number-line",
