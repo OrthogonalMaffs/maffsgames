@@ -13,3 +13,7 @@ CLAUDE.local.md
 # Background processes a session started through scripts/bg.py (contract BG-LAUNCHER): per-worktree, local only.
 .claude/pids.json
 .claude/bg-*.log
+
+# Printable escape-room packs (contract PACK-GENERATOR): the product, built locally by tools/pack-generator/build_pack.py.
+# Never committed, never published, never a CI artifact.
+dist-packs/

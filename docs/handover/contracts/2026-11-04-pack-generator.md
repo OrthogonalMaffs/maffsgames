@@ -81,3 +81,12 @@ STOP IF: branch art/kiln-pack is missing, has other than 11 images, or an image 
 fewer than 7 joint draws meet the rules (report the count); the longest clue cannot fit its label box at 11 pt or
 larger (report which); the existing parser or draw_is_valid() cannot be imported without changing them; the PDF build
 needs any dependency in the live site; any built file would land in a Pages-served path or a CI artifact.
+
+AMENDMENT 1 to PACK-GENERATOR (Jon, 4 Nov): branding.
+- Every page carries the MaffsGames logo (schools/assets/m_plus_logo.svg, read, not copied) and the name
+  "MaffsGames" in the footer, small and black-and-white printable, beside the existing slug/version/seed/date.
+- The cover sheet and teacher notes carry: "Play this room free online: maffsgames.co.uk/escape-rooms/kiln-disaster/"
+  (the room's own URL, taken from the repo, not typed). No other URL, no homepage advert, no QR code, nothing about
+  prices or other products, and no Tes branding anywhere.
+- Add a check to the build: the URL printed resolves to an existing room page in the repo.
+- The logo must not crowd the student pages: footer only on those, under 12 mm high.
