@@ -4,6 +4,8 @@
 
 - DONE queue: docs/history/handover-home-archive.md
 
+- how-many-parts to move next (cloud lane, HOW-MANY-PARTS-FRACTION)
+
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
 - FRACTION-WHOLE: home/Codex, codex/fraction-whole, /home/maffs/mg-fraction-whole, draft PR #662; contract docs/handover/contracts/2026-11-04-fraction-whole.md. Claims fraction-input.js and the-6-ps; checked locally. #660 created updates/cloud.md conflicts; awaiting Jon's branch-merge exception. Shared review hold.
@@ -28,5 +30,7 @@ STOP pending rulebook exception: cloud #660 merged while checks ran. git fetch p
 
 Pushed and opened draft PR #662: https://github.com/OrthogonalMaffs/maffsgames/pull/662 . Contract and signed Amendment 1 included verbatim; full report and phone table in body. Last commit before this pointer: 9a9f110f; implementation f7f157b5, updates a0b324c4. Stop pending the requested branch-merge exception; no Gate result can be obtained while conflicted. Retain /home/maffs/mg-fraction-whole and codex/fraction-whole. Final context-size check passes with home.md well below the warning band; no merge/cleanup.
 
-Record: agent Codex; wall n/a; review cycles 0; amendments 2 (pre-step extension and signed Amendment 1); usage n/a.
+Jon's 4 Nov rulings on #662 resolve the merge STOP and supersede the original contract's cloud Queue edit. Consumed the one-time exception by merging origin/main 31c04c6a into this branch; only updates/index.html and docs/handover/cloud.md conflicted. Cloud handover restored byte-for-byte to main, removing this PR's edit entirely; HOW-MANY-PARTS-FRACTION note now in this Queue and PR body. Updates keeps every entry from both sides, unchanged, newest date first. Rulings saved verbatim in the contract and PR. Next: full local check rerun, push and Gate; stop for Shared review and Jon's merge. No further merge-from-main exception and no PR merge authority.
+
+Record: agent Codex; wall n/a; review cycles 0; amendments 3 (pre-step extension, signed Amendment 1, #662 rulings); usage n/a.
 

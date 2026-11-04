@@ -20,10 +20,10 @@ Checks, independent of the game's code:
   Bank: no question repeated within a bank; a number, not text, for every key.
   Dealing: startGame() five times at each level: 10 different questions from that level's bank.
   Marking, in Chromium (390x844), every item at its level, answered through the game's own checkAnswer() and flipCard():
-    the key typed: "CORRECT! +10 ..." and 10 points; the key plus or minus 1, a tenth of the key and ten times the key
+    the key typed: "Correct! +10 ..." and 10 points; the key plus or minus 1, a tenth of the key and ten times the key
     (where different), the key plus or minus 0.5, and the complement (100-P)% of N (the student who takes the wrong end
-    of the percentage; where different): "WRONG ..." and no points. Flipping the card without checking first marks the
-    same typed answers the same way and a wrong one reads "WRONG — answer is [key]". The back of the card shows the
+    of the percentage; where different): "Not quite ..." and no points. Flipping the card without checking first marks the
+    same typed answers the same way and a wrong one reads "Not quite: the answer is [key]". The back of the card shows the
     verified key and the verified working text.
 No analytics or leaderboard request leaves the stub server (every other request is aborted).
 
@@ -189,12 +189,12 @@ def mark_all(fails, page, bank, name):
                 got = page.evaluate(MARK_JS, [it, fmt(val), flip])
                 where = '%s %s, %s typed (%s), %s' % (name, it['q'], what, fmt(val), 'flipped first' if flip else 'checked')
                 if right:
-                    if not (got['fb'].startswith('CORRECT! +10') and 'correct' in got['cls'] and got['score'] == 10):
+                    if not (got['fb'].startswith('Correct! +10') and 'correct' in got['cls'] and got['score'] == 10):
                         fails.append('%s: the key was not marked right (%r)' % (where, got))
                 else:
-                    ok = got['fb'].startswith('WRONG') and 'wrong' in got['cls'] and got['score'] == 0
+                    ok = got['fb'].startswith('Not quite') and 'wrong' in got['cls'] and got['score'] == 0
                     if flip:
-                        ok = ok and got['fb'] == 'WRONG — answer is %s' % fmt(key)
+                        ok = ok and got['fb'] == 'Not quite: the answer is %s' % fmt(key)
                     if not ok:
                         fails.append('%s: a wrong answer was not marked wrong (%r)' % (where, got))
             if got['back'] != fmt(key) or got['working'] != it['w']:

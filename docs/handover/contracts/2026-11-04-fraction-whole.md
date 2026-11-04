@@ -69,3 +69,15 @@ Thank you.
 
 4 November: The 6 P's: fraction answers now use the same stacked fraction box as our other games, with a box for
 the whole number and a minus button, so mixed numbers and negative fractions can be typed the way they are written.
+
+## Rulings on #662 — Jon, 4 Nov
+
+Rulings on #662 (Jon, 4 Nov):
+1. docs/handover/cloud.md: drop this PR's change to it entirely (restore main's version). The home lane does not edit
+   the cloud handover; that step in the contract was Project Claude's error. Put the note "how-many-parts to move next
+   (cloud lane, HOW-MANY-PARTS-FRACTION)" in docs/handover/home.md instead, and in the PR body.
+2. One-time exception to AGENTS.md's no-merge rule, for this branch only: merge origin/main into codex/fraction-whole
+   once. Resolve updates/index.html by keeping every entry from both sides, in the page's date order, changing no
+   wording. Then re-run the full local checks and let the Gate run. Record this exception verbatim in the saved
+   contract and the PR body.
+Thank you.

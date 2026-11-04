@@ -4,6 +4,41 @@ History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover
 and the last three entries; older entries move here, newest first, unchanged.
 
 
+## 2026-11-04 (cloud): PACK-GENERATOR (`docs/history/contracts/2026-11-04-pack-generator.md`, Shared, Amendments 1-11; stops at a green Gate for Project Claude's review and Jon's "merge")
+
+- Agent: Claude Code; primary checkout, branch `claude/great-feynman-vs4fpp`. Pre-step a9e175f; generator 562c5a2; PR #659.
+- Built: `tools/pack-generator/` (build_pack.py, lockcheck.py, README, Kiln config and 11 webp, two fonts); `dist-packs/` gitignored. Kiln: 320/700 VALID draws, 7 sets, 70 values (21 answers) recomputed independently, labels at least 11.5 pt, 35 pages. Amendment 3: per-lock checking, landscape score sheet (page 2). Final padlock: one x and one + or - in every set, calculator allowed (Amendments 5, 7). Penalties left blank for the teacher (6). Answer boxes give nothing away (4). Page 1 "Run it" (150 words) and read-outs; stakes only as the timeout read-out (8, 9). Final padlock: students told only + - x /, no calculator; friendly products (11). Selftest 17/17.
+- **Jon builds and proofreads the PDF at home:** `python -X utf8 tools/pack-generator/build_pack.py kiln-disaster` (README: what to proofread). Run it and read-outs are DRAFT for his wording.
+- Amendment 2 accepted `scripts/test-pack-generator.py`, `_config.yml` `- tools`, two evidence pages and the fonts.
+- **State:** DONE. Gate green on acdf9fb (run 41850766841); merged #659 (713a178); main run 41859685493 GREEN (checked 4 Nov via the Actions API).
+
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 11; usage n/a.
+
+## 2026-11-04 (cloud): PACKS-CANON (`docs/handover/contracts/2026-11-04-packs-canon.md`, Small, lane exception: canon §7.1, §8, §12)
+
+- Agent: Claude Code; branch `claude/sleepy-shannon-itnz0v` (claim 86a2667). Pre-step 953a0ca. Done: §7.1 line replaced verbatim; §8.2 backlog line; §12 reason.
+- Occurrences, reported not edited: AGENTS.md:16 and .claude/rules/project-claude.md:72 "Free forever. No subscription, no freemium, no ads."; index.html:760 "Free forever"; about/index.html:161 "Free forever &mdash; no subscriptions, no freemium, no ads"; about/index.html:193 "will always be free"; parents/index.html:204 "free to use". None in CLAUDE.md, privacy or canon §0.
+- **STOP IF 1 resolved (Amendment 1, Jon):** §7.1 keeps "no freemium" (nothing on the site held back for payers); about, AGENTS.md, project-claude.md unchanged and now agree.
+- **State:** DONE. Merged #658 (c693a17) on Amendment 1; merge-pr.py's watch: `main c693a17 run 41816602804: GREEN`.
+
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 1; usage n/a.
+
+## 2026-11-04 (cloud): Queue DONE item and entry moved 4 Nov, third batch (verbatim from `docs/handover/cloud.md`, Jon's LOOK-REFRESH-1 pre-step of 4 Nov; history, unchanged)
+
+**PACKS-CANON: DONE** (#658, c693a17, main run 41816602804 GREEN; `docs/history/contracts/2026-11-04-packs-canon.md`).
+
+## 2026-11-04 (cloud): SEARCH-KEYWORDS (`docs/history/contracts/2026-11-04-search-keywords.md`, Shared, lane exception; stopped at a green Gate for Jon's "merge")
+
+- Agent: Claude Code. Primary checkout `/home/user/maffsgames`, branch `claude/sleepy-shannon-itnz0v` (restarted from main a7b476c after #656; claim 7e2bb09).
+- Built: keywords on all 107 games (drafted from each bank, spot-checked; `docs/search-keywords-review.md`), The 6 P's on its `pages` record (Decided for you: STOP IF 1, it is a page with a record, not a game); check-meta.py keyword and card rules, 20/20 selftest plants; apply-meta.py writes data-keywords (124 portal, 38 Essentials cards; idempotent); `schools/assets/search.js` the one matcher; `scripts/verify-search.py` (19 queries, 3 plants). The portal's no-results message was inside a grid applyFilters hides, so it never showed: moved out (own commit 2fe55bb). /updates/ line.
+- For Project Claude: 57 games' spec-map rows claim topics their banks do not teach, and a few banks look small (Estimation Golf ~9 a level, Percentage Flip 12, 52-dle ~20): listed in the review doc, not edited.
+- **STOP (resolved by Amendment 1):** `scripts/verify-new-and-updated.py:123` derives the portal's search results with the old rule (`search in c['text']`), so under the shared matcher it fails on "pies" (How Many Parts? now matches: "pie" is in its "pieces"). Outside the lane exception, so asked.
+- Local: check-meta OK + selftest 20/20; verify-search OK (3/3 plants); verify-card-filter OK after its search check reads data-keywords too; verify-circle-theorem-spotter PASS.
+- **Amendment 1 (Project Claude for Jon, 4 Nov, verbatim in the contract):** verify-new-and-updated.py and verify-card-filter.py now ask the page's MaffsSearch.match (no second copy of the rule; both pass, new-and-updated --selftest 3/3); keyword review approved; resit on Linear Equation Solver kept; decisions accepted; triage lists in the next entry.
+- **State:** DONE. Merged #657 (f8c0edb) on Jon's "merge", after a 502 and a "merge already in progress" lock from GitHub (one retry on Jon's word); merge-pr.py's watch: `main f8c0edb run 41811116888: RED: CI timings and pack (main only)` (GitHub push errors), one rerun: `main f8c0edb run 41811116888: GREEN`.
+
+Record: agent Claude Code; wall n/a; review cycles 1; amendments 1; usage n/a.
+
 ## 2026-11-04 (cloud): Queue DONE items moved 4 Nov, second batch (verbatim from `docs/handover/cloud.md`'s queue section, Jon's PACK-GENERATOR pre-step of 4 Nov; history, unchanged; all three finished: SWEEP-1 batches 1-12 by #358, SWEEP-1-RULINGS by #372, ESSENTIALS-SCREEN-TRUTH-2 by #449 and #450; the three SWEEP-1 standing rulings stay in the queue)
 
 **SWEEP-1** (12 Oct, contract `docs/handover/contracts/2026-10-12-sweep-1.md`): one reading sweep of 96 live games (glorious-gantt skipped), 12 batches of 8 in lowest-level order; findings in each game's file, report `docs/audits/sweep-1-2026-10.md`. **Jon's rulings, 13 Oct** (verbatim: `docs/handover/contracts/2026-10-13-sweep-1-rulings.md`): word-problem-decoder and equation-builder fixed, not unlisted; **equation-builder must merge today, or say so and the home lane unlists it.** quadratic-factoriser DONE (#342, 3ab8cd5; Jon, 13 Oct: fixed, not unlisted). **From now on (Jon, 13 Oct):** a verifier that does not check worked steps or hints is a finding; report every typed answer that can be negative behind inputmode="decimal" (so far: log-laws, suvat; listed in the report's batch 6). Batches 1-5 DONE (#332, #336, #339, #340, #341); equation-builder DONE (#338). Batch 6 DONE (#343). **SR-30 (Jon, 13 Oct; the home lane records it in canon): a CRITICAL level whose fix a standing ruling decides is fixed the same day in its own PR, no unlist, reported to Jon after; stop and ask only for a new stem, context or convention, or if it cannot merge the same day.** circle-theorem-spotter DONE (#344, 091b4f0; batch 7's SR-20 hit, fixed under SR-30). Batch 7 DONE (#345). growth-and-decay DONE (#346, 3b2eb76). **Jon, 13 Oct, from now:** an 'Estimate' stem states a method (SR-12) or says 'use the model to estimate' (brief checks g, h). correlation-or-coincidence DONE (#347, f283457; batch 8's SR-20 hit, B22, B25, B27 replaced on Jon's ruling). Batch 8 DONE (#348, 186aa27). **Batch 9 (all eight reviewed) found two SR-20 levels, each fixed first under SR-30: core-maths-paper2a DONE (#349, 3989aed); stat-attack DONE (#350, 856aa7c). Batch 9 DONE (#351, 6c7c53e; Jon's rulings of 13 Oct and SR-31).** **Batch 10 (all eight reviewed; scratchpad `batch10-notes.txt`) found three SR-20 levels: growth-and-decay (PR open), test-the-claim (wt-tc), graph-sketcher; each its own PR under SR-30, then batch 10 (tax-theft on Jon's ruling).** Then batch 11 (curling-friction, force-resolver, moments-master, log-laws, binomial-blaster, partial-fractions-duel, proof-builder, dimension-checker). Reviewer brief: `docs/handover/contracts/2026-10-12-sweep-1-reviewer-brief.md`.
