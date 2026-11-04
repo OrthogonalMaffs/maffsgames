@@ -127,3 +127,18 @@ AMENDMENT 5 to PACK-GENERATOR (Jon, 4 Nov): a final code. Applies to every pack.
 Record this amendment verbatim in the saved contract and the PR body.
 
 (No Amendment 4 reached the cloud session; Amendment 5 is recorded as received.)
+
+AMENDMENT 6 to PACK-GENERATOR (Jon, 4 Nov): penalties are the teacher's choice. Overrides the fixed 1-minute
+penalties in Amendments 3 and 4.
+- Score sheet header: two blanks the teacher fills in before the game: "Each wrong answer adds ___ min" and
+  "Each hint adds ___ min". Total time = finishing time + (wrong answers x the first) + (hints x the second).
+  Column headings say "Wrong answers" and "Hints" (counts), then "Penalty (min)" and "Total time".
+- Teacher notes: "We suggest 1 minute for each wrong answer and 1 minute for each hint. You know your class:
+  set your own before you start, and tell the teams." (Still DRAFT for Jon's wording.)
+- Cover-sheet line for students: "Bring each answer to your teacher. Wrong answers and hints add time; your
+  teacher will tell you how much." (no figure printed).
+- Selftest: no fixed penalty figure appears on the score sheet or any student page (a planted "1 minute" is caught).
+Record this amendment verbatim in the saved contract and the PR body.
+
+(Amendment 6 overrides Amendment 4's penalty, but Amendment 4 itself never reached the cloud session; hints are
+counted on the score sheet as Amendment 6 says. Anything else Amendment 4 asked for is not in this pack.)

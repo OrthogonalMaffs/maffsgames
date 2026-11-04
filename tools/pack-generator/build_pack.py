@@ -379,13 +379,16 @@ body { font-family: 'Outfit', sans-serif; color: #000; font-size: 10.5pt; line-h
 .page.landscape { page: landscape; width: 297mm; height: 210mm; }
 table.score { table-layout: fixed; font-size: 9.5pt; }
 table.score th, table.score td { padding: 1.2mm 1.5mm; vertical-align: middle; }
-table.score th { text-align: center; line-height: 1.2; }
-table.score tr.row td { height: 15mm; }
+table.score th { text-align: center; line-height: 1.2; font-size: 8.5pt; padding: 1mm 0.8mm; }
+table.score tr.row td { height: 14mm; }
+.page[data-kind=teacher] .main { font-size: 10pt; line-height: 1.32; }
 table.score td.set { text-align: center; font-size: 15pt; font-weight: 800; }
-.box { display: inline-block; width: 4mm; height: 4mm; border: 0.8pt solid #000; margin: 0 0.6mm; vertical-align: middle; }
+.box { display: inline-block; width: 3.4mm; height: 3.4mm; border: 0.8pt solid #000; margin: 0 0.4mm; vertical-align: middle; }
 .box.big { width: 6mm; height: 6mm; }
 td.boxes { text-align: center; white-space: nowrap; }
 .rule { font-size: 9.5pt; margin-top: 2.5mm; }
+.pens { display: flex; gap: 14mm; font-size: 12pt; font-weight: 700; margin: 0 0 3mm; }
+.blank { display: inline-block; width: 16mm; border-bottom: 1pt solid #000; margin: 0 1.5mm; }
 .final { border-top: 1.4pt solid #000; padding-top: 2.5mm; }
 .final h2 { margin-top: 0; }
 .final .target { font-size: 13pt; margin: 1.5mm 0; }
@@ -558,20 +561,25 @@ SCORE_ROWS = 8            # rows a score-sheet page holds; more sets flow onto a
 def score_sheet(locks, sets):
     """The score sheet's tables (Amendment 3), one per page: a row per set, its letter printed; a column group per lock
     (Opened: one tick box; Wrong answers: WRONG_BOXES boxes); the final padlock's tick (Amendment 5); then finishing
-    time, penalty and total time."""
+    time, the counts of wrong answers and hints, penalty and total time (Amendment 6: the penalties are the teacher's,
+    filled in above the table, see score_extras())."""
     groups = "".join("<th colspan='2' data-lock='%s'>Lock %d<br><span class='wrong'>%s</span></th>" % (l["id"], i + 1, l["name"])
                      for i, l in enumerate(locks))
     subs = "".join("<th>Opened</th><th>Wrong answers</th>" for _ in locks)
-    cols = ("<colgroup><col style='width:auto'><col style='width:12mm'>%s<col style='width:16mm'><col style='width:22mm'>"
-            "<col style='width:20mm'><col style='width:20mm'></colgroup>" % "".join("<col style='width:15mm'><col style='width:%dmm'>"
-                                                            % (WRONG_BOXES * 5.4 + 3) for _ in locks))
+    cols = ("<colgroup><col style='width:auto'><col style='width:11mm'>%s<col style='width:14mm'><col style='width:19mm'>"
+            "<col style='width:17mm'><col style='width:14mm'><col style='width:17mm'><col style='width:18mm'></colgroup>"
+            % "".join("<col style='width:13mm'><col style='width:%dmm'>" % round(WRONG_BOXES * 4.4 + 3) for _ in locks))
     head = ("<tr><th rowspan='2'>Team name</th><th rowspan='2'>Set</th>%s<th rowspan='2' data-final='1'>Final padlock</th>"
             "<th rowspan='2'>Finishing time</th>"
-            "<th rowspan='2'>Penalty (minutes)</th><th rowspan='2'>Total time</th></tr><tr>%s</tr>" % (groups, subs))
+            "<th rowspan='2' data-col='wrong'>Wrong answers<br><span class='wrong'>(count)</span></th>"
+            "<th rowspan='2' data-col='hints'>Hints<br><span class='wrong'>(count)</span></th>"
+            "<th rowspan='2' data-col='penalty'>Penalty (min)</th><th rowspan='2' data-col='total'>Total time</th></tr>"
+            "<tr>%s</tr>" % (groups, subs))
     tables = []
     for k in range(0, len(sets), SCORE_ROWS):
         rows = "".join("<tr class='row' data-set='%s'><td></td><td class='set'>%s</td>%s"
-                       "<td class='boxes'><span class='box big' data-box='final'></span></td><td></td><td></td><td></td></tr>"
+                       "<td class='boxes'><span class='box big' data-box='final'></span></td>"
+                       "<td></td><td></td><td></td><td></td><td></td></tr>"
                        % (s["letter"], s["letter"], "".join(
                            "<td class='boxes'><span class='box big' data-lock='%s' data-box='opened'></span></td>"
                            "<td class='boxes'>%s</td>" % (l["id"], "".join(
@@ -580,6 +588,32 @@ def score_sheet(locks, sets):
                        for s in sets[k:k + SCORE_ROWS])
         tables.append("<table class='score'>%s%s%s</table>" % (cols, head, rows))
     return tables
+
+
+def score_extras():
+    """(the two penalty blanks above the table, the rule under it): the teacher sets the penalties (Amendment 6)."""
+    top = ("<div class='pens'><span>Each wrong answer adds<span class='blank' data-blank='wrong'></span>min</span>"
+           "<span>Each hint adds<span class='blank' data-blank='hint'></span>min</span></div>")
+    rule = ("<p class='rule'>Right: tick Opened. Wrong: check one box and say &ldquo;not yet&rdquo;. Hint card given: add "
+            "one to Hints. Finishing time: the timer when the final padlock is ticked. Penalty = (wrong answers &times; "
+            "the first) + (hints &times; the second). <b>Total time = finishing time + (wrong answers &times; the first) + "
+            "(hints &times; the second). Lowest total time wins.</b></p>")
+    return top, rule
+
+
+PENALTY_FIGURE = re.compile(r"\b(?:\d+(?:\.\d+)?|a|an|one|two|three|half a)\s+(?:minutes?|mins?)\b")
+NO_FIGURE_KINDS = ("score", "cover", "evidence", "locks", "hints")
+
+
+def fixed_penalties(pages_text):
+    """A fixed penalty figure ("1 minute", "a minute") on the score sheet or a student page (Amendment 6). Lowercase
+    only, so a clue's own unit ("CYCLE 6 MIN") is not one."""
+    out = []
+    for kind, text in pages_text:
+        if kind in NO_FIGURE_KINDS:
+            for m in PENALTY_FIGURE.finditer(" ".join(text.split())):
+                out.append("a %s page prints a fixed penalty figure: %r" % (kind, m.group(0)))
+    return out
 
 
 def check_score_sheet(tables, locks, sets):
@@ -592,6 +626,9 @@ def check_score_sheet(tables, locks, sets):
                 out.append("lock %s does not have one column group" % lid)
         if t.count("data-final='1'>Final padlock</th>") != 1:
             out.append("the score sheet has no Final padlock column")
+        for col in ("wrong", "hints", "penalty", "total"):
+            if t.count("data-col='%s'" % col) != 1:
+                out.append("the score sheet has no %s column" % col)
         for letter, row in re.findall(r"<tr class='row' data-set='([A-Z])'>(.*?)</tr>", t, re.S):
             seen.append(letter)
             if row.count("data-box='final'") != 1:
@@ -655,7 +692,8 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
                    "working reaches %d.</p>" % (max(st["final"]["target"] for st in sets), max(step_values)))
     script = ("<blockquote><p>%s</p><p>%s</p><p>%s</p><p>Every team has a different set, so your numbers are not "
               "your neighbours&rsquo;. Open the locks, then the final padlock on your locks page. Bring each answer to "
-              "me as soon as you have it. Every wrong answer adds a minute to your time. Lowest total time wins."
+              "me as soon as you have it. Wrong answers and hints add time, and I will tell you how much before we "
+              "start. Lowest total time wins."
               "</p></blockquote>" % (fill_a(room["hook"]),
                                                                                 fill_a(room["brief"]),
                                                                                 fill_a(room["stakes"])))
@@ -670,7 +708,8 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
         "<li>Print one set per team, each team a different letter.</li>"
         "<li>Hand each team its set face down, cover sheet on top.</li>"
         "<li>Keep the score sheet and the answer key with you, and a timer that counts up.</li>"
-        "<li>Optional: cut out the hint cards and keep them at the front.</li></ol>"
+        "<li>Cut out the hint cards and keep them at the front.</li>"
+        "<li>Fill in the two penalties at the top of the score sheet, and tell the teams.</li></ol>"
         "<h2>Read this out</h2>%s"
         "<h2>How checking works</h2>"
         "<p>Use one timer for the whole class, counting up, and start it when every team has its set. A team brings "
@@ -681,8 +720,11 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
         "no brackets, and makes its set&rsquo;s target (the key shows the only one, up to order). Tick Final, or say "
         "&ldquo;not yet&rdquo;.</p>"
         "<p>When a team&rsquo;s final padlock is ticked, write the time on the timer as its finishing time. "
-        "<b>Total time = finishing time + 1 minute per wrong answer. Lowest total time wins</b> (the certificate is "
-        "at the back). The key also gives each lock&rsquo;s common wrong answer and the misconception behind it, for "
+        "When you give a team a hint card, add one to its Hints. <b>Total time = finishing time + (wrong answers "
+        "&times; your wrong-answer penalty) + (hints &times; your hint penalty). Lowest total time wins</b> (the "
+        "certificate is at the back). We suggest 1 minute for each wrong answer and 1 minute for each hint. You know "
+        "your class: set your own before you start, and tell the teams. "
+        "The key also gives each lock&rsquo;s common wrong answer and the misconception behind it, for "
         "the debrief.</p>"
         "<h2>Timing</h2><p>How long to run it is your choice. The online room gives %d minutes%s.</p>"
         "<p class='online'><b>Play this room free online: %s</b></p>"
@@ -697,10 +739,8 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
     # a2. score sheet (Amendment 3): landscape, one row per set, a column group per lock
     tables = score_sheet(locks, sets)
     for k, t in enumerate(tables):
-        rule = ("<p class='rule'>Right: tick Opened. Wrong: check one box and say &ldquo;not yet&rdquo;. Finishing time: "
-                "the timer when the final padlock is ticked. Penalty: 1 minute per checked box. "
-                "<b>Total time = finishing time + penalty. Lowest total time wins.</b></p>")
-        pages.append(page("score", t + rule, "%s: score sheet" % title,
+        top, rule = score_extras()
+        pages.append(page("score", top + t + rule, "%s: score sheet" % title,
                           "One timer for the whole class, counting up" + (", page %d of %d" % (k + 1, len(tables))
                                                                          if len(tables) > 1 else ""), landscape=True))
 
@@ -745,7 +785,8 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
         cover = ("%s<p>%s</p><p>%s</p><p><b>%s</b></p>"
                  "<div class='team'>Team name: <span></span></div>"
                  "<h2>Your codes: write each in its box</h2>"
-                 "<p class='goal'>Bring each answer to your teacher. Every wrong answer adds a minute to your time.</p>"
+                 "<p class='goal'>Bring each answer to your teacher. Wrong answers and hints add time; your teacher will tell you "
+                 "how much.</p>"
                  "<div class='answers'>%s</div><p class='online'>Play this room free online: %s</p>"
                  % (('<img class="cover-art" src="%s" alt="">' % scene.as_uri()) if scene and scene.is_file() else "",
                     f(room["hook"]), f(room["brief"]), f(room["stakes"]), answers, esc(url)))
@@ -788,7 +829,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
                         "<div class='text'>%s</div></div>" % (k + 1, len(l["hints"]), l["name"], f(h))
                         for k in range(max(len(l.get("hints", [])) for l in locks))
                         for l in locks for h in [l["hints"][k] if k < len(l.get("hints", [])) else ""])
-        sub = "Cut out; hand one over when a team asks" + ("" if s else ". The same for every set")
+        sub = "Cut out; hand one over when a team asks, and add one to its Hints" + ("" if s else ". The same for every set")
         pages.append(page("hints", "<div class='hints'>%s</div>" % cards, "%s: hint cards" % title, sub,
                           set_letter=s["letter"] if s else None))
     cert = ("<div class='cert'><h1>%s</h1>%s<p class='line'>%s</p><p class='line'>Team <span></span></p>"
@@ -885,7 +926,7 @@ def build(slug, n, seed, target=None):
                     raise BuildError("label text does not fit its box at %d pt:\n  " % MIN_PT + "\n  ".join(
                         "%s (set %s): %s" % (l["id"], l["set"], l["text"]) for l in small))
                 audit = pg.evaluate(AUDIT_JS)
-                printed = check_printed_text([(k, t) for k, t in audit["text"]], url)
+                printed = check_printed_text([(k, t) for k, t in audit["text"]], url) + fixed_penalties(audit["text"])
                 if printed:
                     raise BuildError("what the pages print fails Amendment 1:\n  " + "\n  ".join(printed))
                 bad = audit["overflow"] + audit["setLetters"] + audit["herringDigits"] + audit["tokens"] + audit["logo"]
@@ -893,6 +934,7 @@ def build(slug, n, seed, target=None):
                     raise BuildError("the pages fail their checks:\n  overflow: %s\n  set letter: %s\n  digits on a red "
                                      "herring: %s\n  logo: %s\n  %s" % (audit["overflow"], audit["setLetters"],
                                                                         audit["herringDigits"], audit["logo"], audit["tokens"]))
+                print("no fixed penalty figure on the score sheet or any student page (the teacher sets them)")
                 print("printed URL %s resolves to a live room page; on every cover and the teacher notes; "
                       "logo and name in every footer (at most %.1f mm high)" % (url, audit["logoMm"]))
                 by_id = {}
@@ -931,7 +973,8 @@ def selftest():
             for slug in rooms:
                 checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed = prepare(slug, None, None, pg)
                 probs = (check_sets(checker, room_js, locks, sets) + verify_sets(locks, sets)[0]
-                         + check_score_sheet(score_sheet(locks, sets), locks, sets) + verify_finals(checker, locks, sets))
+                         + check_score_sheet(score_sheet(locks, sets), locks, sets) + verify_finals(checker, locks, sets)
+                         + fixed_penalties([("score", text_of("".join(score_extras())))]))
                 print("%s: %d sets chosen from %d VALID draws; %s" % (slug, n, len(valid), "OK" if not probs else probs))
                 failures += probs
                 first = first or (checker, room_js, locks, sets, valid)
@@ -998,13 +1041,20 @@ def selftest():
         planted = dict(sets[0]["final"], target=t)
         return [x for x in lockcheck.final_problems("A", nums, planted) if "0 expressions reach" in x]
 
+    def plant_fixed_penalty():
+        top, rule = score_extras()
+        top = pc.apply_plant(top, "<span class='blank' data-blank='wrong'></span>min", " 1 minute",
+                             name="a fixed penalty figure")
+        return fixed_penalties([("score", text_of(top + rule))])
+
     plants = (("a duplicate answer across sets", plant_duplicate),
               ("an invalid joint draw", plant_invalid),
               ("a wrong recomputed answer", plant_wrong_answer),
               ("a printed URL with no room page", plant_bad_url),
               ("a missing score-sheet row", plant_missing_row),
               ("a final target two expressions reach", plant_two_expressions),
-              ("a final target no expression reaches", plant_no_expression))
+              ("a final target no expression reaches", plant_no_expression),
+              ("a fixed penalty figure on the score sheet", plant_fixed_penalty))
     for name, fn in plants:
         found, err = [], None
         try:

@@ -25,9 +25,12 @@ Print it **at 100% (actual size), A4, double-sided off**. It is designed to prin
 
 1. **Teacher notes (page 1): marked DRAFT for your wording.** Drafted from the room and its teacher page. Send your
    wording to Code Claude: it goes into `build_pack.py`, and the DRAFT badge comes off in the same change.
-2. **Score sheet (page 2, landscape):** one row per set, letters printed; for each lock an Opened box and five
-   wrong-answer boxes; finishing time, penalty and total time. Checking is per lock as teams go (Amendment 3): right
-   ticks Opened, wrong checks a box and gets "not yet"; total time = finishing time + 1 minute per wrong answer.
+2. **Score sheet (page 2, landscape):** two blanks the teacher fills in first ("Each wrong answer adds ___ min",
+   "Each hint adds ___ min", Amendment 6); one row per set, letters printed; for each lock an Opened box and five
+   wrong-answer boxes; the final padlock's tick; finishing time, the counts of wrong answers and hints, penalty (min)
+   and total time. Checking is per lock as teams go (Amendment 3): right ticks Opened, wrong checks a box and gets
+   "not yet". Total time = finishing time + (wrong answers x the first) + (hints x the second). No fixed penalty
+   figure is printed on the score sheet or any student page; the teacher notes suggest 1 minute each.
 3. **Answer key and worked solutions (pages 3-4):** every answer, common wrong answer and worked line was recomputed
    by a separate method before the PDF was made, so a mismatch would have stopped the build. The key also gives each
    set's final-padlock target and its one expression; the worked solutions show its working.
@@ -76,9 +79,10 @@ Then, in order, any failure stopping the build:
    all expressions are re-searched, by `lockcheck.py`'s own evaluator. The PDF's page count must equal the pages built.
 
 `python -X utf8 tools/pack-generator/build_pack.py --selftest` (in CI as `scripts/test-pack-generator.py`) checks
-every room with a config and plants seven faults, each of which must be caught: a duplicate answer across sets, an
+every room with a config and plants eight faults, each of which must be caught: a duplicate answer across sets, an
 invalid joint draw, a wrong recomputed answer, a printed URL with no room page, a missing score-sheet row, a final
-target two expressions reach and one no expression reaches. It builds no PDF.
+target two expressions reach and one no expression reaches, and a fixed penalty figure ("1 minute") on the score
+sheet. It builds no PDF.
 
 ## Adding a room
 
