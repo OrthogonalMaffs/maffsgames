@@ -742,7 +742,7 @@ closed them had shipped. The four, and what closed them, are in §8.1.
 
 ## 7.1 Platform Principles
 
-- Everything a student plays is free, forever. No subscriptions, no ads, no sign-up. Teachers may buy offline convenience versions of free content (e.g. printable escape-room packs); the online version stays free and identical. Paid packs are sold through an external marketplace first; nothing paid is sold or linked from maffsgames.co.uk without Jon's approval.
+- Everything a student plays is free, forever. No subscriptions, no freemium, no ads, no sign-up: nothing on maffsgames.co.uk is held back for anyone who pays. Teachers may buy offline convenience versions of free content (e.g. printable escape-room packs); the online version stays free and identical. Paid packs are sold through an external marketplace first; nothing paid is sold or linked from maffsgames.co.uk without Jon's approval.
 - No sign-up required — zero friction for students
 - Gameplay event data may be logged to analytics backend — no PII collected. All collection disclosed in privacy page. No additional collection without Jon's approval.
 - Curriculum aligned — every game maps to AQA/Edexcel/BTEC spec
@@ -2620,7 +2620,7 @@ all — ask for JPGs.**
 
 ## PACKS-CANON (Jon, 5 Oct and 3 Nov 2026)
 
-The reason for §7.1's wording. Jon decided on 5 Oct 2026, and resumed on 3 Nov 2026, to sell printable group-race packs of escape rooms through a teacher resource marketplace (Tes first). The old line, "Free forever — no subscription, no freemium, no ads", forbade it. What stays free is everything a student plays, online, identical to any pack; a pack is an offline convenience for teachers, sold off the site first, and nothing paid is sold or linked from maffsgames.co.uk without Jon's approval. The pilot is The Kiln Disaster, 7 sets (§8.2).
+The reason for §7.1's wording. Jon decided on 5 Oct 2026, and resumed on 3 Nov 2026, to sell printable group-race packs of escape rooms through a teacher resource marketplace (Tes first). The old line, "Free forever — no subscription, no freemium, no ads", forbade it. What stays free is everything a student plays, online, identical to any pack; a pack is an offline convenience for teachers, sold off the site first, and nothing paid is sold or linked from maffsgames.co.uk without Jon's approval. The pilot is The Kiln Disaster, 7 sets (§8.2). "No freemium" stays (Amendment 1, Jon, 4 Nov 2026): nothing on the site is held back for anyone who pays, so the About page, AGENTS.md and Project Claude's rules agree with this wording as they stand.
 
 ## DASHBOARD-METRICS (Jon, 3 Nov 2026)
 

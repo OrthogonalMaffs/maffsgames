@@ -55,3 +55,15 @@ bring cloud.md under its limit without moving live or parked items.
   "Free forever &mdash; no subscriptions, no freemium, no ads". The new §7.1 wording drops "no freemium"; a paid
   printable version of free content can be read as a premium version, which the About page's "no freemium" rules out.
   Canon §0 does not state the principle.
+
+## Amendment 1 (Jon, 4 Nov 2026, verbatim)
+
+Ruling on #658 (Jon, 4 Nov), Amendment 1: STOP IF 1 resolved by keeping "no freemium" in canon, not by rewording
+anything else. Replace the new §7.1 text with, verbatim:
+"Everything a student plays is free, forever. No subscriptions, no freemium, no ads, no sign-up: nothing on
+maffsgames.co.uk is held back for anyone who pays. Teachers may buy offline convenience versions of free content
+(e.g. printable escape-room packs); the online version stays free and identical. Paid packs are sold through an
+external marketplace first; nothing paid is sold or linked from maffsgames.co.uk without Jon's approval."
+about/index.html, AGENTS.md and .claude/rules/project-claude.md stay as they are: with this wording they agree with
+canon. Record the amendment verbatim in the saved contract and the PR body, note the resolution in the handover,
+then merge on green with merge-pr.py 658 --watch.
