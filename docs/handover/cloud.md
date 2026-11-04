@@ -45,6 +45,7 @@ start-up load). When the work merges, move the file to `docs/history/`.
 - **Queued, Low (Jon, 2 Nov, after GATE-FIX):** merge-pr.py counts "the newest merge has no run of its own" as red even under `--wait`, so in the seconds before GitHub registers a new merge's run it refuses ("start one by hand") instead of waiting. Fix: count it as unfinished for a short grace period (about 5 minutes after the commit), with a plant.
 - **Home-lane queue (Jon, 2 Nov):** `scripts/check-banks.py:25` has an invalid escape `\(` (ci-deps.py's `ast.parse` warns on Python 3.12+). Harmless.
 - **Flake (4 Nov):** main run 41811116888 red only in the timings job (GitHub push: Internal Server Error x3); one rerun GREEN.
+- **For Project Claude to triage (LOOK-REFRESH-1, Amendment 1 ruling 4):** 57 of the 88 NOT_YET games render a different palette from canon §7.5's rule (53 dark where it gives light, 4 light where it gives dark); list in the contact-sheet PR.
 - **For Project Claude to triage (PACK-GENERATOR, Amendment 2):** `tools` is not in `scripts/ci-deps.py` KNOWN_TOP, so a tools/ change selects every verifier.
 - **For Project Claude to triage (SEARCH-KEYWORDS ruling 6):** spec-map rows banks do not teach, possibly short banks: archive entry "SEARCH-KEYWORDS triage lists".
 - **For the home lane, canon §7 (SEARCH-KEYWORDS, 4 Nov):** one search rule, `MaffsSearch.match` (`schools/assets/search.js`: text plus `data-keywords`, every word, trailing s), called by the portal and card-filter.js; keywords in games.json via apply-meta.py, held by check-meta.py.
@@ -67,23 +68,7 @@ start-up load). When the work merges, move the file to `docs/history/`.
 
 - Agent: Claude Code; primary checkout, branch `claude/eager-johnson-f7xuyn`. Pre-step b8fd508 (PACK-GENERATOR closed out).
 - **1 prime-factorisation (Prime Sprint):** on theme.css, light; Outfit/JetBrains Mono; teal accent `#0f766e` (5.47:1 on white); no Press Start 2P, Nunito, emoji (tree, hearts: now three dots, same `.heart`/`.lost` classes) or hex outside `:root`; capitals dropped (Start game, Play again, Complete!, Game over, Top scores); life-bonus line "3 lives x 50" (was a heart emoji). MIGRATED in check-theme.py. Phone fit: options 605 -> 370 / 528 at 320x568 (all six primes on one row on phones), Aa 375x667 630 -> 404 / 627; both known-failure entries taken off `scripts/phone-fit-state.json` (the tool requires it). Start button above the fold at every size in normal mode; Aa 375 657 / 627 (was 1110), not a gate. Verifier PASS (4273 taps); answer lock PASS. /updates/ line. Before/after: `docs/screenshots/look-refresh-2026-11/`.
-- **Next:** percentage-flip, then fraction-equivalence, then the contact sheet (step 2).
-
-## 2026-11-04 (cloud): PACK-GENERATOR (`docs/history/contracts/2026-11-04-pack-generator.md`, Shared, Amendments 1-11; stops at a green Gate for Project Claude's review and Jon's "merge")
-
-- Agent: Claude Code; primary checkout, branch `claude/great-feynman-vs4fpp`. Pre-step a9e175f; generator 562c5a2; PR #659.
-- Built: `tools/pack-generator/` (build_pack.py, lockcheck.py, README, Kiln config and 11 webp, two fonts); `dist-packs/` gitignored. Kiln: 320/700 VALID draws, 7 sets, 70 values (21 answers) recomputed independently, labels at least 11.5 pt, 35 pages. Amendment 3: per-lock checking, landscape score sheet (page 2). Final padlock: one x and one + or - in every set, calculator allowed (Amendments 5, 7). Penalties left blank for the teacher (6). Answer boxes give nothing away (4). Page 1 "Run it" (150 words) and read-outs; stakes only as the timeout read-out (8, 9). Final padlock: students told only + - x /, no calculator; friendly products (11). Selftest 17/17.
-- **Jon builds and proofreads the PDF at home:** `python -X utf8 tools/pack-generator/build_pack.py kiln-disaster` (README: what to proofread). Run it and read-outs are DRAFT for his wording.
-- Amendment 2 accepted `scripts/test-pack-generator.py`, `_config.yml` `- tools`, two evidence pages and the fonts.
-- **State:** DONE. Gate green on acdf9fb (run 41850766841); merged #659 (713a178); main run 41859685493 GREEN (checked 4 Nov via the Actions API).
-
-Record: agent Claude Code; wall n/a; review cycles 0; amendments 11; usage n/a.
-
-## 2026-11-04 (cloud): PACKS-CANON (`docs/handover/contracts/2026-11-04-packs-canon.md`, Small, lane exception: canon §7.1, §8, §12)
-
-- Agent: Claude Code; branch `claude/sleepy-shannon-itnz0v` (claim 86a2667). Pre-step 953a0ca. Done: §7.1 line replaced verbatim; §8.2 backlog line; §12 reason.
-- Occurrences, reported not edited: AGENTS.md:16 and .claude/rules/project-claude.md:72 "Free forever. No subscription, no freemium, no ads."; index.html:760 "Free forever"; about/index.html:161 "Free forever &mdash; no subscriptions, no freemium, no ads"; about/index.html:193 "will always be free"; parents/index.html:204 "free to use". None in CLAUDE.md, privacy or canon §0.
-- **STOP IF 1 resolved (Amendment 1, Jon):** §7.1 keeps "no freemium" (nothing on the site held back for payers); about, AGENTS.md, project-claude.md unchanged and now agree.
-- **State:** DONE. Merged #658 (c693a17) on Amendment 1; merge-pr.py's watch: `main c693a17 run 41816602804: GREEN`.
-
-Record: agent Claude Code; wall n/a; review cycles 0; amendments 1; usage n/a.
+- 1 merged #660 (4f2b817); main run 41880253708 queued at hand-off (GitHub held #660's Gate queued for about an hour first).
+- **Amendment 1 (Jon, 4 Nov, verbatim in the contract):** dots, sentence case, state-file removals and screenshot folder accepted; "WRONG — answer is N" becomes "Not quite: the answer is N" and "CORRECT!" becomes "Correct!", each verifier's expected text in the same PR; the other six capitals lines in the two games follow the same pattern (ruling 1), quoted in each PR.
+- **2 percentage-flip:** on theme.css, rose accent `#be185d` (6.04:1), card back `--card-back` (white 11.42:1); card 190/150/120 px (desktop / under 800 px tall / phone). Phone fit: last option 720 -> 397 / 528 (320x568), Next 797 -> 476; Aa 375 737 -> 516 / 627; laptop 1280x720 702 -> 503 / 680, Next 797 -> 596; all six known-failure entries off. Verifier (expected text updated) PASS; answer lock PASS.
+- **Next:** fraction-equivalence (built and measured, parked in the session), then the contact sheet (step 2; 88 games, list drafted).
