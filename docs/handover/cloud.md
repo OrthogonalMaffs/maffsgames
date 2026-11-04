@@ -69,7 +69,7 @@ ESSENTIALS-SCREEN-TRUTH-2 (18 Oct, contract `docs/history/contracts/2026-10-18-e
 - Agent: Claude Code; branch `claude/sleepy-shannon-itnz0v` (claim 86a2667). Pre-step 953a0ca. Done: §7.1 line replaced verbatim; §8.2 backlog line; §12 reason.
 - Occurrences, reported not edited: AGENTS.md:16 and .claude/rules/project-claude.md:72 "Free forever. No subscription, no freemium, no ads."; index.html:760 "Free forever"; about/index.html:161 "Free forever &mdash; no subscriptions, no freemium, no ads"; about/index.html:193 "will always be free"; parents/index.html:204 "free to use". None in CLAUDE.md, privacy or canon §0.
 - **STOP IF 1, for Jon:** about/index.html:161's "no freemium" (AGENTS.md:16 too) reads against paid packs. Merge waits.
-- **State:** PR pending. Next in cloud: PACK-GENERATOR.
+- **State:** PR #658, held for Jon. Next in cloud: PACK-GENERATOR.
 
 Record: agent Claude Code; wall n/a; review cycles 0; amendments 0; usage n/a.
 
