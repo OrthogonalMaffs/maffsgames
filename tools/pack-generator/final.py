@@ -10,7 +10,8 @@ in any shape or through a fractional step, would make the key ambiguous, so none
 Every set in a pack uses the same SHAPE (Amendment 7: sets race each other, so the final padlock is equally hard for
 all): by default one x and one + or - (Option B, "plus-and-minus": one + and one -, set by the room's config). A target
 is a whole number of any size, never one of the set's own answers, never the plain sum, and its expression works out
-in whole, non-negative steps (the generator's two rules, kept by Amendment 7). A set with no such target fails the
+in whole, non-negative steps (the generator's two rules, kept by Amendment 7); its product has a factor that is a
+multiple of 5 or 12 or less (Amendment 11), and students are never told the shape. A set with no such target fails the
 build: there is no fallback to an easier shape.
 
 tools/pack-generator/lockcheck.py checks every target again by its own evaluator, search and shape count.
@@ -28,7 +29,17 @@ SHAPES = {   # name: (the rule as the locks page says it, the operator counts it
                        lambda c: c["*"] == 0 and c["/"] == 0 and c["+"] == 1 and c["-"] == 1),
 }
 DEFAULT_SHAPE = "times-and-plus-or-minus"
-CALCULATOR = {"times-and-plus-or-minus": True, "plus-and-minus": False}   # Amendment 7 / its Option B
+# Amendment 11: students are told only "each answer once, any of + - x /, no brackets, no calculator"; the shape is
+# never printed for them. Every product in a set's one solution must be friendly for mental or quick written methods.
+
+
+def friendly(form):
+    """True when every product in the class has a factor that is a multiple of 5 or is 12 or less (Amendment 11)."""
+    for _, factors in form:
+        mult = [x for e, x in factors if e == 1]
+        if len(mult) > 1 and not any(x % 5 == 0 or x <= 12 for x in mult):
+            return False
+    return True
 
 
 def canon(perm, ops):
@@ -139,7 +150,7 @@ def candidates(nums, shape):
         if v.denominator != 1 or v < 0 or len(fs) != 1 or v == sum(nums) or v in nums:
             continue
         form = next(iter(fs))
-        if not allowed(op_counts(form)):
+        if not allowed(op_counts(form)) or not friendly(form):
             continue
         w = writing(form)
         if w:
@@ -162,6 +173,8 @@ def why_not(nums, t, shape):
         return "%s is one of the set's own answers" % t
     if not SHAPES[shape][1](op_counts(next(iter(fs)))):
         return "the one expression that makes %s is not the pack's shape" % t
+    if not friendly(next(iter(fs))):
+        return "the one expression that makes %s has a product with no factor a multiple of 5 or 12 or less" % t
     return "the one expression that makes %s needs a fraction or a negative step" % t
 
 

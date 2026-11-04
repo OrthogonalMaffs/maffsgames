@@ -63,15 +63,15 @@ start-up load). When the work merges, move the file to `docs/history/`.
 **Every PR:** no `check-changed.py` in the cloud (AGENTS.md, CLOUD-LEAN); merge only via `python scripts/merge-pr.py <n>
 --watch --wait 3600` (needs a green Gate and main, §7.8.3) and report its last line.
 
-## 2026-11-04 (cloud): PACK-GENERATOR (`docs/handover/contracts/2026-11-04-pack-generator.md`, Shared, Amendments 1-9; stops at a green Gate for Project Claude's review and Jon's "merge")
+## 2026-11-04 (cloud): PACK-GENERATOR (`docs/handover/contracts/2026-11-04-pack-generator.md`, Shared, Amendments 1-11; stops at a green Gate for Project Claude's review and Jon's "merge")
 
 - Agent: Claude Code; primary checkout, branch `claude/great-feynman-vs4fpp`. Pre-step a9e175f; generator 562c5a2; PR #659.
-- Built: `tools/pack-generator/` (build_pack.py, lockcheck.py, README, Kiln config and 11 webp, two fonts); `dist-packs/` gitignored. Kiln: 320/700 VALID draws, 7 sets, 70 values (21 answers) recomputed independently, labels at least 11.5 pt, 35 pages. Amendment 3: per-lock checking, landscape score sheet (page 2). Final padlock: one x and one + or - in every set, calculator allowed (Amendments 5, 7). Penalties left blank for the teacher (6). Answer boxes give nothing away (4). Page 1 "Run it" (130 words) and read-outs; stakes only as the timeout read-out (8, 9). Selftest 14/14.
+- Built: `tools/pack-generator/` (build_pack.py, lockcheck.py, README, Kiln config and 11 webp, two fonts); `dist-packs/` gitignored. Kiln: 320/700 VALID draws, 7 sets, 70 values (21 answers) recomputed independently, labels at least 11.5 pt, 35 pages. Amendment 3: per-lock checking, landscape score sheet (page 2). Final padlock: one x and one + or - in every set, calculator allowed (Amendments 5, 7). Penalties left blank for the teacher (6). Answer boxes give nothing away (4). Page 1 "Run it" (150 words) and read-outs; stakes only as the timeout read-out (8, 9). Final padlock: students told only + - x /, no calculator; friendly products (11). Selftest 17/17.
 - **Jon builds and proofreads the PDF at home:** `python -X utf8 tools/pack-generator/build_pack.py kiln-disaster` (README: what to proofread). Run it and read-outs are DRAFT for his wording.
 - Amendment 2 accepted `scripts/test-pack-generator.py`, `_config.yml` `- tools`, two evidence pages and the fonts.
-- **State:** Amendments 8 and 9 pushed; Gate pending. Then Project Claude's review and Jon's "merge".
+- **State:** Amendments 10 and 11 pushed; Gate pending. Then Project Claude's review and Jon's "merge".
 
-Record: agent Claude Code; wall n/a; review cycles 0; amendments 9; usage n/a.
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 11; usage n/a.
 
 ## 2026-11-04 (cloud): PACKS-CANON (`docs/handover/contracts/2026-11-04-packs-canon.md`, Small, lane exception: canon §7.1, §8, §12)
 

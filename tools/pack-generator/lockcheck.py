@@ -149,6 +149,12 @@ def final_problems(letter, nums, final, shape):
         out.append("set %s: the pack's shape %r is unknown" % (letter, shape))
     elif not SHAPE_OPS[shape](*_ops(_parse(expr))):
         out.append("set %s: expression %r is not the pack's shape (%s)" % (letter, expr, shape))
+    for node in _ast.walk(_parse(expr)):            # Amendment 11: every product mental- or quick-method friendly
+        if isinstance(node, _ast.BinOp) and isinstance(node.op, _ast.Mult) \
+                and isinstance(node.left, _ast.Constant) and isinstance(node.right, _ast.Constant):
+            a, b = node.left.value, node.right.value
+            if not (a % 5 == 0 or b % 5 == 0 or a <= 12 or b <= 12):
+                out.append("set %s: product %s x %s has no factor a multiple of 5 or 12 or less" % (letter, a, b))
     if used != sorted(Fraction(str(n)) for n in nums):
         out.append("set %s: expression %r does not use each answer %s exactly once" % (letter, expr, list(nums)))
     if got != t:

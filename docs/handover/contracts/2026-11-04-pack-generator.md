@@ -207,3 +207,31 @@ In the lesson
 6. Call time when you choose. Read the ending that fits. Lowest total time wins.
 Final padlock: calculators allowed. Any calculation that makes the target counts.
 Record this amendment verbatim in the saved contract and the PR body.
+
+AMENDMENTS 10 and 11 to PACK-GENERATOR (Jon, 4 Nov). Please apply both, then record them verbatim in the saved
+contract and the PR body. Thank you.
+
+AMENDMENT 10:
+1. (Superseded by Amendment 11's page 1 line; no change needed for the old wording.)
+2. Prefix: keep "If time runs out:" on paper. Online the warning reads "If you get it wrong." because a wrong setting
+   can trigger the fail picture there; on paper only time can. No change to the engine.
+3. Page 1, under "Before the lesson" step 1: one line giving each set's pages, generated from the build, e.g.
+   "Each set is 4 pages: A 5-8, B 9-12, ...". Counted in the 150-word limit.
+4. Keep the DRAFT badges on Run it and Read-outs until Jon says "wording final".
+
+AMENDMENT 11: the final padlock was made trivial by Amendment 7 (shape given away, calculator allowed: six tries).
+Replaces Amendment 7's student-facing rules and its calculator line.
+- Students are told only: use each of your three answers exactly once, any of + - x /, no brackets (order of
+  operations applies), NO calculator, make the target. The shape is not printed anywhere a student sees.
+- Fairness stays behind the scenes: every set's one solution has the same shape (one x and one + or -), and is the
+  only expression of any shape that makes the target (your existing re-search over all expressions).
+- Every set's product must be mental- or quick-written-method friendly: one factor a multiple of 5, or 12 or less.
+  Add this to set selection: choose the N joint draws so every set has such a target (still VALID, still distinct
+  answers per lock, deterministic for the seed). If N such sets do not exist, fail the build naming the count.
+- A hint card for the final padlock, after the locks' hints: "Is the target close to a round number? Which two of
+  your answers multiply to about that?" Counted as a hint like any other.
+- Page 1 final-padlock line: "No calculator. Any calculation that uses each answer once, with + - x / and no
+  brackets, and makes the target counts (only one does)." "About this room": the shape, the target range, and that
+  estimation is the intended route, for the teacher only.
+- Selftest: the shape printed on a student page, a calculator allowance on a student page, or a set whose product
+  has neither factor a multiple of 5 nor 12 or less, are each caught.

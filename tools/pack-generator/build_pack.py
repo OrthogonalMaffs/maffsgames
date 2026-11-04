@@ -208,7 +208,7 @@ def check_printed_text(pages_text, url):
                 out.append("%s page prints %s" % (kind, why))
             elif u != url:
                 out.append("%s page prints another URL, %s" % (kind, u))
-        if kind in ("cover", "run") and line not in " ".join(text.split()):
+        if kind in ("cover", "readouts") and line not in " ".join(text.split()):
             out.append("a %s page does not carry %r" % (kind, line))
         if re.search(r"\bTes\b", text):
             out.append("a %s page names Tes" % kind)
@@ -237,10 +237,12 @@ def make_set(letter, pick, locks):
     return {"letter": letter, "pick": tuple(pick), "vars": [copy.deepcopy(l["variants"][i]) for l, i in zip(locks, pick)]}
 
 
-def choose(checker, valid, locks, n, seed):
-    """N VALID draws with every lock's answers distinct across them, or BuildError naming the most found.
-    The VALID draws are shuffled by the seed, then searched in that order (depth first), so a seed gives one pack."""
-    order = list(valid)
+def choose(checker, valid, locks, n, seed, final_ok=None):
+    """N VALID draws with every lock's answers distinct across them, each with a final padlock final_ok accepts
+    (Amendment 11: a target whose product is friendly), or BuildError naming the most found. The draws are shuffled by
+    the seed, then searched in that order (depth first), so a seed gives one pack."""
+    usable = [p for p in valid if final_ok is None or final_ok(p)]
+    order = list(usable)
     random.Random(seed).shuffle(order)
     ans = {p: [frozenset(checker.flat(l["variants"][i]["answer"])) for l, i in zip(locks, p)] for p in order}
     chosen, best, budget = [], [], [200000]
@@ -266,8 +268,9 @@ def choose(checker, valid, locks, n, seed):
         return False
 
     if not search(0):
-        raise BuildError("only %d joint draws can be VALID with every lock's answers distinct, fewer than the %d sets "
-                         "asked for (%d VALID draws in all)" % (len(best), n, len(valid)))
+        raise BuildError("only %d sets can be chosen (VALID, every lock's answers distinct, a final padlock with a "
+                         "friendly product), fewer than the %d asked for (%d VALID draws, %d with such a final padlock)"
+                         % (len(best), n, len(valid), len(usable)))
     return [make_set(chr(ord("A") + i), p, locks) for i, p in enumerate(chosen)]
 
 
@@ -672,12 +675,29 @@ def check_score_sheet(tables, locks, sets):
 RUN_IT_WORDS = 150        # page 1's cap (Amendment 9)
 
 
-def run_it(letters, url, shape):
-    """Page 1 (Amendment 9): Project Claude's draft, verbatim but for the set letters (from the pack) and the
-    calculator line (from the pack's final-padlock shape); then Amendment 1's play-online line."""
-    calc = ("calculators allowed" if finalpad.CALCULATOR[shape] else "no calculator needed")
+SET_PAGES = "{SETPAGES}"    # page 1's line of each set's pages (Amendment 10), filled once the pages are numbered
+
+
+def set_pages_line(numbered):
+    """"Each set is 4 pages: A 5-8, B 9-12, ..." from [(letter, [page numbers])] (Amendment 10)."""
+    sizes = {len(nums) for _, nums in numbered}
+    flat = [n for _, nums in numbered for n in nums]
+    in_order = flat == list(range(flat[0], flat[0] + len(flat)))
+    if len(sizes) == 1 and in_order and len(numbered) > 2:
+        # The short form keeps page 1 inside its 150 words (Amendments 9, 10): the sets run in order, so the first and
+        # last set's pages fix every other set's.
+        (a, an), (z, zn) = numbered[0], numbered[-1]
+        return "Each set is %d pages: %s %d-%d \u2026 %s %d-%d." % (len(an), a, an[0], an[-1], z, zn[0], zn[-1])
+    head = ("Each set is %d pages:" % sizes.pop()) if len(sizes) == 1 else "Each set's pages:"
+    return head + " " + ", ".join("%s %d-%d" % (letter, nums[0], nums[-1]) for letter, nums in numbered) + "."
+
+
+def run_it(letters, url, set_pages=SET_PAGES):
+    """Page 1 (Amendments 9, 10, 11): Project Claude's draft, verbatim but for the set letters (from the pack), each
+    set's pages (from the build) and Amendment 11's final-padlock line. Amendment 1's play-online line is on page 2:
+    with it, page 1 would pass its 150 words."""
     return ("<h2>Before the lesson</h2><ol>"
-            "<li>Print one set per team (%s-%s). Cut out the hint cards.</li>"
+            "<li>Print one set per team (%s-%s). Cut out the hint cards.<br>%s</li>"
             "<li>Choose your penalties. We suggest 1 minute per wrong answer and 1 per hint.</li></ol>"
             "<h2>In the lesson</h2><ol>"
             "<li>Hand out the sets face down. Tell the teams your penalties.</li>"
@@ -687,8 +707,9 @@ def run_it(letters, url, shape):
             "<li>A team wants a hint? Hand over the card and add one to Hints.</li>"
             "<li>Final padlock ticked: write down the time.</li>"
             "<li>Call time when you choose. Read the ending that fits. Lowest total time wins.</li></ol>"
-            "<p><b>Final padlock:</b> %s. Any calculation that makes the target counts.</p>"
-            "<p class='online'><b>Play this room free online: %s</b></p>" % (letters[0], letters[-1], calc, esc(url)))
+            "<p><b>Final padlock:</b> No calculator. Any calculation that uses each answer once, with + &minus; "
+            "&times; &divide; and no brackets, and makes the target counts (only one does).</p>"
+            % (letters[0], letters[-1], set_pages))
 
 
 def about_box(room, teach, locks, sets):
@@ -705,7 +726,8 @@ def about_box(room, teach, locks, sets):
             "<p><b>In the pack:</b> %d sets (%s-%s), each a cover sheet, two evidence pages and a locks page; run it, "
             "read-outs, score sheet, this key, worked solutions, hint cards, certificate.</p>"
             "<p><b>Locks:</b> %s.</p>%s"
-            "<p><b>Final padlock:</b> %s in every set; targets %d to %d.</p>"
+            "<p><b>Final padlock (for you only):</b> every set&rsquo;s one solution is %s; targets %d to %d. "
+            "Estimation is the intended route: round the target, then find the two answers whose product is close.</p>"
             "<p>The common wrong answers below are for the debrief.</p></div>"
             % (len(sets), letters[0], letters[-1], topics,
                ("<p><b>Level (the locks):</b> %s</p>" % first_note.group(1)) if first_note else "",
@@ -734,6 +756,37 @@ def teacher_page_problems(pages_text):
         where = sorted({kind for kind, text in pages_text if kind in TEACHER_KINDS and re.search(pat, text, re.I)})
         if len(where) > 1:
             out.append("%s is stated on more than one teacher page: %s" % (name, ", ".join(where)))
+    return out
+
+
+def final_section(letter, n, target):
+    """The locks page's final padlock (Amendment 11): the rules students are told, and nothing about the shape."""
+    return ("<div class='final' data-final-set='%s'><h2>The final padlock</h2><p>Use each of your %d answers exactly "
+            "once, with any of +, &minus;, &times; and &divide; and no brackets, to make the target. &times; and "
+            "&divide; come before + and &minus;. <b>No calculator.</b></p><div class='target'>Target:<b>%s</b></div>"
+            "<div class='work'></div><div class='answerline'>Your expression: <span></span> = %s</div></div>"
+            % (letter, n, target, target))
+
+
+FINAL_HINT = "Is the target close to a round number? Which two of your answers multiply to about that?"
+STUDENT_KINDS = ("cover", "evidence", "locks", "hints")
+CALC_ALLOWED = re.compile(r"calculators?\s+(?:allowed|permitted|may be used|can be used)|use (?:a|your) calculator", re.I)
+
+
+def student_page_final_problems(pages_text):
+    """The final padlock's shape, or a calculator allowance, on a page a student sees (Amendment 11)."""
+    shapes = [" ".join(text_of(words).split()) for words, _ in finalpad.SHAPES.values()]
+    out = []
+    for kind, text in pages_text:
+        if kind not in STUDENT_KINDS:
+            continue
+        t = " ".join(text.split())
+        for sh in shapes:
+            if sh in t:
+                out.append("a %s page prints the final padlock's shape (%r)" % (kind, sh))
+        m = CALC_ALLOWED.search(t)
+        if m:
+            out.append("a %s page allows a calculator (%r)" % (kind, m.group(0)))
     return out
 
 
@@ -808,13 +861,14 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
 
     # a. page 1, "Run it", and page 2, the read-outs (Amendments 8 and 9; DRAFT for Jon's wording)
     shape = sets[0]["final"]["shape"]
-    pages.append(page("run", run_it(letters, url, shape), "%s: run it" % title, "Group race pack, %d sets" % len(sets),
+    pages.append(page("run", run_it(letters, url), "%s: run it" % title, "Group race pack, %d sets" % len(sets),
                       badge='<div class="draft">DRAFT: Jon&rsquo;s wording</div>'))
     reads = readouts(room, fill_a)
     script = ("<p class='when'><b>Read this at the start</b></p><blockquote>%s</blockquote>"
               "<p class='when'><b>Read this when a team finishes</b></p><blockquote>%s</blockquote>"
               "<p class='when'><b>Read this when you call time</b></p><blockquote>%s</blockquote>"
               % (reads["start"], reads["finish"], reads["timeout"]))
+    script += "<p class='online'><b>Play this room free online: %s</b></p>" % esc(url)
     if any("{{" in (room.get(k) or "") for k in ("hook", "brief")):
         script = "<p>At the start, read the hook and brief from any team&rsquo;s cover sheet.</p>" + script
     pages.append(page("readouts", script, "%s: read-outs" % title, "Each for its moment; the ending is yours to call",
@@ -899,12 +953,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
                      for i, l in enumerate(locks))
         box_texts += ["Opens at: " + text_of((l.get("instrument") or {}).get("label", "")) for l in locks]
         fin = s["final"]
-        lk += ("<div class='final' data-final-set='%s'><h2>The final padlock</h2><p>Use each of your %d lock answers "
-               "exactly once, with %s and no brackets, to make the target. &times; comes before + and &minus;.%s</p>"
-               "<div class='target'>Target:<b>%s</b></div>"
-               "<div class='work'></div><div class='answerline'>Your expression: <span></span> = %s</div></div>"
-               % (L, len(locks), finalpad.SHAPES[fin["shape"]][0],
-                  " <b>Calculator allowed.</b>" if finalpad.CALCULATOR[fin["shape"]] else "", fin["target"], fin["target"]))
+        lk += final_section(L, len(locks), fin["target"])
         pages.append(page("locks", lk, title, "The locks and the final padlock: working space", set_letter=L))
 
     # d. hint cards (one page for all sets unless a hint uses a set's figures) and the certificate
@@ -915,8 +964,12 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
                         "<div class='text'>%s</div></div>" % (k + 1, len(l["hints"]), l["name"], f(h))
                         for k in range(max(len(l.get("hints", [])) for l in locks))
                         for l in locks for h in [l["hints"][k] if k < len(l.get("hints", [])) else ""])
+        cards += ("<div class='hint'><div class='which'>Hint 1 of 1</div><div class='lockname'>Final padlock</div>"
+                  "<div class='text'>%s</div></div>" % FINAL_HINT)
+        rows = -(-(cards.count("<div class='hint'>")) // 3)
         sub = "Cut out" + ("" if s else ". The same for every set")
-        pages.append(page("hints", "<div class='hints'>%s</div>" % cards, "%s: hint cards" % title, sub,
+        pages.append(page("hints", "<div class='hints' style='grid-template-rows: repeat(%d, 1fr)'>%s</div>" % (rows, cards),
+                          "%s: hint cards" % title, sub,
                           set_letter=s["letter"] if s else None))
     cert = ("<div class='cert'><h1>%s</h1>%s<p class='line'>%s</p><p class='line'>Team <span></span></p>"
             "<p class='line'>Set ______ &nbsp; Date <span style='width:50mm'></span></p></div>"
@@ -924,6 +977,9 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
                ('<img src="%s" alt="">' % win.as_uri()) if win and win.is_file() else "", fill_a(room.get("win", ""))))
     pages.append(page("certificate", cert, title, "Certificate"))
 
+    numbered = [(st["letter"], [i + 1 for i, pg in enumerate(pages) if ('data-set="%s"' % st["letter"]) in pg[:200]])
+                for st in sets]
+    pages[0] = pages[0].replace(SET_PAGES, set_pages_line(numbered))
     fonts = "".join("@font-face { font-family: '%s'; src: url('%s'); font-weight: %s; }"
                     % (fam, (HERE / "fonts" / fn).as_uri(), w) for fam, fn, w, _ in FONTS.values())
     foot = ('<span class="brand"><span class="logo"><img src="%s" alt=""></span><b>MaffsGames</b>'
@@ -955,7 +1011,9 @@ def prepare(slug, n, seed, page, target=None):
     n = n or cfg.get("sets", 7)
     seed = cfg.get("seed", 1) if seed is None else seed
     valid, total = valid_picks(checker, room_js, locks)
-    sets = choose(checker, valid, locks, n, seed)
+    shape = cfg.get("final_shape", finalpad.DEFAULT_SHAPE)
+    sets = choose(checker, valid, locks, n, seed,
+                  final_ok=lambda pk: bool(finalpad.candidates(answers_of(checker, locks, make_set("?", pk, locks)), shape)))
     add_finals(checker, locks, sets, seed, cfg.get("final_shape", finalpad.DEFAULT_SHAPE), target)
     return checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed
 
@@ -1021,7 +1079,7 @@ def build(slug, n, seed, target=None):
                 printed = (check_printed_text([(k, t) for k, t in audit["text"]], url) + fixed_penalties(audit["text"])
                            + stakes_problems(text_of(filler(locks, sets[0])(room.get("stakes"))), text_of(start_html),
                                              [t for k, t in audit["text"] if k == "cover"])
-                           + teacher_page_problems(audit["text"]))
+                           + teacher_page_problems(audit["text"]) + student_page_final_problems(audit["text"]))
                 if printed:
                     raise BuildError("what the pages print fails its checks:\n  " + "\n  ".join(printed))
                 bad = audit["overflow"] + audit["setLetters"] + audit["herringDigits"] + audit["tokens"] + audit["logo"]
@@ -1030,11 +1088,12 @@ def build(slug, n, seed, target=None):
                                      "herring: %s\n  logo: %s\n  %s" % (audit["overflow"], audit["setLetters"],
                                                                         audit["herringDigits"], audit["logo"], audit["tokens"]))
                 print("no fixed penalty figure on the score sheet or any student page (the teacher sets them)")
+                print("no final-padlock shape or calculator allowance on any student page")
                 print("page 1 (run it) is %d words, at most %d; no rule stated on more than one teacher page"
                       % (len(next(t for k, t in audit["text"] if k == "run").split()), RUN_IT_WORDS))
                 print("the timeout outcome (stakes) only in its own read-out and, prefixed %r, on the covers"
                       % STAKES_PREFIX)
-                print("printed URL %s resolves to a live room page; on every cover and the teacher notes; "
+                print("printed URL %s resolves to a live room page; on every cover and page 2; "
                       "logo and name in every footer (at most %.1f mm high)" % (url, audit["logoMm"]))
                 by_id = {}
                 for l in fit["labels"]:
@@ -1078,12 +1137,16 @@ def selftest():
                          + fixed_penalties([("score", text_of("".join(score_extras())))])
                          + stakes_problems(text_of(filler(locks, sets[0])(room.get("stakes"))),
                                            text_of(readouts(room, filler(locks, sets[0]))["start"]),
-                                           [text_of(cover_story(room, filler(locks, sets[0])))]))
+                                           [text_of(cover_story(room, filler(locks, sets[0])))])
+                         + student_page_final_problems([("locks", text_of(final_section(x["letter"], len(locks),
+                                                                                       x["final"]["target"])))
+                                                        for x in sets] + [("hints", FINAL_HINT)]))
                 print("%s: %d sets chosen from %d VALID draws; %s" % (slug, n, len(valid), "OK" if not probs else probs))
                 failures += probs
                 shape0 = cfg.get("final_shape", finalpad.DEFAULT_SHAPE)
                 probs += teacher_page_problems(
-                    [("run", text_of(run_it([x["letter"] for x in sets], room_url(slug), shape0))),
+                    [("run", text_of(run_it([x["letter"] for x in sets], room_url(slug),
+                                            set_pages_line([(x["letter"], [5, 8]) for x in sets])))),
                      ("key", text_of(about_box(room, teach, locks, sets)))])
                 first = first or (checker, room_js, locks, sets, valid, shape0, room, teach, slug)
         finally:
@@ -1193,12 +1256,13 @@ def selftest():
 
     def teacher_texts(run_html=None, about_html=None):
         letters = [x["letter"] for x in sets]
-        return [("run", text_of(run_html or run_it(letters, room_url(slug0), shape))),
+        return [("run", text_of(run_html or run_it(letters, room_url(slug0),
+                                                   set_pages_line([(x, [5, 8]) for x in letters])))),
                 ("key", text_of(about_html or about_box(room, teach, locks, sets)))]
 
     def plant_long_page_one():
-        run = pc.apply_plant(run_it([x["letter"] for x in sets], room_url(slug0), shape), "<p class='online'>",
-                             "<p>%s</p><p class='online'>" % " ".join(["more"] * 60), name="page 1 over 150 words")
+        run = pc.apply_plant(run_it([x["letter"] for x in sets], room_url(slug0)), "<p><b>Final padlock:</b>",
+                             "<p>%s</p><p><b>Final padlock:</b>" % " ".join(["more"] * 60), name="page 1 over 150 words")
         return [x for x in teacher_page_problems(teacher_texts(run_html=run)) if "words, over" in x]
 
     def plant_repeated_rule():
@@ -1206,6 +1270,29 @@ def selftest():
                                "<p>Total time = finishing time + penalties.</p><p>The common wrong answers below",
                                name="a rule repeated in the About box")
         return [x for x in teacher_page_problems(teacher_texts(about_html=about)) if "more than one teacher page" in x]
+
+    def plant_shape_on_student_page():
+        sec = pc.apply_plant(final_section("A", len(locks), sets[0]["final"]["target"]), "to make the target.",
+                             "to make the target, with " + finalpad.SHAPES[shape][0] + ".", name="the shape on a locks page")
+        return [x for x in student_page_final_problems([("locks", text_of(sec))]) if "shape" in x]
+
+    def plant_calculator_on_student_page():
+        sec = pc.apply_plant(final_section("A", len(locks), sets[0]["final"]["target"]), "<b>No calculator.</b>",
+                             "<b>Calculator allowed.</b>", name="a calculator allowance on a locks page")
+        return [x for x in student_page_final_problems([("locks", text_of(sec))]) if "calculator" in x]
+
+    def plant_unfriendly_product():
+        pools = [answers_of(checker, locks, x) for x in sets] + [(13, 17, 19)]
+        for nums in pools:
+            for v, fs in sorted(finalpad.forms(nums).items()):
+                form = next(iter(fs))
+                if (v.denominator == 1 and v >= 0 and len(fs) == 1 and int(v) not in nums and v != sum(nums)
+                        and finalpad.SHAPES[shape][1](finalpad.op_counts(form)) and not finalpad.friendly(form)):
+                    w = finalpad.writing(form)
+                    if w:
+                        planted = {"target": int(v), "expr": finalpad.show(w[0])}
+                        return [x for x in lockcheck.final_problems("A", nums, planted, shape) if "no factor" in x]
+        raise pc.StalePlant("a set whose product is not friendly", "no unfriendly product found")
 
     plants = (("a duplicate answer across sets", plant_duplicate),
               ("an invalid joint draw", plant_invalid),
@@ -1220,7 +1307,10 @@ def selftest():
               ("stakes on a cover without its prefix", plant_unprefixed_stakes),
               ("stakes inside the start read-out", plant_stakes_in_start),
               ("page 1 over 150 words", plant_long_page_one),
-              ("a rule stated on two teacher pages", plant_repeated_rule))
+              ("a rule stated on two teacher pages", plant_repeated_rule),
+              ("the final padlock's shape on a student page", plant_shape_on_student_page),
+              ("a calculator allowance on a student page", plant_calculator_on_student_page),
+              ("a set whose product is not friendly", plant_unfriendly_product))
     for name, fn in plants:
         found, err = [], None
         try:
