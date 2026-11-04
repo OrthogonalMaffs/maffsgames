@@ -43,3 +43,18 @@ docs/handover/cloud.md records the state.
 STOP IF
 A game's migration needs a change to theme.css; a game's layout breaks the phone rule after migration.
 ```
+
+## Amendment 1 (Jon, 4 Nov 2026), verbatim
+
+```text
+Rulings on LOOK-REFRESH-1 (Jon, 4 Nov):
+1. Hearts to three plain dots; sentence case for emphasis capitals: accepted.
+2. scripts/phone-fit-state.json entries removed as the games now pass; images in docs/screenshots/look-refresh-2026-11/:
+   accepted.
+3. Change the two capital lines: Percentage Flip "WRONG — answer is N" becomes "Not quite: the answer is N", and Fraction
+   Snap "CORRECT!" becomes "Correct!". Update each verifier's expected text in the same PR as the copy (a verifier
+   checks behaviour, not shouting).
+4. The colour-scheme finding (57 of 88 differ from the rule): no action in this contract; add one line under "For
+   Project Claude to triage" in cloud.md.
+Carry on with games 2 and 3 after #660 merges. Thank you.
+```

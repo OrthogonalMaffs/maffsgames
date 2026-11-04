@@ -4,6 +4,25 @@ History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover
 and the last three entries; older entries move here, newest first, unchanged.
 
 
+## 2026-11-04 (cloud): PACK-GENERATOR (`docs/history/contracts/2026-11-04-pack-generator.md`, Shared, Amendments 1-11; stops at a green Gate for Project Claude's review and Jon's "merge")
+
+- Agent: Claude Code; primary checkout, branch `claude/great-feynman-vs4fpp`. Pre-step a9e175f; generator 562c5a2; PR #659.
+- Built: `tools/pack-generator/` (build_pack.py, lockcheck.py, README, Kiln config and 11 webp, two fonts); `dist-packs/` gitignored. Kiln: 320/700 VALID draws, 7 sets, 70 values (21 answers) recomputed independently, labels at least 11.5 pt, 35 pages. Amendment 3: per-lock checking, landscape score sheet (page 2). Final padlock: one x and one + or - in every set, calculator allowed (Amendments 5, 7). Penalties left blank for the teacher (6). Answer boxes give nothing away (4). Page 1 "Run it" (150 words) and read-outs; stakes only as the timeout read-out (8, 9). Final padlock: students told only + - x /, no calculator; friendly products (11). Selftest 17/17.
+- **Jon builds and proofreads the PDF at home:** `python -X utf8 tools/pack-generator/build_pack.py kiln-disaster` (README: what to proofread). Run it and read-outs are DRAFT for his wording.
+- Amendment 2 accepted `scripts/test-pack-generator.py`, `_config.yml` `- tools`, two evidence pages and the fonts.
+- **State:** DONE. Gate green on acdf9fb (run 41850766841); merged #659 (713a178); main run 41859685493 GREEN (checked 4 Nov via the Actions API).
+
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 11; usage n/a.
+
+## 2026-11-04 (cloud): PACKS-CANON (`docs/handover/contracts/2026-11-04-packs-canon.md`, Small, lane exception: canon §7.1, §8, §12)
+
+- Agent: Claude Code; branch `claude/sleepy-shannon-itnz0v` (claim 86a2667). Pre-step 953a0ca. Done: §7.1 line replaced verbatim; §8.2 backlog line; §12 reason.
+- Occurrences, reported not edited: AGENTS.md:16 and .claude/rules/project-claude.md:72 "Free forever. No subscription, no freemium, no ads."; index.html:760 "Free forever"; about/index.html:161 "Free forever &mdash; no subscriptions, no freemium, no ads"; about/index.html:193 "will always be free"; parents/index.html:204 "free to use". None in CLAUDE.md, privacy or canon §0.
+- **STOP IF 1 resolved (Amendment 1, Jon):** §7.1 keeps "no freemium" (nothing on the site held back for payers); about, AGENTS.md, project-claude.md unchanged and now agree.
+- **State:** DONE. Merged #658 (c693a17) on Amendment 1; merge-pr.py's watch: `main c693a17 run 41816602804: GREEN`.
+
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 1; usage n/a.
+
 ## 2026-11-04 (cloud): Queue DONE item and entry moved 4 Nov, third batch (verbatim from `docs/handover/cloud.md`, Jon's LOOK-REFRESH-1 pre-step of 4 Nov; history, unchanged)
 
 **PACKS-CANON: DONE** (#658, c693a17, main run 41816602804 GREEN; `docs/history/contracts/2026-11-04-packs-canon.md`).
