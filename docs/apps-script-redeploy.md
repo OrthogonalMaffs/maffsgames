@@ -120,6 +120,12 @@ Then play any game for a few questions and check the **MaffsGames Events** sheet
   `ensureHeaders` rewrites row 1 whenever it differs from `EXPECTED_HEADERS`, so there is nothing to type), and a
   `question_answered` row from Sequence Solver has `h` + 8 hex digits in column **R**. Other games leave R blank
   until they are moved onto it.
+- From `2026-11-03-b` (DASHBOARD-METRICS): the report reads `data/games.json` from GitHub with `UrlFetchApp`, so the
+  first run after this deploy asks for one new permission, **"Connect to an external service"**: accept it (run
+  `testDashboard` once from the editor to grant it straight away). The Dashboard then shows question-game accuracy
+  (at least 30 answers), hardest questions by `question_id` (at least 10 attempts) and an Escape Rooms table, and names
+  Trig Wars and Bearing Blitz as left out of accuracy. If either the email or the Dashboard says "games.json could
+  not be read", the fetch failed: the report still went out, with every game counted as a question game.
 
 ---
 

@@ -197,7 +197,8 @@
   {
    "slug": "trig-wars",
    "search_phrase": "Trigonometry and Projectiles",
-   "description": "Set the angle and power of a shot and watch the trigonometry resolve it into horizontal and vertical parts."
+   "description": "Set the angle and power of a shot and watch the trigonometry resolve it into horizontal and vertical parts.",
+   "answer_kind": "shot"
   },
   {
    "slug": "trig-worms",
@@ -267,7 +268,8 @@
   {
    "slug": "bearing-blitz",
    "search_phrase": "Three-Figure Bearings",
-   "description": "Estimate and set three-figure bearings, then fire at the target."
+   "description": "Estimate and set three-figure bearings, then fire at the target.",
+   "answer_kind": "shot"
   },
   {
    "slug": "scale-factor-scaling",

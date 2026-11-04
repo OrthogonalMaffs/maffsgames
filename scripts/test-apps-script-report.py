@@ -1,0 +1,260 @@
+#!/usr/bin/env python3
+# ci-line: Analytics report (docs/apps-script-endpoint.js: each kind of game by its own measure, hardest questions by question_id, rooms by escapes, shot games left out, games.json fallback, pre-29-Sep blanks; planted faults caught) |
+# ci-deps: docs/apps-script-endpoint.js data/games.json
+"""Does the daily email and Dashboard (docs/apps-script-endpoint.js) report each kind of game by a measure that means
+something for it? Contract DASHBOARD-METRICS (Jon, 3 Nov 2026; Amendment 2: games.json is read from GitHub).
+
+The script cannot run in CI (it needs Google's services), so, as scripts/test-apps-script-counts.py does, this loads the
+file's own source into Chromium behind small fakes of what it calls (UrlFetchApp, SpreadsheetApp, DriveApp, MailApp,
+Utilities, Charts) with a fixed clock, and drives the real functions on fixture rows:
+
+  - a question game well over the minimum, one at exactly 30 and one at 29, one with no question_id (an older game),
+    an escape room escaped and one never escaped, a shot game (Trig Wars), Prisoner's Dilemma's unmarked blanks, and a
+    game whose rows are from before 29 Sep 2026 20:00 UTC with blank wrong answers;
+  - a. accuracy by game: question games only, at least 30 marked answers, lowest first; overall accuracy from
+    question games only;
+  - b. hardest questions: question games only, keyed game + level + question_id, at least 10 attempts, no row without
+    a question_id, and the heading counts the games that send one;
+  - c. rooms: started, escaped, escape rate, attempts per lock opened (marked / correct), lowest escape rate first;
+  - d. shot games: one line naming them, never in accuracy;
+  - e. a blank `correct` before 2026-09-29T20:00Z counts as wrong; after it, it is not marked;
+  - games.json is fetched once per run; a failed fetch counts every game as a question game and says so in one line
+    of the email and of the Dashboard; the real data/games.json uses only "question" and "shot";
+  - end to end: sendDailyReport sends one email and builds the Dashboard from the same model (--sample prints both).
+Then planted faults, each a small change to the script that must make a check fail: a room counted in accuracy, a row
+with no question_id in hardest questions, a minimum below 30, a pre-29-Sep blank ignored instead of counted wrong.
+
+    python scripts/test-apps-script-report.py [--sample]
+"""
+import json
+import pathlib
+import sys
+
+HERE = pathlib.Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import plant_common as pc  # noqa: E402
+
+BASE = HERE.parent
+SRC = BASE / "docs" / "apps-script-endpoint.js"
+GAMES = BASE / "data" / "games.json"
+
+HARNESS = r"""
+([src, fixtureGames]) => {
+  const out = [];
+  const ok = (name, cond, detail) => out.push([name, !!cond, cond ? '' : String(detail === undefined ? '' : detail)]);
+  const NOW = Date.parse('2026-11-04T07:00:00Z');
+  const RealDate = Date;
+  class FakeDate extends RealDate { constructor(...a) { if (a.length === 0) super(NOW); else super(...a); } static now() { return NOW; } }
+
+  const HEAD = ['timestamp', 'event', 'game_slug', 'level', 'mode', 'question_index', 'correct', 'attempts', 'score',
+    'questions_answered', 'questions_correct', 'previous_score', 'difficulty', 'filter_type', 'filter_value',
+    'client_ts', 'seq', 'question_id'];
+  const col = {}; HEAD.forEach((h, i) => col[h] = i);
+  const row = (ts, event, slug, level, correct, qid) => {
+    const r = HEAD.map(() => ''); r[0] = ts; r[1] = event; r[2] = slug; r[3] = level;
+    r[6] = correct === undefined ? '' : correct; r[17] = qid || ''; return r;
+  };
+  const Y = '2026-11-03T10:00:00.000Z', OLD = '2026-09-28T10:00:00.000Z';
+  const rows = [];
+  const answers = (slug, n, right, qid, ts, level) => { for (let i = 0; i < n; i++) rows.push(row(ts || Y, 'question_answered', slug, level || 'gcse', i < right, typeof qid === 'function' ? qid(i) : qid)); };
+  // question games
+  answers('alpha-q', 12, 3, 'h00000001');                 // the hardest question: 25% over 12 attempts
+  answers('alpha-q', 20, 18, 'h00000002');                // 90% over 20
+  answers('alpha-q', 9, 0, 'h00000003');                  // 0% but only 9 attempts: below the minimum
+  answers('beta-q', 35, 14);                              // no question_id (not migrated yet): 40%
+  answers('thirty-q', 30, 21);                            // exactly 30: in
+  answers('twentynine-q', 29, 1);                         // 29: out, however low
+  rows.push(row(Y, 'question_answered', 'prisoners-dilemma', 'all', '', ''));   // no right answer: not marked
+  rows.push(row(Y, 'question_answered', 'prisoners-dilemma', 'all', '', ''));
+  // a shot game: hits, not answers
+  answers('trig-wars', 40, 4);
+  // escape rooms
+  ['game_started', 'game_started', 'game_started', 'game_started', 'game_completed', 'game_completed']
+    .forEach(e => rows.push(row(Y, e, 'escape-alpha', 'all')));
+  answers('escape-alpha', 36, 9, 'h0000000a', Y, 'all');  // 36 tries, 9 locks opened: 4.0 a lock
+  ['game_started', 'game_started'].forEach(e => rows.push(row(Y, e, 'escape-beta', 'all')));
+  answers('escape-beta', 5, 1, '', Y, 'all');
+  // before the falsy fix: 30 blank (wrong) and 10 right, all before 29 Sep 20:00 UTC
+  answers('delta-q', 10, 10, '', OLD);
+  for (let i = 0; i < 30; i++) rows.push(row(OLD, 'question_answered', 'delta-q', 'gcse', '', ''));
+  rows.push(row('2026-09-29T19:59:00.000Z', 'question_answered', 'delta-q', 'gcse', '', ''));    // a minute before: wrong
+  rows.push(row('2026-09-29T20:01:00.000Z', 'question_answered', 'delta-q', 'gcse', '', ''));    // after: not marked
+
+  function load(fetchMode) {
+    const env = { fetches: 0, mails: [], cells: {}, sheets: {} };
+    const UrlFetchApp = { fetch(url) {
+      env.fetches++; env.url = url;
+      if (fetchMode === 'throw') throw new Error('DNS error');
+      if (fetchMode === '404') return { getResponseCode: () => 404, getContentText: () => 'Not Found' };
+      return { getResponseCode: () => 200, getContentText: () => JSON.stringify(fixtureGames) };
+    } };
+    const chain = new Proxy({}, { get: (t, k) => k === 'build' ? () => ({}) : () => chain });
+    function sheetFake(name, data) {
+      const sh = { name, cells: {},
+        clear() { sh.cells = {}; }, getCharts: () => [], removeChart() {}, insertChart() {}, setColumnWidth() {},
+        setTabColor() {}, setFrozenRows() {}, newChart: () => chain,
+        getDataRange: () => ({ getValues: () => data }),
+        getLastRow: () => data.length,
+        getRange(r, c, nr, nc) {
+          const rg = { setValue(v) { sh.cells[r + ',' + c] = v; return rg; },
+            setValues(vs) { vs.forEach((line, i) => line.forEach((v, j) => sh.cells[(r + i) + ',' + (c + j)] = v)); return rg; },
+            getValues: () => [data[r - 1].slice(c - 1, c - 1 + (nc || 1))] };
+          ['setFontSize', 'setFontWeight', 'setFontStyle', 'setBackground', 'setNumberFormat'].forEach(m => rg[m] = () => rg);
+          return rg;
+        } };
+      return sh;
+    }
+    const events = sheetFake('events', [HEAD].concat(rows));
+    const ss = { getActiveSheet: () => events, getSheetByName: n => env.sheets[n] || null,
+      insertSheet: n => (env.sheets[n] = sheetFake(n, [])) };
+    const DriveApp = { getFilesByName: () => ({ hasNext: () => true, next: () => ({}) }) };
+    const SpreadsheetApp = { open: () => ss, create: () => ss };
+    const MailApp = { sendEmail: (to, subject, body) => env.mails.push({ to, subject, body }) };
+    const Utilities = { formatDate: (d, tz, f) => f === 'yyyy-MM-dd' ? d.toISOString().slice(0, 10) : d.toISOString().slice(0, 16) };
+    const Charts = { ChartType: { BAR: 'BAR', PIE: 'PIE', LINE: 'LINE' } };
+    const api = new Function('UrlFetchApp', 'DriveApp', 'SpreadsheetApp', 'MailApp', 'Utilities', 'Charts', 'Date', 'ContentService', 'ScriptApp',
+      src + '\n;return {rptBuild, rptLoadKinds, rptMarked, rptKind, rptEmailText, sendDailyReport, rebuildDashboard,' +
+      ' RPT_MIN_GAME_ANSWERS, RPT_MIN_QUESTION_ATTEMPTS, GAMES_JSON_URL};')(
+      UrlFetchApp, DriveApp, SpreadsheetApp, MailApp, Utilities, Charts, FakeDate, {}, {});
+    return { api, env };
+  }
+  const dashText = sh => {
+    const keys = Object.keys(sh.cells).map(k => k.split(',').map(Number));
+    const maxR = Math.max(0, ...keys.map(k => k[0]));
+    const lines = [];
+    for (let r = 1; r <= maxR; r++) {
+      const cells = keys.filter(k => k[0] === r).sort((a, b) => a[1] - b[1]).map(k => {
+        const v = sh.cells[k[0] + ',' + k[1]]; return typeof v === 'number' && v > 0 && v < 1 ? Math.round(v * 100) + '%' : String(v); });
+      lines.push(cells.join(' | '));
+    }
+    return lines.join('\n');
+  };
+
+  try {
+    // ---- the model, games.json read
+    let { api, env } = load('ok');
+    const kinds = api.rptLoadKinds(); api.rptLoadKinds();
+    ok('games.json is fetched once per run, from GitHub (Amendment 2)', env.fetches === 1 && env.url === 'https://raw.githubusercontent.com/OrthogonalMaffs/maffsgames/main/data/games.json', env.fetches + ' fetches of ' + env.url);
+    ok('minimums are 30 answers and 10 attempts', api.RPT_MIN_GAME_ANSWERS === 30 && api.RPT_MIN_QUESTION_ATTEMPTS === 10, api.RPT_MIN_GAME_ANSWERS + ', ' + api.RPT_MIN_QUESTION_ATTEMPTS);
+    ok('kinds: escape- is a room, answer_kind shot is a shot, anything else a question',
+      api.rptKind('escape-alpha', kinds) === 'room' && api.rptKind('trig-wars', kinds) === 'shot' && api.rptKind('alpha-q', kinds) === 'question' && api.rptKind('unknown-game', kinds) === 'question');
+    const rep = api.rptBuild(rows, col, kinds);
+    const slugs = rep.games.map(g => g.slug);
+    ok('a. accuracy: question games at 30 or more marked answers, lowest first',
+      JSON.stringify(slugs) === JSON.stringify(['delta-q', 'beta-q', 'alpha-q', 'thirty-q']), JSON.stringify(rep.games));
+    ok('a. a room is never in accuracy', !slugs.some(s => s.indexOf('escape-') === 0), slugs);
+    ok('a. a shot game is never in accuracy', slugs.indexOf('trig-wars') < 0, slugs);
+    ok('a. 29 answers are below the minimum, however low the score', slugs.indexOf('twentynine-q') < 0, slugs);
+    // overall: alpha 41 (21 right), beta 35 (14), thirty 30 (21), twentynine 29 (1), delta 41 marked (10 right)
+    ok('a. overall accuracy counts question games only', rep.overall.total === 176 && rep.overall.correct === 67, JSON.stringify(rep.overall));
+    const hk = rep.hardest.map(q => q.slug + '|' + q.level + '|' + q.qid);
+    ok('b. hardest: game + level + question_id, 10 or more attempts, lowest first',
+      JSON.stringify(hk) === JSON.stringify(['alpha-q|gcse|h00000001', 'alpha-q|gcse|h00000002']), JSON.stringify(rep.hardest));
+    ok('b. no hardest row without a question_id', rep.hardest.every(q => q.qid), JSON.stringify(rep.hardest));
+    ok('b. a room\'s question_id never reaches hardest questions', !rep.hardest.some(q => q.slug.indexOf('escape-') === 0));
+    ok('b. the count of games sending question_id', rep.idGames === 1, rep.idGames);
+    const ra = rep.rooms.map(r => [r.slug, r.starts, r.escaped, r.rate, r.perLock]);
+    ok('c. rooms: started, escaped, rate, attempts per lock, lowest escape rate first',
+      JSON.stringify(ra) === JSON.stringify([['escape-beta', 2, 0, 0, 5], ['escape-alpha', 4, 2, 0.5, 4]]), JSON.stringify(ra));
+    ok('d. shot games named', JSON.stringify(rep.shots) === '["trig-wars"]', rep.shots);
+    const d = rep.games.find(g => g.slug === 'delta-q') || {};
+    ok('e. a blank before 29 Sep 20:00 UTC is a wrong answer; after it, not marked', d.total === 41 && d.correct === 10, JSON.stringify(d));
+    ok('e. Prisoner\'s Dilemma\'s blanks are not marked', !rep.games.some(g => g.slug === 'prisoners-dilemma') && rep.overall.total === 176);
+
+    // ---- end to end, email and Dashboard
+    api.sendDailyReport();
+    const mail = env.mails[0] || { body: '' }, dash = env.sheets['Dashboard'];
+    ok('one email sent', env.mails.length === 1, env.mails.length);
+    ok('the email: overall accuracy from question games', /Overall accuracy: +42% \(question games, 135 marked answers\)/.test(mail.body), mail.body.match(/Overall accuracy.*/));
+    ok('the email: accuracy, hardest, rooms and the shot line', ['ACCURACY BY GAME', 'HARDEST QUESTIONS', 'ESCAPE ROOMS', 'alpha-q · gcse · h00000001 — 25% correct (12 attempts)',
+      'escape-alpha — 4 started, 2 escaped (50%), 4.0 attempts per lock opened', 'Left out of accuracy (a correct answer there is a hit, not a right answer): trig-wars.'].every(t => mail.body.indexOf(t) >= 0), mail.body);
+    ok('the email has no fetch-failure line when games.json is read', mail.body.indexOf('could not be read') < 0);
+    const dt = dash ? dashText(dash) : '';
+    ok('the Dashboard: question-game accuracy, hardest by question_id, rooms, the shot line',
+      dt.indexOf('Accuracy by Game — Last 7 Days (question games, min 30') >= 0 && dt.indexOf('alpha-q | gcse | h00000001 | 12 | 3') >= 0 &&
+      dt.indexOf('escape-alpha | 4 | 2') >= 0 && dt.indexOf('Left out of accuracy') >= 0 && dt.indexOf('1 game sends question_id so far') >= 0, dt);
+    out.push(['__sample_email', true, mail.body]); out.push(['__sample_dash', true, dt]);
+
+    // ---- games.json unreadable: every game a question game, one line saying so
+    for (const mode of ['throw', '404']) {
+      ({ api, env } = load(mode));
+      const k2 = api.rptLoadKinds(), r2 = api.rptBuild(rows, col, k2);
+      ok('fetch ' + mode + ': trig-wars is counted as a question game', !k2.ok && r2.games.some(g => g.slug === 'trig-wars') && r2.shots.length === 0, JSON.stringify(r2.games.map(g => g.slug)));
+      ok('fetch ' + mode + ': rooms still by slug', r2.rooms.length === 2);
+      api.sendDailyReport();
+      const m2 = (env.mails[0] || { body: '' }).body, d2 = env.sheets['Dashboard'] ? dashText(env.sheets['Dashboard']) : '';
+      const line = 'games.json could not be read, so every game is counted as a question game today.';
+      ok('fetch ' + mode + ': one line in the email and one on the Dashboard', m2.split(line).length === 2 && d2.split(line).length === 2, m2.slice(0, 300));
+    }
+  } catch (e) {
+    ok('the harness ran', false, e.stack || e);
+  }
+  return out;
+}
+"""
+
+FIXTURE_GAMES = {"games": [{"slug": "alpha-q"}, {"slug": "beta-q", "answer_kind": "question"}, {"slug": "thirty-q"},
+                           {"slug": "twentynine-q"}, {"slug": "delta-q"}, {"slug": "prisoners-dilemma"},
+                           {"slug": "trig-wars", "answer_kind": "shot"}]}
+
+PLANTS = [
+    ("a room counted in accuracy", "  if (String(slug).indexOf('escape-') === 0) return 'room';\n", ""),
+    ("a row with no question_id in hardest questions", "    if (!qid) return;\n", ""),
+    ("a minimum below 30", "const RPT_MIN_GAME_ANSWERS = 30;", "const RPT_MIN_GAME_ANSWERS = 20;"),
+    ("a pre-29-Sep blank ignored, not counted wrong",
+     "  if (c === '' && new Date(x[col['timestamp']]) < RPT_BLANK_WAS_WRONG_UNTIL) return false;\n", ""),
+]
+
+
+def run(page, src):
+    return page.evaluate(HARNESS, [src, FIXTURE_GAMES])
+
+
+def real_games_json():
+    """The real data/games.json: every answer_kind is "question" or "shot"."""
+    games = json.loads(GAMES.read_text(encoding="utf-8"))["games"]
+    bad = [(g["slug"], g["answer_kind"]) for g in games if "answer_kind" in g and g["answer_kind"] not in ("question", "shot")]
+    shots = [g["slug"] for g in games if g.get("answer_kind") == "shot"]
+    return bad, shots
+
+
+def main():
+    from playwright.sync_api import sync_playwright
+    sys.stdout.reconfigure(encoding="utf-8")
+    src = SRC.read_text(encoding="utf-8")
+    failed = 0
+    with sync_playwright() as pw:
+        browser = pw.chromium.launch()
+        page = browser.new_context(timezone_id="Europe/London").new_page()
+        results = run(page, src)
+        samples = {name: detail for name, _, detail in results if name.startswith("__sample")}
+        for name, good, detail in results:
+            if name.startswith("__sample"):
+                continue
+            failed += not good
+            print("  %s  %s%s" % ("PASS" if good else "FAIL", name, "" if good else "  <- " + detail[:600]))
+        bad, shots = real_games_json()
+        failed += bool(bad)
+        print("  %s  data/games.json: answer_kind is only \"question\" or \"shot\"%s (shot: %s)"
+              % ("FAIL" if bad else "PASS", "  <- %s" % bad if bad else "", ", ".join(shots) or "none"))
+        for what, old, new in PLANTS:
+            try:
+                planted = pc.apply_plant(src, old, new, what)
+            except pc.StalePlant as e:
+                failed += 1
+                print("  FAIL  plant: %s" % e)
+                continue
+            fails = [n for n, good, _ in run(page, planted) if not good and not n.startswith("__")]
+            caught = pc.is_caught(fails)
+            failed += not caught
+            print("  %s  plant: %s%s" % ("CAUGHT" if caught else "MISSED", what, " (" + "; ".join(fails) + ")" if fails else ""))
+        browser.close()
+    if "--sample" in sys.argv:
+        print("\n----- sample email (answer sections) -----\n" + samples.get("__sample_email", ""))
+        print("----- sample Dashboard (cells by row) -----\n" + samples.get("__sample_dash", ""))
+    print("analytics report: %s" % ("FAIL" if failed else "PASS"))
+    return 1 if failed else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
