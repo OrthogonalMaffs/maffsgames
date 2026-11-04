@@ -4,6 +4,27 @@ History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover
 and the last three entries; older entries move here, newest first, unchanged.
 
 
+## Moved 2026-11-04 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
+
+## 2026-11-03 (cloud): DASHBOARD-METRICS (`docs/handover/contracts/2026-11-03-dashboard-metrics.md`, Shared, Amendments 1 and 2; stops at a green Gate for Project Claude's review and Jon's "merge")
+
+- Agent: Claude Code. Primary checkout `/home/user/maffsgames`, branch `claude/stoic-galileo-xvzt45` (from main af8e737).
+- First stopped at STOP IF 2 (`data/` is not published, so maffsgames.co.uk/data/games.json 404s); Jon's Amendment 2 (3 Nov): read it from raw.githubusercontent.com, publish nothing.
+- Built: `answer_kind: "shot"` on trig-wars and bearing-blitz (survey of every question_answered call); endpoint `2026-11-03-b`: one model (`rptBuild`) feeds the email and the Dashboard: question-game accuracy (min 30), hardest by game + level + question_id (min 10), Escape Rooms table, shot games on one line, a one-line games.json-failure fallback, pre-29-Sep blanks wrong; `isMarked` replaced. `scripts/test-apps-script-report.py` (ci-line): 28 checks and 4 plants. Canon §1.2, §1.4, §12; redeploy notes.
+- **STOP IF 1, for Jon:** Prisoner's Dilemma's question_answered is neither an answer nor a shot (`correct: null`, one row a round); the report leaves it unmarked, as before. Bearing Blitz set as shot is a borderline call (a hit is within 5° of the bearing).
+- **Jon's redeploy step after the merge:** new version of the existing deployment (`docs/apps-script-redeploy.md`), accept "Connect to an external service"; `/exec` reports `2026-11-03-b`.
+- **State:** PR pending, Gate pending.
+
+Record: agent Claude Code; wall pending; review cycles 0; amendments 2; usage n/a.
+
+## 2026-11-03 (cloud): SEQ-SOLVER-WORKED (`docs/history/contracts/2026-11-03-seq-solver-worked.md`, Shared)
+
+- Agent: Claude Code. Primary checkout `/home/user/maffsgames`, branch `claude/stoic-galileo-xvzt45` (from main 03acf76; first commits ff2c555 DASHBOARD Amendment 1, 0e2b471 closes SEQ-SOLVER-FIXES).
+- Built: a `worked` field (1 to 3 steps) on all 154 items, question text untouched (ids unchanged); shown under the options on a wrong answer, before Next, in the house "How it goes" list. Phone rule during that feedback: calculator and the two unpicked distractors hidden, HUD and card compacted. Verifier: every worked line checked against its own item (251 equalities, 81 difference and ratio claims, every key), the panel order in Chromium, Next above the fold on all 462 wrong answers at 320, 375, 390 (and Aa 375, 390); 15/15 plants.
+- **State:** MERGED #654 (af8e737) on Jon's "merge" (Gate green on 097b053, run 41716406405); main green: `main af8e737 run 41722042176: GREEN`. Contract moved to `docs/history/contracts/`. Survey for Jon (PR body): of 100 other listed games, 63 explain a wrong answer, 24 do not, 11 partly, 2 n/a.
+
+Record: agent Claude Code; wall 4:58 (received 16:05; queued behind SEQ-SOLVER-FIXES until 20:05; handed off 21:03); review cycles 0; amendments 0; usage n/a.
+
 ## Moved 2026-11-03 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
 
 ## 2026-11-03 (cloud): SEQ-SOLVER-FIXES (`docs/history/contracts/2026-11-03-seq-solver-fixes.md`, Shared)
