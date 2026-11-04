@@ -170,3 +170,40 @@ AMENDMENT 7 (Jon, 4 Nov): the final padlock must be equally hard for every set, 
 (Option B instead: replace the first bullet's shape with "only + and -, exactly one of each" and drop the
 calculator bullet.)
 Record Amendments 2, 4 and 7 verbatim in the saved contract and the PR body.
+
+AMENDMENT 8 to PACK-GENERATOR (Jon, 4 Nov): the room's ending is the teacher's to call. Applies to every room.
+- In room.js, `stakes` is the timeout outcome (the online room shows it only on the fail screen) and `win` the escape
+  outcome. The pack printed `stakes` as part of the opening, in "Read this out" and on every cover. Fix in the
+  generator, not in any room.
+- Teacher notes: three read-outs, each labelled with its moment: "Read this at the start" (hook and brief),
+  "Read this when a team finishes" (win), "Read this when you call time" (stakes).
+- Cover sheets: hook and brief as now; `stakes` only as a warning, prefixed "If time runs out: ".
+- Selftest: a planted `stakes` text appearing unprefixed on a cover, or inside the start read-out, is caught.
+Record this amendment verbatim in the saved contract and the PR body.
+
+AMENDMENT 9 to PACK-GENERATOR (Jon, 4 Nov): the teacher notes overload the teacher. Applies to every room.
+- Page 1 becomes "Run it": numbered steps under "Before the lesson" and "In the lesson", AT MOST 150 words, using
+  Project Claude's draft below verbatim (still marked DRAFT for Jon's wording).
+- Page 2 becomes "Read-outs": the three boxed scripts from Amendment 8 (start, a team finishes, you call time). The
+  start script ends with one line to the students: "Bring each answer to me. Wrong answers and hints add time.
+  Lowest total time wins."
+- Everything else from the old notes moves, shortened, to an "About this room" box at the top of the answer key: the
+  pack contents in one line, each lock's topic and rough time, the grade, the final padlock's shape and target range,
+  and that the key's common wrong answers are for the debrief. No repeated rules.
+- Score sheet footer: the checking rule in two short lines ("Right: tick Opened. Wrong: check a box, say 'not yet'.
+  Total time = finishing time + penalties. Lowest wins.").
+- Selftest: page 1 over 150 words, or the same rule stated on more than one teacher page, is caught.
+DRAFT for page 1:
+Before the lesson
+1. Print one set per team (A-G). Cut out the hint cards.
+2. Choose your penalties. We suggest 1 minute per wrong answer and 1 per hint.
+In the lesson
+1. Hand out the sets face down. Tell the teams your penalties.
+2. Read the start script (page 2). Start a timer, counting up.
+3. Teams bring each answer to you. Check it against their set in the key.
+   Right: tick it. Wrong: check a box and say "not yet".
+4. A team wants a hint? Hand over the card and add one to Hints.
+5. Final padlock ticked: write down the time.
+6. Call time when you choose. Read the ending that fits. Lowest total time wins.
+Final padlock: calculators allowed. Any calculation that makes the target counts.
+Record this amendment verbatim in the saved contract and the PR body.

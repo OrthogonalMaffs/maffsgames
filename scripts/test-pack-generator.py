@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Pack generator (tools/pack-generator/build_pack.py --selftest: every room with a pack config gets VALID sets with distinct answers per lock, every value recomputed independently; a duplicate answer across sets, an invalid joint draw, a wrong recomputed answer, a printed URL with no room page, a missing score-sheet row, final-padlock targets with two expressions and with none, a fixed penalty figure, mixed final-padlock shapes and a range or digit slots on an answer box are planted and caught; no PDF is ever built in CI) |
+# ci-line: Pack generator (tools/pack-generator/build_pack.py --selftest: every room with a pack config gets VALID sets, distinct answers per lock and one final-padlock shape, every value recomputed independently; fourteen planted faults caught (answers, draws, URL, score sheet, final padlock, penalties, answer-box hints, stakes placement, page-1 length, repeated rules); no PDF is ever built in CI) |
 # ci-deps: tools/pack-generator/ escape-rooms/ escape-rooms/variants.json scripts/check-escape-rooms.py scripts/escape_set_checks.py scripts/plant_common.py scripts/bank_common.py CNAME
 """CI's entry to the printable-pack generator's self-test (contract PACK-GENERATOR, 4 Nov 2026).
 

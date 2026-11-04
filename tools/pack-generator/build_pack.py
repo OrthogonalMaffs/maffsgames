@@ -208,7 +208,7 @@ def check_printed_text(pages_text, url):
                 out.append("%s page prints %s" % (kind, why))
             elif u != url:
                 out.append("%s page prints another URL, %s" % (kind, u))
-        if kind in ("cover", "teacher") and line not in " ".join(text.split()):
+        if kind in ("cover", "run") and line not in " ".join(text.split()):
             out.append("a %s page does not carry %r" % (kind, line))
         if re.search(r"\bTes\b", text):
             out.append("a %s page names Tes" % kind)
@@ -404,6 +404,11 @@ table.score td.set { text-align: center; font-size: 15pt; font-weight: 800; }
 .box.big { width: 6mm; height: 6mm; }
 td.boxes { text-align: center; white-space: nowrap; padding: 1mm 0.5mm; }
 .rule { font-size: 9.5pt; margin-top: 2.5mm; }
+.when { margin: 1.5mm 0 0.8mm; }
+.warn { font-style: italic; }
+.about { border: 1pt solid #000; padding: 2mm 3mm; margin-bottom: 3mm; font-size: 9.5pt; }
+.about h2 { margin-top: 0; }
+.about p { margin-bottom: 1mm; }
 .pens { display: flex; gap: 14mm; font-size: 12pt; font-weight: 700; margin: 0 0 3mm; }
 .blank { display: inline-block; width: 16mm; border-bottom: 1pt solid #000; margin: 0 1.5mm; }
 .final { border-top: 1.4pt solid #000; padding-top: 2.5mm; }
@@ -519,7 +524,7 @@ AUDIT_JS = """
   const out = {pages: pages.length, studentPages: 0, overflow: [], setLetters: [], herringDigits: [], tokens: [], logo: [], logoMm: 0, text: []};
   const mm = px => px * 25.4 / 96;
   pages.forEach((p, i) => {
-    out.text.push([p.dataset.kind, p.innerText]);
+    out.text.push([p.dataset.kind, p.querySelector('.main').innerText]);
     const logos = p.querySelectorAll('.logo');
     const lg = p.querySelector('.foot .logo img');
     if (logos.length !== 1 || !lg || !lg.naturalWidth) out.logo.push((i + 1) + ': the logo is not in the footer once');
@@ -616,10 +621,8 @@ def score_extras():
     """(the two penalty blanks above the table, the rule under it): the teacher sets the penalties (Amendment 6)."""
     top = ("<div class='pens'><span>Each wrong answer adds<span class='blank' data-blank='wrong'></span>min</span>"
            "<span>Each hint adds<span class='blank' data-blank='hint'></span>min</span></div>")
-    rule = ("<p class='rule'>Right: tick Opened. Wrong: check one box and say &ldquo;not yet&rdquo;. Hint card given: add "
-            "one to Hints. The final padlock is checked like a lock. Finishing time: the timer when the final padlock is ticked. Penalty = (wrong answers &times; "
-            "the first) + (hints &times; the second). <b>Total time = finishing time + (wrong answers &times; the first) + "
-            "(hints &times; the second). Lowest total time wins.</b></p>")
+    rule = ("<p class='rule'>Right: tick Opened. Wrong: check a box, say &ldquo;not yet&rdquo;.<br>"
+            "Total time = finishing time + penalties. Lowest wins.</p>")
     return top, rule
 
 
@@ -666,6 +669,110 @@ def check_score_sheet(tables, locks, sets):
     return out
 
 
+RUN_IT_WORDS = 150        # page 1's cap (Amendment 9)
+
+
+def run_it(letters, url, shape):
+    """Page 1 (Amendment 9): Project Claude's draft, verbatim but for the set letters (from the pack) and the
+    calculator line (from the pack's final-padlock shape); then Amendment 1's play-online line."""
+    calc = ("calculators allowed" if finalpad.CALCULATOR[shape] else "no calculator needed")
+    return ("<h2>Before the lesson</h2><ol>"
+            "<li>Print one set per team (%s-%s). Cut out the hint cards.</li>"
+            "<li>Choose your penalties. We suggest 1 minute per wrong answer and 1 per hint.</li></ol>"
+            "<h2>In the lesson</h2><ol>"
+            "<li>Hand out the sets face down. Tell the teams your penalties.</li>"
+            "<li>Read the start script (page 2). Start a timer, counting up.</li>"
+            "<li>Teams bring each answer to you. Check it against their set in the key.<br>"
+            "Right: tick it. Wrong: check a box and say &ldquo;not yet&rdquo;.</li>"
+            "<li>A team wants a hint? Hand over the card and add one to Hints.</li>"
+            "<li>Final padlock ticked: write down the time.</li>"
+            "<li>Call time when you choose. Read the ending that fits. Lowest total time wins.</li></ol>"
+            "<p><b>Final padlock:</b> %s. Any calculation that makes the target counts.</p>"
+            "<p class='online'><b>Play this room free online: %s</b></p>" % (letters[0], letters[-1], calc, esc(url)))
+
+
+def about_box(room, teach, locks, sets):
+    """The answer key's "About this room" box (Amendment 9): contents, each lock's topic and time, the grade, the final
+    padlock's shape and target range, and what the common wrong answers are for. It states no rule."""
+    meta = teach.get("lockMeta") or [{}] * len(locks)
+    first_note = re.search(r"<p[^>]*>(.*?)</p>", teach.get("notes", ""), re.S)
+    letters = [st["letter"] for st in sets]
+    topics = "; ".join("%s: %s%s" % (l["name"], esc(m.get("topic", "")),
+                                     (", about %d min" % m["minutes"]) if m.get("minutes") else "")
+                       for l, m in zip(locks, meta))
+    targets = [st["final"]["target"] for st in sets]
+    return ("<div class='about'><h2>About this room</h2>"
+            "<p><b>In the pack:</b> %d sets (%s-%s), each a cover sheet, two evidence pages and a locks page; run it, "
+            "read-outs, score sheet, this key, worked solutions, hint cards, certificate.</p>"
+            "<p><b>Locks:</b> %s.</p>%s"
+            "<p><b>Final padlock:</b> %s in every set; targets %d to %d.</p>"
+            "<p>The common wrong answers below are for the debrief.</p></div>"
+            % (len(sets), letters[0], letters[-1], topics,
+               ("<p><b>Level (the locks):</b> %s</p>" % first_note.group(1)) if first_note else "",
+               finalpad.SHAPES[sets[0]["final"]["shape"]][0], min(targets), max(targets)))
+
+
+TEACHER_KINDS = ("run", "key", "solutions")   # the teacher's reference pages; the read-outs are spoken to students and
+                                              # the score sheet is the form Amendment 9 puts the rule on
+RULES = (("the checking rule", r"not yet"),
+         ("the scoring rule", r"total time\s*=|lowest (?:total time )?wins"),
+         ("the penalty suggestion", r"we suggest"),
+         ("the calculator rule", r"calculators? allowed"),
+         ("the final padlock's acceptance", r"(?:any|every) (?:calculation|expression) that"),
+         ("the hint rule", r"add one to (?:its )?hints"))
+
+
+def teacher_page_problems(pages_text):
+    """Page 1 over RUN_IT_WORDS words, or one rule stated on more than one teacher page (Amendment 9)."""
+    out = []
+    for kind, text in pages_text:
+        if kind == "run":
+            n = len(text.split())
+            if n > RUN_IT_WORDS:
+                out.append("page 1 (run it) is %d words, over %d" % (n, RUN_IT_WORDS))
+    for name, pat in RULES:
+        where = sorted({kind for kind, text in pages_text if kind in TEACHER_KINDS and re.search(pat, text, re.I)})
+        if len(where) > 1:
+            out.append("%s is stated on more than one teacher page: %s" % (name, ", ".join(where)))
+    return out
+
+
+STAKES_PREFIX = "If time runs out:"
+
+
+def readouts(room, fill):
+    """The teacher's three read-outs, each for its moment (Amendment 8): the start (hook, brief and the race's rules),
+    a team finishing (room.js `win`, the escape outcome) and time called (room.js `stakes`, the timeout outcome)."""
+    start = ("<p>%s</p><p>%s</p><p>Bring each answer to me. Wrong answers and hints add time. Lowest total time "
+             "wins.</p>" % (fill(room["hook"]), fill(room["brief"])))
+    return {"start": start, "finish": "<p>%s</p>" % fill(room.get("win", "")),
+            "timeout": "<p>%s</p>" % fill(room.get("stakes", ""))}
+
+
+def cover_story(room, fill):
+    """The cover's story: hook and brief, then `stakes` only as a warning, prefixed (Amendment 8)."""
+    warn = ("<p class='warn'><b>%s</b> %s</p>" % (STAKES_PREFIX, fill(room["stakes"]))) if room.get("stakes") else ""
+    return "<p>%s</p><p>%s</p>%s" % (fill(room["hook"]), fill(room["brief"]), warn)
+
+
+def stakes_problems(stakes_text, start_text, cover_texts):
+    """`stakes` (the timeout outcome) inside the start read-out, or on a cover without its "If time runs out:" prefix."""
+    norm = lambda t: " ".join((t or "").split())
+    st, out = norm(stakes_text), []
+    if not st:
+        return out
+    if st in norm(start_text):
+        out.append("the start read-out contains the timeout outcome (stakes)")
+    for k, text in enumerate(cover_texts):
+        t = norm(text)
+        i = t.find(st)
+        while i >= 0:
+            if not t[:i].rstrip().endswith(STAKES_PREFIX):
+                out.append("cover %d prints the timeout outcome (stakes) without %r" % (k + 1, STAKES_PREFIX))
+            i = t.find(st, i + 1)
+    return out
+
+
 def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
     rdir = HERE / "rooms" / slug
     images = cfg["images"]
@@ -699,66 +806,18 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
     meta = teach.get("lockMeta") or [{}] * len(locks)
     pages, box_texts = [], []
 
-    # a. teacher notes (DRAFT)
-    first_note = re.search(r"<p[^>]*>(.*?)</p>", teach.get("notes", ""), re.S)
-    bank_minutes = sum(m.get("minutes", 0) for m in meta)
-    topics = "".join("<li><b>Lock %d, %s:</b> %s%s</li>" % (
-        i + 1, l["name"], esc(m.get("topic", "")), (" (about %d min)" % m["minutes"]) if m.get("minutes") else "")
-        for i, (l, m) in enumerate(zip(locks, meta)))
-    has_tokens = any("{{" in (room.get(k) or "") for k in ("hook", "brief", "stakes"))
+    # a. page 1, "Run it", and page 2, the read-outs (Amendments 8 and 9; DRAFT for Jon's wording)
     shape = sets[0]["final"]["shape"]
-    shape_words = finalpad.SHAPES[shape][0]
-    calc = finalpad.CALCULATOR[shape]
-    final_reach = ("<p><b>The final padlock:</b> every set makes its own target with %s, so every set&rsquo;s is "
-                   "equally hard; in this pack the targets run from %d to %d.%s</p>"
-                   % (shape_words, min(st["final"]["target"] for st in sets), max(st["final"]["target"] for st in sets),
-                      " <b>Calculator allowed for the final padlock.</b>" if calc else ""))
-    script = ("<blockquote><p>%s</p><p>%s</p><p>%s</p><p>Every team has a different set, so your numbers are not "
-              "your neighbours&rsquo;. Open the locks, then the final padlock on your locks page. Bring each answer to "
-              "me as soon as you have it. Wrong answers and hints add time, and I will tell you how much before we "
-              "start. Lowest total time wins."
-              "</p></blockquote>" % (fill_a(room["hook"]),
-                                                                                fill_a(room["brief"]),
-                                                                                fill_a(room["stakes"])))
-    if has_tokens:
-        script = "<p>Read the hook and brief from any team&rsquo;s cover sheet, then:</p>" + script
-    body = (
-        "<h2>What is in the pack</h2>"
-        "<p>%d sets, %s to %s: the same room with different numbers, so neighbouring teams cannot share answers. Each "
-        "set is a cover sheet, two evidence pages and a locks page. Also here: the score sheet, the answer key, hint "
-        "cards and a certificate.</p><ul>%s</ul>%s"
-        "<h2>Set-up (under two minutes)</h2><ol>"
-        "<li>Print one set per team, each team a different letter.</li>"
-        "<li>Hand each team its set face down, cover sheet on top.</li>"
-        "<li>Keep the score sheet and the answer key with you, and a timer that counts up.</li>"
-        "<li>Cut out the hint cards and keep them at the front.</li>"
-        "<li>Fill in the two penalties at the top of the score sheet, and tell the teams.</li></ol>"
-        "<h2>Read this out</h2>%s"
-        "<h2>How checking works</h2>"
-        "<p>Use one timer for the whole class, counting up, and start it when every team has its set. A team brings "
-        "each lock&rsquo;s answer to you as they go; check it against their set&rsquo;s row in the answer key. "
-        "<b>Right:</b> tick that lock&rsquo;s Opened box on the score sheet. <b>Wrong:</b> check one of that "
-        "lock&rsquo;s wrong-answer boxes and say &ldquo;not yet&rdquo;, with no explanation. <b>Final padlock:</b> the "
-        "team brings an expression; accept any that uses each of its answers once, with {SHAPE} and no "
-        "brackets, and makes its set&rsquo;s target (the key shows the only one, up to order). Right: tick its Opened "
-        "box. Wrong: check one of its wrong-answer boxes and say &ldquo;not yet&rdquo;; it costs your penalty like any "
-        "wrong answer.</p>"
-        "<p>When a team&rsquo;s final padlock is ticked, write the time on the timer as its finishing time. "
-        "When you give a team a hint card, add one to its Hints. <b>Total time = finishing time + (wrong answers "
-        "&times; your wrong-answer penalty) + (hints &times; your hint penalty). Lowest total time wins</b> (the "
-        "certificate is at the back). We suggest 1 minute for each wrong answer and 1 minute for each hint. You know "
-        "your class: set your own before you start, and tell the teams. "
-        "The key also gives each lock&rsquo;s common wrong answer and the misconception behind it, for "
-        "the debrief.</p>"
-        "<p><b>Timing:</b> how long to run it is your choice. The online room gives %d minutes%s.</p>"
-        "<p class='online'><b>Play this room free online: %s</b></p>"
-        % (len(sets), letters[0], letters[-1], topics,
-           (("<p><b>The locks:</b> %s</p>" % first_note.group(1)) if first_note else "") + final_reach,
-           script, room.get("minutes", 15),
-           ("; the locks&rsquo; own times add up to about %d minutes" % bank_minutes) if bank_minutes else "",
-           esc(url)))
-    body = body.replace("{SHAPE}", shape_words)
-    pages.append(page("teacher", body, "%s: teacher notes" % title, "Group race pack, %d sets" % len(sets),
+    pages.append(page("run", run_it(letters, url, shape), "%s: run it" % title, "Group race pack, %d sets" % len(sets),
+                      badge='<div class="draft">DRAFT: Jon&rsquo;s wording</div>'))
+    reads = readouts(room, fill_a)
+    script = ("<p class='when'><b>Read this at the start</b></p><blockquote>%s</blockquote>"
+              "<p class='when'><b>Read this when a team finishes</b></p><blockquote>%s</blockquote>"
+              "<p class='when'><b>Read this when you call time</b></p><blockquote>%s</blockquote>"
+              % (reads["start"], reads["finish"], reads["timeout"]))
+    if any("{{" in (room.get(k) or "") for k in ("hook", "brief")):
+        script = "<p>At the start, read the hook and brief from any team&rsquo;s cover sheet.</p>" + script
+    pages.append(page("readouts", script, "%s: read-outs" % title, "Each for its moment; the ending is yours to call",
                       badge='<div class="draft">DRAFT: Jon&rsquo;s wording</div>'))
 
     # a2. score sheet (Amendment 3): landscape, one row per set, a column group per lock
@@ -778,13 +837,10 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
         for v in s["vars"]), s["final"]["target"], s["final"]["expr"]) for s in sets)
     legend = "".join("<li><b>%s:</b> %s %s</li>" % (l["name"], l.get("missTitle", ""), l.get("missSays", ""))
                      for l in locks)
-    final_note = ("<h2>The final padlock</h2><p>Accept any expression that uses each of the set&rsquo;s answers "
-                  "exactly once, with %s and no brackets, and makes the set&rsquo;s target under the order of "
-                  "operations (&times; before + and &minus;). For each set the expression above is the only one, up "
-                  "to the order of its parts; no expression of any other shape makes it either. The worked solutions "
-                  "show its working.</p>" % finalpad.SHAPES[sets[0]["final"]["shape"]][0])
-    pages.append(page("key", "<table><tr><th></th>%s</tr>%s</table><h2>The common wrong answers</h2><ul>%s</ul>%s"
-                      % (head, rows, legend, final_note), "%s: answer key" % title, "Check each answer against its set's row"))
+    final_note = ("<p>For each set, the final padlock&rsquo;s expression above is the only one that makes its target, "
+                  "up to the order of its parts; the worked solutions show its working.</p>")
+    pages.append(page("key", "%s<table><tr><th></th>%s</tr>%s</table><h2>The common wrong answers</h2><ul>%s</ul>%s"
+                      % (about_box(room, teach, locks, sets), head, rows, legend, final_note), "%s: answer key" % title, "One row per set"))
     sols = ""
     for s in sets:
         f = filler(locks, s)
@@ -809,14 +865,14 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
             box_texts.append(answer_caption(l))
             answers += ("<div><div class='cap'><b>%s</b></div>%s</div>"
                         % (esc(answer_caption(l)), art_block(rdir / im["file"], im["label_box"], "write")))
-        cover = ("%s<p>%s</p><p>%s</p><p><b>%s</b></p>"
+        cover = ("%s%s"
                  "<div class='team'>Team name: <span></span></div>"
                  "<h2>Your codes: write each in its box</h2>"
                  "<p class='goal'>Bring each answer to your teacher. Wrong answers and hints add time; your teacher will tell you "
                  "how much.</p>"
                  "<div class='answers'>%s</div><p class='online'>Play this room free online: %s</p>"
                  % (('<img class="cover-art" src="%s" alt="">' % scene.as_uri()) if scene and scene.is_file() else "",
-                    f(room["hook"]), f(room["brief"]), f(room["stakes"]), answers, esc(url)))
+                    cover_story(room, f), answers, esc(url)))
         pages.append(page("cover", cover, title, "Group race: cover sheet", set_letter=L))
         cards = []
         for o in room["objects"]:
@@ -859,7 +915,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
                         "<div class='text'>%s</div></div>" % (k + 1, len(l["hints"]), l["name"], f(h))
                         for k in range(max(len(l.get("hints", [])) for l in locks))
                         for l in locks for h in [l["hints"][k] if k < len(l.get("hints", [])) else ""])
-        sub = "Cut out; hand one over when a team asks, and add one to its Hints" + ("" if s else ". The same for every set")
+        sub = "Cut out" + ("" if s else ". The same for every set")
         pages.append(page("hints", "<div class='hints'>%s</div>" % cards, "%s: hint cards" % title, sub,
                           set_letter=s["letter"] if s else None))
     cert = ("<div class='cert'><h1>%s</h1>%s<p class='line'>%s</p><p class='line'>Team <span></span></p>"
@@ -877,7 +933,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
                   for i, p in enumerate(pages))
     return ("<!doctype html><html lang='en'><head><meta charset='utf-8'><title>%s pack</title>"
             "<link rel='stylesheet' href='%s'><style>%s%s</style></head><body>%s</body></html>"
-            % (esc(title), GOOGLE_FONTS, fonts, CSS, doc)), len(pages), box_texts
+            % (esc(title), GOOGLE_FONTS, fonts, CSS, doc)), len(pages), box_texts, reads["start"]
 
 
 def pdf_page_count(path):
@@ -939,7 +995,7 @@ def build(slug, n, seed, target=None):
             url = room_url(slug)
             if not LOGO.is_file():
                 raise BuildError("the logo %s is missing" % LOGO.relative_to(ROOT).as_posix())
-            doc, npages, box_texts = build_html(slug, room, teach, locks, sets, cfg, seed, built, url)
+            doc, npages, box_texts, start_html = build_html(slug, room, teach, locks, sets, cfg, seed, built, url)
             hints = instrument_hints(box_texts)
             if hints:
                 raise BuildError("an answer box gives something away (Amendment 4):\n  " + "\n  ".join(hints))
@@ -962,15 +1018,22 @@ def build(slug, n, seed, target=None):
                     raise BuildError("label text does not fit its box at %d pt:\n  " % MIN_PT + "\n  ".join(
                         "%s (set %s): %s" % (l["id"], l["set"], l["text"]) for l in small))
                 audit = pg.evaluate(AUDIT_JS)
-                printed = check_printed_text([(k, t) for k, t in audit["text"]], url) + fixed_penalties(audit["text"])
+                printed = (check_printed_text([(k, t) for k, t in audit["text"]], url) + fixed_penalties(audit["text"])
+                           + stakes_problems(text_of(filler(locks, sets[0])(room.get("stakes"))), text_of(start_html),
+                                             [t for k, t in audit["text"] if k == "cover"])
+                           + teacher_page_problems(audit["text"]))
                 if printed:
-                    raise BuildError("what the pages print fails Amendment 1:\n  " + "\n  ".join(printed))
+                    raise BuildError("what the pages print fails its checks:\n  " + "\n  ".join(printed))
                 bad = audit["overflow"] + audit["setLetters"] + audit["herringDigits"] + audit["tokens"] + audit["logo"]
                 if bad or audit["pages"] != npages:
                     raise BuildError("the pages fail their checks:\n  overflow: %s\n  set letter: %s\n  digits on a red "
                                      "herring: %s\n  logo: %s\n  %s" % (audit["overflow"], audit["setLetters"],
                                                                         audit["herringDigits"], audit["logo"], audit["tokens"]))
                 print("no fixed penalty figure on the score sheet or any student page (the teacher sets them)")
+                print("page 1 (run it) is %d words, at most %d; no rule stated on more than one teacher page"
+                      % (len(next(t for k, t in audit["text"] if k == "run").split()), RUN_IT_WORDS))
+                print("the timeout outcome (stakes) only in its own read-out and, prefixed %r, on the covers"
+                      % STAKES_PREFIX)
                 print("printed URL %s resolves to a live room page; on every cover and the teacher notes; "
                       "logo and name in every footer (at most %.1f mm high)" % (url, audit["logoMm"]))
                 by_id = {}
@@ -1012,13 +1075,20 @@ def selftest():
                          + check_score_sheet(score_sheet(locks, sets), locks, sets)
                          + verify_finals(checker, locks, sets, cfg.get("final_shape", finalpad.DEFAULT_SHAPE))
                          + instrument_hints([answer_caption(l) for l in locks])
-                         + fixed_penalties([("score", text_of("".join(score_extras())))]))
+                         + fixed_penalties([("score", text_of("".join(score_extras())))])
+                         + stakes_problems(text_of(filler(locks, sets[0])(room.get("stakes"))),
+                                           text_of(readouts(room, filler(locks, sets[0]))["start"]),
+                                           [text_of(cover_story(room, filler(locks, sets[0])))]))
                 print("%s: %d sets chosen from %d VALID draws; %s" % (slug, n, len(valid), "OK" if not probs else probs))
                 failures += probs
-                first = first or (checker, room_js, locks, sets, valid, cfg.get("final_shape", finalpad.DEFAULT_SHAPE))
+                shape0 = cfg.get("final_shape", finalpad.DEFAULT_SHAPE)
+                probs += teacher_page_problems(
+                    [("run", text_of(run_it([x["letter"] for x in sets], room_url(slug), shape0))),
+                     ("key", text_of(about_box(room, teach, locks, sets)))])
+                first = first or (checker, room_js, locks, sets, valid, shape0, room, teach, slug)
         finally:
             browser.close()
-    checker, room_js, locks, sets, valid, shape = first
+    checker, room_js, locks, sets, valid, shape, room, teach, slug0 = first
 
     def plant_duplicate():
         s = copy.deepcopy(sets)
@@ -1101,6 +1171,42 @@ def selftest():
                              name="a fixed penalty figure")
         return fixed_penalties([("score", text_of(top + rule))])
 
+    def stakes_and_fill():
+        if not room.get("stakes"):
+            raise pc.StalePlant("stakes", "the room has no stakes")
+        f = filler(locks, sets[0])
+        return text_of(f(room["stakes"])), f
+
+    def plant_unprefixed_stakes():
+        st, f = stakes_and_fill()
+        cover = pc.apply_plant(cover_story(room, f), "<b>%s</b> " % STAKES_PREFIX, "",
+                               name="stakes on a cover without its prefix")
+        return [x for x in stakes_problems(st, text_of(readouts(room, f)["start"]), [text_of(cover)]) if "without" in x]
+
+    def plant_stakes_in_start():
+        st, f = stakes_and_fill()
+        start = readouts(room, f)["start"]
+        start = pc.apply_plant(start, "<p>%s</p>" % f(room["brief"]),
+                               "<p>%s</p><p>%s</p>" % (f(room["brief"]), f(room["stakes"])),
+                               name="stakes inside the start read-out")
+        return [x for x in stakes_problems(st, text_of(start), [text_of(cover_story(room, f))]) if "start read-out" in x]
+
+    def teacher_texts(run_html=None, about_html=None):
+        letters = [x["letter"] for x in sets]
+        return [("run", text_of(run_html or run_it(letters, room_url(slug0), shape))),
+                ("key", text_of(about_html or about_box(room, teach, locks, sets)))]
+
+    def plant_long_page_one():
+        run = pc.apply_plant(run_it([x["letter"] for x in sets], room_url(slug0), shape), "<p class='online'>",
+                             "<p>%s</p><p class='online'>" % " ".join(["more"] * 60), name="page 1 over 150 words")
+        return [x for x in teacher_page_problems(teacher_texts(run_html=run)) if "words, over" in x]
+
+    def plant_repeated_rule():
+        about = pc.apply_plant(about_box(room, teach, locks, sets), "<p>The common wrong answers below",
+                               "<p>Total time = finishing time + penalties.</p><p>The common wrong answers below",
+                               name="a rule repeated in the About box")
+        return [x for x in teacher_page_problems(teacher_texts(about_html=about)) if "more than one teacher page" in x]
+
     plants = (("a duplicate answer across sets", plant_duplicate),
               ("an invalid joint draw", plant_invalid),
               ("a wrong recomputed answer", plant_wrong_answer),
@@ -1110,7 +1216,11 @@ def selftest():
               ("a final target no expression reaches", plant_no_expression),
               ("a fixed penalty figure on the score sheet", plant_fixed_penalty),
               ("a pack whose sets use different shapes", plant_mixed_shapes),
-              ("a range and digit slots on answer boxes", plant_range_hint))
+              ("a range and digit slots on answer boxes", plant_range_hint),
+              ("stakes on a cover without its prefix", plant_unprefixed_stakes),
+              ("stakes inside the start read-out", plant_stakes_in_start),
+              ("page 1 over 150 words", plant_long_page_one),
+              ("a rule stated on two teacher pages", plant_repeated_rule))
     for name, fn in plants:
         found, err = [], None
         try:
