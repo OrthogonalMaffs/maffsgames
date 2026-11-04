@@ -81,3 +81,10 @@ Rulings on #662 (Jon, 4 Nov):
    wording. Then re-run the full local checks and let the Gate run. Record this exception verbatim in the saved
    contract and the PR body.
 Thank you.
+
+## Additional merge exception — Jon, 4 Nov
+
+Question: May I merge `origin/main` once more, preserving every entry unchanged, so Gate can run?
+
+Jon's reply (verbatim):
+yes you may

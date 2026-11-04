@@ -8,7 +8,7 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
-- FRACTION-WHOLE: home/Codex, codex/fraction-whole, /home/maffs/mg-fraction-whole, PR #662; contract docs/handover/contracts/2026-11-04-fraction-whole.md. Local 65/65; fixture corrections checked. STOP: #663 merged, only updates/index.html conflicts again. One permitted main merge consumed at 3492a781; needs another explicit exception. No cloud handover change in PR. Shared hold.
+- FRACTION-WHOLE: home/Codex, codex/fraction-whole, /home/maffs/mg-fraction-whole, PR #662; contract docs/handover/contracts/2026-11-04-fraction-whole.md. Jon approved the additional main merge, resolving the updates-only conflict. No cloud handover change in PR. Checks/Gate and final head tracked in PR report; Shared review hold.
 
 ## 2026-11-04 (home): FRACTION-WHOLE
 
@@ -38,5 +38,7 @@ Post-merge full check-changed.py rerun PASS: 65/65 in 1081s, exit 0 (15 heavy se
 
 STOP after footer correction 3e929ea8: #663 merged into main as 246794b1 while checks/CI corrections ran. GitHub reports dirty and no run exists on 3e929ea8. Read-only git merge-tree after fetch confirms only updates/index.html conflicts; worktree remains clean, no second merge attempted. The one allowed origin/main merge was already consumed at 3492a781. Next: Jon's explicit further exception to resolve only the new updates conflict, preserving every entry and wording; then current-head Gate and Shared review. Production code remains unchanged from f7f157b5; footer/component/selector checks pass; post-merge full local run 65/65, exit 0. Final PR report records this new STOP. Retain /home/maffs/mg-fraction-whole, branch codex/fraction-whole. No PR merge or cleanup.
 
-Record: agent Codex; wall n/a; review cycles 0; amendments 3 (pre-step extension, signed Amendment 1, #662 rulings); usage n/a.
+Jon answered "yes you may" to the additional merge exception (4 Nov), saved verbatim with its question in the contract and PR. Resumed from clean 5fa48716. Merged origin/main d7cc0e78 (includes #663); only updates/index.html conflicted. Kept the approved fraction entry and every main entry, with wording unchanged and dates descending. Asserted updates equals main plus the exact fraction line; cloud handover byte-identical to main; production, verifier, component test and fixture byte-identical to 5fa48716. No further merge or PR merge authority inferred. Next: fresh full local checks and Gate on this head, then stop for Shared review. Final checks/Gate/current-head evidence in the linked PR report; retain branch/worktree, no cleanup.
+
+Record: agent Codex; wall n/a; review cycles 0; amendments 4 (pre-step extension, signed Amendment 1, #662 rulings, additional merge exception); usage n/a.
 
