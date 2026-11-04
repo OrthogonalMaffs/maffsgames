@@ -742,7 +742,7 @@ closed them had shipped. The four, and what closed them, are in §8.1.
 
 ## 7.1 Platform Principles
 
-- Free forever — no subscription, no freemium, no ads
+- Everything a student plays is free, forever. No subscriptions, no ads, no sign-up. Teachers may buy offline convenience versions of free content (e.g. printable escape-room packs); the online version stays free and identical. Paid packs are sold through an external marketplace first; nothing paid is sold or linked from maffsgames.co.uk without Jon's approval.
 - No sign-up required — zero friction for students
 - Gameplay event data may be logged to analytics backend — no PII collected. All collection disclosed in privacy page. No additional collection without Jon's approval.
 - Curriculum aligned — every game maps to AQA/Edexcel/BTEC spec
@@ -1946,6 +1946,7 @@ here in the same commit.
 ## 8.2 Games — Content
 
 - [ ] Matrix Crunch question bank expansion (35+18 → 50+50 to meet platform minimum)
+- [ ] Escape-room printable packs: pilot (The Kiln Disaster, 7 sets) on an external marketplace; review sales before offering via the site.
 
 ### 8.2.1 Bank-first topics (Jon's ruling, 26 Oct 2026; contract PIE-CHARTS-BANK)
 
@@ -2616,6 +2617,10 @@ all — ask for JPGs.**
 ---
 
 # 12. Engineering reference (moved from CLAUDE.md, 8 Oct 2026, contract CTX)
+
+## PACKS-CANON (Jon, 5 Oct and 3 Nov 2026)
+
+The reason for §7.1's wording. Jon decided on 5 Oct 2026, and resumed on 3 Nov 2026, to sell printable group-race packs of escape rooms through a teacher resource marketplace (Tes first). The old line, "Free forever — no subscription, no freemium, no ads", forbade it. What stays free is everything a student plays, online, identical to any pack; a pack is an offline convenience for teachers, sold off the site first, and nothing paid is sold or linked from maffsgames.co.uk without Jon's approval. The pilot is The Kiln Disaster, 7 sets (§8.2).
 
 ## DASHBOARD-METRICS (Jon, 3 Nov 2026)
 

@@ -64,6 +64,15 @@ ESSENTIALS-SCREEN-TRUTH-2 (18 Oct, contract `docs/history/contracts/2026-10-18-e
 **Every PR:** no `check-changed.py` in the cloud (AGENTS.md, CLOUD-LEAN); merge only via `python scripts/merge-pr.py <n>
 --watch --wait 3600` (needs a green Gate and main, §7.8.3) and report its last line.
 
+## 2026-11-04 (cloud): PACKS-CANON (`docs/handover/contracts/2026-11-04-packs-canon.md`, Small, lane exception: canon §7.1, §8, §12)
+
+- Agent: Claude Code; branch `claude/sleepy-shannon-itnz0v` (claim 86a2667). Pre-step 953a0ca. Done: §7.1 line replaced verbatim; §8.2 backlog line; §12 reason.
+- Occurrences, reported not edited: AGENTS.md:16 and .claude/rules/project-claude.md:72 "Free forever. No subscription, no freemium, no ads."; index.html:760 "Free forever"; about/index.html:161 "Free forever &mdash; no subscriptions, no freemium, no ads"; about/index.html:193 "will always be free"; parents/index.html:204 "free to use". None in CLAUDE.md, privacy or canon §0.
+- **STOP IF 1, for Jon:** about/index.html:161's "no freemium" (AGENTS.md:16 too) reads against paid packs. Merge waits.
+- **State:** PR pending. Next in cloud: PACK-GENERATOR.
+
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-04 (cloud): SEARCH-KEYWORDS (`docs/history/contracts/2026-11-04-search-keywords.md`, Shared, lane exception; stopped at a green Gate for Jon's "merge")
 
 - Agent: Claude Code. Primary checkout `/home/user/maffsgames`, branch `claude/sleepy-shannon-itnz0v` (restarted from main a7b476c after #656; claim 7e2bb09).
