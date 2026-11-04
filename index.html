@@ -3254,11 +3254,13 @@
     </div>
   </a>
 
-  <div class="no-results" id="noResults">
-    <p>No games match this filter yet.</p>
-    <p>More coming soon.</p>
-  </div>
+</div>
 
+<!-- Outside every .games-grid: applyFilters() hides a grid with no card showing, and it hid this message with it
+     whenever nothing matched (found by scripts/verify-search.py, SEARCH-KEYWORDS, 4 Nov 2026). -->
+<div class="no-results" id="noResults">
+  <p>No games match this filter yet.</p>
+  <p>More coming soon.</p>
 </div>
 
 </div>
