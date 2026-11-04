@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ci-line: Fraction input modes (default unchanged, whole and signed modes, keyboard/keypad, layout and planted faults) |
-# ci-deps: schools/assets/fraction-input.js schools/assets/keypad.js schools/assets/answer.js
+# ci-deps: scripts/fixtures/fraction-input.html schools/assets/fraction-input.js schools/assets/keypad.js schools/assets/answer.js
 """FRACTION-WHOLE: exercise the real component, including combinations and sign-dropping plants.
 
 The expected raw strings and values below are fixed independently of the component. MaffsAnswer only
@@ -15,6 +15,7 @@ import plant_common as pc
 
 ROOT = Path(__file__).resolve().parent.parent
 SOURCE = ROOT / 'schools/assets/fraction-input.js'
+FIXTURE = ROOT / 'scripts/fixtures/fraction-input.html'
 PLANTS = [
     ('whole omitted', "if (whole) inputs.unshift(whole);", "if (false) inputs.unshift(whole);"),
     ('whole dropped from raw', "var raw = w && f ? w + ' ' + f : w || f;", "var raw = f;"),
@@ -25,7 +26,7 @@ PLANTS = [
 
 
 def check(page, script):
-    page.set_content('<meta name="viewport" content="width=device-width,initial-scale=1"><div id="host"></div><div id="keys"></div>')
+    page.set_content(FIXTURE.read_text(encoding='utf-8'))
     page.add_script_tag(content=(ROOT / 'schools/assets/answer.js').read_text(encoding='utf-8'))
     page.add_script_tag(content=(ROOT / 'schools/assets/keypad.js').read_text(encoding='utf-8'))
     page.add_script_tag(content=script)
