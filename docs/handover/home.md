@@ -2,7 +2,7 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- CHRISTMAS-ROOM: home/Claude Code (took over from Codex, Jon, 4 Nov), codex/christmas-room, Windows worktree E:/jon/mg-christmas-room; implementation 563b14a9. Contract + Amendments 1–2: docs/handover/contracts/2026-11-04-christmas-room.md. Next: validation, PR/Gate; Shared review and Jon's play-test/merge hold.
+- CHRISTMAS-ROOM: home/Claude Code (took over from Codex, Jon, 4 Nov), codex/christmas-room, Windows worktree E:/jon/mg-christmas-room; implementation 563b14a9. Contract + Amendments 1–2: docs/handover/contracts/2026-11-04-christmas-room.md. PR #667. Next: Gate; Shared review and Jon's play-test/merge hold.
 
 - DONE queue: docs/history/handover-home-archive.md
 
@@ -31,6 +31,8 @@ Agent: Codex. Worktree: /home/maffs/mg-christmas-room. Branch: codex/christmas-r
 STOP at contract/code check: scripts/check-escape-rooms.py:209 rejects every lock missing from docs/lock-bank-batch*.txt; no Christmas entries exist. EXACT CHANGE/lane exception omits that bank, so the required checker cannot pass within the named files. SR-30 also requires a new room's findings file, omitted from scope. Need a numbered amendment authorising the new room's bank entries and docs/audits/findings/christmas-tree-fiasco.yml; retain checker and engine unchanged. No implementation or tests claimed, no push/PR. Next: resume this clean branch after amendment, then build, validate, Gate and Shared review/Jon play-test hold. No SR exception applied; SR-30 requirement flagged.
 
 Record: agent Codex; wall n/a (initial contract receipt timestamp unavailable); review cycles 0; amendments 2; usage n/a.
+
+Record: agent Claude Code (takeover); wall in PR #667's report; review cycles 0; amendments 2; usage n/a.
 
 ## 2026-11-04 (home): FRACTION-WHOLE
 
