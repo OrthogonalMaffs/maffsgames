@@ -2,7 +2,7 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- CHRISTMAS-ROOM: PAUSED at Jon's request, 4 Nov. home/Codex, codex/christmas-room, /home/maffs/mg-christmas-room; implementation 563b14a9, local only. Contract + Amendments 1–2: docs/handover/contracts/2026-11-04-christmas-room.md. Next: full validation, then PR/Gate; Shared review and Jon's play-test/merge hold.
+- CHRISTMAS-ROOM: home/Claude Code (took over from Codex, Jon, 4 Nov), codex/christmas-room, Windows worktree E:/jon/mg-christmas-room; implementation 563b14a9. Contract + Amendments 1–2: docs/handover/contracts/2026-11-04-christmas-room.md. Next: validation, PR/Gate; Shared review and Jon's play-test/merge hold.
 
 - DONE queue: docs/history/handover-home-archive.md
 
@@ -13,6 +13,8 @@
 - FRACTION-WHOLE: merged #662, b38ce399; Shared review passed and Jon authorised merge, 4 Nov. Contract: docs/history/contracts/2026-11-04-fraction-whole.md. Main run and cleanup recorded below.
 
 ## 2026-11-04 (home): CHRISTMAS-ROOM
+
+TAKEOVER (Jon's written task, 4 Nov 21:30): Claude Code takes over from Codex on the Windows machine. Primary E:/jon/maffsgames-new-clone fast-forwarded to 10a8b261. New worktree E:/jon/mg-christmas-room from origin/codex/christmas-room (Jon's instruction; the rulebook's same-worktree rule cannot apply across machines), branch keeps its prefix. Status clean and git log origin/main..HEAD matched the record below (head 0647f999). Identity: local user.name is "Jon", email matches; commits pass user.name=Vector52F per command, config unchanged. All Codex's checks treated as not run. Next: run the SUCCESS CONDITION, PR, stop at green Gate. No merge authority.
 
 PAUSED for context handover at Jon's request, 4 Nov. Implementation checkpoint: 563b14a9; branch codex/christmas-room, worktree /home/maffs/mg-christmas-room, base 10a8b261. Resume the SAME branch/worktree; check clean status and git log origin/main..HEAD against this record. No push, PR, Gate or merge yet. Amendment 2 resolves the bank/findings scope STOP below and is saved verbatim with Amendment 1 and the full contract/draft. Registered preview server on 8874 stopped through end-task.py's stop_registered(); generator already exited. No running check queue remains. Do not restart until Jon resumes.
 

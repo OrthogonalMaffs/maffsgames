@@ -926,7 +926,6 @@ for tray in [(("a pasta pot", 185), ("a fruit cup", 60), ("a carton of milk", 12
     keep(store, "lunch-card-change", var, minsep=1)
 V["lunch-card-change"] = store
 
-# ------------------------------------------------- derived tokens
 # Christmas Tree Fiasco (Jon's approved v3, 4 Nov 2026).
 # The first candidate of each lock is Set A; the usual checks and spread
 # apply. A one-hour separation gives the short cold-store dial ten answers.
@@ -994,6 +993,7 @@ for a, b, c, d, each in cands:
         break
 V["christmas-combined-ratios"] = store
 
+# ------------------------------------------------- derived tokens
 # Values the prose wants to quote but that are not parameters: a squared
 # radius, a reduced fraction, a prime factorisation. Deriving them here keeps
 # the hint ladders honest — they cannot disagree with the answer.
