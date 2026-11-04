@@ -4,6 +4,50 @@ History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover
 and the last three entries; older entries move here, newest first, unchanged.
 
 
+## 2026-11-04 (cloud): Queue DONE items moved 4 Nov (verbatim from `docs/handover/cloud.md`'s queue section, Jon's pre-step of 4 Nov; history, unchanged)
+
+**SEARCH-KEYWORDS: DONE** (#657, f8c0edb, main run 41811116888 GREEN after one rerun; `docs/history/contracts/2026-11-04-search-keywords.md`).
+
+**ROOM-ESCAPED: DONE** (#656, a7b476c, main run 41800889964 GREEN; `docs/history/contracts/2026-11-04-room-escaped.md`).
+
+**In this order (Jon, 3 Nov; each starts after the one before merges): 1 SEQ-SOLVER-FIXES: DONE** (#652; `docs/history/contracts/2026-11-03-seq-solver-fixes.md`); **2 SEQ-SOLVER-WORKED: DONE** (#654; `docs/history/contracts/2026-11-03-seq-solver-worked.md`); **3 DASHBOARD-METRICS: DONE** (#655, ba104dc; Shared, `docs/handover/contracts/2026-11-03-dashboard-metrics.md`; Amendments 1 and 2: games.json read from raw.githubusercontent.com; stops at a green Gate for Project Claude's review and Jon's "merge"; STOP IF 1 listed for Jon: Prisoner's Dilemma, entry below).
+
+**QUESTION-ID**: DONE (#649; `docs/history/contracts/2026-11-03-question-id.md`); Jon redeployed the endpoint, 3 Nov.
+
+**SEQ-SOLVER-REREAD**: DONE (#647; `docs/history/contracts/2026-11-03-seq-solver-reread.md`).
+
+**DASH-MINUS**: DONE (#646; `docs/history/contracts/2026-11-03-dash-minus.md`, its table beside it).
+
+**CLOUD-LEAN**: DONE (#643; `docs/history/contracts/2026-11-03-cloud-lean.md`).
+
+**PIES-EXIT**: DONE (#642; `docs/history/contracts/2026-11-03-pies-exit.md`).
+
+**GATE-RESUME** and **GATE-FIX** (2 Nov, `docs/history/contracts/`): DONE (#630, #631, #632, #634), entry below.
+
+**SHARD** (27 Oct): DONE (#578, 39b7c99; its entry archived).
+
+**MAIN-WARN** (25 Oct, `docs/handover/contracts/2026-10-25-main-warn.md`): DONE (#548), entry below.
+
+**TOP-SCORES**: DONE (#550).
+
+**LOOK-REDS-2** (Distinctly Average): DONE (#554), entry below; Prime Sprint waits for Jon's next contract.
+
+**BELOW-FOLD-AUDIT** DONE (#556), entry below.
+
+**PHONE-FIT-DRIVER** (26 Oct, `docs/history/contracts/2026-10-26-phone-fit-driver.md`, Jon's correction to item 1 appended): DONE (#560), entry below; two rulings now Jon's (the 11-game exception, a start-screen rule).
+
+**PR-MEASURED** DONE (#543; `docs/history/contracts/2026-10-25-pr-measured.md`).
+
+**SIX-PS-PLAYER** (25 Oct, the first v2 build contract; contract, Project Claude's schema and Jon's three rulings `docs/history/contracts/2026-10-25-six-ps-player.md`): DONE (#535, #536, #538), entry below.
+
+**SHAPE-SHIFTER-DATA-MODE** (25 Oct, `docs/history/contracts/2026-10-25-shape-shifter-data-mode.md`): DONE (#526); SHAPE-SHIFTER-SPLIT DONE (#528); their worktrees left for the home lane (end-task.py's `gh pr view` was GraphQL, refused from Claude Code sessions; GH-REST #529).
+
+ROOM-CREDIT v2 (19 Oct, contract and v1 verbatim `docs/history/contracts/2026-10-19-room-credit.md`; Jon's lane exception plus his rating.js ruling): one optional room.js `credit`, drawn on the room and teacher pages, checked on the hub and front-page cards; four rooms credited. **DONE (#446, 9a94e78, merged 12:33 BST).**
+
+PYTHAG-REPORT (19 Oct, contract `docs/history/contracts/2026-10-19-pythag-report.md`, research only): **DONE (#447)**; report `docs/handover/pythag-report.md`, for Jon's ruling on a "Formula only" mode. Then ruling (2) of 19 Oct: formula-plug-in DONE (#449, 531c988); new-shapes DONE (#450, e0377e9).
+
+MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; Jon's ruling on the phone gap at its end): the "100 Doors" card states its setup and condition; step 3 list in the entry below. **DONE (#448, b973e23).**
+
 ## Moved 2026-11-04 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
 
 ## 2026-11-04 (cloud): SEARCH-KEYWORDS triage lists (Amendment 1, ruling 6: for Project Claude to triage; not in #657)
