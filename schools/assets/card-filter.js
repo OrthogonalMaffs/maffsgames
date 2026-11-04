@@ -9,7 +9,7 @@
      groups: [{ param: 'topic', attr: 'data-topic', label: 'Topic',
                 options: [{ key: 'number', label: 'Number' }, ...] }],   // chip rows; 'all' is added first
                 // an option may carry values: [...] to accept several attribute values (data-calc both counts as either)
-     search: true                             // a box over the card text
+     search: true                             // a box over the cards; MaffsSearch.match (search.js) decides a match
    });
 
    One reader of filter state: getState(). The bar, the URL (?topic=..&q=..), the count, the analytics and the
@@ -59,7 +59,6 @@
     }
 
     // ── filtering ──
-    function textOf(card) { return (card.textContent || '').replace(/\s+/g, ' ').toLowerCase(); }
     function matches(card) {
       for (var i = 0; i < cfg.groups.length; i++) {
         var g = cfg.groups[i];
@@ -68,8 +67,7 @@
         var accepts = (opt && opt.values) || [state[g.param]];   // an option may accept several attribute values
         if (accepts.indexOf(card.getAttribute(g.attr)) === -1) return false;
       }
-      var q = state.q.trim().toLowerCase();
-      return !q || q.split(/\s+/).every(function (w) { return textOf(card).indexOf(w) !== -1; });
+      return window.MaffsSearch.match(card, state.q);   // the one search rule, schools/assets/search.js
     }
     function apply() {
       var n = 0;
