@@ -69,7 +69,7 @@ start-up load). When the work merges, move the file to `docs/history/`.
 - **Jon builds and proofreads the PDF at home:** `python -X utf8 tools/pack-generator/build_pack.py kiln-disaster` (README: what to proofread). Teacher notes are DRAFT for his wording.
 - **Outside the lane exception, for Jon:** `scripts/test-pack-generator.py` (CI reads ci-lines only in scripts/) and `_config.yml` `- tools` (check-publish-scope fails a new top-level folder); one commit each. Evidence is two pages of four cards (eight cannot hold 11 pt labels).
 - Follow-up (gate file, not edited): `tools` is not in ci-deps.py KNOWN_TOP, so a tools/ change selects every verifier.
-- **State:** Gate pending on PR #659.
+- **State:** Gate green on f74d917 (run 41822579536; the pack selftest ran in CI, 4/4). Waiting for Project Claude's review and Jon's "merge"; nothing merges before it.
 
 Record: agent Claude Code; wall n/a; review cycles 0; amendments 1; usage n/a.
 
