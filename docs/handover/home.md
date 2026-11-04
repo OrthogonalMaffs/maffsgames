@@ -8,7 +8,7 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
-- FRACTION-WHOLE: home/Codex, codex/fraction-whole, /home/maffs/mg-fraction-whole, draft PR #662; contract docs/handover/contracts/2026-11-04-fraction-whole.md. Claims fraction-input.js and the-6-ps; checked locally. #660 created updates/cloud.md conflicts; awaiting Jon's branch-merge exception. Shared review hold.
+- FRACTION-WHOLE: home/Codex, codex/fraction-whole, /home/maffs/mg-fraction-whole, PR #662; contract docs/handover/contracts/2026-11-04-fraction-whole.md. Claims fraction-input.js and the-6-ps. Jon's one-time merge exception consumed at 3492a781; cloud.md equals main. Full checks rerunning; Shared review hold.
 
 ## 2026-11-04 (home): FRACTION-WHOLE
 
