@@ -2,6 +2,8 @@
 
 **Queue (cross-lane facts; never archived)**
 
+- CHRISTMAS-ROOM: home/Codex, codex/christmas-room, /home/maffs/mg-christmas-room; Shared. Contract and Amendment 1: docs/handover/contracts/2026-11-04-christmas-room.md. Claims new room, generator/check entries, three art files and release listings/counts. Stop at Gate green for Shared review, Jon's play-test and merge.
+
 - DONE queue: docs/history/handover-home-archive.md
 
 - how-many-parts to move next (cloud lane, HOW-MANY-PARTS-FRACTION)
