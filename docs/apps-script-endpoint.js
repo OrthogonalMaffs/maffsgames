@@ -70,7 +70,7 @@ function doPost(e) {
 // Bump SCRIPT_VERSION whenever this file is redeployed. Hitting the /exec URL
 // in a browser then tells you which code is actually live — without it there is
 // no way to confirm a deploy landed, or which of several projects serves the URL.
-const SCRIPT_VERSION = '2026-11-03-b';
+const SCRIPT_VERSION = '2026-11-04-a';
 
 function doGet(e) {
   return jsonResponse({
@@ -134,15 +134,23 @@ function rptMarked(x, col) {
   return null;
 }
 
+// A room's game_completed is sent when the room ends, escaped or out of time (engine.js finish(win)); it is an
+// escape only when every lock opened: questions_correct (locks opened) equals questions_answered (locks), both
+// numbers above 0 (contract ROOM-ESCAPED, Jon, 4 Nov 2026). Any other completion is a timeout.
+function rptEscaped(x, col) {
+  var a = x[col['questions_answered']], c = x[col['questions_correct']];
+  return typeof a === 'number' && typeof c === 'number' && a > 0 && c === a;
+}
+
 // Everything the email and the Dashboard say about answers, from one set of rows.
 function rptBuild(rows, col, kinds) {
   var games = {}, qs = {}, rooms = {}, shots = {}, idGames = {}, overall = {total: 0, correct: 0};
   rows.forEach(function(x) {
     var ev = x[col['event']], slug = String(x[col['game_slug']]), kind = rptKind(slug, kinds);
     if (kind === 'room') {
-      var rm = rooms[slug] || (rooms[slug] = {slug: slug, starts: 0, escaped: 0, marked: 0, correct: 0});
+      var rm = rooms[slug] || (rooms[slug] = {slug: slug, starts: 0, escaped: 0, timedOut: 0, marked: 0, correct: 0});
       if (ev === 'game_started') rm.starts++;
-      else if (ev === 'game_completed') rm.escaped++;
+      else if (ev === 'game_completed') { if (rptEscaped(x, col)) rm.escaped++; else rm.timedOut++; }
       else if (ev === 'question_answered') {
         var rk = rptMarked(x, col);
         if (rk !== null) { rm.marked++; if (rk) rm.correct++; }
@@ -220,7 +228,7 @@ function rptEmailText(rep) {
   if (!rep.rooms.length) t += '  None played.\n';
   rep.rooms.forEach(function(r, i) {
     t += '  ' + (i + 1) + '. ' + r.slug + ' — ' + r.starts + ' started, ' + r.escaped + ' escaped (' + rptPct(r.escaped, r.starts) +
-      '), ' + (r.perLock === null ? 'no lock opened' : r.perLock.toFixed(1) + ' attempts per lock opened') + '\n';
+      '), ' + r.timedOut + ' timed out, ' + (r.perLock === null ? 'no lock opened' : r.perLock.toFixed(1) + ' attempts per lock opened') + '\n';
   });
   if (rptShotsLine(rep)) t += '\n' + rptShotsLine(rep) + '\n';
   return t;
@@ -475,10 +483,10 @@ function rebuildDashboard(weekRows, monthRows, col, kinds) {
   var t4bStart = r;
   dash.getRange(r, 1).setValue('Escape Rooms — Last 7 Days (lowest escape rate first)').setFontWeight('bold').setFontSize(11);
   r++;
-  dash.getRange(r, 1, 1, 5).setValues([['Room', 'Started', 'Escaped', 'Escape %', 'Attempts per lock']]).setFontWeight('bold').setBackground('#f0f0f0');
+  dash.getRange(r, 1, 1, 6).setValues([['Room', 'Started', 'Escaped', 'Escape %', 'Timed out', 'Attempts per lock']]).setFontWeight('bold').setBackground('#f0f0f0');
   r++;
   rep.rooms.forEach(function(rm) {
-    dash.getRange(r, 1, 1, 5).setValues([[rm.slug, rm.starts, rm.escaped, rm.rate === null ? '' : rm.rate,
+    dash.getRange(r, 1, 1, 6).setValues([[rm.slug, rm.starts, rm.escaped, rm.rate === null ? '' : rm.rate, rm.timedOut,
       rm.perLock === null ? '' : Math.round(rm.perLock * 10) / 10]]);
     r++;
   });

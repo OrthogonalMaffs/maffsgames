@@ -126,6 +126,9 @@ Then play any game for a few questions and check the **MaffsGames Events** sheet
   (at least 30 answers), hardest questions by `question_id` (at least 10 attempts) and an Escape Rooms table, and names
   Trig Wars and Bearing Blitz as left out of accuracy. If either the email or the Dashboard says "games.json could
   not be read", the fetch failed: the report still went out, with every game counted as a question game.
+- From `2026-11-04-a` (ROOM-ESCAPED): no new permission. A room counts as escaped only when every lock opened
+  (`questions_correct` equals `questions_answered`, both above 0); any other room `game_completed` is a timeout, shown
+  as "T timed out" in the email's rooms line and a **Timed out** column on the Dashboard's Escape Rooms table.
 
 ---
 
