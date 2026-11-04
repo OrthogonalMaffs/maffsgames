@@ -58,3 +58,11 @@ questions_answered (report how many; the test needs a different signal); a room 
   (the history's repack root), engine.js has had no commit since 24 Oct, analytics.js forwards every param, and
   doPost's cellValue blanks only undefined and null, so a 0 is stored as 0. A blank in the 7-day window would need a
   page cached from before 15 Oct. Jon can confirm with one Sheet filter before redeploying (in the PR).
+
+## Amendment 1 (Jon, 4 Nov 2026, verbatim)
+
+merge on green please
+
+(Received after PR #656 opened, its Gate green on 1793180. Jon's "merge" for this Shared PR; it is merged on green
+through `scripts/merge-pr.py 656 --watch --wait 3600` without waiting for Project Claude's review, which follows the
+merge.)

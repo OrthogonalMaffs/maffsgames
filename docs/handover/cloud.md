@@ -70,9 +70,9 @@ MONTY-CARD (19 Oct, contract `docs/history/contracts/2026-10-19-monty-card.md`; 
 - Built: `rptEscaped()` in the endpoint: a room `game_completed` is an escape only when `questions_correct` = `questions_answered` > 0 (both numbers); any other is "timed out", counted per room and shown in the email line and a Dashboard column. `SCRIPT_VERSION` `2026-11-04-a`; redeploy note (no new permission). Test: a 3/3 win, a 1/3 and a 0/3 timeout give 1 escaped, 2 timed out; new plant (every completion an escape) CAUGHT; 29 checks, 5 plants.
 - STOP IF 1 checked from code, not the Sheet (the Drive connector cannot return a 1.1 MB sheet into a session): the engine has sent both fields as numbers since at least 15 Oct and is unchanged since 24 Oct. STOP IF 2 clear. Details in the contract file.
 - **Jon's redeploy step after the merge:** new version of the existing deployment; `/exec` reports `2026-11-04-a`.
-- **State:** PR #656 open, Gate pending; then Project Claude's review and Jon's "merge".
+- **State:** PR #656; Amendment 1 (Jon, 4 Nov): "merge on green please", so merged on green via merge-pr.py, Project Claude's review after the merge.
 
-Record: agent Claude Code; wall pending; review cycles 0; amendments 0; usage n/a.
+Record: agent Claude Code; wall pending; review cycles 0; amendments 1; usage n/a.
 
 ## 2026-11-03 (cloud): DASHBOARD-METRICS (`docs/handover/contracts/2026-11-03-dashboard-metrics.md`, Shared, Amendments 1 and 2; stops at a green Gate for Project Claude's review and Jon's "merge")
 
