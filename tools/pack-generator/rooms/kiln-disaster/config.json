@@ -1,0 +1,23 @@
+{
+  "room": "kiln-disaster",
+  "pack_version": "1",
+  "sets": 7,
+  "seed": 1,
+  "certificate_title": "Kiln opened",
+  "images": [
+    {"file": "art/kiln-01-asset-tag.webp",        "role": "clue",    "object": "asset-tag",        "label_box": [290, 592, 966, 740],  "font": "label"},
+    {"file": "art/kiln-02-cable-label.webp",      "role": "clue",    "object": "cable-label",      "label_box": [215, 620, 990, 955],  "font": "hand"},
+    {"file": "art/kiln-03-install-sheet.webp",    "role": "clue",    "object": "install-sheet",    "label_box": [237, 708, 1014, 966], "font": "label"},
+    {"file": "art/kiln-04-calibration-log.webp",  "role": "clue",    "object": "calibration-log",  "label_box": [276, 720, 980, 809],  "font": "label"},
+    {"file": "art/kiln-05-instruction-card.webp", "role": "clue",    "object": "instruction-card", "label_box": [150, 260, 1105, 1100], "font": "label"},
+    {"file": "art/kiln-06-helpdesk-ticket.webp",  "role": "herring", "object": "helpdesk-ticket",  "label_box": [316, 796, 936, 866],  "font": "hand",
+     "text": "customer happy"},
+    {"file": "art/kiln-07-stop-button.webp",      "role": "herring", "object": "stop-button",      "label_box": [775, 400, 1162, 835], "font": "label",
+     "text": "PRESSING IT FLOODS THE KILN"},
+    {"file": "art/kiln-08-firing-screen.webp",    "role": "herring", "object": "firing-screen",    "label_box": [250, 230, 1000, 615], "font": "label",
+     "text": "COUNTDOWN", "ink": "light"},
+    {"file": "art/kiln-09-keypad.webp",           "role": "answer",  "lock": "kiln-sensor-limit",  "label_box": [348, 136, 908, 308]},
+    {"file": "art/kiln-10-dial.webp",             "role": "answer",  "lock": "kiln-fan-restart",   "label_box": [230, 922, 1020, 1098]},
+    {"file": "art/kiln-11-slider.webp",           "role": "answer",  "lock": "kiln-cancel-check",  "label_box": [124, 710, 1130, 900]}
+  ]
+}
