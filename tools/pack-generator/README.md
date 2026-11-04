@@ -14,7 +14,7 @@ From the repo root, in the WSL venv (it needs only Playwright and its Chromium, 
 python -X utf8 tools/pack-generator/build_pack.py kiln-disaster
 ```
 
-It writes `dist-packs/kiln-disaster-pack.pdf` (33 pages, about 8 MB) and prints what it checked. The same command
+It writes `dist-packs/kiln-disaster-pack.pdf` (34 pages, about 8 MB) and prints what it checked. The same command
 with the same seed gives the same sets every time; `--seed 2` gives a different choice, `--sets 5` fewer sets. Any
 failed check prints `BUILD FAILED` with the reason, and no PDF is written.
 
@@ -24,16 +24,19 @@ Print it **at 100% (actual size), A4, double-sided off**. It is designed to prin
 
 1. **Teacher notes (page 1): marked DRAFT for your wording.** Drafted from the room and its teacher page. Send your
    wording to Code Claude: it goes into `build_pack.py`, and the DRAFT badge comes off in the same change.
-2. **Answer key and worked solutions (pages 2-3):** every answer, common wrong answer and worked line was recomputed
+2. **Score sheet (page 2, landscape):** one row per set, letters printed; for each lock an Opened box and five
+   wrong-answer boxes; finishing time, penalty and total time. Checking is per lock as teams go (Amendment 3): right
+   ticks Opened, wrong checks a box and gets "not yet"; total time = finishing time + 1 minute per wrong answer.
+3. **Answer key and worked solutions (pages 3-4):** every answer, common wrong answer and worked line was recomputed
    by a separate method before the PDF was made, so a mismatch would have stopped the build. Spot-check one set
    against its cover and evidence pages anyway: that is what a teacher will do.
-3. **Each set (cover, evidence pages 1-2, locks page):** the set letter is in the top-right box of every page; the
+4. **Each set (cover, evidence pages 1-2, locks page):** the set letter is in the top-right box of every page; the
    figures printed on each object (asset tag, cable label, installation sheet, calibration log, instruction card)
    read clearly; the three red herrings (helpdesk ticket, emergency stop, firing screen) carry no number.
-4. **The look of the labels on the art:** each label is fitted to its box at 11 pt or larger. If one sits badly on
+5. **The look of the labels on the art:** each label is fitted to its box at 11 pt or larger. If one sits badly on
    its picture, its box is `label_box` in `rooms/kiln-disaster/config.json` (in the image's own pixels).
-5. **Hint cards and certificate (last two pages).**
-6. **Footer:** the MaffsGames logo and name, the room, pack version, seed and build date on every page. Give a
+6. **Hint cards and certificate (last two pages).**
+7. **Footer:** the MaffsGames logo and name, the room, pack version, seed and build date on every page. Give a
    buyer's question the version and seed from the footer and the pack can be rebuilt exactly.
 
 ## How it works
@@ -61,11 +64,13 @@ Then, in order, any failure stopping the build:
    fits its box at 11 pt or more (one line if it can, else balanced lines), no page overflows, every student page
    shows its set letter, no red herring shows a digit, no `{{token}}` is left unfilled, every footer carries the
    logo and name under 12 mm high, and the one URL printed (on the covers and teacher notes) resolves to the room's
-   own live page in this repo (host from `CNAME`). The PDF's page count must equal the pages built.
+   own live page in this repo (host from `CNAME`), and the score sheet has exactly one row per set and one column
+   group per lock. The PDF's page count must equal the pages built.
 
 `python -X utf8 tools/pack-generator/build_pack.py --selftest` (in CI as `scripts/test-pack-generator.py`) checks
-every room with a config and plants four faults, each of which must be caught: a duplicate answer across sets, an
-invalid joint draw, a wrong recomputed answer, a printed URL with no room page. It builds no PDF.
+every room with a config and plants five faults, each of which must be caught: a duplicate answer across sets, an
+invalid joint draw, a wrong recomputed answer, a printed URL with no room page, a missing score-sheet row. It builds
+no PDF.
 
 ## Adding a room
 

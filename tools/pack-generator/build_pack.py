@@ -335,12 +335,24 @@ def split_clue(clue):
 
 CSS = """
 @page { size: A4; margin: 0; }
+@page landscape { size: A4 landscape; margin: 0; }
 html, body { margin: 0; padding: 0; background: #fff; }
 body { font-family: 'Outfit', sans-serif; color: #000; font-size: 10.5pt; line-height: 1.35;
        -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 .page { width: 210mm; height: 297mm; box-sizing: border-box; padding: 10mm 12mm 0; position: relative;
         overflow: hidden; break-after: page; display: flex; flex-direction: column; }
 .page:last-child { break-after: auto; }
+.page.landscape { page: landscape; width: 297mm; height: 210mm; }
+table.score { table-layout: fixed; font-size: 9.5pt; }
+table.score th, table.score td { padding: 1.2mm 1.5mm; vertical-align: middle; }
+table.score th { text-align: center; line-height: 1.2; }
+table.score tr.row td { height: 15mm; }
+table.score td.set { text-align: center; font-size: 15pt; font-weight: 800; }
+.box { display: inline-block; width: 4mm; height: 4mm; border: 0.8pt solid #000; margin: 0 0.6mm; vertical-align: middle; }
+.box.big { width: 6mm; height: 6mm; }
+td.boxes { text-align: center; white-space: nowrap; }
+.rule { font-size: 9.5pt; margin-top: 2.5mm; }
+.goal { font-weight: 700; margin: 2mm 0 3mm; }
 .main { flex: 1 1 auto; height: 0; overflow: hidden; margin-bottom: 15mm; }
 .foot { position: absolute; left: 12mm; right: 12mm; bottom: 5mm; border-top: 0.4pt solid #000; padding-top: 1.2mm;
         display: flex; justify-content: space-between; align-items: center; font-size: 7.5pt; letter-spacing: 0.02em; }
@@ -490,12 +502,64 @@ def art_block(img_path, box, cls, text=None, ident="", set_letter="", max_pt=MAX
     return '<div class="art"><img src="%s" alt="">%s</div>' % (img_path.as_uri(), inner)
 
 
-def page(kind, body, title, sub="", set_letter=None, badge=""):
+def page(kind, body, title, sub="", set_letter=None, badge="", landscape=False):
     attrs = 'data-kind="%s"' % kind + (' data-set="%s"' % set_letter if set_letter else "")
     right = ('<div class="setbox">Set %s</div>' % set_letter) if set_letter else badge
-    return ('<section class="page" %s><div class="head"><div><h1>%s</h1>%s</div>%s</div>'
+    return ('<section class="page%s" %s><div class="head"><div><h1>%s</h1>%s</div>%s</div>'
             '<div class="main">%s</div><div class="foot">{{FOOT}}</div></section>'
-            % (attrs, title, ('<div class="sub">%s</div>' % sub) if sub else "", right, body))
+            % (" landscape" if landscape else "", attrs, title, ('<div class="sub">%s</div>' % sub) if sub else "", right, body))
+
+
+WRONG_BOXES = 5           # wrong-answer boxes per lock on the score sheet (Amendment 3)
+SCORE_ROWS = 8            # rows a score-sheet page holds; more sets flow onto another page
+
+
+def score_sheet(locks, sets):
+    """The score sheet's tables (Amendment 3), one per page: a row per set, its letter printed; a column group per lock
+    (Opened: one tick box; Wrong answers: WRONG_BOXES boxes); then finishing time, penalty and total time."""
+    groups = "".join("<th colspan='2' data-lock='%s'>Lock %d<br><span class='wrong'>%s</span></th>" % (l["id"], i + 1, l["name"])
+                     for i, l in enumerate(locks))
+    subs = "".join("<th>Opened</th><th>Wrong answers</th>" for _ in locks)
+    cols = ("<colgroup><col style='width:auto'><col style='width:12mm'>%s<col style='width:22mm'><col style='width:20mm'>"
+            "<col style='width:20mm'></colgroup>" % "".join("<col style='width:15mm'><col style='width:%dmm'>"
+                                                            % (WRONG_BOXES * 5.4 + 3) for _ in locks))
+    head = ("<tr><th rowspan='2'>Team name</th><th rowspan='2'>Set</th>%s<th rowspan='2'>Finishing time</th>"
+            "<th rowspan='2'>Penalty (minutes)</th><th rowspan='2'>Total time</th></tr><tr>%s</tr>" % (groups, subs))
+    tables = []
+    for k in range(0, len(sets), SCORE_ROWS):
+        rows = "".join("<tr class='row' data-set='%s'><td></td><td class='set'>%s</td>%s<td></td><td></td><td></td></tr>"
+                       % (s["letter"], s["letter"], "".join(
+                           "<td class='boxes'><span class='box big' data-lock='%s' data-box='opened'></span></td>"
+                           "<td class='boxes'>%s</td>" % (l["id"], "".join(
+                               "<span class='box' data-lock='%s' data-box='wrong'></span>" % l["id"]
+                               for _ in range(WRONG_BOXES))) for l in locks))
+                       for s in sets[k:k + SCORE_ROWS])
+        tables.append("<table class='score'>%s%s%s</table>" % (cols, head, rows))
+    return tables
+
+
+def check_score_sheet(tables, locks, sets):
+    """Problems with the score sheet: every set has exactly one row, no row is for a set that is not in the pack, each
+    lock has one column group, and every row holds one Opened box and WRONG_BOXES wrong-answer boxes per lock."""
+    out, seen = [], []
+    for t in tables:
+        for lid in [l["id"] for l in locks]:
+            if t.count("<th colspan='2' data-lock='%s'>" % lid) != 1:
+                out.append("lock %s does not have one column group" % lid)
+        for letter, row in re.findall(r"<tr class='row' data-set='([A-Z])'>(.*?)</tr>", t, re.S):
+            seen.append(letter)
+            for l in locks:
+                o = row.count("data-lock='%s' data-box='opened'" % l["id"])
+                w = row.count("data-lock='%s' data-box='wrong'" % l["id"])
+                if (o, w) != (1, WRONG_BOXES):
+                    out.append("set %s, %s: %d Opened and %d wrong-answer boxes" % (letter, l["id"], o, w))
+    want = [s["letter"] for s in sets]
+    for letter in want:
+        if seen.count(letter) != 1:
+            out.append("the score sheet has %d rows for set %s" % (seen.count(letter), letter))
+    for letter in sorted(set(seen) - set(want)):
+        out.append("the score sheet has a row for set %s, which is not in the pack" % letter)
+    return out
 
 
 def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
@@ -539,35 +603,50 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
         for i, (l, m) in enumerate(zip(locks, meta)))
     has_tokens = any("{{" in (room.get(k) or "") for k in ("hook", "brief", "stakes"))
     script = ("<blockquote><p>%s</p><p>%s</p><p>%s</p><p>Every team has a different set, so your numbers are not "
-              "your neighbours&rsquo;. Find the %d codes, write them on your cover sheet and bring it to me. The first "
-              "fully correct sheet wins.</p></blockquote>" % (fill_a(room["hook"]), fill_a(room["brief"]),
-                                                              fill_a(room["stakes"]), len(locks)))
+              "your neighbours&rsquo;. Bring each answer to me as soon as you have it. Every wrong answer adds a "
+              "minute to your time. Lowest total time wins.</p></blockquote>" % (fill_a(room["hook"]),
+                                                                                fill_a(room["brief"]),
+                                                                                fill_a(room["stakes"])))
     if has_tokens:
         script = "<p>Read the hook and brief from any team&rsquo;s cover sheet, then:</p>" + script
     body = (
         "<h2>What is in the pack</h2>"
         "<p>%d sets, %s to %s: the same room with different numbers, so neighbouring teams cannot share answers. Each "
-        "set is a cover sheet, two evidence pages and a locks page. Also here: the answer key, hint cards and a "
-        "certificate.</p><ul>%s</ul>%s"
+        "set is a cover sheet, two evidence pages and a locks page. Also here: the score sheet, the answer key, hint "
+        "cards and a certificate.</p><ul>%s</ul>%s"
         "<h2>Set-up (under two minutes)</h2><ol>"
         "<li>Print one set per team, each team a different letter.</li>"
         "<li>Hand each team its set face down, cover sheet on top.</li>"
-        "<li>Optional: cut out the hint cards and keep them at the front.</li>"
-        "<li>Keep the answer key with you.</li></ol>"
+        "<li>Keep the score sheet and the answer key with you, and a timer that counts up.</li>"
+        "<li>Optional: cut out the hint cards and keep them at the front.</li></ol>"
         "<h2>Read this out</h2>%s"
         "<h2>How checking works</h2>"
-        "<p>Teams bring their completed cover sheet. Check it against its set letter&rsquo;s row in the answer key. "
-        "All %d right: the first fully correct sheet wins (the certificate is at the back). Anything wrong: hand it back "
-        "with &ldquo;not yet&rdquo;, and do not say which. The key also gives each lock&rsquo;s common wrong answer and "
-        "the misconception behind it, for the debrief.</p>"
-        "<h2>Timing</h2><p>Your choice. The online room gives %d minutes%s.</p>"
+        "<p>Use one timer for the whole class, counting up, and start it when every team has its set. A team brings "
+        "each lock&rsquo;s answer to you as they go; check it against their set&rsquo;s row in the answer key. "
+        "<b>Right:</b> tick that lock&rsquo;s Opened box on the score sheet. <b>Wrong:</b> check one of that "
+        "lock&rsquo;s wrong-answer boxes and say &ldquo;not yet&rdquo;, with no explanation.</p>"
+        "<p>When a team&rsquo;s last lock is ticked, write the time on the timer as its finishing time. "
+        "<b>Total time = finishing time + 1 minute per wrong answer. Lowest total time wins</b> (the certificate is "
+        "at the back). The key also gives each lock&rsquo;s common wrong answer and the misconception behind it, for "
+        "the debrief.</p>"
+        "<h2>Timing</h2><p>How long to run it is your choice. The online room gives %d minutes%s.</p>"
         "<p class='online'><b>Play this room free online: %s</b></p>"
         % (len(sets), letters[0], letters[-1], topics, ("<p>%s</p>" % first_note.group(1)) if first_note else "",
-           script, len(locks), room.get("minutes", 15),
+           script, room.get("minutes", 15),
            ("; the locks&rsquo; own times add up to about %d minutes" % bank_minutes) if bank_minutes else "",
            esc(url)))
     pages.append(page("teacher", body, "%s: teacher notes" % title, "Group race pack, %d sets" % len(sets),
                       badge='<div class="draft">DRAFT: Jon&rsquo;s wording</div>'))
+
+    # a2. score sheet (Amendment 3): landscape, one row per set, a column group per lock
+    tables = score_sheet(locks, sets)
+    for k, t in enumerate(tables):
+        rule = ("<p class='rule'>Right: tick Opened. Wrong: check one box and say &ldquo;not yet&rdquo;. Finishing time: "
+                "the timer when the last lock is ticked. Penalty: 1 minute per checked box. "
+                "<b>Total time = finishing time + penalty. Lowest total time wins.</b></p>")
+        pages.append(page("score", t + rule, "%s: score sheet" % title,
+                          "One timer for the whole class, counting up" + (", page %d of %d" % (k + 1, len(tables))
+                                                                         if len(tables) > 1 else ""), landscape=True))
 
     # b. answer key: the table, then the worked solutions
     head = "".join("<th>%s<br><span class='wrong'>%s</span></th>" % (l["name"], esc(m.get("topic", "")))
@@ -579,7 +658,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
     legend = "".join("<li><b>%s:</b> %s %s</li>" % (l["name"], l.get("missTitle", ""), l.get("missSays", ""))
                      for l in locks)
     pages.append(page("key", "<table><tr><th></th>%s</tr>%s</table><h2>The common wrong answers</h2><ul>%s</ul>"
-                      % (head, rows, legend), "%s: answer key" % title, "Check a cover sheet against its set's row"))
+                      % (head, rows, legend), "%s: answer key" % title, "Check each answer against its set's row"))
     sols = ""
     for s in sets:
         f = filler(locks, s)
@@ -599,7 +678,8 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
                            art_block(rdir / im["file"], im["label_box"], "write")))
         cover = ("%s<p>%s</p><p>%s</p><p><b>%s</b></p>"
                  "<div class='team'>Team name: <span></span></div>"
-                 "<h2>Your codes: write each in its box, then bring this sheet to your teacher</h2>"
+                 "<h2>Your codes: write each in its box</h2>"
+                 "<p class='goal'>Bring each answer to your teacher. Every wrong answer adds a minute to your time.</p>"
                  "<div class='answers'>%s</div><p class='online'>Play this room free online: %s</p>"
                  % (('<img class="cover-art" src="%s" alt="">' % scene.as_uri()) if scene and scene.is_file() else "",
                     f(room["hook"]), f(room["brief"]), f(room["stakes"]), answers, esc(url)))
@@ -708,6 +788,10 @@ def build(slug, n, seed):
             if not LOGO.is_file():
                 raise BuildError("the logo %s is missing" % LOGO.relative_to(ROOT).as_posix())
             doc, npages = build_html(slug, room, teach, locks, sets, cfg, seed, built, url)
+            sheet = check_score_sheet(score_sheet(locks, sets), locks, sets)
+            if sheet:
+                raise BuildError("the score sheet fails:\n  " + "\n  ".join(sheet))
+            print("score sheet: one row per set (%d), one column group per lock (%d)" % (len(sets), len(locks)))
             with tempfile.TemporaryDirectory() as tmp:
                 src = pathlib.Path(tmp) / ("%s-pack.html" % slug)
                 src.write_text(doc, encoding="utf-8")
@@ -766,7 +850,8 @@ def selftest():
             first = None
             for slug in rooms:
                 checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed = prepare(slug, None, None, pg)
-                probs = check_sets(checker, room_js, locks, sets) + verify_sets(locks, sets)[0]
+                probs = (check_sets(checker, room_js, locks, sets) + verify_sets(locks, sets)[0]
+                         + check_score_sheet(score_sheet(locks, sets), locks, sets))
                 print("%s: %d sets chosen from %d VALID draws; %s" % (slug, n, len(valid), "OK" if not probs else probs))
                 failures += probs
                 first = first or (checker, room_js, locks, sets, valid)
@@ -802,10 +887,19 @@ def selftest():
         text = "Play this room free online: " + bad
         return [x for x in check_printed_text([("cover", text)], url) if "does not exist" in x]
 
+    def plant_missing_row():
+        tables = score_sheet(locks, sets)
+        row = re.search(r"<tr class='row' data-set='C'>.*?</tr>", tables[0], re.S)
+        if not row:
+            raise pc.StalePlant("a missing score-sheet row", "the score sheet has no row for set C")
+        tables[0] = pc.apply_plant(tables[0], row.group(0), "", name="a missing score-sheet row")
+        return [x for x in check_score_sheet(tables, locks, sets) if "0 rows for set C" in x]
+
     plants = (("a duplicate answer across sets", plant_duplicate),
               ("an invalid joint draw", plant_invalid),
               ("a wrong recomputed answer", plant_wrong_answer),
-              ("a printed URL with no room page", plant_bad_url))
+              ("a printed URL with no room page", plant_bad_url),
+              ("a missing score-sheet row", plant_missing_row))
     for name, fn in plants:
         found, err = [], None
         try:

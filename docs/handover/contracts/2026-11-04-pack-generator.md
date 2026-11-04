@@ -90,3 +90,22 @@ AMENDMENT 1 to PACK-GENERATOR (Jon, 4 Nov): branding.
   prices or other products, and no Tes branding anywhere.
 - Add a check to the build: the URL printed resolves to an existing room page in the repo.
 - The logo must not crowd the student pages: footer only on those, under 12 mm high.
+
+AMENDMENT 3 to PACK-GENERATOR (Jon, 4 Nov; replaces any earlier Amendment 3 text): per-lock checking and a
+teacher score sheet.
+- Checking changes from "bring the completed cover sheet at the end" to per lock: a team brings each lock's answer
+  to the teacher as they go. Right: the teacher ticks that lock. Wrong: the teacher checks one box in that lock's
+  wrong-answer boxes and says "not yet", no explanation.
+- Finishing time: read from the room timer (one timer for the whole class, started together) when the team's last
+  lock is ticked. Total time = finishing time + 1 minute per wrong answer. Lowest total time wins.
+- New page after the teacher notes: "Score sheet", one A4 table, landscape if needed: one row per set (A-G, letter
+  pre-printed), columns: Team name | Set | for each lock: Opened (one tick box) and Wrong answers (a row of 5 small
+  check boxes) | Finishing time | Penalty (minutes) | Total time. Room-agnostic: lock columns come from the room's
+  locks, rows from --sets.
+- Teacher notes: rewrite "how checking works" to match, including "use one timer for the whole class, counting up"
+  (still marked DRAFT for Jon's wording).
+- Cover sheet: one line for students, "Bring each answer to your teacher. Every wrong answer adds a minute to your time."
+- Selftest: the score sheet has one row per set and one column group per lock (a planted missing row is caught).
+Record this amendment verbatim in the saved contract and the PR body.
+
+(No Amendment 2 reached the cloud session; Amendment 3 is recorded as received.)
