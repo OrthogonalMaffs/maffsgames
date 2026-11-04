@@ -8,9 +8,11 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
-- FRACTION-WHOLE: home/Codex, codex/fraction-whole, /home/maffs/mg-fraction-whole, PR #662; contract docs/handover/contracts/2026-11-04-fraction-whole.md. Jon approved the additional main merge, resolving the updates-only conflict. No cloud handover change in PR. Checks/Gate and final head tracked in PR report; Shared review hold.
+- FRACTION-WHOLE: merged #662, b38ce399; Shared review passed and Jon authorised merge, 4 Nov. Contract: docs/history/contracts/2026-11-04-fraction-whole.md. Main run and cleanup recorded below.
 
 ## 2026-11-04 (home): FRACTION-WHOLE
+
+Final state: MERGED and live #662, squash b38ce399. Resumed 4 Nov by Codex at clean head 8db674cd, matching the PR handover. Project Claude Shared review passed; Jon explicitly said "merge". Primary fast-forwarded first. Gate (every job passed) remained successful on that exact head; GitHub reported mergeable/clean after main advanced. No further main merge. Guard last line: `main b38ce39 run 41900832132: GREEN`; independent watch-main confirmation exit 0. end-task.py exit 0 removed codex/fraction-whole and its worktree. Contract moved verbatim to docs/history/contracts/2026-11-04-fraction-whole.md. Close-out: /home/maffs/mg-fraction-whole-closeout, branch codex/fraction-whole-closeout; check-changed.py 40/40 PASS in 255s, standard seven CI deferrals, log .claude/bg-1793821884474.log (detached command exit status not retained). No production changes or SR decision needed. Next: close-out PR and guarded merge; then CHRISTMAS-ROOM under Jon's 4 Nov contract.
 
 Agent: Codex. Worktree: /home/maffs/mg-fraction-whole. Branch: codex/fraction-whole. Base: 67610171. Pre-step and its extension completed: seven queue entries and seven dated entries moved verbatim to docs/history/handover-home-archive.md under "Queue DONE items moved 4 Nov"; CALC-DOCK-WIDE first, then oldest first. GitHub REST confirms all seven PRs merged; each squash commit is an ancestor of origin/main. Cloud ownership line retained. No live or unmerged item moved. Context size passes without warning and with more than 3 KB spare after this entry.
 
@@ -40,5 +42,5 @@ STOP after footer correction 3e929ea8: #663 merged into main as 246794b1 while c
 
 Jon answered "yes you may" to the additional merge exception (4 Nov), saved verbatim with its question in the contract and PR. Resumed from clean 5fa48716. Merged origin/main d7cc0e78 (includes #663); only updates/index.html conflicted. Kept the approved fraction entry and every main entry, with wording unchanged and dates descending. Asserted updates equals main plus the exact fraction line; cloud handover byte-identical to main; production, verifier, component test and fixture byte-identical to 5fa48716. No further merge or PR merge authority inferred. Next: fresh full local checks and Gate on this head, then stop for Shared review. Final checks/Gate/current-head evidence in the linked PR report; retain branch/worktree, no cleanup.
 
-Record: agent Codex; wall n/a; review cycles 0; amendments 4 (pre-step extension, signed Amendment 1, #662 rulings, additional merge exception); usage n/a.
+Record: agent Codex; wall n/a; review cycles 1; amendments 4 (pre-step extension, signed Amendment 1, #662 rulings, additional merge exception); usage n/a.
 
