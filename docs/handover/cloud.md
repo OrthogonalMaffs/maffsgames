@@ -62,6 +62,17 @@ start-up load). When the work merges, move the file to `docs/history/`.
 **Every PR:** no `check-changed.py` in the cloud (AGENTS.md, CLOUD-LEAN); merge only via `python scripts/merge-pr.py <n>
 --watch --wait 3600` (needs a green Gate and main, §7.8.3) and report its last line.
 
+## 2026-11-04 (cloud): PACK-GENERATOR (`docs/handover/contracts/2026-11-04-pack-generator.md`, Shared, Amendment 1; stops at a green Gate for Project Claude's review and Jon's "merge")
+
+- Agent: Claude Code; primary checkout, branch `claude/great-feynman-vs4fpp`. Pre-step a9e175f; generator 562c5a2; PR #659.
+- Built: `tools/pack-generator/` (build_pack.py, lockcheck.py, README, Kiln config and 11 webp, two fonts); `dist-packs/` gitignored. Kiln: 320/700 VALID draws, 7 sets, 70 values (21 answers) recomputed independently, labels at least 11.5 pt, 33 pages. Selftest 4/4 plants caught.
+- **Jon builds and proofreads the PDF at home:** `python -X utf8 tools/pack-generator/build_pack.py kiln-disaster` (README: what to proofread). Teacher notes are DRAFT for his wording.
+- **Outside the lane exception, for Jon:** `scripts/test-pack-generator.py` (CI reads ci-lines only in scripts/) and `_config.yml` `- tools` (check-publish-scope fails a new top-level folder); one commit each. Evidence is two pages of four cards (eight cannot hold 11 pt labels).
+- Follow-up (gate file, not edited): `tools` is not in ci-deps.py KNOWN_TOP, so a tools/ change selects every verifier.
+- **State:** Gate pending on PR #659.
+
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 1; usage n/a.
+
 ## 2026-11-04 (cloud): PACKS-CANON (`docs/handover/contracts/2026-11-04-packs-canon.md`, Small, lane exception: canon §7.1, §8, §12)
 
 - Agent: Claude Code; branch `claude/sleepy-shannon-itnz0v` (claim 86a2667). Pre-step 953a0ca. Done: §7.1 line replaced verbatim; §8.2 backlog line; §12 reason.
