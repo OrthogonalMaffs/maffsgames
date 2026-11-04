@@ -12,6 +12,14 @@
 
 - FRACTION-WHOLE: merged #662, b38ce399; Shared review passed and Jon authorised merge, 4 Nov. Contract: docs/history/contracts/2026-11-04-fraction-whole.md. Main run and cleanup recorded below.
 
+## 2026-11-04 (home): CHRISTMAS-ROOM
+
+Agent: Codex. Worktree: /home/maffs/mg-christmas-room. Branch: codex/christmas-room. Base: 10a8b261. First commit 0b260bb5 saves the full approved draft/contract and Amendment 1 verbatim, plus Queue claim. Primary fast-forwarded; clean takeover and expected git identity confirmed. Root cause: approved new seasonal content on the existing engine; no bug class or engine change. Amendment 1 resolves the initial fixed-number feedback contradiction. Art branch exists; all three source JPGs visually inspected: no people, lettering or visible watermark. No artwork transformation or production changes yet.
+
+STOP at contract/code check: scripts/check-escape-rooms.py:209 rejects every lock missing from docs/lock-bank-batch*.txt; no Christmas entries exist. EXACT CHANGE/lane exception omits that bank, so the required checker cannot pass within the named files. SR-30 also requires a new room's findings file, omitted from scope. Need a numbered amendment authorising the new room's bank entries and docs/audits/findings/christmas-tree-fiasco.yml; retain checker and engine unchanged. No implementation or tests claimed, no push/PR. Next: resume this clean branch after amendment, then build, validate, Gate and Shared review/Jon play-test hold. No SR exception applied; SR-30 requirement flagged.
+
+Record: agent Codex; wall n/a (initial contract receipt timestamp unavailable); review cycles 0; amendments 1; usage n/a.
+
 ## 2026-11-04 (home): FRACTION-WHOLE
 
 Final state: MERGED and live #662, squash b38ce399. Resumed 4 Nov by Codex at clean head 8db674cd, matching the PR handover. Project Claude Shared review passed; Jon explicitly said "merge". Primary fast-forwarded first. Gate (every job passed) remained successful on that exact head; GitHub reported mergeable/clean after main advanced. No further main merge. Guard last line: `main b38ce39 run 41900832132: GREEN`; independent watch-main confirmation exit 0. end-task.py exit 0 removed codex/fraction-whole and its worktree. Contract moved verbatim to docs/history/contracts/2026-11-04-fraction-whole.md. Close-out: /home/maffs/mg-fraction-whole-closeout, branch codex/fraction-whole-closeout; check-changed.py 40/40 PASS in 255s, standard seven CI deferrals, log .claude/bg-1793821884474.log (detached command exit status not retained). No production changes or SR decision needed. Next: close-out PR and guarded merge; then CHRISTMAS-ROOM under Jon's 4 Nov contract.
