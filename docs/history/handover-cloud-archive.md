@@ -6,6 +6,84 @@ and the last three entries; older entries move here, newest first, unchanged.
 
 ## Moved 2026-11-04 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
 
+## 2026-11-04 (cloud): SEARCH-KEYWORDS triage lists (Amendment 1, ruling 6: for Project Claude to triage; not in #657)
+
+*Spec-map rows the banks do not teach* (found while drafting keywords; `spec-map/` not edited; "not taught" is the drafting read of each game's bank):
+
+- `sequence-solver`: Spec row 'LO1: Arithmetic and geometric progressions, series' (BTEC/HNC) is listed, but the game has no L4 level (levels KS3, GCSE, A-Level only).
+- `estimation-golf`: Mixed bank: Year 6 is general-knowledge facts (days in a year, legs on a spider), not estimation maths; A-Level and L4 are assorted calculations (trapezium rule, RMS voltage). Spec '§3.3 Fermi estimation' is only touched by one or two items (heartbeats in a year, seconds in a day); 'LO1 number theory, fractions' is not taught. Banks are 9 per level (20 for Year 6).
+- `factor-race`: Spec N4 also names primes, HCF, LCM and prime factorisation, none of which this game asks.
+- `prime-factorisation`: Spec N4 also names HCF and LCM; the game does not ask for them.
+- `prime-or-composite`: Spec N4 also names HCF, LCM and prime factorisation; not asked.
+- `percentage-flip`: Spec N12 'percentage change' and N10-N11 'interconversion' are not taught: the game only finds a percentage of an amount. Banks are small (12 default, 20 Year 6).
+- `fraction-equivalence`: Spec N2 'four operations with fractions' is not taught (no fraction arithmetic); N10-N11 interconversion only via one example (1/2 = 0.5).
+- `52dle`: Only about 20 puzzles in the list, one per day.
+- `constructions-lab`: Spec G9 also names bearings; the game has no bearings task.
+- `split-it`: Spec R9 also names percentage increase/decrease; not in this game.
+- `word-problem-decoder`: Keywords deliberately avoid the individual topic names: the game asks students to name the topic, not to do it.
+- `equation-builder`: 'btec' used because the Level 4 tier is HNC/BTEC Level 4 (canon level table).
+- `truth-buster`: No spec rows in the input for this game.
+- `terrible-advice`: The input search_phrase 'Financial Maths Mistakes' overstates the money content: the advisers are money-themed characters, but most questions are general misconceptions (fractions, angles, sequences, area); only a handful are financial (compound interest, loan repayment, best value, break-even). No 'financial maths' keyword proposed.
+- `negative-number-line`: Spec N2 names decimals, fractions and mixed numbers and N1 names ordering decimals and fractions: the game uses integers only (plus 0.5 and -0.5 to place). It never adds or subtracts a negative number, so no 'subtracting negatives' keyword.
+- `formula-plug-in`: Spec G16 names parallelograms, trapezia and prisms: the game has only triangles, rectangles, squares and cuboids.
+- `decimal-detective`: Spec N14-N16 names estimation and error intervals; the game has no estimation or error intervals, only rounding.
+- `like-terms-collector`: Spec row A4 wording 'laws of indices in algebra' is not taught: the bank has no powers at all (collecting like terms only).
+- `shape-shifter`: Roster says 4 modes; the page also has an Enlargement mode (5 cards). Spec G7 row omits enlargement, which the game does teach.
+- `new-shapes`: Spec row G16 also lists area of triangles; the bank has no triangle questions.
+- `higher-power`: Spec row N14-N16 (rounding, error intervals) is not taught: the game compares magnitudes, no rounding or error intervals. N6 fits.
+- `prisoners-dilemma`: Spec row §3.10 cost-benefit analysis is tenuous: Core level reframes the payoff matrix as competitor pricing, but there are no cost-benefit questions; not used for keywords.
+- `seven-bridges`: Spec row DA1-DA2 also lists Hamiltonian graphs; the game has no Hamiltonian content.
+- `index-laws`: Spec row LO1 also names logarithms; this game has no logarithm questions.
+- `quadratic-factoriser`: Spec row B3 lists completing the square; the game does not teach it.
+- `trig-wars`: Spec rows G20-G21 (Pythagoras, exact values) and E1-E7 (radians, identities, compound angles, equations) are not taught; only sin/cos components of a velocity. Q5 projectiles fits.
+- `trig-worms`: Spec rows E1-E7 (radians, identities, compound angles) and the Pythagoras/exact values part of G20-G21 are not taught; also LO2's sine/cosine rules and radians.
+- `modular-battle`: Spec ref looks mislabelled: DfE GCSE N5 is systematic listing/product rule, not remainders; modular arithmetic is not named in the GCSE content.
+- `proportion-blaster`: Spec row R9 (percentage increase/decrease) is barely taught: one item asks the percentage change in y when x rises 50%; the bank is direct/inverse proportion (DfE R10, R13) and ratio sharing (R5).
+- `circle-theorem-spotter`: Spec ref looks mislabelled: in the DfE GCSE content circle theorems are G10; G17 is circumference/area of circles and volumes.
+- `probability-paradox`: Spec rows S1-S4 (averages, data representation), I1-I3 (sampling, data presentation, measures of location/spread) and LO4's distributions/hypothesis testing are not taught; §3.9 Expectation is tenuous (only the envelope paradox). J1-J3 fits.
+- `graph-transformer`: Spec ref looks mislabelled: DfE GCSE A13 is translations/reflections of graphs; A14 is graphs in real contexts, which this game does not teach.
+- `bearing-blitz`: Spec row G9 (constructions, loci) is not taught; only bearings. The DfE ref for bearings is G15, not G9.
+- `scale-factor-scaling`: Spec ref looks mislabelled: in the DfE GCSE content this is R12/G19; R6 is expressing a multiplicative relationship as a ratio or fraction.
+- `correlation-or-coincidence`: Spec rows M1–M3 (PMCC) and §3.7 (PMCC, regression lines) are not taught: the bank has no PMCC, regression or line of best fit, only correlation vs causation. Not used for keywords.
+- `chart-interrogator`: Spec row S1–S4 mentions probability; the game teaches no probability (diagrams and averages/spread only).
+- `given-that`: Spec row §3.9 (Expectation) is not taught: the bank has no expected value questions.
+- `screening-room`: Spec row §3.9 (Expectation) is not taught, and J1–J3's Venn and tree diagrams are not used (icon arrays and Bayes only); only the conditional-probability part fits.
+- `linear-equation-solver`: 'resit' included because the content is GCSE Foundation equation-solving fluency; the game is not in the Resit Fluency Strand, so drop it if the reviewer reads the rule narrowly. Unknowns on both sides are not in the bank ('unknown either side' means 19 = 2x + 9).
+- `stat-attack`: Spec row LO4 (probability, distributions, hypothesis testing) is not taught; only grouped-data summary statistics are.
+- `graph-sketcher`: Spec row A14 mentions graph transformations; the bank has none (the only 'transform' hits are CSS). 'Graphs in real contexts' fits.
+- `glorious-gantt`: Page shows a 'We're correcting this game' notice (some critical-path answers wrong); keywords describe the topic regardless. No spec rows in input.
+- `differentiation-duel`: Spec rows G5–G6 (differential equations part) and Q4 (calculus in kinematics) are not taught: no differential equations or velocity/acceleration items in the bank.
+- `suvat`: Spec rows Q4 (calculus in kinematics, v = dr/dt) and LO2's 'calculus in mechanics' are not taught: the bank has no calculus.
+- `binomial-blaster`: Roster topics include Statistics, but the bank has no binomial distribution; all questions are the binomial expansion (pure).
+- `partial-fractions-duel`: Spec row H1-H8 (integration by parts, substitution, partial fractions) does not fit: the bank only decomposes into partial fractions and never integrates.
+- `proof-builder`: Spec row A1-A5 lists proof by exhaustion; no exhaustion proof is in the bank.
+- `normal-navigator`: Spec row L1-L3 (statistical hypothesis testing) does not fit: no hypothesis testing in the bank. LO4 fits only for its distributions part.
+- `truth-will-set-you-free`: Spec row LO1 includes logic simplification; this game builds and matches truth tables but does not simplify expressions (Boolean Blitz does).
+- `complex-converter`: Spec rows B1-B3 (conjugates, arithmetic), B4-B7 loci and B8-B11 (de Moivre, nth roots of unity) are not in the bank; it only converts forms and plots on the Argand diagram.
+- `matrix-crunch`: Spec row C1-C4 (matrix arithmetic, transformations, invariant points) is not taught; C5-C6 fits only for 2x2 (no 3x3 in the bank).
+- `characteristic-quest`: Spec row C10-C11 includes diagonalisation, which none of the eigen trilogy teaches.
+- `eigenvalue-extractor`: Spec row C10-C11 includes diagonalisation, not taught.
+- `eigenvector-engine`: Spec row C10-C11 includes diagonalisation, not taught.
+- `free-daily-pizza`: Spec rows N12 (percentage change) and R9 (percentage increase/decrease) do not fit: no increase, decrease or percentage change in the bank.
+- `y-so-steep`: Stage 3 (rearranging) is off until fractions are enabled, so no rearranging keyword is given.
+- `take-a-walk`: Spec row G16 mentions trapezia and volume of prisms; neither is in the bank (circles, G17, would fit and is not listed).
+- Reference numbers that look wrong against the DfE GCSE subject content (the drafting note for batch 2): circle theorems are G10, not G17 (G17 is circle area and circumference); graph transformations A13, not A14; bearings G15, not G9; area and volume scale factors R12/G19, not R6; proportion R10/R13, not R9; modular arithmetic is listed under N5 (systematic listing).
+
+*Possibly short banks* (from the drafting notes; not counted further, may be under the 40-question minimum): Estimation Golf about 9 a level (20 for Year 6); Percentage Flip 12 (20 for Year 6); 52-dle about 20 puzzles, one a day.
+
+
+## 2026-11-04 (cloud): ROOM-ESCAPED (`docs/history/contracts/2026-11-04-room-escaped.md`, Shared; stopped at a green Gate for Project Claude's review and Jon's "merge")
+
+- Agent: Claude Code. Primary checkout `/home/user/maffsgames`, branch `claude/sleepy-shannon-itnz0v` (from main 921f7fb; claim ee2c446).
+- Built: `rptEscaped()` in the endpoint: a room `game_completed` is an escape only when `questions_correct` = `questions_answered` > 0 (both numbers); any other is "timed out", counted per room and shown in the email line and a Dashboard column. `SCRIPT_VERSION` `2026-11-04-a`; redeploy note (no new permission). Test: a 3/3 win, a 1/3 and a 0/3 timeout give 1 escaped, 2 timed out; new plant (every completion an escape) CAUGHT; 29 checks, 5 plants.
+- STOP IF 1 checked from code, not the Sheet (the Drive connector cannot return a 1.1 MB sheet into a session): the engine has sent both fields as numbers since at least 15 Oct and is unchanged since 24 Oct. STOP IF 2 clear. Details in the contract file.
+- **Jon's redeploy step after the merge:** new version of the existing deployment; `/exec` reports `2026-11-04-a`.
+- **State:** DONE. MERGED #656 (a7b476c) on Jon's Amendment 1; merge-pr.py exit 0, last line `main a7b476c run 41800889964: GREEN`. Jon's redeploy to `2026-11-04-a` is his step. Amendment 1 ("merge on green please"); Project Claude's review after the merge. Jon checked the Sheet (4 Nov): no blank J/K in the 7 days; blanks from ~29 Sep back, outside every window the rule reads.
+
+Record: agent Claude Code; wall pending; review cycles 0; amendments 1; usage n/a.
+
+## Moved 2026-11-04 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
+
 ## 2026-11-03 (cloud): DASHBOARD-METRICS (`docs/handover/contracts/2026-11-03-dashboard-metrics.md`, Shared, Amendments 1 and 2; stops at a green Gate for Project Claude's review and Jon's "merge")
 
 - Agent: Claude Code. Primary checkout `/home/user/maffsgames`, branch `claude/stoic-galileo-xvzt45` (from main af8e737).
