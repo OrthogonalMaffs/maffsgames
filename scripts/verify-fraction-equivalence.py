@@ -19,9 +19,9 @@ Checks:
     equivalent pair is never offered with identical numbers (a x1 multiple). Reported: how many of each.
   Dealing: startGame() with ?level=year6, six times: each session's 15 pairs come from the bank, none twice.
   Marking, in Chromium (390x844), every bank pair and 400 generated pairs, each answered YES and answered NO through
-    guess(): the right answer shows "CORRECT" in the feedback and puts the correct style on the button pressed; the
-    wrong one shows exactly "WRONG - they are [NOT ]equivalent" (recomputed) and styles the key's button correct.
-    The working line is recomputed for both: "n1xd2=A vs n2xd1=B -> EQUAL/NOT EQUAL" with A, B and the verdict.
+    guess(): the right answer shows "Correct" in the feedback and puts the correct style on the button pressed; the
+    wrong one shows exactly "Not quite: they are [not ]equivalent" (recomputed) and styles the key's button correct.
+    The working line is recomputed for both: "n1xd2=A vs n2xd1=B -> equal/not equal" with A, B and the verdict.
 No analytics or leaderboard request leaves the stub server (every other request is aborted).
 
 A self-test plants faults in a copy of the page and each must FAIL: a wrong key in the bank (1/2 = 2/4 flagged not
@@ -59,7 +59,7 @@ def equivalent(p):
 def working(p, right_key):
     a, b = p['n1'] * p['d2'], p['n2'] * p['d1']
     return '%d×%d=%d vs %d×%d=%d → %s' % (p['n1'], p['d2'], a, p['n2'], p['d1'], b,
-                                                          'EQUAL' if a == b else 'NOT EQUAL')
+                                                          'equal' if a == b else 'not equal')
 
 
 def check_pair(fails, where, p, year6):
@@ -150,10 +150,10 @@ def mark_all(fails, page, items, tag):
             btn = got['yes'] if val else got['no']
             keybtn = got['yes'] if key else got['no']
             if val == key:
-                if not (got['fb'].startswith('CORRECT') and 'correct' in got['cls'] and 'correct' in btn):
+                if not (got['fb'].startswith('Correct') and 'correct' in got['cls'] and 'correct' in btn):
                     fails.append('%s: the right answer was not marked right (%r)' % (where, got))
             else:
-                want = 'WRONG — they are %sequivalent' % ('' if key else 'NOT ')
+                want = 'Not quite: they are %sequivalent' % ('' if key else 'not ')
                 if not (got['fb'] == want and 'wrong' in got['cls'] and 'correct' in keybtn):
                     fails.append('%s: the wrong answer was not marked wrong as %r (%r)' % (where, want, got))
             if got['hint'] != working(p, key):
