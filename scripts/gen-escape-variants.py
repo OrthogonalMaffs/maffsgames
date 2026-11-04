@@ -927,6 +927,73 @@ for tray in [(("a pasta pot", 185), ("a fruit cup", 60), ("a carton of milk", 12
 V["lunch-card-change"] = store
 
 # ------------------------------------------------- derived tokens
+# Christmas Tree Fiasco (Jon's approved v3, 4 Nov 2026).
+# The first candidate of each lock is Set A; the usual checks and spread
+# apply. A one-hour separation gives the short cold-store dial ten answers.
+store = []
+cands = shuffled([(-4, 16, 4, 2)] + [(start, low, rate, h)
+    for start in range(-9, -1) for low in range(8, 21)
+    for rate in (2, 3, 4) for h in (2, 3)])
+for start, low, rate, h in cands:
+    rise, short = low - start, low - abs(start)
+    if low <= abs(start) or rise % rate or short % rate:
+        continue
+    ans, miss = rise // rate, short // rate
+    if not (3 <= ans <= 12 and miss > 0) or 18 in (ans, miss):
+        continue
+    # Using the freezer instead must not produce either response.
+    if (low + 18) % rate == 0 and (low + 18) // rate in (ans, miss):
+        continue
+    keep(store, "christmas-cold-store", {"start": start, "min": low,
+         "g": rate * h, "h": h, "answer": ans, "miss": miss,
+         "rate": rate, "rise": rise, "abs": abs(start), "short": short}, minsep=1)
+    if len(store) >= WANT:
+        break
+V["christmas-cold-store"] = store
+
+store = []
+cands = shuffled([(50, 9, 30, 14)] + [(k, d, s, twice_c)
+    for k in (20, 25, 50) for d in range(6, 13)
+    for s in range(20, 41, 5) for twice_c in range(10, 19)])
+for k, d, s, twice_c in cands:
+    tree, ccm = k * d, 50 * twice_c
+    total = tree + s
+    ans, miss = ccm - total, ccm - tree
+    if not (50 <= ans <= 400) or 18 in (ans, miss):
+        continue
+    keep(store, "christmas-scale-clearance", {"k": k, "d": d, "s": s,
+         "c": twice_c // 2 if twice_c % 2 == 0 else twice_c / 2,
+         "answer": ans, "miss": miss, "tree": tree, "total": total, "ccm": ccm}, minsep=20)
+    if len(store) >= WANT:
+        break
+V["christmas-scale-clearance"] = store
+
+store = []
+cands = shuffled([(3, 2, 4, 1, 6)] + [(a, b, c, d, each)
+    for a in range(1, 9) for b in range(1, 9) for c in range(1, 9)
+    for d in range(1, 9) for each in range(2, 9) if b != c])
+for a, b, c, d, each in cands:
+    # Match the shared tinsel term, then reduce the three-part ratio.
+    raw = (a * c, b * c, b * d)
+    common = gcd(gcd(raw[0], raw[1]), raw[2])
+    r1, r2, r3 = (n // common for n in raw)
+    parts = r1 + r2 + r3
+    if not (8 <= parts <= 15):
+        continue
+    N, ans = parts * each, r3 * each
+    unjoined = a + b + d
+    if (N * d) % unjoined:
+        continue
+    miss = N * d // unjoined
+    if not (2 <= ans <= 36) or miss == ans or 18 in (ans, miss):
+        continue
+    keep(store, "christmas-combined-ratios", {"a": a, "b": b, "c": c, "d": d,
+         "N": N, "answer": ans, "miss": miss, "r1": r1, "r2": r2,
+         "r3": r3, "parts": parts, "each": each})
+    if len(store) >= WANT:
+        break
+V["christmas-combined-ratios"] = store
+
 # Values the prose wants to quote but that are not parameters: a squared
 # radius, a reduced fraction, a prime factorisation. Deriving them here keeps
 # the hint ladders honest — they cannot disagree with the answer.

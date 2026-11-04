@@ -356,6 +356,21 @@ LOCKS = {
         keypad(3),
         lambda v: [printed_price(v[k]) for k in ("p1", "p2", "p3")] + [pence(v[k]) for k in ("p1", "p2", "p3")],
         lambda x, v: x == v["card"] - sum(pence(v[k]) for k in ("p1", "p2", "p3"))),
+    # Include negative temperatures' magnitudes and both fixed decoys, as the
+    # engine reads them from the object's clues when checking joint draws.
+    "christmas-cold-store": Lock(
+        (0, 24, 1),
+        lambda v: [abs(v["start"]), 18, v["min"], v["g"], v["h"]],
+        lambda x, v: x * v["g"] == (v["min"] - v["start"]) * v["h"]),
+    "christmas-scale-clearance": Lock(
+        keypad(3),
+        lambda v: [1, v["k"], v["d"], v["s"], v["c"], 1.2],
+        lambda x, v: x + v["d"] * v["k"] + v["s"] == 100 * v["c"]),
+    "christmas-combined-ratios": Lock(
+        (0, 40, 1),
+        lambda v: [v[k] for k in ("a", "b", "c", "d", "N")],
+        lambda x, v: x * (v["a"] * v["c"] + v["b"] * v["c"] + v["b"] * v["d"])
+            == v["N"] * v["b"] * v["d"]),
 }
 
 TWO_INSTRUMENTS = {
@@ -366,12 +381,68 @@ TWO_INSTRUMENTS = {
 NO_CHECK = "no shared check for this lock"
 
 
+def check_christmas(lock, v):
+    """The approved draft's domains, misconceptions and displayed working.
+
+    Recompute from the clue parameters; do not trust a derived display token
+    to prove another token or the answer. The normal grid/uniqueness checks
+    below still apply to every admitted set.
+    """
+    if 18 in (v["answer"], v["miss"]):
+        return "response equals the freezer decoy's magnitude"
+    if lock == "christmas-cold-store":
+        start, low, g, h = (v[k] for k in ("start", "min", "g", "h"))
+        if not (-9 <= start <= -2 and start == int(start) and 8 <= low <= 20
+                and low == int(low) and low > abs(start) and h in (2, 3)
+                and g / h in (2, 3, 4) and 3 <= v["answer"] <= 12):
+            return "cold-store parameters outside the draft"
+        rate = Fraction(g, h)
+        rise, short = low - start, low - abs(start)
+        if short / rate != v["miss"] or v["miss"] <= 0:
+            return "cold-store misconception is not the wrong-sign calculation"
+        if Fraction(low + 18, 1) / rate in (v["answer"], v["miss"]):
+            return "freezer decoy produces a response"
+        expected = {"rate": rate, "rise": rise, "abs": abs(start), "short": short}
+    elif lock == "christmas-scale-clearance":
+        k, d, s, c = (v[k] for k in ("k", "d", "s", "c"))
+        if not (k in (20, 25, 50) and 6 <= d <= 12 and d == int(d)
+                and 20 <= s <= 40 and s % 5 == 0 and 5 <= c <= 9
+                and c * 2 == int(c * 2) and 50 <= v["answer"] <= 400):
+            return "scale parameters outside the draft"
+        if v["miss"] != 100 * c - d * k:
+            return "scale misconception does not omit the stand"
+        expected = {"tree": d * k, "total": d * k + s, "ccm": 100 * c}
+    else:
+        a, b, c, d, N = (v[k] for k in ("a", "b", "c", "d", "N"))
+        if not all(n > 0 and n == int(n) for n in (a, b, c, d, N)) or b == c:
+            return "ratio parameters outside the draft"
+        tinsel = math.lcm(b, c)
+        joined = [a * (tinsel // b), tinsel, d * (tinsel // c)]
+        common = gcd(gcd(joined[0], joined[1]), joined[2])
+        joined = [n // common for n in joined]
+        parts = sum(joined)
+        each = Fraction(N, parts)
+        if not (8 <= parts <= 15 and each.denominator == 1 and 2 <= each <= 8
+                and 2 <= v["answer"] <= 36):
+            return "combined ratio outside the draft"
+        if Fraction(N * d, a + b + d) != v["miss"]:
+            return "ratio misconception does not use the unjoined ratio"
+        expected = dict(zip(("r1", "r2", "r3"), joined), parts=parts, each=each)
+    if any(v.get(k) != value for k, value in expected.items()):
+        return "derived working disagrees with the clue parameters"
+    return None
+
+
 def covered(lock):
     return lock in LOCKS or lock in TWO_INSTRUMENTS
 
 
 def check(lock, var):
     """The first test this lock's set fails, or None if it passes every one."""
+    if lock in ("christmas-cold-store", "christmas-scale-clearance", "christmas-combined-ratios"):
+        reason = check_christmas(lock, var)
+        if reason:
+            return reason
     if lock in TWO_INSTRUMENTS:
         return TWO_INSTRUMENTS[lock](var)
     if lock in LOCKS:

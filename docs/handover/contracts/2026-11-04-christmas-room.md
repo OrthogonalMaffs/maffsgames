@@ -172,3 +172,11 @@ AMENDMENT 1 to CHRISTMAS-ROOM (Jon, 4 Nov): lock ct's text must follow the drawn
 - missTitle becomes: "That's the gap from {{ct.abs}} °C, not from {{ct.start}} °C."
 - Hint 2 becomes: "From {{ct.start}} °C to {{ct.min}} °C is further than {{ct.short}} degrees: count through zero."
 - No other wording changes. Record this amendment verbatim in the saved contract and the PR body. Thank you.
+
+AMENDMENT 2 to CHRISTMAS-ROOM (Jon, 4 Nov): two more files in scope.
+- docs/lock-bank-batch13.txt: add the three lock-bank entries for ct, sc and cr, in the file's existing format, taken
+  from the approved draft and Amendment 1 (no new wording or rules).
+- docs/audits/findings/christmas-tree-fiasco.yml: create it in the format SR-30 requires for a new room. Record only
+  facts from this build; any field that needs a judgement (a verdict or severity) is marked for Project Claude's
+  review rather than decided here.
+Record this amendment verbatim in the saved contract and the PR body. Thank you.
