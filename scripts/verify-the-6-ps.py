@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ci-shards: The 6 P's (the topic data file is the generator's output; no mark figure, AQA, Edexcel or "in development" in the page, no launch into a game; the four past-paper sites before Start; 10,000 sessions each way: six distinct covered topics in band order, frequencies in proportion to marks; every format marked by value through the page's own judge(), schema faults left out, five picked unseen first; a full session at 1280 px with localStorage working, on fixture banks covering all nine formats: every format answered right and wrong, never-marked answers not marked, slips, working, five a topic and a topic card, results, nudge, practice links, tick-list and events; resumed mid-topic after a reload; the same session at 320 px on a touch screen, typed on the phone keypad, with localStorage blocked: no sideways scroll on any screen, resumed mid-topic from window.name; every real bank's verdict and Next on a 375 x 667 phone; a topic with no bank offers Skip only; fault-injection self-test: the planted faults, each caught) |  | 2
-# ci-deps: the-6-ps/ schools/assets/exam-topics-ocr-foundation.json scripts/gen-exam-topics.py scripts/fixtures/six-ps/
+# ci-deps: the-6-ps/ schools/assets/exam-topics-ocr-foundation.json scripts/gen-exam-topics.py scripts/fixtures/six-ps/ schools/assets/fraction-input.js
 """Independent verification for The 6 P's (/the-6-ps/): built 24 Oct 2026 (contract THE-6-PS), its question player
 25 Oct 2026 (contract SIX-PS-PLAYER, Jon's ruling: self-contained, no hand-off into games).
 
@@ -537,6 +537,15 @@ def sideways(p, where, out):
 def fill(b, part, text):
     """Type into one box: fill() with a mouse; on a touch screen, the phone keypad's own keys."""
     p, sel = b.page, '#in-' + part
+    # The shared input holds the sign on its button, not in a digit box. Drive that real control,
+    # retaining the same scripted values and independent marking expectations.
+    if p.locator(sel + '.mfi-in').count():
+        sign_part = 'whole' if p.locator('#in-whole').count() else 'num'
+        if part == sign_part:
+            button = p.locator('#qInputs .mfi-sign')
+            if (button.get_attribute('aria-pressed') == 'true') != text.startswith('-'):
+                button.click()
+        text = text.lstrip('-')
     if not b.touch:
         p.fill(sel, text)
         return
@@ -1369,9 +1378,47 @@ def one_topic(pw, base, html, data, out, name):
         b.close()
 
 
+def check_fraction_phones(pw, base, html, data, out):
+    """Every fixture fraction shape (including mixed and negative), plus both real negative answers."""
+    for size in ((320, 568), (360, 640), (375, 667)):
+        b = Browser(pw, base, html, size=size, queue=['fx-2'] * K)
+        try:
+            b.open('?cb=fraction-whole')
+            b.page.tap('#startBtn')
+            for _ in range(PER_TOPIC):
+                p = b.page
+                p.wait_for_selector('#play:not([hidden])')
+                bc.wait_settled(p)
+                q = p.evaluate('SixPs.question()')
+                tag = '%dx%d fraction %s' % (*size, q['source']['ref'])
+                m = p.evaluate("""() => {
+                  const controls=Array.from(document.querySelectorAll('#qInputs input,#qInputs button,#checkBtn'));
+                  return {bottom:Math.max(...controls.map(e=>e.getBoundingClientRect().bottom)),
+                    top:Math.min(...controls.map(e=>e.getBoundingClientRect().top)),
+                    scroll:document.documentElement.scrollWidth-innerWidth,
+                    signs:document.querySelectorAll('#qInputs .mfi-sign').length}; }""")
+                if m['signs'] != 1 or m['scroll'] > 0 or m['top'] < 0 or m['bottom'] > size[1] - 40:
+                    out.append('%s: asking controls do not fit or sign missing: %s' % (tag, m))
+                answer(b, q, {'whole': '', 'num': '9', 'den': '13'})
+                p.wait_for_selector('#qFb:not([hidden])')
+                bc.wait_settled(p)
+                nr = p.locator('#qNext button').bounding_box()
+                if not nr or nr['y'] < 0 or nr['y'] + nr['height'] > size[1] - 40:
+                    out.append('%s: wrong-answer Next does not fit: %s' % (tag, nr))
+                sideways(p, tag, out)
+                p.tap('#qNext button')
+            out.extend('%s fraction page error: %s' % (size, e) for e in b.errors)
+            print('Fraction phone %dx%d: five asking/feedback shapes measured' % size)
+        finally:
+            b.close()
+        topic = next(t for t in data['covered'] if t['id'] == 'linear-equations')
+        for qid in ('linear-equations-375c850e', 'linear-equations-98ad8c09'):
+            phone_feedback_topic(pw, base, html, data, topic, out, only=qid, size=size)
+
+
 def page_units(data):
     """The page's units (contract SHARD), in the order of the full run; check() runs those it is given, in this order."""
-    return (['static', 'engine', 'marking', 'start', 'expiry', 'chosen', 'resume', 'results', 'second']
+    return (['static', 'engine', 'marking', 'start', 'expiry', 'chosen', 'resume', 'results', 'second', 'fraction phones']
             + [PHONE + t['id'] for t in data['covered']] + ['tall', 'play 1280', 'play bank-first', 'play 320', 'no bank'])
 
 
@@ -1388,6 +1435,8 @@ def run_unit(pw, base, html, data, out, unit):
             out.extend('page error: ' + e for e in b.errors)
         finally:
             b.close()
+    elif unit == 'fraction phones':
+        guarded(out, 'fraction phones', lambda: check_fraction_phones(pw, base, html, data, out))
     elif unit == 'start':
         guarded(out, 'the start screen at 320 x 568', lambda: check_start_screen(pw, base, html, out))
         guarded(out, 'the calculator on every calculator question', lambda: check_calculator(pw, base, html, data, out))

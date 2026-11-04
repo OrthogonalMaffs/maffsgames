@@ -50,3 +50,17 @@ whose work has merged on main (CALC-DOCK-WIDE #653 first, then any other finishe
 same dated archive heading. Confirm each merged before moving it. Never move a live or unmerged entry. Aim for at
 least 3 KB below the warning threshold so FRACTION-WHOLE and the next contracts' entries fit. Then continue with
 FRACTION-WHOLE. Thank you.
+
+## Amendment 1 — Jon, 4 Nov: signed fractions
+
+AMENDMENT 1 to FRACTION-WHOLE (Jon, 4 Nov): signed fractions.
+- schools/assets/fraction-input.js: add an optional mount(host, { signed: true }) (combinable with whole: true): a
+  sign button to the left of the whole box (or of the fraction when there is no whole box), showing "−" when on,
+  with an accessible label ("Make negative" / "Make positive"); typing "-" in any box toggles it. raw() prefixes "-"
+  when on, in the forms MaffsAnswer.fractionForm already reads ("-a/b", "-w a/b"). Same size and compact rules.
+  Without the option, behaviour is byte-for-byte unchanged (possibly-maybe, pies). Tests and plants for the new mode,
+  including a plant that drops the sign from raw().
+- the-6-ps: use signed: true on EVERY fraction question, not only the two with negative answers, so the button never
+  gives the sign away. Marking unchanged.
+- Everything else in FRACTION-WHOLE stands. Record this amendment verbatim in the saved contract and the PR body.
+Thank you.

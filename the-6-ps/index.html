@@ -141,8 +141,6 @@
   .ans-in.pow { width: 3.6rem; text-align: center; }
   .times { display: inline-flex; align-items: center; gap: 0.3rem; }
   .times sup, .times .exp { position: relative; top: -0.6rem; }
-  .frac { display: inline-flex; flex-direction: column; align-items: center; gap: 0.2rem; }
-  .frac .bar { width: 100%; height: 2px; background: var(--text); }
   .units, .opts { display: flex; flex-wrap: wrap; gap: 0.5rem; }
   .unit, .opt {
     font: inherit; cursor: pointer; min-height: 44px; min-width: 44px; padding: 0.45rem 0.9rem; border-radius: 10px;
@@ -187,6 +185,7 @@
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 <script src="/schools/assets/mathtext.js"></script>
 <script src="/schools/assets/answer.js"></script>
+<script src="/schools/assets/fraction-input.js"></script>
 <script src="/schools/assets/answer-lock.js"></script>
 <script src="/schools/assets/next-control.js"></script>
 <script src="/schools/assets/scroll.js"></script>
@@ -741,7 +740,7 @@
   var $ = function (id) { return document.getElementById(id); };
   var data = null, byId = {}, store = makeStore(), session = null;
   var banks = {};          // topic id -> valid questions, as loaded this visit
-  var q = null, inputs = null, keypad = null;
+  var q = null, inputs = null, keypad = null, fractionInput = null;
 
   window.SixPs = {
     K: K, PER_TOPIC: PER_TOPIC, DATA_URL: DATA_URL, BANK_DIR: BANK_DIR, FORMATS: FORMATS,
@@ -938,6 +937,7 @@
   // One input per format; returns the boxes in order.
   function buildInputs() {
     var host = $('qInputs'), wrap = document.createElement('span'), boxes = [];
+    fractionInput = null;
     host.textContent = '';
     wrap.className = 'boxes';
     $('qUnits').textContent = ''; $('qUnits').hidden = true;
@@ -954,13 +954,11 @@
         add(box('value', 'Your answer in pounds'));
         break;
       case 'fraction': {
-        if (q.answer.w !== undefined) add(box('whole', 'Whole number', 'short'));
-        var f = document.createElement('span'); f.className = 'frac';
-        var top = box('num', 'Top of the fraction (numerator)', 'short'), bot = box('den', 'Bottom of the fraction (denominator)', 'short');
-        var bar = document.createElement('span'); bar.className = 'bar';
-        f.appendChild(top); f.appendChild(bar); f.appendChild(bot);
-        boxes.push(top, bot);
-        wrap.appendChild(f);
+        var f = document.createElement('span'); wrap.appendChild(f);
+        fractionInput = MaffsFractionInput.mount(f, { whole: q.answer.w !== undefined, signed: true });
+        var parts = q.answer.w !== undefined ? ['whole', 'num', 'den'] : ['num', 'den'];
+        fractionInput.inputs.forEach(function (el, i) { el.id = 'in-' + parts[i]; el.dataset.part = parts[i]; boxes.push(el); });
+        f.addEventListener('fraction-submit', function () { submit(); });
         break;
       }
       case 'ratio':
@@ -1023,7 +1021,12 @@
   function readInput(val) {
     var get = function (p) { var el = $('in-' + p); return el ? el.value : ''; };
     switch (q.format) {
-      case 'fraction': return { whole: get('whole'), num: get('num'), den: get('den') };
+      case 'fraction': {
+        var raw = fractionInput.raw(), split = raw.split(' '), frac = split.pop();
+        var pair = frac.split('/');
+        if (pair.length === 1) return { whole: frac, num: '', den: '' };
+        return { whole: split[0] || '', num: pair[0], den: pair[1] };
+      }
       case 'ratio': return { parts: q.answer.parts.map(function (_, i) { return get('p' + i); }) };
       case 'coordinates': return { x: get('x'), y: get('y') };
       case 'pair': return { x: get('x'), y: get('y') };
