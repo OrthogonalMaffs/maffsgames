@@ -238,7 +238,8 @@ def check_behaviour(base, out, sources=None, only=None):
                 page.locator('.cf-search').fill('angle')
                 page.wait_for_timeout(100)
                 c = page.evaluate(COUNTS)
-                names = page.evaluate("[...document.querySelectorAll('a.card')].filter(c => c.getClientRects().length).map(c => c.textContent.toLowerCase())")
+                # A card matches on its text or its data-keywords (search.js, SEARCH-KEYWORDS): read both here, not search.js.
+                names = page.evaluate("[...document.querySelectorAll('a.card')].filter(c => c.getClientRects().length).map(c => (c.textContent + ' ' + (c.getAttribute('data-keywords') || '')).toLowerCase())")
                 if not (0 < c['shown'] < c['total']) or any('angle' not in n for n in names):
                     out.append('search "angle": %d cards, %s' % (c['shown'], c['topics']))
                 page.locator('.cf-search').fill('percent')
