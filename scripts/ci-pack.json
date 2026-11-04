@@ -119,6 +119,7 @@
   "New Shapes (every formula, key, substitution and working step recomputed; the figure's labels checked against the item; every item answered right and wrong in Chromium)": "33",
   "New and updated (dated homepage cards, ordering, cap, deduplication, expiry, unchanged filter sets and phone compact controls; three plants caught)": "25",
   "Normal Navigator (independent recomputation + rendered labels)": "51",
+  "Pack generator (tools/pack-generator/build_pack.py --selftest: every room with a pack config gets VALID sets, distinct answers per lock and one final-padlock shape, every value recomputed independently; seventeen planted faults caught (answers, draws, URL, score sheet, final padlock, penalties, answer-box hints, stakes placement, page-1 length, repeated rules, shape or calculator on a student page, an unfriendly product); no PDF is ever built in CI)": "25",
   "Parent guides (every stated figure recomputed from the page)": "61",
   "Partial Fractions Duel (every key solved from its own stem with SymPy, every option checked and clicked)": "11",
   "Percentage Flip (every key and every figure in the working recomputed; typed answers marked right and wrong in Chromium, both ways round)": "6",
