@@ -20,5 +20,7 @@ New component test: four mode combinations at 320x568, 360x640, 375x667, 1280x70
 
 Implementation commit: f7f157b5. Full verify-the-6-ps.py PASS, exit 0: 34 covered topics, 43 fixture questions, 10,000 session draws each way, desktop and 320px touch sessions, all marking cases, all 25 plants caught. Fraction-phone unit passes all five fixture shapes (including mixed and negative) plus both real negative questions at 320x568, 360x640, 375x667: asking controls and wrong-answer Next above viewport minus 40px, no sideways scroll, sign button on every fraction. Log .claude/bg-1793814069591.log. Direct old/new component comparison at all five sizes confirms default DOM, filtering, raw/value/filled, marking classes, clearing, Enter and geometry exactly equal. Possibly, Maybe, Pies and check-changed queued serially in .claude/bg-1793814327449.log, stopping on first nonzero exit. Awaiting Jon's updates wording; draft/Shared hold until complete.
 
+Jon supplied the updates wording; added newest under November New in the existing dated markup and saved the wording in the contract. No editorial hold remains; finish checks, PR and Gate, then Shared review hold.
+
 Record: agent Codex; wall n/a; review cycles 0; amendments 2 (pre-step extension and signed Amendment 1); usage n/a.
 

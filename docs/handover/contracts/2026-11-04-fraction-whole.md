@@ -64,3 +64,8 @@ AMENDMENT 1 to FRACTION-WHOLE (Jon, 4 Nov): signed fractions.
   gives the sign away. Marking unchanged.
 - Everything else in FRACTION-WHOLE stands. Record this amendment verbatim in the saved contract and the PR body.
 Thank you.
+
+## Updates wording — Jon, 4 Nov
+
+4 November: The 6 P's: fraction answers now use the same stacked fraction box as our other games, with a box for
+the whole number and a minus button, so mixed numbers and negative fractions can be typed the way they are written.
