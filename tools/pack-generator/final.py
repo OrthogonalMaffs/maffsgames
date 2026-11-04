@@ -1,26 +1,34 @@
-"""The final padlock (Amendment 5, Jon, 4 Nov 2026): the generator's side.
+"""The final padlock (Amendments 5 and 7, Jon, 4 Nov 2026): the generator's side.
 
-Each set's lock answers are used exactly once, with + - x and / and no brackets (x and / before + and -, left to right),
-to make the set's target. An expression with no brackets is a sum of signed terms, each a product of factors, some
-divided; two expressions are the SAME when they have the same signed terms with the same factors, in any order
-(commutativity of + and x applied throughout: a + b and b + a, a - b + c and a + c - b, a x b / c and b x a / c).
-"Reachable by exactly one expression" counts these classes, over EVERY expression, in exact fractions: a route through
-a fractional step still counts, so no second answer can hide.
+Each set's lock answers are used exactly once, with no brackets (x and / before + and -, left to right), to make the
+set's target. An expression with no brackets is a sum of signed terms, each a product of factors, some divided; two
+expressions are the SAME when they have the same signed terms with the same factors, in any order (commutativity of
++ and x applied throughout: a + b and b + a, a - b + c and a + c - b, a x b and b x a). "Reachable in exactly one way"
+counts these classes over EVERY expression with + - x /, in exact fractions, whatever the pack's shape: a second route,
+in any shape or through a fractional step, would make the key ambiguous, so none may exist.
 
-A target, per set (or --target for every set), is a whole number from 10 to 999, reached by exactly one expression,
-never the plain sum of the answers. Two rules of the generator's own: the target is never one of the set's own answers
-(72 + 28 - 50 = 50 would give it away), and its expression works out in whole, non-negative steps (so the key's
-working never needs a fraction). Targets whose expression uses x or / are preferred.
+Every set in a pack uses the same SHAPE (Amendment 7: sets race each other, so the final padlock is equally hard for
+all): by default one x and one + or - (Option B, "plus-and-minus": one + and one -, set by the room's config). A target
+is a whole number of any size, never one of the set's own answers, never the plain sum, and its expression works out
+in whole, non-negative steps (the generator's two rules, kept by Amendment 7). A set with no such target fails the
+build: there is no fallback to an easier shape.
 
-tools/pack-generator/lockcheck.py checks every target again by its own evaluator and search (independent of this file).
+tools/pack-generator/lockcheck.py checks every target again by its own evaluator, search and shape count.
 """
 import itertools
 import random
 from collections import defaultdict
 from fractions import Fraction
 
-LOW, HIGH = 10, 999
 SYM = {"+": "+", "-": "−", "*": "×", "/": "÷"}
+SHAPES = {   # name: (the rule as the locks page says it, the operator counts it allows)
+    "times-and-plus-or-minus": ("one &times; and one + or &minus;",
+                                lambda c: c["*"] == 1 and c["/"] == 0 and c["+"] + c["-"] == 1),
+    "plus-and-minus": ("one + and one &minus;",
+                       lambda c: c["*"] == 0 and c["/"] == 0 and c["+"] == 1 and c["-"] == 1),
+}
+DEFAULT_SHAPE = "times-and-plus-or-minus"
+CALCULATOR = {"times-and-plus-or-minus": True, "plus-and-minus": False}   # Amendment 7 / its Option B
 
 
 def canon(perm, ops):
@@ -44,6 +52,16 @@ def value(form):
             t = t * x if e == 1 else t / x
         total += sign * t
     return total
+
+
+def op_counts(form):
+    """How many of each operator any writing of the class uses (a positive term first, a multiplied factor first)."""
+    c = {"+": -1, "-": 0, "*": 0, "/": 0}
+    for sign, factors in form:
+        c["+" if sign == 1 else "-"] += 1
+        c["*"] += sum(1 for e, _ in factors if e == 1) - 1
+        c["/"] += sum(1 for e, _ in factors if e == -1)
+    return c
 
 
 def forms(nums):
@@ -113,29 +131,27 @@ def show(tokens):
     return " ".join(SYM[t] if isinstance(t, str) else fmt(t) for t in tokens)
 
 
-def uses_mul_div(form):
-    return any(len(factors) > 1 for _, factors in form)
-
-
-def candidates(nums):
-    """{target: (form, tokens, steps)} for every target the rules allow, from these numbers."""
-    plain_sum = sum(nums)
+def candidates(nums, shape):
+    """{target: (form, tokens, steps)} for every target the rules allow, from these numbers, in this shape."""
+    allowed = SHAPES[shape][1]
     out = {}
     for v, fs in forms(nums).items():
-        if v.denominator != 1 or not LOW <= v <= HIGH or len(fs) != 1 or v == plain_sum or v in nums:
+        if v.denominator != 1 or v < 0 or len(fs) != 1 or v == sum(nums) or v in nums:
             continue
         form = next(iter(fs))
+        if not allowed(op_counts(form)):
+            continue
         w = writing(form)
         if w:
             out[int(v)] = (form, w[0], w[1])
     return out
 
 
-def why_not(nums, t):
-    """Why target t is not allowed for these numbers, in words."""
-    if not (LOW <= t <= HIGH):
-        return "%s is outside %d to %d" % (t, LOW, HIGH)
+def why_not(nums, t, shape):
+    """Why target t is not allowed for these numbers in this shape, in words."""
     fs = forms(nums).get(Fraction(t), set())
+    if t < 0:
+        return "%s is not a whole number" % t
     if not fs:
         return "no expression makes %s" % t
     if len(fs) > 1:
@@ -144,22 +160,25 @@ def why_not(nums, t):
         return "%s is just the sum of the answers" % t
     if t in nums:
         return "%s is one of the set's own answers" % t
+    if not SHAPES[shape][1](op_counts(next(iter(fs)))):
+        return "the one expression that makes %s is not the pack's shape" % t
     return "the one expression that makes %s needs a fraction or a negative step" % t
 
 
-def choose(nums, seed, letter, forced=None):
-    """The set's final padlock {target, tokens, expr, steps, mul_div}, or (None, reason)."""
-    c = candidates(nums)
+def choose(nums, seed, letter, shape=DEFAULT_SHAPE, forced=None):
+    """The set's final padlock {target, tokens, expr, steps, shape}, or (None, reason)."""
+    if shape not in SHAPES:
+        return None, "unknown final-padlock shape %r (one of %s)" % (shape, sorted(SHAPES))
+    if len(nums) != 3:
+        return None, "the final padlock's shapes need exactly 3 lock answers, and this room has %d" % len(nums)
+    c = candidates(nums, shape)
     if forced is not None:
         if forced not in c:
-            return None, why_not(nums, forced)
+            return None, why_not(nums, forced, shape)
         pick = forced
     else:
         if not c:
-            return None, "no target from %d to %d can be reached by exactly one expression" % (LOW, HIGH)
-        preferred = sorted(t for t, (f, _, _) in c.items() if uses_mul_div(f))
-        pool = preferred or sorted(c)
-        pick = random.Random("%s-%s" % (seed, letter)).choice(pool)
+            return None, "no target can be made in exactly one way in the pack's shape (%s)" % shape
+        pick = random.Random("%s-%s" % (seed, letter)).choice(sorted(c))
     form, tokens, steps = c[pick]
-    return {"target": pick, "tokens": tokens, "expr": show(tokens), "steps": steps,
-            "mul_div": uses_mul_div(form)}, None
+    return {"target": pick, "tokens": tokens, "expr": show(tokens), "steps": steps, "shape": shape}, None

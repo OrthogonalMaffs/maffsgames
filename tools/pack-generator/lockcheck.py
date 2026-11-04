@@ -118,11 +118,24 @@ def final_classes(nums, target):
     return hits
 
 
-def final_problems(letter, nums, final):
-    """Problems with one set's final padlock, checked from its printed target and expression alone."""
+# The pack's shape (Amendment 7), counted here from the parse tree's own operator nodes.
+SHAPE_OPS = {
+    "times-and-plus-or-minus": lambda m, d, a, s: m == 1 and d == 0 and a + s == 1,
+    "plus-and-minus": lambda m, d, a, s: m == 0 and d == 0 and a == 1 and s == 1,
+}
+
+
+def _ops(tree):
+    kinds = [type(n.op) for n in _ast.walk(tree) if isinstance(n, _ast.BinOp)]
+    return (kinds.count(_ast.Mult), kinds.count(_ast.Div), kinds.count(_ast.Add), kinds.count(_ast.Sub))
+
+
+def final_problems(letter, nums, final, shape):
+    """Problems with one set's final padlock, checked from its printed target and expression alone: a whole number,
+    each answer once, the pack's shape, the value, and exactly one expression of any shape reaching it."""
     out, t, expr = [], final["target"], final["expr"]
-    if not (isinstance(t, int) and 10 <= t <= 999):
-        out.append("set %s: target %r is not a whole number from 10 to 999" % (letter, t))
+    if not (isinstance(t, int) and t >= 0):
+        out.append("set %s: target %r is not a whole number" % (letter, t))
     if t == sum(nums):
         out.append("set %s: target %s is just the sum of the answers" % (letter, t))
     if t in nums:
@@ -132,6 +145,10 @@ def final_problems(letter, nums, final):
         used = sorted(Fraction(str(n.value)) for n in _ast.walk(_parse(expr)) if isinstance(n, _ast.Constant))
     except (ValueError, SyntaxError) as e:
         return out + ["set %s: expression %r cannot be read (%s)" % (letter, expr, e)]
+    if shape not in SHAPE_OPS:
+        out.append("set %s: the pack's shape %r is unknown" % (letter, shape))
+    elif not SHAPE_OPS[shape](*_ops(_parse(expr))):
+        out.append("set %s: expression %r is not the pack's shape (%s)" % (letter, expr, shape))
     if used != sorted(Fraction(str(n)) for n in nums):
         out.append("set %s: expression %r does not use each answer %s exactly once" % (letter, expr, list(nums)))
     if got != t:

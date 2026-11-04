@@ -142,3 +142,31 @@ Record this amendment verbatim in the saved contract and the PR body.
 
 (Amendment 6 overrides Amendment 4's penalty, but Amendment 4 itself never reached the cloud session; hints are
 counted on the score sheet as Amendment 6 says. Anything else Amendment 4 asked for is not in this pack.)
+
+AMENDMENTS 2 AND 4, AS RECEIVED LATE (Jon, 4 Nov: "Amendments 2 and 4 were sent earlier but never reached you; here
+they are, then Amendment 7.")
+
+AMENDMENT 2 (Project Claude's rulings on #659, for Jon):
+1. scripts/test-pack-generator.py and the _config.yml "- tools" exclusion: both accepted (the exclusion is essential).
+2. Evidence on two pages: accepted.
+3. Oswald and Permanent Marker with their licences: accepted (OFL and Apache 2.0 allow embedding in a sold PDF).
+4. tools/ missing from ci-deps.py: not in this PR; one line under "For Project Claude to triage" in cloud.md.
+
+AMENDMENT 4 (only the part not overridden by Amendment 6): answer boxes give nothing away. No digit slots, no dial
+or slider range, no maximum on student pages; each box shows the instrument's picture, its label and the unit only.
+The answer key keeps everything. Selftest: a planted range or digit-slot hint on a student page is caught.
+
+AMENDMENT 7 (Jon, 4 Nov): the final padlock must be equally hard for every set, because sets race each other.
+- Every set in a pack uses the same expression shape: one x and one + or - (in either order, no brackets, order of
+  operations applies). No / and no +/- only targets. Target = a whole number, any size, never one of the set's own
+  answers, reachable in exactly one way under your existing sameness rule. If any set cannot get such a target, fail
+  the build naming it (do not fall back to an easier shape).
+- The final padlock is "calculator allowed"; say so on the locks page and in the teacher notes. The rest of the room
+  stays as it was. Fix the teacher notes so "no calculator needed" applies to the locks only.
+- Score sheet: the Final column gets the same wrong-answer boxes as the other locks; a wrong final expression costs
+  the teacher's penalty like any other wrong answer.
+- Keep your two added rules (target never one of the set's answers; key worked in whole, non-negative steps).
+- Selftest: a pack whose sets use different shapes is caught.
+(Option B instead: replace the first bullet's shape with "only + and -, exactly one of each" and drop the
+calculator bullet.)
+Record Amendments 2, 4 and 7 verbatim in the saved contract and the PR body.

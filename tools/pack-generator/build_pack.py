@@ -283,11 +283,12 @@ def answers_of(checker, locks, s):
     return tuple(out)
 
 
-def add_finals(checker, locks, sets, seed, target=None):
-    """Give every set its final padlock (Amendment 5), or BuildError naming the sets that have none."""
+def add_finals(checker, locks, sets, seed, shape, target=None):
+    """Give every set its final padlock in the pack's one shape (Amendments 5 and 7), or BuildError naming every set
+    that has none: there is no fallback to an easier shape."""
     bad = []
     for s in sets:
-        f, why = finalpad.choose(answers_of(checker, locks, s), seed, s["letter"], target)
+        f, why = finalpad.choose(answers_of(checker, locks, s), seed, s["letter"], shape, target)
         if f is None:
             bad.append("set %s (answers %s): %s" % (s["letter"], list(answers_of(checker, locks, s)), why))
         s["final"] = f
@@ -295,12 +296,28 @@ def add_finals(checker, locks, sets, seed, target=None):
         raise BuildError("the final padlock cannot be set:\n  " + "\n  ".join(bad))
 
 
-def verify_finals(checker, locks, sets):
-    """lockcheck's own evaluator and search on every set's printed target and expression."""
+def verify_finals(checker, locks, sets, shape):
+    """lockcheck's own evaluator, search and shape count on every set's printed target and expression, against the
+    pack's one shape: a set in another shape is a problem (Amendment 7)."""
     out = []
     for s in sets:
-        out += lockcheck.final_problems(s["letter"], answers_of(checker, locks, s), s["final"])
+        out += lockcheck.final_problems(s["letter"], answers_of(checker, locks, s), s["final"], shape)
     return out
+
+
+INSTRUMENT_HINT = re.compile(r"\d|_\s*_|\u25a1|\u25a2|\b(?:digits?|max|maximum|minimum|range|between|up to)\b", re.I)
+
+
+def instrument_hints(texts):
+    """An answer box or "opens at" line that gives something away (Amendment 4): a digit, digit slots, a range, a
+    maximum. Each box shows only the instrument's picture, its label and its unit."""
+    return ["a student page's answer box or lock line gives a hint: %r" % t for t in texts if INSTRUMENT_HINT.search(t)]
+
+
+def answer_caption(lock):
+    """An answer box's words: the instrument's label and its unit, if it has one; nothing else (Amendment 4)."""
+    ins = lock.get("instrument") or {}
+    return " ".join(x for x in (text_of(ins.get("label", "")).strip(), text_of(ins.get("unit", "")).strip()) if x)
 
 
 def check_sets(checker, room_js, locks, sets):
@@ -383,9 +400,9 @@ table.score th { text-align: center; line-height: 1.2; font-size: 8.5pt; padding
 table.score tr.row td { height: 14mm; }
 .page[data-kind=teacher] .main { font-size: 10pt; line-height: 1.32; }
 table.score td.set { text-align: center; font-size: 15pt; font-weight: 800; }
-.box { display: inline-block; width: 3.4mm; height: 3.4mm; border: 0.8pt solid #000; margin: 0 0.4mm; vertical-align: middle; }
+.box { display: inline-block; box-sizing: border-box; width: 3.4mm; height: 3.4mm; border: 0.8pt solid #000; margin: 0 0.3mm; vertical-align: middle; }
 .box.big { width: 6mm; height: 6mm; }
-td.boxes { text-align: center; white-space: nowrap; }
+td.boxes { text-align: center; white-space: nowrap; padding: 1mm 0.5mm; }
 .rule { font-size: 9.5pt; margin-top: 2.5mm; }
 .pens { display: flex; gap: 14mm; font-size: 12pt; font-weight: 700; margin: 0 0 3mm; }
 .blank { display: inline-block; width: 16mm; border-bottom: 1pt solid #000; margin: 0 1.5mm; }
@@ -563,13 +580,16 @@ def score_sheet(locks, sets):
     (Opened: one tick box; Wrong answers: WRONG_BOXES boxes); the final padlock's tick (Amendment 5); then finishing
     time, the counts of wrong answers and hints, penalty and total time (Amendment 6: the penalties are the teacher's,
     filled in above the table, see score_extras())."""
-    groups = "".join("<th colspan='2' data-lock='%s'>Lock %d<br><span class='wrong'>%s</span></th>" % (l["id"], i + 1, l["name"])
+    locks = list(locks) + [FINAL_GROUP]
+    groups = "".join("<th colspan='2' data-lock='%s'>%s<br><span class='wrong'>%s</span></th>"
+                     % (l["id"], ("Lock %d" % (i + 1)) if l is not FINAL_GROUP else "Final padlock",
+                        l["name"] if l is not FINAL_GROUP else "the expression")
                      for i, l in enumerate(locks))
     subs = "".join("<th>Opened</th><th>Wrong answers</th>" for _ in locks)
-    cols = ("<colgroup><col style='width:auto'><col style='width:11mm'>%s<col style='width:14mm'><col style='width:19mm'>"
-            "<col style='width:17mm'><col style='width:14mm'><col style='width:17mm'><col style='width:18mm'></colgroup>"
-            % "".join("<col style='width:13mm'><col style='width:%dmm'>" % round(WRONG_BOXES * 4.4 + 3) for _ in locks))
-    head = ("<tr><th rowspan='2'>Team name</th><th rowspan='2'>Set</th>%s<th rowspan='2' data-final='1'>Final padlock</th>"
+    cols = ("<colgroup><col style='width:auto'><col style='width:10mm'>%s<col style='width:17mm'>"
+            "<col style='width:15mm'><col style='width:13mm'><col style='width:15mm'><col style='width:16mm'></colgroup>"
+            % "".join("<col style='width:12mm'><col style='width:%dmm'>" % round(WRONG_BOXES * 4.2 + 3) for _ in locks))
+    head = ("<tr><th rowspan='2'>Team name</th><th rowspan='2'>Set</th>%s"
             "<th rowspan='2'>Finishing time</th>"
             "<th rowspan='2' data-col='wrong'>Wrong answers<br><span class='wrong'>(count)</span></th>"
             "<th rowspan='2' data-col='hints'>Hints<br><span class='wrong'>(count)</span></th>"
@@ -578,7 +598,6 @@ def score_sheet(locks, sets):
     tables = []
     for k in range(0, len(sets), SCORE_ROWS):
         rows = "".join("<tr class='row' data-set='%s'><td></td><td class='set'>%s</td>%s"
-                       "<td class='boxes'><span class='box big' data-box='final'></span></td>"
                        "<td></td><td></td><td></td><td></td><td></td></tr>"
                        % (s["letter"], s["letter"], "".join(
                            "<td class='boxes'><span class='box big' data-lock='%s' data-box='opened'></span></td>"
@@ -590,12 +609,15 @@ def score_sheet(locks, sets):
     return tables
 
 
+FINAL_GROUP = {"id": "final-padlock", "name": "Final padlock"}   # its column group, like a lock's (Amendment 7)
+
+
 def score_extras():
     """(the two penalty blanks above the table, the rule under it): the teacher sets the penalties (Amendment 6)."""
     top = ("<div class='pens'><span>Each wrong answer adds<span class='blank' data-blank='wrong'></span>min</span>"
            "<span>Each hint adds<span class='blank' data-blank='hint'></span>min</span></div>")
     rule = ("<p class='rule'>Right: tick Opened. Wrong: check one box and say &ldquo;not yet&rdquo;. Hint card given: add "
-            "one to Hints. Finishing time: the timer when the final padlock is ticked. Penalty = (wrong answers &times; "
+            "one to Hints. The final padlock is checked like a lock. Finishing time: the timer when the final padlock is ticked. Penalty = (wrong answers &times; "
             "the first) + (hints &times; the second). <b>Total time = finishing time + (wrong answers &times; the first) + "
             "(hints &times; the second). Lowest total time wins.</b></p>")
     return top, rule
@@ -620,19 +642,16 @@ def check_score_sheet(tables, locks, sets):
     """Problems with the score sheet: every set has exactly one row, no row is for a set that is not in the pack, each
     lock has one column group, and every row holds one Opened box and WRONG_BOXES wrong-answer boxes per lock."""
     out, seen = [], []
+    locks = list(locks) + [FINAL_GROUP]
     for t in tables:
         for lid in [l["id"] for l in locks]:
             if t.count("<th colspan='2' data-lock='%s'>" % lid) != 1:
                 out.append("lock %s does not have one column group" % lid)
-        if t.count("data-final='1'>Final padlock</th>") != 1:
-            out.append("the score sheet has no Final padlock column")
         for col in ("wrong", "hints", "penalty", "total"):
             if t.count("data-col='%s'" % col) != 1:
                 out.append("the score sheet has no %s column" % col)
         for letter, row in re.findall(r"<tr class='row' data-set='([A-Z])'>(.*?)</tr>", t, re.S):
             seen.append(letter)
-            if row.count("data-box='final'") != 1:
-                out.append("set %s: %d Final padlock boxes" % (letter, row.count("data-box='final'")))
             for l in locks:
                 o = row.count("data-lock='%s' data-box='opened'" % l["id"])
                 w = row.count("data-lock='%s' data-box='wrong'" % l["id"])
@@ -678,7 +697,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
     letters = [s["letter"] for s in sets]
     fill_a = filler(locks, sets[0])
     meta = teach.get("lockMeta") or [{}] * len(locks)
-    pages = []
+    pages, box_texts = [], []
 
     # a. teacher notes (DRAFT)
     first_note = re.search(r"<p[^>]*>(.*?)</p>", teach.get("notes", ""), re.S)
@@ -687,9 +706,13 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
         i + 1, l["name"], esc(m.get("topic", "")), (" (about %d min)" % m["minutes"]) if m.get("minutes") else "")
         for i, (l, m) in enumerate(zip(locks, meta)))
     has_tokens = any("{{" in (room.get(k) or "") for k in ("hook", "brief", "stakes"))
-    step_values = [int(x.rsplit("= ", 1)[1]) for st in sets for x in st["final"]["steps"]]
-    final_reach = ("<p>The final padlock goes further than the locks: in this pack its targets run to %d and its "
-                   "working reaches %d.</p>" % (max(st["final"]["target"] for st in sets), max(step_values)))
+    shape = sets[0]["final"]["shape"]
+    shape_words = finalpad.SHAPES[shape][0]
+    calc = finalpad.CALCULATOR[shape]
+    final_reach = ("<p><b>The final padlock:</b> every set makes its own target with %s, so every set&rsquo;s is "
+                   "equally hard; in this pack the targets run from %d to %d.%s</p>"
+                   % (shape_words, min(st["final"]["target"] for st in sets), max(st["final"]["target"] for st in sets),
+                      " <b>Calculator allowed for the final padlock.</b>" if calc else ""))
     script = ("<blockquote><p>%s</p><p>%s</p><p>%s</p><p>Every team has a different set, so your numbers are not "
               "your neighbours&rsquo;. Open the locks, then the final padlock on your locks page. Bring each answer to "
               "me as soon as you have it. Wrong answers and hints add time, and I will tell you how much before we "
@@ -716,9 +739,10 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
         "each lock&rsquo;s answer to you as they go; check it against their set&rsquo;s row in the answer key. "
         "<b>Right:</b> tick that lock&rsquo;s Opened box on the score sheet. <b>Wrong:</b> check one of that "
         "lock&rsquo;s wrong-answer boxes and say &ldquo;not yet&rdquo;, with no explanation. <b>Final padlock:</b> the "
-        "team brings an expression; accept any that uses each of its answers once, with + &minus; &times; &divide; and "
-        "no brackets, and makes its set&rsquo;s target (the key shows the only one, up to order). Tick Final, or say "
-        "&ldquo;not yet&rdquo;.</p>"
+        "team brings an expression; accept any that uses each of its answers once, with {SHAPE} and no "
+        "brackets, and makes its set&rsquo;s target (the key shows the only one, up to order). Right: tick its Opened "
+        "box. Wrong: check one of its wrong-answer boxes and say &ldquo;not yet&rdquo;; it costs your penalty like any "
+        "wrong answer.</p>"
         "<p>When a team&rsquo;s final padlock is ticked, write the time on the timer as its finishing time. "
         "When you give a team a hint card, add one to its Hints. <b>Total time = finishing time + (wrong answers "
         "&times; your wrong-answer penalty) + (hints &times; your hint penalty). Lowest total time wins</b> (the "
@@ -726,13 +750,14 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
         "your class: set your own before you start, and tell the teams. "
         "The key also gives each lock&rsquo;s common wrong answer and the misconception behind it, for "
         "the debrief.</p>"
-        "<h2>Timing</h2><p>How long to run it is your choice. The online room gives %d minutes%s.</p>"
+        "<p><b>Timing:</b> how long to run it is your choice. The online room gives %d minutes%s.</p>"
         "<p class='online'><b>Play this room free online: %s</b></p>"
         % (len(sets), letters[0], letters[-1], topics,
-           (("<p>%s</p>" % first_note.group(1)) if first_note else "") + final_reach,
+           (("<p><b>The locks:</b> %s</p>" % first_note.group(1)) if first_note else "") + final_reach,
            script, room.get("minutes", 15),
            ("; the locks&rsquo; own times add up to about %d minutes" % bank_minutes) if bank_minutes else "",
            esc(url)))
+    body = body.replace("{SHAPE}", shape_words)
     pages.append(page("teacher", body, "%s: teacher notes" % title, "Group race pack, %d sets" % len(sets),
                       badge='<div class="draft">DRAFT: Jon&rsquo;s wording</div>'))
 
@@ -754,9 +779,10 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
     legend = "".join("<li><b>%s:</b> %s %s</li>" % (l["name"], l.get("missTitle", ""), l.get("missSays", ""))
                      for l in locks)
     final_note = ("<h2>The final padlock</h2><p>Accept any expression that uses each of the set&rsquo;s answers "
-                  "exactly once, with + &minus; &times; &divide; only and no brackets, and makes the set&rsquo;s target "
-                  "under the order of operations (&times; and &divide; before + and &minus;). For each set the expression "
-                  "above is the only one, up to the order of its parts; the worked solutions show its working.</p>")
+                  "exactly once, with %s and no brackets, and makes the set&rsquo;s target under the order of "
+                  "operations (&times; before + and &minus;). For each set the expression above is the only one, up "
+                  "to the order of its parts; no expression of any other shape makes it either. The worked solutions "
+                  "show its working.</p>" % finalpad.SHAPES[sets[0]["final"]["shape"]][0])
     pages.append(page("key", "<table><tr><th></th>%s</tr>%s</table><h2>The common wrong answers</h2><ul>%s</ul>%s"
                       % (head, rows, legend, final_note), "%s: answer key" % title, "Check each answer against its set's row"))
     sols = ""
@@ -765,7 +791,8 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
         fin = s["final"]
         md = [x for x in fin["steps"] if "\u00d7" in x or "\u00f7" in x]
         pm = [x for x in fin["steps"] if x not in md]
-        work = ("&times; and &divide; first: %s; then + and &minus;: %s" % ("; ".join(md), "; ".join(pm)) if md
+        first = "&times; and &divide;" if any("\u00f7" in x for x in md) else "&times;"
+        work = ("%s first: %s; then + and &minus;: %s" % (first, "; ".join(md), "; ".join(pm)) if md
                 else "+ and &minus; from left to right: %s" % "; ".join(pm))
         sols += "<div class='solution'><b class='set'>Set %s</b><br>%s<br><b>Final padlock:</b> %s = %s. %s.</div>" % (
             s["letter"], "<br>".join("<b>%s:</b> %s" % (l["name"], f(l["solve"])) for l in locks),
@@ -779,9 +806,9 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
         answers = ""
         for l in locks:
             im = by_lock[l["id"]]
-            answers += ("<div><div class='cap'><b>%s</b>%s</div>%s</div>"
-                        % (l["name"], esc(text_of((l.get("instrument") or {}).get("label", ""))),
-                           art_block(rdir / im["file"], im["label_box"], "write")))
+            box_texts.append(answer_caption(l))
+            answers += ("<div><div class='cap'><b>%s</b></div>%s</div>"
+                        % (esc(answer_caption(l)), art_block(rdir / im["file"], im["label_box"], "write")))
         cover = ("%s<p>%s</p><p>%s</p><p><b>%s</b></p>"
                  "<div class='team'>Team name: <span></span></div>"
                  "<h2>Your codes: write each in its box</h2>"
@@ -814,11 +841,14 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
                      "<div class='work'></div></div>"
                      % (i + 1, l["name"], f(l["brief"]), esc(text_of((l.get("instrument") or {}).get("label", ""))))
                      for i, l in enumerate(locks))
+        box_texts += ["Opens at: " + text_of((l.get("instrument") or {}).get("label", "")) for l in locks]
+        fin = s["final"]
         lk += ("<div class='final' data-final-set='%s'><h2>The final padlock</h2><p>Use each of your %d lock answers "
-               "exactly once, with +, &minus;, &times; and &divide; only and no brackets, to make the target. "
-               "&times; and &divide; come before + and &minus;.</p><div class='target'>Target:<b>%s</b></div>"
+               "exactly once, with %s and no brackets, to make the target. &times; comes before + and &minus;.%s</p>"
+               "<div class='target'>Target:<b>%s</b></div>"
                "<div class='work'></div><div class='answerline'>Your expression: <span></span> = %s</div></div>"
-               % (L, len(locks), s["final"]["target"], s["final"]["target"]))
+               % (L, len(locks), finalpad.SHAPES[fin["shape"]][0],
+                  " <b>Calculator allowed.</b>" if finalpad.CALCULATOR[fin["shape"]] else "", fin["target"], fin["target"]))
         pages.append(page("locks", lk, title, "The locks and the final padlock: working space", set_letter=L))
 
     # d. hint cards (one page for all sets unless a hint uses a set's figures) and the certificate
@@ -847,7 +877,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
                   for i, p in enumerate(pages))
     return ("<!doctype html><html lang='en'><head><meta charset='utf-8'><title>%s pack</title>"
             "<link rel='stylesheet' href='%s'><style>%s%s</style></head><body>%s</body></html>"
-            % (esc(title), GOOGLE_FONTS, fonts, CSS, doc)), len(pages)
+            % (esc(title), GOOGLE_FONTS, fonts, CSS, doc)), len(pages), box_texts
 
 
 def pdf_page_count(path):
@@ -870,7 +900,7 @@ def prepare(slug, n, seed, page, target=None):
     seed = cfg.get("seed", 1) if seed is None else seed
     valid, total = valid_picks(checker, room_js, locks)
     sets = choose(checker, valid, locks, n, seed)
-    add_finals(checker, locks, sets, seed, target)
+    add_finals(checker, locks, sets, seed, cfg.get("final_shape", finalpad.DEFAULT_SHAPE), target)
     return checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed
 
 
@@ -896,19 +926,25 @@ def build(slug, n, seed, target=None):
                 raise BuildError("the chosen sets fail:\n  " + "\n  ".join(problems + vp))
             print("every joint draw VALID; every lock's answers distinct across the %d sets" % n)
             print("verification: %d values recomputed independently (%d answers), all agree" % (checked, answers))
-            fp = verify_finals(checker, locks, sets)
+            shape = cfg.get("final_shape", finalpad.DEFAULT_SHAPE)
+            fp = verify_finals(checker, locks, sets, shape)
             if fp:
                 raise BuildError("the final padlock fails its independent check:\n  " + "\n  ".join(fp))
-            print("final padlock (%s): every target re-evaluated from its expression and re-searched, exactly one "
-                  "expression each:" % ("--target %s" % target if target is not None else "per-set targets"))
+            print("final padlock (%s; shape %s, the same for every set): every target re-evaluated from its "
+                  "expression, its shape counted and every expression re-searched, exactly one each:"
+                  % ("--target %s" % target if target is not None else "per-set targets", shape))
             for s in sets:
-                print("  Set %s  %s = %s%s" % (s["letter"], s["final"]["expr"], s["final"]["target"],
-                                               "" if s["final"]["mul_div"] else "  (no target with x or / in this set)"))
+                print("  Set %s  %s = %s" % (s["letter"], s["final"]["expr"], s["final"]["target"]))
             built = datetime.date.today().isoformat()
             url = room_url(slug)
             if not LOGO.is_file():
                 raise BuildError("the logo %s is missing" % LOGO.relative_to(ROOT).as_posix())
-            doc, npages = build_html(slug, room, teach, locks, sets, cfg, seed, built, url)
+            doc, npages, box_texts = build_html(slug, room, teach, locks, sets, cfg, seed, built, url)
+            hints = instrument_hints(box_texts)
+            if hints:
+                raise BuildError("an answer box gives something away (Amendment 4):\n  " + "\n  ".join(hints))
+            print("answer boxes and lock lines: label and unit only, no digit, range or maximum (%d checked)"
+                  % len(box_texts))
             sheet = check_score_sheet(score_sheet(locks, sets), locks, sets)
             if sheet:
                 raise BuildError("the score sheet fails:\n  " + "\n  ".join(sheet))
@@ -973,14 +1009,16 @@ def selftest():
             for slug in rooms:
                 checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed = prepare(slug, None, None, pg)
                 probs = (check_sets(checker, room_js, locks, sets) + verify_sets(locks, sets)[0]
-                         + check_score_sheet(score_sheet(locks, sets), locks, sets) + verify_finals(checker, locks, sets)
+                         + check_score_sheet(score_sheet(locks, sets), locks, sets)
+                         + verify_finals(checker, locks, sets, cfg.get("final_shape", finalpad.DEFAULT_SHAPE))
+                         + instrument_hints([answer_caption(l) for l in locks])
                          + fixed_penalties([("score", text_of("".join(score_extras())))]))
                 print("%s: %d sets chosen from %d VALID draws; %s" % (slug, n, len(valid), "OK" if not probs else probs))
                 failures += probs
-                first = first or (checker, room_js, locks, sets, valid)
+                first = first or (checker, room_js, locks, sets, valid, cfg.get("final_shape", finalpad.DEFAULT_SHAPE))
         finally:
             browser.close()
-    checker, room_js, locks, sets, valid = first
+    checker, room_js, locks, sets, valid, shape = first
 
     def plant_duplicate():
         s = copy.deepcopy(sets)
@@ -1023,23 +1061,39 @@ def selftest():
         # order, for three answers that do, and gives set A that target with one of its expressions.
         for nums in itertools.combinations(range(2, 40), len(locks)):
             for v, fs in sorted(finalpad.forms(nums).items()):
-                if v.denominator == 1 and finalpad.LOW <= v <= finalpad.HIGH and len(fs) > 1 and v != sum(nums) \
+                if v.denominator == 1 and v >= 0 and len(fs) > 1 and v != sum(nums) \
                         and int(v) not in nums:
                     w = finalpad.writing(sorted(fs)[0])
                     if not w:
                         continue
                     planted = {"target": int(v), "expr": finalpad.show(w[0])}
-                    return [x for x in lockcheck.final_problems("A", nums, planted) if "expressions reach" in x]
+                    return [x for x in lockcheck.final_problems("A", nums, planted, shape) if "expressions reach" in x]
         raise pc.StalePlant("a target two expressions reach", "no small answers give one")
 
     def plant_no_expression():
         nums = answers_of(checker, locks, sets[0])
         reach = finalpad.forms(nums)
-        t = next((t for t in range(finalpad.LOW, finalpad.HIGH + 1) if t not in reach), None)
+        t = next((t for t in range(10, 10000) if t not in reach), None)
         if t is None:
             raise pc.StalePlant("a target no expression reaches", "every target from 10 to 999 is reachable")
         planted = dict(sets[0]["final"], target=t)
-        return [x for x in lockcheck.final_problems("A", nums, planted) if "0 expressions reach" in x]
+        return [x for x in lockcheck.final_problems("A", nums, planted, shape) if "0 expressions reach" in x]
+
+    def plant_mixed_shapes():
+        other = next(sh for sh in finalpad.SHAPES if sh != shape)
+        s = copy.deepcopy(sets)
+        f, why = finalpad.choose(answers_of(checker, locks, s[-1]), 1, s[-1]["letter"], other)
+        if f is None:
+            raise pc.StalePlant("a pack whose sets use different shapes", why)
+        s[-1]["final"] = f
+        return [x for x in verify_finals(checker, locks, s, shape) if "not the pack's shape" in x]
+
+    def plant_range_hint():
+        cap = pc.apply_plant(answer_caption(locks[1]), answer_caption(locks[1]),
+                             answer_caption(locks[1]) + " (0 to 120)", name="a dial range on an answer box")
+        slots = pc.apply_plant(answer_caption(locks[0]), answer_caption(locks[0]),
+                               answer_caption(locks[0]) + " _ _", name="digit slots on an answer box")
+        return instrument_hints([cap]) and instrument_hints([slots])
 
     def plant_fixed_penalty():
         top, rule = score_extras()
@@ -1054,7 +1108,9 @@ def selftest():
               ("a missing score-sheet row", plant_missing_row),
               ("a final target two expressions reach", plant_two_expressions),
               ("a final target no expression reaches", plant_no_expression),
-              ("a fixed penalty figure on the score sheet", plant_fixed_penalty))
+              ("a fixed penalty figure on the score sheet", plant_fixed_penalty),
+              ("a pack whose sets use different shapes", plant_mixed_shapes),
+              ("a range and digit slots on answer boxes", plant_range_hint))
     for name, fn in plants:
         found, err = [], None
         try:

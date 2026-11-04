@@ -27,22 +27,25 @@ Print it **at 100% (actual size), A4, double-sided off**. It is designed to prin
    wording to Code Claude: it goes into `build_pack.py`, and the DRAFT badge comes off in the same change.
 2. **Score sheet (page 2, landscape):** two blanks the teacher fills in first ("Each wrong answer adds ___ min",
    "Each hint adds ___ min", Amendment 6); one row per set, letters printed; for each lock an Opened box and five
-   wrong-answer boxes; the final padlock's tick; finishing time, the counts of wrong answers and hints, penalty (min)
+   wrong-answer boxes; the final padlock's Opened box and five wrong-answer boxes, like a lock's; finishing time, the counts of wrong answers and hints, penalty (min)
    and total time. Checking is per lock as teams go (Amendment 3): right ticks Opened, wrong checks a box and gets
    "not yet". Total time = finishing time + (wrong answers x the first) + (hints x the second). No fixed penalty
    figure is printed on the score sheet or any student page; the teacher notes suggest 1 minute each.
 3. **Answer key and worked solutions (pages 3-4):** every answer, common wrong answer and worked line was recomputed
    by a separate method before the PDF was made, so a mismatch would have stopped the build. The key also gives each
-   set's final-padlock target and its one expression; the worked solutions show its working.
-   **The final padlock (Amendment 5):** each set's lock answers, each once, with + - x / and no brackets, make the
-   set's target (10 to 999, exactly one expression up to the order of its parts, never the plain sum, never one of the
-   answers, worked in whole steps). Targets using x or / are preferred; a set with none gets an + and - target, which
-   the build prints. Its numbers go past the locks' (the teacher notes say how far). Spot-check one set
+   set's final-padlock target and its one expression; the worked solutions show its working. Spot-check one set
    against its cover and evidence pages anyway: that is what a teacher will do.
+   **The final padlock (Amendments 5 and 7):** each set's lock answers, each once, with one x and one + or - and no
+   brackets, make the set's target. Every set in a pack uses that same shape, so they are equally hard: a whole
+   number of any size, made by exactly one expression of any shape (up to the order of its parts), never the plain
+   sum, never one of the answers, worked in whole steps. A set with no such target fails the build. Calculator
+   allowed for the final padlock only; the teacher notes say so. Option B (one + and one -, no calculator) is
+   `"final_shape": "plus-and-minus"` in the room's config.
 4. **Each set (cover, evidence pages 1-2, locks page):** the set letter is in the top-right box of every page; the
    figures printed on each object (asset tag, cable label, installation sheet, calibration log, instruction card)
-   read clearly; the three red herrings (helpdesk ticket, emergency stop, firing screen) carry no number; the locks
-   page ends with the final padlock's target, its rules, a working box and the expression line.
+   read clearly; the three red herrings (helpdesk ticket, emergency stop, firing screen) carry no number; the cover's
+   answer boxes show only each instrument's picture, label and unit (Amendment 4: no digit slots, range or maximum);
+   the locks page ends with the final padlock's target, its rules, a working box and the expression line.
 5. **The look of the labels on the art:** each label is fitted to its box at 11 pt or larger. If one sits badly on
    its picture, its box is `label_box` in `rooms/kiln-disaster/config.json` (in the image's own pixels).
 6. **Hint cards and certificate (last two pages).**
@@ -79,10 +82,11 @@ Then, in order, any failure stopping the build:
    all expressions are re-searched, by `lockcheck.py`'s own evaluator. The PDF's page count must equal the pages built.
 
 `python -X utf8 tools/pack-generator/build_pack.py --selftest` (in CI as `scripts/test-pack-generator.py`) checks
-every room with a config and plants eight faults, each of which must be caught: a duplicate answer across sets, an
+every room with a config and plants ten faults, each of which must be caught: a duplicate answer across sets, an
 invalid joint draw, a wrong recomputed answer, a printed URL with no room page, a missing score-sheet row, a final
-target two expressions reach and one no expression reaches, and a fixed penalty figure ("1 minute") on the score
-sheet. It builds no PDF.
+target two expressions reach and one no expression reaches, a fixed penalty figure ("1 minute") on the score
+sheet, a pack whose sets use different final-padlock shapes, and a range and digit slots on answer boxes. It builds
+no PDF.
 
 ## Adding a room
 

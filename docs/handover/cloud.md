@@ -45,6 +45,7 @@ start-up load). When the work merges, move the file to `docs/history/`.
 - **Queued, Low (Jon, 2 Nov, after GATE-FIX):** merge-pr.py counts "the newest merge has no run of its own" as red even under `--wait`, so in the seconds before GitHub registers a new merge's run it refuses ("start one by hand") instead of waiting. Fix: count it as unfinished for a short grace period (about 5 minutes after the commit), with a plant.
 - **Home-lane queue (Jon, 2 Nov):** `scripts/check-banks.py:25` has an invalid escape `\(` (ci-deps.py's `ast.parse` warns on Python 3.12+). Harmless.
 - **Flake (4 Nov):** main run 41811116888 red only in the timings job (GitHub push: Internal Server Error x3); one rerun GREEN.
+- **For Project Claude to triage (PACK-GENERATOR, Amendment 2):** `tools` is not in `scripts/ci-deps.py` KNOWN_TOP, so a tools/ change selects every verifier.
 - **For Project Claude to triage (SEARCH-KEYWORDS ruling 6):** spec-map rows banks do not teach, possibly short banks: archive entry "SEARCH-KEYWORDS triage lists".
 - **For the home lane, canon §7 (SEARCH-KEYWORDS, 4 Nov):** one search rule, `MaffsSearch.match` (`schools/assets/search.js`: text plus `data-keywords`, every word, trailing s), called by the portal and card-filter.js; keywords in games.json via apply-meta.py, held by check-meta.py.
 - **For the home lane (ROOM-ESCAPED, 4 Nov):** canon §1.4 item 5 says rooms "escaped (`game_completed`)"; from endpoint `2026-11-04-a` an escape is a `game_completed` with `questions_correct` = `questions_answered` > 0, any other is "timed out" (its own column). Jon redeployed the endpoint at 09:02 on 4 Nov; /exec reports `2026-11-04-a`: done.
@@ -62,16 +63,15 @@ start-up load). When the work merges, move the file to `docs/history/`.
 **Every PR:** no `check-changed.py` in the cloud (AGENTS.md, CLOUD-LEAN); merge only via `python scripts/merge-pr.py <n>
 --watch --wait 3600` (needs a green Gate and main, §7.8.3) and report its last line.
 
-## 2026-11-04 (cloud): PACK-GENERATOR (`docs/handover/contracts/2026-11-04-pack-generator.md`, Shared, Amendments 1, 3, 5 and 6 (no 2 or 4 received); stops at a green Gate for Project Claude's review and Jon's "merge")
+## 2026-11-04 (cloud): PACK-GENERATOR (`docs/handover/contracts/2026-11-04-pack-generator.md`, Shared, Amendments 1-7; stops at a green Gate for Project Claude's review and Jon's "merge")
 
 - Agent: Claude Code; primary checkout, branch `claude/great-feynman-vs4fpp`. Pre-step a9e175f; generator 562c5a2; PR #659.
-- Built: `tools/pack-generator/` (build_pack.py, lockcheck.py, README, Kiln config and 11 webp, two fonts); `dist-packs/` gitignored. Kiln: 320/700 VALID draws, 7 sets, 70 values (21 answers) recomputed independently, labels at least 11.5 pt, 34 pages. Amendment 3: per-lock checking, landscape score sheet (page 2). Amendment 5: final padlock (A-D use x, E-G only + and -; working reaches 1040). Amendment 6: penalties left blank for the teacher. Selftest 8/8.
+- Built: `tools/pack-generator/` (build_pack.py, lockcheck.py, README, Kiln config and 11 webp, two fonts); `dist-packs/` gitignored. Kiln: 320/700 VALID draws, 7 sets, 70 values (21 answers) recomputed independently, labels at least 11.5 pt, 34 pages. Amendment 3: per-lock checking, landscape score sheet (page 2). Final padlock: one x and one + or - in every set, calculator allowed (Amendments 5, 7). Penalties left blank for the teacher (6). Answer boxes give nothing away (4). Selftest 10/10.
 - **Jon builds and proofreads the PDF at home:** `python -X utf8 tools/pack-generator/build_pack.py kiln-disaster` (README: what to proofread). Teacher notes are DRAFT for his wording.
-- **Outside the lane exception, for Jon:** `scripts/test-pack-generator.py` (CI reads ci-lines only in scripts/) and `_config.yml` `- tools` (check-publish-scope fails a new top-level folder); one commit each. Evidence is two pages of four cards (eight cannot hold 11 pt labels).
-- Follow-up (gate file, not edited): `tools` is not in ci-deps.py KNOWN_TOP, so a tools/ change selects every verifier.
-- **State:** Amendments 5 and 6 pushed; Gate pending. Then Project Claude's review and Jon's "merge".
+- Amendment 2 accepted `scripts/test-pack-generator.py`, `_config.yml` `- tools`, two evidence pages and the fonts.
+- **State:** Amendments 4 and 7 pushed; Gate pending. Then Project Claude's review and Jon's "merge".
 
-Record: agent Claude Code; wall n/a; review cycles 0; amendments 4; usage n/a.
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 7; usage n/a.
 
 ## 2026-11-04 (cloud): PACKS-CANON (`docs/handover/contracts/2026-11-04-packs-canon.md`, Small, lane exception: canon §7.1, §8, §12)
 
