@@ -416,6 +416,8 @@ def check_christmas(lock, v):
         a, b, c, d, N = (v[k] for k in ("a", "b", "c", "d", "N"))
         if not all(n > 0 and n == int(n) for n in (a, b, c, d, N)) or b == c:
             return "ratio parameters outside the draft"
+        if gcd(a, b) != 1 or gcd(c, d) != 1:
+            return "a given ratio is not in simplest form"
         tinsel = math.lcm(b, c)
         joined = [a * (tinsel // b), tinsel, d * (tinsel // c)]
         common = gcd(gcd(joined[0], joined[1]), joined[2])

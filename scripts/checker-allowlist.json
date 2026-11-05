@@ -1676,6 +1676,13 @@
       "where": "table.tt; table.tt"
     },
     {
+      "path": "escape-rooms/christmas-tree-fiasco/teacher.html",
+      "at": "load",
+      "width": 541,
+      "todo": "§1.37",
+      "where": "table.tt; table.tt"
+    },
+    {
       "path": "escape-rooms/comic-caper/teacher.html",
       "at": "load",
       "width": 528,

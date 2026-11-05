@@ -2,7 +2,7 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- CHRISTMAS-ROOM: home/Claude Code (took over from Codex, Jon, 4 Nov), codex/christmas-room, Windows worktree E:/jon/mg-christmas-room; implementation 563b14a9. Contract + Amendments 1–2: docs/handover/contracts/2026-11-04-christmas-room.md. PR #667. STOPPED: Gate red, awaiting Jon's Amendment 3; then Shared review and Jon's play-test/merge hold.
+- CHRISTMAS-ROOM: home/Claude Code (took over from Codex, Jon, 4 Nov), codex/christmas-room, Windows worktree E:/jon/mg-christmas-room; implementation 563b14a9. Contract + Amendments 1–4: docs/handover/contracts/2026-11-04-christmas-room.md. PR #667. Next: Gate; Shared review and Jon's play-test/merge hold.
 
 - DONE queue: docs/history/handover-home-archive.md
 
@@ -14,7 +14,7 @@
 
 ## 2026-11-04 (home): CHRISTMAS-ROOM
 
-STOP, 4 Nov (Claude Code): PR #667 Gate red on 6cd1bd30, run 41922457161: only Tiers 1 + 2 shard 4/4, phone:room-teacher:christmas-tree-fiasco 541px at 320x568, table.tt (todo §1.37, every room). Each room has a tier1_phone_overflow entry in scripts/checker-allowlist.json; that file is outside EXACT CHANGE, so not edited. Asked Jon for Amendment 3, text in the PR body. Next, once issued: add the one entry, save the amendment verbatim, push, confirm Gate, write "Ready for architect review". Worktree E:/jon/mg-christmas-room clean. No merge authority.
+AMENDMENTS 3 and 4 (Jon, 5 Nov), saved verbatim. The 4 Nov Gate stop (run 41922457161, teacher page's table.tt overflow, todo §1.37) is resolved by Amendment 3's tier1_phone_overflow entry, width 541 as issued; it measures 535 locally since the regeneration. Amendment 4: cr's given ratios in simplest form, in the generator and escape_set_checks; only cr's library changed (47 locks compared). VALID now 103 of 1000, was 32; floor 20. Reachable sets ct 8, sc 10, cr 8 of 10. Check-escape-rooms, the four test-escape scripts, the play-through (159 checks) and the independent recompute (30 sets; 232 of 232 corrupted sets rejected) rerun clean. Jon's rulings: Set A stays (warning only); minus signs, canon room count and the unreachable sets are follow-ups, not this PR. Not changed: docs/lock-bank-batch13.txt's cr NOTE does not state the new rule (flagged in the PR). No merge authority.
 
 TAKEOVER (Jon's written task, 4 Nov 21:30): Claude Code takes over from Codex on the Windows machine. Primary E:/jon/maffsgames-new-clone fast-forwarded to 10a8b261. New worktree E:/jon/mg-christmas-room from origin/codex/christmas-room (Jon's instruction; the rulebook's same-worktree rule cannot apply across machines), branch keeps its prefix. Status clean and git log origin/main..HEAD matched the record below (head 0647f999). Identity: local user.name is "Jon", email matches; commits pass user.name=Vector52F per command, config unchanged. All Codex's checks treated as not run. Next: run the SUCCESS CONDITION, PR, stop at green Gate. No merge authority.
 
@@ -34,7 +34,7 @@ STOP at contract/code check: scripts/check-escape-rooms.py:209 rejects every loc
 
 Record: agent Codex; wall n/a (initial contract receipt timestamp unavailable); review cycles 0; amendments 2; usage n/a.
 
-Record: agent Claude Code (takeover); wall in PR #667's report; review cycles 0; amendments 2; usage n/a.
+Record: agent Claude Code (takeover); wall in PR #667's report; review cycles 0; amendments 4; usage n/a.
 
 ## 2026-11-04 (home): FRACTION-WHOLE
 

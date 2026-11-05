@@ -180,3 +180,12 @@ AMENDMENT 2 to CHRISTMAS-ROOM (Jon, 4 Nov): two more files in scope.
   facts from this build; any field that needs a judgement (a verdict or severity) is marked for Project Claude's
   review rather than decided here.
 Record this amendment verbatim in the saved contract and the PR body. Thank you.
+
+AMENDMENT 3 to CHRISTMAS-ROOM (Jon, 5 Nov): scripts/checker-allowlist.json, tier1_phone_overflow: add one entry, in
+the file's existing format: path escape-rooms/christmas-tree-fiasco/teacher.html, at load, width 541, todo §1.37,
+where "table.tt; table.tt". No other change.
+
+AMENDMENT 4 to CHRISTMAS-ROOM (Jon, 5 Nov): lock cr's two given ratios must each be in simplest form (gcd of a and b
+is 1, gcd of c and d is 1); no clue may print a ratio like 2 : 2 or 4 : 2. Add this to the generator rule and
+escape_set_checks.py, regenerate cr's library, and re-run check-escape-rooms.py, the play-through and your
+independent recomputation. All other rules unchanged. STOP IF VALID falls below 20 (report the count).

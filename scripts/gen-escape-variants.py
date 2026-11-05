@@ -972,6 +972,9 @@ cands = shuffled([(3, 2, 4, 1, 6)] + [(a, b, c, d, each)
     for a in range(1, 9) for b in range(1, 9) for c in range(1, 9)
     for d in range(1, 9) for each in range(2, 9) if b != c])
 for a, b, c, d, each in cands:
+    # Amendment 4: each given ratio is printed in simplest form.
+    if gcd(a, b) != 1 or gcd(c, d) != 1:
+        continue
     # Match the shared tinsel term, then reduce the three-part ratio.
     raw = (a * c, b * c, b * d)
     common = gcd(gcd(raw[0], raw[1]), raw[2])
