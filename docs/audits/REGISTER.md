@@ -285,6 +285,7 @@ Rooms have findings files like games (canon §0.3, SR-30) but are not games: not
 | `big-school-begins` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `canteen-hack` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `car-trap` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| `christmas-tree-fiasco` | none (Project Claude review pending) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `comic-caper` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `hamster-heist` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `heatwave-mutiny` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
@@ -296,4 +297,4 @@ Rooms have findings files like games (canon §0.3, SR-30) but are not games: not
 | `roll-for-initiative` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `rugby-mud` | none (not yet audited) | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 
-13 rooms, 0 open findings.
+14 rooms, 0 open findings.
