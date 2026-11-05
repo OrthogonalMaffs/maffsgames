@@ -4,6 +4,23 @@ History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover
 and the last three entries; older entries move here, newest first, unchanged.
 
 
+## Moved 2026-11-05 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
+
+## 2026-11-04 (cloud): LOOK-REFRESH-1 (`docs/history/contracts/2026-11-04-look-refresh-1.md`, Small per game; standing rule: next game after each merge)
+
+- Agent: Claude Code; primary checkout, branch `claude/eager-johnson-f7xuyn`. Pre-step b8fd508 (PACK-GENERATOR closed out).
+- **1 prime-factorisation (Prime Sprint):** on theme.css, light; Outfit/JetBrains Mono; teal accent `#0f766e` (5.47:1 on white); no Press Start 2P, Nunito, emoji (tree, hearts: now three dots, same `.heart`/`.lost` classes) or hex outside `:root`; capitals dropped (Start game, Play again, Complete!, Game over, Top scores); life-bonus line "3 lives x 50" (was a heart emoji). MIGRATED in check-theme.py. Phone fit: options 605 -> 370 / 528 at 320x568 (all six primes on one row on phones), Aa 375x667 630 -> 404 / 627; both known-failure entries taken off `scripts/phone-fit-state.json` (the tool requires it). Start button above the fold at every size in normal mode; Aa 375 657 / 627 (was 1110), not a gate. Verifier PASS (4273 taps); answer lock PASS. /updates/ line. Before/after: `docs/screenshots/look-refresh-2026-11/`.
+- 1 merged #660 (4f2b817); main run 41880253708 GREEN (GitHub held #660's Gate queued for about an hour first).
+- **Amendment 1 (Jon, 4 Nov, verbatim in the contract):** dots, sentence case, state-file removals and screenshot folder accepted; "WRONG — answer is N" becomes "Not quite: the answer is N" and "CORRECT!" becomes "Correct!", each verifier's expected text in the same PR; the other six capitals lines in the two games follow the same pattern (ruling 1), quoted in each PR.
+- **2 percentage-flip:** on theme.css, rose accent `#be185d` (6.04:1), card back `--card-back` (white 11.42:1); card 190/150/120 px (desktop / under 800 px tall / phone). Phone fit: last option 720 -> 397 / 528 (320x568), Next 797 -> 476; Aa 375 737 -> 516 / 627; laptop 1280x720 702 -> 503 / 680, Next 797 -> 596; all six known-failure entries off. Verifier (expected text updated) PASS; answer lock PASS.
+- 2 merged #661 (e8366fa); main run 41883841517 GREEN.
+- **3 fraction-equivalence (Fraction Snap):** on theme.css, blue accent `#1d4ed8` (6.70:1); Yes/No on `--correct`/`--wrong`; feedback "Correct!" (ruling 3), "Not quite: they are [not ]equivalent", "Too slow!", working "equal / not equal"; verifier's expected text updated. No known failures before; normal Next 561 -> 430 / 528 at 320x568, Aa 375 Next 632 -> 585 / 627 (both "Next below fold" reports cleared). Verifier PASS (5 plants); answer lock PASS.
+- 3 merged #663 (246794b); main run 41894513688 GREEN. All three MIGRATED; check-theme.py: 20 MIGRATED, 88 NOT_YET.
+- **Step 2, contact sheet:** `docs/audits/look-refresh-2026-11/README.md` (each game and slug, its own fonts, header emoji, rendered vs rule palette; the 12-game wording list) and four sheets in `docs/screenshots/look-refresh-2026-11/` (88 start screens at 375x667). For Jon to name any that still look childish.
+- **State:** DONE. Contact sheet merged #664 (e5dc408); main run 41898511517 GREEN. Waiting on Jon to name any NOT_YET game that still looks childish.
+
+Record: agent Claude Code; wall n/a (contract-receipt time not recorded); review cycles 0; amendments 1; usage n/a.
+
 ## 2026-11-04 (cloud): PACK-GENERATOR (`docs/history/contracts/2026-11-04-pack-generator.md`, Shared, Amendments 1-11; stops at a green Gate for Project Claude's review and Jon's "merge")
 
 - Agent: Claude Code; primary checkout, branch `claude/great-feynman-vs4fpp`. Pre-step a9e175f; generator 562c5a2; PR #659.
