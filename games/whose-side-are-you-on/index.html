@@ -119,6 +119,7 @@ line.HYP{stroke:var(--hyp)}line.OPP{stroke:var(--opp);stroke-dasharray:11 7}line
 @media (max-height:620px){.hud-label{display:none}.fb-line{font-size:.9rem}.ask{font-size:.98rem}}
 body.accessible{letter-spacing:.12em;word-spacing:.16em}
 body.accessible .hud-label,body.accessible .hud-val{letter-spacing:0}
+body.accessible .hud{flex-wrap:wrap;justify-content:center}
 body.accessible p,body.accessible .fb-line{line-height:2;max-width:65ch}
 body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 .a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer}
@@ -135,7 +136,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 <script src="../../schools/assets/stage-exit.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'answer' with i = 0 gives the right answer, i >= 1 a wrong one (named, then Next).
 {
-  "start": "WS.ui.start(1)",
+  "start": "WS.ui.start(3)",
   "ready": "!!window.WS && WS.ui.state() === 'asking'",
   "answer": [
     "WS.ui.answer(i === 0);"

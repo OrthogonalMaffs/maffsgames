@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Whose Side Are You On? (every item of the four stages recomputed from the triangle's own geometry, never the game's labels: which side is HYP, OPP and ADJ, every fraction, every function against real trig; the feedback table and its wording; 50 or more distinct items a stage; seeded rounds: HYP first, every quadrant; every stage played with real taps at 320, 390 and 1280 px: tap bands 44 px deep, one answer a question, a slow right answer still right, no sideways scroll, Next above the fold; fault-injection self-test: a wrong label, a wrong function and more, each caught) |
+# ci-line: Whose Side Are You On? (every item of the four stages recomputed from the triangle's own geometry, never the game's labels: which side is HYP, OPP and ADJ, every fraction, every function against real trig; the feedback table and its wording; 50 or more distinct items a stage; seeded rounds: HYP first, every quadrant; every stage played with real taps at 320, 390 and 1280 px: tap bands 44 px deep, one answer a question, a slow right answer still right, no sideways scroll, Aa mode included, Next above the fold; fault-injection self-test: a wrong label, a wrong function and more, each caught) |
 """Independent verification for Whose Side Are You On? (games/whose-side-are-you-on/), contract WHOSE-SIDE, 5 Nov 2026.
 SR-30: checked from its first PR.
 
@@ -426,6 +426,28 @@ def check_slow(page, fails):
         fails.append('a slow right answer was not marked right')
 
 
+def check_aa(browser, base, fails):
+    """Aa mode: no sideways scroll on any stage at the phone sizes, asking and on a wrong answer."""
+    for w, h in ((320, 568), (375, 667), (390, 844)):
+        ctx = browser.new_context(viewport={'width': w, 'height': h})
+        ctx.add_init_script("localStorage.setItem('mfg_accessible', 'true');")
+        ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)
+        page = ctx.new_page()
+        page.goto('%s/games/%s/?cb=%d' % (base, SLUG, random.randrange(10 ** 9)))
+        page.wait_for_function('() => !!window.WS && !!window.katex && document.body.classList.contains("accessible")')
+        for stage in (1, 2, 3, 4):
+            page.evaluate('(n) => WS.ui.start(n)', stage)
+            wait_asking(page)
+            for when in ('asking', 'wrong'):
+                if when == 'wrong':
+                    page.evaluate('() => WS.ui.answer(false)')
+                    page.wait_for_function("() => WS.ui.state() === 'wrong'", timeout=4000)
+                sw = page.evaluate('() => document.documentElement.scrollWidth')
+                if sw > w:
+                    fails.append('Aa %dx%d stage %d %s: sideways scroll %d' % (w, h, stage, when, sw))
+        ctx.close()
+
+
 def check_colours(page, fails):
     tokens = page.evaluate("""() => { const c = getComputedStyle(document.documentElement);
       return {HYP:c.getPropertyValue('--hyp').trim(), OPP:c.getPropertyValue('--opp').trim(), ADJ:c.getPropertyValue('--adj').trim()}; }""")
@@ -526,6 +548,7 @@ def main():
         with sync_playwright() as p:
             browser = p.chromium.launch()
             run_page(browser, base, fails)
+            check_aa(browser, base, fails)
             plants = 0 if args.no_selftest else self_test(browser, base, src)
             browser.close()
     finally:
