@@ -55,6 +55,7 @@ when, across its locks:
   b. no lock's answer is printed in another lock's clues
   c. no lock's answer equals another lock's misconception
   d. no two locks share an answer
+  e. no herring figure equals any answer, common wrong answer or clue figure
 A clue figure is any number the student reads in a clue: the resolved
 {{key.token}} values and any numeral written into the clue string itself. A
 clue belongs to the lock whose tokens it uses. Rules (a) and (b) ignore figures
@@ -77,7 +78,7 @@ not by this exit code.
 """
 import itertools, json, re, pathlib, sys
 
-from escape_set_checks import NO_CHECK, check, covered, format_token
+from escape_set_checks import NO_CHECK, check, covered, format_token, printed_figures
 import plant_common as pc
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")   # the stars, on a cp1252 Windows console
@@ -91,6 +92,7 @@ problems = []
 warnings = []
 pending_art = []
 collision_report = []
+herring_plant = None
 
 
 def nums(s):
@@ -115,12 +117,24 @@ def clue_strings(js):
     return out
 
 
+def herring_strings(js):
+    """The authored flavour text of objects without clues."""
+    body = re.sub(r"/\*.*?\*/", "", js, flags=re.S)
+    objs = body.split("objects: [", 1)[1].split("\n  locks: [", 1)[0]
+    lit = r"'(?:[^'\\]|\\.)*'"
+    out = []
+    for object_text in re.findall(r"\{\s*id:.*?(?=\n\s*\{\s*id:|\n\s*\],?)", objs, re.S):
+        if not re.search(r"clue:\s*null", object_text):
+            continue
+        m = re.search(r"flavour:\s*((?:" + lit + r"\s*\+?\s*)+)", object_text)
+        if m:
+            out.append("".join(s[1:-1] for s in re.findall(lit, m.group(1))).replace("\\'", "'"))
+    return out
+
+
 def figures(text, key, var):
     """Every number a student reads in one clue, with this variant filled in."""
-    text = re.sub(r"\{\{" + re.escape(key) + r"\.([\w-]+)\}\}",
-                  lambda m: format_token(var[m.group(1)]) if m.group(1) in var else m.group(0), text)
-    text = re.sub(r"<[^>]*>|&[#\w]+;", " ", text)
-    return {float(x) for x in re.findall(r"\d+(?:\.\d+)?", text)}
+    return printed_figures(text, {key + "." + k: v for k, v in var.items()})
 
 
 def keypad_settable(v, max_digits):
@@ -135,15 +149,22 @@ def flat(x):
     return {float(v) for v in (x if isinstance(x, list) else [x])}
 
 
-def draw_is_valid(draw, clues):
-    """draw: [(key, variant)] one per lock. clues: from clue_strings()."""
+def draw_is_valid(draw, clues, herrings=()):
+    """draw: [(key, variant)] one per lock; printed herring figures cannot match any useful figure."""
     clue = [set() for _ in draw]
+    all_clues = [set() for _ in draw]
     for text, owner in clues:
         for i, (key, var) in enumerate(draw):
             if key == owner:
-                clue[i] |= {f for f in figures(text, key, var) if f > EXEMPT}
+                shown = figures(text, key, var)
+                all_clues[i] |= shown
+                clue[i] |= {f for f in shown if f > EXEMPT}
     ans = [flat(v["answer"]) for _, v in draw]
     miss = [flat(v.get("miss")) for _, v in draw]
+    values = {key + "." + token: value for key, var in draw for token, value in var.items()}
+    herring_figs = set().union(*(printed_figures(text, values) for text in herrings)) if herrings else set()
+    if herring_figs & set().union(*ans, *miss, *all_clues):
+        return False
     for i in range(len(draw)):
         for j in range(len(draw)):
             if i == j:
@@ -287,12 +308,20 @@ for room_dir in sorted(p for p in ROOMS.iterdir() if p.is_dir() and p.name != "a
     if all(lid in verified for lid in lock_ids):
         withdrawn = "noindex" in (room_dir / "index.html").read_text(encoding="utf-8")
         clues = clue_strings(js)
+        herrings = herring_strings(js)
         libs = [[(key, v) for v in verified[lid]] for lid, key in zip(lock_ids, keys)]
         total = valid = 0
         for draw in itertools.product(*libs):
             total += 1
-            valid += draw_is_valid(list(draw), clues)
-        v0 = draw_is_valid([lib[0] for lib in libs], clues)
+            good = draw_is_valid(list(draw), clues, herrings)
+            valid += good
+            if good and herring_plant is None:
+                answer = draw[0][1]["answer"]
+                figure = answer[0] if isinstance(answer, list) else answer
+                if draw_is_valid(list(draw), clues, herrings + [str(figure)]):
+                    problems.append(f"planted herring figure {figure} equal to an answer was not caught")
+                herring_plant = f"{slug}: {figure} equals an answer"
+        v0 = draw_is_valid([lib[0] for lib in libs], clues, herrings)
         state = "withdrawn" if withdrawn else "live"
         collision_report.append(f"{slug:<20} {state:<9} VALID {valid:>4} of {total:<4}  "
                                 f"variant 0 {'VALID' if v0 else 'INVALID'}")
@@ -300,6 +329,9 @@ for room_dir in sorted(p for p in ROOMS.iterdir() if p.is_dir() and p.name != "a
             problems.append(f"{slug}: only {valid} VALID draws, fewer than {MIN_VALID}")
         if not v0:
             warnings.append(f"{slug}: variant-0 draw is not VALID (never served)")
+
+if herring_plant is None:
+    problems.append("STALE PLANT: no VALID draw for a herring-answer collision")
 
 # ---- difficulty stars (ESCAPE-DIFFICULTY) ------------------------------------
 BANDS = [(3, 1, "Warm-up", "1–3"), (5, 2, "Core", "4–5"), (9, 3, "Challenge", "6–9")]   # (top grade, stars, name, grades)
@@ -838,6 +870,7 @@ print(f"broken sets planted: {len(broken_cases)}, from {BROKEN_SETS.relative_to(
 print("cross-lock collisions (VALID draws per room):")
 for line in collision_report:
     print("  " + line)
+print("herring-answer collision plant: " + (herring_plant or "NOT RUN"))
 if warnings:
     print(f"warnings: {len(warnings)}")
     for w in warnings:

@@ -161,6 +161,7 @@
         '</tbody></table>' +
 
         '<h2>Where the clues are, and what they say this time</h2>' +
+        '<p class="lede">Students are told: Not every note will help you. Part of the puzzle is working out which ones do.</p>' +
         (live ? '' : '<p class="print-note">With no game on this device, a clue below shows each lock&rsquo;s Set A figures, as an example.</p>') +
         '<p class="lede">The room deliberately does not tell students which note belongs to which lock &mdash; that ' +
           'is the first real piece of thinking, and it is where the difficulty lives. This table is for you.</p>' +
