@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Whose Side Are You On? (every item of the four stages recomputed from the triangle's own geometry, never the game's labels: which side is HYP, OPP and ADJ, every fraction, every function against real trig; the feedback table and its wording; 50 or more distinct items a stage; seeded rounds: HYP first, every quadrant; every stage played with real taps at 320, 390 and 1280 px: tap bands 44 px deep, one answer a question, a slow right answer still right, no sideways scroll, Aa mode included, Next above the fold; fault-injection self-test: a wrong label, a wrong function and more, each caught) |
+# ci-line: Whose Side Are You On? (every item of the four stages recomputed from the triangle's own geometry, never the game's labels: which side is HYP, OPP and ADJ, every fraction, every function against real trig; the feedback table and its wording; 50 or more distinct items a stage; seeded rounds: HYP first, every quadrant; every stage played with real taps at 320, 390 and 1280 px: tap bands 44 px deep, each side clicked along its length and in the gaps of its dashes or dots, Stage 2's slots filled, cleared and refilled before Check, one answer a question, a slow right answer still right, no sideways scroll, Aa mode included, Next above the fold; fault-injection self-test: a wrong label, a wrong function and more, each caught) |
 """Independent verification for Whose Side Are You On? (games/whose-side-are-you-on/), contract WHOSE-SIDE, 5 Nov 2026.
 SR-30: checked from its first PR.
 
@@ -284,6 +284,65 @@ def check_colour_use(page, label, fails):
         fails.append('%s: %s' % (label, p))
 
 
+def on_side_points(ax, ay, bx, by, role, count):
+    """Points on a side, on screen, from one end: the middles of the gaps in the line its role is drawn with (the page's dash pattern)
+    and otherwise evenly along it, none within 6 px of an end."""
+    length = math.hypot(bx - ax, by - ay)
+    if role == 'OPP':
+        ds = [16 + 20 * k for k in range(100) if 6 < 16 + 20 * k < length - 6]     # 12 on, 8 off: the middle of each gap
+    elif role == 'ADJ':
+        ds = [6 + 11 * k for k in range(100) if 6 < 6 + 11 * k < length - 6]       # 1 on, 10 off
+    else:
+        ds = [length * (k + 1) / (count + 1) for k in range(count)]
+    if len(ds) > count:
+        ds = [ds[round(i * (len(ds) - 1) / (count - 1))] for i in range(count)]
+    return [(ax + (bx - ax) * d / length, ay + (by - ay) * d / length) for d in ds]
+
+
+def bands_on_screen(page):
+    return page.evaluate("""() => Array.from(document.querySelectorAll('#figure .hit')).map(b => {
+      const s = b.getScreenCTM(), c = getComputedStyle(b); return {val:b.dataset.val, width:+b.getAttribute('stroke-width') * s.a, pe:c.pointerEvents, dash:c.strokeDasharray,
+        x1:+b.getAttribute('x1')+s.e,y1:+b.getAttribute('y1')+s.f,x2:+b.getAttribute('x2')+s.e,y2:+b.getAttribute('y2')+s.f}; })""")
+
+
+def slot_vals(page):
+    return page.evaluate("() => { const t = document.getElementById('slotTop'), b = document.getElementById('slotBottom'), c = document.getElementById('checkBtn'); return t ? [t.dataset.val || null, b.dataset.val || null, c.disabled] : [null, null, null]; }")
+
+
+def check_hit_lines(page, label, fails):
+    bands = bands_on_screen(page)
+    if len(bands) != 3:
+        fails.append('%s: %d tap bands, not one a side' % (label, len(bands)))
+    for b in bands:
+        if b['width'] < 44 or b['pe'] != 'stroke' or b['dash'] != 'none':
+            fails.append('%s: tap band %.1f px, pointer-events %s, dashes %s' % (label, b['width'], b['pe'], b['dash']))
+    painted = page.evaluate("() => Array.from(document.querySelectorAll('#figure line.side, #figure .square, #figure .arc, #figure text, #figure .theta')).filter(e => getComputedStyle(e).pointerEvents !== 'none').length")
+    if painted:
+        fails.append('%s: %d painted parts of the figure take pointer events' % (label, painted))
+    return {b['val']: b for b in bands}
+
+
+def check_stage2_clicks(page, it, geo, label, fails):
+    """Every side clicked for real along its length, in the gaps of its own line style, each click filling the top slot with that side."""
+    bands = check_hit_lines(page, label, fails)
+    for role, s in geo.items():
+        b = bands.get(s['id'])
+        if not b:
+            continue
+        for x, y in on_side_points(b['x1'], b['y1'], b['x2'], b['y2'], role, 5):
+            page.mouse.click(x, y)
+            got = slot_vals(page)[0]
+            if got != s['id']:
+                fails.append('%s: a click on %s at (%.0f, %.0f) gave %s' % (label, role, x, y, got))
+                if got:
+                    page.click('#slotTop')
+                continue
+            page.click('#slotTop')
+            if slot_vals(page)[0] is not None:
+                fails.append('%s: tapping the full top slot did not empty it' % label)
+                return
+
+
 def rgb(hexa):
     return 'rgb(%d, %d, %d)' % tuple(int(hexa[i:i + 2], 16) for i in (1, 3, 5))
 
@@ -324,26 +383,47 @@ def play_round(page, stage, wrong_at, label, fails):
         check_colour_use(page, '%s stage %d asking' % (label, stage), fails)
         wrong = n in wrong_at
         if stage in (1, 2):
-            bands = page.evaluate("""() => Array.from(document.querySelectorAll('#figure .hit')).map(b => {
-              const s = b.getScreenCTM(); return {val:b.dataset.val, width:+b.getAttribute('stroke-width') * s.a, x1:+b.getAttribute('x1'),y1:+b.getAttribute('y1'),x2:+b.getAttribute('x2'),y2:+b.getAttribute('y2'), ox:s.e, oy:s.f}; })""")
-            for b in bands:
-                if b['width'] < 44:
-                    fails.append('%s stage %d: tap band %.1f px deep' % (label, stage, b['width']))
-            box = {b['val']: b for b in bands}
+            box = check_hit_lines(page, '%s stage %d' % (label, stage), fails)
+            role_by_id = {v: k for k, v in ids.items()}
 
             def tap(side):
+                # the middle-most point of the side's own gaps (a solid side: its middle), as a real click
                 b = box[side]
-                page.mouse.click(b['ox'] + (b['x1'] + b['x2']) / 2, b['oy'] + (b['y1'] + b['y2']) / 2)
+                pts = on_side_points(b['x1'], b['y1'], b['x2'], b['y2'], role_by_id[side], 5)
+                page.mouse.click(*pts[len(pts) // 2])
             if stage == 1:
                 other = [s['id'] for s in it['sides'] if s['id'] != it['key']][0]
                 tap(other if wrong else ids[it['ask']])
             else:
-                tap(ids[it['top']])
-                page.wait_for_timeout(20)
-                bands2 = page.evaluate("""() => Array.from(document.querySelectorAll('#figure .hit')).map(b => {
-                  const s = b.getScreenCTM(); return {val:b.dataset.val, x1:+b.getAttribute('x1'),y1:+b.getAttribute('y1'),x2:+b.getAttribute('x2'),y2:+b.getAttribute('y2'), ox:s.e, oy:s.f}; })""")
-                box = {b['val']: b for b in bands2}
-                tap(ids[it['top']] if wrong else ids[it['bottom']])
+                top, bottom = ids[it['top']], ids[it['bottom']]
+                third = ids[({'HYP', 'OPP', 'ADJ'} - {it['top'], it['bottom']}).pop()]
+                if slot_vals(page) != [None, None, True]:
+                    fails.append('%s: Stage 2 does not start with two empty slots and Check off' % label)
+                check_stage2_clicks(page, it, geo, '%s q%d' % (label, n + 1), fails)
+                if n % 2 == 0 and not wrong:
+                    # fills a slot wrongly, clears it, refills it correctly: marked right, and nothing is marked before Check
+                    tap(third)
+                    if slot_vals(page) != [third, None, True]:
+                        fails.append('%s: one slot full should leave Check off: %s' % (label, slot_vals(page)))
+                    tap(bottom)
+                    if slot_vals(page) != [third, bottom, False]:
+                        fails.append('%s: both slots full should turn Check on: %s' % (label, slot_vals(page)))
+                    if page.evaluate('() => WS.ui.state()') != 'asking':
+                        fails.append('%s: marked before Check' % label)
+                        return
+                    page.click('#slotTop')
+                    if slot_vals(page) != [None, bottom, True]:
+                        fails.append('%s: clearing a slot should empty it and turn Check off: %s' % (label, slot_vals(page)))
+                    tap(top)
+                else:
+                    tap(top)
+                    tap(top if wrong else bottom)
+                if slot_vals(page) != [top, top if wrong else bottom, False]:
+                    fails.append('%s: slots %s before Check' % (label, slot_vals(page)))
+                r = page.query_selector('#checkBtn').bounding_box()
+                if r['y'] + r['height'] > h - 40 or r['height'] < 44:
+                    fails.append('%s: Check is below the fold or small: %s' % (label, r))
+                page.click('#checkBtn')
         else:
             want = it['key']
             opts = page.query_selector_all('#opts .opt')
@@ -358,7 +438,11 @@ def play_round(page, stage, wrong_at, label, fails):
                     fails.append('%s stage %d: last option below the fold, %.0f in %d' % (label, stage, r['y'] + r['height'], h))
             target = [o for o in opts if (o.get_attribute('data-val') == want) != wrong][0]
             target.click()
-        page.wait_for_function("() => WS.ui.state() === 'right' || WS.ui.state() === 'wrong'", timeout=4000)
+        try:
+            page.wait_for_function("() => WS.ui.state() === 'right' || WS.ui.state() === 'wrong'", timeout=4000)
+        except Exception:
+            fails.append('%s stage %d q%d: the tap marked nothing' % (label, stage, n + 1))
+            return
         got = page.evaluate('() => WS.ui.state()')
         if got != ('wrong' if wrong else 'right'):
             fails.append('%s stage %d q%d: state %s, expected %s' % (label, stage, n + 1, got, 'wrong' if wrong else 'right'))
@@ -506,6 +590,11 @@ PLANTS = [
     ('green feedback', ".fb-head{font-weight:700;font-size:1.05rem;color:var(--text)}", ".fb-head{font-weight:700;font-size:1.05rem;color:var(--correct)}"),
     ('a side colour on the score', ".hud-val{font-family:var(--font-num);", ".hud-val{color:var(--adj);font-family:var(--font-num);"),
     ('no word on a right answer', "(ok ? 'Right' : 'Not quite')", "(ok ? '' : 'Not quite')"),
+    ('a dash-only hit area', "'stroke-width': 44,", "'stroke-width': 44, 'stroke-dasharray': '12 8',", 'stage 2'),
+    ('a painted line that takes the tap', ".figure .side,.figure .square,.figure .arc{pointer-events:none}", ".figure .square,.figure .arc{pointer-events:none}", 'stage 2'),
+    ('Stage 2 marks with no Check', "    showSlot(slot); refreshSlots();\n  }\n  function clearSlot", "    showSlot(slot); refreshSlots();\n    if (top.dataset.val && bottom.dataset.val) checkSlots();\n  }\n  function clearSlot", 'stage 2'),
+    ('a full slot that will not empty', "    delete slot.dataset.val;\n", "", 'stage 2'),
+    ('Check on with one slot empty', "$('checkBtn').disabled = !(top.dataset.val && bottom.dataset.val);", "$('checkBtn').disabled = !(top.dataset.val || bottom.dataset.val);", 'stage 2'),
     ('a changed colour', "--opp:#0072B2", "--opp:#0072C2"),
     ('a small coloured word', ".w{font-weight:700;font-size:19px;", ".w{font-weight:700;font-size:15px;"),
 ]
@@ -513,7 +602,8 @@ PLANTS = [
 
 def self_test(browser, base, src):
     problems = 0
-    for name, old, new in PLANTS:
+    for plant in PLANTS:
+        name, old, new = plant[:3]
         try:
             planted = pc.apply_plant(src, old, new, name=name)
         except pc.StalePlant as e:
@@ -526,7 +616,7 @@ def self_test(browser, base, src):
                                if rt.request.resource_type == 'document' else rt.continue_())
         found, err = [], None
         try:
-            run_page(browser, base, found, route=route(None), sizes=SIZES[:1], stages=(1,))
+            run_page(browser, base, found, route=route(None), sizes=SIZES[:1], stages=(1, 2) if len(plant) > 3 else (1,))
         except Exception as e:      # a plant that stops play is caught only if it left findings; an error alone is never a catch
             err = None if found else e
         if pc.is_caught(found, err):
