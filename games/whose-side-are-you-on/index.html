@@ -523,7 +523,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     ev('game_started', { game_slug: SLUG, level: level, mode: 'stage-' + n });
     nextQuestion();
   }
-  var RESERVE = { 1: 150, 2: 250, 3: 275, 4: 215 };
+  var RESERVE = { 1: 150, 2: 275, 3: 275, 4: 215 };
   function lengthLabels(it) {
     var o = {}; it.sides.forEach(function (s) { o[s.id] = s.len; }); return o;
   }
@@ -543,7 +543,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       $('ask').innerHTML = 'Tap the ' + rich({ HYP: 'HYPOTENUSE', OPP: 'OPPOSITE', ADJ: 'ADJACENT' }[Q.ask]);
       drawFigure(Q, { tap: true, reserve: RESERVE[1] });
     } else if (stage === 2) {
-      $('ask').innerHTML = rich(Q.top + ' over ' + Q.bottom) + ': tap the top side, then the bottom';
+      $('ask').innerHTML = rich(Q.top + ' over ' + Q.bottom) + ': tap the top side, then the bottom. Tap a box to empty it, then press Check.';
       frac.hidden = false; buildSlots();
       drawFigure(Q, { tap: true, labels: lengthLabels(Q), reserve: RESERVE[2] });
     } else if (stage === 3) {

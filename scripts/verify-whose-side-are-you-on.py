@@ -397,6 +397,12 @@ def play_round(page, stage, wrong_at, label, fails):
             else:
                 top, bottom = ids[it['top']], ids[it['bottom']]
                 third = ids[({'HYP', 'OPP', 'ADJ'} - {it['top'], it['bottom']}).pop()]
+                prompt = ' '.join(page.evaluate("() => document.getElementById('ask').textContent").split())
+                want_prompt = '%s over %s: tap the top side, then the bottom. Tap a box to empty it, then press Check.' % (it['top'], it['bottom'])
+                if prompt != want_prompt:
+                    fails.append('%s: Stage 2 prompt %r' % (label, prompt))
+                if page.evaluate("() => document.querySelectorAll('#ask .w').length") != 2:
+                    fails.append('%s: the two side words in the prompt are not coloured' % label)
                 if slot_vals(page) != [None, None, True]:
                     fails.append('%s: Stage 2 does not start with two empty slots and Check off' % label)
                 check_stage2_clicks(page, it, geo, '%s q%d' % (label, n + 1), fails)
@@ -595,6 +601,7 @@ PLANTS = [
     ('Stage 2 marks with no Check', "    showSlot(slot); refreshSlots();\n  }\n  function clearSlot", "    showSlot(slot); refreshSlots();\n    if (top.dataset.val && bottom.dataset.val) checkSlots();\n  }\n  function clearSlot", 'stage 2'),
     ('a full slot that will not empty', "    delete slot.dataset.val;\n", "", 'stage 2'),
     ('Check on with one slot empty', "$('checkBtn').disabled = !(top.dataset.val && bottom.dataset.val);", "$('checkBtn').disabled = !(top.dataset.val || bottom.dataset.val);", 'stage 2'),
+    ('the old Stage 2 prompt', " Tap a box to empty it, then press Check.", "", 'stage 2'),
     ('a changed colour', "--opp:#0072B2", "--opp:#0072C2"),
     ('a small coloured word', ".w{font-weight:700;font-size:19px;", ".w{font-weight:700;font-size:15px;"),
 ]
