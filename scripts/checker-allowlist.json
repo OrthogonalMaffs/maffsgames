@@ -1781,20 +1781,6 @@
       "where": "div.header-right"
     },
     {
-      "path": "games/equatle/index.html",
-      "at": "load",
-      "width": 348,
-      "todo": "§3.9 batch 12",
-      "where": "div.nav-r; button.key"
-    },
-    {
-      "path": "games/equatle/index.html",
-      "at": "start",
-      "width": 348,
-      "todo": "§3.9 batch 12",
-      "where": "div.nav-r; button.key"
-    },
-    {
       "path": "games/glorious-gantt/index.html",
       "at": "start",
       "width": 354,
