@@ -171,6 +171,8 @@ def check_engine(page, fails, sample=None):
         ids = {i['id'] for i in items}
         if len(ids) != len(items):
             fails.append('stage %d: repeated items' % stage)
+        if max(len(i) for i in ids) > 40:           # analytics.js cuts question_id at 40, and two items must never share one
+            fails.append('stage %d: a question id over 40 characters' % stage)
         if len(ids) < MIN_ITEMS:
             fails.append('stage %d: only %d distinct items' % (stage, len(ids)))
         corners = set()
@@ -259,6 +261,29 @@ def check_labels(page, label, fails):
         fails.append('%s: %s' % (label, p))
 
 
+def check_colour_use(page, label, fails):
+    """Amendment 2: the three side colours on the sides and the HYP/OPP/ADJ words only; no green or red anywhere; right and wrong
+    are a symbol and a word. Every visible element's colours are read from the page, the footer's included."""
+    problems = page.evaluate("""() => {
+      const root = getComputedStyle(document.documentElement), hex = n => { const d = document.createElement('i');
+        d.style.color = root.getPropertyValue(n).trim(); document.body.appendChild(d); const c = getComputedStyle(d).color; d.remove(); return c; };
+      const sides = ['--hyp', '--opp', '--adj'].map(hex), bad = sides.concat(['--correct', '--wrong'].map(hex)), out = [];
+      const allowed = e => e.closest('.w, .katex') || e.matches('line.side, line.HYP, line.OPP, line.ADJ') || e.closest('#figure text');
+      document.querySelectorAll('body *').forEach(e => {
+        if (e.closest('script, style') || !e.getClientRects().length) return;
+        const c = getComputedStyle(e), hasText = Array.from(e.childNodes).some(n => n.nodeType === 3 && n.textContent.trim());
+        const used = [c.backgroundColor, c.fill !== 'none' ? c.fill : ''];
+        if (hasText) used.push(c.color);
+        if (parseFloat(c.borderLeftWidth)) used.push(c.borderLeftColor);
+        if (parseFloat(c.borderTopWidth)) used.push(c.borderTopColor);
+        if (c.stroke !== 'none' && e.closest('svg')) used.push(c.stroke);
+        if (used.some(u => bad.includes(u)) && !allowed(e)) out.push((e.id || e.className.baseVal || e.className || e.tagName) + ' uses ' + used.filter(u => bad.includes(u))[0]);
+      });
+      return out.slice(0, 3); }""")
+    for p in problems:
+        fails.append('%s: %s' % (label, p))
+
+
 def rgb(hexa):
     return 'rgb(%d, %d, %d)' % tuple(int(hexa[i:i + 2], 16) for i in (1, 3, 5))
 
@@ -296,6 +321,7 @@ def play_round(page, stage, wrong_at, label, fails):
         if not page.evaluate("() => !!document.querySelector('#figure [data-square]') && !!document.querySelector('#figure [data-theta] .katex') && !!document.querySelector('#figure [data-arc]')"):
             fails.append('%s: the square, the arc or the KaTeX theta is missing' % label)
         check_labels(page, '%s stage %d asking' % (label, stage), fails)
+        check_colour_use(page, '%s stage %d asking' % (label, stage), fails)
         wrong = n in wrong_at
         if stage in (1, 2):
             bands = page.evaluate("""() => Array.from(document.querySelectorAll('#figure .hit')).map(b => {
@@ -344,6 +370,10 @@ def play_round(page, stage, wrong_at, label, fails):
             fails.append('%s: score %s to %s on a %s answer' % (label, score, new_score, 'wrong' if wrong else 'right'))
         score = new_score
         check_labels(page, '%s stage %d marked' % (label, stage), fails)
+        check_colour_use(page, '%s stage %d marked' % (label, stage), fails)
+        mark = page.evaluate("() => { const h = document.querySelector('.fb-head'); return h ? [h.dataset.mark, h.textContent] : null; }")
+        if mark != (['wrong', '✗Not quite'] if wrong else ['right', '✓Right']):
+            fails.append('%s stage %d: the mark reads %s' % (label, stage, mark))
         d = drawn_sides(page)
         if wrong:
             lit = {'stage': stage}
@@ -451,6 +481,9 @@ PLANTS = [
     ('feedback reworded', "Label from θ, not from the square corner.", "Label from the square corner."),
     ('a thin tap band', "'stroke-width': 44,", "'stroke-width': 30,"),
     ('a label on its line', "var clear = Math.abs(nx) * t.hw + Math.abs(ny) * t.hh + 7;", "var clear = 2;"),
+    ('green feedback', ".fb-head{font-weight:700;font-size:1.05rem;color:var(--text)}", ".fb-head{font-weight:700;font-size:1.05rem;color:var(--correct)}"),
+    ('a side colour on the score', ".hud-val{font-family:var(--font-num);", ".hud-val{color:var(--adj);font-family:var(--font-num);"),
+    ('no word on a right answer', "(ok ? 'Right' : 'Not quite')", "(ok ? '' : 'Not quite')"),
     ('a changed colour', "--opp:#0072B2", "--opp:#0072C2"),
     ('a small coloured word', ".w{font-weight:700;font-size:19px;", ".w{font-weight:700;font-size:15px;"),
 ]

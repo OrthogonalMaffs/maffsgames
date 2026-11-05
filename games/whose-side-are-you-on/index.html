@@ -94,14 +94,13 @@ line.HYP{stroke:var(--hyp)}line.OPP{stroke:var(--opp);stroke-dasharray:11 7}line
 .opt{min-height:48px;padding:.3rem;border-radius:10px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-size:1.05rem;cursor:pointer}
 .opt:hover:not(:disabled){border-color:var(--accent)}
 .opt:disabled{cursor:default}
-.opt.right{border-color:var(--correct);border-width:3px}
 .opt.tall{min-height:72px}
 
 .fb{border-radius:12px;padding:.55rem .7rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.45rem}
-.fb.wrong{border-color:var(--wrong)}
-.fb.done{border-color:var(--correct)}
-.fb-line{font-size:.95rem;line-height:1.4;padding:.2rem .55rem;border-left:3px solid var(--hint);border-radius:0 8px 8px 0}
-.fb.done .fb-line{border-left-color:var(--correct);font-weight:700}
+/* Right and wrong are a symbol and a word in the text colour, never green or red, which could be read as ADJ or HYP (Amendment 2). */
+.fb-head{font-weight:700;font-size:1.05rem;color:var(--text)}
+.fb-head .mark{font-family:var(--font-num);margin-right:.35rem}
+.fb-line{font-size:.95rem;line-height:1.4;color:var(--text)}
 .fb-next{display:flex;justify-content:center}
 .feedback:empty{display:none}
 .results{text-align:center;padding:1rem 0}
@@ -593,7 +592,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (stage === 1) {
       if (!MaffsLock.lock($('qarea'))) return;
       var right = val === Q.key, lit = {}; lit[Q.ask] = true;
-      markQuestion(right, right ? 'Yes: that is the ' + Q.ask + '.' : LINE[whyTap(Q, val)], { lit: lit });
+      markQuestion(right, right ? 'That is the ' + Q.ask + '.' : LINE[whyTap(Q, val)], { lit: lit });
     } else if (stage === 2) {
       if (tops === null) {
         tops = val;
@@ -605,7 +604,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       if (!MaffsLock.lock($('qarea'))) return;
       var ok = tops === Q.keyTop && val === Q.keyBottom;
       $('fracline').innerHTML = tex(ok ? fracNums(Q.top, Q.bottom, Q.frac[0], Q.frac[1]) : '\\dfrac{\\mathbf{' + lengthOfId(Q, tops) + '}}{\\mathbf{' + lengthOfId(Q, val) + '}}');
-      markQuestion(ok, ok ? 'Yes.' : Q.top + ' is ' + Q.frac[0] + ' and ' + Q.bottom + ' is ' + Q.frac[1] + ', so ' + Q.top + ' over ' + Q.bottom + ' is ' + Q.frac[0] + ' over ' + Q.frac[1] + '.',
+      markQuestion(ok, ok ? '' : Q.top + ' is ' + Q.frac[0] + ' and ' + Q.bottom + ' is ' + Q.frac[1] + ', so ' + Q.top + ' over ' + Q.bottom + ' is ' + Q.frac[0] + ' over ' + Q.frac[1] + '.',
         { lit: allLit(), labels: lengthLabels(Q) });
     }
   }
@@ -614,12 +613,15 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     var ok = val === Q.key;
     if (stage === 3) {
       var f = Q.dir === 'name' ? Q.key : Q.fn, parts = FN[f];
-      markQuestion(ok, ok ? 'Yes.' : f + ' θ is ' + parts[0] + ' over ' + parts[1] + '.', { lit: allLit(), labels: lengthLabels(Q) });
+      markQuestion(ok, ok ? '' : f + ' θ is ' + parts[0] + ' over ' + parts[1] + '.', { lit: allLit(), labels: lengthLabels(Q) });
     } else {
       var labels = lengthLabels(Q); labels[Q.wanted] = '?';
       var fp = FN[Q.key];
-      markQuestion(ok, ok ? 'Yes: ' + fp[0] + ' over ' + fp[1] + ' is ' + Q.key + ' θ.' : LINE.both, { lit: allLit(), labels: labels });
+      markQuestion(ok, ok ? fp[0] + ' over ' + fp[1] + ' is ' + Q.key + ' θ.' : LINE.both, { lit: allLit(), labels: labels });
     }
+  }
+  function head(ok) {
+    return '<div class="fb-head" data-mark="' + (ok ? 'right' : 'wrong') + '"><span class="mark" aria-hidden="true">' + (ok ? '✓' : '✗') + '</span>' + (ok ? 'Right' : 'Not quite') + '</div>';
   }
   function markQuestion(ok, line, draw) {
     var seconds = (now() - askedAt) / 1000;
@@ -629,19 +631,19 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (ok) { rightCount++; streak++; if (streak > bestStreak) bestStreak = streak; score += scoreFor(seconds); } else streak = 0;
     $('hudStreak').textContent = streak;
     $('hudScore').textContent = score;
-    ev('question_answered', { game_slug: SLUG, level: level, mode: 'stage-' + stage, question_index: qi, correct: ok });
+    ev('question_answered', { game_slug: SLUG, level: level, mode: 'stage-' + stage, question_index: qi, question_id: Q.id, correct: ok });
     var fb = $('feedback');
     draw.reserve = ok ? RESERVE[stage] : reserveFeedback();
     if (ok) {
       state = 'right';
       drawFigure(Q, draw);
-      fb.innerHTML = '<div class="fb done"><div class="fb-line" data-plain="' + esc(line) + '">' + rich(line) + '</div></div>';
+      fb.innerHTML = '<div class="fb done">' + head(true) + (line ? '<div class="fb-line" data-plain="' + esc(line) + '">' + rich(line) + '</div>' : '') + '</div>';
       MaffsLock.timer(advance, 800);
     } else {
       state = 'wrong';
       $('qcard').classList.add('fb-open');
       drawFigure(Q, draw);
-      fb.innerHTML = '<div class="fb wrong"><div class="fb-line" data-help="reason" data-plain="' + esc(line) + '">' + rich(line) + '</div><div class="fb-next"></div></div>';
+      fb.innerHTML = '<div class="fb wrong">' + head(false) + '<div class="fb-line" data-help="reason" data-plain="' + esc(line) + '">' + rich(line) + '</div><div class="fb-next"></div></div>';
       MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance });
     }
   }
