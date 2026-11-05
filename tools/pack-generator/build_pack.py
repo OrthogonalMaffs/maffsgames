@@ -54,6 +54,7 @@ sys.path.insert(0, str(HERE))
 import lockcheck                # noqa: E402  the independent recomputation, keyed by lock id
 import final as finalpad        # noqa: E402  the final padlock's targets (Amendment 5)
 import plant_common as pc       # noqa: E402
+from escape_set_checks import format_token   # noqa: E402  tokens as students read them (TRUE-MINUS)
 
 MIN_PT = 11                     # no printed label smaller than this (contract STOP IF)
 MAX_PT = 20                     # a label is fitted downward from here
@@ -360,15 +361,8 @@ def verify_sets(locks, sets):
 
 # ---- filling -------------------------------------------------------------------------------------------------------
 
-def js_string(v):
-    """A token's value as engine.js writes it (String(v)): a whole float without its .0."""
-    if isinstance(v, float) and v.is_integer():
-        return str(int(v))
-    return str(v)
-
-
 def filler(locks, s):
-    t = {"%s.%s" % (l["key"], k): js_string(val) for l, v in zip(locks, s["vars"]) for k, val in v.items()}
+    t = {"%s.%s" % (l["key"], k): format_token(val) for l, v in zip(locks, s["vars"]) for k, val in v.items()}
 
     def fill(text):
         if text is None:
@@ -887,7 +881,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
                    for l, m in zip(locks, meta)) + "<th>Final padlock<br><span class='wrong'>target: its one expression</span></th>"
     rows = "".join("<tr><th style='white-space:nowrap'>Set %s</th>%s<td class='n'>%s <span class='wrong'>= %s</span></td></tr>" % (s["letter"], "".join(
         "<td class='n'>%s <span class='wrong'>(common wrong answer %s)</span></td>"
-        % (js_string(v["answer"]), js_string(v["miss"]) if v.get("miss") is not None else "none")
+        % (format_token(v["answer"]), format_token(v["miss"]) if v.get("miss") is not None else "none")
         for v in s["vars"]), s["final"]["target"], s["final"]["expr"]) for s in sets)
     legend = "".join("<li><b>%s:</b> %s %s</li>" % (l["name"], l.get("missTitle", ""), l.get("missSays", ""))
                      for l in locks)
@@ -1033,7 +1027,7 @@ def build(slug, n, seed, target=None):
             print("%s: %d of %d joint draws VALID; %d sets chosen (seed %s):" % (slug, len(valid), total, n, seed))
             for s in sets:
                 print("  Set %s  variants %s  answers %s" % (s["letter"], list(s["pick"]),
-                                                          [js_string(v["answer"]) for v in s["vars"]]))
+                                                          [format_token(v["answer"]) for v in s["vars"]]))
             problems = check_sets(checker, room_js, locks, sets)
             vp, checked, answers = verify_sets(locks, sets)
             if problems or vp:

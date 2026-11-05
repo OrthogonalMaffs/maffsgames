@@ -58,11 +58,12 @@
     });
     return t;
   }
+  // Tokens print through the shared rule in rating.js (TRUE-MINUS): a negative value shows U+2212. Display only.
   function fill(s) {
     if (s === null || s === undefined) return s;
     var t = tokens();
     return String(s).replace(/\{\{([\w.-]+)\}\}/g, function (m, key) {
-      return t[key] !== undefined ? t[key] : m;
+      return t[key] !== undefined ? window.MaffsEscapeRating.formatToken(t[key]) : m;
     });
   }
 

@@ -118,7 +118,7 @@
           var out = [];
           clues.forEach(function (c) {
             var seen = c.replace(/\{\{([\w-]+)\.([\w-]+)\}\}/g, function (m, k, t) {
-                         return k === key && v[t] !== undefined ? String(v[t]) : m;
+                         return k === key && v[t] !== undefined ? String(formatToken(v[t])) : m;
                        })
                         .replace(/<[^>]*>|&[#\w]+;/g, ' ');
             numbersIn(seen).forEach(function (f) { if (f > CLUE_EXEMPT) out.push(f); });
@@ -186,11 +186,13 @@
     });
     return t;
   }
+  // Tokens print through the shared rule in rating.js (TRUE-MINUS): a negative value shows U+2212. Display only.
+  function formatToken(v) { return window.MaffsEscapeRating.formatToken(v); }
   function fill(s) {
     if (s === null || s === undefined) return s;
     var t = tokens();
     return String(s).replace(/\{\{([\w.-]+)\}\}/g, function (m, key) {
-      return t[key] !== undefined ? t[key] : m;
+      return t[key] !== undefined ? formatToken(t[key]) : m;
     });
   }
   function publishVars() {

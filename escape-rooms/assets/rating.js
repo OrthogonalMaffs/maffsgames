@@ -79,6 +79,18 @@
     return typeof i === 'number' && i >= 0 && i < SET_CODES.length && i === Math.floor(i) ? SET_CODES.charAt(i) : '';
   }
 
+  // A variant token as text (contract TRUE-MINUS, 5 Nov 2026): a negative number prints with a true minus sign,
+  // U+2212, never the ASCII hyphen-minus String(-4) gives, which reads as a dash. A number below zero, or a string
+  // starting "-" then a digit, becomes U+2212 + the rest; every other value is unchanged. Display only: answer
+  // checking reads the raw variant values. This is the one copy in the browser (this file is loaded by every
+  // room's index.html and teacher.html): engine.js and teacher.js both call it. Its Python twin is
+  // format_token() in scripts/escape_set_checks.py; scripts/test-escape-format.py keeps the two in step.
+  function formatToken(v) {
+    if (typeof v === 'number') return v < 0 ? '\u2212' + String(v).slice(1) : String(v);
+    if (typeof v === 'string' && /^-\d/.test(v)) return '\u2212' + v.slice(1);
+    return v;
+  }
+
   window.MaffsEscapeRating = { rating: rating, html: html, credit: credit, INVITE: INVITE, BANDS: BANDS,
-                               SET_CODES: SET_CODES, setCode: setCode };
+                               SET_CODES: SET_CODES, setCode: setCode, formatToken: formatToken };
 })();

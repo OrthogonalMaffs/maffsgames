@@ -27,13 +27,37 @@ has one. A new lock adds its entry here, and the generator then uses it.
 
 Pure functions, no file I/O.
 """
-import itertools, math
+import itertools, math, re
 from collections import namedtuple
 from fractions import Fraction
 from math import gcd, factorial
 
 
 # ---------------------------------------------------------------- instruments
+MINUS = "\u2212"
+
+
+def format_token(v):
+    """A variant token as the student reads it (contract TRUE-MINUS, 5 Nov 2026): the text engine.js prints, with a
+    negative number's ASCII hyphen-minus replaced by a true minus sign, U+2212.
+
+    The Python twin of formatToken() in escape-rooms/assets/rating.js; scripts/test-escape-format.py holds the two to
+    the same table. A number below zero, or a string starting "-" then a digit, becomes MINUS + the rest; every other
+    value prints as JavaScript's String() prints it (a whole float without its ".0", null, true). Display only: answer
+    checking reads the raw values. build_pack.py and check-escape-rooms.py both print tokens through this.
+    """
+    if v is None:
+        return "null"
+    if isinstance(v, bool):
+        return "true" if v else "false"
+    if isinstance(v, (int, float)):
+        s = str(int(v)) if isinstance(v, float) and v.is_integer() else str(v)
+        return MINUS + s[1:] if v < 0 else s
+    if isinstance(v, str):
+        return MINUS + v[1:] if re.match(r"-\d", v) else v
+    return str(v)
+
+
 def grid(lo, hi, step):
     """Every value the instrument can actually be set to."""
     n = int(round((hi - lo) / step))
