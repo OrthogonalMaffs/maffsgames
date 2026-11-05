@@ -2,7 +2,9 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- CHRISTMAS-ROOM: home/Claude Code (took over from Codex, Jon, 4 Nov), codex/christmas-room, Windows worktree E:/jon/mg-christmas-room; implementation 563b14a9. Contract + Amendments 1–4: docs/handover/contracts/2026-11-04-christmas-room.md. PR #667. Next: Gate; Shared review and Jon's play-test/merge hold.
+- CHRISTMAS-ROOM: DONE. #667 merged as 9cbedee; close-out #668 merged as e32608f. Contract: docs/history/contracts/2026-11-04-christmas-room.md.
+
+- Cloud lane: one session at a time from 6 Nov (Jon, 5 Nov). #669 and #671 are merged; no overlapping cloud sessions remain authorised.
 
 - DONE queue: docs/history/handover-home-archive.md
 
@@ -12,7 +14,15 @@
 
 - FRACTION-WHOLE: merged #662, b38ce399; Shared review passed and Jon authorised merge, 4 Nov. Contract: docs/history/contracts/2026-11-04-fraction-whole.md. Main run and cleanup recorded below.
 
+## 2026-11-05 (home): MERGE-669-671
+
+DONE: #669 EQUATLE-320 merged by merge-pr.py as d6e1ec5; main run 42082117555 GREEN. #671 TRUE-MINUS merged next by merge-pr.py as 3604b7f; main run 42087251109 GREEN. Each PR was rebased after a cloud.md conflict; main's CHRISTMAS-ROOM completion and every main entry were kept, and each PR's new entry was added. CLAUDE.md matched main. No exception to the merge guard was used. Cloud lane returns to one session at a time from 6 Nov.
+
+Record: agent Codex; wall n/a; review cycles 0; amendments 1 (Jon's 5 Nov handover ruling); usage n/a.
+
 ## 2026-11-04 (home): CHRISTMAS-ROOM
+
+Final state: DONE. #667 merged as 9cbedee; close-out #668 merged as e32608f. The contract is in docs/history/contracts/2026-11-04-christmas-room.md. Earlier notes below record the implementation and review handoffs.
 
 AMENDMENTS 3 and 4 (Jon, 5 Nov), saved verbatim. The 4 Nov Gate stop (run 41922457161, teacher page's table.tt overflow, todo §1.37) is resolved by Amendment 3's tier1_phone_overflow entry, width 541 as issued; it measures 535 locally since the regeneration. Amendment 4: cr's given ratios in simplest form, in the generator and escape_set_checks; only cr's library changed (47 locks compared). VALID now 103 of 1000, was 32; floor 20. Reachable sets ct 8, sc 10, cr 8 of 10. Check-escape-rooms, the four test-escape scripts, the play-through (159 checks) and the independent recompute (30 sets; 232 of 232 corrupted sets rejected) rerun clean. Jon's rulings: Set A stays (warning only); minus signs, canon room count and the unreachable sets are follow-ups, not this PR. Not changed: docs/lock-bank-batch13.txt's cr NOTE does not state the new rule (flagged in the PR). No merge authority.
 
