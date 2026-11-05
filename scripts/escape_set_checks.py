@@ -409,6 +409,8 @@ def check_christmas(lock, v):
                 and 20 <= s <= 40 and s % 5 == 0 and 5 <= c <= 9
                 and c * 2 == int(c * 2) and 50 <= v["answer"] <= 400):
             return "scale parameters outside the draft"
+        if not 300 <= d * k <= 600:
+            return "the tree is not 3 m to 6 m tall"
         if v["miss"] != 100 * c - d * k:
             return "scale misconception does not omit the stand"
         expected = {"tree": d * k, "total": d * k + s, "ccm": 100 * c}

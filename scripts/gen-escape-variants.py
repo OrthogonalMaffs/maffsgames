@@ -956,6 +956,9 @@ cands = shuffled([(50, 9, 30, 14)] + [(k, d, s, twice_c)
     for s in range(20, 41, 5) for twice_c in range(10, 19)])
 for k, d, s, twice_c in cands:
     tree, ccm = k * d, 50 * twice_c
+    # Amendment 7: "a huge tree", 3 m to 6 m tall before its stand.
+    if not (300 <= tree <= 600):
+        continue
     total = tree + s
     ans, miss = ccm - total, ccm - tree
     if not (50 <= ans <= 400) or 18 in (ans, miss):

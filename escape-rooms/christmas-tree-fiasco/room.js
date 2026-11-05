@@ -244,28 +244,6 @@ window.ROOM = {
           "ccm": 800
         },
         {
-          "k": 20,
-          "d": 12,
-          "s": 20,
-          "c": 6,
-          "answer": 340,
-          "miss": 360,
-          "tree": 240,
-          "total": 260,
-          "ccm": 600
-        },
-        {
-          "k": 25,
-          "d": 7,
-          "s": 30,
-          "c": 5,
-          "answer": 295,
-          "miss": 325,
-          "tree": 175,
-          "total": 205,
-          "ccm": 500
-        },
-        {
           "k": 50,
           "d": 8,
           "s": 25,
@@ -275,17 +253,6 @@ window.ROOM = {
           "tree": 400,
           "total": 425,
           "ccm": 500
-        },
-        {
-          "k": 20,
-          "d": 10,
-          "s": 30,
-          "c": 5.5,
-          "answer": 320,
-          "miss": 350,
-          "tree": 200,
-          "total": 230,
-          "ccm": 550
         },
         {
           "k": 50,
@@ -310,15 +277,37 @@ window.ROOM = {
           "ccm": 700
         },
         {
-          "k": 20,
-          "d": 8,
+          "k": 50,
+          "d": 9,
           "s": 40,
-          "c": 6,
-          "answer": 400,
-          "miss": 440,
-          "tree": 160,
-          "total": 200,
-          "ccm": 600
+          "c": 8,
+          "answer": 310,
+          "miss": 350,
+          "tree": 450,
+          "total": 490,
+          "ccm": 800
+        },
+        {
+          "k": 50,
+          "d": 10,
+          "s": 20,
+          "c": 8.5,
+          "answer": 330,
+          "miss": 350,
+          "tree": 500,
+          "total": 520,
+          "ccm": 850
+        },
+        {
+          "k": 50,
+          "d": 10,
+          "s": 20,
+          "c": 6.5,
+          "answer": 130,
+          "miss": 150,
+          "tree": 500,
+          "total": 520,
+          "ccm": 650
         }
       ],
       missTitle: 'That&apos;s the tree without its stand.',

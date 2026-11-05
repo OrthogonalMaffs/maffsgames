@@ -204,3 +204,9 @@ AMENDMENT 6 to CHRISTMAS-ROOM (Jon, 5 Nov, from play-test): the truck-display cl
 the tree. Change object truck-display's clue to: "Two readouts. CHILLER ZONE (TREE): {{ct.start}} °C · FREEZER ZONE
 (MINCE PIES): −18 °C". No other change; the −18 decoy and every rule stay. Re-run check-escape-rooms.py and the
 play-through. Record verbatim in the saved contract and the PR body, push, and stop at a green Gate. Thank you.
+
+AMENDMENT 7 to CHRISTMAS-ROOM (Jon, 5 Nov, from play-test): the prize is "a huge tree". In lock sc, the tree's real
+height (drawing height x scale) must be between 3 m and 6 m (300-600 cm); drop any set outside it. Keep every other
+rule: the stand, the ceiling 5-9 m, the answer (gap) 50-400 cm. Regenerate sc's library and re-run
+check-escape-rooms.py, the play-through and an independent recomputation of every set. STOP IF VALID falls below 20
+(report the count). Record verbatim in the saved contract and the PR body, push, and stop at a green Gate. Thank you.
