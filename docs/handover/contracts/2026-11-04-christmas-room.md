@@ -199,3 +199,8 @@ AMENDMENT 5 to CHRISTMAS-ROOM (Jon, 5 Nov):
    change (it was 541; about 535 last measured).
 Record Amendment 5 verbatim in the saved contract and the PR body, push to the same branch, and stop at a green Gate
 for Project Claude's review and Jon's play-test and "merge". Do not merge. Thank you.
+
+AMENDMENT 6 to CHRISTMAS-ROOM (Jon, 5 Nov, from play-test): the truck-display clue must say which compartment holds
+the tree. Change object truck-display's clue to: "Two readouts. CHILLER ZONE (TREE): {{ct.start}} °C · FREEZER ZONE
+(MINCE PIES): −18 °C". No other change; the −18 decoy and every rule stay. Re-run check-escape-rooms.py and the
+play-through. Record verbatim in the saved contract and the PR body, push, and stop at a green Gate. Thank you.

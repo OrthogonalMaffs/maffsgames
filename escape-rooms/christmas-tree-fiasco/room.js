@@ -41,7 +41,7 @@ window.ROOM = {
 
   objects: [
     { id: 'truck-display', name: 'Truck display', where: 'On the back of the Christmaffs truck',
-      clue: 'Two readouts. CHILLER ZONE {{ct.start}} °C · FREEZER ZONE −18 °C' },
+      clue: 'Two readouts. CHILLER ZONE (TREE): {{ct.start}} °C · FREEZER ZONE (MINCE PIES): −18 °C' },
     { id: 'eric-clipboard', name: 'Eric\'s clipboard', where: 'On the trolley by the door',
       clue: 'Eric&apos;s handwriting. TREE COMES INSIDE AT {{ct.min}} °C OR WARMER. WARMS {{ct.g}} °C EVERY {{ct.h}} HOURS ONCE UNLOADED' },
     { id: 'prize-leaflet', name: 'Prize leaflet', where: 'Pinned to the noticeboard',
