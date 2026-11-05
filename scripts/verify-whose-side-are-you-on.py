@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Whose Side Are You On? (every item of the four stages recomputed from the triangle's own geometry, never the game's labels: which side is HYP, OPP and ADJ, every fraction, every function against real trig; the feedback table and its wording; 50 or more distinct items a stage; seeded rounds: HYP first, every quadrant; every stage played with real taps at 320, 390 and 1280 px: tap bands 44 px deep, each side clicked along its length and in the gaps of its dashes or dots, Stage 2's slots filled, cleared and refilled before Check, one answer a question, a slow right answer still right, no sideways scroll, Aa mode included, Next above the fold; fault-injection self-test: a wrong label, a wrong function and more, each caught) |
+# ci-line: Whose Side Are You On? (every item of the four stages recomputed from the triangle's own geometry, never the game's labels: which side is HYP, OPP and ADJ, every fraction, every function against real trig; the feedback table and its wording; 50 or more distinct items a stage; seeded rounds: HYP first, every quadrant; every stage played with real taps at 320, 390 and 1280 px: tap bands 44 px deep, each side clicked along its length and in the gaps of its dashes or dots, double clicks answering once and filling one slot, Stage 2's slots filled, cleared and refilled before Check, one answer a question, a slow right answer still right, no sideways scroll, Aa mode included, Next above the fold; fault-injection self-test: a wrong label, a wrong function and more, each caught) |
 """Independent verification for Whose Side Are You On? (games/whose-side-are-you-on/), contract WHOSE-SIDE, 5 Nov 2026.
 SR-30: checked from its first PR.
 
@@ -344,6 +344,25 @@ def check_stage2_clicks(page, it, geo, label, fails):
                 return
 
 
+def double_click_slots(page, box, role_by_id, label, fails):
+    """A double click on one side fills one slot only, and a further tap on it does nothing."""
+    for side, b in box.items():
+        pts = on_side_points(b['x1'], b['y1'], b['x2'], b['y2'], role_by_id[side], 5)
+        x, y = pts[len(pts) // 2]
+        page.mouse.dblclick(x, y)
+        if slot_vals(page) != [side, None, True]:
+            fails.append('%s: a double click on %s gave slots %s' % (label, role_by_id[side], slot_vals(page)))
+            return
+        page.mouse.click(x, y)
+        if slot_vals(page) != [side, None, True]:
+            fails.append('%s: a further tap moved %s: %s' % (label, role_by_id[side], slot_vals(page)))
+            return
+        page.click('#slotTop')
+        if slot_vals(page)[0] is not None:
+            fails.append('%s: the slot did not empty after a double click' % label)
+            return
+
+
 def rgb(hexa):
     return 'rgb(%d, %d, %d)' % tuple(int(hexa[i:i + 2], 16) for i in (1, 3, 5))
 
@@ -354,7 +373,10 @@ def wait_asking(page):
 
 def play_round(page, stage, wrong_at, label, fails):
     """One whole round with real mouse taps, wrong at the question indices in wrong_at."""
-    page.evaluate('(n) => { document.querySelector("#stageList [data-stage=\\"" + n + "\\"]").click(); }', stage)
+    page.evaluate("""(n) => { window.__answers = 0;
+      if (!window.__mfgWrapped) { const real = window.mfg; window.__mfgWrapped = true;
+        window.mfg = function (name, params) { if (name === 'question_answered') window.__answers++; if (real) return real.apply(this, arguments); }; }
+      document.querySelector('#stageList [data-stage="' + n + '"]').click(); }""", stage)
     w, h = page.viewport_size['width'], page.viewport_size['height']
     streak, score = 0, 0
     for n in range(10):
@@ -394,7 +416,13 @@ def play_round(page, stage, wrong_at, label, fails):
                 page.mouse.click(*pts[len(pts) // 2])
             if stage == 1:
                 other = [s['id'] for s in it['sides'] if s['id'] != it['key']][0]
-                tap(other if wrong else ids[it['ask']])
+                pick = other if wrong else ids[it['ask']]
+                if n in (0, 2):                     # a double click, right (question 1) and wrong (question 3): one answer each
+                    b = box[pick]
+                    pts = on_side_points(b['x1'], b['y1'], b['x2'], b['y2'], role_by_id[pick], 5)
+                    page.mouse.dblclick(*pts[len(pts) // 2])
+                else:
+                    tap(pick)
             else:
                 top, bottom = ids[it['top']], ids[it['bottom']]
                 third = ids[({'HYP', 'OPP', 'ADJ'} - {it['top'], it['bottom']}).pop()]
@@ -407,6 +435,8 @@ def play_round(page, stage, wrong_at, label, fails):
                 if slot_vals(page) != [None, None, True]:
                     fails.append('%s: Stage 2 does not start with two empty slots and Check off' % label)
                 check_stage2_clicks(page, it, geo, '%s q%d' % (label, n + 1), fails)
+                if n < 2:
+                    double_click_slots(page, check_hit_lines(page, label, fails), role_by_id, '%s q%d' % (label, n + 1), fails)
                 if n % 2 == 0 and not wrong:
                     # fills a slot wrongly, clears it, refills it correctly: marked right, and nothing is marked before Check
                     tap(third)
@@ -424,13 +454,16 @@ def play_round(page, stage, wrong_at, label, fails):
                     tap(top)
                 else:
                     tap(top)
-                    tap(top if wrong else bottom)
-                if slot_vals(page) != [top, top if wrong else bottom, False]:
+                    tap(third if wrong else bottom)
+                if slot_vals(page) != [top, third if wrong else bottom, False]:
                     fails.append('%s: slots %s before Check' % (label, slot_vals(page)))
                 r = page.query_selector('#checkBtn').bounding_box()
                 if r['y'] + r['height'] > h - 40 or r['height'] < 44:
                     fails.append('%s: Check is below the fold or small: %s' % (label, r))
-                page.click('#checkBtn')
+                if n == 1:                          # a double click on Check marks once
+                    page.mouse.dblclick(r['x'] + r['width'] / 2, r['y'] + r['height'] / 2)
+                else:
+                    page.click('#checkBtn')
         else:
             want = it['key']
             opts = page.query_selector_all('#opts .opt')
@@ -444,13 +477,21 @@ def play_round(page, stage, wrong_at, label, fails):
                 if r['y'] + r['height'] > h - 40:
                     fails.append('%s stage %d: last option below the fold, %.0f in %d' % (label, stage, r['y'] + r['height'], h))
             target = [o for o in opts if (o.get_attribute('data-val') == want) != wrong][0]
-            target.click()
+            if n in (0, 2):                         # a double click on an option answers once
+                r = target.bounding_box()
+                page.mouse.dblclick(r['x'] + r['width'] / 2, r['y'] + r['height'] / 2)
+            else:
+                target.click()
         try:
             page.wait_for_function("() => WS.ui.state() === 'right' || WS.ui.state() === 'wrong'", timeout=4000)
         except Exception:
             fails.append('%s stage %d q%d: the tap marked nothing' % (label, stage, n + 1))
             return
         got = page.evaluate('() => WS.ui.state()')
+        page.wait_for_timeout(60)                   # room for a second click's effect to land, if it is going to
+        answers = page.evaluate('() => window.__answers')
+        if answers != n + 1:
+            fails.append('%s stage %d q%d: %d answers logged so far, should be %d' % (label, stage, n + 1, answers, n + 1))
         if got != ('wrong' if wrong else 'right'):
             fails.append('%s stage %d q%d: state %s, expected %s' % (label, stage, n + 1, got, 'wrong' if wrong else 'right'))
         streak = 0 if wrong else streak + 1
@@ -605,6 +646,9 @@ PLANTS = [
     ('a full slot that will not empty', "    delete slot.dataset.val;\n", "", 'stage 2'),
     ('Check on with one slot empty', "$('checkBtn').disabled = !(top.dataset.val && bottom.dataset.val);", "$('checkBtn').disabled = !(top.dataset.val || bottom.dataset.val);", 'stage 2'),
     ('the old Stage 2 prompt', " Tap a box to empty it, then press Check.", "", 'stage 2'),
+    ('the old behaviour: one side in both slots', " || top.dataset.val === val || bottom.dataset.val === val) return;", ") return;", 'stage 2'),
+    ('the old behaviour: a second tap answers again', [("    if (state !== 'asking') return;\n    if (stage === 1) {\n      if (!MaffsLock.lock($('qarea'))) return;\n", "    if (stage === 1) {\n"),
+                                                     ("draw.reserve = ok ? RESERVE[stage] : reserveFeedback();", "draw.tap = true; draw.reserve = ok ? RESERVE[stage] : reserveFeedback();")], None),
     ('a changed colour', "--opp:#0072B2", "--opp:#0072C2"),
     ('a small coloured word', ".w{font-weight:700;font-size:19px;", ".w{font-weight:700;font-size:15px;"),
 ]
@@ -615,7 +659,12 @@ def self_test(browser, base, src):
     for plant in PLANTS:
         name, old, new = plant[:3]
         try:
-            planted = pc.apply_plant(src, old, new, name=name)
+            if isinstance(old, list):               # a plant of several edits
+                planted = src
+                for o, n in old:
+                    planted = pc.apply_plant(planted, o, n, name=name)
+            else:
+                planted = pc.apply_plant(src, old, new, name=name)
         except pc.StalePlant as e:
             print('  %s' % e)
             problems += 1

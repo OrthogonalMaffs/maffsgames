@@ -598,7 +598,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   }
   function fillSlot(val) {
     var top = $('slotTop'), bottom = $('slotBottom'), slot = !top.dataset.val ? top : !bottom.dataset.val ? bottom : null;
-    if (!slot) return;
+    // A side already in a slot stays there, so a double click fills one slot; emptying is by tapping the slot.
+    if (!slot || top.dataset.val === val || bottom.dataset.val === val) return;
     slot.dataset.val = val;
     showSlot(slot); refreshSlots();
   }
