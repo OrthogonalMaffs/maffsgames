@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- UNLISTED (contract WHOSE-SIDE, 5 Nov 2026): live at its URL for Jon to use and play; noindex and off the portal, the sitemap and the leaderboard hub until he lists it. -->
+<meta name="robots" content="noindex">
+<meta name="description" content="Label the hypotenuse, opposite and adjacent from the marked angle, then link them to sin, cos and tan. For GCSE. Free, no sign-up.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/whose-side-are-you-on/">
+<meta property="og:title" content="SOHCAHTOA Side Labelling Game – GCSE Maths | MaffsGames">
+<meta property="og:description" content="Label the hypotenuse, opposite and adjacent from the marked angle, then link them to sin, cos and tan. For GCSE. Free, no sign-up.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/whose-side-are-you-on/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>SOHCAHTOA Side Labelling Game – GCSE Maths | MaffsGames</title>
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/answer-count.js" defer></script>
+<script src="/schools/assets/fold.js" defer></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<style>
+/* Theme: schools/assets/theme.css (canon §7.5), light row: the lowest tier served is GCSE. This game's own tokens: a violet accent,
+   clear of the three side colours, and those colours, which never change (the spec's Okabe-Ito set). */
+:root{--accent:#4b3f9e;--accent-dim:#ebe9f7;--on-accent:#ffffff;--hyp:#D55E00;--opp:#0072B2;--adj:#009E73;--plain:#6b7688}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:560px;width:100%;padding:1rem}
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.4rem 0}
+.header h1{font-size:1.9rem;font-weight:700;color:var(--accent);line-height:1.15}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem 0 .5rem}
+@media (max-width:420px){.header h1{font-size:1.5rem}}
+.screen{display:none}.screen.active{display:block}
+[hidden]{display:none!important}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.9rem auto}
+.menu-info{color:var(--text);font-size:.95rem;line-height:1.6}
+.menu-info p+p{margin-top:.6rem}
+.btn{min-height:44px;padding:.6rem 1.2rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--accent-dim)}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.res-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
+
+/* The three sides: colour, line style and letter together, so colour is never the only cue. As text the colours need bold at 19 px or more (3:1, Amendment 1). */
+.w{font-weight:700;font-size:19px;white-space:nowrap}
+.w.HYP{color:var(--hyp)}.w.OPP{color:var(--opp)}.w.ADJ{color:var(--adj)}
+.key{display:grid;grid-template-columns:auto auto 1fr;align-items:center;gap:.25rem .6rem;margin:.6rem 0}
+.key svg{display:block}
+.key line{stroke-width:5}
+.key b{font-family:var(--font-num)}
+line.HYP{stroke:var(--hyp)}line.OPP{stroke:var(--opp);stroke-dasharray:11 7}line.ADJ{stroke:var(--adj);stroke-dasharray:1 8;stroke-linecap:round}
+
+.mode-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:.9rem 0 .3rem}
+.stages{display:flex;flex-direction:column;gap:.5rem}
+.stage-btn{display:flex;align-items:center;gap:.7rem;width:100%;text-align:left;min-height:56px;padding:.45rem .8rem;border-radius:12px;border:1px solid var(--border);background:var(--surface-alt);color:var(--text);cursor:pointer;font:inherit}
+.stage-btn:hover{border-color:var(--accent)}
+.stage-btn .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:700}
+.stage-btn .t{font-weight:700;font-size:.95rem;line-height:1.2}
+.stage-btn .d{display:block;font-weight:400;font-size:.8rem;color:var(--muted);line-height:1.3}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.25rem .7rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.4rem;gap:.3rem}
+.hud-item{text-align:center;min-width:38px}
+.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.hud-val{font-family:var(--font-num);font-size:.92rem;font-weight:700}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.6rem;display:flex;flex-direction:column;gap:.4rem}
+.ask{font-size:1.05rem;line-height:1.35;text-align:center;font-weight:600;min-height:1.4em}
+.ask .katex{font-size:1.1em}
+.fracline{text-align:center;font-size:1.25rem;min-height:3.2rem;display:flex;align-items:center;justify-content:center;gap:.6rem}
+
+.figure{position:relative;margin:0 auto;touch-action:manipulation}
+.figure svg{display:block}
+.figure .side{stroke:var(--plain);stroke-width:4;stroke-linecap:round}
+.figure .side.lit{stroke-width:6}
+.figure .side.lit.HYP{stroke:var(--hyp)}
+.figure .side.lit.OPP{stroke:var(--opp);stroke-dasharray:12 8}
+.figure .side.lit.ADJ{stroke:var(--adj);stroke-dasharray:1 10;stroke-linecap:round}
+.figure .side.sel{stroke:var(--text);stroke-width:6}
+.figure .hit{stroke:transparent;stroke-linecap:butt;pointer-events:stroke;cursor:pointer;outline:none}
+.figure .hit:focus-visible{stroke:var(--accent-dim)}
+.figure .square{fill:none;stroke:var(--text);stroke-width:1.8}
+.figure .arc{fill:none;stroke:var(--text);stroke-width:1.8}
+.figure text{font-family:var(--font-num);font-size:15px;font-weight:700;fill:var(--text);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.figure text.HYP,.figure text.OPP,.figure text.ADJ{font-size:19px}
+.figure text.HYP{fill:var(--hyp)}.figure text.OPP{fill:var(--opp)}.figure text.ADJ{fill:var(--adj)}
+.figure .theta{position:absolute;transform:translate(-50%,-50%);font-size:1.05rem;pointer-events:none;line-height:1}
+
+.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem}
+.opt{min-height:48px;padding:.3rem;border-radius:10px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-size:1.05rem;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt.tall{min-height:72px}
+
+.fb{border-radius:12px;padding:.55rem .7rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.45rem}
+/* Right and wrong are a symbol and a word in the text colour, never green or red, which could be read as ADJ or HYP (Amendment 2). */
+.fb-head{font-weight:700;font-size:1.05rem;color:var(--text)}
+.fb-head .mark{font-family:var(--font-num);margin-right:.35rem}
+.fb-line{font-size:.95rem;line-height:1.4;color:var(--text)}
+.fb-next{display:flex;justify-content:center}
+.feedback:empty{display:none}
+.results{text-align:center;padding:1rem 0}
+.results h2{font-size:1.35rem;margin-bottom:.3rem}
+.final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.4rem 0 .1rem}
+.stats{color:var(--muted);line-height:1.9;font-size:.95rem;margin-bottom:.8rem}
+.stats b{color:var(--text)}
+
+/* Phone rule (canon §7.6.1): once a question is marked wrong, the controls that cannot be used go and the feedback takes their place. */
+.qcard.fb-open .opts,.qcard.fb-open .ask{display:none}
+@media (max-width:420px){
+  .container{padding:.5rem}
+  .qcard{padding:.45rem}
+  .fracline{min-height:2.8rem;font-size:1.1rem}
+}
+@media (max-height:620px){.hud-label{display:none}.fb-line{font-size:.9rem}.ask{font-size:.98rem}}
+body.accessible{letter-spacing:.12em;word-spacing:.16em}
+body.accessible .hud-label,body.accessible .hud-val{letter-spacing:0}
+body.accessible .hud{flex-wrap:wrap;justify-content:center}
+body.accessible p,body.accessible .fb-line{line-height:2;max-width:65ch}
+body.accessible .katex{letter-spacing:normal;word-spacing:normal}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/stage-exit.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'answer' with i = 0 gives the right answer, i >= 1 a wrong one (named, then Next).
+{
+  "start": "WS.ui.start(3)",
+  "ready": "!!window.WS && WS.ui.state() === 'asking'",
+  "answer": [
+    "WS.ui.answer(i === 0);"
+  ]
+}
+-->
+<script src="../../schools/assets/scroll.js"></script>
+<link rel="stylesheet" href="../../schools/assets/stage-exit.css">
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Whose Side Are You On?</h1><div class="sub">Label the sides of a right-angled triangle from the marked angle, then link them to sin, cos and tan.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="panel menu-info">
+      <p>Every side gets its name from the marked angle. Each side keeps its colour, its line and its letter all the way through.</p>
+      <div class="key" role="list">
+        <svg width="56" height="10" aria-hidden="true"><line class="HYP" x1="2" y1="5" x2="54" y2="5"/></svg><b>H</b><span role="listitem"><span class="w HYP">HYP</span> is the longest, across from the right angle.</span>
+        <svg width="56" height="10" aria-hidden="true"><line class="OPP" x1="2" y1="5" x2="54" y2="5"/></svg><b>O</b><span role="listitem"><span class="w OPP">OPP</span> is across from the marked angle.</span>
+        <svg width="56" height="10" aria-hidden="true"><line class="ADJ" x1="2" y1="5" x2="54" y2="5"/></svg><b>A</b><span role="listitem"><span class="w ADJ">ADJ</span> touches the marked angle and is not the longest.</span>
+      </div>
+      <p>Ten quick questions a stage. No lives: a faster right answer scores more, a slow one is still right.</p>
+      <div class="mode-h">Stages</div>
+      <div class="stages" id="stageList"></div>
+    </div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+    <div class="maffs-start-note" data-maffs-start-note></div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/10</div></div>
+      <div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="hudStreak">0</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="hudTime">0:00</div></div>
+    </div>
+    <div class="qcard" id="qcard">
+      <div id="qarea">
+        <div class="ask" id="ask" aria-live="polite"></div>
+        <div class="fracline" id="fracline" hidden></div>
+        <div class="figure" id="figure"></div>
+        <div class="opts" id="opts" role="group" aria-label="Your answer" hidden></div>
+      </div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resTitle">Stage done</h2>
+      <div class="final-score" id="resScore">0</div>
+      <div class="stats" id="resStats"></div>
+      <div class="res-btns">
+        <button class="btn solid" id="nextStageBtn" type="button">Next stage</button>
+        <button class="btn" id="againBtn" type="button">Play this stage again</button>
+        <button class="btn" id="menuBtn" type="button">All stages</button>
+      </div>
+      <p id="teacherInvite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var SLUG = 'whose-side-are-you-on', PER_ROUND = 10, LAST = 4, FOOTER_PX = 40, NS = 'http://www.w3.org/2000/svg';
+  // One level of content, GCSE; the stages are boards, not levels.
+  var level = MaffsLevel.resolve({ slug: 'whose-side-are-you-on', levels: ['gcse'], fallback: 'gcse',
+    boards: ['stage-1', 'stage-2', 'stage-3', 'stage-4'] });
+  var $ = function (id) { return document.getElementById(id); };
+  function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  /* ---------- the triangles and the items: pure data, no DOM ---------- */
+  var STAGES = {
+    1: { name: 'Tap the side', blurb: 'Find HYP, OPP or ADJ on the triangle, however it is turned.' },
+    2: { name: 'Build the fraction', blurb: 'Tap the sides into a fraction: OPP over HYP.' },
+    3: { name: 'Name it', blurb: 'Match each fraction to sin, cos or tan, then back again.' },
+    4: { name: 'Which function?', blurb: 'One side known, one side wanted: pick the function.' }
+  };
+  var TRIPLES = [[3, 4, 5], [5, 12, 13], [8, 15, 17], [7, 24, 25], [20, 21, 29], [6, 8, 10], [9, 12, 15], [10, 24, 26], [12, 16, 20], [16, 30, 34], [12, 35, 37], [15, 20, 25]];
+  var TURNS = [0, 90, 180, 270], TILTS = [0, 22, -22];
+  var FN = { sin: ['OPP', 'HYP'], cos: ['ADJ', 'HYP'], tan: ['OPP', 'ADJ'] };
+  var FNS = ['sin', 'cos', 'tan'];
+  var RATIOS = ['OPP/HYP', 'ADJ/HYP', 'OPP/ADJ'];
+  var LINE = {
+    upright: 'Opposite means across from θ, not upright. Turn the triangle in your head.',
+    longest: 'Two sides touch θ. The longest one, across from the right angle, is always HYP.',
+    square: 'Label from θ, not from the square corner.',
+    both: 'Use both: the side you know AND the side you want.'
+  };
+
+  function fnOf(top, bottom) {
+    for (var i = 0; i < FNS.length; i++) if (FN[FNS[i]][0] === top && FN[FNS[i]][1] === bottom) return FNS[i];
+    return null;
+  }
+  // Mulberry32: a seeded generator, so a verifier can replay any session.
+  function rng(seed) {
+    var s = seed >>> 0;
+    return function () {
+      s = (s + 0x6D2B79F5) >>> 0;
+      var t = Math.imul(s ^ (s >>> 15), 1 | s);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function shuffled(list, r) {
+    var a = list.slice();
+    for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(r() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; }
+    return a;
+  }
+
+  // A triangle from one orientation: the right angle at R, legs a and b, turned, tilted and perhaps reflected, then scaled so
+  // its longer bounding-box edge is 1. Screen coordinates, y down. Vertices and side ids come out shuffled by the seed, so
+  // nothing about the answer can be read from their order.
+  function triangle(o) {
+    var t = TRIPLES[o.t], a = t[0], b = t[1], ang = (TURNS[o.turn] + TILTS[o.tilt]) * Math.PI / 180;
+    var raw = [[0, 0], [a, 0], [0, b]].map(function (p) {
+      var x = o.flip ? -p[0] : p[0], y = p[1];
+      return [x * Math.cos(ang) - y * Math.sin(ang), -(x * Math.sin(ang) + y * Math.cos(ang))];
+    });
+    var xs = raw.map(function (p) { return p[0]; }), ys = raw.map(function (p) { return p[1]; });
+    var x0 = Math.min.apply(null, xs), y0 = Math.min.apply(null, ys);
+    var w = Math.max.apply(null, xs) - x0, h = Math.max.apply(null, ys) - y0, k = Math.max(w, h);
+    var v = raw.map(function (p) { return [(p[0] - x0) / k, (p[1] - y0) / k]; });
+    var thetaAtA = o.corner === 0;              // θ at the end of leg a, or the end of leg b
+    var r = rng((o.t * 7 + o.turn * 31 + o.tilt * 101 + (o.flip ? 211 : 0) + o.corner * 401) * 2654435761);
+    var ord = shuffled([0, 1, 2], r), ids = shuffled(['a', 'b', 'c'], r);
+    var verts = ord.map(function (i) { return v[i]; });
+    var at = function (orig) { return ord.indexOf(orig); };
+    var roles = {}, sides = [];
+    function side(role, p, q, len, n) { roles[role] = ids[n]; sides.push({ id: ids[n], from: at(p), to: at(q), len: len }); }
+    side('HYP', 1, 2, t[2], 0);
+    side(thetaAtA ? 'ADJ' : 'OPP', 0, 1, a, 1);
+    side(thetaAtA ? 'OPP' : 'ADJ', 0, 2, b, 2);
+    sides = shuffled(sides, r);
+    return { verts: verts, right: at(0), theta: at(thetaAtA ? 1 : 2), sides: sides, roles: roles,
+      triple: t.join('-'), orient: [o.turn, o.tilt, o.flip ? 1 : 0, o.corner].join('.') };
+  }
+  function lenOf(tri, role) {
+    var id = tri.roles[role];
+    for (var i = 0; i < tri.sides.length; i++) if (tri.sides[i].id === id) return tri.sides[i].len;
+    return null;
+  }
+  function make(stage, o, ask) {
+    var tri = triangle(o), it = tri;
+    it.stage = stage;
+    it.id = [stage, o.t, o.turn, o.tilt, o.flip ? 1 : 0, o.corner, ask].join('|');
+    if (stage === 1) { it.ask = ask; it.key = tri.roles[ask]; }
+    if (stage === 2) {
+      var p = ask.split('/');
+      it.top = p[0]; it.bottom = p[1]; it.keyTop = tri.roles[p[0]]; it.keyBottom = tri.roles[p[1]];
+      it.frac = [lenOf(tri, p[0]), lenOf(tri, p[1])];
+    }
+    if (stage === 3) {
+      var q = ask.split(':');
+      if (q[0] === 'name') {
+        var r2 = q[1].split('/');
+        it.dir = 'name'; it.top = r2[0]; it.bottom = r2[1]; it.frac = [lenOf(tri, r2[0]), lenOf(tri, r2[1])]; it.key = fnOf(r2[0], r2[1]);
+      } else {
+        it.dir = 'pick'; it.fn = q[1]; it.key = FN[q[1]].join('/');
+      }
+    }
+    if (stage === 4) {
+      var s = ask.split('>');
+      it.knownRole = s[0]; it.wantedRole = s[1]; it.known = tri.roles[s[0]]; it.wanted = tri.roles[s[1]];
+      var both = [s[0], s[1]];
+      it.key = both.indexOf('HYP') < 0 ? 'tan' : both.indexOf('OPP') >= 0 ? 'sin' : 'cos';
+    }
+    return it;
+  }
+  var ASKS = {
+    1: ['HYP', 'OPP', 'ADJ'],
+    2: RATIOS,
+    3: ['name:OPP/HYP', 'name:ADJ/HYP', 'name:OPP/ADJ', 'pick:sin', 'pick:cos', 'pick:tan'],
+    4: ['HYP>OPP', 'OPP>HYP', 'HYP>ADJ', 'ADJ>HYP', 'OPP>ADJ', 'ADJ>OPP']
+  };
+  function orientations() {
+    var out = [];
+    for (var t = 0; t < TRIPLES.length; t++) for (var u = 0; u < TURNS.length; u++) for (var l = 0; l < TILTS.length; l++)
+      for (var f = 0; f < 2; f++) for (var c = 0; c < 2; c++) out.push({ t: t, turn: u, tilt: l, flip: !!f, corner: c });
+    return out;
+  }
+  // Every item a stage can serve.
+  function bank(stage) {
+    var out = [];
+    orientations().forEach(function (o) { ASKS[stage].forEach(function (a) { out.push(make(stage, o, a)); }); });
+    return out;
+  }
+  // One round: no triangle repeated; the turns dealt evenly so every quadrant comes up; Stage 1 asks HYP first, because H anchors
+  // the other two; Stage 3 names first, then the reverse; Stage 2 and 4 asks dealt evenly.
+  function session(stage, seed, n) {
+    var r = rng(seed), os = shuffled(orientations(), r), picked = [], usedT = {}, want = 0;
+    for (var i = 0; i < os.length && picked.length < n; i++) {
+      if (os[i].turn !== want % 4 || usedT[os[i].t + (want % 12 === 0 ? 100 : 0)]) continue;
+      usedT[os[i].t + (want % 12 === 0 ? 100 : 0)] = 1; picked.push(os[i]); want++;
+    }
+    picked = shuffled(picked, r);
+    var asks = [];
+    if (stage === 1) {
+      asks = ['HYP', 'HYP', 'HYP'].concat(shuffled(['OPP', 'OPP', 'OPP', 'OPP', 'ADJ', 'ADJ', 'ADJ'], r));
+    } else if (stage === 3) {
+      asks = shuffled(ASKS[3].slice(0, 3).concat(ASKS[3][Math.floor(r() * 3)]).concat(ASKS[3][Math.floor(r() * 3)]), r)
+        .concat(shuffled(ASKS[3].slice(3).concat(ASKS[3][3 + Math.floor(r() * 3)]).concat(ASKS[3][3 + Math.floor(r() * 3)]), r));
+    } else {
+      var pool = [];
+      while (pool.length < n) pool = pool.concat(shuffled(ASKS[stage], r));
+      asks = pool.slice(0, n);
+    }
+    return picked.map(function (o, k) { return make(stage, o, asks[k]); });
+  }
+  // The side on screen nearest to vertical, if any side is within 30 degrees of it: the side a student who reads "opposite" as
+  // "upright" picks.
+  function uprightSide(it) {
+    var best = null, bestA = 31;
+    it.sides.forEach(function (s) {
+      var p = it.verts[s.from], q = it.verts[s.to];
+      var a = Math.atan2(Math.abs(q[0] - p[0]), Math.abs(q[1] - p[1])) * 180 / Math.PI;
+      if (a < bestA) { bestA = a; best = s.id; }
+    });
+    return best;
+  }
+  // The one feedback line for a wrong tap on Stage 1, a key into LINE.
+  function whyTap(it, tapped) {
+    if (it.ask === 'HYP') return 'longest';
+    if (it.ask === 'OPP') return tapped === uprightSide(it) ? 'upright' : 'square';
+    return tapped === it.roles.HYP ? 'longest' : 'square';
+  }
+  function scoreFor(seconds) { return Math.max(1, Math.round(100 / (1 + 0.15 * Math.log(1 + Math.max(0, seconds))))); }
+
+  /* ---------- rendering ---------- */
+  function tex(t) {
+    if (window.katex) {
+      try { return katex.renderToString(t, { throwOnError: false }); } catch (e) { /* fall through */ }
+    }
+    return esc(t.replace(/\\theta/g, 'θ').replace(/\\(sin|cos|tan)/g, '$1 '));
+  }
+  var THETA = function () { return tex('\\theta'); };
+  // Colours come from the page's own tokens, the one place they are written.
+  function tokenColour(role) {
+    return getComputedStyle(document.documentElement).getPropertyValue(role === 'HYP' ? '--hyp' : role === 'OPP' ? '--opp' : '--adj').trim();
+  }
+  function colourTex(role, body) { return '\\textcolor{' + tokenColour(role) + '}{' + body + '}'; }
+  function fracWords(top, bottom) {
+    return '\\dfrac{' + colourTex(top, '\\textbf{' + top + '}') + '}{' + colourTex(bottom, '\\textbf{' + bottom + '}') + '}';
+  }
+  function fracNums(top, bottom, n, d) {
+    return '\\dfrac{' + colourTex(top, '\\mathbf{' + n + '}') + '}{' + colourTex(bottom, '\\mathbf{' + d + '}') + '}';
+  }
+  // Text with θ in KaTeX and the side words in their colours. No markup in the input.
+  function rich(text) {
+    return esc(text).replace(/θ/g, THETA())
+      .replace(/\b(HYP|OPP|ADJ)\b/g, '<span class="w $1">$1</span>')
+      .replace(/\b(HYPOTENUSE|OPPOSITE|ADJACENT)\b/g, function (m) { return '<span class="w ' + m.slice(0, 3) + '">' + m + '</span>'; });
+  }
+  function el(name, attrs, text) {
+    var e = document.createElementNS(NS, name);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (text !== undefined) e.textContent = text;
+    return e;
+  }
+  function round1(v) { return Math.round(v * 10) / 10; }
+  // The figure's size in CSS px, 1:1 with its viewBox, so the tap band's width is its real depth on screen.
+  function figureSize(reserve) {
+    var W = Math.min(340, $('qcard').clientWidth - 20);
+    var H = Math.max(150, Math.min(W, window.innerHeight - FOOTER_PX - reserve));
+    return { W: W, H: H };
+  }
+  // show: {role: true} draws those sides lit; labels: {sideId: text}; tap: the bands are live.
+  function drawFigure(it, opts) {
+    var f = $('figure'), size = figureSize(opts.reserve), W = size.W, H = size.H;
+    var roleOf = {}; Object.keys(it.roles).forEach(function (r) { roleOf[it.roles[r]] = r; });
+    // Each side's label and its half-size on screen: a lit side's is 19 px bold (Amendment 1), so the triangle leaves room for it.
+    var texts = {}, mx = 30, my = 30;
+    it.sides.forEach(function (s) {
+      var lit = opts.lit && opts.lit[roleOf[s.id]], num = opts.labels && opts.labels[s.id];
+      var label = (lit ? { HYP: 'H', OPP: 'O', ADJ: 'A' }[roleOf[s.id]] : '') + (num !== undefined ? (lit ? ' ' : '') + num : '');
+      if (!label) return;
+      var hw = label.length * (lit ? 5.8 : 4.6) + 2, hh = lit ? 11 : 9;
+      texts[s.id] = { label: label, lit: lit, hw: hw, hh: hh };
+      mx = Math.max(mx, 2 * hw + 10); my = Math.max(my, 2 * hh + 10);
+    });
+    f.innerHTML = '';
+    f.style.width = W + 'px'; f.style.height = H + 'px';
+    var xs = it.verts.map(function (v) { return v[0]; }), ys = it.verts.map(function (v) { return v[1]; });
+    var bw = Math.max.apply(null, xs), bh = Math.max.apply(null, ys);
+    var k = Math.min((W - 2 * mx) / bw, (H - 2 * my) / bh), ox = (W - bw * k) / 2, oy = (H - bh * k) / 2;
+    var P = it.verts.map(function (v) { return [round1(ox + v[0] * k), round1(oy + v[1] * k)]; });
+    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, width: W, height: H, role: 'img', 'data-scale': k.toFixed(2),
+      'aria-label': 'A right-angled triangle with the right angle and the angle theta marked' });
+    var cx = (P[0][0] + P[1][0] + P[2][0]) / 3, cy = (P[0][1] + P[1][1] + P[2][1]) / 3;
+    // the right-angle square, from the two legs
+    var R = P[it.right], legs = [0, 1, 2].filter(function (i) { return i !== it.right; }).map(function (i) {
+      var dx = P[i][0] - R[0], dy = P[i][1] - R[1], d = Math.sqrt(dx * dx + dy * dy); return [dx / d, dy / d];
+    }), S = 15;
+    svg.appendChild(el('polyline', { class: 'square', 'data-square': '1', points: [
+      [R[0] + legs[0][0] * S, R[1] + legs[0][1] * S], [R[0] + (legs[0][0] + legs[1][0]) * S, R[1] + (legs[0][1] + legs[1][1]) * S], [R[0] + legs[1][0] * S, R[1] + legs[1][1] * S]
+    ].map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ') }));
+    // the θ arc and label: the narrower the angle, the further out the label sits, so it clears both sides (13 px from each)
+    var T = P[it.theta], ends = [0, 1, 2].filter(function (i) { return i !== it.theta; }).map(function (i) {
+      var dx = P[i][0] - T[0], dy = P[i][1] - T[1]; return Math.atan2(dy, dx);
+    });
+    var a0 = ends[0], a1 = ends[1], d = a1 - a0;
+    while (d > Math.PI) d -= 2 * Math.PI;
+    while (d < -Math.PI) d += 2 * Math.PI;
+    var half = Math.abs(d) / 2, arcR = 22, labR = Math.min(90, Math.max(33, 13 / Math.sin(half)));
+    svg.appendChild(el('path', { class: 'arc', 'data-arc': '1', d: 'M' + (T[0] + arcR * Math.cos(a0)).toFixed(1) + ' ' + (T[1] + arcR * Math.sin(a0)).toFixed(1) +
+      ' A' + arcR + ' ' + arcR + ' 0 0 ' + (d > 0 ? 1 : 0) + ' ' + (T[0] + arcR * Math.cos(a0 + d)).toFixed(1) + ' ' + (T[1] + arcR * Math.sin(a0 + d)).toFixed(1) }));
+    it.sides.forEach(function (s) {
+      var a = P[s.from], b = P[s.to], role = roleOf[s.id], lit = opts.lit && opts.lit[role], sel = opts.sel && opts.sel[s.id];
+      svg.appendChild(el('line', { class: 'side' + (lit ? ' lit ' + role : '') + (sel ? ' sel' : ''), 'data-side': s.id, x1: a[0], y1: a[1], x2: b[0], y2: b[1] }));
+    });
+    it.sides.forEach(function (s) {
+      var t = texts[s.id];
+      if (!t) return;
+      // Out from the side's middle, along its own normal, far enough that the label's box clears the line.
+      var a = P[s.from], b = P[s.to], len = Math.hypot(b[0] - a[0], b[1] - a[1]), nx = (a[1] - b[1]) / len, ny = (b[0] - a[0]) / len;
+      var mid = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+      if (nx * (mid[0] - cx) + ny * (mid[1] - cy) < 0) { nx = -nx; ny = -ny; }
+      var clear = Math.abs(nx) * t.hw + Math.abs(ny) * t.hh + 7;
+      svg.appendChild(el('text', { 'data-label': s.id, class: t.lit ? roleOf[s.id] : '', x: (mid[0] + nx * clear).toFixed(1), y: (mid[1] + ny * clear).toFixed(1) }, t.label));
+    });
+    if (opts.tap) {
+      it.sides.forEach(function (s) {
+        var a = P[s.from], b = P[s.to];
+        svg.appendChild(el('line', { class: 'hit', 'data-val': s.id, role: 'button', tabindex: '0', 'stroke-width': 44,
+          'aria-label': 'Side ' + s.id, x1: a[0], y1: a[1], x2: b[0], y2: b[1] }));
+      });
+    }
+    f.appendChild(svg);
+    var bis = a0 + d / 2, th = document.createElement('span');
+    th.className = 'theta'; th.setAttribute('data-theta', '1'); th.innerHTML = THETA();
+    th.style.left = (T[0] + labR * Math.cos(bis)).toFixed(1) + 'px'; th.style.top = (T[1] + labR * Math.sin(bis)).toFixed(1) + 'px';
+    f.appendChild(th);
+    return P;
+  }
+
+  var stage = 1, deck = [], qi = 0, Q = null, state = 'menu', tops = null;
+  var score = 0, streak = 0, bestStreak = 0, rightCount = 0, answered = 0;
+  var clockMs = 0, askedAt = 0, clockId = null;
+
+  function show(id) {
+    ['menu', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    document.body.classList.toggle('playing', id === 'game');
+    MaffsLock.screen($(id));
+  }
+  (function () {
+    var h = '';
+    for (var n = 1; n <= LAST; n++) {
+      h += '<button class="stage-btn" type="button" data-stage="' + n + '"><span class="n">' + n + '</span><span><span class="t">' + esc(STAGES[n].name) +
+        '</span><span class="d">' + esc(STAGES[n].blurb) + '</span></span></button>';
+    }
+    $('stageList').innerHTML = h;
+  })();
+
+  /* ---------- the clock: a visible count-up that stops while feedback shows, and only ever feeds the score ---------- */
+  function now() { return performance.now(); }
+  function showClock(ms) {
+    var s = Math.floor(ms / 1000);
+    $('hudTime').textContent = Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2);
+  }
+  function tick() {
+    if (state !== 'asking') return;
+    showClock(clockMs + now() - askedAt);
+    clockId = MaffsLock.timer(tick, 500);
+  }
+
+  /* ---------- play ---------- */
+  function startStage(n) {
+    MaffsLock.newSession();
+    stage = n;
+    deck = session(n, Math.floor(Math.random() * 4294967296), PER_ROUND);
+    qi = 0; score = 0; streak = 0; bestStreak = 0; rightCount = 0; answered = 0; clockMs = 0;
+    show('game');
+    ev('game_started', { game_slug: SLUG, level: level, mode: 'stage-' + n });
+    nextQuestion();
+  }
+  var RESERVE = { 1: 150, 2: 215, 3: 275, 4: 215 };
+  function lengthLabels(it) {
+    var o = {}; it.sides.forEach(function (s) { o[s.id] = s.len; }); return o;
+  }
+  function allLit() { return { HYP: true, OPP: true, ADJ: true }; }
+  function nextQuestion() {
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    $('feedback').innerHTML = '';
+    $('qcard').classList.remove('fb-open');
+    if (qi >= deck.length) { finish(); return; }
+    Q = deck[qi++]; tops = null;
+    $('hudQ').textContent = qi + '/' + PER_ROUND;
+    $('hudStreak').textContent = streak;
+    $('hudScore').textContent = score;
+    var opts = $('opts'), frac = $('fracline');
+    opts.hidden = true; opts.innerHTML = ''; frac.hidden = true; frac.innerHTML = '';
+    if (stage === 1) {
+      $('ask').innerHTML = 'Tap the ' + rich({ HYP: 'HYPOTENUSE', OPP: 'OPPOSITE', ADJ: 'ADJACENT' }[Q.ask]);
+      drawFigure(Q, { tap: true, reserve: RESERVE[1] });
+    } else if (stage === 2) {
+      $('ask').innerHTML = rich(Q.top + ' over ' + Q.bottom) + ': tap the top side, then the bottom';
+      frac.hidden = false; frac.innerHTML = tex('\\dfrac{\\square}{\\square}');
+      drawFigure(Q, { tap: true, labels: lengthLabels(Q), reserve: RESERVE[2] });
+    } else if (stage === 3) {
+      frac.hidden = false;
+      if (Q.dir === 'name') {
+        $('ask').innerHTML = 'Which is this?';
+        frac.innerHTML = tex(fracWords(Q.top, Q.bottom) + '=' + fracNums(Q.top, Q.bottom, Q.frac[0], Q.frac[1]));
+        buildOptions(FNS.map(function (f) { return { val: f, html: tex('\\' + f + '\\theta') }; }));
+      } else {
+        $('ask').innerHTML = 'Which fraction is this?';
+        frac.innerHTML = tex('\\' + Q.fn + '\\theta');
+        buildOptions(RATIOS.map(function (r) { var p = r.split('/'); return { val: r, html: tex(fracWords(p[0], p[1])) }; }), true);
+      }
+      drawFigure(Q, { lit: allLit(), labels: lengthLabels(Q), reserve: RESERVE[3] });
+    } else {
+      $('ask').innerHTML = 'You know one side and want the ? side. Which function?';
+      var labels = {}; labels[Q.known] = lengthOfId(Q, Q.known); labels[Q.wanted] = '?';
+      buildOptions(FNS.map(function (f) { return { val: f, html: tex('\\' + f) }; }));
+      drawFigure(Q, { labels: labels, reserve: RESERVE[4] });
+    }
+    state = 'asking';
+    MaffsLock.fresh($('qarea'));
+    askedAt = now();
+    tick();
+    window.scrollTo(0, 0);
+  }
+  function lengthOfId(it, id) {
+    for (var i = 0; i < it.sides.length; i++) if (it.sides[i].id === id) return it.sides[i].len;
+    return '';
+  }
+  function buildOptions(list, tall) {
+    var opts = $('opts');
+    opts.hidden = false;
+    opts.innerHTML = list.map(function (o) {
+      return '<button class="opt' + (tall ? ' tall' : '') + '" type="button" data-val="' + esc(o.val) + '">' + o.html + '</button>';
+    }).join('');
+  }
+  function reserveFeedback() { return Math.max(RESERVE[stage], 330); }
+
+  // A tap on the diagram: the nearest side to the tap, read from that side's own band (dataset.val).
+  function nearestBand(x, y) {
+    var bands = $('figure').querySelectorAll('.hit'), best = null, bestD = Infinity;
+    for (var i = 0; i < bands.length; i++) {
+      var b = bands[i], x1 = +b.getAttribute('x1'), y1 = +b.getAttribute('y1'), x2 = +b.getAttribute('x2'), y2 = +b.getAttribute('y2');
+      var dx = x2 - x1, dy = y2 - y1, t = Math.max(0, Math.min(1, ((x - x1) * dx + (y - y1) * dy) / (dx * dx + dy * dy)));
+      var d = Math.hypot(x - (x1 + t * dx), y - (y1 + t * dy));
+      if (d < bestD) { bestD = d; best = b; }
+    }
+    return bestD <= 26 ? best : null;
+  }
+  function tapped(val) {
+    if (state !== 'asking') return;
+    if (stage === 1) {
+      if (!MaffsLock.lock($('qarea'))) return;
+      var right = val === Q.key, lit = {}; lit[Q.ask] = true;
+      markQuestion(right, right ? 'That is the ' + Q.ask + '.' : LINE[whyTap(Q, val)], { lit: lit });
+    } else if (stage === 2) {
+      if (tops === null) {
+        tops = val;
+        $('fracline').innerHTML = tex('\\dfrac{\\mathbf{' + lengthOfId(Q, val) + '}}{\\square}');
+        var sel = {}; sel[val] = true;
+        drawFigure(Q, { tap: true, labels: lengthLabels(Q), reserve: RESERVE[2], sel: sel });
+        return;
+      }
+      if (!MaffsLock.lock($('qarea'))) return;
+      var ok = tops === Q.keyTop && val === Q.keyBottom;
+      $('fracline').innerHTML = tex(ok ? fracNums(Q.top, Q.bottom, Q.frac[0], Q.frac[1]) : '\\dfrac{\\mathbf{' + lengthOfId(Q, tops) + '}}{\\mathbf{' + lengthOfId(Q, val) + '}}');
+      markQuestion(ok, ok ? '' : Q.top + ' is ' + Q.frac[0] + ' and ' + Q.bottom + ' is ' + Q.frac[1] + ', so ' + Q.top + ' over ' + Q.bottom + ' is ' + Q.frac[0] + ' over ' + Q.frac[1] + '.',
+        { lit: allLit(), labels: lengthLabels(Q) });
+    }
+  }
+  function chose(val) {
+    if (state !== 'asking' || !MaffsLock.lock($('qarea'))) return;
+    var ok = val === Q.key;
+    if (stage === 3) {
+      var f = Q.dir === 'name' ? Q.key : Q.fn, parts = FN[f];
+      markQuestion(ok, ok ? '' : f + ' θ is ' + parts[0] + ' over ' + parts[1] + '.', { lit: allLit(), labels: lengthLabels(Q) });
+    } else {
+      var labels = lengthLabels(Q); labels[Q.wanted] = '?';
+      var fp = FN[Q.key];
+      markQuestion(ok, ok ? fp[0] + ' over ' + fp[1] + ' is ' + Q.key + ' θ.' : LINE.both, { lit: allLit(), labels: labels });
+    }
+  }
+  function head(ok) {
+    return '<div class="fb-head" data-mark="' + (ok ? 'right' : 'wrong') + '"><span class="mark" aria-hidden="true">' + (ok ? '✓' : '✗') + '</span>' + (ok ? 'Right' : 'Not quite') + '</div>';
+  }
+  function markQuestion(ok, line, draw) {
+    var seconds = (now() - askedAt) / 1000;
+    if (clockId !== null) { MaffsLock.cancel(clockId); clockId = null; }
+    clockMs += now() - askedAt; showClock(clockMs);
+    answered++;
+    if (ok) { rightCount++; streak++; if (streak > bestStreak) bestStreak = streak; score += scoreFor(seconds); } else streak = 0;
+    $('hudStreak').textContent = streak;
+    $('hudScore').textContent = score;
+    ev('question_answered', { game_slug: SLUG, level: level, mode: 'stage-' + stage, question_index: qi, question_id: Q.id, correct: ok });
+    var fb = $('feedback');
+    draw.reserve = ok ? RESERVE[stage] : reserveFeedback();
+    if (ok) {
+      state = 'right';
+      drawFigure(Q, draw);
+      fb.innerHTML = '<div class="fb done">' + head(true) + (line ? '<div class="fb-line" data-plain="' + esc(line) + '">' + rich(line) + '</div>' : '') + '</div>';
+      MaffsLock.timer(advance, 800);
+    } else {
+      state = 'wrong';
+      $('qcard').classList.add('fb-open');
+      drawFigure(Q, draw);
+      fb.innerHTML = '<div class="fb wrong">' + head(false) + '<div class="fb-line" data-help="reason" data-plain="' + esc(line) + '">' + rich(line) + '</div><div class="fb-next"></div></div>';
+      MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance });
+    }
+  }
+  function advance() {
+    if (state === 'moving') return;
+    state = 'moving';
+    nextQuestion();
+  }
+
+  var finish = MaffsLock.finishOnce(function () {
+    state = 'done';
+    var board = 'stage-' + stage;
+    ev('game_completed', { game_slug: SLUG, level: level, mode: board, score: score, questions_answered: answered, questions_correct: rightCount });
+    if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, board, score, answered).catch(function () {});
+    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, board, score);
+    var pbKey = 'wsyo_best_' + stage, prev = parseInt(lsGet(pbKey) || '0', 10) || 0, pb = score > prev;
+    if (pb) { ev('personal_best_set', { game_slug: SLUG, level: level, mode: board, score: score, previous_best: prev }); lsSet(pbKey, String(score)); }
+    $('resTitle').textContent = 'Stage ' + stage + ' done: ' + STAGES[stage].name;
+    $('resScore').textContent = score;
+    $('resStats').innerHTML = '<b>' + rightCount + '</b> right out of <b>' + answered + '</b><br>Best streak <b>' + bestStreak + '</b>' + (pb ? '<br>New personal best' : '');
+    $('nextStageBtn').hidden = stage >= LAST;
+    $('nextStageBtn').dataset.stage = stage + 1;
+    $('nextStageBtn').textContent = 'Stage ' + (stage + 1);
+    show('results');
+  });
+
+  /* ---------- wiring ---------- */
+  $('stageList').addEventListener('click', function (e) { var b = e.target.closest('[data-stage]'); if (b) startStage(parseInt(b.dataset.stage, 10)); });
+  $('nextStageBtn').addEventListener('click', function () { startStage(parseInt($('nextStageBtn').dataset.stage, 10)); });
+  $('againBtn').addEventListener('click', function () { startStage(stage); });
+  $('menuBtn').addEventListener('click', function () { state = 'menu'; show('menu'); });
+  $('figure').addEventListener('click', function (e) {
+    var svg = $('figure').querySelector('svg');
+    if (!svg || !e.target.closest || !e.target.closest('.hit')) return;
+    var r = svg.getBoundingClientRect(), band = nearestBand(e.clientX - r.left, e.clientY - r.top);
+    if (band) tapped(band.dataset.val);
+  });
+  $('figure').addEventListener('keydown', function (e) {
+    if ((e.key !== 'Enter' && e.key !== ' ') || !e.target.classList.contains('hit')) return;
+    e.preventDefault();
+    tapped(e.target.dataset.val);
+  });
+  $('opts').addEventListener('click', function (e) { var b = e.target.closest('.opt'); if (b) chose(b.dataset.val); });
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(lsGet(KEY) === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); lsSet(KEY, String(on)); apply(on); });
+  })();
+
+  // Read-only views of live state and the pure generator, for scripts/verify-whose-side-are-you-on.py and the lock hint above.
+  function tapSide(id) {
+    var b = $('figure').querySelector('.hit[data-val="' + id + '"]');
+    if (!b) return;                             // already marked: the bands have gone
+    var r = b.getBoundingClientRect();
+    b.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window, clientX: r.left + r.width / 2, clientY: r.top + r.height / 2 }));
+  }
+  window.WS = {
+    SLUG: SLUG, LINE: LINE, TRIPLES: TRIPLES,
+    gen: { bank: bank, session: session, whyTap: whyTap, scoreFor: scoreFor },
+    ui: {
+      state: function () { return state; },
+      level: function () { return level; },
+      stage: function () { return stage; },
+      question: function () { return Q ? JSON.parse(JSON.stringify(Q)) : null; },
+      score: function () { return score; },
+      streak: function () { return streak; },
+      start: function (n) { startStage(n); },
+      // Answer the question on screen: the right answer, or a wrong one.
+      answer: function (right) {
+        if (state !== 'asking') return;
+        var ids = Q.sides.map(function (s) { return s.id; });
+        if (stage === 1) {
+          tapSide(right ? Q.key : ids.filter(function (i) { return i !== Q.key; })[0]);
+        } else if (stage === 2) {
+          tapSide(Q.keyTop);
+          tapSide(right ? Q.keyBottom : Q.keyTop);
+        } else {
+          var bs = Array.prototype.slice.call($('opts').querySelectorAll('.opt'));
+          bs.filter(function (b) { return (b.dataset.val === Q.key) === !!right; })[0].click();
+        }
+      }
+    }
+  };
+})();
+</script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'whose-side-are-you-on');</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

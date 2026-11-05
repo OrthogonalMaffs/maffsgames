@@ -1,0 +1,11 @@
+# Findings register for whose-side-are-you-on (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# New build (contract WHOSE-SIDE, 5 Nov 2026; SR-30: checked from its first PR by scripts/verify-whose-side-are-you-on.py).
+# Not yet audited: tranche says so, head is main when the file was made, served is empty. A fix PR sets status: fixed
+# and pr: <n> on the entries it closes.
+game: whose-side-are-you-on
+audited:
+  tranche: none (not yet audited)
+  head: be4a5bf9
+  date: 2026-11-05
+  served: {}
+findings: []

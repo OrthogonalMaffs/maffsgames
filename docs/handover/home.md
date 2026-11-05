@@ -2,6 +2,8 @@
 
 **Queue (cross-lane facts; never archived)**
 
+- WHOSE-SIDE: home/Claude Code, claude/whose-side-are-you-on, Windows worktree E:/jon/mg-whose-side. Contract + Amendments 1–2: docs/handover/contracts/2026-11-05-whose-side.md. Shared: Gate, then Project Claude's review and Jon's phone play-test and "merge".
+
 - CHRISTMAS-ROOM: DONE. #667 merged as 9cbedee; close-out #668 merged as e32608f. Contract: docs/history/contracts/2026-11-04-christmas-room.md.
 
 - Cloud lane: one session at a time from 6 Nov (Jon, 5 Nov). #669 and #671 are merged; no overlapping cloud sessions remain authorised.
@@ -13,6 +15,10 @@
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
 - FRACTION-WHOLE: merged #662, b38ce399; Shared review passed and Jon authorised merge, 4 Nov. Contract: docs/history/contracts/2026-11-04-fraction-whole.md. Main run and cleanup recorded below.
+
+## 2026-11-05 (home): WHOSE-SIDE
+
+New unlisted game, stages 1–4; stage 5 and the art are later. Amendment 1: light theme, games.json and precedent checker lines, side-word text bold 19 px. Amendment 2: side colours on sides and side words only; ✓/✗ and a word for right and wrong. Rulings 19:45: grey sides until answered (1, 2, 4), stage 3 coloured with coloured numbers; 16-30-34 for 9-40-41. Added beyond the contract: question_id = item id (check-question-id.py requires it of new games). Verifier: all 10,368 items recomputed from geometry; 13 plants caught. Next: Gate, review, Jon's merge; no merge authority. Record: agent Claude Code; wall in the PR's report; review cycles 0; amendments 2; usage n/a.
 
 ## 2026-11-05 (home): MERGE-669-671
 
