@@ -6,6 +6,32 @@ and the last three entries; older entries move here, newest first, unchanged.
 
 ## Moved 2026-11-05 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
 
+## 2026-11-05 (cloud): EQUATLE-320 (`docs/handover/contracts/2026-11-05-equatle-320.md`, Small)
+
+Agent: Claude Code, cloud, primary checkout, branch `claude/kind-carson-hlusgj`. Equatle CSS only: `.key` min-width 0, flex 1 1 0; `.kr` width 100%; at ≤360px nav padding .5rem, `#mode-pill` hidden, `.kr` gap 3px (Amendment 1). Digit keys at 320: 26.1px (24.3 without the gap); scrollWidth 320, 1/0/Del/Enter/← on screen, Aa too. 375 and 390: 33 to 29.8 and 31.3px; 420+ and the tiles unchanged. Stale entries removed: two `tier1_phone_overflow`, sideways 320x568 (normal, aa). Still known: the fold, every phone size (vertical). RAN: check-site tier 1 (equatle; only the container's 3 CDN errors, as on main), measure-phone-fit normal/aa/laptop exit 0, its selftest, verify-equatle, check-answer-lock PASS. Claim taken off in the fix commit (branch only, never main). PR #669; Jon, 5 Nov: breakpoint stays at 360px; like #668, the home lane merges it with merge-pr.py, the cloud lane does not.
+
+Record: agent Claude Code; wall n/a (receipt time not recorded); review cycles 0; amendments 1; usage n/a.
+
+## 2026-11-05 (cloud): CANON-LIVE-COUNTS (`docs/handover/contracts/2026-11-05-canon-live-counts.md`, Shared)
+
+Agent: Claude Code, cloud, primary checkout, branch `claude/canon-live-counts` from origin/main 0154381 (Amendment 1: not the session branch, which holds #669). Canon: the live totals at §1 Total games, §9 Coverage heading, §11 intro, §11.1 and §12 Project Overview now point to the roster, `data/games.json` "pages", §11.1 and the hub; §11.1 heading undated; Christmas row (GCSE, no antagonist, Live 05/11/2026, ★★); §7.5.3 extended to canon, CLAUDE.md, AGENTS.md; §7.8 branches: `pr-assets/*` kept. New `scripts/check-canon-rooms.py` (ci-line, --selftest && --check): 14 Live, 1 Withdrawn, 14 cards, 6 plants caught; on main's canon it fails on Christmas (passes once this merges). Kept, dated recounts: 394, 2292, 2923, 3182. RAN: the check, ci-groups --check, ci-deps --selftest, check-verifier-coverage, check-public-claims, check-context-size. Jon, 5 Nov: "merge please"; merge-pr.py cannot authenticate gh here, so Jon ruled the connector, #668 then #670 (one-off exception). #668 merged e32608f (guard by hand: Gate 42022397101, main 9cbedee 42001707743 green). Main merged in (no rebase: force push forbidden); the cloud.md conflicts kept both sides; #668's pr-assets "Not done" sentence removed (step 3a). Next: Gate, then #670 merged the same way.
+
+Record: agent Claude Code; wall n/a (receipt time not recorded); review cycles 0; amendments 1; usage n/a.
+
+## 2026-11-05 (cloud): CHRISTMAS-ROOM (takeover from home, Amendments 5-7)
+
+TAKEOVER (Jon, 5 Nov): the cloud lane takes CHRISTMAS-ROOM, PR #667, from the home lane (home.md stays the home lane's). Claude Code, cloud container, branch `codex/christmas-room` (prefix kept), taken clean at 231b03a, log matching the home entry.
+
+AMENDMENT 5 (853559e): no 1 : 1 in cr's ratios, in the generator and escape_set_checks.py; only cr changed (5 sets replaced, Set A kept); VALID 90 of 1000. Teacher page 535 px; allowlist set to 535. Lock-bank cr NOTE states Amendments 4 and 5.
+
+RAN (Python 3.13, Playwright 1.63): generator deterministic; check-escape-rooms.py, the four test-escape scripts, check-lock-bank.py batch13 and check-site.py tier 1 (this room) exit 0. Scratch recompute and play-through: 3247 checks, 0 fails; plants caught. check-changed.py not run (CLOUD-LEAN). Gate green on deb954a (run 41987567445). AMENDMENTS 6-7 (Jon's play-test, 5 Nov), saved verbatim: truck clue names the TREE and MINCE PIES zones; sc's tree 3-6 m: 9 sets, all 1 : 50; VALID 98 of 900; teacher still 535 px; all rerun clean, play-through 3758, 0 fails. Gate green on 4f70cb4 (run 41996178158).
+
+DONE: merged and live, #667, squash 9cbedee, by Jon's one-off exception (5 Nov, recorded on #667): merge-pr.py needs gh api, which this session lacks, so a connector squash pinned to 4f70cb4 after the guard was checked by hand. Main run 42001707743 on 9cbedee: GREEN, 84 of 84 jobs. Close-out PR left open for the home lane's merge-pr.py (Jon, 5 Nov).
+
+Record: agent Claude Code (cloud takeover); wall n/a (contract receipt time not recorded); review cycles 0; amendments 7; usage n/a.
+
+## Moved 2026-11-05 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
+
 ## 2026-11-04 (cloud): LOOK-REFRESH-1 (`docs/history/contracts/2026-11-04-look-refresh-1.md`, Small per game; standing rule: next game after each merge)
 
 - Agent: Claude Code; primary checkout, branch `claude/eager-johnson-f7xuyn`. Pre-step b8fd508 (PACK-GENERATOR closed out).
