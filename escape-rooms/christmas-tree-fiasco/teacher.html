@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Teacher page for The Christmas Tree Fiasco escape room: answers, hint ladder, misconceptions and timings.">
+<title>The Christmas Tree Fiasco — teacher page — MaffsGames</title>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/engine.css">
+</head>
+<body>
+<button class="a11y-toggle" onclick="toggleAa()" aria-label="Toggle easier-reading text">Aa</button>
+<div class="wrap">
+  <a class="back-link" href="../">&larr; All escape rooms</a>
+  <div id="app"></div>
+</div>
+<script src="room.js"></script>
+<!-- Labels carry no figures: teacher.js does not fill tokens in clueMap. -->
+<script>
+window.TEACH = {
+  "lockMeta": [
+    { "topic": "Negative numbers", "minutes": 5, "misconception": "It starts below freezing. Count up to zero first, then keep going." },
+    { "topic": "Scale", "minutes": 5, "misconception": "That's the tree without its stand." },
+    { "topic": "Combined ratios", "minutes": 5, "misconception": "The tinsel doesn't match up." }
+  ],
+  "clueMap": {
+    "truck-display": "The cold store",
+    "eric-clipboard": "The cold store",
+    "prize-leaflet": "Will it fit?",
+    "hall-plan": "Will it fit?",
+    "packing-slip": "The final puzzle",
+    "sticky-note": "The final puzzle"
+  },
+  "notes": ""
+};
+</script>
+<script src="../assets/rating.js"></script>
+<script src="../assets/teacher.js"></script>
+</body>
+</html>

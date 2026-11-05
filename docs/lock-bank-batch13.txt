@@ -1,0 +1,44 @@
+Batch 13 - Jon, 4 Nov 2026. CHRISTMAS-ROOM approved draft v3 and Amendments 1–2.
+The Christmas Tree Fiasco. Numbers shown are one example set (Set A); the generator makes the rest.
+
+ID:          christmas-cold-store
+LEVEL:       GCSE
+TOPIC:       Negative numbers
+INSTRUMENT:  Dial, hours, 0-24 step 1. Grade 3.
+CONTEXT:     The Christmaffs driver opens the truck to show off the prize. Eric stares at it. "Who freezes a Christmas tree? It's just wrong. We need to warm it before we take it inside." First puzzle: how many hours before the tree would be warm enough for Eric to let it in?
+CLUE:        Two readouts. CHILLER ZONE −4 °C · FREEZER ZONE −18 °C / Eric's handwriting. TREE COMES INSIDE AT 16 °C OR WARMER. WARMS 8 °C EVERY 2 HOURS ONCE UNLOADED
+ANSWER:      5
+AHA:         From −4 °C to 16 °C is further than 12 degrees: count through zero.
+MISCONCEPTION: 3 ((16 − 4) ÷ 4)
+SOLVE:       8 °C every 2 hours is 4 °C an hour. 16 − (−4) = 20. 20 ÷ 4 = 5 hours.
+TIME:        5
+VERIFY:      [n for n in range(25) if n * 8 == (16 - (-4)) * 2]
+NOTE:        start −2 to −9; minimum 8 to 20 and bigger than the size of the start; rate 2, 3 or 4 °C an hour, given as g every h hours (h = 2 or 3); answer whole, 3 to 12; miss = (min − |start|) ÷ rate, whole, positive, not the answer; the −18 decoy must not give a whole-number result equal to the answer or the miss.
+
+ID:          christmas-scale-clearance
+LEVEL:       GCSE
+TOPIC:       Scale
+INSTRUMENT:  Keypad, cm, maxDigits 3. Grade 3.
+CONTEXT:     Second puzzle: Eric needs to know how much room there would be between the top of the tree, on its stand, and the hall ceiling. In centimetres.
+CLUE:        The Christmaffs Store's drawing of the prize tree. DRAWN TO SCALE 1 : 50. HEIGHT ON THIS PAGE 9 cm. STAND ADDS 30 cm / The caretaker's plan. HALL CEILING 7 m · FIRE DOOR WIDTH 1.2 m
+ANSWER:      220
+AHA:         The stand goes under the tree, so it adds to the height.
+MISCONCEPTION: 250 (700 − 450)
+SOLVE:       9 × 50 = 450 cm. 450 + 30 = 480 cm. 7 m = 700 cm. 700 − 480 = 220 cm.
+TIME:        5
+VERIFY:      [n for n in range(1000) if n + 9 * 50 + 30 == 7 * 100]
+NOTE:        scale 1 : 20, 25 or 50; drawing 6 to 12 cm; stand 20 to 40 cm (multiple of 5); ceiling 5 to 9 m (whole or .5); answer 50 to 400 cm; miss = gap without the stand.
+
+ID:          christmas-combined-ratios
+LEVEL:       GCSE
+TOPIC:       Combined ratios
+INSTRUMENT:  Slider, unicorns, 0-40 step 1. Grade 5.
+CONTEXT:     The final puzzle. The prize comes with baubles, tinsel and Christmas unicorns in fixed ratios, and Eric's fire limit is the total. How many Christmas unicorns?
+CLUE:        The prize list. BAUBLES : TINSEL = 3 : 2 · TINSEL : CHRISTMAS UNICORNS = 4 : 1 / MAX 66 DECORATIONS. FIRE LOAD. Underneath, smaller: There is no such thing as too much tinsel.
+ANSWER:      6
+AHA:         Tinsel is 2 in one ratio and 4 in the other. Make them the same before you join them.
+MISCONCEPTION: 11 (unjoined 3 : 2 : 1, 66 ÷ 6)
+SOLVE:       3 : 2 and 4 : 1 give 6 : 4 : 1, 11 parts. 66 ÷ 11 = 6. Unicorns: 1 × 6 = 6.
+TIME:        5
+VERIFY:      [n for n in range(41) if n * (3 * 4 + 2 * 4 + 2 * 1) == 66 * 2 * 1]
+NOTE:        Amendment 4: each given ratio in simplest form (gcd of a and b is 1, gcd of c and d is 1). Amendment 5: the two numbers in each given ratio differ (no 1 : 1). The tinsel numbers differ; combined total 8 to 15 parts; N = parts × 2 to 8; answer 2 to 36; miss = N shared in the unjoined ratio, whole and not the answer (drop sets where it isn't whole). The fixed decoys -18 (truck display) and 1.2 (hall plan) count as clue figures for the VALID rules: no answer or misconception may equal 18.
