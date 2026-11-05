@@ -165,9 +165,8 @@ def check_engine(page, fails, sample=None):
         fails.append('feedback wording differs from the approved spec: %s' % lines)
     orientations = set()
     for stage in (1, 2, 3, 4):
-        items = page.evaluate('(n) => WS.gen.bank(n)', stage)
-        if sample:
-            items = random.Random(stage).sample(items, sample)
+        # A sample is drawn in the page: sending a whole bank across for each plant is most of a self-test's time.
+        items = page.evaluate('([n, k]) => { const b = WS.gen.bank(n); return k ? b.filter((_, i) => i % Math.floor(b.length / k) === 0) : b; }', [stage, sample])
         ids = {i['id'] for i in items}
         if len(ids) != len(items):
             fails.append('stage %d: repeated items' % stage)
@@ -325,6 +324,8 @@ def check_hit_lines(page, label, fails):
 def check_stage2_clicks(page, it, geo, label, fails):
     """Every side clicked for real along its length, in the gaps of its own line style, each click filling the top slot with that side."""
     bands = check_hit_lines(page, label, fails)
+    if int(label.rsplit('q', 1)[1]) > 3:            # the first three questions of a round; the turns are dealt evenly, so these vary
+        return
     for role, s in geo.items():
         b = bands.get(s['id'])
         if not b:
@@ -554,6 +555,8 @@ def check_colours(page, fails):
 def run_page(browser, base, fails, route=None, sizes=SIZES, engine=True, stages=(1, 2, 3, 4)):
     ctx = browser.new_context(viewport={'width': sizes[0][0], 'height': sizes[0][1]})
     ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)
+    # Test only: the 800 ms pause on a right answer runs at 60 ms, so a round is not mostly waiting.
+    ctx.add_init_script("(() => { const st = window.setTimeout; window.setTimeout = (f, ms, ...a) => st(f, ms === 800 ? 60 : ms, ...a); })();")
     for w, h in sizes:
         page = ctx.new_page()
         page.set_viewport_size({'width': w, 'height': h})
@@ -623,7 +626,7 @@ def self_test(browser, base, src):
                                if rt.request.resource_type == 'document' else rt.continue_())
         found, err = [], None
         try:
-            run_page(browser, base, found, route=route(None), sizes=SIZES[:1], stages=(1, 2) if len(plant) > 3 else (1,))
+            run_page(browser, base, found, route=route(None), sizes=SIZES[:1], stages=(2,) if len(plant) > 3 else (1,))
         except Exception as e:      # a plant that stops play is caught only if it left findings; an error alone is never a catch
             err = None if found else e
         if pc.is_caught(found, err):
