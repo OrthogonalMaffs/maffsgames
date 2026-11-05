@@ -189,3 +189,13 @@ AMENDMENT 4 to CHRISTMAS-ROOM (Jon, 5 Nov): lock cr's two given ratios must each
 is 1, gcd of c and d is 1); no clue may print a ratio like 2 : 2 or 4 : 2. Add this to the generator rule and
 escape_set_checks.py, regenerate cr's library, and re-run check-escape-rooms.py, the play-through and your
 independent recomputation. All other rules unchanged. STOP IF VALID falls below 20 (report the count).
+
+AMENDMENT 5 to CHRISTMAS-ROOM (Jon, 5 Nov):
+1. Lock cr: in both given ratios the two numbers must also differ (no 1 : 1), so every set needs a real combining
+   step. Add it to the generator rule and escape_set_checks.py, regenerate cr's library, and re-run
+   check-escape-rooms.py, the play-through and an independent recomputation of every set. STOP IF VALID falls below 20.
+2. docs/lock-bank-batch13.txt: update cr's note to state Amendments 4 and 5 (simplest form, numbers differ).
+3. scripts/checker-allowlist.json: set the christmas-tree-fiasco teacher entry to the width you measure after this
+   change (it was 541; about 535 last measured).
+Record Amendment 5 verbatim in the saved contract and the PR body, push to the same branch, and stop at a green Gate
+for Project Claude's review and Jon's play-test and "merge". Do not merge. Thank you.

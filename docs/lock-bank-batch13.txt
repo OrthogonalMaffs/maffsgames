@@ -41,4 +41,4 @@ MISCONCEPTION: 11 (unjoined 3 : 2 : 1, 66 ÷ 6)
 SOLVE:       3 : 2 and 4 : 1 give 6 : 4 : 1, 11 parts. 66 ÷ 11 = 6. Unicorns: 1 × 6 = 6.
 TIME:        5
 VERIFY:      [n for n in range(41) if n * (3 * 4 + 2 * 4 + 2 * 1) == 66 * 2 * 1]
-NOTE:        the tinsel numbers differ; combined total 8 to 15 parts; N = parts × 2 to 8; answer 2 to 36; miss = N shared in the unjoined ratio, whole and not the answer (drop sets where it isn't whole). The fixed decoys -18 (truck display) and 1.2 (hall plan) count as clue figures for the VALID rules: no answer or misconception may equal 18.
+NOTE:        Amendment 4: each given ratio in simplest form (gcd of a and b is 1, gcd of c and d is 1). Amendment 5: the two numbers in each given ratio differ (no 1 : 1). The tinsel numbers differ; combined total 8 to 15 parts; N = parts × 2 to 8; answer 2 to 36; miss = N shared in the unjoined ratio, whole and not the answer (drop sets where it isn't whole). The fixed decoys -18 (truck display) and 1.2 (hall plan) count as clue figures for the VALID rules: no answer or misconception may equal 18.

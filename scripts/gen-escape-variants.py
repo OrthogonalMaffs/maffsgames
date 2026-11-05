@@ -975,6 +975,9 @@ for a, b, c, d, each in cands:
     # Amendment 4: each given ratio is printed in simplest form.
     if gcd(a, b) != 1 or gcd(c, d) != 1:
         continue
+    # Amendment 5: the two numbers in each ratio differ (no 1 : 1).
+    if a == b or c == d:
+        continue
     # Match the shared tinsel term, then reduce the three-part ratio.
     raw = (a * c, b * c, b * d)
     common = gcd(gcd(raw[0], raw[1]), raw[2])

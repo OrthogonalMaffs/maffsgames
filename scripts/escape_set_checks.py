@@ -418,6 +418,8 @@ def check_christmas(lock, v):
             return "ratio parameters outside the draft"
         if gcd(a, b) != 1 or gcd(c, d) != 1:
             return "a given ratio is not in simplest form"
+        if a == b or c == d:
+            return "a given ratio's two numbers are equal"
         tinsel = math.lcm(b, c)
         joined = [a * (tinsel // b), tinsel, d * (tinsel // c)]
         common = gcd(gcd(joined[0], joined[1]), joined[2])

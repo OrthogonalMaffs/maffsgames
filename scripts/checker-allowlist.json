@@ -1678,7 +1678,7 @@
     {
       "path": "escape-rooms/christmas-tree-fiasco/teacher.html",
       "at": "load",
-      "width": 541,
+      "width": 535,
       "todo": "§1.37",
       "where": "table.tt; table.tt"
     },
