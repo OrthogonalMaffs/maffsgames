@@ -19,7 +19,7 @@ Each section carries its own date; git log is the record.
 | GA4 Measurement ID | G-992JLHLP2D |
 | Sheets Endpoint | Google Apps Script (see docs/apps-script-endpoint.js) |
 | Contact | contact@maffsgames.co.uk |
-| Total games | **101 games live on the portal, and a hundredth listed item: The 6 P's** (27 Oct 2026, contract SIX-PS-LAUNCH, Jon: `/the-6-ps/` is a page, not a game under `games/`, so it has no roster row; it is listed through `data/games.json` "pages", the portal's GCSE section, the sitemap, a pinned featured card on /essentials/ (`schools/assets/featured.js`, data `schools/assets/featured-items.json`: a second featured item is a data entry), /updates/, and a homepage-only "100 games" sash that ends itself on 10 Nov 2026 (`schools/assets/launch-sash.js`, `scripts/check-launch-sash.py`)). The 101 games: (30 Oct 2026: i-found-a-mark and who-ate-all-the-pies listed on Jon's approval; 24 Oct 2026: `squared-squirrel` listed on Jon's approval; 23 Oct 2026, contract TAKE-A-WALK-LIST: `take-a-walk` listed on Jon's approval; contract HMP-LIST: `how-many-parts` listed on Jon's approval; 9 Oct 2026, contract DOCS-9OCT: `factor-theorem` relisted under SR-21, A-Level only; contract RELIST-SR: `screening-room` relisted under SR-21; 8 Oct, contract RELIST-3: `just-pythag-it-bruv` listed on Jon's approval, `expectation-station` and `truth-buster` relisted under SR-21), plus **1 roster game live but unlisted** pending its audit fixes (`glorious-gantt`; canon SR-20 and SR-21, the roster's "Unlisted" section). `regression-rumble` is **withdrawn** behind a `noindex` holding page pending its data rebuild (todo §1.26). Per-game detail in `.claude/rules/game-roster.md` (97 numbered rows, plus a Withdrawn section). `games/` holds **99 directories** — the extras are `regression-rumble` (withdrawn, a holding page) and `the-perfect-prank`, the unlisted escape-room prototype, deliberately not on the portal and not in the roster. Because the roster is where `scripts/check-site.py` reads each game's levels, that game is only ever loaded bare; it is recorded under `roster_exceptions` in `scripts/checker-allowlist.json` so the gap is declared rather than silent |
+| Total games | **No count is kept here (§7.5.3): the games are `.claude/rules/game-roster.md`'s listed sections, and the one listed item that is not a game, The 6 P's, is in `data/games.json` "pages"** (27 Oct 2026, contract SIX-PS-LAUNCH, Jon: `/the-6-ps/` is a page, not a game under `games/`, so it has no roster row; it is listed through `data/games.json` "pages", the portal's GCSE section, the sitemap, a pinned featured card on /essentials/ (`schools/assets/featured.js`, data `schools/assets/featured-items.json`: a second featured item is a data entry), /updates/, and a homepage-only "100 games" sash that ends itself on 10 Nov 2026 (`schools/assets/launch-sash.js`, `scripts/check-launch-sash.py`)). Listings since 8 Oct: (30 Oct 2026: i-found-a-mark and who-ate-all-the-pies listed on Jon's approval; 24 Oct 2026: `squared-squirrel` listed on Jon's approval; 23 Oct 2026, contract TAKE-A-WALK-LIST: `take-a-walk` listed on Jon's approval; contract HMP-LIST: `how-many-parts` listed on Jon's approval; 9 Oct 2026, contract DOCS-9OCT: `factor-theorem` relisted under SR-21, A-Level only; contract RELIST-SR: `screening-room` relisted under SR-21; 8 Oct, contract RELIST-3: `just-pythag-it-bruv` listed on Jon's approval, `expectation-station` and `truth-buster` relisted under SR-21). Games live at their URL but off the portal are the roster's "Unlisted" section (`glorious-gantt` pending its audit fixes, canon SR-20 and SR-21; the others merged unlisted for Jon to play). `regression-rumble` is **withdrawn** behind a `noindex` holding page pending its data rebuild (todo §1.26). Per-game detail in `.claude/rules/game-roster.md` (numbered rows, plus Unlisted and Withdrawn sections). `games/` holds one directory per roster row (the Withdrawn section's `regression-rumble` is a holding page) plus `the-perfect-prank`, the unlisted escape-room prototype, deliberately not on the portal and not in the roster. Because the roster is where `scripts/check-site.py` reads each game's levels, that game is only ever loaded bare; it is recorded under `roster_exceptions` in `scripts/checker-allowlist.json` so the gap is declared rather than silent |
 | Escape rooms | Live at `/escape-rooms/`, indexed, in the sitemap and led from the front page. Not counted in the games total. Which rooms are live or withdrawn is §11.1, the only list. Teacher pages stay `noindex` deliberately — they hold every answer. |
 | Parent guides | **20 at `/parents/`**, plus the hub: 21 indexed URLs, in the sitemap and linked from the portal footer. Ported from MathsWins on 28 Sep 2026 and corrected again on 29 Sep against Jon's approved wording; the findings are in `docs/audit-parent-guides.md` and the fix-by-fix record is in `docs/migrate-parent-guides.md`. `averages` links Distinctly Average at `?level=ks3`. The section has one template: `parents/guide.css` and `parents/guide.js`, portal theme, adult register (the game theme, §7.5, does not apply -- the reader is the parent). **GCSE tier badge:** one component in `parents/guide.js` (its `TIERS` table, built from bold parts of `data/dfe-gcse-parts.json`) on exactly four guides and their hub cards; partly-Higher guides mark each Higher section in the body. `scripts/verify-parent-guides.py` reads every checked value back from the pages. **`scripts/check-site.py` does not discover these pages**: `build_page_list()` globs `games/` and `escape-rooms/` and otherwise walks a hard-coded list of root pages |
 
@@ -1486,7 +1486,11 @@ Learning goals such as "working towards grade 4" and "aiming for grade 4" are pe
   college."
 - **A site fact is never hand-typed beside its data.** The homepage title and description carry no game or
   room count (each was stale within a week: "96 games" while the portal listed 91); the range reads "KS3 to
-  Further Maths" everywhere on the homepage.
+  Further Maths" everywhere on the homepage. **Canon, CLAUDE.md and AGENTS.md follow the same rule** (Jon, 5 Nov
+  2026, contract CANON-LIVE-COUNTS): they point to the list a figure comes from (the roster, `data/games.json`,
+  §11.1 and the hub) and type no live count of games or rooms; a dated line of history keeps its figures. Canon's
+  "Thirteen rooms live" stood beside a hub of 14, and its "101 games live" beside its own "99 live games".
+  §11.1's live rooms are held equal to the hub by `scripts/check-canon-rooms.py` (in CI).
 
 ### 7.5.4 The start-screen mount: the one place for start-screen notes (Jon, 23 Oct 2026; contract START-MOUNT)
 
@@ -1801,7 +1805,7 @@ and is not edited by fix PRs.
 
 - **Home lane:** shared code, shared assets, CI and canon (contract F's shared fixes, then contract C), and
   every docs PR: `docs/todo.md`, relisting fixed games (batched), the roster's listed section.
-- **Branches (Jon, 12 Oct 2026):** GitHub deletes a merged PR's head branch automatically (repo setting), so lanes never delete remote branches; a branch merged before 12 Oct that is still on GitHub is history, not a task. A lane removes its own local branch and worktree with `scripts/end-task.py <branch>` (AGENTS.md, "Checks, merge and cleanup").
+- **Branches (Jon, 12 Oct 2026):** GitHub deletes a merged PR's head branch automatically (repo setting), so lanes never delete remote branches; a branch merged before 12 Oct that is still on GitHub is history, not a task. A lane removes its own local branch and worktree with `scripts/end-task.py <branch>` (AGENTS.md, "Checks, merge and cleanup"). **`pr-assets/*` branches are kept permanently** (Jon, 5 Nov 2026): each holds the screenshots a PR's description links to, so deleting one breaks that PR's record; they are never deleted at close-out.
 - **Cloud lane:** per-game fixes in games that are currently unlisted (and listed games it has claimed: below), one game per PR, each with its
   verifier, closing its register entries in its own `docs/audits/findings/<slug>.yml`. It never edits
   `schools/assets/`, the shared modules in `scripts/`, the workflow, canon, the roster's listed section or
@@ -2257,7 +2261,7 @@ this specific defect. The "4 collisions" count is a floor, not a guaranteed tota
   "Leaderboard Hub Page" below for the other. See §8 backlog for
   outstanding gaps.
 
-## Coverage (99 live games)
+## Coverage
 - **The hub registry is checked too (30 Sep 2026).** `scripts/check-leaderboard-coverage.js` reads
   the `GAMES` array in `leaderboards/index.html` and fails if a game that calls `submitScore()` is
   missing from it, or if a row's levels differ from the keys the game really submits under (call-site
@@ -2404,11 +2408,11 @@ this specific defect. The "4 collisions" count is a floor, not a guaranteed tota
 
 Narrative maths escape rooms at `/escape-rooms/`. Started 2026-08-26; reference point
 **Unlock!**. **15 to 20 minutes each** — built to end a lesson, not fill one, and to be played by three or
-four students round one screen. Not counted in the 99 live games.
+four students round one screen. Not counted among the roster's games.
 
-## 11.1 Current state — 18 October 2026
+## 11.1 Current state
 
-**Thirteen rooms live, one withdrawn.** The site ships a room as its voice rewrite finishes (§11.5).
+**This table is the only list of rooms; the hub, `escape-rooms/index.html`, shows the live ones**, one card each, and `scripts/check-canon-rooms.py` keeps the two equal (§7.5.3: no count is kept beside them). The site ships a room as its voice rewrite finishes (§11.5).
 
 | Room | Slug | Level | Antagonist | State |
 | --- | --- | --- | --- | --- |
@@ -2425,6 +2429,7 @@ four students round one screen. Not counted in the 99 live games.
 | The Library Jam | `library-jam` | GCSE Foundation | — (Mrs Barb Phile, "Bibby", the librarian, is stern, never a villain; the clock is the fines email) | **Live** (10/10/2026; ★) |
 | Roll for Initiative | `roll-for-initiative` | GCSE | Commandant Strictmane (invented; Mr Strictman cameos, never speaks). Built from Mrs Rogers's idea; she is credited | **Live** (16/10/2026; ★★) |
 | Big School Begins | `big-school-begins` | Starter | — (no antagonist; Daisy Reddington, the buddy, William Trembles, the lost new boy, and Mrs Barb Phile, the librarian, are the cast) | **Live** (18/10/2026; Starter, label not stars; four locks, 20 minutes) |
+| The Christmas Tree Fiasco | `christmas-tree-fiasco` | GCSE | — (no antagonist; Eric Ember, the fire safety officer, is an ally; the clock is the Christmaffs final, where the rival St Donald's goes next) | **Live** (05/11/2026; ★★) |
 | The IT Teacher's Vengeance | `it-vengeance` | GCSE Higher | — | Withdrawn (its URL redirects to The Rightful King) |
 
 Two further rooms, **A (Coach Trip Hijack) and B (Tuck Shop Heist)**, are narratives only. Their locks were
@@ -3190,7 +3195,7 @@ const QUESTIONS = { ks3: [...], gcse: [...], alevel: [...], further: [...], leve
 
 ## Project Overview (moved from CLAUDE.md, 1 Nov 2026, contract CONTEXT-SLIM)
 
-Free curriculum-aligned maths games for UK schools. 101 games, The 6 P's (listed 27 Oct 2026 as the 100th item on the portal) and thirteen escape rooms live (Regression Rumble withdrawn 30 Sep 2026 pending a data rebuild). Separate from MathsWins (mathswins.co.uk).
+Free curriculum-aligned maths games for UK schools, and escape rooms. The games are `.claude/rules/game-roster.md`'s listed sections, plus The 6 P's, a page listed 27 Oct 2026 through `data/games.json` "pages"; the rooms are §11.1, whose live ones the hub `escape-rooms/index.html` shows (Regression Rumble withdrawn 30 Sep 2026 pending a data rebuild). No count is kept here (§7.5.3). Separate from MathsWins (mathswins.co.uk).
 
 - **Repo:** https://github.com/OrthogonalMaffs/maffsgames
 - **Live site:** maffsgames.co.uk (GitHub Pages)
