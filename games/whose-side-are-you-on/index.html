@@ -763,7 +763,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
           tapSide(right ? Q.key : ids.filter(function (i) { return i !== Q.key; })[0]);
         } else if (stage === 2) {
           tapSide(Q.keyTop);
-          tapSide(right ? Q.keyBottom : Q.keyTop);
+          tapSide(right ? Q.keyBottom : ids.filter(function (i) { return i !== Q.keyTop && i !== Q.keyBottom; })[0]);
           $('checkBtn').click();
         } else {
           var bs = Array.prototype.slice.call($('opts').querySelectorAll('.opt'));

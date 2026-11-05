@@ -2,7 +2,7 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- WHOSE-SIDE: #674 merged as 257e883, main green, on Jon's "merge" before Project Claude's review (still owed). Jon's play-test fixes: claude/whose-side-fixes, Windows worktree E:/jon/mg-whose-fix, contract docs/handover/contracts/2026-11-05-whose-side-fixes.md. Stops at a green Gate. Close-out of both contracts follows.
+- WHOSE-SIDE: #674 merged as 257e883, main green, on Jon's "merge" before Project Claude's review (still owed). Jon's play-test fixes: claude/whose-side-fixes, Windows worktree E:/jon/mg-whose-fix, contract docs/handover/contracts/2026-11-05-whose-side-fixes.md. Stops at a green Gate. Double clicks and the hold: claude/whose-side-double-tap, worktree E:/jon/mg-whose-dbl, on top of #675 (it needs #675's slots), contract docs/handover/contracts/2026-11-05-whose-side-double-tap.md. Merge #675 first. Close-out of all three contracts follows.
 
 - CHRISTMAS-ROOM: DONE. #667 merged as 9cbedee; close-out #668 merged as e32608f. Contract: docs/history/contracts/2026-11-04-christmas-room.md.
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Whose Side Are You On? (every item of the four stages recomputed from the triangle's own geometry, never the game's labels: which side is HYP, OPP and ADJ, every fraction, every function against real trig; the feedback table and its wording; 50 or more distinct items a stage; seeded rounds: HYP first, every quadrant; every stage played with real taps at 320, 390 and 1280 px: tap bands 44 px deep, each side clicked along its length and in the gaps of its dashes or dots, double clicks answering once and filling one slot, Stage 2's slots filled, cleared and refilled before Check, one answer a question, a slow right answer still right, no sideways scroll, Aa mode included, Next above the fold; fault-injection self-test: a wrong label, a wrong function and more, each caught) |
+# ci-line: Whose Side Are You On? (every item of the four stages recomputed from the triangle's own geometry, never the game's labels: which side is HYP, OPP and ADJ, every fraction, every function against real trig; the feedback table and its wording; 50 or more distinct items a stage; seeded rounds: HYP first, every quadrant; every stage played with real taps at 320, 390 and 1280 px: tap bands 44 px deep, each side clicked along its length and in the gaps of its dashes or dots, double clicks answering once and filling one slot, a right answer held 0.8 s lit with its mark, the clock stopped, Stage 2's slots filled, cleared and refilled before Check, one answer a question, a slow right answer still right, no sideways scroll, Aa mode included, Next above the fold; fault-injection self-test: a wrong label, a wrong function and more, each caught) |
 """Independent verification for Whose Side Are You On? (games/whose-side-are-you-on/), contract WHOSE-SIDE, 5 Nov 2026.
 SR-30: checked from its first PR.
 
@@ -580,6 +580,54 @@ def check_aa(browser, base, fails):
         ctx.close()
 
 
+def check_hold(browser, base, fails, route=None):
+    """A right answer on each stage: lit, "Right", no Next, for the real 0.8 s; taps ignored; then the next question by itself. An hour
+    jumped during the hold must not reach the clock or the score. Real timers here: run_page's fast pause would hide all of this."""
+    ctx = browser.new_context(viewport={'width': 390, 'height': 844})
+    page = ctx.new_page()
+    if route:
+        page.route('**/games/%s/**' % SLUG, route)
+    page.goto('%s/games/%s/?cb=%d' % (base, SLUG, random.randrange(10 ** 9)))
+    page.wait_for_function('() => !!window.WS && !!window.katex')
+    page.evaluate("""() => { const real = performance.now.bind(performance); let extra = 0; window.__skip = (s) => { extra += s * 1000; };
+      performance.now = () => real() + extra; }""")
+    for stage in (1, 2, 3, 4):
+        page.evaluate('(n) => WS.ui.start(n)', stage)
+        wait_asking(page)
+        first = page.evaluate('() => WS.ui.question()')
+        page.evaluate('() => WS.ui.answer(true)')
+        page.wait_for_function("() => WS.ui.state() === 'right'", timeout=3000)
+        score = page.evaluate('() => WS.ui.score()')
+        look = page.evaluate("""() => { const h = document.querySelector('.fb-head');
+          return {mark: h ? h.textContent : null, lit: document.querySelectorAll('#figure line.side.lit').length,
+                  next: document.querySelectorAll('.maffs-next-wrap button, .fb-next button').length, bands: document.querySelectorAll('#figure .hit').length, time: document.getElementById('hudTime').textContent}; }""")
+        if look['mark'] != '✓Right' or look['lit'] < 1 or look['next'] or look['bands']:
+            fails.append('stage %d hold: %s' % (stage, look))
+        page.evaluate('() => window.__skip(3600)')          # an hour passes on the clock's own time source, during the hold
+        page.wait_for_timeout(600)
+        # taps and clicks during the hold: nothing moves
+        page.mouse.click(195, 300)
+        held = page.evaluate('() => [WS.ui.state(), WS.ui.question().id, document.getElementById("hudTime").textContent, WS.ui.score()]')
+        if held != ['right', first['id'], look['time'], score]:
+            fails.append('stage %d: during the hold %s, expected right, %s, %s, %s' % (stage, held, first['id'], look['time'], score))
+        try:
+            page.wait_for_function("(id) => WS.ui.state() === 'asking' && WS.ui.question().id !== id", arg=first['id'], timeout=1500)
+        except Exception:
+            fails.append('stage %d: no next question after the hold' % stage)
+            continue
+        page.wait_for_timeout(600)
+        shown = page.evaluate('() => document.getElementById("hudTime").textContent')
+        if int(shown.split(':')[0]) >= 30:
+            fails.append('stage %d: the clock ran during the hold: %s' % (stage, shown))
+        wait_asking(page)
+        page.evaluate('() => WS.ui.answer(true)')
+        page.wait_for_function("() => WS.ui.state() === 'right'", timeout=3000)
+        if page.evaluate('() => WS.ui.score()') - score < 40:   # 5 seconds or less on the question scores far above this; an hour would not
+            fails.append('stage %d: the hold reached the score: %s after %s' % (stage, page.evaluate('() => WS.ui.score()'), score))
+        page.wait_for_function("() => WS.ui.state() !== 'right'", timeout=3000)
+    ctx.close()
+
+
 def check_colours(page, fails):
     tokens = page.evaluate("""() => { const c = getComputedStyle(document.documentElement);
       return {HYP:c.getPropertyValue('--hyp').trim(), OPP:c.getPropertyValue('--opp').trim(), ADJ:c.getPropertyValue('--adj').trim()}; }""")
@@ -596,8 +644,8 @@ def check_colours(page, fails):
 def run_page(browser, base, fails, route=None, sizes=SIZES, engine=True, stages=(1, 2, 3, 4)):
     ctx = browser.new_context(viewport={'width': sizes[0][0], 'height': sizes[0][1]})
     ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)
-    # Test only: the 800 ms pause on a right answer runs at 60 ms, so a round is not mostly waiting.
-    ctx.add_init_script("(() => { const st = window.setTimeout; window.setTimeout = (f, ms, ...a) => st(f, ms === 800 ? 60 : ms, ...a); })();")
+    # Test only: the 800 ms pause on a right answer runs at 250 ms (check_hold keeps the real one), so a round is not mostly waiting.
+    ctx.add_init_script("(() => { const st = window.setTimeout; window.setTimeout = (f, ms, ...a) => st(f, ms === 800 ? 250 : ms, ...a); })();")
     for w, h in sizes:
         page = ctx.new_page()
         page.set_viewport_size({'width': w, 'height': h})
@@ -649,6 +697,9 @@ PLANTS = [
     ('the old behaviour: one side in both slots', " || top.dataset.val === val || bottom.dataset.val === val) return;", ") return;", 'stage 2'),
     ('the old behaviour: a second tap answers again', [("    if (state !== 'asking') return;\n    if (stage === 1) {\n      if (!MaffsLock.lock($('qarea'))) return;\n", "    if (stage === 1) {\n"),
                                                      ("draw.reserve = ok ? RESERVE[stage] : reserveFeedback();", "draw.tap = true; draw.reserve = ok ? RESERVE[stage] : reserveFeedback();")], None),
+    ('a shorter hold', "MaffsLock.timer(advance, 800);", "MaffsLock.timer(advance, 200);", 'hold'),
+    ('Next on a right answer', "      MaffsLock.timer(advance, 800);\n", "      fb.querySelector('.fb').insertAdjacentHTML('beforeend', '<div class=\"fb-next\"><button type=\"button\">Next</button></div>');\n      MaffsLock.timer(advance, 800);\n", 'hold'),
+    ('the clock runs during the hold', "    askedAt = now();\n    tick();\n", "    tick();\n", 'hold'),
     ('a changed colour', "--opp:#0072B2", "--opp:#0072C2"),
     ('a small coloured word', ".w{font-weight:700;font-size:19px;", ".w{font-weight:700;font-size:15px;"),
 ]
@@ -675,6 +726,13 @@ def self_test(browser, base, src):
                                if rt.request.resource_type == 'document' else rt.continue_())
         found, err = [], None
         try:
+            if len(plant) > 3 and plant[3] == 'hold':
+                check_hold(browser, base, found, route=route(None))
+                print('  planted, caught: %s (%d findings; first: %s)' % (name, len(found), found[0][:110])) if found else None
+                problems += 0 if found else 1
+                if not found:
+                    print('  NOT CAUGHT: %s' % name)
+                continue
             run_page(browser, base, found, route=route(None), sizes=SIZES[:1], stages=(2,) if len(plant) > 3 else (1,))
         except Exception as e:      # a plant that stops play is caught only if it left findings; an error alone is never a catch
             err = None if found else e
@@ -698,6 +756,7 @@ def main():
             browser = p.chromium.launch()
             run_page(browser, base, fails)
             check_aa(browser, base, fails)
+            check_hold(browser, base, fails)
             plants = 0 if args.no_selftest else self_test(browser, base, src)
             browser.close()
     finally:
