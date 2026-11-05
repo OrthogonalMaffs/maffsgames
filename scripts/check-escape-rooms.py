@@ -1,5 +1,5 @@
 # ci-line: Escape rooms (every set of every live room re-checked by escape_set_checks.py: one solution, answer and misconception settable and different, answer not in its clue, off the end of the travel, broken sets planted; every lock against the audited bank and variants.json; tokens; VALID draws; maxDigits answers settable; difficulty stars from lock grades matched on every hub and front-page card and the star key, three faults planted) |
-# ci-deps: escape-rooms/ index.html
+# ci-deps: escape-rooms/ index.html scripts/escape-minus-warn.json
 """Check the built escape rooms against the audited lock bank.
 
 Run after any edit to escape-rooms/*/room.js. It catches:
@@ -28,6 +28,11 @@ Run after any edit to escape-rooms/*/room.js. It catches:
     and front-page cards are static, so each card's note (print-note on the hub, esc-note on the front
     page, straight after the card) must read the credit + INVITE exactly; a note on a room with no credit
     and a credited room with no note both fail. Three faults are planted on every run and must be caught.
+  * a true minus sign (contract TRUE-MINUS, 5 Nov 2026): every string a live room shows, rendered with every set
+    through format_token() (the rule engine.js, teacher.js and the pack share), must have no ASCII hyphen-minus
+    directly before a digit; a negative number prints with U+2212. Authored hyphens are listed in
+    scripts/escape-minus-warn.json (shrink-only: a listed hit warns, a stale entry fails). Three faults are planted
+    on every run (tokens printed with str(), an authored "-5", a stale entry) and must each be caught.
   * on a `maxDigits: N` keypad ("up to N digits, Set to submit", KEYPAD-VARIABLE),
     an answer or misconception the keypad cannot take: it must be a whole
     number of 1 to N digits with no leading zero, so a four-digit misconception
@@ -72,7 +77,7 @@ not by this exit code.
 """
 import itertools, json, re, pathlib, sys
 
-from escape_set_checks import NO_CHECK, check, covered
+from escape_set_checks import NO_CHECK, check, covered, format_token
 import plant_common as pc
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")   # the stars, on a cp1252 Windows console
@@ -113,7 +118,7 @@ def clue_strings(js):
 def figures(text, key, var):
     """Every number a student reads in one clue, with this variant filled in."""
     text = re.sub(r"\{\{" + re.escape(key) + r"\.([\w-]+)\}\}",
-                  lambda m: str(var.get(m.group(1), m.group(0))), text)
+                  lambda m: format_token(var[m.group(1)]) if m.group(1) in var else m.group(0), text)
     text = re.sub(r"<[^>]*>|&[#\w]+;", " ", text)
     return {float(x) for x in re.findall(r"\d+(?:\.\d+)?", text)}
 
@@ -616,6 +621,169 @@ if len(order_plants) != 2:
 order_line = "order faults caught: " + "; ".join(order_plants)
 
 
+# ---- a true minus sign (TRUE-MINUS, Jon, 5 Nov 2026) --------------------------
+# Every string a room shows (clues, briefs, hints, solves, feedback, the stakes and win, which the teacher page and the
+# pack print too) is rendered with every set of every lock it uses, through format_token(), the rule the room engine,
+# the teacher page and the pack share. An ASCII hyphen-minus directly before a digit then fails: a negative number
+# prints with U+2212. Authored prose that means a hyphen ("Form R-1") is listed in MINUS_WARN (a shrink-only warn
+# list, canon §7.8.4): a listed hit warns, an unlisted one fails, and an entry that no longer matches fails as stale.
+MINUS_WARN = BASE / "scripts" / "escape-minus-warn.json"
+HYPHEN_DIGIT = re.compile(r"-(?=\d)")
+
+
+def room_strings(js):
+    """Every string literal in a room.js outside its variant libraries and comments, as (field, text); a chain of
+    literals joined by + is one string. field is the key the chain is the value of, or None (an array element)."""
+    out, i, n = [], 0, len(js)
+    depth = 0               # inside `variants: [`, the bracket depth; 0 outside
+    chain, chain_field, joinable, field = None, None, False, None
+    unesc = re.compile(r"\\(u[0-9a-fA-F]{4}|x[0-9a-fA-F]{2}|.)", re.S)
+    simple = {"n": "\n", "t": "\t", "r": "\r", "b": "\b", "f": "\f", "v": "\v", "0": "\0"}
+
+    def decode(body):
+        def one(m):
+            e = m.group(1)
+            if e[0] in "ux" and len(e) > 1:
+                return chr(int(e[1:], 16))
+            return simple.get(e, e)
+        return unesc.sub(one, body)
+
+    def close():
+        nonlocal chain
+        if chain is not None and not depth:
+            out.append((chain_field, chain))
+        chain = None
+
+    while i < n:
+        c = js[i]
+        if js.startswith("/*", i):
+            end = js.find("*/", i + 2)
+            i = n if end < 0 else end + 2
+            continue
+        if js.startswith("//", i):
+            i = js.find("\n", i)
+            i = n if i < 0 else i
+            continue
+        if c in "'\"`":
+            j = i + 1
+            while js[j] != c:
+                j += 2 if js[j] == "\\" else 1
+            text = decode(js[i + 1:j])
+            if chain is not None and joinable:
+                chain += text
+            else:
+                close()
+                chain, chain_field = text, field
+            joinable, field, i = False, None, j + 1
+            continue
+        if c == "+" and chain is not None:
+            joinable = True
+        elif not c.isspace():
+            close()
+            joinable = False
+            m = re.match(r"(\w+)\s*:", js[i:i + 64])
+            if m:
+                field = m.group(1)
+                if field == "variants" and re.match(r"variants\s*:\s*\[", js[i:]):
+                    depth = 1
+                    i = js.index("[", i) + 1
+                    field = None
+                    continue
+                i += len(m.group(0))
+                continue
+            if depth:
+                depth += (c == "[") - (c == "]")
+            field = None if c in ",[]{}()" else field
+        i += 1
+    close()
+    return out
+
+
+SKIP_FIELDS = {"id", "key", "slug", "art", "level", "kind", "format"}   # identifiers, never shown as prose
+
+
+def minus_hits(js, libs, fmt=format_token):
+    """Each (field, rendered text, hit index) where a rendered string has an ASCII hyphen-minus before a digit.
+    libs maps a lock key to its variant library; a string is rendered with every combination of the sets of the
+    locks whose tokens it uses."""
+    hits = []
+    for field, text in room_strings(js):
+        if field in SKIP_FIELDS:
+            continue
+        keys = sorted({k for k in re.findall(r"\{\{([\w-]+)\.", text) if k in libs})
+        renders = set()
+        for combo in itertools.product(*[libs[k] for k in keys]):
+            sets = dict(zip(keys, combo))
+            renders.add(re.sub(r"\{\{([\w-]+)\.([\w-]+)\}\}",
+                               lambda m: fmt(sets[m.group(1)][m.group(2)])
+                               if m.group(1) in sets and m.group(2) in sets[m.group(1)] else m.group(0), text))
+        for out_text in sorted(renders):
+            hits += [(field, out_text, m.start()) for m in HYPHEN_DIGIT.finditer(out_text)]
+    return hits
+
+
+def room_libs(js):
+    ids = re.findall(r"\n      id: '([^']+)'", js)
+    keys = re.findall(r"\n      key: '([^']+)'", js)
+    return {k: verified.get(lid) or [{}] for lid, k in zip(ids, keys)}
+
+
+def check_minus(rooms, warn_entries, fmt=format_token):
+    """(problems, warnings, listed entries that matched) for the true-minus rule over rooms {slug: room.js}."""
+    probs, warns, used = [], [], set()
+    for slug in sorted(rooms):
+        for field, text, at in minus_hits(rooms[slug], room_libs(rooms[slug]), fmt):
+            listed = [e for e, w in enumerate(warn_entries) if w["room"] == slug and any(
+                p <= at < p + len(w["text"]) for p in [m.start() for m in re.finditer(re.escape(w["text"]), text)])]
+            where = f"{slug} {field or 'list item'}: {text[max(0, at - 24):at + 8]!r}"
+            if listed:
+                used.update(listed)
+                warns.append(f"{where}: an ASCII hyphen before a digit, listed in {MINUS_WARN.name} ({warn_entries[listed[0]]['why']})")
+            else:
+                probs.append(f"{where}: an ASCII hyphen-minus before a digit; a negative number prints with U+2212 "
+                             f"(format_token / formatToken)")
+    for e, w in enumerate(warn_entries):
+        if e not in used and w["room"] in rooms:
+            probs.append(f"stale entry in {MINUS_WARN.name}: {w['room']} {w['text']!r} no longer matches; remove it")
+    return probs, warns, used
+
+
+minus_warn = json.loads(MINUS_WARN.read_text(encoding="utf-8"))["entries"]
+live_js = {s: room_js[s] for s in live}
+got, minus_warnings, _ = check_minus(live_js, minus_warn)
+problems += got
+warnings += minus_warnings
+minus_strings = sum(len(room_strings(live_js[s])) for s in live_js)
+
+# Planted: each must be caught, or the rule has stopped working.
+minus_plants = {}
+neg_rooms = sorted(s for s in live_js if any(isinstance(v, (int, float)) and v < 0
+                                             for lib in room_libs(live_js[s]).values() for var in lib for v in var.values()))
+if neg_rooms:
+    minus_plants[f"{neg_rooms[0]}'s tokens printed with str() (a hyphen)"] = (
+        {neg_rooms[0]: live_js[neg_rooms[0]]}, lambda v: str(v), "an ASCII hyphen-minus before a digit")
+else:
+    problems.append("STALE PLANT: the true-minus token plant needs a live room with a negative token, and none has one")
+pr = sorted(live_js)[0]
+try:
+    minus_plants[f"an authored \"from -5\" in {pr}'s title"] = (
+        {pr: pc.apply_re_plant(live_js[pr], r"\n  title: '", "\n  title: 'from -5 ", name="an authored -5")},
+        format_token, "an ASCII hyphen-minus before a digit")
+except pc.StalePlant as exc:
+    problems.append(str(exc))
+for what, (rooms, fmt, expect) in minus_plants.items():
+    got, _, _ = check_minus(rooms, minus_warn, fmt)
+    if not any(expect in g for g in got):
+        problems.append(f"planted fault NOT caught: {what} (the true-minus check found {got or 'nothing'})")
+stale = [{"room": pr, "text": "no such text -9", "why": "planted"}]
+got, _, _ = check_minus({pr: live_js[pr]}, stale)
+if not any("stale entry" in g for g in got):
+    problems.append(f"planted fault NOT caught: a stale {MINUS_WARN.name} entry (the true-minus check found {got or 'nothing'})")
+minus_plants["a stale warn-list entry"] = None
+minus_line = (f"true minus: {minus_strings} strings in {len(live_js)} live rooms, every set rendered; "
+              f"{len(minus_warnings)} listed in {MINUS_WARN.name}; faults caught: " + "; ".join(minus_plants))
+
+
 # ---- every set, re-checked (ESCAPE-SET-CHECKS) -------------------------------
 def check_sets(slug, lock_ids, library):
     """(problems, sets that passed) for one room: every set of every lock through escape_set_checks.check()."""
@@ -659,6 +827,7 @@ for slug, (stars, name, gr) in star_report.items():
 print(plant_line)
 print(order_line)
 print(credit_line)
+print(minus_line)
 print("verified sets per live room (every set re-checked by scripts/escape_set_checks.py):")
 for slug, n in set_counts.items():
     print(f"  {slug:<20} {n:>4}")
