@@ -36,6 +36,7 @@ ROOT = os.path.dirname(HERE)
 SLUG = 'whose-side-are-you-on'
 GAME = os.path.join(ROOT, 'games', SLUG, 'index.html')
 MIN_ITEMS = 50
+STOP_AT_FIRST = False
 SIZES = [(320, 568), (390, 844), (1280, 800)]
 SPEC_LINES = {
     'upright': 'Opposite means across from θ, not upright. Turn the triangle in your head.',
@@ -380,6 +381,8 @@ def play_round(page, stage, wrong_at, label, fails):
     w, h = page.viewport_size['width'], page.viewport_size['height']
     streak, score = 0, 0
     for n in range(10):
+        if STOP_AT_FIRST and fails:                 # a self-test plant, caught: the rest of its round proves nothing more
+            return
         wait_asking(page)
         it = page.evaluate('() => WS.ui.question()')
         check_item(it, fails)
@@ -580,7 +583,7 @@ def check_aa(browser, base, fails):
         ctx.close()
 
 
-def check_hold(browser, base, fails, route=None):
+def check_hold(browser, base, fails, route=None, stages=(1, 2, 3, 4)):
     """A right answer on each stage: lit, "Right", no Next, for the real 0.8 s; taps ignored; then the next question by itself. An hour
     jumped during the hold must not reach the clock or the score. Real timers here: run_page's fast pause would hide all of this."""
     ctx = browser.new_context(viewport={'width': 390, 'height': 844})
@@ -591,7 +594,7 @@ def check_hold(browser, base, fails, route=None):
     page.wait_for_function('() => !!window.WS && !!window.katex')
     page.evaluate("""() => { const real = performance.now.bind(performance); let extra = 0; window.__skip = (s) => { extra += s * 1000; };
       performance.now = () => real() + extra; }""")
-    for stage in (1, 2, 3, 4):
+    for stage in stages:
         page.evaluate('(n) => WS.ui.start(n)', stage)
         wait_asking(page)
         first = page.evaluate('() => WS.ui.question()')
@@ -706,6 +709,8 @@ PLANTS = [
 
 
 def self_test(browser, base, src):
+    global STOP_AT_FIRST
+    STOP_AT_FIRST = True
     problems = 0
     for plant in PLANTS:
         name, old, new = plant[:3]
@@ -727,7 +732,7 @@ def self_test(browser, base, src):
         found, err = [], None
         try:
             if len(plant) > 3 and plant[3] == 'hold':
-                check_hold(browser, base, found, route=route(None))
+                check_hold(browser, base, found, route=route(None), stages=(1,))
                 print('  planted, caught: %s (%d findings; first: %s)' % (name, len(found), found[0][:110])) if found else None
                 problems += 0 if found else 1
                 if not found:
