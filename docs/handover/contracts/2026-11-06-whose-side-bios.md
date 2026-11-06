@@ -1,6 +1,6 @@
 # WHOSE-SIDE-BIOS (Jon, via Project Claude, 6 Nov 2026), verbatim
 
-Queued on 6 Nov 2026 by the WHOSE-SIDE-ART session (PR #684) for a fresh cloud session. The contract carried no name; the cloud lane calls it WHOSE-SIDE-BIOS. Start it only after WHOSE-SIDE-FIT merges, from current main. When queued, WHOSE-SIDE-FIT had no contract, branch or PR in the repo.
+Queued on 6 Nov 2026 by the WHOSE-SIDE-ART session (PR #684) for a fresh cloud session. The contract carried no name; the cloud lane calls it WHOSE-SIDE-BIOS. Start it only after WHOSE-SIDE-FIT merges, from current main. WHOSE-SIDE-FIT was queued later the same day (`2026-11-06-whose-side-fit.md`), and its contract calls this one WHOSE-SIDE-INTRO.
 
 LANE: cloud (fresh session) · TIER: Shared · after WHOSE-SIDE-FIT merges, from current main
 
