@@ -45,7 +45,7 @@ window.ROOM = {
     { id: 'eric-clipboard', name: 'Eric\'s clipboard', where: 'On the trolley by the door',
       clue: 'Eric&apos;s handwriting. <b>TREE COMES INSIDE AT {{ct.min}} °C OR WARMER. WARMS {{ct.g}} °C EVERY {{ct.h}} HOURS ONCE UNLOADED</b>' },
     { id: 'prize-leaflet', name: 'Prize leaflet', where: 'Pinned to the noticeboard',
-      clue: 'The Christmaffs Store&apos;s drawing of the prize tree. <b>DRAWN TO SCALE 1 : {{sc.k}}. HEIGHT ON THIS PAGE {{sc.d}} cm. STAND ADDS {{sc.s}} cm</b>' },
+      clue: 'The Christmaffs Store&apos;s drawing of the prize tree. <b>DRAWN TO SCALE 1 : {{sc.k}}. HEIGHT ON THE LEAFLET {{sc.d}} cm. STAND ADDS {{sc.s}} cm</b>' },
     { id: 'hall-plan', name: 'Hall plan', where: 'Taped to the hall door',
       clue: 'The caretaker&apos;s plan. <b>HALL CEILING {{sc.c}} m · FIRE DOOR WIDTH 1.2 m</b>' },
     { id: 'packing-slip', name: 'Packing slip', where: 'Stuck to the prize box',

@@ -147,9 +147,12 @@ def load_config(slug):
             raise BuildError("config image missing: %s" % f.relative_to(ROOT))
         if im.get("font", "label") not in FONTS:
             raise BuildError("%s: font %r is not one of %s" % (im["file"], im.get("font"), sorted(FONTS)))
-        x0, y0, x1, y1 = im["label_box"]
-        if not (0 <= x0 < x1 and 0 <= y0 < y1):
-            raise BuildError("%s: label_box %r is not a box" % (im["file"], im["label_box"]))
+        boxes = im.get("label_boxes", [im.get("label_box")])
+        if not boxes or ("label_boxes" in im and "label_box" in im):
+            raise BuildError("%s: use one label_box or a nonempty label_boxes list" % im["file"])
+        for box in boxes:
+            if not isinstance(box, list) or len(box) != 4 or not (0 <= box[0] < box[2] and 0 <= box[1] < box[3]):
+                raise BuildError("%s: %r is not a label box" % (im["file"], box))
     return cfg
 
 
@@ -322,7 +325,17 @@ def instrument_hints(texts):
 def answer_caption(lock):
     """An answer box's words: the instrument's label and its unit, if it has one; nothing else (Amendment 4)."""
     ins = lock.get("instrument") or {}
-    return " ".join(x for x in (text_of(ins.get("label", "")).strip(), text_of(ins.get("unit", "")).strip()) if x)
+    label, unit = (text_of(ins.get(k, "")).strip() for k in ("label", "unit"))
+    if unit and re.search(r"(?<!\w)%s(?!\w)" % re.escape(unit), label, re.I):
+        unit = ""
+    caption = " ".join(x for x in (label, unit) if x)
+    if caption_unit_problems(caption, text_of(ins.get("unit", "")).strip()):
+        raise BuildError("answer caption repeats its unit: %r" % caption)
+    return caption
+
+
+def caption_unit_problems(caption, unit):
+    return unit and len(re.findall(r"(?<!\w)%s(?!\w)" % re.escape(unit), caption, re.I)) > 1
 
 
 def check_sets(checker, room_js, locks, sets):
@@ -379,6 +392,31 @@ def split_clue(clue):
     if len(parts) != 1:
         raise BuildError("a clue needs exactly one <b>...</b> part (the words on the object): %r" % clue[:80])
     return parts[0].strip(), re.sub(r"\s*<b>.*?</b>\s*", " ", clue, flags=re.S).strip()
+
+
+def label_parts(text, boxes):
+    """Split a clue over multiple measured glass areas, then bind figures before browser fitting."""
+    parts = text.split(" · ") if isinstance(boxes[0], list) else [text]
+    count = len(boxes) if isinstance(boxes[0], list) else 1
+    if len(parts) != count:
+        raise BuildError("label has %d printed parts for %d boxes: %r" % (len(parts), count, text))
+    out = []
+    for part in parts:
+        part = re.sub(r"(?<!\w)-(?=\d)", "\u2212", part)
+        part = re.sub(r"(\d)\s+:\s+([\u2212-]?\d)", lambda m: m[1] + "\u00a0:\u00a0" + m[2], part)
+        part = re.sub(r"(\d)\s+(?=(?:°C|cm|mm|km|m|%|kg|g|hours?|mins?|minutes?)(?!\w))",
+                      lambda m: m[1] + "\u00a0", part, flags=re.I)
+        if label_text_problems(part):
+            raise BuildError("label figure has a broken binding or hyphen-minus: %r" % part)
+        out.append(part)
+    return out
+
+
+def label_text_problems(text):
+    """Figure spacing and TRUE-MINUS checks on the words that enter a fitted label."""
+    return [m.group() for pattern in (r"(?<!\w)-\d", r"\d[ \t\n]+:[ \t\n]+[\u2212-]?\d",
+                                     r"\d[ \t\n]+(?:°C|cm|mm|km|m|%|kg|g|hours?|mins?|minutes?)(?!\w)")
+            for m in re.finditer(pattern, text, re.I)]
 
 
 # ---- the pages -----------------------------------------------------------------------------------------------------
@@ -562,12 +600,13 @@ def esc(s):
 
 def art_block(img_path, box, cls, text=None, ident="", set_letter="", max_pt=MAX_PT):
     """An image with its label box laid over it (positions are set in the page from the image's natural size)."""
-    inner = ""
     if cls == "write":
         inner = '<div class="write" data-box="%s"></div>' % esc(json.dumps(box))
     else:
-        inner = ('<div class="lbl %s" data-box="%s" data-id="%s" data-set="%s" data-max="%s"><div>%s</div></div>'
-                 % (cls, esc(json.dumps(box)), esc(ident), esc(set_letter), max_pt, text or ""))
+        boxes = box if isinstance(box[0], list) else [box]
+        inner = "".join('<div class="lbl %s" data-box="%s" data-id="%s" data-set="%s" data-max="%s"><div>%s</div></div>'
+                        % (cls, esc(json.dumps(b)), esc(ident), esc(set_letter), max_pt, part)
+                        for b, part in zip(boxes, label_parts(text or "", box)))
     return '<div class="art"><img src="%s" alt="">%s</div>' % (img_path.as_uri(), inner)
 
 
@@ -952,7 +991,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
                 printed, cls, extra = esc(im.get("text", "")), "card herring", f(o.get("flavour"))
             cards.append("<div class='%s' data-id='%s' data-set='%s'>%s<div class='cap'><span class='name'>%s</span>"
                          " &middot; <span class='where'>%s</span><br>%s</div></div>"
-                         % (cls, o["id"], L, art_block(rdir / im["file"], im["label_box"], font, printed, o["id"], L,
+                         % (cls, o["id"], L, art_block(rdir / im["file"], im.get("label_boxes", im.get("label_box")), font, printed, o["id"], L,
                                                        im.get("max_pt", MAX_PT)),
                             o["name"], o.get("where", ""), extra))
         per = 4
@@ -1217,6 +1256,34 @@ def selftest():
             return [str(e)] if "pack page range is not contiguous" in str(e) else []
         return []
 
+    def plant_label_box_count():
+        try:
+            label_parts("FIRST · SECOND", [[0, 0, 1, 1]])
+        except BuildError as e:
+            return [str(e)] if "printed parts for" in str(e) else []
+        return []
+
+    def plant_broken_unit():
+        good = label_parts("AT 16 °C", [0, 0, 1, 1])[0]
+        bad = pc.apply_plant(good, "16\u00a0°C", "16 °C", name="a split number and unit")
+        return label_text_problems(bad)
+
+    def plant_broken_ratio():
+        good = label_parts("= 5 : 1", [0, 0, 1, 1])[0]
+        bad = pc.apply_plant(good, "5\u00a0:\u00a01", "5 : 1", name="a split ratio")
+        return label_text_problems(bad)
+
+    def plant_hyphen_minus():
+        good = label_parts("CHILLER \u22128 °C", [0, 0, 1, 1])[0]
+        bad = pc.apply_plant(good, "\u22128", "-8", name="a hyphen-minus on a label")
+        return label_text_problems(bad)
+
+    def plant_repeated_caption_unit():
+        lock = {"instrument": {"label": "CHRISTMAS UNICORNS", "unit": "unicorns"}}
+        good = answer_caption(lock)
+        bad = pc.apply_plant(good, good, good + " unicorns", name="a repeated caption unit")
+        return [bad] if caption_unit_problems(bad, "unicorns") else []
+
     def audit_planted_pack(bad_locks):
         with sync_playwright() as p:
             browser = p.chromium.launch()
@@ -1360,6 +1427,11 @@ def selftest():
               ("a printed URL with no room page", plant_bad_url),
               ("a missing score-sheet row", plant_missing_row),
               ("a per-set hint page counted inside a set's range", plant_hint_inside_set_range),
+              ("a clue with a different number of parts and label boxes", plant_label_box_count),
+              ("a number separated from its unit", plant_broken_unit),
+              ("a ratio broken around its colon", plant_broken_ratio),
+              ("a hyphen-minus on printed art", plant_hyphen_minus),
+              ("an answer caption repeating its unit", plant_repeated_caption_unit),
               ("an unfilled missTitle token", plant_unfilled_miss_title),
               ("a locks page whose briefs leave too little working space", plant_lock_brief_overflow),
               ("a final target two expressions reach", plant_two_expressions),

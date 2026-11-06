@@ -5,16 +5,16 @@
   "seed": 1,
   "certificate_title": "Tree delivered",
   "images": [
-    {"file": "art/xmas-01-truck-display.webp", "role": "clue", "object": "truck-display", "label_box": [265, 315, 985, 510], "font": "label"},
-    {"file": "art/xmas-02-clipboard.webp", "role": "clue", "object": "eric-clipboard", "label_box": [305, 230, 1080, 1100], "font": "hand"},
+    {"file": "art/xmas-01-truck-display.webp", "role": "clue", "object": "truck-display", "label_boxes": [[245, 315, 945, 470], [245, 575, 945, 735]], "font": "label"},
+    {"file": "art/xmas-02-clipboard.webp", "role": "clue", "object": "eric-clipboard", "label_box": [340, 230, 1025, 1070], "font": "hand"},
     {"file": "art/xmas-03-prize-leaflet.webp", "role": "clue", "object": "prize-leaflet", "label_box": [565, 275, 1100, 1010], "font": "label"},
     {"file": "art/xmas-04-hall-plan.webp", "role": "clue", "object": "hall-plan", "label_box": [145, 825, 1100, 995], "font": "label"},
     {"file": "art/xmas-05-packing-slip.webp", "role": "clue", "object": "packing-slip", "label_box": [125, 390, 1120, 990], "font": "label"},
     {"file": "art/xmas-06-sticky-note.webp", "role": "clue", "object": "sticky-note", "label_box": [400, 245, 920, 1080], "font": "hand"},
     {"file": "art/xmas-07-old-box.webp", "role": "herring", "object": "old-box", "label_box": [280, 525, 1070, 925], "font": "hand", "text": "DO NOT USE"},
-    {"file": "art/xmas-08-laptop.webp", "role": "herring", "object": "laptop", "label_box": [290, 250, 1040, 725], "font": "label", "text": "The Christmaffs Store's final, counting down"},
-    {"file": "art/xmas-09-dial.webp", "role": "answer", "lock": "christmas-cold-store", "label_box": [160, 1040, 1090, 1175]},
-    {"file": "art/xmas-10-keypad.webp", "role": "answer", "lock": "christmas-scale-clearance", "label_box": [280, 205, 1040, 390]},
-    {"file": "art/xmas-11-slider.webp", "role": "answer", "lock": "christmas-combined-ratios", "label_box": [170, 955, 1080, 1115]}
+    {"file": "art/xmas-08-laptop.webp", "role": "herring", "object": "laptop", "label_box": [215, 275, 900, 690], "font": "label", "text": "The Christmaffs Store's final, counting down"},
+    {"file": "art/xmas-09-dial.webp", "role": "answer", "lock": "christmas-cold-store", "label_box": [145, 950, 1110, 1075]},
+    {"file": "art/xmas-10-keypad.webp", "role": "answer", "lock": "christmas-scale-clearance", "label_box": [335, 220, 1085, 325]},
+    {"file": "art/xmas-11-slider.webp", "role": "answer", "lock": "christmas-combined-ratios", "label_box": [115, 765, 1135, 955]}
   ]
 }

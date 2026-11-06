@@ -83,3 +83,32 @@ a. Answer key misconception list (build_pack.py ~line 889): fill missTitle and m
 b. Locks page: the working-space boxes take the height that is left after the briefs (flex), with a minimum height per box; state the minimum in the PR body. If a set cannot meet the minimum, the existing overflow check fails the build. Report each set's box height and Kiln's before/after.
 
 STOP IF: a locks page cannot meet the minimum without cutting brief text (report the overflow per set); filling the key needs a token the variants do not carry; any fix would need wording, room.js or a threshold change.
+
+AMENDMENT 5 (review fixes; verbatim below):
+
+CHRISTMAS-PACK, review fixes for PR #689 (Project Claude, 6 Nov 19:20; supersedes the 19:15 block). The previous session finished: PR #689 is open on codex/christmas-pack and the worktree is clean. Ignore the earlier recovery handover; there is nothing to recover. Continue on this branch, same PR.
+
+LANE: home (Codex) · TIER: Shared · branch codex/christmas-pack, PR #689 · same COORDINATION and STANDING AUTHORITY as the consolidated CHRISTMAS-PACK contract (docs/handover/contracts/2026-11-06-christmas-pack.md on this branch)
+
+TASK: Fix the printed labels in the Christmas pack so every figure reads cleanly and sits inside its blank area, and change the leaflet clue so it cannot be read as "measure the picture".
+
+ROOT CAUSE: Project Claude's proof review found: (1) the truck's two readouts share the top screen, leaving the bottom one blank, and the text runs into the border; (2) the label wrapper breaks a number from its unit ("AT 16 / °C OR") and inside a ratio ("= 5 : / 1"); (3) the laptop's label box is wider than its screen, so text runs onto the bezel; (4) the slider's answer box sits below its white plate on the cover; (5) answer captions repeat the unit when the label already holds it ("...COME IN hours", "CHRISTMAS UNICORNS unicorns"); (6) an /updates/ line the contract did not ask for; (7) the leaflet's "HEIGHT ON THIS PAGE 10 cm": on paper the drawn tree is about 4 cm, so "this page" invites a student to measure the printed picture and get it wrong (Jon, 6 Nov: change it).
+
+CLASS CHECK: (2) and (5) are generic build_pack.py faults (every room's labels and captions), so they are fixed there, room-agnostic, with selftest plants. (1), (3) and (4) are this room's config (label boxes measured wrong); (1) uses the already-authorised optional label_boxes. (6) and (7) are local.
+
+EXACT CHANGE:
+1. Truck (xmas-01): label_boxes with two boxes, the top and bottom screens' glass, inset; the clue's printed text split at " · " into "CHILLER ZONE (TREE): {{ct.start}} °C" and "FREEZER ZONE (MINCE PIES): −18 °C". Generic label_boxes support with its selftest plant (part count must equal box count), Kiln unchanged.
+2. Line breaking (build_pack.py, all rooms): a number never separates from what follows it as a unit or symbol (°C, cm, m, %, and similar), and "a : b" never breaks around its colon. Implement by binding those pairs with non-breaking spaces before fitting. Plants: a label whose fit splits "16 °C"; one that splits "5 : 1". Kiln's labels compared before/after; report any change.
+3. Minus signs: confirm every negative figure printed on the art uses U+2212 (TRUE-MINUS, #671), the truck's −8 and −18 included. If any is a hyphen, fix it in the generic printing path, with a plant.
+4. Laptop (xmas-08): re-measure the label box inside the screen's glass only, inset; the text must fit at 11 pt or more.
+5. Slider (xmas-11): re-measure the label box inside the white plate; check the dial's and keypad's boxes the same way on the cover.
+6. Answer captions (build_pack.py, all rooms): don't append the instrument's unit when the label already contains it (case-insensitive, whole word: "hours", "unicorns", "(cm)"). Plant: a label containing its unit, which must not be printed twice.
+7. Remove the updates/index.html line from this PR.
+8. escape-rooms/christmas-tree-fiasco/room.js, prize-leaflet clue, ONE wording change (Jon, 6 Nov): "HEIGHT ON THIS PAGE {{sc.d}} cm" -> "HEIGHT ON THE LEAFLET {{sc.d}} cm". Nothing else in room.js changes. Then re-run check-escape-rooms.py (VALID stays 98 of 900) and the escape play-through; the online clue and the teacher page's clue table show the new wording.
+9. Re-export the proof PNGs (page 1, answer key, set A cover, both evidence pages, locks page) and add a set D evidence page 1 (other figures, other line lengths). Report each label's fitted point size.
+
+DO NOT TOUCH: room.js beyond the six <b> pairs and item 8; the maths, variants, sets and seed; page 1's wording; image content; the files under COORDINATION.
+
+SUCCESS CONDITION: Each readout sits in its own truck screen; no figure is separated from its unit and no ratio breaks; every label sits inside its blank area at 11 pt or more; negative figures print with U+2212; no repeated units; the leaflet reads "HEIGHT ON THE LEAFLET" online and on paper; the /updates/ line gone; selftest passes with every new plant caught; Kiln still builds (changes reported with before/after images); new proof PNGs committed; Gate green. Stop for Project Claude's review and Jon's "merge".
+
+STOP IF: a label cannot fit inside its blank area at 11 pt once the bindings are in (report the image and text); any Kiln label changes in a way that isn't the two binding rules or the unit rule; the minus fix needs a change outside the generic printing path; the wording change alters any check result other than the clue text itself.
