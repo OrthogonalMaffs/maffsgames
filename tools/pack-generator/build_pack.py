@@ -460,6 +460,10 @@ blockquote { margin: 0 0 2mm; padding: 2mm 4mm; border-left: 2pt solid #000; }
 .lock { margin-bottom: 4mm; }
 .lock h2 { margin-top: 0; }
 .lock .opens { font-size: 9.5pt; }
+.page[data-kind=locks] .main { display: flex; flex-direction: column; }
+.page[data-kind=locks] .lock { display: flex; flex: 1 1 auto; flex-direction: column; }
+.page[data-kind=locks] .lock .work { height: auto; min-height: 25mm; flex: 1 1 auto; }
+.page[data-kind=locks] .final { flex: none; }
 .work { height: 34mm; border: 0.8pt solid #000; margin-top: 1.5mm;
         background-image: linear-gradient(#bbb 0.3pt, transparent 0.3pt), linear-gradient(90deg, #bbb 0.3pt, transparent 0.3pt);
         background-size: 5mm 5mm; }
@@ -674,8 +678,11 @@ RUN_IT_WORDS = 150        # page 1's cap (Amendment 9)
 SET_PAGES = "{SETPAGES}"    # page 1's line of each set's pages (Amendment 10), filled once the pages are numbered
 
 
-def set_pages_line(numbered):
+def set_pages_line(numbered, hint_pages=()):
     """"Each set is 4 pages: A 5-8, B 9-12, ..." from [(letter, [page numbers])] (Amendment 10)."""
+    for letter, nums in numbered:
+        if not nums or nums != list(range(nums[0], nums[-1] + 1)):
+            raise BuildError("set %s's pack page range is not contiguous: %s" % (letter, nums))
     sizes = {len(nums) for _, nums in numbered}
     flat = [n for _, nums in numbered for n in nums]
     in_order = flat == list(range(flat[0], flat[0] + len(flat)))
@@ -683,25 +690,32 @@ def set_pages_line(numbered):
         # The short form keeps page 1 inside its 150 words (Amendments 9, 10): the sets run in order, so the first and
         # last set's pages fix every other set's.
         (a, an), (z, zn) = numbered[0], numbered[-1]
-        return "Each set is %d pages: %s %d-%d \u2026 %s %d-%d." % (len(an), a, an[0], an[-1], z, zn[0], zn[-1])
-    head = ("Each set is %d pages:" % sizes.pop()) if len(sizes) == 1 else "Each set's pages:"
-    return head + " " + ", ".join("%s %d-%d" % (letter, nums[0], nums[-1]) for letter, nums in numbered) + "."
+        line = "Each set is %d pages: %s %d-%d \u2026 %s %d-%d." % (len(an), a, an[0], an[-1], z, zn[0], zn[-1])
+    else:
+        head = ("Each set is %d pages:" % sizes.pop()) if len(sizes) == 1 else "Each set's pages:"
+        line = head + " " + ", ".join("%s %d-%d" % (letter, nums[0], nums[-1]) for letter, nums in numbered) + "."
+    if len(hint_pages) > 1:
+        if len(hint_pages) != len(numbered):
+            raise BuildError("per-set hint page count %d differs from %d sets" % (len(hint_pages), len(numbered)))
+        line = line[:-1] + "; hint cards %d-%d." % (hint_pages[0], hint_pages[-1])
+    return line
 
 
 def run_it(letters, url, set_pages=SET_PAGES):
-    """Page 1 (Amendments 9, 10, 11): Project Claude's draft, verbatim but for the set letters (from the pack), each
-    set's pages (from the build) and Amendment 11's final-padlock line. Amendment 1's play-online line is on page 2:
+    """Page 1 (Amendments 9, 10, 11; CHRISTMAS-PACK Amendment 3): Project Claude's draft with its three approved
+    trims, the set letters (from the pack), each set's pages (from the build) and Amendment 11's final-padlock line.
+    Amendment 1's play-online line is on page 2:
     with it, page 1 would pass its 150 words."""
     return ("<h2>Before the lesson</h2><ol>"
             "<li>Print one set per team (%s-%s). Cut out the hint cards.<br>%s</li>"
             "<li>Choose your penalties. We suggest 1 minute per wrong answer and 1 per hint.</li></ol>"
             "<h2>In the lesson</h2><ol>"
-            "<li>Hand out the sets face down. Tell the teams your penalties.</li>"
+            "<li>Hand out the sets face down. Tell teams your penalties.</li>"
             "<li>Read the start script (page 2). Start a timer, counting up.</li>"
             "<li>Teams bring each answer to you. Check it against their set in the key.<br>"
             "Right: tick it. Wrong: check a box and say &ldquo;not yet&rdquo;.</li>"
-            "<li>A team wants a hint? Hand over the card and add one to Hints.</li>"
-            "<li>Final padlock ticked: write down the time.</li>"
+            "<li>A team wants a hint? Hand over the card; add one to Hints.</li>"
+            "<li>Final padlock ticked: note the time.</li>"
             "<li>Call time when you choose. Read the ending that fits. Lowest total time wins.</li></ol>"
             "<p><b>Final padlock:</b> No calculator. Any calculation that uses each answer once, with + &minus; "
             "&times; &divide; and no brackets, and makes the target counts (only one does).</p>"
@@ -886,11 +900,13 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
         "<td class='n'>%s <span class='wrong'>(common wrong answer %s)</span></td>"
         % (format_token(v["answer"]), format_token(v["miss"]) if v.get("miss") is not None else "none")
         for v in s["vars"]), s["final"]["target"], s["final"]["expr"]) for s in sets)
-    legend = "".join("<li><b>%s:</b> %s %s</li>" % (l["name"], l.get("missTitle", ""), l.get("missSays", ""))
+    legend = "".join("<li><b>%s:</b> %s %s</li>" % (l["name"], fill_a(l.get("missTitle", "")),
+                                                     fill_a(l.get("missSays", "")))
                      for l in locks)
     final_note = ("<p>For each set, the final padlock&rsquo;s expression above is the only one that makes its target, "
                   "up to the order of its parts; the worked solutions show its working.</p>")
-    pages.append(page("key", "%s<table><tr><th></th>%s</tr>%s</table><h2>The common wrong answers</h2><ul>%s</ul>%s"
+    pages.append(page("key", "%s<table><tr><th></th>%s</tr>%s</table>"
+                      "<h2>The common wrong answers (shown with Set A's figures)</h2><ul>%s</ul>%s"
                       % (about_box(room, teach, locks, sets), head, rows, legend, final_note), "%s: answer key" % title, "One row per set"))
     sols = ""
     for s in sets:
@@ -974,9 +990,13 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
                ('<img src="%s" alt="">' % win.as_uri()) if win and win.is_file() else "", fill_a(room.get("win", ""))))
     pages.append(page("certificate", cert, title, "Certificate"))
 
-    numbered = [(st["letter"], [i + 1 for i, pg in enumerate(pages) if ('data-set="%s"' % st["letter"]) in pg[:200]])
+    numbered = [(st["letter"], [i + 1 for i, pg in enumerate(pages)
+                                  if ('data-set="%s"' % st["letter"]) in pg[:200]
+                                  and any(('data-kind="%s"' % kind) in pg[:200]
+                                          for kind in ("cover", "evidence", "locks"))])
                 for st in sets]
-    pages[0] = pages[0].replace(SET_PAGES, set_pages_line(numbered))
+    hint_pages = [i + 1 for i, pg in enumerate(pages) if 'data-kind="hints"' in pg[:200]]
+    pages[0] = pages[0].replace(SET_PAGES, set_pages_line(numbered, hint_pages))
     fonts = "".join("@font-face { font-family: '%s'; src: url('%s'); font-weight: %s; }"
                     % (fam, (HERE / "fonts" / fn).as_uri(), w) for fam, fn, w, _ in FONTS.values())
     foot = ('<span class="brand"><span class="logo"><img src="%s" alt=""></span><b>MaffsGames</b>'
@@ -1115,8 +1135,7 @@ def build(slug, n, seed, target=None):
 # ---- the selftest --------------------------------------------------------------------------------------------------
 
 def selftest():
-    """Every room with a config: its chosen sets must pass; then three faults are planted in the first room's sets,
-    through the same checks the build uses, and each must be caught. Builds no PDF."""
+    """Every configured room's chosen sets pass; planted faults must fail the same checks as the build. No PDF."""
     from playwright.sync_api import sync_playwright
     rooms = sorted(p.parent.name for p in (HERE / "rooms").glob("*/config.json"))
     failures, caught = [], 0
@@ -1143,7 +1162,8 @@ def selftest():
                 shape0 = cfg.get("final_shape", finalpad.DEFAULT_SHAPE)
                 probs += teacher_page_problems(
                     [("run", text_of(run_it([x["letter"] for x in sets], room_url(slug),
-                                            set_pages_line([(x["letter"], [5, 8]) for x in sets])))),
+                                            set_pages_line([(x["letter"], list(range(5 + 4 * i, 9 + 4 * i)))
+                                                            for i, x in enumerate(sets)])))),
                      ("key", text_of(about_box(room, teach, locks, sets)))])
                 if "Students are told: Not every note will help you. Part of the puzzle is working out which ones do." not in text_of(about_box(room, teach, locks, sets)):
                     failures.append("answer key does not tell teachers about the red herrings")
@@ -1188,6 +1208,45 @@ def selftest():
             raise pc.StalePlant("a missing score-sheet row", "the score sheet has no row for set C")
         tables[0] = pc.apply_plant(tables[0], row.group(0), "", name="a missing score-sheet row")
         return [x for x in check_score_sheet(tables, locks, sets) if "0 rows for set C" in x]
+
+    def plant_hint_inside_set_range():
+        numbered = [("A", [6, 7, 8, 9, 30]), ("B", [10, 11, 12, 13])]
+        try:
+            set_pages_line(numbered, [30, 31])
+        except BuildError as e:
+            return [str(e)] if "pack page range is not contiguous" in str(e) else []
+        return []
+
+    def audit_planted_pack(bad_locks):
+        with sync_playwright() as p:
+            browser = p.chromium.launch()
+            try:
+                pg = offline_context(browser).new_page()
+                cfg = load_config(slug0)
+                doc, _, _, _ = build_html(slug0, room, teach, bad_locks, sets, cfg,
+                                          cfg.get("seed", 1), datetime.date.today().isoformat(), room_url(slug0))
+                with tempfile.TemporaryDirectory() as tmp:
+                    src = pathlib.Path(tmp) / "planted-pack.html"
+                    src.write_text(doc, encoding="utf-8")
+                    pg.goto(src.as_uri())
+                    return pg.evaluate(AUDIT_JS)
+            finally:
+                browser.close()
+
+    def plant_unfilled_miss_title():
+        bad = copy.deepcopy(locks)
+        title = bad[0].get("missTitle", "")
+        token = re.search(r"\{\{[\w.-]+\}\}", title)
+        if not token:
+            raise pc.StalePlant("an unfilled missTitle token", "the first lock's missTitle has no token")
+        bad[0]["missTitle"] = pc.apply_plant(title, token.group(), "{{missing.figure}}",
+                                              name="an unfilled missTitle token")
+        return audit_planted_pack(bad)["tokens"]
+
+    def plant_lock_brief_overflow():
+        bad = copy.deepcopy(locks)
+        bad[0]["brief"] += " " + " ".join(["The printed brief still needs space."] * 80)
+        return [x for x in audit_planted_pack(bad)["overflow"] if "locks A" in x]
 
     def plant_two_expressions():
         # No Kiln set has a target two expressions reach, so the plant searches small whole numbers, in a fixed
@@ -1257,7 +1316,8 @@ def selftest():
     def teacher_texts(run_html=None, about_html=None):
         letters = [x["letter"] for x in sets]
         return [("run", text_of(run_html or run_it(letters, room_url(slug0),
-                                                   set_pages_line([(x, [5, 8]) for x in letters])))),
+                                                   set_pages_line([(x, list(range(5 + 4 * i, 9 + 4 * i)))
+                                                                   for i, x in enumerate(letters)])))),
                 ("key", text_of(about_html or about_box(room, teach, locks, sets)))]
 
     def plant_long_page_one():
@@ -1299,6 +1359,9 @@ def selftest():
               ("a wrong recomputed answer", plant_wrong_answer),
               ("a printed URL with no room page", plant_bad_url),
               ("a missing score-sheet row", plant_missing_row),
+              ("a per-set hint page counted inside a set's range", plant_hint_inside_set_range),
+              ("an unfilled missTitle token", plant_unfilled_miss_title),
+              ("a locks page whose briefs leave too little working space", plant_lock_brief_overflow),
               ("a final target two expressions reach", plant_two_expressions),
               ("a final target no expression reaches", plant_no_expression),
               ("a fixed penalty figure on the score sheet", plant_fixed_penalty),

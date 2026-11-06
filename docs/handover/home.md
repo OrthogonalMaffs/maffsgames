@@ -3,6 +3,7 @@
 **Queue (cross-lane facts; never archived)**
 
 - PHONE-FIT-ASIDE (Shared; Jon, 6 Nov): the phone-fit checker ignores controls inside `data-mfg-aside`. Branch claude/phone-fit-aside, worktree ~/mg-phone-fit-aside. Contract: docs/handover/contracts/2026-11-06-phone-fit-aside.md. The claims on equatle, 52dle and prime-or-composite were made and removed on the branch; main's list stays empty. At the Gate, holding for Project Claude's review and Jon's merge; entry below.
+- CHRISTMAS-PACK (Shared, Codex): conflict recovery from #689 on `codex/christmas-pack-current`, `/home/maffs/mg-christmas-pack-current`; contract and Amendments 1-4: `docs/handover/contracts/2026-11-06-christmas-pack.md`. Room art/config, independent recompute and generic pack fixes are isolated there. Cloud's WHOSE-SIDE-FIT/BIOS and Claude Code's PHONE-FIT-ASIDE files are untouched. Review holds at green Gate for Project Claude's proof PNG review and Jon's "merge".
 
 - WHOSE-SIDE: DONE and live, unlisted. #674 merged as 257e883; fixes #676 merged as f1acc1f (it contains #675, closed unmerged); main green. Merged on Jon's word before review; Project Claude reviewed #674 and #676 on 6 Nov and passed them (side roles in both θ positions, FN, Stage 4's key, all 12 triples, uniform scaling). Worktrees and claude/whose-side-fixes deleted on Jon's call, 6 Nov. Art done (#684). timer-policy.md's line waits for WHOSE-SIDE-FIT to merge; the cloud lane owns the game until stage 5, which follows WHOSE-SIDE-BIOS. Contracts: docs/history/contracts/2026-11-05-whose-side*.md.
 
@@ -18,6 +19,12 @@
 
 - FRACTION-WHOLE: merged #662, b38ce399; Shared review passed and Jon authorised merge, 4 Nov. Contract: docs/history/contracts/2026-11-04-fraction-whole.md. Main run and cleanup recorded below.
 
+## 2026-11-06 (home): CHRISTMAS-PACK
+
+Agent Codex. Worktree `/home/maffs/mg-christmas-pack-current`, branch `codex/christmas-pack-current`, from origin/main 86b56ec1 after ROOM-ORDER-HERRINGS and WHOSE-SIDE-FIT merged. #689 was conflicted by concurrent `home.md` edits; this branch preserves every PHONE-FIT-ASIDE and earlier entry and will replace #689. Implementation was ffe063ab on the original branch; next: local checks, PR and Gate. Shared review and Jon's "merge" hold. Coordination respected: cloud's WHOSE-SIDE game/verifier and Claude Code's PHONE-FIT-ASIDE files not touched.
+
+The six clue markup pairs are the only room.js changes. The room check stayed at 98 VALID of 900 with the same TRUE-MINUS result. Four end-to-end win/loss browser plays passed at 390 and 1100 px; each clue rendered bold printed words with filled tokens. All 11 PNGs on `art/christmas-pack` scanned clean, then converted without resize to WebP under 250 KB. The pack has six fair sets; all 29 variant records independently recompute. The Christmas PDF stays ignored in `dist-packs/`; six 100 dpi Christmas proof PNGs and three Kiln before/after page pairs are prepared for review. Generic fixes count only cover/evidence/locks in each set's range, fill Set A misconception figures in the key, and flex locks-page work boxes with a 25 mm minimum. Christmas boxes measure 28.8 mm in every set; Kiln's measure 35.5 mm after, 34.5 mm before. Christmas page 1 is 150 words; Kiln's is 147 after the three approved trims. Selftest: 20/20 plants caught across both rooms. Build checks passed on original branch (51/51, 404s); rerun on current main and Gate pending.
+
 ## 2026-11-06 (home): PHONE-FIT-ASIDE
 
 measure-phone-fit.py neither counts nor presses anything inside `[data-mfg-aside]`; an option group inside one fails the row with "answer control inside data-mfg-aside", whatever the lists say, and the report lists each region and what it skipped. Tagged: equatle .lbw, 52dle #modal, prime-or-composite #modal. Canon 7.6.1 has the rule. Six new selftest lines cover the three contract cases plus the skipped count, __pfSubmit and the guard against a listed game.
@@ -29,7 +36,6 @@ Open for review: the checker reads Equatle's digit row, not the whole keypad. Th
 Other games: full runs before and after in all three modes, no status changed. Twelve cells moved in how-many-parts, screening-room, take-a-walk and squared-squirrel; the same cells move between repeat runs on untouched main, so noise. Already failing on main, unchanged: possibly-maybe not on unmeasurable (all modes); aa who-ate-all-the-pies, as-you-can-see, distinctly-average, hc-factor, i-found-a-mark, its-on-sale, y-so-steep; laptop better-value.
 
 Record: agent Claude Code; wall in the PR's report; review cycles 0; amendments 0; usage n/a.
-
 ## 2026-11-06 (home): WHOSE-SIDE handover
 
 Agent Claude Code, Windows, worktree E:/jon/mg-whose-rec, branch claude/whose-side-review-record, which carries this entry and the queue line above. Its local checks were running when this was written; it merges through merge-pr.py on a green Gate (Small, docs).
