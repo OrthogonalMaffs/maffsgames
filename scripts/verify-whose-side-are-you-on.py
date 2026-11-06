@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Whose Side Are You On? (every item of the four stages recomputed from the triangle's own geometry, never the game's labels: which side is HYP, OPP and ADJ, every fraction, every function against real trig; the feedback table and its wording; 50 or more distinct items a stage; seeded rounds: HYP first, every quadrant; every stage played with real taps at 320, 390 and 1280 px: tap bands 44 px deep, each side clicked along its length and in the gaps of its dashes or dots, double clicks answering once and filling one slot, a right answer held 0.8 s lit with its mark, the clock stopped, Stage 2's slots filled, cleared and refilled before Check, one answer a question, a slow right answer still right, no sideways scroll, Aa mode included, Next above the fold; fault-injection self-test: a wrong label, a wrong function and more, each caught) |
+# ci-line: Whose Side Are You On? (every item of the four stages recomputed from the triangle's own geometry, never the game's labels: which side is HYP, OPP and ADJ, every fraction, every function against real trig; the feedback table and its wording; 50 or more distinct items a stage; seeded rounds: HYP first, every quadrant; every stage played with real taps at 320, 390 and 1280 px: tap bands 44 px deep, each side clicked along its length and in the gaps of its dashes or dots, double clicks answering once and filling one slot, a right answer held 2.0 s (timed) lit with its mark and a character's line, the clock stopped, Stage 2's slots filled, cleared and refilled before Check, one answer a question, a slow right answer still right, no sideways scroll, Aa mode included, Next above the fold; Jon's characters (contract WHOSE-SIDE-PERSONALITY): the start screen, subtitle, right, wrong, streak and results lines compared with the contract's text, the right line never twice running, the Stage 1 speaker recomputed from the geometry; at 1366x768 and 1920x1080 the figure at least half the screen's height and every control on screen with nothing to scroll; fault-injection self-test: a wrong label, a wrong function, a wrong line, a missing shout-out, a small triangle and more, each caught) |
 """Independent verification for Whose Side Are You On? (games/whose-side-are-you-on/), contract WHOSE-SIDE, 5 Nov 2026.
 SR-30: checked from its first PR.
 
@@ -16,6 +16,8 @@ coordinates, and the corners the page marks, and works everything out with vecto
   Functions    from the measured angle theta: sin, cos and tan against the ratio, to 1e-9. A function is right only if it is the one
                real trig gives for those two sides, so a swapped table cannot pass.
   Feedback     which line a wrong tap gets is recomputed from the geometry, and the wording compared with the approved spec.
+  Characters   which character speaks over a wrong tap on Stage 1 is recomputed from the geometry; every line is compared with
+               the contract's text (WHOSE-SIDE-PERSONALITY, 6 Nov 2026), held here, never read from the page.
 In the page, a played round reads the drawn SVG back and compares it with the data; each tap goes through the real mouse.
 
     python scripts/verify-whose-side-are-you-on.py [--no-selftest]
@@ -44,6 +46,24 @@ SPEC_LINES = {
     'square': 'Label from θ, not from the square corner.',
     'both': 'Use both: the side you know AND the side you want.',
 }
+# Jon's characters and lines, verbatim from contract WHOSE-SIDE-PERSONALITY (6 Nov 2026). Compared exactly, never read from the page.
+SUBTITLE = "One side never moves. The other two can't stop being polite about it."
+LEGEND = [
+    ('HYP', 'HYP, the longest side, across from the right angle.', '“I\'m here. I\'m always here.”'),
+    ('OPP', 'OPP, across from θ.', '“Oh, I\'m opposite today? Splendid.”'),
+    ('ADJ', 'ADJ, next to θ.', '“Then I shall stand beside it. After you.”'),
+]
+CLOSING = "Move θ, and the polite two swap. HYP doesn't flinch."
+RIGHT_SAYS = ['HYP: “Correct. I remain unmoved.”', 'OPP: “Spot on. Do carry on.”', 'ADJ: “Marvellous. After you.”']
+WRONG_SAYS = {
+    'hyp': 'HYP: “I have been the hypotenuse since before you were born.”',
+    'swap': 'OPP and ADJ: “Terribly sorry, I think you\'ll find we swapped.”',
+}
+SHOUTS = {3: 'HYP nods, very slightly.', 5: 'OPP and ADJ bow so politely they bump heads.', 10: 'HYP shows emotion. Once. Never again.'}
+RESULT_SAYS = {'high': 'Sides labelled. HYP is quietly proud. He will never say so.',
+               'low': 'The polite two are still bowing at each other in the corridor. Shall we go again?'}
+HOLD_MS = 2000
+BIG_SIZES = [(1366, 768), (1920, 1080)]
 COLOURS = {'HYP': '#D55E00', 'OPP': '#0072B2', 'ADJ': '#009E73'}
 DASH = {'HYP': False, 'OPP': True, 'ADJ': True}
 FN_SIDES = {'sin': ('OPP', 'HYP'), 'cos': ('ADJ', 'HYP'), 'tan': ('OPP', 'ADJ')}
@@ -111,6 +131,17 @@ def expected_why(it, role_of_tap, tapped):
     if it['ask'] == 'OPP':
         return 'upright' if tapped == upright_side(it) else 'square'
     return 'longest' if role_of_tap == 'HYP' else 'square'
+
+
+def expected_who(it, role_of_tap):
+    """Which character speaks over a wrong tap on Stage 1, from the contract's two cases: HYP whenever HYP is asked for or tapped,
+    the polite two when OPP and ADJ are mixed up. role_of_tap comes from geometry(), never from the game's own roles."""
+    return 'hyp' if it['ask'] == 'HYP' or role_of_tap == 'HYP' else 'swap'
+
+
+def result_say(right):
+    """The results screen's character line for `right` correct out of 10: 8-10 and 0-5 have one, 6-7 none."""
+    return RESULT_SAYS['high'] if right >= 8 else RESULT_SAYS['low'] if right <= 5 else None
 
 
 def check_item(it, fails):
@@ -189,6 +220,19 @@ def check_engine(page, fails, sample=None):
     turns = {o.split('.')[0] for o in orientations}
     if turns != {'0', '1', '2', '3'} or len({o.split('.')[2] for o in orientations}) != 2 or len({o.split('.')[3] for o in orientations}) != 2:
         fails.append('orientations missing: %s' % sorted(orientations)[:5])
+    # Who speaks over a wrong tap on Stage 1: recomputed from the geometry for both wrong sides of each item (all of them, or a
+    # sample of 60 in a self-test), never from the game's roles.
+    items = page.evaluate('() => WS.gen.bank(1)')
+    random.Random(5).shuffle(items)
+    for it in items[:60 if sample else len(items)]:
+        geo, _, _ = geometry(it)
+        role_by_id = {s['id']: k for k, s in geo.items()}
+        for s in it['sides']:
+            if s['id'] == it['key']:
+                continue
+            got = page.evaluate('([q, t]) => WS.gen.whoSays(q, t)', [it, s['id']])
+            if got != expected_who(it, role_by_id[s['id']]):
+                fails.append('%s: a wrong tap on %s (%s) gets %s speaking, should be %s' % (it['id'], s['id'], role_by_id[s['id']], got, expected_who(it, role_by_id[s['id']])))
     if sample:
         return
     # Feedback: 400 Stage 1 items, both wrong sides of each.
@@ -368,6 +412,44 @@ def rgb(hexa):
     return 'rgb(%d, %d, %d)' % tuple(int(hexa[i:i + 2], 16) for i in (1, 3, 5))
 
 
+LAST_RIGHT = {}       # per page: the last right-answer line shown, which the next must differ from
+
+
+def feedback_says(page):
+    """The feedback's character line (its data and its text as rendered), its streak shout-out, and whether the line sits above
+    the teaching line."""
+    return page.evaluate("""() => { const f = document.querySelector('#feedback .fb'); if (!f) return null;
+      const s = f.querySelector('.fb-say'), sh = f.querySelector('.fb-shout'), ln = f.querySelector('.fb-line');
+      const txt = e => e ? e.textContent.replace(/\\s+/g, ' ').trim() : null;
+      return {say: s ? s.dataset.say : null, sayText: txt(s), shout: sh ? sh.dataset.say : null, shoutText: txt(sh),
+              above: !!(s && ln && (s.compareDocumentPosition(ln) & Node.DOCUMENT_POSITION_FOLLOWING))}; }""")
+
+
+def check_right_says(page, streak, label, fails):
+    """A right answer: one of Jon's three lines, never the one shown last; the shout-out exactly at a streak of 3, 5 or 10."""
+    f = feedback_says(page)
+    if not f or f['say'] not in RIGHT_SAYS or f['sayText'] != f['say']:
+        fails.append('%s: right-answer line %s' % (label, f and (f['say'], f['sayText'])))
+        return
+    key = id(page)
+    if LAST_RIGHT.get(key) == f['say']:
+        fails.append('%s: the same right-answer line twice running: %s' % (label, f['say']))
+    LAST_RIGHT[key] = f['say']
+    want = SHOUTS.get(streak)
+    if f['shout'] != want or f['shoutText'] != want:
+        fails.append('%s: at a streak of %d the shout-out is %r, should be %r' % (label, streak, f['shoutText'], want))
+
+
+def check_results_say(page, right, label, fails):
+    want = result_say(right)
+    got = page.evaluate("() => { const e = document.getElementById('resSay'); return e && e.getClientRects().length ? e.textContent.replace(/\\s+/g, ' ').trim() : null; }")
+    if got != want:
+        fails.append('%s: %d right: the results line is %r, should be %r' % (label, right, got, want))
+    above = page.evaluate("() => { const s = document.getElementById('resSay'), n = document.getElementById('resScore'); return !!(s && (s.compareDocumentPosition(n) & Node.DOCUMENT_POSITION_FOLLOWING)); }")
+    if want and not above:
+        fails.append('%s: the results line is not above the score' % label)
+
+
 def wait_asking(page):
     page.wait_for_function("() => WS.ui.state() === 'asking' && !MaffsLock.isFresh()", timeout=8000)
 
@@ -524,6 +606,12 @@ def play_round(page, stage, wrong_at, label, fails):
                 other = [s['id'] for s in it['sides'] if s['id'] != it['key']][0]
                 if line != SPEC_LINES[expected_why(it, role_by_id[other], other)]:
                     fails.append('%s: feedback %r' % (label, line))
+                f = feedback_says(page)
+                want_say = WRONG_SAYS[expected_who(it, role_by_id[other])]
+                if not f or f['say'] != want_say or f['sayText'] != want_say or not f['above']:
+                    fails.append('%s: a wrong tap on %s for %s: character line %s, should be %r above the teaching line' % (label, role_by_id[other], it['ask'], f, want_say))
+            elif feedback_says(page)['say'] is not None:
+                fails.append('%s stage %d: a character line on a wrong answer outside Stage 1: %s' % (label, stage, feedback_says(page)['say']))
             if stage == 4:
                 line = page.evaluate("() => document.querySelector('.fb-line').dataset.plain")
                 if line != SPEC_LINES['both']:
@@ -537,8 +625,10 @@ def play_round(page, stage, wrong_at, label, fails):
                 fails.append('%s stage %d: Next below the fold, %.0f in %d' % (label, stage, r['y'] + r['height'], h))
             btn.click()
         else:
+            check_right_says(page, streak, '%s stage %d q%d' % (label, stage, n + 1), fails)
             page.wait_for_function("() => WS.ui.state() !== 'right'", timeout=4000)
     page.wait_for_function("() => document.querySelector('#results').classList.contains('active')", timeout=4000)
+    check_results_say(page, 10 - len(wrong_at), '%s stage %d' % (label, stage), fails)
     if page.evaluate('() => document.documentElement.scrollWidth') > w:
         fails.append('%s stage %d: sideways scroll on results' % (label, stage))
     subs = page.evaluate('() => { const n = window.__sub.length; window.__sub = []; return n; }')
@@ -584,8 +674,9 @@ def check_aa(browser, base, fails):
 
 
 def check_hold(browser, base, fails, route=None, stages=(1, 2, 3, 4)):
-    """A right answer on each stage: lit, "Right", no Next, for the real 0.8 s; taps ignored; then the next question by itself. An hour
-    jumped during the hold must not reach the clock or the score. Real timers here: run_page's fast pause would hide all of this."""
+    """A right answer on each stage: lit, "Right" and a character's line, no Next, for the real 2.0 s (Jon, 6 Nov), measured from the
+    answer to the next question; taps ignored; then the next question by itself. An hour jumped during the hold must not reach the
+    clock or the score. Real timers here: run_page's fast pause would hide all of this."""
     ctx = browser.new_context(viewport={'width': 390, 'height': 844})
     page = ctx.new_page()
     if route:
@@ -603,8 +694,9 @@ def check_hold(browser, base, fails, route=None, stages=(1, 2, 3, 4)):
         score = page.evaluate('() => WS.ui.score()')
         look = page.evaluate("""() => { const h = document.querySelector('.fb-head');
           return {mark: h ? h.textContent : null, lit: document.querySelectorAll('#figure line.side.lit').length,
-                  next: document.querySelectorAll('.maffs-next-wrap button, .fb-next button').length, bands: document.querySelectorAll('#figure .hit').length, time: document.getElementById('hudTime').textContent}; }""")
-        if look['mark'] != '✓Right' or look['lit'] < 1 or look['next'] or look['bands']:
+                  next: document.querySelectorAll('.maffs-next-wrap button, .fb-next button').length, bands: document.querySelectorAll('#figure .hit').length, time: document.getElementById('hudTime').textContent,
+                  say: (document.querySelector('#feedback .fb-say') || {dataset: {}}).dataset.say || null}; }""")
+        if look['mark'] != '✓Right' or look['lit'] < 1 or look['next'] or look['bands'] or look['say'] not in RIGHT_SAYS:
             fails.append('stage %d hold: %s' % (stage, look))
         page.evaluate('() => window.__skip(3600)')          # an hour passes on the clock's own time source, during the hold
         page.wait_for_timeout(600)
@@ -614,7 +706,7 @@ def check_hold(browser, base, fails, route=None, stages=(1, 2, 3, 4)):
         if held != ['right', first['id'], look['time'], score]:
             fails.append('stage %d: during the hold %s, expected right, %s, %s, %s' % (stage, held, first['id'], look['time'], score))
         try:
-            page.wait_for_function("(id) => WS.ui.state() === 'asking' && WS.ui.question().id !== id", arg=first['id'], timeout=1500)
+            page.wait_for_function("(id) => WS.ui.state() === 'asking' && WS.ui.question().id !== id", arg=first['id'], timeout=3000)
         except Exception:
             fails.append('stage %d: no next question after the hold' % stage)
             continue
@@ -623,12 +715,121 @@ def check_hold(browser, base, fails, route=None, stages=(1, 2, 3, 4)):
         if int(shown.split(':')[0]) >= 30:
             fails.append('stage %d: the clock ran during the hold: %s' % (stage, shown))
         wait_asking(page)
-        page.evaluate('() => WS.ui.answer(true)')
-        page.wait_for_function("() => WS.ui.state() === 'right'", timeout=3000)
-        if page.evaluate('() => WS.ui.score()') - score < 40:   # 5 seconds or less on the question scores far above this; an hour would not
-            fails.append('stage %d: the hold reached the score: %s after %s' % (stage, page.evaluate('() => WS.ui.score()'), score))
-        page.wait_for_function("() => WS.ui.state() !== 'right'", timeout=3000)
+        # The hold, timed in the page from the answer to the next question (wall clock, not the game's own time source).
+        held_ms = page.evaluate("""() => new Promise(done => { const id = WS.ui.question().id, t0 = Date.now(); let right = false, score = null;
+          WS.ui.answer(true);
+          (function poll() { const s = WS.ui.state(), dt = Date.now() - t0;
+            if (s === 'right' && !right) { right = true; score = WS.ui.score(); }
+            if (right && s === 'asking' && WS.ui.question().id !== id) return done([dt, score]);
+            if (dt > 6000) return done([-1, score]);
+            requestAnimationFrame(poll); })(); })""")
+        if not (HOLD_MS - 30 <= held_ms[0] <= HOLD_MS + 400):
+            fails.append('stage %d: a right answer held %d ms, should be %d' % (stage, held_ms[0], HOLD_MS))
+        if (held_ms[1] or 0) - score < 40:   # 5 seconds or less on the question scores far above this; an hour would not
+            fails.append('stage %d: the hold reached the score: %s after %s' % (stage, held_ms[1], score))
     ctx.close()
+
+
+def check_start(page, fails):
+    """The start screen and subtitle, compared with the contract's text exactly; the legend keeps its line sample and letter."""
+    got = page.evaluate("""() => { const t = e => e ? e.textContent.replace(/\\s+/g, ' ').trim() : null;
+      return {sub: t(document.querySelector('#menu .header .sub')), closing: t(document.getElementById('closing')),
+        rows: Array.from(document.querySelectorAll('#menu .key [role=listitem]')).map(r => [r.dataset.role, t(r.querySelector('.def')), t(r.querySelector('.say')),
+          !!r.previousElementSibling && r.previousElementSibling.tagName === 'B' && !!r.previousElementSibling.previousElementSibling.querySelector('line.' + r.dataset.role)]),
+        para: Array.from(document.querySelectorAll('#menu .menu-info > p')).map(p => t(p)), stages: document.querySelectorAll('#stageList [data-stage]').length}; }""")
+    if got['sub'] != SUBTITLE:
+        fails.append('subtitle %r' % got['sub'])
+    rows = [r[:3] for r in got['rows']]
+    if rows != [list(r) for r in LEGEND] or not all(r[3] for r in got['rows']):
+        fails.append('start-screen legend %s' % got['rows'])
+    if got['closing'] != CLOSING:
+        fails.append('closing line %r' % got['closing'])
+    if not any(p.startswith('Ten quick questions a stage.') for p in got['para']) or got['stages'] != 4:
+        fails.append('the "Ten quick questions" line or the stage list is missing: %s, %d stages' % (got['para'], got['stages']))
+
+
+def check_says(browser, base, fails, route=None):
+    """Whole rounds answered through the lock hint, at speed: a perfect Stage 1 round (every right-answer line, never the same twice
+    running, the shout-outs at 3, 5 and 10 and nowhere else, the 8-10 results line), a round of four right (the Stage 1 speaker for
+    each wrong tap from the geometry, the 0-5 line) and one of six right (no results line)."""
+    ctx = browser.new_context(viewport={'width': 390, 'height': 844})
+    ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)
+    ctx.add_init_script("(() => { const st = window.setTimeout; window.setTimeout = (f, ms, ...a) => st(f, ms === %d ? 200 : ms, ...a); })();" % HOLD_MS)
+    page = ctx.new_page()
+    if route:
+        page.route('**/games/%s/**' % SLUG, route)
+    page.goto('%s/games/%s/?cb=%d' % (base, SLUG, random.randrange(10 ** 9)))
+    page.wait_for_function('() => !!window.WS && !!window.katex')
+    for stage, wrong_at in ((1, set()), (1, {0, 2, 4, 5, 6, 8}), (3, {1, 5, 6, 9})):
+        page.evaluate('(n) => WS.ui.start(n)', stage)
+        streak = 0
+        for n in range(10):
+            label = 'lines stage %d q%d' % (stage, n + 1)
+            wait_asking(page)
+            it = page.evaluate('() => WS.ui.question()')
+            wrong = n in wrong_at
+            page.evaluate('(r) => WS.ui.answer(r)', not wrong)
+            page.wait_for_function("() => WS.ui.state() === 'right' || WS.ui.state() === 'wrong'", timeout=4000)
+            if wrong:
+                streak = 0
+                if stage == 1:
+                    geo, _, _ = geometry(it)
+                    role_by_id = {s['id']: k for k, s in geo.items()}
+                    tapped = [s['id'] for s in it['sides'] if s['id'] != it['key']][0]      # the side WS.ui.answer(false) taps
+                    want = WRONG_SAYS[expected_who(it, role_by_id[tapped])]
+                    f = feedback_says(page)
+                    if not f or f['say'] != want or f['sayText'] != want or not f['above'] or f['shout']:
+                        fails.append('%s: wrong tap on %s for %s: %s, should be %r above the teaching line' % (label, role_by_id[tapped], it['ask'], f, want))
+                page.click('.maffs-next-wrap button, .fb-next button')
+            else:
+                streak += 1
+                check_right_says(page, streak, label, fails)
+                page.wait_for_function("() => WS.ui.state() !== 'right'", timeout=4000)
+        page.wait_for_function("() => document.querySelector('#results').classList.contains('active')", timeout=4000)
+        check_results_say(page, 10 - len(wrong_at), 'lines stage %d' % stage, fails)
+        page.wait_for_function('() => !MaffsLock.isFresh()', timeout=4000)
+        page.click('#menuBtn')
+    ctx.close()
+
+
+def check_big(browser, base, fails, route=None, sizes=BIG_SIZES, stages=(1, 2, 3, 4)):
+    """Large screens (contract item 8): the figure's drawn height at least half the screen, the question and every answer control
+    on screen with nothing to scroll, before and after a wrong answer (Next too), and the right-answer line in view during the hold.
+    The triangle inside keeps its shape, so its own height varies with its proportions; the figure it fills is what is sized."""
+    for w, h in sizes:
+        ctx = browser.new_context(viewport={'width': w, 'height': h})
+        ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)
+        page = ctx.new_page()
+        if route:
+            page.route('**/games/%s/**' % SLUG, route)
+        page.goto('%s/games/%s/?cb=%d' % (base, SLUG, random.randrange(10 ** 9)))
+        page.wait_for_function('() => !!window.WS && !!window.katex')
+        for stage in stages:
+            for when in ('asking', 'wrong', 'right'):
+                page.evaluate('(n) => WS.ui.start(n)', stage)
+                wait_asking(page)
+                if when != 'asking':
+                    page.evaluate('(r) => WS.ui.answer(r)', when == 'right')
+                    page.wait_for_function('(s) => WS.ui.state() === s', arg=when, timeout=4000)
+                    page.wait_for_timeout(100)
+                m = page.evaluate("""() => { const b = e => e.getBoundingClientRect(), svg = document.querySelector('#figure svg');
+                  const shown = s => Array.from(document.querySelectorAll(s)).filter(e => e.getClientRects().length);
+                  const ctl = shown('#figure .hit, #slotTop, #slotBottom, #checkBtn, #opts .opt, #ask, .maffs-next-wrap button, .fb-next button, #feedback .fb-head, #feedback .fb-say');
+                  return {svgH: svg ? b(svg).height : 0, bottom: Math.max(...ctl.map(e => b(e).bottom)), top: Math.min(...ctl.map(e => b(e).top)), n: ctl.length,
+                    next: shown('.maffs-next-wrap button, .fb-next button').length, say: shown('#feedback .fb-say').length,
+                    sh: document.documentElement.scrollHeight, sw: document.documentElement.scrollWidth}; }""")
+                label = '%dx%d stage %d %s' % (w, h, stage, when)
+                if m['svgH'] < 0.5 * h:
+                    fails.append('%s: the figure is drawn %.0f px tall, under half the screen (%d)' % (label, m['svgH'], h))
+                if m['bottom'] > h - 40 or m['top'] < 0:
+                    fails.append('%s: the question or a control is off screen (%.0f to %.0f, fold %d)' % (label, m['top'], m['bottom'], h - 40))
+                if m['sh'] > h or m['sw'] > w:
+                    fails.append('%s: the page scrolls (%d x %d in %d x %d)' % (label, m['sw'], m['sh'], w, h))
+                if when == 'wrong' and not m['next']:
+                    fails.append('%s: no Next' % label)
+                if when == 'right' and not m['say']:
+                    fails.append('%s: no right-answer line in view' % label)
+        ctx.close()
 
 
 def check_colours(page, fails):
@@ -647,8 +848,8 @@ def check_colours(page, fails):
 def run_page(browser, base, fails, route=None, sizes=SIZES, engine=True, stages=(1, 2, 3, 4)):
     ctx = browser.new_context(viewport={'width': sizes[0][0], 'height': sizes[0][1]})
     ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)
-    # Test only: the 800 ms pause on a right answer runs at 250 ms (check_hold keeps the real one), so a round is not mostly waiting.
-    ctx.add_init_script("(() => { const st = window.setTimeout; window.setTimeout = (f, ms, ...a) => st(f, ms === 800 ? 250 : ms, ...a); })();")
+    # Test only: the 2.0 s pause on a right answer runs at 250 ms (check_hold keeps the real one), so a round is not mostly waiting.
+    ctx.add_init_script("(() => { const st = window.setTimeout; window.setTimeout = (f, ms, ...a) => st(f, ms === %d ? 250 : ms, ...a); })();" % HOLD_MS)
     for w, h in sizes:
         page = ctx.new_page()
         page.set_viewport_size({'width': w, 'height': h})
@@ -663,6 +864,7 @@ def run_page(browser, base, fails, route=None, sizes=SIZES, engine=True, stages=
         if engine and (w, h) == sizes[0]:
             check_engine(page, fails, sample=None if stages == (1, 2, 3, 4) else 200)
             check_colours(page, fails)
+            check_start(page, fails)
         for stage in stages:
             if stages != (1, 2, 3, 4) and fails:    # a self-test plant already caught: no need to play it out
                 break
@@ -687,7 +889,7 @@ PLANTS = [
     ('a fraction printed upside down', "it.frac = [lenOf(tri, p[0]), lenOf(tri, p[1])];", "it.frac = [lenOf(tri, p[1]), lenOf(tri, p[0])];"),
     ('feedback reworded', "Label from θ, not from the square corner.", "Label from the square corner."),
     ('a thin tap band', "'stroke-width': 44,", "'stroke-width': 30,"),
-    ('a label on its line', "var clear = Math.abs(nx) * t.hw + Math.abs(ny) * t.hh + 7;", "var clear = 2;"),
+    ('a label on its line', "var clear = Math.abs(nx) * t.hw + Math.abs(ny) * t.hh + 7 * g;", "var clear = 2;"),
     ('green feedback', ".fb-head{font-weight:700;font-size:1.05rem;color:var(--text)}", ".fb-head{font-weight:700;font-size:1.05rem;color:var(--correct)}"),
     ('a side colour on the score', ".hud-val{font-family:var(--font-num);", ".hud-val{color:var(--adj);font-family:var(--font-num);"),
     ('no word on a right answer', "(ok ? 'Right' : 'Not quite')", "(ok ? '' : 'Not quite')"),
@@ -700,11 +902,21 @@ PLANTS = [
     ('the old behaviour: one side in both slots', " || top.dataset.val === val || bottom.dataset.val === val) return;", ") return;", 'stage 2'),
     ('the old behaviour: a second tap answers again', [("    if (state !== 'asking') return;\n    if (stage === 1) {\n      if (!MaffsLock.lock($('qarea'))) return;\n", "    if (stage === 1) {\n"),
                                                      ("draw.reserve = ok ? RESERVE[stage] : reserveFeedback();", "draw.tap = true; draw.reserve = ok ? RESERVE[stage] : reserveFeedback();")], None),
-    ('a shorter hold', "MaffsLock.timer(advance, 800);", "MaffsLock.timer(advance, 200);", 'hold'),
-    ('Next on a right answer', "      MaffsLock.timer(advance, 800);\n", "      fb.querySelector('.fb').insertAdjacentHTML('beforeend', '<div class=\"fb-next\"><button type=\"button\">Next</button></div>');\n      MaffsLock.timer(advance, 800);\n", 'hold'),
+    ('a shorter hold', "MaffsLock.timer(advance, HOLD_MS);", "MaffsLock.timer(advance, 200);", 'hold'),
+    ('the old 0.8 s hold', "var HOLD_MS = 2000;", "var HOLD_MS = 800;", 'hold'),
+    ('Next on a right answer', "      MaffsLock.timer(advance, HOLD_MS);\n", "      fb.querySelector('.fb').insertAdjacentHTML('beforeend', '<div class=\"fb-next\"><button type=\"button\">Next</button></div>');\n      MaffsLock.timer(advance, HOLD_MS);\n", 'hold'),
     ('the clock runs during the hold', "    askedAt = now();\n    tick();\n", "    tick();\n", 'hold'),
     ('a changed colour', "--opp:#0072B2", "--opp:#0072C2"),
     ('a small coloured word', ".w{font-weight:700;font-size:19px;", ".w{font-weight:700;font-size:15px;"),
+    # contract WHOSE-SIDE-PERSONALITY: Jon's lines, the speaker rule, the shout-outs, the results line, the large screen
+    ('a wrong line', "since before you were born.", "since you were born."),
+    ('a start-screen line reworded', "Oh, I'm opposite today? Splendid.", "Oh, I'm opposite today!"),
+    ('the subtitle reworded', "The other two can't stop being polite about it.", "The other two are polite about it."),
+    ('the wrong speaker: HYP tapped, the polite two answer', "return it.ask === 'HYP' || tapped === it.roles.HYP ? 'hyp' : 'swap';", "return it.ask === 'HYP' ? 'hyp' : 'swap';"),
+    ('a missing streak shout-out at 5', " 5: 'OPP and ADJ bow so politely they bump heads.',", "", 'says'),
+    ('the same right-answer line twice running', "    if (lastRight >= 0 && i >= lastRight) i++;\n", "    i = 0;\n", 'says'),
+    ('no results line at 8-10 right', "var resLine = rightCount >= 8 ? SAYS.high : rightCount <= 5", "var resLine = rightCount >= 11 ? SAYS.high : rightCount <= 5", 'says'),
+    ('a small triangle at 1920x1080', "var H = Math.max(240, Math.floor(window.innerHeight - below - top - pad));", "var H = 400;", 'big'),
 ]
 
 
@@ -731,6 +943,12 @@ def self_test(browser, base, src):
                                if rt.request.resource_type == 'document' else rt.continue_())
         found, err = [], None
         try:
+            if len(plant) > 3 and plant[3] in ('says', 'big'):
+                (check_says(browser, base, found, route=route(None)) if plant[3] == 'says'
+                 else check_big(browser, base, found, route=route(None), sizes=[(1920, 1080)], stages=(1,)))
+                print('  planted, caught: %s (%d findings; first: %s)' % (name, len(found), found[0][:110])) if found else print('  NOT CAUGHT: %s' % name)
+                problems += 0 if found else 1
+                continue
             if len(plant) > 3 and plant[3] == 'hold':
                 check_hold(browser, base, found, route=route(None), stages=(1,))
                 print('  planted, caught: %s (%d findings; first: %s)' % (name, len(found), found[0][:110])) if found else None
@@ -762,6 +980,8 @@ def main():
             run_page(browser, base, fails)
             check_aa(browser, base, fails)
             check_hold(browser, base, fails)
+            check_says(browser, base, fails)
+            check_big(browser, base, fails)
             plants = 0 if args.no_selftest else self_test(browser, base, src)
             browser.close()
     finally:
