@@ -73,15 +73,21 @@ line.HYP{stroke:var(--hyp)}line.OPP{stroke:var(--opp);stroke-dasharray:11 7}line
 .ask .katex{font-size:1.1em}
 .fracline{text-align:center;font-size:1.25rem;min-height:3.2rem;display:flex;align-items:center;justify-content:center;gap:.6rem}
 
+.builder{display:flex;align-items:center;justify-content:center;gap:1rem}
+.slots{display:flex;flex-direction:column;align-items:stretch;width:84px}
+.slot{min-height:44px;padding:0 .4rem;border:1px dashed var(--border);border-radius:8px;background:var(--surface-alt);color:var(--text);font-size:1.05rem;cursor:pointer}
+.slot.full{border-style:solid}
+.slots hr{border:0;border-top:2px solid var(--text);margin:2px 0}
 .figure{position:relative;margin:0 auto;touch-action:manipulation}
 .figure svg{display:block}
+.figure .side,.figure .square,.figure .arc{pointer-events:none}
 .figure .side{stroke:var(--plain);stroke-width:4;stroke-linecap:round}
 .figure .side.lit{stroke-width:6}
 .figure .side.lit.HYP{stroke:var(--hyp)}
 .figure .side.lit.OPP{stroke:var(--opp);stroke-dasharray:12 8}
 .figure .side.lit.ADJ{stroke:var(--adj);stroke-dasharray:1 10;stroke-linecap:round}
 .figure .side.sel{stroke:var(--text);stroke-width:6}
-.figure .hit{stroke:transparent;stroke-linecap:butt;pointer-events:stroke;cursor:pointer;outline:none}
+.figure .hit{stroke:transparent;stroke-linecap:round;pointer-events:stroke;cursor:pointer;outline:none}
 .figure .hit:focus-visible{stroke:var(--accent-dim)}
 .figure .square{fill:none;stroke:var(--text);stroke-width:1.8}
 .figure .arc{fill:none;stroke:var(--text);stroke-width:1.8}
@@ -477,7 +483,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     return P;
   }
 
-  var stage = 1, deck = [], qi = 0, Q = null, state = 'menu', tops = null;
+  var stage = 1, deck = [], qi = 0, Q = null, state = 'menu';
   var score = 0, streak = 0, bestStreak = 0, rightCount = 0, answered = 0;
   var clockMs = 0, askedAt = 0, clockId = null;
 
@@ -517,7 +523,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     ev('game_started', { game_slug: SLUG, level: level, mode: 'stage-' + n });
     nextQuestion();
   }
-  var RESERVE = { 1: 150, 2: 215, 3: 275, 4: 215 };
+  var RESERVE = { 1: 150, 2: 275, 3: 275, 4: 215 };
   function lengthLabels(it) {
     var o = {}; it.sides.forEach(function (s) { o[s.id] = s.len; }); return o;
   }
@@ -527,7 +533,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     $('feedback').innerHTML = '';
     $('qcard').classList.remove('fb-open');
     if (qi >= deck.length) { finish(); return; }
-    Q = deck[qi++]; tops = null;
+    Q = deck[qi++];
     $('hudQ').textContent = qi + '/' + PER_ROUND;
     $('hudStreak').textContent = streak;
     $('hudScore').textContent = score;
@@ -537,8 +543,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       $('ask').innerHTML = 'Tap the ' + rich({ HYP: 'HYPOTENUSE', OPP: 'OPPOSITE', ADJ: 'ADJACENT' }[Q.ask]);
       drawFigure(Q, { tap: true, reserve: RESERVE[1] });
     } else if (stage === 2) {
-      $('ask').innerHTML = rich(Q.top + ' over ' + Q.bottom) + ': tap the top side, then the bottom';
-      frac.hidden = false; frac.innerHTML = tex('\\dfrac{\\square}{\\square}');
+      $('ask').innerHTML = rich(Q.top + ' over ' + Q.bottom) + ': tap the top side, then the bottom. Tap a box to empty it, then press Check.';
+      frac.hidden = false; buildSlots();
       drawFigure(Q, { tap: true, labels: lengthLabels(Q), reserve: RESERVE[2] });
     } else if (stage === 3) {
       frac.hidden = false;
@@ -568,6 +574,48 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     for (var i = 0; i < it.sides.length; i++) if (it.sides[i].id === id) return it.sides[i].len;
     return '';
   }
+  // Stage 2's fraction: two slots holding sides by dataset.val. A tap on a side fills the first empty slot, a tap on a full slot
+  // empties it, and only Check marks.
+  function buildSlots() {
+    $('fracline').innerHTML = '<div class="builder"><div class="slots">' +
+      '<button class="slot" type="button" id="slotTop" aria-label="Top of the fraction"></button><hr>' +
+      '<button class="slot" type="button" id="slotBottom" aria-label="Bottom of the fraction"></button></div>' +
+      '<button class="btn solid" type="button" id="checkBtn" disabled>Check</button></div>';
+    showSlot($('slotTop')); showSlot($('slotBottom'));
+  }
+  function showSlot(slot) {
+    var full = !!slot.dataset.val;
+    slot.classList.toggle('full', full);
+    slot.innerHTML = tex(full ? '\\mathbf{' + lengthOfId(Q, slot.dataset.val) + '}' : '\\square');
+  }
+  function refreshSlots() {
+    var top = $('slotTop'), bottom = $('slotBottom'), lines = $('figure').querySelectorAll('line.side');
+    for (var i = 0; i < lines.length; i++) {
+      var id = lines[i].getAttribute('data-side');
+      lines[i].classList.toggle('sel', id === top.dataset.val || id === bottom.dataset.val);
+    }
+    $('checkBtn').disabled = !(top.dataset.val && bottom.dataset.val);
+  }
+  function fillSlot(val) {
+    var top = $('slotTop'), bottom = $('slotBottom'), slot = !top.dataset.val ? top : !bottom.dataset.val ? bottom : null;
+    // A side already in a slot stays there, so a double click fills one slot; emptying is by tapping the slot.
+    if (!slot || top.dataset.val === val || bottom.dataset.val === val) return;
+    slot.dataset.val = val;
+    showSlot(slot); refreshSlots();
+  }
+  function clearSlot(slot) {
+    if (state !== 'asking' || !slot.dataset.val) return;
+    delete slot.dataset.val;
+    showSlot(slot); refreshSlots();
+  }
+  function checkSlots() {
+    var top = $('slotTop').dataset.val, bottom = $('slotBottom').dataset.val;
+    if (state !== 'asking' || !top || !bottom || !MaffsLock.lock($('qarea'))) return;
+    var ok = top === Q.keyTop && bottom === Q.keyBottom;
+    $('fracline').innerHTML = tex(ok ? fracNums(Q.top, Q.bottom, Q.frac[0], Q.frac[1]) : '\\dfrac{\\mathbf{' + lengthOfId(Q, top) + '}}{\\mathbf{' + lengthOfId(Q, bottom) + '}}');
+    markQuestion(ok, ok ? '' : Q.top + ' is ' + Q.frac[0] + ' and ' + Q.bottom + ' is ' + Q.frac[1] + ', so ' + Q.top + ' over ' + Q.bottom + ' is ' + Q.frac[0] + ' over ' + Q.frac[1] + '.',
+      { lit: allLit(), labels: lengthLabels(Q) });
+  }
   function buildOptions(list, tall) {
     var opts = $('opts');
     opts.hidden = false;
@@ -595,18 +643,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       var right = val === Q.key, lit = {}; lit[Q.ask] = true;
       markQuestion(right, right ? 'That is the ' + Q.ask + '.' : LINE[whyTap(Q, val)], { lit: lit });
     } else if (stage === 2) {
-      if (tops === null) {
-        tops = val;
-        $('fracline').innerHTML = tex('\\dfrac{\\mathbf{' + lengthOfId(Q, val) + '}}{\\square}');
-        var sel = {}; sel[val] = true;
-        drawFigure(Q, { tap: true, labels: lengthLabels(Q), reserve: RESERVE[2], sel: sel });
-        return;
-      }
-      if (!MaffsLock.lock($('qarea'))) return;
-      var ok = tops === Q.keyTop && val === Q.keyBottom;
-      $('fracline').innerHTML = tex(ok ? fracNums(Q.top, Q.bottom, Q.frac[0], Q.frac[1]) : '\\dfrac{\\mathbf{' + lengthOfId(Q, tops) + '}}{\\mathbf{' + lengthOfId(Q, val) + '}}');
-      markQuestion(ok, ok ? '' : Q.top + ' is ' + Q.frac[0] + ' and ' + Q.bottom + ' is ' + Q.frac[1] + ', so ' + Q.top + ' over ' + Q.bottom + ' is ' + Q.frac[0] + ' over ' + Q.frac[1] + '.',
-        { lit: allLit(), labels: lengthLabels(Q) });
+      fillSlot(val);
     }
   }
   function chose(val) {
@@ -687,6 +724,11 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     e.preventDefault();
     tapped(e.target.dataset.val);
   });
+  $('fracline').addEventListener('click', function (e) {
+    var slot = e.target.closest('.slot');
+    if (slot) clearSlot(slot);
+    else if (e.target.closest('#checkBtn')) checkSlots();
+  });
   $('opts').addEventListener('click', function (e) { var b = e.target.closest('.opt'); if (b) chose(b.dataset.val); });
   (function () {
     var KEY = 'mfg_accessible', btn = $('a11yToggle');
@@ -721,7 +763,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
           tapSide(right ? Q.key : ids.filter(function (i) { return i !== Q.key; })[0]);
         } else if (stage === 2) {
           tapSide(Q.keyTop);
-          tapSide(right ? Q.keyBottom : Q.keyTop);
+          tapSide(right ? Q.keyBottom : ids.filter(function (i) { return i !== Q.keyTop && i !== Q.keyBottom; })[0]);
+          $('checkBtn').click();
         } else {
           var bs = Array.prototype.slice.call($('opts').querySelectorAll('.opt'));
           bs.filter(function (b) { return (b.dataset.val === Q.key) === !!right; })[0].click();

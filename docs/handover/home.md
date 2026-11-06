@@ -2,7 +2,7 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- WHOSE-SIDE: home/Claude Code, claude/whose-side-are-you-on, Windows worktree E:/jon/mg-whose-side. Contract + Amendments 1–2: docs/handover/contracts/2026-11-05-whose-side.md. Shared: Gate, then Project Claude's review and Jon's phone play-test and "merge".
+- WHOSE-SIDE: #674 merged as 257e883, main green, on Jon's "merge" before Project Claude's review (still owed). Jon's play-test fixes: claude/whose-side-fixes, Windows worktree E:/jon/mg-whose-fix, contract docs/handover/contracts/2026-11-05-whose-side-fixes.md. Stops at a green Gate. Double clicks and the hold: claude/whose-side-double-tap, worktree E:/jon/mg-whose-dbl, on top of #675 (it needs #675's slots), contract docs/handover/contracts/2026-11-05-whose-side-double-tap.md. Merge #675 first. Close-out of all three contracts follows.
 
 - CHRISTMAS-ROOM: DONE. #667 merged as 9cbedee; close-out #668 merged as e32608f. Contract: docs/history/contracts/2026-11-04-christmas-room.md.
 
@@ -15,6 +15,10 @@
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
 - FRACTION-WHOLE: merged #662, b38ce399; Shared review passed and Jon authorised merge, 4 Nov. Contract: docs/history/contracts/2026-11-04-fraction-whole.md. Main run and cleanup recorded below.
+
+## 2026-11-05 (home): WHOSE-SIDE-FIXES
+
+Jon's play-test. Stage 2 gets slots and Check; each side one hit line, nothing painted takes a tap; verifier clicks the dash and dot gaps at every size; 18 plants caught. No click on a side missed in reproduction; the clicks that did nothing came during MaffsLock's 300 ms window, and no bands exist during the 800 ms Right flash. No merge authority. Record: agent Claude Code; wall in the PR's report; review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-05 (home): WHOSE-SIDE
 

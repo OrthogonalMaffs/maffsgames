@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Whose Side Are You On? (every item of the four stages recomputed from the triangle's own geometry, never the game's labels: which side is HYP, OPP and ADJ, every fraction, every function against real trig; the feedback table and its wording; 50 or more distinct items a stage; seeded rounds: HYP first, every quadrant; every stage played with real taps at 320, 390 and 1280 px: tap bands 44 px deep, one answer a question, a slow right answer still right, no sideways scroll, Aa mode included, Next above the fold; fault-injection self-test: a wrong label, a wrong function and more, each caught) |
+# ci-line: Whose Side Are You On? (every item of the four stages recomputed from the triangle's own geometry, never the game's labels: which side is HYP, OPP and ADJ, every fraction, every function against real trig; the feedback table and its wording; 50 or more distinct items a stage; seeded rounds: HYP first, every quadrant; every stage played with real taps at 320, 390 and 1280 px: tap bands 44 px deep, each side clicked along its length and in the gaps of its dashes or dots, double clicks answering once and filling one slot, a right answer held 0.8 s lit with its mark, the clock stopped, Stage 2's slots filled, cleared and refilled before Check, one answer a question, a slow right answer still right, no sideways scroll, Aa mode included, Next above the fold; fault-injection self-test: a wrong label, a wrong function and more, each caught) |
 """Independent verification for Whose Side Are You On? (games/whose-side-are-you-on/), contract WHOSE-SIDE, 5 Nov 2026.
 SR-30: checked from its first PR.
 
@@ -36,6 +36,7 @@ ROOT = os.path.dirname(HERE)
 SLUG = 'whose-side-are-you-on'
 GAME = os.path.join(ROOT, 'games', SLUG, 'index.html')
 MIN_ITEMS = 50
+STOP_AT_FIRST = False
 SIZES = [(320, 568), (390, 844), (1280, 800)]
 SPEC_LINES = {
     'upright': 'Opposite means across from θ, not upright. Turn the triangle in your head.',
@@ -165,9 +166,8 @@ def check_engine(page, fails, sample=None):
         fails.append('feedback wording differs from the approved spec: %s' % lines)
     orientations = set()
     for stage in (1, 2, 3, 4):
-        items = page.evaluate('(n) => WS.gen.bank(n)', stage)
-        if sample:
-            items = random.Random(stage).sample(items, sample)
+        # A sample is drawn in the page: sending a whole bank across for each plant is most of a self-test's time.
+        items = page.evaluate('([n, k]) => { const b = WS.gen.bank(n); return k ? b.filter((_, i) => i % Math.floor(b.length / k) === 0) : b; }', [stage, sample])
         ids = {i['id'] for i in items}
         if len(ids) != len(items):
             fails.append('stage %d: repeated items' % stage)
@@ -284,6 +284,86 @@ def check_colour_use(page, label, fails):
         fails.append('%s: %s' % (label, p))
 
 
+def on_side_points(ax, ay, bx, by, role, count):
+    """Points on a side, on screen, from one end: the middles of the gaps in the line its role is drawn with (the page's dash pattern)
+    and otherwise evenly along it, none within 6 px of an end."""
+    length = math.hypot(bx - ax, by - ay)
+    if role == 'OPP':
+        ds = [16 + 20 * k for k in range(100) if 6 < 16 + 20 * k < length - 6]     # 12 on, 8 off: the middle of each gap
+    elif role == 'ADJ':
+        ds = [6 + 11 * k for k in range(100) if 6 < 6 + 11 * k < length - 6]       # 1 on, 10 off
+    else:
+        ds = [length * (k + 1) / (count + 1) for k in range(count)]
+    if len(ds) > count:
+        ds = [ds[round(i * (len(ds) - 1) / (count - 1))] for i in range(count)]
+    return [(ax + (bx - ax) * d / length, ay + (by - ay) * d / length) for d in ds]
+
+
+def bands_on_screen(page):
+    return page.evaluate("""() => Array.from(document.querySelectorAll('#figure .hit')).map(b => {
+      const s = b.getScreenCTM(), c = getComputedStyle(b); return {val:b.dataset.val, width:+b.getAttribute('stroke-width') * s.a, pe:c.pointerEvents, dash:c.strokeDasharray,
+        x1:+b.getAttribute('x1')+s.e,y1:+b.getAttribute('y1')+s.f,x2:+b.getAttribute('x2')+s.e,y2:+b.getAttribute('y2')+s.f}; })""")
+
+
+def slot_vals(page):
+    return page.evaluate("() => { const t = document.getElementById('slotTop'), b = document.getElementById('slotBottom'), c = document.getElementById('checkBtn'); return t ? [t.dataset.val || null, b.dataset.val || null, c.disabled] : [null, null, null]; }")
+
+
+def check_hit_lines(page, label, fails):
+    bands = bands_on_screen(page)
+    if len(bands) != 3:
+        fails.append('%s: %d tap bands, not one a side' % (label, len(bands)))
+    for b in bands:
+        if b['width'] < 44 or b['pe'] != 'stroke' or b['dash'] != 'none':
+            fails.append('%s: tap band %.1f px, pointer-events %s, dashes %s' % (label, b['width'], b['pe'], b['dash']))
+    painted = page.evaluate("() => Array.from(document.querySelectorAll('#figure line.side, #figure .square, #figure .arc, #figure text, #figure .theta')).filter(e => getComputedStyle(e).pointerEvents !== 'none').length")
+    if painted:
+        fails.append('%s: %d painted parts of the figure take pointer events' % (label, painted))
+    return {b['val']: b for b in bands}
+
+
+def check_stage2_clicks(page, it, geo, label, fails):
+    """Every side clicked for real along its length, in the gaps of its own line style, each click filling the top slot with that side."""
+    bands = check_hit_lines(page, label, fails)
+    if int(label.rsplit('q', 1)[1]) > 3:            # the first three questions of a round; the turns are dealt evenly, so these vary
+        return
+    for role, s in geo.items():
+        b = bands.get(s['id'])
+        if not b:
+            continue
+        for x, y in on_side_points(b['x1'], b['y1'], b['x2'], b['y2'], role, 5):
+            page.mouse.click(x, y)
+            got = slot_vals(page)[0]
+            if got != s['id']:
+                fails.append('%s: a click on %s at (%.0f, %.0f) gave %s' % (label, role, x, y, got))
+                if got:
+                    page.click('#slotTop')
+                continue
+            page.click('#slotTop')
+            if slot_vals(page)[0] is not None:
+                fails.append('%s: tapping the full top slot did not empty it' % label)
+                return
+
+
+def double_click_slots(page, box, role_by_id, label, fails):
+    """A double click on one side fills one slot only, and a further tap on it does nothing."""
+    for side, b in box.items():
+        pts = on_side_points(b['x1'], b['y1'], b['x2'], b['y2'], role_by_id[side], 5)
+        x, y = pts[len(pts) // 2]
+        page.mouse.dblclick(x, y)
+        if slot_vals(page) != [side, None, True]:
+            fails.append('%s: a double click on %s gave slots %s' % (label, role_by_id[side], slot_vals(page)))
+            return
+        page.mouse.click(x, y)
+        if slot_vals(page) != [side, None, True]:
+            fails.append('%s: a further tap moved %s: %s' % (label, role_by_id[side], slot_vals(page)))
+            return
+        page.click('#slotTop')
+        if slot_vals(page)[0] is not None:
+            fails.append('%s: the slot did not empty after a double click' % label)
+            return
+
+
 def rgb(hexa):
     return 'rgb(%d, %d, %d)' % tuple(int(hexa[i:i + 2], 16) for i in (1, 3, 5))
 
@@ -294,10 +374,15 @@ def wait_asking(page):
 
 def play_round(page, stage, wrong_at, label, fails):
     """One whole round with real mouse taps, wrong at the question indices in wrong_at."""
-    page.evaluate('(n) => { document.querySelector("#stageList [data-stage=\\"" + n + "\\"]").click(); }', stage)
+    page.evaluate("""(n) => { window.__answers = 0;
+      if (!window.__mfgWrapped) { const real = window.mfg; window.__mfgWrapped = true;
+        window.mfg = function (name, params) { if (name === 'question_answered') window.__answers++; if (real) return real.apply(this, arguments); }; }
+      document.querySelector('#stageList [data-stage="' + n + '"]').click(); }""", stage)
     w, h = page.viewport_size['width'], page.viewport_size['height']
     streak, score = 0, 0
     for n in range(10):
+        if STOP_AT_FIRST and fails:                 # a self-test plant, caught: the rest of its round proves nothing more
+            return
         wait_asking(page)
         it = page.evaluate('() => WS.ui.question()')
         check_item(it, fails)
@@ -324,26 +409,64 @@ def play_round(page, stage, wrong_at, label, fails):
         check_colour_use(page, '%s stage %d asking' % (label, stage), fails)
         wrong = n in wrong_at
         if stage in (1, 2):
-            bands = page.evaluate("""() => Array.from(document.querySelectorAll('#figure .hit')).map(b => {
-              const s = b.getScreenCTM(); return {val:b.dataset.val, width:+b.getAttribute('stroke-width') * s.a, x1:+b.getAttribute('x1'),y1:+b.getAttribute('y1'),x2:+b.getAttribute('x2'),y2:+b.getAttribute('y2'), ox:s.e, oy:s.f}; })""")
-            for b in bands:
-                if b['width'] < 44:
-                    fails.append('%s stage %d: tap band %.1f px deep' % (label, stage, b['width']))
-            box = {b['val']: b for b in bands}
+            box = check_hit_lines(page, '%s stage %d' % (label, stage), fails)
+            role_by_id = {v: k for k, v in ids.items()}
 
             def tap(side):
+                # the middle-most point of the side's own gaps (a solid side: its middle), as a real click
                 b = box[side]
-                page.mouse.click(b['ox'] + (b['x1'] + b['x2']) / 2, b['oy'] + (b['y1'] + b['y2']) / 2)
+                pts = on_side_points(b['x1'], b['y1'], b['x2'], b['y2'], role_by_id[side], 5)
+                page.mouse.click(*pts[len(pts) // 2])
             if stage == 1:
                 other = [s['id'] for s in it['sides'] if s['id'] != it['key']][0]
-                tap(other if wrong else ids[it['ask']])
+                pick = other if wrong else ids[it['ask']]
+                if n in (0, 2):                     # a double click, right (question 1) and wrong (question 3): one answer each
+                    b = box[pick]
+                    pts = on_side_points(b['x1'], b['y1'], b['x2'], b['y2'], role_by_id[pick], 5)
+                    page.mouse.dblclick(*pts[len(pts) // 2])
+                else:
+                    tap(pick)
             else:
-                tap(ids[it['top']])
-                page.wait_for_timeout(20)
-                bands2 = page.evaluate("""() => Array.from(document.querySelectorAll('#figure .hit')).map(b => {
-                  const s = b.getScreenCTM(); return {val:b.dataset.val, x1:+b.getAttribute('x1'),y1:+b.getAttribute('y1'),x2:+b.getAttribute('x2'),y2:+b.getAttribute('y2'), ox:s.e, oy:s.f}; })""")
-                box = {b['val']: b for b in bands2}
-                tap(ids[it['top']] if wrong else ids[it['bottom']])
+                top, bottom = ids[it['top']], ids[it['bottom']]
+                third = ids[({'HYP', 'OPP', 'ADJ'} - {it['top'], it['bottom']}).pop()]
+                prompt = ' '.join(page.evaluate("() => document.getElementById('ask').textContent").split())
+                want_prompt = '%s over %s: tap the top side, then the bottom. Tap a box to empty it, then press Check.' % (it['top'], it['bottom'])
+                if prompt != want_prompt:
+                    fails.append('%s: Stage 2 prompt %r' % (label, prompt))
+                if page.evaluate("() => document.querySelectorAll('#ask .w').length") != 2:
+                    fails.append('%s: the two side words in the prompt are not coloured' % label)
+                if slot_vals(page) != [None, None, True]:
+                    fails.append('%s: Stage 2 does not start with two empty slots and Check off' % label)
+                check_stage2_clicks(page, it, geo, '%s q%d' % (label, n + 1), fails)
+                if n < 2:
+                    double_click_slots(page, check_hit_lines(page, label, fails), role_by_id, '%s q%d' % (label, n + 1), fails)
+                if n % 2 == 0 and not wrong:
+                    # fills a slot wrongly, clears it, refills it correctly: marked right, and nothing is marked before Check
+                    tap(third)
+                    if slot_vals(page) != [third, None, True]:
+                        fails.append('%s: one slot full should leave Check off: %s' % (label, slot_vals(page)))
+                    tap(bottom)
+                    if slot_vals(page) != [third, bottom, False]:
+                        fails.append('%s: both slots full should turn Check on: %s' % (label, slot_vals(page)))
+                    if page.evaluate('() => WS.ui.state()') != 'asking':
+                        fails.append('%s: marked before Check' % label)
+                        return
+                    page.click('#slotTop')
+                    if slot_vals(page) != [None, bottom, True]:
+                        fails.append('%s: clearing a slot should empty it and turn Check off: %s' % (label, slot_vals(page)))
+                    tap(top)
+                else:
+                    tap(top)
+                    tap(third if wrong else bottom)
+                if slot_vals(page) != [top, third if wrong else bottom, False]:
+                    fails.append('%s: slots %s before Check' % (label, slot_vals(page)))
+                r = page.query_selector('#checkBtn').bounding_box()
+                if r['y'] + r['height'] > h - 40 or r['height'] < 44:
+                    fails.append('%s: Check is below the fold or small: %s' % (label, r))
+                if n == 1:                          # a double click on Check marks once
+                    page.mouse.dblclick(r['x'] + r['width'] / 2, r['y'] + r['height'] / 2)
+                else:
+                    page.click('#checkBtn')
         else:
             want = it['key']
             opts = page.query_selector_all('#opts .opt')
@@ -357,9 +480,21 @@ def play_round(page, stage, wrong_at, label, fails):
                 if r['y'] + r['height'] > h - 40:
                     fails.append('%s stage %d: last option below the fold, %.0f in %d' % (label, stage, r['y'] + r['height'], h))
             target = [o for o in opts if (o.get_attribute('data-val') == want) != wrong][0]
-            target.click()
-        page.wait_for_function("() => WS.ui.state() === 'right' || WS.ui.state() === 'wrong'", timeout=4000)
+            if n in (0, 2):                         # a double click on an option answers once
+                r = target.bounding_box()
+                page.mouse.dblclick(r['x'] + r['width'] / 2, r['y'] + r['height'] / 2)
+            else:
+                target.click()
+        try:
+            page.wait_for_function("() => WS.ui.state() === 'right' || WS.ui.state() === 'wrong'", timeout=4000)
+        except Exception:
+            fails.append('%s stage %d q%d: the tap marked nothing' % (label, stage, n + 1))
+            return
         got = page.evaluate('() => WS.ui.state()')
+        page.wait_for_timeout(60)                   # room for a second click's effect to land, if it is going to
+        answers = page.evaluate('() => window.__answers')
+        if answers != n + 1:
+            fails.append('%s stage %d q%d: %d answers logged so far, should be %d' % (label, stage, n + 1, answers, n + 1))
         if got != ('wrong' if wrong else 'right'):
             fails.append('%s stage %d q%d: state %s, expected %s' % (label, stage, n + 1, got, 'wrong' if wrong else 'right'))
         streak = 0 if wrong else streak + 1
@@ -448,6 +583,54 @@ def check_aa(browser, base, fails):
         ctx.close()
 
 
+def check_hold(browser, base, fails, route=None, stages=(1, 2, 3, 4)):
+    """A right answer on each stage: lit, "Right", no Next, for the real 0.8 s; taps ignored; then the next question by itself. An hour
+    jumped during the hold must not reach the clock or the score. Real timers here: run_page's fast pause would hide all of this."""
+    ctx = browser.new_context(viewport={'width': 390, 'height': 844})
+    page = ctx.new_page()
+    if route:
+        page.route('**/games/%s/**' % SLUG, route)
+    page.goto('%s/games/%s/?cb=%d' % (base, SLUG, random.randrange(10 ** 9)))
+    page.wait_for_function('() => !!window.WS && !!window.katex')
+    page.evaluate("""() => { const real = performance.now.bind(performance); let extra = 0; window.__skip = (s) => { extra += s * 1000; };
+      performance.now = () => real() + extra; }""")
+    for stage in stages:
+        page.evaluate('(n) => WS.ui.start(n)', stage)
+        wait_asking(page)
+        first = page.evaluate('() => WS.ui.question()')
+        page.evaluate('() => WS.ui.answer(true)')
+        page.wait_for_function("() => WS.ui.state() === 'right'", timeout=3000)
+        score = page.evaluate('() => WS.ui.score()')
+        look = page.evaluate("""() => { const h = document.querySelector('.fb-head');
+          return {mark: h ? h.textContent : null, lit: document.querySelectorAll('#figure line.side.lit').length,
+                  next: document.querySelectorAll('.maffs-next-wrap button, .fb-next button').length, bands: document.querySelectorAll('#figure .hit').length, time: document.getElementById('hudTime').textContent}; }""")
+        if look['mark'] != '✓Right' or look['lit'] < 1 or look['next'] or look['bands']:
+            fails.append('stage %d hold: %s' % (stage, look))
+        page.evaluate('() => window.__skip(3600)')          # an hour passes on the clock's own time source, during the hold
+        page.wait_for_timeout(600)
+        # taps and clicks during the hold: nothing moves
+        page.mouse.click(195, 300)
+        held = page.evaluate('() => [WS.ui.state(), WS.ui.question().id, document.getElementById("hudTime").textContent, WS.ui.score()]')
+        if held != ['right', first['id'], look['time'], score]:
+            fails.append('stage %d: during the hold %s, expected right, %s, %s, %s' % (stage, held, first['id'], look['time'], score))
+        try:
+            page.wait_for_function("(id) => WS.ui.state() === 'asking' && WS.ui.question().id !== id", arg=first['id'], timeout=1500)
+        except Exception:
+            fails.append('stage %d: no next question after the hold' % stage)
+            continue
+        page.wait_for_timeout(600)
+        shown = page.evaluate('() => document.getElementById("hudTime").textContent')
+        if int(shown.split(':')[0]) >= 30:
+            fails.append('stage %d: the clock ran during the hold: %s' % (stage, shown))
+        wait_asking(page)
+        page.evaluate('() => WS.ui.answer(true)')
+        page.wait_for_function("() => WS.ui.state() === 'right'", timeout=3000)
+        if page.evaluate('() => WS.ui.score()') - score < 40:   # 5 seconds or less on the question scores far above this; an hour would not
+            fails.append('stage %d: the hold reached the score: %s after %s' % (stage, page.evaluate('() => WS.ui.score()'), score))
+        page.wait_for_function("() => WS.ui.state() !== 'right'", timeout=3000)
+    ctx.close()
+
+
 def check_colours(page, fails):
     tokens = page.evaluate("""() => { const c = getComputedStyle(document.documentElement);
       return {HYP:c.getPropertyValue('--hyp').trim(), OPP:c.getPropertyValue('--opp').trim(), ADJ:c.getPropertyValue('--adj').trim()}; }""")
@@ -464,6 +647,8 @@ def check_colours(page, fails):
 def run_page(browser, base, fails, route=None, sizes=SIZES, engine=True, stages=(1, 2, 3, 4)):
     ctx = browser.new_context(viewport={'width': sizes[0][0], 'height': sizes[0][1]})
     ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)
+    # Test only: the 800 ms pause on a right answer runs at 250 ms (check_hold keeps the real one), so a round is not mostly waiting.
+    ctx.add_init_script("(() => { const st = window.setTimeout; window.setTimeout = (f, ms, ...a) => st(f, ms === 800 ? 250 : ms, ...a); })();")
     for w, h in sizes:
         page = ctx.new_page()
         page.set_viewport_size({'width': w, 'height': h})
@@ -506,16 +691,36 @@ PLANTS = [
     ('green feedback', ".fb-head{font-weight:700;font-size:1.05rem;color:var(--text)}", ".fb-head{font-weight:700;font-size:1.05rem;color:var(--correct)}"),
     ('a side colour on the score', ".hud-val{font-family:var(--font-num);", ".hud-val{color:var(--adj);font-family:var(--font-num);"),
     ('no word on a right answer', "(ok ? 'Right' : 'Not quite')", "(ok ? '' : 'Not quite')"),
+    ('a dash-only hit area', "'stroke-width': 44,", "'stroke-width': 44, 'stroke-dasharray': '12 8',", 'stage 2'),
+    ('a painted line that takes the tap', ".figure .side,.figure .square,.figure .arc{pointer-events:none}", ".figure .square,.figure .arc{pointer-events:none}", 'stage 2'),
+    ('Stage 2 marks with no Check', "    showSlot(slot); refreshSlots();\n  }\n  function clearSlot", "    showSlot(slot); refreshSlots();\n    if (top.dataset.val && bottom.dataset.val) checkSlots();\n  }\n  function clearSlot", 'stage 2'),
+    ('a full slot that will not empty', "    delete slot.dataset.val;\n", "", 'stage 2'),
+    ('Check on with one slot empty', "$('checkBtn').disabled = !(top.dataset.val && bottom.dataset.val);", "$('checkBtn').disabled = !(top.dataset.val || bottom.dataset.val);", 'stage 2'),
+    ('the old Stage 2 prompt', " Tap a box to empty it, then press Check.", "", 'stage 2'),
+    ('the old behaviour: one side in both slots', " || top.dataset.val === val || bottom.dataset.val === val) return;", ") return;", 'stage 2'),
+    ('the old behaviour: a second tap answers again', [("    if (state !== 'asking') return;\n    if (stage === 1) {\n      if (!MaffsLock.lock($('qarea'))) return;\n", "    if (stage === 1) {\n"),
+                                                     ("draw.reserve = ok ? RESERVE[stage] : reserveFeedback();", "draw.tap = true; draw.reserve = ok ? RESERVE[stage] : reserveFeedback();")], None),
+    ('a shorter hold', "MaffsLock.timer(advance, 800);", "MaffsLock.timer(advance, 200);", 'hold'),
+    ('Next on a right answer', "      MaffsLock.timer(advance, 800);\n", "      fb.querySelector('.fb').insertAdjacentHTML('beforeend', '<div class=\"fb-next\"><button type=\"button\">Next</button></div>');\n      MaffsLock.timer(advance, 800);\n", 'hold'),
+    ('the clock runs during the hold', "    askedAt = now();\n    tick();\n", "    tick();\n", 'hold'),
     ('a changed colour', "--opp:#0072B2", "--opp:#0072C2"),
     ('a small coloured word', ".w{font-weight:700;font-size:19px;", ".w{font-weight:700;font-size:15px;"),
 ]
 
 
 def self_test(browser, base, src):
+    global STOP_AT_FIRST
+    STOP_AT_FIRST = True
     problems = 0
-    for name, old, new in PLANTS:
+    for plant in PLANTS:
+        name, old, new = plant[:3]
         try:
-            planted = pc.apply_plant(src, old, new, name=name)
+            if isinstance(old, list):               # a plant of several edits
+                planted = src
+                for o, n in old:
+                    planted = pc.apply_plant(planted, o, n, name=name)
+            else:
+                planted = pc.apply_plant(src, old, new, name=name)
         except pc.StalePlant as e:
             print('  %s' % e)
             problems += 1
@@ -526,7 +731,14 @@ def self_test(browser, base, src):
                                if rt.request.resource_type == 'document' else rt.continue_())
         found, err = [], None
         try:
-            run_page(browser, base, found, route=route(None), sizes=SIZES[:1], stages=(1,))
+            if len(plant) > 3 and plant[3] == 'hold':
+                check_hold(browser, base, found, route=route(None), stages=(1,))
+                print('  planted, caught: %s (%d findings; first: %s)' % (name, len(found), found[0][:110])) if found else None
+                problems += 0 if found else 1
+                if not found:
+                    print('  NOT CAUGHT: %s' % name)
+                continue
+            run_page(browser, base, found, route=route(None), sizes=SIZES[:1], stages=(2,) if len(plant) > 3 else (1,))
         except Exception as e:      # a plant that stops play is caught only if it left findings; an error alone is never a catch
             err = None if found else e
         if pc.is_caught(found, err):
@@ -549,6 +761,7 @@ def main():
             browser = p.chromium.launch()
             run_page(browser, base, fails)
             check_aa(browser, base, fails)
+            check_hold(browser, base, fails)
             plants = 0 if args.no_selftest else self_test(browser, base, src)
             browser.close()
     finally:
