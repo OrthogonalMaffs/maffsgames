@@ -66,7 +66,7 @@ start-up load). When the work merges, move the file to `docs/history/`.
 
 ## 2026-11-06 (cloud): WHOSE-SIDE-ART (`docs/history/contracts/2026-11-06-whose-side-art.md`, Shared)
 
-DONE: #684 merged by merge-pr.py as e42aa76 on Jon's "merge" (6 Nov), after its Gate went green on 16855283 (run 42231037198); main run 42236540900 GREEN. Review: Project Claude's review not recorded before the merge. Open for Jon: the tip is measured at the triangle's inner corner, not the strips' centreline point (decision 2 in the PR); the art-inbox branch is his to delete.
+DONE: #684 merged by merge-pr.py as e42aa76 on Jon's "merge" (6 Nov), after its Gate went green on 16855283 (run 42231037198); main run 42236540900 GREEN. Review: Project Claude reviewed and passed the head 16855283 before the merge (6 Nov, relayed by Jon). Tip at the inner corner: accepted in Project Claude's review. Open for Jon: the art-inbox branch is his to delete.
 
 Agent: Claude Code, cloud, primary checkout, branch `claude/funny-allen-wgvy20`, from main c8b30dd (#682 merged). Source checked: art-inbox 9ed06af, 1698x926 PNG, 2,154,880 bytes. `games/whose-side-are-you-on/assets/start.webp`: the house conversion (new_h = 873, so no crop), 1600x873, 94,132 bytes. Start screen: the picture under the title at the card's width (14 px corners, height auto), in a wrapper with the arc (an SVG in the picture's own coordinates) and a KaTeX θ in the text colour, haloed. Tip measured on the WebP: (1325.2, 733.0), where the slope's lower edge meets the base's top edge; slope 28.33 degrees. θ on the bisector 88 image px in (77.49%, 81.50%), 5.5% of the width from the tip; arc radius 170, centred on the tip.
 
