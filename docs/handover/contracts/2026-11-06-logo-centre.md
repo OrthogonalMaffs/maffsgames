@@ -26,3 +26,7 @@ STOP IF: a sixth copy turns up that isn't SVG or HTML (e.g. an apple-touch-icon 
 ## Amendment 1 (Jon, 6 Nov 2026), saved verbatim
 
 Addition to #680 (Jon, 6 Nov), thank you: regenerate schools/assets/og-image.png by rendering the corrected og-image.svg in Chromium at exactly 1200x630 (the repo's own font copies). Prove it faithful: compare with the current PNG and require every pixel outside the two bar rectangles (plus a 3px margin) to match within a small tolerance; put the diff summary in the PR. STOP IF anything outside the bars differs (fonts or text rendering): leave the PNG and report. Same PR, stop at a green Gate.
+
+## Amendment 2 (6 Nov 2026), saved verbatim
+
+Option 1, thank you: add the Outfit render of og-image.png to #680, and attach the before and after images to the PR description so Jon can compare them. Let the Gate run again, then stop for Jon's "merge".

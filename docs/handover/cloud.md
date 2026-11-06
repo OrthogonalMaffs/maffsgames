@@ -68,11 +68,11 @@ start-up load). When the work merges, move the file to `docs/history/`.
 
 Agent: Claude Code, cloud, primary checkout, branch `claude/vibrant-davinci-61us0w`. Bars centred on the M's right leg (x 222.5, width 35; centre 240) in the master `schools/assets/m_plus_logo.svg` (master comment added), favicon.svg, index.html's header and about/index.html (both also #4CB5B0 -> #0d9488, the only uses of that teal in either page); og-image.svg x 82.5, width 35. New `scripts/check-logo.py` (ci-line): maps each copy into the master's coordinates from the M's bounding box and compares M, plus and bars; bars #0d9488; scans all 187 .svg/.html files so an unregistered copy fails. 7 plants caught (both contract plants plus 30-wide bars, a moved plus, the master moved alone, an unparseable copy, a half-size unregistered copy).
 
-Amendment 1 (Jon, 6 Nov: regenerate og-image.png in Chromium): STOPPED, PNG unchanged. The live PNG's text is not Outfit (a fallback sans); the Outfit render differs outside the bars in 10,509 pixels (max 229), all but 4 in the wordmark and tagline (those 4: the M's notch, max 8). A DejaVu render does not reproduce it either (4,073). Jon to rule. No sixth copy found. Not changed, for the home lane: canon §7.4 could name the master and the check.
+Amendment 1 (Jon, 6 Nov: regenerate og-image.png in Chromium): STOPPED, PNG unchanged. The live PNG's text is not Outfit (a fallback sans); the Outfit render differs outside the bars in 10,509 pixels (max 229), all but 4 in the wordmark and tagline (those 4: the M's notch, max 8). A DejaVu render does not reproduce it either (4,073). Amendment 2 (6 Nov): option 1, the Outfit render committed (pixel-identical to the compared render). No sixth copy found. Not changed, for the home lane: canon §7.4 could name the master and the check.
 
 RAN: check-logo `--selftest --check` exit 0; ci-deps `--selftest` PASS; the five copies rendered in Chromium, bars centred. check-changed.py not run (CLOUD-LEAN).
 
-Record: agent Claude Code; wall n/a (receipt time not recorded); review cycles 0; amendments 0; usage n/a.
+Record: agent Claude Code; wall n/a (receipt time not recorded); review cycles 0; amendments 2; usage n/a.
 
 ## 2026-11-06 (cloud): EQUATLE-PHONE-FIT (`docs/history/contracts/2026-11-06-equatle-phone-fit.md`, Small)
 
