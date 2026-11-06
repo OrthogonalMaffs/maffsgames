@@ -1134,14 +1134,18 @@ def check_bios(browser, base, fails, route=None, sizes=BIO_SIZES, report=True):
                 fails.append('bios: the tap regions overlap at %d sampled points of the picture' % over)
         if page.evaluate("() => { const s = document.getElementById('startSides'); return !s || s.getAttribute('aria-hidden') !== 'true' || !!s.querySelector('[tabindex], a, button'); }"):
             fails.append('%s: the ramp\'s tap regions are not hidden from assistive tech and out of the tab order' % label)
-        art = page.evaluate("() => { const r = document.querySelector('#startArt img').getBoundingClientRect(); return [r.left, r.top, r.width]; }")
+        def art_at_top():
+            # a tap on the ramp scrolls its bio into view (MaffsScroll.reveal, which makes further passes for a moment): let those
+            # finish, go back to the top, and read where the picture is now
+            page.wait_for_timeout(250)
+            return page.evaluate("() => { window.scrollTo(0, 0); const r = document.querySelector('#startArt img').getBoundingClientRect(); return [r.left, r.top, r.width]; }")
+        art = art_at_top()
         sc = art[2] / ART_SIZE[0]
         mins, limited, corners = {}, [], []
         for role, (colour, c0, dvec, e0, e1) in roles.items():
             nvec = (-dvec[1], dvec[0])
             for t in (0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95):
                 ix, iy = e0[0] + (e1[0] - e0[0]) * t, e0[1] + (e1[1] - e0[1]) * t
-                page.evaluate('() => window.scrollTo(0, 0)')    # a tap on the ramp scrolls its bio into view
                 if (w, h) in DEPTH_SIZES:
                     # across the strip through this point: the run of screen pixels that land on the same tap region
                     depth = page.evaluate("""([x, y, nx, ny]) => { const at = (k) => { const e = document.elementFromPoint(x + nx * k, y + ny * k);
@@ -1160,7 +1164,15 @@ def check_bios(browser, base, fails, route=None, sizes=BIO_SIZES, report=True):
                         fails.append('%s: %s\'s tap region is %.1f px deep across the strip %.0f%% along it; %s' % (
                             label, role, depth, 100 * t, 'it should be 44' if need == 44 else 'the strips leave room for %.1f' % room))
                 if t in (0.2, 0.5, 0.8):
+                    art = art_at_top()
                     page.mouse.click(art[0] + ix * sc, art[1] + iy * sc)
+                    page.wait_for_timeout(250)
+                    shown = page.evaluate("() => { const f = document.querySelector('footer.site-footer'), fs = f ? getComputedStyle(f) : null;"
+                                          " const inset = fs && fs.position === 'fixed' ? f.getBoundingClientRect().height : 0;"
+                                          " return [document.getElementById('bio').getBoundingClientRect().bottom, innerHeight - inset]; }")
+                    if shown[0] > shown[1] + 1:
+                        fails.append('%s: after a tap on the %s strip its bio ends at %.0f, under the fold at %.0f' % (label, colour, shown[0], shown[1]))
+                    art = art_at_top()
                     judge_bio(page.evaluate(READ_BIO), role, '%s, the %s strip %.0f%% along' % (label, colour, 100 * t), fails)
             stroke, dash, cap, text = page.evaluate(RING_STYLE_JS, role)
             parts = [float(v.replace('px', '')) for v in dash.replace(',', ' ').split()] if dash != 'none' else []
@@ -1530,6 +1542,7 @@ PLANTS = [
      'Move <span class="th">θ</span>, and the polite two swap. <span class="w HYP">HYP</span> doesn\'t flinch.', 'start'),
     ('the scoring line removed', '      <p>Ten quick questions a stage. No lives: a faster right answer scores more, a slow one is still right.</p>\n', '', 'start'),
     ('a strip mapped to the wrong role', [('data-tap="HYP"', 'data-tap="X"'), ('data-tap="ADJ"', 'data-tap="HYP"'), ('data-tap="X"', 'data-tap="ADJ"')], None, 'bios'),
+    ('a ramp tap that leaves the bio under the fold', "    if (window.MaffsScroll) MaffsScroll.reveal($('bio'));\n", "", 'bios'),
     ('a character line left in the right-answer panel', "fb.innerHTML = '<div class=\"fb done\">' + head(true) + rule + '</div>';",
      "fb.innerHTML = '<div class=\"fb done\">' + head(true) + rule + '<div class=\"fb-line\">OPP: “Spot on. Do carry on.”</div></div>';", 'lines'),
     ('the rule missing on a right answer', "fb.innerHTML = '<div class=\"fb done\">' + head(true) + rule + '</div>';", "fb.innerHTML = '<div class=\"fb done\">' + head(true) + '</div>';", 'lines'),

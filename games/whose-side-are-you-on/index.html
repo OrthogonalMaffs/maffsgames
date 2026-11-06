@@ -60,7 +60,7 @@ a.back-link:hover{color:var(--text)}
 .key svg{display:block}
 .key line{stroke-width:5}
 .key b{font-family:var(--font-num)}
-.bio{margin-top:.35rem;padding:.5rem .7rem;border:1px solid var(--border);border-radius:10px;background:var(--surface-alt);line-height:1.45;scroll-margin-bottom:56px}
+.bio{margin-top:.35rem;padding:.5rem .7rem;border:1px solid var(--border);border-radius:10px;background:var(--surface-alt);line-height:1.45}
 .bio-hint{color:var(--muted)}
 .bio-f+.bio-f{margin-top:.2rem}
 .bio-k{font-weight:700}
@@ -920,7 +920,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     var t = e.target.closest && e.target.closest('[data-tap]');
     if (!t) return;
     meet(t.getAttribute('data-tap'));
-    $('bio').scrollIntoView({ block: 'nearest' });
+    if (window.MaffsScroll) MaffsScroll.reveal($('bio'));
   });
   (function () {
     var KEY = 'mfg_accessible', btn = $('a11yToggle');
